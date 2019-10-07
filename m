@@ -2,273 +2,122 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2972C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 020FEECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B0312067B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC67D2067B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:40:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570466442;
+	bh=L1Fcgw+r6ziJgdybi8ZNtmff+CPPTFueBYgIdOr7isM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kK0ntIPvAjSrKmUbkgtAjWD//SPF2KB2s8vmiqo5POCGRNrcLfd3Trojuwq4CXKlH
+	 NKyF4YV6QynDHHbeDuLvzgBajYxTc8munSrS2YzK8smNg1+CLBJZ8y+T4ZxmAKsQSJ
+	 EwfWyWm0S1WPCO0/5uB6gLx7U9wt5weTX8k+BL+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728387AbfJGQjb (ORCPT
+        id S1728607AbfJGQkl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 12:39:31 -0400
-Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:33749 "EHLO
-        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727801AbfJGQja (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 12:39:30 -0400
-Received: from [IPv6:2001:983:e9a7:1:3d61:cdd2:8085:cc8] ([IPv6:2001:983:e9a7:1:3d61:cdd2:8085:cc8])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id HW2eiOSEUjZ8vHW2gi7zin; Mon, 07 Oct 2019 18:39:26 +0200
-Subject: Re: [PATCH 0/2] media: meson: vdec: Add compliant H264 support
-To:     Maxime Jourdan <mjourdan@baylibre.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-References: <20191007145909.29979-1-mjourdan@baylibre.com>
- <8563127e-fe2c-a633-556b-8a883cebb171@xs4all.nl>
- <977c48e8-8275-c96a-688b-ccfbb873eb79@baylibre.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <65a88bfc-d82b-1487-7983-507149b11673@xs4all.nl>
-Date:   Mon, 7 Oct 2019 18:39:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 7 Oct 2019 12:40:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37236 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727801AbfJGQkl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 12:40:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D16042067B;
+        Mon,  7 Oct 2019 16:40:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570466440;
+        bh=L1Fcgw+r6ziJgdybi8ZNtmff+CPPTFueBYgIdOr7isM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lnSRZkGw7cQGuY+xEU9oH85qsMC7P7yjO/clU/BRmencGOTMv4SfeqigKr2zX5KUW
+         puHN++6yq7grp4Mg9oBZ+uGcZECEil7sOs5V4rhpY0aNBVDaN/8OGZfLk+pXUwyadC
+         5eVQ/N4JV4OvyW3fBtaeit0d5PUkoZzqsibTsV98=
+Date:   Mon, 7 Oct 2019 18:40:37 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Mark Salyzyn <salyzyn@android.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
+        linux-security-module@vger.kernel.org, stable@vger.kernel.org,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-unionfs@vger.kernel.org
+Subject: Re: [PATCH] ovl: filter of trusted xattr results in audit
+Message-ID: <20191007164037.GA1012698@kroah.com>
+References: <20191007160918.29504-1-salyzyn@android.com>
+ <20191007161616.GA988623@kroah.com>
+ <20191007161725.GB988623@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <977c48e8-8275-c96a-688b-ccfbb873eb79@baylibre.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfAYWwkY21vUQ4hMBzTqUalGNECuzHryLQUgGuC+6WIiNO/bIa1y2BCfZm5QxVI/sD0uCN7Q6YC/GGX6sb7ctrGb3Xbg+szGIikN+9j/u0zky7NZHc4Nu
- gqf485fh7XN7sBR0uTJP9XsTT94pL69JP+Dnwm0V3YxDbAG1KzC50rKk6zyyBlILMnsLkiXcAohKI+P6CNEZA9HyTcrSOLaJdYRjwC4CQO4fceijo1BGpcj3
- 3UCKu9Ov5FzvewmjwxOosEOhyC1XKXGMBI4wiFjNYbE/vp7nn3U6g1AeNlaFVgImph2sz5a/0lD6Li2Jxwj5RNj7gOUj1WkrmYmTLVKtJaUxFTsrwgQ8Dfz7
- dXsZaNIjkT4q4p4vqUzg7SE+cvYARCrQDkZgw/e08UuGSwsARzxnWgj9yIzY+Svtp2pcKv34siAUrttKrSrMJzhgx/9rBH0PVvAafmbXFt8jkU/uAutNNQmi
- MV4qLCboblApxNj7b6OHEUQvvD2IJM9UPbfYSDFCXfHHdqzbNwL82PuDreyyhxF5djJoaKWuXE6gLlZTpefqbYQQ+hjm70JS9EEOPvhCSNH6sJ/nasu1nauq
- QWAUwElfB8oZlSFy4hiz4Qwifvw5u4FZz5pLg/VV1D/410BTfXm30iE/A+rpoBLMlQwmeP/GW1J+JA1fGoiKPWzz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191007161725.GB988623@kroah.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/7/19 6:24 PM, Maxime Jourdan wrote:
-> On 07/10/2019 17:12, Hans Verkuil wrote:
->> On 10/7/19 4:59 PM, Maxime Jourdan wrote:
->>> Hello,
->>>
->>> This patch series aims to bring H.264 support as well as compliance update
->>> to the amlogic stateful video decoder driver.
->>>
->>> There is 1 issue that remains currently:
->>>
->>>   - The following codepath had to be commented out from v4l2-compliance as
->>> it led to stalling:
->>>
->>> if (node->codec_mask & STATEFUL_DECODER) {
->>>     struct v4l2_decoder_cmd cmd;
->>>     buffer buf_cap(m2m_q);
->>>
->>>     memset(&cmd, 0, sizeof(cmd));
->>>     cmd.cmd = V4L2_DEC_CMD_STOP;
->>>
->>>     /* No buffers are queued, call STREAMON, then STOP */
->>>     fail_on_test(node->streamon(q.g_type()));
->>>     fail_on_test(node->streamon(m2m_q.g_type()));
->>>     fail_on_test(doioctl(node, VIDIOC_DECODER_CMD, &cmd));
->>>
->>>     fail_on_test(buf_cap.querybuf(node, 0));
->>>     fail_on_test(buf_cap.qbuf(node));
->>>     fail_on_test(buf_cap.dqbuf(node));
->>>     fail_on_test(!(buf_cap.g_flags() & V4L2_BUF_FLAG_LAST));
->>>     for (unsigned p = 0; p < buf_cap.g_num_planes(); p++)
->>>         fail_on_test(buf_cap.g_bytesused(p));
->>>     fail_on_test(node->streamoff(q.g_type()));
->>>     fail_on_test(node->streamoff(m2m_q.g_type()));
->>>
->>>     /* Call STREAMON, queue one CAPTURE buffer, then STOP */
->>>     fail_on_test(node->streamon(q.g_type()));
->>>     fail_on_test(node->streamon(m2m_q.g_type()));
->>>     fail_on_test(buf_cap.querybuf(node, 0));
->>>     fail_on_test(buf_cap.qbuf(node));
->>>     fail_on_test(doioctl(node, VIDIOC_DECODER_CMD, &cmd));
->>>
->>>     fail_on_test(buf_cap.dqbuf(node));
->>>     fail_on_test(!(buf_cap.g_flags() & V4L2_BUF_FLAG_LAST));
->>>     for (unsigned p = 0; p < buf_cap.g_num_planes(); p++)
->>>         fail_on_test(buf_cap.g_bytesused(p));
->>>     fail_on_test(node->streamoff(q.g_type()));
->>>     fail_on_test(node->streamoff(m2m_q.g_type()));
->>> }
->>>
->>> The reason for this is because the driver has a limitation where all
->>> capturebuffers must be queued to the driver before STREAMON is effective.
->>> The firmware needs to know in advance what all the buffers are before
->>> starting to decode.
->>> This limitation is enforced via q->min_buffers_needed.
->>> As such, in this compliance codepath, STREAMON is never actually called
->>> driver-side and there is a stall on fail_on_test(buf_cap.dqbuf(node));
->>
->> That's interesting. I will have to look more closely at this.
->>
->>>
->>>
->>> One last detail: V4L2_FMT_FLAG_DYN_RESOLUTION is currently not recognized
->>> by v4l2-compliance, so it was left out for the test. However, it is
->>> present in the patch series.
->>
->> It is definitely recognized by v4l2-compliance.
->>
->>>
->>> The second patch has 3 "Alignment should match open parenthesis" lines
->>> where I preferred to keep them that way.
->>>
->>> Thanks Stanimir for sharing your HDR file creation tools, this was very
->>> helpful :).
->>>
->>> Maxime
->>>
->>> # v4l2-compliance --stream-from-hdr test-25fps.h264.hdr -s250
->>> v4l2-compliance SHA: a162244d47d4bb01d0692da879dce5a070f118e7, 64 bits
->>
->> But this SHA isn't in the v4l-utils repo, so this makes me wonder where you
->> got this repo from.
->>
+On Mon, Oct 07, 2019 at 06:17:25PM +0200, Greg Kroah-Hartman wrote:
+> On Mon, Oct 07, 2019 at 06:16:16PM +0200, Greg Kroah-Hartman wrote:
+> > On Mon, Oct 07, 2019 at 09:09:16AM -0700, Mark Salyzyn wrote:
+> > > When filtering xattr list for reading, presence of trusted xattr
+> > > results in a security audit log.  However, if there is other content
+> > > no errno will be set, and if there isn't, the errno will be -ENODATA
+> > > and not -EPERM as is usually associated with a lack of capability.
+> > > The check does not block the request to list the xattrs present.
+> > > 
+> > > Switch to has_capability_noaudit to reflect a more appropriate check.
+> > > 
+> > > Signed-off-by: Mark Salyzyn <salyzyn@android.com>
+> > > Cc: linux-security-module@vger.kernel.org
+> > > Cc: kernel-team@android.com
+> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > Cc: stable@vger.kernel.org # v3.18
+> > > Fixes: upstream a082c6f680da ("ovl: filter trusted xattr for non-admin")
+> > > Fixes: 3.18 4bcc9b4b3a0a ("ovl: filter trusted xattr for non-admin")
+> > > ---
+> > > Replaced ns_capable_noaudit with 3.18.y tree specific
+> > > has_capability_noaudit present in original submission to kernel.org
+> > > commit 5c2e9f346b815841f9bed6029ebcb06415caf640
+> > > ("ovl: filter of trusted xattr results in audit")
+> > > 
+> > >  fs/overlayfs/inode.c | 3 ++-
+> > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/fs/overlayfs/inode.c b/fs/overlayfs/inode.c
+> > > index a01ec1836a72..1175efa5e956 100644
+> > > --- a/fs/overlayfs/inode.c
+> > > +++ b/fs/overlayfs/inode.c
+> > > @@ -265,7 +265,8 @@ static bool ovl_can_list(const char *s)
+> > >  		return true;
+> > >  
+> > >  	/* Never list trusted.overlay, list other trusted for superuser only */
+> > > -	return !ovl_is_private_xattr(s) && capable(CAP_SYS_ADMIN);
+> > > +	return !ovl_is_private_xattr(s) &&
+> > > +	       has_capability_noaudit(current, CAP_SYS_ADMIN);
+> > >  }
+> > >  
+> > >  ssize_t ovl_listxattr(struct dentry *dentry, char *list, size_t size)
+> > > -- 
+> > > 2.23.0.581.g78d2f28ef7-goog
+> > > 
+> > 
+> > Thanks for the backport, this one worked!
 > 
-> I am based off the hverkuil/vicodec branch. The SHA I am on is actually 05387265053bc6f9 ("test-media: add vicodec tests"), but it wasn't updated as I found out it requires a new bootstrap to refresh
-> the SHA. Maybe some rebasing at some point got rid of a162244d.
+> I spoke too soon:
+> 
+> ERROR: "has_capability_noaudit" [fs/overlayfs/overlay.ko] undefined!
+> 
+> That function isn't exported for modules :(
 
-Don't use the hverkuil/vicodec branch. Everything there has been merged into the
-regular v4l-utils repo some time ago. So just clone git://linuxtv.org/v4l-utils.git
-and use that.
+But, if this really is needed, and it fixes the issue, I'll go export
+that symbol with EXPORT_SYMBOL_GPL() to fix the problem.  Any
+objections?
 
-Regards,
+thanks,
 
-	Hans
-
-> 
-> I started fresh and ran it again. As you can see, V4L2_FMT_FLAG_DYN_RESOLUTION is still problematic (removing it makes all the checks pass):
-> 
-> -------------------------------
-> # v4l2-compliance --stream-from-hdr test-25fps.h264.hdr -s250
-> v4l2-compliance SHA: 05387265053bc6f9c8c98e112543adb28ae39cfa, 64 bits
-> 
-> Compliance test for meson-vdec device /dev/video0:
-> 
-> Driver Info:
->     Driver name      : meson-vdec
->     Card type        : Amlogic Video Decoder
->     Bus info         : platform:meson-vdec
->     Driver version   : 5.4.0
->     Capabilities     : 0x84204000
->         Video Memory-to-Memory Multiplanar
->         Streaming
->         Extended Pix Format
->         Device Capabilities
->     Device Caps      : 0x04204000
->         Video Memory-to-Memory Multiplanar
->         Streaming
->         Extended Pix Format
->     Detected Stateful Decoder
-> 
-> Required ioctls:
->     test VIDIOC_QUERYCAP: OK
-> 
-> Allow for multiple opens:
->     test second /dev/video0 open: OK
->     test VIDIOC_QUERYCAP: OK
->     test VIDIOC_G/S_PRIORITY: OK
->     test for unlimited opens: OK
-> 
-> Debug ioctls:
->     test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
->     test VIDIOC_LOG_STATUS: OK (Not Supported)
-> 
-> Input ioctls:
->     test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
->     test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->     test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
->     test VIDIOC_ENUMAUDIO: OK (Not Supported)
->     test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
->     test VIDIOC_G/S_AUDIO: OK (Not Supported)
->     Inputs: 0 Audio Inputs: 0 Tuners: 0
-> 
-> Output ioctls:
->     test VIDIOC_G/S_MODULATOR: OK (Not Supported)
->     test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->     test VIDIOC_ENUMAUDOUT: OK (Not Supported)
->     test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
->     test VIDIOC_G/S_AUDOUT: OK (Not Supported)
->     Outputs: 0 Audio Outputs: 0 Modulators: 0
-> 
-> Input/Output configuration ioctls:
->     test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
->     test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
->     test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
->     test VIDIOC_G/S_EDID: OK (Not Supported)
-> 
-> Control ioctls:
->     test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
->     test VIDIOC_QUERYCTRL: OK
->     test VIDIOC_G/S_CTRL: OK
->     test VIDIOC_G/S/TRY_EXT_CTRLS: OK
->     test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
->     test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
->     Standard Controls: 2 Private Controls: 0
-> 
-> Format ioctls:
->         fail: v4l2-test-formats.cpp(263): unknown flag 00000009 returned
->     test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: FAIL
->     test VIDIOC_G/S_PARM: OK (Not Supported)
->     test VIDIOC_G_FBUF: OK (Not Supported)
->         fail: v4l2-test-formats.cpp(457): pixelformat 34363248 (H264) for buftype 10 not reported by ENUM_FMT
->     test VIDIOC_G_FMT: FAIL
->         fail: v4l2-test-formats.cpp(457): pixelformat 34363248 (H264) for buftype 10 not reported by ENUM_FMT
->     test VIDIOC_TRY_FMT: FAIL
->         fail: v4l2-test-formats.cpp(457): pixelformat 3247504d (MPG2) for buftype 10 not reported by ENUM_FMT
->     test VIDIOC_S_FMT: FAIL
->     test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
->     test Cropping: OK (Not Supported)
->     test Composing: OK (Not Supported)
->     test Scaling: OK
-> 
-> Codec ioctls:
->     test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
->     test VIDIOC_G_ENC_INDEX: OK (Not Supported)
->     test VIDIOC_(TRY_)DECODER_CMD: OK
-> 
-> Buffer ioctls:
->     test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
->     test VIDIOC_EXPBUF: OK
->     test Requests: OK (Not Supported)
-> 
-> Test input 0:
-> 
-> Streaming ioctls:
->     test read/write: OK (Not Supported)
->     test blocking wait: OK
->     Video Capture Multiplanar: Captured 250 buffers
->     test MMAP (select): OK
->     Video Capture Multiplanar: Captured 250 buffers
->     test MMAP (epoll): OK
->     test USERPTR (select): OK (Not Supported)
->     test DMABUF: Cannot test, specify --expbuf-device
-> 
-> Total for meson-vdec device /dev/video0: 49, Succeeded: 45, Failed: 4, Warnings: 0
-> 
-> -------------------------------
-> 
-> Should I be using another branch than vicodec ?
-> 
-> 
->> Regards,
->>
->>     Hans
->>
-
+greg k-h
