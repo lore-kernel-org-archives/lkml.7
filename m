@@ -6,132 +6,142 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B78FECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF54EC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CC81206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:59:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D083A21479
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:00:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729536AbfJGV7u (ORCPT
+        id S1729562AbfJGWAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 17:59:50 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:50395 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728422AbfJGV7t (ORCPT
+        Mon, 7 Oct 2019 18:00:06 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:43756 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728422AbfJGWAG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 17:59:49 -0400
-Received: from dread.disaster.area (pa49-181-226-196.pa.nsw.optusnet.com.au [49.181.226.196])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 6720E3639CD;
-        Tue,  8 Oct 2019 08:59:45 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.2)
-        (envelope-from <david@fromorbit.com>)
-        id 1iHb2e-0001sm-E9; Tue, 08 Oct 2019 08:59:44 +1100
-Date:   Tue, 8 Oct 2019 08:59:44 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Carlos Maiolino <cmaiolino@redhat.com>
-Subject: Re: [PATCH 09/11] xfs: remove the fork fields in the writepage_ctx
- and ioend
-Message-ID: <20191007215944.GC16973@dread.disaster.area>
-References: <20191006154608.24738-1-hch@lst.de>
- <20191006154608.24738-10-hch@lst.de>
+        Mon, 7 Oct 2019 18:00:06 -0400
+Received: by mail-qk1-f193.google.com with SMTP id h126so14233221qke.10;
+        Mon, 07 Oct 2019 15:00:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZU2lhuzvcrgsM0rNDDAmLSl8Fi5wF3gmf9pM3Bgvdh4=;
+        b=nEBqwgpOz0zwXSxFbDBXCbC4ESIEV+bDZlAUMMogxLx9Y+wGfJnjiDCo7S0utspGDV
+         +v8cQTtGVPrcfbam54onodMqoRwb89ZfwgA8HiJB8V08ksytcxSXVpOvSkKAZRN9fO3N
+         0kF5pczUqDkiU9rin5y9X63ufSMpGDDklfpEVGvXTu5pEF5E4OU5bUk/eoOJyMdx+1hL
+         ffu425VEWxO3yDoRSveE85lYrORDZciutBcakcZGuwBod0Gwn/sujwBBVLsaC9QVAJlD
+         B0Bw4TbOVKUUSlpLQJgHNHC/OC+1jtP1Qcgvj9yo+Zochv9ZSlLJmRJGwieBomxIFkPK
+         +osQ==
+X-Gm-Message-State: APjAAAWeMewj9c08lveKGoL70grvi4AHqm7KMtpvRWh2ZFGIT+Wi6EWv
+        fSLYwJ9Ud1w3akD0Jl/s4Dhtq/gVF9OVLA==
+X-Google-Smtp-Source: APXvYqyxz7pCaCHojodDGLBP1EWQgIU9sNOuMJ+ftpmvqJk91fya1fLMitK2111hM63EVcgElwz42A==
+X-Received: by 2002:a05:620a:7ca:: with SMTP id 10mr26285144qkb.410.1570485604791;
+        Mon, 07 Oct 2019 15:00:04 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id q200sm7852142qke.114.2019.10.07.15.00.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 07 Oct 2019 15:00:04 -0700 (PDT)
+Date:   Mon, 7 Oct 2019 18:00:02 -0400
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+To:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>
+Cc:     linux-crypto@vger.kernel.org, linux-s390@vger.kernel.org,
+        x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Stephan Mueller <smueller@chronox.de>
+Subject: [PATCH] lib/string: make memzero_explicit inline instead of external
+Message-ID: <20191007220000.GA408752@rani.riverdale.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191006154608.24738-10-hch@lst.de>
+In-Reply-To: <1d17349e-98ab-b582-6981-b484b0e970b6@redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
-        a=dRuLqZ1tmBNts2YiI0zFQg==:117 a=dRuLqZ1tmBNts2YiI0zFQg==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=XobE76Q3jBoA:10
-        a=20KFwNOVAAAA:8 a=yPCof4ZbAAAA:8 a=7-415B0cAAAA:8 a=pWr0rBs94VfbQ7lI_PoA:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 06, 2019 at 05:46:06PM +0200, Christoph Hellwig wrote:
-> In preparation for moving the writeback code to iomap.c, replace the
-> XFS-specific COW fork concept with the iomap IOMAP_F_SHARED flag.
+With the use of the barrier implied by barrier_data(), there is no need
+for memzero_explicit to be extern. Making it inline saves the overhead
+of a function call, and allows the code to be reused in arch/*/purgatory
+without having to duplicate the implementation.
 
-"In preparation for switching XFS to use the fs/iomap writeback
-code..."?
+Fixes: 906a4bb97f5d ("crypto: sha256 - Use get/put_unaligned_be32 to get input, memzero_explicit")
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Tested-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+---
+ include/linux/string.h | 21 ++++++++++++++++++++-
+ lib/string.c           | 21 ---------------------
+ 2 files changed, 20 insertions(+), 22 deletions(-)
 
-I suspect the IOMAP_F_SHARED hunk I pointed out in the previous
-patch should be in this one...
-
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Carlos Maiolino <cmaiolino@redhat.com>
-> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-> ---
->  fs/xfs/xfs_aops.c | 42 ++++++++++++++++++++++--------------------
->  fs/xfs/xfs_aops.h |  2 +-
->  2 files changed, 23 insertions(+), 21 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-> index 9f22885902ef..8c101081e3b1 100644
-> --- a/fs/xfs/xfs_aops.c
-> +++ b/fs/xfs/xfs_aops.c
-> @@ -23,7 +23,6 @@
->   */
->  struct xfs_writepage_ctx {
->  	struct iomap		iomap;
-> -	int			fork;
->  	unsigned int		data_seq;
->  	unsigned int		cow_seq;
->  	struct xfs_ioend	*ioend;
-> @@ -257,7 +256,7 @@ xfs_end_ioend(
->  	 */
->  	error = blk_status_to_errno(ioend->io_bio->bi_status);
->  	if (unlikely(error)) {
-> -		if (ioend->io_fork == XFS_COW_FORK)
-> +		if (ioend->io_flags & IOMAP_F_SHARED)
->  			xfs_reflink_cancel_cow_range(ip, offset, size, true);
->  		goto done;
->  	}
-> @@ -265,7 +264,7 @@ xfs_end_ioend(
->  	/*
->  	 * Success: commit the COW or unwritten blocks if needed.
->  	 */
-> -	if (ioend->io_fork == XFS_COW_FORK)
-> +	if (ioend->io_flags & IOMAP_F_SHARED)
->  		error = xfs_reflink_end_cow(ip, offset, size);
->  	else if (ioend->io_type == IOMAP_UNWRITTEN)
->  		error = xfs_iomap_write_unwritten(ip, offset, size, false);
-> @@ -298,7 +297,8 @@ xfs_ioend_can_merge(
->  {
->  	if (ioend->io_bio->bi_status != next->io_bio->bi_status)
->  		return false;
-> -	if ((ioend->io_fork == XFS_COW_FORK) ^ (next->io_fork == XFS_COW_FORK))
-> +	if ((ioend->io_flags & IOMAP_F_SHARED) ^
-> +	    (next->io_flags & IOMAP_F_SHARED))
->  		return false;
->  	if ((ioend->io_type == IOMAP_UNWRITTEN) ^
->  	    (next->io_type == IOMAP_UNWRITTEN))
-
-These probably should be indented too, as they are continuations,
-not separate logic statements.
-
-> @@ -768,7 +769,8 @@ xfs_add_to_ioend(
->  	bool			merged, same_page = false;
->  
->  	if (!wpc->ioend ||
-> -	    wpc->fork != wpc->ioend->io_fork ||
-> +	    (wpc->iomap.flags & IOMAP_F_SHARED) !=
-> +	    (wpc->ioend->io_flags & IOMAP_F_SHARED) ||
-
-Same here.
-
-Cheers,
-
-Dave.
+diff --git a/include/linux/string.h b/include/linux/string.h
+index b2f9df7f0761..b6ccdc2c7f02 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -227,7 +227,26 @@ static inline bool strstarts(const char *str, const char *prefix)
+ }
+ 
+ size_t memweight(const void *ptr, size_t bytes);
+-void memzero_explicit(void *s, size_t count);
++
++/**
++ * memzero_explicit - Fill a region of memory (e.g. sensitive
++ *		      keying data) with 0s.
++ * @s: Pointer to the start of the area.
++ * @count: The size of the area.
++ *
++ * Note: usually using memset() is just fine (!), but in cases
++ * where clearing out _local_ data at the end of a scope is
++ * necessary, memzero_explicit() should be used instead in
++ * order to prevent the compiler from optimising away zeroing.
++ *
++ * memzero_explicit() doesn't need an arch-specific version as
++ * it just invokes the one of memset() implicitly.
++ */
++static inline void memzero_explicit(void *s, size_t count)
++{
++	memset(s, 0, count);
++	barrier_data(s);
++}
+ 
+ /**
+  * kbasename - return the last part of a pathname.
+diff --git a/lib/string.c b/lib/string.c
+index cd7a10c19210..08ec58cc673b 100644
+--- a/lib/string.c
++++ b/lib/string.c
+@@ -748,27 +748,6 @@ void *memset(void *s, int c, size_t count)
+ EXPORT_SYMBOL(memset);
+ #endif
+ 
+-/**
+- * memzero_explicit - Fill a region of memory (e.g. sensitive
+- *		      keying data) with 0s.
+- * @s: Pointer to the start of the area.
+- * @count: The size of the area.
+- *
+- * Note: usually using memset() is just fine (!), but in cases
+- * where clearing out _local_ data at the end of a scope is
+- * necessary, memzero_explicit() should be used instead in
+- * order to prevent the compiler from optimising away zeroing.
+- *
+- * memzero_explicit() doesn't need an arch-specific version as
+- * it just invokes the one of memset() implicitly.
+- */
+-void memzero_explicit(void *s, size_t count)
+-{
+-	memset(s, 0, count);
+-	barrier_data(s);
+-}
+-EXPORT_SYMBOL(memzero_explicit);
+-
+ #ifndef __HAVE_ARCH_MEMSET16
+ /**
+  * memset16() - Fill a memory area with a uint16_t
 -- 
-Dave Chinner
-david@fromorbit.com
+2.21.0
