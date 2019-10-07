@@ -2,114 +2,178 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E212C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F4FC352AA
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8CB92173B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:05:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570442740;
-	bh=SgJfuXvgpHLIgRHdUoCoVb90LQ5tYsiPi7rkeX7IDoo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F+h8ogVK/LPbOwo2D1HCMTkui8Gj7pVgGJKtDy/zpYdXMRKgEqe1z5NlJxKVlu80n
-	 A9PSq3RjsANSQzu2olrvSVvk/IwIBz0e3i+For2GOJOmru7hoAiQ4+1yKVNg1ZRxr4
-	 TZMHxj6co/W3LArmhaQklC2HOeFfJ51DR3YlESwc=
+	by mail.kernel.org (Postfix) with ESMTP id A27CD2084D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:06:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727618AbfJGKFj (ORCPT
+        id S1727566AbfJGKGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 06:05:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33618 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727262AbfJGKFj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 06:05:39 -0400
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C42F52084D;
-        Mon,  7 Oct 2019 10:05:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570442738;
-        bh=SgJfuXvgpHLIgRHdUoCoVb90LQ5tYsiPi7rkeX7IDoo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IiXGhHX+pw00yNbyyHAgafyNp2EdL/uxZ76eoMGtfM9NuBzo/xQCD7tBF5whlxPZT
-         Sdo16fZWfShNlGuiaW6vGtdQK7V2QYAw8ImgMRALSkI0JPaYphoODCd61OXkoGZpNA
-         6wiRsL0tYJSM8cHxg0gU8i8QOA63vrCCKxAomMcg=
-Date:   Mon, 7 Oct 2019 12:05:35 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-media@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        lakml <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] media: dt-bindings: media: Fixup Allwinner A10 CSI
- binding
-Message-ID: <20191007100535.6gp6b3h6ueyeln3b@gilmour>
-References: <b47ec7088aa4b07458519ab151de92df552a9302.1570101510.git.amit.kucheria@linaro.org>
- <20191003115154.6f2jgj3dnqsved2y@gilmour>
- <CAHLCerNoLyQ-e70=1VMPO_J_amA+-2vtHwfoUabo4dhUWj-H0A@mail.gmail.com>
+        Mon, 7 Oct 2019 06:06:41 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:46844 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727262AbfJGKGk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 06:06:40 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id C965AD94CD2C7D7E519C;
+        Mon,  7 Oct 2019 18:06:37 +0800 (CST)
+Received: from [127.0.0.1] (10.177.251.225) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Mon, 7 Oct 2019
+ 18:06:36 +0800
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Subject: [PATCH v2] arm64: armv8_deprecated: Checking return value for memory
+ allocation
+To:     <catalin.marinas@arm.com>, <will.deacon@arm.com>,
+        <kstewart@linuxfoundation.org>, <gregkh@linuxfoundation.org>,
+        <tglx@linutronix.de>, <info@metux.net>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Message-ID: <bd558d56-18a9-3607-3db0-ad203ab12aa8@huawei.com>
+Date:   Mon, 7 Oct 2019 18:06:35 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vtzhpa6icwubspzk"
-Content-Disposition: inline
-In-Reply-To: <CAHLCerNoLyQ-e70=1VMPO_J_amA+-2vtHwfoUabo4dhUWj-H0A@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.251.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+There are no return value checking when using kzalloc() and kcalloc() for
+memory allocation. so add it.
 
---vtzhpa6icwubspzk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+---
+v1 -> v2:
+ - return error code when memory allocation failure
 
-On Sat, Oct 05, 2019 at 04:15:57PM +0530, Amit Kucheria wrote:
-> On Thu, Oct 3, 2019 at 5:22 PM Maxime Ripard <mripard@kernel.org> wrote:
-> >
-> > Hi,
-> >
-> > On Thu, Oct 03, 2019 at 04:52:24PM +0530, Amit Kucheria wrote:
-> > > This new binding fails dt_binding_check due to a typo. Fix it up.
-> > >
-> > > linux.git/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml: $id: path/filename 'arm/allwinner,sun4i-a10-csi.yaml' doesn't match actual filename
-> > > linux.git/Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts' failed
-> > > make[2]: *** [Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts] Error 1
-> > > make[2]: *** Waiting for unfinished jobs....
-> > > linux.git/Makefile:1284: recipe for target 'dt_binding_check' failed
-> > > make[1]: *** [dt_binding_check] Error 2
-> > >
-> > > Fixes: c5e8f4ccd7750 ("media: dt-bindings: media: Add Allwinner A10 CSI binding")
-> > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> >
-> > Thanks for your patch.
-> >
-> > It has already been submitted though:
-> > https://lore.kernel.org/linux-arm-kernel/1568808060-17516-1-git-send-email-pragnesh.patel@sifive.com/
-> >
-> > I'm not sure why it hasn't been applied yet though :/
->
-> Perhaps a Fixes tag will allow more attention to it?
+ arch/arm64/kernel/armv8_deprecated.c | 57 +++++++++++++++++++++++++++---------
+ 1 file changed, 43 insertions(+), 14 deletions(-)
 
-I've added a fixes tag and merged it through the sunxi tree.
+diff --git a/arch/arm64/kernel/armv8_deprecated.c b/arch/arm64/kernel/armv8_deprecated.c
+index 2ec09de..2284fcb 100644
+--- a/arch/arm64/kernel/armv8_deprecated.c
++++ b/arch/arm64/kernel/armv8_deprecated.c
+@@ -168,12 +168,15 @@ static int update_insn_emulation_mode(struct insn_emulation *insn,
+ 	return ret;
+ }
 
-Sorry for the time it took, and thanks for sending that fix!
-Maxime
+-static void __init register_insn_emulation(struct insn_emulation_ops *ops)
++static int __init register_insn_emulation(struct insn_emulation_ops *ops)
+ {
+ 	unsigned long flags;
+ 	struct insn_emulation *insn;
 
---vtzhpa6icwubspzk
-Content-Type: application/pgp-signature; name="signature.asc"
+ 	insn = kzalloc(sizeof(*insn), GFP_KERNEL);
++	if (!insn)
++		return -ENOMEM;
++
+ 	insn->ops = ops;
+ 	insn->min = INSN_UNDEF;
 
------BEGIN PGP SIGNATURE-----
+@@ -197,6 +200,7 @@ static void __init register_insn_emulation(struct insn_emulation_ops *ops)
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZsN7wAKCRDj7w1vZxhR
-xZuhAQCdgJicTIV+SZaFXhQJ8O/6nn4LmVV2y3ElJZkaqAR2wgEAqJe2O+Nq++LE
-h2S1IrtaQMzZpcMjzksWn8n5JRZYSQA=
-=4Pja
------END PGP SIGNATURE-----
+ 	/* Register any handlers if required */
+ 	update_insn_emulation_mode(insn, INSN_UNDEF);
++	return 0;
+ }
 
---vtzhpa6icwubspzk--
+ static int emulation_proc_handler(struct ctl_table *table, int write,
+@@ -224,7 +228,7 @@ static int emulation_proc_handler(struct ctl_table *table, int write,
+ 	return ret;
+ }
+
+-static void __init register_insn_emulation_sysctl(void)
++static int __init register_insn_emulation_sysctl(void)
+ {
+ 	unsigned long flags;
+ 	int i = 0;
+@@ -233,6 +237,8 @@ static void __init register_insn_emulation_sysctl(void)
+
+ 	insns_sysctl = kcalloc(nr_insn_emulated + 1, sizeof(*sysctl),
+ 			       GFP_KERNEL);
++	if (!insns_sysctl)
++		return -ENOMEM;
+
+ 	raw_spin_lock_irqsave(&insn_emulation_lock, flags);
+ 	list_for_each_entry(insn, &insn_emulation, node) {
+@@ -251,6 +257,7 @@ static void __init register_insn_emulation_sysctl(void)
+ 	raw_spin_unlock_irqrestore(&insn_emulation_lock, flags);
+
+ 	register_sysctl("abi", insns_sysctl);
++	return 0;
+ }
+
+ /*
+@@ -617,25 +624,47 @@ static int t16_setend_handler(struct pt_regs *regs, u32 instr)
+  */
+ static int __init armv8_deprecated_init(void)
+ {
+-	if (IS_ENABLED(CONFIG_SWP_EMULATION))
+-		register_insn_emulation(&swp_ops);
++	int ret = 0;
++	int err = 0;
++
++	if (IS_ENABLED(CONFIG_SWP_EMULATION)) {
++		ret = register_insn_emulation(&swp_ops);
++		if (ret) {
++			pr_err("register insn emulation swp: fail\n");
++			err = ret;
++		}
++	}
+
+-	if (IS_ENABLED(CONFIG_CP15_BARRIER_EMULATION))
+-		register_insn_emulation(&cp15_barrier_ops);
++	if (IS_ENABLED(CONFIG_CP15_BARRIER_EMULATION)) {
++		ret = register_insn_emulation(&cp15_barrier_ops);
++		if (ret) {
++			pr_err("register insn emulation cpu15_barrier: fail\n");
++			err = ret;
++		}
++	}
+
+ 	if (IS_ENABLED(CONFIG_SETEND_EMULATION)) {
+-		if(system_supports_mixed_endian_el0())
+-			register_insn_emulation(&setend_ops);
+-		else
++		if (system_supports_mixed_endian_el0()) {
++			ret = register_insn_emulation(&setend_ops);
++			if (ret) {
++				pr_err("register insn emulation setend: fail\n");
++				err = ret;
++			}
++		} else {
+ 			pr_info("setend instruction emulation is not supported on this system\n");
++		}
+ 	}
+
+-	cpuhp_setup_state_nocalls(CPUHP_AP_ARM64_ISNDEP_STARTING,
+-				  "arm64/isndep:starting",
+-				  run_all_insn_set_hw_mode, NULL);
+-	register_insn_emulation_sysctl();
++	if (nr_insn_emulated) {
++		cpuhp_setup_state_nocalls(CPUHP_AP_ARM64_ISNDEP_STARTING,
++					  "arm64/isndep:starting",
++					  run_all_insn_set_hw_mode, NULL);
++		ret = register_insn_emulation_sysctl();
++		if (ret)
++			err = ret;
++	}
+
+-	return 0;
++	return err;
+ }
+
+ core_initcall(armv8_deprecated_init);
+-- 
+1.8.3.1
+
