@@ -2,550 +2,910 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A96ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A6DECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CA1720700
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:39:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7202420640
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:39:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oxgspTED"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729293AbfJGPjq (ORCPT
+        id S1729327AbfJGPju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 7 Oct 2019 11:39:50 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43622 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729285AbfJGPjq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Oct 2019 11:39:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:38854 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729254AbfJGPjl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:39:41 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD75F15AB;
-        Mon,  7 Oct 2019 08:39:39 -0700 (PDT)
-Received: from e112269-lin.arm.com (unknown [10.1.197.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 364E03F6C4;
-        Mon,  7 Oct 2019 08:39:37 -0700 (PDT)
-From:   Steven Price <steven.price@arm.com>
-To:     linux-mm@kvack.org
-Cc:     Steven Price <steven.price@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v11 20/22] x86: mm: Convert dump_pagetables to use walk_page_range
-Date:   Mon,  7 Oct 2019 16:38:20 +0100
-Message-Id: <20191007153822.16518-21-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191007153822.16518-1-steven.price@arm.com>
-References: <20191007153822.16518-1-steven.price@arm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: by mail-pl1-f193.google.com with SMTP id f21so7033129plj.10
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 08:39:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=4q8eOKFIGwAgsdFZc76YNlb0szGETNfMPddqk/7qw5w=;
+        b=oxgspTEDK3EQuBwn/H0v/e4mwXnAvDzSy+Ahs616s6RxLN366Dan1ZF57knsrucWd5
+         rPmlTYdX9zSYiw2a1AUXpbfrZwd5dGbxcq9jOSo+xGku2Q/lN8anUCe7mNB48dWcdU0x
+         gneJKCcFcg/Y+hJuRZGB6ePOEoUWZFwbiIaWh/x02cbagdLg7pz7fzbY0DhHHtgQ++qQ
+         6kttEwaaOsYvQA11NAk0Skbv+YjYXkjkSZV+5sqWvf2y7n7xsPublEY9EhpRNTN/CcBP
+         ZWnWhKO85ssKS8NPP7QWHgY5NWeAY3dhRN4nFya9rg6X8jnXs5tNbH21wluQEo1wa2+9
+         Urxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=4q8eOKFIGwAgsdFZc76YNlb0szGETNfMPddqk/7qw5w=;
+        b=hnUFj6yRiIAvB7jYopp0Ue1bKTfI2sW/SDdCb9Jj63lUp1XabZ7j/XE2aUvycKPBHv
+         0O9gDpxmxsuf02Z+j4wRG7RnSBVMejDZsB1QonpXsKua0mSdm5xbmuXb18y7POLbxJZF
+         Xx+yu5kkrF38KoV3y0vPAyltH7SPirWlW6t4rJjEFuxjLcGQD/d9bUn5ShfhS3CpPhbu
+         Tufl2veKIo1oACn0Ajk3UZP65VJZ1C2N5wxvgOw3E9sz11kNT9LR5gAXRs0EIpCJgMGX
+         F7SE94bQSXmraqghHXvkZ9d/ago0rLuiJV2G+X8049avgNO3636w+E+EjncURJkhhIKf
+         GiOQ==
+X-Gm-Message-State: APjAAAXV1wjBxwrtnzBr1gHWAz4Lg2uizlcbwWa/IoF61k13jGMrwvzR
+        0xcEb6gGuw3d8ItMOBGpjp/L
+X-Google-Smtp-Source: APXvYqztITG6/Wt48mnmIsorpVNc0YMl7BR5FZFQNeOB2qomuZKXPzQpcBvTr6/n9GHbpSeNAED40g==
+X-Received: by 2002:a17:902:bd48:: with SMTP id b8mr9736605plx.19.1570462784843;
+        Mon, 07 Oct 2019 08:39:44 -0700 (PDT)
+Received: from localhost.localdomain ([2405:204:7088:cb7f:1889:38a3:2d:5880])
+        by smtp.gmail.com with ESMTPSA id d69sm15945077pfd.175.2019.10.07.08.39.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2019 08:39:44 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     ars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
+        knaack.h@gmx.de, pmeerw@pmeerw.net, robh+dt@kernel.org
+Cc:     alexandru.Ardelean@analog.com, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 2/2] iio: light: Add support for ADUX1020 sensor
+Date:   Mon,  7 Oct 2019 21:09:17 +0530
+Message-Id: <20191007153917.13611-3-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191007153917.13611-1-manivannan.sadhasivam@linaro.org>
+References: <20191007153917.13611-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make use of the new functionality in walk_page_range to remove the
-arch page walking code and use the generic code to walk the page tables.
+Add initial support for Analog Devices ADUX1020 Photometric sensor.
+Only proximity mode has been enabled for now.
 
-The effective permissions are passed down the chain using new fields
-in struct pg_state.
-
-The KASAN optimisation is implemented by including test_p?d callbacks
-which can decide to skip an entire tree of entries
-
-Signed-off-by: Steven Price <steven.price@arm.com>
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- arch/x86/Kconfig              |   1 +
- arch/x86/Kconfig.debug        |  20 +--
- arch/x86/mm/Makefile          |   4 +-
- arch/x86/mm/dump_pagetables.c | 289 +++++++---------------------------
- 4 files changed, 66 insertions(+), 248 deletions(-)
+ drivers/iio/light/Kconfig    |  11 +
+ drivers/iio/light/Makefile   |   1 +
+ drivers/iio/light/adux1020.c | 783 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 795 insertions(+)
+ create mode 100644 drivers/iio/light/adux1020.c
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index d6e1faa28c58..87acf08358e9 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -120,6 +120,7 @@ config X86
- 	select GENERIC_IRQ_RESERVATION_MODE
- 	select GENERIC_IRQ_SHOW
- 	select GENERIC_PENDING_IRQ		if SMP
-+	select GENERIC_PTDUMP
- 	select GENERIC_SMP_IDLE_THREAD
- 	select GENERIC_STRNCPY_FROM_USER
- 	select GENERIC_STRNLEN_USER
-diff --git a/arch/x86/Kconfig.debug b/arch/x86/Kconfig.debug
-index bf9cd83de777..b0f8e06cf0b8 100644
---- a/arch/x86/Kconfig.debug
-+++ b/arch/x86/Kconfig.debug
-@@ -62,26 +62,10 @@ config EARLY_PRINTK_USB_XDBC
- config MCSAFE_TEST
- 	def_bool n
+diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
+index 08d7e1ef2186..3f8c8689cd89 100644
+--- a/drivers/iio/light/Kconfig
++++ b/drivers/iio/light/Kconfig
+@@ -32,6 +32,17 @@ config ADJD_S311
+ 	  This driver can also be built as a module.  If so, the module
+ 	  will be called adjd_s311.
  
--config X86_PTDUMP_CORE
--	def_bool n
--
--config X86_PTDUMP
--	tristate "Export kernel pagetable layout to userspace via debugfs"
--	depends on DEBUG_KERNEL
--	select DEBUG_FS
--	select X86_PTDUMP_CORE
--	---help---
--	  Say Y here if you want to show the kernel pagetable layout in a
--	  debugfs file. This information is only useful for kernel developers
--	  who are working in architecture specific areas of the kernel.
--	  It is probably not a good idea to enable this feature in a production
--	  kernel.
--	  If in doubt, say "N"
--
- config EFI_PGT_DUMP
- 	bool "Dump the EFI pagetable"
- 	depends on EFI
--	select X86_PTDUMP_CORE
-+	select PTDUMP_CORE
- 	---help---
- 	  Enable this if you want to dump the EFI page table before
- 	  enabling virtual mode. This can be used to debug miscellaneous
-@@ -90,7 +74,7 @@ config EFI_PGT_DUMP
- 
- config DEBUG_WX
- 	bool "Warn on W+X mappings at boot"
--	select X86_PTDUMP_CORE
-+	select PTDUMP_CORE
- 	---help---
- 	  Generate a warning if any W+X mappings are found at boot.
- 
-diff --git a/arch/x86/mm/Makefile b/arch/x86/mm/Makefile
-index 84373dc9b341..66cf0ea5c2be 100644
---- a/arch/x86/mm/Makefile
-+++ b/arch/x86/mm/Makefile
-@@ -28,8 +28,8 @@ obj-$(CONFIG_X86_PAT)		+= pat_rbtree.o
- obj-$(CONFIG_X86_32)		+= pgtable_32.o iomap_32.o
- 
- obj-$(CONFIG_HUGETLB_PAGE)	+= hugetlbpage.o
--obj-$(CONFIG_X86_PTDUMP_CORE)	+= dump_pagetables.o
--obj-$(CONFIG_X86_PTDUMP)	+= debug_pagetables.o
-+obj-$(CONFIG_PTDUMP_CORE)	+= dump_pagetables.o
-+obj-$(CONFIG_PTDUMP_DEBUGFS)	+= debug_pagetables.o
- 
- obj-$(CONFIG_HIGHMEM)		+= highmem_32.o
- 
-diff --git a/arch/x86/mm/dump_pagetables.c b/arch/x86/mm/dump_pagetables.c
-index 3632be89ec99..77a1332c6cd4 100644
---- a/arch/x86/mm/dump_pagetables.c
-+++ b/arch/x86/mm/dump_pagetables.c
-@@ -16,6 +16,7 @@
- #include <linux/seq_file.h>
- #include <linux/highmem.h>
- #include <linux/pci.h>
-+#include <linux/ptdump.h>
- 
- #include <asm/e820/types.h>
- #include <asm/pgtable.h>
-@@ -26,11 +27,12 @@
-  * when a "break" in the continuity is found.
-  */
- struct pg_state {
-+	struct ptdump_state ptdump;
- 	int level;
--	pgprot_t current_prot;
-+	pgprotval_t current_prot;
- 	pgprotval_t effective_prot;
-+	pgprotval_t prot_levels[5];
- 	unsigned long start_address;
--	unsigned long current_address;
- 	const struct addr_marker *marker;
- 	unsigned long lines;
- 	bool to_dmesg;
-@@ -171,9 +173,8 @@ static struct addr_marker address_markers[] = {
- /*
-  * Print a readable form of a pgprot_t to the seq_file
-  */
--static void printk_prot(struct seq_file *m, pgprot_t prot, int level, bool dmsg)
-+static void printk_prot(struct seq_file *m, pgprotval_t pr, int level, bool dmsg)
- {
--	pgprotval_t pr = pgprot_val(prot);
- 	static const char * const level_name[] =
- 		{ "cr3", "pgd", "p4d", "pud", "pmd", "pte" };
- 
-@@ -220,24 +221,11 @@ static void printk_prot(struct seq_file *m, pgprot_t prot, int level, bool dmsg)
- 	pt_dump_cont_printf(m, dmsg, "%s\n", level_name[level]);
- }
- 
--/*
-- * On 64 bits, sign-extend the 48 bit address to 64 bit
-- */
--static unsigned long normalize_addr(unsigned long u)
--{
--	int shift;
--	if (!IS_ENABLED(CONFIG_X86_64))
--		return u;
--
--	shift = 64 - (__VIRTUAL_MASK_SHIFT + 1);
--	return (signed long)(u << shift) >> shift;
--}
--
--static void note_wx(struct pg_state *st)
-+static void note_wx(struct pg_state *st, unsigned long addr)
- {
- 	unsigned long npages;
- 
--	npages = (st->current_address - st->start_address) / PAGE_SIZE;
-+	npages = (addr - st->start_address) / PAGE_SIZE;
- 
- #ifdef CONFIG_PCI_BIOS
- 	/*
-@@ -245,7 +233,7 @@ static void note_wx(struct pg_state *st)
- 	 * Inform about it, but avoid the warning.
- 	 */
- 	if (pcibios_enabled && st->start_address >= PAGE_OFFSET + BIOS_BEGIN &&
--	    st->current_address <= PAGE_OFFSET + BIOS_END) {
-+	    addr <= PAGE_OFFSET + BIOS_END) {
- 		pr_warn_once("x86/mm: PCI BIOS W+X mapping %lu pages\n", npages);
- 		return;
- 	}
-@@ -257,25 +245,44 @@ static void note_wx(struct pg_state *st)
- 		  (void *)st->start_address);
- }
- 
-+static inline pgprotval_t effective_prot(pgprotval_t prot1, pgprotval_t prot2)
++config ADUX1020
++	tristate "ADUX1020 photometric sensor"
++	select REGMAP_I2C
++	depends on I2C
++	help
++	 Say Y here if you want to build a driver for the Analog Devices
++	 ADUX1020 photometric sensor.
++
++	 To compile this driver as a module, choose M here: the
++	 module will be called adux1020.
++
+ config AL3320A
+ 	tristate "AL3320A ambient light sensor"
+ 	depends on I2C
+diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
+index 00d1f9b98f39..5d650ce46a40 100644
+--- a/drivers/iio/light/Makefile
++++ b/drivers/iio/light/Makefile
+@@ -6,6 +6,7 @@
+ # When adding new entries keep the list in alphabetical order
+ obj-$(CONFIG_ACPI_ALS)		+= acpi-als.o
+ obj-$(CONFIG_ADJD_S311)		+= adjd_s311.o
++obj-$(CONFIG_ADUX1020)		+= adux1020.o
+ obj-$(CONFIG_AL3320A)		+= al3320a.o
+ obj-$(CONFIG_APDS9300)		+= apds9300.o
+ obj-$(CONFIG_APDS9960)		+= apds9960.o
+diff --git a/drivers/iio/light/adux1020.c b/drivers/iio/light/adux1020.c
+new file mode 100644
+index 000000000000..d0b76e5b44f1
+--- /dev/null
++++ b/drivers/iio/light/adux1020.c
+@@ -0,0 +1,783 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * adux1020.c - Support for Analog Devices ADUX1020 photometric sensor
++ *
++ * Copyright (C) 2019 Linaro Ltd.
++ * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
++ *
++ * TODO: Triggered buffer support
++ */
++
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/i2c.h>
++#include <linux/init.h>
++#include <linux/interrupt.h>
++#include <linux/irq.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/regmap.h>
++
++#include <linux/iio/iio.h>
++#include <linux/iio/sysfs.h>
++#include <linux/iio/events.h>
++
++#define ADUX1020_REGMAP_NAME		"adux1020_regmap"
++#define ADUX1020_DRV_NAME		"adux1020"
++
++/* System registers */
++#define ADUX1020_REG_CHIP_ID		0x08
++#define ADUX1020_REG_SLAVE_ADDRESS	0x09
++
++#define ADUX1020_REG_SW_RESET		0x0f
++#define ADUX1020_REG_INT_ENABLE		0x1c
++#define ADUX1020_REG_INT_POLARITY	0x1d
++#define ADUX1020_REG_PROX_TH_ON1	0x2a
++#define ADUX1020_REG_PROX_TH_OFF1	0x2b
++#define	ADUX1020_REG_PROX_TYPE		0x2f
++#define	ADUX1020_REG_TEST_MODES_3	0x32
++#define	ADUX1020_REG_FORCE_MODE		0x33
++#define	ADUX1020_REG_FREQUENCY		0x40
++#define ADUX1020_REG_LED_CURRENT	0x41
++#define	ADUX1020_REG_OP_MODE		0x45
++#define	ADUX1020_REG_INT_MASK		0x48
++#define	ADUX1020_REG_INT_STATUS		0x49
++#define	ADUX1020_REG_DATA_BUFFER	0x60
++
++/* Chip ID bits */
++#define ADUX1020_CHIP_ID_MASK		GENMASK(11, 0)
++#define ADUX1020_CHIP_ID		0x03fc
++
++#define ADUX1020_MODE_OUT_SHIFT		4
++#define ADUX1020_MODE_OUT_PROX_I	1
++#define ADUX1020_MODE_OUT_PROX_XY	3
++
++#define ADUX1020_SW_RESET		BIT(1)
++#define ADUX1020_FIFO_FLUSH		BIT(15)
++#define ADUX1020_OP_MODE_MASK		GENMASK(3, 0)
++#define ADUX1020_DATA_OUT_MODE_MASK	GENMASK(7, 4)
++
++#define ADUX1020_MODE_INT_MASK		GENMASK(7, 0)
++#define ADUX1020_INT_ENABLE		0x2096
++#define ADUX1020_INT_DISABLE		0x2090
++#define ADUX1020_PROX_INT_ENABLE	0x00f0
++#define ADUX1020_PROX_ON1_INT		BIT(0)
++#define ADUX1020_PROX_OFF1_INT		BIT(1)
++#define ADUX1020_FIFO_INT_ENABLE	0x7f
++#define ADUX1020_MODE_INT_DISABLE	0xff
++#define ADUX1020_MODE_INT_STATUS_MASK	GENMASK(7, 0)
++#define ADUX1020_FIFO_STATUS_MASK	GENMASK(15, 8)
++#define ADUX1020_PROX_TYPE		BIT(15)
++
++#define ADUX1020_INT_PROX_ON1		BIT(0)
++#define ADUX1020_INT_PROX_OFF1		BIT(1)
++
++#define	ADUX1020_FORCE_CLOCK_ON		0x0f4f
++#define	ADUX1020_FORCE_CLOCK_RESET	0x0040
++#define ADUX1020_ACTIVE_4_STATE		0x0008
++
++#define ADUX1020_PROX_FREQ_MASK		GENMASK(7, 4)
++#define ADUX1020_PROX_FREQ_SHIFT	4
++
++#define ADUX1020_LED_CURRENT_MASK	GENMASK(3, 0)
++#define ADUX1020_LED_PIREF_EN		BIT(12)
++
++/* Operating modes */
++enum adux1020_op_modes {
++	ADUX1020_MODE_STANDBY,
++	ADUX1020_MODE_PROX_I,
++	ADUX1020_MODE_PROX_XY,
++	ADUX1020_MODE_GEST,
++	ADUX1020_MODE_SAMPLE,
++	ADUX1020_MODE_FORCE = 0x0e,
++	ADUX1020_MODE_IDLE = 0x0f,
++};
++
++struct adux1020_data {
++	struct i2c_client *client;
++	struct iio_dev *indio_dev;
++	struct mutex lock;
++	struct regmap *regmap;
++};
++
++struct adux1020_mode_data {
++	u8 bytes;
++	u8 buf_len;
++	u16 int_en;
++};
++
++static const struct adux1020_mode_data adux1020_modes[] = {
++	[ADUX1020_MODE_PROX_I] = {
++		.bytes = 2,
++		.buf_len = 1,
++		.int_en = ADUX1020_PROX_INT_ENABLE,
++	},
++};
++
++static const struct regmap_config adux1020_regmap_config = {
++	.name = ADUX1020_REGMAP_NAME,
++	.reg_bits = 8,
++	.val_bits = 16,
++	.max_register = 0x6F,
++	.cache_type = REGCACHE_NONE,
++};
++
++static const int adux1020_def_conf[][2] = {
++	{ 0x000c, 0x000f },
++	{ 0x0010, 0x1010 },
++	{ 0x0011, 0x004c },
++	{ 0x0012, 0x5f0c },
++	{ 0x0013, 0xada5 },
++	{ 0x0014, 0x0080 },
++	{ 0x0015, 0x0000 },
++	{ 0x0016, 0x0600 },
++	{ 0x0017, 0x0000 },
++	{ 0x0018, 0x2693 },
++	{ 0x0019, 0x0004 },
++	{ 0x001a, 0x4280 },
++	{ 0x001b, 0x0060 },
++	{ 0x001c, 0x2094 },
++	{ 0x001d, 0x0020 },
++	{ 0x001e, 0x0001 },
++	{ 0x001f, 0x0100 },
++	{ 0x0020, 0x0320 },
++	{ 0x0021, 0x0A13 },
++	{ 0x0022, 0x0320 },
++	{ 0x0023, 0x0113 },
++	{ 0x0024, 0x0000 },
++	{ 0x0025, 0x2412 },
++	{ 0x0026, 0x2412 },
++	{ 0x0027, 0x0022 },
++	{ 0x0028, 0x0000 },
++	{ 0x0029, 0x0300 },
++	{ 0x002a, 0x0700 },
++	{ 0x002b, 0x0600 },
++	{ 0x002c, 0x6000 },
++	{ 0x002d, 0x4000 },
++	{ 0x002e, 0x0000 },
++	{ 0x002f, 0x0000 },
++	{ 0x0030, 0x0000 },
++	{ 0x0031, 0x0000 },
++	{ 0x0032, 0x0040 },
++	{ 0x0033, 0x0008 },
++	{ 0x0034, 0xE400 },
++	{ 0x0038, 0x8080 },
++	{ 0x0039, 0x8080 },
++	{ 0x003a, 0x2000 },
++	{ 0x003b, 0x1f00 },
++	{ 0x003c, 0x2000 },
++	{ 0x003d, 0x2000 },
++	{ 0x003e, 0x0000 },
++	{ 0x0040, 0x8069 },
++	{ 0x0041, 0x1f2f },
++	{ 0x0042, 0x4000 },
++	{ 0x0043, 0x0000 },
++	{ 0x0044, 0x0008 },
++	{ 0x0046, 0x0000 },
++	{ 0x0048, 0x00ef },
++	{ 0x0049, 0x0000 },
++	{ 0x0045, 0x0000 },
++};
++
++static const int adux1020_rate[][2] = {
++	{ 0, 100000 },
++	{ 0, 200000 },
++	{ 0, 500000 },
++	{ 1, 0 },
++	{ 2, 0 },
++	{ 5, 0 },
++	{ 10, 0 },
++	{ 20, 0 },
++	{ 50, 0 },
++	{ 100, 0 },
++	{ 190, 0 },
++	{ 450, 0 },
++	{ 820, 0 },
++	{ 1400, 0 },
++};
++
++static const int adux1020_led_current[][2] = {
++	{ 0, 25000 },
++	{ 0, 40000 },
++	{ 0, 55000 },
++	{ 0, 70000 },
++	{ 0, 85000 },
++	{ 0, 100000 },
++	{ 0, 115000 },
++	{ 0, 130000 },
++	{ 0, 145000 },
++	{ 0, 160000 },
++	{ 0, 175000 },
++	{ 0, 190000 },
++	{ 0, 205000 },
++	{ 0, 220000 },
++	{ 0, 235000 },
++	{ 0, 250000 },
++};
++
++static void adux1020_flush_fifo(struct adux1020_data *data)
 +{
-+	return (prot1 & prot2 & (_PAGE_USER | _PAGE_RW)) |
-+	       ((prot1 | prot2) & _PAGE_NX);
++	/* Force Idle mode */
++	regmap_write(data->regmap, ADUX1020_REG_FORCE_MODE,
++		     ADUX1020_ACTIVE_4_STATE);
++	regmap_update_bits(data->regmap, ADUX1020_REG_OP_MODE,
++			   ADUX1020_OP_MODE_MASK, ADUX1020_MODE_FORCE);
++	regmap_update_bits(data->regmap, ADUX1020_REG_OP_MODE,
++			   ADUX1020_OP_MODE_MASK, ADUX1020_MODE_IDLE);
++
++	/* Flush FIFO */
++	regmap_write(data->regmap, ADUX1020_REG_TEST_MODES_3,
++		     ADUX1020_FORCE_CLOCK_ON);
++	regmap_write(data->regmap, ADUX1020_REG_INT_STATUS,
++		     ADUX1020_FIFO_FLUSH);
++	regmap_write(data->regmap, ADUX1020_REG_TEST_MODES_3,
++		     ADUX1020_FORCE_CLOCK_RESET);
 +}
 +
- /*
-  * This function gets called on a break in a continuous series
-  * of PTE entries; the next one is different so we need to
-  * print what we collected so far.
-  */
--static void note_page(struct pg_state *st, pgprot_t new_prot,
--		      pgprotval_t new_eff, int level)
-+static void note_page(struct ptdump_state *pt_st, unsigned long addr, int level,
-+		      unsigned long val)
- {
--	pgprotval_t prot, cur, eff;
-+	struct pg_state *st = container_of(pt_st, struct pg_state, ptdump);
-+	pgprotval_t new_prot, new_eff;
-+	pgprotval_t cur, eff;
- 	static const char units[] = "BKMGTPE";
- 	struct seq_file *m = st->seq;
- 
-+	new_prot = val & PTE_FLAGS_MASK;
++static int adux1020_read_fifo(struct adux1020_data *data, u16 *buf, u8 buf_len)
++{
++	int i, ret = -EINVAL;
++	unsigned int regval;
 +
-+	if (level > 1) {
-+		new_eff = effective_prot(st->prot_levels[level - 2],
-+					 new_prot);
-+	} else {
-+		new_eff = new_prot;
++	/* Enable 32MHz clock */
++	regmap_write(data->regmap, ADUX1020_REG_TEST_MODES_3,
++		     ADUX1020_FORCE_CLOCK_ON);
++
++	for (i = 0; i < buf_len; i++) {
++		ret = regmap_read(data->regmap, ADUX1020_REG_DATA_BUFFER,
++				      &regval);
++		if (ret < 0)
++			goto err_out;
++
++		buf[i] = regval;
 +	}
 +
-+	if (level > 0)
-+		st->prot_levels[level - 1] = new_eff;
++	/* Set 32MHz clock to be controlled by internal state machine */
++	regmap_write(data->regmap, ADUX1020_REG_TEST_MODES_3,
++		     ADUX1020_FORCE_CLOCK_RESET);
 +
- 	/*
- 	 * If we have a "break" in the series, we need to flush the state that
- 	 * we have now. "break" is either changing perms, levels or
- 	 * address space marker.
- 	 */
--	prot = pgprot_val(new_prot);
--	cur = pgprot_val(st->current_prot);
-+	cur = st->current_prot;
- 	eff = st->effective_prot;
- 
- 	if (!st->level) {
-@@ -287,14 +294,14 @@ static void note_page(struct pg_state *st, pgprot_t new_prot,
- 		st->lines = 0;
- 		pt_dump_seq_printf(m, st->to_dmesg, "---[ %s ]---\n",
- 				   st->marker->name);
--	} else if (prot != cur || new_eff != eff || level != st->level ||
--		   st->current_address >= st->marker[1].start_address) {
-+	} else if (new_prot != cur || new_eff != eff || level != st->level ||
-+		   addr >= st->marker[1].start_address) {
- 		const char *unit = units;
- 		unsigned long delta;
- 		int width = sizeof(unsigned long) * 2;
- 
- 		if (st->check_wx && (eff & _PAGE_RW) && !(eff & _PAGE_NX))
--			note_wx(st);
-+			note_wx(st, addr);
- 
- 		/*
- 		 * Now print the actual finished series
-@@ -304,9 +311,9 @@ static void note_page(struct pg_state *st, pgprot_t new_prot,
- 			pt_dump_seq_printf(m, st->to_dmesg,
- 					   "0x%0*lx-0x%0*lx   ",
- 					   width, st->start_address,
--					   width, st->current_address);
-+					   width, addr);
- 
--			delta = st->current_address - st->start_address;
-+			delta = addr - st->start_address;
- 			while (!(delta & 1023) && unit[1]) {
- 				delta >>= 10;
- 				unit++;
-@@ -323,7 +330,7 @@ static void note_page(struct pg_state *st, pgprot_t new_prot,
- 		 * such as the start of vmalloc space etc.
- 		 * This helps in the interpretation.
- 		 */
--		if (st->current_address >= st->marker[1].start_address) {
-+		if (addr >= st->marker[1].start_address) {
- 			if (st->marker->max_lines &&
- 			    st->lines > st->marker->max_lines) {
- 				unsigned long nskip =
-@@ -339,217 +346,43 @@ static void note_page(struct pg_state *st, pgprot_t new_prot,
- 					   st->marker->name);
- 		}
- 
--		st->start_address = st->current_address;
-+		st->start_address = addr;
- 		st->current_prot = new_prot;
- 		st->effective_prot = new_eff;
- 		st->level = level;
- 	}
- }
- 
--static inline pgprotval_t effective_prot(pgprotval_t prot1, pgprotval_t prot2)
--{
--	return (prot1 & prot2 & (_PAGE_USER | _PAGE_RW)) |
--	       ((prot1 | prot2) & _PAGE_NX);
--}
--
--static void walk_pte_level(struct pg_state *st, pmd_t addr, pgprotval_t eff_in,
--			   unsigned long P)
--{
--	int i;
--	pte_t *pte;
--	pgprotval_t prot, eff;
--
--	for (i = 0; i < PTRS_PER_PTE; i++) {
--		st->current_address = normalize_addr(P + i * PTE_LEVEL_MULT);
--		pte = pte_offset_map(&addr, st->current_address);
--		prot = pte_flags(*pte);
--		eff = effective_prot(eff_in, prot);
--		note_page(st, __pgprot(prot), eff, 5);
--		pte_unmap(pte);
--	}
--}
--#ifdef CONFIG_KASAN
--
--/*
-- * This is an optimization for KASAN=y case. Since all kasan page tables
-- * eventually point to the kasan_early_shadow_page we could call note_page()
-- * right away without walking through lower level page tables. This saves
-- * us dozens of seconds (minutes for 5-level config) while checking for
-- * W+X mapping or reading kernel_page_tables debugfs file.
-- */
--static inline bool kasan_page_table(struct pg_state *st, void *pt)
--{
--	if (__pa(pt) == __pa(kasan_early_shadow_pmd) ||
--	    (pgtable_l5_enabled() &&
--			__pa(pt) == __pa(kasan_early_shadow_p4d)) ||
--	    __pa(pt) == __pa(kasan_early_shadow_pud)) {
--		pgprotval_t prot = pte_flags(kasan_early_shadow_pte[0]);
--		note_page(st, __pgprot(prot), 0, 5);
--		return true;
--	}
--	return false;
--}
--#else
--static inline bool kasan_page_table(struct pg_state *st, void *pt)
--{
--	return false;
--}
--#endif
--
--#if PTRS_PER_PMD > 1
--
--static void walk_pmd_level(struct pg_state *st, pud_t addr,
--			   pgprotval_t eff_in, unsigned long P)
--{
--	int i;
--	pmd_t *start, *pmd_start;
--	pgprotval_t prot, eff;
--
--	pmd_start = start = (pmd_t *)pud_page_vaddr(addr);
--	for (i = 0; i < PTRS_PER_PMD; i++) {
--		st->current_address = normalize_addr(P + i * PMD_LEVEL_MULT);
--		if (!pmd_none(*start)) {
--			prot = pmd_flags(*start);
--			eff = effective_prot(eff_in, prot);
--			if (pmd_large(*start) || !pmd_present(*start)) {
--				note_page(st, __pgprot(prot), eff, 4);
--			} else if (!kasan_page_table(st, pmd_start)) {
--				walk_pte_level(st, *start, eff,
--					       P + i * PMD_LEVEL_MULT);
--			}
--		} else
--			note_page(st, __pgprot(0), 0, 4);
--		start++;
--	}
--}
--
--#else
--#define walk_pmd_level(s,a,e,p) walk_pte_level(s,__pmd(pud_val(a)),e,p)
--#define pud_large(a) pmd_large(__pmd(pud_val(a)))
--#define pud_none(a)  pmd_none(__pmd(pud_val(a)))
--#endif
--
--#if PTRS_PER_PUD > 1
--
--static void walk_pud_level(struct pg_state *st, p4d_t addr, pgprotval_t eff_in,
--			   unsigned long P)
--{
--	int i;
--	pud_t *start, *pud_start;
--	pgprotval_t prot, eff;
--
--	pud_start = start = (pud_t *)p4d_page_vaddr(addr);
--
--	for (i = 0; i < PTRS_PER_PUD; i++) {
--		st->current_address = normalize_addr(P + i * PUD_LEVEL_MULT);
--		if (!pud_none(*start)) {
--			prot = pud_flags(*start);
--			eff = effective_prot(eff_in, prot);
--			if (pud_large(*start) || !pud_present(*start)) {
--				note_page(st, __pgprot(prot), eff, 3);
--			} else if (!kasan_page_table(st, pud_start)) {
--				walk_pmd_level(st, *start, eff,
--					       P + i * PUD_LEVEL_MULT);
--			}
--		} else
--			note_page(st, __pgprot(0), 0, 3);
--
--		start++;
--	}
--}
--
--#else
--#define walk_pud_level(s,a,e,p) walk_pmd_level(s,__pud(p4d_val(a)),e,p)
--#define p4d_large(a) pud_large(__pud(p4d_val(a)))
--#define p4d_none(a)  pud_none(__pud(p4d_val(a)))
--#endif
--
--static void walk_p4d_level(struct pg_state *st, pgd_t addr, pgprotval_t eff_in,
--			   unsigned long P)
-+static void ptdump_walk_pgd_level_core(struct seq_file *m, struct mm_struct *mm,
-+				       bool checkwx, bool dmesg)
- {
--	int i;
--	p4d_t *start, *p4d_start;
--	pgprotval_t prot, eff;
--
--	if (PTRS_PER_P4D == 1)
--		return walk_pud_level(st, __p4d(pgd_val(addr)), eff_in, P);
--
--	p4d_start = start = (p4d_t *)pgd_page_vaddr(addr);
--
--	for (i = 0; i < PTRS_PER_P4D; i++) {
--		st->current_address = normalize_addr(P + i * P4D_LEVEL_MULT);
--		if (!p4d_none(*start)) {
--			prot = p4d_flags(*start);
--			eff = effective_prot(eff_in, prot);
--			if (p4d_large(*start) || !p4d_present(*start)) {
--				note_page(st, __pgprot(prot), eff, 2);
--			} else if (!kasan_page_table(st, p4d_start)) {
--				walk_pud_level(st, *start, eff,
--					       P + i * P4D_LEVEL_MULT);
--			}
--		} else
--			note_page(st, __pgprot(0), 0, 2);
--
--		start++;
--	}
--}
-+	const struct ptdump_range ptdump_ranges[] = {
-+#ifdef CONFIG_X86_64
- 
--#define pgd_large(a) (pgtable_l5_enabled() ? pgd_large(a) : p4d_large(__p4d(pgd_val(a))))
--#define pgd_none(a)  (pgtable_l5_enabled() ? pgd_none(a) : p4d_none(__p4d(pgd_val(a))))
-+#define normalize_addr_shift (64 - (__VIRTUAL_MASK_SHIFT + 1))
-+#define normalize_addr(u) ((signed long)((u) << normalize_addr_shift) >> \
-+			   normalize_addr_shift)
- 
--static inline bool is_hypervisor_range(int idx)
--{
--#ifdef CONFIG_X86_64
--	/*
--	 * A hole in the beginning of kernel address space reserved
--	 * for a hypervisor.
--	 */
--	return	(idx >= pgd_index(GUARD_HOLE_BASE_ADDR)) &&
--		(idx <  pgd_index(GUARD_HOLE_END_ADDR));
-+	{0, PTRS_PER_PGD * PGD_LEVEL_MULT / 2},
-+	{normalize_addr(PTRS_PER_PGD * PGD_LEVEL_MULT / 2), ~0UL},
- #else
--	return false;
-+	{0, ~0UL},
- #endif
--}
-+	{0, 0}
++err_out:
++	return ret;
++}
++
++static void adux1020_set_mode(struct adux1020_data *data,
++			      enum adux1020_op_modes mode)
++{
++	/* Switch to standby mode before changing the mode */
++	regmap_write(data->regmap, ADUX1020_REG_OP_MODE, ADUX1020_MODE_STANDBY);
++
++	/* Set data out and switch to the desired mode */
++	if (mode == ADUX1020_MODE_PROX_I) {
++		regmap_update_bits(data->regmap, ADUX1020_REG_OP_MODE,
++			ADUX1020_DATA_OUT_MODE_MASK,
++			ADUX1020_MODE_OUT_PROX_I << ADUX1020_MODE_OUT_SHIFT);
++		regmap_update_bits(data->regmap, ADUX1020_REG_OP_MODE,
++			ADUX1020_OP_MODE_MASK, ADUX1020_MODE_PROX_I);
++	}
++}
++
++static int adux1020_measure(struct adux1020_data *data,
++			    enum adux1020_op_modes mode,
++			    u16 *val)
++{
++	int ret, tries = 50;
++	unsigned int status;
++
++	mutex_lock(&data->lock);
++
++	/* Disable INT pin as polling is going to be used */
++	regmap_write(data->regmap, ADUX1020_REG_INT_ENABLE,
++		     ADUX1020_INT_DISABLE);
++
++	/* Enable mode interrupt */
++	regmap_update_bits(data->regmap, ADUX1020_REG_INT_MASK,
++			   ADUX1020_MODE_INT_MASK,
++			   adux1020_modes[mode].int_en);
++
++	while (tries--) {
++		ret = regmap_read(data->regmap, ADUX1020_REG_INT_STATUS,
++				  &status);
++		if (ret < 0)
++			goto fail;
++
++		status &= ADUX1020_FIFO_STATUS_MASK;
++		if (status >= adux1020_modes[mode].bytes)
++			break;
++		msleep(20);
++	}
++
++	if (tries < 0) {
++		ret = -EIO;
++		goto fail;
++	}
++
++	ret = adux1020_read_fifo(data, val, adux1020_modes[mode].buf_len);
++	if (ret < 0)
++		goto fail;
++
++	/* Clear mode interrupt */
++	regmap_write(data->regmap, ADUX1020_REG_INT_STATUS,
++			   (~adux1020_modes[mode].int_en));
++	/* Disable mode interrupts */
++	regmap_update_bits(data->regmap, ADUX1020_REG_INT_MASK,
++			   ADUX1020_MODE_INT_MASK, ADUX1020_MODE_INT_DISABLE);
++
++fail:
++	mutex_unlock(&data->lock);
++
++	return ret;
++}
++
++static int adux1020_read_raw(struct iio_dev *indio_dev,
++			     struct iio_chan_spec const *chan,
++			     int *val, int *val2, long mask)
++{
++	struct adux1020_data *data = iio_priv(indio_dev);
++	u16 buf[3];
++	int ret = -EINVAL;
++	unsigned int regval;
++
++	switch (mask) {
++	case IIO_CHAN_INFO_RAW:
++		switch (chan->type) {
++		case IIO_PROXIMITY:
++			adux1020_set_mode(data, ADUX1020_MODE_PROX_I);
++			ret = adux1020_measure(data, ADUX1020_MODE_PROX_I, buf);
++			if (ret < 0)
++				return ret;
++
++			*val = buf[0];
++			ret = IIO_VAL_INT;
++			break;
++		default:
++			break;
++		}
++		break;
++	case IIO_CHAN_INFO_PROCESSED:
++		switch (chan->type) {
++		case IIO_CURRENT:
++			ret = regmap_read(data->regmap,
++					  ADUX1020_REG_LED_CURRENT, &regval);
++			if (ret < 0)
++				return ret;
++
++			regval = regval & ADUX1020_LED_CURRENT_MASK;
++
++			*val = adux1020_led_current[regval][0];
++			*val2 = adux1020_led_current[regval][1];
++
++			ret = IIO_VAL_INT_PLUS_MICRO;
++			break;
++		default:
++			break;
++		}
++		break;
++	case IIO_CHAN_INFO_SAMP_FREQ:
++		switch (chan->type) {
++		case IIO_PROXIMITY:
++			ret = regmap_read(data->regmap, ADUX1020_REG_FREQUENCY,
++					  &regval);
++			if (ret < 0)
++				return ret;
++
++			regval = (regval & ADUX1020_PROX_FREQ_MASK) >>
++				  ADUX1020_PROX_FREQ_SHIFT;
++
++			*val = adux1020_rate[regval][0];
++			*val2 = adux1020_rate[regval][1];
++
++			ret = IIO_VAL_INT_PLUS_MICRO;
++			break;
++		default:
++			break;
++		}
++		break;
++	default:
++		break;
++	}
++
++	return ret;
 +};
- 
--static void ptdump_walk_pgd_level_core(struct seq_file *m, struct mm_struct *mm,
--				       bool checkwx, bool dmesg)
--{
--	pgd_t *start = mm->pgd;
--	pgprotval_t prot, eff;
--	int i;
--	struct pg_state st = {};
--
--	st.to_dmesg = dmesg;
--	st.check_wx = checkwx;
--	st.seq = m;
--	if (checkwx)
--		st.wx_pages = 0;
--
--	for (i = 0; i < PTRS_PER_PGD; i++) {
--		st.current_address = normalize_addr(i * PGD_LEVEL_MULT);
--		if (!pgd_none(*start) && !is_hypervisor_range(i)) {
--			prot = pgd_flags(*start);
--#ifdef CONFIG_X86_PAE
--			eff = _PAGE_USER | _PAGE_RW;
--#else
--			eff = prot;
--#endif
--			if (pgd_large(*start) || !pgd_present(*start)) {
--				note_page(&st, __pgprot(prot), eff, 1);
--			} else {
--				walk_p4d_level(&st, *start, eff,
--					       i * PGD_LEVEL_MULT);
--			}
--		} else
--			note_page(&st, __pgprot(0), 0, 1);
-+	struct pg_state st = {
-+		.ptdump = {
-+			.note_page	= note_page,
-+			.range		= ptdump_ranges
-+		},
-+		.to_dmesg	= dmesg,
-+		.check_wx	= checkwx,
-+		.seq		= m
++
++static int adux1020_write_raw(struct iio_dev *indio_dev,
++			     struct iio_chan_spec const *chan,
++			     int val, int val2, long mask)
++{
++	struct adux1020_data *data = iio_priv(indio_dev);
++	int i, ret = -EINVAL;
++
++	switch (mask) {
++	case IIO_CHAN_INFO_SAMP_FREQ:
++		if (chan->type == IIO_PROXIMITY) {
++			for (i = 0; i < ARRAY_SIZE(adux1020_rate); i++) {
++				if ((val == adux1020_rate[i][0]) &&
++				     (val2 == adux1020_rate[i][1])) {
++					ret = regmap_update_bits(data->regmap,
++						ADUX1020_REG_FREQUENCY,
++						ADUX1020_PROX_FREQ_MASK,
++						i << ADUX1020_PROX_FREQ_SHIFT);
++				}
++			}
++		}
++		break;
++	case IIO_CHAN_INFO_PROCESSED:
++		if (chan->type == IIO_CURRENT) {
++			for (i = 0; i < ARRAY_SIZE(adux1020_led_current); i++) {
++				if ((val == adux1020_led_current[i][0]) &&
++				     (val2 == adux1020_led_current[i][1])) {
++					ret = regmap_update_bits(data->regmap,
++						ADUX1020_REG_LED_CURRENT,
++						ADUX1020_LED_CURRENT_MASK, i);
++				}
++			}
++		}
++		break;
++	default:
++		break;
++	}
++
++	return ret;
++}
++
++static int adux1020_write_event_config(struct iio_dev *indio_dev,
++		const struct iio_chan_spec *chan, enum iio_event_type type,
++		enum iio_event_direction dir, int state)
++{
++	struct adux1020_data *data = iio_priv(indio_dev);
++
++	regmap_write(data->regmap, ADUX1020_REG_INT_ENABLE,
++		     ADUX1020_INT_ENABLE);
++
++	regmap_write(data->regmap, ADUX1020_REG_INT_POLARITY, 0);
++
++	switch (chan->type) {
++	case IIO_PROXIMITY:
++		if (dir == IIO_EV_DIR_RISING) {
++			regmap_update_bits(data->regmap, ADUX1020_REG_INT_MASK,
++					   ADUX1020_PROX_ON1_INT,
++					   state ? 0 : ADUX1020_PROX_ON1_INT);
++		} else {
++			regmap_update_bits(data->regmap, ADUX1020_REG_INT_MASK,
++					   ADUX1020_PROX_OFF1_INT,
++					   state ? 0 : ADUX1020_PROX_OFF1_INT);
++		}
++
++		/*
++		 * Trigger proximity interrupt when the intensity is above
++		 * or below threshold
++		 */
++		regmap_update_bits(data->regmap, ADUX1020_REG_PROX_TYPE,
++				   ADUX1020_PROX_TYPE, ADUX1020_PROX_TYPE);
++
++		/* Set proximity mode */
++		adux1020_set_mode(data, ADUX1020_MODE_PROX_I);
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int adux1020_read_event_config(struct iio_dev *indio_dev,
++		const struct iio_chan_spec *chan, enum iio_event_type type,
++		enum iio_event_direction dir)
++{
++	struct adux1020_data *data = iio_priv(indio_dev);
++	int ret, mask;
++	unsigned int regval;
++
++	switch (chan->type) {
++	case IIO_PROXIMITY:
++		if (dir == IIO_EV_DIR_RISING)
++			mask = ADUX1020_PROX_ON1_INT;
++		else
++			mask = ADUX1020_PROX_OFF1_INT;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	ret = regmap_read(data->regmap, ADUX1020_REG_INT_MASK, &regval);
++	if (ret < 0)
++		return ret;
++
++	return !(regval & mask);
++}
++
++static int adux1020_read_thresh(struct iio_dev *indio_dev,
++		const struct iio_chan_spec *chan, enum iio_event_type type,
++		enum iio_event_direction dir, enum iio_event_info info,
++		int *val, int *val2)
++{
++	struct adux1020_data *data = iio_priv(indio_dev);
++	u8 reg;
++	int ret;
++	unsigned int regval;
++
++	switch (chan->type) {
++	case IIO_PROXIMITY:
++		if (dir == IIO_EV_DIR_RISING)
++			reg = ADUX1020_REG_PROX_TH_ON1;
++		else
++			reg = ADUX1020_REG_PROX_TH_OFF1;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	ret = regmap_read(data->regmap, reg, &regval);
++	if (ret < 0)
++		return ret;
++
++	*val = regval;
++
++	return IIO_VAL_INT;
++}
++
++static int adux1020_write_thresh(struct iio_dev *indio_dev,
++		const struct iio_chan_spec *chan, enum iio_event_type type,
++		enum iio_event_direction dir, enum iio_event_info info,
++		int val, int val2)
++{
++	struct adux1020_data *data = iio_priv(indio_dev);
++	u8 reg;
++
++	switch (chan->type) {
++	case IIO_PROXIMITY:
++		if (dir == IIO_EV_DIR_RISING)
++			reg = ADUX1020_REG_PROX_TH_ON1;
++		else
++			reg = ADUX1020_REG_PROX_TH_OFF1;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	/* Full scale threshold value is 0-65535  */
++	if (val < 0 || val > 65535)
++		return -EINVAL;
++
++	return regmap_write(data->regmap, reg, val);
++}
++
++static const struct iio_event_spec adux1020_proximity_event[] = {
++	{
++		.type = IIO_EV_TYPE_THRESH,
++		.dir = IIO_EV_DIR_RISING,
++		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
++			BIT(IIO_EV_INFO_ENABLE),
++	},
++	{
++		.type = IIO_EV_TYPE_THRESH,
++		.dir = IIO_EV_DIR_FALLING,
++		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
++			BIT(IIO_EV_INFO_ENABLE),
++	},
++};
++
++static const struct iio_chan_spec adux1020_channels[] = {
++	{
++		.type = IIO_PROXIMITY,
++		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
++				      BIT(IIO_CHAN_INFO_SAMP_FREQ),
++		.event_spec = adux1020_proximity_event,
++		.num_event_specs = ARRAY_SIZE(adux1020_proximity_event),
++	},
++	{
++		.type = IIO_CURRENT,
++		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED),
++		.extend_name = "led",
++	},
++};
++
++static IIO_CONST_ATTR(sampling_frequency_available,
++		      "0.1 0.2 0.5 1 2 5 10 20 50 100 190 450 820 1400");
++
++static struct attribute *adux1020_attributes[] = {
++	&iio_const_attr_sampling_frequency_available.dev_attr.attr,
++	NULL
++};
++
++static const struct attribute_group adux1020_attribute_group = {
++	.attrs = adux1020_attributes,
++};
++
++static const struct iio_info adux1020_info = {
++	.attrs = &adux1020_attribute_group,
++	.read_raw = adux1020_read_raw,
++	.write_raw = adux1020_write_raw,
++	.read_event_config = adux1020_read_event_config,
++	.write_event_config = adux1020_write_event_config,
++	.read_event_value = adux1020_read_thresh,
++	.write_event_value = adux1020_write_thresh,
++};
++
++static irqreturn_t adux1020_interrupt_handler(int irq, void *private)
++{
++	struct iio_dev *indio_dev = private;
++	struct adux1020_data *data = iio_priv(indio_dev);
++	int ret, status;
++
++	ret = regmap_read(data->regmap, ADUX1020_REG_INT_STATUS, &status);
++	if (ret < 0)
++		return ret;
++
++	status &= ADUX1020_MODE_INT_STATUS_MASK;
++
++	if (status & ADUX1020_INT_PROX_ON1) {
++		iio_push_event(indio_dev,
++				IIO_UNMOD_EVENT_CODE(IIO_PROXIMITY, 0,
++					IIO_EV_TYPE_THRESH,
++					IIO_EV_DIR_RISING),
++				iio_get_time_ns(indio_dev));
++	}
++
++	if (status & ADUX1020_INT_PROX_OFF1) {
++		iio_push_event(indio_dev,
++				IIO_UNMOD_EVENT_CODE(IIO_PROXIMITY, 0,
++					IIO_EV_TYPE_THRESH,
++					IIO_EV_DIR_FALLING),
++				iio_get_time_ns(indio_dev));
++	}
++
++	regmap_update_bits(data->regmap, ADUX1020_REG_INT_STATUS,
++			   ADUX1020_MODE_INT_MASK, status);
++
++	return IRQ_HANDLED;
++}
++
++static int adux1020_chip_init(struct adux1020_data *data)
++{
++	struct i2c_client *client = data->client;
++	int ret, i;
++	unsigned int val;
++
++	ret = regmap_read(data->regmap, ADUX1020_REG_CHIP_ID, &val);
++	if (ret < 0)
++		return ret;
++
++	val &= ADUX1020_CHIP_ID_MASK;
++
++	if (val != ADUX1020_CHIP_ID) {
++		dev_err(&client->dev, "invalid chip id 0x%04x\n", val);
++		return -ENODEV;
 +	};
- 
--		cond_resched();
--		start++;
--	}
-+	ptdump_walk_pgd(&st.ptdump, mm);
- 
--	/* Flush out the last page */
--	st.current_address = normalize_addr(PTRS_PER_PGD*PGD_LEVEL_MULT);
--	note_page(&st, __pgprot(0), 0, 0);
- 	if (!checkwx)
- 		return;
- 	if (st.wx_pages)
++
++	dev_dbg(&client->dev, "Detected ADUX1020 with chip id: 0x%04x\n", val);
++
++	/* Perform software reset */
++	regmap_update_bits(data->regmap, ADUX1020_REG_SW_RESET,
++			   ADUX1020_SW_RESET, ADUX1020_SW_RESET);
++
++	/* Load default configuration */
++	for (i = 0; i < ARRAY_SIZE(adux1020_def_conf); i++)
++		regmap_write(data->regmap, adux1020_def_conf[i][0],
++			     adux1020_def_conf[i][1]);
++
++	adux1020_flush_fifo(data);
++
++	/* Use LED_IREF for proximity mode */
++	regmap_update_bits(data->regmap, ADUX1020_REG_LED_CURRENT,
++			   ADUX1020_LED_PIREF_EN, 0);
++
++	/* Mask all interrupts */
++	regmap_update_bits(data->regmap, ADUX1020_REG_INT_MASK,
++			   ADUX1020_MODE_INT_MASK, ADUX1020_MODE_INT_DISABLE);
++
++	return 0;
++}
++
++static int adux1020_probe(struct i2c_client *client,
++			  const struct i2c_device_id *id)
++{
++	struct adux1020_data *data;
++	struct iio_dev *indio_dev;
++	int ret;
++
++	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
++	if (!indio_dev)
++		return -ENOMEM;
++
++	indio_dev->dev.parent = &client->dev;
++	indio_dev->info = &adux1020_info;
++	indio_dev->name = ADUX1020_DRV_NAME;
++	indio_dev->channels = adux1020_channels;
++	indio_dev->num_channels = ARRAY_SIZE(adux1020_channels);
++	indio_dev->modes = INDIO_DIRECT_MODE;
++
++	data = iio_priv(indio_dev);
++	i2c_set_clientdata(client, indio_dev);
++
++	data->regmap = devm_regmap_init_i2c(client, &adux1020_regmap_config);
++	if (IS_ERR(data->regmap)) {
++		dev_err(&client->dev, "regmap initialization failed.\n");
++		return PTR_ERR(data->regmap);
++	}
++
++	data->client = client;
++	data->indio_dev = indio_dev;
++	mutex_init(&data->lock);
++
++	ret = adux1020_chip_init(data);
++	if (ret)
++		goto err_out;
++
++	if (client->irq) {
++		ret = devm_request_threaded_irq(&client->dev, client->irq,
++				NULL, adux1020_interrupt_handler,
++				IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
++				ADUX1020_DRV_NAME, indio_dev);
++		if (ret) {
++			dev_err(&client->dev, "irq request error %d\n", -ret);
++			goto err_out;
++		}
++	}
++
++	ret = iio_device_register(indio_dev);
++	if (ret) {
++		dev_err(&client->dev, "Failed to register IIO device\n");
++		goto err_out;
++	}
++
++	return 0;
++
++err_out:
++	return ret;
++}
++
++static int adux1020_remove(struct i2c_client *client)
++{
++	struct iio_dev *indio_dev = i2c_get_clientdata(client);
++
++	iio_device_unregister(indio_dev);
++
++	return 0;
++}
++
++static const struct i2c_device_id adux1020_id[] = {
++	{ "adux1020", 0 },
++	{}
++};
++MODULE_DEVICE_TABLE(i2c, adux1020_id);
++
++static const struct of_device_id adux1020_of_match[] = {
++	{ .compatible = "adi,adux1020" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, adux1020_of_match);
++
++static struct i2c_driver adux1020_driver = {
++	.driver = {
++		.name	= ADUX1020_DRV_NAME,
++		.of_match_table = adux1020_of_match,
++	},
++	.probe		= adux1020_probe,
++	.remove		= adux1020_remove,
++	.id_table	= adux1020_id,
++};
++module_i2c_driver(adux1020_driver);
++
++MODULE_AUTHOR("Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>");
++MODULE_DESCRIPTION("ADUX1020 photometric sensor");
++MODULE_LICENSE("GPL");
 -- 
-2.20.1
+2.17.1
 
