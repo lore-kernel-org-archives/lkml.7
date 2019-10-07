@@ -2,146 +2,140 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBCFC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D5EECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C33320867
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:47:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26F9521721
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:47:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dy8coq+B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbfJGMrf (ORCPT
+        id S1727894AbfJGMrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 7 Oct 2019 08:47:36 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37452 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727490AbfJGMrf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Oct 2019 08:47:35 -0400
-Received: from foss.arm.com ([217.140.110.172]:33704 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727536AbfJGMrf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 08:47:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 268591570;
-        Mon,  7 Oct 2019 05:47:34 -0700 (PDT)
-Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 051253F706;
-        Mon,  7 Oct 2019 05:47:32 -0700 (PDT)
-Subject: Re: drm_sched with panfrost crash on T820
-To:     "Koenig, Christian" <Christian.Koenig@amd.com>
-Cc:     Hillf Danton <hdanton@sina.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        Erico Nunes <nunes.erico@gmail.com>
-References: <8e003dfd-2761-4941-8b5b-ecc186222229@email.android.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <cf6c7130-51ea-155b-cbe7-9f05281be360@arm.com>
-Date:   Mon, 7 Oct 2019 13:47:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <8e003dfd-2761-4941-8b5b-ecc186222229@email.android.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Received: by mail-wm1-f66.google.com with SMTP id f22so12199786wmc.2;
+        Mon, 07 Oct 2019 05:47:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=AT90Kg/zRUtjsdvlXig6kf61Re1a9yGlOxg7dRhOahY=;
+        b=dy8coq+B4djgG7XoW0kM31x7L8/pkrlMXAm4QcJzT3GxJGdjcRPIG8+AJd8nECgQ+m
+         pSv6qL03Ct01Prjfha2nrDm+//O/Xxuu2wWq4ThMnWXx1Fcsb/tsCr+qHJJ73ciHlxeL
+         miOXgGdtx3D/f0d/2vDBi7g7Z5EwX8EJF13O1BbGy0q5pBYKp3qbnQVc/HQ8tGBhJC79
+         y2loQusNna46w9WS6FdAPFLne8ruSPAa7iegJZibz1rftSxs3Dgo0amkY1/6q0krKuCx
+         3KO/NMJkdjfk02iNAo82YI38MYqQIPbEBwq9CTrMTCEL3dT+ykzJWXGBfR1lfDu0tFXP
+         chIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=AT90Kg/zRUtjsdvlXig6kf61Re1a9yGlOxg7dRhOahY=;
+        b=EXmJvk/WT0w+b9ZvWGzb4agDLRSMFCi/dUKQxmlbQH/N4KTF8BEH3v702qlpkTeWKa
+         hSh0QmvR6aO7hCFT2Ph1z03AsgSyZ09bZwg3VYWcBd3HyyXqGP74UKjv1DNKCcOtuSOW
+         /BdrRAVDMNONNq6nI947AkbjSiQz9uyaWqfxTIQLj8lefs74BaaiWovlQ710ULbMVI9X
+         I24G/EJ6m36QIzzzeXkL8Fv8XamMG+I2CA3TbIx3yi7KfxbvWuL/XWPKpiPx6IcEYfPl
+         OPsKxKUb++czYAOrIWl2q1Fwe1AXrscE+mcYjwLTR4CHR36FgQIVY4sH4/+6GXYf38tI
+         dscw==
+X-Gm-Message-State: APjAAAW5OCfFceF2nLVxNSTkQemhr+9oa5StTAE4SgCq92dwbaXFqaEa
+        z0OKjSKFKIySiVF+SxE90db8Qau2S+U=
+X-Google-Smtp-Source: APXvYqx70mWEwFEmfHG43cYeL+pn2QE7GLbM4OthUvaC2hktxXvef6MBklkVuZdXGxUiqauM7QgMTQ==
+X-Received: by 2002:a7b:cbc5:: with SMTP id n5mr21592790wmi.31.1570452452161;
+        Mon, 07 Oct 2019 05:47:32 -0700 (PDT)
+Received: from localhost ([194.105.145.90])
+        by smtp.gmail.com with ESMTPSA id w5sm15870495wrs.34.2019.10.07.05.47.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 07 Oct 2019 05:47:31 -0700 (PDT)
+From:   Igor Opaniuk <igor.opaniuk@gmail.com>
+To:     linux-usb@vger.kernel.org
+Cc:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Stefan Agner <stefan.agner@toradex.com>,
+        Max Krummenacher <max.krummenacher@toradex.com>,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Li Jun <jun.li@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH v1 1/3] usb: phy: add usb mode for usb_phy
+Date:   Mon,  7 Oct 2019 15:46:05 +0300
+Message-Id: <20191007124607.20618-1-igor.opaniuk@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/10/2019 17:33, Koenig, Christian wrote:
-> 
-> 
-> Am 04.10.2019 18:02 schrieb Steven Price <steven.price@arm.com>:
-> On 04/10/2019 16:34, Koenig, Christian wrote:
->> Am 04.10.19 um 17:27 schrieb Steven Price:
->>> On 04/10/2019 16:03, Neil Armstrong wrote:
->>>> On 04/10/2019 16:53, Grodzovsky, Andrey wrote:
->>>>> On 10/3/19 4:34 AM, Neil Armstrong wrote:
->>>>>> Hi Andrey,
->>>>>>
->>>>>> Le 02/10/2019 à 16:40, Grodzovsky, Andrey a écrit :
->>>>>>> On 9/30/19 10:52 AM, Hillf Danton wrote:
->>>>>>>> On Mon, 30 Sep 2019 11:17:45 +0200 Neil Armstrong wrote:
->>>>>>>>> Did a new run from 5.3:
->>>>>>>>>
->>>>>>>>> [   35.971972] Call trace:
->>>>>>>>> [   35.974391]  drm_sched_increase_karma+0x5c/0xf0
->>>>>>>>>                         ffff000010667f38        FFFF000010667F94
->>>>>>>>>                         drivers/gpu/drm/scheduler/sched_main.c:335
->>>>>>>>>
->>>>>>>>> The crashing line is :
->>>>>>>>>                                    if (bad->s_fence->scheduled.context ==
->>>>>>>>>                                        entity->fence_context) {
->>>>>>>>>
->>>>>>>>> Doesn't seem related to guilty job.
->>>>>>>> Bail out if s_fence is no longer fresh.
->>>>>>>>
->>>>>>>> --- a/drivers/gpu/drm/scheduler/sched_main.c
->>>>>>>> +++ b/drivers/gpu/drm/scheduler/sched_main.c
->>>>>>>> @@ -333,6 +333,10 @@ void drm_sched_increase_karma(struct drm
->>>>>>>>
->>>>>>>>                          spin_lock(&rq->lock);
->>>>>>>>                          list_for_each_entry_safe(entity, tmp, &rq->entities, list) {
->>>>>>>> +                               if (!smp_load_acquire(&bad->s_fence)) {
->>>>>>>> +                                       spin_unlock(&rq->lock);
->>>>>>>> +                                       return;
->>>>>>>> +                               }
->>>>>>>>                                  if (bad->s_fence->scheduled.context ==
->>>>>>>>                                      entity->fence_context) {
->>>>>>>>                                          if (atomic_read(&bad->karma) >
->>>>>>>> @@ -543,7 +547,7 @@ EXPORT_SYMBOL(drm_sched_job_init);
->>>>>>>>     void drm_sched_job_cleanup(struct drm_sched_job *job)
->>>>>>>>     {
->>>>>>>>          dma_fence_put(&job->s_fence->finished);
->>>>>>>> -       job->s_fence = NULL;
->>>>>>>> +       smp_store_release(&job->s_fence, 0);
->>>>>>>>     }
->>>>>>>>     EXPORT_SYMBOL(drm_sched_job_cleanup);
->>>>>> This fixed the problem on the 10 CI runs.
->>>>>>
->>>>>> Neil
->>>>>
->>>>> These are good news but I still fail to see how this fixes the problem -
->>>>> Hillf, do you mind explaining how you came up with this particular fix -
->>>>> what was the bug you saw ?
->>>> As Steven explained, seems the same job was submitted on both HW slots,
->>>> and then when timeout occurs each thread calls panfrost_job_timedout
->>>> which leads to drm_sched_stop() on the first call and on the
->>>> second call the job was already freed.
->>>>
->>>> Steven proposed a working fix, and this one does the same but on
->>>> the drm_sched side. This one looks cleaner, but panfrost should
->>>> not call drm_sched_stop() twice for the same job.
->>> I'm not sure that Hillf's fix is sufficient. In particular in
->>> drm_sched_increase_karma() I don't understand how the smp_load_acquire()
->>> call prevents bad->s_fence becoming NULL immediately afterwards (but
->>> admittedly the window is much smaller). But really this is just a
->>> Panfrost bug (calling drm_sched_stop() twice on the same job).
->>>
->>> The part of my change that I'd welcome feedback on is changing
->>> cancel_delayed_work() to cancel_delayed_work_sync() in drm_sched_stop()
->>> when called on different scheduler to the bad job. It's not clear to me
->>> exactly what the semantics of the function should be, and I haven't
->>> tested the effect of the change on drivers other than Panfrost.
->>
->> Yeah, at least of hand that change doesn't seem to make sense to me.
-> 
-> We need to ensure that any other timeouts that might have started
-> processing are complete before actually resetting the hardware.
-> Otherwise after the reset another thread could come along and attempt to
-> reset the hardware again (and cause a double free of a job).
-> 
-> This is intentional behaviour. If you don't want the double reset in Panfrost you should probably call the cancel_sync yourself.
+From: Igor Opaniuk <igor.opaniuk@toradex.com>
 
-It's less the double reset that is the problem, more that the job gets
-cleaned up twice: drm_sched_stop() will either free the job or mark it
-to be freed later. By having two threads both drm_sched_stop()ing all
-slots you end up with the guilty job(s) potentially being double freed.
+USB phy driver may need to know the current working mode of
+the controller, and can provide different settings according to
+host mode or device mode.
 
-I've move the call to cancel_delayed_work_sync() into Panfrost since I'm
-not sure whether this is generically useful to other drivers.
+Signed-off-by: Li Jun <jun.li@nxp.com>
+Signed-off-by: Igor Opaniuk <igor.opaniuk@toradex.com>
+---
 
-Steve
+ include/linux/usb/phy.h | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+
+diff --git a/include/linux/usb/phy.h b/include/linux/usb/phy.h
+index e4de6bc1f69b..774941be77d7 100644
+--- a/include/linux/usb/phy.h
++++ b/include/linux/usb/phy.h
+@@ -63,6 +63,13 @@ enum usb_otg_state {
+ 	OTG_STATE_A_VBUS_ERR,
+ };
+ 
++/* The usb role of phy to be working with */
++enum usb_current_mode {
++	USB_MODE_NONE,
++	USB_MODE_HOST,
++	USB_MODE_DEVICE,
++};
++
+ struct usb_phy;
+ struct usb_otg;
+ 
+@@ -155,6 +162,13 @@ struct usb_phy {
+ 	 * manually detect the charger type.
+ 	 */
+ 	enum usb_charger_type (*charger_detect)(struct usb_phy *x);
++
++	/*
++	 * Set current working mode of the USB controller
++	 * (device, host)
++	 */
++	int	(*set_mode)(struct usb_phy *x,
++			enum usb_current_mode mode);
+ };
+ 
+ /* for board-specific init logic */
+@@ -213,6 +227,15 @@ usb_phy_vbus_off(struct usb_phy *x)
+ 	return x->set_vbus(x, false);
+ }
+ 
++static inline int
++usb_phy_set_mode(struct usb_phy *x, enum usb_current_mode mode)
++{
++	if (!x || !x->set_mode)
++		return 0;
++
++	return x->set_mode(x, mode);
++}
++
+ /* for usb host and peripheral controller drivers */
+ #if IS_ENABLED(CONFIG_USB_PHY)
+ extern struct usb_phy *usb_get_phy(enum usb_phy_type type);
+-- 
+2.17.1
+
