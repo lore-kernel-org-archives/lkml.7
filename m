@@ -2,131 +2,231 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2BFCECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE94ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:59:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1CC020684
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:59:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="F2owVDi7"
+	by mail.kernel.org (Postfix) with ESMTP id 1CC1620684
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:59:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729354AbfJGR7U (ORCPT
+        id S1729304AbfJGR7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 13:59:20 -0400
-Received: from mail-eopbgr710135.outbound.protection.outlook.com ([40.107.71.135]:35603
-        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728079AbfJGR7U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 13:59:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=H9oUNSm8wAr8U4FKsnyjQQcpo9hf83F7ac+/bDqnC1SYDxDDH4+cW0exlLnF3GFR8V6VUV8C4EF8zu6CPpodV6OOn6oeBSrCvdfdLUDpPl0BR2K7erqlT5ICE4fag77G2NWAXdei/PkN+JaE45tz9SDjy2aqHFEnsk2tcVXuErHMx0IsWTmQyCSCNUxEvf9ilpXKl3KhNSzET+xgO3SaSJFLhXsahsYqI267ww4xebZw2gscgfXRem9uDu/MGePj48t9W3p/gJUsAY2GzZ8dwLpSz08i9vW6IcAtjzRLcGb31ROqcdT8XOGVKslMRnTQ9AKWgk3Izcws5uPiDsC56A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YpugprrxkpYyCFw31flchiDPUSvNqCsv1FxjbiTbckE=;
- b=ZXNm3aK67PYosKiNxq8eEX5jS5a018BQ7ZNADFo2oUWQtkcbMK49e552AAmdOu5go3KnOlsN9uZcMrDhpmxnL1lQF8ZyFF/Q4Hy0GArXxyG+hsRgDR/+Gx4be6rOL6NpAphSHm0z1n/AGxcVyZZopvWpb7BiHGwT1YqT98Tpr6nLalAQvp4wva/8BUKtVhht8EgIFhS9VUpDri0nAyMZlOlm+F53kwRuNFeh2LMvfvVTRIRIqLaqEeXS6AkUbqK/yz3Xz1B+pOfFfk6fFLu7TLYEVWETgOmvbc4VJsgtyVMfgwYNVBwV8tFI4LOzMnWCQdZhP8dNBa+wk0/2VE69BQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=mips.com;
- dkim=pass header.d=mips.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YpugprrxkpYyCFw31flchiDPUSvNqCsv1FxjbiTbckE=;
- b=F2owVDi7Ep01desXvKu6V0T9Ii8Wy4dIZLgNPwk8GLzK3dZ9AhN1hx7K9RlIRS988lljt1WbaWPNgocLXh5QounfcWC3QDCxBq6SxwSMuwIU0SxZTkrBXgJ73yz8SVZj6zEjc50kFEsc5Fazs5AH6o04MMBOE7+N3Bx4w/dmNT8=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
- MWHPR2201MB1470.namprd22.prod.outlook.com (10.174.170.143) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.24; Mon, 7 Oct 2019 17:59:18 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::3050:9a38:9d8e:8033]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::3050:9a38:9d8e:8033%5]) with mapi id 15.20.2327.025; Mon, 7 Oct 2019
- 17:59:18 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Aurabindo Jayamohanan <mail@aurabindo.in>
-CC:     "ralf@linux-mips.org" <ralf@linux-mips.org>,
-        Paul Burton <pburton@wavecomp.com>,
-        "jhogan@kernel.org" <jhogan@kernel.org>,
-        "alexios.zavras@intel.com" <alexios.zavras@intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "armijn@tjaldur.nl" <armijn@tjaldur.nl>,
-        "allison@lohutok.net" <allison@lohutok.net>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Subject: Re: [PATCH] mips: check for dsp presence only once before
- save/restore
-Thread-Topic: [PATCH] mips: check for dsp presence only once before
- save/restore
-Thread-Index: AQHVfTjwGrGVHbSFvECLy1pIiGJbFw==
-Date:   Mon, 7 Oct 2019 17:59:18 +0000
-Message-ID: <MWHPR2201MB1277E7B787B02B8ADB37E2D9C19B0@MWHPR2201MB1277.namprd22.prod.outlook.com>
-References: <20190913120206.9234-1-mail@aurabindo.in>
-In-Reply-To: <20190913120206.9234-1-mail@aurabindo.in>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR03CA0016.namprd03.prod.outlook.com
- (2603:10b6:a02:a8::29) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:18::12)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.94.197.246]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 57346c07-708f-4d0c-3e87-08d74b5012a6
-x-ms-traffictypediagnostic: MWHPR2201MB1470:
-x-ms-exchange-purlcount: 1
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR2201MB1470EC7A15495F3FC0802255C19B0@MWHPR2201MB1470.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 01834E39B7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(39840400004)(396003)(376002)(366004)(136003)(199004)(189003)(52116002)(33656002)(7416002)(7696005)(76176011)(99286004)(6436002)(256004)(14444005)(476003)(74316002)(42882007)(11346002)(4326008)(446003)(229853002)(7736002)(305945005)(44832011)(486006)(102836004)(6116002)(3846002)(6246003)(71190400001)(71200400001)(6506007)(386003)(26005)(2906002)(186003)(1250700005)(52536014)(9686003)(4744005)(6916009)(54906003)(316002)(5660300002)(25786009)(66066001)(6306002)(14454004)(66446008)(55016002)(478600001)(8936002)(81156014)(66946007)(64756008)(66476007)(81166006)(966005)(8676002)(66556008);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1470;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1alN3vTzsY3RTyU0nGRudf5JMTk8sZm1JsEorVs7MmuNFoTnSYF8Nd4H9NbvnYZiS7zX3t8OKZMu+3jKVTvvXUCxQqFitkhmZhkin8hP4uG34MK/Ks8t5Ib1xRPBuSF5VhOXq96qmnPvKIQet9wBgLcfvtxkHpwsLKirlWpzgnauPp5VkmCV9J5+/45Dl/Elx5kTqU1JWg5MT+RbkI5ykZrBy4Ukgz+Ef48fybuldVAyknlL6lOpWpFmW01VyNaSetrEuzB+Lqp7Ao2i+Wouoj5+DJdFZZyN9KQd66cOcdbAnj2uAkRONfHw++rJIWBYGBbWDdwK/AtdkxDP5Wj12Oh0LRcjRjdYe8OCXj4arxpTSgBfka3yPdJS4BVoH1RqPtnjVgFuYhmTyG/iXkSNYBQCy8AgN44Bsblpg9Cm3xB/0x/Zb2c7pAcSJE86LFfEakmsGHuzBvP92cLv/Y6QYg==
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 57346c07-708f-4d0c-3e87-08d74b5012a6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Oct 2019 17:59:18.0935
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: SzzS65YKhm6dYiHdazvzdXi9Ly8mJHJ5V8YXO0NITXGCY0MohgmEaV9wCj3Jp0znVfa9zp+AK3ICTTfy5rImfQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1470
+        Mon, 7 Oct 2019 13:59:54 -0400
+Received: from mga11.intel.com ([192.55.52.93]:33632 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728079AbfJGR7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 13:59:53 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Oct 2019 10:59:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,269,1566889200"; 
+   d="scan'208";a="193161241"
+Received: from unknown (HELO labuser-Ice-Lake-Client-Platform.jf.intel.com) ([10.54.55.65])
+  by fmsmga007.fm.intel.com with ESMTP; 07 Oct 2019 10:59:52 -0700
+From:   kan.liang@linux.intel.com
+To:     peterz@infradead.org, acme@kernel.org, mingo@kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     jolsa@kernel.org, namhyung@kernel.org, ak@linux.intel.com,
+        vitaly.slobodskoy@intel.com, pavel.gerasimov@intel.com,
+        Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH 00/10] Stitch LBR call stack
+Date:   Mon,  7 Oct 2019 10:59:00 -0700
+Message-Id: <20191007175910.2805-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Kan Liang <kan.liang@linux.intel.com>
 
-Aurabindo Jayamohanan wrote:
-> {save,restore}_dsp() internally checks if the cpu has dsp support.
-> Therefore, explicit check is not required before calling them in
-> {save,restore}_processor_state()
+Start from Haswell, Linux perf can utilize the existing Last Branch
+Record (LBR) facility to record call stack. However, the depth of the
+reconstructed LBR call stack limits to the number of LBR registers.
+E.g. on skylake, the depth of reconstructed LBR call stack is <= 32
+That's because HW will overwrite the oldest LBR registers when it's
+full.
 
-Applied to mips-next.
+However, the overwritten LBRs may still be retrieved from previous
+sample. At that moment, HW hasn't overwritten the LBR registers yet.
+Perf tools can stitch those overwritten LBRs on current call stacks to
+get a more complete call stack.
 
-> commit 9662dd752c14
-> https://git.kernel.org/mips/c/9662dd752c14
->=20
-> Signed-off-by: Aurabindo Jayamohanan <mail@aurabindo.in>
-> Signed-off-by: Paul Burton <paul.burton@mips.com>
+To determine if LBRs can be stitched, the physical index of LBR
+registers is required. A new sample type is introduced in patch 1 & 2
+to dump the LBR Top-of-Stack (TOS) information for perf tools.
+Besides, the maximum number of LBRs is required as well. Patch 3 & 4
+retrieve the capabilities information from sysfs and save them in perf
+header.
+Patch 5 & 6 implements the LBR stitching approach.
+Users can use the options introduced in patch 7-10 to enable the LBR
+stitching approach for perf report, script, top and c2c.
 
-Thanks,
-    Paul
+The stitching approach base on LBR call stack technology. The known
+limitations of LBR call stack technology still apply to the approach,
+e.g. Exception handing such as setjmp/longjmp will have calls/returns
+not match.
+This approach is not full proof. There can be cases where it creates
+incorrect call stacks from incorrect matches. There is no attempt
+to validate any matches in another way. So it is not enabled by default.
+However in many common cases with call stack overflows it can recreate
+better call stacks than the default lbr call stack output. So if there
+are problems with LBR overflows this is a possible workaround.
 
-[ This message was auto-generated; if you believe anything is incorrect
-  then please email paul.burton@mips.com to report it. ]
+Performance impact:
+The processing time may increase with the LBR stitching approach
+enabled. The impact depends on the number of samples with stitched LBRs.
+
+For sqlite's tcltest,
+perf record --call-graph lbr -- make tcltest
+perf report --stitch-lbr
+
+There are 4.11% samples has stitched LBRs.
+Total number of samples:                        2833728
+The number of samples with stitched LBRs        116478
+
+The processing time of perf report increases 6.8%
+Without --stitch-lbr:                           55906106 usec
+With --stitch-lbr:                              59728701 usec
+
+For a simple test case tchain_edit with 43 depth of call stacks.
+perf record --call-graph lbr -- ./tchain_edit
+perf report --stitch-lbr
+
+There are 99.9% samples has stitched LBRs.
+Total number of samples:                        10915
+The number of samples with stitched LBRs        10905
+
+The processing time of perf report increases 67.4%
+Without --stitch-lbr:                           11970508 usec
+With --stitch-lbr:                              20036055 usec
+
+The source code of tchain_edit.c is something like as below.
+noinline void f43(void)
+{
+        int i;
+        for (i = 0; i < 10000;) {
+
+                if(i%2)
+                        i++;
+                else
+                        i++;
+        }
+}
+
+noinline void f42(void)
+{
+        int i;
+        for (i = 0; i < 100; i++) {
+                f43();
+                f43();
+                f43();
+        }
+}
+
+noinline void f41(void)
+{
+        int i;
+        for (i = 0; i < 100; i++) {
+                f42();
+                f42();
+                f42();
+        }
+}
+
+noinline void f40(void)
+{
+        f41();
+}
+
+... ...
+
+noinline void f32(void)
+{
+        f33();
+}
+
+noinline void f31(void)
+{
+        int i;
+
+        for (i = 0; i < 10000; i++) {
+                if(i%2)
+                        i++;
+                else
+                        i++;
+        }
+
+        f32();
+}
+
+noinline void f30(void)
+{
+        f31();
+}
+
+... ...
+
+noinline void f1(void)
+{
+        f2();
+}
+
+int main()
+{
+        f1();
+}
+
+Kan Liang (10):
+  perf/core, x86: Add PERF_SAMPLE_LBR_TOS
+  perf tools: Support PERF_SAMPLE_LBR_TOS
+  perf pmu: Add support for PMU capabilities
+  perf header: Support CPU PMU capabilities
+  perf machine: Refine the function for LBR call stack reconstruction
+  perf tools: Stitch LBR call stack
+  perf report: Add option to enable the LBR stitching approach
+  perf script: Add option to enable the LBR stitching approach
+  perf top: Add option to enable the LBR stitching approach
+  perf c2c: Add option to enable the LBR stitching approach
+
+ arch/x86/events/intel/lbr.c                   |   9 +
+ include/linux/perf_event.h                    |   1 +
+ include/uapi/linux/perf_event.h               |   4 +-
+ kernel/events/core.c                          |  12 +
+ tools/include/uapi/linux/perf_event.h         |   4 +-
+ tools/perf/Documentation/perf-c2c.txt         |  11 +
+ tools/perf/Documentation/perf-report.txt      |  11 +
+ tools/perf/Documentation/perf-script.txt      |  11 +
+ tools/perf/Documentation/perf-top.txt         |   9 +
+ .../Documentation/perf.data-file-format.txt   |  16 +
+ tools/perf/builtin-c2c.c                      |   6 +
+ tools/perf/builtin-record.c                   |   3 +
+ tools/perf/builtin-report.c                   |   6 +
+ tools/perf/builtin-script.c                   |   6 +
+ tools/perf/builtin-stat.c                     |   1 +
+ tools/perf/builtin-top.c                      |  11 +
+ tools/perf/util/branch.h                      |  10 +-
+ tools/perf/util/env.h                         |   3 +
+ tools/perf/util/event.h                       |   1 +
+ tools/perf/util/evsel.c                       |  16 +-
+ tools/perf/util/evsel.h                       |   1 +
+ tools/perf/util/header.c                      | 110 +++++++
+ tools/perf/util/header.h                      |   1 +
+ tools/perf/util/machine.c                     | 303 ++++++++++++++----
+ tools/perf/util/perf_event_attr_fprintf.c     |   2 +-
+ tools/perf/util/pmu.c                         |  87 +++++
+ tools/perf/util/pmu.h                         |  12 +
+ tools/perf/util/synthetic-events.c            |   8 +
+ tools/perf/util/thread.c                      |   3 +
+ tools/perf/util/thread.h                      |  18 ++
+ tools/perf/util/top.h                         |   1 +
+ 31 files changed, 626 insertions(+), 71 deletions(-)
+
+-- 
+2.17.1
+
