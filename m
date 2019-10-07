@@ -2,597 +2,97 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80733ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF65ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45DC420684
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:47:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570463267;
-	bh=uXI86+qL4YouQeX41QkzsJzFHxCNTAVWW4F/QH7rC1U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OVBa9lSarEF9o6FaXunnIB2H7RiyvAdn4AyKpqAXoMSPCmbZeVZ3jrXRsJMJkNyvG
-	 QPUlIGLBHwdVM6aGuDcvHLR5L6+hbbJjtKLgm/lk7jrCbTc0uyk3wW9KBEeLUlY9dm
-	 vFjuq7bI4d8N/DinTKd0CmYqSs5yCcevQtXwJopE=
+	by mail.kernel.org (Postfix) with ESMTP id 3FE3420679
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:48:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728947AbfJGPrU (ORCPT
+        id S1728490AbfJGPs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 11:47:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51726 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728716AbfJGPrT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:47:19 -0400
-Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04D5D2070B;
-        Mon,  7 Oct 2019 15:47:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570463237;
-        bh=uXI86+qL4YouQeX41QkzsJzFHxCNTAVWW4F/QH7rC1U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LgACDBS4CTbE0Ws2sz7kcc26r4ujxz9EKEjHvc2KCQJ5cySXEZ1BeCZHs2LqusFwU
-         i0ncyrlpbYQHPB4KqVSWn9WsOOWwgHkK6Kn8KUpgBBXN46jWr4acREpwh8jK39hYpy
-         L92mDDRFaTFBBOffIgn7rKSMv6lCat7pDq720iDY=
-From:   Will Deacon <will@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Will Deacon <will@kernel.org>, Kees Cook <keescook@chromium.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Elena Reshetova <elena.reshetova@intel.com>,
+        Mon, 7 Oct 2019 11:48:58 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59422 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727814AbfJGPs5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 11:48:57 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7889CAFBE;
+        Mon,  7 Oct 2019 15:48:56 +0000 (UTC)
+Date:   Mon, 7 Oct 2019 17:48:52 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Jan Glauber <jglauber@marvell.com>
-Subject: [PATCH v3 04/10] lib/refcount: Move bulk of REFCOUNT_FULL implementation into header
-Date:   Mon,  7 Oct 2019 16:46:57 +0100
-Message-Id: <20191007154703.5574-5-will@kernel.org>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20191007154703.5574-1-will@kernel.org>
-References: <20191007154703.5574-1-will@kernel.org>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        hpa@zytor.com, x86@kernel.org, rjw@rjwysocki.net, lenb@kernel.org,
+        james.morse@arm.com, tony.luck@intel.com,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH] x86/mm: Split vmalloc_sync_all()
+Message-ID: <20191007154852.GE4636@suse.de>
+References: <20191007151618.11785-1-joro@8bytes.org>
+ <02e99987-10d2-203f-e6ba-e2568fa1af28@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <02e99987-10d2-203f-e6ba-e2568fa1af28@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In an effort to improve performance of the REFCOUNT_FULL implementation,
-move the bulk of its functions into linux/refcount.h. This allows them
-to be inlined in the same way as if they had been provided via
-CONFIG_ARCH_HAS_REFCOUNT.
+Hi Dave,
 
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Elena Reshetova <elena.reshetova@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Will Deacon <will@kernel.org>
----
- include/linux/refcount.h | 237 ++++++++++++++++++++++++++++++++++++--
- lib/refcount.c           | 238 +--------------------------------------
- 2 files changed, 229 insertions(+), 246 deletions(-)
+thanks for your review!
 
-diff --git a/include/linux/refcount.h b/include/linux/refcount.h
-index edd505d1a23b..e719b5b1220e 100644
---- a/include/linux/refcount.h
-+++ b/include/linux/refcount.h
-@@ -45,22 +45,241 @@ static inline unsigned int refcount_read(const refcount_t *r)
- }
- 
- #ifdef CONFIG_REFCOUNT_FULL
-+#include <linux/bug.h>
- 
- #define REFCOUNT_MAX		(UINT_MAX - 1)
- #define REFCOUNT_SATURATED	UINT_MAX
- 
--extern __must_check bool refcount_add_not_zero(int i, refcount_t *r);
--extern void refcount_add(int i, refcount_t *r);
-+/*
-+ * Variant of atomic_t specialized for reference counts.
-+ *
-+ * The interface matches the atomic_t interface (to aid in porting) but only
-+ * provides the few functions one should use for reference counting.
-+ *
-+ * It differs in that the counter saturates at REFCOUNT_SATURATED and will not
-+ * move once there. This avoids wrapping the counter and causing 'spurious'
-+ * use-after-free issues.
-+ *
-+ * Memory ordering rules are slightly relaxed wrt regular atomic_t functions
-+ * and provide only what is strictly required for refcounts.
-+ *
-+ * The increments are fully relaxed; these will not provide ordering. The
-+ * rationale is that whatever is used to obtain the object we're increasing the
-+ * reference count on will provide the ordering. For locked data structures,
-+ * its the lock acquire, for RCU/lockless data structures its the dependent
-+ * load.
-+ *
-+ * Do note that inc_not_zero() provides a control dependency which will order
-+ * future stores against the inc, this ensures we'll never modify the object
-+ * if we did not in fact acquire a reference.
-+ *
-+ * The decrements will provide release order, such that all the prior loads and
-+ * stores will be issued before, it also provides a control dependency, which
-+ * will order us against the subsequent free().
-+ *
-+ * The control dependency is against the load of the cmpxchg (ll/sc) that
-+ * succeeded. This means the stores aren't fully ordered, but this is fine
-+ * because the 1->0 transition indicates no concurrency.
-+ *
-+ * Note that the allocator is responsible for ordering things between free()
-+ * and alloc().
-+ *
-+ * The decrements dec_and_test() and sub_and_test() also provide acquire
-+ * ordering on success.
-+ *
-+ */
-+
-+/**
-+ * refcount_add_not_zero - add a value to a refcount unless it is 0
-+ * @i: the value to add to the refcount
-+ * @r: the refcount
-+ *
-+ * Will saturate at REFCOUNT_SATURATED and WARN.
-+ *
-+ * Provides no memory ordering, it is assumed the caller has guaranteed the
-+ * object memory to be stable (RCU, etc.). It does provide a control dependency
-+ * and thereby orders future stores. See the comment on top.
-+ *
-+ * Use of this function is not recommended for the normal reference counting
-+ * use case in which references are taken and released one at a time.  In these
-+ * cases, refcount_inc(), or one of its variants, should instead be used to
-+ * increment a reference count.
-+ *
-+ * Return: false if the passed refcount is 0, true otherwise
-+ */
-+static inline __must_check bool refcount_add_not_zero(int i, refcount_t *r)
-+{
-+	unsigned int new, val = atomic_read(&r->refs);
-+
-+	do {
-+		if (!val)
-+			return false;
-+
-+		if (unlikely(val == REFCOUNT_SATURATED))
-+			return true;
-+
-+		new = val + i;
-+		if (new < val)
-+			new = REFCOUNT_SATURATED;
-+
-+	} while (!atomic_try_cmpxchg_relaxed(&r->refs, &val, new));
-+
-+	WARN_ONCE(new == REFCOUNT_SATURATED,
-+		  "refcount_t: saturated; leaking memory.\n");
-+
-+	return true;
-+}
-+
-+/**
-+ * refcount_add - add a value to a refcount
-+ * @i: the value to add to the refcount
-+ * @r: the refcount
-+ *
-+ * Similar to atomic_add(), but will saturate at REFCOUNT_SATURATED and WARN.
-+ *
-+ * Provides no memory ordering, it is assumed the caller has guaranteed the
-+ * object memory to be stable (RCU, etc.). It does provide a control dependency
-+ * and thereby orders future stores. See the comment on top.
-+ *
-+ * Use of this function is not recommended for the normal reference counting
-+ * use case in which references are taken and released one at a time.  In these
-+ * cases, refcount_inc(), or one of its variants, should instead be used to
-+ * increment a reference count.
-+ */
-+static inline void refcount_add(int i, refcount_t *r)
-+{
-+	WARN_ONCE(!refcount_add_not_zero(i, r), "refcount_t: addition on 0; use-after-free.\n");
-+}
-+
-+/**
-+ * refcount_inc_not_zero - increment a refcount unless it is 0
-+ * @r: the refcount to increment
-+ *
-+ * Similar to atomic_inc_not_zero(), but will saturate at REFCOUNT_SATURATED
-+ * and WARN.
-+ *
-+ * Provides no memory ordering, it is assumed the caller has guaranteed the
-+ * object memory to be stable (RCU, etc.). It does provide a control dependency
-+ * and thereby orders future stores. See the comment on top.
-+ *
-+ * Return: true if the increment was successful, false otherwise
-+ */
-+static inline __must_check bool refcount_inc_not_zero(refcount_t *r)
-+{
-+	unsigned int new, val = atomic_read(&r->refs);
-+
-+	do {
-+		new = val + 1;
- 
--extern __must_check bool refcount_inc_not_zero(refcount_t *r);
--extern void refcount_inc(refcount_t *r);
-+		if (!val)
-+			return false;
- 
--extern __must_check bool refcount_sub_and_test(int i, refcount_t *r);
-+		if (unlikely(!new))
-+			return true;
- 
--extern __must_check bool refcount_dec_and_test(refcount_t *r);
--extern void refcount_dec(refcount_t *r);
-+	} while (!atomic_try_cmpxchg_relaxed(&r->refs, &val, new));
-+
-+	WARN_ONCE(new == REFCOUNT_SATURATED,
-+		  "refcount_t: saturated; leaking memory.\n");
-+
-+	return true;
-+}
-+
-+/**
-+ * refcount_inc - increment a refcount
-+ * @r: the refcount to increment
-+ *
-+ * Similar to atomic_inc(), but will saturate at REFCOUNT_SATURATED and WARN.
-+ *
-+ * Provides no memory ordering, it is assumed the caller already has a
-+ * reference on the object.
-+ *
-+ * Will WARN if the refcount is 0, as this represents a possible use-after-free
-+ * condition.
-+ */
-+static inline void refcount_inc(refcount_t *r)
-+{
-+	WARN_ONCE(!refcount_inc_not_zero(r), "refcount_t: increment on 0; use-after-free.\n");
-+}
-+
-+/**
-+ * refcount_sub_and_test - subtract from a refcount and test if it is 0
-+ * @i: amount to subtract from the refcount
-+ * @r: the refcount
-+ *
-+ * Similar to atomic_dec_and_test(), but it will WARN, return false and
-+ * ultimately leak on underflow and will fail to decrement when saturated
-+ * at REFCOUNT_SATURATED.
-+ *
-+ * Provides release memory ordering, such that prior loads and stores are done
-+ * before, and provides an acquire ordering on success such that free()
-+ * must come after.
-+ *
-+ * Use of this function is not recommended for the normal reference counting
-+ * use case in which references are taken and released one at a time.  In these
-+ * cases, refcount_dec(), or one of its variants, should instead be used to
-+ * decrement a reference count.
-+ *
-+ * Return: true if the resulting refcount is 0, false otherwise
-+ */
-+static inline __must_check bool refcount_sub_and_test(int i, refcount_t *r)
-+{
-+	unsigned int new, val = atomic_read(&r->refs);
-+
-+	do {
-+		if (unlikely(val == REFCOUNT_SATURATED))
-+			return false;
-+
-+		new = val - i;
-+		if (new > val) {
-+			WARN_ONCE(new > val, "refcount_t: underflow; use-after-free.\n");
-+			return false;
-+		}
-+
-+	} while (!atomic_try_cmpxchg_release(&r->refs, &val, new));
-+
-+	if (!new) {
-+		smp_acquire__after_ctrl_dep();
-+		return true;
-+	}
-+	return false;
-+
-+}
-+
-+/**
-+ * refcount_dec_and_test - decrement a refcount and test if it is 0
-+ * @r: the refcount
-+ *
-+ * Similar to atomic_dec_and_test(), it will WARN on underflow and fail to
-+ * decrement when saturated at REFCOUNT_SATURATED.
-+ *
-+ * Provides release memory ordering, such that prior loads and stores are done
-+ * before, and provides an acquire ordering on success such that free()
-+ * must come after.
-+ *
-+ * Return: true if the resulting refcount is 0, false otherwise
-+ */
-+static inline __must_check bool refcount_dec_and_test(refcount_t *r)
-+{
-+	return refcount_sub_and_test(1, r);
-+}
-+
-+/**
-+ * refcount_dec - decrement a refcount
-+ * @r: the refcount
-+ *
-+ * Similar to atomic_dec(), it will WARN on underflow and fail to decrement
-+ * when saturated at REFCOUNT_SATURATED.
-+ *
-+ * Provides release memory ordering, such that prior loads and stores are done
-+ * before.
-+ */
-+static inline void refcount_dec(refcount_t *r)
-+{
-+	WARN_ONCE(refcount_dec_and_test(r), "refcount_t: decrement hit 0; leaking memory.\n");
-+}
- 
--#else
-+#else /* CONFIG_REFCOUNT_FULL */
- 
- #define REFCOUNT_MAX		INT_MAX
- #define REFCOUNT_SATURATED	(INT_MIN / 2)
-@@ -103,7 +322,7 @@ static inline void refcount_dec(refcount_t *r)
- 	atomic_dec(&r->refs);
- }
- # endif /* !CONFIG_ARCH_HAS_REFCOUNT */
--#endif /* CONFIG_REFCOUNT_FULL */
-+#endif /* !CONFIG_REFCOUNT_FULL */
- 
- extern __must_check bool refcount_dec_if_one(refcount_t *r);
- extern __must_check bool refcount_dec_not_one(refcount_t *r);
-diff --git a/lib/refcount.c b/lib/refcount.c
-index a2f670998cee..3a534fbebdcc 100644
---- a/lib/refcount.c
-+++ b/lib/refcount.c
-@@ -1,41 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Variant of atomic_t specialized for reference counts.
-- *
-- * The interface matches the atomic_t interface (to aid in porting) but only
-- * provides the few functions one should use for reference counting.
-- *
-- * It differs in that the counter saturates at REFCOUNT_SATURATED and will not
-- * move once there. This avoids wrapping the counter and causing 'spurious'
-- * use-after-free issues.
-- *
-- * Memory ordering rules are slightly relaxed wrt regular atomic_t functions
-- * and provide only what is strictly required for refcounts.
-- *
-- * The increments are fully relaxed; these will not provide ordering. The
-- * rationale is that whatever is used to obtain the object we're increasing the
-- * reference count on will provide the ordering. For locked data structures,
-- * its the lock acquire, for RCU/lockless data structures its the dependent
-- * load.
-- *
-- * Do note that inc_not_zero() provides a control dependency which will order
-- * future stores against the inc, this ensures we'll never modify the object
-- * if we did not in fact acquire a reference.
-- *
-- * The decrements will provide release order, such that all the prior loads and
-- * stores will be issued before, it also provides a control dependency, which
-- * will order us against the subsequent free().
-- *
-- * The control dependency is against the load of the cmpxchg (ll/sc) that
-- * succeeded. This means the stores aren't fully ordered, but this is fine
-- * because the 1->0 transition indicates no concurrency.
-- *
-- * Note that the allocator is responsible for ordering things between free()
-- * and alloc().
-- *
-- * The decrements dec_and_test() and sub_and_test() also provide acquire
-- * ordering on success.
-- *
-+ * Out-of-line refcount functions common to all refcount implementations.
-  */
- 
- #include <linux/mutex.h>
-@@ -43,207 +8,6 @@
- #include <linux/spinlock.h>
- #include <linux/bug.h>
- 
--#ifdef CONFIG_REFCOUNT_FULL
--
--/**
-- * refcount_add_not_zero - add a value to a refcount unless it is 0
-- * @i: the value to add to the refcount
-- * @r: the refcount
-- *
-- * Will saturate at REFCOUNT_SATURATED and WARN.
-- *
-- * Provides no memory ordering, it is assumed the caller has guaranteed the
-- * object memory to be stable (RCU, etc.). It does provide a control dependency
-- * and thereby orders future stores. See the comment on top.
-- *
-- * Use of this function is not recommended for the normal reference counting
-- * use case in which references are taken and released one at a time.  In these
-- * cases, refcount_inc(), or one of its variants, should instead be used to
-- * increment a reference count.
-- *
-- * Return: false if the passed refcount is 0, true otherwise
-- */
--bool refcount_add_not_zero(int i, refcount_t *r)
--{
--	unsigned int new, val = atomic_read(&r->refs);
--
--	do {
--		if (!val)
--			return false;
--
--		if (unlikely(val == REFCOUNT_SATURATED))
--			return true;
--
--		new = val + i;
--		if (new < val)
--			new = REFCOUNT_SATURATED;
--
--	} while (!atomic_try_cmpxchg_relaxed(&r->refs, &val, new));
--
--	WARN_ONCE(new == REFCOUNT_SATURATED,
--		  "refcount_t: saturated; leaking memory.\n");
--
--	return true;
--}
--EXPORT_SYMBOL(refcount_add_not_zero);
--
--/**
-- * refcount_add - add a value to a refcount
-- * @i: the value to add to the refcount
-- * @r: the refcount
-- *
-- * Similar to atomic_add(), but will saturate at REFCOUNT_SATURATED and WARN.
-- *
-- * Provides no memory ordering, it is assumed the caller has guaranteed the
-- * object memory to be stable (RCU, etc.). It does provide a control dependency
-- * and thereby orders future stores. See the comment on top.
-- *
-- * Use of this function is not recommended for the normal reference counting
-- * use case in which references are taken and released one at a time.  In these
-- * cases, refcount_inc(), or one of its variants, should instead be used to
-- * increment a reference count.
-- */
--void refcount_add(int i, refcount_t *r)
--{
--	WARN_ONCE(!refcount_add_not_zero(i, r), "refcount_t: addition on 0; use-after-free.\n");
--}
--EXPORT_SYMBOL(refcount_add);
--
--/**
-- * refcount_inc_not_zero - increment a refcount unless it is 0
-- * @r: the refcount to increment
-- *
-- * Similar to atomic_inc_not_zero(), but will saturate at REFCOUNT_SATURATED
-- * and WARN.
-- *
-- * Provides no memory ordering, it is assumed the caller has guaranteed the
-- * object memory to be stable (RCU, etc.). It does provide a control dependency
-- * and thereby orders future stores. See the comment on top.
-- *
-- * Return: true if the increment was successful, false otherwise
-- */
--bool refcount_inc_not_zero(refcount_t *r)
--{
--	unsigned int new, val = atomic_read(&r->refs);
--
--	do {
--		new = val + 1;
--
--		if (!val)
--			return false;
--
--		if (unlikely(!new))
--			return true;
--
--	} while (!atomic_try_cmpxchg_relaxed(&r->refs, &val, new));
--
--	WARN_ONCE(new == REFCOUNT_SATURATED,
--		  "refcount_t: saturated; leaking memory.\n");
--
--	return true;
--}
--EXPORT_SYMBOL(refcount_inc_not_zero);
--
--/**
-- * refcount_inc - increment a refcount
-- * @r: the refcount to increment
-- *
-- * Similar to atomic_inc(), but will saturate at REFCOUNT_SATURATED and WARN.
-- *
-- * Provides no memory ordering, it is assumed the caller already has a
-- * reference on the object.
-- *
-- * Will WARN if the refcount is 0, as this represents a possible use-after-free
-- * condition.
-- */
--void refcount_inc(refcount_t *r)
--{
--	WARN_ONCE(!refcount_inc_not_zero(r), "refcount_t: increment on 0; use-after-free.\n");
--}
--EXPORT_SYMBOL(refcount_inc);
--
--/**
-- * refcount_sub_and_test - subtract from a refcount and test if it is 0
-- * @i: amount to subtract from the refcount
-- * @r: the refcount
-- *
-- * Similar to atomic_dec_and_test(), but it will WARN, return false and
-- * ultimately leak on underflow and will fail to decrement when saturated
-- * at REFCOUNT_SATURATED.
-- *
-- * Provides release memory ordering, such that prior loads and stores are done
-- * before, and provides an acquire ordering on success such that free()
-- * must come after.
-- *
-- * Use of this function is not recommended for the normal reference counting
-- * use case in which references are taken and released one at a time.  In these
-- * cases, refcount_dec(), or one of its variants, should instead be used to
-- * decrement a reference count.
-- *
-- * Return: true if the resulting refcount is 0, false otherwise
-- */
--bool refcount_sub_and_test(int i, refcount_t *r)
--{
--	unsigned int new, val = atomic_read(&r->refs);
--
--	do {
--		if (unlikely(val == REFCOUNT_SATURATED))
--			return false;
--
--		new = val - i;
--		if (new > val) {
--			WARN_ONCE(new > val, "refcount_t: underflow; use-after-free.\n");
--			return false;
--		}
--
--	} while (!atomic_try_cmpxchg_release(&r->refs, &val, new));
--
--	if (!new) {
--		smp_acquire__after_ctrl_dep();
--		return true;
--	}
--	return false;
--
--}
--EXPORT_SYMBOL(refcount_sub_and_test);
--
--/**
-- * refcount_dec_and_test - decrement a refcount and test if it is 0
-- * @r: the refcount
-- *
-- * Similar to atomic_dec_and_test(), it will WARN on underflow and fail to
-- * decrement when saturated at REFCOUNT_SATURATED.
-- *
-- * Provides release memory ordering, such that prior loads and stores are done
-- * before, and provides an acquire ordering on success such that free()
-- * must come after.
-- *
-- * Return: true if the resulting refcount is 0, false otherwise
-- */
--bool refcount_dec_and_test(refcount_t *r)
--{
--	return refcount_sub_and_test(1, r);
--}
--EXPORT_SYMBOL(refcount_dec_and_test);
--
--/**
-- * refcount_dec - decrement a refcount
-- * @r: the refcount
-- *
-- * Similar to atomic_dec(), it will WARN on underflow and fail to decrement
-- * when saturated at REFCOUNT_SATURATED.
-- *
-- * Provides release memory ordering, such that prior loads and stores are done
-- * before.
-- */
--void refcount_dec(refcount_t *r)
--{
--	WARN_ONCE(refcount_dec_and_test(r), "refcount_t: decrement hit 0; leaking memory.\n");
--}
--EXPORT_SYMBOL(refcount_dec);
--
--#endif /* CONFIG_REFCOUNT_FULL */
--
- /**
-  * refcount_dec_if_one - decrement a refcount if it is 1
-  * @r: the refcount
--- 
-2.23.0.581.g78d2f28ef7-goog
+On Mon, Oct 07, 2019 at 08:30:51AM -0700, Dave Hansen wrote:
+> On 10/7/19 8:16 AM, Joerg Roedel wrote:
+> > @@ -318,7 +328,7 @@ static void dump_pagetable(unsigned long address)
+> >  
+> >  #else /* CONFIG_X86_64: */
+> >  
+> > -void vmalloc_sync_all(void)
+> > +void vmalloc_sync_mappings(void)
+> >  {
+> >  	sync_global_pgds(VMALLOC_START & PGDIR_MASK, VMALLOC_END);
+> >  }
+> 
+> FWIW, I generally detest the use of __weak. :)
 
+Yeah, I don't like it either, but in this case it is probably better
+than empty stubs in all architectures besides x86 :)
+
+> In this case, it ends up letting us gloss over the fact that we have a
+> 32/64-bit asymmetry.  It would probably be nice to actually have a
+> 64-bit implementation that comes along with a nice comment.  Maybe this
+> in vmalloc_sync_mappings():
+> 
+> 	/*
+> 	 * 64-bit mappings might allocate new p4d/pud pages
+> 	 * that need to be propagated to all tasks' PGDs.
+> 	 */
+> 
+> which would pair nicely with:
+> 
+> void vmalloc_sync_unmappings(void)
+> {
+> 	/*
+> 	 * Unmappings never allocate or free p4d/pud pages.
+> 	 * No work is required here.
+> 	 */
+> }
+
+Yes, that makes, I will add these comments in V2.
+
+Thanks,
+
+	Joerg
