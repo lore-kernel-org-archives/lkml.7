@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD2B6C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F9DCC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:13:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CAA5206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52A30206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:13:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570472021;
-	bh=IM3RRaHRAAAZ9GriggCzjNI8gnCjvqbSFAswxUXkCbg=;
+	s=default; t=1570472027;
+	bh=7qTxKpzDfiBZgLFEI3pRCQBh4ABTl6ofZ31Wb0WS2q8=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=z2AqrfyMPUzz3itdb0imDMUNGjjdnjPlHjur63BzcwrPM0idhqbVrSfGv+agPenEv
-	 ey+DxaSo1nyeVFplkYyjCC+/nxeq3JtYtZm78f/FHbXEKN1LoHfZ2ejK7hlkDPYWH9
-	 o3q9AY78S8mzBjiuuNKZhKf5ok+cD+JjfckIKIpc=
+	b=E/N9vFHim9BQ3uJNZ0TrH4dQQLc9FDMZBUd3MrgDiIgPirfkh/bQ7LhV5xQK3+0HN
+	 C5PTIZJm2AntSf+csW98OkVQY/Vr8NzNONDI4bCNUEFRlz7+ht8G8jUKXp1+OGe6JH
+	 H9f9EjS80Wk2HGFJBahBVn5bamkpPzTU0dNz919w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728856AbfJGSNk (ORCPT
+        id S1729291AbfJGSNq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 14:13:40 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:34400 "EHLO
+        Mon, 7 Oct 2019 14:13:46 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:34574 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728079AbfJGSNk (ORCPT
+        with ESMTP id S1728079AbfJGSNp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 14:13:40 -0400
+        Mon, 7 Oct 2019 14:13:45 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=YszzIRRq8+HMe+uWy5lgHyDF5uj3GQ+Jn/wpF3eKyO4=; b=GaYXeXG9/kZA
-        xoRoklbcb21LauF4f0MDmub9bJdPkJYpgJBMBQpQ/Vkmbh288FFFllOjhsaDZtDi/71KJJK9qjauh
-        iFkLS8na+vM6ThtkF/TlQYWmNR/KxtMd0ROzrP7t4v6ZxfoF3LwTl9i37LSqEDt/bCSE3ESIF0waa
-        EpZ0w=;
+        List-Archive; bh=dlfa46lGCXB+/J0deOqs/W09rBlwYzs099ZfVzI+9RM=; b=JNe81tPrJrrH
+        VkighFnutBYOUCjjUr2NKOzNc0lmT86d6oIAdhojEKNGH6z8dbbOsLJ5mFn9Nm+g3M6VF8sC0etWz
+        GcyY17vAMPbIvUUh4iVmR7pRxyvbajIEnv7mSlVWF1oS/owSLzCbazZQoRkWIlXXbtG6sT9r35a/e
+        hNl4c=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iHXVe-0004GD-1J; Mon, 07 Oct 2019 18:13:26 +0000
+        id 1iHXVe-0004GE-2f; Mon, 07 Oct 2019 18:13:26 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 42DD6274162F; Mon,  7 Oct 2019 19:13:25 +0100 (BST)
+        id 7EAD52741D8E; Mon,  7 Oct 2019 19:13:25 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Dan Murphy <dmurphy@ti.com>
 Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
         lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
         Mark Brown <broonie@kernel.org>, navada@ti.com, perex@perex.cz,
         shifu0704@thundersoft.com, tiwai@suse.com
-Subject: Applied "ASoC: tas2770: Fix snd_soc_update_bits error handling" to the asoc tree
-In-Reply-To: <20191007171157.17813-1-dmurphy@ti.com>
+Subject: Applied "ASoc: tas2770: Remove unused defines and variables" to the asoc tree
+In-Reply-To: <20191007171157.17813-3-dmurphy@ti.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191007181325.42DD6274162F@ypsilon.sirena.org.uk>
+Message-Id: <20191007181325.7EAD52741D8E@ypsilon.sirena.org.uk>
 Date:   Mon,  7 Oct 2019 19:13:25 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -63,7 +63,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: tas2770: Fix snd_soc_update_bits error handling
+   ASoc: tas2770: Remove unused defines and variables
 
 has been applied to the asoc tree at
 
@@ -88,152 +88,67 @@ to this mail.
 Thanks,
 Mark
 
-From edd6d5393206ec9bfc74776f6f20a57f11327e1b Mon Sep 17 00:00:00 2001
+From 40f90ef0a77bab65c8f959ba1d264bb674f7234b Mon Sep 17 00:00:00 2001
 From: Dan Murphy <dmurphy@ti.com>
-Date: Mon, 7 Oct 2019 12:11:55 -0500
-Subject: [PATCH] ASoC: tas2770: Fix snd_soc_update_bits error handling
+Date: Mon, 7 Oct 2019 12:11:57 -0500
+Subject: [PATCH] ASoc: tas2770: Remove unused defines and variables
 
-According the documentation for snd_soc_update_bits the API
-will return a 1 if the update was successful with a value change,
-a 0 if the update was successful with no value change or a negative
-if the command just failed.
-
-So the value of return in the driver needs to be checked for being less
-then 0 or the caller may indicate failure when the value actually
-changed.
+Remove unused defines and structure variables that are not
+referenced by the code.  If these are needed for future
+enhancements then they should be added at that time.
 
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
-Link: https://lore.kernel.org/r/20191007171157.17813-1-dmurphy@ti.com
+Link: https://lore.kernel.org/r/20191007171157.17813-3-dmurphy@ti.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/tas2770.c | 46 +++++++++++++++++++++++++-------------
- 1 file changed, 30 insertions(+), 16 deletions(-)
+ sound/soc/codecs/tas2770.h | 21 ---------------------
+ 1 file changed, 21 deletions(-)
 
-diff --git a/sound/soc/codecs/tas2770.c b/sound/soc/codecs/tas2770.c
-index f3a665b64fd6..ad76f22fcfac 100644
---- a/sound/soc/codecs/tas2770.c
-+++ b/sound/soc/codecs/tas2770.c
-@@ -83,7 +83,8 @@ static int tas2770_codec_suspend(struct snd_soc_component *component)
- 		TAS2770_PWR_CTRL,
- 		TAS2770_PWR_CTRL_MASK,
- 		TAS2770_PWR_CTRL_SHUTDOWN);
--	if (ret)
-+
-+	if (ret < 0)
- 		return ret;
+diff --git a/sound/soc/codecs/tas2770.h b/sound/soc/codecs/tas2770.h
+index d597a8280707..cbb858369fe6 100644
+--- a/sound/soc/codecs/tas2770.h
++++ b/sound/soc/codecs/tas2770.h
+@@ -125,40 +125,19 @@
+ #define ERROR_UNDER_VOLTAGE 0x0000008
+ #define ERROR_BROWNOUT      0x0000010
+ #define ERROR_CLASSD_PWR    0x0000020
+-#define TAS2770_SLOT_16BIT  16
+-#define TAS2770_SLOT_32BIT  32
+-#define TAS2770_I2C_RETRY_COUNT      3
+-
+-struct tas2770_register {
+-	int book;
+-	int page;
+-	int reg;
+-};
+-
+-struct tas2770_dai_cfg {
+-	unsigned int dai_fmt;
+-	unsigned int tdm_delay;
+-};
  
- 	return 0;
-@@ -97,8 +98,9 @@ static int tas2770_codec_resume(struct snd_soc_component *component)
- 		TAS2770_PWR_CTRL,
- 		TAS2770_PWR_CTRL_MASK,
- 		TAS2770_PWR_CTRL_ACTIVE);
--	if (ret)
--		return -EINVAL;
-+
-+	if (ret < 0)
-+		return ret;
+ struct tas2770_priv {
+ 	struct device *dev;
+ 	struct regmap *regmap;
+-	struct snd_soc_codec *codec;
+ 	struct snd_soc_component *component;
+-	struct mutex dev_lock;
+-	struct hrtimer mtimer;
+ 	int power_state;
+ 	int asi_format;
+ 	struct gpio_desc *reset_gpio;
+ 	int sampling_rate;
+-	int frame_size;
+ 	int channel_size;
+ 	int slot_width;
+ 	int v_sense_slot;
+ 	int i_sense_slot;
+-	bool runtime_suspend;
+-	unsigned int err_code;
+-	struct mutex codec_lock;
+ };
  
- 	return 0;
- }
-@@ -150,7 +152,10 @@ static int tas2770_dac_event(struct snd_soc_dapm_widget *w,
- 	}
- 
- end:
--	return ret;
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
- }
- 
- static const struct snd_kcontrol_new isense_switch =
-@@ -200,7 +205,10 @@ static int tas2770_mute(struct snd_soc_dai *dai, int mute)
- 			TAS2770_PWR_CTRL_MASK,
- 			TAS2770_PWR_CTRL_ACTIVE);
- 
--	return ret;
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
- }
- 
- static int tas2770_set_bitwidth(struct tas2770_priv *tas2770, int bitwidth)
-@@ -253,7 +261,10 @@ static int tas2770_set_bitwidth(struct tas2770_priv *tas2770, int bitwidth)
- 		tas2770->i_sense_slot);
- 
- end:
--	return ret;
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
- }
- 
- static int tas2770_set_samplerate(struct tas2770_priv *tas2770, int samplerate)
-@@ -345,9 +356,11 @@ static int tas2770_set_samplerate(struct tas2770_priv *tas2770, int samplerate)
- 	}
- 
- end:
--	if (!ret)
--		tas2770->sampling_rate = samplerate;
--	return ret;
-+	if (ret < 0)
-+		return ret;
-+
-+	tas2770->sampling_rate = samplerate;
-+	return 0;
- }
- 
- static int tas2770_hw_params(struct snd_pcm_substream *substream,
-@@ -401,7 +414,7 @@ static int tas2770_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 	ret = snd_soc_component_update_bits(component, TAS2770_TDM_CFG_REG1,
- 		TAS2770_TDM_CFG_REG1_RX_MASK,
- 		asi_cfg_1);
--	if (ret)
-+	if (ret < 0)
- 		return ret;
- 
- 	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
-@@ -426,7 +439,7 @@ static int tas2770_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 	ret = snd_soc_component_update_bits(component, TAS2770_TDM_CFG_REG1,
- 		TAS2770_TDM_CFG_REG1_MASK,
- 	(tdm_rx_start_slot << TAS2770_TDM_CFG_REG1_51_SHIFT));
--	if (ret)
-+	if (ret < 0)
- 		return ret;
- 
- 	tas2770->asi_format = fmt;
-@@ -470,12 +483,12 @@ static int tas2770_set_dai_tdm_slot(struct snd_soc_dai *dai,
- 	ret = snd_soc_component_update_bits(component, TAS2770_TDM_CFG_REG3,
- 		TAS2770_TDM_CFG_REG3_30_MASK,
- 		(left_slot << TAS2770_TDM_CFG_REG3_30_SHIFT));
--	if (ret)
-+	if (ret < 0)
- 		return ret;
- 	ret = snd_soc_component_update_bits(component, TAS2770_TDM_CFG_REG3,
- 		TAS2770_TDM_CFG_REG3_RXS_MASK,
- 	(right_slot << TAS2770_TDM_CFG_REG3_RXS_SHIFT));
--	if (ret)
-+	if (ret < 0)
- 		return ret;
- 
- 	switch (slot_width) {
-@@ -509,10 +522,11 @@ static int tas2770_set_dai_tdm_slot(struct snd_soc_dai *dai,
- 		ret = -EINVAL;
- 	}
- 
--	if (!ret)
--		tas2770->slot_width = slot_width;
-+	if (ret < 0)
-+		return ret;
- 
--	return ret;
-+	tas2770->slot_width = slot_width;
-+	return 0;
- }
- 
- static struct snd_soc_dai_ops tas2770_dai_ops = {
+ #endif /* __TAS2770__ */
 -- 
 2.20.1
 
