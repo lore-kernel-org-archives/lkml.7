@@ -2,154 +2,134 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA93C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB14AC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:44:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3216020867
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:41:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AUmIkwxC"
+	by mail.kernel.org (Postfix) with ESMTP id 9D08020867
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:44:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727394AbfJGIlH (ORCPT
+        id S1727376AbfJGIog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 04:41:07 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34557 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727346AbfJGIlG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 04:41:06 -0400
-Received: by mail-pg1-f193.google.com with SMTP id y35so7791274pgl.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 01:41:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d00h7IdnG9Bs/4S91y4kH9nayVR/gCRtlft74BTzy6I=;
-        b=AUmIkwxCvC2VEhvpzdAyuNovVm2KMJDpgDWO5MBAsHUd4584+mQuTJYZeAiA+9d8qf
-         Cb8CstcWhfdXgmKTT8Jlla+OWOrkQkY1Q6jQNfjMg0AaTBOEx4pAXKvHC9GWvBLdZn5f
-         azsN30/RzedzrQSkqzovoBINho5ERfih75S8sqKoNuhZtu7ZJ6mBbxw52wj46VIAfs+0
-         /MI6tTyO9gi1ONrL9pd+19m5cKkMzvosoY+gvlO9IBXyVRyQi1ybU6t67GV8aiwd0d0e
-         6C9JtrHHYWmRkyPJoTmdFUFF6AQSVURI2bOhzr9RF9ZKtLjjyBGodHKo0R5D8MzKfjXZ
-         yRSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d00h7IdnG9Bs/4S91y4kH9nayVR/gCRtlft74BTzy6I=;
-        b=eoIKPfZPJWwTlaeuJAmi5vpKWYQn4hzBQU1IRw9xkHYh7yOLeJeh9Wbmt0dWgQTwao
-         J3USZO3fr5uwVNXw2qAYAzaEF/0yqyN1GnOKJgGwDWVRqyVB3M5mqa8PfEJbjhC0Dl9S
-         NqtB5bxLTbh9qaM+bMSR+kdQELpEQ5qOKn9sENmOkbSoS28qFqKp5sRN7GkRXBgHhY6V
-         CWYl+euoqxqtCLIhfCfV+7WUE6YBtCKxp51pfERdUseMAHHlNpdNx6JA43Dhxdyz2P2O
-         Wt7cmeRC9FR4KIOEzhAgEMw6xEDmLf9Hppa8YEu+DU7bAuO2UIQqt5HtNslsiq6DnpYN
-         JdhA==
-X-Gm-Message-State: APjAAAUaYbOo5Xkp5+KERILZoewDjPT8RaLDiovhBpSxl9kitr1/K/3l
-        cL4BBHnWCFm4clUavbKVZOQpcRYJ8eys5qInpH87rA==
-X-Google-Smtp-Source: APXvYqwxXGxNWrOtyc6pCGXMSd6S1trXysWwf0BjsGf8IFVQEjIqe/b6qXijaBYnb2AJQF5sarq/ZPYHb1uY+bE9OzQ=
-X-Received: by 2002:a17:90a:5d09:: with SMTP id s9mr32723780pji.131.1570437665358;
- Mon, 07 Oct 2019 01:41:05 -0700 (PDT)
+        Mon, 7 Oct 2019 04:44:36 -0400
+Received: from mga09.intel.com ([134.134.136.24]:16703 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727258AbfJGIof (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 04:44:35 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Oct 2019 01:44:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,267,1566889200"; 
+   d="scan'208";a="276727970"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga001.jf.intel.com with ESMTP; 07 Oct 2019 01:44:31 -0700
+Received: from andy by smile with local (Exim 4.92.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iHOd3-0005O0-Rr; Mon, 07 Oct 2019 11:44:29 +0300
+Date:   Mon, 7 Oct 2019 11:44:29 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        akpm@linux-foundation.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux@rasmusvillemoes.dk, yamada.masahiro@socionext.com,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        geert@linux-m68k.org, preid@electromag.com.au, lukas@wunner.de,
+        sean.nyekjaer@prevas.dk, morten.tiljeset@prevas.dk
+Subject: Re: [PATCH v16 11/14] thermal: intel: intel_soc_dts_iosf: Utilize
+ for_each_set_clump8 macro
+Message-ID: <20191007084429.GN32742@smile.fi.intel.com>
+References: <cover.1570374078.git.vilhelm.gray@gmail.com>
+ <8e85aa4ccead5c330d7abdbda292f32a0c48902e.1570374078.git.vilhelm.gray@gmail.com>
 MIME-Version: 1.0
-References: <CAHk-=whX-JbpM2Sc85epng_GAgGGzxRAJ2SSKkMf9N1Lsqe+OA@mail.gmail.com>
- <56e2e1a7-f8fe-765b-8452-1710b41895bf@kernel.org> <20191004222714.GA107737@google.com>
- <ad800337-1ae2-49d2-e715-aa1974e28a10@kernel.org> <20191004232955.GC12012@mit.edu>
- <CAFd5g456rBSp177EkYAwsF+KZ0rxJa90mzUpW2M3R7tWbMAh9Q@mail.gmail.com>
- <63e59b0b-b51e-01f4-6359-a134a1f903fd@kernel.org> <CAFd5g47wji3T9RFmqBwt+jPY0tb83y46oj_ttOq=rTX_N1Ggyg@mail.gmail.com>
- <544bdfcb-fb35-5008-ec94-8d404a08fd14@kernel.org> <CAFd5g467PkfELixpU0JbaepEAAD_ugAA340-uORngC-eXsQQ-g@mail.gmail.com>
- <20191006165436.GA29585@mit.edu> <CAHk-=wjcJxypxUOSF-jc=SQKT1CrOoTMyT7soYzbvK3965JmCA@mail.gmail.com>
-In-Reply-To: <CAHk-=wjcJxypxUOSF-jc=SQKT1CrOoTMyT7soYzbvK3965JmCA@mail.gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Mon, 7 Oct 2019 01:40:53 -0700
-Message-ID: <CAFd5g45djTX+FaXwn2abve1+6GbtNrv+8EJgDe_TXn1d+pzukA@mail.gmail.com>
-Subject: Re: [PATCH v18 00/19] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>, shuah <shuah@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8e85aa4ccead5c330d7abdbda292f32a0c48902e.1570374078.git.vilhelm.gray@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 6, 2019 at 10:18 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Sun, Oct 6, 2019 at 9:55 AM Theodore Y. Ts'o <tytso@mit.edu> wrote:
-> >
-> > Well, one thing we *can* do is if (a) if we can create a kselftest
-> > branch which we know is stable and won't change, and (b) we can get
-> > assurances that Linus *will* accept that branch during the next merge
-> > window, those subsystems which want to use kself test can simply pull
-> > it into their tree.
->
-> Yes.
->
-> At the same time, I don't think it needs to be even that fancy. Even
-> if it's not a stable branch that gets shared between different
-> developers, it would be good to just have people do a "let's try this"
-> throw-away branch to use the kunit functionality and verify that
-> "yeah, this is fairly convenient for ext4".
->
-> It doesn't have to be merged in that form, but just confirmation that
-> the infrastructure is helpful before it gets merged would be good.
+On Sun, Oct 06, 2019 at 11:11:08AM -0400, William Breathitt Gray wrote:
+> Utilize for_each_set_clump8 macro, and the bitmap_set_value8 and
+> bitmap_get_value8 functions, where appropriate. In addition, remove the
+> now unnecessary temp_mask and temp_shift members of the
+> intel_soc_dts_sensor_entry structure.
 
-I thought we already had done this satisfactorily.
+Since it perhaps will be next version, I have few style comments here
+(ignore them if you are not going to send a new version by some other reasons).
 
-We have one proof-of-concept test in the branch in the kselftest repo
-(proc sysctl test) that went out in the pull request, and we also had
-some other tests that were not in the pull request (there is the ext4
-timestamp stuff mentioned above, and we also had one against the list
-data structure), which we were planning on sending out for review once
-Shuah's pull request was accepted. I know the apparmor people also
-wrote some tests that they said were useful; however, I have not
-coordinated with them on upstreaming their tests. I know of some other
-people who are using it, but I don't think the tests are as far along
-for upstreaming.
+>  	int status;
+>  	u32 temp_out;
 
-The point is: I thought we had plenty of signal that KUnit would be
-useful to have merged into the mainline kernel. I thought the only
-reason it was rejected for 5.4 was due to the directory name issue
-combined with bad timing.
+> +	unsigned long update_ptps;
 
-Please correct me if I missed anything.
+I think it's better to put it one line below.
 
-Thanks!
+>  	u32 out;
+>  	u32 store_ptps;
+>  	u32 store_ptmc;
+
+> -	out = (store_ptps & ~(0xFF << (thres_index * 8)));
+> -	out |= (temp_out & 0xFF) << (thres_index * 8);
+> +	update_ptps = store_ptps;
+> +	bitmap_set_value8(&update_ptps, temp_out & 0xFF, thres_index * 8);
+> +	out = update_ptps;
+
++ blank line?
+
+After this change it seems we may drop temp_out and use out instead.
+
+> -	out = (out & dts->temp_mask) >> dts->temp_shift;
+> +	temp_raw = out;
+> +	out = bitmap_get_value8(&temp_raw, dts->id * 8);
+
+>  	out -= SOC_DTS_TJMAX_ENCODING;
+>  	*temp = sensors->tj_max - out * 1000;
+
+We may also join these together, though it's up to you.
+
+>  	char name[10];
+>  	int trip_count = 0;
+
+> +	int writable_trip_count = 0;
+
+Perhaps move it after next line, or before previous one.
+
+>  	int trip_mask = 0;
+>  	u32 store_ptps;
+>  	int ret;
+
+> -	int i;
+> +	unsigned long i;
+
+We may skip this change, but if we go with it, better to place before
+'int ret;' line.
+
+> +	unsigned long trip;
+> +	unsigned long ptps;
+
+I would group each of these with relative group of definitions above.
+
+>  	if (notification_support) {
+>  		trip_count = min(SOC_MAX_DTS_TRIPS, trip_cnt);
+> +		writable_trip_count = trip_count - read_only_trip_cnt;
+
+Maybe writable_trip_count -> writable_trip_cnt? (in align with r/o one).
+
+> +		trip_mask = GENMASK(writable_trip_count - 1, 0);
+>  	}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
