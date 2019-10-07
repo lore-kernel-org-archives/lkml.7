@@ -2,89 +2,99 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3910ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B76C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9912D2133F
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97F462133F
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:06:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uOe86C3v"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BwM8IGAf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729500AbfJGWEm (ORCPT
+        id S1729489AbfJGWGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 18:04:42 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43167 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728422AbfJGWEl (ORCPT
+        Mon, 7 Oct 2019 18:06:06 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34161 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728422AbfJGWGG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 18:04:41 -0400
-Received: by mail-pl1-f195.google.com with SMTP id f21so7495058plj.10
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 15:04:40 -0700 (PDT)
+        Mon, 7 Oct 2019 18:06:06 -0400
+Received: by mail-io1-f68.google.com with SMTP id q1so32282663ion.1;
+        Mon, 07 Oct 2019 15:06:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ixInCzHTHuGPoMvc/4LEqiBnoIwsvH2ChHMVP5v+VmY=;
-        b=uOe86C3vj6CaS6uwMW2GJRTthVEBShtNmMQn6K5ZgQOd13S77DKyAScS4t5Sp05CAr
-         frkcDaQ0fR3BQn5RCygrrLLnk/8iVh9zI6nJ0h3oKPxTH2KD8QT8wcCJwD5c/+XzVjdQ
-         0ni6r7S0CGsFBqLR5kowdiHW0a9wPlQc7M5r4Pcyub+6185zjMkKPrjGVE5PaR5qKf5X
-         fBMtY8GbTPyrb1j8iRMXeMKURnv9Puz17sJEnNLlBeSKjR0ZuNRpRGq5nFrEzeOSRDmq
-         QUFwXjVrGYTYw1/HYi7C+LfirFMTRYkfOyjo+j8JgZPXOs+2VOHV4baVcsTSXzea3MmO
-         iR3g==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Twc3gHw5x4Wog7YioRFdt2DRj3Idc7+bXpqT/1hf/GA=;
+        b=BwM8IGAfFvBfdef2Lcn9ilsr9qhBSudW05V5D/5vmlL2JjGCQk2t+E007puOLkLE7G
+         Pp5/W7p0ju/W6fAg03miaqEwbkUBKCqgFwjXyPzq4zju0sBDr2wXJez9kBrUGQM1RmGO
+         NbWuGpgxjri/wex9sXDdFblIWVIBCNxKkHulrPOLKfArSDCJFkGIDVo11FwKfJsq25x/
+         PvYE1waz2dwmul3X+yfxXxEr5oLSwcJc38hW6ZWMBawSqyVyp7iFw9UJmWmrbYoRQwci
+         T9wcYEUFER4gcVvkpiPLjqYHScwZHwzgKihWISU8TPKiSrUCQAdZMmvg4MmBgudqVvSK
+         e/yA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ixInCzHTHuGPoMvc/4LEqiBnoIwsvH2ChHMVP5v+VmY=;
-        b=XvGBFkZyVahJJprdEChF0IllpzCxfWaqBAH7JkCw+zSh2yJzjGDk64+g7MKHxHgqPr
-         NG/YYFwU2P9//NNU9cLvXeXzEkL6QyPNe8Gs+HLFwwRjsOXa9SZs33VHcsj8pRsO+Hr+
-         oz6zbxqG0ROw5P5EHmu8rP8hRHiMx3oSJFFdekC+CR/S211qTzLYfH54eAnKwH+mzrgK
-         RQR0B7rsraG7y6IX1iNewk7ZBQj+Hf2q32UGARR7O0K6EsmxJnbMeeU3S4DyV4XdSWUj
-         06FyFAMQeQgbbZdjE6P7ocey2/7ZyCG66xZmxZ/i5XePIZzGzxHJpIkFE2ROu30x02N2
-         o+HA==
-X-Gm-Message-State: APjAAAUaStZ2Svq5NeU1BODDiwHDzJa2P0eU9WeSJVXdzrahN8U9ycTA
-        58oT9wBrpHUJCyP3ZzKkeadycGw/La2ldtQsQWnmDg==
-X-Google-Smtp-Source: APXvYqxdfUw8NUeJtuRGGEzEqvtnI3iP4U3bEOpjmRAhZp4oxYNIfoAO20zZhTj+4G8d6lAZz65Epk8t27NgaZEGRYg=
-X-Received: by 2002:a17:902:d887:: with SMTP id b7mr30655303plz.297.1570485879868;
- Mon, 07 Oct 2019 15:04:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <1567890091-9712-1-git-send-email-sj38.park@gmail.com> <CAFd5g46MNYcY-o8Z-1tSi0Kva02CjhcWC-xwkeNc6kfiDzLpLQ@mail.gmail.com>
-In-Reply-To: <CAFd5g46MNYcY-o8Z-1tSi0Kva02CjhcWC-xwkeNc6kfiDzLpLQ@mail.gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Mon, 7 Oct 2019 15:04:28 -0700
-Message-ID: <CAFd5g47sUx6ZRxcH4KdKjftv=wo9HmWn+bZukd8gU-YcJv24zQ@mail.gmail.com>
-Subject: Re: [PATCH] Documentation: kunit: Fix verification command
-To:     SeongJae Park <sj38.park@gmail.com>
-Cc:     shuah <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Twc3gHw5x4Wog7YioRFdt2DRj3Idc7+bXpqT/1hf/GA=;
+        b=i39/Yw4In3CFwzkAGgzxHGzB87l8PzHv8ACgybwFU7GU26+veb7V8lwH6p711j8kgT
+         QcykM7bHo2U1P9fD0D9XazZreQusnJ54Q6KU6vRg+RohnSkqgLKHkam61dguEWtAsZ30
+         RqSHN6wCliHXYIKNBKULjop0tcmq3Xo/lurivckmfnPD6W+u8ITIMxDsVs72+MP7ld17
+         UukZ8DW78Hac5a4j3r9/rSuq9e2QiOvbifJWXhyO6pPz03DNea7K5rLojI0QoyvkdOjE
+         Nh9lURhDV90Anbm5zUmrDFERZCSJChnzV4rUpmY7aWW4tey6dH/53tMYi7zEVjG0XqjX
+         V7bQ==
+X-Gm-Message-State: APjAAAUfJ+knYa+BVy1cJswrLX5OGlhMrcXZYm4d9YqRftLVqfqFuHmZ
+        qFfihRwjr958IK77L0qnVsL7o8TY
+X-Google-Smtp-Source: APXvYqyVAqPt1YZkaEVl6jWaSrNlk0N+4BwSkrrhVDjCjtrmc7NlXfQbwe77w3FKpa5DV52V1cNtMg==
+X-Received: by 2002:a6b:8e0f:: with SMTP id q15mr25463674iod.186.1570485964958;
+        Mon, 07 Oct 2019 15:06:04 -0700 (PDT)
+Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
+        by smtp.gmail.com with ESMTPSA id m14sm6479874ild.3.2019.10.07.15.06.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2019 15:06:03 -0700 (PDT)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-omap@vger.kernel.org
+Cc:     adam.ford@logicpd.com, hns@goldelico.com,
+        Adam Ford <aford173@gmail.com>,
+        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 1/2] configs: ARM: omap2plus: Enable OMAP3_THERMAL
+Date:   Mon,  7 Oct 2019 17:05:39 -0500
+Message-Id: <20191007220540.30690-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 8, 2019 at 4:40 PM Brendan Higgins
-<brendanhiggins@google.com> wrote:
->
-> On Sat, Sep 7, 2019 at 2:01 PM SeongJae Park <sj38.park@gmail.com> wrote:
-> >
-> > kunit wrapper script ('kunit.py') receives a sub-command (only 'run' for
-> > now) as its argument.  If no sub-command is given, it prints help
-> > message and just quit.  However, an example command in the kunit
-> > documentation for a verification of kunit is missing the sub-command.
-> > This commit fixes the example.
-> >
-> > Signed-off-by: SeongJae Park <sj38.park@gmail.com>
->
-> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+The some in the OMAP3 family have a bandgap thermal sensor, but
+omap2plus has it disabled.
 
-Shuah, can you apply this to the kselftest KUnit branch? This should
-not require a resend.
+This patch enables the OMAP3_THERMAL by default like the rest of
+the OMAP family.
+
+Signed-off-by: Adam Ford <aford173@gmail.com>
+
+diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
+index 8f1c2b6f9e56..7e14a8c8bb29 100644
+--- a/arch/arm/configs/omap2plus_defconfig
++++ b/arch/arm/configs/omap2plus_defconfig
+@@ -292,6 +292,7 @@ CONFIG_THERMAL_GOV_FAIR_SHARE=y
+ CONFIG_THERMAL_GOV_USER_SPACE=y
+ CONFIG_CPU_THERMAL=y
+ CONFIG_TI_THERMAL=y
++CONFIG_OMAP3_THERMAL=y
+ CONFIG_OMAP4_THERMAL=y
+ CONFIG_OMAP5_THERMAL=y
+ CONFIG_DRA752_THERMAL=y
+-- 
+2.17.1
+
