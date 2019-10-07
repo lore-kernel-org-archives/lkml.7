@@ -2,128 +2,90 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C460ECE58D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E0FC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CC5920673
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:55:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE33E21655
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:56:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570456581;
+	bh=RR9DRF39oJCR1HSHYuun5bistTTOv6+Wz8MHq5p+aSk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=N+iBHFhBTXo/i+TD/jQRVJhMnIETjVFuuvI9fMmsvBYUy8KNS4NnXIijMICvsG4dE
+	 hnaJzPJmP5Y+EZ1F2TLAVQmV7J2V/fjqKvhiarhiplY94k6vGaVeedYlLrrOrCRvb/
+	 7uk0j60a/LYoDPUaiCwiaiGCB/gVVxqcLBBzdxHU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbfJGNzf (ORCPT
+        id S1728115AbfJGN4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 09:55:35 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:50164 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727442AbfJGNze (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 09:55:34 -0400
-Received: from [185.66.195.251] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iHTU1-00010o-QS; Mon, 07 Oct 2019 13:55:29 +0000
-Date:   Mon, 7 Oct 2019 15:55:28 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Andrea Parri <parri.andrea@gmail.com>, bsingharora@gmail.com,
-        Marco Elver <elver@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzbot <syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH v2] taskstats: fix data-race
-Message-ID: <20191007135527.qd5ibfyajnihsrsh@wittgenstein>
-References: <20191007104039.GA16085@andrea.guest.corp.microsoft.com>
- <20191007110117.1096-1-christian.brauner@ubuntu.com>
- <20191007131804.GA19242@andrea.guest.corp.microsoft.com>
- <CACT4Y+YG23qbL16MYH3GTK4hOPsM9tDfbLzrTZ7k_ocR2ABa6A@mail.gmail.com>
+        Mon, 7 Oct 2019 09:56:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42416 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727442AbfJGN4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 09:56:20 -0400
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B83F520867;
+        Mon,  7 Oct 2019 13:56:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570456579;
+        bh=RR9DRF39oJCR1HSHYuun5bistTTOv6+Wz8MHq5p+aSk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=EiT+C+YsyvMxzR9zIaUlQs95iq4A862EsYfpaNIZQ+TtRi1Mi7FtVPm1AbnsgIJ+K
+         tAFODN5b5cFQQ6nqqC72VgkzRKev0cRbigYdaFQHlpGvDbhXgWeVjW8OGR/W/G7BMZ
+         Has1eijhxLv5fLJ1kuKCaUFRQAWYsTmttSwYsjdM=
+Received: by mail-qk1-f175.google.com with SMTP id h126so12589560qke.10;
+        Mon, 07 Oct 2019 06:56:19 -0700 (PDT)
+X-Gm-Message-State: APjAAAWGoaU5Cb0h0M2joYyVBXNSO83V+Rr4eXkNTRYhwoBKyLNLRNCE
+        3jY8r/QwUddNqmXFu1BCa7gZ1nepDsl2/LHweg==
+X-Google-Smtp-Source: APXvYqwm/bLwZM+PssqOzYzoANua8YSLYuI2PMKJKrZyC7DCdzzrTTVWk2vijf2KyteLQtKm+abCCIEQJ6n5QW83AcM=
+X-Received: by 2002:ac8:31b3:: with SMTP id h48mr30882416qte.300.1570456577813;
+ Mon, 07 Oct 2019 06:56:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+YG23qbL16MYH3GTK4hOPsM9tDfbLzrTZ7k_ocR2ABa6A@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+References: <20191007102552.19808-1-alexandre.torgue@st.com> <20191007102552.19808-3-alexandre.torgue@st.com>
+In-Reply-To: <20191007102552.19808-3-alexandre.torgue@st.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 7 Oct 2019 08:56:05 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKFUTwjJefQvQE5aFmeJButYSLKm0RSpCHjSL=7pQHtxQ@mail.gmail.com>
+Message-ID: <CAL_JsqKFUTwjJefQvQE5aFmeJButYSLKm0RSpCHjSL=7pQHtxQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] dt-bindings: net: adi: Fix yaml verification issue
+To:     Alexandre Torgue <alexandre.torgue@st.com>
+Cc:     Maxime Ripard <mripard@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Alexandru Ardelean <alexaundru.ardelean@analog.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 03:50:47PM +0200, Dmitry Vyukov wrote:
-> On Mon, Oct 7, 2019 at 3:18 PM Andrea Parri <parri.andrea@gmail.com> wrote:
-> >
-> > On Mon, Oct 07, 2019 at 01:01:17PM +0200, Christian Brauner wrote:
-> > > When assiging and testing taskstats in taskstats_exit() there's a race
-> > > when writing and reading sig->stats when a thread-group with more than
-> > > one thread exits:
-> > >
-> > > cpu0:
-> > > thread catches fatal signal and whole thread-group gets taken down
-> > >  do_exit()
-> > >  do_group_exit()
-> > >  taskstats_exit()
-> > >  taskstats_tgid_alloc()
-> > > The tasks reads sig->stats holding sighand lock seeing garbage.
-> >
-> > You meant "without holding sighand lock" here, right?
-> >
-> >
-> > >
-> > > cpu1:
-> > > task calls exit_group()
-> > >  do_exit()
-> > >  do_group_exit()
-> > >  taskstats_exit()
-> > >  taskstats_tgid_alloc()
-> > > The task takes sighand lock and assigns new stats to sig->stats.
-> > >
-> > > Fix this by using READ_ONCE() and smp_store_release().
-> > >
-> > > Reported-by: syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com
-> > > Fixes: 34ec12349c8a ("taskstats: cleanup ->signal->stats allocation")
-> > > Cc: stable@vger.kernel.org
-> > > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> > > Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
-> > > Link: https://lore.kernel.org/r/20191006235216.7483-1-christian.brauner@ubuntu.com
-> > > ---
-> > > /* v1 */
-> > > Link: https://lore.kernel.org/r/20191005112806.13960-1-christian.brauner@ubuntu.com
-> > >
-> > > /* v2 */
-> > > - Dmitry Vyukov <dvyukov@google.com>, Marco Elver <elver@google.com>:
-> > >   - fix the original double-checked locking using memory barriers
-> > >
-> > > /* v3 */
-> > > - Andrea Parri <parri.andrea@gmail.com>:
-> > >   - document memory barriers to make checkpatch happy
-> > > ---
-> > >  kernel/taskstats.c | 21 ++++++++++++---------
-> > >  1 file changed, 12 insertions(+), 9 deletions(-)
-> > >
-> > > diff --git a/kernel/taskstats.c b/kernel/taskstats.c
-> > > index 13a0f2e6ebc2..978d7931fb65 100644
-> > > --- a/kernel/taskstats.c
-> > > +++ b/kernel/taskstats.c
-> > > @@ -554,24 +554,27 @@ static int taskstats_user_cmd(struct sk_buff *skb, struct genl_info *info)
-> > >  static struct taskstats *taskstats_tgid_alloc(struct task_struct *tsk)
-> > >  {
-> > >       struct signal_struct *sig = tsk->signal;
-> > > -     struct taskstats *stats;
-> > > +     struct taskstats *stats_new, *stats;
-> > >
-> > > -     if (sig->stats || thread_group_empty(tsk))
-> > > -             goto ret;
-> > > +     /* Pairs with smp_store_release() below. */
-> > > +     stats = READ_ONCE(sig->stats);
-> >
-> > This pairing suggests that the READ_ONCE() is heading an address
-> > dependency, but I fail to identify it: what is the target memory
-> > access of such a (putative) dependency?
-> 
-> I would assume callers of this function access *stats. So the
-> dependency is between loading stats and accessing *stats.
+On Mon, Oct 7, 2019 at 5:26 AM Alexandre Torgue <alexandre.torgue@st.com> wrote:
+>
+> This commit fixes an issue seen during yaml check ("make dt_binding_check").
+> Each enum were not declared as uint32.
+>
+> "Documentation/devicetree/bindings/net/adi,adin.yaml:
+> properties:adi,rx-internal-delay-ps:
+> ..., 'enum': [1600, 1800, 2000, 2200, 2400], 'default': 2000}
+> is not valid under any of the given schemas"
 
-Right, but why READ_ONCE() and not smp_load_acquire here?
+You need to update dtschema. I fixed this in the meta-schema last
+week. Any property with a standard property unit suffix has a defined
+type already, so we don't need to define it again here.
 
-Christian
+I also added '-bits' to standard units.
+
+Rob
