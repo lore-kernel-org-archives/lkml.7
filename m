@@ -2,296 +2,187 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B5EC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C07DCECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8D97206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:24:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9643C20673
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:25:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="o9h2UfSf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tbKfnNQx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728711AbfJGQY1 (ORCPT
+        id S1728352AbfJGQZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 12:24:27 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38157 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728387AbfJGQY0 (ORCPT
+        Mon, 7 Oct 2019 12:25:39 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40730 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727801AbfJGQZj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 12:24:26 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w12so16089387wro.5
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 09:24:23 -0700 (PDT)
+        Mon, 7 Oct 2019 12:25:39 -0400
+Received: by mail-oi1-f194.google.com with SMTP id k9so12185539oib.7
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 09:25:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Dw4Q3iBxabTSuwssTar7XV7AeyC0rgIGm++0r9dtNq4=;
-        b=o9h2UfSfMMdaP8yEwRAYjGUQPaT9wNK89isvxEgaAkfRy/5Wnx9JTN9mtLgIrOpIpi
-         WaKphTjWSYCnL3K9PDgp7H8H5PU53Aj4aN+s0XW7jhnyCDUG1OkPjNOb8l0NMud8+pB/
-         pm3cQC3xNMOvDoXtkWLVuNr/AGdke4jOeXEXVtEWNuPaj1HE/V1hyTVr8drcaZtUxshu
-         ZOW79w0q6LUZYTIZn+rox1/s7MTILuhUYWU5ykSoUixrWymGq6acXUC/2SVOWfnU3Yih
-         eAv2FQqH9xmgyQQrHCj1TzvRh2fJaZT4WHoIPW20mU4JNeSkDsZnUHgcuDWi1ennPX4s
-         bzDw==
+        bh=/zonqR8a9bYRUArcQ0AsLZe2gFhECx4xlsiRxIugCpI=;
+        b=tbKfnNQxobqT9l2G6cyaVZzhkV5ZUxI5OOtLp7CuMZLbAqbIZNG3Xslx6Qu4SgqWK9
+         2pHzs1dWyfE4uwgkmY/SAFdGsXivyJY+L4Ff4kUEKMAreldnnH0EnrHL1YtbNUKHM2LP
+         1liYwvxxVm+CRTD52MpwURVIWwDV2WSSlPHLlFQiLa1/9FszNXeDC+pYTLr86qA4a6Y8
+         wUmkdHqrbfamuM80kJVuFJxsta8ollWvMkvdOoKSPBKq+IsKdQqlvJsF19Kw+dlGJHbh
+         IjeY1UM2Ol9suJyo0IYvvVKxIiqBGooE/fXesMZgV72M4p2aEAPEuqSidxNtmQeMT+pv
+         itpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Dw4Q3iBxabTSuwssTar7XV7AeyC0rgIGm++0r9dtNq4=;
-        b=hvw9BcxLthqBpmLWdtIgv1S1TmmSKEGgLOtyYRGVf6DQ+DelZdO/clKCytePujnT/X
-         zx5ymDKFW6fs5EhYaC8Fdy7DfD/+hduB68zis3TzDz3C1QRqf1Ss2PZHJnyFy1ie5bED
-         Sll7g+hCEE1aId/L4igsskwfZCzNkuwBKrar42RxHpjYcLj4v8eZ03z/ES3WuB7IGDEi
-         k3G4Uh/7XLWtRYNHjWSi57XDfYycuyeD+Qi54evj64GoFsAbWsVHey9SqEGRmnyx0eKv
-         vNXlo9Uk6WP4Jerw7FfUiYvyYBqFFOOFwadVkGXi+kAWuBfe0Z5xM7F83SND0kkET3Lx
-         rZ7A==
-X-Gm-Message-State: APjAAAWtJzjGrnVvBgCUEX0w9SQeKoGmsFwgzE0df8PVDixdivC8lSSH
-        0cpaxM4y7g2b2pbBDE3sDsoOZg==
-X-Google-Smtp-Source: APXvYqzy3HWKvkWd4yf5lnZVkl2tnDc30Nqy8uFpA3W44ablPXn6tPIdFLvyEWxwoAJsX2qG5SFh4g==
-X-Received: by 2002:adf:ec91:: with SMTP id z17mr24462935wrn.346.1570465462487;
-        Mon, 07 Oct 2019 09:24:22 -0700 (PDT)
-Received: from [192.168.0.31] (abo-99-183-68.mtp.modulonet.fr. [85.68.183.99])
-        by smtp.gmail.com with ESMTPSA id u1sm40608wmc.38.2019.10.07.09.24.21
+        bh=/zonqR8a9bYRUArcQ0AsLZe2gFhECx4xlsiRxIugCpI=;
+        b=YuczhIj//jABwyyrrH3kjSkjdJHPoQtu0mlcTEVzIJwtDtGUVPtZG2qYPvh2tUG9nM
+         uI8BbAwt+Sc8oFf/1/av47WuSOmXyowKbpR4M5cfoZGRTJZRNBPpUNOcGC2exhipNloK
+         ybvnG+5MTVkBdQTLntAzmb2oH2DQr5Fo92vdbTdANFQWen1y475LlvwbSFT9cx+dpLn9
+         Qb0hfc/x9J+4ghfUN8GxNz43vRtcbttBTGNeKjH3GfQ/cZrzUjlZwhX4b0/CZXdjkT/P
+         v3LussjP8Wjl28DbFCEBuDcWhPGN+f29+tpGlg7U7j/QVUr3ck1O/uuBmilZoQSgIyiL
+         6rYA==
+X-Gm-Message-State: APjAAAU1+bJhx162+gfFAm1BPw3ong0nLuJTOZXNqKKUo51fbEizXTSB
+        QKYAL9BL0L0Z85VZks9eXKQDFA==
+X-Google-Smtp-Source: APXvYqzSOxz3jgXnXSKOfwxCrVQXrib0f6vI0fA9tuSp2NkvBZS7YWpOPKHNoDP69HtOeB/fNWJYjg==
+X-Received: by 2002:aca:f492:: with SMTP id s140mr82954oih.83.1570465537865;
+        Mon, 07 Oct 2019 09:25:37 -0700 (PDT)
+Received: from [192.168.17.59] (CableLink-189-218-29-211.Hosts.InterCable.net. [189.218.29.211])
+        by smtp.gmail.com with ESMTPSA id 93sm4658080ota.16.2019.10.07.09.25.36
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 07 Oct 2019 09:24:21 -0700 (PDT)
-Subject: Re: [PATCH 0/2] media: meson: vdec: Add compliant H264 support
-To:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-References: <20191007145909.29979-1-mjourdan@baylibre.com>
- <8563127e-fe2c-a633-556b-8a883cebb171@xs4all.nl>
-From:   Maxime Jourdan <mjourdan@baylibre.com>
-Message-ID: <977c48e8-8275-c96a-688b-ccfbb873eb79@baylibre.com>
-Date:   Mon, 7 Oct 2019 18:24:21 +0200
+        Mon, 07 Oct 2019 09:25:37 -0700 (PDT)
+Subject: Re: [PATCH 5.3 000/166] 5.3.5-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     shuah@kernel.org, patches@kernelci.org,
+        lkft-triage@lists.linaro.org, ben.hutchings@codethink.co.uk,
+        stable@vger.kernel.org, akpm@linux-foundation.org,
+        torvalds@linux-foundation.org, linux@roeck-us.net
+References: <20191006171212.850660298@linuxfoundation.org>
+From:   =?UTF-8?Q?Daniel_D=c3=adaz?= <daniel.diaz@linaro.org>
+Message-ID: <7148ff93-bac0-f78a-df3a-b9dbbee3db1a@linaro.org>
+Date:   Mon, 7 Oct 2019 11:25:35 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <8563127e-fe2c-a633-556b-8a883cebb171@xs4all.nl>
+In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: tl
-Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/10/2019 17:12, Hans Verkuil wrote:
-> On 10/7/19 4:59 PM, Maxime Jourdan wrote:
->> Hello,
->>
->> This patch series aims to bring H.264 support as well as compliance update
->> to the amlogic stateful video decoder driver.
->>
->> There is 1 issue that remains currently:
->>
->>   - The following codepath had to be commented out from v4l2-compliance as
->> it led to stalling:
->>
->> if (node->codec_mask & STATEFUL_DECODER) {
->> 	struct v4l2_decoder_cmd cmd;
->> 	buffer buf_cap(m2m_q);
->>
->> 	memset(&cmd, 0, sizeof(cmd));
->> 	cmd.cmd = V4L2_DEC_CMD_STOP;
->>
->> 	/* No buffers are queued, call STREAMON, then STOP */
->> 	fail_on_test(node->streamon(q.g_type()));
->> 	fail_on_test(node->streamon(m2m_q.g_type()));
->> 	fail_on_test(doioctl(node, VIDIOC_DECODER_CMD, &cmd));
->>
->> 	fail_on_test(buf_cap.querybuf(node, 0));
->> 	fail_on_test(buf_cap.qbuf(node));
->> 	fail_on_test(buf_cap.dqbuf(node));
->> 	fail_on_test(!(buf_cap.g_flags() & V4L2_BUF_FLAG_LAST));
->> 	for (unsigned p = 0; p < buf_cap.g_num_planes(); p++)
->> 		fail_on_test(buf_cap.g_bytesused(p));
->> 	fail_on_test(node->streamoff(q.g_type()));
->> 	fail_on_test(node->streamoff(m2m_q.g_type()));
->>
->> 	/* Call STREAMON, queue one CAPTURE buffer, then STOP */
->> 	fail_on_test(node->streamon(q.g_type()));
->> 	fail_on_test(node->streamon(m2m_q.g_type()));
->> 	fail_on_test(buf_cap.querybuf(node, 0));
->> 	fail_on_test(buf_cap.qbuf(node));
->> 	fail_on_test(doioctl(node, VIDIOC_DECODER_CMD, &cmd));
->>
->> 	fail_on_test(buf_cap.dqbuf(node));
->> 	fail_on_test(!(buf_cap.g_flags() & V4L2_BUF_FLAG_LAST));
->> 	for (unsigned p = 0; p < buf_cap.g_num_planes(); p++)
->> 		fail_on_test(buf_cap.g_bytesused(p));
->> 	fail_on_test(node->streamoff(q.g_type()));
->> 	fail_on_test(node->streamoff(m2m_q.g_type()));
->> }
->>
->> The reason for this is because the driver has a limitation where all
->> capturebuffers must be queued to the driver before STREAMON is effective.
->> The firmware needs to know in advance what all the buffers are before
->> starting to decode.
->> This limitation is enforced via q->min_buffers_needed.
->> As such, in this compliance codepath, STREAMON is never actually called
->> driver-side and there is a stall on fail_on_test(buf_cap.dqbuf(node));
+Hello!
+
+
+On 10/6/19 12:19 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.3.5 release.
+> There are 166 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> That's interesting. I will have to look more closely at this.
+> Responses should be made by Tue 08 Oct 2019 05:07:10 PM UTC.
+> Anything received after that time might be too late.
 > 
->>
->>
->> One last detail: V4L2_FMT_FLAG_DYN_RESOLUTION is currently not recognized
->> by v4l2-compliance, so it was left out for the test. However, it is
->> present in the patch series.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.5-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
+> and the diffstat can be found below.
 > 
-> It is definitely recognized by v4l2-compliance.
+> thanks,
 > 
->>
->> The second patch has 3 "Alignment should match open parenthesis" lines
->> where I preferred to keep them that way.
->>
->> Thanks Stanimir for sharing your HDR file creation tools, this was very
->> helpful :).
->>
->> Maxime
->>
->> # v4l2-compliance --stream-from-hdr test-25fps.h264.hdr -s250
->> v4l2-compliance SHA: a162244d47d4bb01d0692da879dce5a070f118e7, 64 bits
-> 
-> But this SHA isn't in the v4l-utils repo, so this makes me wonder where you
-> got this repo from.
-> 
+> greg k-h
 
-I am based off the hverkuil/vicodec branch. The SHA I am on is actually 
-05387265053bc6f9 ("test-media: add vicodec tests"), but it wasn't 
-updated as I found out it requires a new bootstrap to refresh the SHA. 
-Maybe some rebasing at some point got rid of a162244d.
+Results from Linaro’s test farm.
+Regressions detected.
 
-I started fresh and ran it again. As you can see, 
-V4L2_FMT_FLAG_DYN_RESOLUTION is still problematic (removing it makes all 
-the checks pass):
+As mentioned, we found a problem with the mismatch of kselftests 5.3.1 and net/udpgso.sh, but everything is fine.
 
--------------------------------
-# v4l2-compliance --stream-from-hdr test-25fps.h264.hdr -s250
-v4l2-compliance SHA: 05387265053bc6f9c8c98e112543adb28ae39cfa, 64 bits
+Summary
+------------------------------------------------------------------------
 
-Compliance test for meson-vdec device /dev/video0:
+kernel: 5.3.5-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+git branch: linux-5.3.y
+git commit: a2703e78c28a6166f8796b4733620c6d0b8f479a
+git describe: v5.3.4-167-ga2703e78c28a
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.3-oe/build/v5.3.4-167-ga2703e78c28a
 
-Driver Info:
-	Driver name      : meson-vdec
-	Card type        : Amlogic Video Decoder
-	Bus info         : platform:meson-vdec
-	Driver version   : 5.4.0
-	Capabilities     : 0x84204000
-		Video Memory-to-Memory Multiplanar
-		Streaming
-		Extended Pix Format
-		Device Capabilities
-	Device Caps      : 0x04204000
-		Video Memory-to-Memory Multiplanar
-		Streaming
-		Extended Pix Format
-	Detected Stateful Decoder
+No regressions (compared to build v5.3.4)
 
-Required ioctls:
-	test VIDIOC_QUERYCAP: OK
+No fixes (compared to build v5.3.4)
 
-Allow for multiple opens:
-	test second /dev/video0 open: OK
-	test VIDIOC_QUERYCAP: OK
-	test VIDIOC_G/S_PRIORITY: OK
-	test for unlimited opens: OK
+Ran 25519 total tests in the following environments and test suites.
 
-Debug ioctls:
-	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-	test VIDIOC_LOG_STATUS: OK (Not Supported)
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
 
-Input ioctls:
-	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-	Inputs: 0 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-	Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-	test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Control ioctls:
-	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-	test VIDIOC_QUERYCTRL: OK
-	test VIDIOC_G/S_CTRL: OK
-	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
-	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-	Standard Controls: 2 Private Controls: 0
-
-Format ioctls:
-		fail: v4l2-test-formats.cpp(263): unknown flag 00000009 returned
-	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: FAIL
-	test VIDIOC_G/S_PARM: OK (Not Supported)
-	test VIDIOC_G_FBUF: OK (Not Supported)
-		fail: v4l2-test-formats.cpp(457): pixelformat 34363248 (H264) for 
-buftype 10 not reported by ENUM_FMT
-	test VIDIOC_G_FMT: FAIL
-		fail: v4l2-test-formats.cpp(457): pixelformat 34363248 (H264) for 
-buftype 10 not reported by ENUM_FMT
-	test VIDIOC_TRY_FMT: FAIL
-		fail: v4l2-test-formats.cpp(457): pixelformat 3247504d (MPG2) for 
-buftype 10 not reported by ENUM_FMT
-	test VIDIOC_S_FMT: FAIL
-	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-	test Cropping: OK (Not Supported)
-	test Composing: OK (Not Supported)
-	test Scaling: OK
-
-Codec ioctls:
-	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-	test VIDIOC_(TRY_)DECODER_CMD: OK
-
-Buffer ioctls:
-	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-	test VIDIOC_EXPBUF: OK
-	test Requests: OK (Not Supported)
-
-Test input 0:
-
-Streaming ioctls:
-	test read/write: OK (Not Supported)
-	test blocking wait: OK
-	Video Capture Multiplanar: Captured 250 buffers
-	test MMAP (select): OK
-	Video Capture Multiplanar: Captured 250 buffers
-	test MMAP (epoll): OK
-	test USERPTR (select): OK (Not Supported)
-	test DMABUF: Cannot test, specify --expbuf-device
-
-Total for meson-vdec device /dev/video0: 49, Succeeded: 45, Failed: 4, 
-Warnings: 0
-
--------------------------------
-
-Should I be using another branch than vicodec ?
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libgpiod
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* ltp-fs-tests
+* network-basic-tests
+* ltp-open-posix-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* ssuite
 
 
-> Regards,
-> 
-> 	Hans
-> 
+Greetings!
+
+Daniel Díaz
+daniel.diaz@linaro.org
+
+
+-- 
+Linaro LKFT
+https://lkft.linaro.org
