@@ -2,80 +2,77 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E00F9ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1875AC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B67692084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D508821721
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:15:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570454152;
+	bh=yaGiBdsMqATrOurcaKLKqrYg43AY7Q6N3F9F+dL0RI8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aQwSCwi8DXq/N7+4TzDsvvlczvXtFabEmGgxjTPGVO+ERQkFtqQu2xd0yTgqXobuZ
+	 l7Mkw36vyFjB534gT6HAYegOpKKxpRjh/o20BjjaC3p14RFUQpjy4nb9gVYIvwGwp3
+	 DnERYr5/MXHpni4alT1jSn5scEv2uAmy/xTTD4vM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbfJGNOL (ORCPT
+        id S1727801AbfJGNPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 09:14:11 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:42189 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727010AbfJGNOK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 09:14:10 -0400
-Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id D0926200010;
-        Mon,  7 Oct 2019 13:14:05 +0000 (UTC)
-Date:   Mon, 7 Oct 2019 15:14:05 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Eugen.Hristev@microchip.com, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, wim@linux-watchdog.org,
-        robh+dt@kernel.org, Nicolas.Ferre@microchip.com
-Subject: Re: [PATCH 2/3] watchdog: sam9x60_wdt: introduce sam9x60 watchdog
- timer driver
-Message-ID: <20191007131348.GH4254@piout.net>
-References: <1570001371-8174-1-git-send-email-eugen.hristev@microchip.com>
- <1570001371-8174-2-git-send-email-eugen.hristev@microchip.com>
- <e58a3ab5-69bc-cad3-5faa-ed00ff7906c7@roeck-us.net>
- <ab7b6b45-5e6f-100d-51af-a82ac325d948@microchip.com>
- <a9adf20c-f730-a7e9-a826-59216c17f03d@roeck-us.net>
+        Mon, 7 Oct 2019 09:15:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55286 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727010AbfJGNPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 09:15:51 -0400
+Received: from linux-8ccs (ip5f5ade87.dynamic.kabel-deutschland.de [95.90.222.135])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07A032084D;
+        Mon,  7 Oct 2019 13:15:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570454151;
+        bh=yaGiBdsMqATrOurcaKLKqrYg43AY7Q6N3F9F+dL0RI8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=thZqMFMsagBTGSCXcSjKL/6nXbiyrTIcKSMg69+btrs+dfxzO9yHnezGb63jHXhoy
+         mUcG0ZUANN3GoFS44ixg7JzGIi+XqRgMCarou3TuSu8lzwOf45KQui+OnokRmvQ8Ti
+         O4ZsT2wgXBbV2Gf/rAVBpXVqrca2xB+GncwUKGTs=
+Date:   Mon, 7 Oct 2019 15:15:42 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Julia.Lawall@lip6.fr, Gilles.Muller@lip6.fr, nicolas.palix@imag.fr,
+        michal.lkml@markovi.net, maennich@google.com,
+        gregkh@linuxfoundation.org, yamada.masahiro@socionext.com,
+        Markus.Elfring@web.de, cocci@systeme.lip6.fr,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scripts: add_namespace: Fix coccicheck failed
+Message-ID: <20191007131542.GA30078@linux-8ccs>
+References: <CAK7LNAS2K6i+s2A_xTyRq730M6_=tyjtfwHAnEHF37_nrJa4Eg@mail.gmail.com>
+ <20191006044456.57608-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <a9adf20c-f730-a7e9-a826-59216c17f03d@roeck-us.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191006044456.57608-1-yuehaibing@huawei.com>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.28-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/10/2019 05:36:38-0700, Guenter Roeck wrote:
-> On 10/7/19 12:58 AM, Eugen.Hristev@microchip.com wrote:
-> [ ... ]
-> > Hello Guenter,
-> > 
-> > Thank you for the feedback.
-> > After reviewing this, can you please guide me towards one of the
-> > possible two directions: merge this driver with sama5d4_wdt , and have a
-> > single driver with support for both hardware blocks; or, have this
-> > driver separately , as in this patch series?
-> > 
-> 
-> I noticed the similarities. I don't know if it makes sense to reconcile
-> the two drivers; it seems to me the new chip uses the same basic core with
-> enhancements. In general, I prefer a single driver, but only if the result
-> doesn't end up being an if/else mess. Ultimately, it is really your call
-> to make.
-> 
++++ YueHaibing [06/10/19 12:44 +0800]:
+>Now all scripts in scripts/coccinelle to be automatically called
+>by coccicheck. However new adding add_namespace.cocci does not
+>support report mode, which make coccicheck failed.
+>This add "virtual report" to  make the coccicheck go ahead smoothly.
+>
+>Fixes: eb8305aecb95 ("scripts: Coccinelle script for namespace dependencies.")
+>Acked-by: Julia Lawall <julia.lawall@lip6.fr>
+>Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Most if not all your comments were already addressed in the other
-driver. The main difference in the register interface is the location of
-the counter that only really affects sama5d4_wdt_set_timeout and that
-could be abstracted away by using a different struct watchdog_ops.
-Interrupt enabling is also done differently, I don't think it has a huge
-impact.
+Thanks for the fix!
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+If there are no complaints, I'll queue this up in the modules tree for -rc3.
+
+Jessica
