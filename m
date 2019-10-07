@@ -2,102 +2,135 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD16C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 05:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 961BCC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 05:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6DF0206C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 05:59:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570427973;
-	bh=tfzGYeVYfOBZkfx+VycdiLQMeb8ivldNc8IJ+sPa3eU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WZ2HllOYID2Cxr/JACW9oyF+LizYFnJ3hEeL7kZ9CORRFG/RZ298Ha7SENxDlEplK
-	 CRUWlzjIGMsGHcDsCZZmShQsZqK5jdlRq3KNiJCg5YvGSZVEzLDWLa1eo9TEN7ZtP1
-	 s4pv+6+I7WLdMtg1A9FEaA+espddzK4xpuzO3N30=
+	by mail.kernel.org (Postfix) with ESMTP id 6929C20867
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 05:59:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nP+sss48"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727151AbfJGF7c (ORCPT
+        id S1727222AbfJGF7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 01:59:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45076 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726889AbfJGF7b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 01:59:31 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29445206C2;
-        Mon,  7 Oct 2019 05:59:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570427969;
-        bh=tfzGYeVYfOBZkfx+VycdiLQMeb8ivldNc8IJ+sPa3eU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lr8sSv5hFUTUBbDz3oENh+kaSli4sPEaqqwswkTg8IHuPRYlvjB7e5+0mMK3zrzcN
-         ng+T8ydUMizuyqTMoHzQvCwbtp8hYGpcAtkzAUB9x1TBLNMMMzxVdAn+KcslvCkrh3
-         v2RSJ4oojISOAVq7h6jXosVv4DzuXsYCdydLcaMU=
-Date:   Mon, 7 Oct 2019 07:59:25 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Oded Gabbay <oded.gabbay@gmail.com>
-Cc:     "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
-Subject: Re: Question about using #ifdef CONFIG_PPC64 in driver code
-Message-ID: <20191007055925.GA271894@kroah.com>
-References: <CAFCwf11-MzroWUmj4qOgwLTibqsdOmPP9cHJjXZmS0Pgr3bEOQ@mail.gmail.com>
- <CAFCwf13AtwkWQ4Gnxi6pfKbcdEK95+X__7cFboN1FdHd1aKNQw@mail.gmail.com>
+        Mon, 7 Oct 2019 01:59:37 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45671 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726889AbfJGF7h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 01:59:37 -0400
+Received: by mail-pg1-f193.google.com with SMTP id q7so7487746pgi.12;
+        Sun, 06 Oct 2019 22:59:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=oqFdqqUqLg52ExVds7ZRy0HYDyhYJV6Q8ZIB5Rw2isk=;
+        b=nP+sss48EWXlNFGfoK7E2mq5jsUFr5XIM6R0v0DQUIalN+UibCCos8d5esx3p9uLDs
+         1J2P2BKiPmtGXgQ3YkqdV4tOwFXeeEHjSkNt0j9tZYsUlgNRuQ66Qj8L6+FulrnixdBi
+         de4kWQv38SGK9eqne12JMwwso5geSBBjeR6ZC0Lax/zRcPrJ0Rbb80eRp1kNljSRzqBV
+         dDpsKF7EvoUCkgBeAoNeJ69nEQ//VoNaj88OARHQLdHtO8OIAV30ersvxyXyUNE10yVr
+         8f1fi8K3eQCTH2Gwn1ZBrNsR1VBco4xyK6mHMjQu5kv8E1XpOgKjvUPDfsCVWR2YZJ83
+         HtbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oqFdqqUqLg52ExVds7ZRy0HYDyhYJV6Q8ZIB5Rw2isk=;
+        b=PhUDfpF+vbyXB7xMZjYrmbqs9JKoWhD21IJpQfyV4mO5kmieGfKU0GfJ1VZHRu1tqJ
+         aW0eIYoB1iAcipbapqLvP/BL1vLQdN13CUa5AXxPPJuEahCYESfmFNjFRzTOOnlUAav9
+         8uq1Ipa8Y0ZZKgSBXSCnY693VMlCgB/z9Z0X6ZMuMjSWnbtbwo2SACr0JoCJiBHGloZD
+         jrWkJysl3aSwkktBVn0lk64VDLjKsfDmWjE4MAFQ7m4gL6+NTi4sXzx72h5z96Kxwv7D
+         0Ha8EBHDUwxLwrOD6VjQaeauVd946xoMvTPqV3v7eIvkZR7mYrZCQxerrcotAlHJV1Ls
+         V1sw==
+X-Gm-Message-State: APjAAAV9rUKgbBycrMaKy/Hu3VWA1n9yPuXL2h+VkrM2D3Ajo7IVltMa
+        2LDjWDCMs9nN6arXSP/hQdQ=
+X-Google-Smtp-Source: APXvYqyOPvQG9GmEJ1vI64O6QXSEJQcrBowAjBEfCT7sL6q2XRjSPEgP449VEUEsh5lzk7bYNIdNgg==
+X-Received: by 2002:a17:90a:310:: with SMTP id 16mr32181448pje.100.1570427974602;
+        Sun, 06 Oct 2019 22:59:34 -0700 (PDT)
+Received: from gmail.com (ip-103-85-37-165.syd.xi.com.au. [103.85.37.165])
+        by smtp.gmail.com with ESMTPSA id w134sm14739677pfd.4.2019.10.06.22.59.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Oct 2019 22:59:33 -0700 (PDT)
+Date:   Mon, 7 Oct 2019 16:59:26 +1100
+From:   Adam Zerella <adam.zerella@gmail.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Matthias Maennich <maennich@google.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] doc: move namespaces.rst out of kbuild directory
+Message-ID: <20191007055926.GA9631@gmail.com>
+References: <20191007043611.31036-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAFCwf13AtwkWQ4Gnxi6pfKbcdEK95+X__7cFboN1FdHd1aKNQw@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191007043611.31036-1-yamada.masahiro@socionext.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 06, 2019 at 12:33:31PM +0300, Oded Gabbay wrote:
-> Hi Greg,
-> a while ago we had an argument about identifying in my driver's code
-> whether I'm running on x86 or powerpc. I tried to do something
-> dynamically (based on parent pci bridge ID), and you and other people
-> objected to it.
+On Mon, Oct 07, 2019 at 01:36:11PM +0900, Masahiro Yamada wrote:
+> I did not notice this document was added to Documentation/kbuild/,
+> and I do not understand how it is related to the build system.
 > 
-> I see in other drivers (more then a few) that they are using #ifdef
-> CONFIG_PPC64 in some places for similar things (e.g. to run code that
-> is only needed in case of powerpc).
+> Kick it out of the kbuild directory.
+
+Should we delete the file entirely or does it belong somewhere else? It
+was added in c4f4af4094d6c7dbca3acd8d04df2759d268a116 and is referenced
+in `Documentation/kernel-hacking/hacking.rst`.
+
+Can we put into the `kernel-hacking` directory?
+
+> I am not sure if this is the perfect place, but I added its index
+> close to the module-signing.
 > 
-> e.g. from ocxl driver in misc:
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
 > 
-> #ifdef CONFIG_PPC64
-> static long afu_ioctl_enable_p9_wait(struct ocxl_context *ctx,
-> ...
-> #endif
-> and also:
+>  Documentation/admin-guide/index.rst                  | 1 +
+>  Documentation/{kbuild => admin-guide}/namespaces.rst | 0
+>  MAINTAINERS                                          | 1 +
+>  3 files changed, 2 insertions(+)
+>  rename Documentation/{kbuild => admin-guide}/namespaces.rst (100%)
 > 
-> #ifdef CONFIG_PPC64
-> if (cpu_has_feature(CPU_FTR_P9_TIDR))
-> arg.flags[0] |= OCXL_IOCTL_FEATURES_FLAGS0_P9_WAIT;
-> #endif
-
-ocxl is arguably maybe an exception here, given that it is a PPC64 bus
-only from what I can tell.  Odd that they are using this option, but I
-think it might be just to keep CONFIG_TEST to work properly.
-
-> Is this approach acceptable on you ?
-> Can I do something similar in my driver:
+> diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
+> index 34cc20ee7f3a..ca632fda700f 100644
+> --- a/Documentation/admin-guide/index.rst
+> +++ b/Documentation/admin-guide/index.rst
+> @@ -65,6 +65,7 @@ configure specific aspects of kernel behavior to your liking.
+>     parport
+>     md
+>     module-signing
+> +   namespaces
+>     rapidio
+>     sysrq
+>     unicode
+> diff --git a/Documentation/kbuild/namespaces.rst b/Documentation/admin-guide/namespaces.rst
+> similarity index 100%
+> rename from Documentation/kbuild/namespaces.rst
+> rename to Documentation/admin-guide/namespaces.rst
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 55199ef7fa74..91815dcc5914 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11547,6 +11547,7 @@ NSDEPS
+>  M:	Matthias Maennich <maennich@google.com>
+>  S:	Maintained
+>  F:	scripts/nsdeps
+> +F:	Documentation/admin-guide/namespaces.rst
+>  
+>  NTB AMD DRIVER
+>  M:	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> -- 
+> 2.17.1
 > 
-> #ifdef CONFIG_PPC64
->       foo (64)
-> #else
->       foo (48)
-> #endif
-
-The thing is, why do you need this?  What makes that platform somehow
-unique for your driver?  Focus on that and you should be able to detect
-it specifically, not just the processor type (which usually is on a wide
-range of hardware types.)
-
-thanks,
-
-greg k-h
