@@ -2,148 +2,86 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C90EC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA6FC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE95A206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:06:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9E95206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:07:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729156AbfJGSGZ (ORCPT
+        id S1729189AbfJGSHG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 14:06:25 -0400
-Received: from shelob.surriel.com ([96.67.55.147]:38502 "EHLO
-        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728031AbfJGSGZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 14:06:25 -0400
-Received: from imladris.surriel.com ([96.67.55.152])
-        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92.3)
-        (envelope-from <riel@shelob.surriel.com>)
-        id 1iHXOa-00035O-Sn; Mon, 07 Oct 2019 14:06:08 -0400
-Message-ID: <fe69e0878feaf4d8450ac7e44126f9fffe6e9e3c.camel@surriel.com>
-Subject: Re: [PATCH v3 09/10] sched/fair: use load instead of runnable load
- in wakeup path
-From:   Rik van Riel <riel@surriel.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <Morten.Rasmussen@arm.com>,
-        Hillf Danton <hdanton@sina.com>
-Date:   Mon, 07 Oct 2019 14:06:08 -0400
-In-Reply-To: <CAKfTPtA763zLxToVJpOCKc8TAgD3aZwpwhMZbbzrKiok+UHFaA@mail.gmail.com>
-References: <1568878421-12301-1-git-send-email-vincent.guittot@linaro.org>
-         <1568878421-12301-10-git-send-email-vincent.guittot@linaro.org>
-         <bc879bcb34f089e5888f6721aa2365f0832b69da.camel@surriel.com>
-         <CAKfTPtA763zLxToVJpOCKc8TAgD3aZwpwhMZbbzrKiok+UHFaA@mail.gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-6g0u0PwyfypHWJX/o/gH"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Mon, 7 Oct 2019 14:07:06 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59136 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728031AbfJGSHG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 14:07:06 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BE483315C031;
+        Mon,  7 Oct 2019 18:07:05 +0000 (UTC)
+Received: from shalem.localdomain.com (ovpn-116-119.ams2.redhat.com [10.36.116.119])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 480511001DE4;
+        Mon,  7 Oct 2019 18:07:04 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC 0/1] s390/purgatory: Make sure we fail the build if purgatory has missing symbols
+Date:   Mon,  7 Oct 2019 20:07:02 +0200
+Message-Id: <20191007180703.3678-1-hdegoede@redhat.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Mon, 07 Oct 2019 18:07:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi s390 maintainers,
 
---=-6g0u0PwyfypHWJX/o/gH
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+This patch mirrors a similar patch for x86, but it has been untested
+because I do not have a mainframe to compile on :)
 
-On Mon, 2019-10-07 at 17:27 +0200, Vincent Guittot wrote:
-> On Mon, 7 Oct 2019 at 17:14, Rik van Riel <riel@surriel.com> wrote:
-> > On Thu, 2019-09-19 at 09:33 +0200, Vincent Guittot wrote:
-> > > runnable load has been introduced to take into account the case
-> > > where
-> > > blocked load biases the wake up path which may end to select an
-> > > overloaded
-> > > CPU with a large number of runnable tasks instead of an
-> > > underutilized
-> > > CPU with a huge blocked load.
-> > >=20
-> > > Tha wake up path now starts to looks for idle CPUs before
-> > > comparing
-> > > runnable load and it's worth aligning the wake up path with the
-> > > load_balance.
-> > >=20
-> > > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-> >=20
-> > On a single socket system, patches 9 & 10 have the
-> > result of driving a woken up task (when wake_wide is
-> > true) to the CPU core with the lowest blocked load,
-> > even when there is an idle core the task could run on
-> > right now.
-> >=20
-> > With the whole series applied, I see a 1-2% regression
-> > in CPU use due to that issue.
-> >=20
-> > With only patches 1-8 applied, I see a 1% improvement in
-> > CPU use for that same workload.
->=20
-> Thanks for testing.
-> patch 8-9 have just replaced runnable load  by blocked load and then
-> removed the duplicated metrics in find_idlest_group.
-> I'm preparing an additional patch that reworks  find_idlest_group()
-> to
-> behave similarly to find_busiest_group(). It gathers statistics what
-> it already does, then classifies the groups and finally selects the
-> idlest one. This should fix the problem that you mentioned above when
-> it selects a group with lowest blocked load whereas there are idle
-> cpus in another group with high blocked load.
+In 5.4-rc1 the 2 different sha256 implementations for the purgatory resp.
+for crypto/sha256_generic.c have been consolidated into 1 single shared
+implementation under lib/crypto/sha256.c .
 
-That should do the trick!
+At least on x86 this was causing silent corruption of the purgatory due
+to a missing memzero_explicit symbol in the purgatory string.c/.o file.
 
-> > Given that it looks like select_idle_sibling and
-> > find_idlest_group_cpu do roughly the same thing, I
-> > wonder if it is enough to simply add an additional
-> > test to find_idlest_group to have it return the
-> > LLC sg, if it is called on the LLC sd on a single
-> > socket system.
->=20
-> That make sense to me
->=20
-> > That way find_idlest_group_cpu can still find an
-> > idle core like it does today.
-> >=20
-> > Does that seem like a reasonable thing?
->=20
-> That's worth testing
+With the x86 equivalent of this patch applied a x86 build of 5.4-rc1 now
+correctly fails:
 
-I'll give it a try.
+  CHK     arch/x86/purgatory/purgatory.ro
+ld: arch/x86/purgatory/purgatory.ro: in function `sha256_transform':
+sha256.c:(.text+0x1c0c): undefined reference to `memzero_explicit'
+make[2]: *** [arch/x86/purgatory/Makefile:72:
+    arch/x86/purgatory/kexec-purgatory.c] Error 1
+make[1]: *** [scripts/Makefile.build:509: arch/x86/purgatory] Error 2
+make: *** [Makefile:1650: arch/x86] Error 2
 
-Doing the full find_idlest_group heuristic
-inside an LLC seems like it would be overkill,
-anyway.
+It would be great if the s390 maintainers can test this equivalent patch
+on s390.
 
---=20
-All Rights Reversed.
+As for fixing the missing memzero_explicit symbol, we are currently
+discussing making memzero_explicit a static inline wrapper of memset
+in string.h, so that we do not need to implement it in multiple places.
 
---=-6g0u0PwyfypHWJX/o/gH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+This discussion is Cc-ed to the generic linux-kernel@vger.kernel.org list,
+it is happening in the
+"[PATCH v2 5.4 regression fix] x86/boot: Provide memzero_explicit" thread.
 
------BEGIN PGP SIGNATURE-----
+Regards,
 
-iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl2bfpAACgkQznnekoTE
-3oN2IAgAjQ23n+upCS/L7x2xgo3k8/iA66cw3M/ju0kO/QLbn7V3TAVGMkiXjNWz
-QjidZkY1Zzq/N9n4ugd24vCZit2iZIX2oLwbjzF6FPjHC31WXptQoHXJEw7T8+Jb
-BRmMhYKpB3ILxtnxQLKcG7dqWxXlaVbDe2LuG1wTRwh9FxH4PQ46f+BM6owj+8a6
-Bz/0sWIHvUMtD2V/RIRR5JdwrRtOoBuknl5sdITgj7kCeWgEyFmJV4gjG9MSHHqQ
-Y5EaJAYjny8MC1fvvmEw/2nFcRpZdmzG+hIdIreqYDeKuMaaNmKuoKR4XuxXfEWW
-rVUWJNmNEqAH5OuSVDv9Ov0XW5wgvA==
-=zQW5
------END PGP SIGNATURE-----
+Hans
 
---=-6g0u0PwyfypHWJX/o/gH--
 
