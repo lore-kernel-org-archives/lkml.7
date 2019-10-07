@@ -2,179 +2,148 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAE1ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C90EC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB9C5206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:05:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE95A206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:06:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729119AbfJGSFB (ORCPT
+        id S1729156AbfJGSGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 14:05:01 -0400
-Received: from mga03.intel.com ([134.134.136.65]:23097 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728665AbfJGSFB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 14:05:01 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Oct 2019 11:04:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,269,1566889200"; 
-   d="scan'208";a="218038008"
-Received: from tthayer-hp-z620.an.intel.com (HELO [10.122.105.146]) ([10.122.105.146])
-  by fmsmga004.fm.intel.com with ESMTP; 07 Oct 2019 11:04:58 -0700
-Reply-To: thor.thayer@linux.intel.com
-Subject: Re: [PATCH v4 1/2] fpga: fpga-mgr: Add readback support
-To:     Moritz Fischer <mdf@kernel.org>
-Cc:     Appana Durga Kedareswara Rao <appanad@xilinx.com>,
-        Alan Tull <atull@kernel.org>,
-        Michal Simek <michals@xilinx.com>,
-        "kedare06@gmail.com" <kedare06@gmail.com>,
-        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Nava kishore Manne <navam@xilinx.com>,
-        Siva Durga Prasad Paladugu <sivadur@xilinx.com>,
-        Richard Gong <richard.gong@linux.intel.com>,
-        Dinh Nguyen <dinguyen@kernel.org>
-References: <1532672551-22146-1-git-send-email-appana.durga.rao@xilinx.com>
- <CANk1AXSEWcZ7Oqv5pgpwvJRyyFWk5gPtniXa7T+oe6-uywqEqA@mail.gmail.com>
- <MN2PR02MB6400CD5312983443A67DCC4EDC810@MN2PR02MB6400.namprd02.prod.outlook.com>
- <4476bf39-b665-50d8-fecd-d50687d10ca2@linux.intel.com>
- <20190927182308.GA6797@archbox>
-From:   Thor Thayer <thor.thayer@linux.intel.com>
-Message-ID: <f8a9bc07-0705-1318-eba2-8878e839d696@linux.intel.com>
-Date:   Mon, 7 Oct 2019 13:06:51 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 7 Oct 2019 14:06:25 -0400
+Received: from shelob.surriel.com ([96.67.55.147]:38502 "EHLO
+        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728031AbfJGSGZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 14:06:25 -0400
+Received: from imladris.surriel.com ([96.67.55.152])
+        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <riel@shelob.surriel.com>)
+        id 1iHXOa-00035O-Sn; Mon, 07 Oct 2019 14:06:08 -0400
+Message-ID: <fe69e0878feaf4d8450ac7e44126f9fffe6e9e3c.camel@surriel.com>
+Subject: Re: [PATCH v3 09/10] sched/fair: use load instead of runnable load
+ in wakeup path
+From:   Rik van Riel <riel@surriel.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Hillf Danton <hdanton@sina.com>
+Date:   Mon, 07 Oct 2019 14:06:08 -0400
+In-Reply-To: <CAKfTPtA763zLxToVJpOCKc8TAgD3aZwpwhMZbbzrKiok+UHFaA@mail.gmail.com>
+References: <1568878421-12301-1-git-send-email-vincent.guittot@linaro.org>
+         <1568878421-12301-10-git-send-email-vincent.guittot@linaro.org>
+         <bc879bcb34f089e5888f6721aa2365f0832b69da.camel@surriel.com>
+         <CAKfTPtA763zLxToVJpOCKc8TAgD3aZwpwhMZbbzrKiok+UHFaA@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-6g0u0PwyfypHWJX/o/gH"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-In-Reply-To: <20190927182308.GA6797@archbox>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Moritz,
 
-On 9/27/19 1:23 PM, Moritz Fischer wrote:
-> Thor,
-> 
-> On Fri, Sep 27, 2019 at 09:32:11AM -0500, Thor Thayer wrote:
->> Hi Kedar & Moritz,
->>
->> On 9/27/19 12:13 AM, Appana Durga Kedareswara Rao wrote:
->>> Hi Alan,
->>>
->>> Did you get a chance to send your framework changes to upstream?
-> No they weren't upstreamed.
-> 
->>> @Moritz Fischer: If Alan couldn't send his patch series, Can we take this patch series??
->>> Please let me know your thoughts on this.
-> 
-> Alan had some comments RE: #defines, I'll have to take another look.
->>>
->>> Regards,
->>> Kedar.
->>
->>
->> I'd like to see some mechanism added as well. Our CvP driver needs a way to
->> load images to the FPGA over the PCIe bus.
-> 
-> Can you elaborate a bit on the CvP use-case and how that would work? Who
-> would use the device how after loading the bitstream?
-> 
-> Generally there are several use cases that I have collected mentally
-> over the years:
-> 
-> I) DFL use case:
->    - Mixed-set of drivers: Kernel and Userspace
->    - FPGA logic is discoverable through DFL
->    - Userspace application wants to reprogram FPGA
-> 
-> II) DT configfs use case:
->    - Mixed-set of drivers: Kernel and Userspace
->    - FPGA logic is *not* discoverable (hence DT overlay)
->    - Userspace application wants to reprogram FPGA
-> 
-> III) Thomas' case:
->    - Kernel only drivers (pcie bridge, pcie drivers, ...)
->    - FPGA logic is fully discoverable (i.e. PCIe endpoint
->      implemented in FPGA, connected to SoC via PCIe)
->    - Userspace application wants to reprogram FPGA
-> 
-> IV) VFIO case:
->    - Usually exposes either entire device via vfio-pci or part via
->      vfio-mdev
->    - Loading (basic) bitstream at boot from flash
->    - vfio-mdev case can use FPGA region interface + ioctl
->    - Full VFIO case is similar to III)
-> 
-> How does your CvP use case fit in? Collecting all the use-cases would
-> help with moving forward on coming up with an API :)
-> 
-The CvP case is the same as III) Thomas' case. The FPGA configuration 
-bitstream is downloaded over the PCIe.
+--=-6g0u0PwyfypHWJX/o/gH
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The one difference in my case is that there isn't an SoC. This is a 
-Intel host processor connecting to a non-SoC Stratix10/Arria10. The 
-non-SoC A10/S10, boots a minimal image (CvP) setting up the peripheral 
-pins and enabling the PCIe endpoint for CvP downloads.
+On Mon, 2019-10-07 at 17:27 +0200, Vincent Guittot wrote:
+> On Mon, 7 Oct 2019 at 17:14, Rik van Riel <riel@surriel.com> wrote:
+> > On Thu, 2019-09-19 at 09:33 +0200, Vincent Guittot wrote:
+> > > runnable load has been introduced to take into account the case
+> > > where
+> > > blocked load biases the wake up path which may end to select an
+> > > overloaded
+> > > CPU with a large number of runnable tasks instead of an
+> > > underutilized
+> > > CPU with a huge blocked load.
+> > >=20
+> > > Tha wake up path now starts to looks for idle CPUs before
+> > > comparing
+> > > runnable load and it's worth aligning the wake up path with the
+> > > load_balance.
+> > >=20
+> > > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> >=20
+> > On a single socket system, patches 9 & 10 have the
+> > result of driving a woken up task (when wake_wide is
+> > true) to the CPU core with the lowest blocked load,
+> > even when there is an idle core the task could run on
+> > right now.
+> >=20
+> > With the whole series applied, I see a 1-2% regression
+> > in CPU use due to that issue.
+> >=20
+> > With only patches 1-8 applied, I see a 1% improvement in
+> > CPU use for that same workload.
+>=20
+> Thanks for testing.
+> patch 8-9 have just replaced runnable load  by blocked load and then
+> removed the duplicated metrics in find_idlest_group.
+> I'm preparing an additional patch that reworks  find_idlest_group()
+> to
+> behave similarly to find_busiest_group(). It gathers statistics what
+> it already does, then classifies the groups and finally selects the
+> idlest one. This should fix the problem that you mentioned above when
+> it selects a group with lowest blocked load whereas there are idle
+> cpus in another group with high blocked load.
 
-The host can then download bitstreams using the FPGA Manager through 
-debugFS and when the bitstream finishes downloading and the FPGA enters 
-User Mode, the functionality is available for the host to use.
+That should do the trick!
 
->>
->> It wasn't clear to me from the discussion on Alan's patchset[1] that the
->> debugfs was acceptable to the mainline. I'd be happy to resurrect that
->> patchset with the suggested changes.
-> 
-> Back then we decided to not move forward with the debugfs patchset since
-> it's essentially cat foo.bin > /dev/xdevcfg / cat bar.rbf > /dev/fpga0
-> in disguise. Which is why I vetoed it back then.
-> 
->> Since debugfs isn't enabled for production, are there any alternatives?
->>
->> Alan sent a RFC [2] for loading FIT images through the sysfs.
->>
->> The RFC described a FIT image that included FPGA image specific information
->> to be included with the image (for systems running without device tree like
->> our PCIe bus FPGA CvP).
-> 
-> Yeah I had originally suggested that as a mechanim to make FPGA images
-> discoverable by the kernel. I still think the idea has merit, however it
-> will run into the same issues that the configfs interface ran into w.r.t
-> using dt-overlays.
-> 
-> Generally I'd like to see a solution that exposes the *same* interface
-> to DT and not DT systems to userspace.
-> 
-> Using FIT headers one could go ahead and design something along the
-> lines of what DFL is doing, except for instead of parsing the DFL in the
-> logic, one would parse the FIT header to create subdevices.
-> 
->> Unfortunately, I believe this has the same uphill battle that the Device
->> Tree Overlay patches[3] have to getting accepted.
-> 
-> See above. While I'm happy to discuss this more I atm don't have the
-> bandwidth to push the DT work any further.
+> > Given that it looks like select_idle_sibling and
+> > find_idlest_group_cpu do roughly the same thing, I
+> > wonder if it is enough to simply add an additional
+> > test to find_idlest_group to have it return the
+> > LLC sg, if it is called on the LLC sd on a single
+> > socket system.
+>=20
+> That make sense to me
+>=20
+> > That way find_idlest_group_cpu can still find an
+> > idle core like it does today.
+> >=20
+> > Does that seem like a reasonable thing?
+>=20
+> That's worth testing
 
-Understood. I'm still coming up to speed on the variations of FPGA 
-enablement but I'm happy to help where I can.
+I'll give it a try.
 
-Thanks.
+Doing the full find_idlest_group heuristic
+inside an LLC seems like it would be overkill,
+anyway.
 
-> 
-> Thanks,
-> Moritz
-> 
+--=20
+All Rights Reversed.
+
+--=-6g0u0PwyfypHWJX/o/gH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl2bfpAACgkQznnekoTE
+3oN2IAgAjQ23n+upCS/L7x2xgo3k8/iA66cw3M/ju0kO/QLbn7V3TAVGMkiXjNWz
+QjidZkY1Zzq/N9n4ugd24vCZit2iZIX2oLwbjzF6FPjHC31WXptQoHXJEw7T8+Jb
+BRmMhYKpB3ILxtnxQLKcG7dqWxXlaVbDe2LuG1wTRwh9FxH4PQ46f+BM6owj+8a6
+Bz/0sWIHvUMtD2V/RIRR5JdwrRtOoBuknl5sdITgj7kCeWgEyFmJV4gjG9MSHHqQ
+Y5EaJAYjny8MC1fvvmEw/2nFcRpZdmzG+hIdIreqYDeKuMaaNmKuoKR4XuxXfEWW
+rVUWJNmNEqAH5OuSVDv9Ov0XW5wgvA==
+=zQW5
+-----END PGP SIGNATURE-----
+
+--=-6g0u0PwyfypHWJX/o/gH--
 
