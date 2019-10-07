@@ -2,150 +2,129 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8823C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1088CC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AE4D206BB
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1BF7206BB
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:25:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CiigE7vs"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="bqfkGMcR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728897AbfJGRYL (ORCPT
+        id S1728943AbfJGRZ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 13:24:11 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:33736 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727801AbfJGRYK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 13:24:10 -0400
-Received: by mail-io1-f65.google.com with SMTP id z19so30487572ior.0;
-        Mon, 07 Oct 2019 10:24:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=f19XKzeo7CREoxaZsVsRONVS5s0SLTB6t4SyKnXI7DM=;
-        b=CiigE7vs4fIku3bkBz3sbQ39z1nNKsl+M/ctOQzar/nVEoj4HtdTBA8Bq0/ZYP0ABo
-         dXzKL4fvKnjCSNCE9SOBMlsZB6JnS0vO8zWnK8SZbGWRZMjaV8IrchjiMDTbOvIHLUiw
-         07GxDyR3iO7BPpXhlEC+DBeQAMOUo9onvpPauAVbcm4ugyAn1tf+sezcCpisAZrhnLyF
-         PIWepPOOBbGNm64OXZxzO4Apgw09jQTaWvnHc7PCViQP5PIFeOPtNVxhVuJtIP4yMbAL
-         Z6tGsn3/Y/SiF2ixi5aoHeheVqOD6R81wgTZl0JWdsZwlthBWR7bputJbCzt7tDoSrk9
-         EHqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=f19XKzeo7CREoxaZsVsRONVS5s0SLTB6t4SyKnXI7DM=;
-        b=n+g07cq8qtHizmRDiuj777yxDlCllHNuGgsxWTlQRzq9kPbgBEqU9uqd72a0IuNEne
-         Wkh6LjElpcekopoAZIh9LPYTfqZSCFLZnFQWlxGiYqEb93dsiijU5tTkd0fXTqmbKK/f
-         e0kAJ/FzymZ/0F5Q3vzFe28zBn+DGY1fa92WpxfW4+cgF0FlLqYUdSxwLLPFoN8wehSt
-         lcORTISeVhYcpKalMaX8+f9E9UJhDW+zFllrrBeIN6Z+M1hnB9uOthwmWsb4sOBAM6nI
-         fn2zhPOJ3/hiEja8Obam2jeEbt0WnnhWrBkXF9yquRXpNuGTCLwYxQMfU93tFA22BlSw
-         F7Fg==
-X-Gm-Message-State: APjAAAW0nHoIQl4ZCsK25oJcaRTQWzyLBXM5+MkVzXYMcg+8C0PT8RRS
-        LqGn08gh44EptJnKeW49gjd72eE6zNikeT/UURc=
-X-Google-Smtp-Source: APXvYqzgUWjOVexUVEoIKiFrSYPtJYgjVKLK+LdwKcl8jpZM7OSz2YINg0duXk2nz2yEQ2pbr1uB92Xz5qZFz+8zbsU=
-X-Received: by 2002:a6b:da06:: with SMTP id x6mr16936243iob.42.1570469049735;
- Mon, 07 Oct 2019 10:24:09 -0700 (PDT)
+        Mon, 7 Oct 2019 13:25:29 -0400
+Received: from mail-eopbgr1310123.outbound.protection.outlook.com ([40.107.131.123]:30906
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727801AbfJGRZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 13:25:29 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=W2U+HRdYlQ4+OAY9DiO5uHfYJvGOSlkAF4mGBiTq9D3K4w1VwaHGUY/OZXJPCH8VprEFq/igCCzrImnLS3V0LuKG/inQNlNPdfwH8KwUe8pjlZ/8zu/RdJdEYJtYmozmdm/nR2QQen+5pu/i9ew2N56+4ho2ZTDXNntOAJbgCm1wQ60AtOj/F8jx4nmeTvos5/+QtjzcjUSC9UE9ZcfKBcKS5Ma1imYd9xyjclG1dtp3vJTV23ZUprHSSmRwjDtZLy4ji7Zear2mCnaNv6Ft9v9rYYFdGIdRhogsdN2FkbJmzGCTV9hjI6lFhC7Sexi45/MP463vwglX73hF8A55zQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jTN8DzsLNX+G4kiEDg9fHEgEyPKaABTSyatsaTuHZE4=;
+ b=aNaW4LPKrAVM0ZHWLe6F9Pjudz0YMS42+Z0X1UFxA6/S01bO618dLUuFUc/TZ6Rlihhf+t39u9dSB8jfBKJB5ENTO/iSNxYdvojSx7nzupLTl9GE0/Sgkbfd7kcxR6E/x9Y5L76WS1nUFsknyAVOr5BRC3lcJvxHKN2Jru1kpeo9kVbO2sB11bwQi1QyMSTdfOyac8V2kU+uJUmCA7Mce/4dxGEhWdhOFDYAQk1Vk6HyjjhvFd7Yd9dYAM1vDOL3fwwCqZFNgFRo/R3/Ay+irOOdiHuOwG3CLyNR9S6dadMjtyUKpuGk+7/oXADhP52X+oxNhTGd1cpaAk0CrvQwCg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jTN8DzsLNX+G4kiEDg9fHEgEyPKaABTSyatsaTuHZE4=;
+ b=bqfkGMcRCH6gctW83xOj3ZiJju12ue09gdsCaHUNgGPSFa0a2VQNK6E4X2f/pat6NEn3GJYqTdrCyTkEzv8F7g/p/npHajgCe3vlCtlVbSmx8RjevKKCLXlnwZUi5RvI+Ocv9a36WBPZpGjZ1Kvqk5AAIf+t/veJnU/mVziHOgE=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0186.APCP153.PROD.OUTLOOK.COM (10.170.187.144) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.13; Mon, 7 Oct 2019 17:25:18 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::fc44:a784:73e6:c1c2%7]) with mapi id 15.20.2367.004; Mon, 7 Oct 2019
+ 17:25:18 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Andrea Parri <parri.andrea@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        vkuznets <vkuznets@redhat.com>
+Subject: RE: [PATCH 1/2] Drivers: hv: vmbus: Introduce table of VMBus protocol
+ versions
+Thread-Topic: [PATCH 1/2] Drivers: hv: vmbus: Introduce table of VMBus
+ protocol versions
+Thread-Index: AQHVfSzKc5KO2kE/XECN2J8gzpV8GKdPbL4g
+Date:   Mon, 7 Oct 2019 17:25:18 +0000
+Message-ID: <PU1P153MB0169CAC756996A623CFDFBA7BF9B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <20191007163115.26197-1-parri.andrea@gmail.com>
+ <20191007163115.26197-2-parri.andrea@gmail.com>
+In-Reply-To: <20191007163115.26197-2-parri.andrea@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-07T17:25:14.8404437Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=8e9786b0-faad-44a9-a7cc-3c1339e88dfa;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:7f70:44a6:f3e:a757:ee91]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3904b5f6-881d-44ce-b709-08d74b4b5326
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: PU1P153MB0186:|PU1P153MB0186:|PU1P153MB0186:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <PU1P153MB018600E275C4014FA93EFEF3BF9B0@PU1P153MB0186.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:3513;
+x-forefront-prvs: 01834E39B7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(376002)(396003)(39860400002)(346002)(366004)(199004)(189003)(66946007)(86362001)(316002)(478600001)(76116006)(9686003)(486006)(22452003)(476003)(6436002)(2201001)(229853002)(64756008)(66476007)(66556008)(7736002)(76176011)(81156014)(81166006)(66446008)(25786009)(7696005)(52536014)(8676002)(99286004)(102836004)(33656002)(4744005)(4326008)(256004)(2501003)(8990500004)(5660300002)(6506007)(71200400001)(74316002)(71190400001)(46003)(446003)(6116002)(2906002)(305945005)(11346002)(14444005)(10290500003)(186003)(8936002)(6246003)(110136005)(55016002)(14454004)(10090500001)(54906003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0186;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: UO7Y/MAcNIhhXDZzqk9ZjGN9/c7I1UtxQ0SuVd8eavSfnNnCsUOFo5DExolmG3EJmha4rq2RrmCbY3Yfjq+dQR4UJ/QAnBoLp4+M0FZJm1x5xH4WdlWDm7ujb+xMkkshVLydpk05tyTGBlBGMZRIliI92X7pLSoIDKJLrVdciDg2mtcbUh2dN8H62myNcvv7peD/bbLdLRgnoCjC2OJj/xkhc9e5lewyKb8J9wb3TGGeQxXV/YOJp8OjBZGT2p891uEQSqE646aSaH2ShxZWg1TPD0/oFnYLuplBU+5Bhx7dbzKKluNRvjSIGYlGLIhjYhNRg4Bqn/jaU3984ZBYvLQHd59kjRmzwf6O/pMxKLi294c+9YuAbYnDbXPY0seMPrKMkexAz3RBSGcWURcz3eUYc+pyfqfTdYlaeyxX6HM=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <1570208647.1250.55.camel@oc5348122405> <20191004233052.28865.1609.stgit@localhost.localdomain>
- <1570241926.10511.7.camel@oc5348122405> <CAKgT0Ud7SupVd3RQmTEJ8e0fixiptS-1wFg+8V4EqpHEuAC3wQ@mail.gmail.com>
- <1570463459.1510.5.camel@oc5348122405> <CAKgT0Ue6+JJqcoFO1AcP8GCShmMPiUm1SNkbq9BxxWA-b5=Oow@mail.gmail.com>
- <1570468362.1510.9.camel@oc5348122405>
-In-Reply-To: <1570468362.1510.9.camel@oc5348122405>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Mon, 7 Oct 2019 10:23:58 -0700
-Message-ID: <CAKgT0UdwqGGKvaSJ+3vd-_d-6t9MB=No+7SpkbOT2PnynRK+2w@mail.gmail.com>
-Subject: Re: [RFC PATCH] e1000e: Use rtnl_lock to prevent race conditions
- between net and pci/pm
-To:     "David Z. Dai" <zdai@linux.vnet.ibm.com>
-Cc:     Netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>, zdai@us.ibm.com,
-        David Miller <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3904b5f6-881d-44ce-b709-08d74b4b5326
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Oct 2019 17:25:18.1253
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: e3WdfaU6i4v194s1Qm3JOQ0uIQTMfvqASyxJ3d+y60iTzAYVf1gVpDIqAIaUFzdMg+1Fwek/Ki72HjM39h2rdg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0186
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 10:12 AM David Z. Dai <zdai@linux.vnet.ibm.com> wrote:
->
-> On Mon, 2019-10-07 at 10:02 -0700, Alexander Duyck wrote:
-> > On Mon, Oct 7, 2019 at 8:51 AM David Z. Dai <zdai@linux.vnet.ibm.com> wrote:
-> > >
-> >
-> > <snip>
-> >
-> > > We have tested on one of the test box.
-> > > With this patch, it doesn't crash kernel anymore, which is good!
-> > >
-> > > However we see this warning message from the log file for irq number 0:
-> > > [10206.317270] Trying to free already-free IRQ 0
-> > >
-> > > With this stack:
-> > > [10206.317344] NIP [c00000000018cbf8] __free_irq+0x308/0x370
-> > > [10206.317346] LR [c00000000018cbf4] __free_irq+0x304/0x370
-> > > [10206.317347] Call Trace:
-> > > [10206.317348] [c00000008b92b970] [c00000000018cbf4] __free_irq
-> > > +0x304/0x370 (unreliable)
-> > > [10206.317351] [c00000008b92ba00] [c00000000018cd84] free_irq+0x84/0xf0
-> > > [10206.317358] [c00000008b92ba30] [d000000007449e60] e1000_free_irq
-> > > +0x98/0xc0 [e1000e]
-> > > [10206.317365] [c00000008b92ba60] [d000000007458a70] e1000e_pm_freeze
-> > > +0xb8/0x100 [e1000e]
-> > > [10206.317372] [c00000008b92baa0] [d000000007458b6c]
-> > > e1000_io_error_detected+0x34/0x70 [e1000e]
-> > > [10206.317375] [c00000008b92bad0] [c000000000040358] eeh_report_failure
-> > > +0xc8/0x190
-> > > [10206.317377] [c00000008b92bb20] [c00000000003eb2c] eeh_pe_dev_traverse
-> > > +0x9c/0x170
-> > > [10206.317379] [c00000008b92bbb0] [c000000000040d84]
-> > > eeh_handle_normal_event+0xe4/0x580
-> > > [10206.317382] [c00000008b92bc60] [c000000000041330] eeh_handle_event
-> > > +0x30/0x340
-> > > [10206.317384] [c00000008b92bd10] [c000000000041780] eeh_event_handler
-> > > +0x140/0x200
-> > > [10206.317386] [c00000008b92bdc0] [c0000000001397c8] kthread+0x1a8/0x1b0
-> > > [10206.317389] [c00000008b92be30] [c00000000000b560]
-> > > ret_from_kernel_thread+0x5c/0x7c
-> > >
-> > > Thanks! - David
-> >
-> > Hmm. I wonder if it is possibly calling the report
-> > e1000_io_error_detected multiple times. If so then the secondary calls
-> > to e1000_pm_freeze would cause issues.
-> >
-> > I will add a check so that we only down the interface and free the
-> > IRQs if the interface is in the present and running state.
-> >
-> > I'll submit an update patch shortly.
-> >
-> > Thanks.
-> >
-> > - Alex
-> It only complains about IRQ number 0 in the log.
+> From: linux-hyperv-owner@vger.kernel.org
+> <linux-hyperv-owner@vger.kernel.org> On Behalf Of Andrea Parri
+> Sent: Monday, October 7, 2019 9:31 AM
+> ....
+> +/*
+> + * Table of VMBus versions listed from newest to oldest; the table
+> + * must terminate with VERSION_INVAL.
+> + */
+> +__u32 vmbus_versions[] =3D {
+> +	VERSION_WIN10_V5,
 
-I suspect that is because the IRQ is already freed. So there are no
-other interrupts enabled and it thinks it is running in legacy IRQ
-mode.
-
-> Could you please let me know the actual place where you will add the
-> check?
-> I can retest it again.
->
-> Thanks! - David
-
-So I will need to add another variable called "present" to
-e1000_pm_freeze, I will assign netif_device_present() to it after
-taking the rtnl_lock and before I detach the interface, and will test
-for it and netif_running() before calling the logic that calls
-e1000_down and e1000_free_irq.
-
-- Alex
+This should be "static"?
+=20
+Thanks,
+Dexuan
