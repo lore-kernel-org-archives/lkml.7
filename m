@@ -2,95 +2,150 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5D2C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43234C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31BD620867
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:28:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LW255EIW"
+	by mail.kernel.org (Postfix) with ESMTP id 1A86C2084D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:28:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727491AbfJGI2U (ORCPT
+        id S1727511AbfJGI2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 04:28:20 -0400
-Received: from mail-wm1-f47.google.com ([209.85.128.47]:50996 "EHLO
-        mail-wm1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727103AbfJGI2U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 04:28:20 -0400
-Received: by mail-wm1-f47.google.com with SMTP id 5so11614960wmg.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 01:28:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Vi8i83iMhys619QiytD1LExGsofQRsLapgPmrpICIxs=;
-        b=LW255EIWDKQR6jmEVorn7tbvhQRDUk+7Uq+kOw1uX/zTnPUpwhsNLQ1EnCm+x63suW
-         WmsSgAoZe54dHi18YFALZnNltJi+9b3Of2M42Z0WLbUfCbrVMqKhVzGbpXZ0z3pLPwSP
-         lytOlOSw4riQmSPYFXaI7T3dIefbsx2T+CTZrK3sy8PK0xIvcpbVsyKvZY0GokdajE25
-         PJ4sMB2ZGb0Sh8p4ZAIRrK3DQjCw3r0dyDQhLRbJeQrQXABRIKerVwiOBLV2QhdHqpeV
-         Fx4AM4jQJJ2E1clcjn9eW7Qd3x1C9uZGwE6m0sec0RCaZAP+BjnxLAcNVBptix8m+GYU
-         h+sQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Vi8i83iMhys619QiytD1LExGsofQRsLapgPmrpICIxs=;
-        b=G8awv3iANLEEHaozn08b3cWUpX41We1Th96ZqY5gWEogqMQiHKQ5SfwgnZ03Jq+f7C
-         xaNa5Dl7veR+FPguSiqN0tgx5OEXHXWuEG2rc40vwdkrGDiHRkWgOP75Pklx0z54jBnN
-         Acll38mkklCNldh5kEUSqmKZDAQ61Uisk912CilezBce2h2D+A71kqLks3kjJ2KGFD5u
-         qlxwbg0kpcRhiBFj2pO5p1WRj+k67bTh+JwocYVpVDLrPZz0XD+yqwKr5DRpm99xBWa8
-         iEDarvYe0NY0E1Lt7k3//KhOnh13KcqzeEuKKu+fzu+XJkOn9IdvwEwZ9X0503JIU5tw
-         CAvQ==
-X-Gm-Message-State: APjAAAVrZeW7uO4RepG8e+0GYAvhgN23JsVgJVzbVaE0aSfW0N5pUbzW
-        vLPXlORj3rjRTlxmVqpUYBw=
-X-Google-Smtp-Source: APXvYqyMnHLUB9sDtls7UvPxRun60B6x6ZIQxLudJhjh9AHROWTBeAp7T6UMtzPlyLXK+sWbu8w//w==
-X-Received: by 2002:a7b:c935:: with SMTP id h21mr18684898wml.97.1570436896337;
-        Mon, 07 Oct 2019 01:28:16 -0700 (PDT)
-Received: from ?IPv6:2a00:23c4:f78c:d00:1570:f96d:dab8:76ae? ([2a00:23c4:f78c:d00:1570:f96d:dab8:76ae])
-        by smtp.gmail.com with ESMTPSA id p5sm8606794wmi.4.2019.10.07.01.28.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 07 Oct 2019 01:28:15 -0700 (PDT)
-Subject: Re: [BISECTED] Suspend / USB broken on XPS 9370 + TB16
-To:     Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, andrew.smirnov@gmail.com,
-        rrangel@chromium.org, gregkh@linuxfoundation.org,
-        kamal@canonical.com, khalid.elmously@canonical.com
-References: <2f2f62bc-558f-70d1-44bf-a95334453f8a@gmail.com>
- <294a9515-962a-d64b-c113-b73e9fe85fa8@linux.intel.com>
-From:   Carlo Caione <carlo.caione@gmail.com>
-Message-ID: <906b91a5-834c-f3a6-9c86-609844a6f867@gmail.com>
-Date:   Mon, 7 Oct 2019 09:28:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <294a9515-962a-d64b-c113-b73e9fe85fa8@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Mon, 7 Oct 2019 04:28:23 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60402 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727103AbfJGI2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 04:28:22 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9164AACC6;
+        Mon,  7 Oct 2019 08:28:19 +0000 (UTC)
+Message-ID: <1570437230.13764.1.camel@suse.cz>
+Subject: Re: [PATCH v2 2/2] cpufreq: intel_pstate: Conditional frequency
+ invariant accounting
+From:   Giovanni Gherdovich <ggherdovich@suse.cz>
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@suse.de>, Len Brown <lenb@kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Paul Turner <pjt@google.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Quentin Perret <qperret@qperret.net>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Doug Smythies <dsmythies@telus.net>
+Date:   Mon, 07 Oct 2019 10:33:50 +0200
+In-Reply-To: <56f1e864ed93d45e6328d4d015cfda6406fdda42.camel@linux.intel.com>
+References: <20191002122926.385-1-ggherdovich@suse.cz>
+         <20191002122926.385-3-ggherdovich@suse.cz> <13106850.QMtCbivBLn@kreacher>
+         <5d6d601d2647644238fc51621407061e1c29320d.camel@linux.intel.com>
+         <1570177786.30086.1.camel@suse.cz>
+         <CAJZ5v0jK1kMjQ3gu8KhQmp2Paq9Rb74NPjMQ1HsVRCD3Fct5TQ@mail.gmail.com>
+         <1570179472.30086.4.camel@suse.cz>
+         <56f1e864ed93d45e6328d4d015cfda6406fdda42.camel@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/10/2019 09:13, Mathias Nyman wrote:
-
-/cut
-> Does the below patch help?  Greg just applied it to his usb-linus branch.
+On Fri, 2019-10-04 at 08:17 -0700, Srinivas Pandruvada wrote:
+> On Fri, 2019-10-04 at 10:57 +0200, Giovanni Gherdovich wrote:
+> > On Fri, 2019-10-04 at 10:29 +0200, Rafael J. Wysocki wrote:
+> > > On Fri, Oct 4, 2019 at 10:24 AM Giovanni Gherdovich <
+> > > ggherdovich@suse.cz> wrote:
+> > > > 
+> > > > On Thu, 2019-10-03 at 20:31 -0700, Srinivas Pandruvada wrote:
+> > > > > On Thu, 2019-10-03 at 20:05 +0200, Rafael J. Wysocki wrote:
+> > > > > > On Wednesday, October 2, 2019 2:29:26 PM CEST Giovanni Gherdovich
+> > > > > > wrote:
+> > > > > > > From: Srinivas Pandruvada < srinivas.pandruvada@linux.intel.com>
+> > > > > > > 
+> > > > > > > intel_pstate has two operating modes: active and passive.  In
+> > > > > > > "active" mode, the in-built scaling governor is used and in
+> > > > > > > "passive" mode, the driver can be used with any governor like
+> > > > > > > "schedutil". In "active" mode the utilization values from
+> > > > > > > schedutil is not used and there is a requirement from high
+> > > > > > > performance computing use cases, not to readas well any
+> > > > > > > APERF/MPERF MSRs.
+> > > > > > 
+> > > > > > Well, this isn't quite convincing.
+> > > > > > 
+> > > > > > In particular, I don't see why the "don't read APERF/MPERF MSRs"
+> > > > > > argument applies *only* to intel_pstate in the "active" mode.
+> > > > > > What about intel_pstate in the "passive" mode combined with the
+> > > > > > "performance" governor?  Or any other governor different from
+> > > > > > "schedutil" for that matter?
+> > > > > > 
+> > > > > > And what about acpi_cpufreq combined with any governor different
+> > > > > > from "schedutil"?
+> > > > > > 
+> > > > > > Scale invariance is not really needed in all of those cases right
+> > > > > > now AFAICS, or is it?
+> > > > > 
+> > > > > Correct. This is just part of the patch to disable in active mode
+> > > > > (particularly in HWP and performance mode).
+> > > > > 
+> > > > > But this patch is 2 years old. The folks who wanted this, disable
+> > > > > intel-pstate and use userspace governor with acpi-cpufreq. So may be
+> > > > > better to address those cases too.
+> > > > 
+> > > > I disagree with "scale invariance is needed only by the schedutil
+> > > > governor"; the two other users are the CPU's estimated utilization in
+> > > > the wakeup path, via cpu_util_without(), as well as the load-balance
+> > > > path, via cpu_util() which is used by update_sg_lb_stats().
+> > > 
+> > > OK, so there are reasons to run the scale invariance code which are
+> > > not related to the cpufreq governor in use.
+> > > 
+> > > I wonder then why those reasons are not relevant for intel_pstate in the
+> > > "active" mode.
+> > > 
+> > > > Also remember that scale invariance is applied to both PELT signals
+> > > > util_avg and load_avg; schedutil uses the former but not the latter.
+> > > > 
+> > > > I understand Srinivas patch to disable MSR accesses during the tick as
+> > > > a band-aid solution to address a specific use case he cares about, but
+> > > > I don't think that extending this approach to any non-schedutil
+> > > > governor is a good idea -- you'd be killing load balancing in the
+> > > > process.
+> > > 
+> > > But that is also the case for intel_pstate in the "active" mode,
+> > > isn't it?
+> > 
+> > Sure it is.
+> > 
+> > Now, what's the performance impact of loosing scale-invariance in PELT
+> > signals?  And what's the performance impact of accessing two MSRs at the
+> > scheduler tick on each CPU?
+> > 
+> > I am sporting Srinivas' patch because he expressed the concern that the
+> > losses don't justify the gains for a specific class of users
+> > (supercomputing), although I don't fully like the idea (and arguably that
+> > should be measured).
+> > 
 > 
-> ac343366846a xhci: Increase STS_SAVE timeout in xhci_suspend()
-> Link: 
-> https://lore.kernel.org/r/1570190373-30684-8-git-send-email-mathias.nyman@linux.intel.com 
+> I understand there are other impact of the scale invariance like in
+> deadline code, which I didn't see when I submitted this patch.
+> You can drop this patch at this time if you like. I can poke HPC folks
+> to test a released kernel.
 
-Yes. That patch fixes the issue.
+Thanks Srinivas, in v3 I'll drop the tick_disable mechanism for now.
 
-Thank you,
 
---
-Carlo Caione
+Giovanni
