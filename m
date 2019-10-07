@@ -2,163 +2,100 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADC3ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A912ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 205162070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:09:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YT1reUWl"
+	by mail.kernel.org (Postfix) with ESMTP id 5F1062070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:10:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570461024;
+	bh=C/j8wF5nPghh73PI8MAMCRE0Uukowd37eLCPxz0oV5s=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=nn/6VlAEXTHyuQ5Dgrg6/kgt97lzYSmaAsgwTzQVfUO0DkuGcX2rKlIOhLykHaG+P
+	 piWAEXntaaWm2eVGaF1vKBXvPaH7ddHh8XuizLCVo8IVBVRsrvKPTf1vBh4pYea2Vo
+	 LQcKQ/U2zy57XiSMy0esQwuLsAnpQEcFC0Nu4L1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729329AbfJGPJ3 (ORCPT
+        id S1728560AbfJGPKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 11:09:29 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:37384 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728059AbfJGPHl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:07:41 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x97F7eNb066221;
-        Mon, 7 Oct 2019 10:07:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570460860;
-        bh=VmitdgajHHJkSVwVVJXNsT523zGlYCY363KbSQpWfJQ=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=YT1reUWlKGrELyV8v4mct+FVOE8+1f+6k7eA0StHD9VcRWlyAYky7IePXPZB7CD1e
-         NQpuAs0+t4ct29yztMnpDZypOzYgNRS3w/Dt7KHUmR+/gq7GZ6bltcXVV4/IjPNMxL
-         /f6KbozjV03kp8Jc3qCOPb+gsDX9s7zTDZDkh7Ko=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x97F7eTO023671
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 7 Oct 2019 10:07:40 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 7 Oct
- 2019 10:07:38 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 7 Oct 2019 10:07:40 -0500
-Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x97F7aFA055156;
-        Mon, 7 Oct 2019 10:07:40 -0500
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v3 04/21] media: ti-vpe: vpe: Remove unnecessary use of container_of
-Date:   Mon, 7 Oct 2019 10:09:52 -0500
-Message-ID: <20191007151009.22095-5-bparrot@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191007151009.22095-1-bparrot@ti.com>
-References: <20191007151009.22095-1-bparrot@ti.com>
+        Mon, 7 Oct 2019 11:10:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35696 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727711AbfJGPKW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 11:10:22 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 146FC21479;
+        Mon,  7 Oct 2019 15:10:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570461021;
+        bh=C/j8wF5nPghh73PI8MAMCRE0Uukowd37eLCPxz0oV5s=;
+        h=From:To:Cc:Subject:Date:From;
+        b=gu5mKLE4+Bbcnv5QIDBBme4x1AApivq5EGxEHtvd/4oYepfGTL9R3hbkB6+4ljGoq
+         XA5JMmhMFKt7cfDWeIHhTWOacEejHSCAMJ4dJDxGz1BqbCmbECt1LK2TfyAJVoCdu3
+         STT0XcmYWp4qfHyZg4dwRfibIJehykqcDGV/sPIs=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Shuah Khan <shuah@kernel.org>
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jaswinder.singh@linaro.org
+Subject: [BUGFIX PATCH 0/5] selftests: Fixes for 32bit arch
+Date:   Tue,  8 Oct 2019 00:10:16 +0900
+Message-Id: <157046101671.20724.9561877942986463668.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of saving a pointer to the 'fh' member of struct vpe_ctx to
-later have to use container_of to retrieve the actual pointer to the
-context structure, which seems to confuse static code analysis tool
-anyways, just save the pointer to the actual structure and then retrieve
-it directly.
+Hi,
 
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Here are some patches to fix some warnings/issues on 32bit arch
+(e.g. arm).
+
+When I built the ksefltest on arm, I hit some 32bit related warnings.
+Here are the patches to fix those issues.
+
+
+ - [1/5] va_max was set 2^32 even on 32bit arch. This can make
+        va_max == 0 and always fail. Make it 3GB on 32bit.
+ - [2/5] Some VM tests requires 64bit user space, which should
+        not run on 32bit arch.
+ - [3/5] For counting the size of large file, we should use
+        size_t instead of unsinged long.
+ - [4/5] Gcc warns printf format for size_t and int64_t on
+        32bit arch. Use %llu and cast it.
+ - [5/5] Gcc warns __u64 and pointer type castings. It should
+        once translated to unsigned long.
+
+Thank you,
+
 ---
- drivers/media/platform/ti-vpe/vpe.c | 22 +++++++---------------
- 1 file changed, 7 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index 56f60dbea15c..0e9cb0319a92 100644
---- a/drivers/media/platform/ti-vpe/vpe.c
-+++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -900,14 +900,6 @@ static int set_srcdst_params(struct vpe_ctx *ctx)
- 	return 0;
- }
- 
--/*
-- * Return the vpe_ctx structure for a given struct file
-- */
--static struct vpe_ctx *file2ctx(struct file *file)
--{
--	return container_of(file->private_data, struct vpe_ctx, fh);
--}
--
- /*
-  * mem2mem callbacks
-  */
-@@ -1527,7 +1519,7 @@ static int vpe_enum_fmt(struct file *file, void *priv,
- static int vpe_g_fmt(struct file *file, void *priv, struct v4l2_format *f)
- {
- 	struct v4l2_pix_format_mplane *pix = &f->fmt.pix_mp;
--	struct vpe_ctx *ctx = file2ctx(file);
-+	struct vpe_ctx *ctx = file->private_data;
- 	struct vb2_queue *vq;
- 	struct vpe_q_data *q_data;
- 	int i;
-@@ -1689,7 +1681,7 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
- 
- static int vpe_try_fmt(struct file *file, void *priv, struct v4l2_format *f)
- {
--	struct vpe_ctx *ctx = file2ctx(file);
-+	struct vpe_ctx *ctx = file->private_data;
- 	struct vpe_fmt *fmt = find_format(f);
- 
- 	if (V4L2_TYPE_IS_OUTPUT(f->type))
-@@ -1762,7 +1754,7 @@ static int __vpe_s_fmt(struct vpe_ctx *ctx, struct v4l2_format *f)
- static int vpe_s_fmt(struct file *file, void *priv, struct v4l2_format *f)
- {
- 	int ret;
--	struct vpe_ctx *ctx = file2ctx(file);
-+	struct vpe_ctx *ctx = file->private_data;
- 
- 	ret = vpe_try_fmt(file, priv, f);
- 	if (ret)
-@@ -1847,7 +1839,7 @@ static int __vpe_try_selection(struct vpe_ctx *ctx, struct v4l2_selection *s)
- static int vpe_g_selection(struct file *file, void *fh,
- 		struct v4l2_selection *s)
- {
--	struct vpe_ctx *ctx = file2ctx(file);
-+	struct vpe_ctx *ctx = file->private_data;
- 	struct vpe_q_data *q_data;
- 	bool use_c_rect = false;
- 
-@@ -1908,7 +1900,7 @@ static int vpe_g_selection(struct file *file, void *fh,
- static int vpe_s_selection(struct file *file, void *fh,
- 		struct v4l2_selection *s)
- {
--	struct vpe_ctx *ctx = file2ctx(file);
-+	struct vpe_ctx *ctx = file->private_data;
- 	struct vpe_q_data *q_data;
- 	struct v4l2_selection sel = *s;
- 	int ret;
-@@ -2275,7 +2267,7 @@ static int vpe_open(struct file *file)
- 	init_adb_hdrs(ctx);
- 
- 	v4l2_fh_init(&ctx->fh, video_devdata(file));
--	file->private_data = &ctx->fh;
-+	file->private_data = ctx;
- 
- 	hdl = &ctx->hdl;
- 	v4l2_ctrl_handler_init(hdl, 1);
-@@ -2360,7 +2352,7 @@ static int vpe_open(struct file *file)
- static int vpe_release(struct file *file)
- {
- 	struct vpe_dev *dev = video_drvdata(file);
--	struct vpe_ctx *ctx = file2ctx(file);
-+	struct vpe_ctx *ctx = file->private_data;
- 
- 	vpe_dbg(dev, "releasing instance %p\n", ctx);
- 
--- 
-2.17.1
+Masami Hiramatsu (5):
+      selftests: proc: Make va_max 3GB on 32bit arch
+      selftests: vm: Build/Run 64bit tests only on 64bit arch
+      selftests: net: Use size_t and ssize_t for counting file size
+      selftests: net: Fix printf format warnings on arm
+      selftests: sync: Fix cast warnings on arm
 
+
+ tools/testing/selftests/net/so_txtime.c            |    4 ++--
+ tools/testing/selftests/net/tcp_mmap.c             |    8 ++++----
+ tools/testing/selftests/net/udpgso.c               |    3 ++-
+ tools/testing/selftests/net/udpgso_bench_tx.c      |    3 ++-
+ .../selftests/proc/proc-self-map-files-002.c       |   11 ++++++++++-
+ tools/testing/selftests/sync/sync.c                |    6 +++---
+ tools/testing/selftests/vm/Makefile                |    5 +++++
+ tools/testing/selftests/vm/run_vmtests             |   10 ++++++++++
+ 8 files changed, 38 insertions(+), 12 deletions(-)
+
+--
+Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
