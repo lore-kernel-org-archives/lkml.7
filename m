@@ -2,165 +2,114 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCDE1C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D95ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 978FC205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35C85205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:08:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="i1yGJLhi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hc6iJa4G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728650AbfJGQIZ (ORCPT
+        id S1728723AbfJGQIc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 12:08:25 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:32989 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727711AbfJGQIZ (ORCPT
+        Mon, 7 Oct 2019 12:08:32 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54589 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727711AbfJGQIc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 12:08:25 -0400
-Received: by mail-io1-f67.google.com with SMTP id z19so29916643ior.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 09:08:24 -0700 (PDT)
+        Mon, 7 Oct 2019 12:08:32 -0400
+Received: by mail-wm1-f66.google.com with SMTP id p7so77815wmp.4;
+        Mon, 07 Oct 2019 09:08:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=OYnf5Eb8n9ykt/uD7msDqCGImCXIjmz3mqehpAtin5w=;
-        b=i1yGJLhiLyuMdojyTXTTab15PI1V480jrKDuDZL9zx2s46oSYkji95PIveIRZxXRvm
-         JNOhyzE2x/SaKj9y0VqFm6ds+W6txWfFoYz9wBw8d9f6eo+OMEVxNl+gjjtZx++LvFOW
-         ay1YMXKcJNTrjhrGkSxiqABUUzgTRSjIRsjNo2IQ89+kqwHJY4jnuCbOWXy4TQ30nrCx
-         wZekK7T5a/L9b9D8dNZIYOEwEpXZgOAuzr5uQtmWYwCQfyv57dWxGD/D1WAbIPsgP3NZ
-         pDemS16N8xJPf/hJUlo9oCOl8ouutkgwl2UU/YSeHP9u0VX3rVC1AXDqSyyaMnCtyd4a
-         tywA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z1iEZfsz63+hFaflS3INWnySuglWD+I2yD90meQjneg=;
+        b=hc6iJa4GVuhNuWWKGTrUwO7QaLE2DMH8tSuKd1N7fa2ey63T4C3Sv79QBeWNYBbDYE
+         IBuGrRoyMSkcqqgjaMBcN2U+I5kYsOZmpfe25vJ4AO9sBXoWXaqq0f1F8XeJ3dN6nuCj
+         id/bC57fyx6raHUDxh1UvEP2H/ZuD8KWZfDyFRUUAHQRLL8MC+/7k8CaMDbuIb4lr6PY
+         r6FfQh4xBIcS0GPcIpDSGfh7pmn7rxiwEW0cgQeJWM//Ojfd1i58lKyL2uopQNa6BE01
+         bGR7j88/Vab0pw636IuaEb8mq9eqk79QlZKmvc2fRSb8e+GubGoRijjFLnyJsQATvW04
+         539Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=OYnf5Eb8n9ykt/uD7msDqCGImCXIjmz3mqehpAtin5w=;
-        b=jGBTsGKWE8+F/EUlfE9zNzf1fiBsdVtO2rPbyvnDR+3fsgF9+NRSS4hRbIMcKrcM4s
-         PJMRZFwIEeNhwCAY+p6+zrkY1gUynZZTdfZSDuC0uYXnpvxSWQShnfvp0GuXrRu/JY9h
-         b6YThYLXSBYLdEYD9Q5/B5Cm9A3tvBN1izQP2jwOVQJr0vSZ+Ai86DPIFPF0xXdOnTq0
-         eHbLFDyVQdiuyqZ6bsMlUg/egOPzoQ09csmsm9jIIADfRpeYc9bbDz/2983B/mYfbi1v
-         Jsxfef6nJ7IKdsLZSa/zdod5e0etX9hTV0K0wv2dCMqOTxU+WxE9ST+MawKB76jXvpfW
-         Fg8w==
-X-Gm-Message-State: APjAAAXjr5PruQxCYmUUsUmSWLUmV5DQVzEGTOL+Yvub24Fw93mbTNxr
-        uPFwa2q4iZpU7e/nGkqkb3G2IA==
-X-Google-Smtp-Source: APXvYqysgSod7rlGeElbwsjIxKd06AgfXKGvqpl8gz5zmmcjW+EOSfeoq40wCwPIGBZVOvP4zx3kAg==
-X-Received: by 2002:a02:c654:: with SMTP id k20mr27301575jan.96.1570464504223;
-        Mon, 07 Oct 2019 09:08:24 -0700 (PDT)
-Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id k66sm6121262iof.25.2019.10.07.09.08.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2019 09:08:23 -0700 (PDT)
-Date:   Mon, 7 Oct 2019 09:08:23 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Vincent Chen <vincent.chen@sifive.com>
-cc:     Christoph Hellwig <hch@infradead.org>,
-        linux-riscv@lists.infradead.org, palmer@sifive.com,
-        linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu
-Subject: Re: [PATCH 4/4] riscv: remove the switch statement in
- do_trap_break()
-In-Reply-To: <20190927224711.GI4700@infradead.org>
-Message-ID: <alpine.DEB.2.21.9999.1910070906570.10936@viisi.sifive.com>
-References: <1569199517-5884-1-git-send-email-vincent.chen@sifive.com> <1569199517-5884-5-git-send-email-vincent.chen@sifive.com> <20190927224711.GI4700@infradead.org>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z1iEZfsz63+hFaflS3INWnySuglWD+I2yD90meQjneg=;
+        b=ZCQPXqjBJlOCfdcK8eRbygK/RSfYKdmKZwp2KN4wCViQ6OB+cFZnhHKZE3VO6PRdJo
+         igolQgrNdutiRwTd10otapCpkSqsz82GjquV0zFYszjT42Ttg4yQalyiS4ayLIVkxHp7
+         MJqKIjBXrpuqnc0rODxVoRUn/NBOUOGIlmHsV2rRP8GcJP66hAuR7EB5+Bz9Z4fNQYu7
+         maEh4kQWVJp5VffVtiBjhQU4Y7Pz7Hay7ZP1qCMZW6KWMAGe9BPgjePYHJzzJLfvkKT5
+         hgwFLRDoPWOFt0jXh1QWwRKM/EoqdW5NUzTD0XunYcu1lJfVBxE/DOIaln7CA8d5hOt0
+         a47A==
+X-Gm-Message-State: APjAAAUoqjDp1OyIwvDEoDImpDDsCftmEV9jNR/AqRBkOcRzwviOIhiq
+        NOpCVzI1NHlWsdHy9l3aQGMClWDGH4eZCkokEnNU0A==
+X-Google-Smtp-Source: APXvYqyq4efJgRyiW1dhwc+BXSa/rMaGmKzS1bwzST3wnGDfySKyRkkUk67CpkWeFqq/cYJquUmsPhHAH94fVc4ULu0=
+X-Received: by 2002:a1c:3908:: with SMTP id g8mr64842wma.34.1570464509638;
+ Mon, 07 Oct 2019 09:08:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20191005175808.32018-1-colin.king@canonical.com>
+In-Reply-To: <20191005175808.32018-1-colin.king@canonical.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Mon, 7 Oct 2019 12:08:17 -0400
+Message-ID: <CADnq5_PkTbzqNfesJt29SaB7=R0x4BdoNmHiNDXrHwqj02JUGg@mail.gmail.com>
+Subject: Re: [PATCH] drm/amdkfd: add missing void argument to function kgd2kfd_init
+To:     Colin King <colin.king@canonical.com>
+Cc:     Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vincent,
+On Sat, Oct 5, 2019 at 1:58 PM Colin King <colin.king@canonical.com> wrote:
+>
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> Function kgd2kfd_init is missing a void argument, add it
+> to clean up the non-ANSI function declaration.
+>
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-On Fri, 27 Sep 2019, Christoph Hellwig wrote:
+Applied.  thanks!
 
-> On Mon, Sep 23, 2019 at 08:45:17AM +0800, Vincent Chen wrote:
-> > To make the code more straightforward, replacing the switch statement
-> > with if statement.
-> > 
-> > Suggested-by: Paul Walmsley <paul.walmsley@sifive.com>
-> > Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
+Alex
 
-...
-
-> I like where this is going, but I think this can be improved further
-> given that fact that report_bug has a nice stub for the
-> !CONFIG_GENERIC_BUG case.
-> 
-> How about:
-> 
-> 	if (user_mode(regs))
-> 		force_sig_fault(SIGTRAP, TRAP_BRKPT, (void __user *)regs->sepc);
-> 	else if (report_bug(regs->sepc, regs) == BUG_TRAP_TYPE_WARN)
-> 		regs->sepc += get_break_insn_length(regs->sepc);
-> 	else
-> 		die(regs, "Kernel BUG");
-> 
-
-Christoph's suggestion looks good to me.  What do you think about this 
-modification to your patch?
-
-- Paul
-
-
-From: Vincent Chen <vincent.chen@sifive.com>
-Date: Mon, 23 Sep 2019 08:45:17 +0800
-Subject: [PATCH] riscv: remove the switch statement in do_trap_break()
-
-To make the code more straightforward, replace the switch statement
-with an if statement.
-
-Suggested-by: Paul Walmsley <paul.walmsley@sifive.com>
-Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
-[paul.walmsley@sifive.com: removed CONFIG_GENERIC_BUG tests per
- Christoph's suggestion; cleaned up patch description]
-Cc: Christoph Hellwig <hch@lst.de>
-Link: https://lore.kernel.org/linux-riscv/20190927224711.GI4700@infradead.org/
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
----
- arch/riscv/kernel/traps.c | 21 +++++----------------
- 1 file changed, 5 insertions(+), 16 deletions(-)
-
-diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
-index 93742df9067f..45b82be00714 100644
---- a/arch/riscv/kernel/traps.c
-+++ b/arch/riscv/kernel/traps.c
-@@ -124,24 +124,13 @@ static inline unsigned long get_break_insn_length(unsigned long pc)
- 
- asmlinkage void do_trap_break(struct pt_regs *regs)
- {
--	if (!user_mode(regs)) {
--		enum bug_trap_type type;
--
--		type = report_bug(regs->sepc, regs);
--		switch (type) {
--#ifdef CONFIG_GENERIC_BUG
--		case BUG_TRAP_TYPE_WARN:
--			regs->sepc += get_break_insn_length(regs->sepc);
--			return;
--		case BUG_TRAP_TYPE_BUG:
--#endif /* CONFIG_GENERIC_BUG */
--		default:
--			die(regs, "Kernel BUG");
--		}
--	} else {
-+	if (user_mode(regs))
- 		force_sig_fault(SIGTRAP, TRAP_BRKPT,
- 				(void __user *)(regs->sepc));
--	}
-+	else if (report_bug(regs->sepc, regs) == BUG_TRAP_TYPE_WARN)
-+		regs->sepc += get_break_insn_length(regs->sepc);
-+	else
-+		die(regs, "Kernel BUG");
- }
- 
- #ifdef CONFIG_GENERIC_BUG
--- 
-2.23.0
-
+> ---
+>  drivers/gpu/drm/amd/amdkfd/kfd_module.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_module.c b/drivers/gpu/drm/amd/amdkfd/kfd_module.c
+> index 986ff52d5750..f4b7f7e6c40e 100644
+> --- a/drivers/gpu/drm/amd/amdkfd/kfd_module.c
+> +++ b/drivers/gpu/drm/amd/amdkfd/kfd_module.c
+> @@ -82,7 +82,7 @@ static void kfd_exit(void)
+>         kfd_chardev_exit();
+>  }
+>
+> -int kgd2kfd_init()
+> +int kgd2kfd_init(void)
+>  {
+>         return kfd_init();
+>  }
+> --
+> 2.20.1
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
