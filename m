@@ -2,78 +2,134 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 099A3ECE58D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EED16C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2B8421721
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:03:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC1A120867
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:03:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbfJGMDF (ORCPT
+        id S1727949AbfJGMDN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 08:03:05 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:40097 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727490AbfJGMDE (ORCPT
+        Mon, 7 Oct 2019 08:03:13 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:47000 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727490AbfJGMDM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 08:03:04 -0400
-Received: by mail-oi1-f195.google.com with SMTP id k9so11381212oib.7;
-        Mon, 07 Oct 2019 05:03:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SjlvWt+TP5em4hhlxgUiQ+FTlfEovVoQnG11bRnaQXg=;
-        b=CgYfp4/ZlSeZFOdozcNNY3/R0R+n6BQ7+HhXjO8Jpk1XSzEK8NWYWrq0bxR/MGgpTq
-         33cpxoz1fSRpkLPnhQd0Jd7X95Jglil5KVfuseoIRbay33MsOduYJ1etqyP5dfypBlaz
-         Z9TYIrcm3/stvU9+K2vE8fUF3+2ZfZsEnhwFLYpmXJaMYpuXCJ/7XD28bYQxwmjNnpI8
-         FNW7PhLhzPTxXrDX3m2oMGBbFvdkkbfT0shy0dqoMCZnckdUDFNWkV+PjjqgabYA/5f7
-         W21GcfnkxMJ7rplReou/UaxQKwQ3JMUqeNxQf7sqd3U9orf0iB368Z15A7N9XKwXN2DO
-         LkBw==
-X-Gm-Message-State: APjAAAX252hDX1NfpJqgKjDIFIIFZ/iHJmhMwP0f9Ob+DUqYPmthRxCb
-        lbQM1enwE4osjSfzv81uY2HmQlTbpxPrrBvW0Ds=
-X-Google-Smtp-Source: APXvYqxg4pxC4P8ufrn2Xp4LTiuo8RNZqLnMmEWTzs6n4uOaV3eZZu95o5qT56+3Wy5rkjijbbbOi2hV8K5HeJFdn5s=
-X-Received: by 2002:aca:f305:: with SMTP id r5mr17223296oih.131.1570449782920;
- Mon, 07 Oct 2019 05:03:02 -0700 (PDT)
+        Mon, 7 Oct 2019 08:03:12 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iHRjI-0000kj-96; Mon, 07 Oct 2019 12:03:08 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] net: phy: mscc: make arrays static, makes object smaller
+Date:   Mon,  7 Oct 2019 13:03:08 +0100
+Message-Id: <20191007120308.2392-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20191004094826.8320-1-linux@rasmusvillemoes.dk>
-In-Reply-To: <20191004094826.8320-1-linux@rasmusvillemoes.dk>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 7 Oct 2019 14:02:49 +0200
-Message-ID: <CAMuHMdXSb0mgsqJgNFWqJXywQJLsqvasj7P_bUj4MBvyrAUgVw@mail.gmail.com>
-Subject: Re: [PATCH] clk: mark clk_disable_unused() as __init
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 4, 2019 at 12:30 PM Rasmus Villemoes
-<linux@rasmusvillemoes.dk> wrote:
-> clk_disable_unused is only called once, as a late_initcall, so reclaim
-> a bit of memory by marking it (and the functions and data it is the
-> sole user of) as __init/__initdata. This moves ~1900 bytes from .text
-> to .init.text for a imx_v6_v7_defconfig.
->
-> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+From: Colin Ian King <colin.king@canonical.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Don't populate const arrays on the stack but instead make them
+static. Makes the object code smaller by 1058 bytes.
 
-Gr{oetje,eeting}s,
+Before:
+   text	   data	    bss	    dec	    hex	filename
+  29879	   6144	      0	  36023	   8cb7	drivers/net/phy/mscc.o
 
-                        Geert
+After:
+   text	   data	    bss	    dec	    hex	filename
+  28437	   6528	      0	  34965	   8895	drivers/net/phy/mscc.o
 
+(gcc version 9.2.1, amd64)
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/net/phy/mscc.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
+index 7ada1fd9ca71..805cda3465d7 100644
+--- a/drivers/net/phy/mscc.c
++++ b/drivers/net/phy/mscc.c
+@@ -895,7 +895,7 @@ static void vsc85xx_tr_write(struct phy_device *phydev, u16 addr, u32 val)
+ static int vsc8531_pre_init_seq_set(struct phy_device *phydev)
+ {
+ 	int rc;
+-	const struct reg_val init_seq[] = {
++	static const struct reg_val init_seq[] = {
+ 		{0x0f90, 0x00688980},
+ 		{0x0696, 0x00000003},
+ 		{0x07fa, 0x0050100f},
+@@ -939,7 +939,7 @@ static int vsc8531_pre_init_seq_set(struct phy_device *phydev)
+ 
+ static int vsc85xx_eee_init_seq_set(struct phy_device *phydev)
+ {
+-	const struct reg_val init_eee[] = {
++	static const struct reg_val init_eee[] = {
+ 		{0x0f82, 0x0012b00a},
+ 		{0x1686, 0x00000004},
+ 		{0x168c, 0x00d2c46f},
+@@ -1224,7 +1224,7 @@ static bool vsc8574_is_serdes_init(struct phy_device *phydev)
+ /* bus->mdio_lock should be locked when using this function */
+ static int vsc8574_config_pre_init(struct phy_device *phydev)
+ {
+-	const struct reg_val pre_init1[] = {
++	static const struct reg_val pre_init1[] = {
+ 		{0x0fae, 0x000401bd},
+ 		{0x0fac, 0x000f000f},
+ 		{0x17a0, 0x00a0f147},
+@@ -1272,7 +1272,7 @@ static int vsc8574_config_pre_init(struct phy_device *phydev)
+ 		{0x0fee, 0x0004a6a1},
+ 		{0x0ffe, 0x00b01807},
+ 	};
+-	const struct reg_val pre_init2[] = {
++	static const struct reg_val pre_init2[] = {
+ 		{0x0486, 0x0008a518},
+ 		{0x0488, 0x006dc696},
+ 		{0x048a, 0x00000912},
+@@ -1427,7 +1427,7 @@ static int vsc8574_config_pre_init(struct phy_device *phydev)
+ /* bus->mdio_lock should be locked when using this function */
+ static int vsc8584_config_pre_init(struct phy_device *phydev)
+ {
+-	const struct reg_val pre_init1[] = {
++	static const struct reg_val pre_init1[] = {
+ 		{0x07fa, 0x0050100f},
+ 		{0x1688, 0x00049f81},
+ 		{0x0f90, 0x00688980},
+@@ -1451,7 +1451,7 @@ static int vsc8584_config_pre_init(struct phy_device *phydev)
+ 		{0x16b2, 0x00007000},
+ 		{0x16b4, 0x00000814},
+ 	};
+-	const struct reg_val pre_init2[] = {
++	static const struct reg_val pre_init2[] = {
+ 		{0x0486, 0x0008a518},
+ 		{0x0488, 0x006dc696},
+ 		{0x048a, 0x00000912},
+@@ -1786,7 +1786,7 @@ static int vsc8514_config_pre_init(struct phy_device *phydev)
+ 	 * values to handle hardware performance of PHY. They
+ 	 * are set at Power-On state and remain until PHY Reset.
+ 	 */
+-	const struct reg_val pre_init1[] = {
++	static const struct reg_val pre_init1[] = {
+ 		{0x0f90, 0x00688980},
+ 		{0x0786, 0x00000003},
+ 		{0x07fa, 0x0050100f},
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.20.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
