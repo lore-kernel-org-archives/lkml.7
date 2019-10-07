@@ -2,87 +2,114 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4764DC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E212C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FBEA218AC
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8CB92173B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:05:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570442740;
+	bh=SgJfuXvgpHLIgRHdUoCoVb90LQ5tYsiPi7rkeX7IDoo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=F+h8ogVK/LPbOwo2D1HCMTkui8Gj7pVgGJKtDy/zpYdXMRKgEqe1z5NlJxKVlu80n
+	 A9PSq3RjsANSQzu2olrvSVvk/IwIBz0e3i+For2GOJOmru7hoAiQ4+1yKVNg1ZRxr4
+	 TZMHxj6co/W3LArmhaQklC2HOeFfJ51DR3YlESwc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727612AbfJGKEl convert rfc822-to-8bit (ORCPT
+        id S1727618AbfJGKFj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 06:04:41 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:36341 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727262AbfJGKEl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 06:04:41 -0400
-X-Originating-IP: 86.250.200.211
-Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id E27F2FF808;
-        Mon,  7 Oct 2019 10:04:38 +0000 (UTC)
-Date:   Mon, 7 Oct 2019 12:04:38 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2 7/7] dt-bindings: iio: adc: max1027: Document max12xx
- series compatibles
-Message-ID: <20191007120438.7fa72728@xps13>
-In-Reply-To: <20191006112751.775fc849@archlinux>
-References: <20191003173401.16343-1-miquel.raynal@bootlin.com>
-        <20191003173401.16343-8-miquel.raynal@bootlin.com>
-        <20191006112751.775fc849@archlinux>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 7 Oct 2019 06:05:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33618 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727262AbfJGKFj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 06:05:39 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C42F52084D;
+        Mon,  7 Oct 2019 10:05:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570442738;
+        bh=SgJfuXvgpHLIgRHdUoCoVb90LQ5tYsiPi7rkeX7IDoo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IiXGhHX+pw00yNbyyHAgafyNp2EdL/uxZ76eoMGtfM9NuBzo/xQCD7tBF5whlxPZT
+         Sdo16fZWfShNlGuiaW6vGtdQK7V2QYAw8ImgMRALSkI0JPaYphoODCd61OXkoGZpNA
+         6wiRsL0tYJSM8cHxg0gU8i8QOA63vrCCKxAomMcg=
+Date:   Mon, 7 Oct 2019 12:05:35 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-media@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] media: dt-bindings: media: Fixup Allwinner A10 CSI
+ binding
+Message-ID: <20191007100535.6gp6b3h6ueyeln3b@gilmour>
+References: <b47ec7088aa4b07458519ab151de92df552a9302.1570101510.git.amit.kucheria@linaro.org>
+ <20191003115154.6f2jgj3dnqsved2y@gilmour>
+ <CAHLCerNoLyQ-e70=1VMPO_J_amA+-2vtHwfoUabo4dhUWj-H0A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="vtzhpa6icwubspzk"
+Content-Disposition: inline
+In-Reply-To: <CAHLCerNoLyQ-e70=1VMPO_J_amA+-2vtHwfoUabo4dhUWj-H0A@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonathan,
 
-Jonathan Cameron <jic23@kernel.org> wrote on Sun, 6 Oct 2019 11:27:51
-+0100:
+--vtzhpa6icwubspzk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> On Thu,  3 Oct 2019 19:34:01 +0200
-> Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> 
-> > Update the bindings documentation with new Maxim ADCs compatibles.
-> > 
-> > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>  
-> 
-> Both DT patches look fine to me... 
-> 
-> If you happened to fancy doing the yaml conversion it would be
-> appreciated... :) 
+On Sat, Oct 05, 2019 at 04:15:57PM +0530, Amit Kucheria wrote:
+> On Thu, Oct 3, 2019 at 5:22 PM Maxime Ripard <mripard@kernel.org> wrote:
+> >
+> > Hi,
+> >
+> > On Thu, Oct 03, 2019 at 04:52:24PM +0530, Amit Kucheria wrote:
+> > > This new binding fails dt_binding_check due to a typo. Fix it up.
+> > >
+> > > linux.git/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml: $id: path/filename 'arm/allwinner,sun4i-a10-csi.yaml' doesn't match actual filename
+> > > linux.git/Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts' failed
+> > > make[2]: *** [Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts] Error 1
+> > > make[2]: *** Waiting for unfinished jobs....
+> > > linux.git/Makefile:1284: recipe for target 'dt_binding_check' failed
+> > > make[1]: *** [dt_binding_check] Error 2
+> > >
+> > > Fixes: c5e8f4ccd7750 ("media: dt-bindings: media: Add Allwinner A10 CSI binding")
+> > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> >
+> > Thanks for your patch.
+> >
+> > It has already been submitted though:
+> > https://lore.kernel.org/linux-arm-kernel/1568808060-17516-1-git-send-email-pragnesh.patel@sifive.com/
+> >
+> > I'm not sure why it hasn't been applied yet though :/
+>
+> Perhaps a Fixes tag will allow more attention to it?
 
-I'm being requested all the time, that would be my third yaml
-conversion, so let's go for it (if it's not overly complicated, I'll
-check first...) :)
+I've added a fixes tag and merged it through the sunxi tree.
 
-> If not we'll get to this one one day.
-> 
-> Anyhow, a few trivial bits in the earlier patches so v3 should be
-> good to go.
-> 
-> Thanks,
-> 
-> Jonathan
-> 
+Sorry for the time it took, and thanks for sending that fix!
+Maxime
 
-Thanks,
-Miquèl
+--vtzhpa6icwubspzk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZsN7wAKCRDj7w1vZxhR
+xZuhAQCdgJicTIV+SZaFXhQJ8O/6nn4LmVV2y3ElJZkaqAR2wgEAqJe2O+Nq++LE
+h2S1IrtaQMzZpcMjzksWn8n5JRZYSQA=
+=4Pja
+-----END PGP SIGNATURE-----
+
+--vtzhpa6icwubspzk--
