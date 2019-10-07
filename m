@@ -2,182 +2,446 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DF1C352AA
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE5B9C352AA
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ADE32070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:43:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="LRD9f5iL"
+	by mail.kernel.org (Postfix) with ESMTP id A92D121721
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:44:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727674AbfJGKnY (ORCPT
+        id S1727522AbfJGKo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 06:43:24 -0400
-Received: from mail1.bemta25.messagelabs.com ([195.245.230.69]:59755 "EHLO
-        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727252AbfJGKnX (ORCPT
+        Mon, 7 Oct 2019 06:44:29 -0400
+Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:51877 "EHLO
+        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727252AbfJGKo2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 06:43:23 -0400
-Received: from [46.226.52.200] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-5.bemta.az-b.eu-west-1.aws.symcld.net id 1E/0A-04297-7C61B9D5; Mon, 07 Oct 2019 10:43:19 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrBJsWRWlGSWpSXmKPExsWSoc9mqntMbHa
-  sQd9nc4upD5+wWRxe9ILR4tuVDiaLKX+WM1lc3jWHzYHVY+esu+wem1Z1snncubaHzePzJrkA
-  lijWzLyk/IoE1oyfu3cwFizgqbh68C9rA+NGri5GLg5GgaXMElPbfjJCOMdYJBbPWMwE4Wxml
-  Pjd+5MNxGEROMEs8efsXDBHSGAKk8SXM0dZIZwHjBIvXq0AynBysAlYSEw+8QDMFhEIlFgy9R
-  Q7SBGzwHFGiTM7JzGBJIQFgiRenGplhCgKluh8fQiogQPINpKYfUYdJMwioCLxvusXWDmvQKJ
-  EW+s/sHIhgRKJZ9fXg8U5BRwkzk9+D2YzCshKfGlczQxiMwuIS9x6Mh8sLiEgILFkz3lmCFtU
-  4uXjf6wQ9akSJ5tuMELEdSTOXn8CZStJzJt7BMqWlbg0vxvK9pU4tWMyM8iZIPWnljlAhC0kl
-  nS3skCEVST+HaqEMAskJjxXhzDVJK5fMIcolpG4/WA+OGwlBL6wSjz73MY8gVF/FpKbIWwdiQ
-  W7P7FB2NoSyxa+Zp4FDgdBiZMzn7AsYGRZxWieVJSZnlGSm5iZo2toYKBraGika2hpqWturJd
-  YpZukl1qqW55aXKJrqJdYXqxXXJmbnJOil5dasokRmJxSCo577mC8O+uN3iFGSQ4mJVFeuV2z
-  YoX4kvJTKjMSizPii0pzUosPMcpwcChJ8G4TnR0rJFiUmp5akZaZA0yUMGkJDh4lEd4ZIkBp3
-  uKCxNzizHSI1ClGY44JL+cuYua4/n7vUmYhlrz8vFQpcd6FIKUCIKUZpXlwg2AJ/BKjrJQwLy
-  MDA4MQT0FqUW5mCar8K0ZxDkYlYd6DIPfwZOaVwO17BXQKE9Apf/ymg5xSkoiQkmpgUnm+5gu
-  771S3ohXPpJ6Khv1fv75T4zvz+XbNPMO7lnf7vxZOO+nztnr/dGe754JHFeZtEVWWsAoo3LDv
-  qP+arXdPecvzcry5WM6hFz3pyLHJkTp35B1+cx61ndF6ot4/7uadhi9Lk9mfzbaxv26bGrZQ0
-  y5qhmzo328VfPVLZ2+N/bG+Quz5BcEjG/5VHdR88nGd7LLJ17oD461OvtfhWOK2QyQhcfnDT1
-  XzNaJO58/urt2tLqC2pGiVwo3WfAf53d/nPjAPXtxTuH7m8qLnXw9bKmwolXdg3LNa+n/7Ag+
-  /pt7eaNY2u8bA5VdXrmsXC9B4vCWrVO9+oeCPUD9tc/1r3x+nBZ5d8mT6h4OXOJRYijMSDbWY
-  i4oTAe7vd3BbBAAA
-X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
-X-Msg-Ref: server-16.tower-288.messagelabs.com!1570444998!734450!1
-X-Originating-IP: [104.47.6.53]
-X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.43.12; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 9320 invoked from network); 7 Oct 2019 10:43:18 -0000
-Received: from mail-ve1eur02lp2053.outbound.protection.outlook.com (HELO EUR02-VE1-obe.outbound.protection.outlook.com) (104.47.6.53)
-  by server-16.tower-288.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 7 Oct 2019 10:43:18 -0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SvxWSehEyitIHceM47byUW3dZl59mnzveg5pLI+n5G8czdkAeWVDndbwAyJtvMXCRZs5B1R9UoA5W/0551s8C71rcB/AMQfzGem8/uk9YpoUcGN+DoNXuPmD7wrYGZgtFUCBQjrg427rgJfAAKrHEqzGEI09HP7gilyCdS6Gt21GBcGeEwA7EzLpOA9JbbhdCz99eUb3YrV46w+Plw9VlQXJfSP4kTRnifm05c/KO5zurLh3drJrv7V2FIeSxdHJVP9ckuOQoKwmDkm8wBXqBoWCbwvvALJ7sUfRshiHAeAgBiWaTjJs7J61RCN0WMmo8OULfWNLDiWjO+/LLv6fVw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=D9h5u1ohaewuCJTM1aSmuPsFB0g7+PZDRlH6D9Pl9VU=;
- b=FEX0xt90Y3QOq85HOB/hTHhtCkNCV2CSZEpO0nT86GIF2Bn5uC/HkrZaPhHFKNmcV1JbmC8vKpYW99I5zgJi03U3+ObC9tht0P0dGWuQDPLyU49nWUj5tgv8GwrglJdljLH6Y2Z2gmUfEJMb1P9rixhKIvqafZor4nQ7GLqTk3o1LK6eB+9vlmc36ceb//iwo3SgZ4RACfhW7lK9XwPdymf5Fhom/2U1M+aISytTQFkVZlWy3rZcgn3OJi2YkdcMlUvwGu12r4uoCYmP5PVB4uwAc3DgOhdfywaXNQBvCp+5gX8c858GYRTgNrPYONRjVsCGGgQlaDHz8QLiMsysOg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
- dkim=pass header.d=diasemi.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com;
- s=selector2-dialogsemiconductor-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=D9h5u1ohaewuCJTM1aSmuPsFB0g7+PZDRlH6D9Pl9VU=;
- b=LRD9f5iLEJjY1lbg9P9gvVNLJl8r5Vl0ISJBgdY0oMFRr5TENCJmzNFAkjbNfIMLFO3PKOJFCAm6AFX9CHZLbt8oD9CKQFnvr80ZK6DlUsxY5dN3w0vOlAnnDyiqMOCgMdW87FgYXbypg38+M4QZZb4RIpodHOAS+JjLmbJTeWw=
-Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM (10.169.154.136) by
- AM5PR1001MB1106.EURPRD10.PROD.OUTLOOK.COM (10.169.155.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.24; Mon, 7 Oct 2019 10:43:08 +0000
-Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::1b7:8cda:1411:fb7f]) by AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::1b7:8cda:1411:fb7f%8]) with mapi id 15.20.2327.025; Mon, 7 Oct 2019
- 10:43:08 +0000
-From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Support Opensource <Support.Opensource@diasemi.com>
-Subject: RE: [PATCH 5/7] regulator: da9211: switch to using
- devm_fwnode_gpiod_get
-Thread-Topic: [PATCH 5/7] regulator: da9211: switch to using
- devm_fwnode_gpiod_get
-Thread-Index: AQHVewjtpvmbrVtU2kiqONBPbEXVZKdPAbpg
-Date:   Mon, 7 Oct 2019 10:43:08 +0000
-Message-ID: <AM5PR1001MB0994E69A1599A582473B87B2809B0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
-References: <20191004231017.130290-1-dmitry.torokhov@gmail.com>
- <20191004231017.130290-6-dmitry.torokhov@gmail.com>
-In-Reply-To: <20191004231017.130290-6-dmitry.torokhov@gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.225.80.228]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 658befe0-cff4-4d38-573b-08d74b1324a9
-x-ms-traffictypediagnostic: AM5PR1001MB1106:
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM5PR1001MB1106DF55C8CA167731DE31A3A79B0@AM5PR1001MB1106.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:2733;
-x-forefront-prvs: 01834E39B7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(366004)(346002)(376002)(39850400004)(199004)(189003)(6246003)(229853002)(478600001)(107886003)(54906003)(110136005)(25786009)(14454004)(66946007)(476003)(11346002)(256004)(71190400001)(4326008)(66446008)(64756008)(76116006)(66556008)(66476007)(6436002)(316002)(71200400001)(9686003)(55016002)(74316002)(7696005)(52536014)(6116002)(3846002)(76176011)(7736002)(305945005)(486006)(5660300002)(53546011)(6506007)(2906002)(446003)(66066001)(186003)(99286004)(33656002)(81166006)(81156014)(8676002)(55236004)(102836004)(86362001)(26005)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR1001MB1106;H:AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: diasemi.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: l36LCqUNSSOFdxCGkrmbUu782oNZpPZzVvexpvfu+75X2dZimf6HBu5R0reA6sVcqqs+soMInt34wDH1i5Y1ybN4NvfmmjyHNOUsqEekAuZpSHGiEsIANAn1+yaJmQwk2uy5bByTZM5lIh1dX7ek82kWU7UzydYazch45Ugat/bNS2gCYj9vbtcZsJyR8hgFPbun7FxBraTRCJ+t/0qKyfo7gE6OWklQQSfVU58VumeSsdom73H85c/qQtV/4u3u9y1TRPelfzLYFQhkBZ1obIpLGr5BZfCNV/YlLfiaraJoweG+CcL6Huy8Ll8CP1Yq1JguJbbVDRFDgTLz98YloSYFKvggLX7kE1i5Thui24+cPSrlgq+/NslFpTlZQoJrHRvosMhdlGzMvYSVB8Eu0Nj8pdv44+BIZBowFT3G/fY=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 7 Oct 2019 06:44:28 -0400
+Received: from [IPv6:2001:983:e9a7:1:3d61:cdd2:8085:cc8] ([IPv6:2001:983:e9a7:1:3d61:cdd2:8085:cc8])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id HQV6iLkEqjZ8vHQV7i6A6G; Mon, 07 Oct 2019 12:44:25 +0200
+Subject: Re: [PATCH v2 0/6] media: cedrus: h264: Support multi-slice frames
+To:     Jernej Skrabec <jernej.skrabec@siol.net>, mchehab@kernel.org,
+        paul.kocialkowski@bootlin.com, mripard@kernel.org,
+        pawel@osciak.com, m.szyprowski@samsung.com,
+        kyungmin.park@samsung.com, tfiga@chromium.org, wens@csie.org
+Cc:     gregkh@linuxfoundation.org, boris.brezillon@collabora.com,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
+        ezequiel@collabora.com, jonas@kwiboo.se
+References: <20190929200023.215831-1-jernej.skrabec@siol.net>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <5ec43907-cb6f-1527-f6ec-9fffc768d9ef@xs4all.nl>
+Date:   Mon, 7 Oct 2019 12:44:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 658befe0-cff4-4d38-573b-08d74b1324a9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Oct 2019 10:43:08.6304
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qOK2MJZ1+VfYE3+Y3anZYlIjqD8nYZ6M7lkbyCT+IlVrjsqMYvRaEBwiMYHUxNpYbLzYNx6FRj8IoJOVMhm4qMmzO2X+58KTM6WRpmO1mxE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR1001MB1106
+In-Reply-To: <20190929200023.215831-1-jernej.skrabec@siol.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfANHW6J2gkPO117kDZXf5yDUcUJpglFXHitfq3K2FSScJT6hlDKpngcExIXrn90M2ntaAEF/ThIzDpBqBa7H7nUokHArpVVKI8UXUpSAuVKY3M1gIKZJ
+ 6L6UYkA94icSShhntbaau0r3qRLPR4TNhzX3RnFqSl4KvNAZP2o8g5Rp7jSlJnhFWh7MsDuy1Mq3sabc9JF/L9Up3pRLVFbs/gal5EdjGwbn/4wcbX0QEGGw
+ W8jcCicDUrEInJuoEZtZ42QxNA6h2RTFL4RfPUoK4LL1zM1AElwE/54ByZmnkoDghmloby8E+aW3g13+5g44gxWAowH35fNOhbSA2fPme966Vi53DA1DSisW
+ BWUO80RSTVyQUthkGFLgI1DnkKDENCJC83EDjvWeI2uGeDyCzCvSbLpQWD49pg848LMJ16ZriUa4YzwyTufauMku8zJIms4rU16ZuTPoCO840pRYmX7xP3+Z
+ GVgF3qd8F2USKCuO3GBDJO3FJASQWJ9MeXaAz/owTDjMmFEG+DqZgse6BfqNGfXZQKK37HuYpUrp0vxI4r/GeACxB2GvIb+zkQGTIshk79yVQWt15atEynDY
+ FUtefLXSrX8DVh2hq3jDhx4uJEzcUgyphE1iGMkRjdG+B09PgKBujIhmbHisCn6oDr/m887+Dg8IoB2ijGH5ckbQjUfcr6zpr2uuikB+gZVYlhdXNfg6nH/3
+ CxAqFH6YPQzy422yNP7PiqVcirXS1Bh115m0tH89TQalsijsTLaeunxnic/ILexVq9drpl9lSfY9tgIv6vsKQ+KqaMuRka/xGN7wj7u+GDloyk8LxvNGoQ8W
+ rBvgYwevYBJEnZTRP0Y=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05 October 2019 00:10, Dmitry Torokhov wrote:
+Hi Jernej,
 
-> devm_gpiod_get_from_of_node() is being retired in favor of
-> devm_fwnode_gpiod_get_index(), that behaves similar to
-> devm_gpiod_get_index(), but can work with arbitrary firmware node. It
-> will also be able to support secondary software nodes.
->=20
-> Let's switch this driver over.
->=20
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+On 9/29/19 10:00 PM, Jernej Skrabec wrote:
+> This series adds support for decoding multi-slice H264 frames along with
+> support for V4L2_DEC_CMD_FLUSH and V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF.
+> 
+> Code was tested by modified ffmpeg, which can be found here:
+> https://github.com/jernejsk/FFmpeg, branch mainline-test
+> It has to be configured with at least following options:
+> --enable-v4l2-request --enable-libudev --enable-libdrm
+> 
+> Samples used for testing:
+> http://jernej.libreelec.tv/videos/h264/BA1_FT_C.mp4
+> http://jernej.libreelec.tv/videos/h264/h264.mp4
+> 
+> Command line used for testing:
+> ffmpeg -hwaccel drm -hwaccel_device /dev/dri/card0 -i h264.mp4 -pix_fmt bgra -f fbdev /dev/fb0
+> 
+> Please note that V4L2_DEC_CMD_FLUSH was not tested because I'm
+> not sure how. ffmpeg follows exactly which slice is last in frame
+> and sets hold flag accordingly. Improper usage of hold flag would
+> corrupt ffmpeg assumptions and it would probably crash. Any ideas
+> how to test this are welcome!
+> 
+> Thanks to Jonas for adjusting ffmpeg.
+> 
+> Please let me know what you think.
+> 
+> Best regards,
+> Jernej
+> 
+> Changes from v1:
+> - added Rb tags
+> - updated V4L2_DEC_CMD_FLUSH documentation
+> - updated first slice detection in Cedrus
+> - hold capture buffer flag is set according to source format
+> - added v4l m2m stateless_(try_)decoder_cmd ioctl helpers
+> 
+> Hans Verkuil (2):
+>   vb2: add V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF
+>   videodev2.h: add V4L2_DEC_CMD_FLUSH
+> 
+> Jernej Skrabec (4):
+>   media: v4l2-mem2mem: add stateless_(try_)decoder_cmd ioctl helpers
+>   media: cedrus: Detect first slice of a frame
+>   media: cedrus: h264: Support multiple slices per frame
+>   media: cedrus: Add support for holding capture buffer
+> 
+>  Documentation/media/uapi/v4l/buffer.rst       | 13 ++++++
+>  .../media/uapi/v4l/vidioc-decoder-cmd.rst     | 10 +++-
+>  .../media/uapi/v4l/vidioc-reqbufs.rst         |  6 +++
+>  .../media/videodev2.h.rst.exceptions          |  1 +
+>  .../media/common/videobuf2/videobuf2-v4l2.c   |  8 +++-
+>  drivers/media/v4l2-core/v4l2-mem2mem.c        | 35 ++++++++++++++
+>  drivers/staging/media/sunxi/cedrus/cedrus.h   |  1 +
+>  .../staging/media/sunxi/cedrus/cedrus_dec.c   | 11 +++++
+>  .../staging/media/sunxi/cedrus/cedrus_h264.c  | 11 ++++-
+>  .../staging/media/sunxi/cedrus/cedrus_hw.c    |  8 ++--
+>  .../staging/media/sunxi/cedrus/cedrus_video.c | 14 ++++++
+>  include/media/v4l2-mem2mem.h                  | 46 +++++++++++++++++++
+>  include/media/videobuf2-core.h                |  3 ++
+>  include/media/videobuf2-v4l2.h                |  5 ++
+>  include/uapi/linux/videodev2.h                | 14 ++++--
+>  15 files changed, 175 insertions(+), 11 deletions(-)
+> 
 
-Acked-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+I didn't want to make a v3 of this series, instead I hacked this patch that will
+hopefully do all the locking right.
 
-> ---
->=20
->  drivers/regulator/da9211-regulator.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/regulator/da9211-regulator.c b/drivers/regulator/da9=
-211-
-> regulator.c
-> index bf80748f1ccc..523dc1b95826 100644
-> --- a/drivers/regulator/da9211-regulator.c
-> +++ b/drivers/regulator/da9211-regulator.c
-> @@ -283,12 +283,12 @@ static struct da9211_pdata
-> *da9211_parse_regulators_dt(
->=20
->  		pdata->init_data[n] =3D da9211_matches[i].init_data;
->  		pdata->reg_node[n] =3D da9211_matches[i].of_node;
-> -		pdata->gpiod_ren[n] =3D devm_gpiod_get_from_of_node(dev,
-> -				  da9211_matches[i].of_node,
-> -				  "enable-gpios",
-> -				  0,
-> -				  GPIOD_OUT_HIGH |
-> GPIOD_FLAGS_BIT_NONEXCLUSIVE,
-> -				  "da9211-enable");
-> +		pdata->gpiod_ren[n] =3D devm_fwnode_gpiod_get(dev,
-> +					of_fwnode_handle(pdata-
-> >reg_node[n]),
-> +					"enable",
-> +					GPIOD_OUT_HIGH |
-> +
-> 	GPIOD_FLAGS_BIT_NONEXCLUSIVE,
-> +					"da9211-enable");
->  		if (IS_ERR(pdata->gpiod_ren[n]))
->  			pdata->gpiod_ren[n] =3D NULL;
->  		n++;
-> --
-> 2.23.0.581.g78d2f28ef7-goog
+Basically I moved all the 'held' related code into v4l2-mem2mem under job_spinlock.
+This simplifies the driver code as well.
+
+But this is a hack that sits on top of this series. If your ffmpeg tests are now
+successful, then I'll turn this into a proper series with correct documentation
+(a lot of the comments are now wrong with this patch, so just ignore that).
+
+Regards,
+
+	Hans
+
+diff --git a/drivers/media/v4l2-core/v4l2-mem2mem.c b/drivers/media/v4l2-core/v4l2-mem2mem.c
+index 2677a07e4c9b..f81a8f2465ab 100644
+--- a/drivers/media/v4l2-core/v4l2-mem2mem.c
++++ b/drivers/media/v4l2-core/v4l2-mem2mem.c
+@@ -412,25 +412,24 @@ static void v4l2_m2m_cancel_job(struct v4l2_m2m_ctx *m2m_ctx)
+ 	}
+ }
+
+-void v4l2_m2m_job_finish(struct v4l2_m2m_dev *m2m_dev,
+-			 struct v4l2_m2m_ctx *m2m_ctx)
++static bool _v4l2_m2m_job_finish(struct v4l2_m2m_dev *m2m_dev,
++			  struct v4l2_m2m_ctx *m2m_ctx)
+ {
+-	unsigned long flags;
+-
+-	spin_lock_irqsave(&m2m_dev->job_spinlock, flags);
+ 	if (!m2m_dev->curr_ctx || m2m_dev->curr_ctx != m2m_ctx) {
+-		spin_unlock_irqrestore(&m2m_dev->job_spinlock, flags);
+ 		dprintk("Called by an instance not currently running\n");
+-		return;
++		return false;
+ 	}
+
+ 	list_del(&m2m_dev->curr_ctx->queue);
+ 	m2m_dev->curr_ctx->job_flags &= ~(TRANS_QUEUED | TRANS_RUNNING);
+ 	wake_up(&m2m_dev->curr_ctx->finished);
+ 	m2m_dev->curr_ctx = NULL;
++	return true;
++}
+
+-	spin_unlock_irqrestore(&m2m_dev->job_spinlock, flags);
+-
++static void v4l2_m2m_job_next(struct v4l2_m2m_dev *m2m_dev,
++		       struct v4l2_m2m_ctx *m2m_ctx)
++{
+ 	/* This instance might have more buffers ready, but since we do not
+ 	 * allow more than one job on the job_queue per instance, each has
+ 	 * to be scheduled separately after the previous one finishes. */
+@@ -441,8 +440,113 @@ void v4l2_m2m_job_finish(struct v4l2_m2m_dev *m2m_dev,
+ 	 */
+ 	schedule_work(&m2m_dev->job_work);
+ }
++
++void v4l2_m2m_job_finish(struct v4l2_m2m_dev *m2m_dev,
++			 struct v4l2_m2m_ctx *m2m_ctx)
++{
++	unsigned long flags;
++
++	spin_lock_irqsave(&m2m_dev->job_spinlock, flags);
++	if (!_v4l2_m2m_job_finish(m2m_dev, m2m_ctx)) {
++		spin_unlock_irqrestore(&m2m_dev->job_spinlock, flags);
++		return;
++	}
++	spin_unlock_irqrestore(&m2m_dev->job_spinlock, flags);
++
++	v4l2_m2m_job_next(m2m_dev, m2m_ctx);
++}
+ EXPORT_SYMBOL(v4l2_m2m_job_finish);
+
++void v4l2_m2m_job_finish_held(struct v4l2_m2m_dev *m2m_dev,
++			 struct v4l2_m2m_ctx *m2m_ctx,
++			 enum vb2_buffer_state state)
++{
++	struct vb2_v4l2_buffer *src_buf, *dst_buf;
++	unsigned long flags;
++
++	spin_lock_irqsave(&m2m_dev->job_spinlock, flags);
++	src_buf = v4l2_m2m_src_buf_remove(m2m_ctx);
++	dst_buf = v4l2_m2m_next_dst_buf(m2m_ctx);
++
++	if (!src_buf || !dst_buf) {
++		pr_err("Missing source and/or destination buffers\n");
++		spin_unlock_irqrestore(&m2m_dev->job_spinlock, flags);
++		return;
++	}
++	v4l2_m2m_buf_done(src_buf, state);
++	if (!dst_buf->is_held) {
++		v4l2_m2m_dst_buf_remove(m2m_ctx);
++		v4l2_m2m_buf_done(dst_buf, state);
++	}
++	if (!_v4l2_m2m_job_finish(m2m_dev, m2m_ctx)) {
++		spin_unlock_irqrestore(&m2m_dev->job_spinlock, flags);
++		return;
++	}
++	spin_unlock_irqrestore(&m2m_dev->job_spinlock, flags);
++
++	v4l2_m2m_job_next(m2m_dev, m2m_ctx);
++}
++EXPORT_SYMBOL(v4l2_m2m_job_finish_held);
++
++/**
++ * v4l2_m2m_release_capture_buf() - check if the capture buffer should be
++ * released
++ *
++ * @out_vb: the output buffer
++ * @cap_vb: the capture buffer
++ *
++ * This helper function returns true if the current capture buffer should
++ * be released to vb2. This is the case if the output buffer specified that
++ * the capture buffer should be held (i.e. not returned to vb2) AND if the
++ * timestamp of the capture buffer differs from the output buffer timestamp.
++ *
++ * This helper is to be called at the start of the device_run callback:
++ *
++ * .. code-block:: c
++ *
++ *	if (v4l2_m2m_release_capture_buf(out_vb, cap_vb)) {
++ *		v4l2_m2m_dst_buf_remove(m2m_ctx);
++ *		v4l2_m2m_buf_done(cap_vb, VB2_BUF_STATE_DONE);
++ *		cap_vb = v4l2_m2m_next_dst_buf(m2m_ctx);
++ *	}
++ *	cap_vb->is_held = out_vb->flags & V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF;
++ *
++ *	...
++ *
++ *	v4l2_m2m_buf_done(out_vb, VB2_BUF_STATE_DONE);
++ *	if (!cap_vb->is_held) {
++ *		v4l2_m2m_dst_buf_remove(m2m_ctx);
++ *		v4l2_m2m_buf_done(cap_vb, VB2_BUF_STATE_DONE);
++ *	}
++ *
++ * This allows for multiple output buffers to be used to fill in a single
++ * capture buffer. This is typically used by stateless decoders where
++ * multiple e.g. H.264 slices contribute to a single decoded frame.
++ */
++struct vb2_v4l2_buffer *v4l2_m2m_release_capture_buf(struct v4l2_m2m_ctx *m2m_ctx)
++{
++	struct v4l2_m2m_dev *m2m_dev = m2m_ctx->m2m_dev;
++	struct vb2_v4l2_buffer *src, *dst;
++	unsigned long flags;
++
++	spin_lock_irqsave(&m2m_dev->job_spinlock, flags);
++	src = v4l2_m2m_next_src_buf(m2m_ctx);
++	dst = v4l2_m2m_next_dst_buf(m2m_ctx);
++
++	if (dst->is_held && dst->vb2_buf.copied_timestamp &&
++	    src->vb2_buf.timestamp != dst->vb2_buf.timestamp) {
++		dst->is_held = false;
++		v4l2_m2m_dst_buf_remove(m2m_ctx);
++		v4l2_m2m_buf_done(dst, VB2_BUF_STATE_DONE);
++		dst = v4l2_m2m_next_dst_buf(m2m_ctx);
++	}
++	dst->is_held = src->flags & V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF;
++	src->flags &= ~V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF;
++	spin_unlock_irqrestore(&m2m_dev->job_spinlock, flags);
++	return dst;
++}
++EXPORT_SYMBOL(v4l2_m2m_release_capture_buf);
++
+ int v4l2_m2m_reqbufs(struct file *file, struct v4l2_m2m_ctx *m2m_ctx,
+ 		     struct v4l2_requestbuffers *reqbufs)
+ {
+@@ -1171,19 +1275,28 @@ int v4l2_m2m_ioctl_stateless_decoder_cmd(struct file *file, void *priv,
+ {
+ 	struct v4l2_fh *fh = file->private_data;
+ 	struct vb2_v4l2_buffer *out_vb, *cap_vb;
++	struct v4l2_m2m_dev *m2m_dev = fh->m2m_ctx->m2m_dev;
++	unsigned long flags;
+ 	int ret;
+
+ 	ret = v4l2_m2m_ioctl_stateless_try_decoder_cmd(file, priv, dc);
+ 	if (ret < 0)
+ 		return ret;
+
++	spin_lock_irqsave(&m2m_dev->job_spinlock, flags);
+ 	out_vb = v4l2_m2m_last_src_buf(fh->m2m_ctx);
+ 	cap_vb = v4l2_m2m_last_dst_buf(fh->m2m_ctx);
+
+-	if (out_vb)
++	if (out_vb && (out_vb->flags & V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF)) {
+ 		out_vb->flags &= ~V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF;
+-	else if (cap_vb && cap_vb->is_held)
+-		v4l2_m2m_buf_done(cap_vb, VB2_BUF_STATE_DONE);
++	} else if (cap_vb && cap_vb->is_held) {
++		cap_vb->is_held = false;
++		if (m2m_dev->curr_ctx) {
++			v4l2_m2m_dst_buf_remove(fh->m2m_ctx);
++			v4l2_m2m_buf_done(cap_vb, VB2_BUF_STATE_DONE);
++		}
++	}
++	spin_unlock_irqrestore(&m2m_dev->job_spinlock, flags);
+
+ 	return 0;
+ }
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+index 67f7d4326fc1..4e30f263b427 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
++++ b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+@@ -30,14 +30,7 @@ void cedrus_device_run(void *priv)
+ 	struct media_request *src_req;
+
+ 	run.src = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+-	run.dst = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
+-
+-	if (v4l2_m2m_release_capture_buf(run.src, run.dst)) {
+-		v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
+-		v4l2_m2m_buf_done(run.dst, VB2_BUF_STATE_DONE);
+-		run.dst = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
+-	}
+-	run.dst->is_held = run.src->flags & V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF;
++	run.dst = v4l2_m2m_release_capture_buf(ctx->fh.m2m_ctx);
+
+ 	run.first_slice = !run.dst->vb2_buf.copied_timestamp ||
+ 		run.src->vb2_buf.timestamp != run.dst->vb2_buf.timestamp;
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
+index 99fedec80224..242cad82cc8c 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
++++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
+@@ -103,7 +103,6 @@ static irqreturn_t cedrus_irq(int irq, void *data)
+ {
+ 	struct cedrus_dev *dev = data;
+ 	struct cedrus_ctx *ctx;
+-	struct vb2_v4l2_buffer *src_buf, *dst_buf;
+ 	enum vb2_buffer_state state;
+ 	enum cedrus_irq_status status;
+
+@@ -121,26 +120,12 @@ static irqreturn_t cedrus_irq(int irq, void *data)
+ 	dev->dec_ops[ctx->current_codec]->irq_disable(ctx);
+ 	dev->dec_ops[ctx->current_codec]->irq_clear(ctx);
+
+-	src_buf = v4l2_m2m_src_buf_remove(ctx->fh.m2m_ctx);
+-	dst_buf = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
+-
+-	if (!src_buf || !dst_buf) {
+-		v4l2_err(&dev->v4l2_dev,
+-			 "Missing source and/or destination buffers\n");
+-		return IRQ_HANDLED;
+-	}
+-
+ 	if (status == CEDRUS_IRQ_ERROR)
+ 		state = VB2_BUF_STATE_ERROR;
+ 	else
+ 		state = VB2_BUF_STATE_DONE;
+
+-	v4l2_m2m_buf_done(src_buf, state);
+-	if (!dst_buf->is_held) {
+-		v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
+-		v4l2_m2m_buf_done(dst_buf, state);
+-	}
+-	v4l2_m2m_job_finish(ctx->dev->m2m_dev, ctx->fh.m2m_ctx);
++	v4l2_m2m_job_finish_held(ctx->dev->m2m_dev, ctx->fh.m2m_ctx, state);
+
+ 	return IRQ_HANDLED;
+ }
+diff --git a/include/media/v4l2-mem2mem.h b/include/media/v4l2-mem2mem.h
+index 8ae2f56c7fa3..48ca7d3eaa3d 100644
+--- a/include/media/v4l2-mem2mem.h
++++ b/include/media/v4l2-mem2mem.h
+@@ -173,6 +173,10 @@ void v4l2_m2m_try_schedule(struct v4l2_m2m_ctx *m2m_ctx);
+ void v4l2_m2m_job_finish(struct v4l2_m2m_dev *m2m_dev,
+ 			 struct v4l2_m2m_ctx *m2m_ctx);
+
++void v4l2_m2m_job_finish_held(struct v4l2_m2m_dev *m2m_dev,
++			 struct v4l2_m2m_ctx *m2m_ctx,
++			 enum vb2_buffer_state state);
++
+ static inline void
+ v4l2_m2m_buf_done(struct vb2_v4l2_buffer *buf, enum vb2_buffer_state state)
+ {
+@@ -644,47 +648,7 @@ void v4l2_m2m_buf_copy_metadata(const struct vb2_v4l2_buffer *out_vb,
+ 				struct vb2_v4l2_buffer *cap_vb,
+ 				bool copy_frame_flags);
+
+-/**
+- * v4l2_m2m_release_capture_buf() - check if the capture buffer should be
+- * released
+- *
+- * @out_vb: the output buffer
+- * @cap_vb: the capture buffer
+- *
+- * This helper function returns true if the current capture buffer should
+- * be released to vb2. This is the case if the output buffer specified that
+- * the capture buffer should be held (i.e. not returned to vb2) AND if the
+- * timestamp of the capture buffer differs from the output buffer timestamp.
+- *
+- * This helper is to be called at the start of the device_run callback:
+- *
+- * .. code-block:: c
+- *
+- *	if (v4l2_m2m_release_capture_buf(out_vb, cap_vb)) {
+- *		v4l2_m2m_dst_buf_remove(m2m_ctx);
+- *		v4l2_m2m_buf_done(cap_vb, VB2_BUF_STATE_DONE);
+- *		cap_vb = v4l2_m2m_next_dst_buf(m2m_ctx);
+- *	}
+- *	cap_vb->is_held = out_vb->flags & V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF;
+- *
+- *	...
+- *
+- *	v4l2_m2m_buf_done(out_vb, VB2_BUF_STATE_DONE);
+- *	if (!cap_vb->is_held) {
+- *		v4l2_m2m_dst_buf_remove(m2m_ctx);
+- *		v4l2_m2m_buf_done(cap_vb, VB2_BUF_STATE_DONE);
+- *	}
+- *
+- * This allows for multiple output buffers to be used to fill in a single
+- * capture buffer. This is typically used by stateless decoders where
+- * multiple e.g. H.264 slices contribute to a single decoded frame.
+- */
+-static inline bool v4l2_m2m_release_capture_buf(const struct vb2_v4l2_buffer *out_vb,
+-						const struct vb2_v4l2_buffer *cap_vb)
+-{
+-	return cap_vb->is_held && cap_vb->vb2_buf.copied_timestamp &&
+-	       out_vb->vb2_buf.timestamp != cap_vb->vb2_buf.timestamp;
+-}
++struct vb2_v4l2_buffer *v4l2_m2m_release_capture_buf(struct v4l2_m2m_ctx *m2m_ctx);
+
+ /* v4l2 request helper */
 
