@@ -2,100 +2,150 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92357C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 110E3ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DE2F2054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:17:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBE4F21721
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:18:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ZBMH2wAy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728340AbfJGPRq (ORCPT
+        id S1728465AbfJGPSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 11:17:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39038 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727490AbfJGPRp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:17:45 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B52F2053B;
-        Mon,  7 Oct 2019 15:17:43 +0000 (UTC)
-Date:   Mon, 7 Oct 2019 11:17:42 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
-        hjl.tools@gmail.com, Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Denys Vlasenko <dvlasenk@redhat.com>
-Subject: Re: [RFC][PATCH 0/9] Variable size jump_label support
-Message-ID: <20191007111742.00d6c50b@gandalf.local.home>
-In-Reply-To: <20191007112606.GA44864@gmail.com>
-References: <20191007090225.441087116@infradead.org>
-        <20191007084443.793701281@infradead.org>
-        <20191007112229.GA3221@gmail.com>
-        <20191007112606.GA44864@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 7 Oct 2019 11:18:01 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:44849 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727490AbfJGPSB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 11:18:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1570461480; x=1601997480;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=dUiabn5+4m2UPQhv0R2C4bPeirmU2fuRBGUPhMjm7KQ=;
+  b=ZBMH2wAy8+3X3FtuR3236WBL09C1lmSbGp2L7eh3cepjdZeYy3zJo/1s
+   ZBpUBjynIWkCJ12g/kMSbD/4E4Dx5gjxWgNEs2HbOqV8N/i7s8BfTsHcL
+   V4rnKlX3Dt+IahRMsoTfO/gH6pj7Tck/tDwMQXyhhVKyFvqZAo75/vx2k
+   w=;
+X-IronPort-AV: E=Sophos;i="5.67,268,1566864000"; 
+   d="scan'208";a="420554456"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 07 Oct 2019 15:17:59 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com (Postfix) with ESMTPS id DAF07A2352;
+        Mon,  7 Oct 2019 15:17:54 +0000 (UTC)
+Received: from EX13D19EUB003.ant.amazon.com (10.43.166.69) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 7 Oct 2019 15:17:54 +0000
+Received: from ua9e4f3715fbc5f.ant.amazon.com (10.43.162.116) by
+ EX13D19EUB003.ant.amazon.com (10.43.166.69) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 7 Oct 2019 15:17:44 +0000
+From:   Hanna Hawa <hhhawa@amazon.com>
+To:     <bp@alien8.de>, <mchehab@kernel.org>, <mark.rutland@arm.com>,
+        <james.morse@arm.com>, <robh+dt@kernel.org>,
+        <frowand.list@gmail.com>, <davem@davemloft.net>,
+        <gregkh@linuxfoundation.org>, <linus.walleij@linaro.org>,
+        <daniel@iogearbox.net>, <paulmck@linux.ibm.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <dwmw@amazon.co.uk>,
+        <benh@amazon.com>, <ronenk@amazon.com>, <talel@amazon.com>,
+        <jonnyc@amazon.com>, <hanochu@amazon.com>, <hhhawa@amazon.com>
+Subject: [PATCH v6 0/3] Add support for Amazon's Annapurna Labs EDAC for L1/L2
+Date:   Mon, 7 Oct 2019 16:17:27 +0100
+Message-ID: <20191007151730.7705-1-hhhawa@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.116]
+X-ClientProxiedBy: EX13D03UWC002.ant.amazon.com (10.43.162.160) To
+ EX13D19EUB003.ant.amazon.com (10.43.166.69)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 7 Oct 2019 13:26:06 +0200
-Ingo Molnar <mingo@kernel.org> wrote:
+This series adds L1 cache and L2 cache error detection and correction support
+for Amazon's Annapurna Labs SoCs.
 
-> [ Sorry, fixed the Cc:lkml line. ]
+Alpine SoCs supports L1 and L2 single bit correction and two bits detection
+capability based on ARM implementation.
 
-/me joining the fun.
+The CPU cores in the SoC are the same and all of them support ECC.
 
-> 
-> * Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > These here patches are something I've been poking at for a while, 
-> > enabling jump_label to use 2 byte jumps/nops.
-> > 
-> > It _almost_ works :-/
-> > 
-> > That is, you can build some kernels with it (x86_64-defconfig for 
-> > example works just fine).
-> > 
-> > The problem comes when GCC generates a branch into another section, 
-> > mostly .text.unlikely. At that point GAS just gives up and throws a fit 
-> > (more details in the last patch).
-> > 
-> > Aside from anyone coming up with a really clever GAS trick, I don't see 
-> > how we can do this other than:  
-> 
-> >  - use 'jmp' and get objtool to rewrite the text. Steven has earlier proposed
-> >    something like that (using recordmcount) and Linus hated that.  
-> 
-> As long as GCC+GAS correctly generates a 2-byte or 5-byte JMP depending 
-> on the target distance, the objtool solution should work fine, shouldn't 
-> it?
-> 
-> I can see the recordmcount solution sucking, it would depend on early 
-> kernel patchery. But build time patchery is something we already depend 
-> on, so assuming some objtool catastrophy it's a more robust solution, 
-> isn't it?
-> 
+Changes since v5:
+-----------------
+- Use top-level machine compatible to bind the EDAC device
+- Remove DT bindings
+- Add initcall to create platform device and register the edac driver
+- follow 'next-level-cache' phandle to create CPU topology for L2 driver
+- Change the driver to be tristate
+- Move register read to function flow
+- EXPORT_SYMBOL_GPL of_find_next_cache_node
 
-Actually, even back then I said that it would be best to merge all the
-tools into one (I just didn't have the time to implement it), and then
-we could pull this off. I have one of my developers working to merge
-record-mcount into objtool now (there's been some patches floating
-around).
+Changes since v4:
+-----------------
+- Added include for cpumask.h in al_l2_edac.c
+- Fix RAMID error print according to ARM TRM
+- Use for_each_possible_cpu() to parse information for DT.
+- Add missing of_node_put() call.
 
-Then with a single tool, it shouldn't be controversial.
+Changes since v3:
+-----------------
+- Added include for smp.h sysreg.h
+- Use scnprintf instead of snprintf
+- Move write_sysreg_s after valid check to minimize the window between
+read/write.
+- Use IS_ERR_OR_NULL instead of IS_ERR, because
+edac_device_alloc_ctl_info may return NULL.
 
--- Steve
+Changes since v2:
+-----------------
+- Use BIT for single bit instead of GENMASK
+- Use BIT_ULL and GENMASK_ULL for 64bit vector
+- Fix the mod_name/ctrl_name.
+
+Changes since v1:
+-----------------
+- Split into two drivers
+- Get cpu-mask according to l2-cache handler from devicetree
+- Remove parameter casting
+- Use GENMASK() in bit mask
+- Use FIELD_GET()
+- Update define description PLRU_RAM -> PF_RAM
+- Use sys_reg() and read_sysreg_s()
+- Remove all write/read wrappers
+- Check fatal field to set if the error correctable or not
+- Remove un-relevant information from error prints.
+- Update smp_call_function_single() call function to wait
+- remove usage of get_online_cpus/put_online_cpus
+- Use on_each_cpu() and smp_call_function_any() instead of loop with for_each_cpu.
+- use buffer for error prints and pass to edac API
+- Remove edac_op_state set
+- Add for loop to report on repeated errors of the same type
+- Fix error name of the TLB to be L2_TLB as written in ARM TRM
+- Minor change in Kconfig
+- Minor changes in commit message
+
+Hanna Hawa (3):
+  edac: Add support for Amazon's Annapurna Labs L1 EDAC
+  of: EXPORT_SYMBOL_GPL of_find_next_cache_node
+  edac: Add support for Amazon's Annapurna Labs L2 EDAC
+
+ MAINTAINERS               |  10 ++
+ drivers/edac/Kconfig      |  16 +++
+ drivers/edac/Makefile     |   2 +
+ drivers/edac/al_l1_edac.c | 190 +++++++++++++++++++++++++++++
+ drivers/edac/al_l2_edac.c | 251 ++++++++++++++++++++++++++++++++++++++
+ drivers/of/base.c         |   1 +
+ 6 files changed, 470 insertions(+)
+ create mode 100644 drivers/edac/al_l1_edac.c
+ create mode 100644 drivers/edac/al_l2_edac.c
+
+-- 
+2.17.1
+
