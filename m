@@ -2,271 +2,136 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A65CFC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 460ABC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69BB121655
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:34:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="h+vDW4y2"
+	by mail.kernel.org (Postfix) with ESMTP id 22AA821655
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:34:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727604AbfJGJeU (ORCPT
+        id S1727617AbfJGJef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 05:34:20 -0400
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.83]:30032 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727350AbfJGJeU (ORCPT
+        Mon, 7 Oct 2019 05:34:35 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:49005 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727272AbfJGJef (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 05:34:20 -0400
-X-Greylist: delayed 2088 seconds by postgrey-1.27 at vger.kernel.org; Mon, 07 Oct 2019 05:34:17 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1570440856;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=S36cRnLQIU60DIJ6VvMVjgCE3ff633vnGb8UbjBvdAI=;
-        b=h+vDW4y2iwWHxWOmdneDXUFr0ynClcZ4Jo4N8cMniTV/l36kOrHEQZfOENFMcUXHwN
-        H7T8q4BuZH5BoAfNe4rLvVyNv0vTye7j8rzkmb+bU3UahGUbC0HAwRj+Gkrg0fvMsvli
-        uwcmzYOJ5qK+9fCdd8F/s13MHbu1TKqIPw2Hxz4G3j5/uTJnZGSTKubUtFzKMPQlMH67
-        5+QVdxq/k/JlvwuPxT8uTvozy4IEMJ5TFPalaOFvQ8IU7j5ABeSpAgH6g2Gj8/1SW75V
-        IxiuU59rH+FWjBbt3Ue19+G5pdEymZ4RYAL8spKZWF3uG/uNycXY4nIgmLJNCueclLLy
-        Sjuw==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPbI/SfP6I9"
-X-RZG-CLASS-ID: mo00
-Received: from tauon.chronox.de
-        by smtp.strato.de (RZmta 44.28.0 DYNA|AUTH)
-        with ESMTPSA id I003a5v979Y9yqw
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Mon, 7 Oct 2019 11:34:09 +0200 (CEST)
-From:   Stephan Mueller <smueller@chronox.de>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-crypto@vger.kernel.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>
-Subject: Re: [PATCH 5.4 regression fix] x86/boot: Provide memzero_explicit
-Date:   Mon, 07 Oct 2019 11:34:09 +0200
-Message-ID: <12200313.ic8YZTgDOU@tauon.chronox.de>
-In-Reply-To: <284b70dd-5575-fee4-109f-aa99fb73a434@redhat.com>
-References: <20191007085501.23202-1-hdegoede@redhat.com> <65461301.CAtk0GNLiE@tauon.chronox.de> <284b70dd-5575-fee4-109f-aa99fb73a434@redhat.com>
+        Mon, 7 Oct 2019 05:34:35 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iHPPT-0003pH-HS; Mon, 07 Oct 2019 11:34:31 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iHPPR-0007UZ-41; Mon, 07 Oct 2019 11:34:29 +0200
+Date:   Mon, 7 Oct 2019 11:34:29 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Chunyan Zhang <zhang.chunyan@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        ckeepax@opensource.cirrus.com, LKML <linux-kernel@vger.kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>
+Subject: Re: [PATCH 1/3] regulator: core: fix boot-on regulators use_count
+ usage
+Message-ID: <20191007093429.qekysnxufvkbirit@pengutronix.de>
+References: <20190917154021.14693-2-m.felsch@pengutronix.de>
+ <CAD=FV=W7M8mwQqnPyU9vsK5VAdqqJdQdyxcoe9FRRGTY8zjnFw@mail.gmail.com>
+ <20190923181431.GU2036@sirena.org.uk>
+ <CAD=FV=WVGj8xzKFFxsjpeuqtVzSvv22cHmWBRJtTbH00eC=E9w@mail.gmail.com>
+ <20190923184907.GY2036@sirena.org.uk>
+ <CAD=FV=VkaXDn034EFnJWYvWwyLgvq7ajfgMRm9mbhQeRKmPDRQ@mail.gmail.com>
+ <20190924182758.GC2036@sirena.org.uk>
+ <CAD=FV=WZSy6nHjsY2pvjcoR4iy64b35OPGEb3EPSSc5vpeTTuA@mail.gmail.com>
+ <20190927084710.mt42454vsrjm3yh3@pengutronix.de>
+ <CAD=FV=XM0i=GsvttJjug6VPOJJGHRqFmsmCp-1XXNvmsYp9sJA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="nextPart1856703.9gYyaxCXab"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=XM0i=GsvttJjug6VPOJJGHRqFmsmCp-1XXNvmsYp9sJA@mail.gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 11:28:21 up 142 days, 15:46, 94 users,  load average: 0.00, 0.02,
+ 0.00
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
+Hi Doug, Mark,
 
---nextPart1856703.9gYyaxCXab
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-
-Am Montag, 7. Oktober 2019, 11:06:04 CEST schrieb Hans de Goede:
-
-Hi Hans,
-
-> Hi Stephan,
+On 19-10-01 12:57, Doug Anderson wrote:
+> Hi,
 > 
-> On 07-10-2019 10:59, Stephan Mueller wrote:
-> > Am Montag, 7. Oktober 2019, 10:55:01 CEST schrieb Hans de Goede:
-> > 
-> > Hi Hans,
-> > 
-> >> The purgatory code now uses the shared lib/crypto/sha256.c sha256
-> >> implementation. This needs memzero_explicit, implement this.
-> >> 
-> >> Reported-by: Arvind Sankar <nivedita@alum.mit.edu>
-> >> Fixes: 906a4bb97f5d ("crypto: sha256 - Use get/put_unaligned_be32 to get
-> >> input, memzero_explicit") Signed-off-by: Hans de Goede
-> >> <hdegoede@redhat.com>
-> >> ---
-> >> 
-> >>   arch/x86/boot/compressed/string.c | 5 +++++
-> >>   1 file changed, 5 insertions(+)
-> >> 
-> >> diff --git a/arch/x86/boot/compressed/string.c
-> >> b/arch/x86/boot/compressed/string.c index 81fc1eaa3229..511332e279fe
-> >> 100644
-> >> --- a/arch/x86/boot/compressed/string.c
-> >> +++ b/arch/x86/boot/compressed/string.c
-> >> @@ -50,6 +50,11 @@ void *memset(void *s, int c, size_t n)
-> >> 
-> >>   	return s;
-> >>   
-> >>   }
-> >> 
-> >> +void memzero_explicit(void *s, size_t count)
-> >> +{
-> >> +	memset(s, 0, count);
-> > 
-> > May I ask how it is guaranteed that this memset is not optimized out by
-> > the
-> > compiler, e.g. for stack variables?
+> On Fri, Sep 27, 2019 at 1:47 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
+> > > > > > It should be possible to do a regulator_disable() though I'm not
+> > > > > > sure anyone actually uses that.  The pattern for a regular
+> > > > > > consumer should be the normal enable/disable pair to handle
+> > > > > > shared usage, only an exclusive consumer should be able to use
+> > > > > > just a straight disable.
+> >
+> > In my case it is a regulator-fixed which uses the enable/disable pair.
+> > But as my descriptions says this will not work currently because boot-on
+> > marked regulators can't be disabled right now (using the same logic as
+> > always-on regulators).
+> >
+> > > > > Ah, I see, I wasn't aware of the "exclusive" special case!  Marco: is
+> > > > > this working for you?  I wonder if we need to match
+> > > > > "regulator->enable_count" to "rdev->use_count" at the end of
+> > > > > _regulator_get() in the exclusive case...
+> >
+> > So my fix isn't correct to fix this in general?
 > 
-> The function and the caller live in different compile units, so unless
-> LTO is used this cannot happen.
-
-Agreed in this case.
-
-I would just be worried that this memzero_explicit implementation is assumed 
-to be protected against optimization when used elsewhere since other 
-implementations of memzero_explicit are provided with the goal to be protected 
-against optimizations.
+> I don't think your fix is correct.  It sounds as if the intention of
+> "regulator-boot-on" is to have the OS turn the regulator on at bootup
+> and it keep an implicit reference until someone explicitly tells the
+> OS to drop the reference.
 > 
-> Also note that the previous purgatory private (vs shared) sha256
-> implementation had:
 > 
->          /* Zeroize sensitive information. */
->          memset(sctx, 0, sizeof(*sctx));
+> > > > Yes, I think that case has been missed when adding the enable
+> > > > counts - I've never actually had a system myself that made any
+> > > > use of this stuff.  It probably needs an audit of the users to
+> > > > make sure nobody's relying on the current behaviour though I
+> > > > can't think how they would.
+> > >
+> > > Marco: I'm going to assume you'll tackle this since I don't actually
+> > > have any use cases that need this.
+> >
+> > My use case is a simple regulator-fixed which is turned on by the
+> > bootloader or to be more precise by the pmic-rom. To map that correctly
+> > I marked this regulator as boot-on. Unfortunately as I pointed out above
+> > this is handeld the same way as always-on.
 > 
-> In the place where the new shared 256 code uses memzero_explicit() and the
-> new shared sha256 code is the only user of the
-> arch/x86/boot/compressed/string.c memzero_explicit() implementation.
+> It's a fixed regulator controlled by a GPIO?  Presumably the GPIO can
+> be read.  That would mean it ideally shouldn't be using
+> "regulator-boot-on" since this is _not_ a regulator whose software
+> state can't be read.  Just remove the property.
+
+Sorry that won't fix my problem. If I drop the regulator-boot-on state
+the fixed-regulator will disable this regulator but disable/enable this
+regulator is only valid during suspend/resume. I don't say that my fix
+is correct but we should fix this.
+
+Regards,
+  Marco
+
+> -Doug
 > 
-> With that all said I'm open to suggestions for improving this.
 
-What speaks against the common memzero_explicit implementation? If you cannot 
-use it, what about adding a barrier in the memzero_explicit implementation? Or 
-what about adding some compiler magic as attached to this email?
-
-
-> 
-> Regards,
-> 
-> Hans
-
-
-
-Ciao
-Stephan
---nextPart1856703.9gYyaxCXab
-Content-Disposition: attachment; filename="memset_secure.c"
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/x-csrc; charset="UTF-8"; name="memset_secure.c"
-
-/*
- * Copyright (C) 2015, Stephan Mueller <smueller@chronox.de>
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, and the entire permission notice in its entirety,
- *    including the disclaimer of warranties.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. The name of the author may not be used to endorse or promote
- *    products derived from this software without specific prior
- *    written permission.
- *
- * ALTERNATIVELY, this product may be distributed under the terms of
- * the GNU General Public License, in which case the provisions of the GPL2
- * are required INSTEAD OF the above restrictions.  (This clause is
- * necessary due to a potential bad interaction between the GPL and
- * the restrictions contained in a BSD-style copyright.)
- *
- * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, ALL OF
- * WHICH ARE HEREBY DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
- * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
- * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF NOT ADVISED OF THE POSSIBILITY OF SUCH
- * DAMAGE.
- */
-
-#include <string.h>
-
-/*
- * Tested following code:
- *
- * (1) __asm__ __volatile__("" : "=r" (s) : "0" (s));
- * (2) __asm__ __volatile__("": : :"memory");
- * (3) __asm__ __volatile__("" : "=r" (s) : "0" (s) : "memory");
- * (4) __asm__ __volatile__("" : : "r" (s) : "memory");
- *
- * Requred result:
- *
- * gcc -O3: objdump -d shows the following:
- *
- * 0000000000400440 <main>:
- * ...
- *   400469:       48 c7 04 24 00 00 00    movq   $0x0,(%rsp)
- *   400470:       00
- *   400471:       48 c7 44 24 08 00 00    movq   $0x0,0x8(%rsp)
- *   400478:       00 00
- *   40047a:       c7 44 24 10 00 00 00    movl   $0x0,0x10(%rsp)
- *   400481:       00
- *
- * clang -O3: objdump -d shows the following:
- *
- * 0000000000400590 <main>:
- * ...
- *   4005c3:       c7 44 24 10 00 00 00    movl   $0x0,0x10(%rsp)
- *   4005ca:       00
- *
- *
- * Test results:
- *
- * The following table marks an X when the aforementioned movq/movl code is
- * present (or an invocation of memset@plt) in the object code
- * (i.e. the code we want). Contrary, the table marks - where the code is not
- * present (i.e. the code we do not want):
- *
- *          | BARRIER  | (1) | (2) | (3) | (4)
- * ---------+----------+     |     |     |
- * Compiler |          |     |     |     |
- * =========+==========+=======================
- *                     |     |     |     |
- * gcc -O0             |  X  |  X  |  X  |  X
- *                     |     |     |     |
- * gcc -O2             |  -  |  X  |  X  |  X
- *                     |     |     |     |
- * gcc -O3             |  -  |  X  |  X  |  X
- *                     |     |     |     |
- * clang -00           |  X  |  X  |  X  |  X
- *                     |     |     |     |
- * clang -02           |  X  |  -  |  X  |  X
- *                     |     |     |     |
- * clang -03           |  -  |  -  |  X  |  X
- */
-
-static inline void memset_secure(void *s, int c, size_t n)
-{
-	memset(s, c, n);
-	__asm__ __volatile__("" : : "r" (s) : "memory");
-}
-
-#if 0
-#include <stdio.h>
-
-int main(int argc, char *argv[])
-{
-	char buf[20];
-
-	snprintf(buf, sizeof(buf) - 1, "test");
-	printf("%s\n", buf);
-
-	memset_secure(buf, 0, sizeof(buf));
-	return 0;
-}
-#endif
-
---nextPart1856703.9gYyaxCXab--
-
-
-
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
