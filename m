@@ -5,55 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8EEC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4242DECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93A1E21479
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:07:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06C0021479
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:07:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kj31jL14"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="U6Y98BGv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728752AbfJGPHk (ORCPT
+        id S1728814AbfJGPHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 11:07:40 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:35850 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728059AbfJGPHk (ORCPT
+        Mon, 7 Oct 2019 11:07:44 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:56206 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728786AbfJGPHn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:07:40 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x97F7dZI047006;
-        Mon, 7 Oct 2019 10:07:39 -0500
+        Mon, 7 Oct 2019 11:07:43 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x97F7giD067923;
+        Mon, 7 Oct 2019 10:07:42 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570460859;
-        bh=PJbcQkGUyLQUkdIltaZ+oCCPly62Nq7aKQ+5h4XsBMo=;
+        s=ti-com-17Q1; t=1570460862;
+        bh=HuKfbtAS6502L4aeFWxqTkMVjLR2uSz+eszYj8624Hc=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=kj31jL14QukpYaXBBO8yc2hIKY+d/uvx5x6y4MV8vxmCbGW/0t5tDR9vf+OeqK1K1
-         Qrr+Z8k5pYN381g+ZqLlZe2xFLBOSbOjL6tz4Loj+w0jUWHqlhD7GRm1WI5wR6hqfM
-         JabEAiDNnQ+WJFXIN/SC27hmpk22HDagrp8mv3B0=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x97F7dZb060585;
-        Mon, 7 Oct 2019 10:07:39 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+        b=U6Y98BGvJA3pUoZMs6gtfcY5HtI90D3t9cBovNoCcTxRfJwCI2te6cM0z/16/SEev
+         KMT4H620WMZyKLCMNnzv21f4Odz/kc3pGQ6QfIvpco3b/YoK+tdgKdpp6l88eHJasI
+         SM1xSTS7475HnshdVzuoFRPPXB9wBkpOqk9QpZ4o=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x97F7g3F025544
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 7 Oct 2019 10:07:42 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 7 Oct
- 2019 10:07:36 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 10:07:42 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 7 Oct 2019 10:07:36 -0500
+ Frontend Transport; Mon, 7 Oct 2019 10:07:40 -0500
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x97F7aF8055156;
-        Mon, 7 Oct 2019 10:07:38 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x97F7aFC055156;
+        Mon, 7 Oct 2019 10:07:42 -0500
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>
 CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v3 02/21] media: ti-vpe: vpe: Fix Motion Vector vpdma stride
-Date:   Mon, 7 Oct 2019 10:09:50 -0500
-Message-ID: <20191007151009.22095-3-bparrot@ti.com>
+        <linux-kernel@vger.kernel.org>,
+        Nikhil Devshatwar <nikhil.nd@ti.com>,
+        Benoit Parrot <bparrot@ti.com>
+Subject: [Patch v3 06/21] media: ti-vpe: Add support for NV21 format
+Date:   Mon, 7 Oct 2019 10:09:54 -0500
+Message-ID: <20191007151009.22095-7-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191007151009.22095-1-bparrot@ti.com>
 References: <20191007151009.22095-1-bparrot@ti.com>
@@ -65,96 +68,164 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 52831a418fa6 ("[media] media: ti-vpe: vpe: allow use of user
-specified stride") and commit 8c1e4fa17e92 ("[media] media: ti-vpe: vpdma:
-add support for user specified stride") resulted in the Motion Vector
-stride to be the same as the image stride.
+From: Nikhil Devshatwar <nikhil.nd@ti.com>
 
-This caused memory corruption in the output image as mentionned in
-commit 44f98adf71a8 ("[media] media: ti-vpe: vpe: Fix line stride
-for output motion vector").
+In NV21 format, the chroma plane is written to memory such that the U
+and V components are swapped for NV12.
 
-Fixes: 52831a418fa6 ("[media] media: ti-vpe: vpe: allow use of user specified stride")
-Fixes: 8c1e4fa17e92 ("[media] media: ti-vpe: vpdma: add support for user specified stride")
+Create a new entry in the VPDMA formats to describe the correct data
+types used in the data descriptors.
+
+Update all checks for NV12 and add NV21 there as well.
+
+Add support for V4L2_PIX_FMT_NV21 format for both capture and output
+streams.
+
+Signed-off-by: Nikhil Devshatwar <nikhil.nd@ti.com>
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Acked-by: Nikhil Devshatwar <nikhil.nd@ti.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+ drivers/media/platform/ti-vpe/vpdma.c      | 11 ++++++--
+ drivers/media/platform/ti-vpe/vpdma.h      |  1 +
+ drivers/media/platform/ti-vpe/vpdma_priv.h |  1 +
+ drivers/media/platform/ti-vpe/vpe.c        | 29 +++++++++++++++++-----
+ 4 files changed, 34 insertions(+), 8 deletions(-)
 
+diff --git a/drivers/media/platform/ti-vpe/vpdma.c b/drivers/media/platform/ti-vpe/vpdma.c
+index 53d27cd6e10a..817d287c8138 100644
+--- a/drivers/media/platform/ti-vpe/vpdma.c
++++ b/drivers/media/platform/ti-vpe/vpdma.c
+@@ -56,6 +56,11 @@ const struct vpdma_data_format vpdma_yuv_fmts[] = {
+ 		.data_type	= DATA_TYPE_C420,
+ 		.depth		= 4,
+ 	},
++	[VPDMA_DATA_FMT_CB420] = {
++		.type		= VPDMA_DATA_FMT_TYPE_YUV,
++		.data_type	= DATA_TYPE_CB420,
++		.depth		= 4,
++	},
+ 	[VPDMA_DATA_FMT_YCR422] = {
+ 		.type		= VPDMA_DATA_FMT_TYPE_YUV,
+ 		.data_type	= DATA_TYPE_YCR422,
+@@ -825,7 +830,8 @@ void vpdma_rawchan_add_out_dtd(struct vpdma_desc_list *list, int width,
+ 	channel = next_chan = raw_vpdma_chan;
+ 
+ 	if (fmt->type == VPDMA_DATA_FMT_TYPE_YUV &&
+-			fmt->data_type == DATA_TYPE_C420) {
++	    (fmt->data_type == DATA_TYPE_C420 ||
++	     fmt->data_type == DATA_TYPE_CB420)) {
+ 		rect.height >>= 1;
+ 		rect.top >>= 1;
+ 		depth = 8;
+@@ -893,7 +899,8 @@ void vpdma_add_in_dtd(struct vpdma_desc_list *list, int width,
+ 	channel = next_chan = chan_info[chan].num;
+ 
+ 	if (fmt->type == VPDMA_DATA_FMT_TYPE_YUV &&
+-			fmt->data_type == DATA_TYPE_C420) {
++	    (fmt->data_type == DATA_TYPE_C420 ||
++	     fmt->data_type == DATA_TYPE_CB420)) {
+ 		rect.height >>= 1;
+ 		rect.top >>= 1;
+ 		depth = 8;
+diff --git a/drivers/media/platform/ti-vpe/vpdma.h b/drivers/media/platform/ti-vpe/vpdma.h
+index 28bc94129348..bce17329c4c9 100644
+--- a/drivers/media/platform/ti-vpe/vpdma.h
++++ b/drivers/media/platform/ti-vpe/vpdma.h
+@@ -71,6 +71,7 @@ enum vpdma_yuv_formats {
+ 	VPDMA_DATA_FMT_C444,
+ 	VPDMA_DATA_FMT_C422,
+ 	VPDMA_DATA_FMT_C420,
++	VPDMA_DATA_FMT_CB420,
+ 	VPDMA_DATA_FMT_YCR422,
+ 	VPDMA_DATA_FMT_YC444,
+ 	VPDMA_DATA_FMT_CRY422,
+diff --git a/drivers/media/platform/ti-vpe/vpdma_priv.h b/drivers/media/platform/ti-vpe/vpdma_priv.h
+index c488609bc162..d8ae3e1cd54d 100644
+--- a/drivers/media/platform/ti-vpe/vpdma_priv.h
++++ b/drivers/media/platform/ti-vpe/vpdma_priv.h
+@@ -92,6 +92,7 @@
+ #define DATA_TYPE_C444				0x4
+ #define DATA_TYPE_C422				0x5
+ #define DATA_TYPE_C420				0x6
++#define DATA_TYPE_CB420				0x16
+ #define DATA_TYPE_YC444				0x8
+ #define DATA_TYPE_YCB422			0x7
+ #define DATA_TYPE_YCR422			0x17
 diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index 60b575bb44c4..5ba72445584d 100644
+index 5d0ec5f7ca25..f3ee9ff87927 100644
 --- a/drivers/media/platform/ti-vpe/vpe.c
 +++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -1013,11 +1013,14 @@ static void add_out_dtd(struct vpe_ctx *ctx, int port)
- 	dma_addr_t dma_addr;
- 	u32 flags = 0;
- 	u32 offset = 0;
-+	u32 stride;
+@@ -248,6 +248,14 @@ static struct vpe_fmt vpe_formats[] = {
+ 				    &vpdma_yuv_fmts[VPDMA_DATA_FMT_C420],
+ 				  },
+ 	},
++	{
++		.fourcc		= V4L2_PIX_FMT_NV21,
++		.types		= VPE_FMT_TYPE_CAPTURE | VPE_FMT_TYPE_OUTPUT,
++		.coplanar	= 1,
++		.vpdma_fmt	= { &vpdma_yuv_fmts[VPDMA_DATA_FMT_Y420],
++				    &vpdma_yuv_fmts[VPDMA_DATA_FMT_CB420],
++				  },
++	},
+ 	{
+ 		.fourcc		= V4L2_PIX_FMT_YUYV,
+ 		.types		= VPE_FMT_TYPE_CAPTURE | VPE_FMT_TYPE_OUTPUT,
+@@ -686,7 +694,8 @@ static void set_cfg_modes(struct vpe_ctx *ctx)
+ 	 * Cfg Mode 1: YUV422 source, disable upsampler, DEI is de-interlacing.
+ 	 */
  
- 	if (port == VPE_PORT_MV_OUT) {
- 		vpdma_fmt = &vpdma_misc_fmts[VPDMA_DATA_FMT_MV];
- 		dma_addr = ctx->mv_buf_dma[mv_buf_selector];
- 		q_data = &ctx->q_data[Q_DATA_SRC];
-+		stride = ALIGN((q_data->width * vpdma_fmt->depth) >> 3,
-+			       VPDMA_STRIDE_ALIGN);
- 	} else {
- 		/* to incorporate interleaved formats */
- 		int plane = fmt->coplanar ? p_data->vb_part : 0;
-@@ -1044,6 +1047,7 @@ static void add_out_dtd(struct vpe_ctx *ctx, int port)
- 		}
- 		/* Apply the offset */
- 		dma_addr += offset;
-+		stride = q_data->bytesperline[VPE_LUMA];
- 	}
+-	if (fmt->fourcc == V4L2_PIX_FMT_NV12)
++	if (fmt->fourcc == V4L2_PIX_FMT_NV12 ||
++	    fmt->fourcc == V4L2_PIX_FMT_NV21)
+ 		cfg_mode = 0;
  
- 	if (q_data->flags & Q_DATA_FRAME_1D)
-@@ -1055,7 +1059,7 @@ static void add_out_dtd(struct vpe_ctx *ctx, int port)
- 			   MAX_W, MAX_H);
+ 	write_field(us1_reg0, cfg_mode, VPE_US_MODE_MASK, VPE_US_MODE_SHIFT);
+@@ -701,7 +710,8 @@ static void set_line_modes(struct vpe_ctx *ctx)
+ 	struct vpe_fmt *fmt = ctx->q_data[Q_DATA_SRC].fmt;
+ 	int line_mode = 1;
  
- 	vpdma_add_out_dtd(&ctx->desc_list, q_data->width,
--			  q_data->bytesperline[VPE_LUMA], &q_data->c_rect,
-+			  stride, &q_data->c_rect,
- 			  vpdma_fmt, dma_addr, MAX_OUT_WIDTH_REG1,
- 			  MAX_OUT_HEIGHT_REG1, p_data->channel, flags);
- }
-@@ -1074,10 +1078,13 @@ static void add_in_dtd(struct vpe_ctx *ctx, int port)
- 	dma_addr_t dma_addr;
- 	u32 flags = 0;
- 	u32 offset = 0;
-+	u32 stride;
+-	if (fmt->fourcc == V4L2_PIX_FMT_NV12)
++	if (fmt->fourcc == V4L2_PIX_FMT_NV12 ||
++	    fmt->fourcc == V4L2_PIX_FMT_NV21)
+ 		line_mode = 0;		/* double lines to line buffer */
  
- 	if (port == VPE_PORT_MV_IN) {
- 		vpdma_fmt = &vpdma_misc_fmts[VPDMA_DATA_FMT_MV];
- 		dma_addr = ctx->mv_buf_dma[mv_buf_selector];
-+		stride = ALIGN((q_data->width * vpdma_fmt->depth) >> 3,
-+			       VPDMA_STRIDE_ALIGN);
- 	} else {
- 		/* to incorporate interleaved formats */
- 		int plane = fmt->coplanar ? p_data->vb_part : 0;
-@@ -1104,6 +1111,7 @@ static void add_in_dtd(struct vpe_ctx *ctx, int port)
- 		}
- 		/* Apply the offset */
- 		dma_addr += offset;
-+		stride = q_data->bytesperline[VPE_LUMA];
+ 	/* regs for now */
+@@ -763,7 +773,8 @@ static void set_dst_registers(struct vpe_ctx *ctx)
+ 	 */
+ 	val |= VPE_DS_SRC_DEI_SCALER | VPE_CSC_SRC_DEI_SCALER;
  
- 		if (q_data->flags & Q_DATA_INTERLACED_SEQ_TB) {
- 			/*
-@@ -1139,10 +1147,10 @@ static void add_in_dtd(struct vpe_ctx *ctx, int port)
- 	if (p_data->vb_part && fmt->fourcc == V4L2_PIX_FMT_NV12)
+-	if (fmt->fourcc != V4L2_PIX_FMT_NV12)
++	if (fmt->fourcc != V4L2_PIX_FMT_NV12 &&
++	    fmt->fourcc != V4L2_PIX_FMT_NV21)
+ 		val |= VPE_DS_BYPASS;
+ 
+ 	mmr_adb->out_fmt_reg[0] = val;
+@@ -1129,8 +1140,13 @@ static void add_in_dtd(struct vpe_ctx *ctx, int port)
+ 
+ 			if (field) {
+ 				int height = q_data->height / 2;
+-				int bpp = fmt->fourcc == V4L2_PIX_FMT_NV12 ?
+-						1 : (vpdma_fmt->depth >> 3);
++				int bpp;
++
++				if (fmt->fourcc == V4L2_PIX_FMT_NV12 ||
++				    fmt->fourcc == V4L2_PIX_FMT_NV21)
++					bpp = 1;
++				else
++					bpp = vpdma_fmt->depth >> 3;
+ 
+ 				if (plane)
+ 					height /= 2;
+@@ -1148,7 +1164,8 @@ static void add_in_dtd(struct vpe_ctx *ctx, int port)
+ 	frame_width = q_data->c_rect.width;
+ 	frame_height = q_data->c_rect.height;
+ 
+-	if (p_data->vb_part && fmt->fourcc == V4L2_PIX_FMT_NV12)
++	if (p_data->vb_part && (fmt->fourcc == V4L2_PIX_FMT_NV12 ||
++				fmt->fourcc == V4L2_PIX_FMT_NV21))
  		frame_height /= 2;
  
--	vpdma_add_in_dtd(&ctx->desc_list, q_data->width,
--			 q_data->bytesperline[VPE_LUMA], &q_data->c_rect,
--		vpdma_fmt, dma_addr, p_data->channel, field, flags, frame_width,
--		frame_height, 0, 0);
-+	vpdma_add_in_dtd(&ctx->desc_list, q_data->width, stride,
-+			 &q_data->c_rect, vpdma_fmt, dma_addr,
-+			 p_data->channel, field, flags, frame_width,
-+			 frame_height, 0, 0);
- }
- 
- /*
+ 	vpdma_add_in_dtd(&ctx->desc_list, q_data->width, stride,
 -- 
 2.17.1
 
