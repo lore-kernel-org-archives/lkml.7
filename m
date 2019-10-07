@@ -2,121 +2,328 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B6B8C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED37ECE58E
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7279B2133F
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:17:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pbacVSdy"
+	by mail.kernel.org (Postfix) with ESMTP id 0456420867
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:17:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570483025;
+	bh=7nj9uQY6WqAuYiCgaynFxhnaYKExae7ZbQ7U1gc709g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=zOFTWfOrvtW28E2j11ZwibHHhTUjZM5swuYDG7fT5+KJ0UEQU4xgOicWcaiTip2QG
+	 J3m2xI6q+XWh7lne723z0AdhZo8/MJMROiKkgUGjtxIKIGYw3EhipbK+uuGZZkfpxZ
+	 sPvfAJSXeg3fZMmzUIKY/BsqA9Iv8tnCje3cwO5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729300AbfJGVRA (ORCPT
+        id S1729426AbfJGVRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 17:17:00 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55009 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728330AbfJGVQ7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 17:16:59 -0400
-Received: by mail-wm1-f65.google.com with SMTP id p7so919214wmp.4;
-        Mon, 07 Oct 2019 14:16:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=r1Ds32p5O4ZcmTgQVgBnVXrwuxhYvcTzmMcSF3UJbRo=;
-        b=pbacVSdys0sLAittjH0pybL66qLXh6pGBO12S3ky7p4gVpkjbCMlX/rcLQGzII8A/1
-         q6wwsUbyYzohVk6/46fAIvyrXagObWvJUEQCWzNbKaCX3ubHaQba8eMQsputPLQ4xe8p
-         MzSkcNRdMaeOJKXiQu6gb8FaJRuKYZtmAQLMU/cV5I2Ac0lWGgtci7fxYNti8VrPba7I
-         bd003rqx7Wo3dq8wV6MWhU09yQU88XubqLmX59Xj3i+tRMp4glmW3mBt/PN6NgTdJfmC
-         /QRgRfgsDCPIkbSRTXOWPF0kdvudgL3J/cNQf/okrN9yVl2SeUFS1jLMpjIJlUHkdhvb
-         FI3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=r1Ds32p5O4ZcmTgQVgBnVXrwuxhYvcTzmMcSF3UJbRo=;
-        b=KOXYr+woaqUi95jj2XUMhNuJZe+DNWe/IZOpTF/78Dw40vBaa6lAHkuhVqHf4SnlM/
-         0hDcGwczGvkEFXJmLNG5663SoFZ7DwCRE1iajPOiO6R2whDyjQGm1GPRYBX1YPVgxrTl
-         OqJV1Cdhl4GVWyO7lJoo6o/oI/UxWmdQAupuQAhjuSzXYV32SJBWAtbL6wr5EeDQShqp
-         5FLJKzuj1D8C2/gRwt44QAQoxFnYuzMQfKvMX93LEe2CGiZXEQ69xd8vhlgKFL76TmH3
-         mQqQgQDZNMecRfRo9+11A+Ouj0RQDkU7m4mlU611vAFyWSOp//TFVHBM/f1gZuce2BbV
-         o3kQ==
-X-Gm-Message-State: APjAAAXF6YKfQevNyc6x1g0NC3WJQwkvErE3X548gbrR1GdJJX2WGUel
-        +yUzRG2chLbtWTr+ONRMsZE=
-X-Google-Smtp-Source: APXvYqxyivR8RyXxX3tcMgK5BYcWUcd9CTctKbWKKBO62erx5rad+Y21F+bpUo63vmbXA23tsKhW7g==
-X-Received: by 2002:a05:600c:1009:: with SMTP id c9mr933903wmc.64.1570483018061;
-        Mon, 07 Oct 2019 14:16:58 -0700 (PDT)
-Received: from localhost.localdomain ([109.126.133.195])
-        by smtp.gmail.com with ESMTPSA id v8sm22227375wra.79.2019.10.07.14.16.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2019 14:16:57 -0700 (PDT)
-From:   "Pavel Begunkov (Silence)" <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Pavel Begunkov <asml.silence@gmail.com>
-Subject: [PATCH] blk-stat: Optimise blk_stat_add()
-Date:   Tue,  8 Oct 2019 00:16:51 +0300
-Message-Id: <39dd33cc6f0264b2ec2f79f1dfe21466c2180851.1570482929.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Mon, 7 Oct 2019 17:17:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32834 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728330AbfJGVRD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 17:17:03 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0966A20867;
+        Mon,  7 Oct 2019 21:17:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570483021;
+        bh=7nj9uQY6WqAuYiCgaynFxhnaYKExae7ZbQ7U1gc709g=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=NakiZhnu9dkcHeFbYC0TI933n5v7qzbrkt+BAZqMDFFIXxamIrH+o8rKz8jKqmMGu
+         5Z9kzlmzp1UEU0j3iPgmfFpJiVYXLH76pVgV/Up7L+bPkoPKOyCinpNfJaOGPiENmk
+         zWk7rCfuJsGe6vw//JMtnGexU/CCLbO1RlHuKyWA=
+Date:   Mon, 7 Oct 2019 22:16:57 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 02/10] iio: imu: adis: add unlocked read/write function
+ versions
+Message-ID: <20191007221649.4fb1ee25@archlinux>
+In-Reply-To: <20191006101201.051f9249@archlinux>
+References: <20190926111812.15957-1-alexandru.ardelean@analog.com>
+        <20190926111812.15957-3-alexandru.ardelean@analog.com>
+        <20191006101201.051f9249@archlinux>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Begunkov <asml.silence@gmail.com>
+On Sun, 6 Oct 2019 10:12:01 +0100
+Jonathan Cameron <jic23@kernel.org> wrote:
 
-blk_stat_add() calls {get,put}_cpu_ptr() in a loop, which entails
-overhead of disabling/enabling preemption. The loop is under RCU
-(i.e.short) anyway, so do get_cpu() in advance.
+> On Thu, 26 Sep 2019 14:18:04 +0300
+> Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+> 
+> > This will allow more flexible control to group reads & writes into a single
+> > lock (particularly the state_lock).
+> > 
+> > The end-goal is to remove the indio_dev->mlock usage, and the simplest fix
+> > would have been to just add another lock, which would not be a good idea on
+> > the long-run.
+> > 
+> > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>  
+> Applied to the togreg branch of iio.git and pushed out as testing etc.
+> 
+> Jonathan
+> 
+0-day found a potential issue (kind of) in the read functions.
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- block/blk-stat.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+> > ---
+> >  drivers/iio/imu/adis.c       |  34 +++++------
+> >  include/linux/iio/imu/adis.h | 114 ++++++++++++++++++++++++++++++++++-
+> >  2 files changed, 128 insertions(+), 20 deletions(-)
+> > 
+> > diff --git a/drivers/iio/imu/adis.c b/drivers/iio/imu/adis.c
+> > index 3c2d896e3a96..4f3be011c898 100644
+> > --- a/drivers/iio/imu/adis.c
+> > +++ b/drivers/iio/imu/adis.c
+> > @@ -26,7 +26,14 @@
+> >  #define ADIS_MSC_CTRL_DATA_RDY_DIO2	BIT(0)
+> >  #define ADIS_GLOB_CMD_SW_RESET		BIT(7)
+> >  
+> > -int adis_write_reg(struct adis *adis, unsigned int reg,
+> > +/**
+> > + * __adis_write_reg() - write N bytes to register (unlocked version)
+> > + * @adis: The adis device
+> > + * @reg: The address of the lower of the two registers
+> > + * @value: The value to write to device (up to 4 bytes)
+> > + * @size: The size of the @value (in bytes)
+> > + */
+> > +int __adis_write_reg(struct adis *adis, unsigned int reg,
+> >  	unsigned int value, unsigned int size)
+> >  {
+> >  	unsigned int page = reg / ADIS_PAGE_SIZE;
+> > @@ -70,8 +77,6 @@ int adis_write_reg(struct adis *adis, unsigned int reg,
+> >  		},
+> >  	};
+> >  
+> > -	mutex_lock(&adis->state_lock);
+> > -
+> >  	spi_message_init(&msg);
+> >  
+> >  	if (adis->current_page != page) {
+> > @@ -96,8 +101,7 @@ int adis_write_reg(struct adis *adis, unsigned int reg,
+> >  		adis->tx[3] = value & 0xff;
+> >  		break;
+> >  	default:
+> > -		ret = -EINVAL;
+> > -		goto out_unlock;
+> > +		return -EINVAL;
+> >  	}
+> >  
+> >  	xfers[size].cs_change = 0;
+> > @@ -113,20 +117,18 @@ int adis_write_reg(struct adis *adis, unsigned int reg,
+> >  		adis->current_page = page;
+> >  	}
+> >  
+> > -out_unlock:
+> > -	mutex_unlock(&adis->state_lock);
+> > -
+> >  	return ret;
+> >  }
+> > -EXPORT_SYMBOL_GPL(adis_write_reg);
+> > +EXPORT_SYMBOL_GPL(__adis_write_reg);
+> >  
+> >  /**
+> > - * adis_read_reg() - read 2 bytes from a 16-bit register
+> > + * __adis_read_reg() - read N bytes from register (unlocked version)
+> >   * @adis: The adis device
+> >   * @reg: The address of the lower of the two registers
+> >   * @val: The value read back from the device
+> > + * @size: The size of the @val buffer
+> >   */
+> > -int adis_read_reg(struct adis *adis, unsigned int reg,
+> > +int __adis_read_reg(struct adis *adis, unsigned int reg,
+> >  	unsigned int *val, unsigned int size)
+> >  {
+> >  	unsigned int page = reg / ADIS_PAGE_SIZE;
+> > @@ -188,15 +190,14 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
+> >  		spi_message_add_tail(&xfers[3], &msg);
+> >  		break;
+> >  	default:
+> > -		ret = -EINVAL;
+> > -		goto out_unlock;
+> > +		return -EINVAL;
+> >  	}
+> >  
+> >  	ret = spi_sync(adis->spi, &msg);
+> >  	if (ret) {
+> >  		dev_err(&adis->spi->dev, "Failed to read register 0x%02X: %d\n",
+> >  				reg, ret);
+> > -		goto out_unlock;
+> > +		return ret;
+> >  	} else {
+> >  		adis->current_page = page;
+> >  	}
+> > @@ -210,12 +211,9 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
+> >  		break;
+> >  	}
+> >  
+> > -out_unlock:
+> > -	mutex_unlock(&adis->state_lock);
+> > -
+> >  	return ret;
+> >  }
+> > -EXPORT_SYMBOL_GPL(adis_read_reg);
+> > +EXPORT_SYMBOL_GPL(__adis_read_reg);
+> >  
+> >  #ifdef CONFIG_DEBUG_FS
+> >  
+> > diff --git a/include/linux/iio/imu/adis.h b/include/linux/iio/imu/adis.h
+> > index 3ed5eceaac2d..3a028c40e04e 100644
+> > --- a/include/linux/iio/imu/adis.h
+> > +++ b/include/linux/iio/imu/adis.h
+> > @@ -75,11 +75,121 @@ int adis_init(struct adis *adis, struct iio_dev *indio_dev,
+> >  	struct spi_device *spi, const struct adis_data *data);
+> >  int adis_reset(struct adis *adis);
+> >  
+> > -int adis_write_reg(struct adis *adis, unsigned int reg,
+> > +int __adis_write_reg(struct adis *adis, unsigned int reg,
+> >  	unsigned int val, unsigned int size);
+> > -int adis_read_reg(struct adis *adis, unsigned int reg,
+> > +int __adis_read_reg(struct adis *adis, unsigned int reg,
+> >  	unsigned int *val, unsigned int size);
+> >  
+> > +/**
+> > + * __adis_write_reg_8() - Write single byte to a register (unlocked version)
+> > + * @adis: The adis device
+> > + * @reg: The address of the register to be written
+> > + * @value: The value to write
+> > + */
+> > +static inline int __adis_write_reg_8(struct adis *adis, unsigned int reg,
+> > +	uint8_t val)
+> > +{
+> > +	return __adis_write_reg(adis, reg, val, 1);
+> > +}
+> > +
+> > +/**
+> > + * __adis_write_reg_16() - Write 2 bytes to a pair of registers (unlocked version)
+> > + * @adis: The adis device
+> > + * @reg: The address of the lower of the two registers
+> > + * @value: Value to be written
+> > + */
+> > +static inline int __adis_write_reg_16(struct adis *adis, unsigned int reg,
+> > +	uint16_t val)
+> > +{
+> > +	return __adis_write_reg(adis, reg, val, 2);
+> > +}
+> > +
+> > +/**
+> > + * __adis_write_reg_32() - write 4 bytes to four registers (unlocked version)
+> > + * @adis: The adis device
+> > + * @reg: The address of the lower of the four register
+> > + * @value: Value to be written
+> > + */
+> > +static inline int __adis_write_reg_32(struct adis *adis, unsigned int reg,
+> > +	uint32_t val)
+> > +{
+> > +	return __adis_write_reg(adis, reg, val, 4);
+> > +}
+> > +
+> > +/**
+> > + * __adis_read_reg_16() - read 2 bytes from a 16-bit register (unlocked version)
+> > + * @adis: The adis device
+> > + * @reg: The address of the lower of the two registers
+> > + * @val: The value read back from the device
+> > + */
+> > +static inline int __adis_read_reg_16(struct adis *adis, unsigned int reg,
+> > +	uint16_t *val)
+> > +{
+> > +	unsigned int tmp;
+> > +	int ret;
+> > +
+> > +	ret = __adis_read_reg(adis, reg, &tmp, 2);
+Zero day isn't happy that this can use tmp without it actually being set in the
+__adis_read_reg.
 
-diff --git a/block/blk-stat.c b/block/blk-stat.c
-index d892ad2cb938..4239954b0bce 100644
---- a/block/blk-stat.c
-+++ b/block/blk-stat.c
-@@ -75,7 +75,7 @@ void blk_stat_add(struct request *rq, u64 now)
- 	struct request_queue *q = rq->q;
- 	struct blk_stat_callback *cb;
- 	struct blk_rq_stat_staging *stat;
--	int bucket;
-+	int bucket, cpu;
- 	u64 value;
- 
- 	value = (now >= rq->io_start_time_ns) ? now - rq->io_start_time_ns : 0;
-@@ -83,6 +83,7 @@ void blk_stat_add(struct request *rq, u64 now)
- 	blk_throtl_stat_add(rq, value);
- 
- 	rcu_read_lock();
-+	cpu = get_cpu();
- 	list_for_each_entry_rcu(cb, &q->stats->callbacks, list) {
- 		if (!blk_stat_is_active(cb))
- 			continue;
-@@ -91,10 +92,10 @@ void blk_stat_add(struct request *rq, u64 now)
- 		if (bucket < 0)
- 			continue;
- 
--		stat = &get_cpu_ptr(cb->cpu_stat)[bucket];
-+		stat = &per_cpu_ptr(cb->cpu_stat, cpu)[bucket];
- 		blk_rq_stat_add(stat, value);
--		put_cpu_ptr(cb->cpu_stat);
- 	}
-+	put_cpu();
- 	rcu_read_unlock();
- }
- 
--- 
-2.23.0
+I've added
+	if (ret)
+		return ret;
+> > +	*val = tmp;
+> > +
+> > +	return ret;
+and changed this to return 0;
+
+Same in the 32bit case below.
+
+Hmm. There are quite a few sparse warnings in the adis16400 if anyone fancies
+cleaning them up ;)
+
+Thanks,
+
+Jonathan
+
+> > +}
+> > +
+> > +/**
+> > + * __adis_read_reg_32() - read 4 bytes from a 32-bit register (unlocked version)
+> > + * @adis: The adis device
+> > + * @reg: The address of the lower of the two registers
+> > + * @val: The value read back from the device
+> > + */
+> > +static inline int __adis_read_reg_32(struct adis *adis, unsigned int reg,
+> > +	uint32_t *val)
+> > +{
+> > +	unsigned int tmp;
+> > +	int ret;
+> > +
+> > +	ret = __adis_read_reg(adis, reg, &tmp, 4);
+> > +	*val = tmp;
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +/**
+> > + * adis_write_reg() - write N bytes to register
+> > + * @adis: The adis device
+> > + * @reg: The address of the lower of the two registers
+> > + * @value: The value to write to device (up to 4 bytes)
+> > + * @size: The size of the @value (in bytes)
+> > + */
+> > +static inline int adis_write_reg(struct adis *adis, unsigned int reg,
+> > +	unsigned int val, unsigned int size)
+> > +{
+> > +	int ret;
+> > +
+> > +	mutex_lock(&adis->state_lock);
+> > +	ret = __adis_write_reg(adis, reg, val, size);
+> > +	mutex_unlock(&adis->state_lock);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +/**
+> > + * adis_read_reg() - read N bytes from register
+> > + * @adis: The adis device
+> > + * @reg: The address of the lower of the two registers
+> > + * @val: The value read back from the device
+> > + * @size: The size of the @val buffer
+> > + */
+> > +static int adis_read_reg(struct adis *adis, unsigned int reg,
+> > +	unsigned int *val, unsigned int size)
+> > +{
+> > +	int ret;
+> > +
+> > +	mutex_lock(&adis->state_lock);
+> > +	ret = __adis_read_reg(adis, reg, val, size);
+> > +	mutex_unlock(&adis->state_lock);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> >  /**
+> >   * adis_write_reg_8() - Write single byte to a register
+> >   * @adis: The adis device  
+> 
 
