@@ -2,110 +2,101 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE36EC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C33C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DEE3218AC
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:08:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="u5bgzcz1"
+	by mail.kernel.org (Postfix) with ESMTP id 03C5320867
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:08:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbfJGMIF (ORCPT
+        id S1728010AbfJGMIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 08:08:05 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48912 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727467AbfJGMIF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 08:08:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=rqI/O0G3FNLk7QEjU1ZgKHZVA7miIjxPx4qhFuLG5ms=; b=u5bgzcz1Yyc9JonlH763GgK++
-        gPpG9IciMIzvfFK8WjWg8lCuH2YmrajM2OjNY6JlDK6OF5X59m3L8w4xpcgThuuicVmvyeUmgfXxw
-        ZG9NuTab8+l9LDfq7xhg4LuzjmYMDKHQW4/Tlj92oDEXhg+IqTFtzRLhR2Dh1nuKE3anIM2u2CAX4
-        b5AVWg5HYWnW+CzRyaHePKObIgxiZhbsFzHAHUxmPcB+txRrC/1KrY8D2FqjgdXugEbyp3xVB9U1K
-        7GjElNEguNtJNKhnjwYXnhSa7DccCaiOnHnp5+9+BA8ER3K3YTwDVFc3lCZmqT9BDCm58RSRCos0q
-        ezk4eKsJw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iHRny-00050E-Ua; Mon, 07 Oct 2019 12:07:59 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0661A305E32;
-        Mon,  7 Oct 2019 14:07:06 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E586F20247CA6; Mon,  7 Oct 2019 14:07:56 +0200 (CEST)
-Date:   Mon, 7 Oct 2019 14:07:56 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, hjl.tools@gmail.com
-Subject: Re: [RFC][PATCH 0/9] Variable size jump_label support
-Message-ID: <20191007120756.GE2311@hirez.programming.kicks-ass.net>
-References: <20191007090225.44108711.6@infradead.org>
- <20191007084443.79370128.1@infradead.org>
+        Mon, 7 Oct 2019 08:08:24 -0400
+Received: from mga11.intel.com ([192.55.52.93]:6166 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727467AbfJGMIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 08:08:24 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Oct 2019 05:08:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,268,1566889200"; 
+   d="scan'208";a="276771661"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.66]) ([10.237.72.66])
+  by orsmga001.jf.intel.com with ESMTP; 07 Oct 2019 05:08:21 -0700
+Subject: Re: [PATCH 5/5] perf record: Put a copy of kcore into the perf.data
+ directory
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-kernel@vger.kernel.org
+References: <20191004083121.12182-1-adrian.hunter@intel.com>
+ <20191004083121.12182-6-adrian.hunter@intel.com>
+ <20191007112034.GE6919@krava>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <2298237b-f218-18d9-4fb5-33fc0d3a4664@intel.com>
+Date:   Mon, 7 Oct 2019 15:06:59 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191007084443.79370128.1@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191007112034.GE6919@krava>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-In the failed thread Ingo posted:
-
->On Mon, Oct 07, 2019 at 01:26:06PM +0200, Ingo Molnar wrote:
-> * Peter Zijlstra <peterz@infradead.org> wrote:
+On 7/10/19 2:20 PM, Jiri Olsa wrote:
+> On Fri, Oct 04, 2019 at 11:31:21AM +0300, Adrian Hunter wrote:
 > 
-> > These here patches are something I've been poking at for a while, 
-> > enabling jump_label to use 2 byte jumps/nops.
-> > 
-> > It _almost_ works :-/
-> > 
-> > That is, you can build some kernels with it (x86_64-defconfig for 
-> > example works just fine).
-> > 
-> > The problem comes when GCC generates a branch into another section, 
-> > mostly .text.unlikely. At that point GAS just gives up and throws a fit 
-> > (more details in the last patch).
-> > 
-> > Aside from anyone coming up with a really clever GAS trick, I don't see 
-> > how we can do this other than:
+> SNIP
 > 
-> >  - use 'jmp' and get objtool to rewrite the text. Steven has earlier proposed
-> >    something like that (using recordmcount) and Linus hated that.
+>> +}
+>> +
+>>  static int record__mmap_evlist(struct record *rec,
+>>  			       struct evlist *evlist)
+>>  {
+>> @@ -1383,6 +1417,12 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+>>  	session->header.env.comp_type  = PERF_COMP_ZSTD;
+>>  	session->header.env.comp_level = rec->opts.comp_level;
+>>  
+>> +	if (rec->opts.kcore &&
+>> +	    !record__kcore_readable(&session->machines.host)) {
+>> +		pr_err("ERROR: kcore is not readable.\n");
+>> +		return -1;
+>> +	}
+>> +
 > 
-> As long as GCC+GAS correctly generates a 2-byte or 5-byte JMP depending 
-> on the target distance, the objtool solution should work fine, shouldn't 
-> it?
+> is there any reason why this change is not merged with the change below?
+
+It seemed better to do the validation before opening all the events.
+
 > 
-> I can see the recordmcount solution sucking, it would depend on early 
-> kernel patchery. But build time patchery is something we already depend 
-> on, so assuming some objtool catastrophy it's a more robust solution, 
-> isn't it?
-
-IIRC the recordmcount variant from Steve was also rewriting JMP8 to NOP2
-at build time.
-
-I dug this here link out of my IRC logs:
-
-  https://lore.kernel.org/lkml/1318007374.4729.58.camel@gandalf.stny.rr.com/
-
-Looking at that, part of the reason might've been running yet another
-tool, instead of having one tool do everything.
+> 
+>>  	record__init_features(rec);
+>>  
+>>  	if (rec->opts.use_clockid && rec->opts.clockid_res_ns)
+>> @@ -1414,6 +1454,14 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+>>  	}
+>>  	session->header.env.comp_mmap_len = session->evlist->core.mmap_len;
+>>  
+>> +	if (rec->opts.kcore) {
+>> +		err = record__kcore_copy(&session->machines.host, data);
+>> +		if (err) {
+>> +			pr_err("ERROR: Failed to copy kcore\n");
+>> +			goto out_child;
+>> +		}
+>> +	}
+>> +
+> 
+> thanks,
+> jirka
+> 
 
