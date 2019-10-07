@@ -2,186 +2,238 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C027CC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 06:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4726AC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 06:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 523EA2133F
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 06:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1279620659
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 06:46:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="MzJWAaYm";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="K72LJ8es"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FEpiYSxm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727212AbfJGGkC (ORCPT
+        id S1727220AbfJGGqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 02:40:02 -0400
-Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:38980 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726984AbfJGGkB (ORCPT
+        Mon, 7 Oct 2019 02:46:36 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35936 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727028AbfJGGqf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 02:40:01 -0400
-Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
-        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x976d4Bg020112;
-        Sun, 6 Oct 2019 23:39:51 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type; s=proofpoint;
- bh=17s99B+fBraCSnfR0iDu2qrFmYxWAWAoqS5uKkZGVCc=;
- b=MzJWAaYm/oBJvn8gtPR6F03qGe6AGutJjr4VzYxrHR8uMbwAomtomhgKPBRAPUiVTzpl
- c66Mtr3iU/o2nLkQr3f+GSPG/X5uUKGXiqBC1sHT9fHK/mHj4QPz/HeMcFMOSiWh33YA
- 48/rZlpPPxKpPDMEE5aunV4WmIAr6daa0oLNSWRNAJBvRGjXVJvULG0Z5amn12Te3nAz
- GUBAtjc2yByFlmVFuzlqyLYSL3NGrBtxE/GLCjGpC3VWvGZCEC49uVHwbeYDYzx91LuG
- 5giXYNt1d14eO+gAL5gieCaTCtyJGqFg14eJzq/4j9qT9IOLzP2FTWtlf2sPf+hxYApF zA== 
-Received: from nam04-sn1-obe.outbound.protection.outlook.com (mail-sn1nam04lp2053.outbound.protection.outlook.com [104.47.44.53])
-        by mx0b-0014ca01.pphosted.com with ESMTP id 2vepry5dq8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 06 Oct 2019 23:39:51 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Gg10/8e8DvxrEIpzWmUispG8XQuYkRmxR+XOtN3KAsGumTVmqrrvb24RM2ykMz8gZVzCUKQted5FY5U9A90KplrabRDlEr/gzTtoNdKxH6nH7i2rOE2vyoeOgfPOUrx3AfHb7v0BI+drU3BV/eaZ4WHHMZ3HcyQ53OntG7YTH+1i3aovzSRLzlc2zYuXtehUCrYTh7nOnCJBJedpuNaUG5WsQBL3Ll8Pl75dPE5dRz/vAzYFraQp79dJY6vCelwY4vzx+OwxBJAHbiks9BAPcAXXRuBGy/tx7JYdb1Xh1I62lwR9oKGXCjLTEIrH/GybaMrb3b3GjB7+ZpCQ+l9SOQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=17s99B+fBraCSnfR0iDu2qrFmYxWAWAoqS5uKkZGVCc=;
- b=aqBSWj8jFKmd0Nl8U+fR+YiNaxusImReTHBT2+bMbPF3BUhgA5Rxeu3DZzNmouro3ePaixn+ZBWVhseP3wsUF3Yv9GQls0Vo/0/4vBbocollq2Cm2nWfscg6bbnydMrkxSDUpgvLWt3+3Y2ErlLm6W4N45PAV4yYSw19PH7OUVV6AOcPAViW83ZSIT0SYjv9sdvT4mIkbkHJmBr55cfT+VUPA1S/zz7Qg79SWwX1v9y0QhItNMOHbG2yZRs58CMl1h12g/sXHd9cvKdzSOCSXUtlvLtZOGg3lTKCWdVsGiprqBHwIHdMyOF/IdaZZQ7Rhg7RjClXJCWO1s6lEwe8tQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
- is 158.140.1.28) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=cadence.com;
- dmarc=fail (p=none sp=none pct=100) action=none header.from=cadence.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=17s99B+fBraCSnfR0iDu2qrFmYxWAWAoqS5uKkZGVCc=;
- b=K72LJ8eszKhUeAEKCdTlWt6Odu7aI2ViNdq7h1+j03z/xR1ONThmvwTujbx4j+sq+J/WSRICuI5mTukMTfaGxZNpjhO1xZe8QDK3rgM6InG5DmLx3V2C/CHUFDR2Zy7wGffJGtSofpCqKX5DQl0rbx5jytQV96cewb7WQFUbpuc=
-Received: from BYAPR07CA0064.namprd07.prod.outlook.com (2603:10b6:a03:60::41)
- by DM5PR0701MB3717.namprd07.prod.outlook.com (2603:10b6:4:7f::38) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2327.24; Mon, 7 Oct
- 2019 06:39:49 +0000
-Received: from BY2NAM05FT024.eop-nam05.prod.protection.outlook.com
- (2a01:111:f400:7e52::206) by BYAPR07CA0064.outlook.office365.com
- (2603:10b6:a03:60::41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2220.16 via Frontend
- Transport; Mon, 7 Oct 2019 06:39:49 +0000
-Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
- cadence.com discourages use of 158.140.1.28 as permitted sender)
-Received: from sjmaillnx2.cadence.com (158.140.1.28) by
- BY2NAM05FT024.mail.protection.outlook.com (10.152.100.161) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.8 via Frontend Transport; Mon, 7 Oct 2019 06:39:48 +0000
-Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
-        by sjmaillnx2.cadence.com (8.14.4/8.14.4) with ESMTP id x976dk14030397
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Sun, 6 Oct 2019 23:39:48 -0700
-X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
-Received: from maileu3.global.cadence.com (10.160.88.99) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3; Mon, 7 Oct 2019 08:39:46 +0200
-Received: from lvlogina.cadence.com (10.165.176.102) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Mon, 7 Oct 2019 08:39:46 +0200
-Received: from lvlogina.cadence.com (localhost.localdomain [127.0.0.1])
-        by lvlogina.cadence.com (8.14.4/8.14.4) with ESMTP id x976djqA027699;
-        Mon, 7 Oct 2019 07:39:45 +0100
-Received: (from pawell@localhost)
-        by lvlogina.cadence.com (8.14.4/8.14.4/Submit) id x976dimq027688;
-        Mon, 7 Oct 2019 07:39:44 +0100
-From:   Pawel Laszczak <pawell@cadence.com>
-To:     <felipe.balbi@linux.intel.com>
-CC:     <gregkh@linuxfoundation.org>, <linux-usb@vger.kernel.org>,
-        <rogerq@ti.com>, <linux-kernel@vger.kernel.org>,
-        <jbergsagel@ti.com>, <nsekhar@ti.com>, <nm@ti.com>,
-        <sureshp@cadence.com>, <peter.chen@nxp.com>, <kurahul@cadence.com>,
-        Pawel Laszczak <pawell@cadence.com>
-Subject: [PATCH] usb:cdns3: Fix for CV CH9 running with g_zero driver.
-Date:   Mon, 7 Oct 2019 07:39:11 +0100
-Message-ID: <1570430355-26118-1-git-send-email-pawell@cadence.com>
-X-Mailer: git-send-email 1.7.11.2
+        Mon, 7 Oct 2019 02:46:35 -0400
+Received: by mail-wr1-f65.google.com with SMTP id y19so13750011wrd.3
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 23:46:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GUI4psf4X65BdJQOo61gSGp6sUtBmnqbzSZ33CNSXV8=;
+        b=FEpiYSxmONhoUt5laP56BsF0fWG4q4s21EuqxETZc3ZdfjqGbuupdtmD6npjyF59GU
+         KxpgfXwe4GMDKQV3KIili9ek7WnqTg9w2nbr+snk0+BLD9uQUbi2kFPkL4LGrUYQP1NC
+         MS9paPaiJSAlSJZftOarPjnn/HFBagRdj594dD8P8uWUyz1OiaiYK11/p/lncRWiIh62
+         IVsQ6sJZ17dRhCiyWBSk9+s6YbG7iP/6CBI7+k1H6kGqYJeUdZodKslqs3LpUMBA38G+
+         RE2M2f5uAzqKewgljtMxpW7MqJofQ5lYrjhXtqbrg4F6fYBoM/nzN4mmVVkfzxorwEHR
+         73Vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GUI4psf4X65BdJQOo61gSGp6sUtBmnqbzSZ33CNSXV8=;
+        b=fPX6CEoA9itsCn+PJoEVTlEPn0CCUvti3IboqRkDS5ZGyoFRmoZhK1iaJ1O0OwpE77
+         C8YNPJMdClIGiQfOKkeUMAa3EinKEYRkKd1HOKX9pBlgkX6ktcIy/pPpp8B24WRvv9IE
+         9JLCiDfdnMDYpXl2Qe9fYFXMob+qHfCnZPahmFELHlSvFtSCRn6AUq+MLBVptCHeEOge
+         DPr2tc7XfGUEPqiHZTKiMkMZx7qOMKwu4N1ajZXXiQxATfBfrB3g+5QbxsIRcTGt5WNt
+         yU8W3Bib9bGFL6KJnza1KicCv9bXiEuIcd6StqWH46NUB0G4haF0yc9IBp9a81r3Bkgw
+         0XkQ==
+X-Gm-Message-State: APjAAAXfGQCN3bF5z8hUCSBRGbuDH0mqak8teM645BZ4NJmQDOZlOJx0
+        czhqcRFvMbI5I/BjLiDhdBdimA==
+X-Google-Smtp-Source: APXvYqyhWWW0aGEVKCb6oxvqfa/lZVGv/4trvdH+LsZPb816Q763laeVFhXIxGAomICdDu4Y5QRy2Q==
+X-Received: by 2002:a5d:62c6:: with SMTP id o6mr20341346wrv.243.1570430792299;
+        Sun, 06 Oct 2019 23:46:32 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
+        by smtp.gmail.com with ESMTPSA id f143sm29345955wme.40.2019.10.06.23.46.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Oct 2019 23:46:31 -0700 (PDT)
+Date:   Mon, 7 Oct 2019 07:46:31 +0100
+From:   Matthias Maennich <maennich@google.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Martijn Coenen <maco@android.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-modules <linux-modules@vger.kernel.org>
+Subject: Re: [PATCH] depmod: create and use System.map.no_namespaces
+Message-ID: <20191007064631.GB142813@google.com>
+References: <20190917231031.81341-1-maennich@google.com>
+ <20191004095748.223119-1-maennich@google.com>
+ <CAKi4VALPF7r25SJ+9jazeRz612pv_4MmhjOsJ8aumW_JO29VvA@mail.gmail.com>
+ <CAK7LNAQ10xCm52PrgUvE=Z+d4BabuATSRpw+kL9Xm=O-ik_Duw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-OrganizationHeadersPreserved: maileu3.global.cadence.com
-X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:158.140.1.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(376002)(136003)(39860400002)(36092001)(199004)(189003)(70586007)(47776003)(336012)(486006)(2616005)(7636002)(305945005)(26005)(186003)(86362001)(426003)(2906002)(126002)(476003)(316002)(42186006)(50466002)(50226002)(54906003)(16586007)(70206006)(107886003)(246002)(14444005)(2351001)(48376002)(76130400001)(6916009)(8936002)(87636003)(5660300002)(478600001)(6666004)(26826003)(8676002)(356004)(36756003)(4326008)(51416003)(4720700003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR0701MB3717;H:sjmaillnx2.cadence.com;FPR:;SPF:SoftFail;LANG:en;PTR:corp.Cadence.COM;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 0d6845d6-c2c4-4ec7-e2dd-08d74af1265f
-X-MS-TrafficTypeDiagnostic: DM5PR0701MB3717:
-X-Microsoft-Antispam-PRVS: <DM5PR0701MB37178601089D6D6BD7C2A52EDD9B0@DM5PR0701MB3717.namprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2276;
-X-Forefront-PRVS: 01834E39B7
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: qVUFTcy+Az38/BgOrQ804GtA2EBR/zMHOCscBJyclEhNbXZa08/fu4LSQNJVVgYCrHI0IeF6LJjHXAUfAyoUhw4OG8x1Wlxznmr6vZs74y07uJluvl4x6TX6cBGsBfMJX8n+Aln9MdTaw1U/uitJPCMvMvD+ynFkII7xNAM4UTwti5VJ82FdZZ5d5H2mTJGFlUDnoDoRIBHaMEtV8uMI0cFZb8topRkw3O9Y2dwMNm+qM9SHq4wFCmMUIFL35Gqn8ZzuyRcL9Ddy81lGjOu5EfByKp7A4DiQE5R/aFUvoANVYuT0xJh9sP136U+apGwqA7dEJtpR9+v6Q0wJHpc8SXKQhITIQ153Z9KUoy7muyx3zS70e6KTpK5bdqPO7mmoiez4PPpCQcyvAMbMtmNm3ae86dJaSSBo23NHxTj4xqQ=
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Oct 2019 06:39:48.7326
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0d6845d6-c2c4-4ec7-e2dd-08d74af1265f
-X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[158.140.1.28];Helo=[sjmaillnx2.cadence.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR0701MB3717
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-07_01:2019-10-03,2019-10-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 malwarescore=0
- adultscore=0 impostorscore=0 clxscore=1011 priorityscore=1501 mlxscore=0
- lowpriorityscore=0 bulkscore=0 mlxlogscore=867 phishscore=0 suspectscore=1
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1910070070
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAK7LNAQ10xCm52PrgUvE=Z+d4BabuATSRpw+kL9Xm=O-ik_Duw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Patch fixes issue with Halt Endnpoint Test observed during using g_zero
-driver as DUT. Bug occurred only on some testing board.
+Hi!
 
-Endpoint can defer transition to Halted state if endpoint has pending
-requests.
-Patch add additional condition that allows to return correct endpoint
-status during Get Endpoint Status request even if the halting endpoint
-is in progress.
+On Sat, Oct 05, 2019 at 04:53:56PM +0900, Masahiro Yamada wrote:
+>On Sat, Oct 5, 2019 at 3:25 AM Lucas De Marchi
+><lucas.de.marchi@gmail.com> wrote:
+>>
+>> On Fri, Oct 4, 2019 at 2:57 AM Matthias Maennich <maennich@google.com> wrote:
+>> >
+>> > depmod in its current version is not aware of symbol namespace in
+>> > ksymtab entries introduced with 8651ec01daed ("module: add support for
+>> > symbol namespaces."). They have the form
+>> >
+>> >   __ksymtab_NAMESPACE.symbol_name
+>> >
+>> > A fix for kmod's depmod has been proposed [1]. In order to support older
+>> > versions of depmod as well, create a System.map.no_namespaces during
+>> > scripts/depmod.sh that has the pre-namespaces format. That way users do
+>> > not immediately upgrade the userspace tool.
+>> >
+>> > [1] https://lore.kernel.org/linux-modules/20191004094136.166621-1-maennich@google.com/
+>> >
+>> > Reported-by: Stefan Wahren <stefan.wahren@i2se.com>
+>> > Fixes: 8651ec01daed ("module: add support for symbol namespaces.")
+>> > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+>> > Cc: Lucas De Marchi <lucas.de.marchi@gmail.com>
+>> > Cc: Jessica Yu <jeyu@kernel.org>
+>> > Cc: Martijn Coenen <maco@android.com>
+>> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> > Cc: linux-modules@vger.kernel.org
+>> > Signed-off-by: Matthias Maennich <maennich@google.com>
+>> > ---
+>> >
+>> > Please note this depends on the new ksymtab entry format proposed in
+>> > https://lore.kernel.org/lkml/20191003075826.7478-2-yamada.masahiro@socionext.com/
+>>
+>> I don't really agree with that thought, more below.
+>>
+>> >
+>> > That is likely to be merged soon as well as it fixes problems in 5.4-rc*, hence
+>> > this patch depends on it.
+>> >
+>> > Cheers,
+>> > Matthias
+>> >
+>> >  .gitignore        | 1 +
+>> >  scripts/depmod.sh | 8 +++++++-
+>> >  2 files changed, 8 insertions(+), 1 deletion(-)
+>> >
+>> > diff --git a/.gitignore b/.gitignore
+>> > index 70580bdd352c..5ed58a7cb433 100644
+>> > --- a/.gitignore
+>> > +++ b/.gitignore
+>> > @@ -59,6 +59,7 @@ modules.order
+>> >  /vmlinux-gdb.py
+>> >  /vmlinuz
+>> >  /System.map
+>> > +/System.map.no_namespaces
+>> >  /Module.markers
+>> >  /modules.builtin.modinfo
+>> >
+>> > diff --git a/scripts/depmod.sh b/scripts/depmod.sh
+>> > index e083bcae343f..602e1af072c7 100755
+>> > --- a/scripts/depmod.sh
+>> > +++ b/scripts/depmod.sh
+>> > @@ -39,7 +39,13 @@ if $depmod_hack_needed; then
+>> >         KERNELRELEASE=99.98.$KERNELRELEASE
+>> >  fi
+>> >
+>> > -set -- -ae -F System.map
+>> > +# Older versions of depmod do not support symbol namespaces in ksymtab entries,
+>> > +# hence create an alternative System.map with namespace patched out to use for
+>> > +# depmod. I.e. transform entries as follows:
+>> > +#    __ksymtab_NAMESPACE.symbol_name -> __ksymtab_symbol_name
+>> > +sed 's/__ksymtab_.*\./__ksymtab_/' System.map > System.map.no_namespaces
+>>
+>> So people with old kmod will have to know they need to pass
+>> System.map.no_namespaces rather than the usual
+>> System.map. Also, distros will need to be update to also copy the new
+>> file to the kernel package (or upgrade/patch kmod).
+>>
+>> I'd rather maintain the current format and fix the bug that patch is
+>> fixing. The namespace
+>> in the end IMO is just a small annoyance with a reason to  exist.
+>
+>I agree, this fix is bad.
+>We should not bother kmod or any tools.
+>And System.map.no_namespaces is a cheesy workaround.
 
-Reported-by: Rahul Kumar <kurahul@cadence.com>
-Signed-off-by: Rahul Kumar <kurahul@cadence.com>
-Signed-off-by: Pawel Laszczak <pawell@cadence.com>
-Fixes: 7733f6c32e36 ("usb: cdns3: Add Cadence USB3 DRD Driver")
----
- drivers/usb/cdns3/ep0.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+Thanks for the feedback!
 
-diff --git a/drivers/usb/cdns3/ep0.c b/drivers/usb/cdns3/ep0.c
-index 44f652e8b5a2..10ae03430f34 100644
---- a/drivers/usb/cdns3/ep0.c
-+++ b/drivers/usb/cdns3/ep0.c
-@@ -234,9 +234,11 @@ static int cdns3_req_ep0_set_address(struct cdns3_device *priv_dev,
- static int cdns3_req_ep0_get_status(struct cdns3_device *priv_dev,
- 				    struct usb_ctrlrequest *ctrl)
- {
-+	struct cdns3_endpoint *priv_ep;
- 	__le16 *response_pkt;
- 	u16 usb_status = 0;
- 	u32 recip;
-+	u8 index;
- 
- 	recip = ctrl->bRequestType & USB_RECIP_MASK;
- 
-@@ -262,9 +264,13 @@ static int cdns3_req_ep0_get_status(struct cdns3_device *priv_dev,
- 	case USB_RECIP_INTERFACE:
- 		return cdns3_ep0_delegate_req(priv_dev, ctrl);
- 	case USB_RECIP_ENDPOINT:
--		/* check if endpoint is stalled */
-+		index = cdns3_ep_addr_to_index(ctrl->wIndex);
-+		priv_ep = priv_dev->eps[index];
-+
-+		/* check if endpoint is stalled or stall is pending */
- 		cdns3_select_ep(priv_dev, ctrl->wIndex);
--		if (EP_STS_STALL(readl(&priv_dev->regs->ep_sts)))
-+		if (EP_STS_STALL(readl(&priv_dev->regs->ep_sts)) ||
-+		    (priv_ep->flags & EP_STALL_PENDING))
- 			usb_status =  BIT(USB_ENDPOINT_HALT);
- 		break;
- 	default:
--- 
-2.17.1
+Based on the discussion from last year about changing kmod/depmod for
+this change to the ksymtab entries,
+(https://lore.kernel.org/lkml/CAKi4VA+wvVxPxVSP6ruSR++TYvavKPNAQ5XhREF_9ZxeOKQirg@mail.gmail.com/),
+I assumed this approach would be acceptable. The workaround (yeah, it is
+a hack) is a way to mitigate the issue for people that can't update
+depmod so easily. System.map.no_namespaces was not intended to be part
+of any distribution, but rather used locally in depmod.sh. I could have
+made this more clear.
 
+>
+>BTW, I expressed my negative opinion in the review process
+>for the patch set. I am still not convinced with the
+>namespace feature, but anyway it was merged
+>(with poor review and test).
+>
+>
+>
+>Get back on track, probably the right fix would be to
+>stop using __ksymtab_<namespace>.<symbol>.
+>
+>It is not used for any purposes but passing
+><namespace> / <symbol> pairs to modpost.
+>
+>
+>For example, __kstrtabns_##sym points to
+>the namespace string, so it would be possible
+>to parse it from modpost?
+>
+>Then, asm("__ksymtab_" #ns NS_SEPARATOR #sym)
+>will go away.
+
+I will give this a try.
+
+Cheers,
+Matthias
+
+>
+>
+>Masahiro
+>
+>
+>
+>
+>> Lucas De Marchi
+>>
+>> > +
+>> > +set -- -ae -F System.map.no_namespaces
+>> >  if test -n "$INSTALL_MOD_PATH"; then
+>> >         set -- "$@" -b "$INSTALL_MOD_PATH"
+>> >  fi
+>> > --
+>> > 2.23.0.581.g78d2f28ef7-goog
+>> >
+>>
+>>
+>> --
+>> Lucas De Marchi
+>
+>
+>
+>-- 
+>Best Regards
+>Masahiro Yamada
