@@ -2,120 +2,169 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 489B2ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA83C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F194206BB
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:41:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570466488;
-	bh=9ZYOKLGLO7g0CL+0OB8r0GKTCiZx40o2Lg0nG1OxcTo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bF0SL+Cn0yUNm38eZ03f8IdnrDv9CBOsbKZbOHuUqDMTsQHh4e5TdV2wBoPbiesE9
-	 xVW09nvwF62xKDk3URl4P4qMwlyum0sSt3PmuRz1OIadQv2m7l2CHznIzc1oWoumd4
-	 tZly7ujRwNlQxY/N4A7A+YfTuJ+MxXlm7b6PAb84=
+	by mail.kernel.org (Postfix) with ESMTP id 47920206BB
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:41:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="MLzWT1os"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728792AbfJGQl0 (ORCPT
+        id S1728846AbfJGQlz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 12:41:26 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:39932 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727801AbfJGQl0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 12:41:26 -0400
-Received: by mail-lj1-f196.google.com with SMTP id y3so14424103ljj.6;
-        Mon, 07 Oct 2019 09:41:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jI/iLcOzPQTe2f97TrWx71MZt1CEPA+WREXnjknhy+c=;
-        b=eAHeAGQvB0yjKcC+675QO0viA5bq9QiSHfGf62JaiFxze/uqvjwwoETHfjC9kSZW9v
-         Rg4OpvFaytYRyl0oneg5MLure+OuT8WB6+elc6E/PVhGFQW0i9WsYQIRZCSWZiE7k2Kb
-         GQ8spupna243F1U/ExGKl2mDxHXJyjANSD5dDiu19T8XjlipjTZP4NOIgKI2sy5R3txR
-         wg2qruN6gpiDFlggTA3zM1lE/bkGFRsbklmpljT6lyn0ohFy0oHn8ZijbzI8zRUDqd1X
-         dGRyFCGvnc6hRXMNGg5GRZYul0UtGEgVILEskDuKVCOA9nvuyGiehzKU4+1sOMMtjeQ+
-         4eJQ==
-X-Gm-Message-State: APjAAAWK5KEtfuPYHkkpTtbhtlUhi5Sv5XnJHv10+v4VNLKPsHvAcQq7
-        00rfqfKHv+h9dgdPkkPAn2DgaqWK
-X-Google-Smtp-Source: APXvYqyNv2VKLAXOA9KNrpBz/Cds2AegDowgIvxaSpQnmeZebACb49uKRiLDPsG28obB29nUOBT/MQ==
-X-Received: by 2002:a2e:7e05:: with SMTP id z5mr19566975ljc.8.1570466483459;
-        Mon, 07 Oct 2019 09:41:23 -0700 (PDT)
-Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
-        by smtp.gmail.com with ESMTPSA id g3sm3137094lja.61.2019.10.07.09.41.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 07 Oct 2019 09:41:22 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92.2)
-        (envelope-from <johan@xi.terra>)
-        id 1iHW4f-0001YL-4G; Mon, 07 Oct 2019 18:41:29 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Andrey Rusalin <arusalin@dev.rtsoft.ru>,
-        Lars Poeschel <poeschel@lemonage.de>,
-        linux-usb@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        syzbot+cb035c75c03dbe34b796@syzkaller.appspotmail.com,
-        stable <stable@vger.kernel.org>
-Subject: [PATCH] NFC: pn533: fix use-after-free and memleaks
-Date:   Mon,  7 Oct 2019 18:40:59 +0200
-Message-Id: <20191007164059.5927-1-johan@kernel.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <000000000000f0d74d0594536e2c@google.com>
-References: <000000000000f0d74d0594536e2c@google.com>
+        Mon, 7 Oct 2019 12:41:55 -0400
+Received: from mail.andi.de1.cc ([85.214.55.253]:43478 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727801AbfJGQly (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 12:41:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=vcGbSzQpd1TeTGagYBxvd1qotNo5UEYywORlC/ZOCyk=; b=MLzWT1osbcLQsxYkuVhd/rxpPR
+        0bGgrA/3eWQKRd02P+O8Yu0i9tyCdMXzkY4f9GZvYZnA6JqZa+XvFu7jER3oWKHdoQy3xyJA1pMtP
+        azjWe5s6eyzus7uwxGCZJLJfAhRINe8h9qJuvf4ptL0cjTuhn2BkgT0X6ZoxlcG3EfS8=;
+Received: from p200300ccff0a88001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0a:8800:1a3d:a2ff:febf:d33a] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1iHW4t-0000lS-29; Mon, 07 Oct 2019 18:41:43 +0200
+Received: from andi by aktux with local (Exim 4.92)
+        (envelope-from <andreas@kemnade.info>)
+        id 1iHW4s-0008Fy-MJ; Mon, 07 Oct 2019 18:41:42 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     thierry.reding@gmail.com, sam@ravnborg.org, airlied@linux.ie,
+        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        omi Valkeinen <tomi.valkeinen@ti.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, Tony Lindgren <tony@atomide.com>,
+        Jyri Sarha <jsarha@ti.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Cc:     Andreas Kemnade <andreas@kemnade.info>
+Subject: [PATCH] drm: panels: fix spi aliases of former omap panels
+Date:   Mon,  7 Oct 2019 18:41:30 +0200
+Message-Id: <20191007164130.31534-1-andreas@kemnade.info>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver would fail to deregister and its class device and free
-related resources on late probe errors.
+When the panels were moved from omap/displays/ to panel/
+omapdss prefix was stripped, which cause spi modalias
+to not contain the vendor-prefix anymore.
 
-Reported-by: syzbot+cb035c75c03dbe34b796@syzkaller.appspotmail.com
-Fixes: 32ecc75ded72 ("NFC: pn533: change order operations in dev registation")
-Cc: stable <stable@vger.kernel.org>	# 4.11
-Signed-off-by: Johan Hovold <johan@kernel.org>
+so we had e.g. in former times:
+compatible=omapdss,tpo,td028ttec1 -> modalias=spi:tpo,td028ttec1
+now:
+compatible=tpo,td028ttec1 -> modalias=spi:td028ttec1
+
+This is consistent with other drivers. Tested the td028ttec.c
+only, but the pattern looks the same for the other ones.
+
+Fixes: 45f16c82db7e8 ("drm/omap: displays: Remove unused panel drivers")
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 ---
- drivers/nfc/pn533/usb.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/panel/panel-lg-lb035q02.c       | 2 +-
+ drivers/gpu/drm/panel/panel-nec-nl8048hl11.c    | 2 +-
+ drivers/gpu/drm/panel/panel-sharp-ls037v7dw01.c | 2 +-
+ drivers/gpu/drm/panel/panel-sony-acx565akm.c    | 2 +-
+ drivers/gpu/drm/panel/panel-tpo-td028ttec1.c    | 3 +--
+ drivers/gpu/drm/panel/panel-tpo-td043mtea1.c    | 2 +-
+ 6 files changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/nfc/pn533/usb.c b/drivers/nfc/pn533/usb.c
-index c5289eaf17ee..e897e4d768ef 100644
---- a/drivers/nfc/pn533/usb.c
-+++ b/drivers/nfc/pn533/usb.c
-@@ -547,18 +547,25 @@ static int pn533_usb_probe(struct usb_interface *interface,
+diff --git a/drivers/gpu/drm/panel/panel-lg-lb035q02.c b/drivers/gpu/drm/panel/panel-lg-lb035q02.c
+index fc82a525b071b..8423684a0557e 100644
+--- a/drivers/gpu/drm/panel/panel-lg-lb035q02.c
++++ b/drivers/gpu/drm/panel/panel-lg-lb035q02.c
+@@ -231,7 +231,7 @@ static struct spi_driver lb035q02_driver = {
  
- 	rc = pn533_finalize_setup(priv);
- 	if (rc)
--		goto error;
-+		goto err_deregister;
+ module_spi_driver(lb035q02_driver);
  
- 	usb_set_intfdata(interface, phy);
+-MODULE_ALIAS("spi:lgphilips,lb035q02");
++MODULE_ALIAS("spi:lb035q02");
+ MODULE_AUTHOR("Tomi Valkeinen <tomi.valkeinen@ti.com>");
+ MODULE_DESCRIPTION("LG.Philips LB035Q02 LCD Panel driver");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/gpu/drm/panel/panel-nec-nl8048hl11.c b/drivers/gpu/drm/panel/panel-nec-nl8048hl11.c
+index 299b217c83e18..71b07ef2a62dd 100644
+--- a/drivers/gpu/drm/panel/panel-nec-nl8048hl11.c
++++ b/drivers/gpu/drm/panel/panel-nec-nl8048hl11.c
+@@ -242,7 +242,7 @@ static struct spi_driver nl8048_driver = {
  
- 	return 0;
+ module_spi_driver(nl8048_driver);
  
-+err_deregister:
-+	pn533_unregister_device(phy->priv);
- error:
-+	usb_kill_urb(phy->in_urb);
-+	usb_kill_urb(phy->out_urb);
-+	usb_kill_urb(phy->ack_urb);
-+
- 	usb_free_urb(phy->in_urb);
- 	usb_free_urb(phy->out_urb);
- 	usb_free_urb(phy->ack_urb);
- 	usb_put_dev(phy->udev);
- 	kfree(in_buf);
-+	kfree(phy->ack_buffer);
- 
- 	return rc;
+-MODULE_ALIAS("spi:nec,nl8048hl11");
++MODULE_ALIAS("spi:nl8048hl11");
+ MODULE_AUTHOR("Erik Gilling <konkers@android.com>");
+ MODULE_DESCRIPTION("NEC-NL8048HL11 Driver");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/gpu/drm/panel/panel-sharp-ls037v7dw01.c b/drivers/gpu/drm/panel/panel-sharp-ls037v7dw01.c
+index 46cd9a2501298..838d39a263f53 100644
+--- a/drivers/gpu/drm/panel/panel-sharp-ls037v7dw01.c
++++ b/drivers/gpu/drm/panel/panel-sharp-ls037v7dw01.c
+@@ -204,7 +204,7 @@ static int ls037v7dw01_remove(struct platform_device *pdev)
  }
+ 
+ static const struct of_device_id ls037v7dw01_of_match[] = {
+-	{ .compatible = "sharp,ls037v7dw01", },
++	{ .compatible = "ls037v7dw01", },
+ 	{ /* sentinel */ },
+ };
+ 
+diff --git a/drivers/gpu/drm/panel/panel-sony-acx565akm.c b/drivers/gpu/drm/panel/panel-sony-acx565akm.c
+index 305259b587670..a8af9340f89ee 100644
+--- a/drivers/gpu/drm/panel/panel-sony-acx565akm.c
++++ b/drivers/gpu/drm/panel/panel-sony-acx565akm.c
+@@ -695,7 +695,7 @@ static struct spi_driver acx565akm_driver = {
+ 
+ module_spi_driver(acx565akm_driver);
+ 
+-MODULE_ALIAS("spi:sony,acx565akm");
++MODULE_ALIAS("spi:acx565akm");
+ MODULE_AUTHOR("Nokia Corporation");
+ MODULE_DESCRIPTION("Sony ACX565AKM LCD Panel Driver");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/gpu/drm/panel/panel-tpo-td028ttec1.c b/drivers/gpu/drm/panel/panel-tpo-td028ttec1.c
+index d7b2e34626efe..3ab66b4d3ea27 100644
+--- a/drivers/gpu/drm/panel/panel-tpo-td028ttec1.c
++++ b/drivers/gpu/drm/panel/panel-tpo-td028ttec1.c
+@@ -375,8 +375,7 @@ static const struct of_device_id td028ttec1_of_match[] = {
+ MODULE_DEVICE_TABLE(of, td028ttec1_of_match);
+ 
+ static const struct spi_device_id td028ttec1_ids[] = {
+-	{ "tpo,td028ttec1", 0},
+-	{ "toppoly,td028ttec1", 0 },
++	{ "td028ttec1", 0},
+ 	{ /* sentinel */ }
+ };
+ 
+diff --git a/drivers/gpu/drm/panel/panel-tpo-td043mtea1.c b/drivers/gpu/drm/panel/panel-tpo-td043mtea1.c
+index 84370562910ff..7e6cf0890600c 100644
+--- a/drivers/gpu/drm/panel/panel-tpo-td043mtea1.c
++++ b/drivers/gpu/drm/panel/panel-tpo-td043mtea1.c
+@@ -503,7 +503,7 @@ static struct spi_driver td043mtea1_driver = {
+ 
+ module_spi_driver(td043mtea1_driver);
+ 
+-MODULE_ALIAS("spi:tpo,td043mtea1");
++MODULE_ALIAS("spi:td043mtea1");
+ MODULE_AUTHOR("Gražvydas Ignotas <notasas@gmail.com>");
+ MODULE_DESCRIPTION("TPO TD043MTEA1 Panel Driver");
+ MODULE_LICENSE("GPL");
 -- 
-2.23.0
+2.20.1
 
