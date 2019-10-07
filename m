@@ -2,273 +2,111 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14210C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 20:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A232C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 20:11:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D110A20835
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 20:11:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ED5620835
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 20:11:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DeLR00SG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W8LlnsQw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729169AbfJGULW (ORCPT
+        id S1729230AbfJGUL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 16:11:22 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37129 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728212AbfJGULV (ORCPT
+        Mon, 7 Oct 2019 16:11:57 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:36024 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728212AbfJGUL4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 16:11:21 -0400
-Received: by mail-lj1-f196.google.com with SMTP id l21so15087572lje.4
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 13:11:20 -0700 (PDT)
+        Mon, 7 Oct 2019 16:11:56 -0400
+Received: by mail-io1-f68.google.com with SMTP id b136so31529949iof.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 13:11:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=oHp2V4cqwKnA3Bgcpofc2k1MdyH3DCDWUfUFdzKftko=;
-        b=DeLR00SGfnrW8PeCxJzb8BGpTMyjQiGkQKZW6c/ojrpGQ6XNN24B8xJ/P5z2HVtIb8
-         YlsdFcA/ZTOS9DV1q4ds5ttbPQU8Dl5W5xsf3MlERXoKXdycdx2XkQqsgAPGIfpXJDFN
-         2GCVSac53cO/w9cSeDI/3Of0hdqe9KwCFtbP5NGnwde/37Xe1dpK2yCnDUN0uZqrmjr4
-         lyd4gtf3qj6g1coRkOLoPcrdhidi2H2XDBCnMHHraWcqi9dX6XidzL0CLt15UJWGgH0Y
-         v+i6CLYpM+Q+pnUZuEh70niwJYStRa/9GDhEthIP7JN9Ik4d6HxM3s2WYXGcpkAAJeoM
-         vgvg==
+        bh=kdV5HTN4JZDuKfdhD+OsYsj3d75VR6rtXR3hcKBV4Rw=;
+        b=W8LlnsQwC0jEJMtCBhOivrXr0LvXGMzZW2vBbOhrRqnQ0b+rkjtk7semjEvCr2GB1C
+         MfI9OrDKuKYyBlywIQK6jN9WcvXVAfsczgXa/GzGNMpvNDnC/u8O7h/8cP6Satp4p0B5
+         Sj+xr1TVGCEdaIYZL35m0Y2o0d8dG6K17QDTKNLFvFuKG97MRXshlNI2wAlYtsZIPrSX
+         yCiElWoBvO5qoOlgo4SAgvPGV98RxW1iyONZAcibZxjzu5kIlfWaQPgwTqHz4M0PpgoL
+         hnzT56af2lfPOimHypt9QJgANyC5xytGoZD0kPgWIefgMP9NNjTnWXyjvpqUoyefcKVs
+         AQTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=oHp2V4cqwKnA3Bgcpofc2k1MdyH3DCDWUfUFdzKftko=;
-        b=KwXfQQsndFfdyZ1CBLHORh5PgaZ9EploJGQH+zcQH04BkXyZ6PxqeEjiIZkOTqetgm
-         bzijx7m+vvHotZ0E17wQ7o3UOFVDIGSfRBBDdn8HxKvM6Gky4vam9URMFg165txQf779
-         qWm/5EEPIuMPAS6R91Pq+Bh8vq/30bbqNxZNl/Kfrxl/EWEW8lvwGNF3ztUA2c0OoQMC
-         FJMwnRk1b7LhppSGLvJHPVq59QoyiIPqCjjcBkTz5pm4IYKSefT4GdZrWtKOzHXts3iE
-         mDRuoaipJ2sFtJa00BEGuu9lT7VATnJiFn7PricnP98H1X8h3NH03t54xzjC8jnOuAiu
-         hTAg==
-X-Gm-Message-State: APjAAAWYBXXiMMTP4j4Xd5+35bukwcKCptJ/+MsaVCPbuCUIeZbHxllS
-        7wb173NWNEad+qJ3bVoZFWxEg0KTglsOgOHvvDM=
-X-Google-Smtp-Source: APXvYqyVaeboYyT8bBy5PXUW7jVqcPqaem8Vv8nN4FndZkzDsQLqIJQZ00s5vvQDgNVjW2jUJKEKa/xQL5l/s51+9uE=
-X-Received: by 2002:a2e:9905:: with SMTP id v5mr16723400lji.42.1570479079372;
- Mon, 07 Oct 2019 13:11:19 -0700 (PDT)
+        bh=kdV5HTN4JZDuKfdhD+OsYsj3d75VR6rtXR3hcKBV4Rw=;
+        b=ZIMuxYI2gsiI48Bfdc4bUz1xtg46uBiVIK+NSpAWbiiNCO155v+FlLGvc6q5d7RECT
+         d/5pprQYGEleaR3JOMt7XPrv7VgB7FIImNYEK786NzPCRqIXV/wMwIcLIEMvJvZ04Br+
+         LTKe64ieDEGkD4sP/yHni66wdiXQ3/AeuuO1yU0P2TVu96iEVQVFnJRwVa8O4nQD1H0S
+         x9Is3bpgjcrzERXzciQhrAQv5dQ5bQX1HXQZgyezkmUyrfDCoOHj+/BzKH+k6rI1Lwpn
+         rpcAb7qvatqBvCS7SwvvDx6EUbrwQoZXkI+ppJVQorLf6Kba7qcUw1X8WPE4EwsqVGzQ
+         og5Q==
+X-Gm-Message-State: APjAAAVeSmC7vyqO46dhFaczwucllsC6o8DxPieoUELEGZoVWuCNSzOM
+        Heubxp+x2x28BqoSA4Fk6EHZKrZ+FoyBv/h9lZ9/jDv4tUY=
+X-Google-Smtp-Source: APXvYqzLT5M0O9WcSSTD7MR6fcBnm4pKLmjJQlxCNzf1+n4khnsYPCeIHxMUoEI5MhXL6umDPklkoPaLgdZkHFKS34w=
+X-Received: by 2002:a92:da41:: with SMTP id p1mr29336727ilq.36.1570479115671;
+ Mon, 07 Oct 2019 13:11:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <CADkTA4PBT374CY+UNb85WjQEaNCDodMZu=MgpG8aMYbAu2eOGA@mail.gmail.com>
- <20191002020100.GA6436@castle.dhcp.thefacebook.com> <CADkTA4Mbai=Q5xgKH9-md_g73UsHiKnEauVgMWev+-sG8FVNSA@mail.gmail.com>
- <20191002181914.GA7617@castle.DHCP.thefacebook.com> <CADkTA4PmGBR7YdOXvi6sEDJ+uztuB7x2G95TCcW2u_iqjwhUNQ@mail.gmail.com>
- <20191004000913.GA5519@castle.DHCP.thefacebook.com> <CADkTA4OJok3cmYCcDKtxBXQ5xtK1EMujh7_AgLnVaeRr18TH9w@mail.gmail.com>
-In-Reply-To: <CADkTA4OJok3cmYCcDKtxBXQ5xtK1EMujh7_AgLnVaeRr18TH9w@mail.gmail.com>
-From:   Bruce Ashfield <bruce.ashfield@gmail.com>
-Date:   Mon, 7 Oct 2019 16:11:07 -0400
-Message-ID: <CADkTA4PKc6VEQYvXk4-EWMJPyOrzWQEsk4p6O_BMFo6kvT2jYg@mail.gmail.com>
-Subject: Re: ptrace/strace and freezer oddities and v5.2+ kernels
-To:     Roman Gushchin <guro@fb.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tj@kernel.org" <tj@kernel.org>,
-        Richard Purdie <richard.purdie@linuxfoundation.org>,
-        "oleg@redhat.com" <oleg@redhat.com>
+References: <CAO+szGtvxCo9he+pYjvMjVkMqBHLrXh6gNM4AHRYUWXQp_LnOw@mail.gmail.com>
+ <CAHk-=wiK0Mmo-9qkuoBj4Syx_q9Lbn-ZZLb8BGpvuCf8OHjMgQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wiK0Mmo-9qkuoBj4Syx_q9Lbn-ZZLb8BGpvuCf8OHjMgQ@mail.gmail.com>
+From:   Francis M <fmcbra@gmail.com>
+Date:   Mon, 7 Oct 2019 21:11:45 +0100
+Message-ID: <CAO+szGvTSy5m6d219X3=i+mXgEVTfaLYKtgXESEKJu8TDZXBGA@mail.gmail.com>
+Subject: Re: Decoding an oops
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 8:54 AM Bruce Ashfield <bruce.ashfield@gmail.com> wrote:
+On Mon, 7 Oct 2019 at 20:38, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
-> On Thu, Oct 3, 2019 at 8:09 PM Roman Gushchin <guro@fb.com> wrote:
+> On Mon, Oct 7, 2019 at 7:58 AM Francis M <fmcbra@gmail.com> wrote:
 > >
-> > On Wed, Oct 02, 2019 at 05:59:36PM -0400, Bruce Ashfield wrote:
-> > > On Wed, Oct 2, 2019 at 2:19 PM Roman Gushchin <guro@fb.com> wrote:
-> > > >
-> > > > On Wed, Oct 02, 2019 at 12:18:54AM -0400, Bruce Ashfield wrote:
-> > > > > On Tue, Oct 1, 2019 at 10:01 PM Roman Gushchin <guro@fb.com> wrote:
-> > > > > >
-> > > > > > On Tue, Oct 01, 2019 at 12:14:18PM -0400, Bruce Ashfield wrote:
-> > > > > > > Hi all,
-> > > > > > >
-> > > > > >
-> > > > > > Hi Bruce!
-> > > > > >
-> > > > > > > The Yocto project has an upcoming release this fall, and I've been trying to
-> > > > > > > sort through some issues that are happening with kernel 5.2+ .. although
-> > > > > > > there is a specific yocto kernel, I'm testing and seeing this with
-> > > > > > > normal / vanilla
-> > > > > > > mainline kernels as well.
-> > > > > > >
-> > > > > > > I'm running into an issue that is *very* similar to the one discussed in the
-> > > > > > > [REGRESSION] ptrace broken from "cgroup: cgroup v2 freezer" (76f969e)
-> > > > > > > thread from this past may: https://lkml.org/lkml/2019/5/12/272
-> > > > > > >
-> > > > > > > I can confirm that I have the proposed fix for the initial regression report in
-> > > > > > > my build (05b2892637 [signal: unconditionally leave the frozen state
-> > > > > > > in ptrace_stop()]),
-> > > > > > > but yet I'm still seeing 3 or 4 minute runtimes on a test that used to take 3 or
-> > > > > > > 4 seconds.
-> > > > > >
-> > > > > > So, the problem is that you're experiencing a severe performance regression
-> > > > > > in some test, right?
-> > > > >
-> > > > > Hi Roman,
-> > > > >
-> > > > > Correct. In particular, running some of the tests that ship with strace itself.
-> > > > > The performance change is so drastic, that it definitely makes you wonder
-> > > > > "What have I done wrong? Since everyone must be seeing this" .. and I
-> > > > > always blame myself first.
-> > > > >
-> > > > > >
-> > > > > > >
-> > > > > > > This isn't my normal area of kernel hacking, so I've so far come up empty
-> > > > > > > at either fixing it myself, or figuring out a viable workaround. (well, I can
-> > > > > > > "fix" it by remove the cgroup_enter_frozen() call in ptrace_stop ...
-> > > > > > > but obviously,
-> > > > > > > that is just me trying to figure out what could be causing the issue).
-> > > > > > >
-> > > > > > > As part of the release, we run tests that come with various applications. The
-> > > > > > > ptrace test that is causing us issues can be boiled down to this:
-> > > > > > >
-> > > > > > > $ cd /usr/lib/strace/ptest/tests
-> > > > > > > $ time ../strace -o log -qq -esignal=none -e/clock ./printpath-umovestr>ttt
-> > > > > > >
-> > > > > > > (I can provide as many details as needed, but I wanted to keep this initial
-> > > > > > > email relatively short).
-> > > > > > >
-> > > > > > > I'll continue to debug and attempt to fix this myself, but I grabbed the
-> > > > > > > email list from the regression report in May to see if anyone has any ideas
-> > > > > > > or angles that I haven't covered in my search for a fix.
-> > > > > >
-> > > > > > I'm definitely happy to help, but it's a bit hard to say anything from what
-> > > > > > you've provided. I'm not aware of any open issues with the freezer except
-> > > > > > some spurious cgroup frozen<->not frozen transitions which can happen in some
-> > > > > > cases. If you'll describe how can I reproduce the issue, and I'll try to take
-> > > > > > a look asap.
-> > > > >
-> > > > > That would be great.
-> > > > >
-> > > > > I'll attempt to remove all of the build system specifics out of this
-> > > > > (and Richard Purdie
-> > > > > on the cc' of this can probably help provide more details / setup info as well).
-> > > > >
-> > > > > We are running the built-in tests of strace. So here's a cut and paste of what I
-> > > > > did to get the tests available (ignore/skip what is common sense or isn't needed
-> > > > > in your test rig).
-> > > > >
-> > > > > % git clone https://github.com/strace/strace.git
-> > > > > % cd strace
-> > > > > % ./bootstrap
-> > > > > # the --enable flag isn't strictly required, but may break on some
-> > > > > build machines
-> > > > > % ./configure --enable-mpers=no
-> > > > > % make
-> > > > > % make check-TESTS
-> > > > >
-> > > > > That last step will not only build the tests, but run them all .. so
-> > > > > ^c the run once
-> > > > > it starts, since it is a lot of noise (we carry a patch to strace that
-> > > > > allows us to build
-> > > > > the tests without running them).
-> > > > >
-> > > > > % cd tests
-> > > > > % time strace -o log -qq -esignal=none -e/clock ./printpath-umovestr > fff
-> > > > > real    0m2.566s
-> > > > > user    0m0.284s
-> > > > > sys     0m2.519
-> > > > >
-> > > > > On pre-cgroup2 freezer kernels, you see a run time similar to what I have above.
-> > > > > On the newer kernels we are testing, it is taking 3 or 4 minutes to
-> > > > > run the test.
-> > > > >
-> > > > > I hope that is simple enough to setup and try. Since I've been seeing
-> > > > > this on both
-> > > > > mainline kernels and the yocto reference kernels, I don't think it is
-> > > > > something that
-> > > > > I'm carrying in the distro/reference kernel that is causing this (but
-> > > > > again, I always
-> > > > > blame myself first). If you don't see that same run time, then that
-> > > > > does point the finger
-> > > > > back at what we are doing and I'll have to apologize for chewing up some of your
-> > > > > time.
-> > > >
-> > > > Thank you for the detailed description!
-> > > > I'll try to reproduce the issue and will be back
-> > > > by the end of the week.
-> > >
-> > > Thanks again!
-> > >
-> > > While discussing the issue with a few yocto folks today, it came up that
-> > > someone wasn't seeing the same behaviour on the opensuse v5.2 kernel
-> > > (but I've yet to figure out exactly where to find that tree) .. but when I do,
-> > > I'll try and confirm that and will look for patches or config differences that
-> > > could explain the results.
-> > >
-> > > I did confirm that 5.3 shows the same thing today, and I'll do a 5.4-rc1 test
-> > > tomorrow.
-> > >
-> > > We are also primarily reproducing the issue on qemux86-64, so I'm also
-> > > going to try and rule out qemu (but the same version of qemu with just
-> > > the kernel changing shows the issue).
-> >
-> > Hi Bruce!
-> >
-> > I've tried to follow your steps, but unfortunately failed to reproduce the issue.
-> > I've executed the test on my desktop running 5.2 and cgroup v1 (Fedora 30),
-> > and also a qemu vm with vanilla 5.1 and 5.3 and cgroup v2 mounted by default.
-> > In all cases the test execution time was about 4.5 seconds.
+> > Attached is a JPEG of what I've been able to capture from the console.
+> > I'm guessing it's probably not enough to go on, but hoping someone
+> > might have an 'ahh, that looks familiar' moment.
 >
-> Hi Roman,
->
-> Thanks for the time you spent on this. I had *thought* that I ruled out my
-> config before posting .. but clearly, it is either not my config or something
-> else in the environment.
->
-> >
-> > Looks like something makes your setup special. If you'll provide your
-> > build config, qemu arguments or any other configuration files, I can try
-> > to reproduce it on my side.
->
-> Indeed. I'm going to dive back in and see what I can find. If I can
-> find something
-> that is reproducible in a completely different environment and easy to configure
-> components, I'll follow up with details.
->
-> When I figure out what is going on with the config here, I'll follow up as well,
-> so the solution can be captured in any archives.
+> That is an awkwardly small snippet and not showing any of the real
+> oops state at all (the code/rip dump is actually the user space state
+> at the time of the system call that then causes the problem).
 
-Actually, now that I think about it.
+I was pretty sure it'd turn out to be worthless, cheers for
+confirming ;)
 
-Would it be possible to see the .config that you used for testing (and even how
-you launched the VM) ?.
+> Can you make your VM use a bigger terminal so that it shows more of
+> the oops? Assuming your virtual environment supports the usual VESA
+> VGA modes, it might be as easy as just booting with "vga=775" to get a
+> 1280x1024 console.
 
-I just built a 5.2.17 kernel and the long runtimes persist here. I'm not seeing
-anything in my .config that is jumping out, and am now looking at how we are
-launching qemu .. but it would be helpful to have a known good baseline for
-comparison.
+I forgot about the old VGA mode parameters. Have had trouble
+(read: zero luck) getting a high-res console for this VM from grub
+through to kernel boot since it was provisioned, but I'll give the
+above a shot once I've got the disc images safely backed up.
 
-If you've already tossed that config, no worries, I'll muddle along
-and figure it
-out eventually.
+Have gleaned a small nugget more of stack which might help
+down the road if this turns out to be VirtualBox-specific: I'm
+reliably seeing "vbg_*" (drivers/virt/vboxguest/) stack frames
+very early in the oops but they're scrolling way too fast for me
+to snap a photo with my mobile. Maybe stack corruption,
+maybe not. Pretty sure the VM is using mainline vboxguest.
 
-Bruce
+Anyway, I'll try and glean as much info as I can with vga= and /
+or delayed "printk()".
 
->
-> Thanks again,
->
-> Bruce
->
-> >
-> > Thanks!
-> >
-> > Roman
->
->
->
-> --
-> - Thou shalt not follow the NULL pointer, for chaos and madness await
-> thee at its end
-> - "Use the force Harry" - Gandalf, Star Trek II
+Should note in case the Oracle devs see this, this is a Win 10 Pro
+host, 2019 Core i7, running VirtualBox 6.x. I'll haul this bug 'report'
+upstream if further analysis points to vboxguest.
 
-
-
--- 
-- Thou shalt not follow the NULL pointer, for chaos and madness await
-thee at its end
-- "Use the force Harry" - Gandalf, Star Trek II
+Cheers,
+Francis
