@@ -2,242 +2,127 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE897C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F8CC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C56262070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:00:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DEEA206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:02:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t8xl8m3d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728960AbfJGRAh convert rfc822-to-8bit (ORCPT
+        id S1728901AbfJGRCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 13:00:37 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:45603 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727801AbfJGRAh (ORCPT
+        Mon, 7 Oct 2019 13:02:22 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:35144 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727801AbfJGRCV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 13:00:37 -0400
-Received: from localhost ([82.212.252.42]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MYLqs-1icsjf01h4-00VSnn; Mon, 07 Oct 2019 19:00:21 +0200
-Date:   Mon, 7 Oct 2019 19:00:18 +0200
-From:   Andreas Klinger <ak@it-klinger.de>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] dt-bindings: iio: maxbotix,mb1232.yaml: transform to
- yaml
-Message-ID: <20191007170018.673p6fs6mjokihn6@arbad>
-References: <20191006142715.45k64cgw7mzlekm5@arbad>
- <CAL_Jsq+0SpRVmGJSm5Hw8bQ_zdeJy5wfTb9RM1r=crkiT2uM-Q@mail.gmail.com>
+        Mon, 7 Oct 2019 13:02:21 -0400
+Received: by mail-io1-f66.google.com with SMTP id q10so30267308iop.2;
+        Mon, 07 Oct 2019 10:02:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6A4rIUjcqGcThTcraJEF4GgxX4VhVAP8ORGNSx+WSeU=;
+        b=t8xl8m3dFqfl+nwGVBAgaXTXzMY7VAwFh7x79Jii2SiVGz8cM78abhKWq81YL4zJYC
+         Wo0hSD3B9QLLzEcwcpvTjO3VEHCYatyO2sl3a6SCvXi1vgTdAbzVIMQRdoKaRjuRWUS6
+         R9l1baAxytuK7awtgDHx0x9A735It9GgDptGwPIFHEJ3DAe807vfCjgu87HUA4nrhrUj
+         hlNsqonHVjgh0NCHpFMt9FfVOM6OuUr3rFjc3Rv/tM8mzhGTFs/L5YCxLHok5cID/1vf
+         xf/cFmgU1mdMo60rk4GHGxvvRYaC80bPMIODCgB5P4ofd3lf03gYGUW6MTBS9gIE4QF5
+         zyxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6A4rIUjcqGcThTcraJEF4GgxX4VhVAP8ORGNSx+WSeU=;
+        b=J0wV3ilZawKQccMDIfH3C56K9UGq+C910wtQPXCJ894mA+Dl8/1h3g6L7OlmL4TT9y
+         ckfnyBr1i6/tItxSfcdyqTUPNgpw4VHkwZDiK8pfPdVtrhd8Bq/yyJz2IWDqlrMpY8Ja
+         pgwG8JcfOk6RaqJjT4lIxF7jVXfp9Rx3s1LjBGxEKYGUN1jZu9K3kCp2NVWVki3ofIld
+         H/6ICqWeMKAKXRC1K1HlsyjQV8UovOl/qT2E0EgCvFkWmtnQL7w9fJ6Zof/nkk95ve0B
+         FrVw1arvKsBjAD8An+MUYEoZ3UHy/6/n+euV+VXnxFQWUggNKSAr3xrSoOWdmrKuk/W5
+         CsRg==
+X-Gm-Message-State: APjAAAVAnMotx1XcC8//2X2d+0eZl0wgE9iGt9A+ze/hXH5Ln2hxMM3a
+        yJ7MFLz9jDSN6SVG/XchyWZ2kLDmPJgfh8v63U5hrAjnvN4=
+X-Google-Smtp-Source: APXvYqzaH0lC5Ph8t3EsceUcseVjaditLHPO0o8A2nTOuouDjJdA5idRDEfF8wwdJbG6iixWv+/WD1T0PaCVR5bZXBU=
+X-Received: by 2002:a92:6a0c:: with SMTP id f12mr29492215ilc.64.1570467739448;
+ Mon, 07 Oct 2019 10:02:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <CAL_Jsq+0SpRVmGJSm5Hw8bQ_zdeJy5wfTb9RM1r=crkiT2uM-Q@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Provags-ID: V03:K1:fBoQeayn92YRJEjgYIHYfQdyrqJFqK9E48AtQ7celFTOw3KBIAo
- GPSeMgYihf3sBmTCsf1YdWRaLdomESc1CxrOfU2kLOGXuqdQ/A6zx8efHbkzMhVcC8uHLKB
- rx9EttuwyIfEIZPlrMbKtUhqb06u3RX+wgj0gqyWP/PNBwHsbnTZVatjuIc43lNVL/nP2Ig
- PpwGLUiczXFVvHbQIQ2Wg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:lVHbNj68mDs=:z4Vj4C+6eecmzCJVRro6iQ
- zPsHoAAVbK6H/XYaZZCpm06rJyv93AcESF+KLN2c0m9I/MsJiD/XMNf7//6fCT+fbl5bpXLTv
- 6bKi/JAHDOsOEiVATgzSKhjImll3vXVcg/t3WhD8xlXj5sud7FKzmIR+pPnlNlTY90sQR0hHX
- 9WOaKU8eHZ2ZEWCuuuj8akyWfr5g/3y/K/i/EgDvdLjuFOFRMaQ8BQ6b7xbnjMTcLksXnPTL3
- dlr+tIP3qsZqTAFP4PB4w8XphWy07IhotB5iywlTS8GfCl8Ck0mh06Itfdva8Trk48swxLRRP
- pP3mBCTQcmTa6l5CjmJrnlvNToXb+15YesFyRGHd0MFkh2ImlkKeSIr7xjUA2OgdbjG27UGkv
- 0E4a99yyhzk3j11RvpJcP4mJ0x/ajfZsyMDM1XLoSQ2wdPJQgi24NEb8jeibXOU04GiejyT8A
- KXBH7eGQ+jUIFJg09OM9xDUKpbaamkScM5/WurogxF6aWlVkYRX9OtTgSg+s8dm5uGIdd9UYs
- +OL2cfm94qlsKpkafnvLKd1n3B9ezJjWHbi/CXrsQ8ZvHIWsHiIixb/pwP+bjxbOzvhW27+2g
- p0BjTuGaqguPnNf5opf4JfOYWEiGfnpaQGgg0TUQ4JLDtSW2+jgHShEPbU0siAA1hQvGAdRrj
- LrkEsyOSUA51QiqQMpnVVnyKMN8U+KRm1QUaKb/ITY4LZd6eQzy3kaGy3RI0SYZAvyi1+/ovz
- bIoqyx20cKYAlR9YVMssQUHD7gLRssMf3e4q9cBLe5+yOjbXrp+OfA39C+FVmzSHPIKtLiR9Y
- llBr+8C57MZM4kvKeJR6OLtHyADW4gQssLzerTUN/CKLrPujC/Vf/7EG+XNE0Dn5IR81hDtRJ
- dMDPRzq/WCh3tAuIMe+w==
+References: <1570208647.1250.55.camel@oc5348122405> <20191004233052.28865.1609.stgit@localhost.localdomain>
+ <1570241926.10511.7.camel@oc5348122405> <CAKgT0Ud7SupVd3RQmTEJ8e0fixiptS-1wFg+8V4EqpHEuAC3wQ@mail.gmail.com>
+ <1570463459.1510.5.camel@oc5348122405>
+In-Reply-To: <1570463459.1510.5.camel@oc5348122405>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Mon, 7 Oct 2019 10:02:03 -0700
+Message-ID: <CAKgT0Ue6+JJqcoFO1AcP8GCShmMPiUm1SNkbq9BxxWA-b5=Oow@mail.gmail.com>
+Subject: Re: [RFC PATCH] e1000e: Use rtnl_lock to prevent race conditions
+ between net and pci/pm
+To:     "David Z. Dai" <zdai@linux.vnet.ibm.com>
+Cc:     Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>, zdai@us.ibm.com,
+        David Miller <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On Mon, Oct 7, 2019 at 8:51 AM David Z. Dai <zdai@linux.vnet.ibm.com> wrote:
+>
 
-i don't get this error. Is there anything i'm doing wrong here?
+<snip>
 
-ak@arbad:/project/opt-sw/linux-robh$ make O=../build-wega-robh/ dt_binding_check
-make[1]: Verzeichnis „/project/opt-sw/build-wega-robh“ wird betreten
-  SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
-  /project/opt-sw/linux-robh/Documentation/devicetree/bindings/net/adi,adin.yaml:
-  ignoring, error in schema 'adi,fifo-depth-bits'
-  warning: no schema found in file:
-  /project/opt-sw/linux-robh/Documentation/devicetree/bindings/net/adi,adin.yaml
-  /project/opt-sw/linux-robh/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml:
-  ignoring, error in schema '0'
-  warning: no schema found in file:
-  /project/opt-sw/linux-robh/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-    CHKDT   Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
-    CHKDT   [...]
+> We have tested on one of the test box.
+> With this patch, it doesn't crash kernel anymore, which is good!
+>
+> However we see this warning message from the log file for irq number 0:
+> [10206.317270] Trying to free already-free IRQ 0
+>
+> With this stack:
+> [10206.317344] NIP [c00000000018cbf8] __free_irq+0x308/0x370
+> [10206.317346] LR [c00000000018cbf4] __free_irq+0x304/0x370
+> [10206.317347] Call Trace:
+> [10206.317348] [c00000008b92b970] [c00000000018cbf4] __free_irq
+> +0x304/0x370 (unreliable)
+> [10206.317351] [c00000008b92ba00] [c00000000018cd84] free_irq+0x84/0xf0
+> [10206.317358] [c00000008b92ba30] [d000000007449e60] e1000_free_irq
+> +0x98/0xc0 [e1000e]
+> [10206.317365] [c00000008b92ba60] [d000000007458a70] e1000e_pm_freeze
+> +0xb8/0x100 [e1000e]
+> [10206.317372] [c00000008b92baa0] [d000000007458b6c]
+> e1000_io_error_detected+0x34/0x70 [e1000e]
+> [10206.317375] [c00000008b92bad0] [c000000000040358] eeh_report_failure
+> +0xc8/0x190
+> [10206.317377] [c00000008b92bb20] [c00000000003eb2c] eeh_pe_dev_traverse
+> +0x9c/0x170
+> [10206.317379] [c00000008b92bbb0] [c000000000040d84]
+> eeh_handle_normal_event+0xe4/0x580
+> [10206.317382] [c00000008b92bc60] [c000000000041330] eeh_handle_event
+> +0x30/0x340
+> [10206.317384] [c00000008b92bd10] [c000000000041780] eeh_event_handler
+> +0x140/0x200
+> [10206.317386] [c00000008b92bdc0] [c0000000001397c8] kthread+0x1a8/0x1b0
+> [10206.317389] [c00000008b92be30] [c00000000000b560]
+> ret_from_kernel_thread+0x5c/0x7c
+>
+> Thanks! - David
 
+Hmm. I wonder if it is possibly calling the report
+e1000_io_error_detected multiple times. If so then the secondary calls
+to e1000_pm_freeze would cause issues.
 
-But anyway i've fixed and send it out again.
+I will add a check so that we only down the interface and free the
+IRQs if the interface is in the present and running state.
 
-Andreas
+I'll submit an update patch shortly.
 
+Thanks.
 
-
-Rob Herring <robh+dt@kernel.org> schrieb am Mo, 07. Okt 07:42:
-> On Sun, Oct 6, 2019 at 9:27 AM Andreas Klinger <ak@it-klinger.de> wrote:
-> >
-> > transform existing documentation of maxbotix,mb1232 ultrasonic ranger
-> > from text documentation format into yaml.
-> >
-> > Changes in v2:
-> > - removed description of reg property
-> > - added a line:
-> >   additionalProperties: false
-> >
-> > Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-> > ---
-> >  .../bindings/iio/proximity/maxbotix,mb1232.txt     | 29 -----------
-> >  .../bindings/iio/proximity/maxbotix,mb1232.yaml    | 56 ++++++++++++++++++++++
-> >  2 files changed, 56 insertions(+), 29 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
-> >  create mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
-> > deleted file mode 100644
-> > index dd1058fbe9c3..000000000000
-> > --- a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
-> > +++ /dev/null
-> > @@ -1,29 +0,0 @@
-> > -* MaxBotix I2CXL-MaxSonar ultrasonic distance sensor of type  mb1202,
-> > -  mb1212, mb1222, mb1232, mb1242, mb7040 or mb7137 using the i2c interface
-> > -  for ranging
-> > -
-> > -Required properties:
-> > - - compatible:         "maxbotix,mb1202",
-> > -                       "maxbotix,mb1212",
-> > -                       "maxbotix,mb1222",
-> > -                       "maxbotix,mb1232",
-> > -                       "maxbotix,mb1242",
-> > -                       "maxbotix,mb7040" or
-> > -                       "maxbotix,mb7137"
-> > -
-> > - - reg:                        i2c address of the device, see also i2c/i2c.txt
-> > -
-> > -Optional properties:
-> > - - interrupts:         Interrupt used to announce the preceding reading
-> > -                       request has finished and that data is available.
-> > -                       If no interrupt is specified the device driver
-> > -                       falls back to wait a fixed amount of time until
-> > -                       data can be retrieved.
-> > -
-> > -Example:
-> > -proximity@70 {
-> > -       compatible = "maxbotix,mb1232";
-> > -       reg = <0x70>;
-> > -       interrupt-parent = <&gpio2>;
-> > -       interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
-> > -};
-> > diff --git a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
-> > new file mode 100644
-> > index 000000000000..e2fb1f6d4dbe
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
-> > @@ -0,0 +1,56 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/iio/proximity/maxbotix,mb1232.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: MaxBotix I2CXL-MaxSonar ultrasonic distance sensor
-> > +
-> > +maintainers:
-> > +  - Andreas Klinger <ak@it-klinger.de>
-> > +
-> > +description: |
-> > +  MaxBotix I2CXL-MaxSonar ultrasonic distance sensor of type  mb1202,
-> > +  mb1212, mb1222, mb1232, mb1242, mb7040 or mb7137 using the i2c interface
-> > +  for ranging
-> > +
-> > +  Specifications about the devices can be found at:
-> > +  https://www.maxbotix.com/documents/I2CXL-MaxSonar-EZ_Datasheet.pdf
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - maxbotix,mb1202
-> > +      - maxbotix,mb1212
-> > +      - maxbotix,mb1222
-> > +      - maxbotix,mb1232
-> > +      - maxbotix,mb1242
-> > +      - maxbotix,mb7040
-> > +      - maxbotix,mb7137
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    description:
-> > +      Interrupt used to announce the preceding reading request has finished
-> > +      and that data is available.  If no interrupt is specified the device
-> > +      driver falls back to wait a fixed amount of time until data can be
-> > +      retrieved.
-> > +    maxItems: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > +    proximity@70 {
-> 
-> Fails to build with 'make dt_binding_check':
-> 
-> Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.example.dts:20.11-24:
-> Warning (reg_format): /example-0/proximity@70:reg: property has
-> invalid length (4 bytes) (#address-cells == 1, #size-cells == 1)
-> Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.example.dt.yaml:
-> Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-> Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.example.dt.yaml:
-> Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-> Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.example.dt.yaml:
-> Warning (spi_bus_reg): Failed prerequisite 'reg_format'
-> 
-> You have to put this under an i2c bus node.
-> 
-> i2c {
->   #address-cells = <1>;
->   #size-cells = <0>;
->   ...
-> };
-> 
-> > +      compatible = "maxbotix,mb1232";
-> > +      reg = <0x70>;
-> > +      interrupt-parent = <&gpio2>;
-> > +      interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
-> > +    };
-> > --
-> > 2.11.0
-
--- 
-Andreas Klinger
-Grabenreith 27
-84508 Burgkirchen
-+49 8623 919966
-ak@it-klinger.de
-www.it-klinger.de
-www.grabenreith.de
+- Alex
