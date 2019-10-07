@@ -2,92 +2,174 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A38ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D037ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECE39206BB
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:43:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570466622;
-	bh=18jBfXv9rylAjh6k7GAxABb+qhImwkW083rbcWQbSpY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tVxOtUbLNpzJHuoUPJa2JWg0gAfahsD4G4xKS4B2DS6EBbkYUKn/23YDCSE25S1Tk
-	 Bf/zPTWpdxXFyJpd6cX4606f7lt0ySzXW+fg/Cp7UNHQDYRgjCI1Mdatgt+0wm/WIR
-	 9driPzjBMh4zsGC+Tsor2FNl8pt93ZIPxk8wlD2o=
+	by mail.kernel.org (Postfix) with ESMTP id E5DDF206BB
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:43:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aBQB7O1P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729002AbfJGQnk (ORCPT
+        id S1729020AbfJGQny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 12:43:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37898 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727830AbfJGQnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 12:43:40 -0400
-Received: from linux-8ccs (ip5f5ade87.dynamic.kabel-deutschland.de [95.90.222.135])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43E0E20700;
-        Mon,  7 Oct 2019 16:43:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570466619;
-        bh=18jBfXv9rylAjh6k7GAxABb+qhImwkW083rbcWQbSpY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=L41iUj+ZaQkgvmNDSRNeXBh1OnhPFuJg4lBFldlglcR1Pswi/z8i+ccMEHi3wm6tW
-         yvvpUFglAJfvJ9H2Rn/evA/K3h9PU15zmZRnL4lEJmyitLjJxzRZkDknzjjXxBrd1d
-         RNlIph9vM2Fa/OR0I86t+iVAIKy/DQyLSK4YPjBw=
-Date:   Mon, 7 Oct 2019 18:43:33 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Matthias Maennich <maennich@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shaun Ruffell <sruffell@sruffell.net>,
-        linux-kbuild@vger.kernel.org, Martijn Coenen <maco@android.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/6] module: various bug-fixes and clean-ups for
- module namespace
-Message-ID: <20191007164332.GA6021@linux-8ccs>
-References: <20191003075826.7478-1-yamada.masahiro@socionext.com>
+        Mon, 7 Oct 2019 12:43:54 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41792 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728028AbfJGQnx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 12:43:53 -0400
+Received: by mail-lj1-f193.google.com with SMTP id f5so14419921ljg.8
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 09:43:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=7Zqyp+EzMxcNslBkEtpTkjVzHDniuE8hee0J+iYqh3k=;
+        b=aBQB7O1P30QBMIkkPZhqXSR1LSNwIFJunCsW0X06VXb6Bvn7XGsj+dfsdmKJd3CiyH
+         q4YvufUqrT1Hl2obL2UFRAJ0wxp6agBulsApTGbnil8AS4Np7O9esp+A5jY5NwIg0JSd
+         RpBHTMJRN/H+4aVNuNC5hqI0Qu/sjY/LPbTozg6YRYLbF782F+gyGqNIMOoKNJpwoVpy
+         ta5VuMWLvsa9ZciN2uga5H197TX2KmRWtRzJicu9jUjZ+Bokh7Xx7sl09aUOAtPXJcMz
+         +aOwcQygCF0lmSh5PDuNNQekjaI73UMxFU81oRTqcD+8ihU/wRPI7ju9ANoRCRE717vY
+         BYUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=7Zqyp+EzMxcNslBkEtpTkjVzHDniuE8hee0J+iYqh3k=;
+        b=AFSyGn34HI4YjMLpbeFNpbKjh2nefiYz6siCybzuKQ9d8wwfoRe4Y2p/qOxwH9A5rA
+         v9l8O+5yB/XjgsRFlq0VU4fTL3ID7SkDQghh8kFqYDvVuJ/TUJ0SG8pYTISpjvaglQ+f
+         YX74ZOMn7GDaGk5iJfEgNLyNN73vhnJ+ydAwXfEtzMioDqBoRlzK3T1lBoeVdcHR9VLO
+         ntHLJbq7s492s/7S6FRcD8qhSy7/fqRPYAlPqU4CkUL3KydNBeuByKVns49YUKUIKS+B
+         KnyAMJIoWFv9UjS+WP42b0lauXYkAFPPzz1rEqzfscd3xLEdKICpCIv6m4W84/lkWI48
+         z+rA==
+X-Gm-Message-State: APjAAAVFHLJofXjOa36Fx62cta2I8/4cQHo6U+3n9sChVAl4QX1aKpuv
+        3Grbr/ybhIl9hBvRUA4sgdaPJrHjAN2QY5RNf80HvSM4lAY=
+X-Google-Smtp-Source: APXvYqwPaGHjD2F43p7X3DF5o0DsdFVhMZoHPQhp/6xiPe8/10mLuBDcg6DzDAbtohD03hpCeRgCA2gh2dbsFQ2DPJA=
+X-Received: by 2002:a2e:9a4e:: with SMTP id k14mr15666974ljj.129.1570466631777;
+ Mon, 07 Oct 2019 09:43:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20191003075826.7478-1-yamada.masahiro@socionext.com>
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.28-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191006171212.850660298@linuxfoundation.org> <7148ff93-bac0-f78a-df3a-b9dbbee3db1a@linaro.org>
+In-Reply-To: <7148ff93-bac0-f78a-df3a-b9dbbee3db1a@linaro.org>
+From:   =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>
+Date:   Mon, 7 Oct 2019 11:43:39 -0500
+Message-ID: <CAEUSe79aYVt1=MUqsWefBWQsucskuG6NpP5KRxQsjouJw+yXJQ@mail.gmail.com>
+Subject: Re: [PATCH 5.3 000/166] 5.3.5-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Cc:     Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        stable@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Masahiro Yamada [03/10/19 16:58 +0900]:
+Hello!
+
+On Mon, 7 Oct 2019 at 11:25, Daniel D=C3=ADaz <daniel.diaz@linaro.org> wrot=
+e:
+> Results from Linaro=E2=80=99s test farm.
+> Regressions detected.
+
+My bad. Should read: "No regressions detected" here, in line with the
+other reports.
+
+Greetings!
+
+Daniel D=C3=ADaz
+daniel.diaz@linaro.org
+
+
+> As mentioned, we found a problem with the mismatch of kselftests 5.3.1 an=
+d net/udpgso.sh, but everything is fine.
 >
->I was hit by some problems caused by the module namespace feature
->that was merged recently. At least, the breakage of
->external module builds is a fatal one. I just took a look at the code
->closer, and I noticed some more issues (some are nit-picking).
+> Summary
+> ------------------------------------------------------------------------
 >
->V2:
-> - I dropped "module: avoid code duplication in include/linux/export.h"
->   because Matthias offered to refactor the code by himself.
+> kernel: 5.3.5-rc1
+> git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-st=
+able-rc.git
+> git branch: linux-5.3.y
+> git commit: a2703e78c28a6166f8796b4733620c6d0b8f479a
+> git describe: v5.3.4-167-ga2703e78c28a
+> Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.3-oe/b=
+uild/v5.3.4-167-ga2703e78c28a
 >
-> - V1 missed the problem when a symbol is preloaded before
->  sym_add_exported() is called.  I fixed it too.
-
-Hi Masahiro!
-
-Thanks for the v2. I've queued this up in the module tree with the
-intention of getting the fixes in for -rc3.
-
-Matthias is working on some modpost fixes that would get rid of the
-__ksymtab_<symbol>.<ns>/__ksymtab_<ns>.<symbol> naming scheme
-altogether in favor of just getting the namespace string from
-__kstrtabns and __ksymtab_strings -- this may render patch 1
-unnecessary. But since we want to fix this asap, we can just keep it
-and apply Matthias's fix on top later.
-
-Thanks!
-
-Jessica
+> No regressions (compared to build v5.3.4)
+>
+> No fixes (compared to build v5.3.4)
+>
+> Ran 25519 total tests in the following environments and test suites.
+>
+> Environments
+> --------------
+> - dragonboard-410c
+> - hi6220-hikey
+> - i386
+> - juno-r2
+> - qemu_arm
+> - qemu_arm64
+> - qemu_i386
+> - qemu_x86_64
+> - x15
+> - x86
+>
+> Test Suites
+> -----------
+> * build
+> * install-android-platform-tools-r2600
+> * kselftest
+> * libgpiod
+> * libhugetlbfs
+> * ltp-cap_bounds-tests
+> * ltp-commands-tests
+> * ltp-containers-tests
+> * ltp-cpuhotplug-tests
+> * ltp-cve-tests
+> * ltp-dio-tests
+> * ltp-fcntl-locktests-tests
+> * ltp-filecaps-tests
+> * ltp-fs_bind-tests
+> * ltp-fs_perms_simple-tests
+> * ltp-fsx-tests
+> * ltp-hugetlb-tests
+> * ltp-io-tests
+> * ltp-ipc-tests
+> * ltp-math-tests
+> * ltp-mm-tests
+> * ltp-nptl-tests
+> * ltp-pty-tests
+> * ltp-sched-tests
+> * ltp-securebits-tests
+> * ltp-syscalls-tests
+> * ltp-timers-tests
+> * perf
+> * spectre-meltdown-checker-test
+> * v4l2-compliance
+> * ltp-fs-tests
+> * network-basic-tests
+> * ltp-open-posix-tests
+> * kvm-unit-tests
+> * kselftest-vsyscall-mode-native
+> * kselftest-vsyscall-mode-none
+> * ssuite
+>
+>
+> Greetings!
+>
+> Daniel D=C3=ADaz
+> daniel.diaz@linaro.org
+>
+>
+> --
+> Linaro LKFT
+> https://lkft.linaro.org
