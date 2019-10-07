@@ -2,132 +2,135 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF2FECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC5CC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFDDA2084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:00:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D239206BB
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:03:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="fethwRHH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=ucr.edu header.i=@ucr.edu header.b="abNM6Spu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729379AbfJGTAZ (ORCPT
+        id S1728422AbfJGTDK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 15:00:25 -0400
-Received: from mail-eopbgr690067.outbound.protection.outlook.com ([40.107.69.67]:51427
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728465AbfJGTAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 15:00:25 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Wc/PlKvKNzAP53aE8r+Z9pDCsDQSJamR+lv9/CCATwkNc6pOn19qmcb7cGaHXrOYJbc2LrGUzeW/Darc9frPtT/r4gz6M4tsJiS+PV+wMO7CfMYQITUJ8TBo+In5aUg9vAhbHDhBCPZzpjzHgXtGKjzrIt95FtutBXWVsqvhbUKH+xhSokEjmgAJ+I1OOh+CrmlGUsUzVpu0+BeJqCw5RltamIFfbkQjAQentL2aoOsVqSAHbmtbym1ANlULTE+Zshr7d1yZEr5my6CSuzW5YBFx8wlHcjrcsvGMwKkwe96vBOXlDRt7U+xMopdb3G8h7d0nScduE/ios/Y95vkQbQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Cm9qQMcLOLu0uyHSoAEZQEYzeYl5apmqXMzt47jXO1g=;
- b=N1Ln6i5KVJ2qxMeUQDYhs8lSb1xasnrxZMkaXkumZrCswboxA6vtgsnPw/IjLhGIGKwpLaTheXFoLEbheqJc+Whbc73cj7q5Kn0axfUb54oh4uPQLrTGk9ZiGsKtkx9JqNph2yPsu39+wXamBCYDaE41Iqu7LmoHGrY3BrmA87PLxF/UEeEX8OiCmjh6qkutJI1wBj8AsLYRjoxq53gZXDoCXaoveecGZQIt8Lg3WLDxFjjfEi/0QW+Fsl7nE4dv/B93VL0y/dPitr+h/EnIy5911BxNx2IzknKEHNFwVf/73BWHvYtpXOImDNWT3RSsHUujv78TAkOaz+tnYZilfw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Cm9qQMcLOLu0uyHSoAEZQEYzeYl5apmqXMzt47jXO1g=;
- b=fethwRHHzivN4AyvK+RwPV61D9Ferd26xo1RjtpFtlOKMmjYiEWcptttI6i5szxcp/J4r7BmddexUop/jDWBrGIe93Eje0xQ4wlrugowTv1v2iIF5dLHXlIta4YEPyHddk+mDmeyNBbaSe6TOJXNaAjBIreqCWRnb5V3+ty6E0o=
-Received: from SN6PR12MB2736.namprd12.prod.outlook.com (52.135.107.27) by
- SN6PR12MB2736.namprd12.prod.outlook.com (52.135.107.27) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.24; Mon, 7 Oct 2019 19:00:22 +0000
-Received: from SN6PR12MB2736.namprd12.prod.outlook.com
- ([fe80::b1e3:1867:e650:796c]) by SN6PR12MB2736.namprd12.prod.outlook.com
- ([fe80::b1e3:1867:e650:796c%6]) with mapi id 15.20.2327.023; Mon, 7 Oct 2019
- 19:00:22 +0000
-From:   "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>
-To:     "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, Jon Masters <jcm@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>
-Subject: [PATCH] x86/asm: Fix MWAITX C-state hint value
-Thread-Topic: [PATCH] x86/asm: Fix MWAITX C-state hint value
-Thread-Index: AQHVfUF4wAEM81IrLUWesxXs7fzPCw==
-Date:   Mon, 7 Oct 2019 19:00:22 +0000
-Message-ID: <20191007190011.4859-1-Janakarajan.Natarajan@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN6PR02CA0008.namprd02.prod.outlook.com
- (2603:10b6:805:a2::21) To SN6PR12MB2736.namprd12.prod.outlook.com
- (2603:10b6:805:77::27)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Janakarajan.Natarajan@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [165.204.78.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c90bb332-ccc1-42de-9015-08d74b589ac8
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: SN6PR12MB2736:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR12MB27363E0C01C45962BF3090A3E79B0@SN6PR12MB2736.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 01834E39B7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(366004)(136003)(39860400002)(396003)(189003)(199004)(86362001)(6116002)(478600001)(5660300002)(14444005)(256004)(3846002)(64756008)(66556008)(66476007)(71200400001)(66446008)(66946007)(1076003)(2906002)(71190400001)(4744005)(36756003)(8676002)(54906003)(81156014)(81166006)(66066001)(316002)(7736002)(305945005)(110136005)(99286004)(2616005)(6486002)(52116002)(6512007)(186003)(14454004)(26005)(102836004)(25786009)(8936002)(386003)(6506007)(4326008)(6436002)(486006)(2501003)(476003)(50226002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2736;H:SN6PR12MB2736.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: oO8TMC4dwJLIFE2LpNQBwEiXUWFsN8a7FLhOW3DJ7dEycUbLr9prJs+IEFLCkTlAQxGvNJwizHR+q55IzzlMLM+lKxs9HL7ftB1mzaEfk84erbto/PK8PIKRDTJK8/0kIm84wpQcD5e+1wZUcg19pmIcxsqZtU3iZ4xvKmli7SJ2Gl8CS0zLgiAhn/+tdb1UrrqR+76uk1oG5IUSpNxje2PiH4OcPfWOG3RE//F7px014lFVgsBk1e2Vet8dILGte88aRav1KmnpWrhcNnesfKUFk7cwwxPDNoZZkj1fddVCCWKp25ZKXeloHej7qYn77qUepY1uuAiuDSOVXYez7BpSD1cxvw3VFpwtOTtXEZO/uMiHKowMlmJ44Yv1H0XQcUjRcXiYTD9gOvknrR2Qe4wOTLmL6ImoYs4WdFHpoog=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 7 Oct 2019 15:03:10 -0400
+Received: from mx3.ucr.edu ([138.23.248.64]:10802 "EHLO mx3.ucr.edu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728079AbfJGTDK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 15:03:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=ucr.edu; i=@ucr.edu; q=dns/txt; s=selector3;
+  t=1570474991; x=1602010991;
+  h=mime-version:from:date:message-id:subject:to;
+  bh=qKkd59j86O9FUZiM0WpoYxgW00QFfLIb89TLtsimzfI=;
+  b=abNM6SpuOJ1ckFfRCccdOco9+87lPltP9lDSGN8OwegTeNd42UBkkKLe
+   1WjEIN67yPtFuvFD7FBIIpLG+3kCRsOr22AtbfBYtwUDuu4BB3DwWY0i2
+   Aatzcpddj3pihzl3lzVHNJ4ArfKtA4xv/xSNppGiwGuct1xWzpwzr3Fob
+   vkUtpufe+aQuUNYQyiJ45/xYKuPkz+PAOE77Tb8A3+Pbl0cJOZPA0EeAg
+   1lTuwytdLqAAdkj2uyMPoVHI9HUF/T2IMrJjKSzG/mUIB2a7d6IOj99/m
+   akPnEhk5QqW2ZuY8NypYLYVMPKa44oZHXuh5WzVGR9yU2tVBSl2TNR2tk
+   w==;
+IronPort-SDR: /brpzDqukPUusNRekq9T1UwiCihwTb0HeuZZTOevJ/IbxdVKUY5glCSnhmOQORQblKaw8NSrQ2
+ RrKGXrINK+0Qf8cVnx/K9Fd/6gt5k+d3YpezKCWmUGiYZEkogrMz4jW8omSBk1UMaM0OEQ6oPU
+ nFsVxHE27LGrsDtHk45zRZ/m7hKWKSJoO7nwD8vXDo30fkoIqh8/gMRYEjaadc3bj9uPrzEoCe
+ xDec6bRytbjlxOzi7cyvrH+yeXkEC6TkGT/dCxoWt1XpKNGH1YtIvYYZtCud3UFa31hqmr5yoU
+ BWA=
+IronPort-PHdr: =?us-ascii?q?9a23=3AcphXvREhV5wNoGsY0mdQ7Z1GYnF86YWxBRYc79?=
+ =?us-ascii?q?8ds5kLTJ76ps24bnLW6fgltlLVR4KTs6sC17ON9f2/EjVZsN6oizMrSNR0TR?=
+ =?us-ascii?q?gLiMEbzUQLIfWuLgnFFsPsdDEwB89YVVVorDmROElRH9viNRWJ+iXhpTEdFQ?=
+ =?us-ascii?q?/iOgVrO+/7BpDdj9it1+C15pbffxhEiCCybL9vIhi6twXcu8sZjYd/N6o8zg?=
+ =?us-ascii?q?bCr2dVdehR2W5mP0+YkQzm5se38p5j8iBQtOwk+sVdT6j0fLk2QKJBAjg+PG?=
+ =?us-ascii?q?87+MPktR/YTQuS/XQcSXkZkgBJAwfe8h73WIr6vzbguep83CmaOtD2TawxVD?=
+ =?us-ascii?q?+/4apnVAPkhSEaPDMi7mrZltJ/g75aoBK5phxw3YjUYJ2ONPFjeq/RZM4WSX?=
+ =?us-ascii?q?ZdUspUUSFKH4GyYJYVD+cZMulWr4fzqVgToxWgGQahH//vxiNSi3PqwaE2z+?=
+ =?us-ascii?q?YsHAfb1wIgBdIOt3HUoc33O6cTUOG1zLTIzTLeZPxV2Tfy8onIeQ0mrPCMXL?=
+ =?us-ascii?q?NwcdDeyUgzGw/ZgFidspHlMC+P1ugXrWeU8vdgWPuphmU6qA9xuiCiytkwho?=
+ =?us-ascii?q?TNnI4YyVDJ+T9kzIs0J9C0Ukx2bcCiHZBNrS+VLZF2TdknQ2xwvSY6zaAJto?=
+ =?us-ascii?q?CjcSgRzZQn2wbfa/uac4iU+h7jVPieITN/hH99fbKwnRey8Uy5xu34WMm4zU?=
+ =?us-ascii?q?9GriRHn9XSrHwN2BvT6s+ISvt54EitwyqA1wfW6u1cIEA0k7TUK4I5z7Iuip?=
+ =?us-ascii?q?YetV7PEyz2lUnskaObd0cp9vKq5uj5ernmo4WTN45wigHwKKQuncm/DPw4Mw?=
+ =?us-ascii?q?kPX2iU4+W82KH/8UD3W7hKk+E5krPDvJ/EOMsbu7a1AxVJ3YY79xa/EzCm3c?=
+ =?us-ascii?q?wcnXkGKlJFZR2Gg5HqO17QOvD4C+mwg1C3nTd1yPDJIKfhDo/OLnfdirfhe6?=
+ =?us-ascii?q?hy60pGxAo019Bf6MEcNrZUJfvpRk738sTVEhIjKAGy6+H9Ad5528UVXmfLSo?=
+ =?us-ascii?q?yQLK6aikOF+es1P6HYZ5QJtSn0MeQN4//okG83nkIbcaC13JwRLneiEaIia3?=
+ =?us-ascii?q?mZZn/lmZ8uFWoLrgwzVqS+lFKGQRZXZnCvQ7g74DArTo6rW8OLb4SpgaeG2m?=
+ =?us-ascii?q?+BF5tab2QOXlmIFXbzcIOsX/AMdT6VIYlnnyBSEfC/QpU80zmltAL+0LtgaO?=
+ =?us-ascii?q?HT/2lQmJT51dNyr9LelB4/8SA8W8Wb3WalSmxog3NOQTIqiuQ3q1J0zF6Yyq?=
+ =?us-ascii?q?N4jtRRHtkV4OlGFk8+NJjB36lhAMvzchzOc83PS1u8RNiiRzYrQZZ539YUbE?=
+ =?us-ascii?q?thXtmvkB3H9zSlDqVTlLGRApEwtKXG0Dy5I8d71maD16Q7iVQiatVAOHfgha?=
+ =?us-ascii?q?Nl8QXXQYnTnAHRpaarZLkalBfM/WHLmXiOvVBFVhdYWr6DQHsFIEbasIK9rm?=
+ =?us-ascii?q?jCQrmhGKlvCQxHxobWIbBNbNLBhk4AWfz5ftnSfjTitX23AEO5x6GMcY2iSW?=
+ =?us-ascii?q?UU3W2JGVoEmgFLpS2uKAMkQCqtvjSNX3RVCVvzbha0oqFFo3ShQxpxllnSYg?=
+ =?us-ascii?q?=3D=3D?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2HFAgBoi5tdh0inVdFmDoIQhBCETY5?=
+ =?us-ascii?q?ggw2CCgGGd4VZgRiKNAEIAQEBDi8BAYcfIzcGDgIDCQEBBQEBAQEBBQQBAQI?=
+ =?us-ascii?q?QAQEBCA0JCCmFQII6KQGDVRF8DwImAiQSAQUBIgE0gwCCC6JngQM8iyaBMoQ?=
+ =?us-ascii?q?LAYRZAQkNgUgSeiiMDoIXgRGCXQeIPYJYBIE4AQEBlSyWVAEGAoIQFIxUiEQ?=
+ =?us-ascii?q?bgioBlxSOLJlLDyOBRYF8MxolfwZngU9PEBSBaY1xBFckkhwBAQ?=
+X-IPAS-Result: =?us-ascii?q?A2HFAgBoi5tdh0inVdFmDoIQhBCETY5ggw2CCgGGd4VZg?=
+ =?us-ascii?q?RiKNAEIAQEBDi8BAYcfIzcGDgIDCQEBBQEBAQEBBQQBAQIQAQEBCA0JCCmFQ?=
+ =?us-ascii?q?II6KQGDVRF8DwImAiQSAQUBIgE0gwCCC6JngQM8iyaBMoQLAYRZAQkNgUgSe?=
+ =?us-ascii?q?iiMDoIXgRGCXQeIPYJYBIE4AQEBlSyWVAEGAoIQFIxUiEQbgioBlxSOLJlLD?=
+ =?us-ascii?q?yOBRYF8MxolfwZngU9PEBSBaY1xBFckkhwBAQ?=
+X-IronPort-AV: E=Sophos;i="5.67,269,1566889200"; 
+   d="scan'208";a="85783611"
+Received: from mail-lf1-f72.google.com ([209.85.167.72])
+  by smtp3.ucr.edu with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 07 Oct 2019 12:03:10 -0700
+Received: by mail-lf1-f72.google.com with SMTP id r3so1671093lfn.13
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 12:03:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=ESofDjYlaGWbuPOVSuea9qOggnj5mZzg5iY6K5NGehg=;
+        b=oBU/2rOzfUvXqFOLeOlcg/UO6GDw+Nw3+YCmD2X4gEr6jJZzwMPB0ZnpifwRS3yrwo
+         feUqCkUVDJnozWDQSB5nq9rOjBQOy5KIFWF/ungdssff3GjHoMciYyal2HJeYStZ+9F5
+         f0szU8UKfEBdUvXXaIUtRBPhfD0K1M+iKWsKSR7WJOhzQ2Ckq2QmepphRuFUcxDCWP9z
+         e+6LhBBtoXwe2/bLPON8rP+vKVa4MgRJ5Sh2SSIipb3MaaijdcR/tqah/INnNyfTsh9H
+         CfLkVNlRQf5zbso3c061YPo+/9A0lT/3czNeDTrw11Ri/Gav/dasr4LjTrA2kKzG24h6
+         Y6gw==
+X-Gm-Message-State: APjAAAVAT/qRNMDqJVX2/n0HFKNU97lOae6ORIgULNph8SslaCDE/QkZ
+        ouKO+kd2so78Kv6fIcVo81zk1MoABQ3Q84LPJPOMeUBTB4qGIn43V32M+1RQoLJrQfRfTuAt7Ei
+        WH9/EeeF3e9ORcw61JXxr37gjl/z5i5pwCmOu1MRN/Q==
+X-Received: by 2002:a2e:89cd:: with SMTP id c13mr19382942ljk.92.1570474987354;
+        Mon, 07 Oct 2019 12:03:07 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxPt2y/kkUfF2dViia+Gw42gIv9azn/ATOBEVLWWAlSLPnIIR6FYLzrKHUfg/QEdwY0P6m32CFv87gaTDTQITI=
+X-Received: by 2002:a2e:89cd:: with SMTP id c13mr19382924ljk.92.1570474987121;
+ Mon, 07 Oct 2019 12:03:07 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c90bb332-ccc1-42de-9015-08d74b589ac8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Oct 2019 19:00:22.4024
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: UAhAxZg5vzTfxPyYQR55FwW8jJGL4WSZomqUBbcOZ+RuFL5WzlIcv8NNX2lEpYKHowRG5HrttKc/PQp5mRxd4A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2736
+From:   Yizhuo Zhai <yzhai003@ucr.edu>
+Date:   Mon, 7 Oct 2019 12:03:50 -0700
+Message-ID: <CABvMjLQxcV5UE3_j84SV3u2LxJKVoQ2G+5CZCuKtAd6A_6FDNw@mail.gmail.com>
+Subject: Potential NULL pointer deference in cxgbit
+To:     martin.petersen@oracle.com,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>, varun@chelsio.com,
+        Enrico Weigelt <info@metux.net>, bvanassche@acm.org,
+        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Zhiyun Qian <zhiyunq@cs.ucr.edu>,
+        Chengyu Song <csong@cs.ucr.edu>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As per "AMD64 Architecture Programmer's Manual Volume 3: General-Purpose
-and System Instructions", MWAITX EAX[7:4]+1 specifies the optional hint
-of the optimized C-state. For C0 state, EAX[7:4] should be set to 0xf.
+Hi All:
 
-Currently, a value of 0xf is set for EAX[3:0] instead of EAX[7:4]. Fix
-this by changing MWAITX_DISABLE_CSTATES from 0xf to 0xf0.
+drivers/target/iscsi/cxgbit/cxgbit_ddp.c:
 
-Signed-off-by: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
----
- arch/x86/include/asm/mwait.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Inside function cxgbit_ddp_sgl_check(), sg_next() could return NULL,
+however, the return value of sg_next() is not checked and get
+dereferenced. This could potentially be unsafe.
 
-diff --git a/arch/x86/include/asm/mwait.h b/arch/x86/include/asm/mwait.h
-index e28f8b723b5c..9d5252c9685c 100644
---- a/arch/x86/include/asm/mwait.h
-+++ b/arch/x86/include/asm/mwait.h
-@@ -21,7 +21,7 @@
- #define MWAIT_ECX_INTERRUPT_BREAK	0x1
- #define MWAITX_ECX_TIMER_ENABLE		BIT(1)
- #define MWAITX_MAX_LOOPS		((u32)-1)
--#define MWAITX_DISABLE_CSTATES		0xf
-+#define MWAITX_DISABLE_CSTATES		0xf0
-=20
- static inline void __monitor(const void *eax, unsigned long ecx,
- 			     unsigned long edx)
---=20
-2.17.1
+-- 
+Kind Regards,
 
+Yizhuo Zhai
+
+Computer Science, Graduate Student
+University of California, Riverside
