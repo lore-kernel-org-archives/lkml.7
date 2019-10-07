@@ -2,80 +2,108 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 377CCC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD4EDC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D2BD206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:46:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98A5B2133F
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:46:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728877AbfJGRqM (ORCPT
+        id S1729133AbfJGRq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 13:46:12 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:60814 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728081AbfJGRqM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 13:46:12 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id A31F428D406
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     linux-media@vger.kernel.org
-Cc:     kernel@collabora.com,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        fbuergisser@chromium.org, linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH v2 for 5.4 0/4] media: hantro: Collected fixes for v5.4
-Date:   Mon,  7 Oct 2019 14:45:01 -0300
-Message-Id: <20191007174505.10681-1-ezequiel@collabora.com>
-X-Mailer: git-send-email 2.22.0
+        Mon, 7 Oct 2019 13:46:27 -0400
+Received: from muru.com ([72.249.23.125]:35754 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728793AbfJGRq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 13:46:27 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 9F8D68191;
+        Mon,  7 Oct 2019 17:46:58 +0000 (UTC)
+Date:   Mon, 7 Oct 2019 10:46:22 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Emmanuel Vadot <manu@bidouilliste.com>
+Cc:     Emmanuel Vadot <manu@freebsd.org>, bcousson@baylibre.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: Set status to disable for MMC3
+Message-ID: <20191007174622.GW5610@atomide.com>
+References: <20191007080339.57209-1-manu@freebsd.org>
+ <20191007161634.GS5610@atomide.com>
+ <20191007183830.71e1303d6bd713014dc36710@bidouilliste.com>
+ <20191007165859.GV5610@atomide.com>
+ <20191007192922.7ce3423bd1fd03551487e907@bidouilliste.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191007192922.7ce3423bd1fd03551487e907@bidouilliste.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some pending fixes. The first patch is needed to allow
-dynamic resolution changes, as per the upcoming stateless
-decoder API. This patch was posted before and received
-some comments from Philipp Zabel.
+* Emmanuel Vadot <manu@bidouilliste.com> [191007 17:30]:
+> On Mon, 7 Oct 2019 09:58:59 -0700
+> Tony Lindgren <tony@atomide.com> wrote:
+> > There should be no need to do that for SoC internal devices, the
+> > the default status = "okay" should be just fine. Setting the
+> > status = "disabled" for SoC internal devices and then enabling them
+> > again for tens of board specific dts files just generates tons of
+> > pointless extra churn for the board specific configuration.
+> 
+>  Setting the status = "okay" means that you can use the device. What's
+> the point of enabling a device if you can't use it ? Or worse can't
+> probe it like i2c or spi ?
 
-The second patch was posted by Jonas Karlman as part
-of his series to add support for interlaced content.
-The fix can be applied independently so I'm including it
-here.
+The main reasons for not setting SoC internal devices with
+status = "disabled" are:
 
-Patches 3 and 4 correspond to fixes found by Francois Buergisser
-while doing some tests on ChromeOS.
+1. The SoC internal device is there for sure and also accessible
+   for the kernel
 
-Ezequiel Garcia (1):
-  media: hantro: Fix s_fmt for dynamic resolution changes
+2. Setting an SoC internal device with status = "disabled" makes
+   the kernel completely ignore it and it cannot be idled for PM
+   if left on from the bootloader
 
-Francois Buergisser (2):
-  media: hantro: Fix motion vectors usage condition
-  media: hantro: Fix picture order count table enable
+3. We avoid tens of lines of pointess repetive status = "okay"
+   tinkering for multiple devices per each board specic dts file
+   making them more readable and easier to maintain
 
-Jonas Karlman (1):
-  media: hantro: Fix H264 max frmsize supported on RK3288
+>  Is the plan for TI dts to have every (or almost) device tree node
+> enabled even if the device isn't usable on the board ?
 
- .../staging/media/hantro/hantro_g1_h264_dec.c |  6 ++--
- drivers/staging/media/hantro/hantro_v4l2.c    | 28 +++++++++++++------
- drivers/staging/media/hantro/rk3288_vpu_hw.c  |  4 +--
- 3 files changed, 24 insertions(+), 14 deletions(-)
+This has always been the case with omap3, 4, and 5. I don't
+know when folks started tagging am33xx SoC internal devices as
+disabled but that should have never been necessary.
 
--- 
-2.22.0
+Few years back I suggested some patches for status = "incomplete"
+to deal with cases where the device is there but not pinned
+out or otherwise not complete. But so far we've gotten away
+without that, so probably not needed.
 
+> > >  In this case it's FreeBSD being  because (I think) we have bad support
+> > > for the clocks for this module so we panic when we read from it as the
+> > > module isn't clocked. And since I find it wrong to have device enabled
+> > > while it isn't present I've sent this patch.
+> > 
+> > Thanks for clarifying what happens. OK, sounds like FreeBSD might be
+> > missing clock handling for some devices then.
+> > 
+> > What Linux does is probe the internal devices and then idle the
+> > unused ones as bootloaders often leave many things enabled. Otherwise
+> > the SoC power management won't work properly because device clocks
+> > will block deeper SoC idle states.
+> 
+>  I can understand stand but then the bootload should be fixed to not
+> enable devices that aren't enabled in the DTS if it does that.
+
+This is not doable as in many cases the bootloader cannot be
+updated as it can be signed for phones like n900 and droid4.
+
+Regards,
+
+Tony
