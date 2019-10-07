@@ -2,226 +2,132 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE74C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B16C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC44E20867
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:03:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FE9921479
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:03:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="VZjzhTDs";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Eu73t2sR"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OHR/EYO3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729466AbfJGWD3 (ORCPT
+        id S1729531AbfJGWDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 18:03:29 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:40890 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728422AbfJGWD3 (ORCPT
+        Mon, 7 Oct 2019 18:03:43 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:43637 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728422AbfJGWDm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 18:03:29 -0400
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x97M0L1P002970;
-        Mon, 7 Oct 2019 15:02:49 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=c9OFU67Nme12ss2a2e2CJGmIEWpJhOcZpPtuepV8Kc4=;
- b=VZjzhTDszYoveecWeqlVaWomlIyjRGiKi1GVwIvQ6mEK4N+HFwb/4P5dakHVnd912aTV
- nVtEmbou/YVtPyO5OVpKJQz2f761p9WRSyrDPIkt7Zq2ge4yrnhOkBBJs99/vt4hplai
- hcMCJKF7SzaMwzyu7AcKDfjY77fRDwy1e5o= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2vgbjx8k16-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 07 Oct 2019 15:02:49 -0700
-Received: from ash-exhub102.TheFacebook.com (2620:10d:c0a8:82::f) by
- ash-exhub204.TheFacebook.com (2620:10d:c0a8:83::4) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 7 Oct 2019 15:02:48 -0700
-Received: from NAM05-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.172) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Mon, 7 Oct 2019 15:02:48 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CkImLnXmZe19zooANgU9mM/gQLz4KuTZHtMnF/CWAlSL5/KQfFjNsrwsjNJEkhPbWvzbYIWLwVXy2Cwn0VNRcvP1j4aWVrkagpiJ767QT40+0iLjgl3M4kRU/iitqQNvONpbZX5H3UESfb61E/mb76ZMk++cQSovgUb8sSIqGPjN8KZmmFK8ANErVhRzLKrEyhJtYfFxgzVdLMKVrYqqFSuS0dNQ/KYAS8gCgVzF2zSp2OYZma+8C+NxBUKCLf2KWExqvEuzsNjrgdT0Yk9sEAeYyBS7be9bQTgEyc0RBN9LpZ52NU//1LYNQMkVtxXB//mRSLt/ohK9KoNG9Poqnw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=c9OFU67Nme12ss2a2e2CJGmIEWpJhOcZpPtuepV8Kc4=;
- b=DZdXZ0yDupa6EGgQTqQKrno2copM9QaLz2qU+Q4BAMlzVG4bCXYEvuJ2yWC4UGjCy+5iT5XQ5fuqSkru1qL1lxFWgRatvceVT/m1GRPMKnq6hPaCAMZgwPugunDM27TXoPuHW47c/IbWEMeuOvbK+JPLyrmA6GL6dtnciAS2bKhbXKC59ISUWOrBtVWL7modc1iOH9+GQsrDFf+iSRbTZ6zWgX1gLosZooV3AAvlIjJBp0Rmkow0Nn5YATzlvqwZ76EfH3day8SCzLhjAH13cP7BfHeP+D5v/hP119IH7xLuYaQGUmOkKOBg4tOXpSzSktII0ewIpXxCejsc92yfOg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=c9OFU67Nme12ss2a2e2CJGmIEWpJhOcZpPtuepV8Kc4=;
- b=Eu73t2sRPqjW68okeyBAOhjPl//zLN4nPknPoPFi+DKn2D/5zRH/vE/Vgpv7Y6hbET6d62RWLtpT9H2YrgVhm6HR9relOjA1f29c2wrfcFcad8AmU5Yw7q+WJCRDGU0bCQDPTEuSyYjkmRYwNV5ZmMbtELXaetPIvYlZjdKBaFE=
-Received: from BN8PR15MB2626.namprd15.prod.outlook.com (20.179.137.220) by
- BN8PR15MB2932.namprd15.prod.outlook.com (20.178.222.80) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.24; Mon, 7 Oct 2019 22:02:46 +0000
-Received: from BN8PR15MB2626.namprd15.prod.outlook.com
- ([fe80::dde5:821f:4571:dea4]) by BN8PR15MB2626.namprd15.prod.outlook.com
- ([fe80::dde5:821f:4571:dea4%5]) with mapi id 15.20.2327.023; Mon, 7 Oct 2019
- 22:02:46 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     Hillf Danton <hdanton@sina.com>
-CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "tj@kernel.org" <tj@kernel.org>, Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH] cgroup, blkcg: prevent dirty inodes to pin dying memory
- cgroups
-Thread-Topic: [PATCH] cgroup, blkcg: prevent dirty inodes to pin dying memory
- cgroups
-Thread-Index: AQHVfNS/K+Vdy4pObUu1FttqCOATf6dPvDgA
-Date:   Mon, 7 Oct 2019 22:02:46 +0000
-Message-ID: <20191007220242.GA25914@tower.DHCP.thefacebook.com>
-References: <20191007060144.12416-1-hdanton@sina.com>
-In-Reply-To: <20191007060144.12416-1-hdanton@sina.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR19CA0052.namprd19.prod.outlook.com
- (2603:10b6:300:94::14) To BN8PR15MB2626.namprd15.prod.outlook.com
- (2603:10b6:408:c7::28)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::2:e5d8]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e89d44be-4cb7-4b95-1eba-08d74b7215ed
-x-ms-traffictypediagnostic: BN8PR15MB2932:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN8PR15MB2932E6C0AC6E18CC2C5724F4BE9B0@BN8PR15MB2932.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 01834E39B7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(136003)(366004)(346002)(376002)(396003)(189003)(199004)(6916009)(52116002)(305945005)(6436002)(6246003)(446003)(11346002)(486006)(476003)(102836004)(46003)(14454004)(186003)(7736002)(6486002)(6512007)(316002)(9686003)(54906003)(25786009)(99286004)(478600001)(229853002)(33656002)(76176011)(66946007)(5660300002)(81156014)(6116002)(81166006)(8676002)(6506007)(386003)(256004)(64756008)(8936002)(66476007)(66556008)(2906002)(66446008)(71190400001)(14444005)(1076003)(71200400001)(4326008)(5024004)(86362001)(14143004);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR15MB2932;H:BN8PR15MB2626.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: inobzCp4faM3ICVtT+VeB4tWBzfDb12XHUtyRkwhiSg30m+4WoWbOvbcFLsteV6/+Df8h3b4za9Z2exqZW4JJRQhxlK8BKWiVi7y9/HtYzWxmjhA6/MPH5pTT/9XmJGzb9ONnFsr5jv6CtvzhYKG4OJFuxre37avvAEcVwN7fLbQxQTT55dK1rBZOUFhbm/ds2h6OnXLlNKHizyRkGcc9NZzRF5v2qvrIMS8pXKSEqwhHLVYk0Fq8Jlc3Au+dvKcCseOwxZ8m/79KPl2bPrRoppwIRNOa2VQzcYhm0/oWUi3g3f+oTn8CgRRoqwSDTrpsEdCIx5q+7ImRqDwEfSb1GFGwL+rd5rPl/tEfHldHK07ZJk6Lo6HGmA9E1mGlGg3m912qTo2mw+L8zXahW7JkXMbptlFjjFXknp2kkS7MvU=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <8292DFBB9E86F34D971A322BBFA4A9E8@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 7 Oct 2019 18:03:42 -0400
+Received: by mail-pf1-f193.google.com with SMTP id a2so9502928pfo.10
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 15:03:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UZGzcGWSg7j1xVwFlul4lYcpfYvPiRRuiper8S6eU8I=;
+        b=OHR/EYO3cx6EzPLG+F/+e+l1QFiXnAScx7C66XtHVA4XkmhUKC8GCyCrw7porywgnY
+         G52UMxivFJ3ALT04VoTi+K9+uuJlh/wG2mFaMuwE1MEax0cvsjjShc4khXPVh4hHfaPC
+         MJWsVeU9IwaEM5alXFzudcZCuLv9f7HlfNXiTVP5q8HP0CMxVn5Z0xvYWY5j4YyIx35n
+         skIA2xwOCPTtHRZR9D7bw++okRR0sytqs8Aie70egpUaO4SDNSz5qd63ZmEM5JIYeRP3
+         VRvH4ETFFPrsUZ4CTtji1vrAzMLrnv3Bv+stoP0+uZEWJzKMC1E3fng9tz/Q5E9Cgtuh
+         0rPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UZGzcGWSg7j1xVwFlul4lYcpfYvPiRRuiper8S6eU8I=;
+        b=m0yNZLdHcSnJyMKo8T9YM3Xvn+D1xcmcjAXggxfxL4ivMn5DCXS2xmuG6ES+bpnh55
+         MOZlrSidSLcCZFJVTeyc04NuXrhkzt5MqCQMRlAW+FqwrCzSKum7D8JETT2DHUxudbFm
+         yxhn5vbaPQluQplA+mT1JFfRvO1AkG4pCFtXS5GLC0RnptsjuE16TiWj3kFGiRA/cP3u
+         XmeaGqj5sc1QBNTHlin5GKbfQScG/yGUGzYkqpfYXxgMoPjJltVKOtvLIz5n28F5+MOC
+         lDkVwZfE4h1H4bwivVXQsRZVo+mjCuFk/6arSP8KtKxUjVhnxFGuA0uz3HDbdh9uujj/
+         3WGA==
+X-Gm-Message-State: APjAAAVDE7GNqrF8I1Ez4P2qTyexkyqzRR5dlbyeU7niHqxMzgiAMrc0
+        QDMmB6Bhb6DMQztyjxTFCE2tomgA3uK5CTXp5RDDJw==
+X-Google-Smtp-Source: APXvYqymIFmH/VdtekqcD7IGssXBBT3ftOgwACxjQDDGzT3sa3TN5XbpsxVHSgFRKPMOa6CZsa+r/b9Fhw8989/rN3o=
+X-Received: by 2002:a63:6641:: with SMTP id a62mr31888287pgc.384.1570485821624;
+ Mon, 07 Oct 2019 15:03:41 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: e89d44be-4cb7-4b95-1eba-08d74b7215ed
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Oct 2019 22:02:46.4969
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wKirTGemFppks5JVhU7rsnyWFidx/78hEv4oJq4gmbz+46I86j+YzMvFKqtwR07J
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR15MB2932
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-07_04:2019-10-07,2019-10-07 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 impostorscore=0
- priorityscore=1501 mlxscore=0 adultscore=0 lowpriorityscore=0 spamscore=0
- phishscore=0 suspectscore=0 clxscore=1015 mlxlogscore=999 bulkscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1910070196
-X-FB-Internal: deliver
+References: <CAEjAshr=JqVpF651eSZYFhwVAMNZ29LWcfrH07K_M9GU=hPnvg@mail.gmail.com>
+ <1567786314-12330-1-git-send-email-sj38.park@gmail.com> <CAFd5g44=8TV4VciMkcD2DHR+UsnpwyEFbw2Xucwo7-as6Py_4g@mail.gmail.com>
+ <1bc1c5da-2810-60d3-4e76-8d0b73fdd521@kernel.org>
+In-Reply-To: <1bc1c5da-2810-60d3-4e76-8d0b73fdd521@kernel.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Mon, 7 Oct 2019 15:03:29 -0700
+Message-ID: <CAFd5g47GXbVk4AbRgKb5voG+DLyEEM+KEb+Fgw3u1qjRY2ZhmQ@mail.gmail.com>
+Subject: Re: [PATCH] kunit: Fix '--build_dir' option
+To:     shuah <shuah@kernel.org>
+Cc:     SeongJae Park <sj38.park@gmail.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 02:01:44PM +0800, Hillf Danton wrote:
->=20
-> On Fri, 4 Oct 2019 15:11:04 -0700 Roman Gushchin wrote:
-> >=20
-> > This is a RFC patch, which is not intended to be merged as is,
-> > but hopefully will start a discussion which can result in a good
-> > solution for the described problem.
-> > --
-> > We've noticed that the number of dying cgroups on our production hosts
-> > tends to grow with the uptime. This time it's caused by the writeback
-> > code.
-> >=20
-> > An inode which is getting dirty for the first time is associated
-> > with the wb structure (look at __inode_attach_wb()). It can later
-> > be switched to another wb under some conditions (e.g. some other
-> > cgroup is writing a lot of data to the same inode), but generally
-> > stays associated up to the end of life of the inode structure.
-> >=20
-> > The problem is that the wb structure holds a reference to the original
-> > memory cgroup. So if the inode was dirty once, it has a good chance
-> > to pin down the original memory cgroup.
-> >=20
-> > An example from the real life: some service runs periodically and
-> > updates rpm packages. Each time in a new memory cgroup. Installed
-> > .so files are heavily used by other cgroups, so corresponding inodes
-> > tend to stay alive for a long. So do pinned memory cgroups.
-> > In production I've seen many hosts with 1-2 thousands of dying
-> > cgroups.
->=20
-> The diff below fixes e8a7abf5a5bd ("writeback: disassociate inodes
-> from dying bdi_writebacks") by selecting new memcg_css id for dying
-> bdi_writeback to switch to.
-> Checking offline memcg is also added, which is perhaps needed in your
-> case. Let us know if it makes sense in helping you cut dying cgroups
-> down a bit.
+On Fri, Sep 6, 2019 at 7:33 PM shuah <shuah@kernel.org> wrote:
+>
+> On 9/6/19 7:16 PM, Brendan Higgins wrote:
+> > On Fri, Sep 6, 2019 at 9:12 AM SeongJae Park <sj38.park@gmail.com> wrote:
+> >>
+> >> Running kunit with '--build_dir' option gives following error message:
+> >>
+> >> ```
+> >> $ ./tools/testing/kunit/kunit.py run --build_dir ../linux.out.kunit/
+> >> [00:57:24] Building KUnit Kernel ...
+> >> [00:57:29] Starting KUnit Kernel ...
+> >> Traceback (most recent call last):
+> >>    File "./tools/testing/kunit/kunit.py", line 136, in <module>
+> >>      main(sys.argv[1:])
+> >>    File "./tools/testing/kunit/kunit.py", line 129, in main
+> >>      result = run_tests(linux, request)
+> >>    File "./tools/testing/kunit/kunit.py", line 68, in run_tests
+> >>      test_result = kunit_parser.parse_run_tests(kunit_output)
+> >>    File "/home/sjpark/linux/tools/testing/kunit/kunit_parser.py", line
+> >> 283, in parse_run_tests
+> >>      test_result =
+> >> parse_test_result(list(isolate_kunit_output(kernel_output)))
+> >>    File "/home/sjpark/linux/tools/testing/kunit/kunit_parser.py", line
+> >> 54, in isolate_kunit_output
+> >>      for line in kernel_output:
+> >>    File "/home/sjpark/linux/tools/testing/kunit/kunit_kernel.py", line
+> >> 145, in run_kernel
+> >>      process = self._ops.linux_bin(args, timeout, build_dir)
+> >>    File "/home/sjpark/linux/tools/testing/kunit/kunit_kernel.py", line
+> >> 69, in linux_bin
+> >>      stderr=subprocess.PIPE)
+> >>    File "/usr/lib/python3.5/subprocess.py", line 947, in __init__
+> >>      restore_signals, start_new_session)
+> >>    File "/usr/lib/python3.5/subprocess.py", line 1551, in _execute_child
+> >>      raise child_exception_type(errno_num, err_msg)
+> >> FileNotFoundError: [Errno 2] No such file or directory: './linux'
+> >> ```
+> >>
+> >> This error occurs because the '--build_dir' option value is not passed
+> >> to the 'run_kernel()' function.  Consequently, the function assumes
+> >> the kernel image that built for the tests, which is under the
+> >> '--build_dir' directory, is in kernel source directory and finally raises
+> >> the 'FileNotFoundError'.
+> >>
+> >> This commit fixes the problem by properly passing the '--build_dir'
+> >> option value to the 'run_kernel()'.
+> >>
+> >> Signed-off-by: SeongJae Park <sj38.park@gmail.com>
+> >
+> > Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+> > Tested-by: Brendan Higgins <brendanhiggins@google.com>
+> >
+> > Thanks!
+> >
+>
+> Thanks Brendan! I will apply the patch for 5.4-rc1.
 
-Hello, Hillf!
-
-Thank you for the patch! I'll be back with testing results in few days.
-I doubt that it can completely solve the problem (if nobody is using
-the inode for writing), but probably can make it less noticeable.
-
-Thanks!
-
->=20
-> --- a/fs/fs-writeback.c
-> +++ b/fs/fs-writeback.c
-> @@ -552,6 +552,8 @@ out_free:
->  void wbc_attach_and_unlock_inode(struct writeback_control *wbc,
->  				 struct inode *inode)
->  {
-> +	int new_id =3D 0;
-> +
->  	if (!inode_cgwb_enabled(inode)) {
->  		spin_unlock(&inode->i_lock);
->  		return;
-> @@ -560,6 +562,22 @@ void wbc_attach_and_unlock_inode(struct
->  	wbc->wb =3D inode_to_wb(inode);
->  	wbc->inode =3D inode;
-> =20
-> +	if (unlikely(wb_dying(wbc->wb)) ||
-> +	    !mem_cgroup_from_css(wbc->wb->memcg_css)->cgwb_list.next) {
-> +		int id =3D wbc->wb->memcg_css->id;
-> +		/*
-> +		 * any css id is fine in order to let dying/offline
-> +		 * memcg reap
-> +		 */
-> +		if (id !=3D wbc->wb_id && wbc->wb_id)
-> +			new_id =3D wbc->wb_id;
-> +		else if (id !=3D wbc->wb_lcand_id && wbc->wb_lcand_id)
-> +			new_id =3D wbc->wb_lcand_id;
-> +		else if (id !=3D wbc->wb_tcand_id && wbc->wb_tcand_id)
-> +			new_id =3D wbc->wb_tcand_id;
-> +		else
-> +			new_id =3D inode_to_bdi(inode)->wb.memcg_css->id;
-> +	}
->  	wbc->wb_id =3D wbc->wb->memcg_css->id;
->  	wbc->wb_lcand_id =3D inode->i_wb_frn_winner;
->  	wbc->wb_tcand_id =3D 0;
-> @@ -574,8 +592,8 @@ void wbc_attach_and_unlock_inode(struct
->  	 * A dying wb indicates that the memcg-blkcg mapping has changed
->  	 * and a new wb is already serving the memcg.  Switch immediately.
->  	 */
-> -	if (unlikely(wb_dying(wbc->wb)))
-> -		inode_switch_wbs(inode, wbc->wb_id);
-> +	if (new_id)
-> +		inode_switch_wbs(inode, new_id);
->  }
->  EXPORT_SYMBOL_GPL(wbc_attach_and_unlock_inode);
-> =20
-> --
->=20
->=20
+Shuah, can you apply this to the kselftest KUnit branch? This should
+not require a resend.
