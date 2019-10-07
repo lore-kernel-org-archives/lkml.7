@@ -7,47 +7,42 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B3BFC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A6E3ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2883E2173B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:51:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF0382196E
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:51:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729186AbfJGOv4 (ORCPT
+        id S1728288AbfJGOt1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 10:51:56 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44307 "EHLO
+        Mon, 7 Oct 2019 10:49:27 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44232 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728340AbfJGOt3 (ORCPT
+        with ESMTP id S1727970AbfJGOtZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 10:49:29 -0400
+        Mon, 7 Oct 2019 10:49:25 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iHUK8-0005vJ-AI; Mon, 07 Oct 2019 16:49:20 +0200
+        id 1iHUK6-0005yC-6B; Mon, 07 Oct 2019 16:49:18 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 02A171C032F;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 719281C0DC9;
         Mon,  7 Oct 2019 16:49:15 +0200 (CEST)
-Date:   Mon, 07 Oct 2019 14:49:14 -0000
-From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
+Date:   Mon, 07 Oct 2019 14:49:15 -0000
+From:   "tip-bot2 for Andi Kleen" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf annotate: Propagate perf_env__arch() error
-Cc:     "Russell King - ARM Linux admin" <linux@armlinux.org.uk>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
+Subject: [tip: perf/urgent] perf script brstackinsn: Fix recovery from
+ LBR/binary mismatch
+Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <tip-it5d83kyusfhb1q1b0l4pxzs@git.kernel.org>
-References: <tip-it5d83kyusfhb1q1b0l4pxzs@git.kernel.org>
+In-Reply-To: <20190927233546.11533-1-andi@firstfloor.org>
+References: <20190927233546.11533-1-andi@firstfloor.org>
 MIME-Version: 1.0
-Message-ID: <157045975491.9978.7407885401936915311.tip-bot2@tip-bot2>
+Message-ID: <157045975542.9978.14015561869362479880.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -63,44 +58,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     a66fa0619a0ae3585ef09e9c33ecfb5c7c6cb72b
-Gitweb:        https://git.kernel.org/tip/a66fa0619a0ae3585ef09e9c33ecfb5c7c6cb72b
-Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Mon, 30 Sep 2019 15:06:01 -03:00
+Commit-ID:     e98df280bc2a499fd41d7f9e2d6733884de69902
+Gitweb:        https://git.kernel.org/tip/e98df280bc2a499fd41d7f9e2d6733884de69902
+Author:        Andi Kleen <ak@linux.intel.com>
+AuthorDate:    Fri, 27 Sep 2019 16:35:44 -07:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Mon, 30 Sep 2019 17:29:58 -03:00
+CommitterDate: Mon, 30 Sep 2019 17:29:52 -03:00
 
-perf annotate: Propagate perf_env__arch() error
+perf script brstackinsn: Fix recovery from LBR/binary mismatch
 
-The callers of symbol__annotate2() use symbol__strerror_disassemble() to
-convert its failure returns into a human readable string, so
-propagate error values from functions it calls, starting with
-perf_env__arch() that when fails the right thing to do is to look at
-'errno' to see why its possible call to uname() failed.
+When the LBR data and the instructions in a binary do not match the loop
+printing instructions could get confused and print a long stream of
+bogus <bad> instructions.
 
-Reported-by: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+The problem was that if the instruction decoder cannot decode an
+instruction it ilen wasn't initialized, so the loop going through the
+basic block would continue with the previous value.
+
+Harden the code to avoid such problems:
+
+- Make sure ilen is always freshly initialized and is 0 for bad
+  instructions.
+
+- Do not overrun the code buffer while printing instructions
+
+- Print a warning message if the final jump is not on an instruction
+  boundary.
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-Cc: Will Deacon <will@kernel.org>
-Link: https://lkml.kernel.org/n/tip-it5d83kyusfhb1q1b0l4pxzs@git.kernel.org
+Link: http://lore.kernel.org/lkml/20190927233546.11533-1-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/annotate.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/builtin-script.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index e830ead..9b7b917 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -2071,7 +2071,7 @@ int symbol__annotate(struct symbol *sym, struct map *map,
- 	int err;
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 286fc70..67be8d3 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -1063,7 +1063,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+ 			continue;
  
- 	if (!arch_name)
--		return -1;
-+		return errno;
+ 		insn = 0;
+-		for (off = 0;; off += ilen) {
++		for (off = 0; off < (unsigned)len; off += ilen) {
+ 			uint64_t ip = start + off;
  
- 	args.arch = arch = arch__find(arch_name);
- 	if (arch == NULL)
+ 			printed += ip__fprintf_sym(ip, thread, x.cpumode, x.cpu, &lastsym, attr, fp);
+@@ -1074,6 +1074,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+ 					printed += print_srccode(thread, x.cpumode, ip);
+ 				break;
+ 			} else {
++				ilen = 0;
+ 				printed += fprintf(fp, "\t%016" PRIx64 "\t%s\n", ip,
+ 						   dump_insn(&x, ip, buffer + off, len - off, &ilen));
+ 				if (ilen == 0)
+@@ -1083,6 +1084,8 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+ 				insn++;
+ 			}
+ 		}
++		if (off != (unsigned)len)
++			printed += fprintf(fp, "\tmismatch of LBR data and executable\n");
+ 	}
+ 
+ 	/*
+@@ -1123,6 +1126,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+ 		goto out;
+ 	}
+ 	for (off = 0; off <= end - start; off += ilen) {
++		ilen = 0;
+ 		printed += fprintf(fp, "\t%016" PRIx64 "\t%s\n", start + off,
+ 				   dump_insn(&x, start + off, buffer + off, len - off, &ilen));
+ 		if (ilen == 0)
