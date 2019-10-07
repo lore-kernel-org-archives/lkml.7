@@ -2,72 +2,138 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB80C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE30C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A664620679
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:14:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6572217D6
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:14:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570436085;
+	bh=zkZeNn2p4QwOzYPYGSMsQ6sbzPhcS7MdkgA8k3K/rlI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Nb+Y26rI3jWJEfdiuUFJhaN6KoeV9zIhlSRd84gv+KUIb6lAcWg/INElcFsnVwFKG
+	 wl8FpOwPNkVm3vevXl2EhIEYfoWBrK24LcDSUVPQCIfiTMz53tLWj+0Nw57+//FkiU
+	 ERsAlZAVPwOOj+59OkZ0fLoSXpwFSfE5WXzw/QGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727485AbfJGIOP (ORCPT
+        id S1727488AbfJGIOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 04:14:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55208 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727103AbfJGIOP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 04:14:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3CD96AD45;
-        Mon,  7 Oct 2019 08:14:13 +0000 (UTC)
-Date:   Mon, 7 Oct 2019 10:14:11 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     akpm@linux-foundation.org
-Cc:     andy.shevchenko@gmail.com, sergey.senozhatsky.work@gmail.com,
-        hughd@google.com, uwe@kleine-koenig.org,
-        jani.nikula@linux.intel.com, corbet@lwn.net,
-        mike.kravetz@oracle.com, joe@perches.com, linux@rasmusvillemoes.dk,
-        aarcange@redhat.com, pavel@ucw.cz, linux-kernel@vger.kernel.org,
-        mm-commits@vger.kernel.org
-Subject: Re: + printf-add-support-for-printing-symbolic-error-codes.patch
- added to -mm tree
-Message-ID: <20191007081411.fyvbvnjbvmpi4nla@pathway.suse.cz>
-References: <20191005215200.OEG97MjOa%akpm@linux-foundation.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191005215200.OEG97MjOa%akpm@linux-foundation.org>
-User-Agent: NeoMutt/20170912 (1.9.0)
+        Mon, 7 Oct 2019 04:14:45 -0400
+Received: from inca-roads.misterjones.org ([213.251.177.50]:39373 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726889AbfJGIOo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 04:14:44 -0400
+Received: from [82.98.7.229] (helo=big-swifty.misterjones.org)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iHOAB-00052F-KV; Mon, 07 Oct 2019 10:14:39 +0200
+Date:   Mon, 07 Oct 2019 09:14:38 +0100
+Message-ID: <86blutdlap.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        rayagonda.kokatanur@broadcom.com, li.jin@broadcom.com,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 2/2] pinctrl: iproc: use unique name for irq chip
+In-Reply-To: <CAMuHMdV7syxxtnHEcgFBrf5DLo-M_71tZFWHHQ6kTO=2A1eVhg@mail.gmail.com>
+References: <20191003000310.17099-1-chris.packham@alliedtelesis.co.nz>
+        <20191003000310.17099-3-chris.packham@alliedtelesis.co.nz>
+        <CAMuHMdV7syxxtnHEcgFBrf5DLo-M_71tZFWHHQ6kTO=2A1eVhg@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 82.98.7.229
+X-SA-Exim-Rcpt-To: geert@linux-m68k.org, chris.packham@alliedtelesis.co.nz, linus.walleij@linaro.org, rjui@broadcom.com, sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com, rayagonda.kokatanur@broadcom.com, li.jin@broadcom.com, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
-
-On Sat 2019-10-05 14:52:00, Andrew Morton wrote:
+On Mon, 07 Oct 2019 08:30:50 +0100,
+Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 > 
-> The patch titled
->      Subject: vsprintf: add support for printing symbolic error codes
-> has been added to the -mm tree.  Its filename is
->      printf-add-support-for-printing-symbolic-error-codes.patch
+> Hi Chris,
+> 
+> CC MarcZ
+> 
+> On Thu, Oct 3, 2019 at 2:03 AM Chris Packham
+> <chris.packham@alliedtelesis.co.nz> wrote:
+> > Use the dev_name(dev) for the irqc->name so that we get unique names
+> > when we have multiple instances of this driver.
+> >
+> > Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> 
+> A while ago, Marc Zyngier pointed out that the irq_chip .name field
+> should contain the device's class name, not the instance's name.
+> Hence the current code is correct?
 
-The patch is still under discussion. AFAIK, Rasmus is working on v4.
-The main points are:
+Thanks Geert for looping me in. The main reasons why I oppose this
+kind of "let's show as much information as we can in /proc/interrupts"
+are:
 
-  + Rename the ambiguous "errcode" to "errname".
+- It clutters the output badly: the formatting of this file, which is
+  bad enough when you have a small number of CPUs, becomes unreadable
+  when you have a large number of them *and* stupidly long strings
+  that only make sense on a given platform.
 
-  + Introduce "%pe" instead of enhancing plain %p. First, the plain %p
-    has become almost useless (hashing) on purpose (avoid leaking
-    addresses). Second, we need something that will be explicitly
-    used to print error codes.
+- Like it or not, /proc is ABI. We don't change things randomly there
+  without a good reason, and debugging isn't one of them.
 
-  + Plus there are few more cosmetic issues.
+- Debug information belongs to debugfs, where we already have plenty
+  of stuff (see CONFIG_GENERIC_IRQ_DEBUGFS). I'd rather we improve
+  this infrastructure if needed, rather than add platform specific
+  hacks.
 
-I planed to take the patch via printk.git once ready.
+</rant>
 
-Best Regards,
-Petr
+Thanks,
+
+	M.
+
+> 
+> See also "[PATCH 0/4] irqchip: renesas: Use proper irq_chip name and parent"
+> (https://lore.kernel.org/lkml/20190607095858.10028-1-geert+renesas@glider.be/)
+> Note that the irqchip patches in that series have been applied; the gpio
+> patches haven't been applied yet.
+> 
+> > --- a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
+> > +++ b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
+> > @@ -858,7 +858,7 @@ static int iproc_gpio_probe(struct platform_device *pdev)
+> >                 struct gpio_irq_chip *girq;
+> >
+> >                 irqc = &chip->irqchip;
+> > -               irqc->name = "bcm-iproc-gpio";
+> > +               irqc->name = dev_name(dev);
+> >                 irqc->irq_ack = iproc_gpio_irq_ack;
+> >                 irqc->irq_mask = iproc_gpio_irq_mask;
+> >                 irqc->irq_unmask = iproc_gpio_irq_unmask;
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> -- 
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+> 
+
+-- 
+Jazz is not dead, it just smells funny.
