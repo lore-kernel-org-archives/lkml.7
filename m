@@ -3,456 +3,170 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C48A7C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 23:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD4EC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 23:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87CCA206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 23:17:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0CB12133F
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 23:18:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bapJKVCy"
+	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="lKgg9ZjO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729627AbfJGXRU (ORCPT
+        id S1729650AbfJGXSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 19:17:20 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:46419 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729145AbfJGXRU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 19:17:20 -0400
-Received: by mail-qt1-f196.google.com with SMTP id u22so21869151qtq.13;
-        Mon, 07 Oct 2019 16:17:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IaS4SvPI45yDASGgPA0MR5GDu2HWprEyugIRxy5AF38=;
-        b=bapJKVCyKZa5vv5p1iRW9jWrpLSD/c7Eu6a6+nqTKYH0bCpbf4RnBNBlqdIqQE+BlB
-         K/eTb4F2CaqXRCT/YvVvRIBcSo05ODA76vJPJbAP7yHBD8ndPDX3ZRueZhrPE7skL80y
-         1Q3/cR/t1rxTamDhUswk0eUfVvZpVgVQpnGt7Iag5Ma/4ZJenVNr4Dq9o0/hVZskTTh2
-         HYJib4frOtydJ541j7nvYTgTgU7EQ8hP3JwqveSlN7xvmDJnrWzEKQ7PWZG98w0fBRET
-         1uIfGMSLNgceuAzgjsk2MuF9hB/NGkRykEqMGVXFjMe+Rmi4HwR286RCRhbV5n/buMZz
-         ZE3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IaS4SvPI45yDASGgPA0MR5GDu2HWprEyugIRxy5AF38=;
-        b=rSAMRhTRKHp204l3L+jL5qH3S3xtbV9cICqU5HgfhAhlgaGAhf+IJ8CTW6TcyiKzpz
-         On5K2nl2/1kngo2aoS4dnVFtOaRqDI+gf3F35LvoRo38xgD+lRS41MbP9LhKjP8pI4wm
-         Q3KtUiqmFm/puySkv9Va/+R6e50XpZS70WzYZCiaLwS8Q4PK9Q7TZ+rXUa4tmvFcOwUn
-         KrI23d0b8/nFk21fj+omggYFV5/qXhHClmq0ptqipzjl5WTnVZN1IJLJLKey6zQ5je//
-         h/WfnQgnBV9QfkW96EOfCFNbqp1wvatU/34BOXTs4vTdadbP3GsDgB4Z/tO/tk+HeRPl
-         YCBQ==
-X-Gm-Message-State: APjAAAXit+41ii7WBzhK10ptdeNsu93/6P53GPjaPpruxjvVuCndx/CV
-        4O8BOu4DjEhoRyU4jxPAqP7gKdck30c=
-X-Google-Smtp-Source: APXvYqwJ9Oke9J3Qv6c7mH0vRKhzWS46GZMqlBpnaUGfJU8epLYqNkkToLRG1QLF4GaD+kzFDAM6Zw==
-X-Received: by 2002:a0c:acbb:: with SMTP id m56mr29779075qvc.93.1570490238466;
-        Mon, 07 Oct 2019 16:17:18 -0700 (PDT)
-Received: from localhost.localdomain (189-47-91-141.dsl.telesp.net.br. [189.47.91.141])
-        by smtp.gmail.com with ESMTPSA id w6sm7673780qkj.136.2019.10.07.16.17.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2019 16:17:15 -0700 (PDT)
-From:   =?UTF-8?q?Lucas=20A=2E=20M=2E=20Magalh=C3=A3es?= 
-        <lucmaga@gmail.com>
-To:     linux-media@vger.kernel.org
-Cc:     hverkuil@xs4all.nl, linux-kernel@vger.kernel.org,
-        helen.koike@collabora.com, edusbarretto@gmail.com,
-        lkcamp@lists.libreplanetbr.org,
-        "Lucas A . M . Magalhaes" <lucmaga@gmail.com>
-Subject: [PATCH v3] media: vimc: fla: Add virtual flash subdevice
-Date:   Mon,  7 Oct 2019 20:17:11 -0300
-Message-Id: <20191007231711.29902-1-lucmaga@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Mon, 7 Oct 2019 19:18:09 -0400
+Received: from mail-eopbgr770134.outbound.protection.outlook.com ([40.107.77.134]:27147
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729145AbfJGXSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 19:18:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BpzXW9g+Ef75VOCZElEAUoKU6xMWIZR/5kIr5pdDniTQx00tuXxxXapCHCgtGtWirYT56dxGc2GEjYRuZv4hb/g2eyw2OFaXjY+mAihW0rl3Rv181fOL4oOBZlObyn/Oix2O7TjrD6Y76P9xJo+8dDDSJ0d6DnYiyU5aYDTWTB6II5RiljudzkvxnVcIzPkcoGXDrJ03ehtRXPiV72tGp0rT9asFrUQQFyyezC4UTprtwZRv5p1ZmZme+MCGKHaM76L88PZZ+6CM43QESVmhwn122JRVNRpSmj0Nrnw6am2qBiiLAgYn62Jb8ptieRF7QmAWzWn72TEKDDNDlL3Gpg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DVuydUpP/ytwpgLVGagQM9NYG1nqPxS+6NcT1OwEgYI=;
+ b=Vg/h1wbkCcEQQPVJI5RT0VxT4KSdPCu8OxAvPYzADZ3P+KQHD3l9iBGrRHw/7gI+N88cSz//2z1dV8g14rEBXufTlzmqO0/eIsYahiLvF87Y9y6U5p4O82uOhMWRoNnODj93X913ZE7TNkRfhHumt4mgvY5caDAWDwUSjg/7M/0PlXpoKe3oZZQPcJNHxPJc5kOdRikmPgWKJa8LzNolqw4jTJbTqwU3fG3Ljei4B/j2Q9dOlia0dCx1K8P9xm/29JPMBmnG9NSSX96EpNJlI9DzoLBYLhj1AHsdR/xuXIx170r0/IkUAdi2XqQNwD91IX29Zcm2i03OPfAUUJbhGQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=mips.com;
+ dkim=pass header.d=mips.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DVuydUpP/ytwpgLVGagQM9NYG1nqPxS+6NcT1OwEgYI=;
+ b=lKgg9ZjO7RNb/KUuhwOsKyn3PKTje04TOIwDyvDNlCKmdnHG6u3hwlcsQFCTf37MpwAO24ZUWrIwKzKv0UKeTjeFSdDqsVdBZUXUxg86lqTgRIgt4P8+uSUkTOn+JvPMFVBqm+ju7S43GYL1i6fwJyQgG4iIcyDbbVZt+R8b6qU=
+Received: from CY4PR2201MB1272.namprd22.prod.outlook.com (10.171.214.23) by
+ CY4PR2201MB1096.namprd22.prod.outlook.com (10.171.223.34) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.20; Mon, 7 Oct 2019 23:18:06 +0000
+Received: from CY4PR2201MB1272.namprd22.prod.outlook.com
+ ([fe80::9987:ed50:7ca7:d232]) by CY4PR2201MB1272.namprd22.prod.outlook.com
+ ([fe80::9987:ed50:7ca7:d232%8]) with mapi id 15.20.2327.025; Mon, 7 Oct 2019
+ 23:18:06 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Paul Burton <pburton@wavecomp.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: [PATCH] staging/octeon: Use stubs for MIPS && !CAVIUM_OCTEON_SOC
+Thread-Topic: [PATCH] staging/octeon: Use stubs for MIPS && !CAVIUM_OCTEON_SOC
+Thread-Index: AQHVfWV5h/4dLnhlLUKkJHMTdL4W6Q==
+Date:   Mon, 7 Oct 2019 23:18:06 +0000
+Message-ID: <20191007231741.2012860-1-paul.burton@mips.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR01CA0038.prod.exchangelabs.com (2603:10b6:a03:94::15)
+ To CY4PR2201MB1272.namprd22.prod.outlook.com (2603:10b6:910:6e::23)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.23.0
+x-originating-ip: [73.93.155.166]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 10a9a7e4-7774-4786-a772-08d74b7c9bc6
+x-ms-traffictypediagnostic: CY4PR2201MB1096:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR2201MB1096EF9D72CE1809990DA7FFC19B0@CY4PR2201MB1096.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 01834E39B7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(396003)(346002)(366004)(39840400004)(376002)(199004)(189003)(6916009)(66066001)(966005)(2906002)(71200400001)(25786009)(316002)(71190400001)(478600001)(256004)(7736002)(5660300002)(14454004)(1076003)(102836004)(99286004)(52116002)(26005)(305945005)(44832011)(386003)(42882007)(6506007)(2616005)(486006)(6306002)(476003)(6486002)(6512007)(186003)(4326008)(6436002)(36756003)(6116002)(54906003)(81156014)(81166006)(50226002)(8936002)(64756008)(66946007)(66476007)(66556008)(8676002)(66446008)(3846002);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR2201MB1096;H:CY4PR2201MB1272.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: rwrMWNss/tZluCIMIljKtmdfmy/Hq9ULJoWQH2l5qG+q2sTuwhGafEuvKgqViYOS1N6PlArked0IyLPSbt2yV/FCqAjD7o5QrjXmhJlNtpbvEpCWSrqQhSHz435RLHfJEzGpHqv3S+240+t4M8gDVzgZ8TX/KG/vptb1sD/ONnwhk7B4ceXWVcTe+IiBDdpDqkxF8viFmvoddqOx+GOjoF5R23H/mHoxniiGmbPbh2apJDfO9hEc7AP60MWxtw+c1+HsBh0e/5cJVC3AR5dZhhBub7O21MMor6ogQ6Ykl2pSHW0wZA399J4Z4WBgASn4YZ5Wt6ngk4Qa9P4zz9u4tQb171yG9QvrCJ2czKqfzKZw7Nyzmyrw7y6qGMYYKuIUxto/Gcox+LM8ToDcUkPjkD+Tna9aUuLu+Wb21r6xdFIRfZ3XuXhqq2qE2MB34n0qkTWjGhw1wnr+Q+mVTLsvnw==
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 10a9a7e4-7774-4786-a772-08d74b7c9bc6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Oct 2019 23:18:06.1678
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: AR7ktAf+mwSsbPixOhYLMVLrtfkczh54cMubnD2YQjYu0fOHLPv7MgjBf+5UNca0bXpABn+OAU+RqRHThzl5zg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR2201MB1096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas A. M. Magalhaes <lucmaga@gmail.com>
+When building for a non-Cavium MIPS system with COMPILE_TEST=3Dy, the
+Octeon ethernet driver hits a number of issues due to use of macros
+provided only for CONFIG_CAVIUM_OCTEON_SOC=3Dy configurations. For
+example:
 
-Add a virtual subdevice to simulate the flash control API.
-Those are the supported controls:
-v4l2-ctl -d /dev/v4l-subdev6 -L
-Flash Controls
+  drivers/staging/octeon/ethernet-rx.c:190:6: error:
+    'CONFIG_CAVIUM_OCTEON_CVMSEG_SIZE' undeclared (first use in this functi=
+on)
+  drivers/staging/octeon/ethernet-rx.c:472:25: error:
+    'OCTEON_IRQ_WORKQ0' undeclared (first use in this function)
 
-                       led_mode 0x009c0901 (menu)   : min=0 max=2 default=1 value=1
-                                0: Off
-                                1: Flash
-                                2: Torch
-                  strobe_source 0x009c0902 (menu)   : min=0 max=1 default=0 value=0
-                                0: Software
-                                1: External
-                         strobe 0x009c0903 (button) : flags=write-only, execute-on-write
-                    stop_strobe 0x009c0904 (button) : flags=write-only, execute-on-write
-                  strobe_status 0x009c0905 (bool)   : default=0 value=0 flags=read-only
-                 strobe_timeout 0x009c0906 (int)    : min=50 max=400 step=50 default=50 value=400
-           intensity_flash_mode 0x009c0907 (int)    : min=23040 max=1499600 step=11718 default=23040 value=23040
-           intensity_torch_mode 0x009c0908 (int)    : min=2530 max=187100 step=1460 default=2530 value=2530
-            intensity_indicator 0x009c0909 (int)    : min=0 max=255 step=1 default=0 value=0
-                         faults 0x009c090a (bitmask): max=0x00000002 default=0x00000000 value=0x00000000
+These come from various asm/ headers that a non-Octeon build will be
+using a non-Octeon version of.
 
-Co-authored-by: Eduardo Barretto <edusbarretto@gmail.com>
-Signed-off-by: Eduardo Barretto <edusbarretto@gmail.com>
-Signed-off-by: Lucas A. M. Magalhães <lucmaga@gmail.com>
+Fix this by using the octeon-stubs.h header for non-Cavium MIPS builds,
+and only using the real asm/octeon/ headers when building a Cavium
+Octeon kernel configuration.
+
+This requires that octeon-stubs.h doesn't redefine XKPHYS_TO_PHYS, which
+is defined for MIPS by asm/addrspace.h which is pulled in by many other
+common asm/ headers.
+
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+URL: https://lore.kernel.org/linux-mips/CAMuHMdXvu+BppwzsU9imNWVKea_hoLcRt9=
+N+a29Q-QsjW=3Dip2g@mail.gmail.com/
+Fixes: 171a9bae68c7 ("staging/octeon: Allow test build on !MIPS")
+Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: David S. Miller <davem@davemloft.net>
 
 ---
-Hi,
 
-I've copied some values from another driver (lm3646) to make it more
-realistic, as suggested by Hans. All values except for
-V4L2_CID_FLASH_INDICATOR_INTENSITY, which I couldn't find any
-implementation.
+ drivers/staging/octeon/octeon-ethernet.h | 2 +-
+ drivers/staging/octeon/octeon-stubs.h    | 5 ++++-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-The v4l-compliance is failing. From the documentation
-V4L2_CID_FLASH_STROBE should just work if the
-V4L2_CID_FLASH_STROBE_SOURCE is "Software" and the
-V4L2_CID_FLASH_LED_MODE is "Flash", otherwise it should fail. With the
-standard values configured for the V4L2_CID_FLASH_STROBE will not fail.
-But during the tests v4l-compliance sets V4L2_CID_FLASH_LED_MODE to
-"Torch" and V4L2_CID_FLASH_STROBE_SOURCE to "External" which makes
-V4L2_CID_FLASH_STROBE to fail. How do I proceed? Should the
-v4l-compliance be changed?
-
-Changes in v3:
-	- Fix style errors
-	- Use more realistic numbers for the controllers
-	- Change from kthread to workqueue
-	- Change commit message for the new controllers values
-
-Changes in v2:
-	- Fix v4l2-complience errors
-	- Add V4L2_CID_FLASH_STROBE_STATUS behavior
-	- Add V4L2_CID_FLASH_STROBE restrictions
-	- Remove vimc_fla_g_volatile_ctrl
-	- Remove unnecessarie V4L2_CID_FLASH_CLASS
-	- Change varables names
-
- drivers/media/platform/vimc/Makefile      |   2 +-
- drivers/media/platform/vimc/vimc-common.c |   2 +
- drivers/media/platform/vimc/vimc-common.h |   4 +
- drivers/media/platform/vimc/vimc-core.c   |   5 +
- drivers/media/platform/vimc/vimc-flash.c  | 248 ++++++++++++++++++++++
- 5 files changed, 260 insertions(+), 1 deletion(-)
- create mode 100644 drivers/media/platform/vimc/vimc-flash.c
-
-diff --git a/drivers/media/platform/vimc/Makefile b/drivers/media/platform/vimc/Makefile
-index a53b2b532e9f..e759bbb04b14 100644
---- a/drivers/media/platform/vimc/Makefile
-+++ b/drivers/media/platform/vimc/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- vimc-y := vimc-core.o vimc-common.o vimc-streamer.o vimc-capture.o \
--		vimc-debayer.o vimc-scaler.o vimc-sensor.o
-+		vimc-debayer.o vimc-scaler.o vimc-sensor.o vimc-flash.o
- 
- obj-$(CONFIG_VIDEO_VIMC) += vimc.o
- 
-diff --git a/drivers/media/platform/vimc/vimc-common.c b/drivers/media/platform/vimc/vimc-common.c
-index a3120f4f7a90..cb786de75573 100644
---- a/drivers/media/platform/vimc/vimc-common.c
-+++ b/drivers/media/platform/vimc/vimc-common.c
-@@ -203,6 +203,8 @@ struct media_pad *vimc_pads_init(u16 num_pads, const unsigned long *pads_flag)
- 	struct media_pad *pads;
- 	unsigned int i;
- 
-+	if (!num_pads)
-+		return NULL;
- 	/* Allocate memory for the pads */
- 	pads = kcalloc(num_pads, sizeof(*pads), GFP_KERNEL);
- 	if (!pads)
-diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/platform/vimc/vimc-common.h
-index 698db7c07645..19815f0f4d40 100644
---- a/drivers/media/platform/vimc/vimc-common.h
-+++ b/drivers/media/platform/vimc/vimc-common.h
-@@ -169,6 +169,10 @@ struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
- 				     const char *vcfg_name);
- void vimc_sen_rm(struct vimc_device *vimc, struct vimc_ent_device *ved);
- 
-+struct vimc_ent_device *vimc_fla_add(struct vimc_device *vimc,
-+				     const char *vcfg_name);
-+void vimc_fla_rm(struct vimc_device *vimc, struct vimc_ent_device *ved);
+diff --git a/drivers/staging/octeon/octeon-ethernet.h b/drivers/staging/oct=
+eon/octeon-ethernet.h
+index a8a864b40913..042220d86d33 100644
+--- a/drivers/staging/octeon/octeon-ethernet.h
++++ b/drivers/staging/octeon/octeon-ethernet.h
+@@ -14,7 +14,7 @@
+ #include <linux/of.h>
+ #include <linux/phy.h>
+=20
+-#ifdef CONFIG_MIPS
++#ifdef CONFIG_CAVIUM_OCTEON_SOC
+=20
+ #include <asm/octeon/octeon.h>
+=20
+diff --git a/drivers/staging/octeon/octeon-stubs.h b/drivers/staging/octeon=
+/octeon-stubs.h
+index a4ac3bfb62a8..c7ff90207f8a 100644
+--- a/drivers/staging/octeon/octeon-stubs.h
++++ b/drivers/staging/octeon/octeon-stubs.h
+@@ -1,5 +1,8 @@
+ #define CONFIG_CAVIUM_OCTEON_CVMSEG_SIZE	512
+-#define XKPHYS_TO_PHYS(p)			(p)
 +
- /**
-  * vimc_pads_init - initialize pads
-  *
-diff --git a/drivers/media/platform/vimc/vimc-core.c b/drivers/media/platform/vimc/vimc-core.c
-index 6e3e5c91ae39..5f6c750d3d8d 100644
---- a/drivers/media/platform/vimc/vimc-core.c
-+++ b/drivers/media/platform/vimc/vimc-core.c
-@@ -91,6 +91,11 @@ static struct vimc_ent_config ent_config[] = {
- 		.add = vimc_cap_add,
- 		.rm = vimc_cap_rm,
- 	},
-+	{
-+		.name = "Flash Controller",
-+		.add = vimc_fla_add,
-+		.rm = vimc_fla_rm,
-+	}
- };
- 
- static const struct vimc_ent_link ent_links[] = {
-diff --git a/drivers/media/platform/vimc/vimc-flash.c b/drivers/media/platform/vimc/vimc-flash.c
-new file mode 100644
-index 000000000000..3918beecec57
---- /dev/null
-+++ b/drivers/media/platform/vimc/vimc-flash.c
-@@ -0,0 +1,248 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * vimc-flash.c Virtual Media Controller Driver
-+ *
-+ * Copyright (C) 2019
-+ * Contributors: Lucas A. M. Magalhães <lamm@lucmaga.dev>
-+ *               Eduardo Barretto <edusbarretto@gmail.com>
-+ *
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/workqueue.h>
-+#include <linux/sched.h>
-+#include <linux/vmalloc.h>
-+#include <media/v4l2-ctrls.h>
-+#include <media/v4l2-event.h>
-+#include <media/v4l2-subdev.h>
-+
-+#include "vimc-common.h"
-+
-+/*
-+ * Flash timeout in ms
-+ */
-+#define VIMC_FLASH_TIMEOUT_MS_MIN 50
-+#define VIMC_FLASH_TIMEOUT_MS_MAX 400
-+#define VIMC_FLASH_TIMEOUT_MS_STEP 50
-+
-+/*
-+ * Torch intencity in uA
-+ */
-+#define VIMC_FLASH_TORCH_UA_MIN 2530
-+#define VIMC_FLASH_TORCH_UA_MAX 187100
-+#define VIMC_FLASH_TORCH_UA_STEP 1460
-+
-+/*
-+ * Flash intencity in uA
-+ */
-+#define VIMC_FLASH_FLASH_UA_MIN 23040
-+#define VIMC_FLASH_FLASH_UA_MAX 1499600
-+#define VIMC_FLASH_FLASH_UA_STEP 11718
-+
-+struct vimc_fla_device {
-+	struct vimc_ent_device ved;
-+	struct v4l2_subdev sd;
-+	struct v4l2_ctrl_handler hdl;
-+	int strobe_source;
-+	bool is_strobe;
-+	int led_mode;
-+	int indicator_intensity;
-+	int torch_intensity;
-+	int flash_intensity;
-+	u64 timeout;
-+	u64 last_strobe;
-+	struct workqueue_struct *wq;
-+	struct work_struct work;
-+	struct v4l2_ctrl *strobe_status_ctl;
-+};
-+
-+static void vimc_fla_strobe_work(struct work_struct *work)
-+{
-+	struct vimc_fla_device *vfla =
-+		container_of(work, struct vimc_fla_device, work);
-+	v4l2_ctrl_s_ctrl(vfla->strobe_status_ctl, true);
-+	vfla->last_strobe = ktime_get_ns();
-+	while (vfla->is_strobe &&
-+	       vfla->last_strobe + vfla->timeout > ktime_get_ns()) {
-+		msleep_interruptible(VIMC_FLASH_TIMEOUT_MS_STEP);
-+	}
-+	v4l2_ctrl_s_ctrl(vfla->strobe_status_ctl, false);
-+}
-+
-+static int vimc_fla_s_ctrl(struct v4l2_ctrl *c)
-+{
-+	struct vimc_fla_device *vfla =
-+		container_of(c->handler, struct vimc_fla_device, hdl);
-+
-+	switch (c->id) {
-+	case V4L2_CID_FLASH_LED_MODE:
-+		vfla->led_mode = c->val;
-+		return 0;
-+	case V4L2_CID_FLASH_STROBE_SOURCE:
-+		vfla->strobe_source = c->val;
-+		return 0;
-+	case V4L2_CID_FLASH_STROBE:
-+		if (vfla->led_mode != V4L2_FLASH_LED_MODE_FLASH ||
-+		    vfla->strobe_source != V4L2_FLASH_STROBE_SOURCE_SOFTWARE){
-+			return -EINVAL;
-+		}
-+		queue_work(vfla->wq, &vfla->work);
-+		return 0;
-+	case V4L2_CID_FLASH_STROBE_STATUS:
-+		vfla->is_strobe = c->val;
-+		return 0;
-+	case V4L2_CID_FLASH_STROBE_STOP:
-+		vfla->is_strobe = false;
-+		return 0;
-+	case V4L2_CID_FLASH_TIMEOUT:
-+		vfla->timeout = c->val * 1000000; /* MS to NS */
-+		return 0;
-+	case V4L2_CID_FLASH_INTENSITY:
-+		vfla->flash_intensity = c->val;
-+		return 0;
-+	case V4L2_CID_FLASH_TORCH_INTENSITY:
-+		vfla->torch_intensity = c->val;
-+		return 0;
-+	case V4L2_CID_FLASH_INDICATOR_INTENSITY:
-+		vfla->indicator_intensity = c->val;
-+		return 0;
-+	default:
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
-+static const struct v4l2_ctrl_ops vimc_fla_ctrl_ops = {
-+	.s_ctrl = vimc_fla_s_ctrl,
-+};
-+
-+static const struct v4l2_subdev_core_ops vimc_fla_core_ops = {
-+	.subscribe_event = v4l2_ctrl_subdev_subscribe_event,
-+	.unsubscribe_event = v4l2_event_subdev_unsubscribe,
-+};
-+
-+static const struct v4l2_subdev_ops vimc_fla_ops = {
-+	.core = &vimc_fla_core_ops,
-+};
-+
-+static void vimc_fla_release(struct v4l2_subdev *sd)
-+{
-+	struct vimc_fla_device *vfla =
-+				container_of(sd, struct vimc_fla_device, sd);
-+
-+	v4l2_ctrl_handler_free(&vfla->hdl);
-+	kfree(vfla);
-+}
-+
-+static const struct v4l2_subdev_internal_ops vimc_fla_int_ops = {
-+	.release = vimc_fla_release,
-+};
-+
-+/* initialize device */
-+struct vimc_ent_device *vimc_fla_add(struct vimc_device *vimc,
-+				     const char *vcfg_name)
-+{
-+	struct v4l2_device *v4l2_dev = &vimc->v4l2_dev;
-+	struct vimc_fla_device *vfla;
-+	int ret;
-+
-+	/* Allocate the vfla struct */
-+	vfla = kzalloc(sizeof(*vfla), GFP_KERNEL);
-+	if (!vfla)
-+		return NULL;
-+
-+	v4l2_ctrl_handler_init(&vfla->hdl, 4);
-+	v4l2_ctrl_new_std_menu(&vfla->hdl, &vimc_fla_ctrl_ops,
-+			       V4L2_CID_FLASH_LED_MODE,
-+			       V4L2_FLASH_LED_MODE_TORCH, ~0x7,
-+			       V4L2_FLASH_LED_MODE_FLASH);
-+	v4l2_ctrl_new_std_menu(&vfla->hdl, &vimc_fla_ctrl_ops,
-+			       V4L2_CID_FLASH_STROBE_SOURCE, 0x1, ~0x3,
-+			       V4L2_FLASH_STROBE_SOURCE_SOFTWARE);
-+	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
-+			  V4L2_CID_FLASH_STROBE, 0, 0, 0, 0);
-+	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
-+			  V4L2_CID_FLASH_STROBE_STOP, 0, 0, 0, 0);
-+	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
-+			  V4L2_CID_FLASH_TIMEOUT, VIMC_FLASH_TIMEOUT_MS_MIN,
-+			  VIMC_FLASH_TIMEOUT_MS_MAX,
-+			  VIMC_FLASH_TIMEOUT_MS_STEP,
-+			  VIMC_FLASH_TIMEOUT_MS_MIN);
-+	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
-+			  V4L2_CID_FLASH_TORCH_INTENSITY,
-+			  VIMC_FLASH_TORCH_UA_MIN,
-+			  VIMC_FLASH_TORCH_UA_MAX,
-+			  VIMC_FLASH_TORCH_UA_STEP,
-+			  VIMC_FLASH_TORCH_UA_MIN);
-+	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
-+			  V4L2_CID_FLASH_INTENSITY,
-+			  VIMC_FLASH_FLASH_UA_MIN,
-+			  VIMC_FLASH_FLASH_UA_MAX,
-+			  VIMC_FLASH_FLASH_UA_STEP,
-+			  VIMC_FLASH_FLASH_UA_MIN);
-+	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
-+			  V4L2_CID_FLASH_INDICATOR_INTENSITY,
-+			  0,
-+			  255,
-+			  1,
-+			  0);
-+	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
-+			  V4L2_CID_FLASH_STROBE_STATUS, 0, 1, 1, 0);
-+	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
-+			  V4L2_CID_FLASH_FAULT, 0,
-+			  V4L2_FLASH_FAULT_TIMEOUT, 0, 0);
-+	vfla->sd.ctrl_handler = &vfla->hdl;
-+	if (vfla->hdl.error) {
-+		ret = vfla->hdl.error;
-+		goto err_free_vfla;
-+	}
-+	vfla->strobe_status_ctl = v4l2_ctrl_find(&vfla->hdl,
-+						 V4L2_CID_FLASH_STROBE_STATUS);
-+
-+	/* Initialize ved and sd */
-+	ret = vimc_ent_sd_register(&vfla->ved, &vfla->sd, v4l2_dev,
-+				   vcfg_name,
-+				   MEDIA_ENT_F_FLASH, 0, NULL,
-+				   &vimc_fla_int_ops, &vimc_fla_ops);
-+	if (ret)
-+		goto err_free_hdl;
-+
-+	/* Create processing workqueue */
-+	vfla->wq = alloc_workqueue("%s", 0, 0, "vimc-flash thread");
-+	if (!vfla->wq)
-+		goto err_unregister;
-+
-+	INIT_WORK(&vfla->work, vimc_fla_strobe_work);
-+	/* Initialize standard values */
-+	vfla->indicator_intensity = 0;
-+	vfla->torch_intensity = 0;
-+	vfla->flash_intensity = 0;
-+	vfla->is_strobe = false;
-+	vfla->timeout = 0;
-+	vfla->last_strobe = 0;
-+	vfla->strobe_source = V4L2_FLASH_STROBE_SOURCE_SOFTWARE;
-+	vfla->led_mode = V4L2_FLASH_LED_MODE_FLASH;
-+
-+	return &vfla->ved;
-+
-+err_unregister:
-+	vimc_ent_sd_unregister(&vfla->ved, &vfla->sd);
-+err_free_hdl:
-+	v4l2_ctrl_handler_free(&vfla->hdl);
-+err_free_vfla:
-+	kfree(vfla);
-+
-+	return NULL;
-+}
-+
-+void vimc_fla_rm(struct vimc_device *vimc, struct vimc_ent_device *ved)
-+{
-+	struct vimc_fla_device *vfla;
-+
-+	if (!ved)
-+		return;
-+
-+	vfla = container_of(ved, struct vimc_fla_device, ved);
-+	destroy_workqueue(vfla->wq);
-+	vimc_ent_sd_unregister(ved, &vfla->sd);
-+}
--- 
++#ifndef XKPHYS_TO_PHYS
++# define XKPHYS_TO_PHYS(p)			(p)
++#endif
+=20
+ #define OCTEON_IRQ_WORKQ0 0
+ #define OCTEON_IRQ_RML 0
+--=20
 2.23.0
 
