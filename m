@@ -2,142 +2,191 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99071C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 872B4ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7583221721
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B3ED21721
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728918AbfJGOuP (ORCPT
+        id S1727801AbfJGOuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 10:50:15 -0400
-Received: from mga14.intel.com ([192.55.52.115]:35088 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728660AbfJGOuN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 10:50:13 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Oct 2019 07:50:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,268,1566889200"; 
-   d="scan'208";a="192297760"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga008.fm.intel.com with ESMTP; 07 Oct 2019 07:50:12 -0700
-Date:   Mon, 7 Oct 2019 07:50:11 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com
-Subject: Re: [PATCH v22 09/24] x86/sgx: Add functions to allocate and free
- EPC pages
-Message-ID: <20191007145011.GA18016@linux.intel.com>
-References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
- <20190903142655.21943-10-jarkko.sakkinen@linux.intel.com>
- <20191005164408.GB25699@zn.tnic>
+        Mon, 7 Oct 2019 10:50:20 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44535 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728724AbfJGOts (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 10:49:48 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iHUK8-0005z8-Vd; Mon, 07 Oct 2019 16:49:21 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B90AB1C0DCC;
+        Mon,  7 Oct 2019 16:49:15 +0200 (CEST)
+Date:   Mon, 07 Oct 2019 14:49:15 -0000
+From:   "tip-bot2 for Steve MacLean" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/urgent] perf map: Fix overlapped map handling
+Cc:     Steve MacLean <Steve.MacLean@Microsoft.com>,
+        Brian Robbins <brianrob@microsoft.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        "Eric Saint-Etienne" <eric.saint.etienne@oracle.com>,
+        John Keeping <john@metanate.com>,
+        John Salem <josalem@microsoft.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Stephane Eranian <eranian@google.com>,
+        Tom McDonald <thomas.mcdonald@microsoft.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: =?utf-8?q?=3CBN8PR21MB136270949F22A6A02335C238F7800=40BN8PR21MB?=
+ =?utf-8?q?1362=2Enamprd21=2Eprod=2Eoutlook=2Ecom=3E?=
+References: =?utf-8?q?=3CBN8PR21MB136270949F22A6A02335C238F7800=40BN8PR21M?=
+ =?utf-8?q?B1362=2Enamprd21=2Eprod=2Eoutlook=2Ecom=3E?=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191005164408.GB25699@zn.tnic>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Message-ID: <157045975569.9978.13642071368077226305.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 05, 2019 at 06:44:08PM +0200, Borislav Petkov wrote:
-> On Tue, Sep 03, 2019 at 05:26:40PM +0300, Jarkko Sakkinen wrote:
-> > +/**
-> > + * __sgx_free_page - Free an EPC page
-> > + * @page:	pointer a previously allocated EPC page
-> > + *
-> > + * EREMOVE an EPC page and insert it back to the list of free pages.
-> > + *
-> > + * Return:
-> > + *   0 on success
-> > + *   SGX error code if EREMOVE fails
-> > + */
-> > +int __sgx_free_page(struct sgx_epc_page *page)
-> > +{
-> > +	struct sgx_epc_section *section = sgx_epc_section(page);
-> > +	int ret;
-> 
-> Shouldn't you be grabbing the lock here already?
-> 
-> Or nothing can happen to that page from another thread after you
-> ENCLS[EREMOVE] it and before it is added to the ->page_list of the
-> section?
+The following commit has been merged into the perf/urgent branch of tip:
 
-The caller is responsible for ensuring EREMOVE can be safely executed,
-e.g. by holding the enclave's lock.
+Commit-ID:     ee212d6ea20887c0ef352be8563ca13dbf965906
+Gitweb:        https://git.kernel.org/tip/ee212d6ea20887c0ef352be8563ca13dbf965906
+Author:        Steve MacLean <Steve.MacLean@microsoft.com>
+AuthorDate:    Sat, 28 Sep 2019 01:39:00 
+Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitterDate: Mon, 30 Sep 2019 17:29:46 -03:00
 
-For many ENCLS leafs, EREMOVE included, the CPU requires exclusive access
-to the SGX Enclave Control Structures (SECS)[*] and will signal a #GP if
-a different logical CPU is already executing an ENCLS leaf that requires
-exclusive SECS access.  The SGX subsystem uses a per-enclave mutex to
-serialize such ENCLS leafs, among other things.
+perf map: Fix overlapped map handling
 
-[*] The SECS is a per-enclave page that resides in the EPC and can only be
-    directly accessed by the CPU.  It's used to track metadata about the
-    enclave, e.g. number of child pages, base, size, etc...
+Whenever an mmap/mmap2 event occurs, the map tree must be updated to add a new
+entry. If a new map overlaps a previous map, the overlapped section of the
+previous map is effectively unmapped, but the non-overlapping sections are
+still valid.
 
-> > +
-> > +	ret = __eremove(sgx_epc_addr(page));
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	spin_lock(&section->lock);
-> > +	list_add_tail(&page->list, &section->page_list);
-> > +	section->free_cnt++;
-> > +	spin_unlock(&section->lock);
-> > +
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(__sgx_free_page);
-> > +
-> > +/**
-> > + * sgx_free_page - Free an EPC page and WARN on failure
-> > + * @page:	pointer to a previously allocated EPC page
-> > + *
-> > + * EREMOVE an EPC page and insert it back to the list of free pages, and WARN
-> > + * if EREMOVE fails.  For use when the call site cannot (or chooses not to)
-> > + * handle failure, i.e. the page is leaked on failure.
-> > + */
-> > +void sgx_free_page(struct sgx_epc_page *page)
-> > +{
-> > +	int ret;
-> > +
-> > +	ret = __sgx_free_page(page);
-> > +	WARN(ret > 0, "sgx: EREMOVE returned %d (0x%x)", ret, ret);
-> 
-> That will potentially flood dmesg. Why are we even accommodating such
-> callers? They either handle the error or they don't get to alloc EPC
-> pages. There's also __must_check with which you can enforce the error
-> code checking or we simply don't allow not handling failure. Fullstop.
+maps__fixup_overlappings() is responsible for creating any new map entries from
+the previously overlapped map. It optionally creates a before and an after map.
 
-It was deliberately left as a WARN as having multiple stack traces has
-been very helpful for triaging and debugging software bugs.  I agree that
-it can and should be changed to a WARN_ONCE() for upstream.
+When creating the after map the existing code failed to adjust the map.pgoff.
+This meant the new after map would incorrectly calculate the file offset
+for the ip. This results in incorrect symbol name resolution for any ip in the
+after region.
 
-As for why it exists at all, the WARN will only fire if there is a kernel
-and/or CPU bug.  In the vast majority of cases, EREMOVE is guaranteed to
-be successful (assuming no bugs).  In those situations, if EREMOVE fails
-there really isn't a sane option other to WARN and leak the page, e.g.
-the kernel can't override the CPUs protection to forcefully EREMOVE the
-page.
+Make maps__fixup_overlappings() correctly populate map.pgoff.
 
-The non-warn variant, __sgx_free_page(), is provided for the (currently)
-one case where EREMOVE failure is expected/tolerable (opportunstically
-freeing EPC pages when the enclave is killed).
+Add an assert that new mapping matches old mapping at the beginning of
+the after map.
+
+Committer-testing:
+
+Validated correct parsing of libcoreclr.so symbols from .NET Core 3.0 preview9
+(which didn't strip symbols).
+
+Preparation:
+
+  ~/dotnet3.0-preview9/dotnet new webapi -o perfSymbol
+  cd perfSymbol
+  ~/dotnet3.0-preview9/dotnet publish
+  perf record ~/dotnet3.0-preview9/dotnet \
+      bin/Debug/netcoreapp3.0/publish/perfSymbol.dll
+  ^C
+
+Before:
+
+  perf script --show-mmap-events 2>&1 | grep -e MMAP -e unknown |\
+     grep libcoreclr.so | head -n 4
+        dotnet  1907 373352.698780: PERF_RECORD_MMAP2 1907/1907: \
+            [0x7fe615726000(0x768000) @ 0 08:02 5510620 765057155]: \
+            r-xp .../3.0.0-preview9-19423-09/libcoreclr.so
+        dotnet  1907 373352.701091: PERF_RECORD_MMAP2 1907/1907: \
+            [0x7fe615974000(0x1000) @ 0x24e000 08:02 5510620 765057155]: \
+            rwxp .../3.0.0-preview9-19423-09/libcoreclr.so
+        dotnet  1907 373352.701241: PERF_RECORD_MMAP2 1907/1907: \
+            [0x7fe615c42000(0x1000) @ 0x51c000 08:02 5510620 765057155]: \
+            rwxp .../3.0.0-preview9-19423-09/libcoreclr.so
+        dotnet  1907 373352.705249:     250000 cpu-clock: \
+             7fe6159a1f99 [unknown] \
+             (.../3.0.0-preview9-19423-09/libcoreclr.so)
+
+After:
+
+  perf script --show-mmap-events 2>&1 | grep -e MMAP -e unknown |\
+     grep libcoreclr.so | head -n 4
+        dotnet  1907 373352.698780: PERF_RECORD_MMAP2 1907/1907: \
+            [0x7fe615726000(0x768000) @ 0 08:02 5510620 765057155]: \
+            r-xp .../3.0.0-preview9-19423-09/libcoreclr.so
+        dotnet  1907 373352.701091: PERF_RECORD_MMAP2 1907/1907: \
+            [0x7fe615974000(0x1000) @ 0x24e000 08:02 5510620 765057155]: \
+            rwxp .../3.0.0-preview9-19423-09/libcoreclr.so
+        dotnet  1907 373352.701241: PERF_RECORD_MMAP2 1907/1907: \
+            [0x7fe615c42000(0x1000) @ 0x51c000 08:02 5510620 765057155]: \
+            rwxp .../3.0.0-preview9-19423-09/libcoreclr.so
+
+All the [unknown] symbols were resolved.
+
+Signed-off-by: Steve MacLean <Steve.MacLean@Microsoft.com>
+Tested-by: Brian Robbins <brianrob@microsoft.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Eric Saint-Etienne <eric.saint.etienne@oracle.com>
+Cc: John Keeping <john@metanate.com>
+Cc: John Salem <josalem@microsoft.com>
+Cc: Leo Yan <leo.yan@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Tom McDonald <thomas.mcdonald@microsoft.com>
+Link: http://lore.kernel.org/lkml/BN8PR21MB136270949F22A6A02335C238F7800@BN8PR21MB1362.namprd21.prod.outlook.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/map.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+index 5b83ed1..eec9b28 100644
+--- a/tools/perf/util/map.c
++++ b/tools/perf/util/map.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include "symbol.h"
++#include <assert.h>
+ #include <errno.h>
+ #include <inttypes.h>
+ #include <limits.h>
+@@ -850,6 +851,8 @@ static int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp
+ 			}
+ 
+ 			after->start = map->end;
++			after->pgoff += map->end - pos->start;
++			assert(pos->map_ip(pos, map->end) == after->map_ip(after, map->end));
+ 			__map_groups__insert(pos->groups, after);
+ 			if (verbose >= 2 && !use_browser)
+ 				map__fprintf(after, fp);
