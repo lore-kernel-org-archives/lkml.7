@@ -2,119 +2,255 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DABCC352AA
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F1DC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4001E21721
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:48:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 061A221721
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:49:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sbQ2wz7Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727608AbfJGLsG (ORCPT
+        id S1727745AbfJGLtX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 07:48:06 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:48527 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727395AbfJGLsG (ORCPT
+        Mon, 7 Oct 2019 07:49:23 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:40926 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727514AbfJGLtX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 07:48:06 -0400
-Received: from callcc.thunk.org (guestnat-104-133-0-98.corp.google.com [104.133.0.98] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x97BlYZx002081
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 7 Oct 2019 07:47:35 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 6FF0242045A; Mon,  7 Oct 2019 07:47:34 -0400 (EDT)
-Date:   Mon, 7 Oct 2019 07:47:34 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Nicholas Mc Guire <hofrat@opentech.at>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: x86/random: Speculation to the rescue
-Message-ID: <20191007114734.GA6104@mit.edu>
-References: <alpine.DEB.2.21.1909290010500.2636@nanos.tec.linutronix.de>
- <CAHk-=wgjC01UaoV35PZvGPnrQ812SRGPoV7Xp63BBFxAsJjvrg@mail.gmail.com>
- <20191006114129.GD24605@amd>
- <CAHk-=wjvhovO6V4-zT=xEMFnRonYteZvsPo-S0_n_DetSTUk5A@mail.gmail.com>
- <20191006173501.GA31243@amd>
- <CAHk-=whgfz2+OgBTVrHLoHK57emYb4gN6TtJ_s-607U=jBQ+ig@mail.gmail.com>
- <20191006182103.GA2394@amd>
+        Mon, 7 Oct 2019 07:49:23 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x97BnGP1014702;
+        Mon, 7 Oct 2019 06:49:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1570448956;
+        bh=NvbPrOaJMuM3jS9S5I2o0RPYZiGNQegARG9spbNLan8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=sbQ2wz7QKcRudbCl6BKM2rHW/cmFNfGXFzSWxPCA4jmyJaaLhYwztzNeKAzPArsJo
+         Lx/DDh5jPoLLHmXBgJzEgHPO4VtfnWEBY04Umy78vSsQl5PWwesUy9sPPjXzFKuAWM
+         mAn4XaoUWBqC6blXD9tggeQxBI7fOaGK1aZhFtCI=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x97BnGl2038592
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 7 Oct 2019 06:49:16 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 7 Oct
+ 2019 06:49:16 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 7 Oct 2019 06:49:14 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x97BnGX4012117;
+        Mon, 7 Oct 2019 06:49:16 -0500
+Subject: Re: [PATCH v10 04/16] leds: multicolor: Introduce a multicolor class
+ definition
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20191001145620.11123-1-dmurphy@ti.com>
+ <20191001145620.11123-5-dmurphy@ti.com>
+ <8c00d678-48e0-bb2b-a18f-39247eff7fe2@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <87782950-d6aa-bda9-5894-a737ccdbcef9@ti.com>
+Date:   Mon, 7 Oct 2019 06:51:53 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191006182103.GA2394@amd>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <8c00d678-48e0-bb2b-a18f-39247eff7fe2@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 06, 2019 at 08:21:03PM +0200, Pavel Machek wrote:
-> Even without cycle counter... if we _know_ we are trying to generate
-> entropy and have MMC available, we don't care about power and
-> performance.
-> 
-> So we can just...
-> 
->    issue read request on MMC
->    while (!interrupt_done)
->    	 i++
-> 	 
-> ...and then use i++ as poor man's version of cycle counter.
+Jacek
 
-I suggest that you try that and see how much uncertainty you really
-have before you assume that this is actually going to work.  Again, on
-"System on a Chip" systems, there is very likely a single master
-oscillator, and the eMMC is going to be on the the same silicon die as
-the CPU.  At least for spinning rust platters it's on a physically
-separate peripheral, and there was a physical claim about how chaotic
-air turbulence might add enough uncertainty that timing HDD reads
-could be unpredictable (although note that the paper[1] which claimed
-this was written 25 years ago, and HDD's have had to get more precise,
-not less, in order to cram more bits into the same squire millimeter).
-more.)
+Thanks for the review
 
-[1] D. Davis, R. Ihaka, P.R. Fenstermacher, "Cryptographic Randomness
-from Air Turbulence in Disk Drives", in Advances in Cryptology --
-CRYPTO '94 Conference Proceedings, edited by Yvo G. Desmedt,
-pp.114--120. Lecture Notes in Computer Science #839. Heidelberg:
-Springer-Verlag, 1994
+On 10/6/19 10:23 AM, Jacek Anaszewski wrote:
+> Dan,
+>
+> Thank you for the update.
+>
+> On 10/1/19 4:56 PM, Dan Murphy wrote:
+>> Introduce a multicolor class that groups colored LEDs
+>> within a LED node.
+>>
+>> The multi color class groups monochrome LEDs and allows controlling two
+>> aspects of the final combined color: hue and lightness. The former is
+>> controlled via <color>_intensity files and the latter is controlled
+>> via brightness file.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>   .../ABI/testing/sysfs-class-led-multicolor    |  35 +++
+>>   Documentation/leds/index.rst                  |   1 +
+>>   Documentation/leds/leds-class-multicolor.rst  |  96 +++++++
+>>   drivers/leds/Kconfig                          |  10 +
+>>   drivers/leds/Makefile                         |   1 +
+>>   drivers/leds/led-class-multicolor.c           | 268 ++++++++++++++++++
+>>   include/linux/led-class-multicolor.h          |  88 ++++++
+>>   7 files changed, 499 insertions(+)
+>>   create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
+>>   create mode 100644 Documentation/leds/leds-class-multicolor.rst
+>>   create mode 100644 drivers/leds/led-class-multicolor.c
+>>   create mode 100644 include/linux/led-class-multicolor.h
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor b/Documentation/ABI/testing/sysfs-class-led-multicolor
+>> new file mode 100644
+>> index 000000000000..65cb43de26e6
+>> --- /dev/null
+>> +++ b/Documentation/ABI/testing/sysfs-class-led-multicolor
+>> @@ -0,0 +1,35 @@
+>> +What:		/sys/class/leds/<led>/brightness
+>> +Date:		Sept 2019
+>> +KernelVersion:	5.5
+>> +Contact:	Dan Murphy <dmurphy@ti.com>
+>> +Description:	read/write
+>> +		Writing to this file will update all LEDs within the group to a
+>> +		calculated percentage of what each color LED intensity is set
+>> +		to. The percentage is calculated via the equation below:
+>> +
+>> +		led_brightness = brightness * <color>_intensity/<color>_max_intensity
+>> +
+>> +		For additional details please refer to
+>> +		Documentation/leds/leds-class-multicolor.rst.
+>> +
+>> +		The value of the color is from 0 to
+>> +		/sys/class/leds/<led>/max_brightness.
+>> +
+>> +What:		/sys/class/leds/<led>/colors/<color>_intensity
+>> +Date:		Sept 2019
+>> +KernelVersion:	5.5
+>> +Contact:	Dan Murphy <dmurphy@ti.com>
+>> +Description:	read/write
+>> +		The <color>_intensity file is created based on the color
+>> +		defined by the registrar of the class.
+>> +		There is one file per color presented.
+>> +
+>> +		The value of the color is from 0 to
+>> +		/sys/class/leds/<led>/colors/<color>_max_intensity.
+>> +
+>> +What:		/sys/class/leds/<led>/colors/<color>_max_intensity
+>> +Date:		Sept 2019
+>> +KernelVersion:	5.5
+>> +Contact:	Dan Murphy <dmurphy@ti.com>
+>> +Description:	read only
+>> +		Maximum intensity level for the LED color.
+>> diff --git a/Documentation/leds/index.rst b/Documentation/leds/index.rst
+>> index 060f4e485897..bc70c6aa7138 100644
+>> --- a/Documentation/leds/index.rst
+>> +++ b/Documentation/leds/index.rst
+>> @@ -9,6 +9,7 @@ LEDs
+>>   
+>>      leds-class
+>>      leds-class-flash
+>> +   leds-class-multicolor
+>>      ledtrig-oneshot
+>>      ledtrig-transient
+>>      ledtrig-usbport
+>> diff --git a/Documentation/leds/leds-class-multicolor.rst b/Documentation/leds/leds-class-multicolor.rst
+>> new file mode 100644
+>> index 000000000000..87a1588d7619
+>> --- /dev/null
+>> +++ b/Documentation/leds/leds-class-multicolor.rst
+>> @@ -0,0 +1,96 @@
+>> +====================================
+>> +Multi Color LED handling under Linux
+>> +====================================
+>> +
+>> +Description
+>> +===========
+>> +The multi color class groups monochrome LEDs and allows controlling two
+>> +aspects of the final combined color: hue and lightness. The former is
+>> +controlled via <color>_intensity files and the latter is controlled
+>> +via brightness file.
+>> +
+>> +For more details on hue and lightness notions please refer to
+>> +https://en.wikipedia.org/wiki/CIECAM02.
+>> +
+>> +Note that intensity files only cache the written value and the actual
+>> +change of hardware state occurs upon writing brightness file. This
+>> +allows for changing many factors of the perceived color in a virtually
+>> +unnoticeable way for the human observer.
+>> +
+>> +Multicolor Class Control
+>> +========================
+>> +The multicolor class presents the LED groups under a directory called "colors".
+>> +This directory is a child under the LED parent node created by the led_class
+>> +framework.  The led_class framework is documented in led-class.rst within this
+>> +documentation directory.
+>> +
+>> +Each colored LED will have two files created under the colors directory
+>> +<color>_intensity and <color>_max_intensity. These files will contain
+>> +one of LED_COLOR_ID_* definitions from the header
+>> +include/dt-bindings/leds/common.h.
+>> +
+>> +Directory Layout Example
+>> +========================
+>> +root:/sys/class/leds/rgb:grouped_leds# ls -lR colors/
+>> +-rw-rwxr-- 1 root root 4096 Jul 7 03:10 red_max_intensity
+>> +--w--wx-w- 1 root root 4096 Jul 7 03:10 red_intensity
+>> +-rw-rwxr-- 1 root root 4096 Jul 7 03:10 green_max_intensity
+>> +--w--wx-w- 1 root root 4096 Jul 7 03:10 green_intensity
+>> +-rw-rwxr-- 1 root root 4096 Jul 7 03:10 blue_max_intensity
+>> +--w--wx-w- 1 root root 4096 Jul 7 03:10 blue_intensity
+> Now when you have fixed file permissions in LED mc core the
+> 'ls -l' should report them correctly, so this needs to be
+> updated.
 
-But for a flash device that is on the same silicon as the CPU, and
-driven off of the same clock crystal, and where you are doing *reads*,
-so you can't even depend on SSD GC and uncertainties in programming
-the flash cell --- I'm going to be dubious.
+ACK
 
-If someone wants to use this as a last ditch hope, then we can let
-systemd do this, where there's at least a bit more uncertainty in
-userspace, and maybe you could be doing something useful, like running
-fsck on the stateful partitions of the system.
 
-Ultimately, though, we really want to try to get a hardware RNG, and
-for that matter, a cryptographic secure element built into these
-devices, and the sooner we can pound it into CPU manufacturers' heads
-that not doing this should be professional malpractice, the better.
+> [...]
+>> +int devm_led_classdev_multicolor_register(struct device *parent,
+>> +					  struct led_classdev_mc *mcled_cdev)
+>> +{
+>> +	struct led_classdev_mc **dr;
+>> +	int ret;
+>> +
+>> +	dr = devres_alloc(devm_led_classdev_multicolor_release,
+>> +			  sizeof(*dr), GFP_KERNEL);
+>> +	if (!dr)
+>> +		return -ENOMEM;
+>> +
+>> +	ret = led_classdev_multicolor_register(parent, mcled_cdev);
+>> +	if (ret) {
+>> +		devres_free(dr);
+>> +		return ret;
+>> +	}
+>> +
+>> +	*dr = mcled_cdev;
+>> +	devres_add(parent, dr);
+>> +
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL_GPL(devm_led_classdev_multicolor_register);
+>> +
+>> +static int devm_led_classdev_multicolor_match(struct device *dev,
+>> +					      void *res, void *data)
+>> +{
+>> +	struct mcled_cdev **p = res;
+> s/mcled_cdev/led_classdev_mc/
 
-     	       	    	      		   - Ted
+ACK.  Fixed in v11
 
-P.S.  Note that this Don Davis's paper[1] claims that they were able
-to extract 100 independent unpredictable bits per _minute_.  Given
-that modern init scripts want us to be able to boot in under a few
-seconds, and we need at least 128 independent bits to securely
-initialize the CRNG, people who think that we can get secure random
-bits suitable for long-term cryptographic keys (say, such as
-initializing the host's SSH key) during early boot based only on HDD
-timings may be a bit.... optimistic.
+Dan
 
-P.P.S.  I actually knew Don; he was at MIT Project Athena as a staff
-member at the same time I was working on Kerberos as my day job, and
-Linux's e2fsprogs, /dev/random, etc. as a hobby...
+
+>> +
+>> +	if (WARN_ON(!p || !*p))
+>> +		return 0;
+>> +
+>> +	return *p == data;
+>> +}
+>> +
+> [...]
