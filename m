@@ -2,492 +2,179 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3649C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:05:46 +0000 (UTC)
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,RDNS_NONE,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
+Received: from mail.kernel.org (unknown [198.145.29.99])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CB9ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:06:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6190F206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:05:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="THKGsenh"
+	by mail.kernel.org (Postfix) with ESMTP id 8CDDA2133F
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:06:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729027AbfJGRFp (ORCPT
+        id S1729050AbfJGRGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 13:05:45 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:51124 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727801AbfJGRFo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 13:05:44 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x97H5cr7095753;
-        Mon, 7 Oct 2019 12:05:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570467938;
-        bh=q6Qq7vGOZLyqRO8NHrGtGMKENBEtJw+/rZDysxprU0E=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=THKGsenhXowqTsyC0mi0psJuYGeOpCtncoxkbmBShiIrxKFAfe/Ddmz64FPCPBeCZ
-         r+K9DS9zah/onlk9eKGo0qgceHgtXAp11VFpfFSaiy7gd4EIB0d8aqFJGfM9Q8CTuy
-         g+EGsO+eO+0yjf9H3hg6vHDQ9GF/mXhZ7SPw2g3M=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x97H5cJu077626;
-        Mon, 7 Oct 2019 12:05:38 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 7 Oct
- 2019 12:05:38 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 7 Oct 2019 12:05:38 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x97H5cWg021058;
-        Mon, 7 Oct 2019 12:05:38 -0500
-Subject: Re: [PATCH v10 12/16] leds: lp55xx: Add multicolor framework support
- to lp55xx
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20191001145620.11123-1-dmurphy@ti.com>
- <20191001145620.11123-13-dmurphy@ti.com>
- <9353b10d-d805-0142-5d90-da73e172bd78@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <7d2aa67b-dcf7-d8b9-12ad-92329736623e@ti.com>
-Date:   Mon, 7 Oct 2019 12:08:20 -0500
+        Mon, 7 Oct 2019 13:06:36 -0400
+Received: from mga06.intel.com ([134.134.136.31]:51863 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727970AbfJGRGg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 13:06:36 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Oct 2019 10:06:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,268,1566889200"; 
+   d="scan'208";a="205136707"
+Received: from schen9-desk.jf.intel.com (HELO [10.54.74.162]) ([10.54.74.162])
+  by orsmga002.jf.intel.com with ESMTP; 07 Oct 2019 10:06:34 -0700
+To:     David Laight <David.Laight@ACULAB.COM>,
+        'Parth Shah' <parth@linux.ibm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "patrick.bellasi@matbug.net" <patrick.bellasi@matbug.net>,
+        "valentin.schneider@arm.com" <valentin.schneider@arm.com>,
+        "qais.yousef@arm.com" <qais.yousef@arm.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Cc:     "peterz@infradead.org" <peterz@infradead.org>,
+        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "morten.rasmussen@arm.com" <morten.rasmussen@arm.com>,
+        "pjt@google.com" <pjt@google.com>,
+        "dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>,
+        "tj@kernel.org" <tj@kernel.org>,
+        "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "dhaval.giani@oracle.com" <dhaval.giani@oracle.com>,
+        "quentin.perret@arm.com" <quentin.perret@arm.com>,
+        subhra mazumdar <subhra.mazumdar@oracle.com>,
+        "ggherdovich@suse.cz" <ggherdovich@suse.cz>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        Doug Smythies <dsmythies@telus.net>
+References: <2bd46086-43ff-f130-8720-8eec694eb55b@linux.ibm.com>
+ <9645e7c625a84bfabac001fd6ef35559@AcuMS.aculab.com>
+From:   Tim Chen <tim.c.chen@linux.intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=tim.c.chen@linux.intel.com; prefer-encrypt=mutual; keydata=
+ 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
+ l50q2K/r651xphs7CGEdKi1nU0YJVbQxJQ==
+Subject: Re: [Discussion v2] Usecases for the per-task latency-nice attribute
+Message-ID: <db23de7c-e9d9-33cc-50f5-08245744c4c4@linux.intel.com>
+Date:   Mon, 7 Oct 2019 10:06:34 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <9353b10d-d805-0142-5d90-da73e172bd78@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <9645e7c625a84bfabac001fd6ef35559@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
-
-On 10/6/19 2:52 PM, Jacek Anaszewski wrote:
-> Dan,
->
-> On 10/1/19 4:56 PM, Dan Murphy wrote:
->> Add multicolor framework support for the lp55xx family.
+On 10/2/19 9:11 AM, David Laight wrote:
+> From: Parth Shah
+>> Sent: 30 September 2019 11:44
+> ...
+>> 5> Separating AVX512 tasks and latency sensitive tasks on separate cores
+>> ( -Tim Chen )
+>> ===========================================================================
+>> Another usecase we are considering is to segregate those workload that will
+>> pull down core cpu frequency (e.g. AVX512) from workload that are latency
+>> sensitive. There are certain tasks that need to provide a fast response
+>> time (latency sensitive) and they are best scheduled on cpu that has a
+>> lighter load and not have other tasks running on the sibling cpu that could
+>> pull down the cpu core frequency.
 >>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   drivers/leds/Kconfig                      |   1 +
->>   drivers/leds/leds-lp55xx-common.c         | 169 +++++++++++++++++++---
->>   drivers/leds/leds-lp55xx-common.h         |  11 ++
->>   include/linux/platform_data/leds-lp55xx.h |   6 +
->>   4 files changed, 163 insertions(+), 24 deletions(-)
->>
->> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
->> index 84f60e35c5ee..dc3d9f2194cd 100644
->> --- a/drivers/leds/Kconfig
->> +++ b/drivers/leds/Kconfig
->> @@ -377,6 +377,7 @@ config LEDS_LP50XX
->>   config LEDS_LP55XX_COMMON
->>   	tristate "Common Driver for TI/National LP5521/5523/55231/5562/8501"
->>   	depends on LEDS_LP5521 || LEDS_LP5523 || LEDS_LP5562 || LEDS_LP8501
->> +	depends on LEDS_CLASS_MULTI_COLOR && OF
->>   	select FW_LOADER
->>   	select FW_LOADER_USER_HELPER
->>   	help
->> diff --git a/drivers/leds/leds-lp55xx-common.c b/drivers/leds/leds-lp55xx-common.c
->> index 44ced02b49f9..5de4f1789a44 100644
->> --- a/drivers/leds/leds-lp55xx-common.c
->> +++ b/drivers/leds/leds-lp55xx-common.c
->> @@ -131,14 +131,50 @@ static struct attribute *lp55xx_led_attrs[] = {
->>   };
->>   ATTRIBUTE_GROUPS(lp55xx_led);
->>   
->> +struct led_mc_color_conversion color_component[LP55XX_MAX_GROUPED_CHAN];
-> Why is this global? Please move it to lp55xx_set_brightness().
-ACK
->
->> +
->> +static int lp55xx_get_channel(struct lp55xx_led *led, int color_id)
->> +{
->> +	int i;
->> +
->> +	for (i = 0; i < led->mc_cdev.num_leds; i++) {
->> +		if (led->channel_color[i] == color_id)
->> +			return led->grouped_channels[i];
->> +	}
->> +
->> +	return -EINVAL;
->> +}
->> +
->>   static int lp55xx_set_brightness(struct led_classdev *cdev,
->>   			     enum led_brightness brightness)
->>   {
->>   	struct lp55xx_led *led = cdev_to_lp55xx_led(cdev);
->>   	struct lp55xx_device_config *cfg = led->chip->cfg;
->> +	int channel_num;
->> +	int ret;
->> +	int i;
->>   
->> -	led->brightness = (u8)brightness;
->> -	return cfg->brightness_fn(led);
->> +	if (led->mc_cdev.num_leds > 1) {
->> +		led_mc_calc_brightness(&led->mc_cdev, brightness,
->> +				       &color_component[0]);
-> s/&color_component[0]/color_component/
+>> Some users are running machine learning batch tasks with AVX512, and have
+>> observed that these tasks affect the tasks needing a fast response.  They
+>> have to rely on manual CPU affinity to separate these tasks.  With
+>> appropriate latency hint on task, the scheduler can be taught to separate them.
+> 
+> Has this been diagnosed properly?
+> I can't really see how the frequency drop from AVX512 significantly affects latency.
+> Most tasks that require low latency probably don't do a lot of work.
+> It is much more likely that the latency issues happen because the AVX512 tasks
+> are doing very few system calls so can't be pre-empted even by a high priority task.
 
-ACK
+This problem was conveyed to us by several customers.  The issue is not
+that you are slow to preempt an AVX512 task on the same logical cpu thread, but the AVX512
+tasks on the sibling CPU thread is dropping the CPU frequency and lowering the performance and
+response.  Let's say that you make the latency sensitive task a real time task
+with high priority so it will immediately run on a cpu after being woken.
+But it will be slower if there's an AVX512 running on the sibling versus if other
+kind of tasks are running on sibling.
 
+This is the noisy neighbor effect. So it is better to isolate the latency
+sensitive tasks on cores that AVX512 tasks don't run on.
 
->> +
->> +		for (i = 0; i < led->mc_cdev.num_leds; i++) {
->> +			channel_num = lp55xx_get_channel(led,
->> +						color_component[i].color_id);
->> +			if (channel_num < 0)
->> +				return channel_num;
->> +
->> +			ret = cfg->color_intensity_fn(led, channel_num,
->> +						 color_component[i].brightness);
-> If you passed struct led_mc_color_conversion instead of brightness,
-> then in the color_intensity_fn op you could obtain channel numbers
-> by calling lp55xx_get_channel in a loop. And you could setup the whole
-> cluster in a single call.
+Tim
 
-Hmm.  How would that be an improvement?  Maybe the answer lies down 
-below in my response and we will not have to get the channel_num as we 
-can make the output part of the mc_color_conversion struct.
+> This 'feature' is hinted by this:
+>> 2> TurboSched
+>> ( -Parth Shah )
+>> ====================
+>> TurboSched [2] tries to minimize the number of active cores in a socket by
+>> packing an un-important and low-utilization (named jitter) task on an
+>> already active core and thus refrains from waking up of a new core if
+>> possible.
+> 
+> Consider this example of a process that requires low latency (sub 1ms would be good):
+> - A hardware interrupt (or timer interrupt) wakes up on thread.
+> - When that thread wakes it wakes up other threads that are sleeping.
+> - All the threads 'beaver away' for a few ms (processing RTP and other audio).
+> - They all sleep for the rest of a 10ms period.
+> 
+> The affinities are set so each thread runs on a separate cpu, and all are SCHED_RR.
+> Now loop all the cpus in userspace (run: while :; do :; done) and see what happens to the latencies.
+> You really want the SCHED_RR threads to immediately pre-empt the running processes.
+> But I suspect nothing happens until a timer interrupt to the target cpu.
+> 
+> 	David
+> 
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+> Registration No: 1397386 (Wales)
+> 
 
-As I pointed out in v9 "Beyond that in coding this and thinking about 
-the design it is better to have the lp55xx_common code to do all the 
-heavy lifting and the children to just perform the action on the device 
-itself"
-
-https://lore.kernel.org/linux-leds/4186e454-48fd-1578-cd26-083b54c707ab@gmail.com/T/#u
-
-The children should not have to know if the LED is registered to the LED 
-class, MC Class or Flash class only the common code should know this 
-information.  Just need to keep the child code simple. This is why I 
-pass in the values as opposed to having the child figure it out.
-
-
->> +			if (ret)
->> +				return ret;
->> +		}
->> +	} else {
->> +		led->brightness = (u8)brightness;
->> +		ret = cfg->brightness_fn(led);
->> +	}
->> +
->> +	return ret;
->>   }
->>   
->>   static int lp55xx_init_led(struct lp55xx_led *led,
->> @@ -147,9 +183,9 @@ static int lp55xx_init_led(struct lp55xx_led *led,
->>   	struct lp55xx_platform_data *pdata = chip->pdata;
->>   	struct lp55xx_device_config *cfg = chip->cfg;
->>   	struct device *dev = &chip->cl->dev;
->> +	int max_channel = cfg->max_channel;
->>   	char name[32];
->>   	int ret;
->> -	int max_channel = cfg->max_channel;
->>   
->>   	if (chan >= max_channel) {
->>   		dev_err(dev, "invalid channel: %d / %d\n", chan, max_channel);
->> @@ -159,10 +195,37 @@ static int lp55xx_init_led(struct lp55xx_led *led,
->>   	if (pdata->led_config[chan].led_current == 0)
->>   		return 0;
->>   
->> +	if (pdata->led_config[chan].name) {
->> +		led->cdev.name = pdata->led_config[chan].name;
->> +	} else {
->> +		snprintf(name, sizeof(name), "%s:channel%d",
->> +			pdata->label ? : chip->cl->name, chan);
->> +		led->cdev.name = name;
->> +	}
->> +
->> +	if (pdata->led_config[chan].num_colors > 1) {
->> +		led->mc_cdev.led_cdev = &led->cdev;
->> +		led->cdev.brightness_set_blocking = lp55xx_set_brightness;
->> +		led->cdev.groups = lp55xx_led_groups;
->> +		led->mc_cdev.num_leds = pdata->led_config[chan].num_colors;
->> +		led->mc_cdev.available_colors =
->> +			pdata->led_config[chan].available_colors;
->> +		memcpy(led->channel_color,
->> +		       pdata->led_config[chan].channel_color,
->> +		       sizeof(led->channel_color));
->> +		memcpy(led->grouped_channels,
->> +		       pdata->led_config[chan].grouped_channels,
->> +		       sizeof(led->grouped_channels));
->> +	} else {
->> +
->> +		led->cdev.default_trigger =
->> +			pdata->led_config[chan].default_trigger;
->> +		led->cdev.brightness_set_blocking = lp55xx_set_brightness;
->> +	}	led->cdev.groups = lp55xx_led_groups;
->> +
->>   	led->led_current = pdata->led_config[chan].led_current;
->>   	led->max_current = pdata->led_config[chan].max_current;
->>   	led->chan_nr = pdata->led_config[chan].chan_nr;
->> -	led->cdev.default_trigger = pdata->led_config[chan].default_trigger;
->>   
->>   	if (led->chan_nr >= max_channel) {
->>   		dev_err(dev, "Use channel numbers between 0 and %d\n",
->> @@ -170,18 +233,11 @@ static int lp55xx_init_led(struct lp55xx_led *led,
->>   		return -EINVAL;
->>   	}
->>   
->> -	led->cdev.brightness_set_blocking = lp55xx_set_brightness;
->> -	led->cdev.groups = lp55xx_led_groups;
->> +	if (pdata->led_config[chan].num_colors > 1)
->> +		ret = led_classdev_multicolor_register(dev, &led->mc_cdev);
->> +	else
->> +		ret = led_classdev_register(dev, &led->cdev);
->>   
->> -	if (pdata->led_config[chan].name) {
->> -		led->cdev.name = pdata->led_config[chan].name;
->> -	} else {
->> -		snprintf(name, sizeof(name), "%s:channel%d",
->> -			pdata->label ? : chip->cl->name, chan);
->> -		led->cdev.name = name;
->> -	}
->> -
->> -	ret = led_classdev_register(dev, &led->cdev);
->>   	if (ret) {
->>   		dev_err(dev, "led register err: %d\n", ret);
->>   		return ret;
->> @@ -466,7 +522,6 @@ int lp55xx_register_leds(struct lp55xx_led *led, struct lp55xx_chip *chip)
->>   		dev_err(&chip->cl->dev, "empty brightness configuration\n");
->>   		return -EINVAL;
->>   	}
->> -
->>   	for (i = 0; i < num_channels; i++) {
->>   
->>   		/* do not initialize channels that are not connected */
->> @@ -538,6 +593,76 @@ void lp55xx_unregister_sysfs(struct lp55xx_chip *chip)
->>   }
->>   EXPORT_SYMBOL_GPL(lp55xx_unregister_sysfs);
->>   
->> +static int lp5xx_parse_common_child(struct device_node *np,
->> +				     struct lp55xx_led_config *cfg,
->> +				     int chan_num, bool is_multicolor)
->> +{
->> +	u32 led_number;
->> +	int ret;
->> +
->> +	of_property_read_string(np, "chan-name",
->> +				&cfg[chan_num].name);
->> +	of_property_read_u8(np, "led-cur",
->> +			    &cfg[chan_num].led_current);
->> +	of_property_read_u8(np, "max-cur",
->> +			    &cfg[chan_num].max_current);
->> +
->> +	ret = of_property_read_u32(np, "reg", &led_number);
->> +	if (ret)
->> +		return ret;
->> +
->> +	if (led_number < 0 || led_number > 6)
->> +		return -EINVAL;
->> +
->> +	if (is_multicolor)
->> +		cfg[chan_num].grouped_channels[cfg[chan_num].num_colors]
-> Please pass the index for grouped channels as an argument to this
-> function. Referring here directly to a temporary state of num_colors
-> that is incremented in the loop from which this function is called
-> is ugly IMO.
-
-Ack
-
-
->> +				= led_number;
->> +	else
->> +		cfg[chan_num].chan_nr = led_number;
->> +
->> +	return 0;
->> +}
->> +
->> +static int lp5xx_parse_channel_child(struct device_node *np,
->> +				     struct lp55xx_led_config *cfg,
->> +				     int child_number)
->> +{
->> +	struct device_node *child;
->> +	int channel_color;
->> +	u32 color_id;
->> +	int ret;
->> +
->> +	cfg[child_number].default_trigger =
->> +			of_get_property(np, "linux,default-trigger", NULL);
->> +
->> +	ret = of_property_read_u32(np, "color", &channel_color);
->> +	if (ret)
->> +		channel_color = ret;
->> +
->> +
->> +	if (channel_color == LED_COLOR_ID_MULTI) {
->> +		for_each_child_of_node(np, child) {
->> +			ret = lp5xx_parse_common_child(child, cfg,
->> +						       child_number, true);
->> +			if (ret)
->> +				return ret;
->> +			ret = of_property_read_u32(child, "color", &color_id);
->> +			if (ret)
->> +				return ret;
->> +
->> +			cfg[child_number].channel_color[cfg[child_number].num_colors] =
->> +				color_id;
->> +			set_bit(color_id, &cfg[child_number].available_colors);
->> +
->> +			cfg[child_number].num_colors++;
->> +		}
->> +	} else {
->> +		return lp5xx_parse_common_child(np, cfg, child_number, false);
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->>   struct lp55xx_platform_data *lp55xx_of_populate_pdata(struct device *dev,
->>   						      struct device_node *np)
->>   {
->> @@ -546,6 +671,7 @@ struct lp55xx_platform_data *lp55xx_of_populate_pdata(struct device *dev,
->>   	struct lp55xx_led_config *cfg;
->>   	int num_channels;
->>   	int i = 0;
->> +	int ret;
->>   
->>   	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
->>   	if (!pdata)
->> @@ -565,14 +691,9 @@ struct lp55xx_platform_data *lp55xx_of_populate_pdata(struct device *dev,
->>   	pdata->num_channels = num_channels;
->>   
->>   	for_each_child_of_node(np, child) {
->> -		cfg[i].chan_nr = i;
->> -
->> -		of_property_read_string(child, "chan-name", &cfg[i].name);
->> -		of_property_read_u8(child, "led-cur", &cfg[i].led_current);
->> -		of_property_read_u8(child, "max-cur", &cfg[i].max_current);
->> -		cfg[i].default_trigger =
->> -			of_get_property(child, "linux,default-trigger", NULL);
->> -
->> +		ret = lp5xx_parse_channel_child(child, cfg, i);
->> +		if (ret)
->> +			return ERR_PTR(-EINVAL);
->>   		i++;
->>   	}
->>   
->> diff --git a/drivers/leds/leds-lp55xx-common.h b/drivers/leds/leds-lp55xx-common.h
->> index 783ed5103ce5..5ea2a292a97e 100644
->> --- a/drivers/leds/leds-lp55xx-common.h
->> +++ b/drivers/leds/leds-lp55xx-common.h
->> @@ -12,6 +12,10 @@
->>   #ifndef _LEDS_LP55XX_COMMON_H
->>   #define _LEDS_LP55XX_COMMON_H
->>   
->> +#include <linux/led-class-multicolor.h>
->> +
->> +#define LP55XX_MAX_GROUPED_CHAN	4
->> +
->>   enum lp55xx_engine_index {
->>   	LP55XX_ENGINE_INVALID,
->>   	LP55XX_ENGINE_1,
->> @@ -109,6 +113,9 @@ struct lp55xx_device_config {
->>   	/* access brightness register */
->>   	int (*brightness_fn)(struct lp55xx_led *led);
->>   
->> +	/* access specific brightness register */
->> +	int (*color_intensity_fn)(struct lp55xx_led *led, int chan_num, int brightness);
->> +
->>   	/* current setting function */
->>   	void (*set_led_current) (struct lp55xx_led *led, u8 led_current);
->>   
->> @@ -159,6 +166,7 @@ struct lp55xx_chip {
->>    * struct lp55xx_led
->>    * @chan_nr         : Channel number
->>    * @cdev            : LED class device
->> + * @mc_cdev	    : Multi color class device
->>    * @led_current     : Current setting at each led channel
->>    * @max_current     : Maximun current at each led channel
->>    * @brightness      : Brightness value
-> Documentation for channel_color and grouped_channels is missing.
->
-ACK
-
-
->> @@ -167,9 +175,12 @@ struct lp55xx_chip {
->>   struct lp55xx_led {
->>   	int chan_nr;
->>   	struct led_classdev cdev;
->> +	struct led_classdev_mc mc_cdev;
->>   	u8 led_current;
->>   	u8 max_current;
->>   	u8 brightness;
->> +	int channel_color[LP55XX_MAX_GROUPED_CHAN];
->> +	int grouped_channels[LP55XX_MAX_GROUPED_CHAN];
-> I propose to create structure:
->
-> struct lp55xx_mc_cluster {
-> 	int channel_color;
-> 	int channel_id;
-> };
->
-> and instead of the above two arrays create one
->
-> struct lp55xx_mc_cluster mc_cluster[LP55XX_MAX_GROUPED_CHAN];
-
-Maybe we can extend the mc_color_converion struct to add output_num.
-
-Now I did try to do this but the design of the code made it a bit 
-wonky.  I will look at it again.
-
-If the output_num information is contain in a single struct as opposed 
-to having each driver create their own struct.
-
-struct led_mc_color_conversion {
-     int color_id;
-     int brightness;
-
-     int output_num;
-
-};
-
-struct led_mc_color_conversion mc_cluster[LP55XX_MAX_GROUPED_CHAN];
-
-If other drivers do not need that information then they do not need to 
-populate it
-
->
->>   	struct lp55xx_chip *chip;
->>   };
->>   
->> diff --git a/include/linux/platform_data/leds-lp55xx.h b/include/linux/platform_data/leds-lp55xx.h
->> index 96a787100fda..0ac29f537ab6 100644
->> --- a/include/linux/platform_data/leds-lp55xx.h
->> +++ b/include/linux/platform_data/leds-lp55xx.h
->> @@ -12,6 +12,8 @@
->>   #ifndef _LEDS_LP55XX_H
->>   #define _LEDS_LP55XX_H
->>   
->> +#include <linux/led-class-multicolor.h>
->> +
->>   /* Clock configuration */
->>   #define LP55XX_CLOCK_AUTO	0
->>   #define LP55XX_CLOCK_INT	1
->> @@ -23,6 +25,10 @@ struct lp55xx_led_config {
->>   	u8 chan_nr;
->>   	u8 led_current; /* mA x10, 0 if led is not connected */
->>   	u8 max_current;
->> +	int num_colors;
->> +	unsigned long available_colors;
->> +	u32 channel_color[LED_COLOR_ID_MAX];
-> channel_color array is redundant if you have available_colors flags.
-
-I will look this again.
-
-
->> +	int grouped_channels[LED_COLOR_ID_MAX];
->>   };
->>   
->>   struct lp55xx_predef_pattern {
->>
