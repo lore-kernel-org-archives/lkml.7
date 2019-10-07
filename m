@@ -2,117 +2,238 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D89ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD2B6C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C2D4206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:11:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CAA5206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:13:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570471892;
-	bh=W8k1TFpjsbgvJTr+e1s2Lzc+haTPEP9MMkDcc8VjFCs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=u6cITsH7JspRSttitM3IhgxN2fKD+n3932we0ATuRZFd7co6HG7d3/lr97bIKCL2u
-	 zm7ql1+UnoxWYpRvUxdiIiaqFaN0p9EEULpqjgTjs9B5bcj5lEmC8fI3RaPMQFc+KB
-	 JU0kFZiFHOAAxJIsqoPJ/QqRxDPkITWmpm3xISpw=
+	s=default; t=1570472021;
+	bh=IM3RRaHRAAAZ9GriggCzjNI8gnCjvqbSFAswxUXkCbg=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=z2AqrfyMPUzz3itdb0imDMUNGjjdnjPlHjur63BzcwrPM0idhqbVrSfGv+agPenEv
+	 ey+DxaSo1nyeVFplkYyjCC+/nxeq3JtYtZm78f/FHbXEKN1LoHfZ2ejK7hlkDPYWH9
+	 o3q9AY78S8mzBjiuuNKZhKf5ok+cD+JjfckIKIpc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729345AbfJGSLb (ORCPT
+        id S1728856AbfJGSNk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 14:11:31 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39078 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728273AbfJGSLa (ORCPT
+        Mon, 7 Oct 2019 14:13:40 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:34400 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728079AbfJGSNk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 14:11:30 -0400
-Received: by mail-lj1-f194.google.com with SMTP id y3so14722414ljj.6
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 11:11:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sSXG+xP1mD1UZGXg2TTq5r4dUsztpjrAAtm+apLCkB0=;
-        b=T9+n4Uy8+vBXnVgYXqxACSICel9I1qrO3WM1rG9o1zxB4y8+nglyP7so9RqnUS9cQ8
-         DPynUXscIFi1WYKoG9zr1emFzkpLyTp2BRuohwDJ1ouK6+mq/bC+2eV4h1P0P5G2vHiB
-         f45dnjMv5AzSxoSBKOdXSpYYKUfiyQB6mH0fg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sSXG+xP1mD1UZGXg2TTq5r4dUsztpjrAAtm+apLCkB0=;
-        b=BbJ8saDVl2gqL3PkjDFyEa0pU8SB3In/flEXC/HdqZ7QEtRbm+jRi6G/gs2YIywG7x
-         daGZw4cqWgANp8lshJQTBZutXK6vpPjcUbda3X1TWa+r8PrpzCl8ad8h40nA+ebvH8ds
-         LAasM3X3w4X52bfan/IIYDeW/M7YjhrIp3jZdOyzr+OSyDlhKVKzvH1aHW14IZM5pFXI
-         4yQbe5SR/40NEeht4sLO2CUN7gcKc8tVFtOAo+qNcWtSiHnQxnXAFRLJTVYbqTiEmkMQ
-         QeTUXBMzetH8pVqpvSTsvWdAVb7FQFU/UDIuau7IEfspTBaSu1RTNUN27rovkSf4ycTq
-         5SWw==
-X-Gm-Message-State: APjAAAWn15EmBT/MNjoKg3B3loxQ9fMw6OYXZdsO0p262/9iOyTdapWi
-        EXLk8Vhh1FJv7N5XSorNSCily344IBg=
-X-Google-Smtp-Source: APXvYqwFwAbsnEOtj0mHzdvJNQkD25rycLvVvvRpUAWnHynzwfWa9M6ePJPhvAsZ6Rf5t/h3oto44A==
-X-Received: by 2002:a2e:3806:: with SMTP id f6mr19787879lja.143.1570471886405;
-        Mon, 07 Oct 2019 11:11:26 -0700 (PDT)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id i21sm2802539lfl.44.2019.10.07.11.11.25
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Oct 2019 11:11:25 -0700 (PDT)
-Received: by mail-lj1-f171.google.com with SMTP id d1so14684795ljl.13
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 11:11:25 -0700 (PDT)
-X-Received: by 2002:a2e:9556:: with SMTP id t22mr19099733ljh.97.1570471885049;
- Mon, 07 Oct 2019 11:11:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191006222046.GA18027@roeck-us.net> <CAHk-=wgrqwuZJmwbrjhjCFeSUu2i57unaGOnP4qZAmSyuGwMZA@mail.gmail.com>
- <CAHk-=wjRPerXedTDoBbJL=tHBpH+=sP6pX_9NfgWxpnmHC5RtQ@mail.gmail.com>
- <5f06c138-d59a-d811-c886-9e73ce51924c@roeck-us.net> <CAHk-=whAQWEMADgxb_qAw=nEY4OnuDn6HU4UCSDMNT5ULKvg3g@mail.gmail.com>
- <20191007012437.GK26530@ZenIV.linux.org.uk> <CAHk-=whKJfX579+2f-CHc4_YmEmwvMe_Csr0+CPfLAsSAdfDoA@mail.gmail.com>
- <20191007025046.GL26530@ZenIV.linux.org.uk> <CAHk-=whraNSys_Lj=Ut1EA=CJEfw2Uothh+5-WL+7nDJBegWcQ@mail.gmail.com>
- <c58c2a8a5366409abd4169d10a58196a@AcuMS.aculab.com>
-In-Reply-To: <c58c2a8a5366409abd4169d10a58196a@AcuMS.aculab.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 7 Oct 2019 11:11:09 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjF2fkhuN8N-MnTwvzNig83XdQK50nir8oieF7jV6Om=A@mail.gmail.com>
-Message-ID: <CAHk-=wjF2fkhuN8N-MnTwvzNig83XdQK50nir8oieF7jV6Om=A@mail.gmail.com>
-Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to unsafe_put_user()
-To:     David Laight <David.Laight@aculab.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 7 Oct 2019 14:13:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=YszzIRRq8+HMe+uWy5lgHyDF5uj3GQ+Jn/wpF3eKyO4=; b=GaYXeXG9/kZA
+        xoRoklbcb21LauF4f0MDmub9bJdPkJYpgJBMBQpQ/Vkmbh288FFFllOjhsaDZtDi/71KJJK9qjauh
+        iFkLS8na+vM6ThtkF/TlQYWmNR/KxtMd0ROzrP7t4v6ZxfoF3LwTl9i37LSqEDt/bCSE3ESIF0waa
+        EpZ0w=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iHXVe-0004GD-1J; Mon, 07 Oct 2019 18:13:26 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 42DD6274162F; Mon,  7 Oct 2019 19:13:25 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, navada@ti.com, perex@perex.cz,
+        shifu0704@thundersoft.com, tiwai@suse.com
+Subject: Applied "ASoC: tas2770: Fix snd_soc_update_bits error handling" to the asoc tree
+In-Reply-To: <20191007171157.17813-1-dmurphy@ti.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20191007181325.42DD6274162F@ypsilon.sirena.org.uk>
+Date:   Mon,  7 Oct 2019 19:13:25 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 8:40 AM David Laight <David.Laight@aculab.com> wrote:
->
-> You don't really want an extra access_ok() for every 'word' of a copy.
+The patch
 
-Yes you do.
+   ASoC: tas2770: Fix snd_soc_update_bits error handling
 
-> Some copies have to be done a word at a time.
+has been applied to the asoc tree at
 
-Completely immaterial. If you can't see the access_ok() close to the
-__get/put_user(), you have a bug.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
 
-Plus the access_ok() is cheap. The real cost is the STAC/CLAC.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-So stop with the access_ok() "optimizations". They are broken garbage.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-Really.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-I've been very close to just removing __get_user/__put_user several
-times, exactly because people do completely the wrong thing with them
-- not speeding code up, but making it unsafe and buggy.
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-The new "user_access_begin/end()" model is much better, but it also
-has actual STATIC checking that there are no function calls etc inside
-th4e region, so it forces you to do the loop properly and tightly, and
-not the incorrect "I checked the range somewhere else, now I'm doing
-an unsafe copy".
+Thanks,
+Mark
 
-And it actually speeds things up, unlike the access_ok() games.
+From edd6d5393206ec9bfc74776f6f20a57f11327e1b Mon Sep 17 00:00:00 2001
+From: Dan Murphy <dmurphy@ti.com>
+Date: Mon, 7 Oct 2019 12:11:55 -0500
+Subject: [PATCH] ASoC: tas2770: Fix snd_soc_update_bits error handling
 
-               Linus
+According the documentation for snd_soc_update_bits the API
+will return a 1 if the update was successful with a value change,
+a 0 if the update was successful with no value change or a negative
+if the command just failed.
+
+So the value of return in the driver needs to be checked for being less
+then 0 or the caller may indicate failure when the value actually
+changed.
+
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+Link: https://lore.kernel.org/r/20191007171157.17813-1-dmurphy@ti.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/codecs/tas2770.c | 46 +++++++++++++++++++++++++-------------
+ 1 file changed, 30 insertions(+), 16 deletions(-)
+
+diff --git a/sound/soc/codecs/tas2770.c b/sound/soc/codecs/tas2770.c
+index f3a665b64fd6..ad76f22fcfac 100644
+--- a/sound/soc/codecs/tas2770.c
++++ b/sound/soc/codecs/tas2770.c
+@@ -83,7 +83,8 @@ static int tas2770_codec_suspend(struct snd_soc_component *component)
+ 		TAS2770_PWR_CTRL,
+ 		TAS2770_PWR_CTRL_MASK,
+ 		TAS2770_PWR_CTRL_SHUTDOWN);
+-	if (ret)
++
++	if (ret < 0)
+ 		return ret;
+ 
+ 	return 0;
+@@ -97,8 +98,9 @@ static int tas2770_codec_resume(struct snd_soc_component *component)
+ 		TAS2770_PWR_CTRL,
+ 		TAS2770_PWR_CTRL_MASK,
+ 		TAS2770_PWR_CTRL_ACTIVE);
+-	if (ret)
+-		return -EINVAL;
++
++	if (ret < 0)
++		return ret;
+ 
+ 	return 0;
+ }
+@@ -150,7 +152,10 @@ static int tas2770_dac_event(struct snd_soc_dapm_widget *w,
+ 	}
+ 
+ end:
+-	return ret;
++	if (ret < 0)
++		return ret;
++
++	return 0;
+ }
+ 
+ static const struct snd_kcontrol_new isense_switch =
+@@ -200,7 +205,10 @@ static int tas2770_mute(struct snd_soc_dai *dai, int mute)
+ 			TAS2770_PWR_CTRL_MASK,
+ 			TAS2770_PWR_CTRL_ACTIVE);
+ 
+-	return ret;
++	if (ret < 0)
++		return ret;
++
++	return 0;
+ }
+ 
+ static int tas2770_set_bitwidth(struct tas2770_priv *tas2770, int bitwidth)
+@@ -253,7 +261,10 @@ static int tas2770_set_bitwidth(struct tas2770_priv *tas2770, int bitwidth)
+ 		tas2770->i_sense_slot);
+ 
+ end:
+-	return ret;
++	if (ret < 0)
++		return ret;
++
++	return 0;
+ }
+ 
+ static int tas2770_set_samplerate(struct tas2770_priv *tas2770, int samplerate)
+@@ -345,9 +356,11 @@ static int tas2770_set_samplerate(struct tas2770_priv *tas2770, int samplerate)
+ 	}
+ 
+ end:
+-	if (!ret)
+-		tas2770->sampling_rate = samplerate;
+-	return ret;
++	if (ret < 0)
++		return ret;
++
++	tas2770->sampling_rate = samplerate;
++	return 0;
+ }
+ 
+ static int tas2770_hw_params(struct snd_pcm_substream *substream,
+@@ -401,7 +414,7 @@ static int tas2770_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
+ 	ret = snd_soc_component_update_bits(component, TAS2770_TDM_CFG_REG1,
+ 		TAS2770_TDM_CFG_REG1_RX_MASK,
+ 		asi_cfg_1);
+-	if (ret)
++	if (ret < 0)
+ 		return ret;
+ 
+ 	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
+@@ -426,7 +439,7 @@ static int tas2770_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
+ 	ret = snd_soc_component_update_bits(component, TAS2770_TDM_CFG_REG1,
+ 		TAS2770_TDM_CFG_REG1_MASK,
+ 	(tdm_rx_start_slot << TAS2770_TDM_CFG_REG1_51_SHIFT));
+-	if (ret)
++	if (ret < 0)
+ 		return ret;
+ 
+ 	tas2770->asi_format = fmt;
+@@ -470,12 +483,12 @@ static int tas2770_set_dai_tdm_slot(struct snd_soc_dai *dai,
+ 	ret = snd_soc_component_update_bits(component, TAS2770_TDM_CFG_REG3,
+ 		TAS2770_TDM_CFG_REG3_30_MASK,
+ 		(left_slot << TAS2770_TDM_CFG_REG3_30_SHIFT));
+-	if (ret)
++	if (ret < 0)
+ 		return ret;
+ 	ret = snd_soc_component_update_bits(component, TAS2770_TDM_CFG_REG3,
+ 		TAS2770_TDM_CFG_REG3_RXS_MASK,
+ 	(right_slot << TAS2770_TDM_CFG_REG3_RXS_SHIFT));
+-	if (ret)
++	if (ret < 0)
+ 		return ret;
+ 
+ 	switch (slot_width) {
+@@ -509,10 +522,11 @@ static int tas2770_set_dai_tdm_slot(struct snd_soc_dai *dai,
+ 		ret = -EINVAL;
+ 	}
+ 
+-	if (!ret)
+-		tas2770->slot_width = slot_width;
++	if (ret < 0)
++		return ret;
+ 
+-	return ret;
++	tas2770->slot_width = slot_width;
++	return 0;
+ }
+ 
+ static struct snd_soc_dai_ops tas2770_dai_ops = {
+-- 
+2.20.1
+
