@@ -7,97 +7,101 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A06EECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2FFECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39D5C20684
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:53:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBB5620684
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:53:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="Av+aZWsX"
+	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="BhWRdZx2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729252AbfJGRxh (ORCPT
+        id S1729274AbfJGRxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 13:53:37 -0400
-Received: from mail-eopbgr820127.outbound.protection.outlook.com ([40.107.82.127]:42176
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        Mon, 7 Oct 2019 13:53:46 -0400
+Received: from mail-eopbgr770104.outbound.protection.outlook.com ([40.107.77.104]:52462
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728187AbfJGRxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 13:53:36 -0400
+        id S1728187AbfJGRxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 13:53:45 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=b5ucTa9lRiidyO65d+Z6WeQoguJBPt7HJ9UeTZCCNNtx/8lIiwQnmGAKkikLZvaQpDDli3y8EzqQx7abjp/ULQfzd2TNXP6skq2g0I7hRvnZ6x34OYisEqN588VvR4t6CSKKZ/0Qgh9mB0lY+WPk6m/c7vQTlIkH8rDqAV5lxcFZShXd+m5d3zLAcqLI6ztQdypDuKn7Je18L0u64p6n5/Rt2ONXRQ2Ij2h9LBd/yPZeiwmzN1+AyqWA+7Jb0FFqEpWdfO8z3pt8hhQRmy+jCrTMn3sLHo8h68+rbJQbxPZ0azvW6kmXSUAJeDLBYTWfsqklPjkA2LYIuZcvbsXW/Q==
+ b=ZMyldptAUJNaK0ivMcRno6vqnpvSor1jdWmw/N7dMykZxqB735TiJdH/E4ggTevUbTN5fiZlxS0tTARJzL7ZREjw0oArhoNzzE99HIKPUX68U64hlpMAO0N7/HUQSnz7EUyOVClrhYw3pg8Gn1GSvvLOsEloAKiytUkXetdlMBQouXMEGGHcr6VhZC4Ip/oPNSrORMGreSGJEYuFxjP2nSeegiLF04s/3F7n5CdGxqCEk3jkWmvdkb6SCioqzaaIB1LsxxkE5HNpbsnzXjU1g9WQp/KXWk4pmwYlQ0Nbz7iRcNAizSV7FaN79tUsus0tc6CH7f5yEm5mRjFpJuCZOw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z/G5oQUh9+kI/Ba5gX7iq/zDlHuSKDYGxjfX+489rH4=;
- b=klkS0zd50OFCM2mWXZu5hkJ52MOL0WWbd0BYv7ZI4ICMrmkZ6feV+bI+vQxdQVuWgvvg60wLz7WpbN7TGKhbxC4GGUktOBFzZzgKb/gn/jfeh2uDtd+pF0ib5IFL4Gy0nfomNalySR1S2S5vqrtTHSRYSZxz78xtzHRHcTg1ZtPUTyyB+tr+VKzpE108Nd/ZqTSCIdbwI/X7QQJPmsAaGPZI0GbeCOF7ofH8iFvBPuuNcyZrrclBCWB5hpBOQ6tqnln8Q7/izrUBdIW2o6mtK9PVML4fTCuNKd7hea/dgrr6JeleMBatyaLLTMfSFnZwQfiJAs4OU9vWDR7XqipdRA==
+ bh=4K0p1KMBpzqIzOgk0I1kDi0pvINJTVttqPl2CPPmhzw=;
+ b=i6BliKmJlF5Jj4VaKU26Dc96FMELa6qFqAI45tBT/lNmR0Qe+ajENj61G0A+ES8NotoYgF+0DGUmt/GtPCJj7msbLfDR6uP6WsbLXP2BbgcIZLW/32mgIBtRM6UfWAkfLKmYLQuTvvyeJRjugn3/Mv3/LWzTjHHXv468z9+DSJ2odxkIHKGUf71qJS6RFPA878eyF0l1+KGAMl5DtyqvbZIpslG6YrZrJyb3JnPz3uQ/747b6ObRo+7oLp1Cy/Ov6KXM7Q6gmUFGqUvTrp2sTPT0+Fs7iYB1PFmDoVuMOn/ZVlMiZ8FMdAaq37yHF3v8p5YevYzUIHnQPXftOaL+nA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=mips.com;
  dkim=pass header.d=mips.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z/G5oQUh9+kI/Ba5gX7iq/zDlHuSKDYGxjfX+489rH4=;
- b=Av+aZWsXJoKbA62hbpvyZ7pdA87z+lMxr7c6pfhZ6sNwQbPvZ9Xm54K+seIS3VnI1X2vdBdvWh5LrHQgjJGWs4kKkXdtKO8mSFUI314XSGDyKA8qu0TdfZ5tO402IYiSXFyogl4hqHpzCCQ2lHamLmF1munz+5ApU07IjK20eNI=
+ bh=4K0p1KMBpzqIzOgk0I1kDi0pvINJTVttqPl2CPPmhzw=;
+ b=BhWRdZx2s8XuYB8KyZ64sd0p4WYrCK0yHf3FG8F35xCNY4bIiK/97dEX0DqdwUIjELuV+KqQZKU+souEUV5SoJJfRMGPfvUU2ebvQ+YoHdvDYpZU6K/SA2GDGSB4Evm0zwtkufqnyAB1yz6saY0l6LSTfPB9sDx5MJSFevg0VaM=
 Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
- MWHPR2201MB1104.namprd22.prod.outlook.com (10.174.169.154) with Microsoft
+ MWHPR2201MB1549.namprd22.prod.outlook.com (10.174.170.162) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.25; Mon, 7 Oct 2019 17:53:34 +0000
+ 15.20.2327.24; Mon, 7 Oct 2019 17:53:43 +0000
 Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
  ([fe80::3050:9a38:9d8e:8033]) by MWHPR2201MB1277.namprd22.prod.outlook.com
  ([fe80::3050:9a38:9d8e:8033%5]) with mapi id 15.20.2327.025; Mon, 7 Oct 2019
- 17:53:34 +0000
+ 17:53:43 +0000
 From:   Paul Burton <paul.burton@mips.com>
-To:     Mike Rapoport <rppt@kernel.org>
-CC:     Paul Burton <pburton@wavecomp.com>,
+To:     Alexandre GRIVEAUX <agriveaux@deutnet.info>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "ralf@linux-mips.org" <ralf@linux-mips.org>,
+        Paul Burton <pburton@wavecomp.com>,
+        "jhogan@kernel.org" <jhogan@kernel.org>,
+        "agriveaux@deutnet.info" <agriveaux@deutnet.info>,
         "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Subject: Re: [PATCH v2] mips: sgi-ip27: switch from DISCONTIGMEM to SPARSEMEM
-Thread-Topic: [PATCH v2] mips: sgi-ip27: switch from DISCONTIGMEM to SPARSEMEM
-Thread-Index: AQHVfTgj5T8EwIEneEC/yyJMaTPXnQ==
-Date:   Mon, 7 Oct 2019 17:53:34 +0000
-Message-ID: <MWHPR2201MB1277AFDF6B3F2E646FA5B6B6C19B0@MWHPR2201MB1277.namprd22.prod.outlook.com>
-References: <1568632390-20893-1-git-send-email-rppt@kernel.org>
-In-Reply-To: <1568632390-20893-1-git-send-email-rppt@kernel.org>
+Subject: Re: [PATCH v2 1/5] MIPS: JZ4780: DTS: Add I2C nodes
+Thread-Topic: [PATCH v2 1/5] MIPS: JZ4780: DTS: Add I2C nodes
+Thread-Index: AQHVfTgpfX6EIYydg0e4aPXoU5s8TA==
+Date:   Mon, 7 Oct 2019 17:53:43 +0000
+Message-ID: <MWHPR2201MB12771202FA4C736E46EA69F0C19B0@MWHPR2201MB1277.namprd22.prod.outlook.com>
+References: <b5ffdad6c22a64975e374dc5d2cff878d3ff3312.1569955865.git.agriveaux@deutnet.info>
+In-Reply-To: <b5ffdad6c22a64975e374dc5d2cff878d3ff3312.1569955865.git.agriveaux@deutnet.info>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: BY5PR04CA0029.namprd04.prod.outlook.com
- (2603:10b6:a03:1d0::39) To MWHPR2201MB1277.namprd22.prod.outlook.com
+x-clientproxiedby: BYAPR11CA0070.namprd11.prod.outlook.com
+ (2603:10b6:a03:80::47) To MWHPR2201MB1277.namprd22.prod.outlook.com
  (2603:10b6:301:18::12)
 authentication-results: spf=none (sender IP is )
  smtp.mailfrom=pburton@wavecomp.com; 
 x-ms-exchange-messagesentrepresentingtype: 1
 x-originating-ip: [12.94.197.246]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f8619c18-c044-4fd1-c2b2-08d74b4f459e
-x-ms-traffictypediagnostic: MWHPR2201MB1104:
+x-ms-office365-filtering-correlation-id: f4230a9e-658f-440b-df49-08d74b4f4b3a
+x-ms-traffictypediagnostic: MWHPR2201MB1549:
 x-ms-exchange-purlcount: 1
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR2201MB1104006D420E0D16BF795A54C19B0@MWHPR2201MB1104.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-microsoft-antispam-prvs: <MWHPR2201MB1549421698443ECE085A1BDFC19B0@MWHPR2201MB1549.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
 x-forefront-prvs: 01834E39B7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(396003)(39840400004)(136003)(366004)(346002)(199004)(189003)(71190400001)(102836004)(8676002)(76176011)(7696005)(229853002)(52116002)(4744005)(3846002)(66446008)(81156014)(81166006)(64756008)(6506007)(66556008)(5660300002)(6306002)(8936002)(55016002)(26005)(386003)(6246003)(6436002)(99286004)(66476007)(66066001)(6116002)(186003)(25786009)(71200400001)(9686003)(42882007)(33656002)(478600001)(66946007)(486006)(305945005)(476003)(6916009)(52536014)(966005)(446003)(11346002)(316002)(256004)(74316002)(14454004)(54906003)(44832011)(7736002)(4326008)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1104;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(136003)(346002)(396003)(366004)(39840400004)(189003)(199004)(52116002)(99286004)(476003)(7736002)(305945005)(54906003)(76176011)(25786009)(486006)(33656002)(42882007)(478600001)(2906002)(11346002)(446003)(52536014)(5660300002)(6246003)(7696005)(4744005)(71200400001)(71190400001)(66066001)(316002)(14454004)(229853002)(102836004)(9686003)(81156014)(6436002)(81166006)(6116002)(55016002)(74316002)(3846002)(44832011)(4326008)(8676002)(186003)(6916009)(26005)(966005)(386003)(8936002)(6506007)(14444005)(6306002)(66946007)(66556008)(64756008)(66446008)(66476007)(256004)(6606295002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1549;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: wavecomp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: UzpJMX15nk5ni0rFb9/GKIl+G7bbjkfPbHoFGDm/dYS9AInBBahUJ7oaOcsOiA5OMZxwk/zlOJGMEosYfS2mAvsnXET/ApB9B0rleh5/aaMAXSKXsWU41SgKGacPUgTYNVxmTuVTEnI1/2pl9J9ycA0B2jk02ToD/dhvt37sJqKoJwVTTJrDZ1pabW3A5sQ2JKEPscsE6P7fxi8WRJqOTDF6HzM/JZlzy2mkqXRUm2JBb4X1JYLPJbOqFgRoT7jYqKnd2jgzoed+m71gJmGBhk3DUTj9pXjE2hLEPiWAceBqgYEcT+3DNr9jqDtpEhc9SXUSYxw6mG4kGLEJH+e+UmR5nP3lSuMaCM67ratB511+/dLI+r5wVBeBKdf3rxicfrQHdGN6sP5oA8tI8U/pIu9u8AT0cpQ7lNcSdTNHCnb2LOR4YOIPAU0kOhkkq/hQwz5CgAB0SfmBhG3R3i3hOQ==
+x-microsoft-antispam-message-info: toGSmN8IROsVXJfxLnTzTTJq6FWAkazMlxvwSt83JveW3cqFZ/Rb+J0lpE+vU6497ezYWdTNj+Tx3wy2ecKyrYI3JUV62mN5FcQLC7VZ500MdbYTr3rooGNGpBU5Y3V/L4ftmZxuMbglI12zKOfkw9pOOru0CBiWi3bZZf/QZkPBaCrWkxTdkS7p5xXsoRgJuPiAs+jaGUVeqDW+/WRg4VwVEWD7WyP8mSIoRJBK8S49dT38dVpY71Tg9S9gNvt8lzVyfwsNKZjfoksxmXDX9zckebqrb+riwclemkDZF3c66bzxhIM6qkONn+EfJRW1E86sUwcNfKyT6tAkxY2ov5pKmGlTIUDEIp/hmsOiTQmRHT/gRe/twEwx8K5tVqwfriw+QCaEJWmmyJ9s7aht2Xx1ne3v/Acmy2ZMWtwIpIIXeMezZUAqm+5cP6I4pOECP+zXrIBbRxH2tA0NwewoFg==
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f8619c18-c044-4fd1-c2b2-08d74b4f459e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Oct 2019 17:53:34.1815
+X-MS-Exchange-CrossTenant-Network-Message-Id: f4230a9e-658f-440b-df49-08d74b4f4b3a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Oct 2019 17:53:43.7951
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: c0RlU80bFNTWEqf5FhoN5nAxeNDG0K0V0csxeDmPJUgM0sdI/fGB+o/5DVp5rwYaWzBU0AVG/vdOdfLhOFPfNw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1104
+X-MS-Exchange-CrossTenant-userprincipalname: yO/Dx4vQxiyBXY3xkBEkKisncb2wUR59vGXEB2x4Nd6X6QoiN729Dq3Ppt0l5TaCIu/DTJj9kyBYz9UTMqXAdQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1549
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -105,27 +109,16 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hello,
 
-Mike Rapoport wrote:
-> From: Mike Rapoport <rppt@linux.ibm.com>
->=20
-> The memory initialization of SGI-IP27 is already half-way to support
-> SPARSEMEM. It only had free_bootmem_with_active_regions() left-overs
-> interfering with sparse_memory_present_with_active_regions().
->=20
-> Replace these calls with simpler memblocks_present() call in prom_meminit=
-()
-> and adjust arch/mips/Kconfig to enable SPARSEMEM and SPARSEMEM_EXTREME fo=
-r
-> SGI-IP27.
+Alexandre GRIVEAUX wrote:
+> Add the devicetree nodes for the I2C core of the JZ4780 SoC, disabled
+> by default.
 
 Applied to mips-next.
 
-> commit 397dc00e249e
-> https://git.kernel.org/mips/c/397dc00e249e
+> commit f56a040c9faf
+> https://git.kernel.org/mips/c/f56a040c9faf
 >=20
-> Co-developed-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-> Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> Signed-off-by: Alexandre GRIVEAUX <agriveaux@deutnet.info>
 > Signed-off-by: Paul Burton <paul.burton@mips.com>
 
 Thanks,
