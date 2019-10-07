@@ -2,202 +2,134 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3788DECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF63C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02128206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:31:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IKWapvpN"
+	by mail.kernel.org (Postfix) with ESMTP id ED66F206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:35:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729426AbfJGTbs (ORCPT
+        id S1728792AbfJGTfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 15:31:48 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35257 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728187AbfJGTbs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 15:31:48 -0400
-Received: by mail-lj1-f196.google.com with SMTP id m7so14971965lji.2
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 12:31:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6janG/twynO5N6RLQTcAa8FnjT+uKYqGn399L8c11Xw=;
-        b=IKWapvpNRq1xHEY7GPQfDPs22GMw9wvc21ZN5KRGPv/xYt3khp+SeCRMoM/fSpVKpB
-         4tXNJ8F0RIfSv24JeUQuNX6XWMz8Y65ue+gViSckr3CFvIDPdF++OXJLaYQfPy9D2jh5
-         TcqoFXRmbAK5Im/RmfuUsP5p0U6Z1RC2fgyC/biZl9Ao8jKUK6AKUF7OQVtB4X+W/TNA
-         TMz2qnQlwqKynTBphxbH7vLfktSjT3VswEyLc57z+aX2gm6OMLZy6N3XV1Pf6cPRC9ew
-         Ht9mtRDe2oFMFBITKZqXJW9BGSw+6Sd/Rz1dFtOPX5RXGw1yID007FMGGshWsGwW7+RJ
-         lYXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6janG/twynO5N6RLQTcAa8FnjT+uKYqGn399L8c11Xw=;
-        b=a3K7NrlmQVUF46WRet2kL4FF5cZyIrLoc9jFO0QP/OVZY8SrKlEaokbKvTC3hONyNK
-         mJ/PMaswDGtx5HKJiQHHAfRQ1YbWkyzMoGtd2zNoTXLgaFNz3mjQy3bufJUZFuQ3Wdk6
-         5lwUMRV+ev+SW638UKVNUFcfz4O7kfxeFMxZn+lG95Yu15byEpG+Ahbl5w93enNdY4DN
-         y7+5s6o5HgBgP8zrptl2qAH0ivPAt/BuqygYGSpuyTVRIziZjTev0On+90o+o+INAHMz
-         QBRf6tOKZI3hvTBMOBBmNeAjeEOokgvQXRqs3fNpxO5lhyj4byyNJ64FNoZZmrf7PELI
-         3mYQ==
-X-Gm-Message-State: APjAAAWNZJWsrurMjiUpYB+zzH2DD+UzcKL1akt/zqXnKsz+yRDbokhZ
-        fHi9g1zqizDbli0GALErxm6injv9WkbK4Onvnt2a2A==
-X-Google-Smtp-Source: APXvYqxDDz2qJJc79lbL5ebXszVSYDWfg+4D6lLlqjAogPaHqCThU85XWA4j67TE/Cr1e90BP+LTMb2HvsWUYEQ9kmQ=
-X-Received: by 2002:a2e:2e13:: with SMTP id u19mr17510537lju.112.1570476704924;
- Mon, 07 Oct 2019 12:31:44 -0700 (PDT)
+        Mon, 7 Oct 2019 15:35:41 -0400
+Received: from mga18.intel.com ([134.134.136.126]:16422 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728212AbfJGTfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 15:35:41 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Oct 2019 12:35:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,269,1566889200"; 
+   d="scan'208";a="205174650"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga002.jf.intel.com with ESMTP; 07 Oct 2019 12:35:40 -0700
+Date:   Mon, 7 Oct 2019 12:39:12 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>
+Cc:     "Yi Liu" <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v4 0/4] User API for nested shared virtual address (SVA)
+Message-ID: <20191007123912.60c19a79@jacob-builder>
+In-Reply-To: <1570045363-24856-1-git-send-email-jacob.jun.pan@linux.intel.com>
+References: <1570045363-24856-1-git-send-email-jacob.jun.pan@linux.intel.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <CAL_quvRknSSVvXN3q_Se0hrziw2oTNS3ENNoeHYhvciCRq9Yww@mail.gmail.com>
- <87h84rbile.fsf@intel.com> <20191002102428.zaid63hp6wpd7w34@holly.lan>
- <8736gbbf2b.fsf@intel.com> <CAL_quvQkFjkBjJC5wH2t5XmyEq9OKWYSbAv39BJWT1hrKO7j8g@mail.gmail.com>
- <87h84q9pcj.fsf@intel.com> <CAL_quvQoWnWqS5OQAqbLcBO-bR9_obr1FBc6f6mA1T00n1DJNQ@mail.gmail.com>
- <CAOw6vbJ7XX8=nrJDENfn2pacf4MqQOkP+x8JV0wbqzoMfLvZWQ@mail.gmail.com> <CAL_quvTe_v9Vsbd0u4URitojmD-_VFeaOQ1BBYZ_UGwYWynjVA@mail.gmail.com>
-In-Reply-To: <CAL_quvTe_v9Vsbd0u4URitojmD-_VFeaOQ1BBYZ_UGwYWynjVA@mail.gmail.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Mon, 7 Oct 2019 12:31:08 -0700
-Message-ID: <CACK8Z6H+tBHproaH2hf59mYF406ohYhAWj8szYn=Fjao2SUZVA@mail.gmail.com>
-Subject: Re: New sysfs interface for privacy screens
-To:     Mat King <mathewk@google.com>
-Cc:     Sean Paul <seanpaul@chromium.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Ross Zwisler <zwisler@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        David Airlie <airlied@redhat.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Alexander Schremmer <alex@alexanderweb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 9:19 AM Mat King <mathewk@google.com> wrote:
->
-> On Mon, Oct 7, 2019 at 7:09 AM Sean Paul <seanpaul@chromium.org> wrote:
-> >
-> > On Thu, Oct 3, 2019 at 3:57 PM Mat King <mathewk@google.com> wrote:
-> > >
-> > > On Thu, Oct 3, 2019 at 2:59 AM Jani Nikula <jani.nikula@linux.intel.com> wrote:
-> > > >
-> > > > On Wed, 02 Oct 2019, Mat King <mathewk@google.com> wrote:
-> > > > > On Wed, Oct 2, 2019 at 4:46 AM Jani Nikula <jani.nikula@linux.intel.com> wrote:
-> > > > >>
-> > > > >> On Wed, 02 Oct 2019, Daniel Thompson <daniel.thompson@linaro.org> wrote:
-> > > > >> > On Wed, Oct 02, 2019 at 12:30:05PM +0300, Jani Nikula wrote:
-> > > > >> >> On Tue, 01 Oct 2019, Mat King <mathewk@google.com> wrote:
-> > > > >> >> > Resending in plain text mode
-> >
-> > /snip
-> >
-> > >
-> > > So my proposal would now be to add a new standard property to
-> > > drm_connector called "privacy_screen" this property would be an enum
-> > > which can take one of three values.
-> > >
-> > > PRIVACY_UNSUPPORTED - Privacy is not available for this connector
-> > > PRIVACY_DISABLED - Privacy is available but turned off
-> > > PRIVACY_ENABLED - Privacy is available and turned on
-> >
-> > Agree with Jani, use the property presence to determine if it's supported
->
-> That makes sense; just to confirm can a property be added or removed
-> after the connector is registered?
->
-> >
-> > >
-> > > When the connector is initized the privacy screen property is set to
-> > > PRIVACY_UNSUPPORTED and cannot be changed unless a drm_privacy_screen
-> > > is registered to the connector. drm_privacy_screen will look something
-> > > like
-> > >
-> > > struct drm_privacy_screen_ops {
-> > >     int (*get_privacy_state)(struct drm_privacy_screen *);
-> > >     int (*set_privacy_state)(struct drm_privacy_screen *, int);
-> > > }
-> > >
-> > > struct drm_privacy_screen {
-> > >     /* The privacy screen device */
-> > >     struct device *dev;
-> > >
-> > >     /* The connector that the privacy screen is attached */
-> > >     struct drm_connector *connector;
-> > >
-> > >     /* Ops to get and set the privacy screen state */
-> > >     struct drm_privacy_screen_ops *ops;
-> > >
-> > >     /* The current state of the privacy screen */
-> > >     int state;
-> > > }
-> > >
-> > > Privacy screen device drivers will call a function to register the
-> > > privacy screen with the connector.
-> >
-> > Do we actually need dedicated drivers for privacy screen? It seems
-> > like something that is panel-specific hardware, so I'd suggest just
-> > using the panel driver.
->
-> The privacy screen is physically part of the display but the control
-> interface, at least in all current use cases, is ACPI. Is there a way
-> to control an ACPI device with the panel driver?
+Hi Joerg and all,
 
-I feel that doing it in a dedicated driver has the advantage that if
-we can standardise the control interface, it can be used across
-different panels. So a new panel can be supported using the existing
-driver by merely instantiating the right ACPI HID "privacy screen"
-device as a child device of the parent display / panel device. This
-parent-child relation would also give the kernel the connection needed
-about "which display does this privacy screen attach to". In future,if
-non-x86 platforms need the feature using a different control interface
-(say via a GPIO driver), the privacy screen driver can be updated to
-support that also.
+Just wondering if you have more comments on this series.
 
 Thanks,
 
-Rajat
+Jacob
 
->
-> >
-> > Sean
-> >
-> > >
-> > > int drm_privacy_screen_register(struct drm_privacy_screen_ops *ops,
-> > > struct device *dev, struct drm_connector *);
-> > >
-> > > Calling this will set a new field on the connector "struct
-> > > drm_privacy_screen *privacy_screen" and change the value of the
-> > > property to ops->get_privacy_state(). When
-> > > drm_mode_connector_set_obj_prop() is called with the
-> > > privacy_screen_proptery if a privacy_screen is registered to the
-> > > connector the ops->set_privacy_state() will be called with the new
-> > > value.
-> > >
-> > > Setting of this property (and all drm properties) is done in user
-> > > space using ioctrl.
-> > >
-> > > Registering the privacy screen with a connector may be tricky because
-> > > the driver for the privacy screen will need to be able to identify
-> > > which connector it belongs to and we will have to deal with connectors
-> > > being added both before and after the privacy screen device is added
-> > > by it's driver.
-> > >
-> > > How does that sound? I will work on a patch if that all sounds about right.
-> > >
-> > > One question I still have is there a way to not accept a value that is
-> > > passed to drm_mode_connector_set_obj_prop()? In this case if a privacy
-> > > screen is not registered the property must stay PRIVACY_UNSUPPORTED
-> > > and if a privacy screen is registered then PRIVACY_UNSUPPORTED must
-> > > never be set.
+On Wed,  2 Oct 2019 12:42:39 -0700
+Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
+
+> This set consists of IOMMU APIs to support SVA in the guest, a.k.a
+> nested SVA. As the complete SVA support is complex, we break down the
+> enabling effort into three stages:
+> 1. PCI device direct assignment
+> 2. Fault handling, especially page request service support
+> 3. Mediated device assignment
+> 
+> Each stage includes common API and vendor specific IOMMU driver
+> changes. This series is the common uAPI for stage #1. It is intended
+> to build consensus on the interface which all vendors reply on.
+> 
+> This series is extracted from the complete stage1 set which includes
+> VT-d code. https://lkml.org/lkml/2019/8/15/951
+> 
+> Changes:
+>  - Use spinlock instead of mutex to protect ioasid custom allocators.
+> This is to support callers in atomic context
+>  - Added more padding to guest PASID bind data for future extensions,
+> suggested by Joerg.
+> After much thinking, I did not do name change from PASID to IOASID in
+> the uAPI, considering we have been using PASID in the rest of uAPIs.
+> IOASID will remain used within the kernel.
+> 
+> For more discussions lead to this series, checkout LPC 2019
+> VFIO/IOMMU/PCI microconference materials.
+> https://linuxplumbersconf.org/event/4/sessions/66/#20190909
+> 
+> 
+> Change log:
+> v4:    - minor patch regroup and fixes based on review from Jean
+> v3:    - include errno.h in ioasid.h to fix compile error
+>        - rebased to v5.4-rc1, no change
+>  
+> v2:
+> 	- Addressed review comments by Jean on IOASID custom
+> allocators, locking fix, misc control flow fix.
+> 	- Fixed a compile error with missing header errno.h
+> 	- Updated Jean-Philiippe's new email and updateded
+> reviewed-by tag
+> 
+> Jacob Pan (2):
+>   iommu/ioasid: Add custom allocators
+>   iommu: Introduce guest PASID bind function
+> 
+> Jean-Philippe Brucker (1):
+>   iommu: Add I/O ASID allocator
+> 
+> Yi L Liu (1):
+>   iommu: Introduce cache_invalidate API
+> 
+>  drivers/iommu/Kconfig      |   4 +
+>  drivers/iommu/Makefile     |   1 +
+>  drivers/iommu/ioasid.c     | 422
+> +++++++++++++++++++++++++++++++++++++++++++++
+> drivers/iommu/iommu.c      |  30 ++++ include/linux/ioasid.h     |
+> 76 ++++++++ include/linux/iommu.h      |  36 ++++
+>  include/uapi/linux/iommu.h | 169 ++++++++++++++++++
+>  7 files changed, 738 insertions(+)
+>  create mode 100644 drivers/iommu/ioasid.c
+>  create mode 100644 include/linux/ioasid.h
+> 
+
+[Jacob Pan]
