@@ -2,150 +2,147 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 665EDC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4E8C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41C0121655
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F5DE21655
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:34:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="PmV+hGbV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727565AbfJGJdt (ORCPT
+        id S1727586AbfJGJeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 05:33:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57358 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726010AbfJGJdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 05:33:49 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CB7B9C0495A3;
-        Mon,  7 Oct 2019 09:33:47 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-12-29.pek2.redhat.com [10.72.12.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A4F6F100197A;
-        Mon,  7 Oct 2019 09:33:42 +0000 (UTC)
-Date:   Mon, 7 Oct 2019 17:33:38 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     Lianbo Jiang <lijiang@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org, bhe@redhat.com,
-        jgross@suse.com, dhowells@redhat.com, Thomas.Lendacky@amd.com,
-        ebiederm@xmission.com, vgoyal@redhat.com, kexec@lists.infradead.org
-Subject: Re: [PATCH v2] x86/kdump: Fix 'kmem -s' reported an invalid
- freepointer when SME was active
-Message-ID: <20191007093338.GA4710@dhcp-128-65.nay.redhat.com>
-References: <20191007070844.15935-1-lijiang@redhat.com>
+        Mon, 7 Oct 2019 05:34:06 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:44589 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727383AbfJGJeG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 05:34:06 -0400
+Received: by mail-lf1-f68.google.com with SMTP id q12so3796893lfc.11
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 02:34:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pW/v9rAZUFz/EoQTWrEX0OSxD6rEJBtSsejlmsLkopw=;
+        b=PmV+hGbVTsXwOx8ggwlU7N7+Z/R0TZ8g/q9zQs7etcACngKWx7QjRF/8Se581PyHZo
+         u3fYJ1mAIOm7+YB2mk5oZtKwfXOzhWYHNQUKWRoa97aoIfbHRSJ4JxWzPsYymBurA3Mi
+         Oey+WAMkyy36ll1cVpLCpGcSQZH9vSct27qk350b9oa3xb4SAw8nI0aGFKQbv4dAnZaU
+         2dg4S56+G5bSvHXcin4rivmXG1Djkk1+V+vy6gok2S/UekWotIujENAlroppSFUkFuIF
+         h+zbfpWdH9XV6tq2lk0V6AGe4oaDPsONzIUv1pWUqfTutbr7YH0TJ6MZq9mrxXVeDA6v
+         8USw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pW/v9rAZUFz/EoQTWrEX0OSxD6rEJBtSsejlmsLkopw=;
+        b=b7rPIIXWxHrI8xCjHZoie7K/Sk4+daND0/k2+DaweZMcnRb4LZaV4TfbEDuLMcLbcX
+         pVbPmHvSLSnVkP6ziMty+99xOWD7XO1SWQmm+omeLCBbyAf9AxR0Pw4TE4JTlFRpvI0p
+         59872xOWG0xoL5S3BMhsrKd4j1iGV3f0J5nGS0pxzhepuRTfrV/caGi0xLVn8+771iH+
+         gWMZKix8bpw7PdYXkD045SU1/tzEdNYFPWNgUxBUkhHkaMdCkNzIoxW0/NHDDA70xbIv
+         2qGwh1shWcxeSo0/0QlY9/2d5yYVwbHMxKJYwAn3DiDDCjKM0tFWSrA+n53XmUGFiwqV
+         BLug==
+X-Gm-Message-State: APjAAAXnKc4NhrPYWBKuYx+H0dYMDdrWE33UUHQACGtR0GR9DGz2Bv0L
+        A8BBjL4v5kU29pdl2i5lcxX30JsNWcEKDAP7Z1tn3g==
+X-Google-Smtp-Source: APXvYqxqDny/0zgM/+tgxZ/E60Ozfjkfc7OLYNZZbgTXgeXtW8BH3ZhM+bjalWIqj/Sw5sCvH+97gPy9f+DdcOaWjsk=
+X-Received: by 2002:a19:f617:: with SMTP id x23mr15911101lfe.97.1570440844243;
+ Mon, 07 Oct 2019 02:34:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191007070844.15935-1-lijiang@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Mon, 07 Oct 2019 09:33:48 +0000 (UTC)
+References: <20191006172016.873463083@linuxfoundation.org> <20191006172018.480360174@linuxfoundation.org>
+In-Reply-To: <20191006172018.480360174@linuxfoundation.org>
+From:   Martijn Coenen <maco@android.com>
+Date:   Mon, 7 Oct 2019 11:33:53 +0200
+Message-ID: <CAB0TPYGO8Nm_Qz0kzSvX69NApiPwu4xV19F=KhyLe5DO3DoLTw@mail.gmail.com>
+Subject: Re: [PATCH 4.9 30/47] ANDROID: binder: remove waitqueue when thread exits.
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        syzbot <syzkaller@googlegroups.com>,
+        Mattias Nissler <mnissler@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lianbo,
-On 10/07/19 at 03:08pm, Lianbo Jiang wrote:
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204793
-> 
-> Kdump kernel will reuse the first 640k region because of some reasons,
-> for example: the trampline and conventional PC system BIOS region may
-> require to allocate memory in this area. Obviously, kdump kernel will
-> also overwrite the first 640k region, therefore, kernel has to copy
-> the contents of the first 640k area to a backup area, which is done in
-> purgatory(), because vmcore may need the old memory. When vmcore is
-> dumped, kdump kernel will read the old memory from the backup area of
-> the first 640k area.
-> 
-> Basically, the main reason should be clear, kernel does not correctly
-> handle the first 640k region when SME is active, which causes that
-> kernel does not properly copy these old memory to the backup area in
-> purgatory(). Therefore, kdump kernel reads out the incorrect contents
-> from the backup area when dumping vmcore. Finally, the phenomenon is
-> as follow:
-> 
-> [root linux]$ crash vmlinux /var/crash/127.0.0.1-2019-09-19-08\:31\:27/vmcore
-> WARNING: kernel relocated [240MB]: patching 97110 gdb minimal_symbol values
-> 
->       KERNEL: /var/crash/127.0.0.1-2019-09-19-08:31:27/vmlinux
->     DUMPFILE: /var/crash/127.0.0.1-2019-09-19-08:31:27/vmcore  [PARTIAL DUMP]
->         CPUS: 128
->         DATE: Thu Sep 19 08:31:18 2019
->       UPTIME: 00:01:21
-> LOAD AVERAGE: 0.16, 0.07, 0.02
->        TASKS: 1343
->     NODENAME: amd-ethanol
->      RELEASE: 5.3.0-rc7+
->      VERSION: #4 SMP Thu Sep 19 08:14:00 EDT 2019
->      MACHINE: x86_64  (2195 Mhz)
->       MEMORY: 127.9 GB
->        PANIC: "Kernel panic - not syncing: sysrq triggered crash"
->          PID: 9789
->      COMMAND: "bash"
->         TASK: "ffff89711894ae80  [THREAD_INFO: ffff89711894ae80]"
->          CPU: 83
->        STATE: TASK_RUNNING (PANIC)
-> 
-> crash> kmem -s|grep -i invalid
-> kmem: dma-kmalloc-512: slab:ffffd77680001c00 invalid freepointer:a6086ac099f0c5a4
-> kmem: dma-kmalloc-512: slab:ffffd77680001c00 invalid freepointer:a6086ac099f0c5a4
-> crash>
-> 
-> BTW: I also tried to fix the above problem in purgatory(), but there
-> are too many restricts in purgatory() context, for example: i can't
-> allocate new memory to create the identity mapping page table for SME
-> situation.
-> 
-> Currently, there are two places where the first 640k area is needed,
-> the first one is in the find_trampoline_placement(), another one is
-> in the reserve_real_mode(), and their content doesn't matter. To avoid
-> the above error, lets occupy the remain memory of the first 640k region
-> (expect for the trampoline and real mode) so that the allocated memory
-> does not fall into the first 640k area when SME is active, which makes
-> us not to worry about whether kernel can correctly copy the contents of
-> the first 640k area to a backup region in the purgatory().
-> 
-> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+On Sun, Oct 6, 2019 at 7:23 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> From: Martijn Coenen <maco@android.com>
+>
+> commit f5cb779ba16334b45ba8946d6bfa6d9834d1527f upstream.
+>
+> binder_poll() passes the thread->wait waitqueue that
+> can be slept on for work. When a thread that uses
+> epoll explicitly exits using BINDER_THREAD_EXIT,
+> the waitqueue is freed, but it is never removed
+> from the corresponding epoll data structure. When
+> the process subsequently exits, the epoll cleanup
+> code tries to access the waitlist, which results in
+> a use-after-free.
+>
+> Prevent this by using POLLFREE when the thread exits.
+>
+> Signed-off-by: Martijn Coenen <maco@android.com>
+> Reported-by: syzbot <syzkaller@googlegroups.com>
+> Cc: stable <stable@vger.kernel.org> # 4.14
+> [backport BINDER_LOOPER_STATE_POLL logic as well]
+> Signed-off-by: Mattias Nissler <mnissler@chromium.org>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > ---
-> Changes since v1:
-> 1. Improve patch log
-> 2. Change the checking condition from sme_active() to sme_active()
->    && strstr(boot_command_line, "crashkernel=")
-> 
->  arch/x86/kernel/setup.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> index 77ea96b794bd..bdb1a02a84fd 100644
-> --- a/arch/x86/kernel/setup.c
-> +++ b/arch/x86/kernel/setup.c
-> @@ -1148,6 +1148,9 @@ void __init setup_arch(char **cmdline_p)
->  
->  	reserve_real_mode();
->  
-> +	if (sme_active() && strstr(boot_command_line, "crashkernel="))
-> +		memblock_reserve(0, 640*1024);
+>  drivers/android/binder.c |   17 ++++++++++++++++-
+>  1 file changed, 16 insertions(+), 1 deletion(-)
+>
+> --- a/drivers/android/binder.c
+> +++ b/drivers/android/binder.c
+> @@ -334,7 +334,8 @@ enum {
+>         BINDER_LOOPER_STATE_EXITED      = 0x04,
+>         BINDER_LOOPER_STATE_INVALID     = 0x08,
+>         BINDER_LOOPER_STATE_WAITING     = 0x10,
+> -       BINDER_LOOPER_STATE_NEED_RETURN = 0x20
+> +       BINDER_LOOPER_STATE_NEED_RETURN = 0x20,
+> +       BINDER_LOOPER_STATE_POLL        = 0x40,
+>  };
+>
+>  struct binder_thread {
+> @@ -2628,6 +2629,18 @@ static int binder_free_thread(struct bin
+>                 } else
+>                         BUG();
+>         }
 > +
+> +       /*
+> +        * If this thread used poll, make sure we remove the waitqueue
+> +        * from any epoll data structures holding it with POLLFREE.
+> +        * waitqueue_active() is safe to use here because we're holding
+> +        * the inner lock.
 
-Seems you missed the comment about "unconditionally do it", only check
-crashkernel param looks better.
+This should be "global lock" in 4.9 and 4.4 :)
 
-Also I noticed reserve_crashkernel is called after initmem_init, I'm not
-sure if memblock_reserve is good enough in early code before
-initmem_init. 
+Otherwise LGTM, thanks!
 
->  	trim_platform_memory_ranges();
->  	trim_low_memory_range();
->  
-> -- 
-> 2.17.1
-> 
+Martijn
 
-Thanks
-Dave
+> +        */
+> +       if ((thread->looper & BINDER_LOOPER_STATE_POLL) &&
+> +           waitqueue_active(&thread->wait)) {
+> +               wake_up_poll(&thread->wait, POLLHUP | POLLFREE);
+> +       }
+> +
+>         if (send_reply)
+>                 binder_send_failed_reply(send_reply, BR_DEAD_REPLY);
+>         binder_release_work(&thread->todo);
+> @@ -2651,6 +2664,8 @@ static unsigned int binder_poll(struct f
+>                 return POLLERR;
+>         }
+>
+> +       thread->looper |= BINDER_LOOPER_STATE_POLL;
+> +
+>         wait_for_proc_work = thread->transaction_stack == NULL &&
+>                 list_empty(&thread->todo) && thread->return_error == BR_OK;
+>
+>
+>
