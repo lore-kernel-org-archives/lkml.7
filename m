@@ -2,363 +2,205 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7052EC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20349C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 344822173B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:42:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E896721835
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:43:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qPnX75pQ"
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="uBQeH1QF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbfJGLmA (ORCPT
+        id S1727822AbfJGLnl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 07:42:00 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:39570 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727411AbfJGLl6 (ORCPT
+        Mon, 7 Oct 2019 07:43:41 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45418 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727511AbfJGLnl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 07:41:58 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x97BfrMT125478;
-        Mon, 7 Oct 2019 06:41:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570448513;
-        bh=nH9TZ4hROoUMfZWTGhD+I02NEf8Kpjkulam8+3HbjLo=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=qPnX75pQZg4DcNeIpM6QbAMilecYZ9u4j41toHNjYVPzF+e9gPzUsNPWlCQk2OPyP
-         paIa54zQtr9Ck2fNBNlDV5VnjDTITEgihgQk/I1vwogq3pRf0GgAeAdV33o3Ii3I6M
-         SFOxFKjJz3znLOEglC+673dC5cLJUA79UL//lYFw=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x97Bfr0U056657;
-        Mon, 7 Oct 2019 06:41:53 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 7 Oct
- 2019 06:41:51 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 7 Oct 2019 06:41:49 -0500
-Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x97BfjMM024908;
-        Mon, 7 Oct 2019 06:41:50 -0500
-From:   Roger Quadros <rogerq@ti.com>
-To:     <felipe.balbi@linux.intel.com>
-CC:     <gregkh@linuxfoundation.org>, <pawell@cadence.com>,
-        <nsekhar@ti.com>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Roger Quadros <rogerq@ti.com>
-Subject: [PATCH 2/2] usb: cdns3: Add TI specific wrapper driver
-Date:   Mon, 7 Oct 2019 14:41:42 +0300
-Message-ID: <20191007114142.5182-3-rogerq@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191007114142.5182-1-rogerq@ti.com>
-References: <20191007114142.5182-1-rogerq@ti.com>
+        Mon, 7 Oct 2019 07:43:41 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y72so8449979pfb.12
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 04:43:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ingics-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lnZBYfnQqIKed2UQ8HcNQI/BpCmJn++X3gPwaT+ycjk=;
+        b=uBQeH1QFZEfILxXV7kRDAQC+mobdNn1y/F3W6dHwDuBn5lipQ5J8fj0UYGkYwLQT6m
+         0e86TNBATaEncjWxxqtrYfLqVr3Ednmm671QLmFgd2mULuX9x4h5PkFVi7nyQDWapYdS
+         m6Uu7qvJyJX5slSjvxA6Z1pC3eGi77Bkgo0V9ewQI2ACyZZpHAhcMeSmSw7vAv4S2GZh
+         vepreMbJwJcERXyDh935Z3e33itZPWYpylx/HYzdpfA2Igx4cKqTOTSBPY8fh2DkqWKq
+         AtDbL6UWX3K3HFLZ5GDINlZJLVINOV8WcCpY93N9g+CEa8GE2pbMyh+r7GcKyCEMk5IH
+         tVNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lnZBYfnQqIKed2UQ8HcNQI/BpCmJn++X3gPwaT+ycjk=;
+        b=TM5jNagdW5RVPTiP4P3ACcFQ9mAaCYLT2UFKLtlaNLkYBzwOOSPHBIOgIMtidWa4e7
+         EpcNwgA3OvQ93iZ7o4d9XOEKFzmUJjUkiEnK/aJ5VgjjwY+fIHHOC0GjN52qgWG1ss7X
+         8Kk6/qXZV9DXYUNsyJZHnM8FamfwGyiUULw2LcTahmoTt7SiU23sJKqS0WRjaHkkJTnH
+         /kiBBMEyKbTAJkEF6Zbtr3QNhDdE5dE8aSIKTqqwV1csfdEjEHU5vOmT0ZtY9mmjNJ+w
+         G876lFF78LipI9kCWVw1JxffubtcxwrWsPJeQan/gpmkgvGvf3xk6oRd8XAYChE5ckYo
+         vNqQ==
+X-Gm-Message-State: APjAAAWXzBUHeD5+Bx/1wPWNFz/5GsPj59tdBtP0xvHRDpnULnskdrF7
+        QAksqIF3nLuQ7v1gsIaE7ndogvgmoMg=
+X-Google-Smtp-Source: APXvYqxXtYIrHjCJk9K8uXIYRXUOAraF5V9vbHQfykuAxsxiob4yLROUrZQ/al9VnSPx6rKi8korzg==
+X-Received: by 2002:a65:514c:: with SMTP id g12mr30288978pgq.76.1570448619566;
+        Mon, 07 Oct 2019 04:43:39 -0700 (PDT)
+Received: from localhost.localdomain (122-117-179-2.HINET-IP.hinet.net. [122.117.179.2])
+        by smtp.gmail.com with ESMTPSA id p1sm19188297pfb.112.2019.10.07.04.43.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2019 04:43:38 -0700 (PDT)
+From:   Axel Lin <axel.lin@ingics.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Balaji T K <balajitk@ti.com>, linux-omap@vger.kernel.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
+Subject: [PATCH] regulator: pbias: Get rid of struct pbias_regulator_data
+Date:   Mon,  7 Oct 2019 19:43:20 +0800
+Message-Id: <20191007114320.20977-1-axel.lin@ingics.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The J721e platform comes with 2 Cadence USB3 controller
-instances. This driver supports the TI specific wrapper
-on this platform.
+Only the desc field is really used, so use struct regulator_desc instead.
+Then struct pbias_regulator_data can be removed.
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
 ---
- drivers/usb/cdns3/Kconfig    |  10 ++
- drivers/usb/cdns3/Makefile   |   1 +
- drivers/usb/cdns3/cdns3-ti.c | 244 +++++++++++++++++++++++++++++++++++
- 3 files changed, 255 insertions(+)
- create mode 100644 drivers/usb/cdns3/cdns3-ti.c
+ drivers/regulator/pbias-regulator.c | 69 +++++++++++------------------
+ 1 file changed, 26 insertions(+), 43 deletions(-)
 
-diff --git a/drivers/usb/cdns3/Kconfig b/drivers/usb/cdns3/Kconfig
-index d0331613a355..2a1e89d12ed9 100644
---- a/drivers/usb/cdns3/Kconfig
-+++ b/drivers/usb/cdns3/Kconfig
-@@ -43,4 +43,14 @@ config USB_CDNS3_PCI_WRAP
- 	  If you choose to build this driver as module it will
- 	  be dynamically linked and module will be called cdns3-pci.ko
+diff --git a/drivers/regulator/pbias-regulator.c b/drivers/regulator/pbias-regulator.c
+index a59811060bdc..bfc15dd3f730 100644
+--- a/drivers/regulator/pbias-regulator.c
++++ b/drivers/regulator/pbias-regulator.c
+@@ -38,15 +38,6 @@ struct pbias_reg_info {
+ 	int n_voltages;
+ };
  
-+config USB_CDNS3_TI
-+	tristate "Cadence USB3 support on TI platforms"
-+	depends on ARCH_K3 || COMPILE_TEST
-+	default USB_CDNS3
-+	help
-+	  Say 'Y' or 'M' here if you are building for Texas Instruments
-+	  platforms that contain Cadence USB3 controller core.
-+
-+	  e.g. J721e.
-+
- endif
-diff --git a/drivers/usb/cdns3/Makefile b/drivers/usb/cdns3/Makefile
-index a703547350bb..948e6b88d1a9 100644
---- a/drivers/usb/cdns3/Makefile
-+++ b/drivers/usb/cdns3/Makefile
-@@ -14,3 +14,4 @@ endif
- cdns3-$(CONFIG_USB_CDNS3_HOST)		+= host.o
+-struct pbias_regulator_data {
+-	struct regulator_desc desc;
+-	void __iomem *pbias_addr;
+-	struct regulator_dev *dev;
+-	struct regmap *syscon;
+-	const struct pbias_reg_info *info;
+-	int voltage;
+-};
+-
+ struct pbias_of_data {
+ 	unsigned int offset;
+ };
+@@ -157,13 +148,13 @@ MODULE_DEVICE_TABLE(of, pbias_of_match);
+ static int pbias_regulator_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
+-	struct pbias_regulator_data *drvdata;
+ 	struct resource *res;
+ 	struct regulator_config cfg = { };
++	struct regulator_desc *desc;
++	struct regulator_dev *rdev;
+ 	struct regmap *syscon;
+ 	const struct pbias_reg_info *info;
+-	int ret = 0;
+-	int count, idx, data_idx = 0;
++	int ret, count, idx;
+ 	const struct pbias_of_data *data;
+ 	unsigned int offset;
  
- obj-$(CONFIG_USB_CDNS3_PCI_WRAP)	+= cdns3-pci-wrap.o
-+obj-$(CONFIG_USB_CDNS3_TI)		+= cdns3-ti.o
-diff --git a/drivers/usb/cdns3/cdns3-ti.c b/drivers/usb/cdns3/cdns3-ti.c
-new file mode 100644
-index 000000000000..7447f5fcbe64
---- /dev/null
-+++ b/drivers/usb/cdns3/cdns3-ti.c
-@@ -0,0 +1,244 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/**
-+ * cdns_ti-ti.c - TI specific Glue layer for Cadence USB Controller
-+ *
-+ * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
-+ */
-+
-+#include <linux/bits.h>
-+#include <linux/clk.h>
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/interrupt.h>
-+#include <linux/platform_device.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/io.h>
-+#include <linux/of_platform.h>
-+#include <linux/pm_runtime.h>
-+
-+/* USB Wrapper register offsets */
-+#define USBSS_PID		0x0
-+#define	USBSS_W1		0x4
-+#define USBSS_STATIC_CONFIG	0x8
-+#define USBSS_PHY_TEST		0xc
-+#define	USBSS_DEBUG_CTRL	0x10
-+#define	USBSS_DEBUG_INFO	0x14
-+#define	USBSS_DEBUG_LINK_STATE	0x18
-+#define	USBSS_DEVICE_CTRL	0x1c
-+
-+/* Wrapper 1 register bits */
-+#define USBSS_W1_PWRUP_RST		BIT(0)
-+#define USBSS_W1_OVERCURRENT_SEL	BIT(8)
-+#define USBSS_W1_MODESTRAP_SEL		BIT(9)
-+#define USBSS_W1_OVERCURRENT		BIT(16)
-+#define USBSS_W1_MODESTRAP_MASK		GENMASK(18, 17)
-+#define USBSS_W1_MODESTRAP_SHIFT	17
-+#define USBSS_W1_USB2_ONLY		BIT(19)
-+
-+/* Static config register bits */
-+#define USBSS1_STATIC_PLL_REF_SEL_MASK	GENMASK(8, 5)
-+#define USBSS1_STATIC_PLL_REF_SEL_SHIFT	5
-+#define USBSS1_STATIC_LOOPBACK_MODE_MASK	GENMASK(4, 3)
-+#define USBSS1_STATIC_LOOPBACK_MODE_SHIFT	3
-+#define USBSS1_STATIC_VBUS_SEL_MASK	GENMASK(2, 1)
-+#define USBSS1_STATIC_VBUS_SEL_SHIFT	1
-+#define USBSS1_STATIC_LANE_REVERSE	BIT(0)
-+
-+/* Modestrap modes */
-+enum modestrap_mode { USBSS_MODESTRAP_MODE_NONE,
-+		      USBSS_MODESTRAP_MODE_HOST,
-+		      USBSS_MODESTRAP_MODE_PERIPHERAL};
-+
-+struct cdns_ti {
-+	struct device *dev;
-+	void __iomem *usbss;
-+	int usb2_only:1;
-+	int vbus_divider:1;
-+	struct clk *usb2_refclk;
-+	struct clk *lpm_clk;
-+};
-+
-+static const int cdns_ti_rate_table[] = {	/* in KHZ */
-+	9600,
-+	10000,
-+	12000,
-+	19200,
-+	20000,
-+	24000,
-+	25000,
-+	26000,
-+	38400,
-+	40000,
-+	58000,
-+	50000,
-+	52000,
-+};
-+
-+static inline u32 cdns_ti_readl(struct cdns_ti *data, u32 offset)
-+{
-+	return readl(data->usbss + offset);
-+}
-+
-+static inline void cdns_ti_writel(struct cdns_ti *data, u32 offset, u32 value)
-+{
-+	writel(value, data->usbss + offset);
-+}
-+
-+static int cdns_ti_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *node = pdev->dev.of_node;
-+	struct cdns_ti *data;
-+	struct resource	*res;
-+	int error;
-+	u32 reg;
-+	int modestrap_mode;
-+	int rate_code, i;
-+	unsigned long rate;
-+
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, data);
-+
-+	data->dev = dev;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	data->usbss = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(data->usbss))
-+		return PTR_ERR(data->usbss);
-+
-+	data->usb2_refclk = devm_clk_get(dev, "usb2_refclk");
-+	if (IS_ERR(data->usb2_refclk)) {
-+		dev_err(dev, "can't get usb2_refclk\n");
-+		return PTR_ERR(data->usb2_refclk);
-+	}
-+
-+	data->lpm_clk = devm_clk_get(dev, "lpm_clk");
-+	if (IS_ERR(data->lpm_clk)) {
-+		dev_err(dev, "can't get lpm_clk\n");
-+		return PTR_ERR(data->lpm_clk);
-+	}
-+
-+	rate = clk_get_rate(data->usb2_refclk);
-+	rate /= 1000;	/* To KHz */
-+	for (i = 0; i < ARRAY_SIZE(cdns_ti_rate_table); i++) {
-+		if (cdns_ti_rate_table[i] == rate)
-+			break;
-+	}
-+
-+	if (i == ARRAY_SIZE(cdns_ti_rate_table)) {
-+		dev_err(dev, "unsupported usb2_refclk rate: %lu KHz\n", rate);
-+		return -EINVAL;
-+	}
-+
-+	rate_code = i;
-+
-+	pm_runtime_enable(dev);
-+	error = pm_runtime_get_sync(dev);
-+	if (error < 0) {
-+		dev_err(dev, "pm_runtime_get_sync failed: %d\n", error);
-+		goto err_get;
-+	}
-+
-+	/* assert RESET */
-+	reg = cdns_ti_readl(data, USBSS_W1);
-+	reg &= ~USBSS_W1_PWRUP_RST;
-+	cdns_ti_writel(data, USBSS_W1, reg);
-+
-+	/* set static config */
-+	reg = cdns_ti_readl(data, USBSS_STATIC_CONFIG);
-+	reg &= ~USBSS1_STATIC_PLL_REF_SEL_MASK;
-+	reg |= rate_code << USBSS1_STATIC_PLL_REF_SEL_SHIFT;
-+
-+	reg &= ~USBSS1_STATIC_VBUS_SEL_MASK;
-+	data->vbus_divider = device_property_read_bool(dev, "ti,vbus-divider");
-+	if (data->vbus_divider)
-+		reg |= 1 << USBSS1_STATIC_VBUS_SEL_SHIFT;
-+
-+	cdns_ti_writel(data, USBSS_STATIC_CONFIG, reg);
-+	reg = cdns_ti_readl(data, USBSS_STATIC_CONFIG);
-+
-+	/* set USB2_ONLY mode if requested */
-+	reg = cdns_ti_readl(data, USBSS_W1);
-+	data->usb2_only = device_property_read_bool(dev, "ti,usb2-only");
-+	if (data->usb2_only)
-+		reg |= USBSS_W1_USB2_ONLY;
-+
-+	/* set modestrap  */
-+	if (device_property_read_bool(dev, "ti,modestrap-host"))
-+		modestrap_mode = USBSS_MODESTRAP_MODE_HOST;
-+	else if (device_property_read_bool(dev, "ti,modestrap-peripheral"))
-+		modestrap_mode = USBSS_MODESTRAP_MODE_PERIPHERAL;
-+	else
-+		modestrap_mode = USBSS_MODESTRAP_MODE_NONE;
-+
-+	reg |= USBSS_W1_MODESTRAP_SEL;
-+	reg &= ~USBSS_W1_MODESTRAP_MASK;
-+	reg |= modestrap_mode << USBSS_W1_MODESTRAP_SHIFT;
-+	cdns_ti_writel(data, USBSS_W1, reg);
-+
-+	/* de-assert RESET */
-+	reg |= USBSS_W1_PWRUP_RST;
-+	cdns_ti_writel(data, USBSS_W1, reg);
-+
-+	error = of_platform_populate(node, NULL, NULL, dev);
-+	if (error) {
-+		dev_err(dev, "failed to create children: %d\n", error);
-+		goto err;
-+	}
-+
+@@ -172,10 +163,8 @@ static int pbias_regulator_probe(struct platform_device *pdev)
+ 	if (count < 0)
+ 		return count;
+ 
+-	drvdata = devm_kcalloc(&pdev->dev,
+-			       count, sizeof(struct pbias_regulator_data),
+-			       GFP_KERNEL);
+-	if (!drvdata)
++	desc = devm_kcalloc(&pdev->dev, count, sizeof(*desc), GFP_KERNEL);
++	if (!desc)
+ 		return -ENOMEM;
+ 
+ 	syscon = syscon_regmap_lookup_by_phandle(np, "syscon");
+@@ -198,7 +187,7 @@ static int pbias_regulator_probe(struct platform_device *pdev)
+ 	cfg.regmap = syscon;
+ 	cfg.dev = &pdev->dev;
+ 
+-	for (idx = 0; idx < PBIAS_NUM_REGS && data_idx < count; idx++) {
++	for (idx = 0; idx < PBIAS_NUM_REGS && count; idx++) {
+ 		if (!pbias_matches[idx].init_data ||
+ 			!pbias_matches[idx].of_node)
+ 			continue;
+@@ -207,41 +196,35 @@ static int pbias_regulator_probe(struct platform_device *pdev)
+ 		if (!info)
+ 			return -ENODEV;
+ 
+-		drvdata[data_idx].syscon = syscon;
+-		drvdata[data_idx].info = info;
+-		drvdata[data_idx].desc.name = info->name;
+-		drvdata[data_idx].desc.owner = THIS_MODULE;
+-		drvdata[data_idx].desc.type = REGULATOR_VOLTAGE;
+-		drvdata[data_idx].desc.ops = &pbias_regulator_voltage_ops;
+-		drvdata[data_idx].desc.volt_table = info->pbias_volt_table;
+-		drvdata[data_idx].desc.n_voltages = info->n_voltages;
+-		drvdata[data_idx].desc.enable_time = info->enable_time;
+-		drvdata[data_idx].desc.vsel_reg = offset;
+-		drvdata[data_idx].desc.vsel_mask = info->vmode;
+-		drvdata[data_idx].desc.enable_reg = offset;
+-		drvdata[data_idx].desc.enable_mask = info->enable_mask;
+-		drvdata[data_idx].desc.enable_val = info->enable;
+-		drvdata[data_idx].desc.disable_val = info->disable_val;
++		desc->name = info->name;
++		desc->owner = THIS_MODULE;
++		desc->type = REGULATOR_VOLTAGE;
++		desc->ops = &pbias_regulator_voltage_ops;
++		desc->volt_table = info->pbias_volt_table;
++		desc->n_voltages = info->n_voltages;
++		desc->enable_time = info->enable_time;
++		desc->vsel_reg = offset;
++		desc->vsel_mask = info->vmode;
++		desc->enable_reg = offset;
++		desc->enable_mask = info->enable_mask;
++		desc->enable_val = info->enable;
++		desc->disable_val = info->disable_val;
+ 
+ 		cfg.init_data = pbias_matches[idx].init_data;
+-		cfg.driver_data = &drvdata[data_idx];
+ 		cfg.of_node = pbias_matches[idx].of_node;
+ 
+-		drvdata[data_idx].dev = devm_regulator_register(&pdev->dev,
+-					&drvdata[data_idx].desc, &cfg);
+-		if (IS_ERR(drvdata[data_idx].dev)) {
+-			ret = PTR_ERR(drvdata[data_idx].dev);
++		rdev = devm_regulator_register(&pdev->dev, desc, &cfg);
++		if (IS_ERR(rdev)) {
++			ret = PTR_ERR(rdev);
+ 			dev_err(&pdev->dev,
+ 				"Failed to register regulator: %d\n", ret);
+-			goto err_regulator;
++			return ret;
+ 		}
+-		data_idx++;
++		desc++;
++		count--;
+ 	}
+ 
+-	platform_set_drvdata(pdev, drvdata);
+-
+-err_regulator:
+-	return ret;
 +	return 0;
-+
-+err:
-+	pm_runtime_put_sync(data->dev);
-+err_get:
-+	pm_runtime_disable(data->dev);
-+
-+	return error;
-+}
-+
-+static int cdns_ti_remove_core(struct device *dev, void *c)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+
-+	platform_device_unregister(pdev);
-+
-+	return 0;
-+}
-+
-+static int cdns_ti_remove(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+
-+	device_for_each_child(dev, NULL, cdns_ti_remove_core);
-+	pm_runtime_put_sync(dev);
-+	pm_runtime_disable(dev);
-+
-+	platform_set_drvdata(pdev, NULL);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id cdns_ti_of_match[] = {
-+	{ .compatible = "ti,j721e-usb", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, cdns_ti_of_match);
-+
-+static struct platform_driver cdns_ti_driver = {
-+	.probe		= cdns_ti_probe,
-+	.remove		= cdns_ti_remove,
-+	.driver		= {
-+		.name	= "cdns3-ti",
-+		.of_match_table	= cdns_ti_of_match,
-+	},
-+};
-+
-+module_platform_driver(cdns_ti_driver);
-+
-+MODULE_ALIAS("platform:cdns3-ti");
-+MODULE_AUTHOR("Roger Quadros <rogerq@ti.com>");
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("Cadence USB3 TI Glue Layer");
+ }
+ 
+ static struct platform_driver pbias_regulator_driver = {
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.20.1
 
