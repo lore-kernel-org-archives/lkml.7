@@ -2,186 +2,128 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D935DECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE81ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC57F20684
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:59:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kDOH59OZ"
+	by mail.kernel.org (Postfix) with ESMTP id B44E820684
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:00:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570456828;
+	bh=5DKDGeTFgWgrnLxNSIQxh5fo19stg4UcbImx3z4ru/o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=M/+8zJesDhhWYrRzxaMl7DOSlspyF8mo0YMqJlvIdi/jvWlxF6+3lt6nXmMS6n8pB
+	 6Wijs0ImcEzbGxrLHVJkVhJf2L8iPwbzzzuP5W5MqR9p5+9XRVJ9avwOcPIWMlIL0v
+	 rpjJKc6MUEOBpX/CkY3vQM7UmIkKAIlF95WJYESg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbfJGN7K (ORCPT
+        id S1728164AbfJGOA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 09:59:10 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:34441 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727442AbfJGN7J (ORCPT
+        Mon, 7 Oct 2019 10:00:28 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:33441 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727324AbfJGOA1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 09:59:09 -0400
-Received: by mail-vs1-f66.google.com with SMTP id d3so8968930vsr.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 06:59:09 -0700 (PDT)
+        Mon, 7 Oct 2019 10:00:27 -0400
+Received: by mail-wm1-f65.google.com with SMTP id r17so106161wme.0;
+        Mon, 07 Oct 2019 07:00:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ctSXe3Qibn7SwlKCbsSDIKSVJbFoB8K7abxEy4a8a2Y=;
-        b=kDOH59OZ6r1FcPSXe+JGbtRsP2+75ns0l5OY5gHErPOOKope1DPRHLXTxUrkcPgf6z
-         bLCUrMwDkb0U8f1EbVgdAYQXz+IY/WPdw2QVF8FpuYOIqlo3/g+rPGykW5dJExYIIRbs
-         gBiPr5yJigX15w4y1wtSGnsdBzV6QSQO13RXs=
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LTQi6AkTTCXGOyTWZNioMhV3bvTHe5T1ruIzA19ASxM=;
+        b=Ec5eQrQETPS4fmIBKOLkJ++AcnN6gM5l5/ss/GzPFzM4k/tPOxRjtlxVfT1sTjhyY/
+         GnyJUpjY7ekRLAKB+uyJaFgwUReOVX9x55IXQlzzBEDiGnfgwydrBbEblPgFKWHHxJFW
+         N4ZDVDehirClb2LDqMjWWrQZkfcn+gqMPw5R1BZ4NpHeaBuGSGSkUUnFK2wbY1K4hMIq
+         ttRFGExAhQuGdpYLmX0ZlxozPCZBrd/R6uKEqRDmr+J3Ty3xlX5Mkj1it3sgn5WtxDbw
+         BBuPVcS8Uvp+AZhEMwsBPU5cl0wPi6iBMoqgF2MRWjzVmPZRPYsrSZ8QLkvR5qvyQ6QX
+         rocQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ctSXe3Qibn7SwlKCbsSDIKSVJbFoB8K7abxEy4a8a2Y=;
-        b=LmxdHFGVFTspgs4SilsqH7/d/YIurZ0t0FaKidyZWx7zpX0ZiVVznM+gu53PKNw29A
-         zAJw5Bd34tVrzSa3vDKovlfC3Unqq4LmbaJrUxNrdZCUCXsyhGjTDDagBLJ5H6/lbyGB
-         Rr70TUEk/P0uZg2k7Ji0Q9NoJ7/pTyWaIi953X4ahNu3ZPNxUOeuCRCIKYwohp8J71cN
-         8eBCJ7jxmOutM+X+YKmQrrYwPLNvi5Xs9M2JxTWWMgssBsbkF3oFlZGwZYQAE8uRVA6r
-         TBk07WValOtLtpLYzUJufeLyFw1YaQv2LW6V6fUh/k+BqNx4i48OGsq7yhX8FyzawlgV
-         pdjQ==
-X-Gm-Message-State: APjAAAXgXtR9ixU+6y9w6H4WUdFsfRcX5XHW1bByNP3exbE4lQn+2Y38
-        4rvc5AUSS1WytzKuCawKpB3G3Z8x1YYEdr2kzpQzzg==
-X-Google-Smtp-Source: APXvYqzvEfSO3HqKvInVixjThDGPwl6gp+QVYjOFJmfDBQtcYmmYhlgtXAGem4GcilN/j4BZcMBegIbfRsM/k/N7jPA=
-X-Received: by 2002:a67:2b86:: with SMTP id r128mr15828347vsr.119.1570456748312;
- Mon, 07 Oct 2019 06:59:08 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LTQi6AkTTCXGOyTWZNioMhV3bvTHe5T1ruIzA19ASxM=;
+        b=bDSYxmXsBY01hm5YHYs1vJ2glVnK8LkXf0RKo+D43nEcOr+5J87259VYRvXgu954mX
+         dyHvA9kP7wxuGUTAhAq29K09BheFUHlINZwsDcvP8T+otSTgddsCop6bACZ70YO1iFzv
+         R3wCAhwmoljqrujRaEmPNzHq5BYOO77puG9XzY5Z6c+/tnICzmfjCDzscBCRnDu1vPxq
+         bEhT2tXsrGnAQ5Co44boDJK1TfmladM/cJ/D5f9RtokxkM/MLSu/HEM9in8ksyZMD1vB
+         lZxN7fU7pf0Y2OYvI6ZEdrjlwHEYlvilMno4hRLLVJcIUmVdmenZf7GkTvcl8fEoOWEF
+         gCrw==
+X-Gm-Message-State: APjAAAXNZlPo372ejbqSuMk1EuTzkNnz82xDHHNKrNihGkwFVP+ZjLBP
+        YrGbW2bxXHjNojTDwdStWsk=
+X-Google-Smtp-Source: APXvYqyefKR8OR7QDZDd+jzxQ9ozWeYPJG85KFqiuWil8Kw+KFm7XmK5bGe1uF+tFvXVMghLhjntSw==
+X-Received: by 2002:a05:600c:118a:: with SMTP id i10mr20538894wmf.80.1570456825315;
+        Mon, 07 Oct 2019 07:00:25 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id y19sm34357804wmi.13.2019.10.07.07.00.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2019 07:00:24 -0700 (PDT)
+Date:   Mon, 7 Oct 2019 16:00:22 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-crypto@vger.kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>
+Subject: Re: [PATCH v2 5.4 regression fix] x86/boot: Provide memzero_explicit
+Message-ID: <20191007140022.GA29008@gmail.com>
+References: <20191007134724.4019-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-References: <20191007071610.65714-1-cychiang@chromium.org> <CA+Px+wWkr1xmSpgEkSaGS7UZu8TKUYvSnbjimBRH29=kDtcHKA@mail.gmail.com>
- <ebf9bc3f-a531-6c5b-a146-d80fe6c5d772@roeck-us.net>
-In-Reply-To: <ebf9bc3f-a531-6c5b-a146-d80fe6c5d772@roeck-us.net>
-From:   Cheng-yi Chiang <cychiang@chromium.org>
-Date:   Mon, 7 Oct 2019 21:58:41 +0800
-Message-ID: <CAFv8NwLuYKHJoG9YR3WvofwiMnXCgYv-Sk7t5jCvTZbST+Ctjw@mail.gmail.com>
-Subject: Re: [PATCH] firmware: vpd: Add an interface to read VPD value
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Tzung-Bi Shih <tzungbi@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ALSA development <alsa-devel@alsa-project.org>,
-        Hung-Te Lin <hungte@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Dylan Reid <dgreid@chromium.org>,
-        Tzung-Bi Shih <tzungbi@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191007134724.4019-1-hdegoede@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 8:27 PM Guenter Roeck <linux@roeck-us.net> wrote:
->
-> On 10/7/19 1:03 AM, Tzung-Bi Shih wrote:
-> > On Mon, Oct 7, 2019 at 3:16 PM Cheng-Yi Chiang <cychiang@chromium.org> wrote:
-> >>
-> >> Add an interface for other driver to query VPD value.
-> >> This will be used for ASoC machine driver to query calibration
-> >> data stored in VPD for smart amplifier speaker resistor
-> >> calibration.
-> >>
-> >> Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
-> >> ---
-> >>   drivers/firmware/google/vpd.c              | 16 ++++++++++++++++
-> >>   include/linux/firmware/google/google_vpd.h | 18 ++++++++++++++++++
-> >>   2 files changed, 34 insertions(+)
-> >>   create mode 100644 include/linux/firmware/google/google_vpd.h
-> >>
-> >> diff --git a/drivers/firmware/google/vpd.c b/drivers/firmware/google/vpd.c
-> >> index db0812263d46..71e9d2da63be 100644
-> >> --- a/drivers/firmware/google/vpd.c
-> >> +++ b/drivers/firmware/google/vpd.c
-> >> @@ -65,6 +65,22 @@ static ssize_t vpd_attrib_read(struct file *filp, struct kobject *kobp,
-> >>                                         info->bin_attr.size);
-> >>   }
-> >>
-> >> +int vpd_attribute_read_value(bool ro, const char *key,
-> >> +                            char **value, u32 value_len)
->
-> FWIW, I don't think the "_value" in this function name adds any value,
-> unless there is going to be some other read function.
-ACK
->
-> The API should be documented, and state clearly that the caller must release
-> the returned value.
-ACK
->
-> >> +{
-> >> +       struct vpd_attrib_info *info;
-> >> +       struct vpd_section *sec = ro ? &ro_vpd : &rw_vpd;
-> >> +
-> >> +       list_for_each_entry(info, &sec->attribs, list) {
-> >> +               if (strcmp(info->key, key) == 0) {
-> >> +                       *value = kstrndup(info->value, value_len, GFP_KERNEL);
-> >
-> > Value is not necessary a NULL-terminated string.
-> > kmalloc(info->bin_attr.size) and memcpy(...) would make the most
-> > sense.
-> >
-> kmemdup() ?
-ACK
->
-> > The value_len parameter makes less sense.  It seems the caller knows
-> > the length of the value in advance.
-> > Suggest to change the value_len to report the length of value.  I.e.
-> > *value_len = info->bin_attr.size;
-> >  > Also please check the return value for memory allocation-like
-> > functions (e.g. kstrndup, kmalloc) so that *value won't be NULL but
-> > the function returned 0.
-> >
-> >> +                       return 0;
-> >> +               }
-> >> +       }
-> >> +       return -EINVAL;
->
-> Maybe something like -ENOENT would be more appropriate here.
->
-ACK
-> >> +}
-> >> +EXPORT_SYMBOL(vpd_attribute_read_value);
-> >> +
->
-> I would suggest to use EXPORT_SYMBOL_GPL().
->
-ACK
 
-Hi Guenter,
-Thanks for the quick review.
-I'll update accordingly in v2.
+* Hans de Goede <hdegoede@redhat.com> wrote:
 
-> >>   /*
-> >>    * vpd_section_check_key_name()
-> >>    *
-> >> diff --git a/include/linux/firmware/google/google_vpd.h b/include/linux/firmware/google/google_vpd.h
-> >> new file mode 100644
-> >> index 000000000000..6f1160f28af8
-> >> --- /dev/null
-> >> +++ b/include/linux/firmware/google/google_vpd.h
-> >> @@ -0,0 +1,18 @@
-> >> +/* SPDX-License-Identifier: GPL-2.0 */
-> >> +/*
-> >> + * Google VPD interface.
-> >> + *
-> >> + * Copyright 2019 Google Inc.
-> >> + */
-> >> +
-> >> +/* Interface for reading VPD value on Chrome platform. */
-> >> +
-> >> +#ifndef __GOOGLE_VPD_H
-> >> +#define __GOOGLE_VPD_H
-> >> +
-> >> +#include <linux/types.h>
-> >> +
-> >> +int vpd_attribute_read_value(bool ro, const char *key,
-> >> +                            char **value, u32 value_len);
-> >> +
-> >> +#endif  /* __GOOGLE_VPD_H */
-> >> --
-> >> 2.23.0.581.g78d2f28ef7-goog
-> >>
-> >
->
+> The purgatory code now uses the shared lib/crypto/sha256.c sha256
+> implementation. This needs memzero_explicit, implement this.
+> 
+> Reported-by: Arvind Sankar <nivedita@alum.mit.edu>
+> Fixes: 906a4bb97f5d ("crypto: sha256 - Use get/put_unaligned_be32 to get input, memzero_explicit")
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+> Changes in v2:
+> - Add barrier_data() call after the memset, making the function really
+>   explicit. Using barrier_data() works fine in the purgatory (build)
+>   environment.
+> ---
+>  arch/x86/boot/compressed/string.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/arch/x86/boot/compressed/string.c b/arch/x86/boot/compressed/string.c
+> index 81fc1eaa3229..654a7164a702 100644
+> --- a/arch/x86/boot/compressed/string.c
+> +++ b/arch/x86/boot/compressed/string.c
+> @@ -50,6 +50,12 @@ void *memset(void *s, int c, size_t n)
+>  	return s;
+>  }
+>  
+> +void memzero_explicit(void *s, size_t count)
+> +{
+> +	memset(s, 0, count);
+> +	barrier_data(s);
+> +}
+
+So the barrier_data() is only there to keep LTO from optimizing out the 
+seemingly unused function?
+
+Is there no canonical way to do that, instead of a seemingly obscure 
+barrier_data() call - which would require a comment at minimum.
+
+We do have $(DISABLE_LTO), not sure whether it's applicable here though.
+
+Thanks,
+
+	Ingo
