@@ -2,180 +2,92 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF3CC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB57ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEDB821721
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:44:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LmCJHtNQ"
+	by mail.kernel.org (Postfix) with ESMTP id 0A4C1206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:46:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729409AbfJGVoc (ORCPT
+        id S1729345AbfJGVqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 17:44:32 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:42938 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728654AbfJGVoc (ORCPT
+        Mon, 7 Oct 2019 17:46:36 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:56222 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728422AbfJGVqg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 17:44:32 -0400
-Received: by mail-lf1-f66.google.com with SMTP id c195so10358284lfg.9;
-        Mon, 07 Oct 2019 14:44:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Q+EvvC8b0zqiykxshjm1BmldMhp8/DtfGeGC5gSB2EY=;
-        b=LmCJHtNQEhdw1G9PWFX5SOjwOSJDNkIQ5VwqrayOnBlTyDci9lj1krdHZrkQRQ6LDx
-         QBgPeMh7utDKXxGHMpwbKk8NOsJ+9lzf59eOWOg1EnZfWTSI7DiVF+sTvxRfnHePJkvj
-         54dwwXLJEDOwZhNkRvxDSOMCV20jYGfYQtJ4QzzMNRGlvxODa1Ge27SJSdJdve9COG9A
-         bMriAlSQguyO43fPdCwKBmmaQbzSHy+Hcoz8bSSCmG1cxB7jvkYMOkwytS0UOl6ncBT6
-         A66n2/cY7C/L1eDmLjJ4FCwqN8ALgWcCRbWw1Bg+3U8Kx2ex+uWM1rEj+0yz2i73o6bk
-         HqeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Q+EvvC8b0zqiykxshjm1BmldMhp8/DtfGeGC5gSB2EY=;
-        b=TECdmJiZgvPie8shsvg4QP9UXUrbm1otD/GQlvNkK1C1c3wLaMVKMRA9eikOqbWlCs
-         2r+f9zviAKIQrL5tRHBXJAO/o+Zo4Gqg1MrxKS8cxiBjsEJLwQL7q5kyaXjg2bUrrtSx
-         2YMz3u/o4iMh6a3Z+eAOiqEiJJPMjQeLX1SWNrcWrGsz480HzD/vaE7LtcYXIJ3Vhfdc
-         zvlodi3D7/JwFMgqnSuGUsU12CTADif8eZaAtP78kId+zjQROUDDEGZMMyp7ExTjKpbW
-         oH0hpFF40qBuXNZKmswgY9GWN7kDNCXBay4YAGzC8pFAfMmu2pZJtW4x6vsb+Efn7RYF
-         3eXA==
-X-Gm-Message-State: APjAAAXChHaJec5C9iNWrF4uwSdtCUKDPNsHDs9KCvmMSBxX7/MXKeNT
-        +rvlzUHr0OiGZcoIB/KEb3QS2y6VEGE=
-X-Google-Smtp-Source: APXvYqw/Mh6WzjTN7T5NzOtncMbI+KpytKWLrBJjdkCNEekX43NoCbgOWJENbu6ty2QuTYRUOmKB6w==
-X-Received: by 2002:a19:c14a:: with SMTP id r71mr17745983lff.55.1570484669769;
-        Mon, 07 Oct 2019 14:44:29 -0700 (PDT)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id k15sm3404755ljg.65.2019.10.07.14.44.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2019 14:44:28 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Mon, 7 Oct 2019 23:44:20 +0200
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        Daniel Wagner <dwagner@suse.de>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] mm: vmalloc: Use the vmap_area_lock to protect
- ne_fit_preload_node
-Message-ID: <20191007214420.GA3212@pc636>
-References: <20191003090906.1261-1-dwagner@suse.de>
- <20191004153728.c5xppuqwqcwecbe6@linutronix.de>
- <20191004162041.GA30806@pc636>
- <20191004163042.jpiau6dlxqylbpfh@linutronix.de>
- <20191007083037.zu3n5gindvo7damg@beryllium.lan>
- <20191007105631.iau6zhxqjeuzajnt@linutronix.de>
- <20191007162330.GA26503@pc636>
- <20191007163443.6owts5jp2frum7cy@beryllium.lan>
- <20191007165611.GA26964@pc636>
- <20191007173644.hiiukrl2xryziro3@linutronix.de>
+        Mon, 7 Oct 2019 17:46:36 -0400
+Received: from dread.disaster.area (pa49-181-226-196.pa.nsw.optusnet.com.au [49.181.226.196])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 5B0DD363506;
+        Tue,  8 Oct 2019 08:46:34 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.2)
+        (envelope-from <david@fromorbit.com>)
+        id 1iHaps-0001j3-Pf; Tue, 08 Oct 2019 08:46:32 +1100
+Date:   Tue, 8 Oct 2019 08:46:32 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 05/11] iomap: zero newly allocated mapped blocks
+Message-ID: <20191007214632.GA16973@dread.disaster.area>
+References: <20191006154608.24738-1-hch@lst.de>
+ <20191006154608.24738-6-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191007173644.hiiukrl2xryziro3@linutronix.de>
+In-Reply-To: <20191006154608.24738-6-hch@lst.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
+        a=dRuLqZ1tmBNts2YiI0zFQg==:117 a=dRuLqZ1tmBNts2YiI0zFQg==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=XobE76Q3jBoA:10
+        a=yPCof4ZbAAAA:8 a=7-415B0cAAAA:8 a=PhxamUq2ceSyVfUHfJsA:9
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 07:36:44PM +0200, Sebastian Andrzej Siewior wrote:
-> On 2019-10-07 18:56:11 [+0200], Uladzislau Rezki wrote:
-> > Actually there is a high lock contention on vmap_area_lock, because it
-> > is still global. You can have a look at last slide:
-> > 
-> > https://linuxplumbersconf.org/event/4/contributions/547/attachments/287/479/Reworking_of_KVA_allocator_in_Linux_kernel.pdf
-> > 
-> > so this change will make it a bit higher. From the other hand i agree
-> > that for rt it should be fixed, probably it could be done like:
-> > 
-> > ifdef PREEMPT_RT
-> >     migrate_disable()
-> > #else
-> >     preempt_disable()
-> > ...
-> > 
-> > but i am not sure it is good either.
+On Sun, Oct 06, 2019 at 05:46:02PM +0200, Christoph Hellwig wrote:
+> File systems like gfs2 don't support delayed allocations or unwritten
+> extents and thus allocate normal mapped blocks to fill holes.  To
+> cover the case of such file systems allocating new blocks to fill holes
+> also zero out mapped blocks with the new flag.
 > 
-> What is to be expected on average? Is the lock acquired and then
-> released again because the slot is empty and memory needs to be
-> allocated or can it be assumed that this hardly happens? 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> ---
+>  fs/iomap/buffered-io.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
 > 
-The lock is not released(we are not allowed), instead we just try
-to allocate with GFP_NOWAIT flag. It can happen if preallocation
-has been failed with GFP_KERNEL flag earlier:
+> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+> index 23cc308f971d..4132c0cccb0a 100644
+> --- a/fs/iomap/buffered-io.c
+> +++ b/fs/iomap/buffered-io.c
+> @@ -207,6 +207,14 @@ iomap_read_inline_data(struct inode *inode, struct page *page,
+>  	SetPageUptodate(page);
+>  }
+>  
+> +static inline bool iomap_block_needs_zeroing(struct inode *inode,
+> +		struct iomap *iomap, loff_t pos)
+> +{
+> +	return iomap->type != IOMAP_MAPPED ||
+> +		(iomap->flags & IOMAP_F_NEW) ||
+> +		pos >= i_size_read(inode);
 
-<snip>
-...
- } else if (type == NE_FIT_TYPE) {
-  /*
-   * Split no edge of fit VA.
-   *
-   *     |       |
-   *   L V  NVA  V R
-   * |---|-------|---|
-   */
-  lva = __this_cpu_xchg(ne_fit_preload_node, NULL);
-  if (unlikely(!lva)) {
-      ...
-      lva = kmem_cache_alloc(vmap_area_cachep, GFP_NOWAIT);
-      ...
-  }
-...
-<snip>
+This is a change of logic - why is the IOMAP_F_NEW check added here
+and what bug does it fix?
 
-How often we need an extra object for split purpose, the answer
-is it depends on. For example fork() path falls to that pattern.
+Cheers,
 
-I think we can assume that migration can hardly ever happen and
-that should be considered as rare case. Thus we can do a prealoading
-without worrying much if a it occurs:
-
-<snip>
-urezki@pc636:~/data/ssd/coding/linux-stable$ git diff
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index e92ff5f7dd8b..bc782edcd1fd 100644 
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -1089,20 +1089,16 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
-         * Even if it fails we do not really care about that. Just proceed
-         * as it is. "overflow" path will refill the cache we allocate from.
-         */
--       preempt_disable();
--       if (!__this_cpu_read(ne_fit_preload_node)) {
--               preempt_enable();
-+       if (!this_cpu_read(ne_fit_preload_node)) {
-                pva = kmem_cache_alloc_node(vmap_area_cachep, GFP_KERNEL, node);
--               preempt_disable();
-
--               if (__this_cpu_cmpxchg(ne_fit_preload_node, NULL, pva)) {
-+               if (this_cpu_cmpxchg(ne_fit_preload_node, NULL, pva)) {
-                        if (pva)
-                                kmem_cache_free(vmap_area_cachep, pva);
-                }
-        }
- 
-        spin_lock(&vmap_area_lock);
--       preempt_enable();
-
-        /*
-         * If an allocation fails, the "vend" address is
-urezki@pc636:~/data/ssd/coding/linux-stable$
-<snip>
-
-so, we do not guarantee, instead we minimize number of allocations
-with GFP_NOWAIT flag. For example on my 4xCPUs i am not able to
-even trigger the case when CPU is not preloaded.
-
-I can test it tomorrow on my 12xCPUs to see its behavior there.
-
---
-Vlad Rezki
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
