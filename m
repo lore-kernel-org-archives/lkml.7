@@ -2,29 +2,29 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B0A9ECE58D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A705C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BE00206C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:27:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47A9221924
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:27:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728452AbfJGN1B (ORCPT
+        id S1728533AbfJGN1E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 09:27:01 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:35771 "EHLO
+        Mon, 7 Oct 2019 09:27:04 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:40995 "EHLO
         relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727635AbfJGN1A (ORCPT
+        with ESMTP id S1728453AbfJGN1D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 09:27:00 -0400
+        Mon, 7 Oct 2019 09:27:03 -0400
 X-Originating-IP: 86.250.200.211
 Received: from localhost.localdomain (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
         (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id B24261C000C;
-        Mon,  7 Oct 2019 13:26:58 +0000 (UTC)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 976E91C0008;
+        Mon,  7 Oct 2019 13:27:00 +0000 (UTC)
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
 To:     Jonathan Cameron <jic23@kernel.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
@@ -36,69 +36,102 @@ Cc:     <devicetree@vger.kernel.org>, linux-iio@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 0/8] Introduce max12xx ADC support
-Date:   Mon,  7 Oct 2019 15:26:49 +0200
-Message-Id: <20191007132657.4190-1-miquel.raynal@bootlin.com>
+Subject: [PATCH v3 2/8] iio: adc: max1027: Make it optional to use interrupts
+Date:   Mon,  7 Oct 2019 15:26:51 +0200
+Message-Id: <20191007132657.4190-3-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191007132657.4190-1-miquel.raynal@bootlin.com>
+References: <20191007132657.4190-1-miquel.raynal@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, here is a patchset updating the existing max1027.c driver (for
-10-bit max1027/29/31 ADCs) with a few corrections/improvements and
-then introducing their 12-bit cousins named max1227/29/31.
+The chip has a 'start conversion' and a 'end of conversion' pair of
+pins. They can be used but this is absolutely not mandatory as regular
+polling of the value is totally fine with the current internal
+clocking setup. Turn the interrupts optional and do not error out if
+they are not inquired in the device tree. This has the effect to
+prevent triggered buffers use though.
 
-As on my hardware setup the "start conversion" and "end of conversion"
-pin are not wired (which is absolutely fine for this chip), I also
-updated the driver and the bindings to support optional interrupts. In
-this case, triggered buffers are not available and the user must poll
-the value from sysfs.
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+ drivers/iio/adc/max1027.c | 57 +++++++++++++++++++++------------------
+ 1 file changed, 31 insertions(+), 26 deletions(-)
 
-Thanks,
-Miquèl
-
-
-Changes in v3:
-==============
-* Updated the commit message of the patch adding debugfs read access
-  to better explain why I decided to limit the number of bytes read to
-  two.
-* Updated the macros to define the number of channels per device as
-  proposed by Jonathan.
-* Re-used the realbits entry instead of adding my own (called .depth).
-* Started doing DT-bindings yaml conversion, but realized that after
-  the first patch offering the interrupt as optional, the
-  documentation was fitting pretty well the trivial devices
-  representation. Dropped the specific bindings files and updated the
-  trivial devices list instead.
-
-Changes in v2:
-==============
-* Removed the addition of three compatibles from patch 4 (the
-  preparation patch) to add these lines back in patch 5 (the actual
-  introduction).
-
-
-Miquel Raynal (8):
-  iio: adc: max1027: Add debugfs register read support
-  iio: adc: max1027: Make it optional to use interrupts
-  iio: adc: max1027: Reset the device at probe time
-  iio: adc: max1027: Prepare the introduction of different resolutions
-  iio: adc: max1027: Introduce 12-bit devices support
-  dt-bindings: iio: adc: max1027: Mark interrupts as optional
-  dt-bindings: Add 1027/1029/1031 SPI ADCs as trivial devices
-  dt-bindings: Add max12xx SPI ADC series as trivial devices
-
- .../bindings/iio/adc/max1027-adc.txt          |  12 +-
- .../devicetree/bindings/trivial-devices.yaml  |  12 ++
- drivers/iio/adc/Kconfig                       |   4 +-
- drivers/iio/adc/max1027.c                     | 180 +++++++++++-------
- 4 files changed, 135 insertions(+), 73 deletions(-)
-
+diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
+index 6cdfe9ef73fc..823223b77a70 100644
+--- a/drivers/iio/adc/max1027.c
++++ b/drivers/iio/adc/max1027.c
+@@ -430,35 +430,40 @@ static int max1027_probe(struct spi_device *spi)
+ 		return -ENOMEM;
+ 	}
+ 
+-	ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
+-					&iio_pollfunc_store_time,
+-					&max1027_trigger_handler, NULL);
+-	if (ret < 0) {
+-		dev_err(&indio_dev->dev, "Failed to setup buffer\n");
+-		return ret;
+-	}
++	if (spi->irq) {
++		ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
++						      &iio_pollfunc_store_time,
++						      &max1027_trigger_handler,
++						      NULL);
++		if (ret < 0) {
++			dev_err(&indio_dev->dev, "Failed to setup buffer\n");
++			return ret;
++		}
+ 
+-	st->trig = devm_iio_trigger_alloc(&spi->dev, "%s-trigger",
+-							indio_dev->name);
+-	if (st->trig == NULL) {
+-		ret = -ENOMEM;
+-		dev_err(&indio_dev->dev, "Failed to allocate iio trigger\n");
+-		return ret;
+-	}
++		st->trig = devm_iio_trigger_alloc(&spi->dev, "%s-trigger",
++						  indio_dev->name);
++		if (st->trig == NULL) {
++			ret = -ENOMEM;
++			dev_err(&indio_dev->dev,
++				"Failed to allocate iio trigger\n");
++			return ret;
++		}
+ 
+-	st->trig->ops = &max1027_trigger_ops;
+-	st->trig->dev.parent = &spi->dev;
+-	iio_trigger_set_drvdata(st->trig, indio_dev);
+-	iio_trigger_register(st->trig);
++		st->trig->ops = &max1027_trigger_ops;
++		st->trig->dev.parent = &spi->dev;
++		iio_trigger_set_drvdata(st->trig, indio_dev);
++		iio_trigger_register(st->trig);
+ 
+-	ret = devm_request_threaded_irq(&spi->dev, spi->irq,
+-					iio_trigger_generic_data_rdy_poll,
+-					NULL,
+-					IRQF_TRIGGER_FALLING,
+-					spi->dev.driver->name, st->trig);
+-	if (ret < 0) {
+-		dev_err(&indio_dev->dev, "Failed to allocate IRQ.\n");
+-		return ret;
++		ret = devm_request_threaded_irq(&spi->dev, spi->irq,
++						iio_trigger_generic_data_rdy_poll,
++						NULL,
++						IRQF_TRIGGER_FALLING,
++						spi->dev.driver->name,
++						st->trig);
++		if (ret < 0) {
++			dev_err(&indio_dev->dev, "Failed to allocate IRQ.\n");
++			return ret;
++		}
+ 	}
+ 
+ 	/* Disable averaging */
 -- 
 2.20.1
 
