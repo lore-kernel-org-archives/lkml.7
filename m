@@ -7,61 +7,58 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D35FCC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC2DECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A80282070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:03:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 240E62070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:03:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570453434;
-	bh=qyviMD7Ce4azubl4913BSq3eBFa6+QO2U1AZpLD6+gk=;
+	s=default; t=1570453438;
+	bh=A6a5wbztqAW26jVMbOUVF3MJMGgyGlOYCasoNHXftiQ=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=qF2/oYNxEbR6FbOgYRmaHxV5bF/q7EcREYNGEaoUV0j0iY5RojSMfcaxrWtOEinhD
-	 hYSDOIFI6gZ48oRls0MnJ+5QoAMs69rBSS5quVi4QuOadpFHBcQe552S+0ynBwZeK5
-	 7Ddv0r0Yp399OiawOBS0nYjDggeCJSRHEbKk2RaY=
+	b=Y7R1YrxHBUKW0VlPFakb0QpGHfUVbIBln7ID6if1dLnnO3GDiXigiVBmBYcKocv2C
+	 d5RoxxmzwAluoRyzAXT0v0XxcHz2dzWhFGJU28R4k0J2eU8/sT8GNx19Pg0EOZVKu5
+	 PzVCuCCKs1cYBiVAXPY77zxsk2m9AIT3h+nEEXMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728349AbfJGNDy (ORCPT
+        id S1728372AbfJGND5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 09:03:54 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50140 "EHLO
+        Mon, 7 Oct 2019 09:03:57 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49400 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728146AbfJGNDu (ORCPT
+        with ESMTP id S1728107AbfJGNDZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 09:03:50 -0400
+        Mon, 7 Oct 2019 09:03:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=Cfep0rIWMWln/JuLOxx1Em6o0m/piiYjUQUP4jMHOv0=; b=DxajtVCIZ7TS
-        LUoA4FeiAcAzoPTrmWvtbEN1KtrYBEv1W9u2aZ7c252BXAw0zAjorz8kqWIqIWS228TtPZyt0OlxW
-        ypNHjM2RHffgNnU33MjcMIYZEikgtRvvIWjOYveK0Bd7yLHxEBw4HE4OlNyfCBKHboLT8B1KdT8jZ
-        dZuck=;
+        List-Archive; bh=GpM+rehdO7Dce//pJR+29v/6dn/QNkn9CgShWMuH7R4=; b=mKgVAl6qlpbm
+        7o5bCGnN4sZyWpBLmY/O+cD/4iSp/vSz4jKy+gO0iDWEL2lIVJNAZHWwD02+P2ojyhLyeDLUtTX1L
+        EtVj4KJ/u8QBIguLYZYlb5rCl+Fqe6Hu0HEfawUg4QD9jp+YBc3f4xQmVqI09Ypg7/McLSWHvPcK8
+        cmqLE=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iHSfP-0003Qq-3C; Mon, 07 Oct 2019 13:03:11 +0000
+        id 1iHSfX-0003SL-Qs; Mon, 07 Oct 2019 13:03:19 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 5DBE7274162F; Mon,  7 Oct 2019 14:03:09 +0100 (BST)
+        id 4C63D274162F; Mon,  7 Oct 2019 14:03:19 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     alsa-devel@alsa-project.org, Fabio Estevam <festevam@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        kernel-janitors@vger.kernel.org,
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
         Mark Brown <broonie@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Takashi Iwai <tiwai@suse.com>, Timur Tabi <timur@kernel.org>,
-        Xiubo Li <Xiubo.Lee@gmail.com>
-Subject: Applied "ASoC: fsl_mqs: Fix error handling in probe" to the asoc tree
-In-Reply-To: <20191004102208.GB823@mwanda>
+        Sangbeom Kim <sbkim73@samsung.com>
+Subject: Applied "regulator: s5m8767: switch to using devm_fwnode_gpiod_get" to the regulator tree
+In-Reply-To:  <20191004231017.130290-2-dmitry.torokhov@gmail.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191007130309.5DBE7274162F@ypsilon.sirena.org.uk>
-Date:   Mon,  7 Oct 2019 14:03:09 +0100 (BST)
+Message-Id: <20191007130319.4C63D274162F@ypsilon.sirena.org.uk>
+Date:   Mon,  7 Oct 2019 14:03:19 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -69,11 +66,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: fsl_mqs: Fix error handling in probe
+   regulator: s5m8767: switch to using devm_fwnode_gpiod_get
 
-has been applied to the asoc tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -94,105 +91,45 @@ to this mail.
 Thanks,
 Mark
 
-From a9d273671440c439c4f236123c59dd839c1a0eb7 Mon Sep 17 00:00:00 2001
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Date: Fri, 4 Oct 2019 13:22:09 +0300
-Subject: [PATCH] ASoC: fsl_mqs: Fix error handling in probe
+From 5be0e549e18f8ad7efa81b3e054ca094b7782f55 Mon Sep 17 00:00:00 2001
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Date: Fri, 4 Oct 2019 16:10:11 -0700
+Subject: [PATCH] regulator: s5m8767: switch to using devm_fwnode_gpiod_get
 
-There are several problems in the error handling in fsl_mqs_probe().
+devm_gpiod_get_from_of_node() is being retired in favor of
+devm_fwnode_gpiod_get_index(), that behaves similar to
+devm_gpiod_get_index(), but can work with arbitrary firmware node. It
+will also be able to support secondary software nodes.
 
-1) "ret" isn't initialized on some paths.  GCC has a feature which
-   warns about uninitialized variables but the code initializes "ret"
-   to zero at the start of the function so the checking is turned off.
-2) "gpr_np" is a pointer so initializing it to zero is confusing and
-   generates a Sparse warning.
-3) of_parse_phandle() doesn't return error pointers on error, it returns
-   NULL.
-4) If devm_snd_soc_register_component() fails then the function should
-   free the "gpr_np".
+Let's switch this driver over.
 
-Fixes: 9e28f6532c61 ("ASoC: fsl_mqs: Add MQS component driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: https://lore.kernel.org/r/20191004102208.GB823@mwanda
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Link: https://lore.kernel.org/r/20191004231017.130290-2-dmitry.torokhov@gmail.com
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/fsl/fsl_mqs.c | 27 +++++++++++++++------------
- 1 file changed, 15 insertions(+), 12 deletions(-)
+ drivers/regulator/s5m8767.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/sound/soc/fsl/fsl_mqs.c b/sound/soc/fsl/fsl_mqs.c
-index 7b9cab3a62e7..f7fc44e8fb27 100644
---- a/sound/soc/fsl/fsl_mqs.c
-+++ b/sound/soc/fsl/fsl_mqs.c
-@@ -178,10 +178,10 @@ static const struct regmap_config fsl_mqs_regmap_config = {
- static int fsl_mqs_probe(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node;
--	struct device_node *gpr_np = 0;
-+	struct device_node *gpr_np = NULL;
- 	struct fsl_mqs *mqs_priv;
- 	void __iomem *regs;
--	int ret = 0;
-+	int ret;
- 
- 	mqs_priv = devm_kzalloc(&pdev->dev, sizeof(*mqs_priv), GFP_KERNEL);
- 	if (!mqs_priv)
-@@ -198,17 +198,16 @@ static int fsl_mqs_probe(struct platform_device *pdev)
- 
- 	if (mqs_priv->use_gpr) {
- 		gpr_np = of_parse_phandle(np, "gpr", 0);
--		if (IS_ERR(gpr_np)) {
-+		if (!gpr_np) {
- 			dev_err(&pdev->dev, "failed to get gpr node by phandle\n");
--			ret = PTR_ERR(gpr_np);
--			goto out;
-+			return -EINVAL;
+diff --git a/drivers/regulator/s5m8767.c b/drivers/regulator/s5m8767.c
+index 6ca27e9d5ef7..bdc07739e9a2 100644
+--- a/drivers/regulator/s5m8767.c
++++ b/drivers/regulator/s5m8767.c
+@@ -567,11 +567,10 @@ static int s5m8767_pmic_dt_parse_pdata(struct platform_device *pdev,
+ 			continue;
  		}
  
- 		mqs_priv->regmap = syscon_node_to_regmap(gpr_np);
- 		if (IS_ERR(mqs_priv->regmap)) {
- 			dev_err(&pdev->dev, "failed to get gpr regmap\n");
- 			ret = PTR_ERR(mqs_priv->regmap);
--			goto out;
-+			goto err_free_gpr_np;
- 		}
- 	} else {
- 		regs = devm_platform_ioremap_resource(pdev, 0);
-@@ -229,7 +228,7 @@ static int fsl_mqs_probe(struct platform_device *pdev)
- 		if (IS_ERR(mqs_priv->ipg)) {
- 			dev_err(&pdev->dev, "failed to get the clock: %ld\n",
- 				PTR_ERR(mqs_priv->ipg));
--			goto out;
-+			return PTR_ERR(mqs_priv->ipg);
- 		}
- 	}
- 
-@@ -237,17 +236,21 @@ static int fsl_mqs_probe(struct platform_device *pdev)
- 	if (IS_ERR(mqs_priv->mclk)) {
- 		dev_err(&pdev->dev, "failed to get the clock: %ld\n",
- 			PTR_ERR(mqs_priv->mclk));
--		goto out;
-+		ret = PTR_ERR(mqs_priv->mclk);
-+		goto err_free_gpr_np;
- 	}
- 
- 	dev_set_drvdata(&pdev->dev, mqs_priv);
- 	pm_runtime_enable(&pdev->dev);
- 
--	return devm_snd_soc_register_component(&pdev->dev, &soc_codec_fsl_mqs,
-+	ret = devm_snd_soc_register_component(&pdev->dev, &soc_codec_fsl_mqs,
- 			&fsl_mqs_dai, 1);
--out:
--	if (!IS_ERR(gpr_np))
--		of_node_put(gpr_np);
-+	if (ret)
-+		goto err_free_gpr_np;
-+	return 0;
-+
-+err_free_gpr_np:
-+	of_node_put(gpr_np);
- 
- 	return ret;
- }
+-		rdata->ext_control_gpiod = devm_gpiod_get_from_of_node(
++		rdata->ext_control_gpiod = devm_fwnode_gpiod_get(
+ 			&pdev->dev,
+-			reg_np,
+-			"s5m8767,pmic-ext-control-gpios",
+-			0,
++			of_fwnode_handle(reg_np),
++			"s5m8767,pmic-ext-control",
+ 			GPIOD_OUT_HIGH | GPIOD_FLAGS_BIT_NONEXCLUSIVE,
+ 			"s5m8767");
+ 		if (PTR_ERR(rdata->ext_control_gpiod) == -ENOENT)
 -- 
 2.20.1
 
