@@ -2,104 +2,132 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CAADECE58D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 07:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1390FC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 07:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C782217F9
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 07:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD85C218AC
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 07:31:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="qA1R/5ku"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727321AbfJGHbF (ORCPT
+        id S1727345AbfJGHb2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 03:31:05 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42701 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726960AbfJGHbE (ORCPT
+        Mon, 7 Oct 2019 03:31:28 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:37464 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726960AbfJGHb1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 03:31:04 -0400
-Received: by mail-ot1-f67.google.com with SMTP id c10so10116501otd.9;
-        Mon, 07 Oct 2019 00:31:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TB5Y9SznZoLk3Cl9+KE4TTX9dqxZSiY5fm75Asj4Mjs=;
-        b=P4gta6P4DiTi0D3ddufBT0vxKFwMcR0dfH9IXh+Gb4ytZeKNCD3QUKe2LrNubYvIJ8
-         CKDafQ/8cEdrzwvqTt/eZoX7JKwBf+/n9ZjD3tBdBqQt/MN1VeKqzJ+rw3smwt7k5glI
-         vf/zr6n1D1ho3qG54XMYyVg9spdC581UE1k3GcuxcHHtgF1669HzmM3+k3HLzORR7TBw
-         5C1FYOwaYtFn3GDQ2dH2X6nSHwSNNovZoOh0m1wNRwe2Hg1TZMWK+2ielrek3aXgNGwh
-         RZKztPePYPY4PhGt2xGkC3CBK/sc3AVbeQI9tiQOcFHQ/l/vJnFWFf4Z8XA+4MxqDrSA
-         /G4w==
-X-Gm-Message-State: APjAAAX3n6PJhHFSAUkwxuT/wp9StqIkKIdBtPUF8X112CC2YOCSIiyj
-        2GWwr03PVrAPjA77RU2PfPtanUTzsOltHaDAh6k=
-X-Google-Smtp-Source: APXvYqwRM7uJwnHvbblrxA3GV3XCD3dOkjpVemwi/jQS/PJ9OScfdocl+T1L6ngeL0/ZvC8rlrJgbk3ER8m6c6VW4zk=
-X-Received: by 2002:a9d:6642:: with SMTP id q2mr19868047otm.250.1570433462183;
- Mon, 07 Oct 2019 00:31:02 -0700 (PDT)
+        Mon, 7 Oct 2019 03:31:27 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x977RFgY014524;
+        Mon, 7 Oct 2019 09:31:14 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=m0wVzPPVZI5zTvNlb362SfLUY82UVnwf8TmB+ThZU2M=;
+ b=qA1R/5kuWiNjTVm2AL6IlnTYnyJD3Jpq5RZNMd0yJMMachZ1XA10EeBMVtdcM/t2aI66
+ Ou3lY80QKehIIsesQzTdbHF1WCMwSoTGX1wrsppreGXDtT2MroJpcDwGob75bEce9LAm
+ HZFHCSyFuTprnfrqMSlhsKd4YYFIF1CC+dPM0X59g8LfSKuxwhj5+t17pyQpMnwQbsDB
+ npQB7thmZeJBzSFn3zvSmX36l45BSC57YK7Re1JlWOdiTqfo9k7MYbpLLT4F94+Z5c0S
+ qKlHIT0OICM4neM9QAUb1cOy4AdMq+EHg/kJvjxnx7icHimVFuMfpCIdNBPf/VbZiA94 yQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2vej2p0rsb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 07 Oct 2019 09:31:14 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5D083100038;
+        Mon,  7 Oct 2019 09:31:12 +0200 (CEST)
+Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4717C2AECA9;
+        Mon,  7 Oct 2019 09:31:12 +0200 (CEST)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.46) by Safex1hubcas24.st.com
+ (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 7 Oct 2019
+ 09:31:12 +0200
+Received: from [10.48.0.192] (10.48.0.192) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 7 Oct 2019 09:31:11
+ +0200
+Subject: Re: [PATCH] counter: stm32: clean up indentation issue
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+CC:     Colin King <colin.king@canonical.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "Alexandre Torgue" <alexandre.torgue@st.com>,
+        <linux-iio@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190925095126.20219-1-colin.king@canonical.com>
+ <20191005173004.GA7431@icarus>
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+Message-ID: <792dd11a-ae78-c4a3-834f-b1f67a750a14@st.com>
+Date:   Mon, 7 Oct 2019 09:31:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20191003000310.17099-1-chris.packham@alliedtelesis.co.nz> <20191003000310.17099-3-chris.packham@alliedtelesis.co.nz>
-In-Reply-To: <20191003000310.17099-3-chris.packham@alliedtelesis.co.nz>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 7 Oct 2019 09:30:50 +0200
-Message-ID: <CAMuHMdV7syxxtnHEcgFBrf5DLo-M_71tZFWHHQ6kTO=2A1eVhg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] pinctrl: iproc: use unique name for irq chip
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        rayagonda.kokatanur@broadcom.com, li.jin@broadcom.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Marc Zyngier <maz@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191005173004.GA7431@icarus>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.48.0.192]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-07_01:2019-10-03,2019-10-07 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chris,
+On 10/5/19 7:30 PM, William Breathitt Gray wrote:
+> On Wed, Sep 25, 2019 at 10:51:26AM +0100, Colin King wrote:
+>> From: Colin Ian King <colin.king@canonical.com>
+>>
+>> There is an if statement that is indented one level too deeply,
+>> remove the extraneous tabs.
+>>
+>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>> ---
+>>  drivers/counter/stm32-timer-cnt.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/counter/stm32-timer-cnt.c b/drivers/counter/stm32-timer-cnt.c
+>> index 644ba18a72ad..613dcccf79e1 100644
+>> --- a/drivers/counter/stm32-timer-cnt.c
+>> +++ b/drivers/counter/stm32-timer-cnt.c
+>> @@ -219,8 +219,8 @@ static ssize_t stm32_count_enable_write(struct counter_device *counter,
+>>  
+>>  	if (enable) {
+>>  		regmap_read(priv->regmap, TIM_CR1, &cr1);
+>> -			if (!(cr1 & TIM_CR1_CEN))
+>> -				clk_enable(priv->clk);
+>> +		if (!(cr1 & TIM_CR1_CEN))
+>> +			clk_enable(priv->clk);
+>>  
+>>  		regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN,
+>>  				   TIM_CR1_CEN);
+>> -- 
+>> 2.20.1
+> 
+> Acked-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+> 
+> Fabrice,
+> 
+> I noticed the TIM_CR1_CEN check is happening before the
+> regmap_update_bits call for the enable path, while the disable path does
+> the check after. Is this logic is correct.
 
-CC MarcZ
+Hi  William,
 
-On Thu, Oct 3, 2019 at 2:03 AM Chris Packham
-<chris.packham@alliedtelesis.co.nz> wrote:
-> Use the dev_name(dev) for the irqc->name so that we get unique names
-> when we have multiple instances of this driver.
->
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+In the disable path, things are done in the reverse order, purpose is to:
+- enable the clock before enabling the counter (CEN)
+- disable the clock after the counter has been disabled
+Current code also takes care of balancing clock enable/disable calls.
 
-A while ago, Marc Zyngier pointed out that the irq_chip .name field
-should contain the device's class name, not the instance's name.
-Hence the current code is correct?
-
-See also "[PATCH 0/4] irqchip: renesas: Use proper irq_chip name and parent"
-(https://lore.kernel.org/lkml/20190607095858.10028-1-geert+renesas@glider.be/)
-Note that the irqchip patches in that series have been applied; the gpio
-patches haven't been applied yet.
-
-> --- a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-> +++ b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-> @@ -858,7 +858,7 @@ static int iproc_gpio_probe(struct platform_device *pdev)
->                 struct gpio_irq_chip *girq;
->
->                 irqc = &chip->irqchip;
-> -               irqc->name = "bcm-iproc-gpio";
-> +               irqc->name = dev_name(dev);
->                 irqc->irq_ack = iproc_gpio_irq_ack;
->                 irqc->irq_mask = iproc_gpio_irq_mask;
->                 irqc->irq_unmask = iproc_gpio_irq_unmask;
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+BR,
+Fabrice
+> 
+> William Breathitt Gray
+> 
