@@ -2,177 +2,93 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D036C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C326C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F3D4206C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:04:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cKyDL7AB"
+	by mail.kernel.org (Postfix) with ESMTP id 2F55F21721
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:04:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570457081;
+	bh=5omN2jBYwOSbtTmeKuQo/TnEkXR2hkcbbfkJqjWEXJc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mQ3TJ+/iwIm/1WPU90CO9ak4WoXP6jnFx+LsENVLwE+xf6IUwoIUc2pZYtXCNi7g/
+	 kobyiAVNlUD+QamZk7JYbAraiY6sYJKjPskWieIPBMhVWnD1npWirNYW6DyOIVG5j0
+	 BYwpe6fSoenuGSKZMBdveDS6IHTDryOIjEVpFCkM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbfJGOEO (ORCPT
+        id S1728059AbfJGOEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 10:04:14 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35845 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727685AbfJGOEO (ORCPT
+        Mon, 7 Oct 2019 10:04:40 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:40283 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727685AbfJGOEk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 10:04:14 -0400
-Received: by mail-lj1-f196.google.com with SMTP id v24so13811791ljj.3;
-        Mon, 07 Oct 2019 07:04:10 -0700 (PDT)
+        Mon, 7 Oct 2019 10:04:40 -0400
+Received: by mail-qt1-f196.google.com with SMTP id m61so8193388qte.7;
+        Mon, 07 Oct 2019 07:04:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=7sEOczYia3KOKHGEcMhkwGMtTevaZ3R4NRuGCoRYvdA=;
-        b=cKyDL7ABIR1BUZNmXm35gwM0xfdn5S4tvmbrFqSfzpRqMBMrRRJmldvuXRH2OIH5KR
-         7Wa5BdkX7uuiZJqDi17puIjACYQqO+BBV6Y/E9ctsbau6M3XPSMGP1unSpNVGwn6ROgC
-         C8/dcdwkbN2TMvoGO8ZJQQJGMh4SHRfosL7+Eu7GHng0xmHIiH+t1vOaON1lyWLL/cl3
-         E94i1Q8IN2C0+TX6it6guD6PaUgVkVrxLcQlzx5EhPREY2QlKnGaS7fYMfR9BUBNlhtk
-         Mh4y+7Y0qMDe6c+LWH8CL3QGZAqq9lV4L29fSuCD5veS/RtX3WzQLh7w+cm/dxqDpLSa
-         4Weg==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mpNfxUl1mCUdiXjigudrtwHaG1qAsCzBGZZW+s8y3Fo=;
+        b=Um7Uzaoy6WSIMMNIRXztMQowXtuRFa7RULiv7B9t5bBMGNXcozcvndCrdDyXlOfiPZ
+         Lq0/fy/VmhNyhoH8BCKnypBZ9GOl99U+VqFX4quLcIYC4A7UfXN7mJ+pQMgphzZ1QYrf
+         A/n3W1h5crEuesmUr9jYQI3o9hXR3So2qOBxqrINQ6fMNRHiu3yzeTePxIBzBYG85aPR
+         13AUWabvuF7GX2ePud2dCkGuJ9eyq4PBNikP2XbLEwE/o2gQHCK1pn2lPIxnlnAa+aR/
+         1J/kuQnVSnRHCp/SYbYipfo5WDD9cKYEKq/tqOGNoWBdpADyvE5Lqi7i26hK9O9eB2lo
+         ikqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=7sEOczYia3KOKHGEcMhkwGMtTevaZ3R4NRuGCoRYvdA=;
-        b=bQBoNPDmFUJ1urepwQ16FrrcIIxgzfvQaNIkDv7VD35QXHoA7j/uDczg1SwLzGpOJk
-         N/nHRz9KPc6KuSMY25IT5AVSCXnXy9yjT16hnDoqOZWaigkCX7zo2q7xLNArQnjw61fg
-         DCxcpxSkmMAKRk2Kpj0/1ipTs+cfaGm/6moqKTmQd6m9sw7+7gv2JGfLAPJuI7JkUBMI
-         XgT9QWZAGVKv7F5X8GIOEvOC6WzWgw7Sq9qrw54l1zCrKn0TnYDFvu2Hd0qiK3TYKf9W
-         Z3Csmhz6tGJ5PJ9jQskf6MWfdRoGamr7jNh8zbZrCRjg22YC3X9c5zrncP72lJGa1Cta
-         ZZTw==
-X-Gm-Message-State: APjAAAULrP+mr3evoXoFAzvdxPG7WbUcfMdlFOYaA2j8QOi2AX9diIBC
-        orA0pW0e8qhHFA+5TPaxdLMdrCoxWB3jsB2W9P8tUQ==
-X-Google-Smtp-Source: APXvYqz9rauiSGXNFl9949c8WXsIKrXSSJ2p9Te0Emowvi+R4IoeeF0Fnh2b41vtw5Od7As9Ba6IikYV7IL9gHnaNt4=
-X-Received: by 2002:a2e:8ed2:: with SMTP id e18mr9988415ljl.180.1570457049844;
- Mon, 07 Oct 2019 07:04:09 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mpNfxUl1mCUdiXjigudrtwHaG1qAsCzBGZZW+s8y3Fo=;
+        b=ZyOJsuKEPQvInWWZ7x1MZbah2nmE91cI8IvTCg2OJQyVBArSQgGkIRkiDruiKhYFsW
+         nPzGPozLQgsxVhg9i8Csxd9jBaH97yqN8thE/fxNsNZLivSW08/HoA6IzHNmjr1vCUFf
+         1IiNQFgQbASeCt7R9siwJikAdyXIrLrdgpY2JymzCRrtfr1s+YQ6nIje4b5NKPqjkFtC
+         rIz1koz0zDZvvRKm8r+7L+nB083mMEni79LgoQAuB5fEDhCbselW53mJaMNEwTGMkllv
+         OfNZMuR6m28Pfp3AodbOmEqHuV6P4GqtfW4APgkXWHjt7DjNX6gYvI/Cj7wIXcvDkRmT
+         sIjQ==
+X-Gm-Message-State: APjAAAUCsqSI4EBmHRqwbXHyloGsG3qJjUwOD8oh062CLRT3VB8C+qtY
+        hrngX1vjtWae5G+A+bXdsOc=
+X-Google-Smtp-Source: APXvYqwPO+Nc3byElLX/MFKjYwBl57P51x05qK0mMVXxCG/r46I05iaMlsMB1rYASu4whzW/6iX9yQ==
+X-Received: by 2002:a0c:eb10:: with SMTP id j16mr26693246qvp.207.1570457077309;
+        Mon, 07 Oct 2019 07:04:37 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::2:a536])
+        by smtp.gmail.com with ESMTPSA id d69sm7580319qkc.87.2019.10.07.07.04.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 07 Oct 2019 07:04:36 -0700 (PDT)
+Date:   Mon, 7 Oct 2019 07:04:33 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Miaohe Lin <linmiaohe@huawei.com>
+Cc:     lizefan@huawei.com, hannes@cmpxchg.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mingfangsen@huawei.com
+Subject: Re: [PATCH] cgroup: short-circuit current_cgns_cgroup_from_root() on
+ the default hierarchy
+Message-ID: <20191007140433.GC3404308@devbig004.ftw2.facebook.com>
+References: <20190929080658.11430-1-linmiaohe@huawei.com>
 MIME-Version: 1.0
-References: <20191006184515.23048-1-jcfaracco@gmail.com> <20191006184515.23048-3-jcfaracco@gmail.com>
- <20191007034402-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20191007034402-mutt-send-email-mst@kernel.org>
-From:   Julio Faracco <jcfaracco@gmail.com>
-Date:   Mon, 7 Oct 2019 11:03:58 -0300
-Message-ID: <CAENf94L+KNJgq1V6kgcwnT0hyTZMDX5Jh6kYRCaeMHDU4GGHCg@mail.gmail.com>
-Subject: Re: [PATCH RFC net-next 2/2] drivers: net: virtio_net: Add tx_timeout function
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     netdev@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-        davem@davemloft.net, virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Daiane Mendes <dnmendes76@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190929080658.11430-1-linmiaohe@huawei.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em seg, 7 de out de 2019 =C3=A0s 04:51, Michael S. Tsirkin <mst@redhat.com>=
- escreveu:
->
-> On Sun, Oct 06, 2019 at 03:45:15PM -0300, jcfaracco@gmail.com wrote:
-> > From: Julio Faracco <jcfaracco@gmail.com>
-> >
-> > To enable dev_watchdog, virtio_net should have a tx_timeout defined
-> > (.ndo_tx_timeout). This is only a skeleton to throw a warn message. It
-> > notifies the event in some specific queue of device. This function
-> > still counts tx_timeout statistic and consider this event as an error
-> > (one error per queue), reporting it.
-> >
-> > Signed-off-by: Julio Faracco <jcfaracco@gmail.com>
-> > Signed-off-by: Daiane Mendes <dnmendes76@gmail.com>
-> > Cc: Jason Wang <jasowang@redhat.com>
-> > ---
-> >  drivers/net/virtio_net.c | 27 +++++++++++++++++++++++++++
-> >  1 file changed, 27 insertions(+)
-> >
-> > diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> > index 27f9b212c9f5..4b703b4b9441 100644
-> > --- a/drivers/net/virtio_net.c
-> > +++ b/drivers/net/virtio_net.c
-> > @@ -2585,6 +2585,29 @@ static int virtnet_set_features(struct net_devic=
-e *dev,
-> >       return 0;
-> >  }
-> >
-> > +static void virtnet_tx_timeout(struct net_device *dev)
-> > +{
-> > +     struct virtnet_info *vi =3D netdev_priv(dev);
-> > +     u32 i;
-> > +
-> > +     /* find the stopped queue the same way dev_watchdog() does */
->
-> not really - the watchdog actually looks at trans_start.
+On Sun, Sep 29, 2019 at 04:06:58PM +0800, Miaohe Lin wrote:
+> Like commit 13d82fb77abb ("cgroup: short-circuit cset_cgroup_from_root() on
+> the default hierarchy"), short-circuit current_cgns_cgroup_from_root() on
+> the default hierarchy.
+> 
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
 
-The comments are wrong. It is the negative logic from dev_watchdog.
-Watchdog requires queue stopped AND timeout.
+Applied to cgroup/for-5.5.
 
-If the queue is not stopped, this queue does not reached a timeout event.
-So, continue... Do not report a timeout.
+Thanks.
 
->
-> > +     for (i =3D 0; i < vi->curr_queue_pairs; i++) {
-> > +             struct send_queue *sq =3D &vi->sq[i];
-> > +
-> > +             if (!netif_xmit_stopped(netdev_get_tx_queue(dev, i)))
-> > +                     continue;
-> > +
-> > +             u64_stats_update_begin(&sq->stats.syncp);
-> > +             sq->stats.tx_timeouts++;
-> > +             u64_stats_update_end(&sq->stats.syncp);
-> > +
-> > +             netdev_warn(dev, "TX timeout on send queue: %d, sq: %s, v=
-q: %d, name: %s\n",
-> > +                         i, sq->name, sq->vq->index, sq->vq->name);
->
-> this seems to assume any running queue is timed out.
-> doesn't look right.
->
-> also - there's already a warning in this case in the core. do we need ano=
-ther one?
-
-Here, it can be a debug message if the idea is enhance debugging informatio=
-n.
-Other enhancements can be done to enable or disable debug messages.
-Using ethtool methods for instance.
-
->
-> > +             dev->stats.tx_errors++;
->
->
->
-> > +     }
-> > +}
-> > +
-> >  static const struct net_device_ops virtnet_netdev =3D {
-> >       .ndo_open            =3D virtnet_open,
-> >       .ndo_stop            =3D virtnet_close,
-> > @@ -2600,6 +2623,7 @@ static const struct net_device_ops virtnet_netdev=
- =3D {
-> >       .ndo_features_check     =3D passthru_features_check,
-> >       .ndo_get_phys_port_name =3D virtnet_get_phys_port_name,
-> >       .ndo_set_features       =3D virtnet_set_features,
-> > +     .ndo_tx_timeout         =3D virtnet_tx_timeout,
-> >  };
-> >
-> >  static void virtnet_config_changed_work(struct work_struct *work)
-> > @@ -3018,6 +3042,9 @@ static int virtnet_probe(struct virtio_device *vd=
-ev)
-> >       dev->netdev_ops =3D &virtnet_netdev;
-> >       dev->features =3D NETIF_F_HIGHDMA;
-> >
-> > +     /* Set up dev_watchdog cycle. */
-> > +     dev->watchdog_timeo =3D 5 * HZ;
-> > +
->
-> Seems to be still broken with napi_tx =3D false.
->
-> >       dev->ethtool_ops =3D &virtnet_ethtool_ops;
-> >       SET_NETDEV_DEV(dev, &vdev->dev);
-> >
-> > --
-> > 2.21.0
+-- 
+tejun
