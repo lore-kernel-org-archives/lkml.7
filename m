@@ -2,165 +2,67 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45917ECE58D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3467FC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25D852133F
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F0EC2133F
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:13:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727537AbfJGJLs (ORCPT
+        id S1727442AbfJGJNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 05:11:48 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:56809 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727516AbfJGJLs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 05:11:48 -0400
-X-Originating-IP: 81.185.168.108
-Received: from [192.168.43.237] (108.168.185.81.rev.sfr.net [81.185.168.108])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id E44E71BF20D;
-        Mon,  7 Oct 2019 09:11:35 +0000 (UTC)
-From:   Alex Ghiti <alex@ghiti.fr>
-To:     Atish Patra <atish.patra@wdc.com>
-Cc:     "keescook@chromium.org" <keescook@chromium.org>,
-        "ralf@linux-mips.org" <ralf@linux-mips.org>,
-        "palmer@sifive.com" <palmer@sifive.com>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-        "paul.burton@mips.com" <paul.burton@mips.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "hch@lst.de" <hch@lst.de>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "jhogan@kernel.org" <jhogan@kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "mcgrof@kernel.org" <mcgrof@kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-Subject: Re: [PATCH v6 14/14] riscv: Make mmap allocation top-down by default
-References: <20190808061756.19712-1-alex@ghiti.fr>
- <20190808061756.19712-15-alex@ghiti.fr>
- <208433f810b5b07b1e679d7eedb028697dff851b.camel@wdc.com>
-Message-ID: <60b52f20-a2c7-dee9-7cf3-a727f07400b9@ghiti.fr>
-Date:   Mon, 7 Oct 2019 05:11:34 -0400
+        Mon, 7 Oct 2019 05:13:25 -0400
+Received: from foss.arm.com ([217.140.110.172]:58160 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727307AbfJGJNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 05:13:25 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9531C1570;
+        Mon,  7 Oct 2019 02:13:24 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3F5653F68E;
+        Mon,  7 Oct 2019 02:13:24 -0700 (PDT)
+Subject: Re: Question about sched_prio_to_weight values
+To:     Francesco Poli <invernomuto@paranoici.org>,
+        linux-kernel@vger.kernel.org
+References: <20191007003205.8888ac99da2dd732b6198387@paranoici.org>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <506d5ee6-246a-a03d-ea11-227ff4de1467@arm.com>
+Date:   Mon, 7 Oct 2019 10:13:23 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <208433f810b5b07b1e679d7eedb028697dff851b.camel@wdc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <20191007003205.8888ac99da2dd732b6198387@paranoici.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/4/19 10:12 PM, Atish Patra wrote:
-> On Thu, 2019-08-08 at 02:17 -0400, Alexandre Ghiti wrote:
->> In order to avoid wasting user address space by using bottom-up mmap
->> allocation scheme, prefer top-down scheme when possible.
->>
->> Before:
->> root@qemuriscv64:~# cat /proc/self/maps
->> 00010000-00016000 r-xp 00000000 fe:00 6389       /bin/cat.coreutils
->> 00016000-00017000 r--p 00005000 fe:00 6389       /bin/cat.coreutils
->> 00017000-00018000 rw-p 00006000 fe:00 6389       /bin/cat.coreutils
->> 00018000-00039000 rw-p 00000000 00:00 0          [heap]
->> 1555556000-155556d000 r-xp 00000000 fe:00 7193   /lib/ld-2.28.so
->> 155556d000-155556e000 r--p 00016000 fe:00 7193   /lib/ld-2.28.so
->> 155556e000-155556f000 rw-p 00017000 fe:00 7193   /lib/ld-2.28.so
->> 155556f000-1555570000 rw-p 00000000 00:00 0
->> 1555570000-1555572000 r-xp 00000000 00:00 0      [vdso]
->> 1555574000-1555576000 rw-p 00000000 00:00 0
->> 1555576000-1555674000 r-xp 00000000 fe:00 7187   /lib/libc-2.28.so
->> 1555674000-1555678000 r--p 000fd000 fe:00 7187   /lib/libc-2.28.so
->> 1555678000-155567a000 rw-p 00101000 fe:00 7187   /lib/libc-2.28.so
->> 155567a000-15556a0000 rw-p 00000000 00:00 0
->> 3fffb90000-3fffbb1000 rw-p 00000000 00:00 0      [stack]
->>
->> After:
->> root@qemuriscv64:~# cat /proc/self/maps
->> 00010000-00016000 r-xp 00000000 fe:00 6389       /bin/cat.coreutils
->> 00016000-00017000 r--p 00005000 fe:00 6389       /bin/cat.coreutils
->> 00017000-00018000 rw-p 00006000 fe:00 6389       /bin/cat.coreutils
->> 2de81000-2dea2000 rw-p 00000000 00:00 0          [heap]
->> 3ff7eb6000-3ff7ed8000 rw-p 00000000 00:00 0
->> 3ff7ed8000-3ff7fd6000 r-xp 00000000 fe:00 7187   /lib/libc-2.28.so
->> 3ff7fd6000-3ff7fda000 r--p 000fd000 fe:00 7187   /lib/libc-2.28.so
->> 3ff7fda000-3ff7fdc000 rw-p 00101000 fe:00 7187   /lib/libc-2.28.so
->> 3ff7fdc000-3ff7fe2000 rw-p 00000000 00:00 0
->> 3ff7fe4000-3ff7fe6000 r-xp 00000000 00:00 0      [vdso]
->> 3ff7fe6000-3ff7ffd000 r-xp 00000000 fe:00 7193   /lib/ld-2.28.so
->> 3ff7ffd000-3ff7ffe000 r--p 00016000 fe:00 7193   /lib/ld-2.28.so
->> 3ff7ffe000-3ff7fff000 rw-p 00017000 fe:00 7193   /lib/ld-2.28.so
->> 3ff7fff000-3ff8000000 rw-p 00000000 00:00 0
->> 3fff888000-3fff8a9000 rw-p 00000000 00:00 0      [stack]
->>
->> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
->> Acked-by: Paul Walmsley <paul.walmsley@sifive.com>
->> Reviewed-by: Christoph Hellwig <hch@lst.de>
->> Reviewed-by: Kees Cook <keescook@chromium.org>
->> Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
->> ---
->>   arch/riscv/Kconfig | 12 ++++++++++++
->>   1 file changed, 12 insertions(+)
->>
->> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
->> index 59a4727ecd6c..87dc5370becb 100644
->> --- a/arch/riscv/Kconfig
->> +++ b/arch/riscv/Kconfig
->> @@ -54,6 +54,18 @@ config RISCV
->>   	select EDAC_SUPPORT
->>   	select ARCH_HAS_GIGANTIC_PAGE
->>   	select ARCH_WANT_HUGE_PMD_SHARE if 64BIT
->> +	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
->> +	select HAVE_ARCH_MMAP_RND_BITS
->> +
->> +config ARCH_MMAP_RND_BITS_MIN
->> +	default 18 if 64BIT
->> +	default 8
->> +
->> +# max bits determined by the following formula:
->> +#  VA_BITS - PAGE_SHIFT - 3
->> +config ARCH_MMAP_RND_BITS_MAX
->> +	default 24 if 64BIT # SV39 based
->> +	default 17
->>   
->>   config MMU
->>   	def_bool y
-> With this patch, I am not able to boot a Fedora Linux(a Gnome desktop
-> image) on RISC-V hardware (Unleashed + Microsemi Expansion board). The
-> booting gets stuck right after systemd starts.
->
-> https://paste.fedoraproject.org/paste/TOrUMqqKH-pGFX7CnfajDg
->
-> Reverting just this patch allow to boot Fedora successfully on specific
-> RISC-V hardware. I have not root caused the issue but it looks like it
-> might have messed userpsace mapping.
+Hi Francesco,
 
-It might have messed userspace mapping but not enough to make userspace 
-completely broken
-as systemd does some things. I would try to boot in legacy layout: if 
-you can try to set sysctl legacy_va_layout
-at boottime, it will map userspace as it was before (bottom-up). If that 
-does not work, the problem could
-be the randomization that is activated by default now.
-Anyway, it's weird since userspace should not depend on how the mapping is.
+On 06/10/2019 23:32, Francesco Poli wrote:
+[...]
+> I searched the web and the mailing list archives, but I failed to find
+> an answer to this question. Could someone please explain me how those
+> numbers were picked?
+> 
 
-If you can identify the program that stalls, that would be fantastic :)
+Following the blame rabbit hole I found this:
 
-As the code is common to mips and arm now and I did not hear from them, 
-I imagine the problem comes
-from us.
+254753dc321e ("sched: make the multiplication table more accurate")
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=254753dc321ea2b753ca9bc58ac329557a20efac
 
-Alex
->
+which sounds like it would explain some small deltas if compared to a 
+formula that is set in stone.
+
+Hope that helps.
+
+> Thanks for your time!
+> 
+> 
