@@ -2,178 +2,111 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F4FC352AA
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FA2ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A27CD2084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF7FC21835
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:07:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rS897L+S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727566AbfJGKGl (ORCPT
+        id S1727586AbfJGKHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 06:06:41 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:46844 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727262AbfJGKGk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 06:06:40 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id C965AD94CD2C7D7E519C;
-        Mon,  7 Oct 2019 18:06:37 +0800 (CST)
-Received: from [127.0.0.1] (10.177.251.225) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Mon, 7 Oct 2019
- 18:06:36 +0800
-From:   Yunfeng Ye <yeyunfeng@huawei.com>
-Subject: [PATCH v2] arm64: armv8_deprecated: Checking return value for memory
- allocation
-To:     <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <kstewart@linuxfoundation.org>, <gregkh@linuxfoundation.org>,
-        <tglx@linutronix.de>, <info@metux.net>
-CC:     <linux-arm-kernel@lists.infradead.org>,
+        Mon, 7 Oct 2019 06:07:39 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:18109 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbfJGKHj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 06:07:39 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d9b0e730000>; Mon, 07 Oct 2019 03:07:47 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 07 Oct 2019 03:07:38 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 07 Oct 2019 03:07:38 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 7 Oct
+ 2019 10:07:37 +0000
+Received: from [10.21.133.51] (172.20.13.39) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 7 Oct 2019
+ 10:07:34 +0000
+Subject: Re: [PATCH 4.4 00/36] 4.4.196-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         <linux-kernel@vger.kernel.org>
-Message-ID: <bd558d56-18a9-3607-3db0-ad203ab12aa8@huawei.com>
-Date:   Mon, 7 Oct 2019 18:06:35 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20191006171038.266461022@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <89329840-8544-1d75-eb4e-fa2d1099ce9b@nvidia.com>
+Date:   Mon, 7 Oct 2019 11:07:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20191006171038.266461022@linuxfoundation.org>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.251.225]
-X-CFilter-Loop: Reflected
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1570442867; bh=mjfY1cnI00RZpqM/gScLlfdGNqe//fkcYTRSNXlWNBA=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=rS897L+S3LKMekfX8Ocns6ryyjODQovyphlz1RHG0EUzV/h2jc4XtWX6dFKPQCgaL
+         7qo3/j68r5EKsmRBJt2vvCSZKMzgqQ5bc8BBa6mPz13PPJSUVnc1BuSt3eCq0p6WYs
+         5ZbznTvholquOBij2Txecz+RElWa6Uu0OC8u+0w6ocnkbbmslMGIuV0c1hBa9U/52I
+         3um55p1kI4kLtJmrfukxtsAMWguJuCpS18pystRT6whFjH5l/NvaahoO7WjWfSAimb
+         j0FGfPFPa4wmaqeUKTe6mfuqWUFJT1qY3TGLRZ98vT3KtxlWCxl/xkbjPf/ZE2Lf2N
+         E8Xk1eDZu4d5w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are no return value checking when using kzalloc() and kcalloc() for
-memory allocation. so add it.
 
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
----
-v1 -> v2:
- - return error code when memory allocation failure
+On 06/10/2019 18:18, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.196 release.
+> There are 36 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Tue 08 Oct 2019 05:07:10 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.196-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
- arch/arm64/kernel/armv8_deprecated.c | 57 +++++++++++++++++++++++++++---------
- 1 file changed, 43 insertions(+), 14 deletions(-)
+All tests are passing for Tegra ...
 
-diff --git a/arch/arm64/kernel/armv8_deprecated.c b/arch/arm64/kernel/armv8_deprecated.c
-index 2ec09de..2284fcb 100644
---- a/arch/arm64/kernel/armv8_deprecated.c
-+++ b/arch/arm64/kernel/armv8_deprecated.c
-@@ -168,12 +168,15 @@ static int update_insn_emulation_mode(struct insn_emulation *insn,
- 	return ret;
- }
+Test results for stable-v4.4:
+    6 builds:	6 pass, 0 fail
+    12 boots:	12 pass, 0 fail
+    19 tests:	19 pass, 0 fail
 
--static void __init register_insn_emulation(struct insn_emulation_ops *ops)
-+static int __init register_insn_emulation(struct insn_emulation_ops *ops)
- {
- 	unsigned long flags;
- 	struct insn_emulation *insn;
+Linux version:	4.4.196-rc1-g2082eedffaaa
+Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
+                tegra30-cardhu-a04
 
- 	insn = kzalloc(sizeof(*insn), GFP_KERNEL);
-+	if (!insn)
-+		return -ENOMEM;
-+
- 	insn->ops = ops;
- 	insn->min = INSN_UNDEF;
+Cheers
+Jon
 
-@@ -197,6 +200,7 @@ static void __init register_insn_emulation(struct insn_emulation_ops *ops)
-
- 	/* Register any handlers if required */
- 	update_insn_emulation_mode(insn, INSN_UNDEF);
-+	return 0;
- }
-
- static int emulation_proc_handler(struct ctl_table *table, int write,
-@@ -224,7 +228,7 @@ static int emulation_proc_handler(struct ctl_table *table, int write,
- 	return ret;
- }
-
--static void __init register_insn_emulation_sysctl(void)
-+static int __init register_insn_emulation_sysctl(void)
- {
- 	unsigned long flags;
- 	int i = 0;
-@@ -233,6 +237,8 @@ static void __init register_insn_emulation_sysctl(void)
-
- 	insns_sysctl = kcalloc(nr_insn_emulated + 1, sizeof(*sysctl),
- 			       GFP_KERNEL);
-+	if (!insns_sysctl)
-+		return -ENOMEM;
-
- 	raw_spin_lock_irqsave(&insn_emulation_lock, flags);
- 	list_for_each_entry(insn, &insn_emulation, node) {
-@@ -251,6 +257,7 @@ static void __init register_insn_emulation_sysctl(void)
- 	raw_spin_unlock_irqrestore(&insn_emulation_lock, flags);
-
- 	register_sysctl("abi", insns_sysctl);
-+	return 0;
- }
-
- /*
-@@ -617,25 +624,47 @@ static int t16_setend_handler(struct pt_regs *regs, u32 instr)
-  */
- static int __init armv8_deprecated_init(void)
- {
--	if (IS_ENABLED(CONFIG_SWP_EMULATION))
--		register_insn_emulation(&swp_ops);
-+	int ret = 0;
-+	int err = 0;
-+
-+	if (IS_ENABLED(CONFIG_SWP_EMULATION)) {
-+		ret = register_insn_emulation(&swp_ops);
-+		if (ret) {
-+			pr_err("register insn emulation swp: fail\n");
-+			err = ret;
-+		}
-+	}
-
--	if (IS_ENABLED(CONFIG_CP15_BARRIER_EMULATION))
--		register_insn_emulation(&cp15_barrier_ops);
-+	if (IS_ENABLED(CONFIG_CP15_BARRIER_EMULATION)) {
-+		ret = register_insn_emulation(&cp15_barrier_ops);
-+		if (ret) {
-+			pr_err("register insn emulation cpu15_barrier: fail\n");
-+			err = ret;
-+		}
-+	}
-
- 	if (IS_ENABLED(CONFIG_SETEND_EMULATION)) {
--		if(system_supports_mixed_endian_el0())
--			register_insn_emulation(&setend_ops);
--		else
-+		if (system_supports_mixed_endian_el0()) {
-+			ret = register_insn_emulation(&setend_ops);
-+			if (ret) {
-+				pr_err("register insn emulation setend: fail\n");
-+				err = ret;
-+			}
-+		} else {
- 			pr_info("setend instruction emulation is not supported on this system\n");
-+		}
- 	}
-
--	cpuhp_setup_state_nocalls(CPUHP_AP_ARM64_ISNDEP_STARTING,
--				  "arm64/isndep:starting",
--				  run_all_insn_set_hw_mode, NULL);
--	register_insn_emulation_sysctl();
-+	if (nr_insn_emulated) {
-+		cpuhp_setup_state_nocalls(CPUHP_AP_ARM64_ISNDEP_STARTING,
-+					  "arm64/isndep:starting",
-+					  run_all_insn_set_hw_mode, NULL);
-+		ret = register_insn_emulation_sysctl();
-+		if (ret)
-+			err = ret;
-+	}
-
--	return 0;
-+	return err;
- }
-
- core_initcall(armv8_deprecated_init);
 -- 
-1.8.3.1
-
+nvpublic
