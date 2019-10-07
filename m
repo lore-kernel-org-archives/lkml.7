@@ -2,115 +2,161 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,GAPPY_SUBJECT,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18368C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0CEECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC2E121655
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:40:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07E1421655
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:41:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dDiR8orV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JjC4fdxP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbfJGMkl (ORCPT
+        id S1727849AbfJGMk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 08:40:41 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:40651 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727490AbfJGMkk (ORCPT
+        Mon, 7 Oct 2019 08:40:59 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33871 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727554AbfJGMk7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 08:40:40 -0400
-Received: by mail-oi1-f195.google.com with SMTP id k9so11477374oib.7
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 05:40:40 -0700 (PDT)
+        Mon, 7 Oct 2019 08:40:59 -0400
+Received: by mail-pg1-f194.google.com with SMTP id y35so8172357pgl.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 05:40:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4omqkgEsOa3d7dDrSHEj0fGIcb4u6Z71IZA7jxrxpXA=;
-        b=dDiR8orVa3DeLfGPRt48FE0G85MRTPusWnInVoCHTm00UIfVXwiV/+Te1Locr2IaNc
-         MzWbl8tv0imbIGqQtxu0ALEcZC1N9Or2EThj5AmzPSVpmoDMVs1i8SsmJ9wVcwlzZkYN
-         qBxVgOHEYzZGQe/JFirWQ3b6bW9Kri0w3T2G2dSxfyxekUK0in8Zjncbv0YSi1etbce0
-         JUNEKfAP/FqN5fdqbNVuyaE9cVFfymuJwKGB1Puf/w4zhnazPVVK+ecB9rVjdHkGy5Kq
-         ofuDjgblAoF8uO+Q0NR67UqHDMKQh/+YhcweREO6rBJatoR9tulV3qfPcv/ObTO73w60
-         Slmw==
+        d=linaro.org; s=google;
+        h=date:user-agent:in-reply-to:references:mime-version
+         :content-transfer-encoding:subject:to:cc:from:message-id;
+        bh=o1MuM4w6nZQj3YYsyjZt1J3u5QROZgoxO/xrK/RzJMI=;
+        b=JjC4fdxPZPkA3Nw9t4f3P3/2H9g7ocjoojpPZh4AkYfyXrUyCA85UZa+JP0DplXe7g
+         TPmC2zCfeNdDi7Vicm85y/RP2pcwkqoREGvKrbVQvyYNmWzVgIxX/m2k7rSAFrA0ucan
+         5iLwhGD+V27YNQd/gZwtUJg19Q/uDX2f4z46G8yM5aPQvT45yIzNYIxtYK9azpIua/hd
+         KvLBZZwqjOzNYuygWFhDlvGwcEqdtjQ0up4WirOONG+HXircyNT4wDpc0JnsB5lJe8C5
+         jm7jHSVm7RWi2RdknNrKjK0q5XJ0fF1XT3J5uMZwmePYz/Y8O1Ghkhc2Z/j5LziZBHaS
+         V7gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4omqkgEsOa3d7dDrSHEj0fGIcb4u6Z71IZA7jxrxpXA=;
-        b=SwOOazgxvRZhepu7MlcFcBPlhn0ByXBugKRVi83VB+1zaBrmDeXUqVEj4qCFA8xPMU
-         IWK3sIA1c4ZNd6XTtvQb10FqQJ3EjNioieyzrqszQj4kh4Y7KocxUdSdKvxI0ozdvE5l
-         HI8XQDnnICYuAxqDjqDJoouyjsUfnnIAXdmpDgVhUSjVmWI1faJY/Dbs5stdzvqG5hIl
-         9BbAWaOoVJIArooEd/l+H9gO/joTdsMTxfG3e9aedW7t5SEO8X2o3MU7Uge3KX8Vbaet
-         k0jppyQdLE+76xvcCyahHCJNzjrotf/T4wL/WuGAierL1lMqU2Mdggj3tkTDw/Z6nqNQ
-         8l5A==
-X-Gm-Message-State: APjAAAVO8z/YXlzXYaa9ZfO+NwpeVbH92ZUmRQixWzg3yJu4g8mLD9pI
-        f+Gy1iF5gbyBQxy3zVuexabK5q9GXbRx0rrunmuEX8sprkQ=
-X-Google-Smtp-Source: APXvYqwhR+z+UIZ4jgopakgOCjtQfQIV/2FB/mG9OzRVEd9xbqmcvQS251+v4BMhDWqCxWTMsQGJ/FkT4gtdl54+U4k=
-X-Received: by 2002:aca:ed52:: with SMTP id l79mr17312662oih.47.1570452039482;
- Mon, 07 Oct 2019 05:40:39 -0700 (PDT)
+        h=x-gm-message-state:date:user-agent:in-reply-to:references
+         :mime-version:content-transfer-encoding:subject:to:cc:from
+         :message-id;
+        bh=o1MuM4w6nZQj3YYsyjZt1J3u5QROZgoxO/xrK/RzJMI=;
+        b=BfgyjSF9RXbcr1KEu8G9+oJRMWbVIHdBZS7ZLyqhiij9PjVAKIIeiu4u+LP2dyenM9
+         Z1zgpE6jtJW6RaoScQBjZkzELnWRfoITGupFersgJokKhuhOjsnaNJrrFh1l0Xahzsck
+         7qGM6oGUAc4f+n4dtxXon+iMmev0iBlfmDu4xV+RAd07IaJReaTqzaMzuCXFa83zNWSQ
+         qMqkobdwDqqJwRtM8MUpzk34ZY/eYV3eyMHV1XLw4tjyxJJOW5mcdJ3cr/cvW4x1RGpj
+         BGpiVFiNSIJcARDCer8TzmxIZ4Xp+I6wu2vQffPPY+daGr2NNCoqg5bP3w0EVTuFsxKR
+         7WNw==
+X-Gm-Message-State: APjAAAUQ5flfvIHftijH/ujvoXeLlGgYRfQKJLmx6qYVrtOqwPQA3R26
+        PETeDPIjRpPBkF2P6YOlfvKx
+X-Google-Smtp-Source: APXvYqx29oMFzb0lUaEgpdkVH0kexcEoZJP3ixdNTaxpS0rvl/830cXYdtaNMO2S1ZCsPHNbN7J2FQ==
+X-Received: by 2002:a63:1f1a:: with SMTP id f26mr9115015pgf.2.1570452058127;
+        Mon, 07 Oct 2019 05:40:58 -0700 (PDT)
+Received: from ?IPv6:2409:4072:638b:f55:fd38:63ef:5172:157e? ([2409:4072:638b:f55:fd38:63ef:5172:157e])
+        by smtp.gmail.com with ESMTPSA id m22sm14177583pgj.29.2019.10.07.05.40.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 07 Oct 2019 05:40:57 -0700 (PDT)
+Date:   Mon, 07 Oct 2019 18:10:50 +0530
+User-Agent: K-9 Mail for Android
+In-Reply-To: <a60fb9ea8922c1eb532e0b7ef0a69abcc9306255.camel@analog.com>
+References: <20191007101027.8383-1-manivannan.sadhasivam@linaro.org> <20191007101027.8383-2-manivannan.sadhasivam@linaro.org> <a60fb9ea8922c1eb532e0b7ef0a69abcc9306255.camel@analog.com>
 MIME-Version: 1.0
-References: <1562410493-8661-1-git-send-email-s.mesoraca16@gmail.com>
- <1562410493-8661-5-git-send-email-s.mesoraca16@gmail.com> <CAG48ez35oJhey5WNzMQR14ko6RPJUJp+nCuAHVUJqX7EPPPokA@mail.gmail.com>
- <CAJHCu1+35GhGJY8jDMPEU8meYhJTVgvzY5sJgVCuLrxCoGgHEg@mail.gmail.com> <CAJHCu1JobL7aj51=4gvaoXPfWH8aNdYXgcBDq90wV4_jN2iUfw@mail.gmail.com>
-In-Reply-To: <CAJHCu1JobL7aj51=4gvaoXPfWH8aNdYXgcBDq90wV4_jN2iUfw@mail.gmail.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Mon, 7 Oct 2019 14:40:13 +0200
-Message-ID: <CAG48ez3v4dpCGBUc16FQDbGEAXtnDDvTq2GQpVax0rLgHEM3_g@mail.gmail.com>
-Subject: Re: [PATCH v5 04/12] S.A.R.A.: generic DFA for string matching
-To:     Salvatore Mesoraca <s.mesoraca16@gmail.com>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Brad Spengler <spender@grsecurity.net>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        PaX Team <pageexec@freemail.hu>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        James Morris <jmorris@namei.org>,
-        John Johansen <john.johansen@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 1/2] dt-bindings: iio: light: Add binding for ADUX1020
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Message-ID: <4EC23AB5-B8BE-4E45-8E5B-FCCD5B1508BA@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 6, 2019 at 6:49 PM Salvatore Mesoraca
-<s.mesoraca16@gmail.com> wrote:
-> Salvatore Mesoraca <s.mesoraca16@gmail.com> wrote:
-> > Jann Horn <jannh@google.com> wrote:
-> > > On Sat, Jul 6, 2019 at 12:55 PM Salvatore Mesoraca
-> > > <s.mesoraca16@gmail.com> wrote:
-> > > > Creation of a generic Discrete Finite Automata implementation
-> > > > for string matching. The transition tables have to be produced
-> > > > in user-space.
-> > > > This allows us to possibly support advanced string matching
-> > > > patterns like regular expressions, but they need to be supported
-> > > > by user-space tools.
-> > >
-> > > AppArmor already has a DFA implementation that takes a DFA machine
-> > > from userspace and runs it against file paths; see e.g.
-> > > aa_dfa_match(). Did you look into whether you could move their DFA to
-> > > some place like lib/ and reuse it instead of adding yet another
-> > > generic rule interface to the kernel?
-> >
-> > Yes, using AppArmor DFA cloud be a possibility.
-> > Though, I didn't know how AppArmor's maintainers feel about this.
-> > I thought that was easier to just implement my own.
-> > Anyway I understand that re-using that code would be the optimal solution.
-> > I'm adding in CC AppArmor's maintainers, let's see what they think about this.
->
-> I don't want this to prevent SARA from being up-streamed.
-> Do you think that having another DFA here could be acceptable anyway?
-> Would it be better if I just drop the DFA an go back to simple string
-> matching to speed up things?
+Hi Ardelean,=20
 
-While I think that it would be nicer not to have yet another
-implementation of the same thing, I don't feel strongly about it.
+On 7 October 2019 3:51:16 PM IST, "Ardelean, Alexandru" <alexandru=2EArdel=
+ean@analog=2Ecom> wrote:
+>On Mon, 2019-10-07 at 15:40 +0530, Manivannan Sadhasivam wrote:
+>> [External]
+>>=20
+>> Add devicetree binding for Analog Devices ADUX1020 Photometric
+>> sensor=2E
+>>=20
+>
+>Hey,
+>
+>Thanks for the patches=2E
+>
+>This dt-binding docs is in text format=2E
+>dt-binding docs now need to be in YAML format=2E
+>
+
+Sure=2E I can convert to YAML binding=2E=20
+
+>Also, patches for dt-bindings docs usually come after the driver is
+>added=2E
+>So, this patch should be the second in the series, not the first=2E
+>
+
+I don't think so=2E The convention is to put dt-bindings patch upfront for=
+ all subsystems=2E Not sure if IIO differs here=2E=20
+
+Thanks,=20
+Mani
+>Alex
+>
+>> Signed-off-by: Manivannan Sadhasivam
+><manivannan=2Esadhasivam@linaro=2Eorg>
+>> ---
+>>  =2E=2E=2E/bindings/iio/light/adux1020=2Etxt           | 22
+>+++++++++++++++++++
+>>  1 file changed, 22 insertions(+)
+>>  create mode 100644
+>> Documentation/devicetree/bindings/iio/light/adux1020=2Etxt
+>>=20
+>> diff --git a/Documentation/devicetree/bindings/iio/light/adux1020=2Etxt
+>> b/Documentation/devicetree/bindings/iio/light/adux1020=2Etxt
+>> new file mode 100644
+>> index 000000000000=2E=2Ee896dda30e36
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/light/adux1020=2Etxt
+>> @@ -0,0 +1,22 @@
+>> +Analog Devices ADUX1020 Photometric sensor
+>> +
+>> +Link to datasheet:=20
+>>
+>https://www=2Eanalog=2Ecom/media/en/technical-documentation/data-sheets/A=
+DUX1020=2Epdf
+>> +
+>> +Required properties:
+>> +
+>> + - compatible: should be "adi,adux1020"
+>> + - reg: the I2C address of the sensor
+>> +
+>> +Optional properties:
+>> +
+>> + - interrupts: interrupt mapping for IRQ as documented in
+>> + =20
+>Documentation/devicetree/bindings/interrupt-controller/interrupts=2Etxt
+>> +
+>> +Example:
+>> +
+>> +adux1020@64 {
+>> +	compatible =3D "adi,adux1020";
+>> +	reg =3D <0x64>;
+>> +	interrupt-parent =3D <&msmgpio>;
+>> +	interrupts =3D <24 IRQ_TYPE_LEVEL_HIGH>;
+>> +};
+
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
