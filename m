@@ -2,132 +2,78 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E16ECE58E
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E1B7ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88A16206C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:33:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570462425;
-	bh=b5SBr2aGSkfx5a5ZQNSDcnFdTdkonFBwYdfgdP9rpck=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yaMzReY03EKyNQLgIF72kQpndpu9zPFexQbPurfgb6JCwVSBhVjDRl61GWsNvoKQu
-	 NtKfMEM4mom0OQhkvpqMc8TCBdOrlR6/q4E6yvbWgRbursdZtI3VpklOp7/TceqJVj
-	 bGpqZU2412Q36PhcO+7vmQ+DIZQ7YrHSS7A0MuAA=
+	by mail.kernel.org (Postfix) with ESMTP id 6D7FA206C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:34:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728941AbfJGPdo (ORCPT
+        id S1728879AbfJGPeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 11:33:44 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:32812 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728594AbfJGPdo (ORCPT
+        Mon, 7 Oct 2019 11:34:00 -0400
+Received: from smtprelay0046.hostedemail.com ([216.40.44.46]:57724 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727947AbfJGPd7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:33:44 -0400
-Received: by mail-wr1-f67.google.com with SMTP id b9so15900607wrs.0;
-        Mon, 07 Oct 2019 08:33:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=quR8Kb6GAk4jYImEGkDjHBYeMyfZIdQBv2DrxYLvF70=;
-        b=c7lu6Yh4SW2Tvuh1xafLP92jKbiNAvuBg/Km9vd0KvZU2E11+TBSVwgc3WkiZ/6GeG
-         OMD89f1fH4nrgXTqmewRdrimBHyGFLGFKhNTmCzVClKy/HbvAwz5w4mlL+IVRMQCTz10
-         w1XeN9pM4v/P9F0cC5BAE38SgX/rmuGkKEvFK0M0wDbKCr9fMFJduL5aLgwtmJu/HCUD
-         6DJot7eTO+zB+slgYRwaG30RBBGpQ0NcW0wtW6b4Io3NSOS7ho1aA/VKEQHq8ltDWgzX
-         13XSYOlp6u4QQ1/acZA8CeqSwl21x9EWYa2o7ghUB8UqvfmxtfQrxYgm+rBDK4NY3Ew1
-         iafA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=quR8Kb6GAk4jYImEGkDjHBYeMyfZIdQBv2DrxYLvF70=;
-        b=HsSPnQ3C7gGorDJZN3aPQzC7h69lwPkBuW7Zj4jnilP5FSKq+4WO+pFQaIu4zCKd+P
-         e2ldN4IabiOBS8X1XIo6e/+vruk4nK1F7BZ5oczPmc4TGtJTdpmK/M2FAT42BANDJhlY
-         jCaZGrKDtjSMMNd/SKjhHSdwTAIQ33v54ppfoRh8lEZLDTOIOfUt49vWLEwIZuxBl2j/
-         8w3SbeM46iK5qoDgMpIQsBHD/AMeUWIIyrOtYjWOyBzkmaUiup+sh3JCFxOKo8FSjn9h
-         Qt0EM9fXUErTQoFUu44ar/f5aIvZEgWgKkVE0uiTZ32bIoIf/iR45Ru7phHImHFeUnC5
-         /5HQ==
-X-Gm-Message-State: APjAAAU7DBhnrawTQbdWIkj4q8iY20vlRlHs7raZRUd7YMpTgycHBKKp
-        m3qjNnSBBkoU6HoV10rxwPE=
-X-Google-Smtp-Source: APXvYqz1lvbhYIE/Ji8FSRU355cLZvKRKQCsmcdWrQVr8/9Glty+Il7foi680QdDddETmlMfQpbxHQ==
-X-Received: by 2002:adf:dcd2:: with SMTP id x18mr22950157wrm.220.1570462422220;
-        Mon, 07 Oct 2019 08:33:42 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id a2sm21763670wrt.45.2019.10.07.08.33.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2019 08:33:41 -0700 (PDT)
-Date:   Mon, 7 Oct 2019 17:33:39 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     akpm@linux-foundation.org, walken@google.com, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, Davidlohr Bueso <dbueso@suse.de>
-Subject: Re: [PATCH 11/11] x86/mm, pat: convert pat tree to generic interval
- tree
-Message-ID: <20191007153339.GA95072@gmail.com>
-References: <20191003201858.11666-1-dave@stgolabs.net>
- <20191003201858.11666-12-dave@stgolabs.net>
+        Mon, 7 Oct 2019 11:33:59 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 582B5180A8452;
+        Mon,  7 Oct 2019 15:33:58 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: pigs13_3fa3fecc87e3d
+X-Filterd-Recvd-Size: 2029
+Received: from XPS-9350.home (unknown [47.151.152.152])
+        (Authenticated sender: joe@perches.com)
+        by omf15.hostedemail.com (Postfix) with ESMTPA;
+        Mon,  7 Oct 2019 15:33:57 +0000 (UTC)
+Message-ID: <5ce6f9131327fd2e12d7a0e20a55f588448de090.camel@perches.com>
+Subject: [PATCH] checkpatch: Improve ignoring CamelCase SI style variants
+ like mA
+From:   Joe Perches <joe@perches.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>,
+        Jules Irenge <jbi.octave@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Date:   Mon, 07 Oct 2019 08:33:56 -0700
+In-Reply-To: <20191006190726.GB237538@kroah.com>
+References: <20191006184903.12089-1-jbi.octave@gmail.com>
+         <20191006190726.GB237538@kroah.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191003201858.11666-12-dave@stgolabs.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Ignore all upper-case variants before and after SI units like
+mA, mV and uV so uses like RANGE_mA do not emit a CAMELCASE message.
 
-* Davidlohr Bueso <dave@stgolabs.net> wrote:
+Signed-off-by: Joe Perches <joe@perches.com>
+---
+ scripts/checkpatch.pl | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-> With some considerations, the custom pat_rbtree implementation can be
-> simplified to use most of the generic interval_tree machinery.
-> 
-> o The tree inorder traversal can slightly differ when there are key
-> ('start') collisions in the tree due to one going left and another right.
-> This, however, only affects the output of debugfs' pat_memtype_list file.
-> 
-> o Generic interval trees are now semi open [a,b), which suits well with
-> what pat wants.
-> 
-> o Erasing logic must remain untouched as well.
-> 
-> In order for the types to remain u64, the 'memtype_interval' calls are
-> introduced, as opposed to simply using struct interval_tree.
-> 
-> In addition, pat tree might potentially also benefit by the fast overlap
-> detection for the insertion case when looking up the first overlapping node
-> in the tree.
-> 
-> Finally, I've tested this on various servers, via sanity warnings, running
-> side by side with the current version and so far see no differences in the
-> returned pointer node when doing memtype_rb_lowest_match() lookups.
-> 
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: x86@kernel.org
-> Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
-> ---
->  arch/x86/mm/pat.c        |  22 +++----
->  arch/x86/mm/pat_rbtree.c | 151 ++++++++++-------------------------------------
->  2 files changed, 43 insertions(+), 130 deletions(-)
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index cf7543a9d1b2..edd20f7fa83c 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -5044,8 +5044,9 @@ sub process {
+ 			    $var =~ /[A-Z][a-z]|[a-z][A-Z]/ &&
+ #Ignore Page<foo> variants
+ 			    $var !~ /^(?:Clear|Set|TestClear|TestSet|)Page[A-Z]/ &&
+-#Ignore SI style variants like nS, mV and dB (ie: max_uV, regulator_min_uA_show)
+-			    $var !~ /^(?:[a-z_]*?)_?[a-z][A-Z](?:_[a-z_]+)?$/ &&
++#Ignore SI style variants like nS, mV and dB
++#(ie: max_uV, regulator_min_uA_show, RANGE_mA_VALUE)
++			    $var !~ /^(?:[a-z0-9_]*|[A-Z0-9_]*)?_?[a-z][A-Z](?:_[a-z0-9_]+|_[A-Z0-9_]+)?$/ &&
+ #Ignore some three character SI units explicitly, like MiB and KHz
+ 			    $var !~ /^(?:[a-z_]*?)_?(?:[KMGT]iB|[KMGT]?Hz)(?:_[a-z_]+)?$/) {
+ 				while ($var =~ m{($Ident)}g) {
 
-I suppose this will be carried in -mm?
 
-If so and if this patch is regression free, then:
-
-  Acked-by: Ingo Molnar <mingo@kernel.org>
-
-Thanks,
-	
-	Ingo
