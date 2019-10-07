@@ -2,125 +2,91 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FFA4ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 559CAC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 779AD21721
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:48:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570445320;
-	bh=crukoGO4YhQ7zBCUhvVhbTucokBLXGufGE0A+G8szYA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Lbdrx0me/EW5K3KkvmyjqaYVcPT1diW+e+0/IwykbPLN9+tiVoEIdJ2mG2fGLzsSd
-	 kJzTWQgQj5hLJ68ydMN2Fi2PxNQAoSt3LXGp+ej4ZRpLX0nVfckNs5CncFMj0QAHo1
-	 dVz/1x97pQjsKs/XnpfjQM+srZS4uMZJJ7YRMadA=
+	by mail.kernel.org (Postfix) with ESMTP id 258022084D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:50:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727635AbfJGKsk (ORCPT
+        id S1727657AbfJGKuv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 06:48:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41196 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727317AbfJGKsj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 06:48:39 -0400
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9271A2084D;
-        Mon,  7 Oct 2019 10:48:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570445318;
-        bh=crukoGO4YhQ7zBCUhvVhbTucokBLXGufGE0A+G8szYA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vWd7EjPAG2p3KS6jFcWeBF/6yW7Y+xbEqIY5HL7huiPytN2NSEQJCQSedOv76PysH
-         ln9ZngOq4MHF9bL31OOA7+Tqk5s9YaDRIhNYDrr0w6H2BMlO8AiKF58k+kVPNvLBTE
-         lev+5eQfvqhFdpZeCy9av2/iaYUKXC58QbRYkMkE=
-Date:   Mon, 7 Oct 2019 12:48:35 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-media@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        lakml <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] media: dt-bindings: media: Fixup Allwinner A10 CSI
- binding
-Message-ID: <20191007104835.v6iqpoolqtajryik@gilmour>
-References: <b47ec7088aa4b07458519ab151de92df552a9302.1570101510.git.amit.kucheria@linaro.org>
- <20191003115154.6f2jgj3dnqsved2y@gilmour>
- <CAHLCerNoLyQ-e70=1VMPO_J_amA+-2vtHwfoUabo4dhUWj-H0A@mail.gmail.com>
- <20191007100535.6gp6b3h6ueyeln3b@gilmour>
- <CAP245DXT=HL+m-LqoC25EBnOaPmF1pUW0fEZp6EZB-MdgOJoWw@mail.gmail.com>
+        Mon, 7 Oct 2019 06:50:51 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:44275 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727345AbfJGKuv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 06:50:51 -0400
+Received: from [185.66.195.251] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iHQbH-00040P-0C; Mon, 07 Oct 2019 10:50:47 +0000
+Date:   Mon, 7 Oct 2019 12:50:45 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Andrea Parri <parri.andrea@gmail.com>
+Cc:     bsingharora@gmail.com, elver@google.com,
+        linux-kernel@vger.kernel.org,
+        syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com,
+        syzkaller-bugs@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: [PATCH] taskstats: fix data-race
+Message-ID: <20191007105044.x7srxpcedfo3o5m4@wittgenstein>
+References: <20191005112806.13960-1-christian.brauner@ubuntu.com>
+ <20191006235216.7483-1-christian.brauner@ubuntu.com>
+ <20191007104039.GA16085@andrea.guest.corp.microsoft.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ehz75jskqgtqpnip"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAP245DXT=HL+m-LqoC25EBnOaPmF1pUW0fEZp6EZB-MdgOJoWw@mail.gmail.com>
+In-Reply-To: <20191007104039.GA16085@andrea.guest.corp.microsoft.com>
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Oct 07, 2019 at 12:40:39PM +0200, Andrea Parri wrote:
+> Hi Christian,
+> 
+> On Mon, Oct 07, 2019 at 01:52:16AM +0200, Christian Brauner wrote:
+> > When assiging and testing taskstats in taskstats_exit() there's a race
+> > when writing and reading sig->stats when a thread-group with more than
+> > one thread exits:
+> > 
+> > cpu0:
+> > thread catches fatal signal and whole thread-group gets taken down
+> >  do_exit()
+> >  do_group_exit()
+> >  taskstats_exit()
+> >  taskstats_tgid_alloc()
+> > The tasks reads sig->stats holding sighand lock seeing garbage.
+> > 
+> > cpu1:
+> > task calls exit_group()
+> >  do_exit()
+> >  do_group_exit()
+> >  taskstats_exit()
+> >  taskstats_tgid_alloc()
+> > The task takes sighand lock and assigns new stats to sig->stats.
+> > 
+> > Fix this by using READ_ONCE() and smp_store_release().
+> > 
+> > Reported-by: syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com
+> > Cc: Dmitry Vyukov <dvyukov@google.com>
+> > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> 
+> FYI, checkpatch.pl says:
+> 
+> WARNING: memory barrier without comment
+> #62: FILE: kernel/taskstats.c:568:
+> +		smp_store_release(&sig->stats, stats_new);
+> 
+> Maybe you can make checkpatch.pl happy  ;-) and add a comment to stress
+> the 'pairing' between this barrier and the added READ_ONCE() (as Dmitry
+> was alluding to in a previous post)?
 
---ehz75jskqgtqpnip
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Of course. I totally forgot the memory barrier documentation requirement.
 
-On Mon, Oct 07, 2019 at 03:45:29PM +0530, Amit Kucheria wrote:
-> On Mon, Oct 7, 2019 at 3:35 PM Maxime Ripard <mripard@kernel.org> wrote:
-> >
-> > On Sat, Oct 05, 2019 at 04:15:57PM +0530, Amit Kucheria wrote:
-> > > On Thu, Oct 3, 2019 at 5:22 PM Maxime Ripard <mripard@kernel.org> wrote:
-> > > >
-> > > > Hi,
-> > > >
-> > > > On Thu, Oct 03, 2019 at 04:52:24PM +0530, Amit Kucheria wrote:
-> > > > > This new binding fails dt_binding_check due to a typo. Fix it up.
-> > > > >
-> > > > > linux.git/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml: $id: path/filename 'arm/allwinner,sun4i-a10-csi.yaml' doesn't match actual filename
-> > > > > linux.git/Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts' failed
-> > > > > make[2]: *** [Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts] Error 1
-> > > > > make[2]: *** Waiting for unfinished jobs....
-> > > > > linux.git/Makefile:1284: recipe for target 'dt_binding_check' failed
-> > > > > make[1]: *** [dt_binding_check] Error 2
-> > > > >
-> > > > > Fixes: c5e8f4ccd7750 ("media: dt-bindings: media: Add Allwinner A10 CSI binding")
-> > > > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > > >
-> > > > Thanks for your patch.
-> > > >
-> > > > It has already been submitted though:
-> > > > https://lore.kernel.org/linux-arm-kernel/1568808060-17516-1-git-send-email-pragnesh.patel@sifive.com/
-> > > >
-> > > > I'm not sure why it hasn't been applied yet though :/
-> > >
-> > > Perhaps a Fixes tag will allow more attention to it?
-> >
-> > I've added a fixes tag and merged it through the sunxi tree.
-> >
-> > Sorry for the time it took, and thanks for sending that fix!
->
-> Will it get merged for -rc2?
-
--rc2 was released yesterday, so we're a bit late for that, but it's
- going to be in next tomorrow.
-
-Maxime
-
---ehz75jskqgtqpnip
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZsYAwAKCRDj7w1vZxhR
-xWygAQDjMWzwKSR39Yk842xwupPifmf7scmW28XyHRMhu+rdLgD9FRHsp8ggeM9o
-BD7c/B1rS9r+K2HAG1lCY0LOeHQ/LAk=
-=9BMd
------END PGP SIGNATURE-----
-
---ehz75jskqgtqpnip--
+Christian
