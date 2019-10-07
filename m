@@ -2,90 +2,71 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E0FC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 159BEECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE33E21655
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:56:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570456581;
-	bh=RR9DRF39oJCR1HSHYuun5bistTTOv6+Wz8MHq5p+aSk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=N+iBHFhBTXo/i+TD/jQRVJhMnIETjVFuuvI9fMmsvBYUy8KNS4NnXIijMICvsG4dE
-	 hnaJzPJmP5Y+EZ1F2TLAVQmV7J2V/fjqKvhiarhiplY94k6vGaVeedYlLrrOrCRvb/
-	 7uk0j60a/LYoDPUaiCwiaiGCB/gVVxqcLBBzdxHU=
+	by mail.kernel.org (Postfix) with ESMTP id EAECE21721
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:56:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbfJGN4V (ORCPT
+        id S1728148AbfJGN4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 09:56:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42416 "EHLO mail.kernel.org"
+        Mon, 7 Oct 2019 09:56:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:35526 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727442AbfJGN4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 09:56:20 -0400
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B83F520867;
-        Mon,  7 Oct 2019 13:56:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570456579;
-        bh=RR9DRF39oJCR1HSHYuun5bistTTOv6+Wz8MHq5p+aSk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=EiT+C+YsyvMxzR9zIaUlQs95iq4A862EsYfpaNIZQ+TtRi1Mi7FtVPm1AbnsgIJ+K
-         tAFODN5b5cFQQ6nqqC72VgkzRKev0cRbigYdaFQHlpGvDbhXgWeVjW8OGR/W/G7BMZ
-         Has1eijhxLv5fLJ1kuKCaUFRQAWYsTmttSwYsjdM=
-Received: by mail-qk1-f175.google.com with SMTP id h126so12589560qke.10;
-        Mon, 07 Oct 2019 06:56:19 -0700 (PDT)
-X-Gm-Message-State: APjAAAWGoaU5Cb0h0M2joYyVBXNSO83V+Rr4eXkNTRYhwoBKyLNLRNCE
-        3jY8r/QwUddNqmXFu1BCa7gZ1nepDsl2/LHweg==
-X-Google-Smtp-Source: APXvYqwm/bLwZM+PssqOzYzoANua8YSLYuI2PMKJKrZyC7DCdzzrTTVWk2vijf2KyteLQtKm+abCCIEQJ6n5QW83AcM=
-X-Received: by 2002:ac8:31b3:: with SMTP id h48mr30882416qte.300.1570456577813;
- Mon, 07 Oct 2019 06:56:17 -0700 (PDT)
+        id S1727324AbfJGN4k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 09:56:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8EF83142F;
+        Mon,  7 Oct 2019 06:56:39 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 117B93F703;
+        Mon,  7 Oct 2019 06:56:38 -0700 (PDT)
+Date:   Mon, 7 Oct 2019 14:56:37 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Tom Joseph <tjoseph@cadence.com>, linux-pci@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI:cadence:Driver refactored to use as a core library.
+Message-ID: <20191007135636.GA42880@e119886-lin.cambridge.arm.com>
+References: <20191001100727.GJ42880@e119886-lin.cambridge.arm.com>
+ <20191001214912.GA78523@google.com>
 MIME-Version: 1.0
-References: <20191007102552.19808-1-alexandre.torgue@st.com> <20191007102552.19808-3-alexandre.torgue@st.com>
-In-Reply-To: <20191007102552.19808-3-alexandre.torgue@st.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 7 Oct 2019 08:56:05 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKFUTwjJefQvQE5aFmeJButYSLKm0RSpCHjSL=7pQHtxQ@mail.gmail.com>
-Message-ID: <CAL_JsqKFUTwjJefQvQE5aFmeJButYSLKm0RSpCHjSL=7pQHtxQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] dt-bindings: net: adi: Fix yaml verification issue
-To:     Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Alexandru Ardelean <alexaundru.ardelean@analog.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191001214912.GA78523@google.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 5:26 AM Alexandre Torgue <alexandre.torgue@st.com> wrote:
->
-> This commit fixes an issue seen during yaml check ("make dt_binding_check").
-> Each enum were not declared as uint32.
->
-> "Documentation/devicetree/bindings/net/adi,adin.yaml:
-> properties:adi,rx-internal-delay-ps:
-> ..., 'enum': [1600, 1800, 2000, 2200, 2400], 'default': 2000}
-> is not valid under any of the given schemas"
+On Tue, Oct 01, 2019 at 04:49:12PM -0500, Bjorn Helgaas wrote:
+> On Tue, Oct 01, 2019 at 11:07:28AM +0100, Andrew Murray wrote:
+> > Hi Tom,
+> > 
+> > Thanks for the patch.
+> > 
+> > I'd suggest that you rename the subject of this series to "PCI: cadence: ..."
+> > to be consistent with the existing commit history, e.g. git log 
+> > --oneline drivers/pci/controller/pcie-cadence* - you'll also see that you
+> > don't need a full stop at the end, and you ought to also change the tense
+> > of the subject, e.g. Refactor driver to ...
+> > 
+> > See comments inline...
+> 
+> Andrew, thank you very much for your detailed and thoughtful reviews
+> here and elsewhere.  It is a huge help.
+> 
 
-You need to update dtschema. I fixed this in the meta-schema last
-week. Any property with a standard property unit suffix has a defined
-type already, so we don't need to define it again here.
+Thanks no problem, it's a pleasure :)
 
-I also added '-bits' to standard units.
+Thanks,
 
-Rob
+Andrew Murray
+
+> Bjorn
