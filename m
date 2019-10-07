@@ -2,95 +2,88 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEBDAC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40355C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:01:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B19D72173B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:59:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570449585;
-	bh=5jiwPkl3ecC5PC4thXvIU8gFWAfwR8hG/EemIoCj5g4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2sq7cI/clY7Rd1EkoqFhRYLVMXDD8rGEvmWU0Jn0sk+rM88l2ht9KHPbZ7zBRDVSN
-	 EzHLM0SDkupaRtsrAjd7M80AdvWMjLeSyehgx/hYYiDxb1UjLSBfrWpopUfA5Jq974
-	 wJrJOpEyxOI2cR6xbxIkw0RqTRfycY/WTGBmWQ1U=
+	by mail.kernel.org (Postfix) with ESMTP id 0ECA221721
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:01:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbfJGL7p (ORCPT
+        id S1727745AbfJGMBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 07:59:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57388 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727467AbfJGL7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 07:59:44 -0400
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B148D206C0;
-        Mon,  7 Oct 2019 11:59:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570449584;
-        bh=5jiwPkl3ecC5PC4thXvIU8gFWAfwR8hG/EemIoCj5g4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=00DN5m1u+OpR2j7HvOfVHqIseRTMp9+SH7IzGzNwUnxPEVT1j+E0xUjCc5l7eTm7x
-         Gx7frdd95PSPb2j45D5gFNFQqa77rhHn7lLb+ZDGyQExfG7w0YS/+y41odBO4dEx2l
-         GW59SWBe2FL9LX3l+322/QB8nvCEiuq5VgO6q9bM=
-Date:   Mon, 7 Oct 2019 13:59:41 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Icenowy Zheng <icenowy@aosc.io>
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v2 2/3] drm/sun4i: dsi: fix the overhead of the
- horizontal front porch
-Message-ID: <20191007115941.psgcn4dl5r5wz7eb@gilmour>
-References: <20191006160303.24413-1-icenowy@aosc.io>
- <20191006160303.24413-3-icenowy@aosc.io>
+        Mon, 7 Oct 2019 08:01:01 -0400
+Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:36047 "EHLO
+        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727572AbfJGMBB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 08:01:01 -0400
+Received: from [IPv6:2001:983:e9a7:1:3d61:cdd2:8085:cc8] ([IPv6:2001:983:e9a7:1:3d61:cdd2:8085:cc8])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id HRhBiMLJojZ8vHRhDi6Z66; Mon, 07 Oct 2019 14:00:59 +0200
+Subject: Re: [PATCH v10 6/8] Documentation: media: Describe
+ V4L2_CID_UNIT_CELL_SIZE
+To:     Ricardo Ribalda Delgado <ribalda@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Jacopo Mondi <jacopo@jmondi.org>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191007113502.11746-1-ribalda@kernel.org>
+ <20191007113502.11746-7-ribalda@kernel.org>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <494e3061-985d-8b8e-7728-9e72442ad9f7@xs4all.nl>
+Date:   Mon, 7 Oct 2019 14:00:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="5vfde45ofwoem3io"
-Content-Disposition: inline
-In-Reply-To: <20191006160303.24413-3-icenowy@aosc.io>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191007113502.11746-7-ribalda@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfJzmiJoY/+jN1X0fUHb4t8zhxe/1lKrvBjm2qZ72n0BdLjI8a8LNlHmcviAWTHyhSMA7TcwTh07iPmXYGv4UOhvsYRCr0RnE71fdzyjfJH/Ch3f5vkFN
+ uMa7SYrk2ouQTBW+N9hZ+Ij5vg8McYYk0+c+Yuk6gBNUBFcjWt2rV9/h8yELoIIQXxgzKG/iH1Iij2L6JCuWh+Vsu+1eS5LGdpyZ7yhjoIO88L3pBb0ADdMM
+ t4CT+A4pr0QxmiD550E/0xopB+zxZfvLuNhwq2On5iAQof/8xlWihs3+eLkX8r1yfxL+uRvBqnROr541j+7hqV/o0QDxcjOjCxwTLdhjt/UFzg3FHtVgjW9k
+ 717TojC50Z3MlOEjllr6HL6b8+oKmnvYQtQYHSwPQxbwj7I1a6U1zIcFMuip/6Cfh93HvHy5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 10/7/19 1:35 PM, Ricardo Ribalda Delgado wrote:
+> New control to pass to userspace the width/height of a pixel. Which is
+> needed for calibration and lens selection.
+> 
+> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+> ---
+>  Documentation/media/uapi/v4l/ext-ctrls-image-source.rst | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/Documentation/media/uapi/v4l/ext-ctrls-image-source.rst b/Documentation/media/uapi/v4l/ext-ctrls-image-source.rst
+> index 2c3ab5796d76..6388668855d0 100644
+> --- a/Documentation/media/uapi/v4l/ext-ctrls-image-source.rst
+> +++ b/Documentation/media/uapi/v4l/ext-ctrls-image-source.rst
+> @@ -55,3 +55,12 @@ Image Source Control IDs
+>  
+>  ``V4L2_CID_TEST_PATTERN_GREENB (integer)``
+>      Test pattern green (next to blue) colour component.
+> +
+> +``V4L2_CID_UNIT_CELL_SIZE (struct)``
+> +    This control returns the unit cell size in nanometers. The struct
+> +    :c:type:`v4l2_area` provides the width and the height in separate
+> +    fields to take into consideration asymmetric pixels and/or hardware
+> +    binning.
 
---5vfde45ofwoem3io
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This still states that this control takes binning into account. I understood that
+we decided not to do that?
 
-On Mon, Oct 07, 2019 at 12:03:01AM +0800, Icenowy Zheng wrote:
-> The formula in the BSP kernel indicates that a 16-byte overhead is used
-> when sending the HFP. However, this value is currently set to 6 in the
-> sun6i_mipi_dsi driver, which makes some panels flashing.
->
-> Fix this overhead value.
->
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Regards,
 
-Applied, thanks
+	Hans
 
-Maxime
+> +    The unit cell consists of the whole area of the pixel, sensitive and
+> +    non-sensitive.
+> +    This control is required for automatic calibration of sensors/cameras.
+> 
 
---5vfde45ofwoem3io
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZsorQAKCRDj7w1vZxhR
-xcP8AP47n6BFMYH1VcgTqWrgGo5/vrIabj3UlEvNbcGcQXgpgQD9GkwZ/EbXI2Dp
-TngzLKib/Ovm7hiqxQLsL6DKkKWGGw0=
-=25Nh
------END PGP SIGNATURE-----
-
---5vfde45ofwoem3io--
