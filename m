@@ -2,152 +2,186 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C30C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF19ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA97420684
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BD4B20684
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:19:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gwde7sD4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729145AbfJGTTH (ORCPT
+        id S1729222AbfJGTTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 15:19:07 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:40114 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728071AbfJGTTH (ORCPT
+        Mon, 7 Oct 2019 15:19:14 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:36932 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729174AbfJGTTN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 15:19:07 -0400
-Received: by mail-io1-f70.google.com with SMTP id r20so28377509ioh.7
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 12:19:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=kfIipKsUoU2wWE9hKOkjQ6E2PbPEy+2k66M2HMxGCeQ=;
-        b=RvcCYsoQaBz6RiCEezVgyCpq22g6O7aZ2TspDIa6SHzKLOhGXtWdvO2IXgZsOdirF6
-         1erM+k9B7Ef/cuhUuRFVVXetnCy24/xw2oXGQzBcIntSA7+26iweM8InJlubS4/FYGeM
-         NRBkAWY1pYl/1MDN8USFFRG1UFKUgcZgiQVra/wV/cmhcymbMjatq95v1jc9TysTPerL
-         agoGi5cerE4jnt17EjIvsU+J6H950dhTVykqfGEwz537V+VbBYREqCw1fbHG1FGkofeV
-         3XciHCndSK8HpK9N/9ezSfpBvwIA1fHZcAqII691RCd1FMfOI4pSI207QEiUT12mW/ql
-         dmzw==
-X-Gm-Message-State: APjAAAVJQoyiyQL99tpYCY24ekKEYmPZu/isfAtzjPqlRV+Gc9A4Txht
-        net2BOEgJT5DHjI4bEbnk8zpORcZgfzkRhml0h0gdYKXJVq+
-X-Google-Smtp-Source: APXvYqxmlQbrzZCsCgl3Aqez5p34MMznTpFGk54INHY3AxNOW/acF4gq6+pYak8SyVeux3NOkFMekxdJcgfbwGtHbQ6MFTOGVIwF
+        Mon, 7 Oct 2019 15:19:13 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x97JIi5u127207;
+        Mon, 7 Oct 2019 14:18:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1570475924;
+        bh=pz9wwCFtJJusqr5Ey1KRwptJHVa4cCqoSaCfhYE+QzA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=gwde7sD4uI7ISoQW0XlmKIjuDXLXfp9eUMcrJJQA6DrEuo5sdX53aiaKOrigKI0iT
+         UA8E9G2tnuEUYFk6HC5m5fAH45P1EsIsSjsgk57u2zh1Soe8+onnX0xnD5AlB76Kdo
+         KkCbiJtgQX8GDePbS5jnyQoiH8+fNmyWaAqlRir8=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x97JIiNO087122
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 7 Oct 2019 14:18:44 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 7 Oct
+ 2019 14:18:39 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 7 Oct 2019 14:18:39 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x97JIZa1049445;
+        Mon, 7 Oct 2019 14:18:36 -0500
+Subject: Re: Lay common foundation to make PVR/SGX work without hacks on
+ OMAP34xx, OMAP36xx, AM335x and potentially OMAP4, OMAP5
+To:     Tony Lindgren <tony@atomide.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+CC:     Merlijn Wajer <merlijn@wizzup.org>, Adam Ford <aford173@gmail.com>,
+        Philipp Rossak <embed3d@gmail.com>,
+        =?UTF-8?Q?Pawe=c5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        =?UTF-8?Q?Filip_Matijevi=c4=87?= <filip.matijevic.pz@gmail.com>,
+        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+        moaz korena <moaz@korena.xyz>,
+        James Hilliard <james.hilliard1@gmail.com>,
+        <kernel@pyra-handheld.com>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, <maemo-leste@lists.dyne.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>
+References: <d0cbfaaf-813e-8803-f90b-931a38396750@wizzup.org>
+ <3A03FF16-C203-43ED-AEEF-0260F6B3331A@goldelico.com>
+ <3b0a5e78-c4c2-1963-bac7-b49496a1e9b9@wizzup.org>
+ <1F942AAB-1648-46C0-ADD5-90F6898778BE@goldelico.com>
+ <84cac9b8-0eff-33f8-464d-4f8045d7db19@wizzup.org>
+ <BFAA7FA6-A352-476A-99F9-02EA663A6AAD@goldelico.com>
+ <CAHCN7x+87xTsA3MeHy7kUWU0SU3X8HmSc2wbk5gKvYm1dRNe6A@mail.gmail.com>
+ <04809E3E-A690-4931-B949-1CFDAF407C14@goldelico.com>
+ <ebb50954-b456-4dab-0765-9dfa06c67075@wizzup.org>
+ <C3A56737-6187-4B31-8697-3A02DD164429@goldelico.com>
+ <20191007155252.GQ5610@atomide.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <64474fb1-f6d2-52d0-175a-65bb493dc1fe@ti.com>
+Date:   Mon, 7 Oct 2019 22:18:34 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-Received: by 2002:a6b:f319:: with SMTP id m25mr20397110ioh.33.1570475946432;
- Mon, 07 Oct 2019 12:19:06 -0700 (PDT)
-Date:   Mon, 07 Oct 2019 12:19:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ea6699059456ecc8@google.com>
-Subject: KMSAN: uninit-value in asix_mdio_read
-From:   syzbot <syzbot+a631ec9e717fb0423053@syzkaller.appspotmail.com>
-To:     allison@lohutok.net, davem@davemloft.net, glider@google.com,
-        gregkh@linuxfoundation.org, kstewart@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org, opensource@jilayne.com, swinslow@gmail.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20191007155252.GQ5610@atomide.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 07/10/2019 18:52, Tony Lindgren wrote:
+> Hi,
+> 
+> * H. Nikolaus Schaller <hns@goldelico.com> [191005 16:59]:
+>> Hi all,
+>> with the arrival of v5.4-rc1 some of Tony's sysc patches have arrived
+>> upstream, so we do no longer need them here.
+>>
+>> Therefore, I have rebased my drivers/staging/pvr driver [1] and fixed some
+>> more issues:
+>> * omap4 build only needs to distinguish between omap4420/30/60 and omap4470,
+>>    because the latter has an sgx544 inside and the other sgx540
+>>    This is solved by creating a new omap4470.dts
+>> * I have added proper reg values and interrupts to the omap4 device
+>>    tree node of the sgx (child node of the target-module)
+>> * some updates to my sgxdump and sgxdemo scripts (assuming simple
+>>    Debian Stretch rootfs)
+>> * James Hilliard has contributed a fix for osfunc.c
+>> * omap2plus also needs to be configured for STAGING and PREEMPT
+>>    to be able to compile the driver
+>> * I have added the __always_inline fix [2] which is needed for v5.4 with
+>>    CONFIG_CC_OPTIMIZE_FOR_SIZE=y (which I are enabled on the Letux builds)
+>>
+>> Unfortunately Tero's rstctrl patches did not yet make it upstream (or even
+>> linux-next) so I also have a copy in this branch.
+>>
+>> Results of first testing are:
+>> * OMAP3530 (OpenPandora, BeagleBoard C): fails with
+>> [  559.247558] PVR_K:(Error): SysLocateDevices: platform_get_resource failed
+>>
+>> * DM3730 (GTA04, BeagleBoard XM): kernel module loads
+>>
+>> * OMAP4460 (Pandaboard ES): kernel module loads
+>>
+>> * AM335x (BeagleBoneBlack): reports a problem with omap_reset_deassert:
+>> [  204.246706] omap_reset_deassert: timedout waiting for gfx:0
+> 
+> Please try with Tero's current github branch at github.com/t-kristo/linux-pm.git
+> 5.4-rc1-ipc from few days ago, the earlier versions had still issues.
 
-syzbot found the following crash on:
+Yeah, this one should be fixed now.
 
-HEAD commit:    1e76a3e5 kmsan: replace __GFP_NO_KMSAN_SHADOW with kmsan_i..
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=10327cc3600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f03c659d0830ab8d
-dashboard link: https://syzkaller.appspot.com/bug?extid=a631ec9e717fb0423053
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12e9a3db600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=167fcefb600000
+> 
+>> * OMAP5 (Pyra): fails to enable the clocks (did work with the previous version)
+>> [  304.140363] clock-controller:clk:0000:0: failed to enable
+>> [  304.147388] PVR_K:(Error): EnableSGXClocks: pm_runtime_get_sync failed (16)
+> 
+> Hmm no idea what might be up with this one. Did some clkctrl clock
+> fixes maybe cause a regression here? Tero do you have any ideas?
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+a631ec9e717fb0423053@syzkaller.appspotmail.com
+So, this one I am not too sure, I haven't looked at omap5 graphics 
+clocking. I don't think it has anything to do with reset handling though.
 
-asix 1-1:0.78 (unnamed net_device) (uninitialized): Failed to write reg  
-index 0x0000: -71
-asix 1-1:0.78 (unnamed net_device) (uninitialized): Failed to send software  
-reset: ffffffb9
-asix 1-1:0.78 (unnamed net_device) (uninitialized): Failed to write reg  
-index 0x0000: -71
-asix 1-1:0.78 (unnamed net_device) (uninitialized): Failed to enable  
-software MII access
-asix 1-1:0.78 (unnamed net_device) (uninitialized): Failed to read reg  
-index 0x0000: -71
-=====================================================
-BUG: KMSAN: uninit-value in asix_mdio_bus_read+0xbc/0xe0  
-drivers/net/usb/ax88172a.c:31
-CPU: 0 PID: 2919 Comm: kworker/0:2 Not tainted 5.3.0-rc7+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
-  kmsan_report+0x13a/0x2b0 mm/kmsan/kmsan_report.c:108
-  __msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:250
-  asix_mdio_read+0x3e9/0x8f0 drivers/net/usb/asix_common.c:461
-  asix_mdio_bus_read+0xbc/0xe0 drivers/net/usb/ax88172a.c:31
-  __mdiobus_read+0x106/0x3d0 drivers/net/phy/mdio_bus.c:563
-  mdiobus_read+0xbd/0x110 drivers/net/phy/mdio_bus.c:640
-  get_phy_id drivers/net/phy/phy_device.c:785 [inline]
-  get_phy_device+0x331/0x8a0 drivers/net/phy/phy_device.c:819
-  mdiobus_scan+0x91/0x760 drivers/net/phy/mdio_bus.c:527
-  __mdiobus_register+0x86d/0xca0 drivers/net/phy/mdio_bus.c:426
-  ax88172a_init_mdio drivers/net/usb/ax88172a.c:105 [inline]
-  ax88172a_bind+0xcc5/0xf80 drivers/net/usb/ax88172a.c:243
-  usbnet_probe+0x10ae/0x3960 drivers/net/usb/usbnet.c:1722
-  usb_probe_interface+0xd19/0x1310 drivers/usb/core/driver.c:361
-  really_probe+0x1373/0x1dc0 drivers/base/dd.c:552
-  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:709
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:816
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x489/0x750 drivers/base/dd.c:882
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:929
-  bus_probe_device+0x131/0x390 drivers/base/bus.c:514
-  device_add+0x25b5/0x2df0 drivers/base/core.c:2165
-  usb_set_configuration+0x309f/0x3710 drivers/usb/core/message.c:2027
-  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
-  usb_probe_device+0x146/0x200 drivers/usb/core/driver.c:266
-  really_probe+0x1373/0x1dc0 drivers/base/dd.c:552
-  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:709
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:816
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x489/0x750 drivers/base/dd.c:882
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:929
-  bus_probe_device+0x131/0x390 drivers/base/bus.c:514
-  device_add+0x25b5/0x2df0 drivers/base/core.c:2165
-  usb_new_device+0x23e5/0x2fb0 drivers/usb/core/hub.c:2536
-  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x581d/0x72f0 drivers/usb/core/hub.c:5441
-  process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
-  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
-  kthread+0x4b5/0x4f0 kernel/kthread.c:256
-  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
+Is there some simple way to try this out on board; without PVR module 
+that is?
 
-Local variable description: ----smsr@asix_mdio_read
-Variable was created at:
-  asix_mdio_read+0xa0/0x8f0 include/linux/netdevice.h:2180
-  asix_mdio_bus_read+0xbc/0xe0 drivers/net/usb/ax88172a.c:31
-=====================================================
+-Tero
 
+> 
+>> * OMAP5 with omap2plus_defconfig:
+>> root@letux:~# echo on > $(find /sys -name control | grep \/5600)
+>> [  213.490926] clock-controller:clk:0000:0: failed to enable
+>> root@letux:~#
+>>
+>> * pvrsrvctl --start --no-module:
+>>    reports (where the kernel module loads) that the uKernel does not run
+>>
+>> So I have several ideas what the reasons for the problems on the non-omap5
+>> devices could be:
+>> * initial code may have some omap5 specific hack inside
+>> * or has omap5 specific magic constants
+>> * uKernel may "know" on which platform it runs and
+>>    we would need differently patched user-space code
+>>    for each one
+>> * omap5 has a dual core sgx544 while the other
+>>    have single core
+>> * the register address translation is not yet correct and
+>>    this inhibits communicating of the user-space libs
+>>    with the uKernel
+>>
+>> Maybe, if someone can point me to a complete and working BeagleBone source
+>> tree (any kernel release) which makes use of 1.14.3699939 SDK, I could compare
+>> code and address setup to find what makes the difference.
+> 
+> Regards,
+> 
+> Tony
+> 
+>> [1]: https://github.com/openpvrsgx-devgroup/linux_openpvrsgx/commits/letux-pvr
+>> [2]: https://lkml.org/lkml/2019/10/2/201
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
