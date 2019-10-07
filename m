@@ -2,296 +2,841 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12CA1C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D069EECE58E
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C243B20867
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 841A120835
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:37:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="aLdYhfC9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PQMklxXa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729454AbfJGVga (ORCPT
+        id S1729476AbfJGVhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 17:36:30 -0400
-Received: from mail-eopbgr140087.outbound.protection.outlook.com ([40.107.14.87]:23304
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728654AbfJGVga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 17:36:30 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nKR/PS2geALwHm/hD3c4gqKaZWTcmrnCCYx9nallOPhwWMFvRqIEVwixumTsKuvN/3/NmxV5kBpM92InTzLp9ml3+B8RrSKeLRiANbO5Hd4Rkbin+KwIOIDMu4io8SUgZCBZlQwYhyae124EvdOGVgVDRoqEgxcFWkM6KmicW/hQNJMpfJFP94VX4Zt+UuRlhPPlvrU+4Akl7sxDQRRv7Hd1NIczK8sJZC4cswK8A48OaN9iNyhaHc+/IxI3kQvqPHWFemEU0PKgdCE4etArq2vCBeu+HWJ/jAEqybSebtoyW3mQWLx+4NvmfmV9/uZ7eCSi9LVkgmgazwvp/c5IRw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ei25beopCtm1f87mBuCBJIwvy5p0S1xRGw56QyoxYRI=;
- b=D0r8FgC2cTeNZBB7SqANVIFUgX6Ckjqx/IEMErzt83Ryz4JDZLn3Xf8agIqxl6NU7PQKX2k+1vhk2YAk3m+3nwL4JqVpqB929yoojwiKRwdm+SdCr74cMMvWrJQB01qqub58ZDMFU4QWM7IK99qRQVRYubEbl0DitdPkdt1Nr5xYNRCC1jx0nTJM4qvtlo5kaeOlNDiHtPPBfg+36R4BxrP3BCspkuH2G59FCcpYgrxrVOTuhf1BgJDtE1dVMVR2zWhgGJX8zcB1shAKx41nYqIRw77LNEQdG1Be5DJGgIaxAuuLIOO+dUrSmYCczwH+p9uiE+WitaXexh4PVxpU0Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ei25beopCtm1f87mBuCBJIwvy5p0S1xRGw56QyoxYRI=;
- b=aLdYhfC9mozXwUWUi5QKcJVD0aZYjNt9ao4+IqqKrwWdFhSjmKeO1PSZLe6f+3aZlFEvyf8DwEkflSfch1juvRZnrWqOOBfVW8I4iOxbdliwBNne/XYTY01WTpzUN2dp2W3eplaUZwrI3QxvSqWrrngYAgkfvoDdoVJtTDWv1jo=
-Received: from VE1PR04MB6687.eurprd04.prod.outlook.com (20.179.234.30) by
- VE1PR04MB6749.eurprd04.prod.outlook.com (10.255.118.22) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.24; Mon, 7 Oct 2019 21:36:24 +0000
-Received: from VE1PR04MB6687.eurprd04.prod.outlook.com
- ([fe80::c93:c279:545b:b6b6]) by VE1PR04MB6687.eurprd04.prod.outlook.com
- ([fe80::c93:c279:545b:b6b6%3]) with mapi id 15.20.2327.025; Mon, 7 Oct 2019
- 21:36:24 +0000
-From:   Leo Li <leoyang.li@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>, Ran Wang <ran.wang_1@nxp.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] arm64: dts: lx2160a: Correct CPU core idle state name
-Thread-Topic: [PATCH] arm64: dts: lx2160a: Correct CPU core idle state name
-Thread-Index: AQHVbSoQgKuB1YvE4E++c/2kBBS2fqdPMKwAgACjaGA=
-Date:   Mon, 7 Oct 2019 21:36:24 +0000
-Message-ID: <VE1PR04MB66874D4C179BA0AD091AC3DB8F9B0@VE1PR04MB6687.eurprd04.prod.outlook.com>
-References: <20190917073357.5895-1-ran.wang_1@nxp.com>
- <20191007115104.GF7150@dragon>
-In-Reply-To: <20191007115104.GF7150@dragon>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leoyang.li@nxp.com; 
-x-originating-ip: [64.157.242.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2696280a-3eed-48a3-a3f3-08d74b6e670c
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: VE1PR04MB6749:|VE1PR04MB6749:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB6749E86F6E03C13BB4279AEA8F9B0@VE1PR04MB6749.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:462;
-x-forefront-prvs: 01834E39B7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(376002)(136003)(39860400002)(346002)(13464003)(199004)(189003)(186003)(4326008)(2906002)(6116002)(26005)(55016002)(6436002)(33656002)(64756008)(66946007)(102836004)(66556008)(66476007)(6636002)(76116006)(25786009)(6246003)(66446008)(71200400001)(9686003)(229853002)(7696005)(71190400001)(99286004)(76176011)(305945005)(3846002)(74316002)(53546011)(66066001)(7736002)(256004)(14444005)(6506007)(110136005)(11346002)(446003)(54906003)(476003)(14454004)(486006)(316002)(5660300002)(8936002)(8676002)(81156014)(81166006)(478600001)(52536014)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6749;H:VE1PR04MB6687.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: vfToijxhyQ7YVdx+vuxNSbRq5mLgIbI7WlUPrSNFiCvTe8lC7gnCi00Gy0XgvdlQqQoyIy/1gnyDiOnx1kPcn38JpqVmjUmw9YnkIrQe9QPH6+At+1F6qIfLrwEys/4I+Imj9y46qGveRRSkSOwVAK3m9NeSVwTku2qbcDL9tRYd1ZVleEkjAJ89MGHHXMeqY3ZgW6kV3T0iO8tuKPrlkhWoh9Xe7W2P3vAXNAhJfAgH7V+1oLDCtcP9gkq6r4UwWMsb8B3+Qt1+qx0HPPdS5VUhlmt42fhut93qfrKiZPT2nq/EULS3pR12vTPEuzgOizOGowBKW3y2yBh3ycrxWUNJs3eRNknUSUHxgaEcj4G6mBA1qUZsGuEEpJOCQqcxAfEN5JE0jB2PdJlx2BTaX2XmICv/QSl68hme329+1Oc=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2696280a-3eed-48a3-a3f3-08d74b6e670c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Oct 2019 21:36:24.2332
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: cKe6iu2w3Vt4s2rekkmEKMey0TeksJLfy1WtXEEYWZCJ2QsKbHqo/o9xTLhGQN+VSpklnZWnhq4XUu4FndeS2Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6749
+        Mon, 7 Oct 2019 17:37:00 -0400
+Received: from mail-qk1-f202.google.com ([209.85.222.202]:44898 "EHLO
+        mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729072AbfJGVg7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 17:36:59 -0400
+Received: by mail-qk1-f202.google.com with SMTP id x77so16368333qka.11
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 14:36:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=QgTMZr2OmUuabe3KIXb9kNyafQ3k3yHDnTZLSW+zfsk=;
+        b=PQMklxXaaFN1hpmS0B4NAJed0s83JXAM9YRYx4QPO6yrbi3EyxadcvX5R6zW91q4BF
+         lUrD+AL5nFH6XLzZUhG2CxVgdQhb/6xuve7HVi5HWmQZL7IrZKxAcuS3XqVzSvnVOXLw
+         2uXv8BfTV+FuGxW3Vt+rWQpGgoxfAa1LZw0yGV34FT7l1/rYxNXWVx4d7eX2XQHWMrnJ
+         vEd/FGhA0+MM4knqbjzkMhtDQN/K62FoBy+2nVddVOQd/PMWQyU+wTysxEDWYnmc9npj
+         CnLOfU3HosSbdHKO227nSusWOhTlh0miDCFGFLi2AWl6dNE+gI8xU99+hLUy5YsJ4uB0
+         GjiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=QgTMZr2OmUuabe3KIXb9kNyafQ3k3yHDnTZLSW+zfsk=;
+        b=laEDoVOdYUFnudYuWbh1t2K8YqqOqjPqTf5xLN/lh4GEKeX6WOvhJwLJzDsKkN5Ylj
+         W0fE8Gds21Jf7zcIrKmInlPwA+H/4nWYpbbvXvqWYPNKM6AH6y3QuwCvG1BWJV1EeZRN
+         p6jalVWTwvfrbnDXEA7VwLdFfeBkS9l6/kifhpp6Y1DuMC5gi4n/udlHXVg5mzy9XygE
+         poeVDNb0SChcmMZ1MRK7az2ITd1IDSS+RgD7AL+DX/X5w9lMOkY5plQx74hxW02as1uP
+         ArO1vN+qUyojYB03U6WH7qO+tlSLeFHL0LR/jiEv6d9lvJ7b3kpBRF7Jw1K/xSJgLyDv
+         O0BA==
+X-Gm-Message-State: APjAAAV/qtFPjjNVDvMMf1KVuHhM9LuZyMVOzMqPv6hfo/W5f+tT39+F
+        ak6o7vr3NOXgGRzl+GmWwr6ZXUDeRn9s/w==
+X-Google-Smtp-Source: APXvYqxZZRNk5m/SHt8x4Y7FFyHLCzmJGABTXIi+WNbGw1K82bNMkIv8Qud43BeypC2n98+VmbtQMmT8tdk50g==
+X-Received: by 2002:ac8:1e1a:: with SMTP id n26mr33274499qtl.357.1570484216336;
+ Mon, 07 Oct 2019 14:36:56 -0700 (PDT)
+Date:   Mon,  7 Oct 2019 14:36:33 -0700
+Message-Id: <20191007213633.92565-1-davidgow@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
+Subject: [PATCH] lib/list-test: add a test for the 'list' doubly linked list
+From:   David Gow <davidgow@google.com>
+To:     shuah@kernel.org, brendanhiggins@google.com,
+        akpm@linux-foundation.org, keescook@chromium.org
+Cc:     linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, David Gow <davidgow@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This change adds a KUnit test for the kernel doubly linked list
+implementation in include/linux/list.h
 
+Note that, at present, it only tests the list_ types (not the
+singly-linked hlist_), and does not yet test all of the
+list_for_each_entry* macros (and some related things like
+list_prepare_entry).
 
-> -----Original Message-----
-> From: Shawn Guo <shawnguo@kernel.org>
-> Sent: Monday, October 7, 2019 6:51 AM
-> To: Ran Wang <ran.wang_1@nxp.com>; Leo Li <leoyang.li@nxp.com>
-> Cc: Rob Herring <robh+dt@kernel.org>; Mark Rutland
-> <mark.rutland@arm.com>; linux-arm-kernel@lists.infradead.org;
-> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH] arm64: dts: lx2160a: Correct CPU core idle state nam=
-e
->=20
-> On Tue, Sep 17, 2019 at 03:33:56PM +0800, Ran Wang wrote:
-> > lx2160a support PW15 but not PW20, correct name to avoid confusing.
-> >
-> > Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
->=20
-> Leo, agree?
+This change depends on KUnit, so should be merged via the 'test' branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git/log/?h=test
 
-Ya.  The statement is correct.
+Signed-off-by: David Gow <davidgow@google.com>
+---
+ lib/Kconfig.debug |  12 +
+ lib/Makefile      |   3 +
+ lib/list-test.c   | 711 ++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 726 insertions(+)
+ create mode 100644 lib/list-test.c
 
-Acked-by: Li Yang <leoyang.li@nxp.com>
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index a3017a5dadcd..60691c0aac3e 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -1961,6 +1961,18 @@ config SYSCTL_KUNIT_TEST
+ 
+ 	  If unsure, say N.
+ 
++config LIST_TEST
++	bool "KUnit Test for Kernel Linked-list stuctures"
++	depends on KUNIT
++	help
++	  This builds the linked list unit test, which runs on boot.
++	  It tests that the API and basic functionality of the list_head type
++	  and associated macros.
++	  For more information on KUnit and unit tests in general please refer
++	  to the KUnit documentation in Documentation/dev-tools/kunit/.
++
++	  If unsure, say N.
++
+ config TEST_UDELAY
+ 	tristate "udelay test driver"
+ 	help
+diff --git a/lib/Makefile b/lib/Makefile
+index bba1fd5485f7..309e174ee35d 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -292,3 +292,6 @@ obj-$(CONFIG_GENERIC_LIB_MULDI3) += muldi3.o
+ obj-$(CONFIG_GENERIC_LIB_CMPDI2) += cmpdi2.o
+ obj-$(CONFIG_GENERIC_LIB_UCMPDI2) += ucmpdi2.o
+ obj-$(CONFIG_OBJAGG) += objagg.o
++
++# KUnit tests
++obj-$(CONFIG_LIST_TEST) += list-test.o
+diff --git a/lib/list-test.c b/lib/list-test.c
+new file mode 100644
+index 000000000000..f333e8b0d9fe
+--- /dev/null
++++ b/lib/list-test.c
+@@ -0,0 +1,711 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <kunit/test.h>
++
++#include <linux/list.h>
++
++struct list_test_struct {
++	int data;
++	struct list_head list;
++};
++
++static void list_init_test(struct kunit *test)
++{
++	/* Test the different ways of initialising a list. */
++	struct list_head list1 = LIST_HEAD_INIT(list1);
++	struct list_head list2;
++	LIST_HEAD(list3);
++
++	INIT_LIST_HEAD(&list2);
++
++	/* list_empty_careful() checks both next and prev. */
++	KUNIT_EXPECT_TRUE(test, list_empty_careful(&list1));
++	KUNIT_EXPECT_TRUE(test, list_empty_careful(&list2));
++	KUNIT_EXPECT_TRUE(test, list_empty_careful(&list3));
++}
++
++static void list_add_test(struct kunit *test)
++{
++	struct list_head a, b;
++	LIST_HEAD(list);
++
++	list_add(&a, &list);
++	list_add(&b, &list);
++
++	/* should be [list] -> b -> a */
++	KUNIT_EXPECT_PTR_EQ(test, list.next, &b);
++	KUNIT_EXPECT_PTR_EQ(test, b.prev, &list);
++	KUNIT_EXPECT_PTR_EQ(test, b.next, &a);
++}
++
++static void list_add_tail_test(struct kunit *test)
++{
++	struct list_head a, b;
++	LIST_HEAD(list);
++
++	list_add_tail(&a, &list);
++	list_add_tail(&b, &list);
++
++	/* should be [list] -> a -> b */
++	KUNIT_EXPECT_PTR_EQ(test, list.next, &a);
++	KUNIT_EXPECT_PTR_EQ(test, a.prev, &list);
++	KUNIT_EXPECT_PTR_EQ(test, a.next, &b);
++}
++
++static void list_del_test(struct kunit *test)
++{
++	struct list_head a, b;
++	LIST_HEAD(list);
++
++	list_add_tail(&a, &list);
++	list_add_tail(&b, &list);
++
++	/* before: [list] -> a -> b */
++	list_del(&a);
++
++	/* now: [list] -> b */
++	KUNIT_EXPECT_PTR_EQ(test, list.next, &b);
++	KUNIT_EXPECT_PTR_EQ(test, b.prev, &list);
++}
++
++static void list_replace_test(struct kunit *test)
++{
++	struct list_head a_old, a_new, b;
++	LIST_HEAD(list);
++
++	list_add_tail(&a_old, &list);
++	list_add_tail(&b, &list);
++
++	/* before: [list] -> a_old -> b */
++	list_replace(&a_old, &a_new);
++
++	/* now: [list] -> a_new -> b */
++	KUNIT_EXPECT_PTR_EQ(test, list.next, &a_new);
++	KUNIT_EXPECT_PTR_EQ(test, b.prev, &a_new);
++}
++
++static void list_replace_init_test(struct kunit *test)
++{
++	struct list_head a_old, a_new, b;
++	LIST_HEAD(list);
++
++	list_add_tail(&a_old, &list);
++	list_add_tail(&b, &list);
++
++	/* before: [list] -> a_old -> b */
++	list_replace_init(&a_old, &a_new);
++
++	/* now: [list] -> a_new -> b */
++	KUNIT_EXPECT_PTR_EQ(test, list.next, &a_new);
++	KUNIT_EXPECT_PTR_EQ(test, b.prev, &a_new);
++
++	/* check a_old is empty (initialized) */
++	KUNIT_EXPECT_TRUE(test, list_empty_careful(&a_old));
++}
++
++static void list_swap_test(struct kunit *test)
++{
++	struct list_head a, b;
++	LIST_HEAD(list);
++
++	list_add_tail(&a, &list);
++	list_add_tail(&b, &list);
++
++	/* before: [list] -> a -> b */
++	list_swap(&a, &b);
++
++	/* after: [list] -> b -> a */
++	KUNIT_EXPECT_PTR_EQ(test, &b, list.next);
++	KUNIT_EXPECT_PTR_EQ(test, &a, list.prev);
++
++	KUNIT_EXPECT_PTR_EQ(test, &a, b.next);
++	KUNIT_EXPECT_PTR_EQ(test, &list, b.prev);
++
++	KUNIT_EXPECT_PTR_EQ(test, &list, a.next);
++	KUNIT_EXPECT_PTR_EQ(test, &b, a.prev);
++}
++
++static void list_del_init_test(struct kunit *test)
++{
++	struct list_head a, b;
++	LIST_HEAD(list);
++
++	list_add_tail(&a, &list);
++	list_add_tail(&b, &list);
++
++	/* before: [list] -> a -> b */
++	list_del_init(&a);
++	/* after: [list] -> b, a initialised */
++
++	KUNIT_EXPECT_PTR_EQ(test, list.next, &b);
++	KUNIT_EXPECT_PTR_EQ(test, b.prev, &list);
++	KUNIT_EXPECT_TRUE(test, list_empty_careful(&a));
++}
++
++static void list_move_test(struct kunit *test)
++{
++	struct list_head a, b;
++	LIST_HEAD(list1);
++	LIST_HEAD(list2);
++
++	list_add_tail(&a, &list1);
++	list_add_tail(&b, &list2);
++
++	/* before: [list1] -> a, [list2] -> b */
++	list_move(&a, &list2);
++	/* after: [list1] empty, [list2] -> a -> b */
++
++	KUNIT_EXPECT_TRUE(test, list_empty(&list1));
++
++	KUNIT_EXPECT_PTR_EQ(test, &a, list2.next);
++	KUNIT_EXPECT_PTR_EQ(test, &b, a.next);
++}
++
++static void list_move_tail_test(struct kunit *test)
++{
++	struct list_head a, b;
++	LIST_HEAD(list1);
++	LIST_HEAD(list2);
++
++	list_add_tail(&a, &list1);
++	list_add_tail(&b, &list2);
++
++	/* before: [list1] -> a, [list2] -> b */
++	list_move_tail(&a, &list2);
++	/* after: [list1] empty, [list2] -> b -> a */
++
++	KUNIT_EXPECT_TRUE(test, list_empty(&list1));
++
++	KUNIT_EXPECT_PTR_EQ(test, &b, list2.next);
++	KUNIT_EXPECT_PTR_EQ(test, &a, b.next);
++}
++
++static void list_bulk_move_tail_test(struct kunit *test)
++{
++	struct list_head a, b, c, d, x, y;
++	struct list_head *list1_values[] = { &x, &b, &c, &y };
++	struct list_head *list2_values[] = { &a, &d };
++	struct list_head *ptr;
++	LIST_HEAD(list1);
++	LIST_HEAD(list2);
++	int i = 0;
++
++	list_add_tail(&x, &list1);
++	list_add_tail(&y, &list1);
++
++	list_add_tail(&a, &list2);
++	list_add_tail(&b, &list2);
++	list_add_tail(&c, &list2);
++	list_add_tail(&d, &list2);
++
++	/* before: [list1] -> x -> y, [list2] -> a -> b -> c -> d */
++	list_bulk_move_tail(&y, &b, &c);
++	/* after: [list1] -> x -> b -> c -> y, [list2] -> a -> d */
++
++	list_for_each(ptr, &list1) {
++		KUNIT_EXPECT_PTR_EQ(test, ptr, list1_values[i]);
++		i++;
++	}
++	KUNIT_EXPECT_EQ(test, i, 4);
++	i = 0;
++	list_for_each(ptr, &list2) {
++		KUNIT_EXPECT_PTR_EQ(test, ptr, list2_values[i]);
++		i++;
++	}
++	KUNIT_EXPECT_EQ(test, i, 2);
++}
++
++static void list_is_first_test(struct kunit *test)
++{
++	struct list_head a, b;
++	LIST_HEAD(list);
++
++	list_add_tail(&a, &list);
++	list_add_tail(&b, &list);
++
++	KUNIT_EXPECT_TRUE(test, list_is_first(&a, &list));
++	KUNIT_EXPECT_FALSE(test, list_is_first(&b, &list));
++}
++
++static void list_is_last_test(struct kunit *test)
++{
++	struct list_head a, b;
++	LIST_HEAD(list);
++
++	list_add_tail(&a, &list);
++	list_add_tail(&b, &list);
++
++	KUNIT_EXPECT_FALSE(test, list_is_last(&a, &list));
++	KUNIT_EXPECT_TRUE(test, list_is_last(&b, &list));
++}
++
++static void list_empty_test(struct kunit *test)
++{
++	struct list_head a;
++	LIST_HEAD(list1);
++	LIST_HEAD(list2);
++
++	list_add_tail(&a, &list1);
++
++	KUNIT_EXPECT_FALSE(test, list_empty(&list1));
++	KUNIT_EXPECT_TRUE(test, list_empty(&list2));
++}
++
++static void list_empty_careful_test(struct kunit *test)
++{
++	struct list_head a;
++	LIST_HEAD(list1);
++	LIST_HEAD(list2);
++
++	list_add_tail(&a, &list1);
++
++	KUNIT_EXPECT_FALSE(test, list_empty_careful(&list1));
++	KUNIT_EXPECT_TRUE(test, list_empty_careful(&list2));
++}
++
++static void list_rotate_left_test(struct kunit *test)
++{
++	struct list_head a, b;
++	LIST_HEAD(list);
++
++	list_add_tail(&a, &list);
++	list_add_tail(&b, &list);
++
++	/* before: [list] -> a -> b */
++	list_rotate_left(&list);
++	/* after: [list] -> b -> a */
++
++	KUNIT_EXPECT_PTR_EQ(test, list.next, &b);
++	KUNIT_EXPECT_PTR_EQ(test, b.prev, &list);
++	KUNIT_EXPECT_PTR_EQ(test, b.next, &a);
++}
++
++static void list_rotate_to_front_test(struct kunit *test)
++{
++	struct list_head a, b, c, d;
++	struct list_head *list_values[] = { &c, &d, &a, &b };
++	struct list_head *ptr;
++	LIST_HEAD(list);
++	int i = 0;
++
++	list_add_tail(&a, &list);
++	list_add_tail(&b, &list);
++	list_add_tail(&c, &list);
++	list_add_tail(&d, &list);
++
++	/* before: [list] -> a -> b -> c -> d */
++	list_rotate_to_front(&c, &list);
++	/* after: [list] -> c -> d -> a -> b */
++
++	list_for_each(ptr, &list) {
++		KUNIT_EXPECT_PTR_EQ(test, ptr, list_values[i]);
++		i++;
++	}
++	KUNIT_EXPECT_EQ(test, i, 4);
++}
++
++static void list_is_singular_test(struct kunit *test)
++{
++	struct list_head a, b;
++	LIST_HEAD(list);
++
++	/* [list] empty */
++	KUNIT_EXPECT_FALSE(test, list_is_singular(&list));
++
++	list_add_tail(&a, &list);
++
++	/* [list] -> a */
++	KUNIT_EXPECT_TRUE(test, list_is_singular(&list));
++
++	list_add_tail(&b, &list);
++
++	/* [list] -> a -> b */
++	KUNIT_EXPECT_FALSE(test, list_is_singular(&list));
++}
++
++static void list_cut_position_test(struct kunit *test)
++{
++	struct list_head entries[3], *cur;
++	LIST_HEAD(list1);
++	LIST_HEAD(list2);
++	int i = 0;
++
++	list_add_tail(&entries[0], &list1);
++	list_add_tail(&entries[1], &list1);
++	list_add_tail(&entries[2], &list1);
++
++	/* before: [list1] -> entries[0] -> entries[1] -> entries[2] */
++	list_cut_position(&list2, &list1, &entries[1]);
++	/* after: [list2] -> entries[0] -> entries[1], [list1] -> entries[2] */
++
++	list_for_each(cur, &list2) {
++		KUNIT_EXPECT_PTR_EQ(test, cur, &entries[i]);
++		i++;
++	}
++
++	KUNIT_EXPECT_EQ(test, i, 2);
++
++	list_for_each(cur, &list1) {
++		KUNIT_EXPECT_PTR_EQ(test, cur, &entries[i]);
++		i++;
++	}
++}
++
++static void list_cut_before_test(struct kunit *test)
++{
++	struct list_head entries[3], *cur;
++	LIST_HEAD(list1);
++	LIST_HEAD(list2);
++	int i = 0;
++
++	list_add_tail(&entries[0], &list1);
++	list_add_tail(&entries[1], &list1);
++	list_add_tail(&entries[2], &list1);
++
++	/* before: [list1] -> entries[0] -> entries[1] -> entries[2] */
++	list_cut_before(&list2, &list1, &entries[1]);
++	/* after: [list2] -> entries[0], [list1] -> entries[1] -> entries[2] */
++
++	list_for_each(cur, &list2) {
++		KUNIT_EXPECT_PTR_EQ(test, cur, &entries[i]);
++		i++;
++	}
++
++	KUNIT_EXPECT_EQ(test, i, 1);
++
++	list_for_each(cur, &list1) {
++		KUNIT_EXPECT_PTR_EQ(test, cur, &entries[i]);
++		i++;
++	}
++}
++
++static void list_splice_test(struct kunit *test)
++{
++	struct list_head entries[5], *cur;
++	LIST_HEAD(list1);
++	LIST_HEAD(list2);
++	int i = 0;
++
++	list_add_tail(&entries[0], &list1);
++	list_add_tail(&entries[1], &list1);
++	list_add_tail(&entries[2], &list2);
++	list_add_tail(&entries[3], &list2);
++	list_add_tail(&entries[4], &list1);
++
++	/* before: [list1]->e[0]->e[1]->e[4], [list2]->e[2]->e[3] */
++	list_splice(&list2, &entries[1]);
++	/* after: [list1]->e[0]->e[1]->e[2]->e[3]->e[4], [list2] uninit */
++
++	list_for_each(cur, &list1) {
++		KUNIT_EXPECT_PTR_EQ(test, cur, &entries[i]);
++		i++;
++	}
++
++	KUNIT_EXPECT_EQ(test, i, 5);
++}
++
++static void list_splice_tail_test(struct kunit *test)
++{
++	struct list_head entries[5], *cur;
++	LIST_HEAD(list1);
++	LIST_HEAD(list2);
++	int i = 0;
++
++	list_add_tail(&entries[0], &list1);
++	list_add_tail(&entries[1], &list1);
++	list_add_tail(&entries[2], &list2);
++	list_add_tail(&entries[3], &list2);
++	list_add_tail(&entries[4], &list1);
++
++	/* before: [list1]->e[0]->e[1]->e[4], [list2]->e[2]->e[3] */
++	list_splice_tail(&list2, &entries[4]);
++	/* after: [list1]->e[0]->e[1]->e[2]->e[3]->e[4], [list2] uninit */
++
++	list_for_each(cur, &list1) {
++		KUNIT_EXPECT_PTR_EQ(test, cur, &entries[i]);
++		i++;
++	}
++
++	KUNIT_EXPECT_EQ(test, i, 5);
++}
++
++static void list_splice_init_test(struct kunit *test)
++{
++	struct list_head entries[5], *cur;
++	LIST_HEAD(list1);
++	LIST_HEAD(list2);
++	int i = 0;
++
++	list_add_tail(&entries[0], &list1);
++	list_add_tail(&entries[1], &list1);
++	list_add_tail(&entries[2], &list2);
++	list_add_tail(&entries[3], &list2);
++	list_add_tail(&entries[4], &list1);
++
++	/* before: [list1]->e[0]->e[1]->e[4], [list2]->e[2]->e[3] */
++	list_splice_init(&list2, &entries[1]);
++	/* after: [list1]->e[0]->e[1]->e[2]->e[3]->e[4], [list2] empty */
++
++	list_for_each(cur, &list1) {
++		KUNIT_EXPECT_PTR_EQ(test, cur, &entries[i]);
++		i++;
++	}
++
++	KUNIT_EXPECT_EQ(test, i, 5);
++
++	KUNIT_EXPECT_TRUE(test, list_empty_careful(&list2));
++}
++
++static void list_splice_tail_init_test(struct kunit *test)
++{
++	struct list_head entries[5], *cur;
++	LIST_HEAD(list1);
++	LIST_HEAD(list2);
++	int i = 0;
++
++	list_add_tail(&entries[0], &list1);
++	list_add_tail(&entries[1], &list1);
++	list_add_tail(&entries[2], &list2);
++	list_add_tail(&entries[3], &list2);
++	list_add_tail(&entries[4], &list1);
++
++	/* before: [list1]->e[0]->e[1]->e[4], [list2]->e[2]->e[3] */
++	list_splice_tail_init(&list2, &entries[4]);
++	/* after: [list1]->e[0]->e[1]->e[2]->e[3]->e[4], [list2] empty */
++
++	list_for_each(cur, &list1) {
++		KUNIT_EXPECT_PTR_EQ(test, cur, &entries[i]);
++		i++;
++	}
++
++	KUNIT_EXPECT_EQ(test, i, 5);
++
++	KUNIT_EXPECT_TRUE(test, list_empty_careful(&list2));
++}
++
++static void list_entry_test(struct kunit *test)
++{
++	struct list_test_struct test_struct;
++
++	KUNIT_EXPECT_PTR_EQ(test, &test_struct, list_entry(&(test_struct.list), struct list_test_struct, list));
++}
++
++static void list_first_entry_test(struct kunit *test)
++{
++	struct list_test_struct test_struct1, test_struct2;
++	static LIST_HEAD(list);
++
++	list_add_tail(&test_struct1.list, &list);
++	list_add_tail(&test_struct2.list, &list);
++
++
++	KUNIT_EXPECT_PTR_EQ(test, &test_struct1, list_first_entry(&list, struct list_test_struct, list));
++}
++
++static void list_last_entry_test(struct kunit *test)
++{
++	struct list_test_struct test_struct1, test_struct2;
++	static LIST_HEAD(list);
++
++	list_add_tail(&test_struct1.list, &list);
++	list_add_tail(&test_struct2.list, &list);
++
++
++	KUNIT_EXPECT_PTR_EQ(test, &test_struct2, list_last_entry(&list, struct list_test_struct, list));
++}
++
++static void list_first_entry_or_null_test(struct kunit *test)
++{
++	struct list_test_struct test_struct1, test_struct2;
++	static LIST_HEAD(list);
++
++	KUNIT_EXPECT_FALSE(test, list_first_entry_or_null(&list, struct list_test_struct, list));
++
++	list_add_tail(&test_struct1.list, &list);
++	list_add_tail(&test_struct2.list, &list);
++
++	KUNIT_EXPECT_PTR_EQ(test, &test_struct1, list_first_entry_or_null(&list, struct list_test_struct, list));
++}
++
++static void list_next_entry_test(struct kunit *test)
++{
++	struct list_test_struct test_struct1, test_struct2;
++	static LIST_HEAD(list);
++
++	list_add_tail(&test_struct1.list, &list);
++	list_add_tail(&test_struct2.list, &list);
++
++
++	KUNIT_EXPECT_PTR_EQ(test, &test_struct2, list_next_entry(&test_struct1, list));
++}
++
++static void list_prev_entry_test(struct kunit *test)
++{
++	struct list_test_struct test_struct1, test_struct2;
++	static LIST_HEAD(list);
++
++	list_add_tail(&test_struct1.list, &list);
++	list_add_tail(&test_struct2.list, &list);
++
++
++	KUNIT_EXPECT_PTR_EQ(test, &test_struct1, list_prev_entry(&test_struct2, list));
++}
++
++static void list_for_each_test(struct kunit *test)
++{
++	struct list_head entries[3], *cur;
++	LIST_HEAD(list);
++	int i = 0;
++
++	list_add_tail(&entries[0], &list);
++	list_add_tail(&entries[1], &list);
++	list_add_tail(&entries[2], &list);
++
++	list_for_each(cur, &list) {
++		KUNIT_EXPECT_PTR_EQ(test, cur, &entries[i]);
++		i++;
++	}
++
++	KUNIT_EXPECT_EQ(test, i, 3);
++}
++
++static void list_for_each_prev_test(struct kunit *test)
++{
++	struct list_head entries[3], *cur;
++	LIST_HEAD(list);
++	int i = 2;
++
++	list_add_tail(&entries[0], &list);
++	list_add_tail(&entries[1], &list);
++	list_add_tail(&entries[2], &list);
++
++	list_for_each_prev(cur, &list) {
++		KUNIT_EXPECT_PTR_EQ(test, cur, &entries[i]);
++		i--;
++	}
++
++	KUNIT_EXPECT_EQ(test, i, -1);
++}
++
++static void list_for_each_safe_test(struct kunit *test)
++{
++	struct list_head entries[3], *cur, *n;
++	LIST_HEAD(list);
++	int i = 0;
++
++
++	list_add_tail(&entries[0], &list);
++	list_add_tail(&entries[1], &list);
++	list_add_tail(&entries[2], &list);
++
++	list_for_each_safe(cur, n, &list) {
++		KUNIT_EXPECT_PTR_EQ(test, cur, &entries[i]);
++		list_del(&entries[i]);
++		i++;
++	}
++
++	KUNIT_EXPECT_EQ(test, i, 3);
++}
++
++static void list_for_each_prev_safe_test(struct kunit *test)
++{
++	struct list_head entries[3], *cur, *n;
++	LIST_HEAD(list);
++	int i = 2;
++
++	list_add_tail(&entries[0], &list);
++	list_add_tail(&entries[1], &list);
++	list_add_tail(&entries[2], &list);
++
++	list_for_each_prev_safe(cur, n, &list) {
++		KUNIT_EXPECT_PTR_EQ(test, cur, &entries[i]);
++		list_del(&entries[i]);
++		i--;
++	}
++
++	KUNIT_EXPECT_EQ(test, i, -1);
++}
++
++static void list_for_each_entry_test(struct kunit *test)
++{
++	struct list_test_struct entries[5], *cur;
++	static LIST_HEAD(list);
++	int i = 0;
++
++	for (i = 0; i < 5; ++i) {
++		entries[i].data = i;
++		list_add_tail(&entries[i].list, &list);
++	}
++
++	i = 0;
++
++	list_for_each_entry(cur, &list, list) {
++		KUNIT_EXPECT_EQ(test, cur->data, i);
++		i++;
++	}
++}
++
++static void list_for_each_entry_reverse_test(struct kunit *test)
++{
++	struct list_test_struct entries[5], *cur;
++	static LIST_HEAD(list);
++	int i = 0;
++
++	for (i = 0; i < 5; ++i) {
++		entries[i].data = i;
++		list_add_tail(&entries[i].list, &list);
++	}
++
++	i = 4;
++
++	list_for_each_entry_reverse(cur, &list, list) {
++		KUNIT_EXPECT_EQ(test, cur->data, i);
++		i--;
++	}
++}
++
++static struct kunit_case list_test_cases[] = {
++	KUNIT_CASE(list_init_test),
++	KUNIT_CASE(list_add_test),
++	KUNIT_CASE(list_add_tail_test),
++	KUNIT_CASE(list_del_test),
++	KUNIT_CASE(list_replace_test),
++	KUNIT_CASE(list_replace_init_test),
++	KUNIT_CASE(list_swap_test),
++	KUNIT_CASE(list_del_init_test),
++	KUNIT_CASE(list_move_test),
++	KUNIT_CASE(list_move_tail_test),
++	KUNIT_CASE(list_bulk_move_tail_test),
++	KUNIT_CASE(list_is_first_test),
++	KUNIT_CASE(list_is_last_test),
++	KUNIT_CASE(list_empty_test),
++	KUNIT_CASE(list_empty_careful_test),
++	KUNIT_CASE(list_rotate_left_test),
++	KUNIT_CASE(list_rotate_to_front_test),
++	KUNIT_CASE(list_is_singular_test),
++	KUNIT_CASE(list_cut_position_test),
++	KUNIT_CASE(list_cut_before_test),
++	KUNIT_CASE(list_splice_test),
++	KUNIT_CASE(list_splice_tail_test),
++	KUNIT_CASE(list_splice_init_test),
++	KUNIT_CASE(list_splice_tail_init_test),
++	KUNIT_CASE(list_entry_test),
++	KUNIT_CASE(list_first_entry_test),
++	KUNIT_CASE(list_last_entry_test),
++	KUNIT_CASE(list_first_entry_or_null_test),
++	KUNIT_CASE(list_next_entry_test),
++	KUNIT_CASE(list_prev_entry_test),
++	KUNIT_CASE(list_for_each_test),
++	KUNIT_CASE(list_for_each_prev_test),
++	KUNIT_CASE(list_for_each_safe_test),
++	KUNIT_CASE(list_for_each_prev_safe_test),
++	KUNIT_CASE(list_for_each_entry_test),
++	KUNIT_CASE(list_for_each_entry_reverse_test),
++	{},
++};
++
++static struct kunit_suite list_test_module = {
++	.name = "list-test",
++	.test_cases = list_test_cases,
++};
++
++kunit_test_suite(list_test_module);
+-- 
+2.23.0.581.g78d2f28ef7-goog
 
->=20
-> Shawn
->=20
-> > ---
-> >  arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 36 +++++++++++++-----=
--
-> -------
-> >  1 file changed, 18 insertions(+), 18 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> > index 408e0ec..b032f38 100644
-> > --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> > @@ -33,7 +33,7 @@
-> >  			i-cache-line-size =3D <64>;
-> >  			i-cache-sets =3D <192>;
-> >  			next-level-cache =3D <&cluster0_l2>;
-> > -			cpu-idle-states =3D <&cpu_pw20>;
-> > +			cpu-idle-states =3D <&cpu_pw15>;
-> >  		};
-> >
-> >  		cpu@1 {
-> > @@ -49,7 +49,7 @@
-> >  			i-cache-line-size =3D <64>;
-> >  			i-cache-sets =3D <192>;
-> >  			next-level-cache =3D <&cluster0_l2>;
-> > -			cpu-idle-states =3D <&cpu_pw20>;
-> > +			cpu-idle-states =3D <&cpu_pw15>;
-> >  		};
-> >
-> >  		cpu@100 {
-> > @@ -65,7 +65,7 @@
-> >  			i-cache-line-size =3D <64>;
-> >  			i-cache-sets =3D <192>;
-> >  			next-level-cache =3D <&cluster1_l2>;
-> > -			cpu-idle-states =3D <&cpu_pw20>;
-> > +			cpu-idle-states =3D <&cpu_pw15>;
-> >  		};
-> >
-> >  		cpu@101 {
-> > @@ -81,7 +81,7 @@
-> >  			i-cache-line-size =3D <64>;
-> >  			i-cache-sets =3D <192>;
-> >  			next-level-cache =3D <&cluster1_l2>;
-> > -			cpu-idle-states =3D <&cpu_pw20>;
-> > +			cpu-idle-states =3D <&cpu_pw15>;
-> >  		};
-> >
-> >  		cpu@200 {
-> > @@ -97,7 +97,7 @@
-> >  			i-cache-line-size =3D <64>;
-> >  			i-cache-sets =3D <192>;
-> >  			next-level-cache =3D <&cluster2_l2>;
-> > -			cpu-idle-states =3D <&cpu_pw20>;
-> > +			cpu-idle-states =3D <&cpu_pw15>;
-> >  		};
-> >
-> >  		cpu@201 {
-> > @@ -113,7 +113,7 @@
-> >  			i-cache-line-size =3D <64>;
-> >  			i-cache-sets =3D <192>;
-> >  			next-level-cache =3D <&cluster2_l2>;
-> > -			cpu-idle-states =3D <&cpu_pw20>;
-> > +			cpu-idle-states =3D <&cpu_pw15>;
-> >  		};
-> >
-> >  		cpu@300 {
-> > @@ -129,7 +129,7 @@
-> >  			i-cache-line-size =3D <64>;
-> >  			i-cache-sets =3D <192>;
-> >  			next-level-cache =3D <&cluster3_l2>;
-> > -			cpu-idle-states =3D <&cpu_pw20>;
-> > +			cpu-idle-states =3D <&cpu_pw15>;
-> >  		};
-> >
-> >  		cpu@301 {
-> > @@ -145,7 +145,7 @@
-> >  			i-cache-line-size =3D <64>;
-> >  			i-cache-sets =3D <192>;
-> >  			next-level-cache =3D <&cluster3_l2>;
-> > -			cpu-idle-states =3D <&cpu_pw20>;
-> > +			cpu-idle-states =3D <&cpu_pw15>;
-> >  		};
-> >
-> >  		cpu@400 {
-> > @@ -161,7 +161,7 @@
-> >  			i-cache-line-size =3D <64>;
-> >  			i-cache-sets =3D <192>;
-> >  			next-level-cache =3D <&cluster4_l2>;
-> > -			cpu-idle-states =3D <&cpu_pw20>;
-> > +			cpu-idle-states =3D <&cpu_pw15>;
-> >  		};
-> >
-> >  		cpu@401 {
-> > @@ -177,7 +177,7 @@
-> >  			i-cache-line-size =3D <64>;
-> >  			i-cache-sets =3D <192>;
-> >  			next-level-cache =3D <&cluster4_l2>;
-> > -			cpu-idle-states =3D <&cpu_pw20>;
-> > +			cpu-idle-states =3D <&cpu_pw15>;
-> >  		};
-> >
-> >  		cpu@500 {
-> > @@ -193,7 +193,7 @@
-> >  			i-cache-line-size =3D <64>;
-> >  			i-cache-sets =3D <192>;
-> >  			next-level-cache =3D <&cluster5_l2>;
-> > -			cpu-idle-states =3D <&cpu_pw20>;
-> > +			cpu-idle-states =3D <&cpu_pw15>;
-> >  		};
-> >
-> >  		cpu@501 {
-> > @@ -209,7 +209,7 @@
-> >  			i-cache-line-size =3D <64>;
-> >  			i-cache-sets =3D <192>;
-> >  			next-level-cache =3D <&cluster5_l2>;
-> > -			cpu-idle-states =3D <&cpu_pw20>;
-> > +			cpu-idle-states =3D <&cpu_pw15>;
-> >  		};
-> >
-> >  		cpu@600 {
-> > @@ -225,7 +225,7 @@
-> >  			i-cache-line-size =3D <64>;
-> >  			i-cache-sets =3D <192>;
-> >  			next-level-cache =3D <&cluster6_l2>;
-> > -			cpu-idle-states =3D <&cpu_pw20>;
-> > +			cpu-idle-states =3D <&cpu_pw15>;
-> >  		};
-> >
-> >  		cpu@601 {
-> > @@ -241,7 +241,7 @@
-> >  			i-cache-line-size =3D <64>;
-> >  			i-cache-sets =3D <192>;
-> >  			next-level-cache =3D <&cluster6_l2>;
-> > -			cpu-idle-states =3D <&cpu_pw20>;
-> > +			cpu-idle-states =3D <&cpu_pw15>;
-> >  		};
-> >
-> >  		cpu@700 {
-> > @@ -257,7 +257,7 @@
-> >  			i-cache-line-size =3D <64>;
-> >  			i-cache-sets =3D <192>;
-> >  			next-level-cache =3D <&cluster7_l2>;
-> > -			cpu-idle-states =3D <&cpu_pw20>;
-> > +			cpu-idle-states =3D <&cpu_pw15>;
-> >  		};
-> >
-> >  		cpu@701 {
-> > @@ -273,7 +273,7 @@
-> >  			i-cache-line-size =3D <64>;
-> >  			i-cache-sets =3D <192>;
-> >  			next-level-cache =3D <&cluster7_l2>;
-> > -			cpu-idle-states =3D <&cpu_pw20>;
-> > +			cpu-idle-states =3D <&cpu_pw15>;
-> >  		};
-> >
-> >  		cluster0_l2: l2-cache0 {
-> > @@ -340,9 +340,9 @@
-> >  			cache-level =3D <2>;
-> >  		};
-> >
-> > -		cpu_pw20: cpu-pw20 {
-> > +		cpu_pw15: cpu-pw15 {
-> >  			compatible =3D "arm,idle-state";
-> > -			idle-state-name =3D "PW20";
-> > +			idle-state-name =3D "PW15";
-> >  			arm,psci-suspend-param =3D <0x0>;
-> >  			entry-latency-us =3D <2000>;
-> >  			exit-latency-us =3D <2000>;
-> > --
-> > 2.7.4
-> >
