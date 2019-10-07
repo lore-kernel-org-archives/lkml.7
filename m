@@ -2,140 +2,157 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D89F7C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F67C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B56DD20679
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:52:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEAD720679
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:53:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jFJtBjNc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728459AbfJGPw6 (ORCPT
+        id S1728562AbfJGPxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 11:52:58 -0400
-Received: from muru.com ([72.249.23.125]:35610 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727912AbfJGPw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:52:58 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 5F8B980A5;
-        Mon,  7 Oct 2019 15:53:29 +0000 (UTC)
-Date:   Mon, 7 Oct 2019 08:52:52 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Merlijn Wajer <merlijn@wizzup.org>, Adam Ford <aford173@gmail.com>,
-        Philipp Rossak <embed3d@gmail.com>,
-        =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>,
-        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-        moaz korena <moaz@korena.xyz>,
-        James Hilliard <james.hilliard1@gmail.com>,
-        kernel@pyra-handheld.com,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, maemo-leste@lists.dyne.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Tero Kristo <t-kristo@ti.com>
-Subject: Re: Lay common foundation to make PVR/SGX work without hacks on
- OMAP34xx, OMAP36xx, AM335x and potentially OMAP4, OMAP5
-Message-ID: <20191007155252.GQ5610@atomide.com>
-References: <d0cbfaaf-813e-8803-f90b-931a38396750@wizzup.org>
- <3A03FF16-C203-43ED-AEEF-0260F6B3331A@goldelico.com>
- <3b0a5e78-c4c2-1963-bac7-b49496a1e9b9@wizzup.org>
- <1F942AAB-1648-46C0-ADD5-90F6898778BE@goldelico.com>
- <84cac9b8-0eff-33f8-464d-4f8045d7db19@wizzup.org>
- <BFAA7FA6-A352-476A-99F9-02EA663A6AAD@goldelico.com>
- <CAHCN7x+87xTsA3MeHy7kUWU0SU3X8HmSc2wbk5gKvYm1dRNe6A@mail.gmail.com>
- <04809E3E-A690-4931-B949-1CFDAF407C14@goldelico.com>
- <ebb50954-b456-4dab-0765-9dfa06c67075@wizzup.org>
- <C3A56737-6187-4B31-8697-3A02DD164429@goldelico.com>
+        Mon, 7 Oct 2019 11:53:10 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:42725 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727912AbfJGPxK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 11:53:10 -0400
+Received: by mail-io1-f65.google.com with SMTP id n197so29606537iod.9;
+        Mon, 07 Oct 2019 08:53:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Y0+KKOJG+TisZYwANPRDxoGgI9F6Pi0RrxyV+mcRIhQ=;
+        b=jFJtBjNcMzZT/dfV5DNd+SYdyhKORKldayK714j3ON/TvF4lEz54VZg0ohvI4G5pqF
+         lAWdRi7RPMXntGegumJYq6RIQrmDTg4porBhN27Lbv7Sk/7cJgqCZaCS2KEFkh/DrEaU
+         LG9AUPnMp1r3a8dLLYjdd+V1jld8BVZ4BY6JSnKVz+X5a0nXZfoiM5bwiQsJKqde/8BI
+         c6rJAW38SVFX+bvt4NqsXXg8Ra1WppUYCjZnx8ruBLTXBoEM9uhU1ezFtSRJV7TsPrkG
+         f5rSu/ObEDrsieCcbZrOtmnVt1Yi4ZHZt2KRd5ih6mqMcCroRAGJqtnXERea7kprkZ4t
+         JJeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Y0+KKOJG+TisZYwANPRDxoGgI9F6Pi0RrxyV+mcRIhQ=;
+        b=SyqkjtRaNyBk/ZxH/yFtIw+prJM/i1k6eICvIADoz8sivbJ2O4xXmPWUY6HPm+h/kM
+         jnWHe96eAmE70ZZVEEK1v2qjcxdp9FBh5Q4tZshDTDc0yZjwZF/mxqHdJpNKj3fX7UbJ
+         7QC2qhst52idZQFt2+OyyotrpV5v1h275mslSEVWyubNViAyxAk74efBddVrYj5SmQ+A
+         J9arjHLa3oR0PjcPdVaWgBGi6q9KwNHQGdFhiayEfxlz9IXuj1RIdbPcIcS+Y5k7apob
+         pGbyPXd11ArtPPXIsgi3Z5qEBLebukzgW+8ZSQTjlAp/Aw3z1+Yo4galRaaHnyJympPK
+         +Z3A==
+X-Gm-Message-State: APjAAAWCPZLwABn6cLhN57LXQqV3jqAc5MgMNPejqmPGK/7csskqJy3m
+        DsqqpKfIsuqSZGVc61RTQX/Yammf6OvHva/Z+TA=
+X-Google-Smtp-Source: APXvYqwUmomEUUz3nspO76GFofpEr9Y5lkrzEIBCKloUqkS8g5O/eiwEu29XJ6ktN11Av8YdVnKFAgPHLckXUaGYYDE=
+X-Received: by 2002:a02:245:: with SMTP id 66mr2498022jau.30.1570463588898;
+ Mon, 07 Oct 2019 08:53:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <C3A56737-6187-4B31-8697-3A02DD164429@goldelico.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191007131649.1768-1-linux.amoon@gmail.com> <20191007131649.1768-6-linux.amoon@gmail.com>
+ <74ab98c7-0071-60e9-7613-56d15ad8c0ab@baylibre.com>
+In-Reply-To: <74ab98c7-0071-60e9-7613-56d15ad8c0ab@baylibre.com>
+From:   Anand Moon <linux.amoon@gmail.com>
+Date:   Mon, 7 Oct 2019 21:22:56 +0530
+Message-ID: <CANAwSgRStPUi=naKOw+E=X-b699DnZ0Q0hYAGrUB8VKtN-fFqQ@mail.gmail.com>
+Subject: Re: [RFCv1 5/5] arm64/ARM: configs: Change CONFIG_PWM_MESON from m to y
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic@lists.infradead.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Neil,
 
-* H. Nikolaus Schaller <hns@goldelico.com> [191005 16:59]:
-> Hi all,
-> with the arrival of v5.4-rc1 some of Tony's sysc patches have arrived
-> upstream, so we do no longer need them here.
-> 
-> Therefore, I have rebased my drivers/staging/pvr driver [1] and fixed some
-> more issues:
-> * omap4 build only needs to distinguish between omap4420/30/60 and omap4470,
->   because the latter has an sgx544 inside and the other sgx540
->   This is solved by creating a new omap4470.dts
-> * I have added proper reg values and interrupts to the omap4 device
->   tree node of the sgx (child node of the target-module)
-> * some updates to my sgxdump and sgxdemo scripts (assuming simple
->   Debian Stretch rootfs)
-> * James Hilliard has contributed a fix for osfunc.c
-> * omap2plus also needs to be configured for STAGING and PREEMPT
->   to be able to compile the driver
-> * I have added the __always_inline fix [2] which is needed for v5.4 with
->   CONFIG_CC_OPTIMIZE_FOR_SIZE=y (which I are enabled on the Letux builds)
-> 
-> Unfortunately Tero's rstctrl patches did not yet make it upstream (or even
-> linux-next) so I also have a copy in this branch.
-> 
-> Results of first testing are:
-> * OMAP3530 (OpenPandora, BeagleBoard C): fails with
-> [  559.247558] PVR_K:(Error): SysLocateDevices: platform_get_resource failed
-> 
-> * DM3730 (GTA04, BeagleBoard XM): kernel module loads
-> 
-> * OMAP4460 (Pandaboard ES): kernel module loads
-> 
-> * AM335x (BeagleBoneBlack): reports a problem with omap_reset_deassert:
-> [  204.246706] omap_reset_deassert: timedout waiting for gfx:0
+On Mon, 7 Oct 2019 at 19:55, Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> On 07/10/2019 15:16, Anand Moon wrote:
+> > Using microSD card we cannot get the mainline kernel to boot
+>
+> What's the link with microSD card here ?
 
-Please try with Tero's current github branch at github.com/t-kristo/linux-pm.git
-5.4-rc1-ipc from few days ago, the earlier versions had still issues.
+Well I thought that the PWM failed stop's booting further on linux kernel.
+But looking into kernelcli.org it seem to be working fine, but not at my end.
+[0] https://storage.kernelci.org/media/master/v5.4-rc1-82-gc0e284ccfeda/arm64/defconfig/gcc-8/lab-baylibre/boot-meson-g12b-odroid-n2.txt
 
-> * OMAP5 (Pyra): fails to enable the clocks (did work with the previous version)
-> [  304.140363] clock-controller:clk:0000:0: failed to enable
-> [  304.147388] PVR_K:(Error): EnableSGXClocks: pm_runtime_get_sync failed (16)
+>
+> > using mainline u-boot it fails with below logs.
+> > Build PWM_MESSON as build-in solve the issue.
+> >
+> > [    1.569240] meson-gx-mmc ffe05000.sd: Got CD GPIO
+> > [    1.599227] pwm-regulator regulator-vddcpu-a: Failed to get PWM: -517
+> > [    1.600605] pwm-regulator regulator-vddcpu-b: Failed to get PWM: -517
+> > [    1.607166] pwm-regulator regulator-vddcpu-a: Failed to get PWM: -517
+> > [    1.613273] pwm-regulator regulator-vddcpu-b: Failed to get PWM: -517
+> > [    1.619931] hctosys: unable to open rtc device (rtc0)
+> >
+> > Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> > Cc: Jerome Brunet <jbrunet@baylibre.com>
+> > Cc: Neil Armstrong <narmstrong@baylibre.com>
+> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> > ---
+> > Odroid N2 Schematics says "GPIOC_6 should not pulled low if GPIOC is not
+> > work as SDCARD"
+>
+> Sorry, what's the link with the PWM build-in, and your case ?
+>
 
-Hmm no idea what might be up with this one. Did some clkctrl clock
-fixes maybe cause a regression here? Tero do you have any ideas?
+Sorry I linked two issues with this commit message.
 
-> * OMAP5 with omap2plus_defconfig:
-> root@letux:~# echo on > $(find /sys -name control | grep \/5600)
-> [  213.490926] clock-controller:clk:0000:0: failed to enable
-> root@letux:~# 
-> 
-> * pvrsrvctl --start --no-module:
->   reports (where the kernel module loads) that the uKernel does not run
-> 
-> So I have several ideas what the reasons for the problems on the non-omap5
-> devices could be:
-> * initial code may have some omap5 specific hack inside
-> * or has omap5 specific magic constants
-> * uKernel may "know" on which platform it runs and
->   we would need differently patched user-space code
->   for each one
-> * omap5 has a dual core sgx544 while the other
->   have single core
-> * the register address translation is not yet correct and
->   this inhibits communicating of the user-space libs
->   with the uKernel
-> 
-> Maybe, if someone can point me to a complete and working BeagleBone source
-> tree (any kernel release) which makes use of 1.14.3699939 SDK, I could compare
-> code and address setup to find what makes the difference.
+> This comment is linked to the comment in the datasheet:
+> ""
+> If GPIOC is not work as SDIO port, please do not pull CARD_DET(GPIOC_6) low when system booting
+> up, to avoid romcode trying to boot from SD CARD.
+> ""
+> Seems pretty explicit for me.
+>
 
-Regards,
+Ok I will recheck this at my end.
 
-Tony
+> > Is their any other approch to help resolve this issue.
+> >
+> > Boot log failed with cold boot:
+> > [0] https://pastebin.com/cEtWq2iX
+> > ---
+> >  arch/arm64/configs/defconfig | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> > index c9a867ac32d4..72f6a7dca0d6 100644
+> > --- a/arch/arm64/configs/defconfig
+> > +++ b/arch/arm64/configs/defconfig
+> > @@ -774,7 +774,7 @@ CONFIG_MPL3115=m
+> >  CONFIG_PWM=y
+> >  CONFIG_PWM_BCM2835=m
+> >  CONFIG_PWM_CROS_EC=m
+> > -CONFIG_PWM_MESON=m
+> > +CONFIG_PWM_MESON=y
+> >  CONFIG_PWM_RCAR=m
+> >  CONFIG_PWM_ROCKCHIP=y
+> >  CONFIG_PWM_SAMSUNG=y
+> >
+>
+> For these changes without the microSD fail description in the commit log :
+> Acked-by: Neil Armstrong <narmstrong@baylibre.com>
 
-> [1]: https://github.com/openpvrsgx-devgroup/linux_openpvrsgx/commits/letux-pvr
-> [2]: https://lkml.org/lkml/2019/10/2/201
+Thanks. I will rephrase this without linking the microSD card, with
+better commit message.
+
+Best Regards
+-Anand
