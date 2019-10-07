@@ -2,178 +2,180 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A11B6C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF3CC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E45120835
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:44:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEDB821721
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:44:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LmCJHtNQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729307AbfJGVoA (ORCPT
+        id S1729409AbfJGVoc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 17:44:00 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:36360 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728654AbfJGVn7 (ORCPT
+        Mon, 7 Oct 2019 17:44:32 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:42938 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728654AbfJGVoc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 17:43:59 -0400
-Received: from dread.disaster.area (pa49-181-226-196.pa.nsw.optusnet.com.au [49.181.226.196])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 4A31A363187;
-        Tue,  8 Oct 2019 08:43:55 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.2)
-        (envelope-from <david@fromorbit.com>)
-        id 1iHanK-0001ig-0E; Tue, 08 Oct 2019 08:43:54 +1100
-Date:   Tue, 8 Oct 2019 08:43:53 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/11] iomap: copy the xfs writeback code to iomap.c
-Message-ID: <20191007214353.GZ16973@dread.disaster.area>
-References: <20191006154608.24738-1-hch@lst.de>
- <20191006154608.24738-3-hch@lst.de>
+        Mon, 7 Oct 2019 17:44:32 -0400
+Received: by mail-lf1-f66.google.com with SMTP id c195so10358284lfg.9;
+        Mon, 07 Oct 2019 14:44:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Q+EvvC8b0zqiykxshjm1BmldMhp8/DtfGeGC5gSB2EY=;
+        b=LmCJHtNQEhdw1G9PWFX5SOjwOSJDNkIQ5VwqrayOnBlTyDci9lj1krdHZrkQRQ6LDx
+         QBgPeMh7utDKXxGHMpwbKk8NOsJ+9lzf59eOWOg1EnZfWTSI7DiVF+sTvxRfnHePJkvj
+         54dwwXLJEDOwZhNkRvxDSOMCV20jYGfYQtJ4QzzMNRGlvxODa1Ge27SJSdJdve9COG9A
+         bMriAlSQguyO43fPdCwKBmmaQbzSHy+Hcoz8bSSCmG1cxB7jvkYMOkwytS0UOl6ncBT6
+         A66n2/cY7C/L1eDmLjJ4FCwqN8ALgWcCRbWw1Bg+3U8Kx2ex+uWM1rEj+0yz2i73o6bk
+         HqeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Q+EvvC8b0zqiykxshjm1BmldMhp8/DtfGeGC5gSB2EY=;
+        b=TECdmJiZgvPie8shsvg4QP9UXUrbm1otD/GQlvNkK1C1c3wLaMVKMRA9eikOqbWlCs
+         2r+f9zviAKIQrL5tRHBXJAO/o+Zo4Gqg1MrxKS8cxiBjsEJLwQL7q5kyaXjg2bUrrtSx
+         2YMz3u/o4iMh6a3Z+eAOiqEiJJPMjQeLX1SWNrcWrGsz480HzD/vaE7LtcYXIJ3Vhfdc
+         zvlodi3D7/JwFMgqnSuGUsU12CTADif8eZaAtP78kId+zjQROUDDEGZMMyp7ExTjKpbW
+         oH0hpFF40qBuXNZKmswgY9GWN7kDNCXBay4YAGzC8pFAfMmu2pZJtW4x6vsb+Efn7RYF
+         3eXA==
+X-Gm-Message-State: APjAAAXChHaJec5C9iNWrF4uwSdtCUKDPNsHDs9KCvmMSBxX7/MXKeNT
+        +rvlzUHr0OiGZcoIB/KEb3QS2y6VEGE=
+X-Google-Smtp-Source: APXvYqw/Mh6WzjTN7T5NzOtncMbI+KpytKWLrBJjdkCNEekX43NoCbgOWJENbu6ty2QuTYRUOmKB6w==
+X-Received: by 2002:a19:c14a:: with SMTP id r71mr17745983lff.55.1570484669769;
+        Mon, 07 Oct 2019 14:44:29 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id k15sm3404755ljg.65.2019.10.07.14.44.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2019 14:44:28 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Mon, 7 Oct 2019 23:44:20 +0200
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        Daniel Wagner <dwagner@suse.de>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] mm: vmalloc: Use the vmap_area_lock to protect
+ ne_fit_preload_node
+Message-ID: <20191007214420.GA3212@pc636>
+References: <20191003090906.1261-1-dwagner@suse.de>
+ <20191004153728.c5xppuqwqcwecbe6@linutronix.de>
+ <20191004162041.GA30806@pc636>
+ <20191004163042.jpiau6dlxqylbpfh@linutronix.de>
+ <20191007083037.zu3n5gindvo7damg@beryllium.lan>
+ <20191007105631.iau6zhxqjeuzajnt@linutronix.de>
+ <20191007162330.GA26503@pc636>
+ <20191007163443.6owts5jp2frum7cy@beryllium.lan>
+ <20191007165611.GA26964@pc636>
+ <20191007173644.hiiukrl2xryziro3@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191006154608.24738-3-hch@lst.de>
+In-Reply-To: <20191007173644.hiiukrl2xryziro3@linutronix.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
-        a=dRuLqZ1tmBNts2YiI0zFQg==:117 a=dRuLqZ1tmBNts2YiI0zFQg==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=XobE76Q3jBoA:10
-        a=yPCof4ZbAAAA:8 a=7-415B0cAAAA:8 a=zNbEbow88BXXJ6IC_AYA:9
-        a=CjuIK1q_8ugA:10 a=igBNqPyMv6gA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 06, 2019 at 05:45:59PM +0200, Christoph Hellwig wrote:
-> Takes the xfs writeback code and copies it to iomap.c.  A new structure
-> with three methods is added as the abstraction from the generic
-> writeback code to the file system.  These methods are used to map
-> blocks, submit an ioend, and cancel a page that encountered an error
-> before it was added to an ioend.
+On Mon, Oct 07, 2019 at 07:36:44PM +0200, Sebastian Andrzej Siewior wrote:
+> On 2019-10-07 18:56:11 [+0200], Uladzislau Rezki wrote:
+> > Actually there is a high lock contention on vmap_area_lock, because it
+> > is still global. You can have a look at last slide:
+> > 
+> > https://linuxplumbersconf.org/event/4/contributions/547/attachments/287/479/Reworking_of_KVA_allocator_in_Linux_kernel.pdf
+> > 
+> > so this change will make it a bit higher. From the other hand i agree
+> > that for rt it should be fixed, probably it could be done like:
+> > 
+> > ifdef PREEMPT_RT
+> >     migrate_disable()
+> > #else
+> >     preempt_disable()
+> > ...
+> > 
+> > but i am not sure it is good either.
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> [darrick: create the new iomap code, we'll delete the xfs code separately]
-> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-.....
+> What is to be expected on average? Is the lock acquired and then
+> released again because the slot is empty and memory needs to be
+> allocated or can it be assumed that this hardly happens? 
+> 
+The lock is not released(we are not allowed), instead we just try
+to allocate with GFP_NOWAIT flag. It can happen if preallocation
+has been failed with GFP_KERNEL flag earlier:
 
-> +static int
-> +iomap_ioend_compare(void *priv, struct list_head *a, struct list_head *b)
-> +{
-> +	struct iomap_ioend *ia, *ib;
-> +
-> +	ia = container_of(a, struct iomap_ioend, io_list);
-> +	ib = container_of(b, struct iomap_ioend, io_list);
-> +	if (ia->io_offset < ib->io_offset)
-> +		return -1;
-> +	else if (ia->io_offset > ib->io_offset)
-> +		return 1;
-> +	return 0;
+<snip>
+...
+ } else if (type == NE_FIT_TYPE) {
+  /*
+   * Split no edge of fit VA.
+   *
+   *     |       |
+   *   L V  NVA  V R
+   * |---|-------|---|
+   */
+  lva = __this_cpu_xchg(ne_fit_preload_node, NULL);
+  if (unlikely(!lva)) {
+      ...
+      lva = kmem_cache_alloc(vmap_area_cachep, GFP_NOWAIT);
+      ...
+  }
+...
+<snip>
 
-No need for the else here.
+How often we need an extra object for split purpose, the answer
+is it depends on. For example fork() path falls to that pattern.
 
-> +/*
-> + * Test to see if we have an existing ioend structure that we could append to
-> + * first, otherwise finish off the current ioend and start another.
-> + */
-> +static void
-> +iomap_add_to_ioend(struct inode *inode, loff_t offset, struct page *page,
-> +		struct iomap_page *iop, struct iomap_writepage_ctx *wpc,
-> +		struct writeback_control *wbc, struct list_head *iolist)
-> +{
-> +	sector_t sector = iomap_sector(&wpc->iomap, offset);
-> +	unsigned len = i_blocksize(inode);
-> +	unsigned poff = offset & (PAGE_SIZE - 1);
-> +	bool merged, same_page = false;
-> +
-> +	if (!wpc->ioend ||
-> +	    (wpc->iomap.flags & IOMAP_F_SHARED) !=
-> +	    (wpc->ioend->io_flags & IOMAP_F_SHARED) ||
+I think we can assume that migration can hardly ever happen and
+that should be considered as rare case. Thus we can do a prealoading
+without worrying much if a it occurs:
 
-This second line of the comparison should be indented further as it
-is a continuation of the the previous line's log statement, not a
-unique logic statement by itself.
+<snip>
+urezki@pc636:~/data/ssd/coding/linux-stable$ git diff
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index e92ff5f7dd8b..bc782edcd1fd 100644 
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -1089,20 +1089,16 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
+         * Even if it fails we do not really care about that. Just proceed
+         * as it is. "overflow" path will refill the cache we allocate from.
+         */
+-       preempt_disable();
+-       if (!__this_cpu_read(ne_fit_preload_node)) {
+-               preempt_enable();
++       if (!this_cpu_read(ne_fit_preload_node)) {
+                pva = kmem_cache_alloc_node(vmap_area_cachep, GFP_KERNEL, node);
+-               preempt_disable();
 
-> +	    wpc->iomap.type != wpc->ioend->io_type ||
-> +	    sector != bio_end_sector(wpc->ioend->io_bio) ||
-> +	    offset != wpc->ioend->io_offset + wpc->ioend->io_size) {
-> +		if (wpc->ioend)
-> +			list_add(&wpc->ioend->io_list, iolist);
-> +		wpc->ioend = iomap_alloc_ioend(inode, wpc, offset, sector, wbc);
-> +	}
-.....
-> +static int
-> +iomap_do_writepage(struct page *page, struct writeback_control *wbc, void *data)
-> +{
-> +	struct iomap_writepage_ctx *wpc = data;
-> +	struct inode *inode = page->mapping->host;
-> +	pgoff_t end_index;
-> +	u64 end_offset;
-> +	loff_t offset;
-> +
-> +	trace_iomap_writepage(inode, page, 0, 0);
-> +
-> +	/*
-> +	 * Refuse to write the page out if we are called from reclaim context.
-> +	 *
-> +	 * This avoids stack overflows when called from deeply used stacks in
-> +	 * random callers for direct reclaim or memcg reclaim.  We explicitly
-> +	 * allow reclaim from kswapd as the stack usage there is relatively low.
-> +	 *
-> +	 * This should never happen except in the case of a VM regression so
-> +	 * warn about it.
-> +	 */
-> +	if (WARN_ON_ONCE((current->flags & (PF_MEMALLOC|PF_KSWAPD)) ==
-> +			PF_MEMALLOC))
-> +		goto redirty;
-> +
-> +	/*
-> +	 * Given that we do not allow direct reclaim to call us, we should
-> +	 * never be called while in a filesystem transaction.
-> +	 */
-> +	if (WARN_ON_ONCE(current->flags & PF_MEMALLOC_NOFS))
-> +		goto redirty;
+-               if (__this_cpu_cmpxchg(ne_fit_preload_node, NULL, pva)) {
++               if (this_cpu_cmpxchg(ne_fit_preload_node, NULL, pva)) {
+                        if (pva)
+                                kmem_cache_free(vmap_area_cachep, pva);
+                }
+        }
+ 
+        spin_lock(&vmap_area_lock);
+-       preempt_enable();
 
-Is this true for all expected callers of these functions rather than
-just XFS? i.e. PF_MEMALLOC_NOFS is used by transactions in XFS to
-prevent transaction context recursion, but other filesystems do not
-do this..
+        /*
+         * If an allocation fails, the "vend" address is
+urezki@pc636:~/data/ssd/coding/linux-stable$
+<snip>
 
-FWIW, I can also see that this is going to cause us problems if high
-level code starts using memalloc_nofs_save() and then calling
-filemap_datawrite() and friends...
+so, we do not guarantee, instead we minimize number of allocations
+with GFP_NOWAIT flag. For example on my 4xCPUs i am not able to
+even trigger the case when CPU is not preloaded.
 
-> +iomap_writepage(struct page *page, struct writeback_control *wbc,
-> +		struct iomap_writepage_ctx *wpc,
-> +		const struct iomap_writeback_ops *ops)
-> +{
-> +	int ret;
-> +
-> +	wpc->ops = ops;
-> +	ret = iomap_do_writepage(page, wbc, wpc);
-> +	if (!wpc->ioend)
-> +		return ret;
-> +	return iomap_submit_ioend(wpc, wpc->ioend, ret);
-> +}
-> +EXPORT_SYMBOL_GPL(iomap_writepage);
+I can test it tomorrow on my 12xCPUs to see its behavior there.
 
-Can we kill ->writepage for iomap users, please? After all, we don't
-mostly don't allow memory reclaim to do writeback of dirty pages,
-and that's the only caller of ->writepage.
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+--
+Vlad Rezki
