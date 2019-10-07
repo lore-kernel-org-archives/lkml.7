@@ -2,136 +2,154 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F49C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA93C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE14D20867
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:40:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3216020867
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:41:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nK2ICAb4"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AUmIkwxC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727334AbfJGIkh (ORCPT
+        id S1727394AbfJGIlH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 04:40:37 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:53748 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726969AbfJGIkg (ORCPT
+        Mon, 7 Oct 2019 04:41:07 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34557 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727346AbfJGIlG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 04:40:36 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x978eJEp039869;
-        Mon, 7 Oct 2019 03:40:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570437619;
-        bh=iRVKW68mcO3r9tC2SUOrwePSzioiFn8z6va76+E22Cc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=nK2ICAb4uGYUn7+BmSD7i/RZtBGDiegDzR3ikhSGZhOMeKkzHFWupRVWznhJRDP62
-         Ie/xIRgbihkco9/TYEbeBz4/H+1cHrl/kOcm9xQ7gLfMh409LOAuuWReCLjvywHkTj
-         IbzDg5aDYvXvtnEVP4fcFLapctZL/PcZO/ZLIZf8=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x978eJYl046528
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 7 Oct 2019 03:40:19 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 7 Oct
- 2019 03:40:19 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 7 Oct 2019 03:40:16 -0500
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x978eGEj024937;
-        Mon, 7 Oct 2019 03:40:16 -0500
-Subject: Re: [PATCH] usb:cdns3: Fix for CV CH9 running with g_zero driver.
-To:     Pawel Laszczak <pawell@cadence.com>, <felipe.balbi@linux.intel.com>
-CC:     <gregkh@linuxfoundation.org>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <jbergsagel@ti.com>,
-        <nsekhar@ti.com>, <nm@ti.com>, <sureshp@cadence.com>,
-        <peter.chen@nxp.com>, <kurahul@cadence.com>
-References: <1570430355-26118-1-git-send-email-pawell@cadence.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <640b6cd2-5d10-2dbd-c74d-009747790633@ti.com>
-Date:   Mon, 7 Oct 2019 11:40:15 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 7 Oct 2019 04:41:06 -0400
+Received: by mail-pg1-f193.google.com with SMTP id y35so7791274pgl.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 01:41:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=d00h7IdnG9Bs/4S91y4kH9nayVR/gCRtlft74BTzy6I=;
+        b=AUmIkwxCvC2VEhvpzdAyuNovVm2KMJDpgDWO5MBAsHUd4584+mQuTJYZeAiA+9d8qf
+         Cb8CstcWhfdXgmKTT8Jlla+OWOrkQkY1Q6jQNfjMg0AaTBOEx4pAXKvHC9GWvBLdZn5f
+         azsN30/RzedzrQSkqzovoBINho5ERfih75S8sqKoNuhZtu7ZJ6mBbxw52wj46VIAfs+0
+         /MI6tTyO9gi1ONrL9pd+19m5cKkMzvosoY+gvlO9IBXyVRyQi1ybU6t67GV8aiwd0d0e
+         6C9JtrHHYWmRkyPJoTmdFUFF6AQSVURI2bOhzr9RF9ZKtLjjyBGodHKo0R5D8MzKfjXZ
+         yRSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d00h7IdnG9Bs/4S91y4kH9nayVR/gCRtlft74BTzy6I=;
+        b=eoIKPfZPJWwTlaeuJAmi5vpKWYQn4hzBQU1IRw9xkHYh7yOLeJeh9Wbmt0dWgQTwao
+         J3USZO3fr5uwVNXw2qAYAzaEF/0yqyN1GnOKJgGwDWVRqyVB3M5mqa8PfEJbjhC0Dl9S
+         NqtB5bxLTbh9qaM+bMSR+kdQELpEQ5qOKn9sENmOkbSoS28qFqKp5sRN7GkRXBgHhY6V
+         CWYl+euoqxqtCLIhfCfV+7WUE6YBtCKxp51pfERdUseMAHHlNpdNx6JA43Dhxdyz2P2O
+         Wt7cmeRC9FR4KIOEzhAgEMw6xEDmLf9Hppa8YEu+DU7bAuO2UIQqt5HtNslsiq6DnpYN
+         JdhA==
+X-Gm-Message-State: APjAAAUaYbOo5Xkp5+KERILZoewDjPT8RaLDiovhBpSxl9kitr1/K/3l
+        cL4BBHnWCFm4clUavbKVZOQpcRYJ8eys5qInpH87rA==
+X-Google-Smtp-Source: APXvYqwxXGxNWrOtyc6pCGXMSd6S1trXysWwf0BjsGf8IFVQEjIqe/b6qXijaBYnb2AJQF5sarq/ZPYHb1uY+bE9OzQ=
+X-Received: by 2002:a17:90a:5d09:: with SMTP id s9mr32723780pji.131.1570437665358;
+ Mon, 07 Oct 2019 01:41:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1570430355-26118-1-git-send-email-pawell@cadence.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <CAHk-=whX-JbpM2Sc85epng_GAgGGzxRAJ2SSKkMf9N1Lsqe+OA@mail.gmail.com>
+ <56e2e1a7-f8fe-765b-8452-1710b41895bf@kernel.org> <20191004222714.GA107737@google.com>
+ <ad800337-1ae2-49d2-e715-aa1974e28a10@kernel.org> <20191004232955.GC12012@mit.edu>
+ <CAFd5g456rBSp177EkYAwsF+KZ0rxJa90mzUpW2M3R7tWbMAh9Q@mail.gmail.com>
+ <63e59b0b-b51e-01f4-6359-a134a1f903fd@kernel.org> <CAFd5g47wji3T9RFmqBwt+jPY0tb83y46oj_ttOq=rTX_N1Ggyg@mail.gmail.com>
+ <544bdfcb-fb35-5008-ec94-8d404a08fd14@kernel.org> <CAFd5g467PkfELixpU0JbaepEAAD_ugAA340-uORngC-eXsQQ-g@mail.gmail.com>
+ <20191006165436.GA29585@mit.edu> <CAHk-=wjcJxypxUOSF-jc=SQKT1CrOoTMyT7soYzbvK3965JmCA@mail.gmail.com>
+In-Reply-To: <CAHk-=wjcJxypxUOSF-jc=SQKT1CrOoTMyT7soYzbvK3965JmCA@mail.gmail.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Mon, 7 Oct 2019 01:40:53 -0700
+Message-ID: <CAFd5g45djTX+FaXwn2abve1+6GbtNrv+8EJgDe_TXn1d+pzukA@mail.gmail.com>
+Subject: Re: [PATCH v18 00/19] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>, shuah <shuah@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Oct 6, 2019 at 10:18 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Sun, Oct 6, 2019 at 9:55 AM Theodore Y. Ts'o <tytso@mit.edu> wrote:
+> >
+> > Well, one thing we *can* do is if (a) if we can create a kselftest
+> > branch which we know is stable and won't change, and (b) we can get
+> > assurances that Linus *will* accept that branch during the next merge
+> > window, those subsystems which want to use kself test can simply pull
+> > it into their tree.
+>
+> Yes.
+>
+> At the same time, I don't think it needs to be even that fancy. Even
+> if it's not a stable branch that gets shared between different
+> developers, it would be good to just have people do a "let's try this"
+> throw-away branch to use the kunit functionality and verify that
+> "yeah, this is fairly convenient for ext4".
+>
+> It doesn't have to be merged in that form, but just confirmation that
+> the infrastructure is helpful before it gets merged would be good.
 
+I thought we already had done this satisfactorily.
 
-On 07/10/2019 09:39, Pawel Laszczak wrote:
-> Patch fixes issue with Halt Endnpoint Test observed during using g_zero
-> driver as DUT. Bug occurred only on some testing board.
-> 
-> Endpoint can defer transition to Halted state if endpoint has pending
-> requests.
-> Patch add additional condition that allows to return correct endpoint
-> status during Get Endpoint Status request even if the halting endpoint
-> is in progress.
-> 
-> Reported-by: Rahul Kumar <kurahul@cadence.com>
-> Signed-off-by: Rahul Kumar <kurahul@cadence.com>
-> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
-> Fixes: 7733f6c32e36 ("usb: cdns3: Add Cadence USB3 DRD Driver")
+We have one proof-of-concept test in the branch in the kselftest repo
+(proc sysctl test) that went out in the pull request, and we also had
+some other tests that were not in the pull request (there is the ext4
+timestamp stuff mentioned above, and we also had one against the list
+data structure), which we were planning on sending out for review once
+Shuah's pull request was accepted. I know the apparmor people also
+wrote some tests that they said were useful; however, I have not
+coordinated with them on upstreaming their tests. I know of some other
+people who are using it, but I don't think the tests are as far along
+for upstreaming.
 
-Tested-by: Roger Quadros <rogerq@ti.com>
+The point is: I thought we had plenty of signal that KUnit would be
+useful to have merged into the mainline kernel. I thought the only
+reason it was rejected for 5.4 was due to the directory name issue
+combined with bad timing.
 
+Please correct me if I missed anything.
 
-cheers,
--roger
-
-> ---
->   drivers/usb/cdns3/ep0.c | 10 ++++++++--
->   1 file changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/usb/cdns3/ep0.c b/drivers/usb/cdns3/ep0.c
-> index 44f652e8b5a2..10ae03430f34 100644
-> --- a/drivers/usb/cdns3/ep0.c
-> +++ b/drivers/usb/cdns3/ep0.c
-> @@ -234,9 +234,11 @@ static int cdns3_req_ep0_set_address(struct cdns3_device *priv_dev,
->   static int cdns3_req_ep0_get_status(struct cdns3_device *priv_dev,
->   				    struct usb_ctrlrequest *ctrl)
->   {
-> +	struct cdns3_endpoint *priv_ep;
->   	__le16 *response_pkt;
->   	u16 usb_status = 0;
->   	u32 recip;
-> +	u8 index;
->   
->   	recip = ctrl->bRequestType & USB_RECIP_MASK;
->   
-> @@ -262,9 +264,13 @@ static int cdns3_req_ep0_get_status(struct cdns3_device *priv_dev,
->   	case USB_RECIP_INTERFACE:
->   		return cdns3_ep0_delegate_req(priv_dev, ctrl);
->   	case USB_RECIP_ENDPOINT:
-> -		/* check if endpoint is stalled */
-> +		index = cdns3_ep_addr_to_index(ctrl->wIndex);
-> +		priv_ep = priv_dev->eps[index];
-> +
-> +		/* check if endpoint is stalled or stall is pending */
->   		cdns3_select_ep(priv_dev, ctrl->wIndex);
-> -		if (EP_STS_STALL(readl(&priv_dev->regs->ep_sts)))
-> +		if (EP_STS_STALL(readl(&priv_dev->regs->ep_sts)) ||
-> +		    (priv_ep->flags & EP_STALL_PENDING))
->   			usb_status =  BIT(USB_ENDPOINT_HALT);
->   		break;
->   	default:
-> 
-
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Thanks!
