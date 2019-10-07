@@ -7,45 +7,44 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A11C4360C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 01:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 010FCC4360C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 01:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FE3621871
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 01:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC4F52084B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 01:45:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="MQ17mbX0"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="bhYAtfG+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727256AbfJGBpe (ORCPT
+        id S1727268AbfJGBpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 21:45:34 -0400
-Received: from onstation.org ([52.200.56.107]:33086 "EHLO onstation.org"
+        Sun, 6 Oct 2019 21:45:36 -0400
+Received: from onstation.org ([52.200.56.107]:33016 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727158AbfJGBpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 21:45:24 -0400
+        id S1726781AbfJGBpW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 21:45:22 -0400
 Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 24DC03F23D;
-        Mon,  7 Oct 2019 01:45:23 +0000 (UTC)
+        by onstation.org (Postfix) with ESMTPSA id D60943F230;
+        Mon,  7 Oct 2019 01:45:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1570412723;
-        bh=qSF7JxG0bFyn3cQPR8q7gVg5cnvbx8ozSyPIX8JTT9c=;
+        s=default; t=1570412722;
+        bh=eRhUOSJT70X+Sx4VC7+xmjW4CgqLv3ArFwLDB0ZPKsU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MQ17mbX0Vsr/tmary8b/IbFnHUF9g4q96V0QWEe7CEGCSGnd62+BzOTpbjTDrNxcM
-         h3cVvNbZ5/DGjMCi0EqY2j1hg/9qki3fxibtvEGECG3dFENvMewbniGUGU6iVAAQdH
-         xoahdq/riTIuaqz+bBsU9JvI/+/CyJbneBdyaGYA=
+        b=bhYAtfG+PVYsR5Zyv24EW+FNMDahNcIB7R4WgdlnsbSY1BIhljjmT9rM605Msch2n
+         /SSQtVlMqZosCTOlz6OM8kpLmcy5G81gzF+QWUn6eG59PYPjwel1R5WSkX6qND3r74
+         c9LlZmBsiZORXbtzvlTVRalr1HyMfK9yvz27NlMU=
 From:   Brian Masney <masneyb@onstation.org>
 To:     robdclark@gmail.com, sean@poorly.run
 Cc:     bjorn.andersson@linaro.org, a.hajda@samsung.com,
         Laurent.pinchart@ideasonboard.com, airlied@linux.ie,
         daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, jonathan@marek.ca,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH RFC v2 4/5] ARM: dts: qcom: msm8974: add HDMI nodes
-Date:   Sun,  6 Oct 2019 21:45:08 -0400
-Message-Id: <20191007014509.25180-5-masneyb@onstation.org>
+        freedreno@lists.freedesktop.org, jonathan@marek.ca
+Subject: [PATCH RFC v2 1/5] drm/bridge: analogix-anx78xx: add support for avdd33 regulator
+Date:   Sun,  6 Oct 2019 21:45:05 -0400
+Message-Id: <20191007014509.25180-2-masneyb@onstation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191007014509.25180-1-masneyb@onstation.org>
 References: <20191007014509.25180-1-masneyb@onstation.org>
@@ -56,118 +55,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add HDMI tx and phy nodes to support an external display that can be
-connected over the SlimPort. This is based on work from Jonathan Marek.
+Add support for the avdd33 regulator to the analogix-anx78xx driver.
+Note that the regulator is currently enabled during driver probe and
+disabled when the driver is removed. This is currently how the
+downstream MSM kernel sources do this.
+
+Let's not merge this upstream for the mean time until I get the external
+display fully working on the Nexus 5 and then I can submit proper
+support then that powers down this regulator in the power off function.
 
 Signed-off-by: Brian Masney <masneyb@onstation.org>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 ---
 Changes since v1:
-- Add hdmi_pll to hdmi-phy node
-- add power-domain to hdmi-phy per binding specification
-- Remove FIXME comment regarding the hpd-gdsc-supply. I saw a recent
-  post on linux-arm-msm that this is present for running the upstream
-  MSM display driver on the downstream kernel.
+- None
 
- arch/arm/boot/dts/qcom-msm8974.dtsi | 78 +++++++++++++++++++++++++++++
- 1 file changed, 78 insertions(+)
+ drivers/gpu/drm/bridge/analogix-anx78xx.c | 33 +++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-index 7fc23e422cc5..af02eace14e2 100644
---- a/arch/arm/boot/dts/qcom-msm8974.dtsi
-+++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-@@ -1258,6 +1258,13 @@
+diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.c b/drivers/gpu/drm/bridge/analogix-anx78xx.c
+index dec3f7e66aa0..e25fae36dbe1 100644
+--- a/drivers/gpu/drm/bridge/analogix-anx78xx.c
++++ b/drivers/gpu/drm/bridge/analogix-anx78xx.c
+@@ -56,6 +56,7 @@ static const u8 anx781x_i2c_addresses[] = {
  
- 					port@0 {
- 						reg = <0>;
-+						mdp5_intf3_out: endpoint {
-+							remote-endpoint = <&hdmi_in>;
-+						};
-+					};
-+
-+					port@1 {
-+						reg = <1>;
- 						mdp5_intf1_out: endpoint {
- 							remote-endpoint = <&dsi0_in>;
- 						};
-@@ -1335,6 +1342,77 @@
- 				clocks = <&mmcc MDSS_AHB_CLK>;
- 				clock-names = "iface";
- 			};
-+
-+			hdmi: hdmi-tx@fd922100 {
-+				status = "disabled";
-+
-+				compatible = "qcom,hdmi-tx-8974";
-+				reg = <0xfd922100 0x35c>,
-+				      <0xfc4b8000 0x60f0>;
-+				reg-names = "core_physical",
-+				            "qfprom_physical";
-+
-+				interrupt-parent = <&mdss>;
-+				interrupts = <8 IRQ_TYPE_LEVEL_HIGH>;
-+
-+				power-domains = <&mmcc MDSS_GDSC>;
-+
-+				clocks = <&mmcc MDSS_MDP_CLK>,
-+				         <&mmcc MDSS_AHB_CLK>,
-+				         <&mmcc MDSS_HDMI_CLK>,
-+				         <&mmcc MDSS_HDMI_AHB_CLK>,
-+				         <&mmcc MDSS_EXTPCLK_CLK>;
-+				clock-names = "mdp_core",
-+				              "iface",
-+				              "core",
-+				              "alt_iface",
-+				              "extp";
-+
-+				hpd-5v-supply = <&pm8941_5vs2>;
-+				core-vdda-supply = <&pm8941_l12>;
-+				core-vcc-supply = <&pm8941_s3>;
-+
-+				phys = <&hdmi_phy>;
-+				phy-names = "hdmi_phy";
-+
-+				ports {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					port@0 {
-+						reg = <0>;
-+						hdmi_in: endpoint {
-+							remote-endpoint = <&mdp5_intf3_out>;
-+						};
-+					};
-+
-+					port@1 {
-+						reg = <1>;
-+					};
-+				};
-+			};
-+
-+			hdmi_phy: hdmi-phy@fd922500 {
-+				status = "disabled";
-+
-+				compatible = "qcom,hdmi-phy-8974";
-+				reg = <0xfd922500 0x7c>,
-+				      <0xfd922700 0xd4>;
-+				reg-names = "hdmi_phy",
-+				            "hdmi_pll";
-+
-+				clocks = <&mmcc MDSS_AHB_CLK>,
-+				         <&mmcc MDSS_HDMI_AHB_CLK>;
-+				clock-names = "iface",
-+				              "alt_iface";
-+
-+				core-vdda-supply = <&pm8941_l12>;
-+				vddio-supply = <&pm8941_s3>;
-+
-+				power-domains = <&mmcc MDSS_GDSC>;
-+
-+				#phy-cells = <0>;
-+			};
- 		};
- 	};
+ struct anx78xx_platform_data {
+ 	struct regulator *dvdd10;
++	struct regulator *avdd33;
+ 	struct gpio_desc *gpiod_hpd;
+ 	struct gpio_desc *gpiod_pd;
+ 	struct gpio_desc *gpiod_reset;
+@@ -715,10 +716,42 @@ static int anx78xx_start(struct anx78xx *anx78xx)
+ 	return err;
+ }
  
++static void anx78xx_disable_regulator_action(void *_data)
++{
++	struct anx78xx_platform_data *pdata = _data;
++
++	regulator_disable(pdata->avdd33);
++}
++
+ static int anx78xx_init_pdata(struct anx78xx *anx78xx)
+ {
+ 	struct anx78xx_platform_data *pdata = &anx78xx->pdata;
+ 	struct device *dev = &anx78xx->client->dev;
++	int err;
++
++	/* 3.3V digital core power regulator  */
++	pdata->avdd33 = devm_regulator_get(dev, "avdd33");
++	if (IS_ERR(pdata->avdd33)) {
++		err = PTR_ERR(pdata->avdd33);
++		if (err != -EPROBE_DEFER)
++			DRM_ERROR("avdd33 regulator not found\n");
++
++		return err;
++	}
++
++	err = regulator_enable(pdata->avdd33);
++	if (err) {
++		DRM_ERROR("Failed to enable avdd33 regulator: %d\n", err);
++		return err;
++	}
++
++	err = devm_add_action(dev, anx78xx_disable_regulator_action,
++			      pdata);
++	if (err < 0) {
++		dev_err(dev, "Failed to setup regulator cleanup action %d\n",
++			err);
++		return err;
++	}
+ 
+ 	/* 1.0V digital core power regulator  */
+ 	pdata->dvdd10 = devm_regulator_get(dev, "dvdd10");
 -- 
 2.21.0
 
