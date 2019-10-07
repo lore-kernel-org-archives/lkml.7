@@ -2,123 +2,202 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7608AC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DDFCC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EABC21655
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:38:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570441105;
-	bh=3zhwfHIcLxbbQ+KpMXuhI+igbeHR1uDpFIhjOQRNKws=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=c8MA0VoOuKBU5vddchPq28P3ydf4OZM4+x9jU+hlTDQIDwZqhp28TeT45klUsdyZp
-	 arKDXE6WEntbqWOBcFntj0CRkl3odAmaZ5zmTyviHfc+1GlcvHdMCYuGeZ0qPvS2Nx
-	 IJ//GT4cvl7WWQcNfFXAT3qI9cLOkL0qba46RJcM=
+	by mail.kernel.org (Postfix) with ESMTP id 7BC6721655
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:44:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727383AbfJGJiY (ORCPT
+        id S1727502AbfJGJo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 05:38:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58250 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726010AbfJGJiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 05:38:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51B1C21655;
-        Mon,  7 Oct 2019 09:38:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570441101;
-        bh=3zhwfHIcLxbbQ+KpMXuhI+igbeHR1uDpFIhjOQRNKws=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xhb9NYnljNV1xaVQoNXkMjTFv8xFVwvlhvXK4T26Gs97v9UHxKRdpu+nh7lconEFf
-         LaCA52oK2CY9iuiQSync4Amm0bhSZeC0dviaQ3ejyxtBkyzHUoF8aKDt+3Ed3clXCW
-         TS3MgAFsmDHpRMFHKaLl8QSae5HIAOztyxbzJvYY=
-Date:   Mon, 7 Oct 2019 11:38:19 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Martijn Coenen <maco@android.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
-        syzbot <syzkaller@googlegroups.com>,
-        Mattias Nissler <mnissler@chromium.org>
-Subject: Re: [PATCH 4.9 30/47] ANDROID: binder: remove waitqueue when thread
- exits.
-Message-ID: <20191007093819.GA84909@kroah.com>
-References: <20191006172016.873463083@linuxfoundation.org>
- <20191006172018.480360174@linuxfoundation.org>
- <CAB0TPYGO8Nm_Qz0kzSvX69NApiPwu4xV19F=KhyLe5DO3DoLTw@mail.gmail.com>
+        Mon, 7 Oct 2019 05:44:26 -0400
+Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:50589 "EHLO
+        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726010AbfJGJo0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 05:44:26 -0400
+Received: from [IPv6:2001:983:e9a7:1:3d61:cdd2:8085:cc8] ([IPv6:2001:983:e9a7:1:3d61:cdd2:8085:cc8])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id HPZ0iLENKjZ8vHPZ1i5nUm; Mon, 07 Oct 2019 11:44:24 +0200
+Subject: Re: [PATCH v2 3/6] media: v4l2-mem2mem: add
+ stateless_(try_)decoder_cmd ioctl helpers
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+To:     =?UTF-8?Q?Jernej_=c5=a0krabec?= <jernej.skrabec@siol.net>
+Cc:     mchehab@kernel.org, paul.kocialkowski@bootlin.com,
+        mripard@kernel.org, pawel@osciak.com, m.szyprowski@samsung.com,
+        kyungmin.park@samsung.com, tfiga@chromium.org, wens@csie.org,
+        gregkh@linuxfoundation.org, boris.brezillon@collabora.com,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
+        ezequiel@collabora.com, jonas@kwiboo.se
+References: <20190929200023.215831-1-jernej.skrabec@siol.net>
+ <20190929200023.215831-4-jernej.skrabec@siol.net>
+ <6c7eeaf1-18bb-1c7e-7938-a3eb5af100b6@xs4all.nl>
+ <2840939.OS9t7MgvnY@jernej-laptop>
+ <cce04c8e-8211-0fdc-bd62-650aceeb3af1@xs4all.nl>
+Message-ID: <bc9e3e73-c2aa-c70e-5d81-f77d1bf898e7@xs4all.nl>
+Date:   Mon, 7 Oct 2019 11:44:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAB0TPYGO8Nm_Qz0kzSvX69NApiPwu4xV19F=KhyLe5DO3DoLTw@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <cce04c8e-8211-0fdc-bd62-650aceeb3af1@xs4all.nl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfBhg/py6knYnvxMkJcNfVQ+HaYw1/5QCmKHnBYtRPv76Qm2AoD1c/Ql55QjfH0qG5LPLO1GSLVNPHUFKeJlbTOeuOz7RbyBpURJPL14hyhGGupB0RNCp
+ mRKRFdLcj/L52Oxde2u3TfEr9XaNfGHsAfgV3C9SN6kvhZPBjvcMRd2eXePmKr43x76IDztL9jl7Dykw8+7wOgOqBbqyzKD/MvQMpZWjCL2WX4WiYdtGjDNW
+ x3QLglAwFbVgyGcn8zmLoFn469yVAP1AmOwY58Uy7WCNxhvofVAyc1vfsn7nRUhcXIyQl4A75L9SrOVWvBmCqnQV/7UHRidLfMr8rRUgQG74dIvpwmdfLLit
+ IaYQp/ZbAe8g2wf39hvt5sqMeccaLxo9liVvx9p1BplHSykj/XUSSx3kjsSxRwjidSSl2jJ+p6GRxT8Mq8NhNXihAyHMQxgRl1qwKyVg8V3uJZDNT1En7ndD
+ TvT7Y3o2lD7kjTOx773li/ShhTUO03Rb0KNWN41ZondLwOtrhdk5dxRy9Eyo9e5Vhgf/SsMTasQ4t8y0FyNBURY6pCECM2eWv/PZMHLjG8zcJ52tHccbu2tH
+ tY0NliwdJTMkxVb+CloozwUHKG+iE/sWOBPGHVPFZNf7GWk+VxncTNjC5dRKV2Z70y7FOkttLisWv60oWmTItcad0A7cUiU0vmc+vjIPK/aFo2CHsXfIQKwS
+ n3t0r5yi3Q3mokY5rkoTseCC7cQTmcLVGgd4q0IT33WoLzcGwXvedEEybcr92xfrbIjFv49/SFv3ACNBnaGGelMyhxZZv0ps8jMRvSvrJAXWcVbVMNPcABz2
+ 2qJ/vX1ll17fLGgpykc=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 11:33:53AM +0200, Martijn Coenen wrote:
-> On Sun, Oct 6, 2019 at 7:23 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > From: Martijn Coenen <maco@android.com>
-> >
-> > commit f5cb779ba16334b45ba8946d6bfa6d9834d1527f upstream.
-> >
-> > binder_poll() passes the thread->wait waitqueue that
-> > can be slept on for work. When a thread that uses
-> > epoll explicitly exits using BINDER_THREAD_EXIT,
-> > the waitqueue is freed, but it is never removed
-> > from the corresponding epoll data structure. When
-> > the process subsequently exits, the epoll cleanup
-> > code tries to access the waitlist, which results in
-> > a use-after-free.
-> >
-> > Prevent this by using POLLFREE when the thread exits.
-> >
-> > Signed-off-by: Martijn Coenen <maco@android.com>
-> > Reported-by: syzbot <syzkaller@googlegroups.com>
-> > Cc: stable <stable@vger.kernel.org> # 4.14
-> > [backport BINDER_LOOPER_STATE_POLL logic as well]
-> > Signed-off-by: Mattias Nissler <mnissler@chromium.org>
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > ---
-> >  drivers/android/binder.c |   17 ++++++++++++++++-
-> >  1 file changed, 16 insertions(+), 1 deletion(-)
-> >
-> > --- a/drivers/android/binder.c
-> > +++ b/drivers/android/binder.c
-> > @@ -334,7 +334,8 @@ enum {
-> >         BINDER_LOOPER_STATE_EXITED      = 0x04,
-> >         BINDER_LOOPER_STATE_INVALID     = 0x08,
-> >         BINDER_LOOPER_STATE_WAITING     = 0x10,
-> > -       BINDER_LOOPER_STATE_NEED_RETURN = 0x20
-> > +       BINDER_LOOPER_STATE_NEED_RETURN = 0x20,
-> > +       BINDER_LOOPER_STATE_POLL        = 0x40,
-> >  };
-> >
-> >  struct binder_thread {
-> > @@ -2628,6 +2629,18 @@ static int binder_free_thread(struct bin
-> >                 } else
-> >                         BUG();
-> >         }
-> > +
-> > +       /*
-> > +        * If this thread used poll, make sure we remove the waitqueue
-> > +        * from any epoll data structures holding it with POLLFREE.
-> > +        * waitqueue_active() is safe to use here because we're holding
-> > +        * the inner lock.
+On 10/7/19 10:32 AM, Hans Verkuil wrote:
+> On 10/7/19 8:02 AM, Jernej Škrabec wrote:
+>> Dne petek, 04. oktober 2019 ob 11:21:12 CEST je Hans Verkuil napisal(a):
+>>> On 9/29/19 10:00 PM, Jernej Skrabec wrote:
+>>>> These helpers are used by stateless codecs when they support multiple
+>>>> slices per frame and hold capture buffer flag is set. It's expected that
+>>>> all such codecs will use this code.
+>>>>
+>>>> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+>>>> ---
+>>>>
+>>>>  drivers/media/v4l2-core/v4l2-mem2mem.c | 35 ++++++++++++++++++++++++++
+>>>>  include/media/v4l2-mem2mem.h           |  4 +++
+>>>>  2 files changed, 39 insertions(+)
+>>>>
+>>>> diff --git a/drivers/media/v4l2-core/v4l2-mem2mem.c
+>>>> b/drivers/media/v4l2-core/v4l2-mem2mem.c index 19937dd3c6f6..2677a07e4c9b
+>>>> 100644
+>>>> --- a/drivers/media/v4l2-core/v4l2-mem2mem.c
+>>>> +++ b/drivers/media/v4l2-core/v4l2-mem2mem.c
+>>>> @@ -1154,6 +1154,41 @@ int v4l2_m2m_ioctl_try_decoder_cmd(struct file
+>>>> *file, void *fh,> 
+>>>>  }
+>>>>  EXPORT_SYMBOL_GPL(v4l2_m2m_ioctl_try_decoder_cmd);
+>>>>
+>>>> +int v4l2_m2m_ioctl_stateless_try_decoder_cmd(struct file *file, void *fh,
+>>>> +					     struct 
+>> v4l2_decoder_cmd *dc)
+>>>> +{
+>>>> +	if (dc->cmd != V4L2_DEC_CMD_FLUSH)
+>>>> +		return -EINVAL;
+>>>> +
+>>>> +	dc->flags = 0;
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(v4l2_m2m_ioctl_stateless_try_decoder_cmd);
+>>>> +
+>>>> +int v4l2_m2m_ioctl_stateless_decoder_cmd(struct file *file, void *priv,
+>>>> +					 struct 
+>> v4l2_decoder_cmd *dc)
+>>>> +{
+>>>> +	struct v4l2_fh *fh = file->private_data;
+>>>> +	struct vb2_v4l2_buffer *out_vb, *cap_vb;
+>>>> +	int ret;
+>>>> +
+>>>> +	ret = v4l2_m2m_ioctl_stateless_try_decoder_cmd(file, priv, dc);
+>>>> +	if (ret < 0)
+>>>> +		return ret;
+>>>> +
+>>>> +	out_vb = v4l2_m2m_last_src_buf(fh->m2m_ctx);
+>>>> +	cap_vb = v4l2_m2m_last_dst_buf(fh->m2m_ctx);
+>>>
+>>> I think this should be v4l2_m2m_next_dst_buf. If multiple capture buffers
+>>> were queued up, then it can only be the first capture buffer that can be
+>>> 'HELD'.
+>>
+>> I'm pretty sure v4l2_m2m_last_dst_buf() is correct. We want to affect last job 
+>> in the queue, all jobs before are already properly handled by comparing 
+>> timestamps.
 > 
-> This should be "global lock" in 4.9 and 4.4 :)
+> You're absolutely right.
+> 
+>>
+>>>
+>>> This might solve the race condition you saw with ffmpeg.
+>>
+>> This actually doesn't change anything. ffmpeg currently queues only one job and 
+>> then waits until it's executed. In this case it actually doesn't matter if 
+>> "last" or "next" variant is used.
+> 
+> Can you debug this a bit further? I don't want to merge this unless we know what's
+> going wrong with ffmpeg.
+> 
+> I suspect it is a race condition. I'll reply to patch 6/6 with more info.
 
-I'll go update the comment now, thanks!
+I've decided to make a v3 of this series. There are major locking issues with this
+and this will require a bit of rework.
 
-> Otherwise LGTM, thanks!
+Regards,
 
-thanks for the review.
+	Hans
 
-greg k-h
+> 
+> Regards,
+> 
+> 	Hans
+> 
+>>
+>> Best regards,
+>> Jernej
+>>
+>>>
+>>> Regards,
+>>>
+>>> 	Hans
+>>>
+>>>> +
+>>>> +	if (out_vb)
+>>>> +		out_vb->flags &= ~V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF;
+>>>> +	else if (cap_vb && cap_vb->is_held)
+>>>> +		v4l2_m2m_buf_done(cap_vb, VB2_BUF_STATE_DONE);
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(v4l2_m2m_ioctl_stateless_decoder_cmd);
+>>>> +
+>>>>
+>>>>  /*
+>>>>  
+>>>>   * v4l2_file_operations helpers. It is assumed here same lock is used
+>>>>   * for the output and the capture buffer queue.
+>>>>
+>>>> diff --git a/include/media/v4l2-mem2mem.h b/include/media/v4l2-mem2mem.h
+>>>> index c9fa96c8eed1..8ae2f56c7fa3 100644
+>>>> --- a/include/media/v4l2-mem2mem.h
+>>>> +++ b/include/media/v4l2-mem2mem.h
+>>>> @@ -714,6 +714,10 @@ int v4l2_m2m_ioctl_try_encoder_cmd(struct file *file,
+>>>> void *fh,> 
+>>>>  				   struct v4l2_encoder_cmd *ec);
+>>>>  
+>>>>  int v4l2_m2m_ioctl_try_decoder_cmd(struct file *file, void *fh,
+>>>>  
+>>>>  				   struct v4l2_decoder_cmd *dc);
+>>>>
+>>>> +int v4l2_m2m_ioctl_stateless_try_decoder_cmd(struct file *file, void *fh,
+>>>> +					     struct 
+>> v4l2_decoder_cmd *dc);
+>>>> +int v4l2_m2m_ioctl_stateless_decoder_cmd(struct file *file, void *priv,
+>>>> +					 struct 
+>> v4l2_decoder_cmd *dc);
+>>>>
+>>>>  int v4l2_m2m_fop_mmap(struct file *file, struct vm_area_struct *vma);
+>>>>  __poll_t v4l2_m2m_fop_poll(struct file *file, poll_table *wait);
+>>
+>>
+>>
+>>
+> 
+
