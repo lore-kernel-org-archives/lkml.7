@@ -2,153 +2,149 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF81DECE58D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF7E3C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:45:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 863E721655
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:44:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570452240;
-	bh=U/+2uKUPz/q7OI4duZz2AsaWHpX52Y7QkHzN0iy8ihw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PKza7WOpYCbJ745AjZ/M/fqyXe5SsZAWJgYYWECrCrnnSe4tzbBYHU+E7XCjnJlmQ
-	 v3LSYFIeQk9ZyVDtIIW+K2yMA9UfxGjPnFuctsWGxBqHv4DUBA6R3svq0mWAvGWUJS
-	 AdvfOrfu8vFNjItGayOFhhs2SPnBLCmk4ChMQra8=
+	by mail.kernel.org (Postfix) with ESMTP id 831762173B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:45:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="swLnqi6A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbfJGMn7 (ORCPT
+        id S1727954AbfJGMpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 08:43:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38262 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727490AbfJGMn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 08:43:59 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 30072AB9B;
-        Mon,  7 Oct 2019 12:43:57 +0000 (UTC)
-Date:   Mon, 7 Oct 2019 14:43:56 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     akpm@linux-foundation.org, sergey.senozhatsky.work@gmail.com,
-        pmladek@suse.com, rostedt@goodmis.org, peterz@infradead.org,
-        david@redhat.com, john.ogness@linutronix.de, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
-Message-ID: <20191007124356.GJ2381@dhcp22.suse.cz>
-References: <20191007080742.GD2381@dhcp22.suse.cz>
- <FB72D947-A0F9-43E7-80D9-D7ACE33849C7@lca.pw>
- <20191007113710.GH2381@dhcp22.suse.cz>
- <1570450304.5576.283.camel@lca.pw>
+        Mon, 7 Oct 2019 08:45:03 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:38396 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727801AbfJGMpD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 08:45:03 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x97CitGu030289;
+        Mon, 7 Oct 2019 07:44:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1570452295;
+        bh=UKYNlQrAnqYHdLObzAAphAQPvbt/6HFXaFAp/AGJipk=;
+        h=From:To:CC:Subject:Date;
+        b=swLnqi6AwNfzDlhYP5J9keUG1KcsL4skefAR55w8Pz2OMMn08OqjivTAXjr91v/y3
+         SckiArG3Sf2ECvZ199k9uSOKNvYthRKzsyVh7cm/bdBoUlxvFSv7SUXVZ1+GMvVDu1
+         rjqBP58vKmIjF/EKnavTGlHpU1xuauD6GHYpwLS4=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x97Cit91109873
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 7 Oct 2019 07:44:55 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 7 Oct
+ 2019 07:44:54 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 7 Oct 2019 07:44:52 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x97CirYU093802;
+        Mon, 7 Oct 2019 07:44:54 -0500
+From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <sre@kernel.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <lee.jones@linaro.org>, <daniel.thompson@linaro.org>
+CC:     <dmurphy@ti.com>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <tomi.valkeinen@ti.com>, Jean-Jacques Hiblot <jjhiblot@ti.com>
+Subject: [PATCH v9 0/5] Add a generic driver for LED-based backlight
+Date:   Mon, 7 Oct 2019 14:44:32 +0200
+Message-ID: <20191007124437.20367-1-jjhiblot@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1570450304.5576.283.camel@lca.pw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 07-10-19 08:11:44, Qian Cai wrote:
-> On Mon, 2019-10-07 at 13:37 +0200, Michal Hocko wrote:
-> > On Mon 07-10-19 07:04:00, Qian Cai wrote:
-> > > 
-> > > 
-> > > > On Oct 7, 2019, at 4:07 AM, Michal Hocko <mhocko@kernel.org> wrote:
-> > > > 
-> > > > I do not think that removing the printk is the right long term solution.
-> > > > While I do agree that removing the debugging printk __offline_isolated_pages
-> > > > does make sense because it is essentially of a very limited use, this
-> > > > doesn't really solve the underlying problem.  There are likely other
-> > > > printks from zone->lock. It would be much more saner to actually
-> > > > disallow consoles to allocate any memory while printk is called from an
-> > > > atomic context.
-> > > 
-> > > No, there is only a handful of places called printk() from
-> > > zone->lock. It is normal that the callers will quietly process
-> > > “struct zone” modification in a short section with zone->lock
-> > > held.
-> > 
-> > It is extremely error prone to have any zone->lock vs. printk
-> > dependency. I do not want to play an endless whack a mole.
-> > 
-> > > No, it is not about “allocate any memory while printk is called from an
-> > > atomic context”. It is opposite lock chain  from different processors which has the same effect. For example,
-> > > 
-> > > CPU0:                 CPU1:         CPU2:
-> > > console_owner
-> > >                             sclp_lock
-> > > sclp_lock                                 zone_lock
-> > >                             zone_lock
-> > >                                                  console_owner
-> > 
-> > Why would sclp_lock ever take a zone->lock (apart from an allocation).
-> > So really if sclp_lock is a lock that might be taken from many contexts
-> > and generate very subtle lock dependencies then it should better be
-> > really careful what it is calling into.
-> > 
-> > In other words you are trying to fix a wrong end of the problem. Fix the
-> > console to not allocate or depend on MM by other means.
-> 
-> It looks there are way too many places that could generate those indirect lock
-> chains that are hard to eliminate them all. Here is anther example, where it
-> has,
+This series aims to add a led-backlight driver, similar to pwm-backlight,
+but using a LED class device underneath.
 
-Yeah and I strongly suspect they are consoles which are broken and need
-to be fixed rathert than the problem papered over.
+A few years ago (2015), Tomi Valkeinen posted a series implementing a
+backlight driver on top of a LED device:
+https://patchwork.kernel.org/patch/7293991/
+https://patchwork.kernel.org/patch/7294001/
+https://patchwork.kernel.org/patch/7293981/
 
-I do realize how tempting it is to remove all printks from the
-zone->lock but do realize that as soon as the allocator starts using any
-other locks then we are back to square one and the problem is there
-again. We would have to drop _all_ printks from any locked section in
-the allocator and I do not think this is viable.
+The discussion stopped because Tomi lacked the time to work on it.
 
-Really, the only way forward is to make these consoles be more careful
-of external dependencies.
+changes in v9:
+- let to_of_node() check if the fwnode is actually a of_node
+- add some checks in of_led_get()
+- let dev_of_node() do the check about OF availabilty
+- refactor led_bl_probe() to register a cleanup function with
+  devm_add_action_or_reset(). This simplifies the error handling (which
+  was not 100% done in v7) and allows to get rid of led_bl_remove()
 
-I am also wondering, this code is there for a long time (or is there any
-recent change?), why are we seeing reports only now? Are those consoles
-rarely used or you are simply luck to hit those? Or are those really
-representing a deadlock? Maybe the lockdep is just confused? I am not
-familiar with the code but console_owner_lock is doing some complex
-stuff to hand over the context.
+changes in v8:
+- use class_find_device_by_of_node() instead of class_find_device()
+- renamed devm_led_get() as devm_of_led_get()
 
-> console_owner -> port_lock
-> port_lock -> zone_lock
-> 
-> [  297.425922] -> #3 (&(&zone->lock)->rlock){-.-.}:
-> [  297.425925]        __lock_acquire+0x5b3/0xb40
-> [  297.425925]        lock_acquire+0x126/0x280
-> [  297.425926]        _raw_spin_lock+0x2f/0x40
-> [  297.425927]        rmqueue_bulk.constprop.21+0xb6/0x1160
-> [  297.425928]        get_page_from_freelist+0x898/0x22c0
-> [  297.425928]        __alloc_pages_nodemask+0x2f3/0x1cd0
-> [  297.425929]        alloc_pages_current+0x9c/0x110
-> [  297.425930]        allocate_slab+0x4c6/0x19c0
-> [  297.425931]        new_slab+0x46/0x70
-> [  297.425931]        ___slab_alloc+0x58b/0x960
-> [  297.425932]        __slab_alloc+0x43/0x70
-> [  297.425933]        __kmalloc+0x3ad/0x4b0
-> [  297.425933]        __tty_buffer_request_room+0x100/0x250
-> [  297.425934]        tty_insert_flip_string_fixed_flag+0x67/0x110
-> [  297.425935]        pty_write+0xa2/0xf0
-> [  297.425936]        n_tty_write+0x36b/0x7b0
-> [  297.425936]        tty_write+0x284/0x4c0
-> [  297.425937]        __vfs_write+0x50/0xa0
-> [  297.425938]        vfs_write+0x105/0x290
-> [  297.425939]        redirected_tty_write+0x6a/0xc0
-> [  297.425939]        do_iter_write+0x248/0x2a0
-> [  297.425940]        vfs_writev+0x106/0x1e0
-> [  297.425941]        do_writev+0xd4/0x180
-> [  297.425941]        __x64_sys_writev+0x45/0x50
-> [  297.425942]        do_syscall_64+0xcc/0x76c
-> [  297.425943]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+changes in v7:
+- rebased on top of linux-leds/for-next
+- populate the of_node member of the LED device if fwnode is a of_node
+  (this is a new patch and the first of the series).
+- devm_led_get() works only when the device tree is used. Add a few checks
+  for that.  
+
+changes in v6:
+- trim the list of included headers
+- remove useless definition of BKL_FULL_BRIGHTNESS
+
+changes in v5:
+- removed LED brightness scaling
+- disable sysfs the interface of the LEDs when used by the backlight device
+
+changes in v4:
+- fix dev_err() messages and commit logs following the advices of Pavel
+- cosmetic changes (indents, getting rid of  "? 1 : 0" in
+  led_match_led_node())
+
+changes in v3:
+- dt binding: don't limit the brightness range to 0-255. Use the range of
+  the underlying LEDs. as a side-effect, all LEDs must now have the same
+  range
+- driver: Adapt to dt binding update.
+- driver: rework probe() for clarity and remove the remaining goto.
+
+changes in v2:
+- handle more than one LED.
+- don't make the backlight device a child of the LED controller.
+- make brightness-levels and default-brightness-level optional
+- removed the option to use a GPIO enable.
+- removed the option to use a regulator. It should be handled by the LED
+  core
+- don't make any change to the LED core (not needed anymore)
+
+Jean-Jacques Hiblot (3):
+  leds: populate the device's of_node
+  leds: Add managed API to get a LED from a device driver
+  dt-bindings: backlight: Add led-backlight binding
+
+Tomi Valkeinen (2):
+  leds: Add of_led_get() and led_put()
+  backlight: add led-backlight driver
+
+ .../bindings/leds/backlight/led-backlight.txt |  28 ++
+ drivers/leds/led-class.c                      | 103 ++++++-
+ drivers/video/backlight/Kconfig               |   7 +
+ drivers/video/backlight/Makefile              |   1 +
+ drivers/video/backlight/led_bl.c              | 258 ++++++++++++++++++
+ include/linux/leds.h                          |   6 +
+ 6 files changed, 402 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
+ create mode 100644 drivers/video/backlight/led_bl.c
 
 -- 
-Michal Hocko
-SUSE Labs
+2.17.1
+
