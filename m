@@ -2,101 +2,273 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69FAEC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 20:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14210C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 20:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 431D820835
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 20:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D110A20835
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 20:11:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="f0iot5HO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DeLR00SG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729099AbfJGUKw (ORCPT
+        id S1729169AbfJGULW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 16:10:52 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:34782 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728212AbfJGUKw (ORCPT
+        Mon, 7 Oct 2019 16:11:22 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:37129 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728212AbfJGULV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 16:10:52 -0400
-Received: by mail-oi1-f193.google.com with SMTP id 83so12866117oii.1;
-        Mon, 07 Oct 2019 13:10:51 -0700 (PDT)
+        Mon, 7 Oct 2019 16:11:21 -0400
+Received: by mail-lj1-f196.google.com with SMTP id l21so15087572lje.4
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 13:11:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=EgoI/BpstzExvfapSP/r9rpFlNEylt0wDd7mLlzkxGQ=;
-        b=f0iot5HOwYxLeGOm8csmxxtd6SWMKyklIHgREALK6AUANZrtWVO1P+Ig9PU3XicIMY
-         yMut937g7KW5neV7E82AY6/GnCdXDgIXELS1pXswRMIH9QYfa+NW8+0KmyXoDb2ChZua
-         F7CUPT0mlXK6AOtVjbG8gsYDstqbDyCmfmFp3RURqNEDYTqUE5SGX4VVKKPqUvzHZ4iw
-         e9enIXSgwdxOER9HHzPGZIXgjDV+ttJX2teWyKKjLzC3esWbyX79bhJV29RkSru9h7kC
-         3AyOWJrBIijj8QKtJ6s4vfoOaQZ+bCP2x3PHjZxUn03Od8kX83RfUR4cpatOTikgGIFX
-         7QkQ==
+        bh=oHp2V4cqwKnA3Bgcpofc2k1MdyH3DCDWUfUFdzKftko=;
+        b=DeLR00SGfnrW8PeCxJzb8BGpTMyjQiGkQKZW6c/ojrpGQ6XNN24B8xJ/P5z2HVtIb8
+         YlsdFcA/ZTOS9DV1q4ds5ttbPQU8Dl5W5xsf3MlERXoKXdycdx2XkQqsgAPGIfpXJDFN
+         2GCVSac53cO/w9cSeDI/3Of0hdqe9KwCFtbP5NGnwde/37Xe1dpK2yCnDUN0uZqrmjr4
+         lyd4gtf3qj6g1coRkOLoPcrdhidi2H2XDBCnMHHraWcqi9dX6XidzL0CLt15UJWGgH0Y
+         v+i6CLYpM+Q+pnUZuEh70niwJYStRa/9GDhEthIP7JN9Ik4d6HxM3s2WYXGcpkAAJeoM
+         vgvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=EgoI/BpstzExvfapSP/r9rpFlNEylt0wDd7mLlzkxGQ=;
-        b=Fl0fsXPA+nDyvAaMv4WDPEJgiTnMBwHr7DDMHKfKxKOBbBrgyczVQ3DxDf2d0cBc4G
-         kX4GwvWbT0I3o9E4RlE/Eyq2+jcwstVGlwGXD4diOwlPaLVWKnQ4+Wmn9Vcnawrq2Q03
-         5X1B0XvVfFQ3qvJENmNd8yVDwY0LE0zJnxSJh3dQxOrPa5Z9k2KPNQTLtFWS0cViuUIk
-         wRtYoeXLPCeAT+Px6tN64+7bLGTFraO2tcaYYS3w0qAJMXUACaz50i2tH8L+YuFCuNjq
-         4+lxJwxaMURHwMaUizcHou1izH9VHdAEEOPQD+FKLmP62+zDbdVTNyMqntnxlnuoDx3f
-         cwqA==
-X-Gm-Message-State: APjAAAUJAURkPIXiSSCnjHBrF2s1hHN9iCfLHj9i6jOs5OL/Gs2y5h15
-        /gyBBsjWr4PiKfE8nmfuK6Rcc5oMW9hqa+g5pWY=
-X-Google-Smtp-Source: APXvYqyMUNIK/2LBX1NHC436+9DUvSuMC9kF8EqXAJrGmDjVk7EEXqFvCvKb9HsYzM4QU2sMjSM12j8ePZeFckHGReQ=
-X-Received: by 2002:aca:5a0b:: with SMTP id o11mr889855oib.47.1570479051451;
- Mon, 07 Oct 2019 13:10:51 -0700 (PDT)
+        bh=oHp2V4cqwKnA3Bgcpofc2k1MdyH3DCDWUfUFdzKftko=;
+        b=KwXfQQsndFfdyZ1CBLHORh5PgaZ9EploJGQH+zcQH04BkXyZ6PxqeEjiIZkOTqetgm
+         bzijx7m+vvHotZ0E17wQ7o3UOFVDIGSfRBBDdn8HxKvM6Gky4vam9URMFg165txQf779
+         qWm/5EEPIuMPAS6R91Pq+Bh8vq/30bbqNxZNl/Kfrxl/EWEW8lvwGNF3ztUA2c0OoQMC
+         FJMwnRk1b7LhppSGLvJHPVq59QoyiIPqCjjcBkTz5pm4IYKSefT4GdZrWtKOzHXts3iE
+         mDRuoaipJ2sFtJa00BEGuu9lT7VATnJiFn7PricnP98H1X8h3NH03t54xzjC8jnOuAiu
+         hTAg==
+X-Gm-Message-State: APjAAAWYBXXiMMTP4j4Xd5+35bukwcKCptJ/+MsaVCPbuCUIeZbHxllS
+        7wb173NWNEad+qJ3bVoZFWxEg0KTglsOgOHvvDM=
+X-Google-Smtp-Source: APXvYqyVaeboYyT8bBy5PXUW7jVqcPqaem8Vv8nN4FndZkzDsQLqIJQZ00s5vvQDgNVjW2jUJKEKa/xQL5l/s51+9uE=
+X-Received: by 2002:a2e:9905:: with SMTP id v5mr16723400lji.42.1570479079372;
+ Mon, 07 Oct 2019 13:11:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191007131649.1768-1-linux.amoon@gmail.com> <20191007131649.1768-6-linux.amoon@gmail.com>
-In-Reply-To: <20191007131649.1768-6-linux.amoon@gmail.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Mon, 7 Oct 2019 22:10:40 +0200
-Message-ID: <CAFBinCAoJLZj9Kh+SfF4Q+0OCzac2+huon_BU=Q3yE7Fu38U3w@mail.gmail.com>
-Subject: Re: [RFCv1 5/5] arm64/ARM: configs: Change CONFIG_PWM_MESON from m to y
-To:     Anand Moon <linux.amoon@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <CADkTA4PBT374CY+UNb85WjQEaNCDodMZu=MgpG8aMYbAu2eOGA@mail.gmail.com>
+ <20191002020100.GA6436@castle.dhcp.thefacebook.com> <CADkTA4Mbai=Q5xgKH9-md_g73UsHiKnEauVgMWev+-sG8FVNSA@mail.gmail.com>
+ <20191002181914.GA7617@castle.DHCP.thefacebook.com> <CADkTA4PmGBR7YdOXvi6sEDJ+uztuB7x2G95TCcW2u_iqjwhUNQ@mail.gmail.com>
+ <20191004000913.GA5519@castle.DHCP.thefacebook.com> <CADkTA4OJok3cmYCcDKtxBXQ5xtK1EMujh7_AgLnVaeRr18TH9w@mail.gmail.com>
+In-Reply-To: <CADkTA4OJok3cmYCcDKtxBXQ5xtK1EMujh7_AgLnVaeRr18TH9w@mail.gmail.com>
+From:   Bruce Ashfield <bruce.ashfield@gmail.com>
+Date:   Mon, 7 Oct 2019 16:11:07 -0400
+Message-ID: <CADkTA4PKc6VEQYvXk4-EWMJPyOrzWQEsk4p6O_BMFo6kvT2jYg@mail.gmail.com>
+Subject: Re: ptrace/strace and freezer oddities and v5.2+ kernels
+To:     Roman Gushchin <guro@fb.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tj@kernel.org" <tj@kernel.org>,
+        Richard Purdie <richard.purdie@linuxfoundation.org>,
+        "oleg@redhat.com" <oleg@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 3:17 PM Anand Moon <linux.amoon@gmail.com> wrote:
-[...]
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index c9a867ac32d4..72f6a7dca0d6 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -774,7 +774,7 @@ CONFIG_MPL3115=m
->  CONFIG_PWM=y
->  CONFIG_PWM_BCM2835=m
->  CONFIG_PWM_CROS_EC=m
-> -CONFIG_PWM_MESON=m
-> +CONFIG_PWM_MESON=y
-some time ago I submitted a similar patch for the 32-bit SoCs
-it turned that that pwm-meson can be built as module because the
-kernel will run without CPU DVFS as long as the clock and regulator
-drivers are returning -EPROBE_DEFER (-517)
+On Mon, Oct 7, 2019 at 8:54 AM Bruce Ashfield <bruce.ashfield@gmail.com> wrote:
+>
+> On Thu, Oct 3, 2019 at 8:09 PM Roman Gushchin <guro@fb.com> wrote:
+> >
+> > On Wed, Oct 02, 2019 at 05:59:36PM -0400, Bruce Ashfield wrote:
+> > > On Wed, Oct 2, 2019 at 2:19 PM Roman Gushchin <guro@fb.com> wrote:
+> > > >
+> > > > On Wed, Oct 02, 2019 at 12:18:54AM -0400, Bruce Ashfield wrote:
+> > > > > On Tue, Oct 1, 2019 at 10:01 PM Roman Gushchin <guro@fb.com> wrote:
+> > > > > >
+> > > > > > On Tue, Oct 01, 2019 at 12:14:18PM -0400, Bruce Ashfield wrote:
+> > > > > > > Hi all,
+> > > > > > >
+> > > > > >
+> > > > > > Hi Bruce!
+> > > > > >
+> > > > > > > The Yocto project has an upcoming release this fall, and I've been trying to
+> > > > > > > sort through some issues that are happening with kernel 5.2+ .. although
+> > > > > > > there is a specific yocto kernel, I'm testing and seeing this with
+> > > > > > > normal / vanilla
+> > > > > > > mainline kernels as well.
+> > > > > > >
+> > > > > > > I'm running into an issue that is *very* similar to the one discussed in the
+> > > > > > > [REGRESSION] ptrace broken from "cgroup: cgroup v2 freezer" (76f969e)
+> > > > > > > thread from this past may: https://lkml.org/lkml/2019/5/12/272
+> > > > > > >
+> > > > > > > I can confirm that I have the proposed fix for the initial regression report in
+> > > > > > > my build (05b2892637 [signal: unconditionally leave the frozen state
+> > > > > > > in ptrace_stop()]),
+> > > > > > > but yet I'm still seeing 3 or 4 minute runtimes on a test that used to take 3 or
+> > > > > > > 4 seconds.
+> > > > > >
+> > > > > > So, the problem is that you're experiencing a severe performance regression
+> > > > > > in some test, right?
+> > > > >
+> > > > > Hi Roman,
+> > > > >
+> > > > > Correct. In particular, running some of the tests that ship with strace itself.
+> > > > > The performance change is so drastic, that it definitely makes you wonder
+> > > > > "What have I done wrong? Since everyone must be seeing this" .. and I
+> > > > > always blame myself first.
+> > > > >
+> > > > > >
+> > > > > > >
+> > > > > > > This isn't my normal area of kernel hacking, so I've so far come up empty
+> > > > > > > at either fixing it myself, or figuring out a viable workaround. (well, I can
+> > > > > > > "fix" it by remove the cgroup_enter_frozen() call in ptrace_stop ...
+> > > > > > > but obviously,
+> > > > > > > that is just me trying to figure out what could be causing the issue).
+> > > > > > >
+> > > > > > > As part of the release, we run tests that come with various applications. The
+> > > > > > > ptrace test that is causing us issues can be boiled down to this:
+> > > > > > >
+> > > > > > > $ cd /usr/lib/strace/ptest/tests
+> > > > > > > $ time ../strace -o log -qq -esignal=none -e/clock ./printpath-umovestr>ttt
+> > > > > > >
+> > > > > > > (I can provide as many details as needed, but I wanted to keep this initial
+> > > > > > > email relatively short).
+> > > > > > >
+> > > > > > > I'll continue to debug and attempt to fix this myself, but I grabbed the
+> > > > > > > email list from the regression report in May to see if anyone has any ideas
+> > > > > > > or angles that I haven't covered in my search for a fix.
+> > > > > >
+> > > > > > I'm definitely happy to help, but it's a bit hard to say anything from what
+> > > > > > you've provided. I'm not aware of any open issues with the freezer except
+> > > > > > some spurious cgroup frozen<->not frozen transitions which can happen in some
+> > > > > > cases. If you'll describe how can I reproduce the issue, and I'll try to take
+> > > > > > a look asap.
+> > > > >
+> > > > > That would be great.
+> > > > >
+> > > > > I'll attempt to remove all of the build system specifics out of this
+> > > > > (and Richard Purdie
+> > > > > on the cc' of this can probably help provide more details / setup info as well).
+> > > > >
+> > > > > We are running the built-in tests of strace. So here's a cut and paste of what I
+> > > > > did to get the tests available (ignore/skip what is common sense or isn't needed
+> > > > > in your test rig).
+> > > > >
+> > > > > % git clone https://github.com/strace/strace.git
+> > > > > % cd strace
+> > > > > % ./bootstrap
+> > > > > # the --enable flag isn't strictly required, but may break on some
+> > > > > build machines
+> > > > > % ./configure --enable-mpers=no
+> > > > > % make
+> > > > > % make check-TESTS
+> > > > >
+> > > > > That last step will not only build the tests, but run them all .. so
+> > > > > ^c the run once
+> > > > > it starts, since it is a lot of noise (we carry a patch to strace that
+> > > > > allows us to build
+> > > > > the tests without running them).
+> > > > >
+> > > > > % cd tests
+> > > > > % time strace -o log -qq -esignal=none -e/clock ./printpath-umovestr > fff
+> > > > > real    0m2.566s
+> > > > > user    0m0.284s
+> > > > > sys     0m2.519
+> > > > >
+> > > > > On pre-cgroup2 freezer kernels, you see a run time similar to what I have above.
+> > > > > On the newer kernels we are testing, it is taking 3 or 4 minutes to
+> > > > > run the test.
+> > > > >
+> > > > > I hope that is simple enough to setup and try. Since I've been seeing
+> > > > > this on both
+> > > > > mainline kernels and the yocto reference kernels, I don't think it is
+> > > > > something that
+> > > > > I'm carrying in the distro/reference kernel that is causing this (but
+> > > > > again, I always
+> > > > > blame myself first). If you don't see that same run time, then that
+> > > > > does point the finger
+> > > > > back at what we are doing and I'll have to apologize for chewing up some of your
+> > > > > time.
+> > > >
+> > > > Thank you for the detailed description!
+> > > > I'll try to reproduce the issue and will be back
+> > > > by the end of the week.
+> > >
+> > > Thanks again!
+> > >
+> > > While discussing the issue with a few yocto folks today, it came up that
+> > > someone wasn't seeing the same behaviour on the opensuse v5.2 kernel
+> > > (but I've yet to figure out exactly where to find that tree) .. but when I do,
+> > > I'll try and confirm that and will look for patches or config differences that
+> > > could explain the results.
+> > >
+> > > I did confirm that 5.3 shows the same thing today, and I'll do a 5.4-rc1 test
+> > > tomorrow.
+> > >
+> > > We are also primarily reproducing the issue on qemux86-64, so I'm also
+> > > going to try and rule out qemu (but the same version of qemu with just
+> > > the kernel changing shows the issue).
+> >
+> > Hi Bruce!
+> >
+> > I've tried to follow your steps, but unfortunately failed to reproduce the issue.
+> > I've executed the test on my desktop running 5.2 and cgroup v1 (Fedora 30),
+> > and also a qemu vm with vanilla 5.1 and 5.3 and cgroup v2 mounted by default.
+> > In all cases the test execution time was about 4.5 seconds.
+>
+> Hi Roman,
+>
+> Thanks for the time you spent on this. I had *thought* that I ruled out my
+> config before posting .. but clearly, it is either not my config or something
+> else in the environment.
+>
+> >
+> > Looks like something makes your setup special. If you'll provide your
+> > build config, qemu arguments or any other configuration files, I can try
+> > to reproduce it on my side.
+>
+> Indeed. I'm going to dive back in and see what I can find. If I can
+> find something
+> that is reproducible in a completely different environment and easy to configure
+> components, I'll follow up with details.
+>
+> When I figure out what is going on with the config here, I'll follow up as well,
+> so the solution can be captured in any archives.
 
-did you check whether there's some other problem like some unused
-clock which is being disabled at that moment?
-I've been hunting weird problems in the past where it turned out that
-changing kernel config bits changed the boot timing - that masked the
-original problem
+Actually, now that I think about it.
+
+Would it be possible to see the .config that you used for testing (and even how
+you launched the VM) ?.
+
+I just built a 5.2.17 kernel and the long runtimes persist here. I'm not seeing
+anything in my .config that is jumping out, and am now looking at how we are
+launching qemu .. but it would be helpful to have a known good baseline for
+comparison.
+
+If you've already tossed that config, no worries, I'll muddle along
+and figure it
+out eventually.
+
+Bruce
+
+>
+> Thanks again,
+>
+> Bruce
+>
+> >
+> > Thanks!
+> >
+> > Roman
+>
+>
+>
+> --
+> - Thou shalt not follow the NULL pointer, for chaos and madness await
+> thee at its end
+> - "Use the force Harry" - Gandalf, Star Trek II
 
 
-Martin
+
+-- 
+- Thou shalt not follow the NULL pointer, for chaos and madness await
+thee at its end
+- "Use the force Harry" - Gandalf, Star Trek II
