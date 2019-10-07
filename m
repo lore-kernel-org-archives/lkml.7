@@ -2,236 +2,178 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B56CC352AA
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA3DC352AA
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3377221721
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:51:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 676F421835
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:51:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570449104;
-	bh=rJkCYF9E8hJDyr+u7S20Ya90d4j7QifBLzL5U859QeA=;
+	s=default; t=1570449113;
+	bh=NxqMa2fK6t/d1ElaNHjGh/HPXo2f714iDYRP59YB2SQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EXnD93wMQKUwDaLGfsW8IYmlUgMqS0lZY4EzZ+bhKshDsFn4t80GEnZzR7rTDEP2o
-	 qmRPdcVqmU4HktSu5iW6U0EsG1rMjQLY2fBD1ewy+MWaNO1Y01pDeq32A1yFWzvf7f
-	 BHOmnBWeG0wpwEPZBajGumT+es0xnyvkw38QwAxQ=
+	b=Mz8N2U0vbBWbl3GkS+BAtaeL/Zf6PS5MD1aSy68+U7yPRvPM2yzwnEgBzXPeo1xqA
+	 m0fWaaYOcbdds+TFjvfBuonD1tZbiPz+0rlmbzqy/bYCtJwBZLI5G/FqEF5sLmCCyu
+	 5OcSx/+1oj80ionI4D9xHKNShtyj2Q+F//1EcjMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727730AbfJGLvn (ORCPT
+        id S1727835AbfJGLvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 07:51:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55474 "EHLO mail.kernel.org"
+        Mon, 7 Oct 2019 07:51:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727490AbfJGLvn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 07:51:43 -0400
-Received: from dragon (li937-157.members.linode.com [45.56.119.157])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        id S1727490AbfJGLvw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 07:51:52 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08F20206C2;
-        Mon,  7 Oct 2019 11:51:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 435C9206C2;
+        Mon,  7 Oct 2019 11:51:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570449102;
-        bh=rJkCYF9E8hJDyr+u7S20Ya90d4j7QifBLzL5U859QeA=;
+        s=default; t=1570449110;
+        bh=NxqMa2fK6t/d1ElaNHjGh/HPXo2f714iDYRP59YB2SQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=krAXa5J6WdSaSD7XsilsdxAYI6LjH2OnEJltMf52tq4LLeketI0lqfP0IxFX5BXG/
-         mD6+IN98E9Banma/LLMJqN9mHsByFLZhPb5Gwoacnb7cNJReOkneZbuNdUV96xFBrn
-         3T8AljcPirmnJHyjMA/eKxmHitdsR9kgD84ez17w=
-Date:   Mon, 7 Oct 2019 19:51:06 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Ran Wang <ran.wang_1@nxp.com>, Li Yang <leoyang.li@nxp.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: lx2160a: Correct CPU core idle state name
-Message-ID: <20191007115104.GF7150@dragon>
-References: <20190917073357.5895-1-ran.wang_1@nxp.com>
+        b=j8fLsx4MPnXnRMS/JtkqUyGl3MPCBW6gOr8mWXxREtm1cmaEO3GGM/7G/CI3duZVE
+         gSWbfLgytGFa0hw4+z3MishM6Y2I0RLIf0Cfol0b6PT4j8QY+sb2rqRRq/+t5X5aU7
+         7D/Jf1lK9vfCQ72ibemx20yd7Pbz18ZmvLAYN55Q=
+Date:   Mon, 7 Oct 2019 13:51:48 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, Merlijn Wajer <merlijn@wizzup.org>
+Subject: Re: [PATCH v2 1/3] drm/sun4i: dsi: Fix video start delay computation
+Message-ID: <20191007115148.vlu2ptmrfyng4p3r@gilmour>
+References: <20191006160303.24413-1-icenowy@aosc.io>
+ <20191006160303.24413-2-icenowy@aosc.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="mvyysf4wnnowwhd4"
 Content-Disposition: inline
-In-Reply-To: <20190917073357.5895-1-ran.wang_1@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20191006160303.24413-2-icenowy@aosc.io>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 03:33:56PM +0800, Ran Wang wrote:
-> lx2160a support PW15 but not PW20, correct name to avoid confusing.
-> 
-> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
 
-Leo, agree?
+--mvyysf4wnnowwhd4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Shawn
+On Mon, Oct 07, 2019 at 12:03:00AM +0800, Icenowy Zheng wrote:
+> From: Jagan Teki <jagan@amarulasolutions.com>
+>
+> The LCD timing definitions between Linux DRM vs Allwinner are different,
+> below diagram shows this clear differences.
+>
+>            Active                 Front           Sync           Back
+>            Region                 Porch                          Porch
+> <-----------------------><----------------><--------------><-------------->
+>   //////////////////////|
+>  ////////////////////// |
+> //////////////////////  |..................                ................
+>                                            ________________
+> <----- [hv]display ----->
+> <------------- [hv]sync_start ------------>
+> <--------------------- [hv]sync_end ---------------------->
+> <-------------------------------- [hv]total ------------------------------>
+>
+> <----- lcd_[xy] -------->		  <- lcd_[hv]spw ->
+> 					  <---------- lcd_[hv]bp --------->
+> <-------------------------------- lcd_[hv]t ------------------------------>
+>
+> The DSI driver misinterpreted the vbp term from the BSP code to refer
+> only to the backporch, when in fact it was backporch + sync. Thus the
+> driver incorrectly used the vertical front porch plus sync in its
+> calculation of the DRQ set bit value, when it should not have included
+> the sync timing.
+>
+> Including additional sync timings leads to flip_done timed out as:
+>
+> WARNING: CPU: 0 PID: 31 at drivers/gpu/drm/drm_atomic_helper.c:1429 drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0
+> [CRTC:46:crtc-0] vblank wait timed out
+> Modules linked in:
+> CPU: 0 PID: 31 Comm: kworker/0:1 Not tainted 5.1.0-next-20190514-00029-g09e5b0ed0a58 #18
+> Hardware name: Allwinner sun8i Family
+> Workqueue: events deferred_probe_work_func
+> [<c010ed54>] (unwind_backtrace) from [<c010b76c>] (show_stack+0x10/0x14)
+> [<c010b76c>] (show_stack) from [<c0688c70>] (dump_stack+0x84/0x98)
+> [<c0688c70>] (dump_stack) from [<c011d9e4>] (__warn+0xfc/0x114)
+> [<c011d9e4>] (__warn) from [<c011da40>] (warn_slowpath_fmt+0x44/0x68)
+> [<c011da40>] (warn_slowpath_fmt) from [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0)
+> [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1) from [<c040e694>] (drm_atomic_helper_commit_tail_rpm+0x5c/0x6c)
+> [<c040e694>] (drm_atomic_helper_commit_tail_rpm) from [<c040e4dc>] (commit_tail+0x40/0x6c)
+> [<c040e4dc>] (commit_tail) from [<c040e5cc>] (drm_atomic_helper_commit+0xbc/0x128)
+> [<c040e5cc>] (drm_atomic_helper_commit) from [<c0411b64>] (restore_fbdev_mode_atomic+0x1cc/0x1dc)
+> [<c0411b64>] (restore_fbdev_mode_atomic) from [<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked+0x54/0xa0)
+> [<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked) from [<c0415774>] (drm_fb_helper_set_par+0x30/0x54)
+> [<c0415774>] (drm_fb_helper_set_par) from [<c03ad450>] (fbcon_init+0x560/0x5ac)
+> [<c03ad450>] (fbcon_init) from [<c03eb8a0>] (visual_init+0xbc/0x104)
+> [<c03eb8a0>] (visual_init) from [<c03ed1b8>] (do_bind_con_driver+0x1b0/0x390)
+> [<c03ed1b8>] (do_bind_con_driver) from [<c03ed780>] (do_take_over_console+0x13c/0x1c4)
+> [<c03ed780>] (do_take_over_console) from [<c03ad800>] (do_fbcon_takeover+0x74/0xcc)
+> [<c03ad800>] (do_fbcon_takeover) from [<c013c9c8>] (notifier_call_chain+0x44/0x84)
+> [<c013c9c8>] (notifier_call_chain) from [<c013cd20>] (__blocking_notifier_call_chain+0x48/0x60)
+> [<c013cd20>] (__blocking_notifier_call_chain) from [<c013cd50>] (blocking_notifier_call_chain+0x18/0x20)
+> [<c013cd50>] (blocking_notifier_call_chain) from [<c03a6e44>] (register_framebuffer+0x1e0/0x2f8)
+> [<c03a6e44>] (register_framebuffer) from [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock+0x2fc/0x50c)
+> [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock) from [<c04158c8>] (drm_fbdev_client_hotplug+0xe8/0x1b8)
+> [<c04158c8>] (drm_fbdev_client_hotplug) from [<c0415a20>] (drm_fbdev_generic_setup+0x88/0x118)
+> [<c0415a20>] (drm_fbdev_generic_setup) from [<c043f060>] (sun4i_drv_bind+0x128/0x160)
+> [<c043f060>] (sun4i_drv_bind) from [<c044b598>] (try_to_bring_up_master+0x164/0x1a0)
+> [<c044b598>] (try_to_bring_up_master) from [<c044b668>] (__component_add+0x94/0x140)
+> [<c044b668>] (__component_add) from [<c0445e1c>] (sun6i_dsi_probe+0x144/0x234)
+> [<c0445e1c>] (sun6i_dsi_probe) from [<c0452ef4>] (platform_drv_probe+0x48/0x9c)
+> [<c0452ef4>] (platform_drv_probe) from [<c04512cc>] (really_probe+0x1dc/0x2c8)
+> [<c04512cc>] (really_probe) from [<c0451518>] (driver_probe_device+0x60/0x160)
+> [<c0451518>] (driver_probe_device) from [<c044f7a4>] (bus_for_each_drv+0x74/0xb8)
+> [<c044f7a4>] (bus_for_each_drv) from [<c045107c>] (__device_attach+0xd0/0x13c)
+> [<c045107c>] (__device_attach) from [<c0450474>] (bus_probe_device+0x84/0x8c)
+> [<c0450474>] (bus_probe_device) from [<c0450900>] (deferred_probe_work_func+0x64/0x90)
+> [<c0450900>] (deferred_probe_work_func) from [<c0135970>] (process_one_work+0x204/0x420)
+> [<c0135970>] (process_one_work) from [<c013690c>] (worker_thread+0x274/0x5a0)
+> [<c013690c>] (worker_thread) from [<c013b3d8>] (kthread+0x11c/0x14c)
+> [<c013b3d8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+> Exception stack(0xde539fb0 to 0xde539ff8)
+> 9fa0:                                     00000000 00000000 00000000 00000000
+> 9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> 9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> ---[ end trace 495200a78b24980e ]---
+> random: fast init done
+> [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CRTC:46:crtc-0] flip_done timed out
+> [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CONNECTOR:48:DSI-1] flip_done timed out
+> [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [PLANE:30:plane-0] flip_done timed out
+>
+> With the terms(as described in above diagram) fixed, the panel
+> displays correctly without any timeouts.
+>
+> Tested-by: Merlijn Wajer <merlijn@wizzup.org>
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 
-> ---
->  arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 36 +++++++++++++-------------
->  1 file changed, 18 insertions(+), 18 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> index 408e0ec..b032f38 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> @@ -33,7 +33,7 @@
->  			i-cache-line-size = <64>;
->  			i-cache-sets = <192>;
->  			next-level-cache = <&cluster0_l2>;
-> -			cpu-idle-states = <&cpu_pw20>;
-> +			cpu-idle-states = <&cpu_pw15>;
->  		};
->  
->  		cpu@1 {
-> @@ -49,7 +49,7 @@
->  			i-cache-line-size = <64>;
->  			i-cache-sets = <192>;
->  			next-level-cache = <&cluster0_l2>;
-> -			cpu-idle-states = <&cpu_pw20>;
-> +			cpu-idle-states = <&cpu_pw15>;
->  		};
->  
->  		cpu@100 {
-> @@ -65,7 +65,7 @@
->  			i-cache-line-size = <64>;
->  			i-cache-sets = <192>;
->  			next-level-cache = <&cluster1_l2>;
-> -			cpu-idle-states = <&cpu_pw20>;
-> +			cpu-idle-states = <&cpu_pw15>;
->  		};
->  
->  		cpu@101 {
-> @@ -81,7 +81,7 @@
->  			i-cache-line-size = <64>;
->  			i-cache-sets = <192>;
->  			next-level-cache = <&cluster1_l2>;
-> -			cpu-idle-states = <&cpu_pw20>;
-> +			cpu-idle-states = <&cpu_pw15>;
->  		};
->  
->  		cpu@200 {
-> @@ -97,7 +97,7 @@
->  			i-cache-line-size = <64>;
->  			i-cache-sets = <192>;
->  			next-level-cache = <&cluster2_l2>;
-> -			cpu-idle-states = <&cpu_pw20>;
-> +			cpu-idle-states = <&cpu_pw15>;
->  		};
->  
->  		cpu@201 {
-> @@ -113,7 +113,7 @@
->  			i-cache-line-size = <64>;
->  			i-cache-sets = <192>;
->  			next-level-cache = <&cluster2_l2>;
-> -			cpu-idle-states = <&cpu_pw20>;
-> +			cpu-idle-states = <&cpu_pw15>;
->  		};
->  
->  		cpu@300 {
-> @@ -129,7 +129,7 @@
->  			i-cache-line-size = <64>;
->  			i-cache-sets = <192>;
->  			next-level-cache = <&cluster3_l2>;
-> -			cpu-idle-states = <&cpu_pw20>;
-> +			cpu-idle-states = <&cpu_pw15>;
->  		};
->  
->  		cpu@301 {
-> @@ -145,7 +145,7 @@
->  			i-cache-line-size = <64>;
->  			i-cache-sets = <192>;
->  			next-level-cache = <&cluster3_l2>;
-> -			cpu-idle-states = <&cpu_pw20>;
-> +			cpu-idle-states = <&cpu_pw15>;
->  		};
->  
->  		cpu@400 {
-> @@ -161,7 +161,7 @@
->  			i-cache-line-size = <64>;
->  			i-cache-sets = <192>;
->  			next-level-cache = <&cluster4_l2>;
-> -			cpu-idle-states = <&cpu_pw20>;
-> +			cpu-idle-states = <&cpu_pw15>;
->  		};
->  
->  		cpu@401 {
-> @@ -177,7 +177,7 @@
->  			i-cache-line-size = <64>;
->  			i-cache-sets = <192>;
->  			next-level-cache = <&cluster4_l2>;
-> -			cpu-idle-states = <&cpu_pw20>;
-> +			cpu-idle-states = <&cpu_pw15>;
->  		};
->  
->  		cpu@500 {
-> @@ -193,7 +193,7 @@
->  			i-cache-line-size = <64>;
->  			i-cache-sets = <192>;
->  			next-level-cache = <&cluster5_l2>;
-> -			cpu-idle-states = <&cpu_pw20>;
-> +			cpu-idle-states = <&cpu_pw15>;
->  		};
->  
->  		cpu@501 {
-> @@ -209,7 +209,7 @@
->  			i-cache-line-size = <64>;
->  			i-cache-sets = <192>;
->  			next-level-cache = <&cluster5_l2>;
-> -			cpu-idle-states = <&cpu_pw20>;
-> +			cpu-idle-states = <&cpu_pw15>;
->  		};
->  
->  		cpu@600 {
-> @@ -225,7 +225,7 @@
->  			i-cache-line-size = <64>;
->  			i-cache-sets = <192>;
->  			next-level-cache = <&cluster6_l2>;
-> -			cpu-idle-states = <&cpu_pw20>;
-> +			cpu-idle-states = <&cpu_pw15>;
->  		};
->  
->  		cpu@601 {
-> @@ -241,7 +241,7 @@
->  			i-cache-line-size = <64>;
->  			i-cache-sets = <192>;
->  			next-level-cache = <&cluster6_l2>;
-> -			cpu-idle-states = <&cpu_pw20>;
-> +			cpu-idle-states = <&cpu_pw15>;
->  		};
->  
->  		cpu@700 {
-> @@ -257,7 +257,7 @@
->  			i-cache-line-size = <64>;
->  			i-cache-sets = <192>;
->  			next-level-cache = <&cluster7_l2>;
-> -			cpu-idle-states = <&cpu_pw20>;
-> +			cpu-idle-states = <&cpu_pw15>;
->  		};
->  
->  		cpu@701 {
-> @@ -273,7 +273,7 @@
->  			i-cache-line-size = <64>;
->  			i-cache-sets = <192>;
->  			next-level-cache = <&cluster7_l2>;
-> -			cpu-idle-states = <&cpu_pw20>;
-> +			cpu-idle-states = <&cpu_pw15>;
->  		};
->  
->  		cluster0_l2: l2-cache0 {
-> @@ -340,9 +340,9 @@
->  			cache-level = <2>;
->  		};
->  
-> -		cpu_pw20: cpu-pw20 {
-> +		cpu_pw15: cpu-pw15 {
->  			compatible = "arm,idle-state";
-> -			idle-state-name = "PW20";
-> +			idle-state-name = "PW15";
->  			arm,psci-suspend-param = <0x0>;
->  			entry-latency-us = <2000>;
->  			exit-latency-us = <2000>;
-> -- 
-> 2.7.4
-> 
+you should have your SoB here.
+
+All the patches look fine, so there's no need to resend a new
+version. I'll add it if you can give it.
+
+Maxime
+
+--mvyysf4wnnowwhd4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZsm1AAKCRDj7w1vZxhR
+xc9VAPsEb55VR99Kw0sCcM0i8dH+KxAOHTdQo/I+My1hhiSzzQEAsGt/j9E+Lstn
+zXlCA4KDXC8Mtusd9AHycGI3RcLAqw4=
+=pIhD
+-----END PGP SIGNATURE-----
+
+--mvyysf4wnnowwhd4--
