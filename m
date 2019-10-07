@@ -2,129 +2,156 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA9AC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EFE5ECE58D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4A0B21835
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:25:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF7A821871
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:26:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="i3/yK5Mr"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="LuKZCLEk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728278AbfJGNZ3 (ORCPT
+        id S1728336AbfJGN0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 09:25:29 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:36140 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727324AbfJGNZ2 (ORCPT
+        Mon, 7 Oct 2019 09:26:11 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:36192 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727923AbfJGN0L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 09:25:28 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x97DJEMn044722;
-        Mon, 7 Oct 2019 13:25:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=CjAq2/qIQ+hwx+J1512MljThH+9wP2hyv7uTXzQ8/ps=;
- b=i3/yK5MrK0JFZNPBX5l974i3IlH9H9BBtbIxX5oWOGo7JVoBVKie72fW7IbWelYwRt6j
- RFduqLV/h/rz+GHDxJOEJyeabgG/AedoHFMxJGzhOue6tOy6RXX2Q3Qtap2UYBu2w6xE
- +gfkdijAx0K+maHOinBb/NAE3Ty6D2wuVPHIQpSuHR4DkH2GghY0faiMGh1buH/R60Ct
- CzP8rWKI1e8CXNshnVvDJj7YvTJzFUyCYL0pvirXXfC5FnScU4dThRIs6bYY0Wn0JFd7
- iPKHHQyxQpVE7L6CFiEyWK7nHhDp+pkwwNmlXOZQAY6dU5JZonIPM6Jih+T1frb6I+Xh FA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2vejku6py0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 07 Oct 2019 13:25:17 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x97DHrbC037339;
-        Mon, 7 Oct 2019 13:25:17 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2vg203rtxk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 07 Oct 2019 13:25:17 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x97DPEfm017826;
-        Mon, 7 Oct 2019 13:25:15 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 07 Oct 2019 13:25:13 +0000
-Date:   Mon, 7 Oct 2019 16:25:05 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     Liviu Dudau <liviu.dudau@arm.com>,
-        James Wang <james.qian.wang@arm.com>,
-        Brian Starkey <brian.starkey@arm.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] drm/komeda: remove redundant assignment to pointer
- disable_done
-Message-ID: <20191007132505.GV22609@kadam>
-References: <20191004162156.325-1-colin.king@canonical.com>
- <20191004192720.7eiqdvsm2yv62svg@e110455-lin.cambridge.arm.com>
- <35232014-f65a-f7a1-99db-8ed91f610a77@canonical.com>
+        Mon, 7 Oct 2019 09:26:11 -0400
+Received: by mail-ed1-f67.google.com with SMTP id h2so12435645edn.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 06:26:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gzC3+Ai/BcUPGOo2+frzMx33cRF/lu4IW7bk4buzvfY=;
+        b=LuKZCLEks+pxri1fZImZ8aWZNoPyA0k53cdFVsuHb5MDqAN5knWAMDy0wPUsgUxBCF
+         gQcbOYCIkTqaNbsMxo5RKNjpP0d8lQMy7pguGPtgJSh9DP3B9YIN2mS8bmQvpx9hwj+h
+         f1Slcuf8Kzh1JBnKhidomUrXDTUHxpZKdm+qSnztmiyYersQcoVvJ/ohhpzjG+T7kfj/
+         les5EAK/LmmoySH+aJWZ1XdWfqQwdMTB2W4ogQ6nBwrh8QCxg6VIpsZnYghJaIlVBMwA
+         tZPwZXA0ICwRWfFHd+u/u3DYHya4aQ5yYd1iqfinaPiyxKvPuAJePigymhWXfsmqSyff
+         W1oQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gzC3+Ai/BcUPGOo2+frzMx33cRF/lu4IW7bk4buzvfY=;
+        b=cXPOqTtL4ukQRim84I8qMjaYbumDwS6uf8int8pGfACzwV8keb+xwKbrkpbdB3PTnk
+         uXeJhGT0OZyibWUduHtp58VDrQe2Q5AQU4+c9M20A2slSFstwFcac5sHmJKGqvv+h54F
+         AJD6gGOouqkpwj8lcAdULwVQTBvMQfRRG0dgilHpB28dvCTBl5qR3/QSQSj7C+vnQpn+
+         zQYefq9D9hPGHh+gpnLiFELNO4bgZ52SHWw61x+HfcZN1Yay/evzlvVKN9Rx5k4Gm/SH
+         Bj4W+94rh3WQ0ox+VISz8SeNNWFlxh9yg0NgKAAOOmM8SbwV8yTdWfaMzP6wEy+Run1c
+         FUgA==
+X-Gm-Message-State: APjAAAXiUOVnJCNuIQBj/zDNGWHH66u9D3QHXTYcA6KioGKLhR4rplOY
+        SZjFLKrU5/gd703o9FR8JEbi4Q==
+X-Google-Smtp-Source: APXvYqzElnCPZjbODoQl3J/SFOw2KfpCAczFpMms9cACkFS6giHuVTdY1dFFe29OUP7N4OGq9tG9dw==
+X-Received: by 2002:a05:6402:7c1:: with SMTP id u1mr29121094edy.198.1570454769090;
+        Mon, 07 Oct 2019 06:26:09 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id t30sm3414834edt.91.2019.10.07.06.26.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 07 Oct 2019 06:26:08 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 4DF0F10027F; Mon,  7 Oct 2019 16:26:07 +0300 (+03)
+Date:   Mon, 7 Oct 2019 16:26:07 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V4 2/2] mm/pgtable/debug: Add test validating
+ architecture page table helpers
+Message-ID: <20191007132607.4q537nauwfn5thol@box>
+References: <1570427124-21887-1-git-send-email-anshuman.khandual@arm.com>
+ <1570427124-21887-3-git-send-email-anshuman.khandual@arm.com>
+ <20191007130617.GB56546@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <35232014-f65a-f7a1-99db-8ed91f610a77@canonical.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9402 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=919
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910070134
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9402 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910070134
+In-Reply-To: <20191007130617.GB56546@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 10:53:44PM +0100, Colin Ian King wrote:
-> On 04/10/2019 20:27, Liviu Dudau wrote:
-> > On Fri, Oct 04, 2019 at 05:21:56PM +0100, Colin King wrote:
-> >> From: Colin Ian King <colin.king@canonical.com>
-> >>
-> >> The pointer disable_done is being initialized with a value that
-> >> is never read and is being re-assigned a little later on. The
-> >> assignment is redundant and hence can be removed.
+On Mon, Oct 07, 2019 at 03:06:17PM +0200, Ingo Molnar wrote:
+> 
+> * Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+> 
+> > This adds a test module which will validate architecture page table helpers
+> > and accessors regarding compliance with generic MM semantics expectations.
+> > This will help various architectures in validating changes to the existing
+> > page table helpers or addition of new ones.
 > > 
-> > Not really true, isn't it? The re-assignment is done under the condition that
-> > crtc->state->active is true. disable_done will be used regardless after the if
-> > block, so we can't skip this initialisation.
-> > 
-> > Not sure why Coverity flags this, but I would NAK this patch.
+> > Test page table and memory pages creating it's entries at various level are
+> > all allocated from system memory with required alignments. If memory pages
+> > with required size and alignment could not be allocated, then all depending
+> > individual tests are skipped.
 > 
-> I'm patching against the driver from linux-next so I believe this is OK
-> for that. I believe your statement is true against linux which does not
-> have commit:
+> > diff --git a/arch/x86/include/asm/pgtable_64_types.h b/arch/x86/include/asm/pgtable_64_types.h
+> > index 52e5f5f2240d..b882792a3999 100644
+> > --- a/arch/x86/include/asm/pgtable_64_types.h
+> > +++ b/arch/x86/include/asm/pgtable_64_types.h
+> > @@ -40,6 +40,8 @@ static inline bool pgtable_l5_enabled(void)
+> >  #define pgtable_l5_enabled() 0
+> >  #endif /* CONFIG_X86_5LEVEL */
+> >  
+> > +#define mm_p4d_folded(mm) (!pgtable_l5_enabled())
+> > +
+> >  extern unsigned int pgdir_shift;
+> >  extern unsigned int ptrs_per_p4d;
 > 
-> d6cb013579e743bc7bc5590ca35a1943f2b8f3c8
-> Author: Lowry Li (Arm Technology China) <Lowry.Li@arm.com>
-> Date:   Fri Sep 6 07:18:06 2019 +0000
-> 
+> Any deep reason this has to be a macro instead of proper C?
 
-It really does help reviewing patches when this is mentioned in the
-commit message.
+It's a way to override the generic mm_p4d_folded(). It can be rewritten
+as inline function + define. Something like:
 
-There is some debate about whether this should be mentioned as a Fixes
-since it doesn't fix a bug.  I initialy felt it shouldn't be, but now
-I think enough people think it should be listed as Fixes that I must be
-wrong.  Either way, it's very useful information.
+#define mm_p4d_folded mm_p4d_folded
+static inline bool mm_p4d_folded(struct mm_struct *mm)
+{
+	return !pgtable_l5_enabled();
+}
 
-The other thing is that soon get_maintainer.pl will start CC'ing people
-from the Fixes tag and right now Lowry Li is not CC'd so that's
-unfortunate.
+But I don't see much reason to be more verbose here than needed.
 
-regards,
-dan carpenter
-
+-- 
+ Kirill A. Shutemov
