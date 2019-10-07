@@ -2,139 +2,111 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DCDAECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF1DC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 387A821655
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3E09206C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:13:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="mYSvhDDh"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EedQIAKS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbfJGONt (ORCPT
+        id S1728187AbfJGONz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 10:13:49 -0400
-Received: from mail-eopbgr700088.outbound.protection.outlook.com ([40.107.70.88]:5473
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726334AbfJGONt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 10:13:49 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VxEl4ru/btN2pLDIIlD4ueYs4E4pzGTbbbGk4ydgSDOiNhiy2rBAUZVRHzPTcIbe9BT796fCzGlnHvAK/mvaAdfQUmMi+oQwx3sV4vyXfDcBSeFPHoeynPzMfhxnFx1eNCc84srETVY8dDzjwgJ4Rngf4ozlxbT56wCCLm+/cmRrMo26cLT76pF1fqNiWj6ObDyHbcX24RiRu1RNK7fzDVQ/MDyJ5Z0GNlLPPwOvrL1hJuQMaKjExbUkzdYC3OF1kX5H+sYqnoO1pGRlvhd33aVVD77YFiLBbBADohFET3NSrF5cf5Jw/VG8qAYj3dBXJY5gR9YD3lEBz6OLAxhZOQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JXON0sIeHZ2wNwMyyQbQ2fwIi8wQ7ZP9+Mol11hgLPY=;
- b=BqdHPkNw8peO5YFKxEqWJlomOGANn3l7tH4B17++lbol/lRBrnhqEfTGmsq2Sns1dNMTDkOYB0YuLzkWkADN6TG3DPsS7qeacS3pFygZpqw01JKVTVbIjJSN5+Z++nZbZEUeM3V5K3XHtGdTj4eb301Kee0LsYGM+2N3+WmuMqL77JfYFRbA4OqgdQTs6GAN3coKypN/6c3TdG+P2AzkU1zir2BxCtAWfKlxPstdfmZGuUyOP661Gmxel2YD89NvR26WdJf9cdWZCnpOKWBQXtoBgAtnmJmQOj/n0p2s+zD7Z02sfO+Ev2O9wHEm+vyEHUHJKvzeyEEAkSwlVRmD4Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JXON0sIeHZ2wNwMyyQbQ2fwIi8wQ7ZP9+Mol11hgLPY=;
- b=mYSvhDDh5Mw9sS/vH5wMZYxxeQ0Is+MEtJ0iuxbZalLQY7yRRQ0wQtuvHNdcVfBUltnBOUn8rXFH3n4DENgYrkeFtlctk3UxVvslr9myDu+WXygohuooBA2dhtyAiMiUqm4pm2A28/KBLYE8V9Q3qSTNse6h1OsEPvUObJBX8oQ=
-Received: from CY4PR1201MB0230.namprd12.prod.outlook.com (10.172.79.7) by
- CY4PR1201MB2516.namprd12.prod.outlook.com (10.172.121.141) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.24; Mon, 7 Oct 2019 14:13:44 +0000
-Received: from CY4PR1201MB0230.namprd12.prod.outlook.com
- ([fe80::5471:f58b:733e:1a61]) by CY4PR1201MB0230.namprd12.prod.outlook.com
- ([fe80::5471:f58b:733e:1a61%7]) with mapi id 15.20.2327.023; Mon, 7 Oct 2019
- 14:13:44 +0000
-From:   Harry Wentland <hwentlan@amd.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        "Wentland, Harry" <Harry.Wentland@amd.com>,
-        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>
-CC:     "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
-Subject: Re: [PATCH] drm/amd/display: Fix typo in some comments
-Thread-Topic: [PATCH] drm/amd/display: Fix typo in some comments
-Thread-Index: AQHVe3CP7mPuXXwvtkyI5VRfn5sIiKdPO/aA
-Date:   Mon, 7 Oct 2019 14:13:44 +0000
-Message-ID: <04e006aa-a354-dfe3-3d13-d674c662c300@amd.com>
-References: <20191005113205.14601-1-christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20191005113205.14601-1-christophe.jaillet@wanadoo.fr>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [165.204.55.251]
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-x-clientproxiedby: YTXPR0101CA0064.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b00:1::41) To CY4PR1201MB0230.namprd12.prod.outlook.com
- (2603:10b6:910:1e::7)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Harry.Wentland@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5a7fbf91-6241-4e0d-6846-08d74b308fcc
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: CY4PR1201MB2516:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CY4PR1201MB2516AA1730D18C593E4315118C9B0@CY4PR1201MB2516.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4125;
-x-forefront-prvs: 01834E39B7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(346002)(136003)(376002)(366004)(199004)(189003)(66446008)(446003)(2201001)(11346002)(6116002)(186003)(2501003)(476003)(2616005)(3846002)(26005)(58126008)(54906003)(5660300002)(316002)(65806001)(65956001)(66066001)(25786009)(110136005)(64756008)(8936002)(31696002)(66556008)(31686004)(66476007)(8676002)(2906002)(66946007)(81166006)(486006)(81156014)(36756003)(76176011)(6512007)(14454004)(6436002)(6246003)(305945005)(6486002)(478600001)(71190400001)(71200400001)(256004)(52116002)(99286004)(14444005)(229853002)(4326008)(386003)(6506007)(53546011)(102836004)(7736002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR1201MB2516;H:CY4PR1201MB0230.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: nMLMUQDqfadKl8adIH0tn+dzNX6afgQFCIQdCfIHUdvSjH9f94Q/v7cahFOv36PN6MnGQBUkfwhCiBu77CImqFv8LDcxQB8pXYHPPQ3jxO+sBGwIvtWIklw6bhFkCs6sx+dViKo2r+b1t8vKkCevDEGlQ9PWtWUKL2fm2j1IEBwL+e/y99ycJtqGot88cys3ywHbnhDKyKX9i0z4wGVh5xyn37V/NOMlQ+x0TSpt0sRAwABMgh/CKDD+cu6+/6Iy/iXV00pEIsJ4zQIQgb3TsnpXIcG5A1kuSXnq2T1rE6QEQ114ezdCl5TevRIQzrwmPy0U/zxzAnim+VrTjAzxtgYVe0vK6PgJoh+bJGoWLlEORCnwo1I5lWUTAJRM+F30WMPN2ECcbKSVoOqY83OcqZpVGd08QqfRu/KAfMiwpis=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <CEAFFC5EF80DCA4887F9FA2FF3BF475B@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 7 Oct 2019 10:13:55 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:47874 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726334AbfJGONy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 10:13:54 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x97EDTKv054047;
+        Mon, 7 Oct 2019 14:13:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=v/JPj74F9S3rIumlrnm9CbKkIEwYEENjPGMUC3qkKHg=;
+ b=EedQIAKStPQCo+m5mvlaq6W72DaCQsQgRXLQ6UMSh49lf4oA3aGG6pHVG0pn504CuUoe
+ iAqcDGL8UVr261SlkrWS39EXVIEHnSXZXQvLIy4iwBpDHN2n/f3Wo2jAN6dgskmXNPuz
+ xWbkeWoPiqraedRhgPluUjwa9G6khJCVtpPyN/2QJnjocZG5SSmVG6TZ7BtlPxa90eEt
+ kHQCPEYoRATe2jeDVAqB+kqwqLT/Q59RZ7Vcv582T5ozjR6UB7TcNUEfaZkIYtRxMX02
+ AZA7YHOmOdfCBMZuf7qXfjJJyPiceIUs6gTkD6sILqjNqOVxMK1gKmcxBheKAFfV99OK Fw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2vek4q6yee-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 07 Oct 2019 14:13:42 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x97ECdXj012729;
+        Mon, 7 Oct 2019 14:13:41 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2vf4n99tck-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 07 Oct 2019 14:13:41 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x97EDdsv026177;
+        Mon, 7 Oct 2019 14:13:39 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 07 Oct 2019 07:13:38 -0700
+Date:   Mon, 7 Oct 2019 17:13:27 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+Cc:     outreachy-kernel@googlegroups.com, Larry.Finger@lwfinger.net,
+        florian.c.schilhabel@googlemail.com, gregkh@linuxfoundation.org,
+        payal.s.kshirsagar.98@gmail.com, himadri18.07@gmail.com,
+        colin.king@canonical.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org,
+        trivial@kernel.org
+Subject: Re: [PATCH] staging: rtl8712: align arguments with open parenthesis
+ in file rtl8712_led.c
+Message-ID: <20191007141327.GY22609@kadam>
+References: <20191007003902.21911-1-gabrielabittencourt00@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5a7fbf91-6241-4e0d-6846-08d74b308fcc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Oct 2019 14:13:44.2494
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zaNEZM4Hdd7p913D9bXoIQyCWdcjEIMItp95EaPS0z4Rf+M8e7Y1Dk0mkHlb3heK8kGuAt/b+Jcp350YvaeBLQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB2516
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191007003902.21911-1-gabrielabittencourt00@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9402 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910070141
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9402 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910070140
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0xMC0wNSA3OjMyIGEubS4sIENocmlzdG9waGUgSkFJTExFVCB3cm90ZToNCj4gcCBh
-bmQgZyBhcmUgc3dpdGNoZWQgaW4gJ2FtZHBndV9kbScNCj4gDQo+IFNpZ25lZC1vZmYtYnk6IENo
-cmlzdG9waGUgSkFJTExFVCA8Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI+DQoNClJldmll
-d2VkLWJ5OiBIYXJyeSBXZW50bGFuZCA8aGFycnkud2VudGxhbmRAYW1kLmNvbT4NCg0KSGFycnkN
-Cg0KPiAtLS0NCj4gIGRyaXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxheS9hbWRncHVfZG0vYW1kZ3B1
-X2RtLmMgfCA0ICsrLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDIgZGVs
-ZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FtZC9kaXNwbGF5
-L2FtZGdwdV9kbS9hbWRncHVfZG0uYyBiL2RyaXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxheS9hbWRn
-cHVfZG0vYW1kZ3B1X2RtLmMNCj4gaW5kZXggOTI5MzJkNTIxZDdmLi5iOWMyZTFhOTMwYWIgMTAw
-NjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxheS9hbWRncHVfZG0vYW1kZ3B1
-X2RtLmMNCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2FtZC9kaXNwbGF5L2FtZGdwdV9kbS9hbWRn
-cHVfZG0uYw0KPiBAQCAtMTA0Myw3ICsxMDQzLDcgQEAgc3RhdGljIHZvaWQgczNfaGFuZGxlX21z
-dChzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LCBib29sIHN1c3BlbmQpDQo+ICANCj4gIC8qKg0KPiAg
-ICogZG1faHdfaW5pdCgpIC0gSW5pdGlhbGl6ZSBEQyBkZXZpY2UNCj4gLSAqIEBoYW5kbGU6IFRo
-ZSBiYXNlIGRyaXZlciBkZXZpY2UgY29udGFpbmluZyB0aGUgYW1kcGd1X2RtIGRldmljZS4NCj4g
-KyAqIEBoYW5kbGU6IFRoZSBiYXNlIGRyaXZlciBkZXZpY2UgY29udGFpbmluZyB0aGUgYW1kZ3B1
-X2RtIGRldmljZS4NCj4gICAqDQo+ICAgKiBJbml0aWFsaXplIHRoZSAmc3RydWN0IGFtZGdwdV9k
-aXNwbGF5X21hbmFnZXIgZGV2aWNlLiBUaGlzIGludm9sdmVzIGNhbGxpbmcNCj4gICAqIHRoZSBp
-bml0aWFsaXplcnMgb2YgZWFjaCBETSBjb21wb25lbnQsIHRoZW4gcG9wdWxhdGluZyB0aGUgc3Ry
-dWN0IHdpdGggdGhlbS4NCj4gQEAgLTEwNzMsNyArMTA3Myw3IEBAIHN0YXRpYyBpbnQgZG1faHdf
-aW5pdCh2b2lkICpoYW5kbGUpDQo+ICANCj4gIC8qKg0KPiAgICogZG1faHdfZmluaSgpIC0gVGVh
-cmRvd24gREMgZGV2aWNlDQo+IC0gKiBAaGFuZGxlOiBUaGUgYmFzZSBkcml2ZXIgZGV2aWNlIGNv
-bnRhaW5pbmcgdGhlIGFtZHBndV9kbSBkZXZpY2UuDQo+ICsgKiBAaGFuZGxlOiBUaGUgYmFzZSBk
-cml2ZXIgZGV2aWNlIGNvbnRhaW5pbmcgdGhlIGFtZGdwdV9kbSBkZXZpY2UuDQo+ICAgKg0KPiAg
-ICogVGVhcmRvd24gY29tcG9uZW50cyB3aXRoaW4gJnN0cnVjdCBhbWRncHVfZGlzcGxheV9tYW5h
-Z2VyIHRoYXQgcmVxdWlyZQ0KPiAgICogY2xlYW51cC4gVGhpcyBpbnZvbHZlcyBjbGVhbmluZyB1
-cCB0aGUgRFJNIGRldmljZSwgREMsIGFuZCBhbnkgbW9kdWxlcyB0aGF0DQo+IA0K
+On Sun, Oct 06, 2019 at 09:39:02PM -0300, Gabriela Bittencourt wrote:
+> Cleans up checks of "Alignment should match open parenthesis"
+> 
+> Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+> ---
+>  drivers/staging/rtl8712/rtl8712_led.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/rtl8712/rtl8712_led.c b/drivers/staging/rtl8712/rtl8712_led.c
+> index db99129d3169..5901026949f2 100644
+> --- a/drivers/staging/rtl8712/rtl8712_led.c
+> +++ b/drivers/staging/rtl8712/rtl8712_led.c
+> @@ -75,7 +75,7 @@ static void BlinkWorkItemCallback(struct work_struct *work);
+>   *		Initialize an LED_871x object.
+>   */
+>  static void InitLed871x(struct _adapter *padapter, struct LED_871x *pLed,
+> -		 enum LED_PIN_871x	LedPin)
+> +			enum LED_PIN_871x	LedPin)
+                                         ^^^^^^
+Delete these extra spaces.
+
+regards,
+dan carpenter
+
