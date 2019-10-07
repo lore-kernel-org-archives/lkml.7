@@ -2,139 +2,80 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B70E0ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 377CCC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F67D2084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:44:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="OLLwDwGc"
+	by mail.kernel.org (Postfix) with ESMTP id 0D2BD206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:46:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728984AbfJGRof (ORCPT
+        id S1728877AbfJGRqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 13:44:35 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38627 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728545AbfJGRof (ORCPT
+        Mon, 7 Oct 2019 13:46:12 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:60814 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728081AbfJGRqM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 13:44:35 -0400
-Received: by mail-lj1-f195.google.com with SMTP id b20so14631768ljj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 10:44:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=vk7i14T/JR7YS23mvVE1tUhQjiWMuR9VHE86a98WunI=;
-        b=OLLwDwGcq0XWYoIOVOg3f18hRqsB+0FRgBDO0OmmxtqGQYby0JB5u0UHjDXgij9vYo
-         Se5/pU/H1eTqNRcFiWOtVL5Hx5zYOR44QeVE0UBOryjbfM15v53lLA/oM8EV26gbHEN7
-         UXRvKQeEhMekI8rhDX+Y0qFpuCB18WULcN5R+UjJb0Frfkc49Dhr7MrjPLZKDwKFhS3E
-         9Fre4eNitanYVJmDpA6UEHCi9lUTvmIFQhYGhaNay+PEgLNtF1y3aAh3aEwIK3/Sy26M
-         27co8CrSYmbGd8qfcq7SPlpqlhAPLlmBMcmkumdfymHaf5LfUlqhLclwLOZEcSMx8hl5
-         Ndlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=vk7i14T/JR7YS23mvVE1tUhQjiWMuR9VHE86a98WunI=;
-        b=eUDmwkYokdDoWFC3pEVxXFLJJQ0sK6+I0V2IFYgaaiQ0R7gctWeYkNvusGC248MWZI
-         xSqrx2ngeDe0Su1EQRDqGScFRN3b4vuHisCuLNyNl4hXAZ61/9GXUFO6A0zifnxMmAq9
-         4fDR0lBhGOSCSbRkmI01OJpF1U3iys6591rGC36USXm2LyTbySSgHgKXpazLLtYw8vNc
-         6QA6aKrk15rgOAzU1/eWcYa4MlR//BIxZV3mA+qCbme9SN99idsIJFSP/rWjHRaeXur7
-         DRg9ho8xjyFtpBH18kbT6qwEHBOjRFurZ7QSdnVCX+u2PSTqx2Zi66GcdA3Z7eCLa/Yx
-         fgDw==
-X-Gm-Message-State: APjAAAXvsWE5ocItTAMfDkOz+lIe/qQ1KO7a0z/midBxQ2icXxsAf4OF
-        zr1DLFktWVoWOYBmPbCF/Xge+aG4BWig2P8yr9vK8OBkpTs=
-X-Google-Smtp-Source: APXvYqx5XmOHpRpqAJ92Ox0/Z3WATyleaCoIzWgtDblpyPcclaRE6YhE+RfgISgjo8lZXQBz1jQLC+J5Vp7w60iEpK0=
-X-Received: by 2002:a2e:8084:: with SMTP id i4mr19449238ljg.119.1570470272661;
- Mon, 07 Oct 2019 10:44:32 -0700 (PDT)
+        Mon, 7 Oct 2019 13:46:12 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id A31F428D406
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     linux-media@vger.kernel.org
+Cc:     kernel@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        fbuergisser@chromium.org, linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Subject: [PATCH v2 for 5.4 0/4] media: hantro: Collected fixes for v5.4
+Date:   Mon,  7 Oct 2019 14:45:01 -0300
+Message-Id: <20191007174505.10681-1-ezequiel@collabora.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-References: <1570240177-8934-1-git-send-email-alan.mikhak@sifive.com>
-In-Reply-To: <1570240177-8934-1-git-send-email-alan.mikhak@sifive.com>
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-Date:   Mon, 7 Oct 2019 10:44:21 -0700
-Message-ID: <CABEDWGx5MzsdcKzNzCtt3DxXAEWK69Bm-QBK0248rGAvWaU22w@mail.gmail.com>
-Subject: Re: [PATCH] PCI: endpoint: cast the page number to phys_addr_t
-To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        lorenzo.pieralisi@arm.com, Bjorn Helgaas <bhelgaas@google.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 4, 2019 at 6:49 PM Alan Mikhak <alan.mikhak@sifive.com> wrote:
->
-> From: Alan Mikhak <alan.mikhak@sifive.com>
->
-> Modify pci_epc_mem_alloc_addr() to cast the variable 'pageno'
-> from type 'int' to 'phys_addr_t' before shifting left. This
-> cast is needed to avoid treating bit 31 of 'pageno' as the
-> sign bit which would otherwise get sign-extended to produce
-> a negative value. When added to the base address of PCI memory
-> space, the negative value would produce an invalid physical
-> address which falls before the start of the PCI memory space.
->
-> Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
-> ---
->  drivers/pci/endpoint/pci-epc-mem.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
-> index 2bf8bd1f0563..d2b174ce15de 100644
-> --- a/drivers/pci/endpoint/pci-epc-mem.c
-> +++ b/drivers/pci/endpoint/pci-epc-mem.c
-> @@ -134,7 +134,7 @@ void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
->         if (pageno < 0)
->                 return NULL;
->
-> -       *phys_addr = mem->phys_base + (pageno << page_shift);
-> +       *phys_addr = mem->phys_base + ((phys_addr_t)pageno << page_shift);
->         virt_addr = ioremap(*phys_addr, size);
->         if (!virt_addr)
->                 bitmap_release_region(mem->bitmap, pageno, order);
-> --
-> 2.7.4
->
+Some pending fixes. The first patch is needed to allow
+dynamic resolution changes, as per the upcoming stateless
+decoder API. This patch was posted before and received
+some comments from Philipp Zabel.
 
-Hi Kishon,
+The second patch was posted by Jonas Karlman as part
+of his series to add support for interlaced content.
+The fix can be applied independently so I'm including it
+here.
 
-This issue was observed when requesting pci_epc_mem_alloc_addr()
-to allocate a region of size 0x40010000ULL (1GB + 64KB) from a
-128GB PCI address space with page sizes being 64KB. This resulted
-in 'pageno' value of '0x8000' as the first available page in a
-contiguous region for the requested size due to other smaller
-regions having been allocated earlier. With 64KB page sizes,
-the variable 'page_shift' holds a value of 0x10. Shifting 'pageno'
-16 bits to the left results in an 'int' value whose bit 31 is set.
+Patches 3 and 4 correspond to fixes found by Francois Buergisser
+while doing some tests on ChromeOS.
 
-[   10.565256] __pci_epc_mem_init: mem size 0x2000000000 page_size 0x10000
-[   10.571613] __pci_epc_mem_init: mem pages 0x200000 bitmap_size
-0x40000 page_shift 0x10
+Ezequiel Garcia (1):
+  media: hantro: Fix s_fmt for dynamic resolution changes
 
-PCI memory base 0x2000000000
-PCI memory size 128M 0x2000000000
-page_size 64K 0x10000
-page_shift  16 0x10
-pages 2M 0x200000
-bitmap_size 256K 0x40000
+Francois Buergisser (2):
+  media: hantro: Fix motion vectors usage condition
+  media: hantro: Fix picture order count table enable
 
-[  702.050299] pci_epc_mem_alloc_addr: size 0x10000 order 0x0 pageno
-0x4 virt_add 0xffffffd0047b0000 phys_addr 0x2000040000
-[  702.061424] pci_epc_mem_alloc_addr: size 0x10000 order 0x0 pageno
-0x5 virt_add 0xffffffd0047d0000 phys_addr 0x2000050000
-[  702.203933] pci_epc_mem_alloc_addr: size 0x40010000 order 0xf
-pageno 0x8000 virt_add 0xffffffd004800000 phys_addr 0x1f80000000
-[  702.216547] Oops - store (or AMO) access fault [#1]
-:::
-[  702.310198] sstatus: 0000000200000120 sbadaddr: ffffffd004804000
-scause: 0000000000000007
+Jonas Karlman (1):
+  media: hantro: Fix H264 max frmsize supported on RK3288
 
-Regards,
-Alan
+ .../staging/media/hantro/hantro_g1_h264_dec.c |  6 ++--
+ drivers/staging/media/hantro/hantro_v4l2.c    | 28 +++++++++++++------
+ drivers/staging/media/hantro/rk3288_vpu_hw.c  |  4 +--
+ 3 files changed, 24 insertions(+), 14 deletions(-)
+
+-- 
+2.22.0
+
