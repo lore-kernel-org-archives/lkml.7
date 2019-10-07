@@ -2,126 +2,137 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DATE_IN_PAST_12_24,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C685C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B33EC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8E18206BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3360D206C2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:01:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vm/asU4U"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nIpOjhZa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730077AbfJHJAM (ORCPT
+        id S1730118AbfJHJBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 05:00:12 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:44756 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729767AbfJHJAL (ORCPT
+        Tue, 8 Oct 2019 05:01:46 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:51306 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729772AbfJHJBq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 05:00:11 -0400
-Received: by mail-lj1-f193.google.com with SMTP id m13so16623810ljj.11
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 02:00:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=teTMW0xTyzGadnBpOLviUKelFXzH4FksSl8RfVfYuKY=;
-        b=vm/asU4UhgzlA6XukbK82YQmiDr8qpfhHjhcnzyBapIdRLd9rciZKGg5MriVpzRyAh
-         mIu4O3/xhoB65peMKtP12+lkvrHtuV/4wGepNNAoLnrDojQPxIXyYgiWXWEW4cO241aS
-         qp/j5NDvGOl3E9/1kM4hFF1/6IZ/HtrrSyhcBI3RdPa/RLd0X4e1loMf4SErlTe5VBYV
-         12UsQtsCEsOk9le9OTRBPNsu1kuVPB1CSlclimaTd9xeth6fv+eng9FtnoUQ2MqRpzMI
-         P4hjCwN23uOlKeXSKM8+ggN6A/Dl4brIETBj9jDh4Ezl0jW4PTsftStyAO1NLM2stkLo
-         6y7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=teTMW0xTyzGadnBpOLviUKelFXzH4FksSl8RfVfYuKY=;
-        b=dP1eCm3wz7GBJkKB/zgAzam8bVtwC37RjLa8AmLcTK+2A+cFjBESXymGDY1zZX+woi
-         pjp3vnj6Qo8ymoFjRgzCiTJr12Um9aY237Ya7Ze+kivJMQSM2RDZfKAg3y58sy49vcGE
-         SKEeo8g74K2Wtd1VisikGeOPX+ATh+OgGKwTG4rbqOu54MdPfDYArvSdxjxMWS5pVoQ/
-         +a214qaf6BpPXn0m4RC80JePxoaac3YrxCRZwAcjp68pOnxev08rk6P/5XpFvsOAAGHB
-         MsnM5iJkWn7Ih5XS0joVTNc3ghKtXnt2xA8wtTPpbAHCsPWZbIpUITUo1UrYFSnUE8u2
-         cQ9Q==
-X-Gm-Message-State: APjAAAX1mUxR66ewIQoWebsVpczEk2kDQq+hc8TFqKRzjFUZ2a5plK49
-        599KJZTRJ1hW1wlki1RXCyJVbw1Cr/4NanMLretL9g==
-X-Google-Smtp-Source: APXvYqw9fWGADAgVJEmFIATdDVbXmdaqmYVxjYl4JLUOWELQrCpjiffIUikAvMGhadt+AKiLWWY/NgqaUfqnTPWEw3I=
-X-Received: by 2002:a2e:5dc3:: with SMTP id v64mr21693733lje.118.1570525209710;
- Tue, 08 Oct 2019 02:00:09 -0700 (PDT)
-MIME-Version: 1.0
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 8 Oct 2019 10:59:58 +0200
-Message-ID: <CACRpkdYnnZnOko4q+NmLwdKeObT--f8Xgv+e+fBLLXUAWqh7bg@mail.gmail.com>
-Subject: [GIT PULL] GPIO fixes for the v5.4 series
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 8 Oct 2019 05:01:46 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x988haR7176900;
+        Tue, 8 Oct 2019 08:59:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2019-08-05;
+ bh=GG6cP5QBwbQ2dOIhVepa60W9cY9VD9HYe0NrpQU/UHY=;
+ b=nIpOjhZaA3ifKtsH0MHXkLf4tMmBywm1QxQ96NRefEzjE95zQCiQPfBvoYxwfCBr4KlO
+ qAce0qW7xqpqNHa7p1EmhX3yZuqiOHScxixjwp56SLrO6+F8e1dV+7Y3rOYu2/3g8GDZ
+ QtuNZ/1XZIezCDNk7b+qubWSWk+BIHQszJNW0wS75FAxowm6eDvYHWV9j5RyfTWn+KJr
+ dwHIAeZz5Rxlrr3Flc9fcd8WIGIha9Crhndms+TSZDUEkANNcEaRbWJmke//TvSENj4P
+ CmB/YZOVwSw+74WwXUSmiO0Nci2mQL7LEOx35zGw45HFk8fXwUPNw4bXliYcf7bvnF/T 9g== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2vektrbvhx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 08 Oct 2019 08:59:56 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x988hu2O027563;
+        Tue, 8 Oct 2019 08:59:56 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2vg205ur5k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 08 Oct 2019 08:59:56 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x988xoHX006734;
+        Tue, 8 Oct 2019 08:59:50 GMT
+Received: from z2.cn.oracle.com (/10.182.71.205)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 08 Oct 2019 01:59:50 -0700
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     vkuznets@redhat.com, linux-hyperv@vger.kernel.org,
+        kvm@vger.kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, sashal@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, pbonzini@redhat.com,
+        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        boris.ostrovsky@oracle.com, jgross@suse.com,
+        sstabellini@kernel.org, peterz@infradead.org,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Subject: [PATCH v5 0/5] Add a unified parameter "nopvspin"
+Date:   Mon,  7 Oct 2019 17:04:26 +0800
+Message-Id: <1570439071-9814-1-git-send-email-zhenzhong.duan@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9403 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910080089
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9403 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910080089
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+There are cases folks want to disable spinlock optimization for
+debug/test purpose. Xen and hyperv already have parameters "xen_nopvspin"
+and "hv_nopvspin" to support that, but kvm doesn't.
 
-some GPIO fixes collected since the merge window,
-3 for stable, 2 driver fixes.
+The first patch adds that feature to KVM guest with "nopvspin".
 
-Details in the signed tag.
+For compatibility reason original parameters "xen_nopvspin" and
+"hv_nopvspin" are retained and marked obsolete.
 
-Please pull them in!
+v5:
+PATCH1: new patch to revert a currently unnecessory commit,
+        code is simpler a bit after that change.         [Boris Ostrovsky]
+PATCH3: fold 'if' statement,add comments on virt_spin_lock_key,
+        reorder with PATCH2 to better reflect dependency                               
+PATCH4: fold 'if' statement, add Reviewed-by             [Boris Ostrovsky]
+PATCH5: add Reviewed-by                                  [Michael Kelley]
 
-Yours,
-Linus Walleij
+v4:
+PATCH1: use variable name nopvspin instead of pvspin and
+        defined it as __initdata, changed print message,
+        updated patch description                     [Sean Christopherson]
+PATCH2: remove Suggested-by, use "kvm-guest:" prefix  [Sean Christopherson]
+PATCH3: make variable nopvsin and xen_pvspin coexist
+        remove Reviewed-by due to code change         [Sean Christopherson]
+PATCH4: make variable nopvsin and hv_pvspin coexist   [Sean Christopherson]
 
-The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
+v3:
+PATCH2: Fix indentation
 
-  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
+v2:
+PATCH1: pick the print code change into separate PATCH2,
+        updated patch description             [Vitaly Kuznetsov]
+PATCH2: new patch with print code change      [Vitaly Kuznetsov]
+PATCH3: add Reviewed-by                       [Juergen Gross]
 
-are available in the Git repository at:
+Zhenzhong Duan (5):
+  Revert "KVM: X86: Fix setup the virt_spin_lock_key before static key
+    get initialized"
+  x86/kvm: Change print code to use pr_*() format
+  x86/kvm: Add "nopvspin" parameter to disable PV spinlocks
+  xen: Mark "xen_nopvspin" parameter obsolete
+  x86/hyperv: Mark "hv_nopvspin" parameter obsolete
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
-tags/gpio-v5.4-2
+ Documentation/admin-guide/kernel-parameters.txt | 14 +++++-
+ arch/x86/hyperv/hv_spinlock.c                   |  4 ++
+ arch/x86/include/asm/qspinlock.h                |  1 +
+ arch/x86/kernel/kvm.c                           | 63 ++++++++++++++-----------
+ arch/x86/xen/spinlock.c                         |  4 +-
+ kernel/locking/qspinlock.c                      |  7 +++
+ 6 files changed, 62 insertions(+), 31 deletions(-)
 
-for you to fetch changes up to fffa6af94894126994a7600c6f6f09b892e89fa9:
+-- 
+1.8.3.1
 
-  gpio: max77620: Use correct unit for debounce times (2019-10-04
-23:58:10 +0200)
-
-----------------------------------------------------------------
-GPIO fixes for the v5.4 series:
-
-- Don't clear FLAG_IS_OUT when emulating open drain/source in
-  gpiolib.
-- Fix up the usage of nonexclusive GPIO descriptors from device
-  trees.
-- Fix the incorrect IEC offset when toggling trigger edge in
-  the Spreadtrum driver.
-- Use the correct unit for debounce settings in the MAX77620
-  driver.
-
-----------------------------------------------------------------
-Bartosz Golaszewski (1):
-      gpiolib: don't clear FLAG_IS_OUT when emulating open-drain/open-source
-
-Bruce Chen (1):
-      gpio: eic: sprd: Fix the incorrect EIC offset when toggling
-
-Linus Walleij (1):
-      Merge tag 'gpio-v5.4-rc2-fixes-for-linus' of
-git://git.kernel.org/.../brgl/linux into fixes
-
-Marco Felsch (1):
-      gpio: fix getting nonexclusive gpiods from DT
-
-Thierry Reding (1):
-      gpio: max77620: Use correct unit for debounce times
-
- drivers/gpio/gpio-eic-sprd.c |  7 ++++---
- drivers/gpio/gpio-max77620.c |  6 +++---
- drivers/gpio/gpiolib-of.c    |  2 +-
- drivers/gpio/gpiolib.c       | 27 +++++++++++++++++++--------
- 4 files changed, 27 insertions(+), 15 deletions(-)
