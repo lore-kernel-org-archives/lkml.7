@@ -2,116 +2,127 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA2BC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B72F4ECE58D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AF3C2084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:05:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 984D0217D6
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:06:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727473AbfJGJF4 (ORCPT
+        id S1727502AbfJGJGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 05:05:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34980 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727383AbfJGJF4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 05:05:56 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 99BDDB14B;
-        Mon,  7 Oct 2019 09:05:54 +0000 (UTC)
-Date:   Mon, 7 Oct 2019 11:05:53 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org,
-        sergey.senozhatsky.work@gmail.com, rostedt@goodmis.org,
-        peterz@infradead.org, david@redhat.com, john.ogness@linutronix.de,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
-Message-ID: <20191007090553.g5cq7qa4tj5yrtaa@pathway.suse.cz>
-References: <1570228005-24979-1-git-send-email-cai@lca.pw>
- <20191007080742.GD2381@dhcp22.suse.cz>
+        Mon, 7 Oct 2019 05:06:09 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60978 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727437AbfJGJGJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 05:06:09 -0400
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E136710A1B
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Oct 2019 09:06:08 +0000 (UTC)
+Received: by mail-wr1-f70.google.com with SMTP id w10so7227159wrl.5
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 02:06:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fBRIbgMq9EJ++XGIGImx8CYxss1cJwECLlupsXLpmYY=;
+        b=kSgqFLFM0GzzrnzfWUMtl4PTdXm/Qf/pTiwg4OFRYu4IhUxUXk/XaOhUpU46tTyeRw
+         jizpLcWOvaLbk4rjBCV7Ht2xizCbuDTzej53gUvlSb51r+iHADcKOMCEspyc0Pg8NW0y
+         xFNu8z5mICtRwAhAum/TTP6Md545lwkfQ05/xq79gQNo1dyCS5ZGYjHZx7uzRrqmxgUZ
+         pqVQSGh6s/78+FYq8qNHe+SkFaHJKut1koabGT/n46tsIce5Ysy4irm422QsLS85W39r
+         bwwgqeInldUOQZ9JfEeAwovG7KEykxMyfWt9ncTW1dNK3AEBumudm5JnFsKn3ryt4Ivm
+         6SsQ==
+X-Gm-Message-State: APjAAAUp7OV9bI6GJa8gcc6Mj4gTrO6+uPCXZoz5CvSbyviPB52Yuo5o
+        sCeWWpIU3SnKnZmfZqGb6nfOFOO73nzDPechaqS35eyG+u4731hQEc26wZfyNrvCjlXs92xLSO2
+        bQPZi476dDXx/G/UswXd3UhQL
+X-Received: by 2002:a1c:9e46:: with SMTP id h67mr19896518wme.48.1570439166279;
+        Mon, 07 Oct 2019 02:06:06 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwIB/mpa2f+0YDVQB+ZQ2wugqID9zQ0k8tNxBi2ZQC4pNdIS/WqtuyQ7J2IzdZR/nu3g5Y8dg==
+X-Received: by 2002:a1c:9e46:: with SMTP id h67mr19896501wme.48.1570439166078;
+        Mon, 07 Oct 2019 02:06:06 -0700 (PDT)
+Received: from shalem.localdomain (2001-1c00-0c14-2800-ec23-a060-24d5-2453.cable.dynamic.v6.ziggo.nl. [2001:1c00:c14:2800:ec23:a060:24d5:2453])
+        by smtp.gmail.com with ESMTPSA id z5sm26075756wrs.54.2019.10.07.02.06.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Oct 2019 02:06:05 -0700 (PDT)
+Subject: Re: [PATCH 5.4 regression fix] x86/boot: Provide memzero_explicit
+To:     Stephan Mueller <smueller@chronox.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-crypto@vger.kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>
+References: <20191007085501.23202-1-hdegoede@redhat.com>
+ <65461301.CAtk0GNLiE@tauon.chronox.de>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <284b70dd-5575-fee4-109f-aa99fb73a434@redhat.com>
+Date:   Mon, 7 Oct 2019 11:06:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191007080742.GD2381@dhcp22.suse.cz>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <65461301.CAtk0GNLiE@tauon.chronox.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2019-10-07 10:07:42, Michal Hocko wrote:
-> On Fri 04-10-19 18:26:45, Qian Cai wrote:
-> > It is unsafe to call printk() while zone->lock was held, i.e.,
-> > 
-> > zone->lock --> console_lock
-> > 
-> > because the console could always allocate some memory in different code
-> > paths and form locking chains in an opposite order,
-> > 
-> > console_lock --> * --> zone->lock
-> > 
-> > As the result, it triggers lockdep splats like below and in different
-> > code paths in this thread [1]. Since has_unmovable_pages() was only used
-> > in set_migratetype_isolate() and is_pageblock_removable_nolock(). Only
-> > the former will set the REPORT_FAILURE flag which will call printk().
-> > Hence, unlock the zone->lock just before the dump_page() there where
-> > when has_unmovable_pages() returns true, there is no need to hold the
-> > lock anyway in the rest of set_migratetype_isolate().
-> > 
-> > While at it, remove a problematic printk() in __offline_isolated_pages()
-> > only for debugging as well which will always disable lockdep on debug
-> > kernels.
+Hi Stephan,
+
+On 07-10-2019 10:59, Stephan Mueller wrote:
+> Am Montag, 7. Oktober 2019, 10:55:01 CEST schrieb Hans de Goede:
 > 
-> I do not think that removing the printk is the right long term solution.
-> While I do agree that removing the debugging printk __offline_isolated_pages
-> does make sense because it is essentially of a very limited use, this
-> doesn't really solve the underlying problem.  There are likely other
-> printks from zone->lock. It would be much more saner to actually
-> disallow consoles to allocate any memory while printk is called from an
-> atomic context.
-
-The current "standard" solution for these situations is to replace
-the problematic printk() with printk_deferred(). It would deffer
-the console handling.
-
-Of course, this is a whack a mole approach. The long term solution
-is to deffer printk() by default. We have finally agreed on this
-few weeks ago on Plumbers conference. It is going to be added
-together with fully lockless log buffer hopefully soon. It will
-be part of upstreaming Real-Time related code.
-
-> > The problem is probably there forever, but neither many developers will
-> > run memory offline with the lockdep enabled nor admins in the field are
-> > lucky enough yet to hit a perfect timing which required to trigger a
-> > real deadlock. In addition, there aren't many places that call printk()
-> > while zone->lock was held.
-> > 
-> > WARNING: possible circular locking dependency detected
-> > ------------------------------------------------------
-> > test.sh/1724 is trying to acquire lock:
-> > 0000000052059ec0 (console_owner){-...}, at: console_unlock+0x
-> > 01: 328/0xa30
-> > 
-> > but task is already holding lock:
-> > 000000006ffd89c8 (&(&zone->lock)->rlock){-.-.}, at: start_iso
-> > 01: late_page_range+0x216/0x538
+> Hi Hans,
 > 
-> I am also wondering what does this lockdep report actually say. How come
-> we have a dependency between a start_kernel path and a syscall?
+>> The purgatory code now uses the shared lib/crypto/sha256.c sha256
+>> implementation. This needs memzero_explicit, implement this.
+>>
+>> Reported-by: Arvind Sankar <nivedita@alum.mit.edu>
+>> Fixes: 906a4bb97f5d ("crypto: sha256 - Use get/put_unaligned_be32 to get
+>> input, memzero_explicit") Signed-off-by: Hans de Goede
+>> <hdegoede@redhat.com>
+>> ---
+>>   arch/x86/boot/compressed/string.c | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/arch/x86/boot/compressed/string.c
+>> b/arch/x86/boot/compressed/string.c index 81fc1eaa3229..511332e279fe 100644
+>> --- a/arch/x86/boot/compressed/string.c
+>> +++ b/arch/x86/boot/compressed/string.c
+>> @@ -50,6 +50,11 @@ void *memset(void *s, int c, size_t n)
+>>   	return s;
+>>   }
+>>
+>> +void memzero_explicit(void *s, size_t count)
+>> +{
+>> +	memset(s, 0, count);
+> 
+> May I ask how it is guaranteed that this memset is not optimized out by the
+> compiler, e.g. for stack variables?
 
-My understanding is that these are different code paths. Where each
-code paths shows one existing lock ordering.
+The function and the caller live in different compile units, so unless
+LTO is used this cannot happen.
 
-IMHO, it is possible that these code paths could never run in
-parallel. I guess that lockdep is not able to distinguish
-code paths that are called only during boot and others
-that are called only in fully booted system. That said,
-I am not sure if this is the case here.
+Also note that the previous purgatory private (vs shared) sha256 implementation had:
 
-Best Regards,
-Petr
+         /* Zeroize sensitive information. */
+         memset(sctx, 0, sizeof(*sctx));
+
+In the place where the new shared 256 code uses memzero_explicit() and the
+new shared sha256 code is the only user of the arch/x86/boot/compressed/string.c
+memzero_explicit() implementation.
+
+With that all said I'm open to suggestions for improving this.
+
+Regards,
+
+Hans
