@@ -6,57 +6,47 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB4EC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 876BBC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8661D20867
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:04:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6518720867
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:05:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbfJGMEZ (ORCPT
+        id S1727869AbfJGMFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 08:04:25 -0400
-Received: from mga07.intel.com ([134.134.136.100]:41701 "EHLO mga07.intel.com"
+        Mon, 7 Oct 2019 08:05:22 -0400
+Received: from mga12.intel.com ([192.55.52.136]:3131 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727561AbfJGMEY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 08:04:24 -0400
+        id S1727490AbfJGMFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 08:05:22 -0400
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Oct 2019 05:04:23 -0700
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Oct 2019 05:05:21 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.67,268,1566889200"; 
-   d="scan'208";a="186965410"
-Received: from bplackle-mobl.ger.corp.intel.com (HELO localhost) ([10.252.6.229])
-  by orsmga008.jf.intel.com with ESMTP; 07 Oct 2019 05:04:13 -0700
-Date:   Mon, 7 Oct 2019 15:04:12 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
-        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
-        rientjes@google.com, cedric.xing@intel.com,
-        Andy Lutomirski <luto@amacapital.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: [PATCH v22 16/24] x86/vdso: Add support for exception fixup in
- vDSO functions
-Message-ID: <20191007120412.GB20830@linux.intel.com>
-References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
- <20190903142655.21943-17-jarkko.sakkinen@linux.intel.com>
- <20191002231804.GA14315@linux.intel.com>
- <20191004001459.GD14325@linux.intel.com>
- <20191004185221.GI6945@linux.intel.com>
- <20191005155412.GA9159@linux.intel.com>
- <20191007075712.GA5466@linux.intel.com>
- <20191007081024.GA5962@linux.intel.com>
+   d="scan'208";a="196267827"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 07 Oct 2019 05:05:18 -0700
+Received: from andy by smile with local (Exim 4.92.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iHRlN-0007rE-Ff; Mon, 07 Oct 2019 15:05:17 +0300
+Date:   Mon, 7 Oct 2019 15:05:17 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Tuowen Zhao <ztuowen@gmail.com>,
+        "Luis R. Rodriguez" <mcgrof@kernel.org>
+Cc:     lee.jones@linaro.org, linux-kernel@vger.kernel.org,
+        mika.westerberg@linux.intel.com, acelan.kao@canonical.com,
+        bhelgaas@google.com, kai.heng.feng@canonical.com
+Subject: Re: [PATCH] mfd: intel-lpss: use devm_ioremap_uc for mmio
+Message-ID: <20191007120517.GX32742@smile.fi.intel.com>
+References: <20190927175513.31054-1-ztuowen@gmail.com>
+ <20190930110522.GT32742@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191007081024.GA5962@linux.intel.com>
+In-Reply-To: <20190930110522.GT32742@smile.fi.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -64,44 +54,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 11:10:24AM +0300, Jarkko Sakkinen wrote:
-> Actually, maybe like this:
+On Mon, Sep 30, 2019 at 02:05:22PM +0300, Andy Shevchenko wrote:
+> On Fri, Sep 27, 2019 at 11:55:13AM -0600, Tuowen Zhao wrote:
+> > Write-combining BAR for intel-lpss-pci in MTRR causes system hangs
+> > during boot.
+> > 
+> > This patch adds devm_ioremap_uc as a new managed wrapper to ioremap_uc
+> > and with it forces the use of strongly uncachable mmio in intel-lpss.
+> > 
+> > This bahavior is seen on Dell XPS 13 7390 2-in-1:
+> > 
+> > [    0.001734]   5 base 4000000000 mask 6000000000 write-combining
+> > 
+> > 4000000000-7fffffffff : PCI Bus 0000:00
+> >   4000000000-400fffffff : 0000:00:02.0 (i915)
+> >   4010000000-4010000fff : 0000:00:15.0 (intel-lpss-pci)
 > 
-> struct sgx_enclave_add_page_desc {
-> 	__u64	addr;
-> 	__u64	offset;
-> 	__u64	secinfo;
-> 	__u16	mrmask;
-> 	__u8	reserved[6];
-> };
+> +Cc: Luis as author of UC flavour of ioremap.
 > 
-> struct sgx_enclave_add_page {
-> 	__u64	src;
-> 	__u64	nr_pages;
-> 	__u64	pages;
-> };
+> Luis, some BIOSes in the wild have wrong MTRR setting for PCI resource window
+> and thus when Linux tries to allocate 64-bit MMIO address space (and in
+> opposite to Windows, which does this from the end of available space towards
+> beginning, Linux do this from the beginning towards end). Ideally we have to
+> push vendors to fix firmware.
+> 
+> This patch AFAIU overrides MTTR/PAT settings for those pages and makes it
+> possible to workaround firmware bug.
+> 
+> What do you think is the best approach here?
 
-Of course we should remove @addr:
+Tuowen,
 
-struct sgx_enclave_add_page_desc {
-	__u64	offset;
-	__u16	mrmask;
-	__u8	reserved[6];
-};
+since Luis didn't respond, I think we may proceed with v2 after addressing
+Mika's comments.
 
-struct sgx_enclave_add_page {
-	__u64	src;
-	__u64	secinfo;
-	__u64	nr_pages;
-	__u64	pages;
-};
+-- 
+With Best Regards,
+Andy Shevchenko
 
-That is something we have forgot to do. We should have started to use
-offset instead of address when we moved to fd based API. Anyway I think
-this kind of API where you give array of descriptors from one source
-would be optimal.
 
-Also, @secinfo is better to be out of the descriptor so that let say
-LSM checks could be done with a single callback.
-
-/Jarkko
