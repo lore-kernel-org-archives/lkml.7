@@ -2,242 +2,266 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F04E1C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4852ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACEFE206C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:59:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D94D21835
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:59:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Wpy/0qmu"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="u/ZpKjhi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728459AbfJGO7G (ORCPT
+        id S1728506AbfJGO7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 10:59:06 -0400
-Received: from mail-eopbgr40082.outbound.protection.outlook.com ([40.107.4.82]:30455
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726334AbfJGO7F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 10:59:05 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Bxe9KF2nf6t75aMhLVhIiTOgUjbpxFZQcKR5BhguRqb3eR49Vd1HlFHhseYRTjkXdcpjbZ8QlkJcsCNt/ZdLpNGqgfZgQs8lMuQI5hmd70MHKiWv5ybKtlec5xesm54Y7r8sLhKK1FeKysGoB5K/T8yLKAzqHMkD44P5r9piEB3CM0bQoqKe32p9uxh6M3AlaPh29ezGhdw2YKkfsHfz5TbML5Die5xNoB3Ovef9wlM4j/eIZiIVcfOeS+eMz2enENh6TL4qpdgJ9KQ7c6Y5nT5x2N6ranFHgk6dMDE5S8tvURcsM6dlcMgb8+I/2XD9L3SjWkvD4IxUrK3bYsbeIg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TWdd98POPn68UBeKmGzOmqZw5GX25tz8WIgB7Ch68lo=;
- b=FQLK2I1o2bDEB4etnrLslGqYTkGgMcunEcF5NXob6DDD4rNmp1Mj9Acwb5hLKBcjC3Vhhq87fT2kCfBTom7MzOXdx8aIGrDZb7KPJiLWEoRuC7FNlUXwlQTMpIyojM9kmCGEeZC70TOIpKk178l7m/QPLdroP4xGJTzfr0Yz+gTmEly3c4gMDwQo1BhVla1rJi/nlTfydZ3/gNTa44nHvqYquiJKaTzrliR6jsNS4JSOUTr8ckDUL9QNoNlRYdofuXHhtYY/IAn4u8WRWd5HGC5S+Z8zNND/Re7o96MmtKv+GP+mzCpxJRnDU33NzIbigzULZVUWNrkFmsdYGnetMg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TWdd98POPn68UBeKmGzOmqZw5GX25tz8WIgB7Ch68lo=;
- b=Wpy/0qmuoOBrfXhwU/R8NTQrhUTWccb1pweXeORy05iyAQh1P8yDq/2lVem73PfAwheYmu2LAvT2haQPUOd5G+LNODpxSK376vH5uPYZ8hGetWwaJnDPyRx8Vj1A7IK5QcV4nIfqh81Kiy330WHpOAb87wJvTrOUjYKTt9lMltA=
-Received: from AM6PR04MB4967.eurprd04.prod.outlook.com (20.177.34.75) by
- AM6PR04MB6135.eurprd04.prod.outlook.com (20.179.7.150) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.24; Mon, 7 Oct 2019 14:58:58 +0000
-Received: from AM6PR04MB4967.eurprd04.prod.outlook.com
- ([fe80::550b:474a:d86a:1967]) by AM6PR04MB4967.eurprd04.prod.outlook.com
- ([fe80::550b:474a:d86a:1967%7]) with mapi id 15.20.2305.023; Mon, 7 Oct 2019
- 14:58:58 +0000
-From:   Han Xu <han.xu@nxp.com>
-To:     Schrempf Frieder <frieder.schrempf@kontron.de>,
-        Mark Brown <broonie@kernel.org>
-CC:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] [PATCH] spi: spi-fsl-qspi: Clear TDH bits in FLSHCR
- register
-Thread-Topic: [EXT] [PATCH] spi: spi-fsl-qspi: Clear TDH bits in FLSHCR
- register
-Thread-Index: AQHVfOAOADpafN6rX02KBDhfRCqXY6dPRXuA
-Date:   Mon, 7 Oct 2019 14:58:57 +0000
-Message-ID: <AM6PR04MB4967AA90DEDA889FE721F158979B0@AM6PR04MB4967.eurprd04.prod.outlook.com>
-References: <20191007071933.26786-1-frieder.schrempf@kontron.de>
-In-Reply-To: <20191007071933.26786-1-frieder.schrempf@kontron.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is ) smtp.mailfrom=han.xu@nxp.com; 
-x-originating-ip: [64.157.242.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 97b95a3b-d561-485d-f5ec-08d74b36e18a
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: AM6PR04MB6135:
-x-microsoft-antispam-prvs: <AM6PR04MB6135DDE7E362FB09902728DF979B0@AM6PR04MB6135.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 01834E39B7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(136003)(366004)(396003)(39860400002)(13464003)(199004)(189003)(3846002)(26005)(6116002)(25786009)(66066001)(76116006)(66946007)(33656002)(71190400001)(71200400001)(66446008)(66476007)(66556008)(64756008)(6506007)(99286004)(11346002)(7736002)(53546011)(7696005)(76176011)(86362001)(81156014)(102836004)(8676002)(81166006)(8936002)(486006)(446003)(476003)(110136005)(44832011)(2906002)(186003)(305945005)(14444005)(14454004)(74316002)(54906003)(316002)(52536014)(478600001)(5660300002)(9686003)(6436002)(55016002)(4326008)(6246003)(256004)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB6135;H:AM6PR04MB4967.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: PDSzueugOvwy3OFE8wI2mlelRvrWq1SYDZ9yPsPy02QcMAPoIqEm9zPcbsTjQTZRyVE8trmsVt1iTgEZEz986wpsUc7eYPH1nW/64LrN41oXWhQWfo4bw+nKdMGfY8lAXuM91FJxJprYc5/W+yhHMgsELK4FZxJV/m2/OQXxRbLMKQo/MVNZmCS30ThEnD1oh8QWJlO5fUNNQnlNIkCx+SipR8FTUY6rjNAJO7A7us0pSQWuvAnF0KOi5Ryx7gZYEMS27yioZdizCyhpm4C586Eo8KVT/BlO8uRgfpXHJiCzxx1OC5trORpUfBvqyIOVrX+wr28EQ/nhEU0iRvZqI4R+zG8KPEkkfSaT2JYbLSzgV8dclYB5G67K1UgHjuXT+kNviNkYFO2MNf87SQGlImV0hRgBt1IUGsf1tzO2EHM=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 7 Oct 2019 10:59:14 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46218 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728014AbfJGO7O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 10:59:14 -0400
+Received: by mail-wr1-f65.google.com with SMTP id o18so15662939wrv.13
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 07:59:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vilLtZV/3cPsoe5D69Ef7zst8isSbKkZO1Y1Pm2Cqc0=;
+        b=u/ZpKjhiowf7PaElE2EEAF3J1csGr2KdXAdpJBm5Bqp5+gVCtF+RjNgXVVX/8doKuG
+         MZB9nb/r7aEgcTsvukW26bmUM4TTvAeIUcpgCRclwlZsktjVekazM6PukdKTEeOE9x7f
+         RA33Af5AZf5DPiTdnlC1dsqVuaS6ViHr9A36NaQdFCcqaLU7byvVVYii0IcgC4Hgt5mh
+         Np2vU5IQ9wiIiixACVf/xecLxBHPQfpEdMgpAbHP//jzIyJC3i6hlFAktoQj9TdwgOFk
+         Zj3YbXhJQ5Xdh0YPwoaNmcmtiTZedSyRqNj3NNHyAmcoQcohKs/BsSWI9EBJI5fMJ78r
+         PWLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vilLtZV/3cPsoe5D69Ef7zst8isSbKkZO1Y1Pm2Cqc0=;
+        b=moadIe9lZgy1egtkgueJcudU7WBnvesOe3I9Lb8xNQnj1pvOJ6rQX9bs5mmnfB5a1f
+         MCZ0iIAAZOFYz3piCerswyiCgzk2ZUONFOGK0+qvxn21xPcq5KyvQTDOoT/nH2n3JCRV
+         XBfktFg3IublyAnd4VusaMw7P2BrJWgiERoWEGvOYGlZ3nB+cS9c1si6iLHMX4V7XY9X
+         VbA6ISv0A3Bw0R6hfmZ3GSXp9B865Qlrf9YzqMZaxL6FN5NlLnIRJRBglJd4aZmI6vvk
+         wuVUOKQVoHazb06dYs52jFEtGviMogs3BnsbsVTC4jMwZF1FodvHqUrx8ntSxige/78M
+         adrA==
+X-Gm-Message-State: APjAAAUCdxZSo6K3q0CTu2fwLLQObBolD8zz/hb1qyrFpQ7kGIt7CLFk
+        IgZr9RgrAinuhD4VPVp7KpiRDg==
+X-Google-Smtp-Source: APXvYqwdvMHMACemynEre5GbAwLLqQxaKlJYDmTZ3Mj9Oua30AmbMMMNpmeE3UZ3a1Oj6FKt8FXVrQ==
+X-Received: by 2002:adf:f348:: with SMTP id e8mr15404455wrp.237.1570460351453;
+        Mon, 07 Oct 2019 07:59:11 -0700 (PDT)
+Received: from mjourdan-pc.numericable.fr (abo-99-183-68.mtp.modulonet.fr. [85.68.183.99])
+        by smtp.gmail.com with ESMTPSA id d4sm19348985wrq.22.2019.10.07.07.59.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2019 07:59:10 -0700 (PDT)
+From:   Maxime Jourdan <mjourdan@baylibre.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH 0/2] media: meson: vdec: Add compliant H264 support
+Date:   Mon,  7 Oct 2019 16:59:07 +0200
+Message-Id: <20191007145909.29979-1-mjourdan@baylibre.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 97b95a3b-d561-485d-f5ec-08d74b36e18a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Oct 2019 14:58:57.9482
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: sv8h6danI8S2cv5B7XpTqL+Y0rDJeo7gfoMcZfx5N7Zxn5XCSUXvjU83iDZl8Mbk
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB6135
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
+
+This patch series aims to bring H.264 support as well as compliance update
+to the amlogic stateful video decoder driver.
+
+There is 1 issue that remains currently:
+
+ - The following codepath had to be commented out from v4l2-compliance as
+it led to stalling:
+
+if (node->codec_mask & STATEFUL_DECODER) {
+	struct v4l2_decoder_cmd cmd;
+	buffer buf_cap(m2m_q);
+
+	memset(&cmd, 0, sizeof(cmd));
+	cmd.cmd = V4L2_DEC_CMD_STOP;
+
+	/* No buffers are queued, call STREAMON, then STOP */
+	fail_on_test(node->streamon(q.g_type()));
+	fail_on_test(node->streamon(m2m_q.g_type()));
+	fail_on_test(doioctl(node, VIDIOC_DECODER_CMD, &cmd));
+
+	fail_on_test(buf_cap.querybuf(node, 0));
+	fail_on_test(buf_cap.qbuf(node));
+	fail_on_test(buf_cap.dqbuf(node));
+	fail_on_test(!(buf_cap.g_flags() & V4L2_BUF_FLAG_LAST));
+	for (unsigned p = 0; p < buf_cap.g_num_planes(); p++)
+		fail_on_test(buf_cap.g_bytesused(p));
+	fail_on_test(node->streamoff(q.g_type()));
+	fail_on_test(node->streamoff(m2m_q.g_type()));
+
+	/* Call STREAMON, queue one CAPTURE buffer, then STOP */
+	fail_on_test(node->streamon(q.g_type()));
+	fail_on_test(node->streamon(m2m_q.g_type()));
+	fail_on_test(buf_cap.querybuf(node, 0));
+	fail_on_test(buf_cap.qbuf(node));
+	fail_on_test(doioctl(node, VIDIOC_DECODER_CMD, &cmd));
+
+	fail_on_test(buf_cap.dqbuf(node));
+	fail_on_test(!(buf_cap.g_flags() & V4L2_BUF_FLAG_LAST));
+	for (unsigned p = 0; p < buf_cap.g_num_planes(); p++)
+		fail_on_test(buf_cap.g_bytesused(p));
+	fail_on_test(node->streamoff(q.g_type()));
+	fail_on_test(node->streamoff(m2m_q.g_type()));
+}
+
+The reason for this is because the driver has a limitation where all
+capturebuffers must be queued to the driver before STREAMON is effective.
+The firmware needs to know in advance what all the buffers are before
+starting to decode.
+This limitation is enforced via q->min_buffers_needed.
+As such, in this compliance codepath, STREAMON is never actually called
+driver-side and there is a stall on fail_on_test(buf_cap.dqbuf(node));
 
 
-> -----Original Message-----
-> From: Schrempf Frieder <frieder.schrempf@kontron.de>
-> Sent: Monday, October 7, 2019 2:23 AM
-> To: Han Xu <han.xu@nxp.com>; Mark Brown <broonie@kernel.org>
-> Cc: Schrempf Frieder <frieder.schrempf@kontron.de>; stable@vger.kernel.or=
-g;
-> linux-spi@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: [EXT] [PATCH] spi: spi-fsl-qspi: Clear TDH bits in FLSHCR regist=
-er
->=20
-> Caution: EXT Email
->=20
-> From: Frieder Schrempf <frieder.schrempf@kontron.de>
->=20
-> Later versions of the QSPI controller (e.g. in i.MX6UL/ULL and i.MX7) see=
-m to have
-> an additional TDH setting in the FLSHCR register, that needs to be set in=
- accordance
-> with the access mode that is used (DDR or SDR).
->=20
-> Previous bootstages such as BootROM or bootloader might have used the DDR
-> mode to access the flash. As we currently only use SDR mode, we need to m=
-ake
-> sure the TDH bits are cleared upon initialization.
->=20
-> Fixes: 84d043185dbe ("spi: Add a driver for the Freescale/NXP QuadSPI con=
-troller")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-> ---
->  drivers/spi/spi-fsl-qspi.c | 38 +++++++++++++++++++++++++++++++++-----
->  1 file changed, 33 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/spi/spi-fsl-qspi.c b/drivers/spi/spi-fsl-qspi.c inde=
-x
-> c02e24c01136..63c9f7edaf6c 100644
-> --- a/drivers/spi/spi-fsl-qspi.c
-> +++ b/drivers/spi/spi-fsl-qspi.c
-> @@ -63,6 +63,11 @@
->  #define QUADSPI_IPCR                   0x08
->  #define QUADSPI_IPCR_SEQID(x)          ((x) << 24)
->=20
-> +#define QUADSPI_FLSHCR                 0x0c
-> +#define QUADSPI_FLSHCR_TCSS_MASK       GENMASK(3, 0)
-> +#define QUADSPI_FLSHCR_TCSH_MASK       GENMASK(11, 8)
-> +#define QUADSPI_FLSHCR_TDH_MASK                GENMASK(17, 16)
-> +
->  #define QUADSPI_BUF3CR                 0x1c
->  #define QUADSPI_BUF3CR_ALLMST_MASK     BIT(31)
->  #define QUADSPI_BUF3CR_ADATSZ(x)       ((x) << 8)
-> @@ -95,6 +100,9 @@
->  #define QUADSPI_FR                     0x160
->  #define QUADSPI_FR_TFF_MASK            BIT(0)
->=20
-> +#define QUADSPI_RSER                   0x164
-> +#define QUADSPI_RSER_TFIE              BIT(0)
-> +
->  #define QUADSPI_SPTRCLR                        0x16c
->  #define QUADSPI_SPTRCLR_IPPTRC         BIT(8)
->  #define QUADSPI_SPTRCLR_BFPTRC         BIT(0)
-> @@ -112,9 +120,6 @@
->  #define QUADSPI_LCKER_LOCK             BIT(0)
->  #define QUADSPI_LCKER_UNLOCK           BIT(1)
->=20
-> -#define QUADSPI_RSER                   0x164
-> -#define QUADSPI_RSER_TFIE              BIT(0)
-> -
->  #define QUADSPI_LUT_BASE               0x310
->  #define QUADSPI_LUT_OFFSET             (SEQID_LUT * 4 * 4)
->  #define QUADSPI_LUT_REG(idx) \
-> @@ -181,6 +186,12 @@
->   */
->  #define QUADSPI_QUIRK_BASE_INTERNAL    BIT(4)
->=20
-> +/*
-> + * Controller uses TDH bits in register QUADSPI_FLSHCR.
-> + * They need to be set in accordance with the DDR/SDR mode.
-> + */
-> +#define QUADSPI_QUIRK_USE_TDH_SETTING  BIT(5)
-> +
->  struct fsl_qspi_devtype_data {
->         unsigned int rxfifo;
->         unsigned int txfifo;
-> @@ -209,7 +220,8 @@ static const struct fsl_qspi_devtype_data imx7d_data =
-=3D {
->         .rxfifo =3D SZ_128,
->         .txfifo =3D SZ_512,
->         .ahb_buf_size =3D SZ_1K,
-> -       .quirks =3D QUADSPI_QUIRK_TKT253890 | QUADSPI_QUIRK_4X_INT_CLK,
-> +       .quirks =3D QUADSPI_QUIRK_TKT253890 | QUADSPI_QUIRK_4X_INT_CLK |
-> +                 QUADSPI_QUIRK_USE_TDH_SETTING,
->         .little_endian =3D true,
->  };
->=20
-> @@ -217,7 +229,8 @@ static const struct fsl_qspi_devtype_data imx6ul_data=
- =3D {
->         .rxfifo =3D SZ_128,
->         .txfifo =3D SZ_512,
->         .ahb_buf_size =3D SZ_1K,
-> -       .quirks =3D QUADSPI_QUIRK_TKT253890 | QUADSPI_QUIRK_4X_INT_CLK,
-> +       .quirks =3D QUADSPI_QUIRK_TKT253890 | QUADSPI_QUIRK_4X_INT_CLK |
-> +                 QUADSPI_QUIRK_USE_TDH_SETTING,
->         .little_endian =3D true,
->  };
->=20
-> @@ -275,6 +288,11 @@ static inline int needs_amba_base_offset(struct fsl_=
-qspi *q)
->         return !(q->devtype_data->quirks & QUADSPI_QUIRK_BASE_INTERNAL); =
- }
->=20
-> +static inline int needs_tdh_setting(struct fsl_qspi *q) {
-> +       return q->devtype_data->quirks & QUADSPI_QUIRK_USE_TDH_SETTING;
-> +}
-> +
->  /*
->   * An IC bug makes it necessary to rearrange the 32-bit data.
->   * Later chips, such as IMX6SLX, have fixed this bug.
-> @@ -710,6 +728,16 @@ static int fsl_qspi_default_setup(struct fsl_qspi *q=
-)
->         qspi_writel(q, QUADSPI_MCR_MDIS_MASK |
-> QUADSPI_MCR_RESERVED_MASK,
->                     base + QUADSPI_MCR);
->=20
-> +       /*
-> +        * Previous boot stages (BootROM, bootloader) might have used DDR
-> +        * mode and did not clear the TDH bits. As we currently use SDR m=
-ode
-> +        * only, clear the TDH bits if necessary.
-> +        */
-> +       if (needs_tdh_setting(q))
-> +               qspi_writel(q, qspi_readl(q, base + QUADSPI_FLSHCR) &
-> +                           ~QUADSPI_FLSHCR_TDH_MASK,
-> +                           base + QUADSPI_FLSHCR);
-> +
->         reg =3D qspi_readl(q, base + QUADSPI_SMPR);
->         qspi_writel(q, reg & ~(QUADSPI_SMPR_FSDLY_MASK
->                         | QUADSPI_SMPR_FSPHS_MASK
-> --
+One last detail: V4L2_FMT_FLAG_DYN_RESOLUTION is currently not recognized
+by v4l2-compliance, so it was left out for the test. However, it is
+present in the patch series.
 
-Acked-by: Han Xu <han.xu@nxp.com>
+The second patch has 3 "Alignment should match open parenthesis" lines
+where I preferred to keep them that way.
 
-> 2.17.1
+Thanks Stanimir for sharing your HDR file creation tools, this was very
+helpful :).
+
+Maxime
+
+# v4l2-compliance --stream-from-hdr test-25fps.h264.hdr -s250
+v4l2-compliance SHA: a162244d47d4bb01d0692da879dce5a070f118e7, 64 bits
+
+Compliance test for meson-vdec device /dev/video0:
+
+Driver Info:
+	Driver name      : meson-vdec
+	Card type        : Amlogic Video Decoder
+	Bus info         : platform:meson-vdec
+	Driver version   : 5.4.0
+	Capabilities     : 0x84204000
+		Video Memory-to-Memory Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04204000
+		Video Memory-to-Memory Multiplanar
+		Streaming
+		Extended Pix Format
+	Detected Stateful Decoder
+
+Required ioctls:
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video0 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+	test VIDIOC_QUERYCTRL: OK
+	test VIDIOC_G/S_CTRL: OK
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 2 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK
+
+Buffer ioctls:
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK (Not Supported)
+
+Test input 0:
+
+Streaming ioctls:
+	test read/write: OK (Not Supported)
+	test blocking wait: OK
+	Video Capture Multiplanar: Captured 250 buffers   
+	test MMAP (select): OK
+	Video Capture Multiplanar: Captured 250 buffers   
+	test MMAP (epoll): OK
+	test USERPTR (select): OK (Not Supported)
+	test DMABUF: Cannot test, specify --expbuf-device
+
+Total for meson-vdec device /dev/video0: 49, Succeeded: 49, Failed: 0, Warnings: 0
+
+Maxime Jourdan (2):
+  media: meson: vdec: bring up to compliance
+  media: meson: vdec: add H.264 decoding support
+
+ drivers/staging/media/meson/vdec/Makefile     |   2 +-
+ drivers/staging/media/meson/vdec/codec_h264.c | 482 ++++++++++++++++++
+ drivers/staging/media/meson/vdec/codec_h264.h |  14 +
+ drivers/staging/media/meson/vdec/esparser.c   |  34 +-
+ drivers/staging/media/meson/vdec/vdec.c       |  70 ++-
+ drivers/staging/media/meson/vdec/vdec.h       |  14 +-
+ .../staging/media/meson/vdec/vdec_helpers.c   |  85 ++-
+ .../staging/media/meson/vdec/vdec_helpers.h   |   6 +-
+ .../staging/media/meson/vdec/vdec_platform.c  |  43 ++
+ 9 files changed, 654 insertions(+), 96 deletions(-)
+ create mode 100644 drivers/staging/media/meson/vdec/codec_h264.c
+ create mode 100644 drivers/staging/media/meson/vdec/codec_h264.h
+
+-- 
+2.23.0
+
