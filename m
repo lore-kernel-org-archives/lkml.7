@@ -2,110 +2,170 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F7EECE58E
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 850AEC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7CEE206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:08:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B3CE206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:08:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uRm/bFYP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729005AbfJGSI1 (ORCPT
+        id S1729279AbfJGSI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 14:08:27 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:21718 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728212AbfJGSI0 (ORCPT
+        Mon, 7 Oct 2019 14:08:58 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:34830 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728031AbfJGSI5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 14:08:26 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x97I2jGN037903
-        for <linux-kernel@vger.kernel.org>; Mon, 7 Oct 2019 14:08:26 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vg9h7sx0j-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 14:08:25 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Mon, 7 Oct 2019 19:08:23 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 7 Oct 2019 19:08:19 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x97I8Idm54394928
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 7 Oct 2019 18:08:18 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 14DF711C05C;
-        Mon,  7 Oct 2019 18:08:18 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C533A11C04C;
-        Mon,  7 Oct 2019 18:08:16 +0000 (GMT)
-Received: from dhcp-9-31-103-196.watson.ibm.com (unknown [9.31.103.196])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  7 Oct 2019 18:08:16 +0000 (GMT)
-Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        David Safford <david.safford@ge.com>,
-        linux-integrity@vger.kernel.org, stable@vger.kernel.org,
-        David Howells <dhowells@redhat.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Mon, 07 Oct 2019 14:08:15 -0400
-In-Reply-To: <20191006235238.GA16641@linux.intel.com>
-References: <1570140491.5046.33.camel@linux.ibm.com>
-         <1570147177.10818.11.camel@HansenPartnership.com>
-         <20191004182216.GB6945@linux.intel.com>
-         <1570213491.3563.27.camel@HansenPartnership.com>
-         <20191004183342.y63qdvspojyf3m55@cantor>
-         <1570214574.3563.32.camel@HansenPartnership.com>
-         <20191004200728.xoj6jlgbhv57gepc@cantor>
-         <20191004201134.nuesk6hxtxajnxh2@cantor>
-         <1570227068.17537.4.camel@HansenPartnership.com>
-         <1570322333.5046.145.camel@linux.ibm.com>
-         <20191006235238.GA16641@linux.intel.com>
+        Mon, 7 Oct 2019 14:08:57 -0400
+Received: by mail-pl1-f195.google.com with SMTP id c3so5768354plo.2
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 11:08:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JwC6F2GJvmhpWHGCr7xF/n4f6KLR7+2yf2OOH5GEsgU=;
+        b=uRm/bFYPsstoaYyKukSFhdRLDpzni7itu2EEZfLPwBlxu+qsX3FN7N7lVTsrFB6a6K
+         vt7+5nD3qCBr++/ITUQKwWu6K1dnnVKEt8by7hgTzUOMuW8aSJmqfpxVW8GC6fnd69ap
+         1pnD3I89VMIFfNvvpwCzdpEh/qO1Od6mzoyPAlHrefC1wGCje/aK5MwPIXZ6chgkFXhK
+         KsuQVX0urhlgK8mFNDKZcv7vS+scCHKzOFH+oTcfTWojqCVkR+D+/dCzZmS4njEVH2Bl
+         PtJO3eKNJwpLPfTs5A30TwFHfGYk+h+QE5LMOVXSkqZiGpYH1O9FH2LEOwp4700pX9OZ
+         2g4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JwC6F2GJvmhpWHGCr7xF/n4f6KLR7+2yf2OOH5GEsgU=;
+        b=Hc2tPgKoq586y0gpdY+Uplcx45mXi/hJ2SrBuyrzsBoiiMQ+S7miY5qhc1F1VKAvon
+         Xs/k5Xnf8Nus9vlVrr23YwnkZ0lfoqcB10t+vtyqLaW2madJ2gnIQca/5SFUjzZ9Avbt
+         D05/9Y5T6ZaKWTD+WeZjuvm+v3syd08z/+Pw9btI/QF+cPJV2lQVXr0OHP4dcALgEuX3
+         lw3bqqgnAL7dMwLQYYBxEu0O1pr+y556j3P5S5d4KeqDm2ENMZLMV0nluCdiERSsOt/x
+         y3b9H224gAtKxWWtztBnGrQCXS2+H6nEhRygsYIbx2OE24YyB2vLpmvMH/RXZQj6pfuy
+         xRzg==
+X-Gm-Message-State: APjAAAUJadF37oB1ii1bVgOyGdOp2ehyzrX1Q+JKvzvV5OBxTj+NwvF6
+        gPvq1L45ozqNMDpBhGuFMY4OQfl05ceUidL8uhYCSg==
+X-Google-Smtp-Source: APXvYqzOl3JXsj4sTtvjvilp+o9GzSCOZkl0A9M3zcxvheER0viyb3/IMPpVI+XWTbKtuhaCp0QRNTl7H6IBggmcCXE=
+X-Received: by 2002:a17:902:7c08:: with SMTP id x8mr29403977pll.119.1570471736235;
+ Mon, 07 Oct 2019 11:08:56 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1570292505.git.joe@perches.com> <2e0111756153d81d77248bc8356bac78925923dc.1570292505.git.joe@perches.com>
+In-Reply-To: <2e0111756153d81d77248bc8356bac78925923dc.1570292505.git.joe@perches.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 7 Oct 2019 11:08:45 -0700
+Message-ID: <CAKwvOdmtfUfpGhKODa=UBtq7AKDaJa9cndf7fkjJw1R37SsR6A@mail.gmail.com>
+Subject: Re: [PATCH 1/4] net: sctp: Rename fallthrough label to unhandled
+To:     Joe Perches <joe@perches.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Pavel Machek <pavel@ucw.cz>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Shawn Landden <shawn@git.icu>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Miller <davem@davemloft.net>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        linux-sctp@vger.kernel.org,
+        Network Development <netdev@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19100718-4275-0000-0000-0000036EEB6D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19100718-4276-0000-0000-00003881FA7D
-Message-Id: <1570471695.5046.186.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-07_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=669 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910070161
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-10-07 at 02:52 +0300, Jarkko Sakkinen wrote:
-> 
-> With TEE coming in, TPM is not the only hardware measure anymore sealing
-> the keys and we don't want a mess where every hardware asset does their
-> own proprietary key generation. The proprietary technology should only
-> take care of the sealing part.
+On Sat, Oct 5, 2019 at 9:46 AM Joe Perches <joe@perches.com> wrote:
+>
+> fallthrough may become a pseudo reserved keyword so this only use of
+> fallthrough is better renamed to allow it.
+>
+> Signed-off-by: Joe Perches <joe@perches.com>
+> ---
+>  net/sctp/sm_make_chunk.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/net/sctp/sm_make_chunk.c b/net/sctp/sm_make_chunk.c
+> index e41ed2e0ae7d..48d63956a68c 100644
+> --- a/net/sctp/sm_make_chunk.c
+> +++ b/net/sctp/sm_make_chunk.c
+> @@ -2155,7 +2155,7 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
+>         case SCTP_PARAM_SET_PRIMARY:
+>                 if (ep->asconf_enable)
+>                         break;
+> -               goto fallthrough;
+> +               goto unhandled;
+>
+>         case SCTP_PARAM_HOST_NAME_ADDRESS:
+>                 /* Tell the peer, we won't support this param.  */
+> @@ -2166,11 +2166,11 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
+>         case SCTP_PARAM_FWD_TSN_SUPPORT:
+>                 if (ep->prsctp_enable)
+>                         break;
+> -               goto fallthrough;
+> +               goto unhandled;
+>
+>         case SCTP_PARAM_RANDOM:
+>                 if (!ep->auth_enable)
+> -                       goto fallthrough;
+> +                       goto unhandled;
+>
+>                 /* SCTP-AUTH: Secion 6.1
+>                  * If the random number is not 32 byte long the association
+> @@ -2187,7 +2187,7 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
+>
+>         case SCTP_PARAM_CHUNKS:
+>                 if (!ep->auth_enable)
+> -                       goto fallthrough;
+> +                       goto unhandled;
+>
+>                 /* SCTP-AUTH: Section 3.2
+>                  * The CHUNKS parameter MUST be included once in the INIT or
+> @@ -2203,7 +2203,7 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
+>
+>         case SCTP_PARAM_HMAC_ALGO:
+>                 if (!ep->auth_enable)
+> -                       goto fallthrough;
+> +                       goto unhandled;
+>
+>                 hmacs = (struct sctp_hmac_algo_param *)param.p;
+>                 n_elt = (ntohs(param.p->length) -
+> @@ -2226,7 +2226,7 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
+>                         retval = SCTP_IERROR_ABORT;
+>                 }
+>                 break;
+> -fallthrough:
+> +unhandled:
+>         default:
 
-I'm fine with the concept of "trusted" keys being extended beyond just
-TPM.  But just as the VFS layer defines a set of callbacks and generic
-functions, which can be used in lieu of file system specific callback
-functions, a similar approach could be used here.
+Interesting control flow (goto from one case to the default case, not
+sure "fallthrough" was ever the right word for that).  Thanks for the
+patch.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Mimi
+>                 pr_debug("%s: unrecognized param:%d for chunk:%d\n",
+>                          __func__, ntohs(param.p->type), cid);
+> --
+> 2.15.0
+>
 
+
+-- 
+Thanks,
+~Nick Desaulniers
