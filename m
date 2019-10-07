@@ -2,106 +2,94 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F86AC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2FBFC352AA
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 672CC20867
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9710821721
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:37:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570448141;
-	bh=WMCQd2GDPxepzdcS7GcjwsjWqqxgbpSwzeQjk3Onw74=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zjBRuXlunvU/7pZSYom6N7zNXG+cVHrG0nM66kAcHDsDqwS/3RCm84MDNU5ON/sVF
-	 ndluiGeVm9IvhrMJ6qHlgPQGVUY/4MFX6XrFPp/EZ1w9bCaw1A+wLS0aXNw93BSdUH
-	 eceCL4TjMaBCliesgLYdE5S+xR5bY+NwvEOwZnzM=
+	s=default; t=1570448233;
+	bh=DeDtg5BYyoH5R50tZVdT+sUkRN+LeIt0NG34SdtAwG8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QPI/pUakMk5SqHArtHYCo8+bSpWMquO/Rry0x57CCk7vzunAS5P1OCIcIXEP+RSx2
+	 Rd6WIjRP0i4xijgOa5Jbm0+bj33FqNhn8DSAHQJxwcd2xC2JCr8UdcqNPsCNwrCfUT
+	 fP+Mv2DzDrfkrDyZHrNJc1UuohyDsMoDEp7yeC5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbfJGLfk (ORCPT
+        id S1727685AbfJGLhN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 07:35:40 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:35645 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727757AbfJGLfL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 07:35:11 -0400
-Received: by mail-lf1-f66.google.com with SMTP id w6so9010430lfl.2;
-        Mon, 07 Oct 2019 04:35:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=m6p9TCl1q4PmCyDnNVWS8vM5CeKoKD3/SoQWgI0Yo4g=;
-        b=QJNGZIpScWEOpBiUuR5ogk8EeSrxf1DIU3G2z0VagZr8pkWfPq18XB+4JPgD3xaQD/
-         ZfdfWChvTTZV3o7TbXKuRM7qqTfe87O5SsYR3i3NDvFQvUKTis2Kd80xJ+1hOnOkqIP4
-         SHLJoBMchklgCpaJOY2O3VDXt5+N9VYsXJGIliJtDEMR7L0gQiw/oL0YaHsKuAOPu3hW
-         k9+CyWaYb+3/1FPLevRZdD39NOt903bWVmmOPAVJm8yc1V3ABm/NXXFV74qg7FmCUF1u
-         e1oZdqYbaVwltnQblyShyffncaB39lgwbHbWKldxbhNaPIg6NbJ1Q0mVngXl+Wf+7zrN
-         pzoQ==
-X-Gm-Message-State: APjAAAXf7aLalpSjZE0Qp58lqwbu6rMZhx9fWB5C2v+LP7DbjzJZWs1C
-        FTA0v4Wi1N7q2QZUExQAMyPHQNrzkik=
-X-Google-Smtp-Source: APXvYqwQBw9XPD6p+WtacfDJ/7xNyoIqolTB5wKw/wcK1/uTSQnIYGe+xUlAzIIsCv6vaMQMqIU9HA==
-X-Received: by 2002:ac2:551d:: with SMTP id j29mr16052554lfk.7.1570448108835;
-        Mon, 07 Oct 2019 04:35:08 -0700 (PDT)
-Received: from neopili.qtec.com (cpe.xe-3-0-1-778.vbrnqe10.dk.customer.tdc.net. [80.197.57.18])
-        by smtp.gmail.com with ESMTPSA id b25sm3666047ljj.36.2019.10.07.04.35.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2019 04:35:07 -0700 (PDT)
-From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
-To:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Jacopo Mondi <jacopo@jmondi.org>, linux-media@vger.kernel.org,
+        Mon, 7 Oct 2019 07:37:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48546 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727394AbfJGLhM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 07:37:12 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E6C7FAE65;
+        Mon,  7 Oct 2019 11:37:10 +0000 (UTC)
+Date:   Mon, 7 Oct 2019 13:37:10 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     akpm@linux-foundation.org, sergey.senozhatsky.work@gmail.com,
+        pmladek@suse.com, rostedt@goodmis.org, peterz@infradead.org,
+        david@redhat.com, john.ogness@linutronix.de, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Cc:     Ricardo Ribalda Delgado <ricardo@ribalda.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Ricardo Ribalda Delgado <ribalda@kernel.org>
-Subject: [PATCH v10 2/8] Documentation: v4l2_ctrl_new_std_compound
-Date:   Mon,  7 Oct 2019 13:34:56 +0200
-Message-Id: <20191007113502.11746-3-ribalda@kernel.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191007113502.11746-1-ribalda@kernel.org>
-References: <20191007113502.11746-1-ribalda@kernel.org>
+Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
+Message-ID: <20191007113710.GH2381@dhcp22.suse.cz>
+References: <20191007080742.GD2381@dhcp22.suse.cz>
+ <FB72D947-A0F9-43E7-80D9-D7ACE33849C7@lca.pw>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <FB72D947-A0F9-43E7-80D9-D7ACE33849C7@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ricardo Ribalda Delgado <ricardo@ribalda.com>
+On Mon 07-10-19 07:04:00, Qian Cai wrote:
+> 
+> 
+> > On Oct 7, 2019, at 4:07 AM, Michal Hocko <mhocko@kernel.org> wrote:
+> > 
+> > I do not think that removing the printk is the right long term solution.
+> > While I do agree that removing the debugging printk __offline_isolated_pages
+> > does make sense because it is essentially of a very limited use, this
+> > doesn't really solve the underlying problem.  There are likely other
+> > printks from zone->lock. It would be much more saner to actually
+> > disallow consoles to allocate any memory while printk is called from an
+> > atomic context.
+> 
+> No, there is only a handful of places called printk() from
+> zone->lock. It is normal that the callers will quietly process
+> “struct zone” modification in a short section with zone->lock
+> held.
 
-Function for initializing compound controls with a default value.
+It is extremely error prone to have any zone->lock vs. printk
+dependency. I do not want to play an endless whack a mole.
 
-Suggested-by: Hans Verkuil <hverkuil@xs4all.nl>
-Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
-Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
----
- Documentation/media/kapi/v4l2-controls.rst | 9 +++++++++
- 1 file changed, 9 insertions(+)
+> No, it is not about “allocate any memory while printk is called from an
+> atomic context”. It is opposite lock chain  from different processors which has the same effect. For example,
+> 
+> CPU0:                 CPU1:         CPU2:
+> console_owner
+>                             sclp_lock
+> sclp_lock                                 zone_lock
+>                             zone_lock
+>                                                  console_owner
 
-diff --git a/Documentation/media/kapi/v4l2-controls.rst b/Documentation/media/kapi/v4l2-controls.rst
-index ebe2a55908be..b20800cae3f2 100644
---- a/Documentation/media/kapi/v4l2-controls.rst
-+++ b/Documentation/media/kapi/v4l2-controls.rst
-@@ -140,6 +140,15 @@ Menu controls with a driver specific menu are added by calling
-                        const struct v4l2_ctrl_ops *ops, u32 id, s32 max,
-                        s32 skip_mask, s32 def, const char * const *qmenu);
- 
-+Standard compound controls can be added by calling
-+:c:func:`v4l2_ctrl_new_std_compound`:
-+
-+.. code-block:: c
-+
-+       struct v4l2_ctrl *v4l2_ctrl_new_std_compound(struct v4l2_ctrl_handler *hdl,
-+                       const struct v4l2_ctrl_ops *ops, u32 id,
-+                       const union v4l2_ctrl_ptr p_def);
-+
- Integer menu controls with a driver specific menu can be added by calling
- :c:func:`v4l2_ctrl_new_int_menu`:
- 
+Why would sclp_lock ever take a zone->lock (apart from an allocation).
+So really if sclp_lock is a lock that might be taken from many contexts
+and generate very subtle lock dependencies then it should better be
+really careful what it is calling into.
+
+In other words you are trying to fix a wrong end of the problem. Fix the
+console to not allocate or depend on MM by other means.
 -- 
-2.23.0
-
+Michal Hocko
+SUSE Labs
