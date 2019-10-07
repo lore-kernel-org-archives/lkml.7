@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01DE3C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65005C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:21:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFD0521655
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:20:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CA242070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:21:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="xFMLP3Kn"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="yTafRmvi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728487AbfJGOUb (ORCPT
+        id S1728490AbfJGOVD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 10:20:31 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44383 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727753AbfJGOUb (ORCPT
+        Mon, 7 Oct 2019 10:21:03 -0400
+Received: from mail-wr1-f44.google.com ([209.85.221.44]:46099 "EHLO
+        mail-wr1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727884AbfJGOVD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 10:20:31 -0400
-Received: by mail-wr1-f65.google.com with SMTP id z9so15500059wrl.11
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 07:20:29 -0700 (PDT)
+        Mon, 7 Oct 2019 10:21:03 -0400
+Received: by mail-wr1-f44.google.com with SMTP id o18so15494420wrv.13
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 07:21:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=SnNApNI2Th8BmNSSBmx3A8j3h+xtt+6KF7oasPsCk6U=;
-        b=xFMLP3KnKfj+ITqG0jtkks5Gz68h5cFKi+FipLS8713Y6xMFLbjk6n0aMzJ4KFHutL
-         j5ouNTRzSuVU6Cl4TONf55t5/9h27G1evP0DPx3necKQ1brlzSkC6zLSAv9K2WiJMH7w
-         i7LNksozy3OVyZ+Ai+wUWcy9zR4gBwcGta0w70anGxUooUqseUlzywO1BJYya27GDUMn
-         5JlSJm0RpDqhGnniPTOfp4oW9K+UrPO3FkBpS/A/Pv6LeG1XSpM7a8KCKRpF97YOfPm6
-         nlCheYpcjSaN/hjdEVPvxAzjUU0PEbjGcmWOp+hSEOKwxcEcW++exEiIgiBOvqTFMpoi
-         MQDw==
+        bh=MKirgQbMXeaXSPyMq/4AOs9NDhHjTOzq15XOPIFCYr4=;
+        b=yTafRmvifcoPDIwT72cFHLtvjpLPVxvqq1mDRA0eE3rVMWy5lIMc1hZLWHcRNDpSTU
+         4X+ysZP82jzMdgBkyIDKvTmRc9wSTha97E9dGKNq2GkGCzIfooMlMqWw39KtUX3ivVkr
+         Iq3v2IEVWX8hciNQhhQzjLWYIi9m/4P7Ebw8g/ciHzhV2g7bcr5c8yOeFwSNFK/+FhqX
+         ppgA+mZXB1b14Rnu27ymjugZHSj5DK8yH7bL2VAvLf0Ulb7UDFu8IdLgjTBZqNCWw/nP
+         oKonaoP8+LSKJWKT4KkA+6ICC7roqQ5GkUXvTJp8eiOg4Ef2ji8Jfww+ky81Mdmg1ekV
+         M9Tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=SnNApNI2Th8BmNSSBmx3A8j3h+xtt+6KF7oasPsCk6U=;
-        b=J/YubnsopwMhruDTWxX+xv/gkFtdWuztWRMj9DQ2sQc0VxjzYJbDuRMTbMKOEBVw64
-         HgTGXz13vxohL54NHajVdWYOziL7ParzDmY5e02q4oELZlLiov4tV5TLKw0il3dHKQB0
-         9fQXrVYlaI7Cv3DqK8AOhQ5EpLH8iUwaR8AF0DkMqCY8HFEzOnMMMcFvWOenOD/JKPdF
-         wzRF1H3rCXwNaq4y61/DDKr9GMMOucCtof3kz4pHpTnj8eXM21m3hRUR/qQndFO3jS1u
-         njS8stbYp1s+rJsoDoslu9hrNoK7Sl68qtSSTnRZlXnERfUQfyEPkgnkgIZDhG3tS3ej
-         wp9Q==
-X-Gm-Message-State: APjAAAVcda3lhKeiZzaGFdRHDGnkmzRlu4o+0ZT46PZDSgkmyBhJiiPr
-        66HTCeGEyEurrDMm15UuqkMIMVG+QKvvPA==
-X-Google-Smtp-Source: APXvYqxOlDUINVRLqPA0TekXTu0ZMnv4MKp1/grvwkTk19BD4nnSOn5X0LHdAR5c4Sju4Pva87gL1A==
-X-Received: by 2002:adf:ea0d:: with SMTP id q13mr11965473wrm.111.1570458028573;
-        Mon, 07 Oct 2019 07:20:28 -0700 (PDT)
+        bh=MKirgQbMXeaXSPyMq/4AOs9NDhHjTOzq15XOPIFCYr4=;
+        b=riho3yKDpONXNGEITzuXyduA4RkCJbQXr2iR3WSid7w39MXFKrWU0tQwcqjW+pxsVh
+         HePM5awiA8kjAOy8oVJCUEWr/rvDwCP/SFHl9EXKyoApBA6jcIHrZdY/vUk3NsBWolSO
+         2ZjQ1zK6qpn6Qu4NZETsfH7P56NRQuBH2/0etgkF+KAi5Cl0BgN6cTmllkl4Pg/gHsy+
+         54pKSt9M1svjOb1q1iX0WzyPs2Qc26HdYJY2rZZI7GqE1z7itHKp0DHuwTpS4PSuo2gy
+         I0R0v9rq7pTn7yWOE7tJz4M49UO5+3n3EX6Yy2FUBNgmycUr+8jODz1qwppArIRpDKOR
+         SKYQ==
+X-Gm-Message-State: APjAAAXgYyW0nd9LqJuCoZFNCnxiMPY2ZHKePKIV++riZzbWUVxwRt09
+        fTwZGWb5e/LKb5IvKQLPTyJjcm8p4yl8NA==
+X-Google-Smtp-Source: APXvYqyoIQpIiXxBchkoknxbg0wVL9NHFlZswKKy065XHBS3t86F7A7mKKqBeeuXoi7UUA0w3f7K1A==
+X-Received: by 2002:a5d:4ed0:: with SMTP id s16mr23080434wrv.248.1570458060492;
+        Mon, 07 Oct 2019 07:21:00 -0700 (PDT)
 Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id a10sm16489334wrm.52.2019.10.07.07.20.27
+        by smtp.gmail.com with ESMTPSA id x5sm13428794wrt.75.2019.10.07.07.20.59
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 07 Oct 2019 07:20:28 -0700 (PDT)
-Subject: Re: [RFCv1 2/5] arm64: dts: meson: Add missing pwm control gpio
- signal for pwm-regulator
+        Mon, 07 Oct 2019 07:21:00 -0700 (PDT)
+Subject: Re: [RFCv1 3/5] arm64: dts: meson: Add missing regulator linked to
+ VDDAO_3V3 regulator to FLASH_VDD
 To:     Anand Moon <linux.amoon@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -71,7 +71,7 @@ To:     Anand Moon <linux.amoon@gmail.com>,
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 References: <20191007131649.1768-1-linux.amoon@gmail.com>
- <20191007131649.1768-3-linux.amoon@gmail.com>
+ <20191007131649.1768-4-linux.amoon@gmail.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
@@ -124,12 +124,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
  ZaTUOEkgIor5losDrePdPgE=
 Organization: Baylibre
-Message-ID: <8a74834e-5cfa-3f3b-9ba6-e88e265b67a0@baylibre.com>
-Date:   Mon, 7 Oct 2019 16:20:27 +0200
+Message-ID: <b73a1302-90ae-f1db-ff43-84d56ca4ba39@baylibre.com>
+Date:   Mon, 7 Oct 2019 16:20:59 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191007131649.1768-3-linux.amoon@gmail.com>
+In-Reply-To: <20191007131649.1768-4-linux.amoon@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -139,46 +139,35 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 07/10/2019 15:16, Anand Moon wrote:
-> As per schematics add missing VDDCPUA_PWM and VDDCPUB_PWM
-> gpio signal use to enable/disable the pwm regulator for DVFS.
+> As per schematics add missing VDDAO_3V3 power supply to FLASH_VDD
+> regulator. Also add TFLASH_VDD_EN signal name to gpio pin.
 > 
-> Fixes: d14734a04a8a (arm64: dts: meson-g12b-odroid-n2: enable DVFS)
+> Fixes: c35f6dc5c377 (arm64: dts: meson: Add minimal support for Odroid-N2)
 > Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > Cc: Jerome Brunet <jbrunet@baylibre.com>
 > Cc: Neil Armstrong <narmstrong@baylibre.com>
 > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 > ---
->  arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 4 ++++
->  1 file changed, 4 insertions(+)
+>  arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
 > diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> index a9a661258886..66262a6ab3fe 100644
+> index 66262a6ab3fe..6bd23a1e7e1d 100644
 > --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
 > +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> @@ -135,6 +135,8 @@
+> @@ -51,9 +51,12 @@
+>  		regulator-min-microvolt = <3300000>;
+>  		regulator-max-microvolt = <3300000>;
 >  
->  		regulator-boot-on;
+> +		/* TFLASH_VDD_EN */
+>  		gpio = <&gpio_ao GPIOAO_8 GPIO_ACTIVE_HIGH>;
+>  		enable-active-high;
 >  		regulator-always-on;
-> +		/* VDDCPUA_PWM */
-> +		enable-gpios = <&gpio GPIOE_1 GPIO_ACTIVE_HIGH>;
+> +		/* U18 FC8731-09VF05NRR */
+> +		vin-supply = <&vddao_3v3>;
 >  	};
 >  
->  	vddcpu_b: regulator-vddcpu-b {
-> @@ -154,6 +156,8 @@
->  
->  		regulator-boot-on;
->  		regulator-always-on;
-> +		/* VDDCPUB_PWM */
-> +		enable-gpios = <&gpio GPIOE_2 GPIO_ACTIVE_HIGH>;
->  	};
->  
->  	hub_5v: regulator-hub_5v {
+>  	tf_io: gpio-regulator-tf_io {
 > 
 
-Same as 5V_EN, This GPIO is handled by the BL301 SCP firmware, I'm personally against
-adding this to the DT since it's out of control of Linux or any OS.
-
-This GPIO id controlles by the PSCI call to SCP to enable/disable
-the CPU clusters.
-
-Neil
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
