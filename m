@@ -2,153 +2,120 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1089EC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9870ECE58E
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA5F82133F
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:34:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570487673;
-	bh=LGBSGuz5q9yo8hI9Okbu1av/OqHVYJvDjRBLyWdeHjQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=JriauawR85BeCbShwENQ18dYOdsKAfRbzafZByMJejZ/sRQ5cB6Qp7BAqFn7sXI1f
-	 lWZ83XcoJg/J8MWnjxIeM214+73mZPH/lnwWZtP4jn5qJygdGS0jOLMfheofigc0km
-	 u5uXWSAQsSHvo/9hdW/kC1ui4M6pXro/7vNmgdos=
+	by mail.kernel.org (Postfix) with ESMTP id 7FFE2206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:36:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kMbeUB6n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729413AbfJGWeb (ORCPT
+        id S1729548AbfJGWgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 18:34:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49326 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728893AbfJGWeb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 18:34:31 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFD78206C0;
-        Mon,  7 Oct 2019 22:34:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570487670;
-        bh=LGBSGuz5q9yo8hI9Okbu1av/OqHVYJvDjRBLyWdeHjQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=l+VHYoudpyoV9iaA3IzzJYmS6Xzj05+MpEYQxm0RayzX19zv2bvuOo1THZKU44DF0
-         +/RKCBHtGlDq0ii3iA7U7ajRxB4C4h0kF6M54zbmqTza1xkHLgFRZLMgxVEyQGgCe8
-         ErahbP+R9O9kkCL6iBNowjUgn9RLtJi/JXtbCF9A=
-Date:   Mon, 7 Oct 2019 17:34:28 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     linux-nvme <linux-nvme@lists.infradead.org>,
-        Keith Busch <kbusch@kernel.org>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v3 1/2] PCI: PCIe: ASPM: Introduce pcie_aspm_enabled()
-Message-ID: <20191007223428.GA72605@google.com>
+        Mon, 7 Oct 2019 18:36:51 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:43369 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728654AbfJGWgv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 18:36:51 -0400
+Received: by mail-pl1-f196.google.com with SMTP id f21so7530229plj.10;
+        Mon, 07 Oct 2019 15:36:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qQFvQXMDOOQXelPSQG/VrtGgsFEzvkqo1WSTQd7tu0k=;
+        b=kMbeUB6nfSXlrKHTAkW6JpIwZIRINd9NuS1bNOdTNs+8Aoeqm4IlcnUHMWWqcN5W4u
+         3iV09ixXVBwoNvJOBGTCKHsC5HAah1IJCUyE7A/6eYBxSc17hbsVVPLzxxP8ofAPJNeT
+         MTSH9ESlEsCR51pZjYjcKjj+5hy6yyENbArIf4X5wRJtzvd4IkVh7J3Z2H1guUiDXFtV
+         q2FJAO3hcGhMqmxyG6XB5JOuS8QofPT03Bp8igl7HMH+K5zZ506HQjPqESYgOjbIPPvf
+         OXqYApWayL8ZKiD22bvOJ9Ut9eJzOiG6pkbdznWgWoHZJYTMT1JwVdeC7kEIH60v8NAP
+         K5Sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qQFvQXMDOOQXelPSQG/VrtGgsFEzvkqo1WSTQd7tu0k=;
+        b=SSM/GqUA81r3gRSYx49uX5KdX6tRQ3L7zmBRx1ex7iSik5CcvQWGbjoPczFw43e4Tz
+         hUqxdiv/P7igfIR2CQ/KEwF/GVUbx8OV6KEuQ+ThjAh+bhFi/9aq1HUmXKvEcPfuDbrv
+         MC9q8gqYW1QDRw0QJZyr0uj1P2pE/WdZYSJJTujb9FnFNZtkFtmTkp/Cpr6WLQv6ZP4G
+         Qn/2I+jYR87swQ2jUC+3vM5DuokKjkYMWpUPmoQFVgifgTN8JZ474WekicF8qRWuGHyd
+         Hh7BM7/xtKGRmFRrlFWVHUA/aegP+gNBGMfDoa0uPk++r2khR7u7uArJBFMM/AXI2oe1
+         FWWQ==
+X-Gm-Message-State: APjAAAV988K6zjAaxg5f3qS7ltoA/xe07LPPt/1iW4d71Ejbn3mELY8C
+        El7hqroI+Gef703S81XFKwLAWryl
+X-Google-Smtp-Source: APXvYqwsjlduvrCYB/Xn2VwJfyrMEGd8t6ujlCVPR53aEBbbfr2Ct7e/hsSBZvbPBaa3bvyhCp6hWw==
+X-Received: by 2002:a17:902:144:: with SMTP id 62mr663028plb.283.1570487809873;
+        Mon, 07 Oct 2019 15:36:49 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d6sm17952967pgj.22.2019.10.07.15.36.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 07 Oct 2019 15:36:48 -0700 (PDT)
+Subject: Re: [PATCH 4.4 00/36] 4.4.196-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20191006171038.266461022@linuxfoundation.org>
+ <d3e1e6ae-8ca4-a43b-d30d-9a9a9a7e5752@roeck-us.net>
+ <20191007144951.GB966828@kroah.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <fbce4eb8-ebc8-5246-ea03-3af2ebb97a16@roeck-us.net>
+Date:   Mon, 7 Oct 2019 15:36:46 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1618955.HVa0YQSOW5@kreacher>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191007144951.GB966828@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Heiner]
+On 10/7/19 7:49 AM, Greg Kroah-Hartman wrote:
+> On Mon, Oct 07, 2019 at 05:53:55AM -0700, Guenter Roeck wrote:
+>> On 10/6/19 10:18 AM, Greg Kroah-Hartman wrote:
+>>> This is the start of the stable review cycle for the 4.4.196 release.
+>>> There are 36 patches in this series, all will be posted as a response
+>>> to this one.  If anyone has any issues with these being applied, please
+>>> let me know.
+>>>
+>>> Responses should be made by Tue 08 Oct 2019 05:07:10 PM UTC.
+>>> Anything received after that time might be too late.
+>>>
+>>
+>> powerpc:defconfig fails to build.
+>>
+>> arch/powerpc/kernel/eeh_driver.c: In function ‘eeh_handle_normal_event’:
+>> arch/powerpc/kernel/eeh_driver.c:678:2: error: implicit declaration of function ‘eeh_for_each_pe’; did you mean ‘bus_for_each_dev’?
+>>
+>> It has a point:
+>>
+>> ... HEAD is now at 13cac61d31df Linux 4.4.196-rc1
+>> $ git grep eeh_for_each_pe
+>> arch/powerpc/kernel/eeh_driver.c:       eeh_for_each_pe(pe, tmp_pe)
+>> arch/powerpc/kernel/eeh_driver.c:                               eeh_for_each_pe(pe, tmp_pe)
+>>
+>> Caused by commit 3fb431be8de3a ("powerpc/eeh: Clear stale EEH_DEV_NO_HANDLER flag").
+>> Full report will follow later.
+> 
+> Thanks for letting me know, I've dropped this from the queue now and
+> pushed out a -rc2 with that removed.
+> 
 
-On Thu, Aug 08, 2019 at 11:55:07PM +0200, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> Add a function checking whether or not PCIe ASPM has been enabled for
-> a given device.
-> 
-> It will be used by the NVMe driver to decide how to handle the
-> device during system suspend.
-> 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
-> 
-> v2 -> v3:
->   * Make the new function return bool.
->   * Change its name back to pcie_aspm_enabled().
->   * Fix kerneldoc comment formatting.
-> 
-> -> v2:
->   * Move the PCI/PCIe ASPM changes to a separate patch.
->   * Add the _mask suffix to the new function name.
->   * Add EXPORT_SYMBOL_GPL() to the new function.
->   * Avoid adding an unnecessary blank line.
-> 
-> ---
->  drivers/pci/pcie/aspm.c |   20 ++++++++++++++++++++
->  include/linux/pci.h     |    3 +++
->  2 files changed, 23 insertions(+)
-> 
-> Index: linux-pm/drivers/pci/pcie/aspm.c
-> ===================================================================
-> --- linux-pm.orig/drivers/pci/pcie/aspm.c
-> +++ linux-pm/drivers/pci/pcie/aspm.c
-> @@ -1170,6 +1170,26 @@ static int pcie_aspm_get_policy(char *bu
->  module_param_call(policy, pcie_aspm_set_policy, pcie_aspm_get_policy,
->  	NULL, 0644);
->  
-> +/**
-> + * pcie_aspm_enabled - Check if PCIe ASPM has been enabled for a device.
-> + * @pci_device: Target device.
-> + */
-> +bool pcie_aspm_enabled(struct pci_dev *pci_device)
-> +{
-> +	struct pci_dev *bridge = pci_upstream_bridge(pci_device);
-> +	bool ret;
-> +
-> +	if (!bridge)
-> +		return false;
-> +
-> +	mutex_lock(&aspm_lock);
-> +	ret = bridge->link_state ? !!bridge->link_state->aspm_enabled : false;
-> +	mutex_unlock(&aspm_lock);
+For v4.4.195-36-g898f6e5cf82f:
 
-Why do we need to acquire aspm_lock here?  We aren't modifying
-anything, and I don't think we're preventing a race.  If this races
-with another thread that changes aspm_enabled, we'll return either the
-old state or the new one, and I think that's still the case even if we
-don't acquire aspm_lock.
+Build results:
+	total: 170 pass: 170 fail: 0
+Qemu test results:
+	total: 324 pass: 324 fail: 0
 
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(pcie_aspm_enabled);
-> +
->  #ifdef CONFIG_PCIEASPM_DEBUG
->  static ssize_t link_state_show(struct device *dev,
->  		struct device_attribute *attr,
-> Index: linux-pm/include/linux/pci.h
-> ===================================================================
-> --- linux-pm.orig/include/linux/pci.h
-> +++ linux-pm/include/linux/pci.h
-> @@ -1567,8 +1567,11 @@ extern bool pcie_ports_native;
->  
->  #ifdef CONFIG_PCIEASPM
->  bool pcie_aspm_support_enabled(void);
-> +bool pcie_aspm_enabled(struct pci_dev *pci_device);
->  #else
->  static inline bool pcie_aspm_support_enabled(void) { return false; }
-> +static inline bool pcie_aspm_enabled(struct pci_dev *pci_device)
-> +{ return false; }
->  #endif
->  
->  #ifdef CONFIG_PCIEAER
-> 
-> 
-> 
+Guenter
