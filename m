@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E8CECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF560ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4784D21479
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D08C221479
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728945AbfJGOu0 (ORCPT
+        id S1728376AbfJGOtq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 10:50:26 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44529 "EHLO
+        Mon, 7 Oct 2019 10:49:46 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44472 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728708AbfJGOtr (ORCPT
+        with ESMTP id S1728588AbfJGOtk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 10:49:47 -0400
+        Mon, 7 Oct 2019 10:49:40 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iHUKI-00066Y-PO; Mon, 07 Oct 2019 16:49:30 +0200
+        id 1iHUKF-00065n-5e; Mon, 07 Oct 2019 16:49:27 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0FE711C032F;
-        Mon,  7 Oct 2019 16:49:26 +0200 (CEST)
-Date:   Mon, 07 Oct 2019 14:49:25 -0000
-From:   "tip-bot2 for Hans de Goede" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E70521C08B0;
+        Mon,  7 Oct 2019 16:49:17 +0200 (CEST)
+Date:   Mon, 07 Oct 2019 14:49:17 -0000
+From:   "tip-bot2 for Ian Rogers" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/boot: Provide memzero_explicit()
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+Subject: [tip: perf/urgent] perf tests: Avoid raising SEGV using an obvious
+ NULL dereference
+Cc:     Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-crypto@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191007134724.4019-1-hdegoede@redhat.com>
-References: <20191007134724.4019-1-hdegoede@redhat.com>
+        Stephane Eranian <eranian@google.com>,
+        Wang Nan <wangnan0@huawei.com>, Ingo Molnar <mingo@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
+In-Reply-To: <20190925195924.152834-2-irogers@google.com>
+References: <20190925195924.152834-2-irogers@google.com>
 MIME-Version: 1.0
-Message-ID: <157045976599.9978.16157507866106024022.tip-bot2@tip-bot2>
+Message-ID: <157045975781.9978.17507056715784418883.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -62,60 +61,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     ee008a19f1c72c37ffa54326a592035dddb66fd6
-Gitweb:        https://git.kernel.org/tip/ee008a19f1c72c37ffa54326a592035dddb66fd6
-Author:        Hans de Goede <hdegoede@redhat.com>
-AuthorDate:    Mon, 07 Oct 2019 15:47:24 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 07 Oct 2019 16:47:35 +02:00
+Commit-ID:     e3e2cf3d5b1fe800b032e14c0fdcd9a6fb20cf3b
+Gitweb:        https://git.kernel.org/tip/e3e2cf3d5b1fe800b032e14c0fdcd9a6fb20cf3b
+Author:        Ian Rogers <irogers@google.com>
+AuthorDate:    Wed, 25 Sep 2019 12:59:24 -07:00
+Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitterDate: Fri, 27 Sep 2019 09:26:14 -03:00
 
-x86/boot: Provide memzero_explicit()
+perf tests: Avoid raising SEGV using an obvious NULL dereference
 
-The purgatory code now uses the shared lib/crypto/sha256.c sha256
-implementation. This needs memzero_explicit(), implement this.
+An optimized build such as:
 
-We also have barrier_data() call after the memset, making sure
-neither the compiler nor the linker optimizes out this seemingly
-unused function.
+  make -C tools/perf CLANG=1 CC=clang EXTRA_CFLAGS="-O3
 
-Reported-by: Arvind Sankar <nivedita@alum.mit.edu>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: H . Peter Anvin <hpa@zytor.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
+will turn the dereference operation into a ud2 instruction, raising a
+SIGILL rather than a SIGSEGV. Use raise(..) for correctness and clarity.
+
+Similar issues were addressed in Numfor Mbiziwo-Tiapo's patch:
+
+  https://lkml.org/lkml/2019/7/8/1234
+
+Committer testing:
+
+Before:
+
+  [root@quaco ~]# perf test hooks
+  55: perf hooks                                            : Ok
+  [root@quaco ~]# perf test -v hooks
+  55: perf hooks                                            :
+  --- start ---
+  test child forked, pid 17092
+  SIGSEGV is observed as expected, try to recover.
+  Fatal error (SEGFAULT) in perf hook 'test'
+  test child finished with 0
+  ---- end ----
+  perf hooks: Ok
+  [root@quaco ~]#
+
+After:
+
+  [root@quaco ~]# perf test hooks
+  55: perf hooks                                            : Ok
+  [root@quaco ~]# perf test -v hooks
+  55: perf hooks                                            :
+  --- start ---
+  test child forked, pid 17909
+  SIGSEGV is observed as expected, try to recover.
+  Fatal error (SEGFAULT) in perf hook 'test'
+  test child finished with 0
+  ---- end ----
+  perf hooks: Ok
+  [root@quaco ~]#
+
+Fixes: a074865e60ed ("perf tools: Introduce perf hooks")
+Signed-off-by: Ian Rogers <irogers@google.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-crypto@vger.kernel.org
-Fixes: 906a4bb97f5d ("crypto: sha256 - Use get/put_unaligned_be32 to get input, memzero_explicit")
-Link: https://lkml.kernel.org/r/20191007134724.4019-1-hdegoede@redhat.com
-[ Added comment. ]
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: http://lore.kernel.org/lkml/20190925195924.152834-2-irogers@google.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- arch/x86/boot/compressed/string.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ tools/perf/tests/perf-hooks.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/string.c b/arch/x86/boot/compressed/string.c
-index 81fc1ea..dd30e63 100644
---- a/arch/x86/boot/compressed/string.c
-+++ b/arch/x86/boot/compressed/string.c
-@@ -50,6 +50,16 @@ void *memset(void *s, int c, size_t n)
- 	return s;
+diff --git a/tools/perf/tests/perf-hooks.c b/tools/perf/tests/perf-hooks.c
+index dbc2719..dd865e0 100644
+--- a/tools/perf/tests/perf-hooks.c
++++ b/tools/perf/tests/perf-hooks.c
+@@ -19,12 +19,11 @@ static void sigsegv_handler(int sig __maybe_unused)
+ static void the_hook(void *_hook_flags)
+ {
+ 	int *hook_flags = _hook_flags;
+-	int *p = NULL;
+ 
+ 	*hook_flags = 1234;
+ 
+ 	/* Generate a segfault, test perf_hooks__recover */
+-	*p = 0;
++	raise(SIGSEGV);
  }
  
-+void memzero_explicit(void *s, size_t count)
-+{
-+	memset(s, 0, count);
-+	/*
-+	 * Make sure this function never gets inlined and
-+	 * the memset() never gets optimized away:
-+	 */
-+	barrier_data(s);
-+}
-+
- void *memmove(void *dest, const void *src, size_t n)
- {
- 	unsigned char *d = dest;
+ int test__perf_hooks(struct test *test __maybe_unused, int subtest __maybe_unused)
