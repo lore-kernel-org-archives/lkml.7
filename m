@@ -2,106 +2,90 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D55C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4770AC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B94D720673
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:16:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570464981;
-	bh=WpvdkBYUQEJ9NDSQbhZlzTQfJVCJCK6OqS8GhdTvvLs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RYHYPuP1lz20+FBSVxZRDQIPEUq6rmWWvxjpTeSzvzmBQhbiuME2rUVD5ncUlsJDt
-	 KbeiquvzsXUWV/Bln3UndhzKR4X+gM0VAzkjF0v/X4QT85rXgfk2TtF1rIBL18mKzU
-	 gx8cVS0JwvNWONylbLEty3xkDmU59sgVHGmDisMM=
+	by mail.kernel.org (Postfix) with ESMTP id 28D8C20684
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:16:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbfJGQQU (ORCPT
+        id S1728953AbfJGQQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 12:16:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59276 "EHLO mail.kernel.org"
+        Mon, 7 Oct 2019 12:16:39 -0400
+Received: from muru.com ([72.249.23.125]:35650 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727791AbfJGQQT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 12:16:19 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6512A20673;
-        Mon,  7 Oct 2019 16:16:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570464978;
-        bh=WpvdkBYUQEJ9NDSQbhZlzTQfJVCJCK6OqS8GhdTvvLs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ePG3BA2X39dKb5+eU+4n1K4M0929VFxa/oOKS2iFcDA2LsguR6eKdyUjXo8qDx0Ak
-         638En2eUCsuScGeFaiK/gxx0OvTyfEROAVAqV1vWCNw5ahZ08mcrBvM+xSjpijlaQc
-         PUHmCVPQ3kuq+rk7wbXbcnewSHC/xZ8C4URfKFY0=
-Date:   Mon, 7 Oct 2019 18:16:16 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mark Salyzyn <salyzyn@android.com>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
-        linux-security-module@vger.kernel.org, stable@vger.kernel.org,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-unionfs@vger.kernel.org
-Subject: Re: [PATCH] ovl: filter of trusted xattr results in audit
-Message-ID: <20191007161616.GA988623@kroah.com>
-References: <20191007160918.29504-1-salyzyn@android.com>
+        id S1727791AbfJGQQi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 12:16:38 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 5B2E580A5;
+        Mon,  7 Oct 2019 16:17:11 +0000 (UTC)
+Date:   Mon, 7 Oct 2019 09:16:34 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Emmanuel Vadot <manu@freebsd.org>
+Cc:     bcousson@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: Set status to disable for MMC3
+Message-ID: <20191007161634.GS5610@atomide.com>
+References: <20191007080339.57209-1-manu@freebsd.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191007160918.29504-1-salyzyn@android.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191007080339.57209-1-manu@freebsd.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 09:09:16AM -0700, Mark Salyzyn wrote:
-> When filtering xattr list for reading, presence of trusted xattr
-> results in a security audit log.  However, if there is other content
-> no errno will be set, and if there isn't, the errno will be -ENODATA
-> and not -EPERM as is usually associated with a lack of capability.
-> The check does not block the request to list the xattrs present.
-> 
-> Switch to has_capability_noaudit to reflect a more appropriate check.
-> 
-> Signed-off-by: Mark Salyzyn <salyzyn@android.com>
-> Cc: linux-security-module@vger.kernel.org
-> Cc: kernel-team@android.com
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: stable@vger.kernel.org # v3.18
-> Fixes: upstream a082c6f680da ("ovl: filter trusted xattr for non-admin")
-> Fixes: 3.18 4bcc9b4b3a0a ("ovl: filter trusted xattr for non-admin")
+Hi,
+
+* Emmanuel Vadot <manu@freebsd.org> [191007 08:04]:
+> Commit 5b63fb90adb95 ("ARM: dts: Fix incomplete dts data for am3 and am4 mmc")
+> fixed the mmc instances on the l3 interconnect but removed the disabled status.
+> Fix this and let boards properly define it if it have it.
+
+The dts default is "okay", and should be fine for all the
+internal devices even if not pinned out on the board. This
+way the devices get properly idled during boot, and we
+avoid repeating status = "enabled" over and over again in
+the board specific dts files.
+
+Then the board specific dts files might want to configure
+devices with status = "disabled" if really needed. But this
+should be only done for devices that Linux must not use,
+such as crypto acclerators on secure devices if claimed by
+the secure mode.
+
+So if this fixes something, it's almost certainly a sign
+of something else being broken?
+
+Regards,
+
+Tony
+
+
+> Fixes: 5b63fb90adb95 ("ARM: dts: Fix incomplete dts data for am3 and am4 mmc")
+> Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
 > ---
-> Replaced ns_capable_noaudit with 3.18.y tree specific
-> has_capability_noaudit present in original submission to kernel.org
-> commit 5c2e9f346b815841f9bed6029ebcb06415caf640
-> ("ovl: filter of trusted xattr results in audit")
+>  arch/arm/boot/dts/am33xx.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
 > 
->  fs/overlayfs/inode.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/overlayfs/inode.c b/fs/overlayfs/inode.c
-> index a01ec1836a72..1175efa5e956 100644
-> --- a/fs/overlayfs/inode.c
-> +++ b/fs/overlayfs/inode.c
-> @@ -265,7 +265,8 @@ static bool ovl_can_list(const char *s)
->  		return true;
+> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+> index fb6b8aa12cc5..b3a1fd9e39fa 100644
+> --- a/arch/arm/boot/dts/am33xx.dtsi
+> +++ b/arch/arm/boot/dts/am33xx.dtsi
+> @@ -260,6 +260,7 @@
+>  				ti,needs-special-reset;
+>  				interrupts = <29>;
+>  				reg = <0x0 0x1000>;
+> +				status = "disabled";
+>  			};
+>  		};
 >  
->  	/* Never list trusted.overlay, list other trusted for superuser only */
-> -	return !ovl_is_private_xattr(s) && capable(CAP_SYS_ADMIN);
-> +	return !ovl_is_private_xattr(s) &&
-> +	       has_capability_noaudit(current, CAP_SYS_ADMIN);
->  }
->  
->  ssize_t ovl_listxattr(struct dentry *dentry, char *list, size_t size)
 > -- 
-> 2.23.0.581.g78d2f28ef7-goog
+> 2.22.0
 > 
-
-Thanks for the backport, this one worked!
-
-greg k-h
