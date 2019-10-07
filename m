@@ -2,82 +2,112 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19781ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2B7C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E506F206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:07:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CKT9ySkT"
+	by mail.kernel.org (Postfix) with ESMTP id 77A272084D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:08:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728998AbfJGRHt (ORCPT
+        id S1729123AbfJGRI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 13:07:49 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:42795 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728079AbfJGRHt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 13:07:49 -0400
-Received: by mail-qt1-f195.google.com with SMTP id w14so20227618qto.9
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 10:07:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2K7rXlp5X/h8ftzby/KietV7LryoE7u4vg9KSTfQIbs=;
-        b=CKT9ySkTfIiYroy6J96o8UPUxe9+acVcRANOXINUzq+2CkAZkvPJeGXo+CBDeO9dI0
-         oddOFvsguco+H0TeBx3nmOp2HP5Rc3r7TdyB9Mt00WmgxI91B54LmDA7j+ZRXUfE62cY
-         wvWoVdMCX6jS0MV+TAbmr6AEy4++UXAcPsnEI=
+        Mon, 7 Oct 2019 13:08:29 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35128 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728079AbfJGRI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 13:08:28 -0400
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3F5583D3C
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Oct 2019 17:08:28 +0000 (UTC)
+Received: by mail-wm1-f70.google.com with SMTP id o128so231898wmo.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 10:08:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2K7rXlp5X/h8ftzby/KietV7LryoE7u4vg9KSTfQIbs=;
-        b=Ts4cQuGolOhOvIQDfvPsWywgEsUffA1Ic9/2vKYqWAS0E7GYOXHHATfCeRggTkJNAr
-         crRtrYd/ygk4U93od/DsPVshfSmK6aWNwXAtINTSOYZ7MMfWfIpp++Kp0hBfM7XU7t1j
-         FfmsYkFIi1Ct9UqrfbKsiMk35gUZUxZc0uHwDaA1tSbC6UR8OGrjuc4Veok21bgbNOVQ
-         BoTVCoSYfE2i3rIZBuNkX6Sw0Zb2hozonuB2hDF+Mk0isvVAivgLOiXkuR6jONlDbuM+
-         xWpXcQLcF4Pm40HqkQvtZIKxBcVaV4190mXmx7Nvy3giSOEkms7lTqs5jihaPBRTJMS/
-         4FdA==
-X-Gm-Message-State: APjAAAXcPM1SNR35A2zLsw+87HS0uLV3jrQ/osM5I/bLFl25jBK0p2w1
-        g6Fxwpd9nnA5pxyxCToIj6fe5wu/RxvLSMuoozg+xw==
-X-Google-Smtp-Source: APXvYqyZ2JVdHT9qz9I8PsmKucNM8Is44BfBqxJCxK98WAy+0lfyTExVu/81vESxndFenTE4mepOqqFvEjRyGUIa0aY=
-X-Received: by 2002:a0c:edc2:: with SMTP id i2mr27888828qvr.229.1570468068020;
- Mon, 07 Oct 2019 10:07:48 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4dMNikcs4E1Y6yKRSwkPQbM0//TiQDXUZcr0YM9OD1c=;
+        b=FZoRPNwnc2Xxz7jZ2/t0vNxLu4ONR7+HBhySQZzUmtPrn7Eks7Q3BeOBPZUEK3lITS
+         2Kne30ltjJwGeJ5lb3dIkkZsatY4IwJSqGexkgKXWxHJd/q4/CvahXu2rbmA7VTirwXM
+         2MlwoXfpkEpU+8MLOZOe5Tknpzj2GFQFkTYHNFv9581NUXaaKyxq7MPFWvsiZ0IEAhkt
+         Z9dVeGwaHamO9BZfWX1uOYfKAFiQvQvD9EmCQVsYPUjQiISoYd6WXXGM88NY51AxZCtd
+         xgkzTdWRKqPaIpth7Gk6SK7o0cWfqppgf8ewg3osVXpU0NhO3EccRH0uSsf1Fi8O2Nz4
+         rQzg==
+X-Gm-Message-State: APjAAAUjPGHJCXQQiCx4ONDH81T+ZA9Q13drDl8mdNckO5B5I+CZxsW+
+        13KB9Sf9TrM6f7QpfMd8LfVuCr9P0EjZLHdyT3HgCrtm7oFjSC4xMfcMgdrUR56HUr1JF7AvoE6
+        7EeNqQw8tBJAv2EA9KFrTZT31
+X-Received: by 2002:a1c:658a:: with SMTP id z132mr234268wmb.174.1570468106768;
+        Mon, 07 Oct 2019 10:08:26 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyl2zL9+JMyC3FnFxnpfwEeHdK9iIlPFdBf18ZjZZ5+fIVvZmESnuAYRAzXBT2rMkqUBPJFMg==
+X-Received: by 2002:a1c:658a:: with SMTP id z132mr234231wmb.174.1570468106497;
+        Mon, 07 Oct 2019 10:08:26 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:9dd9:ce92:89b5:d1f2? ([2001:b07:6468:f312:9dd9:ce92:89b5:d1f2])
+        by smtp.gmail.com with ESMTPSA id 79sm330487wmb.7.2019.10.07.10.08.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Oct 2019 10:08:25 -0700 (PDT)
+Subject: Re: [PATCH 09/16] x86/vmx: Introduce VMX_FEATURES_*
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-edac@vger.kernel.org,
+        Borislav Petkov <bp@suse.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+References: <20191004215615.5479-1-sean.j.christopherson@intel.com>
+ <20191004215615.5479-10-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <149d4422-b955-9118-e7df-e135075ad490@redhat.com>
+Date:   Mon, 7 Oct 2019 19:08:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190910075907.132200-1-hsinyi@chromium.org>
-In-Reply-To: <20190910075907.132200-1-hsinyi@chromium.org>
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-Date:   Mon, 7 Oct 2019 10:07:22 -0700
-Message-ID: <CAJMQK-jawP2+Ba0AkquqU16vVnq_yGJN=Bepk7kLRusp_zdq2A@mail.gmail.com>
-Subject: Re: [PATCH] thermal-generic-adc: Silent error message for EPROBE_DEFER
-To:     Eduardo Valentin <edubezval@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Jonathan Cameron <jic23@kernel.org>, linux-pm@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191004215615.5479-10-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 12:59 AM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
->
-> If devm_iio_channel_get() or devm_thermal_zone_of_sensor_register()
-> fail with EPROBE_DEFER, we shouldn't print an error message, as the
-> device will be probed again later.
->
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> ---
+On 04/10/19 23:56, Sean Christopherson wrote:
+> +#define VMX_FEATURE_RDSEED_EXITING	( 2*32+ 16) /* "" VM-Exit on RDSEED */
+> +#define VMX_FEATURE_PAGE_MOD_LOGGING	( 2*32+ 17) /* "pml" Log dirty pages into buffer */
+> +#define VMX_FEATURE_EPT_VIOLATION_VE	( 2*32+ 18) /* "" Conditionally reflect EPT violations as #VE exceptions */
+> +#define VMX_FEATURE_PT_CONCEAL_VMX	( 2*32+ 19) /* "" Suppress VMX indicators in Processor Trace */
+> +#define VMX_FEATURE_XSAVES		( 2*32+ 20) /* "" Enable XSAVES and XRSTORS in guest */
+> +#define VMX_FEATURE_RESERVED_PIN_21	( 2*32+ 21) /* "" Reserved */
+> +#define VMX_FEATURE_MODE_BASED_EPT_EXEC	( 2*32+ 22) /* Enable separate EPT EXEC bits for supervisor vs. user */
+> +#define VMX_FEATURE_RESERVED_PIN_23	( 2*32+ 23) /* "" Reserved */
+> +#define VMX_FEATURE_PT_USE_GPA		( 2*32+ 24) /* "" Processor Trace logs GPAs */
+> +#define VMX_FEATURE_TSC_SCALING		( 2*32+ 25) /* Scale hardware TSC when read in guest */
+> +#define VMX_FEATURE_RESERVED_PIN_26	( 2*32+ 26) /* "" Reserved */
+> +#define VMX_FEATURE_RESERVED_PIN_27	( 2*32+ 27) /* "" Reserved */
+> +#define VMX_FEATURE_ENCLV_EXITING	( 2*32+ 28) /* "" VM-Exit on ENCLV (leaf dependent) */
+> +#define VMX_FEATURE_RESERVED_PIN_29	( 2*32+ 29) /* "" Reserved */
+> +#define VMX_FEATURE_RESERVED_PIN_30	( 2*32+ 30) /* "" Reserved */
+> +#define VMX_FEATURE_RESERVED_PIN_31	( 2*32+ 31) /* "" Reserved */
 
-Ping on the thread. Any suggestion for this patch?
-Thanks
+Pasto on the reserved bit names, but in general why is it useful to
+define them?
+
+Paolo
