@@ -2,86 +2,76 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18630C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC33ECE58D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E20FE2070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:25:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H+HdPDbp"
+	by mail.kernel.org (Postfix) with ESMTP id 4180D21655
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:29:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728189AbfJGOZq (ORCPT
+        id S1727903AbfJGO3l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 10:25:46 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43631 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727324AbfJGOZq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 10:25:46 -0400
-Received: by mail-pg1-f194.google.com with SMTP id i32so1015921pgl.10;
-        Mon, 07 Oct 2019 07:25:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=J6cKf9Yx3TmejeHBa/hPwjDOmZeRHg3GuMqxre+x+ds=;
-        b=H+HdPDbpaytRhFAVSUU7E+FdpTwhsL5uSEHLs6QxP6d8sGLuwAZUOKHUGtzJBBKOVg
-         qgwhh6OS2BYnCpl1V/kJI/uyWaa/wJDmzwArI3Nxvn2wmwGGwJpzZUcGPCNchze353vz
-         Q89Uk1RbaC2h9S0tu47Gd8FuD+7B8tKJxuK59E9EWCrpqShuGKdu+h0CBEEuGKaec3Qr
-         I0p8zCaG5J0ZDXMrjLgMIaVPD7jnap5zx3DpJcWPuZ4tClFW7+ag7TP63NKnYWItD3sA
-         KGFxDR9cIaoNIoNYGw0Fca98bt05mxCORtxbtQJ8sxEmuRtubHMCQeNKM/2pA5gPDq2b
-         hzug==
+        Mon, 7 Oct 2019 10:29:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41994 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727490AbfJGO3l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 10:29:41 -0400
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3E91A3B58C
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Oct 2019 14:29:40 +0000 (UTC)
+Received: by mail-wr1-f72.google.com with SMTP id k4so7494407wru.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 07:29:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=J6cKf9Yx3TmejeHBa/hPwjDOmZeRHg3GuMqxre+x+ds=;
-        b=SJWVmNKp0AiLp1nRU5UD9T4DeJLfzYHZGCqAAa2tsbnpJEGcYsL6Thbgg4a5bqB2Rd
-         XPMeKJ+Pn3gFfx5NKrb9uOWBBAVbsquPCLvWAheq4T9BeMeP2xBrMUGONfXwM4WlLCjp
-         w+ByZxq6TkfZg7ngagT6nHDbsqfBwj4N+CK8qF9wnM1N7I5c2UUGU9nNvDrbuQ91Ij8A
-         U2ugDf1Wexyl4nSX3eVjPZPF+dled+qBWDmTAd7agQIh6geOuljW/wXOazq3FfZCKxiG
-         HmFrzoHoVwVKLPOTan5P8Cy0MC43kFQCUPqcCUecoWBFxLvxb+gLnLUB04e9bEVyM3nL
-         yf4A==
-X-Gm-Message-State: APjAAAVIXNXH0Yd8y6VOptPvELAHLKPW1DowsJR3FwAckLDMshvcijun
-        lB79QGlhCsznonKLph3zenk=
-X-Google-Smtp-Source: APXvYqzyz7HiRItRcW9JAUlaeLL57XHqULxgUPPwavT9gRM/HJ61Y9I2Rjou38t2Eac9ZO4/O/EpiQ==
-X-Received: by 2002:a63:1a4e:: with SMTP id a14mr10316608pgm.376.1570458345657;
-        Mon, 07 Oct 2019 07:25:45 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id n8sm15883715pgt.40.2019.10.07.07.25.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 07 Oct 2019 07:25:45 -0700 (PDT)
-Subject: Re: [PATCH v2 1/3] regulator: fixed: add possibility to enable by
- clock
-To:     Philippe Schenker <philippe.schenker@toradex.com>
-Cc:     Max Krummenacher <max.krummenacher@toradex.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Luka Pivk <luka.pivk@toradex.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Stefan Agner <stefan.agner@toradex.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>
-References: <20190910062103.39641-1-philippe.schenker@toradex.com>
- <20190910062103.39641-2-philippe.schenker@toradex.com>
- <20191007132918.GA580@roeck-us.net>
- <3072f9de201a9d06cb0b71018be25f316c3d4435.camel@toradex.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <50190291-7146-5a2d-e4ae-c08c3de553d3@roeck-us.net>
-Date:   Mon, 7 Oct 2019 07:25:43 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        bh=2DH2lGZItnyCxpT638su7JIBUbhf9Wf2K40MEjQfXGs=;
+        b=rTE3jPTeoJKjhVwY7YIpw0AlKFxwTYj5Y4CvwRIpRrZtTK1QuIbSg9cmKnrr8xZx0r
+         r1H2i6Lz3GDM1GycdjeGwTEM0UYZrzO3B33KNskfgP8cnS4OGKqVFVrJDwq+6tIs3tPu
+         Zx4WKxw1w8zL+EwVOwa8tFrLoNL7jbqFXrUvSiJ+hHln0+TlFw8UvkDrZHsaBy9yrNm3
+         TTHJ/ukvf6SmoxmEEfHcJmkk+SXM57bM8v9JHkzZByNdgV6RfwEJI6Dt7M94IGa94HYl
+         msPMtnzdtj80ifHt5If6ulPIXRwrUeqzoRAZa7S+UN3jo4YBxMrVvTyoPCwCP49zcGtK
+         W2Og==
+X-Gm-Message-State: APjAAAUwp1Ap/v7/PICYt87ISMOSMnMQxxPOleRZdwsIzv5vUsKjcTib
+        fYj5tS0JHFfbW3R3PS3/4RbXVECE5otHVh9PxTZavHsxH2M5V1+GBP4+PtwgStSsL+LEMloJkE1
+        DyaNfBO/zKZlmL2SYsM/1eaXQ
+X-Received: by 2002:a1c:9dc1:: with SMTP id g184mr20208484wme.77.1570458578900;
+        Mon, 07 Oct 2019 07:29:38 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqz0iUna5xpCm/klRwotM0QLEzqWJ6+o/3qIKqAoj8z/BjCYdHBrV6duKeSKdnnUjVlquYJsWA==
+X-Received: by 2002:a1c:9dc1:: with SMTP id g184mr20208466wme.77.1570458578691;
+        Mon, 07 Oct 2019 07:29:38 -0700 (PDT)
+Received: from shalem.localdomain (2001-1c00-0c14-2800-ec23-a060-24d5-2453.cable.dynamic.v6.ziggo.nl. [2001:1c00:c14:2800:ec23:a060:24d5:2453])
+        by smtp.gmail.com with ESMTPSA id m18sm31573558wrg.97.2019.10.07.07.29.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Oct 2019 07:29:38 -0700 (PDT)
+Subject: Re: [PATCH v2 5.4 regression fix] x86/boot: Provide memzero_explicit
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-crypto@vger.kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Stephan Mueller <smueller@chronox.de>
+References: <20191007134724.4019-1-hdegoede@redhat.com>
+ <20191007140022.GA29008@gmail.com>
+ <1dc3c53d-785e-f9a4-1b4c-3374c94ae0a7@redhat.com>
+ <20191007142230.GA117630@gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <2982b666-e310-afb7-40eb-e536ce95e23d@redhat.com>
+Date:   Mon, 7 Oct 2019 16:29:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <3072f9de201a9d06cb0b71018be25f316c3d4435.camel@toradex.com>
+In-Reply-To: <20191007142230.GA117630@gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -90,30 +80,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/7/19 6:57 AM, Philippe Schenker wrote:
-> On Mon, 2019-10-07 at 06:29 -0700, Guenter Roeck wrote:
->> On Tue, Sep 10, 2019 at 06:21:15AM +0000, Philippe Schenker wrote:
->>> This commit adds the possibility to choose the compatible
->>> "regulator-fixed-clock" in devicetree.
->>>
->>> This is a special regulator-fixed that has to have a clock, from
->>> which
->>> the regulator gets switched on and off.
->>>
->>> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
->>
->> This patch causes a crash in one of my qemu tests (kzm machine with
->> imx_v6_v7_defconfig). Reverting this patch fixes the problem.
->> Crash backtrace and bisect log attached below.
->>
->> Guenter
-> 
-> Axel Lin sent a patch to fix this NULL pointer issue with my patch
-> (Thanks by the way :)). I guess it will help for your issue. Could you
-> please test if this patch solves your issue?
-> 
+Hi,
 
-Yes, it does. I replied with Tested-by: on the fixup patch.
+On 07-10-2019 16:22, Ingo Molnar wrote:
+> 
+> * Hans de Goede <hdegoede@redhat.com> wrote:
+> 
+>> Hi,
+>>
+>> On 07-10-2019 16:00, Ingo Molnar wrote:
+>>>
+>>> * Hans de Goede <hdegoede@redhat.com> wrote:
+>>>
+>>>> The purgatory code now uses the shared lib/crypto/sha256.c sha256
+>>>> implementation. This needs memzero_explicit, implement this.
+>>>>
+>>>> Reported-by: Arvind Sankar <nivedita@alum.mit.edu>
+>>>> Fixes: 906a4bb97f5d ("crypto: sha256 - Use get/put_unaligned_be32 to get input, memzero_explicit")
+>>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>>>> ---
+>>>> Changes in v2:
+>>>> - Add barrier_data() call after the memset, making the function really
+>>>>     explicit. Using barrier_data() works fine in the purgatory (build)
+>>>>     environment.
+>>>> ---
+>>>>    arch/x86/boot/compressed/string.c | 6 ++++++
+>>>>    1 file changed, 6 insertions(+)
+>>>>
+>>>> diff --git a/arch/x86/boot/compressed/string.c b/arch/x86/boot/compressed/string.c
+>>>> index 81fc1eaa3229..654a7164a702 100644
+>>>> --- a/arch/x86/boot/compressed/string.c
+>>>> +++ b/arch/x86/boot/compressed/string.c
+>>>> @@ -50,6 +50,12 @@ void *memset(void *s, int c, size_t n)
+>>>>    	return s;
+>>>>    }
+>>>> +void memzero_explicit(void *s, size_t count)
+>>>> +{
+>>>> +	memset(s, 0, count);
+>>>> +	barrier_data(s);
+>>>> +}
+>>>
+>>> So the barrier_data() is only there to keep LTO from optimizing out the
+>>> seemingly unused function?
+>>
+>> I believe that Stephan Mueller (who suggested adding the barrier)
+>> was also worried about people using this as an example for other
+>> "explicit" functions which actually might get inlined.
+>>
+>> This is not so much about protecting against LTO as it is against
+>> protecting against inlining, which in this case boils down to the
+>> same thing. Also this change makes the arch/x86/boot/compressed/string.c
+>> and lib/string.c versions identical which seems like a good thing to me
+>> (except for the code duplication part of it).
+>>
+>> But I agree a comment would be good, how about:
+>>
+>> void memzero_explicit(void *s, size_t count)
+>> {
+>> 	memset(s, 0, count);
+>> 	/* Avoid the memset getting optimized away if we ever get inlined */
+>> 	barrier_data(s);
+>> }
+> 
+> Well, the standard construct for preventing inlining would be 'noinline',
+> right? Any reason that wouldn't work?
 
-Thanks,
-Guenter
+Good question. I guess the worry is that modern compilers are getting
+more aggressive with optimizing and then even if not inlined if the
+function gets compiled in the same scope, then the compiler might
+still notice it is only every writing to the memory passed in; and
+then optimize it away of the write happens to memory which lifetime
+ends immediately afterwards. I mean removing the call is not inlining,
+so compiler developers might decide that that is still fine to do.
+
+IMHO with trickycode like this is is best to just use the proven
+version from lib/string.c
+
+I guess I made the comment to specific though, so how about:
+
+void memzero_explicit(void *s, size_t count)
+{
+	memset(s, 0, count);
+	/* Tell the compiler to never remove / optimize away the memset */
+	barrier_data(s);
+}
+
+Regards,
+
+Hans
