@@ -7,59 +7,53 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F394CECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D4A8ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:51:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0918206C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14256206C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:51:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729178AbfJGOvj (ORCPT
+        id S1729167AbfJGOvi convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 10:51:39 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44366 "EHLO
+        Mon, 7 Oct 2019 10:51:38 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44383 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728436AbfJGOtd (ORCPT
+        with ESMTP id S1728212AbfJGOtd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Oct 2019 10:49:33 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iHUJy-0005pa-Iy; Mon, 07 Oct 2019 16:49:10 +0200
+        id 1iHUKD-00063y-Bx; Mon, 07 Oct 2019 16:49:25 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 1E9F31C0DC9;
-        Mon,  7 Oct 2019 16:49:10 +0200 (CEST)
-Date:   Mon, 07 Oct 2019 14:49:10 -0000
-From:   "tip-bot2 for Ard Biesheuvel" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4A24A1C0DD2;
+        Mon,  7 Oct 2019 16:49:17 +0200 (CEST)
+Date:   Mon, 07 Oct 2019 14:49:17 -0000
+From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: efi/urgent] efivar/ssdt: Don't iterate over EFI vars if no SSDT
- override was specified
-Cc:     Scott Talbert <swt@techie.net>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        <stable@vger.kernel.org>, Ben Dooks <ben.dooks@codethink.co.uk>,
-        Dave Young <dyoung@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lukas Wunner <lukas@wunner.de>, Lyude Paul <lyude@redhat.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Octavian Purdila <octavian.purdila@intel.com>,
-        Peter Jones <pjones@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org,
+Subject: [tip: perf/urgent] tools headers uapi: Sync linux/usbdevice_fs.h with
+ the kernel sources
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Luis =?utf-8?q?Cl=C3=A1udio_Gon=C3=A7alves?= 
+        <lclaudio@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20191002165904.8819-3-ard.biesheuvel@linaro.org>
-References: <20191002165904.8819-3-ard.biesheuvel@linaro.org>
+In-Reply-To: <tip-x1rb109b9nfi7pukota82xhj@git.kernel.org>
+References: <tip-x1rb109b9nfi7pukota82xhj@git.kernel.org>
 MIME-Version: 1.0
-Message-ID: <157045975007.9978.12389827950739449033.tip-bot2@tip-bot2>
+Message-ID: <157045975718.9978.14795938261468093833.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
 X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
@@ -68,64 +62,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the efi/urgent branch of tip:
+The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     c05f8f92b701576b615f30aac31fabdc0648649b
-Gitweb:        https://git.kernel.org/tip/c05f8f92b701576b615f30aac31fabdc0648649b
-Author:        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-AuthorDate:    Wed, 02 Oct 2019 18:58:59 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 07 Oct 2019 15:24:35 +02:00
+Commit-ID:     05f371f8c55d69e4c04db4473085303291e4e734
+Gitweb:        https://git.kernel.org/tip/05f371f8c55d69e4c04db4473085303291e4e734
+Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate:    Fri, 27 Sep 2019 11:42:26 -03:00
+Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitterDate: Mon, 30 Sep 2019 17:29:02 -03:00
 
-efivar/ssdt: Don't iterate over EFI vars if no SSDT override was specified
+tools headers uapi: Sync linux/usbdevice_fs.h with the kernel sources
 
-The kernel command line option efivar_ssdt= allows the name to be
-specified of an EFI variable containing an ACPI SSDT table that should
-be loaded into memory by the OS, and treated as if it was provided by
-the firmware.
+To pick up the changes from:
 
-Currently, that code will always iterate over the EFI variables and
-compare each name with the provided name, even if the command line
-option wasn't set to begin with.
+  4ed3350539aa ("USB: usbfs: Add a capability flag for runtime suspend")
+  7794f486ed0b ("usbfs: Add ioctls for runtime power management")
 
-So bail early when no variable name was provided. This works around a
-boot regression on the 2012 Mac Pro, as reported by Scott.
+This triggers these changes in the kernel sources, automagically
+supporting these new ioctls in the 'perf trace' beautifiers.
 
-Tested-by: Scott Talbert <swt@techie.net>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: <stable@vger.kernel.org> # v4.9+
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Jerry Snitselaar <jsnitsel@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Lukas Wunner <lukas@wunner.de>
-Cc: Lyude Paul <lyude@redhat.com>
-Cc: Matthew Garrett <mjg59@google.com>
-Cc: Octavian Purdila <octavian.purdila@intel.com>
-Cc: Peter Jones <pjones@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-efi@vger.kernel.org
-Cc: linux-integrity@vger.kernel.org
-Fixes: 475fb4e8b2f4 ("efi / ACPI: load SSTDs from EFI variables")
-Link: https://lkml.kernel.org/r/20191002165904.8819-3-ard.biesheuvel@linaro.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Soon this will be used in things like filter expressions for tracepoints
+in 'perf record', 'perf trace', 'perf top', i.e. filter expressions will
+do a lookup to turn things like USBDEVFS_WAIT_FOR_RESUME into _IO('U',
+35) before associating the tracepoint expression to tracepoint perf
+event.
+
+  $ tools/perf/trace/beauty/usbdevfs_ioctl.sh  > before
+  $ cp include/uapi/linux/usbdevice_fs.h tools/include/uapi/linux/usbdevice_fs.h
+  $ git diff
+  diff --git a/tools/include/uapi/linux/usbdevice_fs.h b/tools/include/uapi/linux/usbdevice_fs.h
+  index 78efe870c2b7..cf525cddeb94 100644
+  --- a/tools/include/uapi/linux/usbdevice_fs.h
+  +++ b/tools/include/uapi/linux/usbdevice_fs.h
+  @@ -158,6 +158,7 @@ struct usbdevfs_hub_portinfo {
+   #define USBDEVFS_CAP_MMAP                      0x20
+   #define USBDEVFS_CAP_DROP_PRIVILEGES           0x40
+   #define USBDEVFS_CAP_CONNINFO_EX               0x80
+  +#define USBDEVFS_CAP_SUSPEND                   0x100
+
+   /* USBDEVFS_DISCONNECT_CLAIM flags & struct */
+
+  @@ -223,5 +224,8 @@ struct usbdevfs_streams {
+    * extending size of the data returned.
+    */
+   #define USBDEVFS_CONNINFO_EX(len)  _IOC(_IOC_READ, 'U', 32, len)
+  +#define USBDEVFS_FORBID_SUSPEND    _IO('U', 33)
+  +#define USBDEVFS_ALLOW_SUSPEND     _IO('U', 34)
+  +#define USBDEVFS_WAIT_FOR_RESUME   _IO('U', 35)
+
+   #endif /* _UAPI_LINUX_USBDEVICE_FS_H */
+  $ tools/perf/trace/beauty/usbdevfs_ioctl.sh  > after
+  $ diff -u before after
+  --- before	2019-09-27 11:41:50.634867620 -0300
+  +++ after	2019-09-27 11:42:07.453102978 -0300
+  @@ -24,6 +24,9 @@
+   	[30] = "DROP_PRIVILEGES",
+   	[31] = "GET_SPEED",
+   	[32] = "CONNINFO_EX",
+  +	[33] = "FORBID_SUSPEND",
+  +	[34] = "ALLOW_SUSPEND",
+  +	[35] = "WAIT_FOR_RESUME",
+   	[3] = "RESETEP",
+   	[4] = "SETINTERFACE",
+   	[5] = "SETCONFIGURATION",
+  $
+
+This addresses the following perf build warning:
+
+  Warning: Kernel ABI header at 'tools/include/uapi/linux/usbdevice_fs.h' differs from latest version at 'include/uapi/linux/usbdevice_fs.h'
+  diff -u tools/include/uapi/linux/usbdevice_fs.h include/uapi/linux/usbdevice_fs.h
+
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-x1rb109b9nfi7pukota82xhj@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- drivers/firmware/efi/efi.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/include/uapi/linux/usbdevice_fs.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-index 8d3e778..69f00f7 100644
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -267,6 +267,9 @@ static __init int efivar_ssdt_load(void)
- 	void *data;
- 	int ret;
+diff --git a/tools/include/uapi/linux/usbdevice_fs.h b/tools/include/uapi/linux/usbdevice_fs.h
+index 78efe87..cf525cd 100644
+--- a/tools/include/uapi/linux/usbdevice_fs.h
++++ b/tools/include/uapi/linux/usbdevice_fs.h
+@@ -158,6 +158,7 @@ struct usbdevfs_hub_portinfo {
+ #define USBDEVFS_CAP_MMAP			0x20
+ #define USBDEVFS_CAP_DROP_PRIVILEGES		0x40
+ #define USBDEVFS_CAP_CONNINFO_EX		0x80
++#define USBDEVFS_CAP_SUSPEND			0x100
  
-+	if (!efivar_ssdt[0])
-+		return 0;
-+
- 	ret = efivar_init(efivar_ssdt_iter, &entries, true, &entries);
+ /* USBDEVFS_DISCONNECT_CLAIM flags & struct */
  
- 	list_for_each_entry_safe(entry, aux, &entries, list) {
+@@ -223,5 +224,8 @@ struct usbdevfs_streams {
+  * extending size of the data returned.
+  */
+ #define USBDEVFS_CONNINFO_EX(len)  _IOC(_IOC_READ, 'U', 32, len)
++#define USBDEVFS_FORBID_SUSPEND    _IO('U', 33)
++#define USBDEVFS_ALLOW_SUSPEND     _IO('U', 34)
++#define USBDEVFS_WAIT_FOR_RESUME   _IO('U', 35)
+ 
+ #endif /* _UAPI_LINUX_USBDEVICE_FS_H */
