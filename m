@@ -2,167 +2,98 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E3E0ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88352ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1086E21655
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:14:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59AF42173B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:14:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tVySD4ik"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728590AbfJGPOc (ORCPT
+        id S1728792AbfJGPOe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 11:14:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47180 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728245AbfJGPOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:14:32 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 61ECDC0546F2;
-        Mon,  7 Oct 2019 15:14:31 +0000 (UTC)
-Received: from pauld.bos.csb (dhcp-17-51.bos.redhat.com [10.18.17.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6881F5D9CC;
-        Mon,  7 Oct 2019 15:14:27 +0000 (UTC)
-Date:   Mon, 7 Oct 2019 11:14:25 -0400
-From:   Phil Auld <pauld@redhat.com>
-To:     Xuewei Zhang <xueweiz@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        trivial@kernel.org
-Subject: Re: [PATCH] sched/fair: scale quota and period without losing
- quota/period ratio precision
-Message-ID: <20191007151425.GD22412@pauld.bos.csb>
-References: <20191004001243.140897-1-xueweiz@google.com>
+        Mon, 7 Oct 2019 11:14:34 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:41264 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728245AbfJGPOd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 11:14:33 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x97FETR7005735;
+        Mon, 7 Oct 2019 10:14:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1570461269;
+        bh=YvPsrculAXeGiQIMWJ5mp8WKJXnsxqnJvdgGBLud61A=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=tVySD4ikX006/uetXClacnYftLHNsOgAFpKZLJPZMFsgS7j18WREL/Qw1oAK1H+Eg
+         WmnrhFPE7HSJk5r4D28/L/IvLhP9i/k82GhJQRBS6Uca1XOX7a5EdS9lOlzYNM1brO
+         6NR85l2Kr2bMLI1xg/cRQ6Znuu6BGEdjoLQeSk5o=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x97FEToD031952
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 7 Oct 2019 10:14:29 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 7 Oct
+ 2019 10:14:26 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 7 Oct 2019 10:14:26 -0500
+Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with SMTP id x97FESBO014015;
+        Mon, 7 Oct 2019 10:14:28 -0500
+Date:   Mon, 7 Oct 2019 10:17:03 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+CC:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [Patch v3 1/3] media: ov5640: add PIXEL_RATE control
+Message-ID: <20191007151703.z3eejxuujzt5ruth@ti.com>
+References: <20191004172418.2339-1-bparrot@ti.com>
+ <20191004172418.2339-2-bparrot@ti.com>
+ <20191007080320.GG14917@paasikivi.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20191004001243.140897-1-xueweiz@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Mon, 07 Oct 2019 15:14:31 +0000 (UTC)
+In-Reply-To: <20191007080320.GG14917@paasikivi.fi.intel.com>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 05:12:43PM -0700 Xuewei Zhang wrote:
-> quota/period ratio is used to ensure a child task group won't get more
-> bandwidth than the parent task group, and is calculated as:
-> normalized_cfs_quota() = [(quota_us << 20) / period_us]
+Sakari Ailus <sakari.ailus@linux.intel.com> wrote on Mon [2019-Oct-07 11:03:20 +0300]:
+> On Fri, Oct 04, 2019 at 12:24:16PM -0500, Benoit Parrot wrote:
+> > @@ -2657,6 +2669,12 @@ static int ov5640_init_controls(struct ov5640_dev *sensor)
+> >  	/* we can use our own mutex for the ctrl lock */
+> >  	hdl->lock = &sensor->lock;
+> >  
+> > +	/* Clock related controls */
+> > +	ctrls->pixel_rate = v4l2_ctrl_new_std(hdl, ops, V4L2_CID_PIXEL_RATE,
+> > +					      0, INT_MAX, 1,
+> > +					      ov5640_calc_pixel_rate(sensor));
+> > +	ctrls->pixel_rate->flags |= V4L2_CTRL_FLAG_READ_ONLY;
 > 
-> If the quota/period ratio was changed during this scaling due to
-> precision loss, it will cause inconsistency between parent and child
-> task groups. See below example:
-> A userspace container manager (kubelet) does three operations:
-> 1) Create a parent cgroup, set quota to 1,000us and period to 10,000us.
-> 2) Create a few children cgroups.
-> 3) Set quota to 1,000us and period to 10,000us on a child cgroup.
+> Please check ctrls->pixel_rate first; it may be NULL here.
+
+How about I just move this line below "if (hdl->error)" instead?
+
+Benoit
 > 
-> These operations are expected to succeed. However, if the scaling of
-> 147/128 happens before step 3), quota and period of the parent cgroup
-> will be changed:
-> new_quota: 1148437ns, 1148us
-> new_period: 11484375ns, 11484us
+> > +
+> >  	/* Auto/manual white balance */
+> >  	ctrls->auto_wb = v4l2_ctrl_new_std(hdl, ops,
+> >  					   V4L2_CID_AUTO_WHITE_BALANCE,
 > 
-> And when step 3) comes in, the ratio of the child cgroup will be 104857,
-> which will be larger than the parent cgroup ratio (104821), and will
-> fail.
-> 
-> Scaling them by a factor of 2 will fix the problem.
-> 
-> Fixes: 2e8e19226398 ("sched/fair: Limit sched_cfs_period_timer() loop to avoid hard lockup")
-> Signed-off-by: Xuewei Zhang <xueweiz@google.com>
-
-
-I managed to get it to trigger the second case. It took 50,000 children (20x my initial tests).
-
-[ 1367.850630] cfs_period_timer[cpu11]: period too short, scaling up (new cfs_period_us = 4340, cfs_quota_us = 250000)
-[ 1370.390832] cfs_period_timer[cpu11]: period too short, scaling up (new cfs_period_us = 8680, cfs_quota_us = 500000)
-[ 1372.914689] cfs_period_timer[cpu11]: period too short, scaling up (new cfs_period_us = 17360, cfs_quota_us = 1000000)
-[ 1375.447431] cfs_period_timer[cpu11]: period too short, scaling up (new cfs_period_us = 34720, cfs_quota_us = 2000000)
-[ 1377.982785] cfs_period_timer[cpu11]: period too short, scaling up (new cfs_period_us = 69440, cfs_quota_us = 4000000)
-[ 1380.481702] cfs_period_timer[cpu11]: period too short, scaling up (new cfs_period_us = 138880, cfs_quota_us = 8000000)
-[ 1382.894692] cfs_period_timer[cpu11]: period too short, scaling up (new cfs_period_us = 277760, cfs_quota_us = 16000000)
-[ 1385.264872] cfs_period_timer[cpu11]: period too short, scaling up (new cfs_period_us = 555520, cfs_quota_us = 32000000)
-[ 1393.965140] cfs_period_timer[cpu11]: period too short, but cannot scale up without losing precision (cfs_period_us = 555520, cfs_quota_us = 32000000)
-
-I suspect going higher could cause the original lockup, but that'd be the case with the old code as well. 
-And this also gets us out of it faster.
-
-
-Tested-by: Phil Auld <pauld@redhat.com>
-
-
-Cheers,
-Phil
-
-
-> ---
->  kernel/sched/fair.c | 36 ++++++++++++++++++++++--------------
->  1 file changed, 22 insertions(+), 14 deletions(-)
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 83ab35e2374f..b3d3d0a231cd 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -4926,20 +4926,28 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
->  		if (++count > 3) {
->  			u64 new, old = ktime_to_ns(cfs_b->period);
->  
-> -			new = (old * 147) / 128; /* ~115% */
-> -			new = min(new, max_cfs_quota_period);
-> -
-> -			cfs_b->period = ns_to_ktime(new);
-> -
-> -			/* since max is 1s, this is limited to 1e9^2, which fits in u64 */
-> -			cfs_b->quota *= new;
-> -			cfs_b->quota = div64_u64(cfs_b->quota, old);
-> -
-> -			pr_warn_ratelimited(
-> -	"cfs_period_timer[cpu%d]: period too short, scaling up (new cfs_period_us %lld, cfs_quota_us = %lld)\n",
-> -				smp_processor_id(),
-> -				div_u64(new, NSEC_PER_USEC),
-> -				div_u64(cfs_b->quota, NSEC_PER_USEC));
-> +			/*
-> +			 * Grow period by a factor of 2 to avoid lossing precision.
-> +			 * Precision loss in the quota/period ratio can cause __cfs_schedulable
-> +			 * to fail.
-> +			 */
-> +			new = old * 2;
-> +			if (new < max_cfs_quota_period) {
-> +				cfs_b->period = ns_to_ktime(new);
-> +				cfs_b->quota *= 2;
-> +
-> +				pr_warn_ratelimited(
-> +	"cfs_period_timer[cpu%d]: period too short, scaling up (new cfs_period_us = %lld, cfs_quota_us = %lld)\n",
-> +					smp_processor_id(),
-> +					div_u64(new, NSEC_PER_USEC),
-> +					div_u64(cfs_b->quota, NSEC_PER_USEC));
-> +			} else {
-> +				pr_warn_ratelimited(
-> +	"cfs_period_timer[cpu%d]: period too short, but cannot scale up without losing precision (cfs_period_us = %lld, cfs_quota_us = %lld)\n",
-> +					smp_processor_id(),
-> +					div_u64(old, NSEC_PER_USEC),
-> +					div_u64(cfs_b->quota, NSEC_PER_USEC));
-> +			}
->  
->  			/* reset count so we don't come right back in here */
->  			count = 0;
 > -- 
-> 2.23.0.581.g78d2f28ef7-goog
-> 
-
--- 
+> Sakari Ailus
+> sakari.ailus@linux.intel.com
