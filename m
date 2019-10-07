@@ -2,150 +2,123 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFF3C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 692FFECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD47521871
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 408452173B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570459806;
+	bh=oWc5xK1y+xZRbVDdLDr9f32Jf8TFQA/JnTekh/Csnvw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JdpbqyPylzVD9LUCQkb5FTHS+AkaVrV2rr8yWT7A1ii3P4Li+HlIgG5ck2f3XbWR+
+	 rqu4b93sQjQ184LQT2ZfokhugeWMHbcarJ5s4vjUnWgtEvkGa5Rql9RuB3orBSPfJR
+	 M5N8mFat3F6+1gL7lq3YRVNw/5RKur5cf+OVyc9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728874AbfJGOt7 (ORCPT
+        id S1728900AbfJGOuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 10:49:59 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44543 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728804AbfJGOty (ORCPT
+        Mon, 7 Oct 2019 10:50:05 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46834 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728853AbfJGOt6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 10:49:54 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iHUK8-0005yu-As; Mon, 07 Oct 2019 16:49:20 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 9AC7F1C0DCB;
-        Mon,  7 Oct 2019 16:49:15 +0200 (CEST)
-Date:   Mon, 07 Oct 2019 14:49:15 -0000
-From:   "tip-bot2 for Steve MacLean" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf inject jit: Fix JIT_CODE_MOVE filename
-Cc:     stable@vger.kernel.org, #@tip-bot2.tec.linutronix.de,
-        v4.6+@tip-bot2.tec.linutronix.de,
-        Steve MacLean <Steve.MacLean@Microsoft.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Brian Robbins <brianrob@microsoft.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        "Eric Saint-Etienne" <eric.saint.etienne@oracle.com>,
-        John Keeping <john@metanate.com>,
-        John Salem <josalem@microsoft.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Stephane Eranian <eranian@google.com>,
-        Tom McDonald <thomas.mcdonald@microsoft.com>,
+        Mon, 7 Oct 2019 10:49:58 -0400
+Received: by mail-wr1-f67.google.com with SMTP id o18so15622754wrv.13
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 07:49:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1dSA+SmdtisGu5FvnubDfiZYtTOdvCNLpWjAeop5PWM=;
+        b=NY8Xdb2ENlkzoJiW5PfDLGVYgGYdgNXK+IbonkVtqUPW/pzgaekJMC0r9d1t9BRglK
+         ZkLuJZknhOk7P8pwkwxjiLjYPXtP8xcTXdkF+8jCVX7w+H/2Vgwp1ynXNJT1cTOfESPT
+         GlxUW1wVfpPTCZc77iP2oFYsrKHJofNIUyVcf+XQW4LW7OQnDNuinCCVjzmZtg6iths7
+         YdN6n+XP4ZWSS+gngqtK1i+IjCHuPYCOX7EdYh/IPt+b7Jo0qniQx8XsK1LKToS1W2Ya
+         OaIiLyaedb5+UbjEAdh9MCCE4qnzyQFW8kPxslW/Yv5bk5tWUH9mfowPKvYp6E/sG3u1
+         Vddg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1dSA+SmdtisGu5FvnubDfiZYtTOdvCNLpWjAeop5PWM=;
+        b=ROv0eVEKUWLess2APpjgvEgplpkwjS7EV2ycSG+7Z/lz/RR28Qd2G9tasoHCmlYW+V
+         E5JZ+/EMcakHA5FGES8q6A+w2SM7yNiGeQ4tHyImaydsYmAH/eAxSngaVT2oCMrXNy4d
+         NazO3HclM6GHDeV3MvWDYm/eCbd3xNlQXgaddMJpLmtyuD2ZJzZDKhGi7rKPKuOPZmTr
+         BNFGRKDdTw59oRLoPsUdmuuwIcRX/gMVAM1OURqlvBAAsltYW78ObTWo1G6M6bsSLjod
+         +8Vq4Ys77w9ABZXOXyKDH5HEpiLxV/Okrt3sSUz8GL6k2U+sIhNHTOJkb65LkTpJuq0H
+         bTWQ==
+X-Gm-Message-State: APjAAAUYBHVKQds8BBtVlP6CYo7skVjZym8FXbn3KjKt/6QxiCKLf5id
+        ++QR8o1/RndOALoNqGReOso=
+X-Google-Smtp-Source: APXvYqxnjVycBya9OcagKu5r/lYVAHREqMIN0OHFlE91rLh+HzE+DyCFddjRTujDUYIyZ/CViOk83Q==
+X-Received: by 2002:adf:ef0d:: with SMTP id e13mr23871392wro.300.1570459796728;
+        Mon, 07 Oct 2019 07:49:56 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id q124sm26948893wma.5.2019.10.07.07.49.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2019 07:49:56 -0700 (PDT)
+Date:   Mon, 7 Oct 2019 16:49:54 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc:     Peter Zijlstra <a.p.zijlstra@chello.nl>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: =?utf-8?q?=3CBN8PR21MB1362FF8F127B31DBF4121528F7800=40BN8PR21MB?=
- =?utf-8?q?1362=2Enamprd21=2Eprod=2Eoutlook=2Ecom=3E?=
-References: =?utf-8?q?=3CBN8PR21MB1362FF8F127B31DBF4121528F7800=40BN8PR21M?=
- =?utf-8?q?B1362=2Enamprd21=2Eprod=2Eoutlook=2Ecom=3E?=
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf: Fix inheritance of aux_output groups
+Message-ID: <20191007144954.GA88143@gmail.com>
+References: <20191004125729.32397-1-alexander.shishkin@linux.intel.com>
 MIME-Version: 1.0
-Message-ID: <157045975560.9978.11908955377927615460.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191004125729.32397-1-alexander.shishkin@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     b59711e9b0d22fd47abfa00602fd8c365cdd3ab7
-Gitweb:        https://git.kernel.org/tip/b59711e9b0d22fd47abfa00602fd8c365cdd3ab7
-Author:        Steve MacLean <Steve.MacLean@microsoft.com>
-AuthorDate:    Sat, 28 Sep 2019 01:41:18 
-Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Mon, 30 Sep 2019 17:29:49 -03:00
+* Alexander Shishkin <alexander.shishkin@linux.intel.com> wrote:
 
-perf inject jit: Fix JIT_CODE_MOVE filename
+> Commit
+> 
+>   b43762ef010 ("perf: Allow normal events to output AUX data")
 
-During perf inject --jit, JIT_CODE_MOVE records were injecting MMAP records
-with an incorrect filename. Specifically it was missing the ".so" suffix.
+Missing 'a', the proper SHA1 is:
 
-Further the JIT_CODE_LOAD record were silently truncating the
-jr->load.code_index field to 32 bits before generating the filename.
+    ab43762ef010 ("perf: Allow normal events to output AUX data")
 
-Make both records emit the same filename based on the full 64 bit
-code_index field.
+:-)
 
-Fixes: 9b07e27f88b9 ("perf inject: Add jitdump mmap injection support")
-Cc: stable@vger.kernel.org # v4.6+
-Signed-off-by: Steve MacLean <Steve.MacLean@Microsoft.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Brian Robbins <brianrob@microsoft.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Eric Saint-Etienne <eric.saint.etienne@oracle.com>
-Cc: John Keeping <john@metanate.com>
-Cc: John Salem <josalem@microsoft.com>
-Cc: Leo Yan <leo.yan@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Tom McDonald <thomas.mcdonald@microsoft.com>
-Link: http://lore.kernel.org/lkml/BN8PR21MB1362FF8F127B31DBF4121528F7800@BN8PR21MB1362.namprd21.prod.outlook.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/jitdump.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> forgets to configure aux_output relation in the inherited groups, which
+> results in child PEBS events forever failing to schedule.
+> 
+> Fix this by setting up the AUX output link in the inheritance path.
+> 
+> Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> ---
+>  kernel/events/core.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index f5bb2557d5f6..761995f21b30 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -12024,6 +12024,10 @@ static int inherit_group(struct perf_event *parent_event,
+>  					    child, leader, child_ctx);
+>  		if (IS_ERR(child_ctr))
+>  			return PTR_ERR(child_ctr);
+> +
+> +		if (sub->aux_event == parent_event &&
+> +		    !perf_get_aux_event(child_ctr, leader))
+> +			return -EINVAL;
 
-diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
-index 1bdf4c6..e3ccb0c 100644
---- a/tools/perf/util/jitdump.c
-+++ b/tools/perf/util/jitdump.c
-@@ -395,7 +395,7 @@ static int jit_repipe_code_load(struct jit_buf_desc *jd, union jr_entry *jr)
- 	size_t size;
- 	u16 idr_size;
- 	const char *sym;
--	uint32_t count;
-+	uint64_t count;
- 	int ret, csize, usize;
- 	pid_t pid, tid;
- 	struct {
-@@ -418,7 +418,7 @@ static int jit_repipe_code_load(struct jit_buf_desc *jd, union jr_entry *jr)
- 		return -1;
- 
- 	filename = event->mmap2.filename;
--	size = snprintf(filename, PATH_MAX, "%s/jitted-%d-%u.so",
-+	size = snprintf(filename, PATH_MAX, "%s/jitted-%d-%" PRIu64 ".so",
- 			jd->dir,
- 			pid,
- 			count);
-@@ -529,7 +529,7 @@ static int jit_repipe_code_move(struct jit_buf_desc *jd, union jr_entry *jr)
- 		return -1;
- 
- 	filename = event->mmap2.filename;
--	size = snprintf(filename, PATH_MAX, "%s/jitted-%d-%"PRIu64,
-+	size = snprintf(filename, PATH_MAX, "%s/jitted-%d-%" PRIu64 ".so",
- 	         jd->dir,
- 	         pid,
- 		 jr->move.code_index);
+Could this explain weird 'perf top' failures I'm seeing on my desktop, 
+which I was just about to debug and report?
+
+Thanks,
+
+	Ingo
