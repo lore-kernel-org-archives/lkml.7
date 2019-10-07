@@ -2,84 +2,274 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 568BCC352AA
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 059F0C352AA
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3511E21655
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:26:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C60D821655
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:26:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570447596;
+	bh=otO+M3GKwJDNBfYvfdOsH92IXASIRmxQuBKNDaROzYs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=BIVNeTZcGAHeABfBzIvhAmnaCWvryX/JJQJ7nb8tu35+vlFidGIEEZ6nM5FG7jy7V
+	 tdDzBLRE2+mFB+IYYJB8ALSsqFC2kJQatkLiyjV7hYmAXCuMEfMhgxzem63NI1EVIh
+	 uE3PH1WT+CH7GZnz0ALeHMRazP4mjivMhJxnvhKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbfJGL01 (ORCPT
+        id S1727982AbfJGL0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 07:26:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:32238 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727395AbfJGL00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 07:26:26 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3FE7A30B2502;
-        Mon,  7 Oct 2019 11:26:26 +0000 (UTC)
-Received: from krava (unknown [10.43.17.61])
-        by smtp.corp.redhat.com (Postfix) with SMTP id C2C1660A35;
-        Mon,  7 Oct 2019 11:26:24 +0000 (UTC)
-Date:   Mon, 7 Oct 2019 13:26:24 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] perf: add support for logging debug messages to
- file
-Message-ID: <20191007112624.GG6919@krava>
-References: <20191004023954.1116-1-changbin.du@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191004023954.1116-1-changbin.du@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Mon, 07 Oct 2019 11:26:26 +0000 (UTC)
+        Mon, 7 Oct 2019 07:26:36 -0400
+Received: from inca-roads.misterjones.org ([213.251.177.50]:34339 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727566AbfJGL0f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 07:26:35 -0400
+Received: from 82-132-224-193.dab.02.net ([82.132.224.193] helo=big-swifty.misterjones.org)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iHR9j-0007gp-4l; Mon, 07 Oct 2019 13:26:23 +0200
+Date:   Mon, 07 Oct 2019 12:26:10 +0100
+Message-ID: <86k19gztil.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Talel Shenhar <talel@amazon.com>
+Cc:     <robh+dt@kernel.org>, <mark.rutland@arm.com>, <arnd@arndb.de>,
+        <bp@alien8.de>, <mchehab@kernel.org>, <james.morse@arm.com>,
+        <davem@davemloft.net>, <gregkh@linuxfoundation.org>,
+        <paulmck@linux.ibm.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>,
+        <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
+        <hhhawa@amazon.com>, <ronenk@amazon.com>, <jonnyc@amazon.com>,
+        <hanochu@amazon.com>, <amirkl@amazon.com>, <barakw@amazon.com>
+Subject: Re: [PATCH v4 2/2] soc: amazon: al-pos-edac: Introduce Amazon's Annapurna Labs POS EDAC driver
+In-Reply-To: <1570102361-11696-3-git-send-email-talel@amazon.com>
+References: <1570102361-11696-1-git-send-email-talel@amazon.com>
+        <1570102361-11696-3-git-send-email-talel@amazon.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 82.132.224.193
+X-SA-Exim-Rcpt-To: talel@amazon.com, robh+dt@kernel.org, mark.rutland@arm.com, arnd@arndb.de, bp@alien8.de, mchehab@kernel.org, james.morse@arm.com, davem@davemloft.net, gregkh@linuxfoundation.org, paulmck@linux.ibm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org, dwmw@amazon.co.uk, benh@kernel.crashing.org, hhhawa@amazon.com, ronenk@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, amirkl@amazon.com, barakw@amazon.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 10:39:52AM +0800, Changbin Du wrote:
-> When in TUI mode, it is impossible to show all the debug messages to
-> console. This make it hard to debug perf issues using debug messages.
-> This patch adds support for logging debug messages to file to resolve
-> this problem.
+On Thu, 03 Oct 2019 12:32:41 +0100,
+Talel Shenhar <talel@amazon.com> wrote:
 > 
-> v3:
->   o fix a segfault issue.
+> The Amazon's Annapurna Labs SoCs includes Point Of Serialization error
+> logging unit that reports an error in case write error (e.g . Attempt to
+> write to a read only register).
+> This error shall be reported to EDAC subsystem as uncorrectable-error.
+> 
+> Signed-off-by: Talel Shenhar <talel@amazon.com>
+> ---
+>  MAINTAINERS                |   7 ++
+>  drivers/edac/Kconfig       |   6 ++
+>  drivers/edac/Makefile      |   1 +
+>  drivers/edac/al_pos_edac.c | 173 +++++++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 187 insertions(+)
+>  create mode 100644 drivers/edac/al_pos_edac.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e7a47b5..f5ce446 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -751,6 +751,13 @@ F:	drivers/tty/serial/altera_jtaguart.c
+>  F:	include/linux/altera_uart.h
+>  F:	include/linux/altera_jtaguart.h
+>  
+> +AMAZON ANNAPURNA LABS POS EDAC DRIVER
+> +M:	Talel Shenhar <talel@amazon.com>
+> +M:	Talel Shenhar <talelshenhar@gmail.com>
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/edac/amazon,al-pos-edac.yaml
+> +F:	drivers/edac/al-pos-edac.c
+> +
+>  AMAZON ANNAPURNA LABS THERMAL MMIO DRIVER
+>  M:	Talel Shenhar <talel@amazon.com>
+>  S:	Maintained
+> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+> index 200c04c..bb5805f 100644
+> --- a/drivers/edac/Kconfig
+> +++ b/drivers/edac/Kconfig
+> @@ -100,6 +100,12 @@ config EDAC_AMD64_ERROR_INJECTION
+>  	  In addition, there are two control files, inject_read and inject_write,
+>  	  which trigger the DRAM ECC Read and Write respectively.
+>  
+> +config EDAC_AL_POS
+> +	tristate "Amazon's Annapurna Labs POS EDAC driver"
+> +	depends on (ARCH_ALPINE || COMPILE_TEST)
+> +	help
+> +	  Include support for the SoC POS EDAC error capability.
+> +
+>  config EDAC_AMD76X
+>  	tristate "AMD 76x (760, 762, 768)"
+>  	depends on PCI && X86_32
+> diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
+> index 165ca65e..3571936 100644
+> --- a/drivers/edac/Makefile
+> +++ b/drivers/edac/Makefile
+> @@ -22,6 +22,7 @@ obj-$(CONFIG_EDAC_GHES)			+= ghes_edac.o
+>  edac_mce_amd-y				:= mce_amd.o
+>  obj-$(CONFIG_EDAC_DECODE_MCE)		+= edac_mce_amd.o
+>  
+> +obj-$(CONFIG_EDAC_AL_POS)		+= al_pos_edac.o
+>  obj-$(CONFIG_EDAC_AMD76X)		+= amd76x_edac.o
+>  obj-$(CONFIG_EDAC_CPC925)		+= cpc925_edac.o
+>  obj-$(CONFIG_EDAC_I5000)		+= i5000_edac.o
+> diff --git a/drivers/edac/al_pos_edac.c b/drivers/edac/al_pos_edac.c
+> new file mode 100644
+> index 00000000..bd6cd87
+> --- /dev/null
+> +++ b/drivers/edac/al_pos_edac.c
+> @@ -0,0 +1,173 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+> + */
+> +#include <linux/bitfield.h>
+> +#include <linux/edac.h>
+> +#include <linux/of_irq.h>
+> +#include "edac_module.h"
+> +
+> +#define DRV_NAME "al_pos_edac"
+> +#define AL_POS_EDAC_MSG_MAX 256
+> +
+> +/* Registers Offset */
+> +#define AL_POS_ERROR_LOG_1	0x0
+> +#define AL_POS_ERROR_LOG_0	0x4
+> +
+> +/* Registers Fields */
+> +#define AL_POS_ERROR_LOG_1_VALID	BIT(31)
+> +#define AL_POS_ERROR_LOG_1_BRESP	GENMASK(18, 17)
+> +#define AL_POS_ERROR_LOG_1_REQUEST_ID	GENMASK(16, 8)
+> +#define AL_POS_ERROR_LOG_1_ADDR_HIGH	GENMASK(7, 0)
+> +
+> +#define AL_POS_ERROR_LOG_0_ADDR_LOW	GENMASK(31, 0)
+> +
+> +struct al_pos_edac {
+> +	struct edac_device_ctl_info *edac_dev;
+> +	void __iomem *mmio_base;
+> +	int irq;
+> +};
+> +
+> +static int al_pos_handle(struct al_pos_edac *al_pos)
+> +{
+> +	u32 log0, log1;
+> +	u64 addr;
+> +	u16 request_id;
+> +	u8 bresp;
+> +	char msg[AL_POS_EDAC_MSG_MAX];
+> +
+> +	log1 = readl(al_pos->mmio_base + AL_POS_ERROR_LOG_1);
 
-heya,
-getting segfault for this:
+I already commented on the misuse of strict accesses. Unless you can
+explain and document *why* you need the extra ordering, please use
+relaxed accesses.
 
-[jolsa@krava perf]$ ./perf report -vv 2>out
-Segmentation fault (core dumped)
+> +	if (!FIELD_GET(AL_POS_ERROR_LOG_1_VALID, log1))
+> +		return 0;
+> +
+> +	log0 = readl(al_pos->mmio_base + AL_POS_ERROR_LOG_0);
+> +	writel(0, al_pos->mmio_base + AL_POS_ERROR_LOG_1);
+> +
+> +	addr = FIELD_GET(AL_POS_ERROR_LOG_0_ADDR_LOW, log0);
+> +	addr |= (((u64)FIELD_GET(AL_POS_ERROR_LOG_1_ADDR_HIGH, log1)) << 32);
+> +	request_id = FIELD_GET(AL_POS_ERROR_LOG_1_REQUEST_ID, log1);
+> +	bresp = FIELD_GET(AL_POS_ERROR_LOG_1_BRESP, log1);
+> +
+> +	snprintf(msg, sizeof(msg),
+> +		 "addr=0x%llx request_id=0x%x bresp=0x%x\n",
+> +		 addr, request_id, bresp);
+> +
+> +	edac_device_handle_ue(al_pos->edac_dev, 0, 0, msg);
+> +
+> +	return 1;
+> +}
+> +
+> +static void al_pos_edac_check(struct edac_device_ctl_info *edac_dev)
+> +{
+> +	struct al_pos_edac *al_pos = edac_dev->pvt_info;
+> +
+> +	al_pos_handle(al_pos);
+> +}
+> +
+> +static irqreturn_t al_pos_irq_handler(int irq, void *info)
+> +{
+> +	struct platform_device *pdev = info;
+> +	struct al_pos_edac *al_pos = platform_get_drvdata(pdev);
+> +
+> +	if (al_pos_handle(al_pos))
+> +		return IRQ_HANDLED;
+> +	return IRQ_NONE;
+> +}
+> +
+> +static int al_pos_probe(struct platform_device *pdev)
+> +{
+> +	struct edac_device_ctl_info *edac_dev;
+> +	struct al_pos_edac *al_pos;
+> +	int ret;
+> +
+> +	edac_dev = edac_device_alloc_ctl_info(sizeof(*al_pos), DRV_NAME, 1,
+> +					      DRV_NAME, 1, 0, NULL, 0,
+> +					      edac_device_alloc_index());
+> +	if (!edac_dev)
+> +		return -ENOMEM;
+> +
+> +	al_pos = edac_dev->pvt_info;
+> +	al_pos->edac_dev = edac_dev;
+> +	platform_set_drvdata(pdev, al_pos);
+> +
+> +	al_pos->mmio_base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(al_pos->mmio_base)) {
+> +		dev_err(&pdev->dev, "failed to ioremap memory (%ld)\n",
+> +			PTR_ERR(al_pos->mmio_base));
+> +		return PTR_ERR(al_pos->mmio_base);
+> +	}
+> +
+> +	al_pos->irq = platform_get_irq(pdev, 0);
+> +	if (al_pos->irq <= 0)
+> +		edac_dev->edac_check = al_pos_edac_check;
+> +
+> +	edac_dev->dev = &pdev->dev;
+> +	edac_dev->mod_name = DRV_NAME;
+> +	edac_dev->dev_name = dev_name(&pdev->dev);
+> +	edac_dev->ctl_name = "POS";
+> +
+> +	ret = edac_device_add_device(edac_dev);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to add edac device\n");
+> +		goto err_free_edac;
+> +	}
+> +
+> +	if (al_pos->irq > 0) {
+> +		ret = devm_request_irq(&pdev->dev,
+> +				       al_pos->irq,
+> +				       al_pos_irq_handler,
+> +				       0,
+> +				       pdev->name,
+> +				       pdev);
+> +		if (ret != 0) {
+> +			dev_err(&pdev->dev,
+> +				"failed to register to irq %d (%d)\n",
+> +				al_pos->irq, ret);
+> +			goto err_remove_edac;
 
-jirka
+Would it be worth continuing without interrupts? After all, the
+interrupt seems to be an optional part of the device...
 
-> v2:
->   o specific all debug options one time.
-> 
-> Changbin Du (2):
->   perf: support multiple debug options separated by ','
->   perf: add support for logging debug messages to file
-> 
->  tools/perf/Documentation/perf.txt |  15 ++--
->  tools/perf/util/debug.c           | 124 +++++++++++++++++++-----------
->  2 files changed, 90 insertions(+), 49 deletions(-)
-> 
-> -- 
-> 2.20.1
-> 
+Thanks,
+
+	M.
+
+-- 
+Jazz is not dead, it just smells funny.
