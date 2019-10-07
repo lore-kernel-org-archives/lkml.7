@@ -2,81 +2,143 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C6AECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9094AC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E247B21D7F
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:27:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70D07206C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:28:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728453AbfJGN13 (ORCPT
+        id S1728009AbfJGN24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 09:27:29 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:45017 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728466AbfJGN1E (ORCPT
+        Mon, 7 Oct 2019 09:28:56 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:49348 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727324AbfJGN24 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 09:27:04 -0400
-X-Originating-IP: 86.250.200.211
-Received: from localhost.localdomain (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 9272A1C0003;
-        Mon,  7 Oct 2019 13:27:01 +0000 (UTC)
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     <devicetree@vger.kernel.org>, linux-iio@vger.kernel.org,
+        Mon, 7 Oct 2019 09:28:56 -0400
+Received: from [185.66.195.251] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iHT4G-0007M9-S3; Mon, 07 Oct 2019 13:28:53 +0000
+Date:   Mon, 7 Oct 2019 15:28:51 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Andrea Parri <parri.andrea@gmail.com>
+Cc:     bsingharora@gmail.com, dvyukov@google.com, elver@google.com,
         linux-kernel@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 3/8] iio: adc: max1027: Reset the device at probe time
-Date:   Mon,  7 Oct 2019 15:26:52 +0200
-Message-Id: <20191007132657.4190-4-miquel.raynal@bootlin.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191007132657.4190-1-miquel.raynal@bootlin.com>
-References: <20191007132657.4190-1-miquel.raynal@bootlin.com>
+        syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com,
+        syzkaller-bugs@googlegroups.com, stable@vger.kernel.org
+Subject: Re: [PATCH v2] taskstats: fix data-race
+Message-ID: <20191007132850.u4iwjh5c2or4p2dz@wittgenstein>
+References: <20191007104039.GA16085@andrea.guest.corp.microsoft.com>
+ <20191007110117.1096-1-christian.brauner@ubuntu.com>
+ <20191007131804.GA19242@andrea.guest.corp.microsoft.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191007131804.GA19242@andrea.guest.corp.microsoft.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All the registers are configured by the driver, let's reset the chip
-at probe time, avoiding any conflict with a possible earlier
-configuration.
+On Mon, Oct 07, 2019 at 03:18:04PM +0200, Andrea Parri wrote:
+> On Mon, Oct 07, 2019 at 01:01:17PM +0200, Christian Brauner wrote:
+> > When assiging and testing taskstats in taskstats_exit() there's a race
+> > when writing and reading sig->stats when a thread-group with more than
+> > one thread exits:
+> > 
+> > cpu0:
+> > thread catches fatal signal and whole thread-group gets taken down
+> >  do_exit()
+> >  do_group_exit()
+> >  taskstats_exit()
+> >  taskstats_tgid_alloc()
+> > The tasks reads sig->stats holding sighand lock seeing garbage.
+> 
+> You meant "without holding sighand lock" here, right?
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- drivers/iio/adc/max1027.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Correct, thanks for noticing!
 
-diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
-index 823223b77a70..f9b473ee6711 100644
---- a/drivers/iio/adc/max1027.c
-+++ b/drivers/iio/adc/max1027.c
-@@ -466,6 +466,14 @@ static int max1027_probe(struct spi_device *spi)
- 		}
- 	}
- 
-+	/* Internal reset */
-+	st->reg = MAX1027_RST_REG;
-+	ret = spi_write(st->spi, &st->reg, 1);
-+	if (ret < 0) {
-+		dev_err(&indio_dev->dev, "Failed to reset the ADC\n");
-+		return ret;
-+	}
-+
- 	/* Disable averaging */
- 	st->reg = MAX1027_AVG_REG;
- 	ret = spi_write(st->spi, &st->reg, 1);
--- 
-2.20.1
+> 
+> 
+> > 
+> > cpu1:
+> > task calls exit_group()
+> >  do_exit()
+> >  do_group_exit()
+> >  taskstats_exit()
+> >  taskstats_tgid_alloc()
+> > The task takes sighand lock and assigns new stats to sig->stats.
+> > 
+> > Fix this by using READ_ONCE() and smp_store_release().
+> > 
+> > Reported-by: syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com
+> > Fixes: 34ec12349c8a ("taskstats: cleanup ->signal->stats allocation")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> > Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
+> > Link: https://lore.kernel.org/r/20191006235216.7483-1-christian.brauner@ubuntu.com
+> > ---
+> > /* v1 */
+> > Link: https://lore.kernel.org/r/20191005112806.13960-1-christian.brauner@ubuntu.com
+> > 
+> > /* v2 */
+> > - Dmitry Vyukov <dvyukov@google.com>, Marco Elver <elver@google.com>:
+> >   - fix the original double-checked locking using memory barriers
+> > 
+> > /* v3 */
+> > - Andrea Parri <parri.andrea@gmail.com>:
+> >   - document memory barriers to make checkpatch happy
+> > ---
+> >  kernel/taskstats.c | 21 ++++++++++++---------
+> >  1 file changed, 12 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/kernel/taskstats.c b/kernel/taskstats.c
+> > index 13a0f2e6ebc2..978d7931fb65 100644
+> > --- a/kernel/taskstats.c
+> > +++ b/kernel/taskstats.c
+> > @@ -554,24 +554,27 @@ static int taskstats_user_cmd(struct sk_buff *skb, struct genl_info *info)
+> >  static struct taskstats *taskstats_tgid_alloc(struct task_struct *tsk)
+> >  {
+> >  	struct signal_struct *sig = tsk->signal;
+> > -	struct taskstats *stats;
+> > +	struct taskstats *stats_new, *stats;
+> >  
+> > -	if (sig->stats || thread_group_empty(tsk))
+> > -		goto ret;
+> > +	/* Pairs with smp_store_release() below. */
+> > +	stats = READ_ONCE(sig->stats);
+> 
+> This pairing suggests that the READ_ONCE() is heading an address
+> dependency, but I fail to identify it: what is the target memory
+> access of such a (putative) dependency?
+> 
+> 
+> > +	if (stats || thread_group_empty(tsk))
+> > +		return stats;
+> >  
+> >  	/* No problem if kmem_cache_zalloc() fails */
+> > -	stats = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
+> > +	stats_new = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
+> >  
+> >  	spin_lock_irq(&tsk->sighand->siglock);
+> >  	if (!sig->stats) {
+> > -		sig->stats = stats;
+> > -		stats = NULL;
+> > +		/* Pairs with READ_ONCE() above. */
+> > +		smp_store_release(&sig->stats, stats_new);
+> 
+> This is intended to 'order' the _zalloc()  (zero initializazion)
+> before the update of sig->stats, right?  what else am I missing?
 
+Right, I should've mentioned that. I'll change the comment.
+But I thought this also paired with smp_read_barrier_depends() that's
+placed alongside READ_ONCE()?
+
+Christian
