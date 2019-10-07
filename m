@@ -2,99 +2,96 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B64C10F14
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 00:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A15C4360C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 00:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78FF62084B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 00:01:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43D7C2084B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 00:04:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="WaZ49LUb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RbxYapSC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbfJGABV (ORCPT
+        id S1726826AbfJGAEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 20:01:21 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33672 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbfJGABU (ORCPT
+        Sun, 6 Oct 2019 20:04:14 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46157 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbfJGAEO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 20:01:20 -0400
-Received: by mail-wr1-f65.google.com with SMTP id b9so13110712wrs.0
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 17:01:19 -0700 (PDT)
+        Sun, 6 Oct 2019 20:04:14 -0400
+Received: by mail-pg1-f195.google.com with SMTP id b8so748310pgm.13;
+        Sun, 06 Oct 2019 17:04:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=8A/b/buLvgq885sAoN7Nr0i+KAjyO9HJlZWwmpkzPBM=;
-        b=WaZ49LUblvFIfMvFw/zQrha2Gu/0bUasotvpoLH54PdQvaMX/AQvQJVxby8EgF8dPA
-         51DU9Ote9sOvhs4/jic85DXGz3anNOfxGyjkgbeSVVoNRMnSdd4kcsS5sThQmwUnUGl7
-         4ieJL/UUJcyUEH/fplSBvI1UkJ9x0bb63Wv2o4xsx73OxOfG3NNAtbwWwKvtQgv+jwK0
-         rN/RcVwZMD8YKit9FDMYntFrFq64TyExgRiOefxXJuhB6VGcR92nuJdJ9KrxFvMUKQws
-         gzHp5En3AXRq3c6r81BM+xp85LwQxnGtCovaEHFL0moUb/ROyj72Ict6En/aN9s0od1f
-         A6VQ==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0OGHKPj+Wv5bJqZl+51TCg/isw7AhFW5RqOkp5nI8pY=;
+        b=RbxYapSCPmtOvzif62cXaYKpWjbEj/Acwk/Pec1HgdvlFcj6qTE/b1FaaocjPpdZbI
+         5RHuFu6c24q0fQG3/lVTrwMJopULCDK5xWD0SRCIVhjsAiYgkAj5bcYjrjQs9zgJ48JC
+         NwHL4RG+EB9QWu4yH9rhlL6NCCJ4G8qt5i/2vr7nGzOCfP59oJSgktxzsXF7jVebT4q0
+         nAzQ4OwKKZf2isV+MJtaE+55w4xv/Q4nH8+Tw1Eqrw57EMTGrxdmYDSakv2aBitfKu/m
+         YXu1KSurW+vJx3mRDEuHKaLMOCh/2kJjFXXn23P5OehPGGTFNn2R74eoVEKHXw7e7vuC
+         BiDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=8A/b/buLvgq885sAoN7Nr0i+KAjyO9HJlZWwmpkzPBM=;
-        b=U7UhEUZ0++kP9FqDyySk0XkDHcadpDGRTs9bLe20OzSKBmS+ymsK0G46auaOXXATBl
-         C8F4bhMn17ecZOZhDKbm+5eIs/npAh6H3WRBJ5vZFxYeJVniXCixh1422o25khYmopjk
-         ps8OC7BC2u99v+v1OMGvVdHwy1eP6T2YITE4QTqz0Do2KTQ1B1IfebXHMuqKYzsgeoj5
-         ed1muaCVb7VLU1BPWTsxmXmnXFxmmE+JJl494MtGz7LoKSOAznkwMpyma1E8fN1OVDHr
-         Q3zi9kqm+4uUsTO7TkvTO1mXULizcEURaIsfg2aRWcLctTmjQ4sX8KSNpXhfHJDgm4J9
-         oOjw==
-X-Gm-Message-State: APjAAAVmcmd6aMa4/tLqopsepQo1YanfmSZqL+egWgV8+w0GNgtpZpfN
-        3AZgAaD/Ade+VD3ac8H+zcUo6A==
-X-Google-Smtp-Source: APXvYqyT+osXHm4zxc/ZrBzht6GDZ1DzEJEIwzpu3A3usSFzEHJfzlJBvMXFUdidEn07lEqvd/mYIw==
-X-Received: by 2002:adf:cd86:: with SMTP id q6mr11221308wrj.153.1570406478717;
-        Sun, 06 Oct 2019 17:01:18 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id o4sm25830666wre.91.2019.10.06.17.01.17
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0OGHKPj+Wv5bJqZl+51TCg/isw7AhFW5RqOkp5nI8pY=;
+        b=lmeXznYnS093z+IJ6GcrA+Mn+jxnVsFy6i/bou0k88H0XaBYfrViVd34Zm1g20MgKo
+         Gin121ykW7kXv9tZ/vzPk4rHZh0Trri8+cEMRqPObaSyAIqpa5OTRmKEwji78GkoHgpX
+         vTATvw2ylHjpE9n9O4uNtwQBdLpqcW/fgPpdi7hYJG4w1T0vMOOduz47sKZGm0mDyUAG
+         41owrh12S5lZfcJDpyFLv26z3yq4O4xES/SksVxNQUvJSti9WGguvLiysskPaqoyqubq
+         69WqQfU0BUHsqz6A4iFNXQ2ZbhF6lLIYxa3KBgqBfRdPHfcyTZPC+y7MRvhGKSMagPMH
+         GSOA==
+X-Gm-Message-State: APjAAAV0U1rbVumfERnr3mEHt95PJs9FW2DkmevMqgviZbxHXHqR63q1
+        98MCmDFz3X09BFmgQ7kZx7x/vhP2
+X-Google-Smtp-Source: APXvYqxTcoktvi7Wqs0TBFmvZqRdSJTpKxwLszug0YozOpo72qXAHkhogNUlWB93Xo0nYv2fMRgJCA==
+X-Received: by 2002:aa7:928b:: with SMTP id j11mr30350725pfa.237.1570406652891;
+        Sun, 06 Oct 2019 17:04:12 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id y36sm2055693pgk.66.2019.10.06.17.04.11
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 06 Oct 2019 17:01:18 -0700 (PDT)
-Message-ID: <5d9a804e.1c69fb81.cf4b6.33e6@mx.google.com>
-Date:   Sun, 06 Oct 2019 17:01:18 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Sun, 06 Oct 2019 17:04:11 -0700 (PDT)
+Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to
+ unsafe_put_user()
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+References: <20191006222046.GA18027@roeck-us.net>
+ <CAHk-=wgrqwuZJmwbrjhjCFeSUu2i57unaGOnP4qZAmSyuGwMZA@mail.gmail.com>
+ <CAHk-=wjRPerXedTDoBbJL=tHBpH+=sP6pX_9NfgWxpnmHC5RtQ@mail.gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <5f06c138-d59a-d811-c886-9e73ce51924c@roeck-us.net>
+Date:   Sun, 6 Oct 2019 17:04:10 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: boot
-X-Kernelci-Kernel: v4.19.77-107-g61e72e79b84d
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Branch: linux-4.19.y
-In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
-References: <20191006171124.641144086@linuxfoundation.org>
-Subject: Re: [PATCH 4.19 000/106] 4.19.78-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+In-Reply-To: <CAHk-=wjRPerXedTDoBbJL=tHBpH+=sP6pX_9NfgWxpnmHC5RtQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.19.y boot: 56 boots: 0 failed, 56 passed (v4.19.77-107-g6=
-1e72e79b84d)
+On 10/6/19 4:35 PM, Linus Torvalds wrote:
+[ ... ]
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.19.y/kernel/v4.19.77-107-g61e72e79b84d/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.19.=
-y/kernel/v4.19.77-107-g61e72e79b84d/
+> Anyway, let me think about this, but just for testing, does the
+> attached patch make any difference? It's not the right thing in
+> general (and most definitely not on x86), but for testing whether this
+> is about unaligned accesses it might work.
+> 
 
-Tree: stable-rc
-Branch: linux-4.19.y
-Git Describe: v4.19.77-107-g61e72e79b84d
-Git Commit: 61e72e79b84d3a2519ad88c10964d7e4fa11ef1d
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 39 unique boards, 16 SoC families, 12 builds out of 206
+All my alpha, sparc64, and xtensa tests pass with the attached patch
+applied on top of v5.4-rc2. I didn't test any others.
 
----
-For more info write to <info@kernelci.org>
+I'll (try to) send you some disassembly next.
+
+Guenter
