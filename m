@@ -2,115 +2,112 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E50C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5877FC352AA
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F387B2084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:08:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FC7621BE5
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:08:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SnVhBVZp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727681AbfJGKIl (ORCPT
+        id S1727689AbfJGKIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 06:08:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53592 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726010AbfJGKIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 06:08:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CE97CAE8A;
-        Mon,  7 Oct 2019 10:08:38 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 1F10F1E481E; Mon,  7 Oct 2019 12:08:38 +0200 (CEST)
-Date:   Mon, 7 Oct 2019 12:08:38 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, Tejun Heo <tj@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        AceLan Kao <acelan.kao@canonical.com>, Jan Kara <jack@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: System hangs if NVMe/SSD is removed during suspend
-Message-ID: <20191007100838.GA24366@quack2.suse.cz>
-References: <20191002122136.GD2819@lahna.fi.intel.com>
- <20191003165033.GC3247445@devbig004.ftw2.facebook.com>
- <20191004080340.GB2819@lahna.fi.intel.com>
- <2367934.HCQFgJ56tP@kreacher>
- <20191004110151.GH2819@lahna.fi.intel.com>
- <99b3ffb8-4205-9795-a48a-09125f5fceec@kernel.dk>
+        Mon, 7 Oct 2019 06:08:54 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:4174 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727345AbfJGKIy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 06:08:54 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d9b0eb90000>; Mon, 07 Oct 2019 03:08:57 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 07 Oct 2019 03:08:53 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 07 Oct 2019 03:08:53 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 7 Oct
+ 2019 10:08:52 +0000
+Received: from [10.21.133.51] (172.20.13.39) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 7 Oct 2019
+ 10:08:49 +0000
+Subject: Re: [PATCH 5.2 000/137] 5.2.20-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20191006171209.403038733@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <0d5eb66a-5e96-b2a1-ab4a-862c9173e9db@nvidia.com>
+Date:   Mon, 7 Oct 2019 11:08:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <99b3ffb8-4205-9795-a48a-09125f5fceec@kernel.dk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1570442937; bh=sq3lXdQ1/HybXoLzVTzTLXtGi+to4l6rviPk/9r3TAA=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=SnVhBVZpwVmoa8wJAQrQVLf3yglhveWPrhN5Qr00Y3EoLO8vPFMhAmIF69SEIuYH1
+         PI65Cy0S6gtPp1AKiCeztCFAJUNsjKTt7HeMMPbdAsQfqRk3ld/xXwf7UGCg7isM3w
+         pbag8LpGiZTnKq5EWN4jaORZzRiu72sHQ7EOO/EWaWapak3vWZw+MIzCPdKQ4+3nsf
+         eoDS+/ZEdqBxLySjZ9cQq8syXGF+xPo+ywXKo1Paq/s+M+AhrUzRi1vF/vhBOMAPuJ
+         m/+Z4Ot36pKtGTag2rLyjCGXsJMPwaVGoYElNlzvSuW5Hs4EQhgAQReUZPH0TiaxKy
+         +WgjF40HLaymA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 04-10-19 07:32:40, Jens Axboe wrote:
-> On 10/4/19 5:01 AM, Mika Westerberg wrote:
-> > On Fri, Oct 04, 2019 at 11:59:26AM +0200, Rafael J. Wysocki wrote:
-> >> On Friday, October 4, 2019 10:03:40 AM CEST Mika Westerberg wrote:
-> >>> On Thu, Oct 03, 2019 at 09:50:33AM -0700, Tejun Heo wrote:
-> >>>> Hello, Mika.
-> >>>>
-> >>>> On Wed, Oct 02, 2019 at 03:21:36PM +0300, Mika Westerberg wrote:
-> >>>>> but from that discussion I don't see more generic solution to be
-> >>>>> implemented.
-> >>>>>
-> >>>>> Any ideas we should fix this properly?
-> >>>>
-> >>>> Yeah, the only fix I can think of is not using freezable wq.  It's
-> >>>> just not a good idea and not all that difficult to avoid using.
-> >>>
-> >>> OK, thanks.
-> >>>
-> >>> In that case I will just make a patch that removes WQ_FREEZABLE from
-> >>> bdi_wq and see what people think about it :)
-> >>
-> >> I guess that depends on why WQ_FREEZABLE was added to it in the first place. :-)
-> >>
-> >> The reason might be to avoid writes to persistent storage after creating an
-> >> image during hibernation, since wqs remain frozen throughout the entire
-> >> hibernation including the image saving phase.
-> > 
-> > Good point.
-> > 
-> >> Arguably, making the wq freezable is kind of a sledgehammer approach to that
-> >> particular issue, but in principle it may prevent data corruption from
-> >> occurring, so be careful there.
-> > 
-> > I tried to find the commit that introduced the "freezing" and I think it
-> > is this one:
-> > 
-> >    03ba3782e8dc writeback: switch to per-bdi threads for flushing data
-> > 
-> > Unfortunately from that commit it is not clear (at least to me) why it
-> > calls set_freezable() for the bdi task. It does not look like it has
-> > anything to do with blocking writes to storage while entering
-> > hibernation but I may be mistaken.
+
+On 06/10/2019 18:19, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.2.20 release.
+> There are 137 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Wow, a decade ago...
+> Responses should be made by Tue 08 Oct 2019 05:07:10 PM UTC.
+> Anything received after that time might be too late.
 > 
-> Honestly, I don't recall why these were marked freezable, and as I wrote
-> in the other reply, I don't think there's a good reason for that to be
-> the case.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.20-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Well, cannot it happen that the flush worker will get stuck in D state
-because some subsystem is already suspended and thus hibernation fails
-(because AFAIK processes in uninterruptible sleep block hibernation)?
+All tests are passing for Tegra ...
 
-I was also somewhat worried that the hibernation image could be
-inconsistent if flush workers do something while hibernation image is being
-taken but that does not seem to be a valid concern as all kernel processes
-get frozen before hibernation image is taken.
+Test results for stable-v5.2:
+    12 builds:	12 pass, 0 fail
+    22 boots:	22 pass, 0 fail
+    38 tests:	38 pass, 0 fail
 
-								Honza
+Linux version:	5.2.20-rc1-gc7a8121be8ef
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra194-p2972-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra30-cardhu-a04
+
+Cheers
+Jon
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+nvpublic
