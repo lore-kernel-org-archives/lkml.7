@@ -3,149 +3,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43234C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63928C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:30:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A86C2084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B85120867
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:30:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727511AbfJGI2X (ORCPT
+        id S1727355AbfJGIaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 04:28:23 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60402 "EHLO mx1.suse.de"
+        Mon, 7 Oct 2019 04:30:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36732 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727103AbfJGI2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 04:28:22 -0400
+        id S1727103AbfJGIaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 04:30:39 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9164AACC6;
-        Mon,  7 Oct 2019 08:28:19 +0000 (UTC)
-Message-ID: <1570437230.13764.1.camel@suse.cz>
-Subject: Re: [PATCH v2 2/2] cpufreq: intel_pstate: Conditional frequency
- invariant accounting
-From:   Giovanni Gherdovich <ggherdovich@suse.cz>
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@suse.de>, Len Brown <lenb@kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Paul Turner <pjt@google.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Quentin Perret <qperret@qperret.net>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Doug Smythies <dsmythies@telus.net>
-Date:   Mon, 07 Oct 2019 10:33:50 +0200
-In-Reply-To: <56f1e864ed93d45e6328d4d015cfda6406fdda42.camel@linux.intel.com>
-References: <20191002122926.385-1-ggherdovich@suse.cz>
-         <20191002122926.385-3-ggherdovich@suse.cz> <13106850.QMtCbivBLn@kreacher>
-         <5d6d601d2647644238fc51621407061e1c29320d.camel@linux.intel.com>
-         <1570177786.30086.1.camel@suse.cz>
-         <CAJZ5v0jK1kMjQ3gu8KhQmp2Paq9Rb74NPjMQ1HsVRCD3Fct5TQ@mail.gmail.com>
-         <1570179472.30086.4.camel@suse.cz>
-         <56f1e864ed93d45e6328d4d015cfda6406fdda42.camel@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        by mx1.suse.de (Postfix) with ESMTP id A6C6BB1DE;
+        Mon,  7 Oct 2019 08:30:37 +0000 (UTC)
+Date:   Mon, 7 Oct 2019 10:30:37 +0200
+From:   Daniel Wagner <dwagner@suse.de>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Uladzislau Rezki <urezki@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] mm: vmalloc: Use the vmap_area_lock to protect
+ ne_fit_preload_node
+Message-ID: <20191007083037.zu3n5gindvo7damg@beryllium.lan>
+References: <20191003090906.1261-1-dwagner@suse.de>
+ <20191004153728.c5xppuqwqcwecbe6@linutronix.de>
+ <20191004162041.GA30806@pc636>
+ <20191004163042.jpiau6dlxqylbpfh@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191004163042.jpiau6dlxqylbpfh@linutronix.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-10-04 at 08:17 -0700, Srinivas Pandruvada wrote:
-> On Fri, 2019-10-04 at 10:57 +0200, Giovanni Gherdovich wrote:
-> > On Fri, 2019-10-04 at 10:29 +0200, Rafael J. Wysocki wrote:
-> > > On Fri, Oct 4, 2019 at 10:24 AM Giovanni Gherdovich <
-> > > ggherdovich@suse.cz> wrote:
-> > > > 
-> > > > On Thu, 2019-10-03 at 20:31 -0700, Srinivas Pandruvada wrote:
-> > > > > On Thu, 2019-10-03 at 20:05 +0200, Rafael J. Wysocki wrote:
-> > > > > > On Wednesday, October 2, 2019 2:29:26 PM CEST Giovanni Gherdovich
-> > > > > > wrote:
-> > > > > > > From: Srinivas Pandruvada < srinivas.pandruvada@linux.intel.com>
-> > > > > > > 
-> > > > > > > intel_pstate has two operating modes: active and passive.  In
-> > > > > > > "active" mode, the in-built scaling governor is used and in
-> > > > > > > "passive" mode, the driver can be used with any governor like
-> > > > > > > "schedutil". In "active" mode the utilization values from
-> > > > > > > schedutil is not used and there is a requirement from high
-> > > > > > > performance computing use cases, not to readas well any
-> > > > > > > APERF/MPERF MSRs.
-> > > > > > 
-> > > > > > Well, this isn't quite convincing.
-> > > > > > 
-> > > > > > In particular, I don't see why the "don't read APERF/MPERF MSRs"
-> > > > > > argument applies *only* to intel_pstate in the "active" mode.
-> > > > > > What about intel_pstate in the "passive" mode combined with the
-> > > > > > "performance" governor?  Or any other governor different from
-> > > > > > "schedutil" for that matter?
-> > > > > > 
-> > > > > > And what about acpi_cpufreq combined with any governor different
-> > > > > > from "schedutil"?
-> > > > > > 
-> > > > > > Scale invariance is not really needed in all of those cases right
-> > > > > > now AFAICS, or is it?
-> > > > > 
-> > > > > Correct. This is just part of the patch to disable in active mode
-> > > > > (particularly in HWP and performance mode).
-> > > > > 
-> > > > > But this patch is 2 years old. The folks who wanted this, disable
-> > > > > intel-pstate and use userspace governor with acpi-cpufreq. So may be
-> > > > > better to address those cases too.
-> > > > 
-> > > > I disagree with "scale invariance is needed only by the schedutil
-> > > > governor"; the two other users are the CPU's estimated utilization in
-> > > > the wakeup path, via cpu_util_without(), as well as the load-balance
-> > > > path, via cpu_util() which is used by update_sg_lb_stats().
-> > > 
-> > > OK, so there are reasons to run the scale invariance code which are
-> > > not related to the cpufreq governor in use.
-> > > 
-> > > I wonder then why those reasons are not relevant for intel_pstate in the
-> > > "active" mode.
-> > > 
-> > > > Also remember that scale invariance is applied to both PELT signals
-> > > > util_avg and load_avg; schedutil uses the former but not the latter.
-> > > > 
-> > > > I understand Srinivas patch to disable MSR accesses during the tick as
-> > > > a band-aid solution to address a specific use case he cares about, but
-> > > > I don't think that extending this approach to any non-schedutil
-> > > > governor is a good idea -- you'd be killing load balancing in the
-> > > > process.
-> > > 
-> > > But that is also the case for intel_pstate in the "active" mode,
-> > > isn't it?
-> > 
-> > Sure it is.
-> > 
-> > Now, what's the performance impact of loosing scale-invariance in PELT
-> > signals?  And what's the performance impact of accessing two MSRs at the
-> > scheduler tick on each CPU?
-> > 
-> > I am sporting Srinivas' patch because he expressed the concern that the
-> > losses don't justify the gains for a specific class of users
-> > (supercomputing), although I don't fully like the idea (and arguably that
-> > should be measured).
-> > 
+Hi,
+
+On Fri, Oct 04, 2019 at 06:30:42PM +0200, Sebastian Andrzej Siewior wrote:
+> On 2019-10-04 18:20:41 [+0200], Uladzislau Rezki wrote:
+> > If we have migrate_disable/enable, then, i think preempt_enable/disable
+> > should be replaced by it and not the way how it has been proposed
+> > in the patch.
 > 
-> I understand there are other impact of the scale invariance like in
-> deadline code, which I didn't see when I submitted this patch.
-> You can drop this patch at this time if you like. I can poke HPC folks
-> to test a released kernel.
+> I don't think this patch is appropriate for upstream.
 
-Thanks Srinivas, in v3 I'll drop the tick_disable mechanism for now.
+Yes, I agree. The discussion made this clear, this is only for -rt
+trees. Initially I though this should be in mainline too.
 
-
-Giovanni
+Thanks,
+Daniel
