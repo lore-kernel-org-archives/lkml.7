@@ -2,60 +2,76 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F0FC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 20:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 514C9ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 20:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAA7B21479
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 20:35:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A42621479
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 20:35:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="I0zZFlzu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ToO/RKWq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729337AbfJGUfT (ORCPT
+        id S1729380AbfJGUfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 16:35:19 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:17066 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728212AbfJGUfT (ORCPT
+        Mon, 7 Oct 2019 16:35:39 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45957 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728187AbfJGUfi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 16:35:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1570480517;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=A5om20rumI794pjDhtusHn5kv3KIEIljC6Kd+PxZ3mQ=;
-        b=I0zZFlzuyCzVwOnhUVCjPHA5AgnNrFMAStCgGk4RpSTyy6a4EldFgxz8++Pt4a0d+6
-        5zo2WbX8GKVVN82QqlmxsZRDHwactNRis4MNTmKc+1vwsjfx3UnBdF2rs2o0byAKPmTA
-        gD3c/E6tMtFPJP8Raqfq97vhCLkTHQ8v06GUFU8D8xIBRoIEfyMEnM5dg6Y+Np8/LDz4
-        Jd+DwpH2L/uItfBIw5FlZCPJSATl2jU529+pCzPta/+zV+YnxGgs4tj5KlHA1pwYx9/r
-        yffvjXE3eex/uxtrRSmN6gTVCa7026Kt9cgZ58yjBbvCkwyKgEDk1pWKaCigQ63AWNbP
-        54BA==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXQrEOHTIXt87vtBtcfg=="
-X-RZG-CLASS-ID: mo00
-Received: from localhost.localdomain
-        by smtp.strato.de (RZmta 44.28.0 AUTH)
-        with ESMTPSA id L0811cv97KZD45T
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Mon, 7 Oct 2019 22:35:13 +0200 (CEST)
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Andi Shyti <andi@etezian.org>, Andi Shyti <andi.shyti@samsung.com>,
-        Simon Shields <simon@lineageos.org>,
-        linux-input@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH 1/3] Input: mms114 - use device_get_match_data
-Date:   Mon,  7 Oct 2019 22:33:41 +0200
-Message-Id: <20191007203343.101466-2-stephan@gerhold.net>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191007203343.101466-1-stephan@gerhold.net>
-References: <20191007203343.101466-1-stephan@gerhold.net>
+        Mon, 7 Oct 2019 16:35:38 -0400
+Received: by mail-pf1-f196.google.com with SMTP id y72so9349638pfb.12;
+        Mon, 07 Oct 2019 13:35:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=CqfvJ5pvQPXk0BHnC/qiO7SxY725BiWlCHyn+q4BOxc=;
+        b=ToO/RKWqkLaXMfa+snaXo9WKFKvpYC1NfRgs4c/h85/8LQmRMMP7WIwrafm0v2mEXK
+         pv6Qb21fzchRVOgFzQWuwXbldwIZE37+0mbjGol0bwP+Wb8wdWeyXV4B/GFCX4jH+GMA
+         P9MY0XNkRzbAzkgZuE0LWDERaLivykyGf+D8y+f28XzdibEKlDT2V6gJkJMtw+JCKSCR
+         nzhUFw4nmOEx2eA6FUw6kwpABWh6mP01CuhPBkQ7rcpozRZSG4FvxYqOYDkl8PMK7Lr9
+         2PM/Ngfkzmw2nqzTIS0uyJhb+Bc2C/8XB9wnu3CRu/Wtc9xdsfI6aVSgwVdVWQn8/F/i
+         UDhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=CqfvJ5pvQPXk0BHnC/qiO7SxY725BiWlCHyn+q4BOxc=;
+        b=dOwlSrZ7+o7CxsxvWH26rsM3eiwa7TTg/q6Q1GWdHYROs+qIzf1+pi770ukyMOKQPl
+         SLDgtgpHA+zMGoZaITUZYvQkqBvTbtftopIlx5qR53GYgUCg7OY9jyYkC6VTclUZzxtO
+         W4GKhjElSrncJbtq+pkeYgO0DzukpahHWAJ1sZplbGMKzEc3qEXy2BIU2qXA1ku1kgOy
+         L5WbGm5Y464mcnbZVYZgf7aJzYOU64Z1MSJJWwL+f0mABNunrV4tZ4sEqnzQo5OLIlvh
+         7V8An8dzj5maD5x0Dy48wfk1UjMmfnkzf50KznWzzcyJu+9WJXwd643XYzhlEJ8s2x9W
+         qT2g==
+X-Gm-Message-State: APjAAAUNd6W5G2BHONt7d5nsWCxVaLmn/1NLuMrDsJKXd8JJaA3BoCOD
+        DxOTbz0CFRD3IgmGQ/OxNSc=
+X-Google-Smtp-Source: APXvYqwdvdnGsnyePeqeHBTBNU74U6yfa020DAsY08IaRi36nJv8u4329HayFHYz+95BFWYxqkzUwA==
+X-Received: by 2002:a63:f957:: with SMTP id q23mr170715pgk.81.1570480538059;
+        Mon, 07 Oct 2019 13:35:38 -0700 (PDT)
+Received: from localhost ([100.118.89.196])
+        by smtp.gmail.com with ESMTPSA id q20sm20502851pfl.79.2019.10.07.13.35.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2019 13:35:37 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     freedreno@lists.freedesktop.org,
+        Rob Clark <robdclark@chromium.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 2/2] drm/msm: always dump buffer base/size
+Date:   Mon,  7 Oct 2019 13:31:08 -0700
+Message-Id: <20191007203108.18667-2-robdclark@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191007203108.18667-1-robdclark@gmail.com>
+References: <20191007203108.18667-1-robdclark@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -63,28 +79,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-device_get_match_data is available now, so we can replace the call
-to of_device_get_match_data and remove the FIXME comment.
+From: Rob Clark <robdclark@chromium.org>
 
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Even if we are not dumping the buffer's contents, it is useful to log
+their base address and size.  This makes it easier to see when different
+gpu pointers point to a single buffer, for example higher mipmap levels
+of a single texture.
+
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 ---
- drivers/input/touchscreen/mms114.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/gpu/drm/msm/msm_rd.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/input/touchscreen/mms114.c b/drivers/input/touchscreen/mms114.c
-index a5ab774da4cc..69c6d559eeb0 100644
---- a/drivers/input/touchscreen/mms114.c
-+++ b/drivers/input/touchscreen/mms114.c
-@@ -446,8 +446,7 @@ static int mms114_probe(struct i2c_client *client,
- 	data->client = client;
- 	data->input_dev = input_dev;
+diff --git a/drivers/gpu/drm/msm/msm_rd.c b/drivers/gpu/drm/msm/msm_rd.c
+index f8f654301def..0896419ed95d 100644
+--- a/drivers/gpu/drm/msm/msm_rd.c
++++ b/drivers/gpu/drm/msm/msm_rd.c
+@@ -295,7 +295,7 @@ void msm_rd_debugfs_cleanup(struct msm_drm_private *priv)
  
--	/* FIXME: switch to device_get_match_data() when available */
--	match_data = of_device_get_match_data(&client->dev);
-+	match_data = device_get_match_data(&client->dev);
- 	if (!match_data)
- 		return -EINVAL;
+ static void snapshot_buf(struct msm_rd_state *rd,
+ 		struct msm_gem_submit *submit, int idx,
+-		uint64_t iova, uint32_t size)
++		uint64_t iova, uint32_t size, bool full)
+ {
+ 	struct msm_gem_object *obj = submit->bos[idx].obj;
+ 	unsigned offset = 0;
+@@ -315,6 +315,9 @@ static void snapshot_buf(struct msm_rd_state *rd,
+ 	rd_write_section(rd, RD_GPUADDR,
+ 			(uint32_t[3]){ iova, size, iova >> 32 }, 12);
+ 
++	if (!full)
++		return;
++
+ 	/* But only dump the contents of buffers marked READ */
+ 	if (!(submit->bos[idx].flags & MSM_SUBMIT_BO_READ))
+ 		return;
+@@ -378,8 +381,7 @@ void msm_rd_dump_submit(struct msm_rd_state *rd, struct msm_gem_submit *submit,
+ 	rd_write_section(rd, RD_CMD, msg, ALIGN(n, 4));
+ 
+ 	for (i = 0; i < submit->nr_bos; i++)
+-		if (should_dump(submit, i))
+-			snapshot_buf(rd, submit, i, 0, 0);
++		snapshot_buf(rd, submit, i, 0, 0, should_dump(submit, i));
+ 
+ 	for (i = 0; i < submit->nr_cmds; i++) {
+ 		uint32_t szd  = submit->cmd[i].size; /* in dwords */
+@@ -387,7 +389,7 @@ void msm_rd_dump_submit(struct msm_rd_state *rd, struct msm_gem_submit *submit,
+ 		/* snapshot cmdstream bo's (if we haven't already): */
+ 		if (!should_dump(submit, i)) {
+ 			snapshot_buf(rd, submit, submit->cmd[i].idx,
+-					submit->cmd[i].iova, szd * 4);
++					submit->cmd[i].iova, szd * 4, true);
+ 		}
+ 	}
  
 -- 
-2.23.0
+2.21.0
 
