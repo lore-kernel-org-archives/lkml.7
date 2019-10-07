@@ -2,243 +2,153 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D850ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E971FECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63D50206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:57:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="bth3kC50"
+	by mail.kernel.org (Postfix) with ESMTP id C1362206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:59:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728567AbfJGS5w (ORCPT
+        id S1728913AbfJGS7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 14:57:52 -0400
-Received: from mail-eopbgr1310118.outbound.protection.outlook.com ([40.107.131.118]:13761
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728071AbfJGS5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 14:57:51 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cnoAuCuU5iiyu+FvHWOat7bQh+To8Ev2xBkCYFYX2oex0ojAPk9vrg7aJdrdvxw5CkutA6h27zcKX/0toVTnumO1JihOzi9RPoU5b+NxlnbdDQ7BWfBTnmP0Vd7FXjWuRS2Sb/AJ68Z26xcN42AeKpjdMqTPLmuftXC4lEmQ7iP5gwyoxHwCXpgFuZZRCZuMirENDRu1j4Oc5QfbZsMpbIIAL6MjYLk9veDju477Ei4FUEsMbdORTd5bvkQ5UmgHVnZAxMIRpJGyJs5Q/hDUD4i7JCB0oyYsgB9+OYtXqKi83VM2dEzSJjM73GyaVZx+3WWWDRWRTO5A8mlvTKUa4g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KxoqGK84eMrAv8yOZ6WvCDlnwhKQS/d7aPRzIFy6ffg=;
- b=bVqQkstc1Ef45sR8jCjszoY/NyPOnNXgGqw9HjmxnQV2SbkVI/1Jbf8DikGloUzd6loWviqIfWJKka8wsQ61U94RxLJlxc4gEvAQdulyaNDmt9/49K4wNXLJNeSkocp6p+xqXdMzowmU4qokj2oFu56jqZ8EYAyJSWCJAbVBIwWPxuQaPvvZ8iCJeKQlPID1ywScOtp+oLvSXxY40Jgk4E9sc7r03YlQwKhURMD3TYjr9AAmPf6UgJs4LWCI3BxRvAPyu66Dfv5x9ljPhL4obD1IIo7gmKboj3M0tFe1+0N86s2vGivmzSK/ZxoaKMytCnAwAfkRo/I4cSNw0OFMhg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KxoqGK84eMrAv8yOZ6WvCDlnwhKQS/d7aPRzIFy6ffg=;
- b=bth3kC50hjrl7Tky59UBoBTPVS661UR8BPWFzTFL4OkPyoqKF1ljeDN6yNmUKwaqqQzgEetfrCseRleh948mtLJ2YPcBiXKx5mK9hr4tLtZAigUIpn0gZtuKSAs5fSDFgrdStaoauXQdG0IdntP2q1iqbF15/utsTc9I1orCQFU=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0203.APCP153.PROD.OUTLOOK.COM (52.133.194.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.11; Mon, 7 Oct 2019 18:57:39 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2%7]) with mapi id 15.20.2367.004; Mon, 7 Oct 2019
- 18:57:39 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-CC:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "driverdev-devel@linuxdriverproject.org" 
-        <driverdev-devel@linuxdriverproject.org>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "jackm@mellanox.com" <jackm@mellanox.com>
-Subject: RE: [PATCH v2] PCI: PM: Move to D0 before calling
- pci_legacy_resume_early()
-Thread-Topic: [PATCH v2] PCI: PM: Move to D0 before calling
- pci_legacy_resume_early()
-Thread-Index: AdVSPER5d22rbcvgTV28JV77HSffhgq1j6kAAAuTThA=
-Date:   Mon, 7 Oct 2019 18:57:38 +0000
-Message-ID: <PU1P153MB016996765F9BB827256D05DEBF9B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <KU1P153MB016637CAEAD346F0AA8E3801BFAD0@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM>
- <20191007132414.GA19294@google.com>
-In-Reply-To: <20191007132414.GA19294@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-07T18:57:35.7748996Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c4882525-48f5-4a48-9b5c-a0913e3efe36;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:7f70:44a6:f3e:a757:ee91]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3abe572f-7505-468e-c5f3-08d74b58398a
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: PU1P153MB0203:|PU1P153MB0203:|PU1P153MB0203:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <PU1P153MB020385FEBA02F7FA8C1F3468BF9B0@PU1P153MB0203.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 01834E39B7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(396003)(376002)(136003)(346002)(366004)(189003)(199004)(13464003)(54534003)(14444005)(256004)(76116006)(33656002)(99286004)(4326008)(229853002)(71190400001)(71200400001)(66446008)(64756008)(66556008)(6436002)(66476007)(66946007)(9686003)(55016002)(81156014)(81166006)(5660300002)(8936002)(52536014)(6246003)(7416002)(7736002)(305945005)(8676002)(74316002)(54906003)(316002)(22452003)(186003)(6116002)(102836004)(8990500004)(10090500001)(25786009)(6506007)(53546011)(478600001)(486006)(476003)(86362001)(2906002)(46003)(14454004)(446003)(11346002)(7696005)(76176011)(110136005)(10290500003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0203;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: a0xm1bFRcZBw6bqIvE+y38Z66eRP1eWgdX4H2yOVXFKN4xQVMz+NmGWVs/gaKuOP9l5CprUnQrzvEqtpSgr9GinGejOq4CyLz9efjRuPYA9P4TeT8yzKdG01J0PbyiaYR4WBQMCNm+Z4LCCty09Fj5819rIFdfS5A6MXMWcww60mRUqAv2aSs2OGg9TpjLYuE5nfNJZBCbeZ2n8dPkU6yHh+owHfT2CNaDDuLJGQecUcTfCTLe+Bg/sgFmFCD0JO4Hq40d437Xdt2MJtnKY7n/JUfnFtMfap5LhUtO56hUQ7JDm2JOnZMsxTQ/vUuc33To9j3iUTn5frwsM4Jyly50Juvm4Soxy95rv7VcTku5j5+6SJ6N48E/xceiv0xrAjXdAfTwJ3mJaG7iYB4qnHqUdnH7rh16vgimxufHvCF3U=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 7 Oct 2019 14:59:14 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:42244 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728187AbfJGS7M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 14:59:12 -0400
+Received: by mail-io1-f70.google.com with SMTP id w1so28368802ioj.9
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 11:59:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=GrVx4R2TSBBXTVnwndCSWUFdFGmwDx1aYPlI5rVweMs=;
+        b=AtNxy1NgMvOWGyfbE4TA6L529BPFV1Rqf4Jd1gDfy762LYm8S6pg8kAa6Gv3cRmpXI
+         CijSjGfNYk2c/ExR3HV6HhRDBDmHUyNO5OxJKmiyw4BLhiiQKscjN+xCw1KDDp7v2XIM
+         eu/N6iFAUWvQoNj+jV5uBys8m7jp7rN2jctxJcSlUz9jSfU0CCGGXN654k42WGHKcYBJ
+         H+tBClFfXTZaiWp4xkXq55/doWJl73Gbmb2T5dhOWW7H8OzXGNXzdAiR9Bqh1rh9CANt
+         tXPx68vDFApuS+AlTMfwnkYhHU2P4/fDf+kDC04z7NUDngI7IT7r4iMMk/96aTlZajgx
+         4LnA==
+X-Gm-Message-State: APjAAAWlsINxbhG3MTWQ4am+mGYfQMgMRqRLmLZK7ZqQOcnCiVmt5FWX
+        GIfZMXeffhFXzJs4EbTn4kRl8WyweYLrsa6pruEQ/bzLwpeC
+X-Google-Smtp-Source: APXvYqwejDKuAeexkMPDzZGVQwxrmuUIqx1wT/LFpoCz8L6mzXx+bksAIbMy/P68xH31YByWdWefyeK1irDcA0xmWbUjabXPP2Ip
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3abe572f-7505-468e-c5f3-08d74b58398a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Oct 2019 18:57:38.6778
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: u106Cx2vLaZg/uaamZ+mWDcW/fOpAwG+Tbe4TZ9x5HQq8EFPQ6oClWpBwO1wElq4mvro/iGnFJHgon3BDWrtAw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0203
+X-Received: by 2002:a05:6602:10d:: with SMTP id s13mr16461353iot.244.1570474751494;
+ Mon, 07 Oct 2019 11:59:11 -0700 (PDT)
+Date:   Mon, 07 Oct 2019 11:59:11 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b11343059456a5f5@google.com>
+Subject: general protection fault in devlink_get_from_attrs
+From:   syzbot <syzbot+896295c817162503d359@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jiri@mellanox.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Bjorn Helgaas <helgaas@kernel.org>
-> Sent: Monday, October 7, 2019 6:24 AM
-> To: Dexuan Cui <decui@microsoft.com>
-> Cc: lorenzo.pieralisi@arm.com; linux-pci@vger.kernel.org; Michael Kelley
-> <mikelley@microsoft.com>; linux-hyperv@vger.kernel.org;
-> linux-kernel@vger.kernel.org; driverdev-devel@linuxdriverproject.org; Sas=
-ha
-> Levin <Alexander.Levin@microsoft.com>; Haiyang Zhang
-> <haiyangz@microsoft.com>; KY Srinivasan <kys@microsoft.com>;
-> olaf@aepfle.de; apw@canonical.com; jasowang@redhat.com; vkuznets
-> <vkuznets@redhat.com>; marcelo.cerri@canonical.com; Stephen Hemminger
-> <sthemmin@microsoft.com>; jackm@mellanox.com
-> Subject: Re: [PATCH v2] PCI: PM: Move to D0 before calling
-> pci_legacy_resume_early()
->=20
-> On Wed, Aug 14, 2019 at 01:06:55AM +0000, Dexuan Cui wrote:
-> >
-> > In pci_legacy_suspend_late(), the device state is moved to PCI_UNKNOWN.
-> >
-> > In pci_pm_thaw_noirq(), the state is supposed to be moved back to PCI_D=
-0,
-> > but the current code misses the pci_legacy_resume_early() path, so the
-> > state remains in PCI_UNKNOWN in that path. As a result, in the resume
-> > phase of hibernation, this causes an error for the Mellanox VF driver,
-> > which fails to enable MSI-X because pci_msi_supported() is false due
-> > to dev->current_state !=3D PCI_D0:
-> >
-> > mlx4_core a6d1:00:02.0: Detected virtual function - running in slave mo=
-de
-> > mlx4_core a6d1:00:02.0: Sending reset
-> > mlx4_core a6d1:00:02.0: Sending vhcr0
-> > mlx4_core a6d1:00:02.0: HCA minimum page size:512
-> > mlx4_core a6d1:00:02.0: Timestamping is not supported in slave mode
-> > mlx4_core a6d1:00:02.0: INTx is not supported in multi-function mode,
-> aborting
-> > PM: dpm_run_callback(): pci_pm_thaw+0x0/0xd7 returns -95
-> > PM: Device a6d1:00:02.0 failed to thaw: error -95
-> >
-> > To be more accurate, the "resume" phase means the "thaw" callbacks whic=
-h
-> > run before the system enters hibernation: when the user runs the comman=
-d
-> > "echo disk > /sys/power/state" for hibernation, first the kernel "freez=
-es"
-> > all the devices and creates a hibernation image, then the kernel "thaws=
-"
-> > the devices including the disk/NIC, writes the memory to the disk, and
-> > powers down. This patch fixes the error message for the Mellanox VF dri=
-ver
-> > in this phase.
-> >
-> > When the system starts again, a fresh kernel starts to run, and when th=
-e
-> > kernel detects that a hibernation image was saved, the kernel "quiesces=
-"
-> > the devices, and then "restores" the devices from the saved image. In t=
-his
-> > path:
-> > device_resume_noirq() -> ... ->
-> >   pci_pm_restore_noirq() ->
-> >     pci_pm_default_resume_early() ->
-> >       pci_power_up() moves the device states back to PCI_D0. This path =
-is
-> > not broken and doesn't need my patch.
-> >
-> > Signed-off-by: Dexuan Cui <decui@microsoft.com>
->=20
-> This looks like a bugfix for 5839ee7389e8 ("PCI / PM: Force devices to
-> D0 in pci_pm_thaw_noirq()") so maybe it should be marked for stable as
-> 5839ee7389e8 was?
->=20
-> Rafael, could you confirm?
->=20
-> > ---
-> >
-> > changes in v2:
-> > 	Updated the changelog with more details.
-> >
-> >  drivers/pci/pci-driver.c | 7 ++++---
-> >  1 file changed, 4 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> > index 36dbe960306b..27dfc68db9e7 100644
-> > --- a/drivers/pci/pci-driver.c
-> > +++ b/drivers/pci/pci-driver.c
-> > @@ -1074,15 +1074,16 @@ static int pci_pm_thaw_noirq(struct device
-> *dev)
-> >  			return error;
-> >  	}
-> >
-> > -	if (pci_has_legacy_pm_support(pci_dev))
-> > -		return pci_legacy_resume_early(dev);
-> > -
-> >  	/*
-> >  	 * pci_restore_state() requires the device to be in D0 (because of MS=
-I
-> >  	 * restoration among other things), so force it into D0 in case the
-> >  	 * driver's "freeze" callbacks put it into a low-power state directly=
-.
-> >  	 */
-> >  	pci_set_power_state(pci_dev, PCI_D0);
-> > +
-> > +	if (pci_has_legacy_pm_support(pci_dev))
-> > +		return pci_legacy_resume_early(dev);
-> > +
-> >  	pci_restore_state(pci_dev);
-> >
-> >  	if (drv && drv->pm && drv->pm->thaw_noirq)
-> > --
-> > 2.19.1
-> >
+Hello,
 
-Added Rafael to "To".
+syzbot found the following crash on:
 
-Thanks,
--- Dexuan
+HEAD commit:    056ddc38 Merge branch 'stmmac-next'
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1590218f600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d9be300620399522
+dashboard link: https://syzkaller.appspot.com/bug?extid=896295c817162503d359
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10a6a6c3600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15fd50dd600000
 
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+896295c817162503d359@syzkaller.appspotmail.com
+
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 8790 Comm: syz-executor447 Not tainted 5.4.0-rc1+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:devlink_get_from_attrs+0x32/0x300 net/core/devlink.c:124
+Code: 41 55 41 54 53 48 89 f3 48 83 ec 10 48 89 7d c8 e8 03 f6 bf fb 48 8d  
+7b 08 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f  
+85 84 02 00 00 4c 8b 6b 08 4d 85 ed 0f 84 d9 01 00
+RSP: 0018:ffff8880944bf438 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000001 RSI: ffffffff85b31cdd RDI: 0000000000000008
+RBP: ffff8880944bf470 R08: 1ffffffff13360d4 R09: fffffbfff13360d5
+R10: ffff8880944bf470 R11: ffffffff899b06a7 R12: ffff8880a1fa47b8
+R13: 0000000000000000 R14: 0000000000000000 R15: ffff8880a1fa4830
+FS:  00000000015e8880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000284 CR3: 00000000a1620000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  devlink_health_reporter_get_from_cb net/core/devlink.c:4991 [inline]
+  devlink_nl_cmd_health_reporter_dump_get_dumpit+0x15b/0x930  
+net/core/devlink.c:5246
+  genl_lock_dumpit+0x86/0xc0 net/netlink/genetlink.c:529
+  netlink_dump+0x558/0xfb0 net/netlink/af_netlink.c:2244
+  __netlink_dump_start+0x5b1/0x7d0 net/netlink/af_netlink.c:2352
+  genl_family_rcv_msg_dumpit net/netlink/genetlink.c:614 [inline]
+  genl_family_rcv_msg net/netlink/genetlink.c:710 [inline]
+  genl_rcv_msg+0xc9b/0x1000 net/netlink/genetlink.c:730
+  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
+  genl_rcv+0x29/0x40 net/netlink/genetlink.c:741
+  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+  netlink_unicast+0x531/0x710 net/netlink/af_netlink.c:1328
+  netlink_sendmsg+0x8a5/0xd60 net/netlink/af_netlink.c:1917
+  sock_sendmsg_nosec net/socket.c:637 [inline]
+  sock_sendmsg+0xd7/0x130 net/socket.c:657
+  ___sys_sendmsg+0x803/0x920 net/socket.c:2311
+  __sys_sendmsg+0x105/0x1d0 net/socket.c:2356
+  __do_sys_sendmsg net/socket.c:2365 [inline]
+  __se_sys_sendmsg net/socket.c:2363 [inline]
+  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2363
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4401e9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffe414d6368 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004401e9
+RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000003
+RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401a70
+R13: 0000000000401b00 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace 9a97fc0240c52134 ]---
+RIP: 0010:devlink_get_from_attrs+0x32/0x300 net/core/devlink.c:124
+Code: 41 55 41 54 53 48 89 f3 48 83 ec 10 48 89 7d c8 e8 03 f6 bf fb 48 8d  
+7b 08 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f  
+85 84 02 00 00 4c 8b 6b 08 4d 85 ed 0f 84 d9 01 00
+RSP: 0018:ffff8880944bf438 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000001 RSI: ffffffff85b31cdd RDI: 0000000000000008
+RBP: ffff8880944bf470 R08: 1ffffffff13360d4 R09: fffffbfff13360d5
+R10: ffff8880944bf470 R11: ffffffff899b06a7 R12: ffff8880a1fa47b8
+R13: 0000000000000000 R14: 0000000000000000 R15: ffff8880a1fa4830
+FS:  00000000015e8880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000284 CR3: 00000000a1620000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
