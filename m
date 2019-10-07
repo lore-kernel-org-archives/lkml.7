@@ -2,237 +2,157 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0400ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A9BBECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6921D2070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:09:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uS8J88Ve"
+	by mail.kernel.org (Postfix) with ESMTP id D12AE2070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:09:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729273AbfJGPJG (ORCPT
+        id S1728019AbfJGPJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 11:09:06 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:40522 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728772AbfJGPHm (ORCPT
+        Mon, 7 Oct 2019 11:09:11 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:46911 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727912AbfJGPJJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:07:42 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x97F7fJX004161;
-        Mon, 7 Oct 2019 10:07:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570460861;
-        bh=U+40G8RP769IGoztZIVs1oL82vYi9RvZaUh9qX9X+H0=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=uS8J88VerbL2B0ndK6LWpXtZixeXUNckVdVh31mAZBWE/quru1LMRTmKOwQvzdsXm
-         ltQWQHWhFJbUHVbcvFGa+tYwNAfyIlTYXTl2LaLAnhsnIyJ5KUIsIvzLvMZkO7Ncrq
-         cGCOelO9tkMKFp6CZLnTM/wlXvzjNHARveZ95YTo=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x97F7fx8023685
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 7 Oct 2019 10:07:41 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 7 Oct
- 2019 10:07:39 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 7 Oct 2019 10:07:41 -0500
-Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x97F7aFB055156;
-        Mon, 7 Oct 2019 10:07:41 -0500
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Nikhil Devshatwar <nikhil.nd@ti.com>,
-        Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v3 05/21] media: ti-vpe: Add support for SEQ_BT
-Date:   Mon, 7 Oct 2019 10:09:53 -0500
-Message-ID: <20191007151009.22095-6-bparrot@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191007151009.22095-1-bparrot@ti.com>
-References: <20191007151009.22095-1-bparrot@ti.com>
+        Mon, 7 Oct 2019 11:09:09 -0400
+Received: by mail-io1-f72.google.com with SMTP id t11so27220101ioc.13
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 08:09:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=7KCg+f7TeFzvMI7Bp08YWruXFv6ujw5ZPTj7NmS2ZBg=;
+        b=SkFEMIDOX2iatweuw+Ner5NarK9ZNFiFatR4F298QddrygsBQDycWjv5sTkpuoEWsh
+         oGpjmV++gtdxSX/cmjbO0nE6OZDuEI6XReqmYIXmz5B/MwID8jcwl8Z8mlLse5fkn0So
+         HkjXmefPCjQFEAO/uyrxlkPr9tpg1Ce8N66PozR1eCOYxm04BmG9Ad+Fp7zH67VwEIwY
+         69/av1HgtXiDaaTlCgy91qT6jI+pkw2M6WVpoWnoisQib3Aue+VUxgM4DxqCaqq+bGAE
+         EGOp8lfe/73pfR3FC6eNw+QBVjAnRAvNbNhf9PnhTdseLvE230cvVw/Aepwg5yV8WpGI
+         eUdg==
+X-Gm-Message-State: APjAAAUF6ccM75VGcW7AXwAZqrB6wNrgLlgGkZ1jDgDGssuKWSBdvomp
+        ny2GfIGSnj0geWOMsYkUtTGqUAO+uny8c9S7OzK73AWkdyXl
+X-Google-Smtp-Source: APXvYqy7907YtOP193BqGe7qgENG1Enn1wt1Y4XWrAph4wkpHB4HgDQWbMZWedSuacnxilIEoIu/O8hykW5g6i3TstOFZwjCKt4K
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Received: by 2002:a6b:7a06:: with SMTP id h6mr12529506iom.231.1570460948347;
+ Mon, 07 Oct 2019 08:09:08 -0700 (PDT)
+Date:   Mon, 07 Oct 2019 08:09:08 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f5c33b0594536e77@google.com>
+Subject: kernel BUG at kernel/time/timer.c:LINE! (4)
+From:   syzbot <syzbot+f49d12d34f2321cf4df2@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
+        mchehab@kernel.org, sean@mess.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikhil Devshatwar <nikhil.nd@ti.com>
+Hello,
 
-SEQ_BT indicates the buffer for bottom field needs to be processed
-before the top field.
+syzbot found the following crash on:
 
-Simplify the field selection logic to support SEQ_BT as well.
+HEAD commit:    58d5f26a usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=11e5b20d600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=aa5dac3cda4ffd58
+dashboard link: https://syzkaller.appspot.com/bug?extid=f49d12d34f2321cf4df2
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13d9c713600000
 
-Modify the interlace flags to include any of alternate, SEQ_TB, SEQ_BT.
-Update other format error checking to consider SEQ_BT.
-Replace SEQ_TB with SEQ_XX wherever applicable.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+f49d12d34f2321cf4df2@syzkaller.appspotmail.com
 
-Signed-off-by: Nikhil Devshatwar <nikhil.nd@ti.com>
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
+------------[ cut here ]------------
+kernel BUG at kernel/time/timer.c:956!
+invalid opcode: 0000 [#1] SMP KASAN
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.0-rc1+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:__mod_timer kernel/time/timer.c:956 [inline]
+RIP: 0010:__mod_timer kernel/time/timer.c:949 [inline]
+RIP: 0010:mod_timer+0x5a2/0xb50 kernel/time/timer.c:1100
+Code: 45 10 c7 44 24 14 ff ff ff ff 48 89 44 24 08 48 8d 45 20 48 c7 44 24  
+18 00 00 00 00 48 89 04 24 e9 5a fc ff ff e8 ae ce 0e 00 <0f> 0b e8 a7 ce  
+0e 00 4c 89 74 24 20 e9 37 fe ff ff e8 98 ce 0e 00
+RSP: 0018:ffff8881db209930 EFLAGS: 00010006
+RAX: ffffffff86c2b200 RBX: 00000000ffffa688 RCX: ffffffff83efc583
+RDX: 0000000000000100 RSI: ffffffff812f4d82 RDI: ffff8881d2356200
+RBP: ffff8881d23561e8 R08: ffffffff86c2b200 R09: ffffed103a46abeb
+R10: ffffed103a46abea R11: ffff8881d2355f53 R12: dffffc0000000000
+R13: 1ffff1103b64132d R14: ffff8881d2355f50 R15: 0000000000000006
+FS:  0000000000000000(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f75e2799000 CR3: 00000001d3b07000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  <IRQ>
+  imon_touch_event drivers/media/rc/imon.c:1348 [inline]
+  imon_incoming_packet.isra.0+0x2546/0x2f10 drivers/media/rc/imon.c:1603
+  usb_rx_callback_intf0+0x151/0x1e0 drivers/media/rc/imon.c:1734
+  __usb_hcd_giveback_urb+0x1f2/0x470 drivers/usb/core/hcd.c:1654
+  usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1719
+  dummy_timer+0x120f/0x2fa2 drivers/usb/gadget/udc/dummy_hcd.c:1965
+  call_timer_fn+0x179/0x650 kernel/time/timer.c:1404
+  expire_timers kernel/time/timer.c:1449 [inline]
+  __run_timers kernel/time/timer.c:1773 [inline]
+  __run_timers kernel/time/timer.c:1740 [inline]
+  run_timer_softirq+0x5e3/0x1490 kernel/time/timer.c:1786
+  __do_softirq+0x221/0x912 kernel/softirq.c:292
+  invoke_softirq kernel/softirq.c:373 [inline]
+  irq_exit+0x178/0x1a0 kernel/softirq.c:413
+  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+  smp_apic_timer_interrupt+0x12f/0x500 arch/x86/kernel/apic/apic.c:1137
+  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
+  </IRQ>
+RIP: 0010:default_idle+0x28/0x2e0 arch/x86/kernel/process.c:581
+Code: 90 90 41 56 41 55 65 44 8b 2d 44 3a 8f 7a 41 54 55 53 0f 1f 44 00 00  
+e8 36 ee d0 fb e9 07 00 00 00 0f 00 2d fa dd 4f 00 fb f4 <65> 44 8b 2d 20  
+3a 8f 7a 0f 1f 44 00 00 5b 5d 41 5c 41 5d 41 5e c3
+RSP: 0018:ffffffff86c07da8 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
+RAX: 0000000000000007 RBX: ffffffff86c2b200 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000006 RDI: ffffffff86c2ba4c
+RBP: fffffbfff0d85640 R08: ffffffff86c2b200 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+  cpuidle_idle_call kernel/sched/idle.c:154 [inline]
+  do_idle+0x3b6/0x500 kernel/sched/idle.c:263
+  cpu_startup_entry+0x14/0x20 kernel/sched/idle.c:355
+  start_kernel+0x82a/0x864 init/main.c:784
+  secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:241
+Modules linked in:
+---[ end trace 3b8169377985e706 ]---
+RIP: 0010:__mod_timer kernel/time/timer.c:956 [inline]
+RIP: 0010:__mod_timer kernel/time/timer.c:949 [inline]
+RIP: 0010:mod_timer+0x5a2/0xb50 kernel/time/timer.c:1100
+Code: 45 10 c7 44 24 14 ff ff ff ff 48 89 44 24 08 48 8d 45 20 48 c7 44 24  
+18 00 00 00 00 48 89 04 24 e9 5a fc ff ff e8 ae ce 0e 00 <0f> 0b e8 a7 ce  
+0e 00 4c 89 74 24 20 e9 37 fe ff ff e8 98 ce 0e 00
+RSP: 0018:ffff8881db209930 EFLAGS: 00010006
+RAX: ffffffff86c2b200 RBX: 00000000ffffa688 RCX: ffffffff83efc583
+RDX: 0000000000000100 RSI: ffffffff812f4d82 RDI: ffff8881d2356200
+RBP: ffff8881d23561e8 R08: ffffffff86c2b200 R09: ffffed103a46abeb
+R10: ffffed103a46abea R11: ffff8881d2355f53 R12: dffffc0000000000
+R13: 1ffff1103b64132d R14: ffff8881d2355f50 R15: 0000000000000006
+FS:  0000000000000000(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f75e2799000 CR3: 00000001d3b07000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
 ---
- drivers/media/platform/ti-vpe/vpe.c | 73 ++++++++++++++++++-----------
- 1 file changed, 46 insertions(+), 27 deletions(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index 0e9cb0319a92..5d0ec5f7ca25 100644
---- a/drivers/media/platform/ti-vpe/vpe.c
-+++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -328,9 +328,14 @@ struct vpe_q_data {
- #define	Q_DATA_MODE_TILED		BIT(1)
- #define	Q_DATA_INTERLACED_ALTERNATE	BIT(2)
- #define	Q_DATA_INTERLACED_SEQ_TB	BIT(3)
-+#define	Q_DATA_INTERLACED_SEQ_BT	BIT(4)
-+
-+#define Q_IS_SEQ_XX		(Q_DATA_INTERLACED_SEQ_TB | \
-+				Q_DATA_INTERLACED_SEQ_BT)
- 
- #define Q_IS_INTERLACED		(Q_DATA_INTERLACED_ALTERNATE | \
--				Q_DATA_INTERLACED_SEQ_TB)
-+				Q_DATA_INTERLACED_SEQ_TB | \
-+				Q_DATA_INTERLACED_SEQ_BT)
- 
- enum {
- 	Q_DATA_SRC = 0,
-@@ -1105,24 +1110,31 @@ static void add_in_dtd(struct vpe_ctx *ctx, int port)
- 		dma_addr += offset;
- 		stride = q_data->bytesperline[VPE_LUMA];
- 
--		if (q_data->flags & Q_DATA_INTERLACED_SEQ_TB) {
--			/*
--			 * Use top or bottom field from same vb alternately
--			 * f,f-1,f-2 = TBT when seq is even
--			 * f,f-1,f-2 = BTB when seq is odd
--			 */
--			field = (p_data->vb_index + (ctx->sequence % 2)) % 2;
-+		/*
-+		 * field used in VPDMA desc  = 0 (top) / 1 (bottom)
-+		 * Use top or bottom field from same vb alternately
-+		 * For each de-interlacing operation, f,f-1,f-2 should be one
-+		 * of TBT or BTB
-+		 */
-+		if (q_data->flags & Q_DATA_INTERLACED_SEQ_TB ||
-+		    q_data->flags & Q_DATA_INTERLACED_SEQ_BT) {
-+			/* Select initial value based on format */
-+			if (q_data->flags & Q_DATA_INTERLACED_SEQ_BT)
-+				field = 1;
-+			else
-+				field = 0;
-+
-+			/* Toggle for each vb_index and each operation */
-+			field = (field + p_data->vb_index + ctx->sequence) % 2;
- 
- 			if (field) {
--				/*
--				 * bottom field of a SEQ_TB buffer
--				 * Skip the top field data by
--				 */
- 				int height = q_data->height / 2;
- 				int bpp = fmt->fourcc == V4L2_PIX_FMT_NV12 ?
- 						1 : (vpdma_fmt->depth >> 3);
-+
- 				if (plane)
- 					height /= 2;
-+
- 				dma_addr += q_data->width * height * bpp;
- 			}
- 		}
-@@ -1177,12 +1189,14 @@ static void device_run(void *priv)
- 	struct vpe_q_data *d_q_data = &ctx->q_data[Q_DATA_DST];
- 	struct vpe_q_data *s_q_data = &ctx->q_data[Q_DATA_SRC];
- 
--	if (ctx->deinterlacing && s_q_data->flags & Q_DATA_INTERLACED_SEQ_TB &&
--		ctx->sequence % 2 == 0) {
--		/* When using SEQ_TB buffers, When using it first time,
--		 * No need to remove the buffer as the next field is present
--		 * in the same buffer. (so that job_ready won't fail)
--		 * It will be removed when using bottom field
-+	if (ctx->deinterlacing && s_q_data->flags & Q_IS_SEQ_XX &&
-+	    ctx->sequence % 2 == 0) {
-+		/* When using SEQ_XX type buffers, each buffer has two fields
-+		 * each buffer has two fields (top & bottom)
-+		 * Removing one buffer is actually getting two fields
-+		 * Alternate between two operations:-
-+		 * Even : consume one field but DO NOT REMOVE from queue
-+		 * Odd : consume other field and REMOVE from queue
- 		 */
- 		ctx->src_vbs[0] = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
- 		WARN_ON(ctx->src_vbs[0] == NULL);
-@@ -1573,8 +1587,10 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
- 		return -EINVAL;
- 	}
- 
--	if (pix->field != V4L2_FIELD_NONE && pix->field != V4L2_FIELD_ALTERNATE
--			&& pix->field != V4L2_FIELD_SEQ_TB)
-+	if (pix->field != V4L2_FIELD_NONE &&
-+	    pix->field != V4L2_FIELD_ALTERNATE &&
-+	    pix->field != V4L2_FIELD_SEQ_TB &&
-+	    pix->field != V4L2_FIELD_SEQ_BT)
- 		pix->field = V4L2_FIELD_NONE;
- 
- 	depth = fmt->vpdma_fmt[VPE_LUMA]->depth;
-@@ -1626,9 +1642,9 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
- 
- 	/*
- 	 * For the actual image parameters, we need to consider the field
--	 * height of the image for SEQ_TB buffers.
-+	 * height of the image for SEQ_XX buffers.
- 	 */
--	if (pix->field == V4L2_FIELD_SEQ_TB)
-+	if (pix->field == V4L2_FIELD_SEQ_TB || pix->field == V4L2_FIELD_SEQ_BT)
- 		height = pix->height / 2;
- 	else
- 		height = pix->height;
-@@ -1734,11 +1750,13 @@ static int __vpe_s_fmt(struct vpe_ctx *ctx, struct v4l2_format *f)
- 		q_data->flags |= Q_DATA_INTERLACED_ALTERNATE;
- 	else if (q_data->field == V4L2_FIELD_SEQ_TB)
- 		q_data->flags |= Q_DATA_INTERLACED_SEQ_TB;
-+	else if (q_data->field == V4L2_FIELD_SEQ_BT)
-+		q_data->flags |= Q_DATA_INTERLACED_SEQ_BT;
- 	else
- 		q_data->flags &= ~Q_IS_INTERLACED;
- 
--	/* the crop height is halved for the case of SEQ_TB buffers */
--	if (q_data->flags & Q_DATA_INTERLACED_SEQ_TB)
-+	/* the crop height is halved for the case of SEQ_XX buffers */
-+	if (q_data->flags & Q_IS_SEQ_XX)
- 		q_data->c_rect.height /= 2;
- 
- 	vpe_dbg(ctx->dev, "Setting format for type %d, wxh: %dx%d, fmt: %d bpl_y %d",
-@@ -1811,10 +1829,10 @@ static int __vpe_try_selection(struct vpe_ctx *ctx, struct v4l2_selection *s)
- 	}
- 
- 	/*
--	 * For SEQ_TB buffers, crop height should be less than the height of
-+	 * For SEQ_XX buffers, crop height should be less than the height of
- 	 * the field height, not the buffer height
- 	 */
--	if (q_data->flags & Q_DATA_INTERLACED_SEQ_TB)
-+	if (q_data->flags & Q_IS_SEQ_XX)
- 		height = q_data->height / 2;
- 	else
- 		height = q_data->height;
-@@ -2031,7 +2049,8 @@ static int vpe_buf_prepare(struct vb2_buffer *vb)
- 		} else {
- 			if (vbuf->field != V4L2_FIELD_TOP &&
- 			    vbuf->field != V4L2_FIELD_BOTTOM &&
--			    vbuf->field != V4L2_FIELD_SEQ_TB)
-+			    vbuf->field != V4L2_FIELD_SEQ_TB &&
-+			    vbuf->field != V4L2_FIELD_SEQ_BT)
- 				return -EINVAL;
- 		}
- 	}
--- 
-2.17.1
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
