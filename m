@@ -2,129 +2,388 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1088CC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:25:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21175ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:25:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1BF7206BB
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:25:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D894F206BB
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:25:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="bqfkGMcR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="le+N9z08"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728943AbfJGRZ3 (ORCPT
+        id S1729091AbfJGRZh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 13:25:29 -0400
-Received: from mail-eopbgr1310123.outbound.protection.outlook.com ([40.107.131.123]:30906
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727801AbfJGRZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 13:25:29 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=W2U+HRdYlQ4+OAY9DiO5uHfYJvGOSlkAF4mGBiTq9D3K4w1VwaHGUY/OZXJPCH8VprEFq/igCCzrImnLS3V0LuKG/inQNlNPdfwH8KwUe8pjlZ/8zu/RdJdEYJtYmozmdm/nR2QQen+5pu/i9ew2N56+4ho2ZTDXNntOAJbgCm1wQ60AtOj/F8jx4nmeTvos5/+QtjzcjUSC9UE9ZcfKBcKS5Ma1imYd9xyjclG1dtp3vJTV23ZUprHSSmRwjDtZLy4ji7Zear2mCnaNv6Ft9v9rYYFdGIdRhogsdN2FkbJmzGCTV9hjI6lFhC7Sexi45/MP463vwglX73hF8A55zQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jTN8DzsLNX+G4kiEDg9fHEgEyPKaABTSyatsaTuHZE4=;
- b=aNaW4LPKrAVM0ZHWLe6F9Pjudz0YMS42+Z0X1UFxA6/S01bO618dLUuFUc/TZ6Rlihhf+t39u9dSB8jfBKJB5ENTO/iSNxYdvojSx7nzupLTl9GE0/Sgkbfd7kcxR6E/x9Y5L76WS1nUFsknyAVOr5BRC3lcJvxHKN2Jru1kpeo9kVbO2sB11bwQi1QyMSTdfOyac8V2kU+uJUmCA7Mce/4dxGEhWdhOFDYAQk1Vk6HyjjhvFd7Yd9dYAM1vDOL3fwwCqZFNgFRo/R3/Ay+irOOdiHuOwG3CLyNR9S6dadMjtyUKpuGk+7/oXADhP52X+oxNhTGd1cpaAk0CrvQwCg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jTN8DzsLNX+G4kiEDg9fHEgEyPKaABTSyatsaTuHZE4=;
- b=bqfkGMcRCH6gctW83xOj3ZiJju12ue09gdsCaHUNgGPSFa0a2VQNK6E4X2f/pat6NEn3GJYqTdrCyTkEzv8F7g/p/npHajgCe3vlCtlVbSmx8RjevKKCLXlnwZUi5RvI+Ocv9a36WBPZpGjZ1Kvqk5AAIf+t/veJnU/mVziHOgE=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0186.APCP153.PROD.OUTLOOK.COM (10.170.187.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.13; Mon, 7 Oct 2019 17:25:18 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2%7]) with mapi id 15.20.2367.004; Mon, 7 Oct 2019
- 17:25:18 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Andrea Parri <parri.andrea@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        vkuznets <vkuznets@redhat.com>
-Subject: RE: [PATCH 1/2] Drivers: hv: vmbus: Introduce table of VMBus protocol
- versions
-Thread-Topic: [PATCH 1/2] Drivers: hv: vmbus: Introduce table of VMBus
- protocol versions
-Thread-Index: AQHVfSzKc5KO2kE/XECN2J8gzpV8GKdPbL4g
-Date:   Mon, 7 Oct 2019 17:25:18 +0000
-Message-ID: <PU1P153MB0169CAC756996A623CFDFBA7BF9B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <20191007163115.26197-1-parri.andrea@gmail.com>
- <20191007163115.26197-2-parri.andrea@gmail.com>
-In-Reply-To: <20191007163115.26197-2-parri.andrea@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-07T17:25:14.8404437Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=8e9786b0-faad-44a9-a7cc-3c1339e88dfa;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:7f70:44a6:f3e:a757:ee91]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3904b5f6-881d-44ce-b709-08d74b4b5326
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: PU1P153MB0186:|PU1P153MB0186:|PU1P153MB0186:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <PU1P153MB018600E275C4014FA93EFEF3BF9B0@PU1P153MB0186.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:3513;
-x-forefront-prvs: 01834E39B7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(376002)(396003)(39860400002)(346002)(366004)(199004)(189003)(66946007)(86362001)(316002)(478600001)(76116006)(9686003)(486006)(22452003)(476003)(6436002)(2201001)(229853002)(64756008)(66476007)(66556008)(7736002)(76176011)(81156014)(81166006)(66446008)(25786009)(7696005)(52536014)(8676002)(99286004)(102836004)(33656002)(4744005)(4326008)(256004)(2501003)(8990500004)(5660300002)(6506007)(71200400001)(74316002)(71190400001)(46003)(446003)(6116002)(2906002)(305945005)(11346002)(14444005)(10290500003)(186003)(8936002)(6246003)(110136005)(55016002)(14454004)(10090500001)(54906003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0186;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: UO7Y/MAcNIhhXDZzqk9ZjGN9/c7I1UtxQ0SuVd8eavSfnNnCsUOFo5DExolmG3EJmha4rq2RrmCbY3Yfjq+dQR4UJ/QAnBoLp4+M0FZJm1x5xH4WdlWDm7ujb+xMkkshVLydpk05tyTGBlBGMZRIliI92X7pLSoIDKJLrVdciDg2mtcbUh2dN8H62myNcvv7peD/bbLdLRgnoCjC2OJj/xkhc9e5lewyKb8J9wb3TGGeQxXV/YOJp8OjBZGT2p891uEQSqE646aSaH2ShxZWg1TPD0/oFnYLuplBU+5Bhx7dbzKKluNRvjSIGYlGLIhjYhNRg4Bqn/jaU3984ZBYvLQHd59kjRmzwf6O/pMxKLi294c+9YuAbYnDbXPY0seMPrKMkexAz3RBSGcWURcz3eUYc+pyfqfTdYlaeyxX6HM=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 7 Oct 2019 13:25:37 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:34154 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727801AbfJGRZh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 13:25:37 -0400
+Received: by mail-io1-f66.google.com with SMTP id q1so30458284ion.1;
+        Mon, 07 Oct 2019 10:25:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=v8GbURTQ5kdgbebuDkbzPlB7OzPhXL0GFyIKS4YdnZU=;
+        b=le+N9z08q79azfCOVJdc9z1QdvalPb9h937TALRUb3H4Gd4yQ2TmrHLXaqDCKLjvtY
+         TLgs8FSJlsRLFgPQh9wq8rO6Vc2PChYn1QgjB5455/VJfXVmwcrj/1OTKHFmRESBoL6l
+         QahzMEcNTuF765cbgcx0dtgdQpaHfDt3W4c9Jec5oshXveTuwlq1JsqFXYXR//UO/q5t
+         tR/BVoFuV1vbe3tu5PmIpWfixdPzkjr1Kc+Hwu5GSGuMlhODtQzWzBwN9OzcC7i02khS
+         /KQ06XnxnMPCTPfrl7Zz1Cqo2Gw0tzhhEEHGEsKv0KthrHtRMVafSzOjYBZFnq6U4eXv
+         FNUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=v8GbURTQ5kdgbebuDkbzPlB7OzPhXL0GFyIKS4YdnZU=;
+        b=fAvTQn4FtN7o05+C5qX654RpQc/XPBvhKHL1ZKO2camV6fGzWA0HxY6Ul4+LO6OrKY
+         DgDLiEcHJd+RRttmiGxT7Kb9440oxJeAc3sS79QxrGBy8m1SJcFq3lIURM0ze1aGGO8h
+         /STDsrOb7XKNVOoqNC9T/nYFOs7tIAoIS2c0M8J5U3cv0tknB1eRj92cvK2UDuOa8Xxs
+         6XuUp1+xxM72ONwh37kJBKNbhwUZ+eYeoiTyMnt3T1SG6pL6TYECcPmAuEJ7l7c4SiXu
+         Ii+2VhIbmr5oqp2IAikn9vVQ0NZirS4/WW8P8mcOKz8nncMA8qbIZVdkIJ2dIV2WaCLj
+         qlhQ==
+X-Gm-Message-State: APjAAAUi04xlFo5EHeaRUjSrIo/cz+1aXLoeT7rBpF7OHNk8reV0SzIb
+        8uoiPxQXMvm4e+1LGqroguqdXEjMXMcKUoguIWA=
+X-Google-Smtp-Source: APXvYqzASFc4R1YX0AJlNFxR09QU4oNFgZ9ZuOBN9cK3CDNH1iNcqCOebu21rOgsakOg9FZpjtB2B3SB25ibSz6Kgso=
+X-Received: by 2002:a5d:9c4c:: with SMTP id 12mr24240780iof.276.1570469135904;
+ Mon, 07 Oct 2019 10:25:35 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3904b5f6-881d-44ce-b709-08d74b4b5326
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Oct 2019 17:25:18.1253
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: e3WdfaU6i4v194s1Qm3JOQ0uIQTMfvqASyxJ3d+y60iTzAYVf1gVpDIqAIaUFzdMg+1Fwek/Ki72HjM39h2rdg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0186
+References: <20190913153714.30980-1-aford173@gmail.com> <B710D701-6311-4344-BF4E-F39157BBF2BD@goldelico.com>
+ <CAHCN7xKU1v-BFkwiuZQx82+Cmdgj_1CH1j51bN0TaaduWcu8rQ@mail.gmail.com>
+ <97204F98-FA33-4EBA-80AC-2FB3A6E78B2B@goldelico.com> <CAHCN7xJus=Unsm5rvgtccM9jpdiwGnJXrfjhavwkoswGbNd7qw@mail.gmail.com>
+ <CAHCN7x+=O6f4Q0ps1d5KA+-E9L-8wr5B9XggzurJWtEnxEj7yg@mail.gmail.com> <FD6FED45-EF20-49D8-A2B2-012FB314DCC6@goldelico.com>
+In-Reply-To: <FD6FED45-EF20-49D8-A2B2-012FB314DCC6@goldelico.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Mon, 7 Oct 2019 12:25:24 -0500
+Message-ID: <CAHCN7xLN+52ZW6tzCQPDvwqrdgaQaMrkhPFPotYDr7RdNwqeNA@mail.gmail.com>
+Subject: Re: [RFC v2 1/2] ARM: dts: omap3: Add cpu trips and cooling map for
+ omap3 family
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford <adam.ford@logicpd.com>, Nishanth Menon <nm@ti.com>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Grazvydas Ignotas <notasas@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: linux-hyperv-owner@vger.kernel.org
-> <linux-hyperv-owner@vger.kernel.org> On Behalf Of Andrea Parri
-> Sent: Monday, October 7, 2019 9:31 AM
-> ....
-> +/*
-> + * Table of VMBus versions listed from newest to oldest; the table
-> + * must terminate with VERSION_INVAL.
-> + */
-> +__u32 vmbus_versions[] =3D {
-> +	VERSION_WIN10_V5,
+On Mon, Oct 7, 2019 at 10:45 AM H. Nikolaus Schaller <hns@goldelico.com> wr=
+ote:
+>
+>
+> > Am 07.10.2019 um 17:11 schrieb Adam Ford <aford173@gmail.com>:
+> >
+> > On Sat, Sep 14, 2019 at 11:12 AM Adam Ford <aford173@gmail.com> wrote:
+> >>
+> >> On Sat, Sep 14, 2019 at 9:38 AM H. Nikolaus Schaller <hns@goldelico.co=
+m> wrote:
+> >>>
+> >>>
+> >>>> Am 14.09.2019 um 15:42 schrieb Adam Ford <aford173@gmail.com>:
+> >>>>
+> >>>> On Sat, Sep 14, 2019 at 4:20 AM H. Nikolaus Schaller <hns@goldelico.=
+com> wrote:
+> >>>>>
+> >>>>>
+> >>>>>> Am 13.09.2019 um 17:37 schrieb Adam Ford <aford173@gmail.com>:
+> >>>>>>
+> >>>>>> The OMAP3530, AM3517 and DM3730 all show thresholds of 90C and 105=
+C
+> >>>>>> depending on commercial or industrial temperature ratings.  This
+> >>>>>> patch expands the thermal information to the limits of 90 and 105
+> >>>>>> for alert and critical.
+> >>>>>>
+> >
+> > Tom / anyone from TI,
+> >
+> > I am going to rebase this patch from the current 5.4-RC branch, remove
+> > the AM3517 references, and leave the throttling only applicable to
+> > omap34xx and 36xx (like it is now), and remove the RFC.  Before I do
+> > that, I was hoping for some feedback on whether or not there is a
+> > reason to not do this while acknowledging the thermal sensor isn't
+> > very accurate.
+>
+> I wonder if there is a more precise definition what "isn't very accurate"
+> means?
 
-This should be "static"?
-=20
-Thanks,
-Dexuan
+That's what I was trying to get by asking TI for feedback.
+
+>
+> Is it just because the TI_BANDGAP_FEATURE_UNRELIABLE bit is set in
+> the driver and we assume that it is right?
+
+The bandgap sensor is disabled by default and, when enabled, it throws
+a comment saying 'You've been warned' so I mostly want to acknowledge
+that in the patch.
+
+>
+> Of course the "junction temperature" (TJ) is not well defined (at which
+> edge? in which area?) and the bandgap sensor can only report a single poi=
+nt
+> of the die. So e.g. the GPU or the NEON unit may be hotter or cooler.
+
+I look forward to running the GPU again.  ;-)
+
+>
+> And, the bandgap sensor + ADC is unlikely to be well calibrated to
+> 0.1=C2=B0C precision.
+>
+> But in my experiments there seems to be not much noise and values rise
+> or fall monotonic according to expectations of processor load.
+>
+> So a report of 90=C2=B0C may not be exactly 90=C2=B0C and some parts of t=
+he SoC
+> may be hotter.
+>
+> I would also assume that the TJ limits of 90=C2=B0C have some safety marg=
+in
+> but there seems to be no information in the data sheet.
+>
+> So, IMHO an "unreliable" bandgap sensor is better than no sensor and
+> no trips / cooling maps.
+
+I completely agree.
+
+>
+> One more thing is with the omap3 bandgap sensor (driver?). It appears to
+> report the value of the previous measurement. So unless it is regularily
+> polled (like cpufreq seems to do) it will report outdated values. The
+> first read hours after boot may report the value during probe while booti=
+ng.
+>
+> This is also a source of missing accuracy of course. But I haven't
+> investigated this (can only be tested if thermal management is turned
+> off) because I think it has no practical influence if cpufreq is polling.
+>
+> >
+> > Does anyone have any objections to this?
+> >
+> > Other than the omap mailing list, are there other lists that should be =
+CC'd?
+> >
+> > adam
+> >
+> >>>>>> For boards who never use industrial temperatures, these can be
+> >>>>>> changed on their respective device trees with something like:
+> >>>>>>
+> >>>>>> &cpu_alert0 {
+> >>>>>>     temperature =3D <85000>; /* millicelsius */
+> >>>>>> };
+> >>>>>>
+> >>>>>> &cpu_crit {
+> >>>>>>     temperature =3D <90000>; /* millicelsius */
+> >>>>>> };
+> >>>>>>
+> >>>>>> Signed-off-by: Adam Ford <aford173@gmail.com>
+> >>>>>> ---
+> >>>>>> V2:  Change the CPU reference to &cpu instead of &cpu0
+> >>>>>>
+> >>>>>> diff --git a/arch/arm/boot/dts/omap3-cpu-thermal.dtsi b/arch/arm/b=
+oot/dts/omap3-cpu-thermal.dtsi
+> >>>>>> index 235ecfd61e2d..dfbd0cb0b00b 100644
+> >>>>>> --- a/arch/arm/boot/dts/omap3-cpu-thermal.dtsi
+> >>>>>> +++ b/arch/arm/boot/dts/omap3-cpu-thermal.dtsi
+> >>>>>> @@ -17,4 +17,25 @@ cpu_thermal: cpu_thermal {
+> >>>>>>
+> >>>>>>                     /* sensor       ID */
+> >>>>>>     thermal-sensors =3D <&bandgap     0>;
+> >>>>>> +
+> >>>>>> +     cpu_trips: trips {
+> >>>>>> +             cpu_alert0: cpu_alert {
+> >>>>>> +                     temperature =3D <90000>; /* millicelsius */
+> >>>>>> +                     hysteresis =3D <2000>; /* millicelsius */
+> >>>>>> +                     type =3D "passive";
+> >>>>>> +             };
+> >>>>>> +             cpu_crit: cpu_crit {
+> >>>>>> +                     temperature =3D <105000>; /* millicelsius */
+> >>>>>> +                     hysteresis =3D <2000>; /* millicelsius */
+> >>>>>> +                     type =3D "critical";
+> >>>>>> +             };
+> >>>>>> +     };
+> >>>>>> +
+> >>>>>> +     cpu_cooling_maps: cooling-maps {
+> >>>>>> +             map0 {
+> >>>>>> +                     trip =3D <&cpu_alert0>;
+> >>>>>> +                     cooling-device =3D
+> >>>>>> +                             <&cpu THERMAL_NO_LIMIT THERMAL_NO_LI=
+MIT>;
+> >>>>>> +             };
+> >>>>>> +     };
+> >>>>>> };
+> >>>>>> --
+> >>>>>> 2.17.1
+> >>>>>>
+> >>>>>
+> >>>>> Here is my test log (GTA04A5 with DM3730CBP100).
+> >>>>> "high-load" script is driving the NEON to full power
+> >>>>> and would report calculation errors.
+> >>>>>
+> >>>>> There is no noise visible in the bandgap sensor data
+> >>>>> induced by power supply fluctuations (log shows system
+> >>>>> voltage while charging).
+> >>>>>
+> >>>>
+> >>>> Great data!
+> >>>>
+> >>>>> root@letux:~# ./high-load -n2
+> >>>>> 100% load stress test for 1 cores running ./neon_loop2
+> >>>>> Sat Sep 14 09:05:50 UTC 2019 65=C2=B0 4111mV 1000MHz
+> >>>>> Sat Sep 14 09:05:50 UTC 2019 67=C2=B0 4005mV 1000MHz
+> >>>>> Sat Sep 14 09:05:52 UTC 2019 68=C2=B0 4000mV 1000MHz
+> >>>>> Sat Sep 14 09:05:53 UTC 2019 68=C2=B0 4000mV 1000MHz
+> >>>>> Sat Sep 14 09:05:55 UTC 2019 72=C2=B0 3976mV 1000MHz
+> >>>>> Sat Sep 14 09:05:56 UTC 2019 72=C2=B0 4023mV 1000MHz
+> >>>>> Sat Sep 14 09:05:57 UTC 2019 72=C2=B0 3900mV 1000MHz
+> >>>>> Sat Sep 14 09:05:59 UTC 2019 73=C2=B0 4029mV 1000MHz
+> >>>>> Sat Sep 14 09:06:00 UTC 2019 73=C2=B0 3988mV 1000MHz
+> >>>>> Sat Sep 14 09:06:01 UTC 2019 73=C2=B0 4005mV 1000MHz
+> >>>>> Sat Sep 14 09:06:03 UTC 2019 73=C2=B0 4011mV 1000MHz
+> >>>>> Sat Sep 14 09:06:04 UTC 2019 73=C2=B0 4117mV 1000MHz
+> >>>>> Sat Sep 14 09:06:06 UTC 2019 73=C2=B0 4005mV 1000MHz
+> >>>>> Sat Sep 14 09:06:07 UTC 2019 75=C2=B0 3994mV 1000MHz
+> >>>>> Sat Sep 14 09:06:08 UTC 2019 75=C2=B0 3970mV 1000MHz
+> >>>>> Sat Sep 14 09:06:09 UTC 2019 75=C2=B0 4046mV 1000MHz
+> >>>>> Sat Sep 14 09:06:11 UTC 2019 75=C2=B0 4005mV 1000MHz
+> >>>>> Sat Sep 14 09:06:12 UTC 2019 75=C2=B0 4023mV 1000MHz
+> >>>>> Sat Sep 14 09:06:14 UTC 2019 75=C2=B0 3970mV 1000MHz
+> >>>>> Sat Sep 14 09:06:15 UTC 2019 75=C2=B0 4011mV 1000MHz
+> >>>>> Sat Sep 14 09:06:16 UTC 2019 77=C2=B0 4017mV 1000MHz
+> >>>>> Sat Sep 14 09:06:18 UTC 2019 77=C2=B0 3994mV 1000MHz
+> >>>>> Sat Sep 14 09:06:19 UTC 2019 77=C2=B0 3994mV 1000MHz
+> >>>>> Sat Sep 14 09:06:20 UTC 2019 77=C2=B0 3988mV 1000MHz
+> >>>>> Sat Sep 14 09:06:22 UTC 2019 77=C2=B0 4023mV 1000MHz
+> >>>>> Sat Sep 14 09:06:23 UTC 2019 77=C2=B0 4023mV 1000MHz
+> >>>>> Sat Sep 14 09:06:24 UTC 2019 78=C2=B0 4005mV 1000MHz
+> >>>>> Sat Sep 14 09:06:26 UTC 2019 78=C2=B0 4105mV 1000MHz
+> >>>>> Sat Sep 14 09:06:27 UTC 2019 78=C2=B0 4011mV 1000MHz
+> >>>>> Sat Sep 14 09:06:28 UTC 2019 78=C2=B0 3994mV 1000MHz
+> >>>>> Sat Sep 14 09:06:30 UTC 2019 78=C2=B0 4123mV 1000MHz
+> >>>>> ...
+> >>>>> Sat Sep 14 09:09:57 UTC 2019 88=C2=B0 4082mV 1000MHz
+> >>>>> Sat Sep 14 09:09:59 UTC 2019 88=C2=B0 4164mV 1000MHz
+> >>>>> Sat Sep 14 09:10:00 UTC 2019 88=C2=B0 4058mV 1000MHz
+> >>>>> Sat Sep 14 09:10:01 UTC 2019 88=C2=B0 4058mV 1000MHz
+> >>>>> Sat Sep 14 09:10:03 UTC 2019 88=C2=B0 4082mV 1000MHz
+> >>>>> Sat Sep 14 09:10:04 UTC 2019 88=C2=B0 4058mV 1000MHz
+> >>>>> Sat Sep 14 09:10:06 UTC 2019 88=C2=B0 4146mV 1000MHz
+> >>>>> Sat Sep 14 09:10:07 UTC 2019 88=C2=B0 4041mV 1000MHz
+> >>>>> Sat Sep 14 09:10:08 UTC 2019 88=C2=B0 4035mV 1000MHz
+> >>>>> Sat Sep 14 09:10:10 UTC 2019 88=C2=B0 4052mV 1000MHz
+> >>>>> Sat Sep 14 09:10:11 UTC 2019 88=C2=B0 4087mV 1000MHz
+> >>>>> Sat Sep 14 09:10:12 UTC 2019 88=C2=B0 4152mV 1000MHz
+> >>>>> Sat Sep 14 09:10:14 UTC 2019 88=C2=B0 4070mV 1000MHz
+> >>>>> Sat Sep 14 09:10:15 UTC 2019 88=C2=B0 4064mV 1000MHz
+> >>>>> Sat Sep 14 09:10:17 UTC 2019 88=C2=B0 4170mV 1000MHz
+> >>>>> Sat Sep 14 09:10:18 UTC 2019 88=C2=B0 4058mV 1000MHz
+> >>>>> Sat Sep 14 09:10:19 UTC 2019 88=C2=B0 4187mV 1000MHz
+> >>>>> Sat Sep 14 09:10:21 UTC 2019 88=C2=B0 4093mV 1000MHz
+> >>>>> Sat Sep 14 09:10:22 UTC 2019 88=C2=B0 4087mV 1000MHz
+> >>>>> Sat Sep 14 09:10:23 UTC 2019 90=C2=B0 4070mV 1000MHz
+> >>>>
+> >>>> Should we be a little more conservative?  Without knowing the
+> >>>> accuracy, i believe we do not want to run at 800 or 1GHz at 90C, so =
+if
+> >>>> we made this value 89 instead of 90, we would throttle a little more
+> >>>> conservatively.
+> >>>
+> >>> Well, the OMAP5 also defines exactly 100=C2=B0C in the device tree.
+> >>>
+> >>> I would assume that the badgap sensor accuracy is so that it
+> >>> never reports less than the real temperature. So if we
+> >>> throttle at reported 90=C2=B0 TJ is likely lower.
+> >>>
+> >>>>> Sat Sep 14 09:10:25 UTC 2019 88=C2=B0 4123mV 800MHz
+> >>>>> Sat Sep 14 09:10:26 UTC 2019 88=C2=B0 4064mV 1000MHz
+> >>>>> Sat Sep 14 09:10:28 UTC 2019 90=C2=B0 4058mV 1000MHz
+> >>>>
+> >>>> Again here, I interpret the data sheet correctly, we're technically =
+out of spec
+> >>>
+> >>> I read the data sheet as if 90=C2=B0C at OPP1G is still within spec.
+> >>> 91 would be obviously outside (if bandgap sensor is precise).
+> >>>
+> >>>>
+> >>>>> Sat Sep 14 09:10:29 UTC 2019 88=C2=B0 4076mV 1000MHz
+> >>>>> Sat Sep 14 09:10:30 UTC 2019 88=C2=B0 4064mV 1000MHz
+> >>>>> Sat Sep 14 09:10:32 UTC 2019 88=C2=B0 4117mV 1000MHz
+> >>>>> Sat Sep 14 09:10:33 UTC 2019 88=C2=B0 4105mV 800MHz
+> >>>>> Sat Sep 14 09:10:34 UTC 2019 88=C2=B0 4070mV 1000MHz
+> >>>>> Sat Sep 14 09:10:36 UTC 2019 88=C2=B0 4076mV 1000MHz
+> >>>>> Sat Sep 14 09:10:37 UTC 2019 88=C2=B0 4087mV 1000MHz
+> >>>>> Sat Sep 14 09:10:39 UTC 2019 88=C2=B0 4017mV 1000MHz
+> >>>>> Sat Sep 14 09:10:40 UTC 2019 88=C2=B0 4093mV 1000MHz
+> >>>>> Sat Sep 14 09:10:41 UTC 2019 88=C2=B0 4058mV 800MHz
+> >>>>> Sat Sep 14 09:10:42 UTC 2019 88=C2=B0 4035mV 1000MHz
+> >>>>> Sat Sep 14 09:10:44 UTC 2019 90=C2=B0 4058mV 1000MHz
+> >>>>> Sat Sep 14 09:10:45 UTC 2019 88=C2=B0 4064mV 1000MHz
+> >>>>> Sat Sep 14 09:10:47 UTC 2019 88=C2=B0 4064mV 1000MHz
+> >>>>> Sat Sep 14 09:10:48 UTC 2019 88=C2=B0 4029mV 1000MHz
+> >>>>> Sat Sep 14 09:10:50 UTC 2019 90=C2=B0 4046mV 1000MHz
+> >>>>> ^Ckill 4680
+> >>>>> root@letux:~# cpufreq-info
+> >>>>> cpufrequtils 008: cpufreq-info (C) Dominik Brodowski 2004-2009
+> >>>>> Report errors and bugs to cpufreq@vger.kernel.org, please.
+> >>>>> analyzing CPU 0:
+> >>>>> driver: cpufreq-dt
+> >>>>> CPUs which run at the same hardware frequency: 0
+> >>>>> CPUs which need to have their frequency coordinated by software: 0
+> >>>>> maximum transition latency: 300 us.
+> >>>>> hardware limits: 300 MHz - 1000 MHz
+> >>>>> available frequency steps: 300 MHz, 600 MHz, 800 MHz, 1000 MHz
+> >>>>> available cpufreq governors: conservative, userspace, powersave, on=
+demand, performance
+> >>>>> current policy: frequency should be within 300 MHz and 1000 MHz.
+> >>>>>                 The governor "ondemand" may decide which speed to u=
+se
+> >>>>>                 within this range.
+> >>>>> current CPU frequency is 600 MHz (asserted by call to hardware).
+> >>>>> cpufreq stats: 300 MHz:22.81%, 600 MHz:2.50%, 800 MHz:2.10%, 1000 M=
+Hz:72.59%  (1563)
+> >>>>> root@letux:~#
+> >>>>>
+> >>>>> So OPP is reduced if bandgap sensor reports >=3D 90=C2=B0C
+> >>>>> which almost immediately makes the temperature
+> >>>>> go down.
+> >>>>>
+> >>>>> No operational hickups were observed.
+> >>>>>
+> >>>>> Surface temperature of the PoP chip did rise to
+> >>>>> approx. 53=C2=B0C during this test.
+> >>>>>
+> >>>>> Tested-by: H. Nikolaus Schaller <hns@goldelico.com> # on GTA04A5 wi=
+th dm3730cbp100
+> >>>>>
+> >>>
+> >>> BTW: this patch (set) is even independent of my 1GHz OPP patches.
+> >>> Should also work with OPP-v1 definitions so that maintainers can
+> >>> decide which one to apply first.
+> >>
+> >> If I am going integrate the cooling references into &cpu node, I'll
+> >> probably base it on your work since the cooling isn't really that
+> >> important until we exceed 800MHz.  If I do it on the current linux
+> >> master or omap for-next branch, it may not apply cleanly.
+> >>
+> >>>
+> >>> It is just more difficult to reach TJ of 90=C2=B0C without 1GHz.
+> >>
+> >> If it even does at all without external influences.
+> >>
+> >> adam
+> >>>
+> >>> BR,
+> >>> Nikolaus
+> >>>
+>
