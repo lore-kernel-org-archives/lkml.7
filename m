@@ -2,143 +2,95 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9094AC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 235B2ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70D07206C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBAB52173B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:29:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570454944;
+	bh=L5rHn5244OCDRQqhO2B+4NaFjoSR9E+vH4ATxur4sb4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Z/Yp4ArARVTU92d7M43meSVl60trjTUlcijNHnQyAaMtpQkEsDPFSoaRKEQ0Ihhv1
+	 7GPfhV3S/4N1s3c2kky8KEGgn2fcAX6MZNQdZekZ00ktnrgAGHgaBTKnCUSB2SU3l2
+	 68Zbjtaun8+1LYKWxfxdtLUg8vpCk9fz1Xjm773s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728009AbfJGN24 (ORCPT
+        id S1728196AbfJGN3D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 09:28:56 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:49348 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727324AbfJGN24 (ORCPT
+        Mon, 7 Oct 2019 09:29:03 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43661 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727324AbfJGN3C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 09:28:56 -0400
-Received: from [185.66.195.251] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iHT4G-0007M9-S3; Mon, 07 Oct 2019 13:28:53 +0000
-Date:   Mon, 7 Oct 2019 15:28:51 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Andrea Parri <parri.andrea@gmail.com>
-Cc:     bsingharora@gmail.com, dvyukov@google.com, elver@google.com,
-        linux-kernel@vger.kernel.org,
-        syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com,
-        syzkaller-bugs@googlegroups.com, stable@vger.kernel.org
-Subject: Re: [PATCH v2] taskstats: fix data-race
-Message-ID: <20191007132850.u4iwjh5c2or4p2dz@wittgenstein>
-References: <20191007104039.GA16085@andrea.guest.corp.microsoft.com>
- <20191007110117.1096-1-christian.brauner@ubuntu.com>
- <20191007131804.GA19242@andrea.guest.corp.microsoft.com>
+        Mon, 7 Oct 2019 09:29:02 -0400
+Received: by mail-lj1-f196.google.com with SMTP id n14so13621738ljj.10;
+        Mon, 07 Oct 2019 06:29:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GUwqvYzDSTdSfMQoCXaG3dow07W7ol65UVuVyQZTU18=;
+        b=nZkdOvh1joIOOII1patoJUc1cj/lQoH20c3LOtKLvLvtaiMdxG0ijjs77HyB27wAAn
+         m8ahIOrhHrdXahb0QPoKjM/DunU6X6oz7XUBZJ8X1TKlE20eI1mILrdm3b8ParCpWLRd
+         /LVaAHzsuBG267Ir8b+x2pNNPPWgWCKMRBvWD3i+8C+1R1iZfLvQ3syb+tqJ9Caj3UWW
+         NoeY70ql5UDNU4BrdheKcqxj2kzK9KJFR8HjRZTUFw0G2n66EW832BNrimVOph0S0U7g
+         hIpgli5XpVsP5hJw2QhZxtRVycKI6ebmPE5KCPv0i+3kFk29teJ92WxTW8ayBklNd7Cw
+         Ejqg==
+X-Gm-Message-State: APjAAAUFMHXuY3L+hoQ+F7M9S1HaPA3V1vD65nDZA1ih13jXL0lw05ds
+        eM7i4e7jquDTcuPCKbIn9NI=
+X-Google-Smtp-Source: APXvYqyE/GMVtDsrPH6ycVzjcqa83YXxFu+vG0JExAuyukA1gzNy5+AGj3hxzcoCl0e+YQOxdaReIw==
+X-Received: by 2002:a2e:8199:: with SMTP id e25mr15068093ljg.246.1570454940758;
+        Mon, 07 Oct 2019 06:29:00 -0700 (PDT)
+Received: from neopili.qtec.com (cpe.xe-3-0-1-778.vbrnqe10.dk.customer.tdc.net. [80.197.57.18])
+        by smtp.gmail.com with ESMTPSA id f22sm2702245lfk.56.2019.10.07.06.28.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2019 06:28:59 -0700 (PDT)
+From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
+To:     Pavel Machek <pavel@ucw.cz>, Sakari Ailus <sakari.ailus@iki.fi>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Ricardo Ribalda Delgado <ribalda@kernel.org>
+Subject: [PATCH v8 0/6] ad5820: Multiple fixes
+Date:   Mon,  7 Oct 2019 15:28:50 +0200
+Message-Id: <20191007132856.27948-1-ribalda@kernel.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191007131804.GA19242@andrea.guest.corp.microsoft.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 03:18:04PM +0200, Andrea Parri wrote:
-> On Mon, Oct 07, 2019 at 01:01:17PM +0200, Christian Brauner wrote:
-> > When assiging and testing taskstats in taskstats_exit() there's a race
-> > when writing and reading sig->stats when a thread-group with more than
-> > one thread exits:
-> > 
-> > cpu0:
-> > thread catches fatal signal and whole thread-group gets taken down
-> >  do_exit()
-> >  do_group_exit()
-> >  taskstats_exit()
-> >  taskstats_tgid_alloc()
-> > The tasks reads sig->stats holding sighand lock seeing garbage.
-> 
-> You meant "without holding sighand lock" here, right?
+-Support for enable-pin, of-autoload, enable-gpios and ad5821 and ad5823
 
-Correct, thanks for noticing!
+For some reason these patchset was lost in translation for a year ;)
 
-> 
-> 
-> > 
-> > cpu1:
-> > task calls exit_group()
-> >  do_exit()
-> >  do_group_exit()
-> >  taskstats_exit()
-> >  taskstats_tgid_alloc()
-> > The task takes sighand lock and assigns new stats to sig->stats.
-> > 
-> > Fix this by using READ_ONCE() and smp_store_release().
-> > 
-> > Reported-by: syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com
-> > Fixes: 34ec12349c8a ("taskstats: cleanup ->signal->stats allocation")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> > Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
-> > Link: https://lore.kernel.org/r/20191006235216.7483-1-christian.brauner@ubuntu.com
-> > ---
-> > /* v1 */
-> > Link: https://lore.kernel.org/r/20191005112806.13960-1-christian.brauner@ubuntu.com
-> > 
-> > /* v2 */
-> > - Dmitry Vyukov <dvyukov@google.com>, Marco Elver <elver@google.com>:
-> >   - fix the original double-checked locking using memory barriers
-> > 
-> > /* v3 */
-> > - Andrea Parri <parri.andrea@gmail.com>:
-> >   - document memory barriers to make checkpatch happy
-> > ---
-> >  kernel/taskstats.c | 21 ++++++++++++---------
-> >  1 file changed, 12 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/kernel/taskstats.c b/kernel/taskstats.c
-> > index 13a0f2e6ebc2..978d7931fb65 100644
-> > --- a/kernel/taskstats.c
-> > +++ b/kernel/taskstats.c
-> > @@ -554,24 +554,27 @@ static int taskstats_user_cmd(struct sk_buff *skb, struct genl_info *info)
-> >  static struct taskstats *taskstats_tgid_alloc(struct task_struct *tsk)
-> >  {
-> >  	struct signal_struct *sig = tsk->signal;
-> > -	struct taskstats *stats;
-> > +	struct taskstats *stats_new, *stats;
-> >  
-> > -	if (sig->stats || thread_group_empty(tsk))
-> > -		goto ret;
-> > +	/* Pairs with smp_store_release() below. */
-> > +	stats = READ_ONCE(sig->stats);
-> 
-> This pairing suggests that the READ_ONCE() is heading an address
-> dependency, but I fail to identify it: what is the target memory
-> access of such a (putative) dependency?
-> 
-> 
-> > +	if (stats || thread_group_empty(tsk))
-> > +		return stats;
-> >  
-> >  	/* No problem if kmem_cache_zalloc() fails */
-> > -	stats = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
-> > +	stats_new = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
-> >  
-> >  	spin_lock_irq(&tsk->sighand->siglock);
-> >  	if (!sig->stats) {
-> > -		sig->stats = stats;
-> > -		stats = NULL;
-> > +		/* Pairs with READ_ONCE() above. */
-> > +		smp_store_release(&sig->stats, stats_new);
-> 
-> This is intended to 'order' the _zalloc()  (zero initializazion)
-> before the update of sig->stats, right?  what else am I missing?
 
-Right, I should've mentioned that. I'll change the comment.
-But I thought this also paired with smp_read_barrier_depends() that's
-placed alongside READ_ONCE()?
+v8: I screwed up sending v7, I sent it from a dirty directory
+and clicked on send-all without checking what was under v7*. Sorry :(
+This made patchwork very unhappy. I send v8 to make patchwork happy and
+hopefuly also the maintainer. Sorry again
 
-Christian
+v7: Rebase on current media/master
+
+
+Ricardo Ribalda Delgado (6):
+  media: ad5820: Define entity function
+  media: ad5820: DT new optional field enable-gpios
+  media: ad5820: Add support for enable pin
+  media: ad5820: Add support for of-autoload
+  media: ad5820: DT new compatible devices
+  media: ad5820: Add support for ad5821 and ad5823
+
+ .../devicetree/bindings/media/i2c/ad5820.txt  | 11 +++++-
+ drivers/media/i2c/Kconfig                     |  2 +-
+ drivers/media/i2c/ad5820.c                    | 35 ++++++++++++++++---
+ 3 files changed, 42 insertions(+), 6 deletions(-)
+
+-- 
+2.23.0
+
