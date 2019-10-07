@@ -2,231 +2,130 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40DD1C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BBDECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01AA9206C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:56:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Z5CyBf0C"
+	by mail.kernel.org (Postfix) with ESMTP id 9B11B206C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:57:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728212AbfJGO4r (ORCPT
+        id S1728330AbfJGO5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 10:56:47 -0400
-Received: from mail-eopbgr150087.outbound.protection.outlook.com ([40.107.15.87]:20290
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        Mon, 7 Oct 2019 10:57:19 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56948 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727589AbfJGO4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 10:56:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LPwzI3RWsioIePWUReE/tdaCQl02M71+fbnDEiQ0QOs3lfbcdwlHDVpDkYxfW0MtKP65igKajWJ6rOCp7+mQg6I0BeSXkf5qbgnNsrdzl2fLddlp70aY1ZaNcosWa8Sjs5y3iK2Q38Dd0FxvCvNbef95pB8yf0qH47I/2RS8lAJt9iQw2RsiQawYes3TZiH6nnfeeQ7PnM6GPa8VBw0f3D3LaIK7jr8ogcvs+8rlWG03MIWGduTcMcf4VOrLqYEuHZhJ7rJKZRyYeL60akEzSOK2UkgGWwegu8D8lWOL6yRhSgIJB1ZyEsEyxadS7a0opOtIDl70AqBvP12Pp/S3UA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+lcN8IG23IEUYY/8C0d76+GjBIGrxG/KlTzCGDhznCI=;
- b=Tt+XkFBzx6sVp9f1NJV+EuUCgZM6hEc7V3+1GWi7GquT6TodFVBMNQV+ZOtlupVZEo5R31d6RqBWzl34hh25pY5VzrJ6mO14LkowVNCRqcODoci8nGoFf15FXkg5MuaI88rBbbBQoThVMF+8g+eeWM0BhJfNTw4yyw4U+pFEaLefoRRfeYlnuVjuRf9Gl1DjqUCaRAF/MQVpsnN/tLuL4YcV9L3Eg+ZsoNd1rjxEJ3y6G2AYw0GFccIx32hKAMbVjFAPpqgUNOkzf3xepxrvq4qOW816xfCFh6dke5HtEENFTXApBu+aKK0+a93NzrfHpC0it43nQka9sctcFnzs+g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+lcN8IG23IEUYY/8C0d76+GjBIGrxG/KlTzCGDhznCI=;
- b=Z5CyBf0CnjLXgK1qBArnzOoCZ4v2rNYsbT1r5VoOXBwJnO+zfl6FyvcywEFjzGg3+No29P3/pR8I8OXhDyVA0VkvYQVAAQ+SP+XJGaGvXjkhq7mivTLUZR1JnEAPmOOuIQdhrE+6D626FYWlDwigidrfvrBB6WD/zajPJW6C8fs=
-Received: from AM6PR04MB4967.eurprd04.prod.outlook.com (20.177.34.75) by
- AM6PR04MB6695.eurprd04.prod.outlook.com (20.179.247.208) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.24; Mon, 7 Oct 2019 14:56:39 +0000
-Received: from AM6PR04MB4967.eurprd04.prod.outlook.com
- ([fe80::550b:474a:d86a:1967]) by AM6PR04MB4967.eurprd04.prod.outlook.com
- ([fe80::550b:474a:d86a:1967%7]) with mapi id 15.20.2305.023; Mon, 7 Oct 2019
- 14:56:39 +0000
-From:   Han Xu <han.xu@nxp.com>
-To:     Kuldeep Singh <kuldeep.singh@nxp.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Kuldeep Singh <kuldeep.singh@nxp.com>
-Subject: RE: [PATCH] spi: spi-fsl-qspi: Introduce variable to fix different
- invalid master Id
-Thread-Topic: [PATCH] spi: spi-fsl-qspi: Introduce variable to fix different
- invalid master Id
-Thread-Index: AQHVeDaNx9WIVsU7Tk6OBiwESeYpGKdPTi6w
-Date:   Mon, 7 Oct 2019 14:56:39 +0000
-Message-ID: <AM6PR04MB4967B073EEA50BFEE2F69C6D979B0@AM6PR04MB4967.eurprd04.prod.outlook.com>
-References: <1569920356-8953-1-git-send-email-kuldeep.singh@nxp.com>
-In-Reply-To: <1569920356-8953-1-git-send-email-kuldeep.singh@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is ) smtp.mailfrom=han.xu@nxp.com; 
-x-originating-ip: [64.157.242.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 50458cfd-9866-438e-ed0a-08d74b368f33
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: AM6PR04MB6695:|AM6PR04MB6695:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR04MB66958A287911E0A154DBB7DD979B0@AM6PR04MB6695.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:751;
-x-forefront-prvs: 01834E39B7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(376002)(396003)(366004)(346002)(199004)(189003)(13464003)(71200400001)(229853002)(2501003)(14444005)(256004)(33656002)(110136005)(3846002)(44832011)(305945005)(316002)(2906002)(4326008)(6246003)(6116002)(7736002)(6436002)(71190400001)(9686003)(55016002)(74316002)(25786009)(7696005)(6506007)(53546011)(66446008)(76176011)(99286004)(81156014)(8676002)(81166006)(5660300002)(8936002)(478600001)(102836004)(11346002)(66556008)(52536014)(86362001)(2201001)(14454004)(446003)(64756008)(26005)(66946007)(486006)(186003)(76116006)(66476007)(476003)(66066001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB6695;H:AM6PR04MB4967.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Zcgfr/SXRObkneZcYuEl5cp6v/3FW3QusNll4QTWuXeCsaA/NMzPYjkepGMvLJZdqMWP6xuz/lmrCOCnKHitYMm6TfQ0hiz9B5vwOixXPi8YCbXixhjJIOoK+qWQSgoYsLPoBxeU40EOl4hB7hsFomh44PC6rAZzCHwhB0en2QhZV3Ztgpfj8mXgcfkWqD7NsSIU57iTnRgol0JmELJgexZWMRq9h5Gjk32unbfsERYkwtFszF66cbRFI1oSvM27URezcppM+W1GuuLnqnLMbqJjReu9n+eareaLk+gP4d5Bor9yo3zDo5cUKBdKD9bXOBxchnpWdzN0ui6KbhYoCrjgre0DyUJzN323P9TFpo1MRDGyxB5ENvEG22UAG3wyWshe/0Vcd9PEdAah+E3Uw20SAGjPS9MW5mpXBNvEoxI=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1727490AbfJGO5T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 10:57:19 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id ACF2BACA5;
+        Mon,  7 Oct 2019 14:57:16 +0000 (UTC)
+Subject: Re: [PATCH] cgroup, blkcg: prevent dirty inodes to pin dying memory
+ cgroups
+To:     Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, tj@kernel.org,
+        Jan Kara <jack@suse.cz>
+References: <20191004221104.646711-1-guro@fb.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <f12d0a39-b7ef-39f9-3ff7-412c2d36aaac@suse.cz>
+Date:   Mon, 7 Oct 2019 16:57:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 50458cfd-9866-438e-ed0a-08d74b368f33
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Oct 2019 14:56:39.7567
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VmMb5vN84uCpM8+zJPWM9tHT9v1uEBzxDsYNGhB3gP9cs0fKRNe9U7WgEsbl0OLq
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB6695
+In-Reply-To: <20191004221104.646711-1-guro@fb.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 10/5/19 12:11 AM, Roman Gushchin wrote:
+>
+> One possible approach to this problem is to switch inodes associated
+> with dying wbs to the root wb. Switching is a best effort operation
+> which can fail silently, so unfortunately we can't run once over a
+> list of associated inodes (even if we'd have such a list). So we
+> really have to scan all inodes.
+> 
+> In the proposed patch I schedule a work on each memory cgroup
+> deletion, which is probably too often. Alternatively, we can do it
+> periodically under some conditions (e.g. the number of dying memory
+> cgroups is larger than X). So it's basically a gc run.
+> 
+> I wonder if there are any better ideas?
 
+I don't know this area, so this will be likely easily shown impossible,
+but perhaps it's useful to do that explicitly.
 
-> -----Original Message-----
-> From: Kuldeep Singh <kuldeep.singh@nxp.com>
-> Sent: Tuesday, October 1, 2019 3:59 AM
-> To: Han Xu <han.xu@nxp.com>; broonie@kernel.org; linux-spi@vger.kernel.or=
-g;
-> linux-kernel@vger.kernel.org
-> Cc: Kuldeep Singh <kuldeep.singh@nxp.com>; Suresh Gupta
-> <suresh.gupta@nxp.com>
-> Subject: [PATCH] spi: spi-fsl-qspi: Introduce variable to fix different i=
-nvalid master Id
->=20
-> Different platforms have different Master with different SourceID on AHB =
-bus. The
-> 0X0E Master ID is used by cluster 3 in case of LS2088A.
-> So, patch introduce an invalid master id variable to fix invalid mastered=
- on different
-> platforms.
->=20
-> Signed-off-by: Suresh Gupta <suresh.gupta@nxp.com>
-> Signed-off-by: Kuldeep Singh <kuldeep.singh@nxp.com>
-> ---
->  drivers/spi/spi-fsl-qspi.c | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->=20
-> diff --git a/drivers/spi/spi-fsl-qspi.c b/drivers/spi/spi-fsl-qspi.c inde=
-x
-> c02e24c..51385b0 100644
-> --- a/drivers/spi/spi-fsl-qspi.c
-> +++ b/drivers/spi/spi-fsl-qspi.c
-> @@ -63,6 +63,11 @@
->  #define QUADSPI_IPCR			0x08
->  #define QUADSPI_IPCR_SEQID(x)		((x) << 24)
->=20
-> +#define QUADSPI_BUF0CR                  0x10
-> +#define QUADSPI_BUF1CR                  0x14
-> +#define QUADSPI_BUF2CR                  0x18
-> +#define QUADSPI_BUFXCR_INVALID_MSTRID   0xe
-> +
->  #define QUADSPI_BUF3CR			0x1c
->  #define QUADSPI_BUF3CR_ALLMST_MASK	BIT(31)
->  #define QUADSPI_BUF3CR_ADATSZ(x)	((x) << 8)
-> @@ -184,6 +189,7 @@
->  struct fsl_qspi_devtype_data {
->  	unsigned int rxfifo;
->  	unsigned int txfifo;
-> +	int invalid_mstrid;
->  	unsigned int ahb_buf_size;
->  	unsigned int quirks;
->  	bool little_endian;
-> @@ -192,6 +198,7 @@ struct fsl_qspi_devtype_data {  static const struct
-> fsl_qspi_devtype_data vybrid_data =3D {
->  	.rxfifo =3D SZ_128,
->  	.txfifo =3D SZ_64,
-> +	.invalid_mstrid =3D QUADSPI_BUFXCR_INVALID_MSTRID,
->  	.ahb_buf_size =3D SZ_1K,
->  	.quirks =3D QUADSPI_QUIRK_SWAP_ENDIAN,
->  	.little_endian =3D true,
-> @@ -200,6 +207,7 @@ static const struct fsl_qspi_devtype_data vybrid_data=
- =3D
-> {  static const struct fsl_qspi_devtype_data imx6sx_data =3D {
->  	.rxfifo =3D SZ_128,
->  	.txfifo =3D SZ_512,
-> +	.invalid_mstrid =3D QUADSPI_BUFXCR_INVALID_MSTRID,
->  	.ahb_buf_size =3D SZ_1K,
->  	.quirks =3D QUADSPI_QUIRK_4X_INT_CLK | QUADSPI_QUIRK_TKT245618,
->  	.little_endian =3D true,
-> @@ -208,6 +216,7 @@ static const struct fsl_qspi_devtype_data imx6sx_data=
- =3D
-> {  static const struct fsl_qspi_devtype_data imx7d_data =3D {
->  	.rxfifo =3D SZ_128,
->  	.txfifo =3D SZ_512,
-> +	.invalid_mstrid =3D QUADSPI_BUFXCR_INVALID_MSTRID,
->  	.ahb_buf_size =3D SZ_1K,
->  	.quirks =3D QUADSPI_QUIRK_TKT253890 | QUADSPI_QUIRK_4X_INT_CLK,
->  	.little_endian =3D true,
-> @@ -216,6 +225,7 @@ static const struct fsl_qspi_devtype_data imx7d_data =
-=3D
-> {  static const struct fsl_qspi_devtype_data imx6ul_data =3D {
->  	.rxfifo =3D SZ_128,
->  	.txfifo =3D SZ_512,
-> +	.invalid_mstrid =3D QUADSPI_BUFXCR_INVALID_MSTRID,
->  	.ahb_buf_size =3D SZ_1K,
->  	.quirks =3D QUADSPI_QUIRK_TKT253890 | QUADSPI_QUIRK_4X_INT_CLK,
->  	.little_endian =3D true,
-> @@ -224,6 +234,7 @@ static const struct fsl_qspi_devtype_data imx6ul_data=
- =3D
-> {  static const struct fsl_qspi_devtype_data ls1021a_data =3D {
->  	.rxfifo =3D SZ_128,
->  	.txfifo =3D SZ_64,
-> +	.invalid_mstrid =3D QUADSPI_BUFXCR_INVALID_MSTRID,
->  	.ahb_buf_size =3D SZ_1K,
->  	.quirks =3D 0,
->  	.little_endian =3D false,
-> @@ -233,6 +244,7 @@ static const struct fsl_qspi_devtype_data ls2080a_dat=
-a =3D {
->  	.rxfifo =3D SZ_128,
->  	.txfifo =3D SZ_64,
->  	.ahb_buf_size =3D SZ_1K,
-> +	.invalid_mstrid =3D 0x0,
->  	.quirks =3D QUADSPI_QUIRK_TKT253890 | QUADSPI_QUIRK_BASE_INTERNAL,
->  	.little_endian =3D true,
->  };
-> @@ -615,6 +627,7 @@ static int fsl_qspi_exec_op(struct spi_mem *mem, cons=
-t
-> struct spi_mem_op *op)
->  	void __iomem *base =3D q->iobase;
->  	u32 addr_offset =3D 0;
->  	int err =3D 0;
-> +	int invalid_mstrid =3D q->devtype_data->invalid_mstrid;
->=20
->  	mutex_lock(&q->lock);
->=20
-> @@ -638,6 +651,10 @@ static int fsl_qspi_exec_op(struct spi_mem *mem, con=
-st
-> struct spi_mem_op *op)
->  	qspi_writel(q, QUADSPI_SPTRCLR_BFPTRC | QUADSPI_SPTRCLR_IPPTRC,
->  		    base + QUADSPI_SPTRCLR);
->=20
-> +	qspi_writel(q, invalid_mstrid, base + QUADSPI_BUF0CR);
-> +	qspi_writel(q, invalid_mstrid, base + QUADSPI_BUF1CR);
-> +	qspi_writel(q, invalid_mstrid, base + QUADSPI_BUF2CR);
-> +
->  	fsl_qspi_prepare_lut(q, op);
->=20
->  	/*
-
-Acked-by: Han Xu <han.xu@nxp.com>
-
-> --
-> 2.7.4
-
+What if instead of reparenting each inode, we "reparent" the wb?
+But I see it's not a small object either. Could we then add some bias
+for inode switching conditions so that anyone else touching the inode
+from dead wb would get it immediately?
+And what would happen if we reused the reparented wb's for newly created
+cgroups? Would it "punish" them for the old inodes?
