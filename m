@@ -2,94 +2,114 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F4DC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DB4ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BA4D2173B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:07:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570450035;
-	bh=arbaz8x3puASuQCFv3RH3ysmpiBHcA2eOWy0FamGrFU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=d2bkA56KK2SFsil52g8bGAnPHIdXPFMbwBrjx7ttbqmPoJDSwcgIwQ7B/rND+Rc58
-	 pRAT0x4C2Y0O9gzWyXARuRS2OqJQczKCv+UOMpGsBFE679x3QkhaTimjmJA6mRpjY+
-	 9HEfy4nyFc2UlphUsDZyWnAIVEcthpjQXhgOjI50=
+	by mail.kernel.org (Postfix) with ESMTP id 728E121655
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:07:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbfJGMHP (ORCPT
+        id S1727835AbfJGMHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 08:07:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59948 "EHLO mail.kernel.org"
+        Mon, 7 Oct 2019 08:07:54 -0400
+Received: from mga06.intel.com ([134.134.136.31]:27590 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727905AbfJGMHO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 08:07:14 -0400
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A59320867;
-        Mon,  7 Oct 2019 12:07:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570450034;
-        bh=arbaz8x3puASuQCFv3RH3ysmpiBHcA2eOWy0FamGrFU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MnVmxZLoAkVyRKheU9X/YR5bMo6nKlHmcKS2ro6emQd2eneWrMDXRAALYjSXBxp1a
-         X5Su7sdTQdbaq81iyYhr3iDbwOwriy8ZJQkNLXJ15ST40Mr4CcXjVRu2h6fGWExYN0
-         KKxfdvMTK6e3SF6GYyWpJfvVJH5ai1c/WiucEvsM=
-Date:   Mon, 7 Oct 2019 14:07:10 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Icenowy Zheng <icenowy@aosc.io>
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v2 3/3] drm/sun4i: sun6i_mipi_dsi: fix DCS long write
- packet length
-Message-ID: <20191007120710.zhm6wkm32kpsqv5m@gilmour>
-References: <20191006160303.24413-1-icenowy@aosc.io>
- <20191006160303.24413-4-icenowy@aosc.io>
+        id S1727467AbfJGMHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 08:07:54 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Oct 2019 05:07:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,268,1566889200"; 
+   d="scan'208";a="276771556"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.66]) ([10.237.72.66])
+  by orsmga001.jf.intel.com with ESMTP; 07 Oct 2019 05:07:52 -0700
+Subject: Re: [PATCH 4/5] perf tools: Support single perf.data file directory
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-kernel@vger.kernel.org
+References: <20191004083121.12182-1-adrian.hunter@intel.com>
+ <20191004083121.12182-5-adrian.hunter@intel.com>
+ <20191007112027.GD6919@krava>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <2340d60c-e8a6-2333-06ce-77076c912a1c@intel.com>
+Date:   Mon, 7 Oct 2019 15:06:30 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="q5xk63oitgdknstb"
-Content-Disposition: inline
-In-Reply-To: <20191006160303.24413-4-icenowy@aosc.io>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191007112027.GD6919@krava>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 7/10/19 2:20 PM, Jiri Olsa wrote:
+> On Fri, Oct 04, 2019 at 11:31:20AM +0300, Adrian Hunter wrote:
+> 
+> SNIP
+> 
+>>  	u8 pad[8] = {0};
+>>  
+>> -	if (!perf_data__is_pipe(data) && !perf_data__is_dir(data)) {
+>> +	if (!perf_data__is_pipe(data) && perf_data__is_single_file(data)) {
+>>  		off_t file_offset;
+>>  		int fd = perf_data__fd(data);
+>>  		int err;
+>> diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+>> index df173f0bf654..964ea101dba6 100644
+>> --- a/tools/perf/util/data.c
+>> +++ b/tools/perf/util/data.c
+>> @@ -76,6 +76,13 @@ int perf_data__open_dir(struct perf_data *data)
+>>  	DIR *dir;
+>>  	int nr = 0;
+>>  
+>> +	/*
+>> +	 * Directory containing a single regular perf data file which is already
+>> +	 * open, means there is nothing more to do here.
+>> +	 */
+>> +	if (perf_data__is_single_file(data))
+>> +		return 0;
+>> +
+> 
+> cool, I like this approach much more than the previous flag
 
---q5xk63oitgdknstb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yes it is much nicer.  Thanks for your direction on that.
 
-On Mon, Oct 07, 2019 at 12:03:02AM +0800, Icenowy Zheng wrote:
-> The packet length of DCS long write packet should not be added with 1
-> when constructing long write packet.
->
-> Fix this.
->
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> 
+> any change you (if there's repost) or Arnaldo
+> could squeeze in indent change below?
 
-Applied, thanks
+Sent a patch, to be applied before these.
 
-Maxime
+> 
+> thanks,
+> jirka
+> 
+> 
+> ---
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index bfa80fe8d369..7f567a521cea 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -227,8 +227,8 @@ struct perf_session *perf_session__new(struct perf_data *data,
+>  			/* Open the directory data. */
+>  			if (data->is_dir) {
+>  				ret = perf_data__open_dir(data);
+> -			if (ret)
+> -				goto out_delete;
+> +				if (ret)
+> +					goto out_delete;
+>  			}
+>  
+>  			if (!symbol_conf.kallsyms_name &&
+> 
 
---q5xk63oitgdknstb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZsqbgAKCRDj7w1vZxhR
-xWdGAPoD+SGxYVP/cSUjH/jrEJNThDwZjOU59WN8z3Qi9XF3BgEA0tiZksS/LTVL
-rAlkltweDTGTlptVDBSyEjKNKRqzmg4=
-=Ua0x
------END PGP SIGNATURE-----
-
---q5xk63oitgdknstb--
