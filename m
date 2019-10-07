@@ -2,157 +2,107 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E4DC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E978ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 665862084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:55:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KCbv97tb"
+	by mail.kernel.org (Postfix) with ESMTP id 2F9A221479
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:55:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728352AbfJGOzW (ORCPT
+        id S1728413AbfJGOzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 10:55:22 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:41613 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727490AbfJGOzV (ORCPT
+        Mon, 7 Oct 2019 10:55:24 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44571 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728130AbfJGOzW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 10:55:21 -0400
-Received: by mail-lf1-f65.google.com with SMTP id r2so9489004lfn.8;
-        Mon, 07 Oct 2019 07:55:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=oKQe8PW7xJsxkuN7cYHlHAyycnltqq5WzMyDlYxJAao=;
-        b=KCbv97tb6Hoh+UXuWKIUqilZW7r/lPn2+CWJfseZOOnUoC8QIPALjQLyuNIqXZHsmh
-         HwsTk9x4Sdbf/IKiQVm6WfCgWLrqpfn4ZR4CH9iFtso8DJD2+S/v7b3ZjiNWG/F5dkAW
-         nRBoHuP/CK0mFGQ21n+aVegUI1Tse1t2q6Yf0qpKGgz45aMPJTtzqEvp4mYvfLTSwNSn
-         j5kR90O4aCU1cJc5uICbDFGBJ6WvJGvFDkI4KDzgAyBgFvCrsyXiE0if7jUVgk2nzvT5
-         f0sXT2AO6Gci1607rq7Q0NDDCvuHsVYtStfCc46EZzwD9EEatEgaxEe14LROGNNUMvug
-         Z3ZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=oKQe8PW7xJsxkuN7cYHlHAyycnltqq5WzMyDlYxJAao=;
-        b=s9q1wE+ZDpq3DbDiLN2FbwjSZdr7A5/IufP8qL75Xg2B7WGQm7ugfpA9XTA+D/VHVS
-         Nz1klnU0D+NyYGeIyrsXfqN4O93M+5fV6dZAV83pE+44ta1sjFcJJR/H8IYGxyE0cQ+Y
-         STwBlAlri+iRXSezzqetsfkFZ2sJvk5j1h3EqpxnsCxfGtFIwRdApWWvJDyov+0Xmcx8
-         tGSfVSElq80OVaTNRU7ke32O4LpW3tPgdkQHUuc4C16kiOfZDEaDfvKJXl4nyPh/44h8
-         exqBOQtEKejD3Tc45vZs07AvWlq5sOAb2YZisOdryQ29ng5Eprsug/AvWap/1Ard+O2n
-         A6Hw==
-X-Gm-Message-State: APjAAAWEALeQpAjM/DIifugwrJ8a4qo/zVFNE9hV3DOQfyBKUbfH1z+6
-        Nf6HnySGegt2E9lkJJseKIaLrMqCNDbRIQg7CK8=
-X-Google-Smtp-Source: APXvYqxMeyuL3TPfkmpATSvEkF+Vpcsni2k5agi3aTnnPNW/tlMsFs2IEPjetUBcG/k204KKg7Mn9S20Ld9yM/f8ybA=
-X-Received: by 2002:ac2:59c2:: with SMTP id x2mr15598267lfn.125.1570460118637;
- Mon, 07 Oct 2019 07:55:18 -0700 (PDT)
+        Mon, 7 Oct 2019 10:55:22 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iHUPk-0006c5-Ky; Mon, 07 Oct 2019 16:55:08 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 380391C032F;
+        Mon,  7 Oct 2019 16:55:08 +0200 (CEST)
+Date:   Mon, 07 Oct 2019 14:55:08 -0000
+From:   "tip-bot2 for Alexander Shishkin" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/urgent] perf/core: Fix inheritance of aux_output groups
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20191004125729.32397-1-alexander.shishkin@linux.intel.com>
+References: <20191004125729.32397-1-alexander.shishkin@linux.intel.com>
 MIME-Version: 1.0
-References: <20191006184515.23048-1-jcfaracco@gmail.com> <20191006184515.23048-2-jcfaracco@gmail.com>
- <52efa170-722c-334d-627e-30931fba7a7e@linux.ibm.com>
-In-Reply-To: <52efa170-722c-334d-627e-30931fba7a7e@linux.ibm.com>
-From:   Julio Faracco <jcfaracco@gmail.com>
-Date:   Mon, 7 Oct 2019 11:55:06 -0300
-Message-ID: <CAENf94JY_ScDs+hW9EMMmYamTQ8bkLfavYZJdgCmk-59N3dCtQ@mail.gmail.com>
-Subject: Re: [PATCH RFC net-next 1/2] drivers: net: virtio_net: Add tx_timeout
- stats field
-To:     Julian Wiedmann <jwi@linux.ibm.com>
-Cc:     netdev@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, davem@davemloft.net,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Daiane Mendes <dnmendes76@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <157046010808.9978.1455574004813453973.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em seg, 7 de out de 2019 =C3=A0s 11:15, Julian Wiedmann <jwi@linux.ibm.com>=
- escreveu:
->
-> On 06.10.19 20:45, jcfaracco@gmail.com wrote:
-> > From: Julio Faracco <jcfaracco@gmail.com>
-> >
-> > For debug purpose of TX timeout events, a tx_timeout entry was added to
-> > monitor this special case: when dev_watchdog identifies a tx_timeout an=
-d
-> > throw an exception. We can both consider this event as an error, but
-> > driver should report as a tx_timeout statistic.
-> >
->
-> Hi Julio,
-> dev_watchdog() updates txq->trans_timeout, why isn't that sufficient?
+The following commit has been merged into the perf/urgent branch of tip:
 
-Hi Julian,
-Good catch! This case (this patch) it would be useful only for ethtool stat=
-s.
-This is not so relevant as the method implementation itself.
-But, on the other hand, I think it should be relevant if we split into
-tx_timeout per queue.
-Anyway, suggestions are welcome.
+Commit-ID:     f733c6b508bcaa3441ba1eacf16efb9abd47489f
+Gitweb:        https://git.kernel.org/tip/f733c6b508bcaa3441ba1eacf16efb9abd47489f
+Author:        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+AuthorDate:    Fri, 04 Oct 2019 15:57:29 +03:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Mon, 07 Oct 2019 16:50:42 +02:00
 
->
->
-> > Signed-off-by: Julio Faracco <jcfaracco@gmail.com>
-> > Signed-off-by: Daiane Mendes <dnmendes76@gmail.com>
-> > Cc: Jason Wang <jasowang@redhat.com>
-> > ---
-> >  drivers/net/virtio_net.c | 6 +++++-
-> >  1 file changed, 5 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> > index 4f3de0ac8b0b..27f9b212c9f5 100644
-> > --- a/drivers/net/virtio_net.c
-> > +++ b/drivers/net/virtio_net.c
-> > @@ -75,6 +75,7 @@ struct virtnet_sq_stats {
-> >       u64 xdp_tx;
-> >       u64 xdp_tx_drops;
-> >       u64 kicks;
-> > +     u64 tx_timeouts;
-> >  };
-> >
-> >  struct virtnet_rq_stats {
-> > @@ -98,6 +99,7 @@ static const struct virtnet_stat_desc virtnet_sq_stat=
-s_desc[] =3D {
-> >       { "xdp_tx",             VIRTNET_SQ_STAT(xdp_tx) },
-> >       { "xdp_tx_drops",       VIRTNET_SQ_STAT(xdp_tx_drops) },
-> >       { "kicks",              VIRTNET_SQ_STAT(kicks) },
-> > +     { "tx_timeouts",        VIRTNET_SQ_STAT(tx_timeouts) },
-> >  };
-> >
-> >  static const struct virtnet_stat_desc virtnet_rq_stats_desc[] =3D {
-> > @@ -1721,7 +1723,7 @@ static void virtnet_stats(struct net_device *dev,
-> >       int i;
-> >
-> >       for (i =3D 0; i < vi->max_queue_pairs; i++) {
-> > -             u64 tpackets, tbytes, rpackets, rbytes, rdrops;
-> > +             u64 tpackets, tbytes, terrors, rpackets, rbytes, rdrops;
-> >               struct receive_queue *rq =3D &vi->rq[i];
-> >               struct send_queue *sq =3D &vi->sq[i];
-> >
-> > @@ -1729,6 +1731,7 @@ static void virtnet_stats(struct net_device *dev,
-> >                       start =3D u64_stats_fetch_begin_irq(&sq->stats.sy=
-ncp);
-> >                       tpackets =3D sq->stats.packets;
-> >                       tbytes   =3D sq->stats.bytes;
-> > +                     terrors  =3D sq->stats.tx_timeouts;
-> >               } while (u64_stats_fetch_retry_irq(&sq->stats.syncp, star=
-t));
-> >
-> >               do {
-> > @@ -1743,6 +1746,7 @@ static void virtnet_stats(struct net_device *dev,
-> >               tot->rx_bytes   +=3D rbytes;
-> >               tot->tx_bytes   +=3D tbytes;
-> >               tot->rx_dropped +=3D rdrops;
-> > +             tot->tx_errors  +=3D terrors;
-> >       }
-> >
-> >       tot->tx_dropped =3D dev->stats.tx_dropped;
-> >
->
+perf/core: Fix inheritance of aux_output groups
+
+Commit:
+
+  ab43762ef010 ("perf: Allow normal events to output AUX data")
+
+forgets to configure aux_output relation in the inherited groups, which
+results in child PEBS events forever failing to schedule.
+
+Fix this by setting up the AUX output link in the inheritance path.
+
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20191004125729.32397-1-alexander.shishkin@linux.intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ kernel/events/core.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 3f0cb82..f953dd1 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -11862,6 +11862,10 @@ static int inherit_group(struct perf_event *parent_event,
+ 					    child, leader, child_ctx);
+ 		if (IS_ERR(child_ctr))
+ 			return PTR_ERR(child_ctr);
++
++		if (sub->aux_event == parent_event &&
++		    !perf_get_aux_event(child_ctr, leader))
++			return -EINVAL;
+ 	}
+ 	return 0;
+ }
