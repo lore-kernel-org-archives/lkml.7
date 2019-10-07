@@ -2,139 +2,117 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97394C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B18C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A5DB2173B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:22:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570454544;
-	bh=94FgQQQInriYcdaiwu3nO9LUTD1ig1lcCMAvKOjrqC4=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=vH6pW0GFQ9xMaQ6ZvF2d1nRjmKHmbcerTmLgv+NSswfUyoXEpj1tb+pgo+RgPHZKK
-	 e9W2z0Tz3uC2lB3Bb+lTi1CJI9QpuHhOr7NO4wXMrLrXkVrASNCLQRfNF7/RIPzzaG
-	 nbzSZOlhBOcozkjy2vexmksEF4lk8n6xfXQ/918s=
+	by mail.kernel.org (Postfix) with ESMTP id A344021835
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:24:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728597AbfJGNWY (ORCPT
+        id S1727982AbfJGNYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 09:22:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60248 "EHLO mail.kernel.org"
+        Mon, 7 Oct 2019 09:24:18 -0400
+Received: from know-smtprelay-omc-4.server.virginmedia.net ([80.0.253.68]:43217
+        "EHLO know-smtprelay-omc-4.server.virginmedia.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727010AbfJGNWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 09:22:23 -0400
-Received: from paulmck-ThinkPad-P72 (unknown [12.12.162.101])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 821E820867;
-        Mon,  7 Oct 2019 13:22:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570454541;
-        bh=94FgQQQInriYcdaiwu3nO9LUTD1ig1lcCMAvKOjrqC4=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=Wu2tRRwWmif60CLvRIfmXIIdxFUVzY/DAMy3D3xiCP2QeY68YVmor0hUkkGfC6XNh
-         HQ5HFPMwKqUTAOkE6hahJ8U/4Hip40f10Qx+/7iXubKwJtAux+CmTvfJi1CdRQvyIk
-         OJTLt4gus3H0Mindd4qm+p3wqKrjbVvaKu+k86uM=
-Date:   Mon, 7 Oct 2019 06:22:20 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Marco Elver <elver@google.com>
-Cc:     syzbot <syzbot+134336b86f728d6e55a0@syzkaller.appspotmail.com>,
-        josh@joshtriplett.org, rostedt@goodmis.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org,
-        a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
-        davem@davemloft.net, LKML <linux-kernel@vger.kernel.org>,
-        mareklindner@neomailbox.ch, netdev@vger.kernel.org,
-        sw@simonwunderlich.de, syzkaller-bugs@googlegroups.com
-Subject: Re: KCSAN: data-race in find_next_bit / rcu_report_exp_cpu_mult
-Message-ID: <20191007132220.GZ2689@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <000000000000604e8905944f211f@google.com>
- <CANpmjNNmSOagbTpffHr4=Yedckx9Rm2NuGqC9UqE+AOz5f1-ZQ@mail.gmail.com>
+        id S1727490AbfJGNYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 09:24:17 -0400
+Received: from mail0.xen.dingwall.me.uk ([82.47.84.47])
+        by cmsmtp with ESMTPA
+        id HSzli2qKKikXKHSzli2z4j; Mon, 07 Oct 2019 14:24:14 +0100
+X-Originating-IP: [82.47.84.47]
+X-Authenticated-User: james.dingwall@blueyonder.co.uk
+X-Spam: 0
+X-Authority: v=2.3 cv=JpzfUvwC c=1 sm=1 tr=0 a=0bfgdX8EJi0Cr9X0x0jFDA==:117
+ a=0bfgdX8EJi0Cr9X0x0jFDA==:17 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=kj9zAlcOel0A:10 a=xqWC_Br6kY4A:10 a=XobE76Q3jBoA:10 a=5IRWAbXhAAAA:8
+ a=VwQbUJbxAAAA:8 a=iox4zFpeAAAA:8 a=yPCof4ZbAAAA:8 a=8Yx54hmJfqv9zaizVboA:9
+ a=NA0mioxrYjfIsyVE:21 a=yyYMGV6NDAEi3BFP:21 a=CjuIK1q_8ugA:10
+ a=xo7gz2vLY8DhO4BdlxfM:22 a=AjGcO6oz07-iQ99wixmX:22 a=WzC6qhA0u3u7Ye7llzcV:22
+Received: from localhost (localhost [IPv6:::1])
+        by mail0.xen.dingwall.me.uk (Postfix) with ESMTP id ED85511B8E9;
+        Mon,  7 Oct 2019 13:24:12 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at dingwall.me.uk
+Received: from mail0.xen.dingwall.me.uk ([IPv6:::1])
+        by localhost (mail0.xen.dingwall.me.uk [IPv6:::1]) (amavisd-new, port 10024)
+        with ESMTP id GHLMn-0h2pRW; Mon,  7 Oct 2019 13:24:12 +0000 (UTC)
+Received: from behemoth.dingwall.me.uk (behemoth.dingwall.me.uk [IPv6:2001:470:695c:302::c0a8:105])
+        by dingwall.me.uk (Postfix) with ESMTP id A18BE11B8E6;
+        Mon,  7 Oct 2019 13:24:12 +0000 (UTC)
+Received: by behemoth.dingwall.me.uk (Postfix, from userid 1000)
+        id 821AD107673; Mon,  7 Oct 2019 13:24:12 +0000 (UTC)
+Date:   Mon, 7 Oct 2019 13:24:12 +0000
+From:   James Dingwall <james@dingwall.me.uk>
+To:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
+Cc:     Stefano Stabellini <sstabellini@kernel.org>,
+        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>
+Subject: Re: [PATCH] xen/xenbus: fix self-deadlock after killing user process
+Message-ID: <20191007132412.GA27773@dingwall.me.uk>
+References: <20191001150355.25365-1-jgross@suse.com>
+ <547479f7-bbb3-609c-fcc7-4e2e609823ae@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CANpmjNNmSOagbTpffHr4=Yedckx9Rm2NuGqC9UqE+AOz5f1-ZQ@mail.gmail.com>
+In-Reply-To: <547479f7-bbb3-609c-fcc7-4e2e609823ae@oracle.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
+X-CMAE-Envelope: MS4wfIW4I2E6zkZiCpUZ/S++fnzYeMMvjbPi6fGFkK6rapdFbM9gdoLT5/gBGyVI0nLCPpuIS1EWXnWGEK9ohK85n8r6/YHwXApZFYAhqkCEQCWPhPiuMCAN
+ GsaxkL3utAI5Leyjbfkc9u4c8PTx3F0se5gXKJi4WC6J7G1/V2odnrG286MMHIWHDLv3GWTlVjq19j4LIELouDgy49UiZCObAu6etPwa/clnf2ECtyHQiHGl
+ MpSeu6ptLegHZP457w/haphrNUeOY2x7ulIuCnLRIA5ojWeUYaKYCVoHO4mcvksI7G4rzIPoGaQ66Mw/hic5UUs4A6ihH+guhJSOTAHJc0Y=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 12:04:16PM +0200, Marco Elver wrote:
-> +RCU maintainers
-> This might be a data-race in RCU itself.
+On Tue, Oct 01, 2019 at 01:37:24PM -0400, Boris Ostrovsky wrote:
+> On 10/1/19 11:03 AM, Juergen Gross wrote:
+> > In case a user process using xenbus has open transactions and is killed
+> > e.g. via ctrl-C the following cleanup of the allocated resources might
+> > result in a deadlock due to trying to end a transaction in the xenbus
+> > worker thread:
+> >
+> > [ 2551.474706] INFO: task xenbus:37 blocked for more than 120 seconds.
+> > [ 2551.492215]       Tainted: P           OE     5.0.0-29-generic #5
+> > [ 2551.510263] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> > [ 2551.528585] xenbus          D    0    37      2 0x80000080
+> > [ 2551.528590] Call Trace:
+> > [ 2551.528603]  __schedule+0x2c0/0x870
+> > [ 2551.528606]  ? _cond_resched+0x19/0x40
+> > [ 2551.528632]  schedule+0x2c/0x70
+> > [ 2551.528637]  xs_talkv+0x1ec/0x2b0
+> > [ 2551.528642]  ? wait_woken+0x80/0x80
+> > [ 2551.528645]  xs_single+0x53/0x80
+> > [ 2551.528648]  xenbus_transaction_end+0x3b/0x70
+> > [ 2551.528651]  xenbus_file_free+0x5a/0x160
+> > [ 2551.528654]  xenbus_dev_queue_reply+0xc4/0x220
+> > [ 2551.528657]  xenbus_thread+0x7de/0x880
+> > [ 2551.528660]  ? wait_woken+0x80/0x80
+> > [ 2551.528665]  kthread+0x121/0x140
+> > [ 2551.528667]  ? xb_read+0x1d0/0x1d0
+> > [ 2551.528670]  ? kthread_park+0x90/0x90
+> > [ 2551.528673]  ret_from_fork+0x35/0x40
+> >
+> > Fix this by doing the cleanup via a workqueue instead.
+> >
+> > Reported-by: James Dingwall <james@dingwall.me.uk>
+> > Fixes: fd8aa9095a95c ("xen: optimize xenbus driver for multiple concurrent xenstore accesses")
+> > Cc: <stable@vger.kernel.org> # 4.11
+> > Signed-off-by: Juergen Gross <jgross@suse.com>
+> 
+> Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> 
 
-Quite possibly.  I will take a look, but there will be delays due to this
-week being bootcamp and all.
+Tested-by: James Dingwall <james@dingwall.me.uk>
 
-							Thanx, Paul
+This patch does resolve the observed issue although for my (extreme and 
+not representative of our normal workload) test case the worker still 
+gets blocked for some time if the xenstore-rm is interrupted and no 
+concurrent xenstore commands can run.  I assume that the worker 
+completes the rm and then does a rollback in the background rather than 
+being interrupted early as a result of the userspace program being 
+terminated.
 
-> On Mon, 7 Oct 2019 at 12:01, syzbot
-> <syzbot+134336b86f728d6e55a0@syzkaller.appspotmail.com> wrote:
-> >
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    b4bd9343 x86, kcsan: Enable KCSAN for x86
-> > git tree:       https://github.com/google/ktsan.git kcsan
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=11edb20d600000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=c0906aa620713d80
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=134336b86f728d6e55a0
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >
-> > Unfortunately, I don't have any reproducer for this crash yet.
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+134336b86f728d6e55a0@syzkaller.appspotmail.com
-> >
-> > ==================================================================
-> > BUG: KCSAN: data-race in find_next_bit / rcu_report_exp_cpu_mult
-> >
-> > write to 0xffffffff85a7f140 of 8 bytes by task 7 on cpu 0:
-> >   rcu_report_exp_cpu_mult+0x4f/0xa0 kernel/rcu/tree_exp.h:244
-> >   rcu_report_exp_rdp+0x6c/0x90 kernel/rcu/tree_exp.h:254
-> >   rcu_preempt_deferred_qs_irqrestore+0x3bb/0x580 kernel/rcu/tree_plugin.h:475
-> >   rcu_read_unlock_special+0xec/0x370 kernel/rcu/tree_plugin.h:659
-> >   __rcu_read_unlock+0xcf/0xe0 kernel/rcu/tree_plugin.h:394
-> >   rcu_read_unlock include/linux/rcupdate.h:645 [inline]
-> >   batadv_nc_purge_orig_hash net/batman-adv/network-coding.c:411 [inline]
-> >   batadv_nc_worker+0x13a/0x390 net/batman-adv/network-coding.c:718
-> >   process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
-> >   worker_thread+0xa0/0x800 kernel/workqueue.c:2415
-> >   kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
-> >   ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
-> >
-> > read to 0xffffffff85a7f140 of 8 bytes by task 7251 on cpu 1:
-> >   _find_next_bit lib/find_bit.c:39 [inline]
-> >   find_next_bit+0x57/0xe0 lib/find_bit.c:70
-> >   sync_rcu_exp_select_node_cpus+0x28e/0x510 kernel/rcu/tree_exp.h:375
-> >   sync_rcu_exp_select_cpus+0x30c/0x590 kernel/rcu/tree_exp.h:439
-> >   rcu_exp_sel_wait_wake kernel/rcu/tree_exp.h:575 [inline]
-> >   wait_rcu_exp_gp+0x25/0x40 kernel/rcu/tree_exp.h:589
-> >   process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
-> >   worker_thread+0xa0/0x800 kernel/workqueue.c:2415
-> >   kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
-> >   ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
-> >
-> > Reported by Kernel Concurrency Sanitizer on:
-> > CPU: 1 PID: 7251 Comm: kworker/1:4 Not tainted 5.3.0+ #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > Google 01/01/2011
-> > Workqueue: rcu_gp wait_rcu_exp_gp
-> > ==================================================================
-> >
-> >
-> > ---
-> > This bug is generated by a bot. It may contain errors.
-> > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> >
-> > syzbot will keep track of this bug report. See:
-> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Thanks,
+James
