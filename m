@@ -2,115 +2,129 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 741DEECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9047AC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49C9221655
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:31:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L2WmlKJd"
+	by mail.kernel.org (Postfix) with ESMTP id 70D5D20684
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:31:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728352AbfJGObI (ORCPT
+        id S1728428AbfJGObL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 10:31:08 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40012 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727715AbfJGObI (ORCPT
+        Mon, 7 Oct 2019 10:31:11 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:50499 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727745AbfJGObK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 10:31:08 -0400
-Received: by mail-pg1-f196.google.com with SMTP id d26so8328377pgl.7;
-        Mon, 07 Oct 2019 07:31:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2At1y9KA5mfpevHWnQPZHB4PFv/Qu4O9Kv2KCvAKsps=;
-        b=L2WmlKJdQwNgVbcJE119/1KVF0saNnxUt37UU5+ZoaigA1ONIEaGNemRqxwetnWLg4
-         hjauTVSezFQ9CVITC25sj/x/OMWVMoSbpaw+ypTcc2WeFfkLrLXppP5XyKVr2mC6tRAL
-         0kaKpmcpTUutQyoFrmq1Q/rsCvEXw0Ne/51/mhl0TwcWMCF7aO2sHGT7DKjpUi0RHM7D
-         dhHOHMQZxWUO3YeL9Me9bsiIMRfPgSkY37o7MjwlcHX7t6X/tDcAQM+3vtnlXFxBNRFW
-         vWhHYIJthKdtfXAcdKnVNbSkpaDWUyQ5vbwdBcQHAqfIJA1bDJNJsGfP50jRsVWAtsr/
-         5BgQ==
+        Mon, 7 Oct 2019 10:31:10 -0400
+Received: by mail-io1-f69.google.com with SMTP id f5so26958712iob.17
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 07:31:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2At1y9KA5mfpevHWnQPZHB4PFv/Qu4O9Kv2KCvAKsps=;
-        b=P8or9Zovd3vH0QHn5aJueOJWUMF6X3gXqjaznlWFHwbshYJYXYfFisqO+gPyKyvNnX
-         IxRqMkn/TliIMSjFe+oYcaDZ+TJLwdWpInD2z+WhXsnk/9JdbTl1Zll7X6FMhbgpTL0n
-         Y7KiAV35a4RlkuYis9llElYPl1IGDoPWejskuGOM2MMeliW2xhk0QYichAsIhmOMXrae
-         5VW6V/gYtauPZuOVpczRsT+HxJHozt4pS1OBWm4av1UGO73HzCnrLlbELGEW7xwrzzYM
-         EUwlV2ocE1Pymit8Lx7kArm8heACQBLA8/G1rcPFitGQ+XoK5Qddj/dI99UOBiMJDyVz
-         bshQ==
-X-Gm-Message-State: APjAAAXgdf112m2o22KBv+dGH1LQC0HKgKlnUeM+nJauUuFufrs5w6ow
-        YoXB3Oyo8QK4OpbDpGlnaY8w3IDg
-X-Google-Smtp-Source: APXvYqx64FT9QppAhB7enRcsSabhlyFsHm44WhyzbdH+gp62HQYN+7mxnXvhJlmmysbod3QfzjNuEg==
-X-Received: by 2002:a63:6c89:: with SMTP id h131mr30521423pgc.380.1570458665503;
-        Mon, 07 Oct 2019 07:31:05 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id i74sm18525272pfe.28.2019.10.07.07.31.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 07 Oct 2019 07:31:04 -0700 (PDT)
-Subject: Re: [PATCH 4.4 00/36] 4.4.196-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20191006171038.266461022@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <2ae37179-5896-35bc-e272-ed617f847524@roeck-us.net>
-Date:   Mon, 7 Oct 2019 07:31:03 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=7BY87Ia9AapGjwjMXbsBZnoMaLjgwwjSG2VntvLmU4c=;
+        b=glDC2JoHZkwIEOjySCq3Hn/Wgnq+LJkiCyLejS4DcCB7tYmL/X+1qoaqf45KtnvpQM
+         Ax/ypXkJjYQOk9UdqaLgISEu1SwodUUROJJ8cA3gnTO5h+bf783k2OqLhpEvZbcQLAWs
+         T2WuaXCrvy8ouM06+XLT0vSAB5Vd/efK/NHNlVD1kQ230Vb3EyeChs6U2VaVIi2Ag5QC
+         nUAA+LCrosgtNU1lgimVHM9bi537q3I+Kc6QKvVaW/F3JHRL0sP+0kvZS7ArlXbtsnac
+         r+fmlWcLC3D2hKoggTBi7FGB34+KxzBHzrq9qpWn2UzBJ15cZFMD0bkbmQRfzJDQJ+tk
+         012w==
+X-Gm-Message-State: APjAAAVCkHI76euJ+0ZlxmSjsZIQkm4JNbu4U5Ub0/wHid8u/cvVKE2u
+        EBMG0Y/BST2Sj1Pnjhx5AzWsRVHu0DZbM8vGkbhd2G/wCurl
+X-Google-Smtp-Source: APXvYqwHM30N8tl1H9tiWFEkk5uQF9JjeMTKqdai85oDJLXRimIYKTBAZ9aPa3GdJ+Ja7qB/Sbi3nEzbTc+XziR64uB+U2mBU037
 MIME-Version: 1.0
-In-Reply-To: <20191006171038.266461022@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a92:d14b:: with SMTP id t11mr28007911ilg.126.1570458667508;
+ Mon, 07 Oct 2019 07:31:07 -0700 (PDT)
+Date:   Mon, 07 Oct 2019 07:31:07 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000002edb7059452e7fb@google.com>
+Subject: WARNING in verify_dirent_name
+From:   syzbot <syzbot+76e3977ad1b8cc4d113a@syzkaller.appspotmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/6/19 10:18 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.4.196 release.
-> There are 36 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Tue 08 Oct 2019 05:07:10 PM UTC.
-> Anything received after that time might be too late.
-> 
+Hello,
 
-Build results:
-	total: 170 pass: 169 fail: 1
-Failed builds:
-	powerpc:defconfig
-Qemu test results:
-	total: 324 pass: 313 fail: 11
-Failed tests:
-	ppc64:mac99:ppc64_book3s_defconfig:nosmp:initrd
-	ppc64:mac99:ppc64_book3s_defconfig:smp:initrd
-	ppc64:mac99:ppc64_book3s_defconfig:smp:ide:rootfs
-	ppc64:mac99:ppc64_book3s_defconfig:smp:sdhci:mmc:rootfs
-	ppc64:mac99:ppc64_book3s_defconfig:smp:nvme:rootfs
-	ppc64:mac99:ppc64_book3s_defconfig:smp:scsi[DC395]:rootfs
-	ppc64:pseries:pseries_defconfig:initrd
-	ppc64:pseries:pseries_defconfig:scsi:rootfs
-	ppc64:pseries:pseries_defconfig:usb:rootfs
-	ppc64:pseries:pseries_defconfig:sdhci:mmc:rootfs
-	ppc64:pseries:pseries_defconfig:nvme:rootfs
+syzbot found the following crash on:
 
-Failure as already reported.
+HEAD commit:    43b815c6 Merge tag 'armsoc-fixes' of git://git.kernel.org/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=12165d0b600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1ec3be9936e004f6
+dashboard link: https://syzkaller.appspot.com/bug?extid=76e3977ad1b8cc4d113a
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-arch/powerpc/kernel/eeh_driver.c: In function ‘eeh_handle_normal_event’:
-arch/powerpc/kernel/eeh_driver.c:678:2: error: implicit declaration of function ‘eeh_for_each_pe’
+Unfortunately, I don't have any reproducer for this crash yet.
 
-Guenter
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+76e3977ad1b8cc4d113a@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 25558 at fs/readdir.c:150 verify_dirent_name+0x67/0x80  
+fs/readdir.c:150
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 25558 Comm: syz-executor.2 Not tainted 5.4.0-rc1+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  panic+0x2dc/0x755 kernel/panic.c:220
+  __warn.cold+0x2f/0x3c kernel/panic.c:581
+  report_bug+0x289/0x300 lib/bug.c:195
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
+RIP: 0010:verify_dirent_name+0x67/0x80 fs/readdir.c:150
+Code: 19 b6 ff 44 89 e0 5b 41 5c 5d c3 e8 43 19 b6 ff 0f 0b e8 3c 19 b6 ff  
+41 bc fb ff ff ff 5b 44 89 e0 41 5c 5d c3 e8 29 19 b6 ff <0f> 0b 41 bc fb  
+ff ff ff eb ca 0f 1f 44 00 00 66 2e 0f 1f 84 00 00
+RSP: 0018:ffff88808db87ad0 EFLAGS: 00010212
+RAX: 0000000000040000 RBX: 000000000000000c RCX: ffffc900143e7000
+RDX: 0000000000004d26 RSI: ffffffff81bcf9b7 RDI: ffff88808db87cd3
+RBP: ffff88808db87ae0 R08: ffff88808f5c41c0 R09: 0000000000000004
+R10: fffffbfff120d9b8 R11: ffffffff8906cdc3 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000004 R15: ffff88808db87e50
+  filldir64+0x40/0x670 fs/readdir.c:356
+  dir_emit include/linux/fs.h:3542 [inline]
+  __fat_readdir+0xd9e/0x1cb0 fs/fat/dir.c:677
+  fat_readdir+0x44/0x60 fs/fat/dir.c:704
+  iterate_dir+0x47f/0x5e0 fs/readdir.c:105
+  ksys_getdents64+0x1ce/0x320 fs/readdir.c:412
+  __do_sys_getdents64 fs/readdir.c:431 [inline]
+  __se_sys_getdents64 fs/readdir.c:428 [inline]
+  __x64_sys_getdents64+0x73/0xb0 fs/readdir.c:428
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x459a59
+Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fc825c13c78 EFLAGS: 00000246 ORIG_RAX: 00000000000000d9
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459a59
+RDX: 0000000000001000 RSI: 00000000200005c0 RDI: 0000000000000007
+RBP: 000000000075c070 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fc825c146d4
+R13: 00000000004c0533 R14: 00000000004d2c58 R15: 00000000ffffffff
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
