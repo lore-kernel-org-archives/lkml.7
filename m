@@ -2,126 +2,104 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A0FDECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 417AAC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC32920679
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:56:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14B672067B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:56:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JAkfGW2f"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="EatcSIen"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728735AbfJGP4O (ORCPT
+        id S1728767AbfJGP4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 11:56:14 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36845 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727791AbfJGP4O (ORCPT
+        Mon, 7 Oct 2019 11:56:45 -0400
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.82]:30784 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727791AbfJGP4p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:56:14 -0400
-Received: by mail-wr1-f66.google.com with SMTP id y19so15974239wrd.3;
-        Mon, 07 Oct 2019 08:56:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DKl/PfgKAr8YhYEpS+YymS2q68h7uKqU67+A+i7H4JI=;
-        b=JAkfGW2fPhaHwu0r9uGVsSnnwKsartCh6UKqSuYnahS/t+YLlfImE2qxkw0cKF1IuD
-         k8ym2ZMJljbeH0v2fLjNn0tx29Pyi1Kjmxr0QJnPF4ppQmP39wc21eO5wxswpJ5FrOA7
-         Pn1d5rIc42LYilntEcM6NsrZxRShz3m2TO3SpXLqNNq7CmgBc532yIy7+RzubAMwjbaZ
-         bOEBt2Oo7IQ1B5ROl4U+YyNc+DKU8HfWBT9iCMPsyrY4aSI2ywXr4yJ4KVpdDPEvTp6t
-         LHqxKeFN5iLPeCYKWvCeuoxU3gEOxfKG/b6D6GYjg1Uu0fYdMDrJfXUP3F6XJmGrw1Aj
-         wWTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DKl/PfgKAr8YhYEpS+YymS2q68h7uKqU67+A+i7H4JI=;
-        b=Eg0JuFM3DNIqjb1pINgN8tFwJna0MB/hSUE7+BxBfu73J4n2WNSy5ILcs7cz2DNz7N
-         DlYAE/52fm6vcAs5DHLHMWpgj9RvsgQRg4pc0bPJN1vA9F7pjzHq/8QLWWwr/JBEnyeP
-         QoEDqrQbkAPfaEck2NqZkuTGSOwzpmt4focLZw8t87bJW5XRE9tk7Wj+Ppn0QA5hW9ZC
-         KflEAg4iONoxEsPt9nrRrA4wFQozVgp+xCnwLVIxXUIOwnwcjd7PzjYTuBvuMg4YhWK6
-         ProHcupv0uEOSg0kLGim1GdkFvqV7Wy7gK5fHQZp5il+VAvcB+/hqbB7tugq4WNd0m3g
-         OxYQ==
-X-Gm-Message-State: APjAAAXH2mj1Xfg5zwoffNTA+qdw0rQpHiGajc6cH0flF7zO9u1+DAi+
-        N+6wn5ORLboIAtDofqVMm95tgO7NsDkj3siBNz0=
-X-Google-Smtp-Source: APXvYqzWRusk54BRlh8Vj4kcGxAB4PQIYCfS3CJJZ8LD48feZ0ZtBtZKhBITIHTmurRV0B3SD7aw+dSJ7U9VUoYljLo=
-X-Received: by 2002:adf:fc07:: with SMTP id i7mr8222186wrr.50.1570463770859;
- Mon, 07 Oct 2019 08:56:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191005113205.14601-1-christophe.jaillet@wanadoo.fr> <04e006aa-a354-dfe3-3d13-d674c662c300@amd.com>
-In-Reply-To: <04e006aa-a354-dfe3-3d13-d674c662c300@amd.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Mon, 7 Oct 2019 11:55:58 -0400
-Message-ID: <CADnq5_NhypGdi6z78BbWimAZVtEDxhe1Rw=D4p7JPQNH0Kdqyw@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/display: Fix typo in some comments
-To:     Harry Wentland <hwentlan@amd.com>
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        "Wentland, Harry" <Harry.Wentland@amd.com>,
-        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 7 Oct 2019 11:56:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1570463800;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=FyKZsEpJI7kWJI0Rot+lLT/EfNutbsETMRLUCZ3F92M=;
+        b=EatcSIenBjqm/1WyyRTNIhxW5cXtvt75fKzQ6BCRo9ww4I+LTGBZgHx1Hd7vMs4sIe
+        R5iw5y+wF4A4Fn41yB3oW4WwMZ4BA3Prh9+xmuaPcIg9PW3NwvmX8ciu6W5VMygMcKs+
+        lbqWhJrcyxqx4+gmSzc7WmtGjBqU4jQESUEZGfJFTbYYArteDv+QIsSXJ1kEZPN5fes3
+        G4ehiZpu9+UBcTWqUnz/Pl2Ev5orf9sP7U38cP9GcweAS1ZV7gNph+ZRJl/cmUvzeIgt
+        0lbWq/lwpjoknA1rDIRJbSUM7tjGZq+RLxnQuRKXSPNU5nK5nsOpMqGKxaDnNSa889/S
+        ht+Q==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmMgw47ty6c="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 44.28.0 DYNA|AUTH)
+        with ESMTPSA id v00409v97FudqQY
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Mon, 7 Oct 2019 17:56:39 +0200 (CEST)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: Lay common foundation to make PVR/SGX work without hacks on OMAP34xx, OMAP36xx, AM335x and potentially OMAP4, OMAP5
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20191007155252.GQ5610@atomide.com>
+Date:   Mon, 7 Oct 2019 17:56:38 +0200
+Cc:     Merlijn Wajer <merlijn@wizzup.org>, Adam Ford <aford173@gmail.com>,
+        Philipp Rossak <embed3d@gmail.com>,
+        =?utf-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        =?utf-8?Q?Filip_Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>,
+        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+        moaz korena <moaz@korena.xyz>,
+        James Hilliard <james.hilliard1@gmail.com>,
+        kernel@pyra-handheld.com,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, maemo-leste@lists.dyne.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Tero Kristo <t-kristo@ti.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <D1CD5D93-4178-4359-AF00-FFC3AA9CA054@goldelico.com>
+References: <d0cbfaaf-813e-8803-f90b-931a38396750@wizzup.org> <3A03FF16-C203-43ED-AEEF-0260F6B3331A@goldelico.com> <3b0a5e78-c4c2-1963-bac7-b49496a1e9b9@wizzup.org> <1F942AAB-1648-46C0-ADD5-90F6898778BE@goldelico.com> <84cac9b8-0eff-33f8-464d-4f8045d7db19@wizzup.org> <BFAA7FA6-A352-476A-99F9-02EA663A6AAD@goldelico.com> <CAHCN7x+87xTsA3MeHy7kUWU0SU3X8HmSc2wbk5gKvYm1dRNe6A@mail.gmail.com> <04809E3E-A690-4931-B949-1CFDAF407C14@goldelico.com> <ebb50954-b456-4dab-0765-9dfa06c67075@wizzup.org> <C3A56737-6187-4B31-8697-3A02DD164429@goldelico.com> <20191007155252.GQ5610@atomide.com>
+To:     Tony Lindgren <tony@atomide.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 10:13 AM Harry Wentland <hwentlan@amd.com> wrote:
->
-> On 2019-10-05 7:32 a.m., Christophe JAILLET wrote:
-> > p and g are switched in 'amdpgu_dm'
-> >
-> > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->
-> Reviewed-by: Harry Wentland <harry.wentland@amd.com>
 
-Applied.  thanks!
+> Am 07.10.2019 um 17:52 schrieb Tony Lindgren <tony@atomide.com>:
+>=20
+> Hi,
+>=20
+> * H. Nikolaus Schaller <hns@goldelico.com> [191005 16:59]:
+>>=20
+>>=20
+>> * AM335x (BeagleBoneBlack): reports a problem with =
+omap_reset_deassert:
+>> [  204.246706] omap_reset_deassert: timedout waiting for gfx:0
+>=20
+> Please try with Tero's current github branch at =
+github.com/t-kristo/linux-pm.git
+> 5.4-rc1-ipc from few days ago, the earlier versions had still issues.
 
-Alex
+I have seen there has been a new version today and I'll try that one =
+asap.
 
->
-> Harry
->
-> > ---
-> >  drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > index 92932d521d7f..b9c2e1a930ab 100644
-> > --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > @@ -1043,7 +1043,7 @@ static void s3_handle_mst(struct drm_device *dev, bool suspend)
-> >
-> >  /**
-> >   * dm_hw_init() - Initialize DC device
-> > - * @handle: The base driver device containing the amdpgu_dm device.
-> > + * @handle: The base driver device containing the amdgpu_dm device.
-> >   *
-> >   * Initialize the &struct amdgpu_display_manager device. This involves calling
-> >   * the initializers of each DM component, then populating the struct with them.
-> > @@ -1073,7 +1073,7 @@ static int dm_hw_init(void *handle)
-> >
-> >  /**
-> >   * dm_hw_fini() - Teardown DC device
-> > - * @handle: The base driver device containing the amdpgu_dm device.
-> > + * @handle: The base driver device containing the amdgpu_dm device.
-> >   *
-> >   * Teardown components within &struct amdgpu_display_manager that require
-> >   * cleanup. This involves cleaning up the DRM device, DC, and any modules that
-> >
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+>=20
+>> * OMAP5 (Pyra): fails to enable the clocks (did work with the =
+previous version)
+>> [  304.140363] clock-controller:clk:0000:0: failed to enable
+>> [  304.147388] PVR_K:(Error): EnableSGXClocks: pm_runtime_get_sync =
+failed (16)
+>=20
+> Hmm no idea what might be up with this one. Did some clkctrl clock
+> fixes maybe cause a regression here? Tero do you have any ideas?
+
+BR and thanks,
+Nikolaus
+
