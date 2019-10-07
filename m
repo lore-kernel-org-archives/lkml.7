@@ -2,90 +2,93 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3521DC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 07:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 809ACC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 07:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C2AC2084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 07:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50301217F9
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 07:33:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727369AbfJGHdO (ORCPT
+        id S1727384AbfJGHds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 03:33:14 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46907 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726960AbfJGHdO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 03:33:14 -0400
-Received: by mail-oi1-f195.google.com with SMTP id k25so10767342oiw.13;
-        Mon, 07 Oct 2019 00:33:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2vDq/pScz6jDxm0R1Wr3UxFtVaahc4nNp9ESIiu3grQ=;
-        b=s3eJWchQ16nFXtkfJ2UQBd+AfE95m2lQs07wXcaZhR1iSbkYAshro4awmHnlSzmu0l
-         HX23csbR2Gf9pZTcqap5eITuFM+5QgoTZGp2+jvmz/FvmeCRjkU9qhOBysVKM+mJtZQO
-         /brkvJE7Xyuptn05jmAc09MTkvGRgTqt2EPqPd38o4c0Oa0g/kfhhAmnT+re7arKKcQC
-         udM9RBCPr1eTrxjdSjwjkRKE1j/knCme3v7z2BNjTxJcxRAKHOLBI5YaS+ay18xaJZmU
-         UkyWsaXPnGdtML4tpy5xBOFe/cv5wZuhzKzj8zuoGVpnguzJoFfwGL00pWggvB8RM1Li
-         Ouog==
-X-Gm-Message-State: APjAAAUNcA6c73yojCBhqPC1SzHruHeHzcO5By7Fu0SJJXKF6qRDAItw
-        Hg/UbG+QzaoM4drAkgu1vjjYV3tphThoL8i4SUGj4Q==
-X-Google-Smtp-Source: APXvYqzpMU2bz1x2++O6c1yoiktedX4e6ww9JL1FRY2sBVVT/0DPBbWguSUrzKnsAcSZIlWKzK9iPrbIzuuH+5SkJeY=
-X-Received: by 2002:aca:3908:: with SMTP id g8mr17418460oia.54.1570433592975;
- Mon, 07 Oct 2019 00:33:12 -0700 (PDT)
+        Mon, 7 Oct 2019 03:33:48 -0400
+Received: from mga12.intel.com ([192.55.52.136]:50597 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726960AbfJGHds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 03:33:48 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Oct 2019 00:33:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,265,1566889200"; 
+   d="scan'208";a="392948085"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga005.fm.intel.com with ESMTP; 07 Oct 2019 00:33:47 -0700
+Received: from [10.226.38.27] (unknown [10.226.38.27])
+        by linux.intel.com (Postfix) with ESMTP id CA96C580332;
+        Mon,  7 Oct 2019 00:33:44 -0700 (PDT)
+Subject: Re: [PATCH v1 2/2] mmc: sdhci-of-arasan: Add Support for Intel LGM
+ SDXC
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>, ulf.hansson@linaro.org,
+        linux-mmc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, michal.simek@xilinx.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com
+References: <20191003040032.37696-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20191003040032.37696-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <329a38b4-4fba-eb6e-0d40-c241cfa28e25@intel.com>
+ <0c3d406c-dc28-a670-91df-7c7e6f818f87@linux.intel.com>
+Message-ID: <535ae010-c8b1-ceda-39dc-2dda049b1952@linux.intel.com>
+Date:   Mon, 7 Oct 2019 15:33:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191007071829.13325-1-geert@linux-m68k.org>
-In-Reply-To: <20191007071829.13325-1-geert@linux-m68k.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 7 Oct 2019 09:33:01 +0200
-Message-ID: <CAMuHMdXvu+BppwzsU9imNWVKea_hoLcRt9N+a29Q-QsjW=ip2g@mail.gmail.com>
-Subject: Re: Build regressions/improvements in v5.4-rc2
-To:     Paul Burton <paul.burton@mips.com>
-Cc:     linux-mips@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <0c3d406c-dc28-a670-91df-7c7e6f818f87@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 9:20 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> JFYI, when comparing v5.4-rc2[1] to v5.4-rc1[3], the summaries are:
->   - build errors: +5/-10
+Hi Adrian,
 
-  + /kisskb/src/drivers/staging/octeon/ethernet-defines.h: error:
-'CONFIG_CAVIUM_OCTEON_CVMSEG_SIZE' undeclared (first use in this
-function):  => 30:38
-  + /kisskb/src/drivers/staging/octeon/ethernet-defines.h: error:
-'CONFIG_CAVIUM_OCTEON_CVMSEG_SIZE' undeclared (first use in this
-function); did you mean 'CONFIG_MDIO_OCTEON_MODULE'?:  => 30:38
-  + /kisskb/src/drivers/staging/octeon/ethernet-rx.c: error:
-'CONFIG_CAVIUM_OCTEON_CVMSEG_SIZE' undeclared (first use in this
-function):  => 190:6
-  + /kisskb/src/drivers/staging/octeon/ethernet-rx.c: error:
-'OCTEON_IRQ_WORKQ0' undeclared (first use in this function):  =>
-472:25
-  + /kisskb/src/drivers/staging/octeon/ethernet-rx.c: error:
-'OCTEON_IRQ_WORKQ0' undeclared (first use in this function); did you
-mean 'OCTEON_IS_MODEL'?:  => 472:25
-
-mips-allmodconfig
-
-> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/da0c9ea146cbe92b832f1b0f694840ea8eb33cce/ (233 out of 242 configs)
-> [3] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c/ (233 out of 242 configs)
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+On 3/10/2019 3:46 PM, Ramuthevar, Vadivel MuruganX wrote:
+> Hi Adrian,
+>
+>  Thank you for the comments.
+>
+> On 3/10/2019 3:02 PM, Adrian Hunter wrote:
+>> On 3/10/19 7:00 AM, Ramuthevar,Vadivel MuruganX wrote:
+>>> From: Ramuthevar Vadivel Murugan 
+>>> <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>>
+>>> The current arasan sdhci PHY configuration isn't compatible
+>>> with the PHY on Intel's LGM(Lightning Mountain) SoC devices.
+>>>
+>>> Therefore, add a new compatible, to adapt the Intel's LGM
+>>> SDXC PHY with arasan-sdhc controller to configure the PHY.
+>>>
+>>> Signed-off-by: Ramuthevar Vadivel Murugan 
+>>> <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> Aren't these patches already in v5.4-rc1
+>
+>  No, these patches are not there in v5.4-rc1.
+>
+>  The one which is in v5.4-rc1 supports only eMMC, does not SD/SDIO, so 
+> these patches are required.
+>
+can you please provide your suggestions and opinions further on the 
+above reply,  to proceed, Thanks!
+> ---
+> With Best Regards
+> Vadivel Murugan
