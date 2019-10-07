@@ -2,101 +2,83 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB94ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B77ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5200D20867
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:34:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40F0420867
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:37:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iWkb0BzP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728014AbfJGNe5 (ORCPT
+        id S1727947AbfJGNh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 09:34:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36120 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726334AbfJGNe5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 09:34:57 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 636482064A;
-        Mon,  7 Oct 2019 13:34:55 +0000 (UTC)
-Date:   Mon, 7 Oct 2019 09:34:53 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Marco Elver <elver@google.com>
-Cc:     syzbot <syzbot+134336b86f728d6e55a0@syzkaller.appspotmail.com>,
-        paulmck@kernel.org, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org,
-        a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
-        davem@davemloft.net, LKML <linux-kernel@vger.kernel.org>,
-        mareklindner@neomailbox.ch, netdev@vger.kernel.org,
-        sw@simonwunderlich.de, syzkaller-bugs@googlegroups.com
-Subject: Re: KCSAN: data-race in find_next_bit / rcu_report_exp_cpu_mult
-Message-ID: <20191007093453.2d9852ce@gandalf.local.home>
-In-Reply-To: <CANpmjNNmSOagbTpffHr4=Yedckx9Rm2NuGqC9UqE+AOz5f1-ZQ@mail.gmail.com>
-References: <000000000000604e8905944f211f@google.com>
-        <CANpmjNNmSOagbTpffHr4=Yedckx9Rm2NuGqC9UqE+AOz5f1-ZQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 7 Oct 2019 09:37:56 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37589 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727715AbfJGNh4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 09:37:56 -0400
+Received: by mail-lf1-f68.google.com with SMTP id w67so9309549lff.4
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 06:37:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=K/tsF7GqCM65n3gcBquhTSl70JrQbVs1nlWYo3BS3GI=;
+        b=iWkb0BzPuV7IBp4vSYBVFuZJO0FbJsRfAvgu2cO+P13uspqykRW3EEBZWo11MeamXz
+         ctAHRKUZ4vWMN+r1/+L+eudNCtIt0p8c3q/jkvp1e8QTCOzy/2vxFTI/F/10++5sMo5H
+         vcrMs9OOTaVZKSX7eihwviBkNmwCDV3V0WG4SunWolb/1XLRVu9xMv8DpGsye+/ZhPq2
+         1ZDQTPrvDqX0SnWvwXiYLhKAyRG41aIw0Xmiq3UWfw3AVnchJBDXu98e0zoVqw2vvYpJ
+         irHzwIK+KFOgBogovwiGJTh7rMGHWlalJbUq1OkoGp5IHZBkwFXfXGAr5qGeaWnwXUDE
+         Ntvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K/tsF7GqCM65n3gcBquhTSl70JrQbVs1nlWYo3BS3GI=;
+        b=L3Gzw6f4JByHrpvMBn555dYD3DMDDThKFSDR38pApwFrTyF1TkpzrJG/0BhgJrYNm7
+         sFVVV4853T69f1qCZxOZ8MjUMuKKt2NFiQ/O11rhhgHeDEw79zE4m/UqpsFalmj8z1CD
+         HcJsryKra+QdpLSR8ebe0KB1jvlHGlYoiEMxYXuWFv1tAd1sWHrJinP+3USiMmh8CWnk
+         yOecrw8mqMWfZyT0D38o4efw4rxEeowvHFMIT6kAaclG6B7H5iCzPUswFX+dK3+KQcbb
+         fX4Y4el++qDRl42uDQpUMhJjqmTAf+o6X/geOUhJRzvFGtq8OmgC6iFDe5biOJ61cUCd
+         G85A==
+X-Gm-Message-State: APjAAAWSgz4n8nUvTDj49ZZ84Fqx+2c+t7JqvV2BeaOOa9l8/eRmiZCE
+        2G25M2mRq9NUHFo7HUqSeGcC2wUBA5oN+aKgss1zSg==
+X-Google-Smtp-Source: APXvYqzdlwluYUS9ghER2EH7kQEWGcyE9V00SPsQht/6sMe7rS52Rf3HzisNVBbF55cEvGYsIShCVyJG0pnChTGN6zk=
+X-Received: by 2002:ac2:4289:: with SMTP id m9mr13110124lfh.139.1570455473793;
+ Mon, 07 Oct 2019 06:37:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190911130314.29973-1-qperret@qperret.net> <1fab36a5-25cf-abd2-ee25-23d8c8d673ac@linaro.org>
+In-Reply-To: <1fab36a5-25cf-abd2-ee25-23d8c8d673ac@linaro.org>
+From:   Quentin Perret <qperret@google.com>
+Date:   Mon, 7 Oct 2019 14:37:42 +0100
+Message-ID: <CAPwzONkaUmZuw7W1w=D11G55DVmj8fxmLwZ4hEYGdGEJbpsqHg@mail.gmail.com>
+Subject: Re: [PATCH RESEND v8 0/4] Make IPA use PM_EM
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Quentin Perret <qperret@qperret.net>, edubezval@gmail.com,
+        rui.zhang@intel.com, javi.merino@kernel.org,
+        viresh.kumar@linaro.org, amit.kachhap@gmail.com, rjw@rjwysocki.net,
+        catalin.marinas@arm.com, will@kernel.org, dietmar.eggemann@arm.com,
+        ionela.voinescu@arm.com, mka@chromium.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 7 Oct 2019 12:04:16 +0200
-Marco Elver <elver@google.com> wrote:
+Hi Daniel,
 
-> +RCU maintainers
-> This might be a data-race in RCU itself.
-> 
-> >
-> > write to 0xffffffff85a7f140 of 8 bytes by task 7 on cpu 0:
-> >   rcu_report_exp_cpu_mult+0x4f/0xa0 kernel/rcu/tree_exp.h:244
+On Mon, Oct 7, 2019 at 6:35 AM Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
+> the series does no longer apply, do you think it is possible to give it
+> a respin?
 
-Here we have:
+Right, I'll try to fix the conflicts and post a v9 shortly.
 
-	raw_spin_lock_irqsave_rcu_node(rnp, flags);
-	if (!(rnp->expmask & mask)) {
-		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
-		return;
-	}
-	rnp->expmask &= ~mask;
-	__rcu_report_exp_rnp(rnp, wake, flags); /* Releases rnp->lock. */
-
-> >
-> > read to 0xffffffff85a7f140 of 8 bytes by task 7251 on cpu 1:
-> >   _find_next_bit lib/find_bit.c:39 [inline]
-> >   find_next_bit+0x57/0xe0 lib/find_bit.c:70
-> >   sync_rcu_exp_select_node_cpus+0x28e/0x510 kernel/rcu/tree_exp.h:375
-
-and here we have:
-
-
-	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
-
-	/* IPI the remaining CPUs for expedited quiescent state. */
-	for_each_leaf_node_cpu_mask(rnp, cpu, rnp->expmask) {
-
-
-The write to rnp->expmask is done under the rnp->lock, but on the read
-side, that lock is released before the for loop. Should we have
-something like:
-
-	unsigned long expmask;
-	[...]
-
-	expmask = rnp->expmask;
-	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
-
-	/* IPI the remaining CPUs for expedited quiescent state. */
-	for_each_leaf_node_cpu_mask(rnp, cpu, expmask) {
-
-?
-
--- Steve
+Thanks,
+Quentin
