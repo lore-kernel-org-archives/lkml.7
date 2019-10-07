@@ -2,173 +2,165 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63325ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90928ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D22B20684
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:32:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O6pA7nAG"
+	by mail.kernel.org (Postfix) with ESMTP id 651DF20684
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:34:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729365AbfJGScM (ORCPT
+        id S1728992AbfJGSeA convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 14:32:12 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:45831 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728031AbfJGScL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 14:32:11 -0400
-Received: by mail-qt1-f194.google.com with SMTP id c21so20597725qtj.12
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 11:32:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3rnbgFnuJ98U2STRa9CikKX4jXSjq4U8XYYbtubS7J8=;
-        b=O6pA7nAG8ZfanaMkDBZItX1pIMYhKT0fhFjw90lBs34r8Mshe0qIxKB3Dci2mITiih
-         NVdOqeJQG36TF2YAvneq/c7wSpf76fxc7uHl7t9HI054TaKztCb5MzYkgAcKI/53yfxs
-         izY/eF/PtzBbiTR2lNCjzgP6UDu9C/EsvlqJXR9ZHAOshoG8iN569Dnq6Xjs/+adR9V0
-         Pvba105YGdGX4fWVtjuMzYQCY0TzOjrbdqOSxZtJgz2kiLeLbXD9SAeIK2pLREm7ymGa
-         8ON88jhIv7kdPyFfZcTrQU5WU9DTyolHkZ/OEPJ5ezEWhMP0FM4ttET1k/Yzk1Yjg1jv
-         isHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3rnbgFnuJ98U2STRa9CikKX4jXSjq4U8XYYbtubS7J8=;
-        b=LXf5Smbx9U1Z5fKE7N/3guOeVz6Ho0Ln229wJ+MNvlBsXzIysRmtEmC9rsPZ7aAPcf
-         9qgE4+qWSzRdrxZuRNXxoH5mXpmheGl+FBIey3rFROCcFtJBVaLiGdL5Njootk1yKdFg
-         ECw7oCYVswXLMhx2Jdu/RMgMhUrHCemxEoWuihqKLqYdta/FB2g5o7qZYh17iOlJ+BLY
-         k8J/2pUibqQtafQ+8Vb6+Yi3iq1YNjt3/1O9cZSA6RJt/ZZnAFhsZd6in6pr97K6KoCJ
-         E5HRE1npB5luHaDW0h67yVqpZq4pT86P2nwRNGCOWLsgRIX01Zb8/ckweFcXYmVeXNUy
-         CuBg==
-X-Gm-Message-State: APjAAAXSKtjzzrQaKCwYgoRDp8vjB3lHWYx1mkORM3mx6Mx5K1V2is7g
-        dX37yFluzPTRT0NS5XjSqkg=
-X-Google-Smtp-Source: APXvYqwydeqYAkBJGUUDSKOHyrPiENQl/bxwRYRR4luRVdClTnpwRFsFOPSgbyJfTuIIYZmDcmE81g==
-X-Received: by 2002:aed:21d1:: with SMTP id m17mr32105904qtc.17.1570473129811;
-        Mon, 07 Oct 2019 11:32:09 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id n21sm8251568qka.83.2019.10.07.11.32.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 07 Oct 2019 11:32:09 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Mon, 7 Oct 2019 14:32:07 -0400
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org
-Subject: Re: ehci-pci breakage with dma-mapping changes in 5.4-rc2
-Message-ID: <20191007183206.GA13589@rani.riverdale.lan>
-References: <20191007022454.GA5270@rani.riverdale.lan>
- <20191007073448.GA882@lst.de>
- <20191007175430.GA32537@rani.riverdale.lan>
- <20191007175528.GA21857@lst.de>
- <20191007175630.GA28861@infradead.org>
- <20191007175856.GA42018@rani.riverdale.lan>
+        Mon, 7 Oct 2019 14:34:00 -0400
+Received: from mail-oln040092072071.outbound.protection.outlook.com ([40.92.72.71]:17542
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728081AbfJGSd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 14:33:59 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PzC+CtRz8zApziSU6RaGpNLSv5IMrDPgfE4oXxHtt5AxwE9ZbUyNMWM2aQkm4dfMlkTi3E9Z3he6Y6zYJeCcZnaHp0SMhLmUZxsPbFymR26e3daNXIcFn1q3NlT+MJwMXJUVkvDuUERz0v8KHUktoYhzFpXGs/F/Qe1pykOxmDVmbAvWo5a62vtmLZqcSinmIWYS6TOq0++CNlEoLP04cYJuCwsYFZOIISzx2Po86BkCzN7bwr8Fcjxrn8zWOfT9SFurm1eqrTdLeRynPGHqfhZ1yZt7RCWMfNYoopr2v41Ysc7TavfZ7Eg9aImcWh1xX9Hs8KyInzDqrEyTwAPUWA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gv/rWJhNzSxfYffBOdNDgTZKoNhZl/1l0r+f1m1j2SQ=;
+ b=ds0o4tZr0qtPaB/bqDF+k9Nj7guMaP4BJGb8jHsh+/TBLzT/IBjQxXvG1c2WKo5imGC+u2la5J82s6aUzarTjMKnuoNVJ2G2GV4ddCMqdGM3HkSvGKbRScLxHrv/nW60qb2HClXwU/wUZRvj6gP21YyMku+m7IuLN/uKrmKuBvx0HGA0Ziq09+rh2FhRHvI5xJIsS2lHTRpeNwpRGUsE/++rSjeca9U9Lri1C1aHdajRssqn6A6fhSCR6ugYcI5HZURkbELsgJ4IYo/cMoKwF7qQ4bXz6InfmdfIFZkqavXouZq5kVrVGyBcSUrS8JfOmTSFTEp0dPJewhGPFImL7A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from AM5EUR03FT023.eop-EUR03.prod.protection.outlook.com
+ (10.152.16.58) by AM5EUR03HT008.eop-EUR03.prod.protection.outlook.com
+ (10.152.16.102) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2305.15; Mon, 7 Oct
+ 2019 18:33:53 +0000
+Received: from HE1PR06MB4011.eurprd06.prod.outlook.com (10.152.16.55) by
+ AM5EUR03FT023.mail.protection.outlook.com (10.152.16.169) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2305.15 via Frontend Transport; Mon, 7 Oct 2019 18:33:53 +0000
+Received: from HE1PR06MB4011.eurprd06.prod.outlook.com
+ ([fe80::5c5a:1160:a2e0:43d8]) by HE1PR06MB4011.eurprd06.prod.outlook.com
+ ([fe80::5c5a:1160:a2e0:43d8%4]) with mapi id 15.20.2305.023; Mon, 7 Oct 2019
+ 18:33:52 +0000
+From:   Jonas Karlman <jonas@kwiboo.se>
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+CC:     "kernel@collabora.com" <kernel@collabora.com>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        "fbuergisser@chromium.org" <fbuergisser@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 for 5.4 3/4] media: hantro: Fix motion vectors usage
+ condition
+Thread-Topic: [PATCH v2 for 5.4 3/4] media: hantro: Fix motion vectors usage
+ condition
+Thread-Index: AQHVfTc5j58jepLQQEujLcDcYkaduadPgRaA
+Date:   Mon, 7 Oct 2019 18:33:52 +0000
+Message-ID: <HE1PR06MB4011204B3FC2DAABB4BD1BACAC9B0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+References: <20191007174505.10681-1-ezequiel@collabora.com>
+ <20191007174505.10681-4-ezequiel@collabora.com>
+In-Reply-To: <20191007174505.10681-4-ezequiel@collabora.com>
+Accept-Language: sv-SE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR05CA0221.eurprd05.prod.outlook.com
+ (2603:10a6:3:fa::21) To HE1PR06MB4011.eurprd06.prod.outlook.com
+ (2603:10a6:7:9c::32)
+x-incomingtopheadermarker: OriginalChecksum:49284390698F95E349DEB478EB2430A8870D4DB416F62A400A8F266140FFC451;UpperCasedChecksum:4F92DD6035FE886F19CD68B67CA8F12580B75676CED0F81661C49F4223916D9C;SizeAsReceived:8137;Count:50
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [3e3yQm2qrRRttsWuOTk9jkZyALgVhhVF]
+x-microsoft-original-message-id: <f89199a9-0b23-343c-7456-d003ecedce2d@kwiboo.se>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 50
+x-eopattributedmessage: 0
+x-ms-traffictypediagnostic: AM5EUR03HT008:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: wyoIY13z+kw+xTtJwBbf+Am7TOKkl1qpmUuxROSTL+cqkjmiMbR2ftH4GR3wAMuYXlpOvzRPRx3A35cH9VFGayKYOjpBaBmVzf+ffN1ONC6J0NR1mVpOXp3UszProbQbtn6Lrgr1kdlyTEQQ7NNgpn6aBXq1XQLb26vtqkgd7ySHMATYmd+2RKC7IYJ60zMc
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <940378B8E35A0A4AAADCC3F80571F034@eurprd06.prod.outlook.com>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="ReaqsoxgOBHFXBhH"
-Content-Disposition: inline
-In-Reply-To: <20191007175856.GA42018@rani.riverdale.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6d69403e-8247-4b01-23bb-08d74b54e68b
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Oct 2019 18:33:52.7590
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5EUR03HT008
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019-10-07 19:45, Ezequiel Garcia wrote:
+> From: Francois Buergisser <fbuergisser@chromium.org>
+>
+> The setting of the motion vectors usage and the setting of motion
+> vectors address are currently done under different conditions.
+>
+> When decoding pre-recorded videos, this results of leaving the motion
+> vectors address unset, resulting in faulty memory accesses. Fix it
+> by using the same condition everywhere, which matches the profiles
+> that support motion vectors.
 
---ReaqsoxgOBHFXBhH
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+This does not fully match hantro sdk:
 
-On Mon, Oct 07, 2019 at 01:58:57PM -0400, Arvind Sankar wrote:
-> On Mon, Oct 07, 2019 at 10:56:30AM -0700, Christoph Hellwig wrote:
-> > On Mon, Oct 07, 2019 at 07:55:28PM +0200, Christoph Hellwig wrote:
-> > > On Mon, Oct 07, 2019 at 01:54:32PM -0400, Arvind Sankar wrote:
-> > > > It doesn't boot with the patch. Won't it go
-> > > > 	dma_get_required_mask
-> > > > 	-> intel_get_required_mask
-> > > > 	-> iommu_need_mapping
-> > > > 	-> dma_get_required_mask
-> > > > ?
-> > > > 
-> > > > Should the call to dma_get_required_mask in iommu_need_mapping be
-> > > > replaced with dma_direct_get_required_mask on top of your patch?
-> > > 
-> > > Yes, sorry.
-> > 
-> > Actually my patch already calls dma_direct_get_required_mask.
-> > How did you get the loop?
-> 
-> The function iommu_need_mapping (not changed by your patch) calls
-> dma_get_required_mask internally, to check whether the device's dma_mask
-> is big enough or not. That's the call I was asking whether it needs to
-> be changed.
+  enable direct MV writing and POC tables for high/main streams.
+  enable it also for any "baseline" stream which have main/high tools enabled.
 
-Yeah the attached patch seems to fix it.
+  (sps->profile_idc > 66 && sps->constrained_set0_flag == 0) ||
+  sps->frame_mbs_only_flag != 1 ||
+  sps->chroma_format_idc != 1 ||
+  sps->scaling_matrix_present_flag != 0 ||
+  pps->entropy_coding_mode_flag != 0 ||
+  pps->weighted_pred_flag != 0 ||
+  pps->weighted_bi_pred_idc != 0 ||
+  pps->transform8x8_flag != 0 ||
+  pps->scaling_matrix_present_flag != 0
 
---ReaqsoxgOBHFXBhH
-Content-Type: text/x-diff; charset=utf-8
-Content-Disposition: attachment; filename="0001-iommu-vt-d-Return-the-correct-dma-mask-when-we-are-b.patch"
+Above check is used when DIR_MV_BASE should be written.
+And WRITE_MVS_E is set to nal_ref_idc != 0 when above is true.
 
-From 074e8cc145dde514427c40124913a90c4552dd6e Mon Sep 17 00:00:00 2001
-From: Arvind Sankar <nivedita@alum.mit.edu>
-Date: Mon, 7 Oct 2019 14:19:12 -0400
-Subject: [PATCH] iommu/vt-d: Return the correct dma mask when we are bypassing
- the IOMMU
+I think it may be safer to always set DIR_MV_BASE and keep the existing nal_ref_idc check for WRITE_MVS_E.
+(That is what I did in my "media: hantro: H264 fixes and improvements" series, v2 is incoming)
+Or have you found any video that is having issues in such case?
 
-We must return a mask covering the full physical RAM when bypassing the
-IOMMU mapping. Also, in iommu_need_mapping, we need to check using
-dma_direct_get_required_mask to ensure that the device's dma_mask can
-cover physical RAM before deciding to bypass IOMMU mapping.
+Regards,
+Jonas
 
-Fixes: 249baa547901 ("dma-mapping: provide a better default ->get_required_mask")
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
----
- drivers/iommu/intel-iommu.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+>
+> Fixes: dea0a82f3d22 ("media: hantro: Add support for H264 decoding on G1")
+> Signed-off-by: Francois Buergisser <fbuergisser@chromium.org>
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> ---
+> v2:
+> * New patch.
+>
+>  drivers/staging/media/hantro/hantro_g1_h264_dec.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/staging/media/hantro/hantro_g1_h264_dec.c b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
+> index 7ab534936843..c92460407613 100644
+> --- a/drivers/staging/media/hantro/hantro_g1_h264_dec.c
+> +++ b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
+> @@ -35,7 +35,7 @@ static void set_params(struct hantro_ctx *ctx)
+>  	if (sps->flags & V4L2_H264_SPS_FLAG_MB_ADAPTIVE_FRAME_FIELD)
+>  		reg |= G1_REG_DEC_CTRL0_SEQ_MBAFF_E;
+>  	reg |= G1_REG_DEC_CTRL0_PICORD_COUNT_E;
+> -	if (dec_param->nal_ref_idc)
+> +	if (sps->profile_idc > 66)
+>  		reg |= G1_REG_DEC_CTRL0_WRITE_MVS_E;
+>  
+>  	if (!(sps->flags & V4L2_H264_SPS_FLAG_FRAME_MBS_ONLY) &&
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 3f974919d3bd..79e35b3180ac 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -3471,7 +3471,7 @@ static bool iommu_need_mapping(struct device *dev)
- 		if (dev->coherent_dma_mask && dev->coherent_dma_mask < dma_mask)
- 			dma_mask = dev->coherent_dma_mask;
- 
--		if (dma_mask >= dma_get_required_mask(dev))
-+		if (dma_mask >= dma_direct_get_required_mask(dev))
- 			return false;
- 
- 		/*
-@@ -3775,6 +3775,13 @@ static int intel_map_sg(struct device *dev, struct scatterlist *sglist, int nele
- 	return nelems;
- }
- 
-+static u64 intel_get_required_mask(struct device *dev)
-+{
-+	if (!iommu_need_mapping(dev))
-+		return dma_direct_get_required_mask(dev);
-+	return DMA_BIT_MASK(32);
-+}
-+
- static const struct dma_map_ops intel_dma_ops = {
- 	.alloc = intel_alloc_coherent,
- 	.free = intel_free_coherent,
-@@ -3787,6 +3794,7 @@ static const struct dma_map_ops intel_dma_ops = {
- 	.dma_supported = dma_direct_supported,
- 	.mmap = dma_common_mmap,
- 	.get_sgtable = dma_common_get_sgtable,
-+	.get_required_mask = intel_get_required_mask,
- };
- 
- static void
--- 
-2.21.0
-
-
---ReaqsoxgOBHFXBhH--
