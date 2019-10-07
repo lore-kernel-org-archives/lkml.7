@@ -6,37 +6,32 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E98CC4360C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 01:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64347C4360C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 01:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 263D32080F
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 01:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DF792080F
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 01:57:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726883AbfJGByF (ORCPT
+        id S1726894AbfJGB5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 21:54:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36034 "EHLO mx1.suse.de"
+        Sun, 6 Oct 2019 21:57:45 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36310 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726789AbfJGByF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 21:54:05 -0400
+        id S1726739AbfJGB5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 21:57:45 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9ACBDAC8E;
-        Mon,  7 Oct 2019 01:54:03 +0000 (UTC)
-Date:   Mon, 07 Oct 2019 03:54:03 +0200
-Message-ID: <s5h4l0ljp6s.wl-tiwai@suse.de>
+        by mx1.suse.de (Postfix) with ESMTP id 92E6CAC8E;
+        Mon,  7 Oct 2019 01:57:43 +0000 (UTC)
+Date:   Mon, 07 Oct 2019 03:57:43 +0200
+Message-ID: <s5h1rvpjp0o.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
-To:     "Krzysztof Kozlowski" <krzk@kernel.org>
-Cc:     <alsa-devel@alsa-project.org>,
-        "Liam Girdwood" <lgirdwood@gmail.com>,
-        "Mark Brown" <broonie@kernel.org>,
-        "Jiri Kosina" <trivial@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        "Jaroslav Kysela" <perex@perex.cz>,
-        "Takashi Iwai" <tiwai@suse.com>, <linux-kernel@vger.kernel.org>
-Subject: Re: [RESEND TRIVIAL] sound: Fix Kconfig indentation
-In-Reply-To: <20191004144931.3851-1-krzk@kernel.org>
-References: <20191004144931.3851-1-krzk@kernel.org>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Takashi Iwai <tiwai@suse.com>, <alsa-devel@alsa-project.org>,
+        <kailang@realtek.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ALSA: hda/realtek: Reduce the Headphone static noise on XPS 9350/9360
+In-Reply-To: <20191003043919.10960-1-kai.heng.feng@canonical.com>
+References: <20191003043919.10960-1-kai.heng.feng@canonical.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -47,20 +42,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 04 Oct 2019 16:49:31 +0200,
-Krzysztof Kozlowski wrote:
+On Thu, 03 Oct 2019 06:39:19 +0200,
+Kai-Heng Feng wrote:
 > 
-> Adjust indentation from spaces to tab (+optional two spaces) as in
-> coding style with command like:
->     $ sed -e 's/^        /\t/' -i */Kconfig
+> Headphone on XPS 9350/9360 produces a background white noise. The The
+> noise level somehow correlates with "Headphone Mic Boost", when it sets
+> to 1 the noise disappears. However, doing this has a side effect, which
+> also decreases the overall headphone volume so I didn't send the patch
+> upstream.
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> Acked-by: Mark Brown <broonie@kernel.org>
+> The noise was bearable back then, but after commit 717f43d81afc ("ALSA:
+> hda/realtek - Update headset mode for ALC256") the noise exacerbates to
+> a point it starts hurting ears.
+> 
+> So let's use the workaround to set "Headphone Mic Boost" to 1 and lock
+> it so it's not touchable by userspace.
+> 
+> Fixes: 717f43d81afc ("ALSA: hda/realtek - Update headset mode for ALC256")
+> BugLink: https://bugs.launchpad.net/bugs/1654448
+> BugLink: https://bugs.launchpad.net/bugs/1845810
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-Applied now.  Sorry for the late reaction, as I've been (still)
-traveling.
-
-Thanks.
+Applied now.  Thanks.
 
 
 Takashi
