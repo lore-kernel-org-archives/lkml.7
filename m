@@ -2,106 +2,184 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D46C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD8E4ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCE9D2064A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:56:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FKtkWjX+"
+	by mail.kernel.org (Postfix) with ESMTP id A91FE20867
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:00:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728693AbfJGM4L (ORCPT
+        id S1727832AbfJGNAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 08:56:11 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45094 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728022AbfJGMx7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 08:53:59 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y72so8574802pfb.12;
-        Mon, 07 Oct 2019 05:53:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fouAObQxCvOJMoqSDdHQwZliyL0KnDXKIglF6Y32O0I=;
-        b=FKtkWjX+LnmpMt84boARKT7jv5/0rRPmibx49uZ9K96nq20LROhb6CbRVqmiSyV1et
-         cpXR68OqfcjOzn6+0H6PS8eWkGyhpRbjBOfYlXG8MXE6lqjI0Z22Hm3qj0OGA9jPXfP8
-         kwi0dOO/t7UfrWlCoZ/FZ8V+AQRuvh+f9ACeCGkjtiBL1WsqBuikmTfyKO1pTBAANsbk
-         D9+xlNE61itYdzHvGnrrJWUD322gVnWoKyjbR6Az/4a9MXMOlNYL0C7xe0Bnv7dim/X2
-         So3RYNOHbyS8XqB1V2+SP28SaHekLTd9Mr3Phn+BOVtvlj3Pf+mgNMVqOnFaiS/GG74P
-         +9Bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fouAObQxCvOJMoqSDdHQwZliyL0KnDXKIglF6Y32O0I=;
-        b=CdCbJzoH90eLP6B2Sqc4uS/WP2/SAKLBXC+i1aDseWqZRP7aqeieFkHGANRmq+91qK
-         M64PP7T5/itksI7rvB5LVi5Lc0lBa5WnJhddtdbtN/6/xUmeMP2wUzpdMOAAT0z9o/+U
-         H8d5TFzmr1eHb+4GPn8uMXzIwl36P4XH3zpSbsP8vcTgoVN53wDF2hgSRxgogXRKF9b/
-         vZgLgvqhCGmz8WvJRjlPbGb3AzWkWGX8gMkCLSI7FjClQwEtelrcM4SckR4SbxFRqgC0
-         Ei5cbXJ52ewp2Y+QI8rBlHXyYTsz1DXbbC7SKhh8v1uti/4Qs6qMyE0/6Sq8viVhSy69
-         MrcA==
-X-Gm-Message-State: APjAAAVe4VBCXedZs0smVEb7uqw6SXgG+3C2E+VhrNFPBLsOxl+MNUOU
-        X0yiSt+QElKQip90/hSNQtW6DYWB
-X-Google-Smtp-Source: APXvYqzg6m5901h3+ktXJ47rhgGx3ovB6IcsG0WX+yTofleHA6dk07dmAXfsftdZM1WOY9UkBwYSmQ==
-X-Received: by 2002:a63:8743:: with SMTP id i64mr2141488pge.258.1570452837990;
-        Mon, 07 Oct 2019 05:53:57 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id p66sm16929493pfg.127.2019.10.07.05.53.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 07 Oct 2019 05:53:56 -0700 (PDT)
-Subject: Re: [PATCH 4.4 00/36] 4.4.196-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mon, 7 Oct 2019 09:00:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55870 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727514AbfJGNAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 09:00:05 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8CA1318C8911;
+        Mon,  7 Oct 2019 13:00:04 +0000 (UTC)
+Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1CBF55D9CC;
+        Mon,  7 Oct 2019 13:00:02 +0000 (UTC)
+Date:   Mon, 7 Oct 2019 09:00:00 -0400
+From:   Brian Foster <bfoster@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20191006171038.266461022@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <d3e1e6ae-8ca4-a43b-d30d-9a9a9a7e5752@roeck-us.net>
-Date:   Mon, 7 Oct 2019 05:53:55 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+Subject: Re: [PATCH 01/11] iomap: add tracing for the readpage / readpages
+Message-ID: <20191007130000.GG22140@bfoster>
+References: <20191006154608.24738-1-hch@lst.de>
+ <20191006154608.24738-2-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20191006171038.266461022@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191006154608.24738-2-hch@lst.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Mon, 07 Oct 2019 13:00:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/6/19 10:18 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.4.196 release.
-> There are 36 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Sun, Oct 06, 2019 at 05:45:58PM +0200, Christoph Hellwig wrote:
+> Lift the xfs code for tracing address space operations to the iomap
+> layer.
 > 
-> Responses should be made by Tue 08 Oct 2019 05:07:10 PM UTC.
-> Anything received after that time might be too late.
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+
+For the v7 version:
+
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+
+>  fs/iomap/Makefile      | 16 ++++++++------
+>  fs/iomap/buffered-io.c |  5 +++++
+>  fs/iomap/trace.h       | 49 ++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 63 insertions(+), 7 deletions(-)
+>  create mode 100644 fs/iomap/trace.h
 > 
-
-powerpc:defconfig fails to build.
-
-arch/powerpc/kernel/eeh_driver.c: In function ‘eeh_handle_normal_event’:
-arch/powerpc/kernel/eeh_driver.c:678:2: error: implicit declaration of function ‘eeh_for_each_pe’; did you mean ‘bus_for_each_dev’?
-
-It has a point:
-
-... HEAD is now at 13cac61d31df Linux 4.4.196-rc1
-$ git grep eeh_for_each_pe
-arch/powerpc/kernel/eeh_driver.c:       eeh_for_each_pe(pe, tmp_pe)
-arch/powerpc/kernel/eeh_driver.c:                               eeh_for_each_pe(pe, tmp_pe)
-
-Caused by commit 3fb431be8de3a ("powerpc/eeh: Clear stale EEH_DEV_NO_HANDLER flag").
-Full report will follow later.
-
-Guenter
+> diff --git a/fs/iomap/Makefile b/fs/iomap/Makefile
+> index 93cd11938bf5..eef2722d93a1 100644
+> --- a/fs/iomap/Makefile
+> +++ b/fs/iomap/Makefile
+> @@ -3,13 +3,15 @@
+>  # Copyright (c) 2019 Oracle.
+>  # All Rights Reserved.
+>  #
+> -obj-$(CONFIG_FS_IOMAP)		+= iomap.o
+>  
+> -iomap-y				+= \
+> -					apply.o \
+> -					buffered-io.o \
+> -					direct-io.o \
+> -					fiemap.o \
+> -					seek.o
+> +ccflags-y += -I $(srctree)/$(src)		# needed for trace events
+> +
+> +obj-$(CONFIG_FS_IOMAP)		+= iomap.o
+>  
+> +iomap-y				+= trace.o \
+> +				   apply.o \
+> +				   buffered-io.o \
+> +				   direct-io.o \
+> +				   fiemap.o \
+> +				   seek.o
+>  iomap-$(CONFIG_SWAP)		+= swapfile.o
+> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+> index e25901ae3ff4..fb209272765c 100644
+> --- a/fs/iomap/buffered-io.c
+> +++ b/fs/iomap/buffered-io.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/bio.h>
+>  #include <linux/sched/signal.h>
+>  #include <linux/migrate.h>
+> +#include "trace.h"
+>  
+>  #include "../internal.h"
+>  
+> @@ -293,6 +294,8 @@ iomap_readpage(struct page *page, const struct iomap_ops *ops)
+>  	unsigned poff;
+>  	loff_t ret;
+>  
+> +	trace_iomap_readpage(page->mapping->host, 1);
+> +
+>  	for (poff = 0; poff < PAGE_SIZE; poff += ret) {
+>  		ret = iomap_apply(inode, page_offset(page) + poff,
+>  				PAGE_SIZE - poff, 0, ops, &ctx,
+> @@ -389,6 +392,8 @@ iomap_readpages(struct address_space *mapping, struct list_head *pages,
+>  	loff_t last = page_offset(list_entry(pages->next, struct page, lru));
+>  	loff_t length = last - pos + PAGE_SIZE, ret = 0;
+>  
+> +	trace_iomap_readpages(mapping->host, nr_pages);
+> +
+>  	while (length > 0) {
+>  		ret = iomap_apply(mapping->host, pos, length, 0, ops,
+>  				&ctx, iomap_readpages_actor);
+> diff --git a/fs/iomap/trace.h b/fs/iomap/trace.h
+> new file mode 100644
+> index 000000000000..7798aeda7fb9
+> --- /dev/null
+> +++ b/fs/iomap/trace.h
+> @@ -0,0 +1,49 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2009-2019, Christoph Hellwig
+> + *
+> + * NOTE: none of these tracepoints shall be consider a stable kernel ABI
+> + * as they can change at any time.
+> + */
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM iomap
+> +
+> +#if !defined(_IOMAP_TRACE_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _IOMAP_TRACE_H
+> +
+> +#include <linux/tracepoint.h>
+> +
+> +struct inode;
+> +
+> +DECLARE_EVENT_CLASS(iomap_readpage_class,
+> +	TP_PROTO(struct inode *inode, int nr_pages),
+> +	TP_ARGS(inode, nr_pages),
+> +	TP_STRUCT__entry(
+> +		__field(dev_t, dev)
+> +		__field(u64, ino)
+> +		__field(int, nr_pages)
+> +	),
+> +	TP_fast_assign(
+> +		__entry->dev = inode->i_sb->s_dev;
+> +		__entry->ino = inode->i_ino;
+> +		__entry->nr_pages = nr_pages;
+> +	),
+> +	TP_printk("dev %d:%d ino 0x%llx nr_pages %d",
+> +		  MAJOR(__entry->dev), MINOR(__entry->dev),
+> +		  __entry->ino,
+> +		  __entry->nr_pages)
+> +)
+> +
+> +#define DEFINE_READPAGE_EVENT(name)		\
+> +DEFINE_EVENT(iomap_readpage_class, name,	\
+> +	TP_PROTO(struct inode *inode, int nr_pages), \
+> +	TP_ARGS(inode, nr_pages))
+> +DEFINE_READPAGE_EVENT(iomap_readpage);
+> +DEFINE_READPAGE_EVENT(iomap_readpages);
+> +
+> +#endif /* _IOMAP_TRACE_H */
+> +
+> +#undef TRACE_INCLUDE_PATH
+> +#define TRACE_INCLUDE_PATH .
+> +#define TRACE_INCLUDE_FILE trace
+> +#include <trace/define_trace.h>
+> -- 
+> 2.20.1
+> 
