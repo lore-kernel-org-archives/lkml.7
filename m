@@ -2,205 +2,110 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E75BECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7653FECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F44620867
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:12:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MRy0AppF"
+	by mail.kernel.org (Postfix) with ESMTP id 57AAD20867
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:14:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729594AbfJGWMP (ORCPT
+        id S1729514AbfJGWOJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 18:12:15 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:40920 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728654AbfJGWMO (ORCPT
+        Mon, 7 Oct 2019 18:14:09 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37062 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728654AbfJGWOI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 18:12:14 -0400
-Received: by mail-ua1-f66.google.com with SMTP id i13so4587088uaq.7
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 15:12:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+x3+NIU7NmFQGG7aY+XAxLXvLzEYeAhpOrsYIv4oDkM=;
-        b=MRy0AppFIQGOlY6L6gMMEunAMXL17PrnNxCObaQGdWiDqCIMWNkg6d5h2eu2WrGsUo
-         isbpiMoDVCMNQvERIIm5fZzgOV9cvY+1+AfjY/rODIpIhEefkrJ5GDUVMpt12++LLjRp
-         9Vn/Kcj1lKTBr5qjg8tHk7Co5qMshcdfb/qIg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+x3+NIU7NmFQGG7aY+XAxLXvLzEYeAhpOrsYIv4oDkM=;
-        b=FxtppPufnrxpo3ThjXsoKxc/vNmei8yVnY58rr9Ohu/yeYpMhRuPH83dg2Yk1kk7UP
-         blO34Prn82elzEQ84kmpredLjkhXsIg+HupN1nKjmwnZft6UMCGB+bQ+shubZJd4kzeX
-         ChwAd2imbPuZWmbxcznik0/i6IOTIOlQ5VpDTq1/3DitqGii0tAiPTyagpZ8/rHwQL+p
-         WbyMahIeNsp9tntECkqn5sJbN5xSSxLMOmefuGH2RWxdD4D+t1dmcmlbIiS0UlJHpJLT
-         G8e26Cc1xScCHDf0EOYIFAG5jIlviFaCnXiLlPFgWz+CzIDDfa2OcGJh6J6qIke5WNIK
-         WDsw==
-X-Gm-Message-State: APjAAAWPqdphJsalYysV05LyLEp7AA1qKTIojtREpz/E8znyRxMdp1K7
-        fzwH4AGBelJyU4qeRB3b7LBHlfuLPd0mReoft6EuQQ==
-X-Google-Smtp-Source: APXvYqyj2OkEFxcgaK3ee1ZsjfoQHllyB0cVUX7JFrkWjEJQF39euy4IXlYwvBX6Hqde2i9o6z7Czff2zEOecIzL9i0=
-X-Received: by 2002:a9f:2746:: with SMTP id a64mr3186185uaa.66.1570486332696;
- Mon, 07 Oct 2019 15:12:12 -0700 (PDT)
+        Mon, 7 Oct 2019 18:14:08 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x97LwWjW140478;
+        Mon, 7 Oct 2019 18:13:05 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vg9h81far-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 07 Oct 2019 18:13:04 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x97MAt9w016380;
+        Mon, 7 Oct 2019 22:13:03 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma03wdc.us.ibm.com with ESMTP id 2vejt6meww-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 07 Oct 2019 22:13:03 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x97MD2VT58065340
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 7 Oct 2019 22:13:02 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5A58AC60B2;
+        Mon,  7 Oct 2019 22:13:02 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DF4BFC60B7;
+        Mon,  7 Oct 2019 22:13:01 +0000 (GMT)
+Received: from [9.2.202.93] (unknown [9.2.202.93])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon,  7 Oct 2019 22:13:01 +0000 (GMT)
+Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        "Safford, David (GE Global Research, US)" <david.safford@ge.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190926171601.30404-1-jarkko.sakkinen@linux.intel.com>
+ <1570024819.4999.119.camel@linux.ibm.com>
+ <20191003114119.GF8933@linux.intel.com>
+ <1570107752.4421.183.camel@linux.ibm.com>
+ <20191003175854.GB19679@linux.intel.com>
+ <1570128827.5046.19.camel@linux.ibm.com>
+ <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A22E@ALPMBAPA12.e2k.ad.ge.com>
+ <20191004182711.GC6945@linux.intel.com>
+ <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A38B@ALPMBAPA12.e2k.ad.ge.com>
+ <20191007000520.GA17116@linux.intel.com>
+From:   Ken Goldman <kgold@linux.ibm.com>
+Message-ID: <59b88042-9c56-c891-f75e-7c0719eb5ff9@linux.ibm.com>
+Date:   Mon, 7 Oct 2019 18:13:01 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20190925225833.7310-1-dbasehore@chromium.org> <20190925225833.7310-2-dbasehore@chromium.org>
- <20191007163822.GA126146@art_vandelay>
-In-Reply-To: <20191007163822.GA126146@art_vandelay>
-From:   "dbasehore ." <dbasehore@chromium.org>
-Date:   Mon, 7 Oct 2019 15:12:00 -0700
-Message-ID: <CAGAzgspJa1b1V06s3Om+OAbPLqWsWSptbVtQApEPAXDA7W-VSQ@mail.gmail.com>
-Subject: Re: [PATCH v8 1/4] drm/panel: Add helper for reading DT rotation
-To:     Sean Paul <sean@poorly.run>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        CK Hu <ck.hu@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191007000520.GA17116@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-07_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=882 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910070196
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 9:38 AM Sean Paul <sean@poorly.run> wrote:
->
-> On Wed, Sep 25, 2019 at 03:58:30PM -0700, Derek Basehore wrote:
-> > This adds a helper function for reading the rotation (panel
-> > orientation) from the device tree.
-> >
-> > Signed-off-by: Derek Basehore <dbasehore@chromium.org>
-> > Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
->
-> The patch LGTM, but I don't see it used anywhere later in the patch? Is there a
-> panel driver incoming?
+The TPM library specification states that the TPM must comply with NIST 
+SP800-90 A.
 
-Yeah, the boe-tv101wum-nl6 panel will use it. It's not in the patch
-currently sent upstream since I don't want to step on their toes, but
-I plan on sending a patch to add it as soon as that is merged.
+https://trustedcomputinggroup.org/membership/certification/tpm-certified-products/
 
-I could hold back on this patch until that panel driver is merged too.
-Another alternative is to throw this into the generic drm_panel code,
-but there's no obvious place to put it since DRM seems to leave
-reading the DTS up to the panel drivers themselves.
+shows that the TPMs get third party certification, Common Criteria EAL 4+.
 
->
-> Sean
->
-> > ---
-> >  drivers/gpu/drm/drm_panel.c | 43 +++++++++++++++++++++++++++++++++++++
-> >  include/drm/drm_panel.h     |  9 ++++++++
-> >  2 files changed, 52 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/drm_panel.c b/drivers/gpu/drm/drm_panel.c
-> > index 6b0bf42039cf..0909b53b74e6 100644
-> > --- a/drivers/gpu/drm/drm_panel.c
-> > +++ b/drivers/gpu/drm/drm_panel.c
-> > @@ -264,6 +264,49 @@ struct drm_panel *of_drm_find_panel(const struct device_node *np)
-> >       return ERR_PTR(-EPROBE_DEFER);
-> >  }
-> >  EXPORT_SYMBOL(of_drm_find_panel);
-> > +
-> > +/**
-> > + * of_drm_get_panel_orientation - look up the orientation of the panel through
-> > + * the "rotation" binding from a device tree node
-> > + * @np: device tree node of the panel
-> > + * @orientation: orientation enum to be filled in
-> > + *
-> > + * Looks up the rotation of a panel in the device tree. The orientation of the
-> > + * panel is expressed as a property name "rotation" in the device tree. The
-> > + * rotation in the device tree is counter clockwise.
-> > + *
-> > + * Return: 0 when a valid rotation value (0, 90, 180, or 270) is read or the
-> > + * rotation property doesn't exist. -EERROR otherwise.
-> > + */
-> > +int of_drm_get_panel_orientation(const struct device_node *np,
-> > +                              enum drm_panel_orientation *orientation)
-> > +{
-> > +     int rotation, ret;
-> > +
-> > +     ret = of_property_read_u32(np, "rotation", &rotation);
-> > +     if (ret == -EINVAL) {
-> > +             /* Don't return an error if there's no rotation property. */
-> > +             *orientation = DRM_MODE_PANEL_ORIENTATION_UNKNOWN;
-> > +             return 0;
-> > +     }
-> > +
-> > +     if (ret < 0)
-> > +             return ret;
-> > +
-> > +     if (rotation == 0)
-> > +             *orientation = DRM_MODE_PANEL_ORIENTATION_NORMAL;
-> > +     else if (rotation == 90)
-> > +             *orientation = DRM_MODE_PANEL_ORIENTATION_RIGHT_UP;
-> > +     else if (rotation == 180)
-> > +             *orientation = DRM_MODE_PANEL_ORIENTATION_BOTTOM_UP;
-> > +     else if (rotation == 270)
-> > +             *orientation = DRM_MODE_PANEL_ORIENTATION_LEFT_UP;
-> > +     else
-> > +             return -EINVAL;
-> > +
-> > +     return 0;
-> > +}
-> > +EXPORT_SYMBOL(of_drm_get_panel_orientation);
-> >  #endif
-> >
-> >  MODULE_AUTHOR("Thierry Reding <treding@nvidia.com>");
-> > diff --git a/include/drm/drm_panel.h b/include/drm/drm_panel.h
-> > index 624bd15ecfab..d16158deacdc 100644
-> > --- a/include/drm/drm_panel.h
-> > +++ b/include/drm/drm_panel.h
-> > @@ -34,6 +34,8 @@ struct drm_device;
-> >  struct drm_panel;
-> >  struct display_timing;
-> >
-> > +enum drm_panel_orientation;
-> > +
-> >  /**
-> >   * struct drm_panel_funcs - perform operations on a given panel
-> >   *
-> > @@ -165,11 +167,18 @@ int drm_panel_get_modes(struct drm_panel *panel);
-> >
-> >  #if defined(CONFIG_OF) && defined(CONFIG_DRM_PANEL)
-> >  struct drm_panel *of_drm_find_panel(const struct device_node *np);
-> > +int of_drm_get_panel_orientation(const struct device_node *np,
-> > +                              enum drm_panel_orientation *orientation);
-> >  #else
-> >  static inline struct drm_panel *of_drm_find_panel(const struct device_node *np)
-> >  {
-> >       return ERR_PTR(-ENODEV);
-> >  }
-> > +static inline int of_drm_get_panel_orientation(const struct device_node *np,
-> > +             enum drm_panel_orientation *orientation)
-> > +{
-> > +     return -ENODEV;
-> > +}
-> >  #endif
-> >
-> >  #endif
-> > --
-> > 2.23.0.351.gc4317032e6-goog
-> >
->
-> --
-> Sean Paul, Software Engineer, Google / Chromium OS
+While it's theoretically possible that an attacker could compromise
+both the TPM vendors and the evaluation agencies, we do have EAL 4+ 
+assurance against both 1 and 2.
+
+On 10/6/2019 8:05 PM, Jarkko Sakkinen wrote:
+> 
+> Kernel has the random number generator for two reasons:
+> 
+> 1. To protect against bugs in hwrng's.
+> 2. To protect against deliberate backdoors in hwrng's.
+> 
+> How TPM RNG is guaranteed to protect against both 1 and 2?
+
