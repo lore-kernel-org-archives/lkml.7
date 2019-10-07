@@ -2,147 +2,136 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CED8FC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D68ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A47FF206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B68A8206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:52:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OVAe8zoq"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Hl6H+30i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728735AbfJGSvA (ORCPT
+        id S1728925AbfJGSw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 14:51:00 -0400
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:40724 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728081AbfJGSvA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 14:51:00 -0400
-Received: by mail-vk1-f193.google.com with SMTP id d126so3215225vkf.7
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 11:50:59 -0700 (PDT)
+        Mon, 7 Oct 2019 14:52:57 -0400
+Received: from mail-eopbgr810079.outbound.protection.outlook.com ([40.107.81.79]:20438
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728212AbfJGSw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 14:52:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GLD+3T1u6e7YWCnJuP0JAuWpDukeedoxpXXZAIH98EulN3xtjpBOc6sCzYsAydj5J/DRLYgSlzq1Y7qeV7T6CYf+22lIz1httrbYUhhtIyqAIgVs0tepEW/Gvw5yvRj+2nDjpFC5QlWt/kkepjZV2AxMN+NPTHmXqIuSjgFqJM1eu/NrOmBvwJ4PxAN6Cyuj6AoIEa86w5vn9Tn5PtX4gcgnmA3ZSB52kwJHBKtumlO2eVl2+WVLDn28re9wm5vt7f1Qxw01G5SoKSphP0NMqOv5fPxlMEYTUMSic80Qv4XVfPbuoIjc9KE1FuUuvt0t18F5wflzmuf+V9X1r/OSnA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Cgjyqqn8QPmefb8x5FXVTB+aPpS42Kk7SPeNBYAHjjI=;
+ b=OOZAmu13WRnu/5/QlxB0MJi7UOqYhXp/F5IYz2b/3ak7TmAErhtYe/L7KYcXTFxNGdTa6lVaGAp4nRG5DJdXFRCJvJR3UuhGK/OqXexU5jn/CZQBLTiv2sWEd1CBxDdDxpTLKr56Nafk3UG986o5JS1ZfR8ITSzx18TMbZLoEm58AS5jF/0HEDXQKsVrDETVVQV/6wGpSUR+Q9bQXEhrzVJeZhIPytGDLKx2VQ+B6Hcwk6BV3HdkplHs2XZZ3iO/68Z8c+4Ag61otvBqsmNmKJnxsQfYNc5yb4Uq46gXKocgV4wvowxwah5nx+WkVrN+6ZcjQ9bCyfFvZfRPTAJ53g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Py90T7+TOHoY4y4lQF72qi6auVcn9VleVh+vvTZakMs=;
-        b=OVAe8zoqFnXj2Iv/T3srEGEE1Kd0JS8O49MQyreVdxAUfbrHgl8+3b09Opie6N0kA4
-         N7LebgCcZO00dhMKgEFV8FCEA5mkFivAHI9vNyglEltwMeYiiQBHPRCfwzMkoWZhdjlf
-         jfGPvIvTAtt069I4+IeaPVd8GHxj5K2eRhizY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Py90T7+TOHoY4y4lQF72qi6auVcn9VleVh+vvTZakMs=;
-        b=qfwbKABMf10MZBVnG88L5HzuSpKpN8D2oRx/5/zBcJcTuK8QQs1X32s1eBM5d7jTip
-         +5I48DAzt0TOrMxskUM1qMUAhbrsvmDg2UEIPCm92Y9B+D5PCON4xnHHdsmSvP1jJbrC
-         rM4XVjM3wbv4uLxmEkCrveOurB7JSMeviaoYtusfn3MrCYgd7mzSbSkBDgjJNQWg/kNy
-         +48T1yIhF2ZaA+nYZrnvXjqF8SoJFL0XjihKtbNznDFjkuSdH7WSkEAY0URcPzCT3785
-         Z5Zh4b9P75cPE0FjhyhCeJj9zrVRcJHl1mcGIjOSixyuOuFLxeJHAEgau0V/OD6jdKqh
-         wksA==
-X-Gm-Message-State: APjAAAU1itR6ZF5ZmIn4P94vksNsEJiSBRLvXfxxYUNNuOuM1M7rIHtG
-        +cM0xfxtiYi72fhurtW+TVNR58bCNkuUe6CWqATvlg==
-X-Google-Smtp-Source: APXvYqzKcYn+QyEkep5BPOvhXlmMCn4pYfv1ojDrA+z7FDOd4AW/2yHhLJhMd3ZbFPU80M3ZE1qO494JaRdPjJnSuk8=
-X-Received: by 2002:a1f:cd81:: with SMTP id d123mr15355291vkg.21.1570474258651;
- Mon, 07 Oct 2019 11:50:58 -0700 (PDT)
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Cgjyqqn8QPmefb8x5FXVTB+aPpS42Kk7SPeNBYAHjjI=;
+ b=Hl6H+30ionS3UJDh/GueVFhq+WLzNH0+OIG0paq72WCe7c7scSxkrE3QQxDEwToGwXJM4lr4i6+6gIYxfwrZdV+E1w4os45AV82mfKjuguSqbmyAOPc+5oBrOXdtnTAWb+D56ob45YEC2M5eru4CvgUsA5XF+p3cTSnVSK/CatE=
+Received: from MWHPR02CA0052.namprd02.prod.outlook.com (2603:10b6:301:60::41)
+ by DM5PR02MB3321.namprd02.prod.outlook.com (2603:10b6:4:6a::31) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2305.20; Mon, 7 Oct
+ 2019 18:52:52 +0000
+Received: from BL2NAM02FT062.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::204) by MWHPR02CA0052.outlook.office365.com
+ (2603:10b6:301:60::41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2327.25 via Frontend
+ Transport; Mon, 7 Oct 2019 18:52:52 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ BL2NAM02FT062.mail.protection.outlook.com (10.152.77.57) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2327.21
+ via Frontend Transport; Mon, 7 Oct 2019 18:52:51 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <jolly.shah@xilinx.com>)
+        id 1iHY7m-0003TY-Vf; Mon, 07 Oct 2019 11:52:50 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <jolly.shah@xilinx.com>)
+        id 1iHY7h-0002EM-Rq; Mon, 07 Oct 2019 11:52:45 -0700
+Received: from xsj-pvapsmtp01 (mail.xilinx.com [149.199.38.66] (may be forged))
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x97IqeUC022510;
+        Mon, 7 Oct 2019 11:52:41 -0700
+Received: from [172.19.2.91] (helo=xsjjollys50.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <jolly.shah@xilinx.com>)
+        id 1iHY7c-00027p-P1; Mon, 07 Oct 2019 11:52:40 -0700
+From:   Jolly Shah <jolly.shah@xilinx.com>
+To:     ard.biesheuvel@linaro.org, mingo@kernel.org,
+        gregkh@linuxfoundation.org, matt@codeblueprint.co.uk,
+        sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org,
+        dmitry.torokhov@gmail.com, michal.simek@xilinx.com,
+        robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Jolly Shah <jolly.shah@xilinx.com>
+Subject: [PATCH v2 0/2] drivers: firmware: xilinx: Add support for versal soc
+Date:   Mon,  7 Oct 2019 11:52:21 -0700
+Message-Id: <1570474343-21524-1-git-send-email-jolly.shah@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(376002)(136003)(39860400002)(199004)(189003)(4326008)(4744005)(356004)(7696005)(6666004)(106002)(8676002)(81156014)(81166006)(51416003)(50226002)(8936002)(7416002)(2906002)(478600001)(36756003)(48376002)(316002)(16586007)(426003)(336012)(486006)(476003)(186003)(305945005)(2616005)(126002)(44832011)(26005)(9786002)(36386004)(5660300002)(47776003)(50466002)(70586007)(70206006)(107886003)(42866002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR02MB3321;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
-References: <20191007071610.65714-1-cychiang@chromium.org> <CA+Px+wWkr1xmSpgEkSaGS7UZu8TKUYvSnbjimBRH29=kDtcHKA@mail.gmail.com>
- <ebf9bc3f-a531-6c5b-a146-d80fe6c5d772@roeck-us.net> <CAFv8NwLuYKHJoG9YR3WvofwiMnXCgYv-Sk7t5jCvTZbST+Ctjw@mail.gmail.com>
- <5d9b5b3e.1c69fb81.7203c.1215@mx.google.com>
-In-Reply-To: <5d9b5b3e.1c69fb81.7203c.1215@mx.google.com>
-From:   Cheng-yi Chiang <cychiang@chromium.org>
-Date:   Tue, 8 Oct 2019 02:50:31 +0800
-Message-ID: <CAFv8Nw+x6V-995ijyws1Q36W1MpaP=kNJeiVtNakH-uC3Vgg9Q@mail.gmail.com>
-Subject: Re: [PATCH] firmware: vpd: Add an interface to read VPD value
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Tzung-Bi Shih <tzungbi@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ALSA development <alsa-devel@alsa-project.org>,
-        Hung-Te Lin <hungte@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Dylan Reid <dgreid@chromium.org>,
-        Tzung-Bi Shih <tzungbi@chromium.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c373c99d-7534-4d87-7ea1-08d74b578e4f
+X-MS-TrafficTypeDiagnostic: DM5PR02MB3321:
+X-Microsoft-Antispam-PRVS: <DM5PR02MB33212CC4AEF64B5CC901AF99B89B0@DM5PR02MB3321.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:3968;
+X-Forefront-PRVS: 01834E39B7
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Ovm8PkKvHMIMniI5fs8dk34kq/dK93P0VlDtDVAl5XZOl34EGim5Wi6qVD71FOXLJEdPhMA/XDfOK2p2nX27/5yEIpQnTY9X+iXbnPGP5fk3ztkhsCPy2smtmhE64ScVGaOczqmKfK71VsIqTrHgh87qAB15S+C9Zr1UqzZTz/Bul4v0R7V1jKYnXyK/f/0bY/ThppW9dZuk+aS7+IO1Rrm4ryjE5cPy5N//DvJ80uYKV+x4BqY6IYqgChHR+0PHIKehN0eO6TCwPFWx/tjKLf4GVy45kBc9/qokqX81L+FbRrTfdDSkhfISaLpRD3cQ1yHdvgoEspyTmOnBgXOD0v6wiWinBURTCczEF1iI82OlUPV2J1OABz9UisbQHPR2ri3uqE8fkzlkfMaF2t7KhXH4UskvqX/7PvYZQ6/Vz+M=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Oct 2019 18:52:51.5974
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c373c99d-7534-4d87-7ea1-08d74b578e4f
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR02MB3321
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 11:35 PM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Cheng-yi Chiang (2019-10-07 06:58:41)
-> >
-> > Hi Guenter,
-> > Thanks for the quick review.
-> > I'll update accordingly in v2.
->
-> I'd prefer this use the nvmem framework which already handles many of
-> the requirements discussed here. Implement an nvmem provider and figure
-> out how to wire that up to the kernel users. Also, please include a user
-> of the added support, otherwise it is impossible to understand how this
-> code is used.
->
-Hi Stephen,
-Thanks for the suggestion.
-My usage is for Intel machine driver to read a string for speaker calibration.
+Versal is xilinx's next generation soc. This patch adds
+driver support required to be compatible with versal device
 
-https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1838091/4/sound/soc/intel/boards/cml_rt1011_rt5682.c#325
+v2:
+  No changes. Resending to include DT maintaners
 
-Based on the comments in this thread, its usage would look like
+Jolly Shah (2):
+  dt-bindings: firmware: Add bindings for Versal firmware
+  drivers: firmware: xilinx: Add support for versal soc
 
-#define DSM_CALIB_KEY "dsm_calib"
-static int load_calibration_data(struct cml_card_private *ctx) {
-          char *data = NULL;
-          int ret;
-          u32 value_len;
+ .../bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt    | 16 +++++++++++++++-
+ drivers/firmware/xilinx/zynqmp.c                         |  8 ++++++--
+ 2 files changed, 21 insertions(+), 3 deletions(-)
 
-          /* Read calibration data from VPD. */
-          ret = vpd_attribute_read(1, DSM_CALIB_KEY,
-                                         (u8 **)&data, &value_len);
+-- 
+2.7.4
 
-          /* Parsing of this string...*/
-}
-
-It is currently pending on unmerged machine driver cml_rt1011_rt5682.c
-in ASoC so I can not post it for review for now.
-
-As for nvmem approach, I looked into examples of nvmem usage, and have
-a rough idea how to do this.
-
-1) In vpd.c, as it parses key and value in the VPD section, add nvmem cell  with
-{
-.name=key,
-.offset=consumed,   // need some change in vpd_decodec.c to get the
-offset of value in the section.
-.bytes=value
-}
-Implement read function with vpd_section as context.
-
-2) In vpd.c, register an nvm_device using devm_nvmem_register in
-coreboot_driver's probe function vpd_probe.
-
-3) As my use case does not use device tree, it is hard for ASoC
-machine to access nvmem device. I am wondering if I can use
-nvm_cell_lookup so machine driver can find the nvmem device using a
-con_id. But currently the cell lookup API requires a matched device,
-which does not fit my usage because there will be different machine
-drivers requesting the value.
-I think I can still workaround this by adding the lookup table in
-machine driver. This would seem to be a bit weird because I found that
-most lookup table is added in provider side, not consumer side. Not
-sure if this is logically correct.
-
-IMO the nvmem approach would create more complexity to support this
-simple usage. Plus, the underlying assumption of accessing data with
-offset in a buffer does not fit well with the already parsed VPD
-values in a list of vpd_attrib_info. But if you strongly feel that
-this is a better approach I can work toward this.
-
-Thanks!
