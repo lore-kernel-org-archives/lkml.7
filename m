@@ -2,284 +2,112 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CDBC4360C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 02:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E591BC4360C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 02:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5204320862
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 02:41:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="qLMa5Yhy"
+	by mail.kernel.org (Postfix) with ESMTP id B3DD820862
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 02:50:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbfJGClf (ORCPT
+        id S1727005AbfJGCut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 22:41:35 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38456 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726789AbfJGClf (ORCPT
+        Sun, 6 Oct 2019 22:50:49 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:60916 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726781AbfJGCut (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 22:41:35 -0400
-Received: by mail-pl1-f196.google.com with SMTP id w8so6143048plq.5
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 19:41:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=e6YCPvkqUEYPdp7Issb3rlEPCn0qCQu25RHzf2YaVvc=;
-        b=qLMa5YhyILm6yO8Na5KLscg9DAuCg9v6D6QUckNpATGWtNXINlxvAFEr8EDkVKe/qR
-         bQTb6vxps7Of7X4bDSdAasEp+piPWdS5YeumOTPaEvczVzJ3bNPySggN+IBIqwMu5J7g
-         dkLNrMMMENSnesQyX+c+AvNNhSO2L9OwX1g28nsyT0wIT55EtrLeXz9xe89a9dd9nH8W
-         hza4lsO3870R2hRFuM4DNTh3FFYBCYEAF7BYGFICzb8ntHsa+7LCDiTWc+FAR+uKYJ9r
-         FFo9/V1aNdmd2h8W8ywNv/WjEZs9diztFj7CXIaRTi3t7/sXEidSodSKw/phasIQjdVx
-         +XUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=e6YCPvkqUEYPdp7Issb3rlEPCn0qCQu25RHzf2YaVvc=;
-        b=oSzfIFRc56rbGwn/ExVvyr4CovR2GfLekT/I2UTPEd81QU7boibu6VRcTYJbkUUKLE
-         Kf/1M6jz25VMZ35dOna1TTGKIIYhM4kRNrQ7eOtKXk+3b4NKabIMghfCPojUoiB4EmZ/
-         UMmQg4IWe5bZl6yhOtjlm0yxRfVhnQB1wwHwIfW+vHdpp9E65PTl0Z0nMx2lJ2lgr9TC
-         Sr71JN61y6rjgzppYgUhbUal4bjboIh66KYvImQ8EVoj3Y7n41GzO+JNUHCZiGTiKyZi
-         O0c2Pzsxxn1pKeA7L/xvqWcmKEy4Oc+uuGgQumqG3XeKLe11h7xKYvRj3gZ5xb0W45OA
-         khTg==
-X-Gm-Message-State: APjAAAVLgSp427+Rt9PPSEuAirV/AJheTa54aWuX01rJE0owb6/bJO1J
-        e/xvjLS+rp/VdYCWI4Rc0O5KAQ==
-X-Google-Smtp-Source: APXvYqx0eJ2GKQ0KLH9t4w++nwR6ZWbjydgKAz1kNgkUTHi/fax0ACyxrNqhAZbAuGoiWHJ9jT0YvA==
-X-Received: by 2002:a17:902:8b89:: with SMTP id ay9mr27184492plb.81.1570416094190;
-        Sun, 06 Oct 2019 19:41:34 -0700 (PDT)
-Received: from debian-brgl.local (96-95-220-76-static.hfc.comcastbusiness.net. [96.95.220.76])
-        by smtp.gmail.com with ESMTPSA id 16sm12444822pfn.35.2019.10.06.19.41.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Oct 2019 19:41:33 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2] iio: pressure: bmp280: use devm action and remove labels from probe
-Date:   Mon,  7 Oct 2019 04:41:31 +0200
-Message-Id: <20191007024131.22708-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.23.0
+        Sun, 6 Oct 2019 22:50:49 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iHJ6k-0006NC-GN; Mon, 07 Oct 2019 02:50:46 +0000
+Date:   Mon, 7 Oct 2019 03:50:46 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to
+ unsafe_put_user()
+Message-ID: <20191007025046.GL26530@ZenIV.linux.org.uk>
+References: <20191006222046.GA18027@roeck-us.net>
+ <CAHk-=wgrqwuZJmwbrjhjCFeSUu2i57unaGOnP4qZAmSyuGwMZA@mail.gmail.com>
+ <CAHk-=wjRPerXedTDoBbJL=tHBpH+=sP6pX_9NfgWxpnmHC5RtQ@mail.gmail.com>
+ <5f06c138-d59a-d811-c886-9e73ce51924c@roeck-us.net>
+ <CAHk-=whAQWEMADgxb_qAw=nEY4OnuDn6HU4UCSDMNT5ULKvg3g@mail.gmail.com>
+ <20191007012437.GK26530@ZenIV.linux.org.uk>
+ <CAHk-=whKJfX579+2f-CHc4_YmEmwvMe_Csr0+CPfLAsSAdfDoA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whKJfX579+2f-CHc4_YmEmwvMe_Csr0+CPfLAsSAdfDoA@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Sun, Oct 06, 2019 at 07:06:19PM -0700, Linus Torvalds wrote:
+> On Sun, Oct 6, 2019 at 6:24 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> >
+> > Ugh...  I wonder if it would be better to lift STAC/CLAC out of
+> > raw_copy_to_user(), rather than trying to reinvent its guts
+> > in readdir.c...
+> 
+> Yeah, I suspect that's the best option.
+> 
+> Do something like
+> 
+>  - lift STAC/CLAC out of raw_copy_to_user
+> 
+>  - rename it to unsafe_copy_to_user
+> 
+>  - create a new raw_copy_to_user that is just unsafe_copy_to_user()
+> with the STAC/CLAC around it.
+> 
+> and the end result would actually be cleanert than what we have now
+> (which duplicates that STAC/CLAC for each size case etc).
+> 
+> And then for the "architecture doesn't have user_access_begin/end()"
+> fallback case, we just do
+> 
+>    #define unsafe_copy_to_user raw_copy_to_user
 
-We can drop some duplicate code if we use devm_action for disabling
-regulators and pm and the managed variant of iio_device_register().
+Callers of raw_copy_to_user():
+arch/hexagon/mm/uaccess.c:27:           uncleared = raw_copy_to_user(dest, &empty_zero_page, PAGE_SIZE);
+arch/hexagon/mm/uaccess.c:34:           count = raw_copy_to_user(dest, &empty_zero_page, count);
+arch/powerpc/kvm/book3s_64_mmu_radix.c:68:              ret = raw_copy_to_user(to, from, n);
+arch/s390/include/asm/uaccess.h:150:    size = raw_copy_to_user(ptr, x, size);
+include/asm-generic/uaccess.h:145:      return unlikely(raw_copy_to_user(ptr, x, size)) ? -EFAULT : 0;
+include/linux/uaccess.h:93:     return raw_copy_to_user(to, from, n);
+include/linux/uaccess.h:102:    return raw_copy_to_user(to, from, n);
+include/linux/uaccess.h:131:            n = raw_copy_to_user(to, from, n);
+lib/iov_iter.c:142:             n = raw_copy_to_user(to, from, n);
+lib/usercopy.c:28:              n = raw_copy_to_user(to, from, n);
 
-This allows us to completely remove all remove() callbacks from both
-i2c and spi code.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
-v1 -> v2:
-- squash the patches using devm_iio_device_register() and devm_action
-  to keep the changes bisectable
+Out of those, only __copy_to_user_inatomic(), __copy_to_user(),
+_copy_to_user() and iov_iter.c:copyout() can be called on
+any architecture.
 
- drivers/iio/pressure/bmp280-core.c | 62 +++++++++++++++---------------
- drivers/iio/pressure/bmp280-i2c.c  |  6 ---
- drivers/iio/pressure/bmp280-spi.c  |  6 ---
- drivers/iio/pressure/bmp280.h      |  1 -
- 4 files changed, 30 insertions(+), 45 deletions(-)
+The last two should just do user_access_begin()/user_access_end()
+instead of access_ok().  __copy_to_user_inatomic() has very few callers as well:
 
-diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
-index c2988dbdb1a7..79254dd26dfd 100644
---- a/drivers/iio/pressure/bmp280-core.c
-+++ b/drivers/iio/pressure/bmp280-core.c
-@@ -984,6 +984,22 @@ static int bmp085_fetch_eoc_irq(struct device *dev,
- 	return 0;
- }
- 
-+static void bmp280_pm_disable(void *data)
-+{
-+	struct device *dev = data;
-+
-+	pm_runtime_get_sync(dev);
-+	pm_runtime_put_noidle(dev);
-+	pm_runtime_disable(dev);
-+}
-+
-+static void bmp280_regulators_disable(void *data)
-+{
-+	struct regulator_bulk_data *supplies = data;
-+
-+	regulator_bulk_disable(BMP280_NUM_SUPPLIES, supplies);
-+}
-+
- int bmp280_common_probe(struct device *dev,
- 			struct regmap *regmap,
- 			unsigned int chip,
-@@ -1055,6 +1071,11 @@ int bmp280_common_probe(struct device *dev,
- 		return ret;
- 	}
- 
-+	ret = devm_add_action_or_reset(dev, bmp280_regulators_disable,
-+				       data->supplies);
-+	if (ret)
-+		return ret;
-+
- 	/* Wait to make sure we started up properly */
- 	usleep_range(data->start_up_time, data->start_up_time + 100);
- 
-@@ -1069,17 +1090,16 @@ int bmp280_common_probe(struct device *dev,
- 	data->regmap = regmap;
- 	ret = regmap_read(regmap, BMP280_REG_ID, &chip_id);
- 	if (ret < 0)
--		goto out_disable_regulators;
-+		return ret;
- 	if (chip_id != chip) {
- 		dev_err(dev, "bad chip id: expected %x got %x\n",
- 			chip, chip_id);
--		ret = -EINVAL;
--		goto out_disable_regulators;
-+		return -EINVAL;
- 	}
- 
- 	ret = data->chip_info->chip_config(data);
- 	if (ret < 0)
--		goto out_disable_regulators;
-+		return ret;
- 
- 	dev_set_drvdata(dev, indio_dev);
- 
-@@ -1093,14 +1113,14 @@ int bmp280_common_probe(struct device *dev,
- 		if (ret < 0) {
- 			dev_err(data->dev,
- 				"failed to read calibration coefficients\n");
--			goto out_disable_regulators;
-+			return ret;
- 		}
- 	} else if (chip_id == BMP280_CHIP_ID || chip_id == BME280_CHIP_ID) {
- 		ret = bmp280_read_calib(data, &data->calib.bmp280, chip_id);
- 		if (ret < 0) {
- 			dev_err(data->dev,
- 				"failed to read calibration coefficients\n");
--			goto out_disable_regulators;
-+			return ret;
- 		}
- 	}
- 
-@@ -1112,7 +1132,7 @@ int bmp280_common_probe(struct device *dev,
- 	if (irq > 0 || (chip_id  == BMP180_CHIP_ID)) {
- 		ret = bmp085_fetch_eoc_irq(dev, name, irq, data);
- 		if (ret)
--			goto out_disable_regulators;
-+			return ret;
- 	}
- 
- 	/* Enable runtime PM */
-@@ -1127,36 +1147,14 @@ int bmp280_common_probe(struct device *dev,
- 	pm_runtime_use_autosuspend(dev);
- 	pm_runtime_put(dev);
- 
--	ret = iio_device_register(indio_dev);
-+	ret = devm_add_action_or_reset(dev, bmp280_pm_disable, dev);
- 	if (ret)
--		goto out_runtime_pm_disable;
--
--	return 0;
-+		return ret;
- 
--out_runtime_pm_disable:
--	pm_runtime_get_sync(data->dev);
--	pm_runtime_put_noidle(data->dev);
--	pm_runtime_disable(data->dev);
--out_disable_regulators:
--	regulator_bulk_disable(BMP280_NUM_SUPPLIES, data->supplies);
--	return ret;
-+	return devm_iio_device_register(dev, indio_dev);
- }
- EXPORT_SYMBOL(bmp280_common_probe);
- 
--int bmp280_common_remove(struct device *dev)
--{
--	struct iio_dev *indio_dev = dev_get_drvdata(dev);
--	struct bmp280_data *data = iio_priv(indio_dev);
--
--	iio_device_unregister(indio_dev);
--	pm_runtime_get_sync(data->dev);
--	pm_runtime_put_noidle(data->dev);
--	pm_runtime_disable(data->dev);
--	regulator_bulk_disable(BMP280_NUM_SUPPLIES, data->supplies);
--	return 0;
--}
--EXPORT_SYMBOL(bmp280_common_remove);
--
- #ifdef CONFIG_PM
- static int bmp280_runtime_suspend(struct device *dev)
- {
-diff --git a/drivers/iio/pressure/bmp280-i2c.c b/drivers/iio/pressure/bmp280-i2c.c
-index acd9a3784fb4..3109c8e2cc11 100644
---- a/drivers/iio/pressure/bmp280-i2c.c
-+++ b/drivers/iio/pressure/bmp280-i2c.c
-@@ -38,11 +38,6 @@ static int bmp280_i2c_probe(struct i2c_client *client,
- 				   client->irq);
- }
- 
--static int bmp280_i2c_remove(struct i2c_client *client)
--{
--	return bmp280_common_remove(&client->dev);
--}
--
- static const struct acpi_device_id bmp280_acpi_i2c_match[] = {
- 	{"BMP0280", BMP280_CHIP_ID },
- 	{"BMP0180", BMP180_CHIP_ID },
-@@ -82,7 +77,6 @@ static struct i2c_driver bmp280_i2c_driver = {
- 		.pm = &bmp280_dev_pm_ops,
- 	},
- 	.probe		= bmp280_i2c_probe,
--	.remove		= bmp280_i2c_remove,
- 	.id_table	= bmp280_i2c_id,
- };
- module_i2c_driver(bmp280_i2c_driver);
-diff --git a/drivers/iio/pressure/bmp280-spi.c b/drivers/iio/pressure/bmp280-spi.c
-index 9d57b7a3b134..625b86878ad8 100644
---- a/drivers/iio/pressure/bmp280-spi.c
-+++ b/drivers/iio/pressure/bmp280-spi.c
-@@ -86,11 +86,6 @@ static int bmp280_spi_probe(struct spi_device *spi)
- 				   spi->irq);
- }
- 
--static int bmp280_spi_remove(struct spi_device *spi)
--{
--	return bmp280_common_remove(&spi->dev);
--}
--
- static const struct of_device_id bmp280_of_spi_match[] = {
- 	{ .compatible = "bosch,bmp085", },
- 	{ .compatible = "bosch,bmp180", },
-@@ -118,7 +113,6 @@ static struct spi_driver bmp280_spi_driver = {
- 	},
- 	.id_table = bmp280_spi_id,
- 	.probe = bmp280_spi_probe,
--	.remove = bmp280_spi_remove,
- };
- module_spi_driver(bmp280_spi_driver);
- 
-diff --git a/drivers/iio/pressure/bmp280.h b/drivers/iio/pressure/bmp280.h
-index eda50ef65706..57ba0e85db91 100644
---- a/drivers/iio/pressure/bmp280.h
-+++ b/drivers/iio/pressure/bmp280.h
-@@ -112,7 +112,6 @@ int bmp280_common_probe(struct device *dev,
- 			unsigned int chip,
- 			const char *name,
- 			int irq);
--int bmp280_common_remove(struct device *dev);
- 
- /* PM ops */
- extern const struct dev_pm_ops bmp280_dev_pm_ops;
--- 
-2.23.0
+arch/mips/kernel/unaligned.c:1307:                      res = __copy_to_user_inatomic(addr, fpr, sizeof(*fpr));
+drivers/gpu/drm/i915/i915_gem.c:345:    unwritten = __copy_to_user_inatomic(user_data,
+lib/test_kasan.c:471:   unused = __copy_to_user_inatomic(usermem, kmem, size + 1);
+mm/maccess.c:98:        ret = __copy_to_user_inatomic((__force void __user *)dst, src, size);
 
+So few, in fact, that I wonder if we want to keep it at all; the only
+thing stopping me from "let's remove it" is that I don't understand
+the i915 side of things.  Where does it do an equivalent of access_ok()?
+
+And mm/maccess.c one is __probe_kernel_write(), so presumably we don't
+want stac/clac there at all...
+
+So do we want to bother with separation between raw_copy_to_user() and
+unsafe_copy_to_user()?  After all, __copy_to_user() also has only few
+callers, most of them in arch/*
+
+I'll take a look into that tomorrow - half-asleep right now...
