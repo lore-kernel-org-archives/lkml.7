@@ -2,423 +2,112 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66633C10F14
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 00:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B57C10F14
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 00:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AFB220862
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 00:43:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BA9121479
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 00:45:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="StpyWWgh"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="k3Jq/RGS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbfJGAnp (ORCPT
+        id S1726936AbfJGApz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 20:43:45 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55885 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726779AbfJGAno (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 20:43:44 -0400
-Received: by mail-wm1-f65.google.com with SMTP id a6so10669359wma.5
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 17:43:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from:cc;
-        bh=fQOEfRQoy/pcyTLI4fTFGvUUjpgVNx4G+Kw/9xbGrIE=;
-        b=StpyWWghbg5+qigi+PXQ79YlBBRdvEcdNHMUOepdgoOrdJLYVmozYC25BcmEW0igXc
-         h6zpZcAF3c6+hICYE6URHtb8CRMSE7Wk9EzgU/rm2nXWUMs+97+X5tSulIEshUKxaM6T
-         b3o5zhQAVAUTSXS5EjLNggrmtgABxtkrzJHfMK7QXq/+zwv3zfHU6UmZO5eOug00avaW
-         Bjx0xrIFYy/B3PM4QfJApeqvy2Hs0VHeRe+nF7+FuJZYec0iSocdwBJ9ztIc/GgUDnR0
-         RVY1qWaQsxEgcdcmYm4AAcXJ162bdG3O8iw1CvUOjdbCKfWw4Ti4O1kQpLQZ+iCTsfZ3
-         bauw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from:cc;
-        bh=fQOEfRQoy/pcyTLI4fTFGvUUjpgVNx4G+Kw/9xbGrIE=;
-        b=KzVf+KbAdIV9Pj+8YOsi9MKmJF/yIq8dMvBnaNZFEqeaNbGvYM0lkzD9QGnxoyuiyl
-         QApt6CUH0pNXvX5RUf8dOf3ROUiTLobd52bOlVp9SSKEtQwIHFONksMnW3OrE8SeX38T
-         Cu1JH63xQ8kQtf7EtrTGdVALVgA+3Am+/Jm1nTR7UAtT9AOXfHOAQ3aINbKfnVQETkxs
-         z0WyBJwuQvcTfmzeWCdOTkiMXHlPMKAsTfUhN1oi4+dVhTjWL902xwLNP900fYtFRSMG
-         nNr8a5mFT+7PWhufkhsgC7ZuNt7RCNNgNHWTLscpIxn7x9HrA6c9JZwmW3puWaBSIdpM
-         NHbw==
-X-Gm-Message-State: APjAAAXdDJI+tEYMAcyartJTUh5pUANWuhVG3FKlqfgttA0ZFi/HfZe+
-        bpTmHLX7R7d1Hq1CYG3bnbymrA==
-X-Google-Smtp-Source: APXvYqy1RUExx0LprFcaXh1JMN2lSMQwUqt5qKkBkFusoMa1FCqZI/PiueBG5fDfQiYrIF2OCp7RLg==
-X-Received: by 2002:a1c:9c85:: with SMTP id f127mr13526617wme.28.1570409021143;
-        Sun, 06 Oct 2019 17:43:41 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id z9sm14474627wrp.26.2019.10.06.17.43.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 06 Oct 2019 17:43:40 -0700 (PDT)
-Message-ID: <5d9a8a3c.1c69fb81.14b6f.10d1@mx.google.com>
-Date:   Sun, 06 Oct 2019 17:43:40 -0700 (PDT)
+        Sun, 6 Oct 2019 20:45:55 -0400
+Received: from mail-eopbgr20077.outbound.protection.outlook.com ([40.107.2.77]:41128
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726661AbfJGApy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 20:45:54 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Z2ApjYd/c5z0TxyBOocS2eRCJP56ZLGOHHksdmvHGh+11Xm2F2CuTIqokmtKXe0X5OJpe6XDG9egqxvjkpYOITqBnaQzrCZL8hP/vPJKZw6PI7Ufj8zzTsv6C/vdIUVvGJfC5ETAseYmQOiwXko7gzTe2IrvIuVsL8M5nhtsva/YCk9FTFqRiBrC5LVdYdT/4ADM9AY/GxqnsUnvVHX7IYkGMz1a01tWFAsj9H5v+iOAnHACMZnoVA7/ZWWAR36Iut+zq03m/057RRyzqoXFRGPD36jHwkLQ/8iYYX/J03UkcRi/3qxq8JcTRhhzPd1pHwe9NswdjJtA3M5TVn53/g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vhhHQH6uVALXlP+dDGAM+lgnZ6issBrGnrxW7CsOvAM=;
+ b=ZVhXNh6B88JMOlEQd4Pa+qp3EYqLHEMYctf/yrNRtu6ZplOQW4X00OFtJqaO5bhsePb+sU1AU5IwZi8p8Hu3Xyn6d2RY7wBrY3Rgz4vZpq1Z8Y48YuB4PRq4tF5R1IANGR85+gmJpNaGsBcmQXkOU6fUC0kieKLS2POfVmqhuREpQbG/zUorA+HlPNhHQ+UPDebmwXTtOE7ZkCNcB/a22c2S21SeZN/Dr1U11r2yZZGINm/fM8RXjC1ekFDQIsWyxGZr8/P9z84bxKGHMrECc16+4mGnkyVwi/zpJb0Zuu4nyzvRJ2T2bBc/G8ekJRA1mkKNem3ZeKrekcMY/4vIVA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vhhHQH6uVALXlP+dDGAM+lgnZ6issBrGnrxW7CsOvAM=;
+ b=k3Jq/RGSjtmLogpSmHsYNuDMklIlWGsXXZ5xP1QvJw6PEF4Yt0Wa2cptT0l+mcwx4nf9RioRn5PAFKMzB35jny2z09URa1F9+hyMy0aB2Ypy3Rn2tQYIJYaL3RcJK7AI37tdzvnkbN/DHmNhUXDWwLOPncNGWOj1wxgyYsJoENk=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3931.eurprd04.prod.outlook.com (52.134.65.153) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.20; Mon, 7 Oct 2019 00:45:51 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::d469:ad51:2bec:19f0]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::d469:ad51:2bec:19f0%6]) with mapi id 15.20.2305.023; Mon, 7 Oct 2019
+ 00:45:50 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH] ARM: dts: imx7s: Correct GPT's ipg clock source
+Thread-Topic: [PATCH] ARM: dts: imx7s: Correct GPT's ipg clock source
+Thread-Index: AQHVbGj9OePM1LgLKkuaNPfAjuopxKdNaGOAgAENZYA=
+Date:   Mon, 7 Oct 2019 00:45:50 +0000
+Message-ID: <DB3PR0402MB3916B8450581E6D3F9F8D566F59B0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1568622549-15819-1-git-send-email-Anson.Huang@nxp.com>
+ <20191006083233.GB7150@dragon>
+In-Reply-To: <20191006083233.GB7150@dragon>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 92a33d0f-ec11-499e-01c3-08d74abfb3a5
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: DB3PR0402MB3931:|DB3PR0402MB3931:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB39318FB968382E4C8C4B5802F59B0@DB3PR0402MB3931.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2887;
+x-forefront-prvs: 01834E39B7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(136003)(366004)(39860400002)(376002)(189003)(199004)(3846002)(54906003)(99286004)(229853002)(5660300002)(76176011)(2906002)(7696005)(14454004)(52536014)(6916009)(102836004)(4744005)(86362001)(6116002)(6436002)(25786009)(71190400001)(44832011)(55016002)(9686003)(71200400001)(11346002)(33656002)(486006)(446003)(26005)(186003)(7736002)(6506007)(476003)(66946007)(66476007)(8676002)(81166006)(81156014)(478600001)(4326008)(66066001)(66446008)(64756008)(66556008)(8936002)(76116006)(74316002)(256004)(6246003)(316002)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3931;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ObNtBWuE6qnZTTP7UXMHKQWBSEDm5Lx2Jh4zmdQgire5vaVEYb1hiaT5fHfiXlnNiKdpGcVhmGPeFCpl/1Psy0mNLr4nqRznkgnPqLXICTqTcSUnVGRfR/U/9XoTk9KQVheiyObXXtuf3Qklhmtaejvaau22hmtNSb8T1mRCUVldg6Wcb8Y5KnjjBZIyqTGZsobpf0lTGvF0NBDcm0s5P7k6rJTN/rUJlz1uWiymoRx9CG+g16G45609wUuMXA7f0MRuzQAfs4tapIT+4occE3cBvSb///kDVBGm4oM8cgjeF4V5yPwPLWvMJlHomLnn1VAqLLO5FwA5vjHb9FzIf1eBDED67dfddPvYtk+lkSjF9CTkoGOpH+Rx0laPf1dvAn9No7Ct0uQWPOC0VnVJ/ohEk5GlBGWSRUYO1qxwzlQ=
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: bisect
-X-Kernelci-Kernel: v5.4-rc1-48-g0bc9c79979ea
-X-Kernelci-Tree: krzysztof
-X-Kernelci-Branch: for-next
-X-Kernelci-Lab-Name: lab-collabora
-Subject: krzysztof/for-next boot bisection: v5.4-rc1-48-g0bc9c79979ea on
- peach-pi
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com,
-        mgalka@collabora.com, Chanwoo Choi <cw00.choi@samsung.com>,
-        broonie@kernel.org, matthew.hart@linaro.org, khilman@baylibre.com,
-        enric.balletbo@collabora.com,
-        Kamil Konieczny <k.konieczny@partner.samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 92a33d0f-ec11-499e-01c3-08d74abfb3a5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Oct 2019 00:45:50.8669
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: rtsIV4961zoFrYhELmo1rpFsExkIhjCmwc0DJYmWdSv9eyxvxNjiBdbcnPe5RHjjOFMN8v1UNQ4GbaGMBOUq9g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3931
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-* This automated bisection report was sent to you on the basis  *
-* that you may be involved with the breaking commit it has      *
-* found.  No manual investigation has been done to verify it,   *
-* and the root cause of the problem may be somewhere else.      *
-*                                                               *
-* If you do send a fix, please include this trailer:            *
-*   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
-*                                                               *
-* Hope this helps!                                              *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-
-krzysztof/for-next boot bisection: v5.4-rc1-48-g0bc9c79979ea on peach-pi
-
-Summary:
-  Start:      0bc9c79979ea Merge branch 'for-v5.5/memory-samsung-dmc-dt' in=
-to for-next
-  Details:    https://kernelci.org/boot/id/5d9a50af59b5141ce5857c07
-  Plain log:  https://storage.kernelci.org//krzysztof/for-next/v5.4-rc1-48-=
-g0bc9c79979ea/arm/multi_v7_defconfig/gcc-8/lab-collabora/boot-exynos5800-pe=
-ach-pi.txt
-  HTML log:   https://storage.kernelci.org//krzysztof/for-next/v5.4-rc1-48-=
-g0bc9c79979ea/arm/multi_v7_defconfig/gcc-8/lab-collabora/boot-exynos5800-pe=
-ach-pi.html
-  Result:     0899a480ac65 ARM: dts: exynos: Add initial data for coupled r=
-egulators for Exynos5422/5800
-
-Checks:
-  revert:     PASS
-  verify:     PASS
-
-Parameters:
-  Tree:       krzysztof
-  URL:        https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git
-  Branch:     for-next
-  Target:     peach-pi
-  CPU arch:   arm
-  Lab:        lab-collabora
-  Compiler:   gcc-8
-  Config:     multi_v7_defconfig
-  Test suite: boot
-
-Breaking commit found:
-
----------------------------------------------------------------------------=
-----
-commit 0899a480ac658144b1fa351bb880c2858d43f824
-Author: Marek Szyprowski <m.szyprowski@samsung.com>
-Date:   Thu Oct 3 12:08:14 2019 +0200
-
-    ARM: dts: exynos: Add initial data for coupled regulators for Exynos542=
-2/5800
-    =
-
-    Declare Exynos5422/5800 voltage ranges for opp points for big cpu core =
-and
-    bus wcore and couple their voltage supllies as vdd_arm and vdd_int shou=
-ld
-    be in 300mV range.
-    =
-
-    Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-    [k.konieczny: add missing patch description]
-    Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
-    Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-    Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos54=
-20.dtsi
-index 2c131ad78c09..d08101b1018c 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -48,62 +48,62 @@
- =
-
- 		opp-1800000000 {
- 			opp-hz =3D /bits/ 64 <1800000000>;
--			opp-microvolt =3D <1250000>;
-+			opp-microvolt =3D <1250000 1250000 1500000>;
- 			clock-latency-ns =3D <140000>;
- 		};
- 		opp-1700000000 {
- 			opp-hz =3D /bits/ 64 <1700000000>;
--			opp-microvolt =3D <1212500>;
-+			opp-microvolt =3D <1212500 1212500 1500000>;
- 			clock-latency-ns =3D <140000>;
- 		};
- 		opp-1600000000 {
- 			opp-hz =3D /bits/ 64 <1600000000>;
--			opp-microvolt =3D <1175000>;
-+			opp-microvolt =3D <1175000 1175000 1500000>;
- 			clock-latency-ns =3D <140000>;
- 		};
- 		opp-1500000000 {
- 			opp-hz =3D /bits/ 64 <1500000000>;
--			opp-microvolt =3D <1137500>;
-+			opp-microvolt =3D <1137500 1137500 1500000>;
- 			clock-latency-ns =3D <140000>;
- 		};
- 		opp-1400000000 {
- 			opp-hz =3D /bits/ 64 <1400000000>;
--			opp-microvolt =3D <1112500>;
-+			opp-microvolt =3D <1112500 1112500 1500000>;
- 			clock-latency-ns =3D <140000>;
- 		};
- 		opp-1300000000 {
- 			opp-hz =3D /bits/ 64 <1300000000>;
--			opp-microvolt =3D <1062500>;
-+			opp-microvolt =3D <1062500 1062500 1500000>;
- 			clock-latency-ns =3D <140000>;
- 		};
- 		opp-1200000000 {
- 			opp-hz =3D /bits/ 64 <1200000000>;
--			opp-microvolt =3D <1037500>;
-+			opp-microvolt =3D <1037500 1037500 1500000>;
- 			clock-latency-ns =3D <140000>;
- 		};
- 		opp-1100000000 {
- 			opp-hz =3D /bits/ 64 <1100000000>;
--			opp-microvolt =3D <1012500>;
-+			opp-microvolt =3D <1012500 1012500 1500000>;
- 			clock-latency-ns =3D <140000>;
- 		};
- 		opp-1000000000 {
- 			opp-hz =3D /bits/ 64 <1000000000>;
--			opp-microvolt =3D < 987500>;
-+			opp-microvolt =3D < 987500 987500 1500000>;
- 			clock-latency-ns =3D <140000>;
- 		};
- 		opp-900000000 {
- 			opp-hz =3D /bits/ 64 <900000000>;
--			opp-microvolt =3D < 962500>;
-+			opp-microvolt =3D < 962500 962500 1500000>;
- 			clock-latency-ns =3D <140000>;
- 		};
- 		opp-800000000 {
- 			opp-hz =3D /bits/ 64 <800000000>;
--			opp-microvolt =3D < 937500>;
-+			opp-microvolt =3D < 937500 937500 1500000>;
- 			clock-latency-ns =3D <140000>;
- 		};
- 		opp-700000000 {
- 			opp-hz =3D /bits/ 64 <700000000>;
--			opp-microvolt =3D < 912500>;
-+			opp-microvolt =3D < 912500 912500 1500000>;
- 			clock-latency-ns =3D <140000>;
- 		};
- 	};
-@@ -1097,23 +1097,23 @@
- =
-
- 			opp00 {
- 				opp-hz =3D /bits/ 64 <84000000>;
--				opp-microvolt =3D <925000>;
-+				opp-microvolt =3D <925000 925000 1400000>;
- 			};
- 			opp01 {
- 				opp-hz =3D /bits/ 64 <111000000>;
--				opp-microvolt =3D <950000>;
-+				opp-microvolt =3D <950000 950000 1400000>;
- 			};
- 			opp02 {
- 				opp-hz =3D /bits/ 64 <222000000>;
--				opp-microvolt =3D <950000>;
-+				opp-microvolt =3D <950000 950000 1400000>;
- 			};
- 			opp03 {
- 				opp-hz =3D /bits/ 64 <333000000>;
--				opp-microvolt =3D <950000>;
-+				opp-microvolt =3D <950000 950000 1400000>;
- 			};
- 			opp04 {
- 				opp-hz =3D /bits/ 64 <400000000>;
--				opp-microvolt =3D <987500>;
-+				opp-microvolt =3D <987500 987500 1400000>;
- 			};
- 		};
- =
-
-diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/=
-dts/exynos5422-odroid-core.dtsi
-index 829147e320e0..9b8de61b0385 100644
---- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-+++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-@@ -524,6 +524,8 @@
- 				regulator-max-microvolt =3D <1400000>;
- 				regulator-always-on;
- 				regulator-boot-on;
-+				regulator-coupled-with =3D <&buck2_reg>;
-+				regulator-coupled-max-spread =3D <300000>;
- =
-
- 				regulator-state-mem {
- 					regulator-off-in-suspend;
-@@ -544,6 +546,8 @@
- 				regulator-max-microvolt =3D <1500000>;
- 				regulator-always-on;
- 				regulator-boot-on;
-+				regulator-coupled-with =3D <&buck3_reg>;
-+				regulator-coupled-max-spread =3D <300000>;
- =
-
- 				regulator-state-mem {
- 					regulator-off-in-suspend;
-diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/=
-exynos5800-peach-pi.dts
-index 60ca3d685247..c1e38139ce4f 100644
---- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
-+++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-@@ -257,6 +257,8 @@
- 				regulator-always-on;
- 				regulator-boot-on;
- 				regulator-ramp-delay =3D <12500>;
-+				regulator-coupled-with =3D <&buck3_reg>;
-+				regulator-coupled-max-spread =3D <300000>;
- 				regulator-state-mem {
- 					regulator-off-in-suspend;
- 				};
-@@ -269,6 +271,8 @@
- 				regulator-always-on;
- 				regulator-boot-on;
- 				regulator-ramp-delay =3D <12500>;
-+				regulator-coupled-with =3D <&buck2_reg>;
-+				regulator-coupled-max-spread =3D <300000>;
- 				regulator-state-mem {
- 					regulator-off-in-suspend;
- 				};
-diff --git a/arch/arm/boot/dts/exynos5800.dtsi b/arch/arm/boot/dts/exynos58=
-00.dtsi
-index de639eecc5c9..27789f5f9798 100644
---- a/arch/arm/boot/dts/exynos5800.dtsi
-+++ b/arch/arm/boot/dts/exynos5800.dtsi
-@@ -22,61 +22,61 @@
- =
-
- &cluster_a15_opp_table {
- 	opp-1700000000 {
--		opp-microvolt =3D <1250000>;
-+		opp-microvolt =3D <1250000 1250000 1500000>;
- 	};
- 	opp-1600000000 {
--		opp-microvolt =3D <1250000>;
-+		opp-microvolt =3D <1250000 1250000 1500000>;
- 	};
- 	opp-1500000000 {
--		opp-microvolt =3D <1100000>;
-+		opp-microvolt =3D <1100000 1100000 1500000>;
- 	};
- 	opp-1400000000 {
--		opp-microvolt =3D <1100000>;
-+		opp-microvolt =3D <1100000 1100000 1500000>;
- 	};
- 	opp-1300000000 {
--		opp-microvolt =3D <1100000>;
-+		opp-microvolt =3D <1100000 1100000 1500000>;
- 	};
- 	opp-1200000000 {
--		opp-microvolt =3D <1000000>;
-+		opp-microvolt =3D <1000000 1000000 1500000>;
- 	};
- 	opp-1100000000 {
--		opp-microvolt =3D <1000000>;
-+		opp-microvolt =3D <1000000 1000000 1500000>;
- 	};
- 	opp-1000000000 {
--		opp-microvolt =3D <1000000>;
-+		opp-microvolt =3D <1000000 1000000 1500000>;
- 	};
- 	opp-900000000 {
--		opp-microvolt =3D <1000000>;
-+		opp-microvolt =3D <1000000 1000000 1500000>;
- 	};
- 	opp-800000000 {
--		opp-microvolt =3D <900000>;
-+		opp-microvolt =3D <900000 900000 1500000>;
- 	};
- 	opp-700000000 {
--		opp-microvolt =3D <900000>;
-+		opp-microvolt =3D <900000 900000 1500000>;
- 	};
- 	opp-600000000 {
- 		opp-hz =3D /bits/ 64 <600000000>;
--		opp-microvolt =3D <900000>;
-+		opp-microvolt =3D <900000 900000 1500000>;
- 		clock-latency-ns =3D <140000>;
- 	};
- 	opp-500000000 {
- 		opp-hz =3D /bits/ 64 <500000000>;
--		opp-microvolt =3D <900000>;
-+		opp-microvolt =3D <900000 900000 1500000>;
- 		clock-latency-ns =3D <140000>;
- 	};
- 	opp-400000000 {
- 		opp-hz =3D /bits/ 64 <400000000>;
--		opp-microvolt =3D <900000>;
-+		opp-microvolt =3D <900000 900000 1500000>;
- 		clock-latency-ns =3D <140000>;
- 	};
- 	opp-300000000 {
- 		opp-hz =3D /bits/ 64 <300000000>;
--		opp-microvolt =3D <900000>;
-+		opp-microvolt =3D <900000 900000 1500000>;
- 		clock-latency-ns =3D <140000>;
- 	};
- 	opp-200000000 {
- 		opp-hz =3D /bits/ 64 <200000000>;
--		opp-microvolt =3D <900000>;
-+		opp-microvolt =3D <900000 900000 1500000>;
- 		clock-latency-ns =3D <140000>;
- 	};
- };
----------------------------------------------------------------------------=
-----
-
-
-Git bisection log:
-
----------------------------------------------------------------------------=
-----
-git bisect start
-# good: [2924a93b4c2b1934c0ec59d28f46814a83259f11] Merge branch 'for-v5.5/m=
-emory-samsung-dmc-dt' into for-next
-git bisect good 2924a93b4c2b1934c0ec59d28f46814a83259f11
-# bad: [0bc9c79979ea0b607a0751968840483fd296f6ef] Merge branch 'for-v5.5/me=
-mory-samsung-dmc-dt' into for-next
-git bisect bad 0bc9c79979ea0b607a0751968840483fd296f6ef
-# bad: [0899a480ac658144b1fa351bb880c2858d43f824] ARM: dts: exynos: Add ini=
-tial data for coupled regulators for Exynos5422/5800
-git bisect bad 0899a480ac658144b1fa351bb880c2858d43f824
-# good: [56c126e87e2980d5e2ca5d77b28899f8521af9d7] ARM: dts: exynos: Rename=
- SysRAM node to "sram"
-git bisect good 56c126e87e2980d5e2ca5d77b28899f8521af9d7
-# first bad commit: [0899a480ac658144b1fa351bb880c2858d43f824] ARM: dts: ex=
-ynos: Add initial data for coupled regulators for Exynos5422/5800
----------------------------------------------------------------------------=
-----
+SGksIFNoYXduDQoNCj4gT24gTW9uLCBTZXAgMTYsIDIwMTkgYXQgMDQ6Mjk6MDlQTSArMDgwMCwg
+QW5zb24gSHVhbmcgd3JvdGU6DQo+ID4gaS5NWDdTL0QncyBHUFQgaXBnIGNsb2NrIHNob3VsZCBi
+ZSBmcm9tIEdQVCBjbG9jayByb290IGFuZCBjb250cm9sbGVkDQo+ID4gYnkgQ0NNJ3MgR1BUIEND
+R1IsIHVzaW5nIGNvcnJlY3QgY2xvY2sgc291cmNlIGZvciBHUFQgaXBnIGNsb2NrDQo+ID4gaW5z
+dGVhZCBvZiBJTVg3RF9DTEtfRFVNTVkuDQo+IA0KPiBTbyBib3RoICdpcGcnIGFuZCAncGVyJyBj
+bG9jayBhcmUgY29taW5nIGZyb20gR1BUIHJvb3QgY2xvY2s/DQoNClllcy4NCg0KPiANCj4gPiBT
+aWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gDQo+IEl0
+IGxvb2tzIGxpa2UgYSBmaXgsIHNvIGRvIHdlIG5lZWQgYSBGaXhlcyB0YWcgaGVyZT8NCg0KU3Vy
+ZSwgd2lsbCBhZGQgYSBmaXhlcyB0YWcgaW4gVjIuDQoNClRoYW5rcywNCkFuc29uLg0K
