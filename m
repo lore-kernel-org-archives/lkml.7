@@ -2,344 +2,145 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BD7C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF14C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FDFA218AC
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE89B2070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:03:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570453400;
+	bh=e7O8PBgjg6tQrdpY+ZgHRg9OAtPmzk0EtZ783Kel7Ec=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=1uF2yT51Ytv9HJtU4antIksbtGUyxJzRGHR65DjEwURo0AHjTdejS5MB9Y5+qWhzu
+	 SuYDrik+5+b61dYkRhmJGtv0RI3d6OU9GnlSXxTqNRN6Luz82HaEGd8RvK2W+tj5pY
+	 rsFreqisJTC0Vtrrfg8XLFhmxADdW1Qx7uTYT9Lo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727923AbfJGNCm (ORCPT
+        id S1727985AbfJGNDT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 09:02:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57992 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727490AbfJGNCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 09:02:42 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6BE3D18CB8E2;
-        Mon,  7 Oct 2019 13:02:41 +0000 (UTC)
-Received: from pauld.bos.csb (dhcp-17-51.bos.redhat.com [10.18.17.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 961F1600C1;
-        Mon,  7 Oct 2019 13:02:36 +0000 (UTC)
-Date:   Mon, 7 Oct 2019 09:02:34 -0400
-From:   Phil Auld <pauld@redhat.com>
-To:     Xuewei Zhang <xueweiz@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        trivial@kernel.org, Neel Natu <neelnatu@google.com>,
-        Hao Luo <haoluo@google.com>
-Subject: Re: [PATCH] sched/fair: scale quota and period without losing
- quota/period ratio precision
-Message-ID: <20191007130234.GA22412@pauld.bos.csb>
-References: <20191004001243.140897-1-xueweiz@google.com>
- <20191004005423.GA19076@lorien.usersys.redhat.com>
- <CAPtwhKrswHQ1Ue2YO2hJi7h-Dsk6eGPiQ2UmLCq1AxGxMoHr2w@mail.gmail.com>
- <20191004131432.GA9498@pauld.bos.csb>
- <CAPtwhKo1YND6VG1u8brj8ZRpn33p2xH1cdSRBs-cBSEm78V=Lw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPtwhKo1YND6VG1u8brj8ZRpn33p2xH1cdSRBs-cBSEm78V=Lw@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.63]); Mon, 07 Oct 2019 13:02:41 +0000 (UTC)
+        Mon, 7 Oct 2019 09:03:19 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49140 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727716AbfJGNDT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 09:03:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=Dp1YOPGrxNOCFaSYQ3ZFbTLziPXi1S1+97nmW8XjcNI=; b=P64obnjHlyTz
+        B5N8xNoJ5K7/vMBsoRAqIPzYgzQVY8BlrqM3Aa7cN/CHGB6VKUV0mN59NAXlkpYrjCwWYy4ABgE4B
+        RYbWYkg1/Dav7QHuvHfGxnbmeGbzJcJe7MAZFphTjkwiyDfJvtP4mp62HKJpQ3ECxuLsApEkIgOOU
+        Xcp3s=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iHSfU-0003RV-G9; Mon, 07 Oct 2019 13:03:16 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 041DD2741D8E; Mon,  7 Oct 2019 14:03:15 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: tps65132: switch to using devm_fwnode_gpiod_get()" to the regulator tree
+In-Reply-To: <20191004231017.130290-7-dmitry.torokhov@gmail.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20191007130316.041DD2741D8E@ypsilon.sirena.org.uk>
+Date:   Mon,  7 Oct 2019 14:03:15 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xuewei,
+The patch
 
-On Fri, Oct 04, 2019 at 05:28:15PM -0700 Xuewei Zhang wrote:
-> On Fri, Oct 4, 2019 at 6:14 AM Phil Auld <pauld@redhat.com> wrote:
-> >
-> > On Thu, Oct 03, 2019 at 07:05:56PM -0700 Xuewei Zhang wrote:
-> > > +cc neelnatu@google.com and haoluo@google.com, they helped a lot
-> > > for this issue. Sorry I forgot to include them when sending out the patch.
-> > >
-> > > On Thu, Oct 3, 2019 at 5:55 PM Phil Auld <pauld@redhat.com> wrote:
-> > > >
-> > > > Hi,
-> > > >
-> > > > On Thu, Oct 03, 2019 at 05:12:43PM -0700 Xuewei Zhang wrote:
-> > > > > quota/period ratio is used to ensure a child task group won't get more
-> > > > > bandwidth than the parent task group, and is calculated as:
-> > > > > normalized_cfs_quota() = [(quota_us << 20) / period_us]
-> > > > >
-> > > > > If the quota/period ratio was changed during this scaling due to
-> > > > > precision loss, it will cause inconsistency between parent and child
-> > > > > task groups. See below example:
-> > > > > A userspace container manager (kubelet) does three operations:
-> > > > > 1) Create a parent cgroup, set quota to 1,000us and period to 10,000us.
-> > > > > 2) Create a few children cgroups.
-> > > > > 3) Set quota to 1,000us and period to 10,000us on a child cgroup.
-> > > > >
-> > > > > These operations are expected to succeed. However, if the scaling of
-> > > > > 147/128 happens before step 3), quota and period of the parent cgroup
-> > > > > will be changed:
-> > > > > new_quota: 1148437ns, 1148us
-> > > > > new_period: 11484375ns, 11484us
-> > > > >
-> > > > > And when step 3) comes in, the ratio of the child cgroup will be 104857,
-> > > > > which will be larger than the parent cgroup ratio (104821), and will
-> > > > > fail.
-> > > > >
-> > > > > Scaling them by a factor of 2 will fix the problem.
-> > > >
-> > > > I have no issues with the concept. We went around a bit about the actual
-> > > > numbers and made it an approximation.
-> > > >
-> > > > >
-> > > > > Fixes: 2e8e19226398 ("sched/fair: Limit sched_cfs_period_timer() loop to avoid hard lockup")
-> > > > > Signed-off-by: Xuewei Zhang <xueweiz@google.com>
-> > > > > ---
-> > > > >  kernel/sched/fair.c | 36 ++++++++++++++++++++++--------------
-> > > > >  1 file changed, 22 insertions(+), 14 deletions(-)
-> > > > >
-> > > > > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > > > > index 83ab35e2374f..b3d3d0a231cd 100644
-> > > > > --- a/kernel/sched/fair.c
-> > > > > +++ b/kernel/sched/fair.c
-> > > > > @@ -4926,20 +4926,28 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
-> > > > >               if (++count > 3) {
-> > > > >                       u64 new, old = ktime_to_ns(cfs_b->period);
-> > > > >
-> > > > > -                     new = (old * 147) / 128; /* ~115% */
-> > > > > -                     new = min(new, max_cfs_quota_period);
-> > > > > -
-> > > > > -                     cfs_b->period = ns_to_ktime(new);
-> > > > > -
-> > > > > -                     /* since max is 1s, this is limited to 1e9^2, which fits in u64 */
-> > > > > -                     cfs_b->quota *= new;
-> > > > > -                     cfs_b->quota = div64_u64(cfs_b->quota, old);
-> > > > > -
-> > > > > -                     pr_warn_ratelimited(
-> > > > > -     "cfs_period_timer[cpu%d]: period too short, scaling up (new cfs_period_us %lld, cfs_quota_us = %lld)\n",
-> > > > > -                             smp_processor_id(),
-> > > > > -                             div_u64(new, NSEC_PER_USEC),
-> > > > > -                             div_u64(cfs_b->quota, NSEC_PER_USEC));
-> > > > > +                     /*
-> > > > > +                      * Grow period by a factor of 2 to avoid lossing precision.
-> > > > > +                      * Precision loss in the quota/period ratio can cause __cfs_schedulable
-> > > > > +                      * to fail.
-> > > > > +                      */
-> > > > > +                     new = old * 2;
-> > > > > +                     if (new < max_cfs_quota_period) {
-> > > >
-> > > > I don't like this part as much. There may be a value between
-> > > > max_cfs_quota_period/2 and max_cfs_quota_period that would get us out of
-> > > > the loop. Possibly in practice it won't matter but here you trigger the
-> > > > warning and take no action to keep it from continuing.
-> > > >
-> > > > Also, if you are actually hitting this then you might want to just start at
-> > > > a higher but proportional quota and period.
-> > >
-> > > I'd like to do what you suggested. A quick idea would be to scale period to
-> > > max_cfs_quota_period, and scale quota proportionally. However the naive
-> > > implementation won't work under this edge case:
-> > > original:
-> > > quota: 500,000us  period: 570,000us
-> > > after scaling:
-> > > quota: 877,192us  period: 1,000,000us
-> > > original ratio: 919803
-> > > new ratio: 919802
-> > >
-> > > To do this right, the code would have to keep an eye out on the precision loss,
-> > > and increase quota by 1us sometimes to cancel out the precision loss.
-> > >
-> > > Also, I think this case is not that important. Because if we are
-> > > hitting this case, that
-> > > suggests the period is already >0.5s. And if we are still hitting
-> > > timeouts with a 0.5s
-> > > period, scaling it to 1s probably won't help much.
-> > > When this happens, I'd imagine the parent cgroup would have a LOT of child
-> > > cgroups. It might make sense for the userspace to create the parent cgroup with
-> > > 1s period.
-> > >
-> > > If you think automatically scaling 0.5s+ to 1s is still important, I'm
-> > > happy to stash
-> > > this patch, and send in another one that handles the 0.5+s -> 1s
-> > > scaling the right
-> > > way. :) Thanks!
-> >
-> > First let me understand your use case better. I was thinking about this more last
-> > night and it doesn't make sense.
-> >
-> > You are setting a small quota and period on the parent cgroup and then setting the
-> > same small quota and period on the child. As you say to keep the child from getting
-> > more quota than the parent. But that should already be the case simply by setting
-> > it on the parent. The child can't get more quota than the parent.   All this does
-> > is make the kernel do more work handling more period timers and such.
-> 
-> Sorry for not being clear enough. Let me provide a bit more additional context:
-> 
-> kubelet [1] is the userspace program setting the cfs quota and period.
-> kubelet is essentially a container manager for the end user. The end user
-> can specify any attainable configurations for a pod (which contains multiple
-> containers).
-> 
-> The user interface of kubelet allows end user to specify the amount of CPU
-> granted to any pod or container (in the form of mCPU). And then kubelet will
-> convert the spec to quota/period accepted by cgroup fs, using this rule:
-> the period of any pod/container will be set to 100000us
-> the quota of the pod/container will be calculated using the allowed mCPU
-> 
-> And kubelet simply then writes the calculated period and quota to cgroup fs.
-> 
-> It's very common to specify a pod with multiple containers, and setting
-> different quota for the child containers: some granted with 5-50% of the
-> bandwidth available to the parent, while some other granted with 100%. For
-> simplicity, kubelet writes quota/period to cgroup fs for all pods and
-> containers.
-> 
+   regulator: tps65132: switch to using devm_fwnode_gpiod_get()
 
-Thanks for the details :)
+has been applied to the regulator tree at
 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.5
 
-> ----
-> Now back to our discussion. :)
-> 
-> You see, the reason that kubelet write identical quota and period to parent and
-> child cgroup, is not because it want to enforce that child doesn't get more
-> quota than parent. It is simply because kubelet needs to manage the quota for
-> all containers and pods, and it's more convenenient to just set the quota and
-> period for all of them (because in many cases, child cgroups actually gets less
-> bandwidth than the parent, and has to be set specifically).
-> 
-> I agree that your suggestion would work. If a child cgroup is set to the same
-> bandwidth of the parent cgroup, we could change the userspace program, and ask
-> it to skip setting the child cgroup bandwidth.
-> However, this logic would be a special case, and will require significant logic
-> change to the userspace container managers.
-> 
-> 
-> This issue is affecting many Kubernetes users, see this open issue:
-> https://github.com/kubernetes/kubernetes/issues/72878
-> kubelet on their machines are doing the three operations mentioned in the patch.
-> I also explained them in more detail in this doc:
-> https://docs.google.com/document/d/13KLD__6A935igLXpTFFomqfclATC89nAkhPOxsuKA0I/edit?usp=sharing
-> 
-> Basically, Kubernetes is operating on the below assumption of kernel today:
-> Setting the cpu quota/period of a child cgroup should not be rejected unless
-> the bandwidth is exceeding what the quota/period set for the parent cgroup.
-> 
-> I think this assumption is fair. Please let me know if you think otherwise. And
-> if so, since the kernel broke this assumption today, I don't think it's the
-> responsibility for the userspace to deal with the problem that kernel may change
-> the quota/period ratio at any time.
-> 
-> [1] https://github.com/kubernetes/kubernetes/tree/master/pkg/kubelet
-> 
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-Okay. I'm on board with this. At your starting values you'll get 1,2,4,800ms before 
-hitting max. That should be enough. I'm a little surprised you're hitting it even
-at 100ms but it sounds like you have a lot of children. And if they have their own 
-settings that could be taking longer. I suspect contention on the cfs_b->lock could
-be adding to it.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-I do think that setup is wasting kernel cpu cycles but that's a somewhat orthagonal
-discussion :)
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-> >
-> > Setting the child quota/period only makes sense when setting it smaller than
-> > the parent.
-> 
-> As mentioned above, in the use case of kublet, it's much easier to always
-> set the child quota/period, than to only set it when it is different
-> (i.e. smaller)
-> than the parent.
-> 
-> >
-> > Also, in order to hit this problem you need to have many hundreds of children, in
-> > my experience. In that case it makes even less sense to write the same quota/preiod
-> > as the parent into each of the children.
-> 
-> Here is a problematic scenario:
-> The parent cgroup have 1000 children with a small quota/period, and after a
-> few minutes, kubelet wants to add one additional child with the same
-> quota/period.
-> This bug could prevent kubelet from setting that one additional child
-> successfully.
-> 
-> 
-> Thanks a lot for taking time reviewing and responding the patch Phil!
-> Really appreciate it.
-> 
+Thanks,
+Mark
 
-Sure thing. Thanks for tracking it down. I'll try to test this on my original 
-reproducer when I have a chance. I don't foresee any issues though, so for now:
+From 22803ca3c56b02e5bb8a4eb14104114009fd1c65 Mon Sep 17 00:00:00 2001
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Date: Fri, 4 Oct 2019 16:10:16 -0700
+Subject: [PATCH] regulator: tps65132: switch to using devm_fwnode_gpiod_get()
 
-Acked-by: Phil Auld <pauld@redhat.com>
+devm_fwnode_get_index_gpiod_from_child() is going away as the name is
+too unwieldy, let's switch to using the new devm_fwnode_gpiod_get().
 
+Note that we no longer need to check for NULL as devm_fwnode_gpiod_get()
+will return -ENOENT if GPIO is missing.
 
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Link: https://lore.kernel.org/r/20191004231017.130290-7-dmitry.torokhov@gmail.com
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/regulator/tps65132-regulator.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
-Cheers,
-Phil
-
-> Best regards,
-> Xuewei
-> 
-> >
-> > Or there is something else causing the timer to take too long to run...
-> >
-> >
-> > I agree that if we are taking > 1/2s to run do_sched_cfs_period_timer() it may
-> > not matter, as I said above.
-> >
-> >
-> > Cheers,
-> > Phil
-> >
-> > >
-> > > Best regards,
-> > > Xuewei
-> > >
-> > > >
-> > > >
-> > > > Cheers,
-> > > > Phil
-> > > >
-> > > > > +                             cfs_b->period = ns_to_ktime(new);
-> > > > > +                             cfs_b->quota *= 2;
-> > > > > +
-> > > > > +                             pr_warn_ratelimited(
-> > > > > +     "cfs_period_timer[cpu%d]: period too short, scaling up (new cfs_period_us = %lld, cfs_quota_us = %lld)\n",
-> > > > > +                                     smp_processor_id(),
-> > > > > +                                     div_u64(new, NSEC_PER_USEC),
-> > > > > +                                     div_u64(cfs_b->quota, NSEC_PER_USEC));
-> > > > > +                     } else {
-> > > > > +                             pr_warn_ratelimited(
-> > > > > +     "cfs_period_timer[cpu%d]: period too short, but cannot scale up without losing precision (cfs_period_us = %lld, cfs_quota_us = %lld)\n",
-> > > > > +                                     smp_processor_id(),
-> > > > > +                                     div_u64(old, NSEC_PER_USEC),
-> > > > > +                                     div_u64(cfs_b->quota, NSEC_PER_USEC));
-> > > > > +                     }
-> > > > >
-> > > > >                       /* reset count so we don't come right back in here */
-> > > > >                       count = 0;
-> > > > > --
-> > > > > 2.23.0.581.g78d2f28ef7-goog
-> > > > >
-> > > >
-> > > > --
-> >
-> > --
-
+diff --git a/drivers/regulator/tps65132-regulator.c b/drivers/regulator/tps65132-regulator.c
+index e302bd01a084..7b0e38f8d627 100644
+--- a/drivers/regulator/tps65132-regulator.c
++++ b/drivers/regulator/tps65132-regulator.c
+@@ -136,9 +136,10 @@ static int tps65132_of_parse_cb(struct device_node *np,
+ 	struct tps65132_reg_pdata *rpdata = &tps->reg_pdata[desc->id];
+ 	int ret;
+ 
+-	rpdata->en_gpiod = devm_fwnode_get_index_gpiod_from_child(tps->dev,
+-					"enable", 0, &np->fwnode, 0, "enable");
+-	if (IS_ERR_OR_NULL(rpdata->en_gpiod)) {
++	rpdata->en_gpiod = devm_fwnode_gpiod_get(tps->dev, of_fwnode_handle(np),
++						 "enable", GPIOD_ASIS,
++						 "enable");
++	if (IS_ERR(rpdata->en_gpiod)) {
+ 		ret = PTR_ERR(rpdata->en_gpiod);
+ 
+ 		/* Ignore the error other than probe defer */
+@@ -147,10 +148,12 @@ static int tps65132_of_parse_cb(struct device_node *np,
+ 		return 0;
+ 	}
+ 
+-	rpdata->act_dis_gpiod = devm_fwnode_get_index_gpiod_from_child(
+-					tps->dev, "active-discharge", 0,
+-					&np->fwnode, 0, "active-discharge");
+-	if (IS_ERR_OR_NULL(rpdata->act_dis_gpiod)) {
++	rpdata->act_dis_gpiod = devm_fwnode_gpiod_get(tps->dev,
++						      of_fwnode_handle(np),
++						      "active-discharge",
++						      GPIOD_ASIS,
++						      "active-discharge");
++	if (IS_ERR(rpdata->act_dis_gpiod)) {
+ 		ret = PTR_ERR(rpdata->act_dis_gpiod);
+ 
+ 		/* Ignore the error other than probe defer */
 -- 
+2.20.1
+
