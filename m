@@ -2,94 +2,185 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49203C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 07:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19EA8C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 07:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1320D21655
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 07:21:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R5ZsFrWz"
+	by mail.kernel.org (Postfix) with ESMTP id DECA32173B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 07:23:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727259AbfJGHVn (ORCPT
+        id S1727295AbfJGHXH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 03:21:43 -0400
-Received: from mail-wr1-f54.google.com ([209.85.221.54]:44282 "EHLO
-        mail-wr1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726202AbfJGHVm (ORCPT
+        Mon, 7 Oct 2019 03:23:07 -0400
+Received: from skedge04.snt-world.com ([91.208.41.69]:55758 "EHLO
+        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726202AbfJGHXG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 03:21:42 -0400
-Received: by mail-wr1-f54.google.com with SMTP id z9so13801960wrl.11
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 00:21:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=+S74GriLzHisA5zCNtp+YX4eA5WLKdq2ZT+2hpOIbsA=;
-        b=R5ZsFrWz+ng+i2GRGRriJqk2TmNGUgVNmxQu/DZSeREJiNkwdHuQi74V8BQyaUioyT
-         OhbPs9g1dA0kWHZDqfTqglmTo1wYL4RS9+1O0a/38EhiiFYMlNTE1WVVSGe9B3H/J6fX
-         uG7afwzg/SHDnd3klcLnij3GTwpLM/PvTD+7bvrDqxF/+48E/pINbBpvHAvmK/JtQR0s
-         m2bDGLblCZ6RUCMf5Ecd99RqW64eTV+eOJ7GTYF3gJIH1sh/HhcCpQgVQAjZ9rHTw1uo
-         dLNgaV4DOKGL5ba5pujiF5YQ1vuhALNxIp/v0qmrST5X20wZvjN19H0r+PI6/pH2w9si
-         UAMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=+S74GriLzHisA5zCNtp+YX4eA5WLKdq2ZT+2hpOIbsA=;
-        b=QWL9jr2HA9+nUX7K5o7GWQcnWhNWulDL1YzvAWhw6dXD03U3OU8ciRuiboicuS+qMg
-         9TcEEMfaKdVwp0htRMBdwo47321FMx+jKOt51LHwlVjRg0w5k4zrrguVLreHHuhnV6Q2
-         SutQ9J/kkDBGyD+tEl66nWau+hfwqfevxtUmjj+wfvvzzzVB5+IBKKq9bT0GJNMIHBUe
-         Td2eHTt3dlg8Cv2GLbqiy9lsB3mXX0OwJBup84M0gaO3vHJiTpyljhVXDMhSrR4ijLwh
-         p29FCwYHp4/yfOWmHrvKUCZ3SY1+V7kR3bVbn/+6ADK0Xk1AkWpiq8JBqZCD2u16CLvQ
-         AJvQ==
-X-Gm-Message-State: APjAAAUmMjTsOFu/kYY+25fJjD1wOrUnd+y6CY7CR+iavoD+e1n/FxAT
-        cfQ0KN0Aseq0HLYBYrwR1Gw=
-X-Google-Smtp-Source: APXvYqzPS/luRfsU+e0xh0/CHS+mNlq9Sn6Bql6hE90Y4vh/Pn1egdNdR6ElbLKSlliopjdogDKqhg==
-X-Received: by 2002:a05:6000:14c:: with SMTP id r12mr20971445wrx.303.1570432900469;
-        Mon, 07 Oct 2019 00:21:40 -0700 (PDT)
-Received: from ?IPv6:2a00:23c4:f78c:d00:1570:f96d:dab8:76ae? ([2a00:23c4:f78c:d00:1570:f96d:dab8:76ae])
-        by smtp.gmail.com with ESMTPSA id f3sm16361804wrq.53.2019.10.07.00.21.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 07 Oct 2019 00:21:39 -0700 (PDT)
-From:   Carlo Caione <carlo.caione@gmail.com>
-Subject: [BISECTED] Suspend / USB broken on XPS 9370 + TB16
-To:     linux-kernel@vger.kernel.org
-Cc:     andrew.smirnov@gmail.com, rrangel@chromium.org,
-        mathias.nyman@linux.intel.com, gregkh@linuxfoundation.org,
-        kamal@canonical.com, khalid.elmously@canonical.com
-Message-ID: <2f2f62bc-558f-70d1-44bf-a95334453f8a@gmail.com>
-Date:   Mon, 7 Oct 2019 08:21:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mon, 7 Oct 2019 03:23:06 -0400
+Received: from sntmail12r.snt-is.com (unknown [10.203.32.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by skedge04.snt-world.com (Postfix) with ESMTPS id 7DAC767A7D3;
+        Mon,  7 Oct 2019 09:23:03 +0200 (CEST)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail12r.snt-is.com
+ (10.203.32.182) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 7 Oct 2019
+ 09:23:03 +0200
+Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
+ sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
+ 15.01.1713.004; Mon, 7 Oct 2019 09:23:03 +0200
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     Han Xu <han.xu@nxp.com>, Mark Brown <broonie@kernel.org>
+CC:     Schrempf Frieder <frieder.schrempf@kontron.de>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH] spi: spi-fsl-qspi: Clear TDH bits in FLSHCR register
+Thread-Topic: [PATCH] spi: spi-fsl-qspi: Clear TDH bits in FLSHCR register
+Thread-Index: AQHVfOAOADpafN6rX02KBDhfRCqXYw==
+Date:   Mon, 7 Oct 2019 07:23:02 +0000
+Message-ID: <20191007071933.26786-1-frieder.schrempf@kontron.de>
+Accept-Language: de-DE, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: 7DAC767A7D3.AF040
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: broonie@kernel.org, han.xu@nxp.com,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-I bisected an issue down to commit f7fac17ca925 "xhci: Convert 
-xhci_handshake() to use readl_poll_timeout_atomic()".
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-Setup:
-XPS 9370 + Thunderbolt dock Dell TB16
+Later versions of the QSPI controller (e.g. in i.MX6UL/ULL and i.MX7)
+seem to have an additional TDH setting in the FLSHCR register, that
+needs to be set in accordance with the access mode that is used (DDR
+or SDR).
 
-Issue:
-The laptop is unable to go to sleep. It never really goes to sleep and 
-after a few seconds the USB dies.
+Previous bootstages such as BootROM or bootloader might have used the
+DDR mode to access the flash. As we currently only use SDR mode, we
+need to make sure the TDH bits are cleared upon initialization.
 
-Log:
-https://termbin.com/icix
+Fixes: 84d043185dbe ("spi: Add a driver for the Freescale/NXP QuadSPI controller")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+---
+ drivers/spi/spi-fsl-qspi.c | 38 +++++++++++++++++++++++++++++++++-----
+ 1 file changed, 33 insertions(+), 5 deletions(-)
 
-Cheers!
-
+diff --git a/drivers/spi/spi-fsl-qspi.c b/drivers/spi/spi-fsl-qspi.c
+index c02e24c01136..63c9f7edaf6c 100644
+--- a/drivers/spi/spi-fsl-qspi.c
++++ b/drivers/spi/spi-fsl-qspi.c
+@@ -63,6 +63,11 @@
+ #define QUADSPI_IPCR			0x08
+ #define QUADSPI_IPCR_SEQID(x)		((x) << 24)
+ 
++#define QUADSPI_FLSHCR			0x0c
++#define QUADSPI_FLSHCR_TCSS_MASK	GENMASK(3, 0)
++#define QUADSPI_FLSHCR_TCSH_MASK	GENMASK(11, 8)
++#define QUADSPI_FLSHCR_TDH_MASK		GENMASK(17, 16)
++
+ #define QUADSPI_BUF3CR			0x1c
+ #define QUADSPI_BUF3CR_ALLMST_MASK	BIT(31)
+ #define QUADSPI_BUF3CR_ADATSZ(x)	((x) << 8)
+@@ -95,6 +100,9 @@
+ #define QUADSPI_FR			0x160
+ #define QUADSPI_FR_TFF_MASK		BIT(0)
+ 
++#define QUADSPI_RSER			0x164
++#define QUADSPI_RSER_TFIE		BIT(0)
++
+ #define QUADSPI_SPTRCLR			0x16c
+ #define QUADSPI_SPTRCLR_IPPTRC		BIT(8)
+ #define QUADSPI_SPTRCLR_BFPTRC		BIT(0)
+@@ -112,9 +120,6 @@
+ #define QUADSPI_LCKER_LOCK		BIT(0)
+ #define QUADSPI_LCKER_UNLOCK		BIT(1)
+ 
+-#define QUADSPI_RSER			0x164
+-#define QUADSPI_RSER_TFIE		BIT(0)
+-
+ #define QUADSPI_LUT_BASE		0x310
+ #define QUADSPI_LUT_OFFSET		(SEQID_LUT * 4 * 4)
+ #define QUADSPI_LUT_REG(idx) \
+@@ -181,6 +186,12 @@
+  */
+ #define QUADSPI_QUIRK_BASE_INTERNAL	BIT(4)
+ 
++/*
++ * Controller uses TDH bits in register QUADSPI_FLSHCR.
++ * They need to be set in accordance with the DDR/SDR mode.
++ */
++#define QUADSPI_QUIRK_USE_TDH_SETTING	BIT(5)
++
+ struct fsl_qspi_devtype_data {
+ 	unsigned int rxfifo;
+ 	unsigned int txfifo;
+@@ -209,7 +220,8 @@ static const struct fsl_qspi_devtype_data imx7d_data = {
+ 	.rxfifo = SZ_128,
+ 	.txfifo = SZ_512,
+ 	.ahb_buf_size = SZ_1K,
+-	.quirks = QUADSPI_QUIRK_TKT253890 | QUADSPI_QUIRK_4X_INT_CLK,
++	.quirks = QUADSPI_QUIRK_TKT253890 | QUADSPI_QUIRK_4X_INT_CLK |
++		  QUADSPI_QUIRK_USE_TDH_SETTING,
+ 	.little_endian = true,
+ };
+ 
+@@ -217,7 +229,8 @@ static const struct fsl_qspi_devtype_data imx6ul_data = {
+ 	.rxfifo = SZ_128,
+ 	.txfifo = SZ_512,
+ 	.ahb_buf_size = SZ_1K,
+-	.quirks = QUADSPI_QUIRK_TKT253890 | QUADSPI_QUIRK_4X_INT_CLK,
++	.quirks = QUADSPI_QUIRK_TKT253890 | QUADSPI_QUIRK_4X_INT_CLK |
++		  QUADSPI_QUIRK_USE_TDH_SETTING,
+ 	.little_endian = true,
+ };
+ 
+@@ -275,6 +288,11 @@ static inline int needs_amba_base_offset(struct fsl_qspi *q)
+ 	return !(q->devtype_data->quirks & QUADSPI_QUIRK_BASE_INTERNAL);
+ }
+ 
++static inline int needs_tdh_setting(struct fsl_qspi *q)
++{
++	return q->devtype_data->quirks & QUADSPI_QUIRK_USE_TDH_SETTING;
++}
++
+ /*
+  * An IC bug makes it necessary to rearrange the 32-bit data.
+  * Later chips, such as IMX6SLX, have fixed this bug.
+@@ -710,6 +728,16 @@ static int fsl_qspi_default_setup(struct fsl_qspi *q)
+ 	qspi_writel(q, QUADSPI_MCR_MDIS_MASK | QUADSPI_MCR_RESERVED_MASK,
+ 		    base + QUADSPI_MCR);
+ 
++	/*
++	 * Previous boot stages (BootROM, bootloader) might have used DDR
++	 * mode and did not clear the TDH bits. As we currently use SDR mode
++	 * only, clear the TDH bits if necessary.
++	 */
++	if (needs_tdh_setting(q))
++		qspi_writel(q, qspi_readl(q, base + QUADSPI_FLSHCR) &
++			    ~QUADSPI_FLSHCR_TDH_MASK,
++			    base + QUADSPI_FLSHCR);
++
+ 	reg = qspi_readl(q, base + QUADSPI_SMPR);
+ 	qspi_writel(q, reg & ~(QUADSPI_SMPR_FSDLY_MASK
+ 			| QUADSPI_SMPR_FSPHS_MASK
 -- 
-Carlo Caione
+2.17.1
