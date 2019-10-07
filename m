@@ -2,112 +2,104 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2B7C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C172C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77A272084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:08:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BDB42133F
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:09:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TtaIHK/S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729123AbfJGRI3 (ORCPT
+        id S1728614AbfJGRJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 13:08:29 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35128 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728079AbfJGRI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 13:08:28 -0400
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3F5583D3C
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Oct 2019 17:08:28 +0000 (UTC)
-Received: by mail-wm1-f70.google.com with SMTP id o128so231898wmo.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 10:08:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4dMNikcs4E1Y6yKRSwkPQbM0//TiQDXUZcr0YM9OD1c=;
-        b=FZoRPNwnc2Xxz7jZ2/t0vNxLu4ONR7+HBhySQZzUmtPrn7Eks7Q3BeOBPZUEK3lITS
-         2Kne30ltjJwGeJ5lb3dIkkZsatY4IwJSqGexkgKXWxHJd/q4/CvahXu2rbmA7VTirwXM
-         2MlwoXfpkEpU+8MLOZOe5Tknpzj2GFQFkTYHNFv9581NUXaaKyxq7MPFWvsiZ0IEAhkt
-         Z9dVeGwaHamO9BZfWX1uOYfKAFiQvQvD9EmCQVsYPUjQiISoYd6WXXGM88NY51AxZCtd
-         xgkzTdWRKqPaIpth7Gk6SK7o0cWfqppgf8ewg3osVXpU0NhO3EccRH0uSsf1Fi8O2Nz4
-         rQzg==
-X-Gm-Message-State: APjAAAUjPGHJCXQQiCx4ONDH81T+ZA9Q13drDl8mdNckO5B5I+CZxsW+
-        13KB9Sf9TrM6f7QpfMd8LfVuCr9P0EjZLHdyT3HgCrtm7oFjSC4xMfcMgdrUR56HUr1JF7AvoE6
-        7EeNqQw8tBJAv2EA9KFrTZT31
-X-Received: by 2002:a1c:658a:: with SMTP id z132mr234268wmb.174.1570468106768;
-        Mon, 07 Oct 2019 10:08:26 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyl2zL9+JMyC3FnFxnpfwEeHdK9iIlPFdBf18ZjZZ5+fIVvZmESnuAYRAzXBT2rMkqUBPJFMg==
-X-Received: by 2002:a1c:658a:: with SMTP id z132mr234231wmb.174.1570468106497;
-        Mon, 07 Oct 2019 10:08:26 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:9dd9:ce92:89b5:d1f2? ([2001:b07:6468:f312:9dd9:ce92:89b5:d1f2])
-        by smtp.gmail.com with ESMTPSA id 79sm330487wmb.7.2019.10.07.10.08.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Oct 2019 10:08:25 -0700 (PDT)
-Subject: Re: [PATCH 09/16] x86/vmx: Introduce VMX_FEATURES_*
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
-Cc:     "H. Peter Anvin" <hpa@zytor.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-edac@vger.kernel.org,
-        Borislav Petkov <bp@suse.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-References: <20191004215615.5479-1-sean.j.christopherson@intel.com>
- <20191004215615.5479-10-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <149d4422-b955-9118-e7df-e135075ad490@redhat.com>
-Date:   Mon, 7 Oct 2019 19:08:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 7 Oct 2019 13:09:42 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:49730 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728028AbfJGRJl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 13:09:41 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x97H9HFp077194;
+        Mon, 7 Oct 2019 12:09:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1570468157;
+        bh=oVMcBS9B51Vlj09LuDSqLmxgOK3U5xBBbOwYpJ+/9WQ=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=TtaIHK/S8FEUT4UAj+g5dz/o5t5xQhmZEwiYlCHINILdBtQ2yg1T7WyjgwHQv8vXE
+         CRmWx+br6Kwxh3hAK/50nN29sE2hajNdaK4If9DRwBxWgAGRQs0tFemFUdv/kcj6BJ
+         kgyewPBVsncxsJXjAqhmWRu6IbUcQaXBf8Fo7TrU=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x97H9HNg055073
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 7 Oct 2019 12:09:17 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 7 Oct
+ 2019 12:09:14 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 7 Oct 2019 12:09:14 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x97H9GEF026321;
+        Mon, 7 Oct 2019 12:09:16 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <shifu0704@thundersoft.com>, <broonie@kernel.org>
+CC:     <alsa-devel@alsa-project.org>, <lgirdwood@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <navada@ti.com>, <perex@perex.cz>,
+        <tiwai@suse.com>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v2 2/3] ASoC: tas2770: Remove unneeded read of the TDM_CFG3 register
+Date:   Mon, 7 Oct 2019 12:11:56 -0500
+Message-ID: <20191007171157.17813-2-dmurphy@ti.com>
+X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
+In-Reply-To: <20191007171157.17813-1-dmurphy@ti.com>
+References: <20191007171157.17813-1-dmurphy@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20191004215615.5479-10-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/10/19 23:56, Sean Christopherson wrote:
-> +#define VMX_FEATURE_RDSEED_EXITING	( 2*32+ 16) /* "" VM-Exit on RDSEED */
-> +#define VMX_FEATURE_PAGE_MOD_LOGGING	( 2*32+ 17) /* "pml" Log dirty pages into buffer */
-> +#define VMX_FEATURE_EPT_VIOLATION_VE	( 2*32+ 18) /* "" Conditionally reflect EPT violations as #VE exceptions */
-> +#define VMX_FEATURE_PT_CONCEAL_VMX	( 2*32+ 19) /* "" Suppress VMX indicators in Processor Trace */
-> +#define VMX_FEATURE_XSAVES		( 2*32+ 20) /* "" Enable XSAVES and XRSTORS in guest */
-> +#define VMX_FEATURE_RESERVED_PIN_21	( 2*32+ 21) /* "" Reserved */
-> +#define VMX_FEATURE_MODE_BASED_EPT_EXEC	( 2*32+ 22) /* Enable separate EPT EXEC bits for supervisor vs. user */
-> +#define VMX_FEATURE_RESERVED_PIN_23	( 2*32+ 23) /* "" Reserved */
-> +#define VMX_FEATURE_PT_USE_GPA		( 2*32+ 24) /* "" Processor Trace logs GPAs */
-> +#define VMX_FEATURE_TSC_SCALING		( 2*32+ 25) /* Scale hardware TSC when read in guest */
-> +#define VMX_FEATURE_RESERVED_PIN_26	( 2*32+ 26) /* "" Reserved */
-> +#define VMX_FEATURE_RESERVED_PIN_27	( 2*32+ 27) /* "" Reserved */
-> +#define VMX_FEATURE_ENCLV_EXITING	( 2*32+ 28) /* "" VM-Exit on ENCLV (leaf dependent) */
-> +#define VMX_FEATURE_RESERVED_PIN_29	( 2*32+ 29) /* "" Reserved */
-> +#define VMX_FEATURE_RESERVED_PIN_30	( 2*32+ 30) /* "" Reserved */
-> +#define VMX_FEATURE_RESERVED_PIN_31	( 2*32+ 31) /* "" Reserved */
+Remove the unneeded and incorrect read of the TDM_CFG3 register.
+The read is done but the value is never used.
 
-Pasto on the reserved bit names, but in general why is it useful to
-define them?
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
 
-Paolo
+v2 - New patch no v1
+
+ sound/soc/codecs/tas2770.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/sound/soc/codecs/tas2770.c b/sound/soc/codecs/tas2770.c
+index 361d0bba72b3..c1e28dd0b73e 100644
+--- a/sound/soc/codecs/tas2770.c
++++ b/sound/soc/codecs/tas2770.c
+@@ -386,7 +386,6 @@ static int tas2770_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
+ {
+ 	u8 tdm_rx_start_slot = 0, asi_cfg_1 = 0;
+ 	int ret;
+-	int value = 0;
+ 	struct snd_soc_component *component = dai->component;
+ 	struct tas2770_priv *tas2770 =
+ 			snd_soc_component_get_drvdata(component);
+@@ -442,8 +441,6 @@ static int tas2770_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	value = snd_soc_component_read32(component, TAS2770_TDM_CFG_REG3);
+-
+ 	tas2770->asi_format = fmt;
+ 
+ 	return 0;
+-- 
+2.22.0.214.g8dca754b1e
+
