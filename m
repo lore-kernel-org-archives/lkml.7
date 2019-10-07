@@ -2,155 +2,217 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07AF6ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD7CC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D219621721
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:32:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M4l5WQnY"
+	by mail.kernel.org (Postfix) with ESMTP id 32829206C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:33:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728937AbfJGPcN (ORCPT
+        id S1728633AbfJGPdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 11:32:13 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:33932 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728915AbfJGPcM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:32:12 -0400
-Received: by mail-wm1-f67.google.com with SMTP id y135so299656wmc.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 08:32:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=n+UUyJ3n1ncJEha1n4+/C9IqVhKV2cn/9xer57zUNQg=;
-        b=M4l5WQnY/5/LYnOXzKCnELHG/dlhUcnZ94WpkSICHsRATKoJHNQZb1WTLQ4HMXk87/
-         1ao78TZuxeEd9reB94SSdWD6Llt0ewQX0Lcxb0sczQ+zs1jVRmndlox2A0zXuBjZFV88
-         aMGt+pqdnc3IUASMZ/59ziu0+ZF//5EKF4g/k/YOIQupNJg80Wd7ujtm7BOgLg1ZxPgF
-         Jih5mb/YWFHIZrkV+6wJCapJl2I8w2QgWrh+iCzDMl+edqvYSa7uz+D3I7sSsrlJ+ip5
-         siuFmIAzl+mPgyM78IHo2h/gTJZlDnKCaOKUohtwGNKWUjUt9V3abxFoOSimMI8RI/3U
-         cYlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=n+UUyJ3n1ncJEha1n4+/C9IqVhKV2cn/9xer57zUNQg=;
-        b=npIWl00pfTT6ViGTL5+tAxIWShKTn9d51EoyGAYvJv/a8H6BOr3QLucAAs4Xdgk3Ue
-         bwE6eyKVhyu+vl4uj3a/72j1Z6kXlbieJ54yYifLwefuCUWivBqIg78ZK2WNcpHVc7gU
-         sJpdaoEqfnqroOXD39vZ9DOe+b5a+40rumuPiXO9n93voWkJ4ik6oai0Na2tz+Zu+hVk
-         PI84IMoi1aOv5vPJQPCqKT0xN/jdS5lFyLSqmmSZAFpnW04ZnCBjKII3+idrq8F3YU87
-         45Q/rbpFIA5D3KdmVc0DEOVgxOu/cJ/J96zxMmKVJ/wElLrFToW8Ojnw+p7BZV7l62lw
-         +dxg==
-X-Gm-Message-State: APjAAAXyP9yp1Ui3FPdyTn99eimFrNTmtZKfYvrc+lZY8UMTrIQDPwtk
-        gr+XTyf20aa4k2JIQu0Bl/h7xQ==
-X-Google-Smtp-Source: APXvYqx/10sp6D2JJFW3HuaJH4t65Gd2W/SNMkSW3PcA850egBFe5G6/UYiwi8Ay9MMJ3nADgeKQZQ==
-X-Received: by 2002:a1c:720e:: with SMTP id n14mr11930483wmc.11.1570462330132;
-        Mon, 07 Oct 2019 08:32:10 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id t13sm40397699wra.70.2019.10.07.08.32.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2019 08:32:09 -0700 (PDT)
-Date:   Mon, 7 Oct 2019 16:32:07 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/5] backlight: pwm_bl: switch to power-of-2 base for
- fixed-point math
-Message-ID: <20191007153207.t5kehxs2znu5z6yx@holly.lan>
-References: <20190919140620.32407-1-linux@rasmusvillemoes.dk>
- <20190919140620.32407-4-linux@rasmusvillemoes.dk>
+        Mon, 7 Oct 2019 11:33:19 -0400
+Received: from mga18.intel.com ([134.134.136.126]:61160 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727711AbfJGPdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 11:33:18 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Oct 2019 08:33:05 -0700
+X-IronPort-AV: E=Sophos;i="5.67,268,1566889200"; 
+   d="scan'208";a="196321981"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Oct 2019 08:33:04 -0700
+Message-ID: <d96f744d2c48f5a96c6962c6a0a89d2429e5cab8.camel@linux.intel.com>
+Subject: Re: [PATCH v11 0/6] mm / virtio: Provide support for unused page
+ reporting
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>
+Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Pankaj Gupta <pagupta@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
+        "Wang, Wei W" <wei.w.wang@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 07 Oct 2019 08:33:04 -0700
+In-Reply-To: <0a16b11e-ec3b-7196-5b7f-e7395876cf28@redhat.com>
+References: <20191001152441.27008.99285.stgit@localhost.localdomain>
+         <7233498c-2f64-d661-4981-707b59c78fd5@redhat.com>
+         <1ea1a4e11617291062db81f65745b9c95fd0bb30.camel@linux.intel.com>
+         <8bd303a6-6e50-b2dc-19ab-4c3f176c4b02@redhat.com>
+         <CAKgT0Uf37xAFK2CWqUZJgn7bWznSAi6qncLxBpC55oSpBMG1HQ@mail.gmail.com>
+         <c06b68cb-5e94-ae3e-f84e-48087d675a8f@redhat.com>
+         <CAKgT0Ud6TT=XxqFx6ePHzbUYqMp5FHVPozRvnNZK3tKV7j2xjg@mail.gmail.com>
+         <0a16b11e-ec3b-7196-5b7f-e7395876cf28@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190919140620.32407-4-linux@rasmusvillemoes.dk>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 04:06:19PM +0200, Rasmus Villemoes wrote:
-> Using a power-of-2 instead of power-of-10 base makes the computations
-> much cheaper. 2^16 is safe; retval never becomes more than 2^48 +
-> 2^16/2. On a 32 bit platform, the very expensive 64/32 division at the
-> end of cie1931() instead becomes essentially free (a shift by 32 is
-> just a register rename).
+On Mon, 2019-10-07 at 08:29 -0400, Nitesh Narayan Lal wrote:
+> On 10/2/19 10:25 AM, Alexander Duyck wrote:
 > 
-> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-
-> ---
->  drivers/video/backlight/pwm_bl.c | 22 ++++++++++++----------
->  1 file changed, 12 insertions(+), 10 deletions(-)
+> [...]
+> > > > My suggestion would be to look at reworking the patch set and
+> > > > post numbers for my patch set versus the bitmap approach and we can
+> > > > look at them then.
+> > > Agreed. However, in order to fix an issue I have to reproduce it first.
+> > With the tweak I have suggested above it should make it much easier to
+> > reproduce. Basically all you need is to have the allocation competing
+> > against hinting. Currently the hinting isn't doing this because the
+> > allocations are mostly coming out of 4K pages instead of higher order
+> > ones.
+> > 
+> > Alternatively you could just make the suggestion I had proposed about
+> > using spin_lock/unlock_irq in your worker thread and that resolved it
+> > for me.
+> > 
+> > > >  I would prefer not to spend my time fixing and
+> > > > tuning a patch set that I am still not convinced is viable.
+> > > You  don't have to, I can fix the issues in my patch-set. :)
+> > Sounds good. Hopefully the stuff I pointed out above helps you to get
+> > a reproduction and resolve the issues.
 > 
-> diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-> index aee6839e024a..102bc191310f 100644
-> --- a/drivers/video/backlight/pwm_bl.c
-> +++ b/drivers/video/backlight/pwm_bl.c
-> @@ -148,7 +148,8 @@ static const struct backlight_ops pwm_backlight_ops = {
->  };
->  
->  #ifdef CONFIG_OF
-> -#define PWM_LUMINANCE_SCALE	10000 /* luminance scale */
-> +#define PWM_LUMINANCE_SHIFT	16
-> +#define PWM_LUMINANCE_SCALE	(1 << PWM_LUMINANCE_SHIFT) /* luminance scale */
->  
->  /*
->   * CIE lightness to PWM conversion.
-> @@ -165,23 +166,25 @@ static const struct backlight_ops pwm_backlight_ops = {
->   * The following function does the fixed point maths needed to implement the
->   * above formula.
->   */
-> -static u64 cie1931(unsigned int lightness, unsigned int scale)
-> +static u64 cie1931(unsigned int lightness)
->  {
->  	u64 retval;
->  
->  	/*
->  	 * @lightness is given as a number between 0 and 1, expressed
-> -	 * as a fixed-point number in scale @scale. Convert to a
-> -	 * percentage, still expressed as a fixed-point number, so the
-> -	 * above formulas can be applied.
-> +	 * as a fixed-point number in scale
-> +	 * PWM_LUMINANCE_SCALE. Convert to a percentage, still
-> +	 * expressed as a fixed-point number, so the above formulas
-> +	 * can be applied.
->  	 */
->  	lightness *= 100;
-> -	if (lightness <= (8 * scale)) {
-> +	if (lightness <= (8 * PWM_LUMINANCE_SCALE)) {
->  		retval = DIV_ROUND_CLOSEST(lightness * 10, 9033);
->  	} else {
-> -		retval = (lightness + (16 * scale)) / 116;
-> +		retval = (lightness + (16 * PWM_LUMINANCE_SCALE)) / 116;
->  		retval *= retval * retval;
-> -		retval = DIV_ROUND_CLOSEST_ULL(retval, (scale * scale));
-> +		retval += PWM_LUMINANCE_SCALE/2;
-> +		retval >>= 2*PWM_LUMINANCE_SHIFT;
->  	}
->  
->  	return retval;
-> @@ -215,8 +218,7 @@ int pwm_backlight_brightness_default(struct device *dev,
->  	/* Fill the table using the cie1931 algorithm */
->  	for (i = 0; i < data->max_brightness; i++) {
->  		retval = cie1931((i * PWM_LUMINANCE_SCALE) /
-> -				 data->max_brightness, PWM_LUMINANCE_SCALE) *
-> -				 period;
-> +				 data->max_brightness) * period;
->  		retval = DIV_ROUND_CLOSEST_ULL(retval, PWM_LUMINANCE_SCALE);
->  		if (retval > UINT_MAX)
->  			return -EINVAL;
-> -- 
-> 2.20.1
+> So I did observe a significant drop in running my v12 path-set [1] with the
+> suggested test setup. However, on making certain changes the performance
+> improved significantly.
+> 
+> I used my v12 patch-set which I have posted earlier and made the following
+> changes:
+> 1. Started reporting only (MAX_ORDER - 1) pages and increased the number of
+>     pages that can be reported at a time to 32 from 16. The intent of making
+>     these changes was to bring my configuration closer to what Alexander is
+>     using.
+
+The increase from 16 to 32 is valid. No point in working in too small of
+batches. However tightening the order to only test for MAX_ORDER - 1 seems
+like a step in the wrong direction. The bitmap approach doesn't have much
+value if it can only work with the highest order page. I realize it is
+probably necessary in order to make the trick for checking on page_buddy
+work, but it seems very limiting.
+
+> 2. I made an additional change in my bitmap scanning logic to prevent acquiring
+>     spinlock if the page is already allocated.
+
+Again, not a fan. It basically means you can only work with MAX_ORDER - 1
+and there will be no ability to work with anything smaller.
+
+> 
+> Setup:
+> On a 16 vCPU 30 GB single NUMA guest affined to a single host NUMA, I ran the
+> modified will-it-scale/page_fault number of times and calculated the average
+> of the number of process and threads launched on the 16th core to compare the
+> impact of my patch-set against an unmodified kernel.
+> 
+> 
+> Conclusion:
+> %Drop in number of processes launched on 16th vCPU =     1-2%
+> %Drop in number of threads launched on 16th vCPU     =     5-6%
+
+These numbers don't make that much sense to me. Are you talking about a
+fully functioning setup that is madvsing away the memory in the
+hypervisor? If so I would have expected a much higher difference versus
+baseline as zeroing/faulting the pages in the host gets expensive fairly
+quick. What is the host kernel you are running your test on? I'm just
+wondering if there is some additional overhead currently limiting your
+setup. My host kernel was just the same kernel I was running in the guest,
+just built without the patches applied.
+
+> Other observations:
+> - I also tried running Alexander's latest v11 page-reporting patch set and
+>   observe a similar amount of average degradation in the number of processes
+>   and threads.
+> - I didn't include the linear component recorded by will-it-scale because for
+>   some reason it was fluctuating too much even when I was using an unmodified
+>   kernel. If required I can investigate this further.
+> 
+> Note: If there is a better way to analyze the will-it-scale/page_fault results
+> then please do let me know.
+
+Honestly I have mostly just focused on the processes performance. There is
+usually a fair bit of variability but a pattern forms after a few runs so
+you can generally tell if a configuration is an improvement or not.
+
+> Other setup details:
+> Following are the configurations which I enabled to run my tests:
+> - Enabled: CONFIG_SLAB_FREELIST_RANDOM & CONFIG_SHUFFLE_PAGE_ALLOCATOR
+> - Set host THP to always
+> - Set guest THP to madvise
+> - Added the suggested madvise call in page_fault source code.
+> @Alexander please let me know if I missed something.
+
+This seems about right.
+
+> The current state of my v13:
+> I still have to look into Michal's suggestion of using page-isolation API's
+> instead of isolating the page. However, I believe at this moment our objective
+> is to decide with which approach we can proceed and that's why I decided to
+> post the numbers by making small required changes in v12 instead of posting a
+> new series.
+> 
+> 
+> Following are the changes which I have made on top of my v12:
+> 
+> page_reporting.h change:
+> -#define PAGE_REPORTING_MIN_ORDER               (MAX_ORDER - 2)
+> -#define PAGE_REPORTING_MAX_PAGES               16
+> +#define PAGE_REPORTING_MIN_ORDER              (MAX_ORDER - 1)
+> +#define PAGE_REPORTING_MAX_PAGES              32
+> 
+> page_reporting.c change:
+> @@ -101,8 +101,12 @@ static void scan_zone_bitmap(struct page_reporting_config
+> *phconf,
+>                 /* Process only if the page is still online */
+>                 page = pfn_to_online_page((setbit << PAGE_REPORTING_MIN_ORDER) +
+>                                           zone->base_pfn);
+> -               if (!page)
+> +               if (!page || !PageBuddy(page)) {
+> +                       clear_bit(setbit, zone->bitmap);
+> +                       atomic_dec(&zone->free_pages);
+>                         continue;
+> +               }
+> 
+
+I suspect the zone->free_pages is going to be expensive for you to deal
+with. It is a global atomic value and is going to have the cacheline
+bouncing that it is contained in. As a result thinks like setting the
+bitmap with be more expensive as every tome a CPU increments free_pages it
+will likely have to take the cache line containing the bitmap pointer as
+well.
+
+> @Alexander in case you decide to give it a try and find different results,
+> please do let me know.
+> 
+> [1] https://lore.kernel.org/lkml/20190812131235.27244-1-nitesh@redhat.com/
+> 
+> 
+
+If I have some free time I will take a look. However one thing that
+concerns me about this change is that it will limit things much further in
+terms of how much memory can ultimately be freed since you are now only
+working with the highest order page and that becomes a hard requirement
+for your design.
+
