@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E95C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6161C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E74E621655
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:31:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95D6A20867
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:31:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727570AbfJGIbQ (ORCPT
+        id S1727593AbfJGIbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 04:31:16 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47876 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727522AbfJGIbP (ORCPT
+        Mon, 7 Oct 2019 04:31:18 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:14998 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727561AbfJGIbQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 04:31:15 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x978SLss086385
-        for <linux-kernel@vger.kernel.org>; Mon, 7 Oct 2019 04:31:11 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vg1up03fd-1
+        Mon, 7 Oct 2019 04:31:16 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x978Sdfw022314
+        for <linux-kernel@vger.kernel.org>; Mon, 7 Oct 2019 04:31:16 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vfycdcc2d-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 04:31:10 -0400
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 04:31:15 -0400
 Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
-        Mon, 7 Oct 2019 09:31:05 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Mon, 7 Oct 2019 09:31:13 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 7 Oct 2019 09:31:00 +0100
+        Mon, 7 Oct 2019 09:31:08 +0100
 Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x978Uxdt48234526
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x978V7MS37224706
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 7 Oct 2019 08:30:59 GMT
+        Mon, 7 Oct 2019 08:31:07 GMT
 Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AE1CB11C058;
-        Mon,  7 Oct 2019 08:30:59 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 54BBC11C054;
+        Mon,  7 Oct 2019 08:31:07 +0000 (GMT)
 Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6D78F11C054;
-        Mon,  7 Oct 2019 08:30:57 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 1E8B511C04C;
+        Mon,  7 Oct 2019 08:31:05 +0000 (GMT)
 Received: from localhost.in.ibm.com (unknown [9.124.35.220])
         by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  7 Oct 2019 08:30:57 +0000 (GMT)
+        Mon,  7 Oct 2019 08:31:04 +0000 (GMT)
 From:   Parth Shah <parth@linux.ibm.com>
 To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 Cc:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
@@ -55,16 +55,16 @@ Cc:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
         valentin.schneider@arm.com, pavel@ucw.cz, dsmythies@telus.net,
         quentin.perret@arm.com, rafael.j.wysocki@intel.com,
         tim.c.chen@linux.intel.com, daniel.lezcano@linaro.org
-Subject: [RFC v5 2/6] sched: Introduce switch to enable TurboSched for task packing
-Date:   Mon,  7 Oct 2019 14:00:47 +0530
+Subject: [RFC v5 5/6] sched/fair: Provide arch hook to find domain for non idle core search scan
+Date:   Mon,  7 Oct 2019 14:00:50 +0530
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191007083051.4820-1-parth@linux.ibm.com>
 References: <20191007083051.4820-1-parth@linux.ibm.com>
 X-TM-AS-GCONF: 00
-x-cbid: 19100708-0016-0000-0000-000002B4C032
+x-cbid: 19100708-0028-0000-0000-000003A6BE4A
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19100708-0017-0000-0000-00003315D5ED
-Message-Id: <20191007083051.4820-3-parth@linux.ibm.com>
+x-cbparentid: 19100708-0029-0000-0000-00002468CDD0
+Message-Id: <20191007083051.4820-6-parth@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-07_01:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
@@ -77,72 +77,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Create a static key which allows to enable or disable TurboSched feature at
-runtime.
+Specify the method which returns cpumask within which to limit the
+search for a non idle core. By default, limit the search in LLC domain
+which usually includes few/all the cores in the processor chip.
 
-This key is added in order to enable the TurboSched feature only when
-required. This helps in optimizing the scheduler fast-path when the
-TurboSched feature is disabled.
-
-Also provide get/put methods to keep track of the tasks using the
-TurboSched feature and also refcount classified background tasks. This
-allows to enable the feature on setting first task classified as background
-noise, similarly disable the feature on unsetting of such last task.
+The select_non_idle_core searches for the non idle cores in the LLC domain.
+But in the systems with multiple NUMA domains, the Turbo frequency can be
+sustained within the NUMA domain without being affected from other
+NUMA. For such case, arch_turbo_domain can be tuned to change domain for
+non idle core search.
 
 Signed-off-by: Parth Shah <parth@linux.ibm.com>
 ---
- kernel/sched/core.c  | 20 ++++++++++++++++++++
- kernel/sched/sched.h |  9 +++++++++
- 2 files changed, 29 insertions(+)
+ kernel/sched/fair.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index e7cda4aa8696..ee5980b4e150 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -72,6 +72,26 @@ __read_mostly int scheduler_running;
-  */
- int sysctl_sched_rt_runtime = 950000;
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index d4a1b6474338..731d1aaa6bc0 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -5967,6 +5967,14 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
+ }
  
-+DEFINE_STATIC_KEY_FALSE(__turbo_sched_enabled);
-+static DEFINE_MUTEX(turbo_sched_lock);
-+static int turbo_sched_count;
+ #ifdef CONFIG_SCHED_SMT
 +
-+void turbo_sched_get(void)
++#ifndef arch_turbo_domain
++static __always_inline struct cpumask *arch_turbo_domain(int cpu)
 +{
-+	mutex_lock(&turbo_sched_lock);
-+	if (!turbo_sched_count++)
-+		static_branch_enable(&__turbo_sched_enabled);
-+	mutex_unlock(&turbo_sched_lock);
++	return sched_domain_span(rcu_dereference(per_cpu(sd_llc, cpu)));
 +}
++#endif
 +
-+void turbo_sched_put(void)
-+{
-+	mutex_lock(&turbo_sched_lock);
-+	if (!--turbo_sched_count)
-+		static_branch_disable(&__turbo_sched_enabled);
-+	mutex_unlock(&turbo_sched_lock);
-+}
-+
- /*
-  * __task_rq_lock - lock the rq @p resides on.
-  */
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 802b1f3405f2..4a0b90ea8652 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -2423,3 +2423,12 @@ static inline bool sched_energy_enabled(void)
- static inline bool sched_energy_enabled(void) { return false; }
+ static inline bool is_background_task(struct task_struct *p)
+ {
+ 	if (p->flags & PF_CAN_BE_PACKED)
+@@ -5991,7 +5999,8 @@ static int select_non_idle_core(struct task_struct *p, int prev_cpu, int target)
+ 	struct cpumask *cpus = this_cpu_cpumask_var_ptr(turbo_sched_mask);
+ 	int iter_cpu, sibling;
  
- #endif /* CONFIG_ENERGY_MODEL && CONFIG_CPU_FREQ_GOV_SCHEDUTIL */
-+
-+void turbo_sched_get(void);
-+void turbo_sched_put(void);
-+DECLARE_STATIC_KEY_FALSE(__turbo_sched_enabled);
-+
-+static inline bool is_turbosched_enabled(void)
-+{
-+	return static_branch_unlikely(&__turbo_sched_enabled);
-+}
+-	cpumask_and(cpus, cpu_online_mask, p->cpus_ptr);
++	cpumask_and(cpus, cpu_online_mask, arch_turbo_domain(prev_cpu));
++	cpumask_and(cpus, cpus, p->cpus_ptr);
+ 
+ 	for_each_cpu_wrap(iter_cpu, cpus, prev_cpu) {
+ 		int idle_cpu_count = 0, non_idle_cpu_count = 0;
 -- 
 2.17.1
 
