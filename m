@@ -2,210 +2,188 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A89AC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA66C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FA2F21655
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:18:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85B9821655
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:20:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ucHtKJn0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbfJGISx convert rfc822-to-8bit (ORCPT
+        id S1727521AbfJGIUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 04:18:53 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:56637 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727103AbfJGISx (ORCPT
+        Mon, 7 Oct 2019 04:20:49 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45625 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727028AbfJGIUs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 04:18:53 -0400
-Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 6BD9C100010;
-        Mon,  7 Oct 2019 08:18:48 +0000 (UTC)
-Date:   Mon, 7 Oct 2019 10:18:47 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Mason Yang <masonccyang@mxic.com.tw>
-Cc:     richard@nod.at, marek.vasut@gmail.com, dwmw2@infradead.org,
-        bbrezillon@kernel.org, computersforpeace@gmail.com,
-        vigneshr@ti.com, juliensu@mxic.com.tw,
-        linux-kernel@vger.kernel.org, frieder.schrempf@kontron.de,
-        linux-mtd@lists.infradead.org, tglx@linutronix.de
-Subject: Re: [PATCH v3] mtd: rawnand: Add support for Macronix NAND
- randomizer
-Message-ID: <20191007101847.7fcfcfc7@xps13>
-In-Reply-To: <1567676229-23414-1-git-send-email-masonccyang@mxic.com.tw>
-References: <1567676229-23414-1-git-send-email-masonccyang@mxic.com.tw>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 7 Oct 2019 04:20:48 -0400
+Received: by mail-pl1-f194.google.com with SMTP id u12so6489394pls.12
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 01:20:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ote0/C1JReGNWp+FkearLP+n5iZPIKVYgqsUmtRTjFs=;
+        b=ucHtKJn0UJ/TfFDX+4FXj4mOFaUq1DsFLZGjyuBNxfgLXveZezTTcBAH3AoBOIOBEU
+         9Q68fJQlIZMn6KrlKTDzJpjNG8TqWULiaH2rlCAcf0lZ+nNuMEV+zgZrBiY1Dw9yJ+u+
+         CnikzZLmoBcE6hsbUbbZy61X/2MSIy8UU9KMfv7H8WYsp7Inq5RegXOks3+X+J8jqMPm
+         hKQmH60pRG9T9rirx2yP0hvm85sKqjotn7r05OGpiU9g/AO8TGbcjQmonzZgKOXmk0sp
+         Q/OF6iGuie1Fhf7sgCtf3kcTPs1M9fwLUXXUhWuFlWamP+XzN2k7qw0YD2qXx5TZ+Lra
+         z5Tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ote0/C1JReGNWp+FkearLP+n5iZPIKVYgqsUmtRTjFs=;
+        b=DAdYIyW4uuwZSwDn+UWnTUIrW5J6mZKmverPX25crgKysejeXEUqashYozpi7ACYoi
+         JzZXkUkZvGULvY8HqIj2O5z74tz5l01mQ+jxBC0yfxV/uiRXXESWHStreg7hSeZ61ByD
+         sJqvrn8PR1XykQZK64DvPTy1wLLvxKest+eQ+2qCbhcxvsvWx23+0XHe584qhPb70NQF
+         SZnc0l5mA8NkqBSHUJVdSMLjuGgdQGXO3o36d+DytwXrJLAbgJqnKSaey09Xc9akulpy
+         Wg1hkKkxC7gPZtmkNSoMkaoYvRRZUOfoP2T1ueHL/4SzJklCCPzEFKLs8e6eUzszsnDB
+         oarA==
+X-Gm-Message-State: APjAAAUzR2fHNSl+Km0R4A8hmeCbB5LJNKMQCIeqsf1u/Zsq9oAI21xF
+        giArHnvOLCj5Aw8sJQZoRZfKkbNFPUn+ZZ8yuzcTHQ==
+X-Google-Smtp-Source: APXvYqx8Yk5sgQkWXnFQm4/CGRSWyRMpxzmUgLAHY9vWCZW1JOEviLWEyRGwfm5yzonhZdNlXfXkmD5OjjAPHS+whBM=
+X-Received: by 2002:a17:902:8f88:: with SMTP id z8mr28990175plo.232.1570436445413;
+ Mon, 07 Oct 2019 01:20:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <CAHk-=whX-JbpM2Sc85epng_GAgGGzxRAJ2SSKkMf9N1Lsqe+OA@mail.gmail.com>
+ <56e2e1a7-f8fe-765b-8452-1710b41895bf@kernel.org> <20191004222714.GA107737@google.com>
+ <ad800337-1ae2-49d2-e715-aa1974e28a10@kernel.org> <20191004232955.GC12012@mit.edu>
+ <CAFd5g456rBSp177EkYAwsF+KZ0rxJa90mzUpW2M3R7tWbMAh9Q@mail.gmail.com>
+ <63e59b0b-b51e-01f4-6359-a134a1f903fd@kernel.org> <CAFd5g47wji3T9RFmqBwt+jPY0tb83y46oj_ttOq=rTX_N1Ggyg@mail.gmail.com>
+ <544bdfcb-fb35-5008-ec94-8d404a08fd14@kernel.org> <CAFd5g467PkfELixpU0JbaepEAAD_ugAA340-uORngC-eXsQQ-g@mail.gmail.com>
+ <20191006165436.GA29585@mit.edu>
+In-Reply-To: <20191006165436.GA29585@mit.edu>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Mon, 7 Oct 2019 01:20:34 -0700
+Message-ID: <CAFd5g47XogYaO24fHnRR9wyki_r4oQg0qSWo9kOgnXpyTuJAWw@mail.gmail.com>
+Subject: Re: [PATCH v18 00/19] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     shuah <shuah@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mason,
+On Sun, Oct 6, 2019 at 9:55 AM Theodore Y. Ts'o <tytso@mit.edu> wrote:
+>
+> On Fri, Oct 04, 2019 at 06:18:04PM -0700, Brendan Higgins wrote:
+> > > Let's talk about current state. Right now kunit is in linux-next and
+> > > we want to add a few more tests. We will have to coordinate the effort.
+> > > Once kunit get into mainline, then the need for this coordination goes
+> > > down.
+> >
+> > Sure, I was just thinking that getting other people to write the tests
+> > would be better. Since not only is it then useful to someone else, it
+> > provides the best possible exercise of KUnit.
+>
+> Well, one thing we *can* do is if (a) if we can create a kselftest
+> branch which we know is stable and won't change, and (b) we can get
+> assurances that Linus *will* accept that branch during the next merge
+> window, those subsystems which want to use kself test can simply pull
+> it into their tree.
 
-Mason Yang <masonccyang@mxic.com.tw> wrote on Thu,  5 Sep 2019 17:37:09
-+0800:
+Yeah, I can't think of any reason that you haven't outlined already
+why that might not work, but that seems kind of like circumventing
+Linus.
 
-> Macronix NANDs support randomizer operation for user data scrambled,
-> which can be enabled with a SET_FEATURE.
-> 
-> User data written to the NAND device without randomizer is still readable
-> after randomizer function enabled.
-> The penalty of randomizer are subpage accesses prohibited and more time
-> period is needed in program operation and entering deep power-down mode.
-> i.e., tPROG 300us to 340us(randomizer enabled)
-> 
-> For more high-reliability concern, if subpage write not available with
-> hardware ECC and then to enable randomizer is recommended by default.
-> Driver checks byte 167 of Vendor Blocks in ONFI parameter page table
-> to see if this high-reliability function is supported. By adding a new
-> specific DT property in children nodes to enable randomizer function.
-> i.e.,
-> 
-> 	nand: nand-controller@unit-address {
-> 
-> 		nand@0 {
-> 			reg = <0>;
-> 			mxic,enable-randomizer-otp;
-> 		};
-> 	};
-> 
-> --
-> changelog
-> v3:
-> To enable randomizer by specific DT property in children nodes,
-> mxic,enable-randomizer-otp;
-> 
-> v2:
-> To enable randomizer by checking chip options NAND_NO_SUBPAGE_WRITE
-> 
-> v1:
-> To enable randomizer by sys-fs
-> 
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> ---
->  drivers/mtd/nand/raw/nand_macronix.c | 64 ++++++++++++++++++++++++++++++++++++
+> We've done this before in the file system world, when there has been
+> some common set of changes needed to improve, say, Direct I/O, where
+> the changes are put into a standalone branch, say, in the xfs tree,
+> and those file systems which need it as a building block can pull it
+> into their tree, and then add the changes needed to use those changes
+> into their file system git tree.  These changes are generally not
+> terribly controversial, and we've not had to worry about people want
+> to bikeshed the changes.
+>
+> There is a risk with doing this of course, which is that if the branch
+> *is* controversial, or gets bike-shedded for some reason, then Linus
+> gets upset and any branches which depended on said branch will get
+> rejected at the next merge window.  Which is the requirement for (a)
+> and (b) above.  Presumably, the fact that people were unwilling to let
+> Kunit land during this merge window might will *because* we think more
+> changes might be pending?
 
-As long as you modify bindings, you should write a separate patch to
-update the documentation and get it acked by Rob Herring.
+My understanding, based on what I have been told, is that we were
+simply unlucky with the timing when Linus pulled the branch in the
+first week of the 5.4 merge window (Friday), such that once I fixed
+the directory naming issue, the updated changes didn't spend enough
+time in linux-next. And now with this issue fixed and KUnit back in
+linux-next, if nothing interesting happens between now and 5.5, it
+will be accepted in the 5.5 merge window. I do not think that anyone
+is expecting anymore changes before merging.
 
->  1 file changed, 64 insertions(+)
-> 
-> diff --git a/drivers/mtd/nand/raw/nand_macronix.c b/drivers/mtd/nand/raw/nand_macronix.c
-> index 58511ae..d5df09a 100644
-> --- a/drivers/mtd/nand/raw/nand_macronix.c
-> +++ b/drivers/mtd/nand/raw/nand_macronix.c
-> @@ -11,6 +11,13 @@
->  #define MACRONIX_READ_RETRY_BIT BIT(0)
->  #define MACRONIX_NUM_READ_RETRY_MODES 6
->  
-> +#define MACRONIX_RANDOMIZER_BIT BIT(1)
-> +#define ONFI_FEATURE_ADDR_MXIC_RANDOMIZER 0xB0
-> +#define MACRONIX_RANDOMIZER_ENPGM BIT(0)
-> +#define MACRONIX_RANDOMIZER_RANDEN BIT(1)
-> +#define MACRONIX_RANDOMIZER_RANDOPT BIT(2)
-> +#define MACRONIX_RANDOMIZER_MODE_EXIT ~MACRONIX_RANDOMIZER_ENPGM
+Shuah, Linus, is my understanding correct?
 
-I would rather prefer a 
+> The other thing I suppose I can do is to let the ext4 kunit tests land
+> in ext4 tree, but with the necessary #ifdef's around things like
+> "#include <kunit/test.h>" so that the build won't blow up w/o kunit
+> changes being in the tree that I'm building.  It means I won't be able
+> to run the tests without creating a test integration branch and
+> merging in kunit by hand, which will super-annoying, of course.  And
+> if some of the bike-shedding is in Kunit's interfaces, then that
+> becomes problematic as well, since any tests that are in ext4.git tree
+> might change if people want to rename Kunit's publically exported
+> functions (for example).
 
-#define ...RANDOMISER_MODE_ENTER (ENGPM | RANDEN | RANDOPT)
-#define ...RANDOMISER_MODE_EXIT (RANDEN | RANDOPT)
+Yeah, that seems even worse. I'm sorry to have caused this frustration.
 
-> +
->  struct nand_onfi_vendor_macronix {
->  	u8 reserved;
->  	u8 reliability_func;
-> @@ -29,15 +36,72 @@ static int macronix_nand_setup_read_retry(struct nand_chip *chip, int mode)
->  	return nand_set_features(chip, ONFI_FEATURE_ADDR_READ_RETRY, feature);
->  }
->  
-> +static void macronix_nand_randomizer_check_enable(struct nand_chip *chip)
+> > Hey Ted, do you know if that ext4 timestamp test can go in through
+> > linux-kselftest? It seemed fairly self-contained. Or is that what you
+> > were saying wouldn't work for you?
+>
+> Well, I was hoping that we might start creating more tests beyond just
+> the ext4 timestamp tests....
 
-You should return something and check it from the calling function.
+Okay, that's what I thought (and what I hoped) you were saying :-)
 
-> +{
-> +	u8 feature[ONFI_SUBFEATURE_PARAM_LEN];
-> +	int ret;
-> +
-> +	ret = nand_get_features(chip, ONFI_FEATURE_ADDR_MXIC_RANDOMIZER,
-> +				feature);
-> +	if (feature[0]) {
-> +		pr_info("Macronix NAND randomizer enabled:0x%x\n", feature[0]);
-> +		return;
-> +	}
-> +
-> +	feature[0] = MACRONIX_RANDOMIZER_ENPGM | MACRONIX_RANDOMIZER_RANDEN |
-> +		     MACRONIX_RANDOMIZER_RANDOPT;
-> +	ret = nand_set_features(chip, ONFI_FEATURE_ADDR_MXIC_RANDOMIZER,
-> +				feature);
-> +	if (ret)
-> +		goto err;
-> +
-> +	feature[0] = 0x0;
-> +	ret = nand_prog_page_op(chip, 0, 0, feature, 1);
+I hope we can figure out something that will work for you. Or
+otherwise that you won't mind waiting until 5.5.
 
-What is this? A comment is needed.
-
-> +	if (ret)
-> +		goto err;
-> +
-> +	ret = nand_get_features(chip, ONFI_FEATURE_ADDR_MXIC_RANDOMIZER,
-> +				feature);
-> +	if (ret)
-> +		goto err;
-> +
-> +	feature[0] &= MACRONIX_RANDOMIZER_MODE_EXIT;
-> +	ret = nand_set_features(chip, ONFI_FEATURE_ADDR_MXIC_RANDOMIZER,
-> +				feature);
-> +	if (ret)
-> +		goto err;
-> +
-> +	pr_info("Macronix NAND randomizer enable ok\n");
-
-The pr_info "ok" could be dropped, the "failed" one would go in
-nand_onfi_init() after a check on the return code.
-
-Then, no more goto's.
-
-> +	return;
-> +err:
-> +	pr_err("Macronix NAND randomizer enable failed\n");
-> +}
-> +
->  static void macronix_nand_onfi_init(struct nand_chip *chip)
->  {
->  	struct nand_parameters *p = &chip->parameters;
->  	struct nand_onfi_vendor_macronix *mxic;
-> +	struct device_node *dn = nand_get_flash_node(chip);
-> +	int rand_otp = 0;
->  
->  	if (!p->onfi)
->  		return;
->  
-> +	if (of_find_property(dn, "mxic,enable-randomizer-otp", NULL))
-> +		rand_otp = 1;
-> +
->  	mxic = (struct nand_onfi_vendor_macronix *)p->onfi->vendor;
-> +	if (rand_otp && chip->options & NAND_NO_SUBPAGE_WRITE &&
-> +	    mxic->reliability_func & MACRONIX_RANDOMIZER_BIT) {
-> +		if (p->supports_set_get_features) {
-> +			bitmap_set(p->set_feature_list,
-> +				   ONFI_FEATURE_ADDR_MXIC_RANDOMIZER, 1);
-> +			bitmap_set(p->get_feature_list,
-> +				   ONFI_FEATURE_ADDR_MXIC_RANDOMIZER, 1);
-> +			macronix_nand_randomizer_check_enable(chip);
-> +		}
-> +	}
-> +
->  	if ((mxic->reliability_func & MACRONIX_READ_RETRY_BIT) == 0)
->  		return;
->  
-
-Thanks,
-Miquèl
+Sorry
