@@ -2,225 +2,183 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C267BC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA70C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95C8520679
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:51:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 258DB20679
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:52:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W7kiBn3J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728289AbfJGPvG (ORCPT
+        id S1728323AbfJGPwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 11:51:06 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50228 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727711AbfJGPvG (ORCPT
+        Mon, 7 Oct 2019 11:52:50 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:45184 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727912AbfJGPwt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:51:06 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x97FRTWm112983;
-        Mon, 7 Oct 2019 11:51:03 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vg79gjq2j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Oct 2019 11:51:03 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x97FSNM9121227;
-        Mon, 7 Oct 2019 11:51:02 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vg79gjq21-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Oct 2019 11:51:02 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x97FnrjH003970;
-        Mon, 7 Oct 2019 15:51:01 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma03wdc.us.ibm.com with ESMTP id 2vejt6j6bn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Oct 2019 15:51:01 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x97Fp0C137552418
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 7 Oct 2019 15:51:00 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A8DBDC6055;
-        Mon,  7 Oct 2019 15:51:00 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2FDDFC6057;
-        Mon,  7 Oct 2019 15:51:00 +0000 (GMT)
-Received: from [9.53.179.215] (unknown [9.53.179.215])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon,  7 Oct 2019 15:51:00 +0000 (GMT)
-Subject: Re: [RFC PATCH] e1000e: Use rtnl_lock to prevent race conditions
- between net and pci/pm
-From:   "David Z. Dai" <zdai@linux.vnet.ibm.com>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>, zdai@us.ibm.com,
-        David Miller <davem@davemloft.net>
-In-Reply-To: <CAKgT0Ud7SupVd3RQmTEJ8e0fixiptS-1wFg+8V4EqpHEuAC3wQ@mail.gmail.com>
-References: <1570208647.1250.55.camel@oc5348122405>
-         <20191004233052.28865.1609.stgit@localhost.localdomain>
-         <1570241926.10511.7.camel@oc5348122405>
-         <CAKgT0Ud7SupVd3RQmTEJ8e0fixiptS-1wFg+8V4EqpHEuAC3wQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Date:   Mon, 07 Oct 2019 10:50:59 -0500
-Message-ID: <1570463459.1510.5.camel@oc5348122405>
-Mime-Version: 1.0
-X-Mailer: Evolution 2.32.3 (2.32.3-36.el6) 
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-07_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910070152
+        Mon, 7 Oct 2019 11:52:49 -0400
+Received: by mail-oi1-f193.google.com with SMTP id o205so12064783oib.12
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 08:52:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=12ALqaDC3v3cYyVy/bFXTdcUuL6p/Xn/37qQBbhEtlY=;
+        b=W7kiBn3JKZJ9UvrWm0D0Jggm9a7qw6cZnjwdK2LrjfFklIQaBuacN5lUOFnNRlpR44
+         DXw2lBd6mHGZE7i983pHw+hNxvZHetZJRX/7cX2vDuaOkTc+R55u6DU2qsnRGunu+ykb
+         VWmLdmJvbMkSD6/Wt/N4fjdy3PhKXrV1yLIoOhfQGdT+l5BOzeeyAqzGejgLPG76WmQD
+         qvWDNuvUMByBhLdWXgjUF42xCkkW8lln8+ctqiXZFeLcc8Ap/gd0EGj/ZiCBMc8k8Go/
+         zJAbVv/lW/+Y0/P01LwE7UZ/RMYwgCksIEDtRRGbgGQXFx9V3MD/cEbvxG6ffdHLleUR
+         GqKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=12ALqaDC3v3cYyVy/bFXTdcUuL6p/Xn/37qQBbhEtlY=;
+        b=Xj5AXjZi4fT920eplJFw2E4v/veaa9f5/Z7+Prp4dA1AD+WzUqK5tX4vy83XOKQFum
+         s7vpypgBiXFuoRgHyLvsyi8TSlDgzVhg2YZjhswmjBVt90TXod2IQ6ie569HOOvDody3
+         1GHgmM7LgpR3r8S6WPn/nRbeBU/pppflr2UU2lhsQpXVd+3ENwg4cuR2FmPtIId3Rhgp
+         YyAySo7Lmzkye3Ykw/tjw7jRN+BA/kZqZi96h2ThOm5jUfd0VO5Xd9+IfzNl8WNzUmbG
+         LPe+Ddat3r8f+okK/fy8T5fKkPvZ0d+QUAQEtWAGdT0xXY4XRy9Vvus7oS8tqbIiQYay
+         NmGw==
+X-Gm-Message-State: APjAAAWW9g7/M7kkh+pTYEnwgHAQCfNorvmty2o46BlKqLtub622rX5B
+        L+I7wvuFvDVqBUxf7RX1HH7Ejg==
+X-Google-Smtp-Source: APXvYqwKCgvkl+v42MR98xVsK+56ACzjwkv7mGVEm9CDmaOTjQXqgUN3tU26IpVIlEadT1pxMzDXXw==
+X-Received: by 2002:aca:58c5:: with SMTP id m188mr18131347oib.74.1570463568088;
+        Mon, 07 Oct 2019 08:52:48 -0700 (PDT)
+Received: from [192.168.17.59] (CableLink-189-218-29-211.Hosts.InterCable.net. [189.218.29.211])
+        by smtp.gmail.com with ESMTPSA id 91sm4753211otn.36.2019.10.07.08.52.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 07 Oct 2019 08:52:47 -0700 (PDT)
+Subject: Re: [PATCH 4.14 00/68] 4.14.148-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     shuah@kernel.org, patches@kernelci.org,
+        lkft-triage@lists.linaro.org, ben.hutchings@codethink.co.uk,
+        stable@vger.kernel.org, akpm@linux-foundation.org,
+        torvalds@linux-foundation.org, linux@roeck-us.net
+References: <20191006171108.150129403@linuxfoundation.org>
+From:   =?UTF-8?Q?Daniel_D=c3=adaz?= <daniel.diaz@linaro.org>
+Message-ID: <f952f3cb-42e0-af22-33e4-f08d995a6af7@linaro.org>
+Date:   Mon, 7 Oct 2019 10:52:46 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20191006171108.150129403@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-10-05 at 10:22 -0700, Alexander Duyck wrote:
-> On Fri, Oct 4, 2019 at 7:18 PM David Z. Dai <zdai@linux.vnet.ibm.com> wrote:
-> >
-> > On Fri, 2019-10-04 at 16:36 -0700, Alexander Duyck wrote:
-> > > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > >
-> > > This patch is meant to address possible race conditions that can exist
-> > > between network configuration and power management. A similar issue was
-> > > fixed for igb in commit 9474933caf21 ("igb: close/suspend race in
-> > > netif_device_detach").
-> > >
-> > > In addition it consolidates the code so that the PCI error handling code
-> > > will essentially perform the power management freeze on the device prior to
-> > > attempting a reset, and will thaw the device afterwards if that is what it
-> > > is planning to do. Otherwise when we call close on the interface it should
-> > > see it is detached and not attempt to call the logic to down the interface
-> > > and free the IRQs again.
-> > >
-> > > >From what I can tell the check that was adding the check for __E1000_DOWN
-> > > in e1000e_close was added when runtime power management was added. However
-> > > it should not be relevant for us as we perform a call to
-> > > pm_runtime_get_sync before we call e1000_down/free_irq so it should always
-> > > be back up before we call into this anyway.
-> > >
-> > > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > > ---
-> > >
-> > > I'm putting this out as an RFC for now. I haven't had a chance to do much
-> > > testing yet, but I have verified no build issues, and the driver appears
-> > > to load, link, and pass traffic without problems.
-> > >
-> > > This should address issues seen with either double freeing or never freeing
-> > > IRQs that have been seen on this and similar drivers in the past.
-> > >
-> > > I'll submit this formally after testing it over the weekend assuming there
-> > > are no issues.
-> > >
-> > >  drivers/net/ethernet/intel/e1000e/netdev.c |   33 ++++++++++++++--------------
-> > >  1 file changed, 17 insertions(+), 16 deletions(-)
-> > >
-> > > diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
-> > > index d7d56e42a6aa..182a2c8f12d8 100644
-> > > --- a/drivers/net/ethernet/intel/e1000e/netdev.c
-> > > +++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-> 
-> <snip>
-> 
-> > >
-> > > -#ifdef CONFIG_PM_SLEEP
-> > >  static int e1000e_pm_thaw(struct device *dev)
-> > >  {
-> > >       struct net_device *netdev = dev_get_drvdata(dev);
-> > >       struct e1000_adapter *adapter = netdev_priv(netdev);
-> > > +     int rc = 0;
-> > >
-> > >       e1000e_set_interrupt_capability(adapter);
-> > > -     if (netif_running(netdev)) {
-> > > -             u32 err = e1000_request_irq(adapter);
-> > >
-> > > -             if (err)
-> > > -                     return err;
-> > > +     rtnl_lock();
-> > > +     if (netif_running(netdev)) {
-> > > +             rc = e1000_request_irq(adapter);
-> > > +             if (rc)
-> > > +                     goto err_irq;
-> > >
-> > >               e1000e_up(adapter);
-> > >       }
-> > >
-> > >       netif_device_attach(netdev);
-> > > -
-> > > -     return 0;
-> > > +     rtnl_unlock();
-> > > +err_irq:
-> > > +     return rc;
-> > >  }
-> > >
-> > In e1000e_pm_thaw(), these 2 lines need to switch order to avoid
-> > deadlock.
-> > from:
-> > +       rtnl_unlock();
-> > +err_irq:
-> >
-> > to:
-> > +err_irq:
-> > +       rtnl_unlock();
-> >
-> > I will find hardware to test this patch next week. Will update the test
-> > result later.
-> >
-> > Thanks! - David
-> 
-> Thanks for spotting that. I will update my copy of the patch for when
-> I submit the final revision.
-> 
-> I'll probably wait to submit it for acceptance until you have had a
-> chance to verify that it resolves the issue you were seeing.
-> 
-> Thanks.
-> 
-> - Alex
-We have tested on one of the test box.
-With this patch, it doesn't crash kernel anymore, which is good!
+Hello!
 
-However we see this warning message from the log file for irq number 0:
-[10206.317270] Trying to free already-free IRQ 0
 
-With this stack:
-[10206.317344] NIP [c00000000018cbf8] __free_irq+0x308/0x370
-[10206.317346] LR [c00000000018cbf4] __free_irq+0x304/0x370
-[10206.317347] Call Trace:
-[10206.317348] [c00000008b92b970] [c00000000018cbf4] __free_irq
-+0x304/0x370 (unreliable)
-[10206.317351] [c00000008b92ba00] [c00000000018cd84] free_irq+0x84/0xf0
-[10206.317358] [c00000008b92ba30] [d000000007449e60] e1000_free_irq
-+0x98/0xc0 [e1000e]
-[10206.317365] [c00000008b92ba60] [d000000007458a70] e1000e_pm_freeze
-+0xb8/0x100 [e1000e]
-[10206.317372] [c00000008b92baa0] [d000000007458b6c]
-e1000_io_error_detected+0x34/0x70 [e1000e]
-[10206.317375] [c00000008b92bad0] [c000000000040358] eeh_report_failure
-+0xc8/0x190
-[10206.317377] [c00000008b92bb20] [c00000000003eb2c] eeh_pe_dev_traverse
-+0x9c/0x170
-[10206.317379] [c00000008b92bbb0] [c000000000040d84]
-eeh_handle_normal_event+0xe4/0x580
-[10206.317382] [c00000008b92bc60] [c000000000041330] eeh_handle_event
-+0x30/0x340
-[10206.317384] [c00000008b92bd10] [c000000000041780] eeh_event_handler
-+0x140/0x200
-[10206.317386] [c00000008b92bdc0] [c0000000001397c8] kthread+0x1a8/0x1b0
-[10206.317389] [c00000008b92be30] [c00000000000b560]
-ret_from_kernel_thread+0x5c/0x7c
+On 10/6/19 12:20 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.148 release.
+> There are 68 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Tue 08 Oct 2019 05:07:10 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.148-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Thanks! - David
+Results from Linaro’s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.14.148-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+git branch: linux-4.14.y
+git commit: b970b501da0bee5eba4e61ea7d424adab428a165
+git describe: v4.14.147-69-gb970b501da0b
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/build/v4.14.147-69-gb970b501da0b
+
+No regressions (compared to build v4.14.147)
+
+No fixes (compared to build v4.14.147)
+
+Ran 23798 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* ltp-fs-tests
+* network-basic-tests
+* ltp-open-posix-tests
+* kvm-unit-tests
+* ssuite
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+
+Greetings!
+
+Daniel Díaz
+daniel.diaz@linaro.org
+
+-- 
+Linaro LKFT
+https://lkft.linaro.org
