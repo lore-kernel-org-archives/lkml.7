@@ -2,129 +2,97 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9047AC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ADBBC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:31:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70D5D20684
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:31:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4B6C20684
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:31:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MqziUeDB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbfJGObL (ORCPT
+        id S1728435AbfJGObx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 10:31:11 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:50499 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727745AbfJGObK (ORCPT
+        Mon, 7 Oct 2019 10:31:53 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33795 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727753AbfJGObw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 10:31:10 -0400
-Received: by mail-io1-f69.google.com with SMTP id f5so26958712iob.17
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 07:31:08 -0700 (PDT)
+        Mon, 7 Oct 2019 10:31:52 -0400
+Received: by mail-pg1-f196.google.com with SMTP id y35so8359640pgl.1;
+        Mon, 07 Oct 2019 07:31:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=gckGdavBtKFWRIHGZmeKvufg1AyV7AwXk7yb6Y2b4fw=;
+        b=MqziUeDBawiefRrX/hlHZeMy0c0DetjRZ3H1cRQ48996qOzEsMxV+79QZugTHhKMIq
+         N7ySJ5P7bS8bzdzAZWu44HwJ12biDDJvWzy2y7vYf/aRFuqXJKphLi36PFh+8vQUs3xz
+         sMetf36c51ECkOyyc2fcQhGmuCjFi9tq+d5qgNV4b9YtAD2pI1tu6MySlO3PgLarFqlH
+         EhRaZQGVyggJefVF9lXvlaD6Jj0C0mWkcSAH4vej+by40IZ0mGx9+4iz4Ve3vINrqT4v
+         rubeah8cgCuM//AiQ38VsMA3cCfoEq3M4DlCOcA2kSyXz1EdeQ/UhaoiAhMthojQeUNk
+         6afA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=7BY87Ia9AapGjwjMXbsBZnoMaLjgwwjSG2VntvLmU4c=;
-        b=glDC2JoHZkwIEOjySCq3Hn/Wgnq+LJkiCyLejS4DcCB7tYmL/X+1qoaqf45KtnvpQM
-         Ax/ypXkJjYQOk9UdqaLgISEu1SwodUUROJJ8cA3gnTO5h+bf783k2OqLhpEvZbcQLAWs
-         T2WuaXCrvy8ouM06+XLT0vSAB5Vd/efK/NHNlVD1kQ230Vb3EyeChs6U2VaVIi2Ag5QC
-         nUAA+LCrosgtNU1lgimVHM9bi537q3I+Kc6QKvVaW/F3JHRL0sP+0kvZS7ArlXbtsnac
-         r+fmlWcLC3D2hKoggTBi7FGB34+KxzBHzrq9qpWn2UzBJ15cZFMD0bkbmQRfzJDQJ+tk
-         012w==
-X-Gm-Message-State: APjAAAVCkHI76euJ+0ZlxmSjsZIQkm4JNbu4U5Ub0/wHid8u/cvVKE2u
-        EBMG0Y/BST2Sj1Pnjhx5AzWsRVHu0DZbM8vGkbhd2G/wCurl
-X-Google-Smtp-Source: APXvYqwHM30N8tl1H9tiWFEkk5uQF9JjeMTKqdai85oDJLXRimIYKTBAZ9aPa3GdJ+Ja7qB/Sbi3nEzbTc+XziR64uB+U2mBU037
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gckGdavBtKFWRIHGZmeKvufg1AyV7AwXk7yb6Y2b4fw=;
+        b=Rn+6pbYKhffITRhgE0LOWv2VieYuZmGj2h19+p5F1+ZNcBnHFPBWKGGr9bgZpxFtUv
+         xGPHLK1uQ6DGKkZqvzd5cIf0jb2N9i+zCINmNU84Mkk32ce3M8CkK6fD5ozdKSyBOhka
+         vh4SHBsctxCpSvVaUdzJOTCHo9AhqtCuYyp2uj1OKMxGOB7tK1gcD/Fa4mfy4ht81OJ0
+         gPJmfT4sbXPtQ4p9zbp4/h4F6zfTaacsjWUWvVnfVieDmftwh47KsSmHniRjiIfnUOus
+         at7sFP/k0nFECDRqFayTSY9buPxuqxc7i3lXJwcByTC1sOQjgm6/5RoBqhPqF95P2Jg7
+         vuhQ==
+X-Gm-Message-State: APjAAAVW2lZ/QgcX5Ky/69XIo7M8vY7GLqmCBkF3DJVkVngO373JDdte
+        Xs+F0UVLu7biTjQHznQxeufRQVGm
+X-Google-Smtp-Source: APXvYqwzlVtrS1Cq6vygaL2hPwhyprlTf4e30PGxJSDLYXqtHz9Ia9E9pyCqTg3NiUTp5JkpkoEYIQ==
+X-Received: by 2002:a17:90a:154f:: with SMTP id y15mr668845pja.73.1570458711372;
+        Mon, 07 Oct 2019 07:31:51 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id v133sm4533617pgb.74.2019.10.07.07.31.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 07 Oct 2019 07:31:50 -0700 (PDT)
+Subject: Re: [PATCH 4.9 00/47] 4.9.196-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20191006172016.873463083@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <0a21241c-1b68-84a4-48f2-da0e4b722de6@roeck-us.net>
+Date:   Mon, 7 Oct 2019 07:31:49 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-Received: by 2002:a92:d14b:: with SMTP id t11mr28007911ilg.126.1570458667508;
- Mon, 07 Oct 2019 07:31:07 -0700 (PDT)
-Date:   Mon, 07 Oct 2019 07:31:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000002edb7059452e7fb@google.com>
-Subject: WARNING in verify_dirent_name
-From:   syzbot <syzbot+76e3977ad1b8cc4d113a@syzkaller.appspotmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20191006172016.873463083@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 10/6/19 10:20 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.9.196 release.
+> There are 47 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Tue 08 Oct 2019 05:19:59 PM UTC.
+> Anything received after that time might be too late.
+> 
 
-syzbot found the following crash on:
+Build results:
+	total: 172 pass: 172 fail: 0
+Qemu test results:
+	total: 356 pass: 356 fail: 0
 
-HEAD commit:    43b815c6 Merge tag 'armsoc-fixes' of git://git.kernel.org/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12165d0b600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=1ec3be9936e004f6
-dashboard link: https://syzkaller.appspot.com/bug?extid=76e3977ad1b8cc4d113a
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Guenter
 
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+76e3977ad1b8cc4d113a@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 25558 at fs/readdir.c:150 verify_dirent_name+0x67/0x80  
-fs/readdir.c:150
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 25558 Comm: syz-executor.2 Not tainted 5.4.0-rc1+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  panic+0x2dc/0x755 kernel/panic.c:220
-  __warn.cold+0x2f/0x3c kernel/panic.c:581
-  report_bug+0x289/0x300 lib/bug.c:195
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
-RIP: 0010:verify_dirent_name+0x67/0x80 fs/readdir.c:150
-Code: 19 b6 ff 44 89 e0 5b 41 5c 5d c3 e8 43 19 b6 ff 0f 0b e8 3c 19 b6 ff  
-41 bc fb ff ff ff 5b 44 89 e0 41 5c 5d c3 e8 29 19 b6 ff <0f> 0b 41 bc fb  
-ff ff ff eb ca 0f 1f 44 00 00 66 2e 0f 1f 84 00 00
-RSP: 0018:ffff88808db87ad0 EFLAGS: 00010212
-RAX: 0000000000040000 RBX: 000000000000000c RCX: ffffc900143e7000
-RDX: 0000000000004d26 RSI: ffffffff81bcf9b7 RDI: ffff88808db87cd3
-RBP: ffff88808db87ae0 R08: ffff88808f5c41c0 R09: 0000000000000004
-R10: fffffbfff120d9b8 R11: ffffffff8906cdc3 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000004 R15: ffff88808db87e50
-  filldir64+0x40/0x670 fs/readdir.c:356
-  dir_emit include/linux/fs.h:3542 [inline]
-  __fat_readdir+0xd9e/0x1cb0 fs/fat/dir.c:677
-  fat_readdir+0x44/0x60 fs/fat/dir.c:704
-  iterate_dir+0x47f/0x5e0 fs/readdir.c:105
-  ksys_getdents64+0x1ce/0x320 fs/readdir.c:412
-  __do_sys_getdents64 fs/readdir.c:431 [inline]
-  __se_sys_getdents64 fs/readdir.c:428 [inline]
-  __x64_sys_getdents64+0x73/0xb0 fs/readdir.c:428
-  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x459a59
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fc825c13c78 EFLAGS: 00000246 ORIG_RAX: 00000000000000d9
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459a59
-RDX: 0000000000001000 RSI: 00000000200005c0 RDI: 0000000000000007
-RBP: 000000000075c070 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fc825c146d4
-R13: 00000000004c0533 R14: 00000000004d2c58 R15: 00000000ffffffff
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
