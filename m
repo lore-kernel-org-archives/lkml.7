@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3478C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECE2C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:27:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF98F218AC
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D5822173B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:27:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728614AbfJGN1L (ORCPT
+        id S1728632AbfJGN1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 09:27:11 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:40995 "EHLO
+        Mon, 7 Oct 2019 09:27:14 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:59037 "EHLO
         relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728453AbfJGN1F (ORCPT
+        with ESMTP id S1728603AbfJGN1L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 09:27:05 -0400
+        Mon, 7 Oct 2019 09:27:11 -0400
 X-Originating-IP: 86.250.200.211
 Received: from localhost.localdomain (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
         (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 9978E1C0017;
-        Mon,  7 Oct 2019 13:27:03 +0000 (UTC)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 3D9B51C0012;
+        Mon,  7 Oct 2019 13:27:08 +0000 (UTC)
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
 To:     Jonathan Cameron <jic23@kernel.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
@@ -36,9 +36,9 @@ Cc:     <devicetree@vger.kernel.org>, linux-iio@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 5/8] iio: adc: max1027: Introduce 12-bit devices support
-Date:   Mon,  7 Oct 2019 15:26:54 +0200
-Message-Id: <20191007132657.4190-6-miquel.raynal@bootlin.com>
+Subject: [PATCH v3 8/8] dt-bindings: Add max12xx SPI ADC series as trivial devices
+Date:   Mon,  7 Oct 2019 15:26:57 +0200
+Message-Id: <20191007132657.4190-9-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191007132657.4190-1-miquel.raynal@bootlin.com>
 References: <20191007132657.4190-1-miquel.raynal@bootlin.com>
@@ -49,112 +49,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Maxim's max12xx series is very similar to the max10xx series, with the
-difference of the measurements depth which is upgraded from 10 to 12
-bits per channel. Everything else looks the same.
+Update the compatible list with three Maxim ADCs compatibles.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- drivers/iio/adc/Kconfig   |  4 ++--
- drivers/iio/adc/max1027.c | 38 +++++++++++++++++++++++++++++++++++++-
- 2 files changed, 39 insertions(+), 3 deletions(-)
+ .../bindings/iio/adc/max1027-adc.txt          | 28 +++++++++++++++++++
+ .../devicetree/bindings/trivial-devices.yaml  |  6 ++++
+ 2 files changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
 
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index f0af3a42f53c..6ac16d738822 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -508,8 +508,8 @@ config MAX1027
- 	select IIO_BUFFER
- 	select IIO_TRIGGERED_BUFFER
- 	help
--	  Say yes here to build support for Maxim SPI ADC models
--	  max1027, max1029 and max1031.
-+	  Say yes here to build support for Maxim SPI {10,12}-bit ADC models:
-+	  max1027, max1029, max1031, max1227, max1229 and max1231.
- 
- 	  To compile this driver as a module, choose M here: the module will be
- 	  called max1027.
-diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
-index 8b449044bef5..e171db20c04a 100644
---- a/drivers/iio/adc/max1027.c
-+++ b/drivers/iio/adc/max1027.c
-@@ -63,12 +63,18 @@ enum max1027_id {
- 	max1027,
- 	max1029,
- 	max1031,
-+	max1227,
-+	max1229,
-+	max1231,
- };
- 
- static const struct spi_device_id max1027_id[] = {
- 	{"max1027", max1027},
- 	{"max1029", max1029},
- 	{"max1031", max1031},
-+	{"max1227", max1227},
-+	{"max1229", max1229},
-+	{"max1231", max1231},
- 	{}
- };
- MODULE_DEVICE_TABLE(spi, max1027_id);
-@@ -78,6 +84,9 @@ static const struct of_device_id max1027_adc_dt_ids[] = {
- 	{ .compatible = "maxim,max1027" },
- 	{ .compatible = "maxim,max1029" },
- 	{ .compatible = "maxim,max1031" },
-+	{ .compatible = "maxim,max1227" },
-+	{ .compatible = "maxim,max1229" },
-+	{ .compatible = "maxim,max1231" },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, max1027_adc_dt_ids);
-@@ -153,6 +162,18 @@ static const struct iio_chan_spec max1031_channels[] = {
- 	MAX1X31_CHANNELS(10),
- };
- 
-+static const struct iio_chan_spec max1227_channels[] = {
-+	MAX1X27_CHANNELS(12),
-+};
+diff --git a/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt b/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
+new file mode 100644
+index 000000000000..1b703a01d882
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
+@@ -0,0 +1,28 @@
++* Maxim 1027/1029/1031/1227/1229/1231 Analog to Digital Converter (ADC)
 +
-+static const struct iio_chan_spec max1229_channels[] = {
-+	MAX1X29_CHANNELS(12),
-+};
++Required properties:
++  - compatible: Should be one of:
++    * "maxim,max1027"
++    * "maxim,max1029"
++    * "maxim,max1031"
++    * "maxim,max1227"
++    * "maxim,max1229"
++    * "maxim,max1231"
++  - reg: SPI chip select number for the device
 +
-+static const struct iio_chan_spec max1231_channels[] = {
-+	MAX1X31_CHANNELS(12),
-+};
++Optional properties:
++  - interrupts: IRQ line for the ADC
++  see: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
 +
- static const unsigned long max1027_available_scan_masks[] = {
- 	0x000001ff,
- 	0x00000000,
-@@ -190,6 +211,21 @@ static const struct max1027_chip_info max1027_chip_info_tbl[] = {
- 		.num_channels = ARRAY_SIZE(max1031_channels),
- 		.available_scan_masks = max1031_available_scan_masks,
- 	},
-+	[max1227] = {
-+		.channels = max1227_channels,
-+		.num_channels = ARRAY_SIZE(max1227_channels),
-+		.available_scan_masks = max1027_available_scan_masks,
-+	},
-+	[max1229] = {
-+		.channels = max1229_channels,
-+		.num_channels = ARRAY_SIZE(max1229_channels),
-+		.available_scan_masks = max1029_available_scan_masks,
-+	},
-+	[max1231] = {
-+		.channels = max1231_channels,
-+		.num_channels = ARRAY_SIZE(max1231_channels),
-+		.available_scan_masks = max1031_available_scan_masks,
-+	},
- };
- 
- struct max1027_state {
-@@ -486,5 +522,5 @@ static struct spi_driver max1027_driver = {
- module_spi_driver(max1027_driver);
- 
- MODULE_AUTHOR("Philippe Reynes <tremyfr@yahoo.fr>");
--MODULE_DESCRIPTION("MAX1027/MAX1029/MAX1031 ADC");
-+MODULE_DESCRIPTION("MAX1X27/MAX1X29/MAX1X31 ADC");
- MODULE_LICENSE("GPL v2");
++Recommended properties:
++- spi-max-frequency: Definition as per
++                     Documentation/devicetree/bindings/spi/spi-bus.txt
++
++Example:
++adc@0 {
++	compatible = "maxim,max1027";
++	reg = <0>;
++	interrupt-parent = <&gpio5>;
++	interrupts = <15 IRQ_TYPE_EDGE_RISING>;
++	spi-max-frequency = <1000000>;
++};
+diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
+index e0095ecb472f..765fd1c170df 100644
+--- a/Documentation/devicetree/bindings/trivial-devices.yaml
++++ b/Documentation/devicetree/bindings/trivial-devices.yaml
+@@ -120,6 +120,12 @@ properties:
+           - maxim,max1029
+             # 10-bit 16 channels 300ks/s SPI ADC with temperature sensor
+           - maxim,max1031
++            # 12-bit 8 channels 300ks/s SPI ADC with temperature sensor
++          - maxim,max1227
++            # 12-bit 12 channels 300ks/s SPI ADC with temperature sensor
++          - maxim,max1229
++            # 12-bit 16 channels 300ks/s SPI ADC with temperature sensor
++          - maxim,max1231
+             # Low-Power, 4-/12-Channel, 2-Wire Serial, 12-Bit ADCs
+           - maxim,max1237
+             # PECI-to-I2C translator for PECI-to-SMBus/I2C protocol conversion
 -- 
 2.20.1
 
