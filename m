@@ -2,106 +2,160 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E77CECE58D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA313ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7217C206C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AE05206C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:08:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Mz/2iiOK"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GrzxU0f2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728126AbfJGOIp (ORCPT
+        id S1728303AbfJGOIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 10:08:45 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:3768 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727324AbfJGOIo (ORCPT
+        Mon, 7 Oct 2019 10:08:55 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:39194 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727787AbfJGOIy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 10:08:44 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x97E5xiV002187;
-        Mon, 7 Oct 2019 16:08:29 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=klXRWCSbmhcmHuPY/bDJHkMbLakbKnFtshdjqE+GnyY=;
- b=Mz/2iiOKhwLjeTp22Jq2dcTNxXiDYGyuJ6/IuMGfwVty8fF90AZtnozG5MQXzNppkdj3
- 9j6lmhAu8osbLVGPajspUCDLwnY+GbA6oTywYf7dlwght0s7Gq6a3uGC7uqL64n/1Z9D
- 6VnqBvVk3Y9l35C8Y72/pzIW1HrcZjwKFAVqEyYS9jKMZU/c5OJjZX3TEMl8FNgSTaYt
- 83dCXJ2+6nFBDkmdBOVmTZ4EV778ldK5fVbEagbvaoYktgpONT3Q7CnBtsMRxSplaAOT
- /fAM6OCeS+TCh0FV+qKVOdiZNSpZ6iXWfc6WnvuT4099f0xURv255Q75BHcys5MFwJzV oQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2vegagu49g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Oct 2019 16:08:29 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 040B1100034;
-        Mon,  7 Oct 2019 16:08:29 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E9DD02B1E5F;
-        Mon,  7 Oct 2019 16:08:28 +0200 (CEST)
-Received: from lmecxl0912.lme.st.com (10.75.127.48) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 7 Oct
- 2019 16:08:28 +0200
-Subject: Re: [PATCH 1/3] dt-bindings: media: Fix id path for sun4i-a10-csi
-To:     Maxime Ripard <mripard@kernel.org>
-CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Alexandru Ardelean <alexaundru.ardelean@analog.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        <netdev@vger.kernel.org>
-References: <20191007102552.19808-1-alexandre.torgue@st.com>
- <20191007102552.19808-2-alexandre.torgue@st.com>
- <20191007110040.2mt5uxroos3hz6ic@gilmour>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <3d01e1b5-95ff-f4bd-f57a-a809054e0ba1@st.com>
-Date:   Mon, 7 Oct 2019 16:08:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 7 Oct 2019 10:08:54 -0400
+Received: by mail-qt1-f195.google.com with SMTP id n7so19295937qtb.6
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 07:08:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gmVglyWKRL0YrCqpuD5CasPMTIWps3Y3h/zTwqC3fXU=;
+        b=GrzxU0f2Hryzm14bKBcQi7M+Zw0ohMc6p+VXt12fPY6aMrEKDQI/qxU0LCRY+QUOnh
+         yGdpwRwAMlUUcpufkQ3gv50XZ0X+0UfMTovmnCupdnEDFg1LJ9rmOWG9uyHeaOqSiQEG
+         T1i2uAv/5z8alSFWJcavI1voAFIMUWIdzKXv/RAZiizYzmUPCxxKzE+IwvS7wF9gSFCT
+         hVQ3mKbUhm1s9ANrpGWB4AbOxrL73wleW7W3jZhrCRJKVE7sxUMmL/cy4lJbaWKctnhl
+         OXnhveF05yOxjKHTfrbH9SAn1cownt8F3ifloxGX8WpZB0gcG6KVlK1C3Jz5cjsu7mOD
+         xiXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gmVglyWKRL0YrCqpuD5CasPMTIWps3Y3h/zTwqC3fXU=;
+        b=fNX77X0LotizSGA9a87ENUPvaYmE3qyY+cbeAdUnzCoND/SVpdrMGjIW+cM5qdIPKe
+         tgPBnvQfhkniF0mMTFaUegTl2TVOUxxdBDo+5qz+FWdJpSXifK0YnGpBV9rfq/7aWzHK
+         bEaj7nZmc4PWZB6XQY79yWS+tEUkhYIQUG1/eeph0xL3dtsJSFJbo6hwheOYFTWZajIt
+         ChlMIh7n+WSrGRiNTZpgWwQZoY3RYl00QvCYHhhFGcguxo2Fgt7GUExL+ST9W/4GAeJr
+         VidKvjMynZ/OGC1NdCuyraRLeXVuT+NwcBTYZm6RwJ/WN0ntm2IQsMr2sCDwVhDpxdae
+         fNmA==
+X-Gm-Message-State: APjAAAU9Uk3llZfrQ1h2GuvZhWua2Hw1FyXlpos3PcYhlh6g5ZyUtZw+
+        qA+SsELRarPK+VuEak7Eoy9at/pRogcdKiW9NBb+SA==
+X-Google-Smtp-Source: APXvYqxSy1lbEJCuAAIxwrzbndpVVIPgkOUHJJwJfRmWxZqLhdEZLZlXBATpjpxKAyCgEk2lnVO7asE9kXNZJ0apHJk=
+X-Received: by 2002:ac8:2c50:: with SMTP id e16mr29620165qta.257.1570457333306;
+ Mon, 07 Oct 2019 07:08:53 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191007110040.2mt5uxroos3hz6ic@gilmour>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG3NODE2.st.com (10.75.127.8) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-07_02:2019-10-07,2019-10-07 signatures=0
+References: <20191007104039.GA16085@andrea.guest.corp.microsoft.com>
+ <20191007110117.1096-1-christian.brauner@ubuntu.com> <20191007131804.GA19242@andrea.guest.corp.microsoft.com>
+ <CACT4Y+YG23qbL16MYH3GTK4hOPsM9tDfbLzrTZ7k_ocR2ABa6A@mail.gmail.com> <20191007135527.qd5ibfyajnihsrsh@wittgenstein>
+In-Reply-To: <20191007135527.qd5ibfyajnihsrsh@wittgenstein>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 7 Oct 2019 16:08:41 +0200
+Message-ID: <CACT4Y+Y3oohjuM59Mkdhgpv1UJT_Z_m88vSVtkU5Eq=yRTU2eg@mail.gmail.com>
+Subject: Re: [PATCH v2] taskstats: fix data-race
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Andrea Parri <parri.andrea@gmail.com>, bsingharora@gmail.com,
+        Marco Elver <elver@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzbot <syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Oct 7, 2019 at 3:55 PM Christian Brauner
+<christian.brauner@ubuntu.com> wrote:
+>
+> On Mon, Oct 07, 2019 at 03:50:47PM +0200, Dmitry Vyukov wrote:
+> > On Mon, Oct 7, 2019 at 3:18 PM Andrea Parri <parri.andrea@gmail.com> wrote:
+> > >
+> > > On Mon, Oct 07, 2019 at 01:01:17PM +0200, Christian Brauner wrote:
+> > > > When assiging and testing taskstats in taskstats_exit() there's a race
+> > > > when writing and reading sig->stats when a thread-group with more than
+> > > > one thread exits:
+> > > >
+> > > > cpu0:
+> > > > thread catches fatal signal and whole thread-group gets taken down
+> > > >  do_exit()
+> > > >  do_group_exit()
+> > > >  taskstats_exit()
+> > > >  taskstats_tgid_alloc()
+> > > > The tasks reads sig->stats holding sighand lock seeing garbage.
+> > >
+> > > You meant "without holding sighand lock" here, right?
+> > >
+> > >
+> > > >
+> > > > cpu1:
+> > > > task calls exit_group()
+> > > >  do_exit()
+> > > >  do_group_exit()
+> > > >  taskstats_exit()
+> > > >  taskstats_tgid_alloc()
+> > > > The task takes sighand lock and assigns new stats to sig->stats.
+> > > >
+> > > > Fix this by using READ_ONCE() and smp_store_release().
+> > > >
+> > > > Reported-by: syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com
+> > > > Fixes: 34ec12349c8a ("taskstats: cleanup ->signal->stats allocation")
+> > > > Cc: stable@vger.kernel.org
+> > > > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> > > > Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
+> > > > Link: https://lore.kernel.org/r/20191006235216.7483-1-christian.brauner@ubuntu.com
+> > > > ---
+> > > > /* v1 */
+> > > > Link: https://lore.kernel.org/r/20191005112806.13960-1-christian.brauner@ubuntu.com
+> > > >
+> > > > /* v2 */
+> > > > - Dmitry Vyukov <dvyukov@google.com>, Marco Elver <elver@google.com>:
+> > > >   - fix the original double-checked locking using memory barriers
+> > > >
+> > > > /* v3 */
+> > > > - Andrea Parri <parri.andrea@gmail.com>:
+> > > >   - document memory barriers to make checkpatch happy
+> > > > ---
+> > > >  kernel/taskstats.c | 21 ++++++++++++---------
+> > > >  1 file changed, 12 insertions(+), 9 deletions(-)
+> > > >
+> > > > diff --git a/kernel/taskstats.c b/kernel/taskstats.c
+> > > > index 13a0f2e6ebc2..978d7931fb65 100644
+> > > > --- a/kernel/taskstats.c
+> > > > +++ b/kernel/taskstats.c
+> > > > @@ -554,24 +554,27 @@ static int taskstats_user_cmd(struct sk_buff *skb, struct genl_info *info)
+> > > >  static struct taskstats *taskstats_tgid_alloc(struct task_struct *tsk)
+> > > >  {
+> > > >       struct signal_struct *sig = tsk->signal;
+> > > > -     struct taskstats *stats;
+> > > > +     struct taskstats *stats_new, *stats;
+> > > >
+> > > > -     if (sig->stats || thread_group_empty(tsk))
+> > > > -             goto ret;
+> > > > +     /* Pairs with smp_store_release() below. */
+> > > > +     stats = READ_ONCE(sig->stats);
+> > >
+> > > This pairing suggests that the READ_ONCE() is heading an address
+> > > dependency, but I fail to identify it: what is the target memory
+> > > access of such a (putative) dependency?
+> >
+> > I would assume callers of this function access *stats. So the
+> > dependency is between loading stats and accessing *stats.
+>
+> Right, but why READ_ONCE() and not smp_load_acquire here?
 
-
-On 10/7/19 1:00 PM, Maxime Ripard wrote:
-> Hi Alexandre,
-> 
-> On Mon, Oct 07, 2019 at 12:25:50PM +0200, Alexandre Torgue wrote:
->> This commit fixes id path of allwinner,sun4i-a10-csi.yaml location.
->>
->> Fixes: c5e8f4ccd775 ("media: dt-bindings: media: Add Allwinner A10 CSI binding")
->> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-> 
-> I just merged a patch addressing the same issue earlier today.
-> 
-
-Ok. Thanks Maxime.
-
-Regards
-Alex
-
-> Thanks!
-> Maxime
-> 
+Because if all memory accesses we need to order have data dependency
+between them, READ_ONCE is enough and is cheaper on some archs (e.g.
+ARM).
+In our case there is a data dependency between loading of stats and
+accessing *stats (only Alpha could reorder that, other arches can't
+load via a pointer before loading the pointer itself (sic!)).
