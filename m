@@ -2,72 +2,68 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D857DECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C44B5ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B41392070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:01:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1B712070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:03:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbfJGPB1 (ORCPT
+        id S1728144AbfJGPD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 11:01:27 -0400
-Received: from mga01.intel.com ([192.55.52.88]:4002 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727490AbfJGPB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:01:27 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Oct 2019 08:01:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,268,1566889200"; 
-   d="scan'208";a="344756271"
-Received: from um.fi.intel.com (HELO localhost) ([10.237.72.57])
-  by orsmga004.jf.intel.com with ESMTP; 07 Oct 2019 08:01:22 -0700
-From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        alexander.shishkin@linux.intel.com
-Subject: Re: [PATCH] perf: Fix inheritance of aux_output groups
-In-Reply-To: <20191007144954.GA88143@gmail.com>
-References: <20191004125729.32397-1-alexander.shishkin@linux.intel.com> <20191007144954.GA88143@gmail.com>
-Date:   Mon, 07 Oct 2019 18:01:21 +0300
-Message-ID: <875zl061mm.fsf@ashishki-desk.ger.corp.intel.com>
+        Mon, 7 Oct 2019 11:03:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34038 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727490AbfJGPD3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 11:03:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7C14BACD8;
+        Mon,  7 Oct 2019 15:03:27 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id F1B4BDA7FB; Mon,  7 Oct 2019 17:03:41 +0200 (CEST)
+Date:   Mon, 7 Oct 2019 17:03:40 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Austin Kim <austindh.kim@gmail.com>
+Cc:     clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] btrfs: fix Wmaybe-uninitialized warning
+Message-ID: <20191007150340.GA2751@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Austin Kim <austindh.kim@gmail.com>,
+        clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190903033019.GA149622@LGEARND20B15>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190903033019.GA149622@LGEARND20B15>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ingo Molnar <mingo@kernel.org> writes:
+On Tue, Sep 03, 2019 at 12:30:19PM +0900, Austin Kim wrote:
+> gcc throws warning message as below:
+> 
+> ‘clone_src_i_size’ may be used uninitialized in this function
+> [-Wmaybe-uninitialized]
+>  #define IS_ALIGNED(x, a)  (((x) & ((typeof(x))(a) - 1)) == 0)
+>                        ^
+> fs/btrfs/send.c:5088:6: note: ‘clone_src_i_size’ was declared here
+>  u64 clone_src_i_size;
+>    ^
+> The clone_src_i_size is only used as call-by-reference
+> in a call to get_inode_info().
+> 
+> Silence the warning by initializing clone_src_i_size to 0.
+> 
+> Signed-off-by: Austin Kim <austindh.kim@gmail.com>
 
-> * Alexander Shishkin <alexander.shishkin@linux.intel.com> wrote:
->
->> Commit
->> 
->>   b43762ef010 ("perf: Allow normal events to output AUX data")
->
-> Missing 'a', the proper SHA1 is:
->
->     ab43762ef010 ("perf: Allow normal events to output AUX data")
->
-> :-)
-
-Ouch, sorry about that.
-
-> Could this explain weird 'perf top' failures I'm seeing on my desktop, 
-> which I was just about to debug and report?
-
-Unlikely; to trigger the above you'd have to manually enable the
-aux_output thingy and that would require HW support to begin with.
-
-Thanks,
---
-Alex
+A few more people have repoted this warning, so I'm gonig to apply the
+patch to avoid further reports. Thanks.
