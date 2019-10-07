@@ -2,122 +2,103 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43632ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E02DECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EE9420835
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:18:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8D31217D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:20:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gf1eiBRO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729465AbfJGWSW (ORCPT
+        id S1729491AbfJGWUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 18:18:22 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:45632 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728654AbfJGWSV (ORCPT
+        Mon, 7 Oct 2019 18:20:31 -0400
+Received: from mail-qt1-f201.google.com ([209.85.160.201]:56772 "EHLO
+        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728654AbfJGWUb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 18:18:21 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 5045980555; Tue,  8 Oct 2019 00:18:03 +0200 (CEST)
-Date:   Tue, 8 Oct 2019 00:18:17 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Nicholas Mc Guire <hofrat@opentech.at>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: x86/random: Speculation to the rescue
-Message-ID: <20191007221817.GA4027@amd>
-References: <alpine.DEB.2.21.1909290010500.2636@nanos.tec.linutronix.de>
- <CAHk-=wgjC01UaoV35PZvGPnrQ812SRGPoV7Xp63BBFxAsJjvrg@mail.gmail.com>
- <20191006114129.GD24605@amd>
- <CAHk-=wjvhovO6V4-zT=xEMFnRonYteZvsPo-S0_n_DetSTUk5A@mail.gmail.com>
- <20191006173501.GA31243@amd>
- <CAHk-=whgfz2+OgBTVrHLoHK57emYb4gN6TtJ_s-607U=jBQ+ig@mail.gmail.com>
- <20191006182103.GA2394@amd>
- <20191007114734.GA6104@mit.edu>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="wac7ysb48OaltWcw"
-Content-Disposition: inline
-In-Reply-To: <20191007114734.GA6104@mit.edu>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Mon, 7 Oct 2019 18:20:31 -0400
+Received: by mail-qt1-f201.google.com with SMTP id m6so16798753qtk.23
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 15:20:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=wlN9EjPdJPL0a4w0W+nF7Wogpcxb94Am0mW1KAsykOM=;
+        b=gf1eiBROFqGGBLV0FzXqK9MYWbtPPBdxeGnpQjM1C66U4p86VdFxYBTz+IVfG3s5V+
+         L4nb7hKYq03E3JsliAmA4/dyN6ozjOaa0RYoxfo/fFw9U0MlrRxwGu1YtzslO2zTJ/Mj
+         q9T05C55NJMQN3oy93Dlhegk7j760rnimMVFSagdk+pMEFR6sGcUYLcx6pLO9+56ekY2
+         acQ5SR5lXz7jLrYwWoKlFbnmK5ObS7Im/t3whYKxY1qicRLXTm+5V4h/JhloHdCkMh9s
+         7qwm6Eu+Clk46L90xVZ1dlWHSaoT4iqg53z3mAGqBiurLOa1ayIooPjJdQ8XWU0um6BI
+         B4IA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=wlN9EjPdJPL0a4w0W+nF7Wogpcxb94Am0mW1KAsykOM=;
+        b=c68OTRMwBVGWBtv2RizBO2wathmy0RDckvmzdx/jU48RWpIxVO2Aq3BDRz6s2r4XzJ
+         eRuziW75S1mYQJW2GufoWMR3w59uShhMGFBtkavgKBau9wSTR6cfpGd1+Ft4lGBVOIhy
+         yb+leHOxrVamfmyDMkdWIi35d4ikWTKwbwmiPmSaxzPujx2jyFe426Ra/tbgpqk1XQTE
+         s3IJB9/ECKpa1nFZze9fBv6MyOL/dtv1Hpm1jzF7Jg1MKyxF4rj7DT8NlBRrRjXfdMiV
+         erD9PqYU/5vJhpnx45AY9hKDSzhO6Pe4x9ZcKmK1xLyDucyXeF7Lz7P2wal+CdAWoaYC
+         NCpQ==
+X-Gm-Message-State: APjAAAUoWB8aLMWuW9M0rQqSrhqW6hI9y8yLzTlRKsvEJJBqywMlcfd3
+        JtS3za8NiYYKLS0j0PyWNk9AUdlMkEU=
+X-Google-Smtp-Source: APXvYqxna5U/YbHXLmtzy893qlEj+JXOevUDENdZ3H84rjZemNR7AiPksdRy1bMwRjorvUp6vdO/EIMuJaw=
+X-Received: by 2002:ac8:27d9:: with SMTP id x25mr30930141qtx.321.1570486830137;
+ Mon, 07 Oct 2019 15:20:30 -0700 (PDT)
+Date:   Mon,  7 Oct 2019 16:20:23 -0600
+Message-Id: <20191007222023.162256-1-yuzhao@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
+Subject: [PATCH] mm: update comments in slub.c
+From:   Yu Zhao <yuzhao@google.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Yu Zhao <yuzhao@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Slub doesn't use PG_active and PG_error anymore.
 
---wac7ysb48OaltWcw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Yu Zhao <yuzhao@google.com>
+---
+ mm/slub.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-On Mon 2019-10-07 07:47:34, Theodore Y. Ts'o wrote:
-> On Sun, Oct 06, 2019 at 08:21:03PM +0200, Pavel Machek wrote:
-> > Even without cycle counter... if we _know_ we are trying to generate
-> > entropy and have MMC available, we don't care about power and
-> > performance.
-> >=20
-> > So we can just...
-> >=20
-> >    issue read request on MMC
-> >    while (!interrupt_done)
-> >    	 i++
-> > 	=20
-> > ...and then use i++ as poor man's version of cycle counter.
->=20
-> I suggest that you try that and see how much uncertainty you really
-> have before you assume that this is actually going to work.  Again, on
-> "System on a Chip" systems, there is very likely a single master
-> oscillator, and the eMMC is going to be on the the same silicon die as
-> the CPU.  At least for spinning rust platters it's on a physically
+diff --git a/mm/slub.c b/mm/slub.c
+index 320a1c375e1b..cfbc839dc2ea 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -93,9 +93,7 @@
+  * minimal so we rely on the page allocators per cpu caches for
+  * fast frees and allocs.
+  *
+- * Overloading of page flags that are otherwise used for LRU management.
+- *
+- * PageActive 		The slab is frozen and exempt from list processing.
++ * page->frozen		The slab is frozen and exempt from list processing.
+  * 			This means that the slab is dedicated to a purpose
+  * 			such as satisfying allocations for a specific
+  * 			processor. Objects may be freed in the slab while
+@@ -111,7 +109,7 @@
+  * 			free objects in addition to the regular freelist
+  * 			that requires the slab lock.
+  *
+- * PageError		Slab requires special handling due to debug
++ * SLAB_DEBUG_FLAGS	Slab requires special handling due to debug
+  * 			options set. This moves	slab handling out of
+  * 			the fast path and disables lockless freelists.
+  */
+-- 
+2.23.0.581.g78d2f28ef7-goog
 
-I have many systems including SoC here, but technology needed for NAND
-flash is different from technology for CPU, so these parts do _not_
-share a silicon die. They do not even share same package. (Also RTC
-tends to be on separate chip, connected using i2c).
-
-Would you have an example of Linux-capable system where eMMC is on
-same chip as CPU?
-
-> P.S.  Note that this Don Davis's paper[1] claims that they were able
-> to extract 100 independent unpredictable bits per _minute_.  Given
-> that modern init scripts want us to be able to boot in under a few
-
-Well, for now I'm arguing that it is possible to gather entropy, not
-neccessarily that it is going to be fast. Still waiting minute and a
-half during boot is better than generating non-random keys.
-
-Linux already credits interrupts with some entropy, so all I really
-need to do is generate some interrupts. And "find /" generates lots of
-those on embedded systems. (Even with nfsroot as long as network card
-is not being polled...)
-
-Best regards,
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---wac7ysb48OaltWcw
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl2buakACgkQMOfwapXb+vIMKACfTYD726DRhIKO8U/fIqbhpkhb
-6X0AnjicfyhZGiQk6WZBcx++vPb4LCtJ
-=U6l+
------END PGP SIGNATURE-----
-
---wac7ysb48OaltWcw--
