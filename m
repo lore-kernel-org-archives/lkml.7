@@ -2,112 +2,178 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 503F9ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C63C4ECE58D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2701A21655
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:42:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="1APETO5d"
+	by mail.kernel.org (Postfix) with ESMTP id 9444121721
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:42:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570459377;
+	bh=8a9ttxrtf8XQAHoqUXfvVNJTnrKk2ig330NCAHu4lg8=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=DncCb0Sejw7z+TvSZcdkRcZ5L1B77vEEpTyrI26bZbbk+sUZNKt8N0OemHJ48rq62
+	 d7nRh777kYGmzIm8tZ62BehAqGA96W4LYUaQqbCVP/sQVX9vTH8ljQl9WSOPB5dfLX
+	 nAe3B0DyG9FYYyMjZooj/kynWxtgQyQE88bzoObo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728044AbfJGOmt (ORCPT
+        id S1728207AbfJGOm4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 10:42:49 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53822 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727711AbfJGOms (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 10:42:48 -0400
-Received: by mail-wm1-f68.google.com with SMTP id i16so12977501wmd.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 07:42:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0kl+DAj1oCg+aQcQu6D5DV3XjvnFcsuot+q3ncQGbNg=;
-        b=1APETO5dW5o/P6Bf0/LysOTzFrtKEin7/g+Es/v671W7F2gfUXc5xQ/UqZvhegttkQ
-         Q9qHf/nCa2w6h2TBH6GiIpmYBeGKbQf704cUluye9KUV1/ZFscSqtebTOC857bbLoV9i
-         bFqJaKz/xGcly7fkB3JpVz6EI5DJT2oYMmO6eMtFUtzjCvheQS5tlg94nfrbvBaqobjK
-         qKKaIi+OzCbRD/NO6Y0mki7kQQ/iT993PFbtZrkkGeZhS2KLDZDORxECOgdLFUDnWoBd
-         Ozygifu9Aiouwto0rx5J7wLAy4U6naxGLp9lARRKoU/yOUBJ3a99PsYRu17vHd2kPz0+
-         MIVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0kl+DAj1oCg+aQcQu6D5DV3XjvnFcsuot+q3ncQGbNg=;
-        b=h4gOZHyEyyGTz5S2GKPkGBQLL2Y/0iE93fGPPF52tgNY473sPTADuLxczfez6BRKMa
-         OFY1kjLeZxatbIEWSqm7yCb8bSRFAJRbSLqwa4GvKyI2yPwDMcN73d/sRiNK9jFsJm1U
-         lWds4QBlnzEUrb6yR9uAKZYtelaVSj2BKV+5lclgp+HATmDCu1xGpiQXZecoL0RhM04L
-         ng+7DAXHxRVKskYZGDDAbVbQaWuZdos6DGczi+oMhWOxiqGxl1JWpvd7R/DWVNdoNdqt
-         UkMcgJtBA3NwWqakVHBkEdfTc/Tjgp9AihS2iyHRKVqoQmKudLfnX7bpz1T+w9lYgx1Q
-         x6cA==
-X-Gm-Message-State: APjAAAWVrdLdMjSt+LwPnkm8HftaZoa+kHEOF5Ck6X1n0ondRvTql1bk
-        2UIy92xDOW7miL71Pfgxy9w/nw==
-X-Google-Smtp-Source: APXvYqzGiEZjoZdI1oEjJFuGvM2gE1Fi2waku98ts48QCWrm+IFggCsmK6LJTaueX3QZI/RfatXNuw==
-X-Received: by 2002:a7b:c7d4:: with SMTP id z20mr20958580wmk.49.1570459366588;
-        Mon, 07 Oct 2019 07:42:46 -0700 (PDT)
-Received: from localhost (ip-213-220-235-50.net.upcbroadband.cz. [213.220.235.50])
-        by smtp.gmail.com with ESMTPSA id q15sm31743144wrg.65.2019.10.07.07.42.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2019 07:42:46 -0700 (PDT)
-Date:   Mon, 7 Oct 2019 16:42:45 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     syzbot <syzbot+9cb7edb2906ea1e83006@syzkaller.appspotmail.com>
-Cc:     alex.aring@gmail.com, davem@davemloft.net, jiri@mellanox.com,
-        linux-kernel@vger.kernel.org, linux-wpan@vger.kernel.org,
-        netdev@vger.kernel.org, stefan@datenfreihafen.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: KASAN: use-after-free Read in __cfg8NUM_wpan_dev_from_attrs
-Message-ID: <20191007144245.GC2326@nanopsycho>
-References: <00000000000035a04b059452bc21@google.com>
+        Mon, 7 Oct 2019 10:42:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54918 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727745AbfJGOmz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 10:42:55 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 652F821655;
+        Mon,  7 Oct 2019 14:42:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570459374;
+        bh=8a9ttxrtf8XQAHoqUXfvVNJTnrKk2ig330NCAHu4lg8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=AoB6OsaRPmZtmsSo+lnAiCXKXpAVYnRxoGldWXC/BBHobSDS+krxcX7IrlOfGHyrA
+         TxYbr+Z5YnGt6XoXu3UMvJaolTAbaKL0uQsfA2rKEiZhsD8DybbBoZ3r44PxiMr/G5
+         2Q6UI0fo3E2C4VIFC/24/CxuC6cNzrzr3VHDshCo=
+Subject: Re: [PATCH v18 00/19] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
+        shuah <shuah@kernel.org>
+References: <CAHk-=whX-JbpM2Sc85epng_GAgGGzxRAJ2SSKkMf9N1Lsqe+OA@mail.gmail.com>
+ <56e2e1a7-f8fe-765b-8452-1710b41895bf@kernel.org>
+ <20191004222714.GA107737@google.com>
+ <ad800337-1ae2-49d2-e715-aa1974e28a10@kernel.org>
+ <20191004232955.GC12012@mit.edu>
+ <CAFd5g456rBSp177EkYAwsF+KZ0rxJa90mzUpW2M3R7tWbMAh9Q@mail.gmail.com>
+ <63e59b0b-b51e-01f4-6359-a134a1f903fd@kernel.org>
+ <CAFd5g47wji3T9RFmqBwt+jPY0tb83y46oj_ttOq=rTX_N1Ggyg@mail.gmail.com>
+ <544bdfcb-fb35-5008-ec94-8d404a08fd14@kernel.org>
+ <CAFd5g467PkfELixpU0JbaepEAAD_ugAA340-uORngC-eXsQQ-g@mail.gmail.com>
+ <20191006165436.GA29585@mit.edu>
+ <CAHk-=wjcJxypxUOSF-jc=SQKT1CrOoTMyT7soYzbvK3965JmCA@mail.gmail.com>
+ <CAFd5g45djTX+FaXwn2abve1+6GbtNrv+8EJgDe_TXn1d+pzukA@mail.gmail.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <ed26ac47-7f27-c3ec-56ae-8b3b9aa87654@kernel.org>
+Date:   Mon, 7 Oct 2019 08:42:36 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00000000000035a04b059452bc21@google.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <CAFd5g45djTX+FaXwn2abve1+6GbtNrv+8EJgDe_TXn1d+pzukA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mon, Oct 07, 2019 at 04:19:09PM CEST, syzbot+9cb7edb2906ea1e83006@syzkaller.appspotmail.com wrote:
->Hello,
->
->syzbot found the following crash on:
->
->HEAD commit:    056ddc38 Merge branch 'stmmac-next'
->git tree:       net-next
->console output: https://syzkaller.appspot.com/x/log.txt?x=125aaafd600000
->kernel config:  https://syzkaller.appspot.com/x/.config?x=d9be300620399522
->dashboard link: https://syzkaller.appspot.com/bug?extid=9cb7edb2906ea1e83006
->compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1232bb3f600000
->C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=162d0d0b600000
->
->The bug was bisected to:
->
->commit 75cdbdd089003cd53560ff87b690ae911fa7df8e
->Author: Jiri Pirko <jiri@mellanox.com>
->Date:   Sat Oct 5 18:04:37 2019 +0000
->
->    net: ieee802154: have genetlink code to parse the attrs during dumpit
->
->bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11be5d0b600000
->final crash:    https://syzkaller.appspot.com/x/report.txt?x=13be5d0b600000
->console output: https://syzkaller.appspot.com/x/log.txt?x=15be5d0b600000
->
->IMPORTANT: if you fix the bug, please add the following tag to the commit:
->Reported-by: syzbot+9cb7edb2906ea1e83006@syzkaller.appspotmail.com
->Fixes: 75cdbdd08900 ("net: ieee802154: have genetlink code to parse the attrs
->during dumpit")
->
->netlink: 'syz-executor134': attribute type 6 has an invalid length.
->==================================================================
->BUG: KASAN: use-after-free in nla_memcpy+0xa2/0xb0 lib/nlattr.c:572
+On 10/7/19 2:40 AM, Brendan Higgins wrote:
+> On Sun, Oct 6, 2019 at 10:18 AM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+>>
+>> On Sun, Oct 6, 2019 at 9:55 AM Theodore Y. Ts'o <tytso@mit.edu> wrote:
+>>>
+>>> Well, one thing we *can* do is if (a) if we can create a kselftest
+>>> branch which we know is stable and won't change, and (b) we can get
+>>> assurances that Linus *will* accept that branch during the next merge
+>>> window, those subsystems which want to use kself test can simply pull
+>>> it into their tree.
+>>
+>> Yes.
+>>
+>> At the same time, I don't think it needs to be even that fancy. Even
+>> if it's not a stable branch that gets shared between different
+>> developers, it would be good to just have people do a "let's try this"
+>> throw-away branch to use the kunit functionality and verify that
+>> "yeah, this is fairly convenient for ext4".
+>>
+>> It doesn't have to be merged in that form, but just confirmation that
+>> the infrastructure is helpful before it gets merged would be good.
+> 
+> I thought we already had done this satisfactorily.
+> 
+Adding a couple more tests will only help in the long run. The idea is
+to see can this help
 
-I'm on this.
+> We have one proof-of-concept test in the branch in the kselftest repo
+> (proc sysctl test) that went out in the pull request, and we also had
+> some other tests that were not in the pull request (there is the ext4
+> timestamp stuff mentioned above, and we also had one against the list
+> data structure), which we were planning on sending out for review once
+> Shuah's pull request was accepted. I know the apparmor people also
+> wrote some tests that they said were useful; however, I have not
+> coordinated with them on upstreaming their tests. I know of some other
+> people who are using it, but I don't think the tests are as far along
+> for upstreaming.
+> 
+
+Maybe that is a good start. To get the tests that are already in use
+and get them in shape for upstream.
+
+> The point is: I thought we had plenty of signal that KUnit would be
+> useful to have merged into the mainline kernel. I thought the only
+> reason it was rejected for 5.4 was due to the directory name issue
+> combined with bad timing.
+> 
+
+That is probably the initial thought. However, it makes perfect sense
+to add a couple of tests in. We have a few weeks anyway and it gives
+us more confidence on kunit.
+
+I already have a branch that is in linux-next and it just has kunit in
+it and I will rebase it to 5.4-rc1.
+
+https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git/log/?h=test
+
+Let's use that for kunit work for 5.5. I won't add any kselftest patches
+to it and keep it dedicated for kunit work. When tests are ready for
+upstream, I can keep adding them to this branch.
+
+thanks,
+-- Shuah
+
+
+
+
