@@ -2,108 +2,134 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD4EDC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A08ECE58E
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98A5B2133F
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 830762133F
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:46:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729133AbfJGRq1 (ORCPT
+        id S1729145AbfJGRqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 13:46:27 -0400
-Received: from muru.com ([72.249.23.125]:35754 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728793AbfJGRq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 13:46:27 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 9F8D68191;
-        Mon,  7 Oct 2019 17:46:58 +0000 (UTC)
-Date:   Mon, 7 Oct 2019 10:46:22 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Emmanuel Vadot <manu@bidouilliste.com>
-Cc:     Emmanuel Vadot <manu@freebsd.org>, bcousson@baylibre.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: Set status to disable for MMC3
-Message-ID: <20191007174622.GW5610@atomide.com>
-References: <20191007080339.57209-1-manu@freebsd.org>
- <20191007161634.GS5610@atomide.com>
- <20191007183830.71e1303d6bd713014dc36710@bidouilliste.com>
- <20191007165859.GV5610@atomide.com>
- <20191007192922.7ce3423bd1fd03551487e907@bidouilliste.com>
+        Mon, 7 Oct 2019 13:46:52 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:60824 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728031AbfJGRqv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 13:46:51 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 4268628D406
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     linux-media@vger.kernel.org
+Cc:     kernel@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        fbuergisser@chromium.org, linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Subject: [PATCH v2 for 5.4 1/4] media: hantro: Fix s_fmt for dynamic resolution changes
+Date:   Mon,  7 Oct 2019 14:45:02 -0300
+Message-Id: <20191007174505.10681-2-ezequiel@collabora.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20191007174505.10681-1-ezequiel@collabora.com>
+References: <20191007174505.10681-1-ezequiel@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191007192922.7ce3423bd1fd03551487e907@bidouilliste.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Emmanuel Vadot <manu@bidouilliste.com> [191007 17:30]:
-> On Mon, 7 Oct 2019 09:58:59 -0700
-> Tony Lindgren <tony@atomide.com> wrote:
-> > There should be no need to do that for SoC internal devices, the
-> > the default status = "okay" should be just fine. Setting the
-> > status = "disabled" for SoC internal devices and then enabling them
-> > again for tens of board specific dts files just generates tons of
-> > pointless extra churn for the board specific configuration.
-> 
->  Setting the status = "okay" means that you can use the device. What's
-> the point of enabling a device if you can't use it ? Or worse can't
-> probe it like i2c or spi ?
+Commit 953aaa1492c53 ("media: rockchip/vpu: Prepare things to support decoders")
+changed the conditions under S_FMT was allowed for OUTPUT
+CAPTURE buffers.
 
-The main reasons for not setting SoC internal devices with
-status = "disabled" are:
+However, and according to the mem-to-mem stateless decoder specification,
+in order to support dynamic resolution changes, S_FMT should be allowed
+even if OUTPUT buffers have been allocated.
 
-1. The SoC internal device is there for sure and also accessible
-   for the kernel
+Relax decoder S_FMT restrictions on OUTPUT buffers, allowing a resolution
+modification, provided the pixel format stays the same.
 
-2. Setting an SoC internal device with status = "disabled" makes
-   the kernel completely ignore it and it cannot be idled for PM
-   if left on from the bootloader
+Tested on RK3288 platforms using ChromiumOS Video Decode/Encode Accelerator Unittests.
 
-3. We avoid tens of lines of pointess repetive status = "okay"
-   tinkering for multiple devices per each board specic dts file
-   making them more readable and easier to maintain
+Fixes: 953aaa1492c53 ("media: rockchip/vpu: Prepare things to support decoders")
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+--
+v2:
+* Call try_fmt_out before using the format,
+  pointed out by Philipp.
 
->  Is the plan for TI dts to have every (or almost) device tree node
-> enabled even if the device isn't usable on the board ?
+ drivers/staging/media/hantro/hantro_v4l2.c | 28 +++++++++++++++-------
+ 1 file changed, 19 insertions(+), 9 deletions(-)
 
-This has always been the case with omap3, 4, and 5. I don't
-know when folks started tagging am33xx SoC internal devices as
-disabled but that should have never been necessary.
+diff --git a/drivers/staging/media/hantro/hantro_v4l2.c b/drivers/staging/media/hantro/hantro_v4l2.c
+index 3dae52abb96c..586d243cc3cc 100644
+--- a/drivers/staging/media/hantro/hantro_v4l2.c
++++ b/drivers/staging/media/hantro/hantro_v4l2.c
+@@ -367,19 +367,26 @@ vidioc_s_fmt_out_mplane(struct file *file, void *priv, struct v4l2_format *f)
+ {
+ 	struct v4l2_pix_format_mplane *pix_mp = &f->fmt.pix_mp;
+ 	struct hantro_ctx *ctx = fh_to_ctx(priv);
++	struct vb2_queue *vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
+ 	const struct hantro_fmt *formats;
+ 	unsigned int num_fmts;
+-	struct vb2_queue *vq;
+ 	int ret;
+ 
+-	/* Change not allowed if queue is busy. */
+-	vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
+-	if (vb2_is_busy(vq))
+-		return -EBUSY;
++	ret = vidioc_try_fmt_out_mplane(file, priv, f);
++	if (ret)
++		return ret;
+ 
+ 	if (!hantro_is_encoder_ctx(ctx)) {
+ 		struct vb2_queue *peer_vq;
+ 
++		/*
++		 * In other to support dynamic resolution change,
++		 * the decoder admits a resolution change, as long
++		 * as the pixelformat remains. Can't be done if streaming.
++		 */
++		if (vb2_is_streaming(vq) || (vb2_is_busy(vq) &&
++		    pix_mp->pixelformat != ctx->src_fmt.pixelformat))
++			return -EBUSY;
+ 		/*
+ 		 * Since format change on the OUTPUT queue will reset
+ 		 * the CAPTURE queue, we can't allow doing so
+@@ -389,12 +396,15 @@ vidioc_s_fmt_out_mplane(struct file *file, void *priv, struct v4l2_format *f)
+ 					  V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
+ 		if (vb2_is_busy(peer_vq))
+ 			return -EBUSY;
++	} else {
++		/*
++		 * The encoder doesn't admit a format change if
++		 * there are OUTPUT buffers allocated.
++		 */
++		if (vb2_is_busy(vq))
++			return -EBUSY;
+ 	}
+ 
+-	ret = vidioc_try_fmt_out_mplane(file, priv, f);
+-	if (ret)
+-		return ret;
+-
+ 	formats = hantro_get_formats(ctx, &num_fmts);
+ 	ctx->vpu_src_fmt = hantro_find_format(formats, num_fmts,
+ 					      pix_mp->pixelformat);
+-- 
+2.22.0
 
-Few years back I suggested some patches for status = "incomplete"
-to deal with cases where the device is there but not pinned
-out or otherwise not complete. But so far we've gotten away
-without that, so probably not needed.
-
-> > >  In this case it's FreeBSD being  because (I think) we have bad support
-> > > for the clocks for this module so we panic when we read from it as the
-> > > module isn't clocked. And since I find it wrong to have device enabled
-> > > while it isn't present I've sent this patch.
-> > 
-> > Thanks for clarifying what happens. OK, sounds like FreeBSD might be
-> > missing clock handling for some devices then.
-> > 
-> > What Linux does is probe the internal devices and then idle the
-> > unused ones as bootloaders often leave many things enabled. Otherwise
-> > the SoC power management won't work properly because device clocks
-> > will block deeper SoC idle states.
-> 
->  I can understand stand but then the bootload should be fixed to not
-> enable devices that aren't enabled in the DTS if it does that.
-
-This is not doable as in many cases the bootloader cannot be
-updated as it can be signed for phones like n900 and droid4.
-
-Regards,
-
-Tony
