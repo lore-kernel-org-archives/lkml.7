@@ -7,57 +7,53 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43ECEECE58D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C43C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1610821929
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:03:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F88A21924
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:03:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570453411;
-	bh=DhhP3yo515UYI9wdDYNBvs2jo/nLxQDqsnMYpWsmD3I=;
+	s=default; t=1570453413;
+	bh=kceC5PGJ38aOp+x55yKG39QzkRFu144KNvUGNvqSKuo=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=kP//+WyHR6r1HL7Z7UnV24R3N53vLbxe9/25wPxCJGJXTAs7VZFq14N1RLum2Z2tz
-	 WQy90NLpj8mJbU+a6TWPMDsCMzxrtwf0KnreQpSryH/wap/Vf6RYOQD7HfftofROih
-	 0v00TB1vOB2Pf5f1SFqsWAjMfGlnDzGrcnJ1pDSE=
+	b=IHSirHVJbhMniyHdqDj9kgdhwi8ce/5i12hSdGgku+a9LEMl67n26D2GBUashojHO
+	 msp2bs8YGqRhnxNYunoK9qtWsoYM5vF4HtW/mzN2SGW2NPLKD18JC9VMUX558v15t9
+	 fz3T3zNt4XArbTTeMO/2o5JVgsYhL3uwNq1IErjA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728225AbfJGNDa (ORCPT
+        id S1728203AbfJGND3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 09:03:30 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49470 "EHLO
+        Mon, 7 Oct 2019 09:03:29 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49370 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728145AbfJGND1 (ORCPT
+        with ESMTP id S1728098AbfJGNDZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 09:03:27 -0400
+        Mon, 7 Oct 2019 09:03:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=FXvSV90ORQdMKdGNJr1bG4jNw0ZoYKo8tYhWNdgsM1E=; b=THWXo8Rq7TGt
-        02XMx0KXdK0VMe4ALiMPT583icsjkQOpUdjLZgye3FLvlAhyIRR+hAanzLWoVSwNbh7Awf4lW9/0I
-        1aYHWZuYWuJdCvXfu0odTFZZtNlRv0ts3/oHlsXYAPipHHFPgWEktruoRmDyOqRrJjxXWa/gcvUGn
-        Jodhs=;
+        List-Archive; bh=nh4dSLiskRPL87hNgxggsPDiGEiHyHHb3/9LCSGv6Yc=; b=QLKvZ1kDPXLp
+        x3lHR1EtjBUpatlyVKh1q39xIzOSDMfBR1IjphBBo4UoKSR/j71oovpr2sHvIzDnFP8tH5MK02BWS
+        Ifu+U7cy5NUGM66q/n8XaQUXN3R5VSOn5pPOaeRZV7384WfPeSWScanh3uIOBo6jzjrQoUnZfII3h
+        O5B7U=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iHSfO-0003Qo-Td; Mon, 07 Oct 2019 13:03:10 +0000
+        id 1iHSfa-0003Sn-H8; Mon, 07 Oct 2019 13:03:22 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 8F1AB274124F; Mon,  7 Oct 2019 14:03:09 +0100 (BST)
+        id 07E9D274162F; Mon,  7 Oct 2019 14:03:21 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        festevam@gmail.com, Hulk Robot <hulkci@huawei.com>,
-        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, Mark Brown <broonie@kernel.org>,
-        nicoleotsuka@gmail.com, perex@perex.cz, timur@kernel.org,
-        tiwai@suse.com, Xiubo.Lee@gmail.com
-Subject: Applied "ASoC: fsl_mqs: remove set but not used variable 'bclk'" to the asoc tree
-In-Reply-To: <20191006105522.58560-1-yuehaibing@huawei.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org
+Subject: Applied "gpiolib: introduce fwnode_gpiod_get_index()" to the regulator tree
+In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20191007130309.8F1AB274124F@ypsilon.sirena.org.uk>
-Date:   Mon,  7 Oct 2019 14:03:09 +0100 (BST)
+Message-Id: <20191007130322.07E9D274162F@ypsilon.sirena.org.uk>
+Date:   Mon,  7 Oct 2019 14:03:21 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,11 +61,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: fsl_mqs: remove set but not used variable 'bclk'
+   gpiolib: introduce fwnode_gpiod_get_index()
 
-has been applied to the asoc tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -90,42 +86,154 @@ to this mail.
 Thanks,
 Mark
 
-From e9e8fc9ed63e7e0fb30f8612f628924fbd868467 Mon Sep 17 00:00:00 2001
-From: YueHaibing <yuehaibing@huawei.com>
-Date: Sun, 6 Oct 2019 18:55:22 +0800
-Subject: [PATCH] ASoC: fsl_mqs: remove set but not used variable 'bclk'
+From 13949fa9daa91a60c7cfef40755f7611cc2cf653 Mon Sep 17 00:00:00 2001
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Date: Thu, 12 Sep 2019 20:22:39 -0700
+Subject: [PATCH] gpiolib: introduce fwnode_gpiod_get_index()
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+This introduces fwnode_gpiod_get_index() that iterates through common gpio
+suffixes when trying to locate a GPIO within a given firmware node.
 
-sound/soc/fsl/fsl_mqs.c: In function fsl_mqs_hw_params:
-sound/soc/fsl/fsl_mqs.c:54:6: warning: variable bclk set but not used [-Wunused-but-set-variable]
+We also switch devm_fwnode_gpiod_get_index() to call
+fwnode_gpiod_get_index() instead of iterating through GPIO suffixes on
+its own.
 
-It is never used, so can be removed.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Link: https://lore.kernel.org/r/20191006105522.58560-1-yuehaibing@huawei.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Link: https://lore.kernel.org/r/20190913032240.50333-3-dmitry.torokhov@gmail.com
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- sound/soc/fsl/fsl_mqs.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/gpio/gpiolib-devres.c | 16 +-----------
+ drivers/gpio/gpiolib.c        | 48 +++++++++++++++++++++++++++++++++++
+ include/linux/gpio/consumer.h | 13 ++++++++++
+ 3 files changed, 62 insertions(+), 15 deletions(-)
 
-diff --git a/sound/soc/fsl/fsl_mqs.c b/sound/soc/fsl/fsl_mqs.c
-index c1619a553514..7b9cab3a62e7 100644
---- a/sound/soc/fsl/fsl_mqs.c
-+++ b/sound/soc/fsl/fsl_mqs.c
-@@ -51,10 +51,9 @@ static int fsl_mqs_hw_params(struct snd_pcm_substream *substream,
- 	struct fsl_mqs *mqs_priv = snd_soc_component_get_drvdata(component);
- 	unsigned long mclk_rate;
- 	int div, res;
--	int bclk, lrclk;
-+	int lrclk;
+diff --git a/drivers/gpio/gpiolib-devres.c b/drivers/gpio/gpiolib-devres.c
+index 9a0475c87f95..4421be09b960 100644
+--- a/drivers/gpio/gpiolib-devres.c
++++ b/drivers/gpio/gpiolib-devres.c
+@@ -205,29 +205,15 @@ struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
+ 					      enum gpiod_flags flags,
+ 					      const char *label)
+ {
+-	char prop_name[32]; /* 32 is max size of property name */
+ 	struct gpio_desc **dr;
+ 	struct gpio_desc *desc;
+-	unsigned int i;
  
- 	mclk_rate = clk_get_rate(mqs_priv->mclk);
--	bclk = snd_soc_params_to_bclk(params);
- 	lrclk = params_rate(params);
+ 	dr = devres_alloc(devm_gpiod_release, sizeof(struct gpio_desc *),
+ 			  GFP_KERNEL);
+ 	if (!dr)
+ 		return ERR_PTR(-ENOMEM);
  
- 	/*
+-	for (i = 0; i < ARRAY_SIZE(gpio_suffixes); i++) {
+-		if (con_id)
+-			snprintf(prop_name, sizeof(prop_name), "%s-%s",
+-					    con_id, gpio_suffixes[i]);
+-		else
+-			snprintf(prop_name, sizeof(prop_name), "%s",
+-					    gpio_suffixes[i]);
+-
+-		desc = fwnode_get_named_gpiod(fwnode, prop_name, index, flags,
+-					      label);
+-		if (!IS_ERR(desc) || (PTR_ERR(desc) != -ENOENT))
+-			break;
+-	}
++	desc = fwnode_gpiod_get_index(fwnode, con_id, index, flags, label);
+ 	if (IS_ERR(desc)) {
+ 		devres_free(dr);
+ 		return desc;
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index bdbc1649eafa..2342deaace17 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -4324,6 +4324,54 @@ static int platform_gpio_count(struct device *dev, const char *con_id)
+ 	return count;
+ }
+ 
++/**
++ * fwnode_gpiod_get_index - obtain a GPIO from firmware node
++ * @fwnode:	handle of the firmware node
++ * @con_id:	function within the GPIO consumer
++ * @index:	index of the GPIO to obtain for the consumer
++ * @flags:	GPIO initialization flags
++ * @label:	label to attach to the requested GPIO
++ *
++ * This function can be used for drivers that get their configuration
++ * from opaque firmware.
++ *
++ * The function properly finds the corresponding GPIO using whatever is the
++ * underlying firmware interface and then makes sure that the GPIO
++ * descriptor is requested before it is returned to the caller.
++ *
++ * Returns:
++ * On successful request the GPIO pin is configured in accordance with
++ * provided @flags.
++ *
++ * In case of error an ERR_PTR() is returned.
++ */
++struct gpio_desc *fwnode_gpiod_get_index(struct fwnode_handle *fwnode,
++					 const char *con_id, int index,
++					 enum gpiod_flags flags,
++					 const char *label)
++{
++	struct gpio_desc *desc;
++	char prop_name[32]; /* 32 is max size of property name */
++	unsigned int i;
++
++	for (i = 0; i < ARRAY_SIZE(gpio_suffixes); i++) {
++		if (con_id)
++			snprintf(prop_name, sizeof(prop_name), "%s-%s",
++					    con_id, gpio_suffixes[i]);
++		else
++			snprintf(prop_name, sizeof(prop_name), "%s",
++					    gpio_suffixes[i]);
++
++		desc = fwnode_get_named_gpiod(fwnode, prop_name, index, flags,
++					      label);
++		if (!IS_ERR(desc) || (PTR_ERR(desc) != -ENOENT))
++			break;
++	}
++
++	return desc;
++}
++EXPORT_SYMBOL_GPL(fwnode_gpiod_get_index);
++
+ /**
+  * gpiod_count - return the number of GPIOs associated with a device / function
+  *		or -ENOENT if no GPIO has been assigned to the requested function
+diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
+index dc0ddcd30515..5215fdba6b9a 100644
+--- a/include/linux/gpio/consumer.h
++++ b/include/linux/gpio/consumer.h
+@@ -176,6 +176,10 @@ struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
+ 					 const char *propname, int index,
+ 					 enum gpiod_flags dflags,
+ 					 const char *label);
++struct gpio_desc *fwnode_gpiod_get_index(struct fwnode_handle *fwnode,
++					 const char *con_id, int index,
++					 enum gpiod_flags flags,
++					 const char *label);
+ struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
+ 					      struct fwnode_handle *child,
+ 					      const char *con_id, int index,
+@@ -531,6 +535,15 @@ struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
+ 	return ERR_PTR(-ENOSYS);
+ }
+ 
++static inline
++struct gpio_desc *fwnode_gpiod_get_index(struct fwnode_handle *fwnode,
++					 const char *con_id, int index,
++					 enum gpiod_flags flags,
++					 const char *label)
++{
++	return ERR_PTR(-ENOSYS);
++}
++
+ static inline
+ struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
+ 					      struct fwnode_handle *fwnode,
 -- 
 2.20.1
 
