@@ -2,143 +2,108 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CC1ECE58E
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:20:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C70E4ECE58E
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D491921655
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:20:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D34820673
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:20:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570465238;
+	bh=k8bWCaLv3Ck5619zahS0wFoXqqRWueQQozvCIHASccE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=K8HwAUwchxL8AYf8Isb79CqMzbzzZD+s6epNEGHF59E2ShJM0Zl/Ln/Gq9l94JA/S
+	 f3MBzkLGr19IEE8i8Qv7rQKEGNE9N7byPtutn6wX82cJozvaZYG13/kug8nSqoi3F6
+	 lXcdNpuTKj1cYeFFFlEyJcrxsw7iFsVtmhwkHypw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728786AbfJGQUf (ORCPT
+        id S1728893AbfJGQUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 12:20:35 -0400
-Received: from foss.arm.com ([217.140.110.172]:40048 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728132AbfJGQUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 12:20:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C2548142F;
-        Mon,  7 Oct 2019 09:20:34 -0700 (PDT)
-Received: from [10.1.197.21] (unknown [10.1.197.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1EFC43F68E;
-        Mon,  7 Oct 2019 09:20:32 -0700 (PDT)
-Subject: Re: [PATCH v11 14/22] mm: pagewalk: Add 'depth' parameter to pte_hole
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Mark Rutland <Mark.Rutland@arm.com>, x86@kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        James Morse <james.morse@arm.com>,
+        Mon, 7 Oct 2019 12:20:36 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37127 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728306AbfJGQUg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 12:20:36 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p14so15121278wro.4
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 09:20:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Ri8vm/ezKRwl75wbz/HtUEr3mN+iWcsdAOxE2zd9lHk=;
+        b=WXyI0aW3CwE7lqT5tFsUTIugOYQHUXQ+vQRCRFNRRaPPgIh+acnw6gKmC9jsBTk8dV
+         xPJIvztdT9NHJ8s9C+rCiWDJyalwKUt2s3TJOLWblAYXTgLbtBTQsl2NrB1DWJG1Ux+D
+         +dN14ONSTKK0psQLym7IbNZK4ee20whqIZjmBE4oEjelxJzCC00cY4k8msPiNMBYw/1x
+         HXflbePn80on+pYk7FD0Wn0qeouyaxrltMPMWUCj9LVTTxJ0Yvh0T+oJLW+bzY9TwkOi
+         gjvtlw4FQuTV4xHSWfJAdHg/+BRfJNy6kzYd7n8yDzGDHr9P8IXmOBy1Pa933kgtQm9l
+         i9Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ri8vm/ezKRwl75wbz/HtUEr3mN+iWcsdAOxE2zd9lHk=;
+        b=An0DyzY7kqHKWwTkv7lqal1pTk7oTdkHHOswMdVRndzSu0DgxiIjxBzShNKoUl2CcP
+         B2K7TXrIAdeK3YYDmJ9ZLtOk1dFrPGo1U0IX0lxisYUj2zS2Tv5Pl+e21eCVVkezPv0K
+         lRVBxZNgAStpPbGOmywBdT4+9pXnBix7keBZgTOLYZnh5i768le2gplxi73+9oAf7v46
+         CIngPtY/FHeGb5PVV4J+L8z+rZf7zoP+nz4bpWWfpsb0h0/G2fYcSpJ5iv+Pgi0YlafF
+         Y+vk9ijYUyth5kzz3al0IoMAmtkcwNZkmz3TgSSWujisuHbk5SGBbBhnOTDhtYuhre0o
+         gfkw==
+X-Gm-Message-State: APjAAAVAq5ZyVlilW2PBF4EvWSEYPtPTRh3EGdOQQzZToJCJBemzSXf/
+        nV8xz/mXuA3Nsu4fjw9bFbCJgVCk
+X-Google-Smtp-Source: APXvYqwtO3UT2MrnRVuLaGSAfB8Gj0CM9mX0HD+I1pm9FrENgbC5spDPfCMGm6TsL822aawUTxpY0Q==
+X-Received: by 2002:adf:ec91:: with SMTP id z17mr24448592wrn.346.1570465234474;
+        Mon, 07 Oct 2019 09:20:34 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id g1sm15825119wrv.68.2019.10.07.09.20.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2019 09:20:33 -0700 (PDT)
+Date:   Mon, 7 Oct 2019 18:20:31 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Wanpeng Li <wanpengli@tencent.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-References: <20191007153822.16518-1-steven.price@arm.com>
- <20191007153822.16518-15-steven.price@arm.com>
- <20191007161049.GA13229@ziepe.ca>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <6e570d6d-b29f-f4cb-1eb9-6ff6cab15a2e@arm.com>
-Date:   Mon, 7 Oct 2019 17:20:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
+        Rik van Riel <riel@redhat.com>
+Subject: Re: [PATCH 0/2] vtime: Remove pair of seqcount on context switch
+Message-ID: <20191007162031.GA7676@gmail.com>
+References: <20191003161745.28464-1-frederic@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20191007161049.GA13229@ziepe.ca>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191003161745.28464-1-frederic@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/10/2019 17:10, Jason Gunthorpe wrote:
-> On Mon, Oct 07, 2019 at 04:38:14PM +0100, Steven Price wrote:
->> diff --git a/mm/hmm.c b/mm/hmm.c
->> index 902f5fa6bf93..34fe904dd417 100644
->> +++ b/mm/hmm.c
->> @@ -376,7 +376,7 @@ static void hmm_range_need_fault(const struct hmm_vma_walk *hmm_vma_walk,
->>  }
->>  
->>  static int hmm_vma_walk_hole(unsigned long addr, unsigned long end,
->> -			     struct mm_walk *walk)
->> +			     __always_unused int depth, struct mm_walk *walk)
+
+* Frederic Weisbecker <frederic@kernel.org> wrote:
+
+> Extracted from a larger queue that fixes kcpustat on nohz_full, these
+> two patches have value on their own as they remove two write barriers
+> on nohz_full context switch.
 > 
-> It this __always_unused on function arguments something we are doing
-> now?
-
-$ git grep __always_unused | wc -l
-191
-
-It's elsewhere in the kernel tree. It seems like a good way of both
-documenting and silencing compiler warnings. But I'm open to other
-suggestions.
-
-> Can we have negative depth? Should it be unsigned?
-
-As per the documentation added in this patch:
-
- * @pte_hole:	if set, called for each hole at all levels,
- *		depth is -1 if not known, 0:PGD, 1:P4D, 2:PUD, 3:PMD
- *		4:PTE. Any folded depths (where PTRS_PER_P?D is equal
- *		to 1) are skipped.
-
-So it's signed to allow "-1" in the cases where pte_hole is called
-without knowing the actual depth. This is used in the function
-walk_page_test() because it don't walk the actual page tables, but is
-called on a VMA instead. This means that there may not be a single depth
-for the range provided.
-
-Steve
-
->>  {
->>  	struct hmm_vma_walk *hmm_vma_walk = walk->private;
->>  	struct hmm_range *range = hmm_vma_walk->range;
->> @@ -564,7 +564,7 @@ static int hmm_vma_walk_pmd(pmd_t *pmdp,
->>  again:
->>  	pmd = READ_ONCE(*pmdp);
->>  	if (pmd_none(pmd))
->> -		return hmm_vma_walk_hole(start, end, walk);
->> +		return hmm_vma_walk_hole(start, end, 0, walk);
->>  
->>  	if (thp_migration_supported() && is_pmd_migration_entry(pmd)) {
->>  		bool fault, write_fault;
->> @@ -666,7 +666,7 @@ static int hmm_vma_walk_pud(pud_t *pudp, unsigned long start, unsigned long end,
->>  again:
->>  	pud = READ_ONCE(*pudp);
->>  	if (pud_none(pud))
->> -		return hmm_vma_walk_hole(start, end, walk);
->> +		return hmm_vma_walk_hole(start, end, 0, walk);
->>  
->>  	if (pud_huge(pud) && pud_devmap(pud)) {
->>  		unsigned long i, npages, pfn;
->> @@ -674,7 +674,7 @@ static int hmm_vma_walk_pud(pud_t *pudp, unsigned long start, unsigned long end,
->>  		bool fault, write_fault;
->>  
->>  		if (!pud_present(pud))
->> -			return hmm_vma_walk_hole(start, end, walk);
->> +			return hmm_vma_walk_hole(start, end, 0, walk);
->>  
->>  		i = (addr - range->start) >> PAGE_SHIFT;
->>  		npages = (end - addr) >> PAGE_SHIFT;
+> Frederic Weisbecker (2):
+>   vtime: Rename vtime_account_system() to vtime_account_kernel()
+>   vtime: Spare a seqcount lock/unlock cycle on context switch
 > 
-> Otherwise this mechanical change to hmm.c looks OK to me
-> 
-> Jason
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+>  arch/ia64/kernel/time.c          |  4 +--
+>  arch/powerpc/kernel/time.c       |  6 ++--
+>  arch/s390/kernel/vtime.c         |  4 +--
+>  include/linux/context_tracking.h |  4 +--
+>  include/linux/vtime.h            | 38 ++++++++++++------------
+>  kernel/sched/cputime.c           | 50 ++++++++++++++++++--------------
+>  6 files changed, 57 insertions(+), 49 deletions(-)
 
+Which tree is this against? Doesn't apply cleanly to v5.4-rc2 nor v5.3. 
+Does it have any prereqs perhaps?
+
+Thanks,
+
+	Ingo
