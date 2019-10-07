@@ -2,102 +2,142 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 106E8ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6DEECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6C9A206C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:11:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="uG7p6wHr"
+	by mail.kernel.org (Postfix) with ESMTP id 4E506206C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:12:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729072AbfJGTLG (ORCPT
+        id S1728711AbfJGTMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 15:11:06 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51686 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728079AbfJGTLG (ORCPT
+        Mon, 7 Oct 2019 15:12:35 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57022 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728116AbfJGTMe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 15:11:06 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 7so629986wme.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 12:11:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DbRc2uG6vwGHor8rUOgYQjnnzlCy4EGXZk7gH7qQMpM=;
-        b=uG7p6wHrB7n4cOy0ooYUcAyhlMa4wqdOKblRbs4syBkt4iGNIKdZ4LZy83ATMVQr/C
-         MhN2PoiPrwm0uhYfIxGwBt62WGgpnYmhr3bVb9sZP8KEV+3Rqk4MMy2BgeD0KdtzXwYR
-         6aiGQCKbZZHnhXPxoCDR4jSkXOPudKnJiQhsKyNJyeeI/WwYi6nkNVPUTMbqsjCTwWRD
-         7iSQuZB5zY67jJhfd6gBYrM4a1C0HiEtFQV4RESx5E+KABjOn/30wu61awX7UD8BxFwg
-         XhQfcswg9XntS5sfSKlsvKutdC8dBQVvp9aj4eT3q+WF0pgcGBMe61zlkpA/eRlM4QpF
-         HH+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DbRc2uG6vwGHor8rUOgYQjnnzlCy4EGXZk7gH7qQMpM=;
-        b=rf76lqha5RcPEP7WkJL7EoBmfriwsMdEzA29PCZW4FhXbTnlCBtOn6gHrVm5T978xW
-         N8ZU2Cngf5Tu49qDEpYBWYquvOYKxvgHUBBGefRbVRpfHkVHmp7r6s7GECejyxh7Q1ir
-         TT5wVleOQGMFeIGjlgO5TTI610zqTpCXwWNoCvQhLjTJjaHLHU5oE6vD1ivUilScz3TI
-         l3n9lKSOMN3onB2qc3qb+HhwzLWyMBbMw+yn5+fYWNzEDHO9Y8dTOKGkuQFz2LZcqQP0
-         bfrwrDKmlqlF7EOhzMfDg+jZ10h5Wv09CUu0Y4W6SLcsw6xSAcYZ8h8ic9YBWW+yal0U
-         +e2g==
-X-Gm-Message-State: APjAAAX4KoDJGL7cjPtJmb0p6KHUZl1HOSZfUHdxQhF4e+sDupUgS8yI
-        j3CHxWS2J/1+mwnWaIhYuRWa3g==
-X-Google-Smtp-Source: APXvYqxjJiO6p74kvRlrae8mHexJwU/dwR9MeEs4DdgIIFJsV/o0Y+jflfVCyFAzb2a3GDMBwXy8uA==
-X-Received: by 2002:a1c:d8:: with SMTP id 207mr572307wma.65.1570475463803;
-        Mon, 07 Oct 2019 12:11:03 -0700 (PDT)
-Received: from localhost (ip-213-220-235-50.net.upcbroadband.cz. [213.220.235.50])
-        by smtp.gmail.com with ESMTPSA id j11sm20777978wrw.86.2019.10.07.12.11.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2019 12:11:03 -0700 (PDT)
-Date:   Mon, 7 Oct 2019 21:11:02 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     syzbot <syzbot+896295c817162503d359@syzkaller.appspotmail.com>
-Cc:     davem@davemloft.net, jiri@mellanox.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: general protection fault in devlink_get_from_attrs
-Message-ID: <20191007191102.GD2326@nanopsycho>
-References: <000000000000b11343059456a5f5@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000b11343059456a5f5@google.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Mon, 7 Oct 2019 15:12:34 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x97J7IE0052493;
+        Mon, 7 Oct 2019 15:12:22 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vg8jbdx8a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 07 Oct 2019 15:12:22 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x97J7TjD053309;
+        Mon, 7 Oct 2019 15:12:21 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vg8jbdx7q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 07 Oct 2019 15:12:21 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x97JA5jg004030;
+        Mon, 7 Oct 2019 19:12:21 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma02dal.us.ibm.com with ESMTP id 2vejt6r9yx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 07 Oct 2019 19:12:20 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x97JCHsF60162346
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 7 Oct 2019 19:12:19 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6AC33136252;
+        Mon,  7 Oct 2019 19:12:15 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ACD66136272;
+        Mon,  7 Oct 2019 19:12:10 +0000 (GMT)
+Received: from jarvis.ext.hansenpartnership.com (unknown [9.85.184.117])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon,  7 Oct 2019 19:12:10 +0000 (GMT)
+Message-ID: <1570475528.4242.2.camel@linux.ibm.com>
+Subject: Re: [PATCH v3 1/2] tpm: Use GFP_KERNEL for allocating struct tpm_buf
+From:   James Bottomley <jejb@linux.ibm.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-integrity@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Date:   Mon, 07 Oct 2019 12:12:08 -0700
+In-Reply-To: <20191006095005.GA7660@linux.intel.com>
+References: <20191003185103.26347-1-jarkko.sakkinen@linux.intel.com>
+         <20191003185103.26347-2-jarkko.sakkinen@linux.intel.com>
+         <1570148716.10818.19.camel@linux.ibm.com>
+         <20191006095005.GA7660@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-07_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=997 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910070165
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mon, Oct 07, 2019 at 08:59:11PM CEST, syzbot+896295c817162503d359@syzkaller.appspotmail.com wrote:
->Hello,
->
->syzbot found the following crash on:
->
->HEAD commit:    056ddc38 Merge branch 'stmmac-next'
->git tree:       net-next
->console output: https://syzkaller.appspot.com/x/log.txt?x=1590218f600000
->kernel config:  https://syzkaller.appspot.com/x/.config?x=d9be300620399522
->dashboard link: https://syzkaller.appspot.com/bug?extid=896295c817162503d359
->compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10a6a6c3600000
->C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15fd50dd600000
->
->IMPORTANT: if you fix the bug, please add the following tag to the commit:
->Reported-by: syzbot+896295c817162503d359@syzkaller.appspotmail.com
->
->kasan: CONFIG_KASAN_INLINE enabled
->kasan: GPF could be caused by NULL-ptr deref or user memory access
->general protection fault: 0000 [#1] PREEMPT SMP KASAN
->CPU: 1 PID: 8790 Comm: syz-executor447 Not tainted 5.4.0-rc1+ #0
->Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
->Google 01/01/2011
->RIP: 0010:devlink_get_from_attrs+0x32/0x300 net/core/devlink.c:124
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+Subject: [PATCH] tpm: use GFP kernel for tpm_buf allocations
 
-This is fixed already by:
-5c23afb980b2 ("net: devlink: fix reporter dump dumpit")
+The current code uses GFP_HIGHMEM, which is wrong because GFP_HIGHMEM
+(on 32 bit systems) is memory ordinarily inaccessible to the kernel
+and should only be used for allocations affecting userspace.  In order
+to make highmem visible to the kernel on 32 bit it has to be kmapped,
+which consumes valuable entries in the kmap region.  Since the tpm_buf
+is only ever used in the kernel, switch to using a GFP_KERNEL
+allocation so as not to waste kmap space on 32 bits.
+
+Fixes: a74f8b36352e (tpm: introduce tpm_buf)
+Signed-off-by: James Bottomley <James.Bottomley@HansenPartnership.com>
+---
+ drivers/char/tpm/tpm.h | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
+index a7fea3e0ca86..b4f1cbf344b6 100644
+--- a/drivers/char/tpm/tpm.h
++++ b/drivers/char/tpm/tpm.h
+@@ -284,7 +284,6 @@ enum tpm_buf_flags {
+ };
+ 
+ struct tpm_buf {
+-	struct page *data_page;
+ 	unsigned int flags;
+ 	u8 *data;
+ };
+@@ -300,20 +299,18 @@ static inline void tpm_buf_reset(struct tpm_buf *buf, u16 tag, u32 ordinal)
+ 
+ static inline int tpm_buf_init(struct tpm_buf *buf, u16 tag, u32 ordinal)
+ {
+-	buf->data_page = alloc_page(GFP_HIGHUSER);
+-	if (!buf->data_page)
++	buf->data = (u8 *)__get_free_page(GFP_KERNEL);
++	if (!buf->data)
+ 		return -ENOMEM;
+ 
+ 	buf->flags = 0;
+-	buf->data = kmap(buf->data_page);
+ 	tpm_buf_reset(buf, tag, ordinal);
+ 	return 0;
+ }
+ 
+ static inline void tpm_buf_destroy(struct tpm_buf *buf)
+ {
+-	kunmap(buf->data_page);
+-	__free_page(buf->data_page);
++	free_page(buf->data);
+ }
+ 
+ static inline u32 tpm_buf_length(struct tpm_buf *buf)
+-- 
+2.16.4
+
