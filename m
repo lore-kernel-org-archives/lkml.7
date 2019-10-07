@@ -2,184 +2,224 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E2CC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A05C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A6C42064A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:46:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570459567;
-	bh=+WxnLtW0CM5zuNcVmAFSLRA1c01TWuxDEph+gcccG/A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=N2srwtfoBLmnoo3nAVvXU9qau/neDKPeZ9wHirq8hDlTbhrFoNIBn8YW6zfrE+hg+
-	 olLDAAvss6j670BbnGexhaB0I+H1at2zuypPQ8cx6PCvMZvkd0HpuO6xeJ9GEDsLK3
-	 /vbP2vZ0hYcDBXo9tbV1YmVtMj4OXkbquPjw3U4k=
+	by mail.kernel.org (Postfix) with ESMTP id 8E3D321479
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:48:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hrnkujhq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728223AbfJGOqG (ORCPT
+        id S1727958AbfJGOsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 10:46:06 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:34296 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726334AbfJGOqF (ORCPT
+        Mon, 7 Oct 2019 10:48:36 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:50714 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727490AbfJGOsf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 10:46:05 -0400
-Received: by mail-wm1-f66.google.com with SMTP id y135so200863wmc.1;
-        Mon, 07 Oct 2019 07:46:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7LKk/MQUH9PrRGrgWgJu6sQTRpVfMAcu12gSHONSwaQ=;
-        b=odUBTvBVB0ZmzaHCSWCJ6I1SZNze2wQrGoiGGMdma0cAgPHGgqm7Ii29Oo/bAVdf0D
-         HHoPB69lGGhTa7g5KGhZFZxZFuzxG68pW6BvZcoGrALrMcc5KkfIMcHOREPQoXU7kNPK
-         3+MI+D3fNoV2LbKW+iNbQF1lxkuGoZqdgeL2rj0ovZdwKEGYBOey1Bzj/xomXYpxgJRf
-         okvssGH6OEP5VKGx6VwK7V6FZVdOZNXbcmrujG7M0DYCGIZQGAYxtj4MoktfzMsMQLxW
-         LaBB4rJdO9CXTkL6DvtVn+mv7PrkUA7fr22A5lzX4bPQxw8c+zQ+R0ga1FEu5VOMZYjI
-         ZcMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7LKk/MQUH9PrRGrgWgJu6sQTRpVfMAcu12gSHONSwaQ=;
-        b=acDqWpKP6on/hdJ5YzoFqn9oVEJvJn3w00Xv32O23vSCLUthYSqHlsqLUGfakXWWMa
-         YgysVSnfi4VBoB4yrmZQcnJZCVJBTM2xd5q+FK84w2tyXCnOdcYyigxccd9xcw8K0eFW
-         2xkbQZ0n1miETOEPafY3PkGPfoy4AWDd5cxe1OMCHjFTXxBxF/JkVEQQU8dWjPbbM3fQ
-         PF79x+1XGZVZqk8R8xC2alJLZij6j4UWba3o5fr6ByxLuSu8Us7FPyRYOY1c7BIwKW7M
-         uAf+FJPq7xwWs3B+3ZohtuPEur74NIhTa4J8GnjLldNWSlKy0n6w+meSVe2NA95kwJzI
-         X93Q==
-X-Gm-Message-State: APjAAAUa17YgjvBKaWlPmP34spAUjxu/htto3Pkh9u5tYkuNmWtsYME7
-        V2cl+qE56vkFmeHqp/w/6c0=
-X-Google-Smtp-Source: APXvYqy7eGqUJ6sI/nYfuvX1IX5cPiP8K+0tP/2XpBgkpGpDcxVFJurHv0UYmt4vIYyGTmceu58+pg==
-X-Received: by 2002:a1c:4c12:: with SMTP id z18mr20487068wmf.45.1570459563086;
-        Mon, 07 Oct 2019 07:46:03 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id o9sm36091179wrh.46.2019.10.07.07.46.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2019 07:46:02 -0700 (PDT)
-Date:   Mon, 7 Oct 2019 16:46:00 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-crypto@vger.kernel.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Stephan Mueller <smueller@chronox.de>
-Subject: Re: [PATCH v2 5.4 regression fix] x86/boot: Provide memzero_explicit
-Message-ID: <20191007144600.GB59713@gmail.com>
-References: <20191007134724.4019-1-hdegoede@redhat.com>
- <20191007140022.GA29008@gmail.com>
- <1dc3c53d-785e-f9a4-1b4c-3374c94ae0a7@redhat.com>
- <20191007142230.GA117630@gmail.com>
- <2982b666-e310-afb7-40eb-e536ce95e23d@redhat.com>
+        Mon, 7 Oct 2019 10:48:35 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x97EiEY1125543;
+        Mon, 7 Oct 2019 14:46:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=4N9yoYf9MRwUqpnd56wp98SUWYHADiH5FtpOOJuf0gk=;
+ b=hrnkujhqdN3DqHnzuVtsRmqrQ0R7uDmpTRgE/e9INNY9Nf+88ILdGWOZBBr2Dz/j1D+H
+ 0jhX0ewC4939ghw+fFmBaWmoGz4Zdt+KtdmB7IZtyMMLWAR19wX567LSITKc7LGF04uf
+ G3NLFUEpj7CnPN0AhHaK8dRiCbl0WKYEIRYt+ZxP/jVo8mhtQ6SBe+QGQZPIzBE5ph2z
+ /TOoXLoRI50fZhMSqof6MOJk+xR3N5FLCkG/ldCr7uHtOnXixbCAcA2atzoe3fFDNhp6
+ 7YZjgP26XmT4LrC/mssrMXOU0xObtzMiXfr7T0H25OTgDs4xG9idsOC/LQpDSUzKcTPM 8Q== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2vejku784w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 07 Oct 2019 14:46:36 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x97Ejixh071811;
+        Mon, 7 Oct 2019 14:46:35 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2vf4phnq3j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 07 Oct 2019 14:46:35 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x97EkNxG019145;
+        Mon, 7 Oct 2019 14:46:24 GMT
+Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 07 Oct 2019 07:46:23 -0700
+Subject: Re: [PATCH v4 1/4] x86/kvm: Add "nopvspin" parameter to disable PV
+ spinlocks
+To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        linux-kernel@vger.kernel.org
+Cc:     vkuznets@redhat.com, linux-hyperv@vger.kernel.org,
+        kvm@vger.kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, sashal@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, pbonzini@redhat.com,
+        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        jgross@suse.com, sstabellini@kernel.org, peterz@infradead.org,
+        Jonathan Corbet <corbet@lwn.net>,
+        "H. Peter Anvin" <hpa@zytor.com>, Will Deacon <will@kernel.org>
+References: <1570111335-12731-1-git-send-email-zhenzhong.duan@oracle.com>
+ <1570111335-12731-2-git-send-email-zhenzhong.duan@oracle.com>
+ <26ef7beb-dad0-13c9-fc2f-217a5e046e4d@oracle.com>
+ <b0d6df7b-00ff-cdd8-f9f2-26af73256f5b@oracle.com>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=boris.ostrovsky@oracle.com; prefer-encrypt=mutual; keydata=
+ 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
+ Jg6OxFYd01z+a+oL
+Message-ID: <ee3feb72-e587-9ac8-d5ba-e5c00b2a89c7@oracle.com>
+Date:   Mon, 7 Oct 2019 10:46:03 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2982b666-e310-afb7-40eb-e536ce95e23d@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <b0d6df7b-00ff-cdd8-f9f2-26af73256f5b@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9403 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910070147
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9403 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910070147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 10/6/19 3:49 AM, Zhenzhong Duan wrote:
+> On 2019/10/4 22:52, Boris Ostrovsky wrote:
+>
+>> On 10/3/19 10:02 AM, Zhenzhong Duan wrote:
+>>>   void __init kvm_spinlock_init(void)
+>>>   {
+>>> -    /* Does host kernel support KVM_FEATURE_PV_UNHALT? */
+>>> -    if (!kvm_para_has_feature(KVM_FEATURE_PV_UNHALT))
+>>> -        return;
+>>> -
+>>> -    if (kvm_para_has_hint(KVM_HINTS_REALTIME))
+>>> +    /*
+>>> +     * Don't use the pvqspinlock code if no KVM_FEATURE_PV_UNHALT
+>>> feature
+>>> +     * support, or there is REALTIME hints or only 1 vCPU.
+>>> +     */
+>>> +    if (!kvm_para_has_feature(KVM_FEATURE_PV_UNHALT) ||
+>>> +        kvm_para_has_hint(KVM_HINTS_REALTIME) ||
+>>> +        num_possible_cpus() == 1) {
+>>> +        pr_info("PV spinlocks disabled\n");
+>>>           return;
+>>> +    }
+>>>   -    /* Don't use the pvqspinlock code if there is only 1 vCPU. */
+>>> -    if (num_possible_cpus() == 1)
+>>> +    if (nopvspin) {
+>>> +        pr_info("PV spinlocks disabled forced by \"nopvspin\"
+>>> parameter.\n");
+>>> +        static_branch_disable(&virt_spin_lock_key);
+>> Would it make sense to bring here the other site where the key is
+>> disabled (in kvm_smp_prepare_cpus())?
+>
+> Thanks for point out, I'll do it. Just not clear if I should do that
+> in a separate patch,
+> there is a history about that code:
+>
+> Its original place was here and then moved to kvm_smp_prepare_cpus()
+> by below commit:
+> 34226b6b ("KVM: X86: Fix setup the virt_spin_lock_key before static
+> key get initialized")
+> which fixed jump_label_init() calling late issue.
+>
+> Then 8990cac6 ("x86/jump_label: Initialize static branching early")
+> move jump_label_init()
+> early, so commit 34226b6b could be reverted.
 
-* Hans de Goede <hdegoede@redhat.com> wrote:
 
-> Hi,
-> 
-> On 07-10-2019 16:22, Ingo Molnar wrote:
-> > 
-> > * Hans de Goede <hdegoede@redhat.com> wrote:
-> > 
-> > > Hi,
-> > > 
-> > > On 07-10-2019 16:00, Ingo Molnar wrote:
-> > > > 
-> > > > * Hans de Goede <hdegoede@redhat.com> wrote:
-> > > > 
-> > > > > The purgatory code now uses the shared lib/crypto/sha256.c sha256
-> > > > > implementation. This needs memzero_explicit, implement this.
-> > > > > 
-> > > > > Reported-by: Arvind Sankar <nivedita@alum.mit.edu>
-> > > > > Fixes: 906a4bb97f5d ("crypto: sha256 - Use get/put_unaligned_be32 to get input, memzero_explicit")
-> > > > > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> > > > > ---
-> > > > > Changes in v2:
-> > > > > - Add barrier_data() call after the memset, making the function really
-> > > > >     explicit. Using barrier_data() works fine in the purgatory (build)
-> > > > >     environment.
-> > > > > ---
-> > > > >    arch/x86/boot/compressed/string.c | 6 ++++++
-> > > > >    1 file changed, 6 insertions(+)
-> > > > > 
-> > > > > diff --git a/arch/x86/boot/compressed/string.c b/arch/x86/boot/compressed/string.c
-> > > > > index 81fc1eaa3229..654a7164a702 100644
-> > > > > --- a/arch/x86/boot/compressed/string.c
-> > > > > +++ b/arch/x86/boot/compressed/string.c
-> > > > > @@ -50,6 +50,12 @@ void *memset(void *s, int c, size_t n)
-> > > > >    	return s;
-> > > > >    }
-> > > > > +void memzero_explicit(void *s, size_t count)
-> > > > > +{
-> > > > > +	memset(s, 0, count);
-> > > > > +	barrier_data(s);
-> > > > > +}
-> > > > 
-> > > > So the barrier_data() is only there to keep LTO from optimizing out the
-> > > > seemingly unused function?
-> > > 
-> > > I believe that Stephan Mueller (who suggested adding the barrier)
-> > > was also worried about people using this as an example for other
-> > > "explicit" functions which actually might get inlined.
-> > > 
-> > > This is not so much about protecting against LTO as it is against
-> > > protecting against inlining, which in this case boils down to the
-> > > same thing. Also this change makes the arch/x86/boot/compressed/string.c
-> > > and lib/string.c versions identical which seems like a good thing to me
-> > > (except for the code duplication part of it).
-> > > 
-> > > But I agree a comment would be good, how about:
-> > > 
-> > > void memzero_explicit(void *s, size_t count)
-> > > {
-> > > 	memset(s, 0, count);
-> > > 	/* Avoid the memset getting optimized away if we ever get inlined */
-> > > 	barrier_data(s);
-> > > }
-> > 
-> > Well, the standard construct for preventing inlining would be 'noinline',
-> > right? Any reason that wouldn't work?
-> 
-> Good question. I guess the worry is that modern compilers are getting
-> more aggressive with optimizing and then even if not inlined if the
-> function gets compiled in the same scope, then the compiler might
-> still notice it is only every writing to the memory passed in; and
-> then optimize it away of the write happens to memory which lifetime
-> ends immediately afterwards. I mean removing the call is not inlining,
-> so compiler developers might decide that that is still fine to do.
-> 
-> IMHO with trickycode like this is is best to just use the proven
-> version from lib/string.c
-> 
-> I guess I made the comment to specific though, so how about:
-> 
-> void memzero_explicit(void *s, size_t count)
-> {
-> 	memset(s, 0, count);
-> 	/* Tell the compiler to never remove / optimize away the memset */
-> 	barrier_data(s);
-> }
+Which is similar to what you did earlier for Xen.
 
-Ok, I guess this will work.
 
-Thanks,
+>
+>>
+>> (and, in fact, shouldn't all of the checks that result in early return
+>> above disable the key?)
+>
+> I think we should enable he key for
+> !kvm_para_has_feature(KVM_FEATURE_PV_UNHALT) case,
+> there is lock holder preemption issue as qspinlock is fair lock,
+> virt_spin_lock()
+> is an optimization to that, imaging one pcpu running 10 vcpus of same
+> guest
+> contending a same lock.
 
-	Ingo
+Right. I conflated pv lock and virt_spin_lock_key, and that is wrong.
+
+-boris
+
+
+>
+> For kvm_para_has_hint(KVM_HINTS_REALTIME) case, hypervisor hints there is
+> no preemption and we should disable virt_spin_lock_key to use native
+> qspinlock.
+>
+> For the UP case, we don't care virt_spin_lock_key value.
+>
+> For nopvspin case, we intentionally check native qspinlock code
+> performance,
+> compare it with PV qspinlock, etc. So virt_spin_lock() optimization
+> should be disabled.
+>
+> Let me know if anything wrong with above understanding. Thanks
+>
+> Zhenzhong
+>
+
