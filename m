@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C33AECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A92EEECE58D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 555D92084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:21:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72D0320867
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:21:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570454484;
+	s=default; t=1570454489;
 	bh=bVuSLpTvdW4BifGY1uYuDsq1DfGbsMyMvoeNSs5oiYI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bu6KwfgHkJWYThAZsxYX6wTgLBsfB6abhtZy1z+lj5zjhEHtvBMbl79f/urK1WpZp
-	 Q2EThQRgg1bz5w8CnrQC45X1JZzlj3z1Eg3Bv8M9PaC96MWWizzwZrjfuYBLb3OQB0
-	 TLVhETFnLl6SsqGnQpAVAcQQBaqpordDNjzRHA8E=
+	b=ttpwTHclxCIbuc3eR0TKzIUwFxAGOOu7xfKHyoh7tTwJBRUstonoSYaU3EUcSDdc1
+	 cf0u9yxyFFxSCHggaqrCK1/r2OpT8i6s+/h9fq2fpusNr6dvpucaNh+h3w4BbjjGQj
+	 6gklr92Y4yjLt27bfV6hRyj1KrbvWQI/3tLDLiLc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728488AbfJGNVX (ORCPT
+        id S1728530AbfJGNV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 09:21:23 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35130 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728177AbfJGNVU (ORCPT
+        Mon, 7 Oct 2019 09:21:28 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:40465 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728463AbfJGNVW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 09:21:20 -0400
-Received: by mail-lj1-f194.google.com with SMTP id m7so13637799lji.2;
-        Mon, 07 Oct 2019 06:21:18 -0700 (PDT)
+        Mon, 7 Oct 2019 09:21:22 -0400
+Received: by mail-lf1-f68.google.com with SMTP id d17so9258388lfa.7;
+        Mon, 07 Oct 2019 06:21:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
         bh=85dVJxc5Go/ZeDNecXfIZl1Or+Zhk6XQDSwO01sY1ps=;
-        b=Wcoeo6mzx3dncHyYoUB6QXVPbMPJgY0JzBpYJxcpjrhVGruroDOpyg7d6+UOAPAP4W
-         LbMt47VIPh7Pt8918clafZPMYmprN1m0vySSdItMxwNM16nS4oAxhLvsXof3Zz+VL6iI
-         Y0leTFn8pjESVNztS+Mr6fBBQ4hSaS6tH4TLtJQYHoOhsE2UD3Rkx8YxbF9sscr8KPca
-         nBxaw6GSzWWtrW8++b7K/WzN/TtjsOJ/qcTO4qA1TXFCYqlgJzB7Dm2rmPV/jh5wtiIW
-         VdRJ7IGCyCdXa++gO/VSuH94JEMbKNjJ3wD2XWlCffnQEYvWs0aPNXcdN6czgchz8S94
-         Qhag==
-X-Gm-Message-State: APjAAAXZ3LGKcEMwg56KdecFkk6Pea1uOSmaieF+3h3vbuA+UrVJwrbS
-        bylRzLXGS9qfj/KqqGtICbU=
-X-Google-Smtp-Source: APXvYqwiLSTKdVOFIY8WgaeBunLsCGFVcf3kuoeei/5/yKb+L3k/LDhcTnI6Y1NHVwQ5NjvySirDVA==
-X-Received: by 2002:a2e:9652:: with SMTP id z18mr14259586ljh.249.1570454477573;
-        Mon, 07 Oct 2019 06:21:17 -0700 (PDT)
+        b=bOEgEkYrl3e33BL4fx711tKjOG+0B6XMHsnIZX0KGXjWN+UMGAF3Mlk/EujtqZTBL7
+         OkjS37cWG1M5cZoFyDsrXyZUOdfU4lhe2N/HaS8aGtPOkEH9pghH9ulrvcUEbXNMNV1j
+         tMwvSkTNePn9dUWJtnBSUIByb6f9eZaKBgrNp9KxpPbkOah8xb82GdvUEodzvOEXDUTJ
+         877OBi0qs6WTsMnb9jbtTnvqinimv17g/pX/Sm16cbAyq388IxP56zX1wATBjm0GKoin
+         nJcJc7tL6wq5Z/qYy49RAaI6Paa9RrMS9vqoeqmuy2rD2tCOP0euHhxmJdw8dl50CB4y
+         u0Wg==
+X-Gm-Message-State: APjAAAV8Km0fvhKypaQhoxWORt05vMq6gNjELUtdi+IBJmnDLTMLWPqp
+        06ezL4xHnEFvHZCUr1Mrjk8mkdfyjIq8LA==
+X-Google-Smtp-Source: APXvYqzwfVmA2n/9U6jKmKyrIDlwdZ3QqHt0oLnPp98Dew2HCDTkMUXX5gZMf8Ci3KfU31PLFFoasw==
+X-Received: by 2002:ac2:4289:: with SMTP id m9mr13069519lfh.139.1570454480038;
+        Mon, 07 Oct 2019 06:21:20 -0700 (PDT)
 Received: from neopili.qtec.com (cpe.xe-3-0-1-778.vbrnqe10.dk.customer.tdc.net. [80.197.57.18])
-        by smtp.gmail.com with ESMTPSA id z14sm2687360lfh.30.2019.10.07.06.21.15
+        by smtp.gmail.com with ESMTPSA id z14sm2687360lfh.30.2019.10.07.06.21.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2019 06:21:16 -0700 (PDT)
+        Mon, 07 Oct 2019 06:21:19 -0700 (PDT)
 From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
 To:     Pavel Machek <pavel@ucw.cz>, Sakari Ailus <sakari.ailus@iki.fi>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Ricardo Ribalda Delgado <ribalda@kernel.org>,
         devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
-Subject: [PATCH v7 5/6] ad5820: DT new compatible devices
-Date:   Mon,  7 Oct 2019 15:20:47 +0200
-Message-Id: <20191007132050.27298-10-ribalda@kernel.org>
+Subject: [PATCH v7 5/6] media: ad5820: DT new compatible devices
+Date:   Mon,  7 Oct 2019 15:20:48 +0200
+Message-Id: <20191007132050.27298-11-ribalda@kernel.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191007132050.27298-1-ribalda@kernel.org>
 References: <20191007132050.27298-1-ribalda@kernel.org>
