@@ -2,120 +2,131 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9870ECE58E
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54EBEECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FFE2206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2819E2133F
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:42:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kMbeUB6n"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="EyeN0p85"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729548AbfJGWgv (ORCPT
+        id S1729497AbfJGWmc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 18:36:51 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43369 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728654AbfJGWgv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 18:36:51 -0400
-Received: by mail-pl1-f196.google.com with SMTP id f21so7530229plj.10;
-        Mon, 07 Oct 2019 15:36:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qQFvQXMDOOQXelPSQG/VrtGgsFEzvkqo1WSTQd7tu0k=;
-        b=kMbeUB6nfSXlrKHTAkW6JpIwZIRINd9NuS1bNOdTNs+8Aoeqm4IlcnUHMWWqcN5W4u
-         3iV09ixXVBwoNvJOBGTCKHsC5HAah1IJCUyE7A/6eYBxSc17hbsVVPLzxxP8ofAPJNeT
-         MTSH9ESlEsCR51pZjYjcKjj+5hy6yyENbArIf4X5wRJtzvd4IkVh7J3Z2H1guUiDXFtV
-         q2FJAO3hcGhMqmxyG6XB5JOuS8QofPT03Bp8igl7HMH+K5zZ506HQjPqESYgOjbIPPvf
-         OXqYApWayL8ZKiD22bvOJ9Ut9eJzOiG6pkbdznWgWoHZJYTMT1JwVdeC7kEIH60v8NAP
-         K5Sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qQFvQXMDOOQXelPSQG/VrtGgsFEzvkqo1WSTQd7tu0k=;
-        b=SSM/GqUA81r3gRSYx49uX5KdX6tRQ3L7zmBRx1ex7iSik5CcvQWGbjoPczFw43e4Tz
-         hUqxdiv/P7igfIR2CQ/KEwF/GVUbx8OV6KEuQ+ThjAh+bhFi/9aq1HUmXKvEcPfuDbrv
-         MC9q8gqYW1QDRw0QJZyr0uj1P2pE/WdZYSJJTujb9FnFNZtkFtmTkp/Cpr6WLQv6ZP4G
-         Qn/2I+jYR87swQ2jUC+3vM5DuokKjkYMWpUPmoQFVgifgTN8JZ474WekicF8qRWuGHyd
-         Hh7BM7/xtKGRmFRrlFWVHUA/aegP+gNBGMfDoa0uPk++r2khR7u7uArJBFMM/AXI2oe1
-         FWWQ==
-X-Gm-Message-State: APjAAAV988K6zjAaxg5f3qS7ltoA/xe07LPPt/1iW4d71Ejbn3mELY8C
-        El7hqroI+Gef703S81XFKwLAWryl
-X-Google-Smtp-Source: APXvYqwsjlduvrCYB/Xn2VwJfyrMEGd8t6ujlCVPR53aEBbbfr2Ct7e/hsSBZvbPBaa3bvyhCp6hWw==
-X-Received: by 2002:a17:902:144:: with SMTP id 62mr663028plb.283.1570487809873;
-        Mon, 07 Oct 2019 15:36:49 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d6sm17952967pgj.22.2019.10.07.15.36.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 07 Oct 2019 15:36:48 -0700 (PDT)
-Subject: Re: [PATCH 4.4 00/36] 4.4.196-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20191006171038.266461022@linuxfoundation.org>
- <d3e1e6ae-8ca4-a43b-d30d-9a9a9a7e5752@roeck-us.net>
- <20191007144951.GB966828@kroah.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <fbce4eb8-ebc8-5246-ea03-3af2ebb97a16@roeck-us.net>
-Date:   Mon, 7 Oct 2019 15:36:46 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 7 Oct 2019 18:42:32 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:40005 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728654AbfJGWmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 18:42:31 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46nFq871TRz9sPT;
+        Tue,  8 Oct 2019 09:42:28 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1570488149;
+        bh=t1+QL3NVj1xEg9Hc5TIAtTlFoQW7X/JWQPEMb3/QOac=;
+        h=Date:From:To:Cc:Subject:From;
+        b=EyeN0p85cgnBuFiDJtN2P3nFz0eRTOBUCTi1HnCx9p/NtPUyQOthHQTP3leGw6LuD
+         kDaA8zDv3pbxozTW08qSw3J+EqSqCGBvfdm93x99raTVh/j0ey789r1Roqlb5RdDPq
+         YTs3UcYZxt+Vn000Rg76r0/Q9gELvs9c9ayN6aTs09J8ihVx4nXOMuqk0h0n+qq8Iu
+         eKycxtgUlk/LnUjcNc042QOlQ+WJ/Dhqa5mFk//RUKG8DD3yDiI3+pAjccAybyOV9D
+         0GhohJ0WobOuA5izBl4yiAaAedPi/FjR+ejkzNu1l1lvuvlc8CxClTihDHDl6L5R5k
+         lVX1dDv14iqpA==
+Date:   Tue, 8 Oct 2019 09:42:21 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>
+Subject: linux-next: build warning after merge of the net-next tree
+Message-ID: <20191008094221.62d84587@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20191007144951.GB966828@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/Xj_X7JA3EV9XdyAej7t7QRR";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/7/19 7:49 AM, Greg Kroah-Hartman wrote:
-> On Mon, Oct 07, 2019 at 05:53:55AM -0700, Guenter Roeck wrote:
->> On 10/6/19 10:18 AM, Greg Kroah-Hartman wrote:
->>> This is the start of the stable review cycle for the 4.4.196 release.
->>> There are 36 patches in this series, all will be posted as a response
->>> to this one.  If anyone has any issues with these being applied, please
->>> let me know.
->>>
->>> Responses should be made by Tue 08 Oct 2019 05:07:10 PM UTC.
->>> Anything received after that time might be too late.
->>>
->>
->> powerpc:defconfig fails to build.
->>
->> arch/powerpc/kernel/eeh_driver.c: In function ‘eeh_handle_normal_event’:
->> arch/powerpc/kernel/eeh_driver.c:678:2: error: implicit declaration of function ‘eeh_for_each_pe’; did you mean ‘bus_for_each_dev’?
->>
->> It has a point:
->>
->> ... HEAD is now at 13cac61d31df Linux 4.4.196-rc1
->> $ git grep eeh_for_each_pe
->> arch/powerpc/kernel/eeh_driver.c:       eeh_for_each_pe(pe, tmp_pe)
->> arch/powerpc/kernel/eeh_driver.c:                               eeh_for_each_pe(pe, tmp_pe)
->>
->> Caused by commit 3fb431be8de3a ("powerpc/eeh: Clear stale EEH_DEV_NO_HANDLER flag").
->> Full report will follow later.
-> 
-> Thanks for letting me know, I've dropped this from the queue now and
-> pushed out a -rc2 with that removed.
-> 
+--Sig_/Xj_X7JA3EV9XdyAej7t7QRR
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-For v4.4.195-36-g898f6e5cf82f:
+Hi all,
 
-Build results:
-	total: 170 pass: 170 fail: 0
-Qemu test results:
-	total: 324 pass: 324 fail: 0
+After merging the net-next tree, today's linux-next build (x86_64
+allmodconfig) produced this warning:
 
-Guenter
+
+Introduced by commit
+
+  033b2c7f0f26 ("rxrpc: Add missing "new peer" trace")
+
+interacting with commit
+
+  55f6c98e3674 ("rxrpc: Fix trace-after-put looking at the put peer record")
+
+from the net tree.
+
+I have applied the following merge fix patch.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Tue, 8 Oct 2019 09:37:50 +1100
+Subject: [PATCH] rxrpc: fix up for "rxrpc: Fix trace-after-put looking at t=
+he
+ put peer record"
+
+interacting with commit
+
+  033b2c7f0f26 ("rxrpc: Add missing "new peer" trace")
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ net/rxrpc/peer_object.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/rxrpc/peer_object.c b/net/rxrpc/peer_object.c
+index a7f1a2cdd198..452163eadb98 100644
+--- a/net/rxrpc/peer_object.c
++++ b/net/rxrpc/peer_object.c
+@@ -231,7 +231,7 @@ struct rxrpc_peer *rxrpc_alloc_peer(struct rxrpc_local =
+*local, gfp_t gfp)
+ 			peer->cong_cwnd =3D 3;
+ 		else
+ 			peer->cong_cwnd =3D 4;
+-		trace_rxrpc_peer(peer, rxrpc_peer_new, 1, here);
++		trace_rxrpc_peer(peer->debug_id, rxrpc_peer_new, 1, here);
+ 	}
+=20
+ 	_leave(" =3D %p", peer);
+--=20
+2.23.0.rc1
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Xj_X7JA3EV9XdyAej7t7QRR
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2bv00ACgkQAVBC80lX
+0Gw2zAf/W7h8UKvXttU794iCM0slur9fhK6ToIThd4CmP7wvbjIa3q9JO3NOi+VQ
+MU72DirzJ7mDVrOeJb+8NNagX48Njh+QYt20rHLEjBhNyvpvWweqaGoAXhwMIW5v
+H9osNyDGhwsbVabWa3h1Qnh+ZNJbyDbq3vPFNVFW/BiPvGeffqHKgaYYnWQCRenR
+FcLx8jS2133KzYpVwv7eWiXeMy6liLxjw7sIcvFWI7hrXMzBoUtmYIP1nwJsd0Xt
+Qslm+bsqppTl/fMTikJG/MGNu/bTLxhbj+qoCqGKnMdvh9k5JSNLy7k7JJsJyFyY
+eu/GylQPO5wfY4V4Hj21M7vxomX3zg==
+=83Rl
+-----END PGP SIGNATURE-----
+
+--Sig_/Xj_X7JA3EV9XdyAej7t7QRR--
