@@ -2,153 +2,99 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F79ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F00CC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6898E206BB
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:30:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=vdorst.com header.i=@vdorst.com header.b="mm8Yuqtx"
+	by mail.kernel.org (Postfix) with ESMTP id 51532206C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:30:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729483AbfJGSaa (ORCPT
+        id S1729525AbfJGSau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 14:30:30 -0400
-Received: from mx.0dd.nl ([5.2.79.48]:58346 "EHLO mx.0dd.nl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729433AbfJGSaa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 14:30:30 -0400
-Received: from mail.vdorst.com (mail.vdorst.com [IPv6:fd01::250])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx.0dd.nl (Postfix) with ESMTPS id 9DE365FBBE;
-        Mon,  7 Oct 2019 20:30:28 +0200 (CEST)
-Authentication-Results: mx.0dd.nl;
-        dkim=pass (2048-bit key) header.d=vdorst.com header.i=@vdorst.com header.b="mm8Yuqtx";
-        dkim-atps=neutral
-Received: from www (www.vdorst.com [192.168.2.222])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.vdorst.com (Postfix) with ESMTPSA id 6BE083BE06;
-        Mon,  7 Oct 2019 20:30:28 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.vdorst.com 6BE083BE06
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vdorst.com;
-        s=default; t=1570473028;
-        bh=oeUXtc8+vJUoOsszOZiNMTAuDgvF7gVaUUppHe+ivDs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mm8YuqtxOrunMTWQvqae1DMbOjOq5dOxsJMqYnJJKWaI5MWLaBA9W95gRc+IzvxAB
-         VPV0/5ViKt+5mrvD/UmWsWZRXWG02J1D/1T8YrUl2pjpH8G07AMOkaYEKrk63/hnKn
-         kG69zGZnI79LTFLHhWOT07W+eBytmiWFvPcCa+8WYf7/KCrYlvLvSkPKxvZNP4C5nq
-         6vsPF++aHxIk888XzyvcVXFVKNJfe7XfarD+0WG8SC9SoA4tc0ZouCV8XAHhsFJajG
-         AQR4d4AievSJPr03oIQHeajuYJMG1b+vuVXjAdeHWWnRH69aVDQmeYueLGZglbL9RG
-         kDwRLx6+4SdLQ==
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1]) by
- www.vdorst.com (Horde Framework) with HTTPS; Mon, 07 Oct 2019 18:30:28 +0000
-Date:   Mon, 07 Oct 2019 18:30:28 +0000
-Message-ID: <20191007183028.Horde.dCYJA3Xp9mBh_Bs9Ixa7Sh0@www.vdorst.com>
-From:   =?utf-8?b?UmVuw6k=?= van Dorst <opensource@vdorst.com>
-To:     MarkLee <Mark-MC.Lee@mediatek.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Sean Wang <sean.wang@mediatek.com>,
-        John Crispin <john@phrozen.org>,
-        Nelson Chang <nelson.chang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net,v2 2/2] arm: dts: mediatek: Fix mt7629 dts to
- reflect the latest dt-binding
-References: <20191007070844.14212-1-Mark-MC.Lee@mediatek.com>
- <20191007070844.14212-3-Mark-MC.Lee@mediatek.com>
-In-Reply-To: <20191007070844.14212-3-Mark-MC.Lee@mediatek.com>
-User-Agent: Horde Application Framework 5
-Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
+        Mon, 7 Oct 2019 14:30:50 -0400
+Received: from smtprelay0005.hostedemail.com ([216.40.44.5]:49815 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729335AbfJGSau (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 14:30:50 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 6D0351802E6D3;
+        Mon,  7 Oct 2019 18:30:48 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: sort50_6e6fb6466222
+X-Filterd-Recvd-Size: 3066
+Received: from XPS-9350.home (unknown [47.151.152.152])
+        (Authenticated sender: joe@perches.com)
+        by omf13.hostedemail.com (Postfix) with ESMTPA;
+        Mon,  7 Oct 2019 18:30:47 +0000 (UTC)
+Message-ID: <cce61906a5f7f42f5b2b8b947fc61357bcb56e71.camel@perches.com>
+Subject: [PATCH] sgi-gru: simplify procfs code some more
+From:   Joe Perches <joe@perches.com>
+To:     Dimitri Sivanich <sivanich@hpe.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Mon, 07 Oct 2019 11:30:46 -0700
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting MarkLee <Mark-MC.Lee@mediatek.com>:
+Use seq_puts and simple string output and not seq_printf with formats
+and individual strings to reduce overall object size.
 
-> * Removes mediatek,physpeed property from dtsi that is useless in PHYLINK
-> * Use the fixed-link property speed = <2500> to set the phy in 2.5Gbit.
-> * Set gmac1 to gmii mode that connect to a internal gphy
->
-> Signed-off-by: MarkLee <Mark-MC.Lee@mediatek.com>
-> --
-> v1->v2:
-> * SGMII port only support BASE-X at 2.5Gbit.
-> ---
->  arch/arm/boot/dts/mt7629-rfb.dts | 13 ++++++++++++-
->  arch/arm/boot/dts/mt7629.dtsi    |  2 --
->  2 files changed, 12 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/mt7629-rfb.dts  
-> b/arch/arm/boot/dts/mt7629-rfb.dts
-> index 3621b7d2b22a..9980c10c6e29 100644
-> --- a/arch/arm/boot/dts/mt7629-rfb.dts
-> +++ b/arch/arm/boot/dts/mt7629-rfb.dts
-> @@ -66,9 +66,21 @@
->  	pinctrl-1 = <&ephy_leds_pins>;
->  	status = "okay";
->
-> +	gmac0: mac@0 {
-> +		compatible = "mediatek,eth-mac";
-> +		reg = <0>;
-> +		phy-mode = "2500base-x";
-> +		fixed-link {
-> +			speed = <2500>;
-> +			full-duplex;
-> +			pause;
-> +		};
-> +	};
-> +
->  	gmac1: mac@1 {
->  		compatible = "mediatek,eth-mac";
->  		reg = <1>;
-> +		phy-mode = "gmii";
->  		phy-handle = <&phy0>;
->  	};
->
-> @@ -78,7 +90,6 @@
->
->  		phy0: ethernet-phy@0 {
->  			reg = <0>;
-> -			phy-mode = "gmii";
->  		};
->  	};
->  };
-> diff --git a/arch/arm/boot/dts/mt7629.dtsi b/arch/arm/boot/dts/mt7629.dtsi
-> index 9608bc2ccb3f..867b88103b9d 100644
-> --- a/arch/arm/boot/dts/mt7629.dtsi
-> +++ b/arch/arm/boot/dts/mt7629.dtsi
-> @@ -468,14 +468,12 @@
->  			compatible = "mediatek,mt7629-sgmiisys", "syscon";
->  			reg = <0x1b128000 0x3000>;
->  			#clock-cells = <1>;
-> -			mediatek,physpeed = "2500";
->  		};
->
->  		sgmiisys1: syscon@1b130000 {
->  			compatible = "mediatek,mt7629-sgmiisys", "syscon";
->  			reg = <0x1b130000 0x3000>;
->  			#clock-cells = <1>;
-> -			mediatek,physpeed = "2500";
->  		};
->  	};
->  };
-> --
-> 2.17.1
+$ size drivers/misc/sgi-gru/gruprocfs.o* (x86-64 defconfig with gru)
+   text	   data	    bss	    dec	    hex	filename
+   7006	      8	      0	   7014	   1b66	drivers/misc/sgi-gru/gruprocfs.o.new
+   7472	      8	      0	   7480	   1d38	drivers/misc/sgi-gru/gruprocfs.o.old
 
-Reviewed-by: René van Dorst <opensource@vdorst.com>
+Signed-off-by: Joe Perches <joe@perches.com>
+---
+ drivers/misc/sgi-gru/gruprocfs.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/misc/sgi-gru/gruprocfs.c b/drivers/misc/sgi-gru/gruprocfs.c
+index 3a8d76d1ccae..2817f4751306 100644
+--- a/drivers/misc/sgi-gru/gruprocfs.c
++++ b/drivers/misc/sgi-gru/gruprocfs.c
+@@ -119,7 +119,7 @@ static int mcs_statistics_show(struct seq_file *s, void *p)
+ 		"cch_interrupt_sync", "cch_deallocate", "tfh_write_only",
+ 		"tfh_write_restart", "tgh_invalidate"};
+ 
+-	seq_printf(s, "%-20s%12s%12s%12s\n", "#id", "count", "aver-clks", "max-clks");
++	seq_puts(s, "#id                        count   aver-clks    max-clks\n");
+ 	for (op = 0; op < mcsop_last; op++) {
+ 		count = atomic_long_read(&mcs_op_statistics[op].count);
+ 		total = atomic_long_read(&mcs_op_statistics[op].total);
+@@ -165,8 +165,7 @@ static int cch_seq_show(struct seq_file *file, void *data)
+ 	const char *mode[] = { "??", "UPM", "INTR", "OS_POLL" };
+ 
+ 	if (gid == 0)
+-		seq_printf(file, "#%5s%5s%6s%7s%9s%6s%8s%8s\n", "gid", "bid",
+-			   "ctx#", "asid", "pid", "cbrs", "dsbytes", "mode");
++		seq_puts(file, "#  gid  bid  ctx#   asid      pid  cbrs dsbytes    mode\n");
+ 	if (gru)
+ 		for (i = 0; i < GRU_NUM_CCH; i++) {
+ 			ts = gru->gs_gts[i];
+@@ -191,10 +190,8 @@ static int gru_seq_show(struct seq_file *file, void *data)
+ 	struct gru_state *gru = GID_TO_GRU(gid);
+ 
+ 	if (gid == 0) {
+-		seq_printf(file, "#%5s%5s%7s%6s%6s%8s%6s%6s\n", "gid", "nid",
+-			   "ctx", "cbr", "dsr", "ctx", "cbr", "dsr");
+-		seq_printf(file, "#%5s%5s%7s%6s%6s%8s%6s%6s\n", "", "", "busy",
+-			   "busy", "busy", "free", "free", "free");
++		seq_puts(file, "#  gid  nid    ctx   cbr   dsr     ctx   cbr   dsr\n");
++		seq_puts(file, "#             busy  busy  busy    free  free  free\n");
+ 	}
+ 	if (gru) {
+ 		ctxfree = GRU_NUM_CCH - gru->gs_active_contexts;
 
 
