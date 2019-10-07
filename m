@@ -2,162 +2,138 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E1CC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 23:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 761B3ECE58E
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 23:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 997CD20867
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 23:00:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O+c9lew/"
+	by mail.kernel.org (Postfix) with ESMTP id 4BF1E2133F
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 23:05:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570489552;
+	bh=8oHovXaH88Y52gIETFe+urtMKFGQyhxJM6iuIR0K5YM=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=oynq+R4X6v6wdyBJxO4ncgPwOHUMqTttDit+mQctolFXHLOHY+CdV0hBnzvJ7bmPE
+	 jTviB6LKFFBnLEw2/xouM/rWQE0XljvYv+pjrNjZhVxNNERqwTvbrsc1SKRw5oihd1
+	 fvaGi7gqdLWQl1XlpKbOb24PCmhkLKMRbjb7MwiU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729605AbfJGXAi (ORCPT
+        id S1729585AbfJGXFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 19:00:38 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53079 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728980AbfJGXAh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 19:00:37 -0400
-Received: by mail-wm1-f67.google.com with SMTP id r19so1110693wmh.2
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 16:00:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5sEe5owGp1W2adbjPNudunYGCk7mIJAE9kb0DI5bzNA=;
-        b=O+c9lew/nusfCZUjADv9wuSQXLp8VOFYy/0WSdV/7Hy21ZsROhuKwQjW8kQQXN6EYP
-         Sv/S5RTGBNu3HghEfpz93Z3IxaEP71CfoMQ8yRIWjAZkBM3qr7pYKJC0heA6i7K0XIcn
-         N82zQD4R4/WQjJ39LS7CrMf6UVIhZA6+XJdQ69bPqsEPYAHzJwxIypY5k7JnlsK9Q0ib
-         SCbrqNY+lO0JrDWTCMF9RuUKj9xcNXanM3jhrWRwY9wzLcSmBQM7RSCODbP57hAeuC4s
-         U4DBtjCPh8J2TBNea8QagYHaRzlmRSFj/o64vE15uZcJ4KB5T1knTnwffLW2yJeTPY9V
-         JEWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5sEe5owGp1W2adbjPNudunYGCk7mIJAE9kb0DI5bzNA=;
-        b=UnY64BHZx1GCHCWbhc8hE1bDzUj60yxI6fdeHA6rJUrdZtSLzT/1Psw6b9BlQFFGQk
-         ivKqM7IzBVYPceGS7whUOVYEkG7yhqypHfXR8+T3ItHsJrKg0vic2jxjQNCcDGVix9ix
-         8HYGyhTtr6p14qZQQV+UzWQ4MC27eMIq5xGekcX01xfqnirtoeN2+r3KEOX2DOhCjRxH
-         09EfFPrXBjD4Ya000WiGuGFcSrktaUS0aWK4pXNKs0Gc437bgMF+EawX3xrrbpq4zPd3
-         A4J059lc2JJ8iSkvPC9R7b1NwzRGPUbv8eg5AzqRhAKFrw7uSrZ6M8wFyyhmgbmLlt/1
-         6+ZA==
-X-Gm-Message-State: APjAAAWO4p8F2CqJSntEhrPM/oPVbDjpHhwsWefcteiSEE2DJmPr+pxn
-        rkUDn1Glnksw/AZlB0K32Md0DbFmTbVJAYLHpPuRhQ==
-X-Google-Smtp-Source: APXvYqy+BmC5YTtsbyp5x++i6ezSvoMcC/H1ujeISLV99HlKGQSQjbkA3iAIZKp3FpomRvKH1ABCvOY29EtNbw0Ljsw=
-X-Received: by 2002:a7b:c8d9:: with SMTP id f25mr1209258wml.153.1570489235833;
- Mon, 07 Oct 2019 16:00:35 -0700 (PDT)
+        Mon, 7 Oct 2019 19:05:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54536 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728980AbfJGXFu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 19:05:50 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52A4220835;
+        Mon,  7 Oct 2019 23:05:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570489549;
+        bh=8oHovXaH88Y52gIETFe+urtMKFGQyhxJM6iuIR0K5YM=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Wqqja5alOoCXGTFDib0sgR8qwdNMfnro8xiyxfIYXb6vtGC9jCrFqQqkuGqll3DJb
+         BNCpr1FP2QlGs4x3U/EUd33kpQBJz3HbG/9nkI3t0+CHS1ZVv16zDkEUKeP9fcxyXK
+         v0TPXNmkupRoILsZIxKVGL+9s+/5Euc3K4KPAZO0=
+Subject: Re: [PATCH] kunit: Fix '--build_dir' option
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     SeongJae Park <sj38.park@gmail.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        shuah <shuah@kernel.org>
+References: <CAEjAshr=JqVpF651eSZYFhwVAMNZ29LWcfrH07K_M9GU=hPnvg@mail.gmail.com>
+ <1567786314-12330-1-git-send-email-sj38.park@gmail.com>
+ <CAFd5g44=8TV4VciMkcD2DHR+UsnpwyEFbw2Xucwo7-as6Py_4g@mail.gmail.com>
+ <1bc1c5da-2810-60d3-4e76-8d0b73fdd521@kernel.org>
+ <CAFd5g47GXbVk4AbRgKb5voG+DLyEEM+KEb+Fgw3u1qjRY2ZhmQ@mail.gmail.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <3b98db74-1b74-1797-c73d-ef7ee375d997@kernel.org>
+Date:   Mon, 7 Oct 2019 17:05:48 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20191007175553.66940-1-john.stultz@linaro.org>
- <20191007175553.66940-5-john.stultz@linaro.org> <CAL_JsqJLY2n7hfneNptAGswVZtGm3vJbSR6W2wUG+ZTzMN8wZA@mail.gmail.com>
- <CALAqxLWB7Vd-H70LLLSW0Fv=_4-saQ9CE2k3-L_43E+F8mLj2w@mail.gmail.com> <CAL_JsqJ9uUtqTDEkLi86-BCvW+wM6Pgz_K+JuTsuOqHfFOHStA@mail.gmail.com>
-In-Reply-To: <CAL_JsqJ9uUtqTDEkLi86-BCvW+wM6Pgz_K+JuTsuOqHfFOHStA@mail.gmail.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Mon, 7 Oct 2019 16:00:24 -0700
-Message-ID: <CALAqxLVpPvHf2RpwjHh5v9cnQm9CLtj0HHaqVH=EFQJk-GhaPQ@mail.gmail.com>
-Subject: Re: [RFC][PATCH v2 4/5] dt-bindings: usb: dwc3: of-simple: add
- compatible for HiSi
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Yu Chen <chenyu56@huawei.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAFd5g47GXbVk4AbRgKb5voG+DLyEEM+KEb+Fgw3u1qjRY2ZhmQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 2:11 PM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Mon, Oct 7, 2019 at 2:07 PM John Stultz <john.stultz@linaro.org> wrote:
-> >
-> > On Mon, Oct 7, 2019 at 11:38 AM Rob Herring <robh+dt@kernel.org> wrote:
-> > >
-> > > On Mon, Oct 7, 2019 at 12:56 PM John Stultz <john.stultz@linaro.org> wrote:
-> > > >
-> > > > Add necessary compatible flag for HiSi's DWC3 so
-> > > > dwc3-of-simple will probe.
-> > > >
-> > > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > > Cc: Felipe Balbi <balbi@kernel.org>
-> > > > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > > Cc: Yu Chen <chenyu56@huawei.com>
-> > > > Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> > > > Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > > > Cc: linux-usb@vger.kernel.org
-> > > > Cc: devicetree@vger.kernel.org
-> > > > Signed-off-by: John Stultz <john.stultz@linaro.org>
-> > > > ---
-> > > > v2: Tweaked clock names as clk_usb3phy_ref didn't seem right.
-> > > > ---
-> > > >  .../devicetree/bindings/usb/hisi,dwc3.txt     | 52 +++++++++++++++++++
-> > > >  1 file changed, 52 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/usb/hisi,dwc3.txt
-> > >
-> > > Can you make this a schema.
-> >
-> > Sorry, I'm not sure exactly what you're asking. I'm guessing from
-> > grepping around you want the bindings in yaml instead (I see a few
-> > examples)?
->
-> Yes.
->
-> > Is there some pointer to documentation? The
-> > Documentation/devicetree/bindings/writing-bindings.txt file doesn't
-> > seem to say much on it.
->
-> You mean Documentation/devicetree/writing-schemas.rst? There's that
-> and Documentation/devicetree/bindings/example-schema.yaml which has a
-> bunch of annotations on what each part means.
+On 10/7/19 4:03 PM, Brendan Higgins wrote:
+> On Fri, Sep 6, 2019 at 7:33 PM shuah <shuah@kernel.org> wrote:
+>>
+>> On 9/6/19 7:16 PM, Brendan Higgins wrote:
+>>> On Fri, Sep 6, 2019 at 9:12 AM SeongJae Park <sj38.park@gmail.com> wrote:
+>>>>
+>>>> Running kunit with '--build_dir' option gives following error message:
+>>>>
+>>>> ```
+>>>> $ ./tools/testing/kunit/kunit.py run --build_dir ../linux.out.kunit/
+>>>> [00:57:24] Building KUnit Kernel ...
+>>>> [00:57:29] Starting KUnit Kernel ...
+>>>> Traceback (most recent call last):
+>>>>     File "./tools/testing/kunit/kunit.py", line 136, in <module>
+>>>>       main(sys.argv[1:])
+>>>>     File "./tools/testing/kunit/kunit.py", line 129, in main
+>>>>       result = run_tests(linux, request)
+>>>>     File "./tools/testing/kunit/kunit.py", line 68, in run_tests
+>>>>       test_result = kunit_parser.parse_run_tests(kunit_output)
+>>>>     File "/home/sjpark/linux/tools/testing/kunit/kunit_parser.py", line
+>>>> 283, in parse_run_tests
+>>>>       test_result =
+>>>> parse_test_result(list(isolate_kunit_output(kernel_output)))
+>>>>     File "/home/sjpark/linux/tools/testing/kunit/kunit_parser.py", line
+>>>> 54, in isolate_kunit_output
+>>>>       for line in kernel_output:
+>>>>     File "/home/sjpark/linux/tools/testing/kunit/kunit_kernel.py", line
+>>>> 145, in run_kernel
+>>>>       process = self._ops.linux_bin(args, timeout, build_dir)
+>>>>     File "/home/sjpark/linux/tools/testing/kunit/kunit_kernel.py", line
+>>>> 69, in linux_bin
+>>>>       stderr=subprocess.PIPE)
+>>>>     File "/usr/lib/python3.5/subprocess.py", line 947, in __init__
+>>>>       restore_signals, start_new_session)
+>>>>     File "/usr/lib/python3.5/subprocess.py", line 1551, in _execute_child
+>>>>       raise child_exception_type(errno_num, err_msg)
+>>>> FileNotFoundError: [Errno 2] No such file or directory: './linux'
+>>>> ```
+>>>>
+>>>> This error occurs because the '--build_dir' option value is not passed
+>>>> to the 'run_kernel()' function.  Consequently, the function assumes
+>>>> the kernel image that built for the tests, which is under the
+>>>> '--build_dir' directory, is in kernel source directory and finally raises
+>>>> the 'FileNotFoundError'.
+>>>>
+>>>> This commit fixes the problem by properly passing the '--build_dir'
+>>>> option value to the 'run_kernel()'.
+>>>>
+>>>> Signed-off-by: SeongJae Park <sj38.park@gmail.com>
+>>>
+>>> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+>>> Tested-by: Brendan Higgins <brendanhiggins@google.com>
+>>>
+>>> Thanks!
+>>>
+>>
+>> Thanks Brendan! I will apply the patch for 5.4-rc1.
+> 
+> Shuah, can you apply this to the kselftest KUnit branch? This should
+> not require a resend.
+> 
 
-Ah! Sorry for missing that. Thanks for the pointer, though I may get
-away with dropping this one.
+Done. Applied to
 
-> > > If it's only clocks and resets for the wrapper node, just make this
-> > > all one node.
-> >
-> > Just to make sure I'm following, you're suggesting I put all the
-> > clocks/resets in the dwc3 node (renamed to usb for the node name) and
-> > not add the wrapper?
->
-> Yes.
->
-> > I'll have to see if that's possible. The generic dwc3 binding wants 3
-> > clocks, but I only have two in the code I've worked with (similarly it
-> > seems to only want two resets, not 4) so I'll have to see if I can
-> > figure out how to adapt that.
->
-> Possible since commit fe8abf332b8f ("usb: dwc3: support clocks and
-> resets for DWC3 core").
+https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git 
+test
 
-Ok. It *seems* like I can get it working with the existing binding
-then. There's a little funkiness with the core expecting three clocks
-while I only have two (currently I'm duplicating the "bus_early" clk
-for "suspend". Is there a preferred way to do this sort of hack?), and
-I'm a little worried that only the first reset is being used (instead
-of the 4 specified), but it seems to work so far.
+thanks,
+-- Shuah
 
-I still suspect the dwc3-of-simple.c method might be better since it
-can handle arbitrary sets of clks and resets instead of the fixed 3 &
-1 in the dwc3.txt binding.
-But if I can get away without having to add an extra binding here, I'd
-be happier.
 
-thanks
--john
