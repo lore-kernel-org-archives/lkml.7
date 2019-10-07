@@ -2,85 +2,92 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5139FC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53772ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2466720640
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:40:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 308FF20640
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:42:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729000AbfJGPk0 (ORCPT
+        id S1728212AbfJGPmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 11:40:26 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:29532 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727801AbfJGPkZ (ORCPT
+        Mon, 7 Oct 2019 11:42:02 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:53648 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727791AbfJGPmC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:40:25 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-223-2sMXyru-MEeYMtfSCrrM3w-1; Mon, 07 Oct 2019 16:40:21 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 7 Oct 2019 16:40:21 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 7 Oct 2019 16:40:21 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Linus Torvalds' <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-CC:     Guenter Roeck <linux@roeck-us.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: RE: [PATCH] Convert filldir[64]() from __put_user() to
- unsafe_put_user()
-Thread-Topic: [PATCH] Convert filldir[64]() from __put_user() to
- unsafe_put_user()
-Thread-Index: AQHVfL0BUpJ/upywWEKRtOjvaDvCEKdPT9ew
-Date:   Mon, 7 Oct 2019 15:40:21 +0000
-Message-ID: <c58c2a8a5366409abd4169d10a58196a@AcuMS.aculab.com>
-References: <20191006222046.GA18027@roeck-us.net>
- <CAHk-=wgrqwuZJmwbrjhjCFeSUu2i57unaGOnP4qZAmSyuGwMZA@mail.gmail.com>
- <CAHk-=wjRPerXedTDoBbJL=tHBpH+=sP6pX_9NfgWxpnmHC5RtQ@mail.gmail.com>
- <5f06c138-d59a-d811-c886-9e73ce51924c@roeck-us.net>
- <CAHk-=whAQWEMADgxb_qAw=nEY4OnuDn6HU4UCSDMNT5ULKvg3g@mail.gmail.com>
- <20191007012437.GK26530@ZenIV.linux.org.uk>
- <CAHk-=whKJfX579+2f-CHc4_YmEmwvMe_Csr0+CPfLAsSAdfDoA@mail.gmail.com>
- <20191007025046.GL26530@ZenIV.linux.org.uk>
- <CAHk-=whraNSys_Lj=Ut1EA=CJEfw2Uothh+5-WL+7nDJBegWcQ@mail.gmail.com>
-In-Reply-To: <CAHk-=whraNSys_Lj=Ut1EA=CJEfw2Uothh+5-WL+7nDJBegWcQ@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 7 Oct 2019 11:42:02 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iHV8x-0000bB-Pu; Mon, 07 Oct 2019 15:41:51 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/i915: make array hw_engine_mask static, makes object smaller
+Date:   Mon,  7 Oct 2019 16:41:51 +0100
+Message-Id: <20191007154151.23245-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-MC-Unique: 2sMXyru-MEeYMtfSCrrM3w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBMaW51cyBUb3J2YWxkcw0KPiBTZW50OiAwNyBPY3RvYmVyIDIwMTkgMDQ6MTINCi4u
-Lg0KPiBJbiB0aGlzIGNhc2UsIEkgdGhpbmsgaXQncyBkb25lIGEgZmV3IGNhbGxlcnMgdXAgaW4g
-aTkxNV9nZW1fcHJlYWRfaW9jdGwoKToNCj4gDQo+ICAgICAgICAgaWYgKCFhY2Nlc3Nfb2sodTY0
-X3RvX3VzZXJfcHRyKGFyZ3MtPmRhdGFfcHRyKSwNCj4gICAgICAgICAgICAgICAgICAgICAgICBh
-cmdzLT5zaXplKSkNCj4gICAgICAgICAgICAgICAgIHJldHVybiAtRUZBVUxUOw0KPiANCj4gYnV0
-IGhvbmVzdGx5LCB0cnlpbmcgdG8gb3B0aW1pemUgYXdheSBhbm90aGVyICJhY2Nlc3Nfb2soKSIg
-aXMganVzdA0KPiBub3Qgd29ydGggaXQuIEknZCByYXRoZXIgaGF2ZSBhbiBleHRyYSBvbmUgdGhh
-biBtaXNzIG9uZS4NCg0KWW91IGRvbid0IHJlYWxseSB3YW50IGFuIGV4dHJhIGFjY2Vzc19vaygp
-IGZvciBldmVyeSAnd29yZCcgb2YgYSBjb3B5Lg0KU29tZSBjb3BpZXMgaGF2ZSB0byBiZSBkb25l
-IGEgd29yZCBhdCBhIHRpbWUuDQoNCkFuZCB0aGUgY2hlY2tzIHNvbWVvbmUgYWRkZWQgdG8gY29w
-eV90by9mcm9tX3VzZXIoKSB0byBkZXRlY3Qga2VybmVsDQpidWZmZXIgb3ZlcnJ1bnMgbXVzdCBr
-aWxsIHBlcmZvcm1hbmNlIHdoZW4gdGhlIGJ1ZmZlcnMgYXJlIHdheSBkb3duIHRoZSBzdGFjaw0K
-b3IgaW4ga21hbGxvYygpZWQgc3BhY2UuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJl
-c3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsx
-IDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+From: Colin Ian King <colin.king@canonical.com>
+
+Don't populate the array hw_engine_mask on the stack but instead make it
+static. Makes the object code smaller by 316 bytes.
+
+Before:
+   text	   data	    bss	    dec	    hex	filename
+  34004	   4388	    320	  38712	   9738	gpu/drm/i915/gt/intel_reset.o
+
+After:
+   text	   data	    bss	    dec	    hex	filename
+  33528	   4548	    320	  38396	   95fc	gpu/drm/i915/gt/intel_reset.o
+
+(gcc version 9.2.1, amd64)
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/gpu/drm/i915/gt/intel_reset.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/i915/gt/intel_reset.c b/drivers/gpu/drm/i915/gt/intel_reset.c
+index eeb3bd0c4d69..db58ca9bee3a 100644
+--- a/drivers/gpu/drm/i915/gt/intel_reset.c
++++ b/drivers/gpu/drm/i915/gt/intel_reset.c
+@@ -285,7 +285,7 @@ static int gen6_reset_engines(struct intel_gt *gt,
+ 			      unsigned int retry)
+ {
+ 	struct intel_engine_cs *engine;
+-	const u32 hw_engine_mask[] = {
++	static const u32 hw_engine_mask[] = {
+ 		[RCS0]  = GEN6_GRDOM_RENDER,
+ 		[BCS0]  = GEN6_GRDOM_BLT,
+ 		[VCS0]  = GEN6_GRDOM_MEDIA,
+@@ -408,7 +408,7 @@ static int gen11_reset_engines(struct intel_gt *gt,
+ 			       intel_engine_mask_t engine_mask,
+ 			       unsigned int retry)
+ {
+-	const u32 hw_engine_mask[] = {
++	static const u32 hw_engine_mask[] = {
+ 		[RCS0]  = GEN11_GRDOM_RENDER,
+ 		[BCS0]  = GEN11_GRDOM_BLT,
+ 		[VCS0]  = GEN11_GRDOM_MEDIA,
+-- 
+2.20.1
 
