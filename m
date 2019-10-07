@@ -2,55 +2,106 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61704ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D55C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40B0020659
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:15:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B94D720673
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:16:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570464981;
+	bh=WpvdkBYUQEJ9NDSQbhZlzTQfJVCJCK6OqS8GhdTvvLs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RYHYPuP1lz20+FBSVxZRDQIPEUq6rmWWvxjpTeSzvzmBQhbiuME2rUVD5ncUlsJDt
+	 KbeiquvzsXUWV/Bln3UndhzKR4X+gM0VAzkjF0v/X4QT85rXgfk2TtF1rIBL18mKzU
+	 gx8cVS0JwvNWONylbLEty3xkDmU59sgVHGmDisMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728910AbfJGQPm convert rfc822-to-8bit (ORCPT
+        id S1728916AbfJGQQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 12:15:42 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44929 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727791AbfJGQPm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 12:15:42 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1iHVff-0000Fj-A1; Mon, 07 Oct 2019 18:15:39 +0200
-Date:   Mon, 7 Oct 2019 18:15:39 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Yongxin Liu <yongxin.liu@windriver.com>
-Cc:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
-        tglx@linutronix.de, rostedt@goodmis.org, haitao.liu@windriver.com,
-        zhe.he@windriver.com
-Subject: Re: [PATCH RT] kmemleak: Change the lock of kmemleak_object to
- raw_spinlock_t
-Message-ID: <20191007161539.5fi5wfc7kl3wdzct@linutronix.de>
-References: <20190927082230.34152-1-yongxin.liu@windriver.com>
+        Mon, 7 Oct 2019 12:16:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59276 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727791AbfJGQQT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 12:16:19 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6512A20673;
+        Mon,  7 Oct 2019 16:16:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570464978;
+        bh=WpvdkBYUQEJ9NDSQbhZlzTQfJVCJCK6OqS8GhdTvvLs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ePG3BA2X39dKb5+eU+4n1K4M0929VFxa/oOKS2iFcDA2LsguR6eKdyUjXo8qDx0Ak
+         638En2eUCsuScGeFaiK/gxx0OvTyfEROAVAqV1vWCNw5ahZ08mcrBvM+xSjpijlaQc
+         PUHmCVPQ3kuq+rk7wbXbcnewSHC/xZ8C4URfKFY0=
+Date:   Mon, 7 Oct 2019 18:16:16 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Mark Salyzyn <salyzyn@android.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
+        linux-security-module@vger.kernel.org, stable@vger.kernel.org,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-unionfs@vger.kernel.org
+Subject: Re: [PATCH] ovl: filter of trusted xattr results in audit
+Message-ID: <20191007161616.GA988623@kroah.com>
+References: <20191007160918.29504-1-salyzyn@android.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20190927082230.34152-1-yongxin.liu@windriver.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191007160918.29504-1-salyzyn@android.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-09-27 16:22:30 [+0800], Yongxin Liu wrote:
-> From: Liu Haitao <haitao.liu@windriver.com>
+On Mon, Oct 07, 2019 at 09:09:16AM -0700, Mark Salyzyn wrote:
+> When filtering xattr list for reading, presence of trusted xattr
+> results in a security audit log.  However, if there is other content
+> no errno will be set, and if there isn't, the errno will be -ENODATA
+> and not -EPERM as is usually associated with a lack of capability.
+> The check does not block the request to list the xattrs present.
 > 
-> The following call trace would be triggered as kmemleak is running.
+> Switch to has_capability_noaudit to reflect a more appropriate check.
 > 
-…
+> Signed-off-by: Mark Salyzyn <salyzyn@android.com>
+> Cc: linux-security-module@vger.kernel.org
+> Cc: kernel-team@android.com
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: stable@vger.kernel.org # v3.18
+> Fixes: upstream a082c6f680da ("ovl: filter trusted xattr for non-admin")
+> Fixes: 3.18 4bcc9b4b3a0a ("ovl: filter trusted xattr for non-admin")
+> ---
+> Replaced ns_capable_noaudit with 3.18.y tree specific
+> has_capability_noaudit present in original submission to kernel.org
+> commit 5c2e9f346b815841f9bed6029ebcb06415caf640
+> ("ovl: filter of trusted xattr results in audit")
+> 
+>  fs/overlayfs/inode.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/overlayfs/inode.c b/fs/overlayfs/inode.c
+> index a01ec1836a72..1175efa5e956 100644
+> --- a/fs/overlayfs/inode.c
+> +++ b/fs/overlayfs/inode.c
+> @@ -265,7 +265,8 @@ static bool ovl_can_list(const char *s)
+>  		return true;
+>  
+>  	/* Never list trusted.overlay, list other trusted for superuser only */
+> -	return !ovl_is_private_xattr(s) && capable(CAP_SYS_ADMIN);
+> +	return !ovl_is_private_xattr(s) &&
+> +	       has_capability_noaudit(current, CAP_SYS_ADMIN);
+>  }
+>  
+>  ssize_t ovl_listxattr(struct dentry *dentry, char *list, size_t size)
+> -- 
+> 2.23.0.581.g78d2f28ef7-goog
+> 
 
-Applied.
+Thanks for the backport, this one worked!
 
-Sebastian
+greg k-h
