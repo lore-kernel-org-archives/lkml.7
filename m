@@ -2,207 +2,116 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8018FC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76AFBECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56AB62173B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:42:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570452164;
-	bh=QlmGxXN75S6KDpXUeIecyQv5YkpxdOrHAZ4tfkFVv1Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=GfMiNA58WDhGNXLyPoxQ4KKLmJQrq3UwWx4AQLmyWWucV/G6z1A1IODIU0TwPMvIb
-	 KcQXsUFw+PGDAoj3WT3/WFhi44d3N4V82mEGI91xtYoQxY/H73hJglWwCJITydlWy/
-	 yI6eJ7hW/CWnejF0sFCP1qylbn4McYMWfUrcVjYE=
+	by mail.kernel.org (Postfix) with ESMTP id 4B17421655
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:42:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="r8yQnoKw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727861AbfJGMmn (ORCPT
+        id S1727922AbfJGMm4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 08:42:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41900 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727490AbfJGMmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 08:42:43 -0400
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D454921871;
-        Mon,  7 Oct 2019 12:42:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570452162;
-        bh=QlmGxXN75S6KDpXUeIecyQv5YkpxdOrHAZ4tfkFVv1Y=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=sFjDkU5fwAgfAsB2uKtjmiCRkx+xiCc8h2anG7iOYFA/BQP0MtQC85fQvcF9HjkYN
-         kouywKrhqR1d1WeS49TEmwtVwUCsw1OmlED96oFaX2Dg4YpPGvXkqDTVLtgVoubvh7
-         RkYmxCQvN1nmt4vMNgtCt3SsHmtj7ZSOzdTKgMWc=
-Received: by mail-qt1-f179.google.com with SMTP id u22so18821813qtq.13;
-        Mon, 07 Oct 2019 05:42:41 -0700 (PDT)
-X-Gm-Message-State: APjAAAXtIv3ClJtQ53LeDkY9fnJ/jP6Jn9lVtEDs1qqIRCi93dbpyF0Y
-        zy+D3o1cRwuJn90hRM6TL++GC2NF9MLtt1W27w==
-X-Google-Smtp-Source: APXvYqzgZykjYM+K47WAdfZO6hL3Row4Olz5ZnINVgiZV8PaGcqQNLFCJ5CkCvyGRTvgjU8HbholqiAulEP7V4qx9kw=
-X-Received: by 2002:ac8:2fe5:: with SMTP id m34mr29115750qta.224.1570452160952;
- Mon, 07 Oct 2019 05:42:40 -0700 (PDT)
+        Mon, 7 Oct 2019 08:42:56 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:38204 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727490AbfJGMm4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 08:42:56 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x97Cgt7K030000;
+        Mon, 7 Oct 2019 07:42:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1570452175;
+        bh=2Itw8HwAZSNj5kRKXPjiCE0nUkmlTynlNsoxiQueKDE=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=r8yQnoKwg3wCL+iF9cQTbag5JVO7eOK7HC1VQZFzW+IH2c2un1NBGg2VaDquRARq9
+         7GyaHYEebGOOeaHc1V6HeRdVokxIVPfkKx1ANRho66zoWN4zQHNZCOKB5iAphi7RS9
+         hzt0gCMdRBY0pN+k7G8GDu2Tcs+MNzN2zVwe5kvw=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x97Cgt8C106348
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 7 Oct 2019 07:42:55 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 7 Oct
+ 2019 07:42:52 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 7 Oct 2019 07:42:54 -0500
+Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with SMTP id x97CgsWM089465;
+        Mon, 7 Oct 2019 07:42:54 -0500
+Date:   Mon, 7 Oct 2019 07:45:29 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [Patch v2 16/21] media: ti-vpe: vpe: use standard struct instead
+ of duplicating fields
+Message-ID: <20191007124529.nnrzx2btnraimivq@ti.com>
+References: <20191004162952.4963-1-bparrot@ti.com>
+ <20191004162952.4963-17-bparrot@ti.com>
+ <cb01914f-3bca-2558-2b07-86ddbfc9626e@xs4all.nl>
 MIME-Version: 1.0
-References: <20191006142715.45k64cgw7mzlekm5@arbad>
-In-Reply-To: <20191006142715.45k64cgw7mzlekm5@arbad>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 7 Oct 2019 07:42:29 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+0SpRVmGJSm5Hw8bQ_zdeJy5wfTb9RM1r=crkiT2uM-Q@mail.gmail.com>
-Message-ID: <CAL_Jsq+0SpRVmGJSm5Hw8bQ_zdeJy5wfTb9RM1r=crkiT2uM-Q@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: iio: maxbotix,mb1232.yaml: transform to yaml
-To:     Andreas Klinger <ak@it-klinger.de>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <cb01914f-3bca-2558-2b07-86ddbfc9626e@xs4all.nl>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 6, 2019 at 9:27 AM Andreas Klinger <ak@it-klinger.de> wrote:
->
-> transform existing documentation of maxbotix,mb1232 ultrasonic ranger
-> from text documentation format into yaml.
->
-> Changes in v2:
-> - removed description of reg property
-> - added a line:
->   additionalProperties: false
->
-> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-> ---
->  .../bindings/iio/proximity/maxbotix,mb1232.txt     | 29 -----------
->  .../bindings/iio/proximity/maxbotix,mb1232.yaml    | 56 ++++++++++++++++++++++
->  2 files changed, 56 insertions(+), 29 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
->
-> diff --git a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
-> deleted file mode 100644
-> index dd1058fbe9c3..000000000000
-> --- a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
-> +++ /dev/null
-> @@ -1,29 +0,0 @@
-> -* MaxBotix I2CXL-MaxSonar ultrasonic distance sensor of type  mb1202,
-> -  mb1212, mb1222, mb1232, mb1242, mb7040 or mb7137 using the i2c interface
-> -  for ranging
-> -
-> -Required properties:
-> - - compatible:         "maxbotix,mb1202",
-> -                       "maxbotix,mb1212",
-> -                       "maxbotix,mb1222",
-> -                       "maxbotix,mb1232",
-> -                       "maxbotix,mb1242",
-> -                       "maxbotix,mb7040" or
-> -                       "maxbotix,mb7137"
-> -
-> - - reg:                        i2c address of the device, see also i2c/i2c.txt
-> -
-> -Optional properties:
-> - - interrupts:         Interrupt used to announce the preceding reading
-> -                       request has finished and that data is available.
-> -                       If no interrupt is specified the device driver
-> -                       falls back to wait a fixed amount of time until
-> -                       data can be retrieved.
-> -
-> -Example:
-> -proximity@70 {
-> -       compatible = "maxbotix,mb1232";
-> -       reg = <0x70>;
-> -       interrupt-parent = <&gpio2>;
-> -       interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
-> new file mode 100644
-> index 000000000000..e2fb1f6d4dbe
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
-> @@ -0,0 +1,56 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/proximity/maxbotix,mb1232.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: MaxBotix I2CXL-MaxSonar ultrasonic distance sensor
-> +
-> +maintainers:
-> +  - Andreas Klinger <ak@it-klinger.de>
-> +
-> +description: |
-> +  MaxBotix I2CXL-MaxSonar ultrasonic distance sensor of type  mb1202,
-> +  mb1212, mb1222, mb1232, mb1242, mb7040 or mb7137 using the i2c interface
-> +  for ranging
-> +
-> +  Specifications about the devices can be found at:
-> +  https://www.maxbotix.com/documents/I2CXL-MaxSonar-EZ_Datasheet.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - maxbotix,mb1202
-> +      - maxbotix,mb1212
-> +      - maxbotix,mb1222
-> +      - maxbotix,mb1232
-> +      - maxbotix,mb1242
-> +      - maxbotix,mb7040
-> +      - maxbotix,mb7137
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    description:
-> +      Interrupt used to announce the preceding reading request has finished
-> +      and that data is available.  If no interrupt is specified the device
-> +      driver falls back to wait a fixed amount of time until data can be
-> +      retrieved.
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    proximity@70 {
+Hans Verkuil <hverkuil@xs4all.nl> wrote on Mon [2019-Oct-07 09:57:26 +0200]:
+> On 10/4/19 6:29 PM, Benoit Parrot wrote:
+> > For each queue we need to maintain resolutions, pixel format,
+> > bytesperline, sizeimage, colorspace, etc.
+> > 
+> > Instead of manually adding more entries in the vpe_q_data struct, it is
+> > better to just add a "struct v4l2_format" member and use that to store
+> > all needed information.
+> > 
+> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > ---
+> >  drivers/media/platform/ti-vpe/vpe.c | 185 ++++++++++++++--------------
+> >  1 file changed, 91 insertions(+), 94 deletions(-)
+> > 
+> > diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
+> > index d7f8eb901475..5b1e9908fff2 100644
+> > --- a/drivers/media/platform/ti-vpe/vpe.c
+> > +++ b/drivers/media/platform/ti-vpe/vpe.c
+> > @@ -319,14 +319,9 @@ static struct vpe_fmt vpe_formats[] = {
+> >   * there is one source queue and one destination queue for each m2m context.
+> >   */
+> >  struct vpe_q_data {
+> > -	unsigned int		width;				/* frame width */
+> > -	unsigned int		height;				/* frame height */
+> > -	unsigned int		nplanes;			/* Current number of planes */
+> > -	unsigned int		bytesperline[VPE_MAX_PLANES];	/* bytes per line in memory */
+> > -	enum v4l2_colorspace	colorspace;
+> > -	enum v4l2_field		field;				/* supported field value */
+> > +	/* current v4l2 format info */
+> > +	struct v4l2_format	format;
+> 
+> Wouldn't it make more sense to use struct v4l2_pix_format_mplane? That avoid having to
+> use the '.fmt.pix_mp' sequence every time you need to access it.
 
-Fails to build with 'make dt_binding_check':
+Maybe, I chose "struct v4l2_format" because that is the parameter type used
+in all related IOCTL. But I guess I can change it, if it make the code
+cleaner :).
 
-Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.example.dts:20.11-24:
-Warning (reg_format): /example-0/proximity@70:reg: property has
-invalid length (4 bytes) (#address-cells == 1, #size-cells == 1)
-Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.example.dt.yaml:
-Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.example.dt.yaml:
-Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.example.dt.yaml:
-Warning (spi_bus_reg): Failed prerequisite 'reg_format'
+Benoit
 
-You have to put this under an i2c bus node.
-
-i2c {
-  #address-cells = <1>;
-  #size-cells = <0>;
-  ...
-};
-
-> +      compatible = "maxbotix,mb1232";
-> +      reg = <0x70>;
-> +      interrupt-parent = <&gpio2>;
-> +      interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
-> +    };
-> --
-> 2.11.0
+> 
+> Regards,
+> 
+> 	Hans
+> 
