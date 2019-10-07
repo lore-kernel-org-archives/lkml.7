@@ -2,159 +2,162 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE0CBC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E706FECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A46D72053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CC322053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:19:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lb4bWWeh"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="m7g5UEjw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728598AbfJGPTK (ORCPT
+        id S1728672AbfJGPTW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 11:19:10 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:46340 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727745AbfJGPTK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:19:10 -0400
-Received: by mail-yw1-f66.google.com with SMTP id h10so2241160ywm.13;
-        Mon, 07 Oct 2019 08:19:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wiNFdskpw4yBMm9nyiqt5ftRnxZo6W3oQSMb5hEf9N0=;
-        b=lb4bWWehvLkfbpod5kZF+pZetwwjP/Hl4QHssFZCruTsJ2+da6Y7y2IT76QjtCuIXY
-         jcHRPM3UIIntO35bKebInFUzmiuZ2fCLpF9l2UqODiQa1nhnut99+IDTo02WkZee0Lqh
-         HaVANCKIYksMAT+SUbHNB3LY2GtLN+X5ySty1pg7Pmm8erKDW95qj3gyiMeA/DPeDzUS
-         gc8Ydvc7F24bWkxsLrDXbS6GVid127WHhbmMJ9GrMm/PXNMxymwLPg5f7X4KaMM2N72b
-         YxuI3iw/0sU7ng+V57pPA2LWXWEFfEl4atDnE1D+y74Gm0Rpw27+7LS1nUaz/haerXsE
-         hF+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wiNFdskpw4yBMm9nyiqt5ftRnxZo6W3oQSMb5hEf9N0=;
-        b=DqDPZwncuBvDYND5AsN/v9nDW+UcLlf9IjTOSKbvyZkkPz+MU8uNCx3kbPdqX8ukrP
-         73hkHfFUIS/mFYclNDa8wk9g/6l/618A8/ArjKiEfW66uMGwDWE1lxqLMSh2rnozSpdd
-         MH680plw7azMwcsnMhOCingLr2aCbpCgeOh5EEt8jjl75mYPa4EzBzWkjjHLl3EeNoG4
-         XQBHLUNqO/2reJ708df+V0OSZmRCLBN6+DiVC+5EliSkpgizf30vzqTL2l/1i3M1GqEt
-         WxZpzjVMHk7UNXnSPpp68bHrhYZz5Z15wAsCCFRQsi583Og1P0p5TGP1ahVdlcC+QZnI
-         5nBw==
-X-Gm-Message-State: APjAAAWZQmxKOZ2kf5j3iVr+SUKorQQCNsW0snBVf/eWGF8xvgwKVEpK
-        R62dmlinDD3aoQpj9otIZgk=
-X-Google-Smtp-Source: APXvYqzRFRpv7XJTv8PKNwl6Ppt8cG35jqRtYU+F/E4Oee5d9CbO3gFPtNFJXNPBhZtX6QAVzod2Qw==
-X-Received: by 2002:a0d:cccc:: with SMTP id o195mr18912544ywd.44.1570461547530;
-        Mon, 07 Oct 2019 08:19:07 -0700 (PDT)
-Received: from icarus (072-189-084-142.res.spectrum.com. [72.189.84.142])
-        by smtp.gmail.com with ESMTPSA id g128sm3727806ywb.13.2019.10.07.08.19.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2019 08:19:06 -0700 (PDT)
-Date:   Mon, 7 Oct 2019 11:18:51 -0400
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        akpm@linux-foundation.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux@rasmusvillemoes.dk, yamada.masahiro@socionext.com,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-        geert@linux-m68k.org, preid@electromag.com.au, lukas@wunner.de,
-        sean.nyekjaer@prevas.dk, morten.tiljeset@prevas.dk,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v16 01/14] bitops: Introduce the for_each_set_clump8 macro
-Message-ID: <20191007151851.GA3494@icarus>
-References: <cover.1570374078.git.vilhelm.gray@gmail.com>
- <c0830858f19c852f6d124395a32410bc645ecd15.1570374078.git.vilhelm.gray@gmail.com>
- <20191007082156.GL32742@smile.fi.intel.com>
+        Mon, 7 Oct 2019 11:19:22 -0400
+Received: from vps.xff.cz ([195.181.215.36]:56964 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727745AbfJGPTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 11:19:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1570461560; bh=OMxyikXfTnLOBqWm+QEP8j50cJcpiVKIgC8XLUKV570=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=m7g5UEjw7VFuKAAkFVCxO3wEHwsalXDMCOagem7pdBWKPdNT2aYudIhcBhI4kKSu0
+         GbYJuS+e2J+VDLiYmdNd6Ec36l6rKDbsQjjr3tw1qU9T+xZiDXsWrGIba54j8J3XVd
+         k3PKY59M3+VGq3LLOMSy3EowU+0nwjsLVz5VcsZw=
+Date:   Mon, 7 Oct 2019 17:19:19 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Jagan Teki <jagan@amarulasolutions.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Subject: Re: [linux-sunxi] [PATCH 3/3] Revert "drm/sun4i: dsi: Rework a bit
+ the hblk calculation"
+Message-ID: <20191007151919.4uraoe374lui22gi@core.my.home>
+Mail-Followup-To: Icenowy Zheng <icenowy@aosc.io>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+References: <20191001080253.6135-1-icenowy@aosc.io>
+ <20191001080253.6135-4-icenowy@aosc.io>
+ <CAMty3ZDW4XHyW+6XL_RSVHqTSk79-r749pa0n5e6VbUzowAsiw@mail.gmail.com>
+ <58dc94b6371ab2f5b11b13ab707d73ab3fc4cc64.camel@aosc.io>
+ <14da3ae768c439e387f6609553bd465e945d4a33.camel@aosc.io>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191007082156.GL32742@smile.fi.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <14da3ae768c439e387f6609553bd465e945d4a33.camel@aosc.io>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 11:21:56AM +0300, Andy Shevchenko wrote:
-> On Sun, Oct 06, 2019 at 11:10:58AM -0400, William Breathitt Gray wrote:
-> > This macro iterates for each 8-bit group of bits (clump) with set bits,
-> > within a bitmap memory region. For each iteration, "start" is set to the
-> > bit offset of the found clump, while the respective clump value is
-> > stored to the location pointed by "clump". Additionally, the
-> > bitmap_get_value8 and bitmap_set_value8 functions are introduced to
-> > respectively get and set an 8-bit value in a bitmap memory region.
-> 
-> Very much thank you for an update!
-> I have comments below.
-> 
-> > +/**
-> > + * bitmap_get_value8 - get an 8-bit value within a memory region
-> 
-> Since it's in find.h I would not collide with bitmap namespace.
-> How about
-> 
-> 	find_and_get_value8()
+HI Icenowy,
 
-We modeled the interface for these on the existing bitmap functions, so
-perhaps it would be better to move bitmap_get_value8 and
-bitmap_set_value8 to include/linux/bitmap.h so that they are with the
-rest of the bitmap functions -- afterall, they are operating on bitmaps.
+On Sun, Oct 06, 2019 at 11:12:43PM +0800, Icenowy Zheng wrote:
+> 在 2019-10-06日的 22:44 +0800，Icenowy Zheng写道：
+> > 在 2019-10-03四的 09:53 +0530，Jagan Teki写道：
+> > > Hi Wens,
+> > > 
+> > > On Tue, Oct 1, 2019 at 1:34 PM Icenowy Zheng <icenowy@aosc.io>
+> > > wrote:
+> > > > This reverts commit 62e7511a4f4dcf07f753893d3424decd9466c98b.
+> > > > 
+> > > > This commit, although claimed as a refactor, in fact changed the
+> > > > formula.
+> > > > 
+> > > > By expanding the original formula, we can find that the const 10
+> > > > is
+> > > > not
+> > > > substracted, instead it's added to the value (because 10 is
+> > > > negative
+> > > > when calculating hsa, and hsa itself is negative when calculating
+> > > > hblk).
+> > > > This breaks the similar pattern to other formulas, so restoring
+> > > > the
+> > > > original formula is more proper.
+> > > > 
+> > > > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> > > > ---
+> > > >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 9 ++-------
+> > > >  1 file changed, 2 insertions(+), 7 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > > b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > > index 2d3e822a7739..cb5fd19c0d0d 100644
+> > > > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > > @@ -577,14 +577,9 @@ static void sun6i_dsi_setup_timings(struct
+> > > > sun6i_dsi *dsi,
+> > > >                           (mode->hsync_start - mode->hdisplay) *
+> > > > Bpp - HFP_PACKET_OVERHEAD);
+> > > > 
+> > > >                 /*
+> > > > -                * The blanking is set using a sync event (4
+> > > > bytes)
+> > > > -                * and a blanking packet (4 bytes + payload + 2
+> > > > -                * bytes). Its minimal size is therefore 10
+> > > > bytes.
+> > > > +                * hblk seems to be the line + porches length.
+> > > >                  */
+> > > > -#define HBLK_PACKET_OVERHEAD   10
+> > > > -               hblk = max((unsigned int)HBLK_PACKET_OVERHEAD,
+> > > > -                          (mode->htotal - (mode->hsync_end -
+> > > > mode-
+> > > > > hsync_start)) * Bpp -
+> > > > -                          HBLK_PACKET_OVERHEAD);
+> > > > +               hblk = mode->htotal * Bpp - hsa;
+> > > 
+> > > The original formula is correct according to BSP [1] and work with
+> > > my
+> > > panels which I have tested before. May be the horizontal timings on
+> > > panels you have leads to negative value.
+> > 
+> > Do you tested the same timing with BSP kernel?
+> > 
+> > It's quite difficult to get a negative value here, because the value
+> > is
+> > quite big (includes mode->hdisplay * Bpp).
+> 
+> By re-checking with the BSP source code, I found that the constant in
+> the HFP formula is indeed wrong -- it should be 16, not 6.
 
-> > + * @addr: address to the bitmap memory region
-> > + * @start: bit offset of the 8-bit value; must be a multiple of 8
-> > + *
-> > + * Returns the 8-bit value located at the @start bit offset within the @addr
-> > + * memory region.
-> > + */
-> > +static inline unsigned long bitmap_get_value8(const unsigned long *addr,
-> > +					      unsigned long start)
-> > +{
-> > +	const size_t index = BIT_WORD(start);
-> > +	const unsigned long offset = start % BITS_PER_LONG;
-> > +
-> > +	return (addr[index] >> offset) & 0xFF;
-> > +}
-> > +
-> > +/**
-> > + * bitmap_set_value8 - set an 8-bit value within a memory region
-> 
-> 	find_and_set_value8()
-> 
-> ?
-> 
-> > + * @addr: address to the bitmap memory region
-> > + * @value: the 8-bit value; values wider than 8 bits may clobber bitmap
-> > + * @start: bit offset of the 8-bit value; must be a multiple of 8
-> > + */
-> > +static inline void bitmap_set_value8(unsigned long *addr, unsigned long value,
-> > +				     unsigned long start)
-> > +{
-> > +	const size_t index = BIT_WORD(start);
-> > +	const unsigned long offset = start % BITS_PER_LONG;
-> > +
-> > +	addr[index] &= ~(0xFF << offset);
-> > +	addr[index] |= value << offset;
-> > +}
+I'm not sure if it's relevant to the discussion, but I've recently found
+a LCD configuration manual for A10, that may contain some useful info:
+
+See this: https://github.com/pocketbook/Platform_A13/blob/master/Kernel/drivers/video/sun5i/lcd/a10_lcd_config_nanual_v1.0.pdf
+
+regards,
+	o.
+
+> > 
+> > Strangely, only change the formula here back makes the timing
+> > translated from FEX file works (tested on PineTab and PinePhone
+> > production ver). The translation rule is from [1].
+> > 
+> > So I still insist on the patch because it's needed by experiment.
+> > 
+> > [1] http://linux-sunxi.org/LCD
+> > 
+> > > [1] 
+> > > https://github.com/ayufan-pine64/linux-pine64/blob/my-hacks-1.2-with-drm/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c#L919
 > 
 > -- 
-> With Best Regards,
-> Andy Shevchenko
-
-The find_next_clump8 function can remain exposed via
-include/linux/find.h since it fits in with the rest of the functions
-there.
-
-The reason I moved the definition to lib/find_bit.c is due to the
-circular dependency that arose from the round_down macro. Should I try
-to move the definition back to include/linux/find.h and reimplement it
-without the round_down macro; or is it best to keep this simpler
-implementation here in lib/find_bit.c?
-
-William Breathitt Gray
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/14da3ae768c439e387f6609553bd465e945d4a33.camel%40aosc.io.
