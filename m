@@ -2,154 +2,98 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ADB4C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12FE7C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41D4620867
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9E2D20867
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:20:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fQg6xW+U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729562AbfJGVS4 (ORCPT
+        id S1729409AbfJGVUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 17:18:56 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:57431 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729528AbfJGVSx (ORCPT
+        Mon, 7 Oct 2019 17:20:25 -0400
+Received: from mail-pg1-f173.google.com ([209.85.215.173]:33256 "EHLO
+        mail-pg1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728702AbfJGVUY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 17:18:53 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1N0qmr-1hwMca18BJ-00wmyc; Mon, 07 Oct 2019 23:18:29 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Lijun Ou <oulijun@huawei.com>,
-        "Wei Hu(Xavier)" <xavier.huwei@huawei.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Shaobo Xu <xushaobo2@huawei.com>,
-        Shamir Rabinovitch <shamir.rabinovitch@oracle.com>,
-        Xi Wang <wangxi11@huawei.com>, Tao Tian <tiantao6@huawei.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] RDMA/hns: Fix build error again
-Date:   Mon,  7 Oct 2019 23:18:08 +0200
-Message-Id: <20191007211826.3361202-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Mon, 7 Oct 2019 17:20:24 -0400
+Received: by mail-pg1-f173.google.com with SMTP id i76so1819785pgc.0;
+        Mon, 07 Oct 2019 14:20:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=sycFjW76TPrYh+EZFOry3N94dzhDeaSje8SkQ8MSXvA=;
+        b=fQg6xW+UFVl4P5jrJBH5q5AbD5KcDxnKN1kXTZpWdgzKMqmmuTYG2xLAJDsaA3/w0x
+         /zsYlRlbB/HYh6y5zOevSg0qAa7wdD6h5Q8WsM9tTdgt599iFljrwg/54zrfgNiwBVKR
+         DTe4JzulD6AZoHnqjJJZqY7uUmWt3N+10ivfsbf74Iuyp+MlAkiRMMULp/7QFMs0eBwu
+         GuROimN69l6vkT8EhSYpzSg2rgMFXfcHggNwpe8KwHz7aqmqBt+EFYle/0Sc8UtQRmzT
+         Yh5rXs+KMKZo0L+LynbLdKQ7oR8XTdcIlOsIVFNGgRvK/Cp+broBsSgWlF20A7O96EbB
+         OB/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sycFjW76TPrYh+EZFOry3N94dzhDeaSje8SkQ8MSXvA=;
+        b=RLvL3Cbp+kd0CcYhMdzNj5VtgaxIMuG8tp+WzM3l56ivRkhsT2oAoYlNSafMLfXhJv
+         RYg671VdIL/5gUohq84JcS0/65Z/+uvUVYcX2R8vEx8eoUAJWs/AswaWXuBoChdc6I+c
+         TbchmTxjUerVGgkEB+4zzSk79esOMpRWlS59I5IVd9mlyol3BCt1AfgajlZ8pQ1bh0cp
+         LkPMEh4AV0mUWzr6+tcgUL5GjRxMUcPiv+OmjATdyxUHA7JGNVAgT4oGf2rlp/STgdJz
+         0w29/ovYKwLC8dknyglvAz+0/K7Xreaylh7NIxN9hVh+B8jpCM5BpOnNqLP4P015qJ/E
+         CcVw==
+X-Gm-Message-State: APjAAAUAtIb5d0egA7dmhJDXrqMYSq6GHLFjdcBkmA2aTHxXGEwOSG9M
+        OnU59dyAwKObz7KFHZ5X3CQeaTPV
+X-Google-Smtp-Source: APXvYqyIN2WyX2O/LtktWbQBDxOmrCtq3FQCtQmqRN0tsPHmd49xQZm2L1P3TBbGfx6R85XTdNkOhw==
+X-Received: by 2002:a63:33c4:: with SMTP id z187mr10304868pgz.30.1570483223810;
+        Mon, 07 Oct 2019 14:20:23 -0700 (PDT)
+Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
+        by smtp.gmail.com with ESMTPSA id q76sm27325812pfc.86.2019.10.07.14.20.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Oct 2019 14:20:22 -0700 (PDT)
+Subject: Re: Potential NULL pointer deference in net: sched
+To:     Yizhuo Zhai <yzhai003@ucr.edu>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Zhiyun Qian <zhiyunq@cs.ucr.edu>,
+        Chengyu Song <csong@cs.ucr.edu>
+References: <CABvMjLRuGnatUxBEMKpXWGNJnAjNMiCXQ7Ce88ejuuJJnENR+g@mail.gmail.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <b2997ffb-728a-b4ee-abfa-2c9fe9869d8b@gmail.com>
+Date:   Mon, 7 Oct 2019 14:20:21 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:EWiNtZuGapRE+xX1PdtaFNnMOeHZZ8DNLe6GyszUnhUPAIMsWRd
- +7JZjySSe+lzQIBYcSqcZYMF0teNr+S0b0Bgw0gu8IBq7zI59qfH6MgaBuuxq3frVb9o+Ud
- OhevsJQQSGs6rJWEgNS+GrJcGjNLj+w5RuUAI0zjTduNkbJac6a7x5qZTOSDQtCUNF0SktU
- 8rHgKAQ7GcQWdyE6Mdlvg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:LG5/IVF1Aus=:dEwU4fUmO4LXKB528E/eiF
- azbIpFIGe8I8qZqUKzVBpHVDKlsT6ZGX1TDE955icdCig9ES/mRViuK7BRrwe4qWCIrvVekvE
- juFv3PJ/xY8Qy9YccE+2Yn4P7ZWnG0Dy6DU6+FFPxQBkenEU0T4a7E7rk/02knOMuT2uVFqu+
- sRiJTLmZJESoI/4ngWv9fgd0zo5cxjfEKJIBjj19n69cjYge3Bpdsw85K00bG6+HATlZaQ3tf
- W3Wljb9cZN4fjN6o8lnGMESAvSs0LsP28hlEIZwSGFhHquVn+K0hpcO9BlL6f4mDmo58hRgcE
- rfaNNrQ3lbGSgX0YqZtwmS2r2otOjZa2emKDTCAXuNnXFVVSvHXDYuXnSNf5MHPRNxkVN/J17
- SZYsKZjADPBVVO+r4QzrbJjDkpLzgexVT7FPbnGx0c9Ud8SsYVehRRySvOBBFgHwPFTV4YoDW
- QDd6K9eETIiple3I0bNuHKg7OLaEphVClc9HuwY6/QeMMIwnrU9SH15miNJJNxQIGpFos/nRj
- 7BzUvZVLjrYHz3PfOzfXb1vVIKA9Jz9gFIAXXWC5FavFgv+JQmGVnqXzQb2CEJI4XrBPXmLov
- neoEmIxyG+hUzRBnviXQNJOdHVA2A8jrExddQ816tC9D4O8q3jUzdpGceZyv25CnNCeCFEnRG
- EUZS59Nzi9+DsFFGWNEdbN+bGVeqjLJAGek/tsUw/X2E6/yQEywbcRO3zv3TrmQ1XiUy69gXH
- jxlOJEI4mNIpmzOteoztMa5zgRQeJdZsHtKyuwbEjT675mZsZL48djD2BpJM0v2UfBL8YqNKZ
- GwEyfmaEpL7wy89De/LFHEc2Iz7Q7SvgmgDhhCN45BfuWN7sFKcnFOp5fHli8MZYwWsgcBXvR
- 81Mty/DSXVJgZk3RhOEQ==
+In-Reply-To: <CABvMjLRuGnatUxBEMKpXWGNJnAjNMiCXQ7Ce88ejuuJJnENR+g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is not the first attempt to fix building random configurations,
-unfortunately the attempt in commit a07fc0bb483e ("RDMA/hns: Fix build
-error") caused a new problem when CONFIG_INFINIBAND_HNS_HIP06=m
-and CONFIG_INFINIBAND_HNS_HIP08=y:
 
-drivers/infiniband/hw/hns/hns_roce_main.o:(.rodata+0xe60): undefined reference to `__this_module'
 
-Revert commits a07fc0bb483e ("RDMA/hns: Fix build error") and
-a3e2d4c7e766 ("RDMA/hns: remove obsolete Kconfig comment") to get
-back to the previous state, then fix the issues described there
-differently, by adding more specific dependencies: INFINIBAND_HNS
-can now only be built-in if at least one of HNS or HNS3 are
-built-in, and the individual back-ends are only available if
-that code is reachable from the main driver.
+On 10/7/19 2:08 PM, Yizhuo Zhai wrote:
+> Hi All:
+> 
+> net/sched/sch_mq.c:
+> Inside function mq_dump_class(), mq_queue_get() could return NULL,
+> however, the return value of dev_queue is not checked  and get used.
+> This could potentially be unsafe.
+> 
+> 
 
-Fixes: a07fc0bb483e ("RDMA/hns: Fix build error")
-Fixes: a3e2d4c7e766 ("RDMA/hns: remove obsolete Kconfig comment")
-Fixes: dd74282df573 ("RDMA/hns: Initialize the PCI device for hip08 RoCE")
-Fixes: 08805fdbeb2d ("RDMA/hns: Split hw v1 driver from hns roce driver")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/infiniband/hw/hns/Kconfig  | 17 ++++++++++++++---
- drivers/infiniband/hw/hns/Makefile |  8 ++++++--
- 2 files changed, 20 insertions(+), 5 deletions(-)
+Not really.
 
-diff --git a/drivers/infiniband/hw/hns/Kconfig b/drivers/infiniband/hw/hns/Kconfig
-index d602b698b57e..4921c1e40ccd 100644
---- a/drivers/infiniband/hw/hns/Kconfig
-+++ b/drivers/infiniband/hw/hns/Kconfig
-@@ -1,23 +1,34 @@
- # SPDX-License-Identifier: GPL-2.0-only
- config INFINIBAND_HNS
--	bool "HNS RoCE Driver"
-+	tristate "HNS RoCE Driver"
- 	depends on NET_VENDOR_HISILICON
- 	depends on ARM64 || (COMPILE_TEST && 64BIT)
-+	depends on (HNS_DSAF && HNS_ENET) || HNS3
- 	---help---
- 	  This is a RoCE/RDMA driver for the Hisilicon RoCE engine. The engine
- 	  is used in Hisilicon Hip06 and more further ICT SoC based on
- 	  platform device.
- 
-+	  To compile HIP06 or HIP08 driver as module, choose M here.
-+
- config INFINIBAND_HNS_HIP06
--	tristate "Hisilicon Hip06 Family RoCE support"
-+	bool "Hisilicon Hip06 Family RoCE support"
- 	depends on INFINIBAND_HNS && HNS && HNS_DSAF && HNS_ENET
-+	depends on INFINIBAND_HNS=m || (HNS_DSAF=y && HNS_ENET=y)
- 	---help---
- 	  RoCE driver support for Hisilicon RoCE engine in Hisilicon Hip06 and
- 	  Hip07 SoC. These RoCE engines are platform devices.
- 
-+	  To compile this driver, choose Y here: if INFINIBAND_HNS is m, this
-+	  module will be called hns-roce-hw-v1
-+
- config INFINIBAND_HNS_HIP08
--	tristate "Hisilicon Hip08 Family RoCE support"
-+	bool "Hisilicon Hip08 Family RoCE support"
- 	depends on INFINIBAND_HNS && PCI && HNS3
-+	depends on INFINIBAND_HNS=m || HNS3=y
- 	---help---
- 	  RoCE driver support for Hisilicon RoCE engine in Hisilicon Hip08 SoC.
- 	  The RoCE engine is a PCI device.
-+
-+	  To compile this driver, choose Y here: if INFINIBAND_HNS is m, this
-+	  module will be called hns-roce-hw-v2.
-diff --git a/drivers/infiniband/hw/hns/Makefile b/drivers/infiniband/hw/hns/Makefile
-index 449a2d81319d..e105945b94a1 100644
---- a/drivers/infiniband/hw/hns/Makefile
-+++ b/drivers/infiniband/hw/hns/Makefile
-@@ -9,8 +9,12 @@ hns-roce-objs := hns_roce_main.o hns_roce_cmd.o hns_roce_pd.o \
- 	hns_roce_ah.o hns_roce_hem.o hns_roce_mr.o hns_roce_qp.o \
- 	hns_roce_cq.o hns_roce_alloc.o hns_roce_db.o hns_roce_srq.o hns_roce_restrack.o
- 
-+ifdef CONFIG_INFINIBAND_HNS_HIP06
- hns-roce-hw-v1-objs := hns_roce_hw_v1.o $(hns-roce-objs)
--obj-$(CONFIG_INFINIBAND_HNS_HIP06) += hns-roce-hw-v1.o
-+obj-$(CONFIG_INFINIBAND_HNS) += hns-roce-hw-v1.o
-+endif
- 
-+ifdef CONFIG_INFINIBAND_HNS_HIP08
- hns-roce-hw-v2-objs := hns_roce_hw_v2.o hns_roce_hw_v2_dfx.o $(hns-roce-objs)
--obj-$(CONFIG_INFINIBAND_HNS_HIP08) += hns-roce-hw-v2.o
-+obj-$(CONFIG_INFINIBAND_HNS) += hns-roce-hw-v2.o
-+endif
--- 
-2.20.0
+mq_dump_class() is called by a layer that made sure the @cl argument
+was not complete garbage.
 
