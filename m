@@ -4,56 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B773C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2B3ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BA9721721
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F38221479
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728686AbfJGOto (ORCPT
+        id S1728654AbfJGOtm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 10:49:44 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44463 "EHLO
+        Mon, 7 Oct 2019 10:49:42 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44462 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728556AbfJGOtk (ORCPT
+        with ESMTP id S1728553AbfJGOtj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 10:49:40 -0400
+        Mon, 7 Oct 2019 10:49:39 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iHUJy-0005pU-64; Mon, 07 Oct 2019 16:49:10 +0200
+        id 1iHUKG-00066K-C2; Mon, 07 Oct 2019 16:49:28 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D3C031C08B0;
-        Mon,  7 Oct 2019 16:49:09 +0200 (CEST)
-Date:   Mon, 07 Oct 2019 14:49:09 -0000
-From:   "tip-bot2 for Peter Jones" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 285041C0DD8;
+        Mon,  7 Oct 2019 16:49:18 +0200 (CEST)
+Date:   Mon, 07 Oct 2019 14:49:18 -0000
+From:   "tip-bot2 for Ian Rogers" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: efi/urgent] efi/tpm: Don't traverse an event log with no events
-Cc:     Lyude Paul <lyude@redhat.com>, Peter Jones <pjones@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Dave Young <dyoung@redhat.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lukas Wunner <lukas@wunner.de>,
-        Octavian Purdila <octavian.purdila@intel.com>,
+Subject: [tip: perf/urgent] libsubcmd: Make _FORTIFY_SOURCE defines dependent
+ on the feature
+Cc:     Ian Rogers <irogers@google.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Scott Talbert <swt@techie.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org,
-        stable@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
-In-Reply-To: <20191002165904.8819-5-ard.biesheuvel@linaro.org>
-References: <20191002165904.8819-5-ard.biesheuvel@linaro.org>
+        Stephane Eranian <eranian@google.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20190925195924.152834-1-irogers@google.com>
+References: <20190925195924.152834-1-irogers@google.com>
 MIME-Version: 1.0
-Message-ID: <157045974981.9978.10521392421826592930.tip-bot2@tip-bot2>
+Message-ID: <157045975810.9978.12496841458958178913.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,73 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the efi/urgent branch of tip:
+The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     05c8c1ff81ed2eb9bad7c27cf92e55c864c16df8
-Gitweb:        https://git.kernel.org/tip/05c8c1ff81ed2eb9bad7c27cf92e55c864c16df8
-Author:        Peter Jones <pjones@redhat.com>
-AuthorDate:    Wed, 02 Oct 2019 18:59:01 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 07 Oct 2019 15:24:35 +02:00
+Commit-ID:     4b0b2b096da9d296e0e5668cdfba8613bd6f5bc8
+Gitweb:        https://git.kernel.org/tip/4b0b2b096da9d296e0e5668cdfba8613bd6f5bc8
+Author:        Ian Rogers <irogers@google.com>
+AuthorDate:    Wed, 25 Sep 2019 12:59:23 -07:00
+Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitterDate: Fri, 27 Sep 2019 09:26:14 -03:00
 
-efi/tpm: Don't traverse an event log with no events
+libsubcmd: Make _FORTIFY_SOURCE defines dependent on the feature
 
-When there are no entries to put into the final event log, some machines
-will return the template they would have populated anyway.  In this case
-the nr_events field is 0, but the rest of the log is just garbage.
+Unconditionally defining _FORTIFY_SOURCE can break tools that don't work
+with it, such as memory sanitizers:
 
-This patch stops us from trying to iterate the table with
-__calc_tpm2_event_size() when the number of events in the table is 0.
+  https://github.com/google/sanitizers/wiki/AddressSanitizer#faq
 
-Tested-by: Lyude Paul <lyude@redhat.com>
-Signed-off-by: Peter Jones <pjones@redhat.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Acked-by: Matthew Garrett <mjg59@google.com>
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Jerry Snitselaar <jsnitsel@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Lukas Wunner <lukas@wunner.de>
-Cc: Octavian Purdila <octavian.purdila@intel.com>
+Fixes: 4b6ab94eabe4 ("perf subcmd: Create subcmd library")
+Signed-off-by: Ian Rogers <irogers@google.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Scott Talbert <swt@techie.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-efi@vger.kernel.org
-Cc: linux-integrity@vger.kernel.org
-Cc: stable@vger.kernel.org
-Fixes: c46f3405692d ("tpm: Reserve the TPM final events table")
-Link: https://lkml.kernel.org/r/20191002165904.8819-5-ard.biesheuvel@linaro.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Stephane Eranian <eranian@google.com>
+Link: http://lore.kernel.org/lkml/20190925195924.152834-1-irogers@google.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- drivers/firmware/efi/tpm.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ tools/lib/subcmd/Makefile | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/efi/tpm.c b/drivers/firmware/efi/tpm.c
-index 1d3f5ca..b9ae5c6 100644
---- a/drivers/firmware/efi/tpm.c
-+++ b/drivers/firmware/efi/tpm.c
-@@ -75,11 +75,16 @@ int __init efi_tpm_eventlog_init(void)
- 		goto out;
- 	}
+diff --git a/tools/lib/subcmd/Makefile b/tools/lib/subcmd/Makefile
+index ed61fb3..5b2cd5e 100644
+--- a/tools/lib/subcmd/Makefile
++++ b/tools/lib/subcmd/Makefile
+@@ -20,7 +20,13 @@ MAKEFLAGS += --no-print-directory
+ LIBFILE = $(OUTPUT)libsubcmd.a
  
--	tbl_size = tpm2_calc_event_log_size((void *)efi.tpm_final_log
--					    + sizeof(final_tbl->version)
--					    + sizeof(final_tbl->nr_events),
--					    final_tbl->nr_events,
--					    log_tbl->log);
-+	tbl_size = 0;
-+	if (final_tbl->nr_events != 0) {
-+		void *events = (void *)efi.tpm_final_log
-+				+ sizeof(final_tbl->version)
-+				+ sizeof(final_tbl->nr_events);
+ CFLAGS := $(EXTRA_WARNINGS) $(EXTRA_CFLAGS)
+-CFLAGS += -ggdb3 -Wall -Wextra -std=gnu99 -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 -fPIC
++CFLAGS += -ggdb3 -Wall -Wextra -std=gnu99 -fPIC
 +
-+		tbl_size = tpm2_calc_event_log_size(events,
-+						    final_tbl->nr_events,
-+						    log_tbl->log);
-+	}
- 	memblock_reserve((unsigned long)final_tbl,
- 			 tbl_size + sizeof(*final_tbl));
- 	early_memunmap(final_tbl, sizeof(*final_tbl));
++ifeq ($(DEBUG),0)
++  ifeq ($(feature-fortify-source), 1)
++    CFLAGS += -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2
++  endif
++endif
+ 
+ ifeq ($(CC_NO_CLANG), 0)
+   CFLAGS += -O3
