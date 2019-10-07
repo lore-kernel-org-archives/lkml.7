@@ -5,123 +5,90 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D977ECE58F
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 05:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6D0C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 05:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D553721479
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 05:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E452B2166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 05:16:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XYWQbmMT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JShsrn52"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727259AbfJGFNE (ORCPT
+        id S1727264AbfJGFQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 01:13:04 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36587 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726960AbfJGFND (ORCPT
+        Mon, 7 Oct 2019 01:16:01 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36775 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726960AbfJGFQA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 01:13:03 -0400
-Received: by mail-pg1-f196.google.com with SMTP id 23so7469447pgk.3;
-        Sun, 06 Oct 2019 22:13:03 -0700 (PDT)
+        Mon, 7 Oct 2019 01:16:00 -0400
+Received: by mail-wr1-f65.google.com with SMTP id y19so13529844wrd.3;
+        Sun, 06 Oct 2019 22:15:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=fhsJu9ifDVdBBZy6wa/6bbUe5u7/Lt7fjCQ+1zFjeMQ=;
-        b=XYWQbmMTCm39EJJuv+hy/3iWRt+eK4dTvdmDdFGRx+Gm/8J+/Esp4YDIzgN0NMrbNE
-         qci9e+QRJeiupiIaxasYCJKAZYIkgrZdyrzrGOvS26yrfBV0lOsLbGEZeC0smiaxKHoc
-         RWPBwkY5yO1S4Fz2ZgIzsqmH9egXT3b9b/q3vvdwjcV5Slf9ednC0gol/03b4HXzMovk
-         1F5kebzmmEMA0zUfkuwm/ptByCsQ8KcdV73RzI5ft1duyG664yLH/PX4zmgLg9sot/IE
-         rzjuvxdJNLLvr02X9TsYKEPbfE6sYv21iSydVU5tT8WLnnw6MxVdF3oAZJDZrIZeOwfW
-         d1Cw==
+        h=from:to:cc:subject:date:message-id;
+        bh=wc8zArjUNgVy/s50wiyO1NvyueOi4Jj56svA15IfJrM=;
+        b=JShsrn52XpdHu4hzqho33vlm/BLTIB0ivbt2uiZYxukY3K1yVykXHD0hQV2AtMlVrx
+         x4/ZJz+IX+gDOClpbBgREe5FW11lbD2bbYNh08gfeCdYssDP7b9P+VomVnt0sOQoXXSK
+         4lYhsb8kc/DrS2+j92/giE0aFuTkP79hFCrIoVk/sSpv5+YpsLmiunm6L3SEae8+y+aR
+         UPLxTLhFfhF67xPlW+kFrYaX6HzPyl9zWAKc1ogJtTZ1JRm+qOGaEs1TKP01dTZHdgpg
+         WOLyWa23VwUJZZisFOoh0eQ13smEMog1px57lMXij29uhjpxAjj/R+d2ipurGHDpXcoE
+         jPMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=fhsJu9ifDVdBBZy6wa/6bbUe5u7/Lt7fjCQ+1zFjeMQ=;
-        b=mk74b35gefKJesYFnRYQq931Ob7mOm7t6uOJ8mt+Op7xkjebVfqOkMVcw+txwvckAP
-         mb/W+nDqKRM56zRQAiibjocBHuNOaKX21+WcdIgetehs1tq4JizP+U3QM5QJ3nwE2eMB
-         EUKOYYuBZKICT24L2fxz4S3EFX3lFvyJ3lB9SHz0KFWiHA+8FlrJNmyhdr6l8JH+j0au
-         /Zh4n1qLSiCKYVHjmeyQKS5cG09EjIyfkXa6d9s76sYqEjksWpQclUs7/jD+vTSkF8Lc
-         3Xpq8rtb+6exytYAYGLuNmCNbENsWzbLYwQiezE69eA27/8NgKq7yhl3VBXdJYvyAApc
-         naiA==
-X-Gm-Message-State: APjAAAXISwbfeTpUj5aj0inj2/RmajpsYlGzfHlJXymOPQsgbOU/zedt
-        FKFmMfmjezl+Jwb3yG4T5At4lVgtQyY=
-X-Google-Smtp-Source: APXvYqz3f+93cuyblxUBsA+IZs4GCKkufudySWoXOpUrhuUyfg/ARnzX7WJYHiAH2l4sZ8nJfTe5mQ==
-X-Received: by 2002:a17:90a:1990:: with SMTP id 16mr31070722pji.47.1570425182270;
-        Sun, 06 Oct 2019 22:13:02 -0700 (PDT)
-Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id v133sm2209680pgb.74.2019.10.06.22.13.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Oct 2019 22:13:01 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     linux-input@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Sam Bazely <sambazley@fastmail.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
-        Austin Palmer <austinp@valvesoftware.com>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: [PATCH 3/3] HID: logitech-hidpp: add G920 device validation quirk
-Date:   Sun,  6 Oct 2019 22:12:40 -0700
-Message-Id: <20191007051240.4410-4-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191007051240.4410-1-andrew.smirnov@gmail.com>
-References: <20191007051240.4410-1-andrew.smirnov@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=wc8zArjUNgVy/s50wiyO1NvyueOi4Jj56svA15IfJrM=;
+        b=e4pwR0505lEANUEYcUW9IcvNkAsV783+UV5FckdrgAT5jVRken4YeevUyf5rLzDcGz
+         5c11tFONDGo2kzfdDeAzZB1u6o84qn1ddz2PrQ1tdY9EuEQH31CbS6fEyZZyT2QA5700
+         TF1NigCxHjpzWSSAfuVZpmp4oqX89rxi7lZGSfSziSJ84srPseRNsWfV+t0/RsO1w97M
+         2dz93TlLLlXIST0Lcx7vKmpmCgCRgWpDfwMmq4xdB3xMqdDlP3/irgXO956kJlMoP1SN
+         1QgUN+uIzkBXD+vFzTTeX2K1a6Xg4n4EGqczr4ODjuEz2a0C70bErERMuaZNiG+E+czI
+         Sd0w==
+X-Gm-Message-State: APjAAAV4puwXG6XababbB+/LksGCs877Q0YZ32WPF0d0Wwds1mJsN/xU
+        j6BRdFfo+j0Lbr7kYRALDKFUlu6Z
+X-Google-Smtp-Source: APXvYqwzo0yTz3gSyrODu8GSaSVC/7ZRDoAU4U46fMeNIkG2Z/7Iqe/R78CRVGTLZSok+sa49AnwLQ==
+X-Received: by 2002:a5d:6a09:: with SMTP id m9mr19624526wru.12.1570425358185;
+        Sun, 06 Oct 2019 22:15:58 -0700 (PDT)
+Received: from localhost.localdomain ([94.204.252.234])
+        by smtp.gmail.com with ESMTPSA id s12sm26655859wra.82.2019.10.06.22.15.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 06 Oct 2019 22:15:57 -0700 (PDT)
+From:   Christian Hewitt <christianshewitt@gmail.com>
+To:     Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Christian Hewitt <christianshewitt@gmail.com>
+Subject: [PATCH] soc: amlogic: meson-gx-socinfo: Add S905X3 ID for VIM3L
+Date:   Mon,  7 Oct 2019 09:15:07 +0400
+Message-Id: <1570425307-3231-1-git-send-email-christianshewitt@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-G920 device only advertises REPORT_ID_HIDPP_LONG and
-REPORT_ID_HIDPP_VERY_LONG in its HID report descriptor, so querying
-for REPORT_ID_HIDPP_SHORT with optional=false will always fail and
-prevent G920 to be recognized as a valid HID++ device.
+[    0.086470] soc soc0: Amlogic Meson SM1 (S905X3) Revision 2b:c (b0:2) Detected
 
-Modify hidpp_validate_device() to check only REPORT_ID_HIDPP_LONG with
-optional=false on G920 to fix this.
-
-Fixes: fe3ee1ec007b ("HID: logitech-hidpp: allow non HID++ devices to be handled by this module")
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204191
-Reported-by: Sam Bazely <sambazley@fastmail.com>
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Jiri Kosina <jikos@kernel.org>
-Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: Henrik Rydberg <rydberg@bitmath.org>
-Cc: Sam Bazely <sambazley@fastmail.com>
-Cc: Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
-Cc: Austin Palmer <austinp@valvesoftware.com>
-Cc: linux-input@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- drivers/hid/hid-logitech-hidpp.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/soc/amlogic/meson-gx-socinfo.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
-index cadf36d6c6f3..f415bf398e17 100644
---- a/drivers/hid/hid-logitech-hidpp.c
-+++ b/drivers/hid/hid-logitech-hidpp.c
-@@ -3511,6 +3511,12 @@ static bool hidpp_validate_report(struct hid_device *hdev, int id,
+diff --git a/drivers/soc/amlogic/meson-gx-socinfo.c b/drivers/soc/amlogic/meson-gx-socinfo.c
+index 6d0d04f..dc744f1 100644
+--- a/drivers/soc/amlogic/meson-gx-socinfo.c
++++ b/drivers/soc/amlogic/meson-gx-socinfo.c
+@@ -68,6 +68,8 @@ static const struct meson_gx_package_id {
+ 	{ "S922X", 0x29, 0x40, 0xf0 },
+ 	{ "A311D", 0x29, 0x10, 0xf0 },
+ 	{ "S905X3", 0x2b, 0x5, 0xf },
++	{ "S905X3", 0x2b, 0xb0, 0xf2 },
++	{ "A113L", 0x2c, 0x0, 0xf8 },
+ };
  
- static bool hidpp_validate_device(struct hid_device *hdev)
- {
-+	struct hidpp_device *hidpp = hid_get_drvdata(hdev);
-+
-+	if (hidpp->quirks & HIDPP_QUIRK_CLASS_G920)
-+		return hidpp_validate_report(hdev, REPORT_ID_HIDPP_LONG,
-+					     HIDPP_REPORT_SHORT_LENGTH, false);
-+
- 	return hidpp_validate_report(hdev, REPORT_ID_HIDPP_SHORT,
- 				     HIDPP_REPORT_SHORT_LENGTH, false) &&
- 	       hidpp_validate_report(hdev, REPORT_ID_HIDPP_LONG,
+ static inline unsigned int socinfo_to_major(u32 socinfo)
 -- 
-2.21.0
+2.7.4
 
