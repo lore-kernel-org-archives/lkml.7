@@ -2,98 +2,141 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8690C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD5FC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B869206C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:15:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570457759;
-	bh=EQUjqeE9IjYrFNkRTWbqGmoBkeMX9I6aRT1drhyRgqY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CCCNjnkQp0yVr4W3jBg4/4RgLu9qNubg98UzezoYRpsSC51eNESiS/vGlTOvmPcKQ
-	 RPVcglC0nHj0HbWR4ZeFnYW1ds0PsXgirbodNtcbX3i6wrLdyTt30Jp3nUk3phu6aF
-	 kuJOgJiEXmw5ZbszbR98UpdJ3KokTKqsarvz/NeA=
+	by mail.kernel.org (Postfix) with ESMTP id 43BC0206BB
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:16:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728402AbfJGOP6 (ORCPT
+        id S1728132AbfJGOQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 10:15:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48878 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726334AbfJGOP6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 10:15:58 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF82F206BB;
-        Mon,  7 Oct 2019 14:15:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570457757;
-        bh=EQUjqeE9IjYrFNkRTWbqGmoBkeMX9I6aRT1drhyRgqY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Bki4PB9aJwYSU3VoAmnqlp3fV08Wk1bpSBcbovgUpW2hPIO65aJri1O+4bn3RBwLv
-         gzMxZg91QfLnpFyVXv+Fs/m0vpSh/ckUcllPTkt5+3OVFf185rpUeGuSuj8QJTLV36
-         CQ/f87oQ4lMUnLLoNgC7+dT09ItZWBDE7YWgnSCQ=
-Date:   Mon, 7 Oct 2019 15:15:53 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        ard.biesheuvel@linaro.org, ndesaulniers@google.com,
-        catalin.marinas@arm.com, tglx@linutronix.de, luto@kernel.org
-Subject: Re: [PATCH v5 0/6] arm64: vdso32: Address various issues
-Message-ID: <20191007141552.tbk3n6hgpq4cgane@willie-the-truck>
-References: <20191003174838.8872-1-vincenzo.frascino@arm.com>
- <20191007133106.j3gtsuatsw6hgllz@willie-the-truck>
- <a35ad8b6-fcd8-a681-b456-cc931f1e58cb@arm.com>
+        Mon, 7 Oct 2019 10:16:52 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44030 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726334AbfJGOQv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 10:16:51 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1iHTod-0005Li-06; Mon, 07 Oct 2019 16:16:47 +0200
+Date:   Mon, 7 Oct 2019 16:16:46 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH RT] locking/rtmutex: Clean ->pi_blocked_on in the error case
+Message-ID: <20191007141646.2qjo3d6pnzdrlr5l@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <a35ad8b6-fcd8-a681-b456-cc931f1e58cb@arm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 02:54:29PM +0100, Vincenzo Frascino wrote:
-> On 07/10/2019 14:31, Will Deacon wrote:
-> > On Thu, Oct 03, 2019 at 06:48:32PM +0100, Vincenzo Frascino wrote:
-> >> This patch series is meant to address the various compilation issues
-> >> reported recently for arm64 vdso32 [1].
-> >>
-> >> From v4, the series contains a cleanup of lib/vdso Kconfig as well since
-> >> CROSS_COMPILE_COMPAT_VDSO is not required anymore by any architecture.
-> > 
-> > I've queued this up as fixes for 5.4, but I ended up making quite a few
-> > additional changes to address some other issues and minor inconsistencies
-> > I ran into. In particular, with my changes, you can now easily build the
-> > kernel with clang but the compat vDSO with gcc. The header files still need
-> > sorting out properly, but I think this is a decent starting point:
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/log/?h=for-next/fixes
-> > 
-> > Please have a look.
-> > 
-> 
-> Thank you for letting me know, I will have a look.
+From: Peter Zijlstra <peterz@infradead.org>
 
-Thanks.
+The function rt_mutex_wait_proxy_lock() cleans ->pi_blocked_on in case
+of failure (timeout, signal). The same cleanup is required in
+__rt_mutex_start_proxy_lock().
+In both the cases the tasks was interrupted by a signal or timeout while
+acquiring the lock and after the interruption it longer blocks on the
+lock.
 
-> I see acked-by Catalin on the patches, did you post them in review somewhere? I
-> could not find them. Sorry
+Fixes: 1a1fb985f2e2b ("futex: Handle early deadlock return correctly")
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
 
-I pushed them out to a temporary vdso branch on Friday and Catalin looked at
-that. If you'd like me to post them as well, please let me know, although
-I'm keen to get this stuff sorted out by -rc3 without disabling the compat
-vDSO altogether (i.e. [1]). In other words, if you're ok with my changes on
-top of yours then let's go for that, otherwise let's punt this to 5.5 and
-try to fix the header mess at the same time.
+This means I'm going to revert the raw_spinlock_t changes to
+futex_hash_bucket, add back all futex fixes we had and put this one on
+top.
 
-Will
+ kernel/locking/rtmutex.c | 43 +++++++++++++++++++++++-----------------
+ 1 file changed, 25 insertions(+), 18 deletions(-)
 
-[1] https://lkml.kernel.org/r/20190925130926.50674-1-catalin.marinas@arm.com
+diff --git a/kernel/locking/rtmutex.c b/kernel/locking/rtmutex.c
+index 0649a33fb7e6c..bb5c09c49c504 100644
+--- a/kernel/locking/rtmutex.c
++++ b/kernel/locking/rtmutex.c
+@@ -2321,6 +2321,26 @@ void rt_mutex_proxy_unlock(struct rt_mutex *lock,
+ 	rt_mutex_set_owner(lock, NULL);
+ }
+ 
++static void fixup_rt_mutex_blocked(struct rt_mutex *lock)
++{
++	struct task_struct *tsk = current;
++	/*
++	 * RT has a problem here when the wait got interrupted by a timeout
++	 * or a signal. task->pi_blocked_on is still set. The task must
++	 * acquire the hash bucket lock when returning from this function.
++	 *
++	 * If the hash bucket lock is contended then the
++	 * BUG_ON(rt_mutex_real_waiter(task->pi_blocked_on)) in
++	 * task_blocks_on_rt_mutex() will trigger. This can be avoided by
++	 * clearing task->pi_blocked_on which removes the task from the
++	 * boosting chain of the rtmutex. That's correct because the task
++	 * is not longer blocked on it.
++	 */
++	raw_spin_lock(&tsk->pi_lock);
++	tsk->pi_blocked_on = NULL;
++	raw_spin_unlock(&tsk->pi_lock);
++}
++
+ /**
+  * __rt_mutex_start_proxy_lock() - Start lock acquisition for another task
+  * @lock:		the rt_mutex to take
+@@ -2393,6 +2413,9 @@ int __rt_mutex_start_proxy_lock(struct rt_mutex *lock,
+ 		ret = 0;
+ 	}
+ 
++	if (ret)
++		fixup_rt_mutex_blocked(lock);
++
+ 	debug_rt_mutex_print_deadlock(waiter);
+ 
+ 	return ret;
+@@ -2473,7 +2496,6 @@ int rt_mutex_wait_proxy_lock(struct rt_mutex *lock,
+ 			       struct hrtimer_sleeper *to,
+ 			       struct rt_mutex_waiter *waiter)
+ {
+-	struct task_struct *tsk = current;
+ 	int ret;
+ 
+ 	raw_spin_lock_irq(&lock->wait_lock);
+@@ -2485,23 +2507,8 @@ int rt_mutex_wait_proxy_lock(struct rt_mutex *lock,
+ 	 * have to fix that up.
+ 	 */
+ 	fixup_rt_mutex_waiters(lock);
+-	/*
+-	 * RT has a problem here when the wait got interrupted by a timeout
+-	 * or a signal. task->pi_blocked_on is still set. The task must
+-	 * acquire the hash bucket lock when returning from this function.
+-	 *
+-	 * If the hash bucket lock is contended then the
+-	 * BUG_ON(rt_mutex_real_waiter(task->pi_blocked_on)) in
+-	 * task_blocks_on_rt_mutex() will trigger. This can be avoided by
+-	 * clearing task->pi_blocked_on which removes the task from the
+-	 * boosting chain of the rtmutex. That's correct because the task
+-	 * is not longer blocked on it.
+-	 */
+-	if (ret) {
+-		raw_spin_lock(&tsk->pi_lock);
+-		tsk->pi_blocked_on = NULL;
+-		raw_spin_unlock(&tsk->pi_lock);
+-	}
++	if (ret)
++		fixup_rt_mutex_blocked(lock);
+ 
+ 	raw_spin_unlock_irq(&lock->wait_lock);
+ 
+-- 
+2.23.0
+
