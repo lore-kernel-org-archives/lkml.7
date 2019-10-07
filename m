@@ -2,114 +2,107 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF105ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3F2C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8947C206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:57:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B36A6206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:58:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570471064;
-	bh=4Slkk8FYa1nq0uUPEJ/Ga/4PSME/l45UeoRN71xPurU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DiKkaspC7Z4DU9tY5mq7BIoYku67elF3ony+JW4exbAbJsv/xxCZ5fHWHkpwyz9J4
-	 YgWp6joC97QQZ6Jh1ZsC3Nwk0Z/6FlZE3hLf5pct+DGH1vjWhXFSPovMMaYRWQM96I
-	 SCxFOg72MHTfeteX97Ai77dMSBOvkELX8Q8YUwJA=
+	s=default; t=1570471115;
+	bh=xEwQHPlqXaHNbxmpbtQW2ZV2D287UcBmfyfJ091CUzY=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=cRMTFgsI7kZ5TewMMDW7f99eexwHIBSfcwZ/dWfPiic0yzoWPQGE0Cyu0/HE4Yw+J
+	 3wbpbF3fB8JKaYH2Bfpdkm8qjwlc8velP1Sm/uWyVOlt7PwlAHxs4Vk9itMmmDaFEp
+	 UcfcWyZ8v3jA0G01OCLdCq7P/tZF7IEdEcFfwfs8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729329AbfJGR5n (ORCPT
+        id S1729264AbfJGR6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 13:57:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54182 "EHLO mail.kernel.org"
+        Mon, 7 Oct 2019 13:58:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728954AbfJGR5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 13:57:43 -0400
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728081AbfJGR6e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 13:58:34 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76C2B206C0;
-        Mon,  7 Oct 2019 17:57:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BC7E20684;
+        Mon,  7 Oct 2019 17:58:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570471062;
-        bh=4Slkk8FYa1nq0uUPEJ/Ga/4PSME/l45UeoRN71xPurU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=aGAtPiJ0XUJysZXyBYDXVj9W8HsbOcy7a6RoABUEaPIsboCzlCAmW8Cxq+vbUfSlu
-         SdZolAghlb0Q56At+nbu0WjOoEkerOcJFerEjhmuiRRsGBXwUs1ERrvFNQMaISjZg7
-         oxYPySFp4GNfD4V9IlbELMngikbWfFzy6YGp3LuE=
-Received: by mail-qt1-f170.google.com with SMTP id u40so20458233qth.11;
-        Mon, 07 Oct 2019 10:57:42 -0700 (PDT)
-X-Gm-Message-State: APjAAAVfxfMPPCOPHMW9N5S4E5WVUD1jZwGvWcBuZIXmJMJMTbmYIAC8
-        Z1HAgGAiEGSf/Kdy76zZQNlANob5eUWByWVq+A==
-X-Google-Smtp-Source: APXvYqyx0/vroFKh+gGIFFU2QP1qSo3MpBR0Klz9I9ftnNKkdHNH+5jvTnL3wvDYMYseeiI4YtsA91QWvRtU1xEn4IM=
-X-Received: by 2002:ac8:444f:: with SMTP id m15mr31503108qtn.110.1570471061666;
- Mon, 07 Oct 2019 10:57:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190724044906.12007-1-vkoul@kernel.org> <20190724044906.12007-2-vkoul@kernel.org>
- <CANcMJZBWsfwWmHbGCG+KG4n1kpmytw_8O4uA8HEVv8ysBxiQgw@mail.gmail.com>
-In-Reply-To: <CANcMJZBWsfwWmHbGCG+KG4n1kpmytw_8O4uA8HEVv8ysBxiQgw@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 7 Oct 2019 12:57:30 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJpAqdFQKQLjh0szD2HY23bkFSg2fioDi2VxYvZcs6wsQ@mail.gmail.com>
-Message-ID: <CAL_JsqJpAqdFQKQLjh0szD2HY23bkFSg2fioDi2VxYvZcs6wsQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] arm64: dts: qcom: sdm845: Add unit name to soc node
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        s=default; t=1570471113;
+        bh=xEwQHPlqXaHNbxmpbtQW2ZV2D287UcBmfyfJ091CUzY=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=CeFAWCSaNNAUeWSP1r74bd/S7UtlGHl1gI3UqiEce8mYH0SkXLZhfgKYQ+0om0+W9
+         sDxu1st3KHJAR3JEbY09IbhYQ02OcKrsTbZTZhZqMn+HWA4f7HBTEzNdNY3XTWP7hZ
+         wRvv77uApjxALMXA+4FcQLgSw8KGOeySF+4folfA=
+Date:   Mon, 7 Oct 2019 19:58:31 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Amit Pundir <amit.pundir@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [RESEND PATCH 0/5] Add bluetooth support for Orange Pi 3
+Message-ID: <20191007175831.2r2thebie6hxmxym@gilmour>
+References: <20190823103139.17687-1-megous@megous.com>
+ <20191007141153.7b76t4ntdzdojj5m@core.my.home>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qhahocbwdlja2oay"
+Content-Disposition: inline
+In-Reply-To: <20191007141153.7b76t4ntdzdojj5m@core.my.home>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 12:44 PM John Stultz <john.stultz@linaro.org> wrote:
->
-> On Tue, Jul 23, 2019 at 9:51 PM Vinod Koul <vkoul@kernel.org> wrote:
-> >
-> > We get a warning about missing unit name for soc node, so add it.
-> >
-> > arch/arm64/boot/dts/qcom/sdm845.dtsi:623.11-2814.4: Warning (unit_address_vs_reg): /soc: node has a reg or ranges property, but no unit name
-> >
-> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > index 601cfb078bd5..e81f4a6d08ce 100644
-> > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > @@ -620,7 +620,7 @@
-> >                 method = "smc";
-> >         };
-> >
-> > -       soc: soc {
-> > +       soc: soc@0 {
-> >                 #address-cells = <2>;
-> >                 #size-cells = <2>;
-> >                 ranges = <0 0 0 0 0x10 0>;
->
-> So Amit Pundir noted that this patch is causing 5.4-rc to no longer
-> boot on db845 w/ AOSP, due to it changing the userland sysfs paths
-> from "/devices/platform/soc/1a00000.mdss" to
-> "/devices/platform/soc@0/1a00000.mdss"
->
-> Is there a better solution here that might not break userspace?
 
-Other than doing the right thing of not relying on
-/sys/devices/platform/* paths, implement per target/file DTC_FLAGS
-similar to CFLAGS. There is another want for this in order to enable
-dtc symbols for overlays on a per board basis.
+--qhahocbwdlja2oay
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Oct 07, 2019 at 04:11:53PM +0200, Ond=C5=99ej Jirman wrote:
+> Hi Maxime,
+>
+> On Fri, Aug 23, 2019 at 12:31:34PM +0200, megous hlavni wrote:
+> > From: Ondrej Jirman <megous@megous.com>
+> >
+> > (Resend to add missing lists, sorry for the noise.)
+> >
+> > This series implements bluetooth support for Xunlong Orange Pi 3 board.
+> >
+> > The board uses AP6256 WiFi/BT 5.0 chip.
+> >
+> > Summary of changes:
+> >
+> > - add more delay to let initialize the chip
+> > - let the kernel detect firmware file path
+> > - add new compatible and update dt-bindings
+> > - update Orange Pi 3 / H6 DTS
+>
+> Please consider the DTS patches for 5.5.
 
-Rob
+Can  you resend them? I don't have access to my old mailbox anymore
+
+Maxime
+
+--qhahocbwdlja2oay
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZt8xwAKCRDj7w1vZxhR
+xab8AQCoq16pTHJEpC+5lsSAtxuOg5ykvT6nmBObbhL8FtoOTwD+NpvLfhLVo3aM
+lI/68DRVnpx1ziS2dwVHXdvmQooJ9Qw=
+=TYcE
+-----END PGP SIGNATURE-----
+
+--qhahocbwdlja2oay--
