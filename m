@@ -2,446 +2,265 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C310ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A24BC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1F79206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:02:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570482179;
-	bh=+KFoildWCKALw7L9/MDspkilCE87NjU6TrKNoewxhhY=;
-	h=To:Cc:From:Subject:Date:List-ID:From;
-	b=qxRy6FO8WnzLj1EbrLJwUvLXrZPTnzAfywWiVhh9jef3oekvajTDxgVHlLPD/XS5C
-	 Eg9avU2vGYHT1pHd1j+sGd8R/yMpngEqcIbACQjb2b2PK9+aeVNYESAJojQoWCnKIE
-	 HHcbvgvPDeISIeE0bMTFy79o8dqeDshIuIiA57PI=
+	by mail.kernel.org (Postfix) with ESMTP id 14CF1206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:04:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V5kJxmOf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729199AbfJGVC6 (ORCPT
+        id S1729285AbfJGVET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 17:02:58 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:34961 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728893AbfJGVC6 (ORCPT
+        Mon, 7 Oct 2019 17:04:19 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37335 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728330AbfJGVET (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 17:02:58 -0400
-Received: by mail-io1-f65.google.com with SMTP id q10so31914874iop.2
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 14:02:57 -0700 (PDT)
+        Mon, 7 Oct 2019 17:04:19 -0400
+Received: by mail-lj1-f194.google.com with SMTP id l21so15229919lje.4
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 14:04:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language;
-        bh=dlHnClK45+xK8TgptSlbn0Igt59Q2MEBn/0ZQG8FWVM=;
-        b=fKq740neOno3lchw1/sjyy8GaeL1LwwCTvyNrPESM9i6aa0nqgVSHamACENPddKiho
-         BlguCFv/tpxKamyt/NriQVfOto6sJ8+WegNjF5hq877VmDnHt7L1T39ObsPg7V0mp3sd
-         zWdV1EN1gJ8mwlfq2EusC4Nt930U92jC2rA+g=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Co9O5Jd+jV4mU1gOeqHMaWoIE7J2lG1iVW+V5hyNa5w=;
+        b=V5kJxmOfatnbRUP8+QjX0g24iOgVKIwXxsLTBh2nvhtE6NOAfuij+VgIm7+Sd3JfQ6
+         0R/7zLVqo0yHCbujDFuuFrb6eDs41/obG1QNChDUy70DReVnq9XjGTD20LaBy2UOcoZd
+         z0J8hhP6AKaA1vSprH/3uzRamNiEf+hMqrT+hCjLdM7jYv6rWQfN8+BX4cqFV1WyKSkV
+         J2TprcxO1icNlL9ZdJIMz6/9xMBO9iwP5Wot9G54MJ3Z/DfSrASEH2tiziPeS15hS/XJ
+         +6mAAdn2J11TXyXFtX36LQEJZbblOLlSeYeFNcwTAZzCfxcvASD6FY4qemgAGYqW3Wh4
+         t3eQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language;
-        bh=dlHnClK45+xK8TgptSlbn0Igt59Q2MEBn/0ZQG8FWVM=;
-        b=CJ3/yNvxqXnyEnWdgUr1D46rN0AAXAF8HZFsiXo0eOex7ZsEMhEUynigHOMJkBz8YA
-         sORRB85gcKp3Kz4cZTBkgklLNeDMsRd5vdmVsBcXjY9oq+hu4iVQcyqcCuHp8R+QSn6+
-         MEi1VsCQXx15//ScyI0tTuhFiAZ3tGy2DDPGlCJ3kv3wXchqt0nGBNSyEztclb73sB/2
-         TPdnU0bOwp5SNaQPpKXtHtdNsIz+oY4rK9fIgDMiaoPxRx6XpbjxMrzHKEKkKgRFRukP
-         6gl3NmUMicb85uBA5hr3jVPPpRo3hjHjQDziEoE0XXT1l9thOBNC0TfrfpFn7DoDr/zU
-         pmHg==
-X-Gm-Message-State: APjAAAVMvY/FezCF0i3wMS+1QhxV97d13Uk82ElczOJssDbacQqqTxJ/
-        VmPgLodTgAb4w9r0+DrDh5xs/A==
-X-Google-Smtp-Source: APXvYqwvIJ2EoZCEQERYwYD0M8Ed58Bp7vSSxe/txQVTQM3Qcr20gMiFnV8Nv8qek4iE8OyWukkHng==
-X-Received: by 2002:a5e:aa10:: with SMTP id s16mr15350319ioe.21.1570482177076;
-        Mon, 07 Oct 2019 14:02:57 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id w16sm8006792ilc.62.2019.10.07.14.02.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 07 Oct 2019 14:02:56 -0700 (PDT)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shuah <shuah@kernel.org>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Subject: [GIT PULL] Kselftest update for Linux 5.4-rc3
-Message-ID: <be198a81-7b4b-5d4c-c8c4-8dc3920f2ae5@linuxfoundation.org>
-Date:   Mon, 7 Oct 2019 15:02:55 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Co9O5Jd+jV4mU1gOeqHMaWoIE7J2lG1iVW+V5hyNa5w=;
+        b=tOviWwTbj9/YhukOPXz/nH+k0JBxl4yoExS9T+6B8b2bjX9oVJdyJDUV8fU2eBxd+C
+         cJ1WXzZLmzQMaNqnBx6w8tYazA6Ll0+mk//OjAfFqI5ZUjiQ7hGO4H8kUsPVmjd6YyQx
+         7Xkd1CscIEN0tY1htQvhu+u5pyQ0zha6A24SoQtiBybpwm/wFc5Hag6Ow13sfCaABqlH
+         8lkXwEnnloc1wkzmlRlBZ/w+XA+gdPKH0CATL70+ds1JitmhFw920CSdMu82Bt+qYxRD
+         xjxM+Poi+qYxjgoZ5jRXGOfxmEu4on36EZ8WOUxeeUX+H7b2Eb2ql8iHmJ4z3EE4U2cJ
+         GgZA==
+X-Gm-Message-State: APjAAAUFUdgySyOkllt555bePJa/Z3sxo/WwHMnLUcJhj1ta0dzoEoGK
+        yiNk7OvGwgw8gLBRg34nlU1vO58e4aZSWRhpZEIhxQ==
+X-Google-Smtp-Source: APXvYqwWZ8+sv2DufoODQxvLvhcS2AwplMhZ81kqbp9RVWBfMSSf3MW/n0cPYMVSMh4IuhE9f18ERo0q5kfz0kqK43Q=
+X-Received: by 2002:a2e:80d3:: with SMTP id r19mr19136325ljg.41.1570482256314;
+ Mon, 07 Oct 2019 14:04:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="------------A8F0D94AF098AD7E161F07AF"
-Content-Language: en-US
+References: <CAG48ez14Q0-F8LqsvcNbyR2o6gPW8SHXsm4u5jmD9MpsteM2Tw@mail.gmail.com>
+In-Reply-To: <CAG48ez14Q0-F8LqsvcNbyR2o6gPW8SHXsm4u5jmD9MpsteM2Tw@mail.gmail.com>
+From:   Todd Kjos <tkjos@google.com>
+Date:   Mon, 7 Oct 2019 14:04:04 -0700
+Message-ID: <CAHRSSExnOcwWWPd9osH=MU_WGaqxL4+7aXkf9=srwYFRa7c2eQ@mail.gmail.com>
+Subject: Re: UAF read in print_binder_transaction_log_entry() on
+ ANDROID_BINDERFS kernels
+To:     Jann Horn <jannh@google.com>, Hridya Valsaraju <hridya@google.com>
+Cc:     Martijn Coenen <maco@android.com>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------A8F0D94AF098AD7E161F07AF
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
++Hridya Valsaraju
 
-Hi Linus,
 
-Please pull the following Kselftest update for Linux 5.4-rc3.
-
-This Kselftest update for Linux 5.4-rc3 consists fixes for existing
-tests and the framework. Cristian Marussi's patches add ability to
-skip targets (tests) and exclude tests that didn't build from run-list.
-These patches improve the Kselftest results. Ability to skip targets
-helps avoid running tests that aren't supported in certain environments.
-As an example, bpf tests from mainline aren't supported on stable
-kernels and have dependency on bleeding edge llvm. Being able to skip
-bpf on systems that can't meet this llvm dependency will be helpful.
-
-Kselftest can be built and installed from the main Makefile. This change
-help simplify Kselftest use-cases which addresses request from users.
-
-Kees Cook added per test timeout support to limit individual test
-run-time.
-
-diff is attached.
-
-thanks,
--- Shuah
-
-----------------------------------------------------------------
-
-The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
-
-   Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
-
-are available in the Git repository at:
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest 
-tags/linux-kselftest-5.4-rc3
-
-for you to fetch changes up to ce3a677802121e038d2f062e90f96f84e7351da0:
-
-   selftests: watchdog: Add command line option to show watchdog_info 
-(2019-10-02 13:44:43 -0600)
-
-----------------------------------------------------------------
-linux-kselftest-5.4-rc3
-
-This Kselftest update for Linux 5.4-rc3 consists fixes for existing
-tests and the framework. Cristian Marussi's patches add ability to
-skip targets (tests) and exclude tests that didn't build from run-list.
-These patches improve the Kselftest results. Ability to skip targets
-helps avoid running tests that aren't supported in certain environments.
-As an example, bpf tests from mainline aren't supported on stable kernels
-and have dependency on bleeding edge llvm. Being able to skip bpf on
-systems that can't meet this llvm dependency will be helpful.
-
-Kselftest can be built and installed from the main Makefile. This change
-help simplify Kselftest use-cases which addresses request from users.
-
-Kees Cook added per test timeout support to limit individual test run-time.
-
-----------------------------------------------------------------
-Cristian Marussi (2):
-       kselftest: add capability to skip chosen TARGETS
-       kselftest: exclude failed TARGETS from runlist
-
-George G. Davis (2):
-       selftests: watchdog: Validate optional file argument
-       selftests: watchdog: Add command line option to show watchdog_info
-
-Kees Cook (1):
-       selftests/kselftest/runner.sh: Add 45 second timeout per test
-
-Shuah Khan (1):
-       selftests: Add kselftest-all and kselftest-install targets
-
-  Documentation/dev-tools/kselftest.rst            | 16 +++++++++++
-  Makefile                                         |  5 ++--
-  tools/testing/selftests/Makefile                 | 19 +++++++++++--
-  tools/testing/selftests/kselftest/runner.sh      | 36 
-++++++++++++++++++++++--
-  tools/testing/selftests/kselftest_install.sh     |  4 +--
-  tools/testing/selftests/rtc/settings             |  1 +
-  tools/testing/selftests/watchdog/watchdog-test.c | 27 +++++++++++++++++-
-  7 files changed, 97 insertions(+), 11 deletions(-)
-  create mode 100644 tools/testing/selftests/rtc/settings
-
-----------------------------------------------------------------
-
---------------A8F0D94AF098AD7E161F07AF
-Content-Type: text/x-patch;
- name="linux-kselftest-5.4-rc3.diff"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="linux-kselftest-5.4-rc3.diff"
-
-diff --git a/Documentation/dev-tools/kselftest.rst b/Documentation/dev-tools/kselftest.rst
-index 25604904fa6e..ecdfdc9d4b03 100644
---- a/Documentation/dev-tools/kselftest.rst
-+++ b/Documentation/dev-tools/kselftest.rst
-@@ -89,6 +89,22 @@ To build, save output files in a separate directory with KBUILD_OUTPUT ::
- 
-   $ export KBUILD_OUTPUT=/tmp/kselftest; make TARGETS="size timers" kselftest
- 
-+Additionally you can use the "SKIP_TARGETS" variable on the make command
-+line to specify one or more targets to exclude from the TARGETS list.
-+
-+To run all tests but a single subsystem::
-+
-+  $ make -C tools/testing/selftests SKIP_TARGETS=ptrace run_tests
-+
-+You can specify multiple tests to skip::
-+
-+  $  make SKIP_TARGETS="size timers" kselftest
-+
-+You can also specify a restricted list of tests to run together with a
-+dedicated skiplist::
-+
-+  $  make TARGETS="bpf breakpoints size timers" SKIP_TARGETS=bpf kselftest
-+
- See the top-level tools/testing/selftests/Makefile for the list of all
- possible targets.
- 
-diff --git a/Makefile b/Makefile
-index 6f54f2f95743..02f7ede2f344 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1237,9 +1237,8 @@ PHONY += kselftest
- kselftest:
- 	$(Q)$(MAKE) -C $(srctree)/tools/testing/selftests run_tests
- 
--PHONY += kselftest-clean
--kselftest-clean:
--	$(Q)$(MAKE) -C $(srctree)/tools/testing/selftests clean
-+kselftest-%: FORCE
-+	$(Q)$(MAKE) -C $(srctree)/tools/testing/selftests $*
- 
- PHONY += kselftest-merge
- kselftest-merge:
-diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-index c3feccb99ff5..4cdbae6f4e61 100644
---- a/tools/testing/selftests/Makefile
-+++ b/tools/testing/selftests/Makefile
-@@ -63,6 +63,13 @@ TARGETS += zram
- TARGETS_HOTPLUG = cpu-hotplug
- TARGETS_HOTPLUG += memory-hotplug
- 
-+# User can optionally provide a TARGETS skiplist.
-+SKIP_TARGETS ?=
-+ifneq ($(SKIP_TARGETS),)
-+	TMP := $(filter-out $(SKIP_TARGETS), $(TARGETS))
-+	override TARGETS := $(TMP)
-+endif
-+
- # Clear LDFLAGS and MAKEFLAGS if called from main
- # Makefile to avoid test build failures when test
- # Makefile doesn't have explicit build rules.
-@@ -171,9 +178,12 @@ run_pstore_crash:
- # 1. output_dir=kernel_src
- # 2. a separate output directory is specified using O= KBUILD_OUTPUT
- # 3. a separate output directory is specified using KBUILD_OUTPUT
-+# Avoid conflict with INSTALL_PATH set by the main Makefile
- #
--INSTALL_PATH ?= $(BUILD)/install
--INSTALL_PATH := $(abspath $(INSTALL_PATH))
-+KSFT_INSTALL_PATH ?= $(BUILD)/kselftest_install
-+KSFT_INSTALL_PATH := $(abspath $(KSFT_INSTALL_PATH))
-+# Avoid changing the rest of the logic here and lib.mk.
-+INSTALL_PATH := $(KSFT_INSTALL_PATH)
- ALL_SCRIPT := $(INSTALL_PATH)/run_kselftest.sh
- 
- install: all
-@@ -198,11 +208,16 @@ ifdef INSTALL_PATH
- 	echo "  cat /dev/null > \$$logfile" >> $(ALL_SCRIPT)
- 	echo "fi" >> $(ALL_SCRIPT)
- 
-+	@# While building run_kselftest.sh skip also non-existent TARGET dirs:
-+	@# they could be the result of a build failure and should NOT be
-+	@# included in the generated runlist.
- 	for TARGET in $(TARGETS); do \
- 		BUILD_TARGET=$$BUILD/$$TARGET;	\
-+		[ ! -d $$INSTALL_PATH/$$TARGET ] && echo "Skipping non-existent dir: $$TARGET" && continue; \
- 		echo "[ -w /dev/kmsg ] && echo \"kselftest: Running tests in $$TARGET\" >> /dev/kmsg" >> $(ALL_SCRIPT); \
- 		echo "cd $$TARGET" >> $(ALL_SCRIPT); \
- 		echo -n "run_many" >> $(ALL_SCRIPT); \
-+		echo -n "Emit Tests for $$TARGET\n"; \
- 		$(MAKE) -s --no-print-directory OUTPUT=$$BUILD_TARGET -C $$TARGET emit_tests >> $(ALL_SCRIPT); \
- 		echo "" >> $(ALL_SCRIPT);	    \
- 		echo "cd \$$ROOT" >> $(ALL_SCRIPT); \
-diff --git a/tools/testing/selftests/kselftest/runner.sh b/tools/testing/selftests/kselftest/runner.sh
-index 00c9020bdda8..84de7bc74f2c 100644
---- a/tools/testing/selftests/kselftest/runner.sh
-+++ b/tools/testing/selftests/kselftest/runner.sh
-@@ -3,9 +3,14 @@
- #
- # Runs a set of tests in a given subdirectory.
- export skip_rc=4
-+export timeout_rc=124
- export logfile=/dev/stdout
- export per_test_logging=
- 
-+# Defaults for "settings" file fields:
-+# "timeout" how many seconds to let each test run before failing.
-+export kselftest_default_timeout=45
-+
- # There isn't a shell-agnostic way to find the path of a sourced file,
- # so we must rely on BASE_DIR being set to find other tools.
- if [ -z "$BASE_DIR" ]; then
-@@ -24,6 +29,16 @@ tap_prefix()
- 	fi
- }
- 
-+tap_timeout()
-+{
-+	# Make sure tests will time out if utility is available.
-+	if [ -x /usr/bin/timeout ] ; then
-+		/usr/bin/timeout "$kselftest_timeout" "$1"
-+	else
-+		"$1"
-+	fi
-+}
-+
- run_one()
- {
- 	DIR="$1"
-@@ -32,6 +47,18 @@ run_one()
- 
- 	BASENAME_TEST=$(basename $TEST)
- 
-+	# Reset any "settings"-file variables.
-+	export kselftest_timeout="$kselftest_default_timeout"
-+	# Load per-test-directory kselftest "settings" file.
-+	settings="$BASE_DIR/$DIR/settings"
-+	if [ -r "$settings" ] ; then
-+		while read line ; do
-+			field=$(echo "$line" | cut -d= -f1)
-+			value=$(echo "$line" | cut -d= -f2-)
-+			eval "kselftest_$field"="$value"
-+		done < "$settings"
-+	fi
-+
- 	TEST_HDR_MSG="selftests: $DIR: $BASENAME_TEST"
- 	echo "# $TEST_HDR_MSG"
- 	if [ ! -x "$TEST" ]; then
-@@ -44,14 +71,17 @@ run_one()
- 		echo "not ok $test_num $TEST_HDR_MSG"
- 	else
- 		cd `dirname $TEST` > /dev/null
--		(((((./$BASENAME_TEST 2>&1; echo $? >&3) |
-+		((((( tap_timeout ./$BASENAME_TEST 2>&1; echo $? >&3) |
- 			tap_prefix >&4) 3>&1) |
- 			(read xs; exit $xs)) 4>>"$logfile" &&
- 		echo "ok $test_num $TEST_HDR_MSG") ||
--		(if [ $? -eq $skip_rc ]; then	\
-+		(rc=$?;	\
-+		if [ $rc -eq $skip_rc ]; then	\
- 			echo "not ok $test_num $TEST_HDR_MSG # SKIP"
-+		elif [ $rc -eq $timeout_rc ]; then \
-+			echo "not ok $test_num $TEST_HDR_MSG # TIMEOUT"
- 		else
--			echo "not ok $test_num $TEST_HDR_MSG"
-+			echo "not ok $test_num $TEST_HDR_MSG # exit=$rc"
- 		fi)
- 		cd - >/dev/null
- 	fi
-diff --git a/tools/testing/selftests/kselftest_install.sh b/tools/testing/selftests/kselftest_install.sh
-index ec304463883c..e2e1911d62d5 100755
---- a/tools/testing/selftests/kselftest_install.sh
-+++ b/tools/testing/selftests/kselftest_install.sh
-@@ -24,12 +24,12 @@ main()
- 		echo "$0: Installing in specified location - $install_loc ..."
- 	fi
- 
--	install_dir=$install_loc/kselftest
-+	install_dir=$install_loc/kselftest_install
- 
- # Create install directory
- 	mkdir -p $install_dir
- # Build tests
--	INSTALL_PATH=$install_dir make install
-+	KSFT_INSTALL_PATH=$install_dir make install
- }
- 
- main "$@"
-diff --git a/tools/testing/selftests/rtc/settings b/tools/testing/selftests/rtc/settings
-new file mode 100644
-index 000000000000..ba4d85f74cd6
---- /dev/null
-+++ b/tools/testing/selftests/rtc/settings
-@@ -0,0 +1 @@
-+timeout=90
-diff --git a/tools/testing/selftests/watchdog/watchdog-test.c b/tools/testing/selftests/watchdog/watchdog-test.c
-index afff120c7be6..f45e510500c0 100644
---- a/tools/testing/selftests/watchdog/watchdog-test.c
-+++ b/tools/testing/selftests/watchdog/watchdog-test.c
-@@ -19,7 +19,7 @@
- 
- int fd;
- const char v = 'V';
--static const char sopts[] = "bdehp:t:Tn:NLf:";
-+static const char sopts[] = "bdehp:t:Tn:NLf:i";
- static const struct option lopts[] = {
- 	{"bootstatus",          no_argument, NULL, 'b'},
- 	{"disable",             no_argument, NULL, 'd'},
-@@ -32,6 +32,7 @@ static const struct option lopts[] = {
- 	{"getpretimeout",       no_argument, NULL, 'N'},
- 	{"gettimeleft",		no_argument, NULL, 'L'},
- 	{"file",          required_argument, NULL, 'f'},
-+	{"info",		no_argument, NULL, 'i'},
- 	{NULL,                  no_argument, NULL, 0x0}
- };
- 
-@@ -72,6 +73,7 @@ static void usage(char *progname)
- 	printf("Usage: %s [options]\n", progname);
- 	printf(" -f, --file\t\tOpen watchdog device file\n");
- 	printf("\t\t\tDefault is /dev/watchdog\n");
-+	printf(" -i, --info\t\tShow watchdog_info\n");
- 	printf(" -b, --bootstatus\tGet last boot status (Watchdog/POR)\n");
- 	printf(" -d, --disable\t\tTurn off the watchdog timer\n");
- 	printf(" -e, --enable\t\tTurn on the watchdog timer\n");
-@@ -97,6 +99,7 @@ int main(int argc, char *argv[])
- 	int c;
- 	int oneshot = 0;
- 	char *file = "/dev/watchdog";
-+	struct watchdog_info info;
- 
- 	setbuf(stdout, NULL);
- 
-@@ -118,6 +121,16 @@ int main(int argc, char *argv[])
- 		exit(-1);
- 	}
- 
-+	/*
-+	 * Validate that `file` is a watchdog device
-+	 */
-+	ret = ioctl(fd, WDIOC_GETSUPPORT, &info);
-+	if (ret) {
-+		printf("WDIOC_GETSUPPORT error '%s'\n", strerror(errno));
-+		close(fd);
-+		exit(ret);
-+	}
-+
- 	optind = 0;
- 
- 	while ((c = getopt_long(argc, argv, sopts, lopts, NULL)) != -1) {
-@@ -205,6 +218,18 @@ int main(int argc, char *argv[])
- 		case 'f':
- 			/* Handled above */
- 			break;
-+		case 'i':
-+			/*
-+			 * watchdog_info was obtained as part of file open
-+			 * validation. So we just show it here.
-+			 */
-+			oneshot = 1;
-+			printf("watchdog_info:\n");
-+			printf(" identity:\t\t%s\n", info.identity);
-+			printf(" firmware_version:\t%u\n",
-+			       info.firmware_version);
-+			printf(" options:\t\t%08x\n", info.options);
-+			break;
- 
- 		default:
- 			usage(argv[0]);
-
---------------A8F0D94AF098AD7E161F07AF--
+On Mon, Oct 7, 2019 at 1:50 PM Jann Horn <jannh@google.com> wrote:
+>
+> Hi!
+>
+> There is a use-after-free read in print_binder_transaction_log_entry()
+> on ANDROID_BINDERFS kernels because
+> print_binder_transaction_log_entry() prints the char* e->context_name
+> as string, and if the transaction occurred on a binder device from
+> binderfs, e->context_name belongs to the binder device and is freed
+> when the inode disappears.
+>
+> Luckily this shouldn't have security implications, since:
+>
+> a) reading the binder transaction log is already a pretty privileged oper=
+ation
+> b) I can't find any actual users of ANDROID_BINDERFS
+>
+> I guess there are three ways to fix it:
+> 1) Create a new shared global spinlock for binderfs_evict_inode() and
+> binder_transaction_log_show(), and let binderfs_evict_inode() scan the
+> transaction log for pointers to its name and replace them with
+> pointers to a statically-allocated string "{DELETED}" or something
+> like that.
+> 2) Let the transaction log contain non-reusable device identifiers
+> instead of name pointers, and let print_binder_transaction_log_entry()
+> look them up in something like a hashtable.
+> 3) Just copy the name into the transaction log every time.
+>
+> I'm not sure which one is better, or whether there's a nicer fourth
+> option, so I'm leaving writing a patch for this to y'all.
+>
+>
+> Trigger instructions (requires you to have some helpers that can
+> register a context manager and send some transaction to it):
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> root@test:/home/user# mkdir /tmp/binder
+> root@test:/home/user# mount -t binder -o stats=3Dglobal /dev/null /tmp/bi=
+nder
+> root@test:/home/user# ls -l /tmp/binder
+> total 0
+> crw------- 1 root root 248, 1 Oct  7 20:34 binder
+> crw------- 1 root root 248, 0 Oct  7 20:34 binder-control
+> drwxr-xr-x 3 root root      0 Oct  7 20:34 binder_logs
+> crw------- 1 root root 248, 2 Oct  7 20:34 hwbinder
+> crw------- 1 root root 248, 3 Oct  7 20:34 vndbinder
+> root@test:/home/user# ln -s /tmp/binder/binder /dev/binder
+> [run some simple binder demo code to temporarily register a context
+> manager and send a binder transaction]
+> root@test:/home/user# rm /tmp/binder/binder
+> root@test:/home/user# cat /tmp/binder/binder_logs/transaction_log
+> 2: call  from 2277:2277 to 2273:0 context @=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=
+=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD node 1 handle 0
+> size 24:8 ret 0/0 l=3D0
+> 5: call  from 2273:2273 to 2277:2277 context @=EF=BF=BD=EF=BF=BD=EF=BF=BD=
+=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD node 3 handle 1
+> size 0:0 ret 0/0 l=3D0
+> 6: reply from 2277:2277 to 2273:2273 context @=EF=BF=BD=EF=BF=BD=EF=BF=BD=
+=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD node 0 handle 0
+> size 4:0 ret 0/0 l=3D0
+> 7: reply from 2273:2273 to 2277:2277 context @=EF=BF=BD=EF=BF=BD=EF=BF=BD=
+=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD node 0 handle 0
+> size 4:0 ret 0/0 l=3D0
+> root@test:/home/user#
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> ASAN splat:
+> [  333.300753] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> [  333.303197] BUG: KASAN: use-after-free in string_nocheck+0x9d/0x160
+> [  333.305081] Read of size 1 at addr ffff8880b0981258 by task cat/2279
+>
+> [  333.307415] CPU: 1 PID: 2279 Comm: cat Not tainted 5.4.0-rc1+ #513
+> [  333.309304] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+> BIOS 1.12.0-1 04/01/2014
+> [  333.310987] Call Trace:
+> [  333.312032]  dump_stack+0x7c/0xc0
+> [  333.312581]  ? string_nocheck+0x9d/0x160
+> [  333.313157]  print_address_description.constprop.7+0x36/0x50
+> [  333.314030]  ? string_nocheck+0x9d/0x160
+> [  333.314603]  ? string_nocheck+0x9d/0x160
+> [  333.315236]  __kasan_report.cold.10+0x1a/0x35
+> [  333.315972]  ? string_nocheck+0x9d/0x160
+> [  333.316545]  kasan_report+0xe/0x20
+> [  333.317104]  string_nocheck+0x9d/0x160
+> [  333.317652]  ? widen_string+0x160/0x160
+> [  333.318270]  ? string_nocheck+0x160/0x160
+> [  333.318857]  ? unwind_get_return_address+0x2a/0x40
+> [  333.319636]  ? profile_setup.cold.9+0x96/0x96
+> [  333.320359]  string+0xb6/0xc0
+> [  333.320800]  ? hex_string+0x280/0x280
+> [  333.321398]  vsnprintf+0x20c/0x780
+> [  333.321898]  ? num_to_str+0x180/0x180
+> [  333.322503]  ? __kasan_kmalloc.constprop.6+0xc1/0xd0
+> [  333.323235]  ? vfs_read+0xbc/0x1e0
+> [  333.323814]  ? ksys_read+0xb5/0x150
+> [  333.324323]  ? do_syscall_64+0xb9/0x3b0
+> [  333.324948]  ? entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> [  333.325756]  seq_vprintf+0x78/0xb0
+> [  333.326253]  seq_printf+0x96/0xc0
+> [  333.327132]  ? seq_vprintf+0xb0/0xb0
+> [  333.327678]  ? match_held_lock+0x2e/0x240
+> [  333.328450]  binder_transaction_log_show+0x237/0x2d0
+> [  333.329163]  seq_read+0x266/0x690
+> [  333.329705]  vfs_read+0xbc/0x1e0
+> [  333.330178]  ksys_read+0xb5/0x150
+> [  333.330724]  ? kernel_write+0xb0/0xb0
+> [  333.331257]  ? trace_hardirqs_off_caller+0x57/0x130
+> [  333.332045]  ? mark_held_locks+0x29/0xa0
+> [  333.332678]  ? do_syscall_64+0x6b/0x3b0
+> [  333.333235]  do_syscall_64+0xb9/0x3b0
+> [  333.333856]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> [  333.334635] RIP: 0033:0x7fbbb95d4461
+> [  333.335153] Code: fe ff ff 50 48 8d 3d fe d0 09 00 e8 e9 03 02 00
+> 66 0f 1f 84 00 00 00 00 00 48 8d 05 99 62 0d 00 8b 00 85 c0 75 13 31
+> c0 0f 05 <48> 3d 00 f0 ff ff 77 57 c3 66 0f 1f 44 00 00 41 54 49 89 d4
+> 55 48
+> [  333.337950] RSP: 002b:00007ffcbe6438e8 EFLAGS: 00000246 ORIG_RAX:
+> 0000000000000000
+> [  333.339072] RAX: ffffffffffffffda RBX: 0000000000020000 RCX: 00007fbbb=
+95d4461
+> [  333.340157] RDX: 0000000000020000 RSI: 00007fbbb9324000 RDI: 000000000=
+0000003
+> [  333.341320] RBP: 00007fbbb9324000 R08: 00000000ffffffff R09: 000000000=
+0000000
+> [  333.342454] R10: fffffffffffffb9c R11: 0000000000000246 R12: 00007fbbb=
+9324000
+> [  333.343550] R13: 0000000000000003 R14: 0000000000000fff R15: 000000000=
+0020000
+>
+> [  333.344845] Allocated by task 2259:
+> [  333.345416]  save_stack+0x19/0x80
+> [  333.345899]  __kasan_kmalloc.constprop.6+0xc1/0xd0
+> [  333.346636]  __kmalloc_track_caller+0xf4/0x2e0
+> [  333.347271]  kmemdup+0x17/0x40
+> [  333.347796]  binderfs_binder_device_create.isra.6+0x217/0x530
+> [  333.348674]  binderfs_fill_super+0x486/0x81e
+> [  333.349309]  mount_nodev+0x41/0xb0
+> [  333.349860]  legacy_get_tree+0x7b/0xc0
+> [  333.350398]  vfs_get_tree+0x40/0x130
+> [  333.350970]  do_mount+0xacb/0xea0
+> [  333.351449]  ksys_mount+0xb1/0xd0
+> [  333.352007]  __x64_sys_mount+0x5d/0x70
+> [  333.352545]  do_syscall_64+0xb9/0x3b0
+> [  333.353144]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>
+> [  333.354144] Freed by task 2278:
+> [  333.354598]  save_stack+0x19/0x80
+> [  333.355135]  __kasan_slab_free+0x12e/0x180
+> [  333.355734]  kfree+0xe6/0x310
+> [  333.356234]  binderfs_evict_inode+0xb8/0xd0
+> [  333.356831]  evict+0x16f/0x290
+> [  333.358081]  do_unlinkat+0x2f6/0x420
+> [  333.358593]  do_syscall_64+0xb9/0x3b0
+> [  333.359176]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>
+> [  333.360196] The buggy address belongs to the object at ffff8880b098125=
+8
+>                 which belongs to the cache kmalloc-8 of size 8
+> [  333.361991] The buggy address is located 0 bytes inside of
+>                 8-byte region [ffff8880b0981258, ffff8880b0981260)
+> [  333.363796] The buggy address belongs to the page:
+> [  333.364538] page:ffffea0002c26040 refcount:1 mapcount:0
+> mapping:ffff8880b6c03c80 index:0x0
+> [  333.365765] flags: 0x1fffc0000000200(slab)
+> [  333.366402] raw: 01fffc0000000200 ffffea0002cb1d80 0000001400000014
+> ffff8880b6c03c80
+> [  333.367546] raw: 0000000000000000 0000000000aa00aa 00000001ffffffff
+> 0000000000000000
+> [  333.369030] page dumped because: kasan: bad access detected
+>
+> [  333.370095] Memory state around the buggy address:
+> [  333.370824]  ffff8880b0981100: fc fb fc fc fb fc fc fb fc fc fb fc
+> fc fb fc fc
+> [  333.371907]  ffff8880b0981180: fb fc fc fb fc fc fb fc fc fb fc fc
+> fb fc fc fb
+> [  333.372969] >ffff8880b0981200: fc fc fb fc fc fb fc fc fb fc fc fb
+> fc fc fb fc
+> [  333.374033]                                                     ^
+> [  333.374884]  ffff8880b0981280: fc fb fc fc fb fc fc fb fc fc fb fc
+> fc fb fc fc
+> [  333.375957]  ffff8880b0981300: fb fc fc fb fc fc fb fc fc fb fc fc
+> fb fc fc fb
+> [  333.377013] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
