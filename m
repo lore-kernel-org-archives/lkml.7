@@ -2,108 +2,165 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECDEECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCDE1C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0DB2206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 978FC205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:08:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="i1yGJLhi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728592AbfJGQHj (ORCPT
+        id S1728650AbfJGQIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 12:07:39 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41102 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727711AbfJGQHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 12:07:39 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 92F211895A40;
-        Mon,  7 Oct 2019 16:07:38 +0000 (UTC)
-Received: from gondolin (ovpn-116-231.ams2.redhat.com [10.36.116.231])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DDC9B6012A;
-        Mon,  7 Oct 2019 16:07:35 +0000 (UTC)
-Date:   Mon, 7 Oct 2019 18:07:32 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>
-Subject: Re: [PATCH v2 1/1] s390/cio: fix virtio-ccw DMA without PV
-Message-ID: <20191007180732.7a38ff0b.cohuck@redhat.com>
-In-Reply-To: <20190930153803.7958-1-pasic@linux.ibm.com>
-References: <20190930153803.7958-1-pasic@linux.ibm.com>
-Organization: Red Hat GmbH
+        Mon, 7 Oct 2019 12:08:25 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:32989 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727711AbfJGQIZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 12:08:25 -0400
+Received: by mail-io1-f67.google.com with SMTP id z19so29916643ior.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 09:08:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=OYnf5Eb8n9ykt/uD7msDqCGImCXIjmz3mqehpAtin5w=;
+        b=i1yGJLhiLyuMdojyTXTTab15PI1V480jrKDuDZL9zx2s46oSYkji95PIveIRZxXRvm
+         JNOhyzE2x/SaKj9y0VqFm6ds+W6txWfFoYz9wBw8d9f6eo+OMEVxNl+gjjtZx++LvFOW
+         ay1YMXKcJNTrjhrGkSxiqABUUzgTRSjIRsjNo2IQ89+kqwHJY4jnuCbOWXy4TQ30nrCx
+         wZekK7T5a/L9b9D8dNZIYOEwEpXZgOAuzr5uQtmWYwCQfyv57dWxGD/D1WAbIPsgP3NZ
+         pDemS16N8xJPf/hJUlo9oCOl8ouutkgwl2UU/YSeHP9u0VX3rVC1AXDqSyyaMnCtyd4a
+         tywA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=OYnf5Eb8n9ykt/uD7msDqCGImCXIjmz3mqehpAtin5w=;
+        b=jGBTsGKWE8+F/EUlfE9zNzf1fiBsdVtO2rPbyvnDR+3fsgF9+NRSS4hRbIMcKrcM4s
+         PJMRZFwIEeNhwCAY+p6+zrkY1gUynZZTdfZSDuC0uYXnpvxSWQShnfvp0GuXrRu/JY9h
+         b6YThYLXSBYLdEYD9Q5/B5Cm9A3tvBN1izQP2jwOVQJr0vSZ+Ai86DPIFPF0xXdOnTq0
+         eHbLFDyVQdiuyqZ6bsMlUg/egOPzoQ09csmsm9jIIADfRpeYc9bbDz/2983B/mYfbi1v
+         Jsxfef6nJ7IKdsLZSa/zdod5e0etX9hTV0K0wv2dCMqOTxU+WxE9ST+MawKB76jXvpfW
+         Fg8w==
+X-Gm-Message-State: APjAAAXjr5PruQxCYmUUsUmSWLUmV5DQVzEGTOL+Yvub24Fw93mbTNxr
+        uPFwa2q4iZpU7e/nGkqkb3G2IA==
+X-Google-Smtp-Source: APXvYqysgSod7rlGeElbwsjIxKd06AgfXKGvqpl8gz5zmmcjW+EOSfeoq40wCwPIGBZVOvP4zx3kAg==
+X-Received: by 2002:a02:c654:: with SMTP id k20mr27301575jan.96.1570464504223;
+        Mon, 07 Oct 2019 09:08:24 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id k66sm6121262iof.25.2019.10.07.09.08.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2019 09:08:23 -0700 (PDT)
+Date:   Mon, 7 Oct 2019 09:08:23 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Vincent Chen <vincent.chen@sifive.com>
+cc:     Christoph Hellwig <hch@infradead.org>,
+        linux-riscv@lists.infradead.org, palmer@sifive.com,
+        linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu
+Subject: Re: [PATCH 4/4] riscv: remove the switch statement in
+ do_trap_break()
+In-Reply-To: <20190927224711.GI4700@infradead.org>
+Message-ID: <alpine.DEB.2.21.9999.1910070906570.10936@viisi.sifive.com>
+References: <1569199517-5884-1-git-send-email-vincent.chen@sifive.com> <1569199517-5884-5-git-send-email-vincent.chen@sifive.com> <20190927224711.GI4700@infradead.org>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Mon, 07 Oct 2019 16:07:38 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 30 Sep 2019 17:38:02 +0200
-Halil Pasic <pasic@linux.ibm.com> wrote:
+Vincent,
 
-> Commit 37db8985b211 ("s390/cio: add basic protected virtualization
-> support") breaks virtio-ccw devices with VIRTIO_F_IOMMU_PLATFORM for non
-> Protected Virtualization (PV) guests. The problem is that the dma_mask
+On Fri, 27 Sep 2019, Christoph Hellwig wrote:
 
-Hm, I should probably add that to my test configs.
+> On Mon, Sep 23, 2019 at 08:45:17AM +0800, Vincent Chen wrote:
+> > To make the code more straightforward, replacing the switch statement
+> > with if statement.
+> > 
+> > Suggested-by: Paul Walmsley <paul.walmsley@sifive.com>
+> > Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
 
-> of the ccw device, which is used by virtio core, gets changed from 64 to
-> 31 bit, because some of the DMA allocations do require 31 bit
-> addressable memory. For PV the only drawback is that some of the virtio
-> structures must end up in ZONE_DMA because we have the bounce the
-> buffers mapped via DMA API anyway.
-> 
-> But for non PV guests we have a problem: because of the 31 bit mask
-> guests bigger than 2G are likely to try bouncing buffers. The swiotlb
-> however is only initialized for PV guests, because we don't want to
-> bounce anything for non PV guests. The first such map kills the guest.
-> 
-> Since the DMA API won't allow us to specify for each allocation whether
-> we need memory from ZONE_DMA (31 bit addressable) or any DMA capable
-> memory will do, let us use coherent_dma_mask (which is used for
-> allocations) to force allocating form ZONE_DMA while changing dma_mask
-> to DMA_BIT_MASK(64) so that at least the streaming API will regard
-> the whole memory DMA capable.
-> 
-> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
-> Reported-by: Marc Hartmayer <mhartmay@linux.ibm.com>
-> Suggested-by: Robin Murphy <robin.murphy@arm.com>
-> Fixes: 37db8985b211 ("s390/cio: add basic protected virtualization support")
-> ---
-> 
-> v1 --> v2:
-> * Fixed comment: dropped the sentence with workaround.
-> 
-> The idea of enabling the client code to specify on s390 whether a chunk
-> of allocated DMA memory is to be allocated form ZONE_DMA for each
-> allocation was not well received [1]. 
-> 
-> Making the streaming API threat all addresses as DMA capable, while
-> restricting the DMA API allocations to  ZONE_DMA (regardless of needed
-> or not) is the next best thing we can do (from s390 perspective).
-> 
-> [1] https://lkml.org/lkml/2019/9/23/531 
-> ---
-> ---
->  drivers/s390/cio/cio.h    | 1 +
->  drivers/s390/cio/css.c    | 7 ++++++-
->  drivers/s390/cio/device.c | 2 +-
->  3 files changed, 8 insertions(+), 2 deletions(-)
+...
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+> I like where this is going, but I think this can be improved further
+> given that fact that report_bug has a nice stub for the
+> !CONFIG_GENERIC_BUG case.
+> 
+> How about:
+> 
+> 	if (user_mode(regs))
+> 		force_sig_fault(SIGTRAP, TRAP_BRKPT, (void __user *)regs->sepc);
+> 	else if (report_bug(regs->sepc, regs) == BUG_TRAP_TYPE_WARN)
+> 		regs->sepc += get_break_insn_length(regs->sepc);
+> 	else
+> 		die(regs, "Kernel BUG");
+> 
+
+Christoph's suggestion looks good to me.  What do you think about this 
+modification to your patch?
+
+- Paul
+
+
+From: Vincent Chen <vincent.chen@sifive.com>
+Date: Mon, 23 Sep 2019 08:45:17 +0800
+Subject: [PATCH] riscv: remove the switch statement in do_trap_break()
+
+To make the code more straightforward, replace the switch statement
+with an if statement.
+
+Suggested-by: Paul Walmsley <paul.walmsley@sifive.com>
+Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
+[paul.walmsley@sifive.com: removed CONFIG_GENERIC_BUG tests per
+ Christoph's suggestion; cleaned up patch description]
+Cc: Christoph Hellwig <hch@lst.de>
+Link: https://lore.kernel.org/linux-riscv/20190927224711.GI4700@infradead.org/
+Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+---
+ arch/riscv/kernel/traps.c | 21 +++++----------------
+ 1 file changed, 5 insertions(+), 16 deletions(-)
+
+diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
+index 93742df9067f..45b82be00714 100644
+--- a/arch/riscv/kernel/traps.c
++++ b/arch/riscv/kernel/traps.c
+@@ -124,24 +124,13 @@ static inline unsigned long get_break_insn_length(unsigned long pc)
+ 
+ asmlinkage void do_trap_break(struct pt_regs *regs)
+ {
+-	if (!user_mode(regs)) {
+-		enum bug_trap_type type;
+-
+-		type = report_bug(regs->sepc, regs);
+-		switch (type) {
+-#ifdef CONFIG_GENERIC_BUG
+-		case BUG_TRAP_TYPE_WARN:
+-			regs->sepc += get_break_insn_length(regs->sepc);
+-			return;
+-		case BUG_TRAP_TYPE_BUG:
+-#endif /* CONFIG_GENERIC_BUG */
+-		default:
+-			die(regs, "Kernel BUG");
+-		}
+-	} else {
++	if (user_mode(regs))
+ 		force_sig_fault(SIGTRAP, TRAP_BRKPT,
+ 				(void __user *)(regs->sepc));
+-	}
++	else if (report_bug(regs->sepc, regs) == BUG_TRAP_TYPE_WARN)
++		regs->sepc += get_break_insn_length(regs->sepc);
++	else
++		die(regs, "Kernel BUG");
+ }
+ 
+ #ifdef CONFIG_GENERIC_BUG
+-- 
+2.23.0
+
