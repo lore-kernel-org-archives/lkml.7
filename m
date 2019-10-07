@@ -2,104 +2,295 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6312FECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37463C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3544C21655
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:39:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Eo44T3ue"
+	by mail.kernel.org (Postfix) with ESMTP id 0EA0920700
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:39:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729226AbfJGPjg (ORCPT
+        id S1729252AbfJGPjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 11:39:36 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:39769 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729199AbfJGPje (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:39:34 -0400
-Received: by mail-pg1-f194.google.com with SMTP id e1so8443831pgj.6
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 08:39:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=aqxBeTv+Uaor0p8Sdaehy27crOZap/vMuOdocajh3K8=;
-        b=Eo44T3ue9PTyK90zuRJpURaKwjZEippo0XCcpL1sQTu3b1SYC11r0oG760/AMone7/
-         oxxU5fvuJmJkaGMzctM59CMsVLzNd4+bj0Mzrbk2Od7v8bD70h+Oh+6hiipr411VftEC
-         otDSZD7sKX3dtf9n1t2MFjO5mgkWp6Sy5roRv0+oJkJ3eYFZFqeCQYRpCW1ik6E60ERo
-         3If7rHRQ9V6/H4YVOofEu5Tm/4LA1NSZ3SbzL3XeS8RBAkVf5y1fejGv52F2Z9Dkvf3C
-         mNGExhBVcDTxPQxsS+49oK+vxFenxEAOGJX476kAHo6Gu1PoesP+rukD6pXkstRuzzy2
-         u3Lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=aqxBeTv+Uaor0p8Sdaehy27crOZap/vMuOdocajh3K8=;
-        b=R1vsidcpRA/at8oorf83CaJPswIdSzLbxNlWaXkwKKQWti6cR0d03PqtKFEjarlygi
-         AGfHhgJGYzbxXl0ovWK1ldN/maSH81v9ZzZqE1RX+NAjxr6zNzLyxBraqdQ/pKehrE31
-         lXs+HhP5GsyCzv3zku/dEO/95kTm/LLz5PBw1Al+zo9oufpi4x/Homk3QisEP3KN0JCP
-         UKGBR4/5uqnpmYsTPNkTCDY4pgw8pNMjmZdVmRipilCCV0dFBQGb92IpBHb5pwkJq4SF
-         Zg5IhrtYudfNc1bSwyTUrNslY+oPqRcMyxu0qSHlF8uIGnS9q6wU9OG/FJekaInzyb9h
-         k4xQ==
-X-Gm-Message-State: APjAAAX+zGytb2Q8WsdAjbd8nJvquLkUcUjRHkaX77ZfdlaPgkApLdoj
-        o/KFuT5EDcr4BbKu4mIhy/Ya
-X-Google-Smtp-Source: APXvYqxp9EVNuIxWAF4JhI63OtaIYOBD0UTnkXJOxhywvLLiF23kdWSzZs3AK8N9xrT/wgs6bfQNFw==
-X-Received: by 2002:a63:350f:: with SMTP id c15mr31560380pga.225.1570462773734;
-        Mon, 07 Oct 2019 08:39:33 -0700 (PDT)
-Received: from localhost.localdomain ([2405:204:7088:cb7f:1889:38a3:2d:5880])
-        by smtp.gmail.com with ESMTPSA id d69sm15945077pfd.175.2019.10.07.08.39.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2019 08:39:32 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     ars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
-        knaack.h@gmx.de, pmeerw@pmeerw.net, robh+dt@kernel.org
-Cc:     alexandru.Ardelean@analog.com, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 0/2] Add support for ADUX1020 sensor
-Date:   Mon,  7 Oct 2019 21:09:15 +0530
-Message-Id: <20191007153917.13611-1-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Mon, 7 Oct 2019 11:39:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:38820 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729199AbfJGPjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 11:39:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F34261576;
+        Mon,  7 Oct 2019 08:39:36 -0700 (PDT)
+Received: from e112269-lin.arm.com (unknown [10.1.197.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6881D3F6C4;
+        Mon,  7 Oct 2019 08:39:34 -0700 (PDT)
+From:   Steven Price <steven.price@arm.com>
+To:     linux-mm@kvack.org
+Cc:     Steven Price <steven.price@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v11 19/22] mm: Add generic ptdump
+Date:   Mon,  7 Oct 2019 16:38:19 +0100
+Message-Id: <20191007153822.16518-20-steven.price@arm.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191007153822.16518-1-steven.price@arm.com>
+References: <20191007153822.16518-1-steven.price@arm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Add a generic version of page table dumping that architectures can
+opt-in to
 
-This patchset adds initial IIO driver support for ADUX1020 Photometric
-sensor from Analog Devices. This sensor is usable for multiple optical
-measurement applications, including gesture control and proximity sensing.
+Signed-off-by: Steven Price <steven.price@arm.com>
+---
+ include/linux/ptdump.h |  21 ++++++
+ mm/Kconfig.debug       |  21 ++++++
+ mm/Makefile            |   1 +
+ mm/ptdump.c            | 150 +++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 193 insertions(+)
+ create mode 100644 include/linux/ptdump.h
+ create mode 100644 mm/ptdump.c
 
-This initial driver includes support for only proximity mode with event
-based interrupt. The driver validation has been performed using Shiratech
-LTE mezzanine [1] connected to 96Boards Dragonboard410c [2].
-
-Thanks,
-Mani
-
-[1] https://www.96boards.org/product/shiratech-lte/
-[2] https://www.96boards.org/product/dragonboard410c/
-
-Changes in v2:
-
-* Converted the devicetree binding to YAML
-
-Manivannan Sadhasivam (2):
-  dt-bindings: iio: light: Add binding for ADUX1020
-  iio: light: Add support for ADUX1020 sensor
-
- .../bindings/iio/light/adux1020.yaml          |  47 ++
- drivers/iio/light/Kconfig                     |  11 +
- drivers/iio/light/Makefile                    |   1 +
- drivers/iio/light/adux1020.c                  | 783 ++++++++++++++++++
- 4 files changed, 842 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/light/adux1020.yaml
- create mode 100644 drivers/iio/light/adux1020.c
-
+diff --git a/include/linux/ptdump.h b/include/linux/ptdump.h
+new file mode 100644
+index 000000000000..a0fb8dd2be97
+--- /dev/null
++++ b/include/linux/ptdump.h
+@@ -0,0 +1,21 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++#ifndef _LINUX_PTDUMP_H
++#define _LINUX_PTDUMP_H
++
++#include <linux/mm_types.h>
++
++struct ptdump_range {
++	unsigned long start;
++	unsigned long end;
++};
++
++struct ptdump_state {
++	void (*note_page)(struct ptdump_state *st, unsigned long addr,
++			  int level, unsigned long val);
++	const struct ptdump_range *range;
++};
++
++void ptdump_walk_pgd(struct ptdump_state *st, struct mm_struct *mm);
++
++#endif /* _LINUX_PTDUMP_H */
+diff --git a/mm/Kconfig.debug b/mm/Kconfig.debug
+index 327b3ebf23bf..0271b22e063f 100644
+--- a/mm/Kconfig.debug
++++ b/mm/Kconfig.debug
+@@ -117,3 +117,24 @@ config DEBUG_RODATA_TEST
+     depends on STRICT_KERNEL_RWX
+     ---help---
+       This option enables a testcase for the setting rodata read-only.
++
++config GENERIC_PTDUMP
++	bool
++
++config PTDUMP_CORE
++	bool
++
++config PTDUMP_DEBUGFS
++	bool "Export kernel pagetable layout to userspace via debugfs"
++	depends on DEBUG_KERNEL
++	depends on DEBUG_FS
++	depends on GENERIC_PTDUMP
++	select PTDUMP_CORE
++	help
++	  Say Y here if you want to show the kernel pagetable layout in a
++	  debugfs file. This information is only useful for kernel developers
++	  who are working in architecture specific areas of the kernel.
++	  It is probably not a good idea to enable this feature in a production
++	  kernel.
++
++	  If in doubt, say N.
+diff --git a/mm/Makefile b/mm/Makefile
+index d996846697ef..6e962007f186 100644
+--- a/mm/Makefile
++++ b/mm/Makefile
+@@ -107,3 +107,4 @@ obj-$(CONFIG_PERCPU_STATS) += percpu-stats.o
+ obj-$(CONFIG_ZONE_DEVICE) += memremap.o
+ obj-$(CONFIG_HMM_MIRROR) += hmm.o
+ obj-$(CONFIG_MEMFD_CREATE) += memfd.o
++obj-$(CONFIG_PTDUMP_CORE) += ptdump.o
+diff --git a/mm/ptdump.c b/mm/ptdump.c
+new file mode 100644
+index 000000000000..5d349311e77e
+--- /dev/null
++++ b/mm/ptdump.c
+@@ -0,0 +1,150 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/pagewalk.h>
++#include <linux/ptdump.h>
++#include <linux/kasan.h>
++
++static int ptdump_pgd_entry(pgd_t *pgd, unsigned long addr,
++			    unsigned long next, struct mm_walk *walk)
++{
++	struct ptdump_state *st = walk->private;
++	pgd_t val = READ_ONCE(*pgd);
++
++	if (pgd_leaf(val))
++		st->note_page(st, addr, 1, pgd_val(val));
++
++	return 0;
++}
++
++static int ptdump_p4d_entry(p4d_t *p4d, unsigned long addr,
++			    unsigned long next, struct mm_walk *walk)
++{
++	struct ptdump_state *st = walk->private;
++	p4d_t val = READ_ONCE(*p4d);
++
++	if (p4d_leaf(val))
++		st->note_page(st, addr, 2, p4d_val(val));
++
++	return 0;
++}
++
++static int ptdump_pud_entry(pud_t *pud, unsigned long addr,
++			    unsigned long next, struct mm_walk *walk)
++{
++	struct ptdump_state *st = walk->private;
++	pud_t val = READ_ONCE(*pud);
++
++	if (pud_leaf(val))
++		st->note_page(st, addr, 3, pud_val(val));
++
++	return 0;
++}
++
++static int ptdump_pmd_entry(pmd_t *pmd, unsigned long addr,
++			    unsigned long next, struct mm_walk *walk)
++{
++	struct ptdump_state *st = walk->private;
++	pmd_t val = READ_ONCE(*pmd);
++
++	if (pmd_leaf(val))
++		st->note_page(st, addr, 4, pmd_val(val));
++
++	return 0;
++}
++
++static int ptdump_pte_entry(pte_t *pte, unsigned long addr,
++			    unsigned long next, struct mm_walk *walk)
++{
++	struct ptdump_state *st = walk->private;
++
++	st->note_page(st, addr, 5, pte_val(READ_ONCE(*pte)));
++
++	return 0;
++}
++
++#ifdef CONFIG_KASAN
++/*
++ * This is an optimization for KASAN=y case. Since all kasan page tables
++ * eventually point to the kasan_early_shadow_page we could call note_page()
++ * right away without walking through lower level page tables. This saves
++ * us dozens of seconds (minutes for 5-level config) while checking for
++ * W+X mapping or reading kernel_page_tables debugfs file.
++ */
++static inline int note_kasan_page_table(struct mm_walk *walk,
++					unsigned long addr)
++{
++	struct ptdump_state *st = walk->private;
++
++	st->note_page(st, addr, 5, pte_val(kasan_early_shadow_pte[0]));
++	return 1;
++}
++
++static int ptdump_test_p4d(unsigned long addr, unsigned long next,
++			   p4d_t *p4d, struct mm_walk *walk)
++{
++#if CONFIG_PGTABLE_LEVELS > 4
++	if (p4d == lm_alias(kasan_early_shadow_p4d))
++		return note_kasan_page_table(walk, addr);
++#endif
++	return 0;
++}
++
++static int ptdump_test_pud(unsigned long addr, unsigned long next,
++			   pud_t *pud, struct mm_walk *walk)
++{
++#if CONFIG_PGTABLE_LEVELS > 3
++	if (pud == lm_alias(kasan_early_shadow_pud))
++		return note_kasan_page_table(walk, addr);
++#endif
++	return 0;
++}
++
++static int ptdump_test_pmd(unsigned long addr, unsigned long next,
++			   pmd_t *pmd, struct mm_walk *walk)
++{
++#if CONFIG_PGTABLE_LEVELS > 2
++	if (pmd == lm_alias(kasan_early_shadow_pmd))
++		return note_kasan_page_table(walk, addr);
++#endif
++	return 0;
++}
++#endif /* CONFIG_KASAN */
++
++static int ptdump_hole(unsigned long addr, unsigned long next,
++		       int depth, struct mm_walk *walk)
++{
++	struct ptdump_state *st = walk->private;
++
++	st->note_page(st, addr, depth + 1, 0);
++
++	return 0;
++}
++
++const static struct mm_walk_ops ptdump_ops = {
++	.pgd_entry	= ptdump_pgd_entry,
++	.p4d_entry	= ptdump_p4d_entry,
++	.pud_entry	= ptdump_pud_entry,
++	.pmd_entry	= ptdump_pmd_entry,
++	.pte_entry	= ptdump_pte_entry,
++#ifdef CONFIG_KASAN
++	.test_p4d	= ptdump_test_p4d,
++	.test_pud	= ptdump_test_pud,
++	.test_pmd	= ptdump_test_pmd,
++#endif
++	.pte_hole	= ptdump_hole,
++};
++
++void ptdump_walk_pgd(struct ptdump_state *st, struct mm_struct *mm)
++{
++	const struct ptdump_range *range = st->range;
++
++	down_read(&mm->mmap_sem);
++	while (range->start != range->end) {
++		walk_page_range(mm, range->start, range->end, &ptdump_ops, st);
++		range++;
++	}
++	up_read(&mm->mmap_sem);
++
++	/* Flush out the last page */
++	st->note_page(st, 0, 0, 0);
++}
 -- 
-2.17.1
+2.20.1
 
