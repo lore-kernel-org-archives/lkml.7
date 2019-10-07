@@ -2,134 +2,457 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E14C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 23:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C48A7C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 23:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5578206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 23:17:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87CCA206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 23:17:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="scpxNy1B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bapJKVCy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729606AbfJGXQ4 (ORCPT
+        id S1729627AbfJGXRU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 19:16:56 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33646 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729145AbfJGXQ4 (ORCPT
+        Mon, 7 Oct 2019 19:17:20 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:46419 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729145AbfJGXRU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 19:16:56 -0400
-Received: by mail-pl1-f194.google.com with SMTP id d22so7610377pls.0;
-        Mon, 07 Oct 2019 16:16:55 -0700 (PDT)
+        Mon, 7 Oct 2019 19:17:20 -0400
+Received: by mail-qt1-f196.google.com with SMTP id u22so21869151qtq.13;
+        Mon, 07 Oct 2019 16:17:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=op2uXxkWXggW/ZiyKdiwR/8/LJor0lmgkGPfA3WISUs=;
-        b=scpxNy1BIS0qAUSncfTkj607cnZ6LuLh8Nks7V/5sq1PEC5kSh81aajFRMYZ+O2i0L
-         QzibK+XuvdvRm6iOFZtsT2WA9n4ERkZ5LZimUA8NaVmqSduy1aHvDY5+aPf7MpmGv/0Q
-         IHTsvqs7x9MZUg9WL8GHf9QPmn3LCv/brRY0s6lnYZrvL4dVruebQCp5czBNigAKMwsi
-         Uk9hIiklJmctm4YAw3NEA3l0fFhuZ3EUDZXep4YHjqLorZ157E7gClDTZCDcou0YzpN0
-         MiKU/aANJsfqgoJiIBERCoMr5eL7krRWJTiu5mUXl8mcpx/5aGM5RaPSjmvV1PeZdHxp
-         +dug==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IaS4SvPI45yDASGgPA0MR5GDu2HWprEyugIRxy5AF38=;
+        b=bapJKVCyKZa5vv5p1iRW9jWrpLSD/c7Eu6a6+nqTKYH0bCpbf4RnBNBlqdIqQE+BlB
+         K/eTb4F2CaqXRCT/YvVvRIBcSo05ODA76vJPJbAP7yHBD8ndPDX3ZRueZhrPE7skL80y
+         1Q3/cR/t1rxTamDhUswk0eUfVvZpVgVQpnGt7Iag5Ma/4ZJenVNr4Dq9o0/hVZskTTh2
+         HYJib4frOtydJ541j7nvYTgTgU7EQ8hP3JwqveSlN7xvmDJnrWzEKQ7PWZG98w0fBRET
+         1uIfGMSLNgceuAzgjsk2MuF9hB/NGkRykEqMGVXFjMe+Rmi4HwR286RCRhbV5n/buMZz
+         ZE3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=op2uXxkWXggW/ZiyKdiwR/8/LJor0lmgkGPfA3WISUs=;
-        b=a1as3TcO8c9zovD/tvnzesVEg2dMn9g4Z7tLeg7MHMmDrGzBarm4t864Xx4w4Y2ZgF
-         h3H/6f2iJy900vGiSxVCv3czMoh1gyMPYwnbRiu7cTydGmXS520xXlqAuc6lXvANqfoN
-         EV9Gd8VaxgYMeDLW9YuiDX4hiC1XPG80t01jmhm9F2G//3k6RlSTryN1/2g0JKl6Dbzm
-         WwxsayuFAg8WjtyGDTmKghg1vCALULCc5bL8YNHmOOexujwMqyzqSyE3XX2rIATsv9m6
-         l6GGhbQxQsnVC5wU62lNGgQUGAQwPR0eE4nhNf92PZXC7FxXQiEMMqtzLtaA8TmNKafj
-         BDIA==
-X-Gm-Message-State: APjAAAW/Jt5f2vkg/IPjnCuU/+C2wNuKNdH1ygJAwfI/O8KnDK8dqc0T
-        lK0/hj3CtaWS0QwE08209f4EmhoD
-X-Google-Smtp-Source: APXvYqzMSG5gHjV15d7idvNXEtNMQAOhGF/5QWwhkXjOSHb3HfcLstjfcotM+anbE56ApWd4N0UrvA==
-X-Received: by 2002:a17:902:8344:: with SMTP id z4mr32085723pln.330.1570490214984;
-        Mon, 07 Oct 2019 16:16:54 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id bb15sm438676pjb.2.2019.10.07.16.16.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 07 Oct 2019 16:16:53 -0700 (PDT)
-Subject: Re: [PATCH 4.4 00/36] 4.4.196-stable review
-To:     Sasha Levin <sashal@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20191006171038.266461022@linuxfoundation.org>
- <d3e1e6ae-8ca4-a43b-d30d-9a9a9a7e5752@roeck-us.net>
- <20191007144951.GB966828@kroah.com> <20191007230708.GA1396@sasha-vm>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <35f5fb99-6c35-9afd-1a4e-3fa7d4ba213a@roeck-us.net>
-Date:   Mon, 7 Oct 2019 16:16:51 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        bh=IaS4SvPI45yDASGgPA0MR5GDu2HWprEyugIRxy5AF38=;
+        b=rSAMRhTRKHp204l3L+jL5qH3S3xtbV9cICqU5HgfhAhlgaGAhf+IJ8CTW6TcyiKzpz
+         On5K2nl2/1kngo2aoS4dnVFtOaRqDI+gf3F35LvoRo38xgD+lRS41MbP9LhKjP8pI4wm
+         Q3KtUiqmFm/puySkv9Va/+R6e50XpZS70WzYZCiaLwS8Q4PK9Q7TZ+rXUa4tmvFcOwUn
+         KrI23d0b8/nFk21fj+omggYFV5/qXhHClmq0ptqipzjl5WTnVZN1IJLJLKey6zQ5je//
+         h/WfnQgnBV9QfkW96EOfCFNbqp1wvatU/34BOXTs4vTdadbP3GsDgB4Z/tO/tk+HeRPl
+         YCBQ==
+X-Gm-Message-State: APjAAAXit+41ii7WBzhK10ptdeNsu93/6P53GPjaPpruxjvVuCndx/CV
+        4O8BOu4DjEhoRyU4jxPAqP7gKdck30c=
+X-Google-Smtp-Source: APXvYqwJ9Oke9J3Qv6c7mH0vRKhzWS46GZMqlBpnaUGfJU8epLYqNkkToLRG1QLF4GaD+kzFDAM6Zw==
+X-Received: by 2002:a0c:acbb:: with SMTP id m56mr29779075qvc.93.1570490238466;
+        Mon, 07 Oct 2019 16:17:18 -0700 (PDT)
+Received: from localhost.localdomain (189-47-91-141.dsl.telesp.net.br. [189.47.91.141])
+        by smtp.gmail.com with ESMTPSA id w6sm7673780qkj.136.2019.10.07.16.17.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2019 16:17:15 -0700 (PDT)
+From:   =?UTF-8?q?Lucas=20A=2E=20M=2E=20Magalh=C3=A3es?= 
+        <lucmaga@gmail.com>
+To:     linux-media@vger.kernel.org
+Cc:     hverkuil@xs4all.nl, linux-kernel@vger.kernel.org,
+        helen.koike@collabora.com, edusbarretto@gmail.com,
+        lkcamp@lists.libreplanetbr.org,
+        "Lucas A . M . Magalhaes" <lucmaga@gmail.com>
+Subject: [PATCH v3] media: vimc: fla: Add virtual flash subdevice
+Date:   Mon,  7 Oct 2019 20:17:11 -0300
+Message-Id: <20191007231711.29902-1-lucmaga@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20191007230708.GA1396@sasha-vm>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/7/19 4:07 PM, Sasha Levin wrote:
-> On Mon, Oct 07, 2019 at 04:49:51PM +0200, Greg Kroah-Hartman wrote:
->> On Mon, Oct 07, 2019 at 05:53:55AM -0700, Guenter Roeck wrote:
->>> On 10/6/19 10:18 AM, Greg Kroah-Hartman wrote:
->>> > This is the start of the stable review cycle for the 4.4.196 release.
->>> > There are 36 patches in this series, all will be posted as a response
->>> > to this one.  If anyone has any issues with these being applied, please
->>> > let me know.
->>> >
->>> > Responses should be made by Tue 08 Oct 2019 05:07:10 PM UTC.
->>> > Anything received after that time might be too late.
->>> >
->>>
->>> powerpc:defconfig fails to build.
->>>
->>> arch/powerpc/kernel/eeh_driver.c: In function ‘eeh_handle_normal_event’:
->>> arch/powerpc/kernel/eeh_driver.c:678:2: error: implicit declaration of function ‘eeh_for_each_pe’; did you mean ‘bus_for_each_dev’?
->>>
->>> It has a point:
->>>
->>> ... HEAD is now at 13cac61d31df Linux 4.4.196-rc1
->>> $ git grep eeh_for_each_pe
->>> arch/powerpc/kernel/eeh_driver.c:       eeh_for_each_pe(pe, tmp_pe)
->>> arch/powerpc/kernel/eeh_driver.c:                               eeh_for_each_pe(pe, tmp_pe)
->>>
->>> Caused by commit 3fb431be8de3a ("powerpc/eeh: Clear stale EEH_DEV_NO_HANDLER flag").
->>> Full report will follow later.
->>
->> Thanks for letting me know, I've dropped this from the queue now and
->> pushed out a -rc2 with that removed.
->>
->> Sasha, I thought your builder would have caught stuff like this?
-> 
-> Interesting, the 4.4 build fails for me with vanilla 4.4 LTS kernel
-> (which is why this was missed):
-> 
->   AS      arch/powerpc/kernel/systbl.o
-> arch/powerpc/kernel/exceptions-64s.S: Assembler messages:
-> arch/powerpc/kernel/exceptions-64s.S:1599: Warning: invalid register expression
-> arch/powerpc/kernel/exceptions-64s.S:1640: Warning: invalid register expression
-> arch/powerpc/kernel/exceptions-64s.S:839: Error: attempt to move .org backwards
-> arch/powerpc/kernel/exceptions-64s.S:840: Error: attempt to move .org backwards
-> arch/powerpc/kernel/exceptions-64s.S:864: Error: attempt to move .org backwards
-> arch/powerpc/kernel/exceptions-64s.S:865: Error: attempt to move .org backwards
-> scripts/Makefile.build:375: recipe for target 'arch/powerpc/kernel/head_64.o' failed
-> 
+From: Lucas A. M. Magalhaes <lucmaga@gmail.com>
 
-Is this allmodconfig ? That is correct - it won't build in 4.4.y, and it would not be
-easy to fix.
+Add a virtual subdevice to simulate the flash control API.
+Those are the supported controls:
+v4l2-ctl -d /dev/v4l-subdev6 -L
+Flash Controls
 
-Guenter
+                       led_mode 0x009c0901 (menu)   : min=0 max=2 default=1 value=1
+                                0: Off
+                                1: Flash
+                                2: Torch
+                  strobe_source 0x009c0902 (menu)   : min=0 max=1 default=0 value=0
+                                0: Software
+                                1: External
+                         strobe 0x009c0903 (button) : flags=write-only, execute-on-write
+                    stop_strobe 0x009c0904 (button) : flags=write-only, execute-on-write
+                  strobe_status 0x009c0905 (bool)   : default=0 value=0 flags=read-only
+                 strobe_timeout 0x009c0906 (int)    : min=50 max=400 step=50 default=50 value=400
+           intensity_flash_mode 0x009c0907 (int)    : min=23040 max=1499600 step=11718 default=23040 value=23040
+           intensity_torch_mode 0x009c0908 (int)    : min=2530 max=187100 step=1460 default=2530 value=2530
+            intensity_indicator 0x009c0909 (int)    : min=0 max=255 step=1 default=0 value=0
+                         faults 0x009c090a (bitmask): max=0x00000002 default=0x00000000 value=0x00000000
+
+Co-authored-by: Eduardo Barretto <edusbarretto@gmail.com>
+Signed-off-by: Eduardo Barretto <edusbarretto@gmail.com>
+Signed-off-by: Lucas A. M. Magalhães <lucmaga@gmail.com>
+
+---
+Hi,
+
+I've copied some values from another driver (lm3646) to make it more
+realistic, as suggested by Hans. All values except for
+V4L2_CID_FLASH_INDICATOR_INTENSITY, which I couldn't find any
+implementation.
+
+The v4l-compliance is failing. From the documentation
+V4L2_CID_FLASH_STROBE should just work if the
+V4L2_CID_FLASH_STROBE_SOURCE is "Software" and the
+V4L2_CID_FLASH_LED_MODE is "Flash", otherwise it should fail. With the
+standard values configured for the V4L2_CID_FLASH_STROBE will not fail.
+But during the tests v4l-compliance sets V4L2_CID_FLASH_LED_MODE to
+"Torch" and V4L2_CID_FLASH_STROBE_SOURCE to "External" which makes
+V4L2_CID_FLASH_STROBE to fail. How do I proceed? Should the
+v4l-compliance be changed?
+
+Changes in v3:
+	- Fix style errors
+	- Use more realistic numbers for the controllers
+	- Change from kthread to workqueue
+	- Change commit message for the new controllers values
+
+Changes in v2:
+	- Fix v4l2-complience errors
+	- Add V4L2_CID_FLASH_STROBE_STATUS behavior
+	- Add V4L2_CID_FLASH_STROBE restrictions
+	- Remove vimc_fla_g_volatile_ctrl
+	- Remove unnecessarie V4L2_CID_FLASH_CLASS
+	- Change varables names
+
+ drivers/media/platform/vimc/Makefile      |   2 +-
+ drivers/media/platform/vimc/vimc-common.c |   2 +
+ drivers/media/platform/vimc/vimc-common.h |   4 +
+ drivers/media/platform/vimc/vimc-core.c   |   5 +
+ drivers/media/platform/vimc/vimc-flash.c  | 248 ++++++++++++++++++++++
+ 5 files changed, 260 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/media/platform/vimc/vimc-flash.c
+
+diff --git a/drivers/media/platform/vimc/Makefile b/drivers/media/platform/vimc/Makefile
+index a53b2b532e9f..e759bbb04b14 100644
+--- a/drivers/media/platform/vimc/Makefile
++++ b/drivers/media/platform/vimc/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ vimc-y := vimc-core.o vimc-common.o vimc-streamer.o vimc-capture.o \
+-		vimc-debayer.o vimc-scaler.o vimc-sensor.o
++		vimc-debayer.o vimc-scaler.o vimc-sensor.o vimc-flash.o
+ 
+ obj-$(CONFIG_VIDEO_VIMC) += vimc.o
+ 
+diff --git a/drivers/media/platform/vimc/vimc-common.c b/drivers/media/platform/vimc/vimc-common.c
+index a3120f4f7a90..cb786de75573 100644
+--- a/drivers/media/platform/vimc/vimc-common.c
++++ b/drivers/media/platform/vimc/vimc-common.c
+@@ -203,6 +203,8 @@ struct media_pad *vimc_pads_init(u16 num_pads, const unsigned long *pads_flag)
+ 	struct media_pad *pads;
+ 	unsigned int i;
+ 
++	if (!num_pads)
++		return NULL;
+ 	/* Allocate memory for the pads */
+ 	pads = kcalloc(num_pads, sizeof(*pads), GFP_KERNEL);
+ 	if (!pads)
+diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/platform/vimc/vimc-common.h
+index 698db7c07645..19815f0f4d40 100644
+--- a/drivers/media/platform/vimc/vimc-common.h
++++ b/drivers/media/platform/vimc/vimc-common.h
+@@ -169,6 +169,10 @@ struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
+ 				     const char *vcfg_name);
+ void vimc_sen_rm(struct vimc_device *vimc, struct vimc_ent_device *ved);
+ 
++struct vimc_ent_device *vimc_fla_add(struct vimc_device *vimc,
++				     const char *vcfg_name);
++void vimc_fla_rm(struct vimc_device *vimc, struct vimc_ent_device *ved);
++
+ /**
+  * vimc_pads_init - initialize pads
+  *
+diff --git a/drivers/media/platform/vimc/vimc-core.c b/drivers/media/platform/vimc/vimc-core.c
+index 6e3e5c91ae39..5f6c750d3d8d 100644
+--- a/drivers/media/platform/vimc/vimc-core.c
++++ b/drivers/media/platform/vimc/vimc-core.c
+@@ -91,6 +91,11 @@ static struct vimc_ent_config ent_config[] = {
+ 		.add = vimc_cap_add,
+ 		.rm = vimc_cap_rm,
+ 	},
++	{
++		.name = "Flash Controller",
++		.add = vimc_fla_add,
++		.rm = vimc_fla_rm,
++	}
+ };
+ 
+ static const struct vimc_ent_link ent_links[] = {
+diff --git a/drivers/media/platform/vimc/vimc-flash.c b/drivers/media/platform/vimc/vimc-flash.c
+new file mode 100644
+index 000000000000..3918beecec57
+--- /dev/null
++++ b/drivers/media/platform/vimc/vimc-flash.c
+@@ -0,0 +1,248 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * vimc-flash.c Virtual Media Controller Driver
++ *
++ * Copyright (C) 2019
++ * Contributors: Lucas A. M. Magalhães <lamm@lucmaga.dev>
++ *               Eduardo Barretto <edusbarretto@gmail.com>
++ *
++ */
++
++#include <linux/delay.h>
++#include <linux/workqueue.h>
++#include <linux/sched.h>
++#include <linux/vmalloc.h>
++#include <media/v4l2-ctrls.h>
++#include <media/v4l2-event.h>
++#include <media/v4l2-subdev.h>
++
++#include "vimc-common.h"
++
++/*
++ * Flash timeout in ms
++ */
++#define VIMC_FLASH_TIMEOUT_MS_MIN 50
++#define VIMC_FLASH_TIMEOUT_MS_MAX 400
++#define VIMC_FLASH_TIMEOUT_MS_STEP 50
++
++/*
++ * Torch intencity in uA
++ */
++#define VIMC_FLASH_TORCH_UA_MIN 2530
++#define VIMC_FLASH_TORCH_UA_MAX 187100
++#define VIMC_FLASH_TORCH_UA_STEP 1460
++
++/*
++ * Flash intencity in uA
++ */
++#define VIMC_FLASH_FLASH_UA_MIN 23040
++#define VIMC_FLASH_FLASH_UA_MAX 1499600
++#define VIMC_FLASH_FLASH_UA_STEP 11718
++
++struct vimc_fla_device {
++	struct vimc_ent_device ved;
++	struct v4l2_subdev sd;
++	struct v4l2_ctrl_handler hdl;
++	int strobe_source;
++	bool is_strobe;
++	int led_mode;
++	int indicator_intensity;
++	int torch_intensity;
++	int flash_intensity;
++	u64 timeout;
++	u64 last_strobe;
++	struct workqueue_struct *wq;
++	struct work_struct work;
++	struct v4l2_ctrl *strobe_status_ctl;
++};
++
++static void vimc_fla_strobe_work(struct work_struct *work)
++{
++	struct vimc_fla_device *vfla =
++		container_of(work, struct vimc_fla_device, work);
++	v4l2_ctrl_s_ctrl(vfla->strobe_status_ctl, true);
++	vfla->last_strobe = ktime_get_ns();
++	while (vfla->is_strobe &&
++	       vfla->last_strobe + vfla->timeout > ktime_get_ns()) {
++		msleep_interruptible(VIMC_FLASH_TIMEOUT_MS_STEP);
++	}
++	v4l2_ctrl_s_ctrl(vfla->strobe_status_ctl, false);
++}
++
++static int vimc_fla_s_ctrl(struct v4l2_ctrl *c)
++{
++	struct vimc_fla_device *vfla =
++		container_of(c->handler, struct vimc_fla_device, hdl);
++
++	switch (c->id) {
++	case V4L2_CID_FLASH_LED_MODE:
++		vfla->led_mode = c->val;
++		return 0;
++	case V4L2_CID_FLASH_STROBE_SOURCE:
++		vfla->strobe_source = c->val;
++		return 0;
++	case V4L2_CID_FLASH_STROBE:
++		if (vfla->led_mode != V4L2_FLASH_LED_MODE_FLASH ||
++		    vfla->strobe_source != V4L2_FLASH_STROBE_SOURCE_SOFTWARE){
++			return -EINVAL;
++		}
++		queue_work(vfla->wq, &vfla->work);
++		return 0;
++	case V4L2_CID_FLASH_STROBE_STATUS:
++		vfla->is_strobe = c->val;
++		return 0;
++	case V4L2_CID_FLASH_STROBE_STOP:
++		vfla->is_strobe = false;
++		return 0;
++	case V4L2_CID_FLASH_TIMEOUT:
++		vfla->timeout = c->val * 1000000; /* MS to NS */
++		return 0;
++	case V4L2_CID_FLASH_INTENSITY:
++		vfla->flash_intensity = c->val;
++		return 0;
++	case V4L2_CID_FLASH_TORCH_INTENSITY:
++		vfla->torch_intensity = c->val;
++		return 0;
++	case V4L2_CID_FLASH_INDICATOR_INTENSITY:
++		vfla->indicator_intensity = c->val;
++		return 0;
++	default:
++		return -EINVAL;
++	}
++	return 0;
++}
++
++static const struct v4l2_ctrl_ops vimc_fla_ctrl_ops = {
++	.s_ctrl = vimc_fla_s_ctrl,
++};
++
++static const struct v4l2_subdev_core_ops vimc_fla_core_ops = {
++	.subscribe_event = v4l2_ctrl_subdev_subscribe_event,
++	.unsubscribe_event = v4l2_event_subdev_unsubscribe,
++};
++
++static const struct v4l2_subdev_ops vimc_fla_ops = {
++	.core = &vimc_fla_core_ops,
++};
++
++static void vimc_fla_release(struct v4l2_subdev *sd)
++{
++	struct vimc_fla_device *vfla =
++				container_of(sd, struct vimc_fla_device, sd);
++
++	v4l2_ctrl_handler_free(&vfla->hdl);
++	kfree(vfla);
++}
++
++static const struct v4l2_subdev_internal_ops vimc_fla_int_ops = {
++	.release = vimc_fla_release,
++};
++
++/* initialize device */
++struct vimc_ent_device *vimc_fla_add(struct vimc_device *vimc,
++				     const char *vcfg_name)
++{
++	struct v4l2_device *v4l2_dev = &vimc->v4l2_dev;
++	struct vimc_fla_device *vfla;
++	int ret;
++
++	/* Allocate the vfla struct */
++	vfla = kzalloc(sizeof(*vfla), GFP_KERNEL);
++	if (!vfla)
++		return NULL;
++
++	v4l2_ctrl_handler_init(&vfla->hdl, 4);
++	v4l2_ctrl_new_std_menu(&vfla->hdl, &vimc_fla_ctrl_ops,
++			       V4L2_CID_FLASH_LED_MODE,
++			       V4L2_FLASH_LED_MODE_TORCH, ~0x7,
++			       V4L2_FLASH_LED_MODE_FLASH);
++	v4l2_ctrl_new_std_menu(&vfla->hdl, &vimc_fla_ctrl_ops,
++			       V4L2_CID_FLASH_STROBE_SOURCE, 0x1, ~0x3,
++			       V4L2_FLASH_STROBE_SOURCE_SOFTWARE);
++	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
++			  V4L2_CID_FLASH_STROBE, 0, 0, 0, 0);
++	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
++			  V4L2_CID_FLASH_STROBE_STOP, 0, 0, 0, 0);
++	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
++			  V4L2_CID_FLASH_TIMEOUT, VIMC_FLASH_TIMEOUT_MS_MIN,
++			  VIMC_FLASH_TIMEOUT_MS_MAX,
++			  VIMC_FLASH_TIMEOUT_MS_STEP,
++			  VIMC_FLASH_TIMEOUT_MS_MIN);
++	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
++			  V4L2_CID_FLASH_TORCH_INTENSITY,
++			  VIMC_FLASH_TORCH_UA_MIN,
++			  VIMC_FLASH_TORCH_UA_MAX,
++			  VIMC_FLASH_TORCH_UA_STEP,
++			  VIMC_FLASH_TORCH_UA_MIN);
++	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
++			  V4L2_CID_FLASH_INTENSITY,
++			  VIMC_FLASH_FLASH_UA_MIN,
++			  VIMC_FLASH_FLASH_UA_MAX,
++			  VIMC_FLASH_FLASH_UA_STEP,
++			  VIMC_FLASH_FLASH_UA_MIN);
++	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
++			  V4L2_CID_FLASH_INDICATOR_INTENSITY,
++			  0,
++			  255,
++			  1,
++			  0);
++	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
++			  V4L2_CID_FLASH_STROBE_STATUS, 0, 1, 1, 0);
++	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
++			  V4L2_CID_FLASH_FAULT, 0,
++			  V4L2_FLASH_FAULT_TIMEOUT, 0, 0);
++	vfla->sd.ctrl_handler = &vfla->hdl;
++	if (vfla->hdl.error) {
++		ret = vfla->hdl.error;
++		goto err_free_vfla;
++	}
++	vfla->strobe_status_ctl = v4l2_ctrl_find(&vfla->hdl,
++						 V4L2_CID_FLASH_STROBE_STATUS);
++
++	/* Initialize ved and sd */
++	ret = vimc_ent_sd_register(&vfla->ved, &vfla->sd, v4l2_dev,
++				   vcfg_name,
++				   MEDIA_ENT_F_FLASH, 0, NULL,
++				   &vimc_fla_int_ops, &vimc_fla_ops);
++	if (ret)
++		goto err_free_hdl;
++
++	/* Create processing workqueue */
++	vfla->wq = alloc_workqueue("%s", 0, 0, "vimc-flash thread");
++	if (!vfla->wq)
++		goto err_unregister;
++
++	INIT_WORK(&vfla->work, vimc_fla_strobe_work);
++	/* Initialize standard values */
++	vfla->indicator_intensity = 0;
++	vfla->torch_intensity = 0;
++	vfla->flash_intensity = 0;
++	vfla->is_strobe = false;
++	vfla->timeout = 0;
++	vfla->last_strobe = 0;
++	vfla->strobe_source = V4L2_FLASH_STROBE_SOURCE_SOFTWARE;
++	vfla->led_mode = V4L2_FLASH_LED_MODE_FLASH;
++
++	return &vfla->ved;
++
++err_unregister:
++	vimc_ent_sd_unregister(&vfla->ved, &vfla->sd);
++err_free_hdl:
++	v4l2_ctrl_handler_free(&vfla->hdl);
++err_free_vfla:
++	kfree(vfla);
++
++	return NULL;
++}
++
++void vimc_fla_rm(struct vimc_device *vimc, struct vimc_ent_device *ved)
++{
++	struct vimc_fla_device *vfla;
++
++	if (!ved)
++		return;
++
++	vfla = container_of(ved, struct vimc_fla_device, ved);
++	destroy_workqueue(vfla->wq);
++	vimc_ent_sd_unregister(ved, &vfla->sd);
++}
+-- 
+2.23.0
 
