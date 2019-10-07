@@ -2,345 +2,264 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D43C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE409C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8791E20679
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:06:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A104C20679
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:07:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727321AbfJGIGo (ORCPT
+        id S1727363AbfJGIHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 04:06:44 -0400
-Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:41125 "EHLO
-        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726889AbfJGIGo (ORCPT
+        Mon, 7 Oct 2019 04:07:34 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:58607 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726889AbfJGIHd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 04:06:44 -0400
-Received: from [IPv6:2001:983:e9a7:1:3d61:cdd2:8085:cc8] ([IPv6:2001:983:e9a7:1:3d61:cdd2:8085:cc8])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id HO2RiKOhMjZ8vHO2Si5BtB; Mon, 07 Oct 2019 10:06:40 +0200
-Subject: Re: [Patch v2 19/21] media: v4l2-common: add pixel encoding support
-To:     Benoit Parrot <bparrot@ti.com>
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191004162952.4963-1-bparrot@ti.com>
- <20191004162952.4963-20-bparrot@ti.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <0118836c-f6d9-dccf-4e90-ede802c8be33@xs4all.nl>
-Date:   Mon, 7 Oct 2019 10:06:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 7 Oct 2019 04:07:33 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iHO3H-0002rt-Kp; Mon, 07 Oct 2019 10:07:31 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iHO3F-0004Fn-Uk; Mon, 07 Oct 2019 10:07:29 +0200
+Date:   Mon, 7 Oct 2019 10:07:29 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     Aisheng Dong <aisheng.dong@nxp.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] firmware: imx: Skip return value check for some special
+ SCU firmware APIs
+Message-ID: <20191007080729.6ltbgwz4e7t4wpm4@pengutronix.de>
+References: <DB3PR0402MB391683202692BEAE4D2CD9C1F5860@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <20190926100558.egils3ds37m3s5wo@pengutronix.de>
+ <VI1PR04MB702336F648EA1BF0E4AC584BEE860@VI1PR04MB7023.eurprd04.prod.outlook.com>
+ <DB3PR0402MB391675F9BF6FCA315B124BEBF5810@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <VI1PR04MB702322F2F020A527AD2F8DDEEE820@VI1PR04MB7023.eurprd04.prod.outlook.com>
+ <DB3PR0402MB39169BC7E8DB3525A309034EF5820@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <20190930081434.qrrv3yqczzxihntm@pengutronix.de>
+ <DB3PR0402MB3916B2243D4B452B460EA892F5820@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <20190930100222.p2cx6xspjeunsm54@pengutronix.de>
+ <DB3PR0402MB39166F09D84D20CA3DBFDDE6F59B0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20191004162952.4963-20-bparrot@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfMycd0OdHAjJH/NXrMDbLFIHdx94nRUWjCaUsgX+qJJZ0Emhn9jtC9nQrltLqupEt7kfk75gSAMxFR+dOIriQ48MBNet3BJ47/RnLrU84VczGc2No66R
- pMUnNpn9bR+Fg71AnSrkxbLddN74gpvsHdqncD+Omb1bY6E3TcUQJ2eifZ7cNR+z37/YkyCIazOMb6BzdxaeKjYlq5WPJGjl+ApH+rS3+9XCzLpBKFvBM4+E
- I+F3gSXSKr6w4vQoSs9CgQZ+yO4qUF3l4znIL5bRGrGxZ6SM0mO8zgvOqujxVlLEIfzu18C7CzmnrpeHgK9TJ7HSeaLKt3z10lD8W0EPEXx4zbnYIbaNCHBd
- Fo+73dvNlmCeykukGqqGD4b6t6xfkQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DB3PR0402MB39166F09D84D20CA3DBFDDE6F59B0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 10:05:52 up 142 days, 14:24, 94 users,  load average: 0.09, 0.14,
+ 0.13
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/4/19 6:29 PM, Benoit Parrot wrote:
-> It is often useful to figure out if a pixel_format is either YUV or RGB
-> especially for driver who can perform the pixel encoding conversion.
+On 19-10-07 01:21, Anson Huang wrote:
+> Hi, Marco
 > 
-> Instead of having each driver implement its own "is_this_yuv/rgb"
-> function based on a restricted set of pixel value, it is better to do
-> this in centralized manner.
+> > On 19-09-30 08:32, Anson Huang wrote:
+> > > Hi, Marco
+> > >
+> > > > On 19-09-30 07:42, Anson Huang wrote:
+> > > > > Hi, Leonard
+> > > > >
+> > > > > > On 2019-09-27 4:20 AM, Anson Huang wrote:
+> > > > > > >> On 2019-09-26 1:06 PM, Marco Felsch wrote:
+> > > > > > >>> On 19-09-26 08:03, Anson Huang wrote:
+> > > > > > >>>>> On 19-09-25 18:07, Anson Huang wrote:
+> > > > > > >>>>>> The SCU firmware does NOT always have return value stored
+> > > > > > >>>>>> in message header's function element even the API has
+> > > > > > >>>>>> response data, those special APIs are defined as void
+> > > > > > >>>>>> function in SCU firmware, so they should be treated as return
+> > success always.
+> > > > > > >>>>>>
+> > > > > > >>>>>> +static const struct imx_sc_rpc_msg whitelist[] = {
+> > > > > > >>>>>> +	{ .svc = IMX_SC_RPC_SVC_MISC, .func =
+> > > > > > >>>>> IMX_SC_MISC_FUNC_UNIQUE_ID },
+> > > > > > >>>>>> +	{ .svc = IMX_SC_RPC_SVC_MISC, .func =
+> > > > > > >>>>>> +IMX_SC_MISC_FUNC_GET_BUTTON_STATUS }, };
+> > > > > > >>>>>
+> > > > > > >>>>> Is this going to be extended in the near future? I see
+> > > > > > >>>>> some upcoming problems here if someone uses a different
+> > > > > > >>>>> scu-fw<->kernel combination as nxp would suggest.
+> > > > > > >>>>
+> > > > > > >>>> Could be, but I checked the current APIs, ONLY these 2 will
+> > > > > > >>>> be used in Linux kernel, so I ONLY add these 2 APIs for now.
+> > > > > > >>>
+> > > > > > >>> Okay.
+> > > > > > >>>
+> > > > > > >>>> However, after rethink, maybe we should add another
+> > > > > > >>>> imx_sc_rpc API for those special APIs? To avoid checking it
+> > > > > > >>>> for all the APIs called which
+> > > > > > >> may impact some performance.
+> > > > > > >>>> Still under discussion, if you have better idea, please advise,
+> > thanks!
+> > > > > > >>
+> > > > > > >> My suggestion is to refactor the code and add a new API for
+> > > > > > >> the this "no error value" convention. Internally they can
+> > > > > > >> call a common function with flags.
+> > > > > > >
+> > > > > > > If I understand your point correctly, that means the loop
+> > > > > > > check of whether the API is with "no error value" for every
+> > > > > > > API still NOT be skipped, it is just refactoring the code, right?
+> > > > > >
+> > > > > > There would be no "loop" anywhere: the responsibility would fall
+> > > > > > on the call to call the right RPC function. In the current
+> > > > > > layering scheme (drivers -> RPC ->
+> > > > > > mailbox) the RPC layer treats all calls the same and it's up the
+> > > > > > the caller to provide information about calling convention.
+> > > > > >
+> > > > > > An example implementation:
+> > > > > > * Rename imx_sc_rpc_call to __imx_sc_rpc_call_flags
+> > > > > > * Make a tiny imx_sc_rpc_call wrapper which just converts
+> > > > > > resp/noresp to a flag
+> > > > > > * Make get button status call __imx_sc_rpc_call_flags with the
+> > > > > > _IMX_SC_RPC_NOERROR flag
+> > > > > >
+> > > > > > Hope this makes my suggestion clearer? Pushing this to the
+> > > > > > caller is a bit ugly but I think it's worth preserving the fact
+> > > > > > that the imx rpc core treats services in an uniform way.
+> > > > >
+> > > > > It is clear now, so essentially it is same as 2 separate APIs,
+> > > > > still need to change the button driver and uid driver to use the
+> > > > > special flag, meanwhile, need to change the third parament of
+> > > > > imx_sc_rpc_call()
+> > > > from bool to u32.
+> > > > >
+> > > > > If no one opposes this approach, I will redo the patch together
+> > > > > with the button driver and uid driver after holiday.
+> > > >
+> > > > As Ansons said that are two approaches and in both ways the caller
+> > > > needs to know if the error code is valid. Extending the flags seems
+> > > > better to me but it looks still not that good. One question, does
+> > > > the scu-fw set the error-msg to something? If not than why should we
+> > specify a flag or a other api?
+> > > > Nowadays the caller needs to know that the error-msg-field isn't set
+> > > > so if the caller sets the msg-packet to zero and fills the rpc-id
+> > > > the error-msg-field shouldn't be touched by the firmware. So it should be
+> > zero.
+> > >
+> > > The flow are as below for those special APIs with response data but no
+> > return value from SCU FW:
+> > >
+> > > 1. caller sends msg with a header field and data field, the header
+> > > field has svc ID and function ID; 2. SCU FW will service the caller
+> > > and then clear the SVC ID before return, the response data will be Put
+> > > in msg data field, and if the APIs has return value, SCU FW will put
+> > > the return value in function ID of msg;
+> > 
+> > Thanks for the declaration :)
+> > 
+> > > The caller has no chance to set the msg-packet to zero and rpc-id, it
+> > > needs to pass correct rpc-id to SCU FW and Get response data from SCU
+> > > FW, and for those special APIs has function ID NOT over-written by SCU
+> > > FW's return Value, but the function ID is a unsigned int, and the SCU FW
+> > return value is also a unsigned int, so we have no idea to separate them for
+> > no-return value API or error-return API.
+> > 
+> > I see.
+> > 
+> > > With new approach, I can use below 2 flags, the ugly point is user need to
+> > know which API to call.
+> > 
+> > I don't see any improve using flags because the caller still needs to know if
+> > the scu-fw works (sorry for that) correctly. So we should go to adapt your
+> > approach to handle that within the core and improve the caller usage.
+> > 
+> > What about this:
+> > 
+> > 8<-------------------------------------------------------------------------------
+> > 
+> > diff --git a/drivers/firmware/imx/imx-scu.c b/drivers/firmware/imx/imx-
+> > scu.c index 04a24a863d6e..8f406a0784a4 100644
+> > --- a/drivers/firmware/imx/imx-scu.c
+> > +++ b/drivers/firmware/imx/imx-scu.c
+> > @@ -184,6 +184,16 @@ int imx_scu_call_rpc(struct imx_sc_ipc *sc_ipc, void
+> > *msg, bool have_resp)
+> >  		/* response status is stored in hdr->func field */
+> >  		hdr = msg;
+> >  		ret = hdr->func;
+> > +
+> > +		/*
+> > +		 * Some special SCU firmware APIs do NOT have return value
+> > +		 * in hdr->func, but they do have response data, those
+> > special
+> > +		 * APIs are defined as void function in SCU firmware, so they
+> > +		 * should be treated as return success always.
+> > +		 */
+> > +		if (hdr->func == IMX_SC_MISC_FUNC_UNIQUE_ID ||
+> > +		    hdr->func == IMX_SC_MISC_FUNC_GET_BUTTON_STATUS)
+> > +			ret = 0;
+> >  	}
+> > 
+> >  out:
+> > 8<-------------------------------------------------------------------------------
+> > 
+> > As you and Leonard said, this scu-fw behaviour is intended. So this will be
+> > not changed over the time else we need a scu-fw version check too.
+> > Also as you said those special functions shouldn't be extended I think a
+> > simple if-statement should work and no performance regressions are
+> > expected.
+> > 
 > 
-> We therefore add a pix_enc member to the v4l2_format_info structure to
-> quickly identify the related pixel encoding.
-> And add helper function to find/check pixel encoding.
-> 
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> ---
->  drivers/media/v4l2-core/v4l2-common.c | 162 ++++++++++++++++----------
->  include/media/v4l2-common.h           |  20 ++++
->  2 files changed, 119 insertions(+), 63 deletions(-)
-> 
-> diff --git a/drivers/media/v4l2-core/v4l2-common.c b/drivers/media/v4l2-core/v4l2-common.c
-> index 62f7aa92ac29..474cdb5863f4 100644
-> --- a/drivers/media/v4l2-core/v4l2-common.c
-> +++ b/drivers/media/v4l2-core/v4l2-common.c
-> @@ -236,77 +236,77 @@ const struct v4l2_format_info *v4l2_format_info(u32 format)
->  {
->  	static const struct v4l2_format_info formats[] = {
->  		/* RGB formats */
-> -		{ .format = V4L2_PIX_FMT_BGR24,   .mem_planes = 1, .comp_planes = 1, .bpp = { 3, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_RGB24,   .mem_planes = 1, .comp_planes = 1, .bpp = { 3, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_HSV24,   .mem_planes = 1, .comp_planes = 1, .bpp = { 3, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_BGR32,   .mem_planes = 1, .comp_planes = 1, .bpp = { 4, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_XBGR32,  .mem_planes = 1, .comp_planes = 1, .bpp = { 4, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_BGRX32,  .mem_planes = 1, .comp_planes = 1, .bpp = { 4, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_RGB32,   .mem_planes = 1, .comp_planes = 1, .bpp = { 4, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_XRGB32,  .mem_planes = 1, .comp_planes = 1, .bpp = { 4, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_RGBX32,  .mem_planes = 1, .comp_planes = 1, .bpp = { 4, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_HSV32,   .mem_planes = 1, .comp_planes = 1, .bpp = { 4, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_ARGB32,  .mem_planes = 1, .comp_planes = 1, .bpp = { 4, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_RGBA32,  .mem_planes = 1, .comp_planes = 1, .bpp = { 4, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_ABGR32,  .mem_planes = 1, .comp_planes = 1, .bpp = { 4, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_BGRA32,  .mem_planes = 1, .comp_planes = 1, .bpp = { 4, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_GREY,    .mem_planes = 1, .comp_planes = 1, .bpp = { 1, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_BGR24,   .pix_enc = V4L2_ENC_RGB, .mem_planes = 1, .comp_planes = 1, .bpp = { 3, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_RGB24,   .pix_enc = V4L2_ENC_RGB, .mem_planes = 1, .comp_planes = 1, .bpp = { 3, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_HSV24,   .pix_enc = V4L2_ENC_RGB, .mem_planes = 1, .comp_planes = 1, .bpp = { 3, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_BGR32,   .pix_enc = V4L2_ENC_RGB, .mem_planes = 1, .comp_planes = 1, .bpp = { 4, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_XBGR32,  .pix_enc = V4L2_ENC_RGB, .mem_planes = 1, .comp_planes = 1, .bpp = { 4, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_BGRX32,  .pix_enc = V4L2_ENC_RGB, .mem_planes = 1, .comp_planes = 1, .bpp = { 4, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_RGB32,   .pix_enc = V4L2_ENC_RGB, .mem_planes = 1, .comp_planes = 1, .bpp = { 4, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_XRGB32,  .pix_enc = V4L2_ENC_RGB, .mem_planes = 1, .comp_planes = 1, .bpp = { 4, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_RGBX32,  .pix_enc = V4L2_ENC_RGB, .mem_planes = 1, .comp_planes = 1, .bpp = { 4, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_HSV32,   .pix_enc = V4L2_ENC_RGB, .mem_planes = 1, .comp_planes = 1, .bpp = { 4, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_ARGB32,  .pix_enc = V4L2_ENC_RGB, .mem_planes = 1, .comp_planes = 1, .bpp = { 4, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_RGBA32,  .pix_enc = V4L2_ENC_RGB, .mem_planes = 1, .comp_planes = 1, .bpp = { 4, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_ABGR32,  .pix_enc = V4L2_ENC_RGB, .mem_planes = 1, .comp_planes = 1, .bpp = { 4, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_BGRA32,  .pix_enc = V4L2_ENC_RGB, .mem_planes = 1, .comp_planes = 1, .bpp = { 4, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_GREY,    .pix_enc = V4L2_ENC_RGB, .mem_planes = 1, .comp_planes = 1, .bpp = { 1, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
->  
->  		/* YUV packed formats */
-> -		{ .format = V4L2_PIX_FMT_YUYV,    .mem_planes = 1, .comp_planes = 1, .bpp = { 2, 0, 0, 0 }, .hdiv = 2, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_YVYU,    .mem_planes = 1, .comp_planes = 1, .bpp = { 2, 0, 0, 0 }, .hdiv = 2, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_UYVY,    .mem_planes = 1, .comp_planes = 1, .bpp = { 2, 0, 0, 0 }, .hdiv = 2, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_VYUY,    .mem_planes = 1, .comp_planes = 1, .bpp = { 2, 0, 0, 0 }, .hdiv = 2, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_YUYV,    .pix_enc = V4L2_ENC_YUV, .mem_planes = 1, .comp_planes = 1, .bpp = { 2, 0, 0, 0 }, .hdiv = 2, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_YVYU,    .pix_enc = V4L2_ENC_YUV, .mem_planes = 1, .comp_planes = 1, .bpp = { 2, 0, 0, 0 }, .hdiv = 2, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_UYVY,    .pix_enc = V4L2_ENC_YUV, .mem_planes = 1, .comp_planes = 1, .bpp = { 2, 0, 0, 0 }, .hdiv = 2, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_VYUY,    .pix_enc = V4L2_ENC_YUV, .mem_planes = 1, .comp_planes = 1, .bpp = { 2, 0, 0, 0 }, .hdiv = 2, .vdiv = 1 },
->  
->  		/* YUV planar formats */
-> -		{ .format = V4L2_PIX_FMT_NV12,    .mem_planes = 1, .comp_planes = 2, .bpp = { 1, 2, 0, 0 }, .hdiv = 2, .vdiv = 2 },
-> -		{ .format = V4L2_PIX_FMT_NV21,    .mem_planes = 1, .comp_planes = 2, .bpp = { 1, 2, 0, 0 }, .hdiv = 2, .vdiv = 2 },
-> -		{ .format = V4L2_PIX_FMT_NV16,    .mem_planes = 1, .comp_planes = 2, .bpp = { 1, 2, 0, 0 }, .hdiv = 2, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_NV61,    .mem_planes = 1, .comp_planes = 2, .bpp = { 1, 2, 0, 0 }, .hdiv = 2, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_NV24,    .mem_planes = 1, .comp_planes = 2, .bpp = { 1, 2, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_NV42,    .mem_planes = 1, .comp_planes = 2, .bpp = { 1, 2, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -
-> -		{ .format = V4L2_PIX_FMT_YUV410,  .mem_planes = 1, .comp_planes = 3, .bpp = { 1, 1, 1, 0 }, .hdiv = 4, .vdiv = 4 },
-> -		{ .format = V4L2_PIX_FMT_YVU410,  .mem_planes = 1, .comp_planes = 3, .bpp = { 1, 1, 1, 0 }, .hdiv = 4, .vdiv = 4 },
-> -		{ .format = V4L2_PIX_FMT_YUV411P, .mem_planes = 1, .comp_planes = 3, .bpp = { 1, 1, 1, 0 }, .hdiv = 4, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_YUV420,  .mem_planes = 1, .comp_planes = 3, .bpp = { 1, 1, 1, 0 }, .hdiv = 2, .vdiv = 2 },
-> -		{ .format = V4L2_PIX_FMT_YVU420,  .mem_planes = 1, .comp_planes = 3, .bpp = { 1, 1, 1, 0 }, .hdiv = 2, .vdiv = 2 },
-> -		{ .format = V4L2_PIX_FMT_YUV422P, .mem_planes = 1, .comp_planes = 3, .bpp = { 1, 1, 1, 0 }, .hdiv = 2, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_NV12,    .pix_enc = V4L2_ENC_YUV, .mem_planes = 1, .comp_planes = 2, .bpp = { 1, 2, 0, 0 }, .hdiv = 2, .vdiv = 2 },
-> +		{ .format = V4L2_PIX_FMT_NV21,    .pix_enc = V4L2_ENC_YUV, .mem_planes = 1, .comp_planes = 2, .bpp = { 1, 2, 0, 0 }, .hdiv = 2, .vdiv = 2 },
-> +		{ .format = V4L2_PIX_FMT_NV16,    .pix_enc = V4L2_ENC_YUV, .mem_planes = 1, .comp_planes = 2, .bpp = { 1, 2, 0, 0 }, .hdiv = 2, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_NV61,    .pix_enc = V4L2_ENC_YUV, .mem_planes = 1, .comp_planes = 2, .bpp = { 1, 2, 0, 0 }, .hdiv = 2, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_NV24,    .pix_enc = V4L2_ENC_YUV, .mem_planes = 1, .comp_planes = 2, .bpp = { 1, 2, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_NV42,    .pix_enc = V4L2_ENC_YUV, .mem_planes = 1, .comp_planes = 2, .bpp = { 1, 2, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +
-> +		{ .format = V4L2_PIX_FMT_YUV410,  .pix_enc = V4L2_ENC_YUV, .mem_planes = 1, .comp_planes = 3, .bpp = { 1, 1, 1, 0 }, .hdiv = 4, .vdiv = 4 },
-> +		{ .format = V4L2_PIX_FMT_YVU410,  .pix_enc = V4L2_ENC_YUV, .mem_planes = 1, .comp_planes = 3, .bpp = { 1, 1, 1, 0 }, .hdiv = 4, .vdiv = 4 },
-> +		{ .format = V4L2_PIX_FMT_YUV411P, .pix_enc = V4L2_ENC_YUV, .mem_planes = 1, .comp_planes = 3, .bpp = { 1, 1, 1, 0 }, .hdiv = 4, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_YUV420,  .pix_enc = V4L2_ENC_YUV, .mem_planes = 1, .comp_planes = 3, .bpp = { 1, 1, 1, 0 }, .hdiv = 2, .vdiv = 2 },
-> +		{ .format = V4L2_PIX_FMT_YVU420,  .pix_enc = V4L2_ENC_YUV, .mem_planes = 1, .comp_planes = 3, .bpp = { 1, 1, 1, 0 }, .hdiv = 2, .vdiv = 2 },
-> +		{ .format = V4L2_PIX_FMT_YUV422P, .pix_enc = V4L2_ENC_YUV, .mem_planes = 1, .comp_planes = 3, .bpp = { 1, 1, 1, 0 }, .hdiv = 2, .vdiv = 1 },
->  
->  		/* YUV planar formats, non contiguous variant */
-> -		{ .format = V4L2_PIX_FMT_YUV420M, .mem_planes = 3, .comp_planes = 3, .bpp = { 1, 1, 1, 0 }, .hdiv = 2, .vdiv = 2 },
-> -		{ .format = V4L2_PIX_FMT_YVU420M, .mem_planes = 3, .comp_planes = 3, .bpp = { 1, 1, 1, 0 }, .hdiv = 2, .vdiv = 2 },
-> -		{ .format = V4L2_PIX_FMT_YUV422M, .mem_planes = 3, .comp_planes = 3, .bpp = { 1, 1, 1, 0 }, .hdiv = 2, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_YVU422M, .mem_planes = 3, .comp_planes = 3, .bpp = { 1, 1, 1, 0 }, .hdiv = 2, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_YUV444M, .mem_planes = 3, .comp_planes = 3, .bpp = { 1, 1, 1, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_YVU444M, .mem_planes = 3, .comp_planes = 3, .bpp = { 1, 1, 1, 0 }, .hdiv = 1, .vdiv = 1 },
-> -
-> -		{ .format = V4L2_PIX_FMT_NV12M,   .mem_planes = 2, .comp_planes = 2, .bpp = { 1, 2, 0, 0 }, .hdiv = 2, .vdiv = 2 },
-> -		{ .format = V4L2_PIX_FMT_NV21M,   .mem_planes = 2, .comp_planes = 2, .bpp = { 1, 2, 0, 0 }, .hdiv = 2, .vdiv = 2 },
-> -		{ .format = V4L2_PIX_FMT_NV16M,   .mem_planes = 2, .comp_planes = 2, .bpp = { 1, 2, 0, 0 }, .hdiv = 2, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_NV61M,   .mem_planes = 2, .comp_planes = 2, .bpp = { 1, 2, 0, 0 }, .hdiv = 2, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_YUV420M, .pix_enc = V4L2_ENC_YUV, .mem_planes = 3, .comp_planes = 3, .bpp = { 1, 1, 1, 0 }, .hdiv = 2, .vdiv = 2 },
-> +		{ .format = V4L2_PIX_FMT_YVU420M, .pix_enc = V4L2_ENC_YUV, .mem_planes = 3, .comp_planes = 3, .bpp = { 1, 1, 1, 0 }, .hdiv = 2, .vdiv = 2 },
-> +		{ .format = V4L2_PIX_FMT_YUV422M, .pix_enc = V4L2_ENC_YUV, .mem_planes = 3, .comp_planes = 3, .bpp = { 1, 1, 1, 0 }, .hdiv = 2, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_YVU422M, .pix_enc = V4L2_ENC_YUV, .mem_planes = 3, .comp_planes = 3, .bpp = { 1, 1, 1, 0 }, .hdiv = 2, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_YUV444M, .pix_enc = V4L2_ENC_YUV, .mem_planes = 3, .comp_planes = 3, .bpp = { 1, 1, 1, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_YVU444M, .pix_enc = V4L2_ENC_YUV, .mem_planes = 3, .comp_planes = 3, .bpp = { 1, 1, 1, 0 }, .hdiv = 1, .vdiv = 1 },
-> +
-> +		{ .format = V4L2_PIX_FMT_NV12M,   .pix_enc = V4L2_ENC_YUV, .mem_planes = 2, .comp_planes = 2, .bpp = { 1, 2, 0, 0 }, .hdiv = 2, .vdiv = 2 },
-> +		{ .format = V4L2_PIX_FMT_NV21M,   .pix_enc = V4L2_ENC_YUV, .mem_planes = 2, .comp_planes = 2, .bpp = { 1, 2, 0, 0 }, .hdiv = 2, .vdiv = 2 },
-> +		{ .format = V4L2_PIX_FMT_NV16M,   .pix_enc = V4L2_ENC_YUV, .mem_planes = 2, .comp_planes = 2, .bpp = { 1, 2, 0, 0 }, .hdiv = 2, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_NV61M,   .pix_enc = V4L2_ENC_YUV, .mem_planes = 2, .comp_planes = 2, .bpp = { 1, 2, 0, 0 }, .hdiv = 2, .vdiv = 1 },
->  
->  		/* Bayer RGB formats */
-> -		{ .format = V4L2_PIX_FMT_SBGGR8,	.mem_planes = 1, .comp_planes = 1, .bpp = { 1, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_SGBRG8,	.mem_planes = 1, .comp_planes = 1, .bpp = { 1, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_SGRBG8,	.mem_planes = 1, .comp_planes = 1, .bpp = { 1, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_SRGGB8,	.mem_planes = 1, .comp_planes = 1, .bpp = { 1, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_SBGGR10,	.mem_planes = 1, .comp_planes = 1, .bpp = { 2, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_SGBRG10,	.mem_planes = 1, .comp_planes = 1, .bpp = { 2, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_SGRBG10,	.mem_planes = 1, .comp_planes = 1, .bpp = { 2, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_SRGGB10,	.mem_planes = 1, .comp_planes = 1, .bpp = { 2, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_SBGGR10ALAW8,	.mem_planes = 1, .comp_planes = 1, .bpp = { 1, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_SGBRG10ALAW8,	.mem_planes = 1, .comp_planes = 1, .bpp = { 1, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_SGRBG10ALAW8,	.mem_planes = 1, .comp_planes = 1, .bpp = { 1, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_SRGGB10ALAW8,	.mem_planes = 1, .comp_planes = 1, .bpp = { 1, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_SBGGR10DPCM8,	.mem_planes = 1, .comp_planes = 1, .bpp = { 1, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_SGBRG10DPCM8,	.mem_planes = 1, .comp_planes = 1, .bpp = { 1, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_SGRBG10DPCM8,	.mem_planes = 1, .comp_planes = 1, .bpp = { 1, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_SRGGB10DPCM8,	.mem_planes = 1, .comp_planes = 1, .bpp = { 1, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_SBGGR12,	.mem_planes = 1, .comp_planes = 1, .bpp = { 2, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_SGBRG12,	.mem_planes = 1, .comp_planes = 1, .bpp = { 2, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_SGRBG12,	.mem_planes = 1, .comp_planes = 1, .bpp = { 2, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> -		{ .format = V4L2_PIX_FMT_SRGGB12,	.mem_planes = 1, .comp_planes = 1, .bpp = { 2, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_SBGGR8,	.pix_enc = V4L2_ENC_BAYER, .mem_planes = 1, .comp_planes = 1, .bpp = { 1, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_SGBRG8,	.pix_enc = V4L2_ENC_BAYER, .mem_planes = 1, .comp_planes = 1, .bpp = { 1, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_SGRBG8,	.pix_enc = V4L2_ENC_BAYER, .mem_planes = 1, .comp_planes = 1, .bpp = { 1, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_SRGGB8,	.pix_enc = V4L2_ENC_BAYER, .mem_planes = 1, .comp_planes = 1, .bpp = { 1, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_SBGGR10,	.pix_enc = V4L2_ENC_BAYER, .mem_planes = 1, .comp_planes = 1, .bpp = { 2, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_SGBRG10,	.pix_enc = V4L2_ENC_BAYER, .mem_planes = 1, .comp_planes = 1, .bpp = { 2, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_SGRBG10,	.pix_enc = V4L2_ENC_BAYER, .mem_planes = 1, .comp_planes = 1, .bpp = { 2, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_SRGGB10,	.pix_enc = V4L2_ENC_BAYER, .mem_planes = 1, .comp_planes = 1, .bpp = { 2, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_SBGGR10ALAW8,	.pix_enc = V4L2_ENC_BAYER, .mem_planes = 1, .comp_planes = 1, .bpp = { 1, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_SGBRG10ALAW8,	.pix_enc = V4L2_ENC_BAYER, .mem_planes = 1, .comp_planes = 1, .bpp = { 1, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_SGRBG10ALAW8,	.pix_enc = V4L2_ENC_BAYER, .mem_planes = 1, .comp_planes = 1, .bpp = { 1, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_SRGGB10ALAW8,	.pix_enc = V4L2_ENC_BAYER, .mem_planes = 1, .comp_planes = 1, .bpp = { 1, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_SBGGR10DPCM8,	.pix_enc = V4L2_ENC_BAYER, .mem_planes = 1, .comp_planes = 1, .bpp = { 1, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_SGBRG10DPCM8,	.pix_enc = V4L2_ENC_BAYER, .mem_planes = 1, .comp_planes = 1, .bpp = { 1, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_SGRBG10DPCM8,	.pix_enc = V4L2_ENC_BAYER, .mem_planes = 1, .comp_planes = 1, .bpp = { 1, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_SRGGB10DPCM8,	.pix_enc = V4L2_ENC_BAYER, .mem_planes = 1, .comp_planes = 1, .bpp = { 1, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_SBGGR12,	.pix_enc = V4L2_ENC_BAYER, .mem_planes = 1, .comp_planes = 1, .bpp = { 2, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_SGBRG12,	.pix_enc = V4L2_ENC_BAYER, .mem_planes = 1, .comp_planes = 1, .bpp = { 2, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_SGRBG12,	.pix_enc = V4L2_ENC_BAYER, .mem_planes = 1, .comp_planes = 1, .bpp = { 2, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
-> +		{ .format = V4L2_PIX_FMT_SRGGB12,	.pix_enc = V4L2_ENC_BAYER, .mem_planes = 1, .comp_planes = 1, .bpp = { 2, 0, 0, 0 }, .hdiv = 1, .vdiv = 1 },
->  	};
->  	unsigned int i;
->  
-> @@ -317,6 +317,42 @@ const struct v4l2_format_info *v4l2_format_info(u32 format)
->  }
->  EXPORT_SYMBOL(v4l2_format_info);
->  
-> +bool v4l2_is_format_rgb(u32 format)
-> +{
-> +	const struct v4l2_format_info *f;
-> +
-> +	f = v4l2_format_info(format);
-> +	if (f && f->pix_enc == V4L2_ENC_RGB)
-> +		return true;
-> +
-> +	return false;
+> I agree to just check the special APIs in the imx_scu_call_rpc() function, it can avoid calling
+> another function to check as my V1 patch did, also no need to add another API for users, so
+> that users no need to know which API to call. But I can NOT use the example you listed upper
+> directly, the return value from SCU FW could be an error value which is same as the hdr->func,
 
-This can be simplified to:
+I tought the SCU FW won't touch this field.
 
-	return f && f->pix_enc == V4L2_ENC_RGB;
+> so I need to saved the original hdr->func and compare them, see below, please help review V2
+> patch, thanks.
 
-Same for the other two functions below.
-
-> +}
-> +EXPORT_SYMBOL(v4l2_is_format_rgb);
-> +
-> +bool v4l2_is_format_yuv(u32 format)
-> +{
-> +	const struct v4l2_format_info *f;
-> +
-> +	f = v4l2_format_info(format);
-> +	if (f && f->pix_enc == V4L2_ENC_YUV)
-> +		return true;
-> +
-> +	return false;
-> +}
-> +EXPORT_SYMBOL(v4l2_is_format_yuv);
-> +
-> +bool v4l2_is_format_bayer(u32 format)
-> +{
-> +	const struct v4l2_format_info *f;
-> +
-> +	f = v4l2_format_info(format);
-> +	if (f && f->pix_enc == V4L2_ENC_BAYER)
-> +		return true;
-> +
-> +	return false;
-> +}
-> +EXPORT_SYMBOL(v4l2_is_format_bayer);
-
-That said, I am not sure I like these three functions. It leads to
-usage like this (from patch 21/21):
-
-	if (v4l2_is_format_yuv(src_fmt->fmt.pix_mp.pixelformat) &&
-	    v4l2_is_format_rgb(dst_fmt->fmt.pix_mp.pixelformat)) {
-
-which is quite inefficient since v4l2_format_info() is called twice, so
-the same for-loop there is also done twice.
-
-I think the caller should just call v4l2_format_info(), then test f->pix_enc.
-
-You can also add something like this to v4l2-common.h:
-
-static inline bool v4l2_is_format_yuv(const struct v4l2_format_info *f)
-{
-	return f && f->pix_enc == V4L2_ENC_YUV;
-}
-
-I'm fine with that.
-
-> +
->  static inline unsigned int v4l2_format_block_width(const struct v4l2_format_info *info, int plane)
->  {
->  	if (!info->block_w[plane])
-> diff --git a/include/media/v4l2-common.h b/include/media/v4l2-common.h
-> index c070d8ae11e5..27041cf2b818 100644
-> --- a/include/media/v4l2-common.h
-> +++ b/include/media/v4l2-common.h
-> @@ -456,9 +456,25 @@ int v4l2_s_parm_cap(struct video_device *vdev,
->  
->  /* Pixel format and FourCC helpers */
->  
-> +/**
-> + * enum v4l2_pixel_encoding - specifies the pixel encoding value
-> + *
-> + * @V4L2_ENC_UNKNOWN:	Pixel encoding is unknown/un-initialized
-> + * @V4L2_ENC_YUV:	Pixel encoding is YUV
-> + * @V4L2_ENC_RGB:	Pixel encoding is RGB
-> + * @V4L2_ENC_BAYER:	Pixel encoding is Bayer
-> + */
-> +enum v4l2_pixel_encoding {
-> +	@V4L2_ENC_UNKNOWN = 0,
-> +	V4L2_ENC_YUV = 1,
-> +	V4L2_ENC_RGB = 2,
-> +	V4L2_ENC_BAYER = 3,
-> +};
-
-Just plain _ENC_ is a bit too generic. I'd change this to _PIXEL_ENC_.
-
-> +
->  /**
->   * struct v4l2_format_info - information about a V4L2 format
->   * @format: 4CC format identifier (V4L2_PIX_FMT_*)
-> + * @pix_enc: Pixel format encoding (see enum v4l2_pixel_encoding above)
-
-Drop the 'format' word.
-
->   * @mem_planes: Number of memory planes, which includes the alpha plane (1 to 4).
->   * @comp_planes: Number of component planes, which includes the alpha plane (1 to 4).
->   * @bpp: Array of per-plane bytes per pixel
-> @@ -469,6 +485,7 @@ int v4l2_s_parm_cap(struct video_device *vdev,
->   */
->  struct v4l2_format_info {
->  	u32 format;
-> +	u8 pix_enc;
-
-I would prefer pixel_enc instead of pix_enc.
-
->  	u8 mem_planes;
->  	u8 comp_planes;
->  	u8 bpp[4];
-> @@ -479,6 +496,9 @@ struct v4l2_format_info {
->  };
->  
->  const struct v4l2_format_info *v4l2_format_info(u32 format);
-> +bool v4l2_is_format_rgb(u32 format);
-> +bool v4l2_is_format_yuv(u32 format);
-> +bool v4l2_is_format_bayer(u32 format);
->  
->  void v4l2_apply_frmsize_constraints(u32 *width, u32 *height,
->  				    const struct v4l2_frmsize_stepwise *frmsize);
-> 
+I did :)
 
 Regards,
+  Marco
 
-	Hans
+> 
+> 38 +       if (have_resp) {
+>  39                 sc_ipc->msg = msg;
+>  40 +               saved_svc = ((struct imx_sc_rpc_msg *)msg)->svc;
+>  41 +               saved_func = ((struct imx_sc_rpc_msg *)msg)->func;
+>  42 +       }
+> 
+> 50 +               /*
+>  51 +                * Some special SCU firmware APIs do NOT have return value
+>  52 +                * in hdr->func, but they do have response data, those special
+>  53 +                * APIs are defined as void function in SCU firmware, so they
+>  54 +                * should be treated as return success always.
+>  55 +                */
+>  56 +               if ((saved_svc == IMX_SC_RPC_SVC_MISC) &&
+>  57 +                       (saved_func == IMX_SC_MISC_FUNC_UNIQUE_ID ||
+>  58 +                        saved_func == IMX_SC_MISC_FUNC_GET_BUTTON_STATUS))
+>  59 +                       ret = 0;  
+> 
+> Anson
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
