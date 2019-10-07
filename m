@@ -2,99 +2,93 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B26E4C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B355ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8602E206C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F892206C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:49:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MWQHgu8L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728567AbfJGTrl (ORCPT
+        id S1728871AbfJGTtb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 15:47:41 -0400
-Received: from www17.your-server.de ([213.133.104.17]:42296 "EHLO
-        www17.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728187AbfJGTrk (ORCPT
+        Mon, 7 Oct 2019 15:49:31 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:39155 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728187AbfJGTtb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 15:47:40 -0400
-X-Greylist: delayed 1120 seconds by postgrey-1.27 at vger.kernel.org; Mon, 07 Oct 2019 15:47:39 EDT
-Received: from sslproxy05.your-server.de ([78.46.172.2])
-        by www17.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <thomas@m3y3r.de>)
-        id 1iHYgk-0000RR-24; Mon, 07 Oct 2019 21:28:58 +0200
-Received: from [2a02:908:4c22:ec00:8ad5:993:4cda:a89f] (helo=localhost.localdomain)
-        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <thomas@m3y3r.de>)
-        id 1iHYgj-000I8G-RV; Mon, 07 Oct 2019 21:28:57 +0200
-From:   Thomas Meyer <thomas@m3y3r.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux@rasmusvillemoes.dk, Thomas Meyer <thomas@m3y3r.de>
-Subject: [PATCH] kernel/groups.c: use bsearch library function
-Date:   Mon,  7 Oct 2019 21:26:32 +0200
-Message-Id: <20191007192632.29535-1-thomas@m3y3r.de>
-X-Mailer: git-send-email 2.21.0
+        Mon, 7 Oct 2019 15:49:31 -0400
+Received: by mail-qt1-f196.google.com with SMTP id n7so21004293qtb.6;
+        Mon, 07 Oct 2019 12:49:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hKLRuow+S9OqCZD+ZwnXS5BKikj0oOH26JZuOKs1SBc=;
+        b=MWQHgu8Lz7xXr6b3L0k+K5jZEIYjkw/PzSJnogPsH4dvevuA4viSxuR3XyJJLMTU3s
+         evwiIbB1wBE/1qzIo3U6Qn6WgHlmV1cBIG1GN1zrY73xpHCiS13oGNT/BeWRjR5fF2NM
+         HpRGtFRJBABpbaZZznvfaV/D/qITCU1cBdcg99QA67L1CS4uNepyE2CKIWuqgwnSJUC8
+         zCmMVXX1mxBsNSGcuOB7Wa+MXTsWyITwS6fqtcPWSClHvApLJGQkt++jYbmF5CgSh/bj
+         5U4nGmRMJWCv5DOSAlRmiUW6qVUzqSQWhKS1ULlg1mTc6veg+nhUFqr+J/mkFyYcff1Y
+         w/cA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hKLRuow+S9OqCZD+ZwnXS5BKikj0oOH26JZuOKs1SBc=;
+        b=GqBR7YaAPivnVDn+TKJpKbZ+jIv6d8Y0IKFKutRC4UHfgpcWq7rVBmr77Z3DOm0BMG
+         hyJOE3cgmR60Ba86UkTb0xQA0ywmc0ngsi0jFuBEpZs12LESOUHdRGOvYxr3bcmv9iSA
+         q00NPTlGeYqc2RGtGLSAq+t8WVf+vM3luy0nc4vJ9QWVdMR2vlYhflYbC1/u5v1LXMes
+         Q0Dt76S6HLUf7pGJAK/MUXrEbwpDqfqNK/Pnkdh8brHwvyTQOtK0Souqwk7MhFjOetUm
+         pYgoVA1sRteVgP2GzkZB7bVw91sqRJ2n8JlXuxFj403KCngDINSd4cJRhe52y+IRPSAL
+         geNg==
+X-Gm-Message-State: APjAAAVK5RCg6gqfiuxZGQ2M5pfyP1ENoaoArpWgLHKuOQRvK/KXo79H
+        it0lXpjoAHPSaNzmDY3RZ8mbkyRcK1i7KgG5+NJC+B/B
+X-Google-Smtp-Source: APXvYqy2jUwKRM/1cgnebb/SrMNeOdv41+/4DHRsPW8ShXC7QjVzqeFwUeQZOsY43/WTEahxNAJp8tHcNm1yfslt7uM=
+X-Received: by 2002:ad4:42c8:: with SMTP id f8mr28230703qvr.94.1570477770597;
+ Mon, 07 Oct 2019 12:49:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: thomas@m3y3r.de
-X-Virus-Scanned: Clear (ClamAV 0.101.4/25595/Mon Oct  7 10:28:44 2019)
+References: <20191006222046.GA18027@roeck-us.net> <CAHk-=wgrqwuZJmwbrjhjCFeSUu2i57unaGOnP4qZAmSyuGwMZA@mail.gmail.com>
+ <CAHk-=wjRPerXedTDoBbJL=tHBpH+=sP6pX_9NfgWxpnmHC5RtQ@mail.gmail.com>
+ <5f06c138-d59a-d811-c886-9e73ce51924c@roeck-us.net> <CAHk-=whAQWEMADgxb_qAw=nEY4OnuDn6HU4UCSDMNT5ULKvg3g@mail.gmail.com>
+ <20191007012437.GK26530@ZenIV.linux.org.uk> <CAHk-=whKJfX579+2f-CHc4_YmEmwvMe_Csr0+CPfLAsSAdfDoA@mail.gmail.com>
+ <20191007025046.GL26530@ZenIV.linux.org.uk> <CAHk-=whraNSys_Lj=Ut1EA=CJEfw2Uothh+5-WL+7nDJBegWcQ@mail.gmail.com>
+ <CAHk-=witTXMGsc9ZAK4hnKnd_O7u8b1eiou-6cfjt4aOcWvruQ@mail.gmail.com>
+ <CA+8MBb+VKk0aQZaJ+tMbFV7+s37HrQ6pzy4sHDAA3yqS-3nVwA@mail.gmail.com> <CAHk-=wi3P2NvBNocyNFTAb-G08P0ASVihMVKmiw__oNU4V2M5g@mail.gmail.com>
+In-Reply-To: <CAHk-=wi3P2NvBNocyNFTAb-G08P0ASVihMVKmiw__oNU4V2M5g@mail.gmail.com>
+From:   Tony Luck <tony.luck@gmail.com>
+Date:   Mon, 7 Oct 2019 12:49:19 -0700
+Message-ID: <CA+8MBb+Vubsx3Qyav25tgUgiGbs1XmEwoaCXTM=8jk4m2CxRbw@mail.gmail.com>
+Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to unsafe_put_user()
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit b7b2562f7252 ("kernel/groups.c: use sort library function")
-introduced the sort library function.
-also use the bsearch library function instead of open-coding the binary
-search.
+On Mon, Oct 7, 2019 at 12:09 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+> Hmm? I thought ia64 did unaligneds ok.
 
-Signed-off-by: Thomas Meyer <thomas@m3y3r.de>
----
- kernel/groups.c | 17 ++++-------------
- 1 file changed, 4 insertions(+), 13 deletions(-)
+If PSR.ac is set, we trap. If it isn't set, then model specific
+(though all implementations will
+trap for an unaligned access that crosses a 4K boundary).
 
-diff --git a/kernel/groups.c b/kernel/groups.c
-index daae2f2dc6d4f..69561a9cb4d39 100644
---- a/kernel/groups.c
-+++ b/kernel/groups.c
-@@ -2,6 +2,7 @@
- /*
-  * Supplementary group IDs
-  */
-+#include <linux/bsearch.h>
- #include <linux/cred.h>
- #include <linux/export.h>
- #include <linux/slab.h>
-@@ -96,22 +97,12 @@ EXPORT_SYMBOL(groups_sort);
- /* a simple bsearch */
- int groups_search(const struct group_info *group_info, kgid_t grp)
- {
--	unsigned int left, right;
--
- 	if (!group_info)
- 		return 0;
- 
--	left = 0;
--	right = group_info->ngroups;
--	while (left < right) {
--		unsigned int mid = (left+right)/2;
--		if (gid_gt(grp, group_info->gid[mid]))
--			left = mid + 1;
--		else if (gid_lt(grp, group_info->gid[mid]))
--			right = mid;
--		else
--			return 1;
--	}
-+	if (bsearch(&grp, group_info->gid, group_info->ngroups,
-+		    sizeof(*group_info->gid), gid_cmp))
-+		return 1;
- 	return 0;
- }
- 
--- 
-2.21.0
+Linux sets PSR.ac. Applications can use prctl(PR_SET_UNALIGN) to choose whether
+they want the kernel to silently fix things or to send SIGBUS.
 
+Kernel always noisily (rate limited) fixes up unaligned access.
+
+Your patch does make all the messages go away.
+
+Tested-by: Tony Luck <tony.luck@intel.com>
