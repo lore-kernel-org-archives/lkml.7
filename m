@@ -2,131 +2,97 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDA8ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7ACFECE58D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E31342070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:30:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DAE321655
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:30:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570458634;
+	bh=mdXg/xOK1YBHtcHcCP2J//sbLvG6PykrhZ9phMnAABY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MheA8Uari7Wv64DX4UraOd3LWMpvC7OJxVTqMEluKvL7GZbksaId0d8Yx++cMj7Hv
+	 X6Nhxn+Ce3BSyjzWQxTdK3J7DwF61B1HMOq4SP2D0WfEZOcPLzhM9rqpfhFk8jXnP0
+	 WiO7AfTC6cIFQRLu/l55nlQOeVdHgB3VjA33QMKw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728229AbfJGOaI (ORCPT
+        id S1728317AbfJGOad (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 10:30:08 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:36309 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728107AbfJGOaI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 10:30:08 -0400
-Received: by mail-io1-f71.google.com with SMTP id g126so27132128iof.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 07:30:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=sPnceGy4KIQEpbbOvELtAtUJXVUVS43coZhCQeMu3P0=;
-        b=InDodBYHgaqfE8TPbtdkdj88RtBieSu44uLPOp/y5CxRtyfytUXtAEIaGwfFG7ixJM
-         9JpNQV3wAK8af1ZcWHZUL7Z8452tgZqsZbpdP1OQtubrNz3pr1ngmzRyKPYxTlwS/FPc
-         +7xTjcpb8G9OA90oMmFASIXB667yHYr5t2SJtic0PQ2JJbTnPyBM0Kh6wVxDdeEcahjU
-         h2R0HAvErazrO70WECl2qFpMcWwGcQTi2UvuVd27QMWCAISCCtgh5U2Ebjwrq65nI99w
-         1iFQOuJ6h38S0x0Y7xIa1Gwj6cP8tPlBolFtjjqR1otJ6/HgK7UGIY3P+/G/SX0WBSqy
-         AaYQ==
-X-Gm-Message-State: APjAAAVIntmAKlj6r3n7qaotMVMIyZ7JagnW0uubXb+/UAxV2QwyVmQn
-        7LiSCDCmuBQHaA7VvqgU25rg1Ks4+gvkS9zridPhnhx9GtvC
-X-Google-Smtp-Source: APXvYqw6bMONiAXK3jAD+QHsaAQGL2DxyMV4QlaIUZAMVOoWVo3N+LG+gJwsA2BOPRhEraq3wKaxRgYZGqLSK6QLGem4nlaDNB6t
+        Mon, 7 Oct 2019 10:30:33 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40752 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727951AbfJGOad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 10:30:33 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 813DFAFC6;
+        Mon,  7 Oct 2019 14:30:31 +0000 (UTC)
+Date:   Mon, 7 Oct 2019 16:30:30 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
+        kirill.shutemov@linux.intel.com, ktkhai@virtuozzo.com,
+        hannes@cmpxchg.org, hughd@google.com, shakeelb@google.com,
+        rientjes@google.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: thp: move deferred split queue to memcg's nodeinfo
+Message-ID: <20191007143030.GN2381@dhcp22.suse.cz>
+References: <1569968203-64647-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20191002084304.GI15624@dhcp22.suse.cz>
+ <30421920-4fdb-767a-6ef2-60187932c414@suse.cz>
 MIME-Version: 1.0
-X-Received: by 2002:a5e:a818:: with SMTP id c24mr12978584ioa.230.1570458607252;
- Mon, 07 Oct 2019 07:30:07 -0700 (PDT)
-Date:   Mon, 07 Oct 2019 07:30:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006b7bfb059452e314@google.com>
-Subject: WARNING in filldir64
-From:   syzbot <syzbot+3031f712c7ad5dd4d926@syzkaller.appspotmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <30421920-4fdb-767a-6ef2-60187932c414@suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon 07-10-19 16:19:59, Vlastimil Babka wrote:
+> On 10/2/19 10:43 AM, Michal Hocko wrote:
+> > On Wed 02-10-19 06:16:43, Yang Shi wrote:
+> >> The commit 87eaceb3faa59b9b4d940ec9554ce251325d83fe ("mm: thp: make
+> >> deferred split shrinker memcg aware") makes deferred split queue per
+> >> memcg to resolve memcg pre-mature OOM problem.  But, all nodes end up
+> >> sharing the same queue instead of one queue per-node before the commit.
+> >> It is not a big deal for memcg limit reclaim, but it may cause global
+> >> kswapd shrink THPs from a different node.
+> >>
+> >> And, 0-day testing reported -19.6% regression of stress-ng's madvise
+> >> test [1].  I didn't see that much regression on my test box (24 threads,
+> >> 48GB memory, 2 nodes), with the same test (stress-ng --timeout 1
+> >> --metrics-brief --sequential 72  --class vm --exclude spawn,exec), I saw
+> >> average -3% (run the same test 10 times then calculate the average since
+> >> the test itself may have most 15% variation according to my test)
+> >> regression sometimes (not every time, sometimes I didn't see regression
+> >> at all).
+> >>
+> >> This might be caused by deferred split queue lock contention.  With some
+> >> configuration (i.e. just one root memcg) the lock contention my be worse
+> >> than before (given 2 nodes, two locks are reduced to one lock).
+> >>
+> >> So, moving deferred split queue to memcg's nodeinfo to make it NUMA
+> >> aware again.
+> >>
+> >> With this change stress-ng's madvise test shows average 4% improvement
+> >> sometimes and I didn't see degradation anymore.
+> > 
+> > My concern about this getting more and more complex
+> > (http://lkml.kernel.org/r/20191002084014.GH15624@dhcp22.suse.cz) holds
+> > here even more. Can we step back and reconsider the whole thing please?
+> 
+> What about freeing immediately after split via workqueue and also have a
+> synchronous version called before going oom? Maybe there would be also
+> other things that would benefit from this scheme instead of traditional
+> reclaim and shrinkers?
 
-syzbot found the following crash on:
+That is exactly what we have discussed some time ago.
 
-HEAD commit:    43b815c6 Merge tag 'armsoc-fixes' of git://git.kernel.org/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10721dfb600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=fb0b431ccdf08c1c
-dashboard link: https://syzkaller.appspot.com/bug?extid=3031f712c7ad5dd4d926
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+3031f712c7ad5dd4d926@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 10405 at fs/readdir.c:150 verify_dirent_name  
-fs/readdir.c:150 [inline]
-WARNING: CPU: 1 PID: 10405 at fs/readdir.c:150 filldir64+0x524/0x620  
-fs/readdir.c:356
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 10405 Comm: syz-executor.2 Not tainted 5.4.0-rc1+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x1d8/0x2f8 lib/dump_stack.c:113
-  panic+0x25c/0x799 kernel/panic.c:220
-  __warn+0x20e/0x210 kernel/panic.c:581
-  report_bug+0x1b6/0x2f0 lib/bug.c:195
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  do_error_trap+0xd7/0x440 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x36/0x40 arch/x86/kernel/traps.c:291
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
-RIP: 0010:verify_dirent_name fs/readdir.c:150 [inline]
-RIP: 0010:filldir64+0x524/0x620 fs/readdir.c:356
-Code: 00 00 c7 03 f2 ff ff ff b8 f2 ff ff ff 48 83 c4 60 5b 41 5c 41 5d 41  
-5e 41 5f 5d c3 e8 55 2c b9 ff 0f 0b eb 07 e8 4c 2c b9 ff <0f> 0b 49 83 c6  
-24 4c 89 f0 48 c1 e8 03 42 8a 04 20 84 c0 0f 85 b6
-RSP: 0018:ffff8880a3dc7b88 EFLAGS: 00010283
-RAX: ffffffff81ba0624 RBX: 000000000000000c RCX: 0000000000040000
-RDX: ffffc9000a588000 RSI: 00000000000021f1 RDI: 00000000000021f2
-RBP: ffff8880a3dc7c10 R08: ffffffff81ba0134 R09: 0000000000000004
-R10: fffffbfff1120afb R11: 0000000000000000 R12: dffffc0000000000
-R13: ffff8880a3dc7d30 R14: ffff8880a3dc7e88 R15: 000000000000000c
-  dir_emit include/linux/fs.h:3542 [inline]
-  __fat_readdir+0x1320/0x1a50 fs/fat/dir.c:677
-  fat_readdir+0x46/0x50 fs/fat/dir.c:704
-  iterate_dir+0x2a4/0x520 fs/readdir.c:107
-  ksys_getdents64+0x1ea/0x3f0 fs/readdir.c:412
-  __do_sys_getdents64 fs/readdir.c:431 [inline]
-  __se_sys_getdents64 fs/readdir.c:428 [inline]
-  __x64_sys_getdents64+0x7a/0x90 fs/readdir.c:428
-  do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x459a59
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f943ff4bc78 EFLAGS: 00000246 ORIG_RAX: 00000000000000d9
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459a59
-RDX: 0000000000001000 RSI: 00000000200005c0 RDI: 0000000000000005
-RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f943ff4c6d4
-R13: 00000000004c0533 R14: 00000000004d2c58 R15: 00000000ffffffff
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+-- 
+Michal Hocko
+SUSE Labs
