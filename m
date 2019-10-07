@@ -2,264 +2,216 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE409C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 431AEC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A104C20679
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 117802133F
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:07:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570435668;
+	bh=9VMlwZg1cGe1XTqvSRrybnr8zC4o8PtodXQXLBKYQmM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vflorRp/s79PLA2FrFxP5dq8IavDiCJYJT4z0fLT17ms3c3OtI5dClH+k99t5aww9
+	 yn0ftTGj7sAy/SMQf2jzDsp4xPQBv+P+z2cTPnaGs8GeSRUJU/0nmjPW4jKt4nAm+n
+	 fKMA0DZsi9HIAZOGEa81CTjwurzcPHQPBQQPfgBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727363AbfJGIHe (ORCPT
+        id S1727384AbfJGIHr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 04:07:34 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:58607 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726889AbfJGIHd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 04:07:33 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iHO3H-0002rt-Kp; Mon, 07 Oct 2019 10:07:31 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iHO3F-0004Fn-Uk; Mon, 07 Oct 2019 10:07:29 +0200
-Date:   Mon, 7 Oct 2019 10:07:29 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     Aisheng Dong <aisheng.dong@nxp.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] firmware: imx: Skip return value check for some special
- SCU firmware APIs
-Message-ID: <20191007080729.6ltbgwz4e7t4wpm4@pengutronix.de>
-References: <DB3PR0402MB391683202692BEAE4D2CD9C1F5860@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20190926100558.egils3ds37m3s5wo@pengutronix.de>
- <VI1PR04MB702336F648EA1BF0E4AC584BEE860@VI1PR04MB7023.eurprd04.prod.outlook.com>
- <DB3PR0402MB391675F9BF6FCA315B124BEBF5810@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <VI1PR04MB702322F2F020A527AD2F8DDEEE820@VI1PR04MB7023.eurprd04.prod.outlook.com>
- <DB3PR0402MB39169BC7E8DB3525A309034EF5820@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20190930081434.qrrv3yqczzxihntm@pengutronix.de>
- <DB3PR0402MB3916B2243D4B452B460EA892F5820@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20190930100222.p2cx6xspjeunsm54@pengutronix.de>
- <DB3PR0402MB39166F09D84D20CA3DBFDDE6F59B0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+        Mon, 7 Oct 2019 04:07:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52942 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726889AbfJGIHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 04:07:46 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C63AEACC9;
+        Mon,  7 Oct 2019 08:07:43 +0000 (UTC)
+Date:   Mon, 7 Oct 2019 10:07:42 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     akpm@linux-foundation.org, sergey.senozhatsky.work@gmail.com,
+        pmladek@suse.com, rostedt@goodmis.org, peterz@infradead.org,
+        david@redhat.com, john.ogness@linutronix.de, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
+Message-ID: <20191007080742.GD2381@dhcp22.suse.cz>
+References: <1570228005-24979-1-git-send-email-cai@lca.pw>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <DB3PR0402MB39166F09D84D20CA3DBFDDE6F59B0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 10:05:52 up 142 days, 14:24, 94 users,  load average: 0.09, 0.14,
- 0.13
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <1570228005-24979-1-git-send-email-cai@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-10-07 01:21, Anson Huang wrote:
-> Hi, Marco
+On Fri 04-10-19 18:26:45, Qian Cai wrote:
+> It is unsafe to call printk() while zone->lock was held, i.e.,
 > 
-> > On 19-09-30 08:32, Anson Huang wrote:
-> > > Hi, Marco
-> > >
-> > > > On 19-09-30 07:42, Anson Huang wrote:
-> > > > > Hi, Leonard
-> > > > >
-> > > > > > On 2019-09-27 4:20 AM, Anson Huang wrote:
-> > > > > > >> On 2019-09-26 1:06 PM, Marco Felsch wrote:
-> > > > > > >>> On 19-09-26 08:03, Anson Huang wrote:
-> > > > > > >>>>> On 19-09-25 18:07, Anson Huang wrote:
-> > > > > > >>>>>> The SCU firmware does NOT always have return value stored
-> > > > > > >>>>>> in message header's function element even the API has
-> > > > > > >>>>>> response data, those special APIs are defined as void
-> > > > > > >>>>>> function in SCU firmware, so they should be treated as return
-> > success always.
-> > > > > > >>>>>>
-> > > > > > >>>>>> +static const struct imx_sc_rpc_msg whitelist[] = {
-> > > > > > >>>>>> +	{ .svc = IMX_SC_RPC_SVC_MISC, .func =
-> > > > > > >>>>> IMX_SC_MISC_FUNC_UNIQUE_ID },
-> > > > > > >>>>>> +	{ .svc = IMX_SC_RPC_SVC_MISC, .func =
-> > > > > > >>>>>> +IMX_SC_MISC_FUNC_GET_BUTTON_STATUS }, };
-> > > > > > >>>>>
-> > > > > > >>>>> Is this going to be extended in the near future? I see
-> > > > > > >>>>> some upcoming problems here if someone uses a different
-> > > > > > >>>>> scu-fw<->kernel combination as nxp would suggest.
-> > > > > > >>>>
-> > > > > > >>>> Could be, but I checked the current APIs, ONLY these 2 will
-> > > > > > >>>> be used in Linux kernel, so I ONLY add these 2 APIs for now.
-> > > > > > >>>
-> > > > > > >>> Okay.
-> > > > > > >>>
-> > > > > > >>>> However, after rethink, maybe we should add another
-> > > > > > >>>> imx_sc_rpc API for those special APIs? To avoid checking it
-> > > > > > >>>> for all the APIs called which
-> > > > > > >> may impact some performance.
-> > > > > > >>>> Still under discussion, if you have better idea, please advise,
-> > thanks!
-> > > > > > >>
-> > > > > > >> My suggestion is to refactor the code and add a new API for
-> > > > > > >> the this "no error value" convention. Internally they can
-> > > > > > >> call a common function with flags.
-> > > > > > >
-> > > > > > > If I understand your point correctly, that means the loop
-> > > > > > > check of whether the API is with "no error value" for every
-> > > > > > > API still NOT be skipped, it is just refactoring the code, right?
-> > > > > >
-> > > > > > There would be no "loop" anywhere: the responsibility would fall
-> > > > > > on the call to call the right RPC function. In the current
-> > > > > > layering scheme (drivers -> RPC ->
-> > > > > > mailbox) the RPC layer treats all calls the same and it's up the
-> > > > > > the caller to provide information about calling convention.
-> > > > > >
-> > > > > > An example implementation:
-> > > > > > * Rename imx_sc_rpc_call to __imx_sc_rpc_call_flags
-> > > > > > * Make a tiny imx_sc_rpc_call wrapper which just converts
-> > > > > > resp/noresp to a flag
-> > > > > > * Make get button status call __imx_sc_rpc_call_flags with the
-> > > > > > _IMX_SC_RPC_NOERROR flag
-> > > > > >
-> > > > > > Hope this makes my suggestion clearer? Pushing this to the
-> > > > > > caller is a bit ugly but I think it's worth preserving the fact
-> > > > > > that the imx rpc core treats services in an uniform way.
-> > > > >
-> > > > > It is clear now, so essentially it is same as 2 separate APIs,
-> > > > > still need to change the button driver and uid driver to use the
-> > > > > special flag, meanwhile, need to change the third parament of
-> > > > > imx_sc_rpc_call()
-> > > > from bool to u32.
-> > > > >
-> > > > > If no one opposes this approach, I will redo the patch together
-> > > > > with the button driver and uid driver after holiday.
-> > > >
-> > > > As Ansons said that are two approaches and in both ways the caller
-> > > > needs to know if the error code is valid. Extending the flags seems
-> > > > better to me but it looks still not that good. One question, does
-> > > > the scu-fw set the error-msg to something? If not than why should we
-> > specify a flag or a other api?
-> > > > Nowadays the caller needs to know that the error-msg-field isn't set
-> > > > so if the caller sets the msg-packet to zero and fills the rpc-id
-> > > > the error-msg-field shouldn't be touched by the firmware. So it should be
-> > zero.
-> > >
-> > > The flow are as below for those special APIs with response data but no
-> > return value from SCU FW:
-> > >
-> > > 1. caller sends msg with a header field and data field, the header
-> > > field has svc ID and function ID; 2. SCU FW will service the caller
-> > > and then clear the SVC ID before return, the response data will be Put
-> > > in msg data field, and if the APIs has return value, SCU FW will put
-> > > the return value in function ID of msg;
-> > 
-> > Thanks for the declaration :)
-> > 
-> > > The caller has no chance to set the msg-packet to zero and rpc-id, it
-> > > needs to pass correct rpc-id to SCU FW and Get response data from SCU
-> > > FW, and for those special APIs has function ID NOT over-written by SCU
-> > > FW's return Value, but the function ID is a unsigned int, and the SCU FW
-> > return value is also a unsigned int, so we have no idea to separate them for
-> > no-return value API or error-return API.
-> > 
-> > I see.
-> > 
-> > > With new approach, I can use below 2 flags, the ugly point is user need to
-> > know which API to call.
-> > 
-> > I don't see any improve using flags because the caller still needs to know if
-> > the scu-fw works (sorry for that) correctly. So we should go to adapt your
-> > approach to handle that within the core and improve the caller usage.
-> > 
-> > What about this:
-> > 
-> > 8<-------------------------------------------------------------------------------
-> > 
-> > diff --git a/drivers/firmware/imx/imx-scu.c b/drivers/firmware/imx/imx-
-> > scu.c index 04a24a863d6e..8f406a0784a4 100644
-> > --- a/drivers/firmware/imx/imx-scu.c
-> > +++ b/drivers/firmware/imx/imx-scu.c
-> > @@ -184,6 +184,16 @@ int imx_scu_call_rpc(struct imx_sc_ipc *sc_ipc, void
-> > *msg, bool have_resp)
-> >  		/* response status is stored in hdr->func field */
-> >  		hdr = msg;
-> >  		ret = hdr->func;
-> > +
-> > +		/*
-> > +		 * Some special SCU firmware APIs do NOT have return value
-> > +		 * in hdr->func, but they do have response data, those
-> > special
-> > +		 * APIs are defined as void function in SCU firmware, so they
-> > +		 * should be treated as return success always.
-> > +		 */
-> > +		if (hdr->func == IMX_SC_MISC_FUNC_UNIQUE_ID ||
-> > +		    hdr->func == IMX_SC_MISC_FUNC_GET_BUTTON_STATUS)
-> > +			ret = 0;
-> >  	}
-> > 
-> >  out:
-> > 8<-------------------------------------------------------------------------------
-> > 
-> > As you and Leonard said, this scu-fw behaviour is intended. So this will be
-> > not changed over the time else we need a scu-fw version check too.
-> > Also as you said those special functions shouldn't be extended I think a
-> > simple if-statement should work and no performance regressions are
-> > expected.
-> > 
+> zone->lock --> console_lock
 > 
-> I agree to just check the special APIs in the imx_scu_call_rpc() function, it can avoid calling
-> another function to check as my V1 patch did, also no need to add another API for users, so
-> that users no need to know which API to call. But I can NOT use the example you listed upper
-> directly, the return value from SCU FW could be an error value which is same as the hdr->func,
-
-I tought the SCU FW won't touch this field.
-
-> so I need to saved the original hdr->func and compare them, see below, please help review V2
-> patch, thanks.
-
-I did :)
-
-Regards,
-  Marco
-
+> because the console could always allocate some memory in different code
+> paths and form locking chains in an opposite order,
 > 
-> 38 +       if (have_resp) {
->  39                 sc_ipc->msg = msg;
->  40 +               saved_svc = ((struct imx_sc_rpc_msg *)msg)->svc;
->  41 +               saved_func = ((struct imx_sc_rpc_msg *)msg)->func;
->  42 +       }
+> console_lock --> * --> zone->lock
 > 
-> 50 +               /*
->  51 +                * Some special SCU firmware APIs do NOT have return value
->  52 +                * in hdr->func, but they do have response data, those special
->  53 +                * APIs are defined as void function in SCU firmware, so they
->  54 +                * should be treated as return success always.
->  55 +                */
->  56 +               if ((saved_svc == IMX_SC_RPC_SVC_MISC) &&
->  57 +                       (saved_func == IMX_SC_MISC_FUNC_UNIQUE_ID ||
->  58 +                        saved_func == IMX_SC_MISC_FUNC_GET_BUTTON_STATUS))
->  59 +                       ret = 0;  
+> As the result, it triggers lockdep splats like below and in different
+> code paths in this thread [1]. Since has_unmovable_pages() was only used
+> in set_migratetype_isolate() and is_pageblock_removable_nolock(). Only
+> the former will set the REPORT_FAILURE flag which will call printk().
+> Hence, unlock the zone->lock just before the dump_page() there where
+> when has_unmovable_pages() returns true, there is no need to hold the
+> lock anyway in the rest of set_migratetype_isolate().
 > 
-> Anson
+> While at it, remove a problematic printk() in __offline_isolated_pages()
+> only for debugging as well which will always disable lockdep on debug
+> kernels.
 
+I do not think that removing the printk is the right long term solution.
+While I do agree that removing the debugging printk __offline_isolated_pages
+does make sense because it is essentially of a very limited use, this
+doesn't really solve the underlying problem.  There are likely other
+printks from zone->lock. It would be much more saner to actually
+disallow consoles to allocate any memory while printk is called from an
+atomic context.
+
+> The problem is probably there forever, but neither many developers will
+> run memory offline with the lockdep enabled nor admins in the field are
+> lucky enough yet to hit a perfect timing which required to trigger a
+> real deadlock. In addition, there aren't many places that call printk()
+> while zone->lock was held.
+> 
+> WARNING: possible circular locking dependency detected
+> ------------------------------------------------------
+> test.sh/1724 is trying to acquire lock:
+> 0000000052059ec0 (console_owner){-...}, at: console_unlock+0x
+> 01: 328/0xa30
+> 
+> but task is already holding lock:
+> 000000006ffd89c8 (&(&zone->lock)->rlock){-.-.}, at: start_iso
+> 01: late_page_range+0x216/0x538
+
+I am also wondering what does this lockdep report actually say. How come
+we have a dependency between a start_kernel path and a syscall?
+
+> which lock already depends on the new lock.
+> 
+> the existing dependency chain (in reverse order) is:
+> 
+> -> #2 (&(&zone->lock)->rlock){-.-.}:
+>        lock_acquire+0x21a/0x468
+>        _raw_spin_lock+0x54/0x68
+>        get_page_from_freelist+0x8b6/0x2d28
+>        __alloc_pages_nodemask+0x246/0x658
+>        __get_free_pages+0x34/0x78
+>        sclp_init+0x106/0x690
+>        sclp_register+0x2e/0x248
+>        sclp_rw_init+0x4a/0x70
+>        sclp_console_init+0x4a/0x1b8
+>        console_init+0x2c8/0x410
+>        start_kernel+0x530/0x6a0
+>        startup_continue+0x70/0xd0
+> 
+> -> #1 (sclp_lock){-.-.}:
+>        lock_acquire+0x21a/0x468
+>        _raw_spin_lock_irqsave+0xcc/0xe8
+>        sclp_add_request+0x34/0x308
+>        sclp_conbuf_emit+0x100/0x138
+>        sclp_console_write+0x96/0x3b8
+>        console_unlock+0x6dc/0xa30
+>        vprintk_emit+0x184/0x3c8
+>        vprintk_default+0x44/0x50
+>        printk+0xa8/0xc0
+>        iommu_debugfs_setup+0xf2/0x108
+>        iommu_init+0x6c/0x78
+>        do_one_initcall+0x162/0x680
+>        kernel_init_freeable+0x4e8/0x5a8
+>        kernel_init+0x2a/0x188
+>        ret_from_fork+0x30/0x34
+>        kernel_thread_starter+0x0/0xc
+> 
+> -> #0 (console_owner){-...}:
+>        check_noncircular+0x338/0x3e0
+>        __lock_acquire+0x1e66/0x2d88
+>        lock_acquire+0x21a/0x468
+>        console_unlock+0x3a6/0xa30
+>        vprintk_emit+0x184/0x3c8
+>        vprintk_default+0x44/0x50
+>        printk+0xa8/0xc0
+>        __dump_page+0x1dc/0x710
+>        dump_page+0x2e/0x58
+>        has_unmovable_pages+0x2e8/0x470
+>        start_isolate_page_range+0x404/0x538
+>        __offline_pages+0x22c/0x1338
+>        memory_subsys_offline+0xa6/0xe8
+>        device_offline+0xe6/0x118
+>        state_store+0xf0/0x110
+>        kernfs_fop_write+0x1bc/0x270
+>        vfs_write+0xce/0x220
+>        ksys_write+0xea/0x190
+>        system_call+0xd8/0x2b4
+> 
+> other info that might help us debug this:
+> 
+> Chain exists of:
+>   console_owner --> sclp_lock --> &(&zone->lock)->rlock
+> 
+>  Possible unsafe locking scenario:
+> 
+>        CPU0                    CPU1
+>        ----                    ----
+>   lock(&(&zone->lock)->rlock);
+>                                lock(sclp_lock);
+>                                lock(&(&zone->lock)->rlock);
+>   lock(console_owner);
+> 
+>  *** DEADLOCK ***
+> 
+> 9 locks held by test.sh/1724:
+>  #0: 000000000e925408 (sb_writers#4){.+.+}, at: vfs_write+0x201:
+>  #1: 0000000050aa4280 (&of->mutex){+.+.}, at: kernfs_fop_write:
+>  #2: 0000000062e5c628 (kn->count#198){.+.+}, at: kernfs_fop_write
+>  #3: 00000000523236a0 (device_hotplug_lock){+.+.}, at:
+> lock_device_hotplug_sysfs+0x30/0x80
+>  #4: 0000000062e70990 (&dev->mutex){....}, at: device_offline
+>  #5: 0000000051fd36b0 (cpu_hotplug_lock.rw_sem){++++}, at:
+> __offline_pages+0xec/0x1338
+>  #6: 00000000521ca470 (mem_hotplug_lock.rw_sem){++++}, at:
+> percpu_down_write+0x38/0x210
+>  #7: 000000006ffd89c8 (&(&zone->lock)->rlock){-.-.}, at:
+> start_isolate_page_range+0x216/0x538
+>  #8: 000000005205a100 (console_lock){+.+.}, at: vprintk_emit
+> 
+> stack backtrace:
+> Hardware name: IBM 2964 N96 400 (z/VM 6.4.0)
+> Call Trace:
+> ([<00000000512ae218>] show_stack+0x110/0x1b0)
+>  [<0000000051b6d506>] dump_stack+0x126/0x178
+>  [<00000000513a4b08>] check_noncircular+0x338/0x3e0
+>  [<00000000513aaaf6>] __lock_acquire+0x1e66/0x2d88
+>  [<00000000513a7e12>] lock_acquire+0x21a/0x468
+>  [<00000000513bb2fe>] console_unlock+0x3a6/0xa30
+>  [<00000000513bde2c>] vprintk_emit+0x184/0x3c8
+>  [<00000000513be0b4>] vprintk_default+0x44/0x50
+>  [<00000000513beb60>] printk+0xa8/0xc0
+>  [<000000005158c364>] __dump_page+0x1dc/0x710
+>  [<000000005158c8c6>] dump_page+0x2e/0x58
+>  [<00000000515d87c8>] has_unmovable_pages+0x2e8/0x470
+>  [<000000005167072c>] start_isolate_page_range+0x404/0x538
+>  [<0000000051b96de4>] __offline_pages+0x22c/0x1338
+>  [<0000000051908586>] memory_subsys_offline+0xa6/0xe8
+>  [<00000000518e561e>] device_offline+0xe6/0x118
+>  [<0000000051908170>] state_store+0xf0/0x110
+>  [<0000000051796384>] kernfs_fop_write+0x1bc/0x270
+>  [<000000005168972e>] vfs_write+0xce/0x220
+>  [<0000000051689b9a>] ksys_write+0xea/0x190
+>  [<0000000051ba9990>] system_call+0xd8/0x2b4
+> INFO: lockdep is turned off.
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Michal Hocko
+SUSE Labs
