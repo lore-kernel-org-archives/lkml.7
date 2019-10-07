@@ -4,57 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FAEDECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 805CBECE58D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C3482070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:03:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49F8F2070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:03:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570453414;
-	bh=pt3x/cWOulyFfI1J/zp86beM7A8uXvYWyOKGHp8YZTc=;
+	s=default; t=1570453416;
+	bh=nj4kW52DRZbuhF5KkN4YQuIRid23RCw2jI7hILCuuVM=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=gr+v4PWqJ9Nb4RPMtDjli/QINMOYpu9i6dBqHQGd9eKioSRure/RsGuLZMVMLSDzm
-	 VYTlNhL40WMVlsM3V0XHkLC7WmZs2S4CXNs/rw/mTkCOlgaDuEiK8woh4r8IS9W84j
-	 8KU86fKoVOtPQmpI6jMyGqJ3xmR+rbLGd72Bp2Z0=
+	b=dQ8exQaBEjgo8UaSRj3hMdjaDE6xlD33voW1POEkOjciAhA4Lch+5nHcE6kLNIdEH
+	 UJ7Kg4kS+o68StjNbr0HxVwHHewOKnypGDQP3QIhLuvl1JPhKSWIhQaUzPJIWWUjB4
+	 W/CKOw11zQT4sOcUgVkdzlTllNooEx4w5QZUSyNM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728186AbfJGND1 (ORCPT
+        id S1728270AbfJGNDf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 09:03:27 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49360 "EHLO
+        Mon, 7 Oct 2019 09:03:35 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49472 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728057AbfJGNDY (ORCPT
+        with ESMTP id S1728146AbfJGND1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 09:03:24 -0400
+        Mon, 7 Oct 2019 09:03:27 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=IBedbPcWi2oFjLuWTy0vnawK7yIvgrD1j1GmEPV8jJQ=; b=QerIeijOJ/FM
-        oddnmQnotFtFnwtRI+5bD4ARReBPGncRwcrXz+O5LCAnk2XCGtiXRnGrhVLdUO/x4M7GGSsQZrdr9
-        RHKuFdBmTDw1RJBgSPgqFQ/yqnBaKqZDuib3L+yJi0qE0N8z21bpZLuQwi2NusznLgXkg0c0VbYSK
-        iUZbk=;
+        List-Archive; bh=lL/kh/qetVtVFXgFRF0qXSp3surLNTIc1iBbd+ByaZQ=; b=qPccM/3wNlPs
+        8GZTMxt0kTf4crWhQcXJwkeXYagLlgk4SCpjv5urre1quXHpkzKG0HTuYek0W6WBYw6BEzLG/u+k4
+        voS0kHQEJJudGqRXWnuwImisOw5UlGJ0uIHSjl9q23EzCHS/hwEKRl9eUJx8DDWZK0fpNG0HtliT3
+        W1y58=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iHSfY-0003SM-0Z; Mon, 07 Oct 2019 13:03:20 +0000
+        id 1iHSfc-0003Sz-Qd; Mon, 07 Oct 2019 13:03:24 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 817382741D8E; Mon,  7 Oct 2019 14:03:19 +0100 (BST)
+        id 3D0D9274162F; Mon,  7 Oct 2019 14:03:24 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Balaji T K <balajitk@ti.com>, Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: pbias: Get rid of struct pbias_regulator_data" to the regulator tree
-In-Reply-To: <20191007114320.20977-1-axel.lin@ingics.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Applied "gpiolib: introduce devm_fwnode_gpiod_get_index()" to the regulator tree
+In-Reply-To:  <20190913032240.50333-2-dmitry.torokhov@gmail.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191007130319.817382741D8E@ypsilon.sirena.org.uk>
-Date:   Mon,  7 Oct 2019 14:03:19 +0100 (BST)
+Message-Id: <20191007130324.3D0D9274162F@ypsilon.sirena.org.uk>
+Date:   Mon,  7 Oct 2019 14:03:24 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -62,11 +64,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: pbias: Get rid of struct pbias_regulator_data
+   gpiolib: introduce devm_fwnode_gpiod_get_index()
 
 has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.5
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -87,142 +89,158 @@ to this mail.
 Thanks,
 Mark
 
-From df8c542ee853f22dc0e5584ba0a70de397a3d73e Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Mon, 7 Oct 2019 19:43:20 +0800
-Subject: [PATCH] regulator: pbias: Get rid of struct pbias_regulator_data
+From 2d2f116d69c127099553afe0d87cf9c0bbe2759e Mon Sep 17 00:00:00 2001
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Date: Thu, 12 Sep 2019 20:22:38 -0700
+Subject: [PATCH] gpiolib: introduce devm_fwnode_gpiod_get_index()
 
-Only the desc field is really used, so use struct regulator_desc instead.
-Then struct pbias_regulator_data can be removed.
+devm_fwnode_get_index_gpiod_from_child() is too long, besides the fwnode
+in question does not have to be a child of device node. Let's rename it
+to devm_fwnode_gpiod_get_index() and keep the old name for compatibility
+for now.
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Link: https://lore.kernel.org/r/20191007114320.20977-1-axel.lin@ingics.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Also let's add a devm_fwnode_gpiod_get() wrapper as majority of the
+callers need a single GPIO.
+
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Link: https://lore.kernel.org/r/20190913032240.50333-2-dmitry.torokhov@gmail.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/regulator/pbias-regulator.c | 69 +++++++++++------------------
- 1 file changed, 26 insertions(+), 43 deletions(-)
+ drivers/gpio/gpiolib-devres.c | 19 ++++++++--------
+ include/linux/gpio/consumer.h | 41 ++++++++++++++++++++++++++---------
+ 2 files changed, 40 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/regulator/pbias-regulator.c b/drivers/regulator/pbias-regulator.c
-index a59811060bdc..bfc15dd3f730 100644
---- a/drivers/regulator/pbias-regulator.c
-+++ b/drivers/regulator/pbias-regulator.c
-@@ -38,15 +38,6 @@ struct pbias_reg_info {
- 	int n_voltages;
- };
+diff --git a/drivers/gpio/gpiolib-devres.c b/drivers/gpio/gpiolib-devres.c
+index 98e3c20d9730..9a0475c87f95 100644
+--- a/drivers/gpio/gpiolib-devres.c
++++ b/drivers/gpio/gpiolib-devres.c
+@@ -185,12 +185,11 @@ struct gpio_desc *devm_gpiod_get_from_of_node(struct device *dev,
+ EXPORT_SYMBOL_GPL(devm_gpiod_get_from_of_node);
  
--struct pbias_regulator_data {
--	struct regulator_desc desc;
--	void __iomem *pbias_addr;
--	struct regulator_dev *dev;
--	struct regmap *syscon;
--	const struct pbias_reg_info *info;
--	int voltage;
--};
--
- struct pbias_of_data {
- 	unsigned int offset;
- };
-@@ -157,13 +148,13 @@ MODULE_DEVICE_TABLE(of, pbias_of_match);
- static int pbias_regulator_probe(struct platform_device *pdev)
+ /**
+- * devm_fwnode_get_index_gpiod_from_child - get a GPIO descriptor from a
+- *					    device's child node
++ * devm_fwnode_gpiod_get_index - get a GPIO descriptor from a given node
+  * @dev:	GPIO consumer
++ * @fwnode:	firmware node containing GPIO reference
+  * @con_id:	function within the GPIO consumer
+  * @index:	index of the GPIO to obtain in the consumer
+- * @child:	firmware node (child of @dev)
+  * @flags:	GPIO initialization flags
+  * @label:	label to attach to the requested GPIO
+  *
+@@ -200,11 +199,11 @@ EXPORT_SYMBOL_GPL(devm_gpiod_get_from_of_node);
+  * On successful request the GPIO pin is configured in accordance with
+  * provided @flags.
+  */
+-struct gpio_desc *devm_fwnode_get_index_gpiod_from_child(struct device *dev,
+-						const char *con_id, int index,
+-						struct fwnode_handle *child,
+-						enum gpiod_flags flags,
+-						const char *label)
++struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
++					      struct fwnode_handle *fwnode,
++					      const char *con_id, int index,
++					      enum gpiod_flags flags,
++					      const char *label)
  {
- 	struct device_node *np = pdev->dev.of_node;
--	struct pbias_regulator_data *drvdata;
- 	struct resource *res;
- 	struct regulator_config cfg = { };
-+	struct regulator_desc *desc;
-+	struct regulator_dev *rdev;
- 	struct regmap *syscon;
- 	const struct pbias_reg_info *info;
--	int ret = 0;
--	int count, idx, data_idx = 0;
-+	int ret, count, idx;
- 	const struct pbias_of_data *data;
- 	unsigned int offset;
+ 	char prop_name[32]; /* 32 is max size of property name */
+ 	struct gpio_desc **dr;
+@@ -224,7 +223,7 @@ struct gpio_desc *devm_fwnode_get_index_gpiod_from_child(struct device *dev,
+ 			snprintf(prop_name, sizeof(prop_name), "%s",
+ 					    gpio_suffixes[i]);
  
-@@ -172,10 +163,8 @@ static int pbias_regulator_probe(struct platform_device *pdev)
- 	if (count < 0)
- 		return count;
+-		desc = fwnode_get_named_gpiod(child, prop_name, index, flags,
++		desc = fwnode_get_named_gpiod(fwnode, prop_name, index, flags,
+ 					      label);
+ 		if (!IS_ERR(desc) || (PTR_ERR(desc) != -ENOENT))
+ 			break;
+@@ -239,7 +238,7 @@ struct gpio_desc *devm_fwnode_get_index_gpiod_from_child(struct device *dev,
  
--	drvdata = devm_kcalloc(&pdev->dev,
--			       count, sizeof(struct pbias_regulator_data),
--			       GFP_KERNEL);
--	if (!drvdata)
-+	desc = devm_kcalloc(&pdev->dev, count, sizeof(*desc), GFP_KERNEL);
-+	if (!desc)
- 		return -ENOMEM;
+ 	return desc;
+ }
+-EXPORT_SYMBOL_GPL(devm_fwnode_get_index_gpiod_from_child);
++EXPORT_SYMBOL_GPL(devm_fwnode_gpiod_get_index);
  
- 	syscon = syscon_regmap_lookup_by_phandle(np, "syscon");
-@@ -198,7 +187,7 @@ static int pbias_regulator_probe(struct platform_device *pdev)
- 	cfg.regmap = syscon;
- 	cfg.dev = &pdev->dev;
+ /**
+  * devm_gpiod_get_index_optional - Resource-managed gpiod_get_index_optional()
+diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
+index b70af921c614..dc0ddcd30515 100644
+--- a/include/linux/gpio/consumer.h
++++ b/include/linux/gpio/consumer.h
+@@ -176,11 +176,11 @@ struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
+ 					 const char *propname, int index,
+ 					 enum gpiod_flags dflags,
+ 					 const char *label);
+-struct gpio_desc *devm_fwnode_get_index_gpiod_from_child(struct device *dev,
+-						const char *con_id, int index,
+-						struct fwnode_handle *child,
+-						enum gpiod_flags flags,
+-						const char *label);
++struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
++					      struct fwnode_handle *child,
++					      const char *con_id, int index,
++					      enum gpiod_flags flags,
++					      const char *label);
  
--	for (idx = 0; idx < PBIAS_NUM_REGS && data_idx < count; idx++) {
-+	for (idx = 0; idx < PBIAS_NUM_REGS && count; idx++) {
- 		if (!pbias_matches[idx].init_data ||
- 			!pbias_matches[idx].of_node)
- 			continue;
-@@ -207,41 +196,35 @@ static int pbias_regulator_probe(struct platform_device *pdev)
- 		if (!info)
- 			return -ENODEV;
+ #else /* CONFIG_GPIOLIB */
  
--		drvdata[data_idx].syscon = syscon;
--		drvdata[data_idx].info = info;
--		drvdata[data_idx].desc.name = info->name;
--		drvdata[data_idx].desc.owner = THIS_MODULE;
--		drvdata[data_idx].desc.type = REGULATOR_VOLTAGE;
--		drvdata[data_idx].desc.ops = &pbias_regulator_voltage_ops;
--		drvdata[data_idx].desc.volt_table = info->pbias_volt_table;
--		drvdata[data_idx].desc.n_voltages = info->n_voltages;
--		drvdata[data_idx].desc.enable_time = info->enable_time;
--		drvdata[data_idx].desc.vsel_reg = offset;
--		drvdata[data_idx].desc.vsel_mask = info->vmode;
--		drvdata[data_idx].desc.enable_reg = offset;
--		drvdata[data_idx].desc.enable_mask = info->enable_mask;
--		drvdata[data_idx].desc.enable_val = info->enable;
--		drvdata[data_idx].desc.disable_val = info->disable_val;
-+		desc->name = info->name;
-+		desc->owner = THIS_MODULE;
-+		desc->type = REGULATOR_VOLTAGE;
-+		desc->ops = &pbias_regulator_voltage_ops;
-+		desc->volt_table = info->pbias_volt_table;
-+		desc->n_voltages = info->n_voltages;
-+		desc->enable_time = info->enable_time;
-+		desc->vsel_reg = offset;
-+		desc->vsel_mask = info->vmode;
-+		desc->enable_reg = offset;
-+		desc->enable_mask = info->enable_mask;
-+		desc->enable_val = info->enable;
-+		desc->disable_val = info->disable_val;
- 
- 		cfg.init_data = pbias_matches[idx].init_data;
--		cfg.driver_data = &drvdata[data_idx];
- 		cfg.of_node = pbias_matches[idx].of_node;
- 
--		drvdata[data_idx].dev = devm_regulator_register(&pdev->dev,
--					&drvdata[data_idx].desc, &cfg);
--		if (IS_ERR(drvdata[data_idx].dev)) {
--			ret = PTR_ERR(drvdata[data_idx].dev);
-+		rdev = devm_regulator_register(&pdev->dev, desc, &cfg);
-+		if (IS_ERR(rdev)) {
-+			ret = PTR_ERR(rdev);
- 			dev_err(&pdev->dev,
- 				"Failed to register regulator: %d\n", ret);
--			goto err_regulator;
-+			return ret;
- 		}
--		data_idx++;
-+		desc++;
-+		count--;
- 	}
- 
--	platform_set_drvdata(pdev, drvdata);
--
--err_regulator:
--	return ret;
-+	return 0;
+@@ -531,6 +531,29 @@ struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
+ 	return ERR_PTR(-ENOSYS);
  }
  
- static struct platform_driver pbias_regulator_driver = {
++static inline
++struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
++					      struct fwnode_handle *fwnode,
++					      const char *con_id, int index,
++					      enum gpiod_flags flags,
++					      const char *label)
++{
++	return ERR_PTR(-ENOSYS);
++}
++
++#endif /* CONFIG_GPIOLIB */
++
++static inline
++struct gpio_desc *devm_fwnode_gpiod_get(struct device *dev,
++					struct fwnode_handle *fwnode,
++					const char *con_id,
++					enum gpiod_flags flags,
++					const char *label)
++{
++	return devm_fwnode_gpiod_get_index(dev, fwnode, con_id, 0,
++					   flags, label);
++}
++
+ static inline
+ struct gpio_desc *devm_fwnode_get_index_gpiod_from_child(struct device *dev,
+ 						const char *con_id, int index,
+@@ -538,11 +561,10 @@ struct gpio_desc *devm_fwnode_get_index_gpiod_from_child(struct device *dev,
+ 						enum gpiod_flags flags,
+ 						const char *label)
+ {
+-	return ERR_PTR(-ENOSYS);
++	return devm_fwnode_gpiod_get_index(dev, child, con_id, index,
++					   flags, label);
+ }
+ 
+-#endif /* CONFIG_GPIOLIB */
+-
+ static inline
+ struct gpio_desc *devm_fwnode_get_gpiod_from_child(struct device *dev,
+ 						   const char *con_id,
+@@ -550,8 +572,7 @@ struct gpio_desc *devm_fwnode_get_gpiod_from_child(struct device *dev,
+ 						   enum gpiod_flags flags,
+ 						   const char *label)
+ {
+-	return devm_fwnode_get_index_gpiod_from_child(dev, con_id, 0, child,
+-						      flags, label);
++	return devm_fwnode_gpiod_get_index(dev, child, con_id, 0, flags, label);
+ }
+ 
+ #if IS_ENABLED(CONFIG_GPIOLIB) && IS_ENABLED(CONFIG_OF_GPIO)
 -- 
 2.20.1
 
