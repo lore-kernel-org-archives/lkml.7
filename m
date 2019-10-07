@@ -2,95 +2,150 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45856C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFF3C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D1102173B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570459802;
-	bh=r4K7HAwLnCeGJFkWlb4lenJOAqclCLAOXkLixnCX080=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Nv2A+9pyOC+ujpFg27bST5yf8eH/fhVqWixk9GJKNiLAElJZzI1sYGOXA12UmGGiv
-	 X+TZnnGBk8IcjiEPBd2jObqkjHdMnfaytfnfPP9YXKCxKgpi4RTcoIkc2IXMttDzlA
-	 lM9WRH2j9kn9asmwOWOFrQNkUregnbRpRRjsH1h4=
+	by mail.kernel.org (Postfix) with ESMTP id DD47521871
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728888AbfJGOuA (ORCPT
+        id S1728874AbfJGOt7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 10:50:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56756 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728827AbfJGOtz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 10:49:55 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 795EB21721;
-        Mon,  7 Oct 2019 14:49:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570459794;
-        bh=r4K7HAwLnCeGJFkWlb4lenJOAqclCLAOXkLixnCX080=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=D52K+4pPEnFckx8ZJgeQB5pQg9bw/NPoVMCLRzoJC/bFTaCjswMxxBhdMP2PqRmNX
-         MXB9/A1fV1FaZ8fb8tfslbeiQR+vEv2T9gP+0vyMEr5b7n/nBALrofKtuhOozThz28
-         mYWblVLt26i79NTfFjiVgatl2Jswp0V47JYfdWhI=
-Date:   Mon, 7 Oct 2019 16:49:51 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.4 00/36] 4.4.196-stable review
-Message-ID: <20191007144951.GB966828@kroah.com>
-References: <20191006171038.266461022@linuxfoundation.org>
- <d3e1e6ae-8ca4-a43b-d30d-9a9a9a7e5752@roeck-us.net>
+        Mon, 7 Oct 2019 10:49:59 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44543 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728804AbfJGOty (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 10:49:54 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iHUK8-0005yu-As; Mon, 07 Oct 2019 16:49:20 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 9AC7F1C0DCB;
+        Mon,  7 Oct 2019 16:49:15 +0200 (CEST)
+Date:   Mon, 07 Oct 2019 14:49:15 -0000
+From:   "tip-bot2 for Steve MacLean" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/urgent] perf inject jit: Fix JIT_CODE_MOVE filename
+Cc:     stable@vger.kernel.org, #@tip-bot2.tec.linutronix.de,
+        v4.6+@tip-bot2.tec.linutronix.de,
+        Steve MacLean <Steve.MacLean@Microsoft.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Brian Robbins <brianrob@microsoft.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        "Eric Saint-Etienne" <eric.saint.etienne@oracle.com>,
+        John Keeping <john@metanate.com>,
+        John Salem <josalem@microsoft.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Stephane Eranian <eranian@google.com>,
+        Tom McDonald <thomas.mcdonald@microsoft.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: =?utf-8?q?=3CBN8PR21MB1362FF8F127B31DBF4121528F7800=40BN8PR21MB?=
+ =?utf-8?q?1362=2Enamprd21=2Eprod=2Eoutlook=2Ecom=3E?=
+References: =?utf-8?q?=3CBN8PR21MB1362FF8F127B31DBF4121528F7800=40BN8PR21M?=
+ =?utf-8?q?B1362=2Enamprd21=2Eprod=2Eoutlook=2Ecom=3E?=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d3e1e6ae-8ca4-a43b-d30d-9a9a9a7e5752@roeck-us.net>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Message-ID: <157045975560.9978.11908955377927615460.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 05:53:55AM -0700, Guenter Roeck wrote:
-> On 10/6/19 10:18 AM, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 4.4.196 release.
-> > There are 36 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Tue 08 Oct 2019 05:07:10 PM UTC.
-> > Anything received after that time might be too late.
-> > 
-> 
-> powerpc:defconfig fails to build.
-> 
-> arch/powerpc/kernel/eeh_driver.c: In function ‘eeh_handle_normal_event’:
-> arch/powerpc/kernel/eeh_driver.c:678:2: error: implicit declaration of function ‘eeh_for_each_pe’; did you mean ‘bus_for_each_dev’?
-> 
-> It has a point:
-> 
-> ... HEAD is now at 13cac61d31df Linux 4.4.196-rc1
-> $ git grep eeh_for_each_pe
-> arch/powerpc/kernel/eeh_driver.c:       eeh_for_each_pe(pe, tmp_pe)
-> arch/powerpc/kernel/eeh_driver.c:                               eeh_for_each_pe(pe, tmp_pe)
-> 
-> Caused by commit 3fb431be8de3a ("powerpc/eeh: Clear stale EEH_DEV_NO_HANDLER flag").
-> Full report will follow later.
+The following commit has been merged into the perf/urgent branch of tip:
 
-Thanks for letting me know, I've dropped this from the queue now and
-pushed out a -rc2 with that removed.
+Commit-ID:     b59711e9b0d22fd47abfa00602fd8c365cdd3ab7
+Gitweb:        https://git.kernel.org/tip/b59711e9b0d22fd47abfa00602fd8c365cdd3ab7
+Author:        Steve MacLean <Steve.MacLean@microsoft.com>
+AuthorDate:    Sat, 28 Sep 2019 01:41:18 
+Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitterDate: Mon, 30 Sep 2019 17:29:49 -03:00
 
-Sasha, I thought your builder would have caught stuff like this?
+perf inject jit: Fix JIT_CODE_MOVE filename
 
-thanks,
+During perf inject --jit, JIT_CODE_MOVE records were injecting MMAP records
+with an incorrect filename. Specifically it was missing the ".so" suffix.
 
-greg k-h
+Further the JIT_CODE_LOAD record were silently truncating the
+jr->load.code_index field to 32 bits before generating the filename.
+
+Make both records emit the same filename based on the full 64 bit
+code_index field.
+
+Fixes: 9b07e27f88b9 ("perf inject: Add jitdump mmap injection support")
+Cc: stable@vger.kernel.org # v4.6+
+Signed-off-by: Steve MacLean <Steve.MacLean@Microsoft.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Brian Robbins <brianrob@microsoft.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Eric Saint-Etienne <eric.saint.etienne@oracle.com>
+Cc: John Keeping <john@metanate.com>
+Cc: John Salem <josalem@microsoft.com>
+Cc: Leo Yan <leo.yan@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Tom McDonald <thomas.mcdonald@microsoft.com>
+Link: http://lore.kernel.org/lkml/BN8PR21MB1362FF8F127B31DBF4121528F7800@BN8PR21MB1362.namprd21.prod.outlook.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/jitdump.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
+index 1bdf4c6..e3ccb0c 100644
+--- a/tools/perf/util/jitdump.c
++++ b/tools/perf/util/jitdump.c
+@@ -395,7 +395,7 @@ static int jit_repipe_code_load(struct jit_buf_desc *jd, union jr_entry *jr)
+ 	size_t size;
+ 	u16 idr_size;
+ 	const char *sym;
+-	uint32_t count;
++	uint64_t count;
+ 	int ret, csize, usize;
+ 	pid_t pid, tid;
+ 	struct {
+@@ -418,7 +418,7 @@ static int jit_repipe_code_load(struct jit_buf_desc *jd, union jr_entry *jr)
+ 		return -1;
+ 
+ 	filename = event->mmap2.filename;
+-	size = snprintf(filename, PATH_MAX, "%s/jitted-%d-%u.so",
++	size = snprintf(filename, PATH_MAX, "%s/jitted-%d-%" PRIu64 ".so",
+ 			jd->dir,
+ 			pid,
+ 			count);
+@@ -529,7 +529,7 @@ static int jit_repipe_code_move(struct jit_buf_desc *jd, union jr_entry *jr)
+ 		return -1;
+ 
+ 	filename = event->mmap2.filename;
+-	size = snprintf(filename, PATH_MAX, "%s/jitted-%d-%"PRIu64,
++	size = snprintf(filename, PATH_MAX, "%s/jitted-%d-%" PRIu64 ".so",
+ 	         jd->dir,
+ 	         pid,
+ 		 jr->move.code_index);
