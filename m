@@ -2,573 +2,444 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE96C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 07:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3936CECE58D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 07:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DCD82166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 07:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06CFA2166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 07:58:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="hk8MYKbO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727471AbfJGH5b (ORCPT
+        id S1727404AbfJGH6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 03:57:31 -0400
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:36585 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727028AbfJGH5b (ORCPT
+        Mon, 7 Oct 2019 03:58:49 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:59812 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727028AbfJGH6t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 03:57:31 -0400
-Received: from [IPv6:2001:983:e9a7:1:3d61:cdd2:8085:cc8] ([IPv6:2001:983:e9a7:1:3d61:cdd2:8085:cc8])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id HNtWiKJa1jZ8vHNtYi57vy; Mon, 07 Oct 2019 09:57:28 +0200
-Subject: Re: [Patch v2 16/21] media: ti-vpe: vpe: use standard struct instead
- of duplicating fields
-To:     Benoit Parrot <bparrot@ti.com>
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191004162952.4963-1-bparrot@ti.com>
- <20191004162952.4963-17-bparrot@ti.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <cb01914f-3bca-2558-2b07-86ddbfc9626e@xs4all.nl>
-Date:   Mon, 7 Oct 2019 09:57:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191004162952.4963-17-bparrot@ti.com>
-Content-Type: text/plain; charset=utf-8
+        Mon, 7 Oct 2019 03:58:49 -0400
+Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
+  Eugen.Hristev@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="Eugen.Hristev@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa6.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa6.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: 6jRv3hCIOLYHRmPd4BgG4YdS0rDsy6k2X0Ns9bLTE8l2aMrNhTdFBjZp/ioUL8buiK3OXleHwC
+ Rgp++rv3rznJ9g99U3obGHzTko28JZ5vGd6LDtG5G8R6mhW8SmeienNDXB5c9H/OC66fHuhhWk
+ qB8HHPMwK9ehrCNgO4bNOj/a3YwqSlKvWJVwgu2vn4S2+XTiKrvxPjQHPX5LgE7FRMItuC3dOJ
+ USiANxfvNY4Wommv6dGINHX7+5uNkh5s2/jy8R0z187RS03Ok2b7eaqlgiCd0NmxcWE2oHUCYb
+ Dyg=
+X-IronPort-AV: E=Sophos;i="5.67,265,1566889200"; 
+   d="scan'208";a="49029239"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 07 Oct 2019 00:58:47 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 7 Oct 2019 00:58:46 -0700
+Received: from NAM05-BY2-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 7 Oct 2019 00:58:46 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YdrVxVTFNh6rREED04+4ykvKzyuc/SyHoFHniJX0NEMpuVs+iH/OMZe5oMn4hqSnwcj7jwla3yfm2NnOJ5Pl5t68gpbxl/u7lajZ7FWiEuaEFjcdaqCQFcHD2CpTLFE6kHuAsgdQjYoJSZdnT0mUd2r+gH9PYMkTPHnDpuryFQu2ScgfbfsbPtyA/0cbcfRsu7/3HVaAjHQSkaT942xuAiLUReQmv69DXiX2dYOjQOPRDlusHLhnZoljOJmGyGmMZRJWDK6gt/gCjwXfcw8VimqEWE7DSIm2f4+ScwOa6FjVKwW4dMbKFEKwVRj13z47DK+XySihHoCRD/OOIyuVsg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OMc1MetgAEEKObYHfy6hO2s9cpWD/PXwstrfsqLawNE=;
+ b=Zuw0N3gMbvDSKz5Ogo+sSix84sAxvpdVxxzupcTjoVwwVJVe7qd4qVJzudA6XqKf5CizqBaXke2B2QtxU84+kIAH+JJn92PVgqeDw6Tsd1koNxftTd1FDdLm0WT1PkpZDlSE8q/1yop5Q6pwRlweKGwBs3C3L9p871cTW8AXe+eqb1/HOLlfHRmI/+G1lVNeqPd14uM4UCvwWzIl8ncerMILgUWksMLXhXTAfXBrLEPs3eji8twuCeeXy06wqbwfuk3FK83PTxVce+xblAJbPcmjfw1zZ5Thh03Ud3a4oXlkc/2PSlqZ4nwEE68os8NHE7IkK/w8TzgmH+Cz8elnOA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OMc1MetgAEEKObYHfy6hO2s9cpWD/PXwstrfsqLawNE=;
+ b=hk8MYKbO6f7KKGNwvIRjbbvLWOW1QFFgOax9mQ6zTx2IDkLt3V1wZ2uFTSCkkPWJgC8gEyxdUuYBB31eCUFQengmAEyMSw0PLY1b4i6i3cHNKc6/Z6MI9Y4WBqhU7Iv5FmeZ97Rx6O1R6Km8HudTnL0MJPTsxLOV71oVjiONZsg=
+Received: from DM5PR11MB1242.namprd11.prod.outlook.com (10.168.108.8) by
+ DM5PR11MB1355.namprd11.prod.outlook.com (10.168.103.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2327.24; Mon, 7 Oct 2019 07:58:45 +0000
+Received: from DM5PR11MB1242.namprd11.prod.outlook.com
+ ([fe80::b125:76c1:c9b1:34f4]) by DM5PR11MB1242.namprd11.prod.outlook.com
+ ([fe80::b125:76c1:c9b1:34f4%10]) with mapi id 15.20.2327.023; Mon, 7 Oct 2019
+ 07:58:44 +0000
+From:   <Eugen.Hristev@microchip.com>
+To:     <linux@roeck-us.net>, <linux-watchdog@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.or>
+CC:     <wim@linux-watchdog.org>, <robh+dt@kernel.org>,
+        <Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 2/3] watchdog: sam9x60_wdt: introduce sam9x60 watchdog
+ timer driver
+Thread-Topic: [PATCH 2/3] watchdog: sam9x60_wdt: introduce sam9x60 watchdog
+ timer driver
+Thread-Index: AQHVePP1mVCAVHNqYEKA4n6lujXEMadHVTuAgAeBQgA=
+Date:   Mon, 7 Oct 2019 07:58:44 +0000
+Message-ID: <ab7b6b45-5e6f-100d-51af-a82ac325d948@microchip.com>
+References: <1570001371-8174-1-git-send-email-eugen.hristev@microchip.com>
+ <1570001371-8174-2-git-send-email-eugen.hristev@microchip.com>
+ <e58a3ab5-69bc-cad3-5faa-ed00ff7906c7@roeck-us.net>
+In-Reply-To: <e58a3ab5-69bc-cad3-5faa-ed00ff7906c7@roeck-us.net>
+Accept-Language: en-US, ro-RO
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfMN0rZr5WJtSRL06B/RW028+oBA9fyLJo1UMYYrOuslOOTr942kmDRwSXoGvl0Nphab8+lF++3Cc9l+hjDdWhlvR7NwqpicfJ7t3j4TQ91aXPIVk/RRj
- kcmO+8mLjftWLzUlnd6g47si+MWb+kjzuo8ceEZGeYA0Oyuj7upNL7jmOmY4GRf5YKocTmmEk4qbWGTLanPK+RQaaYocwm1HqD2VdfFNq4pAjvqfU/BiqpV5
- yCfNfIpTEe3lPwco82AYu2KpB+6bz+Fh0C0zCdiY5/jAY0E+JcJ7JGN4y+ojXc8wtR0fdR0r97iobtStXqKUzJxhG+lmfB40KySLaex0Zf5e5szn1j7ns/I1
- b/FJIFYzuWVpxNRicwxjuSwg0R0IJg==
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1P193CA0011.EURP193.PROD.OUTLOOK.COM
+ (2603:10a6:800:bd::21) To DM5PR11MB1242.namprd11.prod.outlook.com
+ (2603:10b6:3:14::8)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tagtoolbar-keys: D20191007105242682
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c015d164-af8e-4697-4641-08d74afc2ce2
+x-ms-traffictypediagnostic: DM5PR11MB1355:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR11MB1355BF48DE86E41E85D7DE22E89B0@DM5PR11MB1355.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 01834E39B7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(396003)(136003)(39850400004)(366004)(376002)(189003)(199004)(446003)(11346002)(476003)(305945005)(486006)(2616005)(5660300002)(14444005)(7736002)(30864003)(6116002)(3846002)(66066001)(2906002)(36756003)(2501003)(186003)(110136005)(54906003)(256004)(316002)(31686004)(86362001)(25786009)(52116002)(31696002)(2201001)(26005)(99286004)(229853002)(478600001)(102836004)(6506007)(53546011)(6436002)(71200400001)(71190400001)(6486002)(386003)(14454004)(6512007)(8936002)(81156014)(4326008)(76176011)(81166006)(66446008)(64756008)(66556008)(66476007)(66946007)(8676002)(6246003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB1355;H:DM5PR11MB1242.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: U7Nlp4ZDDgSxJEgLS6bdNw4blSaDU/tvt4DOMW6S2LKVJJKX+qSw/g6qt7L7eAbdymZeDCXa1uWiUhez5TFSVHzbhNGoKfm+qJNCuflZHKXHckTiwhNaNPQr9t3P9wajVJ3FmtzyJoW9++2KnPUqyoCPyY+GJ6nuAaXwrqaPHkM3CfeiHa3JdMgBdqzvYcBG2q909uorBVCq6Rf0makcntq+gGLcQMTOfLZj1egKGlEH0D+N1lBNHKNTBCDpz4o69kdETamrWQDba40BpSNt4/GoXmVLhH0BybwPMgzKE811HF5Oy/fQq9/DUOyFWWy+ykMcWMQ1zDkjlX/zpFSIlhaAKkxx8mHVwtmkFFMDqQVxbyTBM4EeUmlJN7oUikOkiUlbkIXBDnG0h7sVgadBaRd/4GDnKZFukeBQ+8iH124=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <FBE233B8AB9F17418886AB7995685609@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: c015d164-af8e-4697-4641-08d74afc2ce2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Oct 2019 07:58:44.4353
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: OufSF3qIKiqnkS98djE8gTBFTsSi7MbFgW+JXlB3HLwUMkdlV77qrSO2GacOXTFw3Axo2mWehulhTo659NdciOIXAGEDa7b2ouGUxHnz8WQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1355
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/4/19 6:29 PM, Benoit Parrot wrote:
-> For each queue we need to maintain resolutions, pixel format,
-> bytesperline, sizeimage, colorspace, etc.
-> 
-> Instead of manually adding more entries in the vpe_q_data struct, it is
-> better to just add a "struct v4l2_format" member and use that to store
-> all needed information.
-> 
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> ---
->  drivers/media/platform/ti-vpe/vpe.c | 185 ++++++++++++++--------------
->  1 file changed, 91 insertions(+), 94 deletions(-)
-> 
-> diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-> index d7f8eb901475..5b1e9908fff2 100644
-> --- a/drivers/media/platform/ti-vpe/vpe.c
-> +++ b/drivers/media/platform/ti-vpe/vpe.c
-> @@ -319,14 +319,9 @@ static struct vpe_fmt vpe_formats[] = {
->   * there is one source queue and one destination queue for each m2m context.
->   */
->  struct vpe_q_data {
-> -	unsigned int		width;				/* frame width */
-> -	unsigned int		height;				/* frame height */
-> -	unsigned int		nplanes;			/* Current number of planes */
-> -	unsigned int		bytesperline[VPE_MAX_PLANES];	/* bytes per line in memory */
-> -	enum v4l2_colorspace	colorspace;
-> -	enum v4l2_field		field;				/* supported field value */
-> +	/* current v4l2 format info */
-> +	struct v4l2_format	format;
-
-Wouldn't it make more sense to use struct v4l2_pix_format_mplane? That avoid having to
-use the '.fmt.pix_mp' sequence every time you need to access it.
-
-Regards,
-
-	Hans
-
->  	unsigned int		flags;
-> -	unsigned int		sizeimage[VPE_MAX_PLANES];	/* image size in memory */
->  	struct v4l2_rect	c_rect;				/* crop/compose rectangle */
->  	struct vpe_fmt		*fmt;				/* format info */
->  };
-> @@ -761,7 +756,8 @@ static void set_src_registers(struct vpe_ctx *ctx)
->  static void set_dst_registers(struct vpe_ctx *ctx)
->  {
->  	struct vpe_mmr_adb *mmr_adb = ctx->mmr_adb.addr;
-> -	enum v4l2_colorspace clrspc = ctx->q_data[Q_DATA_DST].colorspace;
-> +	enum v4l2_colorspace clrspc =
-> +			ctx->q_data[Q_DATA_DST].format.fmt.pix_mp.colorspace;
->  	struct vpe_fmt *fmt = ctx->q_data[Q_DATA_DST].fmt;
->  	u32 val = 0;
->  
-> @@ -868,11 +864,15 @@ static int set_srcdst_params(struct vpe_ctx *ctx)
->  	unsigned int src_h = s_q_data->c_rect.height;
->  	unsigned int dst_w = d_q_data->c_rect.width;
->  	unsigned int dst_h = d_q_data->c_rect.height;
-> +	struct v4l2_pix_format_mplane *spix;
-> +	struct v4l2_pix_format_mplane *dpix;
->  	size_t mv_buf_size;
->  	int ret;
->  
->  	ctx->sequence = 0;
->  	ctx->field = V4L2_FIELD_TOP;
-> +	spix = &s_q_data->format.fmt.pix_mp;
-> +	dpix = &d_q_data->format.fmt.pix_mp;
->  
->  	if ((s_q_data->flags & Q_IS_INTERLACED) &&
->  			!(d_q_data->flags & Q_IS_INTERLACED)) {
-> @@ -887,9 +887,9 @@ static int set_srcdst_params(struct vpe_ctx *ctx)
->  		 * extra space will not be used by the de-interlacer, but will
->  		 * ensure that vpdma operates correctly
->  		 */
-> -		bytes_per_line = ALIGN((s_q_data->width * mv->depth) >> 3,
-> -					VPDMA_STRIDE_ALIGN);
-> -		mv_buf_size = bytes_per_line * s_q_data->height;
-> +		bytes_per_line = ALIGN((spix->width * mv->depth) >> 3,
-> +				       VPDMA_STRIDE_ALIGN);
-> +		mv_buf_size = bytes_per_line * spix->height;
->  
->  		ctx->deinterlacing = true;
->  		src_h <<= 1;
-> @@ -909,7 +909,7 @@ static int set_srcdst_params(struct vpe_ctx *ctx)
->  	set_dei_regs(ctx);
->  
->  	csc_set_coeff(ctx->dev->csc, &mmr_adb->csc_regs[0],
-> -		s_q_data->colorspace, d_q_data->colorspace);
-> +		      spix->colorspace, dpix->colorspace);
->  
->  	sc_set_hs_coeffs(ctx->dev->sc, ctx->sc_coeff_h.addr, src_w, dst_w);
->  	sc_set_vs_coeffs(ctx->dev->sc, ctx->sc_coeff_v.addr, src_h, dst_h);
-> @@ -1023,6 +1023,7 @@ static void add_out_dtd(struct vpe_ctx *ctx, int port)
->  	struct vpe_fmt *fmt = q_data->fmt;
->  	const struct vpdma_data_format *vpdma_fmt;
->  	int mv_buf_selector = !ctx->src_mv_buf_selector;
-> +	struct v4l2_pix_format_mplane *pix;
->  	dma_addr_t dma_addr;
->  	u32 flags = 0;
->  	u32 offset = 0;
-> @@ -1032,21 +1033,23 @@ static void add_out_dtd(struct vpe_ctx *ctx, int port)
->  		vpdma_fmt = &vpdma_misc_fmts[VPDMA_DATA_FMT_MV];
->  		dma_addr = ctx->mv_buf_dma[mv_buf_selector];
->  		q_data = &ctx->q_data[Q_DATA_SRC];
-> -		stride = ALIGN((q_data->width * vpdma_fmt->depth) >> 3,
-> +		pix = &q_data->format.fmt.pix_mp;
-> +		stride = ALIGN((pix->width * vpdma_fmt->depth) >> 3,
->  			       VPDMA_STRIDE_ALIGN);
->  	} else {
->  		/* to incorporate interleaved formats */
->  		int plane = fmt->coplanar ? p_data->vb_part : 0;
->  
-> +		pix = &q_data->format.fmt.pix_mp;
->  		vpdma_fmt = fmt->vpdma_fmt[plane];
->  		/*
->  		 * If we are using a single plane buffer and
->  		 * we need to set a separate vpdma chroma channel.
->  		 */
-> -		if (q_data->nplanes == 1 && plane) {
-> +		if (pix->num_planes == 1 && plane) {
->  			dma_addr = vb2_dma_contig_plane_dma_addr(vb, 0);
->  			/* Compute required offset */
-> -			offset = q_data->bytesperline[0] * q_data->height;
-> +			offset = pix->plane_fmt[0].bytesperline * pix->height;
->  		} else {
->  			dma_addr = vb2_dma_contig_plane_dma_addr(vb, plane);
->  			/* Use address as is, no offset */
-> @@ -1060,7 +1063,7 @@ static void add_out_dtd(struct vpe_ctx *ctx, int port)
->  		}
->  		/* Apply the offset */
->  		dma_addr += offset;
-> -		stride = q_data->bytesperline[VPE_LUMA];
-> +		stride = pix->plane_fmt[VPE_LUMA].bytesperline;
->  	}
->  
->  	if (q_data->flags & Q_DATA_FRAME_1D)
-> @@ -1071,7 +1074,7 @@ static void add_out_dtd(struct vpe_ctx *ctx, int port)
->  	vpdma_set_max_size(ctx->dev->vpdma, VPDMA_MAX_SIZE1,
->  			   MAX_W, MAX_H);
->  
-> -	vpdma_add_out_dtd(&ctx->desc_list, q_data->width,
-> +	vpdma_add_out_dtd(&ctx->desc_list, pix->width,
->  			  stride, &q_data->c_rect,
->  			  vpdma_fmt, dma_addr, MAX_OUT_WIDTH_REG1,
->  			  MAX_OUT_HEIGHT_REG1, p_data->channel, flags);
-> @@ -1084,6 +1087,7 @@ static void add_in_dtd(struct vpe_ctx *ctx, int port)
->  	struct vb2_buffer *vb = &ctx->src_vbs[p_data->vb_index]->vb2_buf;
->  	struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
->  	struct vpe_fmt *fmt = q_data->fmt;
-> +	struct v4l2_pix_format_mplane *pix;
->  	const struct vpdma_data_format *vpdma_fmt;
->  	int mv_buf_selector = ctx->src_mv_buf_selector;
->  	int field = vbuf->field == V4L2_FIELD_BOTTOM;
-> @@ -1093,10 +1097,11 @@ static void add_in_dtd(struct vpe_ctx *ctx, int port)
->  	u32 offset = 0;
->  	u32 stride;
->  
-> +	pix = &q_data->format.fmt.pix_mp;
->  	if (port == VPE_PORT_MV_IN) {
->  		vpdma_fmt = &vpdma_misc_fmts[VPDMA_DATA_FMT_MV];
->  		dma_addr = ctx->mv_buf_dma[mv_buf_selector];
-> -		stride = ALIGN((q_data->width * vpdma_fmt->depth) >> 3,
-> +		stride = ALIGN((pix->width * vpdma_fmt->depth) >> 3,
->  			       VPDMA_STRIDE_ALIGN);
->  	} else {
->  		/* to incorporate interleaved formats */
-> @@ -1107,10 +1112,10 @@ static void add_in_dtd(struct vpe_ctx *ctx, int port)
->  		 * If we are using a single plane buffer and
->  		 * we need to set a separate vpdma chroma channel.
->  		 */
-> -		if (q_data->nplanes == 1 && plane) {
-> +		if (pix->num_planes == 1 && plane) {
->  			dma_addr = vb2_dma_contig_plane_dma_addr(vb, 0);
->  			/* Compute required offset */
-> -			offset = q_data->bytesperline[0] * q_data->height;
-> +			offset = pix->plane_fmt[0].bytesperline * pix->height;
->  		} else {
->  			dma_addr = vb2_dma_contig_plane_dma_addr(vb, plane);
->  			/* Use address as is, no offset */
-> @@ -1124,7 +1129,7 @@ static void add_in_dtd(struct vpe_ctx *ctx, int port)
->  		}
->  		/* Apply the offset */
->  		dma_addr += offset;
-> -		stride = q_data->bytesperline[VPE_LUMA];
-> +		stride = pix->plane_fmt[VPE_LUMA].bytesperline;
->  
->  		/*
->  		 * field used in VPDMA desc  = 0 (top) / 1 (bottom)
-> @@ -1144,7 +1149,7 @@ static void add_in_dtd(struct vpe_ctx *ctx, int port)
->  			field = (field + p_data->vb_index + ctx->sequence) % 2;
->  
->  			if (field) {
-> -				int height = q_data->height / 2;
-> +				int height = pix->height / 2;
->  				int bpp;
->  
->  				if (fmt->fourcc == V4L2_PIX_FMT_NV12 ||
-> @@ -1156,7 +1161,7 @@ static void add_in_dtd(struct vpe_ctx *ctx, int port)
->  				if (plane)
->  					height /= 2;
->  
-> -				dma_addr += q_data->width * height * bpp;
-> +				dma_addr += pix->width * height * bpp;
->  			}
->  		}
->  	}
-> @@ -1173,7 +1178,7 @@ static void add_in_dtd(struct vpe_ctx *ctx, int port)
->  				fmt->fourcc == V4L2_PIX_FMT_NV21))
->  		frame_height /= 2;
->  
-> -	vpdma_add_in_dtd(&ctx->desc_list, q_data->width, stride,
-> +	vpdma_add_in_dtd(&ctx->desc_list, pix->width, stride,
->  			 &q_data->c_rect, vpdma_fmt, dma_addr,
->  			 p_data->channel, field, flags, frame_width,
->  			 frame_height, 0, 0);
-> @@ -1282,7 +1287,7 @@ static void device_run(void *priv)
->  	if (ctx->deinterlacing)
->  		add_out_dtd(ctx, VPE_PORT_MV_OUT);
->  
-> -	if (d_q_data->colorspace == V4L2_COLORSPACE_SRGB) {
-> +	if (d_q_data->format.fmt.pix_mp.colorspace == V4L2_COLORSPACE_SRGB) {
->  		add_out_dtd(ctx, VPE_PORT_RGB_OUT);
->  	} else {
->  		add_out_dtd(ctx, VPE_PORT_LUMA_OUT);
-> @@ -1324,7 +1329,7 @@ static void device_run(void *priv)
->  	}
->  
->  	/* sync on channel control descriptors for output ports */
-> -	if (d_q_data->colorspace == V4L2_COLORSPACE_SRGB) {
-> +	if (d_q_data->format.fmt.pix_mp.colorspace == V4L2_COLORSPACE_SRGB) {
->  		vpdma_add_sync_on_channel_ctd(&ctx->desc_list,
->  			VPE_CHAN_RGB_OUT);
->  	} else {
-> @@ -1559,7 +1564,6 @@ static int vpe_g_fmt(struct file *file, void *priv, struct v4l2_format *f)
->  	struct vpe_ctx *ctx = file->private_data;
->  	struct vb2_queue *vq;
->  	struct vpe_q_data *q_data;
-> -	int i;
->  
->  	vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
->  	if (!vq)
-> @@ -1569,27 +1573,15 @@ static int vpe_g_fmt(struct file *file, void *priv, struct v4l2_format *f)
->  	if (!q_data)
->  		return -EINVAL;
->  
-> -	pix->width = q_data->width;
-> -	pix->height = q_data->height;
-> -	pix->pixelformat = q_data->fmt->fourcc;
-> -	pix->field = q_data->field;
-> +	*f = q_data->format;
->  
-> -	if (V4L2_TYPE_IS_OUTPUT(f->type)) {
-> -		pix->colorspace = q_data->colorspace;
-> -	} else {
-> +	if (!V4L2_TYPE_IS_OUTPUT(f->type)) {
->  		struct vpe_q_data *s_q_data;
->  
->  		/* get colorspace from the source queue */
->  		s_q_data = get_q_data(ctx, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
->  
-> -		pix->colorspace = s_q_data->colorspace;
-> -	}
-> -
-> -	pix->num_planes = q_data->nplanes;
-> -
-> -	for (i = 0; i < pix->num_planes; i++) {
-> -		pix->plane_fmt[i].bytesperline = q_data->bytesperline[i];
-> -		pix->plane_fmt[i].sizeimage = q_data->sizeimage[i];
-> +		pix->colorspace = s_q_data->format.fmt.pix_mp.colorspace;
->  	}
->  
->  	return 0;
-> @@ -1736,10 +1728,8 @@ static int vpe_try_fmt(struct file *file, void *priv, struct v4l2_format *f)
->  static int __vpe_s_fmt(struct vpe_ctx *ctx, struct v4l2_format *f)
->  {
->  	struct v4l2_pix_format_mplane *pix = &f->fmt.pix_mp;
-> -	struct v4l2_plane_pix_format *plane_fmt;
->  	struct vpe_q_data *q_data;
->  	struct vb2_queue *vq;
-> -	int i;
->  
->  	vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
->  	if (!vq)
-> @@ -1755,29 +1745,18 @@ static int __vpe_s_fmt(struct vpe_ctx *ctx, struct v4l2_format *f)
->  		return -EINVAL;
->  
->  	q_data->fmt		= find_format(f);
-> -	q_data->width		= pix->width;
-> -	q_data->height		= pix->height;
-> -	q_data->colorspace	= pix->colorspace;
-> -	q_data->field		= pix->field;
-> -	q_data->nplanes		= pix->num_planes;
-> -
-> -	for (i = 0; i < pix->num_planes; i++) {
-> -		plane_fmt = &pix->plane_fmt[i];
-> -
-> -		q_data->bytesperline[i]	= plane_fmt->bytesperline;
-> -		q_data->sizeimage[i]	= plane_fmt->sizeimage;
-> -	}
-> +	q_data->format = *f;
->  
->  	q_data->c_rect.left	= 0;
->  	q_data->c_rect.top	= 0;
-> -	q_data->c_rect.width	= q_data->width;
-> -	q_data->c_rect.height	= q_data->height;
-> +	q_data->c_rect.width	= pix->width;
-> +	q_data->c_rect.height	= pix->height;
->  
-> -	if (q_data->field == V4L2_FIELD_ALTERNATE)
-> +	if (q_data->format.fmt.pix_mp.field == V4L2_FIELD_ALTERNATE)
->  		q_data->flags |= Q_DATA_INTERLACED_ALTERNATE;
-> -	else if (q_data->field == V4L2_FIELD_SEQ_TB)
-> +	else if (q_data->format.fmt.pix_mp.field == V4L2_FIELD_SEQ_TB)
->  		q_data->flags |= Q_DATA_INTERLACED_SEQ_TB;
-> -	else if (q_data->field == V4L2_FIELD_SEQ_BT)
-> +	else if (q_data->format.fmt.pix_mp.field == V4L2_FIELD_SEQ_BT)
->  		q_data->flags |= Q_DATA_INTERLACED_SEQ_BT;
->  	else
->  		q_data->flags &= ~Q_IS_INTERLACED;
-> @@ -1787,11 +1766,11 @@ static int __vpe_s_fmt(struct vpe_ctx *ctx, struct v4l2_format *f)
->  		q_data->c_rect.height /= 2;
->  
->  	vpe_dbg(ctx->dev, "Setting format for type %d, wxh: %dx%d, fmt: %d bpl_y %d",
-> -		f->type, q_data->width, q_data->height, q_data->fmt->fourcc,
-> -		q_data->bytesperline[VPE_LUMA]);
-> -	if (q_data->nplanes == 2)
-> +		f->type, pix->width, pix->height, pix->pixelformat,
-> +		pix->plane_fmt[0].bytesperline);
-> +	if (pix->num_planes == 2)
->  		vpe_dbg(ctx->dev, " bpl_uv %d\n",
-> -			q_data->bytesperline[VPE_CHROMA]);
-> +			pix->plane_fmt[1].bytesperline);
->  
->  	return 0;
->  }
-> @@ -1820,6 +1799,7 @@ static int vpe_s_fmt(struct file *file, void *priv, struct v4l2_format *f)
->  static int __vpe_try_selection(struct vpe_ctx *ctx, struct v4l2_selection *s)
->  {
->  	struct vpe_q_data *q_data;
-> +	struct v4l2_pix_format_mplane *pix;
->  	int height;
->  
->  	if ((s->type != V4L2_BUF_TYPE_VIDEO_CAPTURE) &&
-> @@ -1830,6 +1810,8 @@ static int __vpe_try_selection(struct vpe_ctx *ctx, struct v4l2_selection *s)
->  	if (!q_data)
->  		return -EINVAL;
->  
-> +	pix = &q_data->format.fmt.pix_mp;
-> +
->  	switch (s->target) {
->  	case V4L2_SEL_TGT_COMPOSE:
->  		/*
-> @@ -1860,23 +1842,23 @@ static int __vpe_try_selection(struct vpe_ctx *ctx, struct v4l2_selection *s)
->  	 * the field height, not the buffer height
->  	 */
->  	if (q_data->flags & Q_IS_SEQ_XX)
-> -		height = q_data->height / 2;
-> +		height = pix->height / 2;
->  	else
-> -		height = q_data->height;
-> +		height = pix->height;
->  
->  	if (s->r.top < 0 || s->r.left < 0) {
->  		vpe_err(ctx->dev, "negative values for top and left\n");
->  		s->r.top = s->r.left = 0;
->  	}
->  
-> -	v4l_bound_align_image(&s->r.width, MIN_W, q_data->width, 1,
-> +	v4l_bound_align_image(&s->r.width, MIN_W, pix->width, 1,
->  		&s->r.height, MIN_H, height, H_ALIGN, S_ALIGN);
->  
->  	/* adjust left/top if cropping rectangle is out of bounds */
-> -	if (s->r.left + s->r.width > q_data->width)
-> -		s->r.left = q_data->width - s->r.width;
-> -	if (s->r.top + s->r.height > q_data->height)
-> -		s->r.top = q_data->height - s->r.height;
-> +	if (s->r.left + s->r.width > pix->width)
-> +		s->r.left = pix->width - s->r.width;
-> +	if (s->r.top + s->r.height > pix->height)
-> +		s->r.top = pix->height - s->r.height;
->  
->  	return 0;
->  }
-> @@ -1886,6 +1868,7 @@ static int vpe_g_selection(struct file *file, void *fh,
->  {
->  	struct vpe_ctx *ctx = file->private_data;
->  	struct vpe_q_data *q_data;
-> +	struct v4l2_pix_format_mplane *pix;
->  	bool use_c_rect = false;
->  
->  	if ((s->type != V4L2_BUF_TYPE_VIDEO_CAPTURE) &&
-> @@ -1896,6 +1879,8 @@ static int vpe_g_selection(struct file *file, void *fh,
->  	if (!q_data)
->  		return -EINVAL;
->  
-> +	pix = &q_data->format.fmt.pix_mp;
-> +
->  	switch (s->target) {
->  	case V4L2_SEL_TGT_COMPOSE_DEFAULT:
->  	case V4L2_SEL_TGT_COMPOSE_BOUNDS:
-> @@ -1934,8 +1919,8 @@ static int vpe_g_selection(struct file *file, void *fh,
->  		 */
->  		s->r.left = 0;
->  		s->r.top = 0;
-> -		s->r.width = q_data->width;
-> -		s->r.height = q_data->height;
-> +		s->r.width = pix->width;
-> +		s->r.height = pix->height;
->  	}
->  
->  	return 0;
-> @@ -2043,14 +2028,14 @@ static int vpe_queue_setup(struct vb2_queue *vq,
->  	if (!q_data)
->  		return -EINVAL;
->  
-> -	*nplanes = q_data->nplanes;
-> +	*nplanes = q_data->format.fmt.pix_mp.num_planes;
->  
->  	for (i = 0; i < *nplanes; i++)
-> -		sizes[i] = q_data->sizeimage[i];
-> +		sizes[i] = q_data->format.fmt.pix_mp.plane_fmt[i].sizeimage;
->  
->  	vpe_dbg(ctx->dev, "get %d buffer(s) of size %d", *nbuffers,
->  		sizes[VPE_LUMA]);
-> -	if (q_data->nplanes == 2)
-> +	if (*nplanes == 2)
->  		vpe_dbg(ctx->dev, " and %d\n", sizes[VPE_CHROMA]);
->  
->  	return 0;
-> @@ -2061,14 +2046,16 @@ static int vpe_buf_prepare(struct vb2_buffer *vb)
->  	struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
->  	struct vpe_ctx *ctx = vb2_get_drv_priv(vb->vb2_queue);
->  	struct vpe_q_data *q_data;
-> -	int i, num_planes;
-> +	struct v4l2_pix_format_mplane *pix;
-> +	int i;
->  
->  	vpe_dbg(ctx->dev, "type: %d\n", vb->vb2_queue->type);
->  
->  	q_data = get_q_data(ctx, vb->vb2_queue->type);
->  	if (!q_data)
->  		return -EINVAL;
-> -	num_planes = q_data->nplanes;
-> +
-> +	pix = &q_data->format.fmt.pix_mp;
->  
->  	if (vb->vb2_queue->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE) {
->  		if (!(q_data->flags & Q_IS_INTERLACED)) {
-> @@ -2082,18 +2069,18 @@ static int vpe_buf_prepare(struct vb2_buffer *vb)
->  		}
->  	}
->  
-> -	for (i = 0; i < num_planes; i++) {
-> -		if (vb2_plane_size(vb, i) < q_data->sizeimage[i]) {
-> +	for (i = 0; i < pix->num_planes; i++) {
-> +		if (vb2_plane_size(vb, i) < pix->plane_fmt[i].sizeimage) {
->  			vpe_err(ctx->dev,
->  				"data will not fit into plane (%lu < %lu)\n",
->  				vb2_plane_size(vb, i),
-> -				(long) q_data->sizeimage[i]);
-> +				(long) pix->plane_fmt[i].sizeimage);
->  			return -EINVAL;
->  		}
->  	}
->  
-> -	for (i = 0; i < num_planes; i++)
-> -		vb2_set_plane_payload(vb, i, q_data->sizeimage[i]);
-> +	for (i = 0; i < pix->num_planes; i++)
-> +		vb2_set_plane_payload(vb, i, pix->plane_fmt[i].sizeimage);
->  
->  	return 0;
->  }
-> @@ -2278,6 +2265,7 @@ static int vpe_open(struct file *file)
->  	struct vpe_q_data *s_q_data;
->  	struct v4l2_ctrl_handler *hdl;
->  	struct vpe_ctx *ctx;
-> +	struct v4l2_pix_format_mplane *pix;
->  	int ret;
->  
->  	vpe_dbg(dev, "vpe_open\n");
-> @@ -2326,23 +2314,32 @@ static int vpe_open(struct file *file)
->  	v4l2_ctrl_handler_setup(hdl);
->  
->  	s_q_data = &ctx->q_data[Q_DATA_SRC];
-> +	pix = &s_q_data->format.fmt.pix_mp;
->  	s_q_data->fmt = __find_format(V4L2_PIX_FMT_YUYV);
-> -	s_q_data->width = 1920;
-> -	s_q_data->height = 1080;
-> -	s_q_data->nplanes = 1;
-> -	s_q_data->bytesperline[VPE_LUMA] = (s_q_data->width *
-> +	pix->pixelformat = s_q_data->fmt->fourcc;
-> +	s_q_data->format.type = V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE;
-> +	pix->width = 1920;
-> +	pix->height = 1080;
-> +	pix->num_planes = 1;
-> +	pix->plane_fmt[VPE_LUMA].bytesperline = (pix->width *
->  			s_q_data->fmt->vpdma_fmt[VPE_LUMA]->depth) >> 3;
-> -	s_q_data->sizeimage[VPE_LUMA] = (s_q_data->bytesperline[VPE_LUMA] *
-> -			s_q_data->height);
-> -	s_q_data->colorspace = V4L2_COLORSPACE_REC709;
-> -	s_q_data->field = V4L2_FIELD_NONE;
-> +	pix->plane_fmt[VPE_LUMA].sizeimage =
-> +			pix->plane_fmt[VPE_LUMA].bytesperline *
-> +			pix->height;
-> +	pix->colorspace = V4L2_COLORSPACE_REC709;
-> +	pix->xfer_func = V4L2_XFER_FUNC_DEFAULT;
-> +	pix->ycbcr_enc = V4L2_YCBCR_ENC_DEFAULT;
-> +	pix->quantization = V4L2_QUANTIZATION_DEFAULT;
-> +	pix->field = V4L2_FIELD_NONE;
->  	s_q_data->c_rect.left = 0;
->  	s_q_data->c_rect.top = 0;
-> -	s_q_data->c_rect.width = s_q_data->width;
-> -	s_q_data->c_rect.height = s_q_data->height;
-> +	s_q_data->c_rect.width = pix->width;
-> +	s_q_data->c_rect.height = pix->height;
->  	s_q_data->flags = 0;
->  
->  	ctx->q_data[Q_DATA_DST] = *s_q_data;
-> +	ctx->q_data[Q_DATA_DST].format.type =
-> +			V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
->  
->  	set_dei_shadow_registers(ctx);
->  	set_src_registers(ctx);
-> 
-
+DQoNCk9uIDAyLjEwLjIwMTkgMTY6MTYsIEd1ZW50ZXIgUm9lY2sgd3JvdGU6DQoNCj4gDQo+IE9u
+IDEwLzIvMTkgMTI6MzUgQU0sIEV1Z2VuLkhyaXN0ZXZAbWljcm9jaGlwLmNvbSB3cm90ZToNCj4+
+IEZyb206IEV1Z2VuIEhyaXN0ZXYgPGV1Z2VuLmhyaXN0ZXZAbWljcm9jaGlwLmNvbT4NCj4+DQo+
+PiBUaGlzIGlzIHRoZSBkcml2ZXIgZm9yIFNBTTlYNjAgd2F0Y2hkb2cgdGltZXIuDQo+PiBUaGUg
+b2ZmZXJlZCBmdW5jdGlvbmFsaXR5IGlzIHRoZSBzYW1lIGFzIHNhbWE1ZDRfd2R0Lg0KPj4gVGhl
+IGRpZmZlcmVuY2UgY29tZXMgaW4gcmVnaXN0ZXIgbWFwLCB3YXkgdG8gY29uZmlndXJlIHRoZSB0
+aW1lb3V0IGFuZA0KPj4gaW50ZXJydXB0cy4NCj4+IERldmVsb3BlZCBzdGFydGluZyBmcm9tIHNh
+bWE1ZDRfd2R0LmMNCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBFdWdlbiBIcmlzdGV2IDxldWdlbi5o
+cmlzdGV2QG1pY3JvY2hpcC5jb20+DQo+PiAtLS0NCj4+IMKgIGRyaXZlcnMvd2F0Y2hkb2cvS2Nv
+bmZpZ8KgwqDCoMKgwqDCoCB8wqDCoCA5ICsrDQo+PiDCoCBkcml2ZXJzL3dhdGNoZG9nL01ha2Vm
+aWxlwqDCoMKgwqDCoCB8wqDCoCAxICsNCj4+IMKgIGRyaXZlcnMvd2F0Y2hkb2cvc2FtOXg2MF93
+ZHQuYyB8IDMzNSANCj4+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+DQo+PiDCoCAzIGZpbGVzIGNoYW5nZWQsIDM0NSBpbnNlcnRpb25zKCspDQo+PiDCoCBjcmVhdGUg
+bW9kZSAxMDA2NDQgZHJpdmVycy93YXRjaGRvZy9zYW05eDYwX3dkdC5jDQo+Pg0KPj4gZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvd2F0Y2hkb2cvS2NvbmZpZyBiL2RyaXZlcnMvd2F0Y2hkb2cvS2NvbmZp
+Zw0KPj4gaW5kZXggNThlN2MxMC4uMzU2MmUyNiAxMDA2NDQNCj4+IC0tLSBhL2RyaXZlcnMvd2F0
+Y2hkb2cvS2NvbmZpZw0KPj4gKysrIGIvZHJpdmVycy93YXRjaGRvZy9LY29uZmlnDQo+PiBAQCAt
+NDE2LDYgKzQxNiwxNSBAQCBjb25maWcgU0FNQTVENF9XQVRDSERPRw0KPj4gwqDCoMKgwqDCoMKg
+wqAgSXRzIFdhdGNoZG9nIFRpbWVyIE1vZGUgUmVnaXN0ZXIgY2FuIGJlIHdyaXR0ZW4gbW9yZSB0
+aGFuIG9uY2UuDQo+PiDCoMKgwqDCoMKgwqDCoCBUaGlzIHdpbGwgcmVib290IHlvdXIgc3lzdGVt
+IHdoZW4gdGhlIHRpbWVvdXQgaXMgcmVhY2hlZC4NCj4+ICtjb25maWcgU0FNOVg2MF9XQVRDSERP
+Rw0KPj4gK8KgwqDCoCB0cmlzdGF0ZSAiTWljcm9jaGlwIFNBTTlYNjAgV2F0Y2hkb2cgVGltZXIi
+DQo+PiArwqDCoMKgIGRlcGVuZHMgb24gQVJDSF9BVDkxIHx8IENPTVBJTEVfVEVTVA0KPiANCj4g
+ZGVwZW5kcyBvbiBIQVNfSU9NRU0NCj4gDQo+PiArwqDCoMKgIHNlbGVjdCBXQVRDSERPR19DT1JF
+DQo+PiArwqDCoMKgIGhlbHANCj4+ICvCoMKgwqDCoMKgIE1pY3JvY2hpcCBTQU05WDYwIHdhdGNo
+ZG9nIHRpbWVyIGlzIGVtYmVkZGVkIGludG8gU0FNOVg2MCBjaGlwcy4NCj4+ICvCoMKgwqDCoMKg
+IEl0cyBXYXRjaGRvZyBUaW1lciBNb2RlIFJlZ2lzdGVyIGNhbiBiZSB3cml0dGVuIG1vcmUgdGhh
+biBvbmNlLg0KPj4gK8KgwqDCoMKgwqAgVGhpcyB3aWxsIHJlYm9vdCB5b3VyIHN5c3RlbSB3aGVu
+IHRoZSB0aW1lb3V0IGlzIHJlYWNoZWQuDQo+PiArDQo+PiDCoCBjb25maWcgQ0FERU5DRV9XQVRD
+SERPRw0KPj4gwqDCoMKgwqDCoCB0cmlzdGF0ZSAiQ2FkZW5jZSBXYXRjaGRvZyBUaW1lciINCj4+
+IMKgwqDCoMKgwqAgZGVwZW5kcyBvbiBIQVNfSU9NRU0NCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJz
+L3dhdGNoZG9nL01ha2VmaWxlIGIvZHJpdmVycy93YXRjaGRvZy9NYWtlZmlsZQ0KPj4gaW5kZXgg
+MmVlMzUyYi4uOTNiYTU5OSAxMDA2NDQNCj4+IC0tLSBhL2RyaXZlcnMvd2F0Y2hkb2cvTWFrZWZp
+bGUNCj4+ICsrKyBiL2RyaXZlcnMvd2F0Y2hkb2cvTWFrZWZpbGUNCj4+IEBAIC01Miw2ICs1Miw3
+IEBAIG9iai0kKENPTkZJR19JWFA0WFhfV0FUQ0hET0cpICs9IGl4cDR4eF93ZHQubw0KPj4gwqAg
+b2JqLSQoQ09ORklHX1MzQzI0MTBfV0FUQ0hET0cpICs9IHMzYzI0MTBfd2R0Lm8NCj4+IMKgIG9i
+ai0kKENPTkZJR19TQTExMDBfV0FUQ0hET0cpICs9IHNhMTEwMF93ZHQubw0KPj4gwqAgb2JqLSQo
+Q09ORklHX1NBTUE1RDRfV0FUQ0hET0cpICs9IHNhbWE1ZDRfd2R0Lm8NCj4+ICtvYmotJChDT05G
+SUdfU0FNOVg2MF9XQVRDSERPRykgKz0gc2FtOXg2MF93ZHQubw0KPj4gwqAgb2JqLSQoQ09ORklH
+X0RXX1dBVENIRE9HKSArPSBkd193ZHQubw0KPj4gwqAgb2JqLSQoQ09ORklHX0VQOTNYWF9XQVRD
+SERPRykgKz0gZXA5M3h4X3dkdC5vDQo+PiDCoCBvYmotJChDT05GSUdfUE5YNDAwOF9XQVRDSERP
+RykgKz0gcG54NDAwOF93ZHQubw0KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvd2F0Y2hkb2cvc2Ft
+OXg2MF93ZHQuYyANCj4+IGIvZHJpdmVycy93YXRjaGRvZy9zYW05eDYwX3dkdC5jDQo+PiBuZXcg
+ZmlsZSBtb2RlIDEwMDY0NA0KPj4gaW5kZXggMDAwMDAwMDAuLmY2MTIyMzANCj4+IC0tLSAvZGV2
+L251bGwNCj4+ICsrKyBiL2RyaXZlcnMvd2F0Y2hkb2cvc2FtOXg2MF93ZHQuYw0KPj4gQEAgLTAs
+MCArMSwzMzUgQEANCj4+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KPj4g
+Ky8qDQo+PiArICogRHJpdmVyIGZvciBNaWNyb2NoaXAgU0FNOVg2MCBXYXRjaGRvZyBUaW1lcg0K
+Pj4gKyAqDQo+PiArICogQ29weXJpZ2h0IChDKSAyMDE5IE1pY3JvY2hpcCBUZWNobm9sb2d5LCBJ
+bmMuDQo+PiArICogQXV0aG9yOiBFdWdlbiBIcmlzdGV2IDxldWdlbi5ocmlzdGV2QG1pY3JvY2hp
+cC5jb20+DQo+PiArICoNCj4+ICsgKi8NCj4+ICsNCj4+ICsjaW5jbHVkZSA8bGludXgvZGVsYXku
+aD4NCj4+ICsjaW5jbHVkZSA8bGludXgvaW50ZXJydXB0Lmg+DQo+PiArI2luY2x1ZGUgPGxpbnV4
+L2lvLmg+DQo+PiArI2luY2x1ZGUgPGxpbnV4L2tlcm5lbC5oPg0KPj4gKyNpbmNsdWRlIDxsaW51
+eC9tb2R1bGUuaD4NCj4+ICsjaW5jbHVkZSA8bGludXgvb2YuaD4NCj4+ICsjaW5jbHVkZSA8bGlu
+dXgvb2ZfaXJxLmg+DQo+PiArI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPg0KPj4g
+KyNpbmNsdWRlIDxsaW51eC9yZWJvb3QuaD4NCj4+ICsjaW5jbHVkZSA8bGludXgvd2F0Y2hkb2cu
+aD4NCj4+ICsNCj4+ICsjZGVmaW5lIEFUOTFfV0RUX0NSwqDCoMKgwqDCoMKgwqAgMHgwMMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgLyogV2F0Y2hkb2cgQ29udHJvbCANCj4+IFJlZ2lzdGVyICovDQo+
+PiArI2RlZmluZcKgwqDCoMKgwqDCoMKgIEFUOTFfV0RUX1dEUlNUVMKgwqDCoMKgwqDCoMKgIEJJ
+VCgwKcKgwqDCoMKgwqDCoMKgIC8qIFJlc3RhcnQgKi8NCj4+ICsjZGVmaW5lwqDCoMKgwqDCoMKg
+wqAgQVQ5MV9XRFRfS0VZwqDCoMKgwqDCoMKgwqAgKDB4YTUgPDwgMjQpwqDCoMKgwqDCoMKgwqAg
+LyogS0VZIA0KPj4gUGFzc3dvcmQgKi8NCj4+ICsNCj4+ICsjZGVmaW5lIEFUOTFfV0RUX01SwqDC
+oMKgwqDCoMKgwqAgMHgwNMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgLyogV2F0Y2hkb2cgTW9kZSBS
+ZWdpc3RlciAqLw0KPj4gKyNkZWZpbmXCoMKgwqDCoMKgwqDCoCBBVDkxX1dEVF9QRVJJT0RSU1TC
+oMKgwqAgQklUKDQpwqDCoMKgwqDCoMKgwqAgLyogUGVyaW9kIFJlc2V0ICovDQo+PiArI2RlZmlu
+ZcKgwqDCoMKgwqDCoMKgIEFUOTFfV0RUX1JQVEhSU1TCoMKgwqAgQklUKDUpwqDCoMKgwqDCoMKg
+wqAgLyogTWluaW11bSBSZXN0YXJ0IA0KPj4gUGVyaW9kICovDQo+PiArI2RlZmluZcKgwqDCoMKg
+wqDCoMKgIEFUOTFfV0RUX1dERElTwqDCoMKgwqDCoMKgwqAgQklUKDEyKcKgwqDCoMKgwqDCoMKg
+IC8qIERpc2FibGUgKi8NCj4+ICsjZGVmaW5lwqDCoMKgwqDCoMKgwqAgQVQ5MV9XRFRfV0REQkdI
+TFTCoMKgwqAgQklUKDI4KcKgwqDCoMKgwqDCoMKgIC8qIERlYnVnIEhhbHQgKi8NCj4+ICsjZGVm
+aW5lwqDCoMKgwqDCoMKgwqAgQVQ5MV9XRFRfV0RJRExFSExUwqDCoMKgIEJJVCgyOSnCoMKgwqDC
+oMKgwqDCoCAvKiBJZGxlIEhhbHQgKi8NCj4+ICsNCj4+ICsjZGVmaW5lIEFUOTFfV0RUX1ZSwqDC
+oMKgwqDCoMKgwqAgMHgwOMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgLyogV2F0Y2hkb2cgVGltZXIg
+VmFsdWUgDQo+PiBSZWdpc3RlciAqLw0KPj4gKw0KPj4gKyNkZWZpbmUgQVQ5MV9XRFRfV0xSwqDC
+oMKgwqDCoMKgwqAgMHgwYw0KPj4gKyNkZWZpbmXCoMKgwqDCoMKgwqDCoCBBVDkxX1dEVF9DT1VO
+VEVSwqDCoMKgICgweGZmZiA8PCAwKcKgwqDCoMKgwqDCoMKgIC8qIFdhdGNoZG9nIA0KPj4gUGVy
+aW9kIFZhbHVlICovDQo+PiArI2RlZmluZcKgwqDCoMKgwqDCoMKgIEFUOTFfV0RUX1NFVF9DT1VO
+VEVSKHgpwqDCoMKgICgoeCkgJiBBVDkxX1dEVF9DT1VOVEVSKQ0KPj4gKw0KPj4gKyNkZWZpbmUg
+QVQ5MV9XRFRfSUVSwqDCoMKgwqDCoMKgwqAgMHgxNMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgLyog
+SW50ZXJydXB0IEVuYWJsZSANCj4+IFJlZ2lzdGVyICovDQo+PiArI2RlZmluZcKgwqDCoMKgwqDC
+oMKgIEFUOTFfV0RUX1BFUklOVMKgwqDCoMKgwqDCoMKgIEJJVCgwKcKgwqDCoMKgwqDCoMKgIC8q
+IFBlcmlvZCANCj4+IEludGVycnVwdCBFbmFibGUgKi8NCj4+ICsjZGVmaW5lIEFUOTFfV0RUX0lE
+UsKgwqDCoMKgwqDCoMKgIDB4MTjCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIC8qIEludGVycnVwdCBE
+aXNhYmxlIA0KPj4gUmVnaXN0ZXIgKi8NCj4+ICsjZGVmaW5lIEFUOTFfV0RUX0lTUsKgwqDCoMKg
+wqDCoMKgIDB4MWPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIC8qIEludGVycnVwdCBTdGF0dXMgDQo+
+PiBSZWdpc3RlciAqLw0KPj4gKw0KPj4gKy8qIG1pbmltdW0gYW5kIG1heGltdW0gd2F0Y2hkb2cg
+dGltZW91dCwgaW4gc2Vjb25kcyAqLw0KPj4gKyNkZWZpbmUgTUlOX1dEVF9USU1FT1VUwqDCoMKg
+wqDCoMKgwqAgMQ0KPj4gKyNkZWZpbmUgTUFYX1dEVF9USU1FT1VUwqDCoMKgwqDCoMKgwqAgMTYN
+Cj4+ICsjZGVmaW5lIFdEVF9ERUZBVUxUX1RJTUVPVVTCoMKgwqAgTUFYX1dEVF9USU1FT1VUDQo+
+PiArDQo+PiArI2RlZmluZSBXRFRfU0VDMlRJQ0tTKHMpwqDCoMKgICgocykgPyAoKChzKSA8PCA4
+KSAtIDEpIDogMCkNCj4+ICsNCj4+ICtzdHJ1Y3Qgc2FtOXg2MF93ZHQgew0KPj4gK8KgwqDCoCBz
+dHJ1Y3Qgd2F0Y2hkb2dfZGV2aWNlwqDCoMKgIHdkZDsNCj4+ICvCoMKgwqAgdm9pZCBfX2lvbWVt
+wqDCoMKgwqDCoMKgwqAgKnJlZ19iYXNlOw0KPj4gK8KgwqDCoCB1MzLCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgIG1yOw0KPj4gK8KgwqDCoCB1MzLCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlyOw0KPj4g
+K8KgwqDCoCB1bnNpZ25lZCBsb25nwqDCoMKgwqDCoMKgwqAgbGFzdF9waW5nOw0KPj4gK307DQo+
+PiArDQo+PiArc3RhdGljIGludCB3ZHRfdGltZW91dDsNCj4+ICtzdGF0aWMgYm9vbCBub3dheW91
+dCA9IFdBVENIRE9HX05PV0FZT1VUOw0KPj4gKw0KPj4gK21vZHVsZV9wYXJhbSh3ZHRfdGltZW91
+dCwgaW50LCAwKTsNCj4+ICtNT0RVTEVfUEFSTV9ERVNDKHdkdF90aW1lb3V0LA0KPj4gK8KgwqDC
+oMKgwqDCoMKgwqAgIldhdGNoZG9nIHRpbWVvdXQgaW4gc2Vjb25kcy4gKGRlZmF1bHQgPSAiDQo+
+PiArwqDCoMKgwqDCoMKgwqDCoCBfX01PRFVMRV9TVFJJTkcoV0RUX0RFRkFVTFRfVElNRU9VVCkg
+IikiKTsNCj4+ICsNCj4+ICttb2R1bGVfcGFyYW0obm93YXlvdXQsIGJvb2wsIDApOw0KPj4gK01P
+RFVMRV9QQVJNX0RFU0Mobm93YXlvdXQsDQo+PiArwqDCoMKgwqDCoMKgwqDCoCAiV2F0Y2hkb2cg
+Y2Fubm90IGJlIHN0b3BwZWQgb25jZSBzdGFydGVkIChkZWZhdWx0PSINCj4+ICvCoMKgwqDCoMKg
+wqDCoMKgIF9fTU9EVUxFX1NUUklORyhXQVRDSERPR19OT1dBWU9VVCkgIikiKTsNCj4+ICsNCj4+
+ICsjZGVmaW5lIHdkdF9lbmFibGVkICghKHdkdC0+bXIgJiBBVDkxX1dEVF9XRERJUykpDQo+IA0K
+PiBQbGVhc2Ugbm8gdXNlIGluIHZhcmlhYmxlcyBpbiBtYWNyb3Mgd2l0aG91dCByZWZlcmVuY2lu
+ZyB0aGVtIGluIHRoZSANCj4gYXJndW1lbnQuDQo+IA0KPj4gKw0KPj4gKyNkZWZpbmUgd2R0X3Jl
+YWQod2R0LCBmaWVsZCkgXA0KPj4gK8KgwqDCoCByZWFkbF9yZWxheGVkKCh3ZHQpLT5yZWdfYmFz
+ZSArIChmaWVsZCkpDQo+PiArDQo+PiArLyogNCBzbG93IGNsb2NrIHBlcmlvZHMgaXMgNC8zMjc2
+OCA9IDEyMi4wN3VzKi8NCj4+ICsjZGVmaW5lIFdEVF9ERUxBWcKgwqDCoCB1c2Vjc190b19qaWZm
+aWVzKDEyMykNCj4+ICsNCj4+ICtzdGF0aWMgdm9pZCB3ZHRfd3JpdGUoc3RydWN0IHNhbTl4NjBf
+d2R0ICp3ZHQsIHUzMiBmaWVsZCwgdTMyIHZhbCkNCj4+ICt7DQo+PiArwqDCoMKgIC8qDQo+PiAr
+wqDCoMKgwqAgKiBXRFRfQ1IgYW5kIFdEVF9NUiBtdXN0IG5vdCBiZSBtb2RpZmllZCB3aXRoaW4g
+dGhyZWUgc2xvdyBjbG9jaw0KPj4gK8KgwqDCoMKgICogcGVyaW9kcyBmb2xsb3dpbmcgYSByZXN0
+YXJ0IG9mIHRoZSB3YXRjaGRvZyBwZXJmb3JtZWQgYnkgYSB3cml0ZQ0KPj4gK8KgwqDCoMKgICog
+YWNjZXNzIGluIFdEVF9DUi4NCj4+ICvCoMKgwqDCoCAqLw0KPj4gK8KgwqDCoCB3aGlsZSAodGlt
+ZV9iZWZvcmUoamlmZmllcywgd2R0LT5sYXN0X3BpbmcgKyBXRFRfREVMQVkpKQ0KPj4gK8KgwqDC
+oMKgwqDCoMKgIHVzbGVlcF9yYW5nZSgzMCwgMTI1KTsNCj4+ICvCoMKgwqAgd3JpdGVsX3JlbGF4
+ZWQodmFsLCB3ZHQtPnJlZ19iYXNlICsgZmllbGQpOw0KPj4gK8KgwqDCoCB3ZHQtPmxhc3RfcGlu
+ZyA9IGppZmZpZXM7DQo+PiArfQ0KPj4gKw0KPj4gK3N0YXRpYyB2b2lkIHdkdF93cml0ZV9ub3Ns
+ZWVwKHN0cnVjdCBzYW05eDYwX3dkdCAqd2R0LCB1MzIgZmllbGQsIHUzMiANCj4+IHZhbCkNCj4+
+ICt7DQo+PiArwqDCoMKgIGlmICh0aW1lX2JlZm9yZShqaWZmaWVzLCB3ZHQtPmxhc3RfcGluZyAr
+IFdEVF9ERUxBWSkpDQo+IA0KPiBXRFRfREVMQVkgaXMgbW9zdCBsaWtlbHkgMSB1bmRlciBhbGwg
+Y2lyY3Vtc3RhbmNlcy4gSWYgdGhlIGxhc3QgYWNjZXNzIA0KPiB3YXMganVzdCBiZWZvcmUNCj4g
+YSB0aWNrLCB0aGlzIHdvbid0IGd1YXJhbnRlZSB0aGF0IHJlYWxseSAxMjMgdVMgZXhwaXJlZC4N
+Cj4gDQo+IEluIHNpdHVhdGlvbnMgbGlrZSB0aGlzLCBJIHdvdWxkIHN1Z2dlc3Qgbm90IHRvIHJl
+bHkgb24gamlmZmllcyByZWxhdGVkIA0KPiBmdW5jdGlvbnMuDQo+IElmIHRoZSBsYXN0IGFjY2Vz
+cyB0aW1lIGlzIHN0b3JlZCBiYXNlZCBvbiBrdGltZV9nZXQoKSwgdGhlIHJlbWFpbmluZyANCj4g
+dGltZSBpbg0KPiB1cyBjYW4gYmUgY2FsY3VsYXRlZCB1c2luZyBrdGltZV91c19kZWx0YSgpLiBU
+aGVuIGp1c3Qgc2xlZXAgKG9yIGRlbGF5IA0KPiBpbiBjYXNlDQo+IG9mIG5vc2xlZXApIGZvciB0
+aGF0IGFtb3VudCBvZiBtaWNyb3NlY29uZHMuDQo+IA0KPiBBbHNvLCBJIGRvbid0IHNlZSB3aHkg
+dGhpcyBzZWNvbmQgZnVuY3Rpb24gd291bGQgYmUgbmVjZXNzYXJ5Lg0KPiBBIHNpbmdsZSBmdW5j
+dGlvbiB3aXRoIGFuIGlmKCkgc2hvdWxkIGJlIHN1ZmZpY2llbnQuDQo+IA0KPiAgwqDCoMKgwqBr
+dGltZV90IGRlbHRhID0gV0RUX0RFTEFZX1VTIC0ga3RpbWVfdXNfZGVsdGEoa3RpbWVfZ2V0KCks
+IA0KPiB3ZHQtPmxhc3RfcGluZyk7DQo+IA0KPiAgwqDCoMKgwqBpZiAoZGVsdGEgPiAwKQ0KPiAg
+wqDCoMKgwqDCoMKgwqAgdXNsZWVwX3JhbmdlKGRlbHRhLCBkZWx0YSAqIDIpOw0KPiAgwqDCoMKg
+wqB3cml0ZWxfcmVsYXhlZCh2YWwsIHdkdC0+cmVnX2Jhc2UgKyBmaWVsZCk7DQo+ICDCoMKgwqDC
+oHdkdC0+bGFzdF9waW5nID0ga3RpbWVfZ2V0KCk7DQo+IA0KPj4gK8KgwqDCoMKgwqDCoMKgIHVz
+bGVlcF9yYW5nZSgxMjMsIDI1MCk7DQo+PiArwqDCoMKgIHdyaXRlbF9yZWxheGVkKHZhbCwgd2R0
+LT5yZWdfYmFzZSArIGZpZWxkKTsNCj4+ICvCoMKgwqAgd2R0LT5sYXN0X3BpbmcgPSBqaWZmaWVz
+Ow0KPj4gK30NCj4+ICsNCj4+ICtzdGF0aWMgaW50IHNhbTl4NjBfd2R0X3N0YXJ0KHN0cnVjdCB3
+YXRjaGRvZ19kZXZpY2UgKndkZCkNCj4+ICt7DQo+PiArwqDCoMKgIHN0cnVjdCBzYW05eDYwX3dk
+dCAqd2R0ID0gd2F0Y2hkb2dfZ2V0X2RydmRhdGEod2RkKTsNCj4+ICsNCj4+ICvCoMKgwqAgd2R0
+LT5tciAmPSB+QVQ5MV9XRFRfV0RESVM7DQo+PiArwqDCoMKgIHdkdF93cml0ZSh3ZHQsIEFUOTFf
+V0RUX01SLCB3ZHQtPm1yKTsNCj4+ICvCoMKgwqAgd2R0X3dyaXRlX25vc2xlZXAod2R0LCBBVDkx
+X1dEVF9JRVIsIHdkdC0+aXIpOw0KPj4gKw0KPj4gK8KgwqDCoCByZXR1cm4gMDsNCj4+ICt9DQo+
+PiArDQo+PiArc3RhdGljIGludCBzYW05eDYwX3dkdF9zdG9wKHN0cnVjdCB3YXRjaGRvZ19kZXZp
+Y2UgKndkZCkNCj4+ICt7DQo+PiArwqDCoMKgIHN0cnVjdCBzYW05eDYwX3dkdCAqd2R0ID0gd2F0
+Y2hkb2dfZ2V0X2RydmRhdGEod2RkKTsNCj4+ICsNCj4+ICvCoMKgwqAgd2R0LT5tciB8PSBBVDkx
+X1dEVF9XRERJUzsNCj4+ICvCoMKgwqAgd2R0X3dyaXRlKHdkdCwgQVQ5MV9XRFRfTVIsIHdkdC0+
+bXIpOw0KPj4gK8KgwqDCoCB3ZHRfd3JpdGVfbm9zbGVlcCh3ZHQsIEFUOTFfV0RUX0lEUiwgd2R0
+LT5pcik7DQo+PiArDQo+PiArwqDCoMKgIHJldHVybiAwOw0KPj4gK30NCj4+ICsNCj4+ICtzdGF0
+aWMgaW50IHNhbTl4NjBfd2R0X3Bpbmcoc3RydWN0IHdhdGNoZG9nX2RldmljZSAqd2RkKQ0KPj4g
+K3sNCj4+ICvCoMKgwqAgc3RydWN0IHNhbTl4NjBfd2R0ICp3ZHQgPSB3YXRjaGRvZ19nZXRfZHJ2
+ZGF0YSh3ZGQpOw0KPj4gKw0KPj4gK8KgwqDCoCB3ZHRfd3JpdGUod2R0LCBBVDkxX1dEVF9DUiwg
+QVQ5MV9XRFRfS0VZIHwgQVQ5MV9XRFRfV0RSU1RUKTsNCj4+ICsNCj4+ICvCoMKgwqAgcmV0dXJu
+IDA7DQo+PiArfQ0KPj4gKw0KPj4gK3N0YXRpYyBpbnQgc2FtOXg2MF93ZHRfc2V0X3RpbWVvdXQo
+c3RydWN0IHdhdGNoZG9nX2RldmljZSAqd2RkLA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCB1bnNpZ25lZCBpbnQgdGltZW91dCkNCj4+ICt7DQo+PiArwqDCoMKgIHN0
+cnVjdCBzYW05eDYwX3dkdCAqd2R0ID0gd2F0Y2hkb2dfZ2V0X2RydmRhdGEod2RkKTsNCj4+ICsN
+Cj4+ICvCoMKgwqAgd2R0X3dyaXRlKHdkdCwgQVQ5MV9XRFRfV0xSLA0KPj4gK8KgwqDCoMKgwqDC
+oMKgwqDCoCBBVDkxX1dEVF9TRVRfQ09VTlRFUihXRFRfU0VDMlRJQ0tTKHRpbWVvdXQpKSk7DQo+
+PiArDQo+PiArwqDCoMKgIHdkZC0+dGltZW91dCA9IHRpbWVvdXQ7DQo+PiArDQo+PiArwqDCoMKg
+IHJldHVybiAwOw0KPj4gK30NCj4+ICsNCj4+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHdhdGNoZG9n
+X2luZm8gc2FtOXg2MF93ZHRfaW5mbyA9IHsNCj4+ICvCoMKgwqAgLm9wdGlvbnMgPSBXRElPRl9T
+RVRUSU1FT1VUIHwgV0RJT0ZfTUFHSUNDTE9TRSB8IA0KPj4gV0RJT0ZfS0VFUEFMSVZFUElORywN
+Cj4+ICvCoMKgwqAgLmlkZW50aXR5ID0gIk1pY3JvY2hpcCBTQU05WDYwIFdhdGNoZG9nIiwNCj4+
+ICt9Ow0KPj4gKw0KPj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgd2F0Y2hkb2dfb3BzIHNhbTl4NjBf
+d2R0X29wcyA9IHsNCj4+ICvCoMKgwqAgLm93bmVyID0gVEhJU19NT0RVTEUsDQo+PiArwqDCoMKg
+IC5zdGFydCA9IHNhbTl4NjBfd2R0X3N0YXJ0LA0KPj4gK8KgwqDCoCAuc3RvcCA9IHNhbTl4NjBf
+d2R0X3N0b3AsDQo+PiArwqDCoMKgIC5waW5nID0gc2FtOXg2MF93ZHRfcGluZywNCj4+ICvCoMKg
+wqAgLnNldF90aW1lb3V0ID0gc2FtOXg2MF93ZHRfc2V0X3RpbWVvdXQsDQo+PiArfTsNCj4+ICsN
+Cj4+ICtzdGF0aWMgaXJxcmV0dXJuX3Qgc2FtOXg2MF93ZHRfaXJxX2hhbmRsZXIoaW50IGlycSwg
+dm9pZCAqZGV2X2lkKQ0KPj4gK3sNCj4+ICvCoMKgwqAgc3RydWN0IHNhbTl4NjBfd2R0ICp3ZHQg
+PSBwbGF0Zm9ybV9nZXRfZHJ2ZGF0YShkZXZfaWQpOw0KPj4gKw0KPj4gK8KgwqDCoCBpZiAod2R0
+X3JlYWQod2R0LCBBVDkxX1dEVF9JU1IpKSB7DQo+PiArwqDCoMKgwqDCoMKgwqAgcHJfY3JpdCgi
+TWljcm9jaGlwIFdhdGNoZG9nIFNvZnR3YXJlIFJlc2V0XG4iKTsNCj4+ICvCoMKgwqDCoMKgwqDC
+oCBlbWVyZ2VuY3lfcmVzdGFydCgpOw0KPj4gK8KgwqDCoMKgwqDCoMKgIHByX2NyaXQoIlJlYm9v
+dCBkaWRuJ3Qgc3VjY2VlZFxuIik7DQo+PiArwqDCoMKgIH0NCj4+ICsNCj4+ICvCoMKgwqAgcmV0
+dXJuIElSUV9IQU5ETEVEOw0KPj4gK30NCj4+ICsNCj4+ICtzdGF0aWMgaW50IG9mX3NhbTl4NjBf
+d2R0X2luaXQoc3RydWN0IGRldmljZV9ub2RlICpucCwgc3RydWN0IA0KPj4gc2FtOXg2MF93ZHQg
+KndkdCkNCj4+ICt7DQo+PiArwqDCoMKgIGNvbnN0IGNoYXIgKnRtcDsNCj4+ICsNCj4+ICvCoMKg
+wqAgd2R0LT5tciA9IEFUOTFfV0RUX1dERElTOw0KPj4gKw0KPj4gK8KgwqDCoCBpZiAoIW9mX3By
+b3BlcnR5X3JlYWRfc3RyaW5nKG5wLCAiYXRtZWwsd2F0Y2hkb2ctdHlwZSIsICZ0bXApICYmDQo+
+PiArwqDCoMKgwqDCoMKgwqAgIXN0cmNtcCh0bXAsICJzb2Z0d2FyZSIpKQ0KPj4gK8KgwqDCoMKg
+wqDCoMKgIHdkdC0+aXIgPSBBVDkxX1dEVF9QRVJJTlQ7DQo+PiArwqDCoMKgIGVsc2UNCj4+ICvC
+oMKgwqDCoMKgwqDCoCB3ZHQtPm1yIHw9IEFUOTFfV0RUX1BFUklPRFJTVDsNCj4+ICsNCj4+ICvC
+oMKgwqAgaWYgKG9mX3Byb3BlcnR5X3JlYWRfYm9vbChucCwgImF0bWVsLGlkbGUtaGFsdCIpKQ0K
+Pj4gK8KgwqDCoMKgwqDCoMKgIHdkdC0+bXIgfD0gQVQ5MV9XRFRfV0RJRExFSExUOw0KPj4gKw0K
+Pj4gK8KgwqDCoCBpZiAob2ZfcHJvcGVydHlfcmVhZF9ib29sKG5wLCAiYXRtZWwsZGJnLWhhbHQi
+KSkNCj4+ICvCoMKgwqDCoMKgwqDCoCB3ZHQtPm1yIHw9IEFUOTFfV0RUX1dEREJHSExUOw0KPj4g
+Kw0KPj4gK8KgwqDCoCByZXR1cm4gMDsNCj4+ICt9DQo+PiArDQo+PiArc3RhdGljIGludCBzYW05
+eDYwX3dkdF9pbml0KHN0cnVjdCBzYW05eDYwX3dkdCAqd2R0KQ0KPj4gK3sNCj4+ICvCoMKgwqAg
+dTMyIHJlZzsNCj4+ICvCoMKgwqAgLyoNCj4+ICvCoMKgwqDCoCAqIFdoZW4gYm9vdGluZyBhbmQg
+cmVzdW1pbmcsIHRoZSBib290bG9hZGVyIG1heSBoYXZlIGNoYW5nZWQgdGhlDQo+PiArwqDCoMKg
+wqAgKiB3YXRjaGRvZyBjb25maWd1cmF0aW9uLg0KPj4gK8KgwqDCoMKgICogSWYgdGhlIHdhdGNo
+ZG9nIGlzIGFscmVhZHkgcnVubmluZywgd2UgY2FuIHNhZmVseSB1cGRhdGUgaXQuDQo+PiArwqDC
+oMKgwqAgKiBFbHNlLCB3ZSBoYXZlIHRvIGRpc2FibGUgaXQgcHJvcGVybHkuDQo+PiArwqDCoMKg
+wqAgKi8NCj4+ICvCoMKgwqAgaWYgKHdkdF9lbmFibGVkKSB7DQo+PiArwqDCoMKgwqDCoMKgwqAg
+d2R0X3dyaXRlX25vc2xlZXAod2R0LCBBVDkxX1dEVF9NUiwgd2R0LT5tcik7DQo+PiArwqDCoMKg
+wqDCoMKgwqAgd2R0X3dyaXRlX25vc2xlZXAod2R0LCBBVDkxX1dEVF9JRVIsIHdkdC0+aXIpOw0K
+Pj4gK8KgwqDCoMKgwqDCoMKgIHdkdF93cml0ZSh3ZHQsIEFUOTFfV0RUX1dMUiwNCj4+ICvCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBBVDkxX1dEVF9TRVRfQ09VTlRFUihXRFRfU0VDMlRJQ0tT
+KFdEVF9ERUZBVUxUX1RJTUVPVVQpKSk7DQo+PiArDQo+PiArwqDCoMKgIH0gZWxzZSB7DQo+PiAr
+wqDCoMKgwqDCoMKgwqAgcmVnID0gd2R0X3JlYWQod2R0LCBBVDkxX1dEVF9NUik7DQo+PiArwqDC
+oMKgwqDCoMKgwqAgaWYgKCEocmVnICYgQVQ5MV9XRFRfV0RESVMpKQ0KPj4gK8KgwqDCoMKgwqDC
+oMKgwqDCoMKgwqAgd2R0X3dyaXRlX25vc2xlZXAod2R0LCBBVDkxX1dEVF9NUiwNCj4+ICvCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmVnIHwgQVQ5MV9XRFRfV0RE
+SVMpOw0KPj4gK8KgwqDCoCB9DQo+IA0KPiBJZiB0aGUgd2F0Y2hkb2cgbWF5IGJlIHJ1bm5pbmcg
+YXQgYm9vdCB0aW1lLCB0aGUgd2F0Y2hkb2cgY29yZQ0KPiBzaG91bGQgYmUgaW5mb3JtZWQgYWJv
+dXQgaXQuDQo+IA0KPj4gK8KgwqDCoCByZXR1cm4gMDsNCj4+ICt9DQo+PiArDQo+PiArc3RhdGlj
+IGludCBzYW05eDYwX3dkdF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPj4g
+K3sNCj4+ICvCoMKgwqAgc3RydWN0IHdhdGNoZG9nX2RldmljZSAqd2RkOw0KPj4gK8KgwqDCoCBz
+dHJ1Y3Qgc2FtOXg2MF93ZHQgKndkdDsNCj4+ICvCoMKgwqAgc3RydWN0IHJlc291cmNlICpyZXM7
+DQo+PiArwqDCoMKgIHZvaWQgX19pb21lbSAqcmVnczsNCj4+ICvCoMKgwqAgdTMyIGlycSA9IDA7
+DQo+IA0KPiBVbm5lY2Vzc2FyeSBpbml0aWFsaXphdGlvbi4NCj4gDQo+PiArwqDCoMKgIGludCBy
+ZXQ7DQo+PiArDQo+PiArwqDCoMKgIHdkdCA9IGRldm1fa3phbGxvYygmcGRldi0+ZGV2LCBzaXpl
+b2YoKndkdCksIEdGUF9LRVJORUwpOw0KPj4gK8KgwqDCoCBpZiAoIXdkdCkNCj4+ICvCoMKgwqDC
+oMKgwqDCoCByZXR1cm4gLUVOT01FTTsNCj4+ICsNCj4+ICvCoMKgwqAgd2RkID0gJndkdC0+d2Rk
+Ow0KPj4gK8KgwqDCoCB3ZGQtPnRpbWVvdXQgPSBXRFRfREVGQVVMVF9USU1FT1VUOw0KPj4gK8Kg
+wqDCoCB3ZGQtPmluZm8gPSAmc2FtOXg2MF93ZHRfaW5mbzsNCj4+ICvCoMKgwqAgd2RkLT5vcHMg
+PSAmc2FtOXg2MF93ZHRfb3BzOw0KPj4gK8KgwqDCoCB3ZGQtPm1pbl90aW1lb3V0ID0gTUlOX1dE
+VF9USU1FT1VUOw0KPj4gK8KgwqDCoCB3ZGQtPm1heF90aW1lb3V0ID0gTUFYX1dEVF9USU1FT1VU
+Ow0KPj4gK8KgwqDCoCB3ZHQtPmxhc3RfcGluZyA9IGppZmZpZXM7DQo+PiArDQo+PiArwqDCoMKg
+IHdhdGNoZG9nX3NldF9kcnZkYXRhKHdkZCwgd2R0KTsNCj4+ICsNCj4+ICvCoMKgwqAgcmVzID0g
+cGxhdGZvcm1fZ2V0X3Jlc291cmNlKHBkZXYsIElPUkVTT1VSQ0VfTUVNLCAwKTsNCj4+ICvCoMKg
+wqAgcmVncyA9IGRldm1faW9yZW1hcF9yZXNvdXJjZSgmcGRldi0+ZGV2LCByZXMpOw0KPiANCj4g
+ZGV2bV9wbGF0Zm9ybV9pb3JlbWFwX3Jlc291cmNlKCkNCj4gDQo+PiArwqDCoMKgIGlmIChJU19F
+UlIocmVncykpDQo+PiArwqDCoMKgwqDCoMKgwqAgcmV0dXJuIFBUUl9FUlIocmVncyk7DQo+PiAr
+DQo+PiArwqDCoMKgIHdkdC0+cmVnX2Jhc2UgPSByZWdzOw0KPj4gKw0KPj4gK8KgwqDCoCBpcnEg
+PSBpcnFfb2ZfcGFyc2VfYW5kX21hcChwZGV2LT5kZXYub2Zfbm9kZSwgMCk7DQo+PiArwqDCoMKg
+IGlmICghaXJxKQ0KPj4gK8KgwqDCoMKgwqDCoMKgIGRldl93YXJuKCZwZGV2LT5kZXYsICJmYWls
+ZWQgdG8gZ2V0IElSUSBmcm9tIERUXG4iKTsNCj4+ICsNCj4gDQo+IFRoZSBpbnRlcnJ1cHQgcHJv
+cGVydHkgaXMgb3B0aW9uYWwuIE5vdCBwcm92aWRpbmcgaXQgZG9lcyBub3Qgd2FycmFudCBhIA0K
+PiB3YXJuaW5nLg0KPiANCj4+ICvCoMKgwqAgcmV0ID0gb2Zfc2FtOXg2MF93ZHRfaW5pdChwZGV2
+LT5kZXYub2Zfbm9kZSwgd2R0KTsNCj4+ICvCoMKgwqAgaWYgKHJldCkNCj4+ICvCoMKgwqDCoMKg
+wqDCoCByZXR1cm4gcmV0Ow0KPj4gKw0KPj4gK8KgwqDCoCBpZiAoKHdkdC0+aXIgJiBBVDkxX1dE
+VF9QRVJJTlQpICYmIGlycSkgew0KPiANCj4gLi4uIGV2ZW4gbW9yZSBzbyBpZiBpdCBpc24ndCBh
+Y3R1YWxseSB1c2VkIGluIHNvbWUgY2FzZXMuIA0KPiBpcnFfb2ZfcGFyc2VfYW5kX21hcCgpDQo+
+IHNob3VsZCBwcm9iYWJseSBvbmx5IGJlIGNhbGxlZCBpbiB0aGUgZmlyc3QgcGxhY2UgaWYgQVQ5
+MV9XRFRfUEVSSU5UIGlzIA0KPiBzZXQuDQo+IA0KPj4gK8KgwqDCoMKgwqDCoMKgIHJldCA9IGRl
+dm1fcmVxdWVzdF9pcnEoJnBkZXYtPmRldiwgaXJxLCBzYW05eDYwX3dkdF9pcnFfaGFuZGxlciwN
+Cj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBJUlFGX1NI
+QVJFRCB8IElSUUZfSVJRUE9MTCB8DQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAgSVJRRl9OT19TVVNQRU5ELCBwZGV2LT5uYW1lLCBwZGV2KTsNCj4+ICvC
+oMKgwqDCoMKgwqDCoCBpZiAocmV0KSB7DQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBkZXZf
+ZXJyKCZwZGV2LT5kZXYsDQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICJjYW5u
+b3QgcmVnaXN0ZXIgaW50ZXJydXB0IGhhbmRsZXJcbiIpOw0KPj4gK8KgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgcmV0dXJuIHJldDsNCj4+ICvCoMKgwqDCoMKgwqDCoCB9DQo+PiArwqDCoMKgIH0NCj4+
+ICsNCj4+ICvCoMKgwqAgd2F0Y2hkb2dfaW5pdF90aW1lb3V0KHdkZCwgd2R0X3RpbWVvdXQsICZw
+ZGV2LT5kZXYpOw0KPj4gKw0KPj4gK8KgwqDCoCByZXQgPSBzYW05eDYwX3dkdF9pbml0KHdkdCk7
+DQo+PiArwqDCoMKgIGlmIChyZXQpDQo+PiArwqDCoMKgwqDCoMKgwqAgcmV0dXJuIHJldDsNCj4+
+ICsNCj4+ICvCoMKgwqAgd2F0Y2hkb2dfc2V0X25vd2F5b3V0KHdkZCwgbm93YXlvdXQpOw0KPj4g
+Kw0KPj4gK8KgwqDCoCByZXQgPSB3YXRjaGRvZ19yZWdpc3Rlcl9kZXZpY2Uod2RkKTsNCj4+ICvC
+oMKgwqAgaWYgKHJldCkgew0KPj4gK8KgwqDCoMKgwqDCoMKgIGRldl9lcnIoJnBkZXYtPmRldiwg
+ImZhaWxlZCB0byByZWdpc3RlciB3YXRjaGRvZyBkZXZpY2VcbiIpOw0KPj4gK8KgwqDCoMKgwqDC
+oMKgIHJldHVybiByZXQ7DQo+PiArwqDCoMKgIH0NCj4+ICsNCj4+ICvCoMKgwqAgcGxhdGZvcm1f
+c2V0X2RydmRhdGEocGRldiwgd2R0KTsNCj4+ICsNCj4+ICvCoMKgwqAgZGV2X2luZm8oJnBkZXYt
+PmRldiwgImluaXRpYWxpemVkICh0aW1lb3V0ID0gJWQgc2VjLCBub3dheW91dCA9IA0KPj4gJWQp
+XG4iLA0KPj4gK8KgwqDCoMKgwqDCoMKgwqAgd2RkLT50aW1lb3V0LCBub3dheW91dCk7DQo+PiAr
+DQo+PiArwqDCoMKgIHJldHVybiAwOw0KPj4gK30NCj4+ICsNCj4+ICtzdGF0aWMgaW50IHNhbTl4
+NjBfd2R0X3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPj4gK3sNCj4+ICvC
+oMKgwqAgc3RydWN0IHNhbTl4NjBfd2R0ICp3ZHQgPSBwbGF0Zm9ybV9nZXRfZHJ2ZGF0YShwZGV2
+KTsNCj4+ICsNCj4+ICvCoMKgwqAgc2FtOXg2MF93ZHRfc3RvcCgmd2R0LT53ZGQpOw0KPj4gKw0K
+PiANCj4gUGxlYXNlIHVzZSB3YXRjaGRvZ19zdG9wX29uX3VucmVnaXN0ZXIoKSBpbnN0ZWFkLg0K
+PiANCj4+ICvCoMKgwqAgd2F0Y2hkb2dfdW5yZWdpc3Rlcl9kZXZpY2UoJndkdC0+d2RkKTsNCj4+
+ICsNCj4gDQo+IFBsZWFzZSB1c2UgZGV2bV93YXRjaGRvZ19yZWdpc3Rlcl9kZXZpY2UoKSBhbmQg
+ZHJvcCB0aGUgcmVtb3ZlIGZ1bmN0aW9uLg0KPiANCj4+ICvCoMKgwqAgcmV0dXJuIDA7DQo+PiAr
+fQ0KPj4gKw0KPj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHNhbTl4NjBfd2R0
+X29mX21hdGNoW10gPSB7DQo+PiArwqDCoMKgIHsgLmNvbXBhdGlibGUgPSAibWljcm9jaGlwLHNh
+bTl4NjAtd2R0IiwgfSwNCj4+ICvCoMKgwqAgeyB9DQo+PiArfTsNCj4+ICtNT0RVTEVfREVWSUNF
+X1RBQkxFKG9mLCBzYW05eDYwX3dkdF9vZl9tYXRjaCk7DQo+PiArDQo+PiArI2lmZGVmIENPTkZJ
+R19QTV9TTEVFUA0KPiANCj4gUGxlYXNlIHVzZSBfX21heWJlX3VudXNlZA0KPiANCj4+ICtzdGF0
+aWMgaW50IHNhbTl4NjBfd2R0X3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+PiArew0KPj4g
+K8KgwqDCoCBzdHJ1Y3Qgc2FtOXg2MF93ZHQgKndkdCA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOw0K
+Pj4gKw0KPj4gK8KgwqDCoCAvKg0KPj4gK8KgwqDCoMKgICogRklYTUU6IHdyaXRpbmcgTVIgYWxz
+byBwaW5ncyB0aGUgd2F0Y2hkb2cgd2hpY2ggbWF5IG5vdCBiZSANCj4+IGRlc2lyZWQuDQo+PiAr
+wqDCoMKgwqAgKiBUaGlzIHNob3VsZCBvbmx5IGJlIGRvbmUgd2hlbiB0aGUgcmVnaXN0ZXJzIGFy
+ZSBsb3N0IG9uIA0KPj4gc3VzcGVuZCBidXQNCj4+ICvCoMKgwqDCoCAqIHRoZXJlIGlzIG5vIHdh
+eSB0byBnZXQgdGhpcyBpbmZvcm1hdGlvbiByaWdodCBub3cuDQo+PiArwqDCoMKgwqAgKi8NCj4g
+DQo+IFRoaXMgc2VlbXMgd3JvbmcuIFRoZSBib290bG9hZGVyIG1heSBoYXZlIHN0b3BwZWQgdGhl
+IHdhdGNoZG9nIGluIHRoZQ0KPiBzdXNwZW5kL3Jlc3VtZSBjeWNsZS4gVGhpcyBkb2VzIG5vdCBw
+cm9wZXJseSByZS1pbml0aWFsaXplIGl0Lg0KPiANCj4gQWxzbywgaXMgdGhlcmUgcmVhbGx5IG5v
+IG5lZWQgdG8gc3RvcCB0aGUgd2F0Y2hkb2cgb24gc3VzcGVuZCA/DQo+IA0KPj4gK8KgwqDCoCBz
+YW05eDYwX3dkdF9pbml0KHdkdCk7DQo+PiArDQo+PiArwqDCoMKgIHJldHVybiAwOw0KPj4gK30N
+Cj4+ICsjZW5kaWYNCj4+ICsNCj4+ICtzdGF0aWMgU0lNUExFX0RFVl9QTV9PUFMoc2FtOXg2MF93
+ZHRfcG1fb3BzLCBOVUxMLA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzYW05eDYwX3dk
+dF9yZXN1bWUpOw0KPj4gKw0KPj4gK3N0YXRpYyBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVyIHNhbTl4
+NjBfd2R0X2RyaXZlciA9IHsNCj4+ICvCoMKgwqAgLnByb2JlwqDCoMKgwqDCoMKgwqAgPSBzYW05
+eDYwX3dkdF9wcm9iZSwNCj4+ICvCoMKgwqAgLnJlbW92ZcKgwqDCoMKgwqDCoMKgID0gc2FtOXg2
+MF93ZHRfcmVtb3ZlLA0KPj4gK8KgwqDCoCAuZHJpdmVywqDCoMKgwqDCoMKgwqAgPSB7DQo+PiAr
+wqDCoMKgwqDCoMKgwqAgLm5hbWXCoMKgwqAgPSAic2FtOXg2MF93ZHQiLA0KPj4gK8KgwqDCoMKg
+wqDCoMKgIC5wbcKgwqDCoCA9ICZzYW05eDYwX3dkdF9wbV9vcHMsDQo+PiArwqDCoMKgwqDCoMKg
+wqAgLm9mX21hdGNoX3RhYmxlID0gc2FtOXg2MF93ZHRfb2ZfbWF0Y2gsDQo+PiArwqDCoMKgIH0N
+Cj4+ICt9Ow0KPj4gK21vZHVsZV9wbGF0Zm9ybV9kcml2ZXIoc2FtOXg2MF93ZHRfZHJpdmVyKTsN
+Cj4+ICsNCj4+ICtNT0RVTEVfQVVUSE9SKCJFdWdlbiBIcmlzdGV2Iik7DQo+PiArTU9EVUxFX0RF
+U0NSSVBUSU9OKCJNaWNyb2NoaXAgU0FNOVg2MCBXYXRjaGRvZyBUaW1lciBkcml2ZXIiKTsNCj4+
+ICtNT0RVTEVfTElDRU5TRSgiR1BMIHYyIik7DQo+Pg0KPiANCg0KSGVsbG8gR3VlbnRlciwNCg0K
+VGhhbmsgeW91IGZvciB0aGUgZmVlZGJhY2suDQpBZnRlciByZXZpZXdpbmcgdGhpcywgY2FuIHlv
+dSBwbGVhc2UgZ3VpZGUgbWUgdG93YXJkcyBvbmUgb2YgdGhlIA0KcG9zc2libGUgdHdvIGRpcmVj
+dGlvbnM6IG1lcmdlIHRoaXMgZHJpdmVyIHdpdGggc2FtYTVkNF93ZHQgLCBhbmQgaGF2ZSBhIA0K
+c2luZ2xlIGRyaXZlciB3aXRoIHN1cHBvcnQgZm9yIGJvdGggaGFyZHdhcmUgYmxvY2tzOyBvciwg
+aGF2ZSB0aGlzIA0KZHJpdmVyIHNlcGFyYXRlbHkgLCBhcyBpbiB0aGlzIHBhdGNoIHNlcmllcz8N
+Cg0KQWNjb3JkaW5nIHRvIHRoaXMsIEkgd2lsbCB3b3JrIG9uIHRoZSBuZXh0IHZlcnNpb24gb2Yg
+dGhlIHBhdGNoZXMuDQoNClRoYW5rcywNCg0KRXVnZW4NCg==
