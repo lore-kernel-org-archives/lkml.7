@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D82F8C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9FBDECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFC4C206C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EE6B21871
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:31:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QbjIAco5"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PWxzNCil"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728862AbfJGPbZ (ORCPT
+        id S1728891AbfJGPbp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 11:31:25 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45078 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728481AbfJGPbY (ORCPT
+        Mon, 7 Oct 2019 11:31:45 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45112 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728659AbfJGPbo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:31:24 -0400
-Received: by mail-pg1-f195.google.com with SMTP id q7so8399158pgi.12
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 08:31:24 -0700 (PDT)
+        Mon, 7 Oct 2019 11:31:44 -0400
+Received: by mail-pg1-f193.google.com with SMTP id q7so8399743pgi.12
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 08:31:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=message-id:mime-version:content-transfer-encoding:in-reply-to
          :references:from:to:cc:subject:user-agent:date;
-        bh=sLa90r2E5qlyRjXK3gQlBRKqNd6GDxwpHpyhcXOfQ84=;
-        b=QbjIAco5PbtWgtLkhrQ4/gHl6xagLiNSKZe2tmKrNuHEWeSuY3bQ3eBYHYkc41MgoL
-         lE9Q4QKHjyNKwWLMkweolU9b3sx9Ydrk+blM0TNI7J39nNsjXmzwAVGp65LxInUJ4fwg
-         YbzCdwCJasI2YsCnGLpatsKK/QpODrHB1wmdo=
+        bh=JZ4ZLhpG0uBtRMl0o3Xeh7toOVYQ8X7X8agStl6yaPA=;
+        b=PWxzNCilhqxZx4BInRaEC85RoByjMuhy/v7d51XUHuyPoc2xgtUFa2Dq4rtT/tSg8K
+         o/mw7qx2clFS1oYj3pq6+B+546SBKXzyKa8K6+VRpc1eX8uFXe37ryhWGl9v8/Dfcfj3
+         HYvUYe7reb+I0oCOS67lxnxPmyia1T24TyWaE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:mime-version
          :content-transfer-encoding:in-reply-to:references:from:to:cc:subject
          :user-agent:date;
-        bh=sLa90r2E5qlyRjXK3gQlBRKqNd6GDxwpHpyhcXOfQ84=;
-        b=uDuq1zAIkwTNHaNxsomtUyDjdFDMIXfiOpJicbv8lu/7Zfp6O9pmLZ398Qwuw/tHHV
-         OGV9t3rwuX6OOs8sscaeCwgWYZ4lgI57dTasIn60Q1Mtq+e+znm8CkKJvkn9Mu3JbIe7
-         OoFimwcbdmJ+to1WzagG7yaScFOLv42GRD7BAaLoNu73RbdYZhrUbeNKn8ojyV66Ggsx
-         zwWB8vhTcGFCO1g7oPTIFTg38s1qsiGnRtZQEM5Gg/IbX+lja52pb4Yjm835rUw2GfVM
-         ol5Ajmt0BjhqHktWRTQvimLx7v4OWNiIF9xMWlNvtmgxStOjjJ9KOvHphm8cJwZvqQXl
-         VIfw==
-X-Gm-Message-State: APjAAAVl1TJKWtzuekTVffYLxQGGUzxZDZsIHEc426LmEHM4yQhnthNk
-        gsIdau8VWKp7lcMFmhUx4RrYc5JHkVM=
-X-Google-Smtp-Source: APXvYqyIU0rNZmiZHnbdrXWq7p1j4lmE+m6tu39BGijoWH3TY0UhR+2MBJUz0zov8iXZjViNRKAozQ==
-X-Received: by 2002:aa7:8d8a:: with SMTP id i10mr33512099pfr.45.1570462283513;
-        Mon, 07 Oct 2019 08:31:23 -0700 (PDT)
+        bh=JZ4ZLhpG0uBtRMl0o3Xeh7toOVYQ8X7X8agStl6yaPA=;
+        b=hqBuC13qBlXf0FcJOm+MUV892ttBWOiIPfi6PBcQArUGO+JaHlQBD+GlUSDozjEHlo
+         Er9wXxN18nUleahQjpPQszcIc78EpmTOC0/o47v3RaMz+jAGQRQyt5vwfRigKJPk9ZFd
+         vkx4P5MPILMnWhSlWf+N8wUOcQgM+vM+hUGqjfaXsxcwk/GN/GxceeyFx88WIFlgOUO+
+         cIfhWE4QHMKJozxMNR2vFAZpc7CBkq5ljNGxpsNeXdlmz3/W4AFL1DKlKUSSc3dBhA5j
+         HXF/eYXC+l2d6qhnX8QITGva6THltO76+jlMXLjnrHS6qecCpyTxHwZ9GJouXDXJNnGf
+         CrKw==
+X-Gm-Message-State: APjAAAWiup3zhH8uhMU8MUlawlBD8z+BBUhN648kYAlcHykQxYKxIJB0
+        4lQqSQmO92vrmFpx/hYKlpfoawFY+RQ=
+X-Google-Smtp-Source: APXvYqwxYFF7RQHdC7kZifXplqwZ98J3wRnNwaPRlto+tGJlCXia8cgagHkZUM044+QuC2S+qil0Wg==
+X-Received: by 2002:a17:90a:a10f:: with SMTP id s15mr7702950pjp.49.1570462303498;
+        Mon, 07 Oct 2019 08:31:43 -0700 (PDT)
 Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id 62sm16190658pfg.164.2019.10.07.08.31.22
+        by smtp.gmail.com with ESMTPSA id b14sm16028527pfi.95.2019.10.07.08.31.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2019 08:31:23 -0700 (PDT)
-Message-ID: <5d9b5a4b.1c69fb81.d0598.1f8c@mx.google.com>
+        Mon, 07 Oct 2019 08:31:43 -0700 (PDT)
+Message-ID: <5d9b5a5f.1c69fb81.842f8.329e@mx.google.com>
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191005210449.3926-3-hdegoede@redhat.com>
-References: <20191005210449.3926-1-hdegoede@redhat.com> <20191005210449.3926-3-hdegoede@redhat.com>
+In-Reply-To: <20191005210449.3926-4-hdegoede@redhat.com>
+References: <20191005210449.3926-1-hdegoede@redhat.com> <20191005210449.3926-4-hdegoede@redhat.com>
 From:   Stephen Boyd <swboyd@chromium.org>
 To:     "Rafael J . Wysocki" <rafael@kernel.org>,
         Felipe Balbi <balbi@kernel.org>,
@@ -67,24 +67,19 @@ To:     "Rafael J . Wysocki" <rafael@kernel.org>,
         Hans de Goede <hdegoede@redhat.com>
 Cc:     Hans de Goede <hdegoede@redhat.com>, linux-usb@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] usb: dwc3: Switch to platform_get_irq_byname_optional()
+Subject: Re: [PATCH 3/3] usb: dwc3: Remove dev_err() on platform_get_irq() failure
 User-Agent: alot/0.8.1
-Date:   Mon, 07 Oct 2019 08:31:22 -0700
+Date:   Mon, 07 Oct 2019 08:31:42 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Hans de Goede (2019-10-05 14:04:48)
-> The dwc3 code to get the "peripheral" / "host" / "otg" IRQ first tries
-> platform_get_irq_byname() and then falls back to the IRQ at index 0 if
-> the platform_get_irq_byname().
+Quoting Hans de Goede (2019-10-05 14:04:49)
+> Since commit 7723f4c5ecdb ("driver core: platform: Add an error message to
+> platform_get_irq*()"), platform_get_irq() will call dev_err() itself on
+> failure, so there is no need for the driver to also do this.
 >=20
-> In this case we do not want platform_get_irq_byname() to print an error
-> on failure, so switch to platform_get_irq_byname_optional() instead which
-> does not print an error.
->=20
-> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=3D205037
 > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
 
