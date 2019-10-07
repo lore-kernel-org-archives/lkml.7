@@ -2,167 +2,136 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E67E8ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A79C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C028720684
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:38:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570473516;
-	bh=NAn+q6yf4CHs6Mu3N4wO/Uqn6OEuK70VfBhue/aQrmw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=A+nzzp8ULurAMHRb+bNuD8XASkxUIDyjuZ4GTb9olWptS+TDPpuX14DNG8vTKEilV
-	 wzt0zbLwMp/HrEuXKSvEoNJ4q2rW6xgfKYdr2ib5RPQB5WONuUyLQCvWZNbHC4PVgh
-	 W/O6U7sgqadjhUot7gwuQ4gQMp1iHh0FH0wfdKvo=
+	by mail.kernel.org (Postfix) with ESMTP id 23DBF20684
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:39:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Vo1Z1FpS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728707AbfJGSif (ORCPT
+        id S1728792AbfJGSjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 14:38:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34282 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728081AbfJGSif (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 14:38:35 -0400
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 810AF21655;
-        Mon,  7 Oct 2019 18:38:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570473513;
-        bh=NAn+q6yf4CHs6Mu3N4wO/Uqn6OEuK70VfBhue/aQrmw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=h6OBPyL/UW1tVbfEOBO4SpOwNmrWpZKcca/DqzkkWBlQW89u7QwvHRvL5eWfgt5b9
-         jk0hyfEQaCOvfSHuhYr+gsoSZdrtb8IDXXbMTudalWPQ7BHV89kvap97lRstRxPXO+
-         wCNY3dXkEBaNBT0LxAFO25hBZMbmMzNixvTlekuY=
-Received: by mail-qk1-f182.google.com with SMTP id f16so13598023qkl.9;
-        Mon, 07 Oct 2019 11:38:33 -0700 (PDT)
-X-Gm-Message-State: APjAAAWMktNLSAOM7GZb2N3v9iNLLYr3i98UObOKZ/LzUjsKOW8L99qk
-        aDWb6mDLhTilcpk3TpPjAyRTi1CzltF/xiw4xg==
-X-Google-Smtp-Source: APXvYqw1uMDNOBK4id6x2x90eI0DouFlvWMcqOx1OkyvNHbflg90LosKjYFToraQFwlrtde7/0IP7Djz+EDPbZVrG/U=
-X-Received: by 2002:a05:620a:549:: with SMTP id o9mr25361081qko.223.1570473512597;
- Mon, 07 Oct 2019 11:38:32 -0700 (PDT)
+        Mon, 7 Oct 2019 14:39:32 -0400
+Received: from mail-eopbgr810058.outbound.protection.outlook.com ([40.107.81.58]:52800
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728079AbfJGSjc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 14:39:32 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DjIyEl4vAvPenrV8uVSPOssSFWqJWxLVdm+iX37Ii7c6HlLsSMRHvnu000Mhrek/Mr+26zGJ1or4rGhPLWksCaOeU04J7eTFKAF+8CkPeT2GCKdgWCRiVT2gE4RWtz/mw/3AtWDaf3gayJkJ1YbbHqIcK8gLsoKErh59oIvCiXff7Lf79x+lUA5q6D5jIC3JWA3ObUX0rYPvvTmkv7t+8j6jPlMlf/46O8pzOHKr7Z5K1Ulw5GssXAfYnzddiuaui7Z3HidP0fDiR9J1/P2WHGT1UE2iYQ51NdemrQ/sZNUBYaBLIvD5JptmcAjmVOPrRNJuDBxyuaGsK1+p96x7yQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GvOoufkNTZTMl59dNEqRUMUULZ5QAQ7Hunl22Nf2VfM=;
+ b=bHaSJV1/bqUAy3u/cTrGltlEkrs8IkNjl1jgVc2JUw+HcWfvv8Jtim3vQ1xg9l7TK3DhJf7Ak9oh1wKQOa49pe9x1RK6oC4sKM14UpyHcC4WQwtprjL2hrMSTwwusk3iCL20nXAh9KwfydymTv8q2Y5xrHgJ9d6cIxl/uDmmmIvB5Fe/OkODFKhd1WOBJxVc/G9M0TRSaFSAbn+II2mD27JJswA1HXU8ukkOH/YQMafWd/PskJZGP8v2+3DmKM+TJ9yqqnHl08lIGAoHXvmfGmZ38WX9JAyTHNuHGmrI6OZAeSmjQ4pBIXYaMuZE4Lg/Pwf0nwrUrI9P2Hou7Gqtpg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GvOoufkNTZTMl59dNEqRUMUULZ5QAQ7Hunl22Nf2VfM=;
+ b=Vo1Z1FpS5g1mvhwZCgxrLx4QnDc1WfH3tTOAs8PWhU+UwG/tVpu87uuSyhWwzuMnYd4Vn9vzNZXwMhzaNyvO743McVKYZnhwfAx/Qau8NkLR4pi4jd0ruLgJg7Zj1tpZcBXcJ4c75Al/3UPMJ+bBT6rbwCgbJmDYGHmlucCxgZ4=
+Received: from DM6PR12MB3947.namprd12.prod.outlook.com (10.255.174.156) by
+ DM6PR12MB3339.namprd12.prod.outlook.com (20.178.31.209) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2327.24; Mon, 7 Oct 2019 18:39:29 +0000
+Received: from DM6PR12MB3947.namprd12.prod.outlook.com
+ ([fe80::e56a:1c63:d6bd:8034]) by DM6PR12MB3947.namprd12.prod.outlook.com
+ ([fe80::e56a:1c63:d6bd:8034%4]) with mapi id 15.20.2327.025; Mon, 7 Oct 2019
+ 18:39:29 +0000
+From:   "Kuehling, Felix" <Felix.Kuehling@amd.com>
+To:     Alex Deucher <alexdeucher@gmail.com>,
+        Colin King <colin.king@canonical.com>
+CC:     "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/amdkfd: add missing void argument to function
+ kgd2kfd_init
+Thread-Topic: [PATCH] drm/amdkfd: add missing void argument to function
+ kgd2kfd_init
+Thread-Index: AQHVe6Z1JzTC4LKO3024jKtCTzfwUadPW4+AgAAqPIA=
+Date:   Mon, 7 Oct 2019 18:39:29 +0000
+Message-ID: <1359556b-3d82-9d51-1e49-ba0f9ae205b9@amd.com>
+References: <20191005175808.32018-1-colin.king@canonical.com>
+ <CADnq5_PkTbzqNfesJt29SaB7=R0x4BdoNmHiNDXrHwqj02JUGg@mail.gmail.com>
+In-Reply-To: <CADnq5_PkTbzqNfesJt29SaB7=R0x4BdoNmHiNDXrHwqj02JUGg@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [165.204.55.251]
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+x-clientproxiedby: YT1PR01CA0033.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::46)
+ To DM6PR12MB3947.namprd12.prod.outlook.com (2603:10b6:5:1cb::28)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Felix.Kuehling@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fa8af876-9c07-4a30-cf2a-08d74b55afc3
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: DM6PR12MB3339:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR12MB3339756751CB23857B20BA1D929B0@DM6PR12MB3339.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2582;
+x-forefront-prvs: 01834E39B7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(136003)(396003)(346002)(366004)(199004)(189003)(6306002)(476003)(2616005)(486006)(14454004)(446003)(11346002)(966005)(58126008)(316002)(54906003)(305945005)(81156014)(81166006)(7736002)(8936002)(229853002)(8676002)(6512007)(110136005)(65806001)(6486002)(65956001)(66066001)(6436002)(36756003)(31696002)(86362001)(66446008)(53546011)(102836004)(26005)(186003)(478600001)(6506007)(386003)(52116002)(76176011)(25786009)(6246003)(4326008)(66476007)(99286004)(64756008)(14444005)(256004)(66946007)(66556008)(5660300002)(71190400001)(71200400001)(3846002)(6116002)(2906002)(31686004);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3339;H:DM6PR12MB3947.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: OHLlRND1mfOtMaaZI1TL6ikjqrBzglEZm4ToVppiumng66cXKkiwZR576wuddkuYEeCY/8f9Lr2AfWb4xgbK7qG9vUKjGxf1+tDpRWfXghOjB0ingp+zmdqHK5UF8a256t+WEt5/Vr9E5e2EkdM8Xp8KxMeedK3Xg8mNA0iXrkQFSb734NmCKJzWFOZNnuXRhVP7ODrNc+K+jBmLTfUHUrxphcTrPzcyYSVWHzKTDTE+mkTEyL4caqbAJKNmTf2chOS/6q2OX9mxhk88c9A01DUnWuHF6cvNIuMnYzuwNACZY1epsYF74wFMXvKXyXe3nB+8cT/7ngHZYXwapxFUN9wYcm8pVqaBy1WOMiQFFox+ViD/gxG5OSqDamtDM0HuhEZdrvWBudJkk6cYnHbcbjN7luzxthu5ms9WCQjmnVPJjPtmuF32g5ieHdAS8u0y1pXSA/OzObvBUhWfBzpdBQ==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2C5671FF8E63474187A7560A00C39F57@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20191007175553.66940-1-john.stultz@linaro.org> <20191007175553.66940-5-john.stultz@linaro.org>
-In-Reply-To: <20191007175553.66940-5-john.stultz@linaro.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 7 Oct 2019 13:38:20 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJLY2n7hfneNptAGswVZtGm3vJbSR6W2wUG+ZTzMN8wZA@mail.gmail.com>
-Message-ID: <CAL_JsqJLY2n7hfneNptAGswVZtGm3vJbSR6W2wUG+ZTzMN8wZA@mail.gmail.com>
-Subject: Re: [RFC][PATCH v2 4/5] dt-bindings: usb: dwc3: of-simple: add
- compatible for HiSi
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Yu Chen <chenyu56@huawei.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fa8af876-9c07-4a30-cf2a-08d74b55afc3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Oct 2019 18:39:29.1282
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HEGl95SEQbNNxXW/OPyKC6C7Ay7tdvIGQLdzjIcyqwXbVsSdWoi2wknExvdyTwbaicg0lW7yZZGY4U8thFUldw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3339
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 12:56 PM John Stultz <john.stultz@linaro.org> wrote:
->
-> Add necessary compatible flag for HiSi's DWC3 so
-> dwc3-of-simple will probe.
->
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Felipe Balbi <balbi@kernel.org>
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Yu Chen <chenyu56@huawei.com>
-> Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> Cc: linux-usb@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
-> v2: Tweaked clock names as clk_usb3phy_ref didn't seem right.
-> ---
->  .../devicetree/bindings/usb/hisi,dwc3.txt     | 52 +++++++++++++++++++
->  1 file changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/hisi,dwc3.txt
-
-Can you make this a schema.
-
-> diff --git a/Documentation/devicetree/bindings/usb/hisi,dwc3.txt b/Documentation/devicetree/bindings/usb/hisi,dwc3.txt
-> new file mode 100644
-> index 000000000000..3a3e5c320f2a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/hisi,dwc3.txt
-> @@ -0,0 +1,52 @@
-> +HiSi SuperSpeed DWC3 USB SoC controller
-> +
-> +Required properties:
-> +- compatible:          should contain "hisilicon,hi3660-dwc3" for HiSi SoC
-> +- clocks:              A list of phandle + clock-specifier pairs for the
-> +                       clocks listed in clock-names
-> +- clock-names:         Should contain the following:
-> +  "clk_abb_usb"                USB reference clk
-> +  "aclk_usb3otg"       USB3 OTG aclk
-> +
-> +- assigned-clocks:     Should be:
-> +                               HI3660_ACLK_GATE_USB3OTG
-> +- assigned-clock-rates: Should be:
-> +                               229Mhz (229000000) for HI3660_ACLK_GATE_USB3OTG
-> +
-> +Optional properties:
-> +- resets:              Phandle to reset control that resets core and wrapper.
-
-Looks like 4 resets though.
-
-> +
-> +Required child node:
-> +A child node must exist to represent the core DWC3 IP block. The name of
-> +the node is not important. The content of the node is defined in dwc3.txt.
-> +
-> +Example device nodes:
-> +
-> +       usb3: hisi_dwc3 {
-> +               compatible = "hisilicon,hi3660-dwc3";
-> +               #address-cells = <2>;
-> +               #size-cells = <2>;
-> +               ranges;
-> +
-> +               clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
-> +                        <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
-> +               clock-names = "clk_abb_usb", "aclk_usb3otg";
-> +
-> +               assigned-clocks = <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
-> +               assigned-clock-rates = <229 000 000>;
-> +               resets = <&crg_rst 0x90 8>,
-> +                        <&crg_rst 0x90 7>,
-> +                        <&crg_rst 0x90 6>,
-> +                        <&crg_rst 0x90 5>;
-> +
-> +               dwc3: dwc3@ff100000 {
-
-If it's only clocks and resets for the wrapper node, just make this
-all one node.
-
-And 'usb3' for the node name.
-
-> +                       compatible = "snps,dwc3";
-> +                       reg = <0x0 0xff100000 0x0 0x100000>;
-> +                       interrupts = <0 159 4>, <0 161 4>;
-> +                       phys = <&usb_phy>;
-> +                       phy-names = "usb3-phy";
-> +                       dr_mode = "otg";
-> +
-> +                       ...
-> +               };
-> +       };
-> --
-> 2.17.1
->
+T24gMjAxOS0xMC0wNyAxMjowOCBwLm0uLCBBbGV4IERldWNoZXIgd3JvdGU6DQo+IE9uIFNhdCwg
+T2N0IDUsIDIwMTkgYXQgMTo1OCBQTSBDb2xpbiBLaW5nIDxjb2xpbi5raW5nQGNhbm9uaWNhbC5j
+b20+IHdyb3RlOg0KPj4gRnJvbTogQ29saW4gSWFuIEtpbmcgPGNvbGluLmtpbmdAY2Fub25pY2Fs
+LmNvbT4NCj4+DQo+PiBGdW5jdGlvbiBrZ2Qya2ZkX2luaXQgaXMgbWlzc2luZyBhIHZvaWQgYXJn
+dW1lbnQsIGFkZCBpdA0KPj4gdG8gY2xlYW4gdXAgdGhlIG5vbi1BTlNJIGZ1bmN0aW9uIGRlY2xh
+cmF0aW9uLg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IENvbGluIElhbiBLaW5nIDxjb2xpbi5raW5n
+QGNhbm9uaWNhbC5jb20+DQo+IEFwcGxpZWQuICB0aGFua3MhDQoNClRoYW5rIHlvdSENCg0KDQo+
+DQo+IEFsZXgNCj4NCj4+IC0tLQ0KPj4gICBkcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGtmZC9rZmRf
+bW9kdWxlLmMgfCAyICstDQo+PiAgIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBk
+ZWxldGlvbigtKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGtm
+ZC9rZmRfbW9kdWxlLmMgYi9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGtmZC9rZmRfbW9kdWxlLmMN
+Cj4+IGluZGV4IDk4NmZmNTJkNTc1MC4uZjRiN2Y3ZTZjNDBlIDEwMDY0NA0KPj4gLS0tIGEvZHJp
+dmVycy9ncHUvZHJtL2FtZC9hbWRrZmQva2ZkX21vZHVsZS5jDQo+PiArKysgYi9kcml2ZXJzL2dw
+dS9kcm0vYW1kL2FtZGtmZC9rZmRfbW9kdWxlLmMNCj4+IEBAIC04Miw3ICs4Miw3IEBAIHN0YXRp
+YyB2b2lkIGtmZF9leGl0KHZvaWQpDQo+PiAgICAgICAgICBrZmRfY2hhcmRldl9leGl0KCk7DQo+
+PiAgIH0NCj4+DQo+PiAtaW50IGtnZDJrZmRfaW5pdCgpDQo+PiAraW50IGtnZDJrZmRfaW5pdCh2
+b2lkKQ0KPj4gICB7DQo+PiAgICAgICAgICByZXR1cm4ga2ZkX2luaXQoKTsNCj4+ICAgfQ0KPj4g
+LS0NCj4+IDIuMjAuMQ0KPj4NCj4+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fDQo+PiBkcmktZGV2ZWwgbWFpbGluZyBsaXN0DQo+PiBkcmktZGV2ZWxAbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnDQo+PiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbA0K
