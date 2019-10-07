@@ -2,260 +2,142 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14103C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FD1ECE58E
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCED3206BB
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CF87206C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:26:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570472816;
+	bh=s51GuTf5UBNeGJTJcuN9WJYnvjNCzJywyuwt+janFlw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=d90TBoI9WJtYOWafZkPVcPejtqn5OX/U8AMsvzrjS4kAxVYUSDSSDmZL3vTkyXoyI
+	 Kbg+1ogaIp/TY/oE2jKPKhBkmNktBGoHWt2HgnSfzYXqss1OAC05ofX0NSkHnaTD5i
+	 plRJW8ZgR2I7OVVqZZJuk2arT/VY0vFUX+iHvcMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729357AbfJGSZU (ORCPT
+        id S1729285AbfJGS0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 14:25:20 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:45446 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728031AbfJGSZT (ORCPT
+        Mon, 7 Oct 2019 14:26:55 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40508 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728250AbfJGS0z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 14:25:19 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iHXgu-0002LS-UO; Mon, 07 Oct 2019 20:25:05 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7FF491C032F;
-        Mon,  7 Oct 2019 20:25:04 +0200 (CEST)
-Date:   Mon, 07 Oct 2019 18:25:04 -0000
-From:   "tip-bot2 for Ralf Ramsauer" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/platform] x86/jailhouse: Enable platform UARTs only if available
-Cc:     Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        jailhouse-dev@googlegroups.com, Ingo Molnar <mingo@kernel.org>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191007123819.161432-3-ralf.ramsauer@oth-regensburg.de>
-References: <20191007123819.161432-3-ralf.ramsauer@oth-regensburg.de>
+        Mon, 7 Oct 2019 14:26:55 -0400
+Received: by mail-lf1-f65.google.com with SMTP id d17so9986978lfa.7
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 11:26:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=J7Vyfz7UunT8KOMcxUj/KmQkAWydtzjl94OFb9852io=;
+        b=ZUn2yZzwcywqCxfn/AooAu387VR/0wKoIuT2JKs4AdSOiBNTdCv38NkIJUhxDyBMvm
+         CxtfD2syu3hHc4adBEBg4Ms4tb9HKuwIqUen1FqsmJsnDmMRUSO48rcpHdmThYY1FDYF
+         3ZvrBHe0Vp5A5d6MZRxEURRDKHOtBXvn6vAcA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=J7Vyfz7UunT8KOMcxUj/KmQkAWydtzjl94OFb9852io=;
+        b=rY9Jaug+KTQFZ0bU+yCIUgpneWaxv0dbZ2ulxJpN2iog131sZ0sbB0ctrWXqJBEfxu
+         wNGbgMEAjsTgnQfoUF3Qfx78QWqcqCVZvdqFPRFJBIxU6bPb4C55ia3vD31Mk/8oFXy3
+         RItZ4oZMBtl/Da5T2v5BjkKQZ/36xlJULYSUsaKh7XTJppmmfUyVH+Bf2gdd9y6ZZLkV
+         OIRlMfw4YcQyZpoEGkXJTBHXLqqENIJ8+So50qQ1rwmdMSMX2hbn4dlGlM1KNCNyvhAl
+         UJ2dcyfrKgzdOq+1gi6GayFkLKgxVsQ9Uy/9wfPFto6pHYUkSzWosxtE1T7TXykqW8kc
+         94fw==
+X-Gm-Message-State: APjAAAVZqOpnjbub7FoJXUwzNqNuFymhw2WQs9Vv5dI8R/PwAEmWuQuq
+        6kZMVYGBalw3zjbYL8hdS9DJyw9I1VM=
+X-Google-Smtp-Source: APXvYqz8j4u08eTU8ybEXfNrA4uDl2SHTufAJkLyPBuF7pIwWobob/ck6YEjAjFyLF4WRh0Goci7hw==
+X-Received: by 2002:a19:7b03:: with SMTP id w3mr11208685lfc.16.1570472812959;
+        Mon, 07 Oct 2019 11:26:52 -0700 (PDT)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
+        by smtp.gmail.com with ESMTPSA id c69sm3390543ljf.32.2019.10.07.11.26.52
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Oct 2019 11:26:52 -0700 (PDT)
+Received: by mail-lf1-f49.google.com with SMTP id t8so9941387lfc.13
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 11:26:52 -0700 (PDT)
+X-Received: by 2002:a19:741a:: with SMTP id v26mr17755031lfe.79.1570472811673;
+ Mon, 07 Oct 2019 11:26:51 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <157047270440.9978.1646295335019419258.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20191006222046.GA18027@roeck-us.net> <CAHk-=wgrqwuZJmwbrjhjCFeSUu2i57unaGOnP4qZAmSyuGwMZA@mail.gmail.com>
+ <CAHk-=wjRPerXedTDoBbJL=tHBpH+=sP6pX_9NfgWxpnmHC5RtQ@mail.gmail.com>
+ <5f06c138-d59a-d811-c886-9e73ce51924c@roeck-us.net> <CAHk-=whAQWEMADgxb_qAw=nEY4OnuDn6HU4UCSDMNT5ULKvg3g@mail.gmail.com>
+ <20191007012437.GK26530@ZenIV.linux.org.uk> <CAHk-=whKJfX579+2f-CHc4_YmEmwvMe_Csr0+CPfLAsSAdfDoA@mail.gmail.com>
+ <20191007025046.GL26530@ZenIV.linux.org.uk> <CAHk-=whraNSys_Lj=Ut1EA=CJEfw2Uothh+5-WL+7nDJBegWcQ@mail.gmail.com>
+In-Reply-To: <CAHk-=whraNSys_Lj=Ut1EA=CJEfw2Uothh+5-WL+7nDJBegWcQ@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 7 Oct 2019 11:26:35 -0700
+X-Gmail-Original-Message-ID: <CAHk-=witTXMGsc9ZAK4hnKnd_O7u8b1eiou-6cfjt4aOcWvruQ@mail.gmail.com>
+Message-ID: <CAHk-=witTXMGsc9ZAK4hnKnd_O7u8b1eiou-6cfjt4aOcWvruQ@mail.gmail.com>
+Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to unsafe_put_user()
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/platform branch of tip:
+On Sun, Oct 6, 2019 at 8:11 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> >
+> > The last two should just do user_access_begin()/user_access_end()
+> > instead of access_ok().  __copy_to_user_inatomic() has very few callers as well:
+>
+> Yeah, good points.
 
-Commit-ID:     dac59f1eb78123c3f0e497eb9870ac550c59debb
-Gitweb:        https://git.kernel.org/tip/dac59f1eb78123c3f0e497eb9870ac550c59debb
-Author:        Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>
-AuthorDate:    Mon, 07 Oct 2019 14:38:19 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 07 Oct 2019 17:35:56 +02:00
+Looking at it some more this morning, I think it's actually pretty painful.
 
-x86/jailhouse: Enable platform UARTs only if available
+The good news is that right now x86 is the only architecture that does
+that user_access_begin(), so we don't need to worry about anything
+else. Apparently the ARM people haven't had enough performance
+problems with the PAN bit for them to care.
 
-ACPI tables aren't available if Linux runs as guest of the hypervisor
-Jailhouse. This makes the 8250 driver probe for all platform UARTs as
-it assumes that all platform are present in case of !ACPI. Jailhouse
-will stop execution of Linux guest due to port access violation.
+We can have a fallback wrapper for unsafe_copy_to_user() for other
+architectures that just does the __copy_to_user().
 
-So far, these access violations could be solved by tuning the
-8250.nr_uarts parameter but it has limitations: We can, e.g., only map
-consecutive platform UARTs to Linux, and only in the sequence 0x3f8,
-0x2f8, 0x3e8, 0x2e8.
+But on x86, if we move the STAC/CLAC out of the low-level copy
+routines and into the callers, we'll have a _lot_ of churn. I thought
+it would be mostly a "teach objtool" thing, but we have lots of
+different versions of it. Not just the 32-bit vs 64-bit, it's embedded
+in all the low-level asm implementations.
 
-Beginning from setup_data version 2, Jailhouse will place information of
-available platform UARTs in setup_data. This allows for selective
-activation of platform UARTs.
+And we don't want the regular "copy_to/from_user()" to then have to
+add the STAC/CLAC at the call-site. So then we'd want to un-inline
+copy_to_user() entirely.
 
-This patch queries the setup_data version and activates only available
-UARTS. It comes with backward compatibility, and will still support
-older setup_data versions. In this case, Linux falls back to the old
-behaviour.
+Which all sounds like a really good idea, don't get me wrong. I think
+we inline it way too aggressively now. But it'sa  _big_ job.
 
-Signed-off-by: Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>
-Reviewed-by: Jan Kiszka <jan.kiszka@siemens.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: H . Peter Anvin <hpa@zytor.com>
-Cc: Jan Kiszka <jan.kiszka@siemens.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: jailhouse-dev@googlegroups.com
-Link: https://lkml.kernel.org/r/20191007123819.161432-3-ralf.ramsauer@oth-regensburg.de
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/include/uapi/asm/bootparam.h |  3 +-
- arch/x86/kernel/jailhouse.c           | 83 ++++++++++++++++++++++----
- 2 files changed, 74 insertions(+), 12 deletions(-)
+So we probably _should_
 
-diff --git a/arch/x86/include/uapi/asm/bootparam.h b/arch/x86/include/uapi/asm/bootparam.h
-index 43be437..db1e24e 100644
---- a/arch/x86/include/uapi/asm/bootparam.h
-+++ b/arch/x86/include/uapi/asm/bootparam.h
-@@ -152,6 +152,9 @@ struct jailhouse_setup_data {
- 		__u8	standard_ioapic;
- 		__u8	cpu_ids[255];
- 	} __attribute__((packed)) v1;
-+	struct {
-+		__u32	flags;
-+	} __attribute__((packed)) v2;
- } __attribute__((packed));
- 
- /* The so-called "zeropage" */
-diff --git a/arch/x86/kernel/jailhouse.c b/arch/x86/kernel/jailhouse.c
-index b9647ad..95550c0 100644
---- a/arch/x86/kernel/jailhouse.c
-+++ b/arch/x86/kernel/jailhouse.c
-@@ -11,6 +11,7 @@
- #include <linux/acpi_pmtmr.h>
- #include <linux/kernel.h>
- #include <linux/reboot.h>
-+#include <linux/serial_8250.h>
- #include <asm/apic.h>
- #include <asm/cpu.h>
- #include <asm/hypervisor.h>
-@@ -23,9 +24,22 @@
- 
- static __initdata struct jailhouse_setup_data setup_data;
- #define SETUP_DATA_V1_LEN	(sizeof(setup_data.hdr) + sizeof(setup_data.v1))
-+#define SETUP_DATA_V2_LEN	(SETUP_DATA_V1_LEN + sizeof(setup_data.v2))
- 
- static unsigned int precalibrated_tsc_khz;
- 
-+static void jailhouse_setup_irq(unsigned int irq)
-+{
-+	struct mpc_intsrc mp_irq = {
-+		.type		= MP_INTSRC,
-+		.irqtype	= mp_INT,
-+		.irqflag	= MP_IRQPOL_ACTIVE_HIGH | MP_IRQTRIG_EDGE,
-+		.srcbusirq	= irq,
-+		.dstirq		= irq,
-+	};
-+	mp_save_irq(&mp_irq);
-+}
-+
- static uint32_t jailhouse_cpuid_base(void)
- {
- 	if (boot_cpu_data.cpuid_level < 0 ||
-@@ -79,11 +93,6 @@ static void __init jailhouse_get_smp_config(unsigned int early)
- 		.type = IOAPIC_DOMAIN_STRICT,
- 		.ops = &mp_ioapic_irqdomain_ops,
- 	};
--	struct mpc_intsrc mp_irq = {
--		.type = MP_INTSRC,
--		.irqtype = mp_INT,
--		.irqflag = MP_IRQPOL_ACTIVE_HIGH | MP_IRQTRIG_EDGE,
--	};
- 	unsigned int cpu;
- 
- 	jailhouse_x2apic_init();
-@@ -100,12 +109,12 @@ static void __init jailhouse_get_smp_config(unsigned int early)
- 	if (setup_data.v1.standard_ioapic) {
- 		mp_register_ioapic(0, 0xfec00000, gsi_top, &ioapic_cfg);
- 
--		/* Register 1:1 mapping for legacy UART IRQs 3 and 4 */
--		mp_irq.srcbusirq = mp_irq.dstirq = 3;
--		mp_save_irq(&mp_irq);
--
--		mp_irq.srcbusirq = mp_irq.dstirq = 4;
--		mp_save_irq(&mp_irq);
-+		if (IS_ENABLED(CONFIG_SERIAL_8250) &&
-+		    setup_data.hdr.version < 2) {
-+			/* Register 1:1 mapping for legacy UART IRQs 3 and 4 */
-+			jailhouse_setup_irq(3);
-+			jailhouse_setup_irq(4);
-+		}
- 	}
- }
- 
-@@ -138,6 +147,53 @@ static int __init jailhouse_pci_arch_init(void)
- 	return 0;
- }
- 
-+#ifdef CONFIG_SERIAL_8250
-+static bool jailhouse_uart_enabled(unsigned int uart_nr)
-+{
-+	return setup_data.v2.flags & BIT(uart_nr);
-+}
-+
-+static void jailhouse_serial_fixup(int port, struct uart_port *up,
-+				   u32 *capabilities)
-+{
-+	static const u16 pcuart_base[] = {0x3f8, 0x2f8, 0x3e8, 0x2e8};
-+	unsigned int n;
-+
-+	for (n = 0; n < ARRAY_SIZE(pcuart_base); n++) {
-+		if (pcuart_base[n] != up->iobase)
-+			continue;
-+
-+		if (jailhouse_uart_enabled(n)) {
-+			pr_info("Enabling UART%u (port 0x%lx)\n", n,
-+				up->iobase);
-+			jailhouse_setup_irq(up->irq);
-+		} else {
-+			/* Deactivate UART if access isn't allowed */
-+			up->iobase = 0;
-+		}
-+		break;
-+	}
-+}
-+
-+static void jailhouse_serial_workaround(void)
-+{
-+	/*
-+	 * There are flags inside setup_data that indicate availability of
-+	 * platform UARTs since setup data version 2.
-+	 *
-+	 * In case of version 1, we don't know which UARTs belong Linux. In
-+	 * this case, unconditionally register 1:1 mapping for legacy UART IRQs
-+	 * 3 and 4.
-+	 */
-+	if (setup_data.hdr.version > 1)
-+		serial8250_set_isa_configurator(jailhouse_serial_fixup);
-+}
-+#else /* !CONFIG_SERIAL_8250 */
-+static inline void jailhouse_serial_workaround(void)
-+{
-+}
-+#endif /* CONFIG_SERIAL_8250 */
-+
- static void __init jailhouse_init_platform(void)
- {
- 	u64 pa_data = boot_params.hdr.setup_data;
-@@ -188,7 +244,8 @@ static void __init jailhouse_init_platform(void)
- 	if (setup_data.hdr.version == 0 ||
- 	    setup_data.hdr.compatible_version !=
- 		JAILHOUSE_SETUP_REQUIRED_VERSION ||
--	    (setup_data.hdr.version >= 1 && header.len < SETUP_DATA_V1_LEN))
-+	    (setup_data.hdr.version == 1 && header.len < SETUP_DATA_V1_LEN) ||
-+	    (setup_data.hdr.version >= 2 && header.len < SETUP_DATA_V2_LEN))
- 		goto unsupported;
- 
- 	pmtmr_ioport = setup_data.v1.pm_timer_address;
-@@ -204,6 +261,8 @@ static void __init jailhouse_init_platform(void)
- 	 * are none in a non-root cell.
- 	 */
- 	disable_acpi();
-+
-+	jailhouse_serial_workaround();
- 	return;
- 
- unsupported:
+ - remove INLINE_COPY_TO/FROM_USER
+
+ - remove all the "small constant size special cases".
+
+ - make "raw_copy_to/from_user()" have the "unsafe" semantics and make
+the out-of-line copy in lib/usercopy.c be the only real interface
+
+ - get rid of a _lot_ of oddities
+
+but looking at just how much churn this is, I suspect that for 5.4
+it's a bit late to do quite that much cleanup.
+
+I hope you prove me wrong. But I'll look at a smaller change to just
+make x86 use the current special copy loop (as
+"unsafe_copy_to_user()") and have everybody else do the trivial
+wrapper.
+
+Because we definitely should do that cleanup (it also fixes the whole
+"atomic copy in kernel space" issue that you pointed to that doesn't
+actually want STAC/CLAC at all), but it just looks fairly massive to
+me.
+
+            Linus
