@@ -2,193 +2,478 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C20B7ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:09:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9177ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 891A0206C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:09:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570475356;
-	bh=jdtGyJN+o7rK0WVS/VNxOIDBHte0bjxpt8SYHzYRyzM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=aZz++YNs+Prh2Xpf2lTNqTcqdn1vRvhDLwuG5DuWNAdgnzE3uHirEkTiAzI8TIwz+
-	 DjNnum5Nf5PZxAipkXsFs17PBhMZCdb7ZdzhT8lUC+foHLOHv2LSkf/w/qlfP9fEox
-	 9cB+YzawxanPdFlrxzbC6uhuOhKQP6paCUytfSFc=
+	by mail.kernel.org (Postfix) with ESMTP id 7A8A3206C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:10:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728937AbfJGTJP (ORCPT
+        id S1728968AbfJGTKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 15:09:15 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:35412 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728079AbfJGTJO (ORCPT
+        Mon, 7 Oct 2019 15:10:09 -0400
+Received: from mailoutvs48.siol.net ([185.57.226.239]:59043 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728079AbfJGTKI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 15:09:14 -0400
-Received: by mail-lf1-f66.google.com with SMTP id w6so10067633lfl.2
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 12:09:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hxMOGqUH7Elb22etJi9f55klzLktkU2wVj7zHUXY5p8=;
-        b=XfzBMUjv9l3lNIgatBkKVs1MHqaN1PHi1d8+B3kN+oJh0mAkhwAPmuVC/Fknz9SEeR
-         sR0ulgNs0hUnEfY+n2y5LryzPpMa3lNmF5rhjbPThZ/j5Tx12u5dYpRa0LPCTwnKEQ17
-         8QuKmbBkhH6NSzRHLVptIBuGavSb4CqtuHMsc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hxMOGqUH7Elb22etJi9f55klzLktkU2wVj7zHUXY5p8=;
-        b=B3KbAPwATtx6ZPBRhJhSWjkb2zT2g+MIl68s8nKMIYtnJU8TcIdNCy6L9aoiB6IFxF
-         lwceJtPc1+0BvWiLmuCsTIbsjG1CnmUqYIy2RpmDgmAGi73Qkq6WbCSxB5/8Y6Ity61W
-         jBvp7MEq/hwtifl8TayiSWagDwPjW5tfUHQpLfxbnFPh3i5U9T7xSIm2oeS8NIGTZ6D3
-         2zm1UAY0gieiQDhS/X4JoKpQjn15+5gT//BJ92MFJKtDWcvGJyKZD5DkE9sygPYuto4E
-         ui1Ez9fQpiHJqjRPjWyeNPNTEAsmDeFs3vy9j5Zqr81XEGxb04NZSlSr45NnUDs2CdPp
-         rrNw==
-X-Gm-Message-State: APjAAAUoBFt3ZUlIdrtOi4g2ttdOLh8tK+9IOGQy656YnKiaEJTLr8HI
-        yaNt7iAPp9VZI+LjzdmYMz2uegJFUPQ=
-X-Google-Smtp-Source: APXvYqym8PdlzsP/dB5Sr1nU+6v8Ho1RClPsmwubF1GsOliAFKmAwiT6fm2H7S36JVHlEKWOdrcw9g==
-X-Received: by 2002:a05:6512:202:: with SMTP id a2mr17363922lfo.175.1570475350547;
-        Mon, 07 Oct 2019 12:09:10 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id t24sm2850857lfq.13.2019.10.07.12.09.08
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Oct 2019 12:09:09 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id v24so14909547ljj.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 12:09:08 -0700 (PDT)
-X-Received: by 2002:a2e:9241:: with SMTP id v1mr19591195ljg.148.1570475348623;
- Mon, 07 Oct 2019 12:09:08 -0700 (PDT)
+        Mon, 7 Oct 2019 15:10:08 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id EA424521E2F;
+        Mon,  7 Oct 2019 21:01:08 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id dW8YKP7WwunV; Mon,  7 Oct 2019 21:01:08 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id E446852208F;
+        Mon,  7 Oct 2019 21:01:07 +0200 (CEST)
+Received: from jernej-laptop.localnet (cpe-86-58-59-25.static.triera.net [86.58.59.25])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id C766E521E2F;
+        Mon,  7 Oct 2019 21:01:06 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc:     mchehab@kernel.org, paul.kocialkowski@bootlin.com,
+        mripard@kernel.org, pawel@osciak.com, m.szyprowski@samsung.com,
+        kyungmin.park@samsung.com, tfiga@chromium.org, wens@csie.org,
+        gregkh@linuxfoundation.org, boris.brezillon@collabora.com,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
+        ezequiel@collabora.com, jonas@kwiboo.se
+Subject: Re: [PATCH v2 0/6] media: cedrus: h264: Support multi-slice frames
+Date:   Mon, 07 Oct 2019 21:01:06 +0200
+Message-ID: <2785635.uIalc63MVP@jernej-laptop>
+In-Reply-To: <5ec43907-cb6f-1527-f6ec-9fffc768d9ef@xs4all.nl>
+References: <20190929200023.215831-1-jernej.skrabec@siol.net> <5ec43907-cb6f-1527-f6ec-9fffc768d9ef@xs4all.nl>
 MIME-Version: 1.0
-References: <20191006222046.GA18027@roeck-us.net> <CAHk-=wgrqwuZJmwbrjhjCFeSUu2i57unaGOnP4qZAmSyuGwMZA@mail.gmail.com>
- <CAHk-=wjRPerXedTDoBbJL=tHBpH+=sP6pX_9NfgWxpnmHC5RtQ@mail.gmail.com>
- <5f06c138-d59a-d811-c886-9e73ce51924c@roeck-us.net> <CAHk-=whAQWEMADgxb_qAw=nEY4OnuDn6HU4UCSDMNT5ULKvg3g@mail.gmail.com>
- <20191007012437.GK26530@ZenIV.linux.org.uk> <CAHk-=whKJfX579+2f-CHc4_YmEmwvMe_Csr0+CPfLAsSAdfDoA@mail.gmail.com>
- <20191007025046.GL26530@ZenIV.linux.org.uk> <CAHk-=whraNSys_Lj=Ut1EA=CJEfw2Uothh+5-WL+7nDJBegWcQ@mail.gmail.com>
- <CAHk-=witTXMGsc9ZAK4hnKnd_O7u8b1eiou-6cfjt4aOcWvruQ@mail.gmail.com> <CA+8MBb+VKk0aQZaJ+tMbFV7+s37HrQ6pzy4sHDAA3yqS-3nVwA@mail.gmail.com>
-In-Reply-To: <CA+8MBb+VKk0aQZaJ+tMbFV7+s37HrQ6pzy4sHDAA3yqS-3nVwA@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 7 Oct 2019 12:08:52 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi3P2NvBNocyNFTAb-G08P0ASVihMVKmiw__oNU4V2M5g@mail.gmail.com>
-Message-ID: <CAHk-=wi3P2NvBNocyNFTAb-G08P0ASVihMVKmiw__oNU4V2M5g@mail.gmail.com>
-Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to unsafe_put_user()
-To:     Tony Luck <tony.luck@gmail.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: multipart/mixed; boundary="00000000000048b57b059456c9b7"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---00000000000048b57b059456c9b7
-Content-Type: text/plain; charset="UTF-8"
+Dne ponedeljek, 07. oktober 2019 ob 12:44:24 CEST je Hans Verkuil napisal(a):
+> Hi Jernej,
+> 
+> On 9/29/19 10:00 PM, Jernej Skrabec wrote:
+> > This series adds support for decoding multi-slice H264 frames along with
+> > support for V4L2_DEC_CMD_FLUSH and V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF.
+> > 
+> > Code was tested by modified ffmpeg, which can be found here:
+> > https://github.com/jernejsk/FFmpeg, branch mainline-test
+> > It has to be configured with at least following options:
+> > --enable-v4l2-request --enable-libudev --enable-libdrm
+> > 
+> > Samples used for testing:
+> > http://jernej.libreelec.tv/videos/h264/BA1_FT_C.mp4
+> > http://jernej.libreelec.tv/videos/h264/h264.mp4
+> > 
+> > Command line used for testing:
+> > ffmpeg -hwaccel drm -hwaccel_device /dev/dri/card0 -i h264.mp4 -pix_fmt
+> > bgra -f fbdev /dev/fb0
+> > 
+> > Please note that V4L2_DEC_CMD_FLUSH was not tested because I'm
+> > not sure how. ffmpeg follows exactly which slice is last in frame
+> > and sets hold flag accordingly. Improper usage of hold flag would
+> > corrupt ffmpeg assumptions and it would probably crash. Any ideas
+> > how to test this are welcome!
+> > 
+> > Thanks to Jonas for adjusting ffmpeg.
+> > 
+> > Please let me know what you think.
+> > 
+> > Best regards,
+> > Jernej
+> > 
+> > Changes from v1:
+> > - added Rb tags
+> > - updated V4L2_DEC_CMD_FLUSH documentation
+> > - updated first slice detection in Cedrus
+> > - hold capture buffer flag is set according to source format
+> > - added v4l m2m stateless_(try_)decoder_cmd ioctl helpers
+> > 
+> > Hans Verkuil (2):
+> >   vb2: add V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF
+> >   videodev2.h: add V4L2_DEC_CMD_FLUSH
+> > 
+> > Jernej Skrabec (4):
+> >   media: v4l2-mem2mem: add stateless_(try_)decoder_cmd ioctl helpers
+> >   media: cedrus: Detect first slice of a frame
+> >   media: cedrus: h264: Support multiple slices per frame
+> >   media: cedrus: Add support for holding capture buffer
+> >  
+> >  Documentation/media/uapi/v4l/buffer.rst       | 13 ++++++
+> >  .../media/uapi/v4l/vidioc-decoder-cmd.rst     | 10 +++-
+> >  .../media/uapi/v4l/vidioc-reqbufs.rst         |  6 +++
+> >  .../media/videodev2.h.rst.exceptions          |  1 +
+> >  .../media/common/videobuf2/videobuf2-v4l2.c   |  8 +++-
+> >  drivers/media/v4l2-core/v4l2-mem2mem.c        | 35 ++++++++++++++
+> >  drivers/staging/media/sunxi/cedrus/cedrus.h   |  1 +
+> >  .../staging/media/sunxi/cedrus/cedrus_dec.c   | 11 +++++
+> >  .../staging/media/sunxi/cedrus/cedrus_h264.c  | 11 ++++-
+> >  .../staging/media/sunxi/cedrus/cedrus_hw.c    |  8 ++--
+> >  .../staging/media/sunxi/cedrus/cedrus_video.c | 14 ++++++
+> >  include/media/v4l2-mem2mem.h                  | 46 +++++++++++++++++++
+> >  include/media/videobuf2-core.h                |  3 ++
+> >  include/media/videobuf2-v4l2.h                |  5 ++
+> >  include/uapi/linux/videodev2.h                | 14 ++++--
+> >  15 files changed, 175 insertions(+), 11 deletions(-)
+> 
+> I didn't want to make a v3 of this series, instead I hacked this patch that
+> will hopefully do all the locking right.
+> 
+> Basically I moved all the 'held' related code into v4l2-mem2mem under
+> job_spinlock. This simplifies the driver code as well.
+> 
+> But this is a hack that sits on top of this series. If your ffmpeg tests are
+> now successful, then I'll turn this into a proper series with correct
+> documentation (a lot of the comments are now wrong with this patch, so just
+> ignore that).
 
-On Mon, Oct 7, 2019 at 11:36 AM Tony Luck <tony.luck@gmail.com> wrote:
->
-> Late to this party ,,, but my ia64 console today is full of:
+Thanks for looking into this! With small fix mentioned below, it works! Note 
+that both scenarios I tested (flushing during decoding and flushing after 
+decoding is finished) are focused on capture queue. In order to trigger output 
+queue flush, ffmpeg would need to queue multiple jobs and call flush before they 
+are all processed. This is not something I can do at this time. Maybe Jonas 
+can help with modifying ffmpeg appropriately. However, code for case seems 
+correct to me.
 
-Hmm? I thought ia64 did unaligneds ok.
+> 
+> Regards,
+> 
+> 	Hans
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-mem2mem.c
+> b/drivers/media/v4l2-core/v4l2-mem2mem.c index 2677a07e4c9b..f81a8f2465ab
+> 100644
+> --- a/drivers/media/v4l2-core/v4l2-mem2mem.c
+> +++ b/drivers/media/v4l2-core/v4l2-mem2mem.c
+> @@ -412,25 +412,24 @@ static void v4l2_m2m_cancel_job(struct v4l2_m2m_ctx
+> *m2m_ctx) }
+>  }
+> 
+> -void v4l2_m2m_job_finish(struct v4l2_m2m_dev *m2m_dev,
+> -			 struct v4l2_m2m_ctx *m2m_ctx)
+> +static bool _v4l2_m2m_job_finish(struct v4l2_m2m_dev *m2m_dev,
+> +			  struct v4l2_m2m_ctx *m2m_ctx)
+>  {
+> -	unsigned long flags;
+> -
+> -	spin_lock_irqsave(&m2m_dev->job_spinlock, flags);
+>  	if (!m2m_dev->curr_ctx || m2m_dev->curr_ctx != m2m_ctx) {
+> -		spin_unlock_irqrestore(&m2m_dev->job_spinlock, flags);
+>  		dprintk("Called by an instance not currently 
+running\n");
+> -		return;
+> +		return false;
+>  	}
+> 
+>  	list_del(&m2m_dev->curr_ctx->queue);
+>  	m2m_dev->curr_ctx->job_flags &= ~(TRANS_QUEUED | TRANS_RUNNING);
+>  	wake_up(&m2m_dev->curr_ctx->finished);
+>  	m2m_dev->curr_ctx = NULL;
+> +	return true;
+> +}
+> 
+> -	spin_unlock_irqrestore(&m2m_dev->job_spinlock, flags);
+> -
+> +static void v4l2_m2m_job_next(struct v4l2_m2m_dev *m2m_dev,
+> +		       struct v4l2_m2m_ctx *m2m_ctx)
+> +{
+>  	/* This instance might have more buffers ready, but since we do not
+>  	 * allow more than one job on the job_queue per instance, each has
+>  	 * to be scheduled separately after the previous one finishes. */
+> @@ -441,8 +440,113 @@ void v4l2_m2m_job_finish(struct v4l2_m2m_dev *m2m_dev,
+> */
+>  	schedule_work(&m2m_dev->job_work);
+>  }
+> +
+> +void v4l2_m2m_job_finish(struct v4l2_m2m_dev *m2m_dev,
+> +			 struct v4l2_m2m_ctx *m2m_ctx)
+> +{
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&m2m_dev->job_spinlock, flags);
+> +	if (!_v4l2_m2m_job_finish(m2m_dev, m2m_ctx)) {
+> +		spin_unlock_irqrestore(&m2m_dev->job_spinlock, flags);
+> +		return;
+> +	}
+> +	spin_unlock_irqrestore(&m2m_dev->job_spinlock, flags);
+> +
+> +	v4l2_m2m_job_next(m2m_dev, m2m_ctx);
+> +}
+>  EXPORT_SYMBOL(v4l2_m2m_job_finish);
+> 
+> +void v4l2_m2m_job_finish_held(struct v4l2_m2m_dev *m2m_dev,
+> +			 struct v4l2_m2m_ctx *m2m_ctx,
+> +			 enum vb2_buffer_state state)
+> +{
+> +	struct vb2_v4l2_buffer *src_buf, *dst_buf;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&m2m_dev->job_spinlock, flags);
+> +	src_buf = v4l2_m2m_src_buf_remove(m2m_ctx);
+> +	dst_buf = v4l2_m2m_next_dst_buf(m2m_ctx);
+> +
+> +	if (!src_buf || !dst_buf) {
+> +		pr_err("Missing source and/or destination buffers\n");
+> +		spin_unlock_irqrestore(&m2m_dev->job_spinlock, flags);
+> +		return;
+> +	}
+> +	v4l2_m2m_buf_done(src_buf, state);
+> +	if (!dst_buf->is_held) {
+> +		v4l2_m2m_dst_buf_remove(m2m_ctx);
+> +		v4l2_m2m_buf_done(dst_buf, state);
+> +	}
+> +	if (!_v4l2_m2m_job_finish(m2m_dev, m2m_ctx)) {
+> +		spin_unlock_irqrestore(&m2m_dev->job_spinlock, flags);
+> +		return;
+> +	}
+> +	spin_unlock_irqrestore(&m2m_dev->job_spinlock, flags);
+> +
+> +	v4l2_m2m_job_next(m2m_dev, m2m_ctx);
+> +}
+> +EXPORT_SYMBOL(v4l2_m2m_job_finish_held);
+> +
+> +/**
+> + * v4l2_m2m_release_capture_buf() - check if the capture buffer should be
+> + * released
+> + *
+> + * @out_vb: the output buffer
+> + * @cap_vb: the capture buffer
+> + *
+> + * This helper function returns true if the current capture buffer should
+> + * be released to vb2. This is the case if the output buffer specified that
+> + * the capture buffer should be held (i.e. not returned to vb2) AND if the
+> + * timestamp of the capture buffer differs from the output buffer
+> timestamp. + *
+> + * This helper is to be called at the start of the device_run callback:
+> + *
+> + * .. code-block:: c
+> + *
+> + *	if (v4l2_m2m_release_capture_buf(out_vb, cap_vb)) {
+> + *		v4l2_m2m_dst_buf_remove(m2m_ctx);
+> + *		v4l2_m2m_buf_done(cap_vb, VB2_BUF_STATE_DONE);
+> + *		cap_vb = v4l2_m2m_next_dst_buf(m2m_ctx);
+> + *	}
+> + *	cap_vb->is_held = out_vb->flags & 
+V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF;
+> + *
+> + *	...
+> + *
+> + *	v4l2_m2m_buf_done(out_vb, VB2_BUF_STATE_DONE);
+> + *	if (!cap_vb->is_held) {
+> + *		v4l2_m2m_dst_buf_remove(m2m_ctx);
+> + *		v4l2_m2m_buf_done(cap_vb, VB2_BUF_STATE_DONE);
+> + *	}
+> + *
+> + * This allows for multiple output buffers to be used to fill in a single
+> + * capture buffer. This is typically used by stateless decoders where
+> + * multiple e.g. H.264 slices contribute to a single decoded frame.
+> + */
+> +struct vb2_v4l2_buffer *v4l2_m2m_release_capture_buf(struct v4l2_m2m_ctx
+> *m2m_ctx) +{
+> +	struct v4l2_m2m_dev *m2m_dev = m2m_ctx->m2m_dev;
+> +	struct vb2_v4l2_buffer *src, *dst;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&m2m_dev->job_spinlock, flags);
+> +	src = v4l2_m2m_next_src_buf(m2m_ctx);
+> +	dst = v4l2_m2m_next_dst_buf(m2m_ctx);
+> +
+> +	if (dst->is_held && dst->vb2_buf.copied_timestamp &&
+> +	    src->vb2_buf.timestamp != dst->vb2_buf.timestamp) {
+> +		dst->is_held = false;
+> +		v4l2_m2m_dst_buf_remove(m2m_ctx);
+> +		v4l2_m2m_buf_done(dst, VB2_BUF_STATE_DONE);
+> +		dst = v4l2_m2m_next_dst_buf(m2m_ctx);
+> +	}
+> +	dst->is_held = src->flags & V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF;
+> +	src->flags &= ~V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF;
+> +	spin_unlock_irqrestore(&m2m_dev->job_spinlock, flags);
+> +	return dst;
+> +}
+> +EXPORT_SYMBOL(v4l2_m2m_release_capture_buf);
+> +
+>  int v4l2_m2m_reqbufs(struct file *file, struct v4l2_m2m_ctx *m2m_ctx,
+>  		     struct v4l2_requestbuffers *reqbufs)
+>  {
+> @@ -1171,19 +1275,28 @@ int v4l2_m2m_ioctl_stateless_decoder_cmd(struct file
+> *file, void *priv, {
+>  	struct v4l2_fh *fh = file->private_data;
+>  	struct vb2_v4l2_buffer *out_vb, *cap_vb;
+> +	struct v4l2_m2m_dev *m2m_dev = fh->m2m_ctx->m2m_dev;
+> +	unsigned long flags;
+>  	int ret;
+> 
+>  	ret = v4l2_m2m_ioctl_stateless_try_decoder_cmd(file, priv, dc);
+>  	if (ret < 0)
+>  		return ret;
+> 
+> +	spin_lock_irqsave(&m2m_dev->job_spinlock, flags);
+>  	out_vb = v4l2_m2m_last_src_buf(fh->m2m_ctx);
+>  	cap_vb = v4l2_m2m_last_dst_buf(fh->m2m_ctx);
+> 
+> -	if (out_vb)
+> +	if (out_vb && (out_vb->flags & V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF)) 
+{
+>  		out_vb->flags &= ~V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF;
+> -	else if (cap_vb && cap_vb->is_held)
+> -		v4l2_m2m_buf_done(cap_vb, VB2_BUF_STATE_DONE);
+> +	} else if (cap_vb && cap_vb->is_held) {
+> +		cap_vb->is_held = false;
+> +		if (m2m_dev->curr_ctx) {
 
-But regardless, this is my current (as yet untested) patch.  This is
-not the big user access cleanup that I hope Al will do, this is just a
-"ok, x86 is the only one who wants a special unsafe_copy_to_user()
-right now" patch.
+Above condition should be negated.
 
-                Linus
+Best regards,
+Jernej
 
---00000000000048b57b059456c9b7
-Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
-Content-Disposition: attachment; filename="patch.diff"
-Content-Transfer-Encoding: base64
-Content-ID: <f_k1gsgom80>
-X-Attachment-Id: f_k1gsgom80
+> +			v4l2_m2m_dst_buf_remove(fh->m2m_ctx);
+> +			v4l2_m2m_buf_done(cap_vb, 
+VB2_BUF_STATE_DONE);
+> +		}
+> +	}
+> +	spin_unlock_irqrestore(&m2m_dev->job_spinlock, flags);
+> 
+>  	return 0;
+>  }
+> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+> b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c index
+> 67f7d4326fc1..4e30f263b427 100644
+> --- a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+> @@ -30,14 +30,7 @@ void cedrus_device_run(void *priv)
+>  	struct media_request *src_req;
+> 
+>  	run.src = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+> -	run.dst = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
+> -
+> -	if (v4l2_m2m_release_capture_buf(run.src, run.dst)) {
+> -		v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
+> -		v4l2_m2m_buf_done(run.dst, VB2_BUF_STATE_DONE);
+> -		run.dst = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
+> -	}
+> -	run.dst->is_held = run.src->flags & 
+V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF;
+> +	run.dst = v4l2_m2m_release_capture_buf(ctx->fh.m2m_ctx);
+> 
+>  	run.first_slice = !run.dst->vb2_buf.copied_timestamp ||
+>  		run.src->vb2_buf.timestamp != run.dst-
+>vb2_buf.timestamp;
+> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
+> b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c index
+> 99fedec80224..242cad82cc8c 100644
+> --- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
+> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
+> @@ -103,7 +103,6 @@ static irqreturn_t cedrus_irq(int irq, void *data)
+>  {
+>  	struct cedrus_dev *dev = data;
+>  	struct cedrus_ctx *ctx;
+> -	struct vb2_v4l2_buffer *src_buf, *dst_buf;
+>  	enum vb2_buffer_state state;
+>  	enum cedrus_irq_status status;
+> 
+> @@ -121,26 +120,12 @@ static irqreturn_t cedrus_irq(int irq, void *data)
+>  	dev->dec_ops[ctx->current_codec]->irq_disable(ctx);
+>  	dev->dec_ops[ctx->current_codec]->irq_clear(ctx);
+> 
+> -	src_buf = v4l2_m2m_src_buf_remove(ctx->fh.m2m_ctx);
+> -	dst_buf = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
+> -
+> -	if (!src_buf || !dst_buf) {
+> -		v4l2_err(&dev->v4l2_dev,
+> -			 "Missing source and/or destination 
+buffers\n");
+> -		return IRQ_HANDLED;
+> -	}
+> -
+>  	if (status == CEDRUS_IRQ_ERROR)
+>  		state = VB2_BUF_STATE_ERROR;
+>  	else
+>  		state = VB2_BUF_STATE_DONE;
+> 
+> -	v4l2_m2m_buf_done(src_buf, state);
+> -	if (!dst_buf->is_held) {
+> -		v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
+> -		v4l2_m2m_buf_done(dst_buf, state);
+> -	}
+> -	v4l2_m2m_job_finish(ctx->dev->m2m_dev, ctx->fh.m2m_ctx);
+> +	v4l2_m2m_job_finish_held(ctx->dev->m2m_dev, ctx->fh.m2m_ctx, state);
+> 
+>  	return IRQ_HANDLED;
+>  }
+> diff --git a/include/media/v4l2-mem2mem.h b/include/media/v4l2-mem2mem.h
+> index 8ae2f56c7fa3..48ca7d3eaa3d 100644
+> --- a/include/media/v4l2-mem2mem.h
+> +++ b/include/media/v4l2-mem2mem.h
+> @@ -173,6 +173,10 @@ void v4l2_m2m_try_schedule(struct v4l2_m2m_ctx
+> *m2m_ctx); void v4l2_m2m_job_finish(struct v4l2_m2m_dev *m2m_dev,
+>  			 struct v4l2_m2m_ctx *m2m_ctx);
+> 
+> +void v4l2_m2m_job_finish_held(struct v4l2_m2m_dev *m2m_dev,
+> +			 struct v4l2_m2m_ctx *m2m_ctx,
+> +			 enum vb2_buffer_state state);
+> +
+>  static inline void
+>  v4l2_m2m_buf_done(struct vb2_v4l2_buffer *buf, enum vb2_buffer_state state)
+> {
+> @@ -644,47 +648,7 @@ void v4l2_m2m_buf_copy_metadata(const struct
+> vb2_v4l2_buffer *out_vb, struct vb2_v4l2_buffer *cap_vb,
+>  				bool copy_frame_flags);
+> 
+> -/**
+> - * v4l2_m2m_release_capture_buf() - check if the capture buffer should be
+> - * released
+> - *
+> - * @out_vb: the output buffer
+> - * @cap_vb: the capture buffer
+> - *
+> - * This helper function returns true if the current capture buffer should
+> - * be released to vb2. This is the case if the output buffer specified that
+> - * the capture buffer should be held (i.e. not returned to vb2) AND if the
+> - * timestamp of the capture buffer differs from the output buffer
+> timestamp. - *
+> - * This helper is to be called at the start of the device_run callback:
+> - *
+> - * .. code-block:: c
+> - *
+> - *	if (v4l2_m2m_release_capture_buf(out_vb, cap_vb)) {
+> - *		v4l2_m2m_dst_buf_remove(m2m_ctx);
+> - *		v4l2_m2m_buf_done(cap_vb, VB2_BUF_STATE_DONE);
+> - *		cap_vb = v4l2_m2m_next_dst_buf(m2m_ctx);
+> - *	}
+> - *	cap_vb->is_held = out_vb->flags & 
+V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF;
+> - *
+> - *	...
+> - *
+> - *	v4l2_m2m_buf_done(out_vb, VB2_BUF_STATE_DONE);
+> - *	if (!cap_vb->is_held) {
+> - *		v4l2_m2m_dst_buf_remove(m2m_ctx);
+> - *		v4l2_m2m_buf_done(cap_vb, VB2_BUF_STATE_DONE);
+> - *	}
+> - *
+> - * This allows for multiple output buffers to be used to fill in a single
+> - * capture buffer. This is typically used by stateless decoders where
+> - * multiple e.g. H.264 slices contribute to a single decoded frame.
+> - */
+> -static inline bool v4l2_m2m_release_capture_buf(const struct
+> vb2_v4l2_buffer *out_vb, -					
+	const struct vb2_v4l2_buffer *cap_vb)
+> -{
+> -	return cap_vb->is_held && cap_vb->vb2_buf.copied_timestamp &&
+> -	       out_vb->vb2_buf.timestamp != cap_vb->vb2_buf.timestamp;
+> -}
+> +struct vb2_v4l2_buffer *v4l2_m2m_release_capture_buf(struct v4l2_m2m_ctx
+> *m2m_ctx);
+> 
+>  /* v4l2 request helper */
 
-IGFyY2gveDg2L2luY2x1ZGUvYXNtL3VhY2Nlc3MuaCB8IDIzICsrKysrKysrKysrKysrKysrKysr
-KysKIGZzL3JlYWRkaXIuYyAgICAgICAgICAgICAgICAgICB8IDQ0ICsrLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQogaW5jbHVkZS9saW51eC91YWNjZXNzLmggICAgICAg
-IHwgIDYgKysrKy0tCiAzIGZpbGVzIGNoYW5nZWQsIDI5IGluc2VydGlvbnMoKyksIDQ0IGRlbGV0
-aW9ucygtKQoKZGlmZiAtLWdpdCBhL2FyY2gveDg2L2luY2x1ZGUvYXNtL3VhY2Nlc3MuaCBiL2Fy
-Y2gveDg2L2luY2x1ZGUvYXNtL3VhY2Nlc3MuaAppbmRleCAzNWMyMjVlZGUwZTQuLjYxZDkzZjA2
-MmEzNiAxMDA2NDQKLS0tIGEvYXJjaC94ODYvaW5jbHVkZS9hc20vdWFjY2Vzcy5oCisrKyBiL2Fy
-Y2gveDg2L2luY2x1ZGUvYXNtL3VhY2Nlc3MuaApAQCAtNzM0LDUgKzczNCwyOCBAQCBkbyB7CQkJ
-CQkJCQkJCVwKIAlpZiAodW5saWtlbHkoX19ndV9lcnIpKSBnb3RvIGVycl9sYWJlbDsJCQkJCVwK
-IH0gd2hpbGUgKDApCiAKKy8qCisgKiBXZSB3YW50IHRoZSB1bnNhZmUgYWNjZXNzb3JzIHRvIGFs
-d2F5cyBiZSBpbmxpbmVkIGFuZCB1c2UKKyAqIHRoZSBlcnJvciBsYWJlbHMgLSB0aHVzIHRoZSBt
-YWNybyBnYW1lcy4KKyAqLworI2RlZmluZSB1bnNhZmVfY29weV9sb29wKGRzdCwgc3JjLCBsZW4s
-IHR5cGUsIGxhYmVsKQkJCVwKKwl3aGlsZSAobGVuID49IHNpemVvZih0eXBlKSkgewkJCQkJXAor
-CQl1bnNhZmVfcHV0X3VzZXIoKih0eXBlICopc3JjLCh0eXBlIF9fdXNlciAqKWRzdCxsYWJlbCk7
-CVwKKwkJZHN0ICs9IHNpemVvZih0eXBlKTsJCQkJCVwKKwkJc3JjICs9IHNpemVvZih0eXBlKTsJ
-CQkJCVwKKwkJbGVuIC09IHNpemVvZih0eXBlKTsJCQkJCVwKKwl9CisKKyNkZWZpbmUgdW5zYWZl
-X2NvcHlfdG9fdXNlcihfZHN0LF9zcmMsX2xlbixsYWJlbCkJCQlcCitkbyB7CQkJCQkJCQkJXAor
-CWNoYXIgX191c2VyICpfX3VjdV9kc3QgPSAoX2RzdCk7CQkJCVwKKwljb25zdCBjaGFyICpfX3Vj
-dV9zcmMgPSAoX3NyYyk7CQkJCQlcCisJc2l6ZV90IF9fdWN1X2xlbiA9IChfbGVuKTsJCQkJCVwK
-Kwl1bnNhZmVfY29weV9sb29wKF9fdWN1X2RzdCwgX191Y3Vfc3JjLCBfX3VjdV9sZW4sIHU2NCwg
-bGFiZWwpOwlcCisJdW5zYWZlX2NvcHlfbG9vcChfX3VjdV9kc3QsIF9fdWN1X3NyYywgX191Y3Vf
-bGVuLCB1MzIsIGxhYmVsKTsJXAorCXVuc2FmZV9jb3B5X2xvb3AoX191Y3VfZHN0LCBfX3VjdV9z
-cmMsIF9fdWN1X2xlbiwgdTE2LCBsYWJlbCk7CVwKKwl1bnNhZmVfY29weV9sb29wKF9fdWN1X2Rz
-dCwgX191Y3Vfc3JjLCBfX3VjdV9sZW4sIHU4LCBsYWJlbCk7CVwKK30gd2hpbGUgKDApCisKICNl
-bmRpZiAvKiBfQVNNX1g4Nl9VQUNDRVNTX0ggKi8KIApkaWZmIC0tZ2l0IGEvZnMvcmVhZGRpci5j
-IGIvZnMvcmVhZGRpci5jCmluZGV4IDE5YmVhNTkxYzNmMS4uNmUyNjIzZTU3YjJlIDEwMDY0NAot
-LS0gYS9mcy9yZWFkZGlyLmMKKysrIGIvZnMvcmVhZGRpci5jCkBAIC0yNyw1MyArMjcsMTMgQEAK
-IC8qCiAgKiBOb3RlIHRoZSAidW5zYWZlX3B1dF91c2VyKCkgc2VtYW50aWNzOiB3ZSBnb3RvIGEK
-ICAqIGxhYmVsIGZvciBlcnJvcnMuCi0gKgotICogQWxzbyBub3RlIGhvdyB3ZSB1c2UgYSAid2hp
-bGUoKSIgbG9vcCBoZXJlLCBldmVuIHRob3VnaAotICogb25seSB0aGUgYmlnZ2VzdCBzaXplIG5l
-ZWRzIHRvIGxvb3AuIFRoZSBjb21waWxlciAod2VsbCwKLSAqIGF0IGxlYXN0IGdjYykgaXMgc21h
-cnQgZW5vdWdoIHRvIHR1cm4gdGhlIHNtYWxsZXIgc2l6ZXMKLSAqIGludG8ganVzdCBpZi1zdGF0
-ZW1lbnRzLCBhbmQgdGhpcyB3YXkgd2UgZG9uJ3QgbmVlZCB0bwotICogY2FyZSB3aGV0aGVyICd1
-NjQnIG9yICd1MzInIGlzIHRoZSBiaWdnZXN0IHNpemUuCi0gKi8KLSNkZWZpbmUgdW5zYWZlX2Nv
-cHlfbG9vcChkc3QsIHNyYywgbGVuLCB0eXBlLCBsYWJlbCkgCQlcCi0Jd2hpbGUgKGxlbiA+PSBz
-aXplb2YodHlwZSkpIHsJCQkJXAotCQl1bnNhZmVfcHV0X3VzZXIoZ2V0X3VuYWxpZ25lZCgodHlw
-ZSAqKXNyYyksCVwKLQkJCSh0eXBlIF9fdXNlciAqKWRzdCwgbGFiZWwpOwkJXAotCQlkc3QgKz0g
-c2l6ZW9mKHR5cGUpOwkJCQlcCi0JCXNyYyArPSBzaXplb2YodHlwZSk7CQkJCVwKLQkJbGVuIC09
-IHNpemVvZih0eXBlKTsJCQkJXAotCX0KLQotLyoKLSAqIFdlIGF2b2lkIGRvaW5nIDY0LWJpdCBj
-b3BpZXMgb24gMzItYml0IGFyY2hpdGVjdHVyZXMuIFRoZXkKLSAqIG1pZ2h0IGJlIGJldHRlciwg
-YnV0IHRoZSBjb21wb25lbnQgbmFtZXMgYXJlIG1vc3RseSBzbWFsbCwKLSAqIGFuZCB0aGUgNjQt
-Yml0IGNhc2VzIGNhbiBlbmQgdXAgYmVpbmcgbXVjaCBtb3JlIGNvbXBsZXggYW5kCi0gKiBwdXQg
-bXVjaCBtb3JlIHJlZ2lzdGVyIHByZXNzdXJlIG9uIHRoZSBjb2RlLCBzbyBpdCdzIGxpa2VseQot
-ICogbm90IHdvcnRoIHRoZSBwYWluIG9mIHVuYWxpZ25lZCBhY2Nlc3NlcyBldGMuCi0gKgotICog
-U28gbGltaXQgdGhlIGNvcGllcyB0byAidW5zaWduZWQgbG9uZyIgc2l6ZS4gSSBkaWQgdmVyaWZ5
-Ci0gKiB0aGF0IGF0IGxlYXN0IHRoZSB4ODYtMzIgY2FzZSBpcyBvayB3aXRob3V0IHRoaXMgbGlt
-aXRpbmcsCi0gKiBidXQgSSB3b3JyeSBhYm91dCByYW5kb20gb3RoZXIgbGVnYWN5IDMyLWJpdCBj
-YXNlcyB0aGF0Ci0gKiBtaWdodCBub3QgZG8gYXMgd2VsbC4KLSAqLwotI2RlZmluZSB1bnNhZmVf
-Y29weV90eXBlKGRzdCwgc3JjLCBsZW4sIHR5cGUsIGxhYmVsKSBkbyB7CVwKLQlpZiAoc2l6ZW9m
-KHR5cGUpIDw9IHNpemVvZih1bnNpZ25lZCBsb25nKSkJCVwKLQkJdW5zYWZlX2NvcHlfbG9vcChk
-c3QsIHNyYywgbGVuLCB0eXBlLCBsYWJlbCk7CVwKLX0gd2hpbGUgKDApCi0KLS8qCi0gKiBDb3B5
-IHRoZSBkaXJlbnQgbmFtZSB0byB1c2VyIHNwYWNlLCBhbmQgTlVMLXRlcm1pbmF0ZQotICogaXQu
-IFRoaXMgc2hvdWxkIG5vdCBiZSBhIGZ1bmN0aW9uIGNhbGwsIHNpbmNlIHdlJ3JlIGRvaW5nCi0g
-KiB0aGUgY29weSBpbnNpZGUgYSAidXNlcl9hY2Nlc3NfYmVnaW4vZW5kKCkiIHNlY3Rpb24uCiAg
-Ki8KICNkZWZpbmUgdW5zYWZlX2NvcHlfZGlyZW50X25hbWUoX2RzdCwgX3NyYywgX2xlbiwgbGFi
-ZWwpIGRvIHsJXAogCWNoYXIgX191c2VyICpkc3QgPSAoX2RzdCk7CQkJCVwKIAljb25zdCBjaGFy
-ICpzcmMgPSAoX3NyYyk7CQkJCVwKIAlzaXplX3QgbGVuID0gKF9sZW4pOwkJCQkJXAotCXVuc2Fm
-ZV9jb3B5X3R5cGUoZHN0LCBzcmMsIGxlbiwgdTY0LCBsYWJlbCk7CSAJXAotCXVuc2FmZV9jb3B5
-X3R5cGUoZHN0LCBzcmMsIGxlbiwgdTMyLCBsYWJlbCk7CQlcCi0JdW5zYWZlX2NvcHlfdHlwZShk
-c3QsIHNyYywgbGVuLCB1MTYsIGxhYmVsKTsJCVwKLQl1bnNhZmVfY29weV90eXBlKGRzdCwgc3Jj
-LCBsZW4sIHU4LCAgbGFiZWwpOwkJXAotCXVuc2FmZV9wdXRfdXNlcigwLCBkc3QsIGxhYmVsKTsJ
-CQkJXAorCXVuc2FmZV9wdXRfdXNlcigwLCBkc3QrbGVuLCBsYWJlbCk7CQkJXAorCXVuc2FmZV9j
-b3B5X3RvX3VzZXIoZHN0LCBzcmMsIGxlbiwgbGFiZWwpOwkJXAogfSB3aGlsZSAoMCkKIAogCmRp
-ZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3VhY2Nlc3MuaCBiL2luY2x1ZGUvbGludXgvdWFjY2Vz
-cy5oCmluZGV4IGU0N2QwNTIyYTFmNC4uZDRlZTZlOTQyNTYyIDEwMDY0NAotLS0gYS9pbmNsdWRl
-L2xpbnV4L3VhY2Nlc3MuaAorKysgYi9pbmNsdWRlL2xpbnV4L3VhY2Nlc3MuaApAQCAtMzU1LDgg
-KzM1NSwxMCBAQCBleHRlcm4gbG9uZyBzdHJubGVuX3Vuc2FmZV91c2VyKGNvbnN0IHZvaWQgX191
-c2VyICp1bnNhZmVfYWRkciwgbG9uZyBjb3VudCk7CiAjaWZuZGVmIHVzZXJfYWNjZXNzX2JlZ2lu
-CiAjZGVmaW5lIHVzZXJfYWNjZXNzX2JlZ2luKHB0cixsZW4pIGFjY2Vzc19vayhwdHIsIGxlbikK
-ICNkZWZpbmUgdXNlcl9hY2Nlc3NfZW5kKCkgZG8geyB9IHdoaWxlICgwKQotI2RlZmluZSB1bnNh
-ZmVfZ2V0X3VzZXIoeCwgcHRyLCBlcnIpIGRvIHsgaWYgKHVubGlrZWx5KF9fZ2V0X3VzZXIoeCwg
-cHRyKSkpIGdvdG8gZXJyOyB9IHdoaWxlICgwKQotI2RlZmluZSB1bnNhZmVfcHV0X3VzZXIoeCwg
-cHRyLCBlcnIpIGRvIHsgaWYgKHVubGlrZWx5KF9fcHV0X3VzZXIoeCwgcHRyKSkpIGdvdG8gZXJy
-OyB9IHdoaWxlICgwKQorI2RlZmluZSB1bnNhZmVfb3Bfd3JhcChvcCwgZXJyKSBkbyB7IGlmICh1
-bmxpa2VseShvcCkpIGdvdG8gZXJyOyB9IHdoaWxlICgwKQorI2RlZmluZSB1bnNhZmVfZ2V0X3Vz
-ZXIoeCxwLGUpIHVuc2FmZV9vcF93cmFwKF9fZ2V0X3VzZXIoeCxwKSxlKQorI2RlZmluZSB1bnNh
-ZmVfcHV0X3VzZXIoeCxwLGUpIHVuc2FmZV9vcF93cmFwKF9fcHV0X3VzZXIoeCxwKSxlKQorI2Rl
-ZmluZSB1bnNhZmVfY29weV90b191c2VyKGQscyxsLGUpIHVuc2FmZV9vcF93cmFwKF9fY29weV90
-b191c2VyKGQscyxsKSxlKQogc3RhdGljIGlubGluZSB1bnNpZ25lZCBsb25nIHVzZXJfYWNjZXNz
-X3NhdmUodm9pZCkgeyByZXR1cm4gMFVMOyB9CiBzdGF0aWMgaW5saW5lIHZvaWQgdXNlcl9hY2Nl
-c3NfcmVzdG9yZSh1bnNpZ25lZCBsb25nIGZsYWdzKSB7IH0KICNlbmRpZgo=
---00000000000048b57b059456c9b7--
+
+
+
