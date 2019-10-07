@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7990CC352AA
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75EE8ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4910D22468
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:23:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A46E21655
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:23:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="l0IJTO3G"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KY2kUs1L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727733AbfJGLXi (ORCPT
+        id S1727786AbfJGLXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 07:23:38 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50124 "EHLO
+        Mon, 7 Oct 2019 07:23:39 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:50170 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727416AbfJGLXh (ORCPT
+        with ESMTP id S1727734AbfJGLXi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 07:23:37 -0400
+        Mon, 7 Oct 2019 07:23:38 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
         Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=JoihTJodSVi9WJBQTnnYkKBZbxE0NJTW8x9hUl9C9hM=; b=l0IJTO3GnhSDKYuxnVDiEmIvbs
-        qn7/PpCYbhut5Lhyu0XETj1waXMijQLhpm6GmazJU6RUkXUE5xDa4CVCSKISqei/A3FyAfdVQUGP/
-        G45ju0HQpiEXlMbaZxr1dcTXYEu7+hOYQDJub10CopJyuFzvgksIgk9GAtjcKmUNdUfxuJNnX3L0d
-        IN+bzV78daGvZS6z4QFWxUv1j1R/p4KGs3hVxZrAJd8R6nR/W0QfE6e5KbDsBrAlufm3rjmthJBye
-        MQQP5iNQTU08+b8c0zr/LobpYTDfJjYqdBOV5MaPtDarvXvZPHJtJn7PO/8R44DhqS8s/kEyZF9Hl
-        Me0Tfwsg==;
+        bh=zVQ033DHYBrINJK02LYJoI4IG8nnnQgx+qACnvNJ5D0=; b=KY2kUs1Lx23xwJNyCy+RzDHrGZ
+        SbRDq6IsqgMK2skhTxieGYXTUjHJFRFn1dkVRwPCdAytCpKH/pdrZaGe9pW0ABl6xXDxX6k7MPe0j
+        afNnkhNXl8dAaBAX67D0t2lbslaFwQITbqLSd3hitF12wzGHuUrM4wrCm/dSjDELzw3mE4hbkQoP2
+        BEMW/R206NyckwFHJS89pX8zrK6DJCCE0Su73vRB46KJSkEPDp/pilzyL2k7HDboJ1OMsdLAjY5ei
+        iuSltO5N9ia5+PUBrufAJNXSmBskAi782CunGsOoWWb5nLemFFXTgMaVULb8L0vZ8FsyFRczu6Rw4
+        tIkRVYTQ==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iHR6y-0003H9-LA; Mon, 07 Oct 2019 11:23:32 +0000
+        id 1iHR6z-0003Ht-Vn; Mon, 07 Oct 2019 11:23:34 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8D3473073D1;
-        Mon,  7 Oct 2019 13:22:36 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3A2FB3060EB;
+        Mon,  7 Oct 2019 13:22:41 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 14B3F20245760; Mon,  7 Oct 2019 13:23:27 +0200 (CEST)
-Message-Id: <20191007090012.23157697.0@infradead.org>
+        id DB25820244E3A; Mon,  7 Oct 2019 13:23:26 +0200 (CEST)
+Message-Id: <20191007083831.09800500.5@infradead.org>
 User-Agent: quilt/0.65
-Date:   Mon, 07 Oct 2019 10:44:51 +0200
+Date:   Mon, 07 Oct 2019 10:27:18 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     x86@kernel.org
 Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
@@ -54,9 +54,9 @@ Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
         jbaron@akamai.com, torvalds@linux-foundation.org,
         tglx@linutronix.de, mingo@kernel.org, namit@vmware.com,
         hpa@zytor.com, luto@kernel.org, ard.biesheuvel@linaro.org,
-        jpoimboe@redhat.com, hjl.tools@gmail.com
-Subject: [RFC][PATCH 8/9] jump_label,objtool: Generate possible statistics
-References: <20191007084443.79370128.1@infradead.org>
+        jpoimboe@redhat.com
+Subject: [PATCH v2 10/13] static_call: Add static_cond_call()
+References: <20191007082708.01393931.1@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
@@ -64,97 +64,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	x86_64-defconfig	x86_64-allmodconfig-UBSAN-KASAN
+Extend the static_call infrastructure to optimize the following common
+pattern:
 
-NOP2	1641			21796
-JMP8	48			114
+	if (func_ptr)
+		func_ptr(args...)
 
-NOP5	1010			31042
-JMP32	29			91
+For the trampoline (which is in effect a tail-call), we patch the
+JMP.d32 into a RET, which then directly consumes the trampoline call.
 
-Which results in a possible 3*(1641+48) ~ 5k saving for defconfig
-and 3*(21796+114) ~ 64k saving for allmodconfig.
+For the in-line sites we replace the CALL with a NOP5.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: "H.J. Lu" <hjl.tools@gmail.com>
 ---
- tools/objtool/check.c |   43 +++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 41 insertions(+), 2 deletions(-)
+ arch/x86/kernel/static_call.c |   42 ++++++++++++++++++++++++++++++++----------
+ include/linux/static_call.h   |    7 +++++++
+ 2 files changed, 39 insertions(+), 10 deletions(-)
 
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -817,6 +817,8 @@ static int handle_jump_alt(struct objtoo
- 			   struct instruction *orig_insn,
- 			   struct instruction **new_insn)
+--- a/arch/x86/kernel/static_call.c
++++ b/arch/x86/kernel/static_call.c
+@@ -4,19 +4,41 @@
+ #include <linux/bug.h>
+ #include <asm/text-patching.h>
+ 
+-static void __static_call_transform(void *insn, u8 opcode, void *func)
++enum insn_type {
++	call = 0, /* site call */
++	nop = 1,  /* site cond-call */
++	jmp = 2,  /* tramp / site tail-call */
++	ret = 3,  /* tramp / site cond-tail-call */
++};
++
++static void __static_call_transform(void *insn, enum insn_type type, void *func)
  {
-+	long disp;
-+
- 	if ((orig_insn->len != 2) && (orig_insn->len != 5)) {
- 		WARN_FUNC("jump_label: unsupported INSN length: %d",
- 				orig_insn->sec, orig_insn->offset, orig_insn->len);
-@@ -824,9 +826,12 @@ static int handle_jump_alt(struct objtoo
- 	}
+-	const void *code = text_gen_insn(opcode, (long)insn, (long)func);
++	int size = CALL_INSN_SIZE;
++	const void *code;
  
- 	if (orig_insn->type == INSN_NOP) {
--		long disp;
- 
--		if (orig_insn->len == 2) {
-+		switch (orig_insn->len) {
-+		case 2:
-+			WARN_FUNC("jump_label: NOP2 present",
-+					orig_insn->sec, orig_insn->offset);
-+
- 			if (special_alt->orig_sec != special_alt->new_sec) {
- 				WARN_FUNC("jump_label: JMP8 crossing sections",
- 						orig_insn->sec, orig_insn->offset);
-@@ -839,6 +844,20 @@ static int handle_jump_alt(struct objtoo
- 						orig_insn->sec, orig_insn->offset);
- 				return -1;
- 			}
-+			break;
-+
-+		case 5:
-+			if (special_alt->orig_sec == special_alt->new_sec) {
-+				disp = special_alt->new_off - (special_alt->orig_off + 2);
-+				if ((disp>>31) == (disp>>7)) {
-+					WARN_FUNC("jump_label: NOP2 possible",
-+							orig_insn->sec, orig_insn->offset);
-+					break;
-+				}
-+			}
-+			WARN_FUNC("jump_label: NOP5 present",
-+					orig_insn->sec, orig_insn->offset);
-+			break;
- 		}
- 
- 		return 0;
-@@ -850,6 +869,26 @@ static int handle_jump_alt(struct objtoo
- 		return -1;
- 	}
- 
-+	switch (orig_insn->len) {
-+	case 2:
-+		WARN_FUNC("jump_label: JMP8 present",
-+				orig_insn->sec, orig_insn->offset);
+-	if (WARN_ONCE(*(u8 *)insn != opcode,
+-		      "unexpected static call insn opcode 0x%x at %pS\n",
+-		      opcode, insn))
+-		return;
++	switch (type) {
++	case call:
++		code = text_gen_insn(CALL_INSN_OPCODE, insn, func);
 +		break;
 +
-+	case 5:
-+		if (special_alt->orig_sec == special_alt->new_sec) {
-+			disp = special_alt->new_off - (special_alt->orig_off + 2);
-+			if ((disp>>31) == (disp>>7)) {
-+				WARN_FUNC("jump_label: JMP8 possible",
-+						orig_insn->sec, orig_insn->offset);
-+				break;
-+			}
-+		}
-+		WARN_FUNC("jump_label: JMP32 present",
-+				orig_insn->sec, orig_insn->offset);
++	case nop:
++		code = ideal_nops[NOP_ATOMIC5];
++		break;
++
++	case jmp:
++		code = text_gen_insn(JMP32_INSN_OPCODE, insn, func);
++		break;
++
++	case ret:
++		code = text_gen_insn(RET_INSN_OPCODE, insn, func);
++		size = RET_INSN_SIZE;
 +		break;
 +	}
-+
- 	*new_insn = list_next_entry(orig_insn, list);
- 	return 0;
+ 
+-	if (memcmp(insn, code, CALL_INSN_SIZE) == 0)
++	if (memcmp(insn, code, size) == 0)
+ 		return;
+ 
+-	text_poke_bp(insn, code, CALL_INSN_SIZE, NULL);
++	text_poke_bp(insn, code, size, NULL);
  }
+ 
+ void arch_static_call_transform(void *site, void *tramp, void *func)
+@@ -24,10 +46,10 @@ void arch_static_call_transform(void *si
+ 	mutex_lock(&text_mutex);
+ 
+ 	if (tramp)
+-		__static_call_transform(tramp, JMP32_INSN_OPCODE, func);
++		__static_call_transform(tramp, jmp + !func, func);
+ 
+ 	if (IS_ENABLED(CONFIG_HAVE_STATIC_CALL_INLINE) && site)
+-		__static_call_transform(site, CALL_INSN_OPCODE, func);
++		__static_call_transform(site, !func, func);
+ 
+ 	mutex_unlock(&text_mutex);
+ }
+--- a/include/linux/static_call.h
++++ b/include/linux/static_call.h
+@@ -17,6 +17,7 @@
+  *   DECLARE_STATIC_CALL(name, func);
+  *   DEFINE_STATIC_CALL(name, func);
+  *   static_call(name)(args...);
++ *   static_cond_call(name)(args...)
+  *   static_call_update(name, func);
+  *
+  * Usage example:
+@@ -105,6 +106,7 @@ extern int static_call_text_reserved(voi
+ 	ARCH_DEFINE_STATIC_CALL_TRAMP(name, _func)
+ 
+ #define static_call(name)	STATIC_CALL_TRAMP(name)
++#define static_cond_call(name)	STATIC_CALL_TRAMP(name)
+ 
+ #define EXPORT_STATIC_CALL(name)					\
+ 	EXPORT_SYMBOL(STATIC_CALL_NAME(name));				\
+@@ -128,6 +130,7 @@ struct static_call_key {
+ 	ARCH_DEFINE_STATIC_CALL_TRAMP(name, _func)
+ 
+ #define static_call(name)	STATIC_CALL_TRAMP(name)
++#define static_cond_call(name)	STATIC_CALL_TRAMP(name)
+ 
+ static inline
+ void __static_call_update(struct static_call_key *key, void *tramp, void *func)
+@@ -161,6 +164,10 @@ struct static_call_key {
+ #define static_call(name)						\
+ 	((typeof(STATIC_CALL_TRAMP(name))*)(STATIC_CALL_NAME(name).func))
+ 
++#define static_cond_call(name)						\
++	if (STATIC_CALL_NAME(name).func)				\
++		((typeof(STATIC_CALL_TRAMP(name))*)(STATIC_CALL_NAME(name).func))
++
+ static inline
+ void __static_call_update(struct static_call_key *key, void *tramp, void *func)
+ {
 
 
