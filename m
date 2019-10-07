@@ -2,93 +2,76 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B539C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 20:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6129C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 20:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 475EC20835
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 20:54:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A364920835
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 20:58:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729051AbfJGUyh (ORCPT
+        id S1728980AbfJGU6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 16:54:37 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40950 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728273AbfJGUyh (ORCPT
+        Mon, 7 Oct 2019 16:58:52 -0400
+Received: from [165.204.78.2] ([165.204.78.2]:12957 "EHLO
+        localhost.localdomain" rhost-flags-FAIL-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728273AbfJGU6w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 16:54:37 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x97KqPrs035748;
-        Mon, 7 Oct 2019 16:54:30 -0400
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vgc9013v0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Oct 2019 16:54:30 -0400
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x97KnURr016023;
-        Mon, 7 Oct 2019 20:54:29 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma05wdc.us.ibm.com with ESMTP id 2vejt740hr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Oct 2019 20:54:29 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x97KsSis47317368
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 7 Oct 2019 20:54:28 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B8196AC05B;
-        Mon,  7 Oct 2019 20:54:28 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AD35CAC059;
-        Mon,  7 Oct 2019 20:54:27 +0000 (GMT)
-Received: from jarvis.ext.hansenpartnership.com (unknown [9.85.184.117])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  7 Oct 2019 20:54:27 +0000 (GMT)
-Message-ID: <1570481667.4242.4.camel@linux.ibm.com>
-Subject: Re: Potential NULL pointer deference in scsi: scsi_transport_spi
-From:   James Bottomley <jejb@linux.ibm.com>
-To:     Yizhuo Zhai <yzhai003@ucr.edu>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chengyu Song <csong@cs.ucr.edu>,
-        Zhiyun Qian <zhiyunq@cs.ucr.edu>
-Date:   Mon, 07 Oct 2019 13:54:27 -0700
-In-Reply-To: <CABvMjLSoa6WfdmvwCCPgAUtc1ZmQ8+14xrDnz5Q8MrpFstMDsg@mail.gmail.com>
-References: <CABvMjLSoa6WfdmvwCCPgAUtc1ZmQ8+14xrDnz5Q8MrpFstMDsg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-07_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=921 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910070184
+        Mon, 7 Oct 2019 16:58:52 -0400
+X-Greylist: delayed 613 seconds by postgrey-1.27 at vger.kernel.org; Mon, 07 Oct 2019 16:58:52 EDT
+Received: from localhost.localdomain (localhost [IPv6:::1])
+        by localhost.localdomain (Postfix) with ESMTP id 775E6224EA78;
+        Mon,  7 Oct 2019 15:48:39 -0500 (CDT)
+Subject: [PATCH] x86/cpufeatures: Add feature bit RDPRU on AMD
+From:   Babu Moger <babu.moger@amd.com>
+To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org
+Cc:     fenghua.yu@intel.com, jpoimboe@redhat.com, aaronlewis@google.com,
+        robert.hu@linux.intel.com, ak@linux.intel.com,
+        thellstrom@vmware.com, linux-kernel@vger.kernel.org
+Date:   Mon, 07 Oct 2019 15:48:39 -0500
+Message-ID: <20191007204839.5727.10803.stgit@localhost.localdomain>
+User-Agent: StGit/0.19-24-ge95d
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-10-07 at 13:30 -0700, Yizhuo Zhai wrote:
-> Hi All:
-> 
-> drivers/scsi/scsi_transport_spi.c:
-> 
-> Inside function store_spi_transport_period(), dev_to_shost()
-> could return NULL
+AMD Zen 2 introduces new RDPRU instruction which is used to give access
+to some processor registers that are typically only accessible when the
+privilege level is zero.
 
-No, it can't.  The device model ensures that a SCSI target or device
-must be parented to a host.
+ECX is used as the implicit register to specify which register to read.
+RDPRU places the specified register’s value into EDX:EAX
 
-James
+For example, RDPRU instruction can be used to reading MPERF and APERF at
+user level.
 
-> , however, the return value shost is not
-> checked and get used. This could potentially be unsafe.
-> 
+Adding this to cpu feature definition, so it is visible in /proc/cpuinfo.
+
+Details are available in AMD64 Architecture Programmer’s Manual.
+https://www.amd.com/system/files/TechDocs/24594.pdf
+
+Signed-off-by: Babu Moger <babu.moger@amd.com>
+---
+ arch/x86/include/asm/cpufeatures.h |    1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 0652d3e..5d2f1a7 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -292,6 +292,7 @@
+ #define X86_FEATURE_CLZERO		(13*32+ 0) /* CLZERO instruction */
+ #define X86_FEATURE_IRPERF		(13*32+ 1) /* Instructions Retired Count */
+ #define X86_FEATURE_XSAVEERPTR		(13*32+ 2) /* Always save/restore FP error pointers */
++#define X86_FEATURE_RDPRU		(13*32+ 4) /* read processor register at user level */
+ #define X86_FEATURE_WBNOINVD		(13*32+ 9) /* WBNOINVD instruction */
+ #define X86_FEATURE_AMD_IBPB		(13*32+12) /* "" Indirect Branch Prediction Barrier */
+ #define X86_FEATURE_AMD_IBRS		(13*32+14) /* "" Indirect Branch Restricted Speculation */
 
