@@ -2,131 +2,86 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54EBEECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B89ECE58E
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2819E2133F
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:42:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="EyeN0p85"
+	by mail.kernel.org (Postfix) with ESMTP id 6708C206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:44:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729497AbfJGWmc (ORCPT
+        id S1729564AbfJGWor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 18:42:32 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:40005 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728654AbfJGWmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 18:42:31 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Mon, 7 Oct 2019 18:44:47 -0400
+Received: from mx3.molgen.mpg.de ([141.14.17.11]:35145 "EHLO mx1.molgen.mpg.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729051AbfJGWor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 18:44:47 -0400
+Received: from [192.168.0.5] (ip5f5bf2e6.dynamic.kabel-deutschland.de [95.91.242.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46nFq871TRz9sPT;
-        Tue,  8 Oct 2019 09:42:28 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1570488149;
-        bh=t1+QL3NVj1xEg9Hc5TIAtTlFoQW7X/JWQPEMb3/QOac=;
-        h=Date:From:To:Cc:Subject:From;
-        b=EyeN0p85cgnBuFiDJtN2P3nFz0eRTOBUCTi1HnCx9p/NtPUyQOthHQTP3leGw6LuD
-         kDaA8zDv3pbxozTW08qSw3J+EqSqCGBvfdm93x99raTVh/j0ey789r1Roqlb5RdDPq
-         YTs3UcYZxt+Vn000Rg76r0/Q9gELvs9c9ayN6aTs09J8ihVx4nXOMuqk0h0n+qq8Iu
-         eKycxtgUlk/LnUjcNc042QOlQ+WJ/Dhqa5mFk//RUKG8DD3yDiI3+pAjccAybyOV9D
-         0GhohJ0WobOuA5izBl4yiAaAedPi/FjR+ejkzNu1l1lvuvlc8CxClTihDHDl6L5R5k
-         lVX1dDv14iqpA==
-Date:   Tue, 8 Oct 2019 09:42:21 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>
-Subject: linux-next: build warning after merge of the net-next tree
-Message-ID: <20191008094221.62d84587@canb.auug.org.au>
+        (Authenticated sender: pmenzel)
+        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 55C5120225688;
+        Tue,  8 Oct 2019 00:44:44 +0200 (CEST)
+Subject: Re: [PATCH] ACPI: PM: Revert "ACPI / PM: Blacklist Low Power S0 Idle
+ _DSM for Dell XPS13 9360"
+To:     Mario Limonciello <mario.limonciello@dell.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     linux-acpi@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <1569514137-2307-1-git-send-email-mario.limonciello@dell.com>
+From:   Paul Menzel <pmenzel@molgen.mpg.de>
+Message-ID: <97e66464-8407-fd58-21a6-aeb7736dec7b@molgen.mpg.de>
+Date:   Tue, 8 Oct 2019 00:44:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Xj_X7JA3EV9XdyAej7t7QRR";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <1569514137-2307-1-git-send-email-mario.limonciello@dell.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Xj_X7JA3EV9XdyAej7t7QRR
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-After merging the net-next tree, today's linux-next build (x86_64
-allmodconfig) produced this warning:
+Dear Mario,
 
 
-Introduced by commit
+On 26.09.19 18:08, Mario Limonciello wrote:
+> This reverts part of
+> commit 71630b7a832f ("ACPI / PM: Blacklist Low Power S0 Idle _DSM for Dell XPS13 9360")
+> to remove the S0ix blacklist for the XPS 9360.
+> 
+> The problems with this system occurred in one possible NVME SSD when
+> putting system into s0ix.  As the NVME sleep behavior has been adjusted
+> in d916b1be this is expected to be now resolved.
 
-  033b2c7f0f26 ("rxrpc: Add missing "new peer" trace")
+1.  Please add, that it was the Hynix(?) SSD.
+2.  Please add the commit message summary of d916b1be.
 
-interacting with commit
+     nvme-pci: use host managed power state for suspend
 
-  55f6c98e3674 ("rxrpc: Fix trace-after-put looking at the put peer record")
+> Cc: 'Paul Menzel <pmenzel@molgen.mpg.de>'
+> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=196907
+> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
 
-from the net tree.
+Tag it for the stable series? d916b1be (first tag v5.3-rc1) is not 
+tagged for stable.
 
-I have applied the following merge fix patch.
+> ---
+> The particular failing configuration was reported by only ever failed for Paul Menzel, so hopefully
+> he can test on his failing system.
 
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Tue, 8 Oct 2019 09:37:50 +1100
-Subject: [PATCH] rxrpc: fix up for "rxrpc: Fix trace-after-put looking at t=
-he
- put peer record"
+I successfully tested Linux 5.4-rc1+ with this commit last Friday on the 
+Dell XPS 13 9360.
 
-interacting with commit
+Tested-by: Paul Menzel <pmenzel@molgen.mpg.de>
 
-  033b2c7f0f26 ("rxrpc: Add missing "new peer" trace")
+[…]
 
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- net/rxrpc/peer_object.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/rxrpc/peer_object.c b/net/rxrpc/peer_object.c
-index a7f1a2cdd198..452163eadb98 100644
---- a/net/rxrpc/peer_object.c
-+++ b/net/rxrpc/peer_object.c
-@@ -231,7 +231,7 @@ struct rxrpc_peer *rxrpc_alloc_peer(struct rxrpc_local =
-*local, gfp_t gfp)
- 			peer->cong_cwnd =3D 3;
- 		else
- 			peer->cong_cwnd =3D 4;
--		trace_rxrpc_peer(peer, rxrpc_peer_new, 1, here);
-+		trace_rxrpc_peer(peer->debug_id, rxrpc_peer_new, 1, here);
- 	}
-=20
- 	_leave(" =3D %p", peer);
---=20
-2.23.0.rc1
+Kind regards,
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Xj_X7JA3EV9XdyAej7t7QRR
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2bv00ACgkQAVBC80lX
-0Gw2zAf/W7h8UKvXttU794iCM0slur9fhK6ToIThd4CmP7wvbjIa3q9JO3NOi+VQ
-MU72DirzJ7mDVrOeJb+8NNagX48Njh+QYt20rHLEjBhNyvpvWweqaGoAXhwMIW5v
-H9osNyDGhwsbVabWa3h1Qnh+ZNJbyDbq3vPFNVFW/BiPvGeffqHKgaYYnWQCRenR
-FcLx8jS2133KzYpVwv7eWiXeMy6liLxjw7sIcvFWI7hrXMzBoUtmYIP1nwJsd0Xt
-Qslm+bsqppTl/fMTikJG/MGNu/bTLxhbj+qoCqGKnMdvh9k5JSNLy7k7JJsJyFyY
-eu/GylQPO5wfY4V4Hj21M7vxomX3zg==
-=83Rl
------END PGP SIGNATURE-----
-
---Sig_/Xj_X7JA3EV9XdyAej7t7QRR--
+Paul
