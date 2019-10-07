@@ -2,192 +2,134 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_DIGITS,
-	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4510ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 23:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E14C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 23:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4CEE20835
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 23:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5578206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 23:17:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="scpxNy1B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729613AbfJGXJI (ORCPT
+        id S1729606AbfJGXQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 19:09:08 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:40822 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729440AbfJGXJI (ORCPT
+        Mon, 7 Oct 2019 19:16:56 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:33646 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729145AbfJGXQ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 19:09:08 -0400
-Received: by mail-io1-f71.google.com with SMTP id r20so29329963ioh.7
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 16:09:07 -0700 (PDT)
+        Mon, 7 Oct 2019 19:16:56 -0400
+Received: by mail-pl1-f194.google.com with SMTP id d22so7610377pls.0;
+        Mon, 07 Oct 2019 16:16:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=op2uXxkWXggW/ZiyKdiwR/8/LJor0lmgkGPfA3WISUs=;
+        b=scpxNy1BIS0qAUSncfTkj607cnZ6LuLh8Nks7V/5sq1PEC5kSh81aajFRMYZ+O2i0L
+         QzibK+XuvdvRm6iOFZtsT2WA9n4ERkZ5LZimUA8NaVmqSduy1aHvDY5+aPf7MpmGv/0Q
+         IHTsvqs7x9MZUg9WL8GHf9QPmn3LCv/brRY0s6lnYZrvL4dVruebQCp5czBNigAKMwsi
+         Uk9hIiklJmctm4YAw3NEA3l0fFhuZ3EUDZXep4YHjqLorZ157E7gClDTZCDcou0YzpN0
+         MiKU/aANJsfqgoJiIBERCoMr5eL7krRWJTiu5mUXl8mcpx/5aGM5RaPSjmvV1PeZdHxp
+         +dug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Qjh+eETl+41tYCUSOHGIN6nPQ7ssIlB3+VOdf56APo0=;
-        b=QV/7ckI4pXgtFrNaDDd50t+4z5lAvWFobGcemEXI84kFHFPcqx7EklvMb5jkjt+lHg
-         1y+q+oKGAKY/lEB58rAEShw4VvoI4PFX2I+dQ87B8ARxpRIwjqrFVc7WUe8yXGff3uCh
-         hkz86B+pG8Idm6EGQ6NKlCrBD8lUTpryCVrzYapcVthZZp4SyZBxXxlgEVvWarGrI0RM
-         bad1E3I5Ko/JUsdMf1mWgCHjA4gWYR7mwx9nkLjUapxiATi6VuDQEUYdInfpIWL1BFi6
-         80HVDCQN0aXpmWQx6jvA6fulXgUv0jTFxNmvamKfhIM1/pePiIlrYvszPtk8m+KhQyQH
-         oDVQ==
-X-Gm-Message-State: APjAAAWpOdNJuW0adLcgka3t5iNHaOB2Eoc77xud9nsxxN5IaZDO8b8h
-        AO7+SgnJuOvpSV6sHcguPyZQmkLMQFW38VY1n7PtYoeS1lYN
-X-Google-Smtp-Source: APXvYqy6UTt8scmptDTzOkN27+m9jET8mALR6/WfwFz+6ytuzfs/V5bLBfZq9KDTUMnvR9UBg4pZV+T3mRexb5GbF0vllogyS73l
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=op2uXxkWXggW/ZiyKdiwR/8/LJor0lmgkGPfA3WISUs=;
+        b=a1as3TcO8c9zovD/tvnzesVEg2dMn9g4Z7tLeg7MHMmDrGzBarm4t864Xx4w4Y2ZgF
+         h3H/6f2iJy900vGiSxVCv3czMoh1gyMPYwnbRiu7cTydGmXS520xXlqAuc6lXvANqfoN
+         EV9Gd8VaxgYMeDLW9YuiDX4hiC1XPG80t01jmhm9F2G//3k6RlSTryN1/2g0JKl6Dbzm
+         WwxsayuFAg8WjtyGDTmKghg1vCALULCc5bL8YNHmOOexujwMqyzqSyE3XX2rIATsv9m6
+         l6GGhbQxQsnVC5wU62lNGgQUGAQwPR0eE4nhNf92PZXC7FxXQiEMMqtzLtaA8TmNKafj
+         BDIA==
+X-Gm-Message-State: APjAAAW/Jt5f2vkg/IPjnCuU/+C2wNuKNdH1ygJAwfI/O8KnDK8dqc0T
+        lK0/hj3CtaWS0QwE08209f4EmhoD
+X-Google-Smtp-Source: APXvYqzMSG5gHjV15d7idvNXEtNMQAOhGF/5QWwhkXjOSHb3HfcLstjfcotM+anbE56ApWd4N0UrvA==
+X-Received: by 2002:a17:902:8344:: with SMTP id z4mr32085723pln.330.1570490214984;
+        Mon, 07 Oct 2019 16:16:54 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id bb15sm438676pjb.2.2019.10.07.16.16.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 07 Oct 2019 16:16:53 -0700 (PDT)
+Subject: Re: [PATCH 4.4 00/36] 4.4.196-stable review
+To:     Sasha Levin <sashal@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20191006171038.266461022@linuxfoundation.org>
+ <d3e1e6ae-8ca4-a43b-d30d-9a9a9a7e5752@roeck-us.net>
+ <20191007144951.GB966828@kroah.com> <20191007230708.GA1396@sasha-vm>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <35f5fb99-6c35-9afd-1a4e-3fa7d4ba213a@roeck-us.net>
+Date:   Mon, 7 Oct 2019 16:16:51 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:3e8:: with SMTP id s8mr28019921jaq.68.1570489747133;
- Mon, 07 Oct 2019 16:09:07 -0700 (PDT)
-Date:   Mon, 07 Oct 2019 16:09:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000805e5505945a234b@google.com>
-Subject: KASAN: use-after-free Read in do_mount
-From:   syzbot <syzbot+da4f525235510683d855@syzkaller.appspotmail.com>
-To:     anton@enomsg.org, arnd@arndb.de, ccross@android.com,
-        keescook@chromium.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        tony.luck@intel.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20191007230708.GA1396@sasha-vm>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 10/7/19 4:07 PM, Sasha Levin wrote:
+> On Mon, Oct 07, 2019 at 04:49:51PM +0200, Greg Kroah-Hartman wrote:
+>> On Mon, Oct 07, 2019 at 05:53:55AM -0700, Guenter Roeck wrote:
+>>> On 10/6/19 10:18 AM, Greg Kroah-Hartman wrote:
+>>> > This is the start of the stable review cycle for the 4.4.196 release.
+>>> > There are 36 patches in this series, all will be posted as a response
+>>> > to this one.  If anyone has any issues with these being applied, please
+>>> > let me know.
+>>> >
+>>> > Responses should be made by Tue 08 Oct 2019 05:07:10 PM UTC.
+>>> > Anything received after that time might be too late.
+>>> >
+>>>
+>>> powerpc:defconfig fails to build.
+>>>
+>>> arch/powerpc/kernel/eeh_driver.c: In function ‘eeh_handle_normal_event’:
+>>> arch/powerpc/kernel/eeh_driver.c:678:2: error: implicit declaration of function ‘eeh_for_each_pe’; did you mean ‘bus_for_each_dev’?
+>>>
+>>> It has a point:
+>>>
+>>> ... HEAD is now at 13cac61d31df Linux 4.4.196-rc1
+>>> $ git grep eeh_for_each_pe
+>>> arch/powerpc/kernel/eeh_driver.c:       eeh_for_each_pe(pe, tmp_pe)
+>>> arch/powerpc/kernel/eeh_driver.c:                               eeh_for_each_pe(pe, tmp_pe)
+>>>
+>>> Caused by commit 3fb431be8de3a ("powerpc/eeh: Clear stale EEH_DEV_NO_HANDLER flag").
+>>> Full report will follow later.
+>>
+>> Thanks for letting me know, I've dropped this from the queue now and
+>> pushed out a -rc2 with that removed.
+>>
+>> Sasha, I thought your builder would have caught stuff like this?
+> 
+> Interesting, the 4.4 build fails for me with vanilla 4.4 LTS kernel
+> (which is why this was missed):
+> 
+>   AS      arch/powerpc/kernel/systbl.o
+> arch/powerpc/kernel/exceptions-64s.S: Assembler messages:
+> arch/powerpc/kernel/exceptions-64s.S:1599: Warning: invalid register expression
+> arch/powerpc/kernel/exceptions-64s.S:1640: Warning: invalid register expression
+> arch/powerpc/kernel/exceptions-64s.S:839: Error: attempt to move .org backwards
+> arch/powerpc/kernel/exceptions-64s.S:840: Error: attempt to move .org backwards
+> arch/powerpc/kernel/exceptions-64s.S:864: Error: attempt to move .org backwards
+> arch/powerpc/kernel/exceptions-64s.S:865: Error: attempt to move .org backwards
+> scripts/Makefile.build:375: recipe for target 'arch/powerpc/kernel/head_64.o' failed
+> 
 
-syzbot found the following crash on:
+Is this allmodconfig ? That is correct - it won't build in 4.4.y, and it would not be
+easy to fix.
 
-HEAD commit:    311ef88a Add linux-next specific files for 20191004
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=16ce4899600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=db2e4361e48662f4
-dashboard link: https://syzkaller.appspot.com/bug?extid=da4f525235510683d855
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17b672b9600000
+Guenter
 
-The bug was bisected to:
-
-commit 9d14545b05f9eed69fbd4af14b927a462324ea19
-Author: Arnd Bergmann <arnd@arndb.de>
-Date:   Fri Aug 30 16:12:15 2019 +0000
-
-     Merge branch 'limits' of https://github.com/deepa-hub/vfs into y2038
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16eeee2b600000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=15eeee2b600000
-console output: https://syzkaller.appspot.com/x/log.txt?x=11eeee2b600000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+da4f525235510683d855@syzkaller.appspotmail.com
-Fixes: 9d14545b05f9 ("Merge branch 'limits' of  
-https://github.com/deepa-hub/vfs into y2038")
-
-==================================================================
-BUG: KASAN: use-after-free in do_new_mount_fc fs/namespace.c:2773 [inline]
-BUG: KASAN: use-after-free in do_new_mount fs/namespace.c:2825 [inline]
-BUG: KASAN: use-after-free in do_mount+0x1b5f/0x1d10 fs/namespace.c:3143
-Read of size 8 at addr ffff88809a505b28 by task syz-executor.4/13945
-
-CPU: 1 PID: 13945 Comm: syz-executor.4 Not tainted 5.4.0-rc1-next-20191004  
-#0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
-  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
-  kasan_report+0x12/0x20 mm/kasan/common.c:634
-  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
-  do_new_mount_fc fs/namespace.c:2773 [inline]
-  do_new_mount fs/namespace.c:2825 [inline]
-  do_mount+0x1b5f/0x1d10 fs/namespace.c:3143
-  ksys_mount+0xdb/0x150 fs/namespace.c:3352
-  __do_sys_mount fs/namespace.c:3366 [inline]
-  __se_sys_mount fs/namespace.c:3363 [inline]
-  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3363
-  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x459a59
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f1c10834c78 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 0000000000459a59
-RDX: 0000000020000a40 RSI: 00000000200005c0 RDI: 0000000000000000
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f1c108356d4
-R13: 00000000004c6291 R14: 00000000004db2f8 R15: 00000000ffffffff
-
-Allocated by task 13945:
-  save_stack+0x23/0x90 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc mm/kasan/common.c:510 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:483
-  kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:518
-  slab_post_alloc_hook mm/slab.h:584 [inline]
-  slab_alloc mm/slab.c:3319 [inline]
-  kmem_cache_alloc+0x121/0x710 mm/slab.c:3483
-  kmem_cache_zalloc include/linux/slab.h:680 [inline]
-  alloc_vfsmnt+0x28/0x680 fs/namespace.c:177
-  vfs_create_mount+0x96/0x500 fs/namespace.c:940
-  do_new_mount_fc fs/namespace.c:2763 [inline]
-  do_new_mount fs/namespace.c:2825 [inline]
-  do_mount+0x17ae/0x1d10 fs/namespace.c:3143
-  ksys_mount+0xdb/0x150 fs/namespace.c:3352
-  __do_sys_mount fs/namespace.c:3366 [inline]
-  __se_sys_mount fs/namespace.c:3363 [inline]
-  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3363
-  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 16:
-  save_stack+0x23/0x90 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  kasan_set_free_info mm/kasan/common.c:332 [inline]
-  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:471
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:480
-  __cache_free mm/slab.c:3425 [inline]
-  kmem_cache_free+0x86/0x320 mm/slab.c:3693
-  free_vfsmnt+0x6f/0x90 fs/namespace.c:554
-  delayed_free_vfsmnt+0x16/0x20 fs/namespace.c:559
-  __rcu_reclaim kernel/rcu/rcu.h:222 [inline]
-  rcu_do_batch kernel/rcu/tree.c:2157 [inline]
-  rcu_core+0x581/0x1560 kernel/rcu/tree.c:2377
-  rcu_core_si+0x9/0x10 kernel/rcu/tree.c:2386
-  __do_softirq+0x262/0x98c kernel/softirq.c:292
-
-The buggy address belongs to the object at ffff88809a505b00
-  which belongs to the cache mnt_cache of size 312
-The buggy address is located 40 bytes inside of
-  312-byte region [ffff88809a505b00, ffff88809a505c38)
-The buggy address belongs to the page:
-page:ffffea0002694140 refcount:1 mapcount:0 mapping:ffff8880aa5a88c0  
-index:0x0
-flags: 0x1fffc0000000200(slab)
-raw: 01fffc0000000200 ffffea000274afc8 ffffea0002982688 ffff8880aa5a88c0
-raw: 0000000000000000 ffff88809a505080 000000010000000a 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff88809a505a00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  ffff88809a505a80: 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc fc
-> ffff88809a505b00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                   ^
-  ffff88809a505b80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff88809a505c00: fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc fc
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
