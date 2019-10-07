@@ -2,114 +2,132 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72ED0C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AEEDC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4687121835
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:31:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570440687;
-	bh=JaINcyQNLKJhhWm6YuBkApUi5w0bmV2v7c3hLArmMVY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zsGbRNh8CpWbazSPtQn385rFHFOg7lwXeZtuLfVsDUZyvyCHcRFTAzKzac0S4UArk
-	 1djrLsDC2sbl4NRDeQGLsS6zszUo6dmL16DKF9+YVC7KMvz/VusZ/svDGWOtumplBH
-	 fBz4oUXU52DzVeNtehYJ+Qhcb/sflMLRp6TcVPso=
+	by mail.kernel.org (Postfix) with ESMTP id 3C07A21655
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:32:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="L+w7i+/X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727474AbfJGJb0 (ORCPT
+        id S1727527AbfJGJcA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 05:31:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57120 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726010AbfJGJb0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 05:31:26 -0400
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FDE32084B;
-        Mon,  7 Oct 2019 09:31:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570440685;
-        bh=JaINcyQNLKJhhWm6YuBkApUi5w0bmV2v7c3hLArmMVY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kd7fdRTlUPPtMG3X4zZBeEJWzSxB41hcUU2JEQL7IbNvkBcpHYYrBAJtWsAKa6WGp
-         o3/OJOQ15zc6Czm/5Vy/8FTFe8OoYnnnOUrFHqkTTuuKS9WvKbDptV2MTvy98cIESh
-         J2C9xVNo0kNqTdyOo6jlggUMaFXk7uTFHzPV8/vI=
-Date:   Mon, 7 Oct 2019 11:31:22 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        michael@amarulasolutions.com, Icenowy Zheng <icenowy@aosc.io>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v10 1/6] dt-bindings: sun6i-dsi: Add A64 MIPI-DSI
- compatible
-Message-ID: <20191007093122.ixrpzvy6ynh6vuir@gilmour>
-References: <20191005141913.22020-1-jagan@amarulasolutions.com>
- <20191005141913.22020-2-jagan@amarulasolutions.com>
+        Mon, 7 Oct 2019 05:32:00 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40902 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbfJGJcA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 05:32:00 -0400
+Received: by mail-lf1-f65.google.com with SMTP id d17so8748417lfa.7
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 02:31:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CjJb4Lw1u4Pakm4DYiGRG6UBYCd5/SKc3snKb7a41eY=;
+        b=L+w7i+/XSvQwHJCGQG27QQxfMFppLPlg08famGOQUJibMHc12TXh9PR5l+7yance/0
+         em4sgYjEaGwuw0fqCfGB+DLaXvS+cjs1JDbAsnbhgrEO3PyC3dFCvbuR1KUgvWgLsDM1
+         /aecwOZUsR4lB30qJ+AUgV+WmYvWzqfJSXVq2D5V7BHushGRfodmeoIJFjU8cn6NOdYe
+         7idKl1uC7u98t8KKQWO5/i5qWpUS9AuyvyKYf3ZAv/I/7IojgZj6lfC93W9oegZ6eyY8
+         0VXWLUww674RNY4tyOZlKE6OCKLZLXN768i4vuhZhtlGJYp+RD0rQXO2/cZJhMzOpVtI
+         9ggg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CjJb4Lw1u4Pakm4DYiGRG6UBYCd5/SKc3snKb7a41eY=;
+        b=ZDbY1wSnf+ygF+bVQbfaNl3a+bPpresZRviWVXgjDNTWFVUUXBJL0++FZtd/iCGO61
+         HU2+z1ZZxvUfUXCql2uRZwuid2Y35n5toS9+OA5N09/mh4KD88IiYGgEeu+U4MbAM70l
+         /56xoqvwiGHVkD3PkqNJuyFOInyh0fWHktuUCgSuvExGUNq8NkYTzRV7O0woBGEmf8hF
+         qTOzSzJggVOgegtAkFVqvxe1NzEOUGG52/Plh3oEduTefqFOVjo1JrvkDI/rI5KybwOB
+         f4zfB/PsoKQwJIS9XosfO+/4bYq0fYtnvHWyohziCSr/76jkafEBNixh5vafoZmUROsZ
+         B4zA==
+X-Gm-Message-State: APjAAAVC/CKdYvxgj7/GUmp2sH/i9D6sxiXFuYLvA/mzv+r+Rzczt64H
+        GNIdJz9RBL0AMIar8/Xe7NbXPYhSHoQALQXmQBE9Wg==
+X-Google-Smtp-Source: APXvYqwXSdg79nM61/yrNU4LIMp21a2m4WX62zPPo3IuTua6nuJzwDg70f31wxHvltrmiSsd8wCBM7RhFA4de6TXKEc=
+X-Received: by 2002:a19:7605:: with SMTP id c5mr16903890lff.114.1570440717212;
+ Mon, 07 Oct 2019 02:31:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="hcbxlzriavurqgww"
-Content-Disposition: inline
-In-Reply-To: <20191005141913.22020-2-jagan@amarulasolutions.com>
-User-Agent: NeoMutt/20180716
+References: <20191006172016.873463083@linuxfoundation.org> <20191006172018.480360174@linuxfoundation.org>
+ <20191006173202.GA832@sol.localdomain> <20191006182433.GA217738@kroah.com> <CAKUbbxKbR6R_VM233pkw7_rxv_DMJoBPC_U5ZgVkR6GpXVAScw@mail.gmail.com>
+In-Reply-To: <CAKUbbxKbR6R_VM233pkw7_rxv_DMJoBPC_U5ZgVkR6GpXVAScw@mail.gmail.com>
+From:   Martijn Coenen <maco@android.com>
+Date:   Mon, 7 Oct 2019 11:31:46 +0200
+Message-ID: <CAB0TPYGjhzqAK5pAP3rjgqq9=9LA4z2Xpv+QG8sDrEkd+HWDyA@mail.gmail.com>
+Subject: Re: [PATCH 4.9 30/47] ANDROID: binder: remove waitqueue when thread exits.
+To:     Mattias Nissler <mnissler@chromium.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Todd Kjos <tkjos@google.com>,
+        LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        syzbot <syzkaller@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Oct 7, 2019 at 8:28 AM Mattias Nissler <mnissler@chromium.org> wrote:
+> Jann's PoC calls the BINDER_THREAD_EXIT ioctl to free the
+> binder_thread which will then cause the UAF, and this is cut off by
+> the patch. IIUC, you are worried about a similar AUF on the proc->wait
+> access. I am not 100% sure, but I think the binder_proc lifetime
+> matches the corresponding struct file instance, so it shouldn't be
+> possible to get the binder_proc deallocated while still being able to
+> access it via filp->private_data.
 
---hcbxlzriavurqgww
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yes, I think this is correct; either the binder fd is closed first, in
+which case eventpoll_release() removes the waitqueue from the list
+before it is freed (before binder's release() is called); instead if
+the epoll fd is closed first, it will likewise remove the waitqueue
+itself, before binder_proc can be freed.. I don't know the __fput()
+code that well, but at first glance it seems these two can't overlap.
 
-On Sat, Oct 05, 2019 at 07:49:08PM +0530, Jagan Teki wrote:
-> The MIPI DSI controller in Allwinner A64 is similar to A33.
+The whole problem with BINDER_THREAD_EXIT was that the returned
+waitqueue wasn't tied to the lifetime of the underlying file.
+
+Apologies for not spotting this needed a backport BTW - I refactored
+the wait code heavily somewhere between 4.9 and 4.14, and somehow
+didn't realize the same problem existed in the old code.
+
+Thanks,
+Martijn
+
 >
-> But unlike A33, A64 doesn't have DSI_SCLK gating so it is valid
-> to with separate compatible for A64 on the same driver.
->
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> ---
->  .../bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml        | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml b/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
-> index dafc0980c4fa..cfcc84d38084 100644
-> --- a/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
-> +++ b/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
-> @@ -15,7 +15,9 @@ properties:
->    "#size-cells": true
->
->    compatible:
-> -    const: allwinner,sun6i-a31-mipi-dsi
-> +    enum:
-> +      - const: allwinner,sun6i-a31-mipi-dsi
-> +      - const: allwinner,sun50i-a64-mipi-dsi
-
-How did you test this? It will report an error when running the
-validation
-
-Maxime
-
---hcbxlzriavurqgww
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZsF6gAKCRDj7w1vZxhR
-xecaAP9RqOVF2LeEc8hVaJ7qENbVYYasarhmNzXWXQ/tp03R3gEAt6lJLwS2PUdi
-ULmqU8z92Ol9GjvEOXSZB3G08d0G9wg=
-=VSAg
------END PGP SIGNATURE-----
-
---hcbxlzriavurqgww--
+> > >
+> > >         wait_for_proc_work = thread->transaction_stack == NULL &&
+> > >                 list_empty(&thread->todo) && thread->return_error == BR_OK;
+> > >
+> > >         binder_unlock(__func__);
+> > >
+> > >         if (wait_for_proc_work) {
+> > >                 if (binder_has_proc_work(proc, thread))
+> > >                         return POLLIN;
+> > >                 poll_wait(filp, &proc->wait, wait);
+> > >                 if (binder_has_proc_work(proc, thread))
+> > >                         return POLLIN;
+> > >         } else {
+> > >                 if (binder_has_thread_work(thread))
+> > >                         return POLLIN;
+> > >                 poll_wait(filp, &thread->wait, wait);
+> > >                 if (binder_has_thread_work(thread))
+> > >                         return POLLIN;
+> > >         }
+> > >         return 0;
+> >
+> > I _think_ the backport is correct, and I know someone has verified that
+> > the 4.4.y backport works properly and I don't see much difference here
+> > from that version.
+> >
+> > But I will defer to Todd and Martijn here, as they know this code _WAY_
+> > better than I do.  The codebase has changed a lot from 4.9.y to 4.14.y
+> > so it makes it hard to do equal comparisons simply.
+> >
+> > Todd and Martijn, thoughts?
+> >
+> > thanks,
+> >
+> > greg k-h
