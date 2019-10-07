@@ -2,121 +2,132 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DEEECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26B95C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6B5520867
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:48:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F19F620867
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:48:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fU4gg2Sc"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jYE5no4f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729638AbfJGWso (ORCPT
+        id S1729654AbfJGWst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 18:48:44 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:54385 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728980AbfJGWso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 18:48:44 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46nFyK4Mn3z9sPT;
-        Tue,  8 Oct 2019 09:48:41 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1570488521;
-        bh=G56IR+b8MH/UAZzvFbGgYEyxWfeZdIJW//Ixl1WWE28=;
-        h=Date:From:To:Cc:Subject:From;
-        b=fU4gg2SccggVyIda0pgORMkhwr0EEU3EfzdpSIeV7h+SBZYvLID+Aoo/gqgnarUcC
-         yQKL/skgJvk8RJL308u2joWNI5yy5gsWzZEcjVNX/Z3Vyh9PP0QJPukFjPQQAZqD1u
-         puHEfo0aLM211NdJNGkVKCyzHHPzZhCHPQ0hssz5jtk375bN6SCjRdL2v3a1UQ7Bkn
-         TwmkeTooPV5G0SN5m2qdBYLe0Uq/7HlJ0muUztP0UJpwoNSY8ZuPyftPURW7DOV5hg
-         1hyqfCsPpyCxBYr/AR8p6CdtfFVwmoJzEfAxB+rwUWJR/3EC1xXmwdzLVrzL6R7r+9
-         eWwIJWsfTVyFA==
-Date:   Tue, 8 Oct 2019 09:48:40 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yonghong Song <yhs@fb.com>,
-        Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?= <toke@redhat.com>
-Subject: linux-next: manual merge of the bpf-next tree with the bpf tree
-Message-ID: <20191008094840.1553ff38@canb.auug.org.au>
+        Mon, 7 Oct 2019 18:48:49 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:38377 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728980AbfJGWst (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 18:48:49 -0400
+Received: by mail-qt1-f193.google.com with SMTP id j31so21821306qta.5
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 15:48:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IqvgBnkPf48/c8iQIpD40dYiZ/C4cQZKWA6sHzbPuDk=;
+        b=jYE5no4fqHAFtQq9FMmi4SR6FbbWZnKKqcaF1/WWdYCtx2i92vXBmBiXTlB7Eab7eE
+         KIqw5K00bu4K+2/eU9zIkcbRIDqkEEPRMZ81nNX0huyfAz9MU0airqGb0+7Jevk8QMKC
+         DoK3shgxraZ15x/7rTaIyENce0dXfEFBk7QqM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IqvgBnkPf48/c8iQIpD40dYiZ/C4cQZKWA6sHzbPuDk=;
+        b=V6xJtkzWBPAmUyAKjlHyOdCFjtJC8yhnxAkSg37ymYB/O5wtVk5BqgmeeIB+BhDTgF
+         uCSPQe6lxssYZ/i3Qi92KFPCwS6+LHPlxgAJxlzgKbY5hpCjJt1XG4f/P/0srq0ORxjA
+         DuHNcd5c/VlsbnhOiT+SyD0MMfwWY0dND7L8V9a3lsHlI/gilXeeJKmcd996raNX4TsR
+         6Bcsmc1BMbX+fYEjQMo23PKpJnevyEPc7YMvXPR37AfJP6tHIIe9Py7uXYyPEa3d6pec
+         5h1ELvpgs8FcriI9+EDGWcUPCuSolymP/paR/u4AYljkTvd9akncFVdbIBupl85x4q90
+         RhMA==
+X-Gm-Message-State: APjAAAXadM7By/PLBJwC6Ujp86zH8jEdPWc7Hj44O+UUx4vqCUGN77WC
+        TeCfOiku5jVsd1OXrd3fm83nsrxO3xQ=
+X-Google-Smtp-Source: APXvYqwMW+iYNxXh/YkP6uFm94MwF49ZlfSeNffWwH+8j15pQi1aykabt5cqz9/tmcCKPjKvYuaWLw==
+X-Received: by 2002:a0c:e5c6:: with SMTP id u6mr29905412qvm.106.1570488526825;
+        Mon, 07 Oct 2019 15:48:46 -0700 (PDT)
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com. [209.85.160.178])
+        by smtp.gmail.com with ESMTPSA id l129sm9027197qkd.84.2019.10.07.15.48.44
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Oct 2019 15:48:44 -0700 (PDT)
+Received: by mail-qt1-f178.google.com with SMTP id e15so6938928qtr.4
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 15:48:44 -0700 (PDT)
+X-Received: by 2002:a05:6214:370:: with SMTP id t16mr29551583qvu.245.1570488523404;
+ Mon, 07 Oct 2019 15:48:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/d1EoAl5ASZ.KkWZIMz60_KJ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20191005101629.146710-1-ikjn@chromium.org>
+In-Reply-To: <20191005101629.146710-1-ikjn@chromium.org>
+From:   Brian Norris <briannorris@chromium.org>
+Date:   Mon, 7 Oct 2019 15:48:32 -0700
+X-Gmail-Original-Message-ID: <CA+ASDXPKqVX6QJLB4OvNTGgfJrrEvKYcwzspYAQaicFpymJigQ@mail.gmail.com>
+Message-ID: <CA+ASDXPKqVX6QJLB4OvNTGgfJrrEvKYcwzspYAQaicFpymJigQ@mail.gmail.com>
+Subject: Re: [PATCH 3/3] HID: google: whiskers: mask out extra flags in EC event_type
+To:     Ikjoon Jang <ikjn@chromium.org>
+Cc:     linux-input@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Enrico Granata <egranata@google.com>,
+        Ting Shen <phoenixshen@chromium.org>,
+        Nicolas Boichat <drinkcat@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/d1EoAl5ASZ.KkWZIMz60_KJ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sat, Oct 5, 2019 at 3:16 AM Ikjoon Jang <ikjn@chromium.org> wrote:
+>
+> Whiskers needs to get notifications from EC for getting current base
+> attached state. EC sends extra bits in event_type field that receiver
+> should mask out.
 
-Hi all,
+Notably, this patch was never actually landed upstream:
 
-Today's linux-next merge of the bpf-next tree got a conflict in:
+https://lore.kernel.org/patchwork/patch/1019477/
+[PATCH] mfd: cros_ec: Add support for MKBP more event flags
 
-  tools/lib/bpf/Makefile
+and therefore, this EC_CMD_GET_NEXT_EVENT v2 handling is not yet truly
+relevant. (i.e., no upstream-proper users should hit this bug yet.)
+But that's also a reminder that we need a patch like this for *every*
+cros_ec client driver that's using the event_type field. Other
+unpatched drivers include
+drivers/media/platform/cros-ec-cec/cros-ec-cec.c,
+drivers/platform/chrome/cros_ec_chardev.c, and possibly others.
 
-between commit:
+So I wonder: why don't we
+(a) *really* try to upstream the above patch and
+(b) fix it so that event_data.event_type *always* masks out
+EC_MKBP_EVENT_TYPE_MASK
+?
 
-  1bd63524593b ("libbpf: handle symbol versioning properly for libbpf.a")
+(We could still handle the EC_MKBP_HAS_MORE_EVENTS bit within
+cros_ec.c, but there's no need for every other driver to have to know
+anything about it.)
 
-from the bpf tree and commit:
+Of course, this is another reminder that we should *really* try to get
+our cros_ec patches landed properly in upstream, because otherwise we
+have a different set of bugs and features landing in various
+downstream and mostly-upstream kernels.
 
-  a9eb048d5615 ("libbpf: Add cscope and tags targets to Makefile")
+Brian
 
-from the bpf-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc tools/lib/bpf/Makefile
-index 56ce6292071b,10b77644a17c..000000000000
---- a/tools/lib/bpf/Makefile
-+++ b/tools/lib/bpf/Makefile
-@@@ -143,7 -133,9 +143,9 @@@ LIB_TARGET	:=3D $(addprefix $(OUTPUT),$(L
-  LIB_FILE	:=3D $(addprefix $(OUTPUT),$(LIB_FILE))
-  PC_FILE		:=3D $(addprefix $(OUTPUT),$(PC_FILE))
- =20
-+ TAGS_PROG :=3D $(if $(shell which etags 2>/dev/null),etags,ctags)
-+=20
- -GLOBAL_SYM_COUNT =3D $(shell readelf -s --wide $(BPF_IN) | \
- +GLOBAL_SYM_COUNT =3D $(shell readelf -s --wide $(BPF_IN_SHARED) | \
-  			   cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' | \
-  			   awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$8}' | \
-  			   sort -u | wc -l)
-
---Sig_/d1EoAl5ASZ.KkWZIMz60_KJ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2bwMgACgkQAVBC80lX
-0Gwv0gf6A2u/cEX6FuZGcHkax6uZAJjxvSvgJXw+Bq54YH0lVG21PcK8H105l/9i
-KYD2rUNTyC6xmtx/7yS2FAdwFEvZ9/AfSj8GVGyTKk5zr5CqQiyWXT5R8YsJLWVk
-wjACQuGsXcsAb9ErsN6d7zflEJDnHuK3MuJ1mEV/LAMYvNFjLgEGgDiDdn4+S4YX
-+x1crKkTXvPHggM8UFQ3sBd/VNdTOVjgbsMn9kc1fV/PUKN8FonnJxYEXTfhUs5b
-92rEZvqixOFmMeCqdoryUZuGv/Nuc0lHS8nPAbkR1bWw8X7Rt8O76Z4isibdwPaO
-GrSuLnBoqZMSPnuh7l/h2vueNhcv8g==
-=tCOe
------END PGP SIGNATURE-----
-
---Sig_/d1EoAl5ASZ.KkWZIMz60_KJ--
+...
+> --- a/drivers/hid/hid-google-hammer.c
+> +++ b/drivers/hid/hid-google-hammer.c
+> @@ -96,8 +96,9 @@ static int cbas_ec_notify(struct notifier_block *nb,
+>         struct cros_ec_device *ec = _notify;
+>         unsigned long flags;
+>         bool base_present;
+> +       const u8 event_type = ec->event_data.event_type & EC_MKBP_EVENT_TYPE_MASK;
+>
+> -       if (ec->event_data.event_type == EC_MKBP_EVENT_SWITCH) {
+> +       if (event_type == EC_MKBP_EVENT_SWITCH) {
+>                 base_present = cbas_parse_base_state(
+>                                         &ec->event_data.data.switches);
+>                 dev_dbg(cbas_ec.dev,
