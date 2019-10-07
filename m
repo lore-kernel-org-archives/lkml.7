@@ -2,364 +2,162 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6422ECE58D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B23C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBB412084B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:52:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1634A2166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:53:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cX/5/YR7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727416AbfJGIwK (ORCPT
+        id S1727442AbfJGIxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 04:52:10 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:7137 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727258AbfJGIwJ (ORCPT
+        Mon, 7 Oct 2019 04:53:10 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:43513 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726969AbfJGIxK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 04:52:09 -0400
-X-UUID: 6eaafef2995a4a6aa98d7ddc6c762b60-20191007
-X-UUID: 6eaafef2995a4a6aa98d7ddc6c762b60-20191007
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 684474058; Mon, 07 Oct 2019 16:51:59 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 7 Oct 2019 16:51:56 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 7 Oct 2019 16:51:56 +0800
-Message-ID: <1570438317.4686.44.camel@mtksdccf07>
-Subject: Re: [PATCH] kasan: fix the missing underflow in memmove and memcpy
- with CONFIG_KASAN_GENERIC=y
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>
-Date:   Mon, 7 Oct 2019 16:51:57 +0800
-In-Reply-To: <CACT4Y+Z6QObZ2fvVxSmvv16YQAu4GswOqfOVQK_1_Ncz0eir_g@mail.gmail.com>
-References: <20190927034338.15813-1-walter-zh.wu@mediatek.com>
-         <CACT4Y+Zxz+R=qQxSMoipXoLjRqyApD3O0eYpK0nyrfGHE4NNPw@mail.gmail.com>
-         <1569594142.9045.24.camel@mtksdccf07>
-         <CACT4Y+YuAxhKtL7ho7jpVAPkjG-JcGyczMXmw8qae2iaZjTh_w@mail.gmail.com>
-         <1569818173.17361.19.camel@mtksdccf07>
-         <1570018513.19702.36.camel@mtksdccf07>
-         <CACT4Y+bbZhvz9ZpHtgL8rCCsV=ybU5jA6zFnJBL7gY2cNXDLyQ@mail.gmail.com>
-         <1570069078.19702.57.camel@mtksdccf07>
-         <CACT4Y+ZwNv2-QBrvuR2JvemovmKPQ9Ggrr=ZkdTg6xy_Ki6UAg@mail.gmail.com>
-         <1570095525.19702.59.camel@mtksdccf07>
-         <1570110681.19702.64.camel@mtksdccf07>
-         <CACT4Y+aKrC8mtcDTVhM-So-TTLjOyFCD7r6jryWFH6i2he1WJA@mail.gmail.com>
-         <1570164140.19702.97.camel@mtksdccf07>
-         <1570176131.19702.105.camel@mtksdccf07>
-         <CACT4Y+ZvhomaeXFKr4za6MJi=fW2SpPaCFP=fk06CMRhNcmFvQ@mail.gmail.com>
-         <1570182257.19702.109.camel@mtksdccf07>
-         <CACT4Y+ZnWPEO-9DkE6C3MX-Wo+8pdS6Gr6-2a8LzqBS=2fe84w@mail.gmail.com>
-         <1570190718.19702.125.camel@mtksdccf07>
-         <CACT4Y+YbkjuW3_WQJ4BB8YHWvxgHJyZYxFbDJpnPzfTMxYs60g@mail.gmail.com>
-         <1570418576.4686.30.camel@mtksdccf07>
-         <CACT4Y+aho7BEvQstd2+a2be-jJ0dEsjGebH7bcUFhYp-PoRDxQ@mail.gmail.com>
-         <1570436289.4686.40.camel@mtksdccf07>
-         <CACT4Y+Z6QObZ2fvVxSmvv16YQAu4GswOqfOVQK_1_Ncz0eir_g@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Mon, 7 Oct 2019 04:53:10 -0400
+Received: by mail-vs1-f68.google.com with SMTP id b1so8346024vsr.10
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 01:53:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XziM4hA4Gmod9STm0oZGOi/d+jlnR7kuU5XbW9R6uD8=;
+        b=cX/5/YR7k5pAylNLIqPAAPAbqQyoHj+bpqk7ufj7PajazKDW9ENMGiSjrcmOeaOmJM
+         WIlLHO7sq2wYdat4obJgNS/mHRUu9pNK/rBux1Ls6ASSnwKc2LtO8EQFsqBH/pRbhsKs
+         BfJuOROtLOUPFdNOr+TBr1t8dUAWxKlmsKkrc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XziM4hA4Gmod9STm0oZGOi/d+jlnR7kuU5XbW9R6uD8=;
+        b=MYCZ19Bn5mlX7QsyEvF1iRqoBwQdTb8PBpegAFQ/3TIuKR7nkKYCpWsEiaT/X3jW7E
+         L3YZtOe6xFbmGYEkQvTfljQ74MHcvcWbxQIjklr3/TNSdLXhzEaKrwNW6t/LxDNg02hh
+         L0M3f5Hg1SfZmEs12r6c5R+Wjwa+V3D1hA9Om3aGgIhJPX+paWz9tY94bymXtMAPgVJn
+         QMVFVRK+8nFZ20E+ZhQcBaZAwmGEOnJKILLtifXLWiBJQlR/A5CnKD2FtaTcbqEN3PbU
+         URO2HitP1M+tzKaNJANdlORptZ921I6mOrFNlmgETgphX5OAbXbQRMvRJLnbSqhOSwoF
+         jqbw==
+X-Gm-Message-State: APjAAAVTyo6BI0lEmX+mx/AXku91CaBYNqEL3BAsLzEVkuemR9fR4vN6
+        4X1Uzpjc3WN7zXGkPl4/A47BTrkeCY8PsUnM430llA==
+X-Google-Smtp-Source: APXvYqyCRLg+qUZT9unfn57Tqrts1U2AADTp/EWbz0rzG3BQN2HWuUEFxTZufHm0MxoBjaVXzzffUnzl3GjLy5LL/fs=
+X-Received: by 2002:a67:2b86:: with SMTP id r128mr15127774vsr.119.1570438387453;
+ Mon, 07 Oct 2019 01:53:07 -0700 (PDT)
 MIME-Version: 1.0
-X-MTK:  N
+References: <20191007071610.65714-1-cychiang@chromium.org> <CA+Px+wWkr1xmSpgEkSaGS7UZu8TKUYvSnbjimBRH29=kDtcHKA@mail.gmail.com>
+In-Reply-To: <CA+Px+wWkr1xmSpgEkSaGS7UZu8TKUYvSnbjimBRH29=kDtcHKA@mail.gmail.com>
+From:   Cheng-yi Chiang <cychiang@chromium.org>
+Date:   Mon, 7 Oct 2019 16:52:41 +0800
+Message-ID: <CAFv8Nw+DEXePD-G-ujKgd9zAq+pDAaHF_rZTbRyDupVANGmqsQ@mail.gmail.com>
+Subject: Re: [PATCH] firmware: vpd: Add an interface to read VPD value
+To:     Tzung-Bi Shih <tzungbi@google.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ALSA development <alsa-devel@alsa-project.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Hung-Te Lin <hungte@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        Dylan Reid <dgreid@chromium.org>,
+        Tzung-Bi Shih <tzungbi@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-10-07 at 10:24 +0200, Dmitry Vyukov wrote:
-> On Mon, Oct 7, 2019 at 10:18 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
-> > The patchsets help to produce KASAN report when size is negative numbers
-> > in memory operation function. It is helpful for programmer to solve the
-> > undefined behavior issue. Patch 1 based on Dmitry's review and
-> > suggestion, patch 2 is a test in order to verify the patch 1.
+On Mon, Oct 7, 2019 at 4:03 PM Tzung-Bi Shih <tzungbi@google.com> wrote:
+>
+> On Mon, Oct 7, 2019 at 3:16 PM Cheng-Yi Chiang <cychiang@chromium.org> wrote:
 > >
-> > [1]https://bugzilla.kernel.org/show_bug.cgi?id=199341
-> > [2]https://lore.kernel.org/linux-arm-kernel/20190927034338.15813-1-walter-zh.wu@mediatek.com/
+> > Add an interface for other driver to query VPD value.
+> > This will be used for ASoC machine driver to query calibration
+> > data stored in VPD for smart amplifier speaker resistor
+> > calibration.
 > >
-> > Walter Wu (2):
-> > kasan: detect invalid size in memory operation function
-> > kasan: add test for invalid size in memmove
+> > Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+> > ---
+> >  drivers/firmware/google/vpd.c              | 16 ++++++++++++++++
+> >  include/linux/firmware/google/google_vpd.h | 18 ++++++++++++++++++
+> >  2 files changed, 34 insertions(+)
+> >  create mode 100644 include/linux/firmware/google/google_vpd.h
 > >
-> >  lib/test_kasan.c          | 18 ++++++++++++++++++
-> >  mm/kasan/common.c         | 13 ++++++++-----
-> >  mm/kasan/generic.c        |  5 +++++
-> >  mm/kasan/generic_report.c | 12 ++++++++++++
-> >  mm/kasan/tags.c           |  5 +++++
-> >  mm/kasan/tags_report.c    | 12 ++++++++++++
-> >  6 files changed, 60 insertions(+), 5 deletions(-)
-> >
-> >
-> >
-> >
-> > commit 5b3b68660b3d420fd2bd792f2d9fd3ccb8877ef7
-> > Author: Walter-zh Wu <walter-zh.wu@mediatek.com>
-> > Date:   Fri Oct 4 18:38:31 2019 +0800
-> >
-> >     kasan: detect invalid size in memory operation function
-> >
-> >     It is an undefined behavior to pass a negative numbers to
-> > memset()/memcpy()/memmove()
-> >     , so need to be detected by KASAN.
-> >
-> >     If size is negative numbers, then it has two reasons to be defined
-> > as out-of-bounds bug type.
-> >     1) Casting negative numbers to size_t would indeed turn up as a
-> > large
-> >     size_t and its value will be larger than ULONG_MAX/2, so that this
-> > can
-> >     qualify as out-of-bounds.
-> >     2) Don't generate new bug type in order to prevent duplicate reports
-> > by
-> >     some systems, e.g. syzbot.
-> >
-> >     KASAN report:
-> >
-> >      BUG: KASAN: out-of-bounds in kmalloc_memmove_invalid_size+0x70/0xa0
-> >      Read of size 18446744073709551608 at addr ffffff8069660904 by task
-> > cat/72
-> >
-> >      CPU: 2 PID: 72 Comm: cat Not tainted
-> > 5.4.0-rc1-next-20191004ajb-00001-gdb8af2f372b2-dirty #1
-> >      Hardware name: linux,dummy-virt (DT)
-> >      Call trace:
-> >       dump_backtrace+0x0/0x288
-> >       show_stack+0x14/0x20
-> >       dump_stack+0x10c/0x164
-> >       print_address_description.isra.9+0x68/0x378
-> >       __kasan_report+0x164/0x1a0
-> >       kasan_report+0xc/0x18
-> >       check_memory_region+0x174/0x1d0
-> >       memmove+0x34/0x88
-> >       kmalloc_memmove_invalid_size+0x70/0xa0
-> >
-> >     [1] https://bugzilla.kernel.org/show_bug.cgi?id=199341
-> >
-> >     Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
-> >     Reported -by: Dmitry Vyukov <dvyukov@google.com>
-> >     Suggested-by: Dmitry Vyukov <dvyukov@google.com>
-> >
-> > diff --git a/mm/kasan/common.c b/mm/kasan/common.c
-> > index 6814d6d6a023..6ef0abd27f06 100644
-> > --- a/mm/kasan/common.c
-> > +++ b/mm/kasan/common.c
-> > @@ -102,7 +102,8 @@ EXPORT_SYMBOL(__kasan_check_write);
-> >  #undef memset
-> >  void *memset(void *addr, int c, size_t len)
-> >  {
-> > -       check_memory_region((unsigned long)addr, len, true, _RET_IP_);
-> > +       if (!check_memory_region((unsigned long)addr, len, true, _RET_IP_))
-> > +               return NULL;
-> >
-> >         return __memset(addr, c, len);
-> >  }
-> > @@ -110,8 +111,9 @@ void *memset(void *addr, int c, size_t len)
-> >  #undef memmove
-> >  void *memmove(void *dest, const void *src, size_t len)
-> >  {
-> > -       check_memory_region((unsigned long)src, len, false, _RET_IP_);
-> > -       check_memory_region((unsigned long)dest, len, true, _RET_IP_);
-> > +       if (!check_memory_region((unsigned long)src, len, false, _RET_IP_) ||
-> > +       !check_memory_region((unsigned long)dest, len, true, _RET_IP_))
-> > +               return NULL;
-> >
-> >         return __memmove(dest, src, len);
-> >  }
-> > @@ -119,8 +121,9 @@ void *memmove(void *dest, const void *src, size_t
-> > len)
-> >  #undef memcpy
-> >  void *memcpy(void *dest, const void *src, size_t len)
-> >  {
-> > -       check_memory_region((unsigned long)src, len, false, _RET_IP_);
-> > -       check_memory_region((unsigned long)dest, len, true, _RET_IP_);
-> > +       if (!check_memory_region((unsigned long)src, len, false, _RET_IP_) ||
-> > +       !check_memory_region((unsigned long)dest, len, true, _RET_IP_))
-> > +               return NULL;
-> >
-> >         return __memcpy(dest, src, len);
-> >  }
-> > diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
-> > index 616f9dd82d12..02148a317d27 100644
-> > --- a/mm/kasan/generic.c
-> > +++ b/mm/kasan/generic.c
-> > @@ -173,6 +173,11 @@ static __always_inline bool
-> > check_memory_region_inline(unsigned long addr,
-> >         if (unlikely(size == 0))
-> >                 return true;
-> >
-> > +       if (unlikely((long)size < 0)) {
-> > +               kasan_report(addr, size, write, ret_ip);
-> > +               return false;
-> > +       }
-> > +
-> >         if (unlikely((void *)addr <
-> >                 kasan_shadow_to_mem((void *)KASAN_SHADOW_START))) {
-> >                 kasan_report(addr, size, write, ret_ip);
-> > diff --git a/mm/kasan/generic_report.c b/mm/kasan/generic_report.c
-> > index 36c645939bc9..ed0eb94cb811 100644
-> > --- a/mm/kasan/generic_report.c
-> > +++ b/mm/kasan/generic_report.c
-> > @@ -107,6 +107,18 @@ static const char *get_wild_bug_type(struct
-> > kasan_access_info *info)
-> >
-> >  const char *get_bug_type(struct kasan_access_info *info)
-> >  {
-> > +       /*
-> > +        * If access_size is negative numbers, then it has two reasons
-> > +        * to be defined as out-of-bounds bug type.
-> > +        * 1) Casting negative numbers to size_t would indeed turn up as
-> > +        * a 'large' size_t and its value will be larger than ULONG_MAX/2,
-> > +        * so that this can qualify as out-of-bounds.
-> > +        * 2) Don't generate new bug type in order to prevent duplicate
-> > reports
-> > +        * by some systems, e.g. syzbot.
-> > +        */
-> > +       if ((long)info->access_size < 0)
-> > +               return "out-of-bounds";
-> 
-> "out-of-bounds" is the _least_ frequent KASAN bug type. It won't
-> prevent duplicates. "heap-out-of-bounds" is the frequent one.
-
-
-    /*
-     * If access_size is negative numbers, then it has two reasons
-     * to be defined as out-of-bounds bug type.
-     * 1) Casting negative numbers to size_t would indeed turn up as
-     * a  "large" size_t and its value will be larger than ULONG_MAX/2,
-     *    so that this can qualify as out-of-bounds.
-     * 2) Don't generate new bug type in order to prevent duplicate
-reports
-     *    by some systems, e.g. syzbot. "out-of-bounds" is the _least_
-frequent KASAN bug type.
-     *    It won't prevent duplicates. "heap-out-of-bounds" is the
-frequent one.
-     */
-
-We directly add it into the comment.
-
-> 
-> >         if (addr_has_shadow(info->access_addr))
-> >                 return get_shadow_bug_type(info);
-> >         return get_wild_bug_type(info);
-> > diff --git a/mm/kasan/tags.c b/mm/kasan/tags.c
-> > index 0e987c9ca052..b829535a3ad7 100644
-> > --- a/mm/kasan/tags.c
-> > +++ b/mm/kasan/tags.c
-> > @@ -86,6 +86,11 @@ bool check_memory_region(unsigned long addr, size_t
-> > size, bool write,
-> >         if (unlikely(size == 0))
-> >                 return true;
-> >
-> > +       if (unlikely((long)size < 0)) {
-> > +               kasan_report(addr, size, write, ret_ip);
-> > +               return false;
-> > +       }
-> > +
-> >         tag = get_tag((const void *)addr);
-> >
-> >         /*
-> > diff --git a/mm/kasan/tags_report.c b/mm/kasan/tags_report.c
-> > index 969ae08f59d7..012fbe3a793f 100644
-> > --- a/mm/kasan/tags_report.c
-> > +++ b/mm/kasan/tags_report.c
-> > @@ -36,6 +36,18 @@
-> >
-> >  const char *get_bug_type(struct kasan_access_info *info)
-> >  {
-> > +       /*
-> > +        * If access_size is negative numbers, then it has two reasons
-> > +        * to be defined as out-of-bounds bug type.
-> > +        * 1) Casting negative numbers to size_t would indeed turn up as
-> > +        * a 'large' size_t and its value will be larger than ULONG_MAX/2,
-> > +        * so that this can qualify as out-of-bounds.
-> > +        * 2) Don't generate new bug type in order to prevent duplicate
-> > reports
-> > +        * by some systems, e.g. syzbot.
-> > +        */
-> > +       if ((long)info->access_size < 0)
-> > +               return "out-of-bounds";
-> > +
-> >  #ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
-> >         struct kasan_alloc_meta *alloc_meta;
-> >         struct kmem_cache *cache;
-> >
-> >
-> >
-> >
-> >
-> >
-> >
-> >
-> > commit fb5cf7bd16e939d1feef229af0211a8616c9ea03
-> > Author: Walter-zh Wu <walter-zh.wu@mediatek.com>
-> > Date:   Fri Oct 4 18:32:03 2019 +0800
-> >
-> >     kasan: add test for invalid size in memmove
-> >
-> >     Test size is negative vaule in memmove in order to verify
-> >     if it correctly get KASAN report.
-> >
-> >     Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
-> >
-> > diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-> > index 49cc4d570a40..06942cf585cc 100644
-> > --- a/lib/test_kasan.c
-> > +++ b/lib/test_kasan.c
-> > @@ -283,6 +283,23 @@ static noinline void __init
-> > kmalloc_oob_in_memset(void)
-> >         kfree(ptr);
+> > diff --git a/drivers/firmware/google/vpd.c b/drivers/firmware/google/vpd.c
+> > index db0812263d46..71e9d2da63be 100644
+> > --- a/drivers/firmware/google/vpd.c
+> > +++ b/drivers/firmware/google/vpd.c
+> > @@ -65,6 +65,22 @@ static ssize_t vpd_attrib_read(struct file *filp, struct kobject *kobp,
+> >                                        info->bin_attr.size);
 > >  }
 > >
-> > +static noinline void __init kmalloc_memmove_invalid_size(void)
+> > +int vpd_attribute_read_value(bool ro, const char *key,
+> > +                            char **value, u32 value_len)
 > > +{
-> > +       char *ptr;
-> > +       size_t size = 64;
+> > +       struct vpd_attrib_info *info;
+> > +       struct vpd_section *sec = ro ? &ro_vpd : &rw_vpd;
 > > +
-> > +       pr_info("invalid size in memmove\n");
-> > +       ptr = kmalloc(size, GFP_KERNEL);
-> > +       if (!ptr) {
-> > +               pr_err("Allocation failed\n");
-> > +               return;
+> > +       list_for_each_entry(info, &sec->attribs, list) {
+> > +               if (strcmp(info->key, key) == 0) {
+> > +                       *value = kstrndup(info->value, value_len, GFP_KERNEL);
+>
+> Value is not necessary a NULL-terminated string.
+> kmalloc(info->bin_attr.size) and memcpy(...) would make the most
+> sense.
+>
+> The value_len parameter makes less sense.  It seems the caller knows
+> the length of the value in advance.
+> Suggest to change the value_len to report the length of value.  I.e.
+> *value_len = info->bin_attr.size;
+>
+> Also please check the return value for memory allocation-like
+> functions (e.g. kstrndup, kmalloc) so that *value won't be NULL but
+> the function returned 0.
+
+Thanks for the review.
+I will them in v2.
+
+>
+> > +                       return 0;
+> > +               }
 > > +       }
-> > +
-> > +       memset((char *)ptr, 0, 64);
-> > +       memmove((char *)ptr, (char *)ptr + 4, -2);
-> > +       kfree(ptr);
+> > +       return -EINVAL;
 > > +}
+> > +EXPORT_SYMBOL(vpd_attribute_read_value);
 > > +
-> >  static noinline void __init kmalloc_uaf(void)
-> >  {
-> >         char *ptr;
-> > @@ -773,6 +790,7 @@ static int __init kmalloc_tests_init(void)
-> >         kmalloc_oob_memset_4();
-> >         kmalloc_oob_memset_8();
-> >         kmalloc_oob_memset_16();
-> > +       kmalloc_memmove_invalid_size();
-> >         kmalloc_uaf();
-> >         kmalloc_uaf_memset();
-> >         kmalloc_uaf2();
-> >
-> >
-> >
-> >
+> >  /*
+> >   * vpd_section_check_key_name()
+> >   *
+> > diff --git a/include/linux/firmware/google/google_vpd.h b/include/linux/firmware/google/google_vpd.h
+> > new file mode 100644
+> > index 000000000000..6f1160f28af8
+> > --- /dev/null
+> > +++ b/include/linux/firmware/google/google_vpd.h
+> > @@ -0,0 +1,18 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Google VPD interface.
+> > + *
+> > + * Copyright 2019 Google Inc.
+> > + */
+> > +
+> > +/* Interface for reading VPD value on Chrome platform. */
+> > +
+> > +#ifndef __GOOGLE_VPD_H
+> > +#define __GOOGLE_VPD_H
+> > +
+> > +#include <linux/types.h>
+> > +
+> > +int vpd_attribute_read_value(bool ro, const char *key,
+> > +                            char **value, u32 value_len);
+> > +
+> > +#endif  /* __GOOGLE_VPD_H */
 > > --
-> > You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> > To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> > To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/1570436289.4686.40.camel%40mtksdccf07.
-
-
+> > 2.23.0.581.g78d2f28ef7-goog
+> >
