@@ -2,150 +2,101 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 537B6C4360C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 02:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F68C4360C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 02:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A14B2133F
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 02:30:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dfQJ/qOr"
+	by mail.kernel.org (Postfix) with ESMTP id 063C32080F
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 02:32:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbfJGCaU (ORCPT
+        id S1727051AbfJGCct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 22:30:20 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40522 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726785AbfJGCaT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 22:30:19 -0400
-Received: by mail-pf1-f196.google.com with SMTP id x127so7648667pfb.7;
-        Sun, 06 Oct 2019 19:30:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YGjpu8ryTJmj9+qQvcdT72pgFzxKNn0JDKrBtisM5Yo=;
-        b=dfQJ/qOrpDnZcEkCQnkZza2iEKQq9j26rxpgPi5Ms2YaSGclYVATq7qVZvZ9mK4M/s
-         jwaff2DO3dPC2NKOuspZnmf8Rzqe7dRydjTjmP8TkkCVKmXA2A4ZCwIyL9Jw27jeEtkM
-         kfn85HRuV3+rQv6db4WTfUQgn+hLWHuA8SMIPMeyj4iuL6g8SQGEE2UVouf3c6BDhbPT
-         hijlOqP+LA8gGIoj1nsqrc06cN+jxWHrOlcKH5ZZis1HkO4E+B+cx9PUS+WaY00dfwt4
-         c75h2VTP5lkjg6lZn0C99yAf33tOkVfqhM3PRyIiP6nroDltewe0lvOdIdjGiaG8sfHC
-         nJhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YGjpu8ryTJmj9+qQvcdT72pgFzxKNn0JDKrBtisM5Yo=;
-        b=TpxPKkTSLQjCZuUYAhoXF/JfVjRj7yy1fo4S7rlVm11rZDr9nxz/CRJ4TJ3lotpqZR
-         Z9QOTPYmKHwz+77NOt4N6j2uRNK5w1GdSYZijd1oRDIdy3Wedz8Jf2gRYCn2roornNZ5
-         dgNIlbWFRYB/x+bKJCCgdFN1PyZycWs5g6BXcwSfEKQf4+Lm8sXOziC3Jh+hzwJWa4L4
-         r8OKT/Tyieu/vwRfsp11+Sl2De9jMD2JlhTo4c3aFlbuaCi9ENv6vEjOO9nf9b6DlCc2
-         M76ZfNZTOhWjynaGKR5L2o0g+PNvKlvlRCmk2eXyTr39JoKHRYAlK9BHoDStu0QikgNy
-         5e1A==
-X-Gm-Message-State: APjAAAXzra5/OYXLnMWJq5OG3fA4lQ4VZPew298dUonYxZ5QO2LwhEe6
-        bcu6DH0cwVIwlWusGTCKrKpGu7s/
-X-Google-Smtp-Source: APXvYqxYHjYhp+FPiyT9juSRuUmfuBocFjOXnRXj15b5Xc2xqXMD5kIt3az+stvbSstLH06yMvcqqA==
-X-Received: by 2002:a63:1e16:: with SMTP id e22mr28381741pge.413.1570415418760;
-        Sun, 06 Oct 2019 19:30:18 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id p189sm15158676pfp.163.2019.10.06.19.30.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 06 Oct 2019 19:30:17 -0700 (PDT)
-Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to
- unsafe_put_user()
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-References: <20191006222046.GA18027@roeck-us.net>
- <CAHk-=wgrqwuZJmwbrjhjCFeSUu2i57unaGOnP4qZAmSyuGwMZA@mail.gmail.com>
- <CAHk-=wjRPerXedTDoBbJL=tHBpH+=sP6pX_9NfgWxpnmHC5RtQ@mail.gmail.com>
- <5f06c138-d59a-d811-c886-9e73ce51924c@roeck-us.net>
- <CAHk-=whAQWEMADgxb_qAw=nEY4OnuDn6HU4UCSDMNT5ULKvg3g@mail.gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <c3e9ec03-5eb5-75bb-98da-63eaa9246cff@roeck-us.net>
-Date:   Sun, 6 Oct 2019 19:30:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 6 Oct 2019 22:32:49 -0400
+Received: from mx.socionext.com ([202.248.49.38]:41744 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726960AbfJGCct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 22:32:49 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 07 Oct 2019 11:32:46 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 668F6605F8;
+        Mon,  7 Oct 2019 11:32:46 +0900 (JST)
+Received: from 10.213.24.1 (10.213.24.1) by m-FILTER with ESMTP; Mon, 7 Oct 2019 11:32:46 +0900
+Received: from SOC-EX02V.e01.socionext.com (10.213.24.22) by
+ SOC-EX01V.e01.socionext.com (10.213.24.21) with Microsoft SMTP Server (TLS)
+ id 15.0.995.29; Mon, 7 Oct 2019 11:32:45 +0900
+Received: from SOC-EX02V.e01.socionext.com ([10.213.25.22]) by
+ SOC-EX02V.e01.socionext.com ([10.213.25.22]) with mapi id 15.00.0995.028;
+ Mon, 7 Oct 2019 11:32:45 +0900
+From:   <orito.takao@socionext.com>
+To:     <ulf.hansson@linaro.org>
+CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <adrian.hunter@intel.com>, <linux-mmc@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <masami.hiramatsu@linaro.org>, <jaswinder.singh@linaro.org>,
+        <sugaya.taichi@socionext.com>, <kasai.kazuhiro@socionext.com>,
+        <kanematsu.shinji@socionext.com>
+Subject: Re: [PATCH v3 0/2] mmc: sdhci-milbeaut: add Milbeaut SD driver
+Thread-Topic: [PATCH v3 0/2] mmc: sdhci-milbeaut: add Milbeaut SD driver
+Thread-Index: AQHVZ3ihYlxK3AfGCE+319PUx3aqu6dIPRWAgAXMGQA=
+Date:   Mon, 7 Oct 2019 02:32:44 +0000
+Message-ID: <20191007113235.355F.F0D17A80@socionext.com>
+References: <1568079631-28808-1-git-send-email-orito.takao@socionext.com>
+ <CAPDyKFq6wbscGGq_0Q3_8eGLXk-+xBtmPbjq97jiejR7Qd_QbA@mail.gmail.com>
+In-Reply-To: <CAPDyKFq6wbscGGq_0Q3_8eGLXk-+xBtmPbjq97jiejR7Qd_QbA@mail.gmail.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Becky! ver. 2.74.02 [ja] (Unregistered)
+x-originating-ip: [10.213.24.1]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <36AE662AED835746B2F222A52E6199E0@socionext.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=whAQWEMADgxb_qAw=nEY4OnuDn6HU4UCSDMNT5ULKvg3g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/6/19 6:17 PM, Linus Torvalds wrote:
-> On Sun, Oct 6, 2019 at 5:04 PM Guenter Roeck <linux@roeck-us.net> wrote:
-[ ... ]
-> And yes, I'll fix that name copy loop in filldir to align the
-> destination first, *but* if I'm right, it means that something like
-> this should also likely cause issues:
-> 
->    #define _GNU_SOURCE
->    #include <unistd.h>
->    #include <sys/mman.h>
-> 
->    int main(int argc, char **argv)
->    {
->          void *mymap;
->          uid_t *bad_ptr = (void *) 0x01;
-> 
->          /* Create unpopulated memory area */
->          mymap = mmap(NULL, 16384, PROT_READ | PROT_WRITE, MAP_PRIVATE
-> | MAP_ANONYMOUS, -1, 0);
-> 
->          /* Unaligned uidpointer in that memory area */
->          bad_ptr = mymap+1;
-> 
->          /* Make the kernel do put_user() on it */
->          return getresuid(bad_ptr, bad_ptr+1, bad_ptr+2);
->    }
-> 
-> because that simple user mode program should cause that same "page
-> fault on unaligned put_user()" behavior as far as I can tell.
-> 
-> Mind humoring me and trying that on your alpha machine (or emulator,
-> or whatever)?
-> 
-
-Here you are. This is with v5.4-rc2 and your previous patch applied
-on top.
-
-/ # ./mmtest
-Unable to handle kernel paging request at virtual address 0000000000000004
-mmtest(75): Oops -1
-pc = [<0000000000000004>]  ra = [<fffffc0000311584>]  ps = 0000    Not tainted
-pc is at 0x4
-ra is at entSys+0xa4/0xc0
-v0 = fffffffffffffff2  t0 = 0000000000000000  t1 = 0000000000000000
-t2 = 0000000000000000  t3 = 0000000000000000  t4 = 0000000000000000
-t5 = 000000000000fffe  t6 = 0000000000000000  t7 = fffffc0007edc000
-s0 = 0000000000000000  s1 = 00000001200006f0  s2 = 00000001200df19f
-s3 = 00000001200ea0b9  s4 = 0000000120114630  s5 = 00000001201145d8
-s6 = 000000011f955c50
-a0 = 000002000002c001  a1 = 000002000002c005  a2 = 000002000002c009
-a3 = 0000000000000000  a4 = ffffffffffffffff  a5 = 0000000000000000
-t8 = 0000000000000000  t9 = fffffc0000000000  t10= 0000000000000000
-t11= 000000011f955788  pv = fffffc0000349450  at = 00000000f8db54d3
-gp = fffffc0000f2a160  sp = 00000000ab237c72
-Disabling lock debugging due to kernel taint
-Trace:
-
-Code:
-  00000000
-  00063301
-  000007b6
-  00001111
-  00003f8d
-
-Segmentation fault
-
-Guenter
+DQpUaGFua3MgZm9yIGNoZWNraW5nIGFuZCBwdXNoaW5nIG15IHBhdGNoICENCg0KT3JpdG8NCg0K
+PiBPbiBUdWUsIDEwIFNlcCAyMDE5IGF0IDAzOjM5LCBUYWthbyBPcml0byA8b3JpdG8udGFrYW9A
+c29jaW9uZXh0LmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBUaGUgZm9sbG93aW5nIHBhdGNoZXMgYWRk
+IGRyaXZlciBmb3IgU0QgSG9zdCBjb250cm9sbGVyIG9uDQo+ID4gU29jaW9uZXh0J3MgTWlsYmVh
+dXQgTTEwViBwbGF0Zm9ybXMuDQo+ID4NCj4gPiBTRCBIb3N0IGNvbnRyb2xsZXIgb24gTWlsYmVh
+dXQgY29uc2lzdHMgb2YgdHdvIGNvbnRyb2xsZXIgcGFydHMuDQo+ID4gT25lIGlzIGNvcmUgY29u
+dHJvbGxlciBGX1NESDMwLCB0aGlzIGlzIHNpbWlsYXIgdG8gc2RoY2ktZnVqaXRzdQ0KPiA+IGNv
+bnRyb2xsZXIuDQo+ID4gQW5vdGhlciBpcyBicmlkZ2UgY29udHJvbGxlci4gVGhpcyBicmlkZ2Ug
+Y29udHJvbGxlciBpcyBub3QgY29tcGF0aWJsZQ0KPiA+IHdpdGggc2RoY2ktZnVqaXRzdSBjb250
+cm9sbGVyLiBUaGlzIGlzIHNwZWNpYWwgZm9yIE1pbGJlYXV0IHNlcmllcy4NCj4gPg0KPiA+IEl0
+IGhhcyB0aGUgc2V2ZXJhbCBwYXJ0cywNCj4gPiAgLSByZXNldCBjb250cm9sDQo+ID4gIC0gY2xv
+Y2sgZW5hYmxlIC8gc2VsZWN0IGZvciBTRFI1MC8yNS8xMg0KPiA+ICAtIGhvbGQgY29udHJvbCBv
+ZiBEQVRBL0NNRCBsaW5lDQo+ID4gIC0gc2VsZWN0IGNoYXJhY3RlcmlzdGljcyBmb3IgV1AvQ0Qv
+TEVEIGxpbmUNCj4gPiAgLSBSZS10dW5pbmcgY29udHJvbCBmb3IgbW9kZTMNCj4gPiAgLSBDYXBh
+YmlsaXR5IHNldHRpbmcNCj4gPiAgICBUaW1lb3V0IENsb2NrIC8gQmFzZSBDbG9jayAvIFRpbWVy
+IENvdW50IGZvciBSZS1UdW5pbmcgLw0KPiA+ICAgIERlYm91bmNlIHBlcmlvZA0KPiA+IFRoZXNl
+IHJlcXVpcmVzIHNwZWNpYWwgcHJvY2VkdXJlcyBhdCByZXNldCBvciBjbG9jayBlbmFibGUvY2hh
+bmdlIG9yDQo+ID4gIGZ1cnRoZXIgdHVuaW5nIG9mIGNsb2NrLg0KPiA+DQo+ID4gVGFrYW8gT3Jp
+dG8gKDIpOg0KPiA+ICAgZHQtYmluZGluZ3M6IG1tYzogYWRkIERUIGJpbmRpbmdzIGZvciBNaWxi
+ZWF1dCBTRCBjb250cm9sbGVyDQo+ID4gICBtbWM6IHNkaGNpLW1pbGJlYXV0OiBhZGQgTWlsYmVh
+dXQgU0QgY29udHJvbGxlciBkcml2ZXINCj4gPg0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5n
+cy9tbWMvc2RoY2ktbWlsYmVhdXQudHh0ICAgICB8ICAzMCArKw0KPiA+ICBkcml2ZXJzL21tYy9o
+b3N0L0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAxMSArDQo+ID4gIGRyaXZl
+cnMvbW1jL2hvc3QvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAxICsNCj4g
+PiAgZHJpdmVycy9tbWMvaG9zdC9zZGhjaS1taWxiZWF1dC5jICAgICAgICAgICAgICAgICAgfCAz
+NjIgKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIGRyaXZlcnMvbW1jL2hvc3Qvc2RoY2lfZl9z
+ZGgzMC5jICAgICAgICAgICAgICAgICAgIHwgIDI2ICstDQo+ID4gIGRyaXZlcnMvbW1jL2hvc3Qv
+c2RoY2lfZl9zZGgzMC5oICAgICAgICAgICAgICAgICAgIHwgIDMyICsrDQo+ID4gIDYgZmlsZXMg
+Y2hhbmdlZCwgNDM3IGluc2VydGlvbnMoKyksIDI1IGRlbGV0aW9ucygtKQ0KPiA+ICBjcmVhdGUg
+bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21tYy9zZGhjaS1t
+aWxiZWF1dC50eHQNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvbW1jL2hvc3Qvc2Ro
+Y2ktbWlsYmVhdXQuYw0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9tbWMvaG9zdC9z
+ZGhjaV9mX3NkaDMwLmgNCj4gPg0KPiA+IC0tDQo+ID4gMS45LjENCj4gPg0KPiA+DQo+IA0KPiBB
+cHBsaWVkIGZvciBuZXh0LCB0aGFua3MhDQo+IA0KPiBLaW5kIHJlZ2FyZHMNCj4gVWZmZQ0KDQot
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLQ0KVGFrYW8gT3JpdG8NClNvY2lvbmV4dCBJbmMuDQpFLW1haWw6b3JpdG8udGFrYW9A
+c29jaW9uZXh0LmNvbQ0KVGVsOis4MS04MC05ODE1LTE0NjANCi0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo=
