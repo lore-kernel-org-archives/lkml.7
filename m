@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE75C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C0E6ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D779721479
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF56621721
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:51:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729024AbfJGOvA (ORCPT
+        id S1728583AbfJGOti (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 10:51:00 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44477 "EHLO
+        Mon, 7 Oct 2019 10:49:38 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44430 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728066AbfJGOtl (ORCPT
+        with ESMTP id S1728066AbfJGOtg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 10:49:41 -0400
+        Mon, 7 Oct 2019 10:49:36 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iHUKM-0006Cc-ON; Mon, 07 Oct 2019 16:49:34 +0200
+        id 1iHUKE-00060S-I4; Mon, 07 Oct 2019 16:49:26 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3A25E1C032F;
-        Mon,  7 Oct 2019 16:49:32 +0200 (CEST)
-Date:   Mon, 07 Oct 2019 14:49:32 -0000
-From:   "tip-bot2 for Mike Travis" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E96301C0DD0;
+        Mon,  7 Oct 2019 16:49:16 +0200 (CEST)
+Date:   Mon, 07 Oct 2019 14:49:16 -0000
+From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/platform] x86/platform/uv: Return UV Hubless System Type
-Cc:     Mike Travis <mike.travis@hpe.com>, Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Hedi Berriche <hedi.berriche@hpe.com>,
-        Justin Ernst <justin.ernst@hpe.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
-In-Reply-To: <20190910145839.814880843@stormcage.eag.rdlabs.hpecorp.net>
-References: <20190910145839.814880843@stormcage.eag.rdlabs.hpecorp.net>
+Subject: [tip: perf/urgent] tools headers kvm: Sync kvm headers with the
+ kernel sources
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Liran Alon <liran.alon@oracle.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Huth <thuth@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <tip-akuugvvjxte26kzv23zp5d2z@git.kernel.org>
+References: <tip-akuugvvjxte26kzv23zp5d2z@git.kernel.org>
 MIME-Version: 1.0
-Message-ID: <157045977216.9978.15019848455992775260.tip-bot2@tip-bot2>
+Message-ID: <157045975688.9978.4446047649090510891.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -64,135 +63,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/platform branch of tip:
+The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     0959f8256ada0431c1470d89e5a2811ff2305c88
-Gitweb:        https://git.kernel.org/tip/0959f8256ada0431c1470d89e5a2811ff2305c88
-Author:        Mike Travis <mike.travis@hpe.com>
-AuthorDate:    Tue, 10 Sep 2019 09:58:41 -05:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 07 Oct 2019 13:42:10 +02:00
+Commit-ID:     b7ad6108484221f431372b94763b74e550d16c93
+Gitweb:        https://git.kernel.org/tip/b7ad6108484221f431372b94763b74e550d16c93
+Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate:    Fri, 27 Sep 2019 12:18:21 -03:00
+Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitterDate: Mon, 30 Sep 2019 17:29:30 -03:00
 
-x86/platform/uv: Return UV Hubless System Type
+tools headers kvm: Sync kvm headers with the kernel sources
 
-Return the type of UV hubless system for UV specific code that depends
-on that.  Add a function to convert UV system type to bit pattern needed
-for is_uv_hubless().
+To pick the changes in:
 
-Signed-off-by: Mike Travis <mike.travis@hpe.com>
-Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
-Reviewed-by: Dimitri Sivanich <dimitri.sivanich@hpe.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Hedi Berriche <hedi.berriche@hpe.com>
-Cc: Justin Ernst <justin.ernst@hpe.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Russ Anderson <russ.anderson@hpe.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190910145839.814880843@stormcage.eag.rdlabs.hpecorp.net
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+  200824f55eef ("KVM: s390: Disallow invalid bits in kvm_valid_regs and kvm_dirty_regs")
+  4a53d99dd0c2 ("KVM: VMX: Introduce exit reason for receiving INIT signal on guest-mode")
+  7396d337cfad ("KVM: x86: Return to userspace with internal error on unexpected exit reason")
+  92f35b751c71 ("KVM: arm/arm64: vgic: Allow more than 256 vcpus for KVM_IRQ_LINE")
+
+None of them trigger any changes in tooling, this time this is just to silence
+these perf build warnings:
+
+  Warning: Kernel ABI header at 'tools/include/uapi/linux/kvm.h' differs from latest version at 'include/uapi/linux/kvm.h'
+  diff -u tools/include/uapi/linux/kvm.h include/uapi/linux/kvm.h
+  Warning: Kernel ABI header at 'tools/arch/x86/include/uapi/asm/vmx.h' differs from latest version at 'arch/x86/include/uapi/asm/vmx.h'
+  diff -u tools/arch/x86/include/uapi/asm/vmx.h arch/x86/include/uapi/asm/vmx.h
+  Warning: Kernel ABI header at 'tools/arch/s390/include/uapi/asm/kvm.h' differs from latest version at 'arch/s390/include/uapi/asm/kvm.h'
+  diff -u tools/arch/s390/include/uapi/asm/kvm.h arch/s390/include/uapi/asm/kvm.h
+  Warning: Kernel ABI header at 'tools/arch/arm/include/uapi/asm/kvm.h' differs from latest version at 'arch/arm/include/uapi/asm/kvm.h'
+  diff -u tools/arch/arm/include/uapi/asm/kvm.h arch/arm/include/uapi/asm/kvm.h
+  Warning: Kernel ABI header at 'tools/arch/arm64/include/uapi/asm/kvm.h' differs from latest version at 'arch/arm64/include/uapi/asm/kvm.h'
+  diff -u tools/arch/arm64/include/uapi/asm/kvm.h arch/arm64/include/uapi/asm/kvm.h
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Janosch Frank <frankja@linux.ibm.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Liran Alon <liran.alon@oracle.com>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Thomas Huth <thuth@redhat.com>
+Link: https://lkml.kernel.org/n/tip-akuugvvjxte26kzv23zp5d2z@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- arch/x86/include/asm/uv/uv.h       | 12 ++++++++++--
- arch/x86/kernel/apic/x2apic_uv_x.c | 27 ++++++++++++++++++---------
- 2 files changed, 28 insertions(+), 11 deletions(-)
+ tools/arch/arm/include/uapi/asm/kvm.h   | 4 +++-
+ tools/arch/arm64/include/uapi/asm/kvm.h | 4 +++-
+ tools/arch/s390/include/uapi/asm/kvm.h  | 6 ++++++
+ tools/arch/x86/include/uapi/asm/vmx.h   | 2 ++
+ tools/include/uapi/linux/kvm.h          | 3 +++
+ 5 files changed, 17 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/uv/uv.h b/arch/x86/include/asm/uv/uv.h
-index 6bc6d89..792faab 100644
---- a/arch/x86/include/asm/uv/uv.h
-+++ b/arch/x86/include/asm/uv/uv.h
-@@ -12,6 +12,14 @@ struct mm_struct;
- #ifdef CONFIG_X86_UV
- #include <linux/efi.h>
+diff --git a/tools/arch/arm/include/uapi/asm/kvm.h b/tools/arch/arm/include/uapi/asm/kvm.h
+index a4217c1..2769360 100644
+--- a/tools/arch/arm/include/uapi/asm/kvm.h
++++ b/tools/arch/arm/include/uapi/asm/kvm.h
+@@ -266,8 +266,10 @@ struct kvm_vcpu_events {
+ #define   KVM_DEV_ARM_ITS_CTRL_RESET		4
  
-+static inline int uv(int uvtype)
-+{
-+	/* uv(0) is "any" */
-+	if (uvtype >= 0 && uvtype <= 30)
-+		return 1 << uvtype;
-+	return 1;
-+}
+ /* KVM_IRQ_LINE irq field index values */
++#define KVM_ARM_IRQ_VCPU2_SHIFT		28
++#define KVM_ARM_IRQ_VCPU2_MASK		0xf
+ #define KVM_ARM_IRQ_TYPE_SHIFT		24
+-#define KVM_ARM_IRQ_TYPE_MASK		0xff
++#define KVM_ARM_IRQ_TYPE_MASK		0xf
+ #define KVM_ARM_IRQ_VCPU_SHIFT		16
+ #define KVM_ARM_IRQ_VCPU_MASK		0xff
+ #define KVM_ARM_IRQ_NUM_SHIFT		0
+diff --git a/tools/arch/arm64/include/uapi/asm/kvm.h b/tools/arch/arm64/include/uapi/asm/kvm.h
+index 9a50771..67c21f9 100644
+--- a/tools/arch/arm64/include/uapi/asm/kvm.h
++++ b/tools/arch/arm64/include/uapi/asm/kvm.h
+@@ -325,8 +325,10 @@ struct kvm_vcpu_events {
+ #define   KVM_ARM_VCPU_TIMER_IRQ_PTIMER		1
+ 
+ /* KVM_IRQ_LINE irq field index values */
++#define KVM_ARM_IRQ_VCPU2_SHIFT		28
++#define KVM_ARM_IRQ_VCPU2_MASK		0xf
+ #define KVM_ARM_IRQ_TYPE_SHIFT		24
+-#define KVM_ARM_IRQ_TYPE_MASK		0xff
++#define KVM_ARM_IRQ_TYPE_MASK		0xf
+ #define KVM_ARM_IRQ_VCPU_SHIFT		16
+ #define KVM_ARM_IRQ_VCPU_MASK		0xff
+ #define KVM_ARM_IRQ_NUM_SHIFT		0
+diff --git a/tools/arch/s390/include/uapi/asm/kvm.h b/tools/arch/s390/include/uapi/asm/kvm.h
+index 47104e5..436ec76 100644
+--- a/tools/arch/s390/include/uapi/asm/kvm.h
++++ b/tools/arch/s390/include/uapi/asm/kvm.h
+@@ -231,6 +231,12 @@ struct kvm_guest_debug_arch {
+ #define KVM_SYNC_GSCB   (1UL << 9)
+ #define KVM_SYNC_BPBC   (1UL << 10)
+ #define KVM_SYNC_ETOKEN (1UL << 11)
 +
- extern unsigned long uv_systab_phys;
- 
- extern enum uv_system_type get_uv_system_type(void);
-@@ -20,7 +28,7 @@ static inline bool is_early_uv_system(void)
- 	return uv_systab_phys && uv_systab_phys != EFI_INVALID_TABLE_ADDR;
- }
- extern int is_uv_system(void);
--extern int is_uv_hubless(void);
-+extern int is_uv_hubless(int uvtype);
- extern void uv_cpu_init(void);
- extern void uv_nmi_init(void);
- extern void uv_system_init(void);
-@@ -32,7 +40,7 @@ extern const struct cpumask *uv_flush_tlb_others(const struct cpumask *cpumask,
- static inline enum uv_system_type get_uv_system_type(void) { return UV_NONE; }
- static inline bool is_early_uv_system(void)	{ return 0; }
- static inline int is_uv_system(void)	{ return 0; }
--static inline int is_uv_hubless(void)	{ return 0; }
-+static inline int is_uv_hubless(int uv) { return 0; }
- static inline void uv_cpu_init(void)	{ }
- static inline void uv_system_init(void)	{ }
- static inline const struct cpumask *
-diff --git a/arch/x86/kernel/apic/x2apic_uv_x.c b/arch/x86/kernel/apic/x2apic_uv_x.c
-index 66b38a6..43fad61 100644
---- a/arch/x86/kernel/apic/x2apic_uv_x.c
-+++ b/arch/x86/kernel/apic/x2apic_uv_x.c
-@@ -26,7 +26,7 @@
- static DEFINE_PER_CPU(int, x2apic_extra_bits);
- 
- static enum uv_system_type	uv_system_type;
--static bool			uv_hubless_system;
-+static int			uv_hubless_system;
- static u64			gru_start_paddr, gru_end_paddr;
- static u64			gru_dist_base, gru_first_node_paddr = -1LL, gru_last_node_paddr;
- static u64			gru_dist_lmask, gru_dist_umask;
-@@ -268,11 +268,20 @@ static int __init uv_acpi_madt_oem_check(char *_oem_id, char *_oem_table_id)
- 	uv_stringify(sizeof(oem_table_id), oem_table_id, _oem_table_id);
- 
- 	if (strncmp(oem_id, "SGI", 3) != 0) {
--		if (strncmp(oem_id, "NSGI", 4) == 0) {
--			uv_hubless_system = true;
--			pr_info("UV: OEM IDs %s/%s, HUBLESS\n",
--				oem_id, oem_table_id);
--		}
-+		if (strncmp(oem_id, "NSGI", 4) != 0)
-+			return 0;
++#define KVM_SYNC_S390_VALID_FIELDS \
++	(KVM_SYNC_PREFIX | KVM_SYNC_GPRS | KVM_SYNC_ACRS | KVM_SYNC_CRS | \
++	 KVM_SYNC_ARCH0 | KVM_SYNC_PFAULT | KVM_SYNC_VRS | KVM_SYNC_RICCB | \
++	 KVM_SYNC_FPRS | KVM_SYNC_GSCB | KVM_SYNC_BPBC | KVM_SYNC_ETOKEN)
 +
-+		/* UV4 Hubless, CH, (0x11:UV4+Any) */
-+		if (strncmp(oem_id, "NSGI4", 5) == 0)
-+			uv_hubless_system = 0x11;
-+
-+		/* UV3 Hubless, UV300/MC990X w/o hub (0x9:UV3+Any) */
-+		else
-+			uv_hubless_system = 0x9;
-+
-+		pr_info("UV: OEM IDs %s/%s, HUBLESS(0x%x)\n",
-+			oem_id, oem_table_id, uv_hubless_system);
-+
- 		return 0;
- 	}
+ /* length and alignment of the sdnx as a power of two */
+ #define SDNXC 8
+ #define SDNXL (1UL << SDNXC)
+diff --git a/tools/arch/x86/include/uapi/asm/vmx.h b/tools/arch/x86/include/uapi/asm/vmx.h
+index f0b0c90..f01950a 100644
+--- a/tools/arch/x86/include/uapi/asm/vmx.h
++++ b/tools/arch/x86/include/uapi/asm/vmx.h
+@@ -31,6 +31,7 @@
+ #define EXIT_REASON_EXCEPTION_NMI       0
+ #define EXIT_REASON_EXTERNAL_INTERRUPT  1
+ #define EXIT_REASON_TRIPLE_FAULT        2
++#define EXIT_REASON_INIT_SIGNAL			3
  
-@@ -350,9 +359,9 @@ int is_uv_system(void)
- }
- EXPORT_SYMBOL_GPL(is_uv_system);
+ #define EXIT_REASON_PENDING_INTERRUPT   7
+ #define EXIT_REASON_NMI_WINDOW          8
+@@ -90,6 +91,7 @@
+ 	{ EXIT_REASON_EXCEPTION_NMI,         "EXCEPTION_NMI" }, \
+ 	{ EXIT_REASON_EXTERNAL_INTERRUPT,    "EXTERNAL_INTERRUPT" }, \
+ 	{ EXIT_REASON_TRIPLE_FAULT,          "TRIPLE_FAULT" }, \
++	{ EXIT_REASON_INIT_SIGNAL,           "INIT_SIGNAL" }, \
+ 	{ EXIT_REASON_PENDING_INTERRUPT,     "PENDING_INTERRUPT" }, \
+ 	{ EXIT_REASON_NMI_WINDOW,            "NMI_WINDOW" }, \
+ 	{ EXIT_REASON_TASK_SWITCH,           "TASK_SWITCH" }, \
+diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
+index 5e3f12d..233efbb 100644
+--- a/tools/include/uapi/linux/kvm.h
++++ b/tools/include/uapi/linux/kvm.h
+@@ -243,6 +243,8 @@ struct kvm_hyperv_exit {
+ #define KVM_INTERNAL_ERROR_SIMUL_EX	2
+ /* Encounter unexpected vm-exit due to delivery event. */
+ #define KVM_INTERNAL_ERROR_DELIVERY_EV	3
++/* Encounter unexpected vm-exit reason */
++#define KVM_INTERNAL_ERROR_UNEXPECTED_EXIT_REASON	4
  
--int is_uv_hubless(void)
-+int is_uv_hubless(int uvtype)
- {
--	return uv_hubless_system;
-+	return (uv_hubless_system & uvtype);
- }
- EXPORT_SYMBOL_GPL(is_uv_hubless);
+ /* for KVM_RUN, returned by mmap(vcpu_fd, offset=0) */
+ struct kvm_run {
+@@ -996,6 +998,7 @@ struct kvm_ppc_resize_hpt {
+ #define KVM_CAP_ARM_PTRAUTH_ADDRESS 171
+ #define KVM_CAP_ARM_PTRAUTH_GENERIC 172
+ #define KVM_CAP_PMU_EVENT_FILTER 173
++#define KVM_CAP_ARM_IRQ_LINE_LAYOUT_2 174
  
-@@ -1592,7 +1601,7 @@ static void __init uv_system_init_hub(void)
-  */
- void __init uv_system_init(void)
- {
--	if (likely(!is_uv_system() && !is_uv_hubless()))
-+	if (likely(!is_uv_system() && !is_uv_hubless(1)))
- 		return;
+ #ifdef KVM_CAP_IRQ_ROUTING
  
- 	if (is_uv_system())
