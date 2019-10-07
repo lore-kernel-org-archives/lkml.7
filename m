@@ -2,223 +2,246 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1766EECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 541E5ECE58E
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D65A220679
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:47:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D8E420679
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:47:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570463244;
+	bh=3g3+jTGXd27OaTJMHb+QdPEN5r1Sz7eZI3v+NL4ISi8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=f12zeRWLH6uoGFmbttT/En4nuivHrPimlj50gzpPRfBHAc/h/iylN0f+H+QYEs6L5
+	 v1QoJ9ituAbz/xCvdaqzwsHSl+oxYUiUfBcODAYFPaT+SiPXBF0V0xsZ9zhDS1w3xX
+	 gDfo+7tCKEtl5+GmmmenHvpQxg4IEwKCT2BK/aiU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728979AbfJGPrV convert rfc822-to-8bit (ORCPT
+        id S1729005AbfJGPrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 7 Oct 2019 11:47:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51778 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728929AbfJGPrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Oct 2019 11:47:21 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:56793 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728144AbfJGPrT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:47:19 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1iHVEC-0001aK-Nl; Mon, 07 Oct 2019 09:47:16 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1iHVEB-00026g-HV; Mon, 07 Oct 2019 09:47:16 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     "Michael Kerrisk \(man-pages\)" <mtk.manpages@gmail.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        linux-man <linux-man@vger.kernel.org>,
-        Containers <containers@lists.linux-foundation.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jordan Ogas <jogas@lanl.gov>, werner@almesberger.net,
-        Al Viro <viro@ftp.linux.org.uk>
-References: <CAKgNAki0bR5zZr+kp_xjq+bNUky6-F+s2ep+jnR0YrjHhNMB1g@mail.gmail.com>
-        <20190805103630.tu4kytsbi5evfrhi@mikami>
-        <3a96c631-6595-b75e-f6a7-db703bf89bcf@gmail.com>
-        <da747415-4c7a-f931-6f2e-2962da63c161@philippwendler.de>
-        <CAKgNAkjS+x7aMVUiVSgCRwgi8rnukqJv=svtTARE-tt-oxQxWw@mail.gmail.com>
-        <87r24piwhm.fsf@x220.int.ebiederm.org>
-        <CAKgNAkhK2qBbz5aVY9VdK0UzvpZ=c7c7LWQ1MK2gu-rVKUz9_g@mail.gmail.com>
-        <87ftl5donm.fsf@x220.int.ebiederm.org>
-        <b8b9d8bd-e959-633f-b879-4bfe4eb0df23@gmail.com>
-        <20190910111551.scam5payogqqvlri@wittgenstein>
-        <30545c5c-ff4c-8b87-e591-40cc0a631304@gmail.com>
-        <871rwnda47.fsf@x220.int.ebiederm.org>
-        <448138b8-0d0c-5eb3-d5e5-04a26912d3a8@gmail.com>
-        <87ef0hbezt.fsf@x220.int.ebiederm.org>
-        <cc21557f-1568-68c3-e322-47ceb52fdf53@gmail.com>
-        <71cad40b-0f9f-24de-b650-8bc4fce78fa8@gmail.com>
-        <87y2y6j9i1.fsf@x220.int.ebiederm.org>
-        <7e4b23df-ab83-3d5a-3dc5-54025e3682cf@gmail.com>
-Date:   Mon, 07 Oct 2019 10:46:31 -0500
-In-Reply-To: <7e4b23df-ab83-3d5a-3dc5-54025e3682cf@gmail.com> (Michael
-        Kerrisk's message of "Mon, 7 Oct 2019 14:02:12 +0300")
-Message-ID: <87k19geey0.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-XM-SPF: eid=1iHVEB-00026g-HV;;;mid=<87k19geey0.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX189d0SjMc7rVk2x+/2tni/O8jn4nzqR1ZY=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: pivot_root(".", ".") and the fchdir() dance
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E9A821721;
+        Mon,  7 Oct 2019 15:47:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570463239;
+        bh=3g3+jTGXd27OaTJMHb+QdPEN5r1Sz7eZI3v+NL4ISi8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=QXUkmNPrghOgVC0cjHwvg8kJH44dmEEq/Uz5T7NBoAyoa1IkESrApCQDl3FL3AuxT
+         ztILaZ9SZQedHfFk5lz6hmMB6z0dNKSdx07kzepV3PrmXJjWfUPaRo2dooIhNTxQLS
+         Fr1RDze0ftSDN2Wo2ADQqjqvog4jtARJ6gy5TzBg=
+From:   Will Deacon <will@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Will Deacon <will@kernel.org>, Kees Cook <keescook@chromium.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Jan Glauber <jglauber@marvell.com>
+Subject: [PATCH v3 05/10] lib/refcount: Improve performance of generic REFCOUNT_FULL code
+Date:   Mon,  7 Oct 2019 16:46:58 +0100
+Message-Id: <20191007154703.5574-6-will@kernel.org>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20191007154703.5574-1-will@kernel.org>
+References: <20191007154703.5574-1-will@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com> writes:
+Rewrite the generic REFCOUNT_FULL implementation so that the saturation
+point is moved to INT_MIN / 2. This allows us to defer the sanity checks
+until after the atomic operation, which removes many uses of cmpxchg()
+in favour of atomic_fetch_{add,sub}().
 
-> Hello Eric,
->
-> On 9/30/19 2:42 PM, Eric W. Biederman wrote:
->> "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com> writes:
->>
->>> Hello Eric,
->>>
->>> A ping on my question below. Could you take a look please?
->>>
->>> Thanks,
->>>
->>> Michael
->>>
->>>>>>> The concern from our conversation at the container mini-summit was that
->>>>>>> there is a pathology if in your initial mount namespace all of the
->>>>>>> mounts are marked MS_SHARED like systemd does (and is almost necessary
->>>>>>> if you are going to use mount propagation), that if new_root itself
->>>>>>> is MS_SHARED then unmounting the old_root could propagate.
->>>>>>>
->>>>>>> So I believe the desired sequence is:
->>>>>>>
->>>>>>>>>>             chdir(new_root);
->>>>>>> +++            mount("", ".", MS_SLAVE | MS_REC, NULL);
->>>>>>>>>>             pivot_root(".", ".");
->>>>>>>>>>             umount2(".", MNT_DETACH);
->>>>>>>
->>>>>>> The change to new new_root could be either MS_SLAVE or MS_PRIVATE.  So
->>>>>>> long as it is not MS_SHARED the mount won't propagate back to the
->>>>>>> parent mount namespace.
->>>>>>
->>>>>> Thanks. I made that change.
->>>>>
->>>>> For what it is worth.  The sequence above without the change in mount
->>>>> attributes will fail if it is necessary to change the mount attributes
->>>>> as "." is both put_old as well as new_root.
->>>>>
->>>>> When I initially suggested the change I saw "." was new_root and forgot
->>>>> "." was also put_old.  So I thought there was a silent danger without
->>>>> that sequence.
->>>>
->>>> So, now I am a little confused by the comments you added here. Do you
->>>> now mean that the
->>>>
->>>> mount("", ".", MS_SLAVE | MS_REC, NULL);
->>>>
->>>> call is not actually necessary?
->>
->> Apologies for being slow getting back to you.
->
-> NP. Thanks for your reply.
->
->> To my knowledge there are two cases where pivot_root is used.
->> - In the initial mount namespace from a ramdisk when mounting root.
->>    This is the original use case and somewhat historical as rootfs
->>    (aka an initial ramfs) may not be unmounted.
->>
->> - When setting up a new mount namespace to jettison all of the mounts
->>    you don't need.
->>
->> The sequence:
->>
->> 	chdir(new_root);
->>          pivot_root(".", ".");
->>          umount2(".", MNT_DETACH);
->>
->> is perfect for both use cases (as nothing needs to be known about the
->> directory layout of the new root filesystem).
->>
->> In the case when you are setting up a new mount namespace propogating
->> changes in the mount layout to another mount namespace is fatal.  But
->> that is not a concern for using that pivot_root sequence above because
->> pivot_root will fail deterministically if
->> 'mount("", ".", MS_SLAVE | MS_REC, NULL)' is needed but not specified.
->>
->> So I would document the above sequence of three system calls in the
->> man-page.
->
-> Okay. I've changed the example to be just those three calls.
->
->> I would document that pivot_root will fail if propagation would occur.
->
-> Yep. That's in the page already.
->
->> I would document in pivot_root or under unshare(CLONE_NEWNS) that if
->> mount propagation is enabled (the default with systemd) that you
->> need to call 'mount("", "/", MS_SLAVE | MS_REC, NULL);' or
->> 'mount("", "/", MS_PRIVATE | MS_REC, NULL);' after creating a mount
->> namespace.  Or mounts will propagate backwards, which is usually
->> not what people want.
->
-> Thanks. Instead, I have added the following text to
-> mount_namespaces(7), the page that is referred to by both clone(2) and
-> unshare(2) in their discussions of CLONE_NEWNS:
->
->        An   application  that  creates  a  new  mount  namespace
->        directly using clone(2) or unshare(2) may desire to  pre‐
->        vent  propagation  of  mount events to other mount names‐
->        paces (as is is done by unshare(1)).  This can be done by
->        changing  the propagation type of mount points in the new
->        namesapace to either MS_SLAVE  or  MS_PRIVATE.   using  a
->        call such as the following:
->
->                   mount(NULL, "/", MS_SLAVE | MS_REC, NULL);
+Some crude perf results obtained from lkdtm show substantially less
+overhead, despite the checking:
 
-Yes.
+ $ perf stat -r 3 -B -- echo {ATOMIC,REFCOUNT}_TIMING >/sys/kernel/debug/provoke-crash/DIRECT
 
->> Creating of a mount namespace in a user namespace automatically does
->> 'mount("", "/", MS_SLAVE | MS_REC, NULL);' if the starting mount
->> namespace was not created in that user namespace.  AKA creating
->> a mount namespace in a user namespace does the unshare for you.
->
-> Oh -- I had forgotten that detail. But it is documented
-> (by you, I think) in mount_namespaces(7):
->
->        *  A  mount  namespace  has  an  owner user namespace.  A
->           mount namespace whose owner user namespace is  differ‐
->           ent  from the owner user namespace of its parent mount
->           namespace is considered a less privileged mount names‐
->           pace.
->
->        *  When  creating  a  less  privileged  mount  namespace,
->           shared mounts are reduced to  slave  mounts.   (Shared
->           and  slave  mounts are discussed below.)  This ensures
->           that  mappings  performed  in  less  privileged  mount
->           namespaces will not propagate to more privileged mount
->           namespaces.
->
-> There's one point that description that troubles me. There is a
-> reference to "parent mount namespace", but as I understand things
-> there is no parental relationship among mount namespaces instances
-> (or am I wrong?). Should that wording not be rather something
-> like "the mount namespace of the process that created this mount
-> namespace"?
+ # arm64
+ ATOMIC_TIMING:                                      46.50451 +- 0.00134 seconds time elapsed  ( +-  0.00% )
+ REFCOUNT_TIMING (REFCOUNT_FULL, mainline):          77.57522 +- 0.00982 seconds time elapsed  ( +-  0.01% )
+ REFCOUNT_TIMING (REFCOUNT_FULL, this series):       48.7181 +- 0.0256 seconds time elapsed  ( +-  0.05% )
 
-How about "the mount namespace this mount namespace started as a copy of"
+ # x86
+ ATOMIC_TIMING:                                      31.6225 +- 0.0776 seconds time elapsed  ( +-  0.25% )
+ REFCOUNT_TIMING (!REFCOUNT_FULL, mainline/x86 asm): 31.6689 +- 0.0901 seconds time elapsed  ( +-  0.28% )
+ REFCOUNT_TIMING (REFCOUNT_FULL, mainline):          53.203 +- 0.138 seconds time elapsed  ( +-  0.26% )
+ REFCOUNT_TIMING (REFCOUNT_FULL, this series):       31.7408 +- 0.0486 seconds time elapsed  ( +-  0.15% )
 
-You are absolutely correct there is no relationship between mount
-namespaces.  There is just the propagation tree between mounts.  (Which
-acts similarly to a parent/child relationship but is not at all the same
-thing).
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Elena Reshetova <elena.reshetova@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Tested-by: Hanjun Guo <guohanjun@huawei.com>
+Tested-by: Jan Glauber <jglauber@marvell.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Will Deacon <will@kernel.org>
+---
+ include/linux/refcount.h | 87 ++++++++++++++++------------------------
+ 1 file changed, 34 insertions(+), 53 deletions(-)
 
-Eric
+diff --git a/include/linux/refcount.h b/include/linux/refcount.h
+index e719b5b1220e..7f9aa6511142 100644
+--- a/include/linux/refcount.h
++++ b/include/linux/refcount.h
+@@ -47,8 +47,8 @@ static inline unsigned int refcount_read(const refcount_t *r)
+ #ifdef CONFIG_REFCOUNT_FULL
+ #include <linux/bug.h>
+ 
+-#define REFCOUNT_MAX		(UINT_MAX - 1)
+-#define REFCOUNT_SATURATED	UINT_MAX
++#define REFCOUNT_MAX		INT_MAX
++#define REFCOUNT_SATURATED	(INT_MIN / 2)
+ 
+ /*
+  * Variant of atomic_t specialized for reference counts.
+@@ -109,25 +109,19 @@ static inline unsigned int refcount_read(const refcount_t *r)
+  */
+ static inline __must_check bool refcount_add_not_zero(int i, refcount_t *r)
+ {
+-	unsigned int new, val = atomic_read(&r->refs);
++	int old = refcount_read(r);
+ 
+ 	do {
+-		if (!val)
+-			return false;
+-
+-		if (unlikely(val == REFCOUNT_SATURATED))
+-			return true;
+-
+-		new = val + i;
+-		if (new < val)
+-			new = REFCOUNT_SATURATED;
++		if (!old)
++			break;
++	} while (!atomic_try_cmpxchg_relaxed(&r->refs, &old, old + i));
+ 
+-	} while (!atomic_try_cmpxchg_relaxed(&r->refs, &val, new));
+-
+-	WARN_ONCE(new == REFCOUNT_SATURATED,
+-		  "refcount_t: saturated; leaking memory.\n");
++	if (unlikely(old < 0 || old + i < 0)) {
++		refcount_set(r, REFCOUNT_SATURATED);
++		WARN_ONCE(1, "refcount_t: saturated; leaking memory.\n");
++	}
+ 
+-	return true;
++	return old;
+ }
+ 
+ /**
+@@ -148,7 +142,13 @@ static inline __must_check bool refcount_add_not_zero(int i, refcount_t *r)
+  */
+ static inline void refcount_add(int i, refcount_t *r)
+ {
+-	WARN_ONCE(!refcount_add_not_zero(i, r), "refcount_t: addition on 0; use-after-free.\n");
++	int old = atomic_fetch_add_relaxed(i, &r->refs);
++
++	WARN_ONCE(!old, "refcount_t: addition on 0; use-after-free.\n");
++	if (unlikely(old <= 0 || old + i <= 0)) {
++		refcount_set(r, REFCOUNT_SATURATED);
++		WARN_ONCE(old, "refcount_t: saturated; leaking memory.\n");
++	}
+ }
+ 
+ /**
+@@ -166,23 +166,7 @@ static inline void refcount_add(int i, refcount_t *r)
+  */
+ static inline __must_check bool refcount_inc_not_zero(refcount_t *r)
+ {
+-	unsigned int new, val = atomic_read(&r->refs);
+-
+-	do {
+-		new = val + 1;
+-
+-		if (!val)
+-			return false;
+-
+-		if (unlikely(!new))
+-			return true;
+-
+-	} while (!atomic_try_cmpxchg_relaxed(&r->refs, &val, new));
+-
+-	WARN_ONCE(new == REFCOUNT_SATURATED,
+-		  "refcount_t: saturated; leaking memory.\n");
+-
+-	return true;
++	return refcount_add_not_zero(1, r);
+ }
+ 
+ /**
+@@ -199,7 +183,7 @@ static inline __must_check bool refcount_inc_not_zero(refcount_t *r)
+  */
+ static inline void refcount_inc(refcount_t *r)
+ {
+-	WARN_ONCE(!refcount_inc_not_zero(r), "refcount_t: increment on 0; use-after-free.\n");
++	refcount_add(1, r);
+ }
+ 
+ /**
+@@ -224,26 +208,19 @@ static inline void refcount_inc(refcount_t *r)
+  */
+ static inline __must_check bool refcount_sub_and_test(int i, refcount_t *r)
+ {
+-	unsigned int new, val = atomic_read(&r->refs);
+-
+-	do {
+-		if (unlikely(val == REFCOUNT_SATURATED))
+-			return false;
++	int old = atomic_fetch_sub_release(i, &r->refs);
+ 
+-		new = val - i;
+-		if (new > val) {
+-			WARN_ONCE(new > val, "refcount_t: underflow; use-after-free.\n");
+-			return false;
+-		}
+-
+-	} while (!atomic_try_cmpxchg_release(&r->refs, &val, new));
+-
+-	if (!new) {
++	if (old == i) {
+ 		smp_acquire__after_ctrl_dep();
+ 		return true;
+ 	}
+-	return false;
+ 
++	if (unlikely(old - i < 0)) {
++		refcount_set(r, REFCOUNT_SATURATED);
++		WARN_ONCE(1, "refcount_t: underflow; use-after-free.\n");
++	}
++
++	return false;
+ }
+ 
+ /**
+@@ -276,9 +253,13 @@ static inline __must_check bool refcount_dec_and_test(refcount_t *r)
+  */
+ static inline void refcount_dec(refcount_t *r)
+ {
+-	WARN_ONCE(refcount_dec_and_test(r), "refcount_t: decrement hit 0; leaking memory.\n");
+-}
++	int old = atomic_fetch_sub_release(1, &r->refs);
+ 
++	if (unlikely(old <= 1)) {
++		refcount_set(r, REFCOUNT_SATURATED);
++		WARN_ONCE(1, "refcount_t: decrement hit 0; leaking memory.\n");
++	}
++}
+ #else /* CONFIG_REFCOUNT_FULL */
+ 
+ #define REFCOUNT_MAX		INT_MAX
+-- 
+2.23.0.581.g78d2f28ef7-goog
 
