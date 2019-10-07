@@ -2,164 +2,243 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B961C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D850ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFFB5206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63D50206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:57:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="gCXJAhIi"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="bth3kC50"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728506AbfJGS5R (ORCPT
+        id S1728567AbfJGS5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 14:57:17 -0400
-Received: from mail-eopbgr750044.outbound.protection.outlook.com ([40.107.75.44]:40451
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        Mon, 7 Oct 2019 14:57:52 -0400
+Received: from mail-eopbgr1310118.outbound.protection.outlook.com ([40.107.131.118]:13761
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728187AbfJGS5R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 14:57:17 -0400
+        id S1728071AbfJGS5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 14:57:51 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XdFIFYsnO6fBZqufkMrCrQgWwkvoaYaHP2XYsKCMeOjOEo9ifivbDRBrpJZQ+JyBARPHhQYiwLYngdEu5TYKUFN2hKJ3fkZMru3E/et+ML3ZCyRWMIGTPSF3my3alsaLkTfOB1w5fRjpts7y3SbxdhZQMs1IA2XJKhAadtfg3x8fuHCilFd8MK0svdR74YTvZz2iBvSu0IRrhNLTxYrufR1frSNhd6tvJtLT/b1rtqQFEUkqO7uRRMh5yN3I19B/6NfpIbYQlK7ZnikNHDSS+5w6YIl8UHJSw7K8hCiGCwoeuxaabPcoMCC0m7kexwNzaNILDh2Www93m4fjta58HQ==
+ b=cnoAuCuU5iiyu+FvHWOat7bQh+To8Ev2xBkCYFYX2oex0ojAPk9vrg7aJdrdvxw5CkutA6h27zcKX/0toVTnumO1JihOzi9RPoU5b+NxlnbdDQ7BWfBTnmP0Vd7FXjWuRS2Sb/AJ68Z26xcN42AeKpjdMqTPLmuftXC4lEmQ7iP5gwyoxHwCXpgFuZZRCZuMirENDRu1j4Oc5QfbZsMpbIIAL6MjYLk9veDju477Ei4FUEsMbdORTd5bvkQ5UmgHVnZAxMIRpJGyJs5Q/hDUD4i7JCB0oyYsgB9+OYtXqKi83VM2dEzSJjM73GyaVZx+3WWWDRWRTO5A8mlvTKUa4g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=t53urfTa6DY0+QeDiLFIsdoOtQKtHDycgygWxu0GPqo=;
- b=krYC4yAmEGcKQaw87I/eDx6R8MKB0XwSri2BTo3fmS4gPpnrKpJF0mTqz4ZDQowwMep9R6+50b4c+0OduWV059paHHKo/3YFP0z1er5/n1IdFHKs3daO7sZP8NLRRb5yfp74I+l/KpZtRmhshCtOLqZA7B+FS8LJiB8tqtRafgZw1gKlCAyBJdBpmsi+B546w+J68NnRdCqDgd/VRFXZVAmSOySj2mwbc3dVDixvJAiid9vzIb7Wr7XD3CFQfnqYtXvVxvQVRKz3hKpFhcyye/rYuzZk+AWCDrHoZeFocHJrCBbLAIXZNvn8+BuwJjktLhRTyxHicAr7Y36T1zj+Dg==
+ bh=KxoqGK84eMrAv8yOZ6WvCDlnwhKQS/d7aPRzIFy6ffg=;
+ b=bVqQkstc1Ef45sR8jCjszoY/NyPOnNXgGqw9HjmxnQV2SbkVI/1Jbf8DikGloUzd6loWviqIfWJKka8wsQ61U94RxLJlxc4gEvAQdulyaNDmt9/49K4wNXLJNeSkocp6p+xqXdMzowmU4qokj2oFu56jqZ8EYAyJSWCJAbVBIwWPxuQaPvvZ8iCJeKQlPID1ywScOtp+oLvSXxY40Jgk4E9sc7r03YlQwKhURMD3TYjr9AAmPf6UgJs4LWCI3BxRvAPyu66Dfv5x9ljPhL4obD1IIo7gmKboj3M0tFe1+0N86s2vGivmzSK/ZxoaKMytCnAwAfkRo/I4cSNw0OFMhg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=t53urfTa6DY0+QeDiLFIsdoOtQKtHDycgygWxu0GPqo=;
- b=gCXJAhIiA/1UWi+0dXcUVsCUxvwsnIEkKa3wu9eW5eqn7jr2WR+Ve9fbcvZwfN8d9ydgvmrwVWEppQQuX3Fej1U3FuAXmo2wkzi5c/js5K8gPJkETIw7+UJssj87TuSyFRVcK9aT3SIFGCE3XyhydMTOaTyadn/4zIsNMxhSbJA=
-Received: from BYAPR02MB5992.namprd02.prod.outlook.com (20.179.89.80) by
- BYAPR02MB4133.namprd02.prod.outlook.com (20.176.249.26) with Microsoft SMTP
+ bh=KxoqGK84eMrAv8yOZ6WvCDlnwhKQS/d7aPRzIFy6ffg=;
+ b=bth3kC50hjrl7Tky59UBoBTPVS661UR8BPWFzTFL4OkPyoqKF1ljeDN6yNmUKwaqqQzgEetfrCseRleh948mtLJ2YPcBiXKx5mK9hr4tLtZAigUIpn0gZtuKSAs5fSDFgrdStaoauXQdG0IdntP2q1iqbF15/utsTc9I1orCQFU=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0203.APCP153.PROD.OUTLOOK.COM (52.133.194.146) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.24; Mon, 7 Oct 2019 18:57:13 +0000
-Received: from BYAPR02MB5992.namprd02.prod.outlook.com
- ([fe80::dc47:4e37:db23:90e5]) by BYAPR02MB5992.namprd02.prod.outlook.com
- ([fe80::dc47:4e37:db23:90e5%3]) with mapi id 15.20.2327.025; Mon, 7 Oct 2019
- 18:57:13 +0000
-From:   Jolly Shah <JOLLYS@xilinx.com>
-To:     Michal Simek <michals@xilinx.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-CC:     "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>,
-        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        Michal Simek <michals@xilinx.com>,
-        Rajan Vaja <RAJANV@xilinx.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 1/2] dt-bindings: firmware: Add bindings for Versal
- firmware
-Thread-Topic: [PATCH 1/2] dt-bindings: firmware: Add bindings for Versal
- firmware
-Thread-Index: AQHVdWtshZwwGbsk+0uSb76OF2B3l6dKs9uAgAQOLICAANUGMA==
-Date:   Mon, 7 Oct 2019 18:57:13 +0000
-Message-ID: <BYAPR02MB59922496F636C8C89B26DA70B89B0@BYAPR02MB5992.namprd02.prod.outlook.com>
-References: <1569613206-20189-1-git-send-email-jolly.shah@xilinx.com>
- <1569613206-20189-2-git-send-email-jolly.shah@xilinx.com>
- <20191004161825.GB854302@kroah.com>
- <765978d6-10b3-b0e3-cf69-3c23104a8b6f@xilinx.com>
-In-Reply-To: <765978d6-10b3-b0e3-cf69-3c23104a8b6f@xilinx.com>
+ 15.20.2347.11; Mon, 7 Oct 2019 18:57:39 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::fc44:a784:73e6:c1c2%7]) with mapi id 15.20.2367.004; Mon, 7 Oct 2019
+ 18:57:39 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+CC:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "driverdev-devel@linuxdriverproject.org" 
+        <driverdev-devel@linuxdriverproject.org>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "jackm@mellanox.com" <jackm@mellanox.com>
+Subject: RE: [PATCH v2] PCI: PM: Move to D0 before calling
+ pci_legacy_resume_early()
+Thread-Topic: [PATCH v2] PCI: PM: Move to D0 before calling
+ pci_legacy_resume_early()
+Thread-Index: AdVSPER5d22rbcvgTV28JV77HSffhgq1j6kAAAuTThA=
+Date:   Mon, 7 Oct 2019 18:57:38 +0000
+Message-ID: <PU1P153MB016996765F9BB827256D05DEBF9B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <KU1P153MB016637CAEAD346F0AA8E3801BFAD0@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM>
+ <20191007132414.GA19294@google.com>
+In-Reply-To: <20191007132414.GA19294@google.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
 X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-07T18:57:35.7748996Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c4882525-48f5-4a48-9b5c-a0913e3efe36;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=JOLLYS@xilinx.com; 
-x-originating-ip: [149.199.62.133]
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:7f70:44a6:f3e:a757:ee91]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1131b65f-c058-455b-ffbc-08d74b582a6a
+x-ms-office365-filtering-correlation-id: 3abe572f-7505-468e-c5f3-08d74b58398a
 x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: BYAPR02MB4133:|BYAPR02MB4133:
+x-ms-traffictypediagnostic: PU1P153MB0203:|PU1P153MB0203:|PU1P153MB0203:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR02MB413349620A41F938A63C94D2B89B0@BYAPR02MB4133.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <PU1P153MB020385FEBA02F7FA8C1F3468BF9B0@PU1P153MB0203.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
 x-forefront-prvs: 01834E39B7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(346002)(396003)(136003)(39860400002)(199004)(13464003)(189003)(25786009)(7736002)(102836004)(14444005)(64756008)(66446008)(99286004)(66476007)(66556008)(66946007)(76116006)(74316002)(305945005)(33656002)(256004)(4326008)(7416002)(6246003)(316002)(53546011)(14454004)(76176011)(6506007)(229853002)(52536014)(186003)(81156014)(11346002)(6436002)(9686003)(81166006)(26005)(8676002)(54906003)(71190400001)(71200400001)(110136005)(66066001)(6116002)(478600001)(3846002)(5660300002)(2906002)(476003)(55016002)(486006)(446003)(7696005)(86362001)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB4133;H:BYAPR02MB5992.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(396003)(376002)(136003)(346002)(366004)(189003)(199004)(13464003)(54534003)(14444005)(256004)(76116006)(33656002)(99286004)(4326008)(229853002)(71190400001)(71200400001)(66446008)(64756008)(66556008)(6436002)(66476007)(66946007)(9686003)(55016002)(81156014)(81166006)(5660300002)(8936002)(52536014)(6246003)(7416002)(7736002)(305945005)(8676002)(74316002)(54906003)(316002)(22452003)(186003)(6116002)(102836004)(8990500004)(10090500001)(25786009)(6506007)(53546011)(478600001)(486006)(476003)(86362001)(2906002)(46003)(14454004)(446003)(11346002)(7696005)(76176011)(110136005)(10290500003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0203;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: VlDnp401fvWxNmGS7nygDFyXtyYK0IlJcaAWCr0sjVkHt3RPw4SSzYz0Xc3jUbk383uWvtH1fTPewMF82hSkViSn1wayNXJrNtq4Wcjw9le6dWm+99nic6+35yvCZGV5bC2QHpQQLtnIoZD7l3/of1R6Jymbzsw3/e13AWkEkG4JWQfUa6KVnc7LAA0+OG9ok1HLI9xmJT4daj85jKCUqPEGKciiuxJd/sT/NgPB4SG/Q6WmjOnJl5/bu2iSqH97HGYZ1pDY5oElOFDxePA4CMDxCHybJToiSZ+W6ImX2De2w5bEjYCJXIm9MHShlZJq/gVM509PctCy7xnScLfbFRg5SZ9OkI7gZu5TccWJZOGtVjoBD0xgxnOV6NjfwP3PNXPOkveZMucsTrGW1ONNOQFDIIoU6Pab70DFrWLbbvU=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: a0xm1bFRcZBw6bqIvE+y38Z66eRP1eWgdX4H2yOVXFKN4xQVMz+NmGWVs/gaKuOP9l5CprUnQrzvEqtpSgr9GinGejOq4CyLz9efjRuPYA9P4TeT8yzKdG01J0PbyiaYR4WBQMCNm+Z4LCCty09Fj5819rIFdfS5A6MXMWcww60mRUqAv2aSs2OGg9TpjLYuE5nfNJZBCbeZ2n8dPkU6yHh+owHfT2CNaDDuLJGQecUcTfCTLe+Bg/sgFmFCD0JO4Hq40d437Xdt2MJtnKY7n/JUfnFtMfap5LhUtO56hUQ7JDm2JOnZMsxTQ/vUuc33To9j3iUTn5frwsM4Jyly50Juvm4Soxy95rv7VcTku5j5+6SJ6N48E/xceiv0xrAjXdAfTwJ3mJaG7iYB4qnHqUdnH7rh16vgimxufHvCF3U=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1131b65f-c058-455b-ffbc-08d74b582a6a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Oct 2019 18:57:13.5416
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3abe572f-7505-468e-c5f3-08d74b58398a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Oct 2019 18:57:38.6778
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WX3kheuQoRq0NQFb5ZHGYZMCGs9WbEhQSuUcUyLGYE/shSsvqLnpOef9/wMGysEa7PnzmqJzmbUJsIu1VPRySA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB4133
+X-MS-Exchange-CrossTenant-userprincipalname: u106Cx2vLaZg/uaamZ+mWDcW/fOpAwG+Tbe4TZ9x5HQq8EFPQ6oClWpBwO1wElq4mvro/iGnFJHgon3BDWrtAw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0203
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTWljaGFsIGFuZCBHcmVnLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZy
-b206IE1pY2hhbCBTaW1layA8bWljaGFsLnNpbWVrQHhpbGlueC5jb20+DQo+IFNlbnQ6IFN1bmRh
-eSwgT2N0b2JlciAwNiwgMjAxOSAxMToxNCBQTQ0KPiBUbzogR3JlZyBLSCA8Z3JlZ2toQGxpbnV4
-Zm91bmRhdGlvbi5vcmc+OyBKb2xseSBTaGFoIDxKT0xMWVNAeGlsaW54LmNvbT4NCj4gQ2M6IGFy
-ZC5iaWVzaGV1dmVsQGxpbmFyby5vcmc7IG1pbmdvQGtlcm5lbC5vcmc7IG1hdHRAY29kZWJsdWVw
-cmludC5jby51azsNCj4gc3VkZWVwLmhvbGxhQGFybS5jb207IGhrYWxsd2VpdDFAZ21haWwuY29t
-OyBrZWVzY29va0BjaHJvbWl1bS5vcmc7DQo+IGRtaXRyeS50b3Jva2hvdkBnbWFpbC5jb207IE1p
-Y2hhbCBTaW1layA8bWljaGFsc0B4aWxpbnguY29tPjsgUmFqYW4gVmFqYQ0KPiA8UkFKQU5WQHhp
-bGlueC5jb20+OyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LQ0K
-PiBrZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMS8yXSBkdC1i
-aW5kaW5nczogZmlybXdhcmU6IEFkZCBiaW5kaW5ncyBmb3IgVmVyc2FsIGZpcm13YXJlDQo+IA0K
-PiBPbiAwNC4gMTAuIDE5IDE4OjE4LCBHcmVnIEtIIHdyb3RlOg0KPiA+IE9uIEZyaSwgU2VwIDI3
-LCAyMDE5IGF0IDEyOjQwOjA1UE0gLTA3MDAsIEpvbGx5IFNoYWggd3JvdGU6DQo+ID4+IFp5bnFN
-UCBmaXJtd2FyZSBkcml2ZXIgY2FuIGJlIHVzZWQgZm9yIHZlcnNhbCBhbHNvLg0KPiA+PiBBZGQg
-dmVyc2FsIGNvbXBhdGlibGUgc3RyaW5nIHRvIHp5bnFtcCBmaXJtd2FyZSBkcml2ZXINCj4gPj4g
-ZG9jLg0KPiA+Pg0KPiA+PiBTaWduZWQtb2ZmLWJ5OiBKb2xseSBTaGFoIDxqb2xseS5zaGFoQHhp
-bGlueC5jb20+DQo+ID4+IC0tLQ0KPiA+PiAgLi4uL2JpbmRpbmdzL2Zpcm13YXJlL3hpbGlueC94
-bG54LHp5bnFtcC1maXJtd2FyZS50eHQgICAgfCAxNg0KPiArKysrKysrKysrKysrKystDQo+ID4+
-ICAxIGZpbGUgY2hhbmdlZCwgMTUgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiA+Pg0K
-PiA+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Zpcm13
-YXJlL3hpbGlueC94bG54LHp5bnFtcC0NCj4gZmlybXdhcmUudHh0DQo+IGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Zpcm13YXJlL3hpbGlueC94bG54LHp5bnFtcC0NCj4gZmly
-bXdhcmUudHh0DQo+ID4+IGluZGV4IGE0ZmUxMzYuLjE4YzNhZWEgMTAwNjQ0DQo+ID4+IC0tLSBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9maXJtd2FyZS94aWxpbngveGxueCx6
-eW5xbXAtDQo+IGZpcm13YXJlLnR4dA0KPiA+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZmlybXdhcmUveGlsaW54L3hsbngsenlucW1wLQ0KPiBmaXJtd2FyZS50eHQN
-Cj4gPj4gQEAgLTExLDcgKzExLDkgQEAgcG93ZXIgbWFuYWdlbWVudCBzZXJ2aWNlLCBGUEdBIHNl
-cnZpY2UgYW5kIG90aGVyDQo+IHBsYXRmb3JtIG1hbmFnZW1lbnQNCj4gPj4gIHNlcnZpY2VzLg0K
-PiA+Pg0KPiA+PiAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPj4gLSAtIGNvbXBhdGlibGU6CU11
-c3QgY29udGFpbjoJInhsbngsenlucW1wLWZpcm13YXJlIg0KPiA+PiArIC0gY29tcGF0aWJsZToJ
-TXVzdCBjb250YWluIGFueSBvZiBiZWxvdzoNCj4gPj4gKwkJInhsbngsenlucW1wLWZpcm13YXJl
-IiBmb3IgWnlucSBVbHRyYXNjYWxlKyBNUFNvQw0KPiA+PiArCQkieGxueCx2ZXJzYWwtZmlybXdh
-cmUiIGZvciBWZXJzYWwNCj4gPj4gICAtIG1ldGhvZDoJVGhlIG1ldGhvZCBvZiBjYWxsaW5nIHRo
-ZSBQTS1BUEkgZmlybXdhcmUgbGF5ZXIuDQo+ID4+ICAJCVBlcm1pdHRlZCB2YWx1ZXMgYXJlOg0K
-PiA+PiAgCQkgIC0gInNtYyIgOiBTTUMgIzAsIGZvbGxvd2luZyB0aGUgU01DQ0MNCj4gPj4gQEAg
-LTIxLDYgKzIzLDggQEAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPj4gIEV4YW1wbGUNCj4gPj4g
-IC0tLS0tLS0NCj4gPj4NCj4gPj4gK1p5bnEgVWx0cmFzY2FsZSsgTVBTb0MNCj4gPj4gKy0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0NCj4gPj4gIGZpcm13YXJlIHsNCj4gPj4gIAl6eW5xbXBfZmlybXdh
-cmU6IHp5bnFtcC1maXJtd2FyZSB7DQo+ID4+ICAJCWNvbXBhdGlibGUgPSAieGxueCx6eW5xbXAt
-ZmlybXdhcmUiOw0KPiA+PiBAQCAtMjgsMyArMzIsMTMgQEAgZmlybXdhcmUgew0KPiA+PiAgCQku
-Li4NCj4gPj4gIAl9Ow0KPiA+PiAgfTsNCj4gPj4gKw0KPiA+PiArVmVyc2FsDQo+ID4+ICstLS0t
-LS0NCj4gPj4gK2Zpcm13YXJlIHsNCj4gPj4gKwl2ZXJzYWxfZmlybXdhcmU6IHZlcnNhbC1maXJt
-d2FyZSB7DQo+ID4+ICsJCWNvbXBhdGlibGUgPSAieGxueCx2ZXJzYWwtZmlybXdhcmUiOw0KPiA+
-PiArCQltZXRob2QgPSAic21jIjsNCj4gPj4gKwkJLi4uDQo+ID4+ICsJfTsNCj4gPj4gK307DQo+
-ID4+IC0tDQo+ID4+IDIuNy40DQo+ID4+DQo+ID4NCj4gPg0KPiA+IEZvciBuZXcgZHQgYmluZGlu
-Z3MsIGRvbid0IHlvdSBoYXZlIHRvIGNjOiB0aGUgZHQgbWFpbnRhaW5lcnMgYW5kDQo+ID4gbWFp
-bGluZyBsaXN0PyAgSSBjYW4ndCB0YWtlIHRoZSBwYXRjaCB1bnRpbCBJIGdldCBhbiBhY2sgZnJv
-bSB0aGVtLg0KPiANCj4gWWVzIGR0IGd1eXMgc2hvdWxkIGJlIGluIENDIGFuZCBub3JtYWxseSBJ
-IGFtIHRha2luZyB0aGlzIHZpYSBBUk0gc29jIHRyZWUuDQo+IA0KPiBKb2xseTogUGxlYXNlIHJl
-c2VuZA0KPiANCg0KU29ycnkgbWlzc2VkIGl0IGVhcmxpZXIuIFNlbnQgdjIgaW5jbHVkaW5nIERU
-IG1haW50YWluZXJzLg0KDQpUaGFua3MsDQpKb2xseSBTaGFoDQoNCj4gVGhhbmtzLA0KPiBNaWNo
-YWwNCg==
+> -----Original Message-----
+> From: Bjorn Helgaas <helgaas@kernel.org>
+> Sent: Monday, October 7, 2019 6:24 AM
+> To: Dexuan Cui <decui@microsoft.com>
+> Cc: lorenzo.pieralisi@arm.com; linux-pci@vger.kernel.org; Michael Kelley
+> <mikelley@microsoft.com>; linux-hyperv@vger.kernel.org;
+> linux-kernel@vger.kernel.org; driverdev-devel@linuxdriverproject.org; Sas=
+ha
+> Levin <Alexander.Levin@microsoft.com>; Haiyang Zhang
+> <haiyangz@microsoft.com>; KY Srinivasan <kys@microsoft.com>;
+> olaf@aepfle.de; apw@canonical.com; jasowang@redhat.com; vkuznets
+> <vkuznets@redhat.com>; marcelo.cerri@canonical.com; Stephen Hemminger
+> <sthemmin@microsoft.com>; jackm@mellanox.com
+> Subject: Re: [PATCH v2] PCI: PM: Move to D0 before calling
+> pci_legacy_resume_early()
+>=20
+> On Wed, Aug 14, 2019 at 01:06:55AM +0000, Dexuan Cui wrote:
+> >
+> > In pci_legacy_suspend_late(), the device state is moved to PCI_UNKNOWN.
+> >
+> > In pci_pm_thaw_noirq(), the state is supposed to be moved back to PCI_D=
+0,
+> > but the current code misses the pci_legacy_resume_early() path, so the
+> > state remains in PCI_UNKNOWN in that path. As a result, in the resume
+> > phase of hibernation, this causes an error for the Mellanox VF driver,
+> > which fails to enable MSI-X because pci_msi_supported() is false due
+> > to dev->current_state !=3D PCI_D0:
+> >
+> > mlx4_core a6d1:00:02.0: Detected virtual function - running in slave mo=
+de
+> > mlx4_core a6d1:00:02.0: Sending reset
+> > mlx4_core a6d1:00:02.0: Sending vhcr0
+> > mlx4_core a6d1:00:02.0: HCA minimum page size:512
+> > mlx4_core a6d1:00:02.0: Timestamping is not supported in slave mode
+> > mlx4_core a6d1:00:02.0: INTx is not supported in multi-function mode,
+> aborting
+> > PM: dpm_run_callback(): pci_pm_thaw+0x0/0xd7 returns -95
+> > PM: Device a6d1:00:02.0 failed to thaw: error -95
+> >
+> > To be more accurate, the "resume" phase means the "thaw" callbacks whic=
+h
+> > run before the system enters hibernation: when the user runs the comman=
+d
+> > "echo disk > /sys/power/state" for hibernation, first the kernel "freez=
+es"
+> > all the devices and creates a hibernation image, then the kernel "thaws=
+"
+> > the devices including the disk/NIC, writes the memory to the disk, and
+> > powers down. This patch fixes the error message for the Mellanox VF dri=
+ver
+> > in this phase.
+> >
+> > When the system starts again, a fresh kernel starts to run, and when th=
+e
+> > kernel detects that a hibernation image was saved, the kernel "quiesces=
+"
+> > the devices, and then "restores" the devices from the saved image. In t=
+his
+> > path:
+> > device_resume_noirq() -> ... ->
+> >   pci_pm_restore_noirq() ->
+> >     pci_pm_default_resume_early() ->
+> >       pci_power_up() moves the device states back to PCI_D0. This path =
+is
+> > not broken and doesn't need my patch.
+> >
+> > Signed-off-by: Dexuan Cui <decui@microsoft.com>
+>=20
+> This looks like a bugfix for 5839ee7389e8 ("PCI / PM: Force devices to
+> D0 in pci_pm_thaw_noirq()") so maybe it should be marked for stable as
+> 5839ee7389e8 was?
+>=20
+> Rafael, could you confirm?
+>=20
+> > ---
+> >
+> > changes in v2:
+> > 	Updated the changelog with more details.
+> >
+> >  drivers/pci/pci-driver.c | 7 ++++---
+> >  1 file changed, 4 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> > index 36dbe960306b..27dfc68db9e7 100644
+> > --- a/drivers/pci/pci-driver.c
+> > +++ b/drivers/pci/pci-driver.c
+> > @@ -1074,15 +1074,16 @@ static int pci_pm_thaw_noirq(struct device
+> *dev)
+> >  			return error;
+> >  	}
+> >
+> > -	if (pci_has_legacy_pm_support(pci_dev))
+> > -		return pci_legacy_resume_early(dev);
+> > -
+> >  	/*
+> >  	 * pci_restore_state() requires the device to be in D0 (because of MS=
+I
+> >  	 * restoration among other things), so force it into D0 in case the
+> >  	 * driver's "freeze" callbacks put it into a low-power state directly=
+.
+> >  	 */
+> >  	pci_set_power_state(pci_dev, PCI_D0);
+> > +
+> > +	if (pci_has_legacy_pm_support(pci_dev))
+> > +		return pci_legacy_resume_early(dev);
+> > +
+> >  	pci_restore_state(pci_dev);
+> >
+> >  	if (drv && drv->pm && drv->pm->thaw_noirq)
+> > --
+> > 2.19.1
+> >
+
+Added Rafael to "To".
+
+Thanks,
+-- Dexuan
+
