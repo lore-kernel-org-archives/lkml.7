@@ -2,82 +2,98 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3814BC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F350CECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09FFF20867
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB1512173B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:17:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570447077;
+	bh=r+vLgFtRiNBdOslFnz2p04PFe5zb8gDhJ5YnivaVaUY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dWS/6ET6F6nLO0b3+byBVuqpbrv/CsCvcGGyo1I1Bt7jyGTYFaX1aR7mRE7FEH4sL
+	 EllyxEPKIgbhlT/cBaz/MW0FN0SV+wzroJqFqb2LGTpXoiyknvtvDAF/k+nxbL1JRE
+	 2xbPVCNrE4NDgXGA0F86rS2/lfusqK7/+O1tAdVQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727589AbfJGLJl (ORCPT
+        id S1727526AbfJGLR5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 07:09:41 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:44881 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727317AbfJGLJl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 07:09:41 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iHQtU-0005Nj-0p; Mon, 07 Oct 2019 11:09:36 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        Yunsheng Lin <linyunsheng@huawei.com>,
-        Peng Li <lipeng321@huawei.com>, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] net: hns3: make array tick_array static, makes object smaller
-Date:   Mon,  7 Oct 2019 12:09:35 +0100
-Message-Id: <20191007110935.32607-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 7 Oct 2019 07:17:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47730 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727317AbfJGLR4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 07:17:56 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B03521655;
+        Mon,  7 Oct 2019 11:17:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570447074;
+        bh=r+vLgFtRiNBdOslFnz2p04PFe5zb8gDhJ5YnivaVaUY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UHyRWvhtEhmiGVo9uSRtjPrcdlBE95mlvJCePL9S79N6JNcY5f8eFGKBzFU5SOUll
+         CkB1jBN3d6gQQzwY3Q7aMMMBImsQX8GQoUG85d2uDoF9R1A1/Iq0b0QtzctFH+6Fx6
+         QC/9pP8DKzm1raC0FD/IoY6lMN9uvzUaCZJVGJ7M=
+Date:   Mon, 7 Oct 2019 13:17:52 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 5.3 000/166] 5.3.5-stable review
+Message-ID: <20191007111752.GA669414@kroah.com>
+References: <20191006171212.850660298@linuxfoundation.org>
+ <b71f3543-ba23-9e23-40aa-f958c0012182@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b71f3543-ba23-9e23-40aa-f958c0012182@nvidia.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Mon, Oct 07, 2019 at 11:09:04AM +0100, Jon Hunter wrote:
+> 
+> On 06/10/2019 18:19, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.3.5 release.
+> > There are 166 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Tue 08 Oct 2019 05:07:10 PM UTC.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.5-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> 
+> All tests are passing for Tegra ...
+> 
+> Test results for stable-v5.3:
+>     12 builds:	12 pass, 0 fail
+>     22 boots:	22 pass, 0 fail
+>     38 tests:	38 pass, 0 fail
+> 
+> Linux version:	5.3.5-rc1-ga2703e78c28a
+> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+>                 tegra194-p2972-0000, tegra20-ventana,
+>                 tegra210-p2371-2180, tegra30-cardhu-a04
 
-Don't populate the array tick_array on the stack but instead make it
-static. Makes the object code smaller by 29 bytes.
+Thanks for testing all of these and letting me know
 
-Before:
-   text	   data	    bss	    dec	    hex	filename
-  19191	    432	      0	  19623	   4ca7	hisilicon/hns3/hns3pf/hclge_tm.o
-
-After:
-   text	   data	    bss	    dec	    hex	filename
-  19098	    496	      0	  19594	   4c8a	hisilicon/hns3/hns3pf/hclge_tm.o
-
-(gcc version 9.2.1, amd64)
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
-index 9f0e35f27789..5cce9b7f1d3d 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
-@@ -46,7 +46,7 @@ static int hclge_shaper_para_calc(u32 ir, u8 shaper_level,
- #define DIVISOR_CLK		(1000 * 8)
- #define DIVISOR_IR_B_126	(126 * DIVISOR_CLK)
- 
--	const u16 tick_array[HCLGE_SHAPER_LVL_CNT] = {
-+	static const u16 tick_array[HCLGE_SHAPER_LVL_CNT] = {
- 		6 * 256,        /* Prioriy level */
- 		6 * 32,         /* Prioriy group level */
- 		6 * 8,          /* Port level */
--- 
-2.20.1
-
+greg k-h
