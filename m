@@ -2,108 +2,105 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 776E0C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 04:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5870CC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 04:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41F6E2084B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 04:26:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 244FB2084B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 04:37:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SUkPcE54"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="X9DSPAMm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbfJGE00 (ORCPT
+        id S1727131AbfJGEhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 00:26:26 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:45107 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726889AbfJGE00 (ORCPT
+        Mon, 7 Oct 2019 00:37:02 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:27824 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726889AbfJGEhC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 00:26:26 -0400
-Received: by mail-io1-f66.google.com with SMTP id c25so25565702iot.12;
-        Sun, 06 Oct 2019 21:26:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=9cn7hWNDSYfp5yXqFFW958D3/KZM4oLb6q2uNhX0rvU=;
-        b=SUkPcE54QuOqWOsnTUJ9OupBTtoc/62vjs+pcRhRlW91ahBSnrBEF2wJljxoPdk46O
-         GQNGPESN0Ff1RrPM/aD2eDoqVXb+yyUkqzRTseS2sSq2nQQwQqXYcdkqHqgpVj9DePe8
-         tM9olm3uxcRFSegXNDygnKTMAuMofJXZ3P2N1WakZ6wdpqOh3yfXAI14bWRts8LxVczv
-         XF8H7QDA1WLazodSRkecb3uBVrzIfNoErB7x0n+nImaKizevHEHlyp7pcZAZcbrqPrl2
-         Jqe1KFZLSRNlUOZ2kuG5LaDeSZ4tMyZAc8YmsHCc2YMoeJY0aERGwrVx0T75kbkLfzFI
-         +vgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=9cn7hWNDSYfp5yXqFFW958D3/KZM4oLb6q2uNhX0rvU=;
-        b=OqoofVKhenVt9fHFEWWjwvjH0zytajUPXipp+Uqu/e6rl6CY0Dv6AgFZoCCThWEvev
-         Nmcb1tbksbQsG2VRWmYIPnlQRJhz/TC9Kx1dkRxD4R4YVB9v9yAwjmNBWjOC4wJzFA7P
-         WNuIZj4Z+Av9Cl04aC8EqHd15KFS5nrFXDYKZ16PzUUBpKDwHdpPoABnprvjA1UtKH0O
-         /7jO6jY/C2VzpaRrVzC4JmdO0gpWeMLOFVFULzqJXdiWCAYOJ/E+5RxbRahK+WiHhbEM
-         kJN6lWll1rEIR/8/+1hZXZ4cgf2HT2syZ3mTYyL6JYjgQlKIs60Vi3jZonprEpaVuWAk
-         Qw1w==
-X-Gm-Message-State: APjAAAXdHfqjXKc1sMsTyxktqAI+ogFUYreA7ISYMWPSQemciTJHAuO9
-        wf70lJ6bioMYyhYckyXVgQBy5Aj13AsA16Mzguo=
-X-Google-Smtp-Source: APXvYqwNpG0DnS9E7tcNclPV8jO9ELB64ac4Ds2ETF8/Q67RH1TZJg0YKP6QP0J6Ls8/KN4ciXE8HHJrZwThDIB7Zh8=
-X-Received: by 2002:a92:a80c:: with SMTP id o12mr25789967ilh.190.1570422383586;
- Sun, 06 Oct 2019 21:26:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191004190938.15353-1-navid.emamdoost@gmail.com> <540321eb-7699-1d51-59d5-dde5ffcb8fc4@web.de>
-In-Reply-To: <540321eb-7699-1d51-59d5-dde5ffcb8fc4@web.de>
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Date:   Sun, 6 Oct 2019 23:26:12 -0500
-Message-ID: <CAEkB2ETtVwtmkpup65D3wqyLn=84ZHt0QRo0dJK5GsV=-L=qVw@mail.gmail.com>
-Subject: Re: drm/imx: Checking a kmemdup() call in imx_pd_bind()
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     dri-devel@lists.freedesktop.org,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Fabio Estevam <festevam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 7 Oct 2019 00:37:02 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id x974aGu4005037;
+        Mon, 7 Oct 2019 13:36:16 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x974aGu4005037
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1570422977;
+        bh=9zS2kiZ0aonbgklY7VJR/3auMJ79kULynEoV6u5gXu8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=X9DSPAMmfrMfjqLY943MtrqsF2TF56THsox9uJuCMzHjI0C6ouVr/Ml13c3Co55Ag
+         lpga6L7mh+Avb+4G6IrSqBQL+ueIDSgIXjWthvV3JLWIHmQj+YOCvPhPxgdvo4ZaXt
+         6hIXXThkb3M7q5x2O8cV4c0YsAAh3La9+Tt1Db+Re9QnHr7utMiE4ySD8QfPjGHJMp
+         fwkfFSdelbwNFIry2V09mzYhrpRYofsqCAR5N/RU4YjNVWe2A37jclIpMbuJoHPH1a
+         0iHhyBVUZlyTgiCyoL79+qGjLYLE3MDqYUl5eqyTTtulHxnuMe18g0DCtZgA0H/g0a
+         VtxTCL3QVbUPg==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Adam Zerella <adam.zerella@gmail.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Matthias Maennich <maennich@google.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] doc: move namespaces.rst out of kbuild directory
+Date:   Mon,  7 Oct 2019 13:36:11 +0900
+Message-Id: <20191007043611.31036-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Markus,
+I did not notice this document was added to Documentation/kbuild/,
+and I do not understand how it is related to the build system.
 
-I agree with you, kmemdup may fail so a null check seems necessary there.
+Kick it out of the kbuild directory.
 
-On Sun, Oct 6, 2019 at 4:33 AM Markus Elfring <Markus.Elfring@web.de> wrote=
-:
->
-> I have taken another look also at the implementation of the function =E2=
-=80=9Cimx_pd_bind=E2=80=9D.
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/d=
-rivers/gpu/drm/imx/parallel-display.c?id=3D43b815c6a8e7dbccb5b8bd9c4b099c24=
-bc22d135#n197
-> https://elixir.bootlin.com/linux/v5.4-rc1/source/drivers/gpu/drm/imx/para=
-llel-display.c#L197
->
-> Now I find an unchecked call of the function =E2=80=9Ckmemdup=E2=80=9D su=
-spicious.
-> Will this detail trigger further software development considerations?
->
-> Regards,
-> Markus
+I am not sure if this is the perfect place, but I added its index
+close to the module-signing.
 
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
+ Documentation/admin-guide/index.rst                  | 1 +
+ Documentation/{kbuild => admin-guide}/namespaces.rst | 0
+ MAINTAINERS                                          | 1 +
+ 3 files changed, 2 insertions(+)
+ rename Documentation/{kbuild => admin-guide}/namespaces.rst (100%)
 
---=20
-Navid.
+diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
+index 34cc20ee7f3a..ca632fda700f 100644
+--- a/Documentation/admin-guide/index.rst
++++ b/Documentation/admin-guide/index.rst
+@@ -65,6 +65,7 @@ configure specific aspects of kernel behavior to your liking.
+    parport
+    md
+    module-signing
++   namespaces
+    rapidio
+    sysrq
+    unicode
+diff --git a/Documentation/kbuild/namespaces.rst b/Documentation/admin-guide/namespaces.rst
+similarity index 100%
+rename from Documentation/kbuild/namespaces.rst
+rename to Documentation/admin-guide/namespaces.rst
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 55199ef7fa74..91815dcc5914 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11547,6 +11547,7 @@ NSDEPS
+ M:	Matthias Maennich <maennich@google.com>
+ S:	Maintained
+ F:	scripts/nsdeps
++F:	Documentation/admin-guide/namespaces.rst
+ 
+ NTB AMD DRIVER
+ M:	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+-- 
+2.17.1
+
