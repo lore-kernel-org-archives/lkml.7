@@ -2,134 +2,150 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E69CC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 665EDC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32B9421655
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:33:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=itdevltd.onmicrosoft.com header.i=@itdevltd.onmicrosoft.com header.b="qMGfFR5z"
+	by mail.kernel.org (Postfix) with ESMTP id 41C0121655
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:33:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727556AbfJGJdU (ORCPT
+        id S1727565AbfJGJdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 05:33:20 -0400
-Received: from mail-eopbgr60044.outbound.protection.outlook.com ([40.107.6.44]:18042
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726010AbfJGJdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 05:33:19 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jhlKi9yUMYdNuvqby8cNz23nd+K14XLPjs3XzL0VJBJZ5q5WTcT89LI/b+Th+xQf6V3l6T0NyKJPoYJpcZUM3z2pm56QgpyN8Ziuzpcb+hpnOiCFuURHDEUId4rMIBb3qoUsLdMQ7POyL3h8Qr/TRwjE1amxF3W5GSzEUb2UylxN+yXTswK7uatLt2dWh7F6AuSPdVF53lx+YdSabW1WBNw9TjutFz7CtArdkICbcTq026zyrWISbzK3eIqnvAnqMlOUIqHz8uR06hvWppLq0cBAhYmGGXXwHm/j56TER75+p6nHE4//sdGdk9+njJ3miSwORy5bS6Ax5/qBsMRwJw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bmZkZyjXKEUah/Jlr/MgdorGKmGADLWOMr9xmVHdQQo=;
- b=Gy9RGc4s5nMJ1Ynsy3jX8obJm+zdibuI+9BNql+LQUgPxjxpUX0FhYPDMVX+GzYtvET+8kgVFkwbhkZ+LFpG2ZSjbS4n1MOXSwEM/f3tu+Xhej0YEe5XG0XtYQh1SYr7rdTomTWkK2IIknbqiRM/SAsVy1cF/+6bYlQqXXF8IG22dc0xPjtdphf2/jGGqixdzH/HVtdEDb+IcRegaXRRV2Y59OIH4gUfqlAzCqie7JP0Slk1oOm0wTX7F84m7Vld4F0bums44faz2fhO1b/PwiBw92ApxpkolA0drmeiUEn7SXlKvbOKnBMiWfpMWr4TD6YNgp0lDXMM5yGdUGPkWA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=itdev.co.uk; dmarc=pass action=none header.from=itdev.co.uk;
- dkim=pass header.d=itdev.co.uk; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=itdevltd.onmicrosoft.com; s=selector2-itdevltd-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bmZkZyjXKEUah/Jlr/MgdorGKmGADLWOMr9xmVHdQQo=;
- b=qMGfFR5zg8FhfEYZCaFL0lYsT6fctkhRn9GO7wdf6S1oQDgDerU2UeSMP1R3a3+X92MuoIO+OC87q4fOVf1ApqZU2xstXasf/3wybMl0c/W7669gVrwhfO5MD9vBpGW3qv0gu4FiIWIZ/BrMyKDM2vOynkSe8vvIExzwDmEXyOc=
-Received: from DBBPR08MB4491.eurprd08.prod.outlook.com (20.179.44.144) by
- DBBPR08MB4648.eurprd08.prod.outlook.com (10.255.78.79) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.24; Mon, 7 Oct 2019 09:33:15 +0000
-Received: from DBBPR08MB4491.eurprd08.prod.outlook.com
- ([fe80::4c2f:e455:fb07:bdee]) by DBBPR08MB4491.eurprd08.prod.outlook.com
- ([fe80::4c2f:e455:fb07:bdee%6]) with mapi id 15.20.2327.025; Mon, 7 Oct 2019
- 09:33:15 +0000
-From:   Quentin Deslandes <quentin.deslandes@itdev.co.uk>
-To:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
-CC:     "outreachy-kernel@googlegroups.com" 
-        <outreachy-kernel@googlegroups.com>,
-        "forest@alittletooquiet.net" <forest@alittletooquiet.net>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "trivial@kernel.org" <trivial@kernel.org>
-Subject: Re: [PATCH] staging: vt6656: remove duplicated blank line
-Thread-Topic: [PATCH] staging: vt6656: remove duplicated blank line
-Thread-Index: AQHVfICBMETYKv8JVkao/iXduhbl+6dO63mA
-Date:   Mon, 7 Oct 2019 09:33:14 +0000
-Message-ID: <20191007093313.GA9232@qd-ubuntu>
-References: <20191006195854.9843-1-gabrielabittencourt00@gmail.com>
-In-Reply-To: <20191006195854.9843-1-gabrielabittencourt00@gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LNXP265CA0019.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:5e::31) To DBBPR08MB4491.eurprd08.prod.outlook.com
- (2603:10a6:10:d2::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=quentin.deslandes@itdev.co.uk; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [89.21.227.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 23c6464f-353a-4406-dc27-08d74b0960bf
-x-ms-traffictypediagnostic: DBBPR08MB4648:
-x-microsoft-antispam-prvs: <DBBPR08MB46485202024FBE8BAC57B7AFB39B0@DBBPR08MB4648.eurprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1360;
-x-forefront-prvs: 01834E39B7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(396003)(366004)(136003)(346002)(376002)(39830400003)(189003)(199004)(486006)(6486002)(305945005)(86362001)(6512007)(66066001)(9686003)(76176011)(44832011)(4744005)(229853002)(2906002)(25786009)(476003)(99286004)(5660300002)(3846002)(446003)(71200400001)(71190400001)(6116002)(6916009)(1076003)(11346002)(6436002)(7736002)(102836004)(6246003)(6506007)(386003)(4326008)(186003)(1411001)(8676002)(508600001)(33656002)(8936002)(14454004)(81166006)(81156014)(14444005)(33716001)(256004)(54906003)(316002)(26005)(66476007)(66556008)(64756008)(66446008)(66946007)(52116002);DIR:OUT;SFP:1101;SCL:1;SRVR:DBBPR08MB4648;H:DBBPR08MB4491.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:3;A:1;
-received-spf: None (protection.outlook.com: itdev.co.uk does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: YQ/w6bJJF9oPqEVbU/qzkzHTihf2jX403KEZjV+KRJdW7GYXYqeNJEiFb7RpIY+x16JQOaSWMgSUoRRD3eKbWdxEmU8kAhaxfx9Ki6Oqe8QwquCkzSWENT9lVKi6CxLJhwctOxunHrPDvgLe9amFcmgNGjHQogwhUkVLrhsryv/4oanBV1Df47w7nBycjbXIwSH8BnHpqKEZMnJWmaSDrQNX444uImZPibbkkeO1dcjBpXU+Th2BAiwgZXrqCRAWBocvzIWx2y5kt8E7NEBgFMzhP8TgLyPDFl1/rQhzawh9wil27czUNifxGS2jmLtEnddqUZGo2pk0cyvwaPTmvpVGXYpZCtjS9Uc5nkVcl6N5C/zuIZfOcMp52k4nloCT4MYjXrc0THq6Su8TgTu2G2pJydttGI4iuz0DVs+6TnE=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <54A2AFC5AFBD054E9BD6CA75401561CD@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 7 Oct 2019 05:33:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57358 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726010AbfJGJdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 05:33:49 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id CB7B9C0495A3;
+        Mon,  7 Oct 2019 09:33:47 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-29.pek2.redhat.com [10.72.12.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A4F6F100197A;
+        Mon,  7 Oct 2019 09:33:42 +0000 (UTC)
+Date:   Mon, 7 Oct 2019 17:33:38 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Lianbo Jiang <lijiang@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org, bhe@redhat.com,
+        jgross@suse.com, dhowells@redhat.com, Thomas.Lendacky@amd.com,
+        ebiederm@xmission.com, vgoyal@redhat.com, kexec@lists.infradead.org
+Subject: Re: [PATCH v2] x86/kdump: Fix 'kmem -s' reported an invalid
+ freepointer when SME was active
+Message-ID: <20191007093338.GA4710@dhcp-128-65.nay.redhat.com>
+References: <20191007070844.15935-1-lijiang@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: itdev.co.uk
-X-MS-Exchange-CrossTenant-Network-Message-Id: 23c6464f-353a-4406-dc27-08d74b0960bf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Oct 2019 09:33:14.7629
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 2d2930c4-2251-45b4-ad79-3582c5f41740
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: aHrdW3KaPmtsGH9eQY4iN5F8jfGJtunKUL3WILGJgPmJQW0O6dvGBAgimzY0194rdp2fTvi+NBqMoLt+G3LJo2mT+L41q3meMURf8BLvGMY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB4648
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191007070844.15935-1-lijiang@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Mon, 07 Oct 2019 09:33:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 06, 2019 at 04:58:54PM -0300, Gabriela Bittencourt wrote:
-> Cleans up checks of "don't use multiple blank line"
->=20
-> Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+Hi Lianbo,
+On 10/07/19 at 03:08pm, Lianbo Jiang wrote:
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204793
+> 
+> Kdump kernel will reuse the first 640k region because of some reasons,
+> for example: the trampline and conventional PC system BIOS region may
+> require to allocate memory in this area. Obviously, kdump kernel will
+> also overwrite the first 640k region, therefore, kernel has to copy
+> the contents of the first 640k area to a backup area, which is done in
+> purgatory(), because vmcore may need the old memory. When vmcore is
+> dumped, kdump kernel will read the old memory from the backup area of
+> the first 640k area.
+> 
+> Basically, the main reason should be clear, kernel does not correctly
+> handle the first 640k region when SME is active, which causes that
+> kernel does not properly copy these old memory to the backup area in
+> purgatory(). Therefore, kdump kernel reads out the incorrect contents
+> from the backup area when dumping vmcore. Finally, the phenomenon is
+> as follow:
+> 
+> [root linux]$ crash vmlinux /var/crash/127.0.0.1-2019-09-19-08\:31\:27/vmcore
+> WARNING: kernel relocated [240MB]: patching 97110 gdb minimal_symbol values
+> 
+>       KERNEL: /var/crash/127.0.0.1-2019-09-19-08:31:27/vmlinux
+>     DUMPFILE: /var/crash/127.0.0.1-2019-09-19-08:31:27/vmcore  [PARTIAL DUMP]
+>         CPUS: 128
+>         DATE: Thu Sep 19 08:31:18 2019
+>       UPTIME: 00:01:21
+> LOAD AVERAGE: 0.16, 0.07, 0.02
+>        TASKS: 1343
+>     NODENAME: amd-ethanol
+>      RELEASE: 5.3.0-rc7+
+>      VERSION: #4 SMP Thu Sep 19 08:14:00 EDT 2019
+>      MACHINE: x86_64  (2195 Mhz)
+>       MEMORY: 127.9 GB
+>        PANIC: "Kernel panic - not syncing: sysrq triggered crash"
+>          PID: 9789
+>      COMMAND: "bash"
+>         TASK: "ffff89711894ae80  [THREAD_INFO: ffff89711894ae80]"
+>          CPU: 83
+>        STATE: TASK_RUNNING (PANIC)
+> 
+> crash> kmem -s|grep -i invalid
+> kmem: dma-kmalloc-512: slab:ffffd77680001c00 invalid freepointer:a6086ac099f0c5a4
+> kmem: dma-kmalloc-512: slab:ffffd77680001c00 invalid freepointer:a6086ac099f0c5a4
+> crash>
+> 
+> BTW: I also tried to fix the above problem in purgatory(), but there
+> are too many restricts in purgatory() context, for example: i can't
+> allocate new memory to create the identity mapping page table for SME
+> situation.
+> 
+> Currently, there are two places where the first 640k area is needed,
+> the first one is in the find_trampoline_placement(), another one is
+> in the reserve_real_mode(), and their content doesn't matter. To avoid
+> the above error, lets occupy the remain memory of the first 640k region
+> (expect for the trampoline and real mode) so that the allocated memory
+> does not fall into the first 640k area when SME is active, which makes
+> us not to worry about whether kernel can correctly copy the contents of
+> the first 640k area to a backup region in the purgatory().
+> 
+> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
 > ---
->  drivers/staging/vt6656/main_usb.c | 1 -
->  1 file changed, 1 deletion(-)
->=20
-> diff --git a/drivers/staging/vt6656/main_usb.c b/drivers/staging/vt6656/m=
-ain_usb.c
-> index 856ba97aec4f..a1884b5cc915 100644
-> --- a/drivers/staging/vt6656/main_usb.c
-> +++ b/drivers/staging/vt6656/main_usb.c
-> @@ -362,7 +362,6 @@ static int vnt_init_registers(struct vnt_private *pri=
-v)
->  			goto end;
->  	}
-> =20
-> -
->  	ret =3D vnt_mac_set_led(priv, LEDSTS_TMLEN, 0x38);
->  	if (ret)
->  		goto end;
-> --=20
-> 2.20.1
->=20
+> Changes since v1:
+> 1. Improve patch log
+> 2. Change the checking condition from sme_active() to sme_active()
+>    && strstr(boot_command_line, "crashkernel=")
+> 
+>  arch/x86/kernel/setup.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index 77ea96b794bd..bdb1a02a84fd 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -1148,6 +1148,9 @@ void __init setup_arch(char **cmdline_p)
+>  
+>  	reserve_real_mode();
+>  
+> +	if (sme_active() && strstr(boot_command_line, "crashkernel="))
+> +		memblock_reserve(0, 640*1024);
+> +
 
-Reviewed-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
+Seems you missed the comment about "unconditionally do it", only check
+crashkernel param looks better.
 
-Thank you,
-Quentin
+Also I noticed reserve_crashkernel is called after initmem_init, I'm not
+sure if memblock_reserve is good enough in early code before
+initmem_init. 
+
+>  	trim_platform_memory_ranges();
+>  	trim_low_memory_range();
+>  
+> -- 
+> 2.17.1
+> 
+
+Thanks
+Dave
