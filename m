@@ -2,102 +2,74 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16FF5ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7EDC352AA
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0EEC20867
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:02:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E656320867
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:03:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570446196;
+	bh=VDBJ4s2BZaKphj3RNMld+/VgIar3sIhB0/Ql1nq99ys=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iDHyglUbKTyISdnmQqS1XXMsWo+EZa/rWc97GoY5hhKRJZgRZwIIG0X3lQsfiINpL
+	 BCLr5zFbPjwicmE+GzftAY7R16E5Gr2e4cacUn0PA+v/y5rwIi+MmW0DR2FyFWH/P2
+	 y1c06cbRQPWPLacx9/Crc1uFRi0B/N9AjEmtyBaA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727766AbfJGLCo (ORCPT
+        id S1727778AbfJGLDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 07:02:44 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:52920 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727317AbfJGLCn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 07:02:43 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 10BD780552; Mon,  7 Oct 2019 13:02:24 +0200 (CEST)
-Date:   Mon, 7 Oct 2019 13:02:39 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Matthias Kaehlcke <mka@chromium.org>, jacek.anaszewski@gmail.com,
-        linux-leds@vger.kernel.org, dmurphy@ti.com,
-        "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v6 4/4] net: phy: realtek: Add LED configuration support
- for RTL8211E
-Message-ID: <20191007110239.GA21484@amd>
-References: <20190813191147.19936-1-mka@chromium.org>
- <20190813191147.19936-5-mka@chromium.org>
- <20190816201342.GB1646@bug>
- <20190816212728.GW250418@google.com>
- <20190817140502.GA5878@amd>
- <20190819003757.GB8981@lunn.ch>
+        Mon, 7 Oct 2019 07:03:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44870 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727317AbfJGLDO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 07:03:14 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F0A4206BB;
+        Mon,  7 Oct 2019 11:03:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570446194;
+        bh=VDBJ4s2BZaKphj3RNMld+/VgIar3sIhB0/Ql1nq99ys=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xVEmyDOU6lbwHpoqzNTAWCRu/nc4m0xpnDXn5bJnROx1XOCO7yl1BrWzg+4JP9viy
+         AASXTopzobJ0XHc/IyKtsdm1eomZjMc2IAaAyKGoZhSrKRLFpMgPlA0lwKO3TJpuv7
+         kPSUsy0QLUxxm1rriVZO5QODDivsbRjvOSlBEgFo=
+Date:   Mon, 7 Oct 2019 13:03:11 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     JC Kuo <jckuo@nvidia.com>
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        nkristam@nvidia.com, skomatineni@nvidia.com
+Subject: Re: [PATCH v3 0/7] add Tegra194 XUSB host and pad controller support
+Message-ID: <20191007110311.GA614644@kroah.com>
+References: <20191004162906.4818-1-jckuo@nvidia.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="WIyZ46R2i8wDzkSu"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190819003757.GB8981@lunn.ch>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20191004162906.4818-1-jckuo@nvidia.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Oct 05, 2019 at 12:28:59AM +0800, JC Kuo wrote:
+> Hi,
+> 
+> This series introduces support for Tegra194 XUSB host and pad
+> controller. Tegra194 XUSB host and pad controller are highly
+> similar to the controllers found on Tegra186. Therefore, it's
+> possible to resue xhci-tegra.c and xusb-tegra186.c for Tegra194.
 
---WIyZ46R2i8wDzkSu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I've taken patches 1 and 2 through my USB tree.  If you want/need me to
+take the others, please get acks from those maintainers on them so I can
+do so.
 
-On Mon 2019-08-19 02:37:57, Andrew Lunn wrote:
-> > Yes, I believe the integration is neccessary. Using same binding is
-> > neccessary for that, but not sufficient. For example, we need
-> > compatible trigger names, too.
->=20
-> Hi Pavel
->=20
-> Please could you explain what you mean by compatible trigger names?
+thanks,
 
-Well, you attempted to put trigger names in device tree. That means
-those names should work w.r.t. LED subsystem, too.
-
-> > So... I'd really like to see proper integration is possible before we
-> > merge this.
->=20
-> Please let me turn that around. What do you see as being impossible at
-> the moment? What do we need to convince you about?
-
-That locking requirements are compatible, that triggers you invented
-can be implemented by LED subsystem, ...
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---WIyZ46R2i8wDzkSu
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl2bG08ACgkQMOfwapXb+vLTsACguaZUSA7o5wiU8LUngEzV9LZ2
-S4QAoIuXQiHHVs6amdFdbIvXRo7LFifl
-=yXXm
------END PGP SIGNATURE-----
-
---WIyZ46R2i8wDzkSu--
+greg k-h
