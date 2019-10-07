@@ -2,184 +2,171 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 608EFECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B9A4ECE58D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2705A21721
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:51:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DWoXSOXJ"
+	by mail.kernel.org (Postfix) with ESMTP id 3221E20673
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:52:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570456326;
+	bh=aYLV5xlZCxMG0BPRjLer+c3Uy2wYBjE8ETgH5kME4Ec=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PpgPYkfTLQ+SdPuie5dW3yTCM30yjETjGmjRv0k/flGkcZcnxSAo7Yi5amMjjbFhb
+	 EjneM25bpfJBtvgs/fB9YQ01DvLlDEoyLfL8CLJVQfvDF07ihDKCFdZlD+er0ZZhIQ
+	 8BNg7dk8j6hR2WLlhX5fMgvhvjmfxLoeAn51ZGTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728164AbfJGNvA (ORCPT
+        id S1728301AbfJGNwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 09:51:00 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:43931 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727715AbfJGNvA (ORCPT
+        Mon, 7 Oct 2019 09:52:05 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35750 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726334AbfJGNwE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 09:51:00 -0400
-Received: by mail-qk1-f194.google.com with SMTP id h126so12571882qke.10
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 06:50:59 -0700 (PDT)
+        Mon, 7 Oct 2019 09:52:04 -0400
+Received: by mail-wr1-f66.google.com with SMTP id v8so15434635wrt.2;
+        Mon, 07 Oct 2019 06:52:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IYTQc9pkklqWHMouyJseXYf3fIK7lEf7q4Z1ZbUboWU=;
-        b=DWoXSOXJ2+WloLrHOXlt4e17wDt7AR/niWGjAZjfVMddOsQ1wyWBYBhaosgPDbnc6v
-         UyMg0Ny06xFOyH1RZj47SIcL51nYf7PbPsRVTrwd6YKcgUeXlCy6yVn615HYcKIz3Kci
-         1u8tIvjVXsXQLoObbMxWI8p0fSXcI473Z2JoCieUc4rg54wNoltxZjQNr+Mj6pk0o8RZ
-         f/W3q6CNJJRuLphdRpMzNw86lXvJ77IqyX6pEWJMAWO7WpRL7mGAGcp+ZkCrrdKFH3i2
-         lYzr5NLCTSspZ3S4Amb+3i8JgIq0YAeRqlPbRnwbOy2lxJFqVzn4NmnHDUzdKM6h3+dG
-         lo2g==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NqDKw2q0fE+vHWOgUAiru/n1NoCQkdZ2AUuiN/uBGU8=;
+        b=ic0JkvFI48xbG9WtluZM0Hf2PaBXHEnROez7bzryeyJvDMyBL5e6TbbMM0jUfHQLcj
+         N60dwtHrD83rN8DO0nAWlFYhXP8KC2u6M4pUl5c0nz2hn71y23NUwAnaxYFkxrH4ok93
+         +qfxQR+o9B6oGOhK4vKltZbgeMC0rGmYE19yAJrAQ1/yj8WoUn37LJOzT1mjCMj3nWxf
+         T+d+hYdoZYOlliAXcaBDcfhvlDagJJO/aYGfkcviRX3zUAubMvNmWNjd1pemdF4Sv8ip
+         gy5V18KXkquelqXpy56UmV1xBTQrBaryDxBotNjsV4DVgQZQSEqRJYVQMZJf/ufLy8+j
+         SRrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IYTQc9pkklqWHMouyJseXYf3fIK7lEf7q4Z1ZbUboWU=;
-        b=tfAD/nCKY8yecgkrZwP3WNy8vRWxa0rN7WtzEYNvmcBygN8YxHGjTWHdnKIUTc61yy
-         /zFJaOA0qHuGelP1D8+UCWm+cFGgef4CX/na1IOBeSblhwVK4hmI/RlNBZxyjfzb5Feu
-         R3eT+2G7FpZY+Wjw3GRJz2ofWIOurz3Yal4VkpHTbZHS7Dplq5s/RWUTNyZgzEtsXMhL
-         3axOVEFbNA7IE/uwnGI5cctKE2DU1JjJRSkt/HLz7o5BZdFE80CbBHcEFG9ekGZN0yD/
-         2GDwvJa5Aay9ukSZImxSkhVukON8Xdhm/bhwb4u6byKSW7Pfx9PRwNH7XT0x4EPMMpxy
-         aJWw==
-X-Gm-Message-State: APjAAAX1SsIbF6l05QMj+6LGvuuiVct94oc9yCs+N9bTak1M7YCHjwLc
-        xYfI8WV+OPMqq9vcoyg8fDpPn8cIybnoY0psHus7fw==
-X-Google-Smtp-Source: APXvYqzh/OeSTjLyIs3Dc0YlIhCuQFyOlIjf37jONr3UqmFwJP6OBS+YmngvTj21e28J/XdDCSiEYCj4ZuEOOd361n0=
-X-Received: by 2002:a37:985:: with SMTP id 127mr23035292qkj.43.1570456258406;
- Mon, 07 Oct 2019 06:50:58 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NqDKw2q0fE+vHWOgUAiru/n1NoCQkdZ2AUuiN/uBGU8=;
+        b=F2J1VOxSTv/UUd15EyPRKLymaRExXtYIqlouPSkIv+MkexJG5S65b00UcjwV++cvbB
+         sOPvQ9g7XViOQVrUcsRFuPx1kZ8E1tcM0XOnJ0HKBpSZeA6aBPgXcRfq8PQYg5qMzLtH
+         wJ+AJeI7+IDjSCivz41bD3nj/kmY3nQGhQs7QPTPZpT8idjtj5KeTULwKy/o38tywrNo
+         P5pORuuHc+zG6fnkCSG767/mQyVdLupkX6kCmfqFfN87fYyA2I9W0SEmwhL4TgTG37lB
+         xzW3Qr6J+HO5upyDxh1Nrhs98Zc43cLkFv8XPZOknNnPRMs8prEqjLV0tsTpt/u/zetL
+         doRA==
+X-Gm-Message-State: APjAAAUy57t2Bdl0PIMaWVp/TqPeSP5zwk57DGjrnuQLom5ibINqZ8eu
+        seuCquREvmFozPwxZLDLLDI=
+X-Google-Smtp-Source: APXvYqwFD0AmO4hRi+9l8ADVfmGE8OkR9Fnj4QRZ24lM5fadabYkivM/y6etDxaG7ZOadEedrbv48w==
+X-Received: by 2002:a5d:6441:: with SMTP id d1mr16719177wrw.254.1570456322346;
+        Mon, 07 Oct 2019 06:52:02 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id q19sm41499530wra.89.2019.10.07.06.52.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2019 06:52:01 -0700 (PDT)
+Date:   Mon, 7 Oct 2019 15:51:58 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V4 2/2] mm/pgtable/debug: Add test validating
+ architecture page table helpers
+Message-ID: <20191007135158.GA36360@gmail.com>
+References: <1570427124-21887-1-git-send-email-anshuman.khandual@arm.com>
+ <1570427124-21887-3-git-send-email-anshuman.khandual@arm.com>
+ <20191007130617.GB56546@gmail.com>
+ <20191007132607.4q537nauwfn5thol@box>
 MIME-Version: 1.0
-References: <20191007104039.GA16085@andrea.guest.corp.microsoft.com>
- <20191007110117.1096-1-christian.brauner@ubuntu.com> <20191007131804.GA19242@andrea.guest.corp.microsoft.com>
-In-Reply-To: <20191007131804.GA19242@andrea.guest.corp.microsoft.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 7 Oct 2019 15:50:47 +0200
-Message-ID: <CACT4Y+YG23qbL16MYH3GTK4hOPsM9tDfbLzrTZ7k_ocR2ABa6A@mail.gmail.com>
-Subject: Re: [PATCH v2] taskstats: fix data-race
-To:     Andrea Parri <parri.andrea@gmail.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        bsingharora@gmail.com, Marco Elver <elver@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzbot <syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191007132607.4q537nauwfn5thol@box>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 3:18 PM Andrea Parri <parri.andrea@gmail.com> wrote:
->
-> On Mon, Oct 07, 2019 at 01:01:17PM +0200, Christian Brauner wrote:
-> > When assiging and testing taskstats in taskstats_exit() there's a race
-> > when writing and reading sig->stats when a thread-group with more than
-> > one thread exits:
-> >
-> > cpu0:
-> > thread catches fatal signal and whole thread-group gets taken down
-> >  do_exit()
-> >  do_group_exit()
-> >  taskstats_exit()
-> >  taskstats_tgid_alloc()
-> > The tasks reads sig->stats holding sighand lock seeing garbage.
->
-> You meant "without holding sighand lock" here, right?
->
->
-> >
-> > cpu1:
-> > task calls exit_group()
-> >  do_exit()
-> >  do_group_exit()
-> >  taskstats_exit()
-> >  taskstats_tgid_alloc()
-> > The task takes sighand lock and assigns new stats to sig->stats.
-> >
-> > Fix this by using READ_ONCE() and smp_store_release().
-> >
-> > Reported-by: syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com
-> > Fixes: 34ec12349c8a ("taskstats: cleanup ->signal->stats allocation")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> > Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
-> > Link: https://lore.kernel.org/r/20191006235216.7483-1-christian.brauner@ubuntu.com
-> > ---
-> > /* v1 */
-> > Link: https://lore.kernel.org/r/20191005112806.13960-1-christian.brauner@ubuntu.com
-> >
-> > /* v2 */
-> > - Dmitry Vyukov <dvyukov@google.com>, Marco Elver <elver@google.com>:
-> >   - fix the original double-checked locking using memory barriers
-> >
-> > /* v3 */
-> > - Andrea Parri <parri.andrea@gmail.com>:
-> >   - document memory barriers to make checkpatch happy
-> > ---
-> >  kernel/taskstats.c | 21 ++++++++++++---------
-> >  1 file changed, 12 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/kernel/taskstats.c b/kernel/taskstats.c
-> > index 13a0f2e6ebc2..978d7931fb65 100644
-> > --- a/kernel/taskstats.c
-> > +++ b/kernel/taskstats.c
-> > @@ -554,24 +554,27 @@ static int taskstats_user_cmd(struct sk_buff *skb, struct genl_info *info)
-> >  static struct taskstats *taskstats_tgid_alloc(struct task_struct *tsk)
-> >  {
-> >       struct signal_struct *sig = tsk->signal;
-> > -     struct taskstats *stats;
-> > +     struct taskstats *stats_new, *stats;
-> >
-> > -     if (sig->stats || thread_group_empty(tsk))
-> > -             goto ret;
-> > +     /* Pairs with smp_store_release() below. */
-> > +     stats = READ_ONCE(sig->stats);
->
-> This pairing suggests that the READ_ONCE() is heading an address
-> dependency, but I fail to identify it: what is the target memory
-> access of such a (putative) dependency?
 
-I would assume callers of this function access *stats. So the
-dependency is between loading stats and accessing *stats.
+* Kirill A. Shutemov <kirill@shutemov.name> wrote:
 
-> > +     if (stats || thread_group_empty(tsk))
-> > +             return stats;
-> >
-> >       /* No problem if kmem_cache_zalloc() fails */
-> > -     stats = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
-> > +     stats_new = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
-> >
-> >       spin_lock_irq(&tsk->sighand->siglock);
-> >       if (!sig->stats) {
-> > -             sig->stats = stats;
-> > -             stats = NULL;
-> > +             /* Pairs with READ_ONCE() above. */
-> > +             smp_store_release(&sig->stats, stats_new);
->
-> This is intended to 'order' the _zalloc()  (zero initializazion)
-> before the update of sig->stats, right?  what else am I missing?
->
-> Thanks,
->   Andrea
->
->
-> > +             stats_new = NULL;
-> >       }
-> >       spin_unlock_irq(&tsk->sighand->siglock);
-> >
-> > -     if (stats)
-> > -             kmem_cache_free(taskstats_cache, stats);
-> > -ret:
-> > +     if (stats_new)
-> > +             kmem_cache_free(taskstats_cache, stats_new);
-> > +
-> >       return sig->stats;
-> >  }
-> >
-> > --
-> > 2.23.0
-> >
+> On Mon, Oct 07, 2019 at 03:06:17PM +0200, Ingo Molnar wrote:
+> > 
+> > * Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+> > 
+> > > This adds a test module which will validate architecture page table helpers
+> > > and accessors regarding compliance with generic MM semantics expectations.
+> > > This will help various architectures in validating changes to the existing
+> > > page table helpers or addition of new ones.
+> > > 
+> > > Test page table and memory pages creating it's entries at various level are
+> > > all allocated from system memory with required alignments. If memory pages
+> > > with required size and alignment could not be allocated, then all depending
+> > > individual tests are skipped.
+> > 
+> > > diff --git a/arch/x86/include/asm/pgtable_64_types.h b/arch/x86/include/asm/pgtable_64_types.h
+> > > index 52e5f5f2240d..b882792a3999 100644
+> > > --- a/arch/x86/include/asm/pgtable_64_types.h
+> > > +++ b/arch/x86/include/asm/pgtable_64_types.h
+> > > @@ -40,6 +40,8 @@ static inline bool pgtable_l5_enabled(void)
+> > >  #define pgtable_l5_enabled() 0
+> > >  #endif /* CONFIG_X86_5LEVEL */
+> > >  
+> > > +#define mm_p4d_folded(mm) (!pgtable_l5_enabled())
+> > > +
+> > >  extern unsigned int pgdir_shift;
+> > >  extern unsigned int ptrs_per_p4d;
+> > 
+> > Any deep reason this has to be a macro instead of proper C?
+> 
+> It's a way to override the generic mm_p4d_folded(). It can be rewritten
+> as inline function + define. Something like:
+> 
+> #define mm_p4d_folded mm_p4d_folded
+> static inline bool mm_p4d_folded(struct mm_struct *mm)
+> {
+> 	return !pgtable_l5_enabled();
+> }
+> 
+> But I don't see much reason to be more verbose here than needed.
+
+C type checking? Documentation? Yeah, I know it's just a one-liner, but 
+the principle of the death by a thousand cuts applies here.
+
+BTW., any reason this must be in the low level pgtable_64_types.h type 
+header, instead of one of the API level header files?
+
+Thanks,
+
+	Ingo
