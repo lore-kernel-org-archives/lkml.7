@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2B3ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F09ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F38221479
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C6F521479
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbfJGOtm (ORCPT
+        id S1728987AbfJGOup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 10:49:42 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44462 "EHLO
+        Mon, 7 Oct 2019 10:50:45 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44496 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728553AbfJGOtj (ORCPT
+        with ESMTP id S1728619AbfJGOtn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 10:49:39 -0400
+        Mon, 7 Oct 2019 10:49:43 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iHUKG-00066K-C2; Mon, 07 Oct 2019 16:49:28 +0200
+        id 1iHUKJ-0006AI-PV; Mon, 07 Oct 2019 16:49:31 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 285041C0DD8;
-        Mon,  7 Oct 2019 16:49:18 +0200 (CEST)
-Date:   Mon, 07 Oct 2019 14:49:18 -0000
-From:   "tip-bot2 for Ian Rogers" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 70AA21C032F;
+        Mon,  7 Oct 2019 16:49:31 +0200 (CEST)
+Date:   Mon, 07 Oct 2019 14:49:31 -0000
+From:   "tip-bot2 for Mike Travis" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] libsubcmd: Make _FORTIFY_SOURCE defines dependent
- on the feature
-Cc:     Ian Rogers <irogers@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+Subject: [tip: x86/platform] x86/platform/uv: Account for UV Hubless in is_uvX_hub Ops
+Cc:     Mike Travis <mike.travis@hpe.com>, Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Hedi Berriche <hedi.berriche@hpe.com>,
+        Justin Ernst <justin.ernst@hpe.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20190925195924.152834-1-irogers@google.com>
-References: <20190925195924.152834-1-irogers@google.com>
+        Russ Anderson <russ.anderson@hpe.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+In-Reply-To: <20190910145840.294981941@stormcage.eag.rdlabs.hpecorp.net>
+References: <20190910145840.294981941@stormcage.eag.rdlabs.hpecorp.net>
 MIME-Version: 1.0
-Message-ID: <157045975810.9978.12496841458958178913.tip-bot2@tip-bot2>
+Message-ID: <157045977140.9978.3708665984961827038.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -62,53 +64,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/urgent branch of tip:
+The following commit has been merged into the x86/platform branch of tip:
 
-Commit-ID:     4b0b2b096da9d296e0e5668cdfba8613bd6f5bc8
-Gitweb:        https://git.kernel.org/tip/4b0b2b096da9d296e0e5668cdfba8613bd6f5bc8
-Author:        Ian Rogers <irogers@google.com>
-AuthorDate:    Wed, 25 Sep 2019 12:59:23 -07:00
-Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Fri, 27 Sep 2019 09:26:14 -03:00
+Commit-ID:     4fb7d08707565d27ec84a364d011043ade8c38b4
+Gitweb:        https://git.kernel.org/tip/4fb7d08707565d27ec84a364d011043ade8c38b4
+Author:        Mike Travis <mike.travis@hpe.com>
+AuthorDate:    Tue, 10 Sep 2019 09:58:47 -05:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Mon, 07 Oct 2019 13:42:11 +02:00
 
-libsubcmd: Make _FORTIFY_SOURCE defines dependent on the feature
+x86/platform/uv: Account for UV Hubless in is_uvX_hub Ops
 
-Unconditionally defining _FORTIFY_SOURCE can break tools that don't work
-with it, such as memory sanitizers:
+The references in the is_uvX_hub() function uses the hub_info pointer
+which will be NULL when the system is hubless.  This change avoids
+that NULL dereference.  It is also an optimization in performance.
 
-  https://github.com/google/sanitizers/wiki/AddressSanitizer#faq
-
-Fixes: 4b6ab94eabe4 ("perf subcmd: Create subcmd library")
-Signed-off-by: Ian Rogers <irogers@google.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Mike Travis <mike.travis@hpe.com>
+Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
+Reviewed-by: Dimitri Sivanich <dimitri.sivanich@hpe.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Hedi Berriche <hedi.berriche@hpe.com>
+Cc: Justin Ernst <justin.ernst@hpe.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lore.kernel.org/lkml/20190925195924.152834-1-irogers@google.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Russ Anderson <russ.anderson@hpe.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190910145840.294981941@stormcage.eag.rdlabs.hpecorp.net
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- tools/lib/subcmd/Makefile | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/uv/uv_hub.h | 61 ++++++++++---------------------
+ 1 file changed, 20 insertions(+), 41 deletions(-)
 
-diff --git a/tools/lib/subcmd/Makefile b/tools/lib/subcmd/Makefile
-index ed61fb3..5b2cd5e 100644
---- a/tools/lib/subcmd/Makefile
-+++ b/tools/lib/subcmd/Makefile
-@@ -20,7 +20,13 @@ MAKEFLAGS += --no-print-directory
- LIBFILE = $(OUTPUT)libsubcmd.a
+diff --git a/arch/x86/include/asm/uv/uv_hub.h b/arch/x86/include/asm/uv/uv_hub.h
+index 44cf6d6..950cd13 100644
+--- a/arch/x86/include/asm/uv/uv_hub.h
++++ b/arch/x86/include/asm/uv/uv_hub.h
+@@ -19,6 +19,7 @@
+ #include <linux/topology.h>
+ #include <asm/types.h>
+ #include <asm/percpu.h>
++#include <asm/uv/uv.h>
+ #include <asm/uv/uv_mmrs.h>
+ #include <asm/uv/bios.h>
+ #include <asm/irq_vectors.h>
+@@ -243,83 +244,61 @@ static inline int uv_hub_info_check(int version)
+ #define UV4_HUB_REVISION_BASE		7
+ #define UV4A_HUB_REVISION_BASE		8	/* UV4 (fixed) rev 2 */
  
- CFLAGS := $(EXTRA_WARNINGS) $(EXTRA_CFLAGS)
--CFLAGS += -ggdb3 -Wall -Wextra -std=gnu99 -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 -fPIC
-+CFLAGS += -ggdb3 -Wall -Wextra -std=gnu99 -fPIC
-+
-+ifeq ($(DEBUG),0)
-+  ifeq ($(feature-fortify-source), 1)
-+    CFLAGS += -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2
-+  endif
-+endif
+-#ifdef	UV1_HUB_IS_SUPPORTED
++/* WARNING: UVx_HUB_IS_SUPPORTED defines are deprecated and will be removed */
+ static inline int is_uv1_hub(void)
+ {
+-	return uv_hub_info->hub_revision < UV2_HUB_REVISION_BASE;
+-}
++#ifdef	UV1_HUB_IS_SUPPORTED
++	return is_uv_hubbed(uv(1));
+ #else
+-static inline int is_uv1_hub(void)
+-{
+ 	return 0;
+-}
+ #endif
++}
  
- ifeq ($(CC_NO_CLANG), 0)
-   CFLAGS += -O3
+-#ifdef	UV2_HUB_IS_SUPPORTED
+ static inline int is_uv2_hub(void)
+ {
+-	return ((uv_hub_info->hub_revision >= UV2_HUB_REVISION_BASE) &&
+-		(uv_hub_info->hub_revision < UV3_HUB_REVISION_BASE));
+-}
++#ifdef	UV2_HUB_IS_SUPPORTED
++	return is_uv_hubbed(uv(2));
+ #else
+-static inline int is_uv2_hub(void)
+-{
+ 	return 0;
+-}
+ #endif
++}
+ 
+-#ifdef	UV3_HUB_IS_SUPPORTED
+ static inline int is_uv3_hub(void)
+ {
+-	return ((uv_hub_info->hub_revision >= UV3_HUB_REVISION_BASE) &&
+-		(uv_hub_info->hub_revision < UV4_HUB_REVISION_BASE));
+-}
++#ifdef	UV3_HUB_IS_SUPPORTED
++	return is_uv_hubbed(uv(3));
+ #else
+-static inline int is_uv3_hub(void)
+-{
+ 	return 0;
+-}
+ #endif
++}
+ 
+ /* First test "is UV4A", then "is UV4" */
+-#ifdef	UV4A_HUB_IS_SUPPORTED
+-static inline int is_uv4a_hub(void)
+-{
+-	return (uv_hub_info->hub_revision >= UV4A_HUB_REVISION_BASE);
+-}
+-#else
+ static inline int is_uv4a_hub(void)
+ {
++#ifdef	UV4A_HUB_IS_SUPPORTED
++	if (is_uv_hubbed(uv(4)))
++		return (uv_hub_info->hub_revision == UV4A_HUB_REVISION_BASE);
++#endif
+ 	return 0;
+ }
+-#endif
+ 
+-#ifdef	UV4_HUB_IS_SUPPORTED
+ static inline int is_uv4_hub(void)
+ {
+-	return uv_hub_info->hub_revision >= UV4_HUB_REVISION_BASE;
+-}
++#ifdef	UV4_HUB_IS_SUPPORTED
++	return is_uv_hubbed(uv(4));
+ #else
+-static inline int is_uv4_hub(void)
+-{
+ 	return 0;
+-}
+ #endif
++}
+ 
+ static inline int is_uvx_hub(void)
+ {
+-	if (uv_hub_info->hub_revision >= UV2_HUB_REVISION_BASE)
+-		return uv_hub_info->hub_revision;
+-
+-	return 0;
++	return (is_uv_hubbed(-2) >= uv(2));
+ }
+ 
+ static inline int is_uv_hub(void)
+ {
+-#ifdef	UV1_HUB_IS_SUPPORTED
+-	return uv_hub_info->hub_revision;
+-#endif
+-	return is_uvx_hub();
++	return is_uv1_hub() || is_uvx_hub();
+ }
+ 
+ union uvh_apicid {
