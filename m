@@ -2,70 +2,80 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0373DC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E00F9ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF35C2084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B67692084D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:14:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727985AbfJGNN3 (ORCPT
+        id S1728003AbfJGNOL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 09:13:29 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:52530 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727010AbfJGNN2 (ORCPT
+        Mon, 7 Oct 2019 09:14:11 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:42189 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727010AbfJGNOK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 09:13:28 -0400
-Received: from localhost (unknown [144.121.20.163])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id CADFE14047968;
-        Mon,  7 Oct 2019 06:13:27 -0700 (PDT)
-Date:   Mon, 07 Oct 2019 15:13:26 +0200 (CEST)
-Message-Id: <20191007.151326.1436550597950881500.davem@davemloft.net>
-To:     dhowells@redhat.com
-Cc:     netdev@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net 0/6] rxrpc: Syzbot-inspired fixes
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <157044333551.32635.10133219357337058780.stgit@warthog.procyon.org.uk>
-References: <157044333551.32635.10133219357337058780.stgit@warthog.procyon.org.uk>
-X-Mailer: Mew version 6.8 on Emacs 26.2
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 07 Oct 2019 06:13:28 -0700 (PDT)
+        Mon, 7 Oct 2019 09:14:10 -0400
+Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id D0926200010;
+        Mon,  7 Oct 2019 13:14:05 +0000 (UTC)
+Date:   Mon, 7 Oct 2019 15:14:05 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Eugen.Hristev@microchip.com, linux-watchdog@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, wim@linux-watchdog.org,
+        robh+dt@kernel.org, Nicolas.Ferre@microchip.com
+Subject: Re: [PATCH 2/3] watchdog: sam9x60_wdt: introduce sam9x60 watchdog
+ timer driver
+Message-ID: <20191007131348.GH4254@piout.net>
+References: <1570001371-8174-1-git-send-email-eugen.hristev@microchip.com>
+ <1570001371-8174-2-git-send-email-eugen.hristev@microchip.com>
+ <e58a3ab5-69bc-cad3-5faa-ed00ff7906c7@roeck-us.net>
+ <ab7b6b45-5e6f-100d-51af-a82ac325d948@microchip.com>
+ <a9adf20c-f730-a7e9-a826-59216c17f03d@roeck-us.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a9adf20c-f730-a7e9-a826-59216c17f03d@roeck-us.net>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
-Date: Mon, 07 Oct 2019 11:15:35 +0100
+On 07/10/2019 05:36:38-0700, Guenter Roeck wrote:
+> On 10/7/19 12:58 AM, Eugen.Hristev@microchip.com wrote:
+> [ ... ]
+> > Hello Guenter,
+> > 
+> > Thank you for the feedback.
+> > After reviewing this, can you please guide me towards one of the
+> > possible two directions: merge this driver with sama5d4_wdt , and have a
+> > single driver with support for both hardware blocks; or, have this
+> > driver separately , as in this patch series?
+> > 
+> 
+> I noticed the similarities. I don't know if it makes sense to reconcile
+> the two drivers; it seems to me the new chip uses the same basic core with
+> enhancements. In general, I prefer a single driver, but only if the result
+> doesn't end up being an if/else mess. Ultimately, it is really your call
+> to make.
+> 
 
-> 
-> Here's a series of patches that fix a number of issues found by syzbot:
-> 
->  (1) A reference leak on rxrpc_call structs in a sendmsg error path.
-> 
->  (2) A tracepoint that looked in the rxrpc_peer record after putting it.
-> 
->      Analogous with this, though not presently detected, the same bug is
->      also fixed in relation to rxrpc_connection and rxrpc_call records.
-> 
->  (3) Peer records don't pin local endpoint records, despite accessing them.
-> 
->  (4) Access to connection crypto ops to clean up a call after the call's
->      ref on that connection has been put.
-> 
-> The patches are tagged here:
-> 
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
-> 	rxrpc-fixes-20191007
+Most if not all your comments were already addressed in the other
+driver. The main difference in the register interface is the location of
+the counter that only really affects sama5d4_wdt_set_timeout and that
+could be abstracted away by using a different struct watchdog_ops.
+Interrupt enabling is also done differently, I don't think it has a huge
+impact.
 
-Pulled, thanks David.
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
