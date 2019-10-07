@@ -2,94 +2,112 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 876BBC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:05:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDC2C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6518720867
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:05:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA38E20700
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:06:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbfJGMFW (ORCPT
+        id S1727789AbfJGMGY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 08:05:22 -0400
-Received: from mga12.intel.com ([192.55.52.136]:3131 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727490AbfJGMFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 08:05:22 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Oct 2019 05:05:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,268,1566889200"; 
-   d="scan'208";a="196267827"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga003.jf.intel.com with ESMTP; 07 Oct 2019 05:05:18 -0700
-Received: from andy by smile with local (Exim 4.92.2)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iHRlN-0007rE-Ff; Mon, 07 Oct 2019 15:05:17 +0300
-Date:   Mon, 7 Oct 2019 15:05:17 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Tuowen Zhao <ztuowen@gmail.com>,
-        "Luis R. Rodriguez" <mcgrof@kernel.org>
-Cc:     lee.jones@linaro.org, linux-kernel@vger.kernel.org,
-        mika.westerberg@linux.intel.com, acelan.kao@canonical.com,
-        bhelgaas@google.com, kai.heng.feng@canonical.com
-Subject: Re: [PATCH] mfd: intel-lpss: use devm_ioremap_uc for mmio
-Message-ID: <20191007120517.GX32742@smile.fi.intel.com>
-References: <20190927175513.31054-1-ztuowen@gmail.com>
- <20190930110522.GT32742@smile.fi.intel.com>
+        Mon, 7 Oct 2019 08:06:24 -0400
+Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:56085 "EHLO
+        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727467AbfJGMGX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 08:06:23 -0400
+Received: from [IPv6:2001:983:e9a7:1:3d61:cdd2:8085:cc8] ([IPv6:2001:983:e9a7:1:3d61:cdd2:8085:cc8])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id HRmOiMO4ljZ8vHRmPi6b1B; Mon, 07 Oct 2019 14:06:21 +0200
+Subject: Re: [PATCH v10 6/8] Documentation: media: Describe
+ V4L2_CID_UNIT_CELL_SIZE
+To:     Ricardo Ribalda Delgado <ribalda@kernel.org>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20191007113502.11746-1-ribalda@kernel.org>
+ <20191007113502.11746-7-ribalda@kernel.org>
+ <494e3061-985d-8b8e-7728-9e72442ad9f7@xs4all.nl>
+ <CAPybu_2Qm+1MxQXCXXq4zzhvnjew5awRSofkqiPrc2bMav=Jkg@mail.gmail.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <5934d1ce-fb9e-1965-cff2-1c3cc70006df@xs4all.nl>
+Date:   Mon, 7 Oct 2019 14:06:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190930110522.GT32742@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAPybu_2Qm+1MxQXCXXq4zzhvnjew5awRSofkqiPrc2bMav=Jkg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfImsdgBN2sNq3DcD0W9y9jdfVVd8Uu2jDdX6gK5t2AnJ41nIw6IZ1mUjo4QiCf5ZCpPyjWdX++jWCihUl0lakd5mQi9Q+6XlLFO7CL3posQVCF7Ky/Zv
+ FF/8PEvM/0aNKM7hgA5vp3Aw6UCVyK00P/1DmbGLwg6Fe+Qd1Y6MUJxWrvLnHoccWdSxW69VQarNmFXUSF2kUEGkrSo0gzg31sRtHSEyy2mJIVBPSZAXkA+R
+ wcS42veMdon1fQo7zLxq5/hFlu8W+aPbEfcg5lULrNARQc4saNwlLx/DIp8VH8w5fswVlR0oSIioH+S2AJrhILP/XUZlWfHixjlrLDQErrDcQr2SurQJyHTY
+ EeRD6EDQlAUsMveDTCcf6UlEcyv09SlROiCt9wfiOyEahztrqO8j8g2u0MLu424pMkWdIwXe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 02:05:22PM +0300, Andy Shevchenko wrote:
-> On Fri, Sep 27, 2019 at 11:55:13AM -0600, Tuowen Zhao wrote:
-> > Write-combining BAR for intel-lpss-pci in MTRR causes system hangs
-> > during boot.
-> > 
-> > This patch adds devm_ioremap_uc as a new managed wrapper to ioremap_uc
-> > and with it forces the use of strongly uncachable mmio in intel-lpss.
-> > 
-> > This bahavior is seen on Dell XPS 13 7390 2-in-1:
-> > 
-> > [    0.001734]   5 base 4000000000 mask 6000000000 write-combining
-> > 
-> > 4000000000-7fffffffff : PCI Bus 0000:00
-> >   4000000000-400fffffff : 0000:00:02.0 (i915)
-> >   4010000000-4010000fff : 0000:00:15.0 (intel-lpss-pci)
+On 10/7/19 2:03 PM, Ricardo Ribalda Delgado wrote:
+> Hi Hans
 > 
-> +Cc: Luis as author of UC flavour of ioremap.
 > 
-> Luis, some BIOSes in the wild have wrong MTRR setting for PCI resource window
-> and thus when Linux tries to allocate 64-bit MMIO address space (and in
-> opposite to Windows, which does this from the end of available space towards
-> beginning, Linux do this from the beginning towards end). Ideally we have to
-> push vendors to fix firmware.
 > 
-> This patch AFAIU overrides MTTR/PAT settings for those pages and makes it
-> possible to workaround firmware bug.
+> On Mon, Oct 7, 2019 at 2:01 PM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
+>>
+>> On 10/7/19 1:35 PM, Ricardo Ribalda Delgado wrote:
+>>> New control to pass to userspace the width/height of a pixel. Which is
+>>> needed for calibration and lens selection.
+>>>
+>>> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+>>> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+>>> ---
+>>>  Documentation/media/uapi/v4l/ext-ctrls-image-source.rst | 9 +++++++++
+>>>  1 file changed, 9 insertions(+)
+>>>
+>>> diff --git a/Documentation/media/uapi/v4l/ext-ctrls-image-source.rst b/Documentation/media/uapi/v4l/ext-ctrls-image-source.rst
+>>> index 2c3ab5796d76..6388668855d0 100644
+>>> --- a/Documentation/media/uapi/v4l/ext-ctrls-image-source.rst
+>>> +++ b/Documentation/media/uapi/v4l/ext-ctrls-image-source.rst
+>>> @@ -55,3 +55,12 @@ Image Source Control IDs
+>>>
+>>>  ``V4L2_CID_TEST_PATTERN_GREENB (integer)``
+>>>      Test pattern green (next to blue) colour component.
+>>> +
+>>> +``V4L2_CID_UNIT_CELL_SIZE (struct)``
+>>> +    This control returns the unit cell size in nanometers. The struct
+>>> +    :c:type:`v4l2_area` provides the width and the height in separate
+>>> +    fields to take into consideration asymmetric pixels and/or hardware
+>>> +    binning.
+>>
+>> This still states that this control takes binning into account. I understood that
+>> we decided not to do that?
+>>
 > 
-> What do you think is the best approach here?
+> Good catch, seems that at some point I changed my mind :).
+> 
+> Will fix this doc.
+> 
+> Can I resend only this patch to avoid spamming the list?
 
-Tuowen,
+Yes, that's fine.
 
-since Luis didn't respond, I think we may proceed with v2 after addressing
-Mika's comments.
+	Hans
 
--- 
-With Best Regards,
-Andy Shevchenko
-
+> 
+> 
+>> Regards,
+>>
+>>         Hans
+>>
+>>> +    The unit cell consists of the whole area of the pixel, sensitive and
+>>> +    non-sensitive.
+>>> +    This control is required for automatic calibration of sensors/cameras.
+>>>
+>>
 
