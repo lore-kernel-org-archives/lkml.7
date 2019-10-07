@@ -2,165 +2,176 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A372C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5EB3C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A013206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:14:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF45A206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:14:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="LzBxC851"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LCERyyEk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729244AbfJGVOF (ORCPT
+        id S1729389AbfJGVOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 17:14:05 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:42073 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728702AbfJGVOF (ORCPT
+        Mon, 7 Oct 2019 17:14:24 -0400
+Received: from mail-vk1-f201.google.com ([209.85.221.201]:46284 "EHLO
+        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728702AbfJGVOY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 17:14:05 -0400
-Received: by mail-lj1-f193.google.com with SMTP id y23so15226237lje.9
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 14:14:03 -0700 (PDT)
+        Mon, 7 Oct 2019 17:14:24 -0400
+Received: by mail-vk1-f201.google.com with SMTP id n124so7328820vkg.13
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 14:14:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vrcKN6mCbXPcgwtBM9vrQs1ue8feO5uevCMF6526DqM=;
-        b=LzBxC851wc+vusnWhebbk2ZXt+iqMZZahVb4CNdu4/FAeK3UQuwtXdSsqHcXkWpMr/
-         Im5euDERaWU1r35gIbdVEQUsZHZ1QM2bHq5bf8pcTmQuBexoeN6Ew6ph5cyaAzxvUcna
-         UZFOkfLwQ5msU0ZluWeHBfdzYR7LUlJ2ZeEH64oKh1S93Y2iLanHDSPN2gzWXZ2n77Gr
-         qbbFm08caMT2tb1Bh7vikeeh6O/FSxIZgkuJ2Nu6yzbkuA8U8hxg8NfBYd7qlAKk0YWm
-         OD4WqBgPKrlGHOA0PvWWXeDvVlXCgw/6x91spfrnNwaqRJyez6MhKZTocZZEbgoGz9Rk
-         YEWw==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=fBfJjWCRhUxG21Ng89HEbOaecnd7jMgx3odQFdBCxJ0=;
+        b=LCERyyEkhTVAeNgqdkbiDeOz17qS0c6prgo+IvWGSyIjN8hlkJkU4bQhVGDLEkrtt/
+         9OL9NgQsbq9SBZUzrNmTqIsk7KMbjS2osBcrPpAD7ZuIqgqpzDPWuGVaZQsQHtjm34+0
+         /K3CKdKSNK+SxDcnbtLwnZRbwKLxrTVfQUjkcEWQcwKZQwH6A8t73p44wUFGJA89Vkvv
+         /cMpjXtjzgqNIhBnYpUe9ZUO5yChcsmOGIxU8VIpVzlPzwL4nkzgZ/VkY8kIqJbC8G6Q
+         iFyskXJpjfzO0ifcz1tB7LWzOMwxadjuaVOwwfpv9GZsbjwIL+05pwr/ypfjwDcmW5Qm
+         xB2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vrcKN6mCbXPcgwtBM9vrQs1ue8feO5uevCMF6526DqM=;
-        b=FX8QgrrUhLVIF4A8Sxqn6fNCLLxzamz7wNzP0loldsb8F++QdjK6z7r2AUYLoGT/8Y
-         54XnY2/0PVHOEkPcoW6eIe2tlrrIlZ7BnUQfRuOmg8ZlMC+jRQD/Mh8WqX0iJPxCfr5A
-         i7xERaXMXIux9Ep3wgpGLhuSmEtv6SJ2OA00HZ0eJY7RQHJmVVoM++0orY/qEBGF3kPO
-         UbI0475We7Xyr7/TtYgggO2O46AzS8aP0ZSR0KwAegm1HINOjF9HsSsp4zgtbRqKmIoI
-         sPdSRk41Xy5MmfhsCbvN4v4FQAeGhwka39jRieDsbYMF4zLYV2yNW8LYxIH17Y8rOdKJ
-         1BFA==
-X-Gm-Message-State: APjAAAUuc904zylL+60zt9o7NHSN0JvWimItlvWXG2NtN/X/LUWdHVSN
-        TDCKdej+NF4AvcM6A9K95P6ptb1j020oKc24Z1Q99A==
-X-Google-Smtp-Source: APXvYqyqereRXk4dqu65yBhX1TSCy2PKoXaeLFqdOr74uFykL/IWmTjCyv4H4WktYiMkTHBTA1RZxFvJUulsbzm9ISo=
-X-Received: by 2002:a2e:8507:: with SMTP id j7mr19146839lji.151.1570482842524;
- Mon, 07 Oct 2019 14:14:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <1569885755-10947-1-git-send-email-alan.mikhak@sifive.com>
- <20191007061324.GB17978@infradead.org> <CABEDWGyovfKuXsNpfhsSCJ0sryg3EpAsaqRTHxBGC9LFM+=dww@mail.gmail.com>
-In-Reply-To: <CABEDWGyovfKuXsNpfhsSCJ0sryg3EpAsaqRTHxBGC9LFM+=dww@mail.gmail.com>
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-Date:   Mon, 7 Oct 2019 14:13:51 -0700
-Message-ID: <CABEDWGxZaJp17jhd-CPqc+n9ZjYzvp63PymfMo0JVd=jzQEizQ@mail.gmail.com>
-Subject: Re: [PATCH] scatterlist: Validate page before calling PageSlab()
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, martin.petersen@oracle.com,
-        alexios.zavras@intel.com, ming.lei@redhat.com,
-        gregkh@linuxfoundation.org, tglx@linutronix.de,
-        Jason Gunthorpe <jgg@ziepe.ca>, christophe.leroy@c-s.fr,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=fBfJjWCRhUxG21Ng89HEbOaecnd7jMgx3odQFdBCxJ0=;
+        b=bM7q4JjsXdcqdkmDzj9GHjHxqRUaMqju5BrGc6aD1+ZhWhpG+DXC5+cXa8iWJMWZSs
+         bkYb+md9qehX4NGtvhYcS4x/PulNTaQcPQ527uNm6nVaMPw/KqlTiMNum01O79vd5twI
+         lixy23nkAVkdos5kaH7JolE3uET2rWfm1gdsqJDNq/ooMZJuuO10GEfdqKpsGwdWRhgm
+         dhjGAXZmPo+ySv886k9Mwkk4we0sn9z/CjGQHnW5H914htY9CblaMq5JYmoXOTR9gVj1
+         e4rrOpSQQrfc/Cd7Ye1N1aviXAr4cUl0DUtINFdY1XUZIgTJhDiwH6zvm+ct01qWp562
+         eKtA==
+X-Gm-Message-State: APjAAAX7b0zOD4cYYvVVG1d32jx7obiYr0sL9Ds0R31EfZuHQ+f6UrI8
+        oUyNPz46IAcexTS0Y7Wng41kj+UYygorWPj/AWs=
+X-Google-Smtp-Source: APXvYqxF+3FXrWI0F1JhQsVjGtNovxca74xNOx0v6Tym1VjSkx5iVmESuRaQIaxUUjlmnakmGlvpseIpPCngOR9kjVw=
+X-Received: by 2002:a67:2e01:: with SMTP id u1mr17012140vsu.44.1570482862813;
+ Mon, 07 Oct 2019 14:14:22 -0700 (PDT)
+Date:   Mon,  7 Oct 2019 14:14:18 -0700
+Message-Id: <20191007211418.30321-1-samitolvanen@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
+Subject: [PATCH] arm64: fix alternatives with LLVM's integrated assembler
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Sami Tolvanen <samitolvanen@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 9:44 AM Alan Mikhak <alan.mikhak@sifive.com> wrote:
->
-> On Sun, Oct 6, 2019 at 11:13 PM Christoph Hellwig <hch@infradead.org> wrote:
-> >
-> > On Mon, Sep 30, 2019 at 04:22:35PM -0700, Alan Mikhak wrote:
-> > > From: Alan Mikhak <alan.mikhak@sifive.com>
-> > >
-> > > Modify sg_miter_stop() to validate the page pointer
-> > > before calling PageSlab(). This check prevents a crash
-> > > that will occur if PageSlab() gets called with a page
-> > > pointer that is not backed by page struct.
-> > >
-> > > A virtual address obtained from ioremap() for a physical
-> > > address in PCI address space can be assigned to a
-> > > scatterlist segment using the public scatterlist API
-> > > as in the following example:
-> >
-> > As Jason pointed out that is not a valid use of scatterlist.  What
-> > are you trying to do here at a higher level?
->
-> I am developing a PCI endpoint framework function driver to bring-up
-> an NVMe device over PCIe. The NVMe endpoint function driver connects
-> to an x86_64 or other root-complex host over PCIe. Internally, the
-> NVMe endpoint function driver connects to the unmodified Linux NVMe
-> target driver running on the embedded CPU. The Linux NVMe target
-> operates an NVMe namespace as determined for the application.
-> Currently, the Linux NVMe target code operates a file-based namespace
-> which is backed by the loop device. However, the application can be
-> expanded to operate on non-volatile storage such as flash or
-> battery-backed RAM. Currently, I am able to mount such an NVMe
-> namespace from the x86_64 Debian Linux host across PCIe using the
-> Disks App and perform Partition Benchmarking. I am also able to save
-> and load files, such as trace files for debugging the NVMe endpoint
-> with KernelShark, on the NVMe namespace partition nvme0n1p1.
->
-> My goal is to not modify the Linux NVMe target code at all. The NVMe
-> endpoint function driver currently does the work that is required. It
-> maps NVMe PRPs and PRP Lists from the host, formats a scatterlist that
-> NVMe target driver can consume, and executes the NVMe command with the
-> scatterlist on the NVMe target controller on behalf of the host. The
-> NVMe target controller can therefore read and write directly to host
-> buffers using the scatterlist as it does if the scatterlist had
-> arrived over the NVMe fabric.
->
-> In my current platform, there are no page struct backing for the PCIe
-> memory address space. Nevertheless, I am able to feed the virtual
-> addresses I obtain from ioremap() to the scatterlist as shown in my
-> example earlier. The scatterlist code has no problem traversing the
-> scatterlist that is formed from such addresses that were obtained from
-> ioremap(). The only place the scatterlist code prevents such usage is
-> in sg_miter_stop() when it calls PageSlab() to decide if it should
-> flush the page. I added a check to see if the page is valid and not
-> call PageSlab() if it is not a page struct backed page. That is all I
-> had to do to be able to pass scatterlists to the NVMe target.
->
-> Given that the PCIe memory address space is large, the cost of adding
-> page structs for that region is substantial enough for me to ask that
-> it be considered here to modify scatterlist code to support such
-> memory pointers that were obtained from ioremap(). If not acceptable,
-> the solution would be to pay to price and add page structs for the
-> PCIe memory address space.
->
+LLVM's integrated assembler fails with the following error when
+building KVM:
 
-Please consider the following information and cost estimate in
-bytes for requiring page structs for PCI memory if used with
-scatterlists. For example, a 128GB PCI memory address space
-could require as much as 256MB of system memory just for
-page struct backing. In a 1GB 64-bit system with flat memory
-model, that consumes 25% of available memory. However,
-not all of the 128GB PCI memory may be mapped for use at
-a given time depending on the application. The cost of PCI
-page structs is an upfront cost to be paid at system start.
+  <inline asm>:12:6: error: expected absolute expression
+   .if kvm_update_va_mask == 0
+       ^
+  <inline asm>:21:6: error: expected absolute expression
+   .if kvm_update_va_mask == 0
+       ^
+  <inline asm>:24:2: error: unrecognized instruction mnemonic
+          NOT_AN_INSTRUCTION
+          ^
+  LLVM ERROR: Error parsing inline asm
 
-pci memory start: 0x2000000000
-pci memory size: 128GB  0x2000000000
+These errors come from ALTERNATIVE_CB and __ALTERNATIVE_CFG,
+which test for the existence of the callback parameter in inline
+assembly using the following expression:
 
-pci page_size: 64KB  0x10000
-pci page_shift: 16  0x10
-pci pages: 2MB  0x200000
-pci epc bitmap_size: 256KB  0x40000
+  " .if " __stringify(cb) " == 0\n"
 
-pci page_size: 4KB  0x1000
-pci page_shift: 12  0xc
-pci pages: 32MB  0x2000000
-pci epc bitmap_size: 4MB  0x400000
+This works with GNU as, but isn't supported by LLVM. This change
+splits __ALTERNATIVE_CFG and ALTINSTR_ENTRY into separate macros
+to fix the LLVM build.
 
-system page size: 4KB  0x1000
-linux page struct size: 8B
-pci page struct cost: 256MB  0x10000000
+Link: https://github.com/ClangBuiltLinux/linux/issues/472
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+---
+ arch/arm64/include/asm/alternative.h | 32 ++++++++++++++++++----------
+ 1 file changed, 21 insertions(+), 11 deletions(-)
 
-Regards,
-Alan
+diff --git a/arch/arm64/include/asm/alternative.h b/arch/arm64/include/asm/alternative.h
+index b9f8d787eea9..324e7d5ab37e 100644
+--- a/arch/arm64/include/asm/alternative.h
++++ b/arch/arm64/include/asm/alternative.h
+@@ -35,13 +35,16 @@ void apply_alternatives_module(void *start, size_t length);
+ static inline void apply_alternatives_module(void *start, size_t length) { }
+ #endif
+ 
+-#define ALTINSTR_ENTRY(feature,cb)					      \
++#define ALTINSTR_ENTRY(feature)					              \
+ 	" .word 661b - .\n"				/* label           */ \
+-	" .if " __stringify(cb) " == 0\n"				      \
+ 	" .word 663f - .\n"				/* new instruction */ \
+-	" .else\n"							      \
++	" .hword " __stringify(feature) "\n"		/* feature bit     */ \
++	" .byte 662b-661b\n"				/* source len      */ \
++	" .byte 664f-663f\n"				/* replacement len */
++
++#define ALTINSTR_ENTRY_CB(feature, cb)					      \
++	" .word 661b - .\n"				/* label           */ \
+ 	" .word " __stringify(cb) "- .\n"		/* callback */	      \
+-	" .endif\n"							      \
+ 	" .hword " __stringify(feature) "\n"		/* feature bit     */ \
+ 	" .byte 662b-661b\n"				/* source len      */ \
+ 	" .byte 664f-663f\n"				/* replacement len */
+@@ -62,15 +65,14 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
+  *
+  * Alternatives with callbacks do not generate replacement instructions.
+  */
+-#define __ALTERNATIVE_CFG(oldinstr, newinstr, feature, cfg_enabled, cb)	\
++#define __ALTERNATIVE_CFG(oldinstr, newinstr, feature, cfg_enabled)	\
+ 	".if "__stringify(cfg_enabled)" == 1\n"				\
+ 	"661:\n\t"							\
+ 	oldinstr "\n"							\
+ 	"662:\n"							\
+ 	".pushsection .altinstructions,\"a\"\n"				\
+-	ALTINSTR_ENTRY(feature,cb)					\
++	ALTINSTR_ENTRY(feature)						\
+ 	".popsection\n"							\
+-	" .if " __stringify(cb) " == 0\n"				\
+ 	".pushsection .altinstr_replacement, \"a\"\n"			\
+ 	"663:\n\t"							\
+ 	newinstr "\n"							\
+@@ -78,17 +80,25 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
+ 	".popsection\n\t"						\
+ 	".org	. - (664b-663b) + (662b-661b)\n\t"			\
+ 	".org	. - (662b-661b) + (664b-663b)\n"			\
+-	".else\n\t"							\
++	".endif\n"
++
++#define __ALTERNATIVE_CFG_CB(oldinstr, feature, cfg_enabled, cb)	\
++	".if "__stringify(cfg_enabled)" == 1\n"				\
++	"661:\n\t"							\
++	oldinstr "\n"							\
++	"662:\n"							\
++	".pushsection .altinstructions,\"a\"\n"				\
++	ALTINSTR_ENTRY_CB(feature, cb)					\
++	".popsection\n"							\
+ 	"663:\n\t"							\
+ 	"664:\n\t"							\
+-	".endif\n"							\
+ 	".endif\n"
+ 
+ #define _ALTERNATIVE_CFG(oldinstr, newinstr, feature, cfg, ...)	\
+-	__ALTERNATIVE_CFG(oldinstr, newinstr, feature, IS_ENABLED(cfg), 0)
++	__ALTERNATIVE_CFG(oldinstr, newinstr, feature, IS_ENABLED(cfg))
+ 
+ #define ALTERNATIVE_CB(oldinstr, cb) \
+-	__ALTERNATIVE_CFG(oldinstr, "NOT_AN_INSTRUCTION", ARM64_CB_PATCH, 1, cb)
++	__ALTERNATIVE_CFG_CB(oldinstr, ARM64_CB_PATCH, 1, cb)
+ #else
+ 
+ #include <asm/assembler.h>
+-- 
+2.23.0.581.g78d2f28ef7-goog
+
