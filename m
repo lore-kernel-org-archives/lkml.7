@@ -2,89 +2,141 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC7DC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D62AC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A24620659
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:48:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570466912;
-	bh=uaIHpF/If6uI3IN+EaDDFj03MPBFPdqVnFBMY29qMGs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=a2W4Yl+qwoW0/J+DfsUCnd4LzYE8cYelZLeYTpqVBxU6jWsHSopHlyddaYQK7k77G
-	 piiVLCBT0Mge3N0toCuSEgjsValldLE+bI7RaSznkdRH0LP0UIB9g2lUyL2k0WBBlz
-	 7GQKzD7TOshMJh+UvLUFfZHZwQcQ5Kz+ML8RKWxo=
+	by mail.kernel.org (Postfix) with ESMTP id D2DC320659
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:49:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="aXYdfkT/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729000AbfJGQsb (ORCPT
+        id S1728976AbfJGQtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 12:48:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40208 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727830AbfJGQsb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 12:48:31 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1309C20659;
-        Mon,  7 Oct 2019 16:48:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570466910;
-        bh=uaIHpF/If6uI3IN+EaDDFj03MPBFPdqVnFBMY29qMGs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ddOCTBEdXHAyA68qXDQg1cPJd2U6TPN/ueiBHFOS2sAin/7R1r95CI53SY/BM9D2u
-         rtvFzHTaMZu1OYD8a+6HO1+G/P8HuAhnvod8K2XAhGxqeTgo9JpYQ+YBcvedRjhMVU
-         effOd7lieWvzjVh5RlfcHubSgBKHrJc1xQFPQ8sA=
-Date:   Mon, 7 Oct 2019 18:48:28 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mark Salyzyn <salyzyn@android.com>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
-        linux-security-module@vger.kernel.org, stable@vger.kernel.org,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-unionfs@vger.kernel.org
-Subject: Re: [PATCH] ovl: filter of trusted xattr results in audit
-Message-ID: <20191007164828.GB1090238@kroah.com>
-References: <20191007160918.29504-1-salyzyn@android.com>
- <20191007161616.GA988623@kroah.com>
- <20191007161725.GB988623@kroah.com>
- <7c610f92-5e1f-32ef-0a60-ed47ea999fe3@android.com>
+        Mon, 7 Oct 2019 12:49:06 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:63063 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728139AbfJGQtG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 12:49:06 -0400
+X-Greylist: delayed 45485 seconds by postgrey-1.27 at vger.kernel.org; Mon, 07 Oct 2019 12:49:04 EDT
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id x97GmZqd019698;
+        Tue, 8 Oct 2019 01:48:35 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x97GmZqd019698
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1570466916;
+        bh=y8kJOcEkslZAk6vscewNCsiqfVNW7HLOUn33XrjSX/8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=aXYdfkT/lgvsiWWfLjWAPX0ggr0leZTUeugZDoWrJ3v1WO1pQggaUnuJJxxqDD33P
+         akR1Nz+raADcws3tEpXHnNGRGt21pZLBFZ6wNWsc31Wx/kMBfuDfUflzUJfMtG7v6Q
+         I1enx8WdkLA1WKIhMd04HK7MThbk932x/DBZOT4r3ynbjvMpb6iflWIWFJz/gpnwCZ
+         7sXW6tj0+SZ0R1Ir26uyUZ3zGsACkW54cZN0Hm1L+uQzk2o+PQ/BgxUyIqrg9047bF
+         rwmVM6HLM13vfjOTKLXQs797gmP3pgikdlUBuefD80ZBe0Pj1usplMjlHYtByqD3OZ
+         vW9bSR2haFsuQ==
+X-Nifty-SrcIP: [209.85.221.171]
+Received: by mail-vk1-f171.google.com with SMTP id f1so3117312vkh.9;
+        Mon, 07 Oct 2019 09:48:35 -0700 (PDT)
+X-Gm-Message-State: APjAAAWUIg6L5+ycpHtZOrB28TMHIaZQPFZfEM9k2l6fmFU+Zumacbtl
+        otGyje+3sZ5Ql/MsrHwSidZaiZQLT+pQWPKQDWI=
+X-Google-Smtp-Source: APXvYqz7ukzVlMcJueOvYoOURcSnxC1SoQJMDggO8QxxUau2yVIUqwN1Rp39wa8jRdIxVVo8igICcocuPeFehW+TIOc=
+X-Received: by 2002:a1f:5243:: with SMTP id g64mr14817662vkb.26.1570466914476;
+ Mon, 07 Oct 2019 09:48:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7c610f92-5e1f-32ef-0a60-ed47ea999fe3@android.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191007040935.23436-1-yamada.masahiro@socionext.com> <CAK8P3a0g5iEtbFGk2BE6x3GrE5=zXngecLFUVFPWFqL3NZUwhg@mail.gmail.com>
+In-Reply-To: <CAK8P3a0g5iEtbFGk2BE6x3GrE5=zXngecLFUVFPWFqL3NZUwhg@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 8 Oct 2019 01:47:58 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASQ32R1-tqGDjnGYwMuOo=+SZMhzb7T39F-nKzr+=NaNQ@mail.gmail.com>
+Message-ID: <CAK7LNASQ32R1-tqGDjnGYwMuOo=+SZMhzb7T39F-nKzr+=NaNQ@mail.gmail.com>
+Subject: Re: [RFC PATCH] media: videodev2.h: include <linux/time.h> instead of <sys/time.h>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 09:42:08AM -0700, Mark Salyzyn wrote:
-> 
-> <sigh>
-> 
-> Now what is the playbook, we have three options in order of preference:
-> 
-> 1) #ifdef MODULE use capable() to preserve API, add a short comment about
-> the side effects if overlayfs is used as a module.
-> 
-> 2) export has_capability_nodaudit (proc and oom_kill use it, and are both
-> built-in only), but affect the 3.18 API at near EOL. AFAIK no one wants
-> that?
+Hi Arnd,
 
-I'll just do this.  3.18 is EOL, this is only being done for a
-distro-specific tree (i.e. AOSP).
+On Tue, Oct 8, 2019 at 12:26 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Mon, Oct 7, 2019 at 6:10 AM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+> >
+> > Currently, linux/videodev.h is excluded from the UAPI header test since
+> > it is not self-contained. Building it for user-space would fail.
+> >
+>
+> >
+> > Replacing <sys/time.h> with <linux/time.h> solves it, and allow more
+> > headers to join the UAPI header test.
+> >
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > ---
+> >
+> > I am not 100% sure about the compatibility
+> > between <sys/time.h> and <linux/time.h>, hence RFC.
+> >
+> > But, if they were not compatible,
+> > I guess it would have broken already.
+> >
+> > I CCed Arnd Bergmann, who might have a better insight.
+> >
+> > A related comment is here:
+> > https://lkml.org/lkml/2019/6/4/1046
+>
+> I don't think this can work, there are multiple problems here:
+>
+> * linux/time.h is still incompatible with sys/time.h, so any application
+>   tries to include both sys/time.h and linux/videodev2.h now also
+>   gets the compile-time error.
 
-> 3) Do nothing more. Make this a distro concern only. Leave this posted as a
-> back-port for the record, but never merged, for those that are _interested_
-> and declare 3.18 stable as noisy for sepolicy and overlayfs under some usage
-> patterns with few user space mitigation unless they explicitly take this
-> back-port into their tree (eg: android common kernel) if used built-in. This
-> way, in 3.18.y at least the module and built-in version behave the _same_ in
-> stable.
+You are right.
+I am so stupidly screwed up. Palm face...
 
-I'll just add the export to the patch and check this into AOSP, thanks!
+Please ignore this patch,
+and thank you for your expert comments!
 
-greg k-h
+
+>
+> * The definition of 'struct timespec' in the kernel headers may in
+>   fact be different from the one in the libc, and we do want to use
+>   the one from the C library here, otherwise different parts of the
+>   application may use incompatible struct layouts.
+>
+> Fixing this correctly depends on one of the remaining y2038
+> patches that we still have to revisit. There are two aspects that
+> we should address:
+>
+> 1. The v4l subsystem needs to be changed to handle both the
+>     old and the new 32-bit layout for timespec (and timeval). Both
+>     Hans and I have created patches for this in the past, but they
+>     were never completed and merged.
+>
+> 2. The definition of 'struct timespec' in the kernel headers needs
+>    to be removed after every user of this struct is gone from
+>    the kernel. In internal kernel code, the replacement is
+>    timespec64 or ktime_t, and in user space interfaces, the
+>    correct replacement is one of __kernel_timespec (the 64-bit
+>    version), __kernel_old_timespec (the traditional layout) or
+>    timespec (from the libc headers).
+>
+>         Arnd
+
+
+
+--
+Best Regards
+
+Masahiro Yamada
