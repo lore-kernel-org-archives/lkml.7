@@ -2,98 +2,176 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12FE7C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33ACBECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:21:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9E2D20867
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:20:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fQg6xW+U"
+	by mail.kernel.org (Postfix) with ESMTP id 07ACC20867
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:21:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570483265;
+	bh=0C23/ewIp0M29m6YJbtG7KwlkxQ9/RgBuKNQjpNmHTY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PJpRdWjF25aVCx+9SQp160p+sIPgtTY90+rrZ6AjlgxzKQYj9B9QrTPHpvSwia65k
+	 yseVomD97qPpYn0LF/O3/2E6UCZHrVT5uK5IIEjpTejZfz6l9wVQXCZUCa/EDkVCbO
+	 AYuY0p2Acm9FsfnkMGL2DffO2L0CHoawBwt73XOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729409AbfJGVUZ (ORCPT
+        id S1729456AbfJGVVD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 17:20:25 -0400
-Received: from mail-pg1-f173.google.com ([209.85.215.173]:33256 "EHLO
-        mail-pg1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728702AbfJGVUY (ORCPT
+        Mon, 7 Oct 2019 17:21:03 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39916 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728753AbfJGVVD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 17:20:24 -0400
-Received: by mail-pg1-f173.google.com with SMTP id i76so1819785pgc.0;
-        Mon, 07 Oct 2019 14:20:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=sycFjW76TPrYh+EZFOry3N94dzhDeaSje8SkQ8MSXvA=;
-        b=fQg6xW+UFVl4P5jrJBH5q5AbD5KcDxnKN1kXTZpWdgzKMqmmuTYG2xLAJDsaA3/w0x
-         /zsYlRlbB/HYh6y5zOevSg0qAa7wdD6h5Q8WsM9tTdgt599iFljrwg/54zrfgNiwBVKR
-         DTe4JzulD6AZoHnqjJJZqY7uUmWt3N+10ivfsbf74Iuyp+MlAkiRMMULp/7QFMs0eBwu
-         GuROimN69l6vkT8EhSYpzSg2rgMFXfcHggNwpe8KwHz7aqmqBt+EFYle/0Sc8UtQRmzT
-         Yh5rXs+KMKZo0L+LynbLdKQ7oR8XTdcIlOsIVFNGgRvK/Cp+broBsSgWlF20A7O96EbB
-         OB/A==
+        Mon, 7 Oct 2019 17:21:03 -0400
+Received: by mail-pg1-f195.google.com with SMTP id e1so8974914pgj.6
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 14:21:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=sycFjW76TPrYh+EZFOry3N94dzhDeaSje8SkQ8MSXvA=;
-        b=RLvL3Cbp+kd0CcYhMdzNj5VtgaxIMuG8tp+WzM3l56ivRkhsT2oAoYlNSafMLfXhJv
-         RYg671VdIL/5gUohq84JcS0/65Z/+uvUVYcX2R8vEx8eoUAJWs/AswaWXuBoChdc6I+c
-         TbchmTxjUerVGgkEB+4zzSk79esOMpRWlS59I5IVd9mlyol3BCt1AfgajlZ8pQ1bh0cp
-         LkPMEh4AV0mUWzr6+tcgUL5GjRxMUcPiv+OmjATdyxUHA7JGNVAgT4oGf2rlp/STgdJz
-         0w29/ovYKwLC8dknyglvAz+0/K7Xreaylh7NIxN9hVh+B8jpCM5BpOnNqLP4P015qJ/E
-         CcVw==
-X-Gm-Message-State: APjAAAUAtIb5d0egA7dmhJDXrqMYSq6GHLFjdcBkmA2aTHxXGEwOSG9M
-        OnU59dyAwKObz7KFHZ5X3CQeaTPV
-X-Google-Smtp-Source: APXvYqyIN2WyX2O/LtktWbQBDxOmrCtq3FQCtQmqRN0tsPHmd49xQZm2L1P3TBbGfx6R85XTdNkOhw==
-X-Received: by 2002:a63:33c4:: with SMTP id z187mr10304868pgz.30.1570483223810;
-        Mon, 07 Oct 2019 14:20:23 -0700 (PDT)
-Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
-        by smtp.gmail.com with ESMTPSA id q76sm27325812pfc.86.2019.10.07.14.20.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Oct 2019 14:20:22 -0700 (PDT)
-Subject: Re: Potential NULL pointer deference in net: sched
-To:     Yizhuo Zhai <yzhai003@ucr.edu>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@resnulli.us>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Zhiyun Qian <zhiyunq@cs.ucr.edu>,
-        Chengyu Song <csong@cs.ucr.edu>
-References: <CABvMjLRuGnatUxBEMKpXWGNJnAjNMiCXQ7Ce88ejuuJJnENR+g@mail.gmail.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <b2997ffb-728a-b4ee-abfa-2c9fe9869d8b@gmail.com>
-Date:   Mon, 7 Oct 2019 14:20:21 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ne+gjpSAsSZCPqyjaVRLIU8NFITcOF/zLKSCkYOILvY=;
+        b=jKabTA9ZmREbBLR0KQDUOLmiAJjZBIHO+LCmxMbUGyzq2HsQz8TjSYD+FASTIc4FjV
+         FQNWhK2S/PElaEML3Mh2nhh6ni3z8e2QylDCmmDU6zjwS0vjzfMVqUdKYiH9/GX1yiUq
+         kMhSCdW4vg4M+UurWGV8x8dbKOg5VcI30UOX68iTDpJNuk3GlfN2/nWm4GNsCrtXxawf
+         36sPMNox5llyuqktPL/25b6bsHOcrHihk14ypzaCGa/cFcueDOct1HgxZyOma/NF18xg
+         cGhwpcnvr/teNL3L1H5q00u1QVNwHTytpSEuUd6J6pLaOmIR/5RyVEaZZgD3z6G3swoZ
+         P6LA==
+X-Gm-Message-State: APjAAAXjtuIKejsU5PVlH6KuS4WSeQBLEeCoQ0PGqz8N6UwYRpnENfQt
+        ha6mHPVAQOyc3HiIu5RsmcJJqg==
+X-Google-Smtp-Source: APXvYqzhWLAcy5V9e5bo7GU00koo3J4gXnU61zWPnEE/o6/QkWloI2yUxtBc3CIVy9mThC1pr8ubbg==
+X-Received: by 2002:a63:9144:: with SMTP id l65mr33107157pge.148.1570483260688;
+        Mon, 07 Oct 2019 14:21:00 -0700 (PDT)
+Received: from localhost ([2601:647:5b00:424:4354:8908:1ef2:1e9f])
+        by smtp.gmail.com with ESMTPSA id w2sm14662672pfn.57.2019.10.07.14.20.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2019 14:20:59 -0700 (PDT)
+Date:   Mon, 7 Oct 2019 14:20:58 -0700
+From:   Moritz Fischer <mdf@kernel.org>
+To:     Thor Thayer <thor.thayer@linux.intel.com>
+Cc:     Moritz Fischer <mdf@kernel.org>,
+        Appana Durga Kedareswara Rao <appanad@xilinx.com>,
+        Alan Tull <atull@kernel.org>,
+        Michal Simek <michals@xilinx.com>,
+        "kedare06@gmail.com" <kedare06@gmail.com>,
+        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Nava kishore Manne <navam@xilinx.com>,
+        Siva Durga Prasad Paladugu <sivadur@xilinx.com>,
+        Richard Gong <richard.gong@linux.intel.com>,
+        Dinh Nguyen <dinguyen@kernel.org>, agust@denx.de
+Subject: Re: [PATCH v4 1/2] fpga: fpga-mgr: Add readback support
+Message-ID: <20191007212058.GA2929169@archbox>
+References: <1532672551-22146-1-git-send-email-appana.durga.rao@xilinx.com>
+ <CANk1AXSEWcZ7Oqv5pgpwvJRyyFWk5gPtniXa7T+oe6-uywqEqA@mail.gmail.com>
+ <MN2PR02MB6400CD5312983443A67DCC4EDC810@MN2PR02MB6400.namprd02.prod.outlook.com>
+ <4476bf39-b665-50d8-fecd-d50687d10ca2@linux.intel.com>
+ <20190927182308.GA6797@archbox>
+ <f8a9bc07-0705-1318-eba2-8878e839d696@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <CABvMjLRuGnatUxBEMKpXWGNJnAjNMiCXQ7Ce88ejuuJJnENR+g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f8a9bc07-0705-1318-eba2-8878e839d696@linux.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Thor,
 
-
-On 10/7/19 2:08 PM, Yizhuo Zhai wrote:
-> Hi All:
+On Mon, Oct 07, 2019 at 01:06:51PM -0500, Thor Thayer wrote:
+> Hi Moritz,
 > 
-> net/sched/sch_mq.c:
-> Inside function mq_dump_class(), mq_queue_get() could return NULL,
-> however, the return value of dev_queue is not checked  and get used.
-> This could potentially be unsafe.
+> On 9/27/19 1:23 PM, Moritz Fischer wrote:
+> > Thor,
+> > 
+> > On Fri, Sep 27, 2019 at 09:32:11AM -0500, Thor Thayer wrote:
+> > > Hi Kedar & Moritz,
+> > > 
+> > > On 9/27/19 12:13 AM, Appana Durga Kedareswara Rao wrote:
+> > > > Hi Alan,
+> > > > 
+> > > > Did you get a chance to send your framework changes to upstream?
+> > No they weren't upstreamed.
+> > 
+> > > > @Moritz Fischer: If Alan couldn't send his patch series, Can we take this patch series??
+> > > > Please let me know your thoughts on this.
+> > 
+> > Alan had some comments RE: #defines, I'll have to take another look.
+> > > > 
+> > > > Regards,
+> > > > Kedar.
+> > > 
+> > > 
+> > > I'd like to see some mechanism added as well. Our CvP driver needs a way to
+> > > load images to the FPGA over the PCIe bus.
+> > 
+> > Can you elaborate a bit on the CvP use-case and how that would work? Who
+> > would use the device how after loading the bitstream?
+> > 
+> > Generally there are several use cases that I have collected mentally
+> > over the years:
+> > 
+> > I) DFL use case:
+> >    - Mixed-set of drivers: Kernel and Userspace
+> >    - FPGA logic is discoverable through DFL
+> >    - Userspace application wants to reprogram FPGA
+> > 
+> > II) DT configfs use case:
+> >    - Mixed-set of drivers: Kernel and Userspace
+> >    - FPGA logic is *not* discoverable (hence DT overlay)
+> >    - Userspace application wants to reprogram FPGA
+> > 
+> > III) Thomas' case:
+> >    - Kernel only drivers (pcie bridge, pcie drivers, ...)
+> >    - FPGA logic is fully discoverable (i.e. PCIe endpoint
+> >      implemented in FPGA, connected to SoC via PCIe)
+> >    - Userspace application wants to reprogram FPGA
+> > 
+> > IV) VFIO case:
+> >    - Usually exposes either entire device via vfio-pci or part via
+> >      vfio-mdev
+> >    - Loading (basic) bitstream at boot from flash
+> >    - vfio-mdev case can use FPGA region interface + ioctl
+> >    - Full VFIO case is similar to III)
+> > 
+> > How does your CvP use case fit in? Collecting all the use-cases would
+> > help with moving forward on coming up with an API :)
+> > 
+> The CvP case is the same as III) Thomas' case. The FPGA configuration
+> bitstream is downloaded over the PCIe.
 > 
+> The one difference in my case is that there isn't an SoC. This is a Intel
+> host processor connecting to a non-SoC Stratix10/Arria10. The non-SoC
+> A10/S10, boots a minimal image (CvP) setting up the peripheral pins and
+> enabling the PCIe endpoint for CvP downloads.
 > 
+> The host can then download bitstreams using the FPGA Manager through debugFS
+> and when the bitstream finishes downloading and the FPGA enters User Mode,
+> the functionality is available for the host to use.
 
-Not really.
+I am generally confused by this driver. How does it work exactly? What
+happens after altera-cvp binds a PCI device?
 
-mq_dump_class() is called by a layer that made sure the @cl argument
-was not complete garbage.
+You can use it to download a bitstream (say we had the debugfs
+interface), and then what happens next? How do I use the device? It
+already has a PCI driver bound to it at that point?
 
+What happens next?
+
+Please tell me that not the only use-case for this is /dev/mem :)
+
+Thomas' use-case is different in that behind the FPGA device there are
+actual other *discoverable* PCI devices that will get enumerated and
+bind to separate drivers.
+
+Thanks,
+Moritz
+
+PS: I'll be out this week on vacation starting tmr so responses might be delayed
