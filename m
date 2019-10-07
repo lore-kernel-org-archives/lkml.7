@@ -2,147 +2,271 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4E8C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A65CFC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F5DE21655
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:34:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69BB121655
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:34:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="PmV+hGbV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="h+vDW4y2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727586AbfJGJeG (ORCPT
+        id S1727604AbfJGJeU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 05:34:06 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:44589 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727383AbfJGJeG (ORCPT
+        Mon, 7 Oct 2019 05:34:20 -0400
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.83]:30032 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727350AbfJGJeU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 05:34:06 -0400
-Received: by mail-lf1-f68.google.com with SMTP id q12so3796893lfc.11
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 02:34:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pW/v9rAZUFz/EoQTWrEX0OSxD6rEJBtSsejlmsLkopw=;
-        b=PmV+hGbVTsXwOx8ggwlU7N7+Z/R0TZ8g/q9zQs7etcACngKWx7QjRF/8Se581PyHZo
-         u3fYJ1mAIOm7+YB2mk5oZtKwfXOzhWYHNQUKWRoa97aoIfbHRSJ4JxWzPsYymBurA3Mi
-         Oey+WAMkyy36ll1cVpLCpGcSQZH9vSct27qk350b9oa3xb4SAw8nI0aGFKQbv4dAnZaU
-         2dg4S56+G5bSvHXcin4rivmXG1Djkk1+V+vy6gok2S/UekWotIujENAlroppSFUkFuIF
-         h+zbfpWdH9XV6tq2lk0V6AGe4oaDPsONzIUv1pWUqfTutbr7YH0TJ6MZq9mrxXVeDA6v
-         8USw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pW/v9rAZUFz/EoQTWrEX0OSxD6rEJBtSsejlmsLkopw=;
-        b=b7rPIIXWxHrI8xCjHZoie7K/Sk4+daND0/k2+DaweZMcnRb4LZaV4TfbEDuLMcLbcX
-         pVbPmHvSLSnVkP6ziMty+99xOWD7XO1SWQmm+omeLCBbyAf9AxR0Pw4TE4JTlFRpvI0p
-         59872xOWG0xoL5S3BMhsrKd4j1iGV3f0J5nGS0pxzhepuRTfrV/caGi0xLVn8+771iH+
-         gWMZKix8bpw7PdYXkD045SU1/tzEdNYFPWNgUxBUkhHkaMdCkNzIoxW0/NHDDA70xbIv
-         2qGwh1shWcxeSo0/0QlY9/2d5yYVwbHMxKJYwAn3DiDDCjKM0tFWSrA+n53XmUGFiwqV
-         BLug==
-X-Gm-Message-State: APjAAAXnKc4NhrPYWBKuYx+H0dYMDdrWE33UUHQACGtR0GR9DGz2Bv0L
-        A8BBjL4v5kU29pdl2i5lcxX30JsNWcEKDAP7Z1tn3g==
-X-Google-Smtp-Source: APXvYqxqDny/0zgM/+tgxZ/E60Ozfjkfc7OLYNZZbgTXgeXtW8BH3ZhM+bjalWIqj/Sw5sCvH+97gPy9f+DdcOaWjsk=
-X-Received: by 2002:a19:f617:: with SMTP id x23mr15911101lfe.97.1570440844243;
- Mon, 07 Oct 2019 02:34:04 -0700 (PDT)
+        Mon, 7 Oct 2019 05:34:20 -0400
+X-Greylist: delayed 2088 seconds by postgrey-1.27 at vger.kernel.org; Mon, 07 Oct 2019 05:34:17 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1570440856;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=S36cRnLQIU60DIJ6VvMVjgCE3ff633vnGb8UbjBvdAI=;
+        b=h+vDW4y2iwWHxWOmdneDXUFr0ynClcZ4Jo4N8cMniTV/l36kOrHEQZfOENFMcUXHwN
+        H7T8q4BuZH5BoAfNe4rLvVyNv0vTye7j8rzkmb+bU3UahGUbC0HAwRj+Gkrg0fvMsvli
+        uwcmzYOJ5qK+9fCdd8F/s13MHbu1TKqIPw2Hxz4G3j5/uTJnZGSTKubUtFzKMPQlMH67
+        5+QVdxq/k/JlvwuPxT8uTvozy4IEMJ5TFPalaOFvQ8IU7j5ABeSpAgH6g2Gj8/1SW75V
+        IxiuU59rH+FWjBbt3Ue19+G5pdEymZ4RYAL8spKZWF3uG/uNycXY4nIgmLJNCueclLLy
+        Sjuw==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPbI/SfP6I9"
+X-RZG-CLASS-ID: mo00
+Received: from tauon.chronox.de
+        by smtp.strato.de (RZmta 44.28.0 DYNA|AUTH)
+        with ESMTPSA id I003a5v979Y9yqw
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Mon, 7 Oct 2019 11:34:09 +0200 (CEST)
+From:   Stephan Mueller <smueller@chronox.de>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-crypto@vger.kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>
+Subject: Re: [PATCH 5.4 regression fix] x86/boot: Provide memzero_explicit
+Date:   Mon, 07 Oct 2019 11:34:09 +0200
+Message-ID: <12200313.ic8YZTgDOU@tauon.chronox.de>
+In-Reply-To: <284b70dd-5575-fee4-109f-aa99fb73a434@redhat.com>
+References: <20191007085501.23202-1-hdegoede@redhat.com> <65461301.CAtk0GNLiE@tauon.chronox.de> <284b70dd-5575-fee4-109f-aa99fb73a434@redhat.com>
 MIME-Version: 1.0
-References: <20191006172016.873463083@linuxfoundation.org> <20191006172018.480360174@linuxfoundation.org>
-In-Reply-To: <20191006172018.480360174@linuxfoundation.org>
-From:   Martijn Coenen <maco@android.com>
-Date:   Mon, 7 Oct 2019 11:33:53 +0200
-Message-ID: <CAB0TPYGO8Nm_Qz0kzSvX69NApiPwu4xV19F=KhyLe5DO3DoLTw@mail.gmail.com>
-Subject: Re: [PATCH 4.9 30/47] ANDROID: binder: remove waitqueue when thread exits.
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
-        syzbot <syzkaller@googlegroups.com>,
-        Mattias Nissler <mnissler@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed; boundary="nextPart1856703.9gYyaxCXab"
+Content-Transfer-Encoding: 7Bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 6, 2019 at 7:23 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> From: Martijn Coenen <maco@android.com>
->
-> commit f5cb779ba16334b45ba8946d6bfa6d9834d1527f upstream.
->
-> binder_poll() passes the thread->wait waitqueue that
-> can be slept on for work. When a thread that uses
-> epoll explicitly exits using BINDER_THREAD_EXIT,
-> the waitqueue is freed, but it is never removed
-> from the corresponding epoll data structure. When
-> the process subsequently exits, the epoll cleanup
-> code tries to access the waitlist, which results in
-> a use-after-free.
->
-> Prevent this by using POLLFREE when the thread exits.
->
-> Signed-off-by: Martijn Coenen <maco@android.com>
-> Reported-by: syzbot <syzkaller@googlegroups.com>
-> Cc: stable <stable@vger.kernel.org> # 4.14
-> [backport BINDER_LOOPER_STATE_POLL logic as well]
-> Signed-off-by: Mattias Nissler <mnissler@chromium.org>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->  drivers/android/binder.c |   17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
->
-> --- a/drivers/android/binder.c
-> +++ b/drivers/android/binder.c
-> @@ -334,7 +334,8 @@ enum {
->         BINDER_LOOPER_STATE_EXITED      = 0x04,
->         BINDER_LOOPER_STATE_INVALID     = 0x08,
->         BINDER_LOOPER_STATE_WAITING     = 0x10,
-> -       BINDER_LOOPER_STATE_NEED_RETURN = 0x20
-> +       BINDER_LOOPER_STATE_NEED_RETURN = 0x20,
-> +       BINDER_LOOPER_STATE_POLL        = 0x40,
->  };
->
->  struct binder_thread {
-> @@ -2628,6 +2629,18 @@ static int binder_free_thread(struct bin
->                 } else
->                         BUG();
->         }
-> +
-> +       /*
-> +        * If this thread used poll, make sure we remove the waitqueue
-> +        * from any epoll data structures holding it with POLLFREE.
-> +        * waitqueue_active() is safe to use here because we're holding
-> +        * the inner lock.
+This is a multi-part message in MIME format.
 
-This should be "global lock" in 4.9 and 4.4 :)
+--nextPart1856703.9gYyaxCXab
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-Otherwise LGTM, thanks!
+Am Montag, 7. Oktober 2019, 11:06:04 CEST schrieb Hans de Goede:
 
-Martijn
+Hi Hans,
 
-> +        */
-> +       if ((thread->looper & BINDER_LOOPER_STATE_POLL) &&
-> +           waitqueue_active(&thread->wait)) {
-> +               wake_up_poll(&thread->wait, POLLHUP | POLLFREE);
-> +       }
-> +
->         if (send_reply)
->                 binder_send_failed_reply(send_reply, BR_DEAD_REPLY);
->         binder_release_work(&thread->todo);
-> @@ -2651,6 +2664,8 @@ static unsigned int binder_poll(struct f
->                 return POLLERR;
->         }
->
-> +       thread->looper |= BINDER_LOOPER_STATE_POLL;
-> +
->         wait_for_proc_work = thread->transaction_stack == NULL &&
->                 list_empty(&thread->todo) && thread->return_error == BR_OK;
->
->
->
+> Hi Stephan,
+> 
+> On 07-10-2019 10:59, Stephan Mueller wrote:
+> > Am Montag, 7. Oktober 2019, 10:55:01 CEST schrieb Hans de Goede:
+> > 
+> > Hi Hans,
+> > 
+> >> The purgatory code now uses the shared lib/crypto/sha256.c sha256
+> >> implementation. This needs memzero_explicit, implement this.
+> >> 
+> >> Reported-by: Arvind Sankar <nivedita@alum.mit.edu>
+> >> Fixes: 906a4bb97f5d ("crypto: sha256 - Use get/put_unaligned_be32 to get
+> >> input, memzero_explicit") Signed-off-by: Hans de Goede
+> >> <hdegoede@redhat.com>
+> >> ---
+> >> 
+> >>   arch/x86/boot/compressed/string.c | 5 +++++
+> >>   1 file changed, 5 insertions(+)
+> >> 
+> >> diff --git a/arch/x86/boot/compressed/string.c
+> >> b/arch/x86/boot/compressed/string.c index 81fc1eaa3229..511332e279fe
+> >> 100644
+> >> --- a/arch/x86/boot/compressed/string.c
+> >> +++ b/arch/x86/boot/compressed/string.c
+> >> @@ -50,6 +50,11 @@ void *memset(void *s, int c, size_t n)
+> >> 
+> >>   	return s;
+> >>   
+> >>   }
+> >> 
+> >> +void memzero_explicit(void *s, size_t count)
+> >> +{
+> >> +	memset(s, 0, count);
+> > 
+> > May I ask how it is guaranteed that this memset is not optimized out by
+> > the
+> > compiler, e.g. for stack variables?
+> 
+> The function and the caller live in different compile units, so unless
+> LTO is used this cannot happen.
+
+Agreed in this case.
+
+I would just be worried that this memzero_explicit implementation is assumed 
+to be protected against optimization when used elsewhere since other 
+implementations of memzero_explicit are provided with the goal to be protected 
+against optimizations.
+> 
+> Also note that the previous purgatory private (vs shared) sha256
+> implementation had:
+> 
+>          /* Zeroize sensitive information. */
+>          memset(sctx, 0, sizeof(*sctx));
+> 
+> In the place where the new shared 256 code uses memzero_explicit() and the
+> new shared sha256 code is the only user of the
+> arch/x86/boot/compressed/string.c memzero_explicit() implementation.
+> 
+> With that all said I'm open to suggestions for improving this.
+
+What speaks against the common memzero_explicit implementation? If you cannot 
+use it, what about adding a barrier in the memzero_explicit implementation? Or 
+what about adding some compiler magic as attached to this email?
+
+
+> 
+> Regards,
+> 
+> Hans
+
+
+
+Ciao
+Stephan
+--nextPart1856703.9gYyaxCXab
+Content-Disposition: attachment; filename="memset_secure.c"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/x-csrc; charset="UTF-8"; name="memset_secure.c"
+
+/*
+ * Copyright (C) 2015, Stephan Mueller <smueller@chronox.de>
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, and the entire permission notice in its entirety,
+ *    including the disclaimer of warranties.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. The name of the author may not be used to endorse or promote
+ *    products derived from this software without specific prior
+ *    written permission.
+ *
+ * ALTERNATIVELY, this product may be distributed under the terms of
+ * the GNU General Public License, in which case the provisions of the GPL2
+ * are required INSTEAD OF the above restrictions.  (This clause is
+ * necessary due to a potential bad interaction between the GPL and
+ * the restrictions contained in a BSD-style copyright.)
+ *
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, ALL OF
+ * WHICH ARE HEREBY DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+ * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+ * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF NOT ADVISED OF THE POSSIBILITY OF SUCH
+ * DAMAGE.
+ */
+
+#include <string.h>
+
+/*
+ * Tested following code:
+ *
+ * (1) __asm__ __volatile__("" : "=r" (s) : "0" (s));
+ * (2) __asm__ __volatile__("": : :"memory");
+ * (3) __asm__ __volatile__("" : "=r" (s) : "0" (s) : "memory");
+ * (4) __asm__ __volatile__("" : : "r" (s) : "memory");
+ *
+ * Requred result:
+ *
+ * gcc -O3: objdump -d shows the following:
+ *
+ * 0000000000400440 <main>:
+ * ...
+ *   400469:       48 c7 04 24 00 00 00    movq   $0x0,(%rsp)
+ *   400470:       00
+ *   400471:       48 c7 44 24 08 00 00    movq   $0x0,0x8(%rsp)
+ *   400478:       00 00
+ *   40047a:       c7 44 24 10 00 00 00    movl   $0x0,0x10(%rsp)
+ *   400481:       00
+ *
+ * clang -O3: objdump -d shows the following:
+ *
+ * 0000000000400590 <main>:
+ * ...
+ *   4005c3:       c7 44 24 10 00 00 00    movl   $0x0,0x10(%rsp)
+ *   4005ca:       00
+ *
+ *
+ * Test results:
+ *
+ * The following table marks an X when the aforementioned movq/movl code is
+ * present (or an invocation of memset@plt) in the object code
+ * (i.e. the code we want). Contrary, the table marks - where the code is not
+ * present (i.e. the code we do not want):
+ *
+ *          | BARRIER  | (1) | (2) | (3) | (4)
+ * ---------+----------+     |     |     |
+ * Compiler |          |     |     |     |
+ * =========+==========+=======================
+ *                     |     |     |     |
+ * gcc -O0             |  X  |  X  |  X  |  X
+ *                     |     |     |     |
+ * gcc -O2             |  -  |  X  |  X  |  X
+ *                     |     |     |     |
+ * gcc -O3             |  -  |  X  |  X  |  X
+ *                     |     |     |     |
+ * clang -00           |  X  |  X  |  X  |  X
+ *                     |     |     |     |
+ * clang -02           |  X  |  -  |  X  |  X
+ *                     |     |     |     |
+ * clang -03           |  -  |  -  |  X  |  X
+ */
+
+static inline void memset_secure(void *s, int c, size_t n)
+{
+	memset(s, c, n);
+	__asm__ __volatile__("" : : "r" (s) : "memory");
+}
+
+#if 0
+#include <stdio.h>
+
+int main(int argc, char *argv[])
+{
+	char buf[20];
+
+	snprintf(buf, sizeof(buf) - 1, "test");
+	printf("%s\n", buf);
+
+	memset_secure(buf, 0, sizeof(buf));
+	return 0;
+}
+#endif
+
+--nextPart1856703.9gYyaxCXab--
+
+
+
