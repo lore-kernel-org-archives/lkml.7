@@ -2,128 +2,204 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D5B7ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7329ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5485B206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:07:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=ucr.edu header.i=@ucr.edu header.b="jemE8ipv"
+	by mail.kernel.org (Postfix) with ESMTP id B676A206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:11:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570482678;
+	bh=2++8T5z+QfZLxrx0+JY4Ig6nJlGMQTg7pMrbsTi8s/A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=m7K4fMn1urRPIngVEhizuXAp32QYSMxbLWqFColGW+8fvqa37u9oTfJhQfhKYijEt
+	 46/nSkS5ebgVxusEG0K0PPQTfXJP36rpdMcWxcAusOp/VlBm2Hjjh8qM0PVyknCXfj
+	 uw4DbkwWx9c5XNVHZ/0iNaoGekwM8n5tn9JbnElo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729291AbfJGVHi (ORCPT
+        id S1729123AbfJGVLR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 17:07:38 -0400
-Received: from mx6.ucr.edu ([138.23.62.71]:32430 "EHLO mx6.ucr.edu"
+        Mon, 7 Oct 2019 17:11:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728330AbfJGVHh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 17:07:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=ucr.edu; i=@ucr.edu; q=dns/txt; s=selector3;
-  t=1570482457; x=1602018457;
-  h=mime-version:from:date:message-id:subject:to;
-  bh=bY+sRheD73coXZxadpgSFqLWLuQ/U6qbrle3fNbHs8Y=;
-  b=jemE8ipvkJhph+bX1Rw6A7qoXohqUIIYVHxHsEWT0OWrnnwZhoIBOwMw
-   F455PDyfjckxKf7GNdSuBUbchiwh5iKb5NE21PtMih6E/9AhEE7iHkU//
-   FvPGJ11Y7ZkjDEit2VrTd7T2j7IR2D9S5vP07xFXmXFjH/+e9S+elFSmS
-   gOYcoAq5VsMZ/SsCJfqSGE9+bGiLcoGl9Hq45f+iPshl/Y1g7y0GdLMhC
-   5Mtv8eHHG37mdtxwgAht1+0w8Upp2X263vbTrSfxhBYTRMbGzhjouE+I/
-   8WBkXz/luqsE2M1KnwIrraX7Z5k4z8z1F7fTMtQTDGsQBrEfvRI7vcI5d
-   Q==;
-IronPort-SDR: 7/752GCyEhXfAlYiEQZNd+CnoMJGq+a1LVLutnCNv3a6PtmJLmE73If/VfraebiTnYpXsJ6GGf
- SCRxEBZMM+O3QVY6tRk7OfrdRR2SfVybP/bG8CsH+Wddot0Z3cInwOQ1MZdX8y459ka7mvjaAq
- DGL8w4Wk2+A8GWZ6KtLx31FXXaNySiX9zJeBqkPUu0Bpl7wIl/N0PYfFykI+Q6Pmx0FuA4jfKQ
- D7Pb8owlnYkLKYRLBy2XmpqfFvwqQKQMUsuKNNnWuxoEYkrkvgvs21SvOsdw0+I3kRZb7MOT03
- 1gk=
-IronPort-PHdr: =?us-ascii?q?9a23=3AnQ23OhwRbdRxu13XCy+O+j09IxM/srCxBDY+r6?=
- =?us-ascii?q?Qd2uwfIJqq85mqBkHD//Il1AaPAdyAra8bwLOK6ujJYi8p2d65qncMcZhBBV?=
- =?us-ascii?q?cuqP49uEgeOvODElDxN/XwbiY3T4xoXV5h+GynYwAOQJ6tL1LdrWev4jEMBx?=
- =?us-ascii?q?7xKRR6JvjvGo7Vks+7y/2+94fcbglVijexe7N/IRe5oQnMucQanJZpJ7osxB?=
- =?us-ascii?q?fOvnZGYfldy3lyJVKUkRb858Ow84Bm/i9Npf8v9NNOXLvjcaggQrNWEDopM2?=
- =?us-ascii?q?Yu5M32rhbDVheA5mEdUmoNjBVFBRXO4QzgUZfwtiv6sfd92DWfMMbrQ704RS?=
- =?us-ascii?q?iu4qF2QxLzliwJKyA2/33WisxojaJUvhShpwBkw4XJZI2ZLedycr/Bcd8fQ2?=
- =?us-ascii?q?dKQ8RfWDFbAo6kYIQBD+QPM+VFoYfju1QDtge+CRW2Ce/z1jNEmn370Ksn2O?=
- =?us-ascii?q?ohCwHG2wkgEsoMv3TVrdT1NLoSUeeox6bLzTXMdfJW0ir65YnIcxEhoeuDXb?=
- =?us-ascii?q?NsfcbNx0QiDB7FgUmKqYD/ITyay/kNvnGd4uF9Vuyvk3Yqpx9trjWr3MshiY?=
- =?us-ascii?q?nEipgLxlzY9ih12ps5KNm6RUN9fNWqCoFftzuAOItzWs4iRmZotzskxbAeop?=
- =?us-ascii?q?67eTQKyIwgxx7Cd/yLa4iI7QznVOaWOTp4gWhqeLO7hxqr9UigyPDwWtC60F?=
- =?us-ascii?q?pXqidIkMPAtn8K1xzU5ciHTuVy8l291jaI0gDf8uBEIUYqmqrHM5Mt3KI8m5?=
- =?us-ascii?q?4JvUnAHiL6glv6gLOVe0k+5+Sl7+bqbq3jppCGNo90jg/+Mr4pmsy6Gek5Mg?=
- =?us-ascii?q?kPX2iB9uS9yLHv4UP0Ta5XjvIqiKnVqo7VKtkGpqKhGQ9azp4j6wqjDzehyN?=
- =?us-ascii?q?kYmXgHLFRYeBOIloTpOE/BIOr+Dfihh1Shiylrx//YMb37GJnNLWbMkK3nfb?=
- =?us-ascii?q?lj705Q0g0zzcpQ58EcNrZUAvv2U0u5lNXUD1cCOgi1xq6zCtVm/oYZW2uTC7?=
- =?us-ascii?q?OEdqjVtAnMrskoJebEW4YTt36pO/k04OOoknY/llQae6aB0p4eaXT+FfNjdQ?=
- =?us-ascii?q?HRQ3v2g585EH0JuUJqTu3wiXWYXCVVenK2XuQh/Wd/QISrEYvOWKizj7Gbmi?=
- =?us-ascii?q?S2BJtbYiZBEF/IWXPpcZiUHvQBciSfJud/nTEeE7usUYks0VeprgC+g4hnL/?=
- =?us-ascii?q?vJ/GUhtJvlnIxn5+zCiBcr3TdvSdmWySeAQ3wi2isjRzIw07Fi6Xd6zFjLha?=
- =?us-ascii?q?NjhPpXPddIoe5CSEE3OYOKnMJgDNWnawPTfsqOAGSmS9TuVSAjTtswm4dVS1?=
- =?us-ascii?q?t2AZOvgg2VjHniOKMci7HeXM98yanbxXWkYp8lk3s=3D?=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2HFAgB4qJtdh8XQVdFmDoIQhBCETY5?=
- =?us-ascii?q?hhRcBhneFWYEYijQBCAEBAQ4vAQGHHyM3Bg4CAwkBAQUBAQEBAQUEAQECEAE?=
- =?us-ascii?q?BAQgNCQgphUCCOikBg1URfA8CJgIkEgEFASIBNIMAggsFokSBAzyLJoEyhAw?=
- =?us-ascii?q?BhFUBCQ2BSBJ6KIwOgheBEYNQh1GCWASBOAEBAZUsllQBBgKCEBSMVIhEG4I?=
- =?us-ascii?q?qAZcUjiyZSw8jgUWBfDMaJX8GZ4FPTxAUgWmNcQQBViSSHAEB?=
-X-IPAS-Result: =?us-ascii?q?A2HFAgB4qJtdh8XQVdFmDoIQhBCETY5hhRcBhneFWYEYi?=
- =?us-ascii?q?jQBCAEBAQ4vAQGHHyM3Bg4CAwkBAQUBAQEBAQUEAQECEAEBAQgNCQgphUCCO?=
- =?us-ascii?q?ikBg1URfA8CJgIkEgEFASIBNIMAggsFokSBAzyLJoEyhAwBhFUBCQ2BSBJ6K?=
- =?us-ascii?q?IwOgheBEYNQh1GCWASBOAEBAZUsllQBBgKCEBSMVIhEG4IqAZcUjiyZSw8jg?=
- =?us-ascii?q?UWBfDMaJX8GZ4FPTxAUgWmNcQQBViSSHAEB?=
-X-IronPort-AV: E=Sophos;i="5.67,269,1566889200"; 
-   d="scan'208";a="80780759"
-Received: from mail-lj1-f197.google.com ([209.85.208.197])
-  by smtpmx6.ucr.edu with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 07 Oct 2019 14:07:36 -0700
-Received: by mail-lj1-f197.google.com with SMTP id v24so3869041ljh.23
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 14:07:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=QpIogHTFQ3PNntbyxY8PuVYh6DjinLK9PCtFfqPpljY=;
-        b=BuQuy0YfDDftNYdABX/8V647XecEe+FtNwxyXLsDVWxCKBeeehYMsfBBjSlEIftXLK
-         PCeJ4PeP/Xzhgk03C2aweFZLufCAFR4qQJ4MgwmSmc4Mom8IDUQqRSk0gQyFA4+7Q0mz
-         hpms1xjFJMNxqQ5uQ5HE1Prx3vjuy0d71AkkQiB38SIRrXReV3c2uvHDSSFJOmgczEx5
-         swHQB4fgfiBLoX2ulDu5dmiVMSxRSgdJnyx3MMqxpHvHd6OQD5VENi9nhc64PyO14/iz
-         tpl+cIwxeLRdcE6Vr0HQ8RxS3Xcnjsb5vQ8Eq9iPpTmGILAHuupecXfHKdmcU46nfxcM
-         zYvg==
-X-Gm-Message-State: APjAAAVQhFWKdOmjGmGx6OnfoqtqrkWh7llUUcjTVwldEawyS5N2Le6w
-        twe6CBncFfIBi4f+kyo1sPR5IkTZ+7PsJ2HHWkIFUX8XE0BO/Kqb/Cv6vLJbRd9AN4QHoIKHJj7
-        /550svz/jjQKnJnacQPUtPJcCsmJmhV/AIPkRY3aP1A==
-X-Received: by 2002:a2e:89cd:: with SMTP id c13mr19683308ljk.92.1570482451459;
-        Mon, 07 Oct 2019 14:07:31 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxsaH0jQUXUcxBHYc6wDRLiz7uWnqfB2f4Igx5phAG/R7tvZNQRLqqwJ8r8TZxhh4PC22EU4Ifczy46vVpcjnc=
-X-Received: by 2002:a2e:89cd:: with SMTP id c13mr19683288ljk.92.1570482451154;
- Mon, 07 Oct 2019 14:07:31 -0700 (PDT)
+        id S1728273AbfJGVLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 17:11:17 -0400
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A95321871;
+        Mon,  7 Oct 2019 21:11:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570482675;
+        bh=2++8T5z+QfZLxrx0+JY4Ig6nJlGMQTg7pMrbsTi8s/A=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=MqnJMCvIdq80J7Il5BK3z4Hl/Rjz0FvDiuBTyPxi1L/hJdXCjTadbkoZzujx+rP5i
+         lboI8E810fgzQpg7RhEyqt7H/YOS+BHlBnKfYDSLNZdwRL5Tmr7JjhO1Lf2A7Y9Dy6
+         8qi++nUKNtWLv6HGtIhG6oqo+fgIj3YKezVgUrB0=
+Received: by mail-qt1-f172.google.com with SMTP id o12so21414190qtf.3;
+        Mon, 07 Oct 2019 14:11:15 -0700 (PDT)
+X-Gm-Message-State: APjAAAW/6LPeMArZ4m7LwDFARoaovbjtDFJEx0j2kDu4pdeMkZa8SNZn
+        gXMSLVCX3+qRvbjB3/uZ+9nrDUrY134UDsZ1RQ==
+X-Google-Smtp-Source: APXvYqxgC4Y+IoQKs1SvKtAXtb35EwkBoHIwCUxxsWKBsFy/kXYqrEVfDUkyri9NnRTPi/5JhBKP08QwsTyWEYngVpk=
+X-Received: by 2002:a05:6214:1590:: with SMTP id m16mr29194689qvw.20.1570482674220;
+ Mon, 07 Oct 2019 14:11:14 -0700 (PDT)
 MIME-Version: 1.0
-From:   Yizhuo Zhai <yzhai003@ucr.edu>
-Date:   Mon, 7 Oct 2019 14:08:14 -0700
-Message-ID: <CABvMjLRuGnatUxBEMKpXWGNJnAjNMiCXQ7Ce88ejuuJJnENR+g@mail.gmail.com>
-Subject: Potential NULL pointer deference in net: sched
-To:     Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@resnulli.us>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Zhiyun Qian <zhiyunq@cs.ucr.edu>,
-        Chengyu Song <csong@cs.ucr.edu>
+References: <20191007175553.66940-1-john.stultz@linaro.org>
+ <20191007175553.66940-5-john.stultz@linaro.org> <CAL_JsqJLY2n7hfneNptAGswVZtGm3vJbSR6W2wUG+ZTzMN8wZA@mail.gmail.com>
+ <CALAqxLWB7Vd-H70LLLSW0Fv=_4-saQ9CE2k3-L_43E+F8mLj2w@mail.gmail.com>
+In-Reply-To: <CALAqxLWB7Vd-H70LLLSW0Fv=_4-saQ9CE2k3-L_43E+F8mLj2w@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 7 Oct 2019 16:11:02 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJ9uUtqTDEkLi86-BCvW+wM6Pgz_K+JuTsuOqHfFOHStA@mail.gmail.com>
+Message-ID: <CAL_JsqJ9uUtqTDEkLi86-BCvW+wM6Pgz_K+JuTsuOqHfFOHStA@mail.gmail.com>
+Subject: Re: [RFC][PATCH v2 4/5] dt-bindings: usb: dwc3: of-simple: add
+ compatible for HiSi
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Yu Chen <chenyu56@huawei.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All:
+On Mon, Oct 7, 2019 at 2:07 PM John Stultz <john.stultz@linaro.org> wrote:
+>
+> On Mon, Oct 7, 2019 at 11:38 AM Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > On Mon, Oct 7, 2019 at 12:56 PM John Stultz <john.stultz@linaro.org> wrote:
+> > >
+> > > Add necessary compatible flag for HiSi's DWC3 so
+> > > dwc3-of-simple will probe.
+> > >
+> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > Cc: Felipe Balbi <balbi@kernel.org>
+> > > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > Cc: Yu Chen <chenyu56@huawei.com>
+> > > Cc: Matthias Brugger <matthias.bgg@gmail.com>
+> > > Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > > Cc: linux-usb@vger.kernel.org
+> > > Cc: devicetree@vger.kernel.org
+> > > Signed-off-by: John Stultz <john.stultz@linaro.org>
+> > > ---
+> > > v2: Tweaked clock names as clk_usb3phy_ref didn't seem right.
+> > > ---
+> > >  .../devicetree/bindings/usb/hisi,dwc3.txt     | 52 +++++++++++++++++++
+> > >  1 file changed, 52 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/usb/hisi,dwc3.txt
+> >
+> > Can you make this a schema.
+>
+> Sorry, I'm not sure exactly what you're asking. I'm guessing from
+> grepping around you want the bindings in yaml instead (I see a few
+> examples)?
 
-net/sched/sch_mq.c:
-Inside function mq_dump_class(), mq_queue_get() could return NULL,
-however, the return value of dev_queue is not checked  and get used.
-This could potentially be unsafe.
+Yes.
 
+> Is there some pointer to documentation? The
+> Documentation/devicetree/bindings/writing-bindings.txt file doesn't
+> seem to say much on it.
 
--- 
-Kind Regards,
+You mean Documentation/devicetree/writing-schemas.rst? There's that
+and Documentation/devicetree/bindings/example-schema.yaml which has a
+bunch of annotations on what each part means.
 
-Yizhuo Zhai
+> > > diff --git a/Documentation/devicetree/bindings/usb/hisi,dwc3.txt b/Documentation/devicetree/bindings/usb/hisi,dwc3.txt
+> > > new file mode 100644
+> > > index 000000000000..3a3e5c320f2a
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/usb/hisi,dwc3.txt
+> > > @@ -0,0 +1,52 @@
+> > > +HiSi SuperSpeed DWC3 USB SoC controller
+> > > +
+> > > +Required properties:
+> > > +- compatible:          should contain "hisilicon,hi3660-dwc3" for HiSi SoC
+> > > +- clocks:              A list of phandle + clock-specifier pairs for the
+> > > +                       clocks listed in clock-names
+> > > +- clock-names:         Should contain the following:
+> > > +  "clk_abb_usb"                USB reference clk
 
-Computer Science, Graduate Student
-University of California, Riverside
+Probably 'ref' from dwc3.txt.
+
+> > > +  "aclk_usb3otg"       USB3 OTG aclk
+
+'bus_early'? IIRC, 'aclk' is the clock name for AXI bus clock.
+
+> > > +
+> > > +- assigned-clocks:     Should be:
+> > > +                               HI3660_ACLK_GATE_USB3OTG
+> > > +- assigned-clock-rates: Should be:
+> > > +                               229Mhz (229000000) for HI3660_ACLK_GATE_USB3OTG
+> > > +
+> > > +Optional properties:
+> > > +- resets:              Phandle to reset control that resets core and wrapper.
+> >
+> > Looks like 4 resets though.
+>
+> Good point. I'll fix that up.
+>
+> > > +
+> > > +Required child node:
+> > > +A child node must exist to represent the core DWC3 IP block. The name of
+> > > +the node is not important. The content of the node is defined in dwc3.txt.
+> > > +
+> > > +Example device nodes:
+> > > +
+> > > +       usb3: hisi_dwc3 {
+> > > +               compatible = "hisilicon,hi3660-dwc3";
+> > > +               #address-cells = <2>;
+> > > +               #size-cells = <2>;
+> > > +               ranges;
+> > > +
+> > > +               clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
+> > > +                        <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
+> > > +               clock-names = "clk_abb_usb", "aclk_usb3otg";
+> > > +
+> > > +               assigned-clocks = <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
+> > > +               assigned-clock-rates = <229 000 000>;
+> > > +               resets = <&crg_rst 0x90 8>,
+> > > +                        <&crg_rst 0x90 7>,
+> > > +                        <&crg_rst 0x90 6>,
+> > > +                        <&crg_rst 0x90 5>;
+> > > +
+> > > +               dwc3: dwc3@ff100000 {
+> >
+> > If it's only clocks and resets for the wrapper node, just make this
+> > all one node.
+>
+> Just to make sure I'm following, you're suggesting I put all the
+> clocks/resets in the dwc3 node (renamed to usb for the node name) and
+> not add the wrapper?
+
+Yes.
+
+> I'll have to see if that's possible. The generic dwc3 binding wants 3
+> clocks, but I only have two in the code I've worked with (similarly it
+> seems to only want two resets, not 4) so I'll have to see if I can
+> figure out how to adapt that.
+
+Possible since commit fe8abf332b8f ("usb: dwc3: support clocks and
+resets for DWC3 core").
+
+>
+> If that approach is preferred, do I also no longer need a separate
+> binding document/schema?
+
+Correct. And then no need to convert to schema yet (though feel free
+to convert dwc3.txt :)).
+
+Rob
