@@ -2,166 +2,114 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D43CBECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF105ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A872020684
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:56:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pimaker.at header.i=@pimaker.at header.b="Y3iJ/ujK"
+	by mail.kernel.org (Postfix) with ESMTP id 8947C206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:57:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570471064;
+	bh=4Slkk8FYa1nq0uUPEJ/Ga/4PSME/l45UeoRN71xPurU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=DiKkaspC7Z4DU9tY5mq7BIoYku67elF3ony+JW4exbAbJsv/xxCZ5fHWHkpwyz9J4
+	 YgWp6joC97QQZ6Jh1ZsC3Nwk0Z/6FlZE3hLf5pct+DGH1vjWhXFSPovMMaYRWQM96I
+	 SCxFOg72MHTfeteX97Ai77dMSBOvkELX8Q8YUwJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729500AbfJGR4p (ORCPT
+        id S1729329AbfJGR5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 13:56:45 -0400
-Received: from mail2.protonmail.ch ([185.70.40.22]:60810 "EHLO
-        mail2.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729189AbfJGR4o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 13:56:44 -0400
-Date:   Mon, 07 Oct 2019 17:56:33 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pimaker.at;
-        s=protonmail; t=1570471001;
-        bh=eJ5MtFPu12WNiGiJIVRCOx1RxauP5/FllS4pi3PUTgM=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:
-         Feedback-ID:From;
-        b=Y3iJ/ujK5shcW6Sp0D4soqPfLnJZZ8E1QXenxGeuHROf8XPjzKZjCi03sF7Ms2B/D
-         Tl70Og8IYZs4x9QoUVbSviwnom0xIxNfacQY+3cg2Hv1f4PbKgrd/x7SWjj7zlAcZK
-         IRCCM/psXA6hwaCx+zsvldGxIAUvcFBpBaHYFOZ4=
-To:     paulmck@kernel.org
-From:   Stefan <stefan@pimaker.at>
-Cc:     rcu@vger.kernel.org, Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org
-Reply-To: Stefan <stefan@pimaker.at>
-Subject: Re: [PATCH] rcu/nocb: Fix dump_tree hierarchy print always active
-Message-ID: <d74644c4-9bdc-a21c-acc2-a8f525863064@pimaker.at>
-In-Reply-To: <20191007012625.GA23446@paulmck-ThinkPad-P72>
-References: <20191004194854.11352-1-stefan@pimaker.at>
- <20191004222402.GQ2689@paulmck-ThinkPad-P72>
- <20191007012625.GA23446@paulmck-ThinkPad-P72>
-Feedback-ID: ue9Y3QtBlktHf6EEpXP3zzomX_ELv4nrMskJ1DJAqtnBErUqnmreyaap-KHUztlMofpS6GrkVvbLJ97c2ByOFQ==:Ext:ProtonMail
+        Mon, 7 Oct 2019 13:57:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54182 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728954AbfJGR5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 13:57:43 -0400
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76C2B206C0;
+        Mon,  7 Oct 2019 17:57:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570471062;
+        bh=4Slkk8FYa1nq0uUPEJ/Ga/4PSME/l45UeoRN71xPurU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=aGAtPiJ0XUJysZXyBYDXVj9W8HsbOcy7a6RoABUEaPIsboCzlCAmW8Cxq+vbUfSlu
+         SdZolAghlb0Q56At+nbu0WjOoEkerOcJFerEjhmuiRRsGBXwUs1ERrvFNQMaISjZg7
+         oxYPySFp4GNfD4V9IlbELMngikbWfFzy6YGp3LuE=
+Received: by mail-qt1-f170.google.com with SMTP id u40so20458233qth.11;
+        Mon, 07 Oct 2019 10:57:42 -0700 (PDT)
+X-Gm-Message-State: APjAAAVfxfMPPCOPHMW9N5S4E5WVUD1jZwGvWcBuZIXmJMJMTbmYIAC8
+        Z1HAgGAiEGSf/Kdy76zZQNlANob5eUWByWVq+A==
+X-Google-Smtp-Source: APXvYqyx0/vroFKh+gGIFFU2QP1qSo3MpBR0Klz9I9ftnNKkdHNH+5jvTnL3wvDYMYseeiI4YtsA91QWvRtU1xEn4IM=
+X-Received: by 2002:ac8:444f:: with SMTP id m15mr31503108qtn.110.1570471061666;
+ Mon, 07 Oct 2019 10:57:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <20190724044906.12007-1-vkoul@kernel.org> <20190724044906.12007-2-vkoul@kernel.org>
+ <CANcMJZBWsfwWmHbGCG+KG4n1kpmytw_8O4uA8HEVv8ysBxiQgw@mail.gmail.com>
+In-Reply-To: <CANcMJZBWsfwWmHbGCG+KG4n1kpmytw_8O4uA8HEVv8ysBxiQgw@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 7 Oct 2019 12:57:30 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJpAqdFQKQLjh0szD2HY23bkFSg2fioDi2VxYvZcs6wsQ@mail.gmail.com>
+Message-ID: <CAL_JsqJpAqdFQKQLjh0szD2HY23bkFSg2fioDi2VxYvZcs6wsQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] arm64: dts: qcom: sdm845: Add unit name to soc node
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Amit Pundir <amit.pundir@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/10/2019 03:26, Paul E. McKenney wrote:
->=20
-> On Fri, Oct 04, 2019 at 03:24:02PM -0700, Paul E. McKenney wrote:
->> On Fri, Oct 04, 2019 at 07:49:10PM +0000, Stefan Reiter wrote:
->>> Commit 18cd8c93e69e ("rcu/nocb: Print gp/cb kthread hierarchy if
->>> dump_tree") added print statements to rcu_organize_nocb_kthreads for
->>> debugging, but incorrectly guarded them, causing the function to always
->>> spew out its message.
->>>
->>> This patch fixes it by guarding both pr_alert statements with dump_tree=
-,
->>> while also changing the second pr_alert to a pr_cont, to print the
->>> hierarchy in a single line (assuming that's how it was supposed to
->>> work).
->>>
->>> Fixes: 18cd8c93e69e ("rcu/nocb: Print gp/cb kthread hierarchy if dump_t=
-ree")
->>> Signed-off-by: Stefan Reiter <stefan@pimaker.at>
->>
->> Queued for testing and review, thank you!
->=20
-> And here is an updated version to make the special case of a nocb GP
-> kthread having no other nocb CB kthreads look less strange.  Does this
-> work for you?
+On Mon, Oct 7, 2019 at 12:44 PM John Stultz <john.stultz@linaro.org> wrote:
+>
+> On Tue, Jul 23, 2019 at 9:51 PM Vinod Koul <vkoul@kernel.org> wrote:
+> >
+> > We get a warning about missing unit name for soc node, so add it.
+> >
+> > arch/arm64/boot/dts/qcom/sdm845.dtsi:623.11-2814.4: Warning (unit_address_vs_reg): /soc: node has a reg or ranges property, but no unit name
+> >
+> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > index 601cfb078bd5..e81f4a6d08ce 100644
+> > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > @@ -620,7 +620,7 @@
+> >                 method = "smc";
+> >         };
+> >
+> > -       soc: soc {
+> > +       soc: soc@0 {
+> >                 #address-cells = <2>;
+> >                 #size-cells = <2>;
+> >                 ranges = <0 0 0 0 0x10 0>;
+>
+> So Amit Pundir noted that this patch is causing 5.4-rc to no longer
+> boot on db845 w/ AOSP, due to it changing the userland sysfs paths
+> from "/devices/platform/soc/1a00000.mdss" to
+> "/devices/platform/soc@0/1a00000.mdss"
+>
+> Is there a better solution here that might not break userspace?
 
-Tested just now, works for me. Thanks for the additional fix!
+Other than doing the right thing of not relying on
+/sys/devices/platform/* paths, implement per target/file DTC_FLAGS
+similar to CFLAGS. There is another want for this in order to enable
+dtc symbols for overlays on a per board basis.
 
->=20
-> =09=09=09=09=09=09=09Thanx, Paul
->=20
-> ------------------------------------------------------------------------
->=20
-> commit e6223b0705369750990c32ddc80251942e61be30
-> Author: Stefan Reiter <stefan@pimaker.at>
-> Date:   Fri Oct 4 19:49:10 2019 +0000
->=20
->      rcu/nocb: Fix dump_tree hierarchy print always active
->=20
->      Commit 18cd8c93e69e ("rcu/nocb: Print gp/cb kthread hierarchy if
->      dump_tree") added print statements to rcu_organize_nocb_kthreads for
->      debugging, but incorrectly guarded them, causing the function to alw=
-ays
->      spew out its message.
->=20
->      This patch fixes it by guarding both pr_alert statements with dump_t=
-ree,
->      while also changing the second pr_alert to a pr_cont, to print the
->      hierarchy in a single line (assuming that's how it was supposed to
->      work).
->=20
->      Fixes: 18cd8c93e69e ("rcu/nocb: Print gp/cb kthread hierarchy if dum=
-p_tree")
->      Signed-off-by: Stefan Reiter <stefan@pimaker.at>
->      [ paulmck: Make single-nocbs-CPU GP kthreads look less erroneous. ]
->      Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
->=20
-> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> index d5334e4..d43f4e0 100644
-> --- a/kernel/rcu/tree_plugin.h
-> +++ b/kernel/rcu/tree_plugin.h
-> @@ -2295,6 +2295,8 @@ static void __init rcu_organize_nocb_kthreads(void)
->   {
->   =09int cpu;
->   =09bool firsttime =3D true;
-> +=09bool gotnocbs =3D false;
-> +=09bool gotnocbscbs =3D true;
->   =09int ls =3D rcu_nocb_gp_stride;
->   =09int nl =3D 0;  /* Next GP kthread. */
->   =09struct rcu_data *rdp;
-> @@ -2317,21 +2319,31 @@ static void __init rcu_organize_nocb_kthreads(voi=
-d)
->   =09=09rdp =3D per_cpu_ptr(&rcu_data, cpu);
->   =09=09if (rdp->cpu >=3D nl) {
->   =09=09=09/* New GP kthread, set up for CBs & next GP. */
-> +=09=09=09gotnocbs =3D true;
->   =09=09=09nl =3D DIV_ROUND_UP(rdp->cpu + 1, ls) * ls;
->   =09=09=09rdp->nocb_gp_rdp =3D rdp;
->   =09=09=09rdp_gp =3D rdp;
-> -=09=09=09if (!firsttime && dump_tree)
-> -=09=09=09=09pr_cont("\n");
-> -=09=09=09firsttime =3D false;
-> -=09=09=09pr_alert("%s: No-CB GP kthread CPU %d:", __func__, cpu);
-> +=09=09=09if (dump_tree) {
-> +=09=09=09=09if (!firsttime)
-> +=09=09=09=09=09pr_cont("%s\n", gotnocbscbs
-> +=09=09=09=09=09=09=09? "" : " (self only)");
-> +=09=09=09=09gotnocbscbs =3D false;
-> +=09=09=09=09firsttime =3D false;
-> +=09=09=09=09pr_alert("%s: No-CB GP kthread CPU %d:",
-> +=09=09=09=09=09 __func__, cpu);
-> +=09=09=09}
->   =09=09} else {
->   =09=09=09/* Another CB kthread, link to previous GP kthread. */
-> +=09=09=09gotnocbscbs =3D true;
->   =09=09=09rdp->nocb_gp_rdp =3D rdp_gp;
->   =09=09=09rdp_prev->nocb_next_cb_rdp =3D rdp;
-> -=09=09=09pr_alert(" %d", cpu);
-> +=09=09=09if (dump_tree)
-> +=09=09=09=09pr_cont(" %d", cpu);
->   =09=09}
->   =09=09rdp_prev =3D rdp;
->   =09}
-> +=09if (gotnocbs && dump_tree)
-> +=09=09pr_cont("%s\n", gotnocbscbs ? "" : " (self only)");
->   }
->=20
->   /*
->=20
 
+Rob
