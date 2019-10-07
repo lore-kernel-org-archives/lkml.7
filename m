@@ -2,187 +2,119 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C07DCECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C78C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9643C20673
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDD5A20700
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:26:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tbKfnNQx"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="NdJbYHTK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728352AbfJGQZj (ORCPT
+        id S1728422AbfJGQ0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 12:25:39 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:40730 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727801AbfJGQZj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 12:25:39 -0400
-Received: by mail-oi1-f194.google.com with SMTP id k9so12185539oib.7
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 09:25:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/zonqR8a9bYRUArcQ0AsLZe2gFhECx4xlsiRxIugCpI=;
-        b=tbKfnNQxobqT9l2G6cyaVZzhkV5ZUxI5OOtLp7CuMZLbAqbIZNG3Xslx6Qu4SgqWK9
-         2pHzs1dWyfE4uwgkmY/SAFdGsXivyJY+L4Ff4kUEKMAreldnnH0EnrHL1YtbNUKHM2LP
-         1liYwvxxVm+CRTD52MpwURVIWwDV2WSSlPHLlFQiLa1/9FszNXeDC+pYTLr86qA4a6Y8
-         wUmkdHqrbfamuM80kJVuFJxsta8ollWvMkvdOoKSPBKq+IsKdQqlvJsF19Kw+dlGJHbh
-         IjeY1UM2Ol9suJyo0IYvvVKxIiqBGooE/fXesMZgV72M4p2aEAPEuqSidxNtmQeMT+pv
-         itpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/zonqR8a9bYRUArcQ0AsLZe2gFhECx4xlsiRxIugCpI=;
-        b=YuczhIj//jABwyyrrH3kjSkjdJHPoQtu0mlcTEVzIJwtDtGUVPtZG2qYPvh2tUG9nM
-         uI8BbAwt+Sc8oFf/1/av47WuSOmXyowKbpR4M5cfoZGRTJZRNBPpUNOcGC2exhipNloK
-         ybvnG+5MTVkBdQTLntAzmb2oH2DQr5Fo92vdbTdANFQWen1y475LlvwbSFT9cx+dpLn9
-         Qb0hfc/x9J+4ghfUN8GxNz43vRtcbttBTGNeKjH3GfQ/cZrzUjlZwhX4b0/CZXdjkT/P
-         v3LussjP8Wjl28DbFCEBuDcWhPGN+f29+tpGlg7U7j/QVUr3ck1O/uuBmilZoQSgIyiL
-         6rYA==
-X-Gm-Message-State: APjAAAU1+bJhx162+gfFAm1BPw3ong0nLuJTOZXNqKKUo51fbEizXTSB
-        QKYAL9BL0L0Z85VZks9eXKQDFA==
-X-Google-Smtp-Source: APXvYqzSOxz3jgXnXSKOfwxCrVQXrib0f6vI0fA9tuSp2NkvBZS7YWpOPKHNoDP69HtOeB/fNWJYjg==
-X-Received: by 2002:aca:f492:: with SMTP id s140mr82954oih.83.1570465537865;
-        Mon, 07 Oct 2019 09:25:37 -0700 (PDT)
-Received: from [192.168.17.59] (CableLink-189-218-29-211.Hosts.InterCable.net. [189.218.29.211])
-        by smtp.gmail.com with ESMTPSA id 93sm4658080ota.16.2019.10.07.09.25.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 07 Oct 2019 09:25:37 -0700 (PDT)
-Subject: Re: [PATCH 5.3 000/166] 5.3.5-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     shuah@kernel.org, patches@kernelci.org,
-        lkft-triage@lists.linaro.org, ben.hutchings@codethink.co.uk,
-        stable@vger.kernel.org, akpm@linux-foundation.org,
-        torvalds@linux-foundation.org, linux@roeck-us.net
-References: <20191006171212.850660298@linuxfoundation.org>
-From:   =?UTF-8?Q?Daniel_D=c3=adaz?= <daniel.diaz@linaro.org>
-Message-ID: <7148ff93-bac0-f78a-df3a-b9dbbee3db1a@linaro.org>
-Date:   Mon, 7 Oct 2019 11:25:35 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 7 Oct 2019 12:26:03 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:56098 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727801AbfJGQ0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 12:26:03 -0400
+Received: from zn.tnic (p200300EC2F06420085D86D94306C6599.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:4200:85d8:6d94:306c:6599])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2D3E91EC0BEA;
+        Mon,  7 Oct 2019 18:25:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1570465558;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=PMlIdZe0tafGlH4Uo3oE7bPvqYHG4BVme2hKO40zQS4=;
+        b=NdJbYHTKsOKpZZNBsd9O9Ims8vs9qNkUadLzrXUm36uhAC+njPtSnt60iN5PAl4DCQcJRt
+        v+lmfWNNOKTiuv5zlxuTFKBm+6RiBOULXu0FUux+cPy2FTXkkoVG2mSn8BBZAAvpNA7FqL
+        ckzS5Lm2wTXVnQ57gnvKBMUsa3VI/Cg=
+Date:   Mon, 7 Oct 2019 18:25:51 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>
+Cc:     Jan Kiszka <jan.kiszka@siemens.com>, x86@kernel.org,
+        jailhouse-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        "H . Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH v5 1/2] x86/jailhouse: improve setup data version
+ comparison
+Message-ID: <20191007162551.GC24289@zn.tnic>
+References: <20191007123819.161432-1-ralf.ramsauer@oth-regensburg.de>
+ <20191007123819.161432-2-ralf.ramsauer@oth-regensburg.de>
 MIME-Version: 1.0
-In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191007123819.161432-2-ralf.ramsauer@oth-regensburg.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+On Mon, Oct 07, 2019 at 02:38:18PM +0200, Ralf Ramsauer wrote:
+> We will soon introduce a new setup_data version and extend the
 
+Who is "We"?
 
-On 10/6/19 12:19 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.3.5 release.
-> There are 166 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+There a couple more "we" below. Can you please rewrite that commit message in
+passive voice and thus dispense my confusion about who's "we"? :)
+
+> structure. This requires some preparational work for the sanity check of
+> the header and the check of the version.
 > 
-> Responses should be made by Tue 08 Oct 2019 05:07:10 PM UTC.
-> Anything received after that time might be too late.
+> Use the following strategy:
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.5-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
-> and the diffstat can be found below.
+> 1. Ensure that the header declares at least enough space for the version
+>    and the compatible_version as we must hold that fields for any
+>    version. Furthermore, the location and semantics of those fields will
+>    never change.
 > 
-> thanks,
+> 2. Copy over data -- as much as we can. The length is either limited by
+>    the header length, or the length of setup_data.
 > 
-> greg k-h
+> 3. Things are now in place -- sanity check if the header length complies
+>    the actual version.
+> 
+> For future versions of the setup_data, only step 3 requires alignment.
+> 
+> Signed-off-by: Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>
+> Reviewed-by: Jan Kiszka <jan.kiszka@siemens.com>
+> ---
+>  arch/x86/include/uapi/asm/bootparam.h | 22 +++++++-----
+>  arch/x86/kernel/jailhouse.c           | 50 +++++++++++++++++----------
+>  2 files changed, 44 insertions(+), 28 deletions(-)
 
-Results from Linaro’s test farm.
-Regressions detected.
+...
 
-As mentioned, we found a problem with the mismatch of kselftests 5.3.1 and net/udpgso.sh, but everything is fine.
+> @@ -180,13 +175,26 @@ static void __init jailhouse_init_platform(void)
+>  	if (!pa_data)
+>  		panic("Jailhouse: No valid setup data found");
+>  
+> -	if (setup_data.compatible_version > JAILHOUSE_SETUP_REQUIRED_VERSION)
+> -		panic("Jailhouse: Unsupported setup data structure");
+> +	/* setup data must at least contain the header */
+> +	if (header.len < sizeof(setup_data.hdr))
+> +		goto unsupported;
+>  
+> -	pmtmr_ioport = setup_data.pm_timer_address;
+> +	pa_data += offsetof(struct setup_data, data);
+> +	setup_data_len = min(sizeof(setup_data), (unsigned long)header.len);
 
-Summary
-------------------------------------------------------------------------
+Checkpatch makes sense here:
 
-kernel: 5.3.5-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-git branch: linux-5.3.y
-git commit: a2703e78c28a6166f8796b4733620c6d0b8f479a
-git describe: v5.3.4-167-ga2703e78c28a
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.3-oe/build/v5.3.4-167-ga2703e78c28a
-
-No regressions (compared to build v5.3.4)
-
-No fixes (compared to build v5.3.4)
-
-Ran 25519 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-fs-tests
-* network-basic-tests
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* ssuite
-
-
-Greetings!
-
-Daniel Díaz
-daniel.diaz@linaro.org
-
+WARNING: min() should probably be min_t(unsigned long, sizeof(setup_data), header.len)
+#165: FILE: arch/x86/kernel/jailhouse.c:183:
++       setup_data_len = min(sizeof(setup_data), (unsigned long)header.len);
 
 -- 
-Linaro LKFT
-https://lkft.linaro.org
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
