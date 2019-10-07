@@ -2,220 +2,170 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF50C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 857FDECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B40B82133F
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:28:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 539702133F
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:29:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RVrYNxEC"
+	dkim=pass (1024-bit key) header.d=bidouilliste.com header.i=@bidouilliste.com header.b="GKEDILeh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728821AbfJGR17 (ORCPT
+        id S1729109AbfJGR30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 13:27:59 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39252 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728079AbfJGR17 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 13:27:59 -0400
-Received: by mail-pf1-f193.google.com with SMTP id v4so9077753pff.6;
-        Mon, 07 Oct 2019 10:27:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:date:message-id:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=rewVBm4IqqEvTaYiuvZUBNZZiDgXMthoGgqbVwwE7fI=;
-        b=RVrYNxECPmgNvxSfK06La7b07vRhlukaBBdvvvYhmTRZo+aO+qTFH2ZblgGiJxB9/5
-         OvP5MHzQJKg0rzKqupUtvizgdPVhCKRAfrl49yPNVOVlXxRj4npFks9mYqju8oOCAGQA
-         dGvcGzd+f++le3NzgBXVDh49kuno995vYdpX8WI3wyUL4iMiYtAfbzX3WrQnWf8RTa93
-         oupjUTkdAb3z8UShfYW7aIlM2F3OFyXoVUq5uLaols5fO7kLCvhUr4DbN49+FIN01Lyu
-         hBW1an4CIKtF0lcrO6Yfz34VNGvjnv0RBxADmA2g5Paue/HhIaFbgH57xCO8M/TXH8An
-         BGcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=rewVBm4IqqEvTaYiuvZUBNZZiDgXMthoGgqbVwwE7fI=;
-        b=fCeL3WXvlkqGbjmy8aJUJMNyqOmxp6QhHLzwsLtOgx6+yZf5/7P383KB0YET+AUU4A
-         SCYFsrZ3EKVNT730U7bhLem7RpiBjQ7jl1JrSc5c0L0LEFbmx7I0rQubjHwniHVf3O8A
-         2ehDnTnlcikzJfK4GKh7z3a65wPlMtZsQpveD2ztc9pSkavs1q32oRYolm5VJOYaCRR9
-         mZwZOg04JK/V9qEgKSihFutXRxUP+rXjDpD/AiAP0/FdEntOawPe+6Rmn5dD3hI0RE15
-         MM7FT4BOST0vjGLR9i684DBRP0BJx1IjW+av5I9iV5VcR940WzOFiRUuii94Rbygj1C2
-         nj0g==
-X-Gm-Message-State: APjAAAUBJvZY8iyIVCO/OB6V+XQXDOACnCOuLdVboJa9Ed85gFFfhxhB
-        cgx5YqE9fM0+Ejv1Fh21sOA=
-X-Google-Smtp-Source: APXvYqyBCbO+Qi4CHuA8UQrMr7Jemry4iV0QSvxPw701kJ52QWmD9TrnfhS56eXUMVEYY/OzlknSgg==
-X-Received: by 2002:a17:90a:1aa9:: with SMTP id p38mr447244pjp.142.1570469276472;
-        Mon, 07 Oct 2019 10:27:56 -0700 (PDT)
-Received: from localhost.localdomain ([2001:470:b:9c3:9e5c:8eff:fe4f:f2d0])
-        by smtp.gmail.com with ESMTPSA id k95sm115110pje.10.2019.10.07.10.27.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 07 Oct 2019 10:27:55 -0700 (PDT)
-Subject: [RFC PATCH v2] e1000e: Use rtnl_lock to prevent race conditions
- between net and pci/pm
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-To:     alexander.duyck@gmail.com
-Cc:     zdai@linux.vnet.ibm.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-        jeffrey.t.kirsher@intel.com, zdai@us.ibm.com, davem@davemloft.net
-Date:   Mon, 07 Oct 2019 10:27:55 -0700
-Message-ID: <20191007172559.11166.29328.stgit@localhost.localdomain>
-In-Reply-To: <CAKgT0UdwqGGKvaSJ+3vd-_d-6t9MB=No+7SpkbOT2PnynRK+2w@mail.gmail.com>
-References: <CAKgT0UdwqGGKvaSJ+3vd-_d-6t9MB=No+7SpkbOT2PnynRK+2w@mail.gmail.com>
-User-Agent: StGit/0.17.1-dirty
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+        Mon, 7 Oct 2019 13:29:26 -0400
+Received: from mail.blih.net ([212.83.177.182]:65330 "EHLO mail.blih.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727801AbfJGR3Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 13:29:25 -0400
+Received: from mail.blih.net (mail.blih.net [212.83.177.182])
+        by mail.blih.net (OpenSMTPD) with ESMTP id b855c5bb;
+        Mon, 7 Oct 2019 19:29:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=bidouilliste.com; h=date
+        :from:to:cc:subject:message-id:in-reply-to:references
+        :mime-version:content-type:content-transfer-encoding; s=mail;
+         bh=rgfqZ9Jcv4hr5KrmxTov+YM198Q=; b=GKEDILehO64avyJZeUAx1fPOpS4n
+        QYBYPWp9i5DSKW+6/YxYA9SEy0/LjsFyUnUwEMcnmdz/WZjcJaROYjiHmAZrkq/s
+        chkkSJnxbMLV0Lfq+8zyIs3Dcxxp9j9TmJgKW1iXBgh5ETjinH4UnZNLSORzH+KA
+        4q8LyooNznwpvzs=
+DomainKey-Signature: a=rsa-sha1; c=nofws; d=bidouilliste.com; h=date
+        :from:to:cc:subject:message-id:in-reply-to:references
+        :mime-version:content-type:content-transfer-encoding; q=dns; s=
+        mail; b=hLxfEW+Yzcl5T3mugdWDQ3+pm2K4cCbbBGQgaARtSAHZOA9kIWeggTx9
+        2GdpBDdYhTSNEPHK4ZO3UfoY4bMqQDyQ8yiGL+zRV2Y/uTQqmXK4E7ZcblroTK5S
+        rEn6U5f9KHdRX8GjtvSgp+DPCVv1kOTn8KEvVhr61FHZHY2beYM=
+Received: from sonic.home.blih.net (ip-9.net-89-3-105.rev.numericable.fr [89.3.105.9])
+        by mail.blih.net (OpenSMTPD) with ESMTPSA id a49b0b2e
+        TLS version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO;
+        Mon, 7 Oct 2019 19:29:23 +0200 (CEST)
+Date:   Mon, 7 Oct 2019 19:29:22 +0200
+From:   Emmanuel Vadot <manu@bidouilliste.com>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Emmanuel Vadot <manu@freebsd.org>, bcousson@baylibre.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: Set status to disable for MMC3
+Message-Id: <20191007192922.7ce3423bd1fd03551487e907@bidouilliste.com>
+In-Reply-To: <20191007165859.GV5610@atomide.com>
+References: <20191007080339.57209-1-manu@freebsd.org>
+        <20191007161634.GS5610@atomide.com>
+        <20191007183830.71e1303d6bd713014dc36710@bidouilliste.com>
+        <20191007165859.GV5610@atomide.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; amd64-portbld-freebsd13.0)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+On Mon, 7 Oct 2019 09:58:59 -0700
+Tony Lindgren <tony@atomide.com> wrote:
 
-This patch is meant to address possible race conditions that can exist
-between network configuration and power management. A similar issue was
-fixed for igb in commit 9474933caf21 ("igb: close/suspend race in
-netif_device_detach").
+> * Emmanuel Vadot <manu@bidouilliste.com> [191007 16:39]:
+> > On Mon, 7 Oct 2019 09:16:34 -0700
+> > Tony Lindgren <tony@atomide.com> wrote:
+> > 
+> > > Hi,
+> > > 
+> > > * Emmanuel Vadot <manu@freebsd.org> [191007 08:04]:
+> > > > Commit 5b63fb90adb95 ("ARM: dts: Fix incomplete dts data for am3 and am4 mmc")
+> > > > fixed the mmc instances on the l3 interconnect but removed the disabled status.
+> > > > Fix this and let boards properly define it if it have it.
+> > > 
+> > > The dts default is "okay", and should be fine for all the
+> > > internal devices even if not pinned out on the board. This
+> > > way the devices get properly idled during boot, and we
+> > > avoid repeating status = "enabled" over and over again in
+> > > the board specific dts files.
+> > 
+> >  That is not correct, if a status != "disabled" then pinmuxing will be
+> > configured for this device and if multiple devices share the same pin
+> > then you have a problem. Note that I have (almost) no knowledge on Ti
+> > SoC but I doubt that this is not the case on them.
+> 
+> Hmm well, that should not be needed. The pinmux configuration is always
+> done in a board specific dts file.
 
-In addition it consolidates the code so that the PCI error handling code
-will essentially perform the power management freeze on the device prior to
-attempting a reset, and will thaw the device afterwards if that is what it
-is planning to do. Otherwise when we call close on the interface it should
-see it is detached and not attempt to call the logic to down the interface
-and free the IRQs again.
+ For TI it seems to be that way, but clearly not for other brand.
 
->From what I can tell the check that was adding the check for __E1000_DOWN
-in e1000e_close was added when runtime power management was added. However
-it should not be relevant for us as we perform a call to
-pm_runtime_get_sync before we call e1000_down/free_irq so it should always
-be back up before we call into this anyway.
+> >  Also every other boards that I work with use the standard of setting
+> > every node to disabled in the dtsi and let the board enable them at
+> > will. Is there something different happening in the TI world ?
+> 
+> There should be no need to do that for SoC internal devices, the
+> the default status = "okay" should be just fine. Setting the
+> status = "disabled" for SoC internal devices and then enabling them
+> again for tens of board specific dts files just generates tons of
+> pointless extra churn for the board specific configuration.
 
-Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
----
+ Setting the status = "okay" means that you can use the device. What's
+the point of enabling a device if you can't use it ? Or worse can't
+probe it like i2c or spi ?
+ Is the plan for TI dts to have every (or almost) device tree node
+enabled even if the device isn't usable on the board ?
 
-RFC v2: Dropped some unused variables
-	Added logic to check for device present before removing to pm_freeze
-	Fixed misplaced err_irq to before rtnl_unlock()
+> > > Then the board specific dts files might want to configure
+> > > devices with status = "disabled" if really needed. But this
+> > > should be only done for devices that Linux must not use,
+> > > such as crypto acclerators on secure devices if claimed by
+> > > the secure mode.
+> > > 
+> > > So if this fixes something, it's almost certainly a sign
+> > > of something else being broken?
+> > 
+> >  In this case it's FreeBSD being  because (I think) we have bad support
+> > for the clocks for this module so we panic when we read from it as the
+> > module isn't clocked. And since I find it wrong to have device enabled
+> > while it isn't present I've sent this patch.
+> 
+> Thanks for clarifying what happens. OK, sounds like FreeBSD might be
+> missing clock handling for some devices then.
+> 
+> What Linux does is probe the internal devices and then idle the
+> unused ones as bootloaders often leave many things enabled. Otherwise
+> the SoC power management won't work properly because device clocks
+> will block deeper SoC idle states.
 
- drivers/net/ethernet/intel/e1000e/netdev.c |   40 +++++++++++++++-------------
- 1 file changed, 21 insertions(+), 19 deletions(-)
+ I can understand stand but then the bootload should be fixed to not
+enable devices that aren't enabled in the DTS if it does that.
 
-diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
-index d7d56e42a6aa..8b4e589aca36 100644
---- a/drivers/net/ethernet/intel/e1000e/netdev.c
-+++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-@@ -4715,12 +4715,12 @@ int e1000e_close(struct net_device *netdev)
- 
- 	pm_runtime_get_sync(&pdev->dev);
- 
--	if (!test_bit(__E1000_DOWN, &adapter->state)) {
-+	if (netif_device_present(netdev)) {
- 		e1000e_down(adapter, true);
- 		e1000_free_irq(adapter);
- 
- 		/* Link status message must follow this format */
--		pr_info("%s NIC Link is Down\n", adapter->netdev->name);
-+		pr_info("%s NIC Link is Down\n", netdev->name);
- 	}
- 
- 	napi_disable(&adapter->napi);
-@@ -6298,10 +6298,14 @@ static int e1000e_pm_freeze(struct device *dev)
- {
- 	struct net_device *netdev = dev_get_drvdata(dev);
- 	struct e1000_adapter *adapter = netdev_priv(netdev);
-+	bool present;
- 
-+	rtnl_lock();
-+
-+	present = netif_device_present(netdev);
- 	netif_device_detach(netdev);
- 
--	if (netif_running(netdev)) {
-+	if (present && netif_running(netdev)) {
- 		int count = E1000_CHECK_RESET_COUNT;
- 
- 		while (test_bit(__E1000_RESETTING, &adapter->state) && count--)
-@@ -6313,6 +6317,8 @@ static int e1000e_pm_freeze(struct device *dev)
- 		e1000e_down(adapter, false);
- 		e1000_free_irq(adapter);
- 	}
-+	rtnl_unlock();
-+
- 	e1000e_reset_interrupt_capability(adapter);
- 
- 	/* Allow time for pending master requests to run */
-@@ -6626,27 +6632,31 @@ static int __e1000_resume(struct pci_dev *pdev)
- 	return 0;
- }
- 
--#ifdef CONFIG_PM_SLEEP
- static int e1000e_pm_thaw(struct device *dev)
- {
- 	struct net_device *netdev = dev_get_drvdata(dev);
- 	struct e1000_adapter *adapter = netdev_priv(netdev);
-+	int rc = 0;
- 
- 	e1000e_set_interrupt_capability(adapter);
--	if (netif_running(netdev)) {
--		u32 err = e1000_request_irq(adapter);
- 
--		if (err)
--			return err;
-+	rtnl_lock();
-+	if (netif_running(netdev)) {
-+		rc = e1000_request_irq(adapter);
-+		if (rc)
-+			goto err_irq;
- 
- 		e1000e_up(adapter);
- 	}
- 
- 	netif_device_attach(netdev);
-+err_irq:
-+	rtnl_unlock();
- 
--	return 0;
-+	return rc;
- }
- 
-+#ifdef CONFIG_PM_SLEEP
- static int e1000e_pm_suspend(struct device *dev)
- {
- 	struct pci_dev *pdev = to_pci_dev(dev);
-@@ -6818,16 +6828,11 @@ static void e1000_netpoll(struct net_device *netdev)
- static pci_ers_result_t e1000_io_error_detected(struct pci_dev *pdev,
- 						pci_channel_state_t state)
- {
--	struct net_device *netdev = pci_get_drvdata(pdev);
--	struct e1000_adapter *adapter = netdev_priv(netdev);
--
--	netif_device_detach(netdev);
-+	e1000e_pm_freeze(&pdev->dev);
- 
- 	if (state == pci_channel_io_perm_failure)
- 		return PCI_ERS_RESULT_DISCONNECT;
- 
--	if (netif_running(netdev))
--		e1000e_down(adapter, true);
- 	pci_disable_device(pdev);
- 
- 	/* Request a slot slot reset. */
-@@ -6893,10 +6898,7 @@ static void e1000_io_resume(struct pci_dev *pdev)
- 
- 	e1000_init_manageability_pt(adapter);
- 
--	if (netif_running(netdev))
--		e1000e_up(adapter);
--
--	netif_device_attach(netdev);
-+	e1000e_pm_thaw(&pdev->dev);
- 
- 	/* If the controller has AMT, do not set DRV_LOAD until the interface
- 	 * is up.  For all other cases, let the f/w know that the h/w is now
+> Regards,
+> 
+> Tony
+> 
+> > > > Fixes: 5b63fb90adb95 ("ARM: dts: Fix incomplete dts data for am3 and am4 mmc")
+> > > > Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
+> > > > ---
+> > > >  arch/arm/boot/dts/am33xx.dtsi | 1 +
+> > > >  1 file changed, 1 insertion(+)
+> > > > 
+> > > > diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+> > > > index fb6b8aa12cc5..b3a1fd9e39fa 100644
+> > > > --- a/arch/arm/boot/dts/am33xx.dtsi
+> > > > +++ b/arch/arm/boot/dts/am33xx.dtsi
+> > > > @@ -260,6 +260,7 @@
+> > > >  				ti,needs-special-reset;
+> > > >  				interrupts = <29>;
+> > > >  				reg = <0x0 0x1000>;
+> > > > +				status = "disabled";
+> > > >  			};
+> > > >  		};
+> > > >  
+> > > > -- 
+> > > > 2.22.0
+> > > > 
+> > 
+> > 
+> > -- 
+> > Emmanuel Vadot <manu@bidouilliste.com>
 
+
+-- 
+Emmanuel Vadot <manu@bidouilliste.com>
