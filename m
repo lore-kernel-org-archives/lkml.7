@@ -7,58 +7,57 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA984ECE58D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43ECEECE58D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADA062070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1610821929
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:03:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570453405;
-	bh=Oe2POAS0HCbhMQXWA3+7uGvGXmt+jrCtbB0y/TUtonc=;
+	s=default; t=1570453411;
+	bh=DhhP3yo515UYI9wdDYNBvs2jo/nLxQDqsnMYpWsmD3I=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=ioAvEsBJkcNl/jn1ffU5hXq1+0DIGvE9i7KzK9J5hkI9yVEGTPx+nGoLVVfz5bMwV
-	 yhhofcUmAiKZQxvhAt2qHOzdv3lP9kQcJL0DBFAHuUvUz5ri84xRZDEjlDctyw5SNa
-	 GT5RXEPIWfApy30JlZpNVyMXg7GMlCNFjmzBI+V4=
+	b=kP//+WyHR6r1HL7Z7UnV24R3N53vLbxe9/25wPxCJGJXTAs7VZFq14N1RLum2Z2tz
+	 WQy90NLpj8mJbU+a6TWPMDsCMzxrtwf0KnreQpSryH/wap/Vf6RYOQD7HfftofROih
+	 0v00TB1vOB2Pf5f1SFqsWAjMfGlnDzGrcnJ1pDSE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbfJGNDZ (ORCPT
+        id S1728225AbfJGNDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 09:03:25 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49240 "EHLO
+        Mon, 7 Oct 2019 09:03:30 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49470 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727716AbfJGNDV (ORCPT
+        with ESMTP id S1728145AbfJGND1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 09:03:21 -0400
+        Mon, 7 Oct 2019 09:03:27 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=JUv5W88r1SVcQDN6DZBdoB+smrYd96kwwVVcehVYOQw=; b=Mhn7P3d0v8OW
-        OgQuC64q+SUoXirzcYClIMYcsVo52SWMVbnQPVgYGSPTUxhYvtplJ3Oj3pzgZk5YG63nfeW8ROi+Q
-        JDMPGar2+NewTi8mhT85tZ/AOY9vwGyvX8btaUsM4WRv/jHw5fGt4pMfsXoz21ZB3ErEHhXAjQfbX
-        K+24U=;
+        List-Archive; bh=FXvSV90ORQdMKdGNJr1bG4jNw0ZoYKo8tYhWNdgsM1E=; b=THWXo8Rq7TGt
+        02XMx0KXdK0VMe4ALiMPT583icsjkQOpUdjLZgye3FLvlAhyIRR+hAanzLWoVSwNbh7Awf4lW9/0I
+        1aYHWZuYWuJdCvXfu0odTFZZtNlRv0ts3/oHlsXYAPipHHFPgWEktruoRmDyOqRrJjxXWa/gcvUGn
+        Jodhs=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iHSfV-0003Rg-0O; Mon, 07 Oct 2019 13:03:17 +0000
+        id 1iHSfO-0003Qo-Td; Mon, 07 Oct 2019 13:03:10 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 7A7D9274162F; Mon,  7 Oct 2019 14:03:16 +0100 (BST)
+        id 8F1AB274124F; Mon,  7 Oct 2019 14:03:09 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Sangbeom Kim <sbkim73@samsung.com>
-Subject: Applied "regulator: s2mps11: switch to using devm_fwnode_gpiod_get" to the regulator tree
-In-Reply-To: <20191004231017.130290-5-dmitry.torokhov@gmail.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        festevam@gmail.com, Hulk Robot <hulkci@huawei.com>,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, Mark Brown <broonie@kernel.org>,
+        nicoleotsuka@gmail.com, perex@perex.cz, timur@kernel.org,
+        tiwai@suse.com, Xiubo.Lee@gmail.com
+Subject: Applied "ASoC: fsl_mqs: remove set but not used variable 'bclk'" to the asoc tree
+In-Reply-To: <20191006105522.58560-1-yuehaibing@huawei.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191007130316.7A7D9274162F@ypsilon.sirena.org.uk>
-Date:   Mon,  7 Oct 2019 14:03:16 +0100 (BST)
+Message-Id: <20191007130309.8F1AB274124F@ypsilon.sirena.org.uk>
+Date:   Mon,  7 Oct 2019 14:03:09 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,11 +65,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: s2mps11: switch to using devm_fwnode_gpiod_get
+   ASoC: fsl_mqs: remove set but not used variable 'bclk'
 
-has been applied to the regulator tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.5
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -91,44 +90,42 @@ to this mail.
 Thanks,
 Mark
 
-From de2792b507675641885075bc99e283de861b1ce6 Mon Sep 17 00:00:00 2001
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Date: Fri, 4 Oct 2019 16:10:14 -0700
-Subject: [PATCH] regulator: s2mps11: switch to using devm_fwnode_gpiod_get
+From e9e8fc9ed63e7e0fb30f8612f628924fbd868467 Mon Sep 17 00:00:00 2001
+From: YueHaibing <yuehaibing@huawei.com>
+Date: Sun, 6 Oct 2019 18:55:22 +0800
+Subject: [PATCH] ASoC: fsl_mqs: remove set but not used variable 'bclk'
 
-devm_gpiod_get_from_of_node() is being retired in favor of
-devm_fwnode_gpiod_get_index(), that behaves similar to
-devm_gpiod_get_index(), but can work with arbitrary firmware node. It
-will also be able to support secondary software nodes.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Let's switch this driver over.
+sound/soc/fsl/fsl_mqs.c: In function fsl_mqs_hw_params:
+sound/soc/fsl/fsl_mqs.c:54:6: warning: variable bclk set but not used [-Wunused-but-set-variable]
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Link: https://lore.kernel.org/r/20191004231017.130290-5-dmitry.torokhov@gmail.com
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+It is never used, so can be removed.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Link: https://lore.kernel.org/r/20191006105522.58560-1-yuehaibing@huawei.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/s2mps11.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ sound/soc/fsl/fsl_mqs.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/s2mps11.c b/drivers/regulator/s2mps11.c
-index 5bc00884cf51..4f2dc5ebffdc 100644
---- a/drivers/regulator/s2mps11.c
-+++ b/drivers/regulator/s2mps11.c
-@@ -844,10 +844,9 @@ static void s2mps14_pmic_dt_parse_ext_control_gpio(struct platform_device *pdev,
- 		if (!rdata[reg].init_data || !rdata[reg].of_node)
- 			continue;
+diff --git a/sound/soc/fsl/fsl_mqs.c b/sound/soc/fsl/fsl_mqs.c
+index c1619a553514..7b9cab3a62e7 100644
+--- a/sound/soc/fsl/fsl_mqs.c
++++ b/sound/soc/fsl/fsl_mqs.c
+@@ -51,10 +51,9 @@ static int fsl_mqs_hw_params(struct snd_pcm_substream *substream,
+ 	struct fsl_mqs *mqs_priv = snd_soc_component_get_drvdata(component);
+ 	unsigned long mclk_rate;
+ 	int div, res;
+-	int bclk, lrclk;
++	int lrclk;
  
--		gpio[reg] = devm_gpiod_get_from_of_node(&pdev->dev,
--				rdata[reg].of_node,
--				"samsung,ext-control-gpios",
--				0,
-+		gpio[reg] = devm_fwnode_gpiod_get(&pdev->dev,
-+				of_fwnode_handle(rdata[reg].of_node),
-+				"samsung,ext-control",
- 				GPIOD_OUT_HIGH | GPIOD_FLAGS_BIT_NONEXCLUSIVE,
- 				"s2mps11-regulator");
- 		if (PTR_ERR(gpio[reg]) == -ENOENT)
+ 	mclk_rate = clk_get_rate(mqs_priv->mclk);
+-	bclk = snd_soc_params_to_bclk(params);
+ 	lrclk = params_rate(params);
+ 
+ 	/*
 -- 
 2.20.1
 
