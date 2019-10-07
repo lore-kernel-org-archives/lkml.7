@@ -2,136 +2,123 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 460ABC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7608AC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22AA821655
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:34:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EABC21655
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:38:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570441105;
+	bh=3zhwfHIcLxbbQ+KpMXuhI+igbeHR1uDpFIhjOQRNKws=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=c8MA0VoOuKBU5vddchPq28P3ydf4OZM4+x9jU+hlTDQIDwZqhp28TeT45klUsdyZp
+	 arKDXE6WEntbqWOBcFntj0CRkl3odAmaZ5zmTyviHfc+1GlcvHdMCYuGeZ0qPvS2Nx
+	 IJ//GT4cvl7WWQcNfFXAT3qI9cLOkL0qba46RJcM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727617AbfJGJef (ORCPT
+        id S1727383AbfJGJiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 05:34:35 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:49005 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727272AbfJGJef (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 05:34:35 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iHPPT-0003pH-HS; Mon, 07 Oct 2019 11:34:31 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iHPPR-0007UZ-41; Mon, 07 Oct 2019 11:34:29 +0200
-Date:   Mon, 7 Oct 2019 11:34:29 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Chunyan Zhang <zhang.chunyan@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        ckeepax@opensource.cirrus.com, LKML <linux-kernel@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>
-Subject: Re: [PATCH 1/3] regulator: core: fix boot-on regulators use_count
- usage
-Message-ID: <20191007093429.qekysnxufvkbirit@pengutronix.de>
-References: <20190917154021.14693-2-m.felsch@pengutronix.de>
- <CAD=FV=W7M8mwQqnPyU9vsK5VAdqqJdQdyxcoe9FRRGTY8zjnFw@mail.gmail.com>
- <20190923181431.GU2036@sirena.org.uk>
- <CAD=FV=WVGj8xzKFFxsjpeuqtVzSvv22cHmWBRJtTbH00eC=E9w@mail.gmail.com>
- <20190923184907.GY2036@sirena.org.uk>
- <CAD=FV=VkaXDn034EFnJWYvWwyLgvq7ajfgMRm9mbhQeRKmPDRQ@mail.gmail.com>
- <20190924182758.GC2036@sirena.org.uk>
- <CAD=FV=WZSy6nHjsY2pvjcoR4iy64b35OPGEb3EPSSc5vpeTTuA@mail.gmail.com>
- <20190927084710.mt42454vsrjm3yh3@pengutronix.de>
- <CAD=FV=XM0i=GsvttJjug6VPOJJGHRqFmsmCp-1XXNvmsYp9sJA@mail.gmail.com>
+        Mon, 7 Oct 2019 05:38:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58250 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726010AbfJGJiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 05:38:24 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51B1C21655;
+        Mon,  7 Oct 2019 09:38:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570441101;
+        bh=3zhwfHIcLxbbQ+KpMXuhI+igbeHR1uDpFIhjOQRNKws=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xhb9NYnljNV1xaVQoNXkMjTFv8xFVwvlhvXK4T26Gs97v9UHxKRdpu+nh7lconEFf
+         LaCA52oK2CY9iuiQSync4Amm0bhSZeC0dviaQ3ejyxtBkyzHUoF8aKDt+3Ed3clXCW
+         TS3MgAFsmDHpRMFHKaLl8QSae5HIAOztyxbzJvYY=
+Date:   Mon, 7 Oct 2019 11:38:19 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Martijn Coenen <maco@android.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        syzbot <syzkaller@googlegroups.com>,
+        Mattias Nissler <mnissler@chromium.org>
+Subject: Re: [PATCH 4.9 30/47] ANDROID: binder: remove waitqueue when thread
+ exits.
+Message-ID: <20191007093819.GA84909@kroah.com>
+References: <20191006172016.873463083@linuxfoundation.org>
+ <20191006172018.480360174@linuxfoundation.org>
+ <CAB0TPYGO8Nm_Qz0kzSvX69NApiPwu4xV19F=KhyLe5DO3DoLTw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAD=FV=XM0i=GsvttJjug6VPOJJGHRqFmsmCp-1XXNvmsYp9sJA@mail.gmail.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 11:28:21 up 142 days, 15:46, 94 users,  load average: 0.00, 0.02,
- 0.00
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <CAB0TPYGO8Nm_Qz0kzSvX69NApiPwu4xV19F=KhyLe5DO3DoLTw@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Doug, Mark,
-
-On 19-10-01 12:57, Doug Anderson wrote:
-> Hi,
-> 
-> On Fri, Sep 27, 2019 at 1:47 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
-> > > > > > It should be possible to do a regulator_disable() though I'm not
-> > > > > > sure anyone actually uses that.  The pattern for a regular
-> > > > > > consumer should be the normal enable/disable pair to handle
-> > > > > > shared usage, only an exclusive consumer should be able to use
-> > > > > > just a straight disable.
+On Mon, Oct 07, 2019 at 11:33:53AM +0200, Martijn Coenen wrote:
+> On Sun, Oct 6, 2019 at 7:23 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
 > >
-> > In my case it is a regulator-fixed which uses the enable/disable pair.
-> > But as my descriptions says this will not work currently because boot-on
-> > marked regulators can't be disabled right now (using the same logic as
-> > always-on regulators).
+> > From: Martijn Coenen <maco@android.com>
 > >
-> > > > > Ah, I see, I wasn't aware of the "exclusive" special case!  Marco: is
-> > > > > this working for you?  I wonder if we need to match
-> > > > > "regulator->enable_count" to "rdev->use_count" at the end of
-> > > > > _regulator_get() in the exclusive case...
+> > commit f5cb779ba16334b45ba8946d6bfa6d9834d1527f upstream.
 > >
-> > So my fix isn't correct to fix this in general?
-> 
-> I don't think your fix is correct.  It sounds as if the intention of
-> "regulator-boot-on" is to have the OS turn the regulator on at bootup
-> and it keep an implicit reference until someone explicitly tells the
-> OS to drop the reference.
-> 
-> 
-> > > > Yes, I think that case has been missed when adding the enable
-> > > > counts - I've never actually had a system myself that made any
-> > > > use of this stuff.  It probably needs an audit of the users to
-> > > > make sure nobody's relying on the current behaviour though I
-> > > > can't think how they would.
-> > >
-> > > Marco: I'm going to assume you'll tackle this since I don't actually
-> > > have any use cases that need this.
+> > binder_poll() passes the thread->wait waitqueue that
+> > can be slept on for work. When a thread that uses
+> > epoll explicitly exits using BINDER_THREAD_EXIT,
+> > the waitqueue is freed, but it is never removed
+> > from the corresponding epoll data structure. When
+> > the process subsequently exits, the epoll cleanup
+> > code tries to access the waitlist, which results in
+> > a use-after-free.
 > >
-> > My use case is a simple regulator-fixed which is turned on by the
-> > bootloader or to be more precise by the pmic-rom. To map that correctly
-> > I marked this regulator as boot-on. Unfortunately as I pointed out above
-> > this is handeld the same way as always-on.
+> > Prevent this by using POLLFREE when the thread exits.
+> >
+> > Signed-off-by: Martijn Coenen <maco@android.com>
+> > Reported-by: syzbot <syzkaller@googlegroups.com>
+> > Cc: stable <stable@vger.kernel.org> # 4.14
+> > [backport BINDER_LOOPER_STATE_POLL logic as well]
+> > Signed-off-by: Mattias Nissler <mnissler@chromium.org>
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > ---
+> >  drivers/android/binder.c |   17 ++++++++++++++++-
+> >  1 file changed, 16 insertions(+), 1 deletion(-)
+> >
+> > --- a/drivers/android/binder.c
+> > +++ b/drivers/android/binder.c
+> > @@ -334,7 +334,8 @@ enum {
+> >         BINDER_LOOPER_STATE_EXITED      = 0x04,
+> >         BINDER_LOOPER_STATE_INVALID     = 0x08,
+> >         BINDER_LOOPER_STATE_WAITING     = 0x10,
+> > -       BINDER_LOOPER_STATE_NEED_RETURN = 0x20
+> > +       BINDER_LOOPER_STATE_NEED_RETURN = 0x20,
+> > +       BINDER_LOOPER_STATE_POLL        = 0x40,
+> >  };
+> >
+> >  struct binder_thread {
+> > @@ -2628,6 +2629,18 @@ static int binder_free_thread(struct bin
+> >                 } else
+> >                         BUG();
+> >         }
+> > +
+> > +       /*
+> > +        * If this thread used poll, make sure we remove the waitqueue
+> > +        * from any epoll data structures holding it with POLLFREE.
+> > +        * waitqueue_active() is safe to use here because we're holding
+> > +        * the inner lock.
 > 
-> It's a fixed regulator controlled by a GPIO?  Presumably the GPIO can
-> be read.  That would mean it ideally shouldn't be using
-> "regulator-boot-on" since this is _not_ a regulator whose software
-> state can't be read.  Just remove the property.
+> This should be "global lock" in 4.9 and 4.4 :)
 
-Sorry that won't fix my problem. If I drop the regulator-boot-on state
-the fixed-regulator will disable this regulator but disable/enable this
-regulator is only valid during suspend/resume. I don't say that my fix
-is correct but we should fix this.
+I'll go update the comment now, thanks!
 
-Regards,
-  Marco
+> Otherwise LGTM, thanks!
 
-> -Doug
-> 
+thanks for the review.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+greg k-h
