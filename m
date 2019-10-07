@@ -2,116 +2,210 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6476EC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 04:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 905ADC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 04:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F0FF20867
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 04:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E00920656
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 04:11:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qpqTr6xe"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="A/5d4dVI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbfJGEEb (ORCPT
+        id S1727225AbfJGELA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 00:04:31 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:43530 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726007AbfJGEEb (ORCPT
+        Mon, 7 Oct 2019 00:11:00 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:19204 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbfJGELA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 00:04:31 -0400
-Received: by mail-yw1-f65.google.com with SMTP id q7so4616367ywe.10;
-        Sun, 06 Oct 2019 21:04:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TlxhoNvqY8uYv1eDJ8P+t3V60zJV8aas70uwWrFV0O0=;
-        b=qpqTr6xeA6AEdANGqytS88FZ1HHsbjknW2mo1o3ifRLBWW297E3uLI3AYSucZB1m7H
-         9wpCbAuzjEkkxe4z8RBAYE14C7XjynRA5YXlNHoDc7QEM2SN59IEigeNlLmTcK64wdwB
-         mwqzxmW/HDlkTAE0uHqLG2SiZZmN8XxcuR6N8tjSaaFHCCcMfLA9biJW379cVou2r1TX
-         kk3m13LrI7nwoDyUQRInW4XdIlRoCKXnY5iuhl7MDGaxjo3rPNsHDlKZOz5SUZidP9A2
-         LGtfvKiGiYVduMh9Flkpl3RZB6MZGa4XgC59P00jZXZupbZZAry8NHJqzqiypg/Oq112
-         lKxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TlxhoNvqY8uYv1eDJ8P+t3V60zJV8aas70uwWrFV0O0=;
-        b=lARsxr5abYd0yLfLifRQhHMnWPKL9OZUb/T3IE6c8kEw0P2W2IfBY2WvijzU4iZkL1
-         dJUFslh0wLq1RkP6MMPPQtQ+SZUnjL+1lRev+XlC6cahY5MB6D8peuvmHrrb5YGM5t3p
-         9fETtWiWqFugxa0Is2kv0cBZyG7ArGP2W+fBFz3rTUOk481OrtHIX1xO29IIDRYPYa40
-         xA9byMNS1JvLw3JeKvUVPDWKLcj+r8AgynLjbVRUDiUTeq+sG/xEDwFr7XdWPSDCKmGT
-         mqqUWfnYPdJuKENkACIFdYm+ZVA3xJTEucuFlSBklvXYmRxv01SJ6CikigUwNhned9tE
-         NSXQ==
-X-Gm-Message-State: APjAAAU/vGsaYRCNARyRPNpa+rtWBgEd955p/1q+Lv7hKnADpocjd6kl
-        J1C4H1wcDGTLrctq0yUnLaRX5IYEqg/mYHsQx64=
-X-Google-Smtp-Source: APXvYqy58B7w5bFS51G68+llxeNVQgr+FppBu3pwnAjLlaYiMIzX5+xcTCXfdfy+dKNO+AMZklG5TXi/+tPDD/bKFvc=
-X-Received: by 2002:a0d:dfcc:: with SMTP id i195mr18080993ywe.107.1570421070275;
- Sun, 06 Oct 2019 21:04:30 -0700 (PDT)
+        Mon, 7 Oct 2019 00:11:00 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id x9749g3X018731;
+        Mon, 7 Oct 2019 13:09:42 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x9749g3X018731
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1570421383;
+        bh=Qc7kdQEQSeKLCS/0wAc93VS/IctKNqs8VpX26LsuFE8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=A/5d4dVIrqN2WaWhbcE02/wOFnI0M06+MISGepHGVg4j0vPmj2QAzi6Ii95u/qmqi
+         kCEltsICPi5l3akHJ8G7v/NybUuquWnBddU3XXM/glsFo/ocAbRKjjSBCdYdLr7dg2
+         ivepUNDchYZSJAtDPs1xe8jMf4+RrIXn610OdYvCFcVsKrPaEQeEzGoHkZ54DLu51m
+         24F0QEn3ZBq6Yu6Ik7V18BCezhTEQS0BwRBSr7KXPRsx8eoTuOGx8EQ1pJIptwTNE3
+         knUGeHE9y7FTGFJnXI/IUkhy1RT0Hn433mPRqZNxJ2wM1yMOHqR7549Svb7XGHKdBE
+         1vtpSootLRSaA==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH] media: videodev2.h: include <linux/time.h> instead of <sys/time.h>
+Date:   Mon,  7 Oct 2019 13:09:35 +0900
+Message-Id: <20191007040935.23436-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20191006222046.GA18027@roeck-us.net>
-In-Reply-To: <20191006222046.GA18027@roeck-us.net>
-From:   Max Filippov <jcmvbkbc@gmail.com>
-Date:   Sun, 6 Oct 2019 21:04:19 -0700
-Message-ID: <CAMo8BfJHcLQ_TuacCwdhQYB-nhpdBrCq5EuB=E7SafP15=kd3A@mail.gmail.com>
-Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to unsafe_put_user()
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 6, 2019 at 3:25 PM Guenter Roeck <linux@roeck-us.net> wrote:
-> this patch causes all my sparc64 emulations to stall during boot. It causes
-> all alpha emulations to crash with [1a] and [1b] when booting from a virtual
-> disk, and one of the xtensa emulations to crash with [2].
+Currently, linux/videodev.h is excluded from the UAPI header test since
+it is not self-contained. Building it for user-space would fail.
 
-[...]
+------------------------(build log1 begin)------------------------
 
-> [2]
->
-> Unable to handle kernel paging request at virtual address 0000000000000004
-> reboot(50): Oops -1
-> pc = [<0000000000000004>]  ra = [<fffffc00004512e4>]  ps = 0000    Tainted: G      D
-> pc is at 0x4
-> ra is at filldir64+0x64/0x320
-> v0 = 0000000000000000  t0 = 0000000067736d6b  t1 = 000000012011445b
-> t2 = 0000000000000000  t3 = 0000000000000000  t4 = 0000000000007ef8
-> t5 = 0000000120114448  t6 = 0000000000000000  t7 = fffffc0007eec000
-> s0 = fffffc000792b5c3  s1 = 0000000000000004  s2 = 0000000000000018
-> s3 = fffffc0007eefec8  s4 = 0000000000000008  s5 = 00000000f00000a3
-> s6 = 000000000000000b
-> a0 = fffffc000792b5c3  a1 = 2f2f2f2f2f2f2f2f  a2 = 0000000000000004
-> a3 = 000000000000000b  a4 = 00000000f00000a3  a5 = 0000000000000008
-> t8 = 0000000000000018  t9 = 0000000000000000  t10= 0000000022e1d02a
-> t11= 000000011fd6f3b8  pv = fffffc0000b9a810  at = 0000000022e1ccf8
-> gp = fffffc0000f03930  sp = (____ptrval____)
-> Trace:
-> [<fffffc00004ccba0>] proc_readdir_de+0x170/0x300
-> [<fffffc0000451280>] filldir64+0x0/0x320
-> [<fffffc00004c565c>] proc_root_readdir+0x3c/0x80
-> [<fffffc0000450c68>] iterate_dir+0x198/0x240
-> [<fffffc00004518b8>] ksys_getdents64+0xa8/0x160
-> [<fffffc0000451990>] sys_getdents64+0x20/0x40
-> [<fffffc0000451280>] filldir64+0x0/0x320
-> [<fffffc0000311634>] entSys+0xa4/0xc0
+  CC      usr/include/linux/videodev2.h.s
+In file included from <command-line>:32:0:
+./usr/include/linux/videodev2.h:2320:20: error: field ‘timestamp’ has incomplete type
+  struct timespec   timestamp;
+                    ^~~~~~~~~
 
-This doesn't look like a dump from xtensa core.
-v5.4-rc2 kernel doesn't crash for me on xtensa, but the userspace
-doesn't work well, because all directories appear to be empty.
+-------------------------(build log1 end)-------------------------
 
-__put_user/__get_user don't do unaligned access on xtensa,
-they check address alignment and return -EFAULT if it's bad.
+The in-kernel timespec definition exists in include/uapi/linux/time.h,
+but just including <linux/time.h> causes a lot of redefinition errors.
 
+------------------------(build log2 begin)------------------------
+
+  CC      usr/include/linux/videodev2.h.s
+In file included from ./usr/include/linux/videodev2.h:63:0,
+                 from <command-line>:32:
+./usr/include/linux/time.h:16:8: error: redefinition of ‘struct timeval’
+ struct timeval {
+        ^~~~~~~
+In file included from /usr/include/x86_64-linux-gnu/sys/time.h:25:0,
+                 from ./usr/include/linux/videodev2.h:60,
+                 from <command-line>:32:
+/usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h:8:8: note: originally defined here
+ struct timeval
+        ^~~~~~~
+In file included from ./usr/include/linux/videodev2.h:63:0,
+                 from <command-line>:32:
+./usr/include/linux/time.h:30:0: warning: "ITIMER_REAL" redefined
+ #define ITIMER_REAL  0
+
+In file included from ./usr/include/linux/videodev2.h:60:0,
+                 from <command-line>:32:
+/usr/include/x86_64-linux-gnu/sys/time.h:92:0: note: this is the location of the previous definition
+ #define ITIMER_REAL ITIMER_REAL
+
+In file included from ./usr/include/linux/videodev2.h:63:0,
+                 from <command-line>:32:
+./usr/include/linux/time.h:31:0: warning: "ITIMER_VIRTUAL" redefined
+ #define ITIMER_VIRTUAL  1
+
+In file included from ./usr/include/linux/videodev2.h:60:0,
+                 from <command-line>:32:
+/usr/include/x86_64-linux-gnu/sys/time.h:95:0: note: this is the location of the previous definition
+ #define ITIMER_VIRTUAL ITIMER_VIRTUAL
+
+In file included from ./usr/include/linux/videodev2.h:63:0,
+                 from <command-line>:32:
+./usr/include/linux/time.h:32:0: warning: "ITIMER_PROF" redefined
+ #define ITIMER_PROF  2
+
+In file included from ./usr/include/linux/videodev2.h:60:0,
+                 from <command-line>:32:
+/usr/include/x86_64-linux-gnu/sys/time.h:99:0: note: this is the location of the previous definition
+ #define ITIMER_PROF ITIMER_PROF
+
+In file included from ./usr/include/linux/videodev2.h:63:0,
+                 from <command-line>:32:
+./usr/include/linux/time.h:39:8: error: redefinition of ‘struct itimerval’
+ struct itimerval {
+        ^~~~~~~~~
+In file included from ./usr/include/linux/videodev2.h:60:0,
+                 from <command-line>:32:
+/usr/include/x86_64-linux-gnu/sys/time.h:104:8: note: originally defined here
+ struct itimerval
+        ^~~~~~~~~
+
+-------------------------(build log2 end)-------------------------
+
+Replacing <sys/time.h> with <linux/time.h> solves it, and allow more
+headers to join the UAPI header test.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+I am not 100% sure about the compatibility
+between <sys/time.h> and <linux/time.h>, hence RFC.
+
+But, if they were not compatible,
+I guess it would have broken already.
+
+I CCed Arnd Bergmann, who might have a better insight.
+
+A related comment is here:
+https://lkml.org/lkml/2019/6/4/1046
+
+
+ include/uapi/linux/videodev2.h | 4 +---
+ usr/include/Makefile           | 7 -------
+ 2 files changed, 1 insertion(+), 10 deletions(-)
+
+diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+index 530638dffd93..2571130aa1ca 100644
+--- a/include/uapi/linux/videodev2.h
++++ b/include/uapi/linux/videodev2.h
+@@ -57,11 +57,9 @@
+ #ifndef _UAPI__LINUX_VIDEODEV2_H
+ #define _UAPI__LINUX_VIDEODEV2_H
+ 
+-#ifndef __KERNEL__
+-#include <sys/time.h>
+-#endif
+ #include <linux/compiler.h>
+ #include <linux/ioctl.h>
++#include <linux/time.h>
+ #include <linux/types.h>
+ #include <linux/v4l2-common.h>
+ #include <linux/v4l2-controls.h>
+diff --git a/usr/include/Makefile b/usr/include/Makefile
+index 57b20f7b6729..dafa6cb9b07e 100644
+--- a/usr/include/Makefile
++++ b/usr/include/Makefile
+@@ -23,7 +23,6 @@ header-test- += asm/shmbuf.h
+ header-test- += asm/signal.h
+ header-test- += asm/ucontext.h
+ header-test- += drm/vmwgfx_drm.h
+-header-test- += linux/am437x-vpfe.h
+ header-test- += linux/android/binder.h
+ header-test- += linux/android/binderfs.h
+ header-test-$(CONFIG_CPU_BIG_ENDIAN) += linux/byteorder/big_endian.h
+@@ -33,13 +32,10 @@ header-test- += linux/elfcore.h
+ header-test- += linux/errqueue.h
+ header-test- += linux/fsmap.h
+ header-test- += linux/hdlc/ioctl.h
+-header-test- += linux/ivtv.h
+ header-test- += linux/kexec.h
+-header-test- += linux/matroxfb.h
+ header-test- += linux/netfilter_ipv4/ipt_LOG.h
+ header-test- += linux/netfilter_ipv6/ip6t_LOG.h
+ header-test- += linux/nfc.h
+-header-test- += linux/omap3isp.h
+ header-test- += linux/omapfb.h
+ header-test- += linux/patchkey.h
+ header-test- += linux/phonet.h
+@@ -49,9 +45,6 @@ header-test- += linux/sctp.h
+ header-test- += linux/signal.h
+ header-test- += linux/sysctl.h
+ header-test- += linux/usb/audio.h
+-header-test- += linux/v4l2-mediabus.h
+-header-test- += linux/v4l2-subdev.h
+-header-test- += linux/videodev2.h
+ header-test- += linux/vm_sockets.h
+ header-test- += sound/asequencer.h
+ header-test- += sound/asoc.h
 -- 
-Thanks.
--- Max
+2.17.1
+
