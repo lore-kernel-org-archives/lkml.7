@@ -2,106 +2,136 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75437ECE596
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B78FECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BAE621479
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:59:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570485547;
-	bh=vccaCfLekIcqrg8RQFT5wkIkeO9fGglQMnl9ddohi3I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=x8XHvqnXNHudLf1vRBPyIJvrCE/e5lg1goi0nGzxOTqKPbevBj33b8nQf45GcVvyA
-	 23FuRyPekQi8D30AIXODlBzSSx9sWvg8zfgPMFtVBtx2Ji+ZTp0OqZhNwXYBYD+6T2
-	 SLC7SO8Qw03J/1j4aaG/coB/TIjqA6s6HL6CApLs=
+	by mail.kernel.org (Postfix) with ESMTP id 2CC81206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 21:59:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729524AbfJGV7F (ORCPT
+        id S1729536AbfJGV7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 17:59:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40318 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728422AbfJGV7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 17:59:04 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16ED6206C0;
-        Mon,  7 Oct 2019 21:59:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570485543;
-        bh=vccaCfLekIcqrg8RQFT5wkIkeO9fGglQMnl9ddohi3I=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=DN+h02cpgv8d+Ejd5EN5YVKMhepec70IQOiCXb9JSCch6mASL0uEQB7yMuQHMEBvT
-         l7Jbk1GmZ8HyfHw2sXhUVm7teniTYmTFqrgq/Qtt1gY5Hz1ruYREBCug0GS+PgJIoq
-         CICr5sHeej3dbaCyraAh0n/gN7lxLsld/R41sB+k=
-Date:   Mon, 7 Oct 2019 14:59:02 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Qian Cai <cai@lca.pw>, tj@kernel.org, vdavydov.dev@gmail.com,
-        hannes@cmpxchg.org, guro@fb.com, cl@linux.com, penberg@kernel.org,
-        rientjes@google.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2] mm/slub: fix a deadlock in show_slab_objects()
-Message-Id: <20191007145902.a1ae6aac11c29d466a445a94@linux-foundation.org>
-In-Reply-To: <20191007081621.GE2381@dhcp22.suse.cz>
-References: <1570192309-10132-1-git-send-email-cai@lca.pw>
-        <20191004125701.GJ9578@dhcp22.suse.cz>
-        <20191007081621.GE2381@dhcp22.suse.cz>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 7 Oct 2019 17:59:50 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:50395 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728422AbfJGV7t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 17:59:49 -0400
+Received: from dread.disaster.area (pa49-181-226-196.pa.nsw.optusnet.com.au [49.181.226.196])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 6720E3639CD;
+        Tue,  8 Oct 2019 08:59:45 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.2)
+        (envelope-from <david@fromorbit.com>)
+        id 1iHb2e-0001sm-E9; Tue, 08 Oct 2019 08:59:44 +1100
+Date:   Tue, 8 Oct 2019 08:59:44 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Carlos Maiolino <cmaiolino@redhat.com>
+Subject: Re: [PATCH 09/11] xfs: remove the fork fields in the writepage_ctx
+ and ioend
+Message-ID: <20191007215944.GC16973@dread.disaster.area>
+References: <20191006154608.24738-1-hch@lst.de>
+ <20191006154608.24738-10-hch@lst.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191006154608.24738-10-hch@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
+        a=dRuLqZ1tmBNts2YiI0zFQg==:117 a=dRuLqZ1tmBNts2YiI0zFQg==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=XobE76Q3jBoA:10
+        a=20KFwNOVAAAA:8 a=yPCof4ZbAAAA:8 a=7-415B0cAAAA:8 a=pWr0rBs94VfbQ7lI_PoA:9
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 7 Oct 2019 10:16:21 +0200 Michal Hocko <mhocko@kernel.org> wrote:
+On Sun, Oct 06, 2019 at 05:46:06PM +0200, Christoph Hellwig wrote:
+> In preparation for moving the writeback code to iomap.c, replace the
+> XFS-specific COW fork concept with the iomap IOMAP_F_SHARED flag.
 
-> On Fri 04-10-19 14:57:01, Michal Hocko wrote:
-> > On Fri 04-10-19 08:31:49, Qian Cai wrote:
-> > > Long time ago, there fixed a similar deadlock in show_slab_objects()
-> > > [1]. However, it is apparently due to the commits like 01fb58bcba63
-> > > ("slab: remove synchronous synchronize_sched() from memcg cache
-> > > deactivation path") and 03afc0e25f7f ("slab: get_online_mems for
-> > > kmem_cache_{create,destroy,shrink}"), this kind of deadlock is back by
-> > > just reading files in /sys/kernel/slab which will generate a lockdep
-> > > splat below.
-> > > 
-> > > Since the "mem_hotplug_lock" here is only to obtain a stable online node
-> > > mask while racing with NUMA node hotplug, in the worst case, the results
-> > > may me miscalculated while doing NUMA node hotplug, but they shall be
-> > > corrected by later reads of the same files.
-> > 
-> > I think it is important to mention that this doesn't expose the
-> > show_slab_objects to use-after-free. There is only a single path that
-> > might really race here and that is the slab hotplug notifier callback
-> > __kmem_cache_shrink (via slab_mem_going_offline_callback) but that path
-> > doesn't really destroy kmem_cache_node data structures.
+"In preparation for switching XFS to use the fs/iomap writeback
+code..."?
 
-Yes, I noted this during review.  It's a bit subtle and is worthy of
-more than a changelog note, I think.  How about this?
+I suspect the IOMAP_F_SHARED hunk I pointed out in the previous
+patch should be in this one...
 
---- a/mm/slub.c~mm-slub-fix-a-deadlock-in-show_slab_objects-fix
-+++ a/mm/slub.c
-@@ -4851,6 +4851,10 @@ static ssize_t show_slab_objects(struct
- 	 * already held which will conflict with an existing lock order:
- 	 *
- 	 * mem_hotplug_lock->slab_mutex->kernfs_mutex
-+	 *
-+	 * We don't really need mem_hotplug_lock (to hold off
-+	 * slab_mem_going_offline_callback()) here because slab's memory hot
-+	 * unplug code doesn't destroy the kmem_cache->node[] data.
- 	 */
- 
- #ifdef CONFIG_SLUB_DEBUG
-_
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Carlos Maiolino <cmaiolino@redhat.com>
+> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+> ---
+>  fs/xfs/xfs_aops.c | 42 ++++++++++++++++++++++--------------------
+>  fs/xfs/xfs_aops.h |  2 +-
+>  2 files changed, 23 insertions(+), 21 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
+> index 9f22885902ef..8c101081e3b1 100644
+> --- a/fs/xfs/xfs_aops.c
+> +++ b/fs/xfs/xfs_aops.c
+> @@ -23,7 +23,6 @@
+>   */
+>  struct xfs_writepage_ctx {
+>  	struct iomap		iomap;
+> -	int			fork;
+>  	unsigned int		data_seq;
+>  	unsigned int		cow_seq;
+>  	struct xfs_ioend	*ioend;
+> @@ -257,7 +256,7 @@ xfs_end_ioend(
+>  	 */
+>  	error = blk_status_to_errno(ioend->io_bio->bi_status);
+>  	if (unlikely(error)) {
+> -		if (ioend->io_fork == XFS_COW_FORK)
+> +		if (ioend->io_flags & IOMAP_F_SHARED)
+>  			xfs_reflink_cancel_cow_range(ip, offset, size, true);
+>  		goto done;
+>  	}
+> @@ -265,7 +264,7 @@ xfs_end_ioend(
+>  	/*
+>  	 * Success: commit the COW or unwritten blocks if needed.
+>  	 */
+> -	if (ioend->io_fork == XFS_COW_FORK)
+> +	if (ioend->io_flags & IOMAP_F_SHARED)
+>  		error = xfs_reflink_end_cow(ip, offset, size);
+>  	else if (ioend->io_type == IOMAP_UNWRITTEN)
+>  		error = xfs_iomap_write_unwritten(ip, offset, size, false);
+> @@ -298,7 +297,8 @@ xfs_ioend_can_merge(
+>  {
+>  	if (ioend->io_bio->bi_status != next->io_bio->bi_status)
+>  		return false;
+> -	if ((ioend->io_fork == XFS_COW_FORK) ^ (next->io_fork == XFS_COW_FORK))
+> +	if ((ioend->io_flags & IOMAP_F_SHARED) ^
+> +	    (next->io_flags & IOMAP_F_SHARED))
+>  		return false;
+>  	if ((ioend->io_type == IOMAP_UNWRITTEN) ^
+>  	    (next->io_type == IOMAP_UNWRITTEN))
 
-> Andrew, please add this to the changelog so that we do not have to
-> scratch heads again when looking into that code.
+These probably should be indented too, as they are continuations,
+not separate logic statements.
 
-I did that as well.
+> @@ -768,7 +769,8 @@ xfs_add_to_ioend(
+>  	bool			merged, same_page = false;
+>  
+>  	if (!wpc->ioend ||
+> -	    wpc->fork != wpc->ioend->io_fork ||
+> +	    (wpc->iomap.flags & IOMAP_F_SHARED) !=
+> +	    (wpc->ioend->io_flags & IOMAP_F_SHARED) ||
+
+Same here.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
