@@ -2,282 +2,114 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9202BECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7791FECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CE9F21655
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:40:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FB1D21835
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:40:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570462815;
+	bh=0SqrmEI3jPveA0in6PcRhu6ezfY2kUTsmIlF2EiiGK0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KXgrSi+dm2G5zrcy+zVD0Wm2aR9QQVdzqZzBod/7mXBfM91qBUSWQDx+xCH1Dx/28
+	 hB7kqQsk39ivAm5CONaZz7Kc9QYpwZRZhnWUFPGXzzyLYEl0/JAHKXjF6Up2XUnUa7
+	 V3DvXgmZz6PAg2Z4fftsrBScvLVeNfyEOt0kjAhI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729165AbfJGPjb (ORCPT
+        id S1729382AbfJGPkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 11:39:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:38688 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728130AbfJGPj1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:39:27 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C9C6E142F;
-        Mon,  7 Oct 2019 08:39:25 -0700 (PDT)
-Received: from e112269-lin.arm.com (unknown [10.1.197.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4032A3F6C4;
-        Mon,  7 Oct 2019 08:39:23 -0700 (PDT)
-From:   Steven Price <steven.price@arm.com>
-To:     linux-mm@kvack.org
-Cc:     Steven Price <steven.price@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Mon, 7 Oct 2019 11:40:14 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38223 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729169AbfJGPkL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 11:40:11 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 3so12870348wmi.3;
+        Mon, 07 Oct 2019 08:40:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YvxpVFdJOEZrkQChM8Lq11d9YvLJbKpxKj8YQXF8h+c=;
+        b=b4aG6tjLd5D2QbgnsraRnITHGMxPIlNYBw3yvdWYP1HXbsqS/SraQh9s6vsAGE01d6
+         MQIslDbt1wE18zCEStz+X9q7Y+jV6jLPKAjDeWSBoivuHmzk3dLr7uDU52DvuXSd1BTw
+         ksD0DFhHtZ6gDqB3thMNT0kkZ388AIzXzMAVXxcOm6Weie/MQZPRYbHYdHbLwMvkG1hn
+         mjV1Am8WsTi4xlAwdj5P4xVuX+Nj+pqwa5aM3dlPsSATUFr3NrmlTOJkFh9pgTFrn1BQ
+         HpKoFh/IQSXAeHRrbbdvggubAAPtBj1XdU+YV1/fExBF7JZnI6PCKZ+M/CUlgGKP0Iag
+         D0jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YvxpVFdJOEZrkQChM8Lq11d9YvLJbKpxKj8YQXF8h+c=;
+        b=iNuJLxNTvo7RGem/89WvjeG8DdkG5Q7hCpYpNpkWGGyw6ap19R+XErQBbT5zQuwIUU
+         WqetegjJ+EJa0Ta9eMhaWPfvGr+XlMpeng+jJVCVc2gHFguUBYPkOMX5avh1jrVVm4v4
+         6qg7Yux6934RBBInf9bq80FdpdWc8R4m1/4fqKEfAkIXDEdiDip8CnfbEyW14CPKFVTM
+         dB0BgvOFUReuAyKQhG7wYqNMGi1YUv/OcYH/mLXGTzHDCcEWX1BKyYwScM0HOwW7V+Vr
+         pR5V8EuvDtvlwosxYVZFkE+3xSATzM3z/NMWw9J8Hr+D0Y3eMKuxqwzxybHpQik3fRGd
+         86kg==
+X-Gm-Message-State: APjAAAX10vbkuKDJ62W8jsPPnpOnANCRqKsszQDRFGuJx7vdsYXhla3O
+        F+bbTQKf9Jm7MwAfj5lIpgo=
+X-Google-Smtp-Source: APXvYqw1sh7drpFUzZ8Rb52Hl6MrStf7eBimtSUGhMBrc0RLPFo88/Tu+eXgo9P3OGErTSCHgYbQDA==
+X-Received: by 2002:a1c:7ec4:: with SMTP id z187mr20333322wmc.94.1570462809964;
+        Mon, 07 Oct 2019 08:40:09 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id y5sm18605709wma.14.2019.10.07.08.40.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2019 08:40:09 -0700 (PDT)
+Date:   Mon, 7 Oct 2019 17:40:07 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v11 15/22] x86: mm: Point to struct seq_file from struct pg_state
-Date:   Mon,  7 Oct 2019 16:38:15 +0100
-Message-Id: <20191007153822.16518-16-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191007153822.16518-1-steven.price@arm.com>
-References: <20191007153822.16518-1-steven.price@arm.com>
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-crypto@vger.kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Stephan Mueller <smueller@chronox.de>
+Subject: Re: [PATCH v2 5.4 regression fix] x86/boot: Provide memzero_explicit
+Message-ID: <20191007154007.GA96929@gmail.com>
+References: <20191007134724.4019-1-hdegoede@redhat.com>
+ <20191007140022.GA29008@gmail.com>
+ <1dc3c53d-785e-f9a4-1b4c-3374c94ae0a7@redhat.com>
+ <20191007142230.GA117630@gmail.com>
+ <2982b666-e310-afb7-40eb-e536ce95e23d@redhat.com>
+ <20191007144600.GB59713@gmail.com>
+ <20191007152049.GA384920@rani.riverdale.lan>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191007152049.GA384920@rani.riverdale.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mm/dump_pagetables.c passes both struct seq_file and struct pg_state
-down the chain of walk_*_level() functions to be passed to note_page().
-Instead place the struct seq_file in struct pg_state and access it from
-struct pg_state (which is private to this file) in note_page().
 
-Signed-off-by: Steven Price <steven.price@arm.com>
----
- arch/x86/mm/dump_pagetables.c | 69 ++++++++++++++++++-----------------
- 1 file changed, 35 insertions(+), 34 deletions(-)
+* Arvind Sankar <nivedita@alum.mit.edu> wrote:
 
-diff --git a/arch/x86/mm/dump_pagetables.c b/arch/x86/mm/dump_pagetables.c
-index ab67822fd2f4..4dc6f4df40af 100644
---- a/arch/x86/mm/dump_pagetables.c
-+++ b/arch/x86/mm/dump_pagetables.c
-@@ -36,6 +36,7 @@ struct pg_state {
- 	bool to_dmesg;
- 	bool check_wx;
- 	unsigned long wx_pages;
-+	struct seq_file *seq;
- };
- 
- struct addr_marker {
-@@ -265,11 +266,12 @@ static void note_wx(struct pg_state *st)
-  * of PTE entries; the next one is different so we need to
-  * print what we collected so far.
-  */
--static void note_page(struct seq_file *m, struct pg_state *st,
--		      pgprot_t new_prot, pgprotval_t new_eff, int level)
-+static void note_page(struct pg_state *st, pgprot_t new_prot,
-+		      pgprotval_t new_eff, int level)
- {
- 	pgprotval_t prot, cur, eff;
- 	static const char units[] = "BKMGTPE";
-+	struct seq_file *m = st->seq;
- 
- 	/*
- 	 * If we have a "break" in the series, we need to flush the state that
-@@ -354,8 +356,8 @@ static inline pgprotval_t effective_prot(pgprotval_t prot1, pgprotval_t prot2)
- 	       ((prot1 | prot2) & _PAGE_NX);
- }
- 
--static void walk_pte_level(struct seq_file *m, struct pg_state *st, pmd_t addr,
--			   pgprotval_t eff_in, unsigned long P)
-+static void walk_pte_level(struct pg_state *st, pmd_t addr, pgprotval_t eff_in,
-+			   unsigned long P)
- {
- 	int i;
- 	pte_t *pte;
-@@ -366,7 +368,7 @@ static void walk_pte_level(struct seq_file *m, struct pg_state *st, pmd_t addr,
- 		pte = pte_offset_map(&addr, st->current_address);
- 		prot = pte_flags(*pte);
- 		eff = effective_prot(eff_in, prot);
--		note_page(m, st, __pgprot(prot), eff, 5);
-+		note_page(st, __pgprot(prot), eff, 5);
- 		pte_unmap(pte);
- 	}
- }
-@@ -379,22 +381,20 @@ static void walk_pte_level(struct seq_file *m, struct pg_state *st, pmd_t addr,
-  * us dozens of seconds (minutes for 5-level config) while checking for
-  * W+X mapping or reading kernel_page_tables debugfs file.
-  */
--static inline bool kasan_page_table(struct seq_file *m, struct pg_state *st,
--				void *pt)
-+static inline bool kasan_page_table(struct pg_state *st, void *pt)
- {
- 	if (__pa(pt) == __pa(kasan_early_shadow_pmd) ||
- 	    (pgtable_l5_enabled() &&
- 			__pa(pt) == __pa(kasan_early_shadow_p4d)) ||
- 	    __pa(pt) == __pa(kasan_early_shadow_pud)) {
- 		pgprotval_t prot = pte_flags(kasan_early_shadow_pte[0]);
--		note_page(m, st, __pgprot(prot), 0, 5);
-+		note_page(st, __pgprot(prot), 0, 5);
- 		return true;
- 	}
- 	return false;
- }
- #else
--static inline bool kasan_page_table(struct seq_file *m, struct pg_state *st,
--				void *pt)
-+static inline bool kasan_page_table(struct pg_state *st, void *pt)
- {
- 	return false;
- }
-@@ -402,7 +402,7 @@ static inline bool kasan_page_table(struct seq_file *m, struct pg_state *st,
- 
- #if PTRS_PER_PMD > 1
- 
--static void walk_pmd_level(struct seq_file *m, struct pg_state *st, pud_t addr,
-+static void walk_pmd_level(struct pg_state *st, pud_t addr,
- 			   pgprotval_t eff_in, unsigned long P)
- {
- 	int i;
-@@ -416,27 +416,27 @@ static void walk_pmd_level(struct seq_file *m, struct pg_state *st, pud_t addr,
- 			prot = pmd_flags(*start);
- 			eff = effective_prot(eff_in, prot);
- 			if (pmd_large(*start) || !pmd_present(*start)) {
--				note_page(m, st, __pgprot(prot), eff, 4);
--			} else if (!kasan_page_table(m, st, pmd_start)) {
--				walk_pte_level(m, st, *start, eff,
-+				note_page(st, __pgprot(prot), eff, 4);
-+			} else if (!kasan_page_table(st, pmd_start)) {
-+				walk_pte_level(st, *start, eff,
- 					       P + i * PMD_LEVEL_MULT);
- 			}
- 		} else
--			note_page(m, st, __pgprot(0), 0, 4);
-+			note_page(st, __pgprot(0), 0, 4);
- 		start++;
- 	}
- }
- 
- #else
--#define walk_pmd_level(m,s,a,e,p) walk_pte_level(m,s,__pmd(pud_val(a)),e,p)
-+#define walk_pmd_level(s,a,e,p) walk_pte_level(s,__pmd(pud_val(a)),e,p)
- #define pud_large(a) pmd_large(__pmd(pud_val(a)))
- #define pud_none(a)  pmd_none(__pmd(pud_val(a)))
- #endif
- 
- #if PTRS_PER_PUD > 1
- 
--static void walk_pud_level(struct seq_file *m, struct pg_state *st, p4d_t addr,
--			   pgprotval_t eff_in, unsigned long P)
-+static void walk_pud_level(struct pg_state *st, p4d_t addr, pgprotval_t eff_in,
-+			   unsigned long P)
- {
- 	int i;
- 	pud_t *start, *pud_start;
-@@ -450,33 +450,33 @@ static void walk_pud_level(struct seq_file *m, struct pg_state *st, p4d_t addr,
- 			prot = pud_flags(*start);
- 			eff = effective_prot(eff_in, prot);
- 			if (pud_large(*start) || !pud_present(*start)) {
--				note_page(m, st, __pgprot(prot), eff, 3);
--			} else if (!kasan_page_table(m, st, pud_start)) {
--				walk_pmd_level(m, st, *start, eff,
-+				note_page(st, __pgprot(prot), eff, 3);
-+			} else if (!kasan_page_table(st, pud_start)) {
-+				walk_pmd_level(st, *start, eff,
- 					       P + i * PUD_LEVEL_MULT);
- 			}
- 		} else
--			note_page(m, st, __pgprot(0), 0, 3);
-+			note_page(st, __pgprot(0), 0, 3);
- 
- 		start++;
- 	}
- }
- 
- #else
--#define walk_pud_level(m,s,a,e,p) walk_pmd_level(m,s,__pud(p4d_val(a)),e,p)
-+#define walk_pud_level(s,a,e,p) walk_pmd_level(s,__pud(p4d_val(a)),e,p)
- #define p4d_large(a) pud_large(__pud(p4d_val(a)))
- #define p4d_none(a)  pud_none(__pud(p4d_val(a)))
- #endif
- 
--static void walk_p4d_level(struct seq_file *m, struct pg_state *st, pgd_t addr,
--			   pgprotval_t eff_in, unsigned long P)
-+static void walk_p4d_level(struct pg_state *st, pgd_t addr, pgprotval_t eff_in,
-+			   unsigned long P)
- {
- 	int i;
- 	p4d_t *start, *p4d_start;
- 	pgprotval_t prot, eff;
- 
- 	if (PTRS_PER_P4D == 1)
--		return walk_pud_level(m, st, __p4d(pgd_val(addr)), eff_in, P);
-+		return walk_pud_level(st, __p4d(pgd_val(addr)), eff_in, P);
- 
- 	p4d_start = start = (p4d_t *)pgd_page_vaddr(addr);
- 
-@@ -486,13 +486,13 @@ static void walk_p4d_level(struct seq_file *m, struct pg_state *st, pgd_t addr,
- 			prot = p4d_flags(*start);
- 			eff = effective_prot(eff_in, prot);
- 			if (p4d_large(*start) || !p4d_present(*start)) {
--				note_page(m, st, __pgprot(prot), eff, 2);
--			} else if (!kasan_page_table(m, st, p4d_start)) {
--				walk_pud_level(m, st, *start, eff,
-+				note_page(st, __pgprot(prot), eff, 2);
-+			} else if (!kasan_page_table(st, p4d_start)) {
-+				walk_pud_level(st, *start, eff,
- 					       P + i * P4D_LEVEL_MULT);
- 			}
- 		} else
--			note_page(m, st, __pgprot(0), 0, 2);
-+			note_page(st, __pgprot(0), 0, 2);
- 
- 		start++;
- 	}
-@@ -529,6 +529,7 @@ static void ptdump_walk_pgd_level_core(struct seq_file *m, pgd_t *pgd,
- 	}
- 
- 	st.check_wx = checkwx;
-+	st.seq = m;
- 	if (checkwx)
- 		st.wx_pages = 0;
- 
-@@ -542,13 +543,13 @@ static void ptdump_walk_pgd_level_core(struct seq_file *m, pgd_t *pgd,
- 			eff = prot;
- #endif
- 			if (pgd_large(*start) || !pgd_present(*start)) {
--				note_page(m, &st, __pgprot(prot), eff, 1);
-+				note_page(&st, __pgprot(prot), eff, 1);
- 			} else {
--				walk_p4d_level(m, &st, *start, eff,
-+				walk_p4d_level(&st, *start, eff,
- 					       i * PGD_LEVEL_MULT);
- 			}
- 		} else
--			note_page(m, &st, __pgprot(0), 0, 1);
-+			note_page(&st, __pgprot(0), 0, 1);
- 
- 		cond_resched();
- 		start++;
-@@ -556,7 +557,7 @@ static void ptdump_walk_pgd_level_core(struct seq_file *m, pgd_t *pgd,
- 
- 	/* Flush out the last page */
- 	st.current_address = normalize_addr(PTRS_PER_PGD*PGD_LEVEL_MULT);
--	note_page(m, &st, __pgprot(0), 0, 0);
-+	note_page(&st, __pgprot(0), 0, 0);
- 	if (!checkwx)
- 		return;
- 	if (st.wx_pages)
--- 
-2.20.1
+> With the barrier in there, is there any reason to *not* inline the
+> function? barrier_data() is an asm statement that tells the compiler
+> that the asm uses the memory that was set to zero, thus preventing it
+> from removing the memset even if nothing else uses that memory later. A
+> more detailed comment is there in compiler-gcc.h. I can't see why it
+> wouldn't work even if it were inlined.
+> 
+> If the function can indeed be inlined, we could just make the common
+> implementation a macro and avoid duplicating it? As mentioned in another
+> mail, we otherwise will likely need another duplicate implementation for
+> arch/s390/purgatory as well.
 
+I suspect macro would be justified in this case. Mind sending a v3 patch 
+to demonstrate how it would all look like?
+
+I'll zap v2 if the macro solution looks better.
+
+Thanks,
+
+	Ingo
