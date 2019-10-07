@@ -2,98 +2,131 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D17EEC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A56FECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6CAB2070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:58:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MdwKcAKd"
+	by mail.kernel.org (Postfix) with ESMTP id 0AE2B2070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:59:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729048AbfJGQ63 (ORCPT
+        id S1728874AbfJGQ7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 12:58:29 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60842 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728474AbfJGQ61 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 12:58:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=M1olqyDfSGoMIsdSc+T5PN89uxP7EflDYmXBg03m/Tk=; b=MdwKcAKdqP7IXITupOTHJxXm4
-        e24SkkeEV5TSj97fhYNM+2yoHZ6oTmvtMrmloRNAzVnk56GdXxTFXCM2MLxIi8fy59/+SGC+8JgeX
-        weXcIbg/H1niihCFNEcI15EkvR0Gd15Eug+S/kxkgrtuyRMG0MaUn2euRvxqFRjSo4hkVf3Ng9dN8
-        tWkP6T6yGG49vF8WW0VeZaTqOSIeo+/xGr3uPAu9pJ7H5dM2OV/YKHERA5VOrmgV4YI7M+rKG9qOJ
-        DKyhj/zrjr7V5qfnx2/Ae4qcIBW/q11rl+9g8BNgJN/GiOI2e52/D6XfjEowk6tgs8ZiHmvNdtLAY
-        giYMxxHHw==;
-Received: from [2601:1c0:6280:3f0::9ef4]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iHWL4-0001O1-8G; Mon, 07 Oct 2019 16:58:26 +0000
-Subject: Re: [PATCH] doc: move namespaces.rst out of kbuild directory
-To:     Matthias Maennich <maennich@google.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     Jessica Yu <jeyu@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-doc@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Adam Zerella <adam.zerella@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191007043611.31036-1-yamada.masahiro@socionext.com>
- <20191007060614.GA142813@google.com> <20191007081241.GA8279@linux-8ccs>
- <20191007072930.07b1e90a@lwn.net> <20191007134124.GC23938@google.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <373b2646-7894-cf4b-21b6-a8a63ad707fa@infradead.org>
-Date:   Mon, 7 Oct 2019 09:58:24 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Mon, 7 Oct 2019 12:59:04 -0400
+Received: from muru.com ([72.249.23.125]:35720 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727935AbfJGQ7D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 12:59:03 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 906858191;
+        Mon,  7 Oct 2019 16:59:35 +0000 (UTC)
+Date:   Mon, 7 Oct 2019 09:58:59 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Emmanuel Vadot <manu@bidouilliste.com>
+Cc:     Emmanuel Vadot <manu@freebsd.org>, bcousson@baylibre.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: Set status to disable for MMC3
+Message-ID: <20191007165859.GV5610@atomide.com>
+References: <20191007080339.57209-1-manu@freebsd.org>
+ <20191007161634.GS5610@atomide.com>
+ <20191007183830.71e1303d6bd713014dc36710@bidouilliste.com>
 MIME-Version: 1.0
-In-Reply-To: <20191007134124.GC23938@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191007183830.71e1303d6bd713014dc36710@bidouilliste.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/7/19 6:41 AM, Matthias Maennich wrote:
-> On Mon, Oct 07, 2019 at 07:29:30AM -0600, Jonathan Corbet wrote:
->> On Mon, 7 Oct 2019 10:12:42 +0200
->> Jessica Yu <jeyu@kernel.org> wrote:
->>
->>> This was my line of thought as well, since the audience of
->>> admin-guide/ is sysadmins and users. Namespaces are mostly relevant to
->>> module authors and kernel developers. Currently, I don't think there
->>> is an existing good place in Documentation/ for this topic :-/
->>> I suppose kernel-hacking/ might be the closest fit, as Adam suggested.
->>
->> I didn't see this thread before responding in the first, naturally...
->>
->> I think the core-api manual is probably as good a place as any for this.
->> Changing the name to something like symbol-namespaces.rst is probably a
->> good idea, since most people think of other things when they see
->> "namespaces".  Or perhaps that mythical Somebody could expand it into a
->> proper description of symbol exports in general...:)
+* Emmanuel Vadot <manu@bidouilliste.com> [191007 16:39]:
+> On Mon, 7 Oct 2019 09:16:34 -0700
+> Tony Lindgren <tony@atomide.com> wrote:
 > 
-> As I said in the other thread, I am happy for it to be moved to a better
-> location. core-api/ as well as kernel-hacking/ seem to be good
-> locations.
+> > Hi,
+> > 
+> > * Emmanuel Vadot <manu@freebsd.org> [191007 08:04]:
+> > > Commit 5b63fb90adb95 ("ARM: dts: Fix incomplete dts data for am3 and am4 mmc")
+> > > fixed the mmc instances on the l3 interconnect but removed the disabled status.
+> > > Fix this and let boards properly define it if it have it.
+> > 
+> > The dts default is "okay", and should be fine for all the
+> > internal devices even if not pinned out on the board. This
+> > way the devices get properly idled during boot, and we
+> > avoid repeating status = "enabled" over and over again in
+> > the board specific dts files.
+> 
+>  That is not correct, if a status != "disabled" then pinmuxing will be
+> configured for this device and if multiple devices share the same pin
+> then you have a problem. Note that I have (almost) no knowledge on Ti
+> SoC but I doubt that this is not the case on them.
 
-core-api/ please.  kernel-hacking/ does not make any sense to me.
+Hmm well, that should not be needed. The pinmux configuration is always
+done in a board specific dts file.
 
-> I could imagine expanding the documentation, but would not like to
-> commit to it right now. (Even though I feel very encouraged by your talk
-> in Paris, Jon. Thanks for that!)
+>  Also every other boards that I work with use the standard of setting
+> every node to disabled in the dtsi and let the board enable them at
+> will. Is there something different happening in the TI world ?
 
+There should be no need to do that for SoC internal devices, the
+the default status = "okay" should be just fine. Setting the
+status = "disabled" for SoC internal devices and then enabling them
+again for tens of board specific dts files just generates tons of
+pointless extra churn for the board specific configuration.
 
--- 
-~Randy
+> > Then the board specific dts files might want to configure
+> > devices with status = "disabled" if really needed. But this
+> > should be only done for devices that Linux must not use,
+> > such as crypto acclerators on secure devices if claimed by
+> > the secure mode.
+> > 
+> > So if this fixes something, it's almost certainly a sign
+> > of something else being broken?
+> 
+>  In this case it's FreeBSD being  because (I think) we have bad support
+> for the clocks for this module so we panic when we read from it as the
+> module isn't clocked. And since I find it wrong to have device enabled
+> while it isn't present I've sent this patch.
+
+Thanks for clarifying what happens. OK, sounds like FreeBSD might be
+missing clock handling for some devices then.
+
+What Linux does is probe the internal devices and then idle the
+unused ones as bootloaders often leave many things enabled. Otherwise
+the SoC power management won't work properly because device clocks
+will block deeper SoC idle states.
+
+Regards,
+
+Tony
+
+> > > Fixes: 5b63fb90adb95 ("ARM: dts: Fix incomplete dts data for am3 and am4 mmc")
+> > > Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
+> > > ---
+> > >  arch/arm/boot/dts/am33xx.dtsi | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > > 
+> > > diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+> > > index fb6b8aa12cc5..b3a1fd9e39fa 100644
+> > > --- a/arch/arm/boot/dts/am33xx.dtsi
+> > > +++ b/arch/arm/boot/dts/am33xx.dtsi
+> > > @@ -260,6 +260,7 @@
+> > >  				ti,needs-special-reset;
+> > >  				interrupts = <29>;
+> > >  				reg = <0x0 0x1000>;
+> > > +				status = "disabled";
+> > >  			};
+> > >  		};
+> > >  
+> > > -- 
+> > > 2.22.0
+> > > 
+> 
+> 
+> -- 
+> Emmanuel Vadot <manu@bidouilliste.com>
