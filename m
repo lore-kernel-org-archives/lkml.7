@@ -2,144 +2,239 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 013A3ECE58C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18890ECE58D
 	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2432B21655
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:20:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4A0F2190F
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:20:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570458015;
+	bh=8KJjcCNHr2KDNe8CuRkdOLNMo/usa+JvQiTvDLUlc/g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iYfvXbv2sAk4Q7uILM6RIRSjKmYUMr3JSMt0iPJOFPk0qfewmi6acdhBO5s6WIYsR
+	 yuw4vc+I1gt6brpVzxkqrHQVpypFe3DVaM8TIYPmtVfDjreA6J6wfvsNgv8kFHVfOh
+	 WNOfJM7q1VZzUC9uCRdikpfPedHnkG9VrwiNs3vM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728455AbfJGOUC (ORCPT
+        id S1728474AbfJGOUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 10:20:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37338 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727711AbfJGOUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 10:20:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 927EBAFC6;
-        Mon,  7 Oct 2019 14:19:59 +0000 (UTC)
-Subject: Re: [PATCH] mm: thp: move deferred split queue to memcg's nodeinfo
-To:     Michal Hocko <mhocko@kernel.org>,
-        Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     kirill.shutemov@linux.intel.com, ktkhai@virtuozzo.com,
-        hannes@cmpxchg.org, hughd@google.com, shakeelb@google.com,
-        rientjes@google.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <1569968203-64647-1-git-send-email-yang.shi@linux.alibaba.com>
- <20191002084304.GI15624@dhcp22.suse.cz>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <30421920-4fdb-767a-6ef2-60187932c414@suse.cz>
-Date:   Mon, 7 Oct 2019 16:19:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Mon, 7 Oct 2019 10:20:06 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36144 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727824AbfJGOUD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 10:20:03 -0400
+Received: by mail-wm1-f66.google.com with SMTP id m18so12562608wmc.1;
+        Mon, 07 Oct 2019 07:20:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rKGHMAzLMc3EZjcLnisKCwm5b/7oAc4wt2nUlmMJuJ8=;
+        b=s2AlzTzISao1m9V0GrvqIwdFR4iic9QvFkEwMVANloxiVaAimOvWCASU3WgNFcO4LO
+         IfMB6n5zkYVNNn/BqEP9woGud/kVZk38WxE6y6GQ2SadCaM4TD0MaZ2yymOZNXk1VZti
+         C3XQjeokOyVd14soSonRaCwVVzDBM7mgzL98wUfoAkQ6l1z7xNJzQnO7PLJoID6tDQK0
+         7vlCeSGvbxjSeEfQlf9W2KdlhRTFM16XA2gz383tPwaCtMOVPm06qBd8e8KuthS1VpV7
+         S8NdgQOeGCYzGoE3JDmF0MUvp4S1JNvfe+ZrpfQVpt4RpzyrNcfMuxf8IRXlxCztGgOx
+         QJjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rKGHMAzLMc3EZjcLnisKCwm5b/7oAc4wt2nUlmMJuJ8=;
+        b=BZfAVbxv1ZcD0o6ToYKGCAnNnGu+AI8TmvtPvPJnZpoX3VynT+W+wSzmApYJv1RznQ
+         dmaWehGK6ADMAD4/LKzRpmdybUQXTaG+lzeeUH/QLkQINa4NVZ8Q22TprCWXnAGpN+zi
+         mWbxF+UFKNKmgbYu2MK13HtWiU3TP/x2GW64+gmxYDM8FnsfclFAr50pFs6+J0ycfYYM
+         AQR/gaHkbF8N6niRpwWqlEyWdE3NorRsI0wFWpW68jD5qbTmZ2SAqEnooQkyC+zEJMab
+         zO1NxW9X1Fw1rdCpA5Mv2mbzMENLJuKMfZblNXw65kMeTUOYfTayVQInWyAkBIbvOioV
+         UuBA==
+X-Gm-Message-State: APjAAAXyTphEbDLFd/unT1q6mVdvbepZcENZ+q8Go+kjdwC+TtFbY96E
+        zW4SmhPFJLL+/P2Rs9ZvYNI=
+X-Google-Smtp-Source: APXvYqxaA5ml4MqxCrD1RL6LrpWQ7cAgIupjWzyMStq6oCHDAv7wcBiM5bVTszmFPhCym58NUYZemg==
+X-Received: by 2002:a1c:7f86:: with SMTP id a128mr21534679wmd.104.1570457999892;
+        Mon, 07 Oct 2019 07:19:59 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id g11sm16240295wmh.45.2019.10.07.07.19.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2019 07:19:59 -0700 (PDT)
+Date:   Mon, 7 Oct 2019 16:19:56 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Peter Jones <pjones@redhat.com>,
+        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v7 0/8] efi/firmware/platform-x86: Add EFI embedded fw
+ support
+Message-ID: <20191007141956.GA25347@gmail.com>
+References: <20191004145056.43267-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20191002084304.GI15624@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191004145056.43267-1-hdegoede@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/2/19 10:43 AM, Michal Hocko wrote:
-> On Wed 02-10-19 06:16:43, Yang Shi wrote:
->> The commit 87eaceb3faa59b9b4d940ec9554ce251325d83fe ("mm: thp: make
->> deferred split shrinker memcg aware") makes deferred split queue per
->> memcg to resolve memcg pre-mature OOM problem.  But, all nodes end up
->> sharing the same queue instead of one queue per-node before the commit.
->> It is not a big deal for memcg limit reclaim, but it may cause global
->> kswapd shrink THPs from a different node.
->>
->> And, 0-day testing reported -19.6% regression of stress-ng's madvise
->> test [1].  I didn't see that much regression on my test box (24 threads,
->> 48GB memory, 2 nodes), with the same test (stress-ng --timeout 1
->> --metrics-brief --sequential 72  --class vm --exclude spawn,exec), I saw
->> average -3% (run the same test 10 times then calculate the average since
->> the test itself may have most 15% variation according to my test)
->> regression sometimes (not every time, sometimes I didn't see regression
->> at all).
->>
->> This might be caused by deferred split queue lock contention.  With some
->> configuration (i.e. just one root memcg) the lock contention my be worse
->> than before (given 2 nodes, two locks are reduced to one lock).
->>
->> So, moving deferred split queue to memcg's nodeinfo to make it NUMA
->> aware again.
->>
->> With this change stress-ng's madvise test shows average 4% improvement
->> sometimes and I didn't see degradation anymore.
-> 
-> My concern about this getting more and more complex
-> (http://lkml.kernel.org/r/20191002084014.GH15624@dhcp22.suse.cz) holds
-> here even more. Can we step back and reconsider the whole thing please?
 
-What about freeing immediately after split via workqueue and also have a
-synchronous version called before going oom? Maybe there would be also
-other things that would benefit from this scheme instead of traditional
-reclaim and shrinkers?
+* Hans de Goede <hdegoede@redhat.com> wrote:
+
+> Hi All,
+> 
+> Here is v7 of my patch-set to add support for EFI embedded fw to the kernel.
+> 
+> v6 was posted a long time ago, around the 4.18 days. The long wait was for
+> a suitable secure-hash for checking the firmware we find embedded in the EFI
+> is the one we expect.
+> 
+> With 5.4-rc1 we finally have a standalone sha256 lib, so that hurdle for
+> this patch-set is now gone.
+> 
+> I've tried to address all review-remarks against v6 in this new version:
+> 
+> Changes in v7:
+> - Split drivers/firmware/efi and drivers/base/firmware_loader changes into
+>   2 patches
+> - Use new, standalone, lib/crypto/sha256.c code
+> - Address kdoc comments from Randy Dunlap
+> - Add new FW_OPT_FALLBACK_PLATFORM flag and firmware_request_platform()
+>   _request_firmware() wrapper, as requested by Luis R. Rodriguez
+> - Stop using "efi-embedded-firmware" device-property, now that drivers need to
+>   use the new firmware_request_platform() to enable fallback to a device fw
+>   copy embedded in the platform's main firmware, we no longer need a property
+>   on the device to trigger this behavior
+> - Use security_kernel_load_data instead of calling
+>   security_kernel_read_file with a NULL file pointer argument
+> - Move the docs to Documentation/driver-api/firmware/fallback-mechanisms.rst
+> - Document the new firmware_request_platform() function in
+>   Documentation/driver-api/firmware/request_firmware.rst
+> - Add 2 new patches for the silead and chipone-icn8505 touchscreen drivers
+>   to use the new firmware_request_platform() method
+> - Rebased on top of 5.4-rc1
+> 
+> I guess this will probably need another round (ot two) of review + fixing,
+> but eventually this can hopefully be merged. Since this touches a bunch
+> of different subsystems the question is how to merge this? Most of the
+> touched files outside of the firmware-loader code do not see a lot of
+> churn, so my proposal would be to merge patches 1-6 through the tree
+> which carries firmware-loader changes; and then provide an immutable
+> branch for the platform/x86 maintainers to merge and then they can merge
+> the last 2 patches (as the touchscreen_dmi.c file does see quite a bit
+> of changes every release).
+
+So I was looking for a high level 0/ boilerplate description of this 
+series, to explain what "EFI embedded fw" is, what problems it solves and 
+how it helps the kernel in general - and found this in 2/8:
+
+>> Just like with PCI options ROMs, which we save in the setup_efi_pci*
+>> functions from arch/x86/boot/compressed/eboot.c, the EFI code / ROM itself
+>> sometimes may contain data which is useful/necessary for peripheral drivers
+>> to have access to.
+>>
+>> Specifically the EFI code may contain an embedded copy of firmware which
+>> needs to be (re)loaded into the peripheral. Normally such firmware would be
+>> part of linux-firmware, but in some cases this is not feasible, for 2
+>> reasons:
+>>
+>> 1) The firmware is customized for a specific use-case of the chipset / use
+>> with a specific hardware model, so we cannot have a single firmware file
+>> for the chipset. E.g. touchscreen controller firmwares are compiled
+>> specifically for the hardware model they are used with, as they are
+>> calibrated for a specific model digitizer.
+>>
+>> 2) Despite repeated attempts we have failed to get permission to
+>> redistribute the firmware. This is especially a problem with customized
+>> firmwares, these get created by the chip vendor for a specific ODM and the
+>> copyright may partially belong with the ODM, so the chip vendor cannot
+>> give a blanket permission to distribute these.
+>>
+>> This commit adds support for finding peripheral firmware embedded in the
+>> EFI code and makes the found firmware available through the new
+>> efi_get_embedded_fw() function.
+>>
+>> Support for loading these firmwares through the standard firmware loading
+>> mechanism is added in a follow-up commit in this patch-series.
+>>
+>> Note we check the EFI_BOOT_SERVICES_CODE for embedded firmware near the end
+>> of start_kernel(), just before calling rest_init(), this is on purpose
+>> because the typical EFI_BOOT_SERVICES_CODE memory-segment is too large for
+>> early_memremap(), so the check must be done after mm_init(). This relies
+>> on EFI_BOOT_SERVICES_CODE not being free-ed until efi_free_boot_services()
+>> is called, which means that this will only work on x86 for now.
+>>
+>> Reported-by: Dave Olsthoorn <dave@bewaar.me>
+>> Suggested-by: Peter Jones <pjones@redhat.com>
+>> Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+
+There's also patch #3, which explains how this is used:
+
+>> This commit adds a new platform fallback mechanism to the firmware loader
+>> which will try to lookup a device fw copy embedded in the platform's main
+>> firmware if direct filesystem lookup fails.
+>>
+>> Drivers which need such embedded fw copies can enable this fallback
+>> mechanism by using the new firmware_request_platform() function.
+>>
+>> Note that for now this is only supported on EFI platforms and even on
+>> these platforms firmware_fallback_platform() only works if
+>> CONFIG_EFI_EMBEDDED_FIRMWARE is enabled (this gets selected by drivers
+>> which need this), in all other cases firmware_fallback_platform() simply
+>> always returns -ENOENT.
+
+Plus there's 3 patches that opt in three drivers to this new EFI-firmware 
+loading mechanism, right?
+
+A couple of high level questions:
+
+- How common are these kinds of firmware files that should be loaded into 
+  the device by the OS device driver? Common? Or 1% of systems? 0.1% of 
+  systems? 0.0001%?
+
+- Can there be a situation where linux-firmware already includes an older 
+  copy of the firmware, and the EFI firmware has a newer version? If this 
+  can plausibly happen, shouldn't the fallback mechanism do some sort of 
+  version check (if that's possible), and load the newer version?
+
+- I'm worried about the explicit opt-in nature of these firmware files - 
+  the OS driver has to be explicitly aware of this possibility. Shouldn't 
+  we at minimum have some sort of boot time check to see whether a device 
+  has an embedded fw blob, and warn the user if we don't actually load 
+  it? Which would generate some gentle pressure to fix our drivers?
+
+- I think the config option should be default-y, because AFAICS this 
+  mechanism makes broken drivers/devices work.
+
+- Finally, is there any question of trust or a potential for other 
+  security pitfalls here, where we'd trust linux-firmware over what the 
+  EFI firmware says is the proper firmware for a device? My default 
+  assumption would be that we are exposed to the EFI firmware anyway, and 
+  it comes with the hardware just like the devices come with the 
+  hardware, so we can generally trust it. But I might be missing 
+  something. If there's any plausible question of trust (for example can 
+  attackers hide rooted firmware in the EFI image, without triggering 
+  filesystem integrity checks on the regular filesystem side?) then it 
+  might make sense to offer a boot parameter to disable this, beyond the 
+  config parameter.
+
+Thanks,
+
+	Ingo
