@@ -2,135 +2,172 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 961BCC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 05:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB17C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 06:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6929C20867
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 05:59:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nP+sss48"
+	by mail.kernel.org (Postfix) with ESMTP id 08C72206C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 06:02:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727222AbfJGF7h (ORCPT
+        id S1727231AbfJGGCV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 01:59:37 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45671 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726889AbfJGF7h (ORCPT
+        Mon, 7 Oct 2019 02:02:21 -0400
+Received: from mailoutvs27.siol.net ([185.57.226.218]:53473 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726889AbfJGGCU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 01:59:37 -0400
-Received: by mail-pg1-f193.google.com with SMTP id q7so7487746pgi.12;
-        Sun, 06 Oct 2019 22:59:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=oqFdqqUqLg52ExVds7ZRy0HYDyhYJV6Q8ZIB5Rw2isk=;
-        b=nP+sss48EWXlNFGfoK7E2mq5jsUFr5XIM6R0v0DQUIalN+UibCCos8d5esx3p9uLDs
-         1J2P2BKiPmtGXgQ3YkqdV4tOwFXeeEHjSkNt0j9tZYsUlgNRuQ66Qj8L6+FulrnixdBi
-         de4kWQv38SGK9eqne12JMwwso5geSBBjeR6ZC0Lax/zRcPrJ0Rbb80eRp1kNljSRzqBV
-         dDpsKF7EvoUCkgBeAoNeJ69nEQ//VoNaj88OARHQLdHtO8OIAV30ersvxyXyUNE10yVr
-         8f1fi8K3eQCTH2Gwn1ZBrNsR1VBco4xyK6mHMjQu5kv8E1XpOgKjvUPDfsCVWR2YZJ83
-         HtbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oqFdqqUqLg52ExVds7ZRy0HYDyhYJV6Q8ZIB5Rw2isk=;
-        b=PhUDfpF+vbyXB7xMZjYrmbqs9JKoWhD21IJpQfyV4mO5kmieGfKU0GfJ1VZHRu1tqJ
-         aW0eIYoB1iAcipbapqLvP/BL1vLQdN13CUa5AXxPPJuEahCYESfmFNjFRzTOOnlUAav9
-         8uq1Ipa8Y0ZZKgSBXSCnY693VMlCgB/z9Z0X6ZMuMjSWnbtbwo2SACr0JoCJiBHGloZD
-         jrWkJysl3aSwkktBVn0lk64VDLjKsfDmWjE4MAFQ7m4gL6+NTi4sXzx72h5z96Kxwv7D
-         0Ha8EBHDUwxLwrOD6VjQaeauVd946xoMvTPqV3v7eIvkZR7mYrZCQxerrcotAlHJV1Ls
-         V1sw==
-X-Gm-Message-State: APjAAAV9rUKgbBycrMaKy/Hu3VWA1n9yPuXL2h+VkrM2D3Ajo7IVltMa
-        2LDjWDCMs9nN6arXSP/hQdQ=
-X-Google-Smtp-Source: APXvYqyOPvQG9GmEJ1vI64O6QXSEJQcrBowAjBEfCT7sL6q2XRjSPEgP449VEUEsh5lzk7bYNIdNgg==
-X-Received: by 2002:a17:90a:310:: with SMTP id 16mr32181448pje.100.1570427974602;
-        Sun, 06 Oct 2019 22:59:34 -0700 (PDT)
-Received: from gmail.com (ip-103-85-37-165.syd.xi.com.au. [103.85.37.165])
-        by smtp.gmail.com with ESMTPSA id w134sm14739677pfd.4.2019.10.06.22.59.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Oct 2019 22:59:33 -0700 (PDT)
-Date:   Mon, 7 Oct 2019 16:59:26 +1100
-From:   Adam Zerella <adam.zerella@gmail.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Matthias Maennich <maennich@google.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] doc: move namespaces.rst out of kbuild directory
-Message-ID: <20191007055926.GA9631@gmail.com>
-References: <20191007043611.31036-1-yamada.masahiro@socionext.com>
+        Mon, 7 Oct 2019 02:02:20 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTP id 9592A521630;
+        Mon,  7 Oct 2019 08:02:16 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id vcF-zkhEbduB; Mon,  7 Oct 2019 08:02:16 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTPS id 2224752160B;
+        Mon,  7 Oct 2019 08:02:16 +0200 (CEST)
+Received: from jernej-laptop.localnet (cpe-86-58-59-25.static.triera.net [86.58.59.25])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Zimbra) with ESMTPA id 4A222521630;
+        Mon,  7 Oct 2019 08:02:13 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc:     mchehab@kernel.org, paul.kocialkowski@bootlin.com,
+        mripard@kernel.org, pawel@osciak.com, m.szyprowski@samsung.com,
+        kyungmin.park@samsung.com, tfiga@chromium.org, wens@csie.org,
+        gregkh@linuxfoundation.org, boris.brezillon@collabora.com,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
+        ezequiel@collabora.com, jonas@kwiboo.se
+Subject: Re: [PATCH v2 3/6] media: v4l2-mem2mem: add stateless_(try_)decoder_cmd ioctl helpers
+Date:   Mon, 07 Oct 2019 08:02:12 +0200
+Message-ID: <2840939.OS9t7MgvnY@jernej-laptop>
+In-Reply-To: <6c7eeaf1-18bb-1c7e-7938-a3eb5af100b6@xs4all.nl>
+References: <20190929200023.215831-1-jernej.skrabec@siol.net> <20190929200023.215831-4-jernej.skrabec@siol.net> <6c7eeaf1-18bb-1c7e-7938-a3eb5af100b6@xs4all.nl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191007043611.31036-1-yamada.masahiro@socionext.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 01:36:11PM +0900, Masahiro Yamada wrote:
-> I did not notice this document was added to Documentation/kbuild/,
-> and I do not understand how it is related to the build system.
+Dne petek, 04. oktober 2019 ob 11:21:12 CEST je Hans Verkuil napisal(a):
+> On 9/29/19 10:00 PM, Jernej Skrabec wrote:
+> > These helpers are used by stateless codecs when they support multiple
+> > slices per frame and hold capture buffer flag is set. It's expected that
+> > all such codecs will use this code.
+> > 
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > ---
+> > 
+> >  drivers/media/v4l2-core/v4l2-mem2mem.c | 35 ++++++++++++++++++++++++++
+> >  include/media/v4l2-mem2mem.h           |  4 +++
+> >  2 files changed, 39 insertions(+)
+> > 
+> > diff --git a/drivers/media/v4l2-core/v4l2-mem2mem.c
+> > b/drivers/media/v4l2-core/v4l2-mem2mem.c index 19937dd3c6f6..2677a07e4c9b
+> > 100644
+> > --- a/drivers/media/v4l2-core/v4l2-mem2mem.c
+> > +++ b/drivers/media/v4l2-core/v4l2-mem2mem.c
+> > @@ -1154,6 +1154,41 @@ int v4l2_m2m_ioctl_try_decoder_cmd(struct file
+> > *file, void *fh,> 
+> >  }
+> >  EXPORT_SYMBOL_GPL(v4l2_m2m_ioctl_try_decoder_cmd);
+> > 
+> > +int v4l2_m2m_ioctl_stateless_try_decoder_cmd(struct file *file, void *fh,
+> > +					     struct 
+v4l2_decoder_cmd *dc)
+> > +{
+> > +	if (dc->cmd != V4L2_DEC_CMD_FLUSH)
+> > +		return -EINVAL;
+> > +
+> > +	dc->flags = 0;
+> > +
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(v4l2_m2m_ioctl_stateless_try_decoder_cmd);
+> > +
+> > +int v4l2_m2m_ioctl_stateless_decoder_cmd(struct file *file, void *priv,
+> > +					 struct 
+v4l2_decoder_cmd *dc)
+> > +{
+> > +	struct v4l2_fh *fh = file->private_data;
+> > +	struct vb2_v4l2_buffer *out_vb, *cap_vb;
+> > +	int ret;
+> > +
+> > +	ret = v4l2_m2m_ioctl_stateless_try_decoder_cmd(file, priv, dc);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	out_vb = v4l2_m2m_last_src_buf(fh->m2m_ctx);
+> > +	cap_vb = v4l2_m2m_last_dst_buf(fh->m2m_ctx);
 > 
-> Kick it out of the kbuild directory.
+> I think this should be v4l2_m2m_next_dst_buf. If multiple capture buffers
+> were queued up, then it can only be the first capture buffer that can be
+> 'HELD'.
 
-Should we delete the file entirely or does it belong somewhere else? It
-was added in c4f4af4094d6c7dbca3acd8d04df2759d268a116 and is referenced
-in `Documentation/kernel-hacking/hacking.rst`.
+I'm pretty sure v4l2_m2m_last_dst_buf() is correct. We want to affect last job 
+in the queue, all jobs before are already properly handled by comparing 
+timestamps.
 
-Can we put into the `kernel-hacking` directory?
+> 
+> This might solve the race condition you saw with ffmpeg.
 
-> I am not sure if this is the perfect place, but I added its index
-> close to the module-signing.
+This actually doesn't change anything. ffmpeg currently queues only one job and 
+then waits until it's executed. In this case it actually doesn't matter if 
+"last" or "next" variant is used.
+
+Best regards,
+Jernej
+
 > 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
+> Regards,
 > 
->  Documentation/admin-guide/index.rst                  | 1 +
->  Documentation/{kbuild => admin-guide}/namespaces.rst | 0
->  MAINTAINERS                                          | 1 +
->  3 files changed, 2 insertions(+)
->  rename Documentation/{kbuild => admin-guide}/namespaces.rst (100%)
+> 	Hans
 > 
-> diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
-> index 34cc20ee7f3a..ca632fda700f 100644
-> --- a/Documentation/admin-guide/index.rst
-> +++ b/Documentation/admin-guide/index.rst
-> @@ -65,6 +65,7 @@ configure specific aspects of kernel behavior to your liking.
->     parport
->     md
->     module-signing
-> +   namespaces
->     rapidio
->     sysrq
->     unicode
-> diff --git a/Documentation/kbuild/namespaces.rst b/Documentation/admin-guide/namespaces.rst
-> similarity index 100%
-> rename from Documentation/kbuild/namespaces.rst
-> rename to Documentation/admin-guide/namespaces.rst
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 55199ef7fa74..91815dcc5914 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -11547,6 +11547,7 @@ NSDEPS
->  M:	Matthias Maennich <maennich@google.com>
->  S:	Maintained
->  F:	scripts/nsdeps
-> +F:	Documentation/admin-guide/namespaces.rst
->  
->  NTB AMD DRIVER
->  M:	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> -- 
-> 2.17.1
-> 
+> > +
+> > +	if (out_vb)
+> > +		out_vb->flags &= ~V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF;
+> > +	else if (cap_vb && cap_vb->is_held)
+> > +		v4l2_m2m_buf_done(cap_vb, VB2_BUF_STATE_DONE);
+> > +
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(v4l2_m2m_ioctl_stateless_decoder_cmd);
+> > +
+> > 
+> >  /*
+> >  
+> >   * v4l2_file_operations helpers. It is assumed here same lock is used
+> >   * for the output and the capture buffer queue.
+> > 
+> > diff --git a/include/media/v4l2-mem2mem.h b/include/media/v4l2-mem2mem.h
+> > index c9fa96c8eed1..8ae2f56c7fa3 100644
+> > --- a/include/media/v4l2-mem2mem.h
+> > +++ b/include/media/v4l2-mem2mem.h
+> > @@ -714,6 +714,10 @@ int v4l2_m2m_ioctl_try_encoder_cmd(struct file *file,
+> > void *fh,> 
+> >  				   struct v4l2_encoder_cmd *ec);
+> >  
+> >  int v4l2_m2m_ioctl_try_decoder_cmd(struct file *file, void *fh,
+> >  
+> >  				   struct v4l2_decoder_cmd *dc);
+> > 
+> > +int v4l2_m2m_ioctl_stateless_try_decoder_cmd(struct file *file, void *fh,
+> > +					     struct 
+v4l2_decoder_cmd *dc);
+> > +int v4l2_m2m_ioctl_stateless_decoder_cmd(struct file *file, void *priv,
+> > +					 struct 
+v4l2_decoder_cmd *dc);
+> > 
+> >  int v4l2_m2m_fop_mmap(struct file *file, struct vm_area_struct *vma);
+> >  __poll_t v4l2_m2m_fop_poll(struct file *file, poll_table *wait);
+
+
+
+
