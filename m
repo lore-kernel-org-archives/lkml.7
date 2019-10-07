@@ -2,127 +2,122 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6433BC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1A7C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:29:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38F00205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:29:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rq91mJU4"
+	by mail.kernel.org (Postfix) with ESMTP id C217521871
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:29:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570462193;
+	bh=wZpqJAVdx0OquwJReQG4DI2BbxLYhSANl3AxInjoMnU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1DdcqhUI+1Q4026xpU8tiiP3XN6o6XBB9RICiw62UzAitgIw+FAbMa7SWH6LfyPzX
+	 TDzRu4ukepiBOCJPZmJQyuBCF9WbGRUBgpwmTUx6Tod85yTlk7mpB5nnxfc6v4HgmZ
+	 CaTtije5k31VwFfmFO8xKzmXePBXrhtC9sTZK3v0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728474AbfJGP3B (ORCPT
+        id S1728533AbfJGP3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 11:29:01 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:33657 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726334AbfJGP3A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:29:00 -0400
-Received: by mail-io1-f68.google.com with SMTP id z19so29597828ior.0;
-        Mon, 07 Oct 2019 08:29:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wtVsLO1ntFCrS5daswTpm686yy3QS5pSIH9g4p/6SHY=;
-        b=Rq91mJU4qTssd1QORjJKdkSCMC5RTaFQhaQZilPoU8yf2BUuUM+yTlZnTRoi+85Fri
-         evPqABRZll0UgF32Srs86O6CyUHAb6Y4hgM+r2xZMDa9x1ClU/dfLgn/JjwfI+GnTJYt
-         9iIAlIcMRWHCoi/b6W1HBDgQEPLleBYKQNNBZYfF2AaD9gKAv7u7kE+NUbQxlehRltWh
-         /HhI+/V/rk0/jcP6/YcVqlVkTrnJ+NVRkzGPUCXxk6uYohYaPCw/QKpAdMpxk2K95PGH
-         ULYlMqwJWHMBZLNfWNWB8HRuYt3akVcDn6GgQ1145Fz43jqbF5bFZIWmdtjcBS+EkH5f
-         j+yQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wtVsLO1ntFCrS5daswTpm686yy3QS5pSIH9g4p/6SHY=;
-        b=Ef70Hncbaa5KT9MTJTqoriQPM5idksBjaR/JG/hYVlyD1cbMP0wX14D9CzKukrEssX
-         LpjmKLCz9hr8RlCaHtZcy5wSggOGWIYmTpYDc8Re7OT9WvsqY6bnTQR5SyGzXT3CJE+i
-         Z62Y0zm6dadyXcVO0ejucNtCPCZgKgerVZUCWjXtlo/L10WqYC9o5tQvHS8RfUtuiq9M
-         J4593kJE9vVfzN4AjgF6HrYSgTOpgMS86YmWw2uhkMdnlSj3o+HN1fS3OREvL2mp5x9e
-         4QNeoKt330onA8+eXL1I19ntpAhI0ren5zgG/CCTvfJtl4f+vx8BjgEAZLE5iByo14Mz
-         M8SA==
-X-Gm-Message-State: APjAAAXOMcpci28Y4JQhSgvoTv45wRhZHMuPKDPyRlf2/o4Nzw5xNBKh
-        uNtwq3xsNhMVhxn51OITj63VsG5wIrh7tW6t4dc=
-X-Google-Smtp-Source: APXvYqx45IwIf/HAU8nElk9tCCd1rWFbJeMPlSSBQCc0bur5Oz+a9TlsSmo4fwChJbmJLYKpfCOoDn08G87lnL/TrVc=
-X-Received: by 2002:a02:69cd:: with SMTP id e196mr28656654jac.84.1570462139862;
- Mon, 07 Oct 2019 08:28:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191007131649.1768-1-linux.amoon@gmail.com> <20191007131649.1768-2-linux.amoon@gmail.com>
- <c99adf31-42df-c88e-40d4-1dc383c990b1@baylibre.com>
-In-Reply-To: <c99adf31-42df-c88e-40d4-1dc383c990b1@baylibre.com>
-From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Mon, 7 Oct 2019 20:58:47 +0530
-Message-ID: <CANAwSgQi=56RPQK-a7CM2W9dOt3mzDzdtfNABKmpdsYRN8vLwQ@mail.gmail.com>
-Subject: Re: [RFCv1 1/5] arm64: dts: meson: Add missing 5V_EN gpio signal for
- VCC5V regulator
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
+        Mon, 7 Oct 2019 11:29:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42848 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727791AbfJGP3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 11:29:52 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F341F205C9;
+        Mon,  7 Oct 2019 15:29:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570462191;
+        bh=wZpqJAVdx0OquwJReQG4DI2BbxLYhSANl3AxInjoMnU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dP66wmu7YyEygbX3QijQsb/3NOB4N8uBisRfCqVfuTlCpD54iqPP2wIR1l9440iF7
+         r70y9nVKYTTHvXvlvP1dCgZTXmM/hrecFRaIdWWPdOZawl1Tsfo7IfkqZ5ChB4xrCS
+         qSNiOlLdTjHS6i40jueGJPJ740oi6aqlOM7CO+jk=
+Date:   Mon, 7 Oct 2019 17:29:48 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Chen-Yu Tsai <wens@csie.org>
+Cc:     Samuel Holland <samuel@sholland.org>,
+        Stephen Boyd <sboyd@chromium.org>,
         linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-amlogic@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Subject: Re: [linux-sunxi] [PATCH] bus: sunxi-rsb: Make interrupt handling
+ more robust
+Message-ID: <20191007152948.jgz6l4zmqjxqpzus@gilmour>
+References: <20190824175013.28840-1-samuel@sholland.org>
+ <CAGb2v67nuMnN_o1Pvz2bEyUVeg5OMfJMVgih9-ZsgYFYDbffGw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="blrzkcpgdyo7n7tb"
+Content-Disposition: inline
+In-Reply-To: <CAGb2v67nuMnN_o1Pvz2bEyUVeg5OMfJMVgih9-ZsgYFYDbffGw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
 
-On Mon, 7 Oct 2019 at 19:49, Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> Hi Anand,
->
-> On 07/10/2019 15:16, Anand Moon wrote:
-> > As per schematics add missing 5V_EN gpio signal to enable
-> > VCC5V regulator node.
-> >
-> > Fixes: c35f6dc5c377 (arm64: dts: meson: Add minimal support for Odroid-N2)
-> > Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> > Cc: Jerome Brunet <jbrunet@baylibre.com>
-> > Cc: Neil Armstrong <narmstrong@baylibre.com>
-> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > ---
-> >  arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> > index 42f15405750c..a9a661258886 100644
-> > --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> > +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> > @@ -94,6 +94,9 @@
-> >               regulator-max-microvolt = <5000000>;
-> >               regulator-always-on;
-> >               vin-supply = <&main_12v>;
-> > +             /* U12 NB679GD 5V_EN */
-> > +             gpio = <&gpio GPIOH_8 GPIO_OPEN_DRAIN>;
-> > +             enable-active-high;
->
-> This GPIO is handled by the BL301 SCP firmware, I'm personally against
-> adding this to the DT since it's out of control of Linux or any OS.
->
-> Neil
->
+--blrzkcpgdyo7n7tb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks for your input.
+Hi,
 
-> >       };
+On Mon, Oct 07, 2019 at 11:19:06PM +0800, Chen-Yu Tsai wrote:
+> On Sun, Aug 25, 2019 at 1:50 AM Samuel Holland <samuel@sholland.org> wrote:
+> > The RSB controller has two registers for controlling interrupt inputs:
+> > RSB_INTE, which has bits for each possible interrupt, and the global
+> > interrupt enable bit in RSB_CTRL.
 > >
-> >       vcc_1v8: regulator-vcc_1v8 {
+> > Currently, we enable the bits in RSB_INTE before each transfer, but this
+> > is unnecessary because we never disable them. Move the initialization of
+> > RSB_INTE so it is done only once.
 > >
+> > We also set the global interrupt enable bit before each transfer. Unlike
+> > other bits in RSB_CTRL, this bit is cleared by writing a zero. Thus, we
+> > clear the bit in the post-timeout cleanup code, so note that in the
+> > comment.
+> >
+> > However, if we do receive an interrupt, we do not clear the bit. Nor do
+> > we clear interrupt statuses before starting a transfer. Thus, if some
+> > other driver uses the RSB bus while Linux is suspended (as both Trusted
+> > Firmware and SCP firmware do to control the PMIC), we receive spurious
+> > interrupts upon resume. This causes false completion of a transfer, and
+> > the next transfer starts prematurely, causing a LOAD_BSY condition. The
+> > end result is that some transfers at resume fail with -EBUSY.
 >
+> If we are expecting the hardware to not be in the state we assume to be
+> or left it in, then maybe we should also keep setting the interrupt enable
+> bits on each transfer?
+>
+> Surely we expect to have exclusive use of the controller most of the time.
+> If it's to handle suspend/resume, shouldn't we be adding power management
+> callbacks instead? That would reset the controller to a known state when
+> the system comes out of suspend, including clearing any pending interrupts.
+>
+> Maxime, anything you want to add? (BTW, Maxime switched email addresses.)
 
-Best Regards
--Anand
+The patch looks pretty harmless, so we can merge it, but if we're
+going to share the RSB between those components, we should probably
+use the hardware spinlocks as well.
+
+Maxime
+
+--blrzkcpgdyo7n7tb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZtZ7AAKCRDj7w1vZxhR
+xd1bAQD5Rl4U3NuOje4WVojIJCGbADL6OKRPVUbYlOKDw+8k0wEA9tlTGx9fzbpi
+x5XZIQm5HiB2QyJBU+rPQzd5Nx3+SQU=
+=tZkN
+-----END PGP SIGNATURE-----
+
+--blrzkcpgdyo7n7tb--
