@@ -4,182 +4,169 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD8E4ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E798FC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A91FE20867
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:00:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B867E2173B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:00:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727832AbfJGNAF (ORCPT
+        id S1727881AbfJGNA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 09:00:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55870 "EHLO mx1.redhat.com"
+        Mon, 7 Oct 2019 09:00:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35012 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727514AbfJGNAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 09:00:05 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1727490AbfJGNA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 09:00:56 -0400
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com [209.85.208.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8CA1318C8911;
-        Mon,  7 Oct 2019 13:00:04 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1CBF55D9CC;
-        Mon,  7 Oct 2019 13:00:02 +0000 (UTC)
-Date:   Mon, 7 Oct 2019 09:00:00 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/11] iomap: add tracing for the readpage / readpages
-Message-ID: <20191007130000.GG22140@bfoster>
-References: <20191006154608.24738-1-hch@lst.de>
- <20191006154608.24738-2-hch@lst.de>
+        by mx1.redhat.com (Postfix) with ESMTPS id 3EC69C049E1A
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Oct 2019 13:00:56 +0000 (UTC)
+Received: by mail-ed1-f69.google.com with SMTP id a21so2177374edt.19
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 06:00:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RFA7yYzS4TPNopx3VtKxrY+qRQi7qt3i6uEx9e5IUzo=;
+        b=GyxnEXyCE7yeks4dkvlVJ/zGiVHvuOmAWjYuDlSb7PmmWbNcgGLvEVwjBpSJqHlRrm
+         Pi0nqC2KL/nw8Q6cYgNq6q+RqLC7xaQX9zXx0gLO2EmyL6ZHCEQxCni07c2D+wgvdegw
+         zxvZz+vbzbeng3wA1zbGZ1Uep3Ortlh8McuvlKoInmFnzZCkr1/yF48ZtZOgKnqAkwuG
+         v+jVnIBVnHFC3xicWPLQqjDDnpVmL9qOa84OEEinXuMxrPMPjzgIp2oY8inF5arSmM7/
+         ztRxul9frC0kRKpeUfvM3aJNdA3+9FnL2hhMlIfxcmE929xAeLuWvjLXpwgkJq2PNXjC
+         iDjA==
+X-Gm-Message-State: APjAAAW4vX3HzgXAsPxVBkdxfSeARsQeRobQzTzB2iwSduXH/Wb9D8vS
+        Xw48oSSkKVitbyGmI/sj/xfxYYHBFdk0H1Me2XhGL157YXdYKlCfFWWbbywjLbok/lhgxWEy3bV
+        xfYsRTSDez08MG7kMcC9wuNb8
+X-Received: by 2002:a17:906:3110:: with SMTP id 16mr9524793ejx.306.1570453253820;
+        Mon, 07 Oct 2019 06:00:53 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqx6f7du1JuEgCrlIaBKI32GWF8ovChQHd87ogGR9w5BrT/KZ6Jvz6shNx2HfyEuK96FDQHVpA==
+X-Received: by 2002:a17:906:3110:: with SMTP id 16mr9524746ejx.306.1570453253395;
+        Mon, 07 Oct 2019 06:00:53 -0700 (PDT)
+Received: from shalem.localdomain (2001-1c00-0c14-2800-ec23-a060-24d5-2453.cable.dynamic.v6.ziggo.nl. [2001:1c00:c14:2800:ec23:a060:24d5:2453])
+        by smtp.gmail.com with ESMTPSA id o31sm3324629edd.17.2019.10.07.06.00.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Oct 2019 06:00:52 -0700 (PDT)
+Subject: Re: [PATCH 5.4 regression fix] x86/boot: Provide memzero_explicit
+To:     Stephan Mueller <smueller@chronox.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-crypto@vger.kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>
+References: <20191007085501.23202-1-hdegoede@redhat.com>
+ <65461301.CAtk0GNLiE@tauon.chronox.de>
+ <284b70dd-5575-fee4-109f-aa99fb73a434@redhat.com>
+ <12200313.ic8YZTgDOU@tauon.chronox.de>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <1da4c70f-c303-5469-6978-77a03f4cf792@redhat.com>
+Date:   Mon, 7 Oct 2019 15:00:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191006154608.24738-2-hch@lst.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Mon, 07 Oct 2019 13:00:04 +0000 (UTC)
+In-Reply-To: <12200313.ic8YZTgDOU@tauon.chronox.de>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 06, 2019 at 05:45:58PM +0200, Christoph Hellwig wrote:
-> Lift the xfs code for tracing address space operations to the iomap
-> layer.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
+Hi Stephan,
 
-For the v7 version:
-
-Reviewed-by: Brian Foster <bfoster@redhat.com>
-
->  fs/iomap/Makefile      | 16 ++++++++------
->  fs/iomap/buffered-io.c |  5 +++++
->  fs/iomap/trace.h       | 49 ++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 63 insertions(+), 7 deletions(-)
->  create mode 100644 fs/iomap/trace.h
+On 07-10-2019 11:34, Stephan Mueller wrote:
+> Am Montag, 7. Oktober 2019, 11:06:04 CEST schrieb Hans de Goede:
 > 
-> diff --git a/fs/iomap/Makefile b/fs/iomap/Makefile
-> index 93cd11938bf5..eef2722d93a1 100644
-> --- a/fs/iomap/Makefile
-> +++ b/fs/iomap/Makefile
-> @@ -3,13 +3,15 @@
->  # Copyright (c) 2019 Oracle.
->  # All Rights Reserved.
->  #
-> -obj-$(CONFIG_FS_IOMAP)		+= iomap.o
->  
-> -iomap-y				+= \
-> -					apply.o \
-> -					buffered-io.o \
-> -					direct-io.o \
-> -					fiemap.o \
-> -					seek.o
-> +ccflags-y += -I $(srctree)/$(src)		# needed for trace events
-> +
-> +obj-$(CONFIG_FS_IOMAP)		+= iomap.o
->  
-> +iomap-y				+= trace.o \
-> +				   apply.o \
-> +				   buffered-io.o \
-> +				   direct-io.o \
-> +				   fiemap.o \
-> +				   seek.o
->  iomap-$(CONFIG_SWAP)		+= swapfile.o
-> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-> index e25901ae3ff4..fb209272765c 100644
-> --- a/fs/iomap/buffered-io.c
-> +++ b/fs/iomap/buffered-io.c
-> @@ -16,6 +16,7 @@
->  #include <linux/bio.h>
->  #include <linux/sched/signal.h>
->  #include <linux/migrate.h>
-> +#include "trace.h"
->  
->  #include "../internal.h"
->  
-> @@ -293,6 +294,8 @@ iomap_readpage(struct page *page, const struct iomap_ops *ops)
->  	unsigned poff;
->  	loff_t ret;
->  
-> +	trace_iomap_readpage(page->mapping->host, 1);
-> +
->  	for (poff = 0; poff < PAGE_SIZE; poff += ret) {
->  		ret = iomap_apply(inode, page_offset(page) + poff,
->  				PAGE_SIZE - poff, 0, ops, &ctx,
-> @@ -389,6 +392,8 @@ iomap_readpages(struct address_space *mapping, struct list_head *pages,
->  	loff_t last = page_offset(list_entry(pages->next, struct page, lru));
->  	loff_t length = last - pos + PAGE_SIZE, ret = 0;
->  
-> +	trace_iomap_readpages(mapping->host, nr_pages);
-> +
->  	while (length > 0) {
->  		ret = iomap_apply(mapping->host, pos, length, 0, ops,
->  				&ctx, iomap_readpages_actor);
-> diff --git a/fs/iomap/trace.h b/fs/iomap/trace.h
-> new file mode 100644
-> index 000000000000..7798aeda7fb9
-> --- /dev/null
-> +++ b/fs/iomap/trace.h
-> @@ -0,0 +1,49 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2009-2019, Christoph Hellwig
-> + *
-> + * NOTE: none of these tracepoints shall be consider a stable kernel ABI
-> + * as they can change at any time.
-> + */
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM iomap
-> +
-> +#if !defined(_IOMAP_TRACE_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#define _IOMAP_TRACE_H
-> +
-> +#include <linux/tracepoint.h>
-> +
-> +struct inode;
-> +
-> +DECLARE_EVENT_CLASS(iomap_readpage_class,
-> +	TP_PROTO(struct inode *inode, int nr_pages),
-> +	TP_ARGS(inode, nr_pages),
-> +	TP_STRUCT__entry(
-> +		__field(dev_t, dev)
-> +		__field(u64, ino)
-> +		__field(int, nr_pages)
-> +	),
-> +	TP_fast_assign(
-> +		__entry->dev = inode->i_sb->s_dev;
-> +		__entry->ino = inode->i_ino;
-> +		__entry->nr_pages = nr_pages;
-> +	),
-> +	TP_printk("dev %d:%d ino 0x%llx nr_pages %d",
-> +		  MAJOR(__entry->dev), MINOR(__entry->dev),
-> +		  __entry->ino,
-> +		  __entry->nr_pages)
-> +)
-> +
-> +#define DEFINE_READPAGE_EVENT(name)		\
-> +DEFINE_EVENT(iomap_readpage_class, name,	\
-> +	TP_PROTO(struct inode *inode, int nr_pages), \
-> +	TP_ARGS(inode, nr_pages))
-> +DEFINE_READPAGE_EVENT(iomap_readpage);
-> +DEFINE_READPAGE_EVENT(iomap_readpages);
-> +
-> +#endif /* _IOMAP_TRACE_H */
-> +
-> +#undef TRACE_INCLUDE_PATH
-> +#define TRACE_INCLUDE_PATH .
-> +#define TRACE_INCLUDE_FILE trace
-> +#include <trace/define_trace.h>
-> -- 
-> 2.20.1
+> Hi Hans,
 > 
+>> Hi Stephan,
+>>
+>> On 07-10-2019 10:59, Stephan Mueller wrote:
+>>> Am Montag, 7. Oktober 2019, 10:55:01 CEST schrieb Hans de Goede:
+>>>
+>>> Hi Hans,
+>>>
+>>>> The purgatory code now uses the shared lib/crypto/sha256.c sha256
+>>>> implementation. This needs memzero_explicit, implement this.
+>>>>
+>>>> Reported-by: Arvind Sankar <nivedita@alum.mit.edu>
+>>>> Fixes: 906a4bb97f5d ("crypto: sha256 - Use get/put_unaligned_be32 to get
+>>>> input, memzero_explicit") Signed-off-by: Hans de Goede
+>>>> <hdegoede@redhat.com>
+>>>> ---
+>>>>
+>>>>    arch/x86/boot/compressed/string.c | 5 +++++
+>>>>    1 file changed, 5 insertions(+)
+>>>>
+>>>> diff --git a/arch/x86/boot/compressed/string.c
+>>>> b/arch/x86/boot/compressed/string.c index 81fc1eaa3229..511332e279fe
+>>>> 100644
+>>>> --- a/arch/x86/boot/compressed/string.c
+>>>> +++ b/arch/x86/boot/compressed/string.c
+>>>> @@ -50,6 +50,11 @@ void *memset(void *s, int c, size_t n)
+>>>>
+>>>>    	return s;
+>>>>    
+>>>>    }
+>>>>
+>>>> +void memzero_explicit(void *s, size_t count)
+>>>> +{
+>>>> +	memset(s, 0, count);
+>>>
+>>> May I ask how it is guaranteed that this memset is not optimized out by
+>>> the
+>>> compiler, e.g. for stack variables?
+>>
+>> The function and the caller live in different compile units, so unless
+>> LTO is used this cannot happen.
+> 
+> Agreed in this case.
+> 
+> I would just be worried that this memzero_explicit implementation is assumed
+> to be protected against optimization when used elsewhere since other
+> implementations of memzero_explicit are provided with the goal to be protected
+> against optimizations.
+>>
+>> Also note that the previous purgatory private (vs shared) sha256
+>> implementation had:
+>>
+>>           /* Zeroize sensitive information. */
+>>           memset(sctx, 0, sizeof(*sctx));
+>>
+>> In the place where the new shared 256 code uses memzero_explicit() and the
+>> new shared sha256 code is the only user of the
+>> arch/x86/boot/compressed/string.c memzero_explicit() implementation.
+>>
+>> With that all said I'm open to suggestions for improving this.
+> 
+> What speaks against the common memzero_explicit implementation?
+
+Nothing, but the purgatory is a standalone binary which runs between
+2 kernels when doing kexec so it cannot use the function from lib/string.c
+since it is not linked against the lib/string.o object.
+
+> If you cannot
+> use it, what about adding a barrier in the memzero_explicit implementation? Or
+> what about adding some compiler magic as attached to this email?
+
+Since the purgatory code is running in a somewhat limited environment,
+with not all standard headers / macros available I was afraid that the
+barrier_data() from the lib/string.c implementation would not work, so
+I left it out. In hindsight I should have really given it a try first as
+it seems to compile fine and there are no missing symbols in
+arch/x86/purgatory/purgatory.ro when using it.
+
+So I will send out a new version with the barrier_data() added making
+the arch/x86/boot/compressed/string.c implementation identical to the
+lib/string.c one.
+
+Regards,
+
+Hans
+
