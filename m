@@ -2,80 +2,67 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4AF3C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF47C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE38F2084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:16:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570436186;
-	bh=ZogvcTmWmDXNGJ6SA2eRf+iGwobYOKAqrTOWer/PT+o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ywczbW4K6Ry1lnoXBdRR1NtzwxB2MkgL7rbMvnEfJOs99xr16R2NDiNUZugXHRsU4
-	 9SxU0bwnZYujHuTPZpoyTT9M7GsfgTn7zk0v+eY4Hz/CI3UFWhooh8NnoVsTIao9V0
-	 RD7eGDjA4b3Hg0ZKyELlE6k08KRP/RqRu/0snklY=
+	by mail.kernel.org (Postfix) with ESMTP id 90627217F9
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:17:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727461AbfJGIQ0 (ORCPT
+        id S1727503AbfJGIRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 04:16:26 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56004 "EHLO mx1.suse.de"
+        Mon, 7 Oct 2019 04:17:18 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56240 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726889AbfJGIQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 04:16:25 -0400
+        id S1727448AbfJGIRS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 04:17:18 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1DC79AD45;
-        Mon,  7 Oct 2019 08:16:23 +0000 (UTC)
-Date:   Mon, 7 Oct 2019 10:16:21 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     akpm@linux-foundation.org, tj@kernel.org, vdavydov.dev@gmail.com,
-        hannes@cmpxchg.org, guro@fb.com, cl@linux.com, penberg@kernel.org,
-        rientjes@google.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2] mm/slub: fix a deadlock in show_slab_objects()
-Message-ID: <20191007081621.GE2381@dhcp22.suse.cz>
-References: <1570192309-10132-1-git-send-email-cai@lca.pw>
- <20191004125701.GJ9578@dhcp22.suse.cz>
+        by mx1.suse.de (Postfix) with ESMTP id DC998AE46;
+        Mon,  7 Oct 2019 08:17:16 +0000 (UTC)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     rostedt@goodmis.org, mingo@redhat.com, jpoimboe@redhat.com,
+        jikos@kernel.org, pmladek@suse.com, joe.lawrence@redhat.com
+Cc:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        Miroslav Benes <mbenes@suse.cz>
+Subject: [PATCH 0/3] ftrace: Introduce PERMANENT ftrace_ops flag
+Date:   Mon,  7 Oct 2019 10:17:11 +0200
+Message-Id: <20191007081714.20259-1-mbenes@suse.cz>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191004125701.GJ9578@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 04-10-19 14:57:01, Michal Hocko wrote:
-> On Fri 04-10-19 08:31:49, Qian Cai wrote:
-> > Long time ago, there fixed a similar deadlock in show_slab_objects()
-> > [1]. However, it is apparently due to the commits like 01fb58bcba63
-> > ("slab: remove synchronous synchronize_sched() from memcg cache
-> > deactivation path") and 03afc0e25f7f ("slab: get_online_mems for
-> > kmem_cache_{create,destroy,shrink}"), this kind of deadlock is back by
-> > just reading files in /sys/kernel/slab which will generate a lockdep
-> > splat below.
-> > 
-> > Since the "mem_hotplug_lock" here is only to obtain a stable online node
-> > mask while racing with NUMA node hotplug, in the worst case, the results
-> > may me miscalculated while doing NUMA node hotplug, but they shall be
-> > corrected by later reads of the same files.
-> 
-> I think it is important to mention that this doesn't expose the
-> show_slab_objects to use-after-free. There is only a single path that
-> might really race here and that is the slab hotplug notifier callback
-> __kmem_cache_shrink (via slab_mem_going_offline_callback) but that path
-> doesn't really destroy kmem_cache_node data structures.
+Livepatch uses ftrace for redirection to new patched functions. It is
+thus directly affected by ftrace sysctl knobs such as ftrace_enabled.
+Setting ftrace_enabled to 0 also disables all live patched functions. It
+is not a problem per se, because only administrator can set sysctl
+values, but it still may be surprising.
 
-Andrew, please add this to the changelog so that we do not have to
-scratch heads again when looking into that code.
+Introduce PERMANENT ftrace_ops flag to amend this. If the
+FTRACE_OPS_FL_PERMANENT is set, the tracing of the function is not
+disabled. Such ftrace_ops can still be unregistered in a standard way.
 
-Thanks!
+The patch set passes ftrace and livepatch kselftests.
+
+Miroslav Benes (3):
+  ftrace: Make test_rec_ops_needs_regs() generic
+  ftrace: Introduce PERMANENT ftrace_ops flag
+  livepatch: Use FTRACE_OPS_FL_PERMANENT
+
+ Documentation/trace/ftrace-uses.rst |  6 ++++
+ Documentation/trace/ftrace.rst      |  2 ++
+ include/linux/ftrace.h              |  8 +++--
+ kernel/livepatch/patch.c            |  3 +-
+ kernel/trace/ftrace.c               | 47 ++++++++++++++++++++++++-----
+ 5 files changed, 55 insertions(+), 11 deletions(-)
+
 -- 
-Michal Hocko
-SUSE Labs
+2.23.0
+
