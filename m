@@ -2,114 +2,86 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 754B6C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E29A9ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B9D921835
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:43:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="WzVkM83j"
+	by mail.kernel.org (Postfix) with ESMTP id B72A620700
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:44:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570463091;
+	bh=7AVcHfK0bWVvjbPHEPoXKNBy22PlFsfUrhaMLwuWDd4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Robwo/HWGAjbzphPXRcffaOsznfoqUwvbdDrwgeGH1WX/LgVImTAMHOdatDJxJZ51
+	 FjhFKy4hyrLCiMc68AOlAHMmVzhNyKk/U2sqIksTZwc6DcJynUh/tf65ADkU87hnhZ
+	 c8Wh9NHElxdyIO0v2pkRy+Lj9BHN2ZiYeNU9/wtM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728821AbfJGPng (ORCPT
+        id S1728793AbfJGPou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 11:43:36 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:57812 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728552AbfJGPnf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:43:35 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x97FR4s5010335;
-        Mon, 7 Oct 2019 17:43:20 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=STMicroelectronics;
- bh=F2nmdBj0FoWdFw4qxwGsJgaztWqFmLqoBCS6qM87rok=;
- b=WzVkM83jKSXKgBWgGZKtuAymZMgFEQZKjiPeuNgLrmLa7Nu2TW+2WC9FEq4nXeBd1217
- ZmacNofFfKfskSXyDT9VcS2477whBVt+ugn1sKv71DnKZag9ZWW5IJ25SgloTyWnd5tq
- c5PBeylXg8BY89fcqotdybiu3lHAaEimP0TLDfx3UYeL0qtYpt7gBXIcqKokCoNS8+1c
- iL2rgf20FcSmH59OcUc+GFKgKNrS6cQsk1Bi6uAxAgPepQfU84SqdTpWOw+aWPmzK1ha
- aiEUArQJOD2EAYqxKpD/GqpxOLgGXI0upO5ZkNjY8T/32Yr0lN6UCCSTCEX809Xl/23f RA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2vej2p35ke-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Oct 2019 17:43:19 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 715B4100038;
-        Mon,  7 Oct 2019 17:43:19 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 696122B1E43;
-        Mon,  7 Oct 2019 17:43:19 +0200 (CEST)
-Received: from localhost (10.75.127.49) by SFHDAG5NODE3.st.com (10.75.127.15)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 7 Oct 2019 17:43:19
- +0200
-From:   Antonio Borneo <antonio.borneo@st.com>
-To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>
-CC:     Antonio Borneo <antonio.borneo@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] net: stmmac: fix disabling flexible PPS output
-Date:   Mon, 7 Oct 2019 17:43:05 +0200
-Message-ID: <20191007154306.95827-4-antonio.borneo@st.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191007154306.95827-1-antonio.borneo@st.com>
-References: <20191007154306.95827-1-antonio.borneo@st.com>
+        Mon, 7 Oct 2019 11:44:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50934 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727791AbfJGPou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 11:44:50 -0400
+Received: from C02WT3WMHTD6 (unknown [8.36.226.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E70020640;
+        Mon,  7 Oct 2019 15:44:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570463089;
+        bh=7AVcHfK0bWVvjbPHEPoXKNBy22PlFsfUrhaMLwuWDd4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iJsQV7x6ZBiPD5VZEcxKK9/wKGyBDjS3LqOw8dRYjFTV6E10xSlpPPswFT6XLffWr
+         IAf2UukUH0CW3fWCT+BmXqqFdB5SYdrXYnDEAder6sy44MLnZMMXPfdXEnvg5iwL8J
+         Ndikus1/w88Ex9MyuVIw4tNMX3ti/O40TZuXrdNg=
+Date:   Mon, 7 Oct 2019 09:44:48 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     Tyler Ramer <tyaramer@gmail.com>
+Cc:     Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] nvme-pci: Shutdown when removing dead controller
+Message-ID: <20191007154448.GA3818@C02WT3WMHTD6>
+References: <20191003191354.GA4481@Serenity>
+ <CAKcoMVC2LdcmUx6j5JzuT-TsFGz=mwQ0MsprrKR2qeXoTmQ-TQ@mail.gmail.com>
+ <20191006192109.GA9983@keith-busch>
+ <CAKcoMVCDk+VDk6PSznTzMfJsjhZMdo6wBKZLzNbjDCkg73-WEw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-07_03:2019-10-07,2019-10-07 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKcoMVCDk+VDk6PSznTzMfJsjhZMdo6wBKZLzNbjDCkg73-WEw@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Accordingly to Synopsys documentation [1] and [2], when bit PPSEN0
-in register MAC_PPS_CONTROL is set it selects the functionality
-command in the same register, otherwise selects the functionality
-control.
-Command functionality is required to either enable (command 0x2)
-and disable (command 0x5) the flexible PPS output, but the bit
-PPSEN0 is currently set only for enabling.
+On Mon, Oct 07, 2019 at 11:13:12AM -0400, Tyler Ramer wrote:
+> > Setting the shutdown to true is
+> > usually just to get the queues flushed, but the nvme_kill_queues() that
+> > we call accomplishes the same thing.
+> 
+> The intention of this patch was to clean up another location where
+> nvme_dev_disable()
+> is called with shutdown == false, but the device is being removed due
+> to a failure
+> condition, so it should be shutdown.
+> 
+> Perhaps though, given nvme_kill_queues() provides a subset of the
+> functionality of
+> nvme_dev_disable() with shutdown == true, we can just use
+> nvme_dev_disable() and
+> remove nvme_kill_queues()?
+> 
+> This will make nvme_remove_dead_ctrl() more in line with nvme_remove(),
+> nvme_shutdown(), etc.
 
-Set the bit PPSEN0 to properly disable flexible PPS output.
-
-Tested on STM32MP15x, based on dwmac 4.10a.
-
-[1] DWC Ethernet QoS Databook 4.10a October 2014
-[2] DWC Ethernet QoS Databook 5.00a September 2017
-
-Signed-off-by: Antonio Borneo <antonio.borneo@st.com>
-Fixes: 9a8a02c9d46d ("net: stmmac: Add Flexible PPS support")
----
- drivers/net/ethernet/stmicro/stmmac/dwmac5.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac5.c b/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
-index 3f4f3132e16b..e436fa160c7d 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
-@@ -515,6 +515,7 @@ int dwmac5_flex_pps_config(void __iomem *ioaddr, int index,
- 
- 	if (!enable) {
- 		val |= PPSCMDx(index, 0x5);
-+		val |= PPSEN0;
- 		writel(val, ioaddr + MAC_PPS_CONTROL);
- 		return 0;
- 	}
--- 
-2.23.0
-
+It's fine to use the shutdown == true in this path as well, but I just wanted
+to understand what problem it was fixing. It doesn't sound like your scenario
+is going to end up setting CC.SHN, so the only thing the shutdown should
+accomplish is flushing pending IO, but we already call kill_queues() right
+after the nvme_dev_disable(), so that part should be okay.
