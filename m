@@ -2,168 +2,156 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A57C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63AD8C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A25AC2084B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:46:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35B142084B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:50:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YDl+GYCP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbfJGIqs (ORCPT
+        id S1727350AbfJGIud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 04:46:48 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:61734 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727258AbfJGIqr (ORCPT
+        Mon, 7 Oct 2019 04:50:33 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40319 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727306AbfJGIud (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 04:46:47 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x978gZgl135145
-        for <linux-kernel@vger.kernel.org>; Mon, 7 Oct 2019 04:46:46 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vg097uc4t-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 04:46:46 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
-        Mon, 7 Oct 2019 09:46:43 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 7 Oct 2019 09:46:36 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x978kZKf54853744
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 7 Oct 2019 08:46:35 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A765EA405F;
-        Mon,  7 Oct 2019 08:46:35 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 42FC1A4066;
-        Mon,  7 Oct 2019 08:46:32 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.124.35.220])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  7 Oct 2019 08:46:32 +0000 (GMT)
-Subject: Re: [Discussion v2] Usecases for the per-task latency-nice attribute
-To:     David Laight <David.Laight@ACULAB.COM>,
-        "tim.c.chen@linux.intel.com" <tim.c.chen@linux.intel.com>,
-        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "patrick.bellasi@matbug.net" <patrick.bellasi@matbug.net>,
-        "valentin.schneider@arm.com" <valentin.schneider@arm.com>,
-        "qais.yousef@arm.com" <qais.yousef@arm.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "morten.rasmussen@arm.com" <morten.rasmussen@arm.com>,
-        "pjt@google.com" <pjt@google.com>,
-        "dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>,
-        "tj@kernel.org" <tj@kernel.org>,
-        "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        "dhaval.giani@oracle.com" <dhaval.giani@oracle.com>,
-        "quentin.perret@arm.com" <quentin.perret@arm.com>,
-        subhra mazumdar <subhra.mazumdar@oracle.com>,
-        "ggherdovich@suse.cz" <ggherdovich@suse.cz>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-        Doug Smythies <dsmythies@telus.net>
-References: <2bd46086-43ff-f130-8720-8eec694eb55b@linux.ibm.com>
- <9645e7c625a84bfabac001fd6ef35559@AcuMS.aculab.com>
-From:   Parth Shah <parth@linux.ibm.com>
-Date:   Mon, 7 Oct 2019 14:16:31 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.0
+        Mon, 7 Oct 2019 04:50:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1570438232;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Ej/PWbHITWnqSA/Ufk3jQXz4f2f3Wl/p3PkSHByTCFI=;
+        b=YDl+GYCPtTlYrlggtwEhXPv//c2pGfQ8W7xT1RvhGgcpL+X/zFZ0MGL/WwJUW4FVKEUdEx
+        P0aN6Q+5w2O7AKIRfpTO3b59Q55a/loyotcqHGzbyiMDz4IN/zQiSfDz+0kuQ3xNzFajrg
+        7KMiEc3eS2XZvd+3K7dxClHqMGwmo3M=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-341-iFdphpNzPTG_9pUcywiwhw-1; Mon, 07 Oct 2019 04:50:30 -0400
+Received: by mail-ed1-f70.google.com with SMTP id t13so8528546edr.2
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 01:50:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language;
+        bh=QcOf6V+gVv/cON0pMv4VkUPGYgoEn5vDearY3unE1oc=;
+        b=UlJ5JIglF7chAII3CaNUyZE9YRxtBLd3Y5dSpIrmBdotse1bolnisXSxbVBHK64b5t
+         GM/fmudWbaFgeHZy/BDgMSMGJb4jydjyUk4u52VNK1RMsgsHv5PxIyZNrawjsSfw612G
+         gSc4r5i7sw7nCBa82D+PpMZtBgf7ixH6e8geL0Bco9wY4M2RVc4quT+LviwG13dPZj9D
+         ZkQIT5q0gStBRCP8lpJsHEGcldn+IoIgt0UkfJktYZ0fNQYoGFJVpdsGUO0IPxKKk/ca
+         zclP8rqX6cIdTmVfwHGjtHkl4ysetkpv8LVQ4cgToa2lk0SdVxWUCm9MesLI9uSWcEdU
+         lqAQ==
+X-Gm-Message-State: APjAAAWrSKF9bpGHs97GXIzPEHebGycGQM5+ZEs8SOo/V3kCx1Ot1vf6
+        ZNk5QZZllRrFk0VuFrFnqbmBQ/LcGquMYPbsPgeV/KGWsWv6vgupOD/7gG3tHQpnEMl2rDJ/a4f
+        k5olTnizZnRsnTsU25a83WmLh
+X-Received: by 2002:a50:9e26:: with SMTP id z35mr27737494ede.265.1570438229341;
+        Mon, 07 Oct 2019 01:50:29 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqySxQkIkzTuzQ1GvkBNJaElVj6MRTH/Dbw3Dzz2kaHvc26mSJHYrjgTF7ErEOHJKQ0Iv0MDBA==
+X-Received: by 2002:a50:9e26:: with SMTP id z35mr27737483ede.265.1570438229195;
+        Mon, 07 Oct 2019 01:50:29 -0700 (PDT)
+Received: from shalem.localdomain (2001-1c00-0c14-2800-ec23-a060-24d5-2453.cable.dynamic.v6.ziggo.nl. [2001:1c00:c14:2800:ec23:a060:24d5:2453])
+        by smtp.gmail.com with ESMTPSA id i5sm3142944edq.30.2019.10.07.01.50.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Oct 2019 01:50:28 -0700 (PDT)
+Subject: Re: kexec breaks with 5.4 due to memzero_explicit
+To:     Arvind Sankar <nivedita@alum.mit.edu>, linux-kernel@vger.kernel.org
+Cc:     Ingo Molnar <mingo@kernel.org>, x86@kernel.org
+References: <20191007030939.GB5270@rani.riverdale.lan>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <28f3d204-47a2-8b4f-f6a7-11d73c2d87c8@redhat.com>
+Date:   Mon, 7 Oct 2019 10:50:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <9645e7c625a84bfabac001fd6ef35559@AcuMS.aculab.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191007030939.GB5270@rani.riverdale.lan>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19100708-0016-0000-0000-000002B4C146
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19100708-0017-0000-0000-00003315D717
-Message-Id: <133845e8-bdad-c0c0-a14b-a511ebb88fd4@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-07_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910070091
+X-MC-Unique: iFdphpNzPTG_9pUcywiwhw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: multipart/mixed;
+ boundary="------------E29579C119562803E61F6625"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is a multi-part message in MIME format.
+--------------E29579C119562803E61F6625
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On 07-10-2019 05:09, Arvind Sankar wrote:
+> Hi, arch/x86/purgatory/purgatory.ro has an undefined symbol
+> memzero_explicit. This has come from commit 906a4bb97f5d ("crypto:
+> sha256 - Use get/put_unaligned_be32 to get input, memzero_explicit")
+> according to git bisect.
+
+Hmm, it (obviously) does build for me and using kexec still also works
+for me.
+
+But it seems that you are right and that this should not build, weird.
+
+Thank you for reporting this. I've attached a patch which should fix this,
+I'm also sending this the regular way, so that the x86 maintainers can pick=
+ it up.
+
+Can you please give this a try and let us know if it fixes things for you?
+
+Regards,
+
+Hans
+
+--------------E29579C119562803E61F6625
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0001-x86-boot-Provide-memzero_explicit.patch"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: attachment;
+ filename="0001-x86-boot-Provide-memzero_explicit.patch"
+
+From d371dbdef635b57d993bda428a9eb6b929f4472d Mon Sep 17 00:00:00 2001
+From: Hans de Goede <hdegoede@redhat.com>
+Date: Mon, 7 Oct 2019 10:43:00 +0200
+Subject: [PATCH] x86/boot: Provide memzero_explicit
+
+The purgatory code now uses the shared lib/crypto/sha256.c sha256
+implementation. This needs memzero_explicit, implement this.
+
+Reported-by: Arvind Sankar <nivedita@alum.mit.edu>
+Fixes: 906a4bb97f5d ("crypto: sha256 - Use get/put_unaligned_be32 to get in=
+put, memzero_explicit")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ arch/x86/boot/compressed/string.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/x86/boot/compressed/string.c b/arch/x86/boot/compressed/s=
+tring.c
+index 81fc1eaa3229..511332e279fe 100644
+--- a/arch/x86/boot/compressed/string.c
++++ b/arch/x86/boot/compressed/string.c
+@@ -50,6 +50,11 @@ void *memset(void *s, int c, size_t n)
+ =09return s;
+ }
+=20
++void memzero_explicit(void *s, size_t count)
++{
++=09memset(s, 0, count);
++}
++
+ void *memmove(void *dest, const void *src, size_t n)
+ {
+ =09unsigned char *d =3D dest;
+--=20
+2.23.0
 
 
-On 10/2/19 9:41 PM, David Laight wrote:
-> From: Parth Shah
->> Sent: 30 September 2019 11:44
-> ...
->> 5> Separating AVX512 tasks and latency sensitive tasks on separate cores
->> ( -Tim Chen )
->> ===========================================================================
->> Another usecase we are considering is to segregate those workload that will
->> pull down core cpu frequency (e.g. AVX512) from workload that are latency
->> sensitive. There are certain tasks that need to provide a fast response
->> time (latency sensitive) and they are best scheduled on cpu that has a
->> lighter load and not have other tasks running on the sibling cpu that could
->> pull down the cpu core frequency.
->>
->> Some users are running machine learning batch tasks with AVX512, and have
->> observed that these tasks affect the tasks needing a fast response.  They
->> have to rely on manual CPU affinity to separate these tasks.  With
->> appropriate latency hint on task, the scheduler can be taught to separate them.
-> 
-> Has this been diagnosed properly?
-> I can't really see how the frequency drop from AVX512 significantly affects latency.
-> Most tasks that require low latency probably don't do a lot of work.
-> It is much more likely that the latency issues happen because the AVX512 tasks
-> are doing very few system calls so can't be pre-empted even by a high priority task.> This 'feature' is hinted by this:
->> 2> TurboSched
->> ( -Parth Shah )
->> ====================
->> TurboSched [2] tries to minimize the number of active cores in a socket by
->> packing an un-important and low-utilization (named jitter) task on an
->> already active core and thus refrains from waking up of a new core if
->> possible.
-> 
-
-You are correct as both approach contradict each other in some sense.
-But what TurboSched tried to achieve is doing task packing only for the
-tasks classified by user as *latency in-sensitive*. Whereas, IIUC, what Tim
-proposes here is to not pack *latency sensitive* tasks and I guess that
-align with the TurboSched approach as well, isn't it?
-
-Probably @Tim can throw some light on this for better clarification?
-
-> Consider this example of a process that requires low latency (sub 1ms would be good):
-> - A hardware interrupt (or timer interrupt) wakes up on thread.
-> - When that thread wakes it wakes up other threads that are sleeping.
-> - All the threads 'beaver away' for a few ms (processing RTP and other audio).
-> - They all sleep for the rest of a 10ms period.
-> 
-> The affinities are set so each thread runs on a separate cpu, and all are SCHED_RR.
-> Now loop all the cpus in userspace (run: while :; do :; done) and see what happens to the latencies.
-> You really want the SCHED_RR threads to immediately pre-empt the running processes.
-> But I suspect nothing happens until a timer interrupt to the target cpu.
-> 
-
-This is a good corner case where scheduler can be optimized further, and
-the per-task attribute like the latency-nice can be of some help. Maybe we
-can reduce the vslice of a task not having any latency constraints in the
-time when any RR/RT tasks are present.
-
-> 	David
-> 
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> Registration No: 1397386 (Wales)
-> 
+--------------E29579C119562803E61F6625--
 
