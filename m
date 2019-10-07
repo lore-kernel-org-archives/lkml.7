@@ -2,122 +2,91 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1A7C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09AC2ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C217521871
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:29:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570462193;
-	bh=wZpqJAVdx0OquwJReQG4DI2BbxLYhSANl3AxInjoMnU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1DdcqhUI+1Q4026xpU8tiiP3XN6o6XBB9RICiw62UzAitgIw+FAbMa7SWH6LfyPzX
-	 TDzRu4ukepiBOCJPZmJQyuBCF9WbGRUBgpwmTUx6Tod85yTlk7mpB5nnxfc6v4HgmZ
-	 CaTtije5k31VwFfmFO8xKzmXePBXrhtC9sTZK3v0=
+	by mail.kernel.org (Postfix) with ESMTP id D272F21721
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:30:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bJ+dwD0F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728533AbfJGP3w (ORCPT
+        id S1728528AbfJGPa4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 11:29:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42848 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727791AbfJGP3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:29:52 -0400
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F341F205C9;
-        Mon,  7 Oct 2019 15:29:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570462191;
-        bh=wZpqJAVdx0OquwJReQG4DI2BbxLYhSANl3AxInjoMnU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dP66wmu7YyEygbX3QijQsb/3NOB4N8uBisRfCqVfuTlCpD54iqPP2wIR1l9440iF7
-         r70y9nVKYTTHvXvlvP1dCgZTXmM/hrecFRaIdWWPdOZawl1Tsfo7IfkqZ5ChB4xrCS
-         qSNiOlLdTjHS6i40jueGJPJ740oi6aqlOM7CO+jk=
-Date:   Mon, 7 Oct 2019 17:29:48 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     Samuel Holland <samuel@sholland.org>,
-        Stephen Boyd <sboyd@chromium.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Subject: Re: [linux-sunxi] [PATCH] bus: sunxi-rsb: Make interrupt handling
- more robust
-Message-ID: <20191007152948.jgz6l4zmqjxqpzus@gilmour>
-References: <20190824175013.28840-1-samuel@sholland.org>
- <CAGb2v67nuMnN_o1Pvz2bEyUVeg5OMfJMVgih9-ZsgYFYDbffGw@mail.gmail.com>
+        Mon, 7 Oct 2019 11:30:56 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34783 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726334AbfJGPa4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 11:30:56 -0400
+Received: by mail-pg1-f196.google.com with SMTP id y35so8457300pgl.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 08:30:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:from:to:cc:subject:user-agent:date;
+        bh=5NSccauLcWUBoxjRIE34pua8mfG+v+wacX+TYVO7UnM=;
+        b=bJ+dwD0Fy8g/wGiO8/fTmd7yA+xnaPq6dmQxOt42FaNqRnqi4PB88wWKcch8UxhTpI
+         hudh4e0C51KQMKYdSDCW6qsTgFp1U/WqQG4Guh4qBVVVWK64bMGqZszPRErliLxVYPZa
+         A/Va+Faoh0EJU5sw2RllT/MucGZlkfS58qhCc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:from:to:cc:subject
+         :user-agent:date;
+        bh=5NSccauLcWUBoxjRIE34pua8mfG+v+wacX+TYVO7UnM=;
+        b=mojFgX0GnSJxUex+mzlIMw9hkwgpe1Xwac5xIsVCLADnbsMLPgm21vWqSXHCwkOh7A
+         xuYkHfbn2BZEs7MvH12+nJ0TQjNNcZRyOHAg29zBFF5r4bugWH7ky/Zv6sL/NnUqxDOA
+         B8Cyn0uUKtV5pmgowPTKTLAZNteqJX7FcK1akc7Hd1J62IJID7xUdyULWmeJH8HE0OmW
+         jLqEW7Q66x9/8tme8WvxVgHBDqQEjIz/kt06Z97ChHqnDhVg40MjMdtunJEz1gh5Ypky
+         X7DYsPdaLoSqVABoPjt1EvLA62x1KkDu01DrP9mcvF3aGhfeZwBvLIrPqVdQ+L1H+jw8
+         B7aA==
+X-Gm-Message-State: APjAAAXOwHqVgvFypBrXe9YXyMpylmyBBl/Go0+5MGSZlTTUd4qdlSpa
+        5RnUBOvuBVZ90H1Hf/WulpTTWA==
+X-Google-Smtp-Source: APXvYqyReDvh7dM/3GC9/NGVuLCTtl+kQAQr0uH3LOVAMLJICa5UI1YvrPS32/ceGNP4PRsF/i7HzA==
+X-Received: by 2002:a63:144e:: with SMTP id 14mr23706462pgu.408.1570462253961;
+        Mon, 07 Oct 2019 08:30:53 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id r2sm17254536pfq.60.2019.10.07.08.30.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2019 08:30:53 -0700 (PDT)
+Message-ID: <5d9b5a2d.1c69fb81.c81a9.459d@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="blrzkcpgdyo7n7tb"
-Content-Disposition: inline
-In-Reply-To: <CAGb2v67nuMnN_o1Pvz2bEyUVeg5OMfJMVgih9-ZsgYFYDbffGw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191005210449.3926-2-hdegoede@redhat.com>
+References: <20191005210449.3926-1-hdegoede@redhat.com> <20191005210449.3926-2-hdegoede@redhat.com>
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans de Goede <hdegoede@redhat.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] driver core: platform: Add platform_get_irq_byname_optional()
+User-Agent: alot/0.8.1
+Date:   Mon, 07 Oct 2019 08:30:52 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting Hans de Goede (2019-10-05 14:04:47)
+> Some drivers (e.g dwc3) first try to get an IRQ byname and then fall
+> back to the one at index 0. In this case we do not want the error(s)
+> printed by platform_get_irq_byname(). This commit adds a new
+> platform_get_irq_byname_optional(), which does not print errors, for this.
+>=20
+> While at it also improve the kdoc text for platform_get_irq_byname() a bi=
+t.
+>=20
+> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=3D205037
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
 
---blrzkcpgdyo7n7tb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-Hi,
-
-On Mon, Oct 07, 2019 at 11:19:06PM +0800, Chen-Yu Tsai wrote:
-> On Sun, Aug 25, 2019 at 1:50 AM Samuel Holland <samuel@sholland.org> wrote:
-> > The RSB controller has two registers for controlling interrupt inputs:
-> > RSB_INTE, which has bits for each possible interrupt, and the global
-> > interrupt enable bit in RSB_CTRL.
-> >
-> > Currently, we enable the bits in RSB_INTE before each transfer, but this
-> > is unnecessary because we never disable them. Move the initialization of
-> > RSB_INTE so it is done only once.
-> >
-> > We also set the global interrupt enable bit before each transfer. Unlike
-> > other bits in RSB_CTRL, this bit is cleared by writing a zero. Thus, we
-> > clear the bit in the post-timeout cleanup code, so note that in the
-> > comment.
-> >
-> > However, if we do receive an interrupt, we do not clear the bit. Nor do
-> > we clear interrupt statuses before starting a transfer. Thus, if some
-> > other driver uses the RSB bus while Linux is suspended (as both Trusted
-> > Firmware and SCP firmware do to control the PMIC), we receive spurious
-> > interrupts upon resume. This causes false completion of a transfer, and
-> > the next transfer starts prematurely, causing a LOAD_BSY condition. The
-> > end result is that some transfers at resume fail with -EBUSY.
->
-> If we are expecting the hardware to not be in the state we assume to be
-> or left it in, then maybe we should also keep setting the interrupt enable
-> bits on each transfer?
->
-> Surely we expect to have exclusive use of the controller most of the time.
-> If it's to handle suspend/resume, shouldn't we be adding power management
-> callbacks instead? That would reset the controller to a known state when
-> the system comes out of suspend, including clearing any pending interrupts.
->
-> Maxime, anything you want to add? (BTW, Maxime switched email addresses.)
-
-The patch looks pretty harmless, so we can merge it, but if we're
-going to share the RSB between those components, we should probably
-use the hardware spinlocks as well.
-
-Maxime
-
---blrzkcpgdyo7n7tb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZtZ7AAKCRDj7w1vZxhR
-xd1bAQD5Rl4U3NuOje4WVojIJCGbADL6OKRPVUbYlOKDw+8k0wEA9tlTGx9fzbpi
-x5XZIQm5HiB2QyJBU+rPQzd5Nx3+SQU=
-=tZkN
------END PGP SIGNATURE-----
-
---blrzkcpgdyo7n7tb--
