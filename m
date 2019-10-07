@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61569ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8616CECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32B5C205F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92A052173B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:55:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570452938;
-	bh=si+kMSYZUc+N4hi9NMl7DdyE3rCpUQC4igDTMRoFFLA=;
+	s=default; t=1570452944;
+	bh=EAKcdn48662N1rqAFwmlAJkz686cw4B2kwz6YBHwIN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tlze7GUPDi2MefMJ9XVNj7wdtnccFbY0m47/OcwQfU9cup1P11TZksfN6ItdPA01W
-	 1AD9GWMPVxsIWChtpIdOQN9/PEo+3O6usa+9r105xF84a9i6yIahamy0rwMOe91M8B
-	 ++5wI8BLS25q2hMoFmJnKX4xKYJV1AUkqrpM/WPE=
+	b=x8EkdOzYAx9FTcxjXhw/dKIY0cD03BFsa0hLv8q8oRobq3r7kdO5N2suEe9cEpUfs
+	 z/yIF1EIRHpPFUSDjB+56JH/vc0T8KO4fF9vx6YoeRhFfCM+zhJpNmDhkNgaWFaZx/
+	 XpwgO6tgLmGsVwE2Fqsy8mjkknHBiCphB6Uf7k4k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728632AbfJGMzh (ORCPT
+        id S1728323AbfJGMyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 08:55:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60882 "EHLO mx1.redhat.com"
+        Mon, 7 Oct 2019 08:54:32 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48402 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728382AbfJGMyn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 08:54:43 -0400
+        id S1728293AbfJGMy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 08:54:28 -0400
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 738C4A44AF8;
-        Mon,  7 Oct 2019 12:54:43 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id C1B7230624D0;
+        Mon,  7 Oct 2019 12:54:27 +0000 (UTC)
 Received: from krava.brq.redhat.com (unknown [10.43.17.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3AC145D9CC;
-        Mon,  7 Oct 2019 12:54:41 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 73C875D9CC;
+        Mon,  7 Oct 2019 12:54:25 +0000 (UTC)
 From:   Jiri Olsa <jolsa@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     lkml <linux-kernel@vger.kernel.org>,
@@ -43,100 +43,62 @@ Cc:     lkml <linux-kernel@vger.kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Peter Zijlstra <a.p.zijlstra@chello.nl>,
         Michael Petlan <mpetlan@redhat.com>
-Subject: [PATCH 24/36] libperf: Add perf_evlist__exit function
-Date:   Mon,  7 Oct 2019 14:53:32 +0200
-Message-Id: <20191007125344.14268-25-jolsa@kernel.org>
+Subject: [PATCH 18/36] perf tools: Add perf_evlist__mmap_cb_idx function
+Date:   Mon,  7 Oct 2019 14:53:26 +0200
+Message-Id: <20191007125344.14268-19-jolsa@kernel.org>
 In-Reply-To: <20191007125344.14268-1-jolsa@kernel.org>
 References: <20191007125344.14268-1-jolsa@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Mon, 07 Oct 2019 12:54:43 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Mon, 07 Oct 2019 12:54:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding perf_evlist__exit function, so far it's not
-exported and added only for internal use for perf
-and libperf.
+Adding perf_evlist__mmap_cb_idx function to call
+auxtrace_mmap_params__set_idx on each new index
+during perf_evlist__mmap_ops call.
 
-Using it to release cpus/threads and pollfd array.
-
-Link: http://lkml.kernel.org/n/tip-1n61vkdnvfqaeb7k4mwlvs1h@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-26emdgzve9miryyzvcr77qgh@git.kernel.org
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
- tools/perf/lib/evlist.c                  | 12 +++++++++++-
- tools/perf/lib/include/internal/evlist.h |  2 ++
- tools/perf/util/evlist.c                 |  6 +-----
- 3 files changed, 14 insertions(+), 6 deletions(-)
+ tools/perf/util/evlist.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
-index 5ae1da97d2e6..7ba98f0e6365 100644
---- a/tools/perf/lib/evlist.c
-+++ b/tools/perf/lib/evlist.c
-@@ -109,13 +109,23 @@ perf_evlist__next(struct perf_evlist *evlist, struct perf_evsel *prev)
- 	return next;
- }
- 
-+void perf_evlist__exit(struct perf_evlist *evlist)
-+{
-+	perf_cpu_map__put(evlist->cpus);
-+	perf_thread_map__put(evlist->threads);
-+	evlist->cpus = NULL;
-+	evlist->threads = NULL;
-+	fdarray__exit(&evlist->pollfd);
-+}
-+
- void perf_evlist__delete(struct perf_evlist *evlist)
- {
- 	if (evlist == NULL)
- 		return;
- 
- 	perf_evlist__munmap(evlist);
--	fdarray__exit(&evlist->pollfd);
-+	perf_evlist__close(evlist);
-+	perf_evlist__exit(evlist);
- 	free(evlist);
- }
- 
-diff --git a/tools/perf/lib/include/internal/evlist.h b/tools/perf/lib/include/internal/evlist.h
-index b2019700cdc0..0721512ffb19 100644
---- a/tools/perf/lib/include/internal/evlist.h
-+++ b/tools/perf/lib/include/internal/evlist.h
-@@ -48,6 +48,8 @@ int perf_evlist__mmap_ops(struct perf_evlist *evlist,
- 			  struct perf_evlist_mmap_ops *ops,
- 			  struct perf_mmap_param *mp);
- 
-+void perf_evlist__exit(struct perf_evlist *evlist);
-+
- /**
-  * __perf_evlist__for_each_entry - iterate thru all the evsels
-  * @list: list_head instance to iterate
 diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 71679cce7257..3669ca767340 100644
+index 09fe8fe9805d..71fdc6c92920 100644
 --- a/tools/perf/util/evlist.c
 +++ b/tools/perf/util/evlist.c
-@@ -138,7 +138,7 @@ void evlist__exit(struct evlist *evlist)
- {
- 	zfree(&evlist->mmap);
- 	zfree(&evlist->overwrite_mmap);
--	fdarray__exit(&evlist->core.pollfd);
-+	perf_evlist__exit(&evlist->core);
+@@ -715,6 +715,17 @@ static int evlist__mmap_per_evsel(struct evlist *evlist, int idx,
+ 	return 0;
  }
  
- void evlist__delete(struct evlist *evlist)
-@@ -148,10 +148,6 @@ void evlist__delete(struct evlist *evlist)
++static void
++perf_evlist__mmap_cb_idx(struct perf_evlist *_evlist,
++			 struct perf_mmap_param *_mp,
++			 int idx, bool per_cpu)
++{
++	struct evlist *evlist = container_of(_evlist, struct evlist, core);
++	struct mmap_params *mp = container_of(_mp, struct mmap_params, core);
++
++	auxtrace_mmap_params__set_idx(&mp->auxtrace_mp, evlist, idx, per_cpu);
++}
++
+ static int evlist__mmap_per_cpu(struct evlist *evlist,
+ 				     struct mmap_params *mp)
+ {
+@@ -911,6 +922,9 @@ int evlist__mmap_ex(struct evlist *evlist, unsigned int pages,
+ 		.flush		= flush,
+ 		.comp_level	= comp_level
+ 	};
++	struct perf_evlist_mmap_ops ops __maybe_unused = {
++		.idx = perf_evlist__mmap_cb_idx,
++	};
  
- 	evlist__munmap(evlist);
- 	evlist__close(evlist);
--	perf_cpu_map__put(evlist->core.cpus);
--	perf_thread_map__put(evlist->core.threads);
--	evlist->core.cpus = NULL;
--	evlist->core.threads = NULL;
- 	evlist__purge(evlist);
- 	evlist__exit(evlist);
- 	free(evlist);
+ 	if (!evlist->mmap)
+ 		evlist->mmap = evlist__alloc_mmap(evlist, false);
 -- 
 2.21.0
 
