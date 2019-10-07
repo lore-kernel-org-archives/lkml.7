@@ -2,99 +2,153 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B56FBECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F79ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98ED0206BB
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6898E206BB
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:30:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=vdorst.com header.i=@vdorst.com header.b="mm8Yuqtx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729517AbfJGSab (ORCPT
+        id S1729483AbfJGSaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 14:30:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47832 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729487AbfJGSaa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Oct 2019 14:30:30 -0400
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+Received: from mx.0dd.nl ([5.2.79.48]:58346 "EHLO mx.0dd.nl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729433AbfJGSaa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 14:30:30 -0400
+Received: from mail.vdorst.com (mail.vdorst.com [IPv6:fd01::250])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx.0dd.nl (Postfix) with ESMTPS id 9DE365FBBE;
+        Mon,  7 Oct 2019 20:30:28 +0200 (CEST)
+Authentication-Results: mx.0dd.nl;
+        dkim=pass (2048-bit key) header.d=vdorst.com header.i=@vdorst.com header.b="mm8Yuqtx";
+        dkim-atps=neutral
+Received: from www (www.vdorst.com [192.168.2.222])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 64912C057867
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Oct 2019 18:30:30 +0000 (UTC)
-Received: by mail-qt1-f200.google.com with SMTP id n4so16218255qtp.19
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 11:30:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=Veqvl+qM0CfutM3PPjJjEy4hKVrp4NP3ezEQkZHIQPg=;
-        b=W7KZ2tl+eiV0fQHvK/R/EliMWSFNODJwS+YIB7s4NPMLyzIIPIAKfFWwO+f++qhUOZ
-         nKOZh3k4Qnlu7eSTwU/oHwKZzRS08xa+dKFir77jvl4PvmHlnhcJUGRqEXuDUqbgvcUA
-         MCqa1z9gX4r4/Pjg+9oJ+vte+TS/ys9ebLmi0wOWGHe0DOu9bVLFllrlJSKMBw5gOJS8
-         eZyZrUu4cIuauXfdGXXlTFo0R1VUniF79vkDTlB8WA0I/nXNwDBh0P0huAZGawRc5+Xg
-         7PI+YqpB8sW2jDtwcIYdw+zolRKd3h/+1E/KfvMFKWeTg3NukN0mgox41JcpPHDvpv4p
-         hF/w==
-X-Gm-Message-State: APjAAAX3QNLlb3KBKwnjQmR8zsj7A4nlhgCS31yvwAbx0S15pfyMHA6o
-        O0UPlaEz8z/WDinhwpdkxISb3iSstXq7ZTlZCWPMhdQaPTV5j5oJd8CowrbypWQ9OMVEsF3TN0u
-        B3NgmhOa3fJtCF/nM7tKofiF7
-X-Received: by 2002:a37:8f86:: with SMTP id r128mr14609055qkd.392.1570473029367;
-        Mon, 07 Oct 2019 11:30:29 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqx5hMQXVRiXUEyBzpDI1RwgrB4b7tr07l8zU3XqKSSML03JT2g+x+mug176n0y6vIeLAWA/TQ==
-X-Received: by 2002:a37:8f86:: with SMTP id r128mr14609014qkd.392.1570473029025;
-        Mon, 07 Oct 2019 11:30:29 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-10-77.red.bezeqint.net. [79.176.10.77])
-        by smtp.gmail.com with ESMTPSA id s50sm9515361qth.92.2019.10.07.11.30.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2019 11:30:28 -0700 (PDT)
-Date:   Mon, 7 Oct 2019 14:30:23 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Subject: [PATCH] vhost/test: stop device before reset
-Message-ID: <20191007183019.12522-1-mst@redhat.com>
+        by mail.vdorst.com (Postfix) with ESMTPSA id 6BE083BE06;
+        Mon,  7 Oct 2019 20:30:28 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.vdorst.com 6BE083BE06
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vdorst.com;
+        s=default; t=1570473028;
+        bh=oeUXtc8+vJUoOsszOZiNMTAuDgvF7gVaUUppHe+ivDs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mm8YuqtxOrunMTWQvqae1DMbOjOq5dOxsJMqYnJJKWaI5MWLaBA9W95gRc+IzvxAB
+         VPV0/5ViKt+5mrvD/UmWsWZRXWG02J1D/1T8YrUl2pjpH8G07AMOkaYEKrk63/hnKn
+         kG69zGZnI79LTFLHhWOT07W+eBytmiWFvPcCa+8WYf7/KCrYlvLvSkPKxvZNP4C5nq
+         6vsPF++aHxIk888XzyvcVXFVKNJfe7XfarD+0WG8SC9SoA4tc0ZouCV8XAHhsFJajG
+         AQR4d4AievSJPr03oIQHeajuYJMG1b+vuVXjAdeHWWnRH69aVDQmeYueLGZglbL9RG
+         kDwRLx6+4SdLQ==
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1]) by
+ www.vdorst.com (Horde Framework) with HTTPS; Mon, 07 Oct 2019 18:30:28 +0000
+Date:   Mon, 07 Oct 2019 18:30:28 +0000
+Message-ID: <20191007183028.Horde.dCYJA3Xp9mBh_Bs9Ixa7Sh0@www.vdorst.com>
+From:   =?utf-8?b?UmVuw6k=?= van Dorst <opensource@vdorst.com>
+To:     MarkLee <Mark-MC.Lee@mediatek.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Sean Wang <sean.wang@mediatek.com>,
+        John Crispin <john@phrozen.org>,
+        Nelson Chang <nelson.chang@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net,v2 2/2] arm: dts: mediatek: Fix mt7629 dts to
+ reflect the latest dt-binding
+References: <20191007070844.14212-1-Mark-MC.Lee@mediatek.com>
+ <20191007070844.14212-3-Mark-MC.Lee@mediatek.com>
+In-Reply-To: <20191007070844.14212-3-Mark-MC.Lee@mediatek.com>
+User-Agent: Horde Application Framework 5
+Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Mailer: git-send-email 2.22.0.678.g13338e74b8
-X-Mutt-Fcc: =sent
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When device stop was moved out of reset, test device wasn't updated to
-stop before reset, this resulted in a use after free.  Fix by invoking
-stop appropriately.
+Quoting MarkLee <Mark-MC.Lee@mediatek.com>:
 
-Fixes: b211616d7125 ("vhost: move -net specific code out")
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
----
- drivers/vhost/test.c | 2 ++
- 1 file changed, 2 insertions(+)
+> * Removes mediatek,physpeed property from dtsi that is useless in PHYLINK
+> * Use the fixed-link property speed = <2500> to set the phy in 2.5Gbit.
+> * Set gmac1 to gmii mode that connect to a internal gphy
+>
+> Signed-off-by: MarkLee <Mark-MC.Lee@mediatek.com>
+> --
+> v1->v2:
+> * SGMII port only support BASE-X at 2.5Gbit.
+> ---
+>  arch/arm/boot/dts/mt7629-rfb.dts | 13 ++++++++++++-
+>  arch/arm/boot/dts/mt7629.dtsi    |  2 --
+>  2 files changed, 12 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/mt7629-rfb.dts  
+> b/arch/arm/boot/dts/mt7629-rfb.dts
+> index 3621b7d2b22a..9980c10c6e29 100644
+> --- a/arch/arm/boot/dts/mt7629-rfb.dts
+> +++ b/arch/arm/boot/dts/mt7629-rfb.dts
+> @@ -66,9 +66,21 @@
+>  	pinctrl-1 = <&ephy_leds_pins>;
+>  	status = "okay";
+>
+> +	gmac0: mac@0 {
+> +		compatible = "mediatek,eth-mac";
+> +		reg = <0>;
+> +		phy-mode = "2500base-x";
+> +		fixed-link {
+> +			speed = <2500>;
+> +			full-duplex;
+> +			pause;
+> +		};
+> +	};
+> +
+>  	gmac1: mac@1 {
+>  		compatible = "mediatek,eth-mac";
+>  		reg = <1>;
+> +		phy-mode = "gmii";
+>  		phy-handle = <&phy0>;
+>  	};
+>
+> @@ -78,7 +90,6 @@
+>
+>  		phy0: ethernet-phy@0 {
+>  			reg = <0>;
+> -			phy-mode = "gmii";
+>  		};
+>  	};
+>  };
+> diff --git a/arch/arm/boot/dts/mt7629.dtsi b/arch/arm/boot/dts/mt7629.dtsi
+> index 9608bc2ccb3f..867b88103b9d 100644
+> --- a/arch/arm/boot/dts/mt7629.dtsi
+> +++ b/arch/arm/boot/dts/mt7629.dtsi
+> @@ -468,14 +468,12 @@
+>  			compatible = "mediatek,mt7629-sgmiisys", "syscon";
+>  			reg = <0x1b128000 0x3000>;
+>  			#clock-cells = <1>;
+> -			mediatek,physpeed = "2500";
+>  		};
+>
+>  		sgmiisys1: syscon@1b130000 {
+>  			compatible = "mediatek,mt7629-sgmiisys", "syscon";
+>  			reg = <0x1b130000 0x3000>;
+>  			#clock-cells = <1>;
+> -			mediatek,physpeed = "2500";
+>  		};
+>  	};
+>  };
+> --
+> 2.17.1
 
-diff --git a/drivers/vhost/test.c b/drivers/vhost/test.c
-index 04edd8db62fc..e3a8e9db22cd 100644
---- a/drivers/vhost/test.c
-+++ b/drivers/vhost/test.c
-@@ -170,6 +170,7 @@ static int vhost_test_release(struct inode *inode, struct file *f)
- 
- 	vhost_test_stop(n, &private);
- 	vhost_test_flush(n);
-+	vhost_dev_stop(&n->dev);
- 	vhost_dev_cleanup(&n->dev);
- 	/* We do an extra flush before freeing memory,
- 	 * since jobs can re-queue themselves. */
-@@ -246,6 +247,7 @@ static long vhost_test_reset_owner(struct vhost_test *n)
- 	}
- 	vhost_test_stop(n, &priv);
- 	vhost_test_flush(n);
-+	vhost_dev_stop(&n->dev);
- 	vhost_dev_reset_owner(&n->dev, umem);
- done:
- 	mutex_unlock(&n->dev.mutex);
--- 
-MST
+Reviewed-by: René van Dorst <opensource@vdorst.com>
+
+
