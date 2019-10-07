@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 278C1C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E23C352AA
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D80AF22468
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:24:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 156D321D7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:24:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RkhEnrGr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jeLDecCF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728024AbfJGLYJ (ORCPT
+        id S1728039AbfJGLYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 07:24:09 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:58374 "EHLO
+        Mon, 7 Oct 2019 07:24:13 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:58460 "EHLO
         merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727757AbfJGLXq (ORCPT
+        with ESMTP id S1727999AbfJGLYI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 07:23:46 -0400
+        Mon, 7 Oct 2019 07:24:08 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
         Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=sITR6qYd+NYNASRNNA0LvJFFU0Vx05/fpHy1WWiCLNI=; b=RkhEnrGrStTBqwwCJADlpCgx4a
-        4eaJXiPJZBxyiRA9UA3VmzfId9HLRknmTxWxpZslnX0qzTIpDASGGlYJMCiKuU7/ONPC/9sf6x9xu
-        PFqPxemWcDLI3RykbiVLP3hfzQs/cl4o2BwfkS++K1xW4PcDibLuWyeRHn9UNmN3ercus0GeIK0L9
-        SsPfkovkr0Sgf3zfVnJHFZ6vOYUIr1zUgGpq9s6OuX/tHE7tC3VqtAtW9ahXqnl5WvUNBcnKKjS4W
-        NA3mtSYSZzhASl60zW7paL4n68dTSblnznz1JvPzB4hRIQQn/rCRBLfb1jIJLHb7t1KYYTyf/NvA5
-        SVKM/zdQ==;
+        bh=mKt6HGUiKvdfkR+UdJwfyZ1NgwE2ezPWsx2PYLbxIrc=; b=jeLDecCFET8ZzDdxol8EMoYnNt
+        rlW2whjBfELz/hxsuR4gu0Q/JNfIBe7yu+wVQGqAZxgoAD6TnuPbvASFecTLbOuIZ4BGjut3PLxZY
+        ScFnERK+qEo9yPTH/kL69amRYWS+yOZZfhj+PQCUa4OCragiwZZYv7W/9qpYGwgUE9u2Mr3y/J+m8
+        3am7fv85z2RdfGJYh2z0osLpgHgJf1Re/jiJT/WUwMXj0DYPcFK6FrkGnkWIReyzjKfjp1jn2qPdi
+        uaGLwyGH7UoGPYpCbnRab9swmfTFV+0icJUISPWIysNylfW3OT9q7MgZXPInXJJmHU2Hn0lv4gJha
+        0nXPkQVA==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iHR6y-0002BV-AT; Mon, 07 Oct 2019 11:23:32 +0000
+        id 1iHR6y-0002BW-Mf; Mon, 07 Oct 2019 11:23:32 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4E8283073AB;
-        Mon,  7 Oct 2019 13:22:36 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id F1C2C3067F1;
+        Mon,  7 Oct 2019 13:22:35 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id AD45A20244E32; Mon,  7 Oct 2019 13:23:26 +0200 (CEST)
-Message-Id: <20191007083830.70301561.0@infradead.org>
+        id 87BC420244E20; Mon,  7 Oct 2019 13:23:26 +0200 (CEST)
+Message-Id: <20191007082700.02964999.7@infradead.org>
 User-Agent: quilt/0.65
-Date:   Mon, 07 Oct 2019 10:27:11 +0200
+Date:   Mon, 07 Oct 2019 10:25:42 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     x86@kernel.org
 Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
@@ -54,9 +54,18 @@ Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
         jbaron@akamai.com, torvalds@linux-foundation.org,
         tglx@linutronix.de, mingo@kernel.org, namit@vmware.com,
         hpa@zytor.com, luto@kernel.org, ard.biesheuvel@linaro.org,
-        jpoimboe@redhat.com
-Subject: [PATCH v2 03/13] static_call: Add inline static call infrastructure
-References: <20191007082708.01393931.1@infradead.org>
+        Pavel Machek <pavel@ucw.cz>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Sam Protsenko <semen.protsenko@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Todd Brandt <todd.e.brandt@linux.intel.com>,
+        Vasily Averin <vvs@virtuozzo.com>,
+        Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH v2 1/4] notifier: Fix broken error handling pattern
+References: <20191007082541.64146933.7@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
@@ -64,498 +73,626 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+The current notifiers have the following error handling pattern all
+over the place:
 
-Add infrastructure for an arch-specific CONFIG_HAVE_STATIC_CALL_INLINE
-option, which is a faster version of CONFIG_HAVE_STATIC_CALL.  At
-runtime, the static call sites are patched directly, rather than using
-the out-of-line trampolines.
+	int err, nr;
 
-Compared to out-of-line static calls, the performance benefits are more
-modest, but still measurable.  Steven Rostedt did some tracepoint
-measurements:
+	err = __foo_notifier_call_chain(&chain, val_up, v, -1, &nr);
+	if (err & NOTIFIER_STOP_MASK)
+		__foo_notifier_call_chain(&chain, val_down, v, nr-1, NULL)
 
-  https://lkml.kernel.org/r/20181126155405.72b4f718@gandalf.local.home
+And aside from the endless repetition thereof, it is broken. Consider
+blocking notifiers; both calls take and drop the rwsem, this means
+that the notifier list can change in between the two calls, making @nr
+meaningless.
 
-This code is heavily inspired by the jump label code (aka "static
-jumps"), as some of the concepts are very similar.
+Fix this by replacing all the __foo_notifier_call_chain() functions
+with foo_notifier_call_chain_robust() that embeds the above pattern,
+but ensures it is inside a single lock region.
 
-For more details, see the comments in include/linux/static_call.h.
+Note: I switched atomic_notifier_call_chain_robust() to use
+      the spinlock, since RCU cannot provide the guarantee
+      required for the recovery.
 
-[peterz: simplified interface; merged trampolines]
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Note: software_resume() error handling was broken afaict.
+
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Alexios Zavras <alexios.zavras@intel.com>
+Cc: Allison Randal <allison@lohutok.net>
+Cc: Sam Protsenko <semen.protsenko@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Todd Brandt <todd.e.brandt@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vasily Averin <vvs@virtuozzo.com>
+Cc: Len Brown <len.brown@intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/Kconfig                      |    4 
- include/asm-generic/vmlinux.lds.h |    7 
- include/linux/module.h            |   10 +
- include/linux/static_call.h       |   37 ++++
- include/linux/static_call_types.h |    9 +
- kernel/Makefile                   |    1 
- kernel/module.c                   |    5 
- kernel/static_call.c              |  302 ++++++++++++++++++++++++++++++++++++++
- 8 files changed, 374 insertions(+), 1 deletion(-)
- create mode 100644 kernel/static_call.c
+ include/linux/notifier.h           |   15 +--
+ kernel/cpu_pm.c                    |   46 ++++-------
+ kernel/notifier.c                  |  144 ++++++++++++++++++++++---------------
+ kernel/power/hibernate.c           |   26 +++---
+ kernel/power/main.c                |    8 +-
+ kernel/power/power.h               |    3 
+ kernel/power/suspend.c             |   14 +--
+ kernel/power/user.c                |   14 +--
+ tools/power/pm-graph/sleepgraph.py |    2 
+ 9 files changed, 139 insertions(+), 133 deletions(-)
 
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -963,6 +963,10 @@ config ARCH_HAS_MEM_ENCRYPT
- config HAVE_STATIC_CALL
- 	bool
+--- a/include/linux/notifier.h
++++ b/include/linux/notifier.h
+@@ -165,20 +165,19 @@ extern int srcu_notifier_chain_unregiste
  
-+config HAVE_STATIC_CALL_INLINE
-+	bool
-+	depends on HAVE_STATIC_CALL
+ extern int atomic_notifier_call_chain(struct atomic_notifier_head *nh,
+ 		unsigned long val, void *v);
+-extern int __atomic_notifier_call_chain(struct atomic_notifier_head *nh,
+-	unsigned long val, void *v, int nr_to_call, int *nr_calls);
+ extern int blocking_notifier_call_chain(struct blocking_notifier_head *nh,
+ 		unsigned long val, void *v);
+-extern int __blocking_notifier_call_chain(struct blocking_notifier_head *nh,
+-	unsigned long val, void *v, int nr_to_call, int *nr_calls);
+ extern int raw_notifier_call_chain(struct raw_notifier_head *nh,
+ 		unsigned long val, void *v);
+-extern int __raw_notifier_call_chain(struct raw_notifier_head *nh,
+-	unsigned long val, void *v, int nr_to_call, int *nr_calls);
+ extern int srcu_notifier_call_chain(struct srcu_notifier_head *nh,
+ 		unsigned long val, void *v);
+-extern int __srcu_notifier_call_chain(struct srcu_notifier_head *nh,
+-	unsigned long val, void *v, int nr_to_call, int *nr_calls);
 +
- source "kernel/gcov/Kconfig"
++extern int atomic_notifier_call_chain_robust(struct atomic_notifier_head *nh,
++		unsigned long val_up, unsigned long val_down, void *v);
++extern int blocking_notifier_call_chain_robust(struct blocking_notifier_head *nh,
++		unsigned long val_up, unsigned long val_down, void *v);
++extern int raw_notifier_call_chain_robust(struct raw_notifier_head *nh,
++		unsigned long val_up, unsigned long val_down, void *v);
  
- source "scripts/gcc-plugins/Kconfig"
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -333,6 +333,12 @@
- 	KEEP(*(__jump_table))						\
- 	__stop___jump_table = .;
+ #define NOTIFY_DONE		0x0000		/* Don't care */
+ #define NOTIFY_OK		0x0001		/* Suits me */
+--- a/kernel/cpu_pm.c
++++ b/kernel/cpu_pm.c
+@@ -15,23 +15,31 @@
  
-+#define STATIC_CALL_DATA						\
-+	. = ALIGN(8);							\
-+	__start_static_call_sites = .;					\
-+	KEEP(*(.static_call_sites))					\
-+	__stop_static_call_sites = .;
-+
- /*
-  * Allow architectures to handle ro_after_init data on their
-  * own by defining an empty RO_AFTER_INIT_DATA.
-@@ -342,6 +348,7 @@
- 	__start_ro_after_init = .;					\
- 	*(.data..ro_after_init)						\
- 	JUMP_TABLE_DATA							\
-+	STATIC_CALL_DATA						\
- 	__end_ro_after_init = .;
- #endif
+ static ATOMIC_NOTIFIER_HEAD(cpu_pm_notifier_chain);
  
---- a/include/linux/module.h
-+++ b/include/linux/module.h
-@@ -22,6 +22,7 @@
- #include <linux/error-injection.h>
- #include <linux/tracepoint-defs.h>
- #include <linux/srcu.h>
-+#include <linux/static_call_types.h>
- 
- #include <linux/percpu.h>
- #include <asm/module.h>
-@@ -476,6 +477,10 @@ struct module {
- 	unsigned int num_ftrace_callsites;
- 	unsigned long *ftrace_callsites;
- #endif
-+#ifdef CONFIG_HAVE_STATIC_CALL_INLINE
-+	int num_static_call_sites;
-+	struct static_call_site *static_call_sites;
-+#endif
- 
- #ifdef CONFIG_LIVEPATCH
- 	bool klp; /* Is this a livepatch module? */
-@@ -732,6 +737,11 @@ static inline bool within_module(unsigne
+-static int cpu_pm_notify(enum cpu_pm_event event, int nr_to_call, int *nr_calls)
++static int cpu_pm_notify(enum cpu_pm_event event)
  {
- 	return false;
+ 	int ret;
+ 
+ 	/*
+-	 * __atomic_notifier_call_chain has a RCU read critical section, which
++	 * atomic_notifier_call_chain has a RCU read critical section, which
+ 	 * could be disfunctional in cpu idle. Copy RCU_NONIDLE code to let
+ 	 * RCU know this.
+ 	 */
+ 	rcu_irq_enter_irqson();
+-	ret = __atomic_notifier_call_chain(&cpu_pm_notifier_chain, event, NULL,
+-		nr_to_call, nr_calls);
++	ret = atomic_notifier_call_chain(&cpu_pm_notifier_chain, event, NULL);
+ 	rcu_irq_exit_irqson();
+ 
+ 	return notifier_to_errno(ret);
  }
-+
-+static inline bool within_module_init(unsigned long addr, const struct module *mod)
-+{
-+	return false;
-+}
  
- /* Get/put a kernel symbol (calls should be symmetric) */
- #define symbol_get(x) ({ extern typeof(x) x __attribute__((weak)); &(x); })
---- a/include/linux/static_call.h
-+++ b/include/linux/static_call.h
-@@ -78,7 +78,42 @@ extern void arch_static_call_transform(v
- 			     &STATIC_CALL_TRAMP(name), func);		\
- })
- 
--#if defined(CONFIG_HAVE_STATIC_CALL)
-+#ifdef CONFIG_HAVE_STATIC_CALL_INLINE
-+
-+struct static_call_mod {
-+	struct static_call_mod *next;
-+	struct module *mod; /* for vmlinux, mod == NULL */
-+	struct static_call_site *sites;
-+};
-+
-+struct static_call_key {
-+	void *func;
-+	struct static_call_mod *next;
-+};
-+
-+extern void __static_call_update(struct static_call_key *key, void *tramp, void *func);
-+extern int static_call_mod_init(struct module *mod);
-+
-+#define DEFINE_STATIC_CALL(name, _func)					\
-+	DECLARE_STATIC_CALL(name, _func);				\
-+	struct static_call_key STATIC_CALL_NAME(name) = {		\
-+		.func = _func,						\
-+		.next = NULL,						\
-+	};								\
-+	__ADDRESSABLE(STATIC_CALL_NAME(name));				\
-+	ARCH_DEFINE_STATIC_CALL_TRAMP(name, _func)
-+
-+#define static_call(name)	STATIC_CALL_TRAMP(name)
-+
-+#define EXPORT_STATIC_CALL(name)					\
-+	EXPORT_SYMBOL(STATIC_CALL_NAME(name));				\
-+	EXPORT_SYMBOL(STATIC_CALL_TRAMP(name))
-+
-+#define EXPORT_STATIC_CALL_GPL(name)					\
-+	EXPORT_SYMBOL_GPL(STATIC_CALL_NAME(name));			\
-+	EXPORT_SYMBOL_GPL(STATIC_CALL_TRAMP(name))
-+
-+#elif defined(CONFIG_HAVE_STATIC_CALL)
- 
- struct static_call_key {
- 	void *func;
---- a/include/linux/static_call_types.h
-+++ b/include/linux/static_call_types.h
-@@ -12,4 +12,13 @@
- #define STATIC_CALL_TRAMP(name)	    STATIC_CALL_NAME(name##_tramp)
- #define STATIC_CALL_TRAMP_STR(name) __stringify(STATIC_CALL_TRAMP(name))
- 
-+/*
-+ * The static call site table needs to be created by external tooling (objtool
-+ * or a compiler plugin).
-+ */
-+struct static_call_site {
-+	s32 addr;
-+	s32 key;
-+};
-+
- #endif /* _STATIC_CALL_TYPES_H */
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -103,6 +103,7 @@ obj-$(CONFIG_TRACEPOINTS) += trace/
- obj-$(CONFIG_IRQ_WORK) += irq_work.o
- obj-$(CONFIG_CPU_PM) += cpu_pm.o
- obj-$(CONFIG_BPF) += bpf/
-+obj-$(CONFIG_HAVE_STATIC_CALL_INLINE) += static_call.o
- 
- obj-$(CONFIG_PERF_EVENTS) += events/
- 
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -3231,6 +3231,11 @@ static int find_module_sections(struct m
- 					    sizeof(*mod->ei_funcs),
- 					    &mod->num_ei_funcs);
- #endif
-+#ifdef CONFIG_HAVE_STATIC_CALL_INLINE
-+	mod->static_call_sites = section_objs(info, ".static_call_sites",
-+					      sizeof(*mod->static_call_sites),
-+					      &mod->num_static_call_sites);
-+#endif
- 	mod->extable = section_objs(info, "__ex_table",
- 				    sizeof(*mod->extable), &mod->num_exentries);
- 
---- /dev/null
-+++ b/kernel/static_call.c
-@@ -0,0 +1,302 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/init.h>
-+#include <linux/static_call.h>
-+#include <linux/bug.h>
-+#include <linux/smp.h>
-+#include <linux/sort.h>
-+#include <linux/slab.h>
-+#include <linux/module.h>
-+#include <linux/cpu.h>
-+#include <linux/processor.h>
-+#include <asm/sections.h>
-+
-+extern struct static_call_site __start_static_call_sites[],
-+			       __stop_static_call_sites[];
-+
-+static bool static_call_initialized;
-+
-+#define STATIC_CALL_INIT 1UL
-+
-+/* mutex to protect key modules/sites */
-+static DEFINE_MUTEX(static_call_mutex);
-+
-+static void static_call_lock(void)
-+{
-+	mutex_lock(&static_call_mutex);
-+}
-+
-+static void static_call_unlock(void)
-+{
-+	mutex_unlock(&static_call_mutex);
-+}
-+
-+static inline void *static_call_addr(struct static_call_site *site)
-+{
-+	return (void *)((long)site->addr + (long)&site->addr);
-+}
-+
-+
-+static inline struct static_call_key *static_call_key(const struct static_call_site *site)
-+{
-+	return (struct static_call_key *)
-+		(((long)site->key + (long)&site->key) & ~STATIC_CALL_INIT);
-+}
-+
-+/* These assume the key is word-aligned. */
-+static inline bool static_call_is_init(struct static_call_site *site)
-+{
-+	return ((long)site->key + (long)&site->key) & STATIC_CALL_INIT;
-+}
-+
-+static inline void static_call_set_init(struct static_call_site *site)
-+{
-+	site->key = ((long)static_call_key(site) | STATIC_CALL_INIT) -
-+		    (long)&site->key;
-+}
-+
-+static int static_call_site_cmp(const void *_a, const void *_b)
-+{
-+	const struct static_call_site *a = _a;
-+	const struct static_call_site *b = _b;
-+	const struct static_call_key *key_a = static_call_key(a);
-+	const struct static_call_key *key_b = static_call_key(b);
-+
-+	if (key_a < key_b)
-+		return -1;
-+
-+	if (key_a > key_b)
-+		return 1;
-+
-+	return 0;
-+}
-+
-+static void static_call_site_swap(void *_a, void *_b, int size)
-+{
-+	long delta = (unsigned long)_a - (unsigned long)_b;
-+	struct static_call_site *a = _a;
-+	struct static_call_site *b = _b;
-+	struct static_call_site tmp = *a;
-+
-+	a->addr = b->addr  - delta;
-+	a->key  = b->key   - delta;
-+
-+	b->addr = tmp.addr + delta;
-+	b->key  = tmp.key  + delta;
-+}
-+
-+static inline void static_call_sort_entries(struct static_call_site *start,
-+					    struct static_call_site *stop)
-+{
-+	sort(start, stop - start, sizeof(struct static_call_site),
-+	     static_call_site_cmp, static_call_site_swap);
-+}
-+
-+void __static_call_update(struct static_call_key *key, void *tramp, void *func)
-+{
-+	struct static_call_site *site, *stop;
-+	struct static_call_mod *site_mod;
-+
-+	cpus_read_lock();
-+	static_call_lock();
-+
-+	if (key->func == func)
-+		goto done;
-+
-+	key->func = func;
-+
-+	arch_static_call_transform(NULL, tramp, func);
-+
-+	/*
-+	 * If uninitialized, we'll not update the callsites, but they still
-+	 * point to the trampoline and we just patched that.
-+	 */
-+	if (WARN_ON_ONCE(!static_call_initialized))
-+		goto done;
-+
-+	for (site_mod = key->next; site_mod; site_mod = site_mod->next) {
-+		if (!site_mod->sites) {
-+			/*
-+			 * This can happen if the static call key is defined in
-+			 * a module which doesn't use it.
-+			 */
-+			continue;
-+		}
-+
-+		stop = __stop_static_call_sites;
-+
-+#ifdef CONFIG_MODULES
-+		if (site_mod->mod) {
-+			stop = site_mod->mod->static_call_sites +
-+			       site_mod->mod->num_static_call_sites;
-+		}
-+#endif
-+
-+		for (site = site_mod->sites;
-+		     site < stop && static_call_key(site) == key; site++) {
-+			void *site_addr = static_call_addr(site);
-+			struct module *mod = site_mod->mod;
-+
-+			if (static_call_is_init(site)) {
-+				/*
-+				 * Don't write to call sites which were in
-+				 * initmem and have since been freed.
-+				 */
-+				if (!mod && system_state >= SYSTEM_RUNNING)
-+					continue;
-+				if (mod && !within_module_init((unsigned long)site_addr, mod))
-+					continue;
-+			}
-+
-+			if (!kernel_text_address((unsigned long)site_addr)) {
-+				WARN_ONCE(1, "can't patch static call site at %pS",
-+					  site_addr);
-+				continue;
-+			}
-+
-+			arch_static_call_transform(site_addr, NULL, func);
-+		}
-+	}
-+
-+done:
-+	static_call_unlock();
-+	cpus_read_unlock();
-+}
-+EXPORT_SYMBOL_GPL(__static_call_update);
-+
-+static int __static_call_init(struct module *mod,
-+			      struct static_call_site *start,
-+			      struct static_call_site *stop)
-+{
-+	struct static_call_site *site;
-+	struct static_call_key *key, *prev_key = NULL;
-+	struct static_call_mod *site_mod;
-+
-+	if (start == stop)
-+		return 0;
-+
-+	static_call_sort_entries(start, stop);
-+
-+	for (site = start; site < stop; site++) {
-+		void *site_addr = static_call_addr(site);
-+
-+		if ((mod && within_module_init((unsigned long)site_addr, mod)) ||
-+		    (!mod && init_section_contains(site_addr, 1)))
-+			static_call_set_init(site);
-+
-+		key = static_call_key(site);
-+		if (key != prev_key) {
-+			prev_key = key;
-+
-+			site_mod = kzalloc(sizeof(*site_mod), GFP_KERNEL);
-+			if (!site_mod)
-+				return -ENOMEM;
-+
-+			site_mod->mod = mod;
-+			site_mod->sites = site;
-+			site_mod->next = key->next;
-+			key->next = site_mod;
-+		}
-+
-+		arch_static_call_transform(site_addr, NULL, key->func);
-+	}
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_MODULES
-+
-+static int static_call_add_module(struct module *mod)
-+{
-+	return __static_call_init(mod, mod->static_call_sites,
-+				  mod->static_call_sites + mod->num_static_call_sites);
-+}
-+
-+static void static_call_del_module(struct module *mod)
-+{
-+	struct static_call_site *start = mod->static_call_sites;
-+	struct static_call_site *stop = mod->static_call_sites +
-+					mod->num_static_call_sites;
-+	struct static_call_key *key, *prev_key = NULL;
-+	struct static_call_mod *site_mod, **prev;
-+	struct static_call_site *site;
-+
-+	for (site = start; site < stop; site++) {
-+		key = static_call_key(site);
-+		if (key == prev_key)
-+			continue;
-+
-+		prev_key = key;
-+
-+		for (prev = &key->next, site_mod = key->next;
-+		     site_mod && site_mod->mod != mod;
-+		     prev = &site_mod->next, site_mod = site_mod->next)
-+			;
-+
-+		if (!site_mod)
-+			continue;
-+
-+		*prev = site_mod->next;
-+		kfree(site_mod);
-+	}
-+}
-+
-+static int static_call_module_notify(struct notifier_block *nb,
-+				     unsigned long val, void *data)
-+{
-+	struct module *mod = data;
-+	int ret = 0;
-+
-+	cpus_read_lock();
-+	static_call_lock();
-+
-+	switch (val) {
-+	case MODULE_STATE_COMING:
-+		ret = static_call_add_module(mod);
-+		if (ret) {
-+			WARN(1, "Failed to allocate memory for static calls");
-+			static_call_del_module(mod);
-+		}
-+		break;
-+	case MODULE_STATE_GOING:
-+		static_call_del_module(mod);
-+		break;
-+	}
-+
-+	static_call_unlock();
-+	cpus_read_unlock();
-+
-+	return notifier_from_errno(ret);
-+}
-+
-+static struct notifier_block static_call_module_nb = {
-+	.notifier_call = static_call_module_notify,
-+};
-+
-+#endif /* CONFIG_MODULES */
-+
-+static void __init static_call_init(void)
++static int cpu_pm_notify_robust(enum cpu_pm_event event_up, enum cpu_pm_event event_down)
 +{
 +	int ret;
 +
-+	if (static_call_initialized)
-+		return;
++	ret = atomic_notifier_call_chain_robust(&cpu_pm_notifier_chain, event_up, event_down, NULL);
 +
-+	cpus_read_lock();
-+	static_call_lock();
-+	ret = __static_call_init(NULL, __start_static_call_sites,
-+				 __stop_static_call_sites);
-+	static_call_unlock();
-+	cpus_read_unlock();
-+
-+	if (ret) {
-+		pr_err("Failed to allocate memory for static_call!\n");
-+		BUG();
-+	}
-+
-+	static_call_initialized = true;
-+
-+#ifdef CONFIG_MODULES
-+	register_module_notifier(&static_call_module_nb);
-+#endif
++	return notifier_to_errno(ret);
 +}
-+early_initcall(static_call_init);
++
+ /**
+  * cpu_pm_register_notifier - register a driver with cpu_pm
+  * @nb: notifier block to register
+@@ -80,18 +88,7 @@ EXPORT_SYMBOL_GPL(cpu_pm_unregister_noti
+  */
+ int cpu_pm_enter(void)
+ {
+-	int nr_calls;
+-	int ret = 0;
+-
+-	ret = cpu_pm_notify(CPU_PM_ENTER, -1, &nr_calls);
+-	if (ret)
+-		/*
+-		 * Inform listeners (nr_calls - 1) about failure of CPU PM
+-		 * PM entry who are notified earlier to prepare for it.
+-		 */
+-		cpu_pm_notify(CPU_PM_ENTER_FAILED, nr_calls - 1, NULL);
+-
+-	return ret;
++	return cpu_pm_notify_robust(CPU_PM_ENTER, CPU_PM_ENTER_FAILED);
+ }
+ EXPORT_SYMBOL_GPL(cpu_pm_enter);
+ 
+@@ -109,7 +106,7 @@ EXPORT_SYMBOL_GPL(cpu_pm_enter);
+  */
+ int cpu_pm_exit(void)
+ {
+-	return cpu_pm_notify(CPU_PM_EXIT, -1, NULL);
++	return cpu_pm_notify(CPU_PM_EXIT);
+ }
+ EXPORT_SYMBOL_GPL(cpu_pm_exit);
+ 
+@@ -131,18 +128,7 @@ EXPORT_SYMBOL_GPL(cpu_pm_exit);
+  */
+ int cpu_cluster_pm_enter(void)
+ {
+-	int nr_calls;
+-	int ret = 0;
+-
+-	ret = cpu_pm_notify(CPU_CLUSTER_PM_ENTER, -1, &nr_calls);
+-	if (ret)
+-		/*
+-		 * Inform listeners (nr_calls - 1) about failure of CPU cluster
+-		 * PM entry who are notified earlier to prepare for it.
+-		 */
+-		cpu_pm_notify(CPU_CLUSTER_PM_ENTER_FAILED, nr_calls - 1, NULL);
+-
+-	return ret;
++	return cpu_pm_notify_robust(CPU_CLUSTER_PM_ENTER, CPU_CLUSTER_PM_ENTER_FAILED);
+ }
+ EXPORT_SYMBOL_GPL(cpu_cluster_pm_enter);
+ 
+@@ -163,7 +149,7 @@ EXPORT_SYMBOL_GPL(cpu_cluster_pm_enter);
+  */
+ int cpu_cluster_pm_exit(void)
+ {
+-	return cpu_pm_notify(CPU_CLUSTER_PM_EXIT, -1, NULL);
++	return cpu_pm_notify(CPU_CLUSTER_PM_EXIT);
+ }
+ EXPORT_SYMBOL_GPL(cpu_cluster_pm_exit);
+ 
+--- a/kernel/notifier.c
++++ b/kernel/notifier.c
+@@ -106,6 +106,34 @@ static int notifier_call_chain(struct no
+ }
+ NOKPROBE_SYMBOL(notifier_call_chain);
+ 
++/**
++ * notifier_call_chain_robust - Inform the registered notifiers about an event
++ *                              and rollback on error.
++ * @nl:		Pointer to head of the blocking notifier chain
++ * @val_up:	Value passed unmodified to the notifier function
++ * @val_down:	Value passed unmodified to the notifier function when recovering
++ *              from an error on @val_up
++ * @v		Pointer passed unmodified to the notifier function
++ *
++ * NOTE:	It is important the @nl chain doesn't change between the two
++ *		invocations of notifier_call_chain() such that we visit the
++ *		exact same notifier callbacks; this rules out any RCU usage.
++ *
++ * Returns:	the return value of the @val_up call.
++ */
++static int notifier_call_chain_robust(struct notifier_block **nl,
++				     unsigned long val_up, unsigned long val_down,
++				     void *v)
++{
++	int ret, nr = 0;
++
++	ret = notifier_call_chain(nl, val_up, v, -1, &nr);
++	if (ret & NOTIFY_STOP_MASK)
++		notifier_call_chain(nl, val_down, v, nr-1, NULL);
++
++	return ret;
++}
++
+ /*
+  *	Atomic notifier chain routines.  Registration and unregistration
+  *	use a spinlock, and call_chain is synchronized by RCU (no locks).
+@@ -156,13 +184,30 @@ int atomic_notifier_chain_unregister(str
+ }
+ EXPORT_SYMBOL_GPL(atomic_notifier_chain_unregister);
+ 
++int atomic_notifier_call_chain_robust(struct atomic_notifier_head *nh,
++		unsigned long val_up, unsigned long val_down, void *v)
++{
++	unsigned long flags;
++	int ret;
++
++	/*
++	 * Musn't use RCU; because then the notifier list can
++	 * change between the up and down traversal.
++	 */
++	spin_lock_irqsave(&nh->lock, flags);
++	ret = notifier_call_chain_robust(&nh->head, val_up, val_down, v);
++	spin_unlock_irqrestore(&nh->lock, flags);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(atomic_notifier_call_chain_robust);
++NOKPROBE_SYMBOL(atomic_notifier_call_chain_robust);
++
+ /**
+- *	__atomic_notifier_call_chain - Call functions in an atomic notifier chain
++ *	atomic_notifier_call_chain - Call functions in an atomic notifier chain
+  *	@nh: Pointer to head of the atomic notifier chain
+  *	@val: Value passed unmodified to notifier function
+  *	@v: Pointer passed unmodified to notifier function
+- *	@nr_to_call: See the comment for notifier_call_chain.
+- *	@nr_calls: See the comment for notifier_call_chain.
+  *
+  *	Calls each function in a notifier chain in turn.  The functions
+  *	run in an atomic context, so they must not block.
+@@ -175,24 +220,16 @@ EXPORT_SYMBOL_GPL(atomic_notifier_chain_
+  *	Otherwise the return value is the return value
+  *	of the last notifier function called.
+  */
+-int __atomic_notifier_call_chain(struct atomic_notifier_head *nh,
+-				 unsigned long val, void *v,
+-				 int nr_to_call, int *nr_calls)
++int atomic_notifier_call_chain(struct atomic_notifier_head *nh,
++			       unsigned long val, void *v)
+ {
+ 	int ret;
+ 
+ 	rcu_read_lock();
+-	ret = notifier_call_chain(&nh->head, val, v, nr_to_call, nr_calls);
++	ret = notifier_call_chain(&nh->head, val, v, -1, NULL);
+ 	rcu_read_unlock();
+-	return ret;
+-}
+-EXPORT_SYMBOL_GPL(__atomic_notifier_call_chain);
+-NOKPROBE_SYMBOL(__atomic_notifier_call_chain);
+ 
+-int atomic_notifier_call_chain(struct atomic_notifier_head *nh,
+-			       unsigned long val, void *v)
+-{
+-	return __atomic_notifier_call_chain(nh, val, v, -1, NULL);
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(atomic_notifier_call_chain);
+ NOKPROBE_SYMBOL(atomic_notifier_call_chain);
+@@ -285,13 +322,30 @@ int blocking_notifier_chain_unregister(s
+ }
+ EXPORT_SYMBOL_GPL(blocking_notifier_chain_unregister);
+ 
++int blocking_notifier_call_chain_robust(struct blocking_notifier_head *nh,
++		unsigned long val_up, unsigned long val_down, void *v)
++{
++	int ret = NOTIFY_DONE;
++
++	/*
++	 * We check the head outside the lock, but if this access is
++	 * racy then it does not matter what the result of the test
++	 * is, we re-check the list after having taken the lock anyway:
++	 */
++	if (rcu_access_pointer(nh->head)) {
++		down_read(&nh->rwsem);
++		ret = notifier_call_chain_robust(&nh->head, val_up, val_down, v);
++		up_read(&nh->rwsem);
++	}
++	return ret;
++}
++EXPORT_SYMBOL_GPL(blocking_notifier_call_chain_robust);
++
+ /**
+- *	__blocking_notifier_call_chain - Call functions in a blocking notifier chain
++ *	blocking_notifier_call_chain - Call functions in a blocking notifier chain
+  *	@nh: Pointer to head of the blocking notifier chain
+  *	@val: Value passed unmodified to notifier function
+  *	@v: Pointer passed unmodified to notifier function
+- *	@nr_to_call: See comment for notifier_call_chain.
+- *	@nr_calls: See comment for notifier_call_chain.
+  *
+  *	Calls each function in a notifier chain in turn.  The functions
+  *	run in a process context, so they are allowed to block.
+@@ -303,9 +357,8 @@ EXPORT_SYMBOL_GPL(blocking_notifier_chai
+  *	Otherwise the return value is the return value
+  *	of the last notifier function called.
+  */
+-int __blocking_notifier_call_chain(struct blocking_notifier_head *nh,
+-				   unsigned long val, void *v,
+-				   int nr_to_call, int *nr_calls)
++int blocking_notifier_call_chain(struct blocking_notifier_head *nh,
++		unsigned long val, void *v)
+ {
+ 	int ret = NOTIFY_DONE;
+ 
+@@ -316,19 +369,11 @@ int __blocking_notifier_call_chain(struc
+ 	 */
+ 	if (rcu_access_pointer(nh->head)) {
+ 		down_read(&nh->rwsem);
+-		ret = notifier_call_chain(&nh->head, val, v, nr_to_call,
+-					nr_calls);
++		ret = notifier_call_chain(&nh->head, val, v, -1, NULL);
+ 		up_read(&nh->rwsem);
+ 	}
+ 	return ret;
+ }
+-EXPORT_SYMBOL_GPL(__blocking_notifier_call_chain);
+-
+-int blocking_notifier_call_chain(struct blocking_notifier_head *nh,
+-		unsigned long val, void *v)
+-{
+-	return __blocking_notifier_call_chain(nh, val, v, -1, NULL);
+-}
+ EXPORT_SYMBOL_GPL(blocking_notifier_call_chain);
+ 
+ /*
+@@ -370,13 +415,18 @@ int raw_notifier_chain_unregister(struct
+ }
+ EXPORT_SYMBOL_GPL(raw_notifier_chain_unregister);
+ 
++int raw_notifier_call_chain_robust(struct raw_notifier_head *nh,
++		unsigned long val_up, unsigned long val_down, void *v)
++{
++	return notifier_call_chain_robust(&nh->head, val_up, val_down, v);
++}
++EXPORT_SYMBOL_GPL(raw_notifier_call_chain_robust);
++
+ /**
+- *	__raw_notifier_call_chain - Call functions in a raw notifier chain
++ *	raw_notifier_call_chain - Call functions in a raw notifier chain
+  *	@nh: Pointer to head of the raw notifier chain
+  *	@val: Value passed unmodified to notifier function
+  *	@v: Pointer passed unmodified to notifier function
+- *	@nr_to_call: See comment for notifier_call_chain.
+- *	@nr_calls: See comment for notifier_call_chain
+  *
+  *	Calls each function in a notifier chain in turn.  The functions
+  *	run in an undefined context.
+@@ -389,18 +439,10 @@ EXPORT_SYMBOL_GPL(raw_notifier_chain_unr
+  *	Otherwise the return value is the return value
+  *	of the last notifier function called.
+  */
+-int __raw_notifier_call_chain(struct raw_notifier_head *nh,
+-			      unsigned long val, void *v,
+-			      int nr_to_call, int *nr_calls)
+-{
+-	return notifier_call_chain(&nh->head, val, v, nr_to_call, nr_calls);
+-}
+-EXPORT_SYMBOL_GPL(__raw_notifier_call_chain);
+-
+ int raw_notifier_call_chain(struct raw_notifier_head *nh,
+ 		unsigned long val, void *v)
+ {
+-	return __raw_notifier_call_chain(nh, val, v, -1, NULL);
++	return notifier_call_chain(&nh->head, val, v, -1, NULL);
+ }
+ EXPORT_SYMBOL_GPL(raw_notifier_call_chain);
+ 
+@@ -472,12 +514,10 @@ int srcu_notifier_chain_unregister(struc
+ EXPORT_SYMBOL_GPL(srcu_notifier_chain_unregister);
+ 
+ /**
+- *	__srcu_notifier_call_chain - Call functions in an SRCU notifier chain
++ *	srcu_notifier_call_chain - Call functions in an SRCU notifier chain
+  *	@nh: Pointer to head of the SRCU notifier chain
+  *	@val: Value passed unmodified to notifier function
+  *	@v: Pointer passed unmodified to notifier function
+- *	@nr_to_call: See comment for notifier_call_chain.
+- *	@nr_calls: See comment for notifier_call_chain
+  *
+  *	Calls each function in a notifier chain in turn.  The functions
+  *	run in a process context, so they are allowed to block.
+@@ -489,25 +529,17 @@ EXPORT_SYMBOL_GPL(srcu_notifier_chain_un
+  *	Otherwise the return value is the return value
+  *	of the last notifier function called.
+  */
+-int __srcu_notifier_call_chain(struct srcu_notifier_head *nh,
+-			       unsigned long val, void *v,
+-			       int nr_to_call, int *nr_calls)
++int srcu_notifier_call_chain(struct srcu_notifier_head *nh,
++		unsigned long val, void *v)
+ {
+ 	int ret;
+ 	int idx;
+ 
+ 	idx = srcu_read_lock(&nh->srcu);
+-	ret = notifier_call_chain(&nh->head, val, v, nr_to_call, nr_calls);
++	ret = notifier_call_chain(&nh->head, val, v, -1, NULL);
+ 	srcu_read_unlock(&nh->srcu, idx);
+ 	return ret;
+ }
+-EXPORT_SYMBOL_GPL(__srcu_notifier_call_chain);
+-
+-int srcu_notifier_call_chain(struct srcu_notifier_head *nh,
+-		unsigned long val, void *v)
+-{
+-	return __srcu_notifier_call_chain(nh, val, v, -1, NULL);
+-}
+ EXPORT_SYMBOL_GPL(srcu_notifier_call_chain);
+ 
+ /**
+--- a/kernel/power/hibernate.c
++++ b/kernel/power/hibernate.c
+@@ -693,8 +693,8 @@ static int load_image_and_restore(void)
+  */
+ int hibernate(void)
+ {
+-	int error, nr_calls = 0;
+ 	bool snapshot_test = false;
++	int error;
+ 
+ 	if (!hibernation_available()) {
+ 		pm_pr_dbg("Hibernation not available.\n");
+@@ -710,11 +710,9 @@ int hibernate(void)
+ 
+ 	pr_info("hibernation entry\n");
+ 	pm_prepare_console();
+-	error = __pm_notifier_call_chain(PM_HIBERNATION_PREPARE, -1, &nr_calls);
+-	if (error) {
+-		nr_calls--;
+-		goto Exit;
+-	}
++	error = pm_notifier_call_chain_robust(PM_HIBERNATION_PREPARE, PM_POST_HIBERNATION);
++	if (error)
++		goto Restore;
+ 
+ 	ksys_sync_helper();
+ 
+@@ -772,7 +770,8 @@ int hibernate(void)
+ 	/* Don't bother checking whether freezer_test_done is true */
+ 	freezer_test_done = false;
+  Exit:
+-	__pm_notifier_call_chain(PM_POST_HIBERNATION, nr_calls, NULL);
++	pm_notifier_call_chain(PM_POST_HIBERNATION);
++ Restore:
+ 	pm_restore_console();
+ 	atomic_inc(&snapshot_device_available);
+  Unlock:
+@@ -800,7 +799,7 @@ int hibernate(void)
+  */
+ static int software_resume(void)
+ {
+-	int error, nr_calls = 0;
++	int error;
+ 
+ 	/*
+ 	 * If the user said "noresume".. bail out early.
+@@ -887,11 +886,9 @@ static int software_resume(void)
+ 
+ 	pr_info("resume from hibernation\n");
+ 	pm_prepare_console();
+-	error = __pm_notifier_call_chain(PM_RESTORE_PREPARE, -1, &nr_calls);
+-	if (error) {
+-		nr_calls--;
+-		goto Close_Finish;
+-	}
++	error = pm_notifier_call_chain_robust(PM_RESTORE_PREPARE, PM_POST_RESTORE);
++	if (error)
++		goto Restore;
+ 
+ 	pm_pr_dbg("Preparing processes for restore.\n");
+ 	error = freeze_processes();
+@@ -900,7 +897,8 @@ static int software_resume(void)
+ 	error = load_image_and_restore();
+ 	thaw_processes();
+  Finish:
+-	__pm_notifier_call_chain(PM_POST_RESTORE, nr_calls, NULL);
++	pm_notifier_call_chain(PM_POST_RESTORE);
++ Restore:
+ 	pm_restore_console();
+ 	pr_info("resume from hibernation failed (%d)\n", error);
+ 	atomic_inc(&snapshot_device_available);
+--- a/kernel/power/main.c
++++ b/kernel/power/main.c
+@@ -79,18 +79,18 @@ int unregister_pm_notifier(struct notifi
+ }
+ EXPORT_SYMBOL_GPL(unregister_pm_notifier);
+ 
+-int __pm_notifier_call_chain(unsigned long val, int nr_to_call, int *nr_calls)
++int pm_notifier_call_chain_robust(unsigned long val_up, unsigned long val_down)
+ {
+ 	int ret;
+ 
+-	ret = __blocking_notifier_call_chain(&pm_chain_head, val, NULL,
+-						nr_to_call, nr_calls);
++	ret = blocking_notifier_call_chain_robust(&pm_chain_head, val_up, val_down, NULL);
+ 
+ 	return notifier_to_errno(ret);
+ }
++
+ int pm_notifier_call_chain(unsigned long val)
+ {
+-	return __pm_notifier_call_chain(val, -1, NULL);
++	return blocking_notifier_call_chain(&pm_chain_head, val, NULL);
+ }
+ 
+ /* If set, devices may be suspended and resumed asynchronously. */
+--- a/kernel/power/power.h
++++ b/kernel/power/power.h
+@@ -210,8 +210,7 @@ static inline void suspend_test_finish(c
+ 
+ #ifdef CONFIG_PM_SLEEP
+ /* kernel/power/main.c */
+-extern int __pm_notifier_call_chain(unsigned long val, int nr_to_call,
+-				    int *nr_calls);
++extern int pm_notifier_call_chain_robust(unsigned long val_up, unsigned long val_down);
+ extern int pm_notifier_call_chain(unsigned long val);
+ #endif
+ 
+--- a/kernel/power/suspend.c
++++ b/kernel/power/suspend.c
+@@ -352,18 +352,16 @@ static int suspend_test(int level)
+  */
+ static int suspend_prepare(suspend_state_t state)
+ {
+-	int error, nr_calls = 0;
++	int error;
+ 
+ 	if (!sleep_state_supported(state))
+ 		return -EPERM;
+ 
+ 	pm_prepare_console();
+ 
+-	error = __pm_notifier_call_chain(PM_SUSPEND_PREPARE, -1, &nr_calls);
+-	if (error) {
+-		nr_calls--;
+-		goto Finish;
+-	}
++	error = pm_notifier_call_chain_robust(PM_SUSPEND_PREPARE, PM_POST_SUSPEND);
++	if (error)
++		goto Restore;
+ 
+ 	trace_suspend_resume(TPS("freeze_processes"), 0, true);
+ 	error = suspend_freeze_processes();
+@@ -373,8 +371,8 @@ static int suspend_prepare(suspend_state
+ 
+ 	suspend_stats.failed_freeze++;
+ 	dpm_save_failed_step(SUSPEND_FREEZE);
+- Finish:
+-	__pm_notifier_call_chain(PM_POST_SUSPEND, nr_calls, NULL);
++	pm_notifier_call_chain(PM_POST_SUSPEND);
++ Restore:
+ 	pm_restore_console();
+ 	return error;
+ }
+--- a/kernel/power/user.c
++++ b/kernel/power/user.c
+@@ -44,7 +44,7 @@ atomic_t snapshot_device_available = ATO
+ static int snapshot_open(struct inode *inode, struct file *filp)
+ {
+ 	struct snapshot_data *data;
+-	int error, nr_calls = 0;
++	int error;
+ 
+ 	if (!hibernation_available())
+ 		return -EPERM;
+@@ -71,9 +71,7 @@ static int snapshot_open(struct inode *i
+ 			swap_type_of(swsusp_resume_device, 0, NULL) : -1;
+ 		data->mode = O_RDONLY;
+ 		data->free_bitmaps = false;
+-		error = __pm_notifier_call_chain(PM_HIBERNATION_PREPARE, -1, &nr_calls);
+-		if (error)
+-			__pm_notifier_call_chain(PM_POST_HIBERNATION, --nr_calls, NULL);
++		error = pm_notifier_call_chain_robust(PM_HIBERNATION_PREPARE, PM_POST_HIBERNATION);
+ 	} else {
+ 		/*
+ 		 * Resuming.  We may need to wait for the image device to
+@@ -83,15 +81,11 @@ static int snapshot_open(struct inode *i
+ 
+ 		data->swap = -1;
+ 		data->mode = O_WRONLY;
+-		error = __pm_notifier_call_chain(PM_RESTORE_PREPARE, -1, &nr_calls);
++		error = pm_notifier_call_chain_robust(PM_RESTORE_PREPARE, PM_POST_RESTORE);
+ 		if (!error) {
+ 			error = create_basic_memory_bitmaps();
+ 			data->free_bitmaps = !error;
+-		} else
+-			nr_calls--;
+-
+-		if (error)
+-			__pm_notifier_call_chain(PM_POST_RESTORE, nr_calls, NULL);
++		}
+ 	}
+ 	if (error)
+ 		atomic_inc(&snapshot_device_available);
+--- a/tools/power/pm-graph/sleepgraph.py
++++ b/tools/power/pm-graph/sleepgraph.py
+@@ -153,7 +153,7 @@ import base64
+ 	tracefuncs = {
+ 		'sys_sync': {},
+ 		'ksys_sync': {},
+-		'__pm_notifier_call_chain': {},
++		'pm_notifier_call_chain_robust': {},
+ 		'pm_prepare_console': {},
+ 		'pm_notifier_call_chain': {},
+ 		'freeze_processes': {},
 
 
