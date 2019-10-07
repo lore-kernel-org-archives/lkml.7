@@ -2,141 +2,103 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3DBECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C7CC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1BD92084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:04:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570467892;
-	bh=BOSxj+PbQ1BvxlkuWcNqwjbGF5ytNDQBfi3Ioz8A9RQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rZLQD7nrwfy6LpOsCPMS1PjwKsrPplpBH4IiVcNfUgFw82atvaPdYWaQC/IKJMNHj
-	 3x4A+DV2fZIEPu++Ac0Q86nr1lISl5CDhYsd9lg28uGSkkRk5rUbCvNpOGOaqwZQRy
-	 jXW2Js4obobgRft446awblOSOCZIArHLGRi+xOiw=
+	by mail.kernel.org (Postfix) with ESMTP id BA2522084D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:05:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbfJGREu (ORCPT
+        id S1728937AbfJGRFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 13:04:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42728 "EHLO mail.kernel.org"
+        Mon, 7 Oct 2019 13:05:32 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60753 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727801AbfJGREu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 13:04:50 -0400
-Received: from earth.universe (dyndsl-037-138-090-170.ewe-ip-backbone.de [37.138.90.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728736AbfJGRFc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 13:05:32 -0400
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FF22206C0;
-        Mon,  7 Oct 2019 17:04:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570467889;
-        bh=BOSxj+PbQ1BvxlkuWcNqwjbGF5ytNDQBfi3Ioz8A9RQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dsRX/zC2HcBFZgChcpJyDI+i4gajoUvhCBmhI0kaqlSq24fZGjaMG80cwgJwVvb2j
-         BetaNhEyORIuE/5xKMaKtOEaElhGn8xiS56iXu2AQ6zyhgUVS2rsAVdybamTWDxypj
-         jpFnpsHHD+tK1HZ4ROhFb928jUi60cHNIQqXi04w=
-Received: by earth.universe (Postfix, from userid 1000)
-        id F3A573C0CA1; Mon,  7 Oct 2019 19:04:46 +0200 (CEST)
-Date:   Mon, 7 Oct 2019 19:04:46 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     thierry.reding@gmail.com, sam@ravnborg.org, airlied@linux.ie,
-        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        omi Valkeinen <tomi.valkeinen@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, Tony Lindgren <tony@atomide.com>,
-        Jyri Sarha <jsarha@ti.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] drm: panels: fix spi aliases of former omap panels
-Message-ID: <20191007170446.yotb24s6jhe6nx3r@earth.universe>
-References: <20191007164130.31534-1-andreas@kemnade.info>
+        by mx1.redhat.com (Postfix) with ESMTPS id CD0EB5859E
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Oct 2019 17:05:31 +0000 (UTC)
+Received: by mail-wm1-f72.google.com with SMTP id 190so97073wme.4
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 10:05:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qWZZwMI60/Yk1Jo1iNOlqvg6GvjDVvDOelOPf/CZZOs=;
+        b=jYRt3P4Nb0+IsSHnywf6ZSbOTYvxLr6knI/SYHKX6nH3OAYbjIp97aZZGZMGhRVmtf
+         sMhRuEzfYQeWCtCnYPZnZEZZ2B3gduTrHspLznmfLOROIvpkqGmUTJb1mrnlzccADl6b
+         EJdGCzmZjcSkSIoC0HCch/Y4vf5d6omiGoruZMXAK1zCDQOhXJk4hNYKQgv4OMOz0uLR
+         K+Naxq8PXai4mq38lwmk7rH6Vtz55JXULfgMWM8hANkgul4VlxoIP2WDII/8O5iLV/G8
+         dEVH+m68zgIflWsR2MrM9v97mToaAJ5x1OgT6DMXPKNETsyvB5UGRQM6rvYbhwg/hcwr
+         kbYQ==
+X-Gm-Message-State: APjAAAX+SIZzHLQOr80RA5vOz9Krt+4cDkR8DEj4k0JPHAR25sKZuUsg
+        3c8kbib2FEzFC5J1IiPcBWpy/bP/GMsXOzVOTMO/t21UgS3RniDQm54GERrxa5BlbmrYCzIbyTy
+        SVnvQZnvPVRUwUyS7KrBs9tTD
+X-Received: by 2002:adf:eb4d:: with SMTP id u13mr13794259wrn.224.1570467930414;
+        Mon, 07 Oct 2019 10:05:30 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzzC3fvN/T7itcRThqgFQBEe9qKN64SezWk2klHi7Dhoy4KkaqSAol3vKnzlrw6BJtZMoXZ+g==
+X-Received: by 2002:adf:eb4d:: with SMTP id u13mr13794225wrn.224.1570467930111;
+        Mon, 07 Oct 2019 10:05:30 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:9dd9:ce92:89b5:d1f2? ([2001:b07:6468:f312:9dd9:ce92:89b5:d1f2])
+        by smtp.gmail.com with ESMTPSA id d10sm206901wma.42.2019.10.07.10.05.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Oct 2019 10:05:29 -0700 (PDT)
+Subject: Re: [PATCH 01/16] x86/intel: Initialize IA32_FEATURE_CONTROL MSR at
+ boot
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-edac@vger.kernel.org,
+        Borislav Petkov <bp@suse.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+References: <20191004215615.5479-1-sean.j.christopherson@intel.com>
+ <20191004215615.5479-2-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <afd37a28-d135-7c34-bd63-7c11099998bc@redhat.com>
+Date:   Mon, 7 Oct 2019 19:05:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="iql274jatv4mpjov"
-Content-Disposition: inline
-In-Reply-To: <20191007164130.31534-1-andreas@kemnade.info>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191004215615.5479-2-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 04/10/19 23:56, Sean Christopherson wrote:
+> Always lock IA32_FEATURE_CONTROL if it exists, even if the CPU doesn't
+> support VMX, so that other existing and future kernel code that queries
+> IA32_FEATURE_CONTROL can assume it's locked.
 
---iql274jatv4mpjov
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Possibly stupid question: why bother locking it?  It makes sense to lock
+the MSR bits to _off_ in the firmware, but if the BIOS hasn't locked it,
+why should the OS?
 
-Hi,
+It seems to me that locking introduces a lot of complication.
 
-On Mon, Oct 07, 2019 at 06:41:30PM +0200, Andreas Kemnade wrote:
-> When the panels were moved from omap/displays/ to panel/
-> omapdss prefix was stripped, which cause spi modalias
-> to not contain the vendor-prefix anymore.
->=20
-> so we had e.g. in former times:
-> compatible=3Domapdss,tpo,td028ttec1 -> modalias=3Dspi:tpo,td028ttec1
-> now:
-> compatible=3Dtpo,td028ttec1 -> modalias=3Dspi:td028ttec1
->=20
-> This is consistent with other drivers. Tested the td028ttec.c
-> only, but the pattern looks the same for the other ones.
->=20
-> Fixes: 45f16c82db7e8 ("drm/omap: displays: Remove unused panel drivers")
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> ---
-
-Patch looks good to me, but you have one false positive.
-
-> [...]
->
-> diff --git a/drivers/gpu/drm/panel/panel-sharp-ls037v7dw01.c b/drivers/gp=
-u/drm/panel/panel-sharp-ls037v7dw01.c
-> index 46cd9a2501298..838d39a263f53 100644
-> --- a/drivers/gpu/drm/panel/panel-sharp-ls037v7dw01.c
-> +++ b/drivers/gpu/drm/panel/panel-sharp-ls037v7dw01.c
-> @@ -204,7 +204,7 @@ static int ls037v7dw01_remove(struct platform_device =
-*pdev)
->  }
-> =20
->  static const struct of_device_id ls037v7dw01_of_match[] =3D {
-> -	{ .compatible =3D "sharp,ls037v7dw01", },
-> +	{ .compatible =3D "ls037v7dw01", },
->  	{ /* sentinel */ },
->  };
-> =20
-
-The DT compatible should have a vendor prefix.
-
-> [...]
-
--- Sebastian
-
---iql274jatv4mpjov
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl2bcCsACgkQ2O7X88g7
-+pqKSQ/9HclHNhGRa3L+55z5K08PEFcrfqZTjrhBUnQW/JOnaun8CyHC229w9gfF
-cZ8Z3E0HY6xKlIFHP6K3kjdjcPghU58QXAhneBIf8zr0OiChnuleAe3gZ89WAB8f
-Zy/PCAj+tNLWaUzhlwYe0VW+IXkDbXrF5VCkwUIs96QFNAduLraco7wMxpnl1Kcl
-FQScSqD7wEXQD55dqnJwEVrYfi1C3JjdrtTPXTAZj3mBcpKekYLQ0JzVAx7JqpwQ
-PkRXYjCrVwQ7VfO0gXkqxEjXucK+K/gN6dcIz0wj6Evrl+Pj0e3GKl8RPzWZnk0h
-dAtJ/HXclZyh+qlQKLj0dmFuVHebBlWaLO30Kl4WiuKsGXAq2NfpXS9+Nq4ZaRXM
-X/pH730gVRGvA6/nlPkkkHoqL/0p2/APW40uPBdzUoKCWpOUGoFbG1rknKfVR7Ug
-MNCpJXPv7Jgu9U7pd/mkmlLE08Yu76tshniFFZPz8kzkrkkRwrxIimO/65VTIrFr
-hpzDkZPD8DLDb2q287r7UwL3zgccP85jMrPj+l+XPyhZTErWk6HTadm+JRqAWSX3
-c1Bh47Pb3PPdxSoOp6tddkbeYWutsufe9CA+lXG46tH8X0VKYQ7KtIj+BzclQLkd
-NbbAU4Ja6+mExXInkjgnjB1DGIZ/qSZF9TtwmbZUS6Pe5Rp3NEA=
-=vfl2
------END PGP SIGNATURE-----
-
---iql274jatv4mpjov--
+Paolo
