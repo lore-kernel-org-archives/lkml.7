@@ -2,217 +2,142 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD7CC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF701ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32829206C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87311206C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:33:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="GZmS8zvs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728633AbfJGPdT (ORCPT
+        id S1728871AbfJGPda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 11:33:19 -0400
-Received: from mga18.intel.com ([134.134.136.126]:61160 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727711AbfJGPdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:33:18 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Oct 2019 08:33:05 -0700
-X-IronPort-AV: E=Sophos;i="5.67,268,1566889200"; 
-   d="scan'208";a="196321981"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Oct 2019 08:33:04 -0700
-Message-ID: <d96f744d2c48f5a96c6962c6a0a89d2429e5cab8.camel@linux.intel.com>
-Subject: Re: [PATCH v11 0/6] mm / virtio: Provide support for unused page
- reporting
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>
-Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
-        "Wang, Wei W" <wei.w.wang@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 07 Oct 2019 08:33:04 -0700
-In-Reply-To: <0a16b11e-ec3b-7196-5b7f-e7395876cf28@redhat.com>
-References: <20191001152441.27008.99285.stgit@localhost.localdomain>
-         <7233498c-2f64-d661-4981-707b59c78fd5@redhat.com>
-         <1ea1a4e11617291062db81f65745b9c95fd0bb30.camel@linux.intel.com>
-         <8bd303a6-6e50-b2dc-19ab-4c3f176c4b02@redhat.com>
-         <CAKgT0Uf37xAFK2CWqUZJgn7bWznSAi6qncLxBpC55oSpBMG1HQ@mail.gmail.com>
-         <c06b68cb-5e94-ae3e-f84e-48087d675a8f@redhat.com>
-         <CAKgT0Ud6TT=XxqFx6ePHzbUYqMp5FHVPozRvnNZK3tKV7j2xjg@mail.gmail.com>
-         <0a16b11e-ec3b-7196-5b7f-e7395876cf28@redhat.com>
+        Mon, 7 Oct 2019 11:33:30 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:34574 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728440AbfJGPda (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 11:33:30 -0400
+Received: by mail-qt1-f194.google.com with SMTP id 3so19790117qta.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 08:33:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Pf3HidEZefDIwyo1ct6xxi1YCNmJ5UEixxdYI9lLLog=;
+        b=GZmS8zvsKrQg/EXVKUpvi9NoGYRQVaqarluPnzYaGy8sXqu/b78tsk8TbGuAjsKtWh
+         LaDmXTJaPhM5CnQTtqSw8SluhxxQRqnMaWzGllY79Gn/MVL2xxS9gc+a3/QBJHZF6I2N
+         YZtO/LYBHfCYVCeq9hZsLspTMNt6kY78pStYw9FHJAXsVg9an1sW0fLJ7ATIH8cqQKTp
+         t3/v267Rm+v7hnQqNnnX8q/UFJxHj0eAUEpowfEBjt2r3nwY0amuNZ/hIn9Q+DjLFwCA
+         i/oCmBdYmHs+Z34JUw+19flXawnZv2b0G96TDIdpkQqx8jzntHvEZ27RqlqhIefg2IGL
+         2Rfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Pf3HidEZefDIwyo1ct6xxi1YCNmJ5UEixxdYI9lLLog=;
+        b=J2IaVPpTeXBwPXs2Xr7tYjyiwDly/lUK1VolODQ68QXrT1ILzUudI9h4qmGOvjNbjN
+         Evem3LMwMpVqrEN8lLxrTyd8U4C7H0443bOqRWGdBP767psVU3jWGCn1+SY+OT0YPdWk
+         vWGJI+T38XSrAQ0mAYTUP0xTXJm2D3BeQuXYdgWlzQ7AC4jA5zJrkKqxi0Ov9q6zA9i0
+         3AJEbpYB0gNAJwPzg4hoXmAyVQBwsmCPYglqijg5PnA8SHX6V1PRv12AwQ8x8ZBDm/sa
+         pYiERMiF/eBDblR2aQv2jcrP0kq6Owd9msLALt3uQ8fKjO2W5v0rtOljHmZ2DnhPO8Y4
+         r4nw==
+X-Gm-Message-State: APjAAAXzLkL7FFTU9NF8PkS3GdJNH6CXxX+11c1jgTcXihVY8LICP6s+
+        Tl7MEupjFJDSSdZOzk4q5Sctbg==
+X-Google-Smtp-Source: APXvYqxTsKh02JLIerAgCwtRbcf9vnECQ9HqfotHtN2SVfmR+nR4wgF/+cawR4VwwkxWvATxuzWDpQ==
+X-Received: by 2002:ac8:5147:: with SMTP id h7mr30349757qtn.117.1570462409073;
+        Mon, 07 Oct 2019 08:33:29 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id 207sm8926467qkh.33.2019.10.07.08.33.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 07 Oct 2019 08:33:28 -0700 (PDT)
+Message-ID: <1570462407.5576.292.camel@lca.pw>
+Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
+From:   Qian Cai <cai@lca.pw>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Petr Mladek <pmladek@suse.com>, akpm@linux-foundation.org,
+        sergey.senozhatsky.work@gmail.com, rostedt@goodmis.org,
+        peterz@infradead.org, linux-mm@kvack.org,
+        john.ogness@linutronix.de, david@redhat.com,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 07 Oct 2019 11:33:27 -0400
+In-Reply-To: <20191007151237.GP2381@dhcp22.suse.cz>
+References: <1570228005-24979-1-git-send-email-cai@lca.pw>
+         <20191007143002.l37bt2lzqtnqjqxu@pathway.suse.cz>
+         <1570460350.5576.290.camel@lca.pw> <20191007151237.GP2381@dhcp22.suse.cz>
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-10-07 at 08:29 -0400, Nitesh Narayan Lal wrote:
-> On 10/2/19 10:25 AM, Alexander Duyck wrote:
-> 
+On Mon, 2019-10-07 at 17:12 +0200, Michal Hocko wrote:
+> On Mon 07-10-19 10:59:10, Qian Cai wrote:
 > [...]
-> > > > My suggestion would be to look at reworking the patch set and
-> > > > post numbers for my patch set versus the bitmap approach and we can
-> > > > look at them then.
-> > > Agreed. However, in order to fix an issue I have to reproduce it first.
-> > With the tweak I have suggested above it should make it much easier to
-> > reproduce. Basically all you need is to have the allocation competing
-> > against hinting. Currently the hinting isn't doing this because the
-> > allocations are mostly coming out of 4K pages instead of higher order
-> > ones.
-> > 
-> > Alternatively you could just make the suggestion I had proposed about
-> > using spin_lock/unlock_irq in your worker thread and that resolved it
-> > for me.
-> > 
-> > > >  I would prefer not to spend my time fixing and
-> > > > tuning a patch set that I am still not convinced is viable.
-> > > You  don't have to, I can fix the issues in my patch-set. :)
-> > Sounds good. Hopefully the stuff I pointed out above helps you to get
-> > a reproduction and resolve the issues.
+> > It is almost impossible to eliminate all the indirect call chains from
+> > console_sem/console_owner_lock to zone->lock because it is too normal that
+> > something later needs to allocate some memory dynamically, so as long as it
+> > directly call printk() with zone->lock held, it will be in trouble.
 > 
-> So I did observe a significant drop in running my v12 path-set [1] with the
-> suggested test setup. However, on making certain changes the performance
-> improved significantly.
-> 
-> I used my v12 patch-set which I have posted earlier and made the following
-> changes:
-> 1. Started reporting only (MAX_ORDER - 1) pages and increased the number of
->     pages that can be reported at a time to 32 from 16. The intent of making
->     these changes was to bring my configuration closer to what Alexander is
->     using.
+> Do you have any example where the console driver really _has_ to
+> allocate. Because I have hard time to believe this is going to work at
+> all as the atomic context doesn't allow to do any memory reclaim and
+> such an allocation would be too easy to fail so the allocation cannot
+> really rely on it.
 
-The increase from 16 to 32 is valid. No point in working in too small of
-batches. However tightening the order to only test for MAX_ORDER - 1 seems
-like a step in the wrong direction. The bitmap approach doesn't have much
-value if it can only work with the highest order page. I realize it is
-probably necessary in order to make the trick for checking on page_buddy
-work, but it seems very limiting.
+I don't know how to explain to you clearly, but let me repeat again one last
+time. There is no necessary for console driver directly to allocate considering
+this example,
 
-> 2. I made an additional change in my bitmap scanning logic to prevent acquiring
->     spinlock if the page is already allocated.
+CPU0:              CPU1:    CPU2:       CPU3:
+console_sem->lock                       zone->lock
+                   pi->lock
+pi->lock                    rq_lock
+                   rq->lock
+                            zone->lock
+                                        console_sem->lock
 
-Again, not a fan. It basically means you can only work with MAX_ORDER - 1
-and there will be no ability to work with anything smaller.
+Here it only need someone held the rq_lock and allocate some memory. There is
+also true for port_lock. Since the deadlock could involve a lot of CPUs and a
+longer lock chain, it is impossible to predict which one to allocate some memory
+while held a lock could end up with the same problematic lock chain.
 
 > 
-> Setup:
-> On a 16 vCPU 30 GB single NUMA guest affined to a single host NUMA, I ran the
-> modified will-it-scale/page_fault number of times and calculated the average
-> of the number of process and threads launched on the 16th core to compare the
-> impact of my patch-set against an unmodified kernel.
+> So again, crippling the MM code just because of lockdep false possitives
+> or a broken console driver sounds like a wrong way to approach the
+> problem.
 > 
+> > [  297.425964] -> #1 (&port_lock_key){-.-.}:
+> > [  297.425967]        __lock_acquire+0x5b3/0xb40
+> > [  297.425967]        lock_acquire+0x126/0x280
+> > [  297.425968]        _raw_spin_lock_irqsave+0x3a/0x50
+> > [  297.425969]        serial8250_console_write+0x3e4/0x450
+> > [  297.425970]        univ8250_console_write+0x4b/0x60
+> > [  297.425970]        console_unlock+0x501/0x750
+> > [  297.425971]        vprintk_emit+0x10d/0x340
+> > [  297.425972]        vprintk_default+0x1f/0x30
+> > [  297.425972]        vprintk_func+0x44/0xd4
+> > [  297.425973]        printk+0x9f/0xc5
+> > [  297.425974]        register_console+0x39c/0x520
+> > [  297.425975]        univ8250_console_init+0x23/0x2d
+> > [  297.425975]        console_init+0x338/0x4cd
+> > [  297.425976]        start_kernel+0x534/0x724
+> > [  297.425977]        x86_64_start_reservations+0x24/0x26
+> > [  297.425977]        x86_64_start_kernel+0xf4/0xfb
+> > [  297.425978]        secondary_startup_64+0xb6/0xc0
 > 
-> Conclusion:
-> %Drop in number of processes launched on 16th vCPU =     1-2%
-> %Drop in number of threads launched on 16th vCPU     =     5-6%
+> This is an early init code again so the lockdep sounds like a false
+> possitive to me.
 
-These numbers don't make that much sense to me. Are you talking about a
-fully functioning setup that is madvsing away the memory in the
-hypervisor? If so I would have expected a much higher difference versus
-baseline as zeroing/faulting the pages in the host gets expensive fairly
-quick. What is the host kernel you are running your test on? I'm just
-wondering if there is some additional overhead currently limiting your
-setup. My host kernel was just the same kernel I was running in the guest,
-just built without the patches applied.
+This is just a tip of iceberg to show the lock dependency,
 
-> Other observations:
-> - I also tried running Alexander's latest v11 page-reporting patch set and
->   observe a similar amount of average degradation in the number of processes
->   and threads.
-> - I didn't include the linear component recorded by will-it-scale because for
->   some reason it was fluctuating too much even when I was using an unmodified
->   kernel. If required I can investigate this further.
-> 
-> Note: If there is a better way to analyze the will-it-scale/page_fault results
-> then please do let me know.
+console_owner --> port_lock_key
 
-Honestly I have mostly just focused on the processes performance. There is
-usually a fair bit of variability but a pattern forms after a few runs so
-you can generally tell if a configuration is an improvement or not.
-
-> Other setup details:
-> Following are the configurations which I enabled to run my tests:
-> - Enabled: CONFIG_SLAB_FREELIST_RANDOM & CONFIG_SHUFFLE_PAGE_ALLOCATOR
-> - Set host THP to always
-> - Set guest THP to madvise
-> - Added the suggested madvise call in page_fault source code.
-> @Alexander please let me know if I missed something.
-
-This seems about right.
-
-> The current state of my v13:
-> I still have to look into Michal's suggestion of using page-isolation API's
-> instead of isolating the page. However, I believe at this moment our objective
-> is to decide with which approach we can proceed and that's why I decided to
-> post the numbers by making small required changes in v12 instead of posting a
-> new series.
-> 
-> 
-> Following are the changes which I have made on top of my v12:
-> 
-> page_reporting.h change:
-> -#define PAGE_REPORTING_MIN_ORDER               (MAX_ORDER - 2)
-> -#define PAGE_REPORTING_MAX_PAGES               16
-> +#define PAGE_REPORTING_MIN_ORDER              (MAX_ORDER - 1)
-> +#define PAGE_REPORTING_MAX_PAGES              32
-> 
-> page_reporting.c change:
-> @@ -101,8 +101,12 @@ static void scan_zone_bitmap(struct page_reporting_config
-> *phconf,
->                 /* Process only if the page is still online */
->                 page = pfn_to_online_page((setbit << PAGE_REPORTING_MIN_ORDER) +
->                                           zone->base_pfn);
-> -               if (!page)
-> +               if (!page || !PageBuddy(page)) {
-> +                       clear_bit(setbit, zone->bitmap);
-> +                       atomic_dec(&zone->free_pages);
->                         continue;
-> +               }
-> 
-
-I suspect the zone->free_pages is going to be expensive for you to deal
-with. It is a global atomic value and is going to have the cacheline
-bouncing that it is contained in. As a result thinks like setting the
-bitmap with be more expensive as every tome a CPU increments free_pages it
-will likely have to take the cache line containing the bitmap pointer as
-well.
-
-> @Alexander in case you decide to give it a try and find different results,
-> please do let me know.
-> 
-> [1] https://lore.kernel.org/lkml/20190812131235.27244-1-nitesh@redhat.com/
-> 
-> 
-
-If I have some free time I will take a look. However one thing that
-concerns me about this change is that it will limit things much further in
-terms of how much memory can ultimately be freed since you are now only
-working with the highest order page and that becomes a hard requirement
-for your design.
-
+which could easily happen everywhere with a simple printk().
