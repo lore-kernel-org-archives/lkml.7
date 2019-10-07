@@ -2,255 +2,845 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F1DC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1705C352AA
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 061A221721
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:49:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sbQ2wz7Q"
+	by mail.kernel.org (Postfix) with ESMTP id 6BBF321871
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:49:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570448966;
+	bh=RAy5rhdNXmaAnIaszXWUSHAwaRFJMIP06gIl+/FHrVE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=R9Y6fSxSyWlKQIo5v05mnW9LEhtgNnMPu5L2B1qban+W7/nl/OvGriTr4wP48cVnA
+	 +M9KsSXkHGWiZDoFK54UVpY+7fn0UUaIpH+fo2FjNO0hjKS5QfXitQJsJpEcGlwGVf
+	 UUtStAXaZECtsAO8bx4sMpIRbiRN8bBPQy4WExkc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727745AbfJGLtX (ORCPT
+        id S1727771AbfJGLtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 07:49:23 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:40926 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727514AbfJGLtX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 07:49:23 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x97BnGP1014702;
-        Mon, 7 Oct 2019 06:49:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570448956;
-        bh=NvbPrOaJMuM3jS9S5I2o0RPYZiGNQegARG9spbNLan8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=sbQ2wz7QKcRudbCl6BKM2rHW/cmFNfGXFzSWxPCA4jmyJaaLhYwztzNeKAzPArsJo
-         Lx/DDh5jPoLLHmXBgJzEgHPO4VtfnWEBY04Umy78vSsQl5PWwesUy9sPPjXzFKuAWM
-         mAn4XaoUWBqC6blXD9tggeQxBI7fOaGK1aZhFtCI=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x97BnGl2038592
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 7 Oct 2019 06:49:16 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 7 Oct
- 2019 06:49:16 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 7 Oct 2019 06:49:14 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x97BnGX4012117;
-        Mon, 7 Oct 2019 06:49:16 -0500
-Subject: Re: [PATCH v10 04/16] leds: multicolor: Introduce a multicolor class
- definition
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20191001145620.11123-1-dmurphy@ti.com>
- <20191001145620.11123-5-dmurphy@ti.com>
- <8c00d678-48e0-bb2b-a18f-39247eff7fe2@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <87782950-d6aa-bda9-5894-a737ccdbcef9@ti.com>
-Date:   Mon, 7 Oct 2019 06:51:53 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 7 Oct 2019 07:49:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54948 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727675AbfJGLtY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 07:49:24 -0400
+Received: from dragon (li937-157.members.linode.com [45.56.119.157])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28D58206C2;
+        Mon,  7 Oct 2019 11:48:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570448961;
+        bh=RAy5rhdNXmaAnIaszXWUSHAwaRFJMIP06gIl+/FHrVE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jrX2JD5lResv+E2gQJtU/oM2iL6pfKOLMR5utuiT1DEJSg3VrZOcYSCFX7A4r5Opy
+         /+gRk5ZfviPQt3zOWdiRu9+XZN6CY1t3e3HYKB9KXXZmsBTn3HOEQdFwXuidPyvcgU
+         uYM/IaKGQ1WnVwYH1CgkFUzDM/GdUwAs2DTTUuN4=
+Date:   Mon, 7 Oct 2019 19:48:41 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Marcel Ziswiler <marcel@ziswiler.com>
+Cc:     devicetree@vger.kernel.org, Aisheng Dong <aisheng.dong@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pramod Kumar <pramod.kumar_1@nxp.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>,
+        Jon Nettleton <jon@solid-run.com>,
+        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vabhav Sharma <vabhav.sharma@nxp.com>, linux-imx@nxp.com,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Richard Hu <richard.hu@technexion.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH v1] arm64: dts: freescale: add initial support for
+ colibri imx8x
+Message-ID: <20191007114837.GE7150@dragon>
+References: <20190916130427.20413-1-marcel@ziswiler.com>
 MIME-Version: 1.0
-In-Reply-To: <8c00d678-48e0-bb2b-a18f-39247eff7fe2@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190916130427.20413-1-marcel@ziswiler.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
+On Mon, Sep 16, 2019 at 03:04:27PM +0200, Marcel Ziswiler wrote:
+> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> 
+> This patch adds the device tree to support Toradex Colibri iMX8X a
+> computer on module which can be used on different carrier boards.
+> 
+> The module consists of a NXP i.MX 8X family SoC (either i.MX 8DualX or
+> 8QuadXPlus), a PF8100 PMIC, a FastEthernet PHY, 1 or 2 GB of LPDDR4
+> RAM, some level shifters, a Micron eMMC, a USB hub, an AD7879 resistive
+> touch controller, a SGTL5000 audio codec and on-module CSI as well as
+> DSI-LVDS FFC receptacles plus an optional Bluetooth/Wi-Fi module.
+> 
+> Anything that is not self-contained on the module is disabled by
+> default.
+> 
+> The device tree for the Colibri Evaluation Board includes the module's
+> device tree and enables the supported peripherals of the carrier board
+> (the Colibri Evaluation Board supports almost all of them).
+> 
+> So far there is no display or USB functionality supported at all but
+> basic console UART, eMMC and Ethernet functionality work fine.
+> 
+> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> 
+> ---
+> 
+>  arch/arm64/boot/dts/freescale/Makefile        |   1 +
+>  .../dts/freescale/imx8qxp-colibri-eval-v3.dts |  15 +
+>  .../freescale/imx8qxp-colibri-eval-v3.dtsi    |  62 ++
+>  .../boot/dts/freescale/imx8qxp-colibri.dtsi   | 592 ++++++++++++++++++
+>  4 files changed, 670 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp-colibri-eval-v3.dts
+>  create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp-colibri-eval-v3.dtsi
+>  create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp-colibri.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+> index 93fce8f0c66d..bd3764e52cfd 100644
+> --- a/arch/arm64/boot/dts/freescale/Makefile
+> +++ b/arch/arm64/boot/dts/freescale/Makefile
+> @@ -31,4 +31,5 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mq-pico-pi.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-rmb3.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-zest.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8qxp-ai_ml.dtb
+> +dtb-$(CONFIG_ARCH_MXC) += imx8qxp-colibri-eval-v3.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-colibri-eval-v3.dts b/arch/arm64/boot/dts/freescale/imx8qxp-colibri-eval-v3.dts
+> new file mode 100644
+> index 000000000000..85fc800c348f
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/freescale/imx8qxp-colibri-eval-v3.dts
+> @@ -0,0 +1,15 @@
+> +// SPDX-License-Identifier: GPL-2.0+ OR X11
 
-Thanks for the review
+s/X11/MIT
 
-On 10/6/19 10:23 AM, Jacek Anaszewski wrote:
-> Dan,
->
-> Thank you for the update.
->
-> On 10/1/19 4:56 PM, Dan Murphy wrote:
->> Introduce a multicolor class that groups colored LEDs
->> within a LED node.
->>
->> The multi color class groups monochrome LEDs and allows controlling two
->> aspects of the final combined color: hue and lightness. The former is
->> controlled via <color>_intensity files and the latter is controlled
->> via brightness file.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   .../ABI/testing/sysfs-class-led-multicolor    |  35 +++
->>   Documentation/leds/index.rst                  |   1 +
->>   Documentation/leds/leds-class-multicolor.rst  |  96 +++++++
->>   drivers/leds/Kconfig                          |  10 +
->>   drivers/leds/Makefile                         |   1 +
->>   drivers/leds/led-class-multicolor.c           | 268 ++++++++++++++++++
->>   include/linux/led-class-multicolor.h          |  88 ++++++
->>   7 files changed, 499 insertions(+)
->>   create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
->>   create mode 100644 Documentation/leds/leds-class-multicolor.rst
->>   create mode 100644 drivers/leds/led-class-multicolor.c
->>   create mode 100644 include/linux/led-class-multicolor.h
->>
->> diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor b/Documentation/ABI/testing/sysfs-class-led-multicolor
->> new file mode 100644
->> index 000000000000..65cb43de26e6
->> --- /dev/null
->> +++ b/Documentation/ABI/testing/sysfs-class-led-multicolor
->> @@ -0,0 +1,35 @@
->> +What:		/sys/class/leds/<led>/brightness
->> +Date:		Sept 2019
->> +KernelVersion:	5.5
->> +Contact:	Dan Murphy <dmurphy@ti.com>
->> +Description:	read/write
->> +		Writing to this file will update all LEDs within the group to a
->> +		calculated percentage of what each color LED intensity is set
->> +		to. The percentage is calculated via the equation below:
->> +
->> +		led_brightness = brightness * <color>_intensity/<color>_max_intensity
->> +
->> +		For additional details please refer to
->> +		Documentation/leds/leds-class-multicolor.rst.
->> +
->> +		The value of the color is from 0 to
->> +		/sys/class/leds/<led>/max_brightness.
->> +
->> +What:		/sys/class/leds/<led>/colors/<color>_intensity
->> +Date:		Sept 2019
->> +KernelVersion:	5.5
->> +Contact:	Dan Murphy <dmurphy@ti.com>
->> +Description:	read/write
->> +		The <color>_intensity file is created based on the color
->> +		defined by the registrar of the class.
->> +		There is one file per color presented.
->> +
->> +		The value of the color is from 0 to
->> +		/sys/class/leds/<led>/colors/<color>_max_intensity.
->> +
->> +What:		/sys/class/leds/<led>/colors/<color>_max_intensity
->> +Date:		Sept 2019
->> +KernelVersion:	5.5
->> +Contact:	Dan Murphy <dmurphy@ti.com>
->> +Description:	read only
->> +		Maximum intensity level for the LED color.
->> diff --git a/Documentation/leds/index.rst b/Documentation/leds/index.rst
->> index 060f4e485897..bc70c6aa7138 100644
->> --- a/Documentation/leds/index.rst
->> +++ b/Documentation/leds/index.rst
->> @@ -9,6 +9,7 @@ LEDs
->>   
->>      leds-class
->>      leds-class-flash
->> +   leds-class-multicolor
->>      ledtrig-oneshot
->>      ledtrig-transient
->>      ledtrig-usbport
->> diff --git a/Documentation/leds/leds-class-multicolor.rst b/Documentation/leds/leds-class-multicolor.rst
->> new file mode 100644
->> index 000000000000..87a1588d7619
->> --- /dev/null
->> +++ b/Documentation/leds/leds-class-multicolor.rst
->> @@ -0,0 +1,96 @@
->> +====================================
->> +Multi Color LED handling under Linux
->> +====================================
->> +
->> +Description
->> +===========
->> +The multi color class groups monochrome LEDs and allows controlling two
->> +aspects of the final combined color: hue and lightness. The former is
->> +controlled via <color>_intensity files and the latter is controlled
->> +via brightness file.
->> +
->> +For more details on hue and lightness notions please refer to
->> +https://en.wikipedia.org/wiki/CIECAM02.
->> +
->> +Note that intensity files only cache the written value and the actual
->> +change of hardware state occurs upon writing brightness file. This
->> +allows for changing many factors of the perceived color in a virtually
->> +unnoticeable way for the human observer.
->> +
->> +Multicolor Class Control
->> +========================
->> +The multicolor class presents the LED groups under a directory called "colors".
->> +This directory is a child under the LED parent node created by the led_class
->> +framework.  The led_class framework is documented in led-class.rst within this
->> +documentation directory.
->> +
->> +Each colored LED will have two files created under the colors directory
->> +<color>_intensity and <color>_max_intensity. These files will contain
->> +one of LED_COLOR_ID_* definitions from the header
->> +include/dt-bindings/leds/common.h.
->> +
->> +Directory Layout Example
->> +========================
->> +root:/sys/class/leds/rgb:grouped_leds# ls -lR colors/
->> +-rw-rwxr-- 1 root root 4096 Jul 7 03:10 red_max_intensity
->> +--w--wx-w- 1 root root 4096 Jul 7 03:10 red_intensity
->> +-rw-rwxr-- 1 root root 4096 Jul 7 03:10 green_max_intensity
->> +--w--wx-w- 1 root root 4096 Jul 7 03:10 green_intensity
->> +-rw-rwxr-- 1 root root 4096 Jul 7 03:10 blue_max_intensity
->> +--w--wx-w- 1 root root 4096 Jul 7 03:10 blue_intensity
-> Now when you have fixed file permissions in LED mc core the
-> 'ls -l' should report them correctly, so this needs to be
-> updated.
+X11 is identical to the MIT License, but with an extra sentence that
+prohibits using the copyright holders' names for advertising or
+promotional purposes without written permission.
 
-ACK
+> +/*
+> + * Copyright 2019 Toradex
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "imx8qxp-colibri.dtsi"
+> +#include "imx8qxp-colibri-eval-v3.dtsi"
+> +
+> +/ {
+> +	model = "Toradex Colibri iMX8QXP/DX on Colibri Evaluation Board V3";
+> +	compatible = "toradex,colibri-imx8qxp-eval-v3",
+> +		     "toradex,colibri-imx8qxp", "fsl,imx8qxp";
 
+Please document these board compatibles in a separate patch.
 
-> [...]
->> +int devm_led_classdev_multicolor_register(struct device *parent,
->> +					  struct led_classdev_mc *mcled_cdev)
->> +{
->> +	struct led_classdev_mc **dr;
->> +	int ret;
->> +
->> +	dr = devres_alloc(devm_led_classdev_multicolor_release,
->> +			  sizeof(*dr), GFP_KERNEL);
->> +	if (!dr)
->> +		return -ENOMEM;
->> +
->> +	ret = led_classdev_multicolor_register(parent, mcled_cdev);
->> +	if (ret) {
->> +		devres_free(dr);
->> +		return ret;
->> +	}
->> +
->> +	*dr = mcled_cdev;
->> +	devres_add(parent, dr);
->> +
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(devm_led_classdev_multicolor_register);
->> +
->> +static int devm_led_classdev_multicolor_match(struct device *dev,
->> +					      void *res, void *data)
->> +{
->> +	struct mcled_cdev **p = res;
-> s/mcled_cdev/led_classdev_mc/
+> +};
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-colibri-eval-v3.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp-colibri-eval-v3.dtsi
+> new file mode 100644
+> index 000000000000..f5e4f380755c
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/freescale/imx8qxp-colibri-eval-v3.dtsi
+> @@ -0,0 +1,62 @@
+> +// SPDX-License-Identifier: GPL-2.0+ OR X11
+> +/*
+> + * Copyright 2019 Toradex
+> + */
+> +
+> +#include "dt-bindings/input/linux-event-codes.h"
+> +
+> +/ {
+> +	aliases {
+> +		rtc0 = &rtc_i2c;
+> +		rtc1 = &rtc;
+> +	};
+> +
+> +	gpio-keys {
+> +		compatible = "gpio-keys";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_gpiokeys>;
+> +
+> +		power {
+> +			label = "Wake-Up";
+> +			gpios = <&lsio_gpio3 10 GPIO_ACTIVE_HIGH>;
+> +			linux,code = <KEY_WAKEUP>;
+> +			debounce-interval = <10>;
+> +			gpio-key,wakeup;
 
-ACK.  Fixed in v11
+Check out Documentation/devicetree/bindings/power/wakeup-source.txt
 
-Dan
+> +		};
+> +	};
+> +};
+> +
+> +/* Colibri Ethernet */
+> +&fec1 {
+> +	status = "okay";
+> +};
+> +
+> +&adma_i2c1 {
 
+Sort these labeling nodes alphabetically.
 
->> +
->> +	if (WARN_ON(!p || !*p))
->> +		return 0;
->> +
->> +	return *p == data;
->> +}
->> +
-> [...]
+> +	status = "okay";
+> +
+> +	/* M41T0M6 real time clock on carrier board */
+> +	rtc_i2c: rtc@68 {
+> +		compatible = "st,m41t0";
+> +		reg = <0x68>;
+> +	};
+> +};
+> +
+> +/* Colibri UART_B */
+> +&adma_lpuart0 {
+> +	status= "okay";
+> +};
+> +
+> +/* Colibri UART_C */
+> +&adma_lpuart2 {
+> +	status= "okay";
+> +};
+> +
+> +/* Colibri UART_A */
+> +&adma_lpuart3 {
+> +	status= "okay";
+> +};
+> +
+> +/* Colibri SDCard */
+> +&usdhc2 {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-colibri.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp-colibri.dtsi
+> new file mode 100644
+> index 000000000000..efdc332d082e
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/freescale/imx8qxp-colibri.dtsi
+> @@ -0,0 +1,592 @@
+> +// SPDX-License-Identifier: GPL-2.0+ OR X11
+> +/*
+> + * Copyright 2019 Toradex
+> + */
+> +
+> +#include "imx8qxp.dtsi"
+> +
+> +/ {
+> +	model = "Toradex Colibri iMX8QXP/DX Module";
+> +	compatible = "toradex,colibri-imx8x", "fsl,imx8qxp";
+> +
+> +	chosen {
+> +		stdout-path = &adma_lpuart3;
+> +	};
+> +
+> +	reg_module_3v3: regulator-module-3v3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "+V3.3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +	};
+> +};
+> +
+> +/* Colibri Ethernet */
+> +&fec1 {
+> +	pinctrl-names = "default", "sleep";
+> +	pinctrl-0 = <&pinctrl_fec1>;
+> +	pinctrl-1 = <&pinctrl_fec1_sleep>;
+> +	phy-mode = "rmii";
+> +	phy-handle = <&ethphy0>;
+> +	fsl,magic-packet;
+> +
+> +	mdio {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		ethphy0: ethernet-phy@2 {
+> +			compatible = "ethernet-phy-ieee802.3-c22";
+> +			max-speed = <100>;
+> +			reg = <2>;
+> +		};
+> +	};
+> +};
+> +
+> +/* On-module I2C */
+> +&adma_i2c0 {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	clock-frequency = <100000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c0>, <&pinctrl_sgtl5000_usb_clk>;
+> +	status = "okay";
+> +
+> +	/* Touch controller */
+> +	ad7879@2c {
+
+Use a generic node name.
+
+> +		compatible = "adi,ad7879-1";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_ad7879_int>;
+> +		reg = <0x2c>;
+> +		interrupt-parent = <&lsio_gpio3>;
+> +		interrupts = <5 IRQ_TYPE_EDGE_FALLING>;
+> +		touchscreen-max-pressure = <4096>;
+> +		adi,resistance-plate-x = <120>;
+> +		adi,first-conversion-delay = /bits/ 8 <3>;
+> +		adi,acquisition-time = /bits/ 8 <1>;
+> +		adi,median-filter-size = /bits/ 8 <2>;
+> +		adi,averaging = /bits/ 8 <1>;
+> +		adi,conversion-interval = /bits/ 8 <255>;
+> +	};
+> +};
+> +
+> +/* Colibri I2C */
+> +&adma_i2c1 {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	clock-frequency = <100000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c1>;
+> +};
+> +
+> +&iomuxc {
+
+You may put iomuxc at end of the file to improve the readability, as the
+node contains so much pinctrl data.
+
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_hog0>, <&pinctrl_hog1>, <&pinctrl_ext_io0>;
+> +
+> +	colibri-imx8qxp {
+
+Drop this unneeded container node.
+
+> +		/* On-module touch pen-down interrupt */
+> +		pinctrl_ad7879_int: ad7879-int {
+> +			fsl,pins = <
+> +				IMX8QXP_MIPI_CSI0_I2C0_SCL_LSIO_GPIO3_IO05	0x21
+> +			>;
+> +		};
+> +
+> +		/* Colibri Analogue Inputs */
+> +		pinctrl_adc0: adc0grp {
+> +			fsl,pins = <
+> +				IMX8QXP_ADC_IN0_ADMA_ADC_IN0			0x60		/* SODIMM   8 */
+> +				IMX8QXP_ADC_IN1_ADMA_ADC_IN1			0x60		/* SODIMM   6 */
+> +				IMX8QXP_ADC_IN4_ADMA_ADC_IN4			0x60		/* SODIMM   4 */
+> +				IMX8QXP_ADC_IN5_ADMA_ADC_IN5			0x60		/* SODIMM   2 */
+> +			>;
+> +		};
+> +
+> +		pinctrl_can_int: can-int-grp {
+
+Please name these pinctrl nodes more consistently (preferably xxxgrp),
+and sort them alphabetically.
+
+Shawn
+
+> +			fsl,pins = <
+> +				IMX8QXP_QSPI0A_DQS_LSIO_GPIO3_IO13		0x40		/* SODIMM  73 */
+> +			>;
+> +		};
+> +
+> +		pinctrl_csi_ctl: csictlgrp {
+> +			fsl,pins = <
+> +				IMX8QXP_QSPI0A_SS0_B_LSIO_GPIO3_IO14		0x20		/* SODIMM  77 */
+> +				IMX8QXP_QSPI0A_SS1_B_LSIO_GPIO3_IO15		0x20		/* SODIMM  89 */
+> +			>;
+> +		};
+> +
+> +		pinctrl_gpiokeys: gpiokeysgrp {
+> +			fsl,pins = <
+> +				IMX8QXP_QSPI0A_DATA1_LSIO_GPIO3_IO10		0x20		/* SODIMM  45 */
+> +			>;
+> +		};
+> +
+> +		/* Colibri UART_B */
+> +		pinctrl_lpuart0: lpuart0grp {
+> +			fsl,pins = <
+> +				IMX8QXP_UART0_RX_ADMA_UART0_RX			0x06000020	/* SODIMM  36 */
+> +				IMX8QXP_UART0_TX_ADMA_UART0_TX			0x06000020	/* SODIMM  38 */
+> +				IMX8QXP_FLEXCAN0_RX_ADMA_UART0_RTS_B		0x06000020	/* SODIMM  34 */
+> +				IMX8QXP_FLEXCAN0_TX_ADMA_UART0_CTS_B		0x06000020	/* SODIMM  32 */
+> +			>;
+> +		};
+> +
+> +		/* Colibri UART_C */
+> +		pinctrl_lpuart2: lpuart2grp {
+> +			fsl,pins = <
+> +				IMX8QXP_UART2_RX_ADMA_UART2_RX			0x06000020	/* SODIMM  19 */
+> +				IMX8QXP_UART2_TX_ADMA_UART2_TX			0x06000020	/* SODIMM  21 */
+> +			>;
+> +		};
+> +
+> +		/* Colibri UART_A */
+> +		pinctrl_lpuart3: lpuart3grp {
+> +			fsl,pins = <
+> +				IMX8QXP_FLEXCAN2_RX_ADMA_UART3_RX		0x06000020	/* SODIMM  33 */
+> +				IMX8QXP_FLEXCAN2_TX_ADMA_UART3_TX		0x06000020	/* SODIMM  35 */
+> +			>;
+> +		};
+> +
+> +		/* Colibri UART_A Control */
+> +		pinctrl_lpuart3_ctrl: lpuart3ctrlgrp {
+> +			fsl,pins = <
+> +				IMX8QXP_MIPI_DSI1_GPIO0_01_LSIO_GPIO2_IO00	0x20		/* SODIMM  23 */
+> +				IMX8QXP_SAI1_RXD_LSIO_GPIO0_IO29		0x20		/* SODIMM  25 */
+> +				IMX8QXP_SAI1_RXC_LSIO_GPIO0_IO30		0x20		/* SODIMM  27 */
+> +				IMX8QXP_CSI_RESET_LSIO_GPIO3_IO03		0x20		/* SODIMM  29 */
+> +				IMX8QXP_USDHC1_CD_B_LSIO_GPIO4_IO22		0x20		/* SODIMM  31 */
+> +				IMX8QXP_CSI_EN_LSIO_GPIO3_IO02			0x20		/* SODIMM  37 */
+> +			>;
+> +		};
+> +
+> +		/* Colibri Ethernet: On-module 100Mbps PHY Micrel KSZ8041 */
+> +		pinctrl_fec1: fec1grp {
+> +			fsl,pins = <
+> +				IMX8QXP_ENET0_MDC_CONN_ENET0_MDC			0x06000020
+> +				IMX8QXP_ENET0_MDIO_CONN_ENET0_MDIO			0x06000020
+> +				IMX8QXP_ENET0_RGMII_TX_CTL_CONN_ENET0_RGMII_TX_CTL	0x61
+> +				IMX8QXP_ENET0_RGMII_TXC_CONN_ENET0_RCLK50M_OUT		0x06000061
+> +				IMX8QXP_ENET0_RGMII_TXD0_CONN_ENET0_RGMII_TXD0		0x61
+> +				IMX8QXP_ENET0_RGMII_TXD1_CONN_ENET0_RGMII_TXD1		0x61
+> +				IMX8QXP_ENET0_RGMII_RX_CTL_CONN_ENET0_RGMII_RX_CTL	0x61
+> +				IMX8QXP_ENET0_RGMII_RXD0_CONN_ENET0_RGMII_RXD0		0x61
+> +				IMX8QXP_ENET0_RGMII_RXD1_CONN_ENET0_RGMII_RXD1		0x61
+> +				IMX8QXP_ENET0_RGMII_RXD2_CONN_ENET0_RMII_RX_ER		0x61
+> +			>;
+> +		};
+> +
+> +		pinctrl_fec1_sleep: fec1-sleep-grp {
+> +			fsl,pins = <
+> +				IMX8QXP_ENET0_MDC_LSIO_GPIO5_IO11		0x06000041
+> +				IMX8QXP_ENET0_MDIO_LSIO_GPIO5_IO10		0x06000041
+> +				IMX8QXP_ENET0_RGMII_TX_CTL_LSIO_GPIO4_IO30	0x41
+> +				IMX8QXP_ENET0_RGMII_TXC_LSIO_GPIO4_IO29		0x41
+> +				IMX8QXP_ENET0_RGMII_TXD0_LSIO_GPIO4_IO31	0x41
+> +				IMX8QXP_ENET0_RGMII_TXD1_LSIO_GPIO5_IO00	0x41
+> +				IMX8QXP_ENET0_RGMII_RX_CTL_LSIO_GPIO5_IO04	0x41
+> +				IMX8QXP_ENET0_RGMII_RXD0_LSIO_GPIO5_IO05	0x41
+> +				IMX8QXP_ENET0_RGMII_RXD1_LSIO_GPIO5_IO06	0x41
+> +				IMX8QXP_ENET0_RGMII_RXD2_LSIO_GPIO5_IO07	0x41
+> +			>;
+> +		};
+> +
+> +		/* Colibri LCD Back-Light GPIO */
+> +		pinctrl_gpio_bl_on: gpio-bl-on {
+> +			fsl,pins = <
+> +				IMX8QXP_QSPI0A_DATA3_LSIO_GPIO3_IO12		0x60		/* SODIMM  71 */
+> +			>;
+> +		};
+> +
+> +		pinctrl_hog0: hog0grp {
+> +			fsl,pins = <
+> +				IMX8QXP_ENET0_RGMII_TXD3_LSIO_GPIO5_IO02	0x06000020	/* SODIMM  65 */
+> +				IMX8QXP_CSI_D07_CI_PI_D09			0x61		/* SODIMM  65 */
+> +				IMX8QXP_QSPI0A_DATA2_LSIO_GPIO3_IO11		0x20		/* SODIMM  69 */
+> +				IMX8QXP_SAI0_TXC_LSIO_GPIO0_IO26		0x20		/* SODIMM  79 */
+> +				IMX8QXP_CSI_D02_CI_PI_D04			0x61		/* SODIMM  79 */
+> +				IMX8QXP_ENET0_RGMII_RXC_LSIO_GPIO5_IO03		0x06000020	/* SODIMM  85 */
+> +				IMX8QXP_CSI_D06_CI_PI_D08			0x61		/* SODIMM  85 */
+> +				IMX8QXP_QSPI0B_SCLK_LSIO_GPIO3_IO17		0x20		/* SODIMM  95 */
+> +				IMX8QXP_SAI0_RXD_LSIO_GPIO0_IO27		0x20		/* SODIMM  97 */
+> +				IMX8QXP_CSI_D03_CI_PI_D05			0x61		/* SODIMM  97 */
+> +				IMX8QXP_QSPI0B_DATA0_LSIO_GPIO3_IO18		0x20		/* SODIMM  99 */
+> +				IMX8QXP_SAI0_TXFS_LSIO_GPIO0_IO28		0x20		/* SODIMM 101 */
+> +				IMX8QXP_CSI_D00_CI_PI_D02			0x61		/* SODIMM 101 */
+> +				IMX8QXP_SAI0_TXD_LSIO_GPIO0_IO25		0x20		/* SODIMM 103 */
+> +				IMX8QXP_CSI_D01_CI_PI_D03			0x61		/* SODIMM 103 */
+> +				IMX8QXP_QSPI0B_DATA1_LSIO_GPIO3_IO19		0x20		/* SODIMM 105 */
+> +				IMX8QXP_QSPI0B_DATA2_LSIO_GPIO3_IO20		0x20		/* SODIMM 107 */
+> +				IMX8QXP_USB_SS3_TC2_LSIO_GPIO4_IO05		0x20		/* SODIMM 127 */
+> +				IMX8QXP_USB_SS3_TC3_LSIO_GPIO4_IO06		0x20		/* SODIMM 131 */
+> +				IMX8QXP_USB_SS3_TC1_LSIO_GPIO4_IO04		0x20		/* SODIMM 133 */
+> +				IMX8QXP_CSI_PCLK_LSIO_GPIO3_IO00		0x20		/* SODIMM  96 */
+> +				IMX8QXP_QSPI0B_DATA3_LSIO_GPIO3_IO21		0x20		/* SODIMM  98 */
+> +				IMX8QXP_SAI1_RXFS_LSIO_GPIO0_IO31		0x20		/* SODIMM 100 */
+> +				IMX8QXP_QSPI0B_DQS_LSIO_GPIO3_IO22		0x20		/* SODIMM 102 */
+> +				IMX8QXP_QSPI0B_SS0_B_LSIO_GPIO3_IO23		0x20		/* SODIMM 104 */
+> +				IMX8QXP_QSPI0B_SS1_B_LSIO_GPIO3_IO24		0x20		/* SODIMM 106 */
+> +			>;
+> +		};
+> +
+> +		pinctrl_hog1: hog1grp {
+> +			fsl,pins = <
+> +				IMX8QXP_CSI_MCLK_LSIO_GPIO3_IO01		0x20		/* SODIMM  75 */
+> +				IMX8QXP_QSPI0A_SCLK_LSIO_GPIO3_IO16		0x20		/* SODIMM  93 */
+> +			>;
+> +		};
+> +
+> +		/*
+> +		 * This pin is used in the SCFW as a UART. Using it from
+> +		 * Linux would require rewritting the SCFW board file.
+> +		 */
+> +		pinctrl_hog_scfw: hogscfwgrp {
+> +			fsl,pins = <
+> +				IMX8QXP_SCU_GPIO0_00_LSIO_GPIO2_IO03		0x20		/* SODIMM 144 */
+> +			>;
+> +		};
+> +
+> +		/* On Module I2C */
+> +		pinctrl_i2c0: i2c0grp {
+> +			fsl,pins = <
+> +				IMX8QXP_MIPI_CSI0_GPIO0_00_ADMA_I2C0_SCL	0x06000021
+> +				IMX8QXP_MIPI_CSI0_GPIO0_01_ADMA_I2C0_SDA	0x06000021
+> +			>;
+> +		};
+> +
+> +		/* Colibri I2C */
+> +		pinctrl_i2c1: i2c1grp {
+> +			fsl,pins = <
+> +				IMX8QXP_MIPI_DSI0_GPIO0_00_ADMA_I2C1_SCL	0x06000021	/* SODIMM 196 */
+> +				IMX8QXP_MIPI_DSI0_GPIO0_01_ADMA_I2C1_SDA	0x06000021	/* SODIMM 194 */
+> +			>;
+> +		};
+> +
+> +		/* Colibri optional CAN on UART_B RTS/CTS */
+> +		pinctrl_flexcan1: flexcan0grp {
+> +			fsl,pins = <
+> +				IMX8QXP_FLEXCAN0_TX_ADMA_FLEXCAN0_TX		0x21		/* SODIMM  32 */
+> +				IMX8QXP_FLEXCAN0_RX_ADMA_FLEXCAN0_RX		0x21		/* SODIMM  34 */
+> +			>;
+> +		};
+> +
+> +		/* Colibri optional CAN on PS2 */
+> +		pinctrl_flexcan2: flexcan1grp {
+> +			fsl,pins = <
+> +				IMX8QXP_FLEXCAN1_TX_ADMA_FLEXCAN1_TX		0x21		/* SODIMM  55 */
+> +				IMX8QXP_FLEXCAN1_RX_ADMA_FLEXCAN1_RX		0x21		/* SODIMM  63 */
+> +			>;
+> +		};
+> +
+> +		/* On module wifi module */
+> +		pinctrl_pcieb: pciebgrp {
+> +			fsl,pins = <
+> +				IMX8QXP_PCIE_CTRL0_CLKREQ_B_LSIO_GPIO4_IO01	0x04000061	/* SODIMM 178 */
+> +				IMX8QXP_PCIE_CTRL0_WAKE_B_LSIO_GPIO4_IO02	0x04000061	/* SODIMM  94 */
+> +				IMX8QXP_PCIE_CTRL0_PERST_B_LSIO_GPIO4_IO00	0x60		/* SODIMM  81 */
+> +			>;
+> +		};
+> +
+> +		/* Colibri PWM_A */
+> +		pinctrl_pwm_a: pwma {
+> +		/* both pins are connected together, reserve the unused CSI_D05 */
+> +			fsl,pins = <
+> +				IMX8QXP_CSI_D05_CI_PI_D07			0x61		/* SODIMM  59 */
+> +				IMX8QXP_SPI0_CS1_ADMA_LCD_PWM0_OUT		0x60		/* SODIMM  59 */
+> +			>;
+> +		};
+> +
+> +		/* Colibri PWM_B */
+> +		pinctrl_pwm_b: pwmb {
+> +			fsl,pins = <
+> +				IMX8QXP_UART1_TX_LSIO_PWM0_OUT			0x60		/* SODIMM  28 */
+> +			>;
+> +		};
+> +
+> +		/* Colibri PWM_C */
+> +		pinctrl_pwm_c: pwmc {
+> +			fsl,pins = <
+> +				IMX8QXP_UART1_RX_LSIO_PWM1_OUT			0x60		/* SODIMM  30 */
+> +			>;
+> +		};
+> +
+> +		/* Colibri PWM_D */
+> +		pinctrl_pwm_d: pwmd {
+> +		/* both pins are connected together, reserve the unused CSI_D04 */
+> +			fsl,pins = <
+> +				IMX8QXP_CSI_D04_CI_PI_D06			0x61		/* SODIMM  67 */
+> +				IMX8QXP_UART1_RTS_B_LSIO_PWM2_OUT		0x60		/* SODIMM  67 */
+> +			>;
+> +		};
+> +
+> +		/* On-module I2S */
+> +		pinctrl_sai0: sai0grp {
+> +			fsl,pins = <
+> +				IMX8QXP_SPI0_SDI_ADMA_SAI0_TXD			0x06000040
+> +				IMX8QXP_SPI0_CS0_ADMA_SAI0_RXD			0x06000040
+> +				IMX8QXP_SPI0_SCK_ADMA_SAI0_TXC			0x06000040
+> +				IMX8QXP_SPI0_SDO_ADMA_SAI0_TXFS			0x06000040
+> +			>;
+> +		};
+> +
+> +		/* Colibri Audio Analogue Microphone GND */
+> +		pinctrl_sgtl5000: sgtl5000 {
+> +			fsl,pins = <
+> +				/* MIC GND EN */
+> +				IMX8QXP_MIPI_CSI0_I2C0_SDA_LSIO_GPIO3_IO06	0x41
+> +			>;
+> +		};
+> +
+> +		/* On-module SGTL5000 clock */
+> +		pinctrl_sgtl5000_usb_clk: sgtl5000-usb-clk {
+> +			fsl,pins = <
+> +				IMX8QXP_ADC_IN3_ADMA_ACM_MCLK_OUT0		0x21
+> +			>;
+> +		};
+> +
+> +		/* On-module USB interrupt */
+> +		pinctrl_usb3503a: usb3503a-grp {
+> +			fsl,pins = <
+> +				IMX8QXP_MIPI_CSI0_MCLK_OUT_LSIO_GPIO3_IO04	0x61
+> +			>;
+> +		};
+> +
+> +		/* Colibri USB Client Cable Detect */
+> +		pinctrl_usbc_det: usbc-det {
+> +			fsl,pins = <
+> +				IMX8QXP_ENET0_REFCLK_125M_25M_LSIO_GPIO5_IO09	0x06000040	/* SODIMM 137 */
+> +			>;
+> +		};
+> +
+> +		pinctrl_ext_io0: ext-io0 {
+> +			fsl,pins = <
+> +				IMX8QXP_ENET0_RGMII_RXD3_LSIO_GPIO5_IO08	0x06000040	/* SODIMM 135 */
+> +			>;
+> +		};
+> +
+> +		/* Colibri Parallel RGB LCD Interface */
+> +		pinctrl_lcdif: lcdif-pins {
+> +			fsl,pins = <
+> +				IMX8QXP_MCLK_OUT0_ADMA_LCDIF_CLK		0x60		/* SODIMM  56 */
+> +				IMX8QXP_SPI3_CS0_ADMA_LCDIF_HSYNC		0x60		/* SODIMM  68 */
+> +				IMX8QXP_MCLK_IN0_ADMA_LCDIF_VSYNC		0x60		/* SODIMM  82 */
+> +				IMX8QXP_MCLK_IN1_ADMA_LCDIF_EN			0x60		/* SODIMM  44 */
+> +				IMX8QXP_USDHC1_RESET_B_LSIO_GPIO4_IO19		0x60		/* SODIMM  44 */
+> +				IMX8QXP_ESAI0_FSR_ADMA_LCDIF_D00		0x60		/* SODIMM  76 */
+> +				IMX8QXP_USDHC1_WP_LSIO_GPIO4_IO21		0x60		/* SODIMM  76 */
+> +				IMX8QXP_ESAI0_FST_ADMA_LCDIF_D01		0x60		/* SODIMM  70 */
+> +				IMX8QXP_ESAI0_SCKR_ADMA_LCDIF_D02		0x60		/* SODIMM  60 */
+> +				IMX8QXP_ESAI0_SCKT_ADMA_LCDIF_D03		0x60		/* SODIMM  58 */
+> +				IMX8QXP_ESAI0_TX0_ADMA_LCDIF_D04		0x60		/* SODIMM  78 */
+> +				IMX8QXP_ESAI0_TX1_ADMA_LCDIF_D05		0x60		/* SODIMM  72 */
+> +				IMX8QXP_ESAI0_TX2_RX3_ADMA_LCDIF_D06		0x60		/* SODIMM  80 */
+> +				IMX8QXP_ESAI0_TX3_RX2_ADMA_LCDIF_D07		0x60		/* SODIMM  46 */
+> +				IMX8QXP_ESAI0_TX4_RX1_ADMA_LCDIF_D08		0x60		/* SODIMM  62 */
+> +				IMX8QXP_ESAI0_TX5_RX0_ADMA_LCDIF_D09		0x60		/* SODIMM  48 */
+> +				IMX8QXP_SPDIF0_RX_ADMA_LCDIF_D10		0x60		/* SODIMM  74 */
+> +				IMX8QXP_SPDIF0_TX_ADMA_LCDIF_D11		0x60		/* SODIMM  50 */
+> +				IMX8QXP_SPDIF0_EXT_CLK_ADMA_LCDIF_D12		0x60		/* SODIMM  52 */
+> +				IMX8QXP_SPI3_SCK_ADMA_LCDIF_D13			0x60		/* SODIMM  54 */
+> +				IMX8QXP_SPI3_SDO_ADMA_LCDIF_D14			0x60		/* SODIMM  66 */
+> +				IMX8QXP_SPI3_SDI_ADMA_LCDIF_D15			0x60		/* SODIMM  64 */
+> +				IMX8QXP_SPI3_CS1_ADMA_LCDIF_D16			0x60		/* SODIMM  57 */
+> +				IMX8QXP_ENET0_RGMII_TXD2_LSIO_GPIO5_IO01	0x60		/* SODIMM  57 */
+> +				IMX8QXP_UART1_CTS_B_ADMA_LCDIF_D17		0x60		/* SODIMM  61 */
+> +			>;
+> +		};
+> +
+> +		/* USB Host Power Enable */
+> +		pinctrl_usbh1_reg: usbh1-reg {
+> +			fsl,pins = <
+> +				IMX8QXP_USB_SS3_TC0_LSIO_GPIO4_IO03		0x06000040	/* SODIMM 129 */
+> +			>;
+> +		};
+> +
+> +		/* On-module eMMC */
+> +		pinctrl_usdhc1: usdhc1grp {
+> +			fsl,pins = <
+> +				IMX8QXP_EMMC0_CLK_CONN_EMMC0_CLK		0x06000041
+> +				IMX8QXP_EMMC0_CMD_CONN_EMMC0_CMD		0x21
+> +				IMX8QXP_EMMC0_DATA0_CONN_EMMC0_DATA0		0x21
+> +				IMX8QXP_EMMC0_DATA1_CONN_EMMC0_DATA1		0x21
+> +				IMX8QXP_EMMC0_DATA2_CONN_EMMC0_DATA2		0x21
+> +				IMX8QXP_EMMC0_DATA3_CONN_EMMC0_DATA3		0x21
+> +				IMX8QXP_EMMC0_DATA4_CONN_EMMC0_DATA4		0x21
+> +				IMX8QXP_EMMC0_DATA5_CONN_EMMC0_DATA5		0x21
+> +				IMX8QXP_EMMC0_DATA6_CONN_EMMC0_DATA6		0x21
+> +				IMX8QXP_EMMC0_DATA7_CONN_EMMC0_DATA7		0x21
+> +				IMX8QXP_EMMC0_STROBE_CONN_EMMC0_STROBE		0x41
+> +				IMX8QXP_EMMC0_RESET_B_CONN_EMMC0_RESET_B	0x21
+> +			>;
+> +		};
+> +
+> +		pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
+> +			fsl,pins = <
+> +				IMX8QXP_EMMC0_CLK_CONN_EMMC0_CLK		0x06000041
+> +				IMX8QXP_EMMC0_CMD_CONN_EMMC0_CMD		0x21
+> +				IMX8QXP_EMMC0_DATA0_CONN_EMMC0_DATA0		0x21
+> +				IMX8QXP_EMMC0_DATA1_CONN_EMMC0_DATA1		0x21
+> +				IMX8QXP_EMMC0_DATA2_CONN_EMMC0_DATA2		0x21
+> +				IMX8QXP_EMMC0_DATA3_CONN_EMMC0_DATA3		0x21
+> +				IMX8QXP_EMMC0_DATA4_CONN_EMMC0_DATA4		0x21
+> +				IMX8QXP_EMMC0_DATA5_CONN_EMMC0_DATA5		0x21
+> +				IMX8QXP_EMMC0_DATA6_CONN_EMMC0_DATA6		0x21
+> +				IMX8QXP_EMMC0_DATA7_CONN_EMMC0_DATA7		0x21
+> +				IMX8QXP_EMMC0_STROBE_CONN_EMMC0_STROBE		0x41
+> +				IMX8QXP_EMMC0_RESET_B_CONN_EMMC0_RESET_B	0x21
+> +			>;
+> +		};
+> +
+> +		pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
+> +			fsl,pins = <
+> +				IMX8QXP_EMMC0_CLK_CONN_EMMC0_CLK		0x06000041
+> +				IMX8QXP_EMMC0_CMD_CONN_EMMC0_CMD		0x21
+> +				IMX8QXP_EMMC0_DATA0_CONN_EMMC0_DATA0		0x21
+> +				IMX8QXP_EMMC0_DATA1_CONN_EMMC0_DATA1		0x21
+> +				IMX8QXP_EMMC0_DATA2_CONN_EMMC0_DATA2		0x21
+> +				IMX8QXP_EMMC0_DATA3_CONN_EMMC0_DATA3		0x21
+> +				IMX8QXP_EMMC0_DATA4_CONN_EMMC0_DATA4		0x21
+> +				IMX8QXP_EMMC0_DATA5_CONN_EMMC0_DATA5		0x21
+> +				IMX8QXP_EMMC0_DATA6_CONN_EMMC0_DATA6		0x21
+> +				IMX8QXP_EMMC0_DATA7_CONN_EMMC0_DATA7		0x21
+> +				IMX8QXP_EMMC0_STROBE_CONN_EMMC0_STROBE		0x41
+> +				IMX8QXP_EMMC0_RESET_B_CONN_EMMC0_RESET_B	0x21
+> +			>;
+> +		};
+> +
+> +		/* Colibri SDCard CardDetect */
+> +		pinctrl_usdhc2_gpio: usdhc2gpiogrp {
+> +			fsl,pins = <
+> +				IMX8QXP_QSPI0A_DATA0_LSIO_GPIO3_IO09		0x06000021	/* SODIMM  43 */
+> +			>;
+> +		};
+> +
+> +		pinctrl_usdhc2_gpio_sleep: usdhc2gpioslpgrp {
+> +			fsl,pins = <
+> +				IMX8QXP_QSPI0A_DATA0_LSIO_GPIO3_IO09		0x60		/* SODIMM  43 */
+> +			>;
+> +		};
+> +
+> +		/* Colibri SDCard */
+> +		pinctrl_usdhc2: usdhc2grp {
+> +			fsl,pins = <
+> +				IMX8QXP_USDHC1_CLK_CONN_USDHC1_CLK		0x06000041	/* SODIMM  47 */
+> +				IMX8QXP_USDHC1_CMD_CONN_USDHC1_CMD		0x21		/* SODIMM 190 */
+> +				IMX8QXP_USDHC1_DATA0_CONN_USDHC1_DATA0		0x21		/* SODIMM 192 */
+> +				IMX8QXP_USDHC1_DATA1_CONN_USDHC1_DATA1		0x21		/* SODIMM  49 */
+> +				IMX8QXP_USDHC1_DATA2_CONN_USDHC1_DATA2		0x21		/* SODIMM  51 */
+> +				IMX8QXP_USDHC1_DATA3_CONN_USDHC1_DATA3		0x21		/* SODIMM  53 */
+> +				IMX8QXP_USDHC1_VSELECT_CONN_USDHC1_VSELECT	0x21
+> +			>;
+> +		};
+> +
+> +		pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
+> +			fsl,pins = <
+> +				IMX8QXP_USDHC1_CLK_CONN_USDHC1_CLK		0x06000041	/* SODIMM  47 */
+> +				IMX8QXP_USDHC1_CMD_CONN_USDHC1_CMD		0x21		/* SODIMM 190 */
+> +				IMX8QXP_USDHC1_DATA0_CONN_USDHC1_DATA0		0x21		/* SODIMM 192 */
+> +				IMX8QXP_USDHC1_DATA1_CONN_USDHC1_DATA1		0x21		/* SODIMM  49 */
+> +				IMX8QXP_USDHC1_DATA2_CONN_USDHC1_DATA2		0x21		/* SODIMM  51 */
+> +				IMX8QXP_USDHC1_DATA3_CONN_USDHC1_DATA3		0x21		/* SODIMM  53 */
+> +				IMX8QXP_USDHC1_VSELECT_CONN_USDHC1_VSELECT	0x21
+> +			>;
+> +		};
+> +
+> +		pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
+> +			fsl,pins = <
+> +				IMX8QXP_USDHC1_CLK_CONN_USDHC1_CLK		0x06000041	/* SODIMM  47 */
+> +				IMX8QXP_USDHC1_CMD_CONN_USDHC1_CMD		0x21		/* SODIMM 190 */
+> +				IMX8QXP_USDHC1_DATA0_CONN_USDHC1_DATA0		0x21		/* SODIMM 192 */
+> +				IMX8QXP_USDHC1_DATA1_CONN_USDHC1_DATA1		0x21		/* SODIMM  49 */
+> +				IMX8QXP_USDHC1_DATA2_CONN_USDHC1_DATA2		0x21		/* SODIMM  51 */
+> +				IMX8QXP_USDHC1_DATA3_CONN_USDHC1_DATA3		0x21		/* SODIMM  53 */
+> +				IMX8QXP_USDHC1_VSELECT_CONN_USDHC1_VSELECT	0x21
+> +			>;
+> +		};
+> +
+> +		pinctrl_usdhc2_sleep: usdhc2slpgrp {
+> +			fsl,pins = <
+> +				IMX8QXP_USDHC1_CLK_LSIO_GPIO4_IO23		0x60		/* SODIMM  47 */
+> +				IMX8QXP_USDHC1_CMD_LSIO_GPIO4_IO24		0x60		/* SODIMM 190 */
+> +				IMX8QXP_USDHC1_DATA0_LSIO_GPIO4_IO25		0x60		/* SODIMM 192 */
+> +				IMX8QXP_USDHC1_DATA1_LSIO_GPIO4_IO26		0x60		/* SODIMM  49 */
+> +				IMX8QXP_USDHC1_DATA2_LSIO_GPIO4_IO27		0x60		/* SODIMM  51 */
+> +				IMX8QXP_USDHC1_DATA3_LSIO_GPIO4_IO28		0x60		/* SODIMM  53 */
+> +				IMX8QXP_USDHC1_VSELECT_CONN_USDHC1_VSELECT	0x21
+> +			>;
+> +		};
+> +
+> +		/* MIPI DSI I2C accessible on SODIMM (X1) and FFC (X2) */
+> +		pinctrl_i2c0_mipi_lvds0: mipi_lvds0_i2c0_grp {
+> +			fsl,pins = <
+> +				IMX8QXP_MIPI_DSI0_I2C0_SCL_MIPI_DSI0_I2C0_SCL	0xc6000020	/* SODIMM 140 */
+> +				IMX8QXP_MIPI_DSI0_I2C0_SDA_MIPI_DSI0_I2C0_SDA	0xc6000020	/* SODIMM 142 */
+> +			>;
+> +		};
+> +
+> +		/* MIPI CSI I2C accessible on SODIMM (X1) and FFC (X3) */
+> +		pinctrl_i2c0_mipi_lvds1: mipi_lvds1_i2c0_grp {
+> +			fsl,pins = <
+> +				IMX8QXP_MIPI_DSI1_I2C0_SCL_MIPI_DSI1_I2C0_SCL	0xc6000020	/* SODIMM 186 */
+> +				IMX8QXP_MIPI_DSI1_I2C0_SDA_MIPI_DSI1_I2C0_SDA	0xc6000020	/* SODIMM 188 */
+> +			>;
+> +		};
+> +
+> +		/* Colibri SPI */
+> +		pinctrl_lpspi2: lpspi2 {
+> +			fsl,pins = <
+> +				IMX8QXP_SPI2_CS0_LSIO_GPIO1_IO00		0x21		/* SODIMM  86 */
+> +				IMX8QXP_SPI2_SDO_ADMA_SPI2_SDO			0x06000040	/* SODIMM  92 */
+> +				IMX8QXP_SPI2_SDI_ADMA_SPI2_SDI			0x06000040	/* SODIMM  90 */
+> +				IMX8QXP_SPI2_SCK_ADMA_SPI2_SCK			0x06000040	/* SODIMM  88 */
+> +			>;
+> +		};
+> +
+> +		pinctrl_wifi: wifigrp {
+> +			fsl,pins = <
+> +				IMX8QXP_SCU_BOOT_MODE3_SCU_DSC_RTC_CLOCK_OUTPUT_32K	0x20
+> +			>;
+> +		};
+> +	};
+> +};
+> +
+> +/* Colibri UART_B */
+> +&adma_lpuart0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_lpuart0>;
+> +};
+> +
+> +/* Colibri UART_C */
+> +&adma_lpuart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_lpuart2>;
+> +};
+> +
+> +/* Colibri UART_A */
+> +&adma_lpuart3 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_lpuart3>, <&pinctrl_lpuart3_ctrl>;
+> +};
+> +
+> +/* On-module eMMC */
+> +&usdhc1 {
+> +	bus-width = <8>;
+> +	non-removable;
+> +	no-sd;
+> +	no-sdio;
+> +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
+> +	pinctrl-0 = <&pinctrl_usdhc1>;
+> +	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
+> +	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
+> +	status = "okay";
+> +};
+> +
+> +/* Colibri SDCard */
+> +&usdhc2 {
+> +	bus-width = <4>;
+> +	cd-gpios = <&lsio_gpio3 9 GPIO_ACTIVE_LOW>;
+> +	vmmc-supply = <&reg_module_3v3>;
+> +	pinctrl-names = "default", "state_100mhz", "state_200mhz", "sleep";
+> +	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
+> +	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_gpio>;
+> +	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_gpio>;
+> +	pinctrl-3 = <&pinctrl_usdhc2_sleep>, <&pinctrl_usdhc2_gpio_sleep>;
+> +	disable-wp;
+> +};
+> -- 
+> 2.21.0
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
