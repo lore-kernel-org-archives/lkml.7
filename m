@@ -2,114 +2,85 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7791FECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5139FC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FB1D21835
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:40:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570462815;
-	bh=0SqrmEI3jPveA0in6PcRhu6ezfY2kUTsmIlF2EiiGK0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KXgrSi+dm2G5zrcy+zVD0Wm2aR9QQVdzqZzBod/7mXBfM91qBUSWQDx+xCH1Dx/28
-	 hB7kqQsk39ivAm5CONaZz7Kc9QYpwZRZhnWUFPGXzzyLYEl0/JAHKXjF6Up2XUnUa7
-	 V3DvXgmZz6PAg2Z4fftsrBScvLVeNfyEOt0kjAhI=
+	by mail.kernel.org (Postfix) with ESMTP id 2466720640
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:40:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729382AbfJGPkO (ORCPT
+        id S1729000AbfJGPk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 11:40:14 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38223 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729169AbfJGPkL (ORCPT
+        Mon, 7 Oct 2019 11:40:26 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:29532 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727801AbfJGPkZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:40:11 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 3so12870348wmi.3;
-        Mon, 07 Oct 2019 08:40:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YvxpVFdJOEZrkQChM8Lq11d9YvLJbKpxKj8YQXF8h+c=;
-        b=b4aG6tjLd5D2QbgnsraRnITHGMxPIlNYBw3yvdWYP1HXbsqS/SraQh9s6vsAGE01d6
-         MQIslDbt1wE18zCEStz+X9q7Y+jV6jLPKAjDeWSBoivuHmzk3dLr7uDU52DvuXSd1BTw
-         ksD0DFhHtZ6gDqB3thMNT0kkZ388AIzXzMAVXxcOm6Weie/MQZPRYbHYdHbLwMvkG1hn
-         mjV1Am8WsTi4xlAwdj5P4xVuX+Nj+pqwa5aM3dlPsSATUFr3NrmlTOJkFh9pgTFrn1BQ
-         HpKoFh/IQSXAeHRrbbdvggubAAPtBj1XdU+YV1/fExBF7JZnI6PCKZ+M/CUlgGKP0Iag
-         D0jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YvxpVFdJOEZrkQChM8Lq11d9YvLJbKpxKj8YQXF8h+c=;
-        b=iNuJLxNTvo7RGem/89WvjeG8DdkG5Q7hCpYpNpkWGGyw6ap19R+XErQBbT5zQuwIUU
-         WqetegjJ+EJa0Ta9eMhaWPfvGr+XlMpeng+jJVCVc2gHFguUBYPkOMX5avh1jrVVm4v4
-         6qg7Yux6934RBBInf9bq80FdpdWc8R4m1/4fqKEfAkIXDEdiDip8CnfbEyW14CPKFVTM
-         dB0BgvOFUReuAyKQhG7wYqNMGi1YUv/OcYH/mLXGTzHDCcEWX1BKyYwScM0HOwW7V+Vr
-         pR5V8EuvDtvlwosxYVZFkE+3xSATzM3z/NMWw9J8Hr+D0Y3eMKuxqwzxybHpQik3fRGd
-         86kg==
-X-Gm-Message-State: APjAAAX10vbkuKDJ62W8jsPPnpOnANCRqKsszQDRFGuJx7vdsYXhla3O
-        F+bbTQKf9Jm7MwAfj5lIpgo=
-X-Google-Smtp-Source: APXvYqw1sh7drpFUzZ8Rb52Hl6MrStf7eBimtSUGhMBrc0RLPFo88/Tu+eXgo9P3OGErTSCHgYbQDA==
-X-Received: by 2002:a1c:7ec4:: with SMTP id z187mr20333322wmc.94.1570462809964;
-        Mon, 07 Oct 2019 08:40:09 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id y5sm18605709wma.14.2019.10.07.08.40.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2019 08:40:09 -0700 (PDT)
-Date:   Mon, 7 Oct 2019 17:40:07 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-crypto@vger.kernel.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org, Stephan Mueller <smueller@chronox.de>
-Subject: Re: [PATCH v2 5.4 regression fix] x86/boot: Provide memzero_explicit
-Message-ID: <20191007154007.GA96929@gmail.com>
-References: <20191007134724.4019-1-hdegoede@redhat.com>
- <20191007140022.GA29008@gmail.com>
- <1dc3c53d-785e-f9a4-1b4c-3374c94ae0a7@redhat.com>
- <20191007142230.GA117630@gmail.com>
- <2982b666-e310-afb7-40eb-e536ce95e23d@redhat.com>
- <20191007144600.GB59713@gmail.com>
- <20191007152049.GA384920@rani.riverdale.lan>
+        Mon, 7 Oct 2019 11:40:25 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-223-2sMXyru-MEeYMtfSCrrM3w-1; Mon, 07 Oct 2019 16:40:21 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 7 Oct 2019 16:40:21 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 7 Oct 2019 16:40:21 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Linus Torvalds' <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+CC:     Guenter Roeck <linux@roeck-us.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: RE: [PATCH] Convert filldir[64]() from __put_user() to
+ unsafe_put_user()
+Thread-Topic: [PATCH] Convert filldir[64]() from __put_user() to
+ unsafe_put_user()
+Thread-Index: AQHVfL0BUpJ/upywWEKRtOjvaDvCEKdPT9ew
+Date:   Mon, 7 Oct 2019 15:40:21 +0000
+Message-ID: <c58c2a8a5366409abd4169d10a58196a@AcuMS.aculab.com>
+References: <20191006222046.GA18027@roeck-us.net>
+ <CAHk-=wgrqwuZJmwbrjhjCFeSUu2i57unaGOnP4qZAmSyuGwMZA@mail.gmail.com>
+ <CAHk-=wjRPerXedTDoBbJL=tHBpH+=sP6pX_9NfgWxpnmHC5RtQ@mail.gmail.com>
+ <5f06c138-d59a-d811-c886-9e73ce51924c@roeck-us.net>
+ <CAHk-=whAQWEMADgxb_qAw=nEY4OnuDn6HU4UCSDMNT5ULKvg3g@mail.gmail.com>
+ <20191007012437.GK26530@ZenIV.linux.org.uk>
+ <CAHk-=whKJfX579+2f-CHc4_YmEmwvMe_Csr0+CPfLAsSAdfDoA@mail.gmail.com>
+ <20191007025046.GL26530@ZenIV.linux.org.uk>
+ <CAHk-=whraNSys_Lj=Ut1EA=CJEfw2Uothh+5-WL+7nDJBegWcQ@mail.gmail.com>
+In-Reply-To: <CAHk-=whraNSys_Lj=Ut1EA=CJEfw2Uothh+5-WL+7nDJBegWcQ@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191007152049.GA384920@rani.riverdale.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MC-Unique: 2sMXyru-MEeYMtfSCrrM3w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+PiBGcm9tOiBMaW51cyBUb3J2YWxkcw0KPiBTZW50OiAwNyBPY3RvYmVyIDIwMTkgMDQ6MTINCi4u
+Lg0KPiBJbiB0aGlzIGNhc2UsIEkgdGhpbmsgaXQncyBkb25lIGEgZmV3IGNhbGxlcnMgdXAgaW4g
+aTkxNV9nZW1fcHJlYWRfaW9jdGwoKToNCj4gDQo+ICAgICAgICAgaWYgKCFhY2Nlc3Nfb2sodTY0
+X3RvX3VzZXJfcHRyKGFyZ3MtPmRhdGFfcHRyKSwNCj4gICAgICAgICAgICAgICAgICAgICAgICBh
+cmdzLT5zaXplKSkNCj4gICAgICAgICAgICAgICAgIHJldHVybiAtRUZBVUxUOw0KPiANCj4gYnV0
+IGhvbmVzdGx5LCB0cnlpbmcgdG8gb3B0aW1pemUgYXdheSBhbm90aGVyICJhY2Nlc3Nfb2soKSIg
+aXMganVzdA0KPiBub3Qgd29ydGggaXQuIEknZCByYXRoZXIgaGF2ZSBhbiBleHRyYSBvbmUgdGhh
+biBtaXNzIG9uZS4NCg0KWW91IGRvbid0IHJlYWxseSB3YW50IGFuIGV4dHJhIGFjY2Vzc19vaygp
+IGZvciBldmVyeSAnd29yZCcgb2YgYSBjb3B5Lg0KU29tZSBjb3BpZXMgaGF2ZSB0byBiZSBkb25l
+IGEgd29yZCBhdCBhIHRpbWUuDQoNCkFuZCB0aGUgY2hlY2tzIHNvbWVvbmUgYWRkZWQgdG8gY29w
+eV90by9mcm9tX3VzZXIoKSB0byBkZXRlY3Qga2VybmVsDQpidWZmZXIgb3ZlcnJ1bnMgbXVzdCBr
+aWxsIHBlcmZvcm1hbmNlIHdoZW4gdGhlIGJ1ZmZlcnMgYXJlIHdheSBkb3duIHRoZSBzdGFjaw0K
+b3IgaW4ga21hbGxvYygpZWQgc3BhY2UuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJl
+c3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsx
+IDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
-* Arvind Sankar <nivedita@alum.mit.edu> wrote:
-
-> With the barrier in there, is there any reason to *not* inline the
-> function? barrier_data() is an asm statement that tells the compiler
-> that the asm uses the memory that was set to zero, thus preventing it
-> from removing the memset even if nothing else uses that memory later. A
-> more detailed comment is there in compiler-gcc.h. I can't see why it
-> wouldn't work even if it were inlined.
-> 
-> If the function can indeed be inlined, we could just make the common
-> implementation a macro and avoid duplicating it? As mentioned in another
-> mail, we otherwise will likely need another duplicate implementation for
-> arch/s390/purgatory as well.
-
-I suspect macro would be justified in this case. Mind sending a v3 patch 
-to demonstrate how it would all look like?
-
-I'll zap v2 if the macro solution looks better.
-
-Thanks,
-
-	Ingo
