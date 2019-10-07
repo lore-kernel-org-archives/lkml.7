@@ -2,149 +2,227 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF7E3C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D1FECE58D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 831762173B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:45:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="swLnqi6A"
+	by mail.kernel.org (Postfix) with ESMTP id 349342190F
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:45:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbfJGMpD (ORCPT
+        id S1727984AbfJGMpF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 08:45:03 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:38396 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727801AbfJGMpD (ORCPT
+        Mon, 7 Oct 2019 08:45:05 -0400
+Received: from mtaout.hs-regensburg.de ([194.95.104.10]:60534 "EHLO
+        mtaout.hs-regensburg.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727793AbfJGMpD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Oct 2019 08:45:03 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x97CitGu030289;
-        Mon, 7 Oct 2019 07:44:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570452295;
-        bh=UKYNlQrAnqYHdLObzAAphAQPvbt/6HFXaFAp/AGJipk=;
-        h=From:To:CC:Subject:Date;
-        b=swLnqi6AwNfzDlhYP5J9keUG1KcsL4skefAR55w8Pz2OMMn08OqjivTAXjr91v/y3
-         SckiArG3Sf2ECvZ199k9uSOKNvYthRKzsyVh7cm/bdBoUlxvFSv7SUXVZ1+GMvVDu1
-         rjqBP58vKmIjF/EKnavTGlHpU1xuauD6GHYpwLS4=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x97Cit91109873
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 7 Oct 2019 07:44:55 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 7 Oct
- 2019 07:44:54 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 7 Oct 2019 07:44:52 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x97CirYU093802;
-        Mon, 7 Oct 2019 07:44:54 -0500
-From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <sre@kernel.org>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <lee.jones@linaro.org>, <daniel.thompson@linaro.org>
-CC:     <dmurphy@ti.com>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <tomi.valkeinen@ti.com>, Jean-Jacques Hiblot <jjhiblot@ti.com>
-Subject: [PATCH v9 0/5] Add a generic driver for LED-based backlight
-Date:   Mon, 7 Oct 2019 14:44:32 +0200
-Message-ID: <20191007124437.20367-1-jjhiblot@ti.com>
-X-Mailer: git-send-email 2.17.1
+Received: from pluto.lfdr (im-mob-039.hs-regensburg.de [172.20.37.154])
+        by mtaout.hs-regensburg.de (Postfix) with ESMTP id 46n0Q50mWtzy85;
+        Mon,  7 Oct 2019 14:38:21 +0200 (CEST)
+From:   Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>
+To:     Jan Kiszka <jan.kiszka@siemens.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        jailhouse-dev@googlegroups.com, linux-kernel@vger.kernel.org
+Cc:     Ingo Molnar <mingo@redhat.com>, "H . Peter Anvin" <hpa@zytor.com>,
+        Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>
+Subject: [PATCH v5 2/2] x86/jailhouse: Only enable platform UARTs if available
+Date:   Mon,  7 Oct 2019 14:38:19 +0200
+Message-Id: <20191007123819.161432-3-ralf.ramsauer@oth-regensburg.de>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191007123819.161432-1-ralf.ramsauer@oth-regensburg.de>
+References: <20191007123819.161432-1-ralf.ramsauer@oth-regensburg.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+X-PMX-Version: 6.3.3.2656215, Antispam-Engine: 2.7.2.2107409, Antispam-Data: 2019.10.7.123317, AntiVirus-Engine: 5.65.0, AntiVirus-Data: 2019.10.7.5650001
+X-PMX-Spam: Gauge=IIIIIIII, Probability=8%, Report='
+ MULTIPLE_RCPTS 0.1, HTML_00_01 0.05, HTML_00_10 0.05, BODY_SIZE_5000_5999 0, BODY_SIZE_7000_LESS 0, IN_REP_TO 0, LEGITIMATE_SIGNS 0, MSG_THREAD 0, MULTIPLE_REAL_RCPTS 0, NO_URI_HTTPS 0, REFERENCES 0, __ANY_URI 0, __BODY_NO_MAILTO 0, __CC_NAME 0, __CC_NAME_DIFF_FROM_ACC 0, __CC_REAL_NAMES 0, __CTE 0, __FROM_DOMAIN_IN_ANY_CC1 0, __FROM_DOMAIN_IN_RCPT 0, __HAS_CC_HDR 0, __HAS_FROM 0, __HAS_MSGID 0, __HAS_REFERENCES 0, __HAS_X_MAILER 0, __IN_REP_TO 0, __MIME_TEXT_ONLY 0, __MIME_TEXT_P 0, __MIME_TEXT_P1 0, __MIME_VERSION 0, __MULTIPLE_RCPTS_CC_X2 0, __MULTIPLE_RCPTS_TO_X5 0, __NO_HTML_TAG_RAW 0, __PHISH_PHRASE2 0, __REFERENCES 0, __SANE_MSGID 0, __SUBJ_ALPHA_END 0, __TO_MALFORMED_2 0, __TO_NAME 0, __TO_NAME_DIFF_FROM_ACC 0, __TO_REAL_NAMES 0, __URI_NO_WWW 0, __URI_NS '
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series aims to add a led-backlight driver, similar to pwm-backlight,
-but using a LED class device underneath.
+ACPI tables aren't available if Linux runs as guest of the hypervisor
+Jailhouse. This makes the 8250 driver probe for all platform UARTs as
+it assumes that all platform are present in case of !ACPI. Jailhouse
+will stop execution of Linux guest due to port access violation.
 
-A few years ago (2015), Tomi Valkeinen posted a series implementing a
-backlight driver on top of a LED device:
-https://patchwork.kernel.org/patch/7293991/
-https://patchwork.kernel.org/patch/7294001/
-https://patchwork.kernel.org/patch/7293981/
+So far, these access violations could be solved by tuning the
+8250.nr_uarts parameter but it has limitations: We can, e.g., only map
+consecutive platform UARTs to Linux, and only in the sequence 0x3f8,
+0x2f8, 0x3e8, 0x2e8.
 
-The discussion stopped because Tomi lacked the time to work on it.
+Beginning from setup_data version 2, Jailhouse will place information of
+available platform UARTs in setup_data. This allows for selective
+activation of platform UARTs.
 
-changes in v9:
-- let to_of_node() check if the fwnode is actually a of_node
-- add some checks in of_led_get()
-- let dev_of_node() do the check about OF availabilty
-- refactor led_bl_probe() to register a cleanup function with
-  devm_add_action_or_reset(). This simplifies the error handling (which
-  was not 100% done in v7) and allows to get rid of led_bl_remove()
+This patch queries the setup_data version and activates only available
+UARTS. It comes with backward compatibility, and will still support
+older setup_data versions. In this case, Linux falls back to the old
+behaviour.
 
-changes in v8:
-- use class_find_device_by_of_node() instead of class_find_device()
-- renamed devm_led_get() as devm_of_led_get()
+Signed-off-by: Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>
+---
+ arch/x86/include/uapi/asm/bootparam.h |  3 +
+ arch/x86/kernel/jailhouse.c           | 83 +++++++++++++++++++++++----
+ 2 files changed, 74 insertions(+), 12 deletions(-)
 
-changes in v7:
-- rebased on top of linux-leds/for-next
-- populate the of_node member of the LED device if fwnode is a of_node
-  (this is a new patch and the first of the series).
-- devm_led_get() works only when the device tree is used. Add a few checks
-  for that.  
-
-changes in v6:
-- trim the list of included headers
-- remove useless definition of BKL_FULL_BRIGHTNESS
-
-changes in v5:
-- removed LED brightness scaling
-- disable sysfs the interface of the LEDs when used by the backlight device
-
-changes in v4:
-- fix dev_err() messages and commit logs following the advices of Pavel
-- cosmetic changes (indents, getting rid of  "? 1 : 0" in
-  led_match_led_node())
-
-changes in v3:
-- dt binding: don't limit the brightness range to 0-255. Use the range of
-  the underlying LEDs. as a side-effect, all LEDs must now have the same
-  range
-- driver: Adapt to dt binding update.
-- driver: rework probe() for clarity and remove the remaining goto.
-
-changes in v2:
-- handle more than one LED.
-- don't make the backlight device a child of the LED controller.
-- make brightness-levels and default-brightness-level optional
-- removed the option to use a GPIO enable.
-- removed the option to use a regulator. It should be handled by the LED
-  core
-- don't make any change to the LED core (not needed anymore)
-
-Jean-Jacques Hiblot (3):
-  leds: populate the device's of_node
-  leds: Add managed API to get a LED from a device driver
-  dt-bindings: backlight: Add led-backlight binding
-
-Tomi Valkeinen (2):
-  leds: Add of_led_get() and led_put()
-  backlight: add led-backlight driver
-
- .../bindings/leds/backlight/led-backlight.txt |  28 ++
- drivers/leds/led-class.c                      | 103 ++++++-
- drivers/video/backlight/Kconfig               |   7 +
- drivers/video/backlight/Makefile              |   1 +
- drivers/video/backlight/led_bl.c              | 258 ++++++++++++++++++
- include/linux/leds.h                          |   6 +
- 6 files changed, 402 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
- create mode 100644 drivers/video/backlight/led_bl.c
-
+diff --git a/arch/x86/include/uapi/asm/bootparam.h b/arch/x86/include/uapi/asm/bootparam.h
+index 43be437c9c71..db1e24e56e94 100644
+--- a/arch/x86/include/uapi/asm/bootparam.h
++++ b/arch/x86/include/uapi/asm/bootparam.h
+@@ -152,6 +152,9 @@ struct jailhouse_setup_data {
+ 		__u8	standard_ioapic;
+ 		__u8	cpu_ids[255];
+ 	} __attribute__((packed)) v1;
++	struct {
++		__u32	flags;
++	} __attribute__((packed)) v2;
+ } __attribute__((packed));
+ 
+ /* The so-called "zeropage" */
+diff --git a/arch/x86/kernel/jailhouse.c b/arch/x86/kernel/jailhouse.c
+index b9647add0063..95550c08ab23 100644
+--- a/arch/x86/kernel/jailhouse.c
++++ b/arch/x86/kernel/jailhouse.c
+@@ -11,6 +11,7 @@
+ #include <linux/acpi_pmtmr.h>
+ #include <linux/kernel.h>
+ #include <linux/reboot.h>
++#include <linux/serial_8250.h>
+ #include <asm/apic.h>
+ #include <asm/cpu.h>
+ #include <asm/hypervisor.h>
+@@ -23,9 +24,22 @@
+ 
+ static __initdata struct jailhouse_setup_data setup_data;
+ #define SETUP_DATA_V1_LEN	(sizeof(setup_data.hdr) + sizeof(setup_data.v1))
++#define SETUP_DATA_V2_LEN	(SETUP_DATA_V1_LEN + sizeof(setup_data.v2))
+ 
+ static unsigned int precalibrated_tsc_khz;
+ 
++static void jailhouse_setup_irq(unsigned int irq)
++{
++	struct mpc_intsrc mp_irq = {
++		.type		= MP_INTSRC,
++		.irqtype	= mp_INT,
++		.irqflag	= MP_IRQPOL_ACTIVE_HIGH | MP_IRQTRIG_EDGE,
++		.srcbusirq	= irq,
++		.dstirq		= irq,
++	};
++	mp_save_irq(&mp_irq);
++}
++
+ static uint32_t jailhouse_cpuid_base(void)
+ {
+ 	if (boot_cpu_data.cpuid_level < 0 ||
+@@ -79,11 +93,6 @@ static void __init jailhouse_get_smp_config(unsigned int early)
+ 		.type = IOAPIC_DOMAIN_STRICT,
+ 		.ops = &mp_ioapic_irqdomain_ops,
+ 	};
+-	struct mpc_intsrc mp_irq = {
+-		.type = MP_INTSRC,
+-		.irqtype = mp_INT,
+-		.irqflag = MP_IRQPOL_ACTIVE_HIGH | MP_IRQTRIG_EDGE,
+-	};
+ 	unsigned int cpu;
+ 
+ 	jailhouse_x2apic_init();
+@@ -100,12 +109,12 @@ static void __init jailhouse_get_smp_config(unsigned int early)
+ 	if (setup_data.v1.standard_ioapic) {
+ 		mp_register_ioapic(0, 0xfec00000, gsi_top, &ioapic_cfg);
+ 
+-		/* Register 1:1 mapping for legacy UART IRQs 3 and 4 */
+-		mp_irq.srcbusirq = mp_irq.dstirq = 3;
+-		mp_save_irq(&mp_irq);
+-
+-		mp_irq.srcbusirq = mp_irq.dstirq = 4;
+-		mp_save_irq(&mp_irq);
++		if (IS_ENABLED(CONFIG_SERIAL_8250) &&
++		    setup_data.hdr.version < 2) {
++			/* Register 1:1 mapping for legacy UART IRQs 3 and 4 */
++			jailhouse_setup_irq(3);
++			jailhouse_setup_irq(4);
++		}
+ 	}
+ }
+ 
+@@ -138,6 +147,53 @@ static int __init jailhouse_pci_arch_init(void)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_SERIAL_8250
++static bool jailhouse_uart_enabled(unsigned int uart_nr)
++{
++	return setup_data.v2.flags & BIT(uart_nr);
++}
++
++static void jailhouse_serial_fixup(int port, struct uart_port *up,
++				   u32 *capabilities)
++{
++	static const u16 pcuart_base[] = {0x3f8, 0x2f8, 0x3e8, 0x2e8};
++	unsigned int n;
++
++	for (n = 0; n < ARRAY_SIZE(pcuart_base); n++) {
++		if (pcuart_base[n] != up->iobase)
++			continue;
++
++		if (jailhouse_uart_enabled(n)) {
++			pr_info("Enabling UART%u (port 0x%lx)\n", n,
++				up->iobase);
++			jailhouse_setup_irq(up->irq);
++		} else {
++			/* Deactivate UART if access isn't allowed */
++			up->iobase = 0;
++		}
++		break;
++	}
++}
++
++static void jailhouse_serial_workaround(void)
++{
++	/*
++	 * There are flags inside setup_data that indicate availability of
++	 * platform UARTs since setup data version 2.
++	 *
++	 * In case of version 1, we don't know which UARTs belong Linux. In
++	 * this case, unconditionally register 1:1 mapping for legacy UART IRQs
++	 * 3 and 4.
++	 */
++	if (setup_data.hdr.version > 1)
++		serial8250_set_isa_configurator(jailhouse_serial_fixup);
++}
++#else /* !CONFIG_SERIAL_8250 */
++static inline void jailhouse_serial_workaround(void)
++{
++}
++#endif /* CONFIG_SERIAL_8250 */
++
+ static void __init jailhouse_init_platform(void)
+ {
+ 	u64 pa_data = boot_params.hdr.setup_data;
+@@ -188,7 +244,8 @@ static void __init jailhouse_init_platform(void)
+ 	if (setup_data.hdr.version == 0 ||
+ 	    setup_data.hdr.compatible_version !=
+ 		JAILHOUSE_SETUP_REQUIRED_VERSION ||
+-	    (setup_data.hdr.version >= 1 && header.len < SETUP_DATA_V1_LEN))
++	    (setup_data.hdr.version == 1 && header.len < SETUP_DATA_V1_LEN) ||
++	    (setup_data.hdr.version >= 2 && header.len < SETUP_DATA_V2_LEN))
+ 		goto unsupported;
+ 
+ 	pmtmr_ioport = setup_data.v1.pm_timer_address;
+@@ -204,6 +261,8 @@ static void __init jailhouse_init_platform(void)
+ 	 * are none in a non-root cell.
+ 	 */
+ 	disable_acpi();
++
++	jailhouse_serial_workaround();
+ 	return;
+ 
+ unsupported:
 -- 
-2.17.1
+2.23.0
 
