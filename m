@@ -2,70 +2,176 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38EE4C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ADC8C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1757421655
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:01:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44650206C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:01:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="1dC/oO7K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728360AbfJGOBF (ORCPT
+        id S1728380AbfJGOBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 10:01:05 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:53004 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727324AbfJGOBE (ORCPT
+        Mon, 7 Oct 2019 10:01:11 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:34147 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728225AbfJGOBC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 10:01:04 -0400
-Received: from localhost (unknown [144.121.20.163])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id C86B61411EAF3;
-        Mon,  7 Oct 2019 07:01:03 -0700 (PDT)
-Date:   Mon, 07 Oct 2019 16:01:03 +0200 (CEST)
-Message-Id: <20191007.160103.449489515941198973.davem@davemloft.net>
-To:     colin.king@canonical.com
-Cc:     yisen.zhuang@huawei.com, salil.mehta@huawei.com,
-        tanhuazhong@huawei.com, linyunsheng@huawei.com,
-        lipeng321@huawei.com, netdev@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: hns3: make array tick_array static, makes object
- smaller
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191007110935.32607-1-colin.king@canonical.com>
-References: <20191007110935.32607-1-colin.king@canonical.com>
-X-Mailer: Mew version 6.8 on Emacs 26.2
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 07 Oct 2019 07:01:04 -0700 (PDT)
+        Mon, 7 Oct 2019 10:01:02 -0400
+Received: by mail-ed1-f68.google.com with SMTP id p10so12584854edq.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 07:01:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rKL1w3iXknpln9Ux2lFi8nURmFThC0ACAB38j7xMJOw=;
+        b=1dC/oO7KYUhQk3Cp+gPvQQFfNUhXo7xBP7fOg6lJXEJoNi4xqoFx/+Z/eteEJO7TfS
+         beXRbX34FM5TGrxRC9UtlPyVu0dSHSWxoZtuR+BBMIz3ysIcWEMjUC0trYfvncn0/S1K
+         bedaHLGes2jPFyGX3hZIeFJI6nEWOI1RFwcmLQ/j5X/1FPSdYeaocVmbj1FV4QMO0Ct3
+         gzIXMAqry05u2l85X3+0Gg6QDGEktesNKTlT1AuPCVLEt0ZvIsj2v9MyWo4Idq82kDyc
+         ct/NK1YDtzPjx53EMdfO2f0gZjT1d4J5zb0WVTYkaD/x8lXnVmFKIb86ehHVrjIfm46m
+         og+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rKL1w3iXknpln9Ux2lFi8nURmFThC0ACAB38j7xMJOw=;
+        b=pJ8/qqyT/Kr6dKAyD8VtzZv1ovXXVamDTE5xEGuhJrIdO6qndWzD3qPIvVpWCHl0uq
+         CDyvpX5W3RtdSkgKkD5i9O2uOKVWPPVX4Av6wGxxjCl7bZRIo6GfWS9FuYZqf14L6dBj
+         qq2FG38KR0nT0veLjCwAZwUOgwnlrl2G0GsTuQud68Qxj/qlhyEI7DTmsEe4sjyNCd3J
+         w1JqInCvJxuzBZILdpHuaiQ/xWx+K23/rqTcOiem/7Wu1XUOz9iv9M4/YAs/nch2WOYo
+         ZNiZ8APnePxsjJvB2m4SRq2jn+9j4T2bljF6TwBN4GIMPIhjq10swt9O83iXEo1Fru06
+         KUww==
+X-Gm-Message-State: APjAAAX4ZOIe5xJA51C6EsUBUw1QE5Icwr64xmsW2iGzHpNBD9m0qka/
+        RuJPkX2iPhbG7JG1NI6hSW3OtA==
+X-Google-Smtp-Source: APXvYqxuYtPtzk9H5R4kXUotDVtZLwRxmHkom44kwHAzQPnIVU9Dw79/zIRyaunZCbGIUeO/BsAK1g==
+X-Received: by 2002:a17:906:4d08:: with SMTP id r8mr10168700eju.283.1570456860258;
+        Mon, 07 Oct 2019 07:01:00 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id r18sm3382249edl.6.2019.10.07.07.00.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 07 Oct 2019 07:00:59 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id BDCFF100287; Mon,  7 Oct 2019 17:00:58 +0300 (+03)
+Date:   Mon, 7 Oct 2019 17:00:58 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V4 2/2] mm/pgtable/debug: Add test validating
+ architecture page table helpers
+Message-ID: <20191007140058.um5g44rvxyzyiref@box>
+References: <1570427124-21887-1-git-send-email-anshuman.khandual@arm.com>
+ <1570427124-21887-3-git-send-email-anshuman.khandual@arm.com>
+ <20191007130617.GB56546@gmail.com>
+ <20191007132607.4q537nauwfn5thol@box>
+ <20191007135158.GA36360@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191007135158.GA36360@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin King <colin.king@canonical.com>
-Date: Mon,  7 Oct 2019 12:09:35 +0100
+On Mon, Oct 07, 2019 at 03:51:58PM +0200, Ingo Molnar wrote:
+> 
+> * Kirill A. Shutemov <kirill@shutemov.name> wrote:
+> 
+> > On Mon, Oct 07, 2019 at 03:06:17PM +0200, Ingo Molnar wrote:
+> > > 
+> > > * Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+> > > 
+> > > > This adds a test module which will validate architecture page table helpers
+> > > > and accessors regarding compliance with generic MM semantics expectations.
+> > > > This will help various architectures in validating changes to the existing
+> > > > page table helpers or addition of new ones.
+> > > > 
+> > > > Test page table and memory pages creating it's entries at various level are
+> > > > all allocated from system memory with required alignments. If memory pages
+> > > > with required size and alignment could not be allocated, then all depending
+> > > > individual tests are skipped.
+> > > 
+> > > > diff --git a/arch/x86/include/asm/pgtable_64_types.h b/arch/x86/include/asm/pgtable_64_types.h
+> > > > index 52e5f5f2240d..b882792a3999 100644
+> > > > --- a/arch/x86/include/asm/pgtable_64_types.h
+> > > > +++ b/arch/x86/include/asm/pgtable_64_types.h
+> > > > @@ -40,6 +40,8 @@ static inline bool pgtable_l5_enabled(void)
+> > > >  #define pgtable_l5_enabled() 0
+> > > >  #endif /* CONFIG_X86_5LEVEL */
+> > > >  
+> > > > +#define mm_p4d_folded(mm) (!pgtable_l5_enabled())
+> > > > +
+> > > >  extern unsigned int pgdir_shift;
+> > > >  extern unsigned int ptrs_per_p4d;
+> > > 
+> > > Any deep reason this has to be a macro instead of proper C?
+> > 
+> > It's a way to override the generic mm_p4d_folded(). It can be rewritten
+> > as inline function + define. Something like:
+> > 
+> > #define mm_p4d_folded mm_p4d_folded
+> > static inline bool mm_p4d_folded(struct mm_struct *mm)
+> > {
+> > 	return !pgtable_l5_enabled();
+> > }
+> > 
+> > But I don't see much reason to be more verbose here than needed.
+> 
+> C type checking? Documentation? Yeah, I know it's just a one-liner, but 
+> the principle of the death by a thousand cuts applies here.
 
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Don't populate the array tick_array on the stack but instead make it
-> static. Makes the object code smaller by 29 bytes.
-> 
-> Before:
->    text	   data	    bss	    dec	    hex	filename
->   19191	    432	      0	  19623	   4ca7	hisilicon/hns3/hns3pf/hclge_tm.o
-> 
-> After:
->    text	   data	    bss	    dec	    hex	filename
->   19098	    496	      0	  19594	   4c8a	hisilicon/hns3/hns3pf/hclge_tm.o
-> 
-> (gcc version 9.2.1, amd64)
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Okay, if you think it worth it. Anshuman, could you fix it up for the next
+submission?
 
-Applied.
+
+> BTW., any reason this must be in the low level pgtable_64_types.h type 
+> header, instead of one of the API level header files?
+
+I defined it next pgtable_l5_enabled(). What is more appropriate place to
+you? pgtable_64.h? Yeah, it makes sense.
+
+-- 
+ Kirill A. Shutemov
