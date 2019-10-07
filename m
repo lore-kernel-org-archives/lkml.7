@@ -2,160 +2,168 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69666ECE58D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA9EECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35F28206C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:53:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="fpejq/z7"
+	by mail.kernel.org (Postfix) with ESMTP id 6500321721
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:55:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570460113;
+	bh=036/FgVYQ0erbfkCckT7nupbJ4Qeu0pYge0nGVPHmC0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=A//2fRW06Ql7dSDjM6l6sQjHIBax0lhpvghEQr/0wOziTlv3W1J0ukesdm2KsYJt3
+	 l8HqJYZ2dkED8zVbJvw6+CE2MBTNRTdV3lxIRLdVtQV8fLk21LT6h4DRj4gfohQpcA
+	 6vQYPoBu+njXO2VVuIEhlhbI5aHf8n8/6KVJmLEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728198AbfJGOxW (ORCPT
+        id S1728083AbfJGOzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 10:53:22 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:21186 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727711AbfJGOxV (ORCPT
+        Mon, 7 Oct 2019 10:55:12 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44735 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727490AbfJGOzL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 10:53:21 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x97Eke9C003277;
-        Mon, 7 Oct 2019 16:53:11 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=BHdMjWZVBOApScvksxR8joV5keqKZpJ60rXE2ibEO8g=;
- b=fpejq/z7supoEWxe+slx8u6VsoOpWCsVfD19jaAqZhI0pGQbGv+uJOtfLP7w1ByISxdX
- CYK7sCHsQVt2L31c2fYrKMxsnwZkc5uqOwdxtWgmUwK4BOb+whM+iCemw6GeF4p6MVWk
- IXbLeZ59vIWWv/VQE9UIHvcuEaZF8D9W7TowMUWX7m7dLpCMq1WbpTZPTk/6EyEwci6u
- Y2UjuqSbPnsaON8A9D+I9S8LNdbmRJbtGk4kPlB31EpsXVzBf669j3K+9gHsp4WsF/pI
- 5/5T32y1goOidFIYn5kiV9QGm+44s5OKMQa5D1xGw4nwtE0FwzFpIUw1UpYMsCuzbzjp vQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2vegaguahy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Oct 2019 16:53:11 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 83456100034;
-        Mon,  7 Oct 2019 16:53:10 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 76D982ACFE5;
-        Mon,  7 Oct 2019 16:53:10 +0200 (CEST)
-Received: from lmecxl0995.lme.st.com (10.75.127.50) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 7 Oct
- 2019 16:53:09 +0200
-Subject: Re: [PATCH 1/1] pinctrl: stmfx: add irq_request/release_resources
- callbacks
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Alexandre TORGUE <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <20191004122923.22674-1-amelie.delaunay@st.com>
- <CACRpkda6CyYCt-s-VkaK856Jt3TxQg+HVDz-5Ww9T9KNHHAjaQ@mail.gmail.com>
-From:   Amelie DELAUNAY <amelie.delaunay@st.com>
-Message-ID: <8eb2090a-e50e-2e4f-982b-073ad24e553c@st.com>
-Date:   Mon, 7 Oct 2019 16:53:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 7 Oct 2019 10:55:11 -0400
+Received: by mail-wr1-f67.google.com with SMTP id z9so15652577wrl.11;
+        Mon, 07 Oct 2019 07:55:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zyoLjL42jHZiwxAXIV2/XDf7QRXhcD/Qv0lwPPBYTCw=;
+        b=B3otWI4U0GSNrjqwP6usJ0QsQXw4reQk8JjX63gKbNmDqAXYg4VYGfTbWUjktkuzGX
+         +xaCfb5w2mNmI+cZOUkZOU2oHYUZaeDacr7lOFz0b6bpbtHDBxwDlGimM2pweeUoUckb
+         v71aW6da+G0WmrKWP7WjLNZbCZDKxBxv68vuIk2coAyjeKrN0uLlkMoQjeEjUizhgWhB
+         81cL91Uw1tAqjPAg4Q1xObpfA9FCGncyUd+XXhjU/zpBiTAHru93glYwQ6hFXRh0jU+c
+         o0lQx8rf0p+RmPNf5M6kyseZ00wCTEeZa7k7f3nPTm7LwKAffx8C99poDTbS0a5pit/4
+         HeBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zyoLjL42jHZiwxAXIV2/XDf7QRXhcD/Qv0lwPPBYTCw=;
+        b=MlW0ojwhToYlPfCDYVsgL6bxsaI8PSKD9se19pgLFkzBC1di8Ame4yu0n9sLxvTZ7N
+         LPNA36+M3umUPsZ7V2k7g3Twuq8cZjm4608xYvuW/lcmVDq92A2P7IVJxn6PNQWuMH2h
+         oladtQ9b0xd2HvtC+BMR7OZlxEMDEDJ4Xd1TCHVmqHfW4rWnlz2iQuknzjliGqlkiMUb
+         2A2r3/6j7B2GLSc33m4MYmWMaywqU86jYXpnEg9o/hbmhHrIJO5Xt5SADzGSB64euEQe
+         aXky1pvmOyBdrV+zCPu8KqY2xaaUIaKp1oTfVoINAVUgRe7rqhLR9tc5CZcLLteyAGpa
+         wu2A==
+X-Gm-Message-State: APjAAAU0Xt0ESDp0yqiD8NSZa11U4LHGDxea7S9ezVYEbJZ6UOOySJYK
+        51paO4IydqjJnfi69XJRqZeB28+x
+X-Google-Smtp-Source: APXvYqwE7b8tg9jRbFJHNexgtg4+8TZ17/nub3x5etgIlxbBApsOnGRJD+30XW12FT483Q+wyoX9kg==
+X-Received: by 2002:a5d:4689:: with SMTP id u9mr22942357wrq.78.1570460108023;
+        Mon, 07 Oct 2019 07:55:08 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id s1sm26307592wrg.80.2019.10.07.07.55.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2019 07:55:07 -0700 (PDT)
+Date:   Mon, 7 Oct 2019 16:55:05 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-mm@kvack.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        x86@kernel.org, Keith Busch <keith.busch@intel.com>,
+        jglisse@redhat.com, "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        linuxarm@huawei.com, Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH V5 3/4] x86: Support Generic Initiator only proximity
+ domains
+Message-ID: <20191007145505.GB88143@gmail.com>
+References: <20191004114330.104746-1-Jonathan.Cameron@huawei.com>
+ <20191004114330.104746-4-Jonathan.Cameron@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <CACRpkda6CyYCt-s-VkaK856Jt3TxQg+HVDz-5Ww9T9KNHHAjaQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG4NODE1.st.com (10.75.127.10) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-07_02:2019-10-07,2019-10-07 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191004114330.104746-4-Jonathan.Cameron@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
 
-On 10/5/19 6:49 PM, Linus Walleij wrote:
-> On Fri, Oct 4, 2019 at 2:29 PM Amelie Delaunay <amelie.delaunay@st.com> 
-> wrote:
-> 
->> When an STMFX IO is used as interrupt through the interrupt-controller
->> binding, the STMFX driver should configure this IO as input. Default
->> value of STMFX IO direction is input, but if the IO is used as output
->> before the interrupt use, it will not work without these callbacks.
->>
->> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-> 
-> OK I see what you want to achieve.
-> 
->> +static int stmfx_gpio_irq_request_resources(struct irq_data *data)
->> +{
->> +       struct gpio_chip *gpio_chip = irq_data_get_irq_chip_data(data);
->> +       struct stmfx_pinctrl *pctl = gpiochip_get_data(gpio_chip);
->> +       int ret;
->> +
->> +       ret = stmfx_gpio_direction_input(&pctl->gpio_chip, data->hwirq);
->> +       if (ret)
->> +               return ret;
->> +
->> +       ret = gpiochip_lock_as_irq(&pctl->gpio_chip, data->hwirq);
->> +       if (ret) {
->> +               dev_err(pctl->dev, "Unable to lock gpio %lu as IRQ: %d\n",
->> +                       data->hwirq, ret);
->> +               return ret;
->> +       }
->> +
->> +       return 0;
->> +}
-> 
-> Just call gpiochip_reqres_irq() instead of calling the lock etc
-> explicitly.
-> 
->> +static void stmfx_gpio_irq_release_resources(struct irq_data *data)
->> +{
->> +       struct gpio_chip *gpio_chip = irq_data_get_irq_chip_data(data);
->> +       struct stmfx_pinctrl *pctl = gpiochip_get_data(gpio_chip);
->> +
->> +       gpiochip_unlock_as_irq(&pctl->gpio_chip, data->hwirq);
->> +}
-> 
-> Just call gpiochip_relres_irq()
-> 
-> But all this duplicated a lot of code from the core which is not so nice.
-> 
->> @@ -678,6 +706,8 @@ static int stmfx_pinctrl_probe(struct platform_device *pdev)
->>         pctl->irq_chip.irq_set_type = stmfx_pinctrl_irq_set_type;
->>         pctl->irq_chip.irq_bus_lock = stmfx_pinctrl_irq_bus_lock;
->>         pctl->irq_chip.irq_bus_sync_unlock = stmfx_pinctrl_irq_bus_sync_unlock;
->> +       pctl->irq_chip.irq_request_resources = stmfx_gpio_irq_request_resources;
->> +       pctl->irq_chip.irq_release_resources = stmfx_gpio_irq_release_resources;
-> 
-> What about just adding
-> 
-> pctl->irq_chip.irq_enable and do stmfx_gpio_direction_input()
-> in that callback instead? gpiolib will helpfully wrap it.
+* Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
 
-Thanks for pointing that out to me.
+> Done in a somewhat different fashion to arm64.
+> Here the infrastructure for memoryless domains was already
+> in place.  That infrastruture applies just as well to
+> domains that also don't have a CPU, hence it works for
+> Generic Initiator Domains.
+> 
+> In common with memoryless domains we only register GI domains
+> if the proximity node is not online. If a domain is already
+> a memory containing domain, or a memoryless domain there is
+> nothing to do just because it also contains a Generic Initiator.
+> 
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>  arch/x86/include/asm/numa.h |  2 ++
+>  arch/x86/kernel/setup.c     |  1 +
+>  arch/x86/mm/numa.c          | 14 ++++++++++++++
+>  3 files changed, 17 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/numa.h b/arch/x86/include/asm/numa.h
+> index bbfde3d2662f..f631467272a3 100644
+> --- a/arch/x86/include/asm/numa.h
+> +++ b/arch/x86/include/asm/numa.h
+> @@ -62,12 +62,14 @@ extern void numa_clear_node(int cpu);
+>  extern void __init init_cpu_to_node(void);
+>  extern void numa_add_cpu(int cpu);
+>  extern void numa_remove_cpu(int cpu);
+> +extern void init_gi_nodes(void);
+>  #else	/* CONFIG_NUMA */
+>  static inline void numa_set_node(int cpu, int node)	{ }
+>  static inline void numa_clear_node(int cpu)		{ }
+>  static inline void init_cpu_to_node(void)		{ }
+>  static inline void numa_add_cpu(int cpu)		{ }
+>  static inline void numa_remove_cpu(int cpu)		{ }
+> +static inline void init_gi_nodes(void)			{ }
+>  #endif	/* CONFIG_NUMA */
+>  
+>  #ifdef CONFIG_DEBUG_PER_CPU_MAPS
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index cfb533d42371..b6c977907ea5 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -1264,6 +1264,7 @@ void __init setup_arch(char **cmdline_p)
+>  	prefill_possible_map();
+>  
+>  	init_cpu_to_node();
+> +	init_gi_nodes();
+>  
+>  	io_apic_init_mappings();
+>  
+> diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+> index 4123100e0eaf..50bf724a425e 100644
+> --- a/arch/x86/mm/numa.c
+> +++ b/arch/x86/mm/numa.c
+> @@ -733,6 +733,20 @@ static void __init init_memory_less_node(int nid)
+>  	 */
+>  }
+>  
+> +/*
+> + * Generic Initiator Nodes may have neither CPU nor Memory.
+> + * At this stage if either of the others were present we would
+> + * already be online.
+> + */
+> +void __init init_gi_nodes(void)
+> +{
+> +	int nid;
+> +
+> +	for_each_node_state(nid, N_GENERIC_INITIATOR)
+> +		if (!node_online(nid))
+> +			init_memory_less_node(nid);
+> +}
 
-I can't use .irq_enable because of I2C transfer to set gpio direction 
-(scheduling while atomic BUG occurs in this case). Indeed, .irq_enable 
-is called under raw_spin_lock_irqsave in __setup_irq() while 
-irq_request_resources is called before.
+Nit: missing curly braces.
 
-I could apply gpio direction in stmfx_pinctrl_irq_bus_sync_unlock 
-depending on pctl->irq_gpi_src[] (checking which one is set, to set 
-input direction), but this will be applied each time a consumer requests 
-a stmfx gpio irq.
+How do these work in practice, will a system that only had nodes 0-1 
+today grow a third node '2' that won't have any CPUs on memory on them?
 
-IMHO, keeping .irq_request/release_resources callbacks and using 
-gpiochip_reqres_irq()/gpiochip_relres_irq() seems to be the best compromise.
+Thanks,
 
-Regards,
-Amelie
+	Ingo
