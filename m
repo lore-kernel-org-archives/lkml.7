@@ -2,101 +2,284 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F68C4360C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 02:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CDBC4360C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 02:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 063C32080F
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 02:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5204320862
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 02:41:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="qLMa5Yhy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbfJGCct (ORCPT
+        id S1726959AbfJGClf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 22:32:49 -0400
-Received: from mx.socionext.com ([202.248.49.38]:41744 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726960AbfJGCct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 22:32:49 -0400
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 07 Oct 2019 11:32:46 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 668F6605F8;
-        Mon,  7 Oct 2019 11:32:46 +0900 (JST)
-Received: from 10.213.24.1 (10.213.24.1) by m-FILTER with ESMTP; Mon, 7 Oct 2019 11:32:46 +0900
-Received: from SOC-EX02V.e01.socionext.com (10.213.24.22) by
- SOC-EX01V.e01.socionext.com (10.213.24.21) with Microsoft SMTP Server (TLS)
- id 15.0.995.29; Mon, 7 Oct 2019 11:32:45 +0900
-Received: from SOC-EX02V.e01.socionext.com ([10.213.25.22]) by
- SOC-EX02V.e01.socionext.com ([10.213.25.22]) with mapi id 15.00.0995.028;
- Mon, 7 Oct 2019 11:32:45 +0900
-From:   <orito.takao@socionext.com>
-To:     <ulf.hansson@linaro.org>
-CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <adrian.hunter@intel.com>, <linux-mmc@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <masami.hiramatsu@linaro.org>, <jaswinder.singh@linaro.org>,
-        <sugaya.taichi@socionext.com>, <kasai.kazuhiro@socionext.com>,
-        <kanematsu.shinji@socionext.com>
-Subject: Re: [PATCH v3 0/2] mmc: sdhci-milbeaut: add Milbeaut SD driver
-Thread-Topic: [PATCH v3 0/2] mmc: sdhci-milbeaut: add Milbeaut SD driver
-Thread-Index: AQHVZ3ihYlxK3AfGCE+319PUx3aqu6dIPRWAgAXMGQA=
-Date:   Mon, 7 Oct 2019 02:32:44 +0000
-Message-ID: <20191007113235.355F.F0D17A80@socionext.com>
-References: <1568079631-28808-1-git-send-email-orito.takao@socionext.com>
- <CAPDyKFq6wbscGGq_0Q3_8eGLXk-+xBtmPbjq97jiejR7Qd_QbA@mail.gmail.com>
-In-Reply-To: <CAPDyKFq6wbscGGq_0Q3_8eGLXk-+xBtmPbjq97jiejR7Qd_QbA@mail.gmail.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Becky! ver. 2.74.02 [ja] (Unregistered)
-x-originating-ip: [10.213.24.1]
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-ID: <36AE662AED835746B2F222A52E6199E0@socionext.com>
-Content-Transfer-Encoding: base64
+        Sun, 6 Oct 2019 22:41:35 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38456 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726789AbfJGClf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 22:41:35 -0400
+Received: by mail-pl1-f196.google.com with SMTP id w8so6143048plq.5
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 19:41:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=e6YCPvkqUEYPdp7Issb3rlEPCn0qCQu25RHzf2YaVvc=;
+        b=qLMa5YhyILm6yO8Na5KLscg9DAuCg9v6D6QUckNpATGWtNXINlxvAFEr8EDkVKe/qR
+         bQTb6vxps7Of7X4bDSdAasEp+piPWdS5YeumOTPaEvczVzJ3bNPySggN+IBIqwMu5J7g
+         dkLNrMMMENSnesQyX+c+AvNNhSO2L9OwX1g28nsyT0wIT55EtrLeXz9xe89a9dd9nH8W
+         hza4lsO3870R2hRFuM4DNTh3FFYBCYEAF7BYGFICzb8ntHsa+7LCDiTWc+FAR+uKYJ9r
+         FFo9/V1aNdmd2h8W8ywNv/WjEZs9diztFj7CXIaRTi3t7/sXEidSodSKw/phasIQjdVx
+         +XUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=e6YCPvkqUEYPdp7Issb3rlEPCn0qCQu25RHzf2YaVvc=;
+        b=oSzfIFRc56rbGwn/ExVvyr4CovR2GfLekT/I2UTPEd81QU7boibu6VRcTYJbkUUKLE
+         Kf/1M6jz25VMZ35dOna1TTGKIIYhM4kRNrQ7eOtKXk+3b4NKabIMghfCPojUoiB4EmZ/
+         UMmQg4IWe5bZl6yhOtjlm0yxRfVhnQB1wwHwIfW+vHdpp9E65PTl0Z0nMx2lJ2lgr9TC
+         Sr71JN61y6rjgzppYgUhbUal4bjboIh66KYvImQ8EVoj3Y7n41GzO+JNUHCZiGTiKyZi
+         O0c2Pzsxxn1pKeA7L/xvqWcmKEy4Oc+uuGgQumqG3XeKLe11h7xKYvRj3gZ5xb0W45OA
+         khTg==
+X-Gm-Message-State: APjAAAVLgSp427+Rt9PPSEuAirV/AJheTa54aWuX01rJE0owb6/bJO1J
+        e/xvjLS+rp/VdYCWI4Rc0O5KAQ==
+X-Google-Smtp-Source: APXvYqx0eJ2GKQ0KLH9t4w++nwR6ZWbjydgKAz1kNgkUTHi/fax0ACyxrNqhAZbAuGoiWHJ9jT0YvA==
+X-Received: by 2002:a17:902:8b89:: with SMTP id ay9mr27184492plb.81.1570416094190;
+        Sun, 06 Oct 2019 19:41:34 -0700 (PDT)
+Received: from debian-brgl.local (96-95-220-76-static.hfc.comcastbusiness.net. [96.95.220.76])
+        by smtp.gmail.com with ESMTPSA id 16sm12444822pfn.35.2019.10.06.19.41.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Oct 2019 19:41:33 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v2] iio: pressure: bmp280: use devm action and remove labels from probe
+Date:   Mon,  7 Oct 2019 04:41:31 +0200
+Message-Id: <20191007024131.22708-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpUaGFua3MgZm9yIGNoZWNraW5nIGFuZCBwdXNoaW5nIG15IHBhdGNoICENCg0KT3JpdG8NCg0K
-PiBPbiBUdWUsIDEwIFNlcCAyMDE5IGF0IDAzOjM5LCBUYWthbyBPcml0byA8b3JpdG8udGFrYW9A
-c29jaW9uZXh0LmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBUaGUgZm9sbG93aW5nIHBhdGNoZXMgYWRk
-IGRyaXZlciBmb3IgU0QgSG9zdCBjb250cm9sbGVyIG9uDQo+ID4gU29jaW9uZXh0J3MgTWlsYmVh
-dXQgTTEwViBwbGF0Zm9ybXMuDQo+ID4NCj4gPiBTRCBIb3N0IGNvbnRyb2xsZXIgb24gTWlsYmVh
-dXQgY29uc2lzdHMgb2YgdHdvIGNvbnRyb2xsZXIgcGFydHMuDQo+ID4gT25lIGlzIGNvcmUgY29u
-dHJvbGxlciBGX1NESDMwLCB0aGlzIGlzIHNpbWlsYXIgdG8gc2RoY2ktZnVqaXRzdQ0KPiA+IGNv
-bnRyb2xsZXIuDQo+ID4gQW5vdGhlciBpcyBicmlkZ2UgY29udHJvbGxlci4gVGhpcyBicmlkZ2Ug
-Y29udHJvbGxlciBpcyBub3QgY29tcGF0aWJsZQ0KPiA+IHdpdGggc2RoY2ktZnVqaXRzdSBjb250
-cm9sbGVyLiBUaGlzIGlzIHNwZWNpYWwgZm9yIE1pbGJlYXV0IHNlcmllcy4NCj4gPg0KPiA+IEl0
-IGhhcyB0aGUgc2V2ZXJhbCBwYXJ0cywNCj4gPiAgLSByZXNldCBjb250cm9sDQo+ID4gIC0gY2xv
-Y2sgZW5hYmxlIC8gc2VsZWN0IGZvciBTRFI1MC8yNS8xMg0KPiA+ICAtIGhvbGQgY29udHJvbCBv
-ZiBEQVRBL0NNRCBsaW5lDQo+ID4gIC0gc2VsZWN0IGNoYXJhY3RlcmlzdGljcyBmb3IgV1AvQ0Qv
-TEVEIGxpbmUNCj4gPiAgLSBSZS10dW5pbmcgY29udHJvbCBmb3IgbW9kZTMNCj4gPiAgLSBDYXBh
-YmlsaXR5IHNldHRpbmcNCj4gPiAgICBUaW1lb3V0IENsb2NrIC8gQmFzZSBDbG9jayAvIFRpbWVy
-IENvdW50IGZvciBSZS1UdW5pbmcgLw0KPiA+ICAgIERlYm91bmNlIHBlcmlvZA0KPiA+IFRoZXNl
-IHJlcXVpcmVzIHNwZWNpYWwgcHJvY2VkdXJlcyBhdCByZXNldCBvciBjbG9jayBlbmFibGUvY2hh
-bmdlIG9yDQo+ID4gIGZ1cnRoZXIgdHVuaW5nIG9mIGNsb2NrLg0KPiA+DQo+ID4gVGFrYW8gT3Jp
-dG8gKDIpOg0KPiA+ICAgZHQtYmluZGluZ3M6IG1tYzogYWRkIERUIGJpbmRpbmdzIGZvciBNaWxi
-ZWF1dCBTRCBjb250cm9sbGVyDQo+ID4gICBtbWM6IHNkaGNpLW1pbGJlYXV0OiBhZGQgTWlsYmVh
-dXQgU0QgY29udHJvbGxlciBkcml2ZXINCj4gPg0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5n
-cy9tbWMvc2RoY2ktbWlsYmVhdXQudHh0ICAgICB8ICAzMCArKw0KPiA+ICBkcml2ZXJzL21tYy9o
-b3N0L0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAxMSArDQo+ID4gIGRyaXZl
-cnMvbW1jL2hvc3QvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAxICsNCj4g
-PiAgZHJpdmVycy9tbWMvaG9zdC9zZGhjaS1taWxiZWF1dC5jICAgICAgICAgICAgICAgICAgfCAz
-NjIgKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIGRyaXZlcnMvbW1jL2hvc3Qvc2RoY2lfZl9z
-ZGgzMC5jICAgICAgICAgICAgICAgICAgIHwgIDI2ICstDQo+ID4gIGRyaXZlcnMvbW1jL2hvc3Qv
-c2RoY2lfZl9zZGgzMC5oICAgICAgICAgICAgICAgICAgIHwgIDMyICsrDQo+ID4gIDYgZmlsZXMg
-Y2hhbmdlZCwgNDM3IGluc2VydGlvbnMoKyksIDI1IGRlbGV0aW9ucygtKQ0KPiA+ICBjcmVhdGUg
-bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21tYy9zZGhjaS1t
-aWxiZWF1dC50eHQNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvbW1jL2hvc3Qvc2Ro
-Y2ktbWlsYmVhdXQuYw0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9tbWMvaG9zdC9z
-ZGhjaV9mX3NkaDMwLmgNCj4gPg0KPiA+IC0tDQo+ID4gMS45LjENCj4gPg0KPiA+DQo+IA0KPiBB
-cHBsaWVkIGZvciBuZXh0LCB0aGFua3MhDQo+IA0KPiBLaW5kIHJlZ2FyZHMNCj4gVWZmZQ0KDQot
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLQ0KVGFrYW8gT3JpdG8NClNvY2lvbmV4dCBJbmMuDQpFLW1haWw6b3JpdG8udGFrYW9A
-c29jaW9uZXh0LmNvbQ0KVGVsOis4MS04MC05ODE1LTE0NjANCi0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo=
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+
+We can drop some duplicate code if we use devm_action for disabling
+regulators and pm and the managed variant of iio_device_register().
+
+This allows us to completely remove all remove() callbacks from both
+i2c and spi code.
+
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+v1 -> v2:
+- squash the patches using devm_iio_device_register() and devm_action
+  to keep the changes bisectable
+
+ drivers/iio/pressure/bmp280-core.c | 62 +++++++++++++++---------------
+ drivers/iio/pressure/bmp280-i2c.c  |  6 ---
+ drivers/iio/pressure/bmp280-spi.c  |  6 ---
+ drivers/iio/pressure/bmp280.h      |  1 -
+ 4 files changed, 30 insertions(+), 45 deletions(-)
+
+diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
+index c2988dbdb1a7..79254dd26dfd 100644
+--- a/drivers/iio/pressure/bmp280-core.c
++++ b/drivers/iio/pressure/bmp280-core.c
+@@ -984,6 +984,22 @@ static int bmp085_fetch_eoc_irq(struct device *dev,
+ 	return 0;
+ }
+ 
++static void bmp280_pm_disable(void *data)
++{
++	struct device *dev = data;
++
++	pm_runtime_get_sync(dev);
++	pm_runtime_put_noidle(dev);
++	pm_runtime_disable(dev);
++}
++
++static void bmp280_regulators_disable(void *data)
++{
++	struct regulator_bulk_data *supplies = data;
++
++	regulator_bulk_disable(BMP280_NUM_SUPPLIES, supplies);
++}
++
+ int bmp280_common_probe(struct device *dev,
+ 			struct regmap *regmap,
+ 			unsigned int chip,
+@@ -1055,6 +1071,11 @@ int bmp280_common_probe(struct device *dev,
+ 		return ret;
+ 	}
+ 
++	ret = devm_add_action_or_reset(dev, bmp280_regulators_disable,
++				       data->supplies);
++	if (ret)
++		return ret;
++
+ 	/* Wait to make sure we started up properly */
+ 	usleep_range(data->start_up_time, data->start_up_time + 100);
+ 
+@@ -1069,17 +1090,16 @@ int bmp280_common_probe(struct device *dev,
+ 	data->regmap = regmap;
+ 	ret = regmap_read(regmap, BMP280_REG_ID, &chip_id);
+ 	if (ret < 0)
+-		goto out_disable_regulators;
++		return ret;
+ 	if (chip_id != chip) {
+ 		dev_err(dev, "bad chip id: expected %x got %x\n",
+ 			chip, chip_id);
+-		ret = -EINVAL;
+-		goto out_disable_regulators;
++		return -EINVAL;
+ 	}
+ 
+ 	ret = data->chip_info->chip_config(data);
+ 	if (ret < 0)
+-		goto out_disable_regulators;
++		return ret;
+ 
+ 	dev_set_drvdata(dev, indio_dev);
+ 
+@@ -1093,14 +1113,14 @@ int bmp280_common_probe(struct device *dev,
+ 		if (ret < 0) {
+ 			dev_err(data->dev,
+ 				"failed to read calibration coefficients\n");
+-			goto out_disable_regulators;
++			return ret;
+ 		}
+ 	} else if (chip_id == BMP280_CHIP_ID || chip_id == BME280_CHIP_ID) {
+ 		ret = bmp280_read_calib(data, &data->calib.bmp280, chip_id);
+ 		if (ret < 0) {
+ 			dev_err(data->dev,
+ 				"failed to read calibration coefficients\n");
+-			goto out_disable_regulators;
++			return ret;
+ 		}
+ 	}
+ 
+@@ -1112,7 +1132,7 @@ int bmp280_common_probe(struct device *dev,
+ 	if (irq > 0 || (chip_id  == BMP180_CHIP_ID)) {
+ 		ret = bmp085_fetch_eoc_irq(dev, name, irq, data);
+ 		if (ret)
+-			goto out_disable_regulators;
++			return ret;
+ 	}
+ 
+ 	/* Enable runtime PM */
+@@ -1127,36 +1147,14 @@ int bmp280_common_probe(struct device *dev,
+ 	pm_runtime_use_autosuspend(dev);
+ 	pm_runtime_put(dev);
+ 
+-	ret = iio_device_register(indio_dev);
++	ret = devm_add_action_or_reset(dev, bmp280_pm_disable, dev);
+ 	if (ret)
+-		goto out_runtime_pm_disable;
+-
+-	return 0;
++		return ret;
+ 
+-out_runtime_pm_disable:
+-	pm_runtime_get_sync(data->dev);
+-	pm_runtime_put_noidle(data->dev);
+-	pm_runtime_disable(data->dev);
+-out_disable_regulators:
+-	regulator_bulk_disable(BMP280_NUM_SUPPLIES, data->supplies);
+-	return ret;
++	return devm_iio_device_register(dev, indio_dev);
+ }
+ EXPORT_SYMBOL(bmp280_common_probe);
+ 
+-int bmp280_common_remove(struct device *dev)
+-{
+-	struct iio_dev *indio_dev = dev_get_drvdata(dev);
+-	struct bmp280_data *data = iio_priv(indio_dev);
+-
+-	iio_device_unregister(indio_dev);
+-	pm_runtime_get_sync(data->dev);
+-	pm_runtime_put_noidle(data->dev);
+-	pm_runtime_disable(data->dev);
+-	regulator_bulk_disable(BMP280_NUM_SUPPLIES, data->supplies);
+-	return 0;
+-}
+-EXPORT_SYMBOL(bmp280_common_remove);
+-
+ #ifdef CONFIG_PM
+ static int bmp280_runtime_suspend(struct device *dev)
+ {
+diff --git a/drivers/iio/pressure/bmp280-i2c.c b/drivers/iio/pressure/bmp280-i2c.c
+index acd9a3784fb4..3109c8e2cc11 100644
+--- a/drivers/iio/pressure/bmp280-i2c.c
++++ b/drivers/iio/pressure/bmp280-i2c.c
+@@ -38,11 +38,6 @@ static int bmp280_i2c_probe(struct i2c_client *client,
+ 				   client->irq);
+ }
+ 
+-static int bmp280_i2c_remove(struct i2c_client *client)
+-{
+-	return bmp280_common_remove(&client->dev);
+-}
+-
+ static const struct acpi_device_id bmp280_acpi_i2c_match[] = {
+ 	{"BMP0280", BMP280_CHIP_ID },
+ 	{"BMP0180", BMP180_CHIP_ID },
+@@ -82,7 +77,6 @@ static struct i2c_driver bmp280_i2c_driver = {
+ 		.pm = &bmp280_dev_pm_ops,
+ 	},
+ 	.probe		= bmp280_i2c_probe,
+-	.remove		= bmp280_i2c_remove,
+ 	.id_table	= bmp280_i2c_id,
+ };
+ module_i2c_driver(bmp280_i2c_driver);
+diff --git a/drivers/iio/pressure/bmp280-spi.c b/drivers/iio/pressure/bmp280-spi.c
+index 9d57b7a3b134..625b86878ad8 100644
+--- a/drivers/iio/pressure/bmp280-spi.c
++++ b/drivers/iio/pressure/bmp280-spi.c
+@@ -86,11 +86,6 @@ static int bmp280_spi_probe(struct spi_device *spi)
+ 				   spi->irq);
+ }
+ 
+-static int bmp280_spi_remove(struct spi_device *spi)
+-{
+-	return bmp280_common_remove(&spi->dev);
+-}
+-
+ static const struct of_device_id bmp280_of_spi_match[] = {
+ 	{ .compatible = "bosch,bmp085", },
+ 	{ .compatible = "bosch,bmp180", },
+@@ -118,7 +113,6 @@ static struct spi_driver bmp280_spi_driver = {
+ 	},
+ 	.id_table = bmp280_spi_id,
+ 	.probe = bmp280_spi_probe,
+-	.remove = bmp280_spi_remove,
+ };
+ module_spi_driver(bmp280_spi_driver);
+ 
+diff --git a/drivers/iio/pressure/bmp280.h b/drivers/iio/pressure/bmp280.h
+index eda50ef65706..57ba0e85db91 100644
+--- a/drivers/iio/pressure/bmp280.h
++++ b/drivers/iio/pressure/bmp280.h
+@@ -112,7 +112,6 @@ int bmp280_common_probe(struct device *dev,
+ 			unsigned int chip,
+ 			const char *name,
+ 			int irq);
+-int bmp280_common_remove(struct device *dev);
+ 
+ /* PM ops */
+ extern const struct dev_pm_ops bmp280_dev_pm_ops;
+-- 
+2.23.0
+
