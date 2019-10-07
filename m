@@ -2,92 +2,101 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 907CCC352AA
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED4DC352AA
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 703C721655
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 313AF20867
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:33:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570447985;
+	bh=xArUum528Sfkwj0dI3uMICujB7KB2afd3HvkaXtrqnI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Q4G8Z3bOirYs+Su/SSimDQG2CSLq6qsg6qK13jEVW0yHA7mrOFDxhQRlJtqhBT6VF
+	 gmrAl3d1xq8Bxe+y/0YNKwooKKEJVUIh9hR1GjAf/I/o8rUNsbIWLz9mYDtBbJ660z
+	 uncVUG/PcaaB0dVPQP0Qm3LsQ4CPv8rcpTyUSD8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbfJGL3j (ORCPT
+        id S1727608AbfJGLdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 07:29:39 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41216 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727496AbfJGL3i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 07:29:38 -0400
-Received: by mail-ot1-f65.google.com with SMTP id g13so10617842otp.8;
-        Mon, 07 Oct 2019 04:29:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=az517lk7l2JjiWVDEoNmqTwk0kRxY6zy3XGdpUQGK/8=;
-        b=LkTKZ1jkTeR9yI8V0jI2BMS4vWkM1lrdRGvFjv2U/v9CUsNia4pyTKepMgQfyCb8xq
-         2x6q8JWXETwICqM0pE9CwEOgojNWw2BawBHFz6+vpnYNn0hK0Jy5rjFaZkYX9QgzSiXi
-         22O/9liKNXmhrKZouwa5RvTQQwF8ujXVy772raIrcj82tuc3C52wbovFNYPOQZB7N2yr
-         N+GsgYbTzdokG5j2HUghX20zk6E9uQo5wB9oYz4xEZGQf66uVn08bQ0Pco7fVBHtPssK
-         99TAzno7dYIWzIRsK4t/rBJwyNwbaPDczv55PfXt1Ic/vw9HAdNrmGxdhLnZGLNzxYb0
-         jfJg==
-X-Gm-Message-State: APjAAAVpWTK8hUhhsaTcy8Jp2UmHsePaUZT825Pdkxr0wB0pTGGfbbVH
-        R7Iy3k683Qnv9Vfnft7C/WkKqamieL30sAeQtNM=
-X-Google-Smtp-Source: APXvYqxRQNEZnEmH0p+/FXVlkwQGADEscR1yu73btXK3QB7lvmhgAJErpoReSODDZljCt9iJfWcgiO2rZ6AK2ADzaic=
-X-Received: by 2002:a9d:730d:: with SMTP id e13mr1096381otk.145.1570447776392;
- Mon, 07 Oct 2019 04:29:36 -0700 (PDT)
+        Mon, 7 Oct 2019 07:33:04 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45764 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727467AbfJGLdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 07:33:04 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4BCF5ABD9;
+        Mon,  7 Oct 2019 11:33:02 +0000 (UTC)
+Date:   Mon, 7 Oct 2019 13:33:01 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org,
+        sergey.senozhatsky.work@gmail.com, rostedt@goodmis.org,
+        peterz@infradead.org, david@redhat.com, john.ogness@linutronix.de,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
+Message-ID: <20191007113301.GG2381@dhcp22.suse.cz>
+References: <1570228005-24979-1-git-send-email-cai@lca.pw>
+ <20191007080742.GD2381@dhcp22.suse.cz>
+ <20191007090553.g5cq7qa4tj5yrtaa@pathway.suse.cz>
 MIME-Version: 1.0
-References: <1570178133-21532-1-git-send-email-fabrizio.castro@bp.renesas.com> <1570178133-21532-4-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1570178133-21532-4-git-send-email-fabrizio.castro@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 7 Oct 2019 13:29:25 +0200
-Message-ID: <CAMuHMdX4P_5Bu2dO_kVtFFyOOTycm2jFqk8qNAzH3XEeePfG0Q@mail.gmail.com>
-Subject: Re: [PATCH 3/7] dt-bindings: PCI: rcar: Add device tree support for r8a774b1
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>, xu_shunji@hoperun.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191007090553.g5cq7qa4tj5yrtaa@pathway.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 4, 2019 at 10:35 AM Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
-> Add PCIe support for the RZ/G2N (a.k.a. R8A774B1).
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+On Mon 07-10-19 11:05:53, Petr Mladek wrote:
+> On Mon 2019-10-07 10:07:42, Michal Hocko wrote:
+> > On Fri 04-10-19 18:26:45, Qian Cai wrote:
+> > > It is unsafe to call printk() while zone->lock was held, i.e.,
+> > > 
+> > > zone->lock --> console_lock
+> > > 
+> > > because the console could always allocate some memory in different code
+> > > paths and form locking chains in an opposite order,
+> > > 
+> > > console_lock --> * --> zone->lock
+> > > 
+> > > As the result, it triggers lockdep splats like below and in different
+> > > code paths in this thread [1]. Since has_unmovable_pages() was only used
+> > > in set_migratetype_isolate() and is_pageblock_removable_nolock(). Only
+> > > the former will set the REPORT_FAILURE flag which will call printk().
+> > > Hence, unlock the zone->lock just before the dump_page() there where
+> > > when has_unmovable_pages() returns true, there is no need to hold the
+> > > lock anyway in the rest of set_migratetype_isolate().
+> > > 
+> > > While at it, remove a problematic printk() in __offline_isolated_pages()
+> > > only for debugging as well which will always disable lockdep on debug
+> > > kernels.
+> > 
+> > I do not think that removing the printk is the right long term solution.
+> > While I do agree that removing the debugging printk __offline_isolated_pages
+> > does make sense because it is essentially of a very limited use, this
+> > doesn't really solve the underlying problem.  There are likely other
+> > printks from zone->lock. It would be much more saner to actually
+> > disallow consoles to allocate any memory while printk is called from an
+> > atomic context.
+> 
+> The current "standard" solution for these situations is to replace
+> the problematic printk() with printk_deferred(). It would deffer
+> the console handling.
+> 
+> Of course, this is a whack a mole approach. The long term solution
+> is to deffer printk() by default. We have finally agreed on this
+> few weeks ago on Plumbers conference. It is going to be added
+> together with fully lockless log buffer hopefully soon. It will
+> be part of upstreaming Real-Time related code.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+OK, then we do not really have to do anything here. That is good to hear
+because I really detest putting printk_deferred or anything like
+that at random places.
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Michal Hocko
+SUSE Labs
