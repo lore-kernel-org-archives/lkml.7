@@ -6,32 +6,31 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1260BECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 932E8C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA9AF218AC
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7477820867
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:47:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728546AbfJGNrx (ORCPT
+        id S1728175AbfJGNrc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 09:47:53 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:37187 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728303AbfJGNrg (ORCPT
+        Mon, 7 Oct 2019 09:47:32 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:41629 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727975AbfJGNrb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 09:47:36 -0400
-X-Originating-IP: 86.207.98.53
+        Mon, 7 Oct 2019 09:47:31 -0400
 Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 5A7F41C0007;
-        Mon,  7 Oct 2019 13:47:34 +0000 (UTC)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id E80C5200002;
+        Mon,  7 Oct 2019 13:47:29 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     linux-rtc@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 09/10] rtc: ds1347: use regmap_update_bits
-Date:   Mon,  7 Oct 2019 15:47:23 +0200
-Message-Id: <20191007134724.15505-9-alexandre.belloni@bootlin.com>
+Subject: [PATCH 02/10] rtc: ds1347: remove verbose messages
+Date:   Mon,  7 Oct 2019 15:47:16 +0200
+Message-Id: <20191007134724.15505-2-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191007134724.15505-1-alexandre.belloni@bootlin.com>
 References: <20191007134724.15505-1-alexandre.belloni@bootlin.com>
@@ -42,49 +41,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use regmap_update_bits instead of open coding. Also add proper error
-handling.
+Printing debugging (and opaque) information is not useful and only clutters
+the boot log. Remove those messages.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/rtc/rtc-ds1347.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/rtc/rtc-ds1347.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
 diff --git a/drivers/rtc/rtc-ds1347.c b/drivers/rtc/rtc-ds1347.c
-index eeaf43586bce..a49ce9991916 100644
+index d392a7bfdd1c..ab5533c7f99d 100644
 --- a/drivers/rtc/rtc-ds1347.c
 +++ b/drivers/rtc/rtc-ds1347.c
-@@ -29,6 +29,8 @@
- #define DS1347_STATUS_REG	0x17
- #define DS1347_CLOCK_BURST	0x3F
+@@ -141,13 +141,6 @@ static int ds1347_probe(struct spi_device *spi)
+ 	data = data & 0x1B;
+ 	regmap_write(map, DS1347_STATUS_REG, data);
  
-+#define DS1347_WP_BIT		BIT(7)
-+
- #define DS1347_NEOSC_BIT	BIT(7)
- #define DS1347_OSF_BIT		BIT(2)
- 
-@@ -117,7 +119,7 @@ static int ds1347_probe(struct spi_device *spi)
- 	struct rtc_device *rtc;
- 	struct regmap_config config;
- 	struct regmap *map;
--	unsigned int data;
-+	int err;
- 
- 	memset(&config, 0, sizeof(config));
- 	config.reg_bits = 8;
-@@ -141,9 +143,9 @@ static int ds1347_probe(struct spi_device *spi)
- 	spi_set_drvdata(spi, map);
- 
- 	/* Disable the write protect of rtc */
+-	/* display the settings */
 -	regmap_read(map, DS1347_CONTROL_REG, &data);
--	data = data & ~(1<<7);
--	regmap_write(map, DS1347_CONTROL_REG, data);
-+	err = regmap_update_bits(map, DS1347_CONTROL_REG, DS1347_WP_BIT, 0);
-+	if (err)
-+		return err;
+-	dev_info(&spi->dev, "DS1347 RTC CTRL Reg = 0x%02x\n", data);
+-
+-	regmap_read(map, DS1347_STATUS_REG, &data);
+-	dev_info(&spi->dev, "DS1347 RTC Status Reg = 0x%02x\n", data);
+-
+ 	rtc = devm_rtc_device_register(&spi->dev, "ds1347",
+ 				&ds1347_rtc_ops, THIS_MODULE);
  
- 	rtc = devm_rtc_allocate_device(&spi->dev);
- 	if (IS_ERR(rtc))
 -- 
 2.21.0
 
