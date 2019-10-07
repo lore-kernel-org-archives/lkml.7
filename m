@@ -2,130 +2,168 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E379C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 05:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3095CC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 05:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 541D32084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 05:48:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07157217F9
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 05:48:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iWm2gbrx"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="DmdfFs6L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727156AbfJGFsG (ORCPT
+        id S1727220AbfJGFsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 01:48:06 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35758 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726960AbfJGFsG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 01:48:06 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 205so7930031pfw.2
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 22:48:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5tzoF5jEWBGYn2YEncgp+nUwEVI8tjzoOCexGDe1hVc=;
-        b=iWm2gbrxXJtQbLIiHmiKtOzlK0kdACMqzvNyCI0Bvt31xz+eLXkAX3gfjASqtsyxd2
-         pibAMwyUux/rIge9wN9ApuhvjHkiHSb6pKraakhzlhJbh8JgeyELWbZL3PIl53pLUXyM
-         iC4fFVNWHchNI0Y9vRlKepoKrk43B7Q/GtfRWIqXe+L/euPWh53pNl7YkRPu2Px87Ijb
-         ti4S14CzINDFcQoHtWJxeSosRNR3kd6DjPJfm/4b+LrhRudNDYrseCHJvA0sPBhBVIts
-         zkUet9HlTvXp/wvmIvi/ZrzCOh/d/RQI2xYxO0LV3j4KYxlVl9xwzjWI37g1ahIIy/6B
-         m2Gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5tzoF5jEWBGYn2YEncgp+nUwEVI8tjzoOCexGDe1hVc=;
-        b=XD42M2ny+RMl4TNjxP8c67rsaR4+tC0wa7dNCzAKJRRpHjbUI1OH+aUz5+fEPS/TIa
-         Ndzm2HoS/OB+gCUxU8dtXjIbNdfbg1uRIEgvi9Jf9/WWmn8mm69z0h7so0IO5r73F3G8
-         Y6XygAtordmvp+xCrVKJ4zAQUGgCFwhQfzAY7uiAG0mJJdVLN9eMrdiFGw/QxqKqDQcw
-         F6S7cWgt66LLlutxi8tyxYCb36ROX1DIn+v10JU1sKVCuRjiYqNU5Pb+ZCA62sZ8fZdF
-         YzQ7gmL+m8qRCP3PaMhCjXQx1BL4xCQshw00MrDmg8QNBkGSp3mi/qHEcMr5T7RKRcqc
-         gMVA==
-X-Gm-Message-State: APjAAAUqT/cwRupTXzUpeurDDtEXTODbroCbKdmOHy8FrCW4aDkySumq
-        zr/mkAXgMh1wRpvH4ELrAm4RXQ==
-X-Google-Smtp-Source: APXvYqx8wMELgRKaVDfwPVaxFK4vskD26Isa8VG9p6kFK7Fr+X+pG18Z3YrxVjib5kmWx8LxnhwKbg==
-X-Received: by 2002:a65:504c:: with SMTP id k12mr16046935pgo.252.1570427285224;
-        Sun, 06 Oct 2019 22:48:05 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id u7sm5730980pfn.61.2019.10.06.22.48.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Oct 2019 22:48:04 -0700 (PDT)
-Date:   Sun, 6 Oct 2019 22:48:01 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     robdclark@gmail.com, sean@poorly.run, a.hajda@samsung.com,
-        Laurent.pinchart@ideasonboard.com, airlied@linux.ie,
-        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, jonathan@marek.ca,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH RFC v2 3/5] ARM: dts: qcom: pm8941: add 5vs2 regulator
- node
-Message-ID: <20191007054801.GH6390@tuxbook-pro>
-References: <20191007014509.25180-1-masneyb@onstation.org>
- <20191007014509.25180-4-masneyb@onstation.org>
+        Mon, 7 Oct 2019 01:48:33 -0400
+Received: from mail.andi.de1.cc ([85.214.55.253]:37016 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726889AbfJGFsd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 01:48:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
+        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=bdmc7qlre0F9bijOKxKuJpK+kMSATS4KheYRbfPzDyc=; b=DmdfFs6LU4Zux5OdUIPjlANlw
+        PdSaaPJa2dkoZ3b2e8hLK7opFIxhWMWGYOjvAz3UGZSzbDHFElFQBhjjmEDg03gOiJ366O6vRYmnc
+        R1PeIa2DIz1lbvCILj43pBonyNX3ArRmkC11QBVR0UZIA3UDkiyQIClnN+kHTupI6dicE=;
+Received: from [77.247.85.102] (helo=localhost)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1iHLsc-0000Jc-T5; Mon, 07 Oct 2019 07:48:23 +0200
+Received: from localhost ([::1])
+        by localhost with esmtp (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1iHLsa-0008CK-P4; Mon, 07 Oct 2019 07:48:20 +0200
+Date:   Mon, 7 Oct 2019 07:48:13 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Jonathan =?ISO-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, manivannan.sadhasivam@linaro.org,
+        andrew.smirnov@gmail.com, marex@denx.de, angus@akkea.ca,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        Marco Felsch <m.felsch@pengutronix.de>
+Subject: Re: [PATCH v2 2/3] ARM: dts: add Netronix E60K02 board common file
+Message-ID: <20191007074813.235869db@kemnade.info>
+In-Reply-To: <20191006223848.GE19803@latitude>
+References: <20190930194332.12246-1-andreas@kemnade.info>
+        <20190930194332.12246-3-andreas@kemnade.info>
+        <20191006223848.GE19803@latitude>
+X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; i686-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191007014509.25180-4-masneyb@onstation.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/aB.pTc2IuOjACzyPfRof4hD"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 06 Oct 18:45 PDT 2019, Brian Masney wrote:
+--Sig_/aB.pTc2IuOjACzyPfRof4hD
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-> pm8941 is missing the 5vs2 regulator node so let's add it since its
-> needed to get the external display working. This regulator was already
-> configured in the interrupts property on the parent node.
-> 
-> Note that this regulator is referred to as mvs2 in the downstream MSM
-> kernel sources.
-> 
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Hi Jonathan,
 
-Picked this patch for now, once the driver updates are landed I will
-take the last two dts patches.
+On Mon, 7 Oct 2019 00:38:48 +0200
+Jonathan Neusch=E4fer <j.neuschaefer@gmx.net> wrote:
 
+> Thanks for CCing me on this patchset. Nice to see more e-book reader
+> related work!
+>=20
+> A few comments and questions below.
+>=20
+> On Mon, Sep 30, 2019 at 09:43:31PM +0200, Andreas Kemnade wrote:
+> > The Netronix board E60K02 can be found some several Ebook-Readers,
+> > at least the Kobo Clara HD and the Tolino Shine 3. The board
+> > is equipped with different SoCs requiring different pinmuxes. =20
+>=20
+> Do I understand it correctly that i.MX6SL and i.MX6SLL are pin-
+> compatible so we can use the same pin numbers and GPIO handles in the
+> DT?
+>=20
+Yes, for that purpose yes, The i.MX6SL has more functions than the i.MX6SLL,
+which you will of course not find on the SLL pins.
+
+> > +	leds {
+> > +		compatible =3D "gpio-leds";
+> > +		pinctrl-names =3D "default";
+> > +		pinctrl-0 =3D <&pinctrl_led>;
+> > +
+> > +		GLED { =20
+>=20
+> What does "GLED" mean? It's not obvious to me.
+> What user-visible purpose does this LED have, or where is it on the
+> board?
+>=20
+It is on the power key. So probably we could have "power" in its name.
+GLED is just the name in vendors uboot and kernel.
+
+I use that led also as an output in uboot to have multiboot between
+vendor system, vendor kernel +debian system and patched mainline + debian s=
+ystem.
+
+> > +			gpios =3D <&gpio5 7 GPIO_ACTIVE_LOW>;
+> > +			linux,default-trigger =3D "timer";
+> > +		};
+> > +	};
+> > +
+> > +	memory {
+> > +		reg =3D <0x80000000 0x80000000>; =20
+>=20
+> 2 GiB of memory?
+>=20
+Well, 512MByte. Seems that uboot overwrites that. But we should use the cor=
+rect
+value here.
+
+> > +			/* Core3_3V3 */ =20
+>=20
+> What are these labels (Core3_3V3, Core4_1V2, etc.)?
+>
+I have taken then from the tolino board file. Probably they are netnames
+of the pcb but not the names of the regulators in the pmic.
+=20
+> > +			dcdc2_reg: DCDC2 {
+> > +				regulator-name =3D "DCDC2";
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +				regulator-state-mem {
+> > +					regulator-on-in-suspend;
+> > +					regulator-suspend-max-microvolt =3D <3300000>;
+> > +					regulator-suspend-min-microvolt =3D <3300000>;
+> > +				};
+> > +			}; =20
+>=20
 Regards,
-Bjorn
+Andreas
 
-> ---
-> Changes since v1:
-> - None
-> 
->  arch/arm/boot/dts/qcom-pm8941.dtsi | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/qcom-pm8941.dtsi b/arch/arm/boot/dts/qcom-pm8941.dtsi
-> index f198480c8ef4..c1f2012d1c8b 100644
-> --- a/arch/arm/boot/dts/qcom-pm8941.dtsi
-> +++ b/arch/arm/boot/dts/qcom-pm8941.dtsi
-> @@ -178,6 +178,16 @@
->  				qcom,vs-soft-start-strength = <0>;
->  				regulator-initial-mode = <1>;
->  			};
-> +
-> +			pm8941_5vs2: 5vs2 {
-> +				regulator-enable-ramp-delay = <1000>;
-> +				regulator-pull-down;
-> +				regulator-over-current-protection;
-> +				qcom,ocp-max-retries = <10>;
-> +				qcom,ocp-retry-delay = <30>;
-> +				qcom,vs-soft-start-strength = <0>;
-> +				regulator-initial-mode = <1>;
-> +			};
->  		};
->  	};
->  };
-> -- 
-> 2.21.0
-> 
+--Sig_/aB.pTc2IuOjACzyPfRof4hD
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl2a0Z0ACgkQl4jFM1s/
+ye9dKA//aQgaIGzJry4yT7el+FH8/B/V78b24pRmCx3wnBuRsc9CBxYsAEpYGJTo
+iBXpJUHUpy3J28ZQxSjk6docvx918lE0R1l9VQlqzP3mw1uFGQmtIYG7W6kbZkom
+dXSb9g/Tql+r7zTuEKodK99mz4xPupf3Ay36sLecNKddfGTgXQy96blU3x+Degrb
+MMIKEKZFi+E5e3Q+FLkwNhRMVbAbpVVtqQrmZqN5ImbhD72pFKgbQt+CIPAQZYp7
+b+0CdDnnvHOMvh6QT+Ij4Od3NGfGhqa/+qHqSmztx6X3XZFK57z5RKe83EIw2vBg
+aBYwzfQL5kTE8FKAWXURk2a/NbJk4WWT3BBQZt8HzTmkdgfHsgCimjzQNKgBw7AN
+2d1FrGgNk9EuwZjbrtJmLoSTQ9tieUk67jLhsgj1S8gRrrV4YPoYE8RrXKmYGEGe
+FUJPpcrd7fPDUpPvchZI1jVlPzL+S2W0L3U/KSwhWGey119FgktRVX4ljjquX+iP
+3zxaFIGO9K5vIG/pzxFCDZ9R6gCWBdryPU3q/+a0wZWNLclZROAQd939ekFBY4lD
+ZEta6trdhOkVRkgHU27BdikvJRgzFrZBnm6YUomelezQM3XjT0yeK9OT60EOWNx5
+upg8mHnodGcUdxzUtnzzV3tVvtunAYFGpw/zuwff5B0p16nJKqU=
+=8lWk
+-----END PGP SIGNATURE-----
+
+--Sig_/aB.pTc2IuOjACzyPfRof4hD--
