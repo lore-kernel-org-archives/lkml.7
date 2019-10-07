@@ -2,112 +2,117 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D44B5C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 23:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F6FECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 23:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C44120867
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 23:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB38B20867
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 23:43:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="f5tS1lZt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UkEBhDMC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729705AbfJGXlN (ORCPT
+        id S1729700AbfJGXnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 19:41:13 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53080 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729285AbfJGXlN (ORCPT
+        Mon, 7 Oct 2019 19:43:31 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:55023 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729529AbfJGXnb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 19:41:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=NCfqgswZ/zhXGkUPpwCmmZHjXzuWHZXbpwIKFwpQfKc=; b=f5tS1lZtkVWqVk5ThkGSTwoJ3
-        Xsp9rgKeWruoQGcjkvK35q72SZoXqOQ+t798OXSEcudLsSxh8R/jc68lpMFh/d/7qsYGog09xE4Oq
-        Hix7kBN3OQDYBo0LCUW0OzZgXifZB7GxskczL6TxNWlYzwelsGSz7re9/nPOTkvSqsHcSnCE1jOpg
-        v8mvk3G2xWzAiqPQ8od16jgueTKoSntGs1cyHVUQWzKi7Sz0jiEfgbqF4ocwGJm1mDBVfgua13gKn
-        vq33qiYGgd+2N/B6fotouMLW5vxS9nN6YzCvT62TNhPG9EKbYcYguWxwJ30GvyF6n+6SLxt1BNQPx
-        UHdS0YgxA==;
-Received: from [2601:1c0:6280:3f0::9ef4]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iHcco-0004iH-U2; Mon, 07 Oct 2019 23:41:12 +0000
-Subject: Re: Build regressions/improvements in v5.4-rc2
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Daney <david.daney@cavium.com>
-References: <20191007071829.13325-1-geert@linux-m68k.org>
- <f0250c51-a653-6cac-9e6b-affa74d8559c@infradead.org>
- <CAMuHMdWSu00nfeQbE6hX7Ok=WZveiZ=i178Uhk3sgpF3k4Ax3Q@mail.gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <4ce1ecd0-4b90-f4f6-936b-ae2d756b08d5@infradead.org>
-Date:   Mon, 7 Oct 2019 16:41:08 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Mon, 7 Oct 2019 19:43:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1570491810;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/KfdB8ibDs6rNq8kMkSKmIsENyVmHkVqr3DazxzG7Po=;
+        b=UkEBhDMC5cX+ogTswYiExJFAoChR8g1xXgrqZSxLQdbNw9+wb6iO8SCBkiexIc4ch685y+
+        ZOicxdneEq1fUpwel7NrsxFX9UwvPMrSYcOxPQcWEoleRe/o8w7XR9XseOpnfVKAKwyCXv
+        VVXm4TVZ8IlOxDtpOmqCTmerGVzBMB8=
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
+ [209.85.166.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-245-n8uLjAiqOHaYf_eUQbW_eQ-1; Mon, 07 Oct 2019 19:43:26 -0400
+Received: by mail-io1-f70.google.com with SMTP id u18so29494891ioc.4
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 16:43:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=/KfdB8ibDs6rNq8kMkSKmIsENyVmHkVqr3DazxzG7Po=;
+        b=pLhcFFTDtKrdt/Cf1oFbyZC2bgpYX0Cpr04DL0dHHkZ4Gkl7Xururu+T8tQv7iSCvM
+         89smdtJiyY2rQynLN3/uvFyzqCC0Eqm57FKu5rDNDGXIVm7tHBP/ljbYfEpNkO2usZS7
+         QwoL1xn8C5mKAQ3tvfiuSLkydwDX4gS9CQaNu0cHvFWI5VjxkObNV+BFira7pku8Usxp
+         04PrwKb6ijQ9PDZhnf3BpToh+ix9ulG6rgFpSvLoNHp4bc4VQUzAEOOWukninieOvcnM
+         HC7HIRANj56zAyM3uhZnMSYPBrQijZfuFJR3yczC0q5clqJpNWr0BiYaisnTDYviPwmH
+         ZYOw==
+X-Gm-Message-State: APjAAAXEN08ez/Htlrf9Kx2bIwlUIDWPsK0WvE8hfgrBhGGlLHtfsqj7
+        CXxd2bny6Pm9deRXjHZUM4rY3IuP1BBF+uRibAtNR/9EX0K70ad133epl5Q3xa4gteMV/iN+2GQ
+        7YCn+351ZIBiWnK7dgcTpxjD0
+X-Received: by 2002:a92:bb05:: with SMTP id w5mr31955911ili.303.1570491806350;
+        Mon, 07 Oct 2019 16:43:26 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqy6Zp5FZMi5yxzuc/xTznB+fkg/9WS8bWFCEBHlaPE1Pn9L5J3AawFt79dXD9lIFRMLG+45/g==
+X-Received: by 2002:a92:bb05:: with SMTP id w5mr31955887ili.303.1570491806053;
+        Mon, 07 Oct 2019 16:43:26 -0700 (PDT)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id s5sm5479794iol.71.2019.10.07.16.43.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2019 16:43:25 -0700 (PDT)
+Date:   Mon, 7 Oct 2019 16:43:23 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     James Bottomley <jejb@linux.ibm.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-integrity@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/2] tpm: Use GFP_KERNEL for allocating struct tpm_buf
+Message-ID: <20191007234323.bzeov5mpc4xregcy@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: James Bottomley <jejb@linux.ibm.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-integrity@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20191003185103.26347-1-jarkko.sakkinen@linux.intel.com>
+ <20191003185103.26347-2-jarkko.sakkinen@linux.intel.com>
+ <1570148716.10818.19.camel@linux.ibm.com>
+ <20191006095005.GA7660@linux.intel.com>
+ <1570475528.4242.2.camel@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdWSu00nfeQbE6hX7Ok=WZveiZ=i178Uhk3sgpF3k4Ax3Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <1570475528.4242.2.camel@linux.ibm.com>
+User-Agent: NeoMutt/20180716
+X-MC-Unique: n8uLjAiqOHaYf_eUQbW_eQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/7/19 2:04 PM, Geert Uytterhoeven wrote:
-> Hi Randy,
-> 
-> On Mon, Oct 7, 2019 at 10:48 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->> On 10/7/19 12:18 AM, Geert Uytterhoeven wrote:
->>> Below is the list of build error/warning regressions/improvements in
->>> v5.4-rc2[1] compared to v5.3[2].
->>>
->>> Summarized:
->>>   - build errors: +10/-3
->>>   - build warnings: +152/-143
->>>
->>> JFYI, when comparing v5.4-rc2[1] to v5.4-rc1[3], the summaries are:
->>>   - build errors: +5/-10
->>>   - build warnings: +44/-133
->>>
->>> Note that there may be false regressions, as some logs are incomplete.
->>> Still, they're build errors/warnings.
->>>
->>> Happy fixing! ;-)
->>>
->>> Thanks to the linux-next team for providing the build service.
->>>
->>> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/da0c9ea146cbe92b832f1b0f694840ea8eb33cce/ (233 out of 242 configs)
->>> [2] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/4d856f72c10ecb060868ed10ff1b1453943fc6c8/ (all 242 configs)
->>> [3] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c/ (233 out of 242 configs)
->>>
->>>
->>> *** ERRORS ***
->>>
->>> 10 error regressions:
->>
->>>   + error: "__delay" [drivers/net/phy/mdio-cavium.ko] undefined!:  => N/A
->>
->> Hi Geert,
->>
->> What arch & config is the above build error from?
-> 
-> That was a new one in v5.4-rc1 for sh-allmodconfig (blamed on David Daney).
+On Mon Oct 07 19, James Bottomley wrote:
+>From: James Bottomley <James.Bottomley@HansenPartnership.com>
+>Subject: [PATCH] tpm: use GFP kernel for tpm_buf allocations
+>
+>The current code uses GFP_HIGHMEM, which is wrong because GFP_HIGHMEM
+>(on 32 bit systems) is memory ordinarily inaccessible to the kernel
+>and should only be used for allocations affecting userspace.  In order
+>to make highmem visible to the kernel on 32 bit it has to be kmapped,
+>which consumes valuable entries in the kmap region.  Since the tpm_buf
+>is only ever used in the kernel, switch to using a GFP_KERNEL
+>allocation so as not to waste kmap space on 32 bits.
+>
+>Fixes: a74f8b36352e (tpm: introduce tpm_buf)
+>Signed-off-by: James Bottomley <James.Bottomley@HansenPartnership.com>
+>---
 
-so it seems arch/sh/ needs include/asm/delay.h that at least does
-#include <asm-generic/delay.h>
+Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
 
-eh?
-
->> Sorry to bug you about this.
-> 
-> Np.
-
-
--- 
-~Randy
