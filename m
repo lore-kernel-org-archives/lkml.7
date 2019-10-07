@@ -2,138 +2,121 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE3DECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2427C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5047B205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84465205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:28:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ki0dU7/Q"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PYxYfGB6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728696AbfJGP1Y (ORCPT
+        id S1728711AbfJGP2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 11:27:24 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46659 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727835AbfJGP1Y (ORCPT
+        Mon, 7 Oct 2019 11:28:05 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35120 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727830AbfJGP2F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:27:24 -0400
-Received: by mail-lj1-f194.google.com with SMTP id d1so14114751ljl.13
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 08:27:22 -0700 (PDT)
+        Mon, 7 Oct 2019 11:28:05 -0400
+Received: by mail-wm1-f67.google.com with SMTP id y21so12826409wmi.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 08:28:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RuSSAKxVjo4ULUMqCK9nbWGblBOBwgw2OMwaKqEWY1I=;
-        b=ki0dU7/QpkUKFEP+2XbFUIDoX367Pt75Dh80mCFt5AvFdgL/8/7vNypIrJBG84c7di
-         SbsVdaGEtaJi0h94Xr02vTz4icSDTbgbbBRW69ohW4kV5MtXUVBh/jcf+x7ka1eQLwwa
-         fGbdcZFrU4QmkWG+aXgViNVFsTDr8lWNkT61TNiQ1ssZR/XlF9oUXQP8lamVx2PLneQ/
-         UTkwnUnKkLSgXqfHyllNmngaQMSscB9ei/i8ti/yvOAz5Fo3sQF01Cbh6Dxc8sLBnG5x
-         1hEg0rq2hfbdrrX/VRaly7XDvOT2iCb7rCSZf/QtMm1sEHzz0/r5Vb/pXa4uhi0dRlZ2
-         X4Uw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DCOkxVIM+JoLp/YA+axrp58OiH/imrwWD+NmGvd4Ocg=;
+        b=PYxYfGB6zPqtbG5xjS2Q9qk6xu1t5yFe2l7zfOc1z1MO7Cjx3Ihljkj8az2zpIEJTe
+         92TxrZQdhkL8Jr5XjUmbVouX5Ez39Rud2TRflwB8e9bqonoq2235fow3dFw80PEn2MwT
+         yK1c3LlElksS2/p36HWmCRfUvBNpQ6oGvFLp8G5Y9Eje4M7lOL5hQYn4bO9ZdGpyHJxz
+         i3Zq9KKFEmW1uPM+l3JpophHsU8IskdX8Xg0Vz/kJ40SZqz9vjnh3XeRRheiD8zKjy+u
+         Nt6YLTFk8HUvTJ5oY4wQl+zFdjqMNkJUrQ8m1p7UPr3xqSwfuaHbJksPhAWG9jyjJQCo
+         XI/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RuSSAKxVjo4ULUMqCK9nbWGblBOBwgw2OMwaKqEWY1I=;
-        b=AQwHsjZ1YkcI1Jf1ObBHa3LkpQG/TIkuOfbfew6H0fI6csvXGFwJH/cQ6+qdeT9ujW
-         Zo9+6N17l6AQjiZcw0jvik3/DABebJR83RdOr6SQgC95WOkc0aCizmBHiH7esZN2fY1F
-         BMoYJoN9XWjXgiX0WYU3o1M+Yw2MKEt34xST5VFukrCLA24Hspfh1mRft6y3dSC+wDj7
-         voFxVYnHY4nzQGJvR5kIbPY83zaHuVO/wRZgGxucE5kH2klmaMyXQpx9KmqlMi3Za/5N
-         fOi/16Wge7YhI5RK4G+iswIIzWKTHh5BBWIIz6AEc0kdrmuHbdV5KWthcjSUu6KhJdPQ
-         lUjQ==
-X-Gm-Message-State: APjAAAUHqJyzs7vZ4+BnOWtKM9LZUCz0bZtL4CSlXPq7zD4ncygJKHt8
-        QXWSOBrrTN6hoXV/uyNz+vaJYYCw8/jUCOzvZ4fX8A==
-X-Google-Smtp-Source: APXvYqy3Zrut0RO25qVsbR7qSjjP0G1xChVlgmy5xLOhudQGjrOEwFXYinEbrBfV2lyhq5mRzFV5jcrdKb5mbT5qfdY=
-X-Received: by 2002:a2e:551:: with SMTP id 78mr19319941ljf.48.1570462041808;
- Mon, 07 Oct 2019 08:27:21 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DCOkxVIM+JoLp/YA+axrp58OiH/imrwWD+NmGvd4Ocg=;
+        b=I+NvCbx9lI8z7Pso1RMFNM/DfV0vD4zBXobHHB0yP27cZgF9qmAlOfFp9mFKka8Uq3
+         4cK1lpb6UHvpstvpjBiHe2G4JHk4v6mHShqrxO/XEtJRwKdF7I3De8ljoB1vC5C5V04r
+         ih708iWBAx5186J+bWN2trXLt2rm8SLJ8kawsUeGtPq8cnJ4s6eSveUI/dJ+5PhM3ueQ
+         8VZa/EcMO2kLZ1TCjR3RgscyMxX5gFcbv3YkDYHe0x5qfZpZqlpZFeyP5+yBcCy1ALnt
+         1AwMh7xKgZgS9yUBe/IpxOrcKQ5UXd369vYrK9toOjSIRVy7NI33YblUoLG+Hqx+mxp6
+         1HRg==
+X-Gm-Message-State: APjAAAUs10V/Xds8l9u5T95lVtwIJ7jmrr2FQPluvXyYvNa+Vyws5Vyl
+        sID47J03EAxdaanr99cxavP1qA==
+X-Google-Smtp-Source: APXvYqzLtwmET3hiE2eWvE24sEsSRwb8ljYitXMiLtwoOUl9Ert6W2PeYvJ4zI6wnb+Z9sUY6yV87w==
+X-Received: by 2002:a1c:a8cb:: with SMTP id r194mr20184823wme.156.1570462082643;
+        Mon, 07 Oct 2019 08:28:02 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id n14sm13722808wro.83.2019.10.07.08.28.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2019 08:28:02 -0700 (PDT)
+Date:   Mon, 7 Oct 2019 16:28:00 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] backlight: pwm_bl: drop use of int_pow()
+Message-ID: <20191007152800.3nhbf7h7knumriz4@holly.lan>
+References: <20190919140620.32407-1-linux@rasmusvillemoes.dk>
+ <20190919140620.32407-3-linux@rasmusvillemoes.dk>
 MIME-Version: 1.0
-References: <1568878421-12301-1-git-send-email-vincent.guittot@linaro.org>
- <1568878421-12301-10-git-send-email-vincent.guittot@linaro.org> <bc879bcb34f089e5888f6721aa2365f0832b69da.camel@surriel.com>
-In-Reply-To: <bc879bcb34f089e5888f6721aa2365f0832b69da.camel@surriel.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Mon, 7 Oct 2019 17:27:10 +0200
-Message-ID: <CAKfTPtA763zLxToVJpOCKc8TAgD3aZwpwhMZbbzrKiok+UHFaA@mail.gmail.com>
-Subject: Re: [PATCH v3 09/10] sched/fair: use load instead of runnable load in
- wakeup path
-To:     Rik van Riel <riel@surriel.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <Morten.Rasmussen@arm.com>,
-        Hillf Danton <hdanton@sina.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190919140620.32407-3-linux@rasmusvillemoes.dk>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 7 Oct 2019 at 17:14, Rik van Riel <riel@surriel.com> wrote:
->
-> On Thu, 2019-09-19 at 09:33 +0200, Vincent Guittot wrote:
-> > runnable load has been introduced to take into account the case where
-> > blocked load biases the wake up path which may end to select an
-> > overloaded
-> > CPU with a large number of runnable tasks instead of an underutilized
-> > CPU with a huge blocked load.
-> >
-> > Tha wake up path now starts to looks for idle CPUs before comparing
-> > runnable load and it's worth aligning the wake up path with the
-> > load_balance.
-> >
-> > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
->
-> On a single socket system, patches 9 & 10 have the
-> result of driving a woken up task (when wake_wide is
-> true) to the CPU core with the lowest blocked load,
-> even when there is an idle core the task could run on
-> right now.
->
-> With the whole series applied, I see a 1-2% regression
-> in CPU use due to that issue.
->
-> With only patches 1-8 applied, I see a 1% improvement in
-> CPU use for that same workload.
+On Thu, Sep 19, 2019 at 04:06:18PM +0200, Rasmus Villemoes wrote:
+> The scheduler uses a (currently private) fixed_power_int() in its load
+> average computation for computing powers of numbers 0 < x < 1
+> expressed as fixed-point numbers, which is also what we want here. But
+> that requires the scale to be a power-of-2.
 
-Thanks for testing.
-patch 8-9 have just replaced runnable load  by blocked load and then
-removed the duplicated metrics in find_idlest_group.
-I'm preparing an additional patch that reworks  find_idlest_group() to
-behave similarly to find_busiest_group(). It gathers statistics what
-it already does, then classifies the groups and finally selects the
-idlest one. This should fix the problem that you mentioned above when
-it selects a group with lowest blocked load whereas there are idle
-cpus in another group with high blocked load.
+It feels like there is some rationale missing in the description here.
 
->
-> Given that it looks like select_idle_sibling and
-> find_idlest_group_cpu do roughly the same thing, I
-> wonder if it is enough to simply add an additional
-> test to find_idlest_group to have it return the
-> LLC sg, if it is called on the LLC sd on a single
-> socket system.
+What is the benefit of replacing the explicit int_pow() with the
+implicit multiplications?
 
-That make sense to me
 
->
-> That way find_idlest_group_cpu can still find an
-> idle core like it does today.
->
-> Does that seem like a reasonable thing?
+Daniel.
 
-That's worth testing
 
->
-> I can run tests with that :)
->
-> --
-> All Rights Reversed.
+> 
+> We could (and a following patch will) change to use a power-of-2 scale,
+> but for a fixed small exponent of 3, there's no advantage in using
+> repeated squaring.
+> 
+> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> ---
+>  drivers/video/backlight/pwm_bl.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+> index 9252d51f31b9..aee6839e024a 100644
+> --- a/drivers/video/backlight/pwm_bl.c
+> +++ b/drivers/video/backlight/pwm_bl.c
+> @@ -179,7 +179,8 @@ static u64 cie1931(unsigned int lightness, unsigned int scale)
+>  	if (lightness <= (8 * scale)) {
+>  		retval = DIV_ROUND_CLOSEST(lightness * 10, 9033);
+>  	} else {
+> -		retval = int_pow((lightness + (16 * scale)) / 116, 3);
+> +		retval = (lightness + (16 * scale)) / 116;
+> +		retval *= retval * retval;
+>  		retval = DIV_ROUND_CLOSEST_ULL(retval, (scale * scale));
+>  	}
+>  
+> -- 
+> 2.20.1
