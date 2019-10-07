@@ -2,156 +2,108 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62CD7C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E8FEC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3000D206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:10:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="hZW2x0sX"
+	by mail.kernel.org (Postfix) with ESMTP id 7F910206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:11:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729031AbfJGRK6 (ORCPT
+        id S1729199AbfJGRLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 13:10:58 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40282 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727801AbfJGRK5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 13:10:57 -0400
-Received: by mail-pg1-f195.google.com with SMTP id d26so8588838pgl.7
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 10:10:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=nIO6O9ahSz9V8fOp+W/95V7uzxghRqzih625nuEdwR0=;
-        b=hZW2x0sX8IHEsBdGXbQ7dhAyaFiXvbS0sfin1r0QdfUN0ohP/3mUrNCKIFJgBPRG48
-         ezy9APJy0R1jKr69irFMCUBON0svtdadAaeXk0fE48899dvlcrRE4mnke7FpcnZlAVW+
-         gKD78Sdfwo3tX/dmlwT8JVIOas4+wU9P/Ys80=
+        Mon, 7 Oct 2019 13:11:25 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56096 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727801AbfJGRLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 13:11:24 -0400
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 57D382A09D7
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Oct 2019 17:11:24 +0000 (UTC)
+Received: by mail-wr1-f69.google.com with SMTP id k2so7830175wrn.7
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 10:11:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=nIO6O9ahSz9V8fOp+W/95V7uzxghRqzih625nuEdwR0=;
-        b=G/4wBIwedzVHLy0mI+aJtzNTrnZvlWIFLC5ZsJrt+ypSs49NSX/+ue7TnJSp/Cpn1y
-         rfqGHqMl8toNOLvDnoc+9ktqd51LLJnBs2s97d2wa1zA9aalutsu2w1YzHzKZrMlJJgh
-         DQ6T7dFTOCqVaKF8YC6Y3HF1LUO7VExZ/xt4cXNBpC8qJC96h+Zd90FwpNZLQqyt0HEw
-         /4Dq3besrUMSAWAWl0saO+6PUx03YuAt67JjKW0fy8Ssm3O9zHIBEy+tMVe0bilmlyQo
-         JiWac5ezfIxoY5ws6R7x0QUra9Du/oESoXMGMBefvHID5XryYVwkDeGSwFpgG2xoHv8Z
-         E65A==
-X-Gm-Message-State: APjAAAXKPrZUtKx0CcnaLdOSfcpM+nKd1OcBEB0sT9Vm+i18cNjhPumL
-        kUlJz9buEePRKfg9ioK4yCddaqkdU5OdnQ==
-X-Google-Smtp-Source: APXvYqyHrGt6RhHocknkFK2phK2rTRMyH7SfeP1YDq+8SfupmWTWQyHmhMhYdbC1a+Oq5/qjUN4W9Q==
-X-Received: by 2002:a63:68e:: with SMTP id 136mr11613874pgg.18.1570468256741;
-        Mon, 07 Oct 2019 10:10:56 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id e6sm16243153pfl.146.2019.10.07.10.10.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 07 Oct 2019 10:10:55 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] pinctrl: iproc: use unique name for irq chip
-To:     Marc Zyngier <maz@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        rayagonda.kokatanur@broadcom.com, li.jin@broadcom.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <20191003000310.17099-1-chris.packham@alliedtelesis.co.nz>
- <20191003000310.17099-3-chris.packham@alliedtelesis.co.nz>
- <CAMuHMdV7syxxtnHEcgFBrf5DLo-M_71tZFWHHQ6kTO=2A1eVhg@mail.gmail.com>
- <86blutdlap.wl-maz@kernel.org>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <44510e8c-4e9b-603f-2c26-19db9121d68c@broadcom.com>
-Date:   Mon, 7 Oct 2019 10:10:52 -0700
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bLYqevL9PdywyJeqkvnwbJNWCTwp+vmfpCLSwv3bSmE=;
+        b=oQlHPAKGYJ7PeBB9bzRjx5rJsQb2BgM0NILHCxn6k1yVboMwUpBorrQ5a9eLDSbunX
+         z1U9l1YvMNdDFqP9HtErVrj7o3aOiWuKow26YBi7VHOJV9Eyk6FGtl87OxBlB3bNI1iN
+         yClS+G7TAyC1LV6TUIuru428IG7zFWOkEDZ8Ow+bl2L/0WAvHb2Ysq2KJ3rCtuayV7Ty
+         VScEHBD7gpfC4hM5SLD2fhcVAqCx6m/Q7sR2xwV1z7XjTrh7XMKf75ZdyLKLCra93lYr
+         IeiUTEW0Ma6a9dgEBfd1HADts99jmZQU9MDLo8AYPGhZy41eDS8gH1BE3XImGrXDb3Jt
+         mcAA==
+X-Gm-Message-State: APjAAAVyZ//+Ko98e5trnB7Aoz5e98statzDUYwfKdxuaSART3DAAflz
+        OA+c0GBO6SNEVos4cZdHWUMhRt08rS6qdgnm6f4nqqPYjRsh54Rc1mPWCrxjsDee8OH+Fyo2ZCx
+        lixhP5dkJARn9/5tc2CsmHpsk
+X-Received: by 2002:a1c:dfc4:: with SMTP id w187mr212752wmg.107.1570468282980;
+        Mon, 07 Oct 2019 10:11:22 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqz1x9jK5iGjhn2UKiyqBvzJiOdXgI8Lounm92w3dtdmgh+zFpbdqLV1jAS7OA22NvBTOkz9Ew==
+X-Received: by 2002:a1c:dfc4:: with SMTP id w187mr212734wmg.107.1570468282725;
+        Mon, 07 Oct 2019 10:11:22 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:9dd9:ce92:89b5:d1f2? ([2001:b07:6468:f312:9dd9:ce92:89b5:d1f2])
+        by smtp.gmail.com with ESMTPSA id n17sm13127190wrp.37.2019.10.07.10.11.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Oct 2019 10:11:22 -0700 (PDT)
+Subject: Re: [PATCH 10/16] x86/cpu: Detect VMX features on Intel, Centaur and
+ Zhaoxin CPUs
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-edac@vger.kernel.org,
+        Borislav Petkov <bp@suse.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+References: <20191004215615.5479-1-sean.j.christopherson@intel.com>
+ <20191004215615.5479-11-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <f26580de-d423-3369-42f4-682824dd592d@redhat.com>
+Date:   Mon, 7 Oct 2019 19:11:24 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <86blutdlap.wl-maz@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191004215615.5479-11-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 04/10/19 23:56, Sean Christopherson wrote:
+> +	/*
+> +	 * The high bits contain the allowed-1 settings, i.e. features that can
+> +	 * be turned on.  The low bits contain the allowed-0 settings, i.e.
+> +	 * features that can be turned off.  Ignore the allowed-0 settings,
+> +	 * if a feature can be turned on then it's supported.
+> +	 */
+> +	rdmsr(MSR_IA32_VMX_PINBASED_CTLS, ign, supported);
 
+For QEMU, we're defining a feature as supported if a feature can be
+turned both on and off.  Since msr_low and msr_high can be defined
+respectively as must-be-one and can-be-one, the features become
+"msr_high & ~msr_low".
 
-On 2019-10-07 1:14 a.m., Marc Zyngier wrote:
-> On Mon, 07 Oct 2019 08:30:50 +0100,
-> Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->> Hi Chris,
->>
->> CC MarcZ
->>
->> On Thu, Oct 3, 2019 at 2:03 AM Chris Packham
->> <chris.packham@alliedtelesis.co.nz> wrote:
->>> Use the dev_name(dev) for the irqc->name so that we get unique names
->>> when we have multiple instances of this driver.
->>>
->>> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
->> A while ago, Marc Zyngier pointed out that the irq_chip .name field
->> should contain the device's class name, not the instance's name.
->> Hence the current code is correct?
-> Thanks Geert for looping me in. The main reasons why I oppose this
-> kind of "let's show as much information as we can in /proc/interrupts"
-> are:
->
-> - It clutters the output badly: the formatting of this file, which is
->    bad enough when you have a small number of CPUs, becomes unreadable
->    when you have a large number of them *and* stupidly long strings
->    that only make sense on a given platform.
->
-> - Like it or not, /proc is ABI. We don't change things randomly there
->    without a good reason, and debugging isn't one of them.
->
-> - Debug information belongs to debugfs, where we already have plenty
->    of stuff (see CONFIG_GENERIC_IRQ_DEBUGFS). I'd rather we improve
->    this infrastructure if needed, rather than add platform specific
->    hacks.
->
-> </rant>
->
-> Thanks,
->
-> 	M.
-Thanks Marc/Geert.  Sounds like we should drop patch 2 from series.
->
->> See also "[PATCH 0/4] irqchip: renesas: Use proper irq_chip name and parent"
->> (https://lore.kernel.org/lkml/20190607095858.10028-1-geert+renesas@glider.be/)
->> Note that the irqchip patches in that series have been applied; the gpio
->> patches haven't been applied yet.
->>
->>> --- a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
->>> +++ b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
->>> @@ -858,7 +858,7 @@ static int iproc_gpio_probe(struct platform_device *pdev)
->>>                  struct gpio_irq_chip *girq;
->>>
->>>                  irqc = &chip->irqchip;
->>> -               irqc->name = "bcm-iproc-gpio";
->>> +               irqc->name = dev_name(dev);
->>>                  irqc->irq_ack = iproc_gpio_irq_ack;
->>>                  irqc->irq_mask = iproc_gpio_irq_mask;
->>>                  irqc->irq_unmask = iproc_gpio_irq_unmask;
->> Gr{oetje,eeting}s,
->>
->>                          Geert
->>
->> -- 
->> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->>
->> In personal conversations with technical people, I call myself a hacker. But
->> when I'm talking to journalists I just say "programmer" or something like that.
->>                                  -- Linus Torvalds
->>
+Also, shouldn't this use the "true" feature availability MSRs if available?
 
+Paolo
