@@ -2,112 +2,114 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A441ECE58E
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE4FECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01C872053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:24:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="M2EbXHqU"
+	by mail.kernel.org (Postfix) with ESMTP id 5E012205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:26:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728462AbfJGPYY (ORCPT
+        id S1728273AbfJGP0J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 11:24:24 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:47622 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726334AbfJGPYY (ORCPT
+        Mon, 7 Oct 2019 11:26:09 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:39737 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727589AbfJGP0I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:24:24 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x97FO48h154592;
-        Mon, 7 Oct 2019 15:24:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=+ws5Izj8hyAfCOW5xTuTHXPZXfrQQB1vmYoFwB5WMj8=;
- b=M2EbXHqUEkl9jgn3JwAPS1SD7e/XilSJr7Nw44zgVKVV5qkVDRfB2FFMhWfNWMms12dQ
- alb54vyWE/cT9Sq/dcwHxXlC86yZpf9GP9dqr/NtW/tIiBJFjBrBnY1vIXF+ycztFnM2
- ZSKoXPudZ6F7YAk4HdJUzQKcgQGBAgOFM8NQO4DeOH0sYLXNAXuys72/FGOR+az9+kNK
- C1u2FBc80uJ1DnNc8FLhxaCjXUtNdoOkXlWm7kgu4eMc1Pj/w0VkxXcygWWYzVNnlQoW
- J+S6HG1xeipsV+EqF0mXSV3zSyaT/nIaBsLUMDBNT3PK0Ox7A8yzn7eVSwRFzZbszBZA Fw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2vektr7a84-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 07 Oct 2019 15:24:04 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x97FNvJj021334;
-        Mon, 7 Oct 2019 15:24:04 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2vg20402ku-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 07 Oct 2019 15:24:02 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x97FNgPF020858;
-        Mon, 7 Oct 2019 15:23:42 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 07 Oct 2019 08:23:41 -0700
-Date:   Mon, 7 Oct 2019 08:23:36 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/11] iomap: add tracing for the readpage / readpages
-Message-ID: <20191007152336.GS13108@magnolia>
-References: <20191006154608.24738-1-hch@lst.de>
- <20191006154608.24738-2-hch@lst.de>
- <20191006224324.GR13108@magnolia>
- <20191007054838.GA15655@lst.de>
- <20191007061705.GA20377@lst.de>
+        Mon, 7 Oct 2019 11:26:08 -0400
+Received: by mail-qk1-f195.google.com with SMTP id 4so12955364qki.6;
+        Mon, 07 Oct 2019 08:26:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hRmOGZNk0NYT+fMDvkYsRiFnwMnhVC+gnIUxAp3rxvA=;
+        b=cEa/slRgbL1KiavJbV3A2W5023VI3OILGpSU7kVa2yCrB+n9XKv4hBVTvZb4t2qfn9
+         nUZukODprRWZiJe8L5Shkd/LVcvf8tfKG3y7sKbQOgr9eKJoRSx+yX2Snf1Cejx9ionu
+         7Vxgp3ZEZ6nHMupqlIZBMXmZpBjN1f+Tzqc+kJrcftVmbdeHYh2l5d0/e5ACSQxCZbRK
+         ry2ydqN0E/v5d+HhBG3xUXWkTxYYfDRd+0xAQApm31Ue4TWgSMkWPVTl9BepxxX4YbDV
+         E3qPufOqyWd4Mc3cPerOTcar7M9Ohth0Xjow7vFKBf4FcNctd91lS53+KHanXpKh/Hjh
+         Cu8A==
+X-Gm-Message-State: APjAAAUf2UAHwmkI6l5jtiai4Ne56GRRtxRFnheN14hiXRxX1hBw0BBp
+        1MAqOwdlPmABcSv/B5JUXUEogs2YnuLnBufoTS8=
+X-Google-Smtp-Source: APXvYqx8CqljIh59ZpHzfr7qLshwyG8IAhJfuGpUA+FlV2i2zLh2cOLP3/3M60nyXKm3gmOxZ8L1hPEVku4m2H6b2Kk=
+X-Received: by 2002:ae9:c110:: with SMTP id z16mr24108618qki.352.1570461967381;
+ Mon, 07 Oct 2019 08:26:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191007061705.GA20377@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9403 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910070152
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9403 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910070151
+References: <20191007040935.23436-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20191007040935.23436-1-yamada.masahiro@socionext.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 7 Oct 2019 17:25:51 +0200
+Message-ID: <CAK8P3a0g5iEtbFGk2BE6x3GrE5=zXngecLFUVFPWFqL3NZUwhg@mail.gmail.com>
+Subject: Re: [RFC PATCH] media: videodev2.h: include <linux/time.h> instead of <sys/time.h>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 08:17:05AM +0200, Christoph Hellwig wrote:
-> On Mon, Oct 07, 2019 at 07:48:38AM +0200, Christoph Hellwig wrote:
-> > On Sun, Oct 06, 2019 at 03:43:24PM -0700, Darrick J. Wong wrote:
-> > > > +iomap-y				+= trace.o \
-> > > 
-> > > I think this patch is missing fs/iomap/trace.c ?
-> > 
-> > It does.  The file is in my tree, but I never did a git-add for it..
-> 
-> A branch with the file is here:
-> 
->    git://git.infradead.org/users/hch/xfs.git iomap-writepage.7
-> 
-> Gitweb:
-> 
->     http://git.infradead.org/users/hch/xfs.git/shortlog/refs/heads/iomap-writepage.7
-> 
-> I'll wait a bit until I resend to see if people find other issues.
+On Mon, Oct 7, 2019 at 6:10 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> Currently, linux/videodev.h is excluded from the UAPI header test since
+> it is not self-contained. Building it for user-space would fail.
+>
 
-I didn't see any, at least not in a quick overnight fstests run.
+>
+> Replacing <sys/time.h> with <linux/time.h> solves it, and allow more
+> headers to join the UAPI header test.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+>
+> I am not 100% sure about the compatibility
+> between <sys/time.h> and <linux/time.h>, hence RFC.
+>
+> But, if they were not compatible,
+> I guess it would have broken already.
+>
+> I CCed Arnd Bergmann, who might have a better insight.
+>
+> A related comment is here:
+> https://lkml.org/lkml/2019/6/4/1046
 
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+I don't think this can work, there are multiple problems here:
 
---D
+* linux/time.h is still incompatible with sys/time.h, so any application
+  tries to include both sys/time.h and linux/videodev2.h now also
+  gets the compile-time error.
+
+* The definition of 'struct timespec' in the kernel headers may in
+  fact be different from the one in the libc, and we do want to use
+  the one from the C library here, otherwise different parts of the
+  application may use incompatible struct layouts.
+
+Fixing this correctly depends on one of the remaining y2038
+patches that we still have to revisit. There are two aspects that
+we should address:
+
+1. The v4l subsystem needs to be changed to handle both the
+    old and the new 32-bit layout for timespec (and timeval). Both
+    Hans and I have created patches for this in the past, but they
+    were never completed and merged.
+
+2. The definition of 'struct timespec' in the kernel headers needs
+   to be removed after every user of this struct is gone from
+   the kernel. In internal kernel code, the replacement is
+   timespec64 or ktime_t, and in user space interfaces, the
+   correct replacement is one of __kernel_timespec (the 64-bit
+   version), __kernel_old_timespec (the traditional layout) or
+   timespec (from the libc headers).
+
+        Arnd
