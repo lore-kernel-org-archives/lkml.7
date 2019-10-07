@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FDBC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC61C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DF6120679
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C244C20679
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:54:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GIm5xSbR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ckvqu/Vo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728598AbfJGPyH (ORCPT
+        id S1728636AbfJGPyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 11:54:07 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:39272 "EHLO
+        Mon, 7 Oct 2019 11:54:55 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:40721 "EHLO
         mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727958AbfJGPyG (ORCPT
+        with ESMTP id S1727791AbfJGPyz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:54:06 -0400
-Received: by mail-io1-f67.google.com with SMTP id a1so29693444ioc.6;
-        Mon, 07 Oct 2019 08:54:06 -0700 (PDT)
+        Mon, 7 Oct 2019 11:54:55 -0400
+Received: by mail-io1-f67.google.com with SMTP id h144so29637755iof.7;
+        Mon, 07 Oct 2019 08:54:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=oOKcZv1B2M+ysN8LJmTMwi1RT7cbsvdwnRry27TboAA=;
-        b=GIm5xSbRI50sJepzUbwycg7NDvMt3BT+3RYQ1Ak3PHk03MA/wlw9SqTNGY2DfIZkI3
-         vzloLLiQdo1Im+2BoTX2drQ9SytWBxd+eHhHN+oxkN83GrWLEW2lR8fnp2/7fI3yPVJk
-         ZxOm4F1VeDXgpPbLMuAjDt3XlVRxikDPzHve8KYJuOw5hyLbMGGgxDCmn4YkVI3ivd7q
-         +qC9HjO+buQM/o2qZs44GNytFS6dr+QBe4nE9YfUXJ9tYuB3aUliVkTo2PYIw168NusB
-         jYzgE62kDvg5lylYW9+xxyGY9aRNG6dfE/sjjE4tsJNb9Fkc+4mHngnT1fhm2fIWSs2U
-         RT8Q==
+        bh=lvpOYPT25Dz/vPtn4WUNNAsTQj8w9iYHYk37s9wmbRA=;
+        b=Ckvqu/VoFwKFHldPlCQQ7rGN0El4oSw62jZdcCzu59LwyF2msfcDQM63j0TmFd2YxT
+         WAe3o/ieROixTeOWj5cRNIdhGzfdb3SSQ3c2/0hAmI4vacwT/AjZ4HdH47oBJz13v1Xr
+         Zu8ism2Y1fiki6FPQl3fWyevesoLjP1eV251spvajxesKUS2hbYoN6+cWKrr9CAo71KK
+         tRL3LBH1bAqTsv2FhLoatmnhFgfI8Mfg4LHc7RACVt965MBiLo30hVr5jrP8l7NJI/kw
+         p3e7Ti728xG16cOQ5s+unqsH4DBrAZ3fE9TTt05hfU0+FOECcfP4b/OA8wKIHm+CJuwV
+         9tVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=oOKcZv1B2M+ysN8LJmTMwi1RT7cbsvdwnRry27TboAA=;
-        b=TT0iZBLI16XwtTexmqZsUD5xmgKK/gzd0xMCjNNoM/VB5dn7LIR8A102KgkWh3HJmf
-         iYXdlqA3pr1R5OFeFHb4/6YH9gnN1uy7yWAzamyPLdGxlpTdYj2Rtly7Uwbh76BQW4dt
-         JPylGWhsS0F5bVYi2fJTjKPhrfmNGBW9UoBanU3rqcyOWUifJ1jO2dPIK0NDfCo0QmS2
-         WLrL2eahRMCWWkWVmlNLjhMMwFi2mrT6MOf6xk/sYUuoQvh8/u1wdAy25IcY20iDFZcJ
-         xHzaHZX5U7ahJlbLEiZsAT8sZgHfo834Blgwbj60BKOksT/qeRCqZTdnfze/24bcqfdK
-         Jh0Q==
-X-Gm-Message-State: APjAAAWe6WD8WI9jHmDQffAgaK7+MzyQxegubfwqQETzGc6ULP/5udX4
-        WjvDFKneRUinhIk+Q25EVexhTL9qbTmgi60cU/A=
-X-Google-Smtp-Source: APXvYqw9T09ClSC4idvRRaaJZz/xKErgE5SB3WxVYBhzuMFYdqY2HrLZiaXgYCS9faKiSyduxgwe6sfmi9HXu2ybLSY=
-X-Received: by 2002:a02:c983:: with SMTP id b3mr27831643jap.120.1570463645906;
- Mon, 07 Oct 2019 08:54:05 -0700 (PDT)
+        bh=lvpOYPT25Dz/vPtn4WUNNAsTQj8w9iYHYk37s9wmbRA=;
+        b=qQfAArNGw6AthJ17XW5NBm+ukmdz5/Jg4fDDqAkm1e9uANIDk/MDTl+oi0ctxeUWb9
+         dRMJER4P0kTgVEGK4vc1oL0a4t4DzKT9Ysm5LyiQyoMUcC+2hNuK/MFyN9Vso2kzu0WE
+         zzVe2S9XlBlhAEOmPsnNbjfvyx4aHvkuM/zpWdd9ada6EGO4iPqrtfNE3l7vUk3Z9iZ9
+         IFBXbHNfLvBozSMPsotMKa0DAZhXZ+qiQX8e57wGtKeB0IxvConh6ah3oMqNcOIWNYwX
+         4ix6ciNxSdvNKooX/x/wVUxBzxIC65pLM6+5yXWSODIPNgo+yBRe6pvhzasPWreLS57P
+         o0Kw==
+X-Gm-Message-State: APjAAAWCCjHPIDrvrE5RPfPFdJnjdd0fxtEy9v2lykXqSZaSX1rHYdlQ
+        an4QNaNM0y4xHQwH2TIWWU4QP2KenrLY88CRT84=
+X-Google-Smtp-Source: APXvYqxi4nNcdgpdM7NsVyNP5M/JKLLRb6BMM4Kll8kUSaYi7x+Qj5bGG21aaEgdWhPttIekzf3iOaMHq7JDv5ThOfI=
+X-Received: by 2002:a02:2b2e:: with SMTP id h46mr27703157jaa.141.1570463693043;
+ Mon, 07 Oct 2019 08:54:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191007131649.1768-1-linux.amoon@gmail.com> <20191007131649.1768-4-linux.amoon@gmail.com>
- <b73a1302-90ae-f1db-ff43-84d56ca4ba39@baylibre.com>
-In-Reply-To: <b73a1302-90ae-f1db-ff43-84d56ca4ba39@baylibre.com>
+References: <20191007131649.1768-1-linux.amoon@gmail.com> <20191007131649.1768-5-linux.amoon@gmail.com>
+ <a6daf5e5-fadf-ca72-fc7b-1789abaab605@baylibre.com>
+In-Reply-To: <a6daf5e5-fadf-ca72-fc7b-1789abaab605@baylibre.com>
 From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Mon, 7 Oct 2019 21:23:53 +0530
-Message-ID: <CANAwSgQjKRAKV2wycZ7QFq1CS5jr_ABgvFb+pGMHWTxgFR8wPQ@mail.gmail.com>
-Subject: Re: [RFCv1 3/5] arm64: dts: meson: Add missing regulator linked to
- VDDAO_3V3 regulator to FLASH_VDD
+Date:   Mon, 7 Oct 2019 21:24:41 +0530
+Message-ID: <CANAwSgQBMzkdnuHc8_hFx0+Es2PWmCwgeqykCTieZ3BtTK1W7A@mail.gmail.com>
+Subject: Re: [RFCv1 4/5] arm64: dts: meson: Add missing regulator linked to
+ VCCV5 regulator to VDDIO_C/TF_IO
 To:     Neil Armstrong <narmstrong@baylibre.com>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -84,8 +84,8 @@ Hi Neil,
 On Mon, 7 Oct 2019 at 19:51, Neil Armstrong <narmstrong@baylibre.com> wrote:
 >
 > On 07/10/2019 15:16, Anand Moon wrote:
-> > As per schematics add missing VDDAO_3V3 power supply to FLASH_VDD
-> > regulator. Also add TFLASH_VDD_EN signal name to gpio pin.
+> > As per schematics add missing VCCV5 power supply to VDDIO_C/TF_IO
+> > regulator. Also add TF_3V3N_1V8_EN signal name to gpio pin.
 > >
 > > Fixes: c35f6dc5c377 (arm64: dts: meson: Add minimal support for Odroid-N2)
 > > Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
@@ -97,22 +97,24 @@ On Mon, 7 Oct 2019 at 19:51, Neil Armstrong <narmstrong@baylibre.com> wrote:
 > >  1 file changed, 3 insertions(+)
 > >
 > > diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> > index 66262a6ab3fe..6bd23a1e7e1d 100644
+> > index 6bd23a1e7e1d..5daf176452f7 100644
 > > --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
 > > +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> > @@ -51,9 +51,12 @@
-> >               regulator-min-microvolt = <3300000>;
+> > @@ -66,11 +66,14 @@
+> >               regulator-min-microvolt = <1800000>;
 > >               regulator-max-microvolt = <3300000>;
 > >
-> > +             /* TFLASH_VDD_EN */
-> >               gpio = <&gpio_ao GPIOAO_8 GPIO_ACTIVE_HIGH>;
-> >               enable-active-high;
-> >               regulator-always-on;
-> > +             /* U18 FC8731-09VF05NRR */
-> > +             vin-supply = <&vddao_3v3>;
+> > +             /* TF_3V3N_1V8_EN */
+> >               gpios = <&gpio_ao GPIOAO_9 GPIO_ACTIVE_HIGH>;
+> >               gpios-states = <0>;
+> >
+> >               states = <3300000 0>,
+> >                        <1800000 1>;
+> > +             /* U16 RT9179GB */
+> > +             vin-supply = <&vcc_5v>;
 > >       };
 > >
-> >       tf_io: gpio-regulator-tf_io {
+> >       flash_1v8: regulator-flash_1v8 {
 > >
 >
 > Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
