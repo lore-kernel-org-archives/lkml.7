@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA88ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D41AAC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A63D82196E
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:45:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D70421655
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:45:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qrdQqQID"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qSZ/4sz2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbfJGMpN (ORCPT
+        id S1728080AbfJGMpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 08:45:13 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:50506 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728026AbfJGMpJ (ORCPT
+        Mon, 7 Oct 2019 08:45:15 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:38520 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728053AbfJGMpM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 08:45:09 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x97Ciwml096452;
-        Mon, 7 Oct 2019 07:44:58 -0500
+        Mon, 7 Oct 2019 08:45:12 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x97Cj1wR030306;
+        Mon, 7 Oct 2019 07:45:01 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570452298;
-        bh=MNtYkdAzVgE8Ou25bkrDZ4gd8PxFOPcx4cXOPWheoh0=;
+        s=ti-com-17Q1; t=1570452301;
+        bh=tuyl5wXjPPfpn1iaywTTenuPQVjCxeueO9xgv9nTjRs=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=qrdQqQIDbKYSxx8+z/OZGDaTW7ZRU02RHCdIRVO1MZjk1AywU8MgPvlDBDk2QAZXr
-         Pbb1Iu3GjSDRITwyuR+b09MINI7g607MrV4kt8NCldm0AYRNfVRIsahrfTt5iUWtVj
-         voJ/i+I4SYPTgBYPsyzgTCnlxn03Ira68UKggSxw=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x97CiwkU002058;
-        Mon, 7 Oct 2019 07:44:58 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+        b=qSZ/4sz2srok8fMxzgZClcKxowOe9c49cB53YSkvX4mzNMMI2X10v1n4PyvYFkcsv
+         E5traeeBHUMN5u60dnR/Ic3SqYqrrC0WpIbgWfFRpldQ/nGXdPe4d3iFTCdIh1ft5J
+         4TyZVF522MRajjQueVyFzOjWDVHoC48d9pJT/wNk=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x97Cj1mK094041
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 7 Oct 2019 07:45:01 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 7 Oct
- 2019 07:44:56 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 07:45:00 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 7 Oct 2019 07:44:58 -0500
+ Frontend Transport; Mon, 7 Oct 2019 07:45:00 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x97CivwL115934;
-        Mon, 7 Oct 2019 07:44:57 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x97CixXC115950;
+        Mon, 7 Oct 2019 07:45:00 -0500
 From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <sre@kernel.org>,
         <robh+dt@kernel.org>, <mark.rutland@arm.com>,
@@ -54,9 +55,9 @@ To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <sre@kernel.org>,
 CC:     <dmurphy@ti.com>, <linux-leds@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
         <tomi.valkeinen@ti.com>, Jean-Jacques Hiblot <jjhiblot@ti.com>
-Subject: [PATCH v9 3/5] leds: Add managed API to get a LED from a device driver
-Date:   Mon, 7 Oct 2019 14:44:35 +0200
-Message-ID: <20191007124437.20367-4-jjhiblot@ti.com>
+Subject: [PATCH v9 5/5] backlight: add led-backlight driver
+Date:   Mon, 7 Oct 2019 14:44:37 +0200
+Message-ID: <20191007124437.20367-6-jjhiblot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191007124437.20367-1-jjhiblot@ti.com>
 References: <20191007124437.20367-1-jjhiblot@ti.com>
@@ -68,89 +69,315 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the LED is acquired by a consumer device with devm_led_get(), it is
-automatically released when the device is detached.
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
 
+This patch adds a led-backlight driver (led_bl), which is similar to
+pwm_bl except the driver uses a LED class driver to adjust the
+brightness in the HW. Multiple LEDs can be used for a single backlight.
+
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
 Acked-by: Pavel Machek <pavel@ucw.cz>
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 ---
- drivers/leds/led-class.c | 49 ++++++++++++++++++++++++++++++++++++++++
- include/linux/leds.h     |  2 ++
- 2 files changed, 51 insertions(+)
+ drivers/video/backlight/Kconfig  |   7 +
+ drivers/video/backlight/Makefile |   1 +
+ drivers/video/backlight/led_bl.c | 258 +++++++++++++++++++++++++++++++
+ 3 files changed, 266 insertions(+)
+ create mode 100644 drivers/video/backlight/led_bl.c
 
-diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-index 1d1f1d546dc7..639224392ffa 100644
---- a/drivers/leds/led-class.c
-+++ b/drivers/leds/led-class.c
-@@ -264,6 +264,55 @@ void led_put(struct led_classdev *led_cdev)
- }
- EXPORT_SYMBOL_GPL(led_put);
+diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
+index 8b081d61773e..585a1787618c 100644
+--- a/drivers/video/backlight/Kconfig
++++ b/drivers/video/backlight/Kconfig
+@@ -458,6 +458,13 @@ config BACKLIGHT_RAVE_SP
+ 	help
+ 	  Support for backlight control on RAVE SP device.
  
-+static void devm_led_release(struct device *dev, void *res)
-+{
-+	struct led_classdev **p = res;
++config BACKLIGHT_LED
++	tristate "Generic LED based Backlight Driver"
++	depends on LEDS_CLASS && OF
++	help
++	  If you have a LCD backlight adjustable by LED class driver, say Y
++	  to enable this driver.
 +
-+	led_put(*p);
+ endif # BACKLIGHT_CLASS_DEVICE
+ 
+ endmenu
+diff --git a/drivers/video/backlight/Makefile b/drivers/video/backlight/Makefile
+index 63c507c07437..2a67642966a5 100644
+--- a/drivers/video/backlight/Makefile
++++ b/drivers/video/backlight/Makefile
+@@ -57,3 +57,4 @@ obj-$(CONFIG_BACKLIGHT_TPS65217)	+= tps65217_bl.o
+ obj-$(CONFIG_BACKLIGHT_WM831X)		+= wm831x_bl.o
+ obj-$(CONFIG_BACKLIGHT_ARCXCNN) 	+= arcxcnn_bl.o
+ obj-$(CONFIG_BACKLIGHT_RAVE_SP)		+= rave-sp-backlight.o
++obj-$(CONFIG_BACKLIGHT_LED)		+= led_bl.o
+diff --git a/drivers/video/backlight/led_bl.c b/drivers/video/backlight/led_bl.c
+new file mode 100644
+index 000000000000..b89ba20c1d16
+--- /dev/null
++++ b/drivers/video/backlight/led_bl.c
+@@ -0,0 +1,258 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2015-2019 Texas Instruments Incorporated -  http://www.ti.com/
++ * Authors: Tomi Valkeinen <tomi.valkeinen@ti.com>
++ *          Jean-Jacques Hiblot <jjhiblot@ti.com>
++ */
++
++#include <linux/backlight.h>
++#include <linux/leds.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++
++struct led_bl_data {
++	struct device		*dev;
++	struct backlight_device	*bl_dev;
++	struct led_classdev	**leds;
++	bool			enabled;
++	int			nb_leds;
++	unsigned int		*levels;
++	unsigned int		default_brightness;
++	unsigned int		max_brightness;
++};
++
++static void led_bl_set_brightness(struct led_bl_data *priv, int level)
++{
++	int i;
++	int bkl_brightness;
++
++	if (priv->levels)
++		bkl_brightness = priv->levels[level];
++	else
++		bkl_brightness = level;
++
++	for (i = 0; i < priv->nb_leds; i++)
++		led_set_brightness(priv->leds[i], bkl_brightness);
++
++	priv->enabled = true;
 +}
 +
-+/**
-+ * devm_of_led_get - Resource-managed request of a LED device
-+ * @dev:	LED consumer
-+ * @index:	index of the LED to obtain in the consumer
-+ *
-+ * The device node of the device is parse to find the request LED device.
-+ * The LED device returned from this function is automatically released
-+ * on driver detach.
-+ *
-+ * @return a pointer to a LED device or ERR_PTR(errno) on failure.
-+ */
-+struct led_classdev *__must_check devm_of_led_get(struct device *dev,
-+						  int index)
++static void led_bl_power_off(struct led_bl_data *priv)
 +{
-+	struct led_classdev *led;
-+	struct led_classdev **dr;
++	int i;
 +
-+	if (!dev)
-+		return ERR_PTR(-EINVAL);
++	if (!priv->enabled)
++		return;
 +
-+	/* Consummer not using device tree? */
-+	if (!dev_of_node(dev))
-+		return ERR_PTR(-ENOTSUPP);
++	for (i = 0; i < priv->nb_leds; i++)
++		led_set_brightness(priv->leds[i], LED_OFF);
 +
-+	led = of_led_get(dev_of_node(dev), index);
-+	if (IS_ERR(led))
-+		return led;
++	priv->enabled = false;
++}
 +
-+	dr = devres_alloc(devm_led_release, sizeof(struct led_classdev *),
-+			  GFP_KERNEL);
-+	if (!dr) {
-+		led_put(led);
-+		return ERR_PTR(-ENOMEM);
++static int led_bl_update_status(struct backlight_device *bl)
++{
++	struct led_bl_data *priv = bl_get_data(bl);
++	int brightness = bl->props.brightness;
++
++	if (bl->props.power != FB_BLANK_UNBLANK ||
++	    bl->props.fb_blank != FB_BLANK_UNBLANK ||
++	    bl->props.state & BL_CORE_FBBLANK)
++		brightness = 0;
++
++	if (brightness > 0)
++		led_bl_set_brightness(priv, brightness);
++	else
++		led_bl_power_off(priv);
++
++	return 0;
++}
++
++static const struct backlight_ops led_bl_ops = {
++	.update_status	= led_bl_update_status,
++};
++
++static int led_bl_get_leds(struct device *dev,
++			   struct led_bl_data *priv)
++{
++	int i, nb_leds, ret;
++	struct device_node *node = dev->of_node;
++	struct led_classdev **leds;
++	unsigned int max_brightness;
++	unsigned int default_brightness;
++
++	ret = of_count_phandle_with_args(node, "leds", NULL);
++	if (ret < 0) {
++		dev_err(dev, "Unable to get led count\n");
++		return -EINVAL;
 +	}
 +
-+	*dr = led;
-+	devres_add(dev, dr);
++	nb_leds = ret;
++	if (nb_leds < 1) {
++		dev_err(dev, "At least one LED must be specified!\n");
++		return -EINVAL;
++	}
 +
-+	return led;
++	leds = devm_kzalloc(dev, sizeof(struct led_classdev *) * nb_leds,
++			    GFP_KERNEL);
++	if (!leds)
++		return -ENOMEM;
++
++	for (i = 0; i < nb_leds; i++) {
++		leds[i] = devm_of_led_get(dev, i);
++		if (IS_ERR(leds[i]))
++			return PTR_ERR(leds[i]);
++	}
++
++	/* check that the LEDs all have the same brightness range */
++	max_brightness = leds[0]->max_brightness;
++	for (i = 1; i < nb_leds; i++) {
++		if (max_brightness != leds[i]->max_brightness) {
++			dev_err(dev, "LEDs must have identical ranges\n");
++			return -EINVAL;
++		}
++	}
++
++	/* get the default brightness from the first LED from the list */
++	default_brightness = leds[0]->brightness;
++
++	priv->nb_leds = nb_leds;
++	priv->leds = leds;
++	priv->max_brightness = max_brightness;
++	priv->default_brightness = default_brightness;
++
++	return 0;
 +}
-+EXPORT_SYMBOL_GPL(devm_of_led_get);
 +
- static int led_classdev_next_name(const char *init_name, char *name,
- 				  size_t len)
- {
-diff --git a/include/linux/leds.h b/include/linux/leds.h
-index 6f7371bc7757..9b94cf752012 100644
---- a/include/linux/leds.h
-+++ b/include/linux/leds.h
-@@ -199,6 +199,8 @@ extern void led_classdev_resume(struct led_classdev *led_cdev);
- 
- extern struct led_classdev *of_led_get(struct device_node *np, int index);
- extern void led_put(struct led_classdev *led_cdev);
-+struct led_classdev *__must_check devm_of_led_get(struct device *dev,
-+						  int index);
- 
- /**
-  * led_blink_set - set blinking with software fallback
++static int led_bl_parse_levels(struct device *dev,
++			   struct led_bl_data *priv)
++{
++	struct device_node *node = dev->of_node;
++	int num_levels;
++	u32 value;
++	int ret;
++
++	if (!node)
++		return -ENODEV;
++
++	num_levels = of_property_count_u32_elems(node, "brightness-levels");
++	if (num_levels > 1) {
++		int i;
++		unsigned int db;
++		u32 *levels = NULL;
++
++		levels = devm_kzalloc(dev, sizeof(u32) * num_levels,
++				      GFP_KERNEL);
++		if (!levels)
++			return -ENOMEM;
++
++		ret = of_property_read_u32_array(node, "brightness-levels",
++						levels,
++						num_levels);
++		if (ret < 0)
++			return ret;
++
++		/*
++		 * Try to map actual LED brightness to backlight brightness
++		 * level
++		 */
++		db = priv->default_brightness;
++		for (i = 0 ; i < num_levels; i++) {
++			if ((i && db > levels[i-1]) && db <= levels[i])
++				break;
++		}
++		priv->default_brightness = i;
++		priv->max_brightness = num_levels - 1;
++		priv->levels = levels;
++	} else if (num_levels >= 0)
++		dev_warn(dev, "Not enough levels defined\n");
++
++	ret = of_property_read_u32(node, "default-brightness-level", &value);
++	if (!ret && value <= priv->max_brightness)
++		priv->default_brightness = value;
++	else if (!ret  && value > priv->max_brightness)
++		dev_warn(dev, "Invalid default brightness. Ignoring it\n");
++
++	return 0;
++}
++
++static void led_bl_cleanup(void *data)
++{
++	struct led_bl_data *priv = data;
++	int i;
++
++	led_bl_power_off(priv);
++	for (i = 0; i < priv->nb_leds; i++)
++		led_sysfs_enable(priv->leds[i]);
++}
++
++static int led_bl_probe(struct platform_device *pdev)
++{
++	struct backlight_properties props;
++	struct led_bl_data *priv;
++	int ret, i;
++
++	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, priv);
++
++	priv->dev = &pdev->dev;
++
++	ret = led_bl_get_leds(&pdev->dev, priv);
++	if (ret)
++		return ret;
++
++	ret = led_bl_parse_levels(&pdev->dev, priv);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "Failed to parse DT data\n");
++		return ret;
++	}
++
++	ret = devm_add_action_or_reset(&pdev->dev, led_bl_cleanup, priv);
++	if (ret)
++		return ret;
++
++	for (i = 0; i < priv->nb_leds; i++)
++		led_sysfs_disable(priv->leds[i]);
++
++	memset(&props, 0, sizeof(struct backlight_properties));
++	props.type = BACKLIGHT_RAW;
++	props.max_brightness = priv->max_brightness;
++	props.brightness = priv->default_brightness;
++	props.power = (priv->default_brightness > 0) ? FB_BLANK_POWERDOWN :
++		      FB_BLANK_UNBLANK;
++	priv->bl_dev = devm_backlight_device_register(&pdev->dev,
++			dev_name(&pdev->dev), &pdev->dev, priv, &led_bl_ops,
++			&props);
++	if (IS_ERR(priv->bl_dev)) {
++		dev_err(&pdev->dev, "Failed to register backlight\n");
++		return PTR_ERR(priv->bl_dev);
++	}
++
++	backlight_update_status(priv->bl_dev);
++
++	return 0;
++}
++
++static const struct of_device_id led_bl_of_match[] = {
++	{ .compatible = "led-backlight" },
++	{ }
++};
++
++MODULE_DEVICE_TABLE(of, led_bl_of_match);
++
++static struct platform_driver led_bl_driver = {
++	.driver		= {
++		.name		= "led-backlight",
++		.of_match_table	= led_bl_of_match,
++	},
++	.probe		= led_bl_probe,
++};
++
++module_platform_driver(led_bl_driver);
++
++MODULE_DESCRIPTION("LED based Backlight Driver");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:led-backlight");
 -- 
 2.17.1
 
