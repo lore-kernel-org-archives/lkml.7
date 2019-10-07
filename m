@@ -2,96 +2,108 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE6B0ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0CCECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A08342070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:12:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570461166;
-	bh=PzXSvB7axuNRfS9crsgLcbuL4VAi09lY7uyLkiiEaak=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=j+3RPqQw7JDMwTUhglgoYUwJ5S+diIv+PMPvpzLUfPeZAGI1z01WGoB6E2ckPPt/s
-	 O6rgp0nNQrkxMqMCNYF7qtKnywjkS1l1D6SjXieZH4jPkbEEGYfBt+AdXVTRM3MIFQ
-	 bPhfW0pLvR8+j5PRK60+/+k3gYVWlhOTHpKJfS1g=
+	by mail.kernel.org (Postfix) with ESMTP id E68172070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:13:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TtfturaR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbfJGPMp (ORCPT
+        id S1728436AbfJGPNY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 11:12:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42570 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727835AbfJGPMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:12:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 38C55AC26;
-        Mon,  7 Oct 2019 15:12:38 +0000 (UTC)
-Date:   Mon, 7 Oct 2019 17:12:37 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Petr Mladek <pmladek@suse.com>, akpm@linux-foundation.org,
-        sergey.senozhatsky.work@gmail.com, rostedt@goodmis.org,
-        peterz@infradead.org, linux-mm@kvack.org,
-        john.ogness@linutronix.de, david@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
-Message-ID: <20191007151237.GP2381@dhcp22.suse.cz>
-References: <1570228005-24979-1-git-send-email-cai@lca.pw>
- <20191007143002.l37bt2lzqtnqjqxu@pathway.suse.cz>
- <1570460350.5576.290.camel@lca.pw>
+        Mon, 7 Oct 2019 11:13:24 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53899 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727745AbfJGPNY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 11:13:24 -0400
+Received: by mail-wm1-f66.google.com with SMTP id i16so13092193wmd.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 08:13:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zZhWwemYig8kkhxldGf4LKemMdD16O7Dc8IYXL4Z9nQ=;
+        b=TtfturaR8liADnZGl/3TkUOAnWRUKqPN60ooxnYYL6Va4SHdSH7tCSecNi7Y8dNBVv
+         Sih8Zsx/P0NdmRovUTDJe4OefM0M3fYYZkH4Ua62ocK1kMsPnqFa7Jd7GlevAYguTp8W
+         XGGqQNl9SfdSzxtH9TLnymc2P6hPk/2NiYyKUnEGd4D/dnQH8a7AYyfhHKZ+gSY2rhs0
+         f+Kp+YX+VBKSaaD4RCxkq1pJfGPNK5hjrT6zv/Q2jqxp3rScWis3JE7VYfsz9L5mpSK3
+         AJIWz6NA29ya4ZFpE6PfdJ1qGWzJ1SRoQjz583M8TK5FJWxbHjLuKCHxNOdeu1MiCL7R
+         Cc1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zZhWwemYig8kkhxldGf4LKemMdD16O7Dc8IYXL4Z9nQ=;
+        b=FbS1WNAOwKVhn5di1Wd3leObQoNmq1BFgz3fOi1P694oB/Gyg9d/8TBPYyDk4Oz+zU
+         AjbqxUgLCYjRRdT+0uaTmk2yAb625oipGR20xVLJQckx3F4BZNn3dp80Lb2GMcgQ9PPD
+         kL1z5TBAXMDbneJoK+9P19zMoLm2Mov9cqDiuWhfV27k0jMUdcsKAifu87Br1H3xO5xy
+         RwqkKQpJcsp1jMtN6ofUA4GWn/aGTKBbvAjVQdv0YJz3NVxgIJTWTbsDnQw/KAicJPOn
+         NPHwyLgFZw2sZaIoLtU7eUwwrcwURO9HrgwZ/AL5SIyCb7MtFxwmDQvT80k7S66x4jCJ
+         W6bw==
+X-Gm-Message-State: APjAAAVbRdP/Z9V9cvhPWzA3OQk/zNgj7FIHeq6LY04WRckfDUkektzg
+        2Ah4PwhpqjtHnsS8w653cx5WMg==
+X-Google-Smtp-Source: APXvYqyoB84wgf2m2ZiN/nCRXnW//WyCx1S1jxPL+K+bYrlRxCFhQyVxnrvMqqjqFYdzzvEJ6AVRAA==
+X-Received: by 2002:a7b:c148:: with SMTP id z8mr12606425wmi.95.1570461201869;
+        Mon, 07 Oct 2019 08:13:21 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id a3sm28051120wmc.3.2019.10.07.08.13.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2019 08:13:21 -0700 (PDT)
+Date:   Mon, 7 Oct 2019 16:13:19 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/5] backlight: pwm_bl: eliminate a 64/32 division
+Message-ID: <20191007151319.de6ko7n5dypqgyce@holly.lan>
+References: <20190919140620.32407-1-linux@rasmusvillemoes.dk>
+ <20190919140620.32407-2-linux@rasmusvillemoes.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1570460350.5576.290.camel@lca.pw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190919140620.32407-2-linux@rasmusvillemoes.dk>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 07-10-19 10:59:10, Qian Cai wrote:
-[...]
-> It is almost impossible to eliminate all the indirect call chains from
-> console_sem/console_owner_lock to zone->lock because it is too normal that
-> something later needs to allocate some memory dynamically, so as long as it
-> directly call printk() with zone->lock held, it will be in trouble.
+On Thu, Sep 19, 2019 at 04:06:17PM +0200, Rasmus Villemoes wrote:
+> lightness*1000 is nowhere near overflowing 32 bits, so we can just use
+> an ordinary 32/32 division, which is much cheaper than the 64/32 done
+> via do_div().
+> 
+> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-Do you have any example where the console driver really _has_ to
-allocate. Because I have hard time to believe this is going to work at
-all as the atomic context doesn't allow to do any memory reclaim and
-such an allocation would be too easy to fail so the allocation cannot
-really rely on it.
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
 
-So again, crippling the MM code just because of lockdep false possitives
-or a broken console driver sounds like a wrong way to approach the
-problem.
-
-> [  297.425964] -> #1 (&port_lock_key){-.-.}:
-> [  297.425967]        __lock_acquire+0x5b3/0xb40
-> [  297.425967]        lock_acquire+0x126/0x280
-> [  297.425968]        _raw_spin_lock_irqsave+0x3a/0x50
-> [  297.425969]        serial8250_console_write+0x3e4/0x450
-> [  297.425970]        univ8250_console_write+0x4b/0x60
-> [  297.425970]        console_unlock+0x501/0x750
-> [  297.425971]        vprintk_emit+0x10d/0x340
-> [  297.425972]        vprintk_default+0x1f/0x30
-> [  297.425972]        vprintk_func+0x44/0xd4
-> [  297.425973]        printk+0x9f/0xc5
-> [  297.425974]        register_console+0x39c/0x520
-> [  297.425975]        univ8250_console_init+0x23/0x2d
-> [  297.425975]        console_init+0x338/0x4cd
-> [  297.425976]        start_kernel+0x534/0x724
-> [  297.425977]        x86_64_start_reservations+0x24/0x26
-> [  297.425977]        x86_64_start_kernel+0xf4/0xfb
-> [  297.425978]        secondary_startup_64+0xb6/0xc0
-
-This is an early init code again so the lockdep sounds like a false
-possitive to me.
--- 
-Michal Hocko
-SUSE Labs
+> ---
+>  drivers/video/backlight/pwm_bl.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+> index be36be1cacb7..9252d51f31b9 100644
+> --- a/drivers/video/backlight/pwm_bl.c
+> +++ b/drivers/video/backlight/pwm_bl.c
+> @@ -177,7 +177,7 @@ static u64 cie1931(unsigned int lightness, unsigned int scale)
+>  	 */
+>  	lightness *= 100;
+>  	if (lightness <= (8 * scale)) {
+> -		retval = DIV_ROUND_CLOSEST_ULL(lightness * 10, 9033);
+> +		retval = DIV_ROUND_CLOSEST(lightness * 10, 9033);
+>  	} else {
+>  		retval = int_pow((lightness + (16 * scale)) / 116, 3);
+>  		retval = DIV_ROUND_CLOSEST_ULL(retval, (scale * scale));
+> -- 
+> 2.20.1
