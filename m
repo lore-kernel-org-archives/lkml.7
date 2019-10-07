@@ -2,135 +2,219 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC5CC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76BA9C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D239206BB
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:03:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43599206BB
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:03:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=ucr.edu header.i=@ucr.edu header.b="abNM6Spu"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="adRZqoe5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728422AbfJGTDK (ORCPT
+        id S1728654AbfJGTDr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 15:03:10 -0400
-Received: from mx3.ucr.edu ([138.23.248.64]:10802 "EHLO mx3.ucr.edu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728079AbfJGTDK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 15:03:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=ucr.edu; i=@ucr.edu; q=dns/txt; s=selector3;
-  t=1570474991; x=1602010991;
-  h=mime-version:from:date:message-id:subject:to;
-  bh=qKkd59j86O9FUZiM0WpoYxgW00QFfLIb89TLtsimzfI=;
-  b=abNM6SpuOJ1ckFfRCccdOco9+87lPltP9lDSGN8OwegTeNd42UBkkKLe
-   1WjEIN67yPtFuvFD7FBIIpLG+3kCRsOr22AtbfBYtwUDuu4BB3DwWY0i2
-   Aatzcpddj3pihzl3lzVHNJ4ArfKtA4xv/xSNppGiwGuct1xWzpwzr3Fob
-   vkUtpufe+aQuUNYQyiJ45/xYKuPkz+PAOE77Tb8A3+Pbl0cJOZPA0EeAg
-   1lTuwytdLqAAdkj2uyMPoVHI9HUF/T2IMrJjKSzG/mUIB2a7d6IOj99/m
-   akPnEhk5QqW2ZuY8NypYLYVMPKa44oZHXuh5WzVGR9yU2tVBSl2TNR2tk
-   w==;
-IronPort-SDR: /brpzDqukPUusNRekq9T1UwiCihwTb0HeuZZTOevJ/IbxdVKUY5glCSnhmOQORQblKaw8NSrQ2
- RrKGXrINK+0Qf8cVnx/K9Fd/6gt5k+d3YpezKCWmUGiYZEkogrMz4jW8omSBk1UMaM0OEQ6oPU
- nFsVxHE27LGrsDtHk45zRZ/m7hKWKSJoO7nwD8vXDo30fkoIqh8/gMRYEjaadc3bj9uPrzEoCe
- xDec6bRytbjlxOzi7cyvrH+yeXkEC6TkGT/dCxoWt1XpKNGH1YtIvYYZtCud3UFa31hqmr5yoU
- BWA=
-IronPort-PHdr: =?us-ascii?q?9a23=3AcphXvREhV5wNoGsY0mdQ7Z1GYnF86YWxBRYc79?=
- =?us-ascii?q?8ds5kLTJ76ps24bnLW6fgltlLVR4KTs6sC17ON9f2/EjVZsN6oizMrSNR0TR?=
- =?us-ascii?q?gLiMEbzUQLIfWuLgnFFsPsdDEwB89YVVVorDmROElRH9viNRWJ+iXhpTEdFQ?=
- =?us-ascii?q?/iOgVrO+/7BpDdj9it1+C15pbffxhEiCCybL9vIhi6twXcu8sZjYd/N6o8zg?=
- =?us-ascii?q?bCr2dVdehR2W5mP0+YkQzm5se38p5j8iBQtOwk+sVdT6j0fLk2QKJBAjg+PG?=
- =?us-ascii?q?87+MPktR/YTQuS/XQcSXkZkgBJAwfe8h73WIr6vzbguep83CmaOtD2TawxVD?=
- =?us-ascii?q?+/4apnVAPkhSEaPDMi7mrZltJ/g75aoBK5phxw3YjUYJ2ONPFjeq/RZM4WSX?=
- =?us-ascii?q?ZdUspUUSFKH4GyYJYVD+cZMulWr4fzqVgToxWgGQahH//vxiNSi3PqwaE2z+?=
- =?us-ascii?q?YsHAfb1wIgBdIOt3HUoc33O6cTUOG1zLTIzTLeZPxV2Tfy8onIeQ0mrPCMXL?=
- =?us-ascii?q?NwcdDeyUgzGw/ZgFidspHlMC+P1ugXrWeU8vdgWPuphmU6qA9xuiCiytkwho?=
- =?us-ascii?q?TNnI4YyVDJ+T9kzIs0J9C0Ukx2bcCiHZBNrS+VLZF2TdknQ2xwvSY6zaAJto?=
- =?us-ascii?q?CjcSgRzZQn2wbfa/uac4iU+h7jVPieITN/hH99fbKwnRey8Uy5xu34WMm4zU?=
- =?us-ascii?q?9GriRHn9XSrHwN2BvT6s+ISvt54EitwyqA1wfW6u1cIEA0k7TUK4I5z7Iuip?=
- =?us-ascii?q?YetV7PEyz2lUnskaObd0cp9vKq5uj5ernmo4WTN45wigHwKKQuncm/DPw4Mw?=
- =?us-ascii?q?kPX2iU4+W82KH/8UD3W7hKk+E5krPDvJ/EOMsbu7a1AxVJ3YY79xa/EzCm3c?=
- =?us-ascii?q?wcnXkGKlJFZR2Gg5HqO17QOvD4C+mwg1C3nTd1yPDJIKfhDo/OLnfdirfhe6?=
- =?us-ascii?q?hy60pGxAo019Bf6MEcNrZUJfvpRk738sTVEhIjKAGy6+H9Ad5528UVXmfLSo?=
- =?us-ascii?q?yQLK6aikOF+es1P6HYZ5QJtSn0MeQN4//okG83nkIbcaC13JwRLneiEaIia3?=
- =?us-ascii?q?mZZn/lmZ8uFWoLrgwzVqS+lFKGQRZXZnCvQ7g74DArTo6rW8OLb4SpgaeG2m?=
- =?us-ascii?q?+BF5tab2QOXlmIFXbzcIOsX/AMdT6VIYlnnyBSEfC/QpU80zmltAL+0LtgaO?=
- =?us-ascii?q?HT/2lQmJT51dNyr9LelB4/8SA8W8Wb3WalSmxog3NOQTIqiuQ3q1J0zF6Yyq?=
- =?us-ascii?q?N4jtRRHtkV4OlGFk8+NJjB36lhAMvzchzOc83PS1u8RNiiRzYrQZZ539YUbE?=
- =?us-ascii?q?thXtmvkB3H9zSlDqVTlLGRApEwtKXG0Dy5I8d71maD16Q7iVQiatVAOHfgha?=
- =?us-ascii?q?Nl8QXXQYnTnAHRpaarZLkalBfM/WHLmXiOvVBFVhdYWr6DQHsFIEbasIK9rm?=
- =?us-ascii?q?jCQrmhGKlvCQxHxobWIbBNbNLBhk4AWfz5ftnSfjTitX23AEO5x6GMcY2iSW?=
- =?us-ascii?q?UU3W2JGVoEmgFLpS2uKAMkQCqtvjSNX3RVCVvzbha0oqFFo3ShQxpxllnSYg?=
- =?us-ascii?q?=3D=3D?=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2HFAgBoi5tdh0inVdFmDoIQhBCETY5?=
- =?us-ascii?q?ggw2CCgGGd4VZgRiKNAEIAQEBDi8BAYcfIzcGDgIDCQEBBQEBAQEBBQQBAQI?=
- =?us-ascii?q?QAQEBCA0JCCmFQII6KQGDVRF8DwImAiQSAQUBIgE0gwCCC6JngQM8iyaBMoQ?=
- =?us-ascii?q?LAYRZAQkNgUgSeiiMDoIXgRGCXQeIPYJYBIE4AQEBlSyWVAEGAoIQFIxUiEQ?=
- =?us-ascii?q?bgioBlxSOLJlLDyOBRYF8MxolfwZngU9PEBSBaY1xBFckkhwBAQ?=
-X-IPAS-Result: =?us-ascii?q?A2HFAgBoi5tdh0inVdFmDoIQhBCETY5ggw2CCgGGd4VZg?=
- =?us-ascii?q?RiKNAEIAQEBDi8BAYcfIzcGDgIDCQEBBQEBAQEBBQQBAQIQAQEBCA0JCCmFQ?=
- =?us-ascii?q?II6KQGDVRF8DwImAiQSAQUBIgE0gwCCC6JngQM8iyaBMoQLAYRZAQkNgUgSe?=
- =?us-ascii?q?iiMDoIXgRGCXQeIPYJYBIE4AQEBlSyWVAEGAoIQFIxUiEQbgioBlxSOLJlLD?=
- =?us-ascii?q?yOBRYF8MxolfwZngU9PEBSBaY1xBFckkhwBAQ?=
-X-IronPort-AV: E=Sophos;i="5.67,269,1566889200"; 
-   d="scan'208";a="85783611"
-Received: from mail-lf1-f72.google.com ([209.85.167.72])
-  by smtp3.ucr.edu with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 07 Oct 2019 12:03:10 -0700
-Received: by mail-lf1-f72.google.com with SMTP id r3so1671093lfn.13
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 12:03:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=ESofDjYlaGWbuPOVSuea9qOggnj5mZzg5iY6K5NGehg=;
-        b=oBU/2rOzfUvXqFOLeOlcg/UO6GDw+Nw3+YCmD2X4gEr6jJZzwMPB0ZnpifwRS3yrwo
-         feUqCkUVDJnozWDQSB5nq9rOjBQOy5KIFWF/ungdssff3GjHoMciYyal2HJeYStZ+9F5
-         f0szU8UKfEBdUvXXaIUtRBPhfD0K1M+iKWsKSR7WJOhzQ2Ckq2QmepphRuFUcxDCWP9z
-         e+6LhBBtoXwe2/bLPON8rP+vKVa4MgRJ5Sh2SSIipb3MaaijdcR/tqah/INnNyfTsh9H
-         CfLkVNlRQf5zbso3c061YPo+/9A0lT/3czNeDTrw11Ri/Gav/dasr4LjTrA2kKzG24h6
-         Y6gw==
-X-Gm-Message-State: APjAAAVAT/qRNMDqJVX2/n0HFKNU97lOae6ORIgULNph8SslaCDE/QkZ
-        ouKO+kd2so78Kv6fIcVo81zk1MoABQ3Q84LPJPOMeUBTB4qGIn43V32M+1RQoLJrQfRfTuAt7Ei
-        WH9/EeeF3e9ORcw61JXxr37gjl/z5i5pwCmOu1MRN/Q==
-X-Received: by 2002:a2e:89cd:: with SMTP id c13mr19382942ljk.92.1570474987354;
-        Mon, 07 Oct 2019 12:03:07 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxPt2y/kkUfF2dViia+Gw42gIv9azn/ATOBEVLWWAlSLPnIIR6FYLzrKHUfg/QEdwY0P6m32CFv87gaTDTQITI=
-X-Received: by 2002:a2e:89cd:: with SMTP id c13mr19382924ljk.92.1570474987121;
- Mon, 07 Oct 2019 12:03:07 -0700 (PDT)
+        Mon, 7 Oct 2019 15:03:47 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:33296 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728079AbfJGTDq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 15:03:46 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x97InZkX109522;
+        Mon, 7 Oct 2019 19:03:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=vqjFRmkzoX1rAt9xalycqM22xrgbSL0OjpcVDq1Gfu4=;
+ b=adRZqoe5+YBdH61hYUJz5kymPytFqJ9tkCyFVfEfAOUOehyQyxllkfOW4m0PqTbnWyOU
+ 3zKy40TYgcy6ftyAp8aMssiAUBpwoN9nHzzvh2Qxbhn5M+95JEzwameC4P3Yd2ETm+hn
+ C/r9HlSnlTd4xP0QcKz4pt1dtWa6dBYNxrIIQNMZx9wrqIUG9eqQGxFl7gDvt0ewyB5s
+ qgUmhylYQ0V+jhLjBlidNhG7a9uCel8/Q1repl342xD+rbgStfzCKqKQAoHwn0d1MYr4
+ korxadd8livwDvSMdqB+7EShtYqJcCmyYEt9448F9KHxyiI1ji+xUQcJo9veHuysTj6b Ig== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2vek4q8tp2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 07 Oct 2019 19:03:35 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x97IrdoH062548;
+        Mon, 7 Oct 2019 19:03:34 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2vg204dujs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 07 Oct 2019 19:03:34 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x97J3Vpr026483;
+        Mon, 7 Oct 2019 19:03:32 GMT
+Received: from [192.168.1.222] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 07 Oct 2019 12:03:31 -0700
+Subject: Re: [PATCH] mm, hugetlb: allow hugepage allocations to excessively
+ reclaim
+To:     Michal Hocko <mhocko@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     David Rientjes <rientjes@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Mel Gorman <mgorman@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        Michal Hocko <mhocko@suse.com>
+References: <20191007075548.12456-1-mhocko@kernel.org>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <312f4447-a260-8876-2f9d-f300c5c99dc3@oracle.com>
+Date:   Mon, 7 Oct 2019 12:03:30 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-From:   Yizhuo Zhai <yzhai003@ucr.edu>
-Date:   Mon, 7 Oct 2019 12:03:50 -0700
-Message-ID: <CABvMjLQxcV5UE3_j84SV3u2LxJKVoQ2G+5CZCuKtAd6A_6FDNw@mail.gmail.com>
-Subject: Potential NULL pointer deference in cxgbit
-To:     martin.petersen@oracle.com,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>, varun@chelsio.com,
-        Enrico Weigelt <info@metux.net>, bvanassche@acm.org,
-        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Zhiyun Qian <zhiyunq@cs.ucr.edu>,
-        Chengyu Song <csong@cs.ucr.edu>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191007075548.12456-1-mhocko@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9403 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910070164
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9403 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910070164
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All:
+On 10/7/19 12:55 AM, Michal Hocko wrote:
+> From: David Rientjes <rientjes@google.com>
+> 
+> b39d0ee2632d ("mm, page_alloc: avoid expensive reclaim when compaction
+> may not succeed") has chnaged the allocator to bail out from the
+> allocator early to prevent from a potentially excessive memory
+> reclaim. __GFP_RETRY_MAYFAIL is designed to retry the allocation,
+> reclaim and compaction loop as long as there is a reasonable chance to
+> make a forward progress. Neither COMPACT_SKIPPED nor COMPACT_DEFERRED
+> at the INIT_COMPACT_PRIORITY compaction attempt gives this feedback.
+> 
+> The most obvious affected subsystem is hugetlbfs which allocates huge
+> pages based on an admin request (or via admin configured overcommit).
+> I have done a simple test which tries to allocate half of the memory
+> for hugetlb pages while the memory is full of a clean page cache. This
+> is not an unusual situation because we try to cache as much of the
+> memory as possible and sysctl/sysfs interface to allocate huge pages is
+> there for flexibility to allocate hugetlb pages at any time.
+> 
+> System has 1GB of RAM and we are requesting 515MB worth of hugetlb pages
+> after the memory is prefilled by a clean page cache:
+> root@test1:~# cat hugetlb_test.sh
+> 
+> set -x
+> echo 0 > /proc/sys/vm/nr_hugepages
+> echo 3 > /proc/sys/vm/drop_caches
+> echo 1 > /proc/sys/vm/compact_memory
+> dd if=/mnt/data/file-1G of=/dev/null bs=$((4<<10))
+> TS=$(date +%s)
+> echo 256 > /proc/sys/vm/nr_hugepages
+> cat /proc/sys/vm/nr_hugepages
+> 
+> The results for 2 consecutive runs on clean 5.3
+> root@test1:~# sh hugetlb_test.sh
+> + echo 0
+> + echo 3
+> + echo 1
+> + dd if=/mnt/data/file-1G of=/dev/null bs=4096
+> 262144+0 records in
+> 262144+0 records out
+> 1073741824 bytes (1.1 GB) copied, 21.0694 s, 51.0 MB/s
+> + date +%s
+> + TS=1569905284
+> + echo 256
+> + cat /proc/sys/vm/nr_hugepages
+> 256
+> root@test1:~# sh hugetlb_test.sh
+> + echo 0
+> + echo 3
+> + echo 1
+> + dd if=/mnt/data/file-1G of=/dev/null bs=4096
+> 262144+0 records in
+> 262144+0 records out
+> 1073741824 bytes (1.1 GB) copied, 21.7548 s, 49.4 MB/s
+> + date +%s
+> + TS=1569905311
+> + echo 256
+> + cat /proc/sys/vm/nr_hugepages
+> 256
+> 
+> Now with b39d0ee2632d applied
+> root@test1:~# sh hugetlb_test.sh
+> + echo 0
+> + echo 3
+> + echo 1
+> + dd if=/mnt/data/file-1G of=/dev/null bs=4096
+> 262144+0 records in
+> 262144+0 records out
+> 1073741824 bytes (1.1 GB) copied, 20.1815 s, 53.2 MB/s
+> + date +%s
+> + TS=1569905516
+> + echo 256
+> + cat /proc/sys/vm/nr_hugepages
+> 11
+> root@test1:~# sh hugetlb_test.sh
+> + echo 0
+> + echo 3
+> + echo 1
+> + dd if=/mnt/data/file-1G of=/dev/null bs=4096
+> 262144+0 records in
+> 262144+0 records out
+> 1073741824 bytes (1.1 GB) copied, 21.9485 s, 48.9 MB/s
+> + date +%s
+> + TS=1569905541
+> + echo 256
+> + cat /proc/sys/vm/nr_hugepages
+> 12
+> 
+> The success rate went down by factor of 20!
+> 
+> Although hugetlb allocation requests might fail and it is reasonable to
+> expect them to under extremely fragmented memory or when the memory is
+> under a heavy pressure but the above situation is not that case.
+> 
+> Fix the regression by reverting back to the previous behavior for
+> __GFP_RETRY_MAYFAIL requests and disable the beail out heuristic for
+> those requests.
 
-drivers/target/iscsi/cxgbit/cxgbit_ddp.c:
+Thank you Michal for doing this.
 
-Inside function cxgbit_ddp_sgl_check(), sg_next() could return NULL,
-however, the return value of sg_next() is not checked and get
-dereferenced. This could potentially be unsafe.
+hugetlbfs allocations are commonly done via sysctl/sysfs shortly after boot
+where this may not be as much of an issue.  However, I am aware of at least
+three use cases where allocations are made after the system has been up and
+running for quite some time:
+- DB reconfiguration.  If sysctl/sysfs fails to get required number of huge
+  pages, system is rebooted to perform allocation after boot.
+- VM provisioning.  If unable get required number of huge pages, fall back
+  to base pages.
+- An application that does not preallocate pool, but rather allocates pages
+  at fault time for optimal NUMA locality.
+In all cases, I would expect b39d0ee2632d to cause regressions and noticable
+behavior changes.
 
+My quick/limited testing in [1] was insufficient.  It was also mentioned that
+if something like b39d0ee2632d went forward, I would like exemptions for
+__GFP_RETRY_MAYFAIL requests as in this patch.
+
+> 
+> [mhocko@suse.com: reworded changelog]
+> Fixes: b39d0ee2632d ("mm, page_alloc: avoid expensive reclaim when compaction may not succeed")
+> Cc: Mike Kravetz <mike.kravetz@oracle.com>
+> Signed-off-by: David Rientjes <rientjes@google.com>
+> Signed-off-by: Michal Hocko <mhocko@suse.com>
+
+FWIW,
+Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
+
+[1] https://lkml.kernel.org/r/3468b605-a3a9-6978-9699-57c52a90bd7e@oracle.com
 -- 
-Kind Regards,
-
-Yizhuo Zhai
-
-Computer Science, Graduate Student
-University of California, Riverside
+Mike Kravetz
