@@ -2,124 +2,224 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 422D5ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7489ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 147902084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:17:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j8we2DPk"
+	by mail.kernel.org (Postfix) with ESMTP id 7AF6A2084D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:17:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728334AbfJGNRc (ORCPT
+        id S1728354AbfJGNRe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 09:17:32 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44697 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728303AbfJGNR3 (ORCPT
+        Mon, 7 Oct 2019 09:17:34 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:45311 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727490AbfJGNR0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 09:17:29 -0400
-Received: by mail-pg1-f193.google.com with SMTP id i14so8174554pgt.11;
-        Mon, 07 Oct 2019 06:17:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=EcVoHFsDeIeHDLHpP7WttsttV9wlf7B4Ed2NE5p2jfc=;
-        b=j8we2DPkY8qn+stB744bONJ67YWamBNHxL94s06qmhPOvNOxpNbaeg/JlgBeuQ8bI/
-         t979StZKifPnuS0XpqgKtaBeVAgzemBwfS8D/ircyEDW879HjNzikZXk8boNF6QJyYYa
-         PHU4d4HbhWoJsZ0W5iLm6C38QT0tqjN76pbxsee8o9ehi/skETp6hTCapbubIiZo6EUy
-         IZuX9cDUn1plRP3rJYBEwwMGl9V5eJ2eEyDlvPVJeZQJYsc5qDzW4CY1wfSORW5ixBg+
-         1cUtH8XRmTt0F5br+Or23osASybUCRNjODHW3IWqflzJiOpN7WVnOGvMn/3VFzh99oXc
-         6C9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=EcVoHFsDeIeHDLHpP7WttsttV9wlf7B4Ed2NE5p2jfc=;
-        b=eFMGIffF5GD218EdCisZX2TT9IuNpVCez3gvZYcsFi+YhorGWycRyfj5FdjKxqhdCJ
-         dbdqybMFLY+OCsfafC2Hxp2PxLDRtGuW8tnW+7AcTHo7+iiAZ3/pidSktYaZBReKa/bt
-         nzJ+iXn5ffcOpUrUBonZyluMcgnlA0GeHZxa7qFoO7uVAjBs+xveOw9H3lzDjiAI2STz
-         dyCPT1hLwqlgOpw6Ow18I2kFImPmKpNNVKQJvVtdAKUMnZ8nlx0UzLsWXiSM1XQWcxYH
-         1OIbx4ONphmgOARkvZxpDTzNr6UgUheO+PhymTPVtM0HtucOcSavbar7lKljRvJkL2Bd
-         IEsw==
-X-Gm-Message-State: APjAAAU9I2gW2f+IGMX/+xD5hsqLyTyAO06u6/AKxfwgbv/3dBjoJQuc
-        3hemR8m7xow+qWUKyTE5D9U=
-X-Google-Smtp-Source: APXvYqyocRcmzQldhoXRSqKuK/uto+P5hrbSB6RYEWfYDa0ATI0WIHFndNsKQKqySId7xTa4x9+Xlw==
-X-Received: by 2002:a63:6d6:: with SMTP id 205mr10680788pgg.442.1570454248388;
-        Mon, 07 Oct 2019 06:17:28 -0700 (PDT)
-Received: from localhost.localdomain ([103.51.74.138])
-        by smtp.gmail.com with ESMTPSA id r186sm16938650pfr.40.2019.10.07.06.17.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2019 06:17:28 -0700 (PDT)
-From:   Anand Moon <linux.amoon@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
+        Mon, 7 Oct 2019 09:17:26 -0400
+Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id BEDD6240009;
+        Mon,  7 Oct 2019 13:17:22 +0000 (UTC)
+Date:   Mon, 7 Oct 2019 15:17:22 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RFCv1 5/5] arm64/ARM: configs: Change CONFIG_PWM_MESON from m to y
-Date:   Mon,  7 Oct 2019 13:16:49 +0000
-Message-Id: <20191007131649.1768-6-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191007131649.1768-1-linux.amoon@gmail.com>
-References: <20191007131649.1768-1-linux.amoon@gmail.com>
+        Kukjin Kim <kgene@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Sebastian Reichel <sre@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-rtc@vger.kernel.org
+Subject: Re: [PATCH 1/4] dt-bindings: samsung: Indent examples with four
+ spaces
+Message-ID: <20191007131722.GI4254@piout.net>
+References: <20191002160744.11307-1-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191002160744.11307-1-krzk@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using microSD card we cannot get the mainline kernel to boot
-using mainline u-boot it fails with below logs.
-Build PWM_MESSON as build-in solve the issue.
+On 02/10/2019 18:07:41+0200, Krzysztof Kozlowski wrote:
+> Change the indentation of examples used in json-schema bindings from two
+> to four spaces as this makes the code easier to read and seems to be
+> preferred in other files.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-[    1.569240] meson-gx-mmc ffe05000.sd: Got CD GPIO
-[    1.599227] pwm-regulator regulator-vddcpu-a: Failed to get PWM: -517
-[    1.600605] pwm-regulator regulator-vddcpu-b: Failed to get PWM: -517
-[    1.607166] pwm-regulator regulator-vddcpu-a: Failed to get PWM: -517
-[    1.613273] pwm-regulator regulator-vddcpu-b: Failed to get PWM: -517
-[    1.619931] hctosys: unable to open rtc device (rtc0)
+> ---
+>  .../bindings/arm/samsung/exynos-chipid.yaml   |  4 +-
+>  .../bindings/iio/adc/samsung,exynos-adc.yaml  | 64 +++++++++----------
+>  .../bindings/power/reset/syscon-poweroff.yaml |  8 +--
+>  .../bindings/power/reset/syscon-reboot.yaml   |  8 +--
+>  .../devicetree/bindings/rtc/s3c-rtc.yaml      | 12 ++--
+>  5 files changed, 48 insertions(+), 48 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.yaml b/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.yaml
+> index 9c573ad7dc7d..ce40adabb4e8 100644
+> --- a/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.yaml
+> +++ b/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.yaml
+> @@ -20,6 +20,6 @@ properties:
+>  examples:
+>    - |
+>      chipid@10000000 {
+> -      compatible = "samsung,exynos4210-chipid";
+> -      reg = <0x10000000 0x100>;
+> +        compatible = "samsung,exynos4210-chipid";
+> +        reg = <0x10000000 0x100>;
+>      };
+> diff --git a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
+> index b4c6c26681d9..a0a9b909ac40 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
+> +++ b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
+> @@ -112,40 +112,40 @@ allOf:
+>  examples:
+>    - |
+>      adc: adc@12d10000 {
+> -      compatible = "samsung,exynos-adc-v1";
+> -      reg = <0x12d10000 0x100>;
+> -      interrupts = <0 106 0>;
+> -      #io-channel-cells = <1>;
+> -      io-channel-ranges;
+> -
+> -      clocks = <&clock 303>;
+> -      clock-names = "adc";
+> -
+> -      vdd-supply = <&buck5_reg>;
+> -      samsung,syscon-phandle = <&pmu_system_controller>;
+> -
+> -      /* NTC thermistor is a hwmon device */
+> -      ncp15wb473@0 {
+> -        compatible = "murata,ncp15wb473";
+> -        pullup-uv = <1800000>;
+> -        pullup-ohm = <47000>;
+> -        pulldown-ohm = <0>;
+> -        io-channels = <&adc 4>;
+> -      };
+> +        compatible = "samsung,exynos-adc-v1";
+> +        reg = <0x12d10000 0x100>;
+> +        interrupts = <0 106 0>;
+> +        #io-channel-cells = <1>;
+> +        io-channel-ranges;
+> +
+> +        clocks = <&clock 303>;
+> +        clock-names = "adc";
+> +
+> +        vdd-supply = <&buck5_reg>;
+> +        samsung,syscon-phandle = <&pmu_system_controller>;
+> +
+> +        /* NTC thermistor is a hwmon device */
+> +        ncp15wb473@0 {
+> +            compatible = "murata,ncp15wb473";
+> +            pullup-uv = <1800000>;
+> +            pullup-ohm = <47000>;
+> +            pulldown-ohm = <0>;
+> +            io-channels = <&adc 4>;
+> +          };
+>      };
+>  
+>    - |
+>      adc@126c0000 {
+> -      compatible = "samsung,exynos3250-adc";
+> -      reg = <0x126C0000 0x100>;
+> -      interrupts = <0 137 0>;
+> -      #io-channel-cells = <1>;
+> -      io-channel-ranges;
+> -
+> -      clocks = <&cmu 0>, // CLK_TSADC
+> -               <&cmu 1>; // CLK_SCLK_TSADC
+> -      clock-names = "adc", "sclk";
+> -
+> -      vdd-supply = <&buck5_reg>;
+> -      samsung,syscon-phandle = <&pmu_system_controller>;
+> +        compatible = "samsung,exynos3250-adc";
+> +        reg = <0x126C0000 0x100>;
+> +        interrupts = <0 137 0>;
+> +        #io-channel-cells = <1>;
+> +        io-channel-ranges;
+> +
+> +        clocks = <&cmu 0>, // CLK_TSADC
+> +                 <&cmu 1>; // CLK_SCLK_TSADC
+> +        clock-names = "adc", "sclk";
+> +
+> +        vdd-supply = <&buck5_reg>;
+> +        samsung,syscon-phandle = <&pmu_system_controller>;
+>      };
+> diff --git a/Documentation/devicetree/bindings/power/reset/syscon-poweroff.yaml b/Documentation/devicetree/bindings/power/reset/syscon-poweroff.yaml
+> index fb812937b534..520e07e6f21b 100644
+> --- a/Documentation/devicetree/bindings/power/reset/syscon-poweroff.yaml
+> +++ b/Documentation/devicetree/bindings/power/reset/syscon-poweroff.yaml
+> @@ -53,8 +53,8 @@ allOf:
+>  examples:
+>    - |
+>      poweroff {
+> -      compatible = "syscon-poweroff";
+> -      regmap = <&regmapnode>;
+> -      offset = <0x0>;
+> -      mask = <0x7a>;
+> +        compatible = "syscon-poweroff";
+> +        regmap = <&regmapnode>;
+> +        offset = <0x0>;
+> +        mask = <0x7a>;
+>      };
+> diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml b/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
+> index a7920f5eef79..d38006b1f1f4 100644
+> --- a/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
+> +++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
+> @@ -53,8 +53,8 @@ allOf:
+>  examples:
+>    - |
+>      reboot {
+> -      compatible = "syscon-reboot";
+> -      regmap = <&regmapnode>;
+> -      offset = <0x0>;
+> -      mask = <0x1>;
+> +        compatible = "syscon-reboot";
+> +        regmap = <&regmapnode>;
+> +        offset = <0x0>;
+> +        mask = <0x1>;
+>      };
+> diff --git a/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml b/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml
+> index 951a6a485709..95570d7e19eb 100644
+> --- a/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml
+> +++ b/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml
+> @@ -76,10 +76,10 @@ allOf:
+>  examples:
+>    - |
+>      rtc@10070000 {
+> -      compatible = "samsung,s3c6410-rtc";
+> -      reg = <0x10070000 0x100>;
+> -      interrupts = <0 44 4>, <0 45 4>;
+> -      clocks = <&clock 0>, // CLK_RTC
+> -               <&s2mps11_osc 0>; // S2MPS11_CLK_AP
+> -      clock-names = "rtc", "rtc_src";
+> +        compatible = "samsung,s3c6410-rtc";
+> +        reg = <0x10070000 0x100>;
+> +        interrupts = <0 44 4>, <0 45 4>;
+> +        clocks = <&clock 0>, // CLK_RTC
+> +                 <&s2mps11_osc 0>; // S2MPS11_CLK_AP
+> +        clock-names = "rtc", "rtc_src";
+>      };
+> -- 
+> 2.17.1
+> 
 
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
-Odroid N2 Schematics says "GPIOC_6 should not pulled low if GPIOC is not
-work as SDCARD"
-Is their any other approch to help resolve this issue.
-
-Boot log failed with cold boot:
-[0] https://pastebin.com/cEtWq2iX
----
- arch/arm64/configs/defconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index c9a867ac32d4..72f6a7dca0d6 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -774,7 +774,7 @@ CONFIG_MPL3115=m
- CONFIG_PWM=y
- CONFIG_PWM_BCM2835=m
- CONFIG_PWM_CROS_EC=m
--CONFIG_PWM_MESON=m
-+CONFIG_PWM_MESON=y
- CONFIG_PWM_RCAR=m
- CONFIG_PWM_ROCKCHIP=y
- CONFIG_PWM_SAMSUNG=y
 -- 
-2.23.0
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
