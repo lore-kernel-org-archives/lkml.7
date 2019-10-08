@@ -2,156 +2,202 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 107FFC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F33C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE2F020673
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA2EF2173B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:12:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rqMjNPvD"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Trn1r5D9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730077AbfJHKJU (ORCPT
+        id S1730207AbfJHKMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 06:09:20 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:55194 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728866AbfJHKJT (ORCPT
+        Tue, 8 Oct 2019 06:12:02 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42752 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728866AbfJHKMB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 06:09:19 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x98A937D068103;
-        Tue, 8 Oct 2019 05:09:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570529344;
-        bh=FkNiIod96/3T2zF68YAgCCg2oYEqg3sIPlPb6RVQtJU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=rqMjNPvD+0W8D0F/WVHwVLj73f3VdnSnzzhobu03+GT+LpwtlmnElkM6+UnCNa2sw
-         8ybL4vocG5xUba642POMwE/IomSzf/qjbYfgZPXOQW3CKZ5Ig6SJZ4QNZP+PbL4K/R
-         8RJvjvO1x23sLcJ8v/RAtTk5F+ZLBrlCfGxQOyDE=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x98A9373015293;
-        Tue, 8 Oct 2019 05:09:03 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 8 Oct
- 2019 05:09:00 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 8 Oct 2019 05:09:02 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x98A8xv6073491;
-        Tue, 8 Oct 2019 05:08:59 -0500
-Subject: Re: [PATCH v3 00/14] dmaengine/soc: Add Texas Instruments UDMA
- support
-To:     <santosh.shilimkar@oracle.com>, <vkoul@kernel.org>,
-        <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>
-CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
-        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
-References: <20191001061704.2399-1-peter.ujfalusi@ti.com>
- <c567c1a2-2e74-3809-8e0f-4c2049ba4747@oracle.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <7dd18208-1ca5-c902-dc11-edbd4ded51ed@ti.com>
-Date:   Tue, 8 Oct 2019 13:09:52 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 8 Oct 2019 06:12:01 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q12so10495277pff.9
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 03:12:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oJBL7qyzxoDJRRddYXK54hndGf2KGEetfbRWryMKt2E=;
+        b=Trn1r5D9cGQW5wjoTVdST1Vr+Nt4P4YpIV2bWoatnDDPis7Dy9jpi4NP/IkdP5+fej
+         ZbRZqPfICPJGzhNgYmI6sibzynWOpiZ5k2L0YfGRG0X9mDpgl5puTbYLT5nXIT88PR7n
+         VBfHcTrONdTja6s5V1shQdAHCQFgGN8IIegi8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oJBL7qyzxoDJRRddYXK54hndGf2KGEetfbRWryMKt2E=;
+        b=PL3zJoe6ajlNtomuOSUbZ4eCmaNwDm3djd4KULhZgFi2CUVbCUGu4snrnY1ADRBItH
+         YNhlrXEQtLxYSFpCLdwu1iKxyM8/U44VUoHdgnT/+3pOKWO4dRxW0JJME9U1RYmBZxMb
+         KzhIN5rmBR4ydDhsvwueXdZ3QKLynt0OeFLytK4F9ofPdJPSa4gPNxvr5z8BrphctEwB
+         DUzJjQ4OcwzzCYCf9faYkmD1Wk44BUdqBarffiJGXYyzY7zYXeAqmoD9hvl1zqDT2MWw
+         1hOjdHQ6G0FwQvvmJPQk/w3XjtFNkyZYlAM8JljII63gSmSL0JVVLiEICb+66NEW29fV
+         j3Aw==
+X-Gm-Message-State: APjAAAVpobmQ1Nc06R2mfhXrcKGCaChXNNg95Mi4t/RnNjPsa7dCgW7p
+        mFexbK7SSh4MFqbWXdXYAPRJ1NR4wo8=
+X-Google-Smtp-Source: APXvYqwuL/NpT53t//3HEQqYcM39S9q70cMotyVyM1K2EG7T0EBBhKzkMC/651IeZcvTwB6aGwIs8A==
+X-Received: by 2002:a63:e5c:: with SMTP id 28mr35543545pgo.133.1570529519761;
+        Tue, 08 Oct 2019 03:11:59 -0700 (PDT)
+Received: from localhost ([2401:fa00:1:10:79b4:bd83:e4a5:a720])
+        by smtp.gmail.com with ESMTPSA id t3sm1894936pje.7.2019.10.08.03.11.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Oct 2019 03:11:58 -0700 (PDT)
+From:   Cheng-Yi Chiang <cychiang@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     alsa-devel@alsa-project.org, Guenter Roeck <linux@roeck-us.net>,
+        Hung-Te Lin <hungte@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Shuming Fan <shumingf@realtek.com>,
+        sathya.prakash.m.r@intel.com,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Cheng-Yi Chiang <cychiang@chromium.org>, dgreid@chromium.org,
+        tzungbi@chromium.org
+Subject: [PATCH v2] firmware: vpd: Add an interface to read VPD value
+Date:   Tue,  8 Oct 2019 18:11:44 +0800
+Message-Id: <20191008101144.39342-1-cychiang@chromium.org>
+X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
 MIME-Version: 1.0
-In-Reply-To: <c567c1a2-2e74-3809-8e0f-4c2049ba4747@oracle.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Santosh,
+Add an interface for other driver to query VPD value.
+This will be used for ASoC machine driver to query calibration
+data stored in VPD for smart amplifier speaker resistor
+calibration.
 
-On 04/10/2019 19.35, santosh.shilimkar@oracle.com wrote:
-> On 9/30/19 11:16 PM, Peter Ujfalusi wrote:
->> Hi,
->>
->> Changes since v2
->> )https://patchwork.kernel.org/project/linux-dmaengine/list/?series=152609&state=*)
->>
->> - Based on 5.4-rc1
->> - Support for Flow only data transfer for the glue layer
->>
-> 
->>
->> Grygorii Strashko (3):
->>    bindings: soc: ti: add documentation for k3 ringacc
->>    soc: ti: k3: add navss ringacc driver
->>    dmaengine: ti: k3-udma: Add glue layer for non DMAengine users
->>
->> Peter Ujfalusi (11):
->>    dmaengine: doc: Add sections for per descriptor metadata support
->>    dmaengine: Add metadata_ops for dma_async_tx_descriptor
->>    dmaengine: Add support for reporting DMA cached data amount
->>    dmaengine: ti: Add cppi5 header for UDMA
->>    dt-bindings: dma: ti: Add document for K3 UDMA
->>    dmaengine: ti: New driver for K3 UDMA - split#1: defines, structs, io
->>      func
->>    dmaengine: ti: New driver for K3 UDMA - split#2: probe/remove, xlate
->>      and filter_fn
->>    dmaengine: ti: New driver for K3 UDMA - split#3: alloc/free
->>      chan_resources
->>    dmaengine: ti: New driver for K3 UDMA - split#4: dma_device callbacks
->>      1
->>    dmaengine: ti: New driver for K3 UDMA - split#5: dma_device callbacks
->>      2
->>    dmaengine: ti: New driver for K3 UDMA - split#6: Kconfig and Makefile
->>
->>   .../devicetree/bindings/dma/ti/k3-udma.txt    |  185 +
->>   .../devicetree/bindings/soc/ti/k3-ringacc.txt |   59 +
->>   Documentation/driver-api/dmaengine/client.rst |   75 +
->>   .../driver-api/dmaengine/provider.rst         |   46 +
->>   drivers/dma/dmaengine.c                       |   73 +
->>   drivers/dma/dmaengine.h                       |    8 +
->>   drivers/dma/ti/Kconfig                        |   22 +
->>   drivers/dma/ti/Makefile                       |    2 +
->>   drivers/dma/ti/k3-udma-glue.c                 | 1225 ++++++
->>   drivers/dma/ti/k3-udma-private.c              |  141 +
->>   drivers/dma/ti/k3-udma.c                      | 3525 +++++++++++++++++
->>   drivers/dma/ti/k3-udma.h                      |  161 +
->>   drivers/soc/ti/Kconfig                        |   12 +
->>   drivers/soc/ti/Makefile                       |    1 +
->>   drivers/soc/ti/k3-ringacc.c                   | 1165 ++++++
->>   include/dt-bindings/dma/k3-udma.h             |   10 +
->>   include/linux/dma/k3-udma-glue.h              |  134 +
->>   include/linux/dma/ti-cppi5.h                  | 1049 +++++
->>   include/linux/dmaengine.h                     |  110 +
->>   include/linux/soc/ti/k3-ringacc.h             |  245 ++
->>   20 files changed, 8248 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/dma/ti/k3-udma.txt
->>   create mode 100644
->> Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
->>   create mode 100644 drivers/dma/ti/k3-udma-glue.c
->>   create mode 100644 drivers/dma/ti/k3-udma-private.c
->>   create mode 100644 drivers/dma/ti/k3-udma.c
->>   create mode 100644 drivers/dma/ti/k3-udma.h
->>   create mode 100644 drivers/soc/ti/k3-ringacc.c
->>   create mode 100644 include/dt-bindings/dma/k3-udma.h
->>   create mode 100644 include/linux/dma/k3-udma-glue.h
->>   create mode 100644 include/linux/dma/ti-cppi5.h
->>   create mode 100644 include/linux/soc/ti/k3-ringacc.h
->>
-> Can you please split this series and post drivers/soc/* bits
-> separately ?  If its ready, I can apply k3-ringacc.c changes.
+The example usage in ASoC machine driver is like:
 
-I'll wait couple of days for guys to check the series, then I can send
-the split out ringacc patches separately.
+#define DSM_CALIB_KEY "dsm_calib"
+static int load_calibration_data(struct cml_card_private *ctx) {
+    char *data = NULL;
+    int ret;
+    u32 value_len;
 
-- Péter
+    /* Read calibration data from VPD. */
+    ret = vpd_attribute_read(1, DSM_CALIB_KEY,
+                            (u8 **)&data, &value_len);
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+    /* Parsing of this string...*/
+}
+
+
+Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+---
+Change from v1 to v2:
+- Use kmemdup to copy data.
+- Set value_len according to bin_attr.size.
+- Check return value of kmemdup.
+- Rename the function to vpd_attribute_read.
+- Add docstrings for the function.
+- Returns -ENOENT when the key is not found.
+- Use EXPORT_SYMBOL_GPL.
+
+Note:
+
+The user of this API is in ASoC machine driver cml_rt1011_rt5682.
+It is pending on the initial machine driver change
+
+https://patchwork.kernel.org/patch/11161145/
+
+and the codec driver change to provide API to do calibration.
+
+https://patchwork.kernel.org/patch/11179237/
+
+The draft patch of machine driver change which uses this API is at
+
+https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1838091
+
+
+
+ drivers/firmware/google/vpd.c              | 31 ++++++++++++++++++++++
+ include/linux/firmware/google/google_vpd.h | 18 +++++++++++++
+ 2 files changed, 49 insertions(+)
+ create mode 100644 include/linux/firmware/google/google_vpd.h
+
+diff --git a/drivers/firmware/google/vpd.c b/drivers/firmware/google/vpd.c
+index db0812263d46..c2be0e756402 100644
+--- a/drivers/firmware/google/vpd.c
++++ b/drivers/firmware/google/vpd.c
+@@ -65,6 +65,37 @@ static ssize_t vpd_attrib_read(struct file *filp, struct kobject *kobp,
+ 				       info->bin_attr.size);
+ }
+ 
++/**
++ *	vpd_attribute_read - Read VPD value for a key.
++ *	@ro: True for RO section. False for RW section.
++ *	@key: A string for key.
++ *	@value: Where to write the VPD value on success. The caller
++ *	        must free the memory.
++ *	@value_len: The length of value in bytes.
++ *
++ *	Returns 0 on success, -ENOENT when the key is not found, and
++ *	-ENOMEM when failed to allocate memory for value.
++ */
++int vpd_attribute_read(bool ro, const char *key,
++		       u8 **value, u32 *value_len)
++{
++	struct vpd_attrib_info *info;
++	struct vpd_section *sec = ro ? &ro_vpd : &rw_vpd;
++
++	list_for_each_entry(info, &sec->attribs, list) {
++		if (strcmp(info->key, key) == 0) {
++			*value = kmemdup(info->value, info->bin_attr.size,
++					 GFP_KERNEL);
++			if (!*value)
++				return -ENOMEM;
++			*value_len = info->bin_attr.size;
++			return 0;
++		}
++	}
++	return -ENOENT;
++}
++EXPORT_SYMBOL_GPL(vpd_attribute_read);
++
+ /*
+  * vpd_section_check_key_name()
+  *
+diff --git a/include/linux/firmware/google/google_vpd.h b/include/linux/firmware/google/google_vpd.h
+new file mode 100644
+index 000000000000..4364eaa4e1e3
+--- /dev/null
++++ b/include/linux/firmware/google/google_vpd.h
+@@ -0,0 +1,18 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Google VPD interface.
++ *
++ * Copyright 2019 Google Inc.
++ */
++
++/* Interface for reading VPD value on Chrome platform. */
++
++#ifndef __GOOGLE_VPD_H
++#define __GOOGLE_VPD_H
++
++#include <linux/types.h>
++
++int vpd_attribute_read(bool ro, const char *key,
++		       u8 **value, u32 *value_len);
++
++#endif  /* __GOOGLE_VPD_H */
+-- 
+2.23.0.581.g78d2f28ef7-goog
+
