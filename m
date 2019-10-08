@@ -2,136 +2,115 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F91ECE58C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 21:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B04C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 21:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EB3221835
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 21:32:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570570376;
-	bh=OkeZztjJfWka8pzSMPcOrgXMFjuPsLVWOcUK/R/EDaA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Bb+QPSMBfjnM5xhHleUIBw73/hO/fXeibRDha86ytPK8pRrOSugzkpHFv49xiG0xM
-	 2O7dqjDYhieYCaKdG++nPVTMI4ql2zjCKgM00pieyU9dbISaO97sodcquQOMvArtPp
-	 qBhOeaOj49HtBNWG+fGLvVpXpNK8SJ0mn7r5qrWM=
+	by mail.kernel.org (Postfix) with ESMTP id 8AF0C218DE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 21:33:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="hsox7f1O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731081AbfJHVcy (ORCPT
+        id S1729973AbfJHVd5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 17:32:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57120 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730523AbfJHVcy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 17:32:54 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2180A2070B;
-        Tue,  8 Oct 2019 21:32:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570570373;
-        bh=OkeZztjJfWka8pzSMPcOrgXMFjuPsLVWOcUK/R/EDaA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=FlKH8Wqfszosjq1WbJV0TfiBvFF7oSzEPUnvg03BFlSgAxMIcTjU5AwgHOrrUWiWN
-         xm8lya7Zz4byPfy5RKYQ37t10WZH0YLHYFPCgNHGEUhqSWD2nIaKkQ5XVMYVfmUDDk
-         2Btbry32WgNiS/NTqZrPl892l3uHFrpe7HumUi+8=
-Date:   Tue, 8 Oct 2019 16:32:51 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
-        George Cherian <gcherian@marvell.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "shannon.zhao@linux.alibaba.com" <shannon.zhao@linux.alibaba.com>,
-        Sunil Kovvuri Goutham <sgoutham@marvell.com>
-Subject: Re: [PATCH] PCI: Enhance the ACS quirk for Cavium devices
-Message-ID: <20191008213251.GA229610@google.com>
+        Tue, 8 Oct 2019 17:33:57 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:34047 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726349AbfJHVd5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 17:33:57 -0400
+Received: by mail-io1-f65.google.com with SMTP id q1so351156ion.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 14:33:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=ZuBgbJzoXltmhH0lNq67zyda70EYzZtMbVg27O16d4E=;
+        b=hsox7f1O1JhOkCIRKYbrxjgajBPsOSDqi7B1Lgvugxaamtq9i8nHkkuJBUx+fuqpmy
+         BAak+i52MGnX+KzvK730xUE8OgRGhRjWhnGkFA0okRMkJZ8lV6Q62WhiPg+6n0vFgHbL
+         VCEAwKUPWz0rPth4e7crkTcSlit2voXqJ0ejpl9sJAU7dNLLjT4gqcHH0rIgjJllHUEy
+         PhH3RYFcBRHAIgaKfDAF6XcaX/IvuwtFwRKYJ3kZi33kqKQ1pMfAy1jUs6Wj0FZ/F1G3
+         kGyRJLvuLqMwxBTP7vx/7G4QtZd9roGDtY1NKikyRwzKqH8JMU5sTbhDnrBfv3XSNB4G
+         +aQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=ZuBgbJzoXltmhH0lNq67zyda70EYzZtMbVg27O16d4E=;
+        b=hn2fE4ryMfoLy65aGX3OBkA/+BFDZbFfEehy1nFiLOLE84o2peK5Y/HELFCI7ciG0E
+         fnCETtU/h/yzfLsp35LY6CkSPQ2LbFKHQvvL03jwl6on388hWU6DrwCOlTjCnKqq8kzu
+         tcc6Voqa3c3jMKWJI/b5Stk/F48fpPZF0eaTExGzHEBWUjoEM0zTdeoHZ2znN2w8TYlb
+         lizOHT4k9O3OKBztC413oSNGGGyeoBIOwyB7oKcC4rig+hAFoB4+f71JmNSDs8zMO1nN
+         vx0EHwkdTJRzgZ7zmRLUO9b9bbYDeNfugmoSeSGfgaGal6eds5ueYJh2WyN1lDtVmXsQ
+         WLzw==
+X-Gm-Message-State: APjAAAWqOCalDKFHSPNkAwoip8db6DU6m8q6fpELhAKUKPYdbgaeRRDF
+        +00gsjThPJUf/JzeOLd5s6Xp+Q==
+X-Google-Smtp-Source: APXvYqzsdLumb009bSD2b+NTzNpdbo2nocSDdqyWA/rpF/UqKzncKB6JaSotk0ttAt3W1vuG0mXL5Q==
+X-Received: by 2002:a6b:c701:: with SMTP id x1mr331218iof.162.1570570436145;
+        Tue, 08 Oct 2019 14:33:56 -0700 (PDT)
+Received: from localhost ([64.62.168.194])
+        by smtp.gmail.com with ESMTPSA id c8sm107904iol.57.2019.10.08.14.33.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Oct 2019 14:33:55 -0700 (PDT)
+Date:   Tue, 8 Oct 2019 14:33:48 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Steven Price <steven.price@arm.com>, alex@ghiti.fr
+cc:     linux-mm@kvack.org, Mark Rutland <Mark.Rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-riscv@lists.infradead.org,
+        Will Deacon <will@kernel.org>,
+        "Liang, Kan" <kan.liang@linux.intel.com>, x86@kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Arnd Bergmann <arnd@arndb.de>,
+        =?ISO-8859-15?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v11 07/22] riscv: mm: Add p?d_leaf() definitions
+In-Reply-To: <20191007153822.16518-8-steven.price@arm.com>
+Message-ID: <alpine.DEB.2.21.9999.1910081431310.11044@viisi.sifive.com>
+References: <20191007153822.16518-1-steven.price@arm.com> <20191007153822.16518-8-steven.price@arm.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191008082515.ldm2i7j4syuzampr@rric.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 08:25:23AM +0000, Robert Richter wrote:
-> On 04.10.19 14:48:13, Bjorn Helgaas wrote:
-> > commit 37b22fbfec2d
-> > Author: George Cherian <george.cherian@marvell.com>
-> > Date:   Thu Sep 19 02:43:34 2019 +0000
-> > 
-> >     PCI: Apply Cavium ACS quirk to CN99xx and CN11xxx Root Ports
-> >     
-> >     Add an array of Cavium Root Port device IDs and apply the quirk only to the
-> >     listed devices.
-> >     
-> >     Instead of applying the quirk to all Root Ports where
-> >     "(dev->device & 0xf800) == 0xa000", apply it only to CN88xx 0xa180 and
-> >     0xa170 Root Ports.
-> 
-> No, this can't be removed. It is a match all for all CN8xxx variants
-> (note the 3 'x', all TX1 cores). So all device ids from 0xa000 to
-> 0xa7FF are affected here and need the quirk.
+On Mon, 7 Oct 2019, Steven Price wrote:
 
-OK, I'll drop the patch and wait for a new one.  Maybe what was needed
-was to keep the "(dev->device & 0xf800) == 0xa000" part and add the
-pci_quirk_cavium_acs_ids[] array in addition?
+> walk_page_range() is going to be allowed to walk page tables other than
+> those of user space. For this it needs to know when it has reached a
+> 'leaf' entry in the page tables. This information is provided by the
+> p?d_leaf() functions/macros.
+> 
+> For riscv a page is a leaf page when it has a read, write or execute bit
+> set on it.
+> 
+> CC: Palmer Dabbelt <palmer@sifive.com>
+> CC: Albert Ou <aou@eecs.berkeley.edu>
+> CC: linux-riscv@lists.infradead.org
+> Signed-off-by: Steven Price <steven.price@arm.com>
 
-> >     Also apply the quirk to CN99xx (0xaf84) and CN11xxx (0xb884) Root Ports.
-> 
-> I thought the quirk is CN8xxx specific, but I could be wrong here.
-> 
-> -Robert
-> 
-> >     
-> >     Link: https://urldefense.proofpoint.com/v2/url?u=https-3A__lore.kernel.org_r_20190919024319.GA8792-40dc5-2Deodlnx05.marvell.com&d=DwIBAg&c=nKjWec2b6R0mOyPaz7xtfQ&r=8vKOpC26NZGzQPAMiIlimxyEGCRSJiq-j8yyjPJ6VZ4&m=Vmml-rx3t63ZbbXZ0XaESAM9yAlexE29R-giTbcj4Qk&s=57jKIj8BAydbLpftLt5Ssva7vD6GuoCaIpjTi-sB5kU&e= 
-> >     Fixes: f2ddaf8dfd4a ("PCI: Apply Cavium ThunderX ACS quirk to more Root Ports")
-> >     Fixes: b404bcfbf035 ("PCI: Add ACS quirk for all Cavium devices")
-> >     Signed-off-by: George Cherian <george.cherian@marvell.com>
-> >     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> >     Cc: stable@vger.kernel.org      # v4.12+
-> > 
-> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > index 320255e5e8f8..4e5048cb5ec6 100644
-> > --- a/drivers/pci/quirks.c
-> > +++ b/drivers/pci/quirks.c
-> > @@ -4311,17 +4311,24 @@ static int pci_quirk_amd_sb_acs(struct pci_dev *dev, u16 acs_flags)
-> >  #endif
-> >  }
-> >  
-> > +static const u16 pci_quirk_cavium_acs_ids[] = {
-> > +	0xa180, 0xa170,		/* CN88xx family of devices */
-> > +	0xaf84,			/* CN99xx family of devices */
-> > +	0xb884,			/* CN11xxx family of devices */
-> > +};
-> > +
-> >  static bool pci_quirk_cavium_acs_match(struct pci_dev *dev)
-> >  {
-> > -	/*
-> > -	 * Effectively selects all downstream ports for whole ThunderX 1
-> > -	 * family by 0xf800 mask (which represents 8 SoCs), while the lower
-> > -	 * bits of device ID are used to indicate which subdevice is used
-> > -	 * within the SoC.
-> > -	 */
-> > -	return (pci_is_pcie(dev) &&
-> > -		(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) &&
-> > -		((dev->device & 0xf800) == 0xa000));
-> > +	int i;
-> > +
-> > +	if (!pci_is_pcie(dev) || pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
-> > +		return false;
-> > +
-> > +	for (i = 0; i < ARRAY_SIZE(pci_quirk_cavium_acs_ids); i++)
-> > +		if (pci_quirk_cavium_acs_ids[i] == dev->device)
-> > +			return true;
-> > +
-> > +	return false;
-> >  }
-> >  
-> >  static int pci_quirk_cavium_acs(struct pci_dev *dev, u16 acs_flags)
+Acked-by: Paul Walmsley <paul.walmsley@sifive.com> # for arch/riscv  
+
+Alex has a good point, but probably the right thing to do is to replace 
+the contents of the arch/riscv/mm/hugetlbpage.c p{u,m}d_huge() functions 
+with calls to Steven's new static inline functions.
+
+
+- Paul
