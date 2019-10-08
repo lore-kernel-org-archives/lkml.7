@@ -2,80 +2,94 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5034C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 19:19:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC03C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 19:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD96421871
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 19:19:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3E96206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 19:19:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="NpM8Tp+a"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j7TTiFOj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730401AbfJHTTd (ORCPT
+        id S1730318AbfJHTTc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 15:19:33 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:35522 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727126AbfJHTTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Oct 2019 15:19:32 -0400
-Received: from zn.tnic (p200300EC2F0B51004985F04ADA683F0C.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:5100:4985:f04a:da68:3f0c])
+Received: from merlin.infradead.org ([205.233.59.134]:43266 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726439AbfJHTTc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 15:19:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:To:From:Date:Sender:Reply-To:Cc:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Nx1tfnzncNr1/2YEe91mPr6s9qQb805exoxZT/kE+5Y=; b=j7TTiFOjt+1RkFZcxcir9K79v
+        ZPi31CptFJa+ykSk5Z+i5oziljqs8kVg1nPlVm+qbBJFrD7o6IIEEsZQ846CG5HsDnSZmvG+89G2r
+        oc2zghrxJEsFKl6qIc4A+oKr3OHRvirmk6PB6iWnregY3vI5UUiMcdToXZQN6biyWfRBsOvjdb3xE
+        vfgA+nwWKe+50/+B34tlL7g3aXyfewvRAw9dI0yNHqRBGSbBXWaAgnpWqXiPpsCrdZhrLPzNDnmrW
+        6hVi5ESd2k1ui1G1zQoJ7/kcjloHIWCL6wSZGKB/SK/i0nNVSchQ7K7fNquDuo+Dw7VIpR2sMG1rp
+        VXOfdODOQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iHv0B-0005Vw-5M; Tue, 08 Oct 2019 19:18:31 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id AB3EF1EC06F3;
-        Tue,  8 Oct 2019 21:19:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1570562371;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=CXUWmFNA5mJOZLZURrkTqJUH033VU6Q2eTZE4s/PFuM=;
-        b=NpM8Tp+a3MgxgQKjF033zwArkWT3yMe1dh6y1gUqywSYHGFRWNYjSuH9JXq0bCBmTkLVAc
-        ygosv8qUEfzwIqBCzSaIi2Wgnucu9/HpbCnzxillmVzy8A4bF6OLjlGJSpy3xDSsxhJilM
-        afHuOc4lN7OwJE3fk/J4PS1mwxjPRMo=
-Date:   Tue, 8 Oct 2019 21:19:24 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com, Suresh Siddha <suresh.b.siddha@intel.com>
-Subject: Re: [PATCH v22 12/24] x86/sgx: Linux Enclave Driver
-Message-ID: <20191008191924.GP14765@zn.tnic>
-References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
- <20190903142655.21943-13-jarkko.sakkinen@linux.intel.com>
- <20191008175924.GN14765@zn.tnic>
- <20191008181752.GE14020@linux.intel.com>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5DDCD305EE1;
+        Tue,  8 Oct 2019 21:17:34 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 876CE202448A4; Tue,  8 Oct 2019 21:18:25 +0200 (CEST)
+Date:   Tue, 8 Oct 2019 21:18:25 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org, mingo@redhat.com,
+        will@kernel.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, maarten.lankhorst@linux.intel.com,
+        mripard@kernel.org, sean@poorly.run, airlied@linux.ie,
+        dri-devel@lists.freedesktop.org, gregkh@linuxfoundation.org,
+        jslaby@suse.com, viro@zeniv.linux.org.uk,
+        linux-fsdevel@vger.kernel.org, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, intel-gfx@lists.freedesktop.org,
+        tytso@mit.edu, jack@suse.com, linux-ext4@vger.kernel.org,
+        tj@kernel.org, mark@fasheh.com, jlbec@evilplan.or,
+        joseph.qi@linux.alibaba.com, ocfs2-devel@oss.oracle.com,
+        davem@davemloft.net, st@kernel.org, daniel@iogearbox.net,
+        netdev@vger.kernel.org, bpf@vger.kernel.org, duyuyang@gmail.com,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        alexander.levin@microsoft.com
+Subject: Re: [PATCH -next] treewide: remove unused argument in lock_release()
+Message-ID: <20191008191825.GH2328@hirez.programming.kicks-ass.net>
+References: <1568909380-32199-1-git-send-email-cai@lca.pw>
+ <20191008163351.GR16989@phenom.ffwll.local>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191008181752.GE14020@linux.intel.com>
+In-Reply-To: <20191008163351.GR16989@phenom.ffwll.local>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 11:17:52AM -0700, Sean Christopherson wrote:
-> There are already a handful of driver changes on our todo list for v23, as
-> well as the vDSO and selftest updates.  What if you stop here for now and
-> restart when Jarkko sends v23?  In theory that'll happen later this week.
+On Tue, Oct 08, 2019 at 06:33:51PM +0200, Daniel Vetter wrote:
+> On Thu, Sep 19, 2019 at 12:09:40PM -0400, Qian Cai wrote:
+> > Since the commit b4adfe8e05f1 ("locking/lockdep: Remove unused argument
+> > in __lock_release"), @nested is no longer used in lock_release(), so
+> > remove it from all lock_release() calls and friends.
+> > 
+> > Signed-off-by: Qian Cai <cai@lca.pw>
+> 
+> Ack on the concept and for the drm parts (and feel free to keep the ack if
+> you inevitably have to respin this later on). Might result in some
+> conflicts, but welp we need to keep Linus busy :-)
+> 
+> Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-Sure, sounds good.
-
-Thx!
-
-/me goes to the next patchset on TODO list :)
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Thanks Daniel!
