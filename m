@@ -2,100 +2,102 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC5DEECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1574DC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A58B920815
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:33:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Ey59fqbx"
+	by mail.kernel.org (Postfix) with ESMTP id ECE4320673
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:35:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731108AbfJHNdq (ORCPT
+        id S1731001AbfJHNfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 09:33:46 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:35855 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730301AbfJHNdo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 09:33:44 -0400
-Received: by mail-qk1-f194.google.com with SMTP id y189so16758491qkc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 06:33:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=QnQzIXsBirdC9ZGjzsM1M3X/RwdPQQ7F+7TxSRPMNrM=;
-        b=Ey59fqbx1Y2Eb6IGPCNXsY7xoiPbBNRsc9vMKzUETVH0/4nu8i9qwD4Ovxhft2vTAN
-         lGELYw9QYNIAz3VIcb9v3JBSIu0b/gSt1O+WsZXn7iAxeSMeuzPyyOQBBc1rqIT1esR4
-         B3bc8yOB+0xpj3+BilklfufVZo7UkC5B0pUes3biBm4QJkWCbNxcus3wdNZoX/3QNZyV
-         yFuhcMz0g8u9XKn2Km80XMOtEwHDJcM+zZ/U4L2GIDblC6izBYPTqOZuQjSNHoQ1sV+I
-         NlC04V0V+WMKjYrVIPSJhmRtln/gF8bOUF06bZTv5GmccmXwWBZ8NOM976AcbQRE/FS7
-         1kAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=QnQzIXsBirdC9ZGjzsM1M3X/RwdPQQ7F+7TxSRPMNrM=;
-        b=VaGX/5z9IwbX6Kh1T77cSJT4i6j5PztZWBhJth9Gt2XkmRLQAym+Kz/hpiS15iCbPr
-         1bwIZYj9yTYLB8M8SzF0oLisC7lwA9kS+WJwWUKKG6hSTo9Hz4rOIB9Xe+SAH4Gts5kA
-         k8blBXmLGX7tj1O4m2AE0/r4x7sQGcsOrCLCmtY3OU+QqzCxvcYH5KRFlFfbmZ3Canoy
-         nc9vLT8bucLQIYU2SiLpH0J6pNtpirAJF1VkQ02RrUieb1y0EAZ57/NRCy5QFSI4zRkQ
-         /UUeo1PwD9cYWV7psUTRfQoxROQU4qkax6zu9T/dcBSKliQk2fyp5xPI533SWLlf1244
-         e+jw==
-X-Gm-Message-State: APjAAAXCMRtYDoqdUXTOxmo2iGcW+AJ0wKWLcCnJ2/muJEbEq86EkFjk
-        EHcnVoc93DCT5lrrNtrrmLxtug==
-X-Google-Smtp-Source: APXvYqwrDHdts1zTqtkZ7c+p3YRq1MEHwkTEGeoW3azCPVXwvYJn2GTYynQQE2g0CBnnVTuCJ5k/Hg==
-X-Received: by 2002:a37:9782:: with SMTP id z124mr26583062qkd.78.1570541623638;
-        Tue, 08 Oct 2019 06:33:43 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id c16sm9514575qkg.131.2019.10.08.06.33.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 08 Oct 2019 06:33:43 -0700 (PDT)
-Message-ID: <1570541621.5576.299.camel@lca.pw>
-Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
-From:   Qian Cai <cai@lca.pw>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     sergey.senozhatsky.work@gmail.com, rostedt@goodmis.org,
-        peterz@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
-        john.ogness@linutronix.de, akpm@linux-foundation.org,
-        david@redhat.com, linux-kernel@vger.kernel.org
-Date:   Tue, 08 Oct 2019 09:33:41 -0400
-In-Reply-To: <20191008130803.jf3xdtyt3qpfotn5@pathway.suse.cz>
-References: <1570228005-24979-1-git-send-email-cai@lca.pw>
-         <20191007143002.l37bt2lzqtnqjqxu@pathway.suse.cz>
-         <1570460350.5576.290.camel@lca.pw>
-         <20191008130803.jf3xdtyt3qpfotn5@pathway.suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 8 Oct 2019 09:35:13 -0400
+Received: from mga18.intel.com ([134.134.136.126]:32084 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730249AbfJHNfN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 09:35:13 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 06:35:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,270,1566889200"; 
+   d="scan'208";a="223237554"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga002.fm.intel.com with ESMTP; 08 Oct 2019 06:35:11 -0700
+Date:   Tue, 8 Oct 2019 06:35:11 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com
+Subject: Re: [PATCH v22 07/24] x86/sgx: Add wrappers for ENCLS leaf functions
+Message-ID: <20191008133511.GB14020@linux.intel.com>
+References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
+ <20190903142655.21943-8-jarkko.sakkinen@linux.intel.com>
+ <20191004094513.GA3362@zn.tnic>
+ <20191008040405.GA1724@linux.intel.com>
+ <20191008071845.GA14765@zn.tnic>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191008071845.GA14765@zn.tnic>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-10-08 at 15:08 +0200, Petr Mladek wrote:
-> On Mon 2019-10-07 10:59:10, Qian Cai wrote:
-> > It is almost impossible to eliminate all the indirect call chains from
-> > console_sem/console_owner_lock to zone->lock because it is too normal that
-> > something later needs to allocate some memory dynamically, so as long as it
-> > directly call printk() with zone->lock held, it will be in trouble.
+On Tue, Oct 08, 2019 at 09:18:45AM +0200, Borislav Petkov wrote:
+> On Mon, Oct 07, 2019 at 09:04:05PM -0700, Sean Christopherson wrote:
+> > > BIT(30)
+> > 
+> > This is intentionally open coded so that it can be stringified in asm.
 > 
-> It is not normal the something needs to allocate memory under
-> console_sem. Console drivers are supposed to get the message
-> out even when the system is in really bad state and it is not
-> possible to allocate memory. I consider this a bug in the console
-> driver.
+> It stringifies just fine with the BIT() macro too:
+> 
+> # 187 "arch/x86/kernel/cpu/sgx/encls.h" 1
+>         1: .byte 0x0f, 0x01, 0xcf;
+>         2:
+> .section .fixup,"ax"
+> 3: orl $((((1UL))) << (30)),%eax
+>    jmp 2b
+> .previous
+> 
+> and the resulting object:
+> 
+> Disassembly of section .fixup:
+> 
+> 0000000000000000 <.fixup>:
+>    0:   0d 00 00 00 40          or     $0x40000000,%eax
+>    5:   e9 00 00 00 00          jmpq   a <__addressable_sgx_free_page107+0x2>
 
-Again, it is not directly under console_sem. It is *indirect*.
+Hmm, I get assembler errors using gcc 5.4.0
 
-console_sem --> lockA
-lockA --> lockB
-lockB --> lockC
-
-Anything allocating memory with lockB or lockC held will form the problematic
-lock chain to trigger the lockdep splat with memory offline.
+  linux/arch/x86/kernel/cpu/sgx/encls.h: Assembler messages:
+  linux/arch/x86/kernel/cpu/sgx/encls.h:207: Error: missing ')'
+  linux/arch/x86/kernel/cpu/sgx/encls.h:207: Error: missing ')'
+  linux/arch/x86/kernel/cpu/sgx/encls.h:207: Error: missing ')'
+  linux/arch/x86/kernel/cpu/sgx/encls.h:207: Error: missing ')'
+  linux/arch/x86/kernel/cpu/sgx/encls.h:207: Error: junk `UL)))<<(30))' after expression
+  linux/arch/x86/kernel/cpu/sgx/encls.h:207: Error: missing ')'
+  linux/arch/x86/kernel/cpu/sgx/encls.h:207: Error: missing ')'
+  linux/arch/x86/kernel/cpu/sgx/encls.h:207: Error: missing ')'
+  linux/arch/x86/kernel/cpu/sgx/encls.h:207: Error: missing ')'
+  linux/arch/x86/kernel/cpu/sgx/encls.h:207: Error: junk `UL)))<<(30))' after expression
+  linux/arch/x86/kernel/cpu/sgx/encls.h:207: Error: missing ')'
+  linux/arch/x86/kernel/cpu/sgx/encls.h:207: Error: missing ')'
+  linux/arch/x86/kernel/cpu/sgx/encls.h:207: Error: missing ')'
+  linux/arch/x86/kernel/cpu/sgx/encls.h:207: Error: missing ')'
+  linux/arch/x86/kernel/cpu/sgx/encls.h:207: Error: junk `UL)))<<(30))' after expression
+  linux/scripts/Makefile.build:265: recipe for target 'arch/x86/kernel/cpu/sgx/encls.o' failed
