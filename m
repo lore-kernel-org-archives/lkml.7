@@ -2,138 +2,116 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB20C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA5D8C35280
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C9812070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:52:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC45A2070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:52:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570553573;
+	bh=bxciPF2qPn6AVINPKLIOVCuywf0FCe9PPs/xWu6z0Tk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xL/Ub/5FaGb9E32RMm8R+vWlyiKu92y/o64s3jlxQaoDkNQhWZyYpI6vVHx3WT+Ux
+	 XnxyAYyG1K87s8j9EiNodhwr/7YTFXDmBEsOzPKvgheTC8NYhcSoBdreFsrDZbN8s2
+	 GBAELTghzAi/GFCADga5ItS3ZfN8IrWSAh6+yVBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729147AbfJHQwk (ORCPT
+        id S1729403AbfJHQwx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 12:52:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:41300 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726138AbfJHQwj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 12:52:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 424301570;
-        Tue,  8 Oct 2019 09:52:39 -0700 (PDT)
-Received: from [192.168.0.9] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2AAC23F6C4;
-        Tue,  8 Oct 2019 09:52:37 -0700 (PDT)
-Subject: Re: [RFC v5 4/6] sched/fair: Tune task wake-up logic to pack small
- background tasks on fewer cores
-To:     Parth Shah <parth@linux.ibm.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Doug Smythies <dsmythies@telus.net>,
-        Quentin Perret <qperret@qperret.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-References: <20191007083051.4820-1-parth@linux.ibm.com>
- <20191007083051.4820-5-parth@linux.ibm.com>
- <CAKfTPtCgoTJXxbYyza1W55ayw9QeM7fue2e91Xpt804sL9GQWA@mail.gmail.com>
- <80bb34ec-6358-f4dc-d20d-cde6c9d7e197@linux.ibm.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <d55c593d-af8e-c8ba-cc0e-c9917df5d593@arm.com>
-Date:   Tue, 8 Oct 2019 18:52:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 8 Oct 2019 12:52:53 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59992 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727920AbfJHQww (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 12:52:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=bxciPF2qPn6AVINPKLIOVCuywf0FCe9PPs/xWu6z0Tk=; b=LAN2pwMT0t97CtLQP2ucTpwAW
+        UE2/K1a7mzPqprHmvlGXliUK2y+1MyChVWUn8Qgf9whpl4Y7SD89JyxScg+PFExLw3y62yrjY7+cZ
+        URNkjYrQflcsIYtheCswHdyywCUfG5hGkx2DM+pmgY2oH04f2ZUO8dYMiNLLxK5+06Q5I=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iHsit-0000Xu-O3; Tue, 08 Oct 2019 16:52:31 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id D4E342740D4A; Tue,  8 Oct 2019 17:52:30 +0100 (BST)
+Date:   Tue, 8 Oct 2019 17:52:30 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Ladislav Michl <ladis@linux-mips.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, m.felsch@pengutronix.de,
+        alsa-devel@alsa-project.org, ckeepax@opensource.cirrus.com,
+        kuninori.morimoto.gx@renesas.com, linux-kernel@vger.kernel.org,
+        piotrs@opensource.cirrus.com, andradanciu1997@gmail.com,
+        lgirdwood@gmail.com, paul@crapouillou.net,
+        Hulk Robot <hulkci@huawei.com>, shifu0704@thundersoft.com,
+        enric.balletbo@collabora.com, srinivas.kandagatla@linaro.org,
+        tiwai@suse.com, mirq-linux@rere.qmqm.pl,
+        rf@opensource.wolfsonmicro.com
+Subject: Re: [alsa-devel] Applied "ASoc: tas2770: Fix build error without
+ GPIOLIB" to the asoc tree
+Message-ID: <20191008165230.GR4382@sirena.co.uk>
+References: <20191006104631.60608-1-yuehaibing@huawei.com>
+ <20191007130309.EAEBE2741EF0@ypsilon.sirena.org.uk>
+ <20191008163508.GA16283@lenoch>
 MIME-Version: 1.0
-In-Reply-To: <80bb34ec-6358-f4dc-d20d-cde6c9d7e197@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="o99acAvKqrTZeiCU"
+Content-Disposition: inline
+In-Reply-To: <20191008163508.GA16283@lenoch>
+X-Cookie: Do not disturb.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[- Quentin Perret <quentin.perret@arm.com>]
-[+ Quentin Perret <qperret@qperret.net>]
 
-See commit c193a3ffc282 ("mailmap: Update email address for Quentin Perret")
+--o99acAvKqrTZeiCU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 07/10/2019 18:53, Parth Shah wrote:
-> 
-> 
-> On 10/7/19 5:49 PM, Vincent Guittot wrote:
->> On Mon, 7 Oct 2019 at 10:31, Parth Shah <parth@linux.ibm.com> wrote:
->>>
->>> The algorithm finds the first non idle core in the system and tries to
->>> place a task in the idle CPU in the chosen core. To maintain
->>> cache hotness, work of finding non idle core starts from the prev_cpu,
->>> which also reduces task ping-pong behaviour inside of the core.
->>>
->>> Define a new method to select_non_idle_core which keep tracks of the idle
->>> and non-idle CPUs in the core and based on the heuristics determines if the
->>> core is sufficiently busy to place the incoming backgroung task. The
->>> heuristic further defines the non-idle CPU into either busy (>12.5% util)
->>> CPU and overutilized (>80% util) CPU.
->>> - The core containing more idle CPUs and no busy CPUs is not selected for
->>>   packing
->>> - The core if contains more than 1 overutilized CPUs are exempted from
->>>   task packing
->>> - Pack if there is atleast one busy CPU and overutilized CPUs count is <2
->>>
->>> Value of 12.5% utilization for busy CPU gives sufficient heuristics for CPU
->>> doing enough work an
+On Tue, Oct 08, 2019 at 06:35:08PM +0200, Ladislav Michl wrote:
 
-[...]
+> Hmm, too late it seems...
+> Patch should actually remove <linux/gpio.h> as this is legacy one (see comment
+> on the top and also Documentation/driver-api/gpio/consumer.rst)
 
->>> @@ -6483,7 +6572,11 @@ select_task_rq_fair(struct task_struct *p, int prev_cpu, int sd_flag, int wake_f
->>>         } else if (sd_flag & SD_BALANCE_WAKE) { /* XXX always ? */
->>>                 /* Fast path */
->>>
->>> -               new_cpu = select_idle_sibling(p, prev_cpu, new_cpu);
->>> +               if (is_turbosched_enabled() && unlikely(is_background_task(p)))
->>> +                       new_cpu = turbosched_select_non_idle_core(p, prev_cpu,
->>> +                                                                 new_cpu);
->>
->> Could you add turbosched_select_non_idle_core() similarly to
->> find_energy_efficient_cpu() ?
->> Add it at the beg select_task_rq_fair()
->> Return immediately with theCPU if you have found one
->> Or let the normal path select a CPU if the
->> turbosched_select_non_idle_core() has not been able to find a suitable
->> CPU for packing
->>
-> 
-> of course. I can do that.
-> I was just not aware about the effect of wake_affine and so was waiting for
-> such comments to be sure of. Thanks for this.
-> Maybe I can add just below the sched_energy_present(){...} construct giving
-> precedence to EAS? I'm asking this because I remember Patrick telling me to
-> leverage task packing for android as well?
+Yes, leaving that is an oversight.
 
-I have a hard time imaging that Turbosched will be used in Android next
-to EAS in the foreseeable future.
+> And that brings a question. Given this is -next only is it actually possible
+> to squash fixes into 1a476abc723e ("tas2770: add tas2770 smart PA kernel driver")
+> just to make bisect a bit more happy?
 
-First of all, EAS provides task packing already on Performance Domain
-(PD) level (a.k.a. as cluster on traditional 2-cluster Arm/Arm64
-big.LITTLE or DynamIQ (with Phantom domains (out of tree solution)).
-This is where we can safe energy without harming latency.
+No:
 
-See the tests results under '2.1 Energy test case' in
+> > If any updates are required or you are submitting further changes they
+> > should be sent as incremental updates against current git, existing
+> > patches will not be replaced.
 
-https://lore.kernel.org/r/20181203095628.11858-1-quentin.perret@arm.com
+Apart from anything else I've merged up the fixes branch IIRC which
+causes trouble.
 
-There are 10 to 50 small (classified solely by task utilization) tasks
-per test case and EAS shows an effect on energy consumption by packing
-them onto the PD (cluster) of the small CPUs.
+--o99acAvKqrTZeiCU
+Content-Type: application/pgp-signature; name="signature.asc"
 
-And second, the CPU supported topology is different to the one you're
-testing on.
+-----BEGIN PGP SIGNATURE-----
 
-[...]
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2cvs0ACgkQJNaLcl1U
+h9AmBQf+LFk5zJqNRstdPMwgLOJGb5LX3O5w3BWeoMJNChq1Mdb1mJ+aaafn3HtA
+lgfos+SLHeSz48AHvgTqZ7DvEyjx2abNyeWCc3LH0S0mIp6RQey9Vxtt5eVP3yav
+5E6bRHBoX+Nv+0MqM73S31xLehzpo68qL9Iy2a5yh9TIRFjrVHZjIslo2CgNPkd4
+EQDMuoYYooV3BBHGFIiCAOpS8RA5eSgIUN6Cg/M9/+BHGsLW4bako+iFjIbHgH4F
+32VljVKllo5noLJsauG+ImjqHJGt11YCjp0AJL60CApDiLLFrUucBV3G/Hj5VHDt
+taLaofFv9ONyk9UWxKcoCAqTYirgIw==
+=rHvp
+-----END PGP SIGNATURE-----
+
+--o99acAvKqrTZeiCU--
