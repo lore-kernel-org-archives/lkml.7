@@ -2,122 +2,139 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6B2C47404
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E59BC47404
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 302B220867
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:06:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30DAE20867
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:07:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="rgBL2WXV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cGnOUtg+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729564AbfJHBGp (ORCPT
+        id S1729624AbfJHBHb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 21:06:45 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:43877 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729212AbfJHBGn (ORCPT
+        Mon, 7 Oct 2019 21:07:31 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:40047 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729212AbfJHBHa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 21:06:43 -0400
-Received: by mail-pl1-f194.google.com with SMTP id f21so7682104plj.10
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 18:06:41 -0700 (PDT)
+        Mon, 7 Oct 2019 21:07:30 -0400
+Received: by mail-ot1-f68.google.com with SMTP id y39so12685435ota.7;
+        Mon, 07 Oct 2019 18:07:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=xG4okJdw6yG0+dTVZUzXSvCaMqd7lfeqdk85b8htCP8=;
-        b=rgBL2WXVr2trvPZShyRwXOB2KqvBn/el+0g8d6FvndBKzcvnVgOsBrX2oam1Z6mlb8
-         ot+797QfI9z+GTYlc3Z8YFl1yeqGtRh/e4//aRtTEnH6jbRCOqZIGbyKXc57ArENrkfu
-         dUJI2Msjol/rrNfDjwOcpFJ/wvd6H24GYfVhc5zixtLpQoQUz7AuubazLSR219DU5dFv
-         kM8gL6Mz3CihTn6ZNefw1lg5RI4Q4R66VwibxmLSo5TeoeasRXNKthrHSy55CxWafV8q
-         HvLxHZvACK7/NWLgxlbSZ9ws3NtmAVs4GozQIgL6nl6GsxNNc1jNrDpbk2JfPiXQsGRm
-         c9lQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=80fE1au7f0pETwqvrZXQbXfCUZbLKkjvWDlcT8ifxy0=;
+        b=cGnOUtg+G92nethGH+PlIpXQEOU8lgTWjmS1ukpIBX4MDQrN0i9MufdUkKgTKt4TDe
+         /sLk3jDUb3R38+nLyQ3B+j91PCICBnDVbEzajUyCQWB76AxRVrh6G7EgkHDF9mY9Y98R
+         qcl5oW+NOLY1SzAFTo9915JNbfjy9qGipLDHOXoJNX9oDesvz4nZ8VvR5axlOWYAiAA7
+         seTT7oERIX5Efkavaq4XRY6Ig/edyoXyARga2R4Oyk3QS+fr+Y6LjOpE5cgefCGhitjY
+         94Gzq7znQVy0o2w3V2823Y1LZVdiOtf234uSJlgQvahjhPT/6ilzxgO7GrgZiQz0QPQn
+         c8dQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=xG4okJdw6yG0+dTVZUzXSvCaMqd7lfeqdk85b8htCP8=;
-        b=IPiGP8vMS8svGNAtOPCuPyakJt/ZqjO5o+MMuDW7khLUq92ptOS98zcfnq33EOSrek
-         gOQye+EZVOctU3M5CfJLFYG3FGlMbzvhoJR4UqX9JMWw8LwPWEQGUjJ3gBhDHZ3yLVzi
-         mywna+cAF3sSB2IEPnhnzcZTrJqwvT96L9dDf8Hiq94TlY5fSyz3BVWgwntM4cywc/2G
-         k0uwMq/pto47mFAnO5JU9gmjAWxUGJYKQKnVZibHClxLmwQEBZJarkBaixYqMPVAenXF
-         vyFPEse1F2N1xxcN+fmaoJYJkoZzkieJfqYJU4bdee0u334hUn5IrRaIdLvKYoMON+pC
-         axwA==
-X-Gm-Message-State: APjAAAWGqqzUYZiKlVNh0TqIPCRDOFrWhQEjgI85x7rFOBtXX+x/5nrl
-        /cwihxmWm0/4QIZRXX6T2c8AIA==
-X-Google-Smtp-Source: APXvYqyN5NDtYjHKIrfRAKGop7mU3OUpTZ85SPTXRyyKdVkQIZrC44zQeHxhwIe3+R4PbS8to4rBDQ==
-X-Received: by 2002:a17:902:7782:: with SMTP id o2mr3280279pll.165.1570496801537;
-        Mon, 07 Oct 2019 18:06:41 -0700 (PDT)
-Received: from localhost.localdomain (122-117-179-2.HINET-IP.hinet.net. [122.117.179.2])
-        by smtp.gmail.com with ESMTPSA id 18sm15563898pfp.100.2019.10.07.18.06.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2019 18:06:41 -0700 (PDT)
-From:   Axel Lin <axel.lin@ingics.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        Tony Xie <tony.xie@rock-chips.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH 3/3] regulator: rk808: Remove rk817_set_suspend_voltage function
-Date:   Tue,  8 Oct 2019 09:06:28 +0800
-Message-Id: <20191008010628.8513-3-axel.lin@ingics.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191008010628.8513-1-axel.lin@ingics.com>
-References: <20191008010628.8513-1-axel.lin@ingics.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=80fE1au7f0pETwqvrZXQbXfCUZbLKkjvWDlcT8ifxy0=;
+        b=NCJ99eL0K4DEep3ogfiftQcCDgC4lkRl35FNjrkmWlULg3NSKMf+xXP40J7sxKOwvL
+         dldUy9PXgYu2itIUKX+fsRfxVgzQ25N+nI9w81Pl0wpkyOlEQasOqsWfCVgX8xaqwCKE
+         5Vb+vflGz8EFd/OIj/lywyClq+jbnwtjI3yBqS3saCRLFt+bBYWNc4IxwhB2j6v0Y8MF
+         htR0p+aV2ujb+tJjgHrLu1TViPSJSicP7yiPAHWGC8ZqySyJPxPBhkXobisCbyPcsjQ9
+         Y9/U1w4he8bxtbEWvVW/+Mfa/d7nqbjrVCEtjHuggCjBmk+GnAcVpn+l1n0/f83Cvl2K
+         02Xg==
+X-Gm-Message-State: APjAAAVhvGZ9Z4V7J0Uz6EdV84nSqVJ9M3WkAmONh1OQfKZpZSBIt8XU
+        geskTWH3hhiyvkEa56m5Thh/boPIwiTFhz5+IJ5qbQ==
+X-Google-Smtp-Source: APXvYqw5F0KCI3r0K8qjs0QLNJYJXakLqLbuF2gDpd2m9TNqseSSC+VZTtcK2Ye97NT8T5thC3jf7xRcie+Yk//43c0=
+X-Received: by 2002:a9d:aa8:: with SMTP id 37mr22474954otq.56.1570496850007;
+ Mon, 07 Oct 2019 18:07:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1569719216-32080-1-git-send-email-wanpengli@tencent.com>
+In-Reply-To: <1569719216-32080-1-git-send-email-wanpengli@tencent.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Tue, 8 Oct 2019 09:07:18 +0800
+Message-ID: <CANRm+CyFvpWRCEtsfZNDExPqDOeX9o=yin+tBF2MHN0ThtAfmg@mail.gmail.com>
+Subject: Re: [PATCH v2] KVM: Don't shrink/grow vCPU halt_poll_ns if host side
+ polling is disabled
+To:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Marcelo Tosatti <mtosatti@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The implement is exactly the same as rk808_set_suspend_voltage, so just
-use rk808_set_suspend_voltage instead.
-
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
----
- drivers/regulator/rk808-regulator.c | 17 +----------------
- 1 file changed, 1 insertion(+), 16 deletions(-)
-
-diff --git a/drivers/regulator/rk808-regulator.c b/drivers/regulator/rk808-regulator.c
-index d0d1b868b0cd..5b4003226484 100644
---- a/drivers/regulator/rk808-regulator.c
-+++ b/drivers/regulator/rk808-regulator.c
-@@ -411,21 +411,6 @@ static int rk808_set_suspend_voltage(struct regulator_dev *rdev, int uv)
- 				  sel);
- }
- 
--static int rk817_set_suspend_voltage(struct regulator_dev *rdev, int uv)
--{
--	unsigned int reg;
--	int sel = regulator_map_voltage_linear(rdev, uv, uv);
--	/* only ldo1~ldo9 */
--	if (sel < 0)
--		return -EINVAL;
--
--	reg = rdev->desc->vsel_reg + RK808_SLP_REG_OFFSET;
--
--	return regmap_update_bits(rdev->regmap, reg,
--				  rdev->desc->vsel_mask,
--				  sel);
--}
--
- static int rk808_set_suspend_voltage_range(struct regulator_dev *rdev, int uv)
- {
- 	unsigned int reg;
-@@ -708,7 +693,7 @@ static const struct regulator_ops rk817_reg_ops = {
- 	.enable			= regulator_enable_regmap,
- 	.disable		= regulator_disable_regmap,
- 	.is_enabled		= rk8xx_is_enabled_wmsk_regmap,
--	.set_suspend_voltage	= rk817_set_suspend_voltage,
-+	.set_suspend_voltage	= rk808_set_suspend_voltage,
- 	.set_suspend_enable	= rk817_set_suspend_enable,
- 	.set_suspend_disable	= rk817_set_suspend_disable,
- };
--- 
-2.20.1
-
+ping,
+On Sun, 29 Sep 2019 at 09:07, Wanpeng Li <kernellwp@gmail.com> wrote:
+>
+> From: Wanpeng Li <wanpengli@tencent.com>
+>
+> Don't waste cycles to shrink/grow vCPU halt_poll_ns if host
+> side polling is disabled.
+>
+> Acked-by: Marcelo Tosatti <mtosatti@redhat.com>
+> Cc: Marcelo Tosatti <mtosatti@redhat.com>
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> ---
+> v1 -> v2:
+>  * fix coding style
+>
+>  virt/kvm/kvm_main.c | 29 ++++++++++++++++-------------
+>  1 file changed, 16 insertions(+), 13 deletions(-)
+>
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index e6de315..9d5eed9 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -2359,20 +2359,23 @@ void kvm_vcpu_block(struct kvm_vcpu *vcpu)
+>         kvm_arch_vcpu_unblocking(vcpu);
+>         block_ns = ktime_to_ns(cur) - ktime_to_ns(start);
+>
+> -       if (!vcpu_valid_wakeup(vcpu))
+> -               shrink_halt_poll_ns(vcpu);
+> -       else if (halt_poll_ns) {
+> -               if (block_ns <= vcpu->halt_poll_ns)
+> -                       ;
+> -               /* we had a long block, shrink polling */
+> -               else if (vcpu->halt_poll_ns && block_ns > halt_poll_ns)
+> +       if (!kvm_arch_no_poll(vcpu)) {
+> +               if (!vcpu_valid_wakeup(vcpu)) {
+>                         shrink_halt_poll_ns(vcpu);
+> -               /* we had a short halt and our poll time is too small */
+> -               else if (vcpu->halt_poll_ns < halt_poll_ns &&
+> -                       block_ns < halt_poll_ns)
+> -                       grow_halt_poll_ns(vcpu);
+> -       } else
+> -               vcpu->halt_poll_ns = 0;
+> +               } else if (halt_poll_ns) {
+> +                       if (block_ns <= vcpu->halt_poll_ns)
+> +                               ;
+> +                       /* we had a long block, shrink polling */
+> +                       else if (vcpu->halt_poll_ns && block_ns > halt_poll_ns)
+> +                               shrink_halt_poll_ns(vcpu);
+> +                       /* we had a short halt and our poll time is too small */
+> +                       else if (vcpu->halt_poll_ns < halt_poll_ns &&
+> +                               block_ns < halt_poll_ns)
+> +                               grow_halt_poll_ns(vcpu);
+> +               } else {
+> +                       vcpu->halt_poll_ns = 0;
+> +               }
+> +       }
+>
+>         trace_kvm_vcpu_wakeup(block_ns, waited, vcpu_valid_wakeup(vcpu));
+>         kvm_arch_vcpu_block_finish(vcpu);
+> --
+> 2.7.4
+>
