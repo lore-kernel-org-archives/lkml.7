@@ -2,141 +2,122 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94FB8ECE58C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D427C35280
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EED7206C2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:23:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ebhgc7zR"
+	by mail.kernel.org (Postfix) with ESMTP id 767D9218AC
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:23:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570551821;
+	bh=7LSvG7Z2/shv9SD/4ep9F4XsDMDUqCWfKeBaQ6bS/iM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nZ9VhpniJhJFkONt7kj/QAd0DKgYJ6VoT04ZNjZAvbfNMSJUvnqcTfgeQ490dFXkf
+	 HpKG5gZkGXDdcx7AWiDRXCXY1qLkK06BFxJgmzRsXWwH+1zVGnL/yeDxOVFALn1AV8
+	 rjOfqppARfxAJQqrZ9UEY+bLrDpgWGXlcH80EM4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbfJHQXR (ORCPT
+        id S1728636AbfJHQXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 12:23:17 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:44346 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726239AbfJHQXR (ORCPT
+        Tue, 8 Oct 2019 12:23:40 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:39156 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725966AbfJHQXk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 12:23:17 -0400
-Received: by mail-lf1-f67.google.com with SMTP id q12so7478095lfc.11;
-        Tue, 08 Oct 2019 09:23:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vDv1klytpHASOjBcro99P7afE55WHuXFHU2DQg71q6U=;
-        b=Ebhgc7zR/tw4LmSQ1R97WhArExCdPVSs73g4xH80QiHQyrPAGGoDnvWPBAUFBAMVJT
-         jakVmtMcQdoFpNJwkX17F3VE0q+DbakIfWBZKfWkd+niMBC676hc0T7rgr63z/Hii2Iu
-         w/AkBhGZMwNpFVcx8ic1VUep6eoIYsy6qtnAREGQa3+WPLRVgCglLf3BH1riV3sw7wK2
-         s8loCOSjsImnSEu+UUrM0pvX9kRzGxPJzOBLE3mx6toNxXM4GXq0e8ZPtvJ2uaahC+Oz
-         SGWWqo7wzmKbu2gQpo+XVrpAQGQh16IBg1uHE3vERDU1wKGrOtA7Ru+T4dd9pjc99r8f
-         CVnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vDv1klytpHASOjBcro99P7afE55WHuXFHU2DQg71q6U=;
-        b=R99T4P1DgUFxinGcyOrYwesCCYr4vzWhv9GY84UoAwbAp6wVFlUnURjta2gUZ9b85w
-         syVqLf74XrJCku2CsMdHuWI1J08waNnOTO2AobfTpFHPm2tGRCo4RSO8pe6AZVp9cxBE
-         KUqpJMZ3W8AHzuPpT5CbWNFh8W09I6DoOanKTKYvoggSrvQHWkBQPrsLs+OgCMW+gt5K
-         VkQ+X/5FNXZbS4vzKnO4s+nZWRiK/5mXCCA6e+fYsrTbqjO06ca+nSFICPxxakBlwukA
-         koNkG2IZHhFUEXe0ACugDV90Z2gipdRZXWBX8aehy+C+YKxeu7jwv/lUEPU5c11RDkS8
-         J8Ug==
-X-Gm-Message-State: APjAAAWM3Q+TzuxkMRMNMyZyzRrcjn+wmMqea9KSHnOVnhsPeCM19qSK
-        N9Sq8/oPD7TgvjD/VtStC2o=
-X-Google-Smtp-Source: APXvYqyLg1WX/oRFKmjXO7odTv9bLIpjPd9EZHh2nzwYBQsvoGnshtigNv07Z0M7s1VISFwYDRowLQ==
-X-Received: by 2002:ac2:51a7:: with SMTP id f7mr20302175lfk.119.1570551794933;
-        Tue, 08 Oct 2019 09:23:14 -0700 (PDT)
-Received: from pc636 ([37.139.158.167])
-        by smtp.gmail.com with ESMTPSA id d28sm3877793lfq.88.2019.10.08.09.23.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2019 09:23:14 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Tue, 8 Oct 2019 18:23:06 +0200
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Uladzislau Rezki <urezki@gmail.com>, linux-kernel@vger.kernel.org,
-        kernel-team@android.com, kernel-team@lge.com,
-        Byungchul Park <byungchul.park@lge.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        max.byungchul.park@gmail.com,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Rao Shoaib <rao.shoaib@oracle.com>, rcu@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v4 1/2] rcu/tree: Add basic support for kfree_rcu()
- batching
-Message-ID: <20191008162306.GA5901@pc636>
-References: <20190814160411.58591-1-joel@joelfernandes.org>
- <20190918095811.GA25821@pc636>
- <20190930201623.GA134859@google.com>
- <20191001112702.GA22112@pc636>
- <20191004172038.GG253167@google.com>
+        Tue, 8 Oct 2019 12:23:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Ii7hnic6xKdkLBwpZElFY044FUzKz7oXyF0dN3nO9SM=; b=MTZKPqsnxtWOHMIpMUPYFu5Vw
+        wOxnm0fVU4p3m5h3f/rNDOyIoSObvw/GUtbQkeTb16pXVksMvyC1Y7BfYDXsNjAE8OXTx/yEGy9Lf
+        XkfkK7fHfJM0gT5JG0kBpoZBe3WBdmKu+49HbeZAXMgF0MwvaMqJL3xSUstUEnodhlCRQ=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iHsGs-0000Sd-Fc; Tue, 08 Oct 2019 16:23:34 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id DEBA62740D4A; Tue,  8 Oct 2019 17:23:33 +0100 (BST)
+Date:   Tue, 8 Oct 2019 17:23:33 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     Doug Anderson <dianders@chromium.org>,
+        Chunyan Zhang <zhang.chunyan@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        ckeepax@opensource.cirrus.com, LKML <linux-kernel@vger.kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>
+Subject: Re: [PATCH 1/3] regulator: core: fix boot-on regulators use_count
+ usage
+Message-ID: <20191008162333.GP4382@sirena.co.uk>
+References: <CAD=FV=WZSy6nHjsY2pvjcoR4iy64b35OPGEb3EPSSc5vpeTTuA@mail.gmail.com>
+ <20190927084710.mt42454vsrjm3yh3@pengutronix.de>
+ <CAD=FV=XM0i=GsvttJjug6VPOJJGHRqFmsmCp-1XXNvmsYp9sJA@mail.gmail.com>
+ <20191007093429.qekysnxufvkbirit@pengutronix.de>
+ <20191007182907.GB5614@sirena.co.uk>
+ <20191008060311.3ukim22vv7ywmlhs@pengutronix.de>
+ <20191008125140.GK4382@sirena.co.uk>
+ <20191008145605.5yf4hura7qu4fuyg@pengutronix.de>
+ <20191008154213.GL4382@sirena.co.uk>
+ <20191008161640.2fzqhrbc4ox6gjal@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="OmL7C/BU0IhhC9Of"
 Content-Disposition: inline
-In-Reply-To: <20191004172038.GG253167@google.com>
+In-Reply-To: <20191008161640.2fzqhrbc4ox6gjal@pengutronix.de>
+X-Cookie: Do not disturb.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 01:20:38PM -0400, Joel Fernandes wrote:
-> On Tue, Oct 01, 2019 at 01:27:02PM +0200, Uladzislau Rezki wrote:
-> [snip] 
-> > > > I have just a small question related to workloads and performance evaluation.
-> > > > Are you aware of any specific workloads which benefit from it for example
-> > > > mobile area, etc? I am asking because i think about backporting of it and
-> > > > reuse it on our kernel. 
-> > > 
-> > > I am not aware of a mobile usecase that benefits but there are server
-> > > workloads that make system more stable in the face of a kfree_rcu() flood.
-> > > 
-> > OK, i got it. I wanted to test it finding out how it could effect mobile
-> > workloads.
-> > 
-> > >
-> > > For the KVA allocator work, I see it is quite similar to the way binder
-> > > allocates blocks. See function: binder_alloc_new_buf_locked(). Is there are
-> > > any chance to reuse any code? For one thing, binder also has an rbtree for
-> > > allocated blocks for fast lookup of allocated blocks. Does the KVA allocator
-> > > not have the need for that?
-> > >
-> > Well, there is a difference. Actually the free blocks are not sorted by
-> > the its size like in binder layer, if understand the code correctly.
-> > 
-> > Instead, i keep them(free blocks) sorted(by start address) in ascending
-> > order + maintain the augment value(biggest free size in left or right sub-tree)
-> > for each node, that allows to navigate toward the lowest address and the block
-> > that definitely suits. So as a result our allocations become sequential
-> > what is important.
-> 
-> Right, I realized this after sending the email that binder and kva sort
-> differently though they both try to use free sizes during the allocation.
-> 
-> Would you have any papers, which survey various rb-tree based allocator
-> algorithms and their tradeoffs? I am interested in studying these more
-> especially in relation to the binder driver. Would also be nice to make
-> contributions to papers surveying both these allocators to describe the state
-> of the art.
-> 
-So far i have not had any paper with different kind of comparison. But
-that is interested for sure, especially to analyze the model for example
-based on B-Tree, so when we can fully utilize a cache performance.
-Because regular binary trees are just pointer chasing.
 
-As for binder driver and its allocator, is it O(lognN) complexity? Is
-there any bottleneck in its implementation?
+--OmL7C/BU0IhhC9Of
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks!
+On Tue, Oct 08, 2019 at 06:16:40PM +0200, Marco Felsch wrote:
+> On 19-10-08 16:42, Mark Brown wrote:
 
---
-Vlad Rezki
+> > If this is a GPIO regulator then the Linux APIs mean you can't read the
+> > status back so it's one of the regulators for which this property was
+> > invented.  This is a real limitation of the Linux APIs, with most
+> > hardware you can actually read the status back so we shouldn't need
+> > this.
+
+> I know and I followed the discussion between you and Doug. But it
+> is a valid use-case to have a external gpio-enabled regualtor connected
+> to a panel. If I don't mark the regulator as 'regualtor-boot-on' and use
+> the fixed.c driver (IMHO this is correct), the regulator gets disabled
+> during probe. So I will have a panel off/ panel on sequence during boot.
+
+Right, this is why I am saying that this is one of the regulators for
+which this property was defined and where you should be using it.
+
+> To avoid this I set the 'regualtor-boot-on' property but then I can't
+> disable the panel during suspend..
+
+As you'll have seen from the discussion that's a bug, nothing should be
+taking a reference to the regulator outside of explicit enable calls.
+
+--OmL7C/BU0IhhC9Of
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2cuAUACgkQJNaLcl1U
+h9DJ8Af/d9MHeegO3mG0aWykYncA/Uz7MQ8AB1ExPlJrkChn+k1IhFInP0BUaEMf
+xR6K6jBZRAiFiehJJWMFY8b73OLLaWhqjVEz7VHSIyGotcFPykDF6ESj8w279FiZ
+wZEeXbW366ztz7GqWo0U60Hv+yp5wUVrdxtFTKHOzl+kSHDgpy+Fq4sTu5GEtlmb
+T8XI50JK1npkImJ4a+MutR4DQhZm9hoSR7Tq4FSiP6Wlex2jvMgLrDxexgUQhbkY
+iGFt5TAgSy4WSds2O9o9ujNU6evUhr8mzh0Ze7k4FAz4EhrsfibuJBHGoSl0oPdY
+0vUrqwoqjuPTzftepnXUcghNVuhubg==
+=LEgR
+-----END PGP SIGNATURE-----
+
+--OmL7C/BU0IhhC9Of--
