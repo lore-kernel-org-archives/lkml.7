@@ -2,145 +2,167 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D652DC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 18:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C4AC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 18:10:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1E7521721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 18:09:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570558194;
-	bh=ROAVXmZ1zboSWjlEfvdW4buzP9CBjiQUyqFGG5ko3tA=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=fLvA7OyLmwQzuWpmafB4hlK/cOWF9Dd++VyrM/vcmAi7pGJlOoEp8j2HA4mfb0yHX
-	 PnAa/wB79yUt4whlCf+maCn8bWsMCDito0nqnA2RPSzwm6V+SCPLn8zBiD/XyUlcXN
-	 Tc27eBeMSYsHdwcFf2Q12O7hkwul7yiaIYA3DZZE=
+	by mail.kernel.org (Postfix) with ESMTP id B1B1721721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 18:10:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729464AbfJHSJx (ORCPT
+        id S1729806AbfJHSKp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 14:09:53 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48200 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726439AbfJHSJw (ORCPT
+        Tue, 8 Oct 2019 14:10:45 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:35414 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726439AbfJHSKo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 14:09:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=+Dvvoc3YuVgVEFz79dHTriNBh+K4146BDY8Dg6c/esE=; b=BVyeHBbYCsaf
-        59qkMt908qhsOcGnl5ps7S3yOr6Vh6nDwIHI4KFC5H7y0gNmUipOkCVqGiHIeEer5SL0peLeEvUeK
-        Ywda2M6MDed4n9fDx4SjZc5cA9HIO6uN/QAg/MIQr/0K1So2K+6HbtCZLDuNyUw3P9y3B/i0Gsba9
-        Bri6s=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iHtvh-0000os-Kr; Tue, 08 Oct 2019 18:09:49 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 1F66F2740D4A; Tue,  8 Oct 2019 19:09:49 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Steve Twiss <stwiss.opensource@diasemi.com>,
-        Support Opensource <support.opensource@diasemi.com>
-Subject: Applied "regulator: da9062: Simplify da9062_buck_set_mode for BUCK_MODE_MANUAL case" to the regulator tree
-In-Reply-To: <20191007115009.25672-2-axel.lin@ingics.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20191008180949.1F66F2740D4A@ypsilon.sirena.org.uk>
-Date:   Tue,  8 Oct 2019 19:09:49 +0100 (BST)
+        Tue, 8 Oct 2019 14:10:44 -0400
+Received: by mail-qt1-f195.google.com with SMTP id m15so26662100qtq.2
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 11:10:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PBo1Y4ykGmxO+nKrMk5kRa6ZAN4dxeD32dr3fhjxbuE=;
+        b=PKDNmbASK9j3EGUn3lEDYWKHOz3mJNc+d9NzjWg2VyxEvMfuKcXS+i1uXhlQueDm83
+         tOoa5TNlqS1EEIu4nV8Y0z2k2qu4AdSjTwOWoHT4wPpuR0Al+ie3Kz9lO3vDwjhuYrnR
+         K+fJu0m/3HtZM03SegRFE4Int/s47tIcTfGX0IHKhKD8mBp5qUurVuXAnY4qnFnMoENS
+         7vZ/mf2zxy9nhfWLhQR9RLQIphroQysWNbRXCalcpMjBWPIFQRvY39uRAnVv3coVxQo+
+         1oaW2ifs0YRqxdD4c++YRuWMuxUbUUgF9ucAzHiZPETq1lxl5Hw/weZiJRC4xoS97zVo
+         iyIg==
+X-Gm-Message-State: APjAAAWksXYAVIhargcjFCng9hq5opQK7xaIFPCWop9EXRwDFZKd+V00
+        6uuLMDfI5IunJ1vD8iozopEL3yo0pRccQHWsbhU=
+X-Google-Smtp-Source: APXvYqwo1KRc4uEMRDLv8YMbJR1q9u3b6zouiMCvn2GoWFEuLcImLzKwbGDD4iv751uVoDnRnv5wWops9RksqbS7fIE=
+X-Received: by 2002:ac8:1099:: with SMTP id a25mr37021130qtj.308.1570558243705;
+ Tue, 08 Oct 2019 11:10:43 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191008094006.8251-1-geert+renesas@glider.be>
+ <19c54ca5b3750bebc057e20542ad6c0c2acef960.camel@perches.com>
+ <CAMuHMdUYf=0RVeJhSqs9WUY4H+o9Jk8U+J6tUsnMjz7bgKpAxw@mail.gmail.com> <f59c1ef48b64bcf97047df5952f8994f75c0cecf.camel@perches.com>
+In-Reply-To: <f59c1ef48b64bcf97047df5952f8994f75c0cecf.camel@perches.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 8 Oct 2019 20:10:32 +0200
+Message-ID: <CAMuHMdWvLbcGDG=VZDSAd=E-Bb_FEt9zvffpJu5nubMCKMZUZA@mail.gmail.com>
+Subject: Re: [PATCH] checkpatch: use patch subject when reading from stdin
+To:     Joe Perches <joe@perches.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Andy Whitcroft <apw@canonical.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+Hi Joe,
 
-   regulator: da9062: Simplify da9062_buck_set_mode for BUCK_MODE_MANUAL case
+On Tue, Oct 8, 2019 at 7:02 PM Joe Perches <joe@perches.com> wrote:
+> On Tue, 2019-10-08 at 17:28 +0200, Geert Uytterhoeven wrote:
+> > On Tue, Oct 8, 2019 at 5:20 PM Joe Perches <joe@perches.com> wrote:
+> > > On Tue, 2019-10-08 at 11:40 +0200, Geert Uytterhoeven wrote:
+> > > > When reading a patch file from standard input, checkpatch calls it "Your
+> > > > patch", and reports its state as:
+> > > >
+> > > >     Your patch has style problems, please review.
+> > > >
+> > > > or:
+> > > >
+> > > >     Your patch has no obvious style problems and is ready for submission.
+> > > >
+> > > > Hence when checking multiple patches by piping them to checkpatch, e.g.
+> > > > when checking patchwork bundles using:
+> > > >
+> > > >     formail -s scripts/checkpatch.pl < bundle-foo.mbox
+> > > >
+> > > > it is difficult to identify which patches need to be reviewed and
+> > > > improved.
+> > > >
+> > > > Fix this by replacing "Your patch" by the patch subject, if present.
+> > > []
+> > > > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> > > []
+> > > > @@ -1047,6 +1047,10 @@ for my $filename (@ARGV) {
+> > > >       }
+> > > >       while (<$FILE>) {
+> > > >               chomp;
+> > > > +             if ($vname eq 'Your patch') {
+> > > > +                     my ($subject) = $_ =~ /^Subject:\s*(.*)/;
+> > > > +                     $vname = '"' . $subject . '"' if $subject;
+> > >
+> > > Hi again Geert.
+> > >
+> > > Just some stylistic nits:
+> > >
+> > > $filename is not quoted so I think adding quotes
+> > > before and after $subject may not be useful.
+> >
+> > Filename is indeed not quoted, but $git_commits{$filename} is.
+>
+> If I understand your use case, this will only show the last
+> patch $subject of a bundle?
 
-has been applied to the regulator tree at
+False.
+"formail -s scripts/checkpatch.pl < bundle-foo.mbox" splits
+"bundle-foo.mbox" in separate patches, and invokes
+"scripts/checkpatch.pl" for each of them.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.5
+> Also, it'll show things like "duplicate signature" when multiple
+> patches are tested in a single bundle.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+False, due to the splitting by formail.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+> For instance, if I have a git format-patch series in an output
+> directory and do
+>
+> $ cat <output_dir>/*.patch | ./scripts/checkpatch.pl
+>
+> Bad output happen.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+Yeah, because you're concatenating all patches.
+Currently it works for single patches only.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+> Maybe this might be better:
 
-Thanks,
-Mark
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -2444,6 +2444,15 @@ sub process {
+>
+>                 my $rawline = $rawlines[$linenr - 1];
+>
+> +# if input from stdin, report the subject lines if they exist
+> +               if ($filename eq '-' && !$quiet &&
+> +                   $rawline =~ /^Subject:\s*(.*)/) {
+> +                       report("stdin", "STDIN", '-' x length($1));
+> +                       report("stdin", "STDIN", $1);
+> +                       report("stdin", "STDIN", '-' x length($1));
+> +                       %signatures = ();       # avoid duplicate signatures
+> +               }
+> +
+>  # check if it's a mode change, rename or start of a patch
+>                 if (!$in_commit_log &&
+>                     ($line =~ /^ mode change [0-7]+ => [0-7]+ \S+\s*$/ ||
 
-From be446f183ae35a8c76687ea8203fdd86f3f9678e Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Mon, 7 Oct 2019 19:50:09 +0800
-Subject: [PATCH] regulator: da9062: Simplify da9062_buck_set_mode for
- BUCK_MODE_MANUAL case
+Perhaps.  Just passing the patchwork bundle to checkpatch, and fixing
+checkpatch to handle multiple patches in a single file was my first idea.
+But it looked fragile, with too much state that needs to be reset.
+I.e. the state is not limited to %signatures.  You also have to reset
+$author inside process(), and probably a dozen other variables.
+And make sure that future changes don't forget resetting all newly
+introduced variables.
 
-The sleep flag bit decides the mode for BUCK_MODE_MANUAL case, simplify
-the logic as the result is the same.
+Hence I settled for the solution using formail.
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Link: https://lore.kernel.org/r/20191007115009.25672-2-axel.lin@ingics.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/regulator/da9062-regulator.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+Gr{oetje,eeting}s,
 
-diff --git a/drivers/regulator/da9062-regulator.c b/drivers/regulator/da9062-regulator.c
-index 9bb895006455..4b24518f75b5 100644
---- a/drivers/regulator/da9062-regulator.c
-+++ b/drivers/regulator/da9062-regulator.c
-@@ -136,7 +136,7 @@ static int da9062_buck_set_mode(struct regulator_dev *rdev, unsigned mode)
- static unsigned da9062_buck_get_mode(struct regulator_dev *rdev)
- {
- 	struct da9062_regulator *regl = rdev_get_drvdata(rdev);
--	unsigned int val, mode = 0;
-+	unsigned int val;
- 	int ret;
- 
- 	ret = regmap_field_read(regl->mode, &val);
-@@ -146,7 +146,6 @@ static unsigned da9062_buck_get_mode(struct regulator_dev *rdev)
- 	switch (val) {
- 	default:
- 	case BUCK_MODE_MANUAL:
--		mode = REGULATOR_MODE_FAST | REGULATOR_MODE_STANDBY;
- 		/* Sleep flag bit decides the mode */
- 		break;
- 	case BUCK_MODE_SLEEP:
-@@ -162,11 +161,9 @@ static unsigned da9062_buck_get_mode(struct regulator_dev *rdev)
- 		return 0;
- 
- 	if (val)
--		mode &= REGULATOR_MODE_STANDBY;
-+		return REGULATOR_MODE_STANDBY;
- 	else
--		mode &= REGULATOR_MODE_NORMAL | REGULATOR_MODE_FAST;
--
--	return mode;
-+		return REGULATOR_MODE_FAST;
- }
- 
- /*
+                        Geert
+
 -- 
-2.20.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
