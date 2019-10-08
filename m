@@ -2,116 +2,181 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FA1C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F82C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13D75206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:33:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9DFF206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:33:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728828AbfJHQdS (ORCPT
+        id S1729025AbfJHQdW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 12:33:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35338 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725966AbfJHQdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 12:33:18 -0400
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D066D121D
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Oct 2019 16:33:17 +0000 (UTC)
-Received: by mail-qt1-f199.google.com with SMTP id y10so19604188qti.1
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 09:33:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0emuj7ckCeOi2ShbRboaosDgyEFD8QY/GtdLIcv15Yo=;
-        b=qxwDUnlr/FrV2/nMRc50mO3Js9t7Ow81WtrjO9oFlZLh5LARiakcToDabWYj5EltU5
-         1bEI9pxBfBjd+Mf32NOyNGFMCGjK+/DagdjOrtmMNOn/vUf+FsQUad97zq4TW3feh6ft
-         SsZoAblsweZuSmsMnQcqmL24tQrKzJu59qr0bimQvdiHjN/+7U+SFd2fDi5f6X/GzoQq
-         PGyqciRgKLvym6fDFG4re3JVmoY9eZAom2Ul57hVnf2BvoYRCg+EWWHHJ8GQ7KTEriGM
-         bjTWZHDf6KL7rRByyk8DJto/1RuH8swNgJV8dvhiwnp66AjL2GVbW+0vhGRWqVaUSBdh
-         12Zg==
-X-Gm-Message-State: APjAAAXTn2dUk60D2fYlNHNnrfZSvsXer7OWcpX/E5AmhFKTT2s+X0Z2
-        lRCIZ3v/L9d7kzHGnddjP1o/sCC97UzY/LGT1zBXQSDN2BNzH26ojZ5EJeeaWROV5xr/mVwqugq
-        qWFyZBL9HtJaSlgPxu/JIdjj+
-X-Received: by 2002:ac8:2966:: with SMTP id z35mr37722115qtz.348.1570552397040;
-        Tue, 08 Oct 2019 09:33:17 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqygwcCLbNfX37PFFgvJBMHiAJ+4DIe1+sjK4nzF87cpY0peuIfCoM/lAQubKQGhuVDDY9RmBw==
-X-Received: by 2002:ac8:2966:: with SMTP id z35mr37722061qtz.348.1570552396613;
-        Tue, 08 Oct 2019 09:33:16 -0700 (PDT)
-Received: from [192.168.1.157] (pool-96-235-39-235.pitbpa.fios.verizon.net. [96.235.39.235])
-        by smtp.gmail.com with ESMTPSA id n192sm8999408qke.9.2019.10.08.09.33.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Oct 2019 09:33:15 -0700 (PDT)
-Subject: Re: mount on tmpfs failing to parse context option
-To:     Al Viro <viro@zeniv.linux.org.uk>, Hugh Dickins <hughd@google.com>
-Cc:     David Howells <dhowells@redhat.com>, Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org
-References: <d5b67332-57b7-c19a-0462-f84d07ef1a16@redhat.com>
- <d7f83334-d731-b892-ee49-1065d64a4887@redhat.com>
- <alpine.LSU.2.11.1910071655060.4431@eggly.anvils>
- <20191008012622.GP26530@ZenIV.linux.org.uk>
-From:   Laura Abbott <labbott@redhat.com>
-Message-ID: <9349bbbe-31fe-2b0a-001d-2e22ee20c12f@redhat.com>
-Date:   Tue, 8 Oct 2019 12:33:15 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Tue, 8 Oct 2019 12:33:22 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:48474 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728561AbfJHQdV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 12:33:21 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id C352228FC0D
+Subject: Re: [PATCH] pwm: cros-ec: Let cros_ec_pwm_get_state() return the last
+ applied state
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     linux-kernel@vger.kernel.org, thierry.reding@gmail.com,
+        heiko@sntech.de, dianders@chromium.org, mka@chromium.org,
+        groeck@chromium.org, kernel@collabora.com, bleung@chromium.org,
+        linux-pwm@vger.kernel.org
+References: <20191008105417.16132-1-enric.balletbo@collabora.com>
+ <20191008143432.pbhcqamd6f4qwbqn@pengutronix.de>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <4f009344-242e-19a7-6872-2c55df086044@collabora.com>
+Date:   Tue, 8 Oct 2019 18:33:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191008012622.GP26530@ZenIV.linux.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191008143432.pbhcqamd6f4qwbqn@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/7/19 9:26 PM, Al Viro wrote:
-> On Mon, Oct 07, 2019 at 05:50:31PM -0700, Hugh Dickins wrote:
+Hi Uwe,
+
+Thanks for the quick reply.
+
+On 8/10/19 16:34, Uwe Kleine-König wrote:
+> Hello Enric,
 > 
-> [sorry for being MIA - had been sick through the last week, just digging
-> myself from under piles of mail; my apologies]
+> On Tue, Oct 08, 2019 at 12:54:17PM +0200, Enric Balletbo i Serra wrote:
+>> @@ -117,17 +122,28 @@ static void cros_ec_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+>>  	struct cros_ec_pwm_device *ec_pwm = pwm_to_cros_ec_pwm(chip);
+>>  	int ret;
+>>  
+>> -	ret = cros_ec_pwm_get_duty(ec_pwm->ec, pwm->hwpwm);
+>> -	if (ret < 0) {
+>> -		dev_err(chip->dev, "error getting initial duty: %d\n", ret);
+>> -		return;
+>> +	/*
+>> +	 * As there is no way for this hardware to separate the concept of
+>> +	 * duty cycle and enabled, but the PWM API does, let return the last
+>> +	 * applied state when the PWM is disabled and only return the real
+>> +	 * hardware value when the PWM is enabled. Otherwise, a user of this
+>> +	 * driver, can get confused because won't be able to program a duty
+>> +	 * cycle while the PWM is disabled.
+>> +	 */
+>> +	state->enabled = ec_pwm->state.enabled;
 > 
->> (tmpfs, very tiresomely, supports a NUMA "mpol" mount option which can
->> have commas in it e.g "mpol=bind:0,2": which makes all its comma parsing
->> awkward.  I assume that where the new mount API commits bend over to
->> accommodate that peculiarity, they end up mishandling the comma in
->> the context string above.)
+>> +	if (state->enabled) {
 > 
-> 	Dumber than that, I'm afraid.  mpol is the reason for having
-> ->parse_monolithic() in the first place, all right, but the problem is
-> simply the lack of security_sb_eat_lsm_opts() call in it.
+> As part of registration of the pwm .get_state is called. In this case
+> .apply wasn't called before and so state->enabled is probably 0. So this
+> breaks reporting the initial state ...
 > 
-> 	Could you check if the following fixes that one?
+>> +		ret = cros_ec_pwm_get_duty(ec_pwm->ec, pwm->hwpwm);
+>> +		if (ret < 0) {
+>> +			dev_err(chip->dev, "error getting initial duty: %d\n",
+>> +				ret);
+>> +			return;
+>> +		}
+>> +		state->duty_cycle = ret;
+>> +	} else {
+>> +		state->duty_cycle = ec_pwm->state.duty_cycle;
+>>  	}
+>>  
+>> -	state->enabled = (ret > 0);
+>>  	state->period = EC_PWM_MAX_DUTY;
+>> -
+>> -	/* Note that "disabled" and "duty cycle == 0" are treated the same */
+>> -	state->duty_cycle = ret;
 > 
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index 0f7fd4a85db6..8dcc8d04cbaf 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -3482,6 +3482,12 @@ static int shmem_parse_options(struct fs_context *fc, void *data)
->   {
->   	char *options = data;
->   
-> +	if (options) {
-> +		int err = security_sb_eat_lsm_opts(options, &fc->security);
-> +		if (err)
-> +			return err;
-> +	}
-> +
->   	while (options != NULL) {
->   		char *this_char = options;
->   		for (;;) {
+> A few thoughts to your approach here ...:
+> 
+>  - Would it make sense to only store duty_cycle and enabled in the
+>    driver struct?
 > 
 
-Yes the reporter says that works.
+Yes, in fact, my first approach (that I didn't send) was only storing enabled
+and duty cycle. For some reason I ended storing the full pwm_state struct, but I
+guess is not really needed.
+
+
+>  - Which driver is the consumer of your pwm? If I understand correctly
+>    the following sequence is the bad one:
+> 
+
+The consumer is the pwm_bl driver. Actually I'n trying to identify other consumers.
+
+> 	state.period = P;
+> 	state.duty_cycle = D;
+> 	state.enabled = 0;
+>    	pwm_apply_state(pwm, &state);
+> 
+> 	...
+> 
+> 	pwm_get_state(pwm, &state);
+> 	state.enabled = 1;
+>    	pwm_apply_state(pwm, &state);
+> 
+
+Yes that's the sequence.
+
+>    Before my patch there was an implicit promise in the PWM framework
+>    that the last pwm_apply_state has .duty_cycle = D (and .period = P).
+>    Is this worthwile, or should we instead declare this as
+>    non-guaranteed and fix the caller?
+> 
+
+pwm_bl is compliant with this, the problem in the pwm-cros-ec driver is when you
+set the duty_cycle but enable is 0.
+
+>  - If this is a more or less common property that hardware doesn't know
+>    the concept of "disabled" maybe it would make sense to drop this from
+>    the PWM framework, too. (This is a question that I discussed some
+>    time ago already with Thierry, but without an result. The key
+>    question is: What is the difference between "disabled" and
+>    "duty_cycle = 0" in general and does any consumer care about it.)
+> 
+
+Good question, I don't really know all consumer requirements, but AFAIK, usually
+when you want to program duty_cycle to 0 you also want to disable the PWM. At
+least for the backlight case doesn't make sense program first the duty_cycle and
+then enable the PWM, is implicit, if duty_cycle is 0 the PWM is disabled, if
+duty_cycle > 0 the PWM is enabled.
+
+>  - A softer variant of the above: Should pwm_get_state() anticipate that
+>    with .enabled = 0 the duty_cycle (and maybe also period) is
+>    unreliable and cache that for callers?
+> 
+
+Sorry, when you say pwm_get_state(), you mean the core call or the lowlevel
+driver call?
+
+> Unrelated to the patch in question I noticed that the cros-ec-pwm driver
+> doesn't handle polarity. We need
+> 
+> 	state->polarity = PWM_POLARITY_NORMAL;
+> 
+> in cros_ec_pwm_get_state() and
+> 
+> 	if (state->polarity != PWM_POLARITY_NORMAL)
+> 		return -ERANGE;
+> 
+> in cros_ec_pwm_apply(). (Not sure -ERANGE is the right value, I think
+> there is no global rule in force that tells the right value though.)
+> 
+
+Nice catch, thanks, I'll send a patch to fix this.
 
 Thanks,
-Laura
+ Enric
+
+> Best regards
+> Uwe
+> 
