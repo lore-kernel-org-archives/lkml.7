@@ -2,192 +2,219 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DDB3C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0985DC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C678206C2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE11F20679
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:49:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fiKEYopP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730668AbfJHLsi (ORCPT
+        id S1730705AbfJHLtp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 07:48:38 -0400
-Received: from foss.arm.com ([217.140.110.172]:34512 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730316AbfJHLsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 07:48:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4E0A315BE;
-        Tue,  8 Oct 2019 04:48:37 -0700 (PDT)
-Received: from [10.162.40.139] (p8cg001049571a15.blr.arm.com [10.162.40.139])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5087D3F703;
-        Tue,  8 Oct 2019 04:48:30 -0700 (PDT)
-Subject: Re: [PATCH V8 2/2] arm64/mm: Enable memory hot remove
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
-        will@kernel.org, mark.rutland@arm.com, mhocko@suse.com,
-        david@redhat.com, cai@lca.pw, logang@deltatee.com,
-        cpandya@codeaurora.org, arunks@codeaurora.org,
-        dan.j.williams@intel.com, mgorman@techsingularity.net,
-        osalvador@suse.de, ard.biesheuvel@arm.com, steve.capper@arm.com,
-        broonie@kernel.org, valentin.schneider@arm.com,
-        Robin.Murphy@arm.com, steven.price@arm.com, suzuki.poulose@arm.com,
-        ira.weiny@intel.com
-References: <1569217425-23777-1-git-send-email-anshuman.khandual@arm.com>
- <1569217425-23777-3-git-send-email-anshuman.khandual@arm.com>
- <20191007141738.GA93112@E120351.arm.com>
- <6c277085-a430-eab4-3a4e-99fcfa170c10@arm.com>
- <20191008105520.GA5694@arrakis.emea.arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <a352b560-f7f2-489c-4439-5214afde9ae5@arm.com>
-Date:   Tue, 8 Oct 2019 17:18:53 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 8 Oct 2019 07:49:45 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:40668 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730317AbfJHLtn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 07:49:43 -0400
+Received: by mail-vs1-f68.google.com with SMTP id v10so11076510vsc.7
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 04:49:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gashf1ZAzd7Key4/NTgvhc64QRBwluBpWB6I3jCKxOs=;
+        b=fiKEYopPXYm6rnp9NjGkZ1KcxJYHZsxjBsMcc4hv/5OjHpyX6k5WIZm5dG9fad39cl
+         Xtf1v1I9/muc4vBfWDoHarMolIog9R7edzArMf/o2czUC+w50R5TMNqP3rzykMDI+E2t
+         jnjKDrirhh3DlISSyuneGArhMkA2RopW8++mtlSmrDMvtMFAzq9nh1UcDtrWzpFldPSp
+         21K/vLD74zrdAEg567mSi9sOZcJWbTBZK/S+CBLwbF26h+hAilx7tORo5YQ8GMwtXwpf
+         CfMcWqI2vDL/JiCrV2asdoqPcJOctLMLTRciRj0d9PNZtHT3HwjFlBCRWjkFcBA1eH1+
+         Qs5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gashf1ZAzd7Key4/NTgvhc64QRBwluBpWB6I3jCKxOs=;
+        b=F9lNVthrzXEplzvzsoAR1F70xi3o7k3dJL9eBtBOpfHeD3ottEGFetzBerJkztOYun
+         RzTMGn8Qt8AMes5CqBUtNF2BbsLYhvJnBugCwEJm8d1tvsEBJ3U5Eu/oyDQXdq5IPG0O
+         rVvZoSXg6jrGwGEkRFgADW1YcP9IQG9mFdfmlU5mpdnYGiF975PAWeC4F0RAolEbOUNK
+         j13pfSHqWUSuy9PuN0ttES4XJvfQYPTvWYEsSOpsSpH84HBTPIdA4KBaplgn4AiswJtx
+         PH3dqDincWNFKy3e0YuwjuIHlKTlJ9jq92T5mK4U+5y6exjESyoJybIcmqwAOcrZBA+d
+         sDoQ==
+X-Gm-Message-State: APjAAAWLJmfpR/0tyrlV/sosMTbFtdBR2IXy+GbYAI94lDd5LnOlLrYd
+        nyj5WzCvWwFJ8cP0W7uDwIOTPal7gAl6vrJvJ0kIOQ==
+X-Google-Smtp-Source: APXvYqx1S5aRGmUgzD93NIsrCsojrRb50hnb1dlLYGdT6Yjq5noW1W3AgzaTaEm3MSleilsKWehRv1NgQwfNWVYKRbE=
+X-Received: by 2002:a67:eb84:: with SMTP id e4mr17918307vso.165.1570535380644;
+ Tue, 08 Oct 2019 04:49:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191008105520.GA5694@arrakis.emea.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190722193939.125578-1-dianders@chromium.org>
+ <CAPDyKFoND5Kaam72zxO4wChO0z_1XL2KWX6oNjVcMUGA7G8RFg@mail.gmail.com>
+ <CAD=FV=VTLoqGbxFFMT8h72cfHCLupyvZpD75JB0N86+kFA+vzw@mail.gmail.com>
+ <CAPDyKFrPHguMrMvXN0yHbD9GmEg4m=J1Un=LcpE0PB7WqMRYSg@mail.gmail.com> <CAD=FV=W-qh2NnDc-C1_Tki3=D7vzNGG2PgnZjCjdLU9gL68AxA@mail.gmail.com>
+In-Reply-To: <CAD=FV=W-qh2NnDc-C1_Tki3=D7vzNGG2PgnZjCjdLU9gL68AxA@mail.gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 8 Oct 2019 13:49:04 +0200
+Message-ID: <CAPDyKFoXh9dzunsac9M43gHky1HjWvEBXXGp5Mj=0g3APM36aw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] mmc: core: Fix Marvell WiFi reset by adding SDIO
+ API to replug card
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ganapathi Bhat <gbhat@marvell.com>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Andreas Fenkart <afenkart@gmail.com>,
+        Brian Norris <briannorris@chromium.org>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        netdev <netdev@vger.kernel.org>,
+        Avri Altman <avri.altman@wdc.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 8 Oct 2019 at 01:39, Doug Anderson <dianders@chromium.org> wrote:
+>
+> Hi,
+>
+> On Mon, Sep 16, 2019 at 2:25 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> >
+> > On Wed, 11 Sep 2019 at 23:26, Doug Anderson <dianders@chromium.org> wrote:
+> > >
+> > > Hi,
+> > >
+> > > On Thu, Jul 25, 2019 at 6:28 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> > > >
+> > > > On Mon, 22 Jul 2019 at 21:41, Douglas Anderson <dianders@chromium.org> wrote:
+> > > > >
+> > > > > As talked about in the thread at:
+> > > > >
+> > > > > http://lkml.kernel.org/r/CAD=FV=X7P2F1k_zwHc0mbtfk55-rucTz_GoDH=PL6zWqKYcpuw@mail.gmail.com
+> > > > >
+> > > > > ...when the Marvell WiFi card tries to reset itself it kills
+> > > > > Bluetooth.  It was observed that we could re-init the card properly by
+> > > > > unbinding / rebinding the host controller.  It was also observed that
+> > > > > in the downstream Chrome OS codebase the solution used was
+> > > > > mmc_remove_host() / mmc_add_host(), which is similar to the solution
+> > > > > in this series.
+> > > > >
+> > > > > So far I've only done testing of this series using the reset test
+> > > > > source that can be simulated via sysfs.  Specifically I ran this test:
+> > > > >
+> > > > > for i in $(seq 1000); do
+> > > > >   echo "LOOP $i --------"
+> > > > >   echo 1 > /sys/kernel/debug/mwifiex/mlan0/reset
+> > > > >
+> > > > >   while true; do
+> > > > >     if ! ping -w15 -c1 "${GW}" >/dev/null 2>&1; then
+> > > > >       fail=$(( fail + 1 ))
+> > > > >       echo "Fail WiFi ${fail}"
+> > > > >       if [[ ${fail} == 3 ]]; then
+> > > > >         exit 1
+> > > > >       fi
+> > > > >     else
+> > > > >       fail=0
+> > > > >       break
+> > > > >     fi
+> > > > >   done
+> > > > >
+> > > > >   hciconfig hci0 down
+> > > > >   sleep 1
+> > > > >   if ! hciconfig hci0 up; then
+> > > > >     echo "Fail BT"
+> > > > >     exit 1
+> > > > >   fi
+> > > > > done
+> > > > >
+> > > > > I ran this several times and got several hundred iterations each
+> > > > > before a failure.  When I saw failures:
+> > > > >
+> > > > > * Once I saw a "Fail BT"; manually resetting the card again fixed it.
+> > > > >   I didn't give it time to see if it would have detected this
+> > > > >   automatically.
+> > > > > * Once I saw the ping fail because (for some reason) my device only
+> > > > >   got an IPv6 address from my router and the IPv4 ping failed.  I
+> > > > >   changed my script to use 'ping6' to see if that would help.
+> > > > > * Once I saw the ping fail because the higher level network stack
+> > > > >   ("shill" in my case) seemed to crash.  A few minutes later the
+> > > > >   system recovered itself automatically.  https://crbug.com/984593 if
+> > > > >   you want more details.
+> > > > > * Sometimes while I was testing I saw "Fail WiFi 1" indicating a
+> > > > >   transitory failure.  Usually this was an association failure, but in
+> > > > >   one case I saw the device do "Firmware wakeup failed" after I
+> > > > >   triggered the reset.  This caused the driver to trigger a re-reset
+> > > > >   of itself which eventually recovered things.  This was good because
+> > > > >   it was an actual test of the normal reset flow (not the one
+> > > > >   triggered via sysfs).
+> > > > >
+> > > > > Changes in v2:
+> > > > > - s/routnine/routine (Brian Norris, Matthias Kaehlcke).
+> > > > > - s/contining/containing (Matthias Kaehlcke).
+> > > > > - Add Matthias Reviewed-by tag.
+> > > > > - Removed clear_bit() calls and old comment (Brian Norris).
+> > > > > - Explicit CC of Andreas Fenkart.
+> > > > > - Explicit CC of Brian Norris.
+> > > > > - Add "Fixes" pointing at the commit Brian talked about.
+> > > > > - Add Brian's Reviewed-by tag.
+> > > > >
+> > > > > Douglas Anderson (2):
+> > > > >   mmc: core: Add sdio_trigger_replug() API
+> > > > >   mwifiex: Make use of the new sdio_trigger_replug() API to reset
+> > > > >
+> > > > >  drivers/mmc/core/core.c                     | 28 +++++++++++++++++++--
+> > > > >  drivers/mmc/core/sdio_io.c                  | 20 +++++++++++++++
+> > > > >  drivers/net/wireless/marvell/mwifiex/sdio.c | 16 +-----------
+> > > > >  include/linux/mmc/host.h                    | 15 ++++++++++-
+> > > > >  include/linux/mmc/sdio_func.h               |  2 ++
+> > > > >  5 files changed, 63 insertions(+), 18 deletions(-)
+> > > > >
+> > > >
+> > > > Doug, thanks for sending this!
+> > > >
+> > > > As you know, I have been working on additional changes for SDIO
+> > > > suspend/resume (still WIP and not ready for sharing) and this series
+> > > > is related.
+> > > >
+> > > > The thing is, that even during system suspend/resume, synchronizations
+> > > > are needed between the different layers (mmc host, mmc core and
+> > > > sdio-funcs), which is common to the problem you want to solve.
+> > > >
+> > > > That said, I need to scratch my head a bit more before I can provide
+> > > > you some feedback on $subject series. Moreover, it's vacation period
+> > > > at my side so things are moving a bit slower. Please be patient.
+> > >
+> > > I had kinda forgotten about this series after we landed it locally in
+> > > Chrome OS, but I realized that it never got resolved upstream.  Any
+> > > chance your head has been sufficiently scratched and you're now happy
+> > > with $subject series?  ;-)
+> >
+> > It's still on my TODO list. Apologize for the delay, but I still need
+> > more time to look into it, possibly later this week.
+> >
+> > In any case, let's make sure we get this problem resolved for v5.5.
+>
+> Hi Ulf.  It's your friendly pest, Doug, here to ask how things are going.  :-P
 
+:-)
 
-On 10/08/2019 04:25 PM, Catalin Marinas wrote:
-> On Tue, Oct 08, 2019 at 10:06:26AM +0530, Anshuman Khandual wrote:
->> On 10/07/2019 07:47 PM, Catalin Marinas wrote:
->>> On Mon, Sep 23, 2019 at 11:13:45AM +0530, Anshuman Khandual wrote:
->>>> The arch code for hot-remove must tear down portions of the linear map and
->>>> vmemmap corresponding to memory being removed. In both cases the page
->>>> tables mapping these regions must be freed, and when sparse vmemmap is in
->>>> use the memory backing the vmemmap must also be freed.
->>>>
->>>> This patch adds unmap_hotplug_range() and free_empty_tables() helpers which
->>>> can be used to tear down either region and calls it from vmemmap_free() and
->>>> ___remove_pgd_mapping(). The sparse_vmap argument determines whether the
->>>> backing memory will be freed.
->>>
->>> Can you change the 'sparse_vmap' name to something more meaningful which
->>> would suggest freeing of the backing memory?
->>
->> free_mapped_mem or free_backed_mem ? Even shorter forms like free_mapped or
->> free_backed might do as well. Do you have a particular preference here ? But
->> yes, sparse_vmap has been very much specific to vmemmap for these functions
->> which are now very generic in nature.
-> 
-> free_mapped would do.
+The series on the top of my "things to review" list. I will definitely
+provide you with some feedback then next days or so.
 
-Sure.
+Again, sorry for the delay!
 
-> 
->>>> +static void unmap_hotplug_pte_range(pmd_t *pmdp, unsigned long addr,
->>>> +				    unsigned long end, bool sparse_vmap)
->>>> +{
->>>> +	struct page *page;
->>>> +	pte_t *ptep, pte;
->>>> +
->>>> +	do {
->>>> +		ptep = pte_offset_kernel(pmdp, addr);
->>>> +		pte = READ_ONCE(*ptep);
->>>> +		if (pte_none(pte))
->>>> +			continue;
->>>> +
->>>> +		WARN_ON(!pte_present(pte));
->>>> +		page = sparse_vmap ? pte_page(pte) : NULL;
->>>> +		pte_clear(&init_mm, addr, ptep);
->>>> +		flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
->>>> +		if (sparse_vmap)
->>>> +			free_hotplug_page_range(page, PAGE_SIZE);
->>>
->>> You could only set 'page' if sparse_vmap (or even drop 'page' entirely).
->>
->> I am afraid 'page' is being used to hold pte_page(pte) extraction which
->> needs to be freed (sparse_vmap) as we are going to clear the ptep entry
->> in the next statement and lose access to it for good.
-> 
-> You clear *ptep, not pte.
-
-Ahh, missed that. We have already captured the contents with READ_ONCE().
-
-> 
->> We will need some
->> where to hold onto pte_page(pte) across pte_clear() as we cannot free it
->> before clearing it's entry and flushing the TLB. Hence wondering how the
->> 'page' can be completely dropped.
->>
->>> The compiler is probably smart enough to optimise it but using a
->>> pointless ternary operator just makes the code harder to follow.
->>
->> Not sure I got this but are you suggesting for an 'if' statement here
->>
->> if (sparse_vmap)
->> 	page = pte_page(pte);
->>
->> instead of the current assignment ?
->>
->> page = sparse_vmap ? pte_page(pte) : NULL;
-> 
-> I suggest:
-> 
-> 	if (sparse_vmap)
-> 		free_hotplug_pgtable_page(pte_page(pte), PAGE_SIZE);
-
-Sure, will do.
-
-> 
->>>> +	} while (addr += PAGE_SIZE, addr < end);
->>>> +}
->>> [...]
->>>> +static void free_empty_pte_table(pmd_t *pmdp, unsigned long addr,
->>>> +				 unsigned long end)
->>>> +{
->>>> +	pte_t *ptep, pte;
->>>> +
->>>> +	do {
->>>> +		ptep = pte_offset_kernel(pmdp, addr);
->>>> +		pte = READ_ONCE(*ptep);
->>>> +		WARN_ON(!pte_none(pte));
->>>> +	} while (addr += PAGE_SIZE, addr < end);
->>>> +}
->>>> +
->>>> +static void free_empty_pmd_table(pud_t *pudp, unsigned long addr,
->>>> +				 unsigned long end, unsigned long floor,
->>>> +				 unsigned long ceiling)
->>>> +{
->>>> +	unsigned long next;
->>>> +	pmd_t *pmdp, pmd;
->>>> +
->>>> +	do {
->>>> +		next = pmd_addr_end(addr, end);
->>>> +		pmdp = pmd_offset(pudp, addr);
->>>> +		pmd = READ_ONCE(*pmdp);
->>>> +		if (pmd_none(pmd))
->>>> +			continue;
->>>> +
->>>> +		WARN_ON(!pmd_present(pmd) || !pmd_table(pmd) || pmd_sect(pmd));
->>>> +		free_empty_pte_table(pmdp, addr, next);
->>>> +		free_pte_table(pmdp, addr, next, floor, ceiling);
->>>
->>> Do we need two closely named functions here? Can you not collapse
->>> free_empty_pud_table() and free_pte_table() into a single one? The same
->>> comment for the pmd/pud variants. I just find this confusing.
->>
->> The two functions could be collapsed into a single one. But just wanted to
->> keep free_pxx_table() part which checks floor/ceiling alignment, non-zero
->> entries clear off the actual page table walking.
-> 
-> With the pmd variant, they both take the floor/ceiling argument while
-> the free_empty_pte_table() doesn't even free anything. So not entirely
-> consistent.> 
-> Can you not just copy the free_pgd_range() functions but instead of
-> p*d_free_tlb() just do the TLB invalidation followed by page freeing?
-> That seems to be an easier pattern to follow.
-> 
-
-Sure, will follow that pattern.
+Kind regards
+Uffe
