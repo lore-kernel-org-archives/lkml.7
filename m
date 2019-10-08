@@ -2,166 +2,178 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF693ECE596
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0583C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C294320673
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:55:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6B7621871
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:55:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730502AbfJHKzS (ORCPT
+        id S1730641AbfJHKz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 06:55:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37758 "EHLO mx1.redhat.com"
+        Tue, 8 Oct 2019 06:55:26 -0400
+Received: from foss.arm.com ([217.140.110.172]:33328 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730026AbfJHKzS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 06:55:18 -0400
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 49653806D2
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Oct 2019 10:55:17 +0000 (UTC)
-Received: by mail-wm1-f71.google.com with SMTP id 190so1210471wme.4
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 03:55:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Jr4VyvH8+nrlZUaxZqpcfLSaXw2hE019wUytfSWb3rI=;
-        b=Y6v0G8gpPG7ifWWjJhd1vLpzCr4pgqSy35v14Mq50NGG9CFPavipeEQZOeGcNAdCcq
-         w4sntmqILcyTIsf0ie9smEtyU96Imni2/AWf7lzgnK70toVubdqq6Xf63LHaLuZZBYe6
-         WhhCpnITuhTc8owzA295VLNflrXaufZaxoW8PQ0KiOMecC3jSkddXgg4kFNHb9FV6D+m
-         1zBkHRzRitLcik6pkFrY/IG1Qu9EAoa2dk1MMykn2liZtSWLx06q6YusLxCncFG1eVRo
-         pkIWExRBwfZiKd9rACgCihp4FnzACLnHkk7HQo9g4XIJ3yoTKXbJg9umuzfcHtOpZNCh
-         oHXQ==
-X-Gm-Message-State: APjAAAV5hKLQHhyxjQEHiY4bwkAd7CkwjR2zNOTvXjrH8YcfLQCi6IoH
-        8EjNSRJ/2mlEDhE/YLXygAOH/NZyV+66Y3hDAunrzeXzS3lAUI2zKMZtz1gW0auoXbmlwfze2W9
-        iRr/KQsygapUbzSscmXnhUJfy
-X-Received: by 2002:a05:600c:2107:: with SMTP id u7mr3475176wml.86.1570532115642;
-        Tue, 08 Oct 2019 03:55:15 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyGrNSa6gwRjEcpPPQ0ut0maTS6ToIdDTt4FYqN4se+LW3SVXdX7p8JCpIZiHgUMmIRnNeuGQ==
-X-Received: by 2002:a05:600c:2107:: with SMTP id u7mr3475154wml.86.1570532115396;
-        Tue, 08 Oct 2019 03:55:15 -0700 (PDT)
-Received: from minerva.home ([90.168.169.92])
-        by smtp.gmail.com with ESMTPSA id c132sm3877095wme.27.2019.10.08.03.55.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2019 03:55:14 -0700 (PDT)
-From:   Javier Martinez Canillas <javierm@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ivan Hu <ivan.hu@canonical.com>, Laszlo Ersek <lersek@redhat.com>,
-        linux-efi@vger.kernel.org, Laura Abbott <labbott@redhat.com>,
-        Josh Boyer <jwboyer@redhat.com>,
-        Peter Jones <pjones@redhat.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Javier Martinez Canillas <javierm@redhat.com>,
-        Janne Karhunen <janne.karhunen@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Howells <dhowells@redhat.com>,
-        linux-security-module@vger.kernel.org,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Micah Morton <mortonm@chromium.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        James Morris <jmorris@namei.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Subject: [PATCH v2] efi/efi_test: lock down /dev/efi_test and require CAP_SYS_ADMIN
-Date:   Tue,  8 Oct 2019 12:55:10 +0200
-Message-Id: <20191008105510.6975-1-javierm@redhat.com>
-X-Mailer: git-send-email 2.21.0
+        id S1730026AbfJHKz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 06:55:26 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B86A615BE;
+        Tue,  8 Oct 2019 03:55:25 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CE33A3F6C4;
+        Tue,  8 Oct 2019 03:55:22 -0700 (PDT)
+Date:   Tue, 8 Oct 2019 11:55:20 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
+        will@kernel.org, mark.rutland@arm.com, mhocko@suse.com,
+        david@redhat.com, cai@lca.pw, logang@deltatee.com,
+        cpandya@codeaurora.org, arunks@codeaurora.org,
+        dan.j.williams@intel.com, mgorman@techsingularity.net,
+        osalvador@suse.de, ard.biesheuvel@arm.com, steve.capper@arm.com,
+        broonie@kernel.org, valentin.schneider@arm.com,
+        Robin.Murphy@arm.com, steven.price@arm.com, suzuki.poulose@arm.com,
+        ira.weiny@intel.com
+Subject: Re: [PATCH V8 2/2] arm64/mm: Enable memory hot remove
+Message-ID: <20191008105520.GA5694@arrakis.emea.arm.com>
+References: <1569217425-23777-1-git-send-email-anshuman.khandual@arm.com>
+ <1569217425-23777-3-git-send-email-anshuman.khandual@arm.com>
+ <20191007141738.GA93112@E120351.arm.com>
+ <6c277085-a430-eab4-3a4e-99fcfa170c10@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6c277085-a430-eab4-3a4e-99fcfa170c10@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver exposes EFI runtime services to user-space through an IOCTL
-interface, calling the EFI services function pointers directly without
-using the efivar API.
+On Tue, Oct 08, 2019 at 10:06:26AM +0530, Anshuman Khandual wrote:
+> On 10/07/2019 07:47 PM, Catalin Marinas wrote:
+> > On Mon, Sep 23, 2019 at 11:13:45AM +0530, Anshuman Khandual wrote:
+> >> The arch code for hot-remove must tear down portions of the linear map and
+> >> vmemmap corresponding to memory being removed. In both cases the page
+> >> tables mapping these regions must be freed, and when sparse vmemmap is in
+> >> use the memory backing the vmemmap must also be freed.
+> >>
+> >> This patch adds unmap_hotplug_range() and free_empty_tables() helpers which
+> >> can be used to tear down either region and calls it from vmemmap_free() and
+> >> ___remove_pgd_mapping(). The sparse_vmap argument determines whether the
+> >> backing memory will be freed.
+> > 
+> > Can you change the 'sparse_vmap' name to something more meaningful which
+> > would suggest freeing of the backing memory?
+> 
+> free_mapped_mem or free_backed_mem ? Even shorter forms like free_mapped or
+> free_backed might do as well. Do you have a particular preference here ? But
+> yes, sparse_vmap has been very much specific to vmemmap for these functions
+> which are now very generic in nature.
 
-Disallow access to the /dev/efi_test character device when the kernel is
-locked down to prevent arbitrary user-space to call EFI runtime services.
+free_mapped would do.
 
-Also require CAP_SYS_ADMIN to open the chardev to prevent unprivileged
-users to call the EFI runtime services, instead of just relying on the
-chardev file mode bits for this.
+> >> +static void unmap_hotplug_pte_range(pmd_t *pmdp, unsigned long addr,
+> >> +				    unsigned long end, bool sparse_vmap)
+> >> +{
+> >> +	struct page *page;
+> >> +	pte_t *ptep, pte;
+> >> +
+> >> +	do {
+> >> +		ptep = pte_offset_kernel(pmdp, addr);
+> >> +		pte = READ_ONCE(*ptep);
+> >> +		if (pte_none(pte))
+> >> +			continue;
+> >> +
+> >> +		WARN_ON(!pte_present(pte));
+> >> +		page = sparse_vmap ? pte_page(pte) : NULL;
+> >> +		pte_clear(&init_mm, addr, ptep);
+> >> +		flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
+> >> +		if (sparse_vmap)
+> >> +			free_hotplug_page_range(page, PAGE_SIZE);
+> > 
+> > You could only set 'page' if sparse_vmap (or even drop 'page' entirely).
+> 
+> I am afraid 'page' is being used to hold pte_page(pte) extraction which
+> needs to be freed (sparse_vmap) as we are going to clear the ptep entry
+> in the next statement and lose access to it for good.
 
-The main user of this driver is the fwts [0] tool that already checks if
-the effective user ID is 0 and fails otherwise. So this change shouldn't
-cause any regression to this tool.
+You clear *ptep, not pte.
 
-[0]: https://wiki.ubuntu.com/FirmwareTestSuite/Reference/uefivarinfo
+> We will need some
+> where to hold onto pte_page(pte) across pte_clear() as we cannot free it
+> before clearing it's entry and flushing the TLB. Hence wondering how the
+> 'page' can be completely dropped.
+> 
+> > The compiler is probably smart enough to optimise it but using a
+> > pointless ternary operator just makes the code harder to follow.
+> 
+> Not sure I got this but are you suggesting for an 'if' statement here
+> 
+> if (sparse_vmap)
+> 	page = pte_page(pte);
+> 
+> instead of the current assignment ?
+> 
+> page = sparse_vmap ? pte_page(pte) : NULL;
 
-Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
-Acked-by: Laszlo Ersek <lersek@redhat.com>
+I suggest:
 
----
+	if (sparse_vmap)
+		free_hotplug_pgtable_page(pte_page(pte), PAGE_SIZE);
 
-Changes in v2:
-- Also disable /dev/efi_test access when the kernel is locked down as
-  suggested by Matthew Garrett.
-- Add Acked-by tag from Laszlo Ersek.
+> >> +	} while (addr += PAGE_SIZE, addr < end);
+> >> +}
+> > [...]
+> >> +static void free_empty_pte_table(pmd_t *pmdp, unsigned long addr,
+> >> +				 unsigned long end)
+> >> +{
+> >> +	pte_t *ptep, pte;
+> >> +
+> >> +	do {
+> >> +		ptep = pte_offset_kernel(pmdp, addr);
+> >> +		pte = READ_ONCE(*ptep);
+> >> +		WARN_ON(!pte_none(pte));
+> >> +	} while (addr += PAGE_SIZE, addr < end);
+> >> +}
+> >> +
+> >> +static void free_empty_pmd_table(pud_t *pudp, unsigned long addr,
+> >> +				 unsigned long end, unsigned long floor,
+> >> +				 unsigned long ceiling)
+> >> +{
+> >> +	unsigned long next;
+> >> +	pmd_t *pmdp, pmd;
+> >> +
+> >> +	do {
+> >> +		next = pmd_addr_end(addr, end);
+> >> +		pmdp = pmd_offset(pudp, addr);
+> >> +		pmd = READ_ONCE(*pmdp);
+> >> +		if (pmd_none(pmd))
+> >> +			continue;
+> >> +
+> >> +		WARN_ON(!pmd_present(pmd) || !pmd_table(pmd) || pmd_sect(pmd));
+> >> +		free_empty_pte_table(pmdp, addr, next);
+> >> +		free_pte_table(pmdp, addr, next, floor, ceiling);
+> > 
+> > Do we need two closely named functions here? Can you not collapse
+> > free_empty_pud_table() and free_pte_table() into a single one? The same
+> > comment for the pmd/pud variants. I just find this confusing.
+> 
+> The two functions could be collapsed into a single one. But just wanted to
+> keep free_pxx_table() part which checks floor/ceiling alignment, non-zero
+> entries clear off the actual page table walking.
 
- drivers/firmware/efi/test/efi_test.c | 8 ++++++++
- include/linux/security.h             | 1 +
- security/lockdown/lockdown.c         | 1 +
- 3 files changed, 10 insertions(+)
+With the pmd variant, they both take the floor/ceiling argument while
+the free_empty_pte_table() doesn't even free anything. So not entirely
+consistent.
 
-diff --git a/drivers/firmware/efi/test/efi_test.c b/drivers/firmware/efi/test/efi_test.c
-index 877745c3aaf..7baf48c01e7 100644
---- a/drivers/firmware/efi/test/efi_test.c
-+++ b/drivers/firmware/efi/test/efi_test.c
-@@ -14,6 +14,7 @@
- #include <linux/init.h>
- #include <linux/proc_fs.h>
- #include <linux/efi.h>
-+#include <linux/security.h>
- #include <linux/slab.h>
- #include <linux/uaccess.h>
- 
-@@ -717,6 +718,13 @@ static long efi_test_ioctl(struct file *file, unsigned int cmd,
- 
- static int efi_test_open(struct inode *inode, struct file *file)
- {
-+	int ret = security_locked_down(LOCKDOWN_EFI_TEST);
-+
-+	if (ret)
-+		return ret;
-+
-+	if (!capable(CAP_SYS_ADMIN))
-+		return -EACCES;
- 	/*
- 	 * nothing special to do here
- 	 * We do accept multiple open files at the same time as we
-diff --git a/include/linux/security.h b/include/linux/security.h
-index a8d59d612d2..9df7547afc0 100644
---- a/include/linux/security.h
-+++ b/include/linux/security.h
-@@ -105,6 +105,7 @@ enum lockdown_reason {
- 	LOCKDOWN_NONE,
- 	LOCKDOWN_MODULE_SIGNATURE,
- 	LOCKDOWN_DEV_MEM,
-+	LOCKDOWN_EFI_TEST,
- 	LOCKDOWN_KEXEC,
- 	LOCKDOWN_HIBERNATION,
- 	LOCKDOWN_PCI_ACCESS,
-diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
-index 8a10b43daf7..40b790536de 100644
---- a/security/lockdown/lockdown.c
-+++ b/security/lockdown/lockdown.c
-@@ -20,6 +20,7 @@ static const char *const lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
- 	[LOCKDOWN_NONE] = "none",
- 	[LOCKDOWN_MODULE_SIGNATURE] = "unsigned module loading",
- 	[LOCKDOWN_DEV_MEM] = "/dev/mem,kmem,port",
-+	[LOCKDOWN_EFI_TEST] = "/dev/efi_test access",
- 	[LOCKDOWN_KEXEC] = "kexec of unsigned images",
- 	[LOCKDOWN_HIBERNATION] = "hibernation",
- 	[LOCKDOWN_PCI_ACCESS] = "direct PCI access",
+Can you not just copy the free_pgd_range() functions but instead of
+p*d_free_tlb() just do the TLB invalidation followed by page freeing?
+That seems to be an easier pattern to follow.
+
 -- 
-2.21.0
-
+Catalin
