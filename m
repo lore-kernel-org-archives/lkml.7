@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6167DC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA4CECE58C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C5872070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:45:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 389AD206B6
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:46:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727824AbfJHRpj (ORCPT
+        id S1728130AbfJHRqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 13:45:39 -0400
-Received: from mga14.intel.com ([192.55.52.115]:20436 "EHLO mga14.intel.com"
+        Tue, 8 Oct 2019 13:46:22 -0400
+Received: from mga18.intel.com ([134.134.136.126]:53079 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725939AbfJHRpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 13:45:38 -0400
+        id S1726066AbfJHRqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 13:46:21 -0400
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 10:45:38 -0700
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 10:46:20 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.67,272,1566889200"; 
-   d="scan'208";a="368487975"
+   d="scan'208";a="193442029"
 Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga005.jf.intel.com with ESMTP; 08 Oct 2019 10:45:37 -0700
-Date:   Tue, 8 Oct 2019 10:45:37 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 08 Oct 2019 10:46:20 -0700
+Date:   Tue, 8 Oct 2019 10:46:19 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Borislav Petkov <bp@alien8.de>
 Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
@@ -43,25 +43,29 @@ Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
         cedric.xing@intel.com
 Subject: Re: [PATCH v22 10/24] x86/sgx: Add sgx_einit() for wrapping
  ENCLS[EINIT]
-Message-ID: <20191008174537.GC14020@linux.intel.com>
+Message-ID: <20191008174619.GD14020@linux.intel.com>
 References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
  <20190903142655.21943-11-jarkko.sakkinen@linux.intel.com>
  <20191008173035.GK14765@zn.tnic>
+ <20191008174537.GC14020@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191008173035.GK14765@zn.tnic>
+In-Reply-To: <20191008174537.GC14020@linux.intel.com>
 User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 07:30:35PM +0200, Borislav Petkov wrote:
-> I was about to ask why isn't this export _GPL() but it goes away in a
-> later patch.
+On Tue, Oct 08, 2019 at 10:45:37AM -0700, Sean Christopherson wrote:
+> On Tue, Oct 08, 2019 at 07:30:35PM +0200, Borislav Petkov wrote:
+> > I was about to ask why isn't this export _GPL() but it goes away in a
+> > later patch.
+> 
+> Speaking of later patches, don't bother reviewing patches 19/24 or 20/20,
+> the vDSO function and selftest respectively.  I'm in the process of
+> reworking them for v23, reviewing them in their current state is likely a
+> waste of your time.
 
-Speaking of later patches, don't bother reviewing patches 19/24 or 20/20,
-the vDSO function and selftest respectively.  I'm in the process of
-reworking them for v23, reviewing them in their current state is likely a
-waste of your time.
+Gah, 20/24...
