@@ -2,172 +2,103 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF10C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C57C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 378482173B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:44:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEB98206B6
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:45:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="ndycrZXm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DW4NaB/A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730922AbfJHMoi (ORCPT
+        id S1730990AbfJHMpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 08:44:38 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:39271 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730316AbfJHMoi (ORCPT
+        Tue, 8 Oct 2019 08:45:01 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51380 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730888AbfJHMpA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 08:44:38 -0400
-Received: by mail-qk1-f194.google.com with SMTP id 4so16555102qki.6;
-        Tue, 08 Oct 2019 05:44:37 -0700 (PDT)
+        Tue, 8 Oct 2019 08:45:00 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 7so3006819wme.1;
+        Tue, 08 Oct 2019 05:44:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qsTHL7dnG8pTfXN3LiTylz/fXdfLYFshNaGXKMPCVSA=;
-        b=ndycrZXm5sWbkE8ubUEk9cHyMk62s58AO9SvQliIZdhmcGyVW6JB7R2Wp5Do1V2PaJ
-         /hd6EOGnUQEJsWwJ8mHEXm9+21fl7spIUcZt6cR1YZ96BjWJc49O0fzW7e+7a8uQWMmR
-         mmMplhG2HZ7tYZ5LXMunI5Uukp1MZNqsrrBiw=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9yDaroMsm4CI8Hh6QbGq4eORn4M7okAkDA4uXKpP/5g=;
+        b=DW4NaB/AIYOc2OYd1jDzN+WSSZhSWViSKulHRS296tJZThyC2l1ToOSmlK1uW+oYu+
+         0ej0xkLc2SbSjEGg+KCB1Y5tu6sxXBJAhSVEvRsERBorE1aut2R920zwPcKrSoCSlKpg
+         7AkeniV7nnEZ1WWw58IBhj6cH6H0paJE+5TgmbKIGoAjajSATP8QOSITJO5lYYD7HV1F
+         2oqwu0LvipExIo23f+6sM9+dO9/pBJuZKz34yVEUaoe13YqErUNoK3uRJ9bl1KnfCpPi
+         Qhdh/vBVO+xksZOme3XsSMWmQu7Bo3Z9/5ZyAjT12l5NCitMCSToLAKRrKgfBLO+K6RC
+         803g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qsTHL7dnG8pTfXN3LiTylz/fXdfLYFshNaGXKMPCVSA=;
-        b=HDVpAeKzrl0o30ruahzWKxCpJFY433/BQylhRUsQ7XfzhgDno01c8+d3hvw8IIZQEH
-         Gu/IcQ6eds17B+ni4q67lU2WKORHjB8UFJBRcQrc0Moi55XFtKHWg8L1DZr3mco/n/Nt
-         Py4ivGAS6f8a0BP/PocvYHW5n3Oi6mc/JrdLwXaDMD9JCYAZM5xrZQ6m7HN53fLAfgUR
-         Kek2bfOdd1DUnWtXwrmwcEE2sP03Jc8iXFyq2YtYLvnpmZEUVw3MVEzUI1ZIp4UuBiNJ
-         yOZwqeoaPz1gYY0V9vBmScoUFQ/n4zCq3H/Tr6Akwov3Z8a7GrQQJV5ZoKl8HwOvYKSz
-         gcfw==
-X-Gm-Message-State: APjAAAXZ3ktZvn6yUSpNaqnqqpcx9ujz7zAxOrrxUddgNEvV1XsQqHha
-        YnKJWtK5o/lsdFRxb8LoH06k0gkz9uv5iwSoWz4=
-X-Google-Smtp-Source: APXvYqxEAEDnOLwffSmG/Z2LwTVkYy576Ya72Q2Xui9eD1qyySpI9l4M3DUkH5opaUufU4sk4GAaGv+dFqEtKObKxJQ=
-X-Received: by 2002:a37:a44f:: with SMTP id n76mr7330825qke.414.1570538677073;
- Tue, 08 Oct 2019 05:44:37 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9yDaroMsm4CI8Hh6QbGq4eORn4M7okAkDA4uXKpP/5g=;
+        b=THszsfMIObJzxfsZwWgJv7Nn+V0pkcWYxFe/vR6Z3xUGzUMJNuzmDRlCVJZCdQFujZ
+         KvYqHjwrmHqAgCgEiBxZ1X2Rx9kZQ0SLGZ9mc3Un1WAWnQ7HWLieKnx+SG4jtJ4vDLw4
+         Q6hkmxxA0FGXE2wknN4BImONal+u/I2hj1MmtCZGLFPGi9f0gST+9anA4twPckGIx6/e
+         w+bd1413/jrgV4vsVRAODmWVj/Nt2t7gsm/e/TYugF/kluazOkZ/4esf5DJCL2HqmWgv
+         6jdv+05QOTVelXGROfMBqlod0dRmXo0tkOAXa4knrhEvip5gjn/r4mpTVI48rPcQab1K
+         0T3g==
+X-Gm-Message-State: APjAAAVlXC9/SBe0ewftkMNnzqV5O2JnIwxFl5T0lOId+yaKcVsejMec
+        YhWy21G3RXdJKbtCOf2jVYo=
+X-Google-Smtp-Source: APXvYqwRm31JnT+i75J3rRhce56e1FUUGA5IID0w6BfYAGlIL4Z/N/bHJo5SA9o/uiETU44rVvBaRw==
+X-Received: by 2002:a1c:c90e:: with SMTP id f14mr3613571wmb.5.1570538698456;
+        Tue, 08 Oct 2019 05:44:58 -0700 (PDT)
+Received: from andrea.guest.corp.microsoft.com ([2a01:110:8012:1010:c584:959a:923b:9ec])
+        by smtp.gmail.com with ESMTPSA id e3sm3416147wme.39.2019.10.08.05.44.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Oct 2019 05:44:58 -0700 (PDT)
+Date:   Tue, 8 Oct 2019 14:44:52 +0200
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>
+Subject: Re: [PATCH 1/2] Drivers: hv: vmbus: Introduce table of VMBus
+ protocol versions
+Message-ID: <20191008124452.GA12191@andrea.guest.corp.microsoft.com>
+References: <20191007163115.26197-1-parri.andrea@gmail.com>
+ <20191007163115.26197-2-parri.andrea@gmail.com>
+ <87eezo1nrr.fsf@vitty.brq.redhat.com>
+ <20191008124052.GA11245@andrea.guest.corp.microsoft.com>
 MIME-Version: 1.0
-References: <20191008115143.14149-1-andrew@aj.id.au> <20191008115143.14149-4-andrew@aj.id.au>
-In-Reply-To: <20191008115143.14149-4-andrew@aj.id.au>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Tue, 8 Oct 2019 12:44:25 +0000
-Message-ID: <CACPK8XfmtW9AY7QyBVkWJPvTQncV5o1DVkDwaPUa+ARVYZ4wJQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] net: ftgmac100: Ungate RCLK for RMII on ASPEED MACs
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     netdev@vger.kernel.org, "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191008124052.GA11245@andrea.guest.corp.microsoft.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 8 Oct 2019 at 11:50, Andrew Jeffery <andrew@aj.id.au> wrote:
->
-> The 50MHz RCLK has to be enabled before the RMII interface will function.
->
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> ---
->  drivers/net/ethernet/faraday/ftgmac100.c | 35 +++++++++++++++++++-----
->  1 file changed, 28 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/net/ethernet/faraday/ftgmac100.c b/drivers/net/ethernet/faraday/ftgmac100.c
-> index 9b7af94a40bb..9ff791fb0449 100644
-> --- a/drivers/net/ethernet/faraday/ftgmac100.c
-> +++ b/drivers/net/ethernet/faraday/ftgmac100.c
-> @@ -90,6 +90,9 @@ struct ftgmac100 {
->         struct mii_bus *mii_bus;
->         struct clk *clk;
->
-> +       /* 2600 RMII clock gate */
-> +       struct clk *rclk;
-> +
->         /* Link management */
->         int cur_speed;
->         int cur_duplex;
-> @@ -1718,12 +1721,14 @@ static void ftgmac100_ncsi_handler(struct ncsi_dev *nd)
->                    nd->link_up ? "up" : "down");
->  }
->
-> -static void ftgmac100_setup_clk(struct ftgmac100 *priv)
-> +static int ftgmac100_setup_clk(struct ftgmac100 *priv)
->  {
-> -       priv->clk = devm_clk_get(priv->dev, NULL);
-> -       if (IS_ERR(priv->clk))
-> -               return;
-> +       struct clk *clk;
->
-> +       clk = devm_clk_get(priv->dev, NULL /* MACCLK */);
-> +       if (IS_ERR(clk))
-> +               return PTR_ERR(clk);
-> +       priv->clk = clk;
->         clk_prepare_enable(priv->clk);
->
->         /* Aspeed specifies a 100MHz clock is required for up to
-> @@ -1732,6 +1737,14 @@ static void ftgmac100_setup_clk(struct ftgmac100 *priv)
->          */
->         clk_set_rate(priv->clk, priv->use_ncsi ? FTGMAC_25MHZ :
->                         FTGMAC_100MHZ);
-> +
-> +       /* RCLK is for RMII, typically used for NCSI. Optional because its not
-> +        * necessary if it's the 2400 MAC or the MAC is configured for RGMII
-> +        */
+> IIUC, you're suggesting that I do:
+> 
+> 	for (i = 0; i < ARRAY_SIZE(vmbus_versions); i++) {
+> 		version = vmbus_versions[i];
+> 
+> 		ret = vmbus_negotiate_version(msginfo, version);
+> 		if (ret == -ETIMEDOUT)
+> 			goto cleanup;
+> 
+> 		if (vmbus_connection.conn_state == CONNECTED)
+> 			break;
+> 	}
+> 
+> 	if (vmbus_connection.conn_state != CONNECTED)
+> 		break;
 
-Or for non-ASPEED users of this driver, assuming they exist.
+This "break" should have been "goto cleanup".  Sorry.
 
-Reviewed-by: Joel Stanley <joel@jms.id.au>
-
-
-> +       priv->rclk = devm_clk_get_optional(priv->dev, "RCLK");
-> +       clk_prepare_enable(priv->rclk);
-> +
-> +       return 0;
->  }
->
->  static int ftgmac100_probe(struct platform_device *pdev)
-> @@ -1853,8 +1866,11 @@ static int ftgmac100_probe(struct platform_device *pdev)
->                         goto err_setup_mdio;
->         }
->
-> -       if (priv->is_aspeed)
-> -               ftgmac100_setup_clk(priv);
-> +       if (priv->is_aspeed) {
-> +               err = ftgmac100_setup_clk(priv);
-> +               if (err)
-> +                       goto err_ncsi_dev;
-> +       }
->
->         /* Default ring sizes */
->         priv->rx_q_entries = priv->new_rx_q_entries = DEF_RX_QUEUE_ENTRIES;
-> @@ -1886,8 +1902,11 @@ static int ftgmac100_probe(struct platform_device *pdev)
->
->         return 0;
->
-> -err_ncsi_dev:
->  err_register_netdev:
-> +       if (priv->rclk)
-> +               clk_disable_unprepare(priv->rclk);
-> +       clk_disable_unprepare(priv->clk);
-> +err_ncsi_dev:
->         ftgmac100_destroy_mdio(netdev);
->  err_setup_mdio:
->         iounmap(priv->base);
-> @@ -1909,6 +1928,8 @@ static int ftgmac100_remove(struct platform_device *pdev)
->
->         unregister_netdev(netdev);
->
-> +       if (priv->rclk)
-> +               clk_disable_unprepare(priv->rclk);
->         clk_disable_unprepare(priv->clk);
->
->         /* There's a small chance the reset task will have been re-queued,
-> --
-> 2.20.1
->
+  Andrea
