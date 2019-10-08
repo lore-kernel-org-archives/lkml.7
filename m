@@ -2,121 +2,107 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B7F8C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E47DC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D90B7206C2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:05:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pGwpRHEf"
+	by mail.kernel.org (Postfix) with ESMTP id 6EFDC217D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:05:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbfJHRFI (ORCPT
+        id S1728753AbfJHRF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 13:05:08 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:42929 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725966AbfJHRFH (ORCPT
+        Tue, 8 Oct 2019 13:05:58 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:48721 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbfJHRF6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 13:05:07 -0400
-Received: by mail-lj1-f194.google.com with SMTP id y23so18353968lje.9;
-        Tue, 08 Oct 2019 10:05:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=gwJ1hZvta6EOZ00P9vyRDrTf5gBQEKDe/oC17yzs81Q=;
-        b=pGwpRHEfUWNjrxhIDtIjNvEBu2Xg4XNEAmN4gKj558qWm0ocdonn3sjLOrjCumKCwk
-         2C28TgTG4w/0VD+lFlaWbIa5rRWYd7E9BBBug6m3iJAtmxu6AccXl19ROT1cB2nnCZ6M
-         nTqQSoGaccJw5HQ5w8MAgd0wFwCTcJhS7bLgk9iXybxSLKYUFVzbizlYBaw/2b8pm4He
-         BpFiOIZjlgDJNykGgc7DmjSbDlzjdkmlOBBqztmYkq5lfXuZnssJ/8gRqXWjfN8MHrR+
-         Qc7ub7O28Z8YKbG1Kc00/xNywfMz9+IGN7C6VuDFzg46fIC5QIHcHPE+l8B6D8Yc18MK
-         uDTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gwJ1hZvta6EOZ00P9vyRDrTf5gBQEKDe/oC17yzs81Q=;
-        b=krubnlyaY4VPYVJGLzBwgJ47WA+1KpqDFtdZZ7ATd+UciTdX8IuYOmxkLI78OJ+evx
-         k+s0udv9Uq7aH4LfcWrYppGh7WzlDWACY1IudWskJUIfUt8leCoapuoznNcmWGaR8f58
-         V9lZTR3R3QcKZZMjkWueH4GDBIyV/oJ2Fhd+JLqZo5/Al2gJo3cMtiaDv91jhfonisWi
-         ufL+LVMBfKP6/WBMu+oNGovopzBJutvtdU1Zo8+elKVbKJdHAV3mT4JP++2hnwcx290y
-         esIq+RZM3RLPbRMODEKWzdr6IWpLtUh1jK1vPqBYq5fKspHkLfFTw5tgA6NtfBehohGs
-         MLXg==
-X-Gm-Message-State: APjAAAXtQ0WA5INh5jR3Q+wBJQchGlw8ye8C4j6qK1oP8R4ZGMK1yFln
-        rJZTNNrmUX3pcAjTQ3tVQeg=
-X-Google-Smtp-Source: APXvYqz6CUAzKvfhG2a98w6gEuvAEVF0JEVpIrH3fHBvreWgREV9BTl908nAnCfHWFA0q++rRP/oIw==
-X-Received: by 2002:a2e:5358:: with SMTP id t24mr23216696ljd.209.1570554305656;
-        Tue, 08 Oct 2019 10:05:05 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.34.231])
-        by smtp.googlemail.com with ESMTPSA id k13sm4361363ljc.96.2019.10.08.10.05.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Oct 2019 10:05:04 -0700 (PDT)
-Subject: Re: [PATCH] regulator: core: Skip balancing of the enabled regulators
- in regulator_enable()
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-samsung-soc@vger.kernel.org,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Kamil Konieczny <k.konieczny@samsung.com>
-References: <CGME20191008101720eucas1p2e0d1bca6e696848bf689067e05620679@eucas1p2.samsung.com>
- <20191008101709.13827-1-m.szyprowski@samsung.com>
- <20191008115025.GF4382@sirena.co.uk>
- <0e222fdd-4407-51ea-b75c-a62621cbe622@samsung.com>
- <20191008120611.GG4382@sirena.co.uk>
- <9268b455-ec66-97e1-909d-f964ac31c0ef@samsung.com>
- <20191008124736.GJ4382@sirena.co.uk>
- <86b9b4b5-cca5-9052-7c87-c5679dfffff4@samsung.com>
- <be8d3280-9855-ed18-b2ab-d7fb28d80b82@gmail.com>
- <20191008161535.GN4382@sirena.co.uk>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <4ad890b7-705e-94f9-2e61-1f3a60984c91@gmail.com>
-Date:   Tue, 8 Oct 2019 20:05:03 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 8 Oct 2019 13:05:58 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iHsvk-0005uy-Dv; Tue, 08 Oct 2019 19:05:48 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0EAA91C0325;
+        Tue,  8 Oct 2019 19:05:48 +0200 (CEST)
+Date:   Tue, 08 Oct 2019 17:05:47 -0000
+From:   "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/cpu: Add Comet Lake to the Intel CPU models header
+Cc:     Kan Liang <kan.liang@linux.intel.com>,
+        Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
+        ak@linux.intel.com, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "x86-ml" <x86@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <1570549810-25049-2-git-send-email-kan.liang@linux.intel.com>
+References: <1570549810-25049-2-git-send-email-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20191008161535.GN4382@sirena.co.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Message-ID: <157055434795.9978.2925265055909387833.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-08.10.2019 19:15, Mark Brown пишет:
-> On Tue, Oct 08, 2019 at 06:02:36PM +0300, Dmitry Osipenko wrote:
-> 
-> Please fix your mail client to word wrap within paragraphs at something
-> substantially less than 80 columns.  Doing this makes your messages much
-> easier to read and reply to.
+The following commit has been merged into the x86/urgent branch of tip:
 
-Indeed, thanks!
+Commit-ID:     8d7c6ac3b2371eb1cbc9925a88f4d10efff374de
+Gitweb:        https://git.kernel.org/tip/8d7c6ac3b2371eb1cbc9925a88f4d10efff374de
+Author:        Kan Liang <kan.liang@linux.intel.com>
+AuthorDate:    Tue, 08 Oct 2019 08:50:02 -07:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Tue, 08 Oct 2019 19:01:31 +02:00
 
->> That OPP patch caused the same problem for the NVIDIA Tegra20 CPUFreq
->> driver (in-progress) and I resolved it in the coupler's code [0].
->> Perhaps the generic coupler could do the same thing by assuming that
->> min_uV=current_uV until any consumer sets the voltage, i.e. if
->> regulator_check_consumers(min_uV=0) returns min_uV=0.
-> 
-> That sounds like it might just postpone the inevitable - if you set the
-> wrong voltage first it might decide to drop down some voltage that
-> wasn't expected.  There's a bit of a bootstrapping issue.  I think it
-> would be safer to just say that anything that is within spec won't get
-> changed any time we balance, we'd only change things if needed to bring
-> them back into spec.
+x86/cpu: Add Comet Lake to the Intel CPU models header
 
-Yes, the case of changing voltage before regulator is enabled seems
-won't work as expected.
+Comet Lake is the new 10th Gen Intel processor. Add two new CPU model
+numbers to the Intel family list.
 
-Maybe it won't hurt to disallow a non always-on regulators to be coupled
-until there will be a real user for that case.
+The CPU model numbers are not published in the SDM yet but they come
+from an authoritative internal source.
+
+ [ bp: Touch up commit message. ]
+
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Cc: ak@linux.intel.com
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/1570549810-25049-2-git-send-email-kan.liang@linux.intel.com
+---
+ arch/x86/include/asm/intel-family.h | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+index f046225..c606c0b 100644
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -83,6 +83,9 @@
+ #define INTEL_FAM6_TIGERLAKE_L		0x8C
+ #define INTEL_FAM6_TIGERLAKE		0x8D
+ 
++#define INTEL_FAM6_COMETLAKE		0xA5
++#define INTEL_FAM6_COMETLAKE_L		0xA6
++
+ /* "Small Core" Processors (Atom) */
+ 
+ #define INTEL_FAM6_ATOM_BONNELL		0x1C /* Diamondville, Pineview */
