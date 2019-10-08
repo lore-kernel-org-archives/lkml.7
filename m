@@ -2,124 +2,136 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C413C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F51C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:54:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E656205F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:54:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F664205F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:54:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VXbQXbEi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730248AbfJHIy1 (ORCPT
+        id S1730324AbfJHIye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 04:54:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56086 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728866AbfJHIy0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 04:54:26 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0979F18C4284;
-        Tue,  8 Oct 2019 08:54:26 +0000 (UTC)
-Received: from shalem.localdomain.com (ovpn-117-197.ams2.redhat.com [10.36.117.197])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 762F419C68;
-        Tue,  8 Oct 2019 08:54:24 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC v2] s390/purgatory: Make sure we fail the build if purgatory has missing symbols
-Date:   Tue,  8 Oct 2019 10:54:21 +0200
-Message-Id: <20191008085421.11011-2-hdegoede@redhat.com>
-In-Reply-To: <20191008085421.11011-1-hdegoede@redhat.com>
-References: <20191008085421.11011-1-hdegoede@redhat.com>
+        Tue, 8 Oct 2019 04:54:34 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54412 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728866AbfJHIyd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 04:54:33 -0400
+Received: by mail-wm1-f68.google.com with SMTP id p7so2214041wmp.4;
+        Tue, 08 Oct 2019 01:54:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=references:user-agent:from:to:subject:in-reply-to:date:message-id
+         :mime-version;
+        bh=jPjc7kEf9F+Pv9xjqePtdYZ594Xw4pebrrSpcO4H5N4=;
+        b=VXbQXbEiRyeIqlW0AZpSfsqRElc3PukoxYh/xW9e2HGTceQ5yawq4mum9YQutGvzhI
+         0RLQSx6WZ33d1ebeiZyKWg2KdYU/hzjwfAl++HsNPCDFIQqrqlqOsSoazQWcJlJL01tZ
+         38ZpAVJ1R0scyy+S3wEqiI4JfYYMuasN8lYUUevJ4vsryturfwddfvGSXJzd07fbiyan
+         7tOI/H0Ghup0R9vvIp6Fg0bYBmAbF4+7ZfZ+Z+wLJBwr0dnnvfeVNXxhGu/uNm6c7ShG
+         N01T7YXz96jpOGivMBq7UDtFKrLnuzCJc1p78wOZXdkkJnsUNR4RoJvNiZh0w37P0yiw
+         wGcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=jPjc7kEf9F+Pv9xjqePtdYZ594Xw4pebrrSpcO4H5N4=;
+        b=lTAPMoZURrCtcI0+kqfEAgDDZ0SWDzuxQ53S5dzerYFqugd+FJMFngrqkFxFeFfkZh
+         cJp8CJUI5yOEd+dF/RLVFrcMDM6hb9TQLk60oDaQvXOIxZi09pmXMIhK//HMGmhLOOHR
+         UPVoDRiZK7LobeMP2mqeAfLFaOhaHWPP11U/snh1xCy+fqtoTZ3Ib5hKEksz5xWibUeb
+         ab+DgqR/dXrVXNlH8HtX5nG6/xYitDn+sOEBeeliu4k2f/rOZq9rS8iLfZ8bAt7KvFAI
+         4STjppObRDrZiXh2GxW9gwGtSgy2N4iQYP/3krkvUgLK+3I4Bp8ZKMP6Zii9PdkO1HU4
+         wXEA==
+X-Gm-Message-State: APjAAAUtCExvXk6TzwOWHmWXNqMD8Pu1QkJXkqggJfbCJo4jeyXNtqEV
+        Z4r9uh5Fv87G9k2gdLuAgPRero39
+X-Google-Smtp-Source: APXvYqy/HvGfAU/ArSF6LuxodfAOeqkQ5yg5iRJ5pMsJAj0kWWuPbGswQqfOhH3/3PSGAbUKm97rGA==
+X-Received: by 2002:a05:600c:305:: with SMTP id q5mr2772331wmd.67.1570524869566;
+        Tue, 08 Oct 2019 01:54:29 -0700 (PDT)
+Received: from arch-late (a109-49-46-234.cpe.netcabo.pt. [109.49.46.234])
+        by smtp.gmail.com with ESMTPSA id g185sm1948555wme.10.2019.10.08.01.54.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Oct 2019 01:54:28 -0700 (PDT)
+References: <1570515459-25609-1-git-send-email-hariprasad.kelam@gmail.com>
+User-agent: mu4e 1.2.0; emacs 27.0.50
+From:   Rui Miguel Silva <rmfrfs@gmail.com>
+To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: media: imx: make use devm_platform_ioremap_resource
+In-reply-to: <1570515459-25609-1-git-send-email-hariprasad.kelam@gmail.com>
+Date:   Tue, 08 Oct 2019 09:54:26 +0100
+Message-ID: <m3lftv62il.fsf@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Tue, 08 Oct 2019 08:54:26 +0000 (UTC)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since we link purgatory with -r aka we enable "incremental linking"
-no checks for unresolved symbols are done while linking the purgatory.
+Hi Hariprasad,
+Thanks for the patch
+On Tue 08 Oct 2019 at 07:17, nobody wrote:
+> From: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+>
 
-This commit adds an extra check for unresolved symbols by calling ld
-without -r before running objcopy to generate purgatory.ro.
+Something went wrong formating the patch email, no To: nor From:
 
-This will help us catch missing symbols in the purgatory sooner.
+>
+> fix below issue reported by coccicheck
+> drivers/staging//media/imx/imx7-mipi-csis.c:973:1-12: WARNING: Use
+> devm_platform_ioremap_resource for state -> regs
+>
 
-Note this commit also removes --no-undefined from LDFLAGS_purgatory
-as that has no effect.
+Sorry, but someone else, Jeeeun, already sent a patch for this
+[0]. Thanks anyway.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
-Changes in v2:
-- Using 2 if_changed lines under a single rule does not work, then
-  1 of the 2 will always execute each build.
-  Instead add a new (unused) purgatory.chk intermediate which gets
-  linked from purgatory.ro without -r to do the missing symbols check
-- This also fixes the check generating an a.out file (oops)
----
- arch/s390/purgatory/.gitignore |  1 +
- arch/s390/purgatory/Makefile   | 13 ++++++++++---
- 2 files changed, 11 insertions(+), 3 deletions(-)
+Cheers,
+	Rui
 
-diff --git a/arch/s390/purgatory/.gitignore b/arch/s390/purgatory/.gitignore
-index 04a03433c720..c82157f46b18 100644
---- a/arch/s390/purgatory/.gitignore
-+++ b/arch/s390/purgatory/.gitignore
-@@ -1,3 +1,4 @@
- purgatory
-+purgatory.chk
- purgatory.lds
- purgatory.ro
-diff --git a/arch/s390/purgatory/Makefile b/arch/s390/purgatory/Makefile
-index bc0d7a0d0394..13e9a5dc0a07 100644
---- a/arch/s390/purgatory/Makefile
-+++ b/arch/s390/purgatory/Makefile
-@@ -4,7 +4,7 @@ OBJECT_FILES_NON_STANDARD := y
- 
- purgatory-y := head.o purgatory.o string.o sha256.o mem.o
- 
--targets += $(purgatory-y) purgatory.lds purgatory purgatory.ro
-+targets += $(purgatory-y) purgatory.lds purgatory purgatory.chk purgatory.ro
- PURGATORY_OBJS = $(addprefix $(obj)/,$(purgatory-y))
- 
- $(obj)/sha256.o: $(srctree)/lib/crypto/sha256.c FORCE
-@@ -26,15 +26,22 @@ KBUILD_CFLAGS += $(CLANG_FLAGS)
- KBUILD_CFLAGS += $(call cc-option,-fno-PIE)
- KBUILD_AFLAGS := $(filter-out -DCC_USING_EXPOLINE,$(KBUILD_AFLAGS))
- 
--LDFLAGS_purgatory := -r --no-undefined -nostdlib -z nodefaultlib -T
-+# Since we link purgatory with -r unresolved symbols are not checked, so we
-+# also link a purgatory.chk binary without -r to check for unresolved symbols.
-+PURGATORY_LDFLAGS := -nostdlib -z nodefaultlib
-+LDFLAGS_purgatory := -r $(PURGATORY_LDFLAGS) -T
-+LDFLAGS_purgatory.chk := -e purgatory_start $(PURGATORY_LDFLAGS)
- $(obj)/purgatory: $(obj)/purgatory.lds $(PURGATORY_OBJS) FORCE
- 		$(call if_changed,ld)
- 
-+$(obj)/purgatory.chk: $(obj)/purgatory FORCE
-+		$(call if_changed,ld)
-+
- OBJCOPYFLAGS_purgatory.ro := -O elf64-s390
- OBJCOPYFLAGS_purgatory.ro += --remove-section='*debug*'
- OBJCOPYFLAGS_purgatory.ro += --remove-section='.comment'
- OBJCOPYFLAGS_purgatory.ro += --remove-section='.note.*'
--$(obj)/purgatory.ro: $(obj)/purgatory FORCE
-+$(obj)/purgatory.ro: $(obj)/purgatory $(obj)/purgatory.chk FORCE
- 		$(call if_changed,objcopy)
- 
- $(obj)/kexec-purgatory.o: $(obj)/kexec-purgatory.S $(obj)/purgatory.ro FORCE
--- 
-2.23.0
+
+[0]: https://lore.kernel.org/linux-media/m3wodvgec4.fsf@gmail.com/
+
+>
+> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+> ---
+>  drivers/staging/media/imx/imx7-mipi-csis.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>
+> diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c b/drivers/staging/media/imx/imx7-mipi-csis.c
+> index 73d8354..bf21db3 100644
+> --- a/drivers/staging/media/imx/imx7-mipi-csis.c
+> +++ b/drivers/staging/media/imx/imx7-mipi-csis.c
+> @@ -947,7 +947,6 @@ static void mipi_csis_debugfs_exit(struct csi_state *state)
+>  static int mipi_csis_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> -	struct resource *mem_res;
+>  	struct csi_state *state;
+>  	int ret;
+>
+> @@ -969,8 +968,7 @@ static int mipi_csis_probe(struct platform_device *pdev)
+>  	mipi_csis_phy_init(state);
+>  	mipi_csis_phy_reset(state);
+>
+> -	mem_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	state->regs = devm_ioremap_resource(dev, mem_res);
+> +	state->regs = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(state->regs))
+>  		return PTR_ERR(state->regs);
 
