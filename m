@@ -2,105 +2,140 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC304ECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9CF7C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BADAB20867
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7F97206C2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:37:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730350AbfJHHg6 (ORCPT
+        id S1730396AbfJHHhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 03:36:58 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:44647 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729740AbfJHHg5 (ORCPT
+        Tue, 8 Oct 2019 03:37:15 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:56771 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730367AbfJHHhO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 03:36:57 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1M9W78-1iCDjs0OqS-005VR9; Tue, 08 Oct 2019 09:36:36 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-watchdog@vger.kernel.org,
+        Tue, 8 Oct 2019 03:37:14 -0400
+Received: from dread.disaster.area (pa49-181-226-196.pa.nsw.optusnet.com.au [49.181.226.196])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id E108143E00B;
+        Tue,  8 Oct 2019 18:37:10 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.2)
+        (envelope-from <david@fromorbit.com>)
+        id 1iHk3Q-0005PG-T7; Tue, 08 Oct 2019 18:37:08 +1100
+Date:   Tue, 8 Oct 2019 18:37:08 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] watchdog: cpwd: fix build regression
-Date:   Tue,  8 Oct 2019 09:36:16 +0200
-Message-Id: <20191008073634.290255-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+Subject: Re: [PATCH 02/11] iomap: copy the xfs writeback code to iomap.c
+Message-ID: <20191008073708.GG16973@dread.disaster.area>
+References: <20191006154608.24738-1-hch@lst.de>
+ <20191006154608.24738-3-hch@lst.de>
+ <20191007214353.GZ16973@dread.disaster.area>
+ <20191008063436.GA30465@lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:e0lTh4PYIS+uOwLuEcT+6SHvLxiPJVb0x3syccCvfXdySprRihH
- qEApwBNgPs+3ElpfxURB1l+2SkpYZBzguc9t/iIdh765204J1l61APY5bO6/SORe0kenS26
- LsZENXIen+9F1wEDEhyLYG0de6gqaq1/s8vGQ48OmnqHs+DPZ5GZYKV2KygqKckQ5hw9IV8
- sn5eQyWj8nvzSoxnt3C4A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:WiFGJjr5i6k=:FtjrVF5t6utKSO7CsTSnCd
- 4l2xCl0MSd2jjdiJqEVcObg8c0JhZnWJxaocwfZPUmt3AJCjY2Nk8YIlhunZ/IAQj784BlBEj
- egp0w2fA6NYSGNzEUvVIy9AW1d1KLGuUP1hUN8eD64PSIr8SULsQ4KyxTPnv642RuctQO46Kj
- NVB3YNRO553/D7ot42tbPo/zs027WcqljgJUDsZ0q2IGEWd2+chgAjVT9sgTzCy88S4Nxnuiv
- Ar+Ipt/e0x1j9DBcTk//BqUzz5n9yz26/9n1nxsdjwcuD3s50kpzdJpu1YLE85qt/fbycmWM2
- dTWj4CGrXf4dIk+3cYVJ4TWJcOh5rGzt5n7pNDgvoIfr9yg2rZnejtHXFZahLalR8sfAou9Qm
- GsZaU8sb24ndkTOkb7wbIP0w3wSIFxWsLGOGHAlTUDIOWeY8yY+AUHb3qPy84DisSToXdVwIu
- GCxuEvlkBOwvUg0ERthxan4MFHqvEg3TDQys5/3KiUZ0/+qvVGwNV3aOEYjnwLUzPAaeaJl7t
- t5XM+GG+LqDva7z3ZsBOsT9JBntiB3gfy8L6l1j8o6OP3A99hH9zNBnv0bVJjTYeqn10HznH2
- Xdm0NRLSbw+EsONin+hJEI2MmetjnEqv3ushgvDzcSnKvanplZFH5Yotbe14P5jDWZCc0GJLy
- f4KG0ekCBYKnCt15StYAEx1EbCxAAVtCj5Bix5q4PfGzEApp5O4uplas4V+wrMtEZH/nydrCW
- rCMLgp1SqBdmn9Qrc5JKRK5pIN/Kfrrm4ERf8kAV9mMvBkAvWP2d2h+J40GrAO38+S60NYEQF
- 6zC8gIgxZa23e7p2eHmQktY2hIKVBAeg/oRFxqVNtXodqf1mY8IhtiSE06pcZbqFKcYOx6kWx
- QjtaA8O5imqxS1Uuxkng==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191008063436.GA30465@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
+        a=dRuLqZ1tmBNts2YiI0zFQg==:117 a=dRuLqZ1tmBNts2YiI0zFQg==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=XobE76Q3jBoA:10
+        a=7-415B0cAAAA:8 a=C152E18BS4FYMT0GleMA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The compat_ptr_ioctl() infrastructure did not make it into
-linux-5.4, so cpwd now fails to build.
+On Tue, Oct 08, 2019 at 08:34:36AM +0200, Christoph Hellwig wrote:
+> On Tue, Oct 08, 2019 at 08:43:53AM +1100, Dave Chinner wrote:
+> > > +static int
+> > > +iomap_ioend_compare(void *priv, struct list_head *a, struct list_head *b)
+> > > +{
+> > > +	struct iomap_ioend *ia, *ib;
+> > > +
+> > > +	ia = container_of(a, struct iomap_ioend, io_list);
+> > > +	ib = container_of(b, struct iomap_ioend, io_list);
+> > > +	if (ia->io_offset < ib->io_offset)
+> > > +		return -1;
+> > > +	else if (ia->io_offset > ib->io_offset)
+> > > +		return 1;
+> > > +	return 0;
+> > 
+> > No need for the else here.
+> 
+> That is usually my comment :)  But in this case it is just copied over
+> code, so I didn't want to do cosmetic changes.
 
-Fix it by using an open-coded version.
+*nod*
 
-Fixes: 68f28b01fb9e ("watchdog: cpwd: use generic compat_ptr_ioctl")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/watchdog/cpwd.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+> > > +	/*
+> > > +	 * Given that we do not allow direct reclaim to call us, we should
+> > > +	 * never be called while in a filesystem transaction.
+> > > +	 */
+> > > +	if (WARN_ON_ONCE(current->flags & PF_MEMALLOC_NOFS))
+> > > +		goto redirty;
+> > 
+> > Is this true for all expected callers of these functions rather than
+> > just XFS? i.e. PF_MEMALLOC_NOFS is used by transactions in XFS to
+> > prevent transaction context recursion, but other filesystems do not
+> > do this..
+> > 
+> > FWIW, I can also see that this is going to cause us problems if high
+> > level code starts using memalloc_nofs_save() and then calling
+> > filemap_datawrite() and friends...
+> 
+> We have the check for direct reclaim just above, so any file system
+> using this iomap code will not allow direct reclaim.  Which I think is
+> a very good idea given that direct reclaim through the file system is
+> a very bad idea.
 
-diff --git a/drivers/watchdog/cpwd.c b/drivers/watchdog/cpwd.c
-index 9393be584e72..808eeb4779e4 100644
---- a/drivers/watchdog/cpwd.c
-+++ b/drivers/watchdog/cpwd.c
-@@ -26,6 +26,7 @@
- #include <linux/interrupt.h>
- #include <linux/ioport.h>
- #include <linux/timer.h>
-+#include <linux/compat.h>
- #include <linux/slab.h>
- #include <linux/mutex.h>
- #include <linux/io.h>
-@@ -473,6 +474,11 @@ static long cpwd_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 	return 0;
- }
- 
-+static long cpwd_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-+{
-+	return cpwd_ioctl(file, cmd, (unsigned long)compat_ptr(arg));
-+}
-+
- static ssize_t cpwd_write(struct file *file, const char __user *buf,
- 			  size_t count, loff_t *ppos)
- {
-@@ -497,7 +503,7 @@ static ssize_t cpwd_read(struct file *file, char __user *buffer,
- static const struct file_operations cpwd_fops = {
- 	.owner =		THIS_MODULE,
- 	.unlocked_ioctl =	cpwd_ioctl,
--	.compat_ioctl =		compat_ptr_ioctl,
-+	.compat_ioctl =		cpwd_compat_ioctl,
- 	.open =			cpwd_open,
- 	.write =		cpwd_write,
- 	.read =			cpwd_read,
+*nod*
+
+> That leaves with only the filemap_datawrite case, which so far is
+> theoretical.  If that ever becomes a think it is very obvious and we
+> can just remove the debug check.
+
+I expect it will be a thing sooner rather than later...
+
+> > > +iomap_writepage(struct page *page, struct writeback_control *wbc,
+> > > +		struct iomap_writepage_ctx *wpc,
+> > > +		const struct iomap_writeback_ops *ops)
+> > > +{
+> > > +	int ret;
+> > > +
+> > > +	wpc->ops = ops;
+> > > +	ret = iomap_do_writepage(page, wbc, wpc);
+> > > +	if (!wpc->ioend)
+> > > +		return ret;
+> > > +	return iomap_submit_ioend(wpc, wpc->ioend, ret);
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(iomap_writepage);
+> > 
+> > Can we kill ->writepage for iomap users, please? After all, we don't
+> > mostly don't allow memory reclaim to do writeback of dirty pages,
+> > and that's the only caller of ->writepage.
+> 
+> I'd rather not do this as part of this move.  But if you could expedite
+> your patch to kill ->writepage from the large block size support patch
+> and submit it ASAP on top of this series I would be very much in favor.
+
+Ok, looks like the usual of more follow up patches on top of these.
+I'm kinda waiting for these to land before porting the large block
+size stuff on top of it...
+
+Cheers,
+
+Dave.
 -- 
-2.20.0
-
+Dave Chinner
+david@fromorbit.com
