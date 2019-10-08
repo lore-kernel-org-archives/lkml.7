@@ -2,117 +2,107 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0139C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 18:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8279DC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 18:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9D8321721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 18:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40BB721721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 18:06:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JG+hpqwr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bcTU11Vh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729268AbfJHSFk (ORCPT
+        id S1729517AbfJHSGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 14:05:40 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:38921 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726320AbfJHSFk (ORCPT
+        Tue, 8 Oct 2019 14:06:35 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40316 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727180AbfJHSGe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 14:05:40 -0400
-Received: by mail-io1-f68.google.com with SMTP id a1so38545279ioc.6
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 11:05:40 -0700 (PDT)
+        Tue, 8 Oct 2019 14:06:34 -0400
+Received: by mail-pf1-f195.google.com with SMTP id x127so11227196pfb.7
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 11:06:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7HI75GouwRxYN8A61a1OmNG/T9ubH5sh09rpMiJz5bs=;
-        b=JG+hpqwrxAKEEYcv+zMT9gPASAVNdwQPfuQybjrMkqX/JlIEn7BlrTVVWK3rnK72rp
-         IrP1u4TMxOUbhXCRKUMtovSns1sZr0NWLjFJ1Sha5/epWnT4NpUp0kHnroYgRKJ2I5AG
-         /kVf66tqMQ5oGVfF2ibcRgZyOpKNYmuoC9kTg=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=h90Cd6MFGBRWfIimfxDnjpF0R2GtcjUaWODUBYbROSc=;
+        b=bcTU11VhW9Rk4bFEn8L9uZiTfbCu3q1YDIve80+3ruXqCLIgHegYyZXYYE1mFyB68A
+         VLzam38yk/JfzSNR1ezSKO6A4o9hl1Bafu8/69nZExRPm8aWtLheMURGyFI6kP7ilJ29
+         iuB9ja5T9g+viozO8c6ZnepS2X7mVNAP0nAiuz1bME/8nssgefqS2YRm8DSDv42llzrk
+         TQX8Xg7YtOKWVP7B+Tz0zEbBW7JEKnv37D6J4JPpn0eu5npTtLFKCA2BtFfAPEJyBJk/
+         CzauLGDk6CsBOo/7KBCgRAL/7/7CFBpPjrki7KwpQCP4VRGdD1WlpUrzH/6hNpAK3eNb
+         3Ujg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7HI75GouwRxYN8A61a1OmNG/T9ubH5sh09rpMiJz5bs=;
-        b=YvGqaOd8WDlQ5SWW2HU7cmJHms/5VP00SVmLQMvQ9q9IUV/GJuvW1lQe78t5Oc95xq
-         0l5wtW7Y3tPbyfZJHuxEsyEn3LCy72TuYBZ0k5eW536gNkbaMAH+FDxZu80MNvgfxpfD
-         RAlh2n+/W7jHq9olH5tKffBE2WDUB1cdffT9ffW1SI4uYjI2/KPQWi9+KY0lk5jgEXWa
-         hp636ybgJvIEEPyAFvTqElxGRMxjepyw8OtsElLU0eZubMOZVkKQWtx56RFzpe0OpzEz
-         dSVVV36LoBfYpcCVzllu0rCUvOBC7N0H5xsuu3YWaSToBlIQsEChRW+8qnXNcCFftdIF
-         OTDw==
-X-Gm-Message-State: APjAAAVoLwa5tPa/TcfeJrzDvxK3/nBuoxDk+FU2YR9hfw55qT0MCfkZ
-        pVhDLh5tMC43CkcBuLm2LER4R2sjobo=
-X-Google-Smtp-Source: APXvYqxL91WRqDnoQrNKUIizQF09GiCnxUy4P3jxBEbSLnYKkYeEPPgGSGsvN582it/XoSMowBXigQ==
-X-Received: by 2002:a6b:b213:: with SMTP id b19mr28982816iof.58.1570557939315;
-        Tue, 08 Oct 2019 11:05:39 -0700 (PDT)
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com. [209.85.166.46])
-        by smtp.gmail.com with ESMTPSA id u124sm7246664ioe.63.2019.10.08.11.05.36
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Oct 2019 11:05:38 -0700 (PDT)
-Received: by mail-io1-f46.google.com with SMTP id n26so38439652ioj.8
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 11:05:36 -0700 (PDT)
-X-Received: by 2002:a5d:9812:: with SMTP id a18mr13195587iol.168.1570557936383;
- Tue, 08 Oct 2019 11:05:36 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=h90Cd6MFGBRWfIimfxDnjpF0R2GtcjUaWODUBYbROSc=;
+        b=EwW60qKmrLfFEA/c6vhqlexophrBi3kEfmyvol0ffuRjM2HQ30c7VUU9aALSDze0sU
+         x+1av/RxV4A3mNsdaezLgl/tTZaGjgNJkagHwD3Q0YyRV+/pZePOMHb2fdapT8VrRzeS
+         sgx2XeHPCntrXQXdasiE7Nw+n3dkE/Yqo69TLY+q/rny2svNcaaiVoyHVC0lbMC7astm
+         bKxe20arlLdpmIb6+waEVyWToXMMVii8uEqBPnWkuJbBwUq4qzPnUASr4xZltVeN0zkN
+         m2pUDF0jJAr9uuW6LfjyymeHsaBKZGV3qlwqPNFJkqTSw4Ue4/XkF5B1FZH2mtHBV5EQ
+         DyjQ==
+X-Gm-Message-State: APjAAAV8keqtIXHz/OlRqXG8gp+yXKiPLsKcMppiLrFaCZS3AA6cmOT0
+        axUWLsRIE2tfcf50uUdRB9sKPw==
+X-Google-Smtp-Source: APXvYqx79kSccdtkViHSGl14EAIVEHPyIzTMoHZYqqFCd0NqRcYa0dDt3iUZE3oGjGLlBHQZdHj/lg==
+X-Received: by 2002:a63:c306:: with SMTP id c6mr36235226pgd.253.1570557993927;
+        Tue, 08 Oct 2019 11:06:33 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id q88sm2826700pjq.9.2019.10.08.11.06.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Oct 2019 11:06:33 -0700 (PDT)
+Date:   Tue, 8 Oct 2019 11:06:31 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Murali Nalajala <mnalajal@codeaurora.org>, rafael@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] base: soc: Handle custom soc information sysfs entries
+Message-ID: <20191008180631.GI63675@minitux>
+References: <1570480662-25252-1-git-send-email-mnalajal@codeaurora.org>
+ <5d9cac38.1c69fb81.682ec.053a@mx.google.com>
+ <20191008154346.GA2881455@kroah.com>
 MIME-Version: 1.0
-References: <20191003094137.v2.1.Ic9fd698810ea569c465350154da40b85d24f805b@changeid>
-In-Reply-To: <20191003094137.v2.1.Ic9fd698810ea569c465350154da40b85d24f805b@changeid>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 8 Oct 2019 11:05:24 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Xi-M=Kk0axj=ukGMDr4p0a86LRdiL-6WyPZnL2vuDZGA@mail.gmail.com>
-Message-ID: <CAD=FV=Xi-M=Kk0axj=ukGMDr4p0a86LRdiL-6WyPZnL2vuDZGA@mail.gmail.com>
-Subject: Re: [PATCH v2] ARM: dts: rockchip: Use interpolated brightness tables
- for veyron
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191008154346.GA2881455@kroah.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue 08 Oct 08:43 PDT 2019, Greg KH wrote:
 
-On Thu, Oct 3, 2019 at 9:42 AM Matthias Kaehlcke <mka@chromium.org> wrote:
->
-> Use interpolated brightness tables (added by commit 573fe6d1c25
-> ("backlight: pwm_bl: Linear interpolation between
-> brightness-levels") for veyron, instead of specifying every single
-> step. Some devices/panels have intervals that are smaller than
-> the specified 'num-interpolated-steps', the driver interprets
-> these intervals as a single step.
->
-> Another option would be to switch to a perceptual brightness curve
-> (CIE 1931), with the caveat that it would change the behavior of
-> the backlight. Also the concept of a minimum brightness level is
-> currently not supported for CIE 1931 curves.
->
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
->
-> Changes in v2:
-> - added 0 as first step for devices/panels that require a minimum
->   PWM duty cycle
-> - increased 'num-interpolated-steps' values by one, it's not the
->   number of steps between levels, but that number +1
->
->  arch/arm/boot/dts/rk3288-veyron-edp.dtsi   | 35 ++--------------------
->  arch/arm/boot/dts/rk3288-veyron-jaq.dts    | 35 ++--------------------
->  arch/arm/boot/dts/rk3288-veyron-minnie.dts | 35 ++--------------------
->  arch/arm/boot/dts/rk3288-veyron-tiger.dts  | 35 ++--------------------
->  4 files changed, 8 insertions(+), 132 deletions(-)
+> On Tue, Oct 08, 2019 at 08:33:11AM -0700, Stephen Boyd wrote:
+> > Quoting Murali Nalajala (2019-10-07 13:37:42)
+> > > Soc framework exposed sysfs entries are not sufficient for some
+> > > of the h/w platforms. Currently there is no interface where soc
+> > > drivers can expose further information about their SoCs via soc
+> > > framework. This change address this limitation where clients can
+> > > pass their custom entries as attribute group and soc framework
+> > > would expose them as sysfs properties.
+> > > 
+> > > Signed-off-by: Murali Nalajala <mnalajal@codeaurora.org>
+> > > ---
+> > 
+> > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> > 
+> 
+> Nice, can we convert the existing soc drivers to use this interface
+> instead of the "export the device pointer" mess that they currently
+> have?  That way we can drop that function entirely.
+> 
 
-I guess if someone wanted to they could try to increase the number of
-steps and see if they got prettier backlight transition, but what's
-there now doesn't bother me and has the advantage of matching what has
-been in use forever.  Thus:
+Unfortunately we can't just drop it, because it's used on some SoCs as
+the parent of all platform_devices. 
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+But we can definitely get rid of all that uses it to create sysfs files.
+
+Regards,
+Bjorn
