@@ -2,130 +2,129 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60EEEECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD3AECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 424A72067B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E62F320640
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:28:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730297AbfJHH14 (ORCPT
+        id S1730325AbfJHH2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 03:27:56 -0400
-Received: from mx2.mailbox.org ([80.241.60.215]:22856 "EHLO mx2.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729740AbfJHH14 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 03:27:56 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx2.mailbox.org (Postfix) with ESMTPS id 76756A356C;
-        Tue,  8 Oct 2019 09:27:52 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter02.heinlein-hosting.de (spamfilter02.heinlein-hosting.de [80.241.56.116]) (amavisd-new, port 10030)
-        with ESMTP id 78L-dV7OvKB7; Tue,  8 Oct 2019 09:27:48 +0200 (CEST)
-Date:   Tue, 8 Oct 2019 18:27:37 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     linmiaohe <linmiaohe@huawei.com>
-Cc:     "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "dhowells@redhat.com" <dhowells@redhat.com>,
-        "christian@brauner.io" <christian@brauner.io>,
-        "aubrey.li@linux.intel.com" <aubrey.li@linux.intel.com>,
-        Mingfangsen <mingfangsen@huawei.com>,
-        "mm-commits@vger.kernel.org" <mm-commits@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH] proc:fix confusing macro arg name
-Message-ID: <20191008072737.hkt53lf4hdx6bola@yavin.dot.cyphar.com>
-References: <165631b964b644dfa933653def533e41@huawei.com>
+        Tue, 8 Oct 2019 03:28:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35530 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729740AbfJHH2K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 03:28:10 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 74C01ABA0;
+        Tue,  8 Oct 2019 07:28:08 +0000 (UTC)
+Subject: Re: [PATCH] btrfs: block-group: Rework documentation of
+ check_system_chunk function
+To:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>, clm@fb.com,
+        David Sterba <dsterba@suse.com>
+Cc:     Josef Bacik <josef@toxicpanda.com>,
+        "open list:BTRFS FILE SYSTEM" <linux-btrfs@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20191008005038.12333-1-marcos.souza.org@gmail.com>
+From:   Nikolay Borisov <nborisov@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <c120d3a8-2e58-d109-191c-bd75ee8111b7@suse.com>
+Date:   Tue, 8 Oct 2019 10:28:06 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="xvn3q4ilxem2qqbc"
-Content-Disposition: inline
-In-Reply-To: <165631b964b644dfa933653def533e41@huawei.com>
+In-Reply-To: <20191008005038.12333-1-marcos.souza.org@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---xvn3q4ilxem2qqbc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On 2019-10-08, linmiaohe <linmiaohe@huawei.com> wrote:
-> Add suitable additional cc's as Andrew Morton suggested.
-> Get cc list from get_maintainer script:
-> [root@localhost mm]# ./scripts/get_maintainer.pl 0001-proc-fix-confusing-=
-macro-arg-name.patch=20
-> Alexey Dobriyan <adobriyan@gmail.com> (reviewer:PROC FILESYSTEM)
-> linux-kernel@vger.kernel.org (open list:PROC FILESYSTEM)
-> linux-fsdevel@vger.kernel.org (open list:PROC FILESYSTEM)
->=20
-> ------------------------------------------------------
-> From: Miaohe Lin <linmiaohe@huawei.com>
-> Subject: fix confusing macro arg name
->=20
-> state_size and ops are in the wrong position, fix it.
->=20
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Alexey Dobriyan <adobriyan@gmail.com>
-> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+On 8.10.19 г. 3:50 ч., Marcos Paulo de Souza wrote:
+> Commit 4617ea3a52cf (" Btrfs: fix necessary chunk tree space calculation
+> when allocating a chunk") removed the is_allocation argument from
+> check_system_chunk, since the formula for reserving the necessary space
+> for allocation or removing a chunk would be the same.
+> 
+> So, rework the comment by removing the mention of is_allocation
+> argument.
+> 
+> Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
 
-Looks reasonable.
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
 
-Acked-by: Aleksa Sarai <cyphar@cyphar.com>
 
 > ---
->=20
->  include/linux/proc_fs.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h index a705=
-aa2d03f9..0640be56dcbd 100644
-> --- a/include/linux/proc_fs.h
-> +++ b/include/linux/proc_fs.h
-> @@ -58,8 +58,8 @@ extern int remove_proc_subtree(const char *, struct pro=
-c_dir_entry *);  struct proc_dir_entry *proc_create_net_data(const char *na=
-me, umode_t mode,
->  		struct proc_dir_entry *parent, const struct seq_operations *ops,
->  		unsigned int state_size, void *data);
-> -#define proc_create_net(name, mode, parent, state_size, ops) \
-> -	proc_create_net_data(name, mode, parent, state_size, ops, NULL)
-> +#define proc_create_net(name, mode, parent, ops, state_size) \
-> +	proc_create_net_data(name, mode, parent, ops, state_size, NULL)
->  struct proc_dir_entry *proc_create_net_single(const char *name, umode_t =
-mode,
->  		struct proc_dir_entry *parent,
->  		int (*show)(struct seq_file *, void *), void *data);
+>  fs/btrfs/block-group.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/fs/btrfs/block-group.c b/fs/btrfs/block-group.c
+> index bf7e3f23bba7..4910921838db 100644
+> --- a/fs/btrfs/block-group.c
+> +++ b/fs/btrfs/block-group.c
+> @@ -2987,9 +2987,7 @@ static u64 get_profile_num_devs(struct btrfs_fs_info *fs_info, u64 type)
+>  }
+> 
+>  /*
+> - * If @is_allocation is true, reserve space in the system space info necessary
+> - * for allocating a chunk, otherwise if it's false, reserve space necessary for
+> - * removing a chunk.
+> + * Reserve space in the system space for allocating or removing a chunk
+>   */
+>  void check_system_chunk(struct btrfs_trans_handle *trans, u64 type)
+>  {
 > --
-> 2.21.GIT
->=20
-
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---xvn3q4ilxem2qqbc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXZw6ZgAKCRCdlLljIbnQ
-EiEGAQDG9zRJQF5jUEsy8iMlB83kVXNRjV/eaNv4FlZQxbdtbQD+JM6uYaDbPpOs
-EWiAKUr9k7mf2zBxaLqEzL8/eqYJxQA=
-=QSng
------END PGP SIGNATURE-----
-
---xvn3q4ilxem2qqbc--
+> 2.23.0
+> 
+> 
