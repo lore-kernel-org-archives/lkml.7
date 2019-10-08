@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF52C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D2BC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:16:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88BB62173B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:15:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A7B221721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:16:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730199AbfJHHPZ (ORCPT
+        id S1730323AbfJHHQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 03:15:25 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:50308 "EHLO huawei.com"
+        Tue, 8 Oct 2019 03:16:29 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:52036 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730057AbfJHHPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 03:15:25 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 1B797DE032BBAA1EC3DC;
-        Tue,  8 Oct 2019 15:15:22 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Tue, 8 Oct 2019
- 15:15:12 +0800
+        id S1730057AbfJHHQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 03:16:29 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id BC40D8E81B87B520A9E3;
+        Tue,  8 Oct 2019 15:16:26 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Tue, 8 Oct 2019
+ 15:16:19 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
-To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <pascalvanl@gmail.com>, <antoine.tenart@bootlin.com>
-CC:     <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] crypto: inside-secure - Fix randbuild error
-Date:   Tue, 8 Oct 2019 15:15:03 +0800
-Message-ID: <20191008071503.55772-1-yuehaibing@huawei.com>
+To:     <agross@kernel.org>, <bjorn.andersson@linaro.org>,
+        <vivek.gautam@codeaurora.org>, <yuehaibing@huawei.com>,
+        <jcrouse@codeaurora.org>
+CC:     <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] soc: qcom: Fix llcc-qcom definitions to include
+Date:   Tue, 8 Oct 2019 15:16:14 +0800
+Message-ID: <20191008071614.21692-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -43,33 +43,157 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CRYPTO_DEV_SAFEXCEL is y but CRYPTO_SM3 is m,
-building fails:
+commit 99356b03b431 ("soc: qcom: Make llcc-qcom a
+generic driver") move these out of llcc-qcom.h, make
+the building fails:
 
-drivers/crypto/inside-secure/safexcel_hash.o: In function `safexcel_ahash_final':
-safexcel_hash.c:(.text+0xbc0): undefined reference to `sm3_zero_message_hash'
+drivers/edac/qcom_edac.c:86:40: error: array type has incomplete element type struct llcc_edac_reg_data
+ static const struct llcc_edac_reg_data edac_reg_data[] = {
+                                        ^~~~~~~~~~~~~
+drivers/edac/qcom_edac.c:87:3: error: array index in non-array initializer
+  [LLCC_DRAM_CE] = {
+   ^~~~~~~~~~~~
+drivers/edac/qcom_edac.c:87:3: note: (near initialization for edac_reg_data)
+drivers/edac/qcom_edac.c:88:3: error: field name not in record or union initializer
+   .name = "DRAM Single-bit",
+...
+drivers/edac/qcom_edac.c:169:51: warning: struct llcc_drv_data declared inside parameter
+ list will not be visible outside of this definition or declaration
+ qcom_llcc_clear_error_status(int err_type, struct llcc_drv_data *drv)
+                                                   ^~~~~~~~~~~~~
 
-Select CRYPTO_SM3 to fix this.
+This patch move the needed definitions back to include.
 
 Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 0f2bc13181ce ("crypto: inside-secure - Added support for basic SM3 ahash")
+Fixes: 99356b03b431 ("soc: qcom: Make llcc-qcom a generic driver")
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/crypto/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/soc/qcom/llcc-qcom.c       | 50 --------------------------------------
+ include/linux/soc/qcom/llcc-qcom.h | 50 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 50 insertions(+), 50 deletions(-)
 
-diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
-index 3e51bae..5af17db 100644
---- a/drivers/crypto/Kconfig
-+++ b/drivers/crypto/Kconfig
-@@ -751,6 +751,7 @@ config CRYPTO_DEV_SAFEXCEL
- 	select CRYPTO_SHA512
- 	select CRYPTO_CHACHA20POLY1305
- 	select CRYPTO_SHA3
-+	select CRYPTO_SM3
- 	help
- 	  This driver interfaces with the SafeXcel EIP-97 and EIP-197 cryptographic
- 	  engines designed by Inside Secure. It currently accelerates DES, 3DES and
+diff --git a/drivers/soc/qcom/llcc-qcom.c b/drivers/soc/qcom/llcc-qcom.c
+index 98563ef..43606736 100644
+--- a/drivers/soc/qcom/llcc-qcom.c
++++ b/drivers/soc/qcom/llcc-qcom.c
+@@ -86,56 +86,6 @@ struct llcc_slice_config {
+ 	bool activate_on_init;
+ };
+ 
+-/**
+- * llcc_drv_data - Data associated with the llcc driver
+- * @regmap: regmap associated with the llcc device
+- * @bcast_regmap: regmap associated with llcc broadcast offset
+- * @cfg: pointer to the data structure for slice configuration
+- * @lock: mutex associated with each slice
+- * @cfg_size: size of the config data table
+- * @max_slices: max slices as read from device tree
+- * @num_banks: Number of llcc banks
+- * @bitmap: Bit map to track the active slice ids
+- * @offsets: Pointer to the bank offsets array
+- * @ecc_irq: interrupt for llcc cache error detection and reporting
+- */
+-struct llcc_drv_data {
+-	struct regmap *regmap;
+-	struct regmap *bcast_regmap;
+-	const struct llcc_slice_config *cfg;
+-	struct mutex lock;
+-	u32 cfg_size;
+-	u32 max_slices;
+-	u32 num_banks;
+-	unsigned long *bitmap;
+-	u32 *offsets;
+-	int ecc_irq;
+-};
+-
+-/**
+- * llcc_edac_reg_data - llcc edac registers data for each error type
+- * @name: Name of the error
+- * @synd_reg: Syndrome register address
+- * @count_status_reg: Status register address to read the error count
+- * @ways_status_reg: Status register address to read the error ways
+- * @reg_cnt: Number of registers
+- * @count_mask: Mask value to get the error count
+- * @ways_mask: Mask value to get the error ways
+- * @count_shift: Shift value to get the error count
+- * @ways_shift: Shift value to get the error ways
+- */
+-struct llcc_edac_reg_data {
+-	char *name;
+-	u64 synd_reg;
+-	u64 count_status_reg;
+-	u64 ways_status_reg;
+-	u32 reg_cnt;
+-	u32 count_mask;
+-	u32 ways_mask;
+-	u8  count_shift;
+-	u8  ways_shift;
+-};
+-
+ struct qcom_llcc_config {
+ 	const struct llcc_slice_config *sct_data;
+ 	int size;
+diff --git a/include/linux/soc/qcom/llcc-qcom.h b/include/linux/soc/qcom/llcc-qcom.h
+index c0acdb2..90b8646 100644
+--- a/include/linux/soc/qcom/llcc-qcom.h
++++ b/include/linux/soc/qcom/llcc-qcom.h
+@@ -37,6 +37,56 @@ struct llcc_slice_desc {
+ 	size_t slice_size;
+ };
+ 
++/**
++ * llcc_edac_reg_data - llcc edac registers data for each error type
++ * @name: Name of the error
++ * @synd_reg: Syndrome register address
++ * @count_status_reg: Status register address to read the error count
++ * @ways_status_reg: Status register address to read the error ways
++ * @reg_cnt: Number of registers
++ * @count_mask: Mask value to get the error count
++ * @ways_mask: Mask value to get the error ways
++ * @count_shift: Shift value to get the error count
++ * @ways_shift: Shift value to get the error ways
++ */
++struct llcc_edac_reg_data {
++	char *name;
++	u64 synd_reg;
++	u64 count_status_reg;
++	u64 ways_status_reg;
++	u32 reg_cnt;
++	u32 count_mask;
++	u32 ways_mask;
++	u8  count_shift;
++	u8  ways_shift;
++};
++
++/**
++ * llcc_drv_data - Data associated with the llcc driver
++ * @regmap: regmap associated with the llcc device
++ * @bcast_regmap: regmap associated with llcc broadcast offset
++ * @cfg: pointer to the data structure for slice configuration
++ * @lock: mutex associated with each slice
++ * @cfg_size: size of the config data table
++ * @max_slices: max slices as read from device tree
++ * @num_banks: Number of llcc banks
++ * @bitmap: Bit map to track the active slice ids
++ * @offsets: Pointer to the bank offsets array
++ * @ecc_irq: interrupt for llcc cache error detection and reporting
++ */
++struct llcc_drv_data {
++	struct regmap *regmap;
++	struct regmap *bcast_regmap;
++	const struct llcc_slice_config *cfg;
++	struct mutex lock;
++	u32 cfg_size;
++	u32 max_slices;
++	u32 num_banks;
++	unsigned long *bitmap;
++	u32 *offsets;
++	int ecc_irq;
++};
++
+ #if IS_ENABLED(CONFIG_QCOM_LLCC)
+ /**
+  * llcc_slice_getd - get llcc slice descriptor
 -- 
 2.7.4
 
