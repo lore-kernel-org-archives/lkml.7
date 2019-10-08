@@ -2,201 +2,149 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6932AECE58C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A1EECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45E6D206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:28:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5914E206BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:34:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729851AbfJHB2a (ORCPT
+        id S1729489AbfJHBeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 21:28:30 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:51164 "EHLO inva020.nxp.com"
+        Mon, 7 Oct 2019 21:34:06 -0400
+Received: from mx2.mailbox.org ([80.241.60.215]:31464 "EHLO mx2.mailbox.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729285AbfJHB2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 21:28:21 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 274161A024E;
-        Tue,  8 Oct 2019 03:28:19 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5969E1A01C1;
-        Tue,  8 Oct 2019 03:28:12 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E5C86402DA;
-        Tue,  8 Oct 2019 09:28:01 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        jun.li@nxp.com, daniel.baluta@nxp.com, ping.bai@nxp.com,
-        leonard.crestez@nxp.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2 1/3] arm64: dts: imx8mm-evk: Adjust i2c nodes following alphabetical sort
-Date:   Tue,  8 Oct 2019 09:25:53 +0800
-Message-Id: <1570497955-19481-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1726917AbfJHBeF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 21:34:05 -0400
+Received: from smtp2.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx2.mailbox.org (Postfix) with ESMTPS id D7967A33B3;
+        Tue,  8 Oct 2019 03:34:01 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.240])
+        by spamfilter01.heinlein-hosting.de (spamfilter01.heinlein-hosting.de [80.241.56.115]) (amavisd-new, port 10030)
+        with ESMTP id oK7UU0kzyVpP; Tue,  8 Oct 2019 03:33:57 +0200 (CEST)
+Date:   Tue, 8 Oct 2019 12:33:46 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Jann Horn <jannh@google.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Christian Brauner <christian@brauner.io>,
+        Aleksa Sarai <asarai@suse.de>,
+        linux-man <linux-man@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC 1/3] symlink.7: document magic-links more completely
+Message-ID: <20191008013346.7qft2qqz4wz7ld35@yavin.dot.cyphar.com>
+References: <20191003145542.17490-1-cyphar@cyphar.com>
+ <20191003145542.17490-2-cyphar@cyphar.com>
+ <CAG48ez2LuOGAXgKftZKfDKxhdb6xcBTdoK468-HXdcpxCW4r4w@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="2q45tajd22yttzl5"
+Content-Disposition: inline
+In-Reply-To: <CAG48ez2LuOGAXgKftZKfDKxhdb6xcBTdoK468-HXdcpxCW4r4w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The iomuxc node is being put at end of file because of its huge
-pinctrl data. I2C devices should be placed in alphabetical sort.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-new patch.
----
- arch/arm64/boot/dts/freescale/imx8mm-evk.dts | 124 +++++++++++++--------------
- 1 file changed, 62 insertions(+), 62 deletions(-)
+--2q45tajd22yttzl5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-index f7a15f3..f6d367c 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-@@ -94,68 +94,6 @@
- 	};
- };
- 
--&sai3 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_sai3>;
--	assigned-clocks = <&clk IMX8MM_CLK_SAI3>;
--	assigned-clock-parents = <&clk IMX8MM_AUDIO_PLL1_OUT>;
--	assigned-clock-rates = <24576000>;
--	status = "okay";
--};
--
--&snvs_pwrkey {
--	status = "okay";
--};
--
--&uart2 { /* console */
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_uart2>;
--	status = "okay";
--};
--
--&usbotg1 {
--	dr_mode = "otg";
--	hnp-disable;
--	srp-disable;
--	adp-disable;
--	usb-role-switch;
--	status = "okay";
--
--	port {
--		usb1_drd_sw: endpoint {
--			remote-endpoint = <&typec1_dr_sw>;
--		};
--	};
--};
--
--&usdhc2 {
--	pinctrl-names = "default", "state_100mhz", "state_200mhz";
--	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
--	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_gpio>;
--	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_gpio>;
--	cd-gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
--	bus-width = <4>;
--	vmmc-supply = <&reg_usdhc2_vmmc>;
--	status = "okay";
--};
--
--&usdhc3 {
--	pinctrl-names = "default", "state_100mhz", "state_200mhz";
--	pinctrl-0 = <&pinctrl_usdhc3>;
--	pinctrl-1 = <&pinctrl_usdhc3_100mhz>;
--	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
--	bus-width = <8>;
--	non-removable;
--	status = "okay";
--};
--
--&wdog1 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_wdog>;
--	fsl,ext-reset-output;
--	status = "okay";
--};
--
- &i2c1 {
- 	clock-frequency = <400000>;
- 	pinctrl-names = "default";
-@@ -306,6 +244,68 @@
- 	};
- };
- 
-+&sai3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_sai3>;
-+	assigned-clocks = <&clk IMX8MM_CLK_SAI3>;
-+	assigned-clock-parents = <&clk IMX8MM_AUDIO_PLL1_OUT>;
-+	assigned-clock-rates = <24576000>;
-+	status = "okay";
-+};
-+
-+&snvs_pwrkey {
-+	status = "okay";
-+};
-+
-+&uart2 { /* console */
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart2>;
-+	status = "okay";
-+};
-+
-+&usbotg1 {
-+	dr_mode = "otg";
-+	hnp-disable;
-+	srp-disable;
-+	adp-disable;
-+	usb-role-switch;
-+	status = "okay";
-+
-+	port {
-+		usb1_drd_sw: endpoint {
-+			remote-endpoint = <&typec1_dr_sw>;
-+		};
-+	};
-+};
-+
-+&usdhc2 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
-+	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_gpio>;
-+	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_gpio>;
-+	cd-gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
-+	bus-width = <4>;
-+	vmmc-supply = <&reg_usdhc2_vmmc>;
-+	status = "okay";
-+};
-+
-+&usdhc3 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc3>;
-+	pinctrl-1 = <&pinctrl_usdhc3_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
-+	bus-width = <8>;
-+	non-removable;
-+	status = "okay";
-+};
-+
-+&wdog1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_wdog>;
-+	fsl,ext-reset-output;
-+	status = "okay";
-+};
-+
- &iomuxc {
- 	pinctrl-names = "default";
- 
--- 
-2.7.4
+On 2019-10-07, Jann Horn <jannh@google.com> wrote:
+> On Thu, Oct 3, 2019 at 4:56 PM Aleksa Sarai <cyphar@cyphar.com> wrote:
+> > Traditionally, magic-links have not been a well-understood topic in
+> > Linux. Given the new changes in their semantics (related to the link
+> > mode of trailing magic-links), it seems like a good opportunity to shine
+> > more light on magic-links and their semantics.
+> [...]
+> > +++ b/man7/symlink.7
+> > @@ -84,6 +84,25 @@ as they are implemented on Linux and other systems,
+> >  are outlined here.
+> >  It is important that site-local applications also conform to these rul=
+es,
+> >  so that the user interface can be as consistent as possible.
+> > +.SS Magic-links
+> > +There is a special class of symlink-like objects known as "magic-links=
+" which
+>=20
+> I think names like that normally aren't hypenated in english, and
+> instead of "magic-links", it'd be "magic links"? Just like how you
+> wouldn't write "symbolic-link", but "symbolic link". But this is
+> bikeshedding, and if you disagree, feel free to ignore this comment.
 
+Looking at it now, I think you're right -- I hyphenated it here because
+that's how I wrote it when documenting the feature in comments. But I
+think that's because "symlink" and "magic-link" (the "abbreviated"
+versions) seem to match better than "symlink" and "magic link".
+
+I'll use "magic link" in documentation, but "magic-link" for all cases
+where I would normally write "symlink".
+
+> > +can be found in certain pseudo-filesystems such as
+> > +.BR proc (5)
+> > +(examples include
+> > +.IR /proc/[pid]/exe " and " /proc/[pid]/fd/* .)
+> > +Unlike normal symlinks, magic-links are not resolved through
+>=20
+> nit: AFAICS symlinks are always referred to as "symbolic links"
+> throughout the manpages.
+
+:+1:
+
+> > +pathname-expansion, but instead act as direct references to the kernel=
+'s own
+> > +representation of a file handle. As such, these magic-links allow user=
+s to
+> > +access files which cannot be referenced with normal paths (such as unl=
+inked
+> > +files still referenced by a running program.)
+>=20
+> Could maybe add "and files in different mount namespaces" as another
+> example here; at least for me, that's the main usecases for
+> /proc/*/root.
+
+Will do.
+
+> [...]
+> > +However, magic-links do not follow this rule. They can have a non-0777=
+ mode,
+> > +which is used for permission checks when the final
+> > +component of an
+> > +.BR open (2)'s
+>=20
+> Maybe leave out the "open" part, since the same restriction has to
+> also apply to other syscalls operating on files, like truncate() and
+> so on?
+
+Yes (though I've just realised I hadn't implemented that -- oops.) Given
+how expansive this patchset will get -- I might end up splitting it into
+the magic-link stuff (and O_EMPTYPATH) and a separate series for
+openat2(2) and the path resolution restrictions.
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--2q45tajd22yttzl5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXZvndgAKCRCdlLljIbnQ
+Em8rAP9zDYU4BspEqrhHWm9St1g7MKKDDBGjzIBK742FA4EA6gD9FXqkmZPXhZHY
+m/PlSBGP4lC67Pms1YwaoDM1pk2x+Ak=
+=dsvW
+-----END PGP SIGNATURE-----
+
+--2q45tajd22yttzl5--
