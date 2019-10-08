@@ -4,48 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D35EC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6343C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 255CA21835
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:40:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89BF221835
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:42:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Gz43DLAp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NF0oX8YW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731043AbfJHUkX (ORCPT
+        id S1730990AbfJHUmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 16:40:23 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55028 "EHLO
+        Tue, 8 Oct 2019 16:42:04 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55054 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730523AbfJHUkW (ORCPT
+        with ESMTP id S1730523AbfJHUmE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 16:40:22 -0400
+        Tue, 8 Oct 2019 16:42:04 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
+        Content-Type:MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
         Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=IG1PVwMtQAM28tfOpPtpmdlnReR0UstRu9NVxRsy1Jk=; b=Gz43DLApZQtRZIbtPg1nD6SGm
-        35zFAXuI6KC35Dy5Ms8F2kjxI0uvqyt9UaCdlSrS4SsTPyEp1Gnf/GD3BdnuWinJU84hvDYgm7Gzj
-        OHLAd/U8Qz8kzAh4FJUOTwd9CV9u+k/3jET6jHYR/aH1CwRRw+yQhc+5QQGdt3pJmLBaDSfe2wELq
-        a1vlmVu3vhty/1yXXcnykwEMR1Tz98in9jUrtvAnWxDF2xiC2gTbFNaBHLRP78J4cdmPJGfoUkbMn
-        QNOsVxI/h0KHDZagTuovvTg8z+hU60GcMa2SdOQVzOje/Te5Na2SrzvX+b1Yiu3z9rqu7RRlKdMf9
-        pw/1/eWEg==;
+         bh=M/gJiVen29JN0sHYdmfabbX09bRdcnd8PfJ0YX3VJFc=; b=NF0oX8YW3Mj/fz+0dz1Uo9OtJ
+        pKxxyFmSilSSL/yTMRi1OIYdCF/eOx4pCoHvqOeN17U6Rd0j6JCV6IFlbWh5JXeS6lSiaEJ5Eb9Pb
+        cpmEpkgNHL6HAixqfBn6nc6yZULSm32aR10+fgygUShVoSl0xVf8gJqndfRnuB8ffA12ZQZLd5JAt
+        5jtqIDmV6NKxKtHF+J7b7doghpPhXiVHnnHESTk5QHoaZYgxzTsL6qCpU6XtCXQ8H4vOizhPGXFtk
+        KnzmQjG7F1SFs4zVtXkvI3du4DQ2s4h+ZZZJWueSa5l+tnQ3g03uSk8q7tBj2U2DjQHHnb8IWbEqT
+        c+UGDPf7g==;
 Received: from [2601:1c0:6280:3f0::9ef4]
         by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iHwHO-0003r9-G9; Tue, 08 Oct 2019 20:40:22 +0000
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>
+        id 1iHwJ1-0004A6-9h; Tue, 08 Oct 2019 20:42:03 +0000
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>
 From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] gpio: fix kernel-doc for of_gpio_need_valid_mask()
-Message-ID: <6c5d22c8-6e27-3314-9c46-701d932b11a6@infradead.org>
-Date:   Tue, 8 Oct 2019 13:40:21 -0700
+Subject: [PATCH] bitmap.h: fix kernel-doc warning and typo
+Message-ID: <0729ea7a-2c0d-b2c5-7dd3-3629ee0803e2@infradead.org>
+Date:   Tue, 8 Oct 2019 13:42:02 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.1.1
 MIME-Version: 1.0
@@ -59,32 +58,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Randy Dunlap <rdunlap@infradead.org>
 
-Fix kernel-doc for of_gpio_need_valid_mask().
-Fixes this warning and uses correct Return: format.
+Fix kernel-doc warning in <linux/bitmap.h>:
 
-../drivers/gpio/gpiolib-of.c:92: warning: Excess function parameter 'dev' description in 'of_gpio_need_valid_mask'
+../include/linux/bitmap.h:341: warning: Function parameter or member 'nbits' not described in 'bitmap_or_equal'
 
-Fixes: f626d6dfb709 ("gpio: of: Break out OF-only code")
+Also fix small typo (bitnaps).
+
+Fixes: b9fa6442f704 ("cpumask: Implement cpumask_or_equal()")
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: linux-gpio@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>
 ---
- drivers/gpio/gpiolib-of.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ include/linux/bitmap.h |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- linux-next-20191008.orig/drivers/gpio/gpiolib-of.c
-+++ linux-next-20191008/drivers/gpio/gpiolib-of.c
-@@ -84,8 +84,9 @@ static struct gpio_desc *of_xlate_and_ge
+--- linux-next-20191008.orig/include/linux/bitmap.h
++++ linux-next-20191008/include/linux/bitmap.h
+@@ -326,10 +326,11 @@ static inline int bitmap_equal(const uns
+ }
+ 
  /**
-  * of_gpio_need_valid_mask() - figure out if the OF GPIO driver needs
-  * to set the .valid_mask
-- * @dev: the device for the GPIO provider
-- * @return: true if the valid mask needs to be set
-+ * @gc: the target gpio_chip
-+ *
-+ * Return: true if the valid mask needs to be set
+- * bitmap_or_equal - Check whether the or of two bitnaps is equal to a third
++ * bitmap_or_equal - Check whether the or of two bitmaps is equal to a third
+  * @src1:	Pointer to bitmap 1
+  * @src2:	Pointer to bitmap 2 will be or'ed with bitmap 1
+  * @src3:	Pointer to bitmap 3. Compare to the result of *@src1 | *@src2
++ * @nbits:	number of bits in each of these bitmaps
+  *
+  * Returns: True if (*@src1 | *@src2) == *@src3, false otherwise
   */
- bool of_gpio_need_valid_mask(const struct gpio_chip *gc)
- {
 
