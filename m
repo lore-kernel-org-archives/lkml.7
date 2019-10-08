@@ -4,166 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55262C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4587C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2682D20815
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:29:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71D0021721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:29:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="o6Nw29ct"
+	dkim=pass (1024-bit key) header.d=firstfloor.org header.i=@firstfloor.org header.b="b8kZOjeb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfJHO3c (ORCPT
+        id S1727212AbfJHO3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 10:29:32 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:49658 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726066AbfJHO3c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 10:29:32 -0400
-Received: from zn.tnic (p200300EC2F0B5100B1AE7F6CCC5C3495.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:5100:b1ae:7f6c:cc5c:3495])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C492C1EC0716;
-        Tue,  8 Oct 2019 16:29:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1570544970;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=9PJBBSCRdNjF8VxwfgzjbBJn0bf1aZWuK6L0d+VB2mg=;
-        b=o6Nw29ctnTHW194qsV5qKF957t/AbcVrtIhq1J/+Po158QASa7d17VL/wU5mNc/6+zGk4O
-        Nnm1QyNpKKTOj2k48Joqt/FPNSNvETWZr+zl0WHEX5DJaz6oTTCyiMWszM8S81nfoWEmMM
-        pwANodob+6eoUIBFqeReisNw45AeyR4=
-Date:   Tue, 8 Oct 2019 16:29:24 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com
-Subject: Re: [PATCH v3 1/6] x86/alternatives: Teach text_poke_bp() to emulate
- instructions
-Message-ID: <20191008142924.GE14765@zn.tnic>
-References: <20191007081716.07616230.8@infradead.org>
- <20191007081944.88332264.2@infradead.org>
+        Tue, 8 Oct 2019 10:29:44 -0400
+Received: from one.firstfloor.org ([193.170.194.197]:39246 "EHLO
+        one.firstfloor.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726333AbfJHO3o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 10:29:44 -0400
+X-Greylist: delayed 477 seconds by postgrey-1.27 at vger.kernel.org; Tue, 08 Oct 2019 10:29:44 EDT
+Received: by one.firstfloor.org (Postfix, from userid 503)
+        id D5AA586951; Tue,  8 Oct 2019 16:21:44 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=firstfloor.org;
+        s=mail; t=1570544504;
+        bh=qU+aOZ8e3XhF+99FLjM1jrujYQGQA+No8pJoZYO/5Pw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=b8kZOjeb4MtKFWbWeVqJPPRLt9CdIbDsFzN4tZvHefzobHsgfpkPFcSZsKLFL5tUh
+         fTuZ3BJvecZMBRb5WgnM5GDjOOS0W/e6m2Jko2OwQq92qKMydlo+a41JXUpgXeFaih
+         OUes1KKrjJFztWsFLfmI6JvceO/bBeG+73X3ZY0I=
+Date:   Tue, 8 Oct 2019 07:21:44 -0700
+From:   Andi Kleen <andi@firstfloor.org>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Andi Kleen <andi@firstfloor.org>, acme@kernel.org,
+        jolsa@kernel.org, linux-kernel@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH] perf data: Fix babeltrace detection
+Message-ID: <20191008142143.ts5se4pzwfnfnbsh@two.firstfloor.org>
+References: <20191007174120.12330-1-andi@firstfloor.org>
+ <20191008115240.GE10009@krava>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191007081944.88332264.2@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191008115240.GE10009@krava>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 10:17:17AM +0200, Peter Zijlstra wrote:
-> In preparation for static_call and variable size jump_label support,
-> teach text_poke_bp() to emulate instructions, namely:
+On Tue, Oct 08, 2019 at 01:52:40PM +0200, Jiri Olsa wrote:
+> On Mon, Oct 07, 2019 at 10:41:20AM -0700, Andi Kleen wrote:
+> > From: Andi Kleen <ak@linux.intel.com>
+> > 
+> > The symbol the feature file checks for is now actually in -lbabeltrace,
+> > not -lbabeltrace-ctf, at least as of libbabeltrace-1.5.6-2.fc30.x86_64
+> > 
+> > Always add both libraries to fix the feature detection.
 > 
->   JMP32, JMP8, CALL, NOP2, NOP_ATOMIC5, INT3
+> well, we link with libbabeltrace-ctf.so which links with libbabeltrace.so
 > 
-> The current text_poke_bp() takes a @handler argument which is used as
-> a jump target when the temporary INT3 is hit by a different CPU.
-> 
-> When patching CALL instructions, this doesn't work because we'd miss
-> the PUSH of the return address. Instead, teach poke_int3_handler() to
-> emulate an instruction, typically the instruction we're patching in.
-> 
-> This fits almost all text_poke_bp() users, except
-> arch_unoptimize_kprobe() which restores random text, and for that site
-> we have to build an explicit emulate instruction.
+> I guess we can link it as well, but where do you see it fail?
 
-...
+On FC30 the .so file is just a symlink, so it doesn't pull
+in the other library.
 
-> @@ -63,8 +66,17 @@ static inline void int3_emulate_jmp(stru
->  	regs->ip = ip;
->  }
->  
-> -#define INT3_INSN_SIZE 1
-> -#define CALL_INSN_SIZE 5
-> +#define INT3_INSN_SIZE		1
-> +#define INT3_INSN_OPCODE	0xCC
-> +
-> +#define CALL_INSN_SIZE		5
-> +#define CALL_INSN_OPCODE	0xE8
-> +
-> +#define JMP32_INSN_SIZE		5
-> +#define JMP32_INSN_OPCODE	0xE9
-> +
-> +#define JMP8_INSN_SIZE		2
-> +#define JMP8_INSN_OPCODE	0xEB
+$ gcc test-libbabeltrace.c -lbabeltrace-ctf
+/usr/bin/ld:
+/usr/lib/gcc/x86_64-redhat-linux/9/../../../../lib64/libbabeltrace-ctf.so:
+undefined reference to `bt_packet_seek_get_error'
+/usr/bin/ld:
+/usr/lib/gcc/x86_64-redhat-linux/9/../../../../lib64/libbabeltrace-ctf.so:
+undefined reference to `bt_packet_seek_set_error'
+collect2: error: ld returned 1 exit status
 
-You probably should switch those to have the name prefix come first and
-make them even shorter:
+$ ls -l /usr/lib64/libbabeltrace-ctf.so
+lrwxrwxrwx 1 root root 26 Jan 31  2019 /usr/lib64/libbabeltrace-ctf.so
+-> libbabeltrace-ctf.so.1.0.0
 
-OPCODE_CALL
-INSN_SIZE_CALL
-OPCODE_JMP32
-INSN_SIZE_JMP32
-OPCODE_JMP8
-...
+$ rpm -qf /usr/lib64/libbabeltrace-ctf.so
+libbabeltrace-devel-1.5.6-2.fc30.x86_64
 
-This way you have the opcodes prefixed with OPCODE_ and the insn sizes
-with INSN_SIZE_. I.e., what they actually are.
-
-> --- a/arch/x86/kernel/alternative.c
-> +++ b/arch/x86/kernel/alternative.c
-
-...
-
-> @@ -1027,9 +1046,9 @@ NOKPROBE_SYMBOL(poke_int3_handler);
->   */
->  void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries)
->  {
-> -	int patched_all_but_first = 0;
-> -	unsigned char int3 = 0xcc;
-> +	unsigned char int3 = INT3_INSN_OPCODE;
->  	unsigned int i;
-> +	int do_sync;
->  
->  	lockdep_assert_held(&text_mutex);
->  
-> @@ -1053,16 +1072,16 @@ void text_poke_bp_batch(struct text_poke
->  	/*
->  	 * Second step: update all but the first byte of the patched range.
->  	 */
-> -	for (i = 0; i < nr_entries; i++) {
-> +	for (do_sync = 0, i = 0; i < nr_entries; i++) {
->  		if (tp[i].len - sizeof(int3) > 0) {
->  			text_poke((char *)tp[i].addr + sizeof(int3),
-> -				  (const char *)tp[i].opcode + sizeof(int3),
-> +				  (const char *)tp[i].text + sizeof(int3),
->  				  tp[i].len - sizeof(int3));
-> -			patched_all_but_first++;
-> +			do_sync++;
->  		}
->  	}
->  
-> -	if (patched_all_but_first) {
-> +	if (do_sync) {
->  		/*
->  		 * According to Intel, this core syncing is very likely
->  		 * not necessary and we'd be safe even without it. But
-> @@ -1075,10 +1094,17 @@ void text_poke_bp_batch(struct text_poke
->  	 * Third step: replace the first byte (int3) by the first byte of
->  	 * replacing opcode.
->  	 */
-> -	for (i = 0; i < nr_entries; i++)
-> -		text_poke(tp[i].addr, tp[i].opcode, sizeof(int3));
-> +	for (do_sync = 0, i = 0; i < nr_entries; i++) {
-
-Can we have the do_sync reset outside of the loop?
-
-> +		if (tp[i].text[0] == INT3_INSN_OPCODE)
-> +			continue;
-
-I'm guessing we preset the 0th byte to 0xcc somewhere.... I just can't
-seem to find it...
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+-Andi
