@@ -2,109 +2,89 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A70DC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C46C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 324A42070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:34:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="J2bgWrEK";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iVEeZKv+"
+	by mail.kernel.org (Postfix) with ESMTP id 586AE2070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:34:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730864AbfJHLe3 (ORCPT
+        id S1730882AbfJHLed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 07:34:29 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:34529 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730156AbfJHLe2 (ORCPT
+        Tue, 8 Oct 2019 07:34:33 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37615 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730317AbfJHLec (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 07:34:28 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 795A521947;
-        Tue,  8 Oct 2019 07:34:27 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Tue, 08 Oct 2019 07:34:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
-        :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=FwWI9/MDx5th9
-        3BPylor5pCFZ4biSV3bwPlyQ31srtU=; b=J2bgWrEKdLiSxVKsQHfspdwIW4M/o
-        nP89ghxsFqU8xdG1vHZvtuDlte3JCnWb2Vs6ztb44LMJdzqWJ9OUs/PZSKNSZKGn
-        EtxlL0cvPj0KCBCaETT5kd+2Fjw89yfLKbPqqwFENYlhJWFZMrSSABZRLO9noHNu
-        vyxfeG+cbMrukkywZvd4u18ZXx31HGQcVL9eLA0B8d7u7MjJSP4hcF/vSwjU4FAF
-        jRLE2oWUPbrZsRf4rvFw6GcPa5Rjip4M1PjgyOu0UfYjjzVceTZBSKxBcn283SmR
-        hz6/6teBWTkmKnIYU59AiV7YHzrkZI2QSEcLhGCgRbW2q5Ufq2gob21sQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=FwWI9/MDx5th93BPylor5pCFZ4biSV3bwPlyQ31srtU=; b=iVEeZKv+
-        eF+dvDxO9NHd0GbE1lc+WBUkCjWbVlpHWX7Sx8e/ufcDhLOfwuvF21zC9vf4nfo8
-        HKykZntvU+MAGbRy+dhkOI+Yi6DTAf+hV1egvYfBrfT8EcvjbSgjnqxXw+7dVI32
-        DwAKZgFYIxxtw4chJegrZX0yNxMCDnJmJ8Kpvo1a8FjQAYV/ojlMmLCbv39nSxI1
-        uvfa8iyD1UXD2aaQZIz0VIO71Stv5GIwMAobCzaKKDhXqpoqldmQzY9GvAKBuB1T
-        Qhkk1Pu1xfLW7xGKrsJEjAAWJ8/J1wDzascmWgyHwzUWj6sOrTVh4X/eao9kPHm9
-        2yHVekz4ZXhaXw==
-X-ME-Sender: <xms:Q3ScXaTEm5jDzj34Gkwp05BVzIeLpC_w07WjRfPdgCelnQ6oihQ2Gg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrheelgdegfecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffojghfggfgsedtkeertd
-    ertddtnecuhfhrohhmpeetnhgurhgvficulfgvfhhfvghrhicuoegrnhgurhgvfiesrghj
-    rdhiugdrrghuqeenucfkphepvddtfedrheejrddvudehrddujeeknecurfgrrhgrmhepmh
-    grihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgvrhfuihii
-    vgeptd
-X-ME-Proxy: <xmx:Q3ScXV78YvhlYY68_5UbLoBCwc_MNVrgJg839NfJELG_qFGZbVlukA>
-    <xmx:Q3ScXag45dVG3gEmP11uihciUzFXfVAIxt3j4JNucZhZsW3lLa72fg>
-    <xmx:Q3ScXT0euz7fG1BwZiu103X8FAQlI7y6Nso9MncdxcRh-JBr-EJ1Hg>
-    <xmx:Q3ScXVqHIIG9FstAwuNS4vK672vAfPLvRpol7b0OF6LhzuRtYiBTNA>
-Received: from mistburn.lan (203-57-215-178.dyn.iinet.net.au [203.57.215.178])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 8C2EDD6005B;
-        Tue,  8 Oct 2019 07:34:23 -0400 (EDT)
-From:   Andrew Jeffery <andrew@aj.id.au>
-To:     linux-clk@vger.kernel.org
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, joel@jms.id.au,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH 1/2] dt-bindings: clock: Add AST2500 RMII RCLK definitions
-Date:   Tue,  8 Oct 2019 22:05:22 +1030
-Message-Id: <20191008113523.13601-2-andrew@aj.id.au>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191008113523.13601-1-andrew@aj.id.au>
-References: <20191008113523.13601-1-andrew@aj.id.au>
+        Tue, 8 Oct 2019 07:34:32 -0400
+Received: by mail-oi1-f194.google.com with SMTP id i16so14470589oie.4;
+        Tue, 08 Oct 2019 04:34:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rWU50A1ftSfnXS5t6he0dr7vBuFC5vEUJUAdKOgY8bw=;
+        b=N527jT4PgHTmlvHAVhCNHtZNL738nc/OGDDOsUN8frAJui2iRa5Ppc1CNAsXjx9VyR
+         8696sO7bTM3oVRV9yADjmUpkmBYBNWpXuJJL21tkRgsiq385hvblWNFggoXQRTBrqtJH
+         ACyMAYy8BmaTEqEAWb01vhSx9pRwlzlYoZhxwqHXuJEYpbRHkcGGGwyeqthxjO8ftYz9
+         zsldRXpo75NK4CQ38MdGem7yuys70bfHqSn+VdJ2K/WYsg1KbesP1taYL2gJICDbyxnO
+         8chJ8nSsCPzERIeA2aRpIzCpngdUCHR4MqVlLEfxXG4W6D5aVVyfLFLPAMsunG8HXtJP
+         FRxQ==
+X-Gm-Message-State: APjAAAWr9MtuF4U0g1yMWswyt9oe1KNX8MjyFqG9HKuYwngnPex7955A
+        CX0mqtuJder2U8E4QiOEROmV6mUa8zYy+LBB7Gw=
+X-Google-Smtp-Source: APXvYqwAPA2l7U6mPkupJHpYJrzDgXDrTLl3jL3YFnacDYrvezNetIgkQYwcj5GZ7SdPtESzr+7ZY8OXFr4We2D5N+s=
+X-Received: by 2002:aca:f305:: with SMTP id r5mr3342982oih.131.1570534471508;
+ Tue, 08 Oct 2019 04:34:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1570531132-21856-1-git-send-email-fabrizio.castro@bp.renesas.com> <1570531132-21856-4-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1570531132-21856-4-git-send-email-fabrizio.castro@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 8 Oct 2019 13:34:20 +0200
+Message-ID: <CAMuHMdVGcsVZoJdqaYHVYi4XHkUT24ryRBFo6cXmJ+zfYF69DQ@mail.gmail.com>
+Subject: Re: [PATCH 03/10] dt-bindings: usb: renesas_usbhs: Add r8a774b1 support
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms@verge.net.au>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>, dmaengine@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The AST2500 has an explicit gate for the RMII RCLK for each of the two
-MACs.
+On Tue, Oct 8, 2019 at 12:39 PM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+> Document RZ/G2N (R8A774B1) SoC bindings.
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
----
- include/dt-bindings/clock/aspeed-clock.h | 2 ++
- 1 file changed, 2 insertions(+)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/include/dt-bindings/clock/aspeed-clock.h b/include/dt-bindings/clock/aspeed-clock.h
-index f43738607d77..64e245fb113f 100644
---- a/include/dt-bindings/clock/aspeed-clock.h
-+++ b/include/dt-bindings/clock/aspeed-clock.h
-@@ -39,6 +39,8 @@
- #define ASPEED_CLK_BCLK			33
- #define ASPEED_CLK_MPLL			34
- #define ASPEED_CLK_24M			35
-+#define ASPEED_CLK_GATE_MAC1RCLK	36
-+#define ASPEED_CLK_GATE_MAC2RCLK	37
- 
- #define ASPEED_RESET_XDMA		0
- #define ASPEED_RESET_MCTP		1
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.20.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
