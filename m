@@ -2,69 +2,167 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF474C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 23:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 101B7C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 23:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D10A421721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 23:42:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCC9321721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 23:44:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BKQ1xzf8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729830AbfJHXm0 (ORCPT
+        id S1729814AbfJHXoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 19:42:26 -0400
-Received: from mga03.intel.com ([134.134.136.65]:27718 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726822AbfJHXm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 19:42:26 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 16:42:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,273,1566889200"; 
-   d="scan'208";a="199961741"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by FMSMGA003.fm.intel.com with ESMTP; 08 Oct 2019 16:42:24 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id 83A05F9; Wed,  9 Oct 2019 02:42:23 +0300 (EEST)
-Date:   Wed, 9 Oct 2019 02:42:23 +0300
-From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc:     linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH] ARC: mm: remove __ARCH_USE_5LEVEL_HACK
-Message-ID: <20191008234223.wycjktby2t5gwz3o@black.fi.intel.com>
-References: <20191008213836.19266-1-vgupta@synopsys.com>
+        Tue, 8 Oct 2019 19:44:05 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41217 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726822AbfJHXoF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 19:44:05 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q7so353022pfh.8;
+        Tue, 08 Oct 2019 16:44:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=giOz/dRSNjcjaoPCpsFIM1SwpAO5uvYzKokl/9Bvn60=;
+        b=BKQ1xzf8hhuxcflOm7bvqSjeqcU3Oqibixhqnm42Va7LWUpPnr+GdX8aP8G2VO/89p
+         pYkhYPNmFH5gVC59PBt3DSld5qKt7DE0odsOK+BiUnjbO8YbhumJSkuoGS6Q30c9wuoA
+         LXRlFqiUsneDzDCIKpxXRVpzPqioFR2g77XHdAqCPXX8LcYV5ieJ4b4BflWtMciUg9nz
+         N7FwdWhkT32oWPn63OeCnBtuvaUIbEq2XPsOjGFy/v5uGPn58k3sOvloAkFY30PLPZRd
+         ZDoFCd2diAX+9xhT3LdThYbTmNMZjk6VEJDKlEWKlgwdQsq71/v3um030qSAhUpOHuwJ
+         69Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=giOz/dRSNjcjaoPCpsFIM1SwpAO5uvYzKokl/9Bvn60=;
+        b=lDemhlECazjHK6I+FJnC18PboZTqtFvFYVLTGZhHwXRkitGt076c69v50Rxd82Y7CQ
+         cAuzadk/UuWwYGwG7U2ed3cgenMHhbAo7UEgXf+ioD3Pdg7H+a5N5kqkNBqzFYLIQbGt
+         hlr7aEKo6yFk9pKekjK9LQyoyCEKLVCLzIuAjyU3T9gPL5PvfETKs0aB8qreKhRbY+Tw
+         qH/xqdt0kCwSAAqh78ektkdOARUxseI7Nih2NlmcifQGXhM14YVLLrleOPIX2gj38E9S
+         whXi7VuJ/CvUBmFXHKrIFoxIAq9hB9Lzx2U9odztcIk2IMHt5hA5yB/tK81p3bZV/cxO
+         Hq1Q==
+X-Gm-Message-State: APjAAAVL3Aqbtngrd3+DIWfRQwhKDPOVnskxNWr4iqatXC09cDNFSN1m
+        QlFgUdFFBpoth9GRyb/ZrME=
+X-Google-Smtp-Source: APXvYqyZm6Xavx10KziFI2ZriRe5b6hI9rLlLzyI1VzXZOmZ5IeJZNNGJ6qatjgVlbEfyXZRtyr3SQ==
+X-Received: by 2002:a63:5b07:: with SMTP id p7mr1132507pgb.416.1570578243596;
+        Tue, 08 Oct 2019 16:44:03 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id 127sm203127pfy.56.2019.10.08.16.44.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Oct 2019 16:44:02 -0700 (PDT)
+Date:   Tue, 8 Oct 2019 16:44:00 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Andy Shevchenko <andy@infradead.org>, linux-input@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maximilian Luz <luzmaximilian@gmail.com>
+Subject: Re: [PATCH 5.4 regression fix] Input: soc_button_array - partial
+ revert of support for newer surface devices
+Message-ID: <20191008234400.GJ22365@dtor-ws>
+References: <20191005105551.353273-1-hdegoede@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191008213836.19266-1-vgupta@synopsys.com>
-User-Agent: NeoMutt/20170714-126-deb55f (1.8.3)
+In-Reply-To: <20191005105551.353273-1-hdegoede@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 09:38:36PM +0000, Vineet Gupta wrote:
-> Add the intermediate p4d accessors to make it 5 level compliant.
+On Sat, Oct 05, 2019 at 12:55:51PM +0200, Hans de Goede wrote:
+> Commit c394159310d0 ("Input: soc_button_array - add support for newer
+> surface devices") not only added support for the MSHW0040 ACPI HID,
+> but for some reason it also makes changes to the error handling of the
+> soc_button_lookup_gpio() call in soc_button_device_create(). Note ideally
+> this seamingly unrelated change would have been made in a separate commit,
+> with a message explaining the what and why of this change.
 > 
-> Thi sis non-functional change anyways since ARC has software page walker
-     ^
-     Typo.
-> with 2 lookup levels (pgd -> pte)
+> I guess this change may have been added to deal with -EPROBE_DEFER errors,
+> but in case of the existing support for PNP0C40 devices, treating
+> -EPROBE_DEFER as any other error is deliberate, see the comment this
+> commit adds for why.
 > 
-> Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
-> ---
->  arch/arc/include/asm/pgtable.h |  1 -
->  arch/arc/mm/fault.c            | 10 ++++++++--
->  2 files changed, 8 insertions(+), 3 deletions(-)
+> The actual returning of -EPROBE_DEFER to the caller of soc_button_probe()
+> introduced by the new error checking causes a serious regression:
+> 
+> On devices with so called virtual GPIOs soc_button_lookup_gpio() will
+> always return -EPROBE_DEFER for these fake GPIOs, when this happens
+> during the second call of soc_button_device_create() we already have
+> successfully registered our first child. This causes the kernel to think
+> we are making progress with probing things even though we unregister the
+> child before again before we return the -EPROBE_DEFER. Since we are making
+> progress the kernel will retry deferred-probes again immediately ending
+> up stuck in a loop with the following showing in dmesg:
+> 
+> [  124.022697] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6537
+> [  124.040764] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6538
+> [  124.056967] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6539
+> [  124.072143] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6540
+> [  124.092373] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6541
+> [  124.108065] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6542
+> [  124.128483] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6543
+> [  124.147141] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6544
+> [  124.165070] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6545
+> [  124.179775] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6546
+> [  124.202726] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6547
+> <continues on and on and on>
+> 
+> And 1 CPU core being stuck at 100% and udev hanging since it is waiting
+> for the modprobe of soc_button_array to return.
+> 
+> This patch reverts the soc_button_lookup_gpio() error handling changes,
+> fixing this regression.
+> 
+> Fixes: c394159310d0 ("Input: soc_button_array - add support for newer surface devices")
+> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=205031
+> Cc: Maximilian Luz <luzmaximilian@gmail.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-Have you tested it with CONFIG_HIGHMEM=y? alloc_kmap_pgtable() has to be
-converted too.
+Applied, thank you.
+
+> ---
+>  drivers/input/misc/soc_button_array.c | 17 ++++++++++++-----
+>  1 file changed, 12 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/input/misc/soc_button_array.c b/drivers/input/misc/soc_button_array.c
+> index 97e3639e99d0..97761421d6dd 100644
+> --- a/drivers/input/misc/soc_button_array.c
+> +++ b/drivers/input/misc/soc_button_array.c
+> @@ -92,11 +92,18 @@ soc_button_device_create(struct platform_device *pdev,
+>  			continue;
+>  
+>  		gpio = soc_button_lookup_gpio(&pdev->dev, info->acpi_index);
+> -		if (gpio < 0 && gpio != -ENOENT) {
+> -			error = gpio;
+> -			goto err_free_mem;
+> -		} else if (!gpio_is_valid(gpio)) {
+> -			/* Skip GPIO if not present */
+> +		if (!gpio_is_valid(gpio)) {
+> +			/*
+> +			 * Skip GPIO if not present. Note we deliberately
+> +			 * ignore -EPROBE_DEFER errors here. On some devices
+> +			 * Intel is using so called virtual GPIOs which are not
+> +			 * GPIOs at all but some way for AML code to check some
+> +			 * random status bits without need a custom opregion.
+> +			 * In some cases the resources table we parse points to
+> +			 * such a virtual GPIO, since these are not real GPIOs
+> +			 * we do not have a driver for these so they will never
+> +			 * show up, therefor we ignore -EPROBE_DEFER.
+> +			 */
+>  			continue;
+>  		}
+>  
+> -- 
+> 2.23.0
+> 
 
 -- 
- Kirill A. Shutemov
+Dmitry
