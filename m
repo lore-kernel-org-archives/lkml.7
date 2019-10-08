@@ -2,345 +2,718 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	TVD_SUBJ_WIPE_DEBT,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F42EC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE084C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E5C721721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:26:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D11721721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:27:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="KUQ2jqii"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730827AbfJHU0C (ORCPT
+        id S1730858AbfJHU1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 16:26:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37050 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730565AbfJHU0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 16:26:01 -0400
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com [209.85.208.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B2E968666C
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Oct 2019 20:26:00 +0000 (UTC)
-Received: by mail-ed1-f70.google.com with SMTP id y66so11941761ede.16
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 13:26:00 -0700 (PDT)
+        Tue, 8 Oct 2019 16:27:23 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:34903 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727835AbfJHU1W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 16:27:22 -0400
+Received: by mail-qt1-f194.google.com with SMTP id m15so138230qtq.2
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 13:27:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version;
+        bh=pGoqueZQ/QI/rpFs9SQ0ukSegXjhclNBbOmj8c+PVNY=;
+        b=KUQ2jqiiS+Be6kjsoBWX0MVisSK7xJabXkSWD7BtTPNRgk51QsdxYItZWvETcmhxQI
+         1ElRBETQ5uldRvBa3K1qPdjLHNFlkrgn+wRHfnxch4Qpzl2TNwf1f8r6k8/NvaY1l6vG
+         Bs/YL3KeCK0fnDWlN0TBcaTXmIFDZLKc13q1nlR84v7UkF7K8xHizx3SOGkWdxMAarmG
+         T36di2wjKsRCxVPkj8lQYn07iQH3IN+qAwxKv/Za+tPBAMYqkbvD8rDZ6SF0hNsmpqk5
+         TKFBsmQ5k9JEx6Ep9UOSgbyREyWQKTo/RYg9Bi2P+UmFkWwTM/LZ8OORq/VN/sKbYFAq
+         7JKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6vT1nQy6baeyjaLifLV0yhPzXEaySDZtE1QSxDrBneg=;
-        b=dtRqh9SGfTjZnL6iIfIQcVu82vlsPqKi/6btiyoMGXMDiydk+bJg0tCxBeBHzuvVF4
-         VZE5+6QlxirSWsxCd8YCuh8PRrwkb0AZg04PKzh09Id1ylfIdp123S2Kur3M6bBGtk0s
-         Mx7QQgl5ZvH77BsPNSV+Q/BShJChs4SZLmMywFWCQZiwiv7MYFCL/WdaM2VEi+BtFPou
-         GpAdnmnwoqONSR12MhyHkuYvev1Ft+sydZcEXTdiV17oWDRkrdUitehuqVQ0kEADcilq
-         oqhlHhMsqGizg8FABkMA6/FTKhNFcySwYDSTSwRjqA39mhMYS1lhUG6NRraORlRubNkI
-         /m2A==
-X-Gm-Message-State: APjAAAXMIBVp+TlTJnCYDJ/ziwIZe/Rwf3MJnwg+HWf05T3F1gRgnHVQ
-        GUqVrrfcm5SST+BUkmS8JRrApXtl9ZYocaz/VRX/XslRtayxq5Wu5TUJsjQBKYvw3lb8wUBSB+l
-        pG17whGtbX/vfB8mmICNwthrO
-X-Received: by 2002:a05:6402:1a4c:: with SMTP id bf12mr36184871edb.277.1570566359064;
-        Tue, 08 Oct 2019 13:25:59 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqylCRWlWdb2VGHNAEs+TSOc/3kfnHEYstdSy5WG3CuBru+/Zi4s37ocFW10hX1Hs/9ByC4MHQ==
-X-Received: by 2002:a05:6402:1a4c:: with SMTP id bf12mr36184852edb.277.1570566358814;
-        Tue, 08 Oct 2019 13:25:58 -0700 (PDT)
-Received: from shalem.localdomain (2001-1c00-0c14-2800-ec23-a060-24d5-2453.cable.dynamic.v6.ziggo.nl. [2001:1c00:c14:2800:ec23:a060:24d5:2453])
-        by smtp.gmail.com with ESMTPSA id f6sm3526edr.12.2019.10.08.13.25.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Oct 2019 13:25:57 -0700 (PDT)
-Subject: Re: [PATCH] HID: i2c-hid: Remove runtime power management
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>, jikos@kernel.org,
-        benjamin.tissoires@redhat.com
-Cc:     vicamo.yang@canonical.com, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191008153829.24766-1-kai.heng.feng@canonical.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <d096582b-c96b-69a2-bcc5-cba2984705e7@redhat.com>
-Date:   Tue, 8 Oct 2019 22:25:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version;
+        bh=pGoqueZQ/QI/rpFs9SQ0ukSegXjhclNBbOmj8c+PVNY=;
+        b=Nc5l2atS5EdcP2IiKN/gv2k+3YQkhe3CtSO/5ArEMldDjh0gpWNCZgN5KiOYeNHxxG
+         W4DAuV+jKhACJi7937jXArdFHJkQ9lQD0MTcroJB1lj5ptMB/nAl6kn6sFb+PD2JAryc
+         w5pRvR9zVjjgQMlKjbyU4R7W3uX/Yn23C/dX4cOnGTOfqg7lP7K26UMi/XD5rS13cPFV
+         0pNLqGyqrJcxbBVGMOwX+WsLWTTIP7jY/Yo1vVfD/cbC/AE9WE1S17819Uvk9+EtU7dI
+         f5jvTH6f8U/2HZTw21C5Q7MEurKfa2JpjNFlJGTtZsS+xt4ueOPvwrrotvka6x3B394+
+         KB+A==
+X-Gm-Message-State: APjAAAVIDl1E7hDUWvw9BCxDUmMXZCdBM0TSyE/F9bYf5FzRs0t1pffw
+        PZJS3VJyXi6tWgftBlLyGZ56lg==
+X-Google-Smtp-Source: APXvYqydeh4r2EZwMfRY2ofr3N+sKCDyKsKZ3hcVgqMad4Og5guaUzsllZCFWlHNeY/yOC6p3S17Rg==
+X-Received: by 2002:a0c:c603:: with SMTP id v3mr26619qvi.28.1570566438748;
+        Tue, 08 Oct 2019 13:27:18 -0700 (PDT)
+Received: from tpx230-nicolas.collaboramtl (modemcable154.55-37-24.static.videotron.ca. [24.37.55.154])
+        by smtp.gmail.com with ESMTPSA id t19sm8532389qto.55.2019.10.08.13.27.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Oct 2019 13:27:17 -0700 (PDT)
+Message-ID: <912dfabbaafc6eb4dce343ad43914ae54fc99343.camel@ndufresne.ca>
+Subject: Re: [PATCH 2/2] media: meson: vdec: add H.264 decoding support
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Maxime Jourdan <mjourdan@baylibre.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Date:   Tue, 08 Oct 2019 16:27:14 -0400
+In-Reply-To: <20191007145909.29979-3-mjourdan@baylibre.com>
+References: <20191007145909.29979-1-mjourdan@baylibre.com>
+         <20191007145909.29979-3-mjourdan@baylibre.com>
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+        boundary="=-OmJTcNTLraoYNa4SPA7W"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-In-Reply-To: <20191008153829.24766-1-kai.heng.feng@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 08-10-2019 17:38, Kai-Heng Feng wrote:
-> Runtime power management in i2c-hid brings lots of issues, such as:
-> - When transitioning from display manager to desktop session, i2c-hid
-> was closed and opened, so the device was set to SLEEP and ON in a short
-> period. Vendors confirmed that their devices can't handle fast ON/SLEEP
-> command because Windows doesn't have this behavior.
-> 
-> - When rebooting, i2c-hid was closed, and the driver core put the device
-> back to full power before shutdown. This behavior also triggers a quick
-> SLEEP and ON commands that some devices can't handle, renders an
-> unusable touchpad after reboot.
-> 
-> - Runtime power management is only useful when i2c-hid isn't opened,
-> i.e. a laptop without desktop session, which isn't that common.
-> 
-> - Most importantly, my power meter reports little to none energy saving
-> when i2c-hid is runtime suspended.
-> 
-> So let's remove runtime power management since there is no actual
-> benefit.
-> 
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+--=-OmJTcNTLraoYNa4SPA7W
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Given all the problems we've been seeing related to runtime pm I agree
-that this is probably the best approach:
-
-Acked-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
-
-
+Le lundi 07 octobre 2019 =C3=A0 16:59 +0200, Maxime Jourdan a =C3=A9crit :
+> Add support for the H264 compressed format (V4L2_PIX_FMT_H264).
+>=20
+> Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
 > ---
->   drivers/hid/i2c-hid/i2c-hid-core.c | 111 ++---------------------------
->   1 file changed, 4 insertions(+), 107 deletions(-)
-> 
-> diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
-> index 2a7c6e33bb1c..5ab4982b3a7b 100644
-> --- a/drivers/hid/i2c-hid/i2c-hid-core.c
-> +++ b/drivers/hid/i2c-hid/i2c-hid-core.c
-> @@ -26,7 +26,6 @@
->   #include <linux/delay.h>
->   #include <linux/slab.h>
->   #include <linux/pm.h>
-> -#include <linux/pm_runtime.h>
->   #include <linux/device.h>
->   #include <linux/wait.h>
->   #include <linux/err.h>
-> @@ -48,8 +47,6 @@
->   /* quirks to control the device */
->   #define I2C_HID_QUIRK_SET_PWR_WAKEUP_DEV	BIT(0)
->   #define I2C_HID_QUIRK_NO_IRQ_AFTER_RESET	BIT(1)
-> -#define I2C_HID_QUIRK_NO_RUNTIME_PM		BIT(2)
-> -#define I2C_HID_QUIRK_DELAY_AFTER_SLEEP		BIT(3)
->   #define I2C_HID_QUIRK_BOGUS_IRQ			BIT(4)
->   
->   /* flags */
-> @@ -172,14 +169,7 @@ static const struct i2c_hid_quirks {
->   	{ USB_VENDOR_ID_WEIDA, HID_ANY_ID,
->   		I2C_HID_QUIRK_SET_PWR_WAKEUP_DEV },
->   	{ I2C_VENDOR_ID_HANTICK, I2C_PRODUCT_ID_HANTICK_5288,
-> -		I2C_HID_QUIRK_NO_IRQ_AFTER_RESET |
-> -		I2C_HID_QUIRK_NO_RUNTIME_PM },
-> -	{ I2C_VENDOR_ID_RAYDIUM, I2C_PRODUCT_ID_RAYDIUM_4B33,
-> -		I2C_HID_QUIRK_DELAY_AFTER_SLEEP },
-> -	{ USB_VENDOR_ID_LG, I2C_DEVICE_ID_LG_8001,
-> -		I2C_HID_QUIRK_NO_RUNTIME_PM },
-> -	{ I2C_VENDOR_ID_GOODIX, I2C_DEVICE_ID_GOODIX_01F0,
-> -		I2C_HID_QUIRK_NO_RUNTIME_PM },
-> +		I2C_HID_QUIRK_NO_IRQ_AFTER_RESET },
->   	{ USB_VENDOR_ID_ELAN, HID_ANY_ID,
->   		 I2C_HID_QUIRK_BOGUS_IRQ },
->   	{ 0, 0 }
-> @@ -397,7 +387,6 @@ static int i2c_hid_set_power(struct i2c_client *client, int power_state)
->   {
->   	struct i2c_hid *ihid = i2c_get_clientdata(client);
->   	int ret;
-> -	unsigned long now, delay;
->   
->   	i2c_hid_dbg(ihid, "%s\n", __func__);
->   
-> @@ -415,22 +404,9 @@ static int i2c_hid_set_power(struct i2c_client *client, int power_state)
->   			goto set_pwr_exit;
->   	}
->   
-> -	if (ihid->quirks & I2C_HID_QUIRK_DELAY_AFTER_SLEEP &&
-> -	    power_state == I2C_HID_PWR_ON) {
-> -		now = jiffies;
-> -		if (time_after(ihid->sleep_delay, now)) {
-> -			delay = jiffies_to_usecs(ihid->sleep_delay - now);
-> -			usleep_range(delay, delay + 1);
-> -		}
-> -	}
-> -
->   	ret = __i2c_hid_command(client, &hid_set_power_cmd, power_state,
->   		0, NULL, 0, NULL, 0);
->   
-> -	if (ihid->quirks & I2C_HID_QUIRK_DELAY_AFTER_SLEEP &&
-> -	    power_state == I2C_HID_PWR_SLEEP)
-> -		ihid->sleep_delay = jiffies + msecs_to_jiffies(20);
-> -
->   	if (ret)
->   		dev_err(&client->dev, "failed to change power setting.\n");
->   
-> @@ -791,11 +767,6 @@ static int i2c_hid_open(struct hid_device *hid)
->   {
->   	struct i2c_client *client = hid->driver_data;
->   	struct i2c_hid *ihid = i2c_get_clientdata(client);
-> -	int ret = 0;
-> -
-> -	ret = pm_runtime_get_sync(&client->dev);
-> -	if (ret < 0)
-> -		return ret;
->   
->   	set_bit(I2C_HID_STARTED, &ihid->flags);
->   	return 0;
-> @@ -807,27 +778,6 @@ static void i2c_hid_close(struct hid_device *hid)
->   	struct i2c_hid *ihid = i2c_get_clientdata(client);
->   
->   	clear_bit(I2C_HID_STARTED, &ihid->flags);
-> -
-> -	/* Save some power */
-> -	pm_runtime_put(&client->dev);
-> -}
-> -
-> -static int i2c_hid_power(struct hid_device *hid, int lvl)
-> -{
-> -	struct i2c_client *client = hid->driver_data;
-> -	struct i2c_hid *ihid = i2c_get_clientdata(client);
-> -
-> -	i2c_hid_dbg(ihid, "%s lvl:%d\n", __func__, lvl);
-> -
-> -	switch (lvl) {
-> -	case PM_HINT_FULLON:
-> -		pm_runtime_get_sync(&client->dev);
-> -		break;
-> -	case PM_HINT_NORMAL:
-> -		pm_runtime_put(&client->dev);
-> -		break;
-> -	}
-> -	return 0;
->   }
->   
->   struct hid_ll_driver i2c_hid_ll_driver = {
-> @@ -836,7 +786,6 @@ struct hid_ll_driver i2c_hid_ll_driver = {
->   	.stop = i2c_hid_stop,
->   	.open = i2c_hid_open,
->   	.close = i2c_hid_close,
-> -	.power = i2c_hid_power,
->   	.output_report = i2c_hid_output_report,
->   	.raw_request = i2c_hid_raw_request,
->   };
-> @@ -1104,9 +1053,6 @@ static int i2c_hid_probe(struct i2c_client *client,
->   
->   	i2c_hid_acpi_fix_up_power(&client->dev);
->   
-> -	pm_runtime_get_noresume(&client->dev);
-> -	pm_runtime_set_active(&client->dev);
-> -	pm_runtime_enable(&client->dev);
->   	device_enable_async_suspend(&client->dev);
->   
->   	/* Make sure there is something at this address */
-> @@ -1154,9 +1100,6 @@ static int i2c_hid_probe(struct i2c_client *client,
->   		goto err_mem_free;
->   	}
->   
-> -	if (!(ihid->quirks & I2C_HID_QUIRK_NO_RUNTIME_PM))
-> -		pm_runtime_put(&client->dev);
-> -
->   	return 0;
->   
->   err_mem_free:
-> @@ -1166,9 +1109,6 @@ static int i2c_hid_probe(struct i2c_client *client,
->   	free_irq(client->irq, ihid);
->   
->   err_pm:
-> -	pm_runtime_put_noidle(&client->dev);
-> -	pm_runtime_disable(&client->dev);
-> -
->   err_regulator:
->   	regulator_bulk_disable(ARRAY_SIZE(ihid->pdata.supplies),
->   			       ihid->pdata.supplies);
-> @@ -1181,12 +1121,6 @@ static int i2c_hid_remove(struct i2c_client *client)
->   	struct i2c_hid *ihid = i2c_get_clientdata(client);
->   	struct hid_device *hid;
->   
-> -	if (!(ihid->quirks & I2C_HID_QUIRK_NO_RUNTIME_PM))
-> -		pm_runtime_get_sync(&client->dev);
-> -	pm_runtime_disable(&client->dev);
-> -	pm_runtime_set_suspended(&client->dev);
-> -	pm_runtime_put_noidle(&client->dev);
-> -
->   	hid = ihid->hid;
->   	hid_destroy_device(hid);
->   
-> @@ -1219,25 +1153,15 @@ static int i2c_hid_suspend(struct device *dev)
->   	int wake_status;
->   
->   	if (hid->driver && hid->driver->suspend) {
-> -		/*
-> -		 * Wake up the device so that IO issues in
-> -		 * HID driver's suspend code can succeed.
-> -		 */
-> -		ret = pm_runtime_resume(dev);
-> -		if (ret < 0)
-> -			return ret;
-> -
->   		ret = hid->driver->suspend(hid, PMSG_SUSPEND);
->   		if (ret < 0)
->   			return ret;
->   	}
->   
-> -	if (!pm_runtime_suspended(dev)) {
-> -		/* Save some power */
-> -		i2c_hid_set_power(client, I2C_HID_PWR_SLEEP);
-> +	/* Save some power */
-> +	i2c_hid_set_power(client, I2C_HID_PWR_SLEEP);
->   
-> -		disable_irq(client->irq);
-> -	}
-> +	disable_irq(client->irq);
->   
->   	if (device_may_wakeup(&client->dev)) {
->   		wake_status = enable_irq_wake(client->irq);
-> @@ -1279,11 +1203,6 @@ static int i2c_hid_resume(struct device *dev)
->   				wake_status);
->   	}
->   
-> -	/* We'll resume to full power */
-> -	pm_runtime_disable(dev);
-> -	pm_runtime_set_active(dev);
-> -	pm_runtime_enable(dev);
-> -
->   	enable_irq(client->irq);
->   
->   	/* Instead of resetting device, simply powers the device on. This
-> @@ -1304,30 +1223,8 @@ static int i2c_hid_resume(struct device *dev)
->   }
->   #endif
->   
-> -#ifdef CONFIG_PM
-> -static int i2c_hid_runtime_suspend(struct device *dev)
-> -{
-> -	struct i2c_client *client = to_i2c_client(dev);
-> -
-> -	i2c_hid_set_power(client, I2C_HID_PWR_SLEEP);
-> -	disable_irq(client->irq);
-> -	return 0;
-> -}
-> -
-> -static int i2c_hid_runtime_resume(struct device *dev)
-> -{
-> -	struct i2c_client *client = to_i2c_client(dev);
-> -
-> -	enable_irq(client->irq);
-> -	i2c_hid_set_power(client, I2C_HID_PWR_ON);
-> -	return 0;
-> -}
-> -#endif
-> -
->   static const struct dev_pm_ops i2c_hid_pm = {
->   	SET_SYSTEM_SLEEP_PM_OPS(i2c_hid_suspend, i2c_hid_resume)
-> -	SET_RUNTIME_PM_OPS(i2c_hid_runtime_suspend, i2c_hid_runtime_resume,
-> -			   NULL)
->   };
->   
->   static const struct i2c_device_id i2c_hid_id_table[] = {
-> 
+>  drivers/staging/media/meson/vdec/Makefile     |   2 +-
+>  drivers/staging/media/meson/vdec/codec_h264.c | 482 ++++++++++++++++++
+>  drivers/staging/media/meson/vdec/codec_h264.h |  14 +
+>  .../staging/media/meson/vdec/vdec_platform.c  |  37 ++
+>  4 files changed, 534 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/staging/media/meson/vdec/codec_h264.c
+>  create mode 100644 drivers/staging/media/meson/vdec/codec_h264.h
+>=20
+> diff --git a/drivers/staging/media/meson/vdec/Makefile b/drivers/staging/=
+media/meson/vdec/Makefile
+> index 6bea129084b7..711d990c760e 100644
+> --- a/drivers/staging/media/meson/vdec/Makefile
+> +++ b/drivers/staging/media/meson/vdec/Makefile
+> @@ -3,6 +3,6 @@
+> =20
+>  meson-vdec-objs =3D esparser.o vdec.o vdec_helpers.o vdec_platform.o
+>  meson-vdec-objs +=3D vdec_1.o
+> -meson-vdec-objs +=3D codec_mpeg12.o
+> +meson-vdec-objs +=3D codec_mpeg12.o codec_h264.o
+> =20
+>  obj-$(CONFIG_VIDEO_MESON_VDEC) +=3D meson-vdec.o
+> diff --git a/drivers/staging/media/meson/vdec/codec_h264.c b/drivers/stag=
+ing/media/meson/vdec/codec_h264.c
+> new file mode 100644
+> index 000000000000..4528a6a01c3d
+> --- /dev/null
+> +++ b/drivers/staging/media/meson/vdec/codec_h264.c
+> @@ -0,0 +1,482 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright (C) 2019 BayLibre, SAS
+> + * Author: Maxime Jourdan <mjourdan@baylibre.com>
+> + */
+> +
+> +#include <media/v4l2-mem2mem.h>
+> +#include <media/videobuf2-dma-contig.h>
+> +
+> +#include "vdec_helpers.h"
+> +#include "dos_regs.h"
+> +
+> +#define SIZE_EXT_FW	(20 * SZ_1K)
+> +#define SIZE_WORKSPACE	0x1ee000
+> +#define SIZE_SEI	(8 * SZ_1K)
+> +
+> +/*
+> + * Offset added by the firmware which must be substracted
+> + * from the workspace phyaddr
+> + */
+> +#define WORKSPACE_BUF_OFFSET	0x1000000
+> +
+> +/* ISR status */
+> +#define CMD_MASK		GENMASK(7, 0)
+> +#define CMD_SRC_CHANGE		1
+> +#define CMD_FRAMES_READY	2
+> +#define CMD_FATAL_ERROR		6
+> +#define CMD_BAD_WIDTH		7
+> +#define CMD_BAD_HEIGHT		8
+> +
+> +#define SEI_DATA_READY	BIT(15)
+> +
+> +/* Picture type */
+> +#define PIC_TOP_BOT	5
+> +#define PIC_BOT_TOP	6
+> +
+> +/* Size of Motion Vector per macroblock */
+> +#define MB_MV_SIZE	96
+> +
+> +/* Frame status data */
+> +#define PIC_STRUCT_BIT	5
+> +#define PIC_STRUCT_MASK	GENMASK(2, 0)
+> +#define BUF_IDX_MASK	GENMASK(4, 0)
+> +#define ERROR_FLAG	BIT(9)
+> +#define OFFSET_BIT	16
+> +#define OFFSET_MASK	GENMASK(15, 0)
+> +
+> +/* Bitstream parsed data */
+> +#define MB_TOTAL_BIT	8
+> +#define MB_TOTAL_MASK	GENMASK(15, 0)
+> +#define MB_WIDTH_MASK	GENMASK(7, 0)
+> +#define MAX_REF_BIT	24
+> +#define MAX_REF_MASK	GENMASK(6, 0)
+> +#define AR_IDC_BIT	16
+> +#define AR_IDC_MASK	GENMASK(7, 0)
+> +#define AR_PRESENT_FLAG	BIT(0)
+> +#define AR_EXTEND	0xff
+> +
+> +/*
+> + * Buffer to send to the ESPARSER to signal End Of Stream for H.264.
+> + * This is a 16x16 encoded picture that will trigger drain firmware-side=
+.
+> + * There is no known alternative.
+> + */
+> +static const u8 eos_sequence[SZ_4K] =3D {
+> +	0x00, 0x00, 0x00, 0x01, 0x06, 0x05, 0xff, 0xe4, 0xdc, 0x45, 0xe9, 0xbd,
+> +	0xe6, 0xd9, 0x48, 0xb7,	0x96, 0x2c, 0xd8, 0x20, 0xd9, 0x23, 0xee, 0xef,
+> +	0x78, 0x32, 0x36, 0x34, 0x20, 0x2d, 0x20, 0x63,	0x6f, 0x72, 0x65, 0x20,
+> +	0x36, 0x37, 0x20, 0x72, 0x31, 0x31, 0x33, 0x30, 0x20, 0x38, 0x34, 0x37,
+> +	0x35, 0x39, 0x37, 0x37, 0x20, 0x2d, 0x20, 0x48, 0x2e, 0x32, 0x36, 0x34,
+> +	0x2f, 0x4d, 0x50, 0x45,	0x47, 0x2d, 0x34, 0x20, 0x41, 0x56, 0x43, 0x20,
+> +	0x63, 0x6f, 0x64, 0x65, 0x63, 0x20, 0x2d, 0x20,	0x43, 0x6f, 0x70, 0x79,
+> +	0x6c, 0x65, 0x66, 0x74, 0x20, 0x32, 0x30, 0x30, 0x33, 0x2d, 0x32, 0x30,
+> +	0x30, 0x39, 0x20, 0x2d, 0x20, 0x68, 0x74, 0x74, 0x70, 0x3a, 0x2f, 0x2f,
+> +	0x77, 0x77, 0x77, 0x2e,	0x76, 0x69, 0x64, 0x65, 0x6f, 0x6c, 0x61, 0x6e,
+> +	0x2e, 0x6f, 0x72, 0x67, 0x2f, 0x78, 0x32, 0x36,	0x34, 0x2e, 0x68, 0x74,
+> +	0x6d, 0x6c, 0x20, 0x2d, 0x20, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x73,
+> +	0x3a, 0x20, 0x63, 0x61, 0x62, 0x61, 0x63, 0x3d, 0x31, 0x20, 0x72, 0x65,
+> +	0x66, 0x3d, 0x31, 0x20,	0x64, 0x65, 0x62, 0x6c, 0x6f, 0x63, 0x6b, 0x3d,
+> +	0x31, 0x3a, 0x30, 0x3a, 0x30, 0x20, 0x61, 0x6e,	0x61, 0x6c, 0x79, 0x73,
+> +	0x65, 0x3d, 0x30, 0x78, 0x31, 0x3a, 0x30, 0x78, 0x31, 0x31, 0x31, 0x20,
+> +	0x6d, 0x65, 0x3d, 0x68, 0x65, 0x78, 0x20, 0x73, 0x75, 0x62, 0x6d, 0x65,
+> +	0x3d, 0x36, 0x20, 0x70,	0x73, 0x79, 0x5f, 0x72, 0x64, 0x3d, 0x31, 0x2e,
+> +	0x30, 0x3a, 0x30, 0x2e, 0x30, 0x20, 0x6d, 0x69,	0x78, 0x65, 0x64, 0x5f,
+> +	0x72, 0x65, 0x66, 0x3d, 0x30, 0x20, 0x6d, 0x65, 0x5f, 0x72, 0x61, 0x6e,
+> +	0x67, 0x65, 0x3d, 0x31, 0x36, 0x20, 0x63, 0x68, 0x72, 0x6f, 0x6d, 0x61,
+> +	0x5f, 0x6d, 0x65, 0x3d,	0x31, 0x20, 0x74, 0x72, 0x65, 0x6c, 0x6c, 0x69,
+> +	0x73, 0x3d, 0x30, 0x20, 0x38, 0x78, 0x38, 0x64,	0x63, 0x74, 0x3d, 0x30,
+> +	0x20, 0x63, 0x71, 0x6d, 0x3d, 0x30, 0x20, 0x64, 0x65, 0x61, 0x64, 0x7a,
+> +	0x6f, 0x6e, 0x65, 0x3d, 0x32, 0x31, 0x2c, 0x31, 0x31, 0x20, 0x63, 0x68,
+> +	0x72, 0x6f, 0x6d, 0x61,	0x5f, 0x71, 0x70, 0x5f, 0x6f, 0x66, 0x66, 0x73,
+> +	0x65, 0x74, 0x3d, 0x2d, 0x32, 0x20, 0x74, 0x68,	0x72, 0x65, 0x61, 0x64,
+> +	0x73, 0x3d, 0x31, 0x20, 0x6e, 0x72, 0x3d, 0x30, 0x20, 0x64, 0x65, 0x63,
+> +	0x69, 0x6d, 0x61, 0x74, 0x65, 0x3d, 0x31, 0x20, 0x6d, 0x62, 0x61, 0x66,
+> +	0x66, 0x3d, 0x30, 0x20,	0x62, 0x66, 0x72, 0x61, 0x6d, 0x65, 0x73, 0x3d,
+> +	0x30, 0x20, 0x6b, 0x65, 0x79, 0x69, 0x6e, 0x74,	0x3d, 0x32, 0x35, 0x30,
+> +	0x20, 0x6b, 0x65, 0x79, 0x69, 0x6e, 0x74, 0x5f, 0x6d, 0x69, 0x6e, 0x3d,
+> +	0x32, 0x35, 0x20, 0x73, 0x63, 0x65, 0x6e, 0x65, 0x63, 0x75, 0x74, 0x3d,
+> +	0x34, 0x30, 0x20, 0x72,	0x63, 0x3d, 0x61, 0x62, 0x72, 0x20, 0x62, 0x69,
+> +	0x74, 0x72, 0x61, 0x74, 0x65, 0x3d, 0x31, 0x30,	0x20, 0x72, 0x61, 0x74,
+> +	0x65, 0x74, 0x6f, 0x6c, 0x3d, 0x31, 0x2e, 0x30, 0x20, 0x71, 0x63, 0x6f,
+> +	0x6d, 0x70, 0x3d, 0x30, 0x2e, 0x36, 0x30, 0x20, 0x71, 0x70, 0x6d, 0x69,
+> +	0x6e, 0x3d, 0x31, 0x30,	0x20, 0x71, 0x70, 0x6d, 0x61, 0x78, 0x3d, 0x35,
+> +	0x31, 0x20, 0x71, 0x70, 0x73, 0x74, 0x65, 0x70,	0x3d, 0x34, 0x20, 0x69,
+> +	0x70, 0x5f, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x3d, 0x31, 0x2e, 0x34, 0x30,
+> +	0x20, 0x61, 0x71, 0x3d, 0x31, 0x3a, 0x31, 0x2e, 0x30, 0x30, 0x00, 0x80,
+> +	0x00, 0x00, 0x00, 0x01,	0x67, 0x4d, 0x40, 0x0a, 0x9a, 0x74, 0xf4, 0x20,
+> +	0x00, 0x00, 0x03, 0x00, 0x20, 0x00, 0x00, 0x06,	0x51, 0xe2, 0x44, 0xd4,
+> +	0x00, 0x00, 0x00, 0x01, 0x68, 0xee, 0x32, 0xc8, 0x00, 0x00, 0x00, 0x01,
+> +	0x65, 0x88, 0x80, 0x20, 0x00, 0x08, 0x7f, 0xea, 0x6a, 0xe2, 0x99, 0xb6,
+> +	0x57, 0xae, 0x49, 0x30,	0xf5, 0xfe, 0x5e, 0x46, 0x0b, 0x72, 0x44, 0xc4,
+> +	0xe1, 0xfc, 0x62, 0xda, 0xf1, 0xfb, 0xa2, 0xdb,	0xd6, 0xbe, 0x5c, 0xd7,
+> +	0x24, 0xa3, 0xf5, 0xb9, 0x2f, 0x57, 0x16, 0x49, 0x75, 0x47, 0x77, 0x09,
+> +	0x5c, 0xa1, 0xb4, 0xc3, 0x4f, 0x60, 0x2b, 0xb0, 0x0c, 0xc8, 0xd6, 0x66,
+> +	0xba, 0x9b, 0x82, 0x29,	0x33, 0x92, 0x26, 0x99, 0x31, 0x1c, 0x7f, 0x9b,
+> +	0x00, 0x00, 0x01, 0x0ff,
+> +};
+
+I can read that this contains a pretty large SEI, SPS, PPS, IDR and
+finally this unspecified Nal 15 with no size, but I don't expect every
+can. Maybe you could format this into nals, and document whatever you
+know about this blob ? If you need info, I may suggest you do put that
+into a file and use YUView software to parse it.
+
+> +
+> +static const u8 *codec_h264_eos_sequence(u32 *len)
+> +{
+> +	*len =3D ARRAY_SIZE(eos_sequence);
+> +	return eos_sequence;
+> +}
+> +
+> +struct codec_h264 {
+> +	/* H.264 decoder requires an extended firmware */
+> +	void      *ext_fw_vaddr;
+> +	dma_addr_t ext_fw_paddr;
+> +
+> +	/* Buffer for the H.264 Workspace */
+> +	void      *workspace_vaddr;
+> +	dma_addr_t workspace_paddr;
+> +
+> +	/* Buffer for the H.264 references MV */
+> +	void      *ref_vaddr;
+> +	dma_addr_t ref_paddr;
+> +	u32	   ref_size;
+> +
+> +	/* Buffer for parsed SEI data */
+> +	void      *sei_vaddr;
+> +	dma_addr_t sei_paddr;
+> +
+> +	u32 mb_width;
+> +	u32 mb_height;
+> +	u32 max_refs;
+> +};
+> +
+> +static int codec_h264_can_recycle(struct amvdec_core *core)
+> +{
+> +	return !amvdec_read_dos(core, AV_SCRATCH_7) ||
+> +	       !amvdec_read_dos(core, AV_SCRATCH_8);
+> +}
+> +
+> +static void codec_h264_recycle(struct amvdec_core *core, u32 buf_idx)
+> +{
+> +	/*
+> +	 * Tell the firmware it can recycle this buffer.
+> +	 * AV_SCRATCH_8 serves the same purpose.
+> +	 */
+> +	if (!amvdec_read_dos(core, AV_SCRATCH_7))
+> +		amvdec_write_dos(core, AV_SCRATCH_7, buf_idx + 1);
+> +	else
+> +		amvdec_write_dos(core, AV_SCRATCH_8, buf_idx + 1);
+> +}
+> +
+> +static int codec_h264_start(struct amvdec_session *sess)
+> +{
+> +	u32 workspace_offset;
+> +	struct amvdec_core *core =3D sess->core;
+> +	struct codec_h264 *h264 =3D sess->priv;
+> +
+> +	/* Allocate some memory for the H.264 decoder's state */
+> +	h264->workspace_vaddr =3D
+> +		dma_alloc_coherent(core->dev, SIZE_WORKSPACE,
+> +				   &h264->workspace_paddr, GFP_KERNEL);
+> +	if (!h264->workspace_vaddr)
+> +		return -ENOMEM;
+> +
+> +	/* Allocate some memory for the H.264 SEI dump */
+> +	h264->sei_vaddr =3D dma_alloc_coherent(core->dev, SIZE_SEI,
+> +					     &h264->sei_paddr, GFP_KERNEL);
+> +	if (!h264->sei_vaddr)
+> +		return -ENOMEM;
+> +
+> +	amvdec_write_dos_bits(core, POWER_CTL_VLD, BIT(9) | BIT(6));
+> +
+> +	workspace_offset =3D h264->workspace_paddr - WORKSPACE_BUF_OFFSET;
+> +	amvdec_write_dos(core, AV_SCRATCH_1, workspace_offset);
+> +	amvdec_write_dos(core, AV_SCRATCH_G, h264->ext_fw_paddr);
+> +	amvdec_write_dos(core, AV_SCRATCH_I, h264->sei_paddr -
+> +					     workspace_offset);
+> +
+> +	/* Enable "error correction" */
+> +	amvdec_write_dos(core, AV_SCRATCH_F,
+> +			 (amvdec_read_dos(core, AV_SCRATCH_F) & 0xffffffc3) |
+> +			 BIT(4) | BIT(7));
+> +
+> +	amvdec_write_dos(core, MDEC_PIC_DC_THRESH, 0x404038aa);
+> +
+> +	return 0;
+> +}
+> +
+> +static int codec_h264_stop(struct amvdec_session *sess)
+> +{
+> +	struct codec_h264 *h264 =3D sess->priv;
+> +	struct amvdec_core *core =3D sess->core;
+> +
+> +	if (h264->ext_fw_vaddr)
+> +		dma_free_coherent(core->dev, SIZE_EXT_FW,
+> +				  h264->ext_fw_vaddr, h264->ext_fw_paddr);
+> +
+> +	if (h264->workspace_vaddr)
+> +		dma_free_coherent(core->dev, SIZE_WORKSPACE,
+> +				 h264->workspace_vaddr, h264->workspace_paddr);
+> +
+> +	if (h264->ref_vaddr)
+> +		dma_free_coherent(core->dev, h264->ref_size,
+> +				  h264->ref_vaddr, h264->ref_paddr);
+> +
+> +	if (h264->sei_vaddr)
+> +		dma_free_coherent(core->dev, SIZE_SEI,
+> +				  h264->sei_vaddr, h264->sei_paddr);
+> +
+> +	return 0;
+> +}
+> +
+> +static int codec_h264_load_extended_firmware(struct amvdec_session *sess=
+,
+> +					     const u8 *data, u32 len)
+> +{
+> +	struct codec_h264 *h264;
+> +	struct amvdec_core *core =3D sess->core;
+> +
+> +	if (len < SIZE_EXT_FW)
+> +		return -EINVAL;
+> +
+> +	h264 =3D kzalloc(sizeof(*h264), GFP_KERNEL);
+> +	if (!h264)
+> +		return -ENOMEM;
+> +
+> +	h264->ext_fw_vaddr =3D dma_alloc_coherent(core->dev, SIZE_EXT_FW,
+> +					      &h264->ext_fw_paddr, GFP_KERNEL);
+> +	if (!h264->ext_fw_vaddr) {
+> +		kfree(h264);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	memcpy(h264->ext_fw_vaddr, data, SIZE_EXT_FW);
+> +	sess->priv =3D h264;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct v4l2_fract par_table[] =3D {
+> +	{ 1, 1 },   { 1, 1 },    { 12, 11 }, { 10, 11 },
+> +	{ 16, 11 }, { 40, 33 },  { 24, 11 }, { 20, 11 },
+> +	{ 32, 11 }, { 80, 33 },  { 18, 11 }, { 15, 11 },
+> +	{ 64, 33 }, { 160, 99 }, { 4, 3 },   { 3, 2 },
+> +	{ 2, 1 }
+> +};
+> +
+> +static void codec_h264_set_par(struct amvdec_session *sess)
+> +{
+> +	struct amvdec_core *core =3D sess->core;
+> +	u32 seq_info =3D amvdec_read_dos(core, AV_SCRATCH_2);
+> +	u32 ar_idc =3D (seq_info >> AR_IDC_BIT) & AR_IDC_MASK;
+> +
+> +	if (!(seq_info & AR_PRESENT_FLAG))
+> +		return;
+> +
+> +	if (ar_idc =3D=3D AR_EXTEND) {
+> +		u32 ar_info =3D amvdec_read_dos(core, AV_SCRATCH_3);
+> +
+> +		sess->pixelaspect.numerator =3D ar_info & 0xffff;
+> +		sess->pixelaspect.denominator =3D (ar_info >> 16) & 0xffff;
+> +		return;
+> +	}
+> +
+> +	if (ar_idc >=3D ARRAY_SIZE(par_table))
+> +		return;
+> +
+> +	sess->pixelaspect =3D par_table[ar_idc];
+> +}
+> +
+> +static void codec_h264_resume(struct amvdec_session *sess)
+> +{
+> +	struct amvdec_core *core =3D sess->core;
+> +	struct codec_h264 *h264 =3D sess->priv;
+> +	u32 mb_width, mb_height, mb_total;
+> +
+> +	amvdec_set_canvases(sess, (u32[]){ ANC0_CANVAS_ADDR, 0 },
+> +				  (u32[]){ 24, 0 });
+> +
+> +	dev_dbg(core->dev, "max_refs =3D %u; actual_dpb_size =3D %u\n",
+> +		h264->max_refs, sess->num_dst_bufs);
+> +
+> +	/* Align to a multiple of 4 macroblocks */
+> +	mb_width =3D ALIGN(h264->mb_width, 4);
+> +	mb_height =3D ALIGN(h264->mb_height, 4);
+> +	mb_total =3D mb_width * mb_height;
+> +
+> +	h264->ref_size =3D mb_total * MB_MV_SIZE * h264->max_refs;
+> +	h264->ref_vaddr =3D dma_alloc_coherent(core->dev, h264->ref_size,
+> +					     &h264->ref_paddr, GFP_KERNEL);
+> +	if (!h264->ref_vaddr) {
+> +		amvdec_abort(sess);
+> +		return;
+> +	}
+> +
+> +	/* Address to store the references' MVs */
+> +	amvdec_write_dos(core, AV_SCRATCH_1, h264->ref_paddr);
+> +	/* End of ref MV */
+> +	amvdec_write_dos(core, AV_SCRATCH_4, h264->ref_paddr + h264->ref_size);
+> +
+> +	amvdec_write_dos(core, AV_SCRATCH_0, (h264->max_refs << 24) |
+> +					     (sess->num_dst_bufs << 16) |
+> +					     ((h264->max_refs - 1) << 8));
+> +}
+> +
+> +/**
+> + * Configure the H.264 decoder when the parser detected a parameter set =
+change
+> + */
+> +static void codec_h264_src_change(struct amvdec_session *sess)
+> +{
+> +	struct amvdec_core *core =3D sess->core;
+> +	struct codec_h264 *h264 =3D sess->priv;
+> +	u32 parsed_info, mb_total;
+> +	u32 crop_infor, crop_bottom, crop_right;
+> +	u32 frame_width, frame_height;
+> +
+> +	sess->keyframe_found =3D 1;
+> +
+> +	parsed_info =3D amvdec_read_dos(core, AV_SCRATCH_1);
+> +
+> +	/* Total number of 16x16 macroblocks */
+> +	mb_total =3D (parsed_info >> MB_TOTAL_BIT) & MB_TOTAL_MASK;
+> +	/* Number of macroblocks per line */
+> +	h264->mb_width =3D parsed_info & MB_WIDTH_MASK;
+> +	/* Number of macroblock lines */
+> +	h264->mb_height =3D mb_total / h264->mb_width;
+> +
+> +	h264->max_refs =3D ((parsed_info >> MAX_REF_BIT) & MAX_REF_MASK) + 1;
+> +
+> +	crop_infor =3D amvdec_read_dos(core, AV_SCRATCH_6);
+> +	crop_bottom =3D (crop_infor & 0xff);
+> +	crop_right =3D (crop_infor >> 16) & 0xff;
+> +
+> +	frame_width =3D h264->mb_width * 16 - crop_right;
+> +	frame_height =3D h264->mb_height * 16 - crop_bottom;
+> +
+> +	dev_dbg(core->dev, "frame: %ux%u; crop: %u %u\n",
+> +		frame_width, frame_height, crop_right, crop_bottom);
+> +
+> +	codec_h264_set_par(sess);
+> +	amvdec_src_change(sess, frame_width, frame_height, h264->max_refs + 5);
+> +}
+> +
+> +/**
+> + * The bitstream offset is split in half in 2 different registers.
+> + * Fetch its MSB here, which location depends on the frame number.
+> + */
+> +static u32 get_offset_msb(struct amvdec_core *core, int frame_num)
+> +{
+> +	int take_msb =3D frame_num % 2;
+> +	int reg_offset =3D (frame_num / 2) * 4;
+> +	u32 offset_msb =3D amvdec_read_dos(core, AV_SCRATCH_A + reg_offset);
+> +
+> +	if (take_msb)
+> +		return offset_msb & 0xffff0000;
+> +
+> +	return (offset_msb & 0x0000ffff) << 16;
+> +}
+> +
+> +static void codec_h264_frames_ready(struct amvdec_session *sess, u32 sta=
+tus)
+> +{
+> +	struct amvdec_core *core =3D sess->core;
+> +	int error_count;
+> +	int num_frames;
+> +	int i;
+> +
+> +	error_count =3D amvdec_read_dos(core, AV_SCRATCH_D);
+> +	num_frames =3D (status >> 8) & 0xff;
+> +	if (error_count) {
+> +		dev_warn(core->dev,
+> +			 "decoder error(s) happened, count %d\n", error_count);
+> +		amvdec_write_dos(core, AV_SCRATCH_D, 0);
+> +	}
+> +
+> +	for (i =3D 0; i < num_frames; i++) {
+> +		u32 frame_status =3D amvdec_read_dos(core, AV_SCRATCH_1 + i * 4);
+> +		u32 buffer_index =3D frame_status & BUF_IDX_MASK;
+> +		u32 pic_struct =3D (frame_status >> PIC_STRUCT_BIT) &
+> +				 PIC_STRUCT_MASK;
+> +		u32 offset =3D (frame_status >> OFFSET_BIT) & OFFSET_MASK;
+> +		u32 field =3D V4L2_FIELD_NONE;
+> +
+> +		/*
+> +		 * A buffer decode error means it was decoded,
+> +		 * but part of the picture will have artifacts.
+> +		 * Typical reason is a temporarily corrupted bitstream
+> +		 */
+> +		if (frame_status & ERROR_FLAG)
+> +			dev_dbg(core->dev, "Buffer %d decode error\n",
+> +				buffer_index);
+> +
+> +		if (pic_struct =3D=3D PIC_TOP_BOT)
+> +			field =3D V4L2_FIELD_INTERLACED_TB;
+> +		else if (pic_struct =3D=3D PIC_BOT_TOP)
+> +			field =3D V4L2_FIELD_INTERLACED_BT;
+> +
+> +		offset |=3D get_offset_msb(core, i);
+> +		amvdec_dst_buf_done_idx(sess, buffer_index, offset, field);
+> +	}
+> +}
+> +
+> +static irqreturn_t codec_h264_threaded_isr(struct amvdec_session *sess)
+> +{
+> +	struct amvdec_core *core =3D sess->core;
+> +	u32 status;
+> +	u32 size;
+> +	u8 cmd;
+> +
+> +	status =3D amvdec_read_dos(core, AV_SCRATCH_0);
+> +	cmd =3D status & CMD_MASK;
+> +
+> +	switch (cmd) {
+> +	case CMD_SRC_CHANGE:
+> +		codec_h264_src_change(sess);
+> +		break;
+> +	case CMD_FRAMES_READY:
+> +		codec_h264_frames_ready(sess, status);
+> +		break;
+> +	case CMD_FATAL_ERROR:
+> +		dev_err(core->dev, "H.264 decoder fatal error\n");
+> +		goto abort;
+> +	case CMD_BAD_WIDTH:
+> +		size =3D (amvdec_read_dos(core, AV_SCRATCH_1) + 1) * 16;
+> +		dev_err(core->dev, "Unsupported video width: %u\n", size);
+> +		goto abort;
+> +	case CMD_BAD_HEIGHT:
+> +		size =3D (amvdec_read_dos(core, AV_SCRATCH_1) + 1) * 16;
+> +		dev_err(core->dev, "Unsupported video height: %u\n", size);
+> +		goto abort;
+> +	case 0: /* Unused but not worth printing for */
+> +	case 9:
+> +		break;
+> +	default:
+> +		dev_info(core->dev, "Unexpected H264 ISR: %08X\n", cmd);
+> +		break;
+> +	}
+> +
+> +	if (cmd && cmd !=3D CMD_SRC_CHANGE)
+> +		amvdec_write_dos(core, AV_SCRATCH_0, 0);
+> +
+> +	/* Decoder has some SEI data for us ; ignore */
+> +	if (amvdec_read_dos(core, AV_SCRATCH_J) & SEI_DATA_READY)
+> +		amvdec_write_dos(core, AV_SCRATCH_J, 0);
+> +
+> +	return IRQ_HANDLED;
+> +abort:
+> +	amvdec_abort(sess);
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static irqreturn_t codec_h264_isr(struct amvdec_session *sess)
+> +{
+> +	struct amvdec_core *core =3D sess->core;
+> +
+> +	amvdec_write_dos(core, ASSIST_MBOX1_CLR_REG, 1);
+> +
+> +	return IRQ_WAKE_THREAD;
+> +}
+> +
+> +struct amvdec_codec_ops codec_h264_ops =3D {
+> +	.start =3D codec_h264_start,
+> +	.stop =3D codec_h264_stop,
+> +	.load_extended_firmware =3D codec_h264_load_extended_firmware,
+> +	.isr =3D codec_h264_isr,
+> +	.threaded_isr =3D codec_h264_threaded_isr,
+> +	.can_recycle =3D codec_h264_can_recycle,
+> +	.recycle =3D codec_h264_recycle,
+> +	.eos_sequence =3D codec_h264_eos_sequence,
+> +	.resume =3D codec_h264_resume,
+> +};
+> diff --git a/drivers/staging/media/meson/vdec/codec_h264.h b/drivers/stag=
+ing/media/meson/vdec/codec_h264.h
+> new file mode 100644
+> index 000000000000..7cb4fb86ff36
+> --- /dev/null
+> +++ b/drivers/staging/media/meson/vdec/codec_h264.h
+> @@ -0,0 +1,14 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +/*
+> + * Copyright (C) 2019 BayLibre, SAS
+> + * Author: Maxime Jourdan <mjourdan@baylibre.com>
+> + */
+> +
+> +#ifndef __MESON_VDEC_CODEC_H264_H_
+> +#define __MESON_VDEC_CODEC_H264_H_
+> +
+> +#include "vdec.h"
+> +
+> +extern struct amvdec_codec_ops codec_h264_ops;
+> +
+> +#endif
+> diff --git a/drivers/staging/media/meson/vdec/vdec_platform.c b/drivers/s=
+taging/media/meson/vdec/vdec_platform.c
+> index accad8f8929a..025371ff8fae 100644
+> --- a/drivers/staging/media/meson/vdec/vdec_platform.c
+> +++ b/drivers/staging/media/meson/vdec/vdec_platform.c
+> @@ -9,9 +9,22 @@
+> =20
+>  #include "vdec_1.h"
+>  #include "codec_mpeg12.h"
+> +#include "codec_h264.h"
+> =20
+>  static const struct amvdec_format vdec_formats_gxbb[] =3D {
+>  	{
+> +		.pixfmt =3D V4L2_PIX_FMT_H264,
+> +		.min_buffers =3D 2,
+> +		.max_buffers =3D 24,
+> +		.max_width =3D 1920,
+> +		.max_height =3D 1080,
+> +		.vdec_ops =3D &vdec_1_ops,
+> +		.codec_ops =3D &codec_h264_ops,
+> +		.firmware_path =3D "meson/vdec/gxbb_h264.bin",
+> +		.pixfmts_cap =3D { V4L2_PIX_FMT_NV12M, 0 },
+> +		.flags =3D V4L2_FMT_FLAG_COMPRESSED |
+> +			 V4L2_FMT_FLAG_DYN_RESOLUTION,
+> +	}, {
+>  		.pixfmt =3D V4L2_PIX_FMT_MPEG1,
+>  		.min_buffers =3D 8,
+>  		.max_buffers =3D 8,
+> @@ -38,6 +51,18 @@ static const struct amvdec_format vdec_formats_gxbb[] =
+=3D {
+> =20
+>  static const struct amvdec_format vdec_formats_gxl[] =3D {
+>  	{
+> +		.pixfmt =3D V4L2_PIX_FMT_H264,
+> +		.min_buffers =3D 2,
+> +		.max_buffers =3D 24,
+> +		.max_width =3D 3840,
+> +		.max_height =3D 2160,
+> +		.vdec_ops =3D &vdec_1_ops,
+> +		.codec_ops =3D &codec_h264_ops,
+> +		.firmware_path =3D "meson/vdec/gxl_h264.bin",
+> +		.pixfmts_cap =3D { V4L2_PIX_FMT_NV12M, 0 },
+> +		.flags =3D V4L2_FMT_FLAG_COMPRESSED |
+> +			 V4L2_FMT_FLAG_DYN_RESOLUTION,
+> +	}, {
+>  		.pixfmt =3D V4L2_PIX_FMT_MPEG1,
+>  		.min_buffers =3D 8,
+>  		.max_buffers =3D 8,
+> @@ -64,6 +89,18 @@ static const struct amvdec_format vdec_formats_gxl[] =
+=3D {
+> =20
+>  static const struct amvdec_format vdec_formats_gxm[] =3D {
+>  	{
+> +		.pixfmt =3D V4L2_PIX_FMT_H264,
+> +		.min_buffers =3D 2,
+> +		.max_buffers =3D 24,
+> +		.max_width =3D 3840,
+> +		.max_height =3D 2160,
+> +		.vdec_ops =3D &vdec_1_ops,
+> +		.codec_ops =3D &codec_h264_ops,
+> +		.firmware_path =3D "meson/vdec/gxm_h264.bin",
+> +		.pixfmts_cap =3D { V4L2_PIX_FMT_NV12M, 0 },
+> +		.flags =3D V4L2_FMT_FLAG_COMPRESSED |
+> +			 V4L2_FMT_FLAG_DYN_RESOLUTION,
+> +	}, {
+>  		.pixfmt =3D V4L2_PIX_FMT_MPEG1,
+>  		.min_buffers =3D 8,
+>  		.max_buffers =3D 8,
+
+--=-OmJTcNTLraoYNa4SPA7W
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCXZzxIgAKCRBxUwItrAao
+HHxaAJoCflhx0U9R7xvQMv7BlzMyUP66EwCdGtPpyyAYO+e+oUaEchLBD5mwidI=
+=3Fdv
+-----END PGP SIGNATURE-----
+
+--=-OmJTcNTLraoYNa4SPA7W--
+
