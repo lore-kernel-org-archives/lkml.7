@@ -2,117 +2,75 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DEBEC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E77C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51CFC20673
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 754A6217D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:48:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570542515;
+	bh=VKc7Xxn5RL2X3cXGk70B3QLiIVOG5siFsmbVAIQfhbA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mwbwfXxqCdEsDIvrn3tQH1dfgZkjArnBX7z56beYgjsrvhSPGqQ1qeDbiE2TsamG6
+	 P97DCqYeCizV5Bn2i3iiks5Sd5YovlHpkleFUB8oLrR3LWJQqV34YfjZSTsyyET+Ia
+	 MIiHsMbTxD9oc9bmXy5EXNtxrYhcQQBH165Bncuc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726217AbfJHNpY (ORCPT
+        id S1725939AbfJHNse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 09:45:24 -0400
-Received: from mga02.intel.com ([134.134.136.20]:36613 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbfJHNpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 09:45:23 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 06:45:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,270,1566889200"; 
-   d="scan'208";a="205418032"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.188]) ([10.237.72.188])
-  by orsmga002.jf.intel.com with ESMTP; 08 Oct 2019 06:45:19 -0700
-Subject: Re: [PATCH v1 2/2] mmc: sdhci-of-arasan: Add Support for Intel LGM
- SDXC
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        ulf.hansson@linaro.org, linux-mmc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, michal.simek@xilinx.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com
-References: <20191003040032.37696-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20191003040032.37696-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <2cbda555-42d2-392c-0887-09cae4a35dce@intel.com>
-Date:   Tue, 8 Oct 2019 16:44:19 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 8 Oct 2019 09:48:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45350 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725834AbfJHNse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 09:48:34 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 13FFBB1AC;
+        Tue,  8 Oct 2019 13:48:32 +0000 (UTC)
+Date:   Tue, 8 Oct 2019 15:48:31 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Qian Cai <cai@lca.pw>, Steven Rostedt <rostedt@goodmis.org>,
+        sergey.senozhatsky.work@gmail.com, peterz@infradead.org,
+        linux-mm@kvack.org, john.ogness@linutronix.de,
+        akpm@linux-foundation.org, david@redhat.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
+Message-ID: <20191008134831.GL6681@dhcp22.suse.cz>
+References: <1570228005-24979-1-git-send-email-cai@lca.pw>
+ <20191007143002.l37bt2lzqtnqjqxu@pathway.suse.cz>
+ <1570460350.5576.290.camel@lca.pw>
+ <20191007151237.GP2381@dhcp22.suse.cz>
+ <1570462407.5576.292.camel@lca.pw>
+ <20191008081510.ptwmb7zflqiup5py@pathway.suse.cz>
+ <20191008091349.6195830d@gandalf.local.home>
+ <1570541032.5576.297.camel@lca.pw>
+ <20191008134256.5ti6rjkvadn5b5q4@pathway.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20191003040032.37696-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191008134256.5ti6rjkvadn5b5q4@pathway.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/10/19 7:00 AM, Ramuthevar,Vadivel MuruganX wrote:
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> 
-> The current arasan sdhci PHY configuration isn't compatible
-> with the PHY on Intel's LGM(Lightning Mountain) SoC devices.
-> 
-> Therefore, add a new compatible, to adapt the Intel's LGM
-> SDXC PHY with arasan-sdhc controller to configure the PHY.
-> 
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+On Tue 08-10-19 15:42:56, Petr Mladek wrote:
+[...]
+> I am not -mm maintainer so I could not guarantee that a patch
+> using printk_deferred() will get accepted. But it will have much
+> bigger chance than the original patch.
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-
-> ---
->  drivers/mmc/host/sdhci-of-arasan.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-> index 7023cbec4017..55de839a8a5e 100644
-> --- a/drivers/mmc/host/sdhci-of-arasan.c
-> +++ b/drivers/mmc/host/sdhci-of-arasan.c
-> @@ -120,6 +120,12 @@ static const struct sdhci_arasan_soc_ctl_map intel_lgm_emmc_soc_ctl_map = {
->  	.hiword_update = false,
->  };
->  
-> +static const struct sdhci_arasan_soc_ctl_map intel_lgm_sdxc_soc_ctl_map = {
-> +	.baseclkfreq = { .reg = 0x80, .width = 8, .shift = 2 },
-> +	.clockmultiplier = { .reg = 0, .width = -1, .shift = -1 },
-> +	.hiword_update = false,
-> +};
-> +
->  /**
->   * sdhci_arasan_syscon_write - Write to a field in soc_ctl registers
->   *
-> @@ -384,6 +390,11 @@ static struct sdhci_arasan_of_data intel_lgm_emmc_data = {
->  	.pdata = &sdhci_arasan_cqe_pdata,
->  };
->  
-> +static struct sdhci_arasan_of_data intel_lgm_sdxc_data = {
-> +	.soc_ctl_map = &intel_lgm_sdxc_soc_ctl_map,
-> +	.pdata = &sdhci_arasan_cqe_pdata,
-> +};
-> +
->  #ifdef CONFIG_PM_SLEEP
->  /**
->   * sdhci_arasan_suspend - Suspend method for the driver
-> @@ -489,6 +500,10 @@ static const struct of_device_id sdhci_arasan_of_match[] = {
->  		.compatible = "intel,lgm-sdhci-5.1-emmc",
->  		.data = &intel_lgm_emmc_data,
->  	},
-> +	{
-> +		.compatible = "intel,lgm-sdhci-5.1-sdxc",
-> +		.data = &intel_lgm_sdxc_data,
-> +	},
->  	/* Generic compatible below here */
->  	{
->  		.compatible = "arasan,sdhci-8.9a",
-> 
-
+I am not going to ack any such patch until it is clear what is the
+actual problem. The disucssion in this thread boils down to point to
+lockdep splats which are most likely false possitives and there is no
+clear evidence that the is any actual deadlock as those would be clearly
+identifiable if the zone->lock or any other spinlock spinlock were
+participating.
+-- 
+Michal Hocko
+SUSE Labs
