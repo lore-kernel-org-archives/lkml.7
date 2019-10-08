@@ -2,127 +2,129 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1BCECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 03:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A19C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 03:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82111218AC
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 03:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E913206B6
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 03:46:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Jv62sIcz"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="caK2KVt/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729917AbfJHDob (ORCPT
+        id S1729955AbfJHDqn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 23:44:31 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:55701 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729772AbfJHDob (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 23:44:31 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46nNWc6p6vz9sN1;
-        Tue,  8 Oct 2019 14:44:28 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1570506269;
-        bh=qVUvg5eUzi+xbVw93VditaCtDJH22M296dmyUJg5xss=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Jv62sIcz58cn78k296RK/Dn1UlPyBD6Oxi2PQ+ApclHWCd/PAHEcr3EIrUaX9txvY
-         QkHHk22k7KEIqKCYXqqzpr3BW9NnZW73dJIla8H1s247am/ERZeTlr7ffastTn5SAP
-         bYnf/hboovWRnhZTWP7rpZHVUqxb0uu8OP+mJrx78ldIO1OTGwJEm1zd1C3sCKY1gg
-         A30moEzMpwuBQ+95tel8ojzlXFSJ00o5wFi6x6fOaO2zA4imZG84PqwNLW7bMbtbKq
-         CMaPxG6EVOjK2yv9hAJp9kQg6KfqPNERxh8UjZ64P+OXZpYtJnPny7/i+qKUv2NUMH
-         N+ftxPHMw2NYg==
-Date:   Tue, 8 Oct 2019 14:44:28 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Branden Bonaby <brandonbonaby94@gmail.com>,
-        Changbin Du <changbin.du@gmail.com>
-Subject: linux-next: manual merge of the akpm tree with the hyperv tree
-Message-ID: <20191008144428.49143860@canb.auug.org.au>
+        Mon, 7 Oct 2019 23:46:43 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34542 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729927AbfJHDqn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 23:46:43 -0400
+Received: by mail-pf1-f196.google.com with SMTP id b128so10018317pfa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 20:46:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qFl2JG96ct4qaQdNKzWCXwE4r0sb40nsc6Szq0amLLM=;
+        b=caK2KVt/69FIetO/j+F/mQvB1T1lmIkD4M/Ym3pzovmMBDwSyGKyFWJgv0NbF28UBD
+         fjOEKcKBuqESKXMKm5WPWzttX89uf3jwRekaqAlpN5UOGJqsu+9hjEjmr6fzj2r2UVFy
+         0URF798o3LPYju7YYzyGV3xlkl3XWOTNHF1tfUNP8JjRiD344Tdpi4IuTDDPYqlMR3CV
+         hsP3qnje76JOL/7K484k2kPmPOpfNHkE8OdRxnlb6QdpZqsw2TtlzOAp0NYtJsNte1G0
+         yLfERjeFXHqRzqcQtpgCIN3tR09DD8OWw/ro89CYo2Frnd6PswVGQ9/JZw3KVFc2gXfY
+         zAgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qFl2JG96ct4qaQdNKzWCXwE4r0sb40nsc6Szq0amLLM=;
+        b=ozmM8K9nlWrqDOaos95b4XpCo6un0wngVkBnenR25qWt+uoXZ06I/wBG9v1ytmJGuZ
+         h8EAGj5Tr6lDU0na+0STUvOFl6JzUeESkbiBjTtB0T6lKs7gDkqoX9PpGXzKvBZPqAib
+         reJ91vtMKWPDJUjP/P23f/e3LtpJWiwedctyIMX1G8qHYIx6CvVQeKrdLQCYj/3Ev64z
+         VXPtQ68SBXHENPOouV9tRm9hMzxtiql618prCV3/a3QAZ0VbQiaRz6SVvdQqLbroVP6G
+         0bCAfEOlGYbG+Pj42UmFPaEXtGTP+WxNilZhLcME7C1+ivWq8CWOLZoy80iPaVsRXDCU
+         dAbA==
+X-Gm-Message-State: APjAAAWhFOD9XIxu3Wuk3/elDrjnajlQXgsYLJnzzOCmca9qoypNYBTu
+        dEt8ZSSveRtsZnrG4CxgWC0Ehw==
+X-Google-Smtp-Source: APXvYqz3+mfqHvMdhEbzTG1UT8a/Xp17PYp3x6VIfOSFrMyUdGVDRaOyTkraf7LX98u/PBz7QlCBKg==
+X-Received: by 2002:a63:1401:: with SMTP id u1mr1888823pgl.73.1570506400944;
+        Mon, 07 Oct 2019 20:46:40 -0700 (PDT)
+Received: from localhost.localdomain (123-204-46-122.static.seed.net.tw. [123.204.46.122])
+        by smtp.gmail.com with ESMTPSA id r24sm15671364pfh.69.2019.10.07.20.46.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2019 20:46:40 -0700 (PDT)
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Matthew Wilcox <willy@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux@endlesssm.com,
+        Jian-Hong Pan <jian-hong@endlessm.com>
+Subject: [PATCH] PCI/MSI: Fix restoring of MSI-X vector control's mask bit
+Date:   Tue,  8 Oct 2019 11:42:39 +0800
+Message-Id: <20191008034238.2503-1-jian-hong@endlessm.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/UOIwwKO65pwrsB6ikXZ4nzM";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/UOIwwKO65pwrsB6ikXZ4nzM
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+MSI-X vector control's bit 0 is the mask bit, which masks the
+corresponding interrupt request, or not. Other reserved bits might be
+used for other purpose by device vendors. For example, the values of
+Kingston NVMe SSD's MSI-X vector control are neither 0, nor 1, but other
+values [1].
 
-Hi all,
+The original restoring logic in system resuming uses the whole MSI-X
+vector control value as the flag to set/clear the mask bit. However,
+this logic conflicts the idea mentioned above. It may mislead system to
+disable the MSI-X vector entries. That makes system get no interrupt
+from Kingston NVMe SSD after resume and usually get NVMe I/O timeout
+error.
 
-Today's linux-next merge of the akpm tree got a conflict in:
+[  174.715534] nvme nvme0: I/O 978 QID 3 timeout, completion polled
 
-  lib/Kconfig.debug
+This patch takes only the mask bit of original MSI-X vector control
+value as the flag to fix this issue.
 
-between commit:
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=204887#c8
 
-  54dc8d00a0be ("drivers: hv: vmbus: Introduce latency testing")
+Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=204887
+Fixed: f2440d9acbe8 ("PCI MSI: Refactor interrupt masking code")
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+---
+ drivers/pci/msi.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-from the hyperv tree and patch:
+diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+index 0884bedcfc7a..deae3d5acaf6 100644
+--- a/drivers/pci/msi.c
++++ b/drivers/pci/msi.c
+@@ -433,6 +433,7 @@ static void __pci_restore_msi_state(struct pci_dev *dev)
+ static void __pci_restore_msix_state(struct pci_dev *dev)
+ {
+ 	struct msi_desc *entry;
++	u32 flag;
+ 
+ 	if (!dev->msix_enabled)
+ 		return;
+@@ -444,8 +445,10 @@ static void __pci_restore_msix_state(struct pci_dev *dev)
+ 				PCI_MSIX_FLAGS_ENABLE | PCI_MSIX_FLAGS_MASKALL);
+ 
+ 	arch_restore_msi_irqs(dev);
+-	for_each_pci_msi_entry(entry, dev)
+-		msix_mask_irq(entry, entry->masked);
++	for_each_pci_msi_entry(entry, dev) {
++		flag = entry->masked & PCI_MSIX_ENTRY_CTRL_MASKBIT;
++		msix_mask_irq(entry, flag);
++	}
+ 
+ 	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_MASKALL, 0);
+ }
+-- 
+2.23.0
 
-  "kernel-hacking: create submenu for arch special debugging options"
-
-from the akpm tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc lib/Kconfig.debug
-index 905ce80e6ac4,9a6d7e4955a5..000000000000
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@@ -2156,13 -2156,10 +2156,17 @@@ config DEBUG_AID_FOR_SYZBO
-         help
-           This option is intended for testing by syzbot.
- =20
-+ menu "$(SRCARCH) Debugging"
-+=20
-  source "arch/$(SRCARCH)/Kconfig.debug"
- =20
-+ endmenu
-+=20
- +config HYPERV_TESTING
- +	bool "Microsoft Hyper-V driver testing"
- +	default n
- +	depends on HYPERV && DEBUG_FS
- +	help
- +	  Select this option to enable Hyper-V vmbus testing.
- +
-  endmenu # Kernel hacking
-
---Sig_/UOIwwKO65pwrsB6ikXZ4nzM
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2cBhwACgkQAVBC80lX
-0Gw0nQf/Wtq8UKGSqCvqgIl4myoTYNWLxJNSuf8EQvioR5wo5GgNaA6MoKdNFaEC
-fLF/iDPZrZTAOCE02g5ErVaqBBNnEMDhNnp3AGpslXivm4ZkLApv8WJl6+j8tWgC
-8QXo3khnKsRZ3tWnDLBep9ngrXQtvo3wHYX4ibGGe/Owr8/voDR60aTbcAr1WOO5
-eoXO7DI0QzJ7VibUNX3NTVRKiyUlXQP3U08anVEhhWUslJojZyExhX3dDtOhuUsT
-Xf4d2HAr/33PoRqu3s/LfChI002rKLZwHuCrnwxbrs96aFOfsYHVoTbt8MZWNgOn
-5jUHPCULDTYOi1Rxa0coZ3Ektddv8g==
-=RXLL
------END PGP SIGNATURE-----
-
---Sig_/UOIwwKO65pwrsB6ikXZ4nzM--
