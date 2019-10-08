@@ -2,217 +2,192 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95959C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD60BC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 354A921924
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:45:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="RInnKvJ9"
+	by mail.kernel.org (Postfix) with ESMTP id 94832206C2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:46:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570520774;
+	bh=aO7mbhGTjhKlXSC5HmKCY5zbdscGE+lQO6YFKWrnMG4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=JB7fPkhGp9mLxszmQuSRxvDXTUE2OSTlW0FRne8BrcQnF8NgbR55U14YOVbt5x5aZ
+	 2+s58tCKXvmbui+CYuNC2XxS9gBHh7SGtbN9lxPjrqQspFWx5JdcRL1Vo2HnxXFeBs
+	 o9q+VAITQCx9WhqCrFJRaQtoX/7ZhVGVkXobboDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730419AbfJHHpG (ORCPT
+        id S1730425AbfJHHqN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 03:45:06 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:35946 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730222AbfJHHpG (ORCPT
+        Tue, 8 Oct 2019 03:46:13 -0400
+Received: from inca-roads.misterjones.org ([213.251.177.50]:44779 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730370AbfJHHqN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 03:45:06 -0400
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x987ixw7010587
-        for <linux-kernel@vger.kernel.org>; Tue, 8 Oct 2019 16:45:00 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x987ixw7010587
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1570520701;
-        bh=5vdyLTpEpqPrxGKiHV1GQDqsAbuwLe1TeFdRcUBrweM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=RInnKvJ9611O6MJB6/m/3g9rYpMP2U/Uj3bFYIHKAOdXfTK+Cqhi0PNebaCSbuxiV
-         ZMlZHPcurK7t4rsQNhSH5fncQAVVE8WmkMy6ozrCSezns+A6UMXKfpTampNuG/7PKY
-         +giS4mAvJLtJA5KgVVvbsQdElzGwKdCm4th1cXb/IWqhPTNLH5qqC9fVSVK4Abl88h
-         xLWZIe3bgH4goKQvKaoKAhePA1maQ/K56VuR2luqG0a4ws6KemKH34piyHlKb6fV6y
-         JSCCOUejK+FGpMssH+8tf8wE9aVoBFp+ed+GpF1Uc4BjB5mosdVSe/t3LfH2GLTB/t
-         BFWv015/p358w==
-X-Nifty-SrcIP: [209.85.222.42]
-Received: by mail-ua1-f42.google.com with SMTP id r25so4887660uam.3
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 00:45:00 -0700 (PDT)
-X-Gm-Message-State: APjAAAW0mcq5B2gax2si1rLPd4nAuM0BVVXIcztBSFfvOyAdMn4B3tlx
-        k6LMcU6z6wO8YuVb84H8WfTOEqjqMjLHOrTfSxQ=
-X-Google-Smtp-Source: APXvYqy6lP0GYJAxHitYgDFRxHYa2MX52vBA0gcbcApI2yNBhKsuR8rMg+UwE01vmVZNoTqdjbaL6JS3kYi86HEKnZ0=
-X-Received: by 2002:a9f:2213:: with SMTP id 19mr4841683uad.25.1570520699005;
- Tue, 08 Oct 2019 00:44:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190801230358.4193-1-rikard.falkeborn@gmail.com>
- <20190811184938.1796-1-rikard.falkeborn@gmail.com> <20190811184938.1796-4-rikard.falkeborn@gmail.com>
- <CAMuHMdUkM98oiz-v8X-1QMAM25_d_=Gnxtud+gVQyZNb4nJDMA@mail.gmail.com>
-In-Reply-To: <CAMuHMdUkM98oiz-v8X-1QMAM25_d_=Gnxtud+gVQyZNb4nJDMA@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 8 Oct 2019 16:44:22 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARAC=ATn67PHMBiO2b7ZM-GzmKNSv0o6_yi2qSg9Dyq-w@mail.gmail.com>
-Message-ID: <CAK7LNARAC=ATn67PHMBiO2b7ZM-GzmKNSv0o6_yi2qSg9Dyq-w@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] linux/bits.h: Add compile time sanity check of
- GENMASK inputs
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        Tue, 8 Oct 2019 03:46:13 -0400
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iHkC5-0001oY-Va; Tue, 08 Oct 2019 09:46:06 +0200
+Date:   Tue, 8 Oct 2019 08:46:04 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     "Justin He (Arm Technology China)" <Justin.He@arm.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <Catalin.Marinas@arm.com>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        James Morse <James.Morse@arm.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Punit Agrawal <punitagrawal@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Joe Perches <joe@perches.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Haren Myneni <haren@us.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+        "hejianet@gmail.com" <hejianet@gmail.com>,
+        "Kaly Xin (Arm Technology China)" <Kaly.Xin@arm.com>,
+        nd <nd@arm.com>
+Subject: Re: [PATCH v10 2/3] arm64: mm: implement arch_faults_on_old_pte()
+ on arm64
+Message-ID: <20191008084604.7db2a123@why>
+In-Reply-To: <DB7PR08MB308265EB3ED2465D2471B492F79A0@DB7PR08MB3082.eurprd08.prod.outlook.com>
+References: <20190930015740.84362-1-justin.he@arm.com>
+        <20190930015740.84362-3-justin.he@arm.com>
+        <20191001125031.7ddm5dlwss6m3dth@willie-the-truck>
+        <20191001143219.018281be@why>
+        <DB7PR08MB308265EB3ED2465D2471B492F79A0@DB7PR08MB3082.eurprd08.prod.outlook.com>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: Justin.He@arm.com, will@kernel.org, Catalin.Marinas@arm.com, Mark.Rutland@arm.com, James.Morse@arm.com, willy@infradead.org, kirill.shutemov@linux.intel.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, punitagrawal@gmail.com, tglx@linutronix.de, akpm@linux-foundation.org, hejianet@gmail.com, Kaly.Xin@arm.com, nd@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+On Tue, 8 Oct 2019 01:55:04 +0000
+"Justin He (Arm Technology China)" <Justin.He@arm.com> wrote:
 
-On Tue, Oct 8, 2019 at 4:23 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Rikard,
->
-> On Sun, Aug 11, 2019 at 8:52 PM Rikard Falkeborn
-> <rikard.falkeborn@gmail.com> wrote:
-> > GENMASK() and GENMASK_ULL() are supposed to be called with the high bit
-> > as the first argument and the low bit as the second argument. Mixing
-> > them will return a mask with zero bits set.
-> >
-> > Recent commits show getting this wrong is not uncommon, see e.g.
-> > commit aa4c0c9091b0 ("net: stmmac: Fix misuses of GENMASK macro") and
-> > commit 9bdd7bb3a844 ("clocksource/drivers/npcm: Fix misuse of GENMASK
-> > macro").
-> >
-> > To prevent such mistakes from appearing again, add compile time sanity
-> > checking to the arguments of GENMASK() and GENMASK_ULL(). If both
-> > arguments are known at compile time, and the low bit is higher than the
-> > high bit, break the build to detect the mistake immediately.
-> >
-> > Since GENMASK() is used in declarations, BUILD_BUG_ON_ZERO() must be
-> > used instead of BUILD_BUG_ON().
-> >
-> > __builtin_constant_p does not evaluate is argument, it only checks if it
-> > is a constant or not at compile time, and __builtin_choose_expr does not
-> > evaluate the expression that is not chosen. Therefore, GENMASK(x++, 0)
-> > does only evaluate x++ once.
-> >
-> > Commit 95b980d62d52 ("linux/bits.h: make BIT(), GENMASK(), and friends
-> > available in assembly") made the macros in linux/bits.h available in
-> > assembly. Since BUILD_BUG_OR_ZERO() is not asm compatible, disable the
-> > checks if the file is included in an asm file.
-> >
-> > Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-> > ---
-> > Changes in v3:
-> >   - Changed back to shorter macro argument names
-> >   - Remove casts and use 0 instead of UL(0) in GENMASK_INPUT_CHECK(),
-> >     since all results in GENMASK_INPUT_CHECK() are now ints. Update
-> >     commit message to reflect that.
-> >
-> > Changes in v2:
-> >   - Add comment about why inputs are not checked when used in asm file
-> >   - Use UL(0) instead of 0
-> >   - Extract mask creation in a separate macro to improve readability
-> >   - Use high and low instead of h and l (part of this was extracted to a
-> >     separate patch)
-> >   - Updated commit message
-> >
-> > Joe Perches sent a series to fix the existing misuses of GENMASK() that
-> > needs to be merged before this to avoid build failures. Currently, 5 of
-> > the patches are not in Linus tree, and 2 are not in linux-next. There is
-> > also a patch pending by Nathan Chancellor that also needs to be merged
-> > before this patch is merged to avoid build failures.
-> >
-> >  include/linux/bits.h | 21 +++++++++++++++++++--
-> >  1 file changed, 19 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/include/linux/bits.h b/include/linux/bits.h
-> > index 669d69441a62..4ba0fb609239 100644
-> > --- a/include/linux/bits.h
-> > +++ b/include/linux/bits.h
-> > @@ -18,12 +18,29 @@
-> >   * position @h. For example
-> >   * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
-> >   */
-> > -#define GENMASK(h, l) \
-> > +#ifndef __ASSEMBLY__
-> > +#include <linux/build_bug.h>
-> > +#define GENMASK_INPUT_CHECK(h, l) \
-> > +       (BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
-> > +               __builtin_constant_p((l) > (h)), (l) > (h), 0)))
-> > +#else
-> > +/*
-> > + * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
-> > + * disable the input check if that is the case.
-> > + */
-> > +#define GENMASK_INPUT_CHECK(h, l) 0
-> > +#endif
-> > +
-> > +#define __GENMASK(h, l) \
-> >         (((~UL(0)) - (UL(1) << (l)) + 1) & \
-> >          (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
-> > +#define GENMASK(h, l) \
-> > +       (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
-> >
-> > -#define GENMASK_ULL(h, l) \
-> > +#define __GENMASK_ULL(h, l) \
-> >         (((~ULL(0)) - (ULL(1) << (l)) + 1) & \
-> >          (~ULL(0) >> (BITS_PER_LONG_LONG - 1 - (h))))
-> > +#define GENMASK_ULL(h, l) \
-> > +       (GENMASK_INPUT_CHECK(h, l) + __GENMASK_ULL(h, l))
-> >
-> >  #endif /* __LINUX_BITS_H */
->
-> This is now commit 0fd35cd30a2fece1 ("linux/bits.h: add compile time sanity
-> check of GENMASK inputs") in next-20191008.
->
-> <noreply@ellerman.id.au> reported the following failure in sun3_defconfig,
-> which I managed to reproduce with gcc-4.6.3:
+> Hi Will and Marc
+> 
+> > -----Original Message-----
+> > From: Marc Zyngier <maz@kernel.org>
+> > Sent: 2019年10月1日 21:32
+> > To: Will Deacon <will@kernel.org>
+> > Cc: Justin He (Arm Technology China) <Justin.He@arm.com>; Catalin
+> > Marinas <Catalin.Marinas@arm.com>; Mark Rutland
+> > <Mark.Rutland@arm.com>; James Morse <James.Morse@arm.com>;
+> > Matthew Wilcox <willy@infradead.org>; Kirill A. Shutemov
+> > <kirill.shutemov@linux.intel.com>; linux-arm-kernel@lists.infradead.org;
+> > linux-kernel@vger.kernel.org; linux-mm@kvack.org; Punit Agrawal
+> > <punitagrawal@gmail.com>; Thomas Gleixner <tglx@linutronix.de>;
+> > Andrew Morton <akpm@linux-foundation.org>; hejianet@gmail.com; Kaly
+> > Xin (Arm Technology China) <Kaly.Xin@arm.com>
+> > Subject: Re: [PATCH v10 2/3] arm64: mm: implement
+> > arch_faults_on_old_pte() on arm64
+> > 
+> > On Tue, 1 Oct 2019 13:50:32 +0100
+> > Will Deacon <will@kernel.org> wrote:
+> >   
+> > > On Mon, Sep 30, 2019 at 09:57:39AM +0800, Jia He wrote:  
+> > > > On arm64 without hardware Access Flag, copying fromuser will fail  
+> > because  
+> > > > the pte is old and cannot be marked young. So we always end up with  
+> > zeroed  
+> > > > page after fork() + CoW for pfn mappings. we don't always have a
+> > > > hardware-managed access flag on arm64.
+> > > >
+> > > > Hence implement arch_faults_on_old_pte on arm64 to indicate that it  
+> > might  
+> > > > cause page fault when accessing old pte.
+> > > >
+> > > > Signed-off-by: Jia He <justin.he@arm.com>
+> > > > Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+> > > > ---
+> > > >  arch/arm64/include/asm/pgtable.h | 14 ++++++++++++++
+> > > >  1 file changed, 14 insertions(+)
+> > > >
+> > > > diff --git a/arch/arm64/include/asm/pgtable.h  
+> > b/arch/arm64/include/asm/pgtable.h  
+> > > > index 7576df00eb50..e96fb82f62de 100644
+> > > > --- a/arch/arm64/include/asm/pgtable.h
+> > > > +++ b/arch/arm64/include/asm/pgtable.h
+> > > > @@ -885,6 +885,20 @@ static inline void update_mmu_cache(struct  
+> > vm_area_struct *vma,  
+> > > >  #define phys_to_ttbr(addr)	(addr)
+> > > >  #endif
+> > > >
+> > > > +/*
+> > > > + * On arm64 without hardware Access Flag, copying from user will fail  
+> > because  
+> > > > + * the pte is old and cannot be marked young. So we always end up  
+> > with zeroed  
+> > > > + * page after fork() + CoW for pfn mappings. We don't always have a
+> > > > + * hardware-managed access flag on arm64.
+> > > > + */
+> > > > +static inline bool arch_faults_on_old_pte(void)
+> > > > +{
+> > > > +	WARN_ON(preemptible());
+> > > > +
+> > > > +	return !cpu_has_hw_af();
+> > > > +}  
+> > >
+> > > Does this work correctly in a KVM guest? (i.e. is the MMFR sanitised in  
+> > that  
+> > > case, despite not being the case on the host?)  
+> > 
+> > Yup, all the 64bit MMFRs are trapped (HCR_EL2.TID3 is set for an
+> > AArch64 guest), and we return the sanitised version.  
+> Thanks for Marc's explanation. I verified the patch series on a kvm guest (-M virt)
+> with simulated nvdimm device created by qemu. The host is ThunderX2 aarch64.
+> 
+> > 
+> > But that's an interesting remark: we're now trading an extra fault on
+> > CPUs that do not support HWAFDBS for a guaranteed trap for each and
+> > every guest under the sun that will hit the COW path...
+> > 
+> > My gut feeling is that this is going to be pretty visible. Jia, do you
+> > have any numbers for this kind of behaviour?  
+> It is not a common COW path, but a COW for PFN mapping pages only.
+> I add a g_counter before pte_mkyoung in force_mkyoung{} when testing 
+> vmmalloc_fork at [1].
+> 
+> In this test case, it will start M fork processes and N pthreads. The default is
+> M=2,N=4. the g_counter is about 241, that is it will hit my patch series for 241
+> times.
+> If I set M=20 and N=40 for TEST3, the g_counter is about 1492.
 
-Oh dear.
+I must confess I'm not so much interested in random microbenchmarks,
+but more in actual applications that could potentially be impacted by
+this. The numbers you're quoting here seem pretty small, which would
+indicate a low overhead, but that's not indicative of what would happen
+in real life.
 
-I was able to reproduce this for gcc 4.7 or 4.8,
-but I did not see any problem for gcc 4.9+
+I guess that we can leave it at that for now, and turn it into a CPU
+feature (with the associated static key) if this shows anywhere.
 
-Perhaps, is this due to broken __builtin_choose_expr or __builtin_constant_p
-for old compilers?
+Thanks,
+
+	M.
 
 
-
-
-
-
-
->
->     lib/842/842_compress.c: In function '__split_add_bits':
->     lib/842/842_compress.c:164:25: error: first argument to
-> '__builtin_choose_expr' not a constant
->     lib/842/842_compress.c:164:25: error: bit-field '<anonymous>'
-> width not an integer constant
->     scripts/Makefile.build:265: recipe for target
-> 'lib/842/842_compress.o' failed
->
-> __split_add_bits() calls GENMASK_ULL() with a non-constant.
-> However __split_add_bits() itself is called with constants only.
-> Apparently gcc fails to inline __split_add_bits().
-> Adding inline or always_inline doesn't help.
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
+>   
+> [1] https://github.com/pmem/pmdk/tree/master/src/test/vmmalloc_fork
+> 
+> 
 > --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-
-
-
+> Cheers,
+> Justin (Jia He)
+> 
 -- 
-Best Regards
-Masahiro Yamada
+Jazz is not dead. It just smells funny...
