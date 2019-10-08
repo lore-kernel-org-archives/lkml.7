@@ -4,36 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 228D8ECE58C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D65ECE598
 	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E984C20835
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:23:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A83920835
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:23:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729670AbfJHBWy (ORCPT
+        id S1729756AbfJHBW5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 21:22:54 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:52992 "EHLO huawei.com"
+        Mon, 7 Oct 2019 21:22:57 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:53036 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729375AbfJHBWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 21:22:53 -0400
+        id S1729635AbfJHBWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 21:22:55 -0400
 Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 547A0C915A3F05747E90;
+        by Forcepoint Email with ESMTP id 59C00EF9B73CDB7C635C;
         Tue,  8 Oct 2019 09:22:51 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 8 Oct 2019 09:22:42 +0800
+ 14.3.439.0; Tue, 8 Oct 2019 09:22:43 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>
-Subject: [PATCH net-next 1/6] net: hns3: add support for setting VF link status on the host
-Date:   Tue, 8 Oct 2019 09:20:04 +0800
-Message-ID: <1570497609-36349-2-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 5/6] net: hns3: add support for configuring VF MAC from the host
+Date:   Tue, 8 Oct 2019 09:20:08 +0800
+Message-ID: <1570497609-36349-6-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1570497609-36349-1-git-send-email-tanhuazhong@huawei.com>
 References: <1570497609-36349-1-git-send-email-tanhuazhong@huawei.com>
@@ -46,245 +45,342 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yufeng Mo <moyufeng@huawei.com>
+This patch adds support of configuring VF MAC from the host
+for the HNS3 driver.
 
-This patch adds support to configure VF link properties.
-The options are auto, enable, and disable. Even if the PF
-is down, the communication between VFs will be normal
-if the VFs are set to enable. The commands are as follows:
+BTW, the parameter init in the hns3_init_mac_addr is
+unnecessary now, since the MAC address will not read from
+NCL_CONFIG when doing reset, so it should be removed,
+otherwise it will affect VF's MAC address initialization.
 
-'ip link set <pf> vf <vf_id> state <auto|enable|disable>'
-change the VF status
-
-'ip link show'
-show the setting status
-
-Signed-off-by: Yufeng Mo <moyufeng@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hnae3.h        |  8 +++
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    | 24 +++++++++
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 57 ++++++++++++++++++++++
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |  6 +++
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c | 17 ++++++-
- 5 files changed, 111 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hns3/hnae3.h        |  3 ++
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    | 43 ++++++++++++---
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 62 ++++++++++++++++++++++
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c | 29 ++++++++++
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  | 28 +++++++++-
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h  |  1 +
+ 6 files changed, 158 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-index c4b7bf8..1fc3728 100644
+index 1202bbc..c15d7fc 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
 +++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-@@ -364,6 +364,10 @@ struct hnae3_ae_dev {
-  *   Enable/disable HW GRO
-  * add_arfs_entry
-  *   Check the 5-tuples of flow, and create flow director rule
-+ * get_vf_config
-+ *   Get the VF configuration setting by the host
-+ * set_vf_link_state
-+ *   Set VF link status
+@@ -375,6 +375,8 @@ struct hnae3_ae_dev {
+  *   it can enable promisc mode
+  * set_vf_rate
+  *   Set the max tx rate of specified vf.
++ * set_vf_mac
++ *   Configure the default MAC for specified VF
   */
  struct hnae3_ae_ops {
  	int (*init_ae_dev)(struct hnae3_ae_dev *ae_dev);
-@@ -529,6 +533,10 @@ struct hnae3_ae_ops {
- 	int (*mac_connect_phy)(struct hnae3_handle *handle);
- 	void (*mac_disconnect_phy)(struct hnae3_handle *handle);
- 	void (*restore_vlan_table)(struct hnae3_handle *handle);
-+	int (*get_vf_config)(struct hnae3_handle *handle, int vf,
-+			     struct ifla_vf_info *ivf);
-+	int (*set_vf_link_state)(struct hnae3_handle *handle, int vf,
-+				 int link_state);
+@@ -549,6 +551,7 @@ struct hnae3_ae_ops {
+ 	int (*set_vf_trust)(struct hnae3_handle *handle, int vf, bool enable);
+ 	int (*set_vf_rate)(struct hnae3_handle *handle, int vf,
+ 			   int min_tx_rate, int max_tx_rate, bool force);
++	int (*set_vf_mac)(struct hnae3_handle *handle, int vf, u8 *p);
  };
  
  struct hnae3_dcb_ops {
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 616cad0..2136323 100644
+index 5a8c316..4e304b4 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -1805,6 +1805,28 @@ static int hns3_rx_flow_steer(struct net_device *dev, const struct sk_buff *skb,
- }
- #endif
+@@ -1413,6 +1413,16 @@ static int hns3_nic_net_set_mac_address(struct net_device *netdev, void *p)
+ 		return 0;
+ 	}
  
-+static int hns3_nic_get_vf_config(struct net_device *ndev, int vf,
-+				  struct ifla_vf_info *ivf)
-+{
-+	struct hnae3_handle *h = hns3_get_handle(ndev);
++	/* For VF device, if there is a perm_addr, then the user will not
++	 * be allowed to change the address.
++	 */
++	if (!hns3_is_phys_func(h->pdev) &&
++	    !is_zero_ether_addr(netdev->perm_addr)) {
++		netdev_err(netdev, "has permanent MAC %pM, user MAC %pM not allow\n",
++			   netdev->perm_addr, mac_addr->sa_data);
++		return -EPERM;
++	}
 +
-+	if (!h->ae_algo->ops->get_vf_config)
+ 	ret = h->ae_algo->ops->set_mac_addr(h, mac_addr->sa_data, false);
+ 	if (ret) {
+ 		netdev_err(netdev, "set_mac_address fail, ret=%d!\n", ret);
+@@ -1862,6 +1872,23 @@ static int hns3_nic_set_vf_rate(struct net_device *ndev, int vf,
+ 					    false);
+ }
+ 
++static int hns3_nic_set_vf_mac(struct net_device *netdev, int vf_id, u8 *mac)
++{
++	struct hnae3_handle *h = hns3_get_handle(netdev);
++
++	if (!h->ae_algo->ops->set_vf_mac)
 +		return -EOPNOTSUPP;
 +
-+	return h->ae_algo->ops->get_vf_config(h, vf, ivf);
-+}
++	if (is_multicast_ether_addr(mac)) {
++		netdev_err(netdev,
++			   "Invalid MAC:%pM specified. Could not set MAC\n",
++			   mac);
++		return -EINVAL;
++	}
 +
-+static int hns3_nic_set_vf_link_state(struct net_device *ndev, int vf,
-+				      int link_state)
-+{
-+	struct hnae3_handle *h = hns3_get_handle(ndev);
-+
-+	if (!h->ae_algo->ops->set_vf_link_state)
-+		return -EOPNOTSUPP;
-+
-+	return h->ae_algo->ops->set_vf_link_state(h, vf, link_state);
++	return h->ae_algo->ops->set_vf_mac(h, vf_id, mac);
 +}
 +
  static const struct net_device_ops hns3_nic_netdev_ops = {
  	.ndo_open		= hns3_nic_net_open,
  	.ndo_stop		= hns3_nic_net_stop,
-@@ -1823,6 +1845,8 @@ static const struct net_device_ops hns3_nic_netdev_ops = {
- #ifdef CONFIG_RFS_ACCEL
- 	.ndo_rx_flow_steer	= hns3_rx_flow_steer,
- #endif
-+	.ndo_get_vf_config	= hns3_nic_get_vf_config,
-+	.ndo_set_vf_link_state	= hns3_nic_set_vf_link_state,
- 
+@@ -1885,6 +1912,7 @@ static const struct net_device_ops hns3_nic_netdev_ops = {
+ 	.ndo_get_vf_config	= hns3_nic_get_vf_config,
+ 	.ndo_set_vf_link_state	= hns3_nic_set_vf_link_state,
+ 	.ndo_set_vf_rate	= hns3_nic_set_vf_rate,
++	.ndo_set_vf_mac		= hns3_nic_set_vf_mac,
  };
  
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index fd7f943..931a311 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -55,6 +55,8 @@
- 
- #define HCLGE_LINK_STATUS_MS	10
- 
-+#define HCLGE_VF_VPORT_START_NUM	1
-+
- static int hclge_set_mac_mtu(struct hclge_dev *hdev, int new_mps);
- static int hclge_init_vlan_config(struct hclge_dev *hdev);
- static void hclge_sync_vlan_filter(struct hclge_dev *hdev);
-@@ -1633,6 +1635,7 @@ static int hclge_alloc_vport(struct hclge_dev *hdev)
- 	for (i = 0; i < num_vport; i++) {
- 		vport->back = hdev;
- 		vport->vport_id = i;
-+		vport->vf_info.link_state = IFLA_VF_LINK_STATE_AUTO;
- 		vport->mps = HCLGE_MAC_DEFAULT_FRAME;
- 		vport->port_base_vlan_cfg.state = HNAE3_PORT_BASE_VLAN_DISABLE;
- 		vport->rxvlan_cfg.rx_vlan_offload_en = true;
-@@ -2853,6 +2856,58 @@ static int hclge_get_status(struct hnae3_handle *handle)
- 	return hdev->hw.mac.link;
+ bool hns3_is_phys_func(struct pci_dev *pdev)
+@@ -3804,23 +3832,24 @@ int hns3_uninit_all_ring(struct hns3_nic_priv *priv)
  }
  
-+static struct hclge_vport *hclge_get_vf_vport(struct hclge_dev *hdev, int vf)
-+{
-+	if (pci_num_vf(hdev->pdev) == 0) {
-+		dev_err(&hdev->pdev->dev,
-+			"SRIOV is disabled, can not get vport(%d) info.\n", vf);
-+		return NULL;
-+	}
-+
-+	if (vf < 0 || vf >= pci_num_vf(hdev->pdev)) {
-+		dev_err(&hdev->pdev->dev,
-+			"vf id(%d) is out of range(0 <= vfid < %d)\n",
-+			vf, pci_num_vf(hdev->pdev));
-+		return NULL;
-+	}
-+
-+	/* VF start from 1 in vport */
-+	vf += HCLGE_VF_VPORT_START_NUM;
-+	return &hdev->vport[vf];
-+}
-+
-+static int hclge_get_vf_config(struct hnae3_handle *handle, int vf,
-+			       struct ifla_vf_info *ivf)
-+{
-+	struct hclge_vport *vport = hclge_get_vport(handle);
-+	struct hclge_dev *hdev = vport->back;
-+
-+	vport = hclge_get_vf_vport(hdev, vf);
-+	if (!vport)
-+		return -EINVAL;
-+
-+	ivf->vf = vf;
-+	ivf->linkstate = vport->vf_info.link_state;
-+	ether_addr_copy(ivf->mac, vport->vf_info.mac);
-+
-+	return 0;
-+}
-+
-+static int hclge_set_vf_link_state(struct hnae3_handle *handle, int vf,
-+				   int link_state)
-+{
-+	struct hclge_vport *vport = hclge_get_vport(handle);
-+	struct hclge_dev *hdev = vport->back;
-+
-+	vport = hclge_get_vf_vport(hdev, vf);
-+	if (!vport)
-+		return -EINVAL;
-+
-+	vport->vf_info.link_state = link_state;
-+
-+	return 0;
-+}
-+
- static u32 hclge_check_event_cause(struct hclge_dev *hdev, u32 *clearval)
+ /* Set mac addr if it is configured. or leave it to the AE driver */
+-static int hns3_init_mac_addr(struct net_device *netdev, bool init)
++static int hns3_init_mac_addr(struct net_device *netdev)
  {
- 	u32 rst_src_reg, cmdq_src_reg, msix_src_reg;
-@@ -10152,6 +10207,8 @@ static const struct hnae3_ae_ops hclge_ops = {
- 	.mac_connect_phy = hclge_mac_connect_phy,
- 	.mac_disconnect_phy = hclge_mac_disconnect_phy,
- 	.restore_vlan_table = hclge_restore_vlan_table,
-+	.get_vf_config = hclge_get_vf_config,
-+	.set_vf_link_state = hclge_set_vf_link_state,
+ 	struct hns3_nic_priv *priv = netdev_priv(netdev);
+ 	struct hnae3_handle *h = priv->ae_handle;
+ 	u8 mac_addr_temp[ETH_ALEN];
+ 	int ret = 0;
+ 
+-	if (h->ae_algo->ops->get_mac_addr && init) {
++	if (h->ae_algo->ops->get_mac_addr)
+ 		h->ae_algo->ops->get_mac_addr(h, mac_addr_temp);
+-		ether_addr_copy(netdev->dev_addr, mac_addr_temp);
+-	}
+ 
+ 	/* Check if the MAC address is valid, if not get a random one */
+-	if (!is_valid_ether_addr(netdev->dev_addr)) {
++	if (!is_valid_ether_addr(mac_addr_temp)) {
+ 		eth_hw_addr_random(netdev);
+ 		dev_warn(priv->dev, "using random MAC address %pM\n",
+ 			 netdev->dev_addr);
++	} else {
++		ether_addr_copy(netdev->dev_addr, mac_addr_temp);
++		ether_addr_copy(netdev->perm_addr, mac_addr_temp);
+ 	}
+ 
+ 	if (h->ae_algo->ops->set_mac_addr)
+@@ -3924,7 +3953,7 @@ static int hns3_client_init(struct hnae3_handle *handle)
+ 	handle->kinfo.netdev = netdev;
+ 	handle->priv = (void *)priv;
+ 
+-	hns3_init_mac_addr(netdev, true);
++	hns3_init_mac_addr(netdev);
+ 
+ 	hns3_set_default_feature(netdev);
+ 
+@@ -4392,7 +4421,7 @@ static int hns3_reset_notify_restore_enet(struct hnae3_handle *handle)
+ 	bool vlan_filter_enable;
+ 	int ret;
+ 
+-	ret = hns3_init_mac_addr(netdev, false);
++	ret = hns3_init_mac_addr(netdev);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index b88c0aa..8a3a4fd 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -7490,6 +7490,67 @@ static int hclge_get_mac_ethertype_cmd_status(struct hclge_dev *hdev,
+ 	return return_status;
+ }
+ 
++static bool hclge_check_vf_mac_exist(struct hclge_vport *vport, int vf_idx,
++				     u8 *mac_addr)
++{
++	struct hclge_mac_vlan_tbl_entry_cmd req;
++	struct hclge_dev *hdev = vport->back;
++	struct hclge_desc desc;
++	u16 egress_port = 0;
++	int i;
++
++	if (is_zero_ether_addr(mac_addr))
++		return false;
++
++	memset(&req, 0, sizeof(req));
++	hnae3_set_field(egress_port, HCLGE_MAC_EPORT_VFID_M,
++			HCLGE_MAC_EPORT_VFID_S, vport->vport_id);
++	req.egress_port = cpu_to_le16(egress_port);
++	hclge_prepare_mac_addr(&req, mac_addr, false);
++
++	if (hclge_lookup_mac_vlan_tbl(vport, &req, &desc, false) != -ENOENT)
++		return true;
++
++	vf_idx += HCLGE_VF_VPORT_START_NUM;
++	for (i = hdev->num_vmdq_vport + 1; i < hdev->num_alloc_vport; i++)
++		if (i != vf_idx &&
++		    ether_addr_equal(mac_addr, hdev->vport[i].vf_info.mac))
++			return true;
++
++	return false;
++}
++
++static int hclge_set_vf_mac(struct hnae3_handle *handle, int vf,
++			    u8 *mac_addr)
++{
++	struct hclge_vport *vport = hclge_get_vport(handle);
++	struct hclge_dev *hdev = vport->back;
++
++	vport = hclge_get_vf_vport(hdev, vf);
++	if (!vport)
++		return -EINVAL;
++
++	if (ether_addr_equal(mac_addr, vport->vf_info.mac)) {
++		dev_info(&hdev->pdev->dev,
++			 "Specified MAC(=%pM) is same as before, no change committed!\n",
++			 mac_addr);
++		return 0;
++	}
++
++	if (hclge_check_vf_mac_exist(vport, vf, mac_addr)) {
++		dev_err(&hdev->pdev->dev, "Specified MAC(=%pM) exists!\n",
++			mac_addr);
++		return -EEXIST;
++	}
++
++	ether_addr_copy(vport->vf_info.mac, mac_addr);
++	dev_info(&hdev->pdev->dev,
++		 "MAC of VF %d has been set to %pM, and it will be reinitialized!\n",
++		 vf, mac_addr);
++
++	return hclge_inform_reset_assert_to_vf(vport);
++}
++
+ static int hclge_add_mgr_tbl(struct hclge_dev *hdev,
+ 			     const struct hclge_mac_mgr_tbl_entry_cmd *req)
+ {
+@@ -10490,6 +10551,7 @@ static const struct hnae3_ae_ops hclge_ops = {
+ 	.set_vf_spoofchk = hclge_set_vf_spoofchk,
+ 	.set_vf_trust = hclge_set_vf_trust,
+ 	.set_vf_rate = hclge_set_vf_rate,
++	.set_vf_mac = hclge_set_vf_mac,
  };
  
  static struct hnae3_ae_algo ae_algo = {
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-index 3e9574a..6a3ccda 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-@@ -885,6 +885,11 @@ struct hclge_port_base_vlan_config {
- 	struct hclge_vlan_info vlan_info;
- };
- 
-+struct hclge_vf_info {
-+	int link_state;
-+	u8 mac[ETH_ALEN];
-+};
-+
- struct hclge_vport {
- 	u16 alloc_tqps;	/* Allocated Tx/Rx queues */
- 
-@@ -916,6 +921,7 @@ struct hclge_vport {
- 	unsigned long state;
- 	unsigned long last_active_jiffies;
- 	u32 mps; /* Max packet size */
-+	struct hclge_vf_info vf_info;
- 
- 	struct list_head uc_mac_list;   /* Store VF unicast table */
- 	struct list_head mc_mac_list;   /* Store VF multicast table */
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-index f5da28a..b842291 100644
+index 131b47b..97463e11 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-@@ -428,6 +428,9 @@ static int hclge_get_vf_media_type(struct hclge_vport *vport,
- static int hclge_get_link_info(struct hclge_vport *vport,
- 			       struct hclge_mbx_vf_to_pf_cmd *mbx_req)
- {
-+#define HCLGE_VF_LINK_STATE_UP		1U
-+#define HCLGE_VF_LINK_STATE_DOWN	0U
-+
- 	struct hclge_dev *hdev = vport->back;
- 	u16 link_status;
- 	u8 msg_data[8];
-@@ -435,7 +438,19 @@ static int hclge_get_link_info(struct hclge_vport *vport,
- 	u16 duplex;
+@@ -249,6 +249,20 @@ static int hclge_set_vf_uc_mac_addr(struct hclge_vport *vport,
+ 	if (mbx_req->msg[1] == HCLGE_MBX_MAC_VLAN_UC_MODIFY) {
+ 		const u8 *old_addr = (const u8 *)(&mbx_req->msg[8]);
  
- 	/* mac.link can only be 0 or 1 */
--	link_status = (u16)hdev->hw.mac.link;
-+	switch (vport->vf_info.link_state) {
-+	case IFLA_VF_LINK_STATE_ENABLE:
-+		link_status = HCLGE_VF_LINK_STATE_UP;
-+		break;
-+	case IFLA_VF_LINK_STATE_DISABLE:
-+		link_status = HCLGE_VF_LINK_STATE_DOWN;
-+		break;
-+	case IFLA_VF_LINK_STATE_AUTO:
-+	default:
-+		link_status = (u16)hdev->hw.mac.link;
-+		break;
++		/* If VF MAC has been configured by the host then it
++		 * cannot be overridden by the MAC specified by the VM.
++		 */
++		if (!is_zero_ether_addr(vport->vf_info.mac) &&
++		    !ether_addr_equal(mac_addr, vport->vf_info.mac)) {
++			status = -EPERM;
++			goto out;
++		}
++
++		if (!is_valid_ether_addr(mac_addr)) {
++			status = -EINVAL;
++			goto out;
++		}
++
+ 		hclge_rm_uc_addr_common(vport, old_addr);
+ 		status = hclge_add_uc_addr_common(vport, mac_addr);
+ 		if (status) {
+@@ -276,6 +290,7 @@ static int hclge_set_vf_uc_mac_addr(struct hclge_vport *vport,
+ 		return -EIO;
+ 	}
+ 
++out:
+ 	if (mbx_req->mbx_need_resp & HCLGE_MBX_NEED_RESP_BIT)
+ 		hclge_gen_resp_to_vf(vport, mbx_req, status, NULL, 0);
+ 
+@@ -427,6 +442,13 @@ static int hclge_get_vf_queue_info(struct hclge_vport *vport,
+ 				    HCLGE_TQPS_RSS_INFO_LEN);
+ }
+ 
++static int hclge_get_vf_mac_addr(struct hclge_vport *vport,
++				 struct hclge_mbx_vf_to_pf_cmd *mbx_req)
++{
++	return hclge_gen_resp_to_vf(vport, mbx_req, 0, vport->vf_info.mac,
++				    ETH_ALEN);
++}
++
+ static int hclge_get_vf_queue_depth(struct hclge_vport *vport,
+ 				    struct hclge_mbx_vf_to_pf_cmd *mbx_req,
+ 				    bool gen_resp)
+@@ -793,6 +815,13 @@ void hclge_mbx_handler(struct hclge_dev *hdev)
+ 		case HCLGE_MBX_PUSH_LINK_STATUS:
+ 			hclge_handle_link_change_event(hdev, req);
+ 			break;
++		case HCLGE_MBX_GET_MAC_ADDR:
++			ret = hclge_get_vf_mac_addr(vport, req);
++			if (ret)
++				dev_err(&hdev->pdev->dev,
++					"PF failed(%d) to get MAC for VF\n",
++					ret);
++			break;
+ 		case HCLGE_MBX_NCSI_ERROR:
+ 			hclge_handle_ncsi_error(hdev);
+ 			break;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+index 1732668..9c8fd97 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+@@ -1176,11 +1176,37 @@ static void hclgevf_reset_tqp_stats(struct hnae3_handle *handle)
+ 	}
+ }
+ 
++static int hclgevf_get_host_mac_addr(struct hclgevf_dev *hdev, u8 *p)
++{
++	u8 host_mac[ETH_ALEN];
++	int status;
++
++	status = hclgevf_send_mbx_msg(hdev, HCLGE_MBX_GET_MAC_ADDR, 0, NULL, 0,
++				      true, host_mac, ETH_ALEN);
++	if (status) {
++		dev_err(&hdev->pdev->dev,
++			"fail to get VF MAC from host %d", status);
++		return status;
 +	}
 +
- 	duplex = hdev->hw.mac.duplex;
- 	memcpy(&msg_data[0], &link_status, sizeof(u16));
- 	memcpy(&msg_data[2], &hdev->hw.mac.speed, sizeof(u32));
++	ether_addr_copy(p, host_mac);
++
++	return 0;
++}
++
+ static void hclgevf_get_mac_addr(struct hnae3_handle *handle, u8 *p)
+ {
+ 	struct hclgevf_dev *hdev = hclgevf_ae_get_hdev(handle);
++	u8 host_mac_addr[ETH_ALEN];
+ 
+-	ether_addr_copy(p, hdev->hw.mac.mac_addr);
++	if (hclgevf_get_host_mac_addr(hdev, host_mac_addr))
++		return;
++
++	hdev->has_pf_mac = !is_zero_ether_addr(host_mac_addr);
++	if (hdev->has_pf_mac)
++		ether_addr_copy(p, host_mac_addr);
++	else
++		ether_addr_copy(p, hdev->hw.mac.mac_addr);
+ }
+ 
+ static int hclgevf_set_mac_addr(struct hnae3_handle *handle, void *p,
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
+index bdde3af..ed83940 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
+@@ -266,6 +266,7 @@ struct hclgevf_dev {
+ 	u16 num_tx_desc;	/* desc num of per tx queue */
+ 	u16 num_rx_desc;	/* desc num of per rx queue */
+ 	u8 hw_tc_map;
++	u8 has_pf_mac;
+ 
+ 	u16 num_msi;
+ 	u16 num_msi_left;
 -- 
 2.7.4
 
