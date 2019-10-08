@@ -2,155 +2,85 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45BCDC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A46D0C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:36:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 229D520679
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:34:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CD4820815
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:36:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730947AbfJHMeu (ORCPT
+        id S1730763AbfJHMgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 08:34:50 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:10186 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730605AbfJHMet (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 08:34:49 -0400
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
-  Nicolas.Ferre@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="Nicolas.Ferre@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Nicolas.Ferre@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: FxSCSadRfyOhjmGJ0lq7LzW+WbK63wzhjmw9cb8R/74ZHo7MW1K73CZIBHrOxnJajFj0BaPoKB
- uv53CT0mlylEXBhYUY2oOoE53N3JtzGeVaqveo6n6pNhLxCjQFO2SBDHzZfAK91pH+ScGp/ZKY
- B6Qq/xYJA1i9jU6BWGX5qzgSh4Px3p2td819sVi/ji7ngj4iyPmZWFdD8e/RSUU+pQJBtBuzm9
- Wl2kJO2vZtn+1BXrBGSp7C9bDbhIx7RAj+3mO9OEDDDk4dfuQyZ+Yg6lgQRJdboFRs7csD7gme
- Qf4=
-X-IronPort-AV: E=Sophos;i="5.67,270,1566889200"; 
-   d="scan'208";a="49212619"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 08 Oct 2019 05:34:48 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 8 Oct 2019 05:34:48 -0700
-Received: from tenerife.corp.atmel.com (10.10.85.251) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Tue, 8 Oct 2019 05:34:46 -0700
-From:   Nicolas Ferre <nicolas.ferre@microchip.com>
-To:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <robh+dt@kernel.org>
-CC:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        <linux-kernel@vger.kernel.org>, <ulf.hansson@linaro.org>,
-        <adrian.hunter@intel.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>
-Subject: [PATCH 2/2] mmc: sdhci-of-at91: add DT property to enable calibration on full reset
-Date:   Tue, 8 Oct 2019 14:34:32 +0200
-Message-ID: <d25c8f909d039938a5696e8de32396cf2aaf54b7.1570537903.git.nicolas.ferre@microchip.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <4d269f30b1122487a2b5c8b48e24f78f2b75a509.1570537903.git.nicolas.ferre@microchip.com>
-References: <4d269f30b1122487a2b5c8b48e24f78f2b75a509.1570537903.git.nicolas.ferre@microchip.com>
+        Tue, 8 Oct 2019 08:36:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54436 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730249AbfJHMgF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 08:36:05 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 566FC87717;
+        Tue,  8 Oct 2019 12:36:05 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 2F4CA60605;
+        Tue,  8 Oct 2019 12:36:04 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Tue,  8 Oct 2019 14:36:03 +0200 (CEST)
+Date:   Tue, 8 Oct 2019 14:36:01 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Bruce Ashfield <bruce.ashfield@gmail.com>
+Cc:     Roman Gushchin <guro@fb.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tj@kernel.org" <tj@kernel.org>,
+        Richard Purdie <richard.purdie@linuxfoundation.org>
+Subject: Re: ptrace/strace and freezer oddities and v5.2+ kernels
+Message-ID: <20191008123601.GA28621@redhat.com>
+References: <CADkTA4PBT374CY+UNb85WjQEaNCDodMZu=MgpG8aMYbAu2eOGA@mail.gmail.com>
+ <20191002020100.GA6436@castle.dhcp.thefacebook.com>
+ <CADkTA4Mbai=Q5xgKH9-md_g73UsHiKnEauVgMWev+-sG8FVNSA@mail.gmail.com>
+ <20191002181914.GA7617@castle.DHCP.thefacebook.com>
+ <CADkTA4PmGBR7YdOXvi6sEDJ+uztuB7x2G95TCcW2u_iqjwhUNQ@mail.gmail.com>
+ <20191004000913.GA5519@castle.DHCP.thefacebook.com>
+ <CADkTA4OJok3cmYCcDKtxBXQ5xtK1EMujh7_AgLnVaeRr18TH9w@mail.gmail.com>
+ <CADkTA4PKc6VEQYvXk4-EWMJPyOrzWQEsk4p6O_BMFo6kvT2jYg@mail.gmail.com>
+ <20191007232754.GB11171@tower.DHCP.thefacebook.com>
+ <CADkTA4NKDn4jd2BQaGk+JEnM3B5GMDudsBi6V4YwK3Soq9q9pA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CADkTA4NKDn4jd2BQaGk+JEnM3B5GMDudsBi6V4YwK3Soq9q9pA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Tue, 08 Oct 2019 12:36:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a property to keep the analog calibration cell powered.
-This feature is specific to the Microchip SDHCI IP and outside
-of the standard SDHCI register map.
+On 10/08, Bruce Ashfield wrote:
+>
+> So I've been looking through the config delta's and late last night, I was
+> able to move the runtime back to a failed 4 minute state by adding the
+> CONFIG_PREEMPT settings that we have by default in our reference
+> kernel.
 
-By always keeping it on, after a full reset sequence, we make sure
-that this feature is activated and not disabled.
+Aha... Can you try the patch below?
 
-We expose a hardware property to the DT as this feature can be used
-to adapt SDHCI behavior vs. how the SDCAL SoC pin is connected
-on the board.
+Oleg.
 
-Note that managing properly this property would reduce
-power consumption on some SAMA5D2 SiP revisions.
-
-Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
----
- drivers/mmc/host/sdhci-of-at91.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
-
-diff --git a/drivers/mmc/host/sdhci-of-at91.c b/drivers/mmc/host/sdhci-of-at91.c
-index e7d1920729fb..9571c4a882a9 100644
---- a/drivers/mmc/host/sdhci-of-at91.c
-+++ b/drivers/mmc/host/sdhci-of-at91.c
-@@ -27,6 +27,9 @@
- #define SDMMC_CACR	0x230
- #define		SDMMC_CACR_CAPWREN	BIT(0)
- #define		SDMMC_CACR_KEY		(0x46 << 8)
-+#define SDMMC_CALCR	0x240
-+#define		SDMMC_CALCR_EN		BIT(0)
-+#define		SDMMC_CALCR_ALWYSON	BIT(4)
- 
- #define SDHCI_AT91_PRESET_COMMON_CONF	0x400 /* drv type B, programmable clock mode */
- 
-@@ -35,6 +38,7 @@ struct sdhci_at91_priv {
- 	struct clk *gck;
- 	struct clk *mainck;
- 	bool restore_needed;
-+	bool cal_always_on;
- };
- 
- static void sdhci_at91_set_force_card_detect(struct sdhci_host *host)
-@@ -116,10 +120,17 @@ static void sdhci_at91_set_uhs_signaling(struct sdhci_host *host,
- 
- static void sdhci_at91_reset(struct sdhci_host *host, u8 mask)
- {
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+	struct sdhci_at91_priv *priv = sdhci_pltfm_priv(pltfm_host);
-+
- 	sdhci_reset(host, mask);
- 
- 	if (host->mmc->caps & MMC_CAP_NONREMOVABLE)
- 		sdhci_at91_set_force_card_detect(host);
-+
-+	if (priv->cal_always_on && (mask & SDHCI_RESET_ALL))
-+		sdhci_writel(host, SDMMC_CALCR_ALWYSON | SDMMC_CALCR_EN,
-+			     SDMMC_CALCR);
- }
- 
- static const struct sdhci_ops sdhci_at91_sama5d2_ops = {
-@@ -345,6 +356,14 @@ static int sdhci_at91_probe(struct platform_device *pdev)
- 
- 	priv->restore_needed = false;
- 
-+	/*
-+	 * if SDCAL pin is wrongly connected, we must enable
-+	 * the analog calibration cell permanently.
-+	 */
-+	priv->cal_always_on =
-+		device_property_read_bool(&pdev->dev,
-+					  "microchip,sdcal-inverted");
-+
- 	ret = mmc_of_parse(host->mmc);
- 	if (ret)
- 		goto clocks_disable_unprepare;
--- 
-2.17.1
+--- x/kernel/signal.c
++++ x/kernel/signal.c
+@@ -2205,8 +2205,8 @@ static void ptrace_stop(int exit_code, int why, int clear_code, kernel_siginfo_t
+ 		 */
+ 		preempt_disable();
+ 		read_unlock(&tasklist_lock);
+-		preempt_enable_no_resched();
+ 		cgroup_enter_frozen();
++		preempt_enable_no_resched();
+ 		freezable_schedule();
+ 		cgroup_leave_frozen(true);
+ 	} else {
 
