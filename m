@@ -2,120 +2,168 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29491C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F1DECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C5F720673
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9119521721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:33:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730819AbfJHLdn (ORCPT
+        id S1730830AbfJHLdo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 8 Oct 2019 07:33:44 -0400
+Received: from mga02.intel.com ([134.134.136.20]:27247 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730812AbfJHLdn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Oct 2019 07:33:43 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47865 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730792AbfJHLdk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 07:33:40 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iHnkA-0008Fm-GL; Tue, 08 Oct 2019 13:33:30 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 26BFE1C072D;
-        Tue,  8 Oct 2019 13:33:30 +0200 (CEST)
-Date:   Tue, 08 Oct 2019 11:33:30 -0000
-From:   "tip-bot2 for Sami Tolvanen" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/cpu/vmware: Use the full form of INL in VMWARE_PORT
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Borislav Petkov <bp@suse.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        clang-built-linux@googlegroups.com,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        virtualization@lists.linux-foundation.org,
-        "VMware, Inc." <pv-drivers@vmware.com>, "x86-ml" <x86@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191007192129.104336-1-samitolvanen@google.com>
-References: <20191007192129.104336-1-samitolvanen@google.com>
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 04:33:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,270,1566889200"; 
+   d="scan'208";a="187267995"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by orsmga008.jf.intel.com with SMTP; 08 Oct 2019 04:33:38 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Tue, 08 Oct 2019 14:33:38 +0300
+Date:   Tue, 8 Oct 2019 14:33:38 +0300
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     "sandy.huang" <hjc@rock-chips.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] drm: Add some new format DRM_FORMAT_NVXX_10
+Message-ID: <20191008113338.GP1208@intel.com>
+References: <1569486289-152061-1-git-send-email-hjc@rock-chips.com>
+ <1569486289-152061-2-git-send-email-hjc@rock-chips.com>
+ <20190930104849.GA1208@intel.com>
+ <2c46d532-f810-392d-b9c0-3b9aaccae7f4@rock-chips.com>
 MIME-Version: 1.0
-Message-ID: <157053441011.9978.3342288603618092810.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2c46d532-f810-392d-b9c0-3b9aaccae7f4@rock-chips.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Tue, Oct 08, 2019 at 10:40:20AM +0800, sandy.huang wrote:
+> Hi ville syrjala,
+> 
+> 在 2019/9/30 下午6:48, Ville Syrjälä 写道:
+> > On Thu, Sep 26, 2019 at 04:24:47PM +0800, Sandy Huang wrote:
+> >> These new format is supported by some rockchip socs:
+> >>
+> >> DRM_FORMAT_NV12_10/DRM_FORMAT_NV21_10
+> >> DRM_FORMAT_NV16_10/DRM_FORMAT_NV61_10
+> >> DRM_FORMAT_NV24_10/DRM_FORMAT_NV42_10
+> >>
+> >> Signed-off-by: Sandy Huang <hjc@rock-chips.com>
+> >> ---
+> >>   drivers/gpu/drm/drm_fourcc.c  | 18 ++++++++++++++++++
+> >>   include/uapi/drm/drm_fourcc.h | 14 ++++++++++++++
+> >>   2 files changed, 32 insertions(+)
+> >>
+> >> diff --git a/drivers/gpu/drm/drm_fourcc.c b/drivers/gpu/drm/drm_fourcc.c
+> >> index c630064..ccd78a3 100644
+> >> --- a/drivers/gpu/drm/drm_fourcc.c
+> >> +++ b/drivers/gpu/drm/drm_fourcc.c
+> >> @@ -261,6 +261,24 @@ const struct drm_format_info *__drm_format_info(u32 format)
+> >>   		{ .format = DRM_FORMAT_P016,		.depth = 0,  .num_planes = 2,
+> >>   		  .char_per_block = { 2, 4, 0 }, .block_w = { 1, 0, 0 }, .block_h = { 1, 0, 0 },
+> >>   		  .hsub = 2, .vsub = 2, .is_yuv = true},
+> >> +		{ .format = DRM_FORMAT_NV12_10,		.depth = 0,  .num_planes = 2,
+> >> +		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
+> >> +		  .hsub = 2, .vsub = 2, .is_yuv = true},
+> >> +		{ .format = DRM_FORMAT_NV21_10,		.depth = 0,  .num_planes = 2,
+> >> +		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
+> >> +		  .hsub = 2, .vsub = 2, .is_yuv = true},
+> >> +		{ .format = DRM_FORMAT_NV16_10,		.depth = 0,  .num_planes = 2,
+> >> +		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
+> >> +		  .hsub = 2, .vsub = 1, .is_yuv = true},
+> >> +		{ .format = DRM_FORMAT_NV61_10,		.depth = 0,  .num_planes = 2,
+> >> +		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
+> >> +		  .hsub = 2, .vsub = 1, .is_yuv = true},
+> >> +		{ .format = DRM_FORMAT_NV24_10,		.depth = 0,  .num_planes = 2,
+> >> +		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
+> >> +		  .hsub = 1, .vsub = 1, .is_yuv = true},
+> >> +		{ .format = DRM_FORMAT_NV42_10,		.depth = 0,  .num_planes = 2,
+> >> +		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
+> >> +		  .hsub = 1, .vsub = 1, .is_yuv = true},
+> >>   		{ .format = DRM_FORMAT_P210,		.depth = 0,
+> >>   		  .num_planes = 2, .char_per_block = { 2, 4, 0 },
+> >>   		  .block_w = { 1, 0, 0 }, .block_h = { 1, 0, 0 }, .hsub = 2,
+> >> diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
+> >> index 3feeaa3..08e2221 100644
+> >> --- a/include/uapi/drm/drm_fourcc.h
+> >> +++ b/include/uapi/drm/drm_fourcc.h
+> >> @@ -238,6 +238,20 @@ extern "C" {
+> >>   #define DRM_FORMAT_NV42		fourcc_code('N', 'V', '4', '2') /* non-subsampled Cb:Cr plane */
+> >>   
+> >>   /*
+> >> + * 2 plane YCbCr
+> >> + * index 0 = Y plane, Y3:Y2:Y1:Y0 10:10:10:10
+> >> + * index 1 = Cb:Cr plane, Cb3:Cr3:Cb2:Cr2:Cb1:Cr1:Cb0:Cr0 10:10:10:10:10:10:10:10
+> >> + * or
+> >> + * index 1 = Cr:Cb plane, Cr3:Cb3:Cr2:Cb2:Cr1:Cb1:Cr0:Cb0 10:10:10:10:10:10:10:10
+> > So now you're defining it as some kind of byte aligned block.
+> > With that specifying endianness would now make sense since
+> > otherwise this tells us absolutely nothing about the memory
+> > layout.
+> >
+> > So I'd either do that, or go back to not specifying anything and
+> > use some weasel words like "mamory layout is implementation defined"
+> > which of course means no one can use it for anything that involves
+> > any kind of cross vendor stuff.
+> /*
+>   * 2 plane YCbCr
+>   * index 0 = Y plane, [39: 0] Y3:Y2:Y1:Y0 10:10:10:10  little endian
+>   * index 1 = Cb:Cr plane, [79: 0] Cb3:Cr3:Cb2:Cr2:Cb1:Cr1:Cb0:Cr0 
+> 10:10:10:10:10:10:10:10  little endian
+>   * or
+>   * index 1 = Cr:Cb plane, [79: 0] Cr3:Cb3:Cr2:Cb2:Cr1:Cb1:Cr0:Cb0 
+> 10:10:10:10:10:10:10:10  little endian
+>   */
+> 
+> Is this description ok?
 
-Commit-ID:     fbcfb8f0270bf24fe348393540b17a7f2ba577d7
-Gitweb:        https://git.kernel.org/tip/fbcfb8f0270bf24fe348393540b17a7f2ba577d7
-Author:        Sami Tolvanen <samitolvanen@google.com>
-AuthorDate:    Mon, 07 Oct 2019 12:21:29 -07:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 08 Oct 2019 13:26:42 +02:00
+Seems OK to me, if it actually describes the format correctly.
 
-x86/cpu/vmware: Use the full form of INL in VMWARE_PORT
+Though I'm not sure why the CbCr is defines as an 80bit block
+and Y has a 40bit block. 40bits should be enough for CbCr as well.
 
-LLVM's assembler doesn't accept the short form INL instruction:
+> 
+> >> + */
+> >> +#define DRM_FORMAT_NV12_10	fourcc_code('N', 'A', '1', '2') /* 2x2 subsampled Cr:Cb plane */
+> >> +#define DRM_FORMAT_NV21_10	fourcc_code('N', 'A', '2', '1') /* 2x2 subsampled Cb:Cr plane */
+> >> +#define DRM_FORMAT_NV16_10	fourcc_code('N', 'A', '1', '6') /* 2x1 subsampled Cr:Cb plane */
+> >> +#define DRM_FORMAT_NV61_10	fourcc_code('N', 'A', '6', '1') /* 2x1 subsampled Cb:Cr plane */
+> >> +#define DRM_FORMAT_NV24_10	fourcc_code('N', 'A', '2', '4') /* non-subsampled Cr:Cb plane */
+> >> +#define DRM_FORMAT_NV42_10	fourcc_code('N', 'A', '4', '2') /* non-subsampled Cb:Cr plane */
+> >> +
+> >> +/*
+> >>    * 2 plane YCbCr MSB aligned
+> >>    * index 0 = Y plane, [15:0] Y:x [10:6] little endian
+> >>    * index 1 = Cr:Cb plane, [31:0] Cr:x:Cb:x [10:6:10:6] little endian
+> >> -- 
+> >> 2.7.4
+> >>
+> >>
+> >>
+> >> _______________________________________________
+> >> dri-devel mailing list
+> >> dri-devel@lists.freedesktop.org
+> >> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> 
 
-  inl (%%dx)
-
-but instead insists on the output register to be explicitly specified:
-
-  <inline asm>:1:7: error: invalid operand for instruction
-          inl (%dx)
-             ^
-  LLVM ERROR: Error parsing inline asm
-
-Use the full form of the instruction to fix the build.
-
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Acked-by: Thomas Hellstrom <thellstrom@vmware.com>
-Cc: clang-built-linux@googlegroups.com
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: virtualization@lists.linux-foundation.org
-Cc: "VMware, Inc." <pv-drivers@vmware.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://github.com/ClangBuiltLinux/linux/issues/734
-Link: https://lkml.kernel.org/r/20191007192129.104336-1-samitolvanen@google.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/kernel/cpu/vmware.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/cpu/vmware.c b/arch/x86/kernel/cpu/vmware.c
-index 9735139..46d7326 100644
---- a/arch/x86/kernel/cpu/vmware.c
-+++ b/arch/x86/kernel/cpu/vmware.c
-@@ -49,7 +49,7 @@
- #define VMWARE_CMD_VCPU_RESERVED 31
- 
- #define VMWARE_PORT(cmd, eax, ebx, ecx, edx)				\
--	__asm__("inl (%%dx)" :						\
-+	__asm__("inl (%%dx), %%eax" :					\
- 		"=a"(eax), "=c"(ecx), "=d"(edx), "=b"(ebx) :		\
- 		"a"(VMWARE_HYPERVISOR_MAGIC),				\
- 		"c"(VMWARE_CMD_##cmd),					\
+-- 
+Ville Syrjälä
+Intel
