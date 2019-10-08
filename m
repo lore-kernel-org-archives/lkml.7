@@ -2,145 +2,96 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6646EC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B9E3C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B2502070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:03:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="fI3KWfUg"
+	by mail.kernel.org (Postfix) with ESMTP id 41B6D206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:03:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726252AbfJHODF (ORCPT
+        id S1726532AbfJHODK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 10:03:05 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:38797 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725834AbfJHODF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 10:03:05 -0400
-Received: by mail-qt1-f195.google.com with SMTP id j31so25463885qta.5
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 07:03:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Yu0gGfTVj6sLwuOZPBdVlnhLNBQDCSlVL3WPA0HTvRc=;
-        b=fI3KWfUgybEH0X9WfK+cmL48vOC+A3u7+OOS4JKP+ZyQWgNJUfYAdzSaRJnLkGluAM
-         Z4qLWcnpnDBIaZuG2QExa5fkFkMYHKODMQ7gfaA0TwxzWYTPzlBoqC/8O3ORu6wG3imQ
-         gKv6wMgBmy+RjcCsxQvR0HlxxpBLVVaFkPbd2PVHUhNe5SQh2/H5D64NYHFFOY3nsIdM
-         xbUy3bTc2cr1LcP6jz9/RDLphFG4uFFb5Z6NTojX0O7Cy6ETjIoDQusTxGRjxCBFbe0J
-         Z4yvXq7N+9QZwpP5AGu0CWnhP96CpGn70vMX8woTv22I7qT610+iIe8V2cREjcik7F9x
-         RHOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Yu0gGfTVj6sLwuOZPBdVlnhLNBQDCSlVL3WPA0HTvRc=;
-        b=RLbSL74y1Nvl7vvodMZ4RpL5X08Vaq7raCdBXE9anW8MTZnydn5jadnrhD6+t9F5hQ
-         Cp1N7rB5wcrONo/ljRzqa9yGFAkf207njLnYLwxAcOWxk2P6KMYpaaD0+VUt3B/mRAhK
-         Kzd0sbfocXGWCx7tRTviSER+byQSg+3JtB5V1LeO0AEu4d2mXMPk0OTASCsysFrWuM2h
-         eMmbtVkKsU05FLOC40ls+bKtbhsMpIsY6ahUOIkxjh6dw2KMqMTxOKicLk6bViab5zj1
-         EYMy6z8+ef4QTJOed2oKpagbIcXZF9JVQKzJZ4Rs/A5QedVonL4aJ59lZRSDu8PrLhqL
-         5iNA==
-X-Gm-Message-State: APjAAAUcyfHSnP3s2Y4xrTcsbKqLkSjjmCvB0R8QtgDenip+jC0TWEJg
-        PS66Y5l8CwJSbhxk9iLoEQDVNQ==
-X-Google-Smtp-Source: APXvYqy8ww2Yo3SnAoYjTX3C5cNs32XspQ9GhDMXqUJWdSHhwmUUeHoCPalkVzD6VxjA5hkuiNJRUA==
-X-Received: by 2002:ac8:1bcb:: with SMTP id m11mr36449221qtk.122.1570543384257;
-        Tue, 08 Oct 2019 07:03:04 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id n4sm8634358qkc.61.2019.10.08.07.03.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 08 Oct 2019 07:03:03 -0700 (PDT)
-Message-ID: <1570543381.5576.301.camel@lca.pw>
-Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
-From:   Qian Cai <cai@lca.pw>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        sergey.senozhatsky.work@gmail.com, peterz@infradead.org,
-        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        john.ogness@linutronix.de, akpm@linux-foundation.org,
-        david@redhat.com, linux-kernel@vger.kernel.org
-Date:   Tue, 08 Oct 2019 10:03:01 -0400
-In-Reply-To: <20191008134256.5ti6rjkvadn5b5q4@pathway.suse.cz>
-References: <1570228005-24979-1-git-send-email-cai@lca.pw>
-         <20191007143002.l37bt2lzqtnqjqxu@pathway.suse.cz>
-         <1570460350.5576.290.camel@lca.pw> <20191007151237.GP2381@dhcp22.suse.cz>
-         <1570462407.5576.292.camel@lca.pw>
-         <20191008081510.ptwmb7zflqiup5py@pathway.suse.cz>
-         <20191008091349.6195830d@gandalf.local.home>
-         <1570541032.5576.297.camel@lca.pw>
-         <20191008134256.5ti6rjkvadn5b5q4@pathway.suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 8 Oct 2019 10:03:10 -0400
+Received: from mga17.intel.com ([192.55.52.151]:7522 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726245AbfJHODJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 10:03:09 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 07:03:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,270,1566889200"; 
+   d="scan'208";a="193387191"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga007.fm.intel.com with ESMTP; 08 Oct 2019 07:03:07 -0700
+Received: from andy by smile with local (Exim 4.92.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iHq4w-0002Gy-Sk; Tue, 08 Oct 2019 17:03:06 +0300
+Date:   Tue, 8 Oct 2019 17:03:06 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] device property: Fix the description of struct
+ fwnode_operations
+Message-ID: <20191008140306.GN32742@smile.fi.intel.com>
+References: <20191008132606.56434-1-heikki.krogerus@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191008132606.56434-1-heikki.krogerus@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-10-08 at 15:42 +0200, Petr Mladek wrote:
-> On Tue 2019-10-08 09:23:52, Qian Cai wrote:
-> > On Tue, 2019-10-08 at 09:13 -0400, Steven Rostedt wrote:
-> > > On Tue, 8 Oct 2019 10:15:10 +0200
-> > > Petr Mladek <pmladek@suse.com> wrote:
-> > > 
-> > > > There are basically three possibilities:
-> > > > 
-> > > > 1. Do crazy exercises with locks all around the kernel to
-> > > >    avoid the deadlocks. It is usually not worth it. And
-> > > >    it is a "whack a mole" approach.
-> > > > 
-> > > > 2. Use printk_deferred() in problematic code paths. It is
-> > > >    a "whack a mole" approach as well. And we would end up
-> > > >    with printk_deferred() used almost everywhere.
-> > > > 
-> > > > 3. Always deffer the console handling in printk(). This would
-> > > >    help also to avoid soft lockups. Several people pushed
-> > > >    against this last few years because it might reduce
-> > > >    the chance to see the message in case of system crash.
-> > > > 
-> > > > As I said, there has finally been agreement to always do
-> > > > the offload few weeks ago. John Ogness is working on it.
-> > > > So we might have the systematic solution for these deadlocks
-> > > > rather sooner than later.
-> > > 
-> > > Another solution is to add the printk_deferred() in these places that
-> > > cause lockdep splats, and when John's work is done, it would be easy to
-> > > grep for them and remove them as they would no longer be needed.
-> > > 
-> > > This way we don't play whack-a-mole forever (only until we have a
-> > > proper solution) and everyone is happy that we no longer have these
-> > > false positive or I-don't-care lockdep splats which hide real lockdep
-> > > splats because lockdep shuts off as soon as it discovers its first
-> > > splat.
-> > 
-> > I feel like that is what I trying to do, but there seems a lot of resistances
-> > with that approach where pragmatism met with perfectionism.
-> 
-> No, the resistance was against complicated code changes (games with
-> locks) and against removing useful messages. Such changes might cause
-> more harm than good.
+On Tue, Oct 08, 2019 at 04:26:06PM +0300, Heikki Krogerus wrote:
+> Adding description for the device_is_available member which
+> was missing, and fixing the description of the member
+> property_read_int_array.
 
-I don't think there is "removing useful messages" in this patch. That one
-printk() in __offline_isolated_pages() basically as Michal mentioned it is that
-useful, but could be converted to printk_deferred() if anyone objected.
-
-It is more complicated to convert dump_page() to use printk_deferred().
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
 > 
-> I am not -mm maintainer so I could not guarantee that a patch
-> using printk_deferred() will get accepted. But it will have much
-> bigger chance than the original patch.
+> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> ---
+>  include/linux/fwnode.h | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> Anyway, printk_deferred() is a lost war. It is temporary solution
-> for one particular scenario. But as you said, there might be many
-> others. The long term solution is the printk rework.
+> diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
+> index 6ae05b9ce359..fc002aacae8d 100644
+> --- a/include/linux/fwnode.h
+> +++ b/include/linux/fwnode.h
+> @@ -50,11 +50,11 @@ struct fwnode_reference_args {
+>   * struct fwnode_operations - Operations for fwnode interface
+>   * @get: Get a reference to an fwnode.
+>   * @put: Put a reference to an fwnode.
+> + * @device_is_available: Return true if the device is available.
+>   * @device_get_match_data: Return the device driver match data.
+>   * @property_present: Return true if a property is present.
+> - * @property_read_integer_array: Read an array of integer properties. Return
+> - *				 zero on success, a negative error code
+> - *				 otherwise.
+> + * @property_read_int_array: Read an array of integer properties. Return zero on
+> + *			     success, a negative error code otherwise.
+>   * @property_read_string_array: Read an array of string properties. Return zero
+>   *				on success, a negative error code otherwise.
+>   * @get_parent: Return the parent of an fwnode.
+> -- 
+> 2.23.0
 > 
-> Best Regards,
-> Petr
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
