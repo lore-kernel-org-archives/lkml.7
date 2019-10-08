@@ -2,64 +2,81 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F6F7C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42EA5ECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EBE220673
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D63220673
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:45:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730751AbfJHLnm (ORCPT
+        id S1730588AbfJHLpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 07:43:42 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53120 "EHLO mx1.suse.de"
+        Tue, 8 Oct 2019 07:45:44 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:41826 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730530AbfJHLnm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 07:43:42 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4CC65AC8C;
-        Tue,  8 Oct 2019 11:43:40 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 50031DA7FB; Tue,  8 Oct 2019 13:43:55 +0200 (CEST)
-Date:   Tue, 8 Oct 2019 13:43:55 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-Cc:     dsterba@suse.com, clm@fb.com, Josef Bacik <josef@toxicpanda.com>,
-        "open list:BTRFS FILE SYSTEM" <linux-btrfs@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] btrfs: block-group: Rework documentation of
- check_system_chunk function
-Message-ID: <20191008114355.GO2751@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz,
-        Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
-        dsterba@suse.com, clm@fb.com, Josef Bacik <josef@toxicpanda.com>,
-        "open list:BTRFS FILE SYSTEM" <linux-btrfs@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191008005038.12333-1-marcos.souza.org@gmail.com>
+        id S1730316AbfJHLpo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 07:45:44 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id C7E77790C5E923CB0200;
+        Tue,  8 Oct 2019 19:45:41 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Tue, 8 Oct 2019
+ 19:45:37 +0800
+Date:   Tue, 8 Oct 2019 12:45:20 +0100
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+CC:     Eduardo Valentin <edubezval@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>, <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH] thermal-generic-adc: Silent error message for
+ EPROBE_DEFER
+Message-ID: <20191008124520.000009c7@huawei.com>
+In-Reply-To: <CAJMQK-jawP2+Ba0AkquqU16vVnq_yGJN=Bepk7kLRusp_zdq2A@mail.gmail.com>
+References: <20190910075907.132200-1-hsinyi@chromium.org>
+        <CAJMQK-jawP2+Ba0AkquqU16vVnq_yGJN=Bepk7kLRusp_zdq2A@mail.gmail.com>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191008005038.12333-1-marcos.souza.org@gmail.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 09:50:38PM -0300, Marcos Paulo de Souza wrote:
-> Commit 4617ea3a52cf (" Btrfs: fix necessary chunk tree space calculation
-> when allocating a chunk") removed the is_allocation argument from
-> check_system_chunk, since the formula for reserving the necessary space
-> for allocation or removing a chunk would be the same.
-> 
-> So, rework the comment by removing the mention of is_allocation
-> argument.
-> 
-> Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+On Mon, 7 Oct 2019 10:07:22 -0700
+Hsin-Yi Wang <hsinyi@chromium.org> wrote:
 
-Added to misc-next, thanks.
+> On Tue, Sep 10, 2019 at 12:59 AM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
+> >
+> > If devm_iio_channel_get() or devm_thermal_zone_of_sensor_register()
+> > fail with EPROBE_DEFER, we shouldn't print an error message, as the
+> > device will be probed again later.
+> >
+> > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> > ---  
+> 
+> Ping on the thread. Any suggestion for this patch?
+> Thanks
+
+Looks sensible to me.
+
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+
