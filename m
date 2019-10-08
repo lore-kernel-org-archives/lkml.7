@@ -2,213 +2,158 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E48F8C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 23:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88DDAECE58C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 23:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B208C21721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 23:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F75A21721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 23:38:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="W4sgBgjR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729704AbfJHXfk (ORCPT
+        id S1729596AbfJHXig (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 19:35:40 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33332 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727051AbfJHXfk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 19:35:40 -0400
-Received: by mail-pg1-f193.google.com with SMTP id i76so191012pgc.0
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 16:35:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=OFvUe+T3iY3bJmEe3JuyMtOd0hXR+IEcGGlzX/kzH6U=;
-        b=CkdlneUg4WKfqLaUfFSsoNwRcClfnG7VvD+OLudjeZq+3ESHROuuh9KWPb+Do9qPFC
-         6K44r9IqcDNyIR3enA7NP6ZoptyfMzjSSmeKEc1MFwc+Hmb6Blb5mMbCpLvU79p8peuI
-         Oe+ocXgbGqED+JyeK6HLQrgULRlz37WxV3xZpz/nEnHvtHF0YSS8OYO80SwCWSI+n7s4
-         jw1z55Lo71+czyGqOcOLDoP+FwnE0uQxw3P7WzCtdEsa0MyTeSOC3EhMOlgc+bQmF+IZ
-         GVnpmD47iA14CW/HRwSi37U9fJslyOncuKCgAFH5XYYYF3gUKxhedI9rnJ9n5mjT353C
-         fHKg==
-X-Gm-Message-State: APjAAAUVEf+1lNRv1n9UL9S5Y3L/HfTiit45o8eMTFMrmOi1unWMlq7R
-        v8W86lLq6a2SzbkGiAmUr/dOAg==
-X-Google-Smtp-Source: APXvYqyW6UNl0f5b8RjCGlgwYw5d0Bwnsa3tTz/7oC2HD20NUxMEj+TWAqMq+/69FQKXJdSgfvUnpQ==
-X-Received: by 2002:aa7:9d0d:: with SMTP id k13mr526506pfp.262.1570577739020;
-        Tue, 08 Oct 2019 16:35:39 -0700 (PDT)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id r21sm263139pgm.78.2019.10.08.16.35.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2019 16:35:38 -0700 (PDT)
-Date:   Tue, 08 Oct 2019 16:35:38 -0700 (PDT)
-X-Google-Original-Date: Tue, 08 Oct 2019 16:35:37 PDT (-0700)
-Subject:     Re: [PATCH] riscv: Fix memblock reservation for device tree blob
-In-Reply-To: <46808.1570577477@ratiocinator.vaxen.org>
-CC:     anup@brainfault.org, Paul Walmsley <paul.walmsley@sifive.com>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     aou@eecs.berkeley.edu
-Message-ID: <mhng-f0519e08-08dd-4de3-95b6-5837e503fc47@palmer-si-x1e>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Tue, 8 Oct 2019 19:38:36 -0400
+Received: from ozlabs.org ([203.11.71.1]:41839 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726822AbfJHXig (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 19:38:36 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46nv1M3pwyz9sPL;
+        Wed,  9 Oct 2019 10:38:31 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1570577912;
+        bh=1lm8mYQPJzPKDhit1Mo4RGEcsekl2gAaPnzcVPSg8Kc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=W4sgBgjRAs1uMxPyDwilr2XyPJu8Kd3VendqHI5I/LNoH9HRtFnFOMO6X/2rC1TgU
+         6r4bWFEq3QIYPsp2uggQu9RWNPQYhBDa5Y/KVzWjk5Kv+3effK4wA/niIEqHvOOxaf
+         sHRdqJ+A+8kyNslxgtGlX+CvJwoscjzWEo0e+27Q4C7EwpvZEWFoAABPGHX0gsvIJn
+         I27wHx81r4y5FcDfro0cOJ/a0D2mNKpoDwFg4tXchTvzwGere1c+ghLu6StSdQzQuU
+         LK8ttSP08+QZAsb9N2jxtceaiSAU7KjDur2v7YjD8LqQTSP/ig1xaVOImP3w1Yr93t
+         39LVOWPoFno0w==
+Date:   Wed, 9 Oct 2019 10:38:30 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        Dave Airlie <airlied@linux.ie>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Jani Nikula <jani.nikula@intel.com>
+Subject: linux-next: manual merge of the drm-misc tree with the drm tree
+Message-ID: <20191009103830.0b75dbb5@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/_/zJcqceIEDcW/o/wfX083J";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 08 Oct 2019 16:31:17 PDT (-0700), aou@eecs.berkeley.edu wrote:
-> On 2019-10-08 15:38:15 -0700, Palmer Dabbelt <palmer@sifive.com> wrote:
->> On Fri, 20 Sep 2019 21:34:57 PDT (-0700), anup@brainfault.org wrote:
->> > On Sat, Sep 21, 2019 at 6:30 AM Albert Ou <aou@eecs.berkeley.edu> wrote:
->> >>
->> >> This fixes an error with how the FDT blob is reserved in memblock.
->> >> An incorrect physical address calculation exposed the FDT header to
->> >> unintended corruption, which typically manifested with of_fdt_raw_init()
->> >> faulting during late boot after fdt_totalsize() returned a wrong value.
->> >> Systems with smaller physical memory sizes more frequently trigger this
->> >> issue, as the kernel is more likely to allocate from the DMA32 zone
->> >> where bbl places the DTB after the kernel image.
->> >>
->> >> Commit 671f9a3e2e24 ("RISC-V: Setup initial page tables in two stages")
->> >> changed the mapping of the DTB to reside in the fixmap area.
->> >> Consequently, early_init_fdt_reserve_self() cannot be used anymore in
->> >> setup_bootmem() since it relies on __pa() to derive a physical address,
->> >> which does not work with dtb_early_va that is no longer a valid kernel
->> >> logical address.
->> >>
->> >> The reserved[0x1] region shows the effect of the pointer underflow
->> >> resulting from the __pa(initial_boot_params) offset subtraction:
->> >>
->> >> [    0.000000] MEMBLOCK configuration:
->> >> [    0.000000]  memory size = 0x000000001fe00000 reserved size = 0x0000000000a2e514
->> >> [    0.000000]  memory.cnt  = 0x1
->> >> [    0.000000]  memory[0x0]     [0x0000000080200000-0x000000009fffffff], 0x000000001fe00000 bytes flags: 0x0
->> >> [    0.000000]  reserved.cnt  = 0x2
->> >> [    0.000000]  reserved[0x0]   [0x0000000080200000-0x0000000080c2dfeb], 0x0000000000a2dfec bytes flags: 0x0
->> >> [    0.000000]  reserved[0x1]   [0xfffffff080100000-0xfffffff080100527], 0x0000000000000528 bytes flags: 0x0
->> >>
->> >> With the fix applied:
->> >>
->> >> [    0.000000] MEMBLOCK configuration:
->> >> [    0.000000]  memory size = 0x000000001fe00000 reserved size = 0x0000000000a2e514
->> >> [    0.000000]  memory.cnt  = 0x1
->> >> [    0.000000]  memory[0x0]     [0x0000000080200000-0x000000009fffffff], 0x000000001fe00000 bytes flags: 0x0
->> >> [    0.000000]  reserved.cnt  = 0x2
->> >> [    0.000000]  reserved[0x0]   [0x0000000080200000-0x0000000080c2dfeb], 0x0000000000a2dfec bytes flags: 0x0
->> >> [    0.000000]  reserved[0x1]   [0x0000000080e00000-0x0000000080e00527], 0x0000000000000528 bytes flags: 0x0
->> >
->> > Thanks for catching this issue.
->> >
->> > Most of us did not notice this issue most likely because:
->> > 1. We generally have good enough RAM on QEMU and SiFive Unleashed
->> > 2. Most of people use OpenSBI FW_JUMP on QEMU and U-Boot  on
->> >     SiFive Unleashed to boot in Linux which places FDT quite far away
->> >     from Linux kernel end
->> >
->> > Linux ARM64 kernel also uses FIXMAP to access FDT and over there
->> > as well early_init_fdt_reserve_self() is not used.
->> >
->> >>
->> >> Fixes: 671f9a3e2e24 ("RISC-V: Setup initial page tables in two stages")
->> >> Signed-off-by: Albert Ou <aou@eecs.berkeley.edu>
->> >> ---
->> >>  arch/riscv/mm/init.c | 13 ++++++++++++-
->> >>  1 file changed, 12 insertions(+), 1 deletion(-)
->> >>
->> >> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
->> >> index f0ba713..52d007c 100644
->> >> --- a/arch/riscv/mm/init.c
->> >> +++ b/arch/riscv/mm/init.c
->> >> @@ -11,6 +11,7 @@
->> >>  #include <linux/swap.h>
->> >>  #include <linux/sizes.h>
->> >>  #include <linux/of_fdt.h>
->> >> +#include <linux/libfdt.h>
->> >>
->> >>  #include <asm/fixmap.h>
->> >>  #include <asm/tlbflush.h>
->> >> @@ -82,6 +83,8 @@ static void __init setup_initrd(void)
->> >>  }
->> >>  #endif /* CONFIG_BLK_DEV_INITRD */
->> >>
->> >> +static phys_addr_t __dtb_pa __initdata;
->> >
->> > May be dtb_early_pa will be more consistent name
->> > instead of __dtb_pa because it matches dtb_early_va
->> > used below.
->> >
->> >> +
->> >>  void __init setup_bootmem(void)
->> >>  {
->> >>         struct memblock_region *reg;
->> >> @@ -117,7 +120,12 @@ void __init setup_bootmem(void)
->> >>         setup_initrd();
->> >>  #endif /* CONFIG_BLK_DEV_INITRD */
->> >>
->> >> -       early_init_fdt_reserve_self();
->> >> +       /*
->> >> +        * Avoid using early_init_fdt_reserve_self() since __pa() does
->> >> +        * not work for DTB pointers that are fixmap addresses
->> >> +        */
->> >> +       memblock_reserve(__dtb_pa, fdt_totalsize(dtb_early_va));
->> >> +
->> >>         early_init_fdt_scan_reserved_mem();
->> >>         memblock_allow_resize();
->> >>         memblock_dump_all();
->> >> @@ -333,6 +341,7 @@ static uintptr_t __init best_map_size(phys_addr_t base, phys_addr_t size)
->> >>         "not use absolute addressing."
->> >>  #endif
->> >>
->> >> +
->> >
->> > Please remove this newline addition.
->> >
->> >>  asmlinkage void __init setup_vm(uintptr_t dtb_pa)
->> >>  {
->> >>         uintptr_t va, end_va;
->> >> @@ -393,6 +402,8 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
->> >>
->> >>         /* Save pointer to DTB for early FDT parsing */
->> >>         dtb_early_va = (void *)fix_to_virt(FIX_FDT) + (dtb_pa & ~PAGE_MASK);
->> >> +       /* Save physical address for memblock reservation */
->> >> +       __dtb_pa = dtb_pa;
->> >>  }
->> >>
->> >>  static void __init setup_vm_final(void)
->> >> --
->> >> 2.7.4
->> >>
->> >>
->> >> _______________________________________________
->> >> linux-riscv mailing list
->> >> linux-riscv@lists.infradead.org
->> >> http://lists.infradead.org/mailman/listinfo/linux-riscv
->> >
->> > This deserves to be stable kernel fix as well.
->> > You should add:
->> > Cc: stable@vger.kernel.org
->> > in your commit description.
->> >
->> > Apart from minor nits above.
->> >
->> > Reviewed-by: Anup Patel <anup@brainfault.org>
->> >
->> > I tried this patch for both RV64 and RV32 on QEMU with
->> > Yocto rootfs.
->> >
->> > Tested-by: Anup Patel <anup@brainfault.org>
->> >
->> > Regards,
->> > Anup
->>
->> Albert: Do you plan on spinning a v2 of the patch set?
->>
->
-> v2 was sent last week and has already been applied as
-> 922b0375fc93fb1a20c5617e37c389c26bbccb70 by Paul.
+--Sig_/_/zJcqceIEDcW/o/wfX083J
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Sorry about that.
+Hi all,
+
+Today's linux-next merge of the drm-misc tree got a conflict in:
+
+  drivers/gpu/drm/i915/i915_drv.c
+
+between commit:
+
+  2d6f6f359fd8 ("drm/i915: add i915_driver_modeset_remove()")
+
+from the drm tree and commit:
+
+  f2521f7731ed ("drm/i915: switch to drm_fb_helper_remove_conflicting_pci_f=
+ramebuffers")
+
+from the drm-misc tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/gpu/drm/i915/i915_drv.c
+index 15abad5c2d62,1c4ff8b5b0a2..000000000000
+--- a/drivers/gpu/drm/i915/i915_drv.c
++++ b/drivers/gpu/drm/i915/i915_drv.c
+@@@ -350,44 -422,6 +350,19 @@@ out
+  	return ret;
+  }
+ =20
+- static int i915_kick_out_firmware_fb(struct drm_i915_private *dev_priv)
+- {
+- 	struct apertures_struct *ap;
+- 	struct pci_dev *pdev =3D dev_priv->drm.pdev;
+- 	struct i915_ggtt *ggtt =3D &dev_priv->ggtt;
+- 	bool primary;
+- 	int ret;
+-=20
+- 	ap =3D alloc_apertures(1);
+- 	if (!ap)
+- 		return -ENOMEM;
+-=20
+- 	ap->ranges[0].base =3D ggtt->gmadr.start;
+- 	ap->ranges[0].size =3D ggtt->mappable_end;
+-=20
+- 	primary =3D
+- 		pdev->resource[PCI_ROM_RESOURCE].flags & IORESOURCE_ROM_SHADOW;
+-=20
+- 	ret =3D drm_fb_helper_remove_conflicting_framebuffers(ap, "inteldrmfb", =
+primary);
+-=20
+- 	kfree(ap);
+-=20
+- 	return ret;
+- }
+-=20
+ +static void i915_driver_modeset_remove(struct drm_i915_private *i915)
+ +{
+ +	intel_modeset_driver_remove(i915);
+ +
+ +	intel_bios_driver_remove(i915);
+ +
+ +	i915_switcheroo_unregister(i915);
+ +
+ +	intel_vga_unregister(i915);
+ +
+ +	intel_csr_ucode_fini(i915);
+ +}
+ +
+  static void intel_init_dpio(struct drm_i915_private *dev_priv)
+  {
+  	/*
+
+--Sig_/_/zJcqceIEDcW/o/wfX083J
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2dHfYACgkQAVBC80lX
+0GwyhAf/ebekB2v3yeFzeOUNfR+hb/RMJVxhfa8dyuaoqO8jX8X+QuyDPM0ZoyZ1
+M/MMTW1aEcPn4c+1j9u/ctM92gklAaJGVYmhM+mRN0Jk2zt1+7oZ9tewCXDSFtiv
+63EVFP3/L75/38bhe7PVyGkDWo8hBgteXVc06+MY+ZTQpqLCt69u86RqVTCvo5ss
+hbNjJBVZW9hAcXMYF3bfxDByFDDCku+FysGkBPj2TG5tndGY08CHURV7tXipdHb4
+psKyOZdwKPwJCyZxaFuti1kCAAX53HJBswWZ9rIlcUASXwp+rOmabO33PrPCErBZ
+/PhBPCa4dyaU6v5hRH/6IyEbJAhudg==
+=UVGC
+-----END PGP SIGNATURE-----
+
+--Sig_/_/zJcqceIEDcW/o/wfX083J--
