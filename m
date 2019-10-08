@@ -2,116 +2,129 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA5D8C35280
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 568B5C35280
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC45A2070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:52:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570553573;
-	bh=bxciPF2qPn6AVINPKLIOVCuywf0FCe9PPs/xWu6z0Tk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xL/Ub/5FaGb9E32RMm8R+vWlyiKu92y/o64s3jlxQaoDkNQhWZyYpI6vVHx3WT+Ux
-	 XnxyAYyG1K87s8j9EiNodhwr/7YTFXDmBEsOzPKvgheTC8NYhcSoBdreFsrDZbN8s2
-	 GBAELTghzAi/GFCADga5ItS3ZfN8IrWSAh6+yVBc=
+	by mail.kernel.org (Postfix) with ESMTP id 2DE492070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:53:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nF6ztrce"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729403AbfJHQwx (ORCPT
+        id S1725966AbfJHQx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 12:52:53 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59992 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727920AbfJHQww (ORCPT
+        Tue, 8 Oct 2019 12:53:57 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:39080 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727876AbfJHQx5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 12:52:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=bxciPF2qPn6AVINPKLIOVCuywf0FCe9PPs/xWu6z0Tk=; b=LAN2pwMT0t97CtLQP2ucTpwAW
-        UE2/K1a7mzPqprHmvlGXliUK2y+1MyChVWUn8Qgf9whpl4Y7SD89JyxScg+PFExLw3y62yrjY7+cZ
-        URNkjYrQflcsIYtheCswHdyywCUfG5hGkx2DM+pmgY2oH04f2ZUO8dYMiNLLxK5+06Q5I=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iHsit-0000Xu-O3; Tue, 08 Oct 2019 16:52:31 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id D4E342740D4A; Tue,  8 Oct 2019 17:52:30 +0100 (BST)
-Date:   Tue, 8 Oct 2019 17:52:30 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Ladislav Michl <ladis@linux-mips.org>
-Cc:     YueHaibing <yuehaibing@huawei.com>, m.felsch@pengutronix.de,
-        alsa-devel@alsa-project.org, ckeepax@opensource.cirrus.com,
-        kuninori.morimoto.gx@renesas.com, linux-kernel@vger.kernel.org,
-        piotrs@opensource.cirrus.com, andradanciu1997@gmail.com,
-        lgirdwood@gmail.com, paul@crapouillou.net,
-        Hulk Robot <hulkci@huawei.com>, shifu0704@thundersoft.com,
-        enric.balletbo@collabora.com, srinivas.kandagatla@linaro.org,
-        tiwai@suse.com, mirq-linux@rere.qmqm.pl,
-        rf@opensource.wolfsonmicro.com
-Subject: Re: [alsa-devel] Applied "ASoc: tas2770: Fix build error without
- GPIOLIB" to the asoc tree
-Message-ID: <20191008165230.GR4382@sirena.co.uk>
-References: <20191006104631.60608-1-yuehaibing@huawei.com>
- <20191007130309.EAEBE2741EF0@ypsilon.sirena.org.uk>
- <20191008163508.GA16283@lenoch>
+        Tue, 8 Oct 2019 12:53:57 -0400
+Received: by mail-io1-f66.google.com with SMTP id a1so38042599ioc.6
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 09:53:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fme5fFYUj0wdKTaXtPchzRO/hZyN3IQGJxfMnt1qVJI=;
+        b=nF6ztrceJdjl9xNuXNv5mwqCWU5zJiJnq0FWCZzdURWJFCyF8lq29UW/vjWY6vTYma
+         A2vyFCS8QnTpZRdKfqpcLtymIzPuly4yfU+HNeOcaOe8C0t7yiMkXCpg2oYL6hJvEsee
+         Up6y0FoUSqnDLGgBNM9DYqZNWygDKvbsDednwj+Rj3AVL0cd8Y1O1AwblvHbnErAyM1s
+         Oq0JalZDIlpzXA79i8F9OCTZDMF/7uK8H/ZB1T0tKbINfE1H1l9gPgxcdjjjRcVQZPUw
+         RGUnyj/xgKxNMmLsrq5wWKfa0asvyNQqKOi+g7hq2lwcgkhXkMCPWXJ4T/K8unUXl+j+
+         FosQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fme5fFYUj0wdKTaXtPchzRO/hZyN3IQGJxfMnt1qVJI=;
+        b=Wauk1bLNrrXddSuqEEYDe4BHsP0INLWYkPjGe/L+FEiS+ppY7ynlFvKSeVjecKTiJb
+         pUx5P7gCoyT+3D6JgBSt+2x+x8JNZ0EWDeNyuFlOoU3ieTslTIUdOxoVjLVt9ana4+/T
+         gautdKpKR5USU3WLI8RKr1MaSoEyd1KTpQnkd48vkm8gM9FQhwJLJJUpmO18XiOMUA7L
+         nZJ7P4/NxzS/JaF7uH19Kc9SA2TValC/6F9XJ/YQRgAP26VpCtgj78KalbOja7Mk4Apm
+         ugC2A04dK0HfHqxLJYdUL9nlGOjTiM1o5VwUBgocEcIE2rRS7r0x2aTWOigA8pdyImRI
+         irKA==
+X-Gm-Message-State: APjAAAWM6NzjcHp9UQYPNwocdTjWFhSVGYTAMRh88Kdp5IWmIulCX1eO
+        MF5kSd+U8IofBpHjugNMGjxjbkQykFiCEi1nbyFPcw==
+X-Google-Smtp-Source: APXvYqwDWGOf+yElISRWjmDcwEri92PuzaR9Mbp5SH1x+dezCLs5TRcNt3I5EnwbB6Klb9T5kpEFj0FvbeItRICFmbk=
+X-Received: by 2002:a6b:1606:: with SMTP id 6mr32477437iow.108.1570553635857;
+ Tue, 08 Oct 2019 09:53:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="o99acAvKqrTZeiCU"
-Content-Disposition: inline
-In-Reply-To: <20191008163508.GA16283@lenoch>
-X-Cookie: Do not disturb.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191004215615.5479-1-sean.j.christopherson@intel.com>
+ <20191004215615.5479-12-sean.j.christopherson@intel.com> <55f45459-47bf-df37-a12b-17c4c5c6c19a@redhat.com>
+ <20191007195638.GG18016@linux.intel.com> <bd2cffea-6427-b3cc-7098-a881e3d4522d@redhat.com>
+In-Reply-To: <bd2cffea-6427-b3cc-7098-a881e3d4522d@redhat.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Tue, 8 Oct 2019 09:53:44 -0700
+Message-ID: <CALMp9eSM=rq+jEEzPwWNHNxv03F1s2Dysa7euWJ==PaE=b1sMw@mail.gmail.com>
+Subject: Re: [PATCH 11/16] x86/cpu: Print VMX features as separate line item
+ in /proc/cpuinfo
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>, linux-edac@vger.kernel.org,
+        Borislav Petkov <bp@suse.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Oct 7, 2019 at 11:57 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 07/10/19 21:56, Sean Christopherson wrote:
+> > On Mon, Oct 07, 2019 at 07:12:37PM +0200, Paolo Bonzini wrote:
+> >> On 04/10/19 23:56, Sean Christopherson wrote:
+> >>> diff --git a/arch/x86/kernel/cpu/proc.c b/arch/x86/kernel/cpu/proc.c
+> >>> index cb2e49810d68..4eec8889b0ff 100644
+> >>> --- a/arch/x86/kernel/cpu/proc.c
+> >>> +++ b/arch/x86/kernel/cpu/proc.c
+> >>> @@ -7,6 +7,10 @@
+> >>>
+> >>>  #include "cpu.h"
+> >>>
+> >>> +#ifdef CONFIG_X86_VMX_FEATURE_NAMES
+> >>> +extern const char * const x86_vmx_flags[NVMXINTS*32];
+> >>> +#endif
+> >>> +
+> >>>  /*
+> >>>   * Get CPU information for use by the procfs.
+> >>>   */
+> >>> @@ -102,6 +106,17 @@ static int show_cpuinfo(struct seq_file *m, void *v)
+> >>>             if (cpu_has(c, i) && x86_cap_flags[i] != NULL)
+> >>>                     seq_printf(m, " %s", x86_cap_flags[i]);
+> >>
+> >> I'm afraid this is going to break some scripts in the wild.  I would
+> >> simply remove the seq_puts below.
+> >
+> > Can you elaborate?  I'm having trouble connecting the dots...
+>
+> Somebody is bound to have scripts doing "grep ^flags.*ept /proc/cpuinfo"
+> or checking for VMX flags under some kind of "if (/^flags/)", so it's
+> safer not to separate VMX and non-VMX flags.
 
---o99acAvKqrTZeiCU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yep. Not quite that exact syntax, but we do have, e.g.:
 
-On Tue, Oct 08, 2019 at 06:35:08PM +0200, Ladislav Michl wrote:
+./x86/feature_check.sh ept
 
-> Hmm, too late it seems...
-> Patch should actually remove <linux/gpio.h> as this is legacy one (see comment
-> on the top and also Documentation/driver-api/gpio/consumer.rst)
-
-Yes, leaving that is an oversight.
-
-> And that brings a question. Given this is -next only is it actually possible
-> to squash fixes into 1a476abc723e ("tas2770: add tas2770 smart PA kernel driver")
-> just to make bisect a bit more happy?
-
-No:
-
-> > If any updates are required or you are submitting further changes they
-> > should be sent as incremental updates against current git, existing
-> > patches will not be replaced.
-
-Apart from anything else I've merged up the fixes branch IIRC which
-causes trouble.
-
---o99acAvKqrTZeiCU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2cvs0ACgkQJNaLcl1U
-h9AmBQf+LFk5zJqNRstdPMwgLOJGb5LX3O5w3BWeoMJNChq1Mdb1mJ+aaafn3HtA
-lgfos+SLHeSz48AHvgTqZ7DvEyjx2abNyeWCc3LH0S0mIp6RQey9Vxtt5eVP3yav
-5E6bRHBoX+Nv+0MqM73S31xLehzpo68qL9Iy2a5yh9TIRFjrVHZjIslo2CgNPkd4
-EQDMuoYYooV3BBHGFIiCAOpS8RA5eSgIUN6Cg/M9/+BHGsLW4bako+iFjIbHgH4F
-32VljVKllo5noLJsauG+ImjqHJGt11YCjp0AJL60CApDiLLFrUucBV3G/Hj5VHDt
-taLaofFv9ONyk9UWxKcoCAqTYirgIw==
-=rHvp
------END PGP SIGNATURE-----
-
---o99acAvKqrTZeiCU--
+...and you can imagine what feature_check.sh does.
