@@ -2,76 +2,117 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0967BC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB7E1ECE58C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8705217D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:12:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mfX0Tv/Z"
+	by mail.kernel.org (Postfix) with ESMTP id C4BF4218AC
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:17:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570555056;
+	bh=fxNwB/OAoq85hLuAEfhbbkdlFQInJq6uZvfK7/uy2/c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Y/wI5zcucM7UeFlEwcEPdfTFfGtf9vh0LjylSGoVi1OIAh0StsyZsxpsujAX67QAg
+	 VtCwQ02EziWBaL6yUz+76Dig6uH1QhaQRAXeCMCiHP89NM7M9LCW2p/HFTltL/fSyO
+	 UwL5+vybJwXs7GYp1ENd3IFhw+3K6+GHIDlrx5rA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727575AbfJHRMi (ORCPT
+        id S1727677AbfJHRRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 13:12:38 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:42568 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbfJHRMh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 13:12:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=81zxahn4idnt6KAxrGxdcivM0a7ejpPHFI2trXWy0Dg=; b=mfX0Tv/Z5F9+vPsWf2XMGfVPR
-        gUUnITVfrmtbLzPSf6nWiR4Gi9i6FGXjlEdGGTOmmQSBOTe4Q3oR19gushH56m5UBlxrgprU6ULVR
-        OLmJho4h4FzDkQJbt1fk5d3Z3R18iwg2etlbRdYeVmyb7iYjEOHuZDnnkxKczE/PU+I2aVgMd0d/x
-        Uyp7vKgRdh5oToBeWA30YdBopV2hg10lmppGxTpm/KeECCCqiORebFQcciD4Uj2hAW7IM8xolZFwm
-        lQAKy6ArwiapJ49TncGKsQ/+y9SDNZqp48yLOIMko1ens2vV0/FTwyfdylh+NYaWrV0FjwHxP4UHI
-        WCO1i7Atw==;
-Received: from [31.161.223.134] (helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iHt1r-0003wh-Fu; Tue, 08 Oct 2019 17:12:08 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id AF3EE9802E0; Tue,  8 Oct 2019 19:11:37 +0200 (CEST)
-Date:   Tue, 8 Oct 2019 19:11:37 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com
-Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
-Message-ID: <20191008171137.GA22902@worktop.programming.kicks-ass.net>
-References: <20191007081716.07616230.8@infradead.org>
- <20191007081945.10951536.8@infradead.org>
- <20191008104335.6fcd78c9@gandalf.local.home>
+        Tue, 8 Oct 2019 13:17:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38272 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726353AbfJHRRf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 13:17:35 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 587B2217D7;
+        Tue,  8 Oct 2019 17:17:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570555053;
+        bh=fxNwB/OAoq85hLuAEfhbbkdlFQInJq6uZvfK7/uy2/c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=a1UnvxMiFXusG5Uc+W/4xsdjTvzoL1wfwUhNG1Z0UKu5fpNAIx3mzkOZV3Ey5Qxl7
+         Xdmhb9kSn+WST/jOrEmTC/IyaoKMKmdeYxiAKrt65+cC1MQ6Vj/dHB8zGHfb/OKzbB
+         srWXkpEA+Y969bjp1jrZbu0MOGnJlYKgq4Ua2FAI=
+Date:   Tue, 8 Oct 2019 19:17:31 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     mnalajal@codeaurora.org
+Cc:     Stephen Boyd <swboyd@chromium.org>, rafael@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bjorn.andersson@linaro.org
+Subject: Re: [PATCH v2] base: soc: Handle custom soc information sysfs entries
+Message-ID: <20191008171731.GA2901709@kroah.com>
+References: <1570480662-25252-1-git-send-email-mnalajal@codeaurora.org>
+ <5d9cac38.1c69fb81.682ec.053a@mx.google.com>
+ <20191008154346.GA2881455@kroah.com>
+ <463ec0b5a3f1946df0ed2771ba741545@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191008104335.6fcd78c9@gandalf.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <463ec0b5a3f1946df0ed2771ba741545@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 10:43:35AM -0400, Steven Rostedt wrote:
+On Tue, Oct 08, 2019 at 10:10:08AM -0700, mnalajal@codeaurora.org wrote:
+> On 2019-10-08 08:43, Greg KH wrote:
+> > On Tue, Oct 08, 2019 at 08:33:11AM -0700, Stephen Boyd wrote:
+> > > Quoting Murali Nalajala (2019-10-07 13:37:42)
+> > > > Soc framework exposed sysfs entries are not sufficient for some
+> > > > of the h/w platforms. Currently there is no interface where soc
+> > > > drivers can expose further information about their SoCs via soc
+> > > > framework. This change address this limitation where clients can
+> > > > pass their custom entries as attribute group and soc framework
+> > > > would expose them as sysfs properties.
+> > > >
+> > > > Signed-off-by: Murali Nalajala <mnalajal@codeaurora.org>
+> > > > ---
+> > > 
+> > > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> > > 
+> > 
+> > Nice, can we convert the existing soc drivers to use this interface
+> > instead of the "export the device pointer" mess that they currently
+> > have?  That way we can drop that function entirely.
+> > 
+> Thank you for the reviews.
+> In the current linux tree i can find these driver instances who is using
+> "soc_device_to_device" for populating their sysfs entries.
+> 
+> drivers/soc/ux500/ux500-soc-id.c:       parent =
+> soc_device_to_device(soc_dev);
+> drivers/soc/tegra/fuse/fuse-tegra.c:    return soc_device_to_device(dev);
+> drivers/soc/amlogic/meson-gx-socinfo.c: dev = soc_device_to_device(soc_dev);
+> drivers/soc/amlogic/meson-mx-socinfo.c:
+> dev_info(soc_device_to_device(soc_dev), "Amlogic %s %s detected\n",
+> drivers/soc/imx/soc-imx8.c:     ret =
+> device_create_file(soc_device_to_device(soc_dev),
+> drivers/soc/imx/soc-imx-scu.c:  ret =
+> device_create_file(soc_device_to_device(soc_dev),
+> drivers/soc/versatile/soc-realview.c:
+> device_create_file(soc_device_to_device(soc_dev), &realview_manf_attr);
+> drivers/soc/versatile/soc-realview.c:
+> device_create_file(soc_device_to_device(soc_dev), &realview_board_attr);
+> drivers/soc/versatile/soc-realview.c:
+> device_create_file(soc_device_to_device(soc_dev), &realview_arch_attr);
+> drivers/soc/versatile/soc-realview.c:
+> device_create_file(soc_device_to_device(soc_dev), &realview_build_attr);
+> drivers/soc/versatile/soc-integrator.c: dev = soc_device_to_device(soc_dev);
+> 
+> These drivers can use the current proposed approach to expose their sysfs
+> entries.
+> Will try to address these and submit. But i can't able to test these changes
+> because i do not have these h/w's
 
-> BTW, I'd really like to take this patch series through my tree. That
-> way I can really hammer it, as well as I have code that will be built
-> on top of it.
+Build testing should be sufficient.
 
-Works for me; or we can have a topic branch in tip we both can use.
-Ingo?
+thanks,
 
-> I'll review the other series in this thread, but I'm assuming they
-> don't rely on this series? Or do they?
-
-Indeed, this series stands on it's own. The rest depends on this.
+greg k-h
