@@ -2,89 +2,174 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C39C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B261C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68273206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:37:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570541850;
-	bh=Yi9JCPbELBiVusSY2wzUw0dhpptkn0LIP1Ap2KhWFME=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oWXLjvdB82WRRuQ9JUGkee/tCkXLww7WD9gdLcCsSPHEptMncwwfPqvQX2gqmao9K
-	 JXcBF5xOZ6QvmqxkF2s1fDmWIF/o3zsrJv2QdJWyoWAdbxvvzmC9Y4tVrRNKXJsvyM
-	 bDw3Tem8KPSKeBe2ud17EbMhcP6rqSnYc2c/Bw10=
+	by mail.kernel.org (Postfix) with ESMTP id 49C7E2173B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:37:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726043AbfJHNh3 (ORCPT
+        id S1726078AbfJHNho (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 09:37:29 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41526 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725917AbfJHNh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 09:37:29 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0BC46B021;
-        Tue,  8 Oct 2019 13:37:28 +0000 (UTC)
-Date:   Tue, 8 Oct 2019 15:37:27 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Petr Mladek <pmladek@suse.com>, akpm@linux-foundation.org,
-        sergey.senozhatsky.work@gmail.com, rostedt@goodmis.org,
-        peterz@infradead.org, linux-mm@kvack.org,
-        john.ogness@linutronix.de, david@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
-Message-ID: <20191008133727.GK6681@dhcp22.suse.cz>
-References: <20191008103907.GE6681@dhcp22.suse.cz>
- <3836DE34-9DD2-4815-9E1E-CB87D881B9AD@lca.pw>
- <20191008123920.GI6681@dhcp22.suse.cz>
- <1570539989.5576.295.camel@lca.pw>
+        Tue, 8 Oct 2019 09:37:44 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:42692 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbfJHNho (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 09:37:44 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 32451803D4; Tue,  8 Oct 2019 15:37:27 +0200 (CEST)
+Date:   Tue, 8 Oct 2019 15:37:41 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Charlene Liu <charlene.liu@amd.com>,
+        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 033/106] drm/amd/display: support spdif
+Message-ID: <20191008133741.GG608@amd>
+References: <20191006171124.641144086@linuxfoundation.org>
+ <20191006171140.114447492@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="UTZ8bGhNySVQ9LYl"
 Content-Disposition: inline
-In-Reply-To: <1570539989.5576.295.camel@lca.pw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191006171140.114447492@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 08-10-19 09:06:29, Qian Cai wrote:
-> On Tue, 2019-10-08 at 14:39 +0200, Michal Hocko wrote:
-> > On Tue 08-10-19 08:00:43, Qian Cai wrote:
-> > > 
-> > > 
-> > > > On Oct 8, 2019, at 6:39 AM, Michal Hocko <mhocko@kernel.org> wrote:
-> > > > 
-> > > > Have you actually triggered any real deadlock? With a zone->lock in
-> > > > place it would be pretty clear with hard lockups detected.
-> > > 
-> > > Yes, I did trigger here and there, and those lockdep splats are
-> > > especially useful to figure out why.
-> > 
-> > Can you provide a lockdep splat from an actual deadlock please? I am
-> > sorry but your responses tend to be really cryptic and I never know when
-> > you are talking about actual deadlocks and lockdep splats. I have asked
-> > about the former several times never receiving a specific answer.
-> 
-> It is very time-consuming to confirm a lockdep splat is 100% matching a deadlock
-> giving that it is not able to reproduce on will yet, so when I did encounter a
-> memory offline deadlock where "echo offline > memory/state" just hang, but there
-> is no hard lockup probably because the hard lockup detector did not work
-> properly for some reasons or it keep trying to acquire a spin lock that only
-> keep the CPU 100%.
 
-If there is a real deadlock due to zone->lock then you would certainly
-get a hard lockup splat. So I strongly suspect that you are seeing a
-completely different problem. Most likely some pages cannot be migrated
-and the offlining code will retry for ever. You can terminate that from
-the userspace by a fatal signal of course.
+--UTZ8bGhNySVQ9LYl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Michal Hocko
-SUSE Labs
+Hi!
+
+> [ Upstream commit b5a41620bb88efb9fb31a4fa5e652e3d5bead7d4 ]
+>=20
+> [Description]
+> port spdif fix to staging:
+>  spdif hardwired to afmt inst 1.
+>  spdif func pointer
+>  spdif resource allocation (reserve last audio endpoint for spdif only)
+
+I'm sorry, but I don't understand this changelog. Code below modifies
+whitespace, adds a debug output, and uses local variable for
+pool->audio_count.
+
+Does not seem to be a bugfix, and does not seem to do anything with
+staging.
+
+Best regards,
+								Pavel
+
+
+> +++ b/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
+> @@ -229,12 +229,10 @@ bool resource_construct(
+>  				DC_ERR("DC: failed to create audio!\n");
+>  				return false;
+>  			}
+> -
+>  			if (!aud->funcs->endpoint_valid(aud)) {
+>  				aud->funcs->destroy(&aud);
+>  				break;
+>  			}
+> -
+>  			pool->audios[i] =3D aud;
+>  			pool->audio_count++;
+>  		}
+> @@ -1703,24 +1701,25 @@ static struct audio *find_first_free_audio(
+>  		const struct resource_pool *pool,
+>  		enum engine_id id)
+>  {
+> -	int i;
+> -	for (i =3D 0; i < pool->audio_count; i++) {
+> +	int i, available_audio_count;
+> +
+> +	available_audio_count =3D pool->audio_count;
+> +
+> +	for (i =3D 0; i < available_audio_count; i++) {
+>  		if ((res_ctx->is_audio_acquired[i] =3D=3D false) && (res_ctx->is_strea=
+m_enc_acquired[i] =3D=3D true)) {
+>  			/*we have enough audio endpoint, find the matching inst*/
+>  			if (id !=3D i)
+>  				continue;
+> -
+>  			return pool->audios[i];
+>  		}
+>  	}
+> =20
+> -    /* use engine id to find free audio */
+> -	if ((id < pool->audio_count) && (res_ctx->is_audio_acquired[id] =3D=3D =
+false)) {
+> +	/* use engine id to find free audio */
+> +	if ((id < available_audio_count) && (res_ctx->is_audio_acquired[id] =3D=
+=3D false)) {
+>  		return pool->audios[id];
+>  	}
+> -
+>  	/*not found the matching one, first come first serve*/
+> -	for (i =3D 0; i < pool->audio_count; i++) {
+> +	for (i =3D 0; i < available_audio_count; i++) {
+>  		if (res_ctx->is_audio_acquired[i] =3D=3D false) {
+>  			return pool->audios[i];
+>  		}
+> diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_audio.c b/drivers/gpu=
+/drm/amd/display/dc/dce/dce_audio.c
+> index 7f6d724686f1a..abb559ce64085 100644
+> --- a/drivers/gpu/drm/amd/display/dc/dce/dce_audio.c
+> +++ b/drivers/gpu/drm/amd/display/dc/dce/dce_audio.c
+> @@ -611,6 +611,8 @@ void dce_aud_az_configure(
+> =20
+>  	AZ_REG_WRITE(AZALIA_F0_CODEC_PIN_CONTROL_SINK_INFO1,
+>  		value);
+> +	DC_LOG_HW_AUDIO("\n\tAUDIO:az_configure: index: %u data, 0x%x, displayN=
+ame %s: \n",
+> +		audio->inst, value, audio_info->display_name);
+> =20
+>  	/*
+>  	*write the port ID:
+> @@ -922,7 +924,6 @@ static const struct audio_funcs funcs =3D {
+>  	.az_configure =3D dce_aud_az_configure,
+>  	.destroy =3D dce_aud_destroy,
+>  };
+> -
+>  void dce_aud_destroy(struct audio **audio)
+>  {
+>  	struct dce_audio *aud =3D DCE_AUD(*audio);
+> @@ -953,7 +954,6 @@ struct audio *dce_audio_create(
+>  	audio->regs =3D reg;
+>  	audio->shifts =3D shifts;
+>  	audio->masks =3D masks;
+> -
+>  	return &audio->base;
+>  }
+> =20
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--UTZ8bGhNySVQ9LYl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl2ckSUACgkQMOfwapXb+vKPEQCfW9gdJcW3g3C2l2dL7ITgHNmr
+xQAAnAmvNSky0C+OBdgfsTc1S85NfylU
+=EbfI
+-----END PGP SIGNATURE-----
+
+--UTZ8bGhNySVQ9LYl--
