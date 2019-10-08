@@ -2,135 +2,146 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DAE2C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 19:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C5EC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 19:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F74321721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 19:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 579B321721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 19:41:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730473AbfJHTfh (ORCPT
+        id S1730145AbfJHTlo convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 15:35:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41000 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729602AbfJHTfh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 15:35:37 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 130508553D;
-        Tue,  8 Oct 2019 19:35:37 +0000 (UTC)
-Received: from redhat.com (dhcp-17-119.bos.redhat.com [10.18.17.119])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 221D810013A1;
-        Tue,  8 Oct 2019 19:35:36 +0000 (UTC)
-Date:   Tue, 8 Oct 2019 15:35:34 -0400
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     rostedt@goodmis.org, mingo@redhat.com, jpoimboe@redhat.com,
-        jikos@kernel.org, pmladek@suse.com, linux-kernel@vger.kernel.org,
-        live-patching@vger.kernel.org
-Subject: Re: [PATCH 0/3] ftrace: Introduce PERMANENT ftrace_ops flag
-Message-ID: <20191008193534.GA16675@redhat.com>
-References: <20191007081714.20259-1-mbenes@suse.cz>
+        Tue, 8 Oct 2019 15:41:44 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:60722 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728465AbfJHTlo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 15:41:44 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1iHvMa-0006qJ-Up; Tue, 08 Oct 2019 13:41:40 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1iHvMa-0001Zj-18; Tue, 08 Oct 2019 13:41:40 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     "Michael Kerrisk \(man-pages\)" <mtk.manpages@gmail.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        linux-man <linux-man@vger.kernel.org>,
+        Containers <containers@lists.linux-foundation.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jordan Ogas <jogas@lanl.gov>, werner@almesberger.net,
+        Al Viro <viro@ftp.linux.org.uk>
+References: <CAKgNAki0bR5zZr+kp_xjq+bNUky6-F+s2ep+jnR0YrjHhNMB1g@mail.gmail.com>
+        <20190805103630.tu4kytsbi5evfrhi@mikami>
+        <3a96c631-6595-b75e-f6a7-db703bf89bcf@gmail.com>
+        <da747415-4c7a-f931-6f2e-2962da63c161@philippwendler.de>
+        <CAKgNAkjS+x7aMVUiVSgCRwgi8rnukqJv=svtTARE-tt-oxQxWw@mail.gmail.com>
+        <87r24piwhm.fsf@x220.int.ebiederm.org>
+        <CAKgNAkhK2qBbz5aVY9VdK0UzvpZ=c7c7LWQ1MK2gu-rVKUz9_g@mail.gmail.com>
+        <87ftl5donm.fsf@x220.int.ebiederm.org>
+        <b8b9d8bd-e959-633f-b879-4bfe4eb0df23@gmail.com>
+        <20190910111551.scam5payogqqvlri@wittgenstein>
+        <30545c5c-ff4c-8b87-e591-40cc0a631304@gmail.com>
+        <871rwnda47.fsf@x220.int.ebiederm.org>
+        <448138b8-0d0c-5eb3-d5e5-04a26912d3a8@gmail.com>
+        <87ef0hbezt.fsf@x220.int.ebiederm.org>
+        <cc21557f-1568-68c3-e322-47ceb52fdf53@gmail.com>
+        <71cad40b-0f9f-24de-b650-8bc4fce78fa8@gmail.com>
+        <87y2y6j9i1.fsf@x220.int.ebiederm.org>
+        <7e4b23df-ab83-3d5a-3dc5-54025e3682cf@gmail.com>
+        <87k19geey0.fsf@x220.int.ebiederm.org>
+        <c7041c6a-a4c6-75f2-5380-4fed67cd60b1@gmail.com>
+Date:   Tue, 08 Oct 2019 14:40:55 -0500
+In-Reply-To: <c7041c6a-a4c6-75f2-5380-4fed67cd60b1@gmail.com> (Michael
+        Kerrisk's message of "Tue, 8 Oct 2019 16:27:25 +0200")
+Message-ID: <87eeznc9fc.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191007081714.20259-1-mbenes@suse.cz>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 08 Oct 2019 19:35:37 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-XM-SPF: eid=1iHvMa-0001Zj-18;;;mid=<87eeznc9fc.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/hRZtkqxlOa+U99OxC3bfYn7yjgpKKjqE=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: pivot_root(".", ".") and the fchdir() dance
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 10:17:11AM +0200, Miroslav Benes wrote:
-> Livepatch uses ftrace for redirection to new patched functions. It is
-> thus directly affected by ftrace sysctl knobs such as ftrace_enabled.
-> Setting ftrace_enabled to 0 also disables all live patched functions. It
-> is not a problem per se, because only administrator can set sysctl
-> values, but it still may be surprising.
-> 
-> Introduce PERMANENT ftrace_ops flag to amend this. If the
-> FTRACE_OPS_FL_PERMANENT is set, the tracing of the function is not
-> disabled. Such ftrace_ops can still be unregistered in a standard way.
-> 
-> The patch set passes ftrace and livepatch kselftests.
-> 
-> Miroslav Benes (3):
->   ftrace: Make test_rec_ops_needs_regs() generic
->   ftrace: Introduce PERMANENT ftrace_ops flag
->   livepatch: Use FTRACE_OPS_FL_PERMANENT
-> 
->  Documentation/trace/ftrace-uses.rst |  6 ++++
->  Documentation/trace/ftrace.rst      |  2 ++
->  include/linux/ftrace.h              |  8 +++--
->  kernel/livepatch/patch.c            |  3 +-
->  kernel/trace/ftrace.c               | 47 ++++++++++++++++++++++++-----
->  5 files changed, 55 insertions(+), 11 deletions(-)
-> 
-> -- 
-> 2.23.0
-> 
+"Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com> writes:
 
-Hi Miroslav,
+> Hello Eric,
+>
+>>>> Creating of a mount namespace in a user namespace automatically does
+>>>> 'mount("", "/", MS_SLAVE | MS_REC, NULL);' if the starting mount
+>>>> namespace was not created in that user namespace.  AKA creating
+>>>> a mount namespace in a user namespace does the unshare for you.
+>>>
+>>> Oh -- I had forgotten that detail. But it is documented
+>>> (by you, I think) in mount_namespaces(7):
+>>>
+>>>        *  A  mount  namespace  has  an  owner user namespace.  A
+>>>           mount namespace whose owner user namespace is  differ‐
+>>>           ent  from the owner user namespace of its parent mount
+>>>           namespace is considered a less privileged mount names‐
+>>>           pace.
+>>>
+>>>        *  When  creating  a  less  privileged  mount  namespace,
+>>>           shared mounts are reduced to  slave  mounts.   (Shared
+>>>           and  slave  mounts are discussed below.)  This ensures
+>>>           that  mappings  performed  in  less  privileged  mount
+>>>           namespaces will not propagate to more privileged mount
+>>>           namespaces.
+>>>
+>>> There's one point that description that troubles me. There is a
+>>> reference to "parent mount namespace", but as I understand things
+>>> there is no parental relationship among mount namespaces instances
+>>> (or am I wrong?). Should that wording not be rather something
+>>> like "the mount namespace of the process that created this mount
+>>> namespace"?
+>> 
+>> How about "the mount namespace this mount namespace started as a copy of"
+>> 
+>> You are absolutely correct there is no relationship between mount
+>> namespaces.  There is just the propagation tree between mounts.  (Which
+>> acts similarly to a parent/child relationship but is not at all the same
+>> thing).
+>
+> Thanks. I made the text as follows:
+>
+>        *  Each  mount  namespace  has  an owner user namespace.  As noted
+>           above, when a new mount namespace is  created,  it  inherits  a
+>           copy  of  the  mount  points  from  the  mount namespace of the
+>           process that created the new mount namespace.  If the two mount
+>           namespaces are owned by different user namespaces, then the new
+>           mount namespace is considered less privileged.
 
-I wonder if the opposite would be more intuitive: when ftrace_enabled is
-not set, don't allow livepatches to register ftrace filters and
-likewise, don't allow ftrace_enabled to be unset if any livepatches are
-already registered.  I guess you could make an argument either way, but
-just offering another option.  Perhaps livepatches should follow similar
-behavior of other ftrace clients (like perf probes?)
+I hate to nitpick, but I am going to say that when I read the text above
+the phrase "mount namespace of the process that created the new mount
+namespace" feels wrong.
 
-As for the approach in this patchset, is it consistent that livepatches
-loaded after setting ftrace_enabled to 0 will successfully load, but not
-execute their new code...  but then when ftrace_enabled is toggled, the
-new livepatch code remains on?
+Either you use unshare(2) and the mount namespace of the process that
+created the mount namespace changes.
 
-For example:
+Or you use clone(2) and you could argue it is the new child that created
+the mount namespace.
 
-1 - Turn ftrace_enabled off and load the /proc/cmdline livepatch test
-    case, note that it reports a success patching transition, but
-    doesn't run new its code:
+Having a different mount namespace at the end of the creation operation
+feels like it makes your phrase confusing about what the starting
+mount namespace is.  I hate to use references that are ambiguous when
+things are changing.
 
-  % dmesg -C
-  % sysctl kernel.ftrace_enabled=0
-  kernel.ftrace_enabled = 0
-  % insmod lib/livepatch/test_klp_livepatch.ko 
-  % echo $?
-  0
-  % dmesg
-  [  450.579980] livepatch: enabling patch 'test_klp_livepatch'
-  [  450.581243] livepatch: 'test_klp_livepatch': starting patching transition
-  [  451.942971] livepatch: 'test_klp_livepatch': patching complete
-  % cat /proc/cmdline 
-  BOOT_IMAGE=(hd0,msdos1)/boot/vmlinuz-5.4.0-rc2+ root=UUID=c42bb089-b5c1-4e17-82bd-132f55bee54c ro console=ttyS0 console=ttyS0,115200n8 no_timer_check net.ifnames=0 crashkernel=auto
+I agree that the term parent is also wrong.
 
-2 - Turn ftrace_enabled on and see that the livepatch now works:
-
-  % sysctl kernel.ftrace_enabled=1
-  kernel.ftrace_enabled = 1
-  % cat /proc/cmdline 
-  test_klp_livepatch: this has been live patched
-
-3 - Turn ftrace_enabled off and see that it's still enabled:
-
-  % sysctl kernel.ftrace_enabled=0
-  kernel.ftrace_enabled = 0
-  % cat /proc/cmdline 
-  test_klp_livepatch: this has been live patched
-
-Steps 2 and 3 match the behavior described by the patchset, but I was
-particularly wondering what you thought about step 1.
-
-IMHO, I would expect step 1 to fully enable the livepatch, or at the
-very least, not report a patch transition (though that may confuse
-userspace tools waiting for that report).
-
-Thanks,
-
--- Joe
+Eric
