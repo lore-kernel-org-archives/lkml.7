@@ -2,135 +2,90 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE476C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F2AC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0C5D20815
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA3642070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:47:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="cXYZ/yJK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730370AbfJHJp6 (ORCPT
+        id S1730188AbfJHJrc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 05:45:58 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:35805 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728866AbfJHJp5 (ORCPT
+        Tue, 8 Oct 2019 05:47:32 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:38023 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728866AbfJHJrc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 05:45:57 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id E468C803E2; Tue,  8 Oct 2019 11:45:39 +0200 (CEST)
-Date:   Tue, 8 Oct 2019 11:45:54 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Joel Savitz <jsavitz@redhat.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 011/106] PCI: rpaphp: Avoid a
- sometimes-uninitialized warning
-Message-ID: <20191008094554.GB608@amd>
-References: <20191006171124.641144086@linuxfoundation.org>
- <20191006171129.951697403@linuxfoundation.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="qlTNgmc+xy1dBmNv"
-Content-Disposition: inline
-In-Reply-To: <20191006171129.951697403@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Tue, 8 Oct 2019 05:47:32 -0400
+Received: by mail-qk1-f196.google.com with SMTP id u186so16047505qkc.5
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 02:47:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=qLgfnJa8TF+fqJn6Csm2aNbaRpOd4zDzxzOPf12HbGU=;
+        b=cXYZ/yJKZHxhLdFc+J/7aqzW3aWMwrEzbFfkVK6b2STx6QHscvIWH7imnBEe4+5hu8
+         /u0EZHWjyQPT1nvtbEF/Q0Kg9i/YqCDMse7zLQQlF9qvnZzDAYO5lv25xZR6t9BXHcuq
+         ah+dWBDMRgaikW+rvVfyvyISzE+jZZi8EytVeEJcb33yP6AZXWRPX4ij4dNNh6n//HA4
+         ZeX5K7IRgHSrqr/EWrbf7Id2OL3sA+Y9zt+wp0c875bq5Eka/sHOIgqCnKbwSuEhZiRH
+         Ywn2sJjbAl32mBITdW2nABbm8slhsaxFggyDU0O6KlXeMgbBlIYIBTgAtq0NFFUY9INh
+         Kx7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=qLgfnJa8TF+fqJn6Csm2aNbaRpOd4zDzxzOPf12HbGU=;
+        b=tQSz0dNOI5q/EczKBJDk0T5Yzrg7UGYKZI0v9lkAjuAY6qTAZQZLmrYD7ThSEK07bY
+         2ADQfFRVa/Xkt6ZrYbOIGE5fSU5vIEH0kakxgP2Q3yd+coI8YSt8pE4BRDh5W9lTpRfh
+         tPXWY/lyPYoiH9G3Bx79G0cVtaQ0YBkAyIZS+IAtGNzhkVGY8rBCSKVvp75ZW4KNhtPJ
+         ngnMmoYbwiOC55FZg9dxTrn+K9Zo7aZtfTZKFU/9TjVPMi9NNXkudiEYKlM/40djUodC
+         Y5xXJgPppXeCgm0UHjypPBzqlL3aDs4gKxl3m2pCLmbJk7e4c3WLDAskywAHDnjLvKik
+         N4Cg==
+X-Gm-Message-State: APjAAAXglB3c09VIEQLN8lr41/+nDc/OVZX21eRLxtF4jwZQuJBMgUv4
+        AM2dQ/P3zG4UyCfk7cyKgyymGQ==
+X-Google-Smtp-Source: APXvYqxfD11gEiq1MLqW9BfGOXUQNepLHs6yxjwdSPwZov/5cEt3QgQYUXTBcN37CEYZ7nm6dUXSjQ==
+X-Received: by 2002:a37:4d4a:: with SMTP id a71mr28591867qkb.327.1570528051524;
+        Tue, 08 Oct 2019 02:47:31 -0700 (PDT)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id h68sm8988573qkd.35.2019.10.08.02.47.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Oct 2019 02:47:30 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] kasan: fix the missing underflow in memmove and memcpy with CONFIG_KASAN_GENERIC=y
+Date:   Tue, 8 Oct 2019 05:47:30 -0400
+Message-Id: <B53A3CC0-CEA6-4E1C-BC38-19315D949F38@lca.pw>
+References: <1570515358.4686.97.camel@mtksdccf07>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        wsd_upstream <wsd_upstream@mediatek.com>
+In-Reply-To: <1570515358.4686.97.camel@mtksdccf07>
+To:     Walter Wu <walter-zh.wu@mediatek.com>
+X-Mailer: iPhone Mail (17A860)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---qlTNgmc+xy1dBmNv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi!
-
-> From: Nathan Chancellor <natechancellor@gmail.com>
+> On Oct 8, 2019, at 2:16 AM, Walter Wu <walter-zh.wu@mediatek.com> wrote:
 >=20
-> [ Upstream commit 0df3e42167caaf9f8c7b64de3da40a459979afe8 ]
->=20
-> When building with -Wsometimes-uninitialized, clang warns:
->=20
-> drivers/pci/hotplug/rpaphp_core.c:243:14: warning: variable 'fndit' is
-> used uninitialized whenever 'for' loop exits because its condition is
-> false [-Wsometimes-uninitialized]
->         for (j =3D 0; j < entries; j++) {
->                     ^~~~~~~~~~~
-=2E..
-> fndit is only used to gate a sprintf call, which can be moved into the
-> loop to simplify the code and eliminate the local variable, which will
-> fix this warning.
+> It is an undefined behavior to pass a negative numbers to
+>    memset()/memcpy()/memmove(), so need to be detected by KASAN.
 
-Well, you fixed the warning, but the code is still buggy:
-
-> +++ b/drivers/pci/hotplug/rpaphp_core.c
-> @@ -230,7 +230,7 @@ static int rpaphp_check_drc_props_v2(struct device_no=
-de *dn, char *drc_name,
->  	struct of_drc_info drc;
->  	const __be32 *value;
->  	char cell_drc_name[MAX_DRC_NAME_LEN];
-> -	int j, fndit;
-> +	int j;
-> =20
->  	info =3D of_find_property(dn->parent, "ibm,drc-info", NULL);
->  	if (info =3D=3D NULL)
-> @@ -245,17 +245,13 @@ static int rpaphp_check_drc_props_v2(struct device_=
-node *dn, char *drc_name,
-> =20
->  		/* Should now know end of current entry */
-> =20
-> -		if (my_index > drc.last_drc_index)
-> -			continue;
-> -
-> -		fndit =3D 1;
-> -		break;
-> +		/* Found it */
-> +		if (my_index <=3D drc.last_drc_index) {
-> +			sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix,
-> +				my_index);
-> +			break;
-> +		}
->  	}
-> -	/* Found it */
-> -
-> -	if (fndit)
-> -		sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix,=20
-> -			my_index);
-> =20
->  	if (((drc_name =3D=3D NULL) ||
->  	     (drc_name && !strcmp(drc_name, cell_drc_name))) &&
-
-In case we do not find it, cell_drc_name is not initialized, yet we
-use it in strcmp(). Same bug exists in the mainline.
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---qlTNgmc+xy1dBmNv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl2cWtIACgkQMOfwapXb+vLErgCfcqCv/v2ppCMwY/lzYyPR6qMH
-ONkAni6v57Wf59ytP1Kv6o7X9zW8nf7Y
-=3Dox
------END PGP SIGNATURE-----
-
---qlTNgmc+xy1dBmNv--
+Why can=E2=80=99t this be detected by UBSAN?=
