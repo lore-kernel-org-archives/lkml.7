@@ -2,69 +2,74 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B2D0C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77739C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6682B2070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:40:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QmldmbDs"
+	by mail.kernel.org (Postfix) with ESMTP id 4B82C21835
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:41:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570549279;
+	bh=1AOz1WaJM2kMZGmJ/drNUw2mve3Szc1LQSCLyQ/Qf6o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=04ic5tBTN8OIJoxvSqEHPEG9ihDFIfju5eHOjTK4CwqpcdSwsiDbVxHplM5cS5Qap
+	 bybMXon6RN4GpTnZ/5SnszlaTzSjBzoMg73Tj28KrxKhFyUoKow3f6RmRginqmVF2N
+	 XSTOXdXMNjqILyIJ7zPrLX1ZRFvHr/gcwk42Hi6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbfJHPj7 (ORCPT
+        id S1727766AbfJHPlS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 11:39:59 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:56692 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbfJHPj7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 11:39:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=l2WBiCb5duYJRA9nKpihqrJOH1Qjg6utSrFiu8qAdtc=; b=QmldmbDs5B8413t4l8UOWLdRv
-        8afKzVgYAMSqTAt4/DD2AEFXErozw3FX2IkOsPZqyqCxVCizXW4L8izM3+qlDNNYROdzVaTkS7hzW
-        1YoODgGSt0PStcUOgMti7z4sHkuncxLPZukO/uega6TWzwij0zrzBlLnSESJlE7GXad/tfm6AaXB/
-        ytgNUKs4NEaWOcJe0cTO9+iNJwmKvVfoS813Z0gd3TQWaNZCq0ybh30gtL6BmcX2iCtFxwcR89uH4
-        4qI3dJLWbvbeBmZPi+DQOYi+lqI55Py0d/NYZRO06B5gIFUUkLsQCinND3zG6SigTQa86X8FMHqCC
-        AOk0XV4qA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iHrag-0005VI-Su; Tue, 08 Oct 2019 15:39:58 +0000
-Date:   Tue, 8 Oct 2019 08:39:58 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Atish Patra <atish.patra@wdc.com>
-Cc:     linux-kernel@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>,
-        Richard Fontana <rfontana@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Johan Hovold <johan@kernel.org>,
-        Alexandre Ghiti <aghiti@upmem.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Anup Patel <anup@brainfault.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-riscv@lists.infradead.org
-Subject: Re: [v1 PATCH  1/2] RISC-V: Remove unsupported isa string info print
-Message-ID: <20191008153958.GB20318@infradead.org>
-References: <20191004012000.2661-1-atish.patra@wdc.com>
- <20191004012000.2661-2-atish.patra@wdc.com>
+        Tue, 8 Oct 2019 11:41:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46980 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725966AbfJHPlS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 11:41:18 -0400
+Received: from linux-8ccs (ip5f5adbf2.dynamic.kabel-deutschland.de [95.90.219.242])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D09B2070B;
+        Tue,  8 Oct 2019 15:41:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570549278;
+        bh=1AOz1WaJM2kMZGmJ/drNUw2mve3Szc1LQSCLyQ/Qf6o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oIPTPUqv1NOHHn6EsGHV7Ds8fiZ1FseXHYLNbow7yP3XSg1kB8aTnRpPwFD6A+jMc
+         dr5Z5udWfLSWdzOtFZtuMNG691ktaXJqShE6OxYK4Cv7ON9JbRAy+rE6i9iHuYxZYN
+         uXT4RbkpSdVSY0nsuJlBisaazq2aRx/aUiqimJH4=
+Date:   Tue, 8 Oct 2019 17:41:12 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        Matthias Maennich <maennich@google.com>,
+        Adam Zerella <adam.zerella@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] doc: move namespaces.rst from kbuild/ to core-api/
+Message-ID: <20191008154111.GA7466@linux-8ccs>
+References: <20191008031009.17364-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20191004012000.2661-2-atish.patra@wdc.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20191008031009.17364-1-yamada.masahiro@socionext.com>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.28-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good,
++++ Masahiro Yamada [08/10/19 12:10 +0900]:
+>We discussed a better location for this file, and agreed that
+>core-api/ is a good fit. Rename it to symbol-namespaces.rst
+>for disambiguation, and also add it to index.rst and MAINTAINERS.
+>
+>Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Applied, thanks!
+
+Jessica
+
