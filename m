@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40DB4C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 134E9C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FC72218DE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E581821835
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:33:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730954AbfJHUcJ (ORCPT
+        id S1730962AbfJHUda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 16:32:09 -0400
-Received: from sauhun.de ([88.99.104.3]:52956 "EHLO pokefinder.org"
+        Tue, 8 Oct 2019 16:33:30 -0400
+Received: from sauhun.de ([88.99.104.3]:52996 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730888AbfJHUcI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 16:32:08 -0400
+        id S1730523AbfJHUda (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 16:33:30 -0400
 Received: from localhost (p54B3324A.dip0.t-ipconnect.de [84.179.50.74])
-        by pokefinder.org (Postfix) with ESMTPSA id 2620B2C07B8;
-        Tue,  8 Oct 2019 22:32:06 +0200 (CEST)
+        by pokefinder.org (Postfix) with ESMTPSA id 365942C07DC;
+        Tue,  8 Oct 2019 22:33:28 +0200 (CEST)
 From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     linux-i2c@vger.kernel.org,
@@ -33,9 +33,9 @@ Cc:     linux-i2c@vger.kernel.org,
         Jernej Skrabec <jernej.skrabec@siol.net>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND] gpu: drm: bridge: analogix-anx78xx: convert to i2c_new_dummy_device
-Date:   Tue,  8 Oct 2019 22:31:45 +0200
-Message-Id: <20191008203145.3159-1-wsa+renesas@sang-engineering.com>
+Subject: [PATCH RESEND] gpu: drm: bridge: sii9234: convert to devm_i2c_new_dummy_device
+Date:   Tue,  8 Oct 2019 22:33:22 +0200
+Message-Id: <20191008203322.3238-1-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -44,8 +44,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move from the deprecated i2c_new_dummy() to i2c_new_dummy_device(). We
-now get an ERRPTR which we use in error handling.
+Move from the deprecated i2c_new_dummy() to devm_i2c_new_dummy_device().
+We now get an ERRPTR which we use in error handling and we can skip
+removal of the created devices.
 
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
@@ -54,27 +55,73 @@ Rebased to v5.4-rc2 since last time. One of the last two users of the
 old API, so please apply soon, so I can remove the old interface. Only
 build tested.
 
- drivers/gpu/drm/bridge/analogix-anx78xx.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/bridge/sii9234.c | 36 +++++++++++---------------------
+ 1 file changed, 12 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.c b/drivers/gpu/drm/bridge/analogix-anx78xx.c
-index 3c7cc5af735c..be7756280e41 100644
---- a/drivers/gpu/drm/bridge/analogix-anx78xx.c
-+++ b/drivers/gpu/drm/bridge/analogix-anx78xx.c
-@@ -1350,10 +1350,10 @@ static int anx78xx_i2c_probe(struct i2c_client *client,
+diff --git a/drivers/gpu/drm/bridge/sii9234.c b/drivers/gpu/drm/bridge/sii9234.c
+index 25d4ad8c7ad6..8a6c85693a88 100644
+--- a/drivers/gpu/drm/bridge/sii9234.c
++++ b/drivers/gpu/drm/bridge/sii9234.c
+@@ -841,39 +841,28 @@ static int sii9234_init_resources(struct sii9234 *ctx,
  
- 	/* Map slave addresses of ANX7814 */
- 	for (i = 0; i < I2C_NUM_ADDRESSES; i++) {
--		anx78xx->i2c_dummy[i] = i2c_new_dummy(client->adapter,
-+		anx78xx->i2c_dummy[i] = i2c_new_dummy_device(client->adapter,
- 						anx78xx_i2c_addresses[i] >> 1);
--		if (!anx78xx->i2c_dummy[i]) {
--			err = -ENOMEM;
-+		if (IS_ERR(anx78xx->i2c_dummy[i])) {
-+			err = PTR_ERR(anx78xx->i2c_dummy[i]);
- 			DRM_ERROR("Failed to reserve I2C bus %02x\n",
- 				  anx78xx_i2c_addresses[i]);
- 			goto err_unregister_i2c;
+ 	ctx->client[I2C_MHL] = client;
+ 
+-	ctx->client[I2C_TPI] = i2c_new_dummy(adapter, I2C_TPI_ADDR);
+-	if (!ctx->client[I2C_TPI]) {
++	ctx->client[I2C_TPI] = devm_i2c_new_dummy_device(&client->dev, adapter,
++							 I2C_TPI_ADDR);
++	if (IS_ERR(ctx->client[I2C_TPI])) {
+ 		dev_err(ctx->dev, "failed to create TPI client\n");
+-		return -ENODEV;
++		return PTR_ERR(ctx->client[I2C_TPI]);
+ 	}
+ 
+-	ctx->client[I2C_HDMI] = i2c_new_dummy(adapter, I2C_HDMI_ADDR);
+-	if (!ctx->client[I2C_HDMI]) {
++	ctx->client[I2C_HDMI] = devm_i2c_new_dummy_device(&client->dev, adapter,
++							  I2C_HDMI_ADDR);
++	if (IS_ERR(ctx->client[I2C_HDMI])) {
+ 		dev_err(ctx->dev, "failed to create HDMI RX client\n");
+-		goto fail_tpi;
++		return PTR_ERR(ctx->client[I2C_HDMI]);
+ 	}
+ 
+-	ctx->client[I2C_CBUS] = i2c_new_dummy(adapter, I2C_CBUS_ADDR);
+-	if (!ctx->client[I2C_CBUS]) {
++	ctx->client[I2C_CBUS] = devm_i2c_new_dummy_device(&client->dev, adapter,
++							  I2C_CBUS_ADDR);
++	if (IS_ERR(ctx->client[I2C_CBUS])) {
+ 		dev_err(ctx->dev, "failed to create CBUS client\n");
+-		goto fail_hdmi;
++		return PTR_ERR(ctx->client[I2C_CBUS]);
+ 	}
+ 
+ 	return 0;
+-
+-fail_hdmi:
+-	i2c_unregister_device(ctx->client[I2C_HDMI]);
+-fail_tpi:
+-	i2c_unregister_device(ctx->client[I2C_TPI]);
+-
+-	return -ENODEV;
+-}
+-
+-static void sii9234_deinit_resources(struct sii9234 *ctx)
+-{
+-	i2c_unregister_device(ctx->client[I2C_CBUS]);
+-	i2c_unregister_device(ctx->client[I2C_HDMI]);
+-	i2c_unregister_device(ctx->client[I2C_TPI]);
+ }
+ 
+ static inline struct sii9234 *bridge_to_sii9234(struct drm_bridge *bridge)
+@@ -950,7 +939,6 @@ static int sii9234_remove(struct i2c_client *client)
+ 
+ 	sii9234_cable_out(ctx);
+ 	drm_bridge_remove(&ctx->bridge);
+-	sii9234_deinit_resources(ctx);
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
