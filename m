@@ -2,144 +2,92 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA826C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8116BC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E3CC206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:56:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ECBB218DE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:56:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="eFBJapDy";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="V6kEAXsM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfJHP4R (ORCPT
+        id S1728137AbfJHP4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 11:56:17 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:41115 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725939AbfJHP4R (ORCPT
+        Tue, 8 Oct 2019 11:56:46 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:47974 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726822AbfJHP4q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 11:56:17 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1iHrqK-0001K2-Nn; Tue, 08 Oct 2019 17:56:08 +0200
-Message-ID: <1570550166.18914.12.camel@pengutronix.de>
-Subject: Re: [PATCH v2 2/2] reset: Reset controller driver for Intel LGM SoC
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Philipp Zabel <pza@pengutronix.de>
-Cc:     Dilip Kota <eswara.kota@linux.intel.com>,
-        "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>,
-        cheol.yong.kim@intel.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, qi-ming.wu@intel.com,
-        robh@kernel.org, Hauke Mehrtens <hauke@hauke-m.de>
-Date:   Tue, 08 Oct 2019 17:56:06 +0200
-In-Reply-To: <CAFBinCAEzBk7tT5M-F3H4kLnKURRkK2oSSAmKkrjAn7_wdAROA@mail.gmail.com>
-References: <34336c9a-8e87-8f84-2ae8-032b7967928f@linux.intel.com>
-         <CAFBinCDfM3ssHisMBKXZUFkfoAFw51TaUuKt_aBgtD-mN+9fhg@mail.gmail.com>
-         <657d796d-cb1b-472d-fe67-f7b9bf12fd79@linux.intel.com>
-         <CAFBinCA5sRp1-siqZqJzFL2nuD3BtjrbD65QtpWbnTgtPNXY1A@mail.gmail.com>
-         <cebd8f1d-90ab-87e7-9a34-f5c760688ce5@linux.intel.com>
-         <CAFBinCCXo50OX6=8Fz-=nRKuELU_fMOCX=z6iwAcw0_Tfgn1ug@mail.gmail.com>
-         <da347f1c-864c-7d68-33c8-045e46651f45@linux.intel.com>
-         <CAFBinCDhLYmiORvHdZJAN5cuUjc6eWJK5n9Qg26B0dEhhqUqVQ@mail.gmail.com>
-         <389f360a-a993-b9a8-4b50-ad87bcfec767@linux.intel.com>
-         <CAFBinCBwrTajCrSf-UqZY5gHqUSn0UTmbc_TLPNVZrPyY5jpOA@mail.gmail.com>
-         <20191003141955.zi5wqjqf4wa7lhv7@pengutronix.de>
-         <CAFBinCAEzBk7tT5M-F3H4kLnKURRkK2oSSAmKkrjAn7_wdAROA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Tue, 8 Oct 2019 11:56:46 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 1FDAF61A39; Tue,  8 Oct 2019 15:56:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1570550205;
+        bh=L02AIM1GDP5tyCdGCD4NsXNAC9LOxToRmZrIOu+Kfu4=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=eFBJapDyOcG98E4JlTFj2ucszzQQHNTzISpqVgQCvSJpzhbreSb5FZB/skJ51z9eT
+         OgqexAsOczd0e7VLxkVvlC0sK59lXZVIoIIOxGkOXTvHc7POCE2Xf+ZDA7k0nIW2MS
+         J9sneRvcCoOY/8a0XPcz3ANJgElFWmBLKo0KI+6Q=
+Received: from tynnyri.adurom.net (tynnyri.adurom.net [51.15.11.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C468960BE8;
+        Tue,  8 Oct 2019 15:56:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1570550203;
+        bh=L02AIM1GDP5tyCdGCD4NsXNAC9LOxToRmZrIOu+Kfu4=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=V6kEAXsMzJLpIptKk8+/llAq38z07bU9/OGHNCA/Rvm6CLOGq6N1LzXb+aZs+qKPp
+         YlktqtQD136KHoY59UN4/9na7esCdnqwrUH/iLCIlnowRLH4w6RPf3YBRI3nhR5SnV
+         VJxoO5O5ZsGJ4m/+aXNphrlMWM1zE3XgXI/Fza0A=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C468960BE8
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Siva Rebbagondla <siva8118@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Denis Efremov <efremov@linux.com>
+Subject: Re: [PATCH 1/2] Revert "rsi: fix potential null dereference in rsi_probe()"
+References: <20191004144422.13003-1-johan@kernel.org>
+        <87a7aes2oh.fsf@codeaurora.org>
+Date:   Tue, 08 Oct 2019 18:56:37 +0300
+In-Reply-To: <87a7aes2oh.fsf@codeaurora.org> (Kalle Valo's message of "Sun, 06
+        Oct 2019 11:23:10 +0300")
+Message-ID: <87pnj7grii.fsf@tynnyri.adurom.net>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Martin,
+Kalle Valo <kvalo@codeaurora.org> writes:
 
-On Mon, 2019-10-07 at 21:53 +0200, Martin Blumenstingl wrote:
-> Hi Philipp,
-> 
-> On Thu, Oct 3, 2019 at 4:19 PM Philipp Zabel <pza@pengutronix.de> wrote:
-> [...]
-> > > because the register layout was greatly simplified for the newer SoCs
-> > > (for which there is reset-intel) compared to the older ones
-> > > (reset-lantiq).
-> > > Dilip's suggestion (in my own words) is that you take his new
-> > > reset-intel driver, then we will work on porting reset-lantiq over to
-> > > that so in the end we can drop the reset-lantiq driver.
-> > 
-> > Just to be sure, you are suggesting to add support for the current
-> > lantiq,reset binding to the reset-intel driver at a later point? I
-> > see no reason not to do that, but I'm also not quite sure what the
-> > benefit will be over just keeping reset-lantiq as is?
-> 
-> according to Chuan and Dilip the current reset-lantiq implementation
-> is wrong [0].
+> Johan Hovold <johan@kernel.org> writes:
+>
+>> This reverts commit f170d44bc4ec2feae5f6206980e7ae7fbf0432a0.
+>>
+>> USB core will never call a USB-driver probe function with a NULL
+>> device-id pointer.
+>>
+>> Reverting before removing the existing checks in order to document this
+>> and prevent the offending commit from being "autoselected" for stable.
+>>
+>> Signed-off-by: Johan Hovold <johan@kernel.org>
+>
+> I'll queue these two to v5.4.
 
-The only issue seems to be the .reset callback, which doesn't have any
-users anway.
+Actually I'll take that back. Commit f170d44bc4ec is in -next so I have
+to also queue these to -next.
 
-> my understanding is that the Lantiq and Intel LGM reset controllers
-> are identical except:
-> - the Lantiq variant uses a weird register layout (reset and status
-> registers not at consecutive offsets)
-> - the bits of the reset and status registers sometimes don't match on
-> the Lantiq variant
-
-Thank you, so these are a good explanation for why the DT bindings
-should be different.
-
-> - the Intel variant has a dedicated registers area for the reset
-> controller registers, while the Lantiq variant mixes them with various
-> other functionality (for example: USB2 PHYs)
-
-I'm not quite sure I understand why the intel driver is using syscon,
-then. Either way, it shouldn't make a big difference if regmap is used
-anyway. 
-
-> > > This approach means more work for me (as I am probably the one who
-> > > then has to do the work to port reset-lantiq over to reset-intel).
-> > 
-> > More work than what alternative?
-> 
-> compared to "fixing" the existing reset-lantiq driver (reset callback)
-
-That is still something you could do, or just drop the .reset callback
-because there are no reset consumers using it anyway.
-
-One correct thing to do would be to identify those self-clearing reset
-bits and to disallow calling assert/deassert on them.
-
-> and then (instead of adding a new driver) integrating Intel LGM
-> support into reset-lantiq
-
-Since at this point I'm not even sure whether merging the two at all is
-better than keeping them separate, I have no opinion on whether merging
-intel support into the lantiq driver or the other way around is
-preferable.
-
-> > > I'm happy to do that work if you think that it's worth following this
-> > > approach.  So I want your opinion on this before I spend any effort on
-> > > porting reset-lantiq over to reset-intel.
-> > 
-> > Reset drivers are typically so simple, I'm not quite sure whether it is
-> > worth to integrate multiple drivers if it complicates matters too much.
-> > In this case though I expect it would just be adding support for a
-> > custom .of_xlate and lantiq specific register property parsing?
-> 
-> yes, that's how I understand the Lantiq and Intel reset controllers:
-> - reset/status/assert/deassert callbacks would be shared across all variants
-> - register parsing and of_xlate are SoC specific
-
-Ok. If that turns out to be less rather than more boilerplate than two
-separate drivers, that should be fine.
-
-regards
-Philipp
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
