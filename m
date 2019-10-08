@@ -2,130 +2,183 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA03C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99FF2C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E090F205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:22:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D17A205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:23:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730283AbfJHHWC (ORCPT
+        id S1730279AbfJHHXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 03:22:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59798 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729740AbfJHHWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 03:22:01 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 79966AEAE;
-        Tue,  8 Oct 2019 07:21:59 +0000 (UTC)
-Subject: Re: [PATCH] mm, hugetlb: allow hugepage allocations to excessively
- reclaim
-To:     Michal Hocko <mhocko@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     David Rientjes <rientjes@google.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Mel Gorman <mgorman@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        Michal Hocko <mhocko@suse.com>
-References: <20191007075548.12456-1-mhocko@kernel.org>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <7ea18bd9-d785-cc2c-7ca3-7a2e33002cfd@suse.cz>
-Date:   Tue, 8 Oct 2019 09:21:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Tue, 8 Oct 2019 03:23:54 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37526 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730112AbfJHHXy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 03:23:54 -0400
+Received: by mail-ot1-f68.google.com with SMTP id k32so13208798otc.4
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 00:23:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mL6qxVhbFk2FmzE5VpHZF8kr6YW4l9t0yp9McD5cEJ4=;
+        b=XCapfFQNlPJG8E4givd44mx0Z+lC2hoRde28L0KCYL8q6+9OYigTYjv4wH5OzOMKrP
+         WeHR2rLdqURi09Oz81jw1opmE/lERxWSZE/d/pgeXbwvodpHTYQItGZd0jgNakwpQ2PO
+         rT3u0It4ish6wo+Bv+pnFujo/i9Ama1ZwPDyGDSG98CJNRLVDv+fe6kLm1l2AdsRjFG7
+         OiTJgm9nDm0wW1Gi321UCUq+cWFR6NDm47RnsTLTlc3BzIC0Y70x4uwL6qzjmOtvMKra
+         ukCzpuRU7I9MMTv0aAPBDj+sO5p8ysEz+algAD8zhFHkCzUsyX9H7q/5Ai93otQoXYUO
+         5jhg==
+X-Gm-Message-State: APjAAAUkjAe/5pg7XpN1QXB/aYO1O2YwFcSsuvfu+RwTbCVxigzRYni2
+        CuqcUTmVM62Kv43ca8gJ5x3HobO8IxPT1maRpj4=
+X-Google-Smtp-Source: APXvYqzBxBjA9SP9xgsbBX3nHfq6xX6r+cx08pQ0i3Mfs00X2jkl6wYy6mf5ODikVpXq7l8GMG+mtSk5/Q5opydrC/M=
+X-Received: by 2002:a9d:7311:: with SMTP id e17mr22833601otk.107.1570519432827;
+ Tue, 08 Oct 2019 00:23:52 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191007075548.12456-1-mhocko@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190801230358.4193-1-rikard.falkeborn@gmail.com>
+ <20190811184938.1796-1-rikard.falkeborn@gmail.com> <20190811184938.1796-4-rikard.falkeborn@gmail.com>
+In-Reply-To: <20190811184938.1796-4-rikard.falkeborn@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 8 Oct 2019 09:23:41 +0200
+Message-ID: <CAMuHMdUkM98oiz-v8X-1QMAM25_d_=Gnxtud+gVQyZNb4nJDMA@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] linux/bits.h: Add compile time sanity check of
+ GENMASK inputs
+To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Joe Perches <joe@perches.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Haren Myneni <haren@us.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/7/19 9:55 AM, Michal Hocko wrote:
-> From: David Rientjes <rientjes@google.com>
-Nit: the subject is still somewhat misleading IMHO, especially in light
-of Mike's responses. I would say "reclaim as needed" instead of
-"excessively reclaim". The excessive reclaim behavior in hugetlb nr_pages
-setting was a bug that was addressed by a different series.
- 
-...
+Hi Rikard,
 
-> [mhocko@suse.com: reworded changelog]
-> Fixes: b39d0ee2632d ("mm, page_alloc: avoid expensive reclaim when compaction may not succeed")
-> Cc: Mike Kravetz <mike.kravetz@oracle.com>
-> Signed-off-by: David Rientjes <rientjes@google.com>
-> Signed-off-by: Michal Hocko <mhocko@suse.com>
+On Sun, Aug 11, 2019 at 8:52 PM Rikard Falkeborn
+<rikard.falkeborn@gmail.com> wrote:
+> GENMASK() and GENMASK_ULL() are supposed to be called with the high bit
+> as the first argument and the low bit as the second argument. Mixing
+> them will return a mask with zero bits set.
+>
+> Recent commits show getting this wrong is not uncommon, see e.g.
+> commit aa4c0c9091b0 ("net: stmmac: Fix misuses of GENMASK macro") and
+> commit 9bdd7bb3a844 ("clocksource/drivers/npcm: Fix misuse of GENMASK
+> macro").
+>
+> To prevent such mistakes from appearing again, add compile time sanity
+> checking to the arguments of GENMASK() and GENMASK_ULL(). If both
+> arguments are known at compile time, and the low bit is higher than the
+> high bit, break the build to detect the mistake immediately.
+>
+> Since GENMASK() is used in declarations, BUILD_BUG_ON_ZERO() must be
+> used instead of BUILD_BUG_ON().
+>
+> __builtin_constant_p does not evaluate is argument, it only checks if it
+> is a constant or not at compile time, and __builtin_choose_expr does not
+> evaluate the expression that is not chosen. Therefore, GENMASK(x++, 0)
+> does only evaluate x++ once.
+>
+> Commit 95b980d62d52 ("linux/bits.h: make BIT(), GENMASK(), and friends
+> available in assembly") made the macros in linux/bits.h available in
+> assembly. Since BUILD_BUG_OR_ZERO() is not asm compatible, disable the
+> checks if the file is included in an asm file.
+>
+> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+> ---
+> Changes in v3:
+>   - Changed back to shorter macro argument names
+>   - Remove casts and use 0 instead of UL(0) in GENMASK_INPUT_CHECK(),
+>     since all results in GENMASK_INPUT_CHECK() are now ints. Update
+>     commit message to reflect that.
+>
+> Changes in v2:
+>   - Add comment about why inputs are not checked when used in asm file
+>   - Use UL(0) instead of 0
+>   - Extract mask creation in a separate macro to improve readability
+>   - Use high and low instead of h and l (part of this was extracted to a
+>     separate patch)
+>   - Updated commit message
+>
+> Joe Perches sent a series to fix the existing misuses of GENMASK() that
+> needs to be merged before this to avoid build failures. Currently, 5 of
+> the patches are not in Linus tree, and 2 are not in linux-next. There is
+> also a patch pending by Nathan Chancellor that also needs to be merged
+> before this patch is merged to avoid build failures.
+>
+>  include/linux/bits.h | 21 +++++++++++++++++++--
+>  1 file changed, 19 insertions(+), 2 deletions(-)
+>
+> diff --git a/include/linux/bits.h b/include/linux/bits.h
+> index 669d69441a62..4ba0fb609239 100644
+> --- a/include/linux/bits.h
+> +++ b/include/linux/bits.h
+> @@ -18,12 +18,29 @@
+>   * position @h. For example
+>   * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
+>   */
+> -#define GENMASK(h, l) \
+> +#ifndef __ASSEMBLY__
+> +#include <linux/build_bug.h>
+> +#define GENMASK_INPUT_CHECK(h, l) \
+> +       (BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+> +               __builtin_constant_p((l) > (h)), (l) > (h), 0)))
+> +#else
+> +/*
+> + * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
+> + * disable the input check if that is the case.
+> + */
+> +#define GENMASK_INPUT_CHECK(h, l) 0
+> +#endif
+> +
+> +#define __GENMASK(h, l) \
+>         (((~UL(0)) - (UL(1) << (l)) + 1) & \
+>          (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
+> +#define GENMASK(h, l) \
+> +       (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+>
+> -#define GENMASK_ULL(h, l) \
+> +#define __GENMASK_ULL(h, l) \
+>         (((~ULL(0)) - (ULL(1) << (l)) + 1) & \
+>          (~ULL(0) >> (BITS_PER_LONG_LONG - 1 - (h))))
+> +#define GENMASK_ULL(h, l) \
+> +       (GENMASK_INPUT_CHECK(h, l) + __GENMASK_ULL(h, l))
+>
+>  #endif /* __LINUX_BITS_H */
 
-I still believe that using __GFP_NORETRY as needed is a cleaner solution
-than a check for pageblock order and __GFP_IO, but that can be always
-changed later. This patch does fix the hugetlbfs regression, so
+This is now commit 0fd35cd30a2fece1 ("linux/bits.h: add compile time sanity
+check of GENMASK inputs") in next-20191008.
 
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
+<noreply@ellerman.id.au> reported the following failure in sun3_defconfig,
+which I managed to reproduce with gcc-4.6.3:
+
+    lib/842/842_compress.c: In function '__split_add_bits':
+    lib/842/842_compress.c:164:25: error: first argument to
+'__builtin_choose_expr' not a constant
+    lib/842/842_compress.c:164:25: error: bit-field '<anonymous>'
+width not an integer constant
+    scripts/Makefile.build:265: recipe for target
+'lib/842/842_compress.o' failed
+
+__split_add_bits() calls GENMASK_ULL() with a non-constant.
+However __split_add_bits() itself is called with constants only.
+Apparently gcc fails to inline __split_add_bits().
+Adding inline or always_inline doesn't help.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
