@@ -7,62 +7,56 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE3A5C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 19:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C46C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 19:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A333D21721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 19:41:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4903D21721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 19:43:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570563719;
-	bh=md3URdiVZXHNYYHdfhv8UFfznw+hOvoIoyHSdc6QhXM=;
+	s=default; t=1570563784;
+	bh=0Q9N0eIfUOZeCLFUdyu/TPNy9QnsRIz7q4lrP3NFEOQ=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=q8iNfbU3zV2ga55v0UNZKt7u15NXPqxa9EP6N1KS0hQWiZpNbNKTbgHfhWhJLnzzi
-	 cTyrAMgbD8x6GjSW+XX3geuIpOEovEzcdGZMLwwRrS6JKWsTR6GYJK4S70RnQF2mGX
-	 q1T8PsrweSKqFZzc1GKmuArnbBq3LqMtBNatDQKY=
+	b=x5uR4sKoOH2AM/K6aFTkMKSvq2Qb9LEIaqaan8s3wVezLf9zMLhxDEXOXBbnp848w
+	 4N0TXToabYWIaNFNmpUhCtmdUlxMSdkCLHL9VCauFaPMMd7oS6yO9rTPhw+CF35ZwW
+	 38Al8Zhol0sVTTBSkpWYqzthdQdVtOrI62EuF5Dk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730342AbfJHTl6 (ORCPT
+        id S1730439AbfJHTnD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 15:41:58 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39880 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728465AbfJHTl6 (ORCPT
+        Tue, 8 Oct 2019 15:43:03 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38956 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728465AbfJHTnC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 15:41:58 -0400
-Received: by mail-ot1-f66.google.com with SMTP id s22so15080527otr.6
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 12:41:57 -0700 (PDT)
+        Tue, 8 Oct 2019 15:43:02 -0400
+Received: by mail-ot1-f67.google.com with SMTP id s22so15083381otr.6;
+        Tue, 08 Oct 2019 12:43:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=cM/iEPaCvfOjsvb7CWmfva5BP/wvMw5x+2gKptZwcOk=;
-        b=uSqWXO6GLiY71U/ccJ9Cr4TL2f3ge48+x6oNa61dPxTmLbU8XUOhF8y/cFSLqB/faB
-         AGXR7KxtIRbQ6crMPKwcAPm/FeCfDB2Bh8+1Jq6aeRD5SnDwsr8kfAzODnVS/YXHfKnd
-         k2v6aZpbkFui1gh1vAoadJjN2XqQiEZTBOEhJocURIJ0KXxlNaY6zvQ0Lmmg5MY0C6Uc
-         oolhGzDY60sLH1467/n1cqbxFp1QsqE6jFSc375YAgIiapQXHCTypgrPIlZ3dDSkl6qS
-         UmWPdpijHZrl5JCyQ9nWKsJD2XdFcUdQTAE83jOiU0fap3gEnXiTSWBAkWe0bxSR9MUX
-         YZyQ==
-X-Gm-Message-State: APjAAAXUoTweNjyxSl2x2C7Ty4sL04vlYXbN1klzc+ZxijHljm1/ntWd
-        VMIxL4i5D/az45eYfAgx3Q==
-X-Google-Smtp-Source: APXvYqxBTulxVQeCUzNrniHc4WOTx+3wOd+GgT82xa9DGnUA1ysJ04S1+2IdRLJi/4rEbo0Ce1tAvg==
-X-Received: by 2002:a9d:7418:: with SMTP id n24mr2934782otk.19.1570563717135;
-        Tue, 08 Oct 2019 12:41:57 -0700 (PDT)
+        bh=+hHpNdmx6ZCCeIfcgfwoHn6k+baku1ya57GjAAC0jCk=;
+        b=oVMOrScYCgwZwoLm6suVpoQ48XNuV/hsv27J3e6kOJ58qaqJwGePsPohrR7qid6FwF
+         ukTuoyBJuOWT5xW/w0CTncrA6Qu11PcvLRpLm8JGwXInCnlomV5aZ6Smjry8U3uG0SWY
+         jPqNIzeEGbTpkZms4tcQXqZiumjmbpFCRIuHfbuFfnEtExrMmVCvmKAzEQVurMr/Q4ue
+         RGPBLB9mAaoNr4dmeohU/cBk+CbsjobbnnrTxbK6niZN08aMb23xiclojI6s81XaaosQ
+         l4ASVArzGK9ep01LqVdl5xNFKtnj6pExmMH8ECWOB+wINuKH4JzKWgEY893+bQq/0erQ
+         AmdQ==
+X-Gm-Message-State: APjAAAWgVX4u37p02RlsfDm5CEyzffxU9p1ExbUZ0rUBvrH2kb+C/6qw
+        0fkBRxMYqj4nOR0kD1AoozxUCoI=
+X-Google-Smtp-Source: APXvYqx0hRy7RDge7tDO8F/mdn/AaiNxsFZGFE5MtHui5GF4agtZ9gjqzUAbj2L8XkP8g+AKBmIBHg==
+X-Received: by 2002:a9d:64c8:: with SMTP id n8mr5431476otl.342.1570563781495;
+        Tue, 08 Oct 2019 12:43:01 -0700 (PDT)
 Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id z12sm5364645oth.71.2019.10.08.12.41.55
+        by smtp.googlemail.com with ESMTPSA id y16sm5481079otg.7.2019.10.08.12.43.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2019 12:41:56 -0700 (PDT)
+        Tue, 08 Oct 2019 12:43:00 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
-To:     xen-devel@lists.xenproject.org
-Cc:     linux-kernel@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        Julien Grall <julien.grall@arm.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH v2] xen: Stop abusing DT of_dma_configure API
-Date:   Tue,  8 Oct 2019 14:41:55 -0500
-Message-Id: <20191008194155.4810-1-robh@kernel.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: [PATCH v2] of: Make of_dma_get_range() work on bus nodes
+Date:   Tue,  8 Oct 2019 14:43:00 -0500
+Message-Id: <20191008194300.12626-1-robh@kernel.org>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -71,104 +65,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As the removed comments say, these aren't DT based devices.
-of_dma_configure() is going to stop allowing a NULL DT node and calling
-it will no longer work.
+From: Robin Murphy <robin.murphy@arm.com>
 
-The comment is also now out of date as of commit 9ab91e7c5c51 ("arm64:
-default to the direct mapping in get_arch_dma_ops"). Direct mapping
-is now the default rather than dma_dummy_ops.
+Since the "dma-ranges" property is only valid for a node representing a
+bus, of_dma_get_range() currently assumes the node passed in is a leaf
+representing a device, and starts the walk from its parent. In cases
+like PCI host controllers on typical FDT systems, however, where the PCI
+endpoints are probed dynamically the initial leaf node represents the
+'bus' itself, and this logic means we fail to consider any "dma-ranges"
+describing the host bridge itself. Rework the logic such that
+of_dma_get_range() also works correctly starting from a bus node
+containing "dma-ranges".
 
-According to Stefano and Oleksandr, the only other part needed is
-setting the DMA masks and there's no reason to restrict the masks to
-32-bits. So set the masks to 64 bits.
+While this does mean "dma-ranges" could incorrectly be in a device leaf
+node, there isn't really any way in this function to ensure that a leaf
+node is or isn't a bus node.
 
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Julien Grall <julien.grall@arm.com>
-Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Stefano Stabellini <sstabellini@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: xen-devel@lists.xenproject.org
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+[robh: Allow for the bus child node to still be passed in]
 Signed-off-by: Rob Herring <robh@kernel.org>
+
 ---
 v2:
- - Setup dma masks
- - Also fix xen_drm_front.c
+ - Ensure once we find dma-ranges, every parent has it.
+ - Only get the #{size,address}-cells after we find non-empty dma-ranges
+ - Add a check on the 'dma-ranges' length
+---
+ drivers/of/address.c | 44 ++++++++++++++++++--------------------------
+ 1 file changed, 18 insertions(+), 26 deletions(-)
+
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 5ce69d026584..99c1b8058559 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -930,47 +930,39 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
+ 	const __be32 *ranges = NULL;
+ 	int len, naddr, nsize, pna;
+ 	int ret = 0;
++	bool found_dma_ranges = false;
+ 	u64 dmaaddr;
  
-This can now be applied to the Xen tree independent of the coming
-of_dma_configure() changes.
-
-Rob
-
- drivers/gpu/drm/xen/xen_drm_front.c | 12 ++----------
- drivers/xen/gntdev.c                | 13 ++-----------
- 2 files changed, 4 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/gpu/drm/xen/xen_drm_front.c b/drivers/gpu/drm/xen/xen_drm_front.c
-index ba1828acd8c9..4be49c1aef51 100644
---- a/drivers/gpu/drm/xen/xen_drm_front.c
-+++ b/drivers/gpu/drm/xen/xen_drm_front.c
-@@ -718,17 +718,9 @@ static int xen_drv_probe(struct xenbus_device *xb_dev,
- 	struct device *dev = &xb_dev->dev;
- 	int ret;
+-	if (!node)
+-		return -EINVAL;
+-
+-	while (1) {
+-		struct device_node *parent;
+-
+-		naddr = of_n_addr_cells(node);
+-		nsize = of_n_size_cells(node);
+-
+-		parent = __of_get_dma_parent(node);
+-		of_node_put(node);
+-
+-		node = parent;
+-		if (!node)
+-			break;
+-
++	while (node) {
+ 		ranges = of_get_property(node, "dma-ranges", &len);
  
--	/*
--	 * The device is not spawn from a device tree, so arch_setup_dma_ops
--	 * is not called, thus leaving the device with dummy DMA ops.
--	 * This makes the device return error on PRIME buffer import, which
--	 * is not correct: to fix this call of_dma_configure() with a NULL
--	 * node to set default DMA ops.
--	 */
--	dev->coherent_dma_mask = DMA_BIT_MASK(32);
--	ret = of_dma_configure(dev, NULL, true);
-+	ret = dma_coerce_mask_and_coherent(dev, DMA_BIT_MASK(64));
- 	if (ret < 0) {
--		DRM_ERROR("Cannot setup DMA ops, ret %d", ret);
-+		DRM_ERROR("Cannot setup DMA mask, ret %d", ret);
- 		return ret;
+ 		/* Ignore empty ranges, they imply no translation required */
+ 		if (ranges && len > 0)
+ 			break;
+ 
+-		/*
+-		 * At least empty ranges has to be defined for parent node if
+-		 * DMA is supported
+-		 */
+-		if (!ranges)
+-			break;
++		/* Once we find 'dma-ranges', then a missing one is an error */
++		if (found_dma_ranges && !ranges) {
++			ret = -ENODEV;
++			goto out;
++		}
++		found_dma_ranges = true;
++
++		node = of_get_next_dma_parent(node);
  	}
  
-diff --git a/drivers/xen/gntdev.c b/drivers/xen/gntdev.c
-index a446a7221e13..81401f386c9c 100644
---- a/drivers/xen/gntdev.c
-+++ b/drivers/xen/gntdev.c
-@@ -22,6 +22,7 @@
+-	if (!ranges) {
++	if (!node || !ranges) {
+ 		pr_debug("no dma-ranges found for node(%pOF)\n", np);
+ 		ret = -ENODEV;
+ 		goto out;
+ 	}
  
- #define pr_fmt(fmt) "xen:" KBUILD_MODNAME ": " fmt
- 
-+#include <linux/dma-mapping.h>
- #include <linux/module.h>
- #include <linux/kernel.h>
- #include <linux/init.h>
-@@ -34,9 +35,6 @@
- #include <linux/slab.h>
- #include <linux/highmem.h>
- #include <linux/refcount.h>
--#ifdef CONFIG_XEN_GRANT_DMA_ALLOC
--#include <linux/of_device.h>
--#endif
- 
- #include <xen/xen.h>
- #include <xen/grant_table.h>
-@@ -625,14 +623,7 @@ static int gntdev_open(struct inode *inode, struct file *flip)
- 	flip->private_data = priv;
- #ifdef CONFIG_XEN_GRANT_DMA_ALLOC
- 	priv->dma_dev = gntdev_miscdev.this_device;
+-	len /= sizeof(u32);
 -
--	/*
--	 * The device is not spawn from a device tree, so arch_setup_dma_ops
--	 * is not called, thus leaving the device with dummy DMA ops.
--	 * Fix this by calling of_dma_configure() with a NULL node to set
--	 * default DMA ops.
--	 */
--	of_dma_configure(priv->dma_dev, NULL, true);
-+	dma_coerce_mask_and_coherent(priv->dma_dev, DMA_BIT_MASK(64));
- #endif
- 	pr_debug("priv %p\n", priv);
++	naddr = of_bus_n_addr_cells(node);
++	nsize = of_bus_n_size_cells(node);
+ 	pna = of_n_addr_cells(node);
++	if ((len / sizeof(__be32)) % (pna + naddr + nsize)) {
++		ret = -EINVAL;
++		goto out;
++	}
  
+ 	/* dma-ranges format:
+ 	 * DMA addr	: naddr cells
+@@ -978,7 +970,7 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
+ 	 * size		: nsize cells
+ 	 */
+ 	dmaaddr = of_read_number(ranges, naddr);
+-	*paddr = of_translate_dma_address(np, ranges);
++	*paddr = of_translate_dma_address(node, ranges + naddr);
+ 	if (*paddr == OF_BAD_ADDR) {
+ 		pr_err("translation of DMA address(%llx) to CPU address failed node(%pOF)\n",
+ 		       dmaaddr, np);
 -- 
 2.20.1
 
