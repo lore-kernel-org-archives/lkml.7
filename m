@@ -4,130 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 704D6C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06CCAC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53C71206BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9C772070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:40:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730249AbfJHJjA (ORCPT
+        id S1730180AbfJHJkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 05:39:00 -0400
-Received: from spam01.hygon.cn ([110.188.70.11]:40787 "EHLO spam2.hygon.cn"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729624AbfJHJjA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 05:39:00 -0400
-Received: from MK-FE.hygon.cn ([172.23.18.61])
-        by spam2.hygon.cn with ESMTP id x989btVM098946;
-        Tue, 8 Oct 2019 17:37:55 +0800 (GMT-8)
-        (envelope-from fanjinke@hygon.cn)
-Received: from cncheex01.Hygon.cn ([172.23.18.10])
-        by MK-FE.hygon.cn with ESMTP id x989bmqS049399;
-        Tue, 8 Oct 2019 17:37:48 +0800 (GMT-8)
-        (envelope-from fanjinke@hygon.cn)
-Received: from bogon.higon.com (172.23.18.44) by cncheex01.Hygon.cn
- (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Tue, 8 Oct 2019
- 17:37:50 +0800
-From:   Jinke Fan <fanjinke@hygon.cn>
-To:     <a.zummo@towertech.it>, <alexandre.belloni@bootlin.com>,
-        <puwen@hygon.cn>, <thomas.lendacky@amd.com>, <kim.phillips@amd.com>
-CC:     <linux-rtc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jinke Fan <fanjinke@hygon.cn>
-Subject: [PATCH v2] rtc: Fix the AltCentury value on AMD/Hygon platform
-Date:   Tue, 8 Oct 2019 17:37:12 +0800
-Message-ID: <20191008093712.102158-1-fanjinke@hygon.cn>
+        Tue, 8 Oct 2019 05:40:11 -0400
+Received: from xavier.telenet-ops.be ([195.130.132.52]:35738 "EHLO
+        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729624AbfJHJkK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 05:40:10 -0400
+Received: from ramsan ([84.194.98.4])
+        by xavier.telenet-ops.be with bizsmtp
+        id Axg82100105gfCL01xg8E1; Tue, 08 Oct 2019 11:40:08 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iHlyR-0002jM-TZ; Tue, 08 Oct 2019 11:40:07 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iHlyR-00029o-RI; Tue, 08 Oct 2019 11:40:07 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] checkpatch: use patch subject when reading from stdin
+Date:   Tue,  8 Oct 2019 11:40:06 +0200
+Message-Id: <20191008094006.8251-1-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.23.18.44]
-X-ClientProxiedBy: cncheex01.Hygon.cn (172.23.18.10) To cncheex01.Hygon.cn
- (172.23.18.10)
-X-MAIL: spam2.hygon.cn x989btVM098946
-X-DNSRBL: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When using following operations:
-date -s "21190910 19:20:00"
-hwclock -w
-to change date from 2019 to 2119 for test, it will fail on Hygon
-Dhyana and AMD Zen CPUs, while the same operations run ok on Intel i7
-platform.
+When reading a patch file from standard input, checkpatch calls it "Your
+patch", and reports its state as:
 
-MC146818 driver use function mc146818_set_time() to set register
-RTC_FREQ_SELECT(RTC_REG_A)'s bit4-bit6 field which means divider stage
-reset value on Intel platform to 0x7.
+    Your patch has style problems, please review.
 
-While AMD/Hygon RTC_REG_A(0Ah)'s bit4 is defined as DV0 [Reference]:
-DV0 = 0 selects Bank 0, DV0 = 1 selects Bank 1. Bit5-bit6 is defined
-as reserved.
+or:
 
-DV0 is set to 1, it will select Bank 1, which will disable AltCentury
-register(0x32) access. As UEFI pass acpi_gbl_FADT.century 0x32
-(AltCentury), the CMOS write will be failed on code:
-CMOS_WRITE(century, acpi_gbl_FADT.century).
+    Your patch has no obvious style problems and is ready for submission.
 
-Correct RTC_REG_A bank select bit(DV0) to 0 on AMD/Hygon CPUs, it will
-enable AltCentury(0x32) register writing and finally setup century as
-expected.
+Hence when checking multiple patches by piping them to checkpatch, e.g.
+when checking patchwork bundles using:
 
-Test results on AMD/Hygon machine show that it works as expected.
+    formail -s scripts/checkpatch.pl < bundle-foo.mbox
 
-Reference:
-https://www.amd.com/system/files/TechDocs/51192_Bolton_FCH_RRG.pdf
-section: 3.13 Real Time Clock (RTC)
+it is difficult to identify which patches need to be reviewed and
+improved.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Jinke Fan <fanjinke@hygon.cn>
+Fix this by replacing "Your patch" by the patch subject, if present.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/rtc/rtc-mc146818-lib.c | 9 +++++++--
- include/linux/mc146818rtc.h    | 6 ++++++
- 2 files changed, 13 insertions(+), 2 deletions(-)
+ scripts/checkpatch.pl | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/rtc/rtc-mc146818-lib.c b/drivers/rtc/rtc-mc146818-lib.c
-index 2ecd8752b088..a821dbe215d3 100644
---- a/drivers/rtc/rtc-mc146818-lib.c
-+++ b/drivers/rtc/rtc-mc146818-lib.c
-@@ -170,9 +170,14 @@ int mc146818_set_time(struct rtc_time *time)
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 6fcc66afb0880830..6b9feb4d646a116b 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -1047,6 +1047,10 @@ for my $filename (@ARGV) {
  	}
- 
- 	save_control = CMOS_READ(RTC_CONTROL);
--	CMOS_WRITE((save_control|RTC_SET), RTC_CONTROL);
-+	CMOS_WRITE((save_control | RTC_SET), RTC_CONTROL);
- 	save_freq_select = CMOS_READ(RTC_FREQ_SELECT);
--	CMOS_WRITE((save_freq_select|RTC_DIV_RESET2), RTC_FREQ_SELECT);
-+
-+#if defined(CONFIG_CPU_SUP_AMD) || defined(CONFIG_CPU_SUP_HYGON)
-+	CMOS_WRITE((save_freq_select & (~RTC_DV0)), RTC_FREQ_SELECT);
-+#else
-+	CMOS_WRITE((save_freq_select | RTC_DIV_RESET2), RTC_FREQ_SELECT);
-+#endif
- 
- #ifdef CONFIG_MACH_DECSTATION
- 	CMOS_WRITE(real_yrs, RTC_DEC_YEAR);
-diff --git a/include/linux/mc146818rtc.h b/include/linux/mc146818rtc.h
-index 0661af17a758..590ac7849c78 100644
---- a/include/linux/mc146818rtc.h
-+++ b/include/linux/mc146818rtc.h
-@@ -86,6 +86,12 @@ struct cmos_rtc_board_info {
-    /* 2 values for divider stage reset, others for "testing purposes only" */
- #  define RTC_DIV_RESET1	0x60
- #  define RTC_DIV_RESET2	0x70
-+
-+#if defined(CONFIG_CPU_SUP_AMD) || defined(CONFIG_CPU_SUP_HYGON)
-+   /* DV0 = 0 selects Bank 0, DV0 = 1 selects Bank 1 on AMD/Hygon platform */
-+#  define RTC_DV0		0x10
-+#endif
-+
-   /* Periodic intr. / Square wave rate select. 0=none, 1=32.8kHz,... 15=2Hz */
- # define RTC_RATE_SELECT 	0x0F
- 
+ 	while (<$FILE>) {
+ 		chomp;
++		if ($vname eq 'Your patch') {
++			my ($subject) = $_ =~ /^Subject:\s*(.*)/;
++			$vname = '"' . $subject . '"' if $subject;
++		}
+ 		push(@rawlines, $_);
+ 	}
+ 	close($FILE);
 -- 
 2.17.1
 
