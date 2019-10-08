@@ -2,162 +2,141 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A10C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D71FAC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6EEB21721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4D2921721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:12:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731289AbfJHMMP (ORCPT
+        id S1731302AbfJHMMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 08:12:15 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:40818 "EHLO inva021.nxp.com"
+        Tue, 8 Oct 2019 08:12:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33288 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731098AbfJHMLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 08:11:25 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id DC2992002C9;
-        Tue,  8 Oct 2019 14:11:22 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id CEDC620017B;
-        Tue,  8 Oct 2019 14:11:22 +0200 (CEST)
-Received: from fsr-fed2164-101.ea.freescale.net (fsr-fed2164-101.ea.freescale.net [10.171.82.91])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 84D6F205DB;
-        Tue,  8 Oct 2019 14:11:22 +0200 (CEST)
-From:   Madalin Bucur <madalin.bucur@nxp.com>
-To:     davem@davemloft.net, netdev@vger.kernel.org
-Cc:     roy.pledge@nxp.com, laurentiu.tudor@nxp.com,
-        linux-kernel@vger.kernel.org, Madalin Bucur <madalin.bucur@nxp.com>
-Subject: [PATCH 13/20] dpaa_eth: use a page to store the SGT
-Date:   Tue,  8 Oct 2019 15:10:34 +0300
-Message-Id: <1570536641-25104-14-git-send-email-madalin.bucur@nxp.com>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1570536641-25104-1-git-send-email-madalin.bucur@nxp.com>
-References: <1570536641-25104-1-git-send-email-madalin.bucur@nxp.com>
-Reply-to: madalin.bucur@nxp.com
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1731105AbfJHMLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 08:11:24 -0400
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0069244BD1
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Oct 2019 12:11:24 +0000 (UTC)
+Received: by mail-wm1-f72.google.com with SMTP id n3so1296978wmf.3
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 05:11:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XC+l+JGNpdezIfgQgjgQjgcBhVIbmx5T2yywcc/3dIc=;
+        b=qIXljDXW85qD9CPClz+PItVYDpgRkJyoNfZQ/aUKp9gcY51o0D/QDEGou8ZX0dvEj8
+         7ocBZZeuDRGeymvdyqXQeIAyJ89ANJnQNNEFdmIrummoWwfyzbKKHw6gtbQZUgEP8iWI
+         OdkrDu/ARH4viTqc6U+JcPtZrARdznq7iimSxMy8k13qpPPpsvvO0nYike4StKlYOpc7
+         uy5e+m2TzBu0aLDQ6NMua3ejzMhKBgRURDv/dpnRIP4D47gUGrxHBnLdusNkF7jM61bM
+         KFXjwNg/+/SMfA2X3iA1FItaSdSegv8XcK4TGM5DuSK+qzCnJekjMQMkSbDMdelhR7VR
+         qcJw==
+X-Gm-Message-State: APjAAAWbbTXK28+qZ4vh4VxTiWRE7rs/KOWue2ejTZT3lUcwH8tssKg+
+        wduGoUTPQI4gn5VvKmaSnGJbD8LSx+KYKEvCTjYL9CUzfUZSmfFBYtn59tIQkBhMXJuDMt+2Asm
+        GTEChjQi4vM5g38V6F1TZ4hiq
+X-Received: by 2002:a05:6000:45:: with SMTP id k5mr24156923wrx.259.1570536682666;
+        Tue, 08 Oct 2019 05:11:22 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxVOLNmOG55qRmpeZcOk9E693639E92Lk3u+fEJ6vxxVUor4lqnEMXs6hNuOIi96Wl4hyTPMw==
+X-Received: by 2002:a05:6000:45:: with SMTP id k5mr24156902wrx.259.1570536682402;
+        Tue, 08 Oct 2019 05:11:22 -0700 (PDT)
+Received: from [192.168.10.150] ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id t83sm5002990wmt.18.2019.10.08.05.11.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Oct 2019 05:11:21 -0700 (PDT)
+Subject: Re: [PATCH v2] KVM: Don't shrink/grow vCPU halt_poll_ns if host side
+ polling is disabled
+To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Marcelo Tosatti <mtosatti@redhat.com>
+References: <1569719216-32080-1-git-send-email-wanpengli@tencent.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <a0f940ba-7bc9-8695-c233-0d82858fb91d@redhat.com>
+Date:   Tue, 8 Oct 2019 14:11:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <1569719216-32080-1-git-send-email-wanpengli@tencent.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use a page to store the scatter gather table on the transmit path.
+On 29/09/19 03:06, Wanpeng Li wrote:
+> From: Wanpeng Li <wanpengli@tencent.com>
+> 
+> Don't waste cycles to shrink/grow vCPU halt_poll_ns if host 
+> side polling is disabled.
+> 
+> Acked-by: Marcelo Tosatti <mtosatti@redhat.com>
+> Cc: Marcelo Tosatti <mtosatti@redhat.com>
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> ---
+> v1 -> v2: 
+>  * fix coding style
+> 
+>  virt/kvm/kvm_main.c | 29 ++++++++++++++++-------------
+>  1 file changed, 16 insertions(+), 13 deletions(-)
+> 
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index e6de315..9d5eed9 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -2359,20 +2359,23 @@ void kvm_vcpu_block(struct kvm_vcpu *vcpu)
+>  	kvm_arch_vcpu_unblocking(vcpu);
+>  	block_ns = ktime_to_ns(cur) - ktime_to_ns(start);
+>  
+> -	if (!vcpu_valid_wakeup(vcpu))
+> -		shrink_halt_poll_ns(vcpu);
+> -	else if (halt_poll_ns) {
+> -		if (block_ns <= vcpu->halt_poll_ns)
+> -			;
+> -		/* we had a long block, shrink polling */
+> -		else if (vcpu->halt_poll_ns && block_ns > halt_poll_ns)
+> +	if (!kvm_arch_no_poll(vcpu)) {
+> +		if (!vcpu_valid_wakeup(vcpu)) {
+>  			shrink_halt_poll_ns(vcpu);
+> -		/* we had a short halt and our poll time is too small */
+> -		else if (vcpu->halt_poll_ns < halt_poll_ns &&
+> -			block_ns < halt_poll_ns)
+> -			grow_halt_poll_ns(vcpu);
+> -	} else
+> -		vcpu->halt_poll_ns = 0;
+> +		} else if (halt_poll_ns) {
+> +			if (block_ns <= vcpu->halt_poll_ns)
+> +				;
+> +			/* we had a long block, shrink polling */
+> +			else if (vcpu->halt_poll_ns && block_ns > halt_poll_ns)
+> +				shrink_halt_poll_ns(vcpu);
+> +			/* we had a short halt and our poll time is too small */
+> +			else if (vcpu->halt_poll_ns < halt_poll_ns &&
+> +				block_ns < halt_poll_ns)
+> +				grow_halt_poll_ns(vcpu);
+> +		} else {
+> +			vcpu->halt_poll_ns = 0;
+> +		}
+> +	}
+>  
+>  	trace_kvm_vcpu_wakeup(block_ns, waited, vcpu_valid_wakeup(vcpu));
+>  	kvm_arch_vcpu_block_finish(vcpu);
+> 
 
-Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
----
- drivers/net/ethernet/freescale/dpaa/dpaa_eth.c | 43 +++++++++++++-------------
- 1 file changed, 21 insertions(+), 22 deletions(-)
+Queued, thanks.
 
-diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-index 20f0062afdec..e2385c2fa81a 100644
---- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-+++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-@@ -1592,9 +1592,9 @@ static struct sk_buff *dpaa_cleanup_tx_fd(const struct dpaa_priv *priv,
- 	int i;
- 
- 	if (unlikely(qm_fd_get_format(fd) == qm_fd_sg)) {
--		dma_unmap_single(priv->tx_dma_dev, addr,
--				 qm_fd_get_offset(fd) + DPAA_SGT_SIZE,
--				 dma_dir);
-+		dma_unmap_page(priv->tx_dma_dev, addr,
-+			       qm_fd_get_offset(fd) + DPAA_SGT_SIZE,
-+			       dma_dir);
- 
- 		/* The sgt buffer has been allocated with netdev_alloc_frag(),
- 		 * it's from lowmem.
-@@ -1636,8 +1636,8 @@ static struct sk_buff *dpaa_cleanup_tx_fd(const struct dpaa_priv *priv,
- 	}
- 
- 	if (qm_fd_get_format(fd) == qm_fd_sg)
--		/* Free the page frag that we allocated on Tx */
--		skb_free_frag(vaddr);
-+		/* Free the page that we allocated on Tx for the SGT */
-+		free_pages((unsigned long)vaddr, 0);
- 
- 	return skb;
- }
-@@ -1885,21 +1885,20 @@ static int skb_to_sg_fd(struct dpaa_priv *priv,
- 	struct net_device *net_dev = priv->net_dev;
- 	struct qm_sg_entry *sgt;
- 	struct sk_buff **skbh;
--	int i, j, err, sz;
--	void *buffer_start;
-+	void *buff_start;
- 	skb_frag_t *frag;
- 	dma_addr_t addr;
- 	size_t frag_len;
--	void *sgt_buf;
--
--	/* get a page frag to store the SGTable */
--	sz = SKB_DATA_ALIGN(priv->tx_headroom + DPAA_SGT_SIZE);
--	sgt_buf = netdev_alloc_frag(sz);
--	if (unlikely(!sgt_buf)) {
--		netdev_err(net_dev, "netdev_alloc_frag() failed for size %d\n",
--			   sz);
-+	struct page *p;
-+	int i, j, err;
-+
-+	/* get a page to store the SGTable */
-+	p = dev_alloc_pages(0);
-+	if (unlikely(!p)) {
-+		netdev_err(net_dev, "dev_alloc_pages() failed\n");
- 		return -ENOMEM;
- 	}
-+	buff_start = page_address(p);
- 
- 	/* Enable L3/L4 hardware checksum computation.
- 	 *
-@@ -1907,7 +1906,7 @@ static int skb_to_sg_fd(struct dpaa_priv *priv,
- 	 * need to write into the skb.
- 	 */
- 	err = dpaa_enable_tx_csum(priv, skb, fd,
--				  sgt_buf + DPAA_TX_PRIV_DATA_SIZE);
-+				  buff_start + DPAA_TX_PRIV_DATA_SIZE);
- 	if (unlikely(err < 0)) {
- 		if (net_ratelimit())
- 			netif_err(priv, tx_err, net_dev, "HW csum error: %d\n",
-@@ -1916,7 +1915,7 @@ static int skb_to_sg_fd(struct dpaa_priv *priv,
- 	}
- 
- 	/* SGT[0] is used by the linear part */
--	sgt = (struct qm_sg_entry *)(sgt_buf + priv->tx_headroom);
-+	sgt = (struct qm_sg_entry *)(buff_start + priv->tx_headroom);
- 	frag_len = skb_headlen(skb);
- 	qm_sg_entry_set_len(&sgt[0], frag_len);
- 	sgt[0].bpid = FSL_DPAA_BPID_INV;
-@@ -1954,15 +1953,15 @@ static int skb_to_sg_fd(struct dpaa_priv *priv,
- 	/* Set the final bit in the last used entry of the SGT */
- 	qm_sg_entry_set_f(&sgt[nr_frags], frag_len);
- 
-+	/* set fd offset to priv->tx_headroom */
- 	qm_fd_set_sg(fd, priv->tx_headroom, skb->len);
- 
- 	/* DMA map the SGT page */
--	buffer_start = (void *)sgt - priv->tx_headroom;
--	skbh = (struct sk_buff **)buffer_start;
-+	skbh = (struct sk_buff **)buff_start;
- 	*skbh = skb;
- 
--	addr = dma_map_single(priv->tx_dma_dev, buffer_start,
--			      priv->tx_headroom + DPAA_SGT_SIZE, dma_dir);
-+	addr = dma_map_page(priv->tx_dma_dev, p, 0,
-+			    priv->tx_headroom + DPAA_SGT_SIZE, dma_dir);
- 	if (unlikely(dma_mapping_error(priv->tx_dma_dev, addr))) {
- 		netdev_err(priv->net_dev, "DMA mapping failed");
- 		err = -EINVAL;
-@@ -1982,7 +1981,7 @@ static int skb_to_sg_fd(struct dpaa_priv *priv,
- 			       qm_sg_entry_get_len(&sgt[j]), dma_dir);
- sg0_map_failed:
- csum_failed:
--	skb_free_frag(sgt_buf);
-+	free_pages((unsigned long)buff_start, 0);
- 
- 	return err;
- }
--- 
-2.1.0
-
+Paolo
