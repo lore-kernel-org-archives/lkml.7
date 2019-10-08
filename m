@@ -2,192 +2,140 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD60BC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4112C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94832206C2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:46:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570520774;
-	bh=aO7mbhGTjhKlXSC5HmKCY5zbdscGE+lQO6YFKWrnMG4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=JB7fPkhGp9mLxszmQuSRxvDXTUE2OSTlW0FRne8BrcQnF8NgbR55U14YOVbt5x5aZ
-	 2+s58tCKXvmbui+CYuNC2XxS9gBHh7SGtbN9lxPjrqQspFWx5JdcRL1Vo2HnxXFeBs
-	 o9q+VAITQCx9WhqCrFJRaQtoX/7ZhVGVkXobboDs=
+	by mail.kernel.org (Postfix) with ESMTP id 9294B20867
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:46:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730425AbfJHHqN convert rfc822-to-8bit (ORCPT
+        id S1730435AbfJHHqT convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 03:46:13 -0400
-Received: from inca-roads.misterjones.org ([213.251.177.50]:44779 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730370AbfJHHqN (ORCPT
+        Tue, 8 Oct 2019 03:46:19 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:47227 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730209AbfJHHqT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 03:46:13 -0400
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
-        (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iHkC5-0001oY-Va; Tue, 08 Oct 2019 09:46:06 +0200
-Date:   Tue, 8 Oct 2019 08:46:04 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     "Justin He (Arm Technology China)" <Justin.He@arm.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <Catalin.Marinas@arm.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        James Morse <James.Morse@arm.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Punit Agrawal <punitagrawal@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "hejianet@gmail.com" <hejianet@gmail.com>,
-        "Kaly Xin (Arm Technology China)" <Kaly.Xin@arm.com>,
-        nd <nd@arm.com>
-Subject: Re: [PATCH v10 2/3] arm64: mm: implement arch_faults_on_old_pte()
- on arm64
-Message-ID: <20191008084604.7db2a123@why>
-In-Reply-To: <DB7PR08MB308265EB3ED2465D2471B492F79A0@DB7PR08MB3082.eurprd08.prod.outlook.com>
-References: <20190930015740.84362-1-justin.he@arm.com>
-        <20190930015740.84362-3-justin.he@arm.com>
-        <20191001125031.7ddm5dlwss6m3dth@willie-the-truck>
-        <20191001143219.018281be@why>
-        <DB7PR08MB308265EB3ED2465D2471B492F79A0@DB7PR08MB3082.eurprd08.prod.outlook.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        Tue, 8 Oct 2019 03:46:19 -0400
+Received: from mail-pg1-f200.google.com ([209.85.215.200])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1iHkCH-0003Xt-7r
+        for linux-kernel@vger.kernel.org; Tue, 08 Oct 2019 07:46:17 +0000
+Received: by mail-pg1-f200.google.com with SMTP id h36so12022470pgb.3
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 00:46:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=PjByk3+qcqmoyRROOKSgncBpIurhIbIveg7FM/NtDSE=;
+        b=E8uFk5B7fQkoPRinbautV0P1X60KC+2YjNkSMEpHCwiUfv2WkbKdH+9jUqmSYe8+av
+         Q0BHUPIBuuFlvjCL6p8qJl9TQsiQAnQdUrmqMgijrTbQNk0/KuNVkCloFxzV3Zlsn/KA
+         imYVbbivji14hMnsFYm5FUxWTVO7JxFspSE7O1IlslAGO0BLg39S4GVoDovozL3jpuNJ
+         Us3reC/N1zRMdrjAUmYaW5EYSnorWx+fmW48oeVFXxFqbU5AG36EJ1GCQ5V9UPswkqE1
+         qUno/8W7MFoPgmaEeR0ZjcDpXrv4Lc3Hbtbo/ay1MGYeDxzD+N32L6rr8iA5NO7BPaFm
+         EmLQ==
+X-Gm-Message-State: APjAAAWlUKzPnfBB/vdxi1GiHVU/s3QyUs4X+k31t/KTC/yI81SGZIHp
+        WrZv+eO82dXxYI8UxQaGfSZp/e/JhuMNNcoXr6hZmls0hs7fSRv8uxLvBXD1NjKoFga0mVvBpFO
+        DjW3gZ8Brq55EvDXPIXx7nkcfAgGxe52jUK0XdMDrcg==
+X-Received: by 2002:a17:902:6bc5:: with SMTP id m5mr34613202plt.282.1570520775639;
+        Tue, 08 Oct 2019 00:46:15 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxq2z9TPA04cnVKcnWKfwfTy6uh7Pdgkh/eovRcCG7IjF5fS2tihcKdlwsRnNokM3dRcqpmqQ==
+X-Received: by 2002:a17:902:6bc5:: with SMTP id m5mr34613177plt.282.1570520775239;
+        Tue, 08 Oct 2019 00:46:15 -0700 (PDT)
+Received: from 2001-b011-380f-3c42-1138-6cd0-3dc6-cfa2.dynamic-ip6.hinet.net (2001-b011-380f-3c42-1138-6cd0-3dc6-cfa2.dynamic-ip6.hinet.net. [2001:b011:380f:3c42:1138:6cd0:3dc6:cfa2])
+        by smtp.gmail.com with ESMTPSA id f3sm15041747pgj.62.2019.10.08.00.46.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 08 Oct 2019 00:46:14 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3594.4.19\))
+Subject: Re: e1000e regression - 5.4rc1
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <76fc2204-0786-03b3-773d-110912d48168@mni.thm.de>
+Date:   Tue, 8 Oct 2019 15:46:10 +0800
+Cc:     jeffrey.t.kirsher@intel.com, intel-wired-lan@lists.osuosl.org,
+        linux-kernel@vger.kernel.org, tobias.klausmann@freenet.de
 Content-Transfer-Encoding: 8BIT
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: Justin.He@arm.com, will@kernel.org, Catalin.Marinas@arm.com, Mark.Rutland@arm.com, James.Morse@arm.com, willy@infradead.org, kirill.shutemov@linux.intel.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, punitagrawal@gmail.com, tglx@linutronix.de, akpm@linux-foundation.org, hejianet@gmail.com, Kaly.Xin@arm.com, nd@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Message-Id: <2994F2A2-D844-40B0-9971-C002E5EC49CD@canonical.com>
+References: <171f0c61-73a2-81c2-5c8a-7c140f548803@mni.thm.de>
+ <56242322-D549-4E23-97AB-153CC392B107@canonical.com>
+ <76fc2204-0786-03b3-773d-110912d48168@mni.thm.de>
+To:     Tobias Klausmann <tobias.johannes.klausmann@mni.thm.de>
+X-Mailer: Apple Mail (2.3594.4.19)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 8 Oct 2019 01:55:04 +0000
-"Justin He (Arm Technology China)" <Justin.He@arm.com> wrote:
+Hi Tobias,
 
-> Hi Will and Marc
+> On Oct 5, 2019, at 03:52, Tobias Klausmann <tobias.johannes.klausmann@mni.thm.de> wrote:
 > 
-> > -----Original Message-----
-> > From: Marc Zyngier <maz@kernel.org>
-> > Sent: 2019年10月1日 21:32
-> > To: Will Deacon <will@kernel.org>
-> > Cc: Justin He (Arm Technology China) <Justin.He@arm.com>; Catalin
-> > Marinas <Catalin.Marinas@arm.com>; Mark Rutland
-> > <Mark.Rutland@arm.com>; James Morse <James.Morse@arm.com>;
-> > Matthew Wilcox <willy@infradead.org>; Kirill A. Shutemov
-> > <kirill.shutemov@linux.intel.com>; linux-arm-kernel@lists.infradead.org;
-> > linux-kernel@vger.kernel.org; linux-mm@kvack.org; Punit Agrawal
-> > <punitagrawal@gmail.com>; Thomas Gleixner <tglx@linutronix.de>;
-> > Andrew Morton <akpm@linux-foundation.org>; hejianet@gmail.com; Kaly
-> > Xin (Arm Technology China) <Kaly.Xin@arm.com>
-> > Subject: Re: [PATCH v10 2/3] arm64: mm: implement
-> > arch_faults_on_old_pte() on arm64
-> > 
-> > On Tue, 1 Oct 2019 13:50:32 +0100
-> > Will Deacon <will@kernel.org> wrote:
-> >   
-> > > On Mon, Sep 30, 2019 at 09:57:39AM +0800, Jia He wrote:  
-> > > > On arm64 without hardware Access Flag, copying fromuser will fail  
-> > because  
-> > > > the pte is old and cannot be marked young. So we always end up with  
-> > zeroed  
-> > > > page after fork() + CoW for pfn mappings. we don't always have a
-> > > > hardware-managed access flag on arm64.
-> > > >
-> > > > Hence implement arch_faults_on_old_pte on arm64 to indicate that it  
-> > might  
-> > > > cause page fault when accessing old pte.
-> > > >
-> > > > Signed-off-by: Jia He <justin.he@arm.com>
-> > > > Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-> > > > ---
-> > > >  arch/arm64/include/asm/pgtable.h | 14 ++++++++++++++
-> > > >  1 file changed, 14 insertions(+)
-> > > >
-> > > > diff --git a/arch/arm64/include/asm/pgtable.h  
-> > b/arch/arm64/include/asm/pgtable.h  
-> > > > index 7576df00eb50..e96fb82f62de 100644
-> > > > --- a/arch/arm64/include/asm/pgtable.h
-> > > > +++ b/arch/arm64/include/asm/pgtable.h
-> > > > @@ -885,6 +885,20 @@ static inline void update_mmu_cache(struct  
-> > vm_area_struct *vma,  
-> > > >  #define phys_to_ttbr(addr)	(addr)
-> > > >  #endif
-> > > >
-> > > > +/*
-> > > > + * On arm64 without hardware Access Flag, copying from user will fail  
-> > because  
-> > > > + * the pte is old and cannot be marked young. So we always end up  
-> > with zeroed  
-> > > > + * page after fork() + CoW for pfn mappings. We don't always have a
-> > > > + * hardware-managed access flag on arm64.
-> > > > + */
-> > > > +static inline bool arch_faults_on_old_pte(void)
-> > > > +{
-> > > > +	WARN_ON(preemptible());
-> > > > +
-> > > > +	return !cpu_has_hw_af();
-> > > > +}  
-> > >
-> > > Does this work correctly in a KVM guest? (i.e. is the MMFR sanitised in  
-> > that  
-> > > case, despite not being the case on the host?)  
-> > 
-> > Yup, all the 64bit MMFRs are trapped (HCR_EL2.TID3 is set for an
-> > AArch64 guest), and we return the sanitised version.  
-> Thanks for Marc's explanation. I verified the patch series on a kvm guest (-M virt)
-> with simulated nvdimm device created by qemu. The host is ThunderX2 aarch64.
+> Hello,
 > 
-> > 
-> > But that's an interesting remark: we're now trading an extra fault on
-> > CPUs that do not support HWAFDBS for a guaranteed trap for each and
-> > every guest under the sun that will hit the COW path...
-> > 
-> > My gut feeling is that this is going to be pretty visible. Jia, do you
-> > have any numbers for this kind of behaviour?  
-> It is not a common COW path, but a COW for PFN mapping pages only.
-> I add a g_counter before pte_mkyoung in force_mkyoung{} when testing 
-> vmmalloc_fork at [1].
-> 
-> In this test case, it will start M fork processes and N pthreads. The default is
-> M=2,N=4. the g_counter is about 241, that is it will hit my patch series for 241
-> times.
-> If I set M=20 and N=40 for TEST3, the g_counter is about 1492.
-
-I must confess I'm not so much interested in random microbenchmarks,
-but more in actual applications that could potentially be impacted by
-this. The numbers you're quoting here seem pretty small, which would
-indicate a low overhead, but that's not indicative of what would happen
-in real life.
-
-I guess that we can leave it at that for now, and turn it into a CPU
-feature (with the associated static key) if this shows anywhere.
-
-Thanks,
-
-	M.
-
-
->   
-> [1] https://github.com/pmem/pmdk/tree/master/src/test/vmmalloc_fork
+> On 04.10.19 19:36, Kai-Heng Feng wrote:
+>> Hi Tobias
+>> 
+>>> On Oct 4, 2019, at 18:34, Tobias Klausmann <tobias.johannes.klausmann@mni.thm.de> wrote:
+>>> 
+>>> Hello all,
+>>> 
+>>> While testing the 5.4rc1 release, i noticed my Ethernet never coming fully up, seemingly having a timeout problem. While bisecting this i landed at the commit dee23594d587386e9fda76732aa5f5a487709510 ("e1000e: Make speed detection on hotplugging cable more reliable") as the first bad commit. And indeed just reverting the commit on top of 5.4rc1 resolves the problem. Let me know if you have further questions, or patches to test!
+>> Is runtime PM enabled (i.e. "power/control" = auto)?
 > 
 > 
-> --
-> Cheers,
-> Justin (Jia He)
+> Yes it is set to auto.
+
+Is something like TLP or `powertop --auto-tune` is in use?
+
+Do you still see the issue when "power/control" keeps at "on"?
+
+Kai-Heng
+
 > 
--- 
-Jazz is not dead. It just smells funny...
+> 
+>> Also please attach full dmesg, thanks!
+> 
+> Attached,
+> 
+> Tobias
+> 
+>> 
+>> Kai-Heng
+>> 
+>>> Greetings,
+>>> 
+>>> Tobias
+>>> 
+>>> 
+>>> lspci:
+>>> 
+>>> 00:19.0 Ethernet controller: Intel Corporation 82579V Gigabit Network Connection (rev 06)
+>>>         DeviceName:  Onboard LAN
+>>>         Subsystem: ASUSTeK Computer Inc. P8P67 Deluxe Motherboard
+>>>         Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
+>>>         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+>>>         Latency: 0
+>>>         Interrupt: pin A routed to IRQ 56
+>>>         Region 0: Memory at fbf00000 (32-bit, non-prefetchable) [size=128K]
+>>>         Region 1: Memory at fbf28000 (32-bit, non-prefetchable) [size=4K]
+>>>         Region 2: I/O ports at f040 [size=32]
+>>>         Capabilities: [c8] Power Management version 2
+>>>                 Flags: PMEClk- DSI+ D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
+>>>                 Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=1 PME-
+>>>         Capabilities: [d0] MSI: Enable+ Count=1/1 Maskable- 64bit+
+>>>                 Address: 00000000fee00698  Data: 0000
+>>>         Capabilities: [e0] PCI Advanced Features
+>>>                 AFCap: TP+ FLR+
+>>>                 AFCtrl: FLR-
+>>>                 AFStatus: TP-
+>>>         Kernel driver in use: e1000e
+>>>         Kernel modules: e1000e
+>>> 
+> <dmesg.txt>
+
