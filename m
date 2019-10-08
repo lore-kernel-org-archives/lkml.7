@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 814B0C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C61DECE596
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6347820673
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BB6520673
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:33:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730764AbfJHLde (ORCPT
+        id S1730776AbfJHLde (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 8 Oct 2019 07:33:34 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47830 "EHLO
+Received: from Galois.linutronix.de ([193.142.43.55]:47829 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730375AbfJHLdc (ORCPT
+        with ESMTP id S1730640AbfJHLdc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Oct 2019 07:33:32 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iHnk3-0008DS-El; Tue, 08 Oct 2019 13:33:23 +0200
+        id 1iHnk3-0008DV-JQ; Tue, 08 Oct 2019 13:33:23 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 211C31C072D;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4793E1C0895;
         Tue,  8 Oct 2019 13:33:23 +0200 (CEST)
 Date:   Tue, 08 Oct 2019 11:33:23 -0000
-From:   "tip-bot2 for Sami Tolvanen" <tip-bot2@linutronix.de>
+From:   "tip-bot2 for Janakarajan Natarajan" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/cpu/vmware: Use the full form of INL in VMWARE_PORT
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
+Subject: [tip: x86/urgent] x86/asm: Fix MWAITX C-state hint value
+Cc:     Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
         Borislav Petkov <bp@suse.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        clang-built-linux@googlegroups.com,
+        Frederic Weisbecker <frederic@kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
         "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        virtualization@lists.linux-foundation.org,
-        "VMware, Inc." <pv-drivers@vmware.com>, "x86-ml" <x86@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191007192129.104336-1-samitolvanen@google.com>
-References: <20191007192129.104336-1-samitolvanen@google.com>
+        "x86@kernel.org" <x86@kernel.org>,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        <stable@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
+In-Reply-To: <20191007190011.4859-1-Janakarajan.Natarajan@amd.com>
+References: <20191007190011.4859-1-Janakarajan.Natarajan@amd.com>
 MIME-Version: 1.0
-Message-ID: <157053440307.9978.15776882111397155119.tip-bot2@tip-bot2>
+Message-ID: <157053440322.9978.15261700276165265873.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -65,57 +63,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/urgent branch of tip:
 
-Commit-ID:     fbcfb8f0270bf24fe348393540b17a7f2ba577d7
-Gitweb:        https://git.kernel.org/tip/fbcfb8f0270bf24fe348393540b17a7f2ba577d7
-Author:        Sami Tolvanen <samitolvanen@google.com>
-AuthorDate:    Mon, 07 Oct 2019 12:21:29 -07:00
+Commit-ID:     454de1e7d970d6bc567686052329e4814842867c
+Gitweb:        https://git.kernel.org/tip/454de1e7d970d6bc567686052329e4814842867c
+Author:        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
+AuthorDate:    Mon, 07 Oct 2019 19:00:22 
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 08 Oct 2019 13:26:42 +02:00
+CommitterDate: Tue, 08 Oct 2019 13:25:24 +02:00
 
-x86/cpu/vmware: Use the full form of INL in VMWARE_PORT
+x86/asm: Fix MWAITX C-state hint value
 
-LLVM's assembler doesn't accept the short form INL instruction:
+As per "AMD64 Architecture Programmer's Manual Volume 3: General-Purpose
+and System Instructions", MWAITX EAX[7:4]+1 specifies the optional hint
+of the optimized C-state. For C0 state, EAX[7:4] should be set to 0xf.
 
-  inl (%%dx)
+Currently, a value of 0xf is set for EAX[3:0] instead of EAX[7:4]. Fix
+this by changing MWAITX_DISABLE_CSTATES from 0xf to 0xf0.
 
-but instead insists on the output register to be explicitly specified:
+This hasn't had any implications so far because setting reserved bits in
+EAX is simply ignored by the CPU.
 
-  <inline asm>:1:7: error: invalid operand for instruction
-          inl (%dx)
-             ^
-  LLVM ERROR: Error parsing inline asm
+ [ bp: Fixup comment in delay_mwaitx() and massage. ]
 
-Use the full form of the instruction to fix the build.
-
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Signed-off-by: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
 Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Acked-by: Thomas Hellstrom <thellstrom@vmware.com>
-Cc: clang-built-linux@googlegroups.com
+Cc: Frederic Weisbecker <frederic@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: "H. Peter Anvin" <hpa@zytor.com>
 Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: virtualization@lists.linux-foundation.org
-Cc: "VMware, Inc." <pv-drivers@vmware.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://github.com/ClangBuiltLinux/linux/issues/734
-Link: https://lkml.kernel.org/r/20191007192129.104336-1-samitolvanen@google.com
+Cc: "x86@kernel.org" <x86@kernel.org>
+Cc: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lkml.kernel.org/r/20191007190011.4859-1-Janakarajan.Natarajan@amd.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/kernel/cpu/vmware.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/asm/mwait.h | 2 +-
+ arch/x86/lib/delay.c         | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/vmware.c b/arch/x86/kernel/cpu/vmware.c
-index 9735139..46d7326 100644
---- a/arch/x86/kernel/cpu/vmware.c
-+++ b/arch/x86/kernel/cpu/vmware.c
-@@ -49,7 +49,7 @@
- #define VMWARE_CMD_VCPU_RESERVED 31
+diff --git a/arch/x86/include/asm/mwait.h b/arch/x86/include/asm/mwait.h
+index e28f8b7..9d5252c 100644
+--- a/arch/x86/include/asm/mwait.h
++++ b/arch/x86/include/asm/mwait.h
+@@ -21,7 +21,7 @@
+ #define MWAIT_ECX_INTERRUPT_BREAK	0x1
+ #define MWAITX_ECX_TIMER_ENABLE		BIT(1)
+ #define MWAITX_MAX_LOOPS		((u32)-1)
+-#define MWAITX_DISABLE_CSTATES		0xf
++#define MWAITX_DISABLE_CSTATES		0xf0
  
- #define VMWARE_PORT(cmd, eax, ebx, ecx, edx)				\
--	__asm__("inl (%%dx)" :						\
-+	__asm__("inl (%%dx), %%eax" :					\
- 		"=a"(eax), "=c"(ecx), "=d"(edx), "=b"(ebx) :		\
- 		"a"(VMWARE_HYPERVISOR_MAGIC),				\
- 		"c"(VMWARE_CMD_##cmd),					\
+ static inline void __monitor(const void *eax, unsigned long ecx,
+ 			     unsigned long edx)
+diff --git a/arch/x86/lib/delay.c b/arch/x86/lib/delay.c
+index b7375dc..c126571 100644
+--- a/arch/x86/lib/delay.c
++++ b/arch/x86/lib/delay.c
+@@ -113,8 +113,8 @@ static void delay_mwaitx(unsigned long __loops)
+ 		__monitorx(raw_cpu_ptr(&cpu_tss_rw), 0, 0);
+ 
+ 		/*
+-		 * AMD, like Intel, supports the EAX hint and EAX=0xf
+-		 * means, do not enter any deep C-state and we use it
++		 * AMD, like Intel's MWAIT version, supports the EAX hint and
++		 * EAX=0xf0 means, do not enter any deep C-state and we use it
+ 		 * here in delay() to minimize wakeup latency.
+ 		 */
+ 		__mwaitx(MWAITX_DISABLE_CSTATES, delay, MWAITX_ECX_TIMER_ENABLE);
