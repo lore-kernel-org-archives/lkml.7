@@ -2,44 +2,40 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFFAC47404
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 03:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 418BDECE58C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 03:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B0A520835
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 03:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FBDF218AC
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 03:09:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729863AbfJHDGS convert rfc822-to-8bit (ORCPT
+        id S1729879AbfJHDJp convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 23:06:18 -0400
-Received: from hermes.aosc.io ([199.195.250.187]:53573 "EHLO hermes.aosc.io"
+        Mon, 7 Oct 2019 23:09:45 -0400
+Received: from hermes.aosc.io ([199.195.250.187]:53710 "EHLO hermes.aosc.io"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729725AbfJHDGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 23:06:18 -0400
+        id S1729536AbfJHDJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 23:09:45 -0400
 Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
-        by hermes.aosc.io (Postfix) with ESMTPSA id 1316F82924;
-        Tue,  8 Oct 2019 03:06:14 +0000 (UTC)
-Date:   Tue, 08 Oct 2019 11:06:07 +0800
-In-Reply-To: <20191007115148.vlu2ptmrfyng4p3r@gilmour>
-References: <20191006160303.24413-1-icenowy@aosc.io> <20191006160303.24413-2-icenowy@aosc.io> <20191007115148.vlu2ptmrfyng4p3r@gilmour>
+        by hermes.aosc.io (Postfix) with ESMTPSA id 0EA728355D;
+        Tue,  8 Oct 2019 03:09:41 +0000 (UTC)
+Date:   Tue, 08 Oct 2019 11:09:34 +0800
+In-Reply-To: <CAGb2v65MPG=zbKtQk1oXq+TYP=0fPBXEj0fcGA=6mCD2+Smmpg@mail.gmail.com>
+References: <20191002112545.58481-1-icenowy@aosc.io> <20191002112545.58481-3-icenowy@aosc.io> <CAGb2v65MPG=zbKtQk1oXq+TYP=0fPBXEj0fcGA=6mCD2+Smmpg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain;
  charset=utf-8
 Content-Transfer-Encoding: 8BIT
-Subject: Re: [PATCH v2 1/3] drm/sun4i: dsi: Fix video start delay computation
-To:     linux-arm-kernel@lists.infradead.org,
-        Maxime Ripard <mripard@kernel.org>
-CC:     David Airlie <airlied@linux.ie>, linux-sunxi@googlegroups.com,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Merlijn Wajer <merlijn@wizzup.org>
+Subject: Re: [linux-sunxi] [PATCH 2/2] power: supply: axp20x_usb_power: add applied max Vbus support for AXP813
+To:     Chen-Yu Tsai <wens@csie.org>, Sebastian Reichel <sre@kernel.org>
+CC:     "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
 From:   Icenowy Zheng <icenowy@aosc.io>
-Message-ID: <8B137D6E-74C5-4A9B-A8FE-84F3D38A1AD0@aosc.io>
+Message-ID: <A6B1EF32-5CDE-4AAE-A7DA-F9A636BE7BF3@aosc.io>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -47,154 +43,174 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-于 2019年10月7日 GMT+08:00 下午7:51:48, Maxime Ripard <mripard@kernel.org> 写到:
->On Mon, Oct 07, 2019 at 12:03:00AM +0800, Icenowy Zheng wrote:
->> From: Jagan Teki <jagan@amarulasolutions.com>
->>
->> The LCD timing definitions between Linux DRM vs Allwinner are
->different,
->> below diagram shows this clear differences.
->>
->>            Active                 Front           Sync           Back
->>            Region                 Porch                         
->Porch
->>
-><-----------------------><----------------><--------------><-------------->
->>   //////////////////////|
->>  ////////////////////// |
->> //////////////////////  |..................               
->................
->>                                            ________________
->> <----- [hv]display ----->
->> <------------- [hv]sync_start ------------>
->> <--------------------- [hv]sync_end ---------------------->
->> <-------------------------------- [hv]total
->------------------------------>
->>
->> <----- lcd_[xy] -------->		  <- lcd_[hv]spw ->
->> 					  <---------- lcd_[hv]bp --------->
->> <-------------------------------- lcd_[hv]t
->------------------------------>
->>
->> The DSI driver misinterpreted the vbp term from the BSP code to refer
->> only to the backporch, when in fact it was backporch + sync. Thus the
->> driver incorrectly used the vertical front porch plus sync in its
->> calculation of the DRQ set bit value, when it should not have
->included
->> the sync timing.
->>
->> Including additional sync timings leads to flip_done timed out as:
->>
->> WARNING: CPU: 0 PID: 31 at drivers/gpu/drm/drm_atomic_helper.c:1429
->drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0
->> [CRTC:46:crtc-0] vblank wait timed out
->> Modules linked in:
->> CPU: 0 PID: 31 Comm: kworker/0:1 Not tainted
->5.1.0-next-20190514-00029-g09e5b0ed0a58 #18
->> Hardware name: Allwinner sun8i Family
->> Workqueue: events deferred_probe_work_func
->> [<c010ed54>] (unwind_backtrace) from [<c010b76c>]
->(show_stack+0x10/0x14)
->> [<c010b76c>] (show_stack) from [<c0688c70>] (dump_stack+0x84/0x98)
->> [<c0688c70>] (dump_stack) from [<c011d9e4>] (__warn+0xfc/0x114)
->> [<c011d9e4>] (__warn) from [<c011da40>] (warn_slowpath_fmt+0x44/0x68)
->> [<c011da40>] (warn_slowpath_fmt) from [<c040cd50>]
->(drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0)
->> [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1) from
->[<c040e694>] (drm_atomic_helper_commit_tail_rpm+0x5c/0x6c)
->> [<c040e694>] (drm_atomic_helper_commit_tail_rpm) from [<c040e4dc>]
->(commit_tail+0x40/0x6c)
->> [<c040e4dc>] (commit_tail) from [<c040e5cc>]
->(drm_atomic_helper_commit+0xbc/0x128)
->> [<c040e5cc>] (drm_atomic_helper_commit) from [<c0411b64>]
->(restore_fbdev_mode_atomic+0x1cc/0x1dc)
->> [<c0411b64>] (restore_fbdev_mode_atomic) from [<c04156f8>]
->(drm_fb_helper_restore_fbdev_mode_unlocked+0x54/0xa0)
->> [<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked) from
->[<c0415774>] (drm_fb_helper_set_par+0x30/0x54)
->> [<c0415774>] (drm_fb_helper_set_par) from [<c03ad450>]
->(fbcon_init+0x560/0x5ac)
->> [<c03ad450>] (fbcon_init) from [<c03eb8a0>] (visual_init+0xbc/0x104)
->> [<c03eb8a0>] (visual_init) from [<c03ed1b8>]
->(do_bind_con_driver+0x1b0/0x390)
->> [<c03ed1b8>] (do_bind_con_driver) from [<c03ed780>]
->(do_take_over_console+0x13c/0x1c4)
->> [<c03ed780>] (do_take_over_console) from [<c03ad800>]
->(do_fbcon_takeover+0x74/0xcc)
->> [<c03ad800>] (do_fbcon_takeover) from [<c013c9c8>]
->(notifier_call_chain+0x44/0x84)
->> [<c013c9c8>] (notifier_call_chain) from [<c013cd20>]
->(__blocking_notifier_call_chain+0x48/0x60)
->> [<c013cd20>] (__blocking_notifier_call_chain) from [<c013cd50>]
->(blocking_notifier_call_chain+0x18/0x20)
->> [<c013cd50>] (blocking_notifier_call_chain) from [<c03a6e44>]
->(register_framebuffer+0x1e0/0x2f8)
->> [<c03a6e44>] (register_framebuffer) from [<c04153c0>]
->(__drm_fb_helper_initial_config_and_unlock+0x2fc/0x50c)
->> [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock) from
->[<c04158c8>] (drm_fbdev_client_hotplug+0xe8/0x1b8)
->> [<c04158c8>] (drm_fbdev_client_hotplug) from [<c0415a20>]
->(drm_fbdev_generic_setup+0x88/0x118)
->> [<c0415a20>] (drm_fbdev_generic_setup) from [<c043f060>]
->(sun4i_drv_bind+0x128/0x160)
->> [<c043f060>] (sun4i_drv_bind) from [<c044b598>]
->(try_to_bring_up_master+0x164/0x1a0)
->> [<c044b598>] (try_to_bring_up_master) from [<c044b668>]
->(__component_add+0x94/0x140)
->> [<c044b668>] (__component_add) from [<c0445e1c>]
->(sun6i_dsi_probe+0x144/0x234)
->> [<c0445e1c>] (sun6i_dsi_probe) from [<c0452ef4>]
->(platform_drv_probe+0x48/0x9c)
->> [<c0452ef4>] (platform_drv_probe) from [<c04512cc>]
->(really_probe+0x1dc/0x2c8)
->> [<c04512cc>] (really_probe) from [<c0451518>]
->(driver_probe_device+0x60/0x160)
->> [<c0451518>] (driver_probe_device) from [<c044f7a4>]
->(bus_for_each_drv+0x74/0xb8)
->> [<c044f7a4>] (bus_for_each_drv) from [<c045107c>]
->(__device_attach+0xd0/0x13c)
->> [<c045107c>] (__device_attach) from [<c0450474>]
->(bus_probe_device+0x84/0x8c)
->> [<c0450474>] (bus_probe_device) from [<c0450900>]
->(deferred_probe_work_func+0x64/0x90)
->> [<c0450900>] (deferred_probe_work_func) from [<c0135970>]
->(process_one_work+0x204/0x420)
->> [<c0135970>] (process_one_work) from [<c013690c>]
->(worker_thread+0x274/0x5a0)
->> [<c013690c>] (worker_thread) from [<c013b3d8>] (kthread+0x11c/0x14c)
->> [<c013b3d8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
->> Exception stack(0xde539fb0 to 0xde539ff8)
->> 9fa0:                                     00000000 00000000 00000000
->00000000
->> 9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000
->00000000
->> 9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
->> ---[ end trace 495200a78b24980e ]---
->> random: fast init done
->> [drm:drm_atomic_helper_wait_for_dependencies] *ERROR*
->[CRTC:46:crtc-0] flip_done timed out
->> [drm:drm_atomic_helper_wait_for_dependencies] *ERROR*
->[CONNECTOR:48:DSI-1] flip_done timed out
->> [drm:drm_atomic_helper_wait_for_dependencies] *ERROR*
->[PLANE:30:plane-0] flip_done timed out
->>
->> With the terms(as described in above diagram) fixed, the panel
->> displays correctly without any timeouts.
->>
->> Tested-by: Merlijn Wajer <merlijn@wizzup.org>
->> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+于 2019年10月8日 GMT+08:00 上午12:07:05, Chen-Yu Tsai <wens@csie.org> 写到:
+>Hi,
 >
->you should have your SoB here.
+>On Wed, Oct 2, 2019 at 7:27 PM Icenowy Zheng <icenowy@aosc.io> wrote:
+>>
+>> AXP813 PMIC has two Vbus maximum value settings -- one is the default
+>> value, which is currently the only supported one; the other is the
+>> really applied value, which is set according to the default value if
+>the
+>> BC detection module detected a charging port, or 500mA if no charging
+>> port is detected.
+>>
+>> Add support for reading and writing of the really applied Vbus
+>maxmium
+>> value. Interestingly it has a larger range than the default value.
+>>
+>> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+>> ---
+>>  drivers/power/supply/axp20x_usb_power.c | 132
+>+++++++++++++++++++++++-
+>>  1 file changed, 129 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/power/supply/axp20x_usb_power.c
+>b/drivers/power/supply/axp20x_usb_power.c
+>> index 5f0a5722b19e..905668a2727f 100644
+>> --- a/drivers/power/supply/axp20x_usb_power.c
+>> +++ b/drivers/power/supply/axp20x_usb_power.c
 >
->All the patches look fine, so there's no need to resend a new
->version. I'll add it if you can give it.
+>[...]
+>
+>> @@ -354,6 +451,9 @@ static int axp20x_usb_power_set_property(struct
+>power_supply *psy,
+>>                                                                
+>val->intval);
+>>                 return axp20x_usb_power_set_current_max(power,
+>val->intval);
+>>
+>> +       case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
+>> +               return
+>axp20x_usb_power_set_input_current_limit(power, val->intval);
+>> +
+>
+>So I think there are two things that should be adjusted.
+>
+>First, we should be using POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT for all
+>PMICs.
+>As far as the sysfs documents go, CURRENT_MAX is read-only, and should
+>refer to
+>the hard limit the hardware can support, i.e. maximum power ratings.
+>INPUT_CURRENT_LIMIT and INPUT_VOLTAGE_LIMIT are for configurable upper
+>and lower
+>limits respectively.
+>
+>Sebastian, is my understanding of this correct?
+>
+>We already use INPUT_CURRENT_LIMIT for the AXP813 in the axp20x-ac
+>driver, and
+>it would be nice to have both drivers expose the same attributes.
+>
+>Second, since the value set in register 0x35 is the one that actually
+>has an
+>effect, as opposed to just being a default, we should just use that
+>one.
 
-Sorry, I forgot it.
+However, that default value is also important, otherwise users will
+get dropped back to 500mAh each time they re-insert USB jack.
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Is there a property to export the default value?
+
+BTW, if possible, apply patch 1 first, because it can raise current to 1.5A
+in the default situation.
 
 >
->Maxime
+>Could you restructure the series based on what I described, with a new
+>patch 1
+>switching from CURRENT_MAX to INPUT_CURRENT_LIMIT, and then this patch
+>as patch 2?
+>And both patches should have Fixes tags and possibly CC stable so they
+>get backported
+>for people that are using stable kernels? And then the original patch
+>2 as patch 3.
+>
+>ChenYu
+>
+>>         default:
+>>                 return -EINVAL;
+>>         }
+>> @@ -365,7 +465,8 @@ static int axp20x_usb_power_prop_writeable(struct
+>power_supply *psy,
+>>                                            enum power_supply_property
+>psp)
+>>  {
+>>         return psp == POWER_SUPPLY_PROP_VOLTAGE_MIN ||
+>> -              psp == POWER_SUPPLY_PROP_CURRENT_MAX;
+>> +              psp == POWER_SUPPLY_PROP_CURRENT_MAX ||
+>> +              psp == POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT;
+>>  }
+>>
+>>  static enum power_supply_property axp20x_usb_power_properties[] = {
+>> @@ -386,6 +487,15 @@ static enum power_supply_property
+>axp22x_usb_power_properties[] = {
+>>         POWER_SUPPLY_PROP_CURRENT_MAX,
+>>  };
+>>
+>> +static enum power_supply_property axp813_usb_power_properties[] = {
+>> +       POWER_SUPPLY_PROP_HEALTH,
+>> +       POWER_SUPPLY_PROP_PRESENT,
+>> +       POWER_SUPPLY_PROP_ONLINE,
+>> +       POWER_SUPPLY_PROP_VOLTAGE_MIN,
+>> +       POWER_SUPPLY_PROP_CURRENT_MAX,
+>> +       POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
+>> +};
+>> +
+>>  static const struct power_supply_desc axp20x_usb_power_desc = {
+>>         .name = "axp20x-usb",
+>>         .type = POWER_SUPPLY_TYPE_USB,
+>> @@ -406,6 +516,16 @@ static const struct power_supply_desc
+>axp22x_usb_power_desc = {
+>>         .set_property = axp20x_usb_power_set_property,
+>>  };
+>>
+>> +static const struct power_supply_desc axp813_usb_power_desc = {
+>> +       .name = "axp20x-usb",
+>> +       .type = POWER_SUPPLY_TYPE_USB,
+>> +       .properties = axp813_usb_power_properties,
+>> +       .num_properties = ARRAY_SIZE(axp813_usb_power_properties),
+>> +       .property_is_writeable = axp20x_usb_power_prop_writeable,
+>> +       .get_property = axp20x_usb_power_get_property,
+>> +       .set_property = axp20x_usb_power_set_property,
+>> +};
+>> +
+>>  static int configure_iio_channels(struct platform_device *pdev,
+>>                                   struct axp20x_usb_power *power)
+>>  {
+>> @@ -487,10 +607,16 @@ static int axp20x_usb_power_probe(struct
+>platform_device *pdev)
+>>                 usb_power_desc = &axp20x_usb_power_desc;
+>>                 irq_names = axp20x_irq_names;
+>>         } else if (power->axp20x_id == AXP221_ID ||
+>> -                  power->axp20x_id == AXP223_ID ||
+>> -                  power->axp20x_id == AXP813_ID) {
+>> +                  power->axp20x_id == AXP223_ID) {
+>>                 usb_power_desc = &axp22x_usb_power_desc;
+>>                 irq_names = axp22x_irq_names;
+>> +       } else if (power->axp20x_id == AXP813_ID) {
+>> +               usb_power_desc = &axp813_usb_power_desc;
+>> +               irq_names = axp22x_irq_names;
+>> +
+>> +               /* Enable USB Battery Charging specification
+>detection */
+>> +               regmap_update_bits(axp20x->regmap, AXP288_BC_GLOBAL,
+>> +                                  AXP813_BC_EN, AXP813_BC_EN);
+>
+>This seems like a duplicate of
+>
+>>         } else {
+>>                 dev_err(&pdev->dev, "Unsupported AXP variant: %ld\n",
+>>                         axp20x->variant);
+>> --
+>> 2.21.0
+>>
+>> --
+>> You received this message because you are subscribed to the Google
+>Groups "linux-sunxi" group.
+>> To unsubscribe from this group and stop receiving emails from it,
+>send an email to linux-sunxi+unsubscribe@googlegroups.com.
+>> To view this discussion on the web, visit
+>https://groups.google.com/d/msgid/linux-sunxi/20191002112545.58481-3-icenowy%40aosc.io.
 
 -- 
 使用 K-9 Mail 发送自我的Android设备。
