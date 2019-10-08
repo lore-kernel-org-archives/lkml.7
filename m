@@ -2,116 +2,129 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04BE5C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3439EECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB0F8206BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:18:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17731206BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:19:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730554AbfJHISm (ORCPT
+        id S1730580AbfJHITh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 04:18:42 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:28715 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730309AbfJHISl (ORCPT
+        Tue, 8 Oct 2019 04:19:37 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47241 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730453AbfJHITh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 04:18:41 -0400
-X-UUID: 0b511a8e3bf04a068a8709439614994f-20191008
-X-UUID: 0b511a8e3bf04a068a8709439614994f-20191008
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <yong.wu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1743715037; Tue, 08 Oct 2019 16:18:35 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N1.mediatek.inc
- (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 8 Oct
- 2019 16:18:33 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 8 Oct 2019 16:18:32 +0800
-Message-ID: <1570522712.19130.42.camel@mhfsdcap03>
-Subject: Re: [PATCH] iommu/mediatek: Move the tlb_sync into tlb_flush
-From:   Yong Wu <yong.wu@mediatek.com>
-To:     Will Deacon <will@kernel.org>
-CC:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Will Deacon <will.deacon@arm.com>, <youlin.pei@mediatek.com>,
-        <anan.sun@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>,
-        <cui.zhang@mediatek.com>, <srv_heupstream@mediatek.com>,
-        <chao.hao@mediatek.com>, <linux-kernel@vger.kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        "Tomasz Figa" <tfiga@google.com>,
-        <iommu@lists.linux-foundation.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Tue, 8 Oct 2019 16:18:32 +0800
-In-Reply-To: <20190930120926.t26ydhgggi2scg3e@willie-the-truck>
-References: <1569822142-14303-1-git-send-email-yong.wu@mediatek.com>
-         <20190930120926.t26ydhgggi2scg3e@willie-the-truck>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Tue, 8 Oct 2019 04:19:37 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iHkiM-00052D-RY; Tue, 08 Oct 2019 10:19:27 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 52EF41C0325;
+        Tue,  8 Oct 2019 10:19:26 +0200 (CEST)
+Date:   Tue, 08 Oct 2019 08:19:26 -0000
+From:   "tip-bot2 for Janakarajan Natarajan" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/asm: Fix MWAITX C-state hint value
+Cc:     Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
+        Borislav Petkov <bp@suse.de>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        <stable@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
+In-Reply-To: <20191007190011.4859-1-Janakarajan.Natarajan@amd.com>
+References: <20191007190011.4859-1-Janakarajan.Natarajan@amd.com>
 MIME-Version: 1.0
+Message-ID: <157052276620.9978.10430246117846382274.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: 7D17782CEA9D438245218EEEE6BBEC1C3BB60458E15FE650459FFB65E1DB5FFA2000:8
-X-MTK:  N
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-09-30 at 13:09 +0100, Will Deacon wrote:
-> On Mon, Sep 30, 2019 at 01:42:22PM +0800, Yong Wu wrote:
-> > The commit 4d689b619445 ("iommu/io-pgtable-arm-v7s: Convert to IOMMU API
-> > TLB sync") help move the tlb_sync of unmap from v7s into the iommu
-> > framework. It helps add a new function "mtk_iommu_iotlb_sync", But it
-> > lacked the dom->pgtlock, then it will cause the variable
-> > "tlb_flush_active" may be changed unexpectedly, we could see this warning
-> > log randomly:
-> > 
-> > mtk-iommu 10205000.iommu: Partial TLB flush timed out, falling back to
-> > full flush
-> > 
-> > To fix this issue, we can add dom->pgtlock in the "mtk_iommu_iotlb_sync".
-> > And when checking this issue, we find that __arm_v7s_unmap call
-> > io_pgtable_tlb_add_flush consecutively when it is supersection/largepage,
-> > this also is potential unsafe for us. There is no tlb flush queue in the
-> > MediaTek M4U HW. The HW always expect the tlb_flush/tlb_sync one by one.
-> > If v7s don't always gurarantee the sequence, Thus, In this patch I move
-> > the tlb_sync into tlb_flush(also rename the function deleting "_nosync").
-> > and we don't care if it is leaf, rearrange the callback functions. Also,
-> > the tlb flush/sync was already finished in v7s, then iotlb_sync and
-> > iotlb_sync_all is unnecessary.
-> > 
-> > Besides, there are two minor changes:
-> > a) Use writel for the register F_MMU_INV_RANGE which is for triggering the
-> > HW work. We expect all the setting(iova_start/iova_end...) have already
-> > been finished before F_MMU_INV_RANGE.
-> > b) Reduce the tlb timeout value from 100000us to 1000us. the original value
-> > is so long that affect the multimedia performance.
-> > 
-> > Fixes: 4d689b619445 ("iommu/io-pgtable-arm-v7s: Convert to IOMMU API TLB sync")
-> > Signed-off-by: Chao Hao <chao.hao@mediatek.com>
-> > Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> > ---
-> > This patch looks break the logic for tlb_flush and tlb_sync. I'm not
-> > sure if it
-> > is reasonable. If someone has concern, I could change:
-> > a) Add dom->pgtlock in the mtk_iommu_iotlb_sync
-> > b) Add a io_pgtable_tlb_sync in [1].
-> 
-> The patch looks ok to me, but please could you split it up so that the
-> timeout and writel are done separately?
+The following commit has been merged into the x86/urgent branch of tip:
 
-Thanks for the quick review, I will separate them.
+Commit-ID:     9b69cab42e5d14b8f0467566e3d97e682365db2d
+Gitweb:        https://git.kernel.org/tip/9b69cab42e5d14b8f0467566e3d97e682365db2d
+Author:        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
+AuthorDate:    Mon, 07 Oct 2019 19:00:22 
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Tue, 08 Oct 2019 09:48:09 +02:00
 
-> 
-> Thanks,
-> 
-> Will
+x86/asm: Fix MWAITX C-state hint value
 
+As per "AMD64 Architecture Programmer's Manual Volume 3: General-Purpose
+and System Instructions", MWAITX EAX[7:4]+1 specifies the optional hint
+of the optimized C-state. For C0 state, EAX[7:4] should be set to 0xf.
 
+Currently, a value of 0xf is set for EAX[3:0] instead of EAX[7:4]. Fix
+this by changing MWAITX_DISABLE_CSTATES from 0xf to 0xf0.
+
+This hasn't had any implications so far because setting reserved bits in
+EAX is simply ignored by the CPU.
+
+ [ bp: Fixup comment in delay_mwaitx() and massage. ]
+
+Signed-off-by: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Frederic Weisbecker <frederic@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: "x86@kernel.org" <x86@kernel.org>
+Cc: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lkml.kernel.org/r/20191007190011.4859-1-Janakarajan.Natarajan@amd.com
+---
+ arch/x86/include/asm/mwait.h | 2 +-
+ arch/x86/lib/delay.c         | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/include/asm/mwait.h b/arch/x86/include/asm/mwait.h
+index e28f8b7..9d5252c 100644
+--- a/arch/x86/include/asm/mwait.h
++++ b/arch/x86/include/asm/mwait.h
+@@ -21,7 +21,7 @@
+ #define MWAIT_ECX_INTERRUPT_BREAK	0x1
+ #define MWAITX_ECX_TIMER_ENABLE		BIT(1)
+ #define MWAITX_MAX_LOOPS		((u32)-1)
+-#define MWAITX_DISABLE_CSTATES		0xf
++#define MWAITX_DISABLE_CSTATES		0xf0
+ 
+ static inline void __monitor(const void *eax, unsigned long ecx,
+ 			     unsigned long edx)
+diff --git a/arch/x86/lib/delay.c b/arch/x86/lib/delay.c
+index b7375dc..c126571 100644
+--- a/arch/x86/lib/delay.c
++++ b/arch/x86/lib/delay.c
+@@ -113,8 +113,8 @@ static void delay_mwaitx(unsigned long __loops)
+ 		__monitorx(raw_cpu_ptr(&cpu_tss_rw), 0, 0);
+ 
+ 		/*
+-		 * AMD, like Intel, supports the EAX hint and EAX=0xf
+-		 * means, do not enter any deep C-state and we use it
++		 * AMD, like Intel's MWAIT version, supports the EAX hint and
++		 * EAX=0xf0 means, do not enter any deep C-state and we use it
+ 		 * here in delay() to minimize wakeup latency.
+ 		 */
+ 		__mwaitx(MWAITX_DISABLE_CSTATES, delay, MWAITX_ECX_TIMER_ENABLE);
