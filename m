@@ -2,371 +2,207 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66FC1C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 06:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C85C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 06:20:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3872E2067B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 06:16:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6736F2067B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 06:20:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="YGFrcPqO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730058AbfJHGQH (ORCPT
+        id S1730008AbfJHGUq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 02:16:07 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:7034 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729802AbfJHGQH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 02:16:07 -0400
-X-UUID: b2601c2a9cd044218aef01715ebc0982-20191008
-X-UUID: b2601c2a9cd044218aef01715ebc0982-20191008
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 127426954; Tue, 08 Oct 2019 14:16:00 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 8 Oct 2019 14:15:58 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 8 Oct 2019 14:15:58 +0800
-Message-ID: <1570515358.4686.97.camel@mtksdccf07>
-Subject: Re: [PATCH] kasan: fix the missing underflow in memmove and memcpy
- with CONFIG_KASAN_GENERIC=y
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>
-Date:   Tue, 8 Oct 2019 14:15:58 +0800
-In-Reply-To: <CACT4Y+bJFoQPJ4QbGNjAuqiZx-FFsuLansxkhX3kwLOc19NvcA@mail.gmail.com>
-References: <20190927034338.15813-1-walter-zh.wu@mediatek.com>
-         <CACT4Y+Zxz+R=qQxSMoipXoLjRqyApD3O0eYpK0nyrfGHE4NNPw@mail.gmail.com>
-         <1569594142.9045.24.camel@mtksdccf07>
-         <CACT4Y+YuAxhKtL7ho7jpVAPkjG-JcGyczMXmw8qae2iaZjTh_w@mail.gmail.com>
-         <1569818173.17361.19.camel@mtksdccf07>
-         <1570018513.19702.36.camel@mtksdccf07>
-         <CACT4Y+bbZhvz9ZpHtgL8rCCsV=ybU5jA6zFnJBL7gY2cNXDLyQ@mail.gmail.com>
-         <1570069078.19702.57.camel@mtksdccf07>
-         <CACT4Y+ZwNv2-QBrvuR2JvemovmKPQ9Ggrr=ZkdTg6xy_Ki6UAg@mail.gmail.com>
-         <1570095525.19702.59.camel@mtksdccf07>
-         <1570110681.19702.64.camel@mtksdccf07>
-         <CACT4Y+aKrC8mtcDTVhM-So-TTLjOyFCD7r6jryWFH6i2he1WJA@mail.gmail.com>
-         <1570164140.19702.97.camel@mtksdccf07>
-         <1570176131.19702.105.camel@mtksdccf07>
-         <CACT4Y+ZvhomaeXFKr4za6MJi=fW2SpPaCFP=fk06CMRhNcmFvQ@mail.gmail.com>
-         <1570182257.19702.109.camel@mtksdccf07>
-         <CACT4Y+ZnWPEO-9DkE6C3MX-Wo+8pdS6Gr6-2a8LzqBS=2fe84w@mail.gmail.com>
-         <1570190718.19702.125.camel@mtksdccf07>
-         <CACT4Y+YbkjuW3_WQJ4BB8YHWvxgHJyZYxFbDJpnPzfTMxYs60g@mail.gmail.com>
-         <1570418576.4686.30.camel@mtksdccf07>
-         <CACT4Y+aho7BEvQstd2+a2be-jJ0dEsjGebH7bcUFhYp-PoRDxQ@mail.gmail.com>
-         <1570436289.4686.40.camel@mtksdccf07>
-         <CACT4Y+Z6QObZ2fvVxSmvv16YQAu4GswOqfOVQK_1_Ncz0eir_g@mail.gmail.com>
-         <1570438317.4686.44.camel@mtksdccf07>
-         <CACT4Y+Yc86bKxDp4ST8+49rzLOWkTXLkjs0eyFtohCi_uSjmLQ@mail.gmail.com>
-         <1570439032.4686.50.camel@mtksdccf07>
-         <CACT4Y+YL=8jFXrj2LOuQV7ZyDe-am4W8y1WHEDJJ0-mVNJ3_Cw@mail.gmail.com>
-         <1570440492.4686.59.camel@mtksdccf07> <1570441833.4686.66.camel@mtksdccf07>
-         <CACT4Y+Z0A=Zi4AxEjn4jpHk0xG9+Nh2Q-OYEnOmooW0wN-_vfQ@mail.gmail.com>
-         <1570449804.4686.79.camel@mtksdccf07>
-         <CACT4Y+b4VX5cW3WhP6o3zyKxHjNZRo1Lokxr0+MwDcB5hV5K+A@mail.gmail.com>
-         <1570451575.4686.83.camel@mtksdccf07>
-         <CACT4Y+bJFoQPJ4QbGNjAuqiZx-FFsuLansxkhX3kwLOc19NvcA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Tue, 8 Oct 2019 02:20:46 -0400
+Received: from cmta17.telus.net ([209.171.16.90]:37351 "EHLO cmta17.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729693AbfJHGUq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 02:20:46 -0400
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id HirOiQQ9dbg38HirQiboHh; Tue, 08 Oct 2019 00:20:44 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1570515644; bh=2P6mXez37j9fBdL0Ncl4XJZYmaJobuXHxg4xcKxhvd0=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=YGFrcPqOk2h9+HY5vVYe030T4Fk+rDOPUd0Sso3nBTdNy7efQGWwvUGOe9GXO/4qC
+         36XzwX0/S/KfgrThWTN1T4GwygpszTuURjZpPnC/qOqYBb3u6QuTrc7tB9iSmNIGy/
+         te/m3Jt1LJTrguRMhmMTqVPfg0fQhKhrJzsG4gVDmL5rhbiyGDOQYMKBKtMCL5YJRF
+         TCVpg21491CKdpSO1gcF3wqHpnH/FOHLQNMrR3TFvZnrwGcD9m6R6Pfa0nRuGmAKan
+         rwMFBNbwwS3wdP/fXFYfH8C3q4BHkcDHC8B6d9sj7HHn1HgnHaVeS46zgQgfo7A3Ym
+         G+A93Zgj2Ie3A==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=O/1HQy1W c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=IkcTkHD0fZMA:10 a=aatUQebYAAAA:8 a=fr69Sb5xUs4nFW0D-I0A:9
+ a=aMOKKf1XJ0u5yb9e:21 a=Ni0zgo4QtVMXVrbw:21 a=QEXdDO2ut3YA:10
+ a=7715FyvI7WU-l6oqrZBK:22
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Rafael J. Wysocki'" <rafael@kernel.org>
+Cc:     "'Rafael J. Wysocki'" <rjw@rjwysocki.net>,
+        "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
+        "'Peter Zijlstra'" <peterz@infradead.org>,
+        "'LKML'" <linux-kernel@vger.kernel.org>,
+        "'Frederic Weisbecker'" <frederic@kernel.org>,
+        "'Mel Gorman'" <mgorman@suse.de>,
+        "'Daniel Lezcano'" <daniel.lezcano@linaro.org>,
+        "'Chen, Hu'" <hu1.chen@intel.com>,
+        "'Quentin Perret'" <quentin.perret@arm.com>,
+        "'Linux PM'" <linux-pm@vger.kernel.org>,
+        "'Giovanni Gherdovich'" <ggherdovich@suse.cz>
+References: <001601d57487$e1029ef0$a307dcd0$@net> <000f01d576df$a6b87a30$f4296e90$@net> <CAJZ5v0gu=rALS9ZLNMDT3cw_sT2m8XCKP6+AW3488x2Q9EXM3g@mail.gmail.com> <000001d57c54$db31f8c0$9195ea40$@net> <CAJZ5v0jo-KQouuE3P51THvU33kViBVtDq1WknBFx+FWUY0e=ag@mail.gmail.com>
+In-Reply-To: <CAJZ5v0jo-KQouuE3P51THvU33kViBVtDq1WknBFx+FWUY0e=ag@mail.gmail.com>
+Subject: RE: [RFC/RFT][PATCH v8] cpuidle: New timer events oriented governor for tickless systems
+Date:   Mon, 7 Oct 2019 23:20:38 -0700
+Message-ID: <000d01d57da0$8410f1c0$8c32d540$@net>
 MIME-Version: 1.0
-X-MTK:  N
+Content-Type: text/plain;
+        charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Content-Language: en-ca
+Thread-Index: AdV8W4o2l8nEZTCwSdesKPyubuLfKQBQfELw
+X-CMAE-Envelope: MS4wfDOF5X3abzQ968ueihfwD33xGr5m4KG28aeiJS3EjaQNORdv7BL/mOlVEO3pS2hJo+DiAsC1mjGaUcA8+OiIinxbN4x0u+ZOcvcE0q4KXt1SWA1d5/y+
+ iBQ/t5RDFjzA0GIdFEpgZozadiMBLDN3266EL38QD5Mme7R2DEaHF5rlg3le5qw+UuOr3Lr3gz0+IKtTVXs3RaMwW4Fh8OzKnVQoRRoXE6mxUVJGrFlAvPT+
+ v2fELURZlwduvPhY1tZSw0Urh4qNRJd7aRY0r2hD2ZD26U/bM8ZM97fkEaTJZ6y9l/xNbm46ncvkH82cX1JznbR9MxdSlcqH2FLGG7woo2Uv8jIs+hlRe0nh
+ /Mc2yy/PfIxT0eNXOH7oZT1hAXa7ZHa1sONYKE/Qf7efJglEpDH3CKqbCPBASOU5HuBF1SDA+A++6+KnqBpW+0XK9IDrQEM8b/Bgn/RPt0Dd9AZo1JVtl8OZ
+ 6/4Mc7wIqCOAzYnWwWXJMcM0GFZhRU3Kl3Qx20SL1olJW8+l+4m1ebMJQtUyrrKzVMtHnsUaPXCzIv1D
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-10-07 at 15:33 +0200, Dmitry Vyukov wrote:
-> On Mon, Oct 7, 2019 at 2:33 PM Walter Wu <walter-zh.wu@mediatek.com> wrote:
-> > On Mon, 2019-10-07 at 14:19 +0200, Dmitry Vyukov wrote:
-> > > On Mon, Oct 7, 2019 at 2:03 PM Walter Wu <walter-zh.wu@mediatek.com> wrote:
-> > > My idea was just to always print "heap-out-of-bounds" and don't
-> > > differentiate if the size come from userspace or not.
-> >
-> > Got it.
-> > Would you have any other concern about this patch?
+On 2019.10.06 08:34 Rafael J. Wysocki wrote:
+> On Sun, Oct 6, 2019 at 4:46 PM Doug Smythies <dsmythies@telus.net> wrote:
+>> On 2019.10.01 02:32 Rafael J. Wysocki wrote:
+>>> On Sun, Sep 29, 2019 at 6:05 PM Doug Smythies <dsmythies@telus.net> wrote:
+>>>> On 2019.09.26 09:32 Doug Smythies wrote:
+>>>>
+>>>>> If the deepest idle state is disabled, the system
+>>>>> can become somewhat unstable, with anywhere between no problem
+>>>>> at all, to the occasional temporary jump using a lot more
+>>>>> power for a few seconds, to a permanent jump using a lot more
+>>>>> power continuously. I have been unable to isolate the exact
+>>>>> test load conditions under which this will occur. However,
+>>>>> temporarily disabling and then enabling other idle states
+>>>>> seems to make for a somewhat repeatable test. It is important
+>>>>> to note that the issue occurs with only ever disabling the deepest
+>>>>> idle state, just not reliably.
+>>>>>
+>>>>> I want to know how you want to proceed before I do a bunch of
+>>>>> regression testing.
+>>>>
+>> I do not think I stated it clearly before: The problem here is that some CPUs
+>> seem to get stuck in idle state 0, and when they do power consumption spikes,
+>> often by several hundred % and often indefinitely.
+>
+> That indeed has not been clear to me, thanks for the clarification!
+
+>
+>> I made a hack job automated test:
+>> Kernel  tests  	         fail rate
+>> 5.4-rc1		  6616           13.45%
+>> 5.3              2376            4.50%
+>> 5.3-teov7       12136            0.00%  <<< teo.c reverted and teov7 put in its place.
+>> 5.4-rc1-ds      11168        0.00%  <<< [old] proposed patch (> 7 hours test time)
+
+
+   5.4-rc1-ds12	  4224		0.005 <<< new proposed patch
+
+>>
+>> [old] Proposed patch (on top of kernel 5.4-rc1): [deleted]
+
+> This change may cause the deepest state to be selected even if its
+> "hits" metric is less than the "misses" one AFAICS, in which case the
+> max_early_index state should be selected instead.
 > 
-> 
-> Last versions of the patch looked good to me except for the bug title.
-> The comment may also need some updating if you change the title.
+> It looks like the max_early_index computation is broken when the
+> deepest state is disabled.
 
-Updated, thanks again again.
+O.K. Thanks for your quick reply, and insight.
 
+I think long durations always need to be counted, but currently if
+the deepest idle state is disabled, they are not.
+How about this?:
+(test results added above, more tests pending if this might be a path forward.)
 
-The patchsets help to produce KASAN report when size is negative numbers
-in memory operation function. It is helpful for programmer to solve the 
-undefined behavior issue. Patch 1 based on Dmitry's review and
-suggestion, patch 2 is a test in order to verify the patch 1. 
+diff --git a/drivers/cpuidle/governors/teo.c b/drivers/cpuidle/governors/teo.c
+index b5a0e49..a970d2c 100644
+--- a/drivers/cpuidle/governors/teo.c
++++ b/drivers/cpuidle/governors/teo.c
+@@ -155,10 +155,12 @@ static void teo_update(struct cpuidle_driver *drv, struct cpuidle_device *dev)
 
-[1]https://bugzilla.kernel.org/show_bug.cgi?id=199341 
-[2]https://lore.kernel.org/linux-arm-kernel/20190927034338.15813-1-walter-zh.wu@mediatek.com/ 
+                cpu_data->states[i].early_hits -= early_hits >> DECAY_SHIFT;
 
-Walter Wu (2): 
-kasan: detect invalid size in memory operation function 
-kasan: add test for invalid size in memmove
+-               if (drv->states[i].target_residency <= sleep_length_us) {
+-                       idx_timer = i;
+-                       if (drv->states[i].target_residency <= measured_us)
+-                               idx_hit = i;
++               if (!(drv->states[i].disabled || dev->states_usage[i].disable)){
++                       if (drv->states[i].target_residency <= sleep_length_us) {
++                               idx_timer = i;
++                               if (drv->states[i].target_residency <= measured_us)
++                                       idx_hit = i;
++                       }
+                }
+        }
 
+@@ -256,39 +258,25 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
+                struct cpuidle_state *s = &drv->states[i];
+                struct cpuidle_state_usage *su = &dev->states_usage[i];
 
- lib/test_kasan.c          | 18 ++++++++++++++++++
- mm/kasan/common.c         | 13 ++++++++-----
- mm/kasan/generic.c        |  5 +++++
- mm/kasan/generic_report.c | 18 ++++++++++++++++++
- mm/kasan/tags.c           |  5 +++++
- mm/kasan/tags_report.c    | 17 +++++++++++++++++
- 6 files changed, 71 insertions(+), 5 deletions(-)
+-               if (s->disabled || su->disable) {
+-                       /*
+-                        * If the "early hits" metric of a disabled state is
+-                        * greater than the current maximum, it should be taken
+-                        * into account, because it would be a mistake to select
+-                        * a deeper state with lower "early hits" metric.  The
+-                        * index cannot be changed to point to it, however, so
+-                        * just increase the max count alone and let the index
+-                        * still point to a shallower idle state.
+-                        */
+-                       if (max_early_idx >= 0 &&
+-                           count < cpu_data->states[i].early_hits)
+-                               count = cpu_data->states[i].early_hits;
+-
+-                       continue;
+-               }
 
+-               if (idx < 0)
+-                       idx = i; /* first enabled state */
++               if (!(s->disabled || su->disable)) {
++                       if (idx < 0)
++                               idx = i; /* first enabled state */
 
-commit 1eb58140ac67debabdca705bafaadea934eb7820
-Author: Walter-zh Wu <walter-zh.wu@mediatek.com>
-Date:   Fri Oct 4 18:38:31 2019 +0800
+-               if (s->target_residency > duration_us)
+-                       break;
++                       if (s->target_residency > duration_us)
++                               break;
 
-    kasan: detect negative size in memory operation function
-    
-    It is an undefined behavior to pass a negative numbers to
-    memset()/memcpy()/memmove(), so need to be detected by KASAN.
-    
-    If size is negative numbers, then it has three reasons to be
-    defined as heap-out-of-bounds bug type.
-    1) Casting negative numbers to size_t would indeed turn up as
-       a large size_t and its value will be larger than ULONG_MAX/2,
-       so that this can qualify as out-of-bounds.
-    2) If KASAN has new bug type and user-space passes negative size,
-       then there are duplicate reports. So don't produce new bug type
-       in order to prevent duplicate reports by some systems (e.g.
-syzbot)
-       to report the same bug twice.
-    3) When size is negative numbers, it may be passed from user-space.
-       So we always print heap-out-of-bounds in order to prevent that
-       kernel-space and user-space have the same bug but have duplicate
-       reports.
-    
-    KASAN report:
-    
-     BUG: KASAN: heap-out-of-bounds in kmalloc_memmove_invalid_size
-+0x70/0xa0
-     Read of size 18446744073709551608 at addr ffffff8069660904 by task
-cat/72
-    
-     CPU: 2 PID: 72 Comm: cat Not tainted
-5.4.0-rc1-next-20191004ajb-00001-gdb8af2f372b2-dirty #1
-     Hardware name: linux,dummy-virt (DT)
-     Call trace:
-      dump_backtrace+0x0/0x288
-      show_stack+0x14/0x20
-      dump_stack+0x10c/0x164
-      print_address_description.isra.9+0x68/0x378
-      __kasan_report+0x164/0x1a0
-      kasan_report+0xc/0x18
-      check_memory_region+0x174/0x1d0
-      memmove+0x34/0x88
-      kmalloc_memmove_invalid_size+0x70/0xa0
-    
-    [1] https://bugzilla.kernel.org/show_bug.cgi?id=199341
-    
-    Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
-    Reported -by: Dmitry Vyukov <dvyukov@google.com>
-    Suggested-by: Dmitry Vyukov <dvyukov@google.com>
+-               if (s->exit_latency > latency_req && constraint_idx > i)
+-                       constraint_idx = i;
++                       if (s->exit_latency > latency_req && constraint_idx > i)
++                               constraint_idx = i;
 
-diff --git a/mm/kasan/common.c b/mm/kasan/common.c
-index 6814d6d6a023..6ef0abd27f06 100644
---- a/mm/kasan/common.c
-+++ b/mm/kasan/common.c
-@@ -102,7 +102,8 @@ EXPORT_SYMBOL(__kasan_check_write);
- #undef memset
- void *memset(void *addr, int c, size_t len)
- {
--	check_memory_region((unsigned long)addr, len, true, _RET_IP_);
-+	if (!check_memory_region((unsigned long)addr, len, true, _RET_IP_))
-+		return NULL;
- 
- 	return __memset(addr, c, len);
- }
-@@ -110,8 +111,9 @@ void *memset(void *addr, int c, size_t len)
- #undef memmove
- void *memmove(void *dest, const void *src, size_t len)
- {
--	check_memory_region((unsigned long)src, len, false, _RET_IP_);
--	check_memory_region((unsigned long)dest, len, true, _RET_IP_);
-+	if (!check_memory_region((unsigned long)src, len, false, _RET_IP_) ||
-+	!check_memory_region((unsigned long)dest, len, true, _RET_IP_))
-+		return NULL;
- 
- 	return __memmove(dest, src, len);
- }
-@@ -119,8 +121,9 @@ void *memmove(void *dest, const void *src, size_t
-len)
- #undef memcpy
- void *memcpy(void *dest, const void *src, size_t len)
- {
--	check_memory_region((unsigned long)src, len, false, _RET_IP_);
--	check_memory_region((unsigned long)dest, len, true, _RET_IP_);
-+	if (!check_memory_region((unsigned long)src, len, false, _RET_IP_) ||
-+	!check_memory_region((unsigned long)dest, len, true, _RET_IP_))
-+		return NULL;
- 
- 	return __memcpy(dest, src, len);
- }
-diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
-index 616f9dd82d12..02148a317d27 100644
---- a/mm/kasan/generic.c
-+++ b/mm/kasan/generic.c
-@@ -173,6 +173,11 @@ static __always_inline bool
-check_memory_region_inline(unsigned long addr,
- 	if (unlikely(size == 0))
- 		return true;
- 
-+	if (unlikely((long)size < 0)) {
-+		kasan_report(addr, size, write, ret_ip);
-+		return false;
-+	}
-+
- 	if (unlikely((void *)addr <
- 		kasan_shadow_to_mem((void *)KASAN_SHADOW_START))) {
- 		kasan_report(addr, size, write, ret_ip);
-diff --git a/mm/kasan/generic_report.c b/mm/kasan/generic_report.c
-index 36c645939bc9..52a92c7db697 100644
---- a/mm/kasan/generic_report.c
-+++ b/mm/kasan/generic_report.c
-@@ -107,6 +107,24 @@ static const char *get_wild_bug_type(struct
-kasan_access_info *info)
- 
- const char *get_bug_type(struct kasan_access_info *info)
- {
-+	/*
-+	 * If access_size is negative numbers, then it has three reasons
-+	 * to be defined as heap-out-of-bounds bug type.
-+	 * 1) Casting negative numbers to size_t would indeed turn up as
-+	 *    a large size_t and its value will be larger than ULONG_MAX/2,
-+	 *    so that this can qualify as out-of-bounds.
-+	 * 2) If KASAN has new bug type and user-space passes negative size,
-+	 *    then there are duplicate reports. So don't produce new bug type
-+	 *    in order to prevent duplicate reports by some systems
-+	 *    (e.g. syzbot) to report the same bug twice.
-+	 * 3) When size is negative numbers, it may be passed from user-space.
-+	 *    So we always print heap-out-of-bounds in order to prevent that
-+	 *    kernel-space and user-space have the same bug but have duplicate
-+	 *    reports.
-+	 */
-+	if ((long)info->access_size < 0)
-+		return "heap-out-of-bounds";
-+
- 	if (addr_has_shadow(info->access_addr))
- 		return get_shadow_bug_type(info);
- 	return get_wild_bug_type(info);
-diff --git a/mm/kasan/tags.c b/mm/kasan/tags.c
-index 0e987c9ca052..b829535a3ad7 100644
---- a/mm/kasan/tags.c
-+++ b/mm/kasan/tags.c
-@@ -86,6 +86,11 @@ bool check_memory_region(unsigned long addr, size_t
-size, bool write,
- 	if (unlikely(size == 0))
- 		return true;
- 
-+	if (unlikely((long)size < 0)) {
-+		kasan_report(addr, size, write, ret_ip);
-+		return false;
-+	}
-+
- 	tag = get_tag((const void *)addr);
- 
- 	/*
-diff --git a/mm/kasan/tags_report.c b/mm/kasan/tags_report.c
-index 969ae08f59d7..f7ae474aef3a 100644
---- a/mm/kasan/tags_report.c
-+++ b/mm/kasan/tags_report.c
-@@ -36,6 +36,24 @@
- 
- const char *get_bug_type(struct kasan_access_info *info)
- {
-+	/*
-+	 * If access_size is negative numbers, then it has three reasons
-+	 * to be defined as heap-out-of-bounds bug type.
-+	 * 1) Casting negative numbers to size_t would indeed turn up as
-+	 *    a large size_t and its value will be larger than ULONG_MAX/2,
-+	 *    so that this can qualify as out-of-bounds.
-+	 * 2) If KASAN has new bug type and user-space passes negative size,
-+	 *    then there are duplicate reports. So don't produce new bug type
-+	 *    in order to prevent duplicate reports by some systems
-+	 *    (e.g. syzbot) to report the same bug twice.
-+	 * 3) When size is negative numbers, it may be passed from user-space.
-+	 *    So we always print heap-out-of-bounds in order to prevent that
-+	 *    kernel-space and user-space have the same bug but have duplicate
-+	 *    reports.
-+	 */
-+	if ((long)info->access_size < 0)
-+		return "heap-out-of-bounds";
-+
- #ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
- 	struct kasan_alloc_meta *alloc_meta;
- 	struct kmem_cache *cache;
+-               idx = i;
++                       idx = i;
 
-
-
-
-
-commit fb5cf7bd16e939d1feef229af0211a8616c9ea03
-Author: Walter-zh Wu <walter-zh.wu@mediatek.com>
-Date:   Fri Oct 4 18:32:03 2019 +0800
-
-    kasan: add test for invalid size in memmove
-    
-    Test size is negative vaule in memmove in order to verify
-    if it correctly get KASAN report.
-    
-    Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
-
-diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-index 49cc4d570a40..06942cf585cc 100644
---- a/lib/test_kasan.c
-+++ b/lib/test_kasan.c
-@@ -283,6 +283,23 @@ static noinline void __init
-kmalloc_oob_in_memset(void)
-        kfree(ptr);
- }
- 
-+static noinline void __init kmalloc_memmove_invalid_size(void)
-+{
-+       char *ptr;
-+       size_t size = 64;
-+
-+       pr_info("invalid size in memmove\n");
-+       ptr = kmalloc(size, GFP_KERNEL);
-+       if (!ptr) {
-+               pr_err("Allocation failed\n");
-+               return;
-+       }
-+
-+       memset((char *)ptr, 0, 64);
-+       memmove((char *)ptr, (char *)ptr + 4, -2);
-+       kfree(ptr);
-+}
-+
- static noinline void __init kmalloc_uaf(void)
- {
-        char *ptr;
-@@ -773,6 +790,7 @@ static int __init kmalloc_tests_init(void)
-        kmalloc_oob_memset_4();
-        kmalloc_oob_memset_8();
-        kmalloc_oob_memset_16();
-+       kmalloc_memmove_invalid_size();
-        kmalloc_uaf();
-        kmalloc_uaf_memset();
-        kmalloc_uaf2();
-
+-               if (count < cpu_data->states[i].early_hits &&
+-                   !(tick_nohz_tick_stopped() &&
+-                     drv->states[i].target_residency < TICK_USEC)) {
+-                       count = cpu_data->states[i].early_hits;
+-                       max_early_idx = i;
++                       if (count < cpu_data->states[i].early_hits &&
++                           !(tick_nohz_tick_stopped() &&
++                             drv->states[i].target_residency < TICK_USEC)) {
++                               count = cpu_data->states[i].early_hits;
++                               max_early_idx = i;
++                       }
+                }
+        }
 
 
