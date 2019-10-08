@@ -2,100 +2,145 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A026EC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B36C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7423920815
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:34:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mRfIojx7"
+	by mail.kernel.org (Postfix) with ESMTP id B3B11206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:35:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729436AbfJHQeG (ORCPT
+        id S1729448AbfJHQfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 12:34:06 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55368 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727865AbfJHQeE (ORCPT
+        Tue, 8 Oct 2019 12:35:14 -0400
+Received: from eddie.linux-mips.org ([148.251.95.138]:52102 "EHLO
+        cvs.linux-mips.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726320AbfJHQfN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 12:34:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=LxGaMkqOaVvBpkVPmUmLJlqT8yEBVyNhBC4qVA6fBh4=; b=mRfIojx7gWC8lLI7BRQ4v+LXs
-        BZ7jrfy0PLhJVKY5bHgHqZXy43Cs4h1nYHSRutRBMouvnPwuF/G75FO+TbUqXeN4ZA3EgzWdUSw9q
-        r7L1yCNSUqTmXVUkekaLLP08cnyVyLHzQx5KOZTcW2i2g2ISBMJEhvrp9kC//b3Mj1GeiDyuxFnJt
-        l09GKlZUDk1Hk+/risdVcMcnDHIHtBZCNhLe6f1I/x8w94lMejQMc4J0Xp7UFEaW/iSIubxCghtr0
-        jNTtrzczk2mQNQT9FGfKAHMeuf7LEV+yGKtCAkerz7mEB35SWK39FGrJAB6TiWXjJehvZHYBXzQID
-        WmeKFTBZg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iHsQx-0000xV-Pe; Tue, 08 Oct 2019 16:33:59 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 56D5A305E1D;
-        Tue,  8 Oct 2019 18:33:06 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id BEC2420247CA6; Tue,  8 Oct 2019 18:33:57 +0200 (CEST)
-Date:   Tue, 8 Oct 2019 18:33:57 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Phil Auld <pauld@redhat.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <Morten.Rasmussen@arm.com>,
-        Hillf Danton <hdanton@sina.com>
-Subject: Re: [PATCH v3 04/10] sched/fair: rework load_balance
-Message-ID: <20191008163357.GF2328@hirez.programming.kicks-ass.net>
-References: <1568878421-12301-1-git-send-email-vincent.guittot@linaro.org>
- <1568878421-12301-5-git-send-email-vincent.guittot@linaro.org>
- <c752dd1a-731e-aae3-6a2c-aecf88901ac0@arm.com>
- <CAKfTPtBQNJfNmBqpuaefsLzsTrGxJ=2bTs+tRdbOAa9J3eKuVw@mail.gmail.com>
- <31cac0c1-98e4-c70e-e156-51a70813beff@arm.com>
- <20191008141642.GQ2294@hirez.programming.kicks-ass.net>
- <b4e29e48-a97c-67e5-a284-6ddc13222c5b@arm.com>
+        Tue, 8 Oct 2019 12:35:13 -0400
+Received: (from localhost user: 'ladis' uid#1021 fake: STDIN
+        (ladis@eddie.linux-mips.org)) by eddie.linux-mips.org
+        id S23991911AbfJHQfJd4fX3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 18:35:09 +0200
+Date:   Tue, 8 Oct 2019 18:35:08 +0200
+From:   Ladislav Michl <ladis@linux-mips.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, m.felsch@pengutronix.de,
+        alsa-devel@alsa-project.org, ckeepax@opensource.cirrus.com,
+        kuninori.morimoto.gx@renesas.com, linux-kernel@vger.kernel.org,
+        piotrs@opensource.cirrus.com, andradanciu1997@gmail.com,
+        lgirdwood@gmail.com, paul@crapouillou.net,
+        Hulk Robot <hulkci@huawei.com>, shifu0704@thundersoft.com,
+        enric.balletbo@collabora.com, srinivas.kandagatla@linaro.org,
+        tiwai@suse.com, mirq-linux@rere.qmqm.pl,
+        rf@opensource.wolfsonmicro.com
+Subject: Re: [alsa-devel] Applied "ASoc: tas2770: Fix build error without
+ GPIOLIB" to the asoc tree
+Message-ID: <20191008163508.GA16283@lenoch>
+References: <20191006104631.60608-1-yuehaibing@huawei.com>
+ <20191007130309.EAEBE2741EF0@ypsilon.sirena.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b4e29e48-a97c-67e5-a284-6ddc13222c5b@arm.com>
+In-Reply-To: <20191007130309.EAEBE2741EF0@ypsilon.sirena.org.uk>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 03:34:04PM +0100, Valentin Schneider wrote:
-> On 08/10/2019 15:16, Peter Zijlstra wrote:
-> > On Wed, Oct 02, 2019 at 11:47:59AM +0100, Valentin Schneider wrote:
-> > 
-> >> Yeah, right shift on signed negative values are implementation defined.
-> > 
-> > Seriously? Even under -fno-strict-overflow? There is a perfectly
-> > sensible operation for signed shift right, this stuff should not be
-> > undefined.
-> > 
-> 
-> Mmm good point. I didn't see anything relevant in the description of that
-> flag. All my copy of the C99 standard (draft) says at 6.5.7.5 is:
-> 
-> """
-> The result of E1 >> E2 [...] If E1 has a signed type and a negative value,
-> the resulting value is implementation-defined.
-> """
-> 
-> Arithmetic shift would make sense, but I think this stems from twos'
-> complement not being imposed: 6.2.6.2.2 says sign can be done with
-> sign + magnitude, twos complement or ones' complement...
+Hi YueHaibing & Mark,
 
-But -fno-strict-overflow mandates 2s complement for all such signed
-issues.
+On Mon, Oct 07, 2019 at 02:03:09PM +0100, Mark Brown wrote:
+> The patch
+> 
+>    ASoc: tas2770: Fix build error without GPIOLIB
+> 
+> has been applied to the asoc tree at
+> 
+>    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
+
+Hmm, too late it seems...
+Patch should actually remove <linux/gpio.h> as this is legacy one (see comment
+on the top and also Documentation/driver-api/gpio/consumer.rst)
+
+And that brings a question. Given this is -next only is it actually possible
+to squash fixes into 1a476abc723e ("tas2770: add tas2770 smart PA kernel driver")
+just to make bisect a bit more happy?
+
+	l.
+
+> All being well this means that it will be integrated into the linux-next
+> tree (usually sometime in the next 24 hours) and sent to Linus during
+> the next merge window (or sooner if it is a bug fix), however if
+> problems are discovered then the patch may be dropped or reverted.  
+> 
+> You may get further e-mails resulting from automated or manual testing
+> and review of the tree, please engage with people reporting problems and
+> send followup patches addressing any issues that are reported if needed.
+> 
+> If any updates are required or you are submitting further changes they
+> should be sent as incremental updates against current git, existing
+> patches will not be replaced.
+> 
+> Please add any relevant lists and maintainers to the CCs when replying
+> to this mail.
+> 
+> Thanks,
+> Mark
+> 
+> >From 03fe492e8346d3da59b6eb7ea306d46ebf22e9d5 Mon Sep 17 00:00:00 2001
+> From: YueHaibing <yuehaibing@huawei.com>
+> Date: Sun, 6 Oct 2019 18:46:31 +0800
+> Subject: [PATCH] ASoc: tas2770: Fix build error without GPIOLIB
+> 
+> If GPIOLIB is not set, building fails:
+> 
+> sound/soc/codecs/tas2770.c: In function tas2770_reset:
+> sound/soc/codecs/tas2770.c:38:3: error: implicit declaration of function gpiod_set_value_cansleep; did you mean gpio_set_value_cansleep? [-Werror=implicit-function-declaration]
+>    gpiod_set_value_cansleep(tas2770->reset_gpio, 0);
+>    ^~~~~~~~~~~~~~~~~~~~~~~~
+>    gpio_set_value_cansleep
+> sound/soc/codecs/tas2770.c: In function tas2770_i2c_probe:
+> sound/soc/codecs/tas2770.c:749:24: error: implicit declaration of function devm_gpiod_get_optional; did you mean devm_regulator_get_optional? [-Werror=implicit-function-declaration]
+>   tas2770->reset_gpio = devm_gpiod_get_optional(tas2770->dev,
+>                         ^~~~~~~~~~~~~~~~~~~~~~~
+>                         devm_regulator_get_optional
+> sound/soc/codecs/tas2770.c:751:13: error: GPIOD_OUT_HIGH undeclared (first use in this function); did you mean GPIOF_INIT_HIGH?
+>              GPIOD_OUT_HIGH);
+>              ^~~~~~~~~~~~~~
+>              GPIOF_INIT_HIGH
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: 1a476abc723e ("tas2770: add tas2770 smart PA kernel driver")
+> Suggested-by: Ladislav Michl <ladis@linux-mips.org>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> Link: https://lore.kernel.org/r/20191006104631.60608-1-yuehaibing@huawei.com
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> ---
+>  sound/soc/codecs/tas2770.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/sound/soc/codecs/tas2770.c b/sound/soc/codecs/tas2770.c
+> index dbbb21fe0548..15f6fcc6d87e 100644
+> --- a/sound/soc/codecs/tas2770.c
+> +++ b/sound/soc/codecs/tas2770.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/pm.h>
+>  #include <linux/i2c.h>
+>  #include <linux/gpio.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/firmware.h>
+> -- 
+> 2.20.1
+> 
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
