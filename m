@@ -3,136 +3,135 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7303C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 21:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F91ECE58C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 21:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EC2821835
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 21:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EB3221835
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 21:32:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570570187;
-	bh=f7XVbDLpFmAD4Xl0xpwWSVizeSVRTOEy+b9x6pPH9Ss=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FggT70bwut9LpXoODBOt19k93UvVs5ZypLHz9PTNrnOR3N3aJaMkl91hF8jaw6kHI
-	 Wj8Thqp5J/We7xrFWvdauhg/yl6dxsvS4QXtU+JPJFleMGLnzfLhgAewylYWOxM8bY
-	 O29+861ICpcpWnz4fLiorRbINmt+Yruwa4VJ2KQc=
+	s=default; t=1570570376;
+	bh=OkeZztjJfWka8pzSMPcOrgXMFjuPsLVWOcUK/R/EDaA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=Bb+QPSMBfjnM5xhHleUIBw73/hO/fXeibRDha86ytPK8pRrOSugzkpHFv49xiG0xM
+	 2O7dqjDYhieYCaKdG++nPVTMI4ql2zjCKgM00pieyU9dbISaO97sodcquQOMvArtPp
+	 qBhOeaOj49HtBNWG+fGLvVpXpNK8SJ0mn7r5qrWM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731158AbfJHV3q (ORCPT
+        id S1731081AbfJHVcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 17:29:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56834 "EHLO mail.kernel.org"
+        Tue, 8 Oct 2019 17:32:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730523AbfJHV3q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 17:29:46 -0400
-Received: from localhost (unknown [131.107.159.163])
+        id S1730523AbfJHVcy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 17:32:54 -0400
+Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D4CD21721;
-        Tue,  8 Oct 2019 21:29:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2180A2070B;
+        Tue,  8 Oct 2019 21:32:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570570184;
-        bh=f7XVbDLpFmAD4Xl0xpwWSVizeSVRTOEy+b9x6pPH9Ss=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KU55GiyhZD7rQCwbWg+1nx4bIlXF2vwAO3K23T8wnZyMeK4k6EsyGRdoXJXaRZPZg
-         IuQMXIyo/UK2UQN5K2T8RBoJ3efYWHeIJXbxAA6HqeNWCUHlnyPRvtZRajAI21oT12
-         2NvZG+fPPpQJcKxGatoGHZcpY9TYw/edOTUZ7AuQ=
-Date:   Tue, 8 Oct 2019 17:29:44 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Ilya Dryomov <idryomov@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
-        Dongsheng Yang <dongsheng.yang@easystack.cn>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>
-Subject: Re: [PATCH AUTOSEL 5.3 15/71] rbd: fix response length parameter for
- encoded strings
-Message-ID: <20191008212944.GD1396@sasha-vm>
-References: <20191001163922.14735-1-sashal@kernel.org>
- <20191001163922.14735-15-sashal@kernel.org>
- <CAOi1vP-2iSHxJVOabN05+NCiSZ0DxBC9fGN=5cx98mk5RvaDZA@mail.gmail.com>
+        s=default; t=1570570373;
+        bh=OkeZztjJfWka8pzSMPcOrgXMFjuPsLVWOcUK/R/EDaA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=FlKH8Wqfszosjq1WbJV0TfiBvFF7oSzEPUnvg03BFlSgAxMIcTjU5AwgHOrrUWiWN
+         xm8lya7Zz4byPfy5RKYQ37t10WZH0YLHYFPCgNHGEUhqSWD2nIaKkQ5XVMYVfmUDDk
+         2Btbry32WgNiS/NTqZrPl892l3uHFrpe7HumUi+8=
+Date:   Tue, 8 Oct 2019 16:32:51 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
+        George Cherian <gcherian@marvell.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "shannon.zhao@linux.alibaba.com" <shannon.zhao@linux.alibaba.com>,
+        Sunil Kovvuri Goutham <sgoutham@marvell.com>
+Subject: Re: [PATCH] PCI: Enhance the ACS quirk for Cavium devices
+Message-ID: <20191008213251.GA229610@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAOi1vP-2iSHxJVOabN05+NCiSZ0DxBC9fGN=5cx98mk5RvaDZA@mail.gmail.com>
+In-Reply-To: <20191008082515.ldm2i7j4syuzampr@rric.localdomain>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 07:15:49PM +0200, Ilya Dryomov wrote:
->On Tue, Oct 1, 2019 at 6:39 PM Sasha Levin <sashal@kernel.org> wrote:
->>
->> From: Dongsheng Yang <dongsheng.yang@easystack.cn>
->>
->> [ Upstream commit 5435d2069503e2aa89c34a94154f4f2fa4a0c9c4 ]
->>
->> rbd_dev_image_id() allocates space for length but passes a smaller
->> value to rbd_obj_method_sync().  rbd_dev_v2_object_prefix() doesn't
->> allocate space for length.  Fix both to be consistent.
->>
->> Signed-off-by: Dongsheng Yang <dongsheng.yang@easystack.cn>
->> Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
->> Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
->> Signed-off-by: Sasha Levin <sashal@kernel.org>
->> ---
->>  drivers/block/rbd.c | 10 ++++++----
->>  1 file changed, 6 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
->> index c8fb886aebd4e..69db7385c8df5 100644
->> --- a/drivers/block/rbd.c
->> +++ b/drivers/block/rbd.c
->> @@ -5669,17 +5669,20 @@ static int rbd_dev_v2_image_size(struct rbd_device *rbd_dev)
->>
->>  static int rbd_dev_v2_object_prefix(struct rbd_device *rbd_dev)
->>  {
->> +       size_t size;
->>         void *reply_buf;
->>         int ret;
->>         void *p;
->>
->> -       reply_buf = kzalloc(RBD_OBJ_PREFIX_LEN_MAX, GFP_KERNEL);
->> +       /* Response will be an encoded string, which includes a length */
->> +       size = sizeof(__le32) + RBD_OBJ_PREFIX_LEN_MAX;
->> +       reply_buf = kzalloc(size, GFP_KERNEL);
->>         if (!reply_buf)
->>                 return -ENOMEM;
->>
->>         ret = rbd_obj_method_sync(rbd_dev, &rbd_dev->header_oid,
->>                                   &rbd_dev->header_oloc, "get_object_prefix",
->> -                                 NULL, 0, reply_buf, RBD_OBJ_PREFIX_LEN_MAX);
->> +                                 NULL, 0, reply_buf, size);
->>         dout("%s: rbd_obj_method_sync returned %d\n", __func__, ret);
->>         if (ret < 0)
->>                 goto out;
->> @@ -6696,7 +6699,6 @@ static int rbd_dev_image_id(struct rbd_device *rbd_dev)
->>         dout("rbd id object name is %s\n", oid.name);
->>
->>         /* Response will be an encoded string, which includes a length */
->> -
->>         size = sizeof (__le32) + RBD_IMAGE_ID_LEN_MAX;
->>         response = kzalloc(size, GFP_NOIO);
->>         if (!response) {
->> @@ -6708,7 +6710,7 @@ static int rbd_dev_image_id(struct rbd_device *rbd_dev)
->>
->>         ret = rbd_obj_method_sync(rbd_dev, &oid, &rbd_dev->header_oloc,
->>                                   "get_id", NULL, 0,
->> -                                 response, RBD_IMAGE_ID_LEN_MAX);
->> +                                 response, size);
->>         dout("%s: rbd_obj_method_sync returned %d\n", __func__, ret);
->>         if (ret == -ENOENT) {
->>                 image_id = kstrdup("", GFP_KERNEL);
->
->Hi Sasha,
->
->This patch just made things consistent, there was no bug here.  I don't
->think it should be backported.
+On Tue, Oct 08, 2019 at 08:25:23AM +0000, Robert Richter wrote:
+> On 04.10.19 14:48:13, Bjorn Helgaas wrote:
+> > commit 37b22fbfec2d
+> > Author: George Cherian <george.cherian@marvell.com>
+> > Date:   Thu Sep 19 02:43:34 2019 +0000
+> > 
+> >     PCI: Apply Cavium ACS quirk to CN99xx and CN11xxx Root Ports
+> >     
+> >     Add an array of Cavium Root Port device IDs and apply the quirk only to the
+> >     listed devices.
+> >     
+> >     Instead of applying the quirk to all Root Ports where
+> >     "(dev->device & 0xf800) == 0xa000", apply it only to CN88xx 0xa180 and
+> >     0xa170 Root Ports.
+> 
+> No, this can't be removed. It is a match all for all CN8xxx variants
+> (note the 3 'x', all TX1 cores). So all device ids from 0xa000 to
+> 0xa7FF are affected here and need the quirk.
 
-I'll drop it, thanks!
+OK, I'll drop the patch and wait for a new one.  Maybe what was needed
+was to keep the "(dev->device & 0xf800) == 0xa000" part and add the
+pci_quirk_cavium_acs_ids[] array in addition?
 
--- 
-Thanks,
-Sasha
+> >     Also apply the quirk to CN99xx (0xaf84) and CN11xxx (0xb884) Root Ports.
+> 
+> I thought the quirk is CN8xxx specific, but I could be wrong here.
+> 
+> -Robert
+> 
+> >     
+> >     Link: https://urldefense.proofpoint.com/v2/url?u=https-3A__lore.kernel.org_r_20190919024319.GA8792-40dc5-2Deodlnx05.marvell.com&d=DwIBAg&c=nKjWec2b6R0mOyPaz7xtfQ&r=8vKOpC26NZGzQPAMiIlimxyEGCRSJiq-j8yyjPJ6VZ4&m=Vmml-rx3t63ZbbXZ0XaESAM9yAlexE29R-giTbcj4Qk&s=57jKIj8BAydbLpftLt5Ssva7vD6GuoCaIpjTi-sB5kU&e= 
+> >     Fixes: f2ddaf8dfd4a ("PCI: Apply Cavium ThunderX ACS quirk to more Root Ports")
+> >     Fixes: b404bcfbf035 ("PCI: Add ACS quirk for all Cavium devices")
+> >     Signed-off-by: George Cherian <george.cherian@marvell.com>
+> >     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> >     Cc: stable@vger.kernel.org      # v4.12+
+> > 
+> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > index 320255e5e8f8..4e5048cb5ec6 100644
+> > --- a/drivers/pci/quirks.c
+> > +++ b/drivers/pci/quirks.c
+> > @@ -4311,17 +4311,24 @@ static int pci_quirk_amd_sb_acs(struct pci_dev *dev, u16 acs_flags)
+> >  #endif
+> >  }
+> >  
+> > +static const u16 pci_quirk_cavium_acs_ids[] = {
+> > +	0xa180, 0xa170,		/* CN88xx family of devices */
+> > +	0xaf84,			/* CN99xx family of devices */
+> > +	0xb884,			/* CN11xxx family of devices */
+> > +};
+> > +
+> >  static bool pci_quirk_cavium_acs_match(struct pci_dev *dev)
+> >  {
+> > -	/*
+> > -	 * Effectively selects all downstream ports for whole ThunderX 1
+> > -	 * family by 0xf800 mask (which represents 8 SoCs), while the lower
+> > -	 * bits of device ID are used to indicate which subdevice is used
+> > -	 * within the SoC.
+> > -	 */
+> > -	return (pci_is_pcie(dev) &&
+> > -		(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) &&
+> > -		((dev->device & 0xf800) == 0xa000));
+> > +	int i;
+> > +
+> > +	if (!pci_is_pcie(dev) || pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
+> > +		return false;
+> > +
+> > +	for (i = 0; i < ARRAY_SIZE(pci_quirk_cavium_acs_ids); i++)
+> > +		if (pci_quirk_cavium_acs_ids[i] == dev->device)
+> > +			return true;
+> > +
+> > +	return false;
+> >  }
+> >  
+> >  static int pci_quirk_cavium_acs(struct pci_dev *dev, u16 acs_flags)
