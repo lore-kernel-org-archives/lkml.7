@@ -2,127 +2,531 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C286C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C611C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC864205F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2329E205F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:47:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=victronenergy.com header.i=@victronenergy.com header.b="Od9Jac7D"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Oib5jtzM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbfJHOq7 (ORCPT
+        id S1727572AbfJHOrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 8 Oct 2019 10:47:02 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:43798 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726291AbfJHOq7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Oct 2019 10:46:59 -0400
-Received: from mail-eopbgr70092.outbound.protection.outlook.com ([40.107.7.92]:11758
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725939AbfJHOq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 10:46:58 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Na9Z1oTAB4RgGv3yFK20tELnMhnFY+GqiRiqQrJ0HeT8TinXcd6MiGTQm99rzBZvHfCBY9aLKqNGRoCnPCyzdnED9QoLxWNRlOmq73py+CfVRtbnFcLR6NiLHnDPr+jQa9bJApJaF/fuGlXjN5XhU0t+9U6oiYIg5g7ww1rK+zjcshDE5r3B1Q73sFybbL46LTNi7o79kBO4wvws6QaVenS93fyFb7FdOgxgYBF3jtiQauX84YAmhyMXyF8k8Pr78bhrQlpT7urQWfR/rwnAo6o3FqJChIud1rWozqQNtl2KkAu0A+NzkfC4L2ZrNHLKtwiADX7BRZjESUEGpYaRyA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yOe7GHC2RVI/ZQ6GQlc6KTu4q9QEC1FYz/m42sAJdNE=;
- b=W+hAGELJcdHa6E9seyLHrCi2vHb4Sd3VbhPv8ATsRibZww8Kd+C0p0pm9BIG2pAezUrMkJwstGILLRrBll6hwOy/nx+oazfEBh7f8ozps3QvXOtv6AoVinGse7xIwfS4m2Uh6udhzeTAuDn5ePiFWP0+dkxahPDEga1aCxUyonTQmbWRjWi+4EQ6N1ne/EN8A+rzpOIrpEknptg4Yeoa3SnAWW87FBFeWMCbITEVMvZ7dGfN/ssUl1QVvpXtF0dfP6yEhOA/mfFhJseFiGpsGOOm2Di85Gt8TLdWgwvS2XCEnkxtky6evI/DFfAtW+8vgefuO3oWVi2i+1eyylDLoQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=victronenergy.com; dmarc=pass action=none
- header.from=victronenergy.com; dkim=pass header.d=victronenergy.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=victronenergy.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yOe7GHC2RVI/ZQ6GQlc6KTu4q9QEC1FYz/m42sAJdNE=;
- b=Od9Jac7DDnrsxH3nxWk1EDnBJqxO19SoiBtUbECIbeC4PEviD7nM4Gb+3yXeSBMCB1R98wOQt+nLK5cotKO5d6aJCLAo/lwGSe1mg7H1ah8hrYXU+qDC7aaiTgtlxikmhfwGxTjrtoV5xo21ImAxKsGiONvEW13yfhRPZxj9hVg=
-Received: from VI1PR0701MB2623.eurprd07.prod.outlook.com (10.173.82.19) by
- VI1PR0701MB2415.eurprd07.prod.outlook.com (10.168.138.145) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.15; Tue, 8 Oct 2019 14:46:52 +0000
-Received: from VI1PR0701MB2623.eurprd07.prod.outlook.com
- ([fe80::49b7:a244:d3e4:396c]) by VI1PR0701MB2623.eurprd07.prod.outlook.com
- ([fe80::49b7:a244:d3e4:396c%9]) with mapi id 15.20.2347.016; Tue, 8 Oct 2019
- 14:46:51 +0000
-From:   Jeroen Hofstee <jhofstee@victronenergy.com>
-To:     Tony Lindgren <tony@atomide.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-CC:     "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
-        Koen Kooi <koen@dominion.thruhere.net>,
-        =?utf-8?B?QmVub8OudCBDb3Vzc29u?= <bcousson@baylibre.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ARM: dts: am335x-sancloud-bbe: Fix PHY mode for ethernet
-Thread-Topic: [PATCH] ARM: dts: am335x-sancloud-bbe: Fix PHY mode for ethernet
-Thread-Index: AQHVeQdofKkOWkby2kaW5oWVx4ahWqdHbuCAgAFGYQD///NzgIAILT2AgAAGboA=
-Date:   Tue, 8 Oct 2019 14:46:51 +0000
-Message-ID: <e3f824c9-92bd-1750-bdd4-dce61e618008@victronenergy.com>
-References: <20191002095416.19603-1-jhofstee@victronenergy.com>
- <d027ef07-807d-6a7b-2939-b67be4542469@ti.com>
- <436f1712-7dec-db40-d08f-1a3032af3596@victronenergy.com>
- <d85cd860-22a3-6142-7f2d-736a428d7a31@ti.com>
- <20191008142349.GE5610@atomide.com>
-In-Reply-To: <20191008142349.GE5610@atomide.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-x-originating-ip: [2001:1c01:3bc5:4e00:58f1:a5aa:4c48:a7ed]
-x-clientproxiedby: AM0PR02CA0100.eurprd02.prod.outlook.com
- (2603:10a6:208:154::41) To VI1PR0701MB2623.eurprd07.prod.outlook.com
- (2603:10a6:801:b::19)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jhofstee@victronenergy.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 79d92dc1-557d-4b96-a9dc-08d74bfe5ad6
-x-ms-traffictypediagnostic: VI1PR0701MB2415:
-x-microsoft-antispam-prvs: <VI1PR0701MB24152E784635D3EBBD44AA29C09A0@VI1PR0701MB2415.eurprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 01842C458A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(376002)(396003)(366004)(39850400004)(136003)(199004)(189003)(4744005)(486006)(5660300002)(81156014)(305945005)(478600001)(86362001)(25786009)(81166006)(31696002)(7736002)(8936002)(8676002)(476003)(46003)(186003)(446003)(11346002)(6506007)(386003)(52116002)(76176011)(102836004)(316002)(53546011)(110136005)(54906003)(58126008)(2616005)(99286004)(36756003)(71200400001)(6486002)(229853002)(71190400001)(256004)(66556008)(66946007)(66446008)(66476007)(64756008)(6246003)(6512007)(2906002)(31686004)(65806001)(6436002)(14454004)(65956001)(4326008)(6116002);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0701MB2415;H:VI1PR0701MB2623.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: victronenergy.com does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: PFzaOCfpXzfJ0IzUzxkzOVDk4QadGP8+eQL4yG3iQNQFGDQnS8rF2inhCV2trJib/aMWVZJ9dhEixWKl3lQ8XgzjVNmDezYR9C77okr9E2dtEuBpFQ+kSy+gEcFODsdK7JE63KS/8aiOGFEw8w8ktK07XRbKI+smhx0/QDhJ9RQ2V9yZYWB4nQQSiepHc+dLPfg9fh1HJXd7JZesEFRHsK7OxTI+trYQwu+YmKuqoBwTv8BwMWhXi494p9b5W2f1rxw03lWHNxnwuRu823NXdBCgbja2Z0QpCE0ZKXLSVO6W/VhBBnfWnbXPAK/nCw7hLpe91Z6uIkQQwH5ESSTT8WCOLTRsqcytPBG4myTyp9L09M4LncFzthEhJEQNldeWpTUs0QeO58cxYJOOUYArvUo2fTPWbpveQERnAIu043Q=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4D6D65D68B507E4CBD6C706EF6CA5632@eurprd07.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: victronenergy.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 79d92dc1-557d-4b96-a9dc-08d74bfe5ad6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Oct 2019 14:46:51.6487
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 60b95f08-3558-4e94-b0f8-d690c498e225
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: RmEONF7CJPz85G8hRDKLUK5kIa1TYhLjCSfqTJLPtnwmF162sCKO4pUgn7Oz32f0omHe/bUMRfoFRsG3lsDjFdIZGs1b0fjDsuvroNA/pkI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0701MB2415
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x98ESweN041893;
+        Tue, 8 Oct 2019 14:46:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
+ bh=m8JpdpN883nHXp3llPnA77MQvWxorCT+C/dtRSJsyW0=;
+ b=Oib5jtzMC1e7V1YmYiMWrwW8ndsJKvstlGClzqD2QVsppsYN4NeCCJqwnPBvajBsuCcj
+ 16pbfoYgYOqGBey44qlNXBEOY4wtjFOAeyDoXIvbxKweU6m+inQMrvDnYvCHPaYTnFYo
+ bbQdnN4eLxeNTWvZU0w6CbAg5HUMRJjdhWpBkYobrJgXJ9PHlnRv+0YDh+iQeXEFLUaP
+ WdHv1rUaCBDP0KP51F19qaowPfa47+LJtn1/o1QLryRvphzp+Ezm7MmnJ+UHLpki2jIL
+ YKuI9LiXTdgiBqd5/qbgF8xtCwRuqqWUCda/BP6CeGnOVDPESTn7pToq8XcXQLGOZZKK CA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2vek4qdr7j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 08 Oct 2019 14:46:35 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x98ET9Hp070613;
+        Tue, 8 Oct 2019 14:44:35 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2vg1yw2r4w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 08 Oct 2019 14:44:35 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x98EiXh2027735;
+        Tue, 8 Oct 2019 14:44:33 GMT
+Received: from dhcp-10-175-191-48.vpn.oracle.com (/10.175.191.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 08 Oct 2019 14:44:33 +0000
+From:   Alan Maguire <alan.maguire@oracle.com>
+To:     linux-kselftest@vger.kernel.org, brendanhiggins@google.com,
+        skhan@linuxfoundation.org
+Cc:     mcgrof@kernel.org, keescook@chromium.org, yzaikin@google.com,
+        akpm@linux-foundation.org, yamada.masahiro@socionext.com,
+        catalin.marinas@arm.com, joe.lawrence@redhat.com,
+        penguin-kernel@i-love.sakura.ne.jp, schowdary@nvidia.com,
+        urezki@gmail.com, andriy.shevchenko@linux.intel.com,
+        changbin.du@intel.com, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Knut Omang <knut.omang@oracle.com>
+Subject: [PATCH linux-kselftest-test 1/3] kunit: allow kunit tests to be loaded as a module
+Date:   Tue,  8 Oct 2019 15:43:50 +0100
+Message-Id: <1570545832-32326-2-git-send-email-alan.maguire@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1570545832-32326-1-git-send-email-alan.maguire@oracle.com>
+References: <1570545832-32326-1-git-send-email-alan.maguire@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9403 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=11 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=780
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910080133
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9403 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=11 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=863 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910080133
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gVG9ueSwNCg0KT24gMTAvOC8xOSA0OjIzIFBNLCBUb255IExpbmRncmVuIHdyb3RlOg0K
-PiAqIEdyeWdvcmlpIFN0cmFzaGtvIDxncnlnb3JpaS5zdHJhc2hrb0B0aS5jb20+IFsxOTEwMDMg
-MDI6MzJdOg0KPj4gT24gMDMvMTAvMjAxOSAxMToxNiwgSmVyb2VuIEhvZnN0ZWUgd3JvdGU6DQo+
-Pj4gRnVydGhlcm1vcmUgNC4xOSBpcyBmaW5lLCBzbyB0aGVyZSBpcyBubyBuZWVkIHRvIGluY2x1
-ZGUgaXQgaW4gc3RhYmxlDQo+Pj4gYW5kIGhhdmUgYSBub3RlIHRvIG1ha2Ugc3VyZSBhbHNvIG90
-aGVyIHBhdGNoZXMgYXJlIHJlcXVpcmVkIGV0Yy4NCj4+IEhlbmNlIGFsbCBhYm92ZSBwYXRjaGVz
-IHdlbnQgaW4gNS4xIGl0IHdvdWxkIGJlIGNvcnJlY3QgdG8gbWVudGlvbiBvbmx5DQo+PiA2ZDRj
-ZDA0MWYwYWYgbmV0OiBwaHk6IGF0ODAzeDogZGlzYWJsZSBkZWxheSBvbmx5IGZvciBSR01JSSBt
-b2RlDQo+IEplcm9lbiwgY2FuIHlvdSBwbGVhc2Ugc2VuZCBhbiB1cGRhdGVkIHBhdGNoIHdpdGgg
-dGhlIGZpeGVzDQo+IHRhZyBjaGFuZ2VkPw0KDQoNCk5vdCBhdCB0aGUgbW9tZW50LiBJIGFtIHJp
-Z2h0IHRoYXQgdGhlIG1lbnRpb25lZCBjb21taXQNCmlzIHRoZSBmaXJzdCBvbmUgdG8gYnJlYWsg
-dGhlIGV0aGVybmV0LiBHcnlnb3JpaSBpcyByaWdodCBpdA0Kc2VlbXMgdGhhdCB0aGF0IGNvbW1p
-dCBzaG91bGRuJ3QgYWZmZWN0IGl0LCB5ZXQgaXQgZG9lcy4NCg0KU28gSSB3b3VsZCBsaWtlIHRv
-IHVuZGVyc3RhbmQgaG93IGl0IGJyZWFrcyB0aGluZ3Mgc28gSSBjYW4NCnVwIHdpdGggYSBzZW5z
-aWJsZSBjb21taXQgbWVzc2FnZSAob3Igd2UganVzdCBkcm9wIHJlZmVyZW5jZQ0KdG8gb3RoZXIg
-Y29tbWl0cyBzbyBJIGRvbid0IGhhdmUgdG8gZGlnIHRocm91Z2ggdGhlIDUuMSBoaXN0b3J5LA0K
-dGhlIHBhdGNoIGJ5IGl0c2VsZiBpcyBhbHNvIHZhbGlkKS4NCg0KUmVnYXJkcywNCg0KSmVyb2Vu
-DQoNCg==
+as tests are added to kunit, it will become less feasible to execute
+all built tests together.  By supporting modular tests we provide
+a simple way to do selective execution on a running system; specifying
+
+CONFIG_KUNIT=y
+CONFIG_KUNIT_EXAMPLE_TEST=m
+
+...means we can simply "insmod example-test.ko" to run the tests.
+
+To achieve this we need to
+
+o export the required symbols in kunit
+o support a new way of declaring test suites.  Because a module cannot
+  do multiple late_initcall()s, we provide a kunit_test_suites() macro
+  to declare multiple suites within the same module at once.
+
+Signed-off-by: Knut Omang <knut.omang@oracle.com>
+Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+---
+ include/kunit/test.h       | 36 ++++++++++++++++++++++++++----------
+ kernel/sysctl-test.c       |  6 +++++-
+ kunit/Kconfig              |  4 ++--
+ kunit/assert.c             |  8 ++++++++
+ kunit/example-test.c       |  6 +++++-
+ kunit/string-stream-test.c |  9 +++++++--
+ kunit/string-stream.c      |  7 +++++++
+ kunit/test-test.c          |  8 ++++++--
+ kunit/test.c               |  8 ++++++++
+ kunit/try-catch.c          |  8 ++++++--
+ lib/Kconfig.debug          |  4 ++--
+ 11 files changed, 82 insertions(+), 22 deletions(-)
+
+diff --git a/include/kunit/test.h b/include/kunit/test.h
+index dba4830..37a21dd 100644
+--- a/include/kunit/test.h
++++ b/include/kunit/test.h
+@@ -12,6 +12,7 @@
+ #include <kunit/assert.h>
+ #include <kunit/try-catch.h>
+ #include <linux/kernel.h>
++#include <linux/module.h>
+ #include <linux/slab.h>
+ #include <linux/types.h>
+ 
+@@ -197,31 +198,46 @@ struct kunit {
+ int kunit_run_tests(struct kunit_suite *suite);
+ 
+ /**
+- * kunit_test_suite() - used to register a &struct kunit_suite with KUnit.
++ * kunit_test_suites() - used to register &struct kunit_suite suites with KUnit.
+  *
+- * @suite: a statically allocated &struct kunit_suite.
++ * @...: a list of statically allocated &struct kunit_suite.
+  *
+- * Registers @suite with the test framework. See &struct kunit_suite for
++ * Registers @... suites with the test framework. See &struct kunit_suite for
+  * more information.
+  *
+- * NOTE: Currently KUnit tests are all run as late_initcalls; this means
++ * When builtin,  KUnit tests are all run as late_initcalls; this means
+  * that they cannot test anything where tests must run at a different init
+  * phase. One significant restriction resulting from this is that KUnit
+  * cannot reliably test anything that is initialize in the late_init phase;
+  * another is that KUnit is useless to test things that need to be run in
+  * an earlier init phase.
+  *
++ * An alternative is to build the tests as a module.  Because modules
++ * do not support multiple late_initcall()s, we need to initialize an
++ * array of suites for a module.
++ *
+  * TODO(brendanhiggins@google.com): Don't run all KUnit tests as
+  * late_initcalls.  I have some future work planned to dispatch all KUnit
+  * tests from the same place, and at the very least to do so after
+  * everything else is definitely initialized.
+  */
+-#define kunit_test_suite(suite)						       \
+-	static int kunit_suite_init##suite(void)			       \
+-	{								       \
+-		return kunit_run_tests(&suite);				       \
+-	}								       \
+-	late_initcall(kunit_suite_init##suite)
++#define kunit_test_suites(...)						\
++	static struct kunit_suite *suites[] = { __VA_ARGS__, NULL};	\
++	static int kunit_test_suites_init(void)				\
++	{								\
++		unsigned int i;						\
++		for (i = 0; suites[i] != NULL; i++)			\
++			kunit_run_tests(suites[i]);			\
++		return 0;						\
++	}								\
++	late_initcall(kunit_test_suites_init);				\
++	static void __exit kunit_test_suites_exit(void)			\
++	{								\
++		return;							\
++	}								\
++	module_exit(kunit_test_suites_exit)
++
++#define	kunit_test_suite(suite)	kunit_test_suites(suite)
+ 
+ /*
+  * Like kunit_alloc_resource() below, but returns the struct kunit_resource
+diff --git a/kernel/sysctl-test.c b/kernel/sysctl-test.c
+index 2a63241..15161c5 100644
+--- a/kernel/sysctl-test.c
++++ b/kernel/sysctl-test.c
+@@ -389,4 +389,8 @@ static void sysctl_test_api_dointvec_write_single_greater_int_max(
+ 	.test_cases = sysctl_test_cases,
+ };
+ 
+-kunit_test_suite(sysctl_test_suite);
++kunit_test_suite(&sysctl_test_suite);
++
++#ifdef MODULE
++MODULE_LICENSE("GPL");
++#endif /* MODULE */
+diff --git a/kunit/Kconfig b/kunit/Kconfig
+index 8541ef9..f28bf086 100644
+--- a/kunit/Kconfig
++++ b/kunit/Kconfig
+@@ -15,7 +15,7 @@ config KUNIT
+ 	  Documentation/dev-tools/kunit/.
+ 
+ config KUNIT_TEST
+-	bool "KUnit test for KUnit"
++	tristate "KUnit test for KUnit"
+ 	depends on KUNIT
+ 	help
+ 	  Enables the unit tests for the KUnit test framework. These tests test
+@@ -25,7 +25,7 @@ config KUNIT_TEST
+ 	  expected.
+ 
+ config KUNIT_EXAMPLE_TEST
+-	bool "Example test for KUnit"
++	tristate "Example test for KUnit"
+ 	depends on KUNIT
+ 	help
+ 	  Enables an example unit test that illustrates some of the basic
+diff --git a/kunit/assert.c b/kunit/assert.c
+index 86013d4..92eba2a 100644
+--- a/kunit/assert.c
++++ b/kunit/assert.c
+@@ -24,6 +24,7 @@ void kunit_base_assert_format(const struct kunit_assert *assert,
+ 	string_stream_add(stream, "%s FAILED at %s:%d\n",
+ 			 expect_or_assert, assert->file, assert->line);
+ }
++EXPORT_SYMBOL_GPL(kunit_base_assert_format);
+ 
+ void kunit_assert_print_msg(const struct kunit_assert *assert,
+ 			    struct string_stream *stream)
+@@ -31,6 +32,7 @@ void kunit_assert_print_msg(const struct kunit_assert *assert,
+ 	if (assert->message.fmt)
+ 		string_stream_add(stream, "\n%pV", &assert->message);
+ }
++EXPORT_SYMBOL_GPL(kunit_assert_print_msg);
+ 
+ void kunit_fail_assert_format(const struct kunit_assert *assert,
+ 			      struct string_stream *stream)
+@@ -38,6 +40,7 @@ void kunit_fail_assert_format(const struct kunit_assert *assert,
+ 	kunit_base_assert_format(assert, stream);
+ 	string_stream_add(stream, "%pV", &assert->message);
+ }
++EXPORT_SYMBOL_GPL(kunit_fail_assert_format);
+ 
+ void kunit_unary_assert_format(const struct kunit_assert *assert,
+ 			       struct string_stream *stream)
+@@ -56,6 +59,7 @@ void kunit_unary_assert_format(const struct kunit_assert *assert,
+ 				 unary_assert->condition);
+ 	kunit_assert_print_msg(assert, stream);
+ }
++EXPORT_SYMBOL_GPL(kunit_unary_assert_format);
+ 
+ void kunit_ptr_not_err_assert_format(const struct kunit_assert *assert,
+ 				     struct string_stream *stream)
+@@ -76,6 +80,7 @@ void kunit_ptr_not_err_assert_format(const struct kunit_assert *assert,
+ 	}
+ 	kunit_assert_print_msg(assert, stream);
+ }
++EXPORT_SYMBOL_GPL(kunit_ptr_not_err_assert_format);
+ 
+ void kunit_binary_assert_format(const struct kunit_assert *assert,
+ 				struct string_stream *stream)
+@@ -97,6 +102,7 @@ void kunit_binary_assert_format(const struct kunit_assert *assert,
+ 			 binary_assert->right_value);
+ 	kunit_assert_print_msg(assert, stream);
+ }
++EXPORT_SYMBOL_GPL(kunit_binary_assert_format);
+ 
+ void kunit_binary_ptr_assert_format(const struct kunit_assert *assert,
+ 				    struct string_stream *stream)
+@@ -118,6 +124,7 @@ void kunit_binary_ptr_assert_format(const struct kunit_assert *assert,
+ 			 binary_assert->right_value);
+ 	kunit_assert_print_msg(assert, stream);
+ }
++EXPORT_SYMBOL_GPL(kunit_binary_ptr_assert_format);
+ 
+ void kunit_binary_str_assert_format(const struct kunit_assert *assert,
+ 				    struct string_stream *stream)
+@@ -139,3 +146,4 @@ void kunit_binary_str_assert_format(const struct kunit_assert *assert,
+ 			 binary_assert->right_value);
+ 	kunit_assert_print_msg(assert, stream);
+ }
++EXPORT_SYMBOL_GPL(kunit_binary_str_assert_format);
+diff --git a/kunit/example-test.c b/kunit/example-test.c
+index f64a829..6c6a408 100644
+--- a/kunit/example-test.c
++++ b/kunit/example-test.c
+@@ -85,4 +85,8 @@ static int example_test_init(struct kunit *test)
+  * This registers the above test suite telling KUnit that this is a suite of
+  * tests that need to be run.
+  */
+-kunit_test_suite(example_test_suite);
++kunit_test_suite(&example_test_suite);
++
++#ifdef MODULE
++MODULE_LICENSE("GPL");
++#endif /* MODULE */
+diff --git a/kunit/string-stream-test.c b/kunit/string-stream-test.c
+index 76cc05e..7a3e7a0 100644
+--- a/kunit/string-stream-test.c
++++ b/kunit/string-stream-test.c
+@@ -45,8 +45,13 @@ static void string_stream_test_get_string(struct kunit *test)
+ 	{}
+ };
+ 
+-static struct kunit_suite string_stream_test_suite = {
++struct kunit_suite string_stream_test_suite = {
+ 	.name = "string-stream-test",
+ 	.test_cases = string_stream_test_cases
+ };
+-kunit_test_suite(string_stream_test_suite);
++
++kunit_test_suite(&string_stream_test_suite);
++
++#ifdef MODULE
++MODULE_LICENSE("GPL");
++#endif /* MODULE */
+diff --git a/kunit/string-stream.c b/kunit/string-stream.c
+index e6d17aa..e4f3a97 100644
+--- a/kunit/string-stream.c
++++ b/kunit/string-stream.c
+@@ -100,6 +100,7 @@ int string_stream_vadd(struct string_stream *stream,
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(string_stream_vadd);
+ 
+ int string_stream_add(struct string_stream *stream, const char *fmt, ...)
+ {
+@@ -112,6 +113,7 @@ int string_stream_add(struct string_stream *stream, const char *fmt, ...)
+ 
+ 	return result;
+ }
++EXPORT_SYMBOL_GPL(string_stream_add);
+ 
+ static void string_stream_clear(struct string_stream *stream)
+ {
+@@ -145,6 +147,7 @@ char *string_stream_get_string(struct string_stream *stream)
+ 
+ 	return buf;
+ }
++EXPORT_SYMBOL_GPL(string_stream_get_string);
+ 
+ int string_stream_append(struct string_stream *stream,
+ 			 struct string_stream *other)
+@@ -158,11 +161,13 @@ int string_stream_append(struct string_stream *stream,
+ 
+ 	return string_stream_add(stream, other_content);
+ }
++EXPORT_SYMBOL_GPL(string_stream_append);
+ 
+ bool string_stream_is_empty(struct string_stream *stream)
+ {
+ 	return list_empty(&stream->fragments);
+ }
++EXPORT_SYMBOL_GPL(string_stream_is_empty);
+ 
+ struct string_stream_alloc_context {
+ 	struct kunit *test;
+@@ -207,6 +212,7 @@ struct string_stream *alloc_string_stream(struct kunit *test, gfp_t gfp)
+ 				    gfp,
+ 				    &context);
+ }
++EXPORT_SYMBOL_GPL(alloc_string_stream);
+ 
+ int string_stream_destroy(struct string_stream *stream)
+ {
+@@ -215,3 +221,4 @@ int string_stream_destroy(struct string_stream *stream)
+ 				      string_stream_free,
+ 				      stream);
+ }
++EXPORT_SYMBOL_GPL(string_stream_destroy);
+diff --git a/kunit/test-test.c b/kunit/test-test.c
+index 5ebe059..b5fdbe3 100644
+--- a/kunit/test-test.c
++++ b/kunit/test-test.c
+@@ -100,7 +100,6 @@ static int kunit_try_catch_test_init(struct kunit *test)
+ 	.init = kunit_try_catch_test_init,
+ 	.test_cases = kunit_try_catch_test_cases,
+ };
+-kunit_test_suite(kunit_try_catch_test_suite);
+ 
+ /*
+  * Context for testing test managed resources
+@@ -328,4 +327,9 @@ static void kunit_resource_test_exit(struct kunit *test)
+ 	.exit = kunit_resource_test_exit,
+ 	.test_cases = kunit_resource_test_cases,
+ };
+-kunit_test_suite(kunit_resource_test_suite);
++kunit_test_suites(&kunit_resource_test_suite,
++		  &kunit_try_catch_test_suite);
++
++#ifdef MODULE
++MODULE_LICENSE("GPL");
++#endif /* MODULE */
+diff --git a/kunit/test.c b/kunit/test.c
+index c83c0fa..e7896f1 100644
+--- a/kunit/test.c
++++ b/kunit/test.c
+@@ -171,6 +171,7 @@ void kunit_do_assertion(struct kunit *test,
+ 	if (assert->type == KUNIT_ASSERTION)
+ 		kunit_abort(test);
+ }
++EXPORT_SYMBOL_GPL(kunit_do_assertion);
+ 
+ void kunit_init_test(struct kunit *test, const char *name)
+ {
+@@ -179,6 +180,7 @@ void kunit_init_test(struct kunit *test, const char *name)
+ 	test->name = name;
+ 	test->success = true;
+ }
++EXPORT_SYMBOL_GPL(kunit_init_test);
+ 
+ /*
+  * Initializes and runs test case. Does not clean up or do post validations.
+@@ -317,6 +319,7 @@ int kunit_run_tests(struct kunit_suite *suite)
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(kunit_run_tests);
+ 
+ struct kunit_resource *kunit_alloc_and_get_resource(struct kunit *test,
+ 						    kunit_resource_init_t init,
+@@ -342,6 +345,7 @@ struct kunit_resource *kunit_alloc_and_get_resource(struct kunit *test,
+ 
+ 	return res;
+ }
++EXPORT_SYMBOL_GPL(kunit_alloc_and_get_resource);
+ 
+ static void kunit_resource_free(struct kunit *test, struct kunit_resource *res)
+ {
+@@ -400,6 +404,7 @@ int kunit_resource_destroy(struct kunit *test,
+ 	kunit_resource_free(test, resource);
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(kunit_resource_destroy);
+ 
+ struct kunit_kmalloc_params {
+ 	size_t size;
+@@ -435,6 +440,7 @@ void *kunit_kmalloc(struct kunit *test, size_t size, gfp_t gfp)
+ 				    gfp,
+ 				    &params);
+ }
++EXPORT_SYMBOL_GPL(kunit_kmalloc);
+ 
+ void kunit_kfree(struct kunit *test, const void *ptr)
+ {
+@@ -447,6 +453,7 @@ void kunit_kfree(struct kunit *test, const void *ptr)
+ 
+ 	WARN_ON(rc);
+ }
++EXPORT_SYMBOL_GPL(kunit_kfree);
+ 
+ void kunit_cleanup(struct kunit *test)
+ {
+@@ -476,3 +483,4 @@ void kunit_cleanup(struct kunit *test)
+ 		kunit_resource_free(test, resource);
+ 	}
+ }
++EXPORT_SYMBOL_GPL(kunit_cleanup);
+diff --git a/kunit/try-catch.c b/kunit/try-catch.c
+index 55686839..a288012 100644
+--- a/kunit/try-catch.c
++++ b/kunit/try-catch.c
+@@ -19,6 +19,7 @@ void __noreturn kunit_try_catch_throw(struct kunit_try_catch *try_catch)
+ 	try_catch->try_result = -EFAULT;
+ 	complete_and_exit(try_catch->try_completion, -EFAULT);
+ }
++EXPORT_SYMBOL_GPL(kunit_try_catch_throw);
+ 
+ static int kunit_generic_run_threadfn_adapter(void *data)
+ {
+@@ -50,6 +51,7 @@ static unsigned long kunit_test_timeout(void)
+ 	 * For more background on this topic, see:
+ 	 * https://mike-bland.com/2011/11/01/small-medium-large.html
+ 	 */
++#ifndef MODULE
+ 	if (sysctl_hung_task_timeout_secs) {
+ 		/*
+ 		 * If sysctl_hung_task is active, just set the timeout to some
+@@ -60,9 +62,9 @@ static unsigned long kunit_test_timeout(void)
+ 		 */
+ 		timeout_msecs = (sysctl_hung_task_timeout_secs - 1) *
+ 				MSEC_PER_SEC;
+-	} else {
++	} else
++#endif
+ 		timeout_msecs = 300 * MSEC_PER_SEC; /* 5 min */
+-	}
+ 
+ 	return timeout_msecs;
+ }
+@@ -106,6 +108,7 @@ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
+ 
+ 	try_catch->catch(try_catch->context);
+ }
++EXPORT_SYMBOL_GPL(kunit_try_catch_run);
+ 
+ void kunit_try_catch_init(struct kunit_try_catch *try_catch,
+ 			  struct kunit *test,
+@@ -116,3 +119,4 @@ void kunit_try_catch_init(struct kunit_try_catch *try_catch,
+ 	try_catch->try = try;
+ 	try_catch->catch = catch;
+ }
++EXPORT_SYMBOL_GPL(kunit_try_catch_init);
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index a425741..1d1e38d 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -1966,10 +1966,10 @@ config TEST_SYSCTL
+ 	  If unsure, say N.
+ 
+ config SYSCTL_KUNIT_TEST
+-	bool "KUnit test for sysctl"
++	tristate "KUnit test for sysctl"
+ 	depends on KUNIT
+ 	help
+-	  This builds the proc sysctl unit test, which runs on boot.
++	  This builds the proc sysctl unit test, which runs on boot/module load.
+ 	  Tests the API contract and implementation correctness of sysctl.
+ 	  For more information on KUnit and unit tests in general please refer
+ 	  to the KUnit documentation in Documentation/dev-tools/kunit/.
+-- 
+1.8.3.1
+
