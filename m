@@ -2,99 +2,137 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7681C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2E5C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7BEC2173B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:53:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="m2y5d8Tc"
+	by mail.kernel.org (Postfix) with ESMTP id 3D1E920673
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:54:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730533AbfJHKxg (ORCPT
+        id S1730639AbfJHKy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 06:53:36 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:39374 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730008AbfJHKxg (ORCPT
+        Tue, 8 Oct 2019 06:54:27 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:44762 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730118AbfJHKy1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 06:53:36 -0400
-Received: by mail-qt1-f193.google.com with SMTP id n7so24518874qtb.6
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 03:53:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=I/XAz6EQQu2WMJ2Xm/Zu1m8Sd6t9gK7D5HCK9hWTzCE=;
-        b=m2y5d8Tcs8u9GpWYwEKhUdJe2ngQOmPDj8+a3tK4xhEr7u+kr7LXS8iuB+aghFA6Qy
-         4uAE4PbkaRR3EPMk/yWmyEoVUD7Q/ds9QkzWfe+uVbB7rkVVo+GjRREQuU7XfTBOeGT0
-         8jpEBsQq74dAtyTlQLF7Dnzq4++Xve8gLpyZcb/Oh1hc38ko7n6dQLmmMHaOvgxtimYg
-         TVoK+YGXK7nbFHF0ykRBPsKI3DDQR9uDk/SfqP3ng2a462tViNsbQPrWLoQU8byY+ZkH
-         NAXVtNsem3dW6UyvF9IkNVll9OhGoVzkRJupzKxkylIfjZ641a9c2TJYhUA1SAqRgWNb
-         kYJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=I/XAz6EQQu2WMJ2Xm/Zu1m8Sd6t9gK7D5HCK9hWTzCE=;
-        b=hRgAJ9pvP9uLpavZcNT/UBgbF7q2mzAwzIYAfu87V3XqvCIAhXObeaLcPkVWsmS37J
-         xXjJL0g03jHxl1gKzpQJXeUToDgDg7gMuBToYmZHLwTJuf1DPg1jKM5tQAev+OHu56z0
-         fRYhYUcU8RvED5agRj90vIROHk883pygkQCQ4elEHpqInuskyZM1ATc/S8XGkAaZlhAh
-         WEJ+hP9x+lBi0vpoIoemwyCirpN0vZfNxOazlhoXjkQfYmeG1IEbZa27TkgbvJJ95zZ+
-         UDQH7yKzgA4hjsfJG9rmsEka6iyVTynuoYh/uvzDDVq3hiFYY743LUEGfQlUdOZpGImR
-         KcOg==
-X-Gm-Message-State: APjAAAUjnvQjMFVU6buGgr1/Nlidl0Z0eKnKaLjydC/rZEJ/MpLVvKtT
-        9pEc/CMN5m9kejkEGmJ26KxPaFMRDWlEfE0q3bZxCw==
-X-Google-Smtp-Source: APXvYqzbJ/Tk9Al57lBqL/SeljRXAbglXoJFju7NC/jfHt0IuVX+6aDIXdMxE1cxGezyP3wqRp8o1f7BVO4yYBd3Nu4=
-X-Received: by 2002:ac8:c01:: with SMTP id k1mr34376936qti.59.1570532014073;
- Tue, 08 Oct 2019 03:53:34 -0700 (PDT)
+        Tue, 8 Oct 2019 06:54:27 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 7DDAD28FBC6
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     linux-kernel@vger.kernel.org, thierry.reding@gmail.com
+Cc:     heiko@sntech.de, dianders@chromium.org, mka@chromium.org,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
+        groeck@chromium.org, kernel@collabora.com, bleung@chromium.org,
+        linux-pwm@vger.kernel.org,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Subject: [PATCH] pwm: cros-ec: Let cros_ec_pwm_get_state() return the last applied state
+Date:   Tue,  8 Oct 2019 12:54:17 +0200
+Message-Id: <20191008105417.16132-1-enric.balletbo@collabora.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20191007115009.25672-1-axel.lin@ingics.com> <20191007115009.25672-2-axel.lin@ingics.com>
- <CAFRkauCW5-+u6npP2fpAaNL5kPdKXQ_wWrZ_7qZkJr=uMP1BsA@mail.gmail.com>
- <20191008104407.GA4382@sirena.co.uk> <CAFRkauDq=6X9LRj7APwKOV+7CVZN5OSVuWXmwBQ3QQPWD9Nauw@mail.gmail.com>
- <20191008105101.GB4382@sirena.co.uk>
-In-Reply-To: <20191008105101.GB4382@sirena.co.uk>
-From:   Axel Lin <axel.lin@ingics.com>
-Date:   Tue, 8 Oct 2019 18:53:22 +0800
-Message-ID: <CAFRkauCft5p4P_LkZVLde62Yh03p-_2hNPm6wEct5XSeg-p0Bg@mail.gmail.com>
-Subject: Re: [RESEND][PATCH 2/2] regulator: da9062: Simplify
- da9062_buck_set_mode for BUCK_MODE_MANUAL case
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Steve Twiss <stwiss.opensource@diasemi.com>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark Brown <broonie@kernel.org> =E6=96=BC 2019=E5=B9=B410=E6=9C=888=E6=97=
-=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=886:51=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> On Tue, Oct 08, 2019 at 06:48:15PM +0800, Axel Lin wrote:
-> > Mark Brown <broonie@kernel.org> =E6=96=BC 2019=E5=B9=B410=E6=9C=888=E6=
-=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=886:44=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> > > It doesn't seem to apply against current code.
->
-> > I just test apply it and It looks fine to be applied by linux-next tree=
-.
-> > Or which branch of regulator tree should I generate the patch?
->
-> Well, I queued it for 5.5.  I've not seen if it's got dependencies
-> against 5.4 yet but you chased me so...
+For the cros-ec-pwm, "disabled" is the same as "duty cycle == 0", and is
+not possible to program a duty cycle while the device is disabled. However,
+the PWM API allows us to configure the "duty cycle" while the device is
+"disabled". But now, pwm_get_state() is returning the real hardware state
+instead of the last applied state, and this change of behavior, broke
+the display on my rk3399-gru-kevin and doesn't turn on anymore.
 
-Ok, I see the problem.
-commit a72865f05782 ("regulator: da9062: fix suspend_enable/disable
-preparation") is in for-5.4 branch
-but not in for-5.5 branch. So it does not apply to for-5.5 branch.
+Commit 01ccf903edd6 ("pwm: Let pwm_get_state() return the last implemented
+state") introduced this change of behavior. And, assuming that this is
+the right to do, workaround this problem for the cros-ec-pwm driver by
+reverting the mentioned commit at the lowlevel driver.
 
-But if I generate the patch on for-5.5 branch, I think you will get
-conflict when merge for-5.4 and for-5.5 to for-next.
+With that patch applied pwm_get_state() will return only the programmed
+hardware duty cycle value if the PWM is enabled. When is disabled, will
+return the last applied duty_cycle value instead. That's not ideal, but
+definetely is better than don't implement .get_state().
+
+Fixes: 01ccf903edd6 ("pwm: Let pwm_get_state() return the last implemented state")
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+---
+
+ drivers/pwm/pwm-cros-ec.c | 32 ++++++++++++++++++++++++--------
+ 1 file changed, 24 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/pwm/pwm-cros-ec.c b/drivers/pwm/pwm-cros-ec.c
+index 89497448d217..f750a3cf0c6c 100644
+--- a/drivers/pwm/pwm-cros-ec.c
++++ b/drivers/pwm/pwm-cros-ec.c
+@@ -18,11 +18,13 @@
+  * @dev: Device node
+  * @ec: Pointer to EC device
+  * @chip: PWM controller chip
++ * @state: Holds the last state applied
+  */
+ struct cros_ec_pwm_device {
+ 	struct device *dev;
+ 	struct cros_ec_device *ec;
+ 	struct pwm_chip chip;
++	struct pwm_state state;
+ };
+ 
+ static inline struct cros_ec_pwm_device *pwm_to_cros_ec_pwm(struct pwm_chip *c)
+@@ -102,6 +104,9 @@ static int cros_ec_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	if (state->period != EC_PWM_MAX_DUTY)
+ 		return -EINVAL;
+ 
++	/* Store the new state */
++	ec_pwm->state = *state;
++
+ 	/*
+ 	 * EC doesn't separate the concept of duty cycle and enabled, but
+ 	 * kernel does. Translate.
+@@ -117,17 +122,28 @@ static void cros_ec_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	struct cros_ec_pwm_device *ec_pwm = pwm_to_cros_ec_pwm(chip);
+ 	int ret;
+ 
+-	ret = cros_ec_pwm_get_duty(ec_pwm->ec, pwm->hwpwm);
+-	if (ret < 0) {
+-		dev_err(chip->dev, "error getting initial duty: %d\n", ret);
+-		return;
++	/*
++	 * As there is no way for this hardware to separate the concept of
++	 * duty cycle and enabled, but the PWM API does, let return the last
++	 * applied state when the PWM is disabled and only return the real
++	 * hardware value when the PWM is enabled. Otherwise, a user of this
++	 * driver, can get confused because won't be able to program a duty
++	 * cycle while the PWM is disabled.
++	 */
++	state->enabled = ec_pwm->state.enabled;
++	if (state->enabled) {
++		ret = cros_ec_pwm_get_duty(ec_pwm->ec, pwm->hwpwm);
++		if (ret < 0) {
++			dev_err(chip->dev, "error getting initial duty: %d\n",
++				ret);
++			return;
++		}
++		state->duty_cycle = ret;
++	} else {
++		state->duty_cycle = ec_pwm->state.duty_cycle;
+ 	}
+ 
+-	state->enabled = (ret > 0);
+ 	state->period = EC_PWM_MAX_DUTY;
+-
+-	/* Note that "disabled" and "duty cycle == 0" are treated the same */
+-	state->duty_cycle = ret;
+ }
+ 
+ static struct pwm_device *
+-- 
+2.20.1
+
