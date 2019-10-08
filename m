@@ -2,75 +2,100 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34DB2C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 063AEC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1470320815
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:14:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3BE22070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:15:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728465AbfJHQOU (ORCPT
+        id S1728762AbfJHQPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 12:14:20 -0400
-Received: from muru.com ([72.249.23.125]:36022 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726138AbfJHQOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 12:14:20 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id DB4A48081;
-        Tue,  8 Oct 2019 16:14:52 +0000 (UTC)
-Date:   Tue, 8 Oct 2019 09:14:16 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Jeroen Hofstee <jhofstee@victronenergy.com>
-Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
-        Koen Kooi <koen@dominion.thruhere.net>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ARM: dts: am335x-sancloud-bbe: Fix PHY mode for ethernet
-Message-ID: <20191008161416.GG5610@atomide.com>
-References: <20191002095416.19603-1-jhofstee@victronenergy.com>
- <d027ef07-807d-6a7b-2939-b67be4542469@ti.com>
- <436f1712-7dec-db40-d08f-1a3032af3596@victronenergy.com>
- <d85cd860-22a3-6142-7f2d-736a428d7a31@ti.com>
- <20191008142349.GE5610@atomide.com>
- <1f779973-1702-47eb-158f-7000770c435a@victronenergy.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1f779973-1702-47eb-158f-7000770c435a@victronenergy.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Tue, 8 Oct 2019 12:15:21 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:45551 "EHLO
+        mail.loongson.cn" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725966AbfJHQPV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 12:15:21 -0400
+Received: from linux.loongson.cn (unknown [10.20.41.27])
+        by mail (Coremail) with SMTP id QMiowPAxKcYPtpxd380LAA--.155S2;
+        Wed, 09 Oct 2019 00:15:11 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     paul.burton@mips.com, ralf@linux-mips.org, jhogan@kernel.org
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] MIPS: generic: Use __initconst for const init data
+Date:   Wed,  9 Oct 2019 00:15:09 +0800
+Message-Id: <1570551309-21021-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: QMiowPAxKcYPtpxd380LAA--.155S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7tr4kCrW5GryrAw1DKr4kJFb_yoW8Gw1xpF
+        W093W8Gr1UWF4rXa97Aa4DXrnxCan3ua4ayF1DK3s2q3Z09w17JFWvqay5Zr15G3yIq3WF
+        qr1xXr9xJF4UAFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9Fb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6r1S6rWUM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4
+        A2jsIEc7CjxVAFwI0_Jr0_Gr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
+        w4CE5I8CrVC2j2WlYx0EF7xvrVAajcxG14v26r1j6r4UMcIj6xIIjxv20xvE14v26r1j6r
+        18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vI
+        r41lF7xvr2IYc2Ij64vIr40E4x8a64kEw24l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
+        0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+        zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
+        4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j
+        6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcS
+        sGvfC2KfnxnUUI43ZEXa7IU0g18PUUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Jeroen Hofstee <jhofstee@victronenergy.com> [191008 16:03]:
-> Hello Tony,
-> 
-> On 10/8/19 4:23 PM, Tony Lindgren wrote:
-> > * Grygorii Strashko <grygorii.strashko@ti.com> [191003 02:32]:
-> >> On 03/10/2019 11:16, Jeroen Hofstee wrote:
-> >>> Furthermore 4.19 is fine, so there is no need to include it in stable
-> >>> and have a note to make sure also other patches are required etc.
-> >> Hence all above patches went in 5.1 it would be correct to mention only
-> >> 6d4cd041f0af net: phy: at803x: disable delay only for RGMII mode
-> > Jeroen, can you please send an updated patch with the fixes
-> > tag changed?
-> >
-> 
-> For completeness, there is no "Fixes tag" as you mentioned.
-> The commit only refers to another commit which introduces
-> a problem.
+Fix the following checkpatch errors:
 
-Well please add the fixes tag, that way this will get
-properly applied to earlier stable kernels too :)
+$ ./scripts/checkpatch.pl --no-tree -f arch/mips/generic/init.c
+ERROR: Use of const init definition must use __initconst
+#23: FILE: arch/mips/generic/init.c:23:
++static __initdata const void *fdt;
 
-Regards,
+ERROR: Use of const init definition must use __initconst
+#24: FILE: arch/mips/generic/init.c:24:
++static __initdata const struct mips_machine *mach;
 
-Tony
+ERROR: Use of const init definition must use __initconst
+#25: FILE: arch/mips/generic/init.c:25:
++static __initdata const void *mach_match_data;
+
+Fixes: eed0eabd12ef ("MIPS: generic: Introduce generic DT-based board support")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+
+v2: update the commit message and use the 'Fixes:' tag
+
+ arch/mips/generic/init.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/mips/generic/init.c b/arch/mips/generic/init.c
+index d5b8c47..1de215b 100644
+--- a/arch/mips/generic/init.c
++++ b/arch/mips/generic/init.c
+@@ -20,9 +20,9 @@
+ #include <asm/smp-ops.h>
+ #include <asm/time.h>
+ 
+-static __initdata const void *fdt;
+-static __initdata const struct mips_machine *mach;
+-static __initdata const void *mach_match_data;
++static __initconst const void *fdt;
++static __initconst const struct mips_machine *mach;
++static __initconst const void *mach_match_data;
+ 
+ void __init prom_init(void)
+ {
+-- 
+2.1.0
 
 
