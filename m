@@ -2,121 +2,94 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD448C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7024C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B629721835
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:17:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A96E821924
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:18:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570555074;
-	bh=74Ktqz38e0dJgYhE/drk7oFR2lsSjUQ8AEJK7DYGs4A=;
+	s=default; t=1570555095;
+	bh=BZa10g+YgmZlgnTNV2h2NFRZN0W142JipT0oPGCOm0Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kvTpKSedSHcQxJpHoySSwWxsai7GGuuu1nuFVLYbwuC5OJz5/DSxZ5qUge6BJzmpW
-	 kyqyzHMfMoIgaZ+AfSdo9GuS56AvtgZztg8Byx2Ox3MDgbIypOZW0981M084jsUIGD
-	 AS6cj6jluZRx1VMRCmSexSoJHtm07kS8krT9fyT0=
+	b=FKeEiAaXPaUR8OjAPD5KrwZnQkFuqZ4PL+kRaIlDChivE7MgLlOA6VVpB+hZwphQ1
+	 B8DoVedN+YXZrKebENP+143XO3UOof+uvuCGwHwYqyyU8EOg5wYkeY88xtqu5vcJZJ
+	 1AGtroCSatRT+IRSyk1w7WbpQ17x+VFIn38Royn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729403AbfJHRRy (ORCPT
+        id S1729472AbfJHRSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 13:17:54 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45512 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728961AbfJHRRx (ORCPT
+        Tue, 8 Oct 2019 13:18:15 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35920 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726138AbfJHRSO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 13:17:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=4mqdZlErqq2Bt7M06GBMpHKMhqkoX4+sfbP0n/X4pVc=; b=lMSAEjrfE63qh0t7WHODraAOr
-        IaUbiWQQMtVkWgxiAV8md1o/YI4HF2g49/9vWuPNyrng5cMit0q3SxXzCglbIPY7cOlDDVGXnWrdZ
-        6RkMEVOJYuQjNwj6arZ/pO9KhsYxaK9MPDzXWo75qlo3gy+VPfITfGFtgn8jvfZhyfNq8=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iHt7L-0000d7-Vs; Tue, 08 Oct 2019 17:17:48 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 34C8A2740D4A; Tue,  8 Oct 2019 18:17:47 +0100 (BST)
-Date:   Tue, 8 Oct 2019 18:17:47 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-samsung-soc@vger.kernel.org,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Kamil Konieczny <k.konieczny@samsung.com>
-Subject: Re: [PATCH] regulator: core: Skip balancing of the enabled
- regulators in regulator_enable()
-Message-ID: <20191008171747.GS4382@sirena.co.uk>
-References: <20191008101709.13827-1-m.szyprowski@samsung.com>
- <20191008115025.GF4382@sirena.co.uk>
- <0e222fdd-4407-51ea-b75c-a62621cbe622@samsung.com>
- <20191008120611.GG4382@sirena.co.uk>
- <9268b455-ec66-97e1-909d-f964ac31c0ef@samsung.com>
- <20191008124736.GJ4382@sirena.co.uk>
- <86b9b4b5-cca5-9052-7c87-c5679dfffff4@samsung.com>
- <be8d3280-9855-ed18-b2ab-d7fb28d80b82@gmail.com>
- <20191008161535.GN4382@sirena.co.uk>
- <4ad890b7-705e-94f9-2e61-1f3a60984c91@gmail.com>
+        Tue, 8 Oct 2019 13:18:14 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y19so20350321wrd.3;
+        Tue, 08 Oct 2019 10:18:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+KCXyzpU3dgR07Gdbce6LfLYUIptdiLzSDu/Iqt21TQ=;
+        b=bmgrElu2VlCS5UslRJXA+iibBbwS2jsxFsYeN7y+Ue9vmI21omWyNFYFzme7i68uFe
+         i+wJAyyk5wJgyKl80DMofzp4jizT6WGtdancUzaVemuadEl6l9br3nMRDeD6nYvO+SWI
+         GjuooVG3pD+nMmIC+yjTK0ZkoXBHc08MrZbNIh4NT5NLVpHiw1852DrTAsfsKXd+/qTW
+         kp1wiCr7v+nOqRzvoD4ZcYLz/euKXzOw4oSyahDTRkiERYBqZWfWlbL14WBnEWxlBOXW
+         21NC0fS66ejUa05WIwEdTEc8jYAiOVQ3BmV98rghqGzEWA0VTEHYjfQMwwYAGM0p64in
+         Bavw==
+X-Gm-Message-State: APjAAAWhkagxhWzrvuqDpHaEiz5NrDVdx6QeiMApFYjqpb1FfjSk4TGh
+        p5A5oRrnUN7Ce4OxT07neF3AoRUq
+X-Google-Smtp-Source: APXvYqySEnlrvHQ0j8san+qAcBH4oeN9WXugf40WlyqhbiYA+KvafyW9c7JtN+PLERblpK393GQ4/A==
+X-Received: by 2002:a5d:4689:: with SMTP id u9mr28038407wrq.78.1570555092266;
+        Tue, 08 Oct 2019 10:18:12 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.145])
+        by smtp.googlemail.com with ESMTPSA id z9sm19137134wrl.35.2019.10.08.10.18.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 08 Oct 2019 10:18:11 -0700 (PDT)
+Date:   Tue, 8 Oct 2019 19:18:09 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Lihua Yao <ylhuajnu@outlook.com>
+Subject: Re: [PATCH] ARM: dts: s3c64xx: Fix init order of clock providers
+Message-ID: <20191008171809.GA25661@kozik-lap>
+References: <20191008165917.23908-1-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="QRtLtq+kfJNLc57H"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <4ad890b7-705e-94f9-2e61-1f3a60984c91@gmail.com>
-X-Cookie: Do not disturb.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191008165917.23908-1-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Oct 08, 2019 at 06:59:17PM +0200, Krzysztof Kozlowski wrote:
+> From: Lihua Yao <ylhuajnu@outlook.com>
+> 
+> fin_pll is the parent of clock-controller@7e00f000, specify
+> the dependency to ensure proper initialization order of clock
+> providers.
+> 
+> without this patch:
+> [    0.000000] S3C6410 clocks: apll = 0, mpll = 0
+> [    0.000000]  epll = 0, arm_clk = 0
+> 
+> with this patch:
+> [    0.000000] S3C6410 clocks: apll = 532000000, mpll = 532000000
+> [    0.000000]  epll = 24000000, arm_clk = 532000000
+> 
+> Fixes: 3f6d439f2022 ("clk: reverse default clk provider initialization order in of_clk_init()")
+> Signed-off-by: Lihua Yao <ylhuajnu@outlook.com>
 
---QRtLtq+kfJNLc57H
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks, applied.
 
-On Tue, Oct 08, 2019 at 08:05:03PM +0300, Dmitry Osipenko wrote:
-> 08.10.2019 19:15, Mark Brown =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+Best regards,
+Krzysztof
 
-> > That sounds like it might just postpone the inevitable - if you set the
-> > wrong voltage first it might decide to drop down some voltage that
-> > wasn't expected.  There's a bit of a bootstrapping issue.  I think it
-> > would be safer to just say that anything that is within spec won't get
-> > changed any time we balance, we'd only change things if needed to bring
-> > them back into spec.
-
-> Yes, the case of changing voltage before regulator is enabled seems
-> won't work as expected.
-
-> Maybe it won't hurt to disallow a non always-on regulators to be coupled
-> until there will be a real user for that case.
-
-I thought that coupling with the CPU core and main SoC power regulators
-was one of the main use cases for this feature?
-
---QRtLtq+kfJNLc57H
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2cxLoACgkQJNaLcl1U
-h9DjLgf9Gvem9ox+y3vOfD+4C0f4CIR0bUNT/g2GkBLpFmcExWG9djaEFeIaXmKh
-FBRYi092ZOLmSGhxNxpqAG3+FjYmhj8k+9jlUxfJVLKwehNy89kG9tCT7tQzJRLO
-35ZV/rK+GIfgyqWq4B64zzkXJRClUxJviej0Gxgp+pFPakvcbk28iTxUeLoGL5lE
-fXBh4nSGvvgMyiN72ZJQG43hcWx5X5wBHQEmyIjCFspqI69SQTFmkz52I/C5h0Tk
-ABSznYUeftAKn70ca1kHF2XYogz+5HILCc+IkF4V5LaZhzIQgGe4F7QX3WWIvHtn
-zPsltgmkpnhWYap9ItVsU0j5xOu9Ww==
-=XoKN
------END PGP SIGNATURE-----
-
---QRtLtq+kfJNLc57H--
