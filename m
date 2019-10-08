@@ -2,176 +2,88 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1119C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D879CC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2AB5206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A83D720673
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:31:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Jaw6DUR1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jaok6n+f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730890AbfJHNag (ORCPT
+        id S1730936AbfJHNbp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 09:30:36 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:39946 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730317AbfJHNag (ORCPT
+        Tue, 8 Oct 2019 09:31:45 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:44696 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730249AbfJHNbo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 09:30:36 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x98DUQh5006610;
-        Tue, 8 Oct 2019 08:30:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570541426;
-        bh=lQQiCwrpULzFgm3ZorluBP+qndxuBlCDA9JrLAelV6w=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=Jaw6DUR15NED4trF7LQ+GSvwQnDzExBq3Hw3+XQAUjz2dx1H93lPy4N2EqJid+ttr
-         27NfNH8KyRavgm/EqaJwjZVvZ5/S+CTftv0aR/rq2hNLfpUxzbBjxMzLtsb2Vm1nbt
-         KXHqb+HJn/1BQvzoq12F7U+Tie5d91bt9txDmPGQ=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x98DUQeb078006
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 8 Oct 2019 08:30:26 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 8 Oct
- 2019 08:30:23 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 8 Oct 2019 08:30:23 -0500
-Received: from [10.250.99.146] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x98DUNZQ000416;
-        Tue, 8 Oct 2019 08:30:23 -0500
-Subject: Re: [PATCH v9 4/5] dt-bindings: backlight: Add led-backlight binding
-From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Dan Murphy <dmurphy@ti.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>
-References: <20191007124437.20367-1-jjhiblot@ti.com>
- <20191007124437.20367-5-jjhiblot@ti.com>
- <CAL_JsqLTqnKpU4PB8Zt9SSPSia5mkFcUgoA8ZyX_1E_HfdFyxg@mail.gmail.com>
- <30fcd898-aa50-bac2-b316-0d9bf2429369@ti.com>
-Message-ID: <bc5e4094-2b58-c917-9b9e-0f646c04dd78@ti.com>
-Date:   Tue, 8 Oct 2019 15:30:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 8 Oct 2019 09:31:44 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 21so13972165otj.11
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 06:31:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DlqTGKDatQ39JBp5MaCG8YiZeVo+Zi+HgwYgtcFJ7bM=;
+        b=jaok6n+ftbtguoOgZOkoaVWuKNg/hT1AF+vvxUa8L6VaZYoJW9uTxf5UoaDdOCrqAy
+         2twyG3ioLpAMv2NcmNn/qtjEoCt56r4R5NQZOcPbs6TH7Yfd3jcGYOq1T3rMj19Sf3jS
+         CFwJDPFawl0ALy9+pHKRyZ0nbcXQZO4eaHgqn/EFiCMcrIEH7GJB16rAcH+R3rbkIwqL
+         ZWadGRgNBVuWoCkowErXK473HPRGN72dATrIFSsUsR9OeVFDdlB5ayBOP3aL/dwianX5
+         cRCO17gZhajg/Fgz0jJzmXz0S9vaCdKTvb9kyYB3DBha6o7de0BRT8TzF3SJT+2ynR/R
+         woDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DlqTGKDatQ39JBp5MaCG8YiZeVo+Zi+HgwYgtcFJ7bM=;
+        b=MBxyUi+7wwP2lRs7M37uZr9Z+n0+LNq4Q5zBIgb/i2sbKqatjyo2WRTN+stjsbQ1Le
+         Dsltdnq5Y7zlkLgiHubdt3M5drqEPOzoflUZD415jPojp4nhIkW21aKTQngVClRaA6+H
+         Skzp/wPOMoZnMtbx8CZhfJTwL5Y6522CL8HzOc9qkm2kdljRV1AWWXZSDDT+qnll5iJL
+         opv4XzZ+Hd4Njtiv7zEyCneclWKTFmWa71soXOUuRlswQali4lqogCesvMH8zsi175fq
+         L7x+Dzn3f4rB1SBcenlAux/GTYurcaVTVmGVQl4VLFCMzwSabSx2HEWgm80ZiKUG3ucz
+         ZFZw==
+X-Gm-Message-State: APjAAAXmVu/RKrvUlVJXz8U/VDW1a6qKhk9CqTO2XFoMg2mRF+zK5Z64
+        WLtgkikBa1a/AmX/ssDzllhYDo83EQBJe7wzJuY=
+X-Google-Smtp-Source: APXvYqyig+ODteQZhBcuNLfnk8kQqZ1n49hWxgEP5iwlYTj+3wEOKyrlEHtnCkOS6uAJzNS1YDXiOcAVtIC9MQpRPnk=
+X-Received: by 2002:a9d:7498:: with SMTP id t24mr26700822otk.0.1570541503407;
+ Tue, 08 Oct 2019 06:31:43 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <30fcd898-aa50-bac2-b316-0d9bf2429369@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1570515056-23589-1-git-send-email-hariprasad.kelam@gmail.com>
+In-Reply-To: <1570515056-23589-1-git-send-email-hariprasad.kelam@gmail.com>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Tue, 8 Oct 2019 09:31:32 -0400
+Message-ID: <CAGngYiX0zoAQB=SEoXfoMm9u_JzHu3eLErj4zmTYtSAoDwkp6Q@mail.gmail.com>
+Subject: Re: [PATCH] staging: fieldbus: make use of devm_platform_ioremap_resource
+To:     hariprasad Kelam <hariprasad.kelam@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rob,
+On Tue, Oct 8, 2019 at 2:11 AM hariprasad Kelam
+<hariprasad.kelam@gmail.com> wrote:
+>
+> From: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+>
+> fix below issues reported by coccicheck
+> drivers/staging//fieldbus/anybuss/arcx-anybus.c:135:1-5: WARNING: Use
+> devm_platform_ioremap_resource for base
+> drivers/staging//fieldbus/anybuss/arcx-anybus.c:248:1-14: WARNING: Use
+> devm_platform_ioremap_resource for cd -> cpld_base
+>
+> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+> ---
+>  drivers/staging/fieldbus/anybuss/arcx-anybus.c | 8 ++------
+>  1 file changed, 2 insertions(+), 6 deletions(-)
 
-On 08/10/2019 14:51, Jean-Jacques Hiblot wrote:
-> Hi Rob,
->
-> On 07/10/2019 18:15, Rob Herring wrote:
->> Please send DT bindings to DT list or it's never in my queue. IOW,
->> send patches to the lists that get_maintainers.pl tells you to.
->>
->> On Mon, Oct 7, 2019 at 7:45 AM Jean-Jacques Hiblot <jjhiblot@ti.com> 
->> wrote:
->>> Add DT binding for led-backlight.
->>>
->>> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
->>> Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
->>> Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
->>> ---
->>>   .../bindings/leds/backlight/led-backlight.txt | 28 
->>> +++++++++++++++++++
->>>   1 file changed, 28 insertions(+)
->>>   create mode 100644 
->>> Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
->> Please make this a DT schema.
->
-> OK.
->
-> BTW I used "make dt_binding_check" but had to fix a couple of YAMLs 
-> file to get it to work. Do you have a kernel tree with already all the 
-> YAML files in good shape ? Or do you want me to post the changes to 
-> devicetree@vger.kernel.org ?
->
->
->>
->>> diff --git 
->>> a/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt 
->>> b/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
->>> new file mode 100644
->>> index 000000000000..4c7dfbe7f67a
->>> --- /dev/null
->>> +++ 
->>> b/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
->>> @@ -0,0 +1,28 @@
->>> +led-backlight bindings
->>> +
->>> +This binding is used to describe a basic backlight device made of 
->>> LEDs.
->>> +It can also be used to describe a backlight device controlled by 
->>> the output of
->>> +a LED driver.
->>> +
->>> +Required properties:
->>> +  - compatible: "led-backlight"
->>> +  - leds: a list of LEDs
->> 'leds' is already used as a node name and mixing is not ideal.
->>
->> We already have 'flash-leds' in use and with the same definition, so
->> lets continue that and use 'backlight-leds'.
-> OK
-
-I am taking that back. I have added of_get_led() and devm_of_get_led() 
-to the LED core to make it easier to get a LED from the DT. I modeled 
-the interface like it is done for PWM, PHYs or clocks. The property 
-containing list/array of phandle  is always named the same. To get one 
-particular PWM/PHY/clock, a identifier (name or integer) must be provided.
-
-So unless there is a strong incentive to do otherwise I's rather keep 
-this name here.
-
-
-JJ
-
-
->>> +
->>> +Optional properties:
->>> +  - brightness-levels: Array of distinct brightness levels. The 
->>> levels must be
->>> +                       in the range accepted by the underlying LED 
->>> devices.
->>> +                       This is used to translate a backlight 
->>> brightness level
->>> +                       into a LED brightness level. If it is not 
->>> provided, the
->>> +                       identity mapping is used.
->>> +
->>> +  - default-brightness-level: The default brightness level.
->> You can just assume these 2 get a common schema at some point. So just
->> need to define any additional constraints if possible.
->
-> Maybe we should keep them until such a common schema is written ?
->
-> JJ
->
->>
->> Rob
+Reviewed-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Tested-by: Sven Van Asbroeck <TheSven73@gmail.com>
