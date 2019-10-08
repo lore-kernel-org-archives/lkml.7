@@ -2,116 +2,107 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA1B5C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9D6C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD2AA2070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3345D206C2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:34:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mxq2c0dM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="S/y/UYFI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730349AbfJHKam (ORCPT
+        id S1730316AbfJHKew (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 06:30:42 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45668 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729790AbfJHKam (ORCPT
+        Tue, 8 Oct 2019 06:34:52 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51282 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729876AbfJHKew (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 06:30:42 -0400
-Received: by mail-wr1-f66.google.com with SMTP id r5so18693423wrm.12;
-        Tue, 08 Oct 2019 03:30:38 -0700 (PDT)
+        Tue, 8 Oct 2019 06:34:52 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 7so2578006wme.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 03:34:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=i5lHuAeIrDG9VP/johzYKtAJHBG0Gx+vdNgMDdNvGZQ=;
-        b=mxq2c0dMge/WK1ONqF82XxHe1rQ7f+zlZ5qJCMPruXYMOoRJ9qrjamUNh7a4vMdQnb
-         9W9cDxcFW3X6yal6DHbnclcKC5ZkD4hff8iWM8RKiC2m8LIwxtquR7yNgZ1IRql057ai
-         ZD/UuqPD7nN+B4Q70m3rmnfh4Jq/nELSt7QCBPvOwVecrAqDE/VZOW9sWFMLf5z8dRni
-         P60yUn2Sg3dIBNbKKyZZFuiRdxdlUBfXml5Mu2GY8V7bdwYm8BGy+NVXAsm7Pt7IAnus
-         7Z7tzRPlrCgGJZQw23REqSLUvE1DJsAl/H4V+iulWzXFCm8lCyA9iM5mFpjHEeRiF8Yb
-         oYUA==
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=yhoP5CFY+Z1ghLZyUQcS4Xw0PBKTH2xNqhN5u2X2Zzc=;
+        b=S/y/UYFIfK5H9H2HljRRWcBwJ8ElgkL7TyHzC4kXPvVwxvpRbnTaMm0R/RDTQW3QDo
+         R2AQ0tHtXzOmzjcF0HBHdZsQfX+cem0hZzCB8bzwis0VRQHcKRLhy2nOtURawr/8sixL
+         ZehQEUTJCwts6uZ4FqewNFSZIzqfeLrRp8RFdbAdmlRcaQ84u+RGwK7b20gClMNHFJTs
+         8zazCsfJ8utaVe9grK31P0Q663c7Y2oVP5+SFdFI3aBl+q9wxuME/HS1rhiO6M1+1tzg
+         aUUuBEfh1J0FIZ75a1foG5Cv9rreLhueg3K8gKSGkD+gnS6kPci613hhSFpvsIxTZhxc
+         SaqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=i5lHuAeIrDG9VP/johzYKtAJHBG0Gx+vdNgMDdNvGZQ=;
-        b=eb+qEqpyOO/miTJxPcJRVTKsuf6Okmd1ksiNH8iKY+ad9471vH031W8gevvMqcXI16
-         CXuTh3I1o99Q4hFsEGnFpTdiS6RMJlGRI6SmAbztD2dpP7WObb8NN7GmIWoc2g2XRxQy
-         q0bZL8+azdeN2oIwmgoU0wimH7cm+Mucv3P7pfDWhhQGbQGoTExYLAWXcgoy/7qaGGKC
-         x7ddeW0pIS9QjuDTGAB9bMN4LFC9rqdR5MYJzxUXRDI4tVrsSWEroO213yi5qNzfdjQH
-         0+1ROS3vviLNYRbIZ4pKLVhui7y+bfTO8YDxREuZ2/Qtpluvi7M1gkb4oRZggnOGy3yn
-         g66w==
-X-Gm-Message-State: APjAAAX2dc3iER7RFEfa95j/sJTeZrbTzeuOZWpWyvN9clIsZ4onE8te
-        Eu5ZLVa2XjU0NbJlYl6paWk=
-X-Google-Smtp-Source: APXvYqx+yLmhVo59qtrHGg3BJsPgVadeghZtSHm6NsEerDLDJhE4SG+UH+62s8R4IJSQ4PaE9AvalQ==
-X-Received: by 2002:adf:d1a4:: with SMTP id w4mr23331419wrc.331.1570530638027;
-        Tue, 08 Oct 2019 03:30:38 -0700 (PDT)
-Received: from [10.0.20.253] ([95.157.63.22])
-        by smtp.gmail.com with ESMTPSA id p7sm1825629wma.34.2019.10.08.03.30.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Oct 2019 03:30:36 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com, Florian Weimer <fw@deneb.enyo.de>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-api@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Arnd Bergmann <arnd@arndb.de>, Helge Deller <deller@gmx.de>
-Subject: Re: [REPOST][RFC][PATCH] sysctl: Remove the sysctl system call
-To:     Kees Cook <keescook@chromium.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-References: <8736gcjosv.fsf@x220.int.ebiederm.org>
- <201910011140.EA0181F13@keescook> <87y2y271ws.fsf@mid.deneb.enyo.de>
- <87tv8pftjj.fsf_-_@x220.int.ebiederm.org> <201910031404.C30A0F16@keescook>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <4c3e4883-706e-fd1b-4f4f-0653eabeb027@gmail.com>
-Date:   Tue, 8 Oct 2019 12:30:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <201910031404.C30A0F16@keescook>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=yhoP5CFY+Z1ghLZyUQcS4Xw0PBKTH2xNqhN5u2X2Zzc=;
+        b=QxjfJ/YqzFA/vvQm3v5OInmJH5KajJMUaq89YAxcTcimQnbMbmwlxsmcB+uZutg816
+         O0Xur+/loW9J5dE1Ewzt9gXdHf3iNCjHq6R69CQFrW/urWmyr9y5jZX/mXyJedqDlakL
+         KTYu27woALrmmfljrrlNfnHUJj0rF4zc7n3+0e3J9bKSR5SRtLkQ+kk4f5pnkf0xpcA1
+         AS/hIxKY0omL/WpDkiS+7FwhS8pQAOi5Kz4v8tU44dVHelV1Dok+SRIUJD6n5Qz7FX2M
+         fGGAluZBttIvscWhiDM4CDgTSnhybhB/kazNKiHb+TAWQpxAqmAASxtEDY0wZuEMeovq
+         GGLg==
+X-Gm-Message-State: APjAAAWH1fAgbD0Hd5lpT4jM38fIT6iUPakWB4+RbyeayFOrHSOmZK6R
+        YBqSz9uxVzNQ8ixEDlLCsKavgjH0F81fHvQb
+X-Google-Smtp-Source: APXvYqxOtD4WlrE1pyD3uJ7bqFN11xNdK3t/H3wgvpDqFkTZ+Wb4TRhM7KwImXRCWbyD1sQHepAmKg==
+X-Received: by 2002:a1c:e906:: with SMTP id q6mr3029258wmc.136.1570530889569;
+        Tue, 08 Oct 2019 03:34:49 -0700 (PDT)
+Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
+        by smtp.gmail.com with ESMTPSA id d15sm7310906wru.50.2019.10.08.03.34.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 08 Oct 2019 03:34:48 -0700 (PDT)
+From:   Michal Simek <michal.simek@xilinx.com>
+To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
+        michal.simek@xilinx.com, git@xilinx.com
+Cc:     Kuldeep Dave <kuldeep.dave@xilinx.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Firoz Khan <firoz.khan@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Will Deacon <will@kernel.org>, linux-riscv@lists.infradead.org
+Subject: [PATCH] microblaze: Include generic support for MSI irqdomains
+Date:   Tue,  8 Oct 2019 12:34:47 +0200
+Message-Id: <aa6dd855474451ff4f2e82691d1f590f3a85ba68.1570530881.git.michal.simek@xilinx.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/3/19 11:05 PM, Kees Cook wrote:
-> On Thu, Oct 03, 2019 at 03:44:32PM -0500, Eric W. Biederman wrote:
->>
->> This system call has been deprecated almost since it was introduced, and none
->> of the common distributions enable it.  The only indication that I can find that
->> anyone might care is that a few of the defconfigs in the kernel enable it.  However
->> that is a small fractions of the defconfigs so I suspect it just a lack of care
->> rather than a reflection of software using the the sysctl system call.
->>
->> As there appear to be no users of the sysctl system call, remove the
->> code so that the proc filesystem can be simplified.
-> 
-> nitpick: line lengths near 80 characters
-> 
->> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-> 
-> But, yes, I would love to see this gone. :)
-> 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+From: Kuldeep Dave <kuldeep.dave@xilinx.com>
 
-And for the record, the manual page has since 2007 documented that 
-this system call is likely to go away in the future.
+Enable msi.h generation for pci/pcie irq domain support.
 
-Cheers,
+The same change has been done by commit 251a44888183
+("riscv: include generic support for MSI irqdomains").
 
-Michael
+Signed-off-by: Kuldeep Dave <kuldeep.dave@xilinx.com>
+Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
 
+ arch/microblaze/include/asm/Kbuild | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/arch/microblaze/include/asm/Kbuild b/arch/microblaze/include/asm/Kbuild
+index e5c9170a07fc..83417105c00a 100644
+--- a/arch/microblaze/include/asm/Kbuild
++++ b/arch/microblaze/include/asm/Kbuild
+@@ -25,6 +25,7 @@ generic-y += local64.h
+ generic-y += mcs_spinlock.h
+ generic-y += mm-arch-hooks.h
+ generic-y += mmiowb.h
++generic-y += msi.h
+ generic-y += parport.h
+ generic-y += percpu.h
+ generic-y += preempt.h
 -- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+2.17.1
+
