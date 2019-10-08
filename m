@@ -2,104 +2,216 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE26C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E05C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB114206C2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1F9B206C2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:51:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570528305;
+	bh=sZv4aqSOD7cAvov8mBecUf7/pJZWeTt7DAg6gCWRInI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=DNFtx0jE0Y1h3lcJnJMlG94QeXIZchvEDTHgfdpkUSZLYLYVs3QltveuhCQcNWvId
+	 tv8YyglKzle1+zWRfV23W340X4rR5Q8cG1apC2TaXGFtxfkgqofpt0zGWIefx0dhIT
+	 ThrJlbqJ+YeV3lpLZsQcyFrDdGYnWcLVvV4lpw6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730177AbfJHJtS (ORCPT
+        id S1730206AbfJHJvo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 05:49:18 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:35852 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729767AbfJHJtR (ORCPT
+        Tue, 8 Oct 2019 05:51:44 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:33296 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729375AbfJHJvn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 05:49:17 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 618B88037F; Tue,  8 Oct 2019 11:49:00 +0200 (CEST)
-Date:   Tue, 8 Oct 2019 11:49:15 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Corey Minyard <cminyard@mvista.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 012/106] ipmi_si: Only schedule continuously in the
- thread in maintenance mode
-Message-ID: <20191008094915.GC608@amd>
-References: <20191006171124.641144086@linuxfoundation.org>
- <20191006171130.485953894@linuxfoundation.org>
+        Tue, 8 Oct 2019 05:51:43 -0400
+Received: by mail-oi1-f196.google.com with SMTP id a15so8229285oic.0;
+        Tue, 08 Oct 2019 02:51:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MTWQeRdbAy3yNwBYxrxnBzfQyj2S2eIHLnU9sLLV9Pc=;
+        b=dppyD01aJxMOn93UIAhjiJFlSBL2pIJkG+T4CphPmkVYRGkdW2xVKn6AW/hopSEtnq
+         9vUBbeziM/2zI1Pabr6k9GbyocThUHacCsVmi465eIKVOHfXeYiutbHbObs5SXFopV4R
+         dDUHPsOcWAzChPqxUjv1v0VzafZKTYZp0CljUOov2GygBVD++jsIelODp0q2U+yzWG4x
+         aQX2zOoesjS2Ehcu/3LF4YoAsopbambwK3r0cVSATvE8jvRH9j4CdC2nBWTWD7kqpwby
+         QU/FRREwWUILD2puCXOuRPM4oK/l34ovS1Btr8B2SRol4RWStnV2Vbm0hbyQ2Uss1uW1
+         jCXw==
+X-Gm-Message-State: APjAAAVaFpRWU1X2tGaqdDLHJMwNC+PITSSF76HWiVkd5UM37/Z5TIrK
+        jApMJdjUZqXxXsuIGQolGv6lHubhw07wjmc5FWc=
+X-Google-Smtp-Source: APXvYqwc2KxXM43lmvZ97dI0n0GSTOgxhKyupGgCeWeBfk87jri4fpIXegBrjOEkcYVbCg1zHKXQgXNop3abDuRCBKA=
+X-Received: by 2002:aca:484:: with SMTP id 126mr3089684oie.68.1570528302549;
+ Tue, 08 Oct 2019 02:51:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="Clx92ZfkiYIKRjnr"
-Content-Disposition: inline
-In-Reply-To: <20191006171130.485953894@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <001601d57487$e1029ef0$a307dcd0$@net> <000f01d576df$a6b87a30$f4296e90$@net>
+ <CAJZ5v0gu=rALS9ZLNMDT3cw_sT2m8XCKP6+AW3488x2Q9EXM3g@mail.gmail.com>
+ <000001d57c54$db31f8c0$9195ea40$@net> <CAJZ5v0jo-KQouuE3P51THvU33kViBVtDq1WknBFx+FWUY0e=ag@mail.gmail.com>
+ <000d01d57da0$8410f1c0$8c32d540$@net>
+In-Reply-To: <000d01d57da0$8410f1c0$8c32d540$@net>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 8 Oct 2019 11:51:31 +0200
+Message-ID: <CAJZ5v0gRSpNtwDXrRr9GW2O9ZQpM0yBdKfQDXLwsZua5692yUQ@mail.gmail.com>
+Subject: Re: [RFC/RFT][PATCH v8] cpuidle: New timer events oriented governor
+ for tickless systems
+To:     Doug Smythies <dsmythies@telus.net>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Chen, Hu" <hu1.chen@intel.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Oct 8, 2019 at 8:20 AM Doug Smythies <dsmythies@telus.net> wrote:
+>
+> On 2019.10.06 08:34 Rafael J. Wysocki wrote:
+> > On Sun, Oct 6, 2019 at 4:46 PM Doug Smythies <dsmythies@telus.net> wrote:
+> >> On 2019.10.01 02:32 Rafael J. Wysocki wrote:
+> >>> On Sun, Sep 29, 2019 at 6:05 PM Doug Smythies <dsmythies@telus.net> wrote:
+> >>>> On 2019.09.26 09:32 Doug Smythies wrote:
+> >>>>
+> >>>>> If the deepest idle state is disabled, the system
+> >>>>> can become somewhat unstable, with anywhere between no problem
+> >>>>> at all, to the occasional temporary jump using a lot more
+> >>>>> power for a few seconds, to a permanent jump using a lot more
+> >>>>> power continuously. I have been unable to isolate the exact
+> >>>>> test load conditions under which this will occur. However,
+> >>>>> temporarily disabling and then enabling other idle states
+> >>>>> seems to make for a somewhat repeatable test. It is important
+> >>>>> to note that the issue occurs with only ever disabling the deepest
+> >>>>> idle state, just not reliably.
+> >>>>>
+> >>>>> I want to know how you want to proceed before I do a bunch of
+> >>>>> regression testing.
+> >>>>
+> >> I do not think I stated it clearly before: The problem here is that some CPUs
+> >> seem to get stuck in idle state 0, and when they do power consumption spikes,
+> >> often by several hundred % and often indefinitely.
+> >
+> > That indeed has not been clear to me, thanks for the clarification!
+>
+> >
+> >> I made a hack job automated test:
+> >> Kernel  tests                 fail rate
+> >> 5.4-rc1                6616           13.45%
+> >> 5.3              2376            4.50%
+> >> 5.3-teov7       12136            0.00%  <<< teo.c reverted and teov7 put in its place.
+> >> 5.4-rc1-ds      11168        0.00%  <<< [old] proposed patch (> 7 hours test time)
+>
+>
+>    5.4-rc1-ds12   4224          0.005 <<< new proposed patch
+>
+> >>
+> >> [old] Proposed patch (on top of kernel 5.4-rc1): [deleted]
+>
+> > This change may cause the deepest state to be selected even if its
+> > "hits" metric is less than the "misses" one AFAICS, in which case the
+> > max_early_index state should be selected instead.
+> >
+> > It looks like the max_early_index computation is broken when the
+> > deepest state is disabled.
+>
+> O.K. Thanks for your quick reply, and insight.
+>
+> I think long durations always need to be counted, but currently if
+> the deepest idle state is disabled, they are not.
+> How about this?:
+> (test results added above, more tests pending if this might be a path forward.)
+>
+> diff --git a/drivers/cpuidle/governors/teo.c b/drivers/cpuidle/governors/teo.c
+> index b5a0e49..a970d2c 100644
+> --- a/drivers/cpuidle/governors/teo.c
+> +++ b/drivers/cpuidle/governors/teo.c
+> @@ -155,10 +155,12 @@ static void teo_update(struct cpuidle_driver *drv, struct cpuidle_device *dev)
+>
+>                 cpu_data->states[i].early_hits -= early_hits >> DECAY_SHIFT;
+>
+> -               if (drv->states[i].target_residency <= sleep_length_us) {
+> -                       idx_timer = i;
+> -                       if (drv->states[i].target_residency <= measured_us)
+> -                               idx_hit = i;
+> +               if (!(drv->states[i].disabled || dev->states_usage[i].disable)){
+> +                       if (drv->states[i].target_residency <= sleep_length_us) {
+> +                               idx_timer = i;
+> +                               if (drv->states[i].target_residency <= measured_us)
+> +                                       idx_hit = i;
+> +                       }
 
---Clx92ZfkiYIKRjnr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+What if the state is enabled again after some time?
 
-Hi!
+>                 }
+>         }
+>
+> @@ -256,39 +258,25 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
+>                 struct cpuidle_state *s = &drv->states[i];
+>                 struct cpuidle_state_usage *su = &dev->states_usage[i];
+>
+> -               if (s->disabled || su->disable) {
+> -                       /*
+> -                        * If the "early hits" metric of a disabled state is
+> -                        * greater than the current maximum, it should be taken
+> -                        * into account, because it would be a mistake to select
+> -                        * a deeper state with lower "early hits" metric.  The
+> -                        * index cannot be changed to point to it, however, so
+> -                        * just increase the max count alone and let the index
+> -                        * still point to a shallower idle state.
+> -                        */
+> -                       if (max_early_idx >= 0 &&
+> -                           count < cpu_data->states[i].early_hits)
+> -                               count = cpu_data->states[i].early_hits;
+> -
+> -                       continue;
 
-> @@ -1013,11 +1016,20 @@ static int ipmi_thread(void *data)
->  		spin_unlock_irqrestore(&(smi_info->si_lock), flags);
->  		busy_wait =3D ipmi_thread_busy_wait(smi_result, smi_info,
->  						  &busy_until);
-> -		if (smi_result =3D=3D SI_SM_CALL_WITHOUT_DELAY)
-> +		if (smi_result =3D=3D SI_SM_CALL_WITHOUT_DELAY) {
->  			; /* do nothing */
-> -		else if (smi_result =3D=3D SI_SM_CALL_WITH_DELAY && busy_wait)
-> -			schedule();
-> -		else if (smi_result =3D=3D SI_SM_IDLE) {
-> +		} else if (smi_result =3D=3D SI_SM_CALL_WITH_DELAY && busy_wait) {
-> +			/*
-> +			 * In maintenance mode we run as fast as
-> +			 * possible to allow firmware updates to
-> +			 * complete as fast as possible, but normally
-> +			 * don't bang on the scheduler.
-> +			 */
-> +			if (smi_info->in_maintenance_mode)
-> +				schedule();
-> +			else
-> +				usleep_range(100, 200);
-> +		} else if (smi_result =3D=3D SI_SM_IDLE) {
+AFAICS, adding early_hits to count is not a mistake if there are still
+enabled states deeper than the current one.
 
-This is quite crazy code. usleep() will need to do magic with high
-resolution timers to provide 200usec sleep... when all you want to do
-is unload the scheduler.
+Besides, can you just leave the "continue" here instead of changing
+the indentation level for everything below?
 
-cond_resched() should be okay to call in a loop, can the code use that
-instead?
-
-Best regards,
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---Clx92ZfkiYIKRjnr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl2cW5sACgkQMOfwapXb+vJ7eQCaAzXAg5l8bKuBD/+tQE+XpSfc
-J6sAn05kFLCKSTjEBPozN5WdveX4pR9R
-=82/+
------END PGP SIGNATURE-----
-
---Clx92ZfkiYIKRjnr--
+> -               }
+>
+> -               if (idx < 0)
+> -                       idx = i; /* first enabled state */
+> +               if (!(s->disabled || su->disable)) {
+> +                       if (idx < 0)
+> +                               idx = i; /* first enabled state */
+>
+> -               if (s->target_residency > duration_us)
+> -                       break;
+> +                       if (s->target_residency > duration_us)
+> +                               break;
+>
+> -               if (s->exit_latency > latency_req && constraint_idx > i)
+> -                       constraint_idx = i;
+> +                       if (s->exit_latency > latency_req && constraint_idx > i)
+> +                               constraint_idx = i;
+>
+> -               idx = i;
+> +                       idx = i;
+>
+> -               if (count < cpu_data->states[i].early_hits &&
+> -                   !(tick_nohz_tick_stopped() &&
+> -                     drv->states[i].target_residency < TICK_USEC)) {
+> -                       count = cpu_data->states[i].early_hits;
+> -                       max_early_idx = i;
+> +                       if (count < cpu_data->states[i].early_hits &&
+> +                           !(tick_nohz_tick_stopped() &&
+> +                             drv->states[i].target_residency < TICK_USEC)) {
+> +                               count = cpu_data->states[i].early_hits;
+> +                               max_early_idx = i;
+> +                       }
+>                 }
+>         }
