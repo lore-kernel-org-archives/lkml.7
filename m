@@ -2,147 +2,130 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C57C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5183C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 680512070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:42:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B78F206C2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:43:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Nz5DCDDh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K9H4eDof"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730106AbfJHKmZ (ORCPT
+        id S1730478AbfJHKnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 06:42:25 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:43516 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729876AbfJHKmZ (ORCPT
+        Tue, 8 Oct 2019 06:43:17 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51427 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730016AbfJHKnQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 06:42:25 -0400
-Received: by mail-ed1-f65.google.com with SMTP id r9so15165405edl.10
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 03:42:24 -0700 (PDT)
+        Tue, 8 Oct 2019 06:43:16 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 7so2606186wme.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 03:43:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GlbSEHsat/uhnrc6ji92FO04rhx1+BWt+c9sCRWvAxU=;
-        b=Nz5DCDDhGBHxplALcQZGaCTG5mV3Z4jpVK314QjWtvnqS7b/x79n6UlR6EKH0pSuUQ
-         Ta/sGeucBtoOKc+GGpsFuh0ci0OIaG75nGDsmjab/9c8JpYDC99GMBB80ipOn3+cbiHW
-         Dl8tvsmwndue4YZ60xP4Q3cHJpGZlDwOeSr0s=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kNT0uravG5d+lNDf6zaLGqaWiN2XpE5JXyYmizVBilE=;
+        b=K9H4eDofUQAKZFM6o8SaI1fDGTLc4h7zvLiQ1+kb/3hl9KTydNTP7sOmaT6ZOvOy+h
+         qCDq8mzBa37VmuqcmWj5VvjaBvps+QwcM68guyWqS7cr9uaOY134H4lb7mkzoSRr4Buc
+         MoeRrevZYD2M/FEAhj2Pmft/ekWeOstHP3Qd7drNLISZ3UzzZWZWJrRbTlsAaqGTlbMn
+         zlC88mSLkqFcvForhTUElc0Tk8aobntBt2kXJ7UPWhnu9ZKaS1Q5JYKqELXmOkI4xbf4
+         4yCCbqemhFWRxC1rFNomOZHXO8jgNt7JK20q4ZEL/O60BOBasjqAhiJtzqMKkGJNHJHP
+         hZBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GlbSEHsat/uhnrc6ji92FO04rhx1+BWt+c9sCRWvAxU=;
-        b=WWDHrtIaEQq63e3P4aSFUc87Fm0muk+pfHXS/dSdb90Q2YRleQXuYXl76gdnM+U0J6
-         IkElDYEB1WpWg+nVFbMkssirQWxFpwQ5OQ0ZCum2k98TodGqcuYeMjWv3UYKB8XUIUlj
-         jBbkGcLZVCr00JkVRNSysKWxYppjdW1reFn4RRTnelmQRUVYUDma6MVN/qCJ5fHO1zxr
-         5Wq3G4hC7rAiQRNenuzW3evIuOjGIuJEyV3Bxl8T++GDmcafL4jgexRsTVNKJEnSs0WR
-         FaMkDLlrZch2zgfJ90y1uLzcIpEnRNdNX3b/zDNwzCb+VmOryESbjQZPuBsTiPgRn9BE
-         hkNg==
-X-Gm-Message-State: APjAAAURqhzvK7qVnJT3q7dfrIuHjexMkuLAlyPgGg3qJ8aXkStn0iFU
-        l9R/Zmo2XHs5x1A0KCEwr1qobR88RA+jwA==
-X-Google-Smtp-Source: APXvYqzMtu7wt3Q46Q6MmxhiQMEVvyLEWtin5oJYF3ZRhxP4TOVR+ZYHUOdQHnL2PmsdjconsSSdXQ==
-X-Received: by 2002:a50:cd1a:: with SMTP id z26mr32597649edi.75.1570531343157;
-        Tue, 08 Oct 2019 03:42:23 -0700 (PDT)
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com. [209.85.221.51])
-        by smtp.gmail.com with ESMTPSA id 36sm4002246edz.92.2019.10.08.03.42.20
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Oct 2019 03:42:21 -0700 (PDT)
-Received: by mail-wr1-f51.google.com with SMTP id n14so18754821wrw.9
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 03:42:20 -0700 (PDT)
-X-Received: by 2002:a5d:4b47:: with SMTP id w7mr20090970wrs.7.1570531340404;
- Tue, 08 Oct 2019 03:42:20 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kNT0uravG5d+lNDf6zaLGqaWiN2XpE5JXyYmizVBilE=;
+        b=TToh/7R3qtniDC3+nRAIQVBuZMVDxft5vx1PLvHgyDe3MiERbt2bAlpOPVobTEDRLI
+         zktK0pdMghWmkapBAoks+aI5Dyc4OcVX9lOuuLRkPdnw4qi9+Y0a8bgmphEz9fq8c+Vb
+         SOVtni4JwllMea9UmcTGO/OqzrO5Ge2JdhuOgUWKtInGvM3LO8+6xTV5uWdor9Ujfu9r
+         WAeFSQPhijiAWKfvsaOED6CZsMcRAy3lOfKD0R0J7KeKzia6Ou/aZAveTkeii7u3we97
+         Lh12JuQpkwHDM4Jy3OEADhfvAx/B9EemUD43/wWrcPYTHIIg8kMmCas6knF/6YcvT4ry
+         P+9g==
+X-Gm-Message-State: APjAAAXB5pm+HGZGm2yp8eUWXk7UiOMFsfqFFUc1K261ErIuuR7F8Tr3
+        XiLlIkC096tB56kJFjDbbCtU9g==
+X-Google-Smtp-Source: APXvYqwDdhuAhHaQJXOqUmc7Qcgp2Qnp21uhE7Cr0GMQdE2+Bt2iLHZCWbFgdquKZmjYilbrPc3XeA==
+X-Received: by 2002:a7b:c7d4:: with SMTP id z20mr3278073wmk.145.1570531394197;
+        Tue, 08 Oct 2019 03:43:14 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id b62sm4548867wmc.13.2019.10.08.03.43.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Oct 2019 03:43:13 -0700 (PDT)
+Date:   Tue, 8 Oct 2019 11:43:11 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] backlight: pwm_bl: drop use of int_pow()
+Message-ID: <20191008104311.s4k5syr7gd7tb55w@holly.lan>
+References: <20190919140620.32407-1-linux@rasmusvillemoes.dk>
+ <20190919140620.32407-3-linux@rasmusvillemoes.dk>
+ <20191007152800.3nhbf7h7knumriz4@holly.lan>
+ <5f19e307-29c4-f077-568d-b2bd6ae74608@rasmusvillemoes.dk>
+ <20191008093145.kgx6ytkbycmmkist@holly.lan>
+ <9bf6baf9-46be-771c-7e26-527b117c998a@rasmusvillemoes.dk>
 MIME-Version: 1.0
-References: <20191007174505.10681-1-ezequiel@collabora.com>
- <20191007174505.10681-3-ezequiel@collabora.com> <CAAFQd5BNu2ea3ei_imHmEwmdna0+iiSbQSv_SBsdHfP4Uh1h4Q@mail.gmail.com>
- <HE1PR06MB4011EC9E93ECBB6773252247AC9A0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-In-Reply-To: <HE1PR06MB4011EC9E93ECBB6773252247AC9A0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Tue, 8 Oct 2019 19:42:09 +0900
-X-Gmail-Original-Message-ID: <CAAFQd5CWoAP1psrEW6bVMkRmhFeTvFKtDSLjT7nefc2YiFovqQ@mail.gmail.com>
-Message-ID: <CAAFQd5CWoAP1psrEW6bVMkRmhFeTvFKtDSLjT7nefc2YiFovqQ@mail.gmail.com>
-Subject: Re: [PATCH v2 for 5.4 2/4] media: hantro: Fix H264 max frmsize
- supported on RK3288
-To:     Jonas Karlman <jonas@kwiboo.se>
-Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "kernel@collabora.com" <kernel@collabora.com>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        "fbuergisser@chromium.org" <fbuergisser@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9bf6baf9-46be-771c-7e26-527b117c998a@rasmusvillemoes.dk>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 8, 2019 at 3:31 PM Jonas Karlman <jonas@kwiboo.se> wrote:
->
-> On 2019-10-08 07:27, Tomasz Figa wrote:
-> > Hi Ezequiel, Jonas,
-> >
-> > On Tue, Oct 8, 2019 at 2:46 AM Ezequiel Garcia <ezequiel@collabora.com> wrote:
-> >> From: Jonas Karlman <jonas@kwiboo.se>
+On Tue, Oct 08, 2019 at 12:02:07PM +0200, Rasmus Villemoes wrote:
+> On 08/10/2019 11.31, Daniel Thompson wrote:
+> > On Mon, Oct 07, 2019 at 08:43:31PM +0200, Rasmus Villemoes wrote:
+> >> On 07/10/2019 17.28, Daniel Thompson wrote:
+> >>> On Thu, Sep 19, 2019 at 04:06:18PM +0200, Rasmus Villemoes wrote:
+> >>>
+> >>> It feels like there is some rationale missing in the description here.
+> >>>
 > >>
-> >> TRM specify supported image size 48x48 to 4096x2304 at step size 16 pixels,
-> >> change frmsize max_width/max_height to match TRM.
+> >> Apart from the function call overhead (and resulting register pressure
+> >> etc.), using int_pow is less efficient (for an exponent of 3, it ends up
+> >> doing four 64x64 multiplications instead of just two). But feel free to
+> >> drop it, I'm not going to pursue it further - it just seemed like a
+> >> sensible thing to do while I was optimizing the code anyway.
 > >>
-> >> Fixes: 760327930e10 ("media: hantro: Enable H264 decoding on rk3288")
-> >> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-> >> ---
-> >> v2:
-> >> * No changes.
-> >>
-> >>  drivers/staging/media/hantro/rk3288_vpu_hw.c | 4 ++--
-> >>  1 file changed, 2 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/drivers/staging/media/hantro/rk3288_vpu_hw.c b/drivers/staging/media/hantro/rk3288_vpu_hw.c
-> >> index 6bfcc47d1e58..ebb017b8a334 100644
-> >> --- a/drivers/staging/media/hantro/rk3288_vpu_hw.c
-> >> +++ b/drivers/staging/media/hantro/rk3288_vpu_hw.c
-> >> @@ -67,10 +67,10 @@ static const struct hantro_fmt rk3288_vpu_dec_fmts[] = {
-> >>                 .max_depth = 2,
-> >>                 .frmsize = {
-> >>                         .min_width = 48,
-> >> -                       .max_width = 3840,
-> >> +                       .max_width = 4096,
-> >>                         .step_width = H264_MB_DIM,
-> >>                         .min_height = 48,
-> >> -                       .max_height = 2160,
-> >> +                       .max_height = 2304,
-> > This doesn't match the datasheet I have, which is RK3288 Datasheet Rev
-> > 1.4 and which has the values as in current code. What's the one you
-> > got the values from?
->
-> The RK3288 TRM vcodec chapter from [1], unknown revision and date, lists 48x48 to 4096x2304 step size 16 pixels under 25.5.1 H.264 decoder.
->
-> I can also confirm that one of my test samples (PUPPIES BATH IN 4K) is 4096x2304 and can be decoded after this patch.
-> However the decoding speed is not optimal at 400Mhz, if I recall correctly you need to set the VPU1 clock to 600Mhz for 4K decoding on RK3288.
->
-> I am not sure if I should include a v2 of this patch in my v2 series, as-is this patch do not apply on master (H264_MB_DIM has changed to MB_DIM in master).
->
-> [1] http://www.t-firefly.com/download/firefly-rk3288/docs/TRM/rk3288-chapter-25-video-encoder-decoder-unit-(vcodec).pdf
+> >> [At the time I wrote the patch, this was also the only user of int_pow
+> >> in the tree, so it also allowed removing int_pow altogether.]
+> > 
+> > To be honest the change is fine but the patch description doesn't make
+> > sense if the only current purpose of the patch is as a optimization.
+> 
+> Agreed. Do you want me to resend the series with patch 3 updated to read
+> 
+> "For a fixed small exponent of 3, it is more efficient to simply use two
+> explicit multiplications rather than calling the int_pow() library
+> function: Aside from the function call overhead, its implementation
+> using repeated squaring means it ends up doing four 64x64 multiplications."
+> 
+> (and obviously patch 5 dropped)?
 
-I checked the RK3288 TRM V1.1 too and it refers to 3840x2160@24fps as
-the maximum.
+Yes, please.
 
-As for performance, we've actually been getting around 33 fps at 400
-MHz with 3840x2160 on our devices (the old RK3288 Asus Chromebook
-Flip).
+When you resend you can add my R-B: to all patches:
 
-I guess we might want to check that with Hantro.
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
 
-Best regards,
-Tomasz
+
+Daniel.
+
+
+PS Don't mind either way but I wondered the following is clearer than
+   the slightly funky multiply-and-assign expression (which isn't wrong
+   but isn't very common either so my brain won't speed read it):
+
+		retval = DIV_ROUND_CLOSEST_ULL(retval * retval * retval,
+		 			       scale * scale);
