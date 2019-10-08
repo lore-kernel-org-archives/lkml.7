@@ -2,117 +2,102 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8744DC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FE2C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:10:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F88E206BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:08:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uxnp6etD"
+	by mail.kernel.org (Postfix) with ESMTP id 0DD112070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:10:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570547436;
+	bh=ZwNYdJEcqdnycNPUhUKzVR7Mj81YHnVJ+qnDhlhWJbA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UVy6QNBBn2Xjl68sBy9k5WNhOAxomi4tHtjQfBJpYxZQx4JRAkABOvj2YkdsDXg4z
+	 tmkG7B2zaO3TQZBSmi6+4sTT9mqnL4IQlt8kmxUbcW5XBNq6CtpZiuJV7IkO7UxQAT
+	 FJ9arbTWKYa4typMhzpA9Si/d/rsJpxcVBkisp0U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727350AbfJHPI4 (ORCPT
+        id S1727476AbfJHPKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 11:08:56 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35235 "EHLO
+        Tue, 8 Oct 2019 11:10:34 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36468 "EHLO
         mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbfJHPI4 (ORCPT
+        with ESMTP id S1725989AbfJHPKd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 11:08:56 -0400
-Received: by mail-wr1-f65.google.com with SMTP id v8so19855942wrt.2;
-        Tue, 08 Oct 2019 08:08:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Ypd77sdI6iiTLiz63NonJkbWe8JwhMk44SAfmiueuoc=;
-        b=uxnp6etD5XoaSu0yi0hFGvxt451EBociY6enT1pSfprhEwuuqYFBrD19UZT1OiEacS
-         T5HZfM/8P8OysxhDB3Tt8nQk+vOkellJpmc8dm46/M53rikQHHCCWeShbqMDR4Oy72e2
-         QuWtlu5roeWuveMehy4a9RIjuStXydJDXXIsO8+0W634+Osbbz7/FHnKcs5vw+we10Q4
-         A1Utq+3deP54xbx7svkMPIlVPdfQkRGOx8+JntEJsRnSH903ZUr5NIg+vJOCmpCSLL/x
-         oTXcK1Tjdab6HamtyQsl4/nt9U7ZtZ3zvUoGUc0qaBh3/oQeo3UPwfVNSXL+fMUmeWCs
-         Z4kg==
+        Tue, 8 Oct 2019 11:10:33 -0400
+Received: by mail-wr1-f65.google.com with SMTP id y19so19868009wrd.3;
+        Tue, 08 Oct 2019 08:10:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ypd77sdI6iiTLiz63NonJkbWe8JwhMk44SAfmiueuoc=;
-        b=dYEejs3qqdi6cn5ThZMQwK4xD3mG5rQO8fopGakY8Lja48VyLtTKmKi3wELOQy9lpU
-         PxujYXug3t7ACv5jh78XZDKTRdB6YIY4lN2ot1p0xycwrqScGd3zCsda/hzxeF7mWx8J
-         dCu5WNv3ANqWPMSGHFucQ3sQBCigtrzf8V7poosDDhcBK4opdZUAPVvjXGEQlfjI19lO
-         Rx43nptq0Z3bCiVPcdXlRnQbFKADWglm0qkJHEgGZSLvRyHIiXM5MMI3gMVoCTZdBgM7
-         2JPWgKX2rTVi8S3viNVARnYQPK/4A8Oh/DLDd+qSpjdqcSKr818XWLg+yRTEaAknEZVR
-         LBzg==
-X-Gm-Message-State: APjAAAVhyW3BlnsmpmhOFjc5XYbk9rRIzfwbd7ocQijDigVHJlXK27q8
-        ACO2fo6gL82RBl8cYThNjy4ofnu3n/YcZw==
-X-Google-Smtp-Source: APXvYqwf+M20DLNB55AVht/sasmDqPwm9ID+kX0fL26iK+cUhkhDcRYCGfKb96eN7bXep+C0sqoojQ==
-X-Received: by 2002:adf:fb11:: with SMTP id c17mr29147606wrr.0.1570547334208;
-        Tue, 08 Oct 2019 08:08:54 -0700 (PDT)
-Received: from andrea (userh648.uk.uudial.com. [194.69.103.21])
-        by smtp.gmail.com with ESMTPSA id r2sm5965686wma.1.2019.10.08.08.08.52
+        bh=jDr1BzlICCTlwhp3uNGJEPl314YzfcfD31Fib2fRNSo=;
+        b=fxrRLXHiFr9wcrSrK69zhEYSFeedRkodUXLrs8Mdsd9rpVEY2kgpk2ejmAw/e7rmgt
+         xptxfzSJ3cnZ+qQRsGc16l/NOy8dx2N5/tLvFAGCOqEUZ3ApVRgxixCZlTJ4//jj/UPf
+         LsKWfifF/8HrsB9OYukj+kJWFLNO27319nuP1QtlmAFs4C1/UFWKsKNShl4AFgtjHfc6
+         +kIK9YxqwjqsCHihiUKi+KL88Goqkljx/Urh0UbFQvoRisHpnqj+uDys63LST1/ah9F4
+         XUZVEdBXDAuytgkq14CvU9nikhppnqLv1oodvsk9oFMJTZyxGWBcSa3s+5UU7xI5EKcY
+         W2LA==
+X-Gm-Message-State: APjAAAWKgsBa4WPakrimhevEwSuh0IMCRgT+U7XUNeu6Qec40HqWm6aK
+        UPS1jVyDrRw2Ckbqec+Xa8QfimiI
+X-Google-Smtp-Source: APXvYqzX4ka2psn6HEE8SlAx19V028jaUxy26b9V7r9ws/He1WJtNpQAY+Uuwiz4uo5g6s4xsd7i9w==
+X-Received: by 2002:adf:ecc1:: with SMTP id s1mr19736353wro.223.1570547431457;
+        Tue, 08 Oct 2019 08:10:31 -0700 (PDT)
+Received: from pi3 ([194.230.155.145])
+        by smtp.googlemail.com with ESMTPSA id 90sm26487496wrr.1.2019.10.08.08.10.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2019 08:08:53 -0700 (PDT)
-Date:   Tue, 8 Oct 2019 17:08:47 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        vkuznets <vkuznets@redhat.com>
-Subject: Re: [PATCH 0/2] Drivers: hv: vmbus: Miscellaneous improvements
-Message-ID: <20191008150847.GA15276@andrea>
-References: <20191007163115.26197-1-parri.andrea@gmail.com>
- <PU1P153MB01691E9B0DD83E521B1E12C0BF9B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+        Tue, 08 Oct 2019 08:10:30 -0700 (PDT)
+Date:   Tue, 8 Oct 2019 17:10:28 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Lee Jones <lee.jones@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Maciej Falkowski <m.falkowski@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: arm: samsung: Force clkoutN names to be
+ unique in PMU
+Message-ID: <20191008151028.GA2720@pi3>
+References: <20191004151414.8458-1-krzk@kernel.org>
+ <CAL_JsqJDTcHu5oXG6zszGHCBhTE6EW94AANUjyMV78SkKcn5yA@mail.gmail.com>
+ <20191008125038.GA2550@pi3>
+ <CAL_Jsq+GcsUWN6kjBLkyr1rHGh6_4=w6JL6+k7DBXkBcvHcSBw@mail.gmail.com>
+ <CAL_JsqKBzZCShxx99aB4z15XYNbUionVicmfNNXEfq=iohWLCA@mail.gmail.com>
+ <20191008142900.GA2635@pi3>
+ <CAL_Jsq+ObMD=inkMFqkZbKFoKZUxw53gUMnjsC1pU5GwumK8LQ@mail.gmail.com>
+ <20191008150456.GA2683@pi3>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <PU1P153MB01691E9B0DD83E521B1E12C0BF9B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191008150456.GA2683@pi3>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 05:41:10PM +0000, Dexuan Cui wrote:
-> > From: linux-hyperv-owner@vger.kernel.org
-> > <linux-hyperv-owner@vger.kernel.org> On Behalf Of Andrea Parri
-> > Sent: Monday, October 7, 2019 9:31 AM
-> > 
-> > Hi all,
-> > 
-> > The patchset:
-> > 
-> > - simplifies/refactors the VMBus negotiation code by introducing
-> >   the table of VMBus protocol versions (patch 1/2),
-> > 
-> > - enables VMBus protocol versions 5.1 and 5.2 (patch 2/2).
-> > 
-> > Thanks,
-> >   Andrea
-> > 
-> > Andrea Parri (2):
-> >   Drivers: hv: vmbus: Introduce table of VMBus protocol versions
-> >   Drivers: hv: vmbus: Enable VMBus protocol versions 5.1 and 5.2
+On Tue, Oct 08, 2019 at 05:04:56PM +0200, Krzysztof Kozlowski wrote:
+> On Tue, Oct 08, 2019 at 09:38:15AM -0500, Rob Herring wrote:
+> > Are you running using DT_SCHEMA_FILES? If so, you won't get the core schema.
 > 
-> Should we add a module parameter to allow the user to specify a lower
-> protocol version, when the VM runs on the latest host? 
+> Ah, yes, now I see proper errors. Thanks for pointing this.
 > 
-> This can be useful for testing and debugging purpose: the variable
-> "vmbus_proto_version" is referenced by the vmbus driver itself and
-> some VSC drivers: if we always use the latest available proto version,
-> some code paths can not be tested on the latest hosts. 
+> I'll send next version of this patch only (if others are ok).
+> 
 
-The idea is appealing to me (altough I made no attempt to implement/test
-it yet).  What do others think about this?  Maybe can be considered as a
-follow-up patch/work to this series?
+Of course, there will be no v2, this patch can be just skipped.
 
-Thanks,
-  Andrea
+Best regards,
+Krzysztof
+
