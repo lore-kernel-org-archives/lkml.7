@@ -2,103 +2,193 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49CA5C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FEAECE58C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A837206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6103F217D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:59:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CD3PDvXH"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="nDSySf/u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728187AbfJHR7V (ORCPT
+        id S1729472AbfJHR7a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 13:59:21 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55332 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726320AbfJHR7V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 13:59:21 -0400
-Received: by mail-wm1-f67.google.com with SMTP id a6so4124774wma.5;
-        Tue, 08 Oct 2019 10:59:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=de/h/+CZqrrnC1bJlNTMniZfSzB6FHNGFGPPpwsaq7Q=;
-        b=CD3PDvXHvPqaQA+NWxzdIBr9gEtKMWzC7kNysSHLMFWQ9B2PEUUS+BkiohrEuNrm0S
-         ojYhC4kmNjgXy3yeRz6IOlTd5kEKb022VYzxMea6dqo2pmb+G4kO2X5lUHmbUn1PG8lY
-         oiaV0mL9oIMh9ADeBIGQifBuhU7Su8Rg+dq+NQX00u3b8zQoB/g0web0ISe5aPTAeaSY
-         zs0ljEZxI+vJppQaWXQA7SDC4n4zUvUBKfO5Wpdqr4C5vVQAkazhO7ZaFCkjEGgUDOO4
-         Jx+ndVm1G2sDFS7WdQkXEAjiiEo/geDpLusi5IhKC6AI1qdfgPAcklDEMpTdB/QqqjGu
-         Bd0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=de/h/+CZqrrnC1bJlNTMniZfSzB6FHNGFGPPpwsaq7Q=;
-        b=ehHCkNMaw+u2zyS9DMRONCo5PvOfIgknjYdpaiWd2fjJ6Sy/XvejmoO6jWGm2hSDv0
-         o76sW3e0pPlq2QemIkIGQbpgMuSly6VJjpziJSbUjQ6G7C7gne+Ny9bxqzLuZROBC4Dc
-         20IQWzoMF3Xp/GMTYrKj6CM5KS6nHxKftFnaGrQEQCirLT9+/36PkJCsnh+1E84qmdm7
-         HU+xiAd6FTjfEAD8/5MHy90/hSJsycaQoAp7sw3WUvABKAD4Ce9Bva7ElBnX2lm610gH
-         GVsHAf5aARWfSoABzjDZ+uD5OZto96enjj6q1iDZ5D6CvCtlGxSQAL7mgBWBqyBIuX2W
-         +0Hw==
-X-Gm-Message-State: APjAAAUxTVCz82Vblv6kQFwLFqug+ctj5X2n47kvETcqfpvRQsAHlHER
-        zNvZyd5ONlPLhjIeK0U6kg==
-X-Google-Smtp-Source: APXvYqxeUUSPQhJ79Xf8sAszWDyBD/coVq+bBBubV/Yh6l5sN7oLJT+vL4GQBpGUyn/D5O/P40r4EQ==
-X-Received: by 2002:a1c:e912:: with SMTP id q18mr4736768wmc.42.1570557559484;
-        Tue, 08 Oct 2019 10:59:19 -0700 (PDT)
-Received: from avx2 ([46.53.253.157])
-        by smtp.gmail.com with ESMTPSA id u68sm5643087wmu.12.2019.10.08.10.59.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 08 Oct 2019 10:59:18 -0700 (PDT)
-Date:   Tue, 8 Oct 2019 20:59:16 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jaswinder.singh@linaro.org
-Subject: Re: [BUGFIX PATCH 1/5] selftests: proc: Make va_max 3GB on 32bit arch
-Message-ID: <20191008175916.GA20780@avx2>
-References: <157046101671.20724.9561877942986463668.stgit@devnote2>
- <157046102656.20724.3358140818300189230.stgit@devnote2>
+        Tue, 8 Oct 2019 13:59:30 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:52344 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726320AbfJHR73 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 13:59:29 -0400
+Received: from zn.tnic (p200300EC2F0B51004985F04ADA683F0C.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:5100:4985:f04a:da68:3f0c])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0BDE51EC095C;
+        Tue,  8 Oct 2019 19:59:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1570557567;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5C8Trcl0YLswcFrT8Bhf5kBQud4Vu+vDhH2kLkHcJuk=;
+        b=nDSySf/uUwT+ndWu541wKERvD5OnJ+exQ/jyvN4JcOMybHJbbQ+X7rRSUBhsuI44eSItpQ
+        n+izUaYjoyHhB2PUom5qUKuznPI8c6VdgbXmmgHNy7ImbBDU87Um2Di+DK5Sm5YQ2KN8Ip
+        x85qZLV039SWANBrTEV5lBvNAxMxysU=
+Date:   Tue, 8 Oct 2019 19:59:24 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, sean.j.christopherson@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
+        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
+        Suresh Siddha <suresh.b.siddha@intel.com>
+Subject: Re: [PATCH v22 12/24] x86/sgx: Linux Enclave Driver
+Message-ID: <20191008175924.GN14765@zn.tnic>
+References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
+ <20190903142655.21943-13-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <157046102656.20724.3358140818300189230.stgit@devnote2>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190903142655.21943-13-jarkko.sakkinen@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 12:10:26AM +0900, Masami Hiramatsu wrote:
-> Currently proc-self-map-files-002.c sets va_max (max test address
-> of user virtual address) to 4GB, but it is too big for 32bit
-> arch and 1UL << 32 is overflow on 32bit long.
+
+> Subject: Re: [PATCH v22 12/24] x86/sgx: Linux Enclave Driver
+
+Title needs a verb: "Add a Linux ... "
+
+On Tue, Sep 03, 2019 at 05:26:43PM +0300, Jarkko Sakkinen wrote:
+> Intel Software Guard eXtensions (SGX) is a set of CPU instructions that
+> can be used by applications to set aside private regions of code and
+> data. The code outside the SGX hosted software entity is disallowed to
+> access the memory inside the enclave enforced by the CPU. We call these
+> entities as enclaves.
 > 
-> Make va_max 3GB on 32bit arch like i386 and arm.
+> This commit implements a driver that provides an ioctl API to construct
+> and run enclaves. Enclaves are constructed from pages residing in
+> reserved physical memory areas. The contents of these pages can only be
+> accessed when they are mapped as part of an enclave, by a hardware
+> thread running inside the enclave.
+> 
+> The starting state of an enclave consists of a fixed measured set of
+> pages that are copied to the EPC during the construction process by
+> using ENCLS leaf functions and Software Enclave Control Structure (SECS)
+> that defines the enclave properties.
+> 
+> Enclave are constructed by using ENCLS leaf functions ECREATE, EADD and
+> EINIT. ECREATE initializes SECS, EADD copies pages from system memory to
+> the EPC and EINIT check a given signed measurement and moves the enclave
+> into a state ready for execution.
+> 
+> An initialized enclave can only be accessed through special Thread Control
+> Structure (TCS) pages by using ENCLU (ring-3 only) leaf EENTER.  This leaf
+> function converts a thread into enclave mode and continues the execution in
+> the offset defined by the TCS provided to EENTER. An enclave is exited
+> through syscall, exception, interrupts or by explicitly calling another
+> ENCLU leaf EEXIT.
+> 
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Co-developed-by: Serge Ayoun <serge.ayoun@intel.com>
+> Signed-off-by: Serge Ayoun <serge.ayoun@intel.com>
+> Co-developed-by: Shay Katz-zamir <shay.katz-zamir@intel.com>
+> Signed-off-by: Shay Katz-zamir <shay.katz-zamir@intel.com>
+> Co-developed-by: Suresh Siddha <suresh.b.siddha@intel.com>
+> Signed-off-by: Suresh Siddha <suresh.b.siddha@intel.com>
+> ---
+>  Documentation/ioctl/ioctl-number.rst  |   1 +
+>  arch/x86/include/uapi/asm/sgx.h       |  55 +++
+>  arch/x86/include/uapi/asm/sgx_errno.h |   2 +-
+>  arch/x86/kernel/cpu/sgx/Makefile      |   6 +-
+>  arch/x86/kernel/cpu/sgx/driver.c      | 251 +++++++++++
+>  arch/x86/kernel/cpu/sgx/driver.h      |  37 ++
+>  arch/x86/kernel/cpu/sgx/encl.c        | 365 +++++++++++++++
+>  arch/x86/kernel/cpu/sgx/encl.h        | 100 +++++
+>  arch/x86/kernel/cpu/sgx/ioctl.c       | 612 ++++++++++++++++++++++++++
+>  arch/x86/kernel/cpu/sgx/main.c        |  25 +-
+>  arch/x86/kernel/cpu/sgx/reclaim.c     |   2 +-
+>  arch/x86/kernel/cpu/sgx/sgx.h         |   1 +
+>  12 files changed, 1444 insertions(+), 13 deletions(-)
 
-IIRC i386 had 1G/3G split, so 3GB would be too much still.
+That's a fat one. :)
 
-> --- a/tools/testing/selftests/proc/proc-self-map-files-002.c
-> +++ b/tools/testing/selftests/proc/proc-self-map-files-002.c
+>  create mode 100644 arch/x86/include/uapi/asm/sgx.h
+>  create mode 100644 arch/x86/kernel/cpu/sgx/driver.c
+>  create mode 100644 arch/x86/kernel/cpu/sgx/driver.h
+>  create mode 100644 arch/x86/kernel/cpu/sgx/encl.c
+>  create mode 100644 arch/x86/kernel/cpu/sgx/encl.h
+>  create mode 100644 arch/x86/kernel/cpu/sgx/ioctl.c
+> 
+> diff --git a/Documentation/ioctl/ioctl-number.rst b/Documentation/ioctl/ioctl-number.rst
+> index 7f8dcae7a230..83df9c17c127 100644
+> --- a/Documentation/ioctl/ioctl-number.rst
+> +++ b/Documentation/ioctl/ioctl-number.rst
+> @@ -320,6 +320,7 @@ Code  Seq#    Include File                                           Comments
+>                                                                       <mailto:tlewis@mindspring.com>
+>  0xA3  90-9F  linux/dtlk.h
+>  0xA4  00-1F  uapi/linux/tee.h                                        Generic TEE subsystem
+> +0xA4  00-1F  uapi/asm/sgx.h                                          Intel SGX subsystem (a legit conflict as TEE and SGX do not co-exist)
+>  0xAA  00-3F  linux/uapi/linux/userfaultfd.h
+>  0xAB  00-1F  linux/nbd.h
+>  0xAC  00-1F  linux/raw.h
+> diff --git a/arch/x86/include/uapi/asm/sgx.h b/arch/x86/include/uapi/asm/sgx.h
+> new file mode 100644
+> index 000000000000..c45eeed68144
+> --- /dev/null
+> +++ b/arch/x86/include/uapi/asm/sgx.h
+> @@ -0,0 +1,55 @@
+> +/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) WITH Linux-syscall-note */
 
-> +#if __BITS_PER_LONG == 32
-> +# define VA_MAX (3UL << 30)
-> +#elif __BITS_PER_LONG == 64
-> +# define VA_MAX (1UL << 32)
-> +#else
-> +# define VA_MAX 0
-> +#endif
-> +
->  int main(void)
->  {
->  	const int PAGE_SIZE = sysconf(_SC_PAGESIZE);
-> -	const unsigned long va_max = 1UL << 32;
-> +	const unsigned long va_max = VA_MAX;
+checkpatch is bitching for some reason, I guess it doesn't like the
+"WITH" thing or so:
 
-This limit doesn't need to be precise, 1GB is "big enough".
+WARNING: 'SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) WITH Linux-syscall-note */' is not supported in LICENSES/...
+#98: FILE: arch/x86/include/uapi/asm/sgx.h:1:
++/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) WITH Linux-syscall-note */
+
+WARNING: 'SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause WITH Linux-syscall-note */' is not supported in LICENSES/...
+#159: FILE: arch/x86/include/uapi/asm/sgx_errno.h:1:
++/* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause WITH Linux-syscall-note */
+
+And building this fails:
+
+arch/x86/kernel/cpu/sgx/encl.c: In function ‘sgx_mmu_notifier_release’:
+arch/x86/kernel/cpu/sgx/encl.c:77:3: error: implicit declaration of function ‘mmu_notifier_unregister_no_release’; did you mean ‘mmu_notifier_unregister’? [-Werror=implicit-function-declaration]
+   mmu_notifier_unregister_no_release(mn, mm);
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   mmu_notifier_unregister
+arch/x86/kernel/cpu/sgx/encl.c:78:3: error: implicit declaration of function ‘mmu_notifier_call_srcu’; did you mean ‘mmu_notifier_release’? [-Werror=implicit-function-declaration]
+   mmu_notifier_call_srcu(&encl_mm->rcu,
+   ^~~~~~~~~~~~~~~~~~~~~~
+   mmu_notifier_release
+cc1: some warnings being treated as errors
+make[4]: *** [scripts/Makefile.build:265: arch/x86/kernel/cpu/sgx/encl.o] Error 1
+make[4]: *** Waiting for unfinished jobs....
+make[3]: *** [scripts/Makefile.build:509: arch/x86/kernel/cpu/sgx] Error 2
+make[2]: *** [scripts/Makefile.build:509: arch/x86/kernel/cpu] Error 2
+make[1]: *** [scripts/Makefile.build:509: arch/x86/kernel] Error 2
+make: *** [Makefile:1670: arch/x86] Error 2
+make: *** Waiting for unfinished jobs....
+
+Got a fixed version which I can review instead?
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
