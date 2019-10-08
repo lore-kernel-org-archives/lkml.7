@@ -2,165 +2,130 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE38ECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA03C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26C74217D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:20:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QBybfdx0"
+	by mail.kernel.org (Postfix) with ESMTP id E090F205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:22:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730335AbfJHHUt (ORCPT
+        id S1730283AbfJHHWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 03:20:49 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:36523 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730144AbfJHHUs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 03:20:48 -0400
-Received: by mail-yw1-f66.google.com with SMTP id x64so6101849ywg.3
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 00:20:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vlcH/WZUIe1tFNe94ltDSVt7kfUxOrKgjsM+yEf+das=;
-        b=QBybfdx0WhFzeUSvnu+iOZ8BN30w8BFc59qbkEiZJ2sA2O4CAg0vUm5RdT+1rcs89f
-         Pw5cQWeeugWIH5NTcqfJGfC8O68msLLbpXAe6S+GCmBOW98SxXKGu7U/e6w02XnuBEY4
-         MjumrKJIKlSx1MXljvhEEm4NLQ5/wdBak4vTxd596T7VFV63sc0pYZoLIOQwakOQArq6
-         lmAtXwKYUxAaHO9h2Q9TKx9VODcX+G/2okGvNgDr4qFWq259bpumtBLc3/T0UDQj+1j/
-         v9jgMLlB4oiC3egDdymwHJmDNv4VAyBo0aMffB9+TZwE1xuehAuL7MhTBTUc+KHwfBVw
-         cYVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vlcH/WZUIe1tFNe94ltDSVt7kfUxOrKgjsM+yEf+das=;
-        b=KdKb6wKS+iuF2VV7/7DeadyI4Sbl/cQhZAwv1XpkHexej6tCK/E2TJNwvbCc1rxP4Y
-         YT5+QtYOdPOmjHTQuNQedd/jY6L4o7mVPEMD/A8jVBafbigTp+fOv06g+IufxmEsxHkF
-         GYMDWbOQxGLmZcpIkQBseW3KAjyL7hyAx811JP+hHK+/LfV/iOrpIsWRlrnZ/yLQjs7i
-         W4/j+3YNn+pL8KCRVSBZcJkP0WwRKtn3qZYluI25AQDs5Ly6cFVnnJdfaFYKPRYcOPiX
-         VYgZkY/+StzrHMIfigOrt8/TlaQe3GqiVYr6RQHJG1X7hE3dfvwEJUOsbe8vtrUHF965
-         BS9Q==
-X-Gm-Message-State: APjAAAW9nPcws9Hm9XoYNtgPVEyhm7fDYW/2SaBfUaBEJ/Jey007DdGS
-        jFQrPRKnNEtvCQ6um/cBFwsjxlWCS8tqJkOnGgk=
-X-Google-Smtp-Source: APXvYqwj62Yi+GVJBXzGytO8nIrTiGFbzVYO4xeKYQn0X6ubZwcIB7n4g0A4m089pqMPp80zVbhxmKUxGoa5o6XZC/s=
-X-Received: by 2002:a0d:d7d1:: with SMTP id z200mr22934400ywd.464.1570519247780;
- Tue, 08 Oct 2019 00:20:47 -0700 (PDT)
+        Tue, 8 Oct 2019 03:22:02 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59798 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729740AbfJHHWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 03:22:01 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 79966AEAE;
+        Tue,  8 Oct 2019 07:21:59 +0000 (UTC)
+Subject: Re: [PATCH] mm, hugetlb: allow hugepage allocations to excessively
+ reclaim
+To:     Michal Hocko <mhocko@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     David Rientjes <rientjes@google.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Mel Gorman <mgorman@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        Michal Hocko <mhocko@suse.com>
+References: <20191007075548.12456-1-mhocko@kernel.org>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <7ea18bd9-d785-cc2c-7ca3-7a2e33002cfd@suse.cz>
+Date:   Tue, 8 Oct 2019 09:21:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-References: <1569483508-18768-1-git-send-email-candlesea@gmail.com> <20190930153437.ocatny7u4z3oj7k2@willie-the-truck>
-In-Reply-To: <20190930153437.ocatny7u4z3oj7k2@willie-the-truck>
-From:   Candle Sun <candlesea@gmail.com>
-Date:   Tue, 8 Oct 2019 15:20:36 +0800
-Message-ID: <CAPnx3XMqnQ4R=_gkL6Rye=4adV=qCRUs2sm5A6kJccDCQ82xnw@mail.gmail.com>
-Subject: Re: [RESEND PATCH] ARM/hw_breakpoint: add ARMv8.1/ARMv8.2 debug
- architecutre versions support in enable_monitor_mode()
-To:     Will Deacon <will@kernel.org>
-Cc:     mark.rutland@arm.com, linux@armlinux.org.uk,
-        linux-arm-kernel@lists.infradead.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        Candle Sun <candle.sun@unisoc.com>,
-        Nianfu Bai <nianfu.bai@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191007075548.12456-1-mhocko@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will,
-Sorry for not instant respond.
+On 10/7/19 9:55 AM, Michal Hocko wrote:
+> From: David Rientjes <rientjes@google.com>
+Nit: the subject is still somewhat misleading IMHO, especially in light
+of Mike's responses. I would say "reclaim as needed" instead of
+"excessively reclaim". The excessive reclaim behavior in hugetlb nr_pages
+setting was a bug that was addressed by a different series.
+ 
+...
 
+> [mhocko@suse.com: reworded changelog]
+> Fixes: b39d0ee2632d ("mm, page_alloc: avoid expensive reclaim when compaction may not succeed")
+> Cc: Mike Kravetz <mike.kravetz@oracle.com>
+> Signed-off-by: David Rientjes <rientjes@google.com>
+> Signed-off-by: Michal Hocko <mhocko@suse.com>
 
-On Mon, Sep 30, 2019 at 11:34 PM Will Deacon <will@kernel.org> wrote:
->
-> On Thu, Sep 26, 2019 at 03:38:28PM +0800, Candle Sun wrote:
-> > From: Candle Sun <candle.sun@unisoc.com>
-> >
-> > When ARMv8.1/ARMv8.2 cores are used in AArch32 mode,
-> > arch_hw_breakpoint_init() in arch/arm/kernel/hw_breakpoint.c will be used.
-> >
-> > From ARMv8 specification, different debug architecture versions defined:
-> > * 0110 ARMv8, v8 Debug architecture.
-> > * 0111 ARMv8.1, v8 Debug architecture, with Virtualization Host Extensions.
-> > * 1000 ARMv8.2, v8.2 Debug architecture.
-> >
-> > So missing ARMv8.1/ARMv8.2 cases will cause enable_monitor_mode() function
-> > returns -ENODEV, and arch_hw_breakpoint_init() will fail.
-> >
-> > Signed-off-by: Candle Sun <candle.sun@unisoc.com>
-> > Signed-off-by: Nianfu Bai <nianfu.bai@unisoc.com>
-> > ---
-> >  arch/arm/include/asm/hw_breakpoint.h | 2 ++
-> >  arch/arm/kernel/hw_breakpoint.c      | 2 ++
-> >  2 files changed, 4 insertions(+)
->
-> How did you test this?
->
-> Will
+I still believe that using __GFP_NORETRY as needed is a cleaner solution
+than a check for pageblock order and __GFP_IO, but that can be always
+changed later. This patch does fix the hugetlbfs regression, so
 
-We have the SoC with A55 cores. On one Android project, for saving memory usage,
-we let A55 run in aarch32 mode.
-While the following failures occue on Android CtsBionicTestCases:
---sys_ptrace#watchpoint_imprecisede
---sys_ptrace#hardware_breakpoint
---sys_ptrace#watchpoint_stress
-
-The code snippet for testing is:
-
-static void check_hw_feature_supported(pid_t child, HwFeature feature) {
-#if defined(__arm__)
-  long capabilities;
-  long result = ptrace(PTRACE_GETHBPREGS, child, 0, &capabilities);
-  if (result == -1) {
-    EXPECT_EQ(EIO, errno);
-    GTEST_SKIP() << "Hardware debug support disabled at kernel
-configuration time";
-  }
-  uint8_t hb_count = capabilities & 0xff;
-  capabilities >>= 8;
-  uint8_t wp_count = capabilities & 0xff;
-  capabilities >>= 8;
-  uint8_t max_wp_size = capabilities & 0xff;
-  if (max_wp_size == 0) {
-    GTEST_SKIP() << "Kernel reports zero maximum watchpoint size";
-  } else if (feature == HwFeature::Watchpoint && wp_count == 0) {
-    GTEST_SKIP() << "Kernel reports zero hardware watchpoints";
-  } else if (feature == HwFeature::Breakpoint && hb_count == 0) {
-    GTEST_SKIP() << "Kernel reports zero hardware breakpoints";
-  }
-#elif defined(__aarch64__)
-  user_hwdebug_state dreg_state;
-  iovec iov;
-  iov.iov_base = &dreg_state;
-  iov.iov_len = sizeof(dreg_state);
-
-  long result = ptrace(PTRACE_GETREGSET, child,
-                       feature == HwFeature::Watchpoint ?
-NT_ARM_HW_WATCH : NT_ARM_HW_BREAK, &iov);
-  if (result == -1) {
-    ASSERT_EQ(EINVAL, errno);
-  }
-  if ((dreg_state.dbg_info & 0xff) == 0) GTEST_SKIP() << "hardware
-support missing";
-#else
-  // We assume watchpoints and breakpoints are always supported on x86.
-  UNUSED(child);
-  UNUSED(feature);
-#endif
-}
-
-The max_wp_size field returned by __ptrace() from kernel is zero,
-which causes the test failures.
-
-After futher analysis, we found max_watchpoint_len variable is not
-right initialized in kernel
-arch_hw_breakpoint_init() function. Missing the case of ARM_DEBUG_ARCH_V8_2 in
-enable_monitor_mode() directly aborts the arch_hw_breakpoint_int().
-
-Candle
-Best regards
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
