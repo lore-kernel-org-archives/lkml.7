@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED0CECE58C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EEEECE596
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BC742190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:41:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE69221924
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:41:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="flY5qlCG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cazKxs+d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728828AbfJHWlG (ORCPT
+        id S1729595AbfJHWlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 18:41:06 -0400
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:45203 "EHLO
+        Tue, 8 Oct 2019 18:41:12 -0400
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:34328 "EHLO
         mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728116AbfJHWlF (ORCPT
+        with ESMTP id S1729284AbfJHWlK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 18:41:05 -0400
-Received: by mail-pg1-f201.google.com with SMTP id x31so220257pgl.12
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 15:41:04 -0700 (PDT)
+        Tue, 8 Oct 2019 18:41:10 -0400
+Received: by mail-pg1-f201.google.com with SMTP id g15so246069pgh.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 15:41:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=6CRaByPmwZZbYHACg7k1nT3qVKizFi1JIygNj2Eu6tU=;
-        b=flY5qlCGmPdESWqrzPRhJ6fA000kiBKtv7ouLl1zCVc9abIPurp5+foDKJes/TAbVP
-         BOvnlmpWOKZGnlsbPDIs6d1FSZsgIQHXTjeU58N2yA/eeB3Sw/+OsL1I+GXKq9XNT0AD
-         OIclucvqSWN3FFzU9JlGO9HR767pQM/LRt+oGaJM/clIrViIOItWiFv97xjGlBCTMfnZ
-         J421CZp9Uc1+eiXJjZLZsmhtYJNUNB1nQZ72C+hcWV69er5Yrp6PWpwIcpC6U8Z9Dv2p
-         reYfp1mTlUl4bqOU8FcubPHiMACGVpwptF2AZ6R0BI/4SXQwP5VnqDzht2vJ5ViwQmyi
-         25aA==
+        bh=8ud+ZyVKVzp8perwrvpDLfe0HIBghmzVmkhv8miUgms=;
+        b=cazKxs+dARL2RI/9v+6T4IH1qeNG80YgHPhtpsqSoRdywa37yWDAzufmjPq3q4zjRt
+         mxZtg5BXBkt3cGmMO1WJH+hArzpnDv9NOtopk8G93ZdjLSHGGUNiRSL9Bf2xAdTtgPMP
+         jy+CdsrQLs3ORU+3vEd0a8DjbuKefTlFIs+IAwBp3PZBYBEsg7Y4FY8Ex+V/1f9cHL0e
+         WQR6pLqvs/CRRxLeDbHTtUOGKm8gVxXHwj+zhk5VOa/d1w7XkpwmMv3jxOYeU0X19TYd
+         MnXWvhn+R0YJ3Oc24q/5MRtT9dEmmEpFn/1dslHDxwuUcKwB9M/ckj+BYHJiMP3683s3
+         d78A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=6CRaByPmwZZbYHACg7k1nT3qVKizFi1JIygNj2Eu6tU=;
-        b=VbOqhiZxvsIvJkFE7g1DCb4TMr8cBZboaC4vHptNl/0L5buWI3l/aa8VuHo5wCjODm
-         0rV3hmoCXELarogrTfFaEel7MtKqks75T34MmsJsfNWYinSQiNgbdtGhbBzeDIl64nHu
-         UVYalenxac5S5X8riJzXT5xJmb+w8enQ/iGfrB2fmH9cxW71wbKYaFYbFMDN2IQ6GrzY
-         xCrOJNMCBhOodV1vDH1N4Wnmr+h7oKOOPbf7yHR2SZFAec/U1qG9lva4vhLfskjuio/X
-         Qit75l6BGtIzWr0XcCOQt/yLf5IZU7RnaCTJbzMKxCZLPT7geGqj+ToF3qVBLiTI29jd
-         vfhg==
-X-Gm-Message-State: APjAAAX7mquUg6tG7T6HqSSMXi2iESGLLlBnBDrV9q6+fuiUe4Xfo1bg
-        AlSs1KNg8DAgx4ygPf9nhBt0x5DrUtlAQYr0kVg=
-X-Google-Smtp-Source: APXvYqyx2Zu73kfLvNByNSHZTqrz36zsEhp5z58ZxJrKO+1xLooAIVRmOoecfTmKXbfbRCujP+XgqbeZYdiAL7YQyUk=
-X-Received: by 2002:a65:434c:: with SMTP id k12mr820592pgq.141.1570574464142;
- Tue, 08 Oct 2019 15:41:04 -0700 (PDT)
-Date:   Tue,  8 Oct 2019 15:40:46 -0700
+        bh=8ud+ZyVKVzp8perwrvpDLfe0HIBghmzVmkhv8miUgms=;
+        b=JOtnLzmLNjLZRyHEYhlwhm5UBUGBSjmX93XyFGX/ZeHvAUn8HbhuGRtWaH9+sSQZXx
+         u92j5c6kNWEVFJfSLMqxxSDKH4zu9nYGoNjRRHxUpGqhVI3SZlnjHDfNMzL6VTdPLS73
+         YE1otezlrnYYcEzfnJiVj64Acep18E3Ej0qqx4yenHdy0Aof9PkpGb69SgwUYU6X0xhC
+         dfpF+0g1EzOUxicHVDtNHkSeXcWZJioJxxUCZDoA3mQX650R+RSGelqCXFVZY239nJos
+         cKbXDQREPFI+aamuWVc3MnbywyUDLTj1dCtOiVTwQqGeXs5snnLdh5aCZk+dg3+DjueK
+         P0AA==
+X-Gm-Message-State: APjAAAXLgEpEmkmmLgwEK+IEyIhr0n5azreDpskmIqEcmxk6j1tRvJR9
+        cHUHkapaK5C6Bjc/Iv2H+8n23koIdodz8P+pQRE=
+X-Google-Smtp-Source: APXvYqyPO9y6IbR8kAC3KisSZXK6hnqGwFIgbID/zGCFGrIe+I9w1LI4Fv1BBV0NcPmFd/SPvZo5Qg1FSec5m8cW4Dw=
+X-Received: by 2002:a63:e013:: with SMTP id e19mr871840pgh.274.1570574469068;
+ Tue, 08 Oct 2019 15:41:09 -0700 (PDT)
+Date:   Tue,  8 Oct 2019 15:40:48 -0700
 In-Reply-To: <20191008224049.115427-1-samitolvanen@google.com>
-Message-Id: <20191008224049.115427-3-samitolvanen@google.com>
+Message-Id: <20191008224049.115427-5-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20190913210018.125266-1-samitolvanen@google.com> <20191008224049.115427-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
-Subject: [RESEND PATCH v2 2/5] x86/syscalls: Wire up COMPAT_SYSCALL_DEFINE0
+Subject: [RESEND PATCH v2 4/5] x86: use the correct function type for sys_ni_syscall
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Andy Lutomirski <luto@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -73,89 +73,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Lutomirski <luto@kernel.org>
+Use the correct function type for sys_ni_syscall in system
+call tables to fix indirect call mismatches with Control-Flow
+Integrity (CFI) checking.
 
-x86 has special handling for COMPAT_SYSCALL_DEFINEx, but there was
-no override for COMPAT_SYSCALL_DEFINE0.  Wire it up so that we can
-use it for rt_sigreturn.
-
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- arch/x86/include/asm/syscall_wrapper.h | 32 ++++++++++++++++++++++++--
- 1 file changed, 30 insertions(+), 2 deletions(-)
+ arch/x86/entry/syscall_32.c            |  8 +++-----
+ arch/x86/entry/syscall_64.c            | 14 ++++++++++----
+ arch/x86/entry/syscalls/syscall_32.tbl |  4 ++--
+ 3 files changed, 15 insertions(+), 11 deletions(-)
 
-diff --git a/arch/x86/include/asm/syscall_wrapper.h b/arch/x86/include/asm/syscall_wrapper.h
-index 90eb70df0b18..3dab04841494 100644
---- a/arch/x86/include/asm/syscall_wrapper.h
-+++ b/arch/x86/include/asm/syscall_wrapper.h
-@@ -28,13 +28,21 @@
-  * kernel/sys_ni.c and SYS_NI in kernel/time/posix-stubs.c to cover this
-  * case as well.
-  */
-+#define __IA32_COMPAT_SYS_STUB0(x, name)				\
-+	asmlinkage long __ia32_compat_sys_##name(const struct pt_regs *regs);\
-+	ALLOW_ERROR_INJECTION(__ia32_compat_sys_##name, ERRNO);		\
-+	asmlinkage long __ia32_compat_sys_##name(const struct pt_regs *regs)\
-+	{								\
-+		return __se_compat_sys_##name();			\
-+	}
-+
- #define __IA32_COMPAT_SYS_STUBx(x, name, ...)				\
- 	asmlinkage long __ia32_compat_sys##name(const struct pt_regs *regs);\
- 	ALLOW_ERROR_INJECTION(__ia32_compat_sys##name, ERRNO);		\
- 	asmlinkage long __ia32_compat_sys##name(const struct pt_regs *regs)\
- 	{								\
- 		return __se_compat_sys##name(SC_IA32_REGS_TO_ARGS(x,__VA_ARGS__));\
--	}								\
-+	}
+diff --git a/arch/x86/entry/syscall_32.c b/arch/x86/entry/syscall_32.c
+index aa3336a7cb15..7d17b3addbbb 100644
+--- a/arch/x86/entry/syscall_32.c
++++ b/arch/x86/entry/syscall_32.c
+@@ -10,13 +10,11 @@
+ #ifdef CONFIG_IA32_EMULATION
+ /* On X86_64, we use struct pt_regs * to pass parameters to syscalls */
+ #define __SYSCALL_I386(nr, sym, qual) extern asmlinkage long sym(const struct pt_regs *);
+-
+-/* this is a lie, but it does not hurt as sys_ni_syscall just returns -EINVAL */
+-extern asmlinkage long sys_ni_syscall(const struct pt_regs *);
+-
++#define __sys_ni_syscall __ia32_sys_ni_syscall
+ #else /* CONFIG_IA32_EMULATION */
+ #define __SYSCALL_I386(nr, sym, qual) extern asmlinkage long sym(unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long);
+ extern asmlinkage long sys_ni_syscall(unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long);
++#define __sys_ni_syscall sys_ni_syscall
+ #endif /* CONFIG_IA32_EMULATION */
  
- #define __IA32_SYS_STUBx(x, name, ...)					\
- 	asmlinkage long __ia32_sys##name(const struct pt_regs *regs);	\
-@@ -76,15 +84,24 @@
-  * of the x86-64-style parameter ordering of x32 syscalls. The syscalls common
-  * with x86_64 obviously do not need such care.
-  */
-+#define __X32_COMPAT_SYS_STUB0(x, name, ...)				\
-+	asmlinkage long __x32_compat_sys_##name(const struct pt_regs *regs);\
-+	ALLOW_ERROR_INJECTION(__x32_compat_sys_##name, ERRNO);		\
-+	asmlinkage long __x32_compat_sys_##name(const struct pt_regs *regs)\
-+	{								\
-+		return __se_compat_sys_##name();\
-+	}
-+
- #define __X32_COMPAT_SYS_STUBx(x, name, ...)				\
- 	asmlinkage long __x32_compat_sys##name(const struct pt_regs *regs);\
- 	ALLOW_ERROR_INJECTION(__x32_compat_sys##name, ERRNO);		\
- 	asmlinkage long __x32_compat_sys##name(const struct pt_regs *regs)\
- 	{								\
- 		return __se_compat_sys##name(SC_X86_64_REGS_TO_ARGS(x,__VA_ARGS__));\
--	}								\
-+	}
+ #include <asm/syscalls_32.h>
+@@ -29,6 +27,6 @@ __visible const sys_call_ptr_t ia32_sys_call_table[__NR_syscall_compat_max+1] =
+ 	 * Smells like a compiler bug -- it doesn't work
+ 	 * when the & below is removed.
+ 	 */
+-	[0 ... __NR_syscall_compat_max] = &sys_ni_syscall,
++	[0 ... __NR_syscall_compat_max] = &__sys_ni_syscall,
+ #include <asm/syscalls_32.h>
+ };
+diff --git a/arch/x86/entry/syscall_64.c b/arch/x86/entry/syscall_64.c
+index b1bf31713374..adf619a856e8 100644
+--- a/arch/x86/entry/syscall_64.c
++++ b/arch/x86/entry/syscall_64.c
+@@ -4,11 +4,17 @@
+ #include <linux/linkage.h>
+ #include <linux/sys.h>
+ #include <linux/cache.h>
++#include <linux/syscalls.h>
+ #include <asm/asm-offsets.h>
+ #include <asm/syscall.h>
  
- #else /* CONFIG_X86_X32 */
-+#define __X32_COMPAT_SYS_STUB0(x, name)
- #define __X32_COMPAT_SYS_STUBx(x, name, ...)
- #endif /* CONFIG_X86_X32 */
- 
-@@ -95,6 +112,17 @@
-  * mapping of registers to parameters, we need to generate stubs for each
-  * of them.
-  */
-+#define COMPAT_SYSCALL_DEFINE0(name)					\
-+	static long __se_compat_sys_##name(void);			\
-+	static inline long __do_compat_sys_##name(void);		\
-+	__IA32_COMPAT_SYS_STUB0(x, name)				\
-+	__X32_COMPAT_SYS_STUB0(x, name)					\
-+	static long __se_compat_sys_##name(void)			\
-+	{								\
-+		return __do_compat_sys_##name();			\
-+	}								\
-+	static inline long __do_compat_sys_##name(void)
+-/* this is a lie, but it does not hurt as sys_ni_syscall just returns -EINVAL */
+-extern asmlinkage long sys_ni_syscall(const struct pt_regs *);
++extern asmlinkage long sys_ni_syscall(void);
 +
- #define COMPAT_SYSCALL_DEFINEx(x, name, ...)					\
- 	static long __se_compat_sys##name(__MAP(x,__SC_LONG,__VA_ARGS__));	\
- 	static inline long __do_compat_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__));\
++SYSCALL_DEFINE0(ni_syscall)
++{
++	return sys_ni_syscall();
++}
++
+ #define __SYSCALL_64(nr, sym, qual) extern asmlinkage long sym(const struct pt_regs *);
+ #define __SYSCALL_X32(nr, sym, qual) __SYSCALL_64(nr, sym, qual)
+ #include <asm/syscalls_64.h>
+@@ -23,7 +29,7 @@ asmlinkage const sys_call_ptr_t sys_call_table[__NR_syscall_max+1] = {
+ 	 * Smells like a compiler bug -- it doesn't work
+ 	 * when the & below is removed.
+ 	 */
+-	[0 ... __NR_syscall_max] = &sys_ni_syscall,
++	[0 ... __NR_syscall_max] = &__x64_sys_ni_syscall,
+ #include <asm/syscalls_64.h>
+ };
+ 
+@@ -40,7 +46,7 @@ asmlinkage const sys_call_ptr_t x32_sys_call_table[__NR_syscall_x32_max+1] = {
+ 	 * Smells like a compiler bug -- it doesn't work
+ 	 * when the & below is removed.
+ 	 */
+-	[0 ... __NR_syscall_x32_max] = &sys_ni_syscall,
++	[0 ... __NR_syscall_x32_max] = &__x64_sys_ni_syscall,
+ #include <asm/syscalls_64.h>
+ };
+ 
+diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
+index 2de75fda1d20..15908eb9b17e 100644
+--- a/arch/x86/entry/syscalls/syscall_32.tbl
++++ b/arch/x86/entry/syscalls/syscall_32.tbl
+@@ -124,7 +124,7 @@
+ 110	i386	iopl			sys_iopl			__ia32_sys_iopl
+ 111	i386	vhangup			sys_vhangup			__ia32_sys_vhangup
+ 112	i386	idle
+-113	i386	vm86old			sys_vm86old			sys_ni_syscall
++113	i386	vm86old			sys_vm86old			__ia32_sys_ni_syscall
+ 114	i386	wait4			sys_wait4			__ia32_compat_sys_wait4
+ 115	i386	swapoff			sys_swapoff			__ia32_sys_swapoff
+ 116	i386	sysinfo			sys_sysinfo			__ia32_compat_sys_sysinfo
+@@ -177,7 +177,7 @@
+ 163	i386	mremap			sys_mremap			__ia32_sys_mremap
+ 164	i386	setresuid		sys_setresuid16			__ia32_sys_setresuid16
+ 165	i386	getresuid		sys_getresuid16			__ia32_sys_getresuid16
+-166	i386	vm86			sys_vm86			sys_ni_syscall
++166	i386	vm86			sys_vm86			__ia32_sys_ni_syscall
+ 167	i386	query_module
+ 168	i386	poll			sys_poll			__ia32_sys_poll
+ 169	i386	nfsservctl
 -- 
 2.23.0.581.g78d2f28ef7-goog
 
