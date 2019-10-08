@@ -2,108 +2,64 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED54C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6491C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E075206BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:06:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mykernel.net header.i=cgxu519@mykernel.net header.b="TaUNNTFh"
+	by mail.kernel.org (Postfix) with ESMTP id A870520815
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:07:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727754AbfJHPGb (ORCPT
+        id S1727298AbfJHPHl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 11:06:31 -0400
-Received: from sender2-of-o52.zoho.com.cn ([163.53.93.247]:21543 "EHLO
-        sender2-of-o52.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725976AbfJHPGb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 11:06:31 -0400
-X-Greylist: delayed 906 seconds by postgrey-1.27 at vger.kernel.org; Tue, 08 Oct 2019 11:06:29 EDT
-ARC-Seal: i=1; a=rsa-sha256; t=1570546276; cv=none; 
-        d=zoho.com.cn; s=zohoarc; 
-        b=brFUoouPEMjJSqsa8+K9u9vBzwF8LLEcUDjzvdPUb44eMP0eYlmrKDAntG4o7xgPfm57wlCk3MYuwEZSJGSVEptKtLiMfvM1Iik8W4lkQh2+j+IV4mBKJfUQGfdxLQEYjDJefRMI72Ik72mZEoFz+sd4fjd4koiG7287gBvJH2Y=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
-        t=1570546276; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To:ARC-Authentication-Results; 
-        bh=iWLsd00kA2pIWjpDhgqoOn/cVUxOJx70YwdIj1xn/rY=; 
-        b=KKnfq3OF+IV0w8iKJJYewfJ2/qtZ/8GJEjcyTjkKS6WgjqOBLX/9Gk4Ml07cUVLl5GS7iOrvL4vFuGaS5xRtgXhrW89Wh5fLnf5CdrjmwaxbYWQIcd0EDBCqrWOvd+NlDJ6zHlSTz7NMy36svLfdAbWEbHyBPGGHMJzKzdxY/sQ=
-ARC-Authentication-Results: i=1; mx.zoho.com.cn;
-        dkim=pass  header.i=mykernel.net;
-        spf=pass  smtp.mailfrom=cgxu519@mykernel.net;
-        dmarc=pass header.from=<cgxu519@mykernel.net> header.from=<cgxu519@mykernel.net>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1570546276;
-        s=zohomail; d=mykernel.net; i=cgxu519@mykernel.net;
-        h=From:To:Cc:Message-ID:Subject:Date:MIME-Version:Content-Transfer-Encoding:Content-Type;
-        l=1328; bh=iWLsd00kA2pIWjpDhgqoOn/cVUxOJx70YwdIj1xn/rY=;
-        b=TaUNNTFhjoldUyM6Ks2KaiQNYCHUOkq7VmOkAMoR7f1CBj3BIvu0NKGkFKtOavmT
-        323Pful323iDGIp5jI1R5Bni/9oeLoE+w0C2wsaRumc8dcYK/7iRhhVoaCRaXTXn13q
-        4V/bWmC+B53FunhFypVTTdRifUhgwxgEZoralXnI=
-Received: from localhost.localdomain (113.116.49.170 [113.116.49.170]) by mx.zoho.com.cn
-        with SMTPS id 1570546274198707.4831055250032; Tue, 8 Oct 2019 22:51:14 +0800 (CST)
-From:   Chengguang Xu <cgxu519@mykernel.net>
-To:     jack@suse.com
-Cc:     linux-kernel@vger.kernel.org, Chengguang Xu <cgxu519@mykernel.net>
-Message-ID: <20191008145059.21402-1-cgxu519@mykernel.net>
-Subject: [PATCH] quota: check quota type in early stage
-Date:   Tue,  8 Oct 2019 22:50:59 +0800
-X-Mailer: git-send-email 2.21.0
+        Tue, 8 Oct 2019 11:07:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38354 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725976AbfJHPHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 11:07:40 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45336206BB;
+        Tue,  8 Oct 2019 15:07:39 +0000 (UTC)
+Date:   Tue, 8 Oct 2019 11:07:37 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com
+Subject: Re: [PATCH v3 0/6] Rewrite x86/ftrace to use text_poke()
+Message-ID: <20191008110737.73803008@gandalf.local.home>
+In-Reply-To: <20191007081716.07616230.8@infradead.org>
+References: <20191007090225.44108711.6@infradead.org>
+        <20191007081716.07616230.8@infradead.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
-Content-Type: text/plain; charset=utf8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Check quota type in early stage so we can avoid many
-unncessary operations when the type is wrong.
+On Mon, 07 Oct 2019 10:17:16 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
----
- fs/quota/quota.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+> Ftrace was one of the last W^X violators; these patches move it over to the
+> generic text_poke() interface and thereby get rid of this oddity.
+> 
 
-diff --git a/fs/quota/quota.c b/fs/quota/quota.c
-index cb13fb76dbee..5444d3c4d93f 100644
---- a/fs/quota/quota.c
-+++ b/fs/quota/quota.c
-@@ -60,8 +60,6 @@ static int quota_sync_all(int type)
- {
- =09int ret;
-=20
--=09if (type >=3D MAXQUOTAS)
--=09=09return -EINVAL;
- =09ret =3D security_quotactl(Q_SYNC, type, 0, NULL);
- =09if (!ret)
- =09=09iterate_supers(quota_sync_one, &type);
-@@ -686,8 +684,6 @@ static int do_quotactl(struct super_block *sb, int type=
-, int cmd, qid_t id,
- {
- =09int ret;
-=20
--=09if (type >=3D MAXQUOTAS)
--=09=09return -EINVAL;
- =09type =3D array_index_nospec(type, MAXQUOTAS);
- =09/*
- =09 * Quota not supported on this fs? Check this before s_quota_types
-@@ -831,6 +827,9 @@ int kernel_quotactl(unsigned int cmd, const char __user=
- *special,
- =09cmds =3D cmd >> SUBCMDSHIFT;
- =09type =3D cmd & SUBCMDMASK;
-=20
-+=09if (type >=3D MAXQUOTAS)
-+=09=09return -EINVAL;
-+
- =09/*
- =09 * As a special case Q_SYNC can be called without a specific device.
- =09 * It will iterate all superblocks that have quota enabled and call
---=20
-2.21.0
+Ingo, Thomas or H.Peter,
 
+If it's OK with you, can you ack this series so that I can pull it
+through my tree? I have some code that will conflict with this that I
+want to write on top of it. As well as hammer it out to make sure
+ftrace works fine.
 
+Thanks!
 
+-- Steve
