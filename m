@@ -2,275 +2,109 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89754ECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 06:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4372ECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 06:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56AE521721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 06:34:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="dN0be+FH"
+	by mail.kernel.org (Postfix) with ESMTP id 82B8821721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 06:34:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730069AbfJHGee (ORCPT
+        id S1730103AbfJHGek (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 02:34:34 -0400
-Received: from mail-eopbgr810070.outbound.protection.outlook.com ([40.107.81.70]:39648
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729740AbfJHGee (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 02:34:34 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VcNwQ3ByCJ/DOupyhTdLnsiHW/ADvdBmUFOUv31czCMtfflzpiRgbPcaWDMxxf33/br2n8afIihZU2XJgbfiueT17CRZToq29HGmWy6rg7SAtkQolFcMcQIeYbFiLt7rygJ8a0SePQtmUpiWBA1aXFy9gZOx5CVAp0yfVq5H4GFdpY0dJklo3PK4sEEXxDEiKlkm2KpcRUkm2s+qSNmgyFV6oF5oZNm5DNpjqZsszGMYXVFRNpKfcqtM4b1FGrUMW0TGXr/Cj5vOyOffG64J6tlbHSbq53jnvQF5jNDoZK8P3POP79lIro0h9rOW/5Pv8krkQVOF2GCeqiL9Brs6rA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cDsOKJ5OtZouaCOC9d2wsP3uOsrbxoTCaVIXdvAQCjQ=;
- b=MdQAfa6bAViciUhkRLAJhmmH8bO+5B1gXIJ/OQHmAQFtgGer3FMt2eBejYnSpokBn+3VY0VdcBgKwsaTQ1DIlDWV0zmylsMV1CA2GIPn3vZeFy2J4oOgt03Qbjl/uL5sqPixcx0g1NWgDPyBRsA+E+cEDWijhMuWi3oKFmWODYDky8/ISxgM5omMBNnkhch3LRKhg/At2mBmFYla1tfwzsiXPf2fSaHUrVNAEKR4jl3DB7fxGA/tdSYaVFl+BdDCL44ghgu2Vo+bT+ptstptfke6004YV9UROgjvWc1eMeO9gpsLu0Jtr48a3IQjIC83xe+Pd9xpwZiFJuubLe+jkw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=gmail.com smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cDsOKJ5OtZouaCOC9d2wsP3uOsrbxoTCaVIXdvAQCjQ=;
- b=dN0be+FHMY+PXK3PndQN6Wn126wU2ina3gTJVHogOuqctq3q4oAXG/an2ekGX/dClOZzrbxXPL+eJR19YweTj7XalT28UnANXCLDgSbJrea6zBHrQHxPPMH906vpK4ZfOudKi1zCwOjMxc784Hc3ggq7jcUiKt6aH1ZESI5ACEg=
-Received: from MN2PR02CA0032.namprd02.prod.outlook.com (2603:10b6:208:fc::45)
- by DM5PR02MB2683.namprd02.prod.outlook.com (2603:10b6:3:10e::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2327.23; Tue, 8 Oct
- 2019 06:34:29 +0000
-Received: from CY1NAM02FT046.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::205) by MN2PR02CA0032.outlook.office365.com
- (2603:10b6:208:fc::45) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2327.25 via Frontend
- Transport; Tue, 8 Oct 2019 06:34:29 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT046.mail.protection.outlook.com (10.152.74.232) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2327.21
- via Frontend Transport; Tue, 8 Oct 2019 06:34:29 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1iHj4m-00063X-CR; Mon, 07 Oct 2019 23:34:28 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1iHj4h-0003tg-95; Mon, 07 Oct 2019 23:34:23 -0700
-Received: from xsj-pvapsmtp01 (smtp-fallback.xilinx.com [149.199.38.66] (may be forged))
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x986YJLd008545;
-        Mon, 7 Oct 2019 23:34:19 -0700
-Received: from [172.30.17.123]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1iHj4d-0003sf-BD; Mon, 07 Oct 2019 23:34:19 -0700
-Subject: Re: [PATCH] usb: gadget: udc: Fix assignment of 0/1 to bool variables
-To:     Saurav Girepunje <saurav.girepunje@gmail.com>, balbi@kernel.org,
-        gregkh@linuxfoundation.org, michal.simek@xilinx.com,
-        swboyd@chromium.org, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     saurav.girepunje@hotmail.com
-References: <20191007181527.GA6816@saurav>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <cfb871aa-332c-2256-d194-15f8b87de6f8@xilinx.com>
-Date:   Tue, 8 Oct 2019 08:34:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 8 Oct 2019 02:34:40 -0400
+Received: from verein.lst.de ([213.95.11.211]:44049 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729740AbfJHGek (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 02:34:40 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id B73F668B20; Tue,  8 Oct 2019 08:34:36 +0200 (CEST)
+Date:   Tue, 8 Oct 2019 08:34:36 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/11] iomap: copy the xfs writeback code to iomap.c
+Message-ID: <20191008063436.GA30465@lst.de>
+References: <20191006154608.24738-1-hch@lst.de> <20191006154608.24738-3-hch@lst.de> <20191007214353.GZ16973@dread.disaster.area>
 MIME-Version: 1.0
-In-Reply-To: <20191007181527.GA6816@saurav>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(39860400002)(136003)(346002)(189003)(199004)(44832011)(229853002)(2486003)(5660300002)(478600001)(230700001)(36386004)(31686004)(23676004)(36756003)(76176011)(486006)(11346002)(26005)(186003)(126002)(476003)(446003)(336012)(2616005)(305945005)(426003)(316002)(31696002)(81156014)(9786002)(81166006)(106002)(8936002)(4326008)(8676002)(65956001)(47776003)(2906002)(50466002)(58126008)(6666004)(6246003)(70586007)(70206006)(356004)(65806001)(42866002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR02MB2683;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 94bbcbfc-1cc6-405c-2cc0-08d74bb99254
-X-MS-TrafficTypeDiagnostic: DM5PR02MB2683:
-X-Microsoft-Antispam-PRVS: <DM5PR02MB2683A393AFC9812EA569A513C69A0@DM5PR02MB2683.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:2399;
-X-Forefront-PRVS: 01842C458A
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: B0/CgFe9S3ckoQ/KsQxUO7Pnv4FiVZK/09UOM7/eI4w+9HCUt+0KtOFGnV8jBfr1gebhIgLiu5MjNJV5+V4d7mTRJeaV3wj9ePMnHIBpDnPmgdr/75aur/oXunWQVfrk/j4lZUC8T/ODFi+IMnyFYmeCvGYRYdUzcH6U93CYpuUrYXsBQm1lQUU7Sz1XTj5XTMjVy2BOVzZ5BFhctaAM2dqEaVSeiKRjwz4A3lyS+30vvHLqJMAASZOe26jY7O0txmh7WPbQtwHNOVgycID1uNixexLqCO6mjMG2+YYlaXcVKlL5T0y8040MwTduBzVwfuyF2iQizyI+KyVEyMvbBcE7V3vW97MX7IycQThYDKuwkXihEqw8JDPX4YKvP/4B1PQuIzEEDUUJCz7VRMpEDzWFsR9PLbdGNL97EafJHbU=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Oct 2019 06:34:29.0336
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 94bbcbfc-1cc6-405c-2cc0-08d74bb99254
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR02MB2683
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191007214353.GZ16973@dread.disaster.area>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07. 10. 19 20:15, Saurav Girepunje wrote:
-> Use true/false assignment for below bool variables in udc-xilinx.c:
+On Tue, Oct 08, 2019 at 08:43:53AM +1100, Dave Chinner wrote:
+> > +static int
+> > +iomap_ioend_compare(void *priv, struct list_head *a, struct list_head *b)
+> > +{
+> > +	struct iomap_ioend *ia, *ib;
+> > +
+> > +	ia = container_of(a, struct iomap_ioend, io_list);
+> > +	ib = container_of(b, struct iomap_ioend, io_list);
+> > +	if (ia->io_offset < ib->io_offset)
+> > +		return -1;
+> > +	else if (ia->io_offset > ib->io_offset)
+> > +		return 1;
+> > +	return 0;
 > 
-> bool buffer0ready;
-> bool buffer1ready;
-> bool is_in;
-> bool is_iso;
-> 
-> Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
-> ---
->  drivers/usb/gadget/udc/udc-xilinx.c | 36 ++++++++++++++---------------
->  1 file changed, 18 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/usb/gadget/udc/udc-xilinx.c b/drivers/usb/gadget/udc/udc-xilinx.c
-> index 29d8e5f8bb58..b077c5bfd9ae 100644
-> --- a/drivers/usb/gadget/udc/udc-xilinx.c
-> +++ b/drivers/usb/gadget/udc/udc-xilinx.c
-> @@ -392,7 +392,7 @@ static int xudc_dma_send(struct xusb_ep *ep, struct xusb_req *req,
->  			      XUSB_EP_BUF0COUNT_OFFSET, length);
->  		udc->write_fn(udc->addr, XUSB_DMA_CONTROL_OFFSET,
->  			      XUSB_DMA_BRR_CTRL | (1 << ep->epnumber));
-> -		ep->buffer0ready = 1;
-> +		ep->buffer0ready = true;
->  		ep->curbufnum = 1;
->  	} else if (ep->curbufnum && !ep->buffer1ready) {
->  		/* Get the Buffer address and copy the transmit data.*/
-> @@ -404,7 +404,7 @@ static int xudc_dma_send(struct xusb_ep *ep, struct xusb_req *req,
->  		udc->write_fn(udc->addr, XUSB_DMA_CONTROL_OFFSET,
->  			      XUSB_DMA_BRR_CTRL | (1 << (ep->epnumber +
->  			      XUSB_STATUS_EP_BUFF2_SHIFT)));
-> -		ep->buffer1ready = 1;
-> +		ep->buffer1ready = true;
->  		ep->curbufnum = 0;
->  	} else {
->  		/* None of ping pong buffers are ready currently .*/
-> @@ -442,7 +442,7 @@ static int xudc_dma_receive(struct xusb_ep *ep, struct xusb_req *req,
->  		udc->write_fn(udc->addr, XUSB_DMA_CONTROL_OFFSET,
->  			      XUSB_DMA_BRR_CTRL | XUSB_DMA_READ_FROM_DPRAM |
->  			      (1 << ep->epnumber));
-> -		ep->buffer0ready = 1;
-> +		ep->buffer0ready = true;
->  		ep->curbufnum = 1;
->  	} else if (ep->curbufnum && !ep->buffer1ready) {
->  		/* Get the Buffer address and copy the transmit data */
-> @@ -453,7 +453,7 @@ static int xudc_dma_receive(struct xusb_ep *ep, struct xusb_req *req,
->  			      XUSB_DMA_BRR_CTRL | XUSB_DMA_READ_FROM_DPRAM |
->  			      (1 << (ep->epnumber +
->  			      XUSB_STATUS_EP_BUFF2_SHIFT)));
-> -		ep->buffer1ready = 1;
-> +		ep->buffer1ready = true;
->  		ep->curbufnum = 0;
->  	} else {
->  		/* None of the ping-pong buffers are ready currently */
-> @@ -507,7 +507,7 @@ static int xudc_eptxrx(struct xusb_ep *ep, struct xusb_req *req,
->  		 */
->  		udc->write_fn(udc->addr, XUSB_BUFFREADY_OFFSET,
->  			      1 << ep->epnumber);
-> -		ep->buffer0ready = 1;
-> +		ep->buffer0ready = true;
->  		ep->curbufnum = 1;
->  	} else if (ep->curbufnum && !ep->buffer1ready) {
->  		/* Get the Buffer address and copy the transmit data.*/
-> @@ -525,7 +525,7 @@ static int xudc_eptxrx(struct xusb_ep *ep, struct xusb_req *req,
->  		 */
->  		udc->write_fn(udc->addr, XUSB_BUFFREADY_OFFSET,
->  			      1 << (ep->epnumber + XUSB_STATUS_EP_BUFF2_SHIFT));
-> -		ep->buffer1ready = 1;
-> +		ep->buffer1ready = true;
->  		ep->curbufnum = 0;
->  	} else {
->  		/* None of the ping-pong buffers are ready currently */
-> @@ -818,11 +818,11 @@ static int __xudc_ep_enable(struct xusb_ep *ep,
->  	case USB_ENDPOINT_XFER_CONTROL:
->  		dev_dbg(udc->dev, "only one control endpoint\n");
->  		/* NON- ISO */
-> -		ep->is_iso = 0;
-> +		ep->is_iso = false;
->  		return -EINVAL;
->  	case USB_ENDPOINT_XFER_INT:
->  		/* NON- ISO */
-> -		ep->is_iso = 0;
-> +		ep->is_iso = false;
->  		if (maxpacket > 64) {
->  			dev_dbg(udc->dev, "bogus maxpacket %d\n", maxpacket);
->  			return -EINVAL;
-> @@ -830,7 +830,7 @@ static int __xudc_ep_enable(struct xusb_ep *ep,
->  		break;
->  	case USB_ENDPOINT_XFER_BULK:
->  		/* NON- ISO */
-> -		ep->is_iso = 0;
-> +		ep->is_iso = false;
->  		if (!(is_power_of_2(maxpacket) && maxpacket >= 8 &&
->  				maxpacket <= 512)) {
->  			dev_dbg(udc->dev, "bogus maxpacket %d\n", maxpacket);
-> @@ -839,12 +839,12 @@ static int __xudc_ep_enable(struct xusb_ep *ep,
->  		break;
->  	case USB_ENDPOINT_XFER_ISOC:
->  		/* ISO */
-> -		ep->is_iso = 1;
-> +		ep->is_iso = true;
->  		break;
->  	}
->  
-> -	ep->buffer0ready = 0;
-> -	ep->buffer1ready = 0;
-> +	ep->buffer0ready = false;
-> +	ep->buffer1ready = false;
->  	ep->curbufnum = 0;
->  	ep->rambase = rambase[ep->epnumber];
->  	xudc_epconfig(ep, udc);
-> @@ -868,11 +868,11 @@ static int __xudc_ep_enable(struct xusb_ep *ep,
->  	if (ep->epnumber && !ep->is_in) {
->  		udc->write_fn(udc->addr, XUSB_BUFFREADY_OFFSET,
->  			      1 << ep->epnumber);
-> -		ep->buffer0ready = 1;
-> +		ep->buffer0ready = true;
->  		udc->write_fn(udc->addr, XUSB_BUFFREADY_OFFSET,
->  			     (1 << (ep->epnumber +
->  			      XUSB_STATUS_EP_BUFF2_SHIFT)));
-> -		ep->buffer1ready = 1;
-> +		ep->buffer1ready = true;
->  	}
->  
->  	return 0;
-> @@ -1331,8 +1331,8 @@ static void xudc_eps_init(struct xusb_udc *udc)
->  		 * each endpoint is 0x10.
->  		 */
->  		ep->offset = XUSB_EP0_CONFIG_OFFSET + (ep_number * 0x10);
-> -		ep->is_in = 0;
-> -		ep->is_iso = 0;
-> +		ep->is_in = false;
-> +		ep->is_iso = false;
->  		ep->maxpacket = 0;
->  		xudc_epconfig(ep, udc);
->  
-> @@ -1952,9 +1952,9 @@ static void xudc_nonctrl_ep_handler(struct xusb_udc *udc, u8 epnum,
->  	ep = &udc->ep[epnum];
->  	/* Process the End point interrupts.*/
->  	if (intrstatus & (XUSB_STATUS_EP0_BUFF1_COMP_MASK << epnum))
-> -		ep->buffer0ready = 0;
-> +		ep->buffer0ready = false;
->  	if (intrstatus & (XUSB_STATUS_EP0_BUFF2_COMP_MASK << epnum))
-> -		ep->buffer1ready = 0;
-> +		ep->buffer1ready = false;
->  
->  	if (list_empty(&ep->queue))
->  		return;
-> 
+> No need for the else here.
 
-Acked-by: Michal Simek <michal.simek@xilinx.com>
+That is usually my comment :)  But in this case it is just copied over
+code, so I didn't want to do cosmetic changes.
 
-Thanks,
-Michal
+> > +	/*
+> > +	 * Given that we do not allow direct reclaim to call us, we should
+> > +	 * never be called while in a filesystem transaction.
+> > +	 */
+> > +	if (WARN_ON_ONCE(current->flags & PF_MEMALLOC_NOFS))
+> > +		goto redirty;
+> 
+> Is this true for all expected callers of these functions rather than
+> just XFS? i.e. PF_MEMALLOC_NOFS is used by transactions in XFS to
+> prevent transaction context recursion, but other filesystems do not
+> do this..
+> 
+> FWIW, I can also see that this is going to cause us problems if high
+> level code starts using memalloc_nofs_save() and then calling
+> filemap_datawrite() and friends...
+
+We have the check for direct reclaim just above, so any file system
+using this iomap code will not allow direct reclaim.  Which I think is
+a very good idea given that direct reclaim through the file system is
+a very bad idea.
+
+That leaves with only the filemap_datawrite case, which so far is
+theoretical.  If that ever becomes a think it is very obvious and we
+can just remove the debug check.
+
+> > +iomap_writepage(struct page *page, struct writeback_control *wbc,
+> > +		struct iomap_writepage_ctx *wpc,
+> > +		const struct iomap_writeback_ops *ops)
+> > +{
+> > +	int ret;
+> > +
+> > +	wpc->ops = ops;
+> > +	ret = iomap_do_writepage(page, wbc, wpc);
+> > +	if (!wpc->ioend)
+> > +		return ret;
+> > +	return iomap_submit_ioend(wpc, wpc->ioend, ret);
+> > +}
+> > +EXPORT_SYMBOL_GPL(iomap_writepage);
+> 
+> Can we kill ->writepage for iomap users, please? After all, we don't
+> mostly don't allow memory reclaim to do writeback of dirty pages,
+> and that's the only caller of ->writepage.
+
+I'd rather not do this as part of this move.  But if you could expedite
+your patch to kill ->writepage from the large block size support patch
+and submit it ASAP on top of this series I would be very much in favor.
