@@ -2,317 +2,116 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44634C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 21:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DC7EC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 21:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08E4B2070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 21:35:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ERY1dO71"
+	by mail.kernel.org (Postfix) with ESMTP id 650A221871
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 21:38:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570570721;
+	bh=11TBIQmvDjjaIrom74PlC3QwYOcWo8Yzh1UnY6FDcXM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=NCwLXwSepqqGehFAHY+j3IalsnKnT8dskvOxByAL2NCHVg2gVG3yEnmimNfIO3dd+
+	 HXQxeyJJU4cJnhe2RhckyoNZMVoPVB09df66k9fIGVYzLA63ul1r3+kEXmmOAZ1nNP
+	 hOQMVwkefoD55v6ViXMh6q66/coXzb9Uhpk5ZXFo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730450AbfJHVfm (ORCPT
+        id S1730413AbfJHVik (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 17:35:42 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34439 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730121AbfJHVfm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 17:35:42 -0400
-Received: by mail-pf1-f196.google.com with SMTP id b128so175750pfa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 14:35:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KGh1LAlQix7XM3buDCxUXeBsipn44ZcZivUAyJ5/VQU=;
-        b=ERY1dO71RhJnkTCoIulvXTSkX4SgyB7/+r1p4FDR7jpOBmoj7yup0pf4+0yF/zJ9RS
-         W5oBL9qNkNRkCmwXItZNj8oUo36z/Kcqfs7bKASiJLBgPJ1KxwtEzf+GEd0hYeL9HsHf
-         50jhpSMn1LpqJG2r2Cp87I1uGX2HmEuboCofkwQgMHVJtMfP87ONkAjxAzoSNQygAgHx
-         1V22KBIoOkXTOYLaIMLKnkRqAGtYpmKaroRboopDeKIP+RNBAEnEmnvabsRCCHnMRcEX
-         Dwduss/phn7S/yP6yUZt3Z8EBFpE3LTCJKZ4JZXbVvdcSD7y4exoa3zLtmrs652jhkrz
-         GlgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KGh1LAlQix7XM3buDCxUXeBsipn44ZcZivUAyJ5/VQU=;
-        b=dKafzzaf/lfwGlS+i0NK3g9a3j59Xxn6IWxDvxCxMfAId4c6daXjbNcY9FCd/AqmDo
-         fDGihXTcxA75iGIsfbw0Rw5ydn7860rcy2I/4HkucFJNDKw9tmEZq9y7iEaIcExTVh/N
-         wSiVJB02bOk2/GXq9Qhvlbg8S3LJMUjHCv+wFTT8GAIpHfqdJZ9jvYySPCy4oKvFBArO
-         pzeyLohKwwkieZOtoqINGSBTe97CdIoqxv76503bCGcoyfTvcYe7N3t5JOLzWROMwii3
-         zrUDlWpssoJl/mnwbxh+v08eBtudxQrRas9fpviN8qXkkNSxkf54q71yDFzq+PtwYS9b
-         p+Iw==
-X-Gm-Message-State: APjAAAWWB5BvWWnhUaGaSF0g/bMaRtbkn4oyt80TKdoy33z83tlU101c
-        735apAgq5h2IaDuU15M+hdzGVw==
-X-Google-Smtp-Source: APXvYqwo1rsNnnCYLNqw9NvChcBU7Ndou7YNE02hQiXApIsV7UZDpI2MjLecjRYjjOg6hjIFwLrkig==
-X-Received: by 2002:a62:750d:: with SMTP id q13mr73352pfc.58.1570570540615;
-        Tue, 08 Oct 2019 14:35:40 -0700 (PDT)
-Received: from google.com ([2620:15c:2cb:1:e90c:8e54:c2b4:29e7])
-        by smtp.gmail.com with ESMTPSA id c125sm76724pfa.107.2019.10.08.14.35.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2019 14:35:39 -0700 (PDT)
-Date:   Tue, 8 Oct 2019 14:35:35 -0700
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     Alan Maguire <alan.maguire@oracle.com>
-Cc:     linux-kselftest@vger.kernel.org, skhan@linuxfoundation.org,
-        mcgrof@kernel.org, keescook@chromium.org, yzaikin@google.com,
-        akpm@linux-foundation.org, yamada.masahiro@socionext.com,
-        catalin.marinas@arm.com, joe.lawrence@redhat.com,
-        penguin-kernel@i-love.sakura.ne.jp, schowdary@nvidia.com,
-        urezki@gmail.com, andriy.shevchenko@linux.intel.com,
-        changbin.du@intel.com, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Knut Omang <knut.omang@oracle.com>
-Subject: Re: [PATCH v2 linux-kselftest-test 1/3] kunit: allow kunit tests to
- be loaded as a module
-Message-ID: <20191008213535.GB186342@google.com>
-References: <1570546546-549-1-git-send-email-alan.maguire@oracle.com>
- <1570546546-549-2-git-send-email-alan.maguire@oracle.com>
+        Tue, 8 Oct 2019 17:38:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58156 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727570AbfJHVik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 17:38:40 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2BB32070B;
+        Tue,  8 Oct 2019 21:38:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570570719;
+        bh=11TBIQmvDjjaIrom74PlC3QwYOcWo8Yzh1UnY6FDcXM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=vdS3XsDJMxwTYD7JXt7NUIntQHVBVRlNiQi5xBv/fgLTIFcGeDhw+C0HfNW4Wjwh7
+         e+5qQwwp5LH8xUShakUgnUp7sCPg45gIVCt6ehJz+iXM6t+iqJVkhY+7zczyZ6lYul
+         hBlMiNvw4LndkopNyp9a7E1JajpgAU8UTqbUqXNQ=
+Date:   Tue, 8 Oct 2019 16:38:35 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     CREGUT Pierre IMT/OLN <pierre.cregut@orange.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Donald Dutile <ddutile@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@intel.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Subject: Re: [PATCH] PCI/IOV: update num_VFs earlier
+Message-ID: <20191008213835.GA230403@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1570546546-549-2-git-send-email-alan.maguire@oracle.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191003221007.GA209602@google.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 03:55:44PM +0100, Alan Maguire wrote:
-> as tests are added to kunit, it will become less feasible to execute
-> all built tests together.  By supporting modular tests we provide
-> a simple way to do selective execution on a running system; specifying
+On Thu, Oct 03, 2019 at 05:10:07PM -0500, Bjorn Helgaas wrote:
+> On Thu, Oct 03, 2019 at 11:04:45AM +0200, CREGUT Pierre IMT/OLN wrote:
+> > ...
+
+> > NIC drivers send netlink events when their state change, but it is
+> > the core that changes the value of num_vfs. So I would think it is
+> > the core responsibility to make sure the exposed value makes sense
+> > and it would be better to ignore the details of the driver
+> > implementation.
 > 
-> CONFIG_KUNIT=y
-> CONFIG_KUNIT_EXAMPLE_TEST=m
+> Yes, I think you're right.  And I like your previous suggestion of
+> just locking the device in the reader.  I'm not enough of a sysfs
+> expert to know if there's a good reason to avoid a lock there.  Does
+> the following look reasonable to you?
+
+I applied the patch below to pci/virtualization for v5.5, thanks for
+your great patience!
+
+> commit 0940fc95da45
+> Author: Pierre Crégut <pierre.cregut@orange.com>
+> Date:   Wed Sep 11 09:27:36 2019 +0200
 > 
-> ...means we can simply "insmod example-test.ko" to run the tests.
+>     PCI/IOV: Serialize sysfs sriov_numvfs reads vs writes
+>     
+>     When sriov_numvfs is being updated, drivers may notify about new devices
+>     before they are reflected in sriov->num_VFs, so concurrent sysfs reads
+>     previously returned stale values.
+>     
+>     Serialize the sysfs read vs the write so the read returns the correct
+>     num_VFs value.
+>     
+>     Link: https://bugzilla.kernel.org/show_bug.cgi?id=202991
+>     Link: https://lore.kernel.org/r/20190911072736.32091-1-pierre.cregut@orange.com
+>     Signed-off-by: Pierre Crégut <pierre.cregut@orange.com>
+>     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 > 
-> To achieve this we need to
-> 
-> o export the required symbols in kunit
-> o support a new way of declaring test suites.  Because a module cannot
->   do multiple late_initcall()s, we provide a kunit_test_suites() macro
->   to declare multiple suites within the same module at once.
-> 
-> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-> Signed-off-by: Knut Omang <knut.omang@oracle.com>
-> 
-> ---
->  include/kunit/test.h           | 30 +++++++++++++++++++++++-------
->  kernel/sysctl-test.c           |  6 +++++-
->  lib/Kconfig.debug              |  4 ++--
->  lib/kunit/Kconfig              |  4 ++--
->  lib/kunit/assert.c             |  8 ++++++++
->  lib/kunit/example-test.c       |  6 +++++-
->  lib/kunit/string-stream-test.c |  9 +++++++--
->  lib/kunit/string-stream.c      |  7 +++++++
->  lib/kunit/test-test.c          |  8 ++++++--
->  lib/kunit/test.c               |  8 ++++++++
->  lib/kunit/try-catch.c          |  8 ++++++--
->  11 files changed, 79 insertions(+), 19 deletions(-)
-> 
-> diff --git a/include/kunit/test.h b/include/kunit/test.h
-> index dba4830..9fc6c1b 100644
-> --- a/include/kunit/test.h
-> +++ b/include/kunit/test.h
-> @@ -12,6 +12,7 @@
->  #include <kunit/assert.h>
->  #include <kunit/try-catch.h>
->  #include <linux/kernel.h>
-> +#include <linux/module.h>
->  #include <linux/slab.h>
->  #include <linux/types.h>
->  
-> @@ -204,24 +205,39 @@ struct kunit {
->   * Registers @suite with the test framework. See &struct kunit_suite for
->   * more information.
->   *
-> - * NOTE: Currently KUnit tests are all run as late_initcalls; this means
-> + * When builtin,  KUnit tests are all run as late_initcalls; this means
->   * that they cannot test anything where tests must run at a different init
->   * phase. One significant restriction resulting from this is that KUnit
->   * cannot reliably test anything that is initialize in the late_init phase;
->   * another is that KUnit is useless to test things that need to be run in
->   * an earlier init phase.
->   *
-> + * An alternative is to build the tests as a module.  Because modules
-> + * do not support multiple late_initcall()s, we need to initialize an
-> + * array of suites for a module.
-> + *
->   * TODO(brendanhiggins@google.com): Don't run all KUnit tests as
->   * late_initcalls.  I have some future work planned to dispatch all KUnit
->   * tests from the same place, and at the very least to do so after
->   * everything else is definitely initialized.
->   */
-> -#define kunit_test_suite(suite)						       \
-> -	static int kunit_suite_init##suite(void)			       \
-> -	{								       \
-> -		return kunit_run_tests(&suite);				       \
-> -	}								       \
-> -	late_initcall(kunit_suite_init##suite)
-> +#define kunit_test_suites(...)						\
-> +	static struct kunit_suite *suites[] = { __VA_ARGS__, NULL};	\
-> +	static int kunit_test_suites_init(void)				\
-> +	{								\
-> +		unsigned int i;						\
-> +		for (i = 0; suites[i] != NULL; i++)			\
-> +			kunit_run_tests(suites[i]);			\
-> +		return 0;						\
-> +	}								\
-> +	late_initcall(kunit_test_suites_init);				\
-> +	static void __exit kunit_test_suites_exit(void)			\
-> +	{								\
-> +		return;							\
-> +	}								\
-> +	module_exit(kunit_test_suites_exit)
-> +
-> +#define	kunit_test_suite(suite)	kunit_test_suites(suite)
-
-I think it is fine to just rename this kunit_test_suites.
-
->  /*
->   * Like kunit_alloc_resource() below, but returns the struct kunit_resource
-> diff --git a/kernel/sysctl-test.c b/kernel/sysctl-test.c
-> index 2a63241..15161c5 100644
-> --- a/kernel/sysctl-test.c
-> +++ b/kernel/sysctl-test.c
-> @@ -389,4 +389,8 @@ static void sysctl_test_api_dointvec_write_single_greater_int_max(
->  	.test_cases = sysctl_test_cases,
->  };
->  
-> -kunit_test_suite(sysctl_test_suite);
-> +kunit_test_suite(&sysctl_test_suite);
-> +
-> +#ifdef MODULE
-> +MODULE_LICENSE("GPL");
-> +#endif /* MODULE */
-
-Here and elsewhere: the "ifdef/endif MODULE" should not be necessary.
-
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index a3017a5..f9f411a6 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -1951,10 +1951,10 @@ config TEST_SYSCTL
->  	  If unsure, say N.
->  
->  config SYSCTL_KUNIT_TEST
-> -	bool "KUnit test for sysctl"
-> +	tristate "KUnit test for sysctl"
->  	depends on KUNIT
->  	help
-> -	  This builds the proc sysctl unit test, which runs on boot.
-> +	  This builds the proc sysctl unit test, which runs on boot/module load.
->  	  Tests the API contract and implementation correctness of sysctl.
->  	  For more information on KUnit and unit tests in general please refer
->  	  to the KUnit documentation in Documentation/dev-tools/kunit/.
-[...]
-> diff --git a/lib/kunit/example-test.c b/lib/kunit/example-test.c
-> index f64a829..6c6a408 100644
-> --- a/lib/kunit/example-test.c
-> +++ b/lib/kunit/example-test.c
-> @@ -85,4 +85,8 @@ static int example_test_init(struct kunit *test)
->   * This registers the above test suite telling KUnit that this is a suite of
->   * tests that need to be run.
->   */
-> -kunit_test_suite(example_test_suite);
-> +kunit_test_suite(&example_test_suite);
-> +
-> +#ifdef MODULE
-> +MODULE_LICENSE("GPL");
-> +#endif /* MODULE */
-
-nit: The "ifdef/endif MODULE" should not be necessary.
-
-> diff --git a/lib/kunit/string-stream-test.c b/lib/kunit/string-stream-test.c
-> index 76cc05e..7a3e7a0 100644
-> --- a/lib/kunit/string-stream-test.c
-> +++ b/lib/kunit/string-stream-test.c
-> @@ -45,8 +45,13 @@ static void string_stream_test_get_string(struct kunit *test)
->  	{}
->  };
->  
-> -static struct kunit_suite string_stream_test_suite = {
-> +struct kunit_suite string_stream_test_suite = {
->  	.name = "string-stream-test",
->  	.test_cases = string_stream_test_cases
->  };
-> -kunit_test_suite(string_stream_test_suite);
-> +
-> +kunit_test_suite(&string_stream_test_suite);
-> +
-> +#ifdef MODULE
-> +MODULE_LICENSE("GPL");
-> +#endif /* MODULE */
-> diff --git a/lib/kunit/string-stream.c b/lib/kunit/string-stream.c
-> index e6d17aa..e4f3a97 100644
-> --- a/lib/kunit/string-stream.c
-> +++ b/lib/kunit/string-stream.c
-> @@ -100,6 +100,7 @@ int string_stream_vadd(struct string_stream *stream,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(string_stream_vadd);
-
-Is this actually needed by anything other than lib/kunit/test.c right
-now? Maybe we should move the include file into the kunit/ directory to
-hide these so no one else can use them.
-
->  int string_stream_add(struct string_stream *stream, const char *fmt, ...)
+> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> index b3f972e8cfed..e77562aabbae 100644
+> --- a/drivers/pci/iov.c
+> +++ b/drivers/pci/iov.c
+> @@ -254,8 +254,14 @@ static ssize_t sriov_numvfs_show(struct device *dev,
+>  				 char *buf)
 >  {
-> @@ -112,6 +113,7 @@ int string_stream_add(struct string_stream *stream, const char *fmt, ...)
+>  	struct pci_dev *pdev = to_pci_dev(dev);
+> +	u16 num_vfs;
+> +
+> +	/* Serialize vs sriov_numvfs_store() so readers see valid num_VFs */
+> +	device_lock(&pdev->dev);
+> +	num_vfs = pdev->sriov->num_VFs;
+> +	device_lock(&pdev->dev);
 >  
->  	return result;
+> -	return sprintf(buf, "%u\n", pdev->sriov->num_VFs);
+> +	return sprintf(buf, "%u\n", num_vfs);
 >  }
-> +EXPORT_SYMBOL_GPL(string_stream_add);
-[...]
-> diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-> index c83c0fa..e7896f1 100644
-> --- a/lib/kunit/test.c
-> +++ b/lib/kunit/test.c
-[...]
-> @@ -50,6 +51,7 @@ static unsigned long kunit_test_timeout(void)
->  	 * For more background on this topic, see:
->  	 * https://mike-bland.com/2011/11/01/small-medium-large.html
->  	 */
-> +#ifndef MODULE
-
-Why is this block of code "ifndef MODULE"?
-
->  	if (sysctl_hung_task_timeout_secs) {
->  		/*
->  		 * If sysctl_hung_task is active, just set the timeout to some
-> @@ -60,9 +62,9 @@ static unsigned long kunit_test_timeout(void)
->  		 */
->  		timeout_msecs = (sysctl_hung_task_timeout_secs - 1) *
->  				MSEC_PER_SEC;
-> -	} else {
-> +	} else
-> +#endif
->  		timeout_msecs = 300 * MSEC_PER_SEC; /* 5 min */
-> -	}
 >  
->  	return timeout_msecs;
->  }
-> @@ -106,6 +108,7 @@ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
->  
->  	try_catch->catch(try_catch->context);
->  }
-> +EXPORT_SYMBOL_GPL(kunit_try_catch_run);
->  
->  void kunit_try_catch_init(struct kunit_try_catch *try_catch,
->  			  struct kunit *test,
-> @@ -116,3 +119,4 @@ void kunit_try_catch_init(struct kunit_try_catch *try_catch,
->  	try_catch->try = try;
->  	try_catch->catch = catch;
->  }
-> +EXPORT_SYMBOL_GPL(kunit_try_catch_init);
-
-This code should also probably be hidden from outside of kunit/.
+>  /*
