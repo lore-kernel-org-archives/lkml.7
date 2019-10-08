@@ -2,159 +2,109 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7E3C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 205C9C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D7BB2070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:00:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC7CD2070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:00:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="nj8H4Wwq"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="gB1e0Pwf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729729AbfJHRAC (ORCPT
+        id S1729790AbfJHRAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 13:00:02 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:44714 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729681AbfJHRAC (ORCPT
+        Tue, 8 Oct 2019 13:00:24 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38441 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbfJHRAX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 13:00:02 -0400
-Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x98GtRHO030764
-        for <linux-kernel@vger.kernel.org>; Tue, 8 Oct 2019 10:00:01 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=CSwWYGEHn/p8GU5NchIMh59uuf9oyBV2cYSTpXdWu7M=;
- b=nj8H4WwqcTrH4Ay+mLYmeFQr4/SokBvxH4SvkNnQzgMxBIpi7j1uMiXHm0NEfUzm4Qu2
- 3bGhCyiKHpa9MLo5Ve6I7La2Rm62Ml08kTLqi2oKtvSwnxIpfe/uKI/slGdywA5Rq8lU
- ZiYby2bsXYrrgXbDOLK4YJE88ljpPpaBf/o= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2vgehqc24s-7
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 10:00:00 -0700
-Received: from 2401:db00:2050:5076:face:0:9:0 (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:83::7) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 8 Oct 2019 09:59:57 -0700
-Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id 5A5FE62E122D; Tue,  8 Oct 2019 09:59:56 -0700 (PDT)
-Smtp-Origin-Hostprefix: devbig
-From:   Song Liu <songliubraving@fb.com>
-Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
-To:     <linux-kernel@vger.kernel.org>
-CC:     <kernel-team@fb.com>, Song Liu <songliubraving@fb.com>,
-        <stable@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v2] perf/core: fix corner case in perf_rotate_context()
-Date:   Tue, 8 Oct 2019 09:59:49 -0700
-Message-ID: <20191008165949.920548-1-songliubraving@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Tue, 8 Oct 2019 13:00:23 -0400
+Received: by mail-io1-f68.google.com with SMTP id u8so38075130iom.5
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 10:00:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=jjX9NlOHpquC/Sfta8LEcd2OkeJi//hJzKxsmDBzbTE=;
+        b=gB1e0PwfuyEBf0jsz8o+5nHpb3VXP4nLO2wfWhWGC/75vX90xaUYLZ4CufQ5pwgEWA
+         f8a5GGESkScrhfUAFIM4IFRh3V0WAhqgs+Kmk3mWHKL2rEcI8HlIY1LfgTOQlCc6tP0b
+         h6jT5o5L+wV1miWcBWTMdBUybHf6EcVoGjHdL13bcBnoLCFVA7KP3/9aIKvJX2MQkxAr
+         KYwxpGBGlnQ94spt/znvnB8E6DmZI+mw4LA5Oa6tJhfgzhsDywolVaDeuQ3f/MFzOt/d
+         1Xug10qjK5BsETha8IW6lHS6mIO8JkOX/87sj4GVcyu7dCn/AzcS+9IUP00iMTOvuWoK
+         IKPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jjX9NlOHpquC/Sfta8LEcd2OkeJi//hJzKxsmDBzbTE=;
+        b=UmSH1QKn7ESguWrzNa3d5aXCnKxy1WIPn8wB0HHk/510JgfUHQl2kO2MritEsP5NTI
+         0rwkocvIgrVAJ8SADO5HeuYSlujxaMn7phCtdQUjyNtoeIhvG3TtubczWJrYGPd5mSIS
+         /JVhohbxP440ze7RdOPRlm0R/uMOpDqq2NPScJGSvz4uoe1oB+zpgJXLeWW818rb324O
+         0PdzeSN7cHLQJ2EzDBfgzoCrixlS2mpfJtUJwK+I8cdW2so68J3pHAx0rbih/B2tIlgB
+         d3zdsQtvFwEpjJoOZlpWXqTvUJIKbUDbo1odV58MZuR3g9X8DD+OFw2LXpXXQTGVnwjY
+         UF7Q==
+X-Gm-Message-State: APjAAAW0R3Rf8rpYSXpVyMZqXYKHqOWkMJHs9kln+UoruXpJ3V1XqX8R
+        XEEp7Zi02eMYNRQoJrJFD/up8EykOcF1rQ==
+X-Google-Smtp-Source: APXvYqwAmqmBluQAIhWf2f/0FiXxNwozNzClbWMkH8dbk0HE2IO35d/M6WcDFO4TLIqY5dwZ5O2cxg==
+X-Received: by 2002:a5d:9c4c:: with SMTP id 12mr29014127iof.276.1570554022169;
+        Tue, 08 Oct 2019 10:00:22 -0700 (PDT)
+Received: from [192.168.1.50] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id r2sm9402226ila.52.2019.10.08.10.00.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 08 Oct 2019 10:00:20 -0700 (PDT)
+Subject: Re: [PATCH] io_uring: remove wait loop spurious wakeups
+To:     Pavel Begunkov <asml.silence@gmail.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <936cd758d6c694fe1b8b9de050e24cfecdc2e60d.1570489620.git.asml.silence@gmail.com>
+ <e11a0716-eb18-4ce3-9902-3247beafe65a@kernel.dk>
+ <d035bb1b-e6f0-77db-a434-1761b0a7a142@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <62a8a6c7-9c5b-c9a4-9c73-c77db87c6637@kernel.dk>
+Date:   Tue, 8 Oct 2019 11:00:19 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-08_06:2019-10-08,2019-10-08 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0
- mlxlogscore=999 suspectscore=1 clxscore=1015 lowpriorityscore=0
- priorityscore=1501 malwarescore=0 spamscore=0 mlxscore=0 adultscore=0
- bulkscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1908290000 definitions=main-1910080140
-X-FB-Internal: deliver
+In-Reply-To: <d035bb1b-e6f0-77db-a434-1761b0a7a142@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In perf_rotate_context(), when the first cpu flexible event fail to
-schedule, cpu_rotate is 1, while cpu_event is NULL. Since cpu_event is
-NULL, perf_rotate_context will _NOT_ call cpu_ctx_sched_out(), thus
-cpuctx->ctx.is_active will have EVENT_FLEXIBLE set. Then, the next
-perf_event_sched_in() will skip all cpu flexible events because of the
-EVENT_FLEXIBLE bit.
+On 10/8/19 10:43 AM, Pavel Begunkov wrote:
+> On 08/10/2019 06:16, Jens Axboe wrote:
+>> On 10/7/19 5:18 PM, Pavel Begunkov (Silence) wrote:
+>>> From: Pavel Begunkov <asml.silence@gmail.com>
+>>>
+>>> Any changes interesting to tasks waiting in io_cqring_wait() are
+>>> commited with io_cqring_ev_posted(). However, io_ring_drop_ctx_refs()
+>>> also tries to do that but with no reason, that means spurious wakeups
+>>> every io_free_req() and io_uring_enter().
+>>>
+>>> Just use percpu_ref_put() instead.
+>>
+>> Looks good, this is a leftover from when the ctx teardown used
+>> the waitqueue as well.
+>>
+> BTW, is there a reason for ref-counting in struct io_kiocb? I understand
+> the idea behind submission reference, but don't see any actual part
+> needing it.
 
-In the next call of perf_rotate_context(), cpu_rotate stays 1, and
-cpu_event stays NULL, so this process repeats. The end result is, flexible
-events on this cpu will not be scheduled (until another event being added
-to the cpuctx).
+In short, it's to prevent the completion running before we're done with
+the iocb on the submission side.
 
-Here is an easy repro of this issue. On Intel CPUs, where ref-cycles
-could only use one counter, run one pinned event for ref-cycles, one
-flexible event for ref-cycles, and one flexible event for cycles. The
-flexible ref-cycles is never scheduled, which is expected. However,
-because of this issue, the cycles event is never scheduled either.
+> Tested with another ref-counting patch and got +5-8% to
+> nops performance.
+> 
+> 
 
-perf stat -e ref-cycles:D,ref-cycles,cycles -C 5 -I 1000
-           time             counts unit events
-    1.000152973         15,412,480      ref-cycles:D
-    1.000152973      <not counted>      ref-cycles     (0.00%)
-    1.000152973      <not counted>      cycles         (0.00%)
-    2.000486957         18,263,120      ref-cycles:D
-    2.000486957      <not counted>      ref-cycles     (0.00%)
-    2.000486957      <not counted>      cycles         (0.00%)
 
-To fix this, when the flexible_active list is empty, try rotate the
-first event in the flexible_groups. Also, rename ctx_first_active() to
-ctx_event_to_rotate(), which is more accurate.
-
-Fixes: 8d5bce0c37fa ("perf/core: Optimize perf_rotate_context() event scheduling")
-Cc: stable@vger.kernel.org # v4.17+
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Sasha Levin <sashal@kernel.org>
-Signed-off-by: Song Liu <songliubraving@fb.com>
----
- kernel/events/core.c | 20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 3f0cb82e4fbc..b96cefed4fb2 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -3779,11 +3779,21 @@ static void rotate_ctx(struct perf_event_context *ctx, struct perf_event *event)
- 	perf_event_groups_insert(&ctx->flexible_groups, event);
- }
- 
-+/* pick an event from the flexible_groups to rotate */
- static inline struct perf_event *
--ctx_first_active(struct perf_event_context *ctx)
-+ctx_event_to_rotate(struct perf_event_context *ctx)
- {
--	return list_first_entry_or_null(&ctx->flexible_active,
--					struct perf_event, active_list);
-+	struct perf_event *event;
-+
-+	/* pick the first active flexible event */
-+	event = list_first_entry_or_null(&ctx->flexible_active,
-+					 struct perf_event, active_list);
-+
-+	/* if no active flexible event, pick the first event */
-+	if (!event)
-+		event = rb_entry_safe(rb_first(&ctx->flexible_groups.tree),
-+				      typeof(*event), group_node);
-+	return event;
- }
- 
- static bool perf_rotate_context(struct perf_cpu_context *cpuctx)
-@@ -3808,9 +3818,9 @@ static bool perf_rotate_context(struct perf_cpu_context *cpuctx)
- 	perf_pmu_disable(cpuctx->ctx.pmu);
- 
- 	if (task_rotate)
--		task_event = ctx_first_active(task_ctx);
-+		task_event = ctx_event_to_rotate(task_ctx);
- 	if (cpu_rotate)
--		cpu_event = ctx_first_active(&cpuctx->ctx);
-+		cpu_event = ctx_event_to_rotate(&cpuctx->ctx);
- 
- 	/*
- 	 * As per the order given at ctx_resched() first 'pop' task flexible
 -- 
-2.17.1
+Jens Axboe
 
