@@ -2,167 +2,122 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27714C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D083C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:02:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB0DE2070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:02:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44C4121721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:02:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qGMvm+2Q"
+	dkim=pass (1024-bit key) header.d=victronenergy.com header.i=@victronenergy.com header.b="eWcS1Fu8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728913AbfJHQCM (ORCPT
+        id S1728792AbfJHQCv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 12:02:12 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:40297 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbfJHQCL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 12:02:11 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20191008160209euoutp01841cd8d992d677716d8fe6fb5f0fd4ab~Lt2K5e-Qh2295322953euoutp019
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Oct 2019 16:02:09 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20191008160209euoutp01841cd8d992d677716d8fe6fb5f0fd4ab~Lt2K5e-Qh2295322953euoutp019
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1570550529;
-        bh=BCc/Qqs2WfjDX6ovn/o7YnWTV1oZSv54+rW4zjmhABo=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=qGMvm+2QotfDQkWPSvp8QGFNnNfrITDMmuUePoF49F5qT0jaSyXi9PZozSAzrtgU+
-         wHV2kR4GOjSLhb3O+8Z8nucUROLk/CsEK0gxB/5daynwmbgeg/T+6OlXyBuE6YYuw3
-         qlegoJlgnXQs9CY78I9X44LtxLZAFmy2afDGJG2Q=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20191008160209eucas1p155ddc06b8fad76e3b2576add32d61040~Lt2Kjw58e1601816018eucas1p1_;
-        Tue,  8 Oct 2019 16:02:09 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id FE.98.04469.103BC9D5; Tue,  8
-        Oct 2019 17:02:09 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191008160208eucas1p2e9ad389fc2843c811c75cc67e19d0bbc~Lt2KIZskR2583825838eucas1p2j;
-        Tue,  8 Oct 2019 16:02:08 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191008160208eusmtrp2606ccc70cbf904fc248e07e7fa63a657~Lt2KHJ9_w2351923519eusmtrp2C;
-        Tue,  8 Oct 2019 16:02:08 +0000 (GMT)
-X-AuditID: cbfec7f2-54fff70000001175-31-5d9cb301d180
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id DB.A1.04117.003BC9D5; Tue,  8
-        Oct 2019 17:02:08 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191008160208eusmtip16c1310b5cc70442ea478899f3d1d7f5e~Lt2Jn41Bh2692826928eusmtip1a;
-        Tue,  8 Oct 2019 16:02:08 +0000 (GMT)
-Subject: Re: [PATCH] regulator: core: Skip balancing of the enabled
- regulators in regulator_enable()
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-kernel@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-samsung-soc@vger.kernel.org,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Kamil Konieczny <k.konieczny@samsung.com>
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <86eb668d-7bcf-798b-dabb-95071d16cbb6@samsung.com>
-Date:   Tue, 8 Oct 2019 18:02:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20191008154844.GM4382@sirena.co.uk>
-Content-Type: text/plain; charset="windows-1252"
+        Tue, 8 Oct 2019 12:02:51 -0400
+Received: from mail-eopbgr80091.outbound.protection.outlook.com ([40.107.8.91]:40270
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726211AbfJHQCv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 12:02:51 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=i8stZ60f+48Y9X0BHh7NwFVnjpf1uY1/lTXpvIAX6uwsm6+a6gH4qy8jyxLYgiy32S0kjUB+bbv9az0Ymtmvc2W6abo3UGrV3p0TtwcsIgPsTH+F0xCKpCBQnEkJY6q5GYNaubOAv03WAbloC5hiyt7Tn01jQS7vAvfhA6IvXHOH/L52sTiCx5jChpPYYtbedbWl4HsphX9H1m+bWfoVOY+VY2wyQSlgJtZ5nuNQXTlMjLxD2gbEzJ68vjJVmyB4JvgT7CIpebf8FKxcoc/oCoUPbBk3xOvmv4fRy7hSLxacBVSGvMWgpbfOW2twS6oSObuV1lH6V1fBfPKxqb8RpA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MPbiwc2u+DOMU9ienA5ScEKJdDxtjzBcZLyObfwc8Oc=;
+ b=Q1AYipSEIGvOReD7qORCA1XVtudkrPrs0317EidXxUqbNxLaGXmOwBXlpX30uvTf4B6iYVQu/sF7HXnmtw9De+fYzWTI6EGf/Qy4ii4HxdncpV5Y+jvzwbIvLmLs/Kua090jp0gEZFqa4hvoSbA5K/1ZG0DWbHiLzHI38GAlIgGc92jke02zVRNtAe+4zV2P9T2271B3WwGrqsHq46dYzZAsuZVlNLzG94qVDCK86MGSJKY4NWls8A6zz1m1TyYZxPch51lPdDP0JVzFIedklaPtAseRPmEZG/0jG9e3HuHBpa0/kKR0ZKu5n0RRJ29ZQGesjZhF8rrBb9d9ic6y0w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=victronenergy.com; dmarc=pass action=none
+ header.from=victronenergy.com; dkim=pass header.d=victronenergy.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=victronenergy.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MPbiwc2u+DOMU9ienA5ScEKJdDxtjzBcZLyObfwc8Oc=;
+ b=eWcS1Fu8ZckNzONUc+cioQp93IrnIoY8Ci4Z40KQwWvWfke3oDpPgr0TDSSsFI9puH01DOP69yc7qAlg31/QB51rXFEqBDMQxn4na5Mt4X4/PyjYRuH3funa9ElrAP6Vt6jhMcyz3wNvmCPexf9Oae95soI7XWGg/Pxsq04uB8w=
+Received: from VI1PR0701MB2623.eurprd07.prod.outlook.com (10.173.82.19) by
+ VI1PR0701MB2767.eurprd07.prod.outlook.com (10.173.81.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.15; Tue, 8 Oct 2019 16:02:47 +0000
+Received: from VI1PR0701MB2623.eurprd07.prod.outlook.com
+ ([fe80::49b7:a244:d3e4:396c]) by VI1PR0701MB2623.eurprd07.prod.outlook.com
+ ([fe80::49b7:a244:d3e4:396c%9]) with mapi id 15.20.2347.016; Tue, 8 Oct 2019
+ 16:02:47 +0000
+From:   Jeroen Hofstee <jhofstee@victronenergy.com>
+To:     Tony Lindgren <tony@atomide.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+CC:     "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
+        Koen Kooi <koen@dominion.thruhere.net>,
+        =?utf-8?B?QmVub8OudCBDb3Vzc29u?= <bcousson@baylibre.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ARM: dts: am335x-sancloud-bbe: Fix PHY mode for ethernet
+Thread-Topic: [PATCH] ARM: dts: am335x-sancloud-bbe: Fix PHY mode for ethernet
+Thread-Index: AQHVeQdofKkOWkby2kaW5oWVx4ahWqdHbuCAgAFGYQD///NzgIAILT2AgAAbpYA=
+Date:   Tue, 8 Oct 2019 16:02:47 +0000
+Message-ID: <1f779973-1702-47eb-158f-7000770c435a@victronenergy.com>
+References: <20191002095416.19603-1-jhofstee@victronenergy.com>
+ <d027ef07-807d-6a7b-2939-b67be4542469@ti.com>
+ <436f1712-7dec-db40-d08f-1a3032af3596@victronenergy.com>
+ <d85cd860-22a3-6142-7f2d-736a428d7a31@ti.com>
+ <20191008142349.GE5610@atomide.com>
+In-Reply-To: <20191008142349.GE5610@atomide.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SfyyUcRzH+z5399zj9NjjaPeZWuy0LI1O0zz6YWr9cav144+2dEUOT8e6
-        O7oHRWvZmMPmd6TbidGoQ34Twx/HMrVYxGjJiT+wqTkusZDzZPPf6/Pj/fl83tuH4Il7BG5E
-        jDae0WmVaiku4re9Xxv0Qc3GUNnUM4oump7F6ZqlGUSXW0sE9NBQg5C2lE5g9O8vGRg90mnE
-        6ZKhHoyu65sU0o02ebBI3mGYFMqbTJm4/NtYFy7P3ZDJc1pMSL7cdPg6rhCdjWLUMYmM7kRQ
-        uCi6tnmZHzdIPhovXBCmoBzHLORAAOUP0z9b8SwkIsTUawSGbBvGBSsIBlqqEBcsI1hrrsF2
-        JXXtQ0KuUI2gvtIk4IJFBO3zuTtdLtQ9KFhY4dvZlfKE0dXuHeZRMxiY/0rsjFOnIV9v2l5B
-        ECQVBNO1IfY0nzoC9a8sQjsfoELAaukV2JmknGHgxezOGAfKD/Tr6zg3UgZ9FUYBxxL4OluG
-        cewO7YtGnv02oMaEsFpdxOMcXISpumwBxy6w0N8i5PgQbHWUYZzgLYKNjLn/6nYE1YWbONd1
-        Bnr7PwvsVwN1HtJqozh0gvFFZ26xExS0PedxaRIy0sWc8Cg0VDXgu6uyOt7w8pDUsMeaYY8d
-        wx47hj12yhHfhCRMAqtRMayflnnoyyo1bIJW5RsZq2lC21/1cbPf+g7ZhiPMiCKQdD8ZnGwM
-        FQuUiWySxoyA4EldyQrDdoqMUiYlM7rYu7oENcOa0UGCL5WQj/dZbosplTKeuc8wcYxut4oR
-        Dm4pKF3tWFqc6W27cLVg+nusNkOuzA8fHZkf9vv0Uv/AVHbZrLc9DZMUe6KJuhuKXI/iqT8R
-        Cnf3pa5zHgr/yEqv1puZ6EPYrfVGVHH8SWxh1y82uFSVP1fcSS54+cSlBlqvxB/r0aYFXFrf
-        KvnRoQ9QpS7JAk8GQFdet+ma+lT+HSmfjVb6efN0rPIf6lxn1FEDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrHIsWRmVeSWpSXmKPExsVy+t/xu7oMm+fEGiz7Z2wx9eETNovVHx8z
-        Wiz4NIPV4vz5DewWD+beZLL4dqWDyeLyrjlsFjPO72OyWHvkLrvFxq8eDlweO2fdZffYtKqT
-        zePOtT1sHv1/DTz6tqxi9Pi8SS6ALUrPpii/tCRVISO/uMRWKdrQwkjP0NJCz8jEUs/Q2DzW
-        yshUSd/OJiU1J7MstUjfLkEvY83mzywF53grbkx+xd7A2MfdxcjJISFgIrF2+3n2LkYuDiGB
-        pYwSpxrmMXUxcgAlZCSOry+DqBGW+HOtiw3EFhJ4zSgxeaIxiC0skCZx//BjRhBbREBZ4ur3
-        vSwgc5gFHjNJnJ5whBVi6BlmiZ1rGllBqtgErCQmtq9iBFnAK2An8XBNBEiYRUBFYv2SB+wg
-        tqhAhMThHbPAhvIKCEqcnPmEBcTmFDCUaP/1C+wIZgE9iR3Xf7FC2OISt57MZ4Kw5SW2v53D
-        PIFRaBaS9llIWmYhaZmFpGUBI8sqRpHU0uLc9NxiI73ixNzi0rx0veT83E2MwLjcduznlh2M
-        Xe+CDzEKcDAq8fA6VM2JFWJNLCuuzD3EKMHBrCTCu2gWUIg3JbGyKrUoP76oNCe1+BCjKdBz
-        E5mlRJPzgSkjryTe0NTQ3MLS0NzY3NjMQkmct0PgYIyQQHpiSWp2ampBahFMHxMHp1QDY0ZC
-        ZWb8aXvO6el1eZ/Na1s2BSofev95o6IKc1FmTXeZYpK0DUN6R0vyzxsuio9vJCUm9b80tax7
-        U1NbyGYlVhO05+DlI/u2Vygznni36o+4zQ+BqxmRVuyGZWc+nnvJcEfr4rFp+y+cmF/0yS5M
-        kXNywO4dgRGHYq6W7Ct9wiNZNeed/b4yJZbijERDLeai4kQANVD/u+ECAAA=
-X-CMS-MailID: 20191008160208eucas1p2e9ad389fc2843c811c75cc67e19d0bbc
-X-Msg-Generator: CA
-X-RootMTR: 20191008101720eucas1p2e0d1bca6e696848bf689067e05620679
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20191008101720eucas1p2e0d1bca6e696848bf689067e05620679
-References: <CGME20191008101720eucas1p2e0d1bca6e696848bf689067e05620679@eucas1p2.samsung.com>
-        <20191008101709.13827-1-m.szyprowski@samsung.com>
-        <20191008115025.GF4382@sirena.co.uk>
-        <0e222fdd-4407-51ea-b75c-a62621cbe622@samsung.com>
-        <20191008120611.GG4382@sirena.co.uk>
-        <9268b455-ec66-97e1-909d-f964ac31c0ef@samsung.com>
-        <20191008124736.GJ4382@sirena.co.uk>
-        <86b9b4b5-cca5-9052-7c87-c5679dfffff4@samsung.com>
-        <20191008154844.GM4382@sirena.co.uk>
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+x-originating-ip: [2001:1c01:3bc5:4e00:58f1:a5aa:4c48:a7ed]
+x-clientproxiedby: AM0PR10CA0016.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:208:17c::26) To VI1PR0701MB2623.eurprd07.prod.outlook.com
+ (2603:10a6:801:b::19)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jhofstee@victronenergy.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2ac11550-4419-4fcc-5913-08d74c08f613
+x-ms-traffictypediagnostic: VI1PR0701MB2767:
+x-microsoft-antispam-prvs: <VI1PR0701MB27675FD68D211F1B5AE4E4E0C09A0@VI1PR0701MB2767.eurprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 01842C458A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(366004)(346002)(396003)(39850400004)(136003)(199004)(189003)(58126008)(386003)(110136005)(31696002)(486006)(52116002)(76176011)(2616005)(446003)(476003)(11346002)(316002)(6506007)(54906003)(53546011)(46003)(102836004)(66476007)(2906002)(66446008)(64756008)(31686004)(6116002)(71200400001)(186003)(71190400001)(66946007)(66556008)(6512007)(4326008)(229853002)(6486002)(6436002)(305945005)(36756003)(7736002)(99286004)(81166006)(65806001)(65956001)(256004)(8936002)(8676002)(6246003)(5660300002)(14454004)(81156014)(4744005)(25786009)(478600001)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0701MB2767;H:VI1PR0701MB2623.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: victronenergy.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: TkKtyQw/6461im1gKvbuxN2JmsgV978+sJVr79VB7FBMiAJ/Gcyb18k96CRQp8hjMOJxOPv1KIeNL4vz4r08LLEB4IhpIDBiVSwuNvaN9DNjMB8gpuOxLyrHlaNmMWhh1jpNH9yjnpEbNip9eJfDZh8cY7rN9p2XI61eUGK2HkjuJlGQlZNd6wl//fG0U48p1ZwgufHFTtqkfmVQlw7lqXDQNQ1agN0OvVzwfB41VjIWG/GnZJf9ho6sErxKHqXMsdLi7Y91KYohP+KlOl91sUolcj5a8i0uMb8FQnFPWNEmx8T24eHwD7p/PLRi/gUisolk4DEVOv/J3GxmabQ1JRzzuNB7t7xYwq+B4XhoLJ2jhM3rSCmRljIthN0A4w+2jx/xvQSmYVwW/a+cXgdilyY+SB9Yp5kOC2wlATgyfhQ=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D25751073CDE47498688199522BD3F1F@eurprd07.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: victronenergy.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2ac11550-4419-4fcc-5913-08d74c08f613
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Oct 2019 16:02:47.0885
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 60b95f08-3558-4e94-b0f8-d690c498e225
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 52N2+ffncErrgmYFd24NIX/nDs2AmCdk65G11mNkcdQdQ/rxXcZr6NCADaSOx8WNVx6RNXfmLydECehXoWXsKhhUxQcg1R0Vft8BQzV1cBI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0701MB2767
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 10/8/19 5:48 PM, Mark Brown wrote:
-> On Tue, Oct 08, 2019 at 03:24:17PM +0200, Bartlomiej Zolnierkiewicz wrote:
-> 
->> Commit 7f93ff73f7c8 ("opp: core: add regulators enable and disable")
->> currently can be safely reverted as all affected users use always-on
->> regulators. However IMHO it should be possible to enable always-on
->> regulator without side-effects.
-> 
-> With coupled regulators you might have something kicking in because a
-> change was made on a completely different regulator...  If we don't take
-> account of coupling requirements we'd doubtless have issues with that at
-> some point.
-
-OK, I have not considered this.
-
->> When it comes to setting regulator constraints before doing enable
->> operation, it also seems to be possible solution but would require
->> splitting regulator_set_voltage() operation on two functions:
-> 
->> - one for setting constraints (before regulator_enable() operation)
-> 
->> - the other one actually setting voltage (after enable operation)
-> 
-> I don't follow?  What would a "constraint" be in this context and how
-> would it be different to the voltage range you'd set in normal operation?
-
-The constraint here would be just the voltage range. I just wanted to
-point out that the actual voltage set operation (on the hardware itself
-not the internal subsystem bookkeeping) shouldn't be done before enable
-operation (especially in context of non-coupled regulators).
-
-Taking into account your remark about enable operation on coupled
-regulators and Dmitry's mail about cpufreq issue I think now that just
-dropping opp change is the most straightforward fix.
-
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+SGVsbG8gVG9ueSwNCg0KT24gMTAvOC8xOSA0OjIzIFBNLCBUb255IExpbmRncmVuIHdyb3RlOg0K
+PiAqIEdyeWdvcmlpIFN0cmFzaGtvIDxncnlnb3JpaS5zdHJhc2hrb0B0aS5jb20+IFsxOTEwMDMg
+MDI6MzJdOg0KPj4gT24gMDMvMTAvMjAxOSAxMToxNiwgSmVyb2VuIEhvZnN0ZWUgd3JvdGU6DQo+
+Pj4gRnVydGhlcm1vcmUgNC4xOSBpcyBmaW5lLCBzbyB0aGVyZSBpcyBubyBuZWVkIHRvIGluY2x1
+ZGUgaXQgaW4gc3RhYmxlDQo+Pj4gYW5kIGhhdmUgYSBub3RlIHRvIG1ha2Ugc3VyZSBhbHNvIG90
+aGVyIHBhdGNoZXMgYXJlIHJlcXVpcmVkIGV0Yy4NCj4+IEhlbmNlIGFsbCBhYm92ZSBwYXRjaGVz
+IHdlbnQgaW4gNS4xIGl0IHdvdWxkIGJlIGNvcnJlY3QgdG8gbWVudGlvbiBvbmx5DQo+PiA2ZDRj
+ZDA0MWYwYWYgbmV0OiBwaHk6IGF0ODAzeDogZGlzYWJsZSBkZWxheSBvbmx5IGZvciBSR01JSSBt
+b2RlDQo+IEplcm9lbiwgY2FuIHlvdSBwbGVhc2Ugc2VuZCBhbiB1cGRhdGVkIHBhdGNoIHdpdGgg
+dGhlIGZpeGVzDQo+IHRhZyBjaGFuZ2VkPw0KPg0KDQpGb3IgY29tcGxldGVuZXNzLCB0aGVyZSBp
+cyBubyAiRml4ZXMgdGFnIiBhcyB5b3UgbWVudGlvbmVkLg0KVGhlIGNvbW1pdCBvbmx5IHJlZmVy
+cyB0byBhbm90aGVyIGNvbW1pdCB3aGljaCBpbnRyb2R1Y2VzDQphIHByb2JsZW0uDQoNClJlZ2Fy
+ZHMsDQoNCkplcm9lbg0KDQo=
