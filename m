@@ -2,176 +2,336 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FD7C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 21:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC012C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 21:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFD7D20679
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 21:48:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B29C6206BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 21:52:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f/llxx8v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726254AbfJHVsk (ORCPT
+        id S1726186AbfJHVwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 17:48:40 -0400
-Received: from mailoutvs49.siol.net ([185.57.226.240]:43388 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725848AbfJHVsk (ORCPT
+        Tue, 8 Oct 2019 17:52:03 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:35626 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725879AbfJHVwC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 17:48:40 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id CF1F252280B;
-        Tue,  8 Oct 2019 23:48:35 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id C7RFpzssUdce; Tue,  8 Oct 2019 23:48:35 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 432BE52280D;
-        Tue,  8 Oct 2019 23:48:35 +0200 (CEST)
-Received: from jernej-laptop.localnet (cpe-86-58-59-25.static.triera.net [86.58.59.25])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id C7AB652280A;
-        Tue,  8 Oct 2019 23:48:32 +0200 (CEST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <mripard@bootlin.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v8 0/3] HEVC/H.265 stateless support for V4L2 and Cedrus
-Date:   Tue, 08 Oct 2019 23:48:32 +0200
-Message-ID: <9239760.nWnt09pPvv@jernej-laptop>
-In-Reply-To: <20190927143411.141526-1-paul.kocialkowski@bootlin.com>
-References: <20190927143411.141526-1-paul.kocialkowski@bootlin.com>
+        Tue, 8 Oct 2019 17:52:02 -0400
+Received: by mail-ed1-f66.google.com with SMTP id v8so201456eds.2;
+        Tue, 08 Oct 2019 14:52:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Qb9i9HD3ZFoO4hRp7aDBaksC/e5zxK5MkfJ0nTvfm5E=;
+        b=f/llxx8vOKfvJQFNI5L90HzOj0C4jXZbaOx01mVGlJf1dg39U2Da+eBgzSo3AdTCiY
+         KXJ6nkbOdBP0O5ZSfKvCxqSdtSX/n/rH/FQWRdfGaxBFlVOJmyY+VrJIYpIol9gJTvu+
+         uH+bZtWo9dCm1zonOOcCT/D2GQ37NJ7ejFX9RyYn1ZLjM28SqKa2Er7eRGwrg0YXaRMY
+         +4i+YBD6kCjOCNnir4K8bmK0dQ/Qx56DY5ASc51JYjLMytG1Yg/CwplXeAV/OvWqWvA/
+         G6xuX+mWyDkfQiLrHR/tlEg8fZguY3sfz4vm1WEsCIiZNYtetTI/PNY+OigOokyHPjKW
+         kVLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Qb9i9HD3ZFoO4hRp7aDBaksC/e5zxK5MkfJ0nTvfm5E=;
+        b=ZpCVeiJ4Q9dZ6AlTgF+i9UjHrYe3UYh1G89S+drSREjbwy4FCs+4TESRGQe5bRHFZ0
+         AVo+urLbpvn/RmutB3qbxmb6zTY1cSBBp+8FjLlfhyNjcWbPEcVnXvMkhgEKHe9DyQo/
+         CNbQikNWN1gVvLBTtTWcfsq8E2gffvDWgKhgoUfYkiFm/aVw7Ns+OAvxoYWBhIbIXEi4
+         RvoKH2QFRSRC8LGLEGJgHG7ztgh3lt6Bi7HCabdUeaC+BYhGEOl7jtXtS1D7EOpTclsX
+         e/SLQKrHFiaSYoykWv4oMGnQ6d4SE4cCBw9brFWAqfHe7Z6xxXRK/VBaE+vGvVuUiugF
+         ue/g==
+X-Gm-Message-State: APjAAAUWTdtKYZQOQ7YoKK1RaQVdqJ2co+LL/aVAxcjf9Qxk9uwJ98Gp
+        T1rQ+07zSUABIu3ObcCCZ+A=
+X-Google-Smtp-Source: APXvYqw3jkwkheVJnM59iHpZ6Pe8JHQKM5AMiNHR70IlRbTycaEs3uvpkBxy3KIn9xXB7bezglfjlw==
+X-Received: by 2002:a05:6402:74b:: with SMTP id p11mr201635edy.84.1570571520219;
+        Tue, 08 Oct 2019 14:52:00 -0700 (PDT)
+Received: from hv-1.home ([188.187.50.94])
+        by smtp.gmail.com with ESMTPSA id e39sm35373edb.69.2019.10.08.14.51.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Oct 2019 14:51:59 -0700 (PDT)
+From:   ivan.lazeev@gmail.com
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ivan Lazeev <ivan.lazeev@gmail.com>
+Subject: [PATCH v7] tpm_crb: fix fTPM on AMD Zen+ CPUs
+Date:   Wed,  9 Oct 2019 00:51:37 +0300
+Message-Id: <20191008215137.17893-1-ivan.lazeev@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne petek, 27. september 2019 ob 16:34:08 CEST je Paul Kocialkowski 
-napisal(a):
-> HEVC/H.265 stateless support for V4L2 and Cedrus
-> 
-> This is early support for HEVC/H.265 stateless decoding in V4L2,
-> including both definitions and driver support for the Cedrus VPU
-> driver, which concerns Allwinner devices.
-> 
-> A specific pixel format is introduced for the HEVC slice format and
-> controls are provided to pass the bitstream metadata to the decoder.
-> Some bitstream extensions are intentionally not supported at this point.
-> 
-> Since this is the first proposal for stateless HEVC/H.265 support in
-> V4L2, reviews and comments about the controls definitions are
-> particularly welcome.
-> 
-> On the Cedrus side, the H.265 implementation covers frame pictures
-> with both uni-directional and bi-direction prediction modes (P/B
-> slices). Field pictures (interleaved), scaling lists and 10-bit output
-> are not supported at this point.
+From: Ivan Lazeev <ivan.lazeev@gmail.com>
 
-Whole series is:
-Reviewed-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Bug link: https://bugzilla.kernel.org/show_bug.cgi?id=195657
 
-Hopefully this can be merged soon.
+cmd/rsp buffers are expected to be in the same ACPI region.
+For Zen+ CPUs BIOS's might report two different regions, some of
+them also report region sizes inconsistent with values from TPM
+registers.
 
-Best regards,
-Jernej
+Memory configuration on ASRock x470 ITX:
 
-> 
-> Changes since v7:
-> * Rebased on latest media tree;
-> * Fixed holes in structures for cacheline alignment;
-> * Added decode mode and start code controls
->   (only per-slice and no start code is supported at this point).
-> 
-> Changes since v6:
-> * Rebased on latest media tree from Hans;
-> * Reordered some fields to avoid holes and multi-padding;
-> * Updated the documentation.
-> 
-> Changes since v5:
-> * Rebased atop latest next media tree;
-> * Moved to flags instead of u8 fields;
-> * Added padding to ensure 64-bit alignment
->   (tested with GDB on 32 and 64-bit architectures);
-> * Reworked cedrus H.265 driver support a bit for flags;
-> * Split off codec-specific control validation and init;
-> * Added HEVC controls fields cleanup at std_validate to allow reliable
->   control comparison with memcmp;
-> * Fixed various misc reported mistakes.
-> 
-> Changes since v4:
-> * Rebased atop latest H.254 series.
-> 
-> Changes since v3:
-> * Updated commit messages;
-> * Updated CID base to avoid conflicts;
-> * Used cpu_to_le32 for packed le32 data;
-> * Fixed misc minor issues in the drive code;
-> * Made it clear in the docs that the API will evolve;
-> * Made the pixfmt private and split commits about it.
-> 
-> Changes since v2:
-> * Moved headers to non-public API;
-> * Added H265 capability for A64 and H5;
-> * Moved docs to ext-ctrls-codec.rst;
-> * Mentionned sections of the spec in the docs;
-> * Added padding to control structures for 32-bit alignment;
-> * Made write function use void/size in bytes;
-> * Reduced the number of arguments to helpers when possible;
-> * Removed PHYS_OFFSET since we already set PFN_OFFSET;
-> * Added comments where suggested;
-> * Moved to timestamp for references instead of index;
-> * Fixed some style issues reported by checkpatch.
-> 
-> Changes since v1:
-> * Added a H.265 capability to whitelist relevant platforms;
-> * Switched over to tags instead of buffer indices in the DPB
-> * Declared variable in their reduced scope as suggested;
-> * Added the H.265/HEVC spec to the biblio;
-> * Used in-doc references to the spec and the required APIs;
-> * Removed debugging leftovers.
-> 
-> Cheers!
-> 
-> Paul Kocialkowski (3):
->   media: v4l: Add definitions for HEVC stateless decoding
->   media: pixfmt: Document the HEVC slice pixel format
->   media: cedrus: Add HEVC/H.265 decoding support
-> 
->  Documentation/media/uapi/v4l/biblio.rst       |   9 +
->  .../media/uapi/v4l/ext-ctrls-codec.rst        | 553 +++++++++++++++-
->  .../media/uapi/v4l/pixfmt-compressed.rst      |  23 +
->  .../media/uapi/v4l/vidioc-queryctrl.rst       |  18 +
->  .../media/videodev2.h.rst.exceptions          |   3 +
->  drivers/media/v4l2-core/v4l2-ctrls.c          | 108 ++-
->  drivers/media/v4l2-core/v4l2-ioctl.c          |   1 +
->  drivers/staging/media/sunxi/cedrus/Makefile   |   2 +-
->  drivers/staging/media/sunxi/cedrus/cedrus.c   |  52 +-
->  drivers/staging/media/sunxi/cedrus/cedrus.h   |  18 +
->  .../staging/media/sunxi/cedrus/cedrus_dec.c   |   9 +
->  .../staging/media/sunxi/cedrus/cedrus_h265.c  | 616 ++++++++++++++++++
->  .../staging/media/sunxi/cedrus/cedrus_hw.c    |   4 +
->  .../staging/media/sunxi/cedrus/cedrus_regs.h  | 271 ++++++++
->  .../staging/media/sunxi/cedrus/cedrus_video.c |  10 +
->  include/media/hevc-ctrls.h                    | 212 ++++++
->  include/media/v4l2-ctrls.h                    |   7 +
->  17 files changed, 1907 insertions(+), 9 deletions(-)
->  create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus_h265.c
->  create mode 100644 include/media/hevc-ctrls.h
+db0a0000-dc59efff : Reserved
+        dc57e000-dc57efff : MSFT0101:00
+        dc582000-dc582fff : MSFT0101:00
 
+Work around the issue by storing ACPI regions declared for the
+device in a fixed array and adding an array for pointers to
+corresponding possibly allocated resources in crb_map_io function.
+This data was previously held for a single resource
+in struct crb_priv (iobase field) and local variable io_res in
+crb_map_io function. ACPI resources array is used to find index of
+corresponding region for each buffer and make the buffer size
+consistent with region's length. Array of pointers to allocated
+resources is used to map the region at most once.
 
+Signed-off-by: Ivan Lazeev <ivan.lazeev@gmail.com>
+---
+Changes in v7:
+	- use terminator entry in iores_array
 
+ drivers/char/tpm/tpm_crb.c | 123 +++++++++++++++++++++++++++----------
+ 1 file changed, 90 insertions(+), 33 deletions(-)
+
+diff --git a/drivers/char/tpm/tpm_crb.c b/drivers/char/tpm/tpm_crb.c
+index e59f1f91d7f3..49d142721b11 100644
+--- a/drivers/char/tpm/tpm_crb.c
++++ b/drivers/char/tpm/tpm_crb.c
+@@ -22,6 +22,7 @@
+ #include "tpm.h"
+ 
+ #define ACPI_SIG_TPM2 "TPM2"
++#define TPM_CRB_MAX_RESOURCES 3
+ 
+ static const guid_t crb_acpi_start_guid =
+ 	GUID_INIT(0x6BBF6CAB, 0x5463, 0x4714,
+@@ -91,7 +92,6 @@ enum crb_status {
+ struct crb_priv {
+ 	u32 sm;
+ 	const char *hid;
+-	void __iomem *iobase;
+ 	struct crb_regs_head __iomem *regs_h;
+ 	struct crb_regs_tail __iomem *regs_t;
+ 	u8 __iomem *cmd;
+@@ -434,21 +434,27 @@ static const struct tpm_class_ops tpm_crb = {
+ 
+ static int crb_check_resource(struct acpi_resource *ares, void *data)
+ {
+-	struct resource *io_res = data;
++	struct resource *iores_array = data;
+ 	struct resource_win win;
+ 	struct resource *res = &(win.res);
++	int i;
+ 
+ 	if (acpi_dev_resource_memory(ares, res) ||
+ 	    acpi_dev_resource_address_space(ares, &win)) {
+-		*io_res = *res;
+-		io_res->name = NULL;
++		for (i = 0; i < TPM_CRB_MAX_RESOURCES + 1; ++i) {
++			if (resource_type(iores_array + i) != IORESOURCE_MEM) {
++				iores_array[i] = *res;
++				iores_array[i].name = NULL;
++				break;
++			}
++		}
+ 	}
+ 
+ 	return 1;
+ }
+ 
+-static void __iomem *crb_map_res(struct device *dev, struct crb_priv *priv,
+-				 struct resource *io_res, u64 start, u32 size)
++static void __iomem *crb_map_res(struct device *dev, struct resource *iores,
++				 void __iomem **iobase_ptr, u64 start, u32 size)
+ {
+ 	struct resource new_res = {
+ 		.start	= start,
+@@ -460,10 +466,16 @@ static void __iomem *crb_map_res(struct device *dev, struct crb_priv *priv,
+ 	if (start != new_res.start)
+ 		return (void __iomem *) ERR_PTR(-EINVAL);
+ 
+-	if (!resource_contains(io_res, &new_res))
++	if (!iores)
+ 		return devm_ioremap_resource(dev, &new_res);
+ 
+-	return priv->iobase + (new_res.start - io_res->start);
++	if (!*iobase_ptr) {
++		*iobase_ptr = devm_ioremap_resource(dev, iores);
++		if (IS_ERR(*iobase_ptr))
++			return *iobase_ptr;
++	}
++
++	return *iobase_ptr + (new_res.start - iores->start);
+ }
+ 
+ /*
+@@ -490,9 +502,13 @@ static u64 crb_fixup_cmd_size(struct device *dev, struct resource *io_res,
+ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 		      struct acpi_table_tpm2 *buf)
+ {
+-	struct list_head resources;
+-	struct resource io_res;
++	struct list_head acpi_resource_list;
++	struct resource iores_array[TPM_CRB_MAX_RESOURCES + 1] = { {0} };
++	void __iomem *iobase_array[TPM_CRB_MAX_RESOURCES] = {0};
+ 	struct device *dev = &device->dev;
++	struct resource *iores;
++	void __iomem **iobase_ptr;
++	int i;
+ 	u32 pa_high, pa_low;
+ 	u64 cmd_pa;
+ 	u32 cmd_size;
+@@ -501,21 +517,41 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 	u32 rsp_size;
+ 	int ret;
+ 
+-	INIT_LIST_HEAD(&resources);
+-	ret = acpi_dev_get_resources(device, &resources, crb_check_resource,
+-				     &io_res);
++	INIT_LIST_HEAD(&acpi_resource_list);
++	ret = acpi_dev_get_resources(device, &acpi_resource_list,
++				     crb_check_resource, iores_array);
+ 	if (ret < 0)
+ 		return ret;
+-	acpi_dev_free_resource_list(&resources);
++	acpi_dev_free_resource_list(&acpi_resource_list);
+ 
+-	if (resource_type(&io_res) != IORESOURCE_MEM) {
++	if (resource_type(iores_array) != IORESOURCE_MEM) {
+ 		dev_err(dev, FW_BUG "TPM2 ACPI table does not define a memory resource\n");
+ 		return -EINVAL;
++	} else if (resource_type(iores_array + TPM_CRB_MAX_RESOURCES) ==
++		IORESOURCE_MEM) {
++		dev_warn(dev, "TPM2 ACPI table defines too many memory resources\n");
++		memset(iores_array + TPM_CRB_MAX_RESOURCES,
++		       0, sizeof(*iores_array));
++		iores_array[TPM_CRB_MAX_RESOURCES].flags = 0;
+ 	}
+ 
+-	priv->iobase = devm_ioremap_resource(dev, &io_res);
+-	if (IS_ERR(priv->iobase))
+-		return PTR_ERR(priv->iobase);
++	iores = NULL;
++	iobase_ptr = NULL;
++	for (i = 0; resource_type(iores_array + i) == IORESOURCE_MEM; ++i) {
++		if (buf->control_address >= iores_array[i].start &&
++		    buf->control_address + sizeof(struct crb_regs_tail) - 1 <=
++		    iores_array[i].end) {
++			iores = iores_array + i;
++			iobase_ptr = iobase_array + i;
++			break;
++		}
++	}
++
++	priv->regs_t = crb_map_res(dev, iores, iobase_ptr, buf->control_address,
++				   sizeof(struct crb_regs_tail));
++
++	if (IS_ERR(priv->regs_t))
++		return PTR_ERR(priv->regs_t);
+ 
+ 	/* The ACPI IO region starts at the head area and continues to include
+ 	 * the control area, as one nice sane region except for some older
+@@ -523,9 +559,10 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 	 */
+ 	if ((priv->sm == ACPI_TPM2_COMMAND_BUFFER) ||
+ 	    (priv->sm == ACPI_TPM2_MEMORY_MAPPED)) {
+-		if (buf->control_address == io_res.start +
++		if (iores &&
++		    buf->control_address == iores->start +
+ 		    sizeof(*priv->regs_h))
+-			priv->regs_h = priv->iobase;
++			priv->regs_h = *iobase_ptr;
+ 		else
+ 			dev_warn(dev, FW_BUG "Bad ACPI memory layout");
+ 	}
+@@ -534,13 +571,6 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 	if (ret)
+ 		return ret;
+ 
+-	priv->regs_t = crb_map_res(dev, priv, &io_res, buf->control_address,
+-				   sizeof(struct crb_regs_tail));
+-	if (IS_ERR(priv->regs_t)) {
+-		ret = PTR_ERR(priv->regs_t);
+-		goto out_relinquish_locality;
+-	}
+-
+ 	/*
+ 	 * PTT HW bug w/a: wake up the device to access
+ 	 * possibly not retained registers.
+@@ -552,13 +582,26 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 	pa_high = ioread32(&priv->regs_t->ctrl_cmd_pa_high);
+ 	pa_low  = ioread32(&priv->regs_t->ctrl_cmd_pa_low);
+ 	cmd_pa = ((u64)pa_high << 32) | pa_low;
+-	cmd_size = crb_fixup_cmd_size(dev, &io_res, cmd_pa,
+-				      ioread32(&priv->regs_t->ctrl_cmd_size));
++	cmd_size = ioread32(&priv->regs_t->ctrl_cmd_size);
++
++	iores = NULL;
++	iobase_ptr = NULL;
++	for (i = 0; iores_array[i].end; ++i) {
++		if (cmd_pa >= iores_array[i].start &&
++		    cmd_pa <= iores_array[i].end) {
++			iores = iores_array + i;
++			iobase_ptr = iobase_array + i;
++			break;
++		}
++	}
++
++	if (iores)
++		cmd_size = crb_fixup_cmd_size(dev, iores, cmd_pa, cmd_size);
+ 
+ 	dev_dbg(dev, "cmd_hi = %X cmd_low = %X cmd_size %X\n",
+ 		pa_high, pa_low, cmd_size);
+ 
+-	priv->cmd = crb_map_res(dev, priv, &io_res, cmd_pa, cmd_size);
++	priv->cmd = crb_map_res(dev, iores, iobase_ptr,	cmd_pa, cmd_size);
+ 	if (IS_ERR(priv->cmd)) {
+ 		ret = PTR_ERR(priv->cmd);
+ 		goto out;
+@@ -566,11 +609,25 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 
+ 	memcpy_fromio(&__rsp_pa, &priv->regs_t->ctrl_rsp_pa, 8);
+ 	rsp_pa = le64_to_cpu(__rsp_pa);
+-	rsp_size = crb_fixup_cmd_size(dev, &io_res, rsp_pa,
+-				      ioread32(&priv->regs_t->ctrl_rsp_size));
++	rsp_size = ioread32(&priv->regs_t->ctrl_rsp_size);
++
++	iores = NULL;
++	iobase_ptr = NULL;
++	for (i = 0; resource_type(iores_array + i) == IORESOURCE_MEM; ++i) {
++		if (rsp_pa >= iores_array[i].start &&
++		    rsp_pa <= iores_array[i].end) {
++			iores = iores_array + i;
++			iobase_ptr = iobase_array + i;
++			break;
++		}
++	}
++
++	if (iores)
++		rsp_size = crb_fixup_cmd_size(dev, iores, rsp_pa, rsp_size);
+ 
+ 	if (cmd_pa != rsp_pa) {
+-		priv->rsp = crb_map_res(dev, priv, &io_res, rsp_pa, rsp_size);
++		priv->rsp = crb_map_res(dev, iores, iobase_ptr,
++					rsp_pa, rsp_size);
+ 		ret = PTR_ERR_OR_ZERO(priv->rsp);
+ 		goto out;
+ 	}
+-- 
+2.20.1
 
