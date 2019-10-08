@@ -2,438 +2,235 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F335C47404
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 00:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 940D8C47404
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 00:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CEFD2133F
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 00:15:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5742420867
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 00:28:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MZd5VttP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729729AbfJHAPk (ORCPT
+        id S1729686AbfJHA2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 20:15:40 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:36662 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729285AbfJHAPk (ORCPT
+        Mon, 7 Oct 2019 20:28:05 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40611 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729285AbfJHA2E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 20:15:40 -0400
-Received: from turingmachine.home (unknown [IPv6:2804:431:c7f4:ff3d:d711:794d:1c68:5ed3])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tonyk)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id C60AE28E972;
-        Tue,  8 Oct 2019 01:15:35 +0100 (BST)
-From:   =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
-To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     axboe@kernel.dk, kernel@collabora.com, krisman@collabora.com,
-        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
-Subject: [PATCH v2 1/1] blk-mq: fill header with kernel-doc
-Date:   Mon,  7 Oct 2019 21:14:16 -0300
-Message-Id: <20191008001416.12656-1-andrealmeid@collabora.com>
-X-Mailer: git-send-email 2.23.0
+        Mon, 7 Oct 2019 20:28:04 -0400
+Received: by mail-wr1-f68.google.com with SMTP id h4so8547590wrv.7;
+        Mon, 07 Oct 2019 17:28:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=w+JBUrRhiUQbDzaygs2fgvMicjQUmjOGtRFHB3njrmE=;
+        b=MZd5VttPijXxFzVk1TicOZ49zJWo4ZHPTGaxMizeEaVRdcdItqjNBpmvfl1tlSrqiR
+         200pLXx6umSubZnGccOLkQC6Iq9lu0d5DCxvI5MwDI97dyAYXiWF2QHvpRX0kwqiO8Lw
+         YTas/6lA/plybBkn2SUfH8KfczAl6iXSqbAUI7uxtcyaj9mjPxlY6NCPhqxricBHF0jK
+         Ow0nsQqpIs+o5CR4GJy2wfD5O3WNA+mkM7e1Co/WSReVZJZ/J+q8XY7WKOXSl0siIikP
+         r41dofptArfYLCHpBWjnFAmJssNYvoZnDGVU8br2FcZvwcvPwFS0EaDtXuBVpeJZGvDK
+         eWOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=w+JBUrRhiUQbDzaygs2fgvMicjQUmjOGtRFHB3njrmE=;
+        b=XtjHyjsfNndO5tL6Yv/8Z0gFaHrgD3U+Kb/ETbk82a768Xf1Fs7MiI/13AKx/J7CeH
+         vawK2JPw+QQoskWEERFUTumu+nJEJ/FFiKDxWmVLpIW0UlQU3Q+f7KXYZPFtLjmemu45
+         2d7bzaqNmOyNCH4AxQJKtZteoOknugXwOlYXcY9S6D2ZuKPjnIJxmTuJZF+bxylQpA2q
+         a6k966JWwhDoTKBc6iVE7KPeZTxBGAGPPiWe1s+gE8pE/yyvZwd3hgMv0jLnNAJmyaCE
+         oqn//4MLF5B3z4lEY+lVHjf1VgHF5kUGxNgQaywHsX02+Tsn3QoyF/zjEj+4k6Cij4A/
+         Z0vw==
+X-Gm-Message-State: APjAAAWgSmZZhH73tlwIt/YOJCxoPKRrYqLPr3UoQxr6P3fGyGUCOibQ
+        g1wYV//iwgUKoCE7OYyVgT901nej
+X-Google-Smtp-Source: APXvYqwkfbsKuWqXA0MMV+UkXywV90ZOV3CPC8nDUTLoE5WmtXTI7Kr+OPhfP7NiNUjgYcJMCiFhwA==
+X-Received: by 2002:a5d:4b50:: with SMTP id w16mr16529077wrs.82.1570494481328;
+        Mon, 07 Oct 2019 17:28:01 -0700 (PDT)
+Received: from [172.30.88.146] (sjewanfw1-nat.mentorg.com. [139.181.7.34])
+        by smtp.gmail.com with ESMTPSA id y186sm2424952wmd.26.2019.10.07.17.27.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 07 Oct 2019 17:28:00 -0700 (PDT)
+From:   Steve Longerbeam <slongerbeam@gmail.com>
+Subject: Re: [PATCH] media: i2c: adv7180: fix adv7280 BT.656-4 compatibility
+To:     Tim Harvey <tharvey@gateworks.com>,
+        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Matthew Michilot <matthew.michilot@gmail.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190827215539.1286-1-mmichilot@gateworks.com>
+ <cb3e9be4-9ce6-354f-bb7c-a4710edc1c1b@xs4all.nl>
+ <20190829142931.GZ28351@bigcity.dyn.berto.se>
+ <CAJ+vNU11HTcP8L5J2Xg+Rmhvb8JDYemhJxt-GaGG5Myk3n38Tw@mail.gmail.com>
+ <20190927190454.GA7409@bigcity.dyn.berto.se>
+ <CAJ+vNU2shAbnLO9TY4dtPupLxE4UFvNi9FXoFF4MfPbtbAZo=g@mail.gmail.com>
+ <20190927204340.GB7409@bigcity.dyn.berto.se>
+ <CAJ+vNU2=cXvi3f67igJX03rONodaPkuSRPS=x9WPSxwLnOEUvA@mail.gmail.com>
+Message-ID: <ece1d3cc-891c-49a5-4639-a5a70385e1a4@gmail.com>
+Date:   Mon, 7 Oct 2019 17:27:57 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <CAJ+vNU2=cXvi3f67igJX03rONodaPkuSRPS=x9WPSxwLnOEUvA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Insert documentation for structs, enums and functions at header file.
-Format existing and new comments at struct blk_mq_ops as
-kernel-doc comments.
 
-Signed-off-by: André Almeida <andrealmeid@collabora.com>
----
-Hello,
 
-This patch is an effort to enhance the documentation of the multiqueue
-API. To check if the comments are confirming to kernel-doc format, you
-first need to apply a patch[1] solving a bug around the `__cacheline...`
-directive. Then, just run
+On 10/2/19 2:31 PM, Tim Harvey wrote:
+> On Fri, Sep 27, 2019 at 1:43 PM Niklas Söderlund
+> <niklas.soderlund@ragnatech.se>  wrote:
+>> Hi Tim,
+>>
+>> On 2019-09-27 12:26:40 -0700, Tim Harvey wrote:
+>>> On Fri, Sep 27, 2019 at 12:04 PM Niklas Söderlund
+>>> <niklas.soderlund@ragnatech.se>  wrote:
+>>>> Hi Tim,
+>>>>
+>>>> Sorry for taking to so long to look at this.
+>>>>
+>>>> On 2019-09-23 15:04:47 -0700, Tim Harvey wrote:
+>>>>> On Thu, Aug 29, 2019 at 7:29 AM Niklas Söderlund
+>>>>> <niklas.soderlund@ragnatech.se>  wrote:
+>>>>>> Hi,
+>>>>>>
+>>>>>> On 2019-08-29 13:43:49 +0200, Hans Verkuil wrote:
+>>>>>>> Adding Niklas.
+>>>>>>>
+>>>>>>> Niklas, can you take a look at this?
+>>>>>> I'm happy to have a look at this. I'm currently moving so all my boards
+>>>>>> are in a box somewhere. I hope to have my lab up and running next week,
+>>>>>> so if this is not urgent I will look at it then.
+>>>>>>
+>>>>> Niklas,
+>>>>>
+>>>>> Have you looked at this yet? Without this patch the ADV7280A does not
+>>>>> output proper BT.656. We tested this on a Gateworks Ventana GW5404-G
+>>>>> which uses the ADV7280A connected to the IMX6 CSI parallel bus. I'm
+>>>>> hoping to see this get merged and perhaps backported to older kernels.
+>>>> I only have access to an adv7180 so I was unable to test this patch.
+>>>> After reviewing the documentation I think the patch is OK if what you
+>>>> want is to unconditionally switch the driver from outputting BT.656-3 to
+>>>> outputting BT.656-4.
+>>>>
+>>>> As this change would effect a large number of compat strings (adv7280,
+>>>> adv7280-m, adv7281, adv7281-m, adv7281-ma, adv7282, adv7282-m) and the
+>>>> goal is to back port it I'm a bit reluctant to adding my tag to this
+>>>> patch as I'm not sure if this will break other setups.
+>>>>
+>>>>  From the documentation about the BT.656-4 register (address 0x04 bit 7):
+>>>>
+>>>>      Between Revision 3 and Revision 4 of the ITU-R BT.656 standards,
+>>>>      the ITU has changed the toggling position for the V bit within
+>>>>      the SAV EAV codes for NTSC. The ITU-R BT.656-4 standard
+>>>>      bit allows the user to select an output mode that is compliant
+>>>>      with either the previous or new standard. For further information,
+>>>>      visit the International Telecommunication Union website.
+>>>>
+>>>>      Note that the standard change only affects NTSC and has no
+>>>>      bearing on PAL.
+>>>>
+>>>>      When ITU-R BT.656-4 is 0 (default), the ITU-R BT.656-3
+>>>>      specification is used. The V bit goes low at EAV of Line 10
+>>>>      and Line 273.
+>>>>
+>>>>      When ITU-R BT.656-4 is 1, the ITU-R BT.656-4 specification is
+>>>>      used. The V bit goes low at EAV of Line 20 and Line 283.
+>>>>
+>>>> Do you know what effects such a change would bring? Looking at the
+>>>> driver BT.656-4 seems to be set unconditionally for some adv7180 chips.
+>>>>
+>>> Niklas,
+>>>
+>>> Quite simply, we have a board that has an ADV7180 attached to the
+>>> parallel CSI of an IMX6 that worked fine with mainline drivers then
+>>> when we revised this board to attach an ADV7280A in the same way
+>>> capture failed to sync. Investigation showed that the NEWAVMODE
+>>> differed between the two.
+>> I understand your problem, the driver configures adv7180 and adv7280
+>> differently.
+>>
+>>> So if the point of the driver is to configure the variants in the same
+>>> way, this patch needs to be applied.
+>> I'm not sure that is the point of the driver. As the driver today
+>> configures different compatible strings differently. Some as ITU-R
+>> BT.656-3 and some as ITU-R BT.656-4, I can only assume there is a reason
+>> for that.
+>>
+>>> I would maintain that the adv7180 comes up with NEWAVMODE enabled and
+>>> in order to be compatible we must configure the adv7282 the same.
+>>>
+>>> The same argument can be made for setting the V bit end position in
+>>> NTSC mode - its done for the adv7180 so for compatible output it
+>>> should be done for the adv7282.
+>> I understand that this is needed to make it a drop-in replacement for
+>> the adv7180 in your use-case. But I'm not sure it is a good idea for
+>> other users of the driver. What if someone is already using a adv7282 on
+>> a board and depends on it providing ITU-R BT.656-3 and the old settings?
+>> If this patch is picked up there use-cases may break.
+>>
+>> I'm not sure what the best way forward is I'm afraid. Looking at
+>> video-interfaces.txt we have a device tree property bus-type which is
+>> used to describe the bus is a BT.656 bus but not which revision of it.
+>>
+>> I'm not really found of driver specific bus descriptions, but maybe this
+>> is a case where one might consider adding one? Hans what do you think?
+>>
+> Niklas / Hans,
+>
+> Thanks for the feedback. I thought that the goal of any 'compatible'
+> device should be to be configured identically. If that's not the case
+> then we need more discussion for sure.
+>
+> There are 3 registers being changed by this patch which do the
+> following for the adv7182/adv7280/adv7181/adv7282:
+> - change output from BT656-3 to BT656-4 (as the driver does this for adv7180)
+> - enable NEWAVMODE meaning EAV/SAV codes are configurable (new code
+> but adv7180 enables this by power-on default and adv7280 does not)
+> - configure V bit end count (to be what adv7180 uses; this isn't used
+> if NEWAVMODE is disabled)
+>
+> So its not only the question of how to decide to configure BT656-3 vs
+> BT656-4 but how to deal with differences in the EAV/SAV codes. I'm not
+> an expert so I don't know what configuration is BT656 compliant and of
+> course without knowing who is using these devices we can't tell what
+> would break even if we fix something that may be misconfigured already
+> (or even completely unused).
+>
+> I'm cc'ing Steve Longerbeam as well as at one point he was suggesting
+> adding a 'newavmode' property to the adv7180 bindings and likely
+> recalls the discussions there.
 
-./scripts/kernel-doc -none include/linux/blk-mq.h
+I've never understood why the adv7180 driver configures a non-standard 
+V-bit end position (ADV7180_NTSC_V_BIT_END_MANUAL_NVEND), maybe because 
+the driver was introduced along with a new bridge driver that assumes 
+that V-bit position. The parallel CSI interface in imx6 driver is also 
+configuring its crop window to work with this non-standard V-bit position.
 
-to check that there is no warning at this documentation. I've done my
-best at the source to check the purpose of each struct and its members,
-but please let me know if I get something wrong.
+The most straight-forward approach to decouple these adv7180 
+dependencies would be to remove the non-standard V-bit setting in the 
+adv7180 driver, and it should output standard bt.656-3 or bt.656-4 
+SAV/EAV codes for all compatible chips. Then expand on the bus-type DT 
+bindings to distinguish between bt.656-3 and bt.656-4. And finally all 
+bridge drivers that use adv7180 would have to be fixed to work only with 
+standard bt.656-3/4 codes. But I realize that last part isn't so easy, 
+and it's even possible some bridge drivers may not be able to cope with 
+the standard V-bit positions.
 
-Changes since v2:
-- Fix the meaning of PDU
-- Uses nested comments for long structs
-- Slight reword member definition to look closer to work made at commit
-"block: Document all members of blk_mq_tag_set and bkl_mq_queue_map"
 
-[1] https://lkml.org/lkml/2019/9/17/820
----
- include/linux/blk-mq.h | 207 +++++++++++++++++++++++++++++++++--------
- 1 file changed, 167 insertions(+), 40 deletions(-)
-
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index e0fce93ac127..8b745f229789 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -10,74 +10,153 @@ struct blk_mq_tags;
- struct blk_flush_queue;
- 
- /**
-- * struct blk_mq_hw_ctx - State for a hardware queue facing the hardware block device
-+ * struct blk_mq_hw_ctx - State for a hardware queue facing the hardware
-+ * block device
-  */
- struct blk_mq_hw_ctx {
- 	struct {
-+		/** @lock: Lock for accessing dispatch queue */
- 		spinlock_t		lock;
-+		/**
-+		 * @dispatch: Queue of dispatched requests, waiting for
-+		 * workers to send them to the hardware.
-+		 */
- 		struct list_head	dispatch;
--		unsigned long		state;		/* BLK_MQ_S_* flags */
-+		 /**
-+		  * @state: BLK_MQ_S_* flags. Define the state of the hw
-+		  * queue (active, scheduled to restart, stopped).
-+		  */
-+		unsigned long		state;
- 	} ____cacheline_aligned_in_smp;
- 
-+	/**
-+	 * @run_work: Worker for dispatch scheduled requests to hardware.
-+	 * BLK_MQ_CPU_WORK_BATCH workers will be assigned to a CPU, then the
-+	 * following ones will be assigned to the next_cpu.
-+	 */
- 	struct delayed_work	run_work;
-+	/** @cpumask: Map of available CPUs. */
- 	cpumask_var_t		cpumask;
-+	/**
-+	 * @next_cpu: Index of CPU/workqueue to be used in the next batch
-+	 * of workers.
-+	 */
- 	int			next_cpu;
-+	/**
-+	 * @next_cpu_batch: Counter of how many works letf in the batch before
-+	 * changing to the next CPU. A batch has the size
-+	 * of BLK_MQ_CPU_WORK_BATCH.
-+	 */
- 	int			next_cpu_batch;
- 
--	unsigned long		flags;		/* BLK_MQ_F_* flags */
-+	/** @flags: BLK_MQ_F_* flags. Define the behaviour of the queue. */
-+	unsigned long		flags;
- 
-+	/** @sched_data: Data to support schedulers. */
- 	void			*sched_data;
-+	/** @queue: Queue of request to be dispatched. */
- 	struct request_queue	*queue;
-+	/** @fq: Queue of requests to be flushed from memory to storage. */
- 	struct blk_flush_queue	*fq;
- 
-+	/**
-+	 * @driver_data: Pointer to data owned by the block driver that created
-+	 * this hctx
-+	 */
- 	void			*driver_data;
- 
-+	/**
-+	 * @ctx_map: Bitmap for each software queue. If bit is on, there is a
-+	 * pending request.
-+	 */
- 	struct sbitmap		ctx_map;
- 
-+	/**
-+	 * @dispatch_from: Queue to be used when there is no scheduler
-+	 * was selected.
-+	 */
- 	struct blk_mq_ctx	*dispatch_from;
-+	/**
-+	 * @dispatch_busy: Number used by blk_mq_update_dispatch_busy() to
-+	 * decide if the hw_queue is busy using Exponential Weighted Moving
-+	 * Average algorithm.
-+	 */
- 	unsigned int		dispatch_busy;
- 
-+	/** @type: HCTX_TYPE_* flags. Type of hardware queue. */
- 	unsigned short		type;
-+	/** @nr_ctx: Number of software queues. */
- 	unsigned short		nr_ctx;
-+	/** @ctxs:	Array of software queues. */
- 	struct blk_mq_ctx	**ctxs;
- 
-+	/** @dispatch_wait_lock: Lock for dispatch_wait queue. */
- 	spinlock_t		dispatch_wait_lock;
-+	/**
-+	 * @dispatch_wait: Waitqueue for dispatched requests. Request here will
-+	 * be processed when percpu_ref_is_zero(&q->q_usage_counter) evaluates
-+	 * true for q as a request_queue.
-+	 */
- 	wait_queue_entry_t	dispatch_wait;
-+	/** @wait_index: Index of next wait queue to be used. */
- 	atomic_t		wait_index;
- 
-+	/** @tags: Request tags. */
- 	struct blk_mq_tags	*tags;
-+	/** @sched_tags: Request tags for schedulers. */
- 	struct blk_mq_tags	*sched_tags;
- 
-+	/** @queued: Number of queued requests. */
- 	unsigned long		queued;
-+	/** @run: Number of dispatched requests. */
- 	unsigned long		run;
- #define BLK_MQ_MAX_DISPATCH_ORDER	7
-+	/** @dispatched: Number of dispatch requests by queue. */
- 	unsigned long		dispatched[BLK_MQ_MAX_DISPATCH_ORDER];
- 
-+	/** @numa_node: NUMA node the storage adapter has been connected to. */
- 	unsigned int		numa_node;
-+	/** @queue_num: Index of this hardware queue. */
- 	unsigned int		queue_num;
- 
-+	/** @nr_active:	Number of active tags. */
- 	atomic_t		nr_active;
- 
-+	/** @cpuhp_dead: List to store request if some CPU die. */
- 	struct hlist_node	cpuhp_dead;
-+	/** @kobj: Kernel object for sysfs. */
- 	struct kobject		kobj;
- 
-+	/** @poll_considered: Count times blk_poll() was called. */
- 	unsigned long		poll_considered;
-+	/** @poll_invoked: Count how many requests blk_poll() polled. */
- 	unsigned long		poll_invoked;
-+	/** @poll_success: Count how many polled requests were completed. */
- 	unsigned long		poll_success;
- 
- #ifdef CONFIG_BLK_DEBUG_FS
-+	/**
-+	 * @debugfs_dir: debugfs directory for this hardware queue. Named
-+	 * as cpu<cpu_number>.
-+	 */
- 	struct dentry		*debugfs_dir;
-+	/** @sched_debugfs_dir:	debugfs directory for the scheduler. */
- 	struct dentry		*sched_debugfs_dir;
- #endif
- 
-+	/** @hctx_list:	List of all hardware queues. */
- 	struct list_head	hctx_list;
- 
--	/* Must be the last member - see also blk_mq_hw_ctx_size(). */
-+	/**
-+	 * @srcu: Sleepable RCU. Use as lock when type of the hardware queue is
-+	 * blocking (BLK_MQ_F_BLOCKING). Must be the last member - see also
-+	 * blk_mq_hw_ctx_size().
-+	 */
- 	struct srcu_struct	srcu[0];
- };
- 
- /**
-- * struct blk_mq_queue_map - ctx -> hctx mapping
-+ * struct blk_mq_queue_map - Map software queues to hardware queues
-  * @mq_map:       CPU ID to hardware queue index map. This is an array
-  *	with nr_cpu_ids elements. Each element has a value in the range
-  *	[@queue_offset, @queue_offset + @nr_queues).
-@@ -92,10 +171,17 @@ struct blk_mq_queue_map {
- 	unsigned int queue_offset;
- };
- 
-+/**
-+ * enum hctx_type - Type of hardware queue
-+ * @HCTX_TYPE_DEFAULT:	All I/O not otherwise accounted for.
-+ * @HCTX_TYPE_READ:	Just for READ I/O.
-+ * @HCTX_TYPE_POLL:	Polled I/O of any kind.
-+ * @HCTX_MAX_TYPES:	Number of types of hctx.
-+ */
- enum hctx_type {
--	HCTX_TYPE_DEFAULT,	/* all I/O not otherwise accounted for */
--	HCTX_TYPE_READ,		/* just for READ I/O */
--	HCTX_TYPE_POLL,		/* polled I/O of any kind */
-+	HCTX_TYPE_DEFAULT,
-+	HCTX_TYPE_READ,
-+	HCTX_TYPE_POLL,
- 
- 	HCTX_MAX_TYPES,
- };
-@@ -147,6 +233,12 @@ struct blk_mq_tag_set {
- 	struct list_head	tag_list;
- };
- 
-+/**
-+ * struct blk_mq_queue_data - Data about a request inserted in a queue
-+ *
-+ * @rq:   Data about the block IO request.
-+ * @last: If it is the last request in the queue.
-+ */
- struct blk_mq_queue_data {
- 	struct request *rq;
- 	bool last;
-@@ -174,81 +266,101 @@ typedef bool (busy_fn)(struct request_queue *);
- typedef void (complete_fn)(struct request *);
- typedef void (cleanup_rq_fn)(struct request *);
- 
--
-+/**
-+ * struct blk_mq_ops - list of callback functions that implements block driver
-+ * behaviour.
-+ */
- struct blk_mq_ops {
--	/*
--	 * Queue request
-+	/**
-+	 * @queue_rq: Queue a new request from block IO.
- 	 */
- 	queue_rq_fn		*queue_rq;
- 
--	/*
--	 * If a driver uses bd->last to judge when to submit requests to
--	 * hardware, it must define this function. In case of errors that
--	 * make us stop issuing further requests, this hook serves the
-+	/**
-+	 * @commit_rqs: If a driver uses bd->last to judge when to submit
-+	 * requests to hardware, it must define this function. In case of errors
-+	 * that make us stop issuing further requests, this hook serves the
- 	 * purpose of kicking the hardware (which the last request otherwise
- 	 * would have done).
- 	 */
- 	commit_rqs_fn		*commit_rqs;
- 
--	/*
--	 * Reserve budget before queue request, once .queue_rq is
-+	/**
-+	 * @get_budget: Reserve budget before queue request, once .queue_rq is
- 	 * run, it is driver's responsibility to release the
- 	 * reserved budget. Also we have to handle failure case
- 	 * of .get_budget for avoiding I/O deadlock.
- 	 */
- 	get_budget_fn		*get_budget;
-+	/**
-+	 * @put_budget: Release the reserved budget.
-+	 */
- 	put_budget_fn		*put_budget;
- 
--	/*
--	 * Called on request timeout
-+	/**
-+	 * @timeout: Called on request timeout.
- 	 */
- 	timeout_fn		*timeout;
- 
--	/*
--	 * Called to poll for completion of a specific tag.
-+	/**
-+	 * @poll: Called to poll for completion of a specific tag.
- 	 */
- 	poll_fn			*poll;
- 
-+	/**
-+	 * @complete: Mark the request as complete.
-+	 */
- 	complete_fn		*complete;
- 
--	/*
--	 * Called when the block layer side of a hardware queue has been
--	 * set up, allowing the driver to allocate/init matching structures.
--	 * Ditto for exit/teardown.
-+	/**
-+	 * @init_hctx: Called when the block layer side of a hardware queue has
-+	 * been set up, allowing the driver to allocate/init matching
-+	 * structures.
- 	 */
- 	init_hctx_fn		*init_hctx;
-+	/**
-+	 * @exit_hctx: Ditto for exit/teardown.
-+	 */
- 	exit_hctx_fn		*exit_hctx;
- 
--	/*
--	 * Called for every command allocated by the block layer to allow
--	 * the driver to set up driver specific data.
-+	/**
-+	 * @init_request: Called for every command allocated by the block layer
-+	 * to allow the driver to set up driver specific data.
- 	 *
- 	 * Tag greater than or equal to queue_depth is for setting up
- 	 * flush request.
--	 *
--	 * Ditto for exit/teardown.
- 	 */
- 	init_request_fn		*init_request;
-+	/**
-+	 * @exit_request: Ditto for exit/teardown.
-+	 */
- 	exit_request_fn		*exit_request;
--	/* Called from inside blk_get_request() */
-+
-+	/**
-+	 * @initialize_rq_fn: Called from inside blk_get_request().
-+	 */
- 	void (*initialize_rq_fn)(struct request *rq);
- 
--	/*
--	 * Called before freeing one request which isn't completed yet,
--	 * and usually for freeing the driver private data
-+	/**
-+	 * @cleanup_rq: Called before freeing one request which isn't completed
-+	 * yet, and usually for freeing the driver private data.
- 	 */
- 	cleanup_rq_fn		*cleanup_rq;
- 
--	/*
--	 * If set, returns whether or not this queue currently is busy
-+	/**
-+	 * @busy: If set, returns whether or not this queue currently is busy.
- 	 */
- 	busy_fn			*busy;
- 
-+	/**
-+	 * @map_queues: This allows drivers specify their own queue mapping by
-+	 * overriding the setup-time function that builds the mq_map.
-+	 */
- 	map_queues_fn		*map_queues;
- 
- #ifdef CONFIG_BLK_DEBUG_FS
--	/*
--	 * Used by the debugfs implementation to show driver-specific
-+	/**
-+	 * @show_rq: Used by the debugfs implementation to show driver-specific
- 	 * information about a request.
- 	 */
- 	void (*show_rq)(struct seq_file *m, struct request *rq);
-@@ -391,14 +503,29 @@ void blk_mq_quiesce_queue_nowait(struct request_queue *q);
- 
- unsigned int blk_mq_rq_cpu(struct request *rq);
- 
--/*
-+/**
-+ * blk_mq_rq_from_pdu - cast a PDU to a request
-+ * @pdu: the PDU (Protocol Data Unit) to be casted
-+ *
-+ * Return: request
-+ *
-  * Driver command data is immediately after the request. So subtract request
-- * size to get back to the original request, add request size to get the PDU.
-+ * size to get back to the original request.
-  */
- static inline struct request *blk_mq_rq_from_pdu(void *pdu)
- {
- 	return pdu - sizeof(struct request);
- }
-+
-+/**
-+ * blk_mq_rq_to_pdu - cast a request to a PDU
-+ * @rq: the request to be casted
-+ *
-+ * Return: pointer to the PDU
-+ *
-+ * Driver command data is immediately after the request. So add request to get
-+ * the PDU.
-+ */
- static inline void *blk_mq_rq_to_pdu(struct request *rq)
- {
- 	return rq + 1;
--- 
-2.23.0
+Steve
 
