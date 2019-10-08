@@ -2,84 +2,159 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7449C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68823ECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85BC3206BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C21621721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:18:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730565AbfJHLPq (ORCPT
+        id S1730479AbfJHLR7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 07:15:46 -0400
-Received: from mga02.intel.com ([134.134.136.20]:26134 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729790AbfJHLPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 07:15:46 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 04:15:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,270,1566889200"; 
-   d="scan'208";a="206619094"
-Received: from kuha.fi.intel.com ([10.237.72.53])
-  by fmsmga001.fm.intel.com with SMTP; 08 Oct 2019 04:15:43 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 08 Oct 2019 14:15:42 +0300
-Date:   Tue, 8 Oct 2019 14:15:42 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH 0/2] extcon: axp288: Move to swnodes
-Message-ID: <20191008111542.GA12909@kuha.fi.intel.com>
-References: <20191001105138.73036-1-heikki.krogerus@linux.intel.com>
- <b1691d61-313c-ad57-3ef4-2dc2dc8263a2@redhat.com>
+        Tue, 8 Oct 2019 07:17:59 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3222 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729790AbfJHLR7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 07:17:59 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 440B2A04CF488C9331FE;
+        Tue,  8 Oct 2019 19:17:56 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Tue, 8 Oct 2019
+ 19:17:47 +0800
+Date:   Tue, 8 Oct 2019 12:17:29 +0100
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     Ingo Molnar <mingo@kernel.org>
+CC:     <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>,
+        Keith Busch <keith.busch@intel.com>, <jglisse@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>, <linuxarm@huawei.com>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH V5 3/4] x86: Support Generic Initiator only proximity
+ domains
+Message-ID: <20191008121729.00005ee9@huawei.com>
+In-Reply-To: <20191007145505.GB88143@gmail.com>
+References: <20191004114330.104746-1-Jonathan.Cameron@huawei.com>
+        <20191004114330.104746-4-Jonathan.Cameron@huawei.com>
+        <20191007145505.GB88143@gmail.com>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b1691d61-313c-ad57-3ef4-2dc2dc8263a2@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 06, 2019 at 09:37:25PM +0200, Hans de Goede wrote:
-> Hi,
+On Mon, 7 Oct 2019 16:55:05 +0200
+Ingo Molnar <mingo@kernel.org> wrote:
+
+> * Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
 > 
-> On 01-10-2019 12:51, Heikki Krogerus wrote:
-> > Hi Hans,
+> > Done in a somewhat different fashion to arm64.
+> > Here the infrastructure for memoryless domains was already
+> > in place.  That infrastruture applies just as well to
+> > domains that also don't have a CPU, hence it works for
+> > Generic Initiator Domains.
 > > 
-> > That AXP288 extcon driver is the last that uses build-in connection
-> > description. I'm replacing it with a code that finds the role mux
-> > software node instead.
+> > In common with memoryless domains we only register GI domains
+> > if the proximity node is not online. If a domain is already
+> > a memory containing domain, or a memoryless domain there is
+> > nothing to do just because it also contains a Generic Initiator.
 > > 
-> > I'm proposing also here a little helper
-> > usb_role_switch_find_by_fwnode() that uses
-> > class_find_device_by_fwnode() to find the role switches.
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > ---
+> >  arch/x86/include/asm/numa.h |  2 ++
+> >  arch/x86/kernel/setup.c     |  1 +
+> >  arch/x86/mm/numa.c          | 14 ++++++++++++++
+> >  3 files changed, 17 insertions(+)
+> > 
+> > diff --git a/arch/x86/include/asm/numa.h b/arch/x86/include/asm/numa.h
+> > index bbfde3d2662f..f631467272a3 100644
+> > --- a/arch/x86/include/asm/numa.h
+> > +++ b/arch/x86/include/asm/numa.h
+> > @@ -62,12 +62,14 @@ extern void numa_clear_node(int cpu);
+> >  extern void __init init_cpu_to_node(void);
+> >  extern void numa_add_cpu(int cpu);
+> >  extern void numa_remove_cpu(int cpu);
+> > +extern void init_gi_nodes(void);
+> >  #else	/* CONFIG_NUMA */
+> >  static inline void numa_set_node(int cpu, int node)	{ }
+> >  static inline void numa_clear_node(int cpu)		{ }
+> >  static inline void init_cpu_to_node(void)		{ }
+> >  static inline void numa_add_cpu(int cpu)		{ }
+> >  static inline void numa_remove_cpu(int cpu)		{ }
+> > +static inline void init_gi_nodes(void)			{ }
+> >  #endif	/* CONFIG_NUMA */
+> >  
+> >  #ifdef CONFIG_DEBUG_PER_CPU_MAPS
+> > diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> > index cfb533d42371..b6c977907ea5 100644
+> > --- a/arch/x86/kernel/setup.c
+> > +++ b/arch/x86/kernel/setup.c
+> > @@ -1264,6 +1264,7 @@ void __init setup_arch(char **cmdline_p)
+> >  	prefill_possible_map();
+> >  
+> >  	init_cpu_to_node();
+> > +	init_gi_nodes();
+> >  
+> >  	io_apic_init_mappings();
+> >  
+> > diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+> > index 4123100e0eaf..50bf724a425e 100644
+> > --- a/arch/x86/mm/numa.c
+> > +++ b/arch/x86/mm/numa.c
+> > @@ -733,6 +733,20 @@ static void __init init_memory_less_node(int nid)
+> >  	 */
+> >  }
+> >  
+> > +/*
+> > + * Generic Initiator Nodes may have neither CPU nor Memory.
+> > + * At this stage if either of the others were present we would
+> > + * already be online.
+> > + */
+> > +void __init init_gi_nodes(void)
+> > +{
+> > +	int nid;
+> > +
+> > +	for_each_node_state(nid, N_GENERIC_INITIATOR)
+> > +		if (!node_online(nid))
+> > +			init_memory_less_node(nid);
+> > +}  
 > 
-> I'm building a kernel with these patches to test them now
-> (on hw which uses the axp288 extcon code-paths with the role-sw)
+> Nit: missing curly braces.
+
+Good point.
+
 > 
-> No test results yet, but I did notice this will building:
+> How do these work in practice, will a system that only had nodes 0-1 
+> today grow a third node '2' that won't have any CPUs on memory on them?
+
+Yes. Exactly that.  The result is that fallback lists etc work when
+_PXM is used to assign a device into that new node.  The interesting
+bit comes when a driver does something more interesting and queries
+the numa distances from SLIT.  At that point the driver can elect to
+do load balancing across multiple nodes at similar distances.
+
+In theory you can also specify a device you wish to put into the node
+via the SRAT entry (IIRC using segment + BDF for PCI devices), but
+for now I haven't implemented that method.
+
 > 
->   CC [M]  drivers/extcon/extcon-axp288.o
-> drivers/extcon/extcon-axp288.c: In function ‘axp288_extcon_find_role_sw’:
-> drivers/extcon/extcon-axp288.c:333:9: warning: assignment discards ‘const’ qualifier from pointer target type [-Wdiscarded-qualifiers]
->   333 |  swnode = software_node_find_by_name(NULL, "intel-xhci-usb-sw");
->       |         ^
+> Thanks,
+> 
+> 	Ingo
 
-Thanks Hans. I'll fix that.
+Thanks,
 
-Br,
+Jonathan
 
--- 
-heikki
