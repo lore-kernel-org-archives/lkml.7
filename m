@@ -2,246 +2,171 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D4FC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9D2C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43A5120873
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:18:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="A35FoO8j"
+	by mail.kernel.org (Postfix) with ESMTP id 5A22B20873
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:18:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbfJHWSi (ORCPT
+        id S1727920AbfJHWSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 18:18:38 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45224 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfJHWSh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 18:18:37 -0400
-Received: by mail-io1-f68.google.com with SMTP id c25so426447iot.12
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 15:18:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Py9QJX7qhRtI3RVtQMuyJHB60SSixZWVKU2LBYXikqo=;
-        b=A35FoO8jdY6LIxFUegLaV/812sjqHUdjHeaYRb6Lpcb/vBnKUOmpQ3ULxdL0T5IRrD
-         9kt8/jvyv8ffUfMXJDMlEoHGXdaIfqL07VBTrold86upw7WAxWcXCQ+XHzkW3TQPdJSg
-         5CWjBQsEFby9vNfIt8n+/J9njJiLhXr/ejSfQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Py9QJX7qhRtI3RVtQMuyJHB60SSixZWVKU2LBYXikqo=;
-        b=QZBlAWmY72aE/jWl34KCQwrTWPDRcUmTvMAJbIasII6JotVRxWdfjZHgXVjVSDtq1O
-         Cuhybx4YZJCRMvA8chm7IzwJVzLpF51QQBxtY+YTFJ0AJ8ZA+0m9xq08FrnWGhhZygIT
-         m2+uNPFSarJsBPJP74GnpBlZrElxBO/8P+PlHHXtO38WIil45fqeV02y3Z1j5f6BK7kD
-         xqXlMjl1PP69IMYmRH4/unO/FKsBp5Z1ph7tovi52bSfFUFIn5/spT0H35S2gi/i7agZ
-         cAsmANmWnSeB524DtJsQ8deHIupdFvD5f/uZwLF1C1askhGYI83P8oYUmAU7lHo6v44s
-         bMvg==
-X-Gm-Message-State: APjAAAWcNU5HAgaAtyh4la2whePBsmD9H0vxnDfzFzBbxCwrti44Nj3L
-        V2z229B7lBiRrhldhiqGE6Wfe4S8Pq8=
-X-Google-Smtp-Source: APXvYqwBw5aTkR8AgncxMffxoZxlK6opmbln5C2nn3+XWcPLg+/0Ipzd+JYD+RLOgyd7Xt/IOXKe3Q==
-X-Received: by 2002:a92:3314:: with SMTP id a20mr779152ilf.276.1570573116401;
-        Tue, 08 Oct 2019 15:18:36 -0700 (PDT)
-Received: from localhost ([2620:15c:183:200:5d69:b29f:8fd8:6f45])
-        by smtp.gmail.com with ESMTPSA id h18sm148802iog.52.2019.10.08.15.18.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Oct 2019 15:18:35 -0700 (PDT)
-From:   Daniel Campello <campello@chromium.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Daniel Campello <campello@chromium.org>,
-        Nick Crews <ncrews@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Benson Leung <bleung@chromium.org>,
-        Raul E Rangel <rrangel@chromium.org>
-Subject: [PATCH v4] wilco_ec: Add Dell's USB PowerShare Policy control
-Date:   Tue,  8 Oct 2019 16:18:30 -0600
-Message-Id: <20191008161749.1.I4476e6e2b1026ff388eb11813310264e25aa9cc9@changeid>
-X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
+        Tue, 8 Oct 2019 18:18:50 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:50820 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727290AbfJHWSt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 18:18:49 -0400
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1iHxod-000554-C6; Tue, 08 Oct 2019 16:18:48 -0600
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1iHxob-0003Pf-2O; Tue, 08 Oct 2019 16:18:45 -0600
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     Kit Chow <kchow@gigaio.com>, Logan Gunthorpe <logang@deltatee.com>
+Date:   Tue,  8 Oct 2019 16:18:37 -0600
+Message-Id: <20191008221837.13067-4-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191008221837.13067-1-logang@deltatee.com>
+References: <20191008221837.13067-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, joro@8bytes.org, kchow@gigaio.com, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+Subject: [PATCH 3/3] iommu/amd: Support multiple PCI DMA aliases in IRQ Remapping
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-USB PowerShare is a policy which affects charging via the special
-USB PowerShare port (marked with a small lightning bolt or battery icon)
-when in low power states:
-- In S0, the port will always provide power.
-- In S0ix, if usb_charge is enabled, then power will be supplied to
-  the port when on AC or if battery is > 50%. Else no power is supplied.
-- In S5, if usb_charge is enabled, then power will be supplied to
-  the port when on AC. Else no power is supplied.
+Non-Transparent Bridge (NTB) devices (among others) may have many DMA
+aliases seeing the hardware will send requests with different device ids
+depending on their origin across the bridged hardware.
 
-Signed-off-by: Daniel Campello <campello@chromium.org>
-Signed-off-by: Nick Crews <ncrews@chromium.org>
+See commit ad281ecf1c7d ("PCI: Add DMA alias quirk for Microsemi Switchtec
+NTB") for more information on this.
+
+The AMD IOMMU IRQ remapping functionality ignores all PCI aliases for
+IRQs so if devices send an interrupt from one of their aliases they
+will be blocked on AMD hardware with the IOMMU enabled.
+
+To fix this, ensure IRQ remapping is enabled for all aliases with
+MSI interrupts.
+
+This is analogous to the functionality added to the Intel IRQ remapping
+code in commit 3f0c625c6ae7 ("iommu/vt-d: Allow interrupts from the entire
+bus for aliased devices")
+
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
+ drivers/iommu/amd_iommu.c | 46 +++++++++++++++++++++++++++++++++------
+ 1 file changed, 39 insertions(+), 7 deletions(-)
 
-v4 changes:
-- Renamed from usb_power_share to usb_charge to match existing feature
-in other platforms in the kernel (i.e., sony-laptop, samsung-laptop,
-lg-laptop)
-v3 changes:
-- Drop a silly blank line
-- Use val > 1 instead of val != 0 && val != 1
-v2 changes:
-- Move documentation to Documentation/ABI/testing/sysfs-platform-wilco-ec
-- Zero out reserved bytes in requests.
-
- .../ABI/testing/sysfs-platform-wilco-ec       | 17 ++++
- drivers/platform/chrome/wilco_ec/sysfs.c      | 91 +++++++++++++++++++
- 2 files changed, 108 insertions(+)
-
-diff --git a/Documentation/ABI/testing/sysfs-platform-wilco-ec b/Documentation/ABI/testing/sysfs-platform-wilco-ec
-index 8827a734f933..bb7ba67cae97 100644
---- a/Documentation/ABI/testing/sysfs-platform-wilco-ec
-+++ b/Documentation/ABI/testing/sysfs-platform-wilco-ec
-@@ -31,6 +31,23 @@ Description:
-                Output will a version string be similar to the example below:
-                08B6
-
-+What:		/sys/bus/platform/devices/GOOG000C\:00/usb_charge
-+Date:		October 2019
-+KernelVersion:	5.5
-+Description:
-+		Control the USB PowerShare Policy. USB PowerShare is a policy
-+		which affects charging via the special USB PowerShare port
-+		(marked with a small lightning bolt or battery icon) when in
-+		low power states:
-+		- In S0, the port will always provide power.
-+		- In S0ix, if usb_charge is enabled, then power will be
-+		  supplied to the port when on AC or if battery is > 50%.
-+		  Else no power is supplied.
-+		- In S5, if usb_charge is enabled, then power will be supplied
-+		  to the port when on AC. Else no power is supplied.
-+
-+		Input should be either "0" or "1".
-+
- What:          /sys/bus/platform/devices/GOOG000C\:00/version
- Date:          May 2019
- KernelVersion: 5.3
-diff --git a/drivers/platform/chrome/wilco_ec/sysfs.c b/drivers/platform/chrome/wilco_ec/sysfs.c
-index 3b86a21005d3..f0d174b6bb21 100644
---- a/drivers/platform/chrome/wilco_ec/sysfs.c
-+++ b/drivers/platform/chrome/wilco_ec/sysfs.c
-@@ -23,6 +23,26 @@ struct boot_on_ac_request {
- 	u8 reserved7;
- } __packed;
-
-+#define CMD_USB_CHARGE 0x39
-+
-+enum usb_charge_op {
-+	USB_CHARGE_GET = 0,
-+	USB_CHARGE_SET = 1,
-+};
-+
-+struct usb_charge_request {
-+	u8 cmd;		/* Always CMD_USB_CHARGE */
-+	u8 reserved;
-+	u8 op;		/* One of enum usb_charge_op */
-+	u8 val;		/* When setting, either 0 or 1 */
-+} __packed;
-+
-+struct usb_charge_response {
-+	u8 reserved;
-+	u8 status;	/* Set by EC to 0 on success, other value on failure */
-+	u8 val;		/* When getting, set by EC to either 0 or 1 */
-+} __packed;
-+
- #define CMD_EC_INFO			0x38
- enum get_ec_info_op {
- 	CMD_GET_EC_LABEL	= 0,
-@@ -131,12 +151,83 @@ static ssize_t model_number_show(struct device *dev,
-
- static DEVICE_ATTR_RO(model_number);
-
-+static int send_usb_charge(struct wilco_ec_device *ec,
-+				struct usb_charge_request *rq,
-+				struct usb_charge_response *rs)
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index 1f15f0bae5b3..f8a6fa8d639b 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -3758,7 +3758,27 @@ static void set_remap_table_entry(struct amd_iommu *iommu, u16 devid,
+ 	iommu_flush_dte(iommu, devid);
+ }
+ 
+-static struct irq_remap_table *alloc_irq_table(u16 devid)
++static int set_remap_table_entry_alias(struct pci_dev *pdev, u16 alias,
++				       void *data)
 +{
-+	struct wilco_ec_message msg;
-+	int ret;
++	struct irq_remap_table *table = data;
 +
-+	memset(&msg, 0, sizeof(msg));
-+	msg.type = WILCO_EC_MSG_LEGACY;
-+	msg.request_data = rq;
-+	msg.request_size = sizeof(*rq);
-+	msg.response_data = rs;
-+	msg.response_size = sizeof(*rs);
-+	ret = wilco_ec_mailbox(ec, &msg);
-+	if (ret < 0)
-+		return ret;
-+	if (rs->status)
-+		return -EIO;
++	irq_lookup_table[alias] = table;
++	set_dte_irq_entry(alias, table);
 +
 +	return 0;
 +}
 +
-+static ssize_t usb_charge_show(struct device *dev,
-+				    struct device_attribute *attr, char *buf)
++static int iommu_flush_dte_alias(struct pci_dev *pdev, u16 alias, void *data)
 +{
-+	struct wilco_ec_device *ec = dev_get_drvdata(dev);
-+	struct usb_charge_request rq;
-+	struct usb_charge_response rs;
-+	int ret;
++	struct amd_iommu *iommu = data;
 +
-+	memset(&rq, 0, sizeof(rq));
-+	rq.cmd = CMD_USB_CHARGE;
-+	rq.op = USB_CHARGE_GET;
++	iommu_flush_dte(iommu, alias);
 +
-+	ret = send_usb_charge(ec, &rq, &rs);
-+	if (ret < 0)
-+		return ret;
-+
-+	return sprintf(buf, "%d\n", rs.val);
++	return 0;
 +}
 +
-+static ssize_t usb_charge_store(struct device *dev,
-+				     struct device_attribute *attr,
-+				     const char *buf, size_t count)
-+{
-+	struct wilco_ec_device *ec = dev_get_drvdata(dev);
-+	struct usb_charge_request rq;
-+	struct usb_charge_response rs;
-+	int ret;
-+	u8 val;
++static struct irq_remap_table *alloc_irq_table(u16 devid, struct pci_dev *pdev)
+ {
+ 	struct irq_remap_table *table = NULL;
+ 	struct irq_remap_table *new_table = NULL;
+@@ -3804,7 +3824,14 @@ static struct irq_remap_table *alloc_irq_table(u16 devid)
+ 	table = new_table;
+ 	new_table = NULL;
+ 
+-	set_remap_table_entry(iommu, devid, table);
++	if (pdev) {
++		pci_for_each_dma_alias(pdev, set_remap_table_entry_alias,
++				       table);
++		pci_for_each_dma_alias(pdev, iommu_flush_dte_alias, iommu);
++	} else {
++		set_remap_table_entry(iommu, devid, table);
++	}
 +
-+	ret = kstrtou8(buf, 10, &val);
-+	if (ret < 0)
-+		return ret;
-+	if (val > 1)
-+		return -EINVAL;
+ 	if (devid != alias)
+ 		set_remap_table_entry(iommu, alias, table);
+ 
+@@ -3821,7 +3848,8 @@ static struct irq_remap_table *alloc_irq_table(u16 devid)
+ 	return table;
+ }
+ 
+-static int alloc_irq_index(u16 devid, int count, bool align)
++static int alloc_irq_index(u16 devid, int count, bool align,
++			   struct pci_dev *pdev)
+ {
+ 	struct irq_remap_table *table;
+ 	int index, c, alignment = 1;
+@@ -3831,7 +3859,7 @@ static int alloc_irq_index(u16 devid, int count, bool align)
+ 	if (!iommu)
+ 		return -ENODEV;
+ 
+-	table = alloc_irq_table(devid);
++	table = alloc_irq_table(devid, pdev);
+ 	if (!table)
+ 		return -ENODEV;
+ 
+@@ -4264,7 +4292,7 @@ static int irq_remapping_alloc(struct irq_domain *domain, unsigned int virq,
+ 		struct irq_remap_table *table;
+ 		struct amd_iommu *iommu;
+ 
+-		table = alloc_irq_table(devid);
++		table = alloc_irq_table(devid, NULL);
+ 		if (table) {
+ 			if (!table->min_index) {
+ 				/*
+@@ -4281,11 +4309,15 @@ static int irq_remapping_alloc(struct irq_domain *domain, unsigned int virq,
+ 		} else {
+ 			index = -ENOMEM;
+ 		}
+-	} else {
++	} else if (info->type == X86_IRQ_ALLOC_TYPE_MSI ||
++		   info->type == X86_IRQ_ALLOC_TYPE_MSIX) {
+ 		bool align = (info->type == X86_IRQ_ALLOC_TYPE_MSI);
+ 
+-		index = alloc_irq_index(devid, nr_irqs, align);
++		index = alloc_irq_index(devid, nr_irqs, align, info->msi_dev);
++	} else {
++		index = alloc_irq_index(devid, nr_irqs, false, NULL);
+ 	}
 +
-+	memset(&rq, 0, sizeof(rq));
-+	rq.cmd = CMD_USB_CHARGE;
-+	rq.op = USB_CHARGE_SET;
-+	rq.val = val;
-+
-+	ret = send_usb_charge(ec, &rq, &rs);
-+	if (ret < 0)
-+		return ret;
-+
-+	return count;
-+}
-+
-+static DEVICE_ATTR_RW(usb_charge);
-
- static struct attribute *wilco_dev_attrs[] = {
- 	&dev_attr_boot_on_ac.attr,
- 	&dev_attr_build_date.attr,
- 	&dev_attr_build_revision.attr,
- 	&dev_attr_model_number.attr,
-+	&dev_attr_usb_charge.attr,
- 	&dev_attr_version.attr,
- 	NULL,
- };
---
-2.23.0.581.g78d2f28ef7-goog
+ 	if (index < 0) {
+ 		pr_warn("Failed to allocate IRTE\n");
+ 		ret = index;
+-- 
+2.20.1
 
