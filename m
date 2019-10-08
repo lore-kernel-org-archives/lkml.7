@@ -2,81 +2,159 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E74ECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8A8C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C05C9206B6
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:38:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570538327;
-	bh=5jyR2aunmnx/KUpswmJ5Ko60ltn0ViqTwRLPlVma8YE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=U4E+HVCVXOBJJk5s7rPtNGKtMGDA3dh6HFd+ZGML1FEjb/8q+oHMuVb6fZJ/z1On3
-	 ku5+pIJTsKerIVT75D1fMUbxCaCxHa/4UQ2h7X/qAAhoqGM0oH01+SM1P78xjlX4rk
-	 lv8LYz0SorBY6asxkmo/1kDvUCpy2JV+modMcxQg=
+	by mail.kernel.org (Postfix) with ESMTP id BC39A206B6
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:39:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="g9k6XiBr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731025AbfJHMir (ORCPT
+        id S1731039AbfJHMjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 08:38:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37518 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730694AbfJHMiq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 08:38:46 -0400
-Received: from localhost (unknown [89.205.136.155])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 374482070B;
-        Tue,  8 Oct 2019 12:38:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570538325;
-        bh=5jyR2aunmnx/KUpswmJ5Ko60ltn0ViqTwRLPlVma8YE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=R50pLwqIPWvn/qF5BWUABdDTrtC8oJK4Y3/3i+74pbAl8abTJ7FiHInm1Tq7J8RKv
-         lz+gl/e96FARB8H+3KV7+h1BF6UXSaU2wXo/qNcWFc1shsyCjEEIWtbxSxMtZxH6wI
-         6zYcWCAie+RkPzzRrlS8XvJ3FRv/OCx9ZDIg9gNQ=
-Date:   Tue, 8 Oct 2019 14:38:41 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     hariprasad@osuosl.org, Kelam@osuosl.org, hariprasad.kelam@gmail.com
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
-Subject: Re: [PATCH] staging: media: sunxi: make use of
- devm_platform_ioremap_resource
-Message-ID: <20191008123841.GC2763989@kroah.com>
-References: <1570517975-32648-1-git-send-email-hariprasad.kelam@gmail.com>
+        Tue, 8 Oct 2019 08:39:00 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:57128 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730859AbfJHMi7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 08:38:59 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191008123857euoutp02d071b56861b57cc4ba6ad40436fb0cfb~LrEv-K1ml1639816398euoutp02P
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Oct 2019 12:38:57 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191008123857euoutp02d071b56861b57cc4ba6ad40436fb0cfb~LrEv-K1ml1639816398euoutp02P
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1570538337;
+        bh=V4BbM92IgPN1F7h3ef4+UfXL3HknJSrjrDy/wscVA0o=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=g9k6XiBrd4mKf7Bn+ujSlrl60Ay0T9raNKq3Xr7LIHmEY0Gr5dTIPXjD6ATQ5jUIa
+         uXKJ1zPtu/IHMGWgbkkzx/NrJY/UeOIH7OuJMJVk/lKKtyjw9qIb9CcL+vJaoPS7fy
+         tvYgDRUMrbExPkLMYy5ZLNO57XZcW3wt2D0npE34=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20191008123857eucas1p1afeed565aa401556191363efc41a9cc5~LrEvk-xEo1784517845eucas1p1W;
+        Tue,  8 Oct 2019 12:38:57 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 6E.5C.04469.0638C9D5; Tue,  8
+        Oct 2019 13:38:56 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20191008123856eucas1p2b9536096c0f7a5f84f2232a5a1ca7b01~LrEvRhevX0896008960eucas1p2S;
+        Tue,  8 Oct 2019 12:38:56 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191008123856eusmtrp2ed968efc8dc1c4adc652a3a9fc7d30e9~LrEvQ0Qz02484724847eusmtrp2k;
+        Tue,  8 Oct 2019 12:38:56 +0000 (GMT)
+X-AuditID: cbfec7f2-54fff70000001175-57-5d9c8360072f
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id F0.C7.04117.0638C9D5; Tue,  8
+        Oct 2019 13:38:56 +0100 (BST)
+Received: from [106.120.51.15] (unknown [106.120.51.15]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191008123856eusmtip2dd1d4901801c5d5a68a9668b90a2542f~LrEuxNrL42907529075eusmtip21;
+        Tue,  8 Oct 2019 12:38:56 +0000 (GMT)
+Subject: Re: [PATCH] regulator: core: Skip balancing of the enabled
+ regulators in regulator_enable()
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-samsung-soc@vger.kernel.org,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Kamil Konieczny <k.konieczny@samsung.com>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <9268b455-ec66-97e1-909d-f964ac31c0ef@samsung.com>
+Date:   Tue, 8 Oct 2019 14:38:55 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1570517975-32648-1-git-send-email-hariprasad.kelam@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191008120611.GG4382@sirena.co.uk>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrDKsWRmVeSWpSXmKPExsWy7djPc7oJzXNiDRo6rC02zljPajH14RM2
+        i9UfHzNaLPg0g9Xi/PkN7BYP5t5ksvh2pYPJ4vKuOWwWM87vY7LY+NXDgctj56y77B6bVnWy
+        edy5tofNo/+vgUffllWMHp83yQWwRXHZpKTmZJalFunbJXBlrLj4nrXgIm/F9J1FDYzfuLoY
+        OTkkBEwkdi3qYu5i5OIQEljBKNHRPJcNwvnCKDGh+xmU85lRYvbtWYwwLRdO7WeESCxnlLix
+        4BErhPOWUWJ+w3cWkCphgTSJSa++gNkiAsoSV7/vZQEpYhZ4xSTR+mUdK0iCTcBQouttFxuI
+        zStgJ3Hq3E/2LkYODhYBFYlX9zJAwqICsRL3fhxnhigRlDg58wnYTE6g1mnvHoK1MgvIS2x/
+        O4cZwhaXuPVkPhPILgmBc+wSV9YfY4M420ViTdsWZghbWOLV8S3sELaMxP+dMA3NjBIPz61l
+        h3B6GCUuN82Aetpa4vDxi6wg1zELaEqs36UPYkoIOEq0rEmBMPkkbrwVhLiBT2LStunMEGFe
+        iY42IYgZahKzjq+D23rwwiXmCYxKs5B8NgvJN7OQfDMLYe0CRpZVjOKppcW56anFhnmp5XrF
+        ibnFpXnpesn5uZsYgWnq9L/jn3Ywfr2UdIhRgINRiYfXoWpOrBBrYllxZe4hRgkOZiURXrml
+        M2KFeFMSK6tSi/Lji0pzUosPMUpzsCiJ81YzPIgWEkhPLEnNTk0tSC2CyTJxcEo1MAqJndcz
+        2eWV06qxj+e0+3TnO92bmyq2Ce1lNn2w5ErBhcXXnTTzwlZO1lji8uCs8KkJk1j45ZtiLxlk
+        r9M7IfChbh/D8kc8XEV8/y4d/ivgyRwdvWext7Ch/4vMoNlldkejlUJWux0wuXw8cMr3CNnJ
+        /4/etinhEN20lOfJCRdbJyePlybn25VYijMSDbWYi4oTAZqrQUlPAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLIsWRmVeSWpSXmKPExsVy+t/xe7oJzXNiDXpeqlpsnLGe1WLqwyds
+        Fqs/Pma0WPBpBqvF+fMb2C0ezL3JZPHtSgeTxeVdc9gsZpzfx2Sx8auHA5fHzll32T02repk
+        87hzbQ+bR/9fA4++LasYPT5vkgtgi9KzKcovLUlVyMgvLrFVija0MNIztLTQMzKx1DM0No+1
+        MjJV0rezSUnNySxLLdK3S9DLWHHxPWvBRd6K6TuLGhi/cXUxcnJICJhIXDi1n7GLkYtDSGAp
+        o8SzBxeZIBIyEienNbBC2MISf651sYHYQgKvGSVmX7IFsYUF0iTuH37MCGKLCChLXP2+lwVk
+        ELPAGyaJ5Zv+Qk2dwiTRf7UNbCqbgKFE11uISbwCdhKnzv1k72Lk4GARUJF4dS8DxBQViJXY
+        tNcMokJQ4uTMJywgNidQ57R3D8E6mQXMJOZtfsgMYctLbH87B8oWl7j1ZD7TBEahWUjaZyFp
+        mYWkZRaSlgWMLKsYRVJLi3PTc4uN9IoTc4tL89L1kvNzNzECo3LbsZ9bdjB2vQs+xCjAwajE
+        w+tQNSdWiDWxrLgy9xCjBAezkgiv3NIZsUK8KYmVValF+fFFpTmpxYcYTYFem8gsJZqcD0wY
+        eSXxhqaG5haWhubG5sZmFkrivB0CB2OEBNITS1KzU1MLUotg+pg4OKUaGP1nP5GY+32T34a9
+        Bw1Eylx6OzcYTHihtPjN/t1LQzhfFBTqZfdrVs4OMtgZ7Ze6seOc0YnGqzdOPzVv+fc5lp9T
+        OPjwzkTZzjf2G09fubHN6dr+nffTuvOWi+zNSb8YfZB7+0SvgLWLzEv1dHpFqzv/iHxRn5LH
+        Mak6eKvyx4UHNyRUd+zh/6rEUpyRaKjFXFScCADujN2J4AIAAA==
+X-CMS-MailID: 20191008123856eucas1p2b9536096c0f7a5f84f2232a5a1ca7b01
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191008101720eucas1p2e0d1bca6e696848bf689067e05620679
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191008101720eucas1p2e0d1bca6e696848bf689067e05620679
+References: <CGME20191008101720eucas1p2e0d1bca6e696848bf689067e05620679@eucas1p2.samsung.com>
+        <20191008101709.13827-1-m.szyprowski@samsung.com>
+        <20191008115025.GF4382@sirena.co.uk>
+        <0e222fdd-4407-51ea-b75c-a62621cbe622@samsung.com>
+        <20191008120611.GG4382@sirena.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 12:29:34PM +0530, hariprasad@osuosl.org wrote:
-> From: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-> 
-> fix below issue reported by coccicheck
-> drivers/staging//media/sunxi/cedrus/cedrus_hw.c:229:1-10: WARNING: Use
-> devm_platform_ioremap_resource for dev -> base
-> 
-> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-> ---
->  drivers/staging/media/sunxi/cedrus/cedrus_hw.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+Hi Mark,
 
-I've dropped all of your patches, please fix up your tool and resend
-this as a patch series so we know what order to apply them in.
+On 08.10.2019 14:06, Mark Brown wrote:
+> On Tue, Oct 08, 2019 at 02:01:15PM +0200, Marek Szyprowski wrote:
+>> On 08.10.2019 13:50, Mark Brown wrote:
+>>> This then means that for users that might legitimately enable and
+>>> disable regulators that need to be constrained are forced to change the
+>>> voltage when they enable the regualtors in order to have their
+>>> constraints take effect which seems bad.  I'd rather change the the
+>>> cpufreq consumers to either not do the enable (since there really should
+>>> be an always-on constraint this should be redundant, we might need to
+>>> fix the core to take account of their settings though I think we lost
+>>> that) or to set the voltage to whatever they need prior to doing their
+>>> first enable, that seems more robust.
+>> Well, I'm open for other ways of fixing this issue. Calling enable on
+>> always-on regulator imho should not change its rate...
+> Yes, although there is the whole "don't touch things until a consumer
+> tells us to" thing going on.  I had expected that this was kicking in
+> because we weren't paying attention to the constraints of disabled
+> regulators but I can't see the code implementing that any more so I
+> guess we removed it at some point (it was always debatable).
 
-thanks,
+Then if I get it right, the issue is caused by the commit 7f93ff73f7c8 
+("opp: core: add regulators enable and disable"). I've checked and 
+indeed reverting it fixes Peach Pi to boot properly. The question is if 
+this is desired behavior or not?
 
-greg k-h
+I've CC: Viresh, Kamil and Bartlomiej, here is the link to the beginning 
+of this thread:
+
+https://lkml.org/lkml/2019/10/8/265
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
