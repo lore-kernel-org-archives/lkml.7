@@ -2,89 +2,120 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E987ECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 814B0C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 271BE20673
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6347820673
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:33:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730755AbfJHLcz (ORCPT
+        id S1730764AbfJHLde (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 07:32:55 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33924 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730156AbfJHLcz (ORCPT
+        Tue, 8 Oct 2019 07:33:34 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47830 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730375AbfJHLdc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 07:32:55 -0400
-Received: by mail-ot1-f65.google.com with SMTP id m19so13752895otp.1;
-        Tue, 08 Oct 2019 04:32:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X/P4A34kBWltit617HgU9BCptX8N7U/u6oSp9tuhsww=;
-        b=JP7YPc7eT6xQ6ck0G+DAbgxNob/xhbTbFLe+4zOsFMlL+8h5pm3+Es7g9xdUY39/Oz
-         cAo08tHYGKA9+8g8KuWmWzaIEIL09oCiIK8HxwO788kw55sb++QjjS4XmvW0RPj1IDKi
-         dpgFfkrpQ0RlprPqoTtqnnRXfbObL+D8bzCLA7A16KqiLwOx2EIzBnR+g088Uixo2Kwn
-         2VVm1EirYPHe4redtNgV6n0BC1o1GvXrnDjvTWlgV3ukFFR+oe/Ft44iS/Y2aFNoe9aT
-         59RUT1pP/y4P7NYDdBHGvoJCaPadroPCYNJZPdJXnWF+vPNRbNzbbXiEvSRd1xzt4QtV
-         YPQw==
-X-Gm-Message-State: APjAAAXsAHPvbDxOu+YGRBsbXquuwdRfu/2XFsM0q2Cz6APd1G3vz7lY
-        U+cM5pR35CZJ+XulkfHH4jsr2MuWhprRNkWRxmA=
-X-Google-Smtp-Source: APXvYqz93Kf3dVVQ1pD17nYMR7M0+TJGZ+RyWjaEPoiOqoprx/G7pBNyusN7HY7F4713UaL1ro4MlzqU5ZzEiQNFxQk=
-X-Received: by 2002:a9d:7311:: with SMTP id e17mr23509246otk.107.1570534372603;
- Tue, 08 Oct 2019 04:32:52 -0700 (PDT)
+        Tue, 8 Oct 2019 07:33:32 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iHnk3-0008DS-El; Tue, 08 Oct 2019 13:33:23 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 211C31C072D;
+        Tue,  8 Oct 2019 13:33:23 +0200 (CEST)
+Date:   Tue, 08 Oct 2019 11:33:23 -0000
+From:   "tip-bot2 for Sami Tolvanen" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/cpu/vmware: Use the full form of INL in VMWARE_PORT
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Borislav Petkov <bp@suse.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        clang-built-linux@googlegroups.com,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        virtualization@lists.linux-foundation.org,
+        "VMware, Inc." <pv-drivers@vmware.com>, "x86-ml" <x86@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20191007192129.104336-1-samitolvanen@google.com>
+References: <20191007192129.104336-1-samitolvanen@google.com>
 MIME-Version: 1.0
-References: <1570531132-21856-1-git-send-email-fabrizio.castro@bp.renesas.com> <1570531132-21856-3-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1570531132-21856-3-git-send-email-fabrizio.castro@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 8 Oct 2019 13:32:41 +0200
-Message-ID: <CAMuHMdVgkmrDmTwZQksy_qfkk6kmshnTwCMeYXBpKb0Nk_PKLg@mail.gmail.com>
-Subject: Re: [PATCH 02/10] dt-bindings: dmaengine: usb-dmac: Add binding for r8a774b1
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms@verge.net.au>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>, dmaengine@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <157053440307.9978.15776882111397155119.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 8, 2019 at 12:39 PM Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
-> This patch adds the binding for r8a774b1 SoC (RZ/G2N).
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+The following commit has been merged into the x86/urgent branch of tip:
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Commit-ID:     fbcfb8f0270bf24fe348393540b17a7f2ba577d7
+Gitweb:        https://git.kernel.org/tip/fbcfb8f0270bf24fe348393540b17a7f2ba577d7
+Author:        Sami Tolvanen <samitolvanen@google.com>
+AuthorDate:    Mon, 07 Oct 2019 12:21:29 -07:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 08 Oct 2019 13:26:42 +02:00
 
-Gr{oetje,eeting}s,
+x86/cpu/vmware: Use the full form of INL in VMWARE_PORT
 
-                        Geert
+LLVM's assembler doesn't accept the short form INL instruction:
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+  inl (%%dx)
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+but instead insists on the output register to be explicitly specified:
+
+  <inline asm>:1:7: error: invalid operand for instruction
+          inl (%dx)
+             ^
+  LLVM ERROR: Error parsing inline asm
+
+Use the full form of the instruction to fix the build.
+
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Acked-by: Thomas Hellstrom <thellstrom@vmware.com>
+Cc: clang-built-linux@googlegroups.com
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: virtualization@lists.linux-foundation.org
+Cc: "VMware, Inc." <pv-drivers@vmware.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://github.com/ClangBuiltLinux/linux/issues/734
+Link: https://lkml.kernel.org/r/20191007192129.104336-1-samitolvanen@google.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/kernel/cpu/vmware.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/cpu/vmware.c b/arch/x86/kernel/cpu/vmware.c
+index 9735139..46d7326 100644
+--- a/arch/x86/kernel/cpu/vmware.c
++++ b/arch/x86/kernel/cpu/vmware.c
+@@ -49,7 +49,7 @@
+ #define VMWARE_CMD_VCPU_RESERVED 31
+ 
+ #define VMWARE_PORT(cmd, eax, ebx, ecx, edx)				\
+-	__asm__("inl (%%dx)" :						\
++	__asm__("inl (%%dx), %%eax" :					\
+ 		"=a"(eax), "=c"(ecx), "=d"(edx), "=b"(ebx) :		\
+ 		"a"(VMWARE_HYPERVISOR_MAGIC),				\
+ 		"c"(VMWARE_CMD_##cmd),					\
