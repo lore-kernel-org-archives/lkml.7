@@ -2,89 +2,156 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 748AEC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 107FFC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 476B220673
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:04:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE2F020673
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:09:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="MkG19wPi"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rqMjNPvD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730106AbfJHKEf (ORCPT
+        id S1730077AbfJHKJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 06:04:35 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:44841 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729893AbfJHKEf (ORCPT
+        Tue, 8 Oct 2019 06:09:20 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:55194 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728866AbfJHKJT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 06:04:35 -0400
-Received: by mail-qt1-f194.google.com with SMTP id u40so24292682qth.11
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 03:04:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=UHzh8Nd1pry2iT/DrbwRzV6vQa+dEjtAAEofF/MEC0w=;
-        b=MkG19wPiUYEy/cwH4FWAdJFeOjxTx/ih3bRy9Ft9HUqflgmrO8W2P9pWqLKz1W1Wpo
-         4zCmrzjYfRzNZDjPMBjwwFbFQfUrBq/Lm/ioydz+tHPfFO671FqVrp8VT2kjhoOxP3kP
-         j4COp8ThvUM1npokOcngJl8xj2iMg9P+Y+iI73OIqWpixBThtqR/uRWjyrWqxclnDhF4
-         DMdlK61gyjF41qEAfYtulkO1jWJAoqkOwpfRSJ3OAHgsoibpeTPqwXTkfk+LqLkMjVwm
-         m19jghQDsgEo87ss6InPPapN9RqVbvm1QdD+vopuB+KnT1eS/j0iAaf35z7eLBC+ljI8
-         oZQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=UHzh8Nd1pry2iT/DrbwRzV6vQa+dEjtAAEofF/MEC0w=;
-        b=C+57EL3vWwFI4CETIL9x/2caHpIgob5tklkcwx6cQVCs0YZ757ED6TRdS21t9U+ap4
-         coaiwSFmKitOuLWmk6AKfTtwDU+TBUeVorJzJDlOfa/t4Sq9DI5WSFOBupWKZ9nylvfK
-         NMpQxcMcnzmj6KWwQwg+DBPLphC0xMXrU5AC36IYM5M44gCqgHY66AlxR2nv/uMbFNKU
-         pQaR+iGiQKtOIsB2Ebl1kkNlWheElDiY95D6UlQH45/+EOpRbuPsOMAWbEWwcCQ7/NmC
-         zjblF7kdLpaybmxk+/u7ehm0sMtJJR37yDvFBwFZCJFAAEfBTz6go5DxffoE8ijrxF7Z
-         kwwg==
-X-Gm-Message-State: APjAAAUOdZWGFZv7Z99htE9rcdK9SAzLzV8sxuWk6qSXV04vdpmt++UV
-        dm+eg4z/Kj/VoViQmxix6AuAWg==
-X-Google-Smtp-Source: APXvYqw7c8QA+yozBt0uCvf/tfkuKfaIVAYplJEsYi/GpUQdwiDTaqs8uL3JR7XJ6WvUkOaVZ6eLnw==
-X-Received: by 2002:ac8:b41:: with SMTP id m1mr34691601qti.382.1570529074168;
-        Tue, 08 Oct 2019 03:04:34 -0700 (PDT)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id a36sm9356107qtk.21.2019.10.08.03.04.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Oct 2019 03:04:33 -0700 (PDT)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
-Date:   Tue, 8 Oct 2019 06:04:32 -0400
-Message-Id: <298970BD-529E-4095-8D87-61470ADBDD32@lca.pw>
-References: <20191008084031.GC6681@dhcp22.suse.cz>
-Cc:     Petr Mladek <pmladek@suse.com>, akpm@linux-foundation.org,
-        sergey.senozhatsky.work@gmail.com, rostedt@goodmis.org,
-        peterz@infradead.org, linux-mm@kvack.org,
-        john.ogness@linutronix.de, david@redhat.com,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191008084031.GC6681@dhcp22.suse.cz>
-To:     Michal Hocko <mhocko@kernel.org>
-X-Mailer: iPhone Mail (17A860)
+        Tue, 8 Oct 2019 06:09:19 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x98A937D068103;
+        Tue, 8 Oct 2019 05:09:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1570529344;
+        bh=FkNiIod96/3T2zF68YAgCCg2oYEqg3sIPlPb6RVQtJU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=rqMjNPvD+0W8D0F/WVHwVLj73f3VdnSnzzhobu03+GT+LpwtlmnElkM6+UnCNa2sw
+         8ybL4vocG5xUba642POMwE/IomSzf/qjbYfgZPXOQW3CKZ5Ig6SJZ4QNZP+PbL4K/R
+         8RJvjvO1x23sLcJ8v/RAtTk5F+ZLBrlCfGxQOyDE=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x98A9373015293;
+        Tue, 8 Oct 2019 05:09:03 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 8 Oct
+ 2019 05:09:00 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 8 Oct 2019 05:09:02 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x98A8xv6073491;
+        Tue, 8 Oct 2019 05:08:59 -0500
+Subject: Re: [PATCH v3 00/14] dmaengine/soc: Add Texas Instruments UDMA
+ support
+To:     <santosh.shilimkar@oracle.com>, <vkoul@kernel.org>,
+        <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
+References: <20191001061704.2399-1-peter.ujfalusi@ti.com>
+ <c567c1a2-2e74-3809-8e0f-4c2049ba4747@oracle.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <7dd18208-1ca5-c902-dc11-edbd4ded51ed@ti.com>
+Date:   Tue, 8 Oct 2019 13:09:52 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <c567c1a2-2e74-3809-8e0f-4c2049ba4747@oracle.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Santosh,
 
+On 04/10/2019 19.35, santosh.shilimkar@oracle.com wrote:
+> On 9/30/19 11:16 PM, Peter Ujfalusi wrote:
+>> Hi,
+>>
+>> Changes since v2
+>> )https://patchwork.kernel.org/project/linux-dmaengine/list/?series=152609&state=*)
+>>
+>> - Based on 5.4-rc1
+>> - Support for Flow only data transfer for the glue layer
+>>
+> 
+>>
+>> Grygorii Strashko (3):
+>>    bindings: soc: ti: add documentation for k3 ringacc
+>>    soc: ti: k3: add navss ringacc driver
+>>    dmaengine: ti: k3-udma: Add glue layer for non DMAengine users
+>>
+>> Peter Ujfalusi (11):
+>>    dmaengine: doc: Add sections for per descriptor metadata support
+>>    dmaengine: Add metadata_ops for dma_async_tx_descriptor
+>>    dmaengine: Add support for reporting DMA cached data amount
+>>    dmaengine: ti: Add cppi5 header for UDMA
+>>    dt-bindings: dma: ti: Add document for K3 UDMA
+>>    dmaengine: ti: New driver for K3 UDMA - split#1: defines, structs, io
+>>      func
+>>    dmaengine: ti: New driver for K3 UDMA - split#2: probe/remove, xlate
+>>      and filter_fn
+>>    dmaengine: ti: New driver for K3 UDMA - split#3: alloc/free
+>>      chan_resources
+>>    dmaengine: ti: New driver for K3 UDMA - split#4: dma_device callbacks
+>>      1
+>>    dmaengine: ti: New driver for K3 UDMA - split#5: dma_device callbacks
+>>      2
+>>    dmaengine: ti: New driver for K3 UDMA - split#6: Kconfig and Makefile
+>>
+>>   .../devicetree/bindings/dma/ti/k3-udma.txt    |  185 +
+>>   .../devicetree/bindings/soc/ti/k3-ringacc.txt |   59 +
+>>   Documentation/driver-api/dmaengine/client.rst |   75 +
+>>   .../driver-api/dmaengine/provider.rst         |   46 +
+>>   drivers/dma/dmaengine.c                       |   73 +
+>>   drivers/dma/dmaengine.h                       |    8 +
+>>   drivers/dma/ti/Kconfig                        |   22 +
+>>   drivers/dma/ti/Makefile                       |    2 +
+>>   drivers/dma/ti/k3-udma-glue.c                 | 1225 ++++++
+>>   drivers/dma/ti/k3-udma-private.c              |  141 +
+>>   drivers/dma/ti/k3-udma.c                      | 3525 +++++++++++++++++
+>>   drivers/dma/ti/k3-udma.h                      |  161 +
+>>   drivers/soc/ti/Kconfig                        |   12 +
+>>   drivers/soc/ti/Makefile                       |    1 +
+>>   drivers/soc/ti/k3-ringacc.c                   | 1165 ++++++
+>>   include/dt-bindings/dma/k3-udma.h             |   10 +
+>>   include/linux/dma/k3-udma-glue.h              |  134 +
+>>   include/linux/dma/ti-cppi5.h                  | 1049 +++++
+>>   include/linux/dmaengine.h                     |  110 +
+>>   include/linux/soc/ti/k3-ringacc.h             |  245 ++
+>>   20 files changed, 8248 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/dma/ti/k3-udma.txt
+>>   create mode 100644
+>> Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
+>>   create mode 100644 drivers/dma/ti/k3-udma-glue.c
+>>   create mode 100644 drivers/dma/ti/k3-udma-private.c
+>>   create mode 100644 drivers/dma/ti/k3-udma.c
+>>   create mode 100644 drivers/dma/ti/k3-udma.h
+>>   create mode 100644 drivers/soc/ti/k3-ringacc.c
+>>   create mode 100644 include/dt-bindings/dma/k3-udma.h
+>>   create mode 100644 include/linux/dma/k3-udma-glue.h
+>>   create mode 100644 include/linux/dma/ti-cppi5.h
+>>   create mode 100644 include/linux/soc/ti/k3-ringacc.h
+>>
+> Can you please split this series and post drivers/soc/* bits
+> separately ?  If its ready, I can apply k3-ringacc.c changes.
 
-> On Oct 8, 2019, at 4:40 AM, Michal Hocko <mhocko@kernel.org> wrote:
->=20
-> Does this tip point to a real deadlock or merely a class of lockdep
-> false dependencies?
+I'll wait couple of days for guys to check the series, then I can send
+the split out ringacc patches separately.
 
-I lean towards it is a real deadlock given how trivial to generate those loc=
-k orders everywhere. On the other hand, it make a little different to spend t=
-oo much time arguing the authentic of those reproducible locdep splats, as e=
-ven false positives could be as bad for developers where it would disable th=
-e whole lockdep and mask off other true deadlock could happen later.=
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
