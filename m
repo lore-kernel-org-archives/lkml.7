@@ -2,99 +2,300 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	TVD_SUBJ_WIPE_DEBT,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B04C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:38:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E0CC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B97BB218DE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:38:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570549117;
-	bh=gjdt14TlOZyesMNTH7/5zSE94bMrmk0OHHv7OXJGXaE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oodyK31oCPBgYueD6iwF/S2eDDIpg2JUlskOLAvgyBazL6MoSSa2MvjPv2YkVZIkT
-	 mInySGT76S3SJnszKoZAe10sxWPFuruE4tgGBtbjOoCpksMtgVPuGIDgHmHBhLqkf7
-	 KkTEbTPz1B4wGtqCrpP6fQtzTBLZ0pKfhBBSxhZY=
+	by mail.kernel.org (Postfix) with ESMTP id AD05C21721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:38:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727476AbfJHPih (ORCPT
+        id S1727798AbfJHPik (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 11:38:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45858 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725908AbfJHPig (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 11:38:36 -0400
-Received: from localhost (unknown [89.205.136.99])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02E902070B;
-        Tue,  8 Oct 2019 15:38:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570549114;
-        bh=gjdt14TlOZyesMNTH7/5zSE94bMrmk0OHHv7OXJGXaE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=g6Hw1hA8MaxUCugwMm+KqWjnL4ueUeMaByU1o/g241xDYq/YvMvFCndcGgL6KBg/C
-         CHK3kljSd/j9kMjl7/uRDDwzU2ShSfUUaXtN72uf53LWFMLpVY0qDHQRe7XZu0H+F7
-         SbqoQhju7xWNE5hakgvm6d5VXqDy9Jl7ziRTVI9k=
-Date:   Tue, 8 Oct 2019 17:38:31 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to
- unsafe_put_user()
-Message-ID: <20191008153831.GA2881123@kroah.com>
-References: <20191007012437.GK26530@ZenIV.linux.org.uk>
- <CAHk-=whKJfX579+2f-CHc4_YmEmwvMe_Csr0+CPfLAsSAdfDoA@mail.gmail.com>
- <20191007025046.GL26530@ZenIV.linux.org.uk>
- <CAHk-=whraNSys_Lj=Ut1EA=CJEfw2Uothh+5-WL+7nDJBegWcQ@mail.gmail.com>
- <CAHk-=witTXMGsc9ZAK4hnKnd_O7u8b1eiou-6cfjt4aOcWvruQ@mail.gmail.com>
- <20191008032912.GQ26530@ZenIV.linux.org.uk>
- <CAHk-=wiAyZmsEp6oQQgHiuaDU0bLj=OVHSGV_OfvHRSXNPYABw@mail.gmail.com>
- <20191008045712.GR26530@ZenIV.linux.org.uk>
- <20191008131416.GA2860109@kroah.com>
- <20191008152900.GT26530@ZenIV.linux.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191008152900.GT26530@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Tue, 8 Oct 2019 11:38:40 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:60913 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725908AbfJHPij (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 11:38:39 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1iHrZK-00059h-UJ; Tue, 08 Oct 2019 15:38:35 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     jikos@kernel.org, benjamin.tissoires@redhat.com
+Cc:     hdegoede@redhat.com, vicamo.yang@canonical.com,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH] HID: i2c-hid: Remove runtime power management
+Date:   Tue,  8 Oct 2019 23:38:29 +0800
+Message-Id: <20191008153829.24766-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 04:29:00PM +0100, Al Viro wrote:
-> On Tue, Oct 08, 2019 at 03:14:16PM +0200, Greg KH wrote:
-> > On Tue, Oct 08, 2019 at 05:57:12AM +0100, Al Viro wrote:
-> > > 
-> > > 	OK...  BTW, do you agree that the use of access_ok() in
-> > > drivers/tty/n_hdlc.c:n_hdlc_tty_read() is wrong?  It's used as an early
-> > > cutoff, so we don't bother waiting if user has passed an obviously bogus
-> > > address.  copy_to_user() is used for actual copying there...
-> > 
-> > Yes, it's wrong, and not needed.  I'll go rip it out unless you want to?
-> 
-> I'll throw it into misc queue for now; it has no prereqs and nothing is going
-> to depend upon it.
+Runtime power management in i2c-hid brings lots of issues, such as:
+- When transitioning from display manager to desktop session, i2c-hid
+was closed and opened, so the device was set to SLEEP and ON in a short
+period. Vendors confirmed that their devices can't handle fast ON/SLEEP
+command because Windows doesn't have this behavior.
 
-Great, thanks.
+- When rebooting, i2c-hid was closed, and the driver core put the device
+back to full power before shutdown. This behavior also triggers a quick
+SLEEP and ON commands that some devices can't handle, renders an
+unusable touchpad after reboot.
 
-> While looking for more of the same pattern: usb_device_read().  Frankly,
-> usb_device_dump() calling conventions look ugly - it smells like it
-> would be much happier as seq_file.  Iterator would take some massage,
-> but that seems to be doable.  Anyway, that's a separate story...
+- Runtime power management is only useful when i2c-hid isn't opened,
+i.e. a laptop without desktop session, which isn't that common.
 
-That's just a debugfs file, and yes, it should be moved to seq_file.  I
-think I tried it a long time ago, but given it's just a debugging thing,
-I gave up as it wasn't worth it.
+- Most importantly, my power meter reports little to none energy saving
+when i2c-hid is runtime suspended.
 
-But yes, the access_ok() there also seems odd, and should be dropped.
+So let's remove runtime power management since there is no actual
+benefit.
 
-thanks,
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/hid/i2c-hid/i2c-hid-core.c | 111 ++---------------------------
+ 1 file changed, 4 insertions(+), 107 deletions(-)
 
-greg k-h
+diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
+index 2a7c6e33bb1c..5ab4982b3a7b 100644
+--- a/drivers/hid/i2c-hid/i2c-hid-core.c
++++ b/drivers/hid/i2c-hid/i2c-hid-core.c
+@@ -26,7 +26,6 @@
+ #include <linux/delay.h>
+ #include <linux/slab.h>
+ #include <linux/pm.h>
+-#include <linux/pm_runtime.h>
+ #include <linux/device.h>
+ #include <linux/wait.h>
+ #include <linux/err.h>
+@@ -48,8 +47,6 @@
+ /* quirks to control the device */
+ #define I2C_HID_QUIRK_SET_PWR_WAKEUP_DEV	BIT(0)
+ #define I2C_HID_QUIRK_NO_IRQ_AFTER_RESET	BIT(1)
+-#define I2C_HID_QUIRK_NO_RUNTIME_PM		BIT(2)
+-#define I2C_HID_QUIRK_DELAY_AFTER_SLEEP		BIT(3)
+ #define I2C_HID_QUIRK_BOGUS_IRQ			BIT(4)
+ 
+ /* flags */
+@@ -172,14 +169,7 @@ static const struct i2c_hid_quirks {
+ 	{ USB_VENDOR_ID_WEIDA, HID_ANY_ID,
+ 		I2C_HID_QUIRK_SET_PWR_WAKEUP_DEV },
+ 	{ I2C_VENDOR_ID_HANTICK, I2C_PRODUCT_ID_HANTICK_5288,
+-		I2C_HID_QUIRK_NO_IRQ_AFTER_RESET |
+-		I2C_HID_QUIRK_NO_RUNTIME_PM },
+-	{ I2C_VENDOR_ID_RAYDIUM, I2C_PRODUCT_ID_RAYDIUM_4B33,
+-		I2C_HID_QUIRK_DELAY_AFTER_SLEEP },
+-	{ USB_VENDOR_ID_LG, I2C_DEVICE_ID_LG_8001,
+-		I2C_HID_QUIRK_NO_RUNTIME_PM },
+-	{ I2C_VENDOR_ID_GOODIX, I2C_DEVICE_ID_GOODIX_01F0,
+-		I2C_HID_QUIRK_NO_RUNTIME_PM },
++		I2C_HID_QUIRK_NO_IRQ_AFTER_RESET },
+ 	{ USB_VENDOR_ID_ELAN, HID_ANY_ID,
+ 		 I2C_HID_QUIRK_BOGUS_IRQ },
+ 	{ 0, 0 }
+@@ -397,7 +387,6 @@ static int i2c_hid_set_power(struct i2c_client *client, int power_state)
+ {
+ 	struct i2c_hid *ihid = i2c_get_clientdata(client);
+ 	int ret;
+-	unsigned long now, delay;
+ 
+ 	i2c_hid_dbg(ihid, "%s\n", __func__);
+ 
+@@ -415,22 +404,9 @@ static int i2c_hid_set_power(struct i2c_client *client, int power_state)
+ 			goto set_pwr_exit;
+ 	}
+ 
+-	if (ihid->quirks & I2C_HID_QUIRK_DELAY_AFTER_SLEEP &&
+-	    power_state == I2C_HID_PWR_ON) {
+-		now = jiffies;
+-		if (time_after(ihid->sleep_delay, now)) {
+-			delay = jiffies_to_usecs(ihid->sleep_delay - now);
+-			usleep_range(delay, delay + 1);
+-		}
+-	}
+-
+ 	ret = __i2c_hid_command(client, &hid_set_power_cmd, power_state,
+ 		0, NULL, 0, NULL, 0);
+ 
+-	if (ihid->quirks & I2C_HID_QUIRK_DELAY_AFTER_SLEEP &&
+-	    power_state == I2C_HID_PWR_SLEEP)
+-		ihid->sleep_delay = jiffies + msecs_to_jiffies(20);
+-
+ 	if (ret)
+ 		dev_err(&client->dev, "failed to change power setting.\n");
+ 
+@@ -791,11 +767,6 @@ static int i2c_hid_open(struct hid_device *hid)
+ {
+ 	struct i2c_client *client = hid->driver_data;
+ 	struct i2c_hid *ihid = i2c_get_clientdata(client);
+-	int ret = 0;
+-
+-	ret = pm_runtime_get_sync(&client->dev);
+-	if (ret < 0)
+-		return ret;
+ 
+ 	set_bit(I2C_HID_STARTED, &ihid->flags);
+ 	return 0;
+@@ -807,27 +778,6 @@ static void i2c_hid_close(struct hid_device *hid)
+ 	struct i2c_hid *ihid = i2c_get_clientdata(client);
+ 
+ 	clear_bit(I2C_HID_STARTED, &ihid->flags);
+-
+-	/* Save some power */
+-	pm_runtime_put(&client->dev);
+-}
+-
+-static int i2c_hid_power(struct hid_device *hid, int lvl)
+-{
+-	struct i2c_client *client = hid->driver_data;
+-	struct i2c_hid *ihid = i2c_get_clientdata(client);
+-
+-	i2c_hid_dbg(ihid, "%s lvl:%d\n", __func__, lvl);
+-
+-	switch (lvl) {
+-	case PM_HINT_FULLON:
+-		pm_runtime_get_sync(&client->dev);
+-		break;
+-	case PM_HINT_NORMAL:
+-		pm_runtime_put(&client->dev);
+-		break;
+-	}
+-	return 0;
+ }
+ 
+ struct hid_ll_driver i2c_hid_ll_driver = {
+@@ -836,7 +786,6 @@ struct hid_ll_driver i2c_hid_ll_driver = {
+ 	.stop = i2c_hid_stop,
+ 	.open = i2c_hid_open,
+ 	.close = i2c_hid_close,
+-	.power = i2c_hid_power,
+ 	.output_report = i2c_hid_output_report,
+ 	.raw_request = i2c_hid_raw_request,
+ };
+@@ -1104,9 +1053,6 @@ static int i2c_hid_probe(struct i2c_client *client,
+ 
+ 	i2c_hid_acpi_fix_up_power(&client->dev);
+ 
+-	pm_runtime_get_noresume(&client->dev);
+-	pm_runtime_set_active(&client->dev);
+-	pm_runtime_enable(&client->dev);
+ 	device_enable_async_suspend(&client->dev);
+ 
+ 	/* Make sure there is something at this address */
+@@ -1154,9 +1100,6 @@ static int i2c_hid_probe(struct i2c_client *client,
+ 		goto err_mem_free;
+ 	}
+ 
+-	if (!(ihid->quirks & I2C_HID_QUIRK_NO_RUNTIME_PM))
+-		pm_runtime_put(&client->dev);
+-
+ 	return 0;
+ 
+ err_mem_free:
+@@ -1166,9 +1109,6 @@ static int i2c_hid_probe(struct i2c_client *client,
+ 	free_irq(client->irq, ihid);
+ 
+ err_pm:
+-	pm_runtime_put_noidle(&client->dev);
+-	pm_runtime_disable(&client->dev);
+-
+ err_regulator:
+ 	regulator_bulk_disable(ARRAY_SIZE(ihid->pdata.supplies),
+ 			       ihid->pdata.supplies);
+@@ -1181,12 +1121,6 @@ static int i2c_hid_remove(struct i2c_client *client)
+ 	struct i2c_hid *ihid = i2c_get_clientdata(client);
+ 	struct hid_device *hid;
+ 
+-	if (!(ihid->quirks & I2C_HID_QUIRK_NO_RUNTIME_PM))
+-		pm_runtime_get_sync(&client->dev);
+-	pm_runtime_disable(&client->dev);
+-	pm_runtime_set_suspended(&client->dev);
+-	pm_runtime_put_noidle(&client->dev);
+-
+ 	hid = ihid->hid;
+ 	hid_destroy_device(hid);
+ 
+@@ -1219,25 +1153,15 @@ static int i2c_hid_suspend(struct device *dev)
+ 	int wake_status;
+ 
+ 	if (hid->driver && hid->driver->suspend) {
+-		/*
+-		 * Wake up the device so that IO issues in
+-		 * HID driver's suspend code can succeed.
+-		 */
+-		ret = pm_runtime_resume(dev);
+-		if (ret < 0)
+-			return ret;
+-
+ 		ret = hid->driver->suspend(hid, PMSG_SUSPEND);
+ 		if (ret < 0)
+ 			return ret;
+ 	}
+ 
+-	if (!pm_runtime_suspended(dev)) {
+-		/* Save some power */
+-		i2c_hid_set_power(client, I2C_HID_PWR_SLEEP);
++	/* Save some power */
++	i2c_hid_set_power(client, I2C_HID_PWR_SLEEP);
+ 
+-		disable_irq(client->irq);
+-	}
++	disable_irq(client->irq);
+ 
+ 	if (device_may_wakeup(&client->dev)) {
+ 		wake_status = enable_irq_wake(client->irq);
+@@ -1279,11 +1203,6 @@ static int i2c_hid_resume(struct device *dev)
+ 				wake_status);
+ 	}
+ 
+-	/* We'll resume to full power */
+-	pm_runtime_disable(dev);
+-	pm_runtime_set_active(dev);
+-	pm_runtime_enable(dev);
+-
+ 	enable_irq(client->irq);
+ 
+ 	/* Instead of resetting device, simply powers the device on. This
+@@ -1304,30 +1223,8 @@ static int i2c_hid_resume(struct device *dev)
+ }
+ #endif
+ 
+-#ifdef CONFIG_PM
+-static int i2c_hid_runtime_suspend(struct device *dev)
+-{
+-	struct i2c_client *client = to_i2c_client(dev);
+-
+-	i2c_hid_set_power(client, I2C_HID_PWR_SLEEP);
+-	disable_irq(client->irq);
+-	return 0;
+-}
+-
+-static int i2c_hid_runtime_resume(struct device *dev)
+-{
+-	struct i2c_client *client = to_i2c_client(dev);
+-
+-	enable_irq(client->irq);
+-	i2c_hid_set_power(client, I2C_HID_PWR_ON);
+-	return 0;
+-}
+-#endif
+-
+ static const struct dev_pm_ops i2c_hid_pm = {
+ 	SET_SYSTEM_SLEEP_PM_OPS(i2c_hid_suspend, i2c_hid_resume)
+-	SET_RUNTIME_PM_OPS(i2c_hid_runtime_suspend, i2c_hid_runtime_resume,
+-			   NULL)
+ };
+ 
+ static const struct i2c_device_id i2c_hid_id_table[] = {
+-- 
+2.17.1
+
