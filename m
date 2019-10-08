@@ -2,78 +2,86 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5FBC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A94C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A83AC2070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:16:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE03E2070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:18:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570547792;
-	bh=HBPyM3fbQmTRXscejMZaaT3oltRHFHQ/AKn9AwmsNPM=;
+	s=default; t=1570547882;
+	bh=pu15L9RwUEae6WQjWmvYaOl1fDYuNLf8hrqu5nJEfk0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=O33D0nScmEgDT4cdrVgx3d+vD8zPM7c6oSTVvUKGvay1CL9ZKN5rQ+3pdjBJvnJyh
-	 386LRUoEqoG2Q5c/kH59GiJ1HJztYZUvUQvK5ewB6JEONoAQfbgtXjbrFS4DdrhmVW
-	 d/QY5LNaxqitBmlshMi2K39p97O+nB2lCMyy3uNc=
+	b=thqWiYyevHm4DyvebAk6TbLWi2Ypvl9CpWS/nF0U96EptT6WoAx/+Khz5wBEjSrDQ
+	 3WoswKPncY/DQcAjkaZgbOWWu+rQuV7r12pUybwFXBceGRqnBCKhh2XqhktH4WfsyN
+	 t2z2Sz7fhm+swtxSQnA8rRtILyndh9HTB6ElJHRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727861AbfJHPQc (ORCPT
+        id S1728054AbfJHPSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 11:16:32 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:47048 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726291AbfJHPQb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 11:16:31 -0400
-Received: by mail-pg1-f196.google.com with SMTP id b8so4058768pgm.13
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 08:16:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HBPyM3fbQmTRXscejMZaaT3oltRHFHQ/AKn9AwmsNPM=;
-        b=RDQDDpTGcJ+CU5oG20pFY3+f/912vgZHPuOBlJgUk1GvQDsUpfZWJBhtrPPKHGfKin
-         c5AdPIUJyuSFtv4Ck3+oddWe8kHzE2HPZDNDS+7KJmU8uLuldtt7ZDdvCtovD0E8VbrN
-         btPCwrL3cx9q+KOhIImmLCHtb+dFYgRngz/lyeNtpz0fdmTtEbdk7+Fz3SCLciVUP8iF
-         FOMIIRUR+k/RWlUzyE/tzCGnpQtp9VJl/Vx/3M0b8oGasvTFtiehokX7qML5vIXF4rc5
-         4aa50AzB2ptrVVEy6mvF0FrXSQg268RXPTed+3GNECqZM2flg+XDeq16K0Nqpm/XlsWf
-         +KjA==
-X-Gm-Message-State: APjAAAX0c8biphVW0Rpa9j8l9hLOVy4CF9wLPEdY5faNGKTGRdUzdxhd
-        Sgx+OpiwKwkjVNPpXDxeu6lpbGmmIKg=
-X-Google-Smtp-Source: APXvYqxL4tqZxI7W5Qba4JPc57Aq4UBeRh411inoIg4ZNNcMTEOzHxTu5bSzWPdCj/QC8rP4guJXAg==
-X-Received: by 2002:a17:90a:8001:: with SMTP id b1mr6336570pjn.10.1570547790809;
-        Tue, 08 Oct 2019 08:16:30 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id e21sm13287017pgk.57.2019.10.08.08.16.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2019 08:16:29 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id D3FE140255; Tue,  8 Oct 2019 15:16:28 +0000 (UTC)
-Date:   Tue, 8 Oct 2019 15:16:28 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Tuowen Zhao <ztuowen@gmail.com>
-Cc:     lee.jones@linaro.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
-        acelan.kao@canonical.com, bhelgaas@google.com,
-        kai.heng.feng@canonical.com
-Subject: Re: [PATCH v2] mfd: intel-lpss: use devm_ioremap_uc for MMIO
-Message-ID: <20191008151628.GA16384@42.do-not-panic.com>
-References: <20191007184231.13256-1-ztuowen@gmail.com>
+        Tue, 8 Oct 2019 11:18:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41156 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725839AbfJHPSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 11:18:01 -0400
+Received: from localhost (unknown [89.205.136.99])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A90B206C0;
+        Tue,  8 Oct 2019 15:18:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570547881;
+        bh=pu15L9RwUEae6WQjWmvYaOl1fDYuNLf8hrqu5nJEfk0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nbDY0sw3u8LA9uVR+RmMolTPUQLU5DB8aI9i9TF3dGYpFQhqnUeT/54uJWyK/mNqO
+         kz0nOuGyL9sDpstiPmnATSUxHBffFQVE5OjbVpMSBT2TJ04F1YSwPhkJ/cmwU9DkgB
+         tW+/Za3J9e5uxhxKvWPyqfl23hR+7nPyjbnBzU0Q=
+Date:   Tue, 8 Oct 2019 17:17:57 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Charlene Liu <charlene.liu@amd.com>,
+        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 033/106] drm/amd/display: support spdif
+Message-ID: <20191008151757.GB2872679@kroah.com>
+References: <20191006171124.641144086@linuxfoundation.org>
+ <20191006171140.114447492@linuxfoundation.org>
+ <20191008133741.GG608@amd>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191007184231.13256-1-ztuowen@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191008133741.GG608@amd>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 12:42:31PM -0600, Tuowen Zhao wrote:
-> +EXPORT_SYMBOL(devm_ioremap_uc);
+On Tue, Oct 08, 2019 at 03:37:41PM +0200, Pavel Machek wrote:
+> Hi!
+> 
+> > [ Upstream commit b5a41620bb88efb9fb31a4fa5e652e3d5bead7d4 ]
+> > 
+> > [Description]
+> > port spdif fix to staging:
+> >  spdif hardwired to afmt inst 1.
+> >  spdif func pointer
+> >  spdif resource allocation (reserve last audio endpoint for spdif only)
+> 
+> I'm sorry, but I don't understand this changelog. Code below modifies
+> whitespace, adds a debug output, and uses local variable for
+> pool->audio_count.
+> 
+> Does not seem to be a bugfix, and does not seem to do anything with
+> staging.
 
-EXPORT_SYMBOL_GPL() would be my preference.
+That's what the original changelog had in it, so I kept it.
 
- Luis
+thanks,
+
+greg k-h
