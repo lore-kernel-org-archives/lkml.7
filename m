@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A83ECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 274E8C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7CDC2070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:15:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9F1021929
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:15:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="CHMVWjyy"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="UGyHthrR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729989AbfJHJPY (ORCPT
+        id S1730325AbfJHJP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 05:15:24 -0400
-Received: from pio-pvt-msa1.bahnhof.se ([79.136.2.40]:46120 "EHLO
-        pio-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728866AbfJHJPX (ORCPT
+        Tue, 8 Oct 2019 05:15:56 -0400
+Received: from ste-pvt-msa1.bahnhof.se ([213.80.101.70]:14550 "EHLO
+        ste-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729740AbfJHJPY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 05:15:23 -0400
+        Tue, 8 Oct 2019 05:15:24 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 79BE83F787;
-        Tue,  8 Oct 2019 11:15:21 +0200 (CEST)
-Authentication-Results: pio-pvt-msa1.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b="CHMVWjyy";
+        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id F2AF63F6B4;
+        Tue,  8 Oct 2019 11:15:20 +0200 (CEST)
+Authentication-Results: ste-pvt-msa1.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=UGyHthrR;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa1.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id COAn5xUjmjkU; Tue,  8 Oct 2019 11:15:20 +0200 (CEST)
+Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
+        by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id x7Op6IdZToQ2; Tue,  8 Oct 2019 11:15:20 +0200 (CEST)
 Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
         (Authenticated sender: mb878879)
-        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 1B41D3F59D;
-        Tue,  8 Oct 2019 11:15:17 +0200 (CEST)
+        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 3737B3F673;
+        Tue,  8 Oct 2019 11:15:19 +0200 (CEST)
 Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id A16BB3605DC;
-        Tue,  8 Oct 2019 11:15:17 +0200 (CEST)
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 5D9A7360FCF;
+        Tue,  8 Oct 2019 11:15:18 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1570526117; bh=cWWLN8IyL/PIrg0tjEE8pDhLTEss1yQM1iEt6Room1s=;
+        t=1570526118; bh=bx8eG09waI9JD3lCmO6ixUtN4UOAIiobzckYp+RwK+E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CHMVWjyymcO57wjd2bv9bPjkIzsm7+YRzfsVkGqFCn3rOzHnWRNa1hy3ECnnK/S56
-         fIEu8ZxmY4ivhNnsGEe+GL4Qi+WuSePxGOKG2Yl+v0a6LMcMBoMgbKzWpo+tnkrFwe
-         ehwinB/VzkQvGI3zXl5wxaUvKKFPOa7iLymr7dfc=
+        b=UGyHthrRM8Ty83dHf/2wxPKr3h0GCbukcY0YVrYrDQKnmQAfx/eTR6nS7nPRw+IG2
+         W/RedGhIGabPjcrWD5MMsk/DF68iI2/tgUUl1dF5JPQYBhO/5t5R0pyVXSXie8hTGy
+         HG2PlvMaSgL7IZBxF3MXkfyzE/121PHNNqNzv16I=
 From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
         <thomas_os@shipmail.org>
 To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
 Cc:     torvalds@linux-foundation.org,
         Thomas Hellstrom <thellstrom@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Matthew Wilcox <willy@infradead.org>,
         Will Deacon <will.deacon@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -59,10 +60,11 @@ Cc:     torvalds@linux-foundation.org,
         Michal Hocko <mhocko@suse.com>,
         Huang Ying <ying.huang@intel.com>,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>
-Subject: [PATCH v4 3/9] mm: pagewalk: Don't split transhuge pmds when a pmd_entry is present
-Date:   Tue,  8 Oct 2019 11:15:02 +0200
-Message-Id: <20191008091508.2682-4-thomas_os@shipmail.org>
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Deepak Rawat <drawat@vmware.com>
+Subject: [PATCH v4 7/9] drm/vmwgfx: Use an RBtree instead of linked list for MOB resources
+Date:   Tue,  8 Oct 2019 11:15:06 +0200
+Message-Id: <20191008091508.2682-8-thomas_os@shipmail.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191008091508.2682-1-thomas_os@shipmail.org>
 References: <20191008091508.2682-1-thomas_os@shipmail.org>
@@ -76,19 +78,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Hellstrom <thellstrom@vmware.com>
 
-The pagewalk code was unconditionally splitting transhuge pmds when a
-pte_entry was present. However ideally we'd want to handle transhuge pmds
-in the pmd_entry function and ptes in pte_entry function. So don't split
-huge pmds when there is a pmd_entry function present, but let the callback
-take care of it if necessary.
+With emulated coherent memory we need to be able to quickly look up
+a resource from the MOB offset. Instead of traversing a linked list with
+O(n) worst case, use an RBtree with O(log n) worst case complexity.
 
-In order to make sure a virtual address range is handled by one and only
-one callback, and since pmd entries may be unstable, we introduce a
-pmd_entry return code that tells the walk code to continue processing this
-pmd entry rather than to move on. Since caller-defined positive return
-codes (up to 2) are used by current callers, use a high value that allows a
-large range of positive caller-defined return codes for future users.
-
+Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Matthew Wilcox <willy@infradead.org>
 Cc: Will Deacon <will.deacon@arm.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
@@ -98,96 +92,172 @@ Cc: Michal Hocko <mhocko@suse.com>
 Cc: Huang Ying <ying.huang@intel.com>
 Cc: Jérôme Glisse <jglisse@redhat.com>
 Cc: Kirill A. Shutemov <kirill@shutemov.name>
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+Reviewed-by: Deepak Rawat <drawat@vmware.com>
 ---
- include/linux/pagewalk.h |  8 ++++++++
- mm/pagewalk.c            | 28 +++++++++++++++++++++-------
- 2 files changed, 29 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/vmwgfx/vmwgfx_bo.c       |  5 ++--
+ drivers/gpu/drm/vmwgfx/vmwgfx_drv.h      | 10 +++----
+ drivers/gpu/drm/vmwgfx/vmwgfx_resource.c | 33 +++++++++++++++++-------
+ 3 files changed, 32 insertions(+), 16 deletions(-)
 
-diff --git a/include/linux/pagewalk.h b/include/linux/pagewalk.h
-index bddd9759bab9..c4a013eb445d 100644
---- a/include/linux/pagewalk.h
-+++ b/include/linux/pagewalk.h
-@@ -4,6 +4,11 @@
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_bo.c b/drivers/gpu/drm/vmwgfx/vmwgfx_bo.c
+index 869aeaec2f86..18e4b329e563 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_bo.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_bo.c
+@@ -463,6 +463,7 @@ void vmw_bo_bo_free(struct ttm_buffer_object *bo)
+ 	struct vmw_buffer_object *vmw_bo = vmw_buffer_object(bo);
  
- #include <linux/mm.h>
+ 	WARN_ON(vmw_bo->dirty);
++	WARN_ON(!RB_EMPTY_ROOT(&vmw_bo->res_tree));
+ 	vmw_bo_unmap(vmw_bo);
+ 	kfree(vmw_bo);
+ }
+@@ -479,6 +480,7 @@ static void vmw_user_bo_destroy(struct ttm_buffer_object *bo)
+ 	struct vmw_buffer_object *vbo = &vmw_user_bo->vbo;
  
-+/* Highest positive pmd_entry caller-specific return value */
-+#define PAGE_WALK_CALLER_MAX     (INT_MAX / 2)
-+/* The handler did not handle the entry. Fall back to the next level */
-+#define PAGE_WALK_FALLBACK       (PAGE_WALK_CALLER_MAX + 1)
-+
- struct mm_walk;
+ 	WARN_ON(vbo->dirty);
++	WARN_ON(!RB_EMPTY_ROOT(&vbo->res_tree));
+ 	vmw_bo_unmap(vbo);
+ 	ttm_prime_object_kfree(vmw_user_bo, prime);
+ }
+@@ -514,8 +516,7 @@ int vmw_bo_init(struct vmw_private *dev_priv,
+ 	memset(vmw_bo, 0, sizeof(*vmw_bo));
+ 	BUILD_BUG_ON(TTM_MAX_BO_PRIORITY <= 3);
+ 	vmw_bo->base.priority = 3;
+-
+-	INIT_LIST_HEAD(&vmw_bo->res_list);
++	vmw_bo->res_tree = RB_ROOT;
+ 
+ 	ret = ttm_bo_init(bdev, &vmw_bo->base, size,
+ 			  ttm_bo_type_device, placement,
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
+index 7944dbbbdd72..53f8522ae032 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
+@@ -100,7 +100,7 @@ struct vmw_fpriv {
+ /**
+  * struct vmw_buffer_object - TTM buffer object with vmwgfx additions
+  * @base: The TTM buffer object
+- * @res_list: List of resources using this buffer object as a backing MOB
++ * @res_tree: RB tree of resources using this buffer object as a backing MOB
+  * @pin_count: pin depth
+  * @dx_query_ctx: DX context if this buffer object is used as a DX query MOB
+  * @map: Kmap object for semi-persistent mappings
+@@ -109,7 +109,7 @@ struct vmw_fpriv {
+  */
+ struct vmw_buffer_object {
+ 	struct ttm_buffer_object base;
+-	struct list_head res_list;
++	struct rb_root res_tree;
+ 	s32 pin_count;
+ 	/* Not ref-counted.  Protected by binding_mutex */
+ 	struct vmw_resource *dx_query_ctx;
+@@ -157,8 +157,8 @@ struct vmw_res_func;
+  * pin-count greater than zero. It is not on the resource LRU lists and its
+  * backup buffer is pinned. Hence it can't be evicted.
+  * @func: Method vtable for this resource. Immutable.
++ * @mob_node; Node for the MOB backup rbtree. Protected by @backup reserved.
+  * @lru_head: List head for the LRU list. Protected by @dev_priv::resource_lock.
+- * @mob_head: List head for the MOB backup list. Protected by @backup reserved.
+  * @binding_head: List head for the context binding list. Protected by
+  * the @dev_priv::binding_mutex
+  * @res_free: The resource destructor.
+@@ -179,8 +179,8 @@ struct vmw_resource {
+ 	unsigned long backup_offset;
+ 	unsigned long pin_count;
+ 	const struct vmw_res_func *func;
++	struct rb_node mob_node;
+ 	struct list_head lru_head;
+-	struct list_head mob_head;
+ 	struct list_head binding_head;
+ 	struct vmw_resource_dirty *dirty;
+ 	void (*res_free) (struct vmw_resource *res);
+@@ -733,7 +733,7 @@ void vmw_resource_dirty_update(struct vmw_resource *res, pgoff_t start,
+  */
+ static inline bool vmw_resource_mob_attached(const struct vmw_resource *res)
+ {
+-	return !list_empty(&res->mob_head);
++	return !RB_EMPTY_NODE(&res->mob_node);
+ }
  
  /**
-@@ -16,6 +21,9 @@ struct mm_walk;
-  *			this handler is required to be able to handle
-  *			pmd_trans_huge() pmds.  They may simply choose to
-  *			split_huge_page() instead of handling it explicitly.
-+ *                      If the handler did not handle the PMD, or split the
-+ *                      PMD and wants it handled by the PTE handler, it
-+ *                      should return PAGE_WALK_FALLBACK.
-  * @pte_entry:		if set, called for each non-empty PTE (4th-level) entry
-  * @pte_hole:		if set, called for each hole at all levels
-  * @hugetlb_entry:	if set, called for each hugetlb entry
-diff --git a/mm/pagewalk.c b/mm/pagewalk.c
-index 83c0b78363b4..f844c2a2aa60 100644
---- a/mm/pagewalk.c
-+++ b/mm/pagewalk.c
-@@ -50,10 +50,18 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
- 		 * This implies that each ->pmd_entry() handler
- 		 * needs to know about pmd_trans_huge() pmds
- 		 */
--		if (ops->pmd_entry)
-+		if (ops->pmd_entry) {
- 			err = ops->pmd_entry(pmd, addr, next, walk);
--		if (err)
--			break;
-+			if (!err)
-+				continue;
-+			else if (err <= PAGE_WALK_CALLER_MAX)
-+				break;
-+			WARN_ON(err != PAGE_WALK_FALLBACK);
-+			err = 0;
-+			if (pmd_trans_unstable(pmd))
-+				goto again;
-+			/* Fall through */
-+		}
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_resource.c b/drivers/gpu/drm/vmwgfx/vmwgfx_resource.c
+index e4c97a4cf2ff..328ad46076ff 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_resource.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_resource.c
+@@ -40,11 +40,24 @@
+ void vmw_resource_mob_attach(struct vmw_resource *res)
+ {
+ 	struct vmw_buffer_object *backup = res->backup;
++	struct rb_node **new = &backup->res_tree.rb_node, *parent = NULL;
  
- 		/*
- 		 * Check this here so we only break down trans_huge
-@@ -61,8 +69,8 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
- 		 */
- 		if (!ops->pte_entry)
- 			continue;
+ 	dma_resv_assert_held(res->backup->base.base.resv);
+ 	res->used_prio = (res->res_dirty) ? res->func->dirty_prio :
+ 		res->func->prio;
+-	list_add_tail(&res->mob_head, &backup->res_list);
++
++	while (*new) {
++		struct vmw_resource *this =
++			container_of(*new, struct vmw_resource, mob_node);
++
++		parent = *new;
++		new = (res->backup_offset < this->backup_offset) ?
++			&((*new)->rb_left) : &((*new)->rb_right);
++	}
++
++	rb_link_node(&res->mob_node, parent, new);
++	rb_insert_color(&res->mob_node, &backup->res_tree);
++
+ 	vmw_bo_prio_add(backup, res->used_prio);
+ }
+ 
+@@ -58,7 +71,8 @@ void vmw_resource_mob_detach(struct vmw_resource *res)
+ 
+ 	dma_resv_assert_held(backup->base.base.resv);
+ 	if (vmw_resource_mob_attached(res)) {
+-		list_del_init(&res->mob_head);
++		rb_erase(&res->mob_node, &backup->res_tree);
++		RB_CLEAR_NODE(&res->mob_node);
+ 		vmw_bo_prio_del(backup, res->used_prio);
+ 	}
+ }
+@@ -204,8 +218,8 @@ int vmw_resource_init(struct vmw_private *dev_priv, struct vmw_resource *res,
+ 	res->res_free = res_free;
+ 	res->dev_priv = dev_priv;
+ 	res->func = func;
++	RB_CLEAR_NODE(&res->mob_node);
+ 	INIT_LIST_HEAD(&res->lru_head);
+-	INIT_LIST_HEAD(&res->mob_head);
+ 	INIT_LIST_HEAD(&res->binding_head);
+ 	res->id = -1;
+ 	res->backup = NULL;
+@@ -754,19 +768,20 @@ int vmw_resource_validate(struct vmw_resource *res, bool intr)
+  */
+ void vmw_resource_unbind_list(struct vmw_buffer_object *vbo)
+ {
 -
--		split_huge_pmd(walk->vma, pmd, addr);
-+		if (!ops->pmd_entry)
-+			split_huge_pmd(walk->vma, pmd, addr);
- 		if (pmd_trans_unstable(pmd))
- 			goto again;
- 		err = walk_pte_range(pmd, addr, next, walk);
-@@ -281,11 +289,17 @@ static int __walk_page_range(unsigned long start, unsigned long end,
-  *
-  *  - 0  : succeeded to handle the current entry, and if you don't reach the
-  *         end address yet, continue to walk.
-- *  - >0 : succeeded to handle the current entry, and return to the caller
-- *         with caller specific value.
-+ *  - >0, and <= PAGE_WALK_CALLER_MAX : succeeded to handle the current entry,
-+ *         and return to the caller with caller specific value.
-  *  - <0 : failed to handle the current entry, and return to the caller
-  *         with error code.
-  *
-+ * For pmd_entry(), a value <= PAGE_WALK_CALLER_MAX indicates that the entry
-+ * was handled by the callback. PAGE_WALK_FALLBACK indicates that the entry
-+ * could not be handled by the callback and should be re-checked. If the
-+ * callback needs the entry to be handled by the next level, it should
-+ * split the entry and then return PAGE_WALK_FALLBACK.
-+ *
-  * Before starting to walk page table, some callers want to check whether
-  * they really want to walk over the current vma, typically by checking
-  * its vm_flags. walk_page_test() and @ops->test_walk() are used for this
+-	struct vmw_resource *res, *next;
+ 	struct ttm_validate_buffer val_buf = {
+ 		.bo = &vbo->base,
+ 		.num_shared = 0
+ 	};
+ 
+ 	dma_resv_assert_held(vbo->base.base.resv);
+-	list_for_each_entry_safe(res, next, &vbo->res_list, mob_head) {
+-		if (!res->func->unbind)
+-			continue;
++	while (!RB_EMPTY_ROOT(&vbo->res_tree)) {
++		struct rb_node *node = vbo->res_tree.rb_node;
++		struct vmw_resource *res =
++			container_of(node, struct vmw_resource, mob_node);
++
++		if (!WARN_ON_ONCE(!res->func->unbind))
++			(void) res->func->unbind(res, res->res_dirty, &val_buf);
+ 
+-		(void) res->func->unbind(res, res->res_dirty, &val_buf);
+ 		res->backup_dirty = true;
+ 		res->res_dirty = false;
+ 		vmw_resource_mob_detach(res);
 -- 
 2.21.0
 
