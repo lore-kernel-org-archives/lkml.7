@@ -2,112 +2,111 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE15AC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5450AC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE64320679
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:33:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0242120679
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:34:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e1Fxzd/Z"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="RBvmbRVj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730694AbfJHMd5 (ORCPT
+        id S1730915AbfJHMeW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 08:33:57 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:37054 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730317AbfJHMd4 (ORCPT
+        Tue, 8 Oct 2019 08:34:22 -0400
+Received: from pio-pvt-msa3.bahnhof.se ([79.136.2.42]:39830 "EHLO
+        pio-pvt-msa3.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730763AbfJHMeV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 08:33:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1570538035;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=vxNxzGS1YL2pIRA3iElWkbMg1T80wDQcjG/i1PxznHk=;
-        b=e1Fxzd/Z49/pCF4+A7wVnRB1gkhMs0/zq2K+BCJRGNcLY/g82jQFiPgrP+hY4V+Tc0UA7H
-        odvccT5xnz/iztmPTJvoy1Mqbyw3WKS8LEVQbjt7OqYXbUmJ+6pIq0luuc0zesBaFxBnlz
-        1iheRgL4u+tor8XIi2oOan7DfTZiQ/U=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-329-ZZlRT3KIM2KCz7xplebYPA-1; Tue, 08 Oct 2019 08:33:52 -0400
-Received: by mail-wm1-f72.google.com with SMTP id f63so919064wma.7
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 05:33:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=J4guI5W+JBy2/Wk9QmpICIZphEUf2I9ZwikXlS8M7Tk=;
-        b=BAn59oMGISHaz3w0SGCfmUluGbSvFC1W6Jz+FMpuzRnOZGlaf9QTyfRQWgh+z1dcYN
-         AeSmVrZnG6wIzhYTfRVQyo27F/hJpK4+t12lvjlQMIu14fLfd5G2/8x1DpzaSbQr3MrJ
-         gTkOxhWjipZd5UfxQmViBjFXOOBhj4QvWVBhJ++lE3Njoel8PPxMwM7zrEdoMzM14+SO
-         7xckv4IY0lKgDcE74hg0IU3FuuS+HhYbh1167WSvcUmG5kVO5q+rEwaQa3utJMM4/sUE
-         IQBkbO1WZWYmP+fXonLQmzExvIqouKqFnM0MOuQYNDf2EB8b2ShlZT5H5RhM/OmdXmmt
-         jimw==
-X-Gm-Message-State: APjAAAXuZIJ6lSAYgEAhXOPT5ZEBwzFmZnWKRcHZiCPCQK2ISNN78ikC
-        5Ijd4zP51MdAU4PPYHcD/25vZOu8Go7lQG1N8TaIi/lY2P6OdqThQ4KkmCBVIFhAMn8W8870yt0
-        BRjomH9slTlsZoas6vLSBpW1C
-X-Received: by 2002:a05:600c:2207:: with SMTP id z7mr3714162wml.149.1570538031448;
-        Tue, 08 Oct 2019 05:33:51 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyAKI2iZTVbZl4t588qZfShH353mJjPntH73s4tdZMg33tqt9c0kisZMYYS3sNnU0yf2q5GQA==
-X-Received: by 2002:a05:600c:2207:: with SMTP id z7mr3714148wml.149.1570538031223;
-        Tue, 08 Oct 2019 05:33:51 -0700 (PDT)
-Received: from mcroce-redhat.mxp.redhat.com (nat-pool-mxp-t.redhat.com. [149.6.153.186])
-        by smtp.gmail.com with ESMTPSA id u68sm4361842wmu.12.2019.10.08.05.33.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2019 05:33:50 -0700 (PDT)
-From:   Matteo Croce <mcroce@redhat.com>
-To:     Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org
-Subject: [PATCH] staging: vchiq: don't leak kernel address
-Date:   Tue,  8 Oct 2019 14:33:46 +0200
-Message-Id: <20191008123346.3931-1-mcroce@redhat.com>
-X-Mailer: git-send-email 2.21.0
+        Tue, 8 Oct 2019 08:34:21 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTP id B3B493FA9A;
+        Tue,  8 Oct 2019 14:34:19 +0200 (CEST)
+Authentication-Results: pio-pvt-msa3.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=RBvmbRVj;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa3.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa3.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ahkiahV7a3lc; Tue,  8 Oct 2019 14:34:18 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTPA id 1BA573FA16;
+        Tue,  8 Oct 2019 14:34:17 +0200 (CEST)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 7B26C36014C;
+        Tue,  8 Oct 2019 14:34:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1570538057; bh=YVSzd0MqV7won9JFSsoZRiwEMwhD7Xyu+FymKYBpowA=;
+        h=To:Cc:From:Subject:Date:From;
+        b=RBvmbRVjIhnW1mzTIJgBvKh61ASOlOick3JL0homIAy980483edV+0Y50vArqEScX
+         2URhS27aeWDunvwBOxAJhoL/jLNIkSU8YAiWSuXV7kc6eVMGe4GPbjMHNV8u9PR73t
+         9kJhkCWZobiw3GBq7JhmHz0satvW+ODdRR3WAL90=
+To:     Christoph Hellwig <hch@infradead.org>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Subject: dma coherent memory user-space maps
+Organization: VMware Inc.
+Message-ID: <b811f66d-2353-23c6-c9fa-e279cdb0f832@shipmail.org>
+Date:   Tue, 8 Oct 2019 14:34:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-MC-Unique: ZZlRT3KIM2KCz7xplebYPA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit ad67b74d2469d9b8 ("printk: hash addresses printed with %p"),
-an obfuscated kernel pointer is printed at boot:
+Hi, Christoph,
 
-    vchiq: vchiq_init_state: slot_zero =3D (____ptrval____)
+Following our previous discussion I wonder if something along the lines 
+of the following could work / be acceptible
 
-Remove the the print completely, as it's useless without the address.
+typedef unsigned long dma_pfn_t /* Opaque pfn type. Arch dependent. This 
+could if needed be a struct with a pointer and an offset */
 
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
----
- drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c | 3 ---
- 1 file changed, 3 deletions(-)
+/* Similar to vmf_insert_mixed() */
+vm_fault_t dma_vmf_insert_mixed(struct device *dev,
+                 struct vm_area_struct *vma,
+                 unsigned long addr,
+                 dma_pfn_t dpfn,
+                 unsigned long attrs);
 
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c=
- b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
-index 56a23a297fa4..084cd4b0f07c 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
-@@ -2132,9 +2132,6 @@ vchiq_init_state(struct vchiq_state *state, struct vc=
-hiq_slot_zero *slot_zero)
- =09char threadname[16];
- =09int i;
-=20
--=09vchiq_log_warning(vchiq_core_log_level,
--=09=09"%s: slot_zero =3D %pK", __func__, slot_zero);
--
- =09if (vchiq_states[0]) {
- =09=09pr_err("%s: VCHIQ state already initialized\n", __func__);
- =09=09return VCHIQ_ERROR;
---=20
-2.21.0
+/* Similar to vmf_insert_pfn_pmd() */
+vm_fault_t dma_vmf_insert_pfn_pmd(struct device *dev,
+                   struct vm_area_struct *vma,
+                   unsigned long addr,
+                   dma_pfn_t dpfn,
+                   unsigned long attrs);
+
+/* Like vmap, but takes struct dma_pfns. */
+extern void *dma_vmap(struct device *dev,
+               dma_pfn_t dpfns[],
+               unsigned int count, unsigned long flags,
+               unsigned long attrs);
+
+/* Obtain struct dma_pfn pointers from a dma coherent allocation */
+int dma_get_dpfns(struct device *dev, void *cpu_addr, dma_addr_t dma_addr,
+           pgoff_t offset, pgoff_t num, dma_pfn_t dpfns[]);
+
+I figure, for most if not all architectures we could use an ordinary pfn 
+as dma_pfn_t, but the dma layer would still have control over how those 
+pfns are obtained and how they are used in the kernel's mapping APIs.
+
+If so, I could start looking at this, time permitting,  for the cases 
+where the pfn can be obtained from the kernel address or from 
+arch_dma_coherent_to_pfn(), and also the needed work to have a tailored 
+vmap_pfn().
+
+Thanks,
+/Thomas
+
 
