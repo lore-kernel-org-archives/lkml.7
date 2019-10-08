@@ -2,78 +2,130 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 726DFC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28031ECE596
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42BE620815
+	by mail.kernel.org (Postfix) with ESMTP id F0C662173B
 	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:56:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="bT46D5rO"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WYusr7jq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbfJHO4p (ORCPT
+        id S1727635AbfJHO4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 8 Oct 2019 10:56:46 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:33114 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbfJHO4p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Oct 2019 10:56:45 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:54014 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726057AbfJHO4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 10:56:45 -0400
-Received: from zn.tnic (p200300EC2F0B5100B1AE7F6CCC5C3495.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:5100:b1ae:7f6c:cc5c:3495])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E03011EC067D;
-        Tue,  8 Oct 2019 16:56:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1570546604;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=l5tpSpjsdY7nwNni2u60uo4lJ8beDF5BTwe0zYQ7m2w=;
-        b=bT46D5rOzFSUgRo72uVwNeaPA2xy+on9lfXLxoLQ02X2harSS80T+5SpScgJw1XvH6KiHb
-        AMhtgNfWITIP587uSk4beQxAOJM2teRl5MNu7ziSVElP91kXY2g1omdnYx+nWggiiDYtEK
-        I/C14n/GByC/uzEIhvSJ28T7sO/pwH8=
-Date:   Tue, 8 Oct 2019 16:56:42 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com
-Subject: Re: [PATCH v22 07/24] x86/sgx: Add wrappers for ENCLS leaf functions
-Message-ID: <20191008145642.GH14765@zn.tnic>
-References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
- <20190903142655.21943-8-jarkko.sakkinen@linux.intel.com>
- <20191004094513.GA3362@zn.tnic>
- <20191008040405.GA1724@linux.intel.com>
- <20191008071845.GA14765@zn.tnic>
- <20191008133511.GB14020@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191008133511.GB14020@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x98En6JX089148;
+        Tue, 8 Oct 2019 14:56:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2019-08-05;
+ bh=in2Wx3k+nUesmaQsjF1bcoCwQ7ksLAAPz2jKhu/xjuU=;
+ b=WYusr7jq/9X4G6KU0hNDs1CXzz1OqIqk7Roan74h60HpBZTw89Cav8H0APDEdMwjnpul
+ xHEfTqyahUfg5MvWq+avs5+rvUGjmE2ot1iBaSlhwcBr+rIURMQg8/iXrpTPgxGRYW28
+ 5NfrvYlucj6Dz6eh9n/ZFSiXS7f53xpeylj/cYSHarlscKeba+ydWScN5V9TQ56fUNJZ
+ 8OZLkMG/uvh0XixD5FjFj9BqiON8psBSVf+gKPIcW7q1pDqF5Zp2b25g4vXEwlsIkN0W
+ +Qu7ehOWdh6zaGSTb+R72o6LJwo82gDX+1HOTAc37j5Gvenjhor9zyfKouSQqSvzKJeg gg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2vektrdmfq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 08 Oct 2019 14:56:18 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x98EnBOo141555;
+        Tue, 8 Oct 2019 14:56:17 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2vgefarhtg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 08 Oct 2019 14:56:17 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x98EuFHv026443;
+        Tue, 8 Oct 2019 14:56:15 GMT
+Received: from dhcp-10-175-191-48.vpn.oracle.com (/10.175.191.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 08 Oct 2019 14:56:14 +0000
+From:   Alan Maguire <alan.maguire@oracle.com>
+To:     linux-kselftest@vger.kernel.org, brendanhiggins@google.com,
+        skhan@linuxfoundation.org
+Cc:     mcgrof@kernel.org, keescook@chromium.org, yzaikin@google.com,
+        akpm@linux-foundation.org, yamada.masahiro@socionext.com,
+        catalin.marinas@arm.com, joe.lawrence@redhat.com,
+        penguin-kernel@i-love.sakura.ne.jp, schowdary@nvidia.com,
+        urezki@gmail.com, andriy.shevchenko@linux.intel.com,
+        changbin.du@intel.com, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Alan Maguire <alan.maguire@oracle.com>
+Subject: [PATCH v2 linux-kselftest-test 0/3] kunit: support building core/tests as modules
+Date:   Tue,  8 Oct 2019 15:55:43 +0100
+Message-Id: <1570546546-549-1-git-send-email-alan.maguire@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9403 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=38 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910080134
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9403 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=38 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910080134
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 06:35:11AM -0700, Sean Christopherson wrote:
-> Hmm, I get assembler errors using gcc 5.4.0
+The current kunit execution model is to provide base kunit functionality
+and tests built-in to the kernel.  The aim of this series is to allow
+building kunit itself and tests as modules.  This in turn allows a
+simple form of selective execution; load the module you wish to test.
+In doing so, kunit itself (if also built as a module) will be loaded as
+an implicit dependency.
 
-Crap. 8.3 eats this just fine. And I guess we can accomodate old gccs
-by having BIT() evaluate the enclosing UL() macro into its __ASSEMBLY__
-variant but it ain't worth the trouble.
+Because this requires a core API modification - if a module delivers
+multiple suites, they must be declared with the kunit_test_suites()
+macro - we're proposing this patch as a candidate to be applied to the
+test tree before too many kunit consumers appear.  We attempt to deal
+with existing consumers in patch 1.
+
+Changes since v1:
+
+- sent correct patch set; apologies, previous patch set was built
+  prior to kunit move to lib/ and should be ignored.
+
+Patch 1 consists changes needed to support loading tests as modules.
+Patch 2 allows kunit itself to be loaded as a module.
+Patch 3 documents module support.
+
+Alan Maguire (3):
+  kunit: allow kunit tests to be loaded as a module
+  kunit: allow kunit to be loaded as a module
+  kunit: update documentation to describe module-based build
+
+ Documentation/dev-tools/kunit/faq.rst   |  3 ++-
+ Documentation/dev-tools/kunit/index.rst |  3 +++
+ Documentation/dev-tools/kunit/usage.rst | 16 ++++++++++++++++
+ include/kunit/test.h                    | 30 +++++++++++++++++++++++-------
+ kernel/sysctl-test.c                    |  6 +++++-
+ lib/Kconfig.debug                       |  4 ++--
+ lib/kunit/Kconfig                       |  6 +++---
+ lib/kunit/Makefile                      |  4 +++-
+ lib/kunit/assert.c                      |  8 ++++++++
+ lib/kunit/example-test.c                |  6 +++++-
+ lib/kunit/string-stream-test.c          |  9 +++++++--
+ lib/kunit/string-stream.c               |  7 +++++++
+ lib/kunit/test-test.c                   |  8 ++++++--
+ lib/kunit/test.c                        | 12 ++++++++++++
+ lib/kunit/try-catch.c                   |  8 ++++++--
+ 15 files changed, 108 insertions(+), 22 deletions(-)
 
 -- 
-Regards/Gruss,
-    Boris.
+1.8.3.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
