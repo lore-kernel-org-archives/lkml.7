@@ -2,114 +2,191 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8873BC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 615FDECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B32520815
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:25:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570530318;
-	bh=xvQs2o0EkBO2YHBiV+0D/Vc9/Ghl0Vhxiv3685TLTIY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Q4VomKHUH8dulAHf3pTde1pR6YZ9x/4WXV+i7YMjZbIVuUdSGLMlNTHnvL+hKSZCu
-	 kxIomuWrQZsNDy/A0/hF1ge5BgV7hqIXqQwBcKfvDvrgDru3Qppand5MuBHEsA7IVE
-	 aRI4C0FuWjoCdJYvUUs/FqbJYdvJkY6y8A9f0C5A=
+	by mail.kernel.org (Postfix) with ESMTP id 33728206BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:26:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="anQG58BQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730450AbfJHKZR (ORCPT
+        id S1730249AbfJHK05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 06:25:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59970 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730416AbfJHKZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 06:25:17 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D277D206BB;
-        Tue,  8 Oct 2019 10:25:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570530316;
-        bh=xvQs2o0EkBO2YHBiV+0D/Vc9/Ghl0Vhxiv3685TLTIY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=egWENj8PwMc2WcACRDBMWTlZGkW2pxt0YBJ7nm9KJu66YC/B3eUUpWGJru2vDHShm
-         y8GbOMhvNSP5KfEG7Mn2kqQJwJp9SJwvvvQdIjqT0GBG/zr9n9qbrMqb5DU+wnlPMN
-         uVv8njYO0qCDjrf5+MVm+HJGhXvh6DjojbuhonbA=
-Date:   Tue, 8 Oct 2019 11:25:12 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Yunfeng Ye <yeyunfeng@huawei.com>
-Cc:     catalin.marinas@arm.com, will.deacon@arm.com,
-        kstewart@linuxfoundation.org, gregkh@linuxfoundation.org,
-        tglx@linutronix.de, info@metux.net, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2] arm64: armv8_deprecated: Checking return value for
- memory allocation
-Message-ID: <20191008102511.pmkqcpf7spkogarp@willie-the-truck>
-References: <bd558d56-18a9-3607-3db0-ad203ab12aa8@huawei.com>
- <20191007153710.7xpx27kgeewz75kt@willie-the-truck>
- <e58c36f6-23e3-12b2-bd9c-1ef731b5f8fd@huawei.com>
+        Tue, 8 Oct 2019 06:26:57 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:37231 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729790AbfJHK04 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 06:26:56 -0400
+Received: by mail-ed1-f67.google.com with SMTP id r4so15154180edy.4
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 03:26:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TuTp4qSs/ib4dWqdltJLc9xTt5QmDdIVXlg895SiimI=;
+        b=anQG58BQbSDFEwGX4sXa027j9aWBAUcj+wsxH2AEo964GdrVfgqTdTeY8elwiU65O3
+         QuzoQ6VdSB7i2X3m4gwA0QNl5qMpSg9Euq0ViC/EtK4kjLfBpbA9B6Xov0017C6yDHHU
+         93NNIknMKE/eiFm0+EnnelPjm4r0EzvhuQJjk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TuTp4qSs/ib4dWqdltJLc9xTt5QmDdIVXlg895SiimI=;
+        b=oJicUkXcr5SrZrO9vbzxLpYuGtrrcCRvOp8/KYlTulGrnaqYujNVXIwnc6+69oL5hc
+         Mlzt6bC5x5lOOJqTOjH4OPv/CrdvOMzz3gHZLpH2hz+6sfnEu89IshFBrsSuXLxbbXQm
+         CgbToW3g4bbnqGgsNFxWvPt2/ZCdObSaH5Et55/U2pe9xZ0iKRdIoq2V1FNGzc9cxHDa
+         XQ8m7AzLR8HfPTy+ez4WbC9ssGou4gSe5zPZOaZR0E2zlhr05qqqLztpZ5UKLQI+dFe8
+         UbriPRUsrECtZDsuusQ1oAoCbQTEFTexDNK0oQ5qsJXnFBG2uzLQUh7w2k8HmaR1BpF8
+         jdTA==
+X-Gm-Message-State: APjAAAUX366f0lnKjOtzxT6FroNnJ0QSSqFOrz68Kz1kAZiLf+YRBEhq
+        5HaAWdF0YCFUGPyXfQTh5ISanypQ2HyAOg==
+X-Google-Smtp-Source: APXvYqyhEkD+1Uno1aig9TbSN3sl3imQTDaVUEKQrkJu/mP1X2o7eAbRt77a2XcAyGmyJdpCr16dOA==
+X-Received: by 2002:aa7:c555:: with SMTP id s21mr33182781edr.151.1570530414145;
+        Tue, 08 Oct 2019 03:26:54 -0700 (PDT)
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com. [209.85.221.46])
+        by smtp.gmail.com with ESMTPSA id v24sm2219222ejr.22.2019.10.08.03.26.52
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Oct 2019 03:26:52 -0700 (PDT)
+Received: by mail-wr1-f46.google.com with SMTP id j11so12953993wrp.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 03:26:52 -0700 (PDT)
+X-Received: by 2002:a5d:4c45:: with SMTP id n5mr28188191wrt.100.1570530411726;
+ Tue, 08 Oct 2019 03:26:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e58c36f6-23e3-12b2-bd9c-1ef731b5f8fd@huawei.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20191007174505.10681-1-ezequiel@collabora.com>
+ <20191007174505.10681-4-ezequiel@collabora.com> <HE1PR06MB4011204B3FC2DAABB4BD1BACAC9B0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+ <CAAFQd5BEPO3nicr1PzRNWoVEzsvKvv5AkqoMVh2AG7qST+bZdA@mail.gmail.com> <HE1PR06MB40111D7287970183CF6D0DD1AC9A0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+In-Reply-To: <HE1PR06MB40111D7287970183CF6D0DD1AC9A0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Tue, 8 Oct 2019 19:26:39 +0900
+X-Gmail-Original-Message-ID: <CAAFQd5AqYsUJeM5tzOY3WNFRZu74k6Yst3TpxcfB61zZtaHJDA@mail.gmail.com>
+Message-ID: <CAAFQd5AqYsUJeM5tzOY3WNFRZu74k6Yst3TpxcfB61zZtaHJDA@mail.gmail.com>
+Subject: Re: [PATCH v2 for 5.4 3/4] media: hantro: Fix motion vectors usage condition
+To:     Jonas Karlman <jonas@kwiboo.se>
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "kernel@collabora.com" <kernel@collabora.com>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        "fbuergisser@chromium.org" <fbuergisser@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 10:33:17AM +0800, Yunfeng Ye wrote:
-> On 2019/10/7 23:37, Will Deacon wrote:
-> > On Mon, Oct 07, 2019 at 06:06:35PM +0800, Yunfeng Ye wrote:
-> >> @@ -617,25 +624,47 @@ static int t16_setend_handler(struct pt_regs *regs, u32 instr)
-> >>   */
-> >>  static int __init armv8_deprecated_init(void)
-> >>  {
-> >> -	if (IS_ENABLED(CONFIG_SWP_EMULATION))
-> >> -		register_insn_emulation(&swp_ops);
-> >> +	int ret = 0;
-> >> +	int err = 0;
-> >> +
-> >> +	if (IS_ENABLED(CONFIG_SWP_EMULATION)) {
-> >> +		ret = register_insn_emulation(&swp_ops);
-> >> +		if (ret) {
-> >> +			pr_err("register insn emulation swp: fail\n");
-> >> +			err = ret;
-> >> +		}
-> >> +	}
-> > 
-> > Is there much point in continuing here? May as well just return ret, I
-> > think. I also don't think you need to print anything, since kmalloc
-> > should already have shouted.
-> > 
-> The registration of each instruction simulation is independent. I think
-> that one failure does not affect the registration of other instructions.
+On Tue, Oct 8, 2019 at 3:23 PM Jonas Karlman <jonas@kwiboo.se> wrote:
+>
+> On 2019-10-08 05:29, Tomasz Figa wrote:
+> > Hi Jonas,
+> >
+> > On Tue, Oct 8, 2019 at 3:33 AM Jonas Karlman <jonas@kwiboo.se> wrote:
+> >> On 2019-10-07 19:45, Ezequiel Garcia wrote:
+> >>> From: Francois Buergisser <fbuergisser@chromium.org>
+> >>>
+> >>> The setting of the motion vectors usage and the setting of motion
+> >>> vectors address are currently done under different conditions.
+> >>>
+> >>> When decoding pre-recorded videos, this results of leaving the motion
+> >>> vectors address unset, resulting in faulty memory accesses. Fix it
+> >>> by using the same condition everywhere, which matches the profiles
+> >>> that support motion vectors.
+> >> This does not fully match hantro sdk:
+> >>
+> >>   enable direct MV writing and POC tables for high/main streams.
+> >>   enable it also for any "baseline" stream which have main/high tools enabled.
+> >>
+> >>   (sps->profile_idc > 66 && sps->constrained_set0_flag == 0) ||
+> >>   sps->frame_mbs_only_flag != 1 ||
+> >>   sps->chroma_format_idc != 1 ||
+> >>   sps->scaling_matrix_present_flag != 0 ||
+> >>   pps->entropy_coding_mode_flag != 0 ||
+> >>   pps->weighted_pred_flag != 0 ||
+> >>   pps->weighted_bi_pred_idc != 0 ||
+> >>   pps->transform8x8_flag != 0 ||
+> >>   pps->scaling_matrix_present_flag != 0
+> > Thanks for double checking this. I can confirm that it's what Hantro
+> > SDK does indeed.
+> >
+> > However, would a stream with sps->profile_idc <= 66 and those other
+> > conditions met be still a compliant stream?
+>
+> You are correct, if a non-compliant video is having decoding problems it should probably be handled
+> on userspace side (by not reporting baseline profile) and not in kernel.
+> All my video samples that was having the issue fixed in this patch are now decoded correctly.
+>
+> >
+> >> Above check is used when DIR_MV_BASE should be written.
+> >> And WRITE_MVS_E is set to nal_ref_idc != 0 when above is true.
+> >>
+> >> I think it may be safer to always set DIR_MV_BASE and keep the existing nal_ref_idc check for WRITE_MVS_E.
+> > That might have a performance penalty or some other side effects,
+> > though. Otherwise Hantro SDK wouldn't have enable it conditionally.
+> >
+> >> (That is what I did in my "media: hantro: H264 fixes and improvements" series, v2 is incoming)
+> >> Or have you found any video that is having issues in such case?
+> > We've been running the code with sps->profile_idc > 66 in production
+> > for 4 years and haven't seen any reports of a stream that wasn't
+> > decoded correctly.
+> >
+> > If we decide to go with a different behavior, I'd suggest thoroughly
+> > verifying the behavior on a big number of streams, including some
+> > performance measurements.
+>
+> I agree, I would however suggest to change the if statement to the following (or similar)
+> as that should be the optimal for performance reasons and match the hantro sdk.
+>
+> if (sps->profile_idc > 66 && dec_param->nal_ref_idc)
 
-Dunno, I think that if kmalloc() starts failing then it's time to give up!
+Sorry for my ignorance, but could you elaborate on this? What's the
+meaning of nal_ref_idc? I don't see it being checked in the Hantro SDK
+condition you mentioned earlier.
 
-> In addition, if return directly, is it need to unregister? Of course,
-> the first instruction registration can be directly returned, If the
-> following instruction registration fails, is it need unregister operation?
-> currently the unregistration of instruction simulation is not be implemented
-> yet.
-
-That's an interesting one -- currently there isn't a way to unregister
-an emulation hook afaict. We could add unregister_insn_emulation() to
-remove the emulation hook from the insn_emulation list and free it, but
-I'm actually now starting to prefer your initial patch after all. The only
-way these failures will happen are either because the system is doomed
-or kmalloc fault injection is being used; so keeping things simple rather
-than add rarely executed complexity is probably best.
-
-> The purpose of printing information is to replace the direct return, which
-> can distinguish which instruction failed to register. There is no need to print
-> information if it returns directly.
-
-What do you expect people to do with that information?
-
-Are you ok with me applying your original patch?
-
-Will
+>
+> Regards,
+> Jonas
+>
+> >
+> > Best regards,
+> > Tomasz
+> >
+> >> Regards,
+> >> Jonas
+> >>
+> >>> Fixes: dea0a82f3d22 ("media: hantro: Add support for H264 decoding on G1")
+> >>> Signed-off-by: Francois Buergisser <fbuergisser@chromium.org>
+> >>> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> >>> ---
+> >>> v2:
+> >>> * New patch.
+> >>>
+> >>>  drivers/staging/media/hantro/hantro_g1_h264_dec.c | 2 +-
+> >>>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/drivers/staging/media/hantro/hantro_g1_h264_dec.c b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
+> >>> index 7ab534936843..c92460407613 100644
+> >>> --- a/drivers/staging/media/hantro/hantro_g1_h264_dec.c
+> >>> +++ b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
+> >>> @@ -35,7 +35,7 @@ static void set_params(struct hantro_ctx *ctx)
+> >>>       if (sps->flags & V4L2_H264_SPS_FLAG_MB_ADAPTIVE_FRAME_FIELD)
+> >>>               reg |= G1_REG_DEC_CTRL0_SEQ_MBAFF_E;
+> >>>       reg |= G1_REG_DEC_CTRL0_PICORD_COUNT_E;
+> >>> -     if (dec_param->nal_ref_idc)
+> >>> +     if (sps->profile_idc > 66)
+> >>>               reg |= G1_REG_DEC_CTRL0_WRITE_MVS_E;
+> >>>
+> >>>       if (!(sps->flags & V4L2_H264_SPS_FLAG_FRAME_MBS_ONLY) &&
+>
