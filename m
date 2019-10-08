@@ -2,107 +2,99 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B677FECE58C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B04C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A6D720659
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B97BB218DE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:38:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570549117;
+	bh=gjdt14TlOZyesMNTH7/5zSE94bMrmk0OHHv7OXJGXaE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oodyK31oCPBgYueD6iwF/S2eDDIpg2JUlskOLAvgyBazL6MoSSa2MvjPv2YkVZIkT
+	 mInySGT76S3SJnszKoZAe10sxWPFuruE4tgGBtbjOoCpksMtgVPuGIDgHmHBhLqkf7
+	 KkTEbTPz1B4wGtqCrpP6fQtzTBLZ0pKfhBBSxhZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727409AbfJHPfl (ORCPT
+        id S1727476AbfJHPih (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 11:35:41 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:60722 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725939AbfJHPfk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 11:35:40 -0400
-Received: from [213.220.153.21] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iHrWS-0004tt-B1; Tue, 08 Oct 2019 15:35:36 +0000
-Date:   Tue, 8 Oct 2019 17:35:35 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Andrea Parri <parri.andrea@gmail.com>
-Cc:     Dmitry Vyukov <dvyukov@google.com>, bsingharora@gmail.com,
-        Marco Elver <elver@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzbot <syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH v2] taskstats: fix data-race
-Message-ID: <20191008153533.r43qyvasfqahmq6f@wittgenstein>
-References: <20191007104039.GA16085@andrea.guest.corp.microsoft.com>
- <20191007110117.1096-1-christian.brauner@ubuntu.com>
- <20191007131804.GA19242@andrea.guest.corp.microsoft.com>
- <CACT4Y+YG23qbL16MYH3GTK4hOPsM9tDfbLzrTZ7k_ocR2ABa6A@mail.gmail.com>
- <20191007141432.GA22083@andrea.guest.corp.microsoft.com>
- <CACT4Y+avbYvtF9mHiX=R8Y2=YsP1_QsN6i_FpjLM7UxCKv6vxA@mail.gmail.com>
- <20191008142035.GA13564@andrea.guest.corp.microsoft.com>
- <20191008142413.h5kczta7jo4ado6u@wittgenstein>
- <20191008152659.GA16065@andrea>
+        Tue, 8 Oct 2019 11:38:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45858 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725908AbfJHPig (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 11:38:36 -0400
+Received: from localhost (unknown [89.205.136.99])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02E902070B;
+        Tue,  8 Oct 2019 15:38:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570549114;
+        bh=gjdt14TlOZyesMNTH7/5zSE94bMrmk0OHHv7OXJGXaE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=g6Hw1hA8MaxUCugwMm+KqWjnL4ueUeMaByU1o/g241xDYq/YvMvFCndcGgL6KBg/C
+         CHK3kljSd/j9kMjl7/uRDDwzU2ShSfUUaXtN72uf53LWFMLpVY0qDHQRe7XZu0H+F7
+         SbqoQhju7xWNE5hakgvm6d5VXqDy9Jl7ziRTVI9k=
+Date:   Tue, 8 Oct 2019 17:38:31 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to
+ unsafe_put_user()
+Message-ID: <20191008153831.GA2881123@kroah.com>
+References: <20191007012437.GK26530@ZenIV.linux.org.uk>
+ <CAHk-=whKJfX579+2f-CHc4_YmEmwvMe_Csr0+CPfLAsSAdfDoA@mail.gmail.com>
+ <20191007025046.GL26530@ZenIV.linux.org.uk>
+ <CAHk-=whraNSys_Lj=Ut1EA=CJEfw2Uothh+5-WL+7nDJBegWcQ@mail.gmail.com>
+ <CAHk-=witTXMGsc9ZAK4hnKnd_O7u8b1eiou-6cfjt4aOcWvruQ@mail.gmail.com>
+ <20191008032912.GQ26530@ZenIV.linux.org.uk>
+ <CAHk-=wiAyZmsEp6oQQgHiuaDU0bLj=OVHSGV_OfvHRSXNPYABw@mail.gmail.com>
+ <20191008045712.GR26530@ZenIV.linux.org.uk>
+ <20191008131416.GA2860109@kroah.com>
+ <20191008152900.GT26530@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191008152659.GA16065@andrea>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191008152900.GT26530@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 05:26:59PM +0200, Andrea Parri wrote:
-> On Tue, Oct 08, 2019 at 04:24:14PM +0200, Christian Brauner wrote:
-> > On Tue, Oct 08, 2019 at 04:20:35PM +0200, Andrea Parri wrote:
-> > > On Mon, Oct 07, 2019 at 04:18:26PM +0200, Dmitry Vyukov wrote:
-> > > > On Mon, Oct 7, 2019 at 4:14 PM Andrea Parri <parri.andrea@gmail.com> wrote:
-> > > > >
-> > > > > > > >  static struct taskstats *taskstats_tgid_alloc(struct task_struct *tsk)
-> > > > > > > >  {
-> > > > > > > >       struct signal_struct *sig = tsk->signal;
-> > > > > > > > -     struct taskstats *stats;
-> > > > > > > > +     struct taskstats *stats_new, *stats;
-> > > > > > > >
-> > > > > > > > -     if (sig->stats || thread_group_empty(tsk))
-> > > > > > > > -             goto ret;
-> > > > > > > > +     /* Pairs with smp_store_release() below. */
-> > > > > > > > +     stats = READ_ONCE(sig->stats);
-> > > > > > >
-> > > > > > > This pairing suggests that the READ_ONCE() is heading an address
-> > > > > > > dependency, but I fail to identify it: what is the target memory
-> > > > > > > access of such a (putative) dependency?
-> > > > > >
-> > > > > > I would assume callers of this function access *stats. So the
-> > > > > > dependency is between loading stats and accessing *stats.
-> > > > >
-> > > > > AFAICT, the only caller of the function in 5.4-rc2 is taskstats_exit(),
-> > > > > which 'casts' the return value to a boolean (so I really don't see how
-> > > > > any address dependency could be carried over/relied upon here).
-> > > > 
-> > > > This does not make sense.
-> > > > 
-> > > > But later taskstats_exit does:
-> > > > 
-> > > > memcpy(stats, tsk->signal->stats, sizeof(*stats));
-> > > > 
-> > > > Perhaps it's supposed to use stats returned by taskstats_tgid_alloc?
+On Tue, Oct 08, 2019 at 04:29:00PM +0100, Al Viro wrote:
+> On Tue, Oct 08, 2019 at 03:14:16PM +0200, Greg KH wrote:
+> > On Tue, Oct 08, 2019 at 05:57:12AM +0100, Al Viro wrote:
 > > > 
-> > > Seems reasonable to me.  If so, replacing the READ_ONCE() in question
-> > > with an smp_load_acquire() might be the solution.  Thoughts?
+> > > 	OK...  BTW, do you agree that the use of access_ok() in
+> > > drivers/tty/n_hdlc.c:n_hdlc_tty_read() is wrong?  It's used as an early
+> > > cutoff, so we don't bother waiting if user has passed an obviously bogus
+> > > address.  copy_to_user() is used for actual copying there...
 > > 
-> > I've done that already in my tree yesterday. I can resend for another
-> > review if you'd prefer.
+> > Yes, it's wrong, and not needed.  I'll go rip it out unless you want to?
 > 
-> Oh nice!  No need to resend of course.  ;D FWIW, I can check it if you
-> let me know the particular branch/commit (guessing that's somewhere in
-> git://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git, yes?).
+> I'll throw it into misc queue for now; it has no prereqs and nothing is going
+> to depend upon it.
 
-Oh ups, yeah of course :)
-https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/log/?h=taskstats_syzbot
+Great, thanks.
 
-Thanks!
-Christian
+> While looking for more of the same pattern: usb_device_read().  Frankly,
+> usb_device_dump() calling conventions look ugly - it smells like it
+> would be much happier as seq_file.  Iterator would take some massage,
+> but that seems to be doable.  Anyway, that's a separate story...
+
+That's just a debugfs file, and yes, it should be moved to seq_file.  I
+think I tried it a long time ago, but given it's just a debugging thing,
+I gave up as it wasn't worth it.
+
+But yes, the access_ok() there also seems odd, and should be dropped.
+
+thanks,
+
+greg k-h
