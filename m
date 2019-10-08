@@ -2,124 +2,82 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF06C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C69C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CDE3206C2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:15:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3D9B206BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:15:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="mzEhWko4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dcAWg8QQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730547AbfJHIPm (ORCPT
+        id S1730565AbfJHIPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 04:15:42 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:58133 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730292AbfJHIPm (ORCPT
+        Tue, 8 Oct 2019 04:15:47 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39086 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730549AbfJHIPq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 04:15:42 -0400
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x988FR4i029233
-        for <linux-kernel@vger.kernel.org>; Tue, 8 Oct 2019 17:15:28 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x988FR4i029233
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1570522528;
-        bh=6LRUPwIURK4vpFJVXoCYR8axEeDiThpXYfk5FWjPS10=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=mzEhWko4sFkDpAbLoA9mccwk68VeIFOfbdzK9CwRbTmCRgbwr+bUllfAjuqzZ+97V
-         46WBSal+9rQx2vGLyZ7sX3lyxHqq5EfgOiYfyFlUealdXP6f5WTIMtifDwUtYhvbT2
-         MpVX66gRGWmWXZ+Dp5/J7jzmvPBBVaM5XHU4Ol9JTKeWNsvB2cffskHKTBmpJV7ucL
-         rJGRYRc4+Bm1kA6KWqeY6bDMPDLVtemuGm+y+EKtRExC4YMeuVGmcklzUcOMbF7pLk
-         fzRZNEdrjRDVBh/70womkRliWZ7gcLzrHyyks7NKvfRt921Og3WnAFkCGJtcVAEZs4
-         kVZz9AnVd+wuA==
-X-Nifty-SrcIP: [209.85.217.48]
-Received: by mail-vs1-f48.google.com with SMTP id b1so10720320vsr.10
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 01:15:28 -0700 (PDT)
-X-Gm-Message-State: APjAAAVbeBfeI8DHCP+GVN/HGuyGV0d/vZkqud7/zx3A0zBy4MnmwS4c
-        VrWMaW5V6JP3dv4xqlVs2Yo3Mf/+G936YNFxIZA=
-X-Google-Smtp-Source: APXvYqw7EuyrvnLMOoGms5NTByY+HQoC5ngvlYEXlL5DXYZZEq1wHXVggwi3qIN3zzbLIOmct9kDDeI/QUutWlP6pJo=
-X-Received: by 2002:a67:88c9:: with SMTP id k192mr17600348vsd.181.1570522527324;
- Tue, 08 Oct 2019 01:15:27 -0700 (PDT)
+        Tue, 8 Oct 2019 04:15:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=sh9ykIEzDZIGiyjLdhPffAiNXbo1ruICQ2cpisEDWQA=; b=dcAWg8QQ4feUcsmnPUK85ucvM
+        h1AWM/e2x6RsKCdJWTalQOyQY1735NVykrYFIcX19lU0Zj/wWry+TorFKQ3QN6WiG1bideFKoFJOy
+        uPZt6YFVxvU2rKLe2wIlXaS3Wa71fpqcpTeENfnIhNky0na1F4AdgieV3r8ayyNpD2jT/T+ozWupF
+        v8yPAVLZ6wuleRI1WE93ae0wOHs5JknRKgp+q+X9UCIyiUHEAHOeF728CI55uW6UR1BqnXLYsE2On
+        LgbCHit0tuCY+THwHBQRaD3hfKAKMNe3AiIO7XKlSx+iYBm3bXRFjsN5SnKh+MKzwrSc/6K7lCyR2
+        Kxpkpzw/w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iHkeg-000788-6H; Tue, 08 Oct 2019 08:15:38 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2F62E3008C1;
+        Tue,  8 Oct 2019 10:14:43 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 511AA2022BAB2; Tue,  8 Oct 2019 10:15:35 +0200 (CEST)
+Date:   Tue, 8 Oct 2019 10:15:35 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com
+Subject: Re: [PATCH v3 4/6] x86/alternatives: Add and use text_gen_insn()
+ helper
+Message-ID: <20191008081535.GF2311@hirez.programming.kicks-ass.net>
+References: <20191007081716.07616230.8@infradead.org>
+ <20191007081945.05309765.9@infradead.org>
+ <20191008152349.293e77b5315acf42f6e607ec@kernel.org>
 MIME-Version: 1.0
-References: <z4zhwEnRqCVnnV8RYwKbY9H_TEnHePR6grYfw1toELFA-iZidlp3T18y0w35JtWNghJQ3hwL23RrsKXIVJHYiv9wOsqmow33NU6LcHcFWyw=@protonmail.ch>
- <874l0k3hd0.fsf@igel.home> <20191007115217.GA835482@kroah.com>
- <87zhic212y.fsf@igel.home> <BbFL6w_pvJJ1heDKuGhto7sFNt-6M-GQSqysyQ75Lgd_MOwqEGzkFdhqvmcDhS27MbsEZ239tZ-1BMjC_ObkRB16jR8vS2Ri8HGJWul6wsw=@protonmail.ch>
-In-Reply-To: <BbFL6w_pvJJ1heDKuGhto7sFNt-6M-GQSqysyQ75Lgd_MOwqEGzkFdhqvmcDhS27MbsEZ239tZ-1BMjC_ObkRB16jR8vS2Ri8HGJWul6wsw=@protonmail.ch>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 8 Oct 2019 17:14:51 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASwrKohUUY22Ru06DcG5nUpqRJW3ZjZR+2BZYsX8hfvJw@mail.gmail.com>
-Message-ID: <CAK7LNASwrKohUUY22Ru06DcG5nUpqRJW3ZjZR+2BZYsX8hfvJw@mail.gmail.com>
-Subject: Re: [PATCH v2] kheaders: making headers archive reproducible
-To:     Dmitry Goldin <dgoldin@protonmail.ch>
-Cc:     Andreas Schwab <schwab@linux-m68k.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        "linux-kernel\\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "joel\\@joelfernandes.org" <joel@joelfernandes.org>,
-        Ben Hutchings <ben@decadent.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191008152349.293e77b5315acf42f6e607ec@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 8, 2019 at 5:07 PM Dmitry Goldin <dgoldin@protonmail.ch> wrote:
->
-> Hi,
->
-> =E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90 Original =
-Message =E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90
-> On Monday, October 7, 2019 2:26 PM, Andreas Schwab <schwab@linux-m68k.org=
-> wrote:
->
-> > On Okt 07 2019, Greg KH gregkh@linuxfoundation.org wrote:
-> >
-> > > On Mon, Oct 07, 2019 at 01:49:47PM +0200, Andreas Schwab wrote:
-> > >
-> > > > GEN kernel/kheaders_data.tar.xz
-> > > > tar: unrecognized option '--sort=3Dname'
-> > > > Try `tar --help' or`tar --usage' for more information.
-> > > > make[2]: *** [kernel/kheaders_data.tar.xz] Error 64
-> > > > make[1]: *** [kernel] Error 2
-> > > > make: *** [sub-make] Error 2
-> > > > $ tar --version
-> > > > tar (GNU tar) 1.26
-> > > > Copyright (C) 2011 Free Software Foundation, Inc.
-> > >
-> > > Wow that's an old version of tar. 2011? What happens if you use a mor=
-e
-> > > modern one?
-> >
-> > That's the most modern I have available on that machine.
->
-> Hmm. --sort was introduced in 1.28 in 2014. Do you think it would warrant=
- some sort of version check and fallback or is this something we can expect=
- the user to handle if their distribution happens to not ship anything more=
- recent? A few sensible workarounds come to mind.
+On Tue, Oct 08, 2019 at 03:23:49PM +0900, Masami Hiramatsu wrote:
+> On Mon, 07 Oct 2019 10:17:20 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
+> 
+> > Provide a simple helper function to create common instruction
+> > encodings.
+> 
+> Thanks for using correct INSN_OPCODE:)
+> This looks good to me.
+> 
 
-I think the former.
-
-The release in 2014 is quite new, so
-we can not always expect it on the users' system.
-
-
-
-
->
-> In any case, likely it would make sense to at least update to https://git=
-hub.com/torvalds/linux/blob/master/Documentation/process/changes.rst with t=
-he minimal version we decide on.
->
->
-> Dmitry
-
-
-
---=20
-Best Regards
-Masahiro Yamada
+Right, I have it on my todo list to convert all of kprobes over. But
+feel tree to beat me to it :-)
