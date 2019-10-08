@@ -2,199 +2,126 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D2BC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DB8C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A7B221721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:16:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D32C721721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:17:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730323AbfJHHQ3 (ORCPT
+        id S1730288AbfJHHRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 03:16:29 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:52036 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730057AbfJHHQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 03:16:29 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id BC40D8E81B87B520A9E3;
-        Tue,  8 Oct 2019 15:16:26 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Tue, 8 Oct 2019
- 15:16:19 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <agross@kernel.org>, <bjorn.andersson@linaro.org>,
-        <vivek.gautam@codeaurora.org>, <yuehaibing@huawei.com>,
-        <jcrouse@codeaurora.org>
-CC:     <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] soc: qcom: Fix llcc-qcom definitions to include
-Date:   Tue, 8 Oct 2019 15:16:14 +0800
-Message-ID: <20191008071614.21692-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 8 Oct 2019 03:17:51 -0400
+Received: from mga06.intel.com ([134.134.136.31]:45785 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730057AbfJHHRu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 03:17:50 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 00:17:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,270,1566889200"; 
+   d="scan'208";a="199737798"
+Received: from raystayl-mobl1.ger.corp.intel.com ([10.252.7.179])
+  by FMSMGA003.fm.intel.com with ESMTP; 08 Oct 2019 00:17:45 -0700
+Message-ID: <b1c63efd883452ccb5e57e107c6a0aa74bf25d49.camel@intel.com>
+Subject: Re: [PATCH] iwlwifi: fw: don't send GEO_TX_POWER_LIMIT command to
+ FW version 29
+From:   Luciano Coelho <luciano.coelho@intel.com>
+To:     You-Sheng Yang <vicamo.yang@canonical.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Shahar S Matityahu <shahar.s.matityahu@intel.com>,
+        Sara Sharon <sara.sharon@intel.com>,
+        Gil Adam <gil.adam@intel.com>,
+        Mordechay Goodstein <mordechay.goodstein@intel.com>,
+        Haim Dreyfuss <haim.dreyfuss@intel.com>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 08 Oct 2019 10:17:44 +0300
+In-Reply-To: <20191008060511.18474-1-vicamo.yang@canonical.com>
+References: <20191008060511.18474-1-vicamo.yang@canonical.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 99356b03b431 ("soc: qcom: Make llcc-qcom a
-generic driver") move these out of llcc-qcom.h, make
-the building fails:
+On Tue, 2019-10-08 at 14:05 +0800, You-Sheng Yang wrote:
+> Follow-up for commit fddbfeece9c7 ("iwlwifi: fw: don't send
+> GEO_TX_POWER_LIMIT command to FW version 36"). There is no
+> GEO_TX_POWER_LIMIT command support for all revisions of FW version
+> 29, either.
+> 
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204151
+> Signed-off-by: You-Sheng Yang <vicamo.yang@canonical.com>
+> ---
+>  drivers/net/wireless/intel/iwlwifi/mvm/fw.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
+> index 32a5e4e5461f..dbba616c19de 100644
+> --- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
+> +++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
+> @@ -889,14 +889,14 @@ static bool iwl_mvm_sar_geo_support(struct iwl_mvm *mvm)
+>  	 * firmware versions.  Unfortunately, we don't have a TLV API
+>  	 * flag to rely on, so rely on the major version which is in
+>  	 * the first byte of ucode_ver.  This was implemented
+> -	 * initially on version 38 and then backported to29 and 17.
+> +	 * initially on version 38 and then backported to 29 and 17.
+>  	 * The intention was to have it in 36 as well, but not all
+>  	 * 8000 family got this feature enabled.  The 8000 family is
+>  	 * the only one using version 36, so skip this version
+> -	 * entirely.
+> +	 * entirely. All revisions of -29 fw still don't have
+> +	 * GEO_TX_POWER_LIMIT supported yet.
+>  	 */
+>  	return IWL_UCODE_SERIAL(mvm->fw->ucode_ver) >= 38 ||
+> -	       IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 29 ||
+>  	       IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 17;
+>  }
 
-drivers/edac/qcom_edac.c:86:40: error: array type has incomplete element type struct llcc_edac_reg_data
- static const struct llcc_edac_reg_data edac_reg_data[] = {
-                                        ^~~~~~~~~~~~~
-drivers/edac/qcom_edac.c:87:3: error: array index in non-array initializer
-  [LLCC_DRAM_CE] = {
-   ^~~~~~~~~~~~
-drivers/edac/qcom_edac.c:87:3: note: (near initialization for edac_reg_data)
-drivers/edac/qcom_edac.c:88:3: error: field name not in record or union initializer
-   .name = "DRAM Single-bit",
-...
-drivers/edac/qcom_edac.c:169:51: warning: struct llcc_drv_data declared inside parameter
- list will not be visible outside of this definition or declaration
- qcom_llcc_clear_error_status(int err_type, struct llcc_drv_data *drv)
-                                                   ^~~~~~~~~~~~~
+Thanks for the patch!
 
-This patch move the needed definitions back to include.
+But I have investigated this (even) further and now I see that 3168
+doesn't have this command, but 7265D does.  The latter also uses -29,
+so we can't blindly disable all -29 versions.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 99356b03b431 ("soc: qcom: Make llcc-qcom a generic driver")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/soc/qcom/llcc-qcom.c       | 50 --------------------------------------
- include/linux/soc/qcom/llcc-qcom.h | 50 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 50 insertions(+), 50 deletions(-)
+Can you try this instead?
 
-diff --git a/drivers/soc/qcom/llcc-qcom.c b/drivers/soc/qcom/llcc-qcom.c
-index 98563ef..43606736 100644
---- a/drivers/soc/qcom/llcc-qcom.c
-+++ b/drivers/soc/qcom/llcc-qcom.c
-@@ -86,56 +86,6 @@ struct llcc_slice_config {
- 	bool activate_on_init;
- };
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
+b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
+index 0d2229319261..38d89ee9bd28 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
+@@ -906,8 +906,10 @@ static bool iwl_mvm_sar_geo_support(struct iwl_mvm
+*mvm)
+         * entirely.
+         */
+        return IWL_UCODE_SERIAL(mvm->fw->ucode_ver) >= 38 ||
+-              IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 29 ||
+-              IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 17;
++              IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 17 ||
++              (IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 29 &&
++               (mvm->trans->hw_rev &
++                CSR_HW_REV_TYPE_MSK) == CSR_HW_REV_TYPE_7265D);
+ }
  
--/**
-- * llcc_drv_data - Data associated with the llcc driver
-- * @regmap: regmap associated with the llcc device
-- * @bcast_regmap: regmap associated with llcc broadcast offset
-- * @cfg: pointer to the data structure for slice configuration
-- * @lock: mutex associated with each slice
-- * @cfg_size: size of the config data table
-- * @max_slices: max slices as read from device tree
-- * @num_banks: Number of llcc banks
-- * @bitmap: Bit map to track the active slice ids
-- * @offsets: Pointer to the bank offsets array
-- * @ecc_irq: interrupt for llcc cache error detection and reporting
-- */
--struct llcc_drv_data {
--	struct regmap *regmap;
--	struct regmap *bcast_regmap;
--	const struct llcc_slice_config *cfg;
--	struct mutex lock;
--	u32 cfg_size;
--	u32 max_slices;
--	u32 num_banks;
--	unsigned long *bitmap;
--	u32 *offsets;
--	int ecc_irq;
--};
--
--/**
-- * llcc_edac_reg_data - llcc edac registers data for each error type
-- * @name: Name of the error
-- * @synd_reg: Syndrome register address
-- * @count_status_reg: Status register address to read the error count
-- * @ways_status_reg: Status register address to read the error ways
-- * @reg_cnt: Number of registers
-- * @count_mask: Mask value to get the error count
-- * @ways_mask: Mask value to get the error ways
-- * @count_shift: Shift value to get the error count
-- * @ways_shift: Shift value to get the error ways
-- */
--struct llcc_edac_reg_data {
--	char *name;
--	u64 synd_reg;
--	u64 count_status_reg;
--	u64 ways_status_reg;
--	u32 reg_cnt;
--	u32 count_mask;
--	u32 ways_mask;
--	u8  count_shift;
--	u8  ways_shift;
--};
--
- struct qcom_llcc_config {
- 	const struct llcc_slice_config *sct_data;
- 	int size;
-diff --git a/include/linux/soc/qcom/llcc-qcom.h b/include/linux/soc/qcom/llcc-qcom.h
-index c0acdb2..90b8646 100644
---- a/include/linux/soc/qcom/llcc-qcom.h
-+++ b/include/linux/soc/qcom/llcc-qcom.h
-@@ -37,6 +37,56 @@ struct llcc_slice_desc {
- 	size_t slice_size;
- };
- 
-+/**
-+ * llcc_edac_reg_data - llcc edac registers data for each error type
-+ * @name: Name of the error
-+ * @synd_reg: Syndrome register address
-+ * @count_status_reg: Status register address to read the error count
-+ * @ways_status_reg: Status register address to read the error ways
-+ * @reg_cnt: Number of registers
-+ * @count_mask: Mask value to get the error count
-+ * @ways_mask: Mask value to get the error ways
-+ * @count_shift: Shift value to get the error count
-+ * @ways_shift: Shift value to get the error ways
-+ */
-+struct llcc_edac_reg_data {
-+	char *name;
-+	u64 synd_reg;
-+	u64 count_status_reg;
-+	u64 ways_status_reg;
-+	u32 reg_cnt;
-+	u32 count_mask;
-+	u32 ways_mask;
-+	u8  count_shift;
-+	u8  ways_shift;
-+};
-+
-+/**
-+ * llcc_drv_data - Data associated with the llcc driver
-+ * @regmap: regmap associated with the llcc device
-+ * @bcast_regmap: regmap associated with llcc broadcast offset
-+ * @cfg: pointer to the data structure for slice configuration
-+ * @lock: mutex associated with each slice
-+ * @cfg_size: size of the config data table
-+ * @max_slices: max slices as read from device tree
-+ * @num_banks: Number of llcc banks
-+ * @bitmap: Bit map to track the active slice ids
-+ * @offsets: Pointer to the bank offsets array
-+ * @ecc_irq: interrupt for llcc cache error detection and reporting
-+ */
-+struct llcc_drv_data {
-+	struct regmap *regmap;
-+	struct regmap *bcast_regmap;
-+	const struct llcc_slice_config *cfg;
-+	struct mutex lock;
-+	u32 cfg_size;
-+	u32 max_slices;
-+	u32 num_banks;
-+	unsigned long *bitmap;
-+	u32 *offsets;
-+	int ecc_irq;
-+};
-+
- #if IS_ENABLED(CONFIG_QCOM_LLCC)
- /**
-  * llcc_slice_getd - get llcc slice descriptor
--- 
-2.7.4
+ int iwl_mvm_get_sar_geo_profile(struct iwl_mvm *mvm)
 
+
+--
+Cheers,
+Luca.
 
