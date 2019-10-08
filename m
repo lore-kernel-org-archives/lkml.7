@@ -2,173 +2,117 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6822C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 18:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0139C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 18:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81A4821721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 18:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9D8321721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 18:05:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="gI2w8LEi"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JG+hpqwr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728804AbfJHSFT (ORCPT
+        id S1729268AbfJHSFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 14:05:19 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38376 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726439AbfJHSFS (ORCPT
+        Tue, 8 Oct 2019 14:05:40 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38921 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726320AbfJHSFk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 14:05:18 -0400
-Received: by mail-pf1-f194.google.com with SMTP id h195so11240473pfe.5
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 11:05:18 -0700 (PDT)
+        Tue, 8 Oct 2019 14:05:40 -0400
+Received: by mail-io1-f68.google.com with SMTP id a1so38545279ioc.6
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 11:05:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ELxAahh6Yu3vLwEO8PoffGoqAdx+X0u75FdVW3JY1Sg=;
-        b=gI2w8LEiuJ8QiTz0qaKjrFj29ovgQqape9UrwF8PgqhKY5YLEnDL2d7vZ6bRaaDCMO
-         ACwTwDvSBazaHtOHX/3gUREFksyAHhJMuT9PitspDDM9DWXZ7M4x8/d5Gwd2O3uZytRD
-         eo9WymPXThG/wamCnCsvWSs8pwN+w6PUuy2n0=
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7HI75GouwRxYN8A61a1OmNG/T9ubH5sh09rpMiJz5bs=;
+        b=JG+hpqwrxAKEEYcv+zMT9gPASAVNdwQPfuQybjrMkqX/JlIEn7BlrTVVWK3rnK72rp
+         IrP1u4TMxOUbhXCRKUMtovSns1sZr0NWLjFJ1Sha5/epWnT4NpUp0kHnroYgRKJ2I5AG
+         /kVf66tqMQ5oGVfF2ibcRgZyOpKNYmuoC9kTg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ELxAahh6Yu3vLwEO8PoffGoqAdx+X0u75FdVW3JY1Sg=;
-        b=c8xX1WQQfA8pSc5A37Nn4yZfHDWtTwUy01tpQzxbpHH0i/w52TD/ZsKCQDiSkX6cBn
-         kZR0IiU1YWlTU1zPGTCiE29JQkwe5WCSBbs8ih1wNibJ3q3sP9HLcRAikVC2javIOIrU
-         Fgd0I+Np3kDKluYbrEcc+5fB7LEhBC7swGtHfsOa38E1VONsnXKQabAr0TvyAwvkG7PU
-         pPJXJNd9wKtCy6TDhKEuvNAZHi0czCLuRZCV/jtzfLvXPaPFrhEbHC5DAUUU2kYb3JN8
-         SLcwqKGGGT5crTtFJcjLZgBchZg9bMfFZ70f5PPvHvtfuy/MOTmOPVUepn2NO6+jg8jE
-         EMJQ==
-X-Gm-Message-State: APjAAAXp44hrcFEmeMH6kIO+T6CMD7F+WuT3wzaPEzFWoODLookA2sYI
-        jpczUhDKhmTK6X+ai4Ya+byx4A==
-X-Google-Smtp-Source: APXvYqx9Yy4rF5ZGPbnFM8um+WCTgOQ2VEF8Ceziv6hXyFbR88Ad4Mvbu6bXH2//Ti5CUkovB742/g==
-X-Received: by 2002:a17:90a:3d08:: with SMTP id h8mr7434521pjc.12.1570557917832;
-        Tue, 08 Oct 2019 11:05:17 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id h26sm18536212pgh.7.2019.10.08.11.05.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2019 11:05:17 -0700 (PDT)
-Date:   Tue, 8 Oct 2019 14:05:16 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     jannh@google.com, arve@android.com, christian@brauner.io,
-        devel@driverdev.osuosl.org, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, maco@android.com, tkjos@google.com,
-        Todd Kjos <tkjos@android.com>,
-        Hridya Valsaraju <hridya@google.com>
-Subject: Re: [PATCH] binder: prevent UAF read in
- print_binder_transaction_log_entry()
-Message-ID: <20191008180516.GB143258@google.com>
-References: <CAG48ez14Q0-F8LqsvcNbyR2o6gPW8SHXsm4u5jmD9MpsteM2Tw@mail.gmail.com>
- <20191008130159.10161-1-christian.brauner@ubuntu.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7HI75GouwRxYN8A61a1OmNG/T9ubH5sh09rpMiJz5bs=;
+        b=YvGqaOd8WDlQ5SWW2HU7cmJHms/5VP00SVmLQMvQ9q9IUV/GJuvW1lQe78t5Oc95xq
+         0l5wtW7Y3tPbyfZJHuxEsyEn3LCy72TuYBZ0k5eW536gNkbaMAH+FDxZu80MNvgfxpfD
+         RAlh2n+/W7jHq9olH5tKffBE2WDUB1cdffT9ffW1SI4uYjI2/KPQWi9+KY0lk5jgEXWa
+         hp636ybgJvIEEPyAFvTqElxGRMxjepyw8OtsElLU0eZubMOZVkKQWtx56RFzpe0OpzEz
+         dSVVV36LoBfYpcCVzllu0rCUvOBC7N0H5xsuu3YWaSToBlIQsEChRW+8qnXNcCFftdIF
+         OTDw==
+X-Gm-Message-State: APjAAAVoLwa5tPa/TcfeJrzDvxK3/nBuoxDk+FU2YR9hfw55qT0MCfkZ
+        pVhDLh5tMC43CkcBuLm2LER4R2sjobo=
+X-Google-Smtp-Source: APXvYqxL91WRqDnoQrNKUIizQF09GiCnxUy4P3jxBEbSLnYKkYeEPPgGSGsvN582it/XoSMowBXigQ==
+X-Received: by 2002:a6b:b213:: with SMTP id b19mr28982816iof.58.1570557939315;
+        Tue, 08 Oct 2019 11:05:39 -0700 (PDT)
+Received: from mail-io1-f46.google.com (mail-io1-f46.google.com. [209.85.166.46])
+        by smtp.gmail.com with ESMTPSA id u124sm7246664ioe.63.2019.10.08.11.05.36
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Oct 2019 11:05:38 -0700 (PDT)
+Received: by mail-io1-f46.google.com with SMTP id n26so38439652ioj.8
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 11:05:36 -0700 (PDT)
+X-Received: by 2002:a5d:9812:: with SMTP id a18mr13195587iol.168.1570557936383;
+ Tue, 08 Oct 2019 11:05:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191008130159.10161-1-christian.brauner@ubuntu.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191003094137.v2.1.Ic9fd698810ea569c465350154da40b85d24f805b@changeid>
+In-Reply-To: <20191003094137.v2.1.Ic9fd698810ea569c465350154da40b85d24f805b@changeid>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 8 Oct 2019 11:05:24 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Xi-M=Kk0axj=ukGMDr4p0a86LRdiL-6WyPZnL2vuDZGA@mail.gmail.com>
+Message-ID: <CAD=FV=Xi-M=Kk0axj=ukGMDr4p0a86LRdiL-6WyPZnL2vuDZGA@mail.gmail.com>
+Subject: Re: [PATCH v2] ARM: dts: rockchip: Use interpolated brightness tables
+ for veyron
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 03:01:59PM +0200, Christian Brauner wrote:
-> When a binder transaction is initiated on a binder device coming from a
-> binderfs instance, a pointer to the name of the binder device is stashed
-> in the binder_transaction_log_entry's context_name member. Later on it
-> is used to print the name in print_binder_transaction_log_entry(). By
-> the time print_binder_transaction_log_entry() accesses context_name
-> binderfs_evict_inode() might have already freed the associated memory
-> thereby causing a UAF. Do the simple thing and prevent this by copying
-> the name of the binder device instead of stashing a pointer to it.
-> 
-> Reported-by: Jann Horn <jannh@google.com>
-> Fixes: 03e2e07e3814 ("binder: Make transaction_log available in binderfs")
-> Link: https://lore.kernel.org/r/CAG48ez14Q0-F8LqsvcNbyR2o6gPW8SHXsm4u5jmD9MpsteM2Tw@mail.gmail.com
-> Cc: Joel Fernandes <joel@joelfernandes.org>
-> Cc: Todd Kjos <tkjos@android.com>
-> Cc: Hridya Valsaraju <hridya@google.com>
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+Hi,
+
+On Thu, Oct 3, 2019 at 9:42 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+>
+> Use interpolated brightness tables (added by commit 573fe6d1c25
+> ("backlight: pwm_bl: Linear interpolation between
+> brightness-levels") for veyron, instead of specifying every single
+> step. Some devices/panels have intervals that are smaller than
+> the specified 'num-interpolated-steps', the driver interprets
+> these intervals as a single step.
+>
+> Another option would be to switch to a perceptual brightness curve
+> (CIE 1931), with the caveat that it would change the behavior of
+> the backlight. Also the concept of a minimum brightness level is
+> currently not supported for CIE 1931 curves.
+>
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 > ---
->  drivers/android/binder.c          | 4 +++-
->  drivers/android/binder_internal.h | 2 +-
->  2 files changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-> index c0a491277aca..5b9ac2122e89 100644
-> --- a/drivers/android/binder.c
-> +++ b/drivers/android/binder.c
-> @@ -57,6 +57,7 @@
->  #include <linux/sched/signal.h>
->  #include <linux/sched/mm.h>
->  #include <linux/seq_file.h>
-> +#include <linux/string.h>
->  #include <linux/uaccess.h>
->  #include <linux/pid_namespace.h>
->  #include <linux/security.h>
-> @@ -66,6 +67,7 @@
->  #include <linux/task_work.h>
->  
->  #include <uapi/linux/android/binder.h>
-> +#include <uapi/linux/android/binderfs.h>
->  
->  #include <asm/cacheflush.h>
->  
-> @@ -2876,7 +2878,7 @@ static void binder_transaction(struct binder_proc *proc,
->  	e->target_handle = tr->target.handle;
->  	e->data_size = tr->data_size;
->  	e->offsets_size = tr->offsets_size;
-> -	e->context_name = proc->context->name;
-> +	strscpy(e->context_name, proc->context->name, BINDERFS_MAX_NAME);
+>
+> Changes in v2:
+> - added 0 as first step for devices/panels that require a minimum
+>   PWM duty cycle
+> - increased 'num-interpolated-steps' values by one, it's not the
+>   number of steps between levels, but that number +1
+>
+>  arch/arm/boot/dts/rk3288-veyron-edp.dtsi   | 35 ++--------------------
+>  arch/arm/boot/dts/rk3288-veyron-jaq.dts    | 35 ++--------------------
+>  arch/arm/boot/dts/rk3288-veyron-minnie.dts | 35 ++--------------------
+>  arch/arm/boot/dts/rk3288-veyron-tiger.dts  | 35 ++--------------------
+>  4 files changed, 8 insertions(+), 132 deletions(-)
 
-Strictly speaking, proc-context->name can also be initialized for !BINDERFS
-so the BINDERFS in the MAX_NAME macro is misleading. So probably there should
-be a BINDER_MAX_NAME (and associated checks for whether non BINDERFS names
-fit within the MAX.
+I guess if someone wanted to they could try to increase the number of
+steps and see if they got prettier backlight transition, but what's
+there now doesn't bother me and has the advantage of matching what has
+been in use forever.  Thus:
 
->  	if (reply) {
-
->  		binder_inner_proc_lock(proc);
-> diff --git a/drivers/android/binder_internal.h b/drivers/android/binder_internal.h
-> index bd47f7f72075..ae991097d14d 100644
-> --- a/drivers/android/binder_internal.h
-> +++ b/drivers/android/binder_internal.h
-> @@ -130,7 +130,7 @@ struct binder_transaction_log_entry {
->  	int return_error_line;
->  	uint32_t return_error;
->  	uint32_t return_error_param;
-> -	const char *context_name;
-> +	char context_name[BINDERFS_MAX_NAME + 1];
-
-Same comment here, context_name can be used for non-BINDERFS transactions as
-well such as default binder devices.
-
-One more thought, this can be made dependent on CONFIG_BINDERFS since regular
-binder devices cannot be unregistered AFAICS and as Jann said, the problem is
-BINDERFS specific. That way we avoid the memcpy for _every_ transaction.
-These can be thundering when Android starts up.
-
-(I secretly wish C strings could be refcounted to avoid exactly this issue,
-that should not be hard to develop but I am not sure if it is worth it for
-this problem :) - For one, it will avoid having to do the strcpy for _every_
-transaction).
-
-Other than these nits, please add my tag on whichever is the final solution:
-
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-
-thanks,
-
- - Joel
-
-
->  };
->  
->  struct binder_transaction_log {
-> -- 
-> 2.23.0
-> 
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
