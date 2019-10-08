@@ -2,176 +2,89 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABBFFC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB59C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94FBA2070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:32:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 160AE218AC
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:39:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="r+DgLo7b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729412AbfJHRce (ORCPT
+        id S1727688AbfJHRjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 13:32:34 -0400
-Received: from mga03.intel.com ([134.134.136.65]:64562 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726253AbfJHRcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 13:32:33 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 10:32:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,272,1566889200"; 
-   d="scan'208";a="193439247"
-Received: from rjwysock-mobl1.ger.corp.intel.com (HELO [10.249.147.52]) ([10.249.147.52])
-  by fmsmga007.fm.intel.com with ESMTP; 08 Oct 2019 10:32:28 -0700
-Subject: Re: [PATCH v2] PCI: PM: Move to D0 before calling
- pci_legacy_resume_early()
-To:     Dexuan Cui <decui@microsoft.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "driverdev-devel@linuxdriverproject.org" 
-        <driverdev-devel@linuxdriverproject.org>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "jackm@mellanox.com" <jackm@mellanox.com>
-References: <KU1P153MB016637CAEAD346F0AA8E3801BFAD0@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM>
- <20191007132414.GA19294@google.com>
- <PU1P153MB016996765F9BB827256D05DEBF9B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-From:   "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Organization: Intel Technology Poland Sp. z o. o., KRS 101882, ul. Slowackiego
- 173, 80-298 Gdansk
-Message-ID: <a2d8ad9f-b59d-57e4-f014-645e7b796cc4@intel.com>
-Date:   Tue, 8 Oct 2019 19:32:27 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 8 Oct 2019 13:39:31 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:42784 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfJHRja (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 13:39:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=7mN2uRVrNBa851TOjCoSypqhGYuGGBF+I76EoO/K6j0=; b=r+DgLo7b05l0q8vi7/Yh3VmUs
+        Xe/4iS4aWYQrnjn3ytyVHx4sCzKzxn2849Nxnq47Iq1n892BH0eBR0IoafLt7XNgA+k8zduxvtbWw
+        +qy5bUZHE4UALRknq/VElO2sCQNjq77U8P/vFCQrMgYyuFKTEt/Um9wx/EW2/N3O48KFg4rrxNi9P
+        pF5vHI/0KY0lWDTO3cu3/6uPOHxh10wAe3unO2T7FiCtGzI7pcBdEeagCDGPi/+DAFd98U40CvCF5
+        3kPjXXzTpSDKkr6KlFgSL7zX7XF1gK7ENVnnrZOdymcN3XJhh9LcDZ8VKpdib+w7pRYAuTKJCO1+M
+        drr0gbkNg==;
+Received: from [31.161.223.134] (helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iHtS6-0004Aj-VY; Tue, 08 Oct 2019 17:39:18 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D56789802E0; Tue,  8 Oct 2019 19:39:10 +0200 (CEST)
+Date:   Tue, 8 Oct 2019 19:39:10 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Phil Auld <pauld@redhat.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Hillf Danton <hdanton@sina.com>
+Subject: Re: [PATCH v3 04/10] sched/fair: rework load_balance
+Message-ID: <20191008173910.GB22902@worktop.programming.kicks-ass.net>
+References: <1568878421-12301-1-git-send-email-vincent.guittot@linaro.org>
+ <1568878421-12301-5-git-send-email-vincent.guittot@linaro.org>
+ <c752dd1a-731e-aae3-6a2c-aecf88901ac0@arm.com>
+ <CAKfTPtBQNJfNmBqpuaefsLzsTrGxJ=2bTs+tRdbOAa9J3eKuVw@mail.gmail.com>
+ <31cac0c1-98e4-c70e-e156-51a70813beff@arm.com>
+ <20191008141642.GQ2294@hirez.programming.kicks-ass.net>
+ <b4e29e48-a97c-67e5-a284-6ddc13222c5b@arm.com>
+ <20191008153002.GA21999@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <PU1P153MB016996765F9BB827256D05DEBF9B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191008153002.GA21999@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/7/2019 8:57 PM, Dexuan Cui wrote:
->> -----Original Message-----
->> From: Bjorn Helgaas <helgaas@kernel.org>
->> Sent: Monday, October 7, 2019 6:24 AM
->> To: Dexuan Cui <decui@microsoft.com>
->> Cc: lorenzo.pieralisi@arm.com; linux-pci@vger.kernel.org; Michael Kelley
->> <mikelley@microsoft.com>; linux-hyperv@vger.kernel.org;
->> linux-kernel@vger.kernel.org; driverdev-devel@linuxdriverproject.org; Sasha
->> Levin <Alexander.Levin@microsoft.com>; Haiyang Zhang
->> <haiyangz@microsoft.com>; KY Srinivasan <kys@microsoft.com>;
->> olaf@aepfle.de; apw@canonical.com; jasowang@redhat.com; vkuznets
->> <vkuznets@redhat.com>; marcelo.cerri@canonical.com; Stephen Hemminger
->> <sthemmin@microsoft.com>; jackm@mellanox.com
->> Subject: Re: [PATCH v2] PCI: PM: Move to D0 before calling
->> pci_legacy_resume_early()
->>
->> On Wed, Aug 14, 2019 at 01:06:55AM +0000, Dexuan Cui wrote:
->>> In pci_legacy_suspend_late(), the device state is moved to PCI_UNKNOWN.
->>>
->>> In pci_pm_thaw_noirq(), the state is supposed to be moved back to PCI_D0,
->>> but the current code misses the pci_legacy_resume_early() path, so the
->>> state remains in PCI_UNKNOWN in that path. As a result, in the resume
->>> phase of hibernation, this causes an error for the Mellanox VF driver,
->>> which fails to enable MSI-X because pci_msi_supported() is false due
->>> to dev->current_state != PCI_D0:
->>>
->>> mlx4_core a6d1:00:02.0: Detected virtual function - running in slave mode
->>> mlx4_core a6d1:00:02.0: Sending reset
->>> mlx4_core a6d1:00:02.0: Sending vhcr0
->>> mlx4_core a6d1:00:02.0: HCA minimum page size:512
->>> mlx4_core a6d1:00:02.0: Timestamping is not supported in slave mode
->>> mlx4_core a6d1:00:02.0: INTx is not supported in multi-function mode,
->> aborting
->>> PM: dpm_run_callback(): pci_pm_thaw+0x0/0xd7 returns -95
->>> PM: Device a6d1:00:02.0 failed to thaw: error -95
->>>
->>> To be more accurate, the "resume" phase means the "thaw" callbacks which
->>> run before the system enters hibernation: when the user runs the command
->>> "echo disk > /sys/power/state" for hibernation, first the kernel "freezes"
->>> all the devices and creates a hibernation image, then the kernel "thaws"
->>> the devices including the disk/NIC, writes the memory to the disk, and
->>> powers down. This patch fixes the error message for the Mellanox VF driver
->>> in this phase.
->>>
->>> When the system starts again, a fresh kernel starts to run, and when the
->>> kernel detects that a hibernation image was saved, the kernel "quiesces"
->>> the devices, and then "restores" the devices from the saved image. In this
->>> path:
->>> device_resume_noirq() -> ... ->
->>>    pci_pm_restore_noirq() ->
->>>      pci_pm_default_resume_early() ->
->>>        pci_power_up() moves the device states back to PCI_D0. This path is
->>> not broken and doesn't need my patch.
->>>
->>> Signed-off-by: Dexuan Cui <decui@microsoft.com>
->> This looks like a bugfix for 5839ee7389e8 ("PCI / PM: Force devices to
->> D0 in pci_pm_thaw_noirq()") so maybe it should be marked for stable as
->> 5839ee7389e8 was?
->>
->> Rafael, could you confirm?
+On Tue, Oct 08, 2019 at 05:30:02PM +0200, Vincent Guittot wrote:
 
-No, it is not a bug fix for that commit.  The underlying issue would be 
-there without that commit too.
+> This is how I plan to get ride of the problem:
+> +		if (busiest->group_weight == 1 || sds->prefer_sibling) {
+> +			unsigned int nr_diff = busiest->sum_h_nr_running;
+> +			/*
+> +			 * When prefer sibling, evenly spread running tasks on
+> +			 * groups.
+> +			 */
+> +			env->migration_type = migrate_task;
+> +			lsub_positive(&nr_diff, local->sum_h_nr_running);
+> +			env->imbalance = nr_diff >> 1;
+> +			return;
+> +		}
 
-
->>> ---
->>>
->>> changes in v2:
->>> 	Updated the changelog with more details.
->>>
->>>   drivers/pci/pci-driver.c | 7 ++++---
->>>   1 file changed, 4 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
->>> index 36dbe960306b..27dfc68db9e7 100644
->>> --- a/drivers/pci/pci-driver.c
->>> +++ b/drivers/pci/pci-driver.c
->>> @@ -1074,15 +1074,16 @@ static int pci_pm_thaw_noirq(struct device
->> *dev)
->>>   			return error;
->>>   	}
->>>
->>> -	if (pci_has_legacy_pm_support(pci_dev))
->>> -		return pci_legacy_resume_early(dev);
->>> -
->>>   	/*
->>>   	 * pci_restore_state() requires the device to be in D0 (because of MSI
->>>   	 * restoration among other things), so force it into D0 in case the
->>>   	 * driver's "freeze" callbacks put it into a low-power state directly.
->>>   	 */
->>>   	pci_set_power_state(pci_dev, PCI_D0);
->>> +
->>> +	if (pci_has_legacy_pm_support(pci_dev))
->>> +		return pci_legacy_resume_early(dev);
->>> +
->>>   	pci_restore_state(pci_dev);
->>>
->>>   	if (drv && drv->pm && drv->pm->thaw_noirq)
->>> --
->>> 2.19.1
->>>
-The patch looks reasonable to me, but the comment above the 
-pci_set_power_state() call needs to be updated too IMO.
-
-
+I'm thinking the max_t(long, 0, ...); variant reads a lot simpler and
+really _should_ work given that -fno-strict-overflow / -fwrapv mandates
+2s complement.
