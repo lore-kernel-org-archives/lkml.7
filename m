@@ -2,51 +2,105 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F13F1C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF29C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D052720640
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:50:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9F4220640
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:50:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730988AbfJHMuO (ORCPT
+        id S1731001AbfJHMum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 08:50:14 -0400
-Received: from verein.lst.de ([213.95.11.211]:46671 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730605AbfJHMuN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 08:50:13 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id D55AD68B05; Tue,  8 Oct 2019 14:50:08 +0200 (CEST)
-Date:   Tue, 8 Oct 2019 14:50:08 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: ehci-pci breakage with dma-mapping changes in 5.4-rc2
-Message-ID: <20191008125008.GA4829@lst.de>
-References: <20191007175430.GA32537@rani.riverdale.lan> <20191007175528.GA21857@lst.de> <20191007175630.GA28861@infradead.org> <20191007175856.GA42018@rani.riverdale.lan> <20191007183206.GA13589@rani.riverdale.lan> <20191007184754.GB31345@lst.de> <20191007221054.GA409402@rani.riverdale.lan> <20191007235401.GA608824@rani.riverdale.lan> <20191008073210.GB9452@lst.de> <20191008115103.GA463127@rani.riverdale.lan>
+        Tue, 8 Oct 2019 08:50:42 -0400
+Received: from smtprelay0013.hostedemail.com ([216.40.44.13]:42754 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730605AbfJHMul (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 08:50:41 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 49108180A68C0;
+        Tue,  8 Oct 2019 12:50:40 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: run25_5bb555778148
+X-Filterd-Recvd-Size: 2428
+Received: from XPS-9350.home (unknown [47.151.152.152])
+        (Authenticated sender: joe@perches.com)
+        by omf05.hostedemail.com (Postfix) with ESMTPA;
+        Tue,  8 Oct 2019 12:50:39 +0000 (UTC)
+Message-ID: <5ccc9458aeb124d5c66baa8fd24e78e918609487.camel@perches.com>
+Subject: Re: [PATCH] checkpatch: use patch subject when reading from stdin
+From:   Joe Perches <joe@perches.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Andy Whitcroft <apw@canonical.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org
+Date:   Tue, 08 Oct 2019 05:50:37 -0700
+In-Reply-To: <20191008094006.8251-1-geert+renesas@glider.be>
+References: <20191008094006.8251-1-geert+renesas@glider.be>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191008115103.GA463127@rani.riverdale.lan>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 07:51:03AM -0400, Arvind Sankar wrote:
-> What I mean is, do there exist devices (which would necessarily support
-> 64-bit DMA) that want to DMA using bigger than 4Gb buffers. Eg a GPU
-> accelerator card with 16Gb of RAM on-board that wants to map 6Gb for DMA
-> in one go, or 5 accelerator cards that are in one IOMMU domain and want
-> to simultaneously map 1Gb each.
+On Tue, 2019-10-08 at 11:40 +0200, Geert Uytterhoeven wrote:
+> When reading a patch file from standard input, checkpatch calls it "Your
+> patch", and reports its state as:
+> 
+>     Your patch has style problems, please review.
+> 
+> or:
+> 
+>     Your patch has no obvious style problems and is ready for submission.
+> 
+> Hence when checking multiple patches by piping them to checkpatch, e.g.
+> when checking patchwork bundles using:
+> 
+>     formail -s scripts/checkpatch.pl < bundle-foo.mbox
+> 
+> it is difficult to identify which patches need to be reviewed and
+> improved.
+> 
+> Fix this by replacing "Your patch" by the patch subject, if present.
 
-If you allocate more than 32-bits worth of address space the IOMMU
-address space allocator will dip into 64-bit values if the device
-dma mask supports that.
+Seems sensible, thanks Geert
+
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  scripts/checkpatch.pl | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index 6fcc66afb0880830..6b9feb4d646a116b 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -1047,6 +1047,10 @@ for my $filename (@ARGV) {
+>  	}
+>  	while (<$FILE>) {
+>  		chomp;
+> +		if ($vname eq 'Your patch') {
+> +			my ($subject) = $_ =~ /^Subject:\s*(.*)/;
+> +			$vname = '"' . $subject . '"' if $subject;
+
+trivia:
+
+Not a big deal and is likely good enough but this will
+cut off subjects that are continued on multiple lines.
+
+e.g.:
+
+Subject: [PATCH Vx n/M] very long description with a subject spanning
+ multiple lines
+From: patch submitter <submitter@domain.tld>
+
+> +		}
+>  		push(@rawlines, $_);
+>  	}
+>  	close($FILE);
+
