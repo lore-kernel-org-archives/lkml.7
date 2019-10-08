@@ -2,107 +2,116 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A7EDC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20655C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CFD82173B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:43:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 006E021721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:44:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730396AbfJHHnI (ORCPT
+        id S1730405AbfJHHoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 03:43:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39514 "EHLO mx1.suse.de"
+        Tue, 8 Oct 2019 03:44:00 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39908 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730218AbfJHHnI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 03:43:08 -0400
+        id S1730222AbfJHHn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 03:43:59 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3AC18AEF1;
-        Tue,  8 Oct 2019 07:43:06 +0000 (UTC)
-Message-ID: <1570520919.25071.2.camel@suse.cz>
-Subject: Re: [PATCH v2 1/2] x86,sched: Add support for frequency invariance
-From:   Giovanni Gherdovich <ggherdovich@suse.cz>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@suse.de>,
-        Len Brown <lenb@kernel.org>, x86@kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Paul Turner <pjt@google.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Quentin Perret <qperret@qperret.net>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Doug Smythies <dsmythies@telus.net>
-Date:   Tue, 08 Oct 2019 09:48:39 +0200
-In-Reply-To: <1990043.dY4KdrEkPr@kreacher>
-References: <20191002122926.385-1-ggherdovich@suse.cz>
-         <1906426.HDqaVa71mF@kreacher>
-         <20191003121537.GR4536@hirez.programming.kicks-ass.net>
-         <1990043.dY4KdrEkPr@kreacher>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        by mx1.suse.de (Postfix) with ESMTP id 0DF5FAB98;
+        Tue,  8 Oct 2019 07:43:58 +0000 (UTC)
+Date:   Tue, 8 Oct 2019 09:43:57 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org,
+        sergey.senozhatsky.work@gmail.com, rostedt@goodmis.org,
+        peterz@infradead.org, linux-mm@kvack.org,
+        john.ogness@linutronix.de, david@redhat.com,
+        linux-kernel@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
+Message-ID: <20191008074357.f33f6pbs4cw5majk@pathway.suse.cz>
+References: <1570228005-24979-1-git-send-email-cai@lca.pw>
+ <20191007143002.l37bt2lzqtnqjqxu@pathway.suse.cz>
+ <20191007144937.GO2381@dhcp22.suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191007144937.GO2381@dhcp22.suse.cz>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-10-03 at 19:53 +0200, Rafael J. Wysocki wrote:
-> On Thursday, October 3, 2019 2:15:37 PM CEST Peter Zijlstra wrote:
-> > On Thu, Oct 03, 2019 at 12:27:52PM +0200, Rafael J. Wysocki wrote:
-> > > On Wednesday, October 2, 2019 2:29:25 PM CEST Giovanni Gherdovich wrote:
-> > > > +static bool turbo_disabled(void)
-> > > > +{
-> > > > +	u64 misc_en;
-> > > > +	int err;
-> > > > +
-> > > > +	err = rdmsrl_safe(MSR_IA32_MISC_ENABLE, &misc_en);
-> > > > +	if (err)
-> > > > +		return false;
-> > > > +
-> > > > +	return (misc_en & MSR_IA32_MISC_ENABLE_TURBO_DISABLE);
-> > > > +}
-> > > 
-> > > This setting may be updated by the platform firmware (BIOS) in some cases
-> > > (see kernel.org BZ 200759, for example), so in general checking it once
-> > > at the init time is not enough.
+On Mon 2019-10-07 16:49:37, Michal Hocko wrote:
+> [Cc s390 maintainers - the lockdep is http://lkml.kernel.org/r/1570228005-24979-1-git-send-email-cai@lca.pw
+>  Petr has explained it is a false positive
+>  http://lkml.kernel.org/r/20191007143002.l37bt2lzqtnqjqxu@pathway.suse.cz]
+> On Mon 07-10-19 16:30:02, Petr Mladek wrote:
+> [...]
+> > I believe that it cannot really happen because:
 > > 
-> > Is there anything sane we can do if the BIOS frobs stuff like that under
-> > our feet? Other than yell bloody murder, that is?
+> > 	static int __init
+> > 	sclp_console_init(void)
+> > 	{
+> > 	[...]
+> > 		rc = sclp_rw_init();
+> > 	[...]
+> > 		register_console(&sclp_console);
+> > 		return 0;
+> > 	}
+> > 
+> > sclp_rw_init() is called before register_console(). And
+> > console_unlock() will never call sclp_console_write() before
+> > the console is registered.
+> > 
+> > AFAIK, lockdep only compares existing chain of locks. It does
+> > not know about console registration that would make some
+> > code paths mutually exclusive.
+> > 
+> > I believe that it is a false positive. I do not know how to
+> > avoid this lockdep report. I hope that it will disappear
+> > by deferring all printk() calls rather soon.
 > 
-> Sane?  No, I don't think so.
-> 
-> Now, in principle *something* could be done to fix things up in the _PPC
-> notify handler, but I guess we would just end up disabling the scale
-> invariance code altogether in those cases.
+> Thanks a lot for looking into this Petr. I have also checked the code
+> and I really fail to see why the allocation has to be done under the
+> lock in the first place. sclp_read_sccb and sclp_init_sccb are global
+> variables but I strongly suspect that they need a synchronization during
+> early init, callbacks are registered only later IIUC:
 
-I'm looking at how to react to turbo being disabled at run time, assuming a
-_PPC notification is triggered in that case.
+Good idea. It would work when the init function is called only once.
+But see below.
 
-I don't think the correct action would be to disable scale invariance: if the
-turbo range is not available, then max frequency is max_P, and scale
-invariance can go on using that. The case max_freq=max_P is represented by
-arch_max_freq=1024 in this patch (because arch_max_freq=max_freq*1024/max_P).
+> diff --git a/drivers/s390/char/sclp.c b/drivers/s390/char/sclp.c
+> index d2ab3f07c008..4b1c033e3255 100644
+> --- a/drivers/s390/char/sclp.c
+> +++ b/drivers/s390/char/sclp.c
+> @@ -1169,13 +1169,13 @@ sclp_init(void)
+>  	unsigned long flags;
+>  	int rc = 0;
+>  
+> +	sclp_read_sccb = (void *) __get_free_page(GFP_ATOMIC | GFP_DMA);
+> +	sclp_init_sccb = (void *) __get_free_page(GFP_ATOMIC | GFP_DMA);
+>  	spin_lock_irqsave(&sclp_lock, flags);
+>  	/* Check for previous or running initialization */
+>  	if (sclp_init_state != sclp_init_state_uninitialized)
+>  		goto fail_unlock;
 
-Since the variable arch_max_freq is global to all CPUs, the fact that the _PPC
-notification is sent to just one CPU is not a concern: the CPU receiving the
-notif will set arch_max_freq=1024 (Srinivas was worried about this in another
-message).
+It seems that sclp_init() could be called several times in parallel.
+I see it called from sclp_register() and sclp_initcall().
 
-This looks like a job for the ->update_limits callback you added to "struct
-cpufreq_driver" in response to the mentioned kernel.org BZ 200759.
-I see that only intel_pstate implements it, it's not clear to me yet if I'll
-have to give an ->update_limits to acpi_cpufreq as well to treat this case.
+I am not sure if it is really needed or if it is just a strange
+desing.
 
+It might be still possible to always do the allocation without the lock
+and free the memory when it is not really used. But I am not sure
+if we want to do this exercise just to avoid lockdep false positive.
 
-Giovanni
+Best Regards,
+Petr
