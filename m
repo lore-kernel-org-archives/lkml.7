@@ -2,105 +2,103 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B67ECE58C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 21:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37DEBC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 21:03:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B34DA2070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 21:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0889220873
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 21:03:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UpvrHmSJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m9awFJIn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731055AbfJHVAa (ORCPT
+        id S1731072AbfJHVDh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 17:00:30 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40393 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730720AbfJHVAa (ORCPT
+        Tue, 8 Oct 2019 17:03:37 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55882 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730674AbfJHVDh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 17:00:30 -0400
-Received: by mail-pg1-f195.google.com with SMTP id d26so10959650pgl.7
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 14:00:29 -0700 (PDT)
+        Tue, 8 Oct 2019 17:03:37 -0400
+Received: by mail-wm1-f68.google.com with SMTP id a6so4638516wma.5
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 14:03:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yVnzPJdyV7FO5xyMUaSFRF4krY7Ebw999D+CIkWoW0w=;
-        b=UpvrHmSJ/o+tlZQnZJuF15+KjkFId+6b4Q2KvX1rKHIIDaaANFqOMHtMh9wUwoJJA4
-         l5sHvJXl36ZzYlT0XHBRM84LqagMRcmhB+hZChxp4EJAfSlMxl4+UANL7820E8TBKDuA
-         /gcNgOFC7PJ/K+H8YuEBHNQFHccLAeMflbfMB9dgdEs5UZn2LbKBI18s231W2zzfI1Wg
-         LqGxONrJ1xKwgmNi6R0r4jRN9I2de0NJZUB1mEMjAWbs3Zn4jRcVQsid59hpsFazzZBV
-         2DsbQ2BuBJQyPSJ0odZeb1CuMnND0nHWCDJFjSdqqC34D7YNlimqBfCWJzmEsNFpFInE
-         N7LQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DwbSuCVPgdnfuc55S5QoU+HrLN1Lslk6AXfdZ8RTC9E=;
+        b=m9awFJInBde/MGOYE/MIqKtZr254xTohNiS2+mSSIvOf6QYazbZsauAFzC+R96cNZU
+         FHRiK1EV+xl1Hf80/ZxOlgvL99n8j2vUPooWgdBZ+3gK+yKTOdm0CB5EwID5jz4eLTob
+         VkMsVAtLV/+wAPhEhd/juT7Ng5r3FCrE48RVOVo+JNH/JCp2LiebjcvBhdz77+TsaU1F
+         PloVThIxID6gSWpY3zv14vLM4agKPnOcpN7k6vPoTABaeNYNbzqFKghgUc0lGZ2wUgE6
+         ysZCu4KDi+SrkKL0/QlOBJ3TjI1f/bdvfaEPurvezpqQNCbjzXX62+pezZk9JXkzjSxH
+         lRjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yVnzPJdyV7FO5xyMUaSFRF4krY7Ebw999D+CIkWoW0w=;
-        b=dc7FMnu6SM77n6/UgBHY5bf01P4vNUDU0eYYWVKgt23IvxDijKDwIT5ssYs/DdOyJT
-         440ddr5zBm9fTtzaoOBUEVLq+Cw3ln7k24ua1YGOqHAjKDD0wiOh5T/ynofS0AFAP7P9
-         R5Wyg5CQpa1dJtz1elIRH1Vj5mP0Sxc3tEWwVqy7H3TTsJE85dijT66+iiE731PI98Wu
-         zlk/HqBbkB5jTTCfkWa15+9x1y77h/FCsHvFsAqKoItl8vMDmYaidpH9hP0FTYhYXI3O
-         kWhXtfeNIZjHT6ba+5FQny7qgGy9bjfNdks50/nQqtKqtYN2cd1Z5TOJIL+DlefRetl5
-         Kk9w==
-X-Gm-Message-State: APjAAAUx0obDvBObWxwirDoX06inVJCZrlS3teiKV9nCJ1YGo2jxJt/P
-        Bqbx4/9QW5spLoddtvu8p6MPaw==
-X-Google-Smtp-Source: APXvYqwyxzllxF/LoBLa/x1iOZGL35rS0gTiTaUEVADayCbzUtTbP0axdqTlfofHfTzaGT8lgKDz/A==
-X-Received: by 2002:a17:90a:6509:: with SMTP id i9mr6821226pjj.82.1570568428738;
-        Tue, 08 Oct 2019 14:00:28 -0700 (PDT)
-Received: from google.com ([2620:15c:2cb:1:e90c:8e54:c2b4:29e7])
-        by smtp.gmail.com with ESMTPSA id q15sm90399pgl.12.2019.10.08.14.00.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2019 14:00:27 -0700 (PDT)
-Date:   Tue, 8 Oct 2019 14:00:22 -0700
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     Alan Maguire <alan.maguire@oracle.com>
-Cc:     linux-kselftest@vger.kernel.org, skhan@linuxfoundation.org,
-        mcgrof@kernel.org, keescook@chromium.org, yzaikin@google.com,
-        akpm@linux-foundation.org, yamada.masahiro@socionext.com,
-        catalin.marinas@arm.com, joe.lawrence@redhat.com,
-        penguin-kernel@i-love.sakura.ne.jp, schowdary@nvidia.com,
-        urezki@gmail.com, andriy.shevchenko@linux.intel.com,
-        changbin.du@intel.com, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 linux-kselftest-test 0/3] kunit: support building
- core/tests as modules
-Message-ID: <20191008210022.GA186342@google.com>
-References: <1570546546-549-1-git-send-email-alan.maguire@oracle.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DwbSuCVPgdnfuc55S5QoU+HrLN1Lslk6AXfdZ8RTC9E=;
+        b=tjMd3MikV33dOswwXj+UDUYnbv2/pEUllU++hBDjTg0MUvYfNkcEzzgpWDgRsWxYcw
+         bruNEgwRzcNN4jFt3OC66v7zV8Ewa7MUeVLPcnkQNa9Zrnis3eCiI6ujqE6re8gij2P1
+         YdcM6j86mTe1BWuzOE/Ahz7dAPiQHFLjg77+olkIQK0V33lsinuIbz2tBLt7lLMl4unp
+         0MBVxf/CAg3oxxklBWtNfnpU/8kU8lXNaVJAu5h4hlg4bA4X9RpPdPZBm4RanHBXjNiP
+         982urixBeLRufSP1271M47G6PAkS+GaXTQr3gYMszKbhr/mHNty7he0M8PwbYAUBdVPZ
+         946g==
+X-Gm-Message-State: APjAAAWvgftLUGEB464Q6UIQI5nr1DwoygypsCO+V8nRxgCaotfTMS4L
+        kbAuvubE9YTzKpJv0bkbijvZWQKpoHinN3JMeEc5cQ==
+X-Google-Smtp-Source: APXvYqztuQvm09D/e/iuK2cvpYO1uTjf4jBe0A/iujbXm8RUQJnLMWOcFU+QjXddgGnDARg3HVbK57y4JBwp9f8cYNE=
+X-Received: by 2002:a1c:a651:: with SMTP id p78mr72278wme.53.1570568615342;
+ Tue, 08 Oct 2019 14:03:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1570546546-549-1-git-send-email-alan.maguire@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191007201452.208067-1-samitolvanen@google.com>
+ <CAKwvOdmaMaO-Gpv2x0CWG+CRUCNKbNWJij97Jr0LaRaZXjAiTA@mail.gmail.com>
+ <CABCJKufxncBPOx6==57asbMF_On=g1sZAv+w6RnqHJFSwOSeTw@mail.gmail.com>
+ <CAKwvOd=k5iE8L5xbxwYDF=hSftqUXDdpgKYBDBa35XOkAx3d0w@mail.gmail.com>
+ <CABCJKucPcqSS=8dP-6hOwGpKUYxOk8Q_Av83O0A2A85JKznypQ@mail.gmail.com> <c0f0eb7e-9e46-10cc-1277-b37fcd48d0be@arm.com>
+In-Reply-To: <c0f0eb7e-9e46-10cc-1277-b37fcd48d0be@arm.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Tue, 8 Oct 2019 23:03:24 +0200
+Message-ID: <CAKv+Gu82ERZjaEH265+RNVjtQSk51ekHONniDZg-4vWy1VHkuQ@mail.gmail.com>
+Subject: Re: [PATCH] arm64: lse: fix LSE atomics with LLVM's integrated assembler
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 03:55:43PM +0100, Alan Maguire wrote:
-> The current kunit execution model is to provide base kunit functionality
-> and tests built-in to the kernel.  The aim of this series is to allow
-> building kunit itself and tests as modules.  This in turn allows a
+On Tue, 8 Oct 2019 at 18:19, Robin Murphy <robin.murphy@arm.com> wrote:
+>
+> On 08/10/2019 16:22, Sami Tolvanen wrote:
+> > On Mon, Oct 7, 2019 at 2:46 PM 'Nick Desaulniers' via Clang Built
+> > Linux <clang-built-linux@googlegroups.com> wrote:
+> >> I'm worried that one of these might lower to LSE atomics without
+> >> ALTERNATIVE guards by blanketing all C code with `-march=armv8-a+lse`.
+> >
+> > True, that's a valid concern. I think adding the directive to each
+> > assembly block is the way forward then, assuming the maintainers are
+> > fine with that.
+>
+> It's definitely a valid concern in principle, but in practice note that
+> lse.h ends up included in ~99% of C files, so the extension is enabled
+> more or less everywhere already.
+>
 
-Cool! I had plans for supporting this eventually, so I am more than
-happy to accept support for this!
+lse.h currently does
 
-> simple form of selective execution; load the module you wish to test.
-> In doing so, kunit itself (if also built as a module) will be loaded as
-> an implicit dependency.
+__asm__(".arch_extension        lse");
 
-Seems like a reasonable initial approach. I had some plans for a
-centralized test executor, but I don't think that this should be a
-problem.
-
-> Because this requires a core API modification - if a module delivers
-> multiple suites, they must be declared with the kunit_test_suites()
-> macro - we're proposing this patch as a candidate to be applied to the
-> test tree before too many kunit consumers appear.  We attempt to deal
-> with existing consumers in patch 1.
-
-Makese sense.
+which instructs the assembler to permit the use of LSE opcodes, but it
+does not instruct the compiler to emit them, so this is not quite the
+same thing.
