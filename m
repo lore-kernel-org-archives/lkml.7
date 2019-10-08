@@ -2,137 +2,112 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE88C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE15AC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD21720679
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:32:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE64320679
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:33:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lsDzesG1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e1Fxzd/Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730888AbfJHMcO (ORCPT
+        id S1730694AbfJHMd5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 08:32:14 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:56052 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730866AbfJHMcN (ORCPT
+        Tue, 8 Oct 2019 08:33:57 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:37054 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730317AbfJHMd4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 08:32:13 -0400
-Received: by mail-wm1-f66.google.com with SMTP id a6so2937707wma.5
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 05:32:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=shR49NxmVmRzjTPJaHTivjYNGPE5YJPsxJZdgJY6iQM=;
-        b=lsDzesG1tUV5boM2JpKkMBg+IFseYB8gNMB/2z51TmpVZtOsSvY9QoCHAHg2xVLTHz
-         4L/OzMarSv26biZjm6lJTIIUKbzUqcC+DISaetXJ+5TQhuxKrUPVujtlT8A8Yptd9Im6
-         m1XyUCPUkSk1YNzzRWR5e6sn/FlcnhsfWaL7i11yGRo5qt1+a1KGJM++DpPtShOoN7q/
-         pHsKNRT7WDiUb+8VUBO4W564RWtu19UZ0RJOo83T7Bzz4gi7DQfUVnUdqwjoHycTDLKK
-         cwL0Suha/Ii7w5pamlrveXOVzlUWtl8o6a/V5pORIDIj4w/4DT0VViYdoTgC3hQLbgWC
-         akjg==
+        Tue, 8 Oct 2019 08:33:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1570538035;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=vxNxzGS1YL2pIRA3iElWkbMg1T80wDQcjG/i1PxznHk=;
+        b=e1Fxzd/Z49/pCF4+A7wVnRB1gkhMs0/zq2K+BCJRGNcLY/g82jQFiPgrP+hY4V+Tc0UA7H
+        odvccT5xnz/iztmPTJvoy1Mqbyw3WKS8LEVQbjt7OqYXbUmJ+6pIq0luuc0zesBaFxBnlz
+        1iheRgL4u+tor8XIi2oOan7DfTZiQ/U=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-329-ZZlRT3KIM2KCz7xplebYPA-1; Tue, 08 Oct 2019 08:33:52 -0400
+Received: by mail-wm1-f72.google.com with SMTP id f63so919064wma.7
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 05:33:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=shR49NxmVmRzjTPJaHTivjYNGPE5YJPsxJZdgJY6iQM=;
-        b=Jwq69196cWCX1WPai10Flea1v8/0fUukcata0+3HFNnY5w+363hSvkDXOjOybN/rYr
-         hVFE1fBbPDdHAwHQx5rh02XLJ9FCTsyLSIKM/B7n5O+OHePrpFlTYfc3zeZqDKMH/IuH
-         Ig5V+Mbjq0uXRpkFXMmqg0hbqGRWoUYZryeF1B+/16Tpt29BVLtpi8z3IuqlFeva6Ewg
-         jsBhrxRGKKfotoYytVY6Ud5HMBdHf3XlwRsRYD8MYX8KRdK4+T57l9igtkn8adqUuBrh
-         FPmxrrzeit82FT35cD2pGsv0Eli+S2hOwd3eA98LifSc4weV8OrxouECp+BwRCqonFe0
-         vICw==
-X-Gm-Message-State: APjAAAVQ8p3scyyUWrjjOQXdjfDnw8pY0Bem9yZvAmCYQZI4uHLKVSlu
-        Z81C+qBYeV3aB/+kg/ok4hU=
-X-Google-Smtp-Source: APXvYqyt+SKerakwgnZgEgOsqSfWxhWKoeWLeDJsl5D4yFOTKVeXhAt6PaLtVToSGevP9GB607auBQ==
-X-Received: by 2002:a1c:8189:: with SMTP id c131mr3601513wmd.151.1570537931475;
-        Tue, 08 Oct 2019 05:32:11 -0700 (PDT)
-Received: from mail.google.com ([104.238.174.53])
-        by smtp.gmail.com with ESMTPSA id z5sm32094249wrs.54.2019.10.08.05.32.06
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=J4guI5W+JBy2/Wk9QmpICIZphEUf2I9ZwikXlS8M7Tk=;
+        b=BAn59oMGISHaz3w0SGCfmUluGbSvFC1W6Jz+FMpuzRnOZGlaf9QTyfRQWgh+z1dcYN
+         AeSmVrZnG6wIzhYTfRVQyo27F/hJpK4+t12lvjlQMIu14fLfd5G2/8x1DpzaSbQr3MrJ
+         gTkOxhWjipZd5UfxQmViBjFXOOBhj4QvWVBhJ++lE3Njoel8PPxMwM7zrEdoMzM14+SO
+         7xckv4IY0lKgDcE74hg0IU3FuuS+HhYbh1167WSvcUmG5kVO5q+rEwaQa3utJMM4/sUE
+         IQBkbO1WZWYmP+fXonLQmzExvIqouKqFnM0MOuQYNDf2EB8b2ShlZT5H5RhM/OmdXmmt
+         jimw==
+X-Gm-Message-State: APjAAAXuZIJ6lSAYgEAhXOPT5ZEBwzFmZnWKRcHZiCPCQK2ISNN78ikC
+        5Ijd4zP51MdAU4PPYHcD/25vZOu8Go7lQG1N8TaIi/lY2P6OdqThQ4KkmCBVIFhAMn8W8870yt0
+        BRjomH9slTlsZoas6vLSBpW1C
+X-Received: by 2002:a05:600c:2207:: with SMTP id z7mr3714162wml.149.1570538031448;
+        Tue, 08 Oct 2019 05:33:51 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyAKI2iZTVbZl4t588qZfShH353mJjPntH73s4tdZMg33tqt9c0kisZMYYS3sNnU0yf2q5GQA==
+X-Received: by 2002:a05:600c:2207:: with SMTP id z7mr3714148wml.149.1570538031223;
+        Tue, 08 Oct 2019 05:33:51 -0700 (PDT)
+Received: from mcroce-redhat.mxp.redhat.com (nat-pool-mxp-t.redhat.com. [149.6.153.186])
+        by smtp.gmail.com with ESMTPSA id u68sm4361842wmu.12.2019.10.08.05.33.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2019 05:32:10 -0700 (PDT)
-Date:   Tue, 8 Oct 2019 20:32:02 +0800
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Changbin Du <changbin.du@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] perf: add support for logging debug messages to
- file
-Message-ID: <20191008123201.qk5yfeys4ahpjopp@mail.google.com>
-References: <20191004023954.1116-1-changbin.du@gmail.com>
- <20191007112624.GG6919@krava>
+        Tue, 08 Oct 2019 05:33:50 -0700 (PDT)
+From:   Matteo Croce <mcroce@redhat.com>
+To:     Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org
+Subject: [PATCH] staging: vchiq: don't leak kernel address
+Date:   Tue,  8 Oct 2019 14:33:46 +0200
+Message-Id: <20191008123346.3931-1-mcroce@redhat.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191007112624.GG6919@krava>
-User-Agent: NeoMutt/20180716
+X-MC-Unique: ZZlRT3KIM2KCz7xplebYPA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 01:26:24PM +0200, Jiri Olsa wrote:
-> On Fri, Oct 04, 2019 at 10:39:52AM +0800, Changbin Du wrote:
-> > When in TUI mode, it is impossible to show all the debug messages to
-> > console. This make it hard to debug perf issues using debug messages.
-> > This patch adds support for logging debug messages to file to resolve
-> > this problem.
-> > 
-> > v3:
-> >   o fix a segfault issue.
-> 
-> heya,
-> getting segfault for this:
-> 
-> [jolsa@krava perf]$ ./perf report -vv 2>out
-> Segmentation fault (core dumped)
->
-This can be fixed by below change. In this case, log_file is NULL.
+Since commit ad67b74d2469d9b8 ("printk: hash addresses printed with %p"),
+an obfuscated kernel pointer is printed at boot:
 
---- a/tools/perf/util/debug.c
-+++ b/tools/perf/util/debug.c
-@@ -37,8 +37,10 @@ int veprintf(int level, int var, const char *fmt, va_list args)
-        if (var >= level) {
-                if (use_browser >= 1 && !log_file)
-                        ui_helpline__vshow(fmt, args);
--               else
-+               else if (log_file)
-                        ret = vfprintf(log_file, fmt, args);
-+               else
-+                       ret = vfprintf(stderr, fmt, args);
-        }
- 
-        return ret;
+    vchiq: vchiq_init_state: slot_zero =3D (____ptrval____)
 
+Remove the the print completely, as it's useless without the address.
 
+Signed-off-by: Matteo Croce <mcroce@redhat.com>
+---
+ drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-> jirka
-> 
-> > v2:
-> >   o specific all debug options one time.
-> > 
-> > Changbin Du (2):
-> >   perf: support multiple debug options separated by ','
-> >   perf: add support for logging debug messages to file
-> > 
-> >  tools/perf/Documentation/perf.txt |  15 ++--
-> >  tools/perf/util/debug.c           | 124 +++++++++++++++++++-----------
-> >  2 files changed, 90 insertions(+), 49 deletions(-)
-> > 
-> > -- 
-> > 2.20.1
-> > 
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c=
+ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
+index 56a23a297fa4..084cd4b0f07c 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
+@@ -2132,9 +2132,6 @@ vchiq_init_state(struct vchiq_state *state, struct vc=
+hiq_slot_zero *slot_zero)
+ =09char threadname[16];
+ =09int i;
+=20
+-=09vchiq_log_warning(vchiq_core_log_level,
+-=09=09"%s: slot_zero =3D %pK", __func__, slot_zero);
+-
+ =09if (vchiq_states[0]) {
+ =09=09pr_err("%s: VCHIQ state already initialized\n", __func__);
+ =09=09return VCHIQ_ERROR;
+--=20
+2.21.0
 
--- 
-Cheers,
-Changbin Du
