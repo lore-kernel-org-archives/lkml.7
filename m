@@ -2,146 +2,95 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DD4C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDAEC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0643206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:01:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570564874;
-	bh=MXnhJLTL8ti42i5VuVCIvvysD431dNS8jvytu6e8Lf8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=krUsxlmyhhN2sJh8vjkEX9WP12baJCObdhcAZqWHVnLWjpp6XZLx079MdzLgkX2fq
-	 1rhOdCQMV8d7KteKFcge83U7mLGBJTy1CjHoJlWXuAYsBeTjMx66HtKzCcm7c0JqmH
-	 NqatSKrMGeD0Nbz255sTfs62Kd3OXe4yAUfv5IFY=
+	by mail.kernel.org (Postfix) with ESMTP id C7B19206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:01:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730664AbfJHUBN (ORCPT
+        id S1730717AbfJHUBm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 16:01:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44394 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729436AbfJHUBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 16:01:13 -0400
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D87221920;
-        Tue,  8 Oct 2019 20:01:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570564871;
-        bh=MXnhJLTL8ti42i5VuVCIvvysD431dNS8jvytu6e8Lf8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=r3wGpJ5xQJauzB5omWs2piL66oogJbi9dKwnsf6P7dpJBpkjbxME+CL3Sby1isMxo
-         BpBwx+ii+CFuyMGzq10Oep53fWC7hjLld4CN0YwhP6JdH7Z7Jc1ory6inLSqnG+mDA
-         0ONxGaQ7yr848NPhVlPjE4y7Mc9JXtwdoXuYbDy0=
-Received: by mail-qk1-f171.google.com with SMTP id 4so23423qki.6;
-        Tue, 08 Oct 2019 13:01:11 -0700 (PDT)
-X-Gm-Message-State: APjAAAXP9Juwyxs9BQw9a7NgCEupwd72SxEb9goA0mh+Ftu6AoBV2G6x
-        yCJBJUeveTTiuaoWogoQwhxbhXEJ1iNvTJQHKA==
-X-Google-Smtp-Source: APXvYqzM48d5zR+zkCtLlKtkyUNzyrezT7QeMT9990hbYZvI1831lnXsT0GtMlUy9GSCqRc67XwIzIu3jH6XXuZmdCE=
-X-Received: by 2002:a05:620a:12d5:: with SMTP id e21mr31267756qkl.152.1570564870662;
- Tue, 08 Oct 2019 13:01:10 -0700 (PDT)
+        Tue, 8 Oct 2019 16:01:42 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:40822 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729436AbfJHUBm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 16:01:42 -0400
+Received: by mail-pf1-f196.google.com with SMTP id x127so8365pfb.7;
+        Tue, 08 Oct 2019 13:01:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xPXZ9kF4GFL6v89vFU2ZEHo7SfcEsi52mwigB/rCYtY=;
+        b=BhI4JlPi1lB8pPxSfgsAth6LhYsw8p7P5yuNRi37rMX+qWOcNBYGl8KeFR3V2TVz2N
+         2v9VFIVAmv9P+eo+as+cjYCs6EaDPx18OLjpSj2hX71zbYQSHGiajGeg+r6r4PuLll4O
+         PUIPHRX1TU8Z76NcOSdnSXabZEZEhaWkEtrhX+d/U/i1Ry00h0H3gNcw8lGIxPrVm8Jf
+         gaEW2cactPIijXISDHBBQ8NaZiDHTRN30Ek7JbF4/eDF2X4THDaGVy5tu8CzMkH0oUhS
+         VRuTiUf/Ro/SEfFCgLA8uwHPJ8hXiQdbZkUqkMTegV614E8O6cfJpT78y0KlIdVAgXTT
+         duHA==
+X-Gm-Message-State: APjAAAXjV0nitAyGxrzdxV64EQmrvwruEZSQwl/qfFnU29L1pyek/dTv
+        LH3pVYnipl0Y3M1mLAkMhN8=
+X-Google-Smtp-Source: APXvYqzsPBEPcjwVojznWXBeDxWR7tzrTuazlMQklON6Ok06EdIXuptFWD3mT4f/ths+IK6uvLL+tQ==
+X-Received: by 2002:aa7:96f3:: with SMTP id i19mr41662272pfq.32.1570564901292;
+        Tue, 08 Oct 2019 13:01:41 -0700 (PDT)
+Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
+        by smtp.gmail.com with ESMTPSA id z29sm17759300pff.23.2019.10.08.13.01.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Oct 2019 13:01:40 -0700 (PDT)
+Subject: Re: [PATCH v2 1/1] blk-mq: fill header with kernel-doc
+To:     Gabriel Krisman Bertazi <krisman@collabora.com>
+Cc:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        axboe@kernel.dk, kernel@collabora.com
+References: <20191008001416.12656-1-andrealmeid@collabora.com>
+ <854l0j19go.fsf@collabora.com> <6aa48cd2-5f23-a4be-f777-d65bf755a976@acm.org>
+ <85zhibyt14.fsf@collabora.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <86de2c88-5812-4a87-b5d8-1b7b1808d013@acm.org>
+Date:   Tue, 8 Oct 2019 13:01:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191007124437.20367-1-jjhiblot@ti.com> <20191007124437.20367-5-jjhiblot@ti.com>
- <CAL_JsqLTqnKpU4PB8Zt9SSPSia5mkFcUgoA8ZyX_1E_HfdFyxg@mail.gmail.com>
- <30fcd898-aa50-bac2-b316-0d9bf2429369@ti.com> <bc5e4094-2b58-c917-9b9e-0f646c04dd78@ti.com>
- <CAL_JsqL8b0gWPTt3oJ8ScY_AwP+uB__dZP6Eednfa5Fq9vAptw@mail.gmail.com> <edadb121-cebd-b8ea-e07d-f5495a581dfd@gmail.com>
-In-Reply-To: <edadb121-cebd-b8ea-e07d-f5495a581dfd@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 8 Oct 2019 15:00:58 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJLp65f6g2OG5uJPrcZ2uuc5cgREaiQ-AXeBp6reqvbkw@mail.gmail.com>
-Message-ID: <CAL_JsqJLp65f6g2OG5uJPrcZ2uuc5cgREaiQ-AXeBp6reqvbkw@mail.gmail.com>
-Subject: Re: [PATCH v9 4/5] dt-bindings: backlight: Add led-backlight binding
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     Jean-Jacques Hiblot <jjhiblot@ti.com>, Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Dan Murphy <dmurphy@ti.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <85zhibyt14.fsf@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 8, 2019 at 12:17 PM Jacek Anaszewski
-<jacek.anaszewski@gmail.com> wrote:
->
-> On 10/8/19 5:00 PM, Rob Herring wrote:
-> > On Tue, Oct 8, 2019 at 8:30 AM Jean-Jacques Hiblot <jjhiblot@ti.com> wrote:
-> >>
-> >> Rob,
-> >>
-> >> On 08/10/2019 14:51, Jean-Jacques Hiblot wrote:
-> >>> Hi Rob,
-> >>>
-> >>> On 07/10/2019 18:15, Rob Herring wrote:
-> >>>> Please send DT bindings to DT list or it's never in my queue. IOW,
-> >>>> send patches to the lists that get_maintainers.pl tells you to.
-> >>>>
-> >>>> On Mon, Oct 7, 2019 at 7:45 AM Jean-Jacques Hiblot <jjhiblot@ti.com>
-> >>>> wrote:
-> >>>>> Add DT binding for led-backlight.
-> >>>>>
-> >>>>> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-> >>>>> Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-> >>>>> Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> >>>>> ---
-> >>>>>   .../bindings/leds/backlight/led-backlight.txt | 28
-> >>>>> +++++++++++++++++++
-> >>>>>   1 file changed, 28 insertions(+)
-> >>>>>   create mode 100644
-> >>>>> Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
-> >>>> Please make this a DT schema.
-> >>>
-> >>> OK.
-> >>>
-> >>> BTW I used "make dt_binding_check" but had to fix a couple of YAMLs
-> >>> file to get it to work. Do you have a kernel tree with already all the
-> >>> YAML files in good shape ? Or do you want me to post the changes to
-> >>> devicetree@vger.kernel.org ?
-> >>>
-> >>>
-> >>>>
-> >>>>> diff --git
-> >>>>> a/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
-> >>>>> b/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
-> >>>>> new file mode 100644
-> >>>>> index 000000000000..4c7dfbe7f67a
-> >>>>> --- /dev/null
-> >>>>> +++
-> >>>>> b/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
-> >>>>> @@ -0,0 +1,28 @@
-> >>>>> +led-backlight bindings
-> >>>>> +
-> >>>>> +This binding is used to describe a basic backlight device made of
-> >>>>> LEDs.
-> >>>>> +It can also be used to describe a backlight device controlled by
-> >>>>> the output of
-> >>>>> +a LED driver.
-> >>>>> +
-> >>>>> +Required properties:
-> >>>>> +  - compatible: "led-backlight"
-> >>>>> +  - leds: a list of LEDs
-> >>>> 'leds' is already used as a node name and mixing is not ideal.
->
-> for the record: child node names (if that was what you had on mind)
-> have singular form 'led'.
+On 10/8/19 11:46 AM, Gabriel Krisman Bertazi wrote:
+> Hmm, sorry, but I'm confused.  I'm sure I'm missing something simple,
+> since I haven't touched this in a while, so maybe you can quickly point
+> me in the right direction?
+> 
+> I see blk_mq_requeue_request() being used by device drivers to retry
+> requests that failed, but if I read the code correctly, the flushed
+> queue seems to be moved to hctx->dispatch when the device
+> driver returned BLK_STS_RESOURCE or BLK_STS_DEV_RESOURCE to
+> blk_mq_dispatch_rq_list(). I thought BLK_STS_RESOURCE was returned by
+> the driver on .queue_rq() to signal there was no more resources on the
+> hardware to service further requests.
 
-I did actually grep this and not rely on my somewhat faulty memory:
+Hi Gabriel,
 
-$ git grep '\sleds {' | wc -l
-463
+The simplified version of how requests are requeued as follows:
+* A block driver calls blk_mq_requeue_request().
+* blk_mq_requeue_request() calls blk_mq_add_to_requeue_list()
+* blk_mq_add_to_requeue_list() executes the following code:
+     list_add_tail(&rq->queuelist, &q->requeue_list)
+* A block driver or the block layer core calls
+   blk_mq_kick_requeue_list() or blk_mq_delay_kick_requeue_list(). Both
+   functions trigger a call of blk_mq_requeue_work().
+* blk_mq_requeue_work() processes q->requeue_list.
 
-These are mostly gpio-leds I think.
+Bart.
 
-Rob
+
