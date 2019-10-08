@@ -2,78 +2,100 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6B1C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6949C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5498206C2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:00:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 792DD2070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:00:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570543253;
+	bh=z8XVEDscMHzBcI3AQN73/CB4t6GUPrUbP3dBe1p7P78=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rpxPx1nkof0mBiTgeV/KiDZUBlh37p9p7OAZKKQQOFWl7LBjtzbECnkTHyugCqZ+S
+	 R+3oa1wTVY9wTedtkwBR7Fdnv/GHHC+y8lpGzGfAnJz1GUJqxgoKkKa2vkAzWP5KBy
+	 vquWKX/DuXHHf1qYSt5AzZL925Ponj4av5EzfSA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726430AbfJHOAT (ORCPT
+        id S1726314AbfJHOAw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 10:00:19 -0400
-Received: from smtprelay0001.hostedemail.com ([216.40.44.1]:49946 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725795AbfJHOAS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 10:00:18 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 49ACD8368F00;
-        Tue,  8 Oct 2019 14:00:17 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: year93_1f3b28f822a23
-X-Filterd-Recvd-Size: 2066
-Received: from XPS-9350.home (unknown [47.151.152.152])
-        (Authenticated sender: joe@perches.com)
-        by omf02.hostedemail.com (Postfix) with ESMTPA;
-        Tue,  8 Oct 2019 14:00:14 +0000 (UTC)
-Message-ID: <05e9cf0254790321433fd7d2c19129ec952bb3ac.camel@perches.com>
-Subject: Re: [PATCH] drm/amdgpu/display: make various arrays static, makes
- object smaller
-From:   Joe Perches <joe@perches.com>
-To:     Harry Wentland <hwentlan@amd.com>,
-        Colin King <colin.king@canonical.com>,
-        "Wentland, Harry" <Harry.Wentland@amd.com>,
-        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-Cc:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Tue, 08 Oct 2019 07:00:13 -0700
-In-Reply-To: <9579bfae-1db5-d282-79ea-df1966f4c123@amd.com>
-References: <20191007215857.14720-1-colin.king@canonical.com>
-         <9579bfae-1db5-d282-79ea-df1966f4c123@amd.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
+        Tue, 8 Oct 2019 10:00:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51468 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725848AbfJHOAw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 10:00:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6D70DB1A9;
+        Tue,  8 Oct 2019 14:00:50 +0000 (UTC)
+Date:   Tue, 8 Oct 2019 16:00:49 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Christian Kellner <ckellner@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Christian Kellner <christian@kellner.me>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Roman Gushchin <guro@fb.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Dmitry V. Levin" <ldv@altlinux.org>
+Subject: Re: [PATCH] pidfd: show pids for nested pid namespaces in fdinfo
+Message-ID: <20191008140049.GM6681@dhcp22.suse.cz>
+References: <20191008133641.23019-1-ckellner@redhat.com>
+ <20191008135258.mzc7o2djiq5yydko@wittgenstein>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191008135258.mzc7o2djiq5yydko@wittgenstein>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-10-08 at 13:56 +0000, Harry Wentland wrote:
-[]
-> > diff --git a/drivers/gpu/drm/amd/display/dc/bios/bios_parser.c b/drivers/gpu/drm/amd/display/dc/bios/bios_parser.c
-> []
-> > @@ -2745,7 +2745,7 @@ static enum bp_result bios_get_board_layout_info(
-> >  	struct bios_parser *bp;
-> >  	enum bp_result record_result;
-> >  
-> > -	const unsigned int slot_index_to_vbios_id[MAX_BOARD_SLOTS] = {
-> > +	static const unsigned int slot_index_to_vbios_id[MAX_BOARD_SLOTS] = {
+On Tue 08-10-19 15:52:59, Christian Brauner wrote:
+> On Tue, Oct 08, 2019 at 03:36:37PM +0200, Christian Kellner wrote:
+> > From: Christian Kellner <christian@kellner.me>
+> > 
+> > The fdinfo file for a process file descriptor already contains the
+> > pid of the process in the callers namespaces. Additionally, if pid
+> > namespaces are configured, show the process ids of the process in
+> > all nested namespaces in the same format as in the procfs status
+> > file, i.e. "NSPid:\t%d\%d...". This allows the easy identification
+> > of the processes in nested namespaces.
+> > 
+> > Signed-off-by: Christian Kellner <christian@kellner.me>
 > 
-> Won't this break the multi-GPU case where you'll have multiple driver
-> instances with different layout?
+> Yeah, makes sense to me.
+> Note that if you send the pidfd to a sibling pid namespace NSpid won't
+> show you anything useful. But that's what I'd expect security wise. You
+> should only be able to snoop on descendant pid namespaces.
+> 
+> Please add a test for this to verify that this all works correctly and
+> then resend. The tests live in tools/testing/selftests/pidfd/ and should
+> already have most of the infrastructure there. The fdinfo parsing code
+> should be in samples/pidfd/ which
+> 
+> For the patch itself:
+> 
+> Reviewed-by: Christian Brauner <christian.brauner@ubuntu.com>
+> 
+> You can resend with my Reviewed-by retained if you don't change
+> anything. Before I see tests I'll hold off on merging this. ;)
 
-As the array is read-only, how could that happen?
+This is also forming a new user visible "api" right? So the make sure
+that linux-api is on the Cc list.
 
-
+And one minore note. The ifdefery is just ugly, could you just make it a
+separate function with ifdef hidden inside?
+-- 
+Michal Hocko
+SUSE Labs
