@@ -2,149 +2,116 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16BF0C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97306C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0B2C206C2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:05:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="EQxxLJPu"
+	by mail.kernel.org (Postfix) with ESMTP id 6F9E32070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:06:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570536378;
+	bh=Tp7W2qNt3xmj2uz/0unJgy9NljpDnUvi+6KS4MOzt5w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=R1OqX0TKoY6xEGVOMCXbYe93Ni9NhWgwedtss2qyI6PBpPiDea4ZxXjzprJnFhDhu
+	 iMkQGg7YFD90QfrqM7zqywekhPrCwZ6XPWdVBD7S0YePOUgu4ClfJHqKa9LkEzuDbW
+	 mr4LNilpu6KY//pdP7qP08awJsv9ABGbipRIP6mA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730954AbfJHMFc (ORCPT
+        id S1730955AbfJHMGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 08:05:32 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:42332 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730923AbfJHMF3 (ORCPT
+        Tue, 8 Oct 2019 08:06:18 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58158 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730249AbfJHMGR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 08:05:29 -0400
-Received: by mail-lj1-f193.google.com with SMTP id y23so17214898lje.9
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 05:05:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=TptQKMAgu40zPvzhQ1Z31J/pJlahQ9zU95/IQSGlotQ=;
-        b=EQxxLJPuv5kKROn32XBozgwjwLwg89RorArcZU/g8cItI4zFmL7g+GBxM/Ahg/onYr
-         /Qq6eZw1P0LGp4IiWbUpBRj0wt8o58C+ixmMvDPdQyY9ckNxJ8fwVC+8j5r3oWi+ocMe
-         bAPIcSJt4aI9G1QMFztBqZWK5BjdSrlZzfkn0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=TptQKMAgu40zPvzhQ1Z31J/pJlahQ9zU95/IQSGlotQ=;
-        b=gT6n/s4hkYaiQYJbSYBfw1NVvhFyUU72ZOTV6SzmEfuaEbD0I1boRf3qynZNVoFWzu
-         py1GDsznh9bQDNKt9m3oK3rchU1AhegshvNr8nMSzW39nC2Tz7ButAqGLULnlNcfrjBI
-         drQmQvynHaCn5TIGG7YAAAnCN3gt4L653CWPsN3TDNG9JJCeo9IXwhr9szVeckhmn4Ai
-         BDnjPlqfC7wVH00rEiiAlQOK5NLXnG+CgAqLQ9X1STbfIjuzb5SUcoFUo4r3yDe47xBa
-         PzaiibCnbd3d13Kaf3jcJD8BMBUPtswkFQ8hSFRpH3KiO64SaPYEnqrsvRm8mwge2m7S
-         PZSA==
-X-Gm-Message-State: APjAAAU0uxDmEKks4FvsZQnWCh2sZbcE5amscXxbUtfhlCn6UYeevX+z
-        +aouW7dVDP8RA00O+XWaFKgHN/DRrp8WC19d
-X-Google-Smtp-Source: APXvYqz1ZVV6abC07XSZS+ewKWoIdZcZT75MUkfMcioX26MZiIhkt3Y7dE8w+s+hfv7TsUNPdK5xaw==
-X-Received: by 2002:a2e:b045:: with SMTP id d5mr22159030ljl.105.1570536327398;
-        Tue, 08 Oct 2019 05:05:27 -0700 (PDT)
-Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id z18sm3918033ljh.17.2019.10.08.05.05.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2019 05:05:25 -0700 (PDT)
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/4] backlight: pwm_bl: switch to power-of-2 base for fixed-point math
-Date:   Tue,  8 Oct 2019 14:03:27 +0200
-Message-Id: <20191008120327.24208-5-linux@rasmusvillemoes.dk>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191008120327.24208-1-linux@rasmusvillemoes.dk>
-References: <20191008120327.24208-1-linux@rasmusvillemoes.dk>
+        Tue, 8 Oct 2019 08:06:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=iNXCq0tdrGr+v7qLVsnpGqjHYmCeZ78z3PFZJHaeMP8=; b=WL1P9kiXgzGcYtmdIzPPUSwi2
+        e078UMBv6u0H4uP1gcANf0zyzq0lvQhR51bV3+nh60NbKPhmoAecyshaBuTQX3uYm+BE+q8IsHMQn
+        7D4Eb/yl0AzxicYvZRRBfuLR73k7qSPLzHG5B5F8ryNieZ0cskUt0siySP076tEecLF2I=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iHoFo-0008EX-8U; Tue, 08 Oct 2019 12:06:12 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 6F8752742998; Tue,  8 Oct 2019 13:06:11 +0100 (BST)
+Date:   Tue, 8 Oct 2019 13:06:11 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     linux-kernel@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH] regulator: core: Skip balancing of the enabled
+ regulators in regulator_enable()
+Message-ID: <20191008120611.GG4382@sirena.co.uk>
+References: <CGME20191008101720eucas1p2e0d1bca6e696848bf689067e05620679@eucas1p2.samsung.com>
+ <20191008101709.13827-1-m.szyprowski@samsung.com>
+ <20191008115025.GF4382@sirena.co.uk>
+ <0e222fdd-4407-51ea-b75c-a62621cbe622@samsung.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="+1TulI7fc0PCHNy3"
+Content-Disposition: inline
+In-Reply-To: <0e222fdd-4407-51ea-b75c-a62621cbe622@samsung.com>
+X-Cookie: Do not disturb.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using a power-of-2 instead of power-of-10 base makes the computations
-much cheaper. 2^16 is safe; retval never becomes more than 2^48 +
-2^32/2. On a 32 bit platform, the very expensive 64/32 division at the
-end of cie1931() instead becomes essentially free (a shift by 32 is
-just a register rename).
 
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
----
- drivers/video/backlight/pwm_bl.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+--+1TulI7fc0PCHNy3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index 273d3fb628a0..a99c2210c935 100644
---- a/drivers/video/backlight/pwm_bl.c
-+++ b/drivers/video/backlight/pwm_bl.c
-@@ -148,7 +148,8 @@ static const struct backlight_ops pwm_backlight_ops = {
- };
- 
- #ifdef CONFIG_OF
--#define PWM_LUMINANCE_SCALE	10000 /* luminance scale */
-+#define PWM_LUMINANCE_SHIFT	16
-+#define PWM_LUMINANCE_SCALE	(1 << PWM_LUMINANCE_SHIFT) /* luminance scale */
- 
- /*
-  * CIE lightness to PWM conversion.
-@@ -165,23 +166,25 @@ static const struct backlight_ops pwm_backlight_ops = {
-  * The following function does the fixed point maths needed to implement the
-  * above formula.
-  */
--static u64 cie1931(unsigned int lightness, unsigned int scale)
-+static u64 cie1931(unsigned int lightness)
- {
- 	u64 retval;
- 
- 	/*
- 	 * @lightness is given as a number between 0 and 1, expressed
--	 * as a fixed-point number in scale @scale. Convert to a
--	 * percentage, still expressed as a fixed-point number, so the
--	 * above formulas can be applied.
-+	 * as a fixed-point number in scale
-+	 * PWM_LUMINANCE_SCALE. Convert to a percentage, still
-+	 * expressed as a fixed-point number, so the above formulas
-+	 * can be applied.
- 	 */
- 	lightness *= 100;
--	if (lightness <= (8 * scale)) {
-+	if (lightness <= (8 * PWM_LUMINANCE_SCALE)) {
- 		retval = DIV_ROUND_CLOSEST(lightness * 10, 9033);
- 	} else {
--		retval = (lightness + (16 * scale)) / 116;
-+		retval = (lightness + (16 * PWM_LUMINANCE_SCALE)) / 116;
- 		retval *= retval * retval;
--		retval = DIV_ROUND_CLOSEST_ULL(retval, (scale * scale));
-+		retval += 1ULL << (2*PWM_LUMINANCE_SHIFT - 1);
-+		retval >>= 2*PWM_LUMINANCE_SHIFT;
- 	}
- 
- 	return retval;
-@@ -215,8 +218,7 @@ int pwm_backlight_brightness_default(struct device *dev,
- 	/* Fill the table using the cie1931 algorithm */
- 	for (i = 0; i < data->max_brightness; i++) {
- 		retval = cie1931((i * PWM_LUMINANCE_SCALE) /
--				 data->max_brightness, PWM_LUMINANCE_SCALE) *
--				 period;
-+				 data->max_brightness) * period;
- 		retval = DIV_ROUND_CLOSEST_ULL(retval, PWM_LUMINANCE_SCALE);
- 		if (retval > UINT_MAX)
- 			return -EINVAL;
--- 
-2.20.1
+On Tue, Oct 08, 2019 at 02:01:15PM +0200, Marek Szyprowski wrote:
+> On 08.10.2019 13:50, Mark Brown wrote:
 
+> > This then means that for users that might legitimately enable and
+> > disable regulators that need to be constrained are forced to change the
+> > voltage when they enable the regualtors in order to have their
+> > constraints take effect which seems bad.  I'd rather change the the
+> > cpufreq consumers to either not do the enable (since there really should
+> > be an always-on constraint this should be redundant, we might need to
+> > fix the core to take account of their settings though I think we lost
+> > that) or to set the voltage to whatever they need prior to doing their
+> > first enable, that seems more robust.
+
+> Well, I'm open for other ways of fixing this issue. Calling enable on=20
+> always-on regulator imho should not change its rate...
+
+Yes, although there is the whole "don't touch things until a consumer
+tells us to" thing going on.  I had expected that this was kicking in
+because we weren't paying attention to the constraints of disabled
+regulators but I can't see the code implementing that any more so I
+guess we removed it at some point (it was always debatable).
+
+--+1TulI7fc0PCHNy3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2ce7IACgkQJNaLcl1U
+h9AGmwf/UbimQ9sq/zEYWdR5N0U5nYyw0n1illJslo92MzhrHjeXkA+J75dNT9wo
+E1wtoPEndtrRtb0F+650lzfqvceJauFIaDwb2WvG3vxutwoSdFCJ9qjoPoXLFZOx
+T0gTrPtDX9HHTgMoFackql9B0xwjwHg+cEV6bcAfw3B4F6LnwYIZB27i4Rbf+DXt
+oxB70sgrULzP0QJAtJLMN3QZtNOg94vNdA8xH83V/FeXdtZiE1VLlJVSQ0hjAjc2
+GJ+zjjSFfC5qRLw+DpKpF6CbBO9NwkcBEhFt5CVNiQlQCwL/tuXHBBGUAXvlk/GN
+zDivlP9XJXhyJRNSbxzDX7C4rEqn3w==
+=Qc9y
+-----END PGP SIGNATURE-----
+
+--+1TulI7fc0PCHNy3--
