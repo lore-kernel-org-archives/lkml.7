@@ -2,247 +2,131 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BD6C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA0EC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A61C4206BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:16:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C3B820815
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:19:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=mvista-com.20150623.gappssmtp.com header.i=@mvista-com.20150623.gappssmtp.com header.b="twHANZAs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730646AbfJHMQ3 (ORCPT
+        id S1730710AbfJHMTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 08:16:29 -0400
-Received: from mga06.intel.com ([134.134.136.31]:5029 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730199AbfJHMQ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 08:16:28 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 05:16:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,270,1566889200"; 
-   d="scan'208";a="206625721"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 08 Oct 2019 05:16:24 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 08 Oct 2019 15:16:24 +0300
-Date:   Tue, 8 Oct 2019 15:16:23 +0300
-From:   "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "logang@deltatee.com" <logang@deltatee.com>
-Subject: Re: [PATCH v8 5/6] PCI: Add hp_mmio_size and hp_mmio_pref_size
- parameters
-Message-ID: <20191008121623.GJ2819@lahna.fi.intel.com>
-References: <SL2P216MB0187C45A8B38504D855A1DEA80C00@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+        Tue, 8 Oct 2019 08:19:49 -0400
+Received: from mail-oi1-f170.google.com ([209.85.167.170]:40960 "EHLO
+        mail-oi1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730249AbfJHMTt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 08:19:49 -0400
+Received: by mail-oi1-f170.google.com with SMTP id w65so14561902oiw.8
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 05:19:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=mvista-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GIG3/erJQ11vZy1ZvW+DrK2VeOVE/GSaMMKgSlpyZZM=;
+        b=twHANZAsI9ZGdyC0yiVIfRbHW/uHdB0ek8OO8I2YmwQCSctRjQmyKBPDcbgdQ/wnLz
+         yDO7ZIuyUhSw6BH/VLK1JibAbSABc+fANVOqVHyvPe/RYjnuZBZm9UKwdEkCpj4FWSIF
+         aY3ItNY+ZlOYc9llnQn5NOFZQHY3+KmYar8KfgA8a8QOKX+krkY2xu1lb+GhHZDVUU+E
+         1OTWdggfmkf7S4Lkf5nAjFWDeNmGlIEWSkCULequMVcaQmtP8kAHlRnAtsqlPODiBRrb
+         8NyA2lYpOp9BAECCRhf3fvWGXhL7G/seuKALWC8vzgRJi7CARNelhQyTLIdq1v4uwF8B
+         940g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GIG3/erJQ11vZy1ZvW+DrK2VeOVE/GSaMMKgSlpyZZM=;
+        b=ec3XYOuiKY+bOPKeZye7kLiXgrCmZNm+JwDLx/jsbNNusRN5VcNwLkyzmgxthHcviV
+         6iM6OyS+J2V2a2EKwrr1iV1hcKb7mMX4pAFwF13YfmA/qxveyAmBITNrRqA9vUcQGRz+
+         0xlqsBbwkK+hy2E9n+3+kzNcPGzstxoLTvEGWv5yb7OvfbMCbESKfNBj0eWKzquzbkAQ
+         4bfYsissoCS5Sb100CpMrihC8BMse1oZATPJOoS1WmVkMqG/EOCiub+Fznct3JW0RoIG
+         PimfohbiAnBLhyHna2Sn1E5RqROx/Y0sNmTq8/chNgrGXb3h5COVpv8OpYjvwDxXWhGm
+         6V/A==
+X-Gm-Message-State: APjAAAWgVHsQZ1qZWzigY4j/KTlKXpeLVBgMGLl+gjpDbLDPtMVwbPbq
+        jA+8IysfTK6TFpGcoKI5U0FehOgGQN8=
+X-Google-Smtp-Source: APXvYqyJ7UdWwBKkU/Iyie1JZFv08c9kyvlVoDj56G9F1U7knWplJ8VJuoRWovvihxy2D0npliNXtg==
+X-Received: by 2002:a05:6808:4c3:: with SMTP id a3mr3708645oie.82.1570537183673;
+        Tue, 08 Oct 2019 05:19:43 -0700 (PDT)
+Received: from t560 ([47.184.136.59])
+        by smtp.gmail.com with ESMTPSA id g8sm5115524otp.42.2019.10.08.05.19.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 08 Oct 2019 05:19:42 -0700 (PDT)
+Date:   Tue, 8 Oct 2019 07:19:41 -0500
+From:   Corey Minyard <cminyard@mvista.com>
+To:     Pavel Machek <pavel@denx.de>, Tejun Heo <tj@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 012/106] ipmi_si: Only schedule continuously in the
+ thread in maintenance mode
+Message-ID: <20191008121941.GA14232@t560>
+Reply-To: cminyard@mvista.com
+References: <20191006171124.641144086@linuxfoundation.org>
+ <20191006171130.485953894@linuxfoundation.org>
+ <20191008094915.GC608@amd>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SL2P216MB0187C45A8B38504D855A1DEA80C00@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191008094915.GC608@amd>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 12:54:44PM +0000, Nicholas Johnson wrote:
-> Add kernel parameter pci=hpmmiosize=nn[KMG] to set MMIO bridge window
-> size for hotplug bridges.
+On Tue, Oct 08, 2019 at 11:49:15AM +0200, Pavel Machek wrote:
+> Hi!
 > 
-> Add kernel parameter pci=hpmmioprefsize=nn[KMG] to set MMIO_PREF bridge
-> window size for hotplug bridges.
+> > @@ -1013,11 +1016,20 @@ static int ipmi_thread(void *data)
+> >  		spin_unlock_irqrestore(&(smi_info->si_lock), flags);
+> >  		busy_wait = ipmi_thread_busy_wait(smi_result, smi_info,
+> >  						  &busy_until);
+> > -		if (smi_result == SI_SM_CALL_WITHOUT_DELAY)
+> > +		if (smi_result == SI_SM_CALL_WITHOUT_DELAY) {
+> >  			; /* do nothing */
+> > -		else if (smi_result == SI_SM_CALL_WITH_DELAY && busy_wait)
+> > -			schedule();
+> > -		else if (smi_result == SI_SM_IDLE) {
+> > +		} else if (smi_result == SI_SM_CALL_WITH_DELAY && busy_wait) {
+> > +			/*
+> > +			 * In maintenance mode we run as fast as
+> > +			 * possible to allow firmware updates to
+> > +			 * complete as fast as possible, but normally
+> > +			 * don't bang on the scheduler.
+> > +			 */
+> > +			if (smi_info->in_maintenance_mode)
+> > +				schedule();
+> > +			else
+> > +				usleep_range(100, 200);
+> > +		} else if (smi_result == SI_SM_IDLE) {
 > 
-> Leave pci=hpmemsize=nn[KMG] unchanged, to prevent disruptions to
-> existing users. This sets both MMIO and MMIO_PREF to the same size.
+> This is quite crazy code. usleep() will need to do magic with high
+> resolution timers to provide 200usec sleep... when all you want to do
+> is unload the scheduler.
 > 
-> The two new parameters conform to the style of pci=hpiosize=nn[KMG].
+> cond_resched() should be okay to call in a loop, can the code use that
+> instead?
+
+According to Tejun Heo, spinning in a loop sleeping was causing all
+sorts of issues with banging on scheduler locks on systems with lots of
+cores.  I forgot to add him to the CC on the patch, adding him now
+for comment.
+
+If cond_resched() would work, though, I'd be happy with that, it's
+certainly simpler.
+
+-corey
+
 > 
-> Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-
-This does not apply anymore because of 003d3b2c5f83 ("PCI: Make
-pci_hotplug_io_size, mem_size, and bus_size private") so I think you
-need to rebase this on top of current mainline.
-
-> ---
->  .../admin-guide/kernel-parameters.txt         |  9 ++++++-
->  drivers/pci/pci.c                             | 17 ++++++++++---
->  drivers/pci/setup-bus.c                       | 25 +++++++++++--------
->  include/linux/pci.h                           |  3 ++-
->  4 files changed, 38 insertions(+), 16 deletions(-)
+> Best regards,
+> 									Pavel
 > 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 46b826fcb..9bc54cb99 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -3467,8 +3467,15 @@
->  		hpiosize=nn[KMG]	The fixed amount of bus space which is
->  				reserved for hotplug bridge's IO window.
->  				Default size is 256 bytes.
-> +		hpmmiosize=nn[KMG]	The fixed amount of bus space which is
-> +				reserved for hotplug bridge's MMIO window.
-> +				Default size is 2 megabytes.
-> +		hpmmioprefsize=nn[KMG]	The fixed amount of bus space which is
-> +				reserved for hotplug bridge's MMIO_PREF window.
-> +				Default size is 2 megabytes.
->  		hpmemsize=nn[KMG]	The fixed amount of bus space which is
-> -				reserved for hotplug bridge's memory window.
-> +				reserved for hotplug bridge's MMIO and
-> +				MMIO_PREF window.
->  				Default size is 2 megabytes.
->  		hpbussize=nn	The minimum amount of additional bus numbers
->  				reserved for buses below a hotplug bridge.
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 29ed5ec1a..6b3857cad 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -85,10 +85,12 @@ unsigned long pci_cardbus_io_size = DEFAULT_CARDBUS_IO_SIZE;
->  unsigned long pci_cardbus_mem_size = DEFAULT_CARDBUS_MEM_SIZE;
->  
->  #define DEFAULT_HOTPLUG_IO_SIZE		(256)
-> -#define DEFAULT_HOTPLUG_MEM_SIZE	(2*1024*1024)
-> +#define DEFAULT_HOTPLUG_MMIO_SIZE	(2*1024*1024)
-> +#define DEFAULT_HOTPLUG_MMIO_PREF_SIZE	(2*1024*1024)
->  /* pci=hpmemsize=nnM,hpiosize=nn can override this */
->  unsigned long pci_hotplug_io_size  = DEFAULT_HOTPLUG_IO_SIZE;
-> -unsigned long pci_hotplug_mem_size = DEFAULT_HOTPLUG_MEM_SIZE;
-> +unsigned long pci_hotplug_mmio_size = DEFAULT_HOTPLUG_MMIO_SIZE;
-> +unsigned long pci_hotplug_mmio_pref_size = DEFAULT_HOTPLUG_MMIO_PREF_SIZE;
->  
->  #define DEFAULT_HOTPLUG_BUS_SIZE	1
->  unsigned long pci_hotplug_bus_size = DEFAULT_HOTPLUG_BUS_SIZE;
-> @@ -6281,8 +6283,17 @@ static int __init pci_setup(char *str)
->  				pcie_ecrc_get_policy(str + 5);
->  			} else if (!strncmp(str, "hpiosize=", 9)) {
->  				pci_hotplug_io_size = memparse(str + 9, &str);
-> +			} else if (!strncmp(str, "hpmmiosize=", 11)) {
-> +				pci_hotplug_mmio_size =
-> +					memparse(str + 11, &str);
-
-I would keep this in single line disregarding the 80 char limit.
-
-> +			} else if (!strncmp(str, "hpmmioprefsize=", 15)) {
-> +				pci_hotplug_mmio_pref_size =
-> +					memparse(str + 15, &str);
-
-Ditto
-
->  			} else if (!strncmp(str, "hpmemsize=", 10)) {
-> -				pci_hotplug_mem_size = memparse(str + 10, &str);
-> +				pci_hotplug_mmio_size =
-> +					memparse(str + 10, &str);
-Ditto.
-
-> +				pci_hotplug_mmio_pref_size =
-> +					memparse(str + 10, &str);
-
-Ditto.
-
->  			} else if (!strncmp(str, "hpbussize=", 10)) {
->  				pci_hotplug_bus_size =
->  					simple_strtoul(str + 10, &str, 0);
-> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> index 7e1dc892a..345ecf16d 100644
-> --- a/drivers/pci/setup-bus.c
-> +++ b/drivers/pci/setup-bus.c
-> @@ -1178,7 +1178,8 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
->  {
->  	struct pci_dev *dev;
->  	unsigned long mask, prefmask, type2 = 0, type3 = 0;
-> -	resource_size_t additional_mem_size = 0, additional_io_size = 0;
-> +	resource_size_t additional_io_size = 0, additional_mmio_size = 0,
-> +		additional_mmio_pref_size = 0;
-
-Maybe align them like
-
-	resource_size_t additional_io_size = 0, additional_mmio_size = 0,
-			additional_mmio_pref_size = 0;
-
->  	struct resource *b_res;
->  	int ret;
->  
-> @@ -1212,7 +1213,8 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
->  		pci_bridge_check_ranges(bus);
->  		if (bus->self->is_hotplug_bridge) {
->  			additional_io_size  = pci_hotplug_io_size;
-> -			additional_mem_size = pci_hotplug_mem_size;
-> +			additional_mmio_size = pci_hotplug_mmio_size;
-> +			additional_mmio_pref_size = pci_hotplug_mmio_pref_size;
->  		}
->  		/* Fall through */
->  	default:
-> @@ -1230,9 +1232,9 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
->  		if (b_res[2].flags & IORESOURCE_MEM_64) {
->  			prefmask |= IORESOURCE_MEM_64;
->  			ret = pbus_size_mem(bus, prefmask, prefmask,
-> -				  prefmask, prefmask,
-> -				  realloc_head ? 0 : additional_mem_size,
-> -				  additional_mem_size, realloc_head);
-> +				prefmask, prefmask,
-> +				realloc_head ? 0 : additional_mmio_pref_size,
-> +				additional_mmio_pref_size, realloc_head);
->  
->  			/*
->  			 * If successful, all non-prefetchable resources
-> @@ -1254,9 +1256,9 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
->  		if (!type2) {
->  			prefmask &= ~IORESOURCE_MEM_64;
->  			ret = pbus_size_mem(bus, prefmask, prefmask,
-> -					 prefmask, prefmask,
-> -					 realloc_head ? 0 : additional_mem_size,
-> -					 additional_mem_size, realloc_head);
-> +				prefmask, prefmask,
-> +				realloc_head ? 0 : additional_mmio_pref_size,
-> +				additional_mmio_pref_size, realloc_head);
->  
->  			/*
->  			 * If successful, only non-prefetchable resources
-> @@ -1265,7 +1267,8 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
->  			if (ret == 0)
->  				mask = prefmask;
->  			else
-> -				additional_mem_size += additional_mem_size;
-> +				additional_mmio_size +=
-> +					additional_mmio_pref_size;
-
-Here also looks better if you put them single line.
-
->  
->  			type2 = type3 = IORESOURCE_MEM;
->  		}
-> @@ -1285,8 +1288,8 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
->  		 * prefetchable resource in a 64-bit prefetchable window.
->  		 */
->  		pbus_size_mem(bus, mask, IORESOURCE_MEM, type2, type3,
-> -				realloc_head ? 0 : additional_mem_size,
-> -				additional_mem_size, realloc_head);
-> +			realloc_head ? 0 : additional_mmio_size,
-> +			additional_mmio_size, realloc_head);
->  		break;
->  	}
->  }
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 9e700d9f9..1bde5763a 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -2031,7 +2031,8 @@ extern u8 pci_dfl_cache_line_size;
->  extern u8 pci_cache_line_size;
->  
->  extern unsigned long pci_hotplug_io_size;
-> -extern unsigned long pci_hotplug_mem_size;
-> +extern unsigned long pci_hotplug_mmio_size;
-> +extern unsigned long pci_hotplug_mmio_pref_size;
->  extern unsigned long pci_hotplug_bus_size;
->  
->  /* Architecture-specific versions may override these (weak) */
 > -- 
-> 2.22.0
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+
+
