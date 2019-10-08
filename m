@@ -2,119 +2,231 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.4 required=3.0 tests=DATE_IN_FUTURE_03_06,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F24ECE58C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3413FC47404
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 783EA206BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:44:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OVM9BcVL"
+	by mail.kernel.org (Postfix) with ESMTP id F0B1220867
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:47:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570499269;
+	bh=y6LapkP6z+QfC5hn9MqLrOtIxecK9qmQFoKnEgikv20=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=JOnL/cp1DKS4GqwHjbUN9Q3+QDTYSnBFKl0ot2Wtok0Ft03S7pKx0q2V4nhS4d/sf
+	 YxmJt+CqlYSLTcJaKnWpaNKYeykeiTnX9LsuD9ThnCYSoxoq5SetmQJjv/v6oQdeVp
+	 GFwOgyOoRpF4gBc9xg9tFWQ/uv4QxfRzBEx4vV1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729737AbfJHBoh (ORCPT
+        id S1729750AbfJHBrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 21:44:37 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:39634 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726917AbfJHBoh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 21:44:37 -0400
-Received: by mail-io1-f67.google.com with SMTP id a1so33112304ioc.6;
-        Mon, 07 Oct 2019 18:44:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Fw209Whs539FleYIAnU1s0PqSxWW0KiTK1H4R+hwlPI=;
-        b=OVM9BcVLoy6BaRIpxY8+rAgvJ00VTOBWAiySLb/FwcAzbDZIwDGGgb/C/oZ7axKGns
-         mIk7bwGQo78Ahi0c0ZEyjVw2ZvYCuNod3xX2tppd7mTUr7GEUqfJvaLVfBIj+3O1/Z4X
-         iQqBoxjeQlZiHtcbpZbqYpkG7VdOJxx3lPTQ/m8/BaA/Pw6E14XOXVPunznX76FNaTd5
-         EixN7GlsZxlvh6v0Z9rsJ6+A1rvHUowLrR8u7QB4QVRISIJNcUqTz0m1MAEzn60FFs0G
-         F1jUK+zocZQwlIkQ5HUFJ5CaVRupKdrjW98xH/W49nKbhQZA4NNEC8yuz7XOv250B1m+
-         92gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Fw209Whs539FleYIAnU1s0PqSxWW0KiTK1H4R+hwlPI=;
-        b=lqHTyF7vUCZdR/KQXJQpq/ksfBekVMzXHf/8yZ+iAangoxxQSG8RhcibSXIM32tshp
-         X56eyMcoFn7TuNmuOV3PobgNrQQAa4IYjs0RZf3AOwY4ppPmxEdmvS9cMYq5uCUSf3Lo
-         bdTclTzVVlU4+JEbs4gHzADztIhGPlP/62Ve30XcKERMmATYls6FnsaBriBusofa08FQ
-         b3wYsB8o1xSo6Nheqe5i1FqsVNuYA0fSrxLLljhVzPB1N1FwvqefaipPR7YErrKJFFFE
-         g9BDJxAmF2CGPHtiVvTJIG038vpbnBAX0WoUM9PfSLS1roYuMuS9tgNj1oHfoVDrozfp
-         AbVw==
-X-Gm-Message-State: APjAAAViqBJY9e/esU9B4uU9HTVGQNDekAZvaMYG6X8OqP5IIlzplNE+
-        uUgvC/Ed4slLgd0v6Bc4CeUhONSZ2FvCH6HKjBw=
-X-Google-Smtp-Source: APXvYqxt6/0xninW5CnKNuJYQqbikrgLXATP2QD131RmcPQ9Z/5vmjUUYkrZ6xXfXBxL3RpKBYFfL7OfUy6i9llje9k=
-X-Received: by 2002:a5e:8c15:: with SMTP id n21mr11990598ioj.246.1570499076276;
- Mon, 07 Oct 2019 18:44:36 -0700 (PDT)
+        Mon, 7 Oct 2019 21:47:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53336 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726917AbfJHBrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 21:47:47 -0400
+Received: from paulmck-ThinkPad-P72 (unknown [12.12.162.101])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9460C20835;
+        Tue,  8 Oct 2019 01:47:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570499266;
+        bh=y6LapkP6z+QfC5hn9MqLrOtIxecK9qmQFoKnEgikv20=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=hYt86vBA/erPMb3+zfEvzLkJ7hxiY943+jF81tal2eYovVDvTkiQXVo7iKTc/p6c4
+         FNrh7jmsaw+Pf8+c4cRe0PmYbN9ARWYxds7DXSP+t2V8fu1+qfnmwSZnihKlGIKRML
+         2tygwoeq8WPTV7Zk2pIRCSBsJ4vmVNCapPj6Sr+Q=
+Date:   Mon, 7 Oct 2019 18:47:43 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Marco Elver <elver@google.com>
+Cc:     syzbot <syzbot+134336b86f728d6e55a0@syzkaller.appspotmail.com>,
+        josh@joshtriplett.org, rostedt@goodmis.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org,
+        a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
+        davem@davemloft.net, LKML <linux-kernel@vger.kernel.org>,
+        mareklindner@neomailbox.ch, netdev@vger.kernel.org,
+        sw@simonwunderlich.de, syzkaller-bugs@googlegroups.com
+Subject: Re: KCSAN: data-race in find_next_bit / rcu_report_exp_cpu_mult
+Message-ID: <20191008014743.GA2689@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <000000000000604e8905944f211f@google.com>
+ <CANpmjNNmSOagbTpffHr4=Yedckx9Rm2NuGqC9UqE+AOz5f1-ZQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191007131649.1768-1-linux.amoon@gmail.com> <20191007131649.1768-6-linux.amoon@gmail.com>
- <CAFBinCAoJLZj9Kh+SfF4Q+0OCzac2+huon_BU=Q3yE7Fu38U3w@mail.gmail.com>
-In-Reply-To: <CAFBinCAoJLZj9Kh+SfF4Q+0OCzac2+huon_BU=Q3yE7Fu38U3w@mail.gmail.com>
-From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Tue, 8 Oct 2019 12:49:46 +0530
-Message-ID: <CANAwSgQScXdKewfBtu-o_sjRb-pk+CvJrv4RunGJOzz=DWjBnQ@mail.gmail.com>
-Subject: Re: [RFCv1 5/5] arm64/ARM: configs: Change CONFIG_PWM_MESON from m to y
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-amlogic@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNNmSOagbTpffHr4=Yedckx9Rm2NuGqC9UqE+AOz5f1-ZQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Martin.
+On Mon, Oct 07, 2019 at 12:04:16PM +0200, Marco Elver wrote:
+> +RCU maintainers
+> This might be a data-race in RCU itself.
+> 
+> On Mon, 7 Oct 2019 at 12:01, syzbot
+> <syzbot+134336b86f728d6e55a0@syzkaller.appspotmail.com> wrote:
+> >
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    b4bd9343 x86, kcsan: Enable KCSAN for x86
+> > git tree:       https://github.com/google/ktsan.git kcsan
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=11edb20d600000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=c0906aa620713d80
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=134336b86f728d6e55a0
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> >
+> > Unfortunately, I don't have any reproducer for this crash yet.
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+134336b86f728d6e55a0@syzkaller.appspotmail.com
+> >
+> > ==================================================================
+> > BUG: KCSAN: data-race in find_next_bit / rcu_report_exp_cpu_mult
+> >
+> > write to 0xffffffff85a7f140 of 8 bytes by task 7 on cpu 0:
+> >   rcu_report_exp_cpu_mult+0x4f/0xa0 kernel/rcu/tree_exp.h:244
+> >   rcu_report_exp_rdp+0x6c/0x90 kernel/rcu/tree_exp.h:254
+> >   rcu_preempt_deferred_qs_irqrestore+0x3bb/0x580 kernel/rcu/tree_plugin.h:475
+> >   rcu_read_unlock_special+0xec/0x370 kernel/rcu/tree_plugin.h:659
+> >   __rcu_read_unlock+0xcf/0xe0 kernel/rcu/tree_plugin.h:394
+> >   rcu_read_unlock include/linux/rcupdate.h:645 [inline]
+> >   batadv_nc_purge_orig_hash net/batman-adv/network-coding.c:411 [inline]
+> >   batadv_nc_worker+0x13a/0x390 net/batman-adv/network-coding.c:718
+> >   process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
+> >   worker_thread+0xa0/0x800 kernel/workqueue.c:2415
+> >   kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
+> >   ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
+> >
+> > read to 0xffffffff85a7f140 of 8 bytes by task 7251 on cpu 1:
+> >   _find_next_bit lib/find_bit.c:39 [inline]
+> >   find_next_bit+0x57/0xe0 lib/find_bit.c:70
+> >   sync_rcu_exp_select_node_cpus+0x28e/0x510 kernel/rcu/tree_exp.h:375
+> >   sync_rcu_exp_select_cpus+0x30c/0x590 kernel/rcu/tree_exp.h:439
+> >   rcu_exp_sel_wait_wake kernel/rcu/tree_exp.h:575 [inline]
+> >   wait_rcu_exp_gp+0x25/0x40 kernel/rcu/tree_exp.h:589
+> >   process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
+> >   worker_thread+0xa0/0x800 kernel/workqueue.c:2415
+> >   kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
+> >   ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
+> >
+> > Reported by Kernel Concurrency Sanitizer on:
+> > CPU: 1 PID: 7251 Comm: kworker/1:4 Not tainted 5.3.0+ #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > Google 01/01/2011
+> > Workqueue: rcu_gp wait_rcu_exp_gp
+> > ==================================================================
+> >
+> >
+> > ---
+> > This bug is generated by a bot. It may contain errors.
+> > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> >
+> > syzbot will keep track of this bug report. See:
+> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-On Tue, 8 Oct 2019 at 01:40, Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
->
-> On Mon, Oct 7, 2019 at 3:17 PM Anand Moon <linux.amoon@gmail.com> wrote:
-> [...]
-> > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> > index c9a867ac32d4..72f6a7dca0d6 100644
-> > --- a/arch/arm64/configs/defconfig
-> > +++ b/arch/arm64/configs/defconfig
-> > @@ -774,7 +774,7 @@ CONFIG_MPL3115=m
-> >  CONFIG_PWM=y
-> >  CONFIG_PWM_BCM2835=m
-> >  CONFIG_PWM_CROS_EC=m
-> > -CONFIG_PWM_MESON=m
-> > +CONFIG_PWM_MESON=y
-> some time ago I submitted a similar patch for the 32-bit SoCs
-> it turned that that pwm-meson can be built as module because the
-> kernel will run without CPU DVFS as long as the clock and regulator
-> drivers are returning -EPROBE_DEFER (-517)
->
-> did you check whether there's some other problem like some unused
-> clock which is being disabled at that moment?
-> I've been hunting weird problems in the past where it turned out that
-> changing kernel config bits changed the boot timing - that masked the
-> original problem
+And yes, ->expmask is accessed locklessly in a few places without
+READ_ONCE().  So does the following (untested) patch help?
 
-OK.
+							Thanx, Paul
 
->
->
-> Martin
+------------------------------------------------------------------------
 
-Sorry for linking this two separate issue PWM failed and microSD detect failed.
-Thanks for the input, I will check if you patch help, I will try to
-investigate more why it fails at my end.
-
-Best Regards
--Anand
+diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
+index d632cd0..bcd2a79 100644
+--- a/kernel/rcu/tree_exp.h
++++ b/kernel/rcu/tree_exp.h
+@@ -134,7 +134,7 @@ static void __maybe_unused sync_exp_reset_tree(void)
+ 	rcu_for_each_node_breadth_first(rnp) {
+ 		raw_spin_lock_irqsave_rcu_node(rnp, flags);
+ 		WARN_ON_ONCE(rnp->expmask);
+-		rnp->expmask = rnp->expmaskinit;
++		WRITE_ONCE(rnp->expmask, rnp->expmaskinit);
+ 		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+ 	}
+ }
+@@ -211,7 +211,7 @@ static void __rcu_report_exp_rnp(struct rcu_node *rnp,
+ 		rnp = rnp->parent;
+ 		raw_spin_lock_rcu_node(rnp); /* irqs already disabled */
+ 		WARN_ON_ONCE(!(rnp->expmask & mask));
+-		rnp->expmask &= ~mask;
++		WRITE_ONCE(rnp->expmask, rnp->expmask & ~mask);
+ 	}
+ }
+ 
+@@ -241,7 +241,7 @@ static void rcu_report_exp_cpu_mult(struct rcu_node *rnp,
+ 		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+ 		return;
+ 	}
+-	rnp->expmask &= ~mask;
++	WRITE_ONCE(rnp->expmask, rnp->expmask & ~mask);
+ 	__rcu_report_exp_rnp(rnp, wake, flags); /* Releases rnp->lock. */
+ }
+ 
+@@ -332,6 +332,7 @@ static bool exp_funnel_lock(unsigned long s)
+ static void sync_rcu_exp_select_node_cpus(struct work_struct *wp)
+ {
+ 	int cpu;
++	unsigned long expmask_snap;
+ 	unsigned long flags;
+ 	unsigned long mask_ofl_test;
+ 	unsigned long mask_ofl_ipi;
+@@ -369,10 +370,11 @@ static void sync_rcu_exp_select_node_cpus(struct work_struct *wp)
+ 	 */
+ 	if (rcu_preempt_has_tasks(rnp))
+ 		rnp->exp_tasks = rnp->blkd_tasks.next;
++	expmask_snap = rnp->expmask;
+ 	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+ 
+ 	/* IPI the remaining CPUs for expedited quiescent state. */
+-	for_each_leaf_node_cpu_mask(rnp, cpu, rnp->expmask) {
++	for_each_leaf_node_cpu_mask(rnp, cpu, expmask_snap) {
+ 		unsigned long mask = leaf_node_cpu_bit(rnp, cpu);
+ 		struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
+ 
+@@ -491,7 +493,7 @@ static void synchronize_sched_expedited_wait(void)
+ 				struct rcu_data *rdp;
+ 
+ 				mask = leaf_node_cpu_bit(rnp, cpu);
+-				if (!(rnp->expmask & mask))
++				if (!(READ_ONCE(rnp->expmask) & mask))
+ 					continue;
+ 				ndetected++;
+ 				rdp = per_cpu_ptr(&rcu_data, cpu);
+@@ -503,7 +505,8 @@ static void synchronize_sched_expedited_wait(void)
+ 		}
+ 		pr_cont(" } %lu jiffies s: %lu root: %#lx/%c\n",
+ 			jiffies - jiffies_start, rcu_state.expedited_sequence,
+-			rnp_root->expmask, ".T"[!!rnp_root->exp_tasks]);
++			READ_ONCE(rnp_root->expmask),
++			".T"[!!rnp_root->exp_tasks]);
+ 		if (ndetected) {
+ 			pr_err("blocking rcu_node structures:");
+ 			rcu_for_each_node_breadth_first(rnp) {
+@@ -513,7 +516,7 @@ static void synchronize_sched_expedited_wait(void)
+ 					continue;
+ 				pr_cont(" l=%u:%d-%d:%#lx/%c",
+ 					rnp->level, rnp->grplo, rnp->grphi,
+-					rnp->expmask,
++					READ_ONCE(rnp->expmask),
+ 					".T"[!!rnp->exp_tasks]);
+ 			}
+ 			pr_cont("\n");
+@@ -521,7 +524,7 @@ static void synchronize_sched_expedited_wait(void)
+ 		rcu_for_each_leaf_node(rnp) {
+ 			for_each_leaf_node_possible_cpu(rnp, cpu) {
+ 				mask = leaf_node_cpu_bit(rnp, cpu);
+-				if (!(rnp->expmask & mask))
++				if (!(READ_ONCE(rnp->expmask) & mask))
+ 					continue;
+ 				dump_cpu_task(cpu);
+ 			}
