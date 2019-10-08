@@ -2,105 +2,112 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E096BC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8829BC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B19602070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FA7020640
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:47:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570538845;
-	bh=gPpCa6p+Wso87HvLkhRvL+4LLCQTklIIhK4mGQjgaXA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Mh9yspSVp60DzRbJVeL7mfu66aBB5XjUOPpVzHUf1ThHNNK/eo2JnQObC8zihyz7/
-	 /gBEJD9ej/k0oKWRDizFmYlBEtB+s86K5fmUHmNTdYPsKYwioj/UydAeIbx0vNmj9l
-	 fx77rlcy4kp4vV+9P+fNSSrV33fAFcyuTgCzae5E=
+	s=default; t=1570538862;
+	bh=jMyiYxmqhwMzidIJ1KYFcPmFN0sukm0TZJhb74dfpvo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HHOqHb+s7GtD0ojXF9b9cnlF4lj/nJmM04twv+de2lv0B69YdhRnKVbKgW3BQBy5L
+	 ixJ7xDwqYIDxVVBn468B2b2xivWucrMbx54jP3t3f72nJZ8mydZOapDoxB2kTWnnvE
+	 xJIZ0RxaktOyV4kM3rW1yaR8NfLnwXut6nSDGnC8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730876AbfJHMrZ (ORCPT
+        id S1730963AbfJHMrl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 08:47:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40340 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730316AbfJHMrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 08:47:24 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1665F20640;
-        Tue,  8 Oct 2019 12:47:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570538844;
-        bh=gPpCa6p+Wso87HvLkhRvL+4LLCQTklIIhK4mGQjgaXA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ZhNc5wiP2bjwQKEPE96Jtm8B32XiDgHnk1lCcNhInf6MdIm3rZ5TRWMidk7plGOd8
-         sbb9kr4SvfvwNP4hHOt8DlAXpXC5vpzKny9kDZRx+1xrd1uilfGPhLXncxxdZMFu25
-         N1/M2Eu38NLnXvGOgZMdcd8WLpWWqnCx254KocPM=
-Date:   Tue, 8 Oct 2019 07:47:23 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com,
-        Kuldeep Dave <kuldeep.dave@xilinx.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI/MSI: Enable PCI_MSI_IRQ_DOMAIN support for Microblaze
-Message-ID: <20191008124723.GA161444@google.com>
+        Tue, 8 Oct 2019 08:47:41 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43038 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730882AbfJHMrl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 08:47:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=jMyiYxmqhwMzidIJ1KYFcPmFN0sukm0TZJhb74dfpvo=; b=IfNuj1qjZ8lNMtO71VeiBn4D/
+        sHTKhHPpKZHVZn7m63qH7RszZpZAN19FgIqoCJaTE5efZoi/UwQcZWZVQXw/OqaY3lTsLSFFe9/1E
+        hP9SyAPvDpgHGJP805X6wIDc8BiqHJc5L6M7FxfIKASnlXxJRQHr+RXoA+ejDR+KSteWs=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iHots-0008Kv-Ny; Tue, 08 Oct 2019 12:47:36 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 2F8D42740D48; Tue,  8 Oct 2019 13:47:36 +0100 (BST)
+Date:   Tue, 8 Oct 2019 13:47:36 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     linux-kernel@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-samsung-soc@vger.kernel.org,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Kamil Konieczny <k.konieczny@samsung.com>
+Subject: Re: [PATCH] regulator: core: Skip balancing of the enabled
+ regulators in regulator_enable()
+Message-ID: <20191008124736.GJ4382@sirena.co.uk>
+References: <CGME20191008101720eucas1p2e0d1bca6e696848bf689067e05620679@eucas1p2.samsung.com>
+ <20191008101709.13827-1-m.szyprowski@samsung.com>
+ <20191008115025.GF4382@sirena.co.uk>
+ <0e222fdd-4407-51ea-b75c-a62621cbe622@samsung.com>
+ <20191008120611.GG4382@sirena.co.uk>
+ <9268b455-ec66-97e1-909d-f964ac31c0ef@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="liqSWPDvh3eyfZ9k"
 Content-Disposition: inline
-In-Reply-To: <e0ead31283c74254e8c02c0e5e5123277ed1f927.1570531159.git.michal.simek@xilinx.com>
+In-Reply-To: <9268b455-ec66-97e1-909d-f964ac31c0ef@samsung.com>
+X-Cookie: Do not disturb.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 12:39:22PM +0200, Michal Simek wrote:
-> From: Kuldeep Dave <kuldeep.dave@xilinx.com>
-> 
-> Add Microblaze as an arch that supports PCI_MSI_IRQ_DOMAIN.
-> Enabling msi.h generation is done by separate patch.
-> 
-> Similar change was done by commit 2a9af0273c1c
-> ("PCI/MSI: Enable PCI_MSI_IRQ_DOMAIN support for RISC-V")
-> 
-> Signed-off-by: Kuldeep Dave <kuldeep.dave@xilinx.com>
-> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+--liqSWPDvh3eyfZ9k
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Arch part was sent here:
-> https://lkml.org/lkml/2019/10/8/277
+On Tue, Oct 08, 2019 at 02:38:55PM +0200, Marek Szyprowski wrote:
 
-Can you please squash this drivers/pci/Kconfig change into the same
-patch as the arch/microblaze patch mentioned above?  That way there's
-no ordering issue between the two patches.  I'd be glad to merge it,
-or you can add my ack and apply it via the Microblaze tree.  Just let
-me know which you prefer so I know whether to do something with this.
+> Then if I get it right, the issue is caused by the commit 7f93ff73f7c8=20
+> ("opp: core: add regulators enable and disable"). I've checked and=20
+> indeed reverting it fixes Peach Pi to boot properly. The question is if=
+=20
+> this is desired behavior or not?
 
-Sorry; I probably suggested the splitting in the first place for
-RISC-V, but I think that was a mistake.
+That doesn't seem ideal - either it's redundant for regulators that need
+to be marked as always-on anyway or it's going to force the regulators
+on when a device could do runtime PM (eg, if the same code can run on
+something like a GPU which can be turned off while the screen is off or
+is displaying a static image).
 
-> ---
->  drivers/pci/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> index a304f5ea11b9..9d259372fbfd 100644
-> --- a/drivers/pci/Kconfig
-> +++ b/drivers/pci/Kconfig
-> @@ -52,7 +52,7 @@ config PCI_MSI
->  	   If you don't know what to do here, say Y.
->  
->  config PCI_MSI_IRQ_DOMAIN
-> -	def_bool ARC || ARM || ARM64 || X86 || RISCV
-> +	def_bool ARC || ARM || ARM64 || X86 || RISCV || MICROBLAZE
->  	depends on PCI_MSI
->  	select GENERIC_MSI_IRQ_DOMAIN
->  
-> -- 
-> 2.17.1
-> 
+--liqSWPDvh3eyfZ9k
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2chWcACgkQJNaLcl1U
+h9CXBQf/b+pmbUPYAhUShO4eVdxzuwWcxfei9CJpiBusJoaR/D523P4pH5wKHcU1
+tuxCRGKqrO3Ty6SAttrXl6/8hPRkESeRnWXfCqeorDOC3LSC/wrTHR7UedCALn69
+hmT7pqOJeD2130JqCuPKit1HxxjxgT8KZHMEamDgqFcB7nh2wU3VwMCWTGRl1VyK
+GN9McMSpWCQeSSRRhrrlKGRf+UAiAeDo1MdDe7eO8cowlc4OWOHsaPyL6LU0Uvli
+ou6lJxFBUH9ZVbYEX45741FGDAXZimtGkmnwoBgH7r3WB23D9G90L60auCMemmk+
+pmMMDHYAfBOliiuDs57KsPnmbgDZDw==
+=J/eq
+-----END PGP SIGNATURE-----
+
+--liqSWPDvh3eyfZ9k--
