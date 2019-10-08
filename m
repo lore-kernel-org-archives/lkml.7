@@ -2,135 +2,197 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CADA4C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 18:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FBCC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 18:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F31621721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 18:06:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 019FA21721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 18:06:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="V8mYrN5x"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MCRb2iTl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729605AbfJHSGn (ORCPT
+        id S1729699AbfJHSGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 14:06:43 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38267 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727496AbfJHSGm (ORCPT
+        Tue, 8 Oct 2019 14:06:49 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35885 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727496AbfJHSGs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 14:06:42 -0400
-Received: by mail-pl1-f194.google.com with SMTP id w8so8796227plq.5
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 11:06:42 -0700 (PDT)
+        Tue, 8 Oct 2019 14:06:48 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 23so10697696pgk.3
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 11:06:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=NYB6tmPRC1SIoib6ul0uGoI9d0Fak9VnoM9hYJE8RnE=;
-        b=V8mYrN5xmCt6W6pA+EkohagbGhwmh7NfbdoIXf9wwYu8JDjgxlVk9CXDbdLc8MPnRd
-         jDxStfRjqrgfqq0fz235ZbDxTSDOjO1SdSOXVT1dVT40zbAry1mJXAw/09cjaOCLBbzz
-         cG3cHMvTX5QV7Z0O1De47pW3ZcjlB82hMPwEc=
+         :content-disposition:in-reply-to:user-agent;
+        bh=9k22JdnTV8IuRdbYO3IAN2HJ7ZCOjIEh/nswIg1lfuQ=;
+        b=MCRb2iTlomnfBtouVkKEDuO553yc8SUSxUKjfPTpHEwXI1jeXnew0Z0Ddez3M2fXx/
+         rA2P9rXv0NNizrZCdub5wGeeFVN06GScndU6XPjiNa08tpSTlwcm0hyjVVpJH+QCp9BU
+         hfw51DrnS0ZacnsH7ny0/ARzKPESpLAt1gs372Hno15pUybo5EW5ugiGamWCecB56sB9
+         ztXq6GPdLp7hUzzTX6sRZomaq0kYxTTT/aox99qN3OCdksR2eQ72zsCheG8yB9/uqohn
+         Wb7lIWna7NosQnwAXJWUkloK7FsXzNv+n5aI8aSbvLeS2xtIVGwNC73/HaSVzGHd8BKF
+         Oc2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NYB6tmPRC1SIoib6ul0uGoI9d0Fak9VnoM9hYJE8RnE=;
-        b=QeLjhNJVDMdVpr9vptZrmzNG95/utIdE9JQM3ZXUEnxwbfbok/cYRoPxwHBDF5EA/z
-         fAUBOKvAeqFy8EFfaf20OvH74XuHoq7jjRCdwVMZ/ms6vXZFQWdOj7tgAwnfpImiEFcK
-         iRSgq46sxjbjw4spj4JLi0HyFMPvbkRZ7boHQLMLlVuxSRB12ibv13TBijAMITSpWBIE
-         d+4SrL6yNGMgxouAb5YA/oKBv5h9LaGB86vZjgDt4PgmDMJVcUg77IjoZjAUd5/aB9gx
-         R5dMMAzGBC4tseIm1k/yqCm2iyuoE6U/UmbGNzch64DBrPeeJIub70RjEz3bFDlXls/y
-         jdoQ==
-X-Gm-Message-State: APjAAAUvrnhVzjl8PV3FNV0ilQulrWdQfLInj1l8X6pdNroPk+do0B4t
-        MEmJyLh0j7q53x/nxwJMeSVBLg==
-X-Google-Smtp-Source: APXvYqwwd9+2Ml8+wkWYicH8JkxxqWQMX6APMmp+DMaKOdWBlhq6/O0SLK+eS5lODOTOLuXDfGgd3g==
-X-Received: by 2002:a17:902:968e:: with SMTP id n14mr29311899plp.339.1570558002131;
-        Tue, 08 Oct 2019 11:06:42 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id l62sm22528320pfl.167.2019.10.08.11.06.40
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9k22JdnTV8IuRdbYO3IAN2HJ7ZCOjIEh/nswIg1lfuQ=;
+        b=mF/egBugMvg0g4LS4+oVwWGWRSvJ7Ty2wQe7JeoOU9Y9rhw76sT5/WT7r6RMBpIb6O
+         pnOS9ag+d3uuDCX+TuV2X3P3FpJrokjPeg3Z89L9mqMsIVJ194aHOuOO2zn2sAXsG6/i
+         KVPb158Q/bpu7mCEcdpI370Xxgn3jafx2fwHu2Q0UViklILfBKmVlfG3W7pQPUbh4SfI
+         D/q24YIQx37i/2rCMtwLpYV0CBmr0crqKZhxExjaOe5HhLU03rVKacutPDtba4fh7osb
+         EL1tNfTOZ0oGBSwpEV+gQDAQBIsWI5Ipux2ATydsRmp0H5Ppov8bLj/jKItL/tnsfhXD
+         uiYA==
+X-Gm-Message-State: APjAAAU374+2rtbmByYePkfBHunuH5RcxZawu5RvcIUz2PQ6mEX35sN6
+        v8y+k6G/TP7VUpI7KTMqh3e+ew==
+X-Google-Smtp-Source: APXvYqz1sEVhEgGPcKClIqNzftGgElPBwTnrJTbBUeF21A1lzGp78FE91ZlOnE2yQqFNO7foYAPkqw==
+X-Received: by 2002:a65:6681:: with SMTP id b1mr10308144pgw.393.1570558006561;
+        Tue, 08 Oct 2019 11:06:46 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id t21sm2269075pgi.87.2019.10.08.11.06.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2019 11:06:41 -0700 (PDT)
-Date:   Tue, 8 Oct 2019 11:06:39 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Luis Henriques <lhenriques@suse.com>
-Cc:     Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org
-Subject: Re: 'unable to handle page fault' in pstore
-Message-ID: <201910081105.A4156956@keescook>
-References: <87o8yrmv69.fsf@suse.com>
+        Tue, 08 Oct 2019 11:06:45 -0700 (PDT)
+Date:   Tue, 8 Oct 2019 11:06:43 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Murali Nalajala <mnalajal@codeaurora.org>
+Cc:     gregkh@linuxfoundation.org, rafael@kernel.org, swboyd@chromium.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] base: soc: Handle custom soc information sysfs entries
+Message-ID: <20191008180643.GJ63675@minitux>
+References: <1570480662-25252-1-git-send-email-mnalajal@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87o8yrmv69.fsf@suse.com>
+In-Reply-To: <1570480662-25252-1-git-send-email-mnalajal@codeaurora.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 10:41:02AM +0100, Luis Henriques wrote:
-> I've efi-pstore loaded, with a bunch of files in /sys/fs/pstore.  If I
-> unload my backend driver (efi-pstore) and try to remove a file from
-> /sys/fs/pstore I'll see the following spat:
+On Mon 07 Oct 13:37 PDT 2019, Murali Nalajala wrote:
 
-Oh ew. I think the issue is that the backend should not be removed while
-pstore is still loaded. I think ramoops enforces this, but I'll double
-check...
+> Soc framework exposed sysfs entries are not sufficient for some
+> of the h/w platforms. Currently there is no interface where soc
+> drivers can expose further information about their SoCs via soc
+> framework. This change address this limitation where clients can
+> pass their custom entries as attribute group and soc framework
+> would expose them as sysfs properties.
+> 
+> Signed-off-by: Murali Nalajala <mnalajal@codeaurora.org>
 
--Kees
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
+> ---
+> Changes in v2:
+> - Address comments from Stephen Boyd about "soc_dev" clean up in error paths.
 > 
-> BUG: unable to handle page fault for address: ffffffffc0bcf090
-> #PF: supervisor read access in kernel mode
-> #PF: error_code(0x0000) - not-present page
-> PGD 64a60c067 P4D 64a60c067 PUD 64a60e067 PMD 892200067 PTE 0
-> Oops: 0000 [#1] SMP PTI
-> CPU: 0 PID: 3154 Comm: mv Tainted: G            E     5.4.0-rc2 #19
-> Hardware name: Dell Inc. Precision 5510/0N8J4R, BIOS 1.10.0 02/25/2019
-> RIP: 0010:pstore_unlink+0x1e/0x70
-> Code: 66 66 2e 0f 1f 84 00 00 00 00 00 90 0f 1f 44 00 00 41 54 49 89 fc 55 53 48 8b 46 30 48 8b 80 38 02 00 00 48 8b 58 10 48 8b 3b <48> 83 bf 90 00 00 00 00 74 39 48 83 c7 0c 81 42 00
-> RSP: 0018:ffffb2eb40587e70 EFLAGS: 00010246
-> RAX: ffff8920cea3e8a0 RBX: ffff8920cd55b400 RCX: 0000000000000000
-> RDX: 0000000000000001 RSI: ffff8920cf76f300 RDI: ffffffffc0bcf000
-> RBP: ffff8920cf76f300 R08: ffff8920cf76f300 R09: 007a2e636e652e32
-> R10: 0000000000000007 R11: 7fffffffffffffff R12: ffff8920d4c91d80
-> R13: ffff8920d4c91d80 R14: ffff8920d80c3480 R15: ffff8920d80c3520
-> FS:  00007f3afe720640(0000) GS:ffff8920dda00000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: ffffffffc0bcf090 CR3: 000000088e260001 CR4: 00000000003606f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  vfs_unlink+0x10f/0x1f0
->  do_unlinkat+0x1af/0x2f0
->  do_syscall_64+0x4c/0x170
->  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> RIP: 0033:0x7f3afe8ef2f7
-> Code: 73 01 c3 48 8b 0d 89 db 0c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 b8 07 01 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 59 64 89 01 48
-> RSP: 002b:00007ffd60fea168 EFLAGS: 00000202 ORIG_RAX: 0000000000000107
-> RAX: ffffffffffffffda RBX: 00005629c4e3ef70 RCX: 00007f3afe8ef2f7
-> RDX: 0000000000000000 RSI: 00005629c4e3dd40 RDI: 00000000ffffff9c
-> RBP: 00005629c4e3dcb0 R08: 0000000000000003 R09: 0000000000000000
-> R10: fffffffffffff24b R11: 0000000000000202 R12: 0000000000000000
-> R13: 00007ffd60fea260 R14: 00005629c4e3ef70 R15: 0000000000000002
+> Changes in v1:
+> - Remove NULL initialization of "soc_attr_groups"
+> - Taken care of freeing "soc_attr_groups" in soc_release()
+> - Addressed Stephen Boyd comments on usage of "kalloc"
 > 
-> My understanding is that pstore_unlink() is exploding when running:
+>  drivers/base/soc.c      | 30 +++++++++++++++++-------------
+>  include/linux/sys_soc.h |  1 +
+>  2 files changed, 18 insertions(+), 13 deletions(-)
 > 
-> 	if (!record->psi->erase)
-> 
-> because that address (psi) was on the efi-pstore module.
-> 
-> I'm not sure what's the best way to fix this, probably a
-> 
-> 	if (psinfo && record->psi->erase)
-> 
-> would be enough, but ugly (and still racy?).
-> 
-> Cheers,
+> diff --git a/drivers/base/soc.c b/drivers/base/soc.c
+> index 7c0c5ca..4af11a4 100644
+> --- a/drivers/base/soc.c
+> +++ b/drivers/base/soc.c
+> @@ -104,15 +104,12 @@ static ssize_t soc_info_get(struct device *dev,
+>  	.is_visible = soc_attribute_mode,
+>  };
+>  
+> -static const struct attribute_group *soc_attr_groups[] = {
+> -	&soc_attr_group,
+> -	NULL,
+> -};
+> -
+>  static void soc_release(struct device *dev)
+>  {
+>  	struct soc_device *soc_dev = container_of(dev, struct soc_device, dev);
+>  
+> +	ida_simple_remove(&soc_ida, soc_dev->soc_dev_num);
+> +	kfree(soc_dev->dev.groups);
+>  	kfree(soc_dev);
+>  }
+>  
+> @@ -121,6 +118,7 @@ static void soc_release(struct device *dev)
+>  struct soc_device *soc_device_register(struct soc_device_attribute *soc_dev_attr)
+>  {
+>  	struct soc_device *soc_dev;
+> +	const struct attribute_group **soc_attr_groups;
+>  	int ret;
+>  
+>  	if (!soc_bus_type.p) {
+> @@ -136,10 +134,18 @@ struct soc_device *soc_device_register(struct soc_device_attribute *soc_dev_attr
+>  		goto out1;
+>  	}
+>  
+> +	soc_attr_groups = kcalloc(3, sizeof(*soc_attr_groups), GFP_KERNEL);
+> +	if (!soc_attr_groups) {
+> +		ret = -ENOMEM;
+> +		goto out2;
+> +	}
+> +	soc_attr_groups[0] = &soc_attr_group;
+> +	soc_attr_groups[1] = soc_dev_attr->custom_attr_group;
+> +
+>  	/* Fetch a unique (reclaimable) SOC ID. */
+>  	ret = ida_simple_get(&soc_ida, 0, 0, GFP_KERNEL);
+>  	if (ret < 0)
+> -		goto out2;
+> +		goto out3;
+>  	soc_dev->soc_dev_num = ret;
+>  
+>  	soc_dev->attr = soc_dev_attr;
+> @@ -150,15 +156,15 @@ struct soc_device *soc_device_register(struct soc_device_attribute *soc_dev_attr
+>  	dev_set_name(&soc_dev->dev, "soc%d", soc_dev->soc_dev_num);
+>  
+>  	ret = device_register(&soc_dev->dev);
+> -	if (ret)
+> -		goto out3;
+> +	if (ret) {
+> +		put_device(&soc_dev->dev);
+> +		return ERR_PTR(ret);
+> +	}
+>  
+>  	return soc_dev;
+>  
+>  out3:
+> -	ida_simple_remove(&soc_ida, soc_dev->soc_dev_num);
+> -	put_device(&soc_dev->dev);
+> -	soc_dev = NULL;
+> +	kfree(soc_attr_groups);
+>  out2:
+>  	kfree(soc_dev);
+>  out1:
+> @@ -169,8 +175,6 @@ struct soc_device *soc_device_register(struct soc_device_attribute *soc_dev_attr
+>  /* Ensure soc_dev->attr is freed prior to calling soc_device_unregister. */
+>  void soc_device_unregister(struct soc_device *soc_dev)
+>  {
+> -	ida_simple_remove(&soc_ida, soc_dev->soc_dev_num);
+> -
+>  	device_unregister(&soc_dev->dev);
+>  	early_soc_dev_attr = NULL;
+>  }
+> diff --git a/include/linux/sys_soc.h b/include/linux/sys_soc.h
+> index 48ceea8..d9b3cf0 100644
+> --- a/include/linux/sys_soc.h
+> +++ b/include/linux/sys_soc.h
+> @@ -15,6 +15,7 @@ struct soc_device_attribute {
+>  	const char *serial_number;
+>  	const char *soc_id;
+>  	const void *data;
+> +	const struct attribute_group *custom_attr_group;
+>  };
+>  
+>  /**
 > -- 
-> Luis
-
--- 
-Kees Cook
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
