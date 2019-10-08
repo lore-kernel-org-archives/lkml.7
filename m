@@ -2,64 +2,89 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B15EAC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86DCCC35280
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FC652070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 648252070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:51:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728342AbfJHQvD (ORCPT
+        id S1728893AbfJHQv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 12:51:03 -0400
-Received: from foss.arm.com ([217.140.110.172]:41268 "EHLO foss.arm.com"
+        Tue, 8 Oct 2019 12:51:58 -0400
+Received: from muru.com ([72.249.23.125]:36036 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726239AbfJHQvD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 12:51:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 03AC31570;
-        Tue,  8 Oct 2019 09:51:03 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6CA553F6C4;
-        Tue,  8 Oct 2019 09:51:02 -0700 (PDT)
-Date:   Tue, 8 Oct 2019 17:51:00 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Murphy Zhou <jencce.kernel@gmail.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/kmemleak: skip late_init if not skip disable
-Message-ID: <20191008165100.GC5694@arrakis.emea.arm.com>
-References: <20190929095659.jzy3gtcj6vgd35j6@XZHOUW.usersys.redhat.com>
+        id S1726138AbfJHQv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 12:51:58 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 548F08081;
+        Tue,  8 Oct 2019 16:52:31 +0000 (UTC)
+Date:   Tue, 8 Oct 2019 09:51:54 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Jeroen Hofstee <jhofstee@victronenergy.com>
+Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
+        Koen Kooi <koen@dominion.thruhere.net>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ARM: dts: am335x-sancloud-bbe: Fix PHY mode for ethernet
+Message-ID: <20191008165154.GH5610@atomide.com>
+References: <20191002095416.19603-1-jhofstee@victronenergy.com>
+ <d027ef07-807d-6a7b-2939-b67be4542469@ti.com>
+ <436f1712-7dec-db40-d08f-1a3032af3596@victronenergy.com>
+ <d85cd860-22a3-6142-7f2d-736a428d7a31@ti.com>
+ <20191008142349.GE5610@atomide.com>
+ <1f779973-1702-47eb-158f-7000770c435a@victronenergy.com>
+ <20191008161416.GG5610@atomide.com>
+ <4fa5393d-0b2c-4b8c-128a-81ab05a14a82@victronenergy.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190929095659.jzy3gtcj6vgd35j6@XZHOUW.usersys.redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <4fa5393d-0b2c-4b8c-128a-81ab05a14a82@victronenergy.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Murphy,
-
-On Sun, Sep 29, 2019 at 05:56:59PM +0800, Murphy Zhou wrote:
-> Now if DEFAULT_OFF set to y, kmemleak_init will start the cleanup_work
-> workqueue. Then late_init call will set kmemleak_initialized to 1, the
-> cleaup workqueue will try to do cleanup, triggering:
+* Jeroen Hofstee <jhofstee@victronenergy.com> [191008 16:43]:
+> Hello Tony,
 > 
-> [24.738773] ==================================================================
-> [24.742784] BUG: KASAN: global-out-of-bounds in __kmemleak_do_cleanup+0x166/0x180
+> On 10/8/19 6:14 PM, Tony Lindgren wrote:
+> > * Jeroen Hofstee <jhofstee@victronenergy.com> [191008 16:03]:
+> >> Hello Tony,
+> >>
+> >> On 10/8/19 4:23 PM, Tony Lindgren wrote:
+> >>> * Grygorii Strashko <grygorii.strashko@ti.com> [191003 02:32]:
+> >>>> On 03/10/2019 11:16, Jeroen Hofstee wrote:
+> >>>>> Furthermore 4.19 is fine, so there is no need to include it in stable
+> >>>>> and have a note to make sure also other patches are required etc.
+> >>>> Hence all above patches went in 5.1 it would be correct to mention only
+> >>>> 6d4cd041f0af net: phy: at803x: disable delay only for RGMII mode
+> >>> Jeroen, can you please send an updated patch with the fixes
+> >>> tag changed?
+> >>>
+> >> For completeness, there is no "Fixes tag" as you mentioned.
+> >> The commit only refers to another commit which introduces
+> >> a problem.
+> > Well please add the fixes tag, that way this will get
+> > properly applied to earlier stable kernels too :)
+> 
+> But 4.19 is fine, this is an issue in 5.1 as in EOL...
+> I really don't understand why I should waste time
+> to figure out what happened exactly during the 5.1
+> release cycle...
 
-I don't think the invocation of kmemleak_do_cleanup() is the issue here.
-It should be safe schedule the clean-up thread in case kmemleak was
-disabled from boot. What you probably hit was a bug in
-__kmemleak_do_cleanup() itself, fixed here:
+Hmm so what's the issue with just adding the fixes tag Grygorii
+suggested:
 
-http://lkml.kernel.org/r/20191004134624.46216-1-catalin.marinas@arm.com
+6d4cd041f0af ("net: phy: at803x: disable delay only for RGMII mode")
 
-With the above patch, I can no longer trigger the KASan warning.
+No need to dig further?
 
--- 
-Catalin
+Regards,
+
+Tony
