@@ -2,403 +2,105 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 338FAECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E096BC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AEFC20640
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:46:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="df3SblY3";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="g+eAoDC4"
+	by mail.kernel.org (Postfix) with ESMTP id B19602070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:47:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570538845;
+	bh=gPpCa6p+Wso87HvLkhRvL+4LLCQTklIIhK4mGQjgaXA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=Mh9yspSVp60DzRbJVeL7mfu66aBB5XjUOPpVzHUf1ThHNNK/eo2JnQObC8zihyz7/
+	 /gBEJD9ej/k0oKWRDizFmYlBEtB+s86K5fmUHmNTdYPsKYwioj/UydAeIbx0vNmj9l
+	 fx77rlcy4kp4vV+9P+fNSSrV33fAFcyuTgCzae5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730876AbfJHMqS (ORCPT
+        id S1730876AbfJHMrZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 08:46:18 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:46669 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730249AbfJHMqS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 08:46:18 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id 96910207B8;
-        Tue,  8 Oct 2019 08:46:15 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Tue, 08 Oct 2019 08:46:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=EdI8sCEFdDc6Y+uEa5ouuEc5HjI
-        RSH6K92pefphxdNM=; b=df3SblY3TwB23IMomoUXpYWfyzW7SOh7AMVUWQyUcm3
-        COVds/lYazsfPmSDm9bFY9lZsttPmsM2PegLzybIvWLPEBkr7uK+di2vJErGQ0bB
-        kKDeWKNZB+b/wck/NU5KOHhk3WeWF6bB2Htjc+x1yVkLHDYzfAd53NQK/l3HowJ7
-        oX8LuGcWki4n86z4UOq/DxvcyjUGG8eFLI4JNzW5pwdEpw7j7rKGOb2cxK4aWVii
-        3NqkWzQC4TmF4eh22rXOk+wr0sytMGTjtJ3nZBLTJu7VD7PO+PG6+mjUDjPHYTMl
-        dTsGa9KMHYwbJ8+B5pyQ8X25EIIYdhsxJrB1nO55SkQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=EdI8sC
-        EFdDc6Y+uEa5ouuEc5HjIRSH6K92pefphxdNM=; b=g+eAoDC4bYqX3pMyzGVU0w
-        Z3pjM4G58X6QLLlShpMAquJVKEBDe5qKD9A02a2OO6/ideqBh/llGHBTYKTMDCzL
-        irrzt+W/Gx+oNtEZX7O74ABASJYqYdV0dQ90F8SKx3dTq+CNIijp1frK6QMppY+X
-        sYOSHRKkuf4EW52RUGNLSpYUVbDoZV2hhyxOa6gvxLiMEk5zv26SHA0dTPy2MPwZ
-        Pl13CJApdQj8GzhDShKWten5RVv/UJkib4ix5wTKhNxSxoABRWnp+5/FpbxCqs56
-        0NRH/LtWaA/HOwumkvGhb8GDzE/AQ5xbeYk3rMhJdVtvPMsBHbVuMWLVMHFBqiew
-        ==
-X-ME-Sender: <xms:FoWcXQx0ZOF5zmtxfo2OhJhIDEbZOSC6EAdvecwTcn3mMzjAdyMu0w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrheelgdehjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeelrddvtdehrddufeeird
-    duheehnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhen
-    ucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:FoWcXYgmPTylvXJ1CmiKSyoXZOcEuibF5PlU1a1OANoYazU6SFpYLA>
-    <xmx:FoWcXdWEss3BC7FGmGbk9fsjBg4FJMMXHO5fmHaJZ3yunLCCWp0oMw>
-    <xmx:FoWcXS32tDFN7QAj0nTAmt0UvYINlu5ZpmiwLx5tjkC13geVd4_llA>
-    <xmx:F4WcXTCc9GlFTqNlIrLdogdV1rr4GV_WKSGZ7ZU-vbzFQZh3gG5U-w>
-Received: from localhost (unknown [89.205.136.155])
-        by mail.messagingengine.com (Postfix) with ESMTPA id ECB238006A;
-        Tue,  8 Oct 2019 08:46:13 -0400 (EDT)
-Date:   Tue, 8 Oct 2019 14:46:12 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?iso-8859-1?B?Suly9G1l?= Pouiller <jerome.pouiller@silabs.com>
-Subject: Re: linux-next: build failure after merge of the staging tree
-Message-ID: <20191008124612.GA2803978@kroah.com>
-References: <20191008134907.0094ca86@canb.auug.org.au>
+        Tue, 8 Oct 2019 08:47:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40340 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730316AbfJHMrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 08:47:24 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1665F20640;
+        Tue,  8 Oct 2019 12:47:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570538844;
+        bh=gPpCa6p+Wso87HvLkhRvL+4LLCQTklIIhK4mGQjgaXA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ZhNc5wiP2bjwQKEPE96Jtm8B32XiDgHnk1lCcNhInf6MdIm3rZ5TRWMidk7plGOd8
+         sbb9kr4SvfvwNP4hHOt8DlAXpXC5vpzKny9kDZRx+1xrd1uilfGPhLXncxxdZMFu25
+         N1/M2Eu38NLnXvGOgZMdcd8WLpWWqnCx254KocPM=
+Date:   Tue, 8 Oct 2019 07:47:23 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com,
+        Kuldeep Dave <kuldeep.dave@xilinx.com>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI/MSI: Enable PCI_MSI_IRQ_DOMAIN support for Microblaze
+Message-ID: <20191008124723.GA161444@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191008134907.0094ca86@canb.auug.org.au>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <e0ead31283c74254e8c02c0e5e5123277ed1f927.1570531159.git.michal.simek@xilinx.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 01:49:07PM +1100, Stephen Rothwell wrote:
-> Hi all,
+On Tue, Oct 08, 2019 at 12:39:22PM +0200, Michal Simek wrote:
+> From: Kuldeep Dave <kuldeep.dave@xilinx.com>
 > 
-> After merging the staging tree, today's linux-next build (powerpc
-> allyesconfig) failed like this:
+> Add Microblaze as an arch that supports PCI_MSI_IRQ_DOMAIN.
+> Enabling msi.h generation is done by separate patch.
 > 
-> In file included from include/linux/byteorder/big_endian.h:5,
->                  from arch/powerpc/include/uapi/asm/byteorder.h:14,
->                  from include/asm-generic/bitops/le.h:6,
->                  from arch/powerpc/include/asm/bitops.h:243,
->                  from include/linux/bitops.h:26,
->                  from include/linux/kernel.h:12,
->                  from include/asm-generic/bug.h:19,
->                  from arch/powerpc/include/asm/bug.h:120,
->                  from include/linux/bug.h:5,
->                  from include/linux/gpio/consumer.h:5,
->                  from drivers/staging/wfx/bh.c:8:
-> drivers/staging/wfx/bh.c: In function 'rx_helper':
-> drivers/staging/wfx/bh.c:86:19: warning: passing argument 1 of '__swab16s' makes pointer from integer without a cast [-Wint-conversion]
->    86 |   le16_to_cpus(hif->len);
-> include/uapi/linux/byteorder/big_endian.h:97:38: note: in definition of macro '__le16_to_cpus'
->    97 | #define __le16_to_cpus(x) __swab16s((x))
->       |                                      ^
-> drivers/staging/wfx/bh.c:86:3: note: in expansion of macro 'le16_to_cpus'
->    86 |   le16_to_cpus(hif->len);
->       |   ^~~~~~~~~~~~
-> In file included from include/linux/swab.h:5,
->                  from include/uapi/linux/byteorder/big_endian.h:13,
->                  from include/linux/byteorder/big_endian.h:5,
->                  from arch/powerpc/include/uapi/asm/byteorder.h:14,
->                  from include/asm-generic/bitops/le.h:6,
->                  from arch/powerpc/include/asm/bitops.h:243,
->                  from include/linux/bitops.h:26,
->                  from include/linux/kernel.h:12,
->                  from include/asm-generic/bug.h:19,
->                  from arch/powerpc/include/asm/bug.h:120,
->                  from include/linux/bug.h:5,
->                  from include/linux/gpio/consumer.h:5,
->                  from drivers/staging/wfx/bh.c:8:
-> include/uapi/linux/swab.h:230:37: note: expected '__u16 *' {aka 'short unsigned int *'} but argument is of type 'uint16_t' {aka 'short unsigned int'}
->   230 | static inline void __swab16s(__u16 *p)
->       |                              ~~~~~~~^
-> In file included from include/linux/byteorder/big_endian.h:5,
->                  from arch/powerpc/include/uapi/asm/byteorder.h:14,
->                  from include/asm-generic/bitops/le.h:6,
->                  from arch/powerpc/include/asm/bitops.h:243,
->                  from include/linux/bitops.h:26,
->                  from include/linux/kernel.h:12,
->                  from include/asm-generic/bug.h:19,
->                  from arch/powerpc/include/asm/bug.h:120,
->                  from include/linux/bug.h:5,
->                  from include/linux/gpio/consumer.h:5,
->                  from drivers/staging/wfx/bh.c:8:
-> drivers/staging/wfx/bh.c:91:19: warning: passing argument 1 of '__swab16s' makes pointer from integer without a cast [-Wint-conversion]
->    91 |   le16_to_cpus(hif->len);
-> include/uapi/linux/byteorder/big_endian.h:97:38: note: in definition of macro '__le16_to_cpus'
->    97 | #define __le16_to_cpus(x) __swab16s((x))
->       |                                      ^
-> drivers/staging/wfx/bh.c:91:3: note: in expansion of macro 'le16_to_cpus'
->    91 |   le16_to_cpus(hif->len);
->       |   ^~~~~~~~~~~~
-> In file included from include/linux/swab.h:5,
->                  from include/uapi/linux/byteorder/big_endian.h:13,
->                  from include/linux/byteorder/big_endian.h:5,
->                  from arch/powerpc/include/uapi/asm/byteorder.h:14,
->                  from include/asm-generic/bitops/le.h:6,
->                  from arch/powerpc/include/asm/bitops.h:243,
->                  from include/linux/bitops.h:26,
->                  from include/linux/kernel.h:12,
->                  from include/asm-generic/bug.h:19,
->                  from arch/powerpc/include/asm/bug.h:120,
->                  from include/linux/bug.h:5,
->                  from include/linux/gpio/consumer.h:5,
->                  from drivers/staging/wfx/bh.c:8:
-> include/uapi/linux/swab.h:230:37: note: expected '__u16 *' {aka 'short unsigned int *'} but argument is of type 'uint16_t' {aka 'short unsigned int'}
->   230 | static inline void __swab16s(__u16 *p)
->       |                              ~~~~~~~^
-> In file included from include/linux/byteorder/big_endian.h:5,
->                  from arch/powerpc/include/uapi/asm/byteorder.h:14,
->                  from include/asm-generic/bitops/le.h:6,
->                  from arch/powerpc/include/asm/bitops.h:243,
->                  from include/linux/bitops.h:26,
->                  from include/linux/kernel.h:12,
->                  from include/asm-generic/bug.h:19,
->                  from arch/powerpc/include/asm/bug.h:120,
->                  from include/linux/bug.h:5,
->                  from include/net/mac80211.h:16,
->                  from drivers/staging/wfx/key.c:8:
-> drivers/staging/wfx/hif_tx_mib.h: In function 'hif_set_mfp':
-> drivers/staging/wfx/hif_tx_mib.h:139:15: error: passing argument 1 of '__swab32s' from incompatible pointer type [-Werror=incompatible-pointer-types]
->   139 |  cpu_to_le32s(&val);
-> include/uapi/linux/byteorder/big_endian.h:94:38: note: in definition of macro '__cpu_to_le32s'
->    94 | #define __cpu_to_le32s(x) __swab32s((x))
->       |                                      ^
-> drivers/staging/wfx/hif_tx_mib.h:139:2: note: in expansion of macro 'cpu_to_le32s'
->   139 |  cpu_to_le32s(&val);
->       |  ^~~~~~~~~~~~
-> In file included from include/linux/swab.h:5,
->                  from include/uapi/linux/byteorder/big_endian.h:13,
->                  from include/linux/byteorder/big_endian.h:5,
->                  from arch/powerpc/include/uapi/asm/byteorder.h:14,
->                  from include/asm-generic/bitops/le.h:6,
->                  from arch/powerpc/include/asm/bitops.h:243,
->                  from include/linux/bitops.h:26,
->                  from include/linux/kernel.h:12,
->                  from include/asm-generic/bug.h:19,
->                  from arch/powerpc/include/asm/bug.h:120,
->                  from include/linux/bug.h:5,
->                  from include/net/mac80211.h:16,
->                  from drivers/staging/wfx/key.c:8:
-> include/uapi/linux/swab.h:242:46: note: expected '__u32 *' {aka 'unsigned int *'} but argument is of type 'struct hif_mib_protected_mgmt_policy *'
->   242 | static __always_inline void __swab32s(__u32 *p)
->       |                                       ~~~~~~~^
-> In file included from include/linux/byteorder/big_endian.h:5,
->                  from arch/powerpc/include/uapi/asm/byteorder.h:14,
->                  from include/asm-generic/bitops/le.h:6,
->                  from arch/powerpc/include/asm/bitops.h:243,
->                  from include/linux/bitops.h:26,
->                  from include/linux/kernel.h:12,
->                  from include/asm-generic/bug.h:19,
->                  from arch/powerpc/include/asm/bug.h:120,
->                  from include/linux/bug.h:5,
->                  from include/net/mac80211.h:16,
->                  from drivers/staging/wfx/scan.c:8:
-> drivers/staging/wfx/hif_tx_mib.h: In function 'hif_set_mfp':
-> drivers/staging/wfx/hif_tx_mib.h:139:15: error: passing argument 1 of '__swab32s' from incompatible pointer type [-Werror=incompatible-pointer-types]
->   139 |  cpu_to_le32s(&val);
-> include/uapi/linux/byteorder/big_endian.h:94:38: note: in definition of macro '__cpu_to_le32s'
->    94 | #define __cpu_to_le32s(x) __swab32s((x))
->       |                                      ^
-> drivers/staging/wfx/hif_tx_mib.h:139:2: note: in expansion of macro 'cpu_to_le32s'
->   139 |  cpu_to_le32s(&val);
->       |  ^~~~~~~~~~~~
-> In file included from include/linux/swab.h:5,
->                  from include/uapi/linux/byteorder/big_endian.h:13,
->                  from include/linux/byteorder/big_endian.h:5,
->                  from arch/powerpc/include/uapi/asm/byteorder.h:14,
->                  from include/asm-generic/bitops/le.h:6,
->                  from arch/powerpc/include/asm/bitops.h:243,
->                  from include/linux/bitops.h:26,
->                  from include/linux/kernel.h:12,
->                  from include/asm-generic/bug.h:19,
->                  from arch/powerpc/include/asm/bug.h:120,
->                  from include/linux/bug.h:5,
->                  from include/net/mac80211.h:16,
->                  from drivers/staging/wfx/scan.c:8:
-> include/uapi/linux/swab.h:242:46: note: expected '__u32 *' {aka 'unsigned int *'} but argument is of type 'struct hif_mib_protected_mgmt_policy *'
->   242 | static __always_inline void __swab32s(__u32 *p)
->       |                                       ~~~~~~~^
-> In file included from include/linux/byteorder/big_endian.h:5,
->                  from arch/powerpc/include/uapi/asm/byteorder.h:14,
->                  from include/asm-generic/bitops/le.h:6,
->                  from arch/powerpc/include/asm/bitops.h:243,
->                  from include/linux/bitops.h:26,
->                  from include/linux/kernel.h:12,
->                  from include/linux/list.h:9,
->                  from include/linux/module.h:9,
->                  from drivers/staging/wfx/main.c:13:
-> drivers/staging/wfx/hif_tx_mib.h: In function 'hif_set_mfp':
-> drivers/staging/wfx/hif_tx_mib.h:139:15: error: passing argument 1 of '__swab32s' from incompatible pointer type [-Werror=incompatible-pointer-types]
->   139 |  cpu_to_le32s(&val);
-> include/uapi/linux/byteorder/big_endian.h:94:38: note: in definition of macro '__cpu_to_le32s'
->    94 | #define __cpu_to_le32s(x) __swab32s((x))
->       |                                      ^
-> drivers/staging/wfx/hif_tx_mib.h:139:2: note: in expansion of macro 'cpu_to_le32s'
->   139 |  cpu_to_le32s(&val);
->       |  ^~~~~~~~~~~~
-> In file included from include/linux/swab.h:5,
->                  from include/uapi/linux/byteorder/big_endian.h:13,
->                  from include/linux/byteorder/big_endian.h:5,
->                  from arch/powerpc/include/uapi/asm/byteorder.h:14,
->                  from include/asm-generic/bitops/le.h:6,
->                  from arch/powerpc/include/asm/bitops.h:243,
->                  from include/linux/bitops.h:26,
->                  from include/linux/kernel.h:12,
->                  from include/linux/list.h:9,
->                  from include/linux/module.h:9,
->                  from drivers/staging/wfx/main.c:13:
-> include/uapi/linux/swab.h:242:46: note: expected '__u32 *' {aka 'unsigned int *'} but argument is of type 'struct hif_mib_protected_mgmt_policy *'
->   242 | static __always_inline void __swab32s(__u32 *p)
->       |                                       ~~~~~~~^
-> In file included from include/linux/byteorder/big_endian.h:5,
->                  from arch/powerpc/include/uapi/asm/byteorder.h:14,
->                  from include/asm-generic/bitops/le.h:6,
->                  from arch/powerpc/include/asm/bitops.h:243,
->                  from include/linux/bitops.h:26,
->                  from include/linux/kernel.h:12,
->                  from include/asm-generic/bug.h:19,
->                  from arch/powerpc/include/asm/bug.h:120,
->                  from include/linux/bug.h:5,
->                  from include/net/mac80211.h:16,
->                  from drivers/staging/wfx/data_tx.c:8:
-> drivers/staging/wfx/hif_tx_mib.h: In function 'hif_set_mfp':
-> drivers/staging/wfx/hif_tx_mib.h:139:15: error: passing argument 1 of '__swab32s' from incompatible pointer type [-Werror=incompatible-pointer-types]
->   139 |  cpu_to_le32s(&val);
-> include/uapi/linux/byteorder/big_endian.h:94:38: note: in definition of macro '__cpu_to_le32s'
->    94 | #define __cpu_to_le32s(x) __swab32s((x))
->       |                                      ^
-> drivers/staging/wfx/hif_tx_mib.h:139:2: note: in expansion of macro 'cpu_to_le32s'
->   139 |  cpu_to_le32s(&val);
->       |  ^~~~~~~~~~~~
-> In file included from include/linux/swab.h:5,
->                  from include/uapi/linux/byteorder/big_endian.h:13,
->                  from include/linux/byteorder/big_endian.h:5,
->                  from arch/powerpc/include/uapi/asm/byteorder.h:14,
->                  from include/asm-generic/bitops/le.h:6,
->                  from arch/powerpc/include/asm/bitops.h:243,
->                  from include/linux/bitops.h:26,
->                  from include/linux/kernel.h:12,
->                  from include/asm-generic/bug.h:19,
->                  from arch/powerpc/include/asm/bug.h:120,
->                  from include/linux/bug.h:5,
->                  from include/net/mac80211.h:16,
->                  from drivers/staging/wfx/data_tx.c:8:
-> include/uapi/linux/swab.h:242:46: note: expected '__u32 *' {aka 'unsigned int *'} but argument is of type 'struct hif_mib_protected_mgmt_policy *'
->   242 | static __always_inline void __swab32s(__u32 *p)
->       |                                       ~~~~~~~^
-> In file included from include/linux/byteorder/big_endian.h:5,
->                  from arch/powerpc/include/uapi/asm/byteorder.h:14,
->                  from include/asm-generic/bitops/le.h:6,
->                  from arch/powerpc/include/asm/bitops.h:243,
->                  from include/linux/bitops.h:26,
->                  from include/linux/kernel.h:12,
->                  from include/asm-generic/bug.h:19,
->                  from arch/powerpc/include/asm/bug.h:120,
->                  from include/linux/bug.h:5,
->                  from include/net/mac80211.h:16,
->                  from drivers/staging/wfx/data_tx.c:8:
-> drivers/staging/wfx/data_tx.c: In function 'wfx_tx_inner':
-> include/uapi/linux/byteorder/big_endian.h:35:26: warning: conversion from 'short unsigned int' to 'uint8_t' {aka 'unsigned char'} changes value from '1024' to '0' [-Woverflow]
->    35 | #define __cpu_to_le16(x) ((__force __le16)__swab16((x)))
->       |                          ^
-> include/linux/byteorder/generic.h:90:21: note: in expansion of macro '__cpu_to_le16'
->    90 | #define cpu_to_le16 __cpu_to_le16
->       |                     ^~~~~~~~~~~~~
-> drivers/staging/wfx/data_tx.c:623:16: note: in expansion of macro 'cpu_to_le16'
->   623 |  hif_msg->id = cpu_to_le16(HIF_REQ_ID_TX);
->       |                ^~~~~~~~~~~
-> In file included from include/linux/byteorder/big_endian.h:5,
->                  from arch/powerpc/include/uapi/asm/byteorder.h:14,
->                  from include/asm-generic/bitops/le.h:6,
->                  from arch/powerpc/include/asm/bitops.h:243,
->                  from include/linux/bitops.h:26,
->                  from include/linux/kernel.h:12,
->                  from include/asm-generic/bug.h:19,
->                  from arch/powerpc/include/asm/bug.h:120,
->                  from include/linux/bug.h:5,
->                  from include/net/mac80211.h:16,
->                  from drivers/staging/wfx/sta.c:8:
-> drivers/staging/wfx/hif_tx_mib.h: In function 'hif_set_mfp':
-> drivers/staging/wfx/hif_tx_mib.h:139:15: error: passing argument 1 of '__swab32s' from incompatible pointer type [-Werror=incompatible-pointer-types]
->   139 |  cpu_to_le32s(&val);
-> include/uapi/linux/byteorder/big_endian.h:94:38: note: in definition of macro '__cpu_to_le32s'
->    94 | #define __cpu_to_le32s(x) __swab32s((x))
->       |                                      ^
-> drivers/staging/wfx/hif_tx_mib.h:139:2: note: in expansion of macro 'cpu_to_le32s'
->   139 |  cpu_to_le32s(&val);
->       |  ^~~~~~~~~~~~
-> In file included from include/linux/swab.h:5,
->                  from include/uapi/linux/byteorder/big_endian.h:13,
->                  from include/linux/byteorder/big_endian.h:5,
->                  from arch/powerpc/include/uapi/asm/byteorder.h:14,
->                  from include/asm-generic/bitops/le.h:6,
->                  from arch/powerpc/include/asm/bitops.h:243,
->                  from include/linux/bitops.h:26,
->                  from include/linux/kernel.h:12,
->                  from include/asm-generic/bug.h:19,
->                  from arch/powerpc/include/asm/bug.h:120,
->                  from include/linux/bug.h:5,
->                  from include/net/mac80211.h:16,
->                  from drivers/staging/wfx/sta.c:8:
-> include/uapi/linux/swab.h:242:46: note: expected '__u32 *' {aka 'unsigned int *'} but argument is of type 'struct hif_mib_protected_mgmt_policy *'
->   242 | static __always_inline void __swab32s(__u32 *p)
->       |                                       ~~~~~~~^
-> In file included from include/linux/byteorder/big_endian.h:5,
->                  from arch/powerpc/include/uapi/asm/byteorder.h:14,
->                  from include/asm-generic/bitops/le.h:6,
->                  from arch/powerpc/include/asm/bitops.h:243,
->                  from include/linux/bitops.h:26,
->                  from include/linux/kernel.h:12,
->                  from include/linux/list.h:9,
->                  from include/linux/wait.h:7,
->                  from include/linux/wait_bit.h:8,
->                  from include/linux/fs.h:6,
->                  from include/linux/debugfs.h:15,
->                  from drivers/staging/wfx/debug.c:8:
-> drivers/staging/wfx/hif_tx_mib.h: In function 'hif_set_mfp':
-> drivers/staging/wfx/hif_tx_mib.h:139:15: error: passing argument 1 of '__swab32s' from incompatible pointer type [-Werror=incompatible-pointer-types]
->   139 |  cpu_to_le32s(&val);
-> include/uapi/linux/byteorder/big_endian.h:94:38: note: in definition of macro '__cpu_to_le32s'
->    94 | #define __cpu_to_le32s(x) __swab32s((x))
->       |                                      ^
-> drivers/staging/wfx/hif_tx_mib.h:139:2: note: in expansion of macro 'cpu_to_le32s'
->   139 |  cpu_to_le32s(&val);
->       |  ^~~~~~~~~~~~
-> In file included from include/linux/swab.h:5,
->                  from include/uapi/linux/byteorder/big_endian.h:13,
->                  from include/linux/byteorder/big_endian.h:5,
->                  from arch/powerpc/include/uapi/asm/byteorder.h:14,
->                  from include/asm-generic/bitops/le.h:6,
->                  from arch/powerpc/include/asm/bitops.h:243,
->                  from include/linux/bitops.h:26,
->                  from include/linux/kernel.h:12,
->                  from include/linux/list.h:9,
->                  from include/linux/wait.h:7,
->                  from include/linux/wait_bit.h:8,
->                  from include/linux/fs.h:6,
->                  from include/linux/debugfs.h:15,
->                  from drivers/staging/wfx/debug.c:8:
-> include/uapi/linux/swab.h:242:46: note: expected '__u32 *' {aka 'unsigned int *'} but argument is of type 'struct hif_mib_protected_mgmt_policy *'
->   242 | static __always_inline void __swab32s(__u32 *p)
->       |                                       ~~~~~~~^
+> Similar change was done by commit 2a9af0273c1c
+> ("PCI/MSI: Enable PCI_MSI_IRQ_DOMAIN support for RISC-V")
 > 
-> Caused by commits from the staging tree.
-> 
-> I have disabled CONFIG_WFX for today.
+> Signed-off-by: Kuldeep Dave <kuldeep.dave@xilinx.com>
+> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 
-Should be fixed soon, thanks for the report.
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-greg k-h
+> Arch part was sent here:
+> https://lkml.org/lkml/2019/10/8/277
+
+Can you please squash this drivers/pci/Kconfig change into the same
+patch as the arch/microblaze patch mentioned above?  That way there's
+no ordering issue between the two patches.  I'd be glad to merge it,
+or you can add my ack and apply it via the Microblaze tree.  Just let
+me know which you prefer so I know whether to do something with this.
+
+Sorry; I probably suggested the splitting in the first place for
+RISC-V, but I think that was a mistake.
+
+> ---
+>  drivers/pci/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> index a304f5ea11b9..9d259372fbfd 100644
+> --- a/drivers/pci/Kconfig
+> +++ b/drivers/pci/Kconfig
+> @@ -52,7 +52,7 @@ config PCI_MSI
+>  	   If you don't know what to do here, say Y.
+>  
+>  config PCI_MSI_IRQ_DOMAIN
+> -	def_bool ARC || ARM || ARM64 || X86 || RISCV
+> +	def_bool ARC || ARM || ARM64 || X86 || RISCV || MICROBLAZE
+>  	depends on PCI_MSI
+>  	select GENERIC_MSI_IRQ_DOMAIN
+>  
+> -- 
+> 2.17.1
+> 
