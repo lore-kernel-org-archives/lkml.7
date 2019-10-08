@@ -2,146 +2,90 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A16C35280
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C8BCC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1698121871
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:35:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jCEpS9kZ"
+	by mail.kernel.org (Postfix) with ESMTP id 52003217D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:39:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729504AbfJHQf6 (ORCPT
+        id S1728567AbfJHQjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 12:35:58 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45050 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726320AbfJHQf5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 12:35:57 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 21so14545568otj.11
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 09:35:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GZeF9+x7oA1LkT60KPu6aRKTIGksyJ9mdpR8n367HKI=;
-        b=jCEpS9kZZoxfVWjoZh+93nUsTUTlU358yVr8bpGo3tSg7PHOrbIkUuF6i4hwfUtpSg
-         o7+43jzDmAIjU5KF78mIrOGAE6WVYVblEsABdznS7UHciO5aF9oxXCE3GXpgMIKCsgWO
-         Nu0JSU95/DwEb1RIN4vgAupU7Af0eycfAW5vRFe8zHcUwnLPvFjShPoJ/HVNqs38c9iu
-         jM0CrtMBuJwIDv86gU+LEquR+Pj+ZxZUcS9klCO6VbfEqQTEJ3qFv9t1JzrWuYms4w+B
-         aibsOHRD3JvWJwJo+IsbO3iM3vIYG500Nh59c5rA3jIOsFFJi9bXHh14AeU4Ved+jNGz
-         XaCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GZeF9+x7oA1LkT60KPu6aRKTIGksyJ9mdpR8n367HKI=;
-        b=KuMzaG0WxK3lDc8WanjpwM8b8RFvt5+MmbrahNVwQjDNSYy7D2W6KOnPnm3k7Ix4e5
-         9ckvQGIYU2ElSfLpVSJZCcXhewgg4dZhHv5ETzD8oj64vXDbEeKwu1STr+c3reXxt6kY
-         pkprSsZYK1tNtGcN/Z7fClg1KOW28lR4joXWqBRvnMQ/OCPFocXXKS+96Z6JBrKWpITy
-         4RqrsG6UlVqZVc1oddzJZTDPAeW0zop6UELDFaLTrdeFrX4JkXuCY1PLW9Ln+n+E6Hw8
-         JCQ+XYoq9gvn5IpYnFFd5i2AAKbudUQAXZyV8S8o6Fmb+CfWOVFLusgx0pnEWdOZYxoY
-         Ad+Q==
-X-Gm-Message-State: APjAAAXsXEiLM4eVo2/o8U/6HGPpPSQu5Mwo0dIf4DSblNMufrR/2Fk5
-        pDrUs0EWCEy/jOcV5d1IUFA8Im9TKPLpsVCevFF2so+TmjFfsA==
-X-Google-Smtp-Source: APXvYqwpq1gGDDxcpdjmaiFHe46d7qsdzIN6UKWO6eyD2QJpl40suKR9yK4izkhTqpq7ovBYpEtSqYkPcxDlstqMVKA=
-X-Received: by 2002:a9d:68d7:: with SMTP id i23mr26631718oto.23.1570552556380;
- Tue, 08 Oct 2019 09:35:56 -0700 (PDT)
+        Tue, 8 Oct 2019 12:39:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:40992 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725966AbfJHQjb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 12:39:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7B9701570;
+        Tue,  8 Oct 2019 09:39:30 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3ED123F6C4;
+        Tue,  8 Oct 2019 09:39:29 -0700 (PDT)
+Subject: Re: [PATCH v3 04/10] sched/fair: rework load_balance
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Phil Auld <pauld@redhat.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Hillf Danton <hdanton@sina.com>
+References: <1568878421-12301-1-git-send-email-vincent.guittot@linaro.org>
+ <1568878421-12301-5-git-send-email-vincent.guittot@linaro.org>
+ <c752dd1a-731e-aae3-6a2c-aecf88901ac0@arm.com>
+ <CAKfTPtBQNJfNmBqpuaefsLzsTrGxJ=2bTs+tRdbOAa9J3eKuVw@mail.gmail.com>
+ <31cac0c1-98e4-c70e-e156-51a70813beff@arm.com>
+ <20191008141642.GQ2294@hirez.programming.kicks-ass.net>
+ <b4e29e48-a97c-67e5-a284-6ddc13222c5b@arm.com>
+ <20191008163357.GF2328@hirez.programming.kicks-ass.net>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <5de71c9f-cd6b-0284-f4a0-0d1fe4059099@arm.com>
+Date:   Tue, 8 Oct 2019 17:39:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20191008050145.4041702-1-boqun.feng@gmail.com> <20191008163028.GA136151@google.com>
-In-Reply-To: <20191008163028.GA136151@google.com>
-From:   Marco Elver <elver@google.com>
-Date:   Tue, 8 Oct 2019 18:35:45 +0200
-Message-ID: <CANpmjNP0Vt4i7nWXPd2g4vaqkE3J2K1M_BiEMrtGqVcRE8khtw@mail.gmail.com>
-Subject: Re: [PATCH] rcu: Avoid to modify mask_ofl_ipi in sync_rcu_exp_select_node_cpus()
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Boqun Feng <boqun.feng@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>, rcu@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191008163357.GF2328@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 8 Oct 2019 at 18:30, Joel Fernandes <joel@joelfernandes.org> wrote:
->
-> On Tue, Oct 08, 2019 at 01:01:40PM +0800, Boqun Feng wrote:
-> > "mask_ofl_ipi" is used for iterate CPUs which IPIs are needed to send
-> > to, however in the IPI sending loop, "mask_ofl_ipi" along with another
-> > variable "mask_ofl_test" might also get modified to record which CPU's
-> > quiesent state can be reported by sync_rcu_exp_select_node_cpus(). Two
-> > variables seems to be redundant for such a propose, so this patch clean
-> > things a little by solely using "mask_ofl_test" for recording and
-> > "mask_ofl_ipi" for iteration. This would improve the readibility of the
-> > IPI sending loop in sync_rcu_exp_select_node_cpus().
-> >
-> > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> > ---
->
-> Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
->
-> thanks,
->
->  - Joel
+On 08/10/2019 17:33, Peter Zijlstra wrote:
+> On Tue, Oct 08, 2019 at 03:34:04PM +0100, Valentin Schneider wrote:
+>> On 08/10/2019 15:16, Peter Zijlstra wrote:
+>>> On Wed, Oct 02, 2019 at 11:47:59AM +0100, Valentin Schneider wrote:
+>>>
+>>>> Yeah, right shift on signed negative values are implementation defined.
+>>>
+>>> Seriously? Even under -fno-strict-overflow? There is a perfectly
+>>> sensible operation for signed shift right, this stuff should not be
+>>> undefined.
+>>>
+>>
+>> Mmm good point. I didn't see anything relevant in the description of that
+>> flag. All my copy of the C99 standard (draft) says at 6.5.7.5 is:
+>>
+>> """
+>> The result of E1 >> E2 [...] If E1 has a signed type and a negative value,
+>> the resulting value is implementation-defined.
+>> """
+>>
+>> Arithmetic shift would make sense, but I think this stems from twos'
+>> complement not being imposed: 6.2.6.2.2 says sign can be done with
+>> sign + magnitude, twos complement or ones' complement...
+> 
+> But -fno-strict-overflow mandates 2s complement for all such signed
+> issues.
+> 
 
-Acked-by: Marco Elver <elver@google.com>
-
-If this is the official patch for the fix to the KCSAN reported
-data-race, it'd be great to include the tag:
-Reported-by: syzbot+134336b86f728d6e55a0@syzkaller.appspotmail.com
-so the bot knows this was fixed.
-
-Thanks!
--- Marco
-
-> >  kernel/rcu/tree_exp.h | 13 ++++++-------
-> >  1 file changed, 6 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
-> > index 69c5aa64fcfd..212470018752 100644
-> > --- a/kernel/rcu/tree_exp.h
-> > +++ b/kernel/rcu/tree_exp.h
-> > @@ -387,10 +387,10 @@ static void sync_rcu_exp_select_node_cpus(struct work_struct *wp)
-> >               }
-> >               ret = smp_call_function_single(cpu, rcu_exp_handler, NULL, 0);
-> >               put_cpu();
-> > -             if (!ret) {
-> > -                     mask_ofl_ipi &= ~mask;
-> > +             /* The CPU responses the IPI, and will report QS itself */
-> > +             if (!ret)
-> >                       continue;
-> > -             }
-> > +
-> >               /* Failed, raced with CPU hotplug operation. */
-> >               raw_spin_lock_irqsave_rcu_node(rnp, flags);
-> >               if ((rnp->qsmaskinitnext & mask) &&
-> > @@ -401,13 +401,12 @@ static void sync_rcu_exp_select_node_cpus(struct work_struct *wp)
-> >                       schedule_timeout_uninterruptible(1);
-> >                       goto retry_ipi;
-> >               }
-> > -             /* CPU really is offline, so we can ignore it. */
-> > -             if (!(rnp->expmask & mask))
-> > -                     mask_ofl_ipi &= ~mask;
-> > +             /* CPU really is offline, and we need its QS to pass GP. */
-> > +             if (rnp->expmask & mask)
-> > +                     mask_ofl_test |= mask;
-> >               raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
-> >       }
-> >       /* Report quiescent states for those that went offline. */
-> > -     mask_ofl_test |= mask_ofl_ipi;
-> >       if (mask_ofl_test)
-> >               rcu_report_exp_cpu_mult(rnp, mask_ofl_test, false);
-> >  }
-> > --
-> > 2.23.0
-> >
+So then there really shouldn't be any ambiguity. I have no idea if
+-fno-strict-overflow then also lifts the undefinedness of the right shifts,
+gotta get my spade and dig some more.
