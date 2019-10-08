@@ -2,121 +2,106 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 571FAC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DA1C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F72020673
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E6DD21721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:21:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="InzhK1nL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kPwgbuv4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbfJHOUp (ORCPT
+        id S1726387AbfJHOVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 10:20:45 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35228 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725795AbfJHOUp (ORCPT
+        Tue, 8 Oct 2019 10:21:50 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:42935 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725853AbfJHOVu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 10:20:45 -0400
-Received: by mail-wr1-f65.google.com with SMTP id v8so19655761wrt.2;
-        Tue, 08 Oct 2019 07:20:42 -0700 (PDT)
+        Tue, 8 Oct 2019 10:21:50 -0400
+Received: by mail-oi1-f196.google.com with SMTP id i185so14882357oif.9
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 07:21:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jGk4MWMZkTAIeXYuDbRwhGcphWqWu107D+eHL9NFn3g=;
-        b=InzhK1nLbMGYUei3X0D3rLlwU60tfmfvgVRQZsqB8Deg7Cy0csosomUPXmqTj+imVy
-         igtXMAV2IAjGFF6u02l/cBsCagUB52DbTrK+x9bWKKQgwEa26XNK+Eos7HG5+8w8HDIf
-         693w/nnvyf5+kBpYlOb4qE2Ym/oRQ0047SAUGNcfDTc7JQp3GmPMWM8H9a0JY1l89Fyi
-         4CqHxOTZ5dLogj5/VuPRdrCWEkNNNuTleBH5mEL89x0uuXbu/+BNsGmhirPKvthjUbEI
-         ZaSVCG0ZCn8GzBvLQWUQU9qzjTtHh0A/otWE4V97kbUjH6AE//wHnRsl6VQ3queneAb6
-         vh4Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=MA85NocqHsE0pV0WfruagTwcSPZ20OKA7j0BxtbfiKg=;
+        b=kPwgbuv4SZyOXa0VVd9PS9lv1q4g0p3gD2oqmeLiueLI2DbgKdwfPbfzH4pTCEopYB
+         9buGDhEoq2K4C/Yw2E0U3aAFxVD7aLRefWrB36OLxiETjmGIsDzr5Rk1VU2vNDz9EoRD
+         EKiEmRQx7/m2707sy1vkdtlvzY1h5eP+tPomtD9Yqqe1HCwpA4TCjlkB7PyFhlivKltZ
+         VFjGKXbPvPNqkdqk6XJZ+3OQgsHjcXbVuM8EsQG4HefArMnpTQzjMHA04jz7TF6rWJtL
+         zTcBYEaeqx7aMxygbS07rBNSTW8RyGmFwTaEwnpq3lP4CYWj1G5tRCCxxZ4vB2w3AP9y
+         L8+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jGk4MWMZkTAIeXYuDbRwhGcphWqWu107D+eHL9NFn3g=;
-        b=L2JrkF7baKuwpl3jqmIKMn/80CE5ZqQylS7KClh270R9kTe3lw3r3LE6AI7p00BrBY
-         pFEHtNNfggtUzb4vNf3ronUna+BY/0H+CaVV6N8ZA2eox5E4U9i2+IZblu4qDHJ7egKj
-         z+z9a2Ae6g7g2jbM4Bs/UfTVB7IRJvhvIHTI3EVcp7Woe+zebELxpOjOTyCPWMmz5G2I
-         PEOngH/AsXY1nA8OfML+6eDtgWQ9DDM+O1QHsMtqqMMlN6MkHQiIi1IxVMosjpIcmCy7
-         Xm8XjQoTdKDy6yBU6bFxgbYMXfkniUDfu6OqLcSHRPQYlUOxHj2damLCqV3q/K2d/LcP
-         9+3w==
-X-Gm-Message-State: APjAAAX/7VTf7qmw3U7R74lCQTihP8L6iGHeF21Dj4b/ENbnnCQdErkn
-        EHS14R/s4AvSXqjc0KW2xZI=
-X-Google-Smtp-Source: APXvYqyeT+VLXbtw4Q5jruAq2+vrr36ZPYGxIF4WvsOT8/YF013qqikXYbUhUxfoHYKOk6NidLg/Cw==
-X-Received: by 2002:a5d:6a90:: with SMTP id s16mr27268223wru.284.1570544441329;
-        Tue, 08 Oct 2019 07:20:41 -0700 (PDT)
-Received: from andrea.guest.corp.microsoft.com (userh394.uk.uudial.com. [194.69.102.21])
-        by smtp.gmail.com with ESMTPSA id h7sm19467307wrs.15.2019.10.08.07.20.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2019 07:20:40 -0700 (PDT)
-Date:   Tue, 8 Oct 2019 16:20:35 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        bsingharora@gmail.com, Marco Elver <elver@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzbot <syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH v2] taskstats: fix data-race
-Message-ID: <20191008142035.GA13564@andrea.guest.corp.microsoft.com>
-References: <20191007104039.GA16085@andrea.guest.corp.microsoft.com>
- <20191007110117.1096-1-christian.brauner@ubuntu.com>
- <20191007131804.GA19242@andrea.guest.corp.microsoft.com>
- <CACT4Y+YG23qbL16MYH3GTK4hOPsM9tDfbLzrTZ7k_ocR2ABa6A@mail.gmail.com>
- <20191007141432.GA22083@andrea.guest.corp.microsoft.com>
- <CACT4Y+avbYvtF9mHiX=R8Y2=YsP1_QsN6i_FpjLM7UxCKv6vxA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=MA85NocqHsE0pV0WfruagTwcSPZ20OKA7j0BxtbfiKg=;
+        b=Oscou09YYndxX3lhs2w9DMXZJIOQ7gj8a3DIFOkuCWGh3pYW7o+4Djex4QDdNlYxzA
+         /q1hvRgTNHpk5HXmSpdktIirsrxeeB4XL/XLJBMcGT/Q2qruevyUgqo8njdBD1vLuwwM
+         qIWntlsSjn000/LdFkG+GaLZVMASA0JTacmr2zOpO0ZFhpz2xaOViAcMuLDCsuzfQrSZ
+         cKWFGTIlz/J7QpN541DaTeAPZjloB/RV8cZYhnrlvyYFLkZjLgd09XWtmphv2KTuxcs9
+         HMlrSzvjhG/+xIF8uM7vjfhSwSVfpZxkg7dURi+I5TkbpNxlrIRzIheRmWXEYBk7BqrU
+         +MtQ==
+X-Gm-Message-State: APjAAAWjy3/tfBUagdsU8pgxdtBEznxg/PeDX23+5922VSQUzl+sG78O
+        cKx76XnEa9CBq6atWxL+hykreARMzZ3CbxI2C08=
+X-Google-Smtp-Source: APXvYqwbOXJQBSQzyqHrkkq9QPraEKF9kIEK+PuMw7Wmluq/cUmot0rXXoSPY/Vp/T+6R4vHL4wlRBxK5y1qx7cAvvc=
+X-Received: by 2002:a05:6808:9b6:: with SMTP id e22mr3925086oig.51.1570544509753;
+ Tue, 08 Oct 2019 07:21:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+avbYvtF9mHiX=R8Y2=YsP1_QsN6i_FpjLM7UxCKv6vxA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1569241648-26908-1-git-send-email-lpf.vector@gmail.com> <20191002160649.9ab76eabaf5900548c455b02@linux-foundation.org>
+In-Reply-To: <20191002160649.9ab76eabaf5900548c455b02@linux-foundation.org>
+From:   Pengfei Li <lpf.vector@gmail.com>
+Date:   Tue, 8 Oct 2019 22:21:38 +0800
+Message-ID: <CAD7_sbFvsXMMa9zHiV9SvaXYnrX6zoo9X5e09ToLupcx1=U8=Q@mail.gmail.com>
+Subject: Re: [PATCH v6 0/3] mm, slab: Make kmalloc_info[] contain all types of names
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Christopher Lameter <cl@linux.com>, penberg@kernel.org,
+        David Rientjes <rientjes@google.com>, iamjoonsoo.kim@lge.com,
+        Vlastimil Babka <vbabka@suse.cz>, Roman Gushchin <guro@fb.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 04:18:26PM +0200, Dmitry Vyukov wrote:
-> On Mon, Oct 7, 2019 at 4:14 PM Andrea Parri <parri.andrea@gmail.com> wrote:
-> >
-> > > > >  static struct taskstats *taskstats_tgid_alloc(struct task_struct *tsk)
-> > > > >  {
-> > > > >       struct signal_struct *sig = tsk->signal;
-> > > > > -     struct taskstats *stats;
-> > > > > +     struct taskstats *stats_new, *stats;
-> > > > >
-> > > > > -     if (sig->stats || thread_group_empty(tsk))
-> > > > > -             goto ret;
-> > > > > +     /* Pairs with smp_store_release() below. */
-> > > > > +     stats = READ_ONCE(sig->stats);
-> > > >
-> > > > This pairing suggests that the READ_ONCE() is heading an address
-> > > > dependency, but I fail to identify it: what is the target memory
-> > > > access of such a (putative) dependency?
-> > >
-> > > I would assume callers of this function access *stats. So the
-> > > dependency is between loading stats and accessing *stats.
-> >
-> > AFAICT, the only caller of the function in 5.4-rc2 is taskstats_exit(),
-> > which 'casts' the return value to a boolean (so I really don't see how
-> > any address dependency could be carried over/relied upon here).
-> 
-> This does not make sense.
-> 
-> But later taskstats_exit does:
-> 
-> memcpy(stats, tsk->signal->stats, sizeof(*stats));
-> 
-> Perhaps it's supposed to use stats returned by taskstats_tgid_alloc?
+On Thu, Oct 3, 2019 at 7:06 AM Andrew Morton <akpm@linux-foundation.org> wr=
+ote:
+>
+> On Mon, 23 Sep 2019 20:27:25 +0800 Pengfei Li <lpf.vector@gmail.com> wrot=
+e:
+>
+> > Changes in v6
+> > --
+> > 1. abandon patch 4-7 (Because there is not enough reason to explain
+> > that they are beneficial)
+>
+> So http://lkml.kernel.org/r/20190923004022.GC15734@shao2-debian can no
+> longer occur?
+>
 
-Seems reasonable to me.  If so, replacing the READ_ONCE() in question
-with an smp_load_acquire() might be the solution.  Thoughts?
+Sorry for such a late reply.
 
-  Andrea
+Yes, it=E2=80=98s caused by [patch v5 5/7]. So do not occur in v6.
+
+> > Changes in v5
+> > --
+> > 1. patch 1/7:
+> >     - rename SET_KMALLOC_SIZE to INIT_KMALLOC_INFO
+> > 2. patch 5/7:
+> >     - fix build errors (Reported-by: kbuild test robot)
+> >     - make all_kmalloc_info[] static (Reported-by: kbuild test robot)
+> > 3. patch 6/7:
+> >     - for robustness, determine kmalloc_cache is !NULL in
+> >       new_kmalloc_cache()
+> > 4. add ack tag from David Rientjes
+> >
+>
+>
+>
