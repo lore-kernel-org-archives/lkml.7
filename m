@@ -2,128 +2,124 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62251ECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF06C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44C9821871
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:15:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CDE3206C2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:15:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="mzEhWko4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730540AbfJHIPO (ORCPT
+        id S1730547AbfJHIPm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 04:15:14 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58268 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730292AbfJHIPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 04:15:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 86616ADDC;
-        Tue,  8 Oct 2019 08:15:11 +0000 (UTC)
-Date:   Tue, 8 Oct 2019 10:15:10 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        sergey.senozhatsky.work@gmail.com, rostedt@goodmis.org,
-        peterz@infradead.org, linux-mm@kvack.org,
-        john.ogness@linutronix.de, akpm@linux-foundation.org,
-        david@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
-Message-ID: <20191008081510.ptwmb7zflqiup5py@pathway.suse.cz>
-References: <1570228005-24979-1-git-send-email-cai@lca.pw>
- <20191007143002.l37bt2lzqtnqjqxu@pathway.suse.cz>
- <1570460350.5576.290.camel@lca.pw>
- <20191007151237.GP2381@dhcp22.suse.cz>
- <1570462407.5576.292.camel@lca.pw>
+        Tue, 8 Oct 2019 04:15:42 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:58133 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730292AbfJHIPm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 04:15:42 -0400
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x988FR4i029233
+        for <linux-kernel@vger.kernel.org>; Tue, 8 Oct 2019 17:15:28 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x988FR4i029233
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1570522528;
+        bh=6LRUPwIURK4vpFJVXoCYR8axEeDiThpXYfk5FWjPS10=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=mzEhWko4sFkDpAbLoA9mccwk68VeIFOfbdzK9CwRbTmCRgbwr+bUllfAjuqzZ+97V
+         46WBSal+9rQx2vGLyZ7sX3lyxHqq5EfgOiYfyFlUealdXP6f5WTIMtifDwUtYhvbT2
+         MpVX66gRGWmWXZ+Dp5/J7jzmvPBBVaM5XHU4Ol9JTKeWNsvB2cffskHKTBmpJV7ucL
+         rJGRYRc4+Bm1kA6KWqeY6bDMPDLVtemuGm+y+EKtRExC4YMeuVGmcklzUcOMbF7pLk
+         fzRZNEdrjRDVBh/70womkRliWZ7gcLzrHyyks7NKvfRt921Og3WnAFkCGJtcVAEZs4
+         kVZz9AnVd+wuA==
+X-Nifty-SrcIP: [209.85.217.48]
+Received: by mail-vs1-f48.google.com with SMTP id b1so10720320vsr.10
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 01:15:28 -0700 (PDT)
+X-Gm-Message-State: APjAAAVbeBfeI8DHCP+GVN/HGuyGV0d/vZkqud7/zx3A0zBy4MnmwS4c
+        VrWMaW5V6JP3dv4xqlVs2Yo3Mf/+G936YNFxIZA=
+X-Google-Smtp-Source: APXvYqw7EuyrvnLMOoGms5NTByY+HQoC5ngvlYEXlL5DXYZZEq1wHXVggwi3qIN3zzbLIOmct9kDDeI/QUutWlP6pJo=
+X-Received: by 2002:a67:88c9:: with SMTP id k192mr17600348vsd.181.1570522527324;
+ Tue, 08 Oct 2019 01:15:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1570462407.5576.292.camel@lca.pw>
-User-Agent: NeoMutt/20170912 (1.9.0)
+References: <z4zhwEnRqCVnnV8RYwKbY9H_TEnHePR6grYfw1toELFA-iZidlp3T18y0w35JtWNghJQ3hwL23RrsKXIVJHYiv9wOsqmow33NU6LcHcFWyw=@protonmail.ch>
+ <874l0k3hd0.fsf@igel.home> <20191007115217.GA835482@kroah.com>
+ <87zhic212y.fsf@igel.home> <BbFL6w_pvJJ1heDKuGhto7sFNt-6M-GQSqysyQ75Lgd_MOwqEGzkFdhqvmcDhS27MbsEZ239tZ-1BMjC_ObkRB16jR8vS2Ri8HGJWul6wsw=@protonmail.ch>
+In-Reply-To: <BbFL6w_pvJJ1heDKuGhto7sFNt-6M-GQSqysyQ75Lgd_MOwqEGzkFdhqvmcDhS27MbsEZ239tZ-1BMjC_ObkRB16jR8vS2Ri8HGJWul6wsw=@protonmail.ch>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 8 Oct 2019 17:14:51 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASwrKohUUY22Ru06DcG5nUpqRJW3ZjZR+2BZYsX8hfvJw@mail.gmail.com>
+Message-ID: <CAK7LNASwrKohUUY22Ru06DcG5nUpqRJW3ZjZR+2BZYsX8hfvJw@mail.gmail.com>
+Subject: Re: [PATCH v2] kheaders: making headers archive reproducible
+To:     Dmitry Goldin <dgoldin@protonmail.ch>
+Cc:     Andreas Schwab <schwab@linux-m68k.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "linux-kernel\\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "joel\\@joelfernandes.org" <joel@joelfernandes.org>,
+        Ben Hutchings <ben@decadent.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2019-10-07 11:33:27, Qian Cai wrote:
-> On Mon, 2019-10-07 at 17:12 +0200, Michal Hocko wrote:
-> > On Mon 07-10-19 10:59:10, Qian Cai wrote:
-> > [...]
-> > > It is almost impossible to eliminate all the indirect call chains from
-> > > console_sem/console_owner_lock to zone->lock because it is too normal that
-> > > something later needs to allocate some memory dynamically, so as long as it
-> > > directly call printk() with zone->lock held, it will be in trouble.
-> > 
-> > Do you have any example where the console driver really _has_ to
-> > allocate. Because I have hard time to believe this is going to work at
-> > all as the atomic context doesn't allow to do any memory reclaim and
-> > such an allocation would be too easy to fail so the allocation cannot
-> > really rely on it.
-> 
-> I don't know how to explain to you clearly, but let me repeat again one last
-> time. There is no necessary for console driver directly to allocate considering
-> this example,
-> 
-> CPU0:              CPU1:    CPU2:       CPU3:
-> console_sem->lock                       zone->lock
->                    pi->lock
-> pi->lock                    rq_lock
->                    rq->lock
->                             zone->lock
->                                         console_sem->lock
+On Tue, Oct 8, 2019 at 5:07 PM Dmitry Goldin <dgoldin@protonmail.ch> wrote:
+>
+> Hi,
+>
+> =E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90 Original =
+Message =E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90
+> On Monday, October 7, 2019 2:26 PM, Andreas Schwab <schwab@linux-m68k.org=
+> wrote:
+>
+> > On Okt 07 2019, Greg KH gregkh@linuxfoundation.org wrote:
+> >
+> > > On Mon, Oct 07, 2019 at 01:49:47PM +0200, Andreas Schwab wrote:
+> > >
+> > > > GEN kernel/kheaders_data.tar.xz
+> > > > tar: unrecognized option '--sort=3Dname'
+> > > > Try `tar --help' or`tar --usage' for more information.
+> > > > make[2]: *** [kernel/kheaders_data.tar.xz] Error 64
+> > > > make[1]: *** [kernel] Error 2
+> > > > make: *** [sub-make] Error 2
+> > > > $ tar --version
+> > > > tar (GNU tar) 1.26
+> > > > Copyright (C) 2011 Free Software Foundation, Inc.
+> > >
+> > > Wow that's an old version of tar. 2011? What happens if you use a mor=
+e
+> > > modern one?
+> >
+> > That's the most modern I have available on that machine.
+>
+> Hmm. --sort was introduced in 1.28 in 2014. Do you think it would warrant=
+ some sort of version check and fallback or is this something we can expect=
+ the user to handle if their distribution happens to not ship anything more=
+ recent? A few sensible workarounds come to mind.
 
-I am curious about CPU2. Does scheduler need to allocate memory?
+I think the former.
 
-> Here it only need someone held the rq_lock and allocate some memory. There is
-> also true for port_lock. Since the deadlock could involve a lot of CPUs and a
-> longer lock chain, it is impossible to predict which one to allocate some memory
-> while held a lock could end up with the same problematic lock chain.
-> 
-> This is just a tip of iceberg to show the lock dependency,
-> 
-> console_owner --> port_lock_key
-> 
-> which could easily happen everywhere with a simple printk().
+The release in 2014 is quite new, so
+we can not always expect it on the users' system.
 
-We have got several lockdep reports about possible deadlocks between
-console_lock and port_lock caused by printk() called from console
-code.
 
-First note that they have been there for years. They were well hidden
-until 4.11 released in April 2017. Where the commit
-f975237b76827956fe13e ("printk: use printk_safe buffers in printk")
-allowed recursive printk() and lockdep.
 
-We believe that these deadlocks are really hard to hit. Console
-drivers call printk() only in very critical and rare situations.
-This is why nobody invested too much time into fixing these
-so far.
 
-There are basically three possibilities:
+>
+> In any case, likely it would make sense to at least update to https://git=
+hub.com/torvalds/linux/blob/master/Documentation/process/changes.rst with t=
+he minimal version we decide on.
+>
+>
+> Dmitry
 
-1. Do crazy exercises with locks all around the kernel to
-   avoid the deadlocks. It is usually not worth it. And
-   it is a "whack a mole" approach.
 
-2. Use printk_deferred() in problematic code paths. It is
-   a "whack a mole" approach as well. And we would end up
-   with printk_deferred() used almost everywhere.
 
-3. Always deffer the console handling in printk(). This would
-   help also to avoid soft lockups. Several people pushed
-   against this last few years because it might reduce
-   the chance to see the message in case of system crash.
-
-As I said, there has finally been agreement to always do
-the offload few weeks ago. John Ogness is working on it.
-So we might have the systematic solution for these deadlocks
-rather sooner than later.
-
-Feel free to ask John to CC you on the patches if you want
-to help with review.
-
-Best Regards,
-Petr
+--=20
+Best Regards
+Masahiro Yamada
