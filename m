@@ -2,171 +2,104 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0014FC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CCD3C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D752520673
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:42:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B722206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:42:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726070AbfJHNmt (ORCPT
+        id S1726138AbfJHNm6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 09:42:49 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:36103 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbfJHNms (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 09:42:48 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1iHplH-0003AG-N2; Tue, 08 Oct 2019 15:42:47 +0200
-Message-ID: <1570542167.18914.5.camel@pengutronix.de>
-Subject: Re: [PATCH] reset: hi6220: Add support for AO reset controller
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Cc:     Peter Griffin <peter.griffin@linaro.org>,
-        Enrico Weigelt <info@metux.net>
-Date:   Tue, 08 Oct 2019 15:42:47 +0200
-In-Reply-To: <20191001182114.69699-1-john.stultz@linaro.org>
-References: <20191001182114.69699-1-john.stultz@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Tue, 8 Oct 2019 09:42:58 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43446 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725821AbfJHNm6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 09:42:58 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8B3BDB1AB;
+        Tue,  8 Oct 2019 13:42:56 +0000 (UTC)
+Date:   Tue, 8 Oct 2019 15:42:56 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        sergey.senozhatsky.work@gmail.com, peterz@infradead.org,
+        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
+        john.ogness@linutronix.de, akpm@linux-foundation.org,
+        david@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
+Message-ID: <20191008134256.5ti6rjkvadn5b5q4@pathway.suse.cz>
+References: <1570228005-24979-1-git-send-email-cai@lca.pw>
+ <20191007143002.l37bt2lzqtnqjqxu@pathway.suse.cz>
+ <1570460350.5576.290.camel@lca.pw>
+ <20191007151237.GP2381@dhcp22.suse.cz>
+ <1570462407.5576.292.camel@lca.pw>
+ <20191008081510.ptwmb7zflqiup5py@pathway.suse.cz>
+ <20191008091349.6195830d@gandalf.local.home>
+ <1570541032.5576.297.camel@lca.pw>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1570541032.5576.297.camel@lca.pw>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John, Peter,
-
-On Tue, 2019-10-01 at 18:21 +0000, John Stultz wrote:
-> From: Peter Griffin <peter.griffin@linaro.org>
+On Tue 2019-10-08 09:23:52, Qian Cai wrote:
+> On Tue, 2019-10-08 at 09:13 -0400, Steven Rostedt wrote:
+> > On Tue, 8 Oct 2019 10:15:10 +0200
+> > Petr Mladek <pmladek@suse.com> wrote:
+> > 
+> > > There are basically three possibilities:
+> > > 
+> > > 1. Do crazy exercises with locks all around the kernel to
+> > >    avoid the deadlocks. It is usually not worth it. And
+> > >    it is a "whack a mole" approach.
+> > > 
+> > > 2. Use printk_deferred() in problematic code paths. It is
+> > >    a "whack a mole" approach as well. And we would end up
+> > >    with printk_deferred() used almost everywhere.
+> > > 
+> > > 3. Always deffer the console handling in printk(). This would
+> > >    help also to avoid soft lockups. Several people pushed
+> > >    against this last few years because it might reduce
+> > >    the chance to see the message in case of system crash.
+> > > 
+> > > As I said, there has finally been agreement to always do
+> > > the offload few weeks ago. John Ogness is working on it.
+> > > So we might have the systematic solution for these deadlocks
+> > > rather sooner than later.
+> > 
+> > Another solution is to add the printk_deferred() in these places that
+> > cause lockdep splats, and when John's work is done, it would be easy to
+> > grep for them and remove them as they would no longer be needed.
+> > 
+> > This way we don't play whack-a-mole forever (only until we have a
+> > proper solution) and everyone is happy that we no longer have these
+> > false positive or I-don't-care lockdep splats which hide real lockdep
+> > splats because lockdep shuts off as soon as it discovers its first
+> > splat.
 > 
-> This is required to bring Mali450 gpu out of reset.
+> I feel like that is what I trying to do, but there seems a lot of resistances
+> with that approach where pragmatism met with perfectionism.
 
-Do you know whether this is actually a module reset going to the GPU,
-or if this is somehow part of the clock and power gating machinery?
-There's also clock and isolation cell control going on, so this looks a
-bit like it should be part of a power domain driver.
-Do you have an (internal or external) regulator that could be disabled
-while the GPU is inactive, like [1]?
+No, the resistance was against complicated code changes (games with
+locks) and against removing useful messages. Such changes might cause
+more harm than good.
 
-[1] https://raw.githubusercontent.com/96boards/meta-96boards/master/recipes-kernel/linux/linux-96boards/0004-drivers-gpu-arm-utgard-add-basic-HiKey-platform-file.patch
+I am not -mm maintainer so I could not guarantee that a patch
+using printk_deferred() will get accepted. But it will have much
+bigger chance than the original patch.
 
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> Cc: Peter Griffin <peter.griffin@linaro.org>
-> Cc: Enrico Weigelt <info@metux.net>
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
->  drivers/reset/hisilicon/hi6220_reset.c | 51 +++++++++++++++++++++++++-
->  1 file changed, 50 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/reset/hisilicon/hi6220_reset.c b/drivers/reset/hisilicon/hi6220_reset.c
-> index 24e6d420b26b..d84674a2cead 100644
-> --- a/drivers/reset/hisilicon/hi6220_reset.c
-> +++ b/drivers/reset/hisilicon/hi6220_reset.c
-> @@ -33,6 +33,7 @@
->  enum hi6220_reset_ctrl_type {
->  	PERIPHERAL,
->  	MEDIA,
-> +	AO,
->  };
->  
->  struct hi6220_reset_data {
-> @@ -92,6 +93,47 @@ static const struct reset_control_ops hi6220_media_reset_ops = {
->  	.deassert = hi6220_media_deassert,
->  };
->  
-> +#define AO_SCTRL_SC_PW_CLKEN0     0x800
-> +#define AO_SCTRL_SC_PW_CLKDIS0    0x804
-> +
-> +#define AO_SCTRL_SC_PW_RSTEN0     0x810
-> +#define AO_SCTRL_SC_PW_RSTDIS0    0x814
-> +
-> +#define AO_SCTRL_SC_PW_ISOEN0     0x820
-> +#define AO_SCTRL_SC_PW_ISODIS0    0x824
-> +#define AO_MAX_INDEX              12
-> +
-> +static int hi6220_ao_assert(struct reset_controller_dev *rc_dev,
-> +			    unsigned long idx)
-> +{
-> +	struct hi6220_reset_data *data = to_reset_data(rc_dev);
-> +	struct regmap *regmap = data->regmap;
-> +	int ret;
-> +
-> +	ret = regmap_write(regmap, AO_SCTRL_SC_PW_RSTEN0, BIT(idx));
-> +	ret |= regmap_write(regmap, AO_SCTRL_SC_PW_ISOEN0, BIT(idx));
-> +	ret |= regmap_write(regmap, AO_SCTRL_SC_PW_CLKDIS0, BIT(idx));
+Anyway, printk_deferred() is a lost war. It is temporary solution
+for one particular scenario. But as you said, there might be many
+others. The long term solution is the printk rework.
 
-I would like the return values not to be ORed together, since they are
-returned to the caller.
-
-> +	return ret;
-> +}
-> +
-> +static int hi6220_ao_deassert(struct reset_controller_dev *rc_dev,
-> +			      unsigned long idx)
-> +{
-> +	struct hi6220_reset_data *data = to_reset_data(rc_dev);
-> +	struct regmap *regmap = data->regmap;
-> +	int ret;
-> +
-> +	ret = regmap_write(regmap, AO_SCTRL_SC_PW_RSTDIS0, BIT(idx));
-> +	ret |= regmap_write(regmap, AO_SCTRL_SC_PW_ISODIS0, BIT(idx));
-> +	ret |= regmap_write(regmap, AO_SCTRL_SC_PW_CLKEN0, BIT(idx));
-
-Are you sure these are fire and forget, or might the order be important?
-
-It might be necessary to disable isolation before enabling the clocks
-and deasserting reset, to avoid glitches.
-
-> +	return ret;
-> +}
-> +
-> +static const struct reset_control_ops hi6220_ao_reset_ops = {
-> +	.assert = hi6220_ao_assert,
-> +	.deassert = hi6220_ao_deassert,
-> +};
-> +
->  static int hi6220_reset_probe(struct platform_device *pdev)
->  {
->  	struct device_node *np = pdev->dev.of_node;
-> @@ -117,9 +159,12 @@ static int hi6220_reset_probe(struct platform_device *pdev)
->  	if (type == MEDIA) {
->  		data->rc_dev.ops = &hi6220_media_reset_ops;
->  		data->rc_dev.nr_resets = MEDIA_MAX_INDEX;
-> -	} else {
-> +	} else if (type == PERIPHERAL) {
->  		data->rc_dev.ops = &hi6220_peripheral_reset_ops;
->  		data->rc_dev.nr_resets = PERIPH_MAX_INDEX;
-> +	} else {
-> +		data->rc_dev.ops = &hi6220_ao_reset_ops;
-> +		data->rc_dev.nr_resets = AO_MAX_INDEX;
->  	}
->  
->  	return reset_controller_register(&data->rc_dev);
-> @@ -134,6 +179,10 @@ static const struct of_device_id hi6220_reset_match[] = {
->  		.compatible = "hisilicon,hi6220-mediactrl",
->  		.data = (void *)MEDIA,
->  	},
-> +	{
-> +		.compatible = "hisilicon,hi6220-aoctrl",
-> +		.data = (void *)AO,
-> +	},
->  	{ /* sentinel */ },
->  };
->  MODULE_DEVICE_TABLE(of, hi6220_reset_match);
-
-regards
-Philipp
+Best Regards,
+Petr
