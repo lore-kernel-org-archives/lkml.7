@@ -2,134 +2,88 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6144C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3374C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7905C21721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:16:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="o7ykyomE"
+	by mail.kernel.org (Postfix) with ESMTP id B038C21721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:16:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730671AbfJHUQD (ORCPT
+        id S1730757AbfJHUQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 16:16:03 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:12874 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727835AbfJHUQD (ORCPT
+        Tue, 8 Oct 2019 16:16:19 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:34422 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727570AbfJHUQT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 16:16:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1570565758;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=7l9B9WgbcHPP/uN48vYMG6DLjIQ8bhPWoUt9/moHWNI=;
-        b=o7ykyomEUU/VES7IicBQUFyAQyicwjpWqS9M+lOtDcgkLq19ppVEDGPUQBubyk9obp
-        sNZ44ayXrbuXKe6lTkkms5ghM+xTYp0/yp2yokuXodSRnP1NYqh0fo7RvunzJ4OuZBHg
-        Swl3M9niIhDBHJUi+2VNZKhQbz1URbV51Cw6b8LGcovw75QE2gc9Q4MMFgIZQEPjxZtd
-        QcV9Cz0aaHsy0p3oHYJxVFCHRnlQnl+RvC/7Yuu/l83epxvaQZBDUPRePvISfXpPL+Wl
-        jPbP+MilFsE535JoYygPvVEnxQXit2es/O7szK9wz//buSKP8yMcIEpth7bF8R8wZYCo
-        UFEg==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmAgw47ve18="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 44.28.0 DYNA|AUTH)
-        with ESMTPSA id v00409v98KFvw6X
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Tue, 8 Oct 2019 22:15:57 +0200 (CEST)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: Lay common foundation to make PVR/SGX work without hacks on OMAP34xx, OMAP36xx, AM335x and potentially OMAP4, OMAP5
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <0bb4739d-e26f-de49-fd80-257a836e892a@ti.com>
-Date:   Tue, 8 Oct 2019 22:15:57 +0200
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Adam Ford <aford173@gmail.com>,
-        Philipp Rossak <embed3d@gmail.com>,
-        =?utf-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        =?utf-8?Q?Filip_Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>,
-        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-        moaz korena <moaz@korena.xyz>,
-        James Hilliard <james.hilliard1@gmail.com>,
-        kernel@pyra-handheld.com,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, maemo-leste@lists.dyne.org,
+        Tue, 8 Oct 2019 16:16:19 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iHvu4-0001qR-Ey; Tue, 08 Oct 2019 20:16:17 +0000
+Date:   Tue, 8 Oct 2019 21:16:16 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <0FEF1AB1-5FE0-4EEE-BEB9-0957BB424C18@goldelico.com>
-References: <d0cbfaaf-813e-8803-f90b-931a38396750@wizzup.org> <3A03FF16-C203-43ED-AEEF-0260F6B3331A@goldelico.com> <3b0a5e78-c4c2-1963-bac7-b49496a1e9b9@wizzup.org> <1F942AAB-1648-46C0-ADD5-90F6898778BE@goldelico.com> <84cac9b8-0eff-33f8-464d-4f8045d7db19@wizzup.org> <BFAA7FA6-A352-476A-99F9-02EA663A6AAD@goldelico.com> <CAHCN7x+87xTsA3MeHy7kUWU0SU3X8HmSc2wbk5gKvYm1dRNe6A@mail.gmail.com> <04809E3E-A690-4931-B949-1CFDAF407C14@goldelico.com> <ebb50954-b456-4dab-0765-9dfa06c67075@wizzup.org> <C3A56737-6187-4B31-8697-3A02DD164429@goldelico.com> <20191007155252.GQ5610@atomide.com> <64474fb1-f6d2-52d0-175a-65bb493dc1fe@ti.com> <9253CFB5-0AF7-4EA0-AC7F-6DE37318238A@goldelico.com> <0bb4739d-e26f-de49-fd80-257a836e892a@ti.com>
-To:     Tero Kristo <t-kristo@ti.com>
-X-Mailer: Apple Mail (2.3124)
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to
+ unsafe_put_user()
+Message-ID: <20191008201616.GW26530@ZenIV.linux.org.uk>
+References: <CAHk-=wgrqwuZJmwbrjhjCFeSUu2i57unaGOnP4qZAmSyuGwMZA@mail.gmail.com>
+ <CAHk-=wjRPerXedTDoBbJL=tHBpH+=sP6pX_9NfgWxpnmHC5RtQ@mail.gmail.com>
+ <5f06c138-d59a-d811-c886-9e73ce51924c@roeck-us.net>
+ <CAHk-=whAQWEMADgxb_qAw=nEY4OnuDn6HU4UCSDMNT5ULKvg3g@mail.gmail.com>
+ <20191007012437.GK26530@ZenIV.linux.org.uk>
+ <CAHk-=whKJfX579+2f-CHc4_YmEmwvMe_Csr0+CPfLAsSAdfDoA@mail.gmail.com>
+ <20191007025046.GL26530@ZenIV.linux.org.uk>
+ <CAHk-=whraNSys_Lj=Ut1EA=CJEfw2Uothh+5-WL+7nDJBegWcQ@mail.gmail.com>
+ <CAHk-=witTXMGsc9ZAK4hnKnd_O7u8b1eiou-6cfjt4aOcWvruQ@mail.gmail.com>
+ <20191008195858.GV26530@ZenIV.linux.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191008195858.GV26530@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Oct 08, 2019 at 08:58:58PM +0100, Al Viro wrote:
 
-> Am 08.10.2019 um 10:00 schrieb Tero Kristo <t-kristo@ti.com>:
->=20
-> On 07/10/2019 22:24, H. Nikolaus Schaller wrote:
->> Hi Tero,
->>> Am 07.10.2019 um 21:18 schrieb Tero Kristo <t-kristo@ti.com>:
->>>=20
->>> On 07/10/2019 18:52, Tony Lindgren wrote:
->>>> Hi,
->>>> * H. Nikolaus Schaller <hns@goldelico.com> [191005 16:59]:
->>>> Please try with Tero's current github branch at =
-github.com/t-kristo/linux-pm.git
->>>> 5.4-rc1-ipc from few days ago, the earlier versions had still =
-issues.
->>>=20
->>> Yeah, this one should be fixed now.
->> Ok! Will try asap.
->>>=20
->>>>> * OMAP5 (Pyra): fails to enable the clocks (did work with the =
-previous version)
->>>>> [  304.140363] clock-controller:clk:0000:0: failed to enable
->>>>> [  304.147388] PVR_K:(Error): EnableSGXClocks: pm_runtime_get_sync =
-failed (16)
->>>> Hmm no idea what might be up with this one. Did some clkctrl clock
->>>> fixes maybe cause a regression here? Tero do you have any ideas?
->>>=20
->>> So, this one I am not too sure, I haven't looked at omap5 graphics =
-clocking. I don't think it has anything to do with reset handling =
-though.
->>>=20
->>> Is there some simple way to try this out on board; without PVR =
-module that is?
->> Yes, I have also seen it when just running the commands in the =
-original commit message [1]:
->> # echo on > $(find /sys -name control | grep \/5600)
->> # rwmem 0x5600fe00	# OCP Revision
->> 0x5600fe00 =3D 0x40000000
->> # echo auto > $(find /sys -name control | grep \/5600)
->> # rwmem 0x5600fe10
->> # rwmem 0x56000024
->> But I have not yet tested with 5.4-rc2, just 5.4-rc1.
->=20
-> Ok, there is a one liner DTS data fix for this issue, attached.
+> That's powerpc.  And while the constant-sized bits are probably pretty
+> useless there as well, note the allow_read_from_user()/prevent_read_from_user()
+> part.  Looks suspiciously similar to user_access_begin()/user_access_end()...
+> 
+> The difference is, they have separate "for read" and "for write" primitives
+> and they want the range in their user_access_end() analogue.  Separating
+> the read and write isn't a problem for callers (we want them close to
+> the actual memory accesses).  Passing the range to user_access_end() just
+> might be tolerable, unless it makes you throw up...
 
-Yes, have tested and it fixes omap5. I have the 3D demo running again on =
-the Pyra. Yay!
+	BTW, another related cleanup is futex_atomic_op_inuser() and
+arch_futex_atomic_op_inuser().  In the former we have
+        if (!access_ok(uaddr, sizeof(u32)))
+                return -EFAULT;
 
-Together with the latest rstcrtl patches, am335x is now better.
-No omap_reset_deassert: timedout waiting for gfx:0 any more.
+        ret = arch_futex_atomic_op_inuser(op, oparg, &oldval, uaddr);
+        if (ret)
+                return ret;
+and in the latter we've got STAC/CLAC pairs stuck into inlined bits
+on x86.  As well as allow_write_to_user(uaddr, sizeof(*uaddr)) on
+ppc...
 
-But I can't access the sgx registers and get memory faults. Maybe
-my script has a bug and is trying the wrong address. Have to check
-with some distance...
-
-I have also tested omap3630 and omap4460 and they are not worse,
-but also not better. So I think the foundation for sgx clock and
-reset is now ok.
-
-BR and thanks,
-Nikolaus=
+I don't see anything in x86 one objtool would've barfed if we pulled
+STAC/CLAC out and turned access_ok() into user_access_begin(),
+with matching user_access_end() right after the call of 
+arch_futex_atomic_op_inuser().  Everything is inlined there and
+no scary memory accesses would get into the scope (well, we do
+have
+        if (!ret)
+                *oval = oldval;
+in the very end of arch_futex_atomic_op_inuser() there, but oval
+is the address of a local variable in the sole caller; if we run
+with kernel stack on ring 3 page, we are deeply fucked *and*
+wouldn't have survived that far into futex_atomic_op_inuser() anyway ;-)
