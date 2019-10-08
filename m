@@ -2,144 +2,254 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD374C47404
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 03:13:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EED8DECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 03:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A388F218AC
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 03:13:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l5DQgPL2"
+	by mail.kernel.org (Postfix) with ESMTP id CF3AD21A4A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 03:14:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729915AbfJHDNJ (ORCPT
+        id S1729917AbfJHDOU convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 23:13:09 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41917 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729536AbfJHDNI (ORCPT
+        Mon, 7 Oct 2019 23:14:20 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:39006 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729536AbfJHDOT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 23:13:08 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q7so9921300pfh.8;
-        Mon, 07 Oct 2019 20:13:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MwOr1Yqsq0vV0L2I0NuVxBn/YJkcXrSl5bx2uwm6GME=;
-        b=l5DQgPL2Y+0qJXzGNoIaNDOAAIUJAk63EXpupbo+H3/fiTJ5modtP5d7iA6U+VfMhk
-         OBjVGHCy6FaDj3AuFsasOQQ8RUord7oybiI12W0qKEl+M2XXUgqu8VSGVzSOCmtzA2CH
-         sEF363igvp2bC4v0mTB6FF5EU/rszyjfER5wfETyzGteql8Teb70RDknSIosrHaQJ9+K
-         LcBvIcdTTMTBtoa1SOxNtaKzR7PamQaMwo58AIbfWdd6uS8ppsJcf5egYQLwYl/fFV/o
-         bKGFMP7VN5YYhOp2pzHsBggjiBYGDcejwSMIdLrAHNwHruk9+8gGSlFK0gotavTOaqiS
-         lzpQ==
+        Mon, 7 Oct 2019 23:14:19 -0400
+Received: by mail-ed1-f68.google.com with SMTP id a15so14307296edt.6;
+        Mon, 07 Oct 2019 20:14:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MwOr1Yqsq0vV0L2I0NuVxBn/YJkcXrSl5bx2uwm6GME=;
-        b=RFelGU2khEtrAa8WN4mNYOaFLGZLUoHmDCd74sWchbWPWMm1eVy+pKXrZg8KT4wmYt
-         AN9VvI5NOfFr36NLSHuHkm4o/nSD1ROrIY4TKGzFcG4CrYbC1HRTuoQHg2zTXvFmbLvu
-         6kBEvBis4UHExZHfq/lQph2vfcHZHCM+Z1/wum8J9uOaPmqNE7VO2wGy42x8EFLuAiye
-         DwN5cCb5TSvWS3Jwzi1SwpSg+qgrd2zbIuH6Xc3KYI2/4O3oUU45UZ/ZAITvb4oo0+yy
-         S02oaXN/t4MwPoAfDO0sOHAAS++3ByFUU7j5ZLm3tMHPJOXLDJVH8zxrqixDI8oIta6n
-         Vl4Q==
-X-Gm-Message-State: APjAAAXzjea5UAZiG5ooG6By5a6gPv9dG/158lygUwuOlNraux5rWxEN
-        qeP2Hs8rVILm90PH2nrU32DgW3wP
-X-Google-Smtp-Source: APXvYqz/aTjJrRNMzNO1/XB1zmUl5/r7tcj7a/bk8SorwCF5Qq9Ugle+lKHLjSticXDM+CViaWRbDg==
-X-Received: by 2002:a63:2348:: with SMTP id u8mr2860808pgm.344.1570504387491;
-        Mon, 07 Oct 2019 20:13:07 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id s1sm9574747pgi.52.2019.10.07.20.13.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 07 Oct 2019 20:13:06 -0700 (PDT)
-Subject: Re: [PATCH 4.4 00/36] 4.4.196-stable review
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20191006171038.266461022@linuxfoundation.org>
- <d3e1e6ae-8ca4-a43b-d30d-9a9a9a7e5752@roeck-us.net>
- <20191007144951.GB966828@kroah.com> <20191007230708.GA1396@sasha-vm>
- <35f5fb99-6c35-9afd-1a4e-3fa7d4ba213a@roeck-us.net>
- <20191008014954.GB1396@sasha-vm>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <4e0e8cf2-a085-9bdf-b084-a3cb205bb100@roeck-us.net>
-Date:   Mon, 7 Oct 2019 20:13:04 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=gdO29FYVKmAOS1wiTfKH5OiiKXWYsa6tbkzG+3CzWlA=;
+        b=ltuGrqMYWwvxHRNboVx5+Yk00NuIS3cyID81I3oh23dTqkZbo4pxJk4gG76nM/DFWH
+         C/qmTC57L/E4lqFbGmp/LG/lqmAzf5gZZZHBLbu/4bFYaMqDDN4/peXvG6fxy+TuSjVf
+         TiwCX5WglyuBuvAYJk0INbNFaUao4hroFpcFPr6X9zWuq+ZWYKoulQ07AsgNNQWwd3Ou
+         eKbnt3IbcajnweMRMLFmkfkAPrp1IifAMblbal0JNuHa/un/bSHrdTCMzkwcH1d5IKvq
+         TvF8VVWm4DuDwoVaw4oTiPVxhfy4Nhb4h4Acbx4yGufCoIt/Ovlk083M8GQF41f8Mo4W
+         x9yQ==
+X-Gm-Message-State: APjAAAW4Ly4IsWCOGzqXeTMvgcCprZHpGyeM1ZOOrUZePk51gdoPqkFs
+        rz7BmJG4eUZAwkAxIIVyCKjB/oqCC50=
+X-Google-Smtp-Source: APXvYqyvRUQeg9NYDeUMbuSY5Cq6uTfmLbhWOLjEOB59QOCqNdu6j3Xi3Bv1MsxeMLwROGkkVS/iVQ==
+X-Received: by 2002:a50:9a05:: with SMTP id o5mr32139262edb.44.1570504456821;
+        Mon, 07 Oct 2019 20:14:16 -0700 (PDT)
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com. [209.85.221.51])
+        by smtp.gmail.com with ESMTPSA id e13sm2069871eje.52.2019.10.07.20.14.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Oct 2019 20:14:16 -0700 (PDT)
+Received: by mail-wr1-f51.google.com with SMTP id w12so17538664wro.5;
+        Mon, 07 Oct 2019 20:14:16 -0700 (PDT)
+X-Received: by 2002:adf:e70a:: with SMTP id c10mr11172941wrm.288.1570504455944;
+ Mon, 07 Oct 2019 20:14:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191008014954.GB1396@sasha-vm>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20191002112545.58481-1-icenowy@aosc.io> <20191002112545.58481-3-icenowy@aosc.io>
+ <CAGb2v65MPG=zbKtQk1oXq+TYP=0fPBXEj0fcGA=6mCD2+Smmpg@mail.gmail.com> <A6B1EF32-5CDE-4AAE-A7DA-F9A636BE7BF3@aosc.io>
+In-Reply-To: <A6B1EF32-5CDE-4AAE-A7DA-F9A636BE7BF3@aosc.io>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Tue, 8 Oct 2019 11:14:06 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65NGEnSaWSETvjwrj8FKZsUX-qcW=okJFTtE2qwUqUgtA@mail.gmail.com>
+Message-ID: <CAGb2v65NGEnSaWSETvjwrj8FKZsUX-qcW=okJFTtE2qwUqUgtA@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH 2/2] power: supply: axp20x_usb_power: add
+ applied max Vbus support for AXP813
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/7/19 6:49 PM, Sasha Levin wrote:
-> On Mon, Oct 07, 2019 at 04:16:51PM -0700, Guenter Roeck wrote:
->> On 10/7/19 4:07 PM, Sasha Levin wrote:
->>> On Mon, Oct 07, 2019 at 04:49:51PM +0200, Greg Kroah-Hartman wrote:
->>>> On Mon, Oct 07, 2019 at 05:53:55AM -0700, Guenter Roeck wrote:
->>>>> On 10/6/19 10:18 AM, Greg Kroah-Hartman wrote:
->>>>>> This is the start of the stable review cycle for the 4.4.196 release.
->>>>>> There are 36 patches in this series, all will be posted as a response
->>>>>> to this one.  If anyone has any issues with these being applied, please
->>>>>> let me know.
->>>>>>
->>>>>> Responses should be made by Tue 08 Oct 2019 05:07:10 PM UTC.
->>>>>> Anything received after that time might be too late.
->>>>>>
->>>>>
->>>>> powerpc:defconfig fails to build.
->>>>>
->>>>> arch/powerpc/kernel/eeh_driver.c: In function ‘eeh_handle_normal_event’:
->>>>> arch/powerpc/kernel/eeh_driver.c:678:2: error: implicit declaration of function ‘eeh_for_each_pe’; did you mean ‘bus_for_each_dev’?
->>>>>
->>>>> It has a point:
->>>>>
->>>>> ... HEAD is now at 13cac61d31df Linux 4.4.196-rc1
->>>>> $ git grep eeh_for_each_pe
->>>>> arch/powerpc/kernel/eeh_driver.c:       eeh_for_each_pe(pe, tmp_pe)
->>>>> arch/powerpc/kernel/eeh_driver.c:                               eeh_for_each_pe(pe, tmp_pe)
->>>>>
->>>>> Caused by commit 3fb431be8de3a ("powerpc/eeh: Clear stale EEH_DEV_NO_HANDLER flag").
->>>>> Full report will follow later.
->>>>
->>>> Thanks for letting me know, I've dropped this from the queue now and
->>>> pushed out a -rc2 with that removed.
->>>>
->>>> Sasha, I thought your builder would have caught stuff like this?
->>>
->>> Interesting, the 4.4 build fails for me with vanilla 4.4 LTS kernel
->>> (which is why this was missed):
->>>
->>>  AS      arch/powerpc/kernel/systbl.o
->>> arch/powerpc/kernel/exceptions-64s.S: Assembler messages:
->>> arch/powerpc/kernel/exceptions-64s.S:1599: Warning: invalid register expression
->>> arch/powerpc/kernel/exceptions-64s.S:1640: Warning: invalid register expression
->>> arch/powerpc/kernel/exceptions-64s.S:839: Error: attempt to move .org backwards
->>> arch/powerpc/kernel/exceptions-64s.S:840: Error: attempt to move .org backwards
->>> arch/powerpc/kernel/exceptions-64s.S:864: Error: attempt to move .org backwards
->>> arch/powerpc/kernel/exceptions-64s.S:865: Error: attempt to move .org backwards
->>> scripts/Makefile.build:375: recipe for target 'arch/powerpc/kernel/head_64.o' failed
->>>
->>
->> Is this allmodconfig ? That is correct - it won't build in 4.4.y, and it would not be
->> easy to fix.
-> 
-> Oh, interesting, so no allmodconfig? I've disabled everything but
-> allmodconfig on a few architectures in an attempt to save to build time.
-> 
+On Tue, Oct 8, 2019 at 11:09 AM Icenowy Zheng <icenowy@aosc.io> wrote:
+> 于 2019年10月8日 GMT+08:00 上午12:07:05, Chen-Yu Tsai <wens@csie.org> 写到:
+> >Hi,
+> >
+> >On Wed, Oct 2, 2019 at 7:27 PM Icenowy Zheng <icenowy@aosc.io> wrote:
+> >>
+> >> AXP813 PMIC has two Vbus maximum value settings -- one is the default
+> >> value, which is currently the only supported one; the other is the
+> >> really applied value, which is set according to the default value if
+> >the
+> >> BC detection module detected a charging port, or 500mA if no charging
+> >> port is detected.
+> >>
+> >> Add support for reading and writing of the really applied Vbus
+> >maxmium
+> >> value. Interestingly it has a larger range than the default value.
+> >>
+> >> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> >> ---
+> >>  drivers/power/supply/axp20x_usb_power.c | 132
+> >+++++++++++++++++++++++-
+> >>  1 file changed, 129 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/drivers/power/supply/axp20x_usb_power.c
+> >b/drivers/power/supply/axp20x_usb_power.c
+> >> index 5f0a5722b19e..905668a2727f 100644
+> >> --- a/drivers/power/supply/axp20x_usb_power.c
+> >> +++ b/drivers/power/supply/axp20x_usb_power.c
+> >
+> >[...]
+> >
+> >> @@ -354,6 +451,9 @@ static int axp20x_usb_power_set_property(struct
+> >power_supply *psy,
+> >>
+> >val->intval);
+> >>                 return axp20x_usb_power_set_current_max(power,
+> >val->intval);
+> >>
+> >> +       case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
+> >> +               return
+> >axp20x_usb_power_set_input_current_limit(power, val->intval);
+> >> +
+> >
+> >So I think there are two things that should be adjusted.
+> >
+> >First, we should be using POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT for all
+> >PMICs.
+> >As far as the sysfs documents go, CURRENT_MAX is read-only, and should
+> >refer to
+> >the hard limit the hardware can support, i.e. maximum power ratings.
+> >INPUT_CURRENT_LIMIT and INPUT_VOLTAGE_LIMIT are for configurable upper
+> >and lower
+> >limits respectively.
+> >
+> >Sebastian, is my understanding of this correct?
+> >
+> >We already use INPUT_CURRENT_LIMIT for the AXP813 in the axp20x-ac
+> >driver, and
+> >it would be nice to have both drivers expose the same attributes.
+> >
+> >Second, since the value set in register 0x35 is the one that actually
+> >has an
+> >effect, as opposed to just being a default, we should just use that
+> >one.
+>
+> However, that default value is also important, otherwise users will
+> get dropped back to 500mAh each time they re-insert USB jack.
+>
+> Is there a property to export the default value?
 
-If I recall correctly, it stopped working quite some time ago for v4.4.y, and the powerpc
-maintainers didn't want to spend the time fixing it. It works with v4.9.y and later.
+Not that I know of. I suppose you could piggy back on INPUT_CURRENT_LIMIT
+and just set both values at the same time. Of course the default value
+has a smaller range, so you would end up setting the highest value for
+actual values above its range.
 
-Guenter
+> BTW, if possible, apply patch 1 first, because it can raise current to 1.5A
+> in the default situation.
+
+Agreed.
+
+ChenYu
+
+> >Could you restructure the series based on what I described, with a new
+> >patch 1
+> >switching from CURRENT_MAX to INPUT_CURRENT_LIMIT, and then this patch
+> >as patch 2?
+> >And both patches should have Fixes tags and possibly CC stable so they
+> >get backported
+> >for people that are using stable kernels? And then the original patch
+> >2 as patch 3.
+> >
+> >ChenYu
+> >
+> >>         default:
+> >>                 return -EINVAL;
+> >>         }
+> >> @@ -365,7 +465,8 @@ static int axp20x_usb_power_prop_writeable(struct
+> >power_supply *psy,
+> >>                                            enum power_supply_property
+> >psp)
+> >>  {
+> >>         return psp == POWER_SUPPLY_PROP_VOLTAGE_MIN ||
+> >> -              psp == POWER_SUPPLY_PROP_CURRENT_MAX;
+> >> +              psp == POWER_SUPPLY_PROP_CURRENT_MAX ||
+> >> +              psp == POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT;
+> >>  }
+> >>
+> >>  static enum power_supply_property axp20x_usb_power_properties[] = {
+> >> @@ -386,6 +487,15 @@ static enum power_supply_property
+> >axp22x_usb_power_properties[] = {
+> >>         POWER_SUPPLY_PROP_CURRENT_MAX,
+> >>  };
+> >>
+> >> +static enum power_supply_property axp813_usb_power_properties[] = {
+> >> +       POWER_SUPPLY_PROP_HEALTH,
+> >> +       POWER_SUPPLY_PROP_PRESENT,
+> >> +       POWER_SUPPLY_PROP_ONLINE,
+> >> +       POWER_SUPPLY_PROP_VOLTAGE_MIN,
+> >> +       POWER_SUPPLY_PROP_CURRENT_MAX,
+> >> +       POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
+> >> +};
+> >> +
+> >>  static const struct power_supply_desc axp20x_usb_power_desc = {
+> >>         .name = "axp20x-usb",
+> >>         .type = POWER_SUPPLY_TYPE_USB,
+> >> @@ -406,6 +516,16 @@ static const struct power_supply_desc
+> >axp22x_usb_power_desc = {
+> >>         .set_property = axp20x_usb_power_set_property,
+> >>  };
+> >>
+> >> +static const struct power_supply_desc axp813_usb_power_desc = {
+> >> +       .name = "axp20x-usb",
+> >> +       .type = POWER_SUPPLY_TYPE_USB,
+> >> +       .properties = axp813_usb_power_properties,
+> >> +       .num_properties = ARRAY_SIZE(axp813_usb_power_properties),
+> >> +       .property_is_writeable = axp20x_usb_power_prop_writeable,
+> >> +       .get_property = axp20x_usb_power_get_property,
+> >> +       .set_property = axp20x_usb_power_set_property,
+> >> +};
+> >> +
+> >>  static int configure_iio_channels(struct platform_device *pdev,
+> >>                                   struct axp20x_usb_power *power)
+> >>  {
+> >> @@ -487,10 +607,16 @@ static int axp20x_usb_power_probe(struct
+> >platform_device *pdev)
+> >>                 usb_power_desc = &axp20x_usb_power_desc;
+> >>                 irq_names = axp20x_irq_names;
+> >>         } else if (power->axp20x_id == AXP221_ID ||
+> >> -                  power->axp20x_id == AXP223_ID ||
+> >> -                  power->axp20x_id == AXP813_ID) {
+> >> +                  power->axp20x_id == AXP223_ID) {
+> >>                 usb_power_desc = &axp22x_usb_power_desc;
+> >>                 irq_names = axp22x_irq_names;
+> >> +       } else if (power->axp20x_id == AXP813_ID) {
+> >> +               usb_power_desc = &axp813_usb_power_desc;
+> >> +               irq_names = axp22x_irq_names;
+> >> +
+> >> +               /* Enable USB Battery Charging specification
+> >detection */
+> >> +               regmap_update_bits(axp20x->regmap, AXP288_BC_GLOBAL,
+> >> +                                  AXP813_BC_EN, AXP813_BC_EN);
+> >
+> >This seems like a duplicate of
+> >
+> >>         } else {
+> >>                 dev_err(&pdev->dev, "Unsupported AXP variant: %ld\n",
+> >>                         axp20x->variant);
+> >> --
+> >> 2.21.0
+> >>
+> >> --
+> >> You received this message because you are subscribed to the Google
+> >Groups "linux-sunxi" group.
+> >> To unsubscribe from this group and stop receiving emails from it,
+> >send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> >> To view this discussion on the web, visit
+> >https://groups.google.com/d/msgid/linux-sunxi/20191002112545.58481-3-icenowy%40aosc.io.
+>
+> --
+> 使用 K-9 Mail 发送自我的Android设备。
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/A6B1EF32-5CDE-4AAE-A7DA-F9A636BE7BF3%40aosc.io.
