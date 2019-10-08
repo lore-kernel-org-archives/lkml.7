@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99303C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F65AC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F96D217D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:53:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F32020673
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:53:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570531980;
-	bh=cPN/oXb+tsdCCMcT4KIVmdquVqDq6EQzyoe8tU87rwQ=;
+	s=default; t=1570531991;
+	bh=3KNWvdTJxLRG8wrfAZLCmIUFtbUSGxWGbISeTogTaf8=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=y3aWcc0YuyZu04oci5TnSMBFbTN62PUKrmX802aoj0aK3cPJa6QhSzYHs9OVxNlyC
-	 hENAjAH9wGKFEWA+TpVHNSSHWFvSXL0OcHWhD8s7LMusCYsWyqWW9LsEofR7ESdcKV
-	 D9NHU8zhC2Q2FCgRlC4AaNSO8DZYQytae/ssaKyo=
+	b=M8AowWh4C7BA9CbdpEWjLno30IIPQp6kuYSJmN3InLNDCzWb0c+r8p82HVYqzKOeu
+	 iK8kc0E1PodHGa2BwtveO0jh6pFb/BtE5x8kn8XS5EoJ5+omtkA39tftucSq8+Eu9B
+	 iJBuASNwwxeNVhadHAiB+82LjEWc5AHQM1lSW7Ag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730565AbfJHKw7 (ORCPT
+        id S1730605AbfJHKxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 06:52:59 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:47770 "EHLO
+        Tue, 8 Oct 2019 06:53:10 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:47772 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730532AbfJHKw6 (ORCPT
+        with ESMTP id S1730218AbfJHKw6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Oct 2019 06:52:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,34 +34,33 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=aQWLP7shEvQVOd1gmFs3OAaCkBEiFu5+HvYLjGdA7Dk=; b=WCX/oiMR4Mbj
-        tvcNM4c/J9yqw9Jn+IPYQWMqehcP85a3NKx/c9dFH7tDbyCmIjxEEt5Bsw95UcHjGsecKDbzw3D/S
-        ootrCS1jkO8NhvHfAMMvjtSzIK02fkVhtgx0p8vyLLxWNGA3KQ/5veNFZMs81/IlHPP79Dkiedf5b
-        mzs80=;
+        List-Archive; bh=H7lh+AWXkJkKYtvaH82vN4KeDEGiFTNPJ+CxtZRgMF0=; b=LK5kW98pBTIc
+        mCO1prLLF9UIoBr81ENVMaf6R85emPL1suoNSQsSrg5DVfmwxILI6QeWFyD3JelFJsSVy2eStKARc
+        ZXVYfWnR0ps8lUDwu9LJOc9+GlKqIG7N2ddkZWkve6HFP+SZYY/YN5bMnRq9AOAML5R7s0VckOMxd
+        9vtrg=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iHn6h-00083K-OZ; Tue, 08 Oct 2019 10:52:43 +0000
+        id 1iHn6h-00083J-Eg; Tue, 08 Oct 2019 10:52:43 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 3A5CA274299B; Tue,  8 Oct 2019 11:52:43 +0100 (BST)
+        id ED3C12742998; Tue,  8 Oct 2019 11:52:42 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Cc:     alsa-devel@alsa-project.org,
         Bard liao <yung-chuan.liao@linux.intel.com>,
         broonie@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
-        Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
         Rander Wang <rander.wang@linux.intel.com>,
         Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
         slawomir.blauciak@intel.com, srinivas.kandagatla@linaro.org,
         Takashi Iwai <tiwai@suse.com>, tiwai@suse.de, vkoul@kernel.org
-Subject: Applied "ASoC: soc-acpi: add link_mask field" to the asoc tree
-In-Reply-To: <20190916214251.13130-2-pierre-louis.bossart@linux.intel.com>
+Subject: Applied "ASoC: SOF: support alternate list of machines" to the asoc tree
+In-Reply-To: <20190916214251.13130-3-pierre-louis.bossart@linux.intel.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191008105243.3A5CA274299B@ypsilon.sirena.org.uk>
-Date:   Tue,  8 Oct 2019 11:52:43 +0100 (BST)
+Message-Id: <20191008105242.ED3C12742998@ypsilon.sirena.org.uk>
+Date:   Tue,  8 Oct 2019 11:52:42 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -69,7 +68,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: soc-acpi: add link_mask field
+   ASoC: SOF: support alternate list of machines
 
 has been applied to the asoc tree at
 
@@ -94,50 +93,37 @@ to this mail.
 Thanks,
 Mark
 
-From af78cec45f2d01be9d14c177e403c8021ebfd40e Mon Sep 17 00:00:00 2001
+From 1466327e8eb3e59ae8e65e5c728055102fe0a60e Mon Sep 17 00:00:00 2001
 From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Date: Mon, 16 Sep 2019 16:42:40 -0500
-Subject: [PATCH] ASoC: soc-acpi: add link_mask field
+Date: Mon, 16 Sep 2019 16:42:41 -0500
+Subject: [PATCH] ASoC: SOF: support alternate list of machines
 
-When interfaces can be pin-muxed, static information from ACPI might
-not be enough. Add information on which links needs to be enabled by
-hardware/firmware for a specific machine driver to be selected.
-
-When walking through the list of possible machines, links will be
-checked, which implies that configurations where multiple links are
-required need to be checked first.
-
-Additional criteria will be needed later, such as which SoundWire
-Slave devices are actually enabled, but for now this helps detect
-between basic configurations.
+For cases where an interface can be pin-muxed, we need to assess at
+probe time which configuration should be used. In cases such as
+SoundWire, we need to maintain an alternate list of machines and walk
+through them when the primary detection based on ACPI _HID fails.
 
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20190916214251.13130-2-pierre-louis.bossart@linux.intel.com
+Link: https://lore.kernel.org/r/20190916214251.13130-3-pierre-louis.bossart@linux.intel.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- include/sound/soc-acpi.h | 2 ++
- 1 file changed, 2 insertions(+)
+ include/sound/sof.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/include/sound/soc-acpi.h b/include/sound/soc-acpi.h
-index 35b38e41e5b2..c0fb71c7b3ad 100644
---- a/include/sound/soc-acpi.h
-+++ b/include/sound/soc-acpi.h
-@@ -75,6 +75,7 @@ struct snd_soc_acpi_mach_params {
-  * all firmware/topology related fields.
-  *
-  * @id: ACPI ID (usually the codec's) used to find a matching machine driver.
-+ * @link_mask: describes required board layout, e.g. for SoundWire.
-  * @drv_name: machine driver name
-  * @fw_filename: firmware file name. Used when SOF is not enabled.
-  * @board: board name
-@@ -90,6 +91,7 @@ struct snd_soc_acpi_mach_params {
- /* Descriptor for SST ASoC machine driver */
- struct snd_soc_acpi_mach {
- 	const u8 id[ACPI_ID_LEN];
-+	const u32 link_mask;
- 	const char *drv_name;
- 	const char *fw_filename;
- 	const char *board;
+diff --git a/include/sound/sof.h b/include/sound/sof.h
+index 4640566b54fe..479101736ee0 100644
+--- a/include/sound/sof.h
++++ b/include/sound/sof.h
+@@ -61,6 +61,9 @@ struct sof_dev_desc {
+ 	/* list of machines using this configuration */
+ 	struct snd_soc_acpi_mach *machines;
+ 
++	/* alternate list of machines using this configuration */
++	struct snd_soc_acpi_mach *alt_machines;
++
+ 	/* Platform resource indexes in BAR / ACPI resources. */
+ 	/* Must set to -1 if not used - add new items to end */
+ 	int resindex_lpe_base;
 -- 
 2.20.1
 
