@@ -2,291 +2,105 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D385C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 19:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30978C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 19:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11706218DE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 19:56:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570564589;
-	bh=0nMoZ85ygsNBdXAqiyinbiqycG88Jyb222PyEdKvVZs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=gXketr99Pd6c5i8E5gZM6R8WDKIF0PSNHkpxUJvXtd8fZlwmwMvNkxbnR5DMe1dtA
-	 LQvqyp76lnR+Kh4SilisMSXs8T2gJaWh00WRvfaCBynEkDH7s4QOU1f9uCBy2Su4QN
-	 p/hxwqhp4NaPJSb9z9+y4vmncvRGXWLIpOyrvPsA=
+	by mail.kernel.org (Postfix) with ESMTP id 0B7132190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 19:59:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730647AbfJHT41 (ORCPT
+        id S1730467AbfJHT7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 15:56:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43802 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729616AbfJHT41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 15:56:27 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 396C1218AC;
-        Tue,  8 Oct 2019 19:56:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570564586;
-        bh=0nMoZ85ygsNBdXAqiyinbiqycG88Jyb222PyEdKvVZs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=W+XNfzlCwDwF/rOZTOeXFXdurCTiWoV+D11WBIR8XNAeA7u65Uvob10IiWDRcKjgf
-         NrAkCOWJ3b+14JRjZSChaUDrEM7Nlgdd1djEPtzdyY7tHjlHYMM2fLQpvMu6M6wu28
-         PyFWqx81e8Wea3yueHk+1u/LJXENK2w7kqKN5Nkg=
-Date:   Tue, 8 Oct 2019 14:56:24 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "driverdev-devel@linuxdriverproject.org" 
-        <driverdev-devel@linuxdriverproject.org>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "jackm@mellanox.com" <jackm@mellanox.com>
-Subject: Re: [PATCH v2] PCI: PM: Move to D0 before calling
- pci_legacy_resume_early()
-Message-ID: <20191008195624.GA198287@google.com>
+        Tue, 8 Oct 2019 15:59:02 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:34206 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729436AbfJHT7C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 15:59:02 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iHvdK-0001OS-Ea; Tue, 08 Oct 2019 19:58:58 +0000
+Date:   Tue, 8 Oct 2019 20:58:58 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to
+ unsafe_put_user()
+Message-ID: <20191008195858.GV26530@ZenIV.linux.org.uk>
+References: <20191006222046.GA18027@roeck-us.net>
+ <CAHk-=wgrqwuZJmwbrjhjCFeSUu2i57unaGOnP4qZAmSyuGwMZA@mail.gmail.com>
+ <CAHk-=wjRPerXedTDoBbJL=tHBpH+=sP6pX_9NfgWxpnmHC5RtQ@mail.gmail.com>
+ <5f06c138-d59a-d811-c886-9e73ce51924c@roeck-us.net>
+ <CAHk-=whAQWEMADgxb_qAw=nEY4OnuDn6HU4UCSDMNT5ULKvg3g@mail.gmail.com>
+ <20191007012437.GK26530@ZenIV.linux.org.uk>
+ <CAHk-=whKJfX579+2f-CHc4_YmEmwvMe_Csr0+CPfLAsSAdfDoA@mail.gmail.com>
+ <20191007025046.GL26530@ZenIV.linux.org.uk>
+ <CAHk-=whraNSys_Lj=Ut1EA=CJEfw2Uothh+5-WL+7nDJBegWcQ@mail.gmail.com>
+ <CAHk-=witTXMGsc9ZAK4hnKnd_O7u8b1eiou-6cfjt4aOcWvruQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a2d8ad9f-b59d-57e4-f014-645e7b796cc4@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAHk-=witTXMGsc9ZAK4hnKnd_O7u8b1eiou-6cfjt4aOcWvruQ@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 07:32:27PM +0200, Rafael J. Wysocki wrote:
-> On 10/7/2019 8:57 PM, Dexuan Cui wrote:
-> > > -----Original Message-----
-> > > From: Bjorn Helgaas <helgaas@kernel.org>
-> > > Sent: Monday, October 7, 2019 6:24 AM
-> > > To: Dexuan Cui <decui@microsoft.com>
-> > > Cc: lorenzo.pieralisi@arm.com; linux-pci@vger.kernel.org; Michael Kelley
-> > > <mikelley@microsoft.com>; linux-hyperv@vger.kernel.org;
-> > > linux-kernel@vger.kernel.org; driverdev-devel@linuxdriverproject.org; Sasha
-> > > Levin <Alexander.Levin@microsoft.com>; Haiyang Zhang
-> > > <haiyangz@microsoft.com>; KY Srinivasan <kys@microsoft.com>;
-> > > olaf@aepfle.de; apw@canonical.com; jasowang@redhat.com; vkuznets
-> > > <vkuznets@redhat.com>; marcelo.cerri@canonical.com; Stephen Hemminger
-> > > <sthemmin@microsoft.com>; jackm@mellanox.com
-> > > Subject: Re: [PATCH v2] PCI: PM: Move to D0 before calling
-> > > pci_legacy_resume_early()
-> > > 
-> > > On Wed, Aug 14, 2019 at 01:06:55AM +0000, Dexuan Cui wrote:
-> > > > In pci_legacy_suspend_late(), the device state is moved to PCI_UNKNOWN.
-> > > > 
-> > > > In pci_pm_thaw_noirq(), the state is supposed to be moved back to PCI_D0,
-> > > > but the current code misses the pci_legacy_resume_early() path, so the
-> > > > state remains in PCI_UNKNOWN in that path. As a result, in the resume
-> > > > phase of hibernation, this causes an error for the Mellanox VF driver,
-> > > > which fails to enable MSI-X because pci_msi_supported() is false due
-> > > > to dev->current_state != PCI_D0:
-> > > > 
-> > > > mlx4_core a6d1:00:02.0: Detected virtual function - running in slave mode
-> > > > mlx4_core a6d1:00:02.0: Sending reset
-> > > > mlx4_core a6d1:00:02.0: Sending vhcr0
-> > > > mlx4_core a6d1:00:02.0: HCA minimum page size:512
-> > > > mlx4_core a6d1:00:02.0: Timestamping is not supported in slave mode
-> > > > mlx4_core a6d1:00:02.0: INTx is not supported in multi-function mode,
-> > > aborting
-> > > > PM: dpm_run_callback(): pci_pm_thaw+0x0/0xd7 returns -95
-> > > > PM: Device a6d1:00:02.0 failed to thaw: error -95
-> > > > 
-> > > > To be more accurate, the "resume" phase means the "thaw" callbacks which
-> > > > run before the system enters hibernation: when the user runs the command
-> > > > "echo disk > /sys/power/state" for hibernation, first the kernel "freezes"
-> > > > all the devices and creates a hibernation image, then the kernel "thaws"
-> > > > the devices including the disk/NIC, writes the memory to the disk, and
-> > > > powers down. This patch fixes the error message for the Mellanox VF driver
-> > > > in this phase.
+On Mon, Oct 07, 2019 at 11:26:35AM -0700, Linus Torvalds wrote:
 
-Wordsmithing nit: what the patch does is not "fix the error message";
-what it does is fix the *problem*, i.e., the fact that we can't
-operate the device because we can't enable MSI-X.  The message is only
-a symptom.
+> The good news is that right now x86 is the only architecture that does
+> that user_access_begin(), so we don't need to worry about anything
+> else. Apparently the ARM people haven't had enough performance
+> problems with the PAN bit for them to care.
 
-IIUC the relevant part of the system hibernation sequence is:
+Take a look at this:
+static inline unsigned long raw_copy_from_user(void *to,
+                const void __user *from, unsigned long n)
+{
+        unsigned long ret;
+        if (__builtin_constant_p(n) && (n <= 8)) {
+                ret = 1;
 
-  pci_pm_freeze_noirq
-  pci_pm_thaw_noirq
-  pci_pm_thaw
+                switch (n) {
+                case 1:
+                        barrier_nospec();
+                        __get_user_size(*(u8 *)to, from, 1, ret);
+                        break;
+                case 2:
+                        barrier_nospec();
+                        __get_user_size(*(u16 *)to, from, 2, ret);
+                        break;
+                case 4:
+                        barrier_nospec();
+                        __get_user_size(*(u32 *)to, from, 4, ret);
+                        break;
+                case 8:
+                        barrier_nospec();
+                        __get_user_size(*(u64 *)to, from, 8, ret);
+                        break;
+                }
+                if (ret == 0)
+                        return 0;
+        }
 
-And the execution flow is:
+        barrier_nospec();
+        allow_read_from_user(from, n);
+        ret = __copy_tofrom_user((__force void __user *)to, from, n);
+        prevent_read_from_user(from, n);
+        return ret;
+}
 
-  pci_pm_freeze_noirq
-    if (pci_has_legacy_pm_support(pci_dev)) # true for mlx4
-      pci_legacy_suspend_late(dev, PMSG_FREEZE)
-	pci_pm_set_unknown_state
-	  dev->current_state = PCI_UNKNOWN  # <---
-  pci_pm_thaw_noirq
-    if (pci_has_legacy_pm_support(pci_dev)) # true
-      pci_legacy_resume_early(dev)          # noop; mlx4 doesn't implement
-  pci_pm_thaw                               # returns -95 EOPNOTSUPP
-    if (pci_has_legacy_pm_support(pci_dev)) # true
-      pci_legacy_resume
-	drv->resume
-	  mlx4_resume                       # mlx4_driver.resume (legacy)
-	    mlx4_load_one
-	      mlx4_enable_msi_x
-		pci_enable_msix_range
-		  __pci_enable_msix_range
-		    __pci_enable_msix
-		      if (!pci_msi_supported())
-			if (dev->current_state != PCI_D0)  # <---
-			  return 0
-			return -EINVAL
-		err = -EOPNOTSUPP
-		"INTx is not supported ..."
+That's powerpc.  And while the constant-sized bits are probably pretty
+useless there as well, note the allow_read_from_user()/prevent_read_from_user()
+part.  Looks suspiciously similar to user_access_begin()/user_access_end()...
 
-(These are just my notes; you don't need to put them all into the
-commit message.  I'm just sharing them in case I'm not understanding
-correctly.)
-
-> > > > When the system starts again, a fresh kernel starts to run, and when the
-> > > > kernel detects that a hibernation image was saved, the kernel "quiesces"
-> > > > the devices, and then "restores" the devices from the saved image. In this
-> > > > path:
-> > > > device_resume_noirq() -> ... ->
-> > > >    pci_pm_restore_noirq() ->
-> > > >      pci_pm_default_resume_early() ->
-> > > >        pci_power_up() moves the device states back to PCI_D0. This path is
-> > > > not broken and doesn't need my patch.
-> > > > 
-
-The cc list suggests that this might be a fix for a user-reported
-problem.  Is there a launchpad or similar link you could include here?
-
-Should this be marked for stable?
-
-> > > > Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> > > This looks like a bugfix for 5839ee7389e8 ("PCI / PM: Force devices to
-> > > D0 in pci_pm_thaw_noirq()") so maybe it should be marked for stable as
-> > > 5839ee7389e8 was?
-> > > 
-> > > Rafael, could you confirm?
-> 
-> No, it is not a bug fix for that commit.  The underlying issue would be
-> there without that commit too.
-
-Oh, right, I dunno what I was thinking, sorry.
-
-> > > > --- a/drivers/pci/pci-driver.c
-> > > > +++ b/drivers/pci/pci-driver.c
-> > > > @@ -1074,15 +1074,16 @@ static int pci_pm_thaw_noirq(struct device
-> > > *dev)
-> > > >   			return error;
-> > > >   	}
-> > > > 
-> > > > -	if (pci_has_legacy_pm_support(pci_dev))
-> > > > -		return pci_legacy_resume_early(dev);
-> > > > -
-> > > >   	/*
-> > > >   	 * pci_restore_state() requires the device to be in D0 (because of MSI
-> > > >   	 * restoration among other things), so force it into D0 in case the
-> > > >   	 * driver's "freeze" callbacks put it into a low-power state directly.
-> > > >   	 */
-> > > >   	pci_set_power_state(pci_dev, PCI_D0);
-> > > > +
-> > > > +	if (pci_has_legacy_pm_support(pci_dev))
-> > > > +		return pci_legacy_resume_early(dev);
-> > > > +
-> > > >   	pci_restore_state(pci_dev);
-> > > > 
-> > > >   	if (drv && drv->pm && drv->pm->thaw_noirq)
-> > > > --
-> > > > 2.19.1
-> > > > 
-> The patch looks reasonable to me, but the comment above the
-> pci_set_power_state() call needs to be updated too IMO.
-
-Hmm.
-
-1) pci_restore_state() mainly writes config space, which doesn't
-require the device to be in D0.  The only thing I see that would
-require D0 is the MSI-X MMIO space, so to be more specific, the
-comment could say "restoring the MSI-X *MMIO* state requires the
-device to be in D0".
-
-But I think you meant some other comment change.  Did you mean
-something along the lines of "a legacy drv->resume_early() callback
-and pci_restore_state() both require the device to be in D0"?
-
-If something else, maybe you could propose some text?
-
-2) I assume pci_pm_thaw_noirq() should leave the device in a
-functionally equivalent state, whether it uses legacy PM or not.  Do
-we want something like the patch below instead?  If we *do* want to
-skip pci_restore_state() for legacy PM, maybe we should add a comment.
-
-3) Documentation/power/pci.rst says:
-
-  ... devices have to be brought back to the fully functional
-  state ...
-
-  pci_pm_thaw_noirq() ... doesn't put the device into the full power
-  state and doesn't attempt to restore its standard configuration
-  registers.
-
-That doesn't seem consistent, and it looks like pci_pm_thaw_noirq()
-actually *does* put the device in full power (D0) state and restore
-config registers.
-
-
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index a8124e47bf6e..30c721fd6bcf 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -1068,7 +1068,7 @@ static int pci_pm_thaw_noirq(struct device *dev)
- {
- 	struct pci_dev *pci_dev = to_pci_dev(dev);
- 	struct device_driver *drv = dev->driver;
--	int error = 0;
-+	int error;
- 
- 	if (pcibios_pm_ops.thaw_noirq) {
- 		error = pcibios_pm_ops.thaw_noirq(dev);
-@@ -1076,9 +1076,6 @@ static int pci_pm_thaw_noirq(struct device *dev)
- 			return error;
- 	}
- 
--	if (pci_has_legacy_pm_support(pci_dev))
--		return pci_legacy_resume_early(dev);
--
- 	/*
- 	 * pci_restore_state() requires the device to be in D0 (because of MSI
- 	 * restoration among other things), so force it into D0 in case the
-@@ -1087,10 +1084,13 @@ static int pci_pm_thaw_noirq(struct device *dev)
- 	pci_set_power_state(pci_dev, PCI_D0);
- 	pci_restore_state(pci_dev);
- 
-+	if (pci_has_legacy_pm_support(pci_dev))
-+		return pci_legacy_resume_early(dev);
-+
- 	if (drv && drv->pm && drv->pm->thaw_noirq)
--		error = drv->pm->thaw_noirq(dev);
-+		return drv->pm->thaw_noirq(dev);
- 
--	return error;
-+	return 0;
- }
- 
- static int pci_pm_thaw(struct device *dev)
+The difference is, they have separate "for read" and "for write" primitives
+and they want the range in their user_access_end() analogue.  Separating
+the read and write isn't a problem for callers (we want them close to
+the actual memory accesses).  Passing the range to user_access_end() just
+might be tolerable, unless it makes you throw up...
