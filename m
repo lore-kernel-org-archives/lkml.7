@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C61DECE596
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C74DCC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BB6520673
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:33:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A551020673
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:33:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730776AbfJHLde (ORCPT
+        id S1730791AbfJHLdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 07:33:34 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47829 "EHLO
+        Tue, 8 Oct 2019 07:33:36 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47840 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730640AbfJHLdc (ORCPT
+        with ESMTP id S1730710AbfJHLdf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 07:33:32 -0400
+        Tue, 8 Oct 2019 07:33:35 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iHnk3-0008DV-JQ; Tue, 08 Oct 2019 13:33:23 +0200
+        id 1iHnk3-0008DR-CC; Tue, 08 Oct 2019 13:33:23 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4793E1C0895;
-        Tue,  8 Oct 2019 13:33:23 +0200 (CEST)
-Date:   Tue, 08 Oct 2019 11:33:23 -0000
-From:   "tip-bot2 for Janakarajan Natarajan" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E98E01C0325;
+        Tue,  8 Oct 2019 13:33:22 +0200 (CEST)
+Date:   Tue, 08 Oct 2019 11:33:22 -0000
+From:   "tip-bot2 for Arvind Sankar" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/asm: Fix MWAITX C-state hint value
-Cc:     Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
-        Borislav Petkov <bp@suse.de>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+Subject: [tip: x86/urgent] lib/string: Make memzero_explicit() inline instead
+ of external
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephan Mueller <smueller@chronox.de>,
         Thomas Gleixner <tglx@linutronix.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        <stable@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
-In-Reply-To: <20191007190011.4859-1-Janakarajan.Natarajan@amd.com>
-References: <20191007190011.4859-1-Janakarajan.Natarajan@amd.com>
+        linux-crypto@vger.kernel.org, linux-s390@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+In-Reply-To: <20191007220000.GA408752@rani.riverdale.lan>
+References: <20191007220000.GA408752@rani.riverdale.lan>
 MIME-Version: 1.0
-Message-ID: <157053440322.9978.15261700276165265873.tip-bot2@tip-bot2>
+Message-ID: <157053440280.9978.14856787712173585355.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -63,69 +66,102 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/urgent branch of tip:
 
-Commit-ID:     454de1e7d970d6bc567686052329e4814842867c
-Gitweb:        https://git.kernel.org/tip/454de1e7d970d6bc567686052329e4814842867c
-Author:        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
-AuthorDate:    Mon, 07 Oct 2019 19:00:22 
+Commit-ID:     bec500777089b3c96c53681fc0aa6fee59711d4a
+Gitweb:        https://git.kernel.org/tip/bec500777089b3c96c53681fc0aa6fee59711d4a
+Author:        Arvind Sankar <nivedita@alum.mit.edu>
+AuthorDate:    Mon, 07 Oct 2019 18:00:02 -04:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 08 Oct 2019 13:25:24 +02:00
+CommitterDate: Tue, 08 Oct 2019 13:27:05 +02:00
 
-x86/asm: Fix MWAITX C-state hint value
+lib/string: Make memzero_explicit() inline instead of external
 
-As per "AMD64 Architecture Programmer's Manual Volume 3: General-Purpose
-and System Instructions", MWAITX EAX[7:4]+1 specifies the optional hint
-of the optimized C-state. For C0 state, EAX[7:4] should be set to 0xf.
+With the use of the barrier implied by barrier_data(), there is no need
+for memzero_explicit() to be extern. Making it inline saves the overhead
+of a function call, and allows the code to be reused in arch/*/purgatory
+without having to duplicate the implementation.
 
-Currently, a value of 0xf is set for EAX[3:0] instead of EAX[7:4]. Fix
-this by changing MWAITX_DISABLE_CSTATES from 0xf to 0xf0.
-
-This hasn't had any implications so far because setting reserved bits in
-EAX is simply ignored by the CPU.
-
- [ bp: Fixup comment in delay_mwaitx() and massage. ]
-
-Signed-off-by: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Frederic Weisbecker <frederic@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
+Tested-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: H . Peter Anvin <hpa@zytor.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephan Mueller <smueller@chronox.de>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: "x86@kernel.org" <x86@kernel.org>
-Cc: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20191007190011.4859-1-Janakarajan.Natarajan@amd.com
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-s390@vger.kernel.org
+Fixes: 906a4bb97f5d ("crypto: sha256 - Use get/put_unaligned_be32 to get input, memzero_explicit")
+Link: https://lkml.kernel.org/r/20191007220000.GA408752@rani.riverdale.lan
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/include/asm/mwait.h | 2 +-
- arch/x86/lib/delay.c         | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ include/linux/string.h | 21 ++++++++++++++++++++-
+ lib/string.c           | 21 ---------------------
+ 2 files changed, 20 insertions(+), 22 deletions(-)
 
-diff --git a/arch/x86/include/asm/mwait.h b/arch/x86/include/asm/mwait.h
-index e28f8b7..9d5252c 100644
---- a/arch/x86/include/asm/mwait.h
-+++ b/arch/x86/include/asm/mwait.h
-@@ -21,7 +21,7 @@
- #define MWAIT_ECX_INTERRUPT_BREAK	0x1
- #define MWAITX_ECX_TIMER_ENABLE		BIT(1)
- #define MWAITX_MAX_LOOPS		((u32)-1)
--#define MWAITX_DISABLE_CSTATES		0xf
-+#define MWAITX_DISABLE_CSTATES		0xf0
+diff --git a/include/linux/string.h b/include/linux/string.h
+index b2f9df7..b6ccdc2 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -227,7 +227,26 @@ static inline bool strstarts(const char *str, const char *prefix)
+ }
  
- static inline void __monitor(const void *eax, unsigned long ecx,
- 			     unsigned long edx)
-diff --git a/arch/x86/lib/delay.c b/arch/x86/lib/delay.c
-index b7375dc..c126571 100644
---- a/arch/x86/lib/delay.c
-+++ b/arch/x86/lib/delay.c
-@@ -113,8 +113,8 @@ static void delay_mwaitx(unsigned long __loops)
- 		__monitorx(raw_cpu_ptr(&cpu_tss_rw), 0, 0);
+ size_t memweight(const void *ptr, size_t bytes);
+-void memzero_explicit(void *s, size_t count);
++
++/**
++ * memzero_explicit - Fill a region of memory (e.g. sensitive
++ *		      keying data) with 0s.
++ * @s: Pointer to the start of the area.
++ * @count: The size of the area.
++ *
++ * Note: usually using memset() is just fine (!), but in cases
++ * where clearing out _local_ data at the end of a scope is
++ * necessary, memzero_explicit() should be used instead in
++ * order to prevent the compiler from optimising away zeroing.
++ *
++ * memzero_explicit() doesn't need an arch-specific version as
++ * it just invokes the one of memset() implicitly.
++ */
++static inline void memzero_explicit(void *s, size_t count)
++{
++	memset(s, 0, count);
++	barrier_data(s);
++}
  
- 		/*
--		 * AMD, like Intel, supports the EAX hint and EAX=0xf
--		 * means, do not enter any deep C-state and we use it
-+		 * AMD, like Intel's MWAIT version, supports the EAX hint and
-+		 * EAX=0xf0 means, do not enter any deep C-state and we use it
- 		 * here in delay() to minimize wakeup latency.
- 		 */
- 		__mwaitx(MWAITX_DISABLE_CSTATES, delay, MWAITX_ECX_TIMER_ENABLE);
+ /**
+  * kbasename - return the last part of a pathname.
+diff --git a/lib/string.c b/lib/string.c
+index cd7a10c..08ec58c 100644
+--- a/lib/string.c
++++ b/lib/string.c
+@@ -748,27 +748,6 @@ void *memset(void *s, int c, size_t count)
+ EXPORT_SYMBOL(memset);
+ #endif
+ 
+-/**
+- * memzero_explicit - Fill a region of memory (e.g. sensitive
+- *		      keying data) with 0s.
+- * @s: Pointer to the start of the area.
+- * @count: The size of the area.
+- *
+- * Note: usually using memset() is just fine (!), but in cases
+- * where clearing out _local_ data at the end of a scope is
+- * necessary, memzero_explicit() should be used instead in
+- * order to prevent the compiler from optimising away zeroing.
+- *
+- * memzero_explicit() doesn't need an arch-specific version as
+- * it just invokes the one of memset() implicitly.
+- */
+-void memzero_explicit(void *s, size_t count)
+-{
+-	memset(s, 0, count);
+-	barrier_data(s);
+-}
+-EXPORT_SYMBOL(memzero_explicit);
+-
+ #ifndef __HAVE_ARCH_MEMSET16
+ /**
+  * memset16() - Fill a memory area with a uint16_t
