@@ -2,95 +2,224 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED835C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2030C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AECA7206C2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:07:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.ch header.i=@protonmail.ch header.b="Y15T2+Cx"
+	by mail.kernel.org (Postfix) with ESMTP id A8991206B6
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:07:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730532AbfJHIHX (ORCPT
+        id S1730547AbfJHIH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 04:07:23 -0400
-Received: from mail1.protonmail.ch ([185.70.40.18]:18361 "EHLO
-        mail1.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730292AbfJHIHW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 04:07:22 -0400
-Date:   Tue, 08 Oct 2019 08:07:09 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.ch;
-        s=default; t=1570522039;
-        bh=R5QcdOE+v9okFkaEXqHZRwsdShwM5f79Ms4sEgcnOyA=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:
-         Feedback-ID:From;
-        b=Y15T2+CxUuF6BWDJPlMraCAKHJ8TMYE2E9bcPocRK8SfFQhXKmDkmJDMl8RN345Fg
-         VLd9AdGa/KGebHXBZJaCbZpJRYjn24DrY1UhWzd5aAyOKvEMJJ26bl6IdY/Y1SJgUb
-         DsQ1FTRz6QgStLnyq1ZsnivoLghigRS4+di7IEFc=
-To:     Andreas Schwab <schwab@linux-m68k.org>
-From:   Dmitry Goldin <dgoldin@protonmail.ch>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Tue, 8 Oct 2019 04:07:28 -0400
+Received: from foss.arm.com ([217.140.110.172]:57944 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730292AbfJHIH1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 04:07:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EFB621570;
+        Tue,  8 Oct 2019 01:07:25 -0700 (PDT)
+Received: from [10.162.40.139] (p8cg001049571a15.blr.arm.com [10.162.40.139])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B53E83F6C4;
+        Tue,  8 Oct 2019 01:07:12 -0700 (PDT)
+Subject: Re: [PATCH V4 2/2] mm/pgtable/debug: Add test validating architecture
+ page table helpers
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "linux-kernel\\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "joel\\@joelfernandes.org" <joel@joelfernandes.org>,
-        Ben Hutchings <ben@decadent.org.uk>
-Reply-To: Dmitry Goldin <dgoldin@protonmail.ch>
-Subject: Re: [PATCH v2] kheaders: making headers archive reproducible
-Message-ID: <BbFL6w_pvJJ1heDKuGhto7sFNt-6M-GQSqysyQ75Lgd_MOwqEGzkFdhqvmcDhS27MbsEZ239tZ-1BMjC_ObkRB16jR8vS2Ri8HGJWul6wsw=@protonmail.ch>
-In-Reply-To: <87zhic212y.fsf@igel.home>
-References: <z4zhwEnRqCVnnV8RYwKbY9H_TEnHePR6grYfw1toELFA-iZidlp3T18y0w35JtWNghJQ3hwL23RrsKXIVJHYiv9wOsqmow33NU6LcHcFWyw=@protonmail.ch>
- <874l0k3hd0.fsf@igel.home>
- <20191007115217.GA835482@kroah.com>
- <87zhic212y.fsf@igel.home>
-Feedback-ID: Z14zYPZ70AFJyYagXjx-jk2Vw9RTvF5p9C9xp4Pq6DJAMFg9PDsfB7GoMmtR_dfa0BaFgToZb9Q4V0UiY2YiMQ==:Ext:ProtonMail
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+References: <1570427124-21887-1-git-send-email-anshuman.khandual@arm.com>
+ <1570427124-21887-3-git-send-email-anshuman.khandual@arm.com>
+ <20191007130617.GB56546@gmail.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <916f2dd7-6b05-065b-da75-3dbcad1f804d@arm.com>
+Date:   Tue, 8 Oct 2019 13:37:36 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191007130617.GB56546@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90 Original Me=
-ssage =E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90
-On Monday, October 7, 2019 2:26 PM, Andreas Schwab <schwab@linux-m68k.org> =
-wrote:
+On 10/07/2019 06:36 PM, Ingo Molnar wrote:
+> 
+> * Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+> 
+>> This adds a test module which will validate architecture page table helpers
+>> and accessors regarding compliance with generic MM semantics expectations.
+>> This will help various architectures in validating changes to the existing
+>> page table helpers or addition of new ones.
+>>
+>> Test page table and memory pages creating it's entries at various level are
+>> all allocated from system memory with required alignments. If memory pages
+>> with required size and alignment could not be allocated, then all depending
+>> individual tests are skipped.
+> 
+>> diff --git a/arch/x86/include/asm/pgtable_64_types.h b/arch/x86/include/asm/pgtable_64_types.h
+>> index 52e5f5f2240d..b882792a3999 100644
+>> --- a/arch/x86/include/asm/pgtable_64_types.h
+>> +++ b/arch/x86/include/asm/pgtable_64_types.h
+>> @@ -40,6 +40,8 @@ static inline bool pgtable_l5_enabled(void)
+>>  #define pgtable_l5_enabled() 0
+>>  #endif /* CONFIG_X86_5LEVEL */
+>>  
+>> +#define mm_p4d_folded(mm) (!pgtable_l5_enabled())
+>> +
+>>  extern unsigned int pgdir_shift;
+>>  extern unsigned int ptrs_per_p4d;
+> 
+> Any deep reason this has to be a macro instead of proper C?
+> 
+>> diff --git a/mm/Kconfig.debug b/mm/Kconfig.debug
+>> index 327b3ebf23bf..683131b1ee7d 100644
+>> --- a/mm/Kconfig.debug
+>> +++ b/mm/Kconfig.debug
+>> @@ -117,3 +117,18 @@ config DEBUG_RODATA_TEST
+>>      depends on STRICT_KERNEL_RWX
+>>      ---help---
+>>        This option enables a testcase for the setting rodata read-only.
+>> +
+>> +config DEBUG_ARCH_PGTABLE_TEST
+>> +	bool "Test arch page table helpers for semantics compliance"
+>> +	depends on MMU
+>> +	depends on DEBUG_KERNEL
+>> +	depends on !(ARM || IA64)
+> 
+> Please add a proper enabling switch for architectures to opt in.
 
-> On Okt 07 2019, Greg KH gregkh@linuxfoundation.org wrote:
->
-> > On Mon, Oct 07, 2019 at 01:49:47PM +0200, Andreas Schwab wrote:
-> >
-> > > GEN kernel/kheaders_data.tar.xz
-> > > tar: unrecognized option '--sort=3Dname'
-> > > Try `tar --help' or`tar --usage' for more information.
-> > > make[2]: *** [kernel/kheaders_data.tar.xz] Error 64
-> > > make[1]: *** [kernel] Error 2
-> > > make: *** [sub-make] Error 2
-> > > $ tar --version
-> > > tar (GNU tar) 1.26
-> > > Copyright (C) 2011 Free Software Foundation, Inc.
-> >
-> > Wow that's an old version of tar. 2011? What happens if you use a more
-> > modern one?
->
-> That's the most modern I have available on that machine.
+Sure, will do.
 
-Hmm. --sort was introduced in 1.28 in 2014. Do you think it would warrant s=
-ome sort of version check and fallback or is this something we can expect t=
-he user to handle if their distribution happens to not ship anything more r=
-ecent? A few sensible workarounds come to mind.
+> 
+> Please also add it to Documentation/features/list-arch.sh so that it's 
+> listed as a 'TODO' entry on architectures where the tests are not enabled 
+> yet.
 
-In any case, likely it would make sense to at least update to https://githu=
-b.com/torvalds/linux/blob/master/Documentation/process/changes.rst with the=
- minimal version we decide on.
+Will do.
 
+> 
+>> +	help
+>> +	  This options provides a kernel module which can be used to test
+>> +	  architecture page table helper functions on various platform in
+>> +	  verifying if they comply with expected generic MM semantics. This
+>> +	  will help architectures code in making sure that any changes or
+>> +	  new additions of these helpers will still conform to generic MM
+>> +	  expected semantics.
+> 
+> Typos and grammar fixed:
+> 
+> 	help
+> 	  This option provides a kernel module which can be used to test
+> 	  architecture page table helper functions on various platforms in
+> 	  verifying if they comply with expected generic MM semantics. This
+> 	  will help architecture code in making sure that any changes or
+> 	  new additions of these helpers still conform to expected 
+> 	  semantics of the generic MM.
 
-Dmitry
+Sure, will update except the 'kernel module' part. Thank you.
+
+> 
+> Also, more fundamentally: isn't a kernel module too late for such a debug
+
+Its not a kernel module any more, my bad that the description has still these
+words left on from previous versions, will fix it. The test now gets invoked
+through a late_initcall().
+
+> check, should something break due to a core MM change? Have these debug 
+> checks caught any bugs or inconsistencies before?
+
+Gerald Schaefer had reported earlier about a bug found on s390 with this test.
+
+https://lkml.org/lkml/2019/9/4/1718
+
+> 
+> Why not call this as some earlier MM debug check, after enabling paging 
+> but before executing user-space binaries or relying on complex MM ops 
+> within the kernel, called at a stage when those primitives are all 
+> expected to work fine?
+
+At minimum we need buddy allocator to be initialized for the allocations to
+work. Just after pgtable_init() or kmem_cache_init() in mm_init() will be a
+good place ?
+
+> 
+> It seems to me that arch_pgtable_tests_init) won't even context-switch 
+> normally, right?
+
+Not sure whether I got this. Why would you expect it to context switch ?
+
+> 
+> Finally, instead of inventing yet another randomly named .config debug 
+> switch, please fit it into the regular MM debug options which go along 
+> the CONFIG_DEBUG_VM* naming scheme.
+> 
+> Might even make sense to enable these new debug checks by default if 
+> CONFIG_DEBUG_VM=y, that way we'll get a *lot* more debug coverage than 
+> some random module somewhere that few people will know about, let alone 
+> run.
+
+All the configs with respect to memory debugging is generated from
+lib/Kconfig.debug after fetching all that is in "mm/Kconfig.debug".
+There are only three configs which depend on CONFIG_DEBUG_VM like
+a package.
+
+1. CONFIG_DEBUG_VM_VMACACHE
+2. CONFIG_DEBUG_VM_RB
+3. CONFIG_DEBUG_VM_PGFLAGS
+4. CONFIG_DEBUG_VM_PGTABLE [proposed for this]
+
+Before that, just trying to understand whether the reason of making this
+arch page table test as part of DEBUG_VM_* package than a just a stand
+alone config as many others, is that it is directly related to virtual
+memory enablement in kernel. Or is there something else I am missing.
+
+But this looks better and will make this depend on a selectable arch
+config like ARCH_HAS_DEBUG_VM_PGTABLE or something.
+
+> 
+> Thanks,
+> 
+> 	Ingo
+> 
