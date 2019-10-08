@@ -2,87 +2,95 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4587C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0EA1C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71D0021721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:29:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=firstfloor.org header.i=@firstfloor.org header.b="b8kZOjeb"
+	by mail.kernel.org (Postfix) with ESMTP id B10D6206C2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:31:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727212AbfJHO3o (ORCPT
+        id S1726257AbfJHObV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 10:29:44 -0400
-Received: from one.firstfloor.org ([193.170.194.197]:39246 "EHLO
-        one.firstfloor.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726333AbfJHO3o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 10:29:44 -0400
-X-Greylist: delayed 477 seconds by postgrey-1.27 at vger.kernel.org; Tue, 08 Oct 2019 10:29:44 EDT
-Received: by one.firstfloor.org (Postfix, from userid 503)
-        id D5AA586951; Tue,  8 Oct 2019 16:21:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=firstfloor.org;
-        s=mail; t=1570544504;
-        bh=qU+aOZ8e3XhF+99FLjM1jrujYQGQA+No8pJoZYO/5Pw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=b8kZOjeb4MtKFWbWeVqJPPRLt9CdIbDsFzN4tZvHefzobHsgfpkPFcSZsKLFL5tUh
-         fTuZ3BJvecZMBRb5WgnM5GDjOOS0W/e6m2Jko2OwQq92qKMydlo+a41JXUpgXeFaih
-         OUes1KKrjJFztWsFLfmI6JvceO/bBeG+73X3ZY0I=
-Date:   Tue, 8 Oct 2019 07:21:44 -0700
-From:   Andi Kleen <andi@firstfloor.org>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Andi Kleen <andi@firstfloor.org>, acme@kernel.org,
-        jolsa@kernel.org, linux-kernel@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH] perf data: Fix babeltrace detection
-Message-ID: <20191008142143.ts5se4pzwfnfnbsh@two.firstfloor.org>
-References: <20191007174120.12330-1-andi@firstfloor.org>
- <20191008115240.GE10009@krava>
+        Tue, 8 Oct 2019 10:31:21 -0400
+Received: from muru.com ([72.249.23.125]:35994 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725795AbfJHObU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 10:31:20 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 48D9F8081;
+        Tue,  8 Oct 2019 14:31:53 +0000 (UTC)
+Date:   Tue, 8 Oct 2019 07:31:16 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Sebastian Reichel <sre@kernel.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Adam Ford <aford173@gmail.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-bluetooth@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@collabora.com
+Subject: Re: [PATCHv2 0/4] Convert all btwilink users to hci_ll and drop
+ btwilink
+Message-ID: <20191008143116.GF5610@atomide.com>
+References: <20191003134147.9458-1-sre@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191008115240.GE10009@krava>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20191003134147.9458-1-sre@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 01:52:40PM +0200, Jiri Olsa wrote:
-> On Mon, Oct 07, 2019 at 10:41:20AM -0700, Andi Kleen wrote:
-> > From: Andi Kleen <ak@linux.intel.com>
-> > 
-> > The symbol the feature file checks for is now actually in -lbabeltrace,
-> > not -lbabeltrace-ctf, at least as of libbabeltrace-1.5.6-2.fc30.x86_64
-> > 
-> > Always add both libraries to fix the feature detection.
+* Sebastian Reichel <sre@kernel.org> [191003 06:42]:
+> Hi,
 > 
-> well, we link with libbabeltrace-ctf.so which links with libbabeltrace.so
+> This moves the remaining users of btwilink to the "new" serdev based hci_ll
+> driver and drops the btwilink driver afterwards. The patches were only compile
+> tested by me, but Enric tested the IGEP platform and Adam will test the LogicPD
+> platform.
 > 
-> I guess we can link it as well, but where do you see it fail?
+> I kept the TI_ST driver for now, since I plan to send a second patchset for the
+> FM radio driver. Once the FM driver has been converted to also use hci_ll, we
+> can remove TI_ST completly.
+> 
+> My suggestion is for the patch handling is, that everything simply goes through
+> Tony's tree.
 
-On FC30 the .so file is just a symlink, so it doesn't pull
-in the other library.
+Sounds good to me, good to see kim gone with patch 3/4 :)
 
-$ gcc test-libbabeltrace.c -lbabeltrace-ctf
-/usr/bin/ld:
-/usr/lib/gcc/x86_64-redhat-linux/9/../../../../lib64/libbabeltrace-ctf.so:
-undefined reference to `bt_packet_seek_get_error'
-/usr/bin/ld:
-/usr/lib/gcc/x86_64-redhat-linux/9/../../../../lib64/libbabeltrace-ctf.so:
-undefined reference to `bt_packet_seek_set_error'
-collect2: error: ld returned 1 exit status
+Marcel, care to ack the old driver removal patch?
 
-$ ls -l /usr/lib64/libbabeltrace-ctf.so
-lrwxrwxrwx 1 root root 26 Jan 31  2019 /usr/lib64/libbabeltrace-ctf.so
--> libbabeltrace-ctf.so.1.0.0
+Regards,
 
-$ rpm -qf /usr/lib64/libbabeltrace-ctf.so
-libbabeltrace-devel-1.5.6-2.fc30.x86_64
+Tony
 
--Andi
+> Changes since PATCHv1 [0]
+>  * rebase to 5.4-rc1
+>  * move FM radio patches into separate patchset
+> 
+> [0] https://lore.kernel.org/lkml/20181221011752.25627-1-sre@kernel.org/
+> 
+> -- Sebastian
+> 
+> Sebastian Reichel (4):
+>   ARM: dts: LogicPD Torpedo: Add WiLink UART node
+>   ARM: dts: IGEP: Add WiLink UART node
+>   ARM: OMAP2+: pdata-quirks: drop TI_ST/KIM support
+>   Bluetooth: btwilink: drop superseded driver
+> 
+>  .../boot/dts/logicpd-torpedo-37xx-devkit.dts  |   8 +
+>  arch/arm/boot/dts/omap3-igep0020-rev-f.dts    |   8 +
+>  arch/arm/boot/dts/omap3-igep0030-rev-g.dts    |   8 +
+>  arch/arm/mach-omap2/pdata-quirks.c            |  52 ---
+>  drivers/bluetooth/Kconfig                     |  11 -
+>  drivers/bluetooth/Makefile                    |   1 -
+>  drivers/bluetooth/btwilink.c                  | 337 ------------------
+>  7 files changed, 24 insertions(+), 401 deletions(-)
+>  delete mode 100644 drivers/bluetooth/btwilink.c
+> 
+> -- 
+> 2.23.0
+> 
