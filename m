@@ -2,156 +2,135 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FDFC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 19:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A81C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 19:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C41F21721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 19:43:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56CEC21721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 19:44:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="OzqFClqJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730755AbfJHTnx (ORCPT
+        id S1730761AbfJHTo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 15:43:53 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:5480 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728465AbfJHTnq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 15:43:46 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2BFFD307D989;
-        Tue,  8 Oct 2019 19:43:46 +0000 (UTC)
-Received: from vitty.brq.redhat.com (ovpn-204-92.brq.redhat.com [10.40.204.92])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9D26B5D6A7;
-        Tue,  8 Oct 2019 19:43:44 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>
-Subject: [PATCH 2/3] selftests: kvm: consolidate VMX support checks
-Date:   Tue,  8 Oct 2019 21:43:37 +0200
-Message-Id: <20191008194338.24159-3-vkuznets@redhat.com>
-In-Reply-To: <20191008194338.24159-1-vkuznets@redhat.com>
-References: <20191008194338.24159-1-vkuznets@redhat.com>
+        Tue, 8 Oct 2019 15:44:28 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:38566 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728465AbfJHTo2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 15:44:28 -0400
+Received: by mail-qk1-f193.google.com with SMTP id u186so17985708qkc.5
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 12:44:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jSsEZPTQg8l8YHZdSCh+wDFOVE+s2j+rzoUqLaEq18I=;
+        b=OzqFClqJ6oekWe08HpZ7lmwfPfFobrg9AadnFY8oK7PaaIlIH0rAUm9i2CawAfgc4m
+         Nj9pSyYBhYwKZXI+3TnOy1T6ePt0LeZKPCa77CdF5gyNKtO646l1GX+gaITloi2LlgnY
+         V+rwz7eHyKQ90jF0kCvMoKakeeTxoDgrkzOl8S9STZ6/EV8g8SlIWXViBfvdO69E4hkQ
+         LA1HvQhF/gp7ouwiNl1mr0jKo/e39ebJyaQfuUnm7Wn7OvoEh3rvpYF+qbynHr9HMhyT
+         q9Edy2DfIQqhH5gxZv1xfg5FF+jG/EaWc0yQcWwqaOZTChL7veJR+1Qkl2GRz0M/jzlU
+         9Uow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jSsEZPTQg8l8YHZdSCh+wDFOVE+s2j+rzoUqLaEq18I=;
+        b=ryCNpH3QNSGNBltY86H/psAVhG+RR0I2OdGA6QS4fTDV4/k/YmHDu66wiihhSmumlt
+         qbdK8ilCjZKoeOmidtTORXkfeloZ9lzdhggeVkXypTIZfoDxzKzJSdQs2eRPkZ0NBO9u
+         GcCBfS9nJS/9usJ2rYmU/rt7MNsLffnH3nG+mXNX21Xfqq6er1TqGRO4U+rAVFKPvD9T
+         +mQGbNo05XU5AB0odjQY+F6q6Y93hKjiAIzYJ8aJczzL1ZNQQ03/bxrlelKWaQsmaoOv
+         diD9Cr9mydnMtJQk3uPEcn6w6SjDUyyBxooSb1cm9o3xmloP9OodeoAZ1dXo0rO44hMq
+         BPzg==
+X-Gm-Message-State: APjAAAXVk8G5AbufrSM33X3Opshg6sXv4AFIFDtxQCYBBeOWPHw7/30W
+        f81X38AOtxf/BxnTPXWeAK4yfg==
+X-Google-Smtp-Source: APXvYqw/ggbr2Q4jcHjWzNrBFlHgNFoE/rBMsjO/VvOM/kcybGO47TgrWijN4Abjyx3I7K4lrN1W0w==
+X-Received: by 2002:a37:8104:: with SMTP id c4mr32348380qkd.367.1570563866533;
+        Tue, 08 Oct 2019 12:44:26 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
+        by smtp.gmail.com with ESMTPSA id q5sm12672993qte.38.2019.10.08.12.44.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 08 Oct 2019 12:44:25 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1iHvPF-0007Nn-DB; Tue, 08 Oct 2019 16:44:25 -0300
+Date:   Tue, 8 Oct 2019 16:44:25 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Doug Ledford <dledford@redhat.com>,
+        Potnuri Bharat Teja <bharat@chelsio.com>,
+        Matan Barak <matanb@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Shamir Rabinovitch <shamir.rabinovitch@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Guralnik <michaelgur@mellanox.com>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] uverbs: prevent potential underflow
+Message-ID: <20191008194425.GA28067@ziepe.ca>
+References: <20191005052337.GA20129@mwanda>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Tue, 08 Oct 2019 19:43:46 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191005052337.GA20129@mwanda>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vmx_* tests require VMX and three of them implement the same check. Move it
-to vmx library.
+On Sat, Oct 05, 2019 at 08:23:37AM +0300, Dan Carpenter wrote:
+> The issue is in drivers/infiniband/core/uverbs_std_types_cq.c in the
+> UVERBS_HANDLER(UVERBS_METHOD_CQ_CREATE) function.  We check that:
+> 
+> 	if (attr.comp_vector >= attrs->ufile->device->num_comp_vectors) {
+> 
+> But we don't check that "attr.comp_vector" whether negative.  It
+> could potentially lead to an array underflow.  My concern would be where
+> cq->vector is used in the create_cq() function from the cxgb4 driver.
+> 
+> Fixes: 9ee79fce3642 ("IB/core: Add completion queue (cq) object actions")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> ---
+>  drivers/infiniband/core/uverbs.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- tools/testing/selftests/kvm/include/x86_64/vmx.h       |  2 ++
- tools/testing/selftests/kvm/lib/x86_64/vmx.c           | 10 ++++++++++
- .../selftests/kvm/x86_64/vmx_close_while_nested_test.c |  6 +-----
- .../selftests/kvm/x86_64/vmx_set_nested_state_test.c   |  6 +-----
- .../testing/selftests/kvm/x86_64/vmx_tsc_adjust_test.c |  6 +-----
- 5 files changed, 15 insertions(+), 15 deletions(-)
+ 
+> diff --git a/drivers/infiniband/core/uverbs.h b/drivers/infiniband/core/uverbs.h
+> index 1e5aeb39f774..63f7f7db5902 100644
+> --- a/drivers/infiniband/core/uverbs.h
+> +++ b/drivers/infiniband/core/uverbs.h
+> @@ -98,7 +98,7 @@ ib_uverbs_init_udata_buf_or_null(struct ib_udata *udata,
+>  
+>  struct ib_uverbs_device {
+>  	atomic_t				refcount;
+> -	int					num_comp_vectors;
+> +	u32					num_comp_vectors;
+>  	struct completion			comp;
+>  	struct device				dev;
+>  	/* First group for device attributes, NULL terminated array */
 
-diff --git a/tools/testing/selftests/kvm/include/x86_64/vmx.h b/tools/testing/selftests/kvm/include/x86_64/vmx.h
-index 6ae5a47fe067..f52e0ba84fed 100644
---- a/tools/testing/selftests/kvm/include/x86_64/vmx.h
-+++ b/tools/testing/selftests/kvm/include/x86_64/vmx.h
-@@ -580,6 +580,8 @@ bool prepare_for_vmx_operation(struct vmx_pages *vmx);
- void prepare_vmcs(struct vmx_pages *vmx, void *guest_rip, void *guest_rsp);
- bool load_vmcs(struct vmx_pages *vmx);
- 
-+void nested_vmx_check_supported(void);
-+
- void nested_pg_map(struct vmx_pages *vmx, struct kvm_vm *vm,
- 		   uint64_t nested_paddr, uint64_t paddr, uint32_t eptp_memslot);
- void nested_map(struct vmx_pages *vmx, struct kvm_vm *vm,
-diff --git a/tools/testing/selftests/kvm/lib/x86_64/vmx.c b/tools/testing/selftests/kvm/lib/x86_64/vmx.c
-index fab8f6b0bf52..f6ec97b7eaef 100644
---- a/tools/testing/selftests/kvm/lib/x86_64/vmx.c
-+++ b/tools/testing/selftests/kvm/lib/x86_64/vmx.c
-@@ -376,6 +376,16 @@ void prepare_vmcs(struct vmx_pages *vmx, void *guest_rip, void *guest_rsp)
- 	init_vmcs_guest_state(guest_rip, guest_rsp);
- }
- 
-+void nested_vmx_check_supported(void)
-+{
-+	struct kvm_cpuid_entry2 *entry = kvm_get_supported_cpuid_entry(1);
-+
-+	if (!(entry->ecx & CPUID_VMX)) {
-+		fprintf(stderr, "nested VMX not enabled, skipping test\n");
-+		exit(KSFT_SKIP);
-+	}
-+}
-+
- void nested_pg_map(struct vmx_pages *vmx, struct kvm_vm *vm,
- 	 	   uint64_t nested_paddr, uint64_t paddr, uint32_t eptp_memslot)
- {
-diff --git a/tools/testing/selftests/kvm/x86_64/vmx_close_while_nested_test.c b/tools/testing/selftests/kvm/x86_64/vmx_close_while_nested_test.c
-index 3b0ffe01dacd..5dfb53546a26 100644
---- a/tools/testing/selftests/kvm/x86_64/vmx_close_while_nested_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/vmx_close_while_nested_test.c
-@@ -53,12 +53,8 @@ static void l1_guest_code(struct vmx_pages *vmx_pages)
- int main(int argc, char *argv[])
- {
- 	vm_vaddr_t vmx_pages_gva;
--	struct kvm_cpuid_entry2 *entry = kvm_get_supported_cpuid_entry(1);
- 
--	if (!(entry->ecx & CPUID_VMX)) {
--		fprintf(stderr, "nested VMX not enabled, skipping test\n");
--		exit(KSFT_SKIP);
--	}
-+	nested_vmx_check_supported();
- 
- 	vm = vm_create_default(VCPU_ID, 0, (void *) l1_guest_code);
- 	vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
-diff --git a/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c b/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
-index a6d85614ae4d..9ef7fab39d48 100644
---- a/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
-@@ -224,7 +224,6 @@ int main(int argc, char *argv[])
- {
- 	struct kvm_vm *vm;
- 	struct kvm_nested_state state;
--	struct kvm_cpuid_entry2 *entry = kvm_get_supported_cpuid_entry(1);
- 
- 	have_evmcs = kvm_check_cap(KVM_CAP_HYPERV_ENLIGHTENED_VMCS);
- 
-@@ -237,10 +236,7 @@ int main(int argc, char *argv[])
- 	 * AMD currently does not implement set_nested_state, so for now we
- 	 * just early out.
- 	 */
--	if (!(entry->ecx & CPUID_VMX)) {
--		fprintf(stderr, "nested VMX not enabled, skipping test\n");
--		exit(KSFT_SKIP);
--	}
-+	nested_vmx_check_supported();
- 
- 	vm = vm_create_default(VCPU_ID, 0, 0);
- 
-diff --git a/tools/testing/selftests/kvm/x86_64/vmx_tsc_adjust_test.c b/tools/testing/selftests/kvm/x86_64/vmx_tsc_adjust_test.c
-index f36c10eba71e..5590fd2bcf87 100644
---- a/tools/testing/selftests/kvm/x86_64/vmx_tsc_adjust_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/vmx_tsc_adjust_test.c
-@@ -128,12 +128,8 @@ static void report(int64_t val)
- int main(int argc, char *argv[])
- {
- 	vm_vaddr_t vmx_pages_gva;
--	struct kvm_cpuid_entry2 *entry = kvm_get_supported_cpuid_entry(1);
- 
--	if (!(entry->ecx & CPUID_VMX)) {
--		fprintf(stderr, "nested VMX not enabled, skipping test\n");
--		exit(KSFT_SKIP);
--	}
-+	nested_vmx_check_supported();
- 
- 	vm = vm_create_default(VCPU_ID, 0, (void *) l1_guest_code);
- 	vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
--- 
-2.20.1
+I would have expected you to change struct ib_cq_init_attr ? Or at
+least both..
 
+This is actually a bug as the type of
+UVERBS_ATTR_CREATE_CQ_COMP_VECTOR for userspace is u32:
+
+        UVERBS_ATTR_PTR_IN(UVERBS_ATTR_CREATE_CQ_COMP_VECTOR,
+                           UVERBS_ATTR_TYPE(u32),
+                           UA_MANDATORY),
+
+But we are stuffing it into a int:
+
+        ret = uverbs_copy_from(&attr.comp_vector, attrs,
+                               UVERBS_ATTR_CREATE_CQ_COMP_VECTOR);
+
+So very large values will become negative and switching
+num_comp_vectors to u32 won't help??
+
+Jason
