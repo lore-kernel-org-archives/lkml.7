@@ -2,124 +2,132 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C09ECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED36C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41BDA21835
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:26:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05ED4206BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:29:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JjllhKoY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tEeiaX7M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730647AbfJHL0j (ORCPT
+        id S1730626AbfJHL3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 07:26:39 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59516 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729876AbfJHL0j (ORCPT
+        Tue, 8 Oct 2019 07:29:12 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45641 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730249AbfJHL3M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 07:26:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=QzG9uxqVaWu2Py++vRepIVOXKbIJ3yM+1U+4xpiRQXU=; b=JjllhKoY7qqd4rYbCBXvE6gNh
-        qv27J0/uXStkQWkcXHLPXLt8u53loVBn+pBWo1PcUzZ3fu4V2+HrhI4ZI0NeclHZ08G5VyLDfxYSz
-        MJb2c6aOEX4oJt/S8dLjXnWe91nzdInaMbOf73mgxpJzaC1UVUnwJCuVKPoTh2RECfbtllWD1RrkU
-        KboP/7ZXTEmrgy3gpWO40uJqIyk+gzGJ8rlRrC1sGts3fXHgUXDEkpCfTTbNir5c5jR2eW69QQ7Ki
-        t2SyUN6vfrkOT8JgqDAtJ72yS6+50BQeE9mSmxUizjg0EXpIopYDHTl1ZBVsqZCIX7vrVbI+kH9ia
-        obuCjHKEA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iHnd7-0004LE-2M; Tue, 08 Oct 2019 11:26:13 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 513C2305E1D;
-        Tue,  8 Oct 2019 13:25:18 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A3C3529BBAD03; Tue,  8 Oct 2019 13:26:09 +0200 (CEST)
-Date:   Tue, 8 Oct 2019 13:26:09 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Phil Auld <pauld@redhat.com>
-Cc:     Xuewei Zhang <xueweiz@google.com>, Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        trivial@kernel.org
-Subject: Re: [PATCH] sched/fair: scale quota and period without losing
- quota/period ratio precision
-Message-ID: <20191008112609.GL2294@hirez.programming.kicks-ass.net>
-References: <20191004001243.140897-1-xueweiz@google.com>
- <20191007151425.GD22412@pauld.bos.csb>
+        Tue, 8 Oct 2019 07:29:12 -0400
+Received: by mail-wr1-f65.google.com with SMTP id r5so18902167wrm.12;
+        Tue, 08 Oct 2019 04:29:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FYmSEb4UkFBwKb8YV3FOeq6yilH8AXXad/DLPAhG4DI=;
+        b=tEeiaX7Me1T5znQaAg+ubwUI0vyc8Zhm1RjV5QaasUhzCH7mpsLT9TdXrRLlndmrBy
+         9RHa82qNm8Z4BChHyMO4a1xGthdxMHsOyhGGzZ7pTvwqU+7Ym1YoivrurbPIQa6OgqII
+         KGwRa/dbvofp/UQ7IwH9WC+wq4VhIaGzl8ez39hfi1WDhYyms/dh8HbWcuccGmzK/cFx
+         fy7IcIVsurt7yk0XrmiR9v1WtfNAL7w58nKFHfsWUCPjmRPrgd0RD98wjUYEbwc+EBxf
+         GBGTyeaI2ExDYMGQ0tzbCGYyyLFe5sKirM45R6aBwUpFWLVALeunS9JMqEIaSaoAlwc8
+         tD3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FYmSEb4UkFBwKb8YV3FOeq6yilH8AXXad/DLPAhG4DI=;
+        b=qoZ4sEne627nlcUxRg67VoqcM/8Mcz6gc1CSLwRGzh02lp8cTa1OSTiIE9pvN5WHDR
+         i5XaKt9fgt084I+Artw2FhKJjSgOX4qDp06JHOIKl/OivEjyk/7O6MHj+BfGi8NdyxJ8
+         xcmuRoOFPH1XUek4ZrXTJoLQUQ4OBkW4NAgqECMICR1WurWdP8aKHHmW7ZenrCfquiF+
+         yVQLpDYw42xO7d5g7aFWGto1FHYaG/rngOiLm7Ym+MGzHoBfPzI5jMauwaUx1On21bWQ
+         gcF+UY4yds8HbV50c+3kAp7SADZWev6idptVLq3OPYpeRCZNNxFEJVM9galCQAvJbghb
+         2glg==
+X-Gm-Message-State: APjAAAWw5Sao+5VGbgpOWleiw5kz6+OYYvN7T2p6NyKWz/+cJBnsJI0l
+        /f47kE1uibKMkDcbOdAKvmQ=
+X-Google-Smtp-Source: APXvYqwDi0ge0lsN7GXz3MGF8+juCAMiP5g/2tiWKI2mruB19jSzvAi1nOuWd7Kf7c7AMppkHec4Kw==
+X-Received: by 2002:adf:cc8a:: with SMTP id p10mr26060310wrj.321.1570534149735;
+        Tue, 08 Oct 2019 04:29:09 -0700 (PDT)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id y186sm6213868wmd.26.2019.10.08.04.29.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Oct 2019 04:29:08 -0700 (PDT)
+Date:   Tue, 8 Oct 2019 13:29:07 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     JC Kuo <jckuo@nvidia.com>, jonathanh@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        nkristam@nvidia.com, skomatineni@nvidia.com
+Subject: Re: [PATCH v3 0/7] add Tegra194 XUSB host and pad controller support
+Message-ID: <20191008112907.GC228118@ulmo>
+References: <20191004162906.4818-1-jckuo@nvidia.com>
+ <20191007110311.GA614644@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="GPJrCs/72TxItFYR"
 Content-Disposition: inline
-In-Reply-To: <20191007151425.GD22412@pauld.bos.csb>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191007110311.GA614644@kroah.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 11:14:25AM -0400, Phil Auld wrote:
-> On Thu, Oct 03, 2019 at 05:12:43PM -0700 Xuewei Zhang wrote:
-> > quota/period ratio is used to ensure a child task group won't get more
-> > bandwidth than the parent task group, and is calculated as:
-> > normalized_cfs_quota() = [(quota_us << 20) / period_us]
-> > 
-> > If the quota/period ratio was changed during this scaling due to
-> > precision loss, it will cause inconsistency between parent and child
-> > task groups. See below example:
-> > A userspace container manager (kubelet) does three operations:
-> > 1) Create a parent cgroup, set quota to 1,000us and period to 10,000us.
-> > 2) Create a few children cgroups.
-> > 3) Set quota to 1,000us and period to 10,000us on a child cgroup.
-> > 
-> > These operations are expected to succeed. However, if the scaling of
-> > 147/128 happens before step 3), quota and period of the parent cgroup
-> > will be changed:
-> > new_quota: 1148437ns, 1148us
-> > new_period: 11484375ns, 11484us
-> > 
-> > And when step 3) comes in, the ratio of the child cgroup will be 104857,
-> > which will be larger than the parent cgroup ratio (104821), and will
-> > fail.
-> > 
-> > Scaling them by a factor of 2 will fix the problem.
-> > 
-> > Fixes: 2e8e19226398 ("sched/fair: Limit sched_cfs_period_timer() loop to avoid hard lockup")
-> > Signed-off-by: Xuewei Zhang <xueweiz@google.com>
-> 
-> 
-> I managed to get it to trigger the second case. It took 50,000 children (20x my initial tests).
-> 
-> [ 1367.850630] cfs_period_timer[cpu11]: period too short, scaling up (new cfs_period_us = 4340, cfs_quota_us = 250000)
-> [ 1370.390832] cfs_period_timer[cpu11]: period too short, scaling up (new cfs_period_us = 8680, cfs_quota_us = 500000)
-> [ 1372.914689] cfs_period_timer[cpu11]: period too short, scaling up (new cfs_period_us = 17360, cfs_quota_us = 1000000)
-> [ 1375.447431] cfs_period_timer[cpu11]: period too short, scaling up (new cfs_period_us = 34720, cfs_quota_us = 2000000)
-> [ 1377.982785] cfs_period_timer[cpu11]: period too short, scaling up (new cfs_period_us = 69440, cfs_quota_us = 4000000)
-> [ 1380.481702] cfs_period_timer[cpu11]: period too short, scaling up (new cfs_period_us = 138880, cfs_quota_us = 8000000)
-> [ 1382.894692] cfs_period_timer[cpu11]: period too short, scaling up (new cfs_period_us = 277760, cfs_quota_us = 16000000)
-> [ 1385.264872] cfs_period_timer[cpu11]: period too short, scaling up (new cfs_period_us = 555520, cfs_quota_us = 32000000)
-> [ 1393.965140] cfs_period_timer[cpu11]: period too short, but cannot scale up without losing precision (cfs_period_us = 555520, cfs_quota_us = 32000000)
-> 
-> I suspect going higher could cause the original lockup, but that'd be the case with the old code as well. 
-> And this also gets us out of it faster.
-> 
-> 
-> Tested-by: Phil Auld <pauld@redhat.com>
 
-Thanks!
+--GPJrCs/72TxItFYR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Oct 07, 2019 at 01:03:11PM +0200, Greg KH wrote:
+> On Sat, Oct 05, 2019 at 12:28:59AM +0800, JC Kuo wrote:
+> > Hi,
+> >=20
+> > This series introduces support for Tegra194 XUSB host and pad
+> > controller. Tegra194 XUSB host and pad controller are highly
+> > similar to the controllers found on Tegra186. Therefore, it's
+> > possible to resue xhci-tegra.c and xusb-tegra186.c for Tegra194.
+>=20
+> I've taken patches 1 and 2 through my USB tree.  If you want/need me to
+> take the others, please get acks from those maintainers on them so I can
+> do so.
+
+I can pick up patches 6 and 7 into the Tegra tree. There are a few
+patches in there already that conflict with the DT changes in this
+series and those will be easier to resolve in the Tegra tree.
+
+JC, I noticed that you didn't Cc Kishon as the PHY subsystem maintainer.
+Please resend the series with Kishon added in the To: line to make sure
+he sees them and can apply or ack them.
+
+Given that Greg's already applied patches 1 and 2, maybe leave them out
+of the series.
+
+Thierry
+
+--GPJrCs/72TxItFYR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2ccwIACgkQ3SOs138+
+s6EHqhAAtp/qnbVEMpUPdQ4QZrf6zUalRDl5LzyC8TQdSl+FMfbcFe9thXOQNkKN
+w69TNE00wHz9llCeHLB7cXYKnXZkRjxjJg+0JRt5ULV6ijZH+vRG1ICs/FG5KPxZ
+RFODotu9nCMcbFmszhYTHP5TtvVObWylAhjQ8lBBWFRutILCsaYwY2qA5cd+JAAW
+itNCCKSIAhqksYpL0hmfFr28bUoMZ4fh51Lnie/RP0lHV6HHa1LPYXJQ10lx9x2u
+E+BanUgNYaNTpgnoZgQUsc0kjnrU8+watMHZGNAT2qOOtm71Xs1iOxkLR28z35Jm
+L8oTrS9DZAoob0ewxpWPH8dJMwrF8yxp+8Pp+C8NG0KpHpdiOM7woEq6VXEHaY+d
+6sfngywiY6YvY/dH18hH6Ds0tPWCaEwzDBdEenZAm2+H35cz4mFKBR/mxy2EkZJq
+cgRBJVLrKgG84Bnujfq8hNXkrGp3I3KCk+ENeq4tC+EpgDc3i1He7mS1G9ppSdxD
+lEMfnZqBD9Rj4zAQPoAVtkMdXGi93LL2YPIMZhEGbyl07ZejfsC+jomAXhmWpk+8
+r+3zZj10fXH7xGsdRAHIzra36DYVe8hsYJrMtyIr4yiDgebpDr5Ofvc0jdWq/eRU
+kxbyY8RANaFfs+vH7hIoB1ta6y0X+0SXeixsk+PuzqYfvDq6fV8=
+=mEdr
+-----END PGP SIGNATURE-----
+
+--GPJrCs/72TxItFYR--
