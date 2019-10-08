@@ -6,85 +6,134 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86DCCC35280
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB20C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 648252070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:51:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C9812070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:52:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728893AbfJHQv6 (ORCPT
+        id S1729147AbfJHQwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 12:51:58 -0400
-Received: from muru.com ([72.249.23.125]:36036 "EHLO muru.com"
+        Tue, 8 Oct 2019 12:52:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:41300 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726138AbfJHQv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 12:51:58 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 548F08081;
-        Tue,  8 Oct 2019 16:52:31 +0000 (UTC)
-Date:   Tue, 8 Oct 2019 09:51:54 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Jeroen Hofstee <jhofstee@victronenergy.com>
-Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
-        Koen Kooi <koen@dominion.thruhere.net>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ARM: dts: am335x-sancloud-bbe: Fix PHY mode for ethernet
-Message-ID: <20191008165154.GH5610@atomide.com>
-References: <20191002095416.19603-1-jhofstee@victronenergy.com>
- <d027ef07-807d-6a7b-2939-b67be4542469@ti.com>
- <436f1712-7dec-db40-d08f-1a3032af3596@victronenergy.com>
- <d85cd860-22a3-6142-7f2d-736a428d7a31@ti.com>
- <20191008142349.GE5610@atomide.com>
- <1f779973-1702-47eb-158f-7000770c435a@victronenergy.com>
- <20191008161416.GG5610@atomide.com>
- <4fa5393d-0b2c-4b8c-128a-81ab05a14a82@victronenergy.com>
+        id S1726138AbfJHQwj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 12:52:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 424301570;
+        Tue,  8 Oct 2019 09:52:39 -0700 (PDT)
+Received: from [192.168.0.9] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2AAC23F6C4;
+        Tue,  8 Oct 2019 09:52:37 -0700 (PDT)
+Subject: Re: [RFC v5 4/6] sched/fair: Tune task wake-up logic to pack small
+ background tasks on fewer cores
+To:     Parth Shah <parth@linux.ibm.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Doug Smythies <dsmythies@telus.net>,
+        Quentin Perret <qperret@qperret.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+References: <20191007083051.4820-1-parth@linux.ibm.com>
+ <20191007083051.4820-5-parth@linux.ibm.com>
+ <CAKfTPtCgoTJXxbYyza1W55ayw9QeM7fue2e91Xpt804sL9GQWA@mail.gmail.com>
+ <80bb34ec-6358-f4dc-d20d-cde6c9d7e197@linux.ibm.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <d55c593d-af8e-c8ba-cc0e-c9917df5d593@arm.com>
+Date:   Tue, 8 Oct 2019 18:52:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4fa5393d-0b2c-4b8c-128a-81ab05a14a82@victronenergy.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <80bb34ec-6358-f4dc-d20d-cde6c9d7e197@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Jeroen Hofstee <jhofstee@victronenergy.com> [191008 16:43]:
-> Hello Tony,
+[- Quentin Perret <quentin.perret@arm.com>]
+[+ Quentin Perret <qperret@qperret.net>]
+
+See commit c193a3ffc282 ("mailmap: Update email address for Quentin Perret")
+
+On 07/10/2019 18:53, Parth Shah wrote:
 > 
-> On 10/8/19 6:14 PM, Tony Lindgren wrote:
-> > * Jeroen Hofstee <jhofstee@victronenergy.com> [191008 16:03]:
-> >> Hello Tony,
-> >>
-> >> On 10/8/19 4:23 PM, Tony Lindgren wrote:
-> >>> * Grygorii Strashko <grygorii.strashko@ti.com> [191003 02:32]:
-> >>>> On 03/10/2019 11:16, Jeroen Hofstee wrote:
-> >>>>> Furthermore 4.19 is fine, so there is no need to include it in stable
-> >>>>> and have a note to make sure also other patches are required etc.
-> >>>> Hence all above patches went in 5.1 it would be correct to mention only
-> >>>> 6d4cd041f0af net: phy: at803x: disable delay only for RGMII mode
-> >>> Jeroen, can you please send an updated patch with the fixes
-> >>> tag changed?
-> >>>
-> >> For completeness, there is no "Fixes tag" as you mentioned.
-> >> The commit only refers to another commit which introduces
-> >> a problem.
-> > Well please add the fixes tag, that way this will get
-> > properly applied to earlier stable kernels too :)
 > 
-> But 4.19 is fine, this is an issue in 5.1 as in EOL...
-> I really don't understand why I should waste time
-> to figure out what happened exactly during the 5.1
-> release cycle...
+> On 10/7/19 5:49 PM, Vincent Guittot wrote:
+>> On Mon, 7 Oct 2019 at 10:31, Parth Shah <parth@linux.ibm.com> wrote:
+>>>
+>>> The algorithm finds the first non idle core in the system and tries to
+>>> place a task in the idle CPU in the chosen core. To maintain
+>>> cache hotness, work of finding non idle core starts from the prev_cpu,
+>>> which also reduces task ping-pong behaviour inside of the core.
+>>>
+>>> Define a new method to select_non_idle_core which keep tracks of the idle
+>>> and non-idle CPUs in the core and based on the heuristics determines if the
+>>> core is sufficiently busy to place the incoming backgroung task. The
+>>> heuristic further defines the non-idle CPU into either busy (>12.5% util)
+>>> CPU and overutilized (>80% util) CPU.
+>>> - The core containing more idle CPUs and no busy CPUs is not selected for
+>>>   packing
+>>> - The core if contains more than 1 overutilized CPUs are exempted from
+>>>   task packing
+>>> - Pack if there is atleast one busy CPU and overutilized CPUs count is <2
+>>>
+>>> Value of 12.5% utilization for busy CPU gives sufficient heuristics for CPU
+>>> doing enough work an
 
-Hmm so what's the issue with just adding the fixes tag Grygorii
-suggested:
+[...]
 
-6d4cd041f0af ("net: phy: at803x: disable delay only for RGMII mode")
+>>> @@ -6483,7 +6572,11 @@ select_task_rq_fair(struct task_struct *p, int prev_cpu, int sd_flag, int wake_f
+>>>         } else if (sd_flag & SD_BALANCE_WAKE) { /* XXX always ? */
+>>>                 /* Fast path */
+>>>
+>>> -               new_cpu = select_idle_sibling(p, prev_cpu, new_cpu);
+>>> +               if (is_turbosched_enabled() && unlikely(is_background_task(p)))
+>>> +                       new_cpu = turbosched_select_non_idle_core(p, prev_cpu,
+>>> +                                                                 new_cpu);
+>>
+>> Could you add turbosched_select_non_idle_core() similarly to
+>> find_energy_efficient_cpu() ?
+>> Add it at the beg select_task_rq_fair()
+>> Return immediately with theCPU if you have found one
+>> Or let the normal path select a CPU if the
+>> turbosched_select_non_idle_core() has not been able to find a suitable
+>> CPU for packing
+>>
+> 
+> of course. I can do that.
+> I was just not aware about the effect of wake_affine and so was waiting for
+> such comments to be sure of. Thanks for this.
+> Maybe I can add just below the sched_energy_present(){...} construct giving
+> precedence to EAS? I'm asking this because I remember Patrick telling me to
+> leverage task packing for android as well?
 
-No need to dig further?
+I have a hard time imaging that Turbosched will be used in Android next
+to EAS in the foreseeable future.
 
-Regards,
+First of all, EAS provides task packing already on Performance Domain
+(PD) level (a.k.a. as cluster on traditional 2-cluster Arm/Arm64
+big.LITTLE or DynamIQ (with Phantom domains (out of tree solution)).
+This is where we can safe energy without harming latency.
 
-Tony
+See the tests results under '2.1 Energy test case' in
+
+https://lore.kernel.org/r/20181203095628.11858-1-quentin.perret@arm.com
+
+There are 10 to 50 small (classified solely by task utilization) tasks
+per test case and EAS shows an effect on energy consumption by packing
+them onto the PD (cluster) of the small CPUs.
+
+And second, the CPU supported topology is different to the one you're
+testing on.
+
+[...]
