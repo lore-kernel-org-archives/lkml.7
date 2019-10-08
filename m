@@ -2,176 +2,80 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D81D8ECE58D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 03:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB179ECE58D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 03:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A33F320867
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 03:29:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1C56217D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 03:29:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Bqopbd1f"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LU2lPXf7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729962AbfJHD3h (ORCPT
+        id S1729981AbfJHD3l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 23:29:37 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:43094 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729772AbfJHD3h (ORCPT
+        Mon, 7 Oct 2019 23:29:41 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33733 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729772AbfJHD3k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 23:29:37 -0400
-Received: by mail-ed1-f68.google.com with SMTP id r9so14314143edl.10
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 20:29:35 -0700 (PDT)
+        Mon, 7 Oct 2019 23:29:40 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q10so10000062pfl.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 20:29:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EvafDVJviid1Lod+sDu0bEw60oGKxGZ5GVF0o7ApXbk=;
-        b=Bqopbd1fSDtzVkQJrSaKPt8f5oWAzVJy4oUD3Au2A8ZU2xbsPXki7QEQ6F8ZTZSZHz
-         V2zz9TR2KCF5Ma3jlofSqdC+ChNfxdcaa07+hMltQlqqZRRE21I+gpOzAJJLkuhBAzq5
-         rZ5Z0ip3O/EYiXMt0uDz40T+TuPpnGDBil6u4=
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=r5rY61uv0TbBekYVBoIpJ8HVOvZlHLYXTkq5V4p7fCg=;
+        b=LU2lPXf7sxL6J2e6wTkTDrQeeog+JxhAgKTIIWv9q8Ytt3/107/c6qbGeoWBEeZZ+v
+         oMvYZZqJ9ypOk6rnaKnklRhw9WIiEdocCp7ve4tdUyTn3MccriyPQb088k0B4sz/9/nd
+         3Sm1OrcB/h1SFsHtrmMFmoGKHGTtj2uYb6kkI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EvafDVJviid1Lod+sDu0bEw60oGKxGZ5GVF0o7ApXbk=;
-        b=Ps8T5WombfWzWVlRi/akqAoOcdQw9PwN4dp5dTHCY5JjuovzNWywiTbRPMyZqwSp9I
-         FwY7+os5y+2aZYjv42EwikbQhfMUG2Z0GRehttgxbcz7c0YSt2Qf0orie8to6zcbk1tE
-         XWQJBSNH8X5iugMBi3nvQpyprnzpx9G5p1OZZKEaA++gv5oV4BTWn2YbuoA473aIQjhF
-         5ENewnUYuxEpkP0iw9pJfpd9tZ2cwopZ0vjm45dc6VbKO/hCUjaIXmp5B/ORBPgJb3Nu
-         V+VjdwrhN5kPOBKIuf2TxF2j2gr5WjNmRQ8G7H6GvQQLV5goaSTNyFZMkpoc/HWv3JlD
-         ETDA==
-X-Gm-Message-State: APjAAAVj7y31Bx0lVFN3NZqtCS/sEWq/gnuTZ50mfRsTLf2iY/bF+kDP
-        Fzoq66lmrv8fIHTpartFDtWbHH86dCgwPQ==
-X-Google-Smtp-Source: APXvYqxE3+eYn6cxUc5jnO4MVZyt76S58DMKZoFM19NYtMzmyac2dhG0upCyDOIXl5ei/PhuXt/CXg==
-X-Received: by 2002:a17:906:b742:: with SMTP id fx2mr27079848ejb.205.1570505374999;
-        Mon, 07 Oct 2019 20:29:34 -0700 (PDT)
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com. [209.85.128.48])
-        by smtp.gmail.com with ESMTPSA id bq13sm2100472ejb.25.2019.10.07.20.29.34
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Oct 2019 20:29:34 -0700 (PDT)
-Received: by mail-wm1-f48.google.com with SMTP id 3so1474127wmi.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 20:29:34 -0700 (PDT)
-X-Received: by 2002:a1c:a516:: with SMTP id o22mr1979936wme.116.1570505374139;
- Mon, 07 Oct 2019 20:29:34 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=r5rY61uv0TbBekYVBoIpJ8HVOvZlHLYXTkq5V4p7fCg=;
+        b=ROQ+zCSxLdS9qHDCXp8wbRVl4mHETbREeyzwU8p4XyKHOW5BvUENY09iFxFxV9w321
+         01GO/VjVNSz7UsXuAbfXPJP3DB929kG3420XecWuaY0ww8ZosGRAJpI/B9uqEBLC75AC
+         9qQUg7Y1MQj7tPkiheHP9nrJ/OsP56LZHuaaSI3KqDxmnvsUkW/J0WafVL9dPzP4LN4A
+         IJhpLEcVTgMkKegYx2sArbkwVgsNlXntDVR9oLAnb1ABF/LZYNnwtNS6DfCM5DcAB4YS
+         qIglY5E5AC1vk5Zcp/M9wQVf+fSrzY6bPRKDQbRj1c6LpqDyuDZ3GdypdIVG7docae6n
+         j0GQ==
+X-Gm-Message-State: APjAAAVS3ieOeoXl0d0EhrWceHSx+VCQXC0nrgmwykonfT6wWjTEYWrx
+        84unmif84wqGrKywdHvNLZakcA==
+X-Google-Smtp-Source: APXvYqxbDbVLe1YIwV3eUnWXg4A3HRU9Iqjt0HY6IkSzyLI4VO66EII/A2LwB+c7qQL01M6ejs5ucA==
+X-Received: by 2002:a17:90a:db47:: with SMTP id u7mr2947520pjx.40.1570505378971;
+        Mon, 07 Oct 2019 20:29:38 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id r24sm15647308pfh.69.2019.10.07.20.29.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2019 20:29:38 -0700 (PDT)
+Date:   Mon, 7 Oct 2019 20:29:37 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     David Gow <davidgow@google.com>
+Cc:     shuah@kernel.org, brendanhiggins@google.com,
+        akpm@linux-foundation.org, linux-kselftest@vger.kernel.org,
+        kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] lib/list-test: add a test for the 'list' doubly linked
+ list
+Message-ID: <201910072028.C7AB93651@keescook>
+References: <20191007213633.92565-1-davidgow@google.com>
 MIME-Version: 1.0
-References: <20191007174505.10681-1-ezequiel@collabora.com>
- <20191007174505.10681-4-ezequiel@collabora.com> <HE1PR06MB4011204B3FC2DAABB4BD1BACAC9B0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-In-Reply-To: <HE1PR06MB4011204B3FC2DAABB4BD1BACAC9B0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Tue, 8 Oct 2019 12:29:22 +0900
-X-Gmail-Original-Message-ID: <CAAFQd5BEPO3nicr1PzRNWoVEzsvKvv5AkqoMVh2AG7qST+bZdA@mail.gmail.com>
-Message-ID: <CAAFQd5BEPO3nicr1PzRNWoVEzsvKvv5AkqoMVh2AG7qST+bZdA@mail.gmail.com>
-Subject: Re: [PATCH v2 for 5.4 3/4] media: hantro: Fix motion vectors usage condition
-To:     Jonas Karlman <jonas@kwiboo.se>
-Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "kernel@collabora.com" <kernel@collabora.com>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        "fbuergisser@chromium.org" <fbuergisser@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191007213633.92565-1-davidgow@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonas,
+On Mon, Oct 07, 2019 at 02:36:33PM -0700, David Gow wrote:
+> +config LIST_TEST
+> +	bool "KUnit Test for Kernel Linked-list stuctures"
 
-On Tue, Oct 8, 2019 at 3:33 AM Jonas Karlman <jonas@kwiboo.se> wrote:
->
-> On 2019-10-07 19:45, Ezequiel Garcia wrote:
-> > From: Francois Buergisser <fbuergisser@chromium.org>
-> >
-> > The setting of the motion vectors usage and the setting of motion
-> > vectors address are currently done under different conditions.
-> >
-> > When decoding pre-recorded videos, this results of leaving the motion
-> > vectors address unset, resulting in faulty memory accesses. Fix it
-> > by using the same condition everywhere, which matches the profiles
-> > that support motion vectors.
->
-> This does not fully match hantro sdk:
->
->   enable direct MV writing and POC tables for high/main streams.
->   enable it also for any "baseline" stream which have main/high tools enabled.
->
->   (sps->profile_idc > 66 && sps->constrained_set0_flag == 0) ||
->   sps->frame_mbs_only_flag != 1 ||
->   sps->chroma_format_idc != 1 ||
->   sps->scaling_matrix_present_flag != 0 ||
->   pps->entropy_coding_mode_flag != 0 ||
->   pps->weighted_pred_flag != 0 ||
->   pps->weighted_bi_pred_idc != 0 ||
->   pps->transform8x8_flag != 0 ||
->   pps->scaling_matrix_present_flag != 0
+I missed this the first time through: typo of "structures"
 
-Thanks for double checking this. I can confirm that it's what Hantro
-SDK does indeed.
-
-However, would a stream with sps->profile_idc <= 66 and those other
-conditions met be still a compliant stream?
-
->
-> Above check is used when DIR_MV_BASE should be written.
-> And WRITE_MVS_E is set to nal_ref_idc != 0 when above is true.
->
-> I think it may be safer to always set DIR_MV_BASE and keep the existing nal_ref_idc check for WRITE_MVS_E.
-
-That might have a performance penalty or some other side effects,
-though. Otherwise Hantro SDK wouldn't have enable it conditionally.
-
-> (That is what I did in my "media: hantro: H264 fixes and improvements" series, v2 is incoming)
-> Or have you found any video that is having issues in such case?
-
-We've been running the code with sps->profile_idc > 66 in production
-for 4 years and haven't seen any reports of a stream that wasn't
-decoded correctly.
-
-If we decide to go with a different behavior, I'd suggest thoroughly
-verifying the behavior on a big number of streams, including some
-performance measurements.
-
-Best regards,
-Tomasz
-
->
-> Regards,
-> Jonas
->
-> >
-> > Fixes: dea0a82f3d22 ("media: hantro: Add support for H264 decoding on G1")
-> > Signed-off-by: Francois Buergisser <fbuergisser@chromium.org>
-> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > ---
-> > v2:
-> > * New patch.
-> >
-> >  drivers/staging/media/hantro/hantro_g1_h264_dec.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/staging/media/hantro/hantro_g1_h264_dec.c b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
-> > index 7ab534936843..c92460407613 100644
-> > --- a/drivers/staging/media/hantro/hantro_g1_h264_dec.c
-> > +++ b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
-> > @@ -35,7 +35,7 @@ static void set_params(struct hantro_ctx *ctx)
-> >       if (sps->flags & V4L2_H264_SPS_FLAG_MB_ADAPTIVE_FRAME_FIELD)
-> >               reg |= G1_REG_DEC_CTRL0_SEQ_MBAFF_E;
-> >       reg |= G1_REG_DEC_CTRL0_PICORD_COUNT_E;
-> > -     if (dec_param->nal_ref_idc)
-> > +     if (sps->profile_idc > 66)
-> >               reg |= G1_REG_DEC_CTRL0_WRITE_MVS_E;
-> >
-> >       if (!(sps->flags & V4L2_H264_SPS_FLAG_FRAME_MBS_ONLY) &&
->
+-- 
+Kees Cook
