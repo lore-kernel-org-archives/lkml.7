@@ -2,133 +2,116 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B12ECE58C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 21:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B84C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 21:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE23721835
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 21:22:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570569747;
-	bh=b2R98nFWJA8KQ9V8pVgOiwJ2juY6CvTkExzj2ehzTIQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iTwp/ODmKDECXURd7e3E/jJOEiXkfttCu5mVtz859W7F71D8N8zbnAlBKATn1QSEa
-	 NkeZZVS1Im3b4ykQFmDJoPDM2Sk+N7X2kaNrBEmcpyDybQUFClHpeT44H1pFwHBH2s
-	 ZgLfGySjb5zYDM6/KyoH7zP9DlaagbSzcJzx58jQ=
+	by mail.kernel.org (Postfix) with ESMTP id 31AB421871
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 21:22:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="cZ00oFaz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731118AbfJHVWZ (ORCPT
+        id S1731160AbfJHVWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 17:22:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55640 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730674AbfJHVWZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 17:22:25 -0400
-Received: from localhost (unknown [131.107.159.163])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A71421721;
-        Tue,  8 Oct 2019 21:22:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570569744;
-        bh=b2R98nFWJA8KQ9V8pVgOiwJ2juY6CvTkExzj2ehzTIQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vpmmdg5MTkxwa3zXfobJHRUbwnWMiu+EA3sK18sc4ke2+W62vZaJFbZ57kmPBs4XC
-         /CibLn3+WkAwGOu528NZN47XvQAOMcgaSH2WvDSLCql7NmQOjuGky5RZxkxFuz8sqE
-         wndV0BcOdcpbxhftcdDQNhN6cSrv4059R9xjP+AA=
-Date:   Tue, 8 Oct 2019 17:22:24 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Prakhar Srivastava <prsriva@linux.microsoft.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-        arnd@arndb.de, jean-philippe@linaro.org, allison@lohutok.net,
-        kristina.martsenko@arm.org, yamada.masahiro@socionext.com,
-        duwe@lst.de, mark.rutland@arm.com, tglx@linutronix.de,
-        takahiro.akashi@linaro.org, james.morse@arm.org,
-        catalin.marinas@arm.com, sboyd@kernel.org, bauerman@linux.ibm.com,
-        zohar@linux.ibm.com
-Subject: Re: [PATCH v2 1/2] Add support for arm64 to carry ima measurement
- log in kexec_file_load
-Message-ID: <20191008212224.GC1396@sasha-vm>
-References: <20191007185943.1828-1-prsriva@linux.microsoft.com>
- <20191007185943.1828-2-prsriva@linux.microsoft.com>
+        Tue, 8 Oct 2019 17:22:48 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46751 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730674AbfJHVWr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 17:22:47 -0400
+Received: by mail-pg1-f193.google.com with SMTP id b8so4643998pgm.13
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 14:22:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=OG8y2yjqwcKyZ/0narkDeEHuCiN7kZU2ER/a4tyXpjE=;
+        b=cZ00oFazORyAP9YjioGS8LdNPbIVdIVSxZIsbl4iOaaEbk7CvginJ2/mcC2/hKtOEe
+         dx1qmpsmLTpAJTzJGk3avzTODwmj9xceYd0E4NJiof0QpaCTg+egKW3cDFANqKkNrj03
+         3sk3Wcv2RdfGnmDY5/1yjao+NU2iOLxsn8AIeOy0AzLJ5HrbNuaHRAV4jZBcAI1FSUd/
+         lybraYAHIi9Ld9+QYnLUgIrP/9JEhYsCOrM2s7Qe5MtnFG/GggkQoHyMJ9Y+HsQ9Qnls
+         xbYHlGbVAmaR+qKyqnK2ws5NQx966ujYvW1x4Mx0ZqdyFtbz9wCIvRdMe3Dr1IkCkOzU
+         0RSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OG8y2yjqwcKyZ/0narkDeEHuCiN7kZU2ER/a4tyXpjE=;
+        b=IUQeZnH8YEjCx4UzQ9F/4nB6MVdX2nxseOKpO8H9mgCJSh3ZkpIYUX4C/84T2Tmiv+
+         aXuXpVTsV1Rny5t+aIetPRzNi5eQDHYADWgIO2DjJAEGWCvgbuQZS+xpf3On+Z65aHdC
+         SX1c5+GVLzMQ5+YBTsGddCgMa5RjgEajJuZG95c8hqsipZ6AKTZ/YT7wIRsDun9eIN0G
+         1fgf/VKjHEQKpPW0SdGYCDEPsqZsOne/CWPXQVeb97aU2+rlMeHrj+IAHGKnDAXDAx7o
+         N6Rq4ATnzWv4Or46ZUCnSevU8SajN9Ax0UCwpZkx0Ld5y4B1NZsR5au6XE/cooawXUS9
+         qEhg==
+X-Gm-Message-State: APjAAAVduyFJA7sRtqiYghF3uhN46kWhl4KoEEVAT677snYuxzHlIx4d
+        kM5dv92kq+QmlYAqKiQD5zq7a/AdmweeGQ==
+X-Google-Smtp-Source: APXvYqwEdHimHTD5NsKMKOHzTqFuq6gAtn676HiYi2DorhC6h2nYJCaCg4y4iFAlmNtBDPAA8k9DVg==
+X-Received: by 2002:a62:5ac3:: with SMTP id o186mr40660pfb.20.1570569766467;
+        Tue, 08 Oct 2019 14:22:46 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.79])
+        by smtp.gmail.com with ESMTPSA id k65sm138117pga.94.2019.10.08.14.22.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 08 Oct 2019 14:22:45 -0700 (PDT)
+Subject: Re: [PATCH] io_uring: remove wait loop spurious wakeups
+To:     Pavel Begunkov <asml.silence@gmail.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <936cd758d6c694fe1b8b9de050e24cfecdc2e60d.1570489620.git.asml.silence@gmail.com>
+ <e11a0716-eb18-4ce3-9902-3247beafe65a@kernel.dk>
+ <d035bb1b-e6f0-77db-a434-1761b0a7a142@gmail.com>
+ <62a8a6c7-9c5b-c9a4-9c73-c77db87c6637@kernel.dk>
+ <99bfb7aa-6980-fc14-32f7-a479dea63eb4@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <a1f8de23-fcad-7252-cbd4-8f5e617056cd@kernel.dk>
+Date:   Tue, 8 Oct 2019 15:22:43 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20191007185943.1828-2-prsriva@linux.microsoft.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <99bfb7aa-6980-fc14-32f7-a479dea63eb4@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 11:59:42AM -0700, Prakhar Srivastava wrote:
->During kexec_file_load, carrying forward the ima measurement log allows
->a verifying party to get the entire runtime event log since the last
->full reboot since that is when PCRs were last reset.
->
->Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
->---
-> arch/Kconfig                           |   6 +-
-> arch/arm64/include/asm/ima.h           |  24 +++
-> arch/arm64/include/asm/kexec.h         |   5 +
-> arch/arm64/kernel/Makefile             |   3 +-
-> arch/arm64/kernel/ima_kexec.c          |  78 ++++++++++
-> arch/arm64/kernel/machine_kexec_file.c |   6 +
-> drivers/of/Kconfig                     |   6 +
-> drivers/of/Makefile                    |   1 +
-> drivers/of/of_ima.c                    | 204 +++++++++++++++++++++++++
-> include/linux/of.h                     |  31 ++++
-> 10 files changed, 362 insertions(+), 2 deletions(-)
-> create mode 100644 arch/arm64/include/asm/ima.h
-> create mode 100644 arch/arm64/kernel/ima_kexec.c
-> create mode 100644 drivers/of/of_ima.c
->
->diff --git a/arch/Kconfig b/arch/Kconfig
->index a7b57dd42c26..d53e1596c5b1 100644
->--- a/arch/Kconfig
->+++ b/arch/Kconfig
->@@ -19,7 +19,11 @@ config KEXEC_CORE
-> 	bool
->
-> config HAVE_IMA_KEXEC
->-	bool
->+	bool "Carry over IMA measurement log during kexec_file_load() syscall"
->+	depends on KEXEC_FILE
->+	help
->+	  Select this option to carry over IMA measurement log during
->+	  kexec_file_load.
+On 10/8/19 2:58 PM, Pavel Begunkov wrote:
+> On 08/10/2019 20:00, Jens Axboe wrote:
+>> On 10/8/19 10:43 AM, Pavel Begunkov wrote:
+>>> On 08/10/2019 06:16, Jens Axboe wrote:
+>>>> On 10/7/19 5:18 PM, Pavel Begunkov (Silence) wrote:
+>>>>> From: Pavel Begunkov <asml.silence@gmail.com>
+>>>>>
+>>>>> Any changes interesting to tasks waiting in io_cqring_wait() are
+>>>>> commited with io_cqring_ev_posted(). However, io_ring_drop_ctx_refs()
+>>>>> also tries to do that but with no reason, that means spurious wakeups
+>>>>> every io_free_req() and io_uring_enter().
+>>>>>
+>>>>> Just use percpu_ref_put() instead.
+>>>>
+>>>> Looks good, this is a leftover from when the ctx teardown used
+>>>> the waitqueue as well.
+>>>>
+>>> BTW, is there a reason for ref-counting in struct io_kiocb? I understand
+>>> the idea behind submission reference, but don't see any actual part
+>>> needing it.
+>>
+>> In short, it's to prevent the completion running before we're done with
+>> the iocb on the submission side.
+> 
+> Yep, that's what I expected. Perhaps I missed something, but what I've
+> seen following code paths all the way down, it either
+> 1. gets error / completes synchronously and then frees req locally
+> 2. or passes it further (e.g. async list) and never accesses it after
 
-This change looks very wrong: HAVE_* config symbols are used to indicate
-the availability of certain arch specific capability, rather than act as
-a config option. How does this work with CONFIG_IMA_KEXEC ?
+As soon as the IO is passed on, it can complete. In fact, it can complete
+even _before_ that call returns. That's the issue. Obviously this isn't
+true for purely polled IO, but it is true for IRQ based IO.
 
-Also, please, at the very least verify that basic functionality works on
-the architectures we have access to. Trying it on x86:
+-- 
+Jens Axboe
 
-$ make allmodconfig
-scripts/kconfig/conf  --allmodconfig Kconfig
-#
-# No change to .config
-#
-$ make
-  CALL    scripts/checksyscalls.sh
-  CALL    scripts/atomic/check-atomics.sh
-  DESCEND  objtool
-  CC      security/integrity/ima/ima_fs.o
-In file included from security/integrity/ima/ima_fs.c:26:
-security/integrity/ima/ima.h:28:10: fatal error: asm/ima.h: No such file or directory
- #include <asm/ima.h>
-          ^~~~~~~~~~~
-compilation terminated.
-make[3]: *** [scripts/Makefile.build:266: security/integrity/ima/ima_fs.o] Error 1
-make[2]: *** [scripts/Makefile.build:509: security/integrity/ima] Error 2
-make[1]: *** [scripts/Makefile.build:509: security/integrity] Error 2
-make: *** [Makefile:1649: security] Error 2
-
---
-Thanks,
-Sasha
