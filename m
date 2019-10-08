@@ -2,152 +2,167 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B519BC47404
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC2DECE58C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BB002173B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:24:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="SAECd+P9"
+	by mail.kernel.org (Postfix) with ESMTP id 3392920835
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:25:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729854AbfJHBYF (ORCPT
+        id S1729727AbfJHBZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 21:24:05 -0400
-Received: from mail-eopbgr40054.outbound.protection.outlook.com ([40.107.4.54]:16448
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729389AbfJHBYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 21:24:05 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AGbRK+cO4Hn0tyormGesEL6umKnqcKc6bwMlcis/jgMTAKxgizhLi/Rm54uFQai8C1HFHJ/EgucERlSgK3OfsQS3oIe+YK1icTpz69OxxiBGKuTFKx1SmTwDG/HMRAhBcaC01ZZeDeHx+/qZqq6eYHKRzbEDfk1QJWpJ2cwSf52PLdkIFey0tXy2LSfEk0ujHZ2J0GgGjifs32um7BN35yfkvUO4rI2Cc/GBHOpTOuKhpjW2dXRpmbLRxaQXl43Iko5x81uL+q98U/ZRDNDC5b+vBDXovuvDuCVqaRISpDQkdxrHiJxSghqmCHw+jNJI7JDO7SJSJvYIYIVNhqg1Yg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PXdl6zGKYQr3UqXF+Q4qnSOYWnnZNBZXfydR2SOhWtU=;
- b=LSUEce54jO6KJzGfvd1QaMH34HkQ8UTuMo/C/WI6LCAxjYNm7+mQta9Mbg0lqbyUlW5tZlSqAlssJ3Ig+u30W/i94SAAr/fN+/ywlETT53tWU3xlxbHJc5oT/5H1aaW6pCS8993nhBoY6s94vI8tsOBrxPlWGdZhR/zdZ9RavygnlFKlReEQ6DQ+F6JQySDfeEMzaNULL+3VtGd1MhXv81XSe/T9PAi/qawFZW0GxBAkow3Q5VRCKIxvTju0BuHS6i9BNEC0NhyW00cH0T1p+DtYAYi+hGuW1svcllDj3ASVYIOgLlFlXZx+WzyJR/tCYh0Y3ZK1Ez4fVQ6DrklMfg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PXdl6zGKYQr3UqXF+Q4qnSOYWnnZNBZXfydR2SOhWtU=;
- b=SAECd+P9mCNGogUFk24tXdUux0039itunft1wp/sEvZiVVKfa4TY5xvxoCuXIWn22uyrWhhcsDi2Uio6zdMOdbU5E45ET0Cpi8Hdy9ApYHCb9avwmiVRINteUuBRBh5jbEa0xEYhew49SOSOCVa2QQNR6fU8L+bIxc/ZodY4SKY=
-Received: from AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) by
- AM5PR04MB3027.eurprd04.prod.outlook.com (10.173.254.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.24; Tue, 8 Oct 2019 01:23:55 +0000
-Received: from AM5PR04MB3299.eurprd04.prod.outlook.com
- ([fe80::5dd3:ddc9:411a:db41]) by AM5PR04MB3299.eurprd04.prod.outlook.com
- ([fe80::5dd3:ddc9:411a:db41%3]) with mapi id 15.20.2305.023; Tue, 8 Oct 2019
- 01:23:55 +0000
-From:   Xiaowei Bao <xiaowei.bao@nxp.com>
-To:     Andrew Murray <andrew.murray@arm.com>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
+        Mon, 7 Oct 2019 21:25:39 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:52193 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729327AbfJHBZi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 21:25:38 -0400
+X-UUID: fdc1729b23f040bcba897059c71b9714-20191008
+X-UUID: fdc1729b23f040bcba897059c71b9714-20191008
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        (envelope-from <weiyi.lu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 307946823; Tue, 08 Oct 2019 09:25:32 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 8 Oct 2019 09:25:30 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 8 Oct 2019 09:25:30 +0800
+Message-ID: <1570497930.1483.0.camel@mtksdaap41>
+Subject: Re: [PATCH v7 02/13] dt-bindings: soc: Add MT8183 power dt-bindings
+From:   Weiyi Lu <weiyi.lu@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Nicolas Boichat <drinkcat@chromium.org>,
+        Rob Herring <robh@kernel.org>,
+        James Liao <jamesjj.liao@mediatek.com>,
+        Fan Chen <fan.chen@mediatek.com>,
         <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Subject: RE: [PATCH v4 11/11] misc: pci_endpoint_test: Add LS1088a in
- pci_device_id table
-Thread-Topic: [PATCH v4 11/11] misc: pci_endpoint_test: Add LS1088a in
- pci_device_id table
-Thread-Index: AQHVcn/x16DzWe6fqE+HQYFU7grjl6dEWbwAgAuvO5A=
-Date:   Tue, 8 Oct 2019 01:23:55 +0000
-Message-ID: <AM5PR04MB329958D65C0D0B5172FEBE07F59A0@AM5PR04MB3299.eurprd04.prod.outlook.com>
-References: <20190924021849.3185-1-xiaowei.bao@nxp.com>
- <20190924021849.3185-12-xiaowei.bao@nxp.com>
- <20190930145723.GC42880@e119886-lin.cambridge.arm.com>
-In-Reply-To: <20190930145723.GC42880@e119886-lin.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=xiaowei.bao@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f6a50e3b-2525-438e-9b04-08d74b8e3005
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: AM5PR04MB3027:|AM5PR04MB3027:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM5PR04MB3027E3B88FE9BA9C30801119F59A0@AM5PR04MB3027.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3513;
-x-forefront-prvs: 01842C458A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(136003)(396003)(366004)(376002)(13464003)(199004)(189003)(305945005)(66446008)(64756008)(9686003)(6436002)(102836004)(76176011)(53546011)(229853002)(6506007)(256004)(8936002)(7416002)(14454004)(33656002)(81166006)(81156014)(4326008)(44832011)(54906003)(66476007)(478600001)(66556008)(74316002)(316002)(8676002)(6246003)(55016002)(52536014)(6116002)(86362001)(25786009)(26005)(71190400001)(71200400001)(7696005)(7736002)(486006)(2906002)(76116006)(11346002)(446003)(5660300002)(66066001)(66946007)(6916009)(3846002)(186003)(99286004)(476003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR04MB3027;H:AM5PR04MB3299.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: wTa4eLZVGRwiH5mvZdD9d4dvHBKed8mHXgExF3snZqV7NTFpr3f2NzQKH5l9mdRhVdyTUDide3mtdHPA/8ccdU2s68cXiO9iDkL1rd6yktcC4cohu6Qdm/+r7+3f76ze9tTe3phqrshiypZ2WuMtPjWIu2U/cTn5sdNpMOmbf3EmHP8z5kQLp7eyKR/BTx4UXPke901+SdjEtlVJJ/zB+MdmYrYR8wj1W4WmOk/HmKeKT1a+OuoU+Ol3qEKvCYcACQVRqv9UL6gqeMYLbg7INqYkS+vPg2hVnON+FbxKJ4awdZgWdF16WA+W5C7hpXcre702+cSbioWvzouNX+/EWdSNKSr2Kg5Wp5F63NN1gvUTcnhSsGhO7G4zLYwHNr+tyBJ7v/lqRnbxgfbf4O6SvCYq1dv5OoMHAFnUFp6eDO8=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, Yong Wu <yong.wu@mediatek.com>
+Date:   Tue, 8 Oct 2019 09:25:30 +0800
+In-Reply-To: <48655b84-fd20-f417-529c-b81a7d64d63d@gmail.com>
+References: <1566983506-26598-1-git-send-email-weiyi.lu@mediatek.com>
+         <1566983506-26598-3-git-send-email-weiyi.lu@mediatek.com>
+         <48655b84-fd20-f417-529c-b81a7d64d63d@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f6a50e3b-2525-438e-9b04-08d74b8e3005
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Oct 2019 01:23:55.8358
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7ZQfdJQG7kEn+VRMm8DaviIrY2kXwnl/5vHTpx0CRCdmdxwlh+x+XFJA9wmJPdb18GvHWMBTGxqZQoVruRw8EA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3027
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 578EE69AAD1693E32ACFE0DC740AB3F9176CFE3AF9905C35F6FC95A5F7A7086C2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5kcmV3IE11cnJheSA8
-YW5kcmV3Lm11cnJheUBhcm0uY29tPg0KPiBTZW50OiAyMDE5xOo51MIzMMjVIDIyOjU3DQo+IFRv
-OiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gQ2M6IHJvYmgrZHRAa2VybmVs
-Lm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IHNoYXduZ3VvQGtlcm5lbC5vcmc7IExlbw0KPiBM
-aSA8bGVveWFuZy5saUBueHAuY29tPjsga2lzaG9uQHRpLmNvbTsgbG9yZW56by5waWVyYWxpc2lA
-YXJtLmNvbTsgTS5oLg0KPiBMaWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBNaW5na2FpIEh1
-IDxtaW5na2FpLmh1QG54cC5jb20+OyBSb3kNCj4gWmFuZyA8cm95LnphbmdAbnhwLmNvbT47IGpp
-bmdvb2hhbjFAZ21haWwuY29tOw0KPiBndXN0YXZvLnBpbWVudGVsQHN5bm9wc3lzLmNvbTsgbGlu
-dXgtcGNpQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
-YWQub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgta2VybmVsQHZnZXIu
-a2VybmVsLm9yZzsgbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcNCj4gU3ViamVjdDogUmU6
-IFtQQVRDSCB2NCAxMS8xMV0gbWlzYzogcGNpX2VuZHBvaW50X3Rlc3Q6IEFkZCBMUzEwODhhIGlu
-DQo+IHBjaV9kZXZpY2VfaWQgdGFibGUNCj4gDQo+IE9uIFR1ZSwgU2VwIDI0LCAyMDE5IGF0IDEw
-OjE4OjQ5QU0gKzA4MDAsIFhpYW93ZWkgQmFvIHdyb3RlOg0KPiA+IEFkZCBMUzEwODhhIGluIHBj
-aV9kZXZpY2VfaWQgdGFibGUgc28gdGhhdCBwY2ktZXBmLXRlc3QgY2FuIGJlIHVzZWQNCj4gPiBm
-b3IgdGVzdGluZyBQQ0llIEVQIGluIExTMTA4OGEuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBY
-aWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiB2MjoNCj4gPiAg
-LSBObyBjaGFuZ2UuDQo+ID4gdjM6DQo+ID4gIC0gTm8gY2hhbmdlLg0KPiA+IHY0Og0KPiA+ICAt
-IFVzZSBhIG1hY28gdG8gZGVmaW5lIHRoZSBMUzEwODhhIGRldmljZSBJRC4NCj4gPg0KPiA+ICBk
-cml2ZXJzL21pc2MvcGNpX2VuZHBvaW50X3Rlc3QuYyB8IDIgKysNCj4gPiAgMSBmaWxlIGNoYW5n
-ZWQsIDIgaW5zZXJ0aW9ucygrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWlzYy9w
-Y2lfZW5kcG9pbnRfdGVzdC5jDQo+ID4gYi9kcml2ZXJzL21pc2MvcGNpX2VuZHBvaW50X3Rlc3Qu
-Yw0KPiA+IGluZGV4IDZlMjA4YTAuLjhjMjIyYTYgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9t
-aXNjL3BjaV9lbmRwb2ludF90ZXN0LmMNCj4gPiArKysgYi9kcml2ZXJzL21pc2MvcGNpX2VuZHBv
-aW50X3Rlc3QuYw0KPiA+IEBAIC02NSw2ICs2NSw3IEBADQo+ID4gICNkZWZpbmUgUENJX0VORFBP
-SU5UX1RFU1RfSVJRX05VTUJFUgkJMHgyOA0KPiA+DQo+ID4gICNkZWZpbmUgUENJX0RFVklDRV9J
-RF9USV9BTTY1NAkJCTB4YjAwYw0KPiA+ICsjZGVmaW5lIFBDSV9ERVZJQ0VfSURfTFMxMDg4QQkJ
-CTB4ODBjMA0KPiANCj4gUmV2aWV3ZWQtYnk6IEFuZHJldyBNdXJyYXkgPGFuZHJldy5tdXJyYXlA
-YXJtLmNvbT4NCg0KVGhhbmtzIEFuZHJldy4NCg0KPiANCj4gPg0KPiA+ICAjZGVmaW5lIGlzX2Ft
-NjU0X3BjaV9kZXYocGRldikJCVwNCj4gPiAgCQkoKHBkZXYpLT5kZXZpY2UgPT0gUENJX0RFVklD
-RV9JRF9USV9BTTY1NCkgQEAgLTc5Myw2ICs3OTQsNw0KPiBAQA0KPiA+IHN0YXRpYyBjb25zdCBz
-dHJ1Y3QgcGNpX2RldmljZV9pZCBwY2lfZW5kcG9pbnRfdGVzdF90YmxbXSA9IHsNCj4gPiAgCXsg
-UENJX0RFVklDRShQQ0lfVkVORE9SX0lEX1RJLCBQQ0lfREVWSUNFX0lEX1RJX0RSQTc0eCkgfSwN
-Cj4gPiAgCXsgUENJX0RFVklDRShQQ0lfVkVORE9SX0lEX1RJLCBQQ0lfREVWSUNFX0lEX1RJX0RS
-QTcyeCkgfSwNCj4gPiAgCXsgUENJX0RFVklDRShQQ0lfVkVORE9SX0lEX0ZSRUVTQ0FMRSwgMHg4
-MWMwKSB9LA0KPiA+ICsJeyBQQ0lfREVWSUNFKFBDSV9WRU5ET1JfSURfRlJFRVNDQUxFLCBQQ0lf
-REVWSUNFX0lEX0xTMTA4OEEpIH0sDQo+ID4gIAl7IFBDSV9ERVZJQ0VfREFUQShTWU5PUFNZUywg
-RUREQSwgTlVMTCkgfSwNCj4gPiAgCXsgUENJX0RFVklDRShQQ0lfVkVORE9SX0lEX1RJLCBQQ0lf
-REVWSUNFX0lEX1RJX0FNNjU0KSwNCj4gPiAgCSAgLmRyaXZlcl9kYXRhID0gKGtlcm5lbF91bG9u
-Z190KSZhbTY1NF9kYXRhDQo+ID4gLS0NCj4gPiAyLjkuNQ0KPiA+DQo=
+On Wed, 2019-08-28 at 11:39 +0200, Matthias Brugger wrote:
+> 
+> On 28/08/2019 11:11, Weiyi Lu wrote:
+> > Add power dt-bindings of MT8183 and introduces "BASIC" and
+> > "SUBSYS" clock types in binding document.
+> > The "BASIC" type is compatible to the original power control with
+> > clock name [a-z]+[0-9]*, e.g. mm, vpu1.
+> > The "SUBSYS" type is used for bus protection control with clock
+> > name [a-z]+-[0-9]+, e.g. isp-0, cam-1.
+> > 
+> > Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
+> > ---
+> >  .../devicetree/bindings/soc/mediatek/scpsys.txt    | 14 ++++++++++++
+> >  include/dt-bindings/power/mt8183-power.h           | 26 ++++++++++++++++++++++
+> >  2 files changed, 40 insertions(+)
+> >  create mode 100644 include/dt-bindings/power/mt8183-power.h
+> > 
+> > diff --git a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+> > index 876693a..00eab7e 100644
+> > --- a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+> > +++ b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+> > @@ -14,6 +14,7 @@ power/power_domain.txt. It provides the power domains defined in
+> >  - include/dt-bindings/power/mt2701-power.h
+> >  - include/dt-bindings/power/mt2712-power.h
+> >  - include/dt-bindings/power/mt7622-power.h
+> > +- include/dt-bindings/power/mt8183-power.h
+> >  
+> >  Required properties:
+> >  - compatible: Should be one of:
+> > @@ -25,18 +26,31 @@ Required properties:
+> >  	- "mediatek,mt7623a-scpsys": For MT7623A SoC
+> >  	- "mediatek,mt7629-scpsys", "mediatek,mt7622-scpsys": For MT7629 SoC
+> >  	- "mediatek,mt8173-scpsys"
+> > +	- "mediatek,mt8183-scpsys"
+> >  - #power-domain-cells: Must be 1
+> >  - reg: Address range of the SCPSYS unit
+> >  - infracfg: must contain a phandle to the infracfg controller
+> >  - clock, clock-names: clocks according to the common clock binding.
+> >                        These are clocks which hardware needs to be
+> >                        enabled before enabling certain power domains.
+> > +                      The new clock type "BASIC" belongs to the type above.
+> > +                      As to the new clock type "SUBSYS" needs to be
+> > +                      enabled before releasing bus protection.
+> 
+> The new clock type won't be new in a couple of month, better reword this. E.g.:
+> Some SoCs have to groups of clocks. BASIC clocks need to be enabled before
+> enabling the corresponding power domain. SUBSYS clocks need to be enabled before
+> releasing the bus protection.
+> 
+
+Got it, I'll reword in next version. Many thanks.
+
+> >  	Required clocks for MT2701 or MT7623: "mm", "mfg", "ethif"
+> >  	Required clocks for MT2712: "mm", "mfg", "venc", "jpgdec", "audio", "vdec"
+> >  	Required clocks for MT6797: "mm", "mfg", "vdec"
+> >  	Required clocks for MT7622 or MT7629: "hif_sel"
+> >  	Required clocks for MT7623A: "ethif"
+> >  	Required clocks for MT8173: "mm", "mfg", "venc", "venc_lt"
+> > +	Required clocks for MT8183: BASIC: "audio", "mfg", "mm", "cam", "isp",
+> > +					   "vpu", "vpu1", "vpu2", "vpu3"
+> > +				    SUBSYS: "mm-0", "mm-1", "mm-2", "mm-3",
+> > +					    "mm-4", "mm-5", "mm-6", "mm-7",
+> > +					    "mm-8", "mm-9", "isp-0", "isp-1",
+> > +					    "cam-0", "cam-1", "cam-2", "cam-3",
+> > +					    "cam-4", "cam-5", "cam-6", "vpu-0",
+> > +					    "vpu-1", "vpu-2", "vpu-3", "vpu-4",
+> > +					    "vpu-5"
+> >  
+> >  Optional properties:
+> >  - vdec-supply: Power supply for the vdec power domain
+> > diff --git a/include/dt-bindings/power/mt8183-power.h b/include/dt-bindings/power/mt8183-power.h
+> > new file mode 100644
+> > index 0000000..5c0c8c7
+> > --- /dev/null
+> > +++ b/include/dt-bindings/power/mt8183-power.h
+> > @@ -0,0 +1,26 @@
+> > +/* SPDX-License-Identifier: GPL-2.0
+> > + *
+> > + * Copyright (c) 2018 MediaTek Inc.
+> > + * Author: Weiyi Lu <weiyi.lu@mediatek.com>
+> > + */
+> > +
+> > +#ifndef _DT_BINDINGS_POWER_MT8183_POWER_H
+> > +#define _DT_BINDINGS_POWER_MT8183_POWER_H
+> > +
+> > +#define MT8183_POWER_DOMAIN_AUDIO	0
+> > +#define MT8183_POWER_DOMAIN_CONN	1
+> > +#define MT8183_POWER_DOMAIN_MFG_ASYNC	2
+> > +#define MT8183_POWER_DOMAIN_MFG		3
+> > +#define MT8183_POWER_DOMAIN_MFG_CORE0	4
+> > +#define MT8183_POWER_DOMAIN_MFG_CORE1	5
+> > +#define MT8183_POWER_DOMAIN_MFG_2D	6
+> > +#define MT8183_POWER_DOMAIN_DISP	7
+> > +#define MT8183_POWER_DOMAIN_CAM		8
+> > +#define MT8183_POWER_DOMAIN_ISP		9
+> > +#define MT8183_POWER_DOMAIN_VDEC	10
+> > +#define MT8183_POWER_DOMAIN_VENC	11
+> > +#define MT8183_POWER_DOMAIN_VPU_TOP	12
+> > +#define MT8183_POWER_DOMAIN_VPU_CORE0	13
+> > +#define MT8183_POWER_DOMAIN_VPU_CORE1	14
+> > +
+> > +#endif /* _DT_BINDINGS_POWER_MT8183_POWER_H */
+> > 
+
+
