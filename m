@@ -2,137 +2,171 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FE5C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0014FC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3C7520673
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:41:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="gzrZL23T"
+	by mail.kernel.org (Postfix) with ESMTP id D752520673
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:42:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726068AbfJHNlO (ORCPT
+        id S1726070AbfJHNmt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 09:41:14 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:42651 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725795AbfJHNlO (ORCPT
+        Tue, 8 Oct 2019 09:42:49 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:36103 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbfJHNms (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 09:41:14 -0400
-Received: by mail-qk1-f193.google.com with SMTP id f16so16749714qkl.9
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 06:41:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=QnyLnvGAcx9kjpc3HCZ8Vnq/dzsuUJCJ33fI/g9/tOc=;
-        b=gzrZL23Tkk1b+YphyrvY/WJDNeV6J40/ra1E3pWhmw/cxEOf6YQFAOYaKXWJFLW1DE
-         OzPRrzEhyXzxxmwSY24Kiy94vWfyK8Qb36nCaanYdnnf9YWTacwtD0jIYAXN8rLgA0g/
-         0CzFdmgxmzr6GXIsFcjFyEJ8UUaqDk6PaYFWoFMXvzr7UmNstkt6tAwqTuqMBK8ixSU1
-         A7QCsgmG6w6qQUSg//n48hL5EHvf2TYOGl/5whJZeP7xB+gSpNRpTkHlR/ptSEGzqRJR
-         VY3B6dHqBzL56tndP+WQeXqdZM0yabViZt9NGM/lqgZizpbos45C+EVadqEINVl7OXdv
-         vD+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=QnyLnvGAcx9kjpc3HCZ8Vnq/dzsuUJCJ33fI/g9/tOc=;
-        b=fJmvjm6kRO+Xa/A7vjnOpS4rmyxWjf4QPaJjUooMFY2lwFsHc9nuRI12EfPdfdQtJM
-         BWCYVVCM9FDPJE3dIq5hugdbS9lvhklgsM9up3gjxV3vRsL9asHn0jRGOGHUby5So1yT
-         OdJcnRc7vlD01ECuW1Ruh5y/SnWevMJxMWZxMrTW4M4pvIrC02FaSFeKdkKRLNNsaRmL
-         zK/HaK5psKpziVvHlfidtxrOdBqB3KU69FPtZ7rHeZlBo1R06qX8XLcCjlOMEHvwtTUG
-         Rcp7aB30vv7g4X/8sFe6Kqj0TVgKfj+CHLs5cXlk12Jl//rVbrd1STcmrUyFyIMyOmgI
-         G1Qg==
-X-Gm-Message-State: APjAAAUBRvYPuQZ1X38c+eNAkD2RZIerA1QT0UHiTscCC6nMyQrSvpaW
-        hlMNLV1JaZOUE0mDVTuLr5WcqA==
-X-Google-Smtp-Source: APXvYqwzZmNVMlZftb8sNlA///WKChp/vBiPYVwiSCkAByIzuJ9Fp6ka4j7O0KNiMsuKyA8lSYgJAw==
-X-Received: by 2002:a37:52d5:: with SMTP id g204mr29297331qkb.44.1570542073391;
-        Tue, 08 Oct 2019 06:41:13 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id b1sm7775109qtr.17.2019.10.08.06.41.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 08 Oct 2019 06:41:12 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     vitaly.wool@konsulko.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH -next] mm/z3fold: fix -Wunused-but-set-variable warnings
-Date:   Tue,  8 Oct 2019 09:41:02 -0400
-Message-Id: <1570542062-29144-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Tue, 8 Oct 2019 09:42:48 -0400
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1iHplH-0003AG-N2; Tue, 08 Oct 2019 15:42:47 +0200
+Message-ID: <1570542167.18914.5.camel@pengutronix.de>
+Subject: Re: [PATCH] reset: hi6220: Add support for AO reset controller
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Cc:     Peter Griffin <peter.griffin@linaro.org>,
+        Enrico Weigelt <info@metux.net>
+Date:   Tue, 08 Oct 2019 15:42:47 +0200
+In-Reply-To: <20191001182114.69699-1-john.stultz@linaro.org>
+References: <20191001182114.69699-1-john.stultz@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The linux-next commit "mm/z3fold.c: add inter-page compaction" [1]
-introduced a few GCC compilation warnings.
+Hi John, Peter,
 
-mm/z3fold.c: In function 'compact_single_buddy':
-mm/z3fold.c:693:16: warning: variable 'newpage' set but not used
-[-Wunused-but-set-variable]
-   struct page *newpage;
-                ^~~~~~~
-mm/z3fold.c:664:13: warning: variable 'bud' set but not used
-[-Wunused-but-set-variable]
-  enum buddy bud;
-             ^~~
-Simply remove those seems accidentally left-over code.
+On Tue, 2019-10-01 at 18:21 +0000, John Stultz wrote:
+> From: Peter Griffin <peter.griffin@linaro.org>
+> 
+> This is required to bring Mali450 gpu out of reset.
 
-[1] http://lkml.kernel.org/r/20191006041457.24113-1-vitalywool@gmail.com
+Do you know whether this is actually a module reset going to the GPU,
+or if this is somehow part of the clock and power gating machinery?
+There's also clock and isolation cell control going on, so this looks a
+bit like it should be part of a power domain driver.
+Do you have an (internal or external) regulator that could be disabled
+while the GPU is inactive, like [1]?
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- mm/z3fold.c | 6 ------
- 1 file changed, 6 deletions(-)
+[1] https://raw.githubusercontent.com/96boards/meta-96boards/master/recipes-kernel/linux/linux-96boards/0004-drivers-gpu-arm-utgard-add-basic-HiKey-platform-file.patch
 
-diff --git a/mm/z3fold.c b/mm/z3fold.c
-index 25713a4a7186..d48d0ec3bcdd 100644
---- a/mm/z3fold.c
-+++ b/mm/z3fold.c
-@@ -661,7 +661,6 @@ static struct z3fold_header *compact_single_buddy(struct z3fold_header *zhdr)
- 	struct z3fold_pool *pool = zhdr_to_pool(zhdr);
- 	void *p = zhdr;
- 	unsigned long old_handle = 0;
--	enum buddy bud;
- 	size_t sz = 0;
- 	struct z3fold_header *new_zhdr = NULL;
- 	int first_idx = __idx(zhdr, FIRST);
-@@ -673,24 +672,20 @@ static struct z3fold_header *compact_single_buddy(struct z3fold_header *zhdr)
- 	 * the page lock is already taken
- 	 */
- 	if (zhdr->first_chunks && zhdr->slots->slot[first_idx]) {
--		bud = FIRST;
- 		p += ZHDR_SIZE_ALIGNED;
- 		sz = zhdr->first_chunks << CHUNK_SHIFT;
- 		old_handle = (unsigned long)&zhdr->slots->slot[first_idx];
- 	} else if (zhdr->middle_chunks && zhdr->slots->slot[middle_idx]) {
--		bud = MIDDLE;
- 		p += zhdr->start_middle << CHUNK_SHIFT;
- 		sz = zhdr->middle_chunks << CHUNK_SHIFT;
- 		old_handle = (unsigned long)&zhdr->slots->slot[middle_idx];
- 	} else if (zhdr->last_chunks && zhdr->slots->slot[last_idx]) {
--		bud = LAST;
- 		p += PAGE_SIZE - (zhdr->last_chunks << CHUNK_SHIFT);
- 		sz = zhdr->last_chunks << CHUNK_SHIFT;
- 		old_handle = (unsigned long)&zhdr->slots->slot[last_idx];
- 	}
- 
- 	if (sz > 0) {
--		struct page *newpage;
- 		enum buddy new_bud = HEADLESS;
- 		short chunks = size_to_chunks(sz);
- 		void *q;
-@@ -699,7 +694,6 @@ static struct z3fold_header *compact_single_buddy(struct z3fold_header *zhdr)
- 		if (!new_zhdr)
- 			return NULL;
- 
--		newpage = virt_to_page(new_zhdr);
- 		if (WARN_ON(new_zhdr == zhdr))
- 			goto out_fail;
- 
--- 
-1.8.3.1
+> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> Cc: Peter Griffin <peter.griffin@linaro.org>
+> Cc: Enrico Weigelt <info@metux.net>
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> ---
+>  drivers/reset/hisilicon/hi6220_reset.c | 51 +++++++++++++++++++++++++-
+>  1 file changed, 50 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/reset/hisilicon/hi6220_reset.c b/drivers/reset/hisilicon/hi6220_reset.c
+> index 24e6d420b26b..d84674a2cead 100644
+> --- a/drivers/reset/hisilicon/hi6220_reset.c
+> +++ b/drivers/reset/hisilicon/hi6220_reset.c
+> @@ -33,6 +33,7 @@
+>  enum hi6220_reset_ctrl_type {
+>  	PERIPHERAL,
+>  	MEDIA,
+> +	AO,
+>  };
+>  
+>  struct hi6220_reset_data {
+> @@ -92,6 +93,47 @@ static const struct reset_control_ops hi6220_media_reset_ops = {
+>  	.deassert = hi6220_media_deassert,
+>  };
+>  
+> +#define AO_SCTRL_SC_PW_CLKEN0     0x800
+> +#define AO_SCTRL_SC_PW_CLKDIS0    0x804
+> +
+> +#define AO_SCTRL_SC_PW_RSTEN0     0x810
+> +#define AO_SCTRL_SC_PW_RSTDIS0    0x814
+> +
+> +#define AO_SCTRL_SC_PW_ISOEN0     0x820
+> +#define AO_SCTRL_SC_PW_ISODIS0    0x824
+> +#define AO_MAX_INDEX              12
+> +
+> +static int hi6220_ao_assert(struct reset_controller_dev *rc_dev,
+> +			    unsigned long idx)
+> +{
+> +	struct hi6220_reset_data *data = to_reset_data(rc_dev);
+> +	struct regmap *regmap = data->regmap;
+> +	int ret;
+> +
+> +	ret = regmap_write(regmap, AO_SCTRL_SC_PW_RSTEN0, BIT(idx));
+> +	ret |= regmap_write(regmap, AO_SCTRL_SC_PW_ISOEN0, BIT(idx));
+> +	ret |= regmap_write(regmap, AO_SCTRL_SC_PW_CLKDIS0, BIT(idx));
 
+I would like the return values not to be ORed together, since they are
+returned to the caller.
+
+> +	return ret;
+> +}
+> +
+> +static int hi6220_ao_deassert(struct reset_controller_dev *rc_dev,
+> +			      unsigned long idx)
+> +{
+> +	struct hi6220_reset_data *data = to_reset_data(rc_dev);
+> +	struct regmap *regmap = data->regmap;
+> +	int ret;
+> +
+> +	ret = regmap_write(regmap, AO_SCTRL_SC_PW_RSTDIS0, BIT(idx));
+> +	ret |= regmap_write(regmap, AO_SCTRL_SC_PW_ISODIS0, BIT(idx));
+> +	ret |= regmap_write(regmap, AO_SCTRL_SC_PW_CLKEN0, BIT(idx));
+
+Are you sure these are fire and forget, or might the order be important?
+
+It might be necessary to disable isolation before enabling the clocks
+and deasserting reset, to avoid glitches.
+
+> +	return ret;
+> +}
+> +
+> +static const struct reset_control_ops hi6220_ao_reset_ops = {
+> +	.assert = hi6220_ao_assert,
+> +	.deassert = hi6220_ao_deassert,
+> +};
+> +
+>  static int hi6220_reset_probe(struct platform_device *pdev)
+>  {
+>  	struct device_node *np = pdev->dev.of_node;
+> @@ -117,9 +159,12 @@ static int hi6220_reset_probe(struct platform_device *pdev)
+>  	if (type == MEDIA) {
+>  		data->rc_dev.ops = &hi6220_media_reset_ops;
+>  		data->rc_dev.nr_resets = MEDIA_MAX_INDEX;
+> -	} else {
+> +	} else if (type == PERIPHERAL) {
+>  		data->rc_dev.ops = &hi6220_peripheral_reset_ops;
+>  		data->rc_dev.nr_resets = PERIPH_MAX_INDEX;
+> +	} else {
+> +		data->rc_dev.ops = &hi6220_ao_reset_ops;
+> +		data->rc_dev.nr_resets = AO_MAX_INDEX;
+>  	}
+>  
+>  	return reset_controller_register(&data->rc_dev);
+> @@ -134,6 +179,10 @@ static const struct of_device_id hi6220_reset_match[] = {
+>  		.compatible = "hisilicon,hi6220-mediactrl",
+>  		.data = (void *)MEDIA,
+>  	},
+> +	{
+> +		.compatible = "hisilicon,hi6220-aoctrl",
+> +		.data = (void *)AO,
+> +	},
+>  	{ /* sentinel */ },
+>  };
+>  MODULE_DEVICE_TABLE(of, hi6220_reset_match);
+
+regards
+Philipp
