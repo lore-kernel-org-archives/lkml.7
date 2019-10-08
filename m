@@ -2,113 +2,68 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDCA5C35280
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C80C35280
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7C722070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:11:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H6F4206g"
+	by mail.kernel.org (Postfix) with ESMTP id 9923620815
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:12:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbfJHQLc (ORCPT
+        id S1728081AbfJHQMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 12:11:32 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42080 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725966AbfJHQLb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 12:11:31 -0400
-Received: by mail-lj1-f195.google.com with SMTP id y23so18171056lje.9;
-        Tue, 08 Oct 2019 09:11:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AT+kDpEjrdBshsMqJBNVg8JsTs5Ln99yNIaxkRDtThA=;
-        b=H6F4206g5t18kFz01VuQPieIxoQpVLKANGGFoXM6ePueTOX2VPQy9nC+c5TYLTnnzm
-         cXmJh9QSTByOD5ZAOuYOjClZi5iBiCF0vNx1zq00dK7Wyi1H1+gZlfWIMVXePyHUeYca
-         DY1z20zNcqEog30lb3AZ6JYZ1rz+7vvs4wfDZc0EOU+hH9z4Q1aohsLuA7I8reUzxSLw
-         3K8n5XJvZDHvVgXXusNohBOFHHLJC86XiJ/xtyMX1XKyUSo2F2L+ZdP+p3GKZUX8WDMv
-         B8EVK03VA/5XGiwYMQQnR7PVYVqDziUUOGQJqQZlwKxx2OrIIOUYImbDXX5TRgaykp2i
-         qvKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AT+kDpEjrdBshsMqJBNVg8JsTs5Ln99yNIaxkRDtThA=;
-        b=ECJwNgmcDo/Shvz3vVGn9uI2XqEpooBCzy+1KaVHFJTHyjBkRgiOGBdz55f0FTPEDp
-         Wd8H6t0e/6XXLYUMCi6fEgvd3XF2XxPguJBAUuHOSveIqF13aPsAsMKgaX9Lnk8yN8xL
-         dRAXN/sgYdVIuf/eT1FcwiAegexdByDDNOY4ymxhV0L7zcWszjuDovWogPqXHybKr4FU
-         NZ4NcYsiSGqDNpAcz47/N331bqzteFByo3X7mQk1k1Nt8bNCxixMjCctW5+vaqjoEONF
-         26Q/gk4SMm8d51Eu75goNxmiTHYViqN1rjPwonoz+pD49Ph4ctkdPV1Ih0YR7ADRXG1X
-         ij6g==
-X-Gm-Message-State: APjAAAUxObYZw+iYflbK0k1zam7JImYFLEH8kWI3PnxXlUTsoiP00nov
-        ZVibZ7eSKZOvxUEm1YMsKlA2sYC0cpSfTW6kRp4=
-X-Google-Smtp-Source: APXvYqwn5DlZGijUmc7DgbkIfu62kvr3NLZ18Ba3IyP+/Ho1XmFOjIm2o1fNq5KIpNcvuRoaxSrAnDitq5DGjmcTndI=
-X-Received: by 2002:a2e:7502:: with SMTP id q2mr23044246ljc.202.1570551089481;
- Tue, 08 Oct 2019 09:11:29 -0700 (PDT)
+        Tue, 8 Oct 2019 12:12:50 -0400
+Received: from mga04.intel.com ([192.55.52.120]:42615 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725908AbfJHQMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 12:12:49 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 09:12:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,270,1566889200"; 
+   d="scan'208";a="206667983"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga001.fm.intel.com with ESMTP; 08 Oct 2019 09:12:47 -0700
+Received: from andy by smile with local (Exim 4.92.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iHs6P-0003r1-Mi; Tue, 08 Oct 2019 19:12:45 +0300
+Date:   Tue, 8 Oct 2019 19:12:45 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Tuowen Zhao <ztuowen@gmail.com>, lee.jones@linaro.org,
+        linux-kernel@vger.kernel.org, mika.westerberg@linux.intel.com,
+        acelan.kao@canonical.com, bhelgaas@google.com,
+        kai.heng.feng@canonical.com
+Subject: Re: [PATCH v2] mfd: intel-lpss: use devm_ioremap_uc for MMIO
+Message-ID: <20191008161245.GU32742@smile.fi.intel.com>
+References: <20191007184231.13256-1-ztuowen@gmail.com>
+ <20191008151628.GA16384@42.do-not-panic.com>
 MIME-Version: 1.0
-References: <20190904171723.2956-1-robdclark@gmail.com>
-In-Reply-To: <20190904171723.2956-1-robdclark@gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Tue, 8 Oct 2019 13:11:19 -0300
-Message-ID: <CAOMZO5DgnB0kuSTxg1=ngJYiRvbq6bqBC4K-R5nQMzEinBYq7A@mail.gmail.com>
-Subject: Re: [PATCH] drm/msm: Use the correct dma_sync calls harder
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     DRI mailing list <dri-devel@lists.freedesktop.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <freedreno@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191008151628.GA16384@42.do-not-panic.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On Tue, Oct 08, 2019 at 03:16:28PM +0000, Luis Chamberlain wrote:
+> On Mon, Oct 07, 2019 at 12:42:31PM -0600, Tuowen Zhao wrote:
+> > +EXPORT_SYMBOL(devm_ioremap_uc);
+> 
+> EXPORT_SYMBOL_GPL() would be my preference.
 
-On Wed, Sep 4, 2019 at 2:19 PM Rob Clark <robdclark@gmail.com> wrote:
->
-> From: Rob Clark <robdclark@chromium.org>
->
-> Looks like the dma_sync calls don't do what we want on armv7 either.
-> Fixes:
->
->   Unable to handle kernel paging request at virtual address 50001000
->   pgd = (ptrval)
->   [50001000] *pgd=00000000
->   Internal error: Oops: 805 [#1] SMP ARM
->   Modules linked in:
->   CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.3.0-rc6-00271-g9f159ae07f07 #4
->   Hardware name: Freescale i.MX53 (Device Tree Support)
->   PC is at v7_dma_clean_range+0x20/0x38
->   LR is at __dma_page_cpu_to_dev+0x28/0x90
->   pc : [<c011c76c>]    lr : [<c01181c4>]    psr: 20000013
->   sp : d80b5a88  ip : de96c000  fp : d840ce6c
->   r10: 00000000  r9 : 00000001  r8 : d843e010
->   r7 : 00000000  r6 : 00008000  r5 : ddb6c000  r4 : 00000000
->   r3 : 0000003f  r2 : 00000040  r1 : 50008000  r0 : 50001000
->   Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
->   Control: 10c5387d  Table: 70004019  DAC: 00000051
->   Process swapper/0 (pid: 1, stack limit = 0x(ptrval))
->
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-> Fixes: 3de433c5b38a ("drm/msm: Use the correct dma_sync calls in msm_gem")
-> Tested-by: Fabio Estevam <festevam@gmail.com>
+Maybe we can even split this to two patches?
 
-I see this one got applied in linux-next already.
-Could it be sent to 5.4-rc, please?
+-- 
+With Best Regards,
+Andy Shevchenko
 
-mx53 boards cannot boot in mainline because of this.
 
-Thanks
