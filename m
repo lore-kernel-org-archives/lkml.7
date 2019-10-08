@@ -2,79 +2,69 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EABB1C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BF4C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4E5D206C2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:39:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02D9F206C2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:39:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570531156;
+	bh=gdWIcm/fEQmlP/oJYmxNy/wnrsGTgCCRS51f7LuUMRo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=S4QSOePT3zVjH1RdW7/ZSfXcFeUR7a5JCJUHA0DNllcyQiMwZ+yqA3FTEVzutwzc1
+	 daL554jDhdsyPROyGcQG6n1JQ++YMjidAiDosCvVzfK2chI4PFnogZ2I4rcgiwG7Z4
+	 AcsJJK35AhOUOF5wLiY+BPDvj6jXWJ/Ocv6e5G3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730426AbfJHKjL (ORCPT
+        id S1729893AbfJHKjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 06:39:11 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:12627 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729790AbfJHKjK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 06:39:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41300 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730256AbfJHKjK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Oct 2019 06:39:10 -0400
-X-IronPort-AV: E=Sophos;i="5.67,270,1566831600"; 
-   d="scan'208";a="28578186"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 08 Oct 2019 19:39:07 +0900
-Received: from fabrizio-dev.ree.adwin.renesas.com (unknown [10.226.36.196])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id BE38C400C0B8;
-        Tue,  8 Oct 2019 19:39:03 +0900 (JST)
-From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms@verge.net.au>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH 01/10] dt-bindings: rcar-gen3-phy-usb2: Add r8a774b1 support
-Date:   Tue,  8 Oct 2019 11:38:43 +0100
-Message-Id: <1570531132-21856-2-git-send-email-fabrizio.castro@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1570531132-21856-1-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1570531132-21856-1-git-send-email-fabrizio.castro@bp.renesas.com>
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id EB0CFAEAF;
+        Tue,  8 Oct 2019 10:39:08 +0000 (UTC)
+Date:   Tue, 8 Oct 2019 12:39:07 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Petr Mladek <pmladek@suse.com>, akpm@linux-foundation.org,
+        sergey.senozhatsky.work@gmail.com, rostedt@goodmis.org,
+        peterz@infradead.org, linux-mm@kvack.org,
+        john.ogness@linutronix.de, david@redhat.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
+Message-ID: <20191008103907.GE6681@dhcp22.suse.cz>
+References: <20191008084031.GC6681@dhcp22.suse.cz>
+ <298970BD-529E-4095-8D87-61470ADBDD32@lca.pw>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <298970BD-529E-4095-8D87-61470ADBDD32@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document RZ/G2N (R8A774B1) SoC bindings.
+On Tue 08-10-19 06:04:32, Qian Cai wrote:
+> 
+> 
+> > On Oct 8, 2019, at 4:40 AM, Michal Hocko <mhocko@kernel.org> wrote:
+> > 
+> > Does this tip point to a real deadlock or merely a class of lockdep
+> > false dependencies?
+> 
+> I lean towards it is a real deadlock given how trivial to generate those lock orders everywhere.
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
----
- Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 2 ++
- 1 file changed, 2 insertions(+)
+Have you actually triggered any real deadlock? With a zone->lock in
+place it would be pretty clear with hard lockups detected.
 
-diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-index 503a8cf..7734b21 100644
---- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-+++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-@@ -10,6 +10,8 @@ Required properties:
- 	      SoC.
- 	      "renesas,usb2-phy-r8a774a1" if the device is a part of an R8A774A1
- 	      SoC.
-+	      "renesas,usb2-phy-r8a774b1" if the device is a part of an R8A774B1
-+	      SoC.
- 	      "renesas,usb2-phy-r8a774c0" if the device is a part of an R8A774C0
- 	      SoC.
- 	      "renesas,usb2-phy-r8a7795" if the device is a part of an R8A7795
 -- 
-2.7.4
-
+Michal Hocko
+SUSE Labs
