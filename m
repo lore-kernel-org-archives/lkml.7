@@ -2,80 +2,78 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1AD1C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E487C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:09:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9BB32070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:06:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3456620815
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:09:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570543742;
+	bh=hAtaKBdf2v+m3L/M2Pgq+JFsTTPcKYZH7GeoTBIDpUs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=THgkuc+rwC5jZjQBr7azdQJQlK2a5KKpXFdQpzSUUV2JnCSqZThOqh56bNB7hTzrI
+	 lxm6HVhEXB/SW71WQAJ40BgkQUa7/MgZGCzXIqDQPUiCJEP0bb/Ywtzbo5BAIxKbcK
+	 gfCkvVN+pN+V2VqYBfkdIYSHLOy3LwaR10/lQXCw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbfJHOGo (ORCPT
+        id S1725989AbfJHOJB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 10:06:44 -0400
-Received: from smtp2.goneo.de ([85.220.129.33]:38802 "EHLO smtp2.goneo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727243AbfJHOGi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 10:06:38 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by smtp2.goneo.de (Postfix) with ESMTP id 65B8B23F709;
-        Tue,  8 Oct 2019 16:06:36 +0200 (CEST)
-X-Virus-Scanned: by goneo
-Received: from smtp2.goneo.de ([127.0.0.1])
-        by localhost (smtp2.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id gq3pCUUVz41S; Tue,  8 Oct 2019 16:06:35 +0200 (CEST)
-Received: from lem-wkst-02.lemonage.de. (hq.lemonage.de [87.138.178.34])
-        by smtp2.goneo.de (Postfix) with ESMTPA id 5411123F8DD;
-        Tue,  8 Oct 2019 16:06:35 +0200 (CEST)
-From:   Lars Poeschel <poeschel@lemonage.de>
-To:     Lars Poeschel <poeschel@lemonage.de>,
-        netdev@vger.kernel.org (open list:NFC SUBSYSTEM),
-        linux-kernel@vger.kernel.org (open list)
-Cc:     Johan Hovold <johan@kernel.org>
-Subject: [PATCH v9 7/7] nfc: pn532_uart: Make use of pn532 autopoll
-Date:   Tue,  8 Oct 2019 16:05:44 +0200
-Message-Id: <20191008140544.17112-8-poeschel@lemonage.de>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191008140544.17112-1-poeschel@lemonage.de>
-References: <20191008140544.17112-1-poeschel@lemonage.de>
+        Tue, 8 Oct 2019 10:09:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54040 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725839AbfJHOJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 10:09:01 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 668A1AC45;
+        Tue,  8 Oct 2019 14:08:59 +0000 (UTC)
+Date:   Tue, 8 Oct 2019 16:08:58 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        sergey.senozhatsky.work@gmail.com, peterz@infradead.org,
+        linux-mm@kvack.org, john.ogness@linutronix.de,
+        akpm@linux-foundation.org, david@redhat.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
+Message-ID: <20191008140858.GN6681@dhcp22.suse.cz>
+References: <1570228005-24979-1-git-send-email-cai@lca.pw>
+ <20191007143002.l37bt2lzqtnqjqxu@pathway.suse.cz>
+ <1570460350.5576.290.camel@lca.pw>
+ <20191007151237.GP2381@dhcp22.suse.cz>
+ <1570462407.5576.292.camel@lca.pw>
+ <20191008081510.ptwmb7zflqiup5py@pathway.suse.cz>
+ <20191008091349.6195830d@gandalf.local.home>
+ <1570541032.5576.297.camel@lca.pw>
+ <20191008134256.5ti6rjkvadn5b5q4@pathway.suse.cz>
+ <1570543381.5576.301.camel@lca.pw>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1570543381.5576.301.camel@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This switches the pn532 UART phy driver from manually polling to the new
-autopoll mechanism.
+On Tue 08-10-19 10:03:01, Qian Cai wrote:
+[..]
+> I don't think there is "removing useful messages" in this patch. That one
+> printk() in __offline_isolated_pages() basically as Michal mentioned it is that
+> useful, but could be converted to printk_deferred() if anyone objected.
 
-Cc: Johan Hovold <johan@kernel.org>
-Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
----
-Changes in v9:
-- Rebased the patch series on v5.4-rc2
+"remove from free list" printk is quite dubious as I've said. And I
+wouldn't be opposed to remove it altogether. It just swamps the low with
+something that is of no real use. It might have been useful while
+shaping and debugging the initial code but it has close to zero value
+for end users. But it makes no sense to make to make it printk_deferred
+on grounds mentioned so far.
 
-Changes in v6:
-- Rebased the patch series on v5.3-rc5
-
- drivers/nfc/pn533/uart.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/nfc/pn533/uart.c b/drivers/nfc/pn533/uart.c
-index 7f639051cdd0..edf8db890eaa 100644
---- a/drivers/nfc/pn533/uart.c
-+++ b/drivers/nfc/pn533/uart.c
-@@ -262,7 +262,7 @@ static int pn532_uart_probe(struct serdev_device *serdev)
- 	serdev_device_set_flow_control(serdev, false);
- 	pn532->send_wakeup = PN532_SEND_WAKEUP;
- 	timer_setup(&pn532->cmd_timeout, pn532_cmd_timeout, 0);
--	priv = pn53x_common_init(PN533_DEVICE_PN532,
-+	priv = pn53x_common_init(PN533_DEVICE_PN532_AUTOPOLL,
- 				     PN533_PROTO_REQ_ACK_RESP,
- 				     pn532, &uart_phy_ops, NULL,
- 				     &pn532->serdev->dev);
 -- 
-2.23.0
-
+Michal Hocko
+SUSE Labs
