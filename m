@@ -2,167 +2,227 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C4AC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 18:10:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19EE9C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 18:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1B1721721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 18:10:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC62721721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 18:12:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729806AbfJHSKp (ORCPT
+        id S1729447AbfJHSMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 14:10:45 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:35414 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726439AbfJHSKo (ORCPT
+        Tue, 8 Oct 2019 14:12:49 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:46152 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726384AbfJHSMt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 14:10:44 -0400
-Received: by mail-qt1-f195.google.com with SMTP id m15so26662100qtq.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 11:10:44 -0700 (PDT)
+        Tue, 8 Oct 2019 14:12:49 -0400
+Received: by mail-pl1-f194.google.com with SMTP id q24so8785666plr.13;
+        Tue, 08 Oct 2019 11:12:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PBo1Y4ykGmxO+nKrMk5kRa6ZAN4dxeD32dr3fhjxbuE=;
-        b=PKDNmbASK9j3EGUn3lEDYWKHOz3mJNc+d9NzjWg2VyxEvMfuKcXS+i1uXhlQueDm83
-         tOoa5TNlqS1EEIu4nV8Y0z2k2qu4AdSjTwOWoHT4wPpuR0Al+ie3Kz9lO3vDwjhuYrnR
-         K+fJu0m/3HtZM03SegRFE4Int/s47tIcTfGX0IHKhKD8mBp5qUurVuXAnY4qnFnMoENS
-         7vZ/mf2zxy9nhfWLhQR9RLQIphroQysWNbRXCalcpMjBWPIFQRvY39uRAnVv3coVxQo+
-         1oaW2ifs0YRqxdD4c++YRuWMuxUbUUgF9ucAzHiZPETq1lxl5Hw/weZiJRC4xoS97zVo
-         iyIg==
-X-Gm-Message-State: APjAAAWksXYAVIhargcjFCng9hq5opQK7xaIFPCWop9EXRwDFZKd+V00
-        6uuLMDfI5IunJ1vD8iozopEL3yo0pRccQHWsbhU=
-X-Google-Smtp-Source: APXvYqwo1KRc4uEMRDLv8YMbJR1q9u3b6zouiMCvn2GoWFEuLcImLzKwbGDD4iv751uVoDnRnv5wWops9RksqbS7fIE=
-X-Received: by 2002:ac8:1099:: with SMTP id a25mr37021130qtj.308.1570558243705;
- Tue, 08 Oct 2019 11:10:43 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WO0UfvP5hWvRycJbNL9RqVvE2KNQTq70cfKr8pWoYb8=;
+        b=PulnEYM/0wKLSJRnpQdzTxUZE4lJcvMH9i1VUiUH19rIZ5DaUKgE9Gvwwv4RFwfDI7
+         RNMHuwDyv+d/d/Udqvs/vr69kVkKv1UW0lTr+O4fr29xZUqiiaFN+Hgf7JGMlhL4MJv3
+         TZ+52Q79M+TmM3KAm2UsaGfhor8ByumxnZeaD9vXy46hzUa4SZ5a0EpPFh3Ria1u+qUw
+         qJqI+v/Y9hSN/sPEknjaGpJVXczpXcWfXcZ6OUX/dDVTxZlFVTxK78PZKm/540yvI+Dy
+         tybzHjJ2dS7C0eNoL15P7mfgMmgiZKgj/3eQ595r1dMe6IwvtHIuNPO2TO/9wILQ5PwR
+         0eOw==
+X-Gm-Message-State: APjAAAUSgPSlaH5wdpVvvQCeo9ngXJTpIoT1Cnw5Z3AqlYJrbd+NXYeW
+        jo1ObbYrSCx1oKr0arbi6VOPs1oT
+X-Google-Smtp-Source: APXvYqwcLYU5f1HW++6DMTnWMGff/JOcEykO6zgn4/n1ObwqTdFwpOm6ukg4RXAcguurGXZEYGJYxQ==
+X-Received: by 2002:a17:902:b60d:: with SMTP id b13mr35875643pls.331.1570558368113;
+        Tue, 08 Oct 2019 11:12:48 -0700 (PDT)
+Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
+        by smtp.gmail.com with ESMTPSA id h4sm17593940pgg.81.2019.10.08.11.12.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Oct 2019 11:12:46 -0700 (PDT)
+Subject: Re: [PATCH v2 1/1] blk-mq: fill header with kernel-doc
+To:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     axboe@kernel.dk, kernel@collabora.com, krisman@collabora.com
+References: <20191008001416.12656-1-andrealmeid@collabora.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <16a10539-c0a0-e411-8f9a-1f0830579986@acm.org>
+Date:   Tue, 8 Oct 2019 11:12:45 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191008094006.8251-1-geert+renesas@glider.be>
- <19c54ca5b3750bebc057e20542ad6c0c2acef960.camel@perches.com>
- <CAMuHMdUYf=0RVeJhSqs9WUY4H+o9Jk8U+J6tUsnMjz7bgKpAxw@mail.gmail.com> <f59c1ef48b64bcf97047df5952f8994f75c0cecf.camel@perches.com>
-In-Reply-To: <f59c1ef48b64bcf97047df5952f8994f75c0cecf.camel@perches.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 8 Oct 2019 20:10:32 +0200
-Message-ID: <CAMuHMdWvLbcGDG=VZDSAd=E-Bb_FEt9zvffpJu5nubMCKMZUZA@mail.gmail.com>
-Subject: Re: [PATCH] checkpatch: use patch subject when reading from stdin
-To:     Joe Perches <joe@perches.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Andy Whitcroft <apw@canonical.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191008001416.12656-1-andrealmeid@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joe,
+On 10/7/19 5:14 PM, André Almeida wrote:
+>   struct blk_mq_hw_ctx {
+>   	struct {
+> +		/** @lock: Lock for accessing dispatch queue */
+>   		spinlock_t		lock;
 
-On Tue, Oct 8, 2019 at 7:02 PM Joe Perches <joe@perches.com> wrote:
-> On Tue, 2019-10-08 at 17:28 +0200, Geert Uytterhoeven wrote:
-> > On Tue, Oct 8, 2019 at 5:20 PM Joe Perches <joe@perches.com> wrote:
-> > > On Tue, 2019-10-08 at 11:40 +0200, Geert Uytterhoeven wrote:
-> > > > When reading a patch file from standard input, checkpatch calls it "Your
-> > > > patch", and reports its state as:
-> > > >
-> > > >     Your patch has style problems, please review.
-> > > >
-> > > > or:
-> > > >
-> > > >     Your patch has no obvious style problems and is ready for submission.
-> > > >
-> > > > Hence when checking multiple patches by piping them to checkpatch, e.g.
-> > > > when checking patchwork bundles using:
-> > > >
-> > > >     formail -s scripts/checkpatch.pl < bundle-foo.mbox
-> > > >
-> > > > it is difficult to identify which patches need to be reviewed and
-> > > > improved.
-> > > >
-> > > > Fix this by replacing "Your patch" by the patch subject, if present.
-> > > []
-> > > > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> > > []
-> > > > @@ -1047,6 +1047,10 @@ for my $filename (@ARGV) {
-> > > >       }
-> > > >       while (<$FILE>) {
-> > > >               chomp;
-> > > > +             if ($vname eq 'Your patch') {
-> > > > +                     my ($subject) = $_ =~ /^Subject:\s*(.*)/;
-> > > > +                     $vname = '"' . $subject . '"' if $subject;
-> > >
-> > > Hi again Geert.
-> > >
-> > > Just some stylistic nits:
-> > >
-> > > $filename is not quoted so I think adding quotes
-> > > before and after $subject may not be useful.
-> >
-> > Filename is indeed not quoted, but $git_commits{$filename} is.
->
-> If I understand your use case, this will only show the last
-> patch $subject of a bundle?
+This spinlock not only protects dispatch list accesses but also 
+modifications of the dispatch list. How about changing that comment into 
+"protects the dispatch list"?
 
-False.
-"formail -s scripts/checkpatch.pl < bundle-foo.mbox" splits
-"bundle-foo.mbox" in separate patches, and invokes
-"scripts/checkpatch.pl" for each of them.
+> +		/**
+> +		 * @dispatch: Queue of dispatched requests, waiting for
+> +		 * workers to send them to the hardware.
+> +		 */
+>   		struct list_head	dispatch;
 
-> Also, it'll show things like "duplicate signature" when multiple
-> patches are tested in a single bundle.
+What is a worker? That word is not used anywhere in the block layer. How 
+about changing that comment into "requests owned by this hardware queue"?
 
-False, due to the splitting by formail.
+> -		unsigned long		state;		/* BLK_MQ_S_* flags */
+> +		 /**
+> +		  * @state: BLK_MQ_S_* flags. Define the state of the hw
+                                               ^^^^^^
+                                               Defines?
+>   
+> +	/**
+> +	 * @run_work: Worker for dispatch scheduled requests to hardware.
+> +	 * BLK_MQ_CPU_WORK_BATCH workers will be assigned to a CPU, then the
+> +	 * following ones will be assigned to the next_cpu.
+> +	 */
+ >   	struct delayed_work	run_work;
 
-> For instance, if I have a git format-patch series in an output
-> directory and do
->
-> $ cat <output_dir>/*.patch | ./scripts/checkpatch.pl
->
-> Bad output happen.
+I'd prefer if algorithm details would be left out from structure 
+documentation since such documentation becomes easily outdated. How 
+about using something like the following description: "used for 
+scheduling a hardware queue run at a later time"?
 
-Yeah, because you're concatenating all patches.
-Currently it works for single patches only.
+> +	/**
+> +	 * @next_cpu: Index of CPU/workqueue to be used in the next batch
+> +	 * of workers.
+> +	 */
 
-> Maybe this might be better:
+The word "workers" here is confusing. How about the following 
+description: "used by blk_mq_hctx_next_cpu() for round-robin CPU 
+selection from @cpumask"?
 
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -2444,6 +2444,15 @@ sub process {
->
->                 my $rawline = $rawlines[$linenr - 1];
->
-> +# if input from stdin, report the subject lines if they exist
-> +               if ($filename eq '-' && !$quiet &&
-> +                   $rawline =~ /^Subject:\s*(.*)/) {
-> +                       report("stdin", "STDIN", '-' x length($1));
-> +                       report("stdin", "STDIN", $1);
-> +                       report("stdin", "STDIN", '-' x length($1));
-> +                       %signatures = ();       # avoid duplicate signatures
-> +               }
-> +
->  # check if it's a mode change, rename or start of a patch
->                 if (!$in_commit_log &&
->                     ($line =~ /^ mode change [0-7]+ => [0-7]+ \S+\s*$/ ||
+> +	/**
+> +	 * @next_cpu_batch: Counter of how many works letf in the batch before
+                                                       ^^^^
+                                                       left?
+> +	 * changing to the next CPU. A batch has the size
+> +	 * of BLK_MQ_CPU_WORK_BATCH.
+> +	 */
+>   	int			next_cpu_batch;
 
-Perhaps.  Just passing the patchwork bundle to checkpatch, and fixing
-checkpatch to handle multiple patches in a single file was my first idea.
-But it looked fragile, with too much state that needs to be reset.
-I.e. the state is not limited to %signatures.  You also have to reset
-$author inside process(), and probably a dozen other variables.
-And make sure that future changes don't forget resetting all newly
-introduced variables.
+Again, I think this is too much detail about the actual algorithm.
 
-Hence I settled for the solution using formail.
+>   
+> -	unsigned long		flags;		/* BLK_MQ_F_* flags */
+> +	/** @flags: BLK_MQ_F_* flags. Define the behaviour of the queue. */
+                                       ^^^^^^
+                                       Defines?
+> +	unsigned long		flags;
+>   
+> +	/** @sched_data: Data to support schedulers. */
+>   	void			*sched_data;
 
-Gr{oetje,eeting}s,
+That's a rather vague description. How about mentioning that this 
+pointer is owned by the I/O scheduler that has been attached to a 
+request queue and that the I/O scheduler decides how to use this pointer?
 
-                        Geert
+> +	/** @queue: Queue of request to be dispatched. */
+>   	struct request_queue	*queue;
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+How about "pointer to the request queue that owns this hardware context"?
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> +	/**
+> +	 * @ctx_map: Bitmap for each software queue. If bit is on, there is a
+> +	 * pending request.
+> +	 */
+>   	struct sbitmap		ctx_map;
+
+Please add " in that software queue" at the end of the description.
+
+>   
+> +	/**
+> +	 * @dispatch_from: Queue to be used when there is no scheduler
+> +	 * was selected.
+> +	 */
+>   	struct blk_mq_ctx	*dispatch_from;
+
+Does the word "queue" refer to a request queue, software queue or 
+hardware queue? Please make that clear.
+
+> +	/**
+> +	 * @dispatch_wait: Waitqueue for dispatched requests. Request here will
+> +	 * be processed when percpu_ref_is_zero(&q->q_usage_counter) evaluates
+> +	 * true for q as a request_queue.
+> +	 */
+>   	wait_queue_entry_t	dispatch_wait;
+
+That description doesn't look correct to me. I think that @dispatch_wait 
+is used to wait if no tags are available. The comment above 
+blk_mq_mark_tag_wait() is as follows:
+
+/*
+  * Mark us waiting for a tag. For shared tags, this involves hooking us
+  * into the tag wakeups. For non-shared tags, we can simply mark us
+  * needing a restart. For both cases, take care to check the condition
+  * again after marking us as waiting.
+  */
+
+> +	/** @wait_index: Index of next wait queue to be used. */
+>   	atomic_t		wait_index;
+
+To be used by what?
+
+> +	/** @tags: Request tags. */
+>   	struct blk_mq_tags	*tags;
+> +	/** @sched_tags: Request tags for schedulers. */
+>   	struct blk_mq_tags	*sched_tags;
+
+I think @tags represents tags owned by the block driver and @sched_tags 
+represents tags owned by the I/O scheduler. If no I/O scheduler is 
+associated with a request queue, only a driver tag is allocated. If an 
+I/O scheduler has been associated with a request queue, a request is 
+assigned a tag from @sched_tags when that request is allocated. A tag 
+from @tags is only assigned when a request is dispatched to a hardware 
+queue. See also blk_mq_get_driver_tag().
+
+> +	/** @nr_active:	Number of active tags. */
+>   	atomic_t		nr_active;
+
+Isn't this the number of active requests instead of the number of active 
+tags? Please mention that this member is only used when a tag set is 
+shared across request queues.
+
+> +/**
+> + * struct blk_mq_queue_data - Data about a request inserted in a queue
+> + *
+> + * @rq:   Data about the block IO request.
+
+How about changing this into "Request pointer"?
+
+> +/**
+> + * struct blk_mq_ops - list of callback functions that implements block driver
+> + * behaviour.
+> + */
+
+Is this really a list?
+
+>    * Driver command data is immediately after the request. So subtract request
+> - * size to get back to the original request, add request size to get the PDU.
+> + * size to get back to the original request.
+>    */
+>   static inline struct request *blk_mq_rq_from_pdu(void *pdu)
+>   {
+>   	return pdu - sizeof(struct request);
+>   }
+
+I'm not sure this change is an improvement.
+
+Bart.
