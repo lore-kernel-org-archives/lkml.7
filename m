@@ -2,89 +2,189 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB59C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE98C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 160AE218AC
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAAE421924
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:41:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="r+DgLo7b"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="A48ymLIK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727688AbfJHRjb (ORCPT
+        id S1728862AbfJHRlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 13:39:31 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:42784 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbfJHRja (ORCPT
+        Tue, 8 Oct 2019 13:41:03 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34209 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727514AbfJHRlC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 13:39:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=7mN2uRVrNBa851TOjCoSypqhGYuGGBF+I76EoO/K6j0=; b=r+DgLo7b05l0q8vi7/Yh3VmUs
-        Xe/4iS4aWYQrnjn3ytyVHx4sCzKzxn2849Nxnq47Iq1n892BH0eBR0IoafLt7XNgA+k8zduxvtbWw
-        +qy5bUZHE4UALRknq/VElO2sCQNjq77U8P/vFCQrMgYyuFKTEt/Um9wx/EW2/N3O48KFg4rrxNi9P
-        pF5vHI/0KY0lWDTO3cu3/6uPOHxh10wAe3unO2T7FiCtGzI7pcBdEeagCDGPi/+DAFd98U40CvCF5
-        3kPjXXzTpSDKkr6KlFgSL7zX7XF1gK7ENVnnrZOdymcN3XJhh9LcDZ8VKpdib+w7pRYAuTKJCO1+M
-        drr0gbkNg==;
-Received: from [31.161.223.134] (helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iHtS6-0004Aj-VY; Tue, 08 Oct 2019 17:39:18 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D56789802E0; Tue,  8 Oct 2019 19:39:10 +0200 (CEST)
-Date:   Tue, 8 Oct 2019 19:39:10 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Phil Auld <pauld@redhat.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <Morten.Rasmussen@arm.com>,
-        Hillf Danton <hdanton@sina.com>
-Subject: Re: [PATCH v3 04/10] sched/fair: rework load_balance
-Message-ID: <20191008173910.GB22902@worktop.programming.kicks-ass.net>
-References: <1568878421-12301-1-git-send-email-vincent.guittot@linaro.org>
- <1568878421-12301-5-git-send-email-vincent.guittot@linaro.org>
- <c752dd1a-731e-aae3-6a2c-aecf88901ac0@arm.com>
- <CAKfTPtBQNJfNmBqpuaefsLzsTrGxJ=2bTs+tRdbOAa9J3eKuVw@mail.gmail.com>
- <31cac0c1-98e4-c70e-e156-51a70813beff@arm.com>
- <20191008141642.GQ2294@hirez.programming.kicks-ass.net>
- <b4e29e48-a97c-67e5-a284-6ddc13222c5b@arm.com>
- <20191008153002.GA21999@linaro.org>
+        Tue, 8 Oct 2019 13:41:02 -0400
+Received: by mail-ot1-f68.google.com with SMTP id m19so14803870otp.1;
+        Tue, 08 Oct 2019 10:41:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xOC0mpKmGEmRikgCRd9gsgQ9erZ8EhH2ac4zF2SOvfc=;
+        b=A48ymLIK2rb7BiQ9QuBri46T6nbKFuIQJxa7IZOrx9u7UZZjm57jzAFIIYzYvWLrix
+         m+nDdkRVAO2+gOSlB5xS91WBrGwrPIYdmbS1o615tpr57WuZBLJC3B6ckf/LOptWZ1Ub
+         gJYtq5XNt82fMCqHor/KL47/Zfi03r9Lcu7ah4JpxQzHWRQAXsmiufKaM507CHWwWDzX
+         wuksd3+2wJ5/sXreoS2epnF9sTqEmrgFgSyR/Z9C3JNv6wJ+IrfIXn6AFIFTduTFLAjS
+         itBaUhBVZ9Qzu3Pkd74h4T4/qeYmEeqsrAAtBlj6UkpmRgDydVnCnFwNreL37zzt2K7l
+         PqYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xOC0mpKmGEmRikgCRd9gsgQ9erZ8EhH2ac4zF2SOvfc=;
+        b=ApdQQTY6UuTzBffvbbCYPAzhp7mg3GgmfKqVHnUegkmK6S7CkG7ybYkcY7KOcQlxDd
+         Lhdj9c7BFwryidgcQvOyPWvtyEEaHYV8AKDCdWNSo7NMt4P2DZp9uR7rVOeI2o93xqsv
+         psaHiYOKmHh2bWuKX06wI2+RIOh1J1HIv/pgJTNV8nxYhGW2j3nI34GRnk0gz6OEZClZ
+         wOwz1HwBnjXXtEsjOYh/ktkM3hp8k3Y4LlF8sbfNSKT+45ILHYI/q9tsYBG0NwB00SR/
+         vb7KhTVXKqIS8nYUWgbQ1YZixsocJBWb81yuqTgLGkqy9gSiU6d7r/Yi35WxGiOSh4lC
+         YUNw==
+X-Gm-Message-State: APjAAAV0tGLqLncGPz65pSEjCwhZ4tnkH1sgoM+eznqsrPt0U449J0oN
+        pQYJNNJnP3ERw0A3QTcviKQ27DgfBgeykwFf+X4=
+X-Google-Smtp-Source: APXvYqxqhXwAynybsN9Gz27KPhjj5btFKvK2S66P8tFQ842KPj4fHqw45egk61mlamGvOAvK6sbk0VhqSQzJff+YD4E=
+X-Received: by 2002:a05:6830:150d:: with SMTP id k13mr25847326otp.98.1570556460961;
+ Tue, 08 Oct 2019 10:41:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191008153002.GA21999@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191007131649.1768-1-linux.amoon@gmail.com> <20191007131649.1768-6-linux.amoon@gmail.com>
+ <CAFBinCAoJLZj9Kh+SfF4Q+0OCzac2+huon_BU=Q3yE7Fu38U3w@mail.gmail.com>
+ <7hsgo4cgeg.fsf@baylibre.com> <CANAwSgRfcFa6uBNtpqz6y=9Uwsa4gcp_4tDD+Chhg4SynJCq0Q@mail.gmail.com>
+In-Reply-To: <CANAwSgRfcFa6uBNtpqz6y=9Uwsa4gcp_4tDD+Chhg4SynJCq0Q@mail.gmail.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Tue, 8 Oct 2019 19:40:50 +0200
+Message-ID: <CAFBinCA6ZoeR4m4bhj08HF1DqxY1qB5mygpaQCGbo3d8M+Wr9Q@mail.gmail.com>
+Subject: Re: [RFCv1 5/5] arm64/ARM: configs: Change CONFIG_PWM_MESON from m to y
+To:     Anand Moon <linux.amoon@gmail.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic@lists.infradead.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 05:30:02PM +0200, Vincent Guittot wrote:
+Hi Anand,
 
-> This is how I plan to get ride of the problem:
-> +		if (busiest->group_weight == 1 || sds->prefer_sibling) {
-> +			unsigned int nr_diff = busiest->sum_h_nr_running;
-> +			/*
-> +			 * When prefer sibling, evenly spread running tasks on
-> +			 * groups.
-> +			 */
-> +			env->migration_type = migrate_task;
-> +			lsub_positive(&nr_diff, local->sum_h_nr_running);
-> +			env->imbalance = nr_diff >> 1;
-> +			return;
-> +		}
+On Tue, Oct 8, 2019 at 4:39 PM Anand Moon <linux.amoon@gmail.com> wrote:
+>
+> Hi Kevin / Martin,
+>
+> On Tue, 8 Oct 2019 at 04:28, Kevin Hilman <khilman@baylibre.com> wrote:
+> >
+> > Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
+> >
+> > > On Mon, Oct 7, 2019 at 3:17 PM Anand Moon <linux.amoon@gmail.com> wrote:
+> > > [...]
+> > >> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> > >> index c9a867ac32d4..72f6a7dca0d6 100644
+> > >> --- a/arch/arm64/configs/defconfig
+> > >> +++ b/arch/arm64/configs/defconfig
+> > >> @@ -774,7 +774,7 @@ CONFIG_MPL3115=m
+> > >>  CONFIG_PWM=y
+> > >>  CONFIG_PWM_BCM2835=m
+> > >>  CONFIG_PWM_CROS_EC=m
+> > >> -CONFIG_PWM_MESON=m
+> > >> +CONFIG_PWM_MESON=y
+> > >
+> > > some time ago I submitted a similar patch for the 32-bit SoCs
+> > > it turned that that pwm-meson can be built as module because the
+> > > kernel will run without CPU DVFS as long as the clock and regulator
+> > > drivers are returning -EPROBE_DEFER (-517)
+> >
+> > On 64-bit SoCs, the kernel boots with PWM as a module also, but DVFS
+> > only works sometimes, and making it built-in fixes the problem.
+> > Actually, it doesn't fix, it just hides the problem, which is likely a
+> > race or timeout happening during deferred probing.
+> >
+> > > did you check whether there's some other problem like some unused
+> > > clock which is being disabled at that moment?
+> > > I've been hunting weird problems in the past where it turned out that
+> > > changing kernel config bits changed the boot timing - that masked the
+> > > original problem
+> >
+> > Right, I would definitely prefer to not make this built-in without a lot
+> > more information to *why* this is needed.  In figuring that out, we'll
+> > probably find the race/timeout that's the root cause.
+> >
+> > Kevin
+> >
+> >
+>
+> Kevin,
+>
+> As per my understanding from the kernelci.org logs it seen that
+> pwm-meson driver is requested more than once before it finally load the module.
+>
+> [0] https://storage.kernelci.org/next/master/next-20191008/arm64/defconfig/gcc-8/lab-baylibre/boot-meson-g12b-odroid-n2.txt
+my understanding is that:
+- the PWM regulator driver is built in (=y)
+- the Meson PWM controller driver is built as module (=m)
+- during boot the PWM regulator node is found and it has a matching
+driver (built-in)
+- the PWM regulator driver tries to find the PWM controller but cannot
+find it yet (and reports "Failed to get PWM: -517")
+- (this repeats a few times)
+- then the filesystem / initramfs is loaded where the modules are located
+- now the Meson PWM controller driver is loaded
+- the PWM regulator driver tries to find the PWM controller -> now it found it
 
-I'm thinking the max_t(long, 0, ...); variant reads a lot simpler and
-really _should_ work given that -fno-strict-overflow / -fwrapv mandates
-2s complement.
+> Hi Martin,
+>
+> I have tired your Martin's patch [1] and still the boot fails to move
+> ahead with below logs.
+> [1] https://lore.kernel.org/patchwork/patch/1034186/
+this patch only silences the "Failed to get PWM: -517" message
+Mark didn't apply it back then because without that message it would
+be harder to debug these issues
+
+> [    1.543928] xhci-hcd xhci-hcd.0.auto: Host supports USB 3.0 SuperSpeed
+> [    1.550422] usb usb2: We don't know the algorithms for LPM for this
+> host, disabling LPM.
+> [    1.558702] hub 2-0:1.0: USB hub found
+> [    1.562131] hub 2-0:1.0: 1 port detected
+> [    1.566206] dwc3-meson-g12a ffe09000.usb: switching to Device Mode
+> [    1.573252] meson-gx-mmc ffe05000.sd: Got CD GPIO
+> [    1.607405] hctosys: unable to open rtc device (rtc0)
+>
+> I have put some more prints in pwm-meson.c it fails to load the module
+> as microsSD card is not completely initialized.
+what makes you think that there's a problem with pwm-meson?
+
+can you please share a boot log with the command line parameter
+"initcall_debug" [0]?
+from Documentation/admin-guide/kernel-parameters.txt:
+ initcall_debug [KNL] Trace initcalls as they are executed.  Useful
+ for working out where the kernel is dying during
+ startup.
+
+you can also try the command line parameter "clk_ignore_unused" (it's
+just a gut feeling: maybe a "critical" clock is being disabled because
+it's not wired up correctly).
+
+back when I was working out the CPU clock tree for the 32-bit SoCs I
+had a bad parent clock in one of the muxes which resulted in sporadic
+lockups if CPU DVFS was enabled.
+you can try to disable CPU DVFS by dropping the OPP table and it's
+references from the .dtsi
+
+
+Martin
+
+
+[0] https://elinux.org/Initcall_Debug
