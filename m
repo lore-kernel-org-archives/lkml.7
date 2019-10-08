@@ -2,98 +2,108 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 142C5C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E06AAC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0343206BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:41:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDB16206BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:41:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730314AbfJHJlH (ORCPT
+        id S1730349AbfJHJlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 05:41:07 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43338 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729624AbfJHJlG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 05:41:06 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DA86DB179;
-        Tue,  8 Oct 2019 09:41:04 +0000 (UTC)
-From:   Luis Henriques <lhenriques@suse.com>
-To:     Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: 'unable to handle page fault' in pstore
-Date:   Tue, 08 Oct 2019 10:41:02 +0100
-Message-ID: <87o8yrmv69.fsf@suse.com>
+        Tue, 8 Oct 2019 05:41:25 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:35673 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729790AbfJHJlY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 05:41:24 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 2EE0C803E2; Tue,  8 Oct 2019 11:41:07 +0200 (CEST)
+Date:   Tue, 8 Oct 2019 11:41:21 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Vadim Sukhomlinov <sukhomlinov@google.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 002/106] tpm: Fix TPM 1.2 Shutdown sequence to
+ prevent future TPM operations
+Message-ID: <20191008094121.GA608@amd>
+References: <20191006171124.641144086@linuxfoundation.org>
+ <20191006171126.123065744@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="0F1p//8PRICkK4MW"
+Content-Disposition: inline
+In-Reply-To: <20191006171126.123065744@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-Maybe this is a known issue with pstore, I didn't investigate, but it's
-pretty easy to reproduce:
+--0F1p//8PRICkK4MW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I've efi-pstore loaded, with a bunch of files in /sys/fs/pstore.  If I
-unload my backend driver (efi-pstore) and try to remove a file from
-/sys/fs/pstore I'll see the following spat:
+Hi!
 
-BUG: unable to handle page fault for address: ffffffffc0bcf090
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 64a60c067 P4D 64a60c067 PUD 64a60e067 PMD 892200067 PTE 0
-Oops: 0000 [#1] SMP PTI
-CPU: 0 PID: 3154 Comm: mv Tainted: G            E     5.4.0-rc2 #19
-Hardware name: Dell Inc. Precision 5510/0N8J4R, BIOS 1.10.0 02/25/2019
-RIP: 0010:pstore_unlink+0x1e/0x70
-Code: 66 66 2e 0f 1f 84 00 00 00 00 00 90 0f 1f 44 00 00 41 54 49 89 fc 55 53 48 8b 46 30 48 8b 80 38 02 00 00 48 8b 58 10 48 8b 3b <48> 83 bf 90 00 00 00 00 74 39 48 83 c7 0c 81 42 00
-RSP: 0018:ffffb2eb40587e70 EFLAGS: 00010246
-RAX: ffff8920cea3e8a0 RBX: ffff8920cd55b400 RCX: 0000000000000000
-RDX: 0000000000000001 RSI: ffff8920cf76f300 RDI: ffffffffc0bcf000
-RBP: ffff8920cf76f300 R08: ffff8920cf76f300 R09: 007a2e636e652e32
-R10: 0000000000000007 R11: 7fffffffffffffff R12: ffff8920d4c91d80
-R13: ffff8920d4c91d80 R14: ffff8920d80c3480 R15: ffff8920d80c3520
-FS:  00007f3afe720640(0000) GS:ffff8920dda00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffc0bcf090 CR3: 000000088e260001 CR4: 00000000003606f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- vfs_unlink+0x10f/0x1f0
- do_unlinkat+0x1af/0x2f0
- do_syscall_64+0x4c/0x170
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x7f3afe8ef2f7
-Code: 73 01 c3 48 8b 0d 89 db 0c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 b8 07 01 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 59 64 89 01 48
-RSP: 002b:00007ffd60fea168 EFLAGS: 00000202 ORIG_RAX: 0000000000000107
-RAX: ffffffffffffffda RBX: 00005629c4e3ef70 RCX: 00007f3afe8ef2f7
-RDX: 0000000000000000 RSI: 00005629c4e3dd40 RDI: 00000000ffffff9c
-RBP: 00005629c4e3dcb0 R08: 0000000000000003 R09: 0000000000000000
-R10: fffffffffffff24b R11: 0000000000000202 R12: 0000000000000000
-R13: 00007ffd60fea260 R14: 00005629c4e3ef70 R15: 0000000000000002
+> From: Vadim Sukhomlinov <sukhomlinov@google.com>
+>=20
+> commit db4d8cb9c9f2af71c4d087817160d866ed572cc9 upstream
+>=20
+> TPM 2.0 Shutdown involve sending TPM2_Shutdown to TPM chip and disabling
+> future TPM operations. TPM 1.2 behavior was different, future TPM
+> operations weren't disabled, causing rare issues. This patch ensures
+> that future TPM operations are disabled.
+=2E..
 
-My understanding is that pstore_unlink() is exploding when running:
+> --- a/drivers/char/tpm/tpm-chip.c
+> +++ b/drivers/char/tpm/tpm-chip.c
+> @@ -187,12 +187,13 @@ static int tpm_class_shutdown(struct device *dev)
+>  {
+>  	struct tpm_chip *chip =3D container_of(dev, struct tpm_chip, dev);
+> =20
+> +	down_write(&chip->ops_sem);
+>  	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
+> -		down_write(&chip->ops_sem);
+>  		tpm2_shutdown(chip, TPM2_SU_CLEAR);
+>  		chip->ops =3D NULL;
+> -		up_write(&chip->ops_sem);
+>  	}
+> +	chip->ops =3D NULL;
+> +	up_write(&chip->ops_sem);
+> =20
+>  	return 0;
+>  }
 
-	if (!record->psi->erase)
+Still can be improved -- chip->ops =3D NULL; is done twice, copy inside
+the if {} is redundant...
 
-because that address (psi) was on the efi-pstore module.
+Best regards,
+									Pavel
 
-I'm not sure what's the best way to fix this, probably a
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-	if (psinfo && record->psi->erase)
+--0F1p//8PRICkK4MW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-would be enough, but ugly (and still racy?).
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Cheers,
--- 
-Luis
+iEYEARECAAYFAl2cWcEACgkQMOfwapXb+vLbYgCffR+Ik90cUuBHAYxxqbhhX8S4
+ir0An1MyxGfX0btyAtBfH9oInfWUUBFA
+=XvM4
+-----END PGP SIGNATURE-----
+
+--0F1p//8PRICkK4MW--
