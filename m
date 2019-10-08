@@ -2,201 +2,123 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F6F2C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED446C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7DD82190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:11:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C74EE2070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:11:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="O74tYwgU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730966AbfJHMLt (ORCPT
+        id S1731267AbfJHMLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 08:11:49 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:54354 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731184AbfJHMLh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 08:11:37 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E3F341A0249;
-        Tue,  8 Oct 2019 14:11:34 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D6BE21A002E;
-        Tue,  8 Oct 2019 14:11:34 +0200 (CEST)
-Received: from fsr-fed2164-101.ea.freescale.net (fsr-fed2164-101.ea.freescale.net [10.171.82.91])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 9555C205DB;
-        Tue,  8 Oct 2019 14:11:34 +0200 (CEST)
-From:   Madalin Bucur <madalin.bucur@nxp.com>
-To:     davem@davemloft.net, netdev@vger.kernel.org
-Cc:     roy.pledge@nxp.com, laurentiu.tudor@nxp.com,
-        linux-kernel@vger.kernel.org, Madalin Bucur <madalin.bucur@nxp.com>
-Subject: [PATCH 19/20] dpaa_eth: add dpaa_dma_to_virt()
-Date:   Tue,  8 Oct 2019 15:10:40 +0300
-Message-Id: <1570536641-25104-20-git-send-email-madalin.bucur@nxp.com>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1570536641-25104-1-git-send-email-madalin.bucur@nxp.com>
-References: <1570536641-25104-1-git-send-email-madalin.bucur@nxp.com>
-Reply-to: madalin.bucur@nxp.com
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 8 Oct 2019 08:11:54 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35068 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731226AbfJHMLw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 08:11:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=el0DYGZ+UtD3Q7bf+tloYS3IVTjk0rUS+bONbgMT2Rg=; b=O74tYwgUjbjFkwHNi6ZU+HaR6
+        LBkK8REqe9k40pVT68Vf1bZ875QNzej49ZWHpedsMDiJGCyVXElI/WYMpzBequQwZQVxzCvGsqycR
+        1Eo3sHvlUSL/B1zyyKLRGDs0KZFQ00BLfbPtTEoQPZFPo2j2OY6DHN/ia/ea4oX4QPXsw5Q2sqE66
+        FA2i/hjj6056Mr6HBGA/HW7QvtuWNTBvA8Y9v3TTDYwe8ImhMa7IiT3bARuiUKS7RHE9oYafG+HMr
+        q3yB4iMkdE0a6FKcVTvl/5KaggJ8OxdgMRG+Y23uk7kjteTIGJ11T0ySqwJJEPPEdHpYy4PDVnJqr
+        0kSH4reeg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iHoL9-0007Qk-R3; Tue, 08 Oct 2019 12:11:44 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A8440306C53;
+        Tue,  8 Oct 2019 14:10:49 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0714D202A1952; Tue,  8 Oct 2019 14:11:41 +0200 (CEST)
+Date:   Tue, 8 Oct 2019 14:11:40 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Like Xu <like.xu@linux.intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
+        vkuznets@redhat.com, Jim Mattson <jmattson@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        ak@linux.intel.com, wei.w.wang@intel.com, kan.liang@intel.com,
+        like.xu@intel.com, ehankland@google.com, arbel.moshe@oracle.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] KVM: x86/vPMU: Add lazy mechanism to release
+ perf_event per vPMC
+Message-ID: <20191008121140.GN2294@hirez.programming.kicks-ass.net>
+References: <20190930072257.43352-1-like.xu@linux.intel.com>
+ <20190930072257.43352-4-like.xu@linux.intel.com>
+ <20191001082321.GL4519@hirez.programming.kicks-ass.net>
+ <e77fe471-1c65-571d-2b9e-d97c2ee0706f@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e77fe471-1c65-571d-2b9e-d97c2ee0706f@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Centralize the phys_to_virt() calls.
+On Tue, Oct 01, 2019 at 08:33:45PM +0800, Like Xu wrote:
+> Hi Peter,
+> 
+> On 2019/10/1 16:23, Peter Zijlstra wrote:
+> > On Mon, Sep 30, 2019 at 03:22:57PM +0800, Like Xu wrote:
+> > > +	union {
+> > > +		u8 event_count :7; /* the total number of created perf_events */
+> > > +		bool enable_cleanup :1;
+> > 
+> > That's atrocious, don't ever create a bitfield with base _Bool.
+> 
+> I saw this kind of usages in the tree such as "struct
+> arm_smmu_master/tipc_mon_state/regmap_irq_chip".
 
-Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
----
- drivers/net/ethernet/freescale/dpaa/dpaa_eth.c | 45 ++++++++++++++------------
- 1 file changed, 24 insertions(+), 21 deletions(-)
+Because other people do tasteless things doesn't make it right.
 
-diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-index 77edf2e026e8..c178f1b8c5e5 100644
---- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-+++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-@@ -189,6 +189,15 @@ static int dpaa_rx_extra_headroom;
- #define dpaa_get_max_mtu()	\
- 	(dpaa_max_frm - (VLAN_ETH_HLEN + ETH_FCS_LEN))
- 
-+static void *dpaa_dma_to_virt(struct device *dev, dma_addr_t addr)
-+{
-+	if (!addr) {
-+		dev_err(dev, "Invalid address\n");
-+		return NULL;
-+	}
-+	return phys_to_virt(addr);
-+}
-+
- static int dpaa_netdev_init(struct net_device *net_dev,
- 			    const struct net_device_ops *dpaa_ops,
- 			    u16 tx_timeout)
-@@ -1307,7 +1316,8 @@ static void dpaa_fd_release(const struct net_device *net_dev,
- 		return;
- 
- 	if (qm_fd_get_format(fd) == qm_fd_sg) {
--		vaddr = phys_to_virt(qm_fd_addr(fd));
-+		vaddr = dpaa_dma_to_virt(dpaa_bp->priv->rx_dma_dev,
-+					 qm_fd_addr(fd));
- 		sgt = vaddr + qm_fd_get_offset(fd);
- 
- 		dma_unmap_page(dpaa_bp->priv->rx_dma_dev, qm_fd_addr(fd),
-@@ -1588,12 +1598,13 @@ static struct sk_buff *dpaa_cleanup_tx_fd(const struct dpaa_priv *priv,
- 	struct device *dev = priv->net_dev->dev.parent;
- 	struct skb_shared_hwtstamps shhwtstamps;
- 	dma_addr_t addr = qm_fd_addr(fd);
--	void *vaddr = phys_to_virt(addr);
- 	const struct qm_sg_entry *sgt;
- 	struct sk_buff *skb;
-+	void *vaddr;
- 	u64 ns;
- 	int i;
- 
-+	vaddr = dpaa_dma_to_virt(priv->rx_dma_dev, addr);
- 	if (unlikely(qm_fd_get_format(fd) == qm_fd_sg)) {
- 		dma_unmap_page(priv->tx_dma_dev, addr,
- 			       qm_fd_get_offset(fd) + DPAA_SGT_SIZE,
-@@ -1667,16 +1678,11 @@ static u8 rx_csum_offload(const struct dpaa_priv *priv, const struct qm_fd *fd)
-  * accommodate the shared info area of the skb.
-  */
- static struct sk_buff *contig_fd_to_skb(const struct dpaa_priv *priv,
--					const struct qm_fd *fd)
-+					const struct qm_fd *fd, void *vaddr)
- {
- 	ssize_t fd_off = qm_fd_get_offset(fd);
--	dma_addr_t addr = qm_fd_addr(fd);
- 	struct dpaa_bp *dpaa_bp;
- 	struct sk_buff *skb;
--	void *vaddr;
--
--	vaddr = phys_to_virt(addr);
--	WARN_ON(!IS_ALIGNED((unsigned long)vaddr, SMP_CACHE_BYTES));
- 
- 	dpaa_bp = dpaa_bpid2pool(fd->bpid);
- 	if (!dpaa_bp)
-@@ -1705,14 +1711,13 @@ static struct sk_buff *contig_fd_to_skb(const struct dpaa_priv *priv,
-  * The page fragment holding the S/G Table is recycled here.
-  */
- static struct sk_buff *sg_fd_to_skb(const struct dpaa_priv *priv,
--				    const struct qm_fd *fd)
-+				    const struct qm_fd *fd, void *vaddr)
- {
- 	ssize_t fd_off = qm_fd_get_offset(fd);
--	dma_addr_t addr = qm_fd_addr(fd);
- 	const struct qm_sg_entry *sgt;
- 	struct page *page, *head_page;
- 	struct dpaa_bp *dpaa_bp;
--	void *vaddr, *sg_vaddr;
-+	void *sg_vaddr;
- 	int frag_off, frag_len;
- 	struct sk_buff *skb;
- 	dma_addr_t sg_addr;
-@@ -1721,9 +1726,6 @@ static struct sk_buff *sg_fd_to_skb(const struct dpaa_priv *priv,
- 	int *count_ptr;
- 	int i;
- 
--	vaddr = phys_to_virt(addr);
--	WARN_ON(!IS_ALIGNED((unsigned long)vaddr, SMP_CACHE_BYTES));
--
- 	/* Iterate through the SGT entries and add data buffers to the skb */
- 	sgt = vaddr + fd_off;
- 	skb = NULL;
-@@ -1732,7 +1734,7 @@ static struct sk_buff *sg_fd_to_skb(const struct dpaa_priv *priv,
- 		WARN_ON(qm_sg_entry_is_ext(&sgt[i]));
- 
- 		sg_addr = qm_sg_addr(&sgt[i]);
--		sg_vaddr = phys_to_virt(sg_addr);
-+		sg_vaddr = dpaa_dma_to_virt(priv->rx_dma_dev, sg_addr);
- 		WARN_ON(!IS_ALIGNED((unsigned long)sg_vaddr,
- 				    SMP_CACHE_BYTES));
- 
-@@ -1811,7 +1813,7 @@ static struct sk_buff *sg_fd_to_skb(const struct dpaa_priv *priv,
- 	/* free all the SG entries */
- 	for (i = 0; i < DPAA_SGT_MAX_ENTRIES ; i++) {
- 		sg_addr = qm_sg_addr(&sgt[i]);
--		sg_vaddr = phys_to_virt(sg_addr);
-+		sg_vaddr = dpaa_dma_to_virt(priv->rx_dma_dev, sg_addr);
- 		free_pages((unsigned long)sg_vaddr, 0);
- 		dpaa_bp = dpaa_bpid2pool(sgt[i].bpid);
- 		if (dpaa_bp) {
-@@ -2281,11 +2283,12 @@ static enum qman_cb_dqrr_result rx_default_dqrr(struct qman_portal *portal,
- 		return qman_cb_dqrr_consume;
- 	}
- 
--	dma_unmap_page(dpaa_bp->priv->rx_dma_dev, addr, DPAA_BP_RAW_SIZE,
-+	vaddr = dpaa_dma_to_virt(priv->rx_dma_dev, addr);
-+
-+	dma_unmap_page(priv->rx_dma_dev, addr, DPAA_BP_RAW_SIZE,
- 		       DMA_FROM_DEVICE);
- 
- 	/* prefetch the first 64 bytes of the frame or the SGT start */
--	vaddr = phys_to_virt(addr);
- 	prefetch(vaddr + qm_fd_get_offset(fd));
- 
- 	/* The only FD types that we may receive are contig and S/G */
-@@ -2298,9 +2301,9 @@ static enum qman_cb_dqrr_result rx_default_dqrr(struct qman_portal *portal,
- 	(*count_ptr)--;
- 
- 	if (likely(fd_format == qm_fd_contig))
--		skb = contig_fd_to_skb(priv, fd);
-+		skb = contig_fd_to_skb(priv, fd, vaddr);
- 	else
--		skb = sg_fd_to_skb(priv, fd);
-+		skb = sg_fd_to_skb(priv, fd, vaddr);
- 	if (!skb)
- 		return qman_cb_dqrr_consume;
- 
-@@ -2640,7 +2643,7 @@ static inline void dpaa_bp_free_pf(const struct dpaa_bp *bp,
- 	dma_unmap_page(bp->priv->rx_dma_dev, addr, DPAA_BP_RAW_SIZE,
- 		       DMA_FROM_DEVICE);
- 
--	skb_free_frag(phys_to_virt(addr));
-+	skb_free_frag(dpaa_dma_to_virt(bp->priv->rx_dma_dev, addr));
- }
- 
- /* Alloc the dpaa_bp struct and configure default values */
--- 
-2.1.0
+> I'm not sure is this your personal preference or is there a technical
+> reason such as this usage is not incompatible with union syntax?
 
+Apparently it 'works', so there is no hard technical reason, but
+consider that _Bool is specified as an integer type large enough to
+store the values 0 and 1, then consider it as a base type for a
+bitfield. That's just disguisting.
+
+Now, I suppose it 'works', but there is no actual benefit over just
+using a single bit of any other base type.
+
+> My design point is to save a little bit space without introducing
+> two variables such as "int event_count & bool enable_cleanup".
+
+Your design is questionable, the structure is _huge_, and your union has
+event_count:0 and enable_cleanup:0 as the same bit, which I don't think
+was intentional.
+
+Did you perhaps want to write:
+
+	struct {
+		u8 event_count : 7;
+		u8 event_cleanup : 1;
+	};
+
+which has a total size of 1 byte and uses the low 7 bits as count and the
+msb as cleanup.
+
+Also, the structure has plenty holes to stick proper variables in
+without further growing it.
+
+> By the way, is the lazy release mechanism looks reasonable to you?
+
+I've no idea how it works.. I don't know much about virt.
