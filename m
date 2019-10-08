@@ -2,120 +2,119 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.4 required=3.0 tests=DATE_IN_FUTURE_03_06,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E79ECE58C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F24ECE58C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:44:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4684E206BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:44:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 783EA206BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:44:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="hCzosoDz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OVM9BcVL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729657AbfJHBoZ (ORCPT
+        id S1729737AbfJHBoh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 21:44:25 -0400
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:10042 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726917AbfJHBoZ (ORCPT
+        Mon, 7 Oct 2019 21:44:37 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39634 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726917AbfJHBoh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 21:44:25 -0400
-Received: from pps.filterd (m0170397.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x981e6An011903;
-        Mon, 7 Oct 2019 21:44:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=yCKdzxuAI15HqQkGoQIkK3L6z/InOYNfvaU8ZRq3CIQ=;
- b=hCzosoDzxt8GWMsLE6dI+YPFcXsRr6lotBZaMVgS956b2QJkePDWjC9i54KkIM9x7VMs
- W9i+ICPnso4G46yFcT3wcz5UZuBuNKrs9mnuwTVcFYD4IGCYjq6fCjthPLT6CxH4uvQP
- kLf30FXL77ZtWQB4Uio+67Tj6UIavyx8cO/K7oaATY668K9EOfah31AQeqGdFHAdV4HP
- KIa8DhIwMTXGhkU70oUDc+nu+ZbpPfxpylz9tFB24MYGFozHtH8t4h6wRH2s7cL0Q7wd
- sU9fIBMpY9lgLr2CWK1UY/Hzi6l84kqt3oY/QE9CaVs4mEKi/dDYyINCaamsjNVNUWXP uw== 
-Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
-        by mx0b-00154904.pphosted.com with ESMTP id 2vem8vkg54-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Oct 2019 21:44:22 -0400
-Received: from pps.filterd (m0144104.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x981cMWo078962;
-        Mon, 7 Oct 2019 21:44:21 -0400
-Received: from ausc60ps301.us.dell.com (ausc60ps301.us.dell.com [143.166.148.206])
-        by mx0b-00154901.pphosted.com with ESMTP id 2vemenrr8q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 07 Oct 2019 21:44:21 -0400
-X-LoopCount0: from 10.166.132.133
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
-   d="scan'208";a="1360428870"
-From:   <Mario.Limonciello@dell.com>
-To:     <pmenzel@molgen.mpg.de>, <rjw@rjwysocki.net>
-CC:     <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] ACPI: PM: Revert "ACPI / PM: Blacklist Low Power S0 Idle
- _DSM for Dell XPS13 9360"
-Thread-Topic: [PATCH] ACPI: PM: Revert "ACPI / PM: Blacklist Low Power S0 Idle
- _DSM for Dell XPS13 9360"
-Thread-Index: AQHVdIS2zGdNRDUjQk2wDaptzH3FCKdQLGgA///crxA=
-Date:   Tue, 8 Oct 2019 01:44:17 +0000
-Message-ID: <541d9bfa3ccf45b5b07e35e3eebb72ed@AUSX13MPC105.AMER.DELL.COM>
-References: <1569514137-2307-1-git-send-email-mario.limonciello@dell.com>
- <97e66464-8407-fd58-21a6-aeb7736dec7b@molgen.mpg.de>
-In-Reply-To: <97e66464-8407-fd58-21a6-aeb7736dec7b@molgen.mpg.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.143.242.75]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 7 Oct 2019 21:44:37 -0400
+Received: by mail-io1-f67.google.com with SMTP id a1so33112304ioc.6;
+        Mon, 07 Oct 2019 18:44:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Fw209Whs539FleYIAnU1s0PqSxWW0KiTK1H4R+hwlPI=;
+        b=OVM9BcVLoy6BaRIpxY8+rAgvJ00VTOBWAiySLb/FwcAzbDZIwDGGgb/C/oZ7axKGns
+         mIk7bwGQo78Ahi0c0ZEyjVw2ZvYCuNod3xX2tppd7mTUr7GEUqfJvaLVfBIj+3O1/Z4X
+         iQqBoxjeQlZiHtcbpZbqYpkG7VdOJxx3lPTQ/m8/BaA/Pw6E14XOXVPunznX76FNaTd5
+         EixN7GlsZxlvh6v0Z9rsJ6+A1rvHUowLrR8u7QB4QVRISIJNcUqTz0m1MAEzn60FFs0G
+         F1jUK+zocZQwlIkQ5HUFJ5CaVRupKdrjW98xH/W49nKbhQZA4NNEC8yuz7XOv250B1m+
+         92gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Fw209Whs539FleYIAnU1s0PqSxWW0KiTK1H4R+hwlPI=;
+        b=lqHTyF7vUCZdR/KQXJQpq/ksfBekVMzXHf/8yZ+iAangoxxQSG8RhcibSXIM32tshp
+         X56eyMcoFn7TuNmuOV3PobgNrQQAa4IYjs0RZf3AOwY4ppPmxEdmvS9cMYq5uCUSf3Lo
+         bdTclTzVVlU4+JEbs4gHzADztIhGPlP/62Ve30XcKERMmATYls6FnsaBriBusofa08FQ
+         b3wYsB8o1xSo6Nheqe5i1FqsVNuYA0fSrxLLljhVzPB1N1FwvqefaipPR7YErrKJFFFE
+         g9BDJxAmF2CGPHtiVvTJIG038vpbnBAX0WoUM9PfSLS1roYuMuS9tgNj1oHfoVDrozfp
+         AbVw==
+X-Gm-Message-State: APjAAAViqBJY9e/esU9B4uU9HTVGQNDekAZvaMYG6X8OqP5IIlzplNE+
+        uUgvC/Ed4slLgd0v6Bc4CeUhONSZ2FvCH6HKjBw=
+X-Google-Smtp-Source: APXvYqxt6/0xninW5CnKNuJYQqbikrgLXATP2QD131RmcPQ9Z/5vmjUUYkrZ6xXfXBxL3RpKBYFfL7OfUy6i9llje9k=
+X-Received: by 2002:a5e:8c15:: with SMTP id n21mr11990598ioj.246.1570499076276;
+ Mon, 07 Oct 2019 18:44:36 -0700 (PDT)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-07_05:2019-10-07,2019-10-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- impostorscore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0
- phishscore=0 bulkscore=0 suspectscore=0 adultscore=0 spamscore=0
- mlxlogscore=999 clxscore=1011 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1908290000 definitions=main-1910080016
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 clxscore=1015
- suspectscore=0 mlxscore=0 malwarescore=0 bulkscore=0 mlxlogscore=999
- impostorscore=0 phishscore=0 adultscore=0 lowpriorityscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1910080016
+References: <20191007131649.1768-1-linux.amoon@gmail.com> <20191007131649.1768-6-linux.amoon@gmail.com>
+ <CAFBinCAoJLZj9Kh+SfF4Q+0OCzac2+huon_BU=Q3yE7Fu38U3w@mail.gmail.com>
+In-Reply-To: <CAFBinCAoJLZj9Kh+SfF4Q+0OCzac2+huon_BU=Q3yE7Fu38U3w@mail.gmail.com>
+From:   Anand Moon <linux.amoon@gmail.com>
+Date:   Tue, 8 Oct 2019 12:49:46 +0530
+Message-ID: <CANAwSgQScXdKewfBtu-o_sjRb-pk+CvJrv4RunGJOzz=DWjBnQ@mail.gmail.com>
+Subject: Re: [RFCv1 5/5] arm64/ARM: configs: Change CONFIG_PWM_MESON from m to y
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic@lists.infradead.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiAyNi4wOS4xOSAxODowOCwgTWFyaW8gTGltb25jaWVsbG8gd3JvdGU6DQo+ID4gVGhpcyBy
-ZXZlcnRzIHBhcnQgb2YNCj4gPiBjb21taXQgNzE2MzBiN2E4MzJmICgiQUNQSSAvIFBNOiBCbGFj
-a2xpc3QgTG93IFBvd2VyIFMwIElkbGUgX0RTTSBmb3INCj4gPiBEZWxsIFhQUzEzIDkzNjAiKSB0
-byByZW1vdmUgdGhlIFMwaXggYmxhY2tsaXN0IGZvciB0aGUgWFBTIDkzNjAuDQo+ID4NCj4gPiBU
-aGUgcHJvYmxlbXMgd2l0aCB0aGlzIHN5c3RlbSBvY2N1cnJlZCBpbiBvbmUgcG9zc2libGUgTlZN
-RSBTU0Qgd2hlbg0KPiA+IHB1dHRpbmcgc3lzdGVtIGludG8gczBpeC4gIEFzIHRoZSBOVk1FIHNs
-ZWVwIGJlaGF2aW9yIGhhcyBiZWVuDQo+ID4gYWRqdXN0ZWQgaW4gZDkxNmIxYmUgdGhpcyBpcyBl
-eHBlY3RlZCB0byBiZSBub3cgcmVzb2x2ZWQuDQo+IA0KPiAxLiAgUGxlYXNlIGFkZCwgdGhhdCBp
-dCB3YXMgdGhlIEh5bml4KD8pIFNTRC4NCj4gMi4gIFBsZWFzZSBhZGQgdGhlIGNvbW1pdCBtZXNz
-YWdlIHN1bW1hcnkgb2YgZDkxNmIxYmUuDQo+IA0KPiAgICAgIG52bWUtcGNpOiB1c2UgaG9zdCBt
-YW5hZ2VkIHBvd2VyIHN0YXRlIGZvciBzdXNwZW5kDQo+IA0KDQpSYWZhZWwsIGxldCBtZSBrbm93
-IGlmIHlvdSB3YW50IG1lIHRvIGFkanVzdCB0aGUgY29tbWl0IG1lc3NhZ2UgYW5kIHJlc3VibWl0
-DQpvciBpZiB5b3Ugd291bGQganVzdCBoYW5kbGUgdGhpcyB0YXNrLg0KDQo+ID4gQ2M6ICdQYXVs
-IE1lbnplbCA8cG1lbnplbEBtb2xnZW4ubXBnLmRlPicNCj4gPiBCdWdMaW5rOiBodHRwczovL2J1
-Z3ppbGxhLmtlcm5lbC5vcmcvc2hvd19idWcuY2dpP2lkPTE5NjkwNw0KPiA+IFNpZ25lZC1vZmYt
-Ynk6IE1hcmlvIExpbW9uY2llbGxvIDxtYXJpby5saW1vbmNpZWxsb0BkZWxsLmNvbT4NCj4gDQo+
-IFRhZyBpdCBmb3IgdGhlIHN0YWJsZSBzZXJpZXM/IGQ5MTZiMWJlIChmaXJzdCB0YWcgdjUuMy1y
-YzEpIGlzIG5vdCB0YWdnZWQgZm9yIHN0YWJsZS4NCj4gDQoNCkFsdGhvdWdoIERlbGwgYXJyYW5n
-ZWQgYSBsb3Qgb2YgdGVzdGluZyB3aXRoIHBhcnRuZXJzIEkgZG9uJ3QgZmVlbCBkOTE2YjFiZSBp
-cyBhIHN0YWJsZQ0KY2FuZGlkYXRlLiAgUmFmYWVsIGZvdW5kIGEgY29ybmVyIGNhc2Ugd2l0aCBy
-ZWdhcmRzIHRvIEFTUE0gY29uZmlndXJhdGlvbiBsYXN0IG1pbnV0ZQ0KaW4gNS4zcmNYLCBJIGZv
-dW5kIGEgYW5vdGhlciBjb3JuZXIgY2FzZSByZWxhdGVkIHRvIG9yZGVyIG9mIGV2ZW50cyBhbmQg
-dGltaW5nIGFyb3VuZA0KUEMxMCBlbnRyeSB0aGF0J3MgZ2V0dGluZyBmaXhlZCBpbiA1LjQuDQoN
-Cj4gPiAtLS0NCj4gPiBUaGUgcGFydGljdWxhciBmYWlsaW5nIGNvbmZpZ3VyYXRpb24gd2FzIHJl
-cG9ydGVkIGJ5IG9ubHkgZXZlciBmYWlsZWQNCj4gPiBmb3IgUGF1bCBNZW56ZWwsIHNvIGhvcGVm
-dWxseSBoZSBjYW4gdGVzdCBvbiBoaXMgZmFpbGluZyBzeXN0ZW0uDQo+IA0KPiBJIHN1Y2Nlc3Nm
-dWxseSB0ZXN0ZWQgTGludXggNS40LXJjMSsgd2l0aCB0aGlzIGNvbW1pdCBsYXN0IEZyaWRheSBv
-biB0aGUgRGVsbCBYUFMNCj4gMTMgOTM2MC4NCj4gDQo+IFRlc3RlZC1ieTogUGF1bCBNZW56ZWwg
-PHBtZW56ZWxAbW9sZ2VuLm1wZy5kZT4NCj4gDQoNCldlbGwgdGhhdCdzIGdyZWF0LCBhcHByZWNp
-YXRlIHlvdXIgdGVzdGluZyBhbmQgY29uZmlybWF0aW9uLg0KDQo=
+Hi Martin.
+
+On Tue, 8 Oct 2019 at 01:40, Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
+>
+> On Mon, Oct 7, 2019 at 3:17 PM Anand Moon <linux.amoon@gmail.com> wrote:
+> [...]
+> > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> > index c9a867ac32d4..72f6a7dca0d6 100644
+> > --- a/arch/arm64/configs/defconfig
+> > +++ b/arch/arm64/configs/defconfig
+> > @@ -774,7 +774,7 @@ CONFIG_MPL3115=m
+> >  CONFIG_PWM=y
+> >  CONFIG_PWM_BCM2835=m
+> >  CONFIG_PWM_CROS_EC=m
+> > -CONFIG_PWM_MESON=m
+> > +CONFIG_PWM_MESON=y
+> some time ago I submitted a similar patch for the 32-bit SoCs
+> it turned that that pwm-meson can be built as module because the
+> kernel will run without CPU DVFS as long as the clock and regulator
+> drivers are returning -EPROBE_DEFER (-517)
+>
+> did you check whether there's some other problem like some unused
+> clock which is being disabled at that moment?
+> I've been hunting weird problems in the past where it turned out that
+> changing kernel config bits changed the boot timing - that masked the
+> original problem
+
+OK.
+
+>
+>
+> Martin
+
+Sorry for linking this two separate issue PWM failed and microSD detect failed.
+Thanks for the input, I will check if you patch help, I will try to
+investigate more why it fails at my end.
+
+Best Regards
+-Anand
