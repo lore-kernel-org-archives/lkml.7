@@ -2,72 +2,100 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D725C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87973C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DD0221721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:05:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D220206C2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:05:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="AponybTx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730879AbfJHMFF (ORCPT
+        id S1730889AbfJHMFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 08:05:05 -0400
-Received: from mga14.intel.com ([192.55.52.115]:59561 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730332AbfJHMFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 08:05:04 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 05:05:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,270,1566889200"; 
-   d="scan'208";a="206624152"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 08 Oct 2019 05:05:01 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 08 Oct 2019 15:05:00 +0300
-Date:   Tue, 8 Oct 2019 15:05:00 +0300
-From:   "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "logang@deltatee.com" <logang@deltatee.com>
-Subject: Re: [PATCH v8 3/6] PCI: Change extend_bridge_window() to set
- resource size directly
-Message-ID: <20191008120500.GH2819@lahna.fi.intel.com>
-References: <SL2P216MB018777F9E124D364769E5D4680C00@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+        Tue, 8 Oct 2019 08:05:18 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:46272 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730710AbfJHMFS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 08:05:18 -0400
+Received: by mail-lf1-f66.google.com with SMTP id t8so11691963lfc.13
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 05:05:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yIqqIP3EIw1WUky7Dl5KboQRqFaypkEePxm8k0rEc9o=;
+        b=AponybTxAeH4Qwys7uf32YeqpoJ78jgDddTlKOmqmCAlexPcNn8x24ajVQ+O7+xRkR
+         RuBT096o6RaBaaTnFRhKPGbBnK69SeSdi0jX5VxETzV8yWF+FlbeSjLE8LtoSz+LXe/9
+         1SJ01i6mDKGlRWpaglFSkyprM69Ur66rByxaU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yIqqIP3EIw1WUky7Dl5KboQRqFaypkEePxm8k0rEc9o=;
+        b=UQMice3leCmg8FexiZ5RarV5egJ0qbP3Znaw90roUSuUsXPi4/oEFadUy/avtt5Yf1
+         TfAEClJgGnOyKtSCBoEssQlgiWizF+uwc6DiaqsBXoNDTHeU1LTtUXmoz6MAMvfuU8GK
+         RzAqYL2MzivMXrlj648ErNTfdDQqKJAB7Eoe2ai0hUZSq+MbNYslJGEIHp8yHBA8ZzDA
+         B41Nj/vtHAsYG1Td6JPq+Dxi0UlrLfe6Tb66PEGN3g0IgEg7dnW2NME2f2zT61M6fuLn
+         tVOS0Wa5s3nCPHSXvjipztmiip/em34xXuDOssJ91hDNdC3n6Cn3mG6p79McfwoI6wg5
+         V7vw==
+X-Gm-Message-State: APjAAAUG6U+kK84EtNJ+awKPjqKrUujcw2WZADUCH93DLvUWiJcxyZFA
+        mmRteSicpb/gzdLZRU+PQKD5DQ==
+X-Google-Smtp-Source: APXvYqykeLmJ/WUhlQxva8zZaqPikrZhQ2ld9WnisNftyHunM8rSa4gXa55Lqcwffs1sdJgebXd04g==
+X-Received: by 2002:a19:ec16:: with SMTP id b22mr20438594lfa.189.1570536316077;
+        Tue, 08 Oct 2019 05:05:16 -0700 (PDT)
+Received: from prevas-ravi.prevas.se ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id z18sm3918033ljh.17.2019.10.08.05.05.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Oct 2019 05:05:15 -0700 (PDT)
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: [PATCH v2 0/4] backlight: pwm_bl: optimizations and small fix for cie1913
+Date:   Tue,  8 Oct 2019 14:03:23 +0200
+Message-Id: <20191008120327.24208-1-linux@rasmusvillemoes.dk>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SL2P216MB018777F9E124D364769E5D4680C00@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 12:54:01PM +0000, Nicholas Johnson wrote:
-> Change extend_bridge_window() to set resource size directly instead of
-> using additional resource lists.
-> 
-> Because additional resource lists are optional resources, any algorithm
-> that requires guaranteed allocation that uses them cannot be guaranteed
-> to work.
-> 
-> Remove the resource from add_list. If it is set to zero size and left,
-> it can cause significant problems when it comes to assigning resources.
+These patches optimize the cie1913() implementation by using fewer 64
+bit divisions and multiplications. It also contains a minor fix for
+the linear constant used.
 
-It would be good if you would open bit more what kind of significant
-problems this may result.
+v2:
+- Drop patch 5.
+- Fix thinko in patch 4, otherwise no code change.
+- Better changelog in patch 3.
+- Add Daniel's Reviewed-By to the four patches.
 
-> Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Daniel, I took the liberty of adding your R-B to patch 4 despite
+changing it a little to fix a thinko - I should add 1<<31 and not
+1<<15. Please tell me if that was inappropriate.
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Rasmus Villemoes (4):
+  backlight: pwm_bl: fix cie1913 comments and constant
+  backlight: pwm_bl: eliminate a 64/32 division
+  backlight: pwm_bl: drop use of int_pow()
+  backlight: pwm_bl: switch to power-of-2 base for fixed-point math
+
+ drivers/video/backlight/pwm_bl.c | 29 +++++++++++++++++++----------
+ 1 file changed, 19 insertions(+), 10 deletions(-)
+
+-- 
+2.20.1
+
