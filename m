@@ -6,34 +6,36 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C119C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 407DCECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5931920640
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:53:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2464420640
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:53:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730890AbfJHMxW (ORCPT
+        id S1731095AbfJHMxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 08:53:22 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:36934 "EHLO huawei.com"
+        Tue, 8 Oct 2019 08:53:24 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:36936 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730541AbfJHMxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 08:53:22 -0400
+        id S1730301AbfJHMxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 08:53:23 -0400
 Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E8BFF7BAEF272BFF2464;
+        by Forcepoint Email with ESMTP id EE0A8341A32B5758DA77;
         Tue,  8 Oct 2019 20:53:20 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 8 Oct 2019
- 20:53:10 +0800
+ 20:53:14 +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     Chao Yu <yuchao0@huawei.com>, <linux-erofs@lists.ozlabs.org>
 CC:     LKML <linux-kernel@vger.kernel.org>, Miao Xie <miaoxie@huawei.com>,
         "Li Guifu" <bluce.liguifu@huawei.com>,
         Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH for-next 1/5] erofs: clean up collection handling routines
-Date:   Tue, 8 Oct 2019 20:56:12 +0800
-Message-ID: <20191008125616.183715-1-gaoxiang25@huawei.com>
+Subject: [PATCH for-next 3/5] erofs: get rid of __stagingpage_alloc helper
+Date:   Tue, 8 Oct 2019 20:56:14 +0800
+Message-ID: <20191008125616.183715-3-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191008125616.183715-1-gaoxiang25@huawei.com>
+References: <20191008125616.183715-1-gaoxiang25@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.140.130.215]
@@ -43,147 +45,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- - change return value to int since collection is
-   already returned within the collector.
- - better function naming.
+Now open code is much cleaner due to iterative development.
 
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- fs/erofs/zdata.c | 47 +++++++++++++++++++++++++----------------------
- 1 file changed, 25 insertions(+), 22 deletions(-)
+ fs/erofs/zdata.c | 19 +++++--------------
+ 1 file changed, 5 insertions(+), 14 deletions(-)
 
 diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index fad80c97d247..ef32757d1aac 100644
+index 93f8bc1a64f6..e2a89aa921b1 100644
 --- a/fs/erofs/zdata.c
 +++ b/fs/erofs/zdata.c
-@@ -337,9 +337,9 @@ try_to_claim_pcluster(struct z_erofs_pcluster *pcl,
- 	return COLLECT_PRIMARY;	/* :( better luck next time */
+@@ -546,15 +546,6 @@ static bool z_erofs_collector_end(struct z_erofs_collector *clt)
+ 	return true;
  }
  
--static struct z_erofs_collection *cllookup(struct z_erofs_collector *clt,
--					   struct inode *inode,
--					   struct erofs_map_blocks *map)
-+static int z_erofs_lookup_collection(struct z_erofs_collector *clt,
-+				     struct inode *inode,
-+				     struct erofs_map_blocks *map)
- {
- 	struct erofs_workgroup *grp;
- 	struct z_erofs_pcluster *pcl;
-@@ -349,20 +349,20 @@ static struct z_erofs_collection *cllookup(struct z_erofs_collector *clt,
+-static inline struct page *__stagingpage_alloc(struct list_head *pagepool,
+-					       gfp_t gfp)
+-{
+-	struct page *page = erofs_allocpage(pagepool, gfp, true);
+-
+-	page->mapping = Z_EROFS_MAPPING_STAGING;
+-	return page;
+-}
+-
+ static bool should_alloc_managed_pages(struct z_erofs_decompress_frontend *fe,
+ 				       unsigned int cachestrategy,
+ 				       erofs_off_t la)
+@@ -661,8 +652,9 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
+ 	/* should allocate an additional staging page for pagevec */
+ 	if (err == -EAGAIN) {
+ 		struct page *const newpage =
+-			__stagingpage_alloc(pagepool, GFP_NOFS);
++			erofs_allocpage(pagepool, GFP_NOFS, true);
  
- 	grp = erofs_find_workgroup(inode->i_sb, map->m_pa >> PAGE_SHIFT, &tag);
- 	if (!grp)
--		return NULL;
-+		return -ENOENT;
- 
- 	pcl = container_of(grp, struct z_erofs_pcluster, obj);
- 	if (clt->owned_head == &pcl->next || pcl == clt->tailpcl) {
- 		DBG_BUGON(1);
- 		erofs_workgroup_put(grp);
--		return ERR_PTR(-EFSCORRUPTED);
-+		return -EFSCORRUPTED;
++		newpage->mapping = Z_EROFS_MAPPING_STAGING;
+ 		err = z_erofs_attach_page(clt, newpage,
+ 					  Z_EROFS_PAGE_TYPE_EXCLUSIVE);
+ 		if (!err)
+@@ -1079,15 +1071,14 @@ static struct page *pickup_page_for_submission(struct z_erofs_pcluster *pcl,
+ 	unlock_page(page);
+ 	put_page(page);
+ out_allocpage:
+-	page = __stagingpage_alloc(pagepool, gfp);
++	page = erofs_allocpage(pagepool, gfp, true);
+ 	if (oldpage != cmpxchg(&pcl->compressed_pages[nr], oldpage, page)) {
+ 		list_add(&page->lru, pagepool);
+ 		cpu_relax();
+ 		goto repeat;
  	}
- 
- 	cl = z_erofs_primarycollection(pcl);
- 	if (cl->pageofs != (map->m_la & ~PAGE_MASK)) {
- 		DBG_BUGON(1);
- 		erofs_workgroup_put(grp);
--		return ERR_PTR(-EFSCORRUPTED);
-+		return -EFSCORRUPTED;
+-	if (!tocache)
+-		goto out;
+-	if (add_to_page_cache_lru(page, mc, index + nr, gfp)) {
++
++	if (!tocache || add_to_page_cache_lru(page, mc, index + nr, gfp)) {
+ 		page->mapping = Z_EROFS_MAPPING_STAGING;
+ 		goto out;
  	}
- 
- 	length = READ_ONCE(pcl->length);
-@@ -370,7 +370,7 @@ static struct z_erofs_collection *cllookup(struct z_erofs_collector *clt,
- 		if ((map->m_llen << Z_EROFS_PCLUSTER_LENGTH_BIT) > length) {
- 			DBG_BUGON(1);
- 			erofs_workgroup_put(grp);
--			return ERR_PTR(-EFSCORRUPTED);
-+			return -EFSCORRUPTED;
- 		}
- 	} else {
- 		unsigned int llen = map->m_llen << Z_EROFS_PCLUSTER_LENGTH_BIT;
-@@ -394,12 +394,12 @@ static struct z_erofs_collection *cllookup(struct z_erofs_collector *clt,
- 		clt->tailpcl = NULL;
- 	clt->pcl = pcl;
- 	clt->cl = cl;
--	return cl;
-+	return 0;
- }
- 
--static struct z_erofs_collection *clregister(struct z_erofs_collector *clt,
--					     struct inode *inode,
--					     struct erofs_map_blocks *map)
-+static int z_erofs_register_collection(struct z_erofs_collector *clt,
-+				       struct inode *inode,
-+				       struct erofs_map_blocks *map)
- {
- 	struct z_erofs_pcluster *pcl;
- 	struct z_erofs_collection *cl;
-@@ -408,7 +408,7 @@ static struct z_erofs_collection *clregister(struct z_erofs_collector *clt,
- 	/* no available workgroup, let's allocate one */
- 	pcl = kmem_cache_alloc(pcluster_cachep, GFP_NOFS);
- 	if (!pcl)
--		return ERR_PTR(-ENOMEM);
-+		return -ENOMEM;
- 
- 	z_erofs_pcluster_init_always(pcl);
- 	pcl->obj.index = map->m_pa >> PAGE_SHIFT;
-@@ -442,7 +442,7 @@ static struct z_erofs_collection *clregister(struct z_erofs_collector *clt,
- 	if (err) {
- 		mutex_unlock(&cl->lock);
- 		kmem_cache_free(pcluster_cachep, pcl);
--		return ERR_PTR(-EAGAIN);
-+		return -EAGAIN;
- 	}
- 	/* used to check tail merging loop due to corrupted images */
- 	if (clt->owned_head == Z_EROFS_PCLUSTER_TAIL)
-@@ -450,14 +450,14 @@ static struct z_erofs_collection *clregister(struct z_erofs_collector *clt,
- 	clt->owned_head = &pcl->next;
- 	clt->pcl = pcl;
- 	clt->cl = cl;
--	return cl;
-+	return 0;
- }
- 
- static int z_erofs_collector_begin(struct z_erofs_collector *clt,
- 				   struct inode *inode,
- 				   struct erofs_map_blocks *map)
- {
--	struct z_erofs_collection *cl;
-+	int ret;
- 
- 	DBG_BUGON(clt->cl);
- 
-@@ -471,19 +471,22 @@ static int z_erofs_collector_begin(struct z_erofs_collector *clt,
- 	}
- 
- repeat:
--	cl = cllookup(clt, inode, map);
--	if (!cl) {
--		cl = clregister(clt, inode, map);
-+	ret = z_erofs_lookup_collection(clt, inode, map);
-+	if (ret == -ENOENT) {
-+		ret = z_erofs_register_collection(clt, inode, map);
- 
--		if (cl == ERR_PTR(-EAGAIN))
-+		/* someone registered at the same time, give another try */
-+		if (ret == -EAGAIN) {
-+			cond_resched();
- 			goto repeat;
-+		}
- 	}
- 
--	if (IS_ERR(cl))
--		return PTR_ERR(cl);
-+	if (ret)
-+		return ret;
- 
- 	z_erofs_pagevec_ctor_init(&clt->vector, Z_EROFS_NR_INLINE_PAGEVECS,
--				  cl->pagevec, cl->vcnt);
-+				  clt->cl->pagevec, clt->cl->vcnt);
- 
- 	clt->compressedpages = clt->pcl->compressed_pages;
- 	if (clt->mode <= COLLECT_PRIMARY) /* cannot do in-place I/O */
 -- 
 2.17.1
 
