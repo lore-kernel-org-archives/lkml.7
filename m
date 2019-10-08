@@ -2,170 +2,115 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 051ACC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 21:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03020C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D166F21835
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 21:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEE9C206BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:00:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EjeMoo6m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbfJHVzr (ORCPT
+        id S1726109AbfJHWAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 17:55:47 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:51598 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfJHVzr (ORCPT
+        Tue, 8 Oct 2019 18:00:20 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41782 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfJHWAU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 17:55:47 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id A5CDD28D7B3
-Message-ID: <d37e781548fbcb1cb891d681b322645b7af7f01b.camel@collabora.com>
-Subject: Re: [PATCH v3 3/5] drm/rockchip: Add optional support for CRTC
- gamma LUT
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Sean Paul <sean@poorly.run>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rockchip@lists.infradead.org,
-        Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
-        Sandy Huang <hjc@rock-chips.com>, kernel@collabora.com,
-        Sean Paul <seanpaul@chromium.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Ilia Mirkin <imirkin@alum.mit.edu>,
-        Rob Herring <robh+dt@kernel.org>,
+        Tue, 8 Oct 2019 18:00:20 -0400
+Received: by mail-pg1-f196.google.com with SMTP id t3so26547pga.8;
+        Tue, 08 Oct 2019 15:00:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=K8VwQ8TCTC5/lrHVeyiW+MeWgBKPPjSQ/SHqffwjhy4=;
+        b=EjeMoo6mfQOP0n9xeZlsTtCsBU1AuRIGmMk4KQE7ADpiVua7YXe7RFmbF3EGo8JzgY
+         kMWlIewGlijC/1STqK6+nLrmbzKU8HhuE/NsInavlZlMkBdx65+8mby2XEGRxgBlNh2r
+         IiKX+bESF+EFe3EQ9amxEboKxBeRDssgKIzRT1IUkkjIyO0JBOeeQJklvGgYKhJYCG6V
+         UPjUPT77uePy7cp0bH7yN2s7QB9aAwcLeDukuhQv6of5YfdzU0+QJQme8rN8elcLfJ9X
+         QDY6ACLYcWPkgKRMc4Qa3cfMOoS21tCapqPVv7ki2G2FbFX3Tcou/b8Q7PBrCe1g+x5W
+         iDGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=K8VwQ8TCTC5/lrHVeyiW+MeWgBKPPjSQ/SHqffwjhy4=;
+        b=tWjjoEYUi38k2xOEk0gWOc4q7kFPCChpGQXGf4GbIyGJnapevIcx6pRX4ncnt9KRbf
+         TbpugFsfJQeKyfHrxIX/lInq5Bt442NwN+1i/3VnLVinG+gUG7DQf8nPjn+J0TfhA1CT
+         Yj3G1o+C/CSts4rbriG2N1GzJkNA3kBxVo44UxJxpNmO5MbbMw/SHLBwLg7yr4weQ7c/
+         1DH9s1F/VW3NdX8pz0YPCGkgmLp+sMpEfOzoWXP6mm2ifuhPK9nWrIk2svEzwCS3wPrK
+         xQo3ZJEdnuyp2G4E6d7GUcqb3iBN+QpLF7ZEdG3eKalshkaPAOL/1WoEvWK9IDOq6CDA
+         pssA==
+X-Gm-Message-State: APjAAAWuUvpr9C1USMlEdt/WWun7H8Dr8zHAtedmWX1xaxQbFwI1mnL/
+        4RS1THs5pJKlIYhlJQMQThk=
+X-Google-Smtp-Source: APXvYqysYd5UL6IiBu3iTKiFYZKZnVf9LyvpnmVljoO76NQu5tU14obnuxA7Fz23fDzTAUwIwswgWg==
+X-Received: by 2002:a62:5ec6:: with SMTP id s189mr173438pfb.30.1570572017861;
+        Tue, 08 Oct 2019 15:00:17 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id d19sm150685pjz.5.2019.10.08.15.00.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Oct 2019 15:00:16 -0700 (PDT)
+Date:   Tue, 8 Oct 2019 15:00:14 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     Andi Shyti <andi@etezian.org>, Simon Shields <simon@lineageos.org>,
+        linux-input@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>
-Date:   Tue, 08 Oct 2019 18:55:34 -0300
-In-Reply-To: <20191008200339.GD85762@art_vandelay>
-References: <20190930222802.32088-1-ezequiel@collabora.com>
-         <20190930222802.32088-4-ezequiel@collabora.com>
-         <20191007185432.GG126146@art_vandelay>
-         <dad6ee9aa3699af0f794f467224a8a01798d86b2.camel@collabora.com>
-         <9cdd23c20ed91d4c4654aaae27d8c3addfd9af3f.camel@collabora.com>
-         <20191008200339.GD85762@art_vandelay>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] Input: mms114 - add support for mms345l
+Message-ID: <20191008220014.GI22365@dtor-ws>
+References: <20191007203343.101466-1-stephan@gerhold.net>
+ <20191007205021.104402-1-stephan@gerhold.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191007205021.104402-1-stephan@gerhold.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-10-08 at 16:03 -0400, Sean Paul wrote:
-> On Tue, Oct 08, 2019 at 04:33:35PM -0300, Ezequiel Garcia wrote:
-> > On Tue, 2019-10-08 at 16:23 -0300, Ezequiel Garcia wrote:
-> > > Hello Sean,
-> > > 
-> > > On Mon, 2019-10-07 at 14:54 -0400, Sean Paul wrote:
-> > > > On Mon, Sep 30, 2019 at 07:28:00PM -0300, Ezequiel Garcia wrote:
-> > > > > Add an optional CRTC gamma LUT support, and enable it on RK3288.
-> > > > > This is currently enabled via a separate address resource,
-> > > > > which needs to be specified in the devicetree.
-> > > > > 
-> > > > > The address resource is required because on some SoCs, such as
-> > > > > RK3288, the LUT address is after the MMU address, and the latter
-> > > > > is supported by a different driver. This prevents the DRM driver
-> > > > > from requesting an entire register space.
-> > > > > 
-> > > > > The current implementation works for RGB 10-bit tables, as that
-> > > > > is what seems to work on RK3288.
-> > > > > 
-> > > > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > > > > Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> > > > > Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > > > > ---
-> > > > > Changes from v2:
-> > > > > * None.
-> > > > > 
-> > > > > Changes from v1:
-> > > > > * drop explicit linear LUT after finding a proper
-> > > > >   way to disable gamma correction.
-> > > > > * avoid setting gamma is the CRTC is not active.
-> > > > > * s/int/unsigned int as suggested by Jacopo.
-> > > > > * only enable color management and set gamma size
-> > > > >   if gamma LUT is supported, suggested by Doug.
-> > > > > * drop the reg-names usage, and instead just use indexed reg
-> > > > >   specifiers, suggested by Doug.
-> > > > > 
-> > > > > Changes from RFC:
-> > > > > * Request (an optional) address resource for the LUT.
-> > > > > * Drop support for RK3399, which doesn't seem to work
-> > > > >   out of the box and needs more research.
-> > > > > * Support pass-thru setting when GAMMA_LUT is NULL.
-> > > > > * Add a check for the gamma size, as suggested by Ilia.
-> > > > > * Move gamma setting to atomic_commit_tail, as pointed
-> > > > >   out by Jacopo/Laurent, is the correct way.
-> > > > > ---
-> > > > >  drivers/gpu/drm/rockchip/rockchip_drm_fb.c  |   3 +
-> > > > >  drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 114 ++++++++++++++++++++
-> > > > >  drivers/gpu/drm/rockchip/rockchip_drm_vop.h |   7 ++
-> > > > >  drivers/gpu/drm/rockchip/rockchip_vop_reg.c |   2 +
-> > > > >  4 files changed, 126 insertions(+)
-> > > > > 
-> > > > > diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-> > > > > index dba352ec0ee3..fd1d987698ab 100644
-> > > > > --- a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-> > > > > +++ b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-> > > > > @@ -17,6 +17,7 @@
-> > > > >  #include "rockchip_drm_drv.h"
-> > > > >  #include "rockchip_drm_fb.h"
-> > > > >  #include "rockchip_drm_gem.h"
-> > > > > +#include "rockchip_drm_vop.h"
-> > > > >  
-> > > > >  static const struct drm_framebuffer_funcs rockchip_drm_fb_funcs = {
-> > > > >  	.destroy       = drm_gem_fb_destroy,
-> > > > > @@ -112,6 +113,8 @@ rockchip_atomic_helper_commit_tail_rpm(struct drm_atomic_state *old_state)
-> > > > >  
-> > > > >  	drm_atomic_helper_commit_modeset_disables(dev, old_state);
-> > > > >  
-> > > > > +	rockchip_drm_vop_gamma_set(old_state);
-> > > > > +
-> > > > 
-> > > > Instead of duplicating the commit_tail helper, could you just implement
-> > > > .atomic_begin() and call this from there? I think the only hitch is if you
-> > > > need this to be completed before crtc->atomic_enable(), at which point you
-> > > > might need to call it from vop_crtc_atomic_enable() and then detect that in
-> > > > atomic_begin()
-> > > > 
-> > > 
-> > > I think moving this to .atomic_begin might be enough. Let me send a new
-> > > series and we can see how that goes.
-> > > 
-> > 
-> > Oh, before going forward, pleaste note that the first iteration
-> > of this patch (as noted in the changelog) was applying the gamma lut
-> > on .atomic_flush. However, Laurent and Jacopo pointed out that
-> > it might add some tearing to do so, and that's why it was moved
-> > to commit_tail.
-> > 
-> > I have to admit I'm not too sure about the difference between
-> > applying this gamma LUT on atomic_begin or atomic_flush,
-> > perhaps you can clarify that?
+On Mon, Oct 07, 2019 at 10:50:21PM +0200, Stephan Gerhold wrote:
+> MMS345L is another first generation touch screen from Melfas,
+> which uses the same registers as MMS152.
 > 
-> The only difference between what you have now and calling it in atomic_begin
-> is that as you have it now, it's set before crtc->atomic_enable() is called.
-> I think in order to address Ville's concerns on the other patch, you'll need
-> to set it the lut in .atomic_enable() anyways, so here's what I would suggest:
+> However, using I2C_M_NOSTART for it causes errors when reading:
 > 
-> - Set the LUT in .atomic_enable() wherever it makes sense (you have it at the
->   start now)
-> - Add an .atomic_begin() implementation and check state->color_mgmt_changed and
->   state->active_changed. color_mgmt_changed && !active_changed, set the lut
-> - Remove patches 1 & 5
+> 	i2c i2c-0: sendbytes: NAK bailout.
+> 	mms114 0-0048: __mms114_read_reg: i2c transfer failed (-5)
 > 
-> ...I think :-)
+> The driver works fine as soon as I2C_M_NOSTART is removed.
 > 
+> Add a separate melfas,mms345l binding, and make use of I2C_M_NOSTART
+> only for MMS114 and MMS152.
+> 
+> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+> ---
+> Note: I was not able to find a datasheet for any of the models,
+> so this change is merely based on testing and comparison with
+> the downstream driver [1].
+> 
+> There was a related patch [2] that removes I2C_M_NOSTART for all models,
+> but it seems abandoned and I do not have any other model for testing.
+> Therefore, this patch implements the least instrusive solution
+> and only removes I2C_M_NOSTART for MMS345L.
 
-OK, that helped! Patches in 3...2...
+Hmm,  at this point I am inclined to pick up Andi's patch since it seems
+to work for you and him and it looks like Android drivers are not using
+I2C_M_NOSTART. I wonder if this was some quirk/big on the platform where
+it was originally developed.
 
-Regards,
-Ezequiel
+Any objections?
 
+Thanks.
+
+-- 
+Dmitry
