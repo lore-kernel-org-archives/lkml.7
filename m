@@ -2,110 +2,90 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FDD1C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C44C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 563B22070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:08:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XqWFclf1"
+	by mail.kernel.org (Postfix) with ESMTP id 5FB91206C2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:09:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730871AbfJHMII (ORCPT
+        id S1730786AbfJHMJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 08:08:08 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:55508 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730541AbfJHMII (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 08:08:08 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x98C44fR110712;
-        Tue, 8 Oct 2019 12:07:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=TmaPSvdLAAUjYycK4fTb+QYPszkTpvdMZGFtiACntoM=;
- b=XqWFclf1lZMoy0jmXDUtiLEMRFE1+Q3zUx6XXoqvGz7wkIOWZWQzVZsev519bWaIVyQd
- RnIOQvKPXcON5u7i6G8pmXEwXBtJTVzZOaph8iORMOwFb9g4ozSS36D2aZBcgoaQMori
- 6fur+kvxL7eW4B/GH0oxS5q5GH+zoahiaJJLUYXcedIU5VDs0Ph6D7nStiwQ+h4glxhs
- Jdj6nU0xJ0LhrZQdsRFHWuU43KNrMhoplcI4mf5flPrkfaaN8dMK1r5QK/peEgEzRF67
- Cy84SbyY2PtHb69i0BzsVRw3ohSupCyJoI0GtyRSk3nJRHPKwySdynL3ZKYYYcNWzTw0 uw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2vek4qctby-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 08 Oct 2019 12:07:57 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x98C7riF131307;
-        Tue, 8 Oct 2019 12:07:57 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2vgefagb3u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 08 Oct 2019 12:07:57 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x98C7uD6004566;
-        Tue, 8 Oct 2019 12:07:56 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 08 Oct 2019 05:07:55 -0700
-Date:   Tue, 8 Oct 2019 15:07:49 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Jerome Pouiller <Jerome.Pouiller@silabs.com>
-Cc:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 6/7] staging: wfx: drop calls to BUG_ON()
-Message-ID: <20191008120749.GG25098@kadam>
-References: <20191008094232.10014-1-Jerome.Pouiller@silabs.com>
- <20191008094232.10014-7-Jerome.Pouiller@silabs.com>
+        Tue, 8 Oct 2019 08:09:12 -0400
+Received: from mga02.intel.com ([134.134.136.20]:29707 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730541AbfJHMJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 08:09:12 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 05:09:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,270,1566889200"; 
+   d="scan'208";a="206624790"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 08 Oct 2019 05:09:08 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 08 Oct 2019 15:09:07 +0300
+Date:   Tue, 8 Oct 2019 15:09:07 +0300
+From:   "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "logang@deltatee.com" <logang@deltatee.com>
+Subject: Re: [PATCH v8 4/6] PCI: Allow extend_bridge_window() to shrink
+ resource if necessary
+Message-ID: <20191008120907.GI2819@lahna.fi.intel.com>
+References: <SL2P216MB01879766498AA7746C2E5FB780C00@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191008094232.10014-7-Jerome.Pouiller@silabs.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9403 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=960
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910080119
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9403 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910080118
+In-Reply-To: <SL2P216MB01879766498AA7746C2E5FB780C00@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 09:43:01AM +0000, Jerome Pouiller wrote:
-> @@ -56,9 +56,9 @@ static uint8_t fill_tkip_pair(struct hif_tkip_pairwise_key *msg,
->  {
->  	uint8_t *keybuf = key->key;
->  
-> -	WARN_ON(key->keylen != sizeof(msg->tkip_key_data)
-> -			       + sizeof(msg->tx_mic_key)
-> -			       + sizeof(msg->rx_mic_key));
-> +	WARN(key->keylen != sizeof(msg->tkip_key_data)
-> +			    + sizeof(msg->tx_mic_key)
-> +			    + sizeof(msg->rx_mic_key), "inconsistent data");
+On Fri, Jul 26, 2019 at 12:54:22PM +0000, Nicholas Johnson wrote:
+> Remove checks for resource size in extend_bridge_window(). This is
+> necessary to allow the pci_bus_distribute_available_resources() to
+> function when the kernel parameter pci=hpmemsize=nn[KMG] is used to
+> allocate resources. Because the kernel parameter sets the size of all
+> hotplug bridges to be the same, there are problems when nested hotplug
+> bridges are encountered. Fitting a downstream hotplug bridge with size X
+> and normal bridges with size Y into parent hotplug bridge with size X is
+> impossible, and hence the downstream hotplug bridge needs to shrink to
+> fit into its parent.
 
-This is not a comment on the patch since the code was like that
-originally, but the " +" should go of the first line:
+Maybe you could show the topology here which needs shrinking.
 
-	WARN(key->keylen != sizeof(msg->tkip_key_data) +
-			    sizeof(msg->tx_mic_key) +
-			    sizeof(msg->rx_mic_key),
-	     "inconsistent data");
+> Add check for if bridge is extended or shrunken and adjust pci_dbg to
+> reflect this.
+> 
+> Reset the resource if its new size is zero (if we have run out of a
+> bridge window resource). If it is set to zero size and left, it can
+> cause significant problems when it comes to enabling devices.
 
-That doesn't look too good still...  The error message is sort of
-rubbish also.  Anyway the operator goes on the first line.
+Same comment here about explaining the "significant problems".
+> 
+> Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+> ---
+>  drivers/pci/setup-bus.c | 16 +++++++++++-----
+>  1 file changed, 11 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> index a072781ab..7e1dc892a 100644
+> --- a/drivers/pci/setup-bus.c
+> +++ b/drivers/pci/setup-bus.c
+> @@ -1823,13 +1823,19 @@ static void extend_bridge_window(struct pci_dev *bridge, struct resource *res,
 
-regards,
-dan carpenter
+Since it is also shrinking now maybe name it adjust_bridge_window() instead?
