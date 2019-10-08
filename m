@@ -2,75 +2,183 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22326ECE58C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02BB4C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 045B821721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6BE221721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:54:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570575291;
+	bh=B9G7S/xkZdPGkTEykG3idCdbGuVne3to/vB44gbJ5ok=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=agLiz/DOmEgJeEYLBpEVHkrYP8xMtN91N5mV3rIyHUK6axFJMkVcCkWNWR6BEOtSw
+	 6imGxQsMAkmr4xQb1kyQ0cnONHd2TVtACS5vH7WLmehs7yJROTUlA2JFYUKdyLG6PS
+	 T7Sl26Yc0I2nu2XYejhMs1/eQQbDfmhGe3Oq3mO8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729627AbfJHWwH (ORCPT
+        id S1728212AbfJHWyu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 18:52:07 -0400
-Received: from mga05.intel.com ([192.55.52.43]:1870 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725848AbfJHWwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 18:52:07 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 15:52:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,272,1566889200"; 
-   d="scan'208";a="187448951"
-Received: from jhogan1-mobl.ger.corp.intel.com (HELO localhost) ([10.252.2.221])
-  by orsmga008.jf.intel.com with ESMTP; 08 Oct 2019 15:52:02 -0700
-Date:   Wed, 9 Oct 2019 01:52:02 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     James Bottomley <jejb@linux.ibm.com>
-Cc:     linux-integrity@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/2] tpm: Use GFP_KERNEL for allocating struct tpm_buf
-Message-ID: <20191008225202.GA12089@linux.intel.com>
-References: <20191003185103.26347-1-jarkko.sakkinen@linux.intel.com>
- <20191003185103.26347-2-jarkko.sakkinen@linux.intel.com>
- <1570148716.10818.19.camel@linux.ibm.com>
- <20191006095005.GA7660@linux.intel.com>
- <1570475528.4242.2.camel@linux.ibm.com>
+        Tue, 8 Oct 2019 18:54:50 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:35420 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfJHWyu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 18:54:50 -0400
+Received: by mail-oi1-f194.google.com with SMTP id x3so171586oig.2;
+        Tue, 08 Oct 2019 15:54:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SggbRRKNXqQlH49P3KzPfRoT4FOY8o89Xl8C5FlY+KA=;
+        b=SPc7Wo/xlhNBDSK+mjqXICQ8FyFQMeZ29jL29NzY1ngXkmv2/8vxP99YnTZzZ2Y9tF
+         uS6y/MXBEIBquJW9zKQzNi3pRI9WjbqTeAPQIqNYLg9XftTR8TRpuU6EvNsnk/0DcgE9
+         u9zJaVfNBEy9urK/XXrPKZANeoEKO3eJ2hl5Z1SRROu4jszB8HEwEcEbijmJuvnTPcHF
+         brmnGa6sEyLgq6eZEeMsd4VV9cAsj4o3kSDVhlKwuEhMg/26wBNYfOD2K/CnJO2r6dA5
+         8lXKryPt1IbMABOiIH+kCJ7XjVRZdW2IQtRkcLslronRC9QGpCy8K0ShqWUM8ltnVJSN
+         KkMA==
+X-Gm-Message-State: APjAAAUwy+rF4zejMQRlDW7ml/F2chTEVw0kn3fW1sIPb+i81uywfRGs
+        iI4k18ndyWjx3q7+FT/QWigKh7uidJus9ki2VHY=
+X-Google-Smtp-Source: APXvYqzAHIWDALJmWxny85y+zNIHc6fYu7ABhv0L9fiH6TsA/vMVV+jisYkSGZMtPlgYlfymiNkZrvEQvyEMSGQl7Vo=
+X-Received: by 2002:aca:d706:: with SMTP id o6mr7215oig.57.1570575288501; Tue,
+ 08 Oct 2019 15:54:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1570475528.4242.2.camel@linux.ibm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CAJZ5v0iL4Rv=AQ-Qnma=wWaqBBbOdfRqu9uS9Gesa-G75oQpzQ@mail.gmail.com>
+ <20191008211656.GA163302@google.com>
+In-Reply-To: <20191008211656.GA163302@google.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 9 Oct 2019 00:54:37 +0200
+Message-ID: <CAJZ5v0j-uSM2gheHViommWcrSaLVfzbwV3M7OOWz3GyzhHSwRA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] PCI: PCIe: ASPM: Introduce pcie_aspm_enabled()
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Keith Busch <kbusch@kernel.org>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 12:12:08PM -0700, James Bottomley wrote:
-> From: James Bottomley <James.Bottomley@HansenPartnership.com>
-> Subject: [PATCH] tpm: use GFP kernel for tpm_buf allocations
-> 
-> The current code uses GFP_HIGHMEM, which is wrong because GFP_HIGHMEM
-> (on 32 bit systems) is memory ordinarily inaccessible to the kernel
-> and should only be used for allocations affecting userspace.  In order
-> to make highmem visible to the kernel on 32 bit it has to be kmapped,
-> which consumes valuable entries in the kmap region.  Since the tpm_buf
-> is only ever used in the kernel, switch to using a GFP_KERNEL
-> allocation so as not to waste kmap space on 32 bits.
-> 
-> Fixes: a74f8b36352e (tpm: introduce tpm_buf)
-> Signed-off-by: James Bottomley <James.Bottomley@HansenPartnership.com>
+On Tue, Oct 8, 2019 at 11:16 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Tue, Oct 08, 2019 at 11:27:51AM +0200, Rafael J. Wysocki wrote:
+> > On Tue, Oct 8, 2019 at 12:34 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > On Thu, Aug 08, 2019 at 11:55:07PM +0200, Rafael J. Wysocki wrote:
+> > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > >
+> > > > Add a function checking whether or not PCIe ASPM has been enabled for
+> > > > a given device.
+> > > >
+> > > > It will be used by the NVMe driver to decide how to handle the
+> > > > device during system suspend.
+> > > >
+> > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > > ---
+> > > >
+> > > > v2 -> v3:
+> > > >   * Make the new function return bool.
+> > > >   * Change its name back to pcie_aspm_enabled().
+> > > >   * Fix kerneldoc comment formatting.
+> > > >
+> > > > -> v2:
+> > > >   * Move the PCI/PCIe ASPM changes to a separate patch.
+> > > >   * Add the _mask suffix to the new function name.
+> > > >   * Add EXPORT_SYMBOL_GPL() to the new function.
+> > > >   * Avoid adding an unnecessary blank line.
+> > > >
+> > > > ---
+> > > >  drivers/pci/pcie/aspm.c |   20 ++++++++++++++++++++
+> > > >  include/linux/pci.h     |    3 +++
+> > > >  2 files changed, 23 insertions(+)
+> > > >
+> > > > Index: linux-pm/drivers/pci/pcie/aspm.c
+> > > > ===================================================================
+> > > > --- linux-pm.orig/drivers/pci/pcie/aspm.c
+> > > > +++ linux-pm/drivers/pci/pcie/aspm.c
+> > > > @@ -1170,6 +1170,26 @@ static int pcie_aspm_get_policy(char *bu
+> > > >  module_param_call(policy, pcie_aspm_set_policy, pcie_aspm_get_policy,
+> > > >       NULL, 0644);
+> > > >
+> > > > +/**
+> > > > + * pcie_aspm_enabled - Check if PCIe ASPM has been enabled for a device.
+> > > > + * @pci_device: Target device.
+> > > > + */
+> > > > +bool pcie_aspm_enabled(struct pci_dev *pci_device)
+> > > > +{
+> > > > +     struct pci_dev *bridge = pci_upstream_bridge(pci_device);
+> > > > +     bool ret;
+> > > > +
+> > > > +     if (!bridge)
+> > > > +             return false;
+> > > > +
+> > > > +     mutex_lock(&aspm_lock);
+> > > > +     ret = bridge->link_state ? !!bridge->link_state->aspm_enabled : false;
+> > > > +     mutex_unlock(&aspm_lock);
+> > >
+> > > Why do we need to acquire aspm_lock here?  We aren't modifying
+> > > anything, and I don't think we're preventing a race.  If this races
+> > > with another thread that changes aspm_enabled, we'll return either the
+> > > old state or the new one, and I think that's still the case even if we
+> > > don't acquire aspm_lock.
+> >
+> > Well, if we can guarantee that pci_remove_bus_device() will never be
+> > called in parallel with this helper, then I agree, but can we
+> > guarantee that?
+>
+> Hmm, yeah, I guess that's the question.  It's not a race with another
+> thread changing aspm_enabled; the potential race is with another
+> thread removing the last child of "bridge", which will free the
+> link_state and set bridge->link_state = NULL.
+>
+> I think it should be safe to call device-related PCI interfaces if
+> you're holding a reference to the device, e.g., from a driver bound to
+> the device or a sysfs accessor.  Since we call pcie_aspm_enabled(dev)
+> from a driver bound to "dev", another thread should not be able to
+> remove "dev" while we're using it.
+>
+> I know that's a little hand-wavey, but if it weren't true, I think
+> we'd have a lot more locking sprinkled everywhere in the PCI core than
+> we do.
+>
+> This has implications for Heiner's ASPM sysfs patches because we're
+> currently doing this in sysfs accessors:
+>
+>   static ssize_t aspm_attr_show_common(struct device *dev, ...)
+>   {
+>     ...
+>     link = pcie_aspm_get_link(pdev);
+>
+>     mutex_lock(&aspm_lock);
+>     enabled = link->aspm_enabled & state;
+>     mutex_unlock(&aspm_lock);
+>     ...
+>   }
+>
+> I assume sysfs must be holding a reference that guarantees "dev" is
+> valid througout this code, and therefore we should not need to hold
+> aspm_lock.
 
-Thanks a lot. Makes a lot more sense than the patch that I sent.
+In principle, pcie_aspm_enabled() need not be called via sysfs.
 
-Reviewed-by:  Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+In the particular NVMe use case, it is called from the driver's own PM
+callback, so it would be safe without the locking AFAICS.
 
-/Jarkko
+I guess it is safe to drop the locking from there, but then it would
+be good to mention in the kerneldoc that calling it is only safe under
+the assumption that the link_state object cannot go away while it is
+running.
