@@ -2,87 +2,140 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41988C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F2BECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 177BB2070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4675020673
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:37:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730825AbfJHLgl (ORCPT
+        id S1730648AbfJHLhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 07:36:41 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39718 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730631AbfJHLgl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 07:36:41 -0400
-Received: by mail-ot1-f65.google.com with SMTP id s22so13702920otr.6;
-        Tue, 08 Oct 2019 04:36:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rWU50A1ftSfnXS5t6he0dr7vBuFC5vEUJUAdKOgY8bw=;
-        b=gP9IM6l6V6qKOfuktxpG0VRlaXArt61lORsvVGnbVT++lkPctXP0dWCpDERiMFUUmc
-         cjFyCNXrGB0vVSfF++qlezXiacav5QqZuKW6KdUdGxm3mQTzNdfxGf1FmBsdpG7+iI4M
-         zFs/IcQ6vfl3LaQG/+d/qjBIpKpUq7O9SN/SCjKB+bKhSm1t+u3jKuBBHDfsHTxRg4vl
-         lfcSTuAONvBaQGTNvQa/IlE2TbN+CQlllr0nGRAebOUP+AXdFtN1G+vL+ERPIgXUFRtp
-         u9r0LeA6LJ79/lhYxsk5EOsyMr88Kmi7+98K1tYxa5bg3ROiP0C7o9blWgylrJ6q/mr9
-         za2Q==
-X-Gm-Message-State: APjAAAWPxEKQEZGFMKrNNr5qneKJkNiDTuExMPOg+k1oiwTlrBrnESql
-        rF/waHFfc8PFDEHFPQx5Q7frMwsc5hUqRwKrw6k=
-X-Google-Smtp-Source: APXvYqwOO5BS1K03L9uNR/miBqU63vEKiq23BoSUvbF63agtYSvu+oyojKsPD8km90+OaPp+oi4YlXVQvWCX4HWrRxM=
-X-Received: by 2002:a9d:404d:: with SMTP id o13mr15570285oti.39.1570534599950;
- Tue, 08 Oct 2019 04:36:39 -0700 (PDT)
+        Tue, 8 Oct 2019 07:37:43 -0400
+Received: from spam01.hygon.cn ([110.188.70.11]:46016 "EHLO spam2.hygon.cn"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730316AbfJHLhn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 07:37:43 -0400
+Received: from MK-DB.hygon.cn ([172.23.18.60])
+        by spam2.hygon.cn with ESMTP id x98Bai4T009785;
+        Tue, 8 Oct 2019 19:36:45 +0800 (GMT-8)
+        (envelope-from fanjinke@hygon.cn)
+Received: from cncheex01.Hygon.cn ([172.23.18.10])
+        by MK-DB.hygon.cn with ESMTP id x98BaTN1019959;
+        Tue, 8 Oct 2019 19:36:29 +0800 (GMT-8)
+        (envelope-from fanjinke@hygon.cn)
+Received: from bogon.higon.com (172.23.18.44) by cncheex01.Hygon.cn
+ (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Tue, 8 Oct 2019
+ 19:36:41 +0800
+From:   Jinke Fan <fanjinke@hygon.cn>
+To:     <a.zummo@towertech.it>, <alexandre.belloni@bootlin.com>,
+        <puwen@hygon.cn>, <thomas.lendacky@amd.com>, <kim.phillips@amd.com>
+CC:     <linux-rtc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Jinke Fan <fanjinke@hygon.cn>
+Subject: [PATCH v3] rtc: Fix the AltCentury value on AMD/Hygon platform
+Date:   Tue, 8 Oct 2019 19:36:16 +0800
+Message-ID: <20191008113616.103734-1-fanjinke@hygon.cn>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <1570531132-21856-1-git-send-email-fabrizio.castro@bp.renesas.com> <1570531132-21856-5-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1570531132-21856-5-git-send-email-fabrizio.castro@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 8 Oct 2019 13:36:26 +0200
-Message-ID: <CAMuHMdVUV2=RE4BmF94_bZfg_JoiU_JFPAguVqQWjAzwydRUbA@mail.gmail.com>
-Subject: Re: [PATCH 04/10] dt-bindings: rcar-gen3-phy-usb3: Add r8a774b1 support
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Simon Horman <horms@verge.net.au>, Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>, dmaengine@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [172.23.18.44]
+X-ClientProxiedBy: cncheex01.Hygon.cn (172.23.18.10) To cncheex01.Hygon.cn
+ (172.23.18.10)
+X-MAIL: spam2.hygon.cn x98Bai4T009785
+X-DNSRBL: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 8, 2019 at 12:39 PM Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
-> Document RZ/G2N (R8A774B1) SoC bindings.
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+When using following operations:
+date -s "21190910 19:20:00"
+hwclock -w
+to change date from 2019 to 2119 for test, it will fail on Hygon
+Dhyana and AMD Zen CPUs, while the same operations run ok on Intel i7
+platform.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+MC146818 driver use function mc146818_set_time() to set register
+RTC_FREQ_SELECT(RTC_REG_A)'s bit4-bit6 field which means divider stage
+reset value on Intel platform to 0x7.
 
-Gr{oetje,eeting}s,
+While AMD/Hygon RTC_REG_A(0Ah)'s bit4 is defined as DV0 [Reference]:
+DV0 = 0 selects Bank 0, DV0 = 1 selects Bank 1. Bit5-bit6 is defined
+as reserved.
 
-                        Geert
+DV0 is set to 1, it will select Bank 1, which will disable AltCentury
+register(0x32) access. As UEFI pass acpi_gbl_FADT.century 0x32
+(AltCentury), the CMOS write will be failed on code:
+CMOS_WRITE(century, acpi_gbl_FADT.century).
 
+Correct RTC_REG_A bank select bit(DV0) to 0 on AMD/Hygon CPUs, it will
+enable AltCentury(0x32) register writing and finally setup century as
+expected.
+
+Test results on AMD/Hygon machine show that it works as expected.
+
+Reference:
+https://www.amd.com/system/files/TechDocs/51192_Bolton_FCH_RRG.pdf
+section: 3.13 Real Time Clock (RTC)
+
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Jinke Fan <fanjinke@hygon.cn>
+---
+
+v2->v3:
+  - Make the changes only relevant to AMD/Hygon.
+
+v1->v2:
+  - Fix the compile errors on sparc64/alpha platform.
+
+ drivers/rtc/rtc-mc146818-lib.c | 11 ++++++++++-
+ include/linux/mc146818rtc.h    |  6 ++++++
+ 2 files changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/rtc/rtc-mc146818-lib.c b/drivers/rtc/rtc-mc146818-lib.c
+index 2ecd8752b088..70502881785d 100644
+--- a/drivers/rtc/rtc-mc146818-lib.c
++++ b/drivers/rtc/rtc-mc146818-lib.c
+@@ -172,7 +172,16 @@ int mc146818_set_time(struct rtc_time *time)
+ 	save_control = CMOS_READ(RTC_CONTROL);
+ 	CMOS_WRITE((save_control|RTC_SET), RTC_CONTROL);
+ 	save_freq_select = CMOS_READ(RTC_FREQ_SELECT);
+-	CMOS_WRITE((save_freq_select|RTC_DIV_RESET2), RTC_FREQ_SELECT);
++
++#ifdef CONFIG_X86
++	if (boot_cpu_data.x86_vendor == X86_VENDOR_AMD ||
++	    boot_cpu_data.x86_vendor == X86_VENDOR_HYGON)
++		CMOS_WRITE((save_freq_select & (~RTC_DV0)), RTC_FREQ_SELECT);
++	else
++		CMOS_WRITE((save_freq_select | RTC_DIV_RESET2), RTC_FREQ_SELECT);
++#else
++	CMOS_WRITE((save_freq_select | RTC_DIV_RESET2), RTC_FREQ_SELECT);
++#endif
+ 
+ #ifdef CONFIG_MACH_DECSTATION
+ 	CMOS_WRITE(real_yrs, RTC_DEC_YEAR);
+diff --git a/include/linux/mc146818rtc.h b/include/linux/mc146818rtc.h
+index 0661af17a758..7066a7bced61 100644
+--- a/include/linux/mc146818rtc.h
++++ b/include/linux/mc146818rtc.h
+@@ -86,6 +86,12 @@ struct cmos_rtc_board_info {
+    /* 2 values for divider stage reset, others for "testing purposes only" */
+ #  define RTC_DIV_RESET1	0x60
+ #  define RTC_DIV_RESET2	0x70
++
++#ifdef CONFIG_X86
++   /* DV0 = 0 selects Bank 0, DV0 = 1 selects Bank 1 on AMD/Hygon platform */
++#  define RTC_DV0		0x10
++#endif
++
+   /* Periodic intr. / Square wave rate select. 0=none, 1=32.8kHz,... 15=2Hz */
+ # define RTC_RATE_SELECT 	0x0F
+ 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.17.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
