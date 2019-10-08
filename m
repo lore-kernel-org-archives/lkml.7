@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2497DC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BDAC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 001EA2173B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:06:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B466320679
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:06:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730191AbfJHHGQ (ORCPT
+        id S1730212AbfJHHGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 03:06:16 -0400
+        Tue, 8 Oct 2019 03:06:18 -0400
 Received: from mga18.intel.com ([134.134.136.126]:64439 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730026AbfJHHGO (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 03:06:14 -0400
+        id S1730026AbfJHHGR (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 03:06:17 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 00:06:14 -0700
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 00:06:16 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.67,269,1566889200"; 
-   d="scan'208";a="196522439"
+   d="scan'208";a="196522445"
 Received: from kbl.sh.intel.com ([10.239.159.163])
-  by orsmga003.jf.intel.com with ESMTP; 08 Oct 2019 00:06:12 -0700
+  by orsmga003.jf.intel.com with ESMTP; 08 Oct 2019 00:06:14 -0700
 From:   Jin Yao <yao.jin@linux.intel.com>
 To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
         mingo@redhat.com, alexander.shishkin@linux.intel.com
 Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
         kan.liang@intel.com, yao.jin@intel.com,
         Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v1 1/5] perf util: Create new block.h/block.c for block related functions
-Date:   Tue,  8 Oct 2019 15:04:58 +0800
-Message-Id: <20191008070502.22551-2-yao.jin@linux.intel.com>
+Subject: [PATCH v1 2/5] perf util: Count the total cycles of all samples
+Date:   Tue,  8 Oct 2019 15:04:59 +0800
+Message-Id: <20191008070502.22551-3-yao.jin@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191008070502.22551-1-yao.jin@linux.intel.com>
 References: <20191008070502.22551-1-yao.jin@linux.intel.com>
@@ -45,288 +45,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have already implemented some block related functions. Now it's
-time to do some cleanup, and move the functions and structures to
-the new block.h/block.c.
+We can get the per sample cycles by hist__account_cycles(). It's also
+useful to know the total cycles of all samples in order to get the
+cycles coverage for a single program block in further. For example,
+
+coverage = per block sampled cycles / total sampled cycles
+
+This patch creates a new argument 'total_cycles' in hist__account_cycles(),
+which will be added with the cycles of each sample.
 
 Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 ---
- tools/perf/builtin-diff.c | 38 ++---------------------
- tools/perf/util/Build     |  1 +
- tools/perf/util/block.c   | 63 +++++++++++++++++++++++++++++++++++++++
- tools/perf/util/block.h   | 36 ++++++++++++++++++++++
- tools/perf/util/hist.c    |  1 +
- tools/perf/util/symbol.c  | 22 --------------
- tools/perf/util/symbol.h  | 23 --------------
- 7 files changed, 103 insertions(+), 81 deletions(-)
- create mode 100644 tools/perf/util/block.c
- create mode 100644 tools/perf/util/block.h
+ tools/perf/builtin-annotate.c | 2 +-
+ tools/perf/builtin-diff.c     | 3 ++-
+ tools/perf/builtin-report.c   | 2 +-
+ tools/perf/builtin-top.c      | 3 ++-
+ tools/perf/util/hist.c        | 6 +++++-
+ tools/perf/util/hist.h        | 3 ++-
+ 6 files changed, 13 insertions(+), 6 deletions(-)
 
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index 8db8fc9bddef..6ab0cc45b287 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -201,7 +201,7 @@ static int process_branch_callback(struct evsel *evsel,
+ 	if (a.map != NULL)
+ 		a.map->dso->hit = 1;
+ 
+-	hist__account_cycles(sample->branch_stack, al, sample, false);
++	hist__account_cycles(sample->branch_stack, al, sample, false, NULL);
+ 
+ 	ret = hist_entry_iter__add(&iter, &a, PERF_MAX_STACK_DEPTH, ann);
+ 	return ret;
 diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
-index c37a78677955..c5242737a6df 100644
+index c5242737a6df..029da813bfa6 100644
 --- a/tools/perf/builtin-diff.c
 +++ b/tools/perf/builtin-diff.c
-@@ -23,6 +23,7 @@
- #include "util/time-utils.h"
- #include "util/annotate.h"
- #include "util/map.h"
-+#include "util/block.h"
- #include <linux/err.h>
- #include <linux/zalloc.h>
- #include <subcmd/pager.h>
-@@ -530,41 +531,6 @@ static void hists__baseline_only(struct hists *hists)
+@@ -421,7 +421,8 @@ static int diff__process_sample_event(struct perf_tool *tool,
+ 			goto out_put;
+ 		}
+ 
+-		hist__account_cycles(sample->branch_stack, &al, sample, false);
++		hist__account_cycles(sample->branch_stack, &al, sample, false,
++				     NULL);
  	}
+ 
+ 	/*
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index aae0e57c60fb..094bb43cbcf5 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -292,7 +292,7 @@ static int process_sample_event(struct perf_tool *tool,
+ 
+ 	if (ui__has_annotation() || rep->symbol_ipc) {
+ 		hist__account_cycles(sample->branch_stack, &al, sample,
+-				     rep->nonany_branch_mode);
++				     rep->nonany_branch_mode, NULL);
+ 	}
+ 
+ 	ret = hist_entry_iter__add(&iter, &al, rep->max_stack, rep);
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 611d03030abc..d2fc44da8b03 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -724,7 +724,8 @@ static int hist_iter__top_callback(struct hist_entry_iter *iter,
+ 		perf_top__record_precise_ip(top, he, iter->sample, evsel, al->addr);
+ 
+ 	hist__account_cycles(iter->sample->branch_stack, al, iter->sample,
+-		     !(top->record_opts.branch_stack & PERF_SAMPLE_BRANCH_ANY));
++		     !(top->record_opts.branch_stack & PERF_SAMPLE_BRANCH_ANY),
++		     NULL);
+ 	return 0;
  }
  
--static int64_t block_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
--			 struct hist_entry *left, struct hist_entry *right)
--{
--	struct block_info *bi_l = left->block_info;
--	struct block_info *bi_r = right->block_info;
--	int cmp;
--
--	if (!bi_l->sym || !bi_r->sym) {
--		if (!bi_l->sym && !bi_r->sym)
--			return 0;
--		else if (!bi_l->sym)
--			return -1;
--		else
--			return 1;
--	}
--
--	if (bi_l->sym == bi_r->sym) {
--		if (bi_l->start == bi_r->start) {
--			if (bi_l->end == bi_r->end)
--				return 0;
--			else
--				return (int64_t)(bi_r->end - bi_l->end);
--		} else
--			return (int64_t)(bi_r->start - bi_l->start);
--	} else {
--		cmp = strcmp(bi_l->sym->name, bi_r->sym->name);
--		return cmp;
--	}
--
--	if (bi_l->sym->start != bi_r->sym->start)
--		return (int64_t)(bi_r->sym->start - bi_l->sym->start);
--
--	return (int64_t)(bi_r->sym->end - bi_l->sym->end);
--}
--
- static int64_t block_cycles_diff_cmp(struct hist_entry *left,
- 				     struct hist_entry *right)
- {
-@@ -593,7 +559,7 @@ static void init_block_hist(struct block_hist *bh)
- 
- 	INIT_LIST_HEAD(&bh->block_fmt.list);
- 	INIT_LIST_HEAD(&bh->block_fmt.sort_list);
--	bh->block_fmt.cmp = block_cmp;
-+	bh->block_fmt.cmp = block_info__cmp;
- 	bh->block_fmt.sort = block_sort;
- 	perf_hpp_list__register_sort_field(&bh->block_list,
- 					   &bh->block_fmt);
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 8dcfca1a882f..af46facb6d08 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -1,4 +1,5 @@
- perf-y += annotate.o
-+perf-y += block.o
- perf-y += block-range.o
- perf-y += build-id.o
- perf-y += cacheline.o
-diff --git a/tools/perf/util/block.c b/tools/perf/util/block.c
-new file mode 100644
-index 000000000000..e5e6f941f040
---- /dev/null
-+++ b/tools/perf/util/block.c
-@@ -0,0 +1,63 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <stdlib.h>
-+#include <string.h>
-+#include <linux/zalloc.h>
-+#include "block.h"
-+#include "sort.h"
-+
-+struct block_info *block_info__get(struct block_info *bi)
-+{
-+	if (bi)
-+		refcount_inc(&bi->refcnt);
-+	return bi;
-+}
-+
-+void block_info__put(struct block_info *bi)
-+{
-+	if (bi && refcount_dec_and_test(&bi->refcnt))
-+		free(bi);
-+}
-+
-+struct block_info *block_info__new(void)
-+{
-+	struct block_info *bi = zalloc(sizeof(*bi));
-+
-+	if (bi)
-+		refcount_set(&bi->refcnt, 1);
-+	return bi;
-+}
-+
-+int64_t block_info__cmp(struct perf_hpp_fmt *fmt __maybe_unused,
-+			struct hist_entry *left, struct hist_entry *right)
-+{
-+	struct block_info *bi_l = left->block_info;
-+	struct block_info *bi_r = right->block_info;
-+	int cmp;
-+
-+	if (!bi_l->sym || !bi_r->sym) {
-+		if (!bi_l->sym && !bi_r->sym)
-+			return 0;
-+		else if (!bi_l->sym)
-+			return -1;
-+		else
-+			return 1;
-+	}
-+
-+	if (bi_l->sym == bi_r->sym) {
-+		if (bi_l->start == bi_r->start) {
-+			if (bi_l->end == bi_r->end)
-+				return 0;
-+			else
-+				return (int64_t)(bi_r->end - bi_l->end);
-+		} else
-+			return (int64_t)(bi_r->start - bi_l->start);
-+	} else {
-+		cmp = strcmp(bi_l->sym->name, bi_r->sym->name);
-+		return cmp;
-+	}
-+
-+	if (bi_l->sym->start != bi_r->sym->start)
-+		return (int64_t)(bi_r->sym->start - bi_l->sym->start);
-+
-+	return (int64_t)(bi_r->sym->end - bi_l->sym->end);
-+}
-diff --git a/tools/perf/util/block.h b/tools/perf/util/block.h
-new file mode 100644
-index 000000000000..1aeef6dd2bf3
---- /dev/null
-+++ b/tools/perf/util/block.h
-@@ -0,0 +1,36 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __PERF_BLOCK_H
-+#define __PERF_BLOCK_H
-+
-+#include <linux/types.h>
-+#include <linux/refcount.h>
-+#include "util/hist.h"
-+#include "util/symbol.h"
-+
-+struct block_info {
-+	struct symbol		*sym;
-+	u64			start;
-+	u64			end;
-+	u64			cycles;
-+	u64			cycles_aggr;
-+	int			num;
-+	int			num_aggr;
-+	refcount_t		refcnt;
-+};
-+
-+struct block_info *block_info__new(void);
-+struct block_info *block_info__get(struct block_info *bi);
-+void   block_info__put(struct block_info *bi);
-+
-+static inline void __block_info__zput(struct block_info **bi)
-+{
-+	block_info__put(*bi);
-+	*bi = NULL;
-+}
-+
-+#define block_info__zput(bi) __block_info__zput(&bi)
-+
-+int64_t block_info__cmp(struct perf_hpp_fmt *fmt __maybe_unused,
-+			struct hist_entry *left, struct hist_entry *right);
-+
-+#endif /* __PERF_BLOCK_H */
 diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 679a1d75090c..26ee45a3e5d0 100644
+index 26ee45a3e5d0..af65ce950ba2 100644
 --- a/tools/perf/util/hist.c
 +++ b/tools/perf/util/hist.c
-@@ -18,6 +18,7 @@
- #include "srcline.h"
- #include "symbol.h"
- #include "thread.h"
-+#include "block.h"
- #include "ui/progress.h"
- #include <errno.h>
- #include <math.h>
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index a8f80e427674..fac8887a6759 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -2371,25 +2371,3 @@ struct mem_info *mem_info__new(void)
- 		refcount_set(&mi->refcnt, 1);
- 	return mi;
+@@ -2570,7 +2570,8 @@ int hists__unlink(struct hists *hists)
  }
--
--struct block_info *block_info__get(struct block_info *bi)
--{
--	if (bi)
--		refcount_inc(&bi->refcnt);
--	return bi;
--}
--
--void block_info__put(struct block_info *bi)
--{
--	if (bi && refcount_dec_and_test(&bi->refcnt))
--		free(bi);
--}
--
--struct block_info *block_info__new(void)
--{
--	struct block_info *bi = zalloc(sizeof(*bi));
--
--	if (bi)
--		refcount_set(&bi->refcnt, 1);
--	return bi;
--}
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index 0b0c6b5b1899..6015541e145b 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -105,17 +105,6 @@ struct ref_reloc_sym {
- 	u64		unrelocated_addr;
- };
  
--struct block_info {
--	struct symbol		*sym;
--	u64			start;
--	u64			end;
--	u64			cycles;
--	u64			cycles_aggr;
--	int			num;
--	int			num_aggr;
--	refcount_t		refcnt;
--};
--
- struct addr_location {
- 	struct machine *machine;
- 	struct thread *thread;
-@@ -289,16 +278,4 @@ static inline void __mem_info__zput(struct mem_info **mi)
+ void hist__account_cycles(struct branch_stack *bs, struct addr_location *al,
+-			  struct perf_sample *sample, bool nonany_branch_mode)
++			  struct perf_sample *sample, bool nonany_branch_mode,
++			  u64 *total_cycles)
+ {
+ 	struct branch_info *bi;
  
- #define mem_info__zput(mi) __mem_info__zput(&mi)
+@@ -2597,6 +2598,9 @@ void hist__account_cycles(struct branch_stack *bs, struct addr_location *al,
+ 					nonany_branch_mode ? NULL : prev,
+ 					bi[i].flags.cycles);
+ 				prev = &bi[i].to;
++
++				if (total_cycles)
++					*total_cycles += bi[i].flags.cycles;
+ 			}
+ 			free(bi);
+ 		}
+diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+index 6a186b668303..4d87c7b4c1b2 100644
+--- a/tools/perf/util/hist.h
++++ b/tools/perf/util/hist.h
+@@ -527,7 +527,8 @@ unsigned int hists__sort_list_width(struct hists *hists);
+ unsigned int hists__overhead_width(struct hists *hists);
  
--struct block_info *block_info__new(void);
--struct block_info *block_info__get(struct block_info *bi);
--void   block_info__put(struct block_info *bi);
--
--static inline void __block_info__zput(struct block_info **bi)
--{
--	block_info__put(*bi);
--	*bi = NULL;
--}
--
--#define block_info__zput(bi) __block_info__zput(&bi)
--
- #endif /* __PERF_SYMBOL */
+ void hist__account_cycles(struct branch_stack *bs, struct addr_location *al,
+-			  struct perf_sample *sample, bool nonany_branch_mode);
++			  struct perf_sample *sample, bool nonany_branch_mode,
++			  u64 *total_cycles);
+ 
+ struct option;
+ int parse_filter_percentage(const struct option *opt, const char *arg, int unset);
 -- 
 2.17.1
 
