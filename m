@@ -2,86 +2,138 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6FECC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3AEBECE58C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B24F8206BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:49:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Tcez90tD";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="lMOdN6k2"
+	by mail.kernel.org (Postfix) with ESMTP id D5D66218AC
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:52:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728323AbfJHPt6 (ORCPT
+        id S1727107AbfJHPwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 11:49:58 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:41812 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726239AbfJHPt5 (ORCPT
+        Tue, 8 Oct 2019 11:52:02 -0400
+Received: from outbound-smtp15.blacknight.com ([46.22.139.232]:54604 "EHLO
+        outbound-smtp15.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725966AbfJHPwB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 11:49:57 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 9864F61110; Tue,  8 Oct 2019 15:49:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570549796;
-        bh=h3VL4ZBPrnT897PQsUIyI6anbgxW0GUUyodhS8+7YPI=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=Tcez90tDP4y04s5zhd9xb/f7RNp45PgAY2zrZZadV5t8uHqw6bdvj8hC1ubpNsmbn
-         75WCtv6mgh/+OFsV8WtSn09J2NHPh37SP5C9au694oMzqXLfQpVxfVIPiqpDfbP+tz
-         YlHhU8UOLBJamY5k7aw61Fs6MgVkPekSXROK0wHk=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8D18D602DC;
-        Tue,  8 Oct 2019 15:49:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570549796;
-        bh=h3VL4ZBPrnT897PQsUIyI6anbgxW0GUUyodhS8+7YPI=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=lMOdN6k2Odv3QIiy+N47mS6ScNn1pjGxCRVK4qsM4t/vSnhr5ksNIJINqIkM0hZLv
-         P2deuwTuv1fbdY0RCItnttszJPXeHhwr8zxLwDoB+NAqQWi2dPowepGt1TJQQOyNsp
-         kelq4DekPrCjG4cKx2iVRTk2nV5djMDfNwQdIWuk=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8D18D602DC
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Tue, 8 Oct 2019 11:52:01 -0400
+Received: from mail.blacknight.com (unknown [81.17.254.17])
+        by outbound-smtp15.blacknight.com (Postfix) with ESMTPS id 8DC431C2D68
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Oct 2019 16:51:58 +0100 (IST)
+Received: (qmail 5557 invoked from network); 8 Oct 2019 15:51:58 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.19.210])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 8 Oct 2019 15:51:58 -0000
+Date:   Tue, 8 Oct 2019 16:51:56 +0100
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Florian Weimer <fw@deneb.enyo.de>,
+        Dave Chinner <david@fromorbit.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] mm, compaction: fix wrong pfn handling in
+ __reset_isolation_pfn()
+Message-ID: <20191008155156.GD3321@techsingularity.net>
+References: <20191008152915.24704-1-vbabka@suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] rt2x00: remove input-polldev.h header
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20191002215052.GA116229@dtor-ws>
-References: <20191002215052.GA116229@dtor-ws>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Stanislaw Gruszka <sgruszka@redhat.com>,
-        Helmut Schaa <helmut.schaa@googlemail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20191008154956.9864F61110@smtp.codeaurora.org>
-Date:   Tue,  8 Oct 2019 15:49:56 +0000 (UTC)
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <20191008152915.24704-1-vbabka@suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
-
-> The driver does not use input subsystem so we do not need this header,
-> and it is being removed, so stop pulling it in.
+On Tue, Oct 08, 2019 at 05:29:15PM +0200, Vlastimil Babka wrote:
+> Florian and Dave reported [1] a NULL pointer dereference in
+> __reset_isolation_pfn(). While the exact cause is unclear, staring at the code
+> revealed two bugs, which might be related.
 > 
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-Patch applied to wireless-drivers.git, thanks.
+I think the fix is a good fit. Even if the problem still occurs, it
+eliminates an important possibility.
 
-98d22b01f9f6 rt2x00: remove input-polldev.h header
+> One bug is that if zone starts in the middle of pageblock, block_page might
+> correspond to different pfn than block_pfn, and then the pfn_valid_within()
+> checks will check different pfn's than those accessed via struct page. This
+> might result in acessing an unitialized page in CONFIG_HOLES_IN_ZONE configs.
+> 
+
+s/acessing/accessing/
+
+Aside from HOLES_IN_ZONE, the patch addresses an issue if the start
+of the zone is not pageblock-aligned. While this is common, it's not
+guaranteed. I don't think this needs to be clarified in the changelog as
+your example is valid. I'm commenting in case someone decides not to try
+the patch because they feel HOLES_IN_ZONE is required.
+
+> The other bug is that end_page refers to the first page of next pageblock and
+> not last page of current pageblock. The online and valid check is then wrong
+> and with sections, the while (page < end_page) loop might wander off actual
+> struct page arrays.
+> 
+> [1] https://lore.kernel.org/linux-xfs/87o8z1fvqu.fsf@mid.deneb.enyo.de/
+> 
+> Reported-by: Florian Weimer <fw@deneb.enyo.de>
+> Reported-by: Dave Chinner <david@fromorbit.com>
+> Fixes: 6b0868c820ff ("mm/compaction.c: correct zone boundary handling when resetting pageblock skip hints")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+
+Acked-by: Mel Gorman <mgorman@techsingularity.net>
+
+Just one minor irrelevant note below.
+
+> ---
+>  mm/compaction.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/mm/compaction.c b/mm/compaction.c
+> index ce08b39d85d4..672d3c78c6ab 100644
+> --- a/mm/compaction.c
+> +++ b/mm/compaction.c
+> @@ -270,14 +270,15 @@ __reset_isolation_pfn(struct zone *zone, unsigned long pfn, bool check_source,
+>  
+>  	/* Ensure the start of the pageblock or zone is online and valid */
+>  	block_pfn = pageblock_start_pfn(pfn);
+> -	block_page = pfn_to_online_page(max(block_pfn, zone->zone_start_pfn));
+> +	block_pfn = max(block_pfn, zone->zone_start_pfn);
+> +	block_page = pfn_to_online_page(block_pfn);
+>  	if (block_page) {
+>  		page = block_page;
+>  		pfn = block_pfn;
+>  	}
+>  
+>  	/* Ensure the end of the pageblock or zone is online and valid */
+> -	block_pfn += pageblock_nr_pages;
+> +	block_pfn = pageblock_end_pfn(pfn) - 1;
+>  	block_pfn = min(block_pfn, zone_end_pfn(zone) - 1);
+>  	end_page = pfn_to_online_page(block_pfn);
+>  	if (!end_page)
+
+This is fine and is definetly fixing a potential issue.
+
+> @@ -303,7 +304,7 @@ __reset_isolation_pfn(struct zone *zone, unsigned long pfn, bool check_source,
+>  
+>  		page += (1 << PAGE_ALLOC_COSTLY_ORDER);
+>  		pfn += (1 << PAGE_ALLOC_COSTLY_ORDER);
+> -	} while (page < end_page);
+> +	} while (page <= end_page);
+>  
+>  	return false;
+>  }
+
+I think this is also ok as it's appropriate for PFN walkers in general of
+this style. However, I think it's unlikely to fix anything given that we
+are walking in steps of (1 << PAGE_ALLOC_COSTLY_ORDER) and the final page
+is not necessarily aligned on that boundary. Still, it's an improvement.
+
+Thanks
 
 -- 
-https://patchwork.kernel.org/patch/11171877/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+Mel Gorman
+SUSE Labs
