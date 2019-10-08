@@ -4,38 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC40AC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A264C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C07F2206C2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED32B206C2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:12:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731322AbfJHMMf (ORCPT
+        id S1731016AbfJHMLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 08:12:35 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:40702 "EHLO inva021.nxp.com"
+        Tue, 8 Oct 2019 08:11:09 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:40582 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731032AbfJHMLP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 08:11:15 -0400
+        id S1730885AbfJHMLC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 08:11:02 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8BAA820017B;
-        Tue,  8 Oct 2019 14:11:13 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 941092002C9;
+        Tue,  8 Oct 2019 14:11:00 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7F6CB2002DE;
-        Tue,  8 Oct 2019 14:11:13 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 87A4720017B;
+        Tue,  8 Oct 2019 14:11:00 +0200 (CEST)
 Received: from fsr-fed2164-101.ea.freescale.net (fsr-fed2164-101.ea.freescale.net [10.171.82.91])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 3E43F205DB;
-        Tue,  8 Oct 2019 14:11:13 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 3E9A9205DB;
+        Tue,  8 Oct 2019 14:11:00 +0200 (CEST)
 From:   Madalin Bucur <madalin.bucur@nxp.com>
 To:     davem@davemloft.net, netdev@vger.kernel.org
 Cc:     roy.pledge@nxp.com, laurentiu.tudor@nxp.com,
         linux-kernel@vger.kernel.org, Madalin Bucur <madalin.bucur@nxp.com>
-Subject: [PATCH 09/20] dpaa_eth: perform DMA unmapping before read
-Date:   Tue,  8 Oct 2019 15:10:30 +0300
-Message-Id: <1570536641-25104-10-git-send-email-madalin.bucur@nxp.com>
+Subject: [PATCH 04/20] fsl/fman: add API to get the device behind a fman port
+Date:   Tue,  8 Oct 2019 15:10:25 +0300
+Message-Id: <1570536641-25104-5-git-send-email-madalin.bucur@nxp.com>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <1570536641-25104-1-git-send-email-madalin.bucur@nxp.com>
 References: <1570536641-25104-1-git-send-email-madalin.bucur@nxp.com>
@@ -46,70 +45,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DMA unmapping is required before accessing the HW provided timestamping
-information.
+From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-Fixes: 4664856e9ca2 ("dpaa_eth: add support for hardware timestamping")
+Add an API that retrieves the 'struct device' that the specified FMan
+port probed against. The new API will be used in a subsequent patch
+that corrects the DMA devices used by the dpaa_eth driver.
+
+Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
 ---
- drivers/net/ethernet/freescale/dpaa/dpaa_eth.c | 32 ++++++++++++++------------
- 1 file changed, 17 insertions(+), 15 deletions(-)
+ drivers/net/ethernet/freescale/fman/fman_port.c | 14 ++++++++++++++
+ drivers/net/ethernet/freescale/fman/fman_port.h |  2 ++
+ 2 files changed, 16 insertions(+)
 
-diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-index ee267918aa70..c3f19485739b 100644
---- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-+++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-@@ -1591,18 +1591,6 @@ static struct sk_buff *dpaa_cleanup_tx_fd(const struct dpaa_priv *priv,
- 	skbh = (struct sk_buff **)phys_to_virt(addr);
- 	skb = *skbh;
- 
--	if (priv->tx_tstamp && skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) {
--		memset(&shhwtstamps, 0, sizeof(shhwtstamps));
--
--		if (!fman_port_get_tstamp(priv->mac_dev->port[TX], (void *)skbh,
--					  &ns)) {
--			shhwtstamps.hwtstamp = ns_to_ktime(ns);
--			skb_tstamp_tx(skb, &shhwtstamps);
--		} else {
--			dev_warn(dev, "fman_port_get_tstamp failed!\n");
--		}
--	}
--
- 	if (unlikely(qm_fd_get_format(fd) == qm_fd_sg)) {
- 		nr_frags = skb_shinfo(skb)->nr_frags;
- 		dma_unmap_single(priv->tx_dma_dev, addr,
-@@ -1625,14 +1613,28 @@ static struct sk_buff *dpaa_cleanup_tx_fd(const struct dpaa_priv *priv,
- 			dma_unmap_page(priv->tx_dma_dev, qm_sg_addr(&sgt[i]),
- 				       qm_sg_entry_get_len(&sgt[i]), dma_dir);
- 		}
--
--		/* Free the page frag that we allocated on Tx */
--		skb_free_frag(phys_to_virt(addr));
- 	} else {
- 		dma_unmap_single(priv->tx_dma_dev, addr,
- 				 skb_tail_pointer(skb) - (u8 *)skbh, dma_dir);
- 	}
- 
-+	/* DMA unmapping is required before accessing the HW provided info */
-+	if (priv->tx_tstamp && skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) {
-+		memset(&shhwtstamps, 0, sizeof(shhwtstamps));
-+
-+		if (!fman_port_get_tstamp(priv->mac_dev->port[TX], (void *)skbh,
-+					  &ns)) {
-+			shhwtstamps.hwtstamp = ns_to_ktime(ns);
-+			skb_tstamp_tx(skb, &shhwtstamps);
-+		} else {
-+			dev_warn(dev, "fman_port_get_tstamp failed!\n");
-+		}
-+	}
-+
-+	if (qm_fd_get_format(fd) == qm_fd_sg)
-+		/* Free the page frag that we allocated on Tx */
-+		skb_free_frag(phys_to_virt(addr));
-+
- 	return skb;
+diff --git a/drivers/net/ethernet/freescale/fman/fman_port.c b/drivers/net/ethernet/freescale/fman/fman_port.c
+index ee82ee1384eb..bd76c9730692 100644
+--- a/drivers/net/ethernet/freescale/fman/fman_port.c
++++ b/drivers/net/ethernet/freescale/fman/fman_port.c
+@@ -1728,6 +1728,20 @@ u32 fman_port_get_qman_channel_id(struct fman_port *port)
  }
+ EXPORT_SYMBOL(fman_port_get_qman_channel_id);
  
++/**
++ * fman_port_get_device
++ * port:	Pointer to the FMan port device
++ *
++ * Get the 'struct device' associated to the specified FMan port device
++ *
++ * Return: pointer to associated 'struct device'
++ */
++struct device *fman_port_get_device(struct fman_port *port)
++{
++	return port->dev;
++}
++EXPORT_SYMBOL(fman_port_get_device);
++
+ int fman_port_get_hash_result_offset(struct fman_port *port, u32 *offset)
+ {
+ 	if (port->buffer_offsets.hash_result_offset == ILLEGAL_BASE)
+diff --git a/drivers/net/ethernet/freescale/fman/fman_port.h b/drivers/net/ethernet/freescale/fman/fman_port.h
+index 9dbb69f40121..82f12661a46d 100644
+--- a/drivers/net/ethernet/freescale/fman/fman_port.h
++++ b/drivers/net/ethernet/freescale/fman/fman_port.h
+@@ -157,4 +157,6 @@ int fman_port_get_tstamp(struct fman_port *port, const void *data, u64 *tstamp);
+ 
+ struct fman_port *fman_port_bind(struct device *dev);
+ 
++struct device *fman_port_get_device(struct fman_port *port);
++
+ #endif /* __FMAN_PORT_H */
 -- 
 2.1.0
 
