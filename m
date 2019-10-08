@@ -2,91 +2,67 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2980FC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 06:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACFBFC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 06:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09AD12173B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 06:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91401206C2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 06:42:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730138AbfJHGjk (ORCPT
+        id S1730104AbfJHGmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 02:39:40 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3217 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729937AbfJHGjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 02:39:39 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 1BA09D3084733FCB0373;
-        Tue,  8 Oct 2019 14:39:37 +0800 (CST)
-Received: from [127.0.0.1] (10.133.217.137) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Tue, 8 Oct 2019
- 14:39:33 +0800
-Subject: Re: [PATCH 00/32] Kill pr_warning in the whole linux code
-To:     Petr Mladek <pmladek@suse.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-CC:     Arnd Bergmann <arnd@arndb.de>, Andy Whitcroft <apw@canonical.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Daniel Borkmann" <daniel@iogearbox.net>,
-        AlexeiStarovoitov <ast@kernel.org>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        GregKroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>,
-        "Arnaldo Carvalho de Melo" <acme@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, <linux-kernel@vger.kernel.org>
-References: <20190920062544.180997-1-wangkefeng.wang@huawei.com>
- <20191002085554.ddvx6yx6nx7tdeey@pathway.suse.cz>
-From:   Kefeng Wang <wangkefeng.wang@huawei.com>
-Message-ID: <f613df39-6903-123b-a0f1-d1b783a755ce@huawei.com>
-Date:   Tue, 8 Oct 2019 14:39:32 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 8 Oct 2019 02:42:39 -0400
+Received: from verein.lst.de ([213.95.11.211]:44117 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729693AbfJHGmj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 02:42:39 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 743D468B20; Tue,  8 Oct 2019 08:42:35 +0200 (CEST)
+Date:   Tue, 8 Oct 2019 08:42:35 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Carlos Maiolino <cmaiolino@redhat.com>
+Subject: Re: [PATCH 08/11] xfs: use a struct iomap in xfs_writepage_ctx
+Message-ID: <20191008064235.GB30465@lst.de>
+References: <20191006154608.24738-1-hch@lst.de> <20191006154608.24738-9-hch@lst.de> <20191007215423.GB16973@dread.disaster.area>
 MIME-Version: 1.0
-In-Reply-To: <20191002085554.ddvx6yx6nx7tdeey@pathway.suse.cz>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.217.137]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191007215423.GB16973@dread.disaster.area>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On Tue, Oct 08, 2019 at 08:54:24AM +1100, Dave Chinner wrote:
+> > +	if (whichfork == XFS_COW_FORK)
+> > +		flags |= IOMAP_F_SHARED;
+> 
+> That seems out of place - I don't see anywhere in this patch that
+> moves/removes setting the IOMAP_F_SHARED flag. i.e this looks like a
+> change of behaviour....
 
-On 2019/10/2 16:55, Petr Mladek wrote:
-> Linus,
-> 
-> On Fri 2019-09-20 14:25:12, Kefeng Wang wrote:
->> There are pr_warning and pr_warng to show WARNING level message,
->> most of the code using pr_warn, number based on next-20190919,
->>
->> pr_warn: 5189   pr_warning: 546 (tools: 398, others: 148)
-> 
-> The ratio is 10:1 in favor of pr_warn(). It would make sense
-> to remove the pr_warning().
-> 
-> Would you accept pull request with these 32 simple patches
-> for rc2, please?
-> 
-> Alternative is to run a simple sed. But it is not trivial
-> to fix indentation of the related lines.
+It is a change of representation, not behavior.  Before this patch we
+used a struct xfs_bmbt_irec + int fork in xfs_writepage_ctx to hold the
+current writeback extent.  We now use a iomap, which wants this flag to
+have the fork information.  The fork flag is removed later when switching
+to the iomap implementation to avoid extra churn.
 
-Kindly ping, should I respin patches with comments fixed?
-Is the patchset acceptable, hope to be clear that what to do next :)
+Before Darricks reshuffling there was an extra patch making this
+transition more clear:
 
-Thanks
+	http://git.infradead.org/users/hch/xfs.git/commitdiff/5274577088ffcfcfbf735dcfe4153d699027caad
 
-> 
-> Best Regards,
-> Petr
-> 
-> .
-> 
-
+but since the series was turned upside down and creates the iomap code
+out of the thin air all these easy to understand and verify step by
+step changes to the existing xfs codebase got lost unfortunately.
