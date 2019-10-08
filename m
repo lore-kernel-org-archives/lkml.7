@@ -5,56 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A598CC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC535C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D18C2190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87B6521871
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:48:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OmHvTmqp"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xpMuk2LX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731272AbfJHUst (ORCPT
+        id S1731151AbfJHUsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 16:48:49 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:43492 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731134AbfJHUsZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Oct 2019 16:48:25 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:43360 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730787AbfJHUsX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 16:48:23 -0400
 Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x98KmMpG114907;
-        Tue, 8 Oct 2019 15:48:22 -0500
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x98KmJUp092460;
+        Tue, 8 Oct 2019 15:48:19 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570567702;
-        bh=nbVVUZ3Qhf2Oih+Vzfzrpge7klNd8/7wkUn5sxV3aTo=;
+        s=ti-com-17Q1; t=1570567699;
+        bh=zV3cVdmjhCBXzQdA/5xCOaiT1n6XKbwdMaP1jdy4goo=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=OmHvTmqpYXk3YehzINLxlEUsn8Y8eJXtOKxzN8ef+hzdC2q+OWNj4EL25/9h8LkH5
-         F159exaMX4q3nMIFTFvAA6+CDV5k1G5RwZYSKeOYrm+V2R3OLWrUX6UE5ekzV6Ypad
-         yalNbSB+ghNpLKE7A7icLFl6twNL5iJFqcL9u6Bc=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x98KmMih027727
+        b=xpMuk2LXulNdCJmzDpZrOEk1vHmxW+FD7Rn9RY7/3peP/TzY/v3rUxz8LAr/BRRod
+         fURTJED8Z7jklWp2vqS+z2va5LMbKzFpr93OsJ4aZLm8kk+Rfj9vS497ohqNcEfdhP
+         7RhDWkizF/fpBBayFuLQFAf82WTyEJT3T52SIkgU=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x98KmJmx027690
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 8 Oct 2019 15:48:22 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 8 Oct 2019 15:48:19 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 8 Oct
- 2019 15:48:22 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 15:48:16 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
  Frontend Transport; Tue, 8 Oct 2019 15:48:19 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x98KmMXt066700;
-        Tue, 8 Oct 2019 15:48:22 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x98KmJUf066644;
+        Tue, 8 Oct 2019 15:48:19 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
 CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v11 16/16] leds: lp5523: Fix checkpatch issues in the code
-Date:   Tue, 8 Oct 2019 15:48:00 -0500
-Message-ID: <20191008204800.19870-17-dmurphy@ti.com>
+Subject: [PATCH v11 02/16] dt-bindings: leds: Add multicolor ID to the color ID list
+Date:   Tue, 8 Oct 2019 15:47:46 -0500
+Message-ID: <20191008204800.19870-3-dmurphy@ti.com>
 X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
 In-Reply-To: <20191008204800.19870-1-dmurphy@ti.com>
 References: <20191008204800.19870-1-dmurphy@ti.com>
@@ -67,65 +67,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix checkpatch errors and warnings for the LP5523.c device
-driver.
+Add a new color ID that is declared as MULTICOLOR as with the
+multicolor framework declaring a definitive color is not accurate
+as the node can contain multiple colors.
 
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- drivers/leds/leds-lp5523.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ include/dt-bindings/leds/common.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/leds/leds-lp5523.c b/drivers/leds/leds-lp5523.c
-index 5d6002e4d657..3c7c2e68e137 100644
---- a/drivers/leds/leds-lp5523.c
-+++ b/drivers/leds/leds-lp5523.c
-@@ -23,13 +23,13 @@
+diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
+index 9e1256a7c1bf..7006d15f71e8 100644
+--- a/include/dt-bindings/leds/common.h
++++ b/include/dt-bindings/leds/common.h
+@@ -29,7 +29,8 @@
+ #define LED_COLOR_ID_VIOLET	5
+ #define LED_COLOR_ID_YELLOW	6
+ #define LED_COLOR_ID_IR		7
+-#define LED_COLOR_ID_MAX	8
++#define LED_COLOR_ID_MULTI	8
++#define LED_COLOR_ID_MAX	9
  
- #define LP5523_PROGRAM_LENGTH		32	/* bytes */
- /* Memory is used like this:
--   0x00 engine 1 program
--   0x10 engine 2 program
--   0x20 engine 3 program
--   0x30 engine 1 muxing info
--   0x40 engine 2 muxing info
--   0x50 engine 3 muxing info
--*/
-+ * 0x00 engine 1 program
-+ * 0x10 engine 2 program
-+ * 0x20 engine 3 program
-+ * 0x30 engine 1 muxing info
-+ * 0x40 engine 2 muxing info
-+ * 0x50 engine 3 muxing info
-+ */
- #define LP5523_MAX_LEDS			9
- 
- /* Registers */
-@@ -326,7 +326,7 @@ static int lp5523_update_program_memory(struct lp55xx_chip *chip,
- 					const u8 *data, size_t size)
- {
- 	u8 pattern[LP5523_PROGRAM_LENGTH] = {0};
--	unsigned cmd;
-+	unsigned int cmd;
- 	char c[3];
- 	int nrchars;
- 	int ret;
-@@ -468,6 +468,7 @@ static int lp5523_mux_parse(const char *buf, u16 *mux, size_t len)
- static void lp5523_mux_to_array(u16 led_mux, char *array)
- {
- 	int i, pos = 0;
-+
- 	for (i = 0; i < LP5523_MAX_LEDS; i++)
- 		pos += sprintf(array + pos, "%x", LED_ACTIVE(led_mux, i));
- 
-@@ -506,7 +507,7 @@ static int lp5523_load_mux(struct lp55xx_chip *chip, u16 mux, int nr)
- 	if (ret)
- 		return ret;
- 
--	ret = lp55xx_write(chip, LP5523_REG_PROG_MEM , (u8)(mux >> 8));
-+	ret = lp55xx_write(chip, LP5523_REG_PROG_MEM, (u8)(mux >> 8));
- 	if (ret)
- 		return ret;
- 
+ /* Standard LED functions */
+ #define LED_FUNCTION_ACTIVITY "activity"
 -- 
 2.22.0.214.g8dca754b1e
 
