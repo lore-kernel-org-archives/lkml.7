@@ -2,97 +2,112 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB80C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 612E1C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B84C21871
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:05:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570547103;
-	bh=rX0PXXQKYXyZRDbrBWfRRnZ6rIagZRqMiLAQaZV8zbs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Nb1dBbKOtnoKSH5zm5tzAIFJKp0Ci+RxaO7JaV7ARM8lfCp9cH3d2dZ6s1qV12UXW
-	 zBPBWR8yB2B9KM3oxGRbY/F3kqbZ3uz/YZwBPM3GO91vTgHyoieyEMP18cvuUyHu5O
-	 Z9qFJx0dwcQHYuRMA0igj/798PRsAWvzyi4O2huc=
+	by mail.kernel.org (Postfix) with ESMTP id 2B5FE2070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:06:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="G8uczl3R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727696AbfJHPFC (ORCPT
+        id S1727580AbfJHPGB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 11:05:02 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45827 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727589AbfJHPFC (ORCPT
+        Tue, 8 Oct 2019 11:06:01 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42244 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbfJHPGB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 11:05:02 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r5so19754894wrm.12;
-        Tue, 08 Oct 2019 08:05:00 -0700 (PDT)
+        Tue, 8 Oct 2019 11:06:01 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q12so10918174pff.9
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 08:06:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=tzsRg9pgEa9ifvg41ObkDkwx5TvwMyRk1wxFJpblvlg=;
+        b=G8uczl3RULQcRPZNuuCGSUomb/snylYiJ6arGsUloQ3Wa2+dSUqI/YENI2cilQPHq+
+         eA3+zmXi0bCaRtlqrEy+DS9RnTMUiUNxO7mtjIW0Oiv+ayXsEwyO1XyYkZs+MHOgW5wu
+         oo7eY39CvJcRKrVWmog/2bO2uGO+77/Ey6dQDwRu2cePnp97SenCamFTlNwEhPwdn30b
+         eKObB9wkms+pp9bQfr6USpdBqSs/idPOEUXkd5ziVWpP5BZomIUV9TSOmhWqXpWjNkHv
+         7mqwMZ5Q2KRhss4E0XnwCxFBcGdvFhuBOHQT+4vIwhLu6XPGYqhiiyZVyUyltufgpUw1
+         LQNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rX0PXXQKYXyZRDbrBWfRRnZ6rIagZRqMiLAQaZV8zbs=;
-        b=iwpd6ZXMGD2NSbpFwq/VzQkESAz09B5XgNlWI6GeIVgsB1lDUjqyG0ipvKqxdoSwzl
-         qvZvQfCZmOzxT6+qCKUF8x11CUODSbhZdBx9aMJZUEZGpNbJ3NVU1emSIMgqAV5VCBko
-         JQgcAbb8W14RVLAAh9aCPRPDMDhAYEOd8U7GH8q/IFtRbTyZmmm0CtapCAXTXp2WFrep
-         2l6516wwWW+gcI6iLiga0iwoptjCA91UIIqKE0NW6ZBGugqfLLat8ffwqoyQvZugqmXl
-         +58x0NqcpFmv2xkKfcTCEZmT/PQv5sHRyRLNXauvsn2T1/Ch6BdKLB9LuwUh3B5IfO0G
-         CQfQ==
-X-Gm-Message-State: APjAAAUQfnGwGxsZG9VPL7H1IBSYs01n9jBxs0ZE0QKRCnY+TFC5iR3H
-        lLw5f2LafGdKtAUmfxdQ8Vw=
-X-Google-Smtp-Source: APXvYqxbH6kNC2No7U6c2Eckjb4BC3VaoHcgnIuNUSw/LgzIdnnn5qz0WdDmVXiEjMQbUVy1l+M2yg==
-X-Received: by 2002:adf:f311:: with SMTP id i17mr17611648wro.394.1570547099949;
-        Tue, 08 Oct 2019 08:04:59 -0700 (PDT)
-Received: from pi3 ([194.230.155.145])
-        by smtp.googlemail.com with ESMTPSA id l9sm3273799wme.45.2019.10.08.08.04.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2019 08:04:59 -0700 (PDT)
-Date:   Tue, 8 Oct 2019 17:04:56 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Lee Jones <lee.jones@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Maciej Falkowski <m.falkowski@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: arm: samsung: Force clkoutN names to be
- unique in PMU
-Message-ID: <20191008150456.GA2683@pi3>
-References: <20191004151414.8458-1-krzk@kernel.org>
- <CAL_JsqJDTcHu5oXG6zszGHCBhTE6EW94AANUjyMV78SkKcn5yA@mail.gmail.com>
- <20191008125038.GA2550@pi3>
- <CAL_Jsq+GcsUWN6kjBLkyr1rHGh6_4=w6JL6+k7DBXkBcvHcSBw@mail.gmail.com>
- <CAL_JsqKBzZCShxx99aB4z15XYNbUionVicmfNNXEfq=iohWLCA@mail.gmail.com>
- <20191008142900.GA2635@pi3>
- <CAL_Jsq+ObMD=inkMFqkZbKFoKZUxw53gUMnjsC1pU5GwumK8LQ@mail.gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=tzsRg9pgEa9ifvg41ObkDkwx5TvwMyRk1wxFJpblvlg=;
+        b=qJ/FzhCNfjfqPM3C+mQ4PPsiSMnGjTPp4FXV4Yddd6Yvi4HLecmLplcAlFGNl9KJjX
+         ACrKrG6HTZ7pyrLeOwlyjPMKN1IMGO2HK6oyyGp9XhvIwaiDUwAe9bRr+vGBJ6r+8KLA
+         7ic/XbcN0BuLn4yylyr7/Y0sAt0Nf8YsWmeLWJs1jPWGeWExQ6Qq9P0cO++g7IHfdFyg
+         sqx6ZOb0IuowTvGRz6hS+32Y6LTK4Soj1hBY6987KTPcnu7LBnwSaIPTerHgl6pN03gR
+         pyZoPBsTmvXU5hfnvc8jMf+DLO8d6uWM7sUqHDTsLwHd5ksyaqj3hyDk0kn27RF9wEM9
+         b6rQ==
+X-Gm-Message-State: APjAAAVRfvSOXevgKLnfTiaTQT+s4X4fVcuMZvP2AC35RHldkTNaGFSO
+        90lHtzYsNcePPAAJ0AHrMbQsJA==
+X-Google-Smtp-Source: APXvYqxhixa3F/cEc785OVOZs0F2stbVxXL2Q91Zz8G3dA0FQLAg7s6F+eNuzgo0xQ6EBlfs3p8Uew==
+X-Received: by 2002:a65:48ca:: with SMTP id o10mr7551202pgs.116.1570547160188;
+        Tue, 08 Oct 2019 08:06:00 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:8d4b:adae:e1eb:fe8e])
+        by smtp.gmail.com with ESMTPSA id u3sm17330522pfn.134.2019.10.08.08.05.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 08 Oct 2019 08:05:59 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Saurav Girepunje <saurav.girepunje@gmail.com>, balbi@kernel.org,
+        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     saurav.girepunje@hotmail.com
+Subject: Re: [PATCH] usb: dwc3: dwc3-meson-g12a.c: use devm_platform_ioremap_resource()
+In-Reply-To: <20191008102751.GA10401@saurav>
+References: <20191008102751.GA10401@saurav>
+Date:   Tue, 08 Oct 2019 08:05:58 -0700
+Message-ID: <7h7e5f5lbd.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+ObMD=inkMFqkZbKFoKZUxw53gUMnjsC1pU5GwumK8LQ@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 09:38:15AM -0500, Rob Herring wrote:
-> Are you running using DT_SCHEMA_FILES? If so, you won't get the core schema.
+Saurav Girepunje <saurav.girepunje@gmail.com> writes:
 
-Ah, yes, now I see proper errors. Thanks for pointing this.
+> Use the new helper that wraps the calls to platform_get_resource()
+> and devm_ioremap_resource() together in dwc3_meson_g12a_probe().
+>
+> Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
 
-I'll send next version of this patch only (if others are ok).
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
 
-Best regards,
-Krzysztof
-
+> ---
+>  drivers/usb/dwc3/dwc3-meson-g12a.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>
+> diff --git a/drivers/usb/dwc3/dwc3-meson-g12a.c b/drivers/usb/dwc3/dwc3-meson-g12a.c
+> index bca7e92a10e9..d73ccd9e1366 100644
+> --- a/drivers/usb/dwc3/dwc3-meson-g12a.c
+> +++ b/drivers/usb/dwc3/dwc3-meson-g12a.c
+> @@ -386,7 +386,6 @@ static int dwc3_meson_g12a_probe(struct platform_device *pdev)
+>  	struct device		*dev = &pdev->dev;
+>  	struct device_node	*np = dev->of_node;
+>  	void __iomem *base;
+> -	struct resource *res;
+>  	enum phy_mode otg_id;
+>  	int ret, i, irq;
+>  
+> @@ -394,8 +393,7 @@ static int dwc3_meson_g12a_probe(struct platform_device *pdev)
+>  	if (!priv)
+>  		return -ENOMEM;
+>  
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	base = devm_ioremap_resource(dev, res);
+> +	base = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(base))
+>  		return PTR_ERR(base);
+>  
+> -- 
+> 2.20.1
