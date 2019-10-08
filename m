@@ -2,103 +2,120 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA551C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEC7C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 887DA206C2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:58:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 117272070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:59:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730589AbfJHJ61 (ORCPT
+        id S1730389AbfJHJ7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 05:58:27 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:55585 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729935AbfJHJ61 (ORCPT
+        Tue, 8 Oct 2019 05:59:14 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47508 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728866AbfJHJ7O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 05:58:27 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-21-VWCztQ1aNFyz46d4CGNx0w-1; Tue, 08 Oct 2019 10:58:24 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 8 Oct 2019 10:58:24 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 8 Oct 2019 10:58:24 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Linus Torvalds' <torvalds@linux-foundation.org>
-CC:     Al Viro <viro@zeniv.linux.org.uk>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: RE: [PATCH] Convert filldir[64]() from __put_user() to
- unsafe_put_user()
-Thread-Topic: [PATCH] Convert filldir[64]() from __put_user() to
- unsafe_put_user()
-Thread-Index: AQHVfL0BUpJ/upywWEKRtOjvaDvCEKdPT9ewgAAbG4CAAQw74A==
-Date:   Tue, 8 Oct 2019 09:58:24 +0000
-Message-ID: <18992f7f25b44f2898812ffc203c4b35@AcuMS.aculab.com>
-References: <20191006222046.GA18027@roeck-us.net>
- <CAHk-=wgrqwuZJmwbrjhjCFeSUu2i57unaGOnP4qZAmSyuGwMZA@mail.gmail.com>
- <CAHk-=wjRPerXedTDoBbJL=tHBpH+=sP6pX_9NfgWxpnmHC5RtQ@mail.gmail.com>
- <5f06c138-d59a-d811-c886-9e73ce51924c@roeck-us.net>
- <CAHk-=whAQWEMADgxb_qAw=nEY4OnuDn6HU4UCSDMNT5ULKvg3g@mail.gmail.com>
- <20191007012437.GK26530@ZenIV.linux.org.uk>
- <CAHk-=whKJfX579+2f-CHc4_YmEmwvMe_Csr0+CPfLAsSAdfDoA@mail.gmail.com>
- <20191007025046.GL26530@ZenIV.linux.org.uk>
- <CAHk-=whraNSys_Lj=Ut1EA=CJEfw2Uothh+5-WL+7nDJBegWcQ@mail.gmail.com>
- <c58c2a8a5366409abd4169d10a58196a@AcuMS.aculab.com>
- <CAHk-=wjF2fkhuN8N-MnTwvzNig83XdQK50nir8oieF7jV6Om=A@mail.gmail.com>
-In-Reply-To: <CAHk-=wjF2fkhuN8N-MnTwvzNig83XdQK50nir8oieF7jV6Om=A@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 8 Oct 2019 05:59:14 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iHmGl-0006Wr-If; Tue, 08 Oct 2019 11:59:03 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0E0331C0325;
+        Tue,  8 Oct 2019 11:59:03 +0200 (CEST)
+Date:   Tue, 08 Oct 2019 09:59:02 -0000
+From:   "tip-bot2 for Sami Tolvanen" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/cpu/vmware: Use the full form of inl in VMWARE_PORT
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Borislav Petkov <bp@suse.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        clang-built-linux@googlegroups.com,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        virtualization@lists.linux-foundation.org,
+        "VMware, Inc." <pv-drivers@vmware.com>, "x86-ml" <x86@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20191007192129.104336-1-samitolvanen@google.com>
+References: <20191007192129.104336-1-samitolvanen@google.com>
 MIME-Version: 1.0
-X-MC-Unique: VWCztQ1aNFyz46d4CGNx0w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Message-ID: <157052874294.9978.13063009764324746785.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogTGludXMgVG9ydmFsZHMgPHRvcnZhbGRzQGxpbnV4LWZvdW5kYXRpb24ub3JnPg0KPiBT
-ZW50OiAwNyBPY3RvYmVyIDIwMTkgMTk6MTENCi4uLg0KPiBJJ3ZlIGJlZW4gdmVyeSBjbG9zZSB0
-byBqdXN0IHJlbW92aW5nIF9fZ2V0X3VzZXIvX19wdXRfdXNlciBzZXZlcmFsDQo+IHRpbWVzLCBl
-eGFjdGx5IGJlY2F1c2UgcGVvcGxlIGRvIGNvbXBsZXRlbHkgdGhlIHdyb25nIHRoaW5nIHdpdGgg
-dGhlbQ0KPiAtIG5vdCBzcGVlZGluZyBjb2RlIHVwLCBidXQgbWFraW5nIGl0IHVuc2FmZSBhbmQg
-YnVnZ3kuDQoNClRoZXkgY291bGQgZG8gdGhlIHZlcnkgc2ltcGxlIGNoZWNrIHRoYXQgJ3VzZXJf
-cHRyK3NpemUgPCBrZXJuZWxfYmFzZScNCnJhdGhlciB0aGFuIHRoZSBmdWxsIHdpbmRvdyBjaGVj
-ayB1bmRlciB0aGUgYXNzdW1wdGlvbiB0aGF0IGFjY2Vzc19vaygpDQpoYXMgYmVlbiBjYWxsZWQg
-YW5kIHRoYXQgdGhlIGxpa2VseSBlcnJvcnMgYXJlIGp1c3Qgb3ZlcnJ1bnMuDQoNCj4gVGhlIG5l
-dyAidXNlcl9hY2Nlc3NfYmVnaW4vZW5kKCkiIG1vZGVsIGlzIG11Y2ggYmV0dGVyLCBidXQgaXQg
-YWxzbw0KPiBoYXMgYWN0dWFsIFNUQVRJQyBjaGVja2luZyB0aGF0IHRoZXJlIGFyZSBubyBmdW5j
-dGlvbiBjYWxscyBldGMgaW5zaWRlDQo+IHRoZSByZWdpb24sIHNvIGl0IGZvcmNlcyB5b3UgdG8g
-ZG8gdGhlIGxvb3AgcHJvcGVybHkgYW5kIHRpZ2h0bHksIGFuZA0KPiBub3QgdGhlIGluY29ycmVj
-dCAiSSBjaGVja2VkIHRoZSByYW5nZSBzb21ld2hlcmUgZWxzZSwgbm93IEknbSBkb2luZw0KPiBh
-biB1bnNhZmUgY29weSIuDQo+IA0KPiBBbmQgaXQgYWN0dWFsbHkgc3BlZWRzIHRoaW5ncyB1cCwg
-dW5saWtlIHRoZSBhY2Nlc3Nfb2soKSBnYW1lcy4NCg0KSSd2ZSBjb2RlIHRoYXQgZG9lczoNCglp
-ZiAoIWFjY2Vzc19vayguLi4pKQ0KCQlyZXR1cm4gLUVGQVVMVDsNCgkuLi4NCglmb3IgKC4uLikg
-ew0KCQlpZiAoX19nZXRfdXNlcih0bXBfdTY0LCB1c2VyX3B0cisrKSkNCgkJCXJldHVybiAtRUZB
-VUxUOw0KCQl3cml0ZXEodG1wX3U2NCwgaW9fcHRyKyspOw0KCX0NCihBbHRob3VnaCB0aGUgY29k
-ZSBpcyBtb3JlIGNvbXBsZXggYmVjYXVzZSBub3QgYWxsIHRyYW5zZmVycyBhcmUgbXVsdGlwbGVz
-IG9mIDggYnl0ZXMuKQ0KDQpXaXRoIHVzZXJfYWNjZXNzX2JlZ2luL2VuZCgpIEknZCBwcm9iYWJs
-eSB3YW50IHRvIHB1dCB0aGUgY29weSBsb29wDQppbnNpZGUgYSBmdW5jdGlvbiAod2hpY2ggd2ls
-bCBwcm9iYWJseSBnZXQgaW5saW5lZCkgdG8gYXZvaWQgY29udm9sdXRlZA0KZXJyb3IgcHJvY2Vz
-c2luZy4NClNvIHlvdSBlbmQgdXAgd2l0aDoNCglpZiAoIXVzZXJfYWNjZXNzX29rKCkpDQoJCXJl
-dHVybiBfRUZBVUxUOw0KCXVzZXJfYWNjZXNzX2JlZ2luKCk7DQoJcnZhbCA9IGRvX2NvcHlfY29k
-ZSguLi4pOw0KCXVzZXJfYWNjZXNzX2VuZCgpOw0KCXJldHVybiBydmFsOw0KV2hpY2gsIGF0IHRo
-ZSBzb3VyY2UgbGV2ZWwgKGF0IGxlYXN0KSBicmVha3MgeW91ciAnbm8gZnVuY3Rpb24gY2FsbHMn
-IHJ1bGUuDQpUaGUgd3JpdGVxKCkgbWlnaHQgYWxzbyBicmVhayBpdCBhcyB3ZWxsLg0KDQoJRGF2
-aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50
-IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTcz
-ODYgKFdhbGVzKQ0K
+The following commit has been merged into the x86/urgent branch of tip:
 
+Commit-ID:     b547c1fa97b030ac50586e8b187571b4a83d154c
+Gitweb:        https://git.kernel.org/tip/b547c1fa97b030ac50586e8b187571b4a83d154c
+Author:        Sami Tolvanen <samitolvanen@google.com>
+AuthorDate:    Mon, 07 Oct 2019 12:21:29 -07:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Tue, 08 Oct 2019 11:52:35 +02:00
+
+x86/cpu/vmware: Use the full form of inl in VMWARE_PORT
+
+LLVM's assembler doesn't accept the short form
+
+  inl (%%dx)
+
+instruction, but instead insists on the output register to be explicitly
+specified:
+
+  <inline asm>:1:7: error: invalid operand for instruction
+          inl (%dx)
+             ^
+  LLVM ERROR: Error parsing inline asm
+
+Use the full form of the instruction to fix the build.
+
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Acked-by: Thomas Hellstrom <thellstrom@vmware.com>
+Cc: clang-built-linux@googlegroups.com
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: virtualization@lists.linux-foundation.org
+Cc: "VMware, Inc." <pv-drivers@vmware.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://github.com/ClangBuiltLinux/linux/issues/734
+Link: https://lkml.kernel.org/r/20191007192129.104336-1-samitolvanen@google.com
+---
+ arch/x86/kernel/cpu/vmware.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/cpu/vmware.c b/arch/x86/kernel/cpu/vmware.c
+index 9735139..46d7326 100644
+--- a/arch/x86/kernel/cpu/vmware.c
++++ b/arch/x86/kernel/cpu/vmware.c
+@@ -49,7 +49,7 @@
+ #define VMWARE_CMD_VCPU_RESERVED 31
+ 
+ #define VMWARE_PORT(cmd, eax, ebx, ecx, edx)				\
+-	__asm__("inl (%%dx)" :						\
++	__asm__("inl (%%dx), %%eax" :					\
+ 		"=a"(eax), "=c"(ecx), "=d"(edx), "=b"(ebx) :		\
+ 		"a"(VMWARE_HYPERVISOR_MAGIC),				\
+ 		"c"(VMWARE_CMD_##cmd),					\
