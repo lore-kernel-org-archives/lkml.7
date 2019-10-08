@@ -2,132 +2,76 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A89ECE58C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE812C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9896D21721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:41:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="T4/df+dZ"
+	by mail.kernel.org (Postfix) with ESMTP id BC05021721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:43:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729069AbfJHRl1 (ORCPT
+        id S1727496AbfJHRng (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 13:41:27 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:49666 "EHLO mail.skyhub.de"
+        Tue, 8 Oct 2019 13:43:36 -0400
+Received: from foss.arm.com ([217.140.110.172]:42238 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727677AbfJHRl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 13:41:26 -0400
-Received: from zn.tnic (p200300EC2F0B51004985F04ADA683F0C.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:5100:4985:f04a:da68:3f0c])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 222B71EC0B7A;
-        Tue,  8 Oct 2019 19:41:25 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1570556485;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=SJ6v4MwSJT7jj9CBnRfAH7LZOjGb4kHK+HeAwATot6c=;
-        b=T4/df+dZX8mBsyqL9k4W5yymLxF55rVWyYiXSXy53Rajj5ewuoTAED/n01TuDsDISQECml
-        lf7j/EICTE+/D5ctIsbOtBi/SrHL+OUDURkPqlV/NB5pPaRBQ7iF3PlEyPnf7DbOO9t7uB
-        uM697X/jY0ktmDHrbmhBMzSXw9gxjaI=
-Date:   Tue, 8 Oct 2019 19:41:18 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-mm@kvack.org
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, sean.j.christopherson@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
-        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com
-Subject: Re: [PATCH v22 11/24] mm: Introduce vm_ops->may_mprotect()
-Message-ID: <20191008174118.GL14765@zn.tnic>
-References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
- <20190903142655.21943-12-jarkko.sakkinen@linux.intel.com>
+        id S1725939AbfJHRnf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 13:43:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CD54315BE;
+        Tue,  8 Oct 2019 10:36:53 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8F35B3F6C4;
+        Tue,  8 Oct 2019 10:36:52 -0700 (PDT)
+Subject: Re: [PATCH v3 04/10] sched/fair: rework load_balance
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Phil Auld <pauld@redhat.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Hillf Danton <hdanton@sina.com>
+References: <1568878421-12301-1-git-send-email-vincent.guittot@linaro.org>
+ <1568878421-12301-5-git-send-email-vincent.guittot@linaro.org>
+ <c752dd1a-731e-aae3-6a2c-aecf88901ac0@arm.com>
+ <CAKfTPtBQNJfNmBqpuaefsLzsTrGxJ=2bTs+tRdbOAa9J3eKuVw@mail.gmail.com>
+ <31cac0c1-98e4-c70e-e156-51a70813beff@arm.com>
+ <20191008141642.GQ2294@hirez.programming.kicks-ass.net>
+ <b4e29e48-a97c-67e5-a284-6ddc13222c5b@arm.com>
+ <20191008163357.GF2328@hirez.programming.kicks-ass.net>
+ <5de71c9f-cd6b-0284-f4a0-0d1fe4059099@arm.com>
+Message-ID: <df8cff7b-a83c-42d1-f1c7-1a711dc1b2ce@arm.com>
+Date:   Tue, 8 Oct 2019 18:36:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <5de71c9f-cd6b-0284-f4a0-0d1fe4059099@arm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190903142655.21943-12-jarkko.sakkinen@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ linux-mm.
-
-On Tue, Sep 03, 2019 at 05:26:42PM +0300, Jarkko Sakkinen wrote:
-> From: Sean Christopherson <sean.j.christopherson@intel.com>
+On 08/10/2019 17:39, Valentin Schneider wrote:
+>>
+>> But -fno-strict-overflow mandates 2s complement for all such signed
+>> issues.
+>>
 > 
-> Add vm_ops()->may_mprotect() to check additional constrains set by a
-
-constraints
-
-Leaving in the rest for MM folks:
-
-> subsystem for a mprotect() call.
-> 
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  include/linux/mm.h |  2 ++
->  mm/mprotect.c      | 13 ++++++++++---
->  2 files changed, 12 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 0334ca97c584..405cea65057a 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -469,6 +469,8 @@ struct vm_operations_struct {
->  	void (*close)(struct vm_area_struct * area);
->  	int (*split)(struct vm_area_struct * area, unsigned long addr);
->  	int (*mremap)(struct vm_area_struct * area);
-> +	int (*may_mprotect)(struct vm_area_struct *vma, unsigned long start,
-> +			    unsigned long end, unsigned long prot);
->  	vm_fault_t (*fault)(struct vm_fault *vmf);
->  	vm_fault_t (*huge_fault)(struct vm_fault *vmf,
->  			enum page_entry_size pe_size);
-> diff --git a/mm/mprotect.c b/mm/mprotect.c
-> index bf38dfbbb4b4..18732543b295 100644
-> --- a/mm/mprotect.c
-> +++ b/mm/mprotect.c
-> @@ -547,13 +547,20 @@ static int do_mprotect_pkey(unsigned long start, size_t len,
->  			goto out;
->  		}
->  
-> +		tmp = vma->vm_end;
-> +		if (tmp > end)
-> +			tmp = end;
-> +
-> +		if (vma->vm_ops && vma->vm_ops->may_mprotect) {
-> +			error = vma->vm_ops->may_mprotect(vma, nstart, tmp, prot);
-> +			if (error)
-> +				goto out;
-> +		}
-> +
->  		error = security_file_mprotect(vma, reqprot, prot);
->  		if (error)
->  			goto out;
->  
-> -		tmp = vma->vm_end;
-> -		if (tmp > end)
-> -			tmp = end;
->  		error = mprotect_fixup(vma, &prev, nstart, tmp, newflags);
->  		if (error)
->  			goto out;
-> -- 
-> 2.20.1
+> So then there really shouldn't be any ambiguity. I have no idea if
+> -fno-strict-overflow then also lifts the undefinedness of the right shifts,
+> gotta get my spade and dig some more.
 > 
 
--- 
-Regards/Gruss,
-    Boris.
+Bleh, no luck really.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Thinking about it some more you can't overflow by right shifting
+(logical/arithmetic), so I dunno if signed right shift counts as "such
+signed issues".
