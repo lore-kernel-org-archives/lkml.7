@@ -2,129 +2,179 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49897C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1DADC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E515218AC
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:19:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD120218DE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:20:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730596AbfJHITo (ORCPT
+        id S1730583AbfJHIUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 04:19:44 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47249 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730453AbfJHITo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 04:19:44 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iHkiT-000531-Bu; Tue, 08 Oct 2019 10:19:33 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 05D281C0325;
-        Tue,  8 Oct 2019 10:19:33 +0200 (CEST)
-Date:   Tue, 08 Oct 2019 08:19:32 -0000
-From:   "tip-bot2 for Janakarajan Natarajan" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/asm: Fix MWAITX C-state hint value
-Cc:     Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
-        Borislav Petkov <bp@suse.de>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        <stable@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
-In-Reply-To: <20191007190011.4859-1-Janakarajan.Natarajan@amd.com>
-References: <20191007190011.4859-1-Janakarajan.Natarajan@amd.com>
+        Tue, 8 Oct 2019 04:20:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60520 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730440AbfJHIUm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 04:20:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id AA896AEA1;
+        Tue,  8 Oct 2019 08:20:39 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 25BBF1E4801; Tue,  8 Oct 2019 10:20:39 +0200 (CEST)
+Date:   Tue, 8 Oct 2019 10:20:39 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "tj@kernel.org" <tj@kernel.org>, Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH] cgroup, blkcg: prevent dirty inodes to pin dying memory
+ cgroups
+Message-ID: <20191008082039.GA5078@quack2.suse.cz>
+References: <20191004221104.646711-1-guro@fb.com>
+ <20191008040630.GA15134@dread.disaster.area>
+ <20191008053854.GA14951@castle.dhcp.thefacebook.com>
 MIME-Version: 1.0
-Message-ID: <157052277295.9978.2993482656720588753.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191008053854.GA14951@castle.dhcp.thefacebook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Tue 08-10-19 05:38:59, Roman Gushchin wrote:
+> On Tue, Oct 08, 2019 at 03:06:31PM +1100, Dave Chinner wrote:
+> > On Fri, Oct 04, 2019 at 03:11:04PM -0700, Roman Gushchin wrote:
+> > > This is a RFC patch, which is not intended to be merged as is,
+> > > but hopefully will start a discussion which can result in a good
+> > > solution for the described problem.
+> > > 
+> > > --
+> > > 
+> > > We've noticed that the number of dying cgroups on our production hosts
+> > > tends to grow with the uptime. This time it's caused by the writeback
+> > > code.
+> > > 
+> > > An inode which is getting dirty for the first time is associated
+> > > with the wb structure (look at __inode_attach_wb()). It can later
+> > > be switched to another wb under some conditions (e.g. some other
+> > > cgroup is writing a lot of data to the same inode), but generally
+> > > stays associated up to the end of life of the inode structure.
+> > > 
+> > > The problem is that the wb structure holds a reference to the original
+> > > memory cgroup. So if the inode was dirty once, it has a good chance
+> > > to pin down the original memory cgroup.
+> > > 
+> > > An example from the real life: some service runs periodically and
+> > > updates rpm packages. Each time in a new memory cgroup. Installed
+> > > .so files are heavily used by other cgroups, so corresponding inodes
+> > > tend to stay alive for a long. So do pinned memory cgroups.
+> > > In production I've seen many hosts with 1-2 thousands of dying
+> > > cgroups.
+> > > 
+> > > This is not the first problem with the dying memory cgroups. As
+> > > always, the problem is with their relative size: memory cgroups
+> > > are large objects, easily 100x-1000x larger that inodes. So keeping
+> > > a couple of thousands of dying cgroups in memory without a good reason
+> > > (what we easily do with inodes) is quite costly (and is measured
+> > > in tens and hundreds of Mb).
+> > > 
+> > > One possible approach to this problem is to switch inodes associated
+> > > with dying wbs to the root wb. Switching is a best effort operation
+> > > which can fail silently, so unfortunately we can't run once over a
+> > > list of associated inodes (even if we'd have such a list). So we
+> > > really have to scan all inodes.
+> > > 
+> > > In the proposed patch I schedule a work on each memory cgroup
+> > > deletion, which is probably too often. Alternatively, we can do it
+> > > periodically under some conditions (e.g. the number of dying memory
+> > > cgroups is larger than X). So it's basically a gc run.
+> > > 
+> > > I wonder if there are any better ideas?
+> > > 
+> > > Signed-off-by: Roman Gushchin <guro@fb.com>
+> > > ---
+> > >  fs/fs-writeback.c | 29 +++++++++++++++++++++++++++++
+> > >  mm/memcontrol.c   |  5 +++++
+> > >  2 files changed, 34 insertions(+)
+> > > 
+> > > diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
+> > > index 542b02d170f8..4bbc9a200b2c 100644
+> > > --- a/fs/fs-writeback.c
+> > > +++ b/fs/fs-writeback.c
+> > > @@ -545,6 +545,35 @@ static void inode_switch_wbs(struct inode *inode, int new_wb_id)
+> > >  	up_read(&bdi->wb_switch_rwsem);
+> > >  }
+> > >  
+> > > +static void reparent_dirty_inodes_one_sb(struct super_block *sb, void *arg)
+> > > +{
+> > > +	struct inode *inode, *next;
+> > > +
+> > > +	spin_lock(&sb->s_inode_list_lock);
+> > > +	list_for_each_entry_safe(inode, next, &sb->s_inodes, i_sb_list) {
+> > > +		spin_lock(&inode->i_lock);
+> > > +		if (inode->i_state & (I_NEW | I_FREEING | I_WILL_FREE)) {
+> > > +			spin_unlock(&inode->i_lock);
+> > > +			continue;
+> > > +		}
+> > > +
+> > > +		if (inode->i_wb && wb_dying(inode->i_wb)) {
+> > > +			spin_unlock(&inode->i_lock);
+> > > +			inode_switch_wbs(inode, root_mem_cgroup->css.id);
+> > > +			continue;
+> > > +		}
+> > > +
+> > > +		spin_unlock(&inode->i_lock);
+> > > +	}
+> > > +	spin_unlock(&sb->s_inode_list_lock);
+> > 
+> > No idea what the best solution is, but I think this is fundamentally
+> > unworkable. It's not uncommon to have a hundred million cached
+> > inodes these days, often on a single filesystem. Anything that
+> > requires a brute-force system wide inode scan, especially without
+> > conditional reschedule points, is largely a non-starter.
+> > 
+> > Also, inode_switch_wbs() is not guaranteed to move the inode to the
+> > destination wb.  There can only be WB_FRN_MAX_IN_FLIGHT (1024)
+> > switches in flight at once and switches are run via RCU callbacks,
+> > so I suspect that using inode_switch_wbs() for bulk re-assignment is
+> > going to be a lot more complex than just finding inodes to call
+> > inode_switch_wbs() on....
+> 
+> We can schedule it only if the number of dying cgroups exceeds a certain
+> number (like 100), which will make it relatively rare event. Maybe we can
+> add some other conditions, e.g. count the number of inodes associated with
+> a wb and skip scanning if it's zero.
+> 
+> Alternatively the wb structure can keep the list of associated inodes,
+> and scan only them, but then it's not trivial to implement without
+> additional complication of already quite complex locking scheme.
+> And because inode_switch_wbs() can fail, we can't guarantee that a single
+> pass over such a list will be enough. That means the we need to schedule
+> scans periodically until all inodes will be switched.
+> 
+> So I really don't know which option is better, but at the same time
+> doing nothing isn't the option too. Somehow the problem should be solved.
 
-Commit-ID:     9b69cab42e5d14b8f0467566e3d97e682365db2d
-Gitweb:        https://git.kernel.org/tip/9b69cab42e5d14b8f0467566e3d97e682365db2d
-Author:        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
-AuthorDate:    Mon, 07 Oct 2019 19:00:22 
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Tue, 08 Oct 2019 09:48:09 +02:00
+I agree with Dave that scanning all inodes in the system can get really
+expensive quickly. So what I rather think we could do is create another 'IO
+list' (linked by inode->i_io_list) where we would put inodes that reference
+the wb but are not in any other IO list of the wb. And then we would
+switch inodes on this list when the wb is dying... One would have to be
+somewhat careful with properly draining this list since new inodes can be
+added to it while we work on it but otherwise I don't see any complication
+with this.
 
-x86/asm: Fix MWAITX C-state hint value
-
-As per "AMD64 Architecture Programmer's Manual Volume 3: General-Purpose
-and System Instructions", MWAITX EAX[7:4]+1 specifies the optional hint
-of the optimized C-state. For C0 state, EAX[7:4] should be set to 0xf.
-
-Currently, a value of 0xf is set for EAX[3:0] instead of EAX[7:4]. Fix
-this by changing MWAITX_DISABLE_CSTATES from 0xf to 0xf0.
-
-This hasn't had any implications so far because setting reserved bits in
-EAX is simply ignored by the CPU.
-
- [ bp: Fixup comment in delay_mwaitx() and massage. ]
-
-Signed-off-by: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Frederic Weisbecker <frederic@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: "x86@kernel.org" <x86@kernel.org>
-Cc: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20191007190011.4859-1-Janakarajan.Natarajan@amd.com
----
- arch/x86/include/asm/mwait.h | 2 +-
- arch/x86/lib/delay.c         | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/include/asm/mwait.h b/arch/x86/include/asm/mwait.h
-index e28f8b7..9d5252c 100644
---- a/arch/x86/include/asm/mwait.h
-+++ b/arch/x86/include/asm/mwait.h
-@@ -21,7 +21,7 @@
- #define MWAIT_ECX_INTERRUPT_BREAK	0x1
- #define MWAITX_ECX_TIMER_ENABLE		BIT(1)
- #define MWAITX_MAX_LOOPS		((u32)-1)
--#define MWAITX_DISABLE_CSTATES		0xf
-+#define MWAITX_DISABLE_CSTATES		0xf0
- 
- static inline void __monitor(const void *eax, unsigned long ecx,
- 			     unsigned long edx)
-diff --git a/arch/x86/lib/delay.c b/arch/x86/lib/delay.c
-index b7375dc..c126571 100644
---- a/arch/x86/lib/delay.c
-+++ b/arch/x86/lib/delay.c
-@@ -113,8 +113,8 @@ static void delay_mwaitx(unsigned long __loops)
- 		__monitorx(raw_cpu_ptr(&cpu_tss_rw), 0, 0);
- 
- 		/*
--		 * AMD, like Intel, supports the EAX hint and EAX=0xf
--		 * means, do not enter any deep C-state and we use it
-+		 * AMD, like Intel's MWAIT version, supports the EAX hint and
-+		 * EAX=0xf0 means, do not enter any deep C-state and we use it
- 		 * here in delay() to minimize wakeup latency.
- 		 */
- 		__mwaitx(MWAITX_DISABLE_CSTATES, delay, MWAITX_ECX_TIMER_ENABLE);
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
