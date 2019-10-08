@@ -2,109 +2,106 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 205C9C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B4EECE58C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:00:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC7CD2070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:00:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="gB1e0Pwf"
+	by mail.kernel.org (Postfix) with ESMTP id 8786C217D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:00:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729790AbfJHRAY (ORCPT
+        id S1729794AbfJHRA6 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 13:00:24 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:38441 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbfJHRAX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 13:00:23 -0400
-Received: by mail-io1-f68.google.com with SMTP id u8so38075130iom.5
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 10:00:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=jjX9NlOHpquC/Sfta8LEcd2OkeJi//hJzKxsmDBzbTE=;
-        b=gB1e0PwfuyEBf0jsz8o+5nHpb3VXP4nLO2wfWhWGC/75vX90xaUYLZ4CufQ5pwgEWA
-         f8a5GGESkScrhfUAFIM4IFRh3V0WAhqgs+Kmk3mWHKL2rEcI8HlIY1LfgTOQlCc6tP0b
-         h6jT5o5L+wV1miWcBWTMdBUybHf6EcVoGjHdL13bcBnoLCFVA7KP3/9aIKvJX2MQkxAr
-         KYwxpGBGlnQ94spt/znvnB8E6DmZI+mw4LA5Oa6tJhfgzhsDywolVaDeuQ3f/MFzOt/d
-         1Xug10qjK5BsETha8IW6lHS6mIO8JkOX/87sj4GVcyu7dCn/AzcS+9IUP00iMTOvuWoK
-         IKPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jjX9NlOHpquC/Sfta8LEcd2OkeJi//hJzKxsmDBzbTE=;
-        b=UmSH1QKn7ESguWrzNa3d5aXCnKxy1WIPn8wB0HHk/510JgfUHQl2kO2MritEsP5NTI
-         0rwkocvIgrVAJ8SADO5HeuYSlujxaMn7phCtdQUjyNtoeIhvG3TtubczWJrYGPd5mSIS
-         /JVhohbxP440ze7RdOPRlm0R/uMOpDqq2NPScJGSvz4uoe1oB+zpgJXLeWW818rb324O
-         0PdzeSN7cHLQJ2EzDBfgzoCrixlS2mpfJtUJwK+I8cdW2so68J3pHAx0rbih/B2tIlgB
-         d3zdsQtvFwEpjJoOZlpWXqTvUJIKbUDbo1odV58MZuR3g9X8DD+OFw2LXpXXQTGVnwjY
-         UF7Q==
-X-Gm-Message-State: APjAAAW0R3Rf8rpYSXpVyMZqXYKHqOWkMJHs9kln+UoruXpJ3V1XqX8R
-        XEEp7Zi02eMYNRQoJrJFD/up8EykOcF1rQ==
-X-Google-Smtp-Source: APXvYqwAmqmBluQAIhWf2f/0FiXxNwozNzClbWMkH8dbk0HE2IO35d/M6WcDFO4TLIqY5dwZ5O2cxg==
-X-Received: by 2002:a5d:9c4c:: with SMTP id 12mr29014127iof.276.1570554022169;
-        Tue, 08 Oct 2019 10:00:22 -0700 (PDT)
-Received: from [192.168.1.50] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id r2sm9402226ila.52.2019.10.08.10.00.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 08 Oct 2019 10:00:20 -0700 (PDT)
-Subject: Re: [PATCH] io_uring: remove wait loop spurious wakeups
-To:     Pavel Begunkov <asml.silence@gmail.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <936cd758d6c694fe1b8b9de050e24cfecdc2e60d.1570489620.git.asml.silence@gmail.com>
- <e11a0716-eb18-4ce3-9902-3247beafe65a@kernel.dk>
- <d035bb1b-e6f0-77db-a434-1761b0a7a142@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <62a8a6c7-9c5b-c9a4-9c73-c77db87c6637@kernel.dk>
-Date:   Tue, 8 Oct 2019 11:00:19 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 8 Oct 2019 13:00:58 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38286 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725966AbfJHRA6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 13:00:58 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6F213B1FF;
+        Tue,  8 Oct 2019 17:00:56 +0000 (UTC)
+Date:   Tue, 8 Oct 2019 09:59:42 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     "Koenig, Christian" <Christian.Koenig@amd.com>
+Cc:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "walken@google.com" <walken@google.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Doug Ledford <dledford@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        J?r?me Glisse <jglisse@redhat.com>,
+        Davidlohr Bueso <dbueso@suse.de>
+Subject: Re: [PATCH 09/11] lib/interval-tree: convert interval_tree to half
+ closed intervals
+Message-ID: <20191008165942.vxfwbectycuersdx@linux-p48b>
+Mail-Followup-To: "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "walken@google.com" <walken@google.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Doug Ledford <dledford@redhat.com>, Joerg Roedel <joro@8bytes.org>,
+        J?r?me Glisse <jglisse@redhat.com>,
+        Davidlohr Bueso <dbueso@suse.de>
+References: <20191003201858.11666-1-dave@stgolabs.net>
+ <20191003201858.11666-10-dave@stgolabs.net>
+ <bc45a4c6-35ab-54a3-487f-ce41b75dd99c@amd.com>
+ <d1f5de2f-006f-5e76-cd1b-1524b8bc2cb0@amd.com>
 MIME-Version: 1.0
-In-Reply-To: <d035bb1b-e6f0-77db-a434-1761b0a7a142@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <d1f5de2f-006f-5e76-cd1b-1524b8bc2cb0@amd.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/8/19 10:43 AM, Pavel Begunkov wrote:
-> On 08/10/2019 06:16, Jens Axboe wrote:
->> On 10/7/19 5:18 PM, Pavel Begunkov (Silence) wrote:
->>> From: Pavel Begunkov <asml.silence@gmail.com>
->>>
->>> Any changes interesting to tasks waiting in io_cqring_wait() are
->>> commited with io_cqring_ev_posted(). However, io_ring_drop_ctx_refs()
->>> also tries to do that but with no reason, that means spurious wakeups
->>> every io_free_req() and io_uring_enter().
->>>
->>> Just use percpu_ref_put() instead.
+On Fri, 04 Oct 2019, Koenig, Christian wrote:
+
+>Am 04.10.19 um 08:57 schrieb Christian König:
+>> Am 03.10.19 um 22:18 schrieb Davidlohr Bueso:
+>>> The generic tree tree really wants [a, b) intervals, not fully closed.
+>>> As such convert it to use the new interval_tree_gen.h. Most of the
+>>> conversions are straightforward, with the exception of perhaps
+>>> radeon_vm_bo_set_addr(), but semantics have been tried to be left
+>>> untouched.
 >>
->> Looks good, this is a leftover from when the ctx teardown used
->> the waitqueue as well.
+>> NAK, the whole thing won't work.
 >>
-> BTW, is there a reason for ref-counting in struct io_kiocb? I understand
-> the idea behind submission reference, but don't see any actual part
-> needing it.
+>> See we need to handle the full device address space which means we
+>> have values in the range of 0x0-0xffffffff.
+>>
+>> If you make this a closed interval then the end would wrap around to
+>> 0x0 if long is only 32bit.
+>
+>Well I've just now re-read the subject line. From that it sounds like
+>you are actually trying to fix the interval tree to use a half closed
+>interval, e.g. something like [a, b[
 
-In short, it's to prevent the completion running before we're done with
-the iocb on the submission side.
+Correct.
 
-> Tested with another ref-counting patch and got +5-8% to
-> nops performance.
-> 
-> 
+>
+>But your code changes sometimes doesn't seem to reflect that.
 
+Hmm the change simply aims at avoiding the end - 1 trick when dealing
+with interval_tree insertions and lookups; the rest of the series
+converts other interval tree users in a similar way, albeit some errors
+which will be updated. What are your concerns about this patch?
 
--- 
-Jens Axboe
-
+Thanks,
+Davidlohr
