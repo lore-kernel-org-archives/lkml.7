@@ -2,346 +2,240 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD596C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A13AC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB0C82070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:49:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570538953;
-	bh=l4QjoOoC1FPsBF/H8+vyqEeZBRWcMj5euRW3XBxAE98=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=GKZgVBBhMM1kF9FalJIDeAqwUFrRZFROS4upfjxD1AlZuZ4MCUarISoCJbsjTqqaD
-	 bQZzM1HoLEt50eZgxtSACjnkzxz7pBWGOQ3TRoGWblNcmEnbfQnSkTpcXLmalvm+e4
-	 88qlmKLkKeXJD64Q8w9JslesuTjGims5sr7ur+Ng=
+	by mail.kernel.org (Postfix) with ESMTP id 30D0B20640
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:49:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dLZ8r+Ga"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730848AbfJHMtN (ORCPT
+        id S1730990AbfJHMtU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 08:49:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41080 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730605AbfJHMtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 08:49:12 -0400
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3EF120815;
-        Tue,  8 Oct 2019 12:49:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570538951;
-        bh=l4QjoOoC1FPsBF/H8+vyqEeZBRWcMj5euRW3XBxAE98=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=OEdAywYO6BHIh3JUKUWueff1vUkd8txFYMvRvT1WS5dhPMIw1bgC7i+gyvfKi8bk7
-         NiNHdWJdyhegNol3yg8TiMAsc3UIYhZF8C3n13Z7YZAFUroIzk1NWttcAjTQrrFhj8
-         mqKNKguQx+/phncGm9QOOr4PJ3Pd6arxycSm4mRw=
-Received: by mail-qt1-f171.google.com with SMTP id e15so10190979qtr.4;
-        Tue, 08 Oct 2019 05:49:10 -0700 (PDT)
-X-Gm-Message-State: APjAAAXlq/6IqG73Vxfo8VDbkZuUwvTfWCEwPt6gGCegLV43IM7StNzn
-        RaqGWX3VM8uOi5/zADdYe1Equ7WXvABrQuJl5g==
-X-Google-Smtp-Source: APXvYqxSaRgUqqni7RWikQ+zN1xMpYCgoo0IuuKMMlW4a/sVKwGL8eRTo+RXkXFsUSbAZ9vRNEtMOquOyCQzYMzABM4=
-X-Received: by 2002:ac8:444f:: with SMTP id m15mr35881979qtn.110.1570538949942;
- Tue, 08 Oct 2019 05:49:09 -0700 (PDT)
+        Tue, 8 Oct 2019 08:49:20 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38006 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730737AbfJHMtU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 08:49:20 -0400
+Received: by mail-pl1-f194.google.com with SMTP id w8so8410858plq.5
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 05:49:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=CbQJLATT5wb2/W6NdgyosWQjZqh4rIHUE+AO/Jirx2w=;
+        b=dLZ8r+GaYAhqVoJIHmKPZVUlkG+X+4KCbTJZ1A6TpyqcJp7SAhVQKj5iIBvAk4oKBW
+         yJU3F2GGlQpAcMFcpYIgOhDIRGBvoaxAjp5NWsyUq83WeMveLMcMC2HhdnbA0ndZ+8cy
+         avQe1Ky+lZsLvHkXmtBCRTI3XZ1GFS9Wzj8c1jrwIa/vS7jQvH4MV64DpKtl2Fod6T94
+         WNcWJf+w/5rrGvtdmpepZaAyRdEjFsMvVcWCfFVL0/RdxEIkfxVsluf7Mw/iRZLjbe0m
+         I1Cs27WAiBS1EC/BkyscS+6WZDwcWx3wDzTTLZYxAZv4mHwcUerSLqYO4yY7AW0myVhm
+         ACxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=CbQJLATT5wb2/W6NdgyosWQjZqh4rIHUE+AO/Jirx2w=;
+        b=qoqIi5LFsama4hu2CV7z7EvDG1V2I0IkauB1z7XiX++BAL1mqs8ecfXUkgzDe3ItwP
+         dYsgQVdEdPK5CDC0vUrvY6GsDN0zzlFCIiOgYbzgytdaIX7HCL3G8qshFy0LlaQ99PDI
+         YaOqk4gRE77wsnC0IiWsAzqAL+JIauuwYyFzjsRD4nQrHjOmqxAmGLUsuOa+u4zGmj0t
+         30p6OUbxh5lm2ucX2WiXxpOCByb04ssFQBEs4woDICKe27OgoSPeyw8kFKP4blGOxrt+
+         YO4k3LOH0/47ApdnuMtgrBratwdzGHamdbHgxkOTcWcv+v5CZDDqDqYzkPfxuvgAGdrW
+         +UPg==
+X-Gm-Message-State: APjAAAWAGQY0czycKVRoyLXPRjxObSArKR3Yv5bv3znnX1eFl3DrWrnd
+        8hb7xGhkJ/pHUNjIqsS92FdVv2V+Yr9h4rMlu+U=
+X-Google-Smtp-Source: APXvYqwqSOJ7tzLQ4quv9+8s2+v7XbFTXNVsPhCoLu89qLE9d4xyt+ln++6mddDw7thcWzVn0aFGbFmfzGYyR626ACo=
+X-Received: by 2002:a17:902:7c08:: with SMTP id x8mr33430533pll.119.1570538959095;
+ Tue, 08 Oct 2019 05:49:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191002151714.15813-1-benjamin.gaignard@st.com>
-In-Reply-To: <20191002151714.15813-1-benjamin.gaignard@st.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 8 Oct 2019 07:48:58 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJtHgAZvFbWOEwu7WsG2OHHugfB1RKSrxsaP3Exa5odGg@mail.gmail.com>
-Message-ID: <CAL_JsqJtHgAZvFbWOEwu7WsG2OHHugfB1RKSrxsaP3Exa5odGg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: display: Convert stm32 display bindings to json-schema
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Yannick Fertre <yannick.fertre@st.com>,
-        Philippe Cornu <philippe.cornu@st.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+From:   Yi Zheng <goodmenzy@gmail.com>
+Date:   Tue, 8 Oct 2019 20:47:40 +0800
+Message-ID: <CAJPHfYMpX0wkxBL8TFg-sWTgmji6Ek+h35qM2Yc1f1JtXvx4xQ@mail.gmail.com>
+Subject: Maybe a bug in kernel/irq/chip.c unmask_irq(), device irq is masked unexpectedly.
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>,
+        Zheng Yi <yzheng@techyauld.com>
+Content-Type: multipart/mixed; boundary="000000000000c3ab1805946598f3"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 10:17 AM Benjamin Gaignard
-<benjamin.gaignard@st.com> wrote:
->
-> Convert the STM32 display binding to DT schema format using json-schema.
-> Split the original bindings in two yaml files:
-> - one for display controller (ltdc)
-> - one for DSI controller
->
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
->  .../devicetree/bindings/display/st,stm32-dsi.yaml  | 130 +++++++++++++++++++
->  .../devicetree/bindings/display/st,stm32-ltdc.txt  | 144 ---------------------
->  .../devicetree/bindings/display/st,stm32-ltdc.yaml |  82 ++++++++++++
->  3 files changed, 212 insertions(+), 144 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/display/st,stm32-dsi.yaml
->  delete mode 100644 Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
->  create mode 100644 Documentation/devicetree/bindings/display/st,stm32-ltdc.yaml
->
-> diff --git a/Documentation/devicetree/bindings/display/st,stm32-dsi.yaml b/Documentation/devicetree/bindings/display/st,stm32-dsi.yaml
-> new file mode 100644
-> index 000000000000..8143cf6f0ce7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/st,stm32-dsi.yaml
-> @@ -0,0 +1,130 @@
-> +# SPDX-License-Identifier: GPL-2.0
+--000000000000c3ab1805946598f3
+Content-Type: text/plain; charset="UTF-8"
 
-If all the authors are ST, can you relicense to (GPL-2.0-only OR BSD-2-Clause).
+Hi,
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/st,stm32-dsi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: STMicroelectronics STM32 DSI host controller
-> +
-> +maintainers:
-> +  - Philippe Cornu <philippe.cornu@st.com>
-> +  - Yannick Fertre <yannick.fertre@st.com>
-> +
-> +properties:
-> +  "#address-cells": true
-> +  "#size-cells": true
-> +
-> +  compatible:
-> +    const: st,stm32-dsi
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: Module Clock
-> +      - description: DSI bus clock
-> +      - description: Pixel clock
-> +    minItems: 2
-> +    maxItems: 3
-> +
-> +  clock-names:
-> +    items:
-> +      - const: pclk
-> +      - const: ref
-> +      - const: px_clk
-> +    minItems: 2
-> +    maxItems: 3
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  reset-names:
-> +    items:
-> +      - const: apb
-> +
-> +  phy-dsi-supply:
-> +    maxItems: 1
-> +    description:
-> +        Phandle of the regulator that provides the supply voltage.
-> +
-> +  ports:
-> +    type: object
-> +    description:
-> +        A node containing DSI input & output port nodes with endpoint
-> +        definitions as documented in
-> +        Documentation/devicetree/bindings/media/video-interfaces.txt
-> +        Documentation/devicetree/bindings/graph.txt
-> +
-> +  port:
+     I found something wrong on my AM3352 SoC machine, the GPIO
+triggered IRQ is masked
+     unexpectedly.  That bug cause the devices using that GPIO-IRQ can
+not work. Even the
+     latest kernel version (v5.4-rc2-20-geda57a0e4299)!
 
-This needs to be under 'properties' under 'ports'. And you need to
-have 'port@0' and 'port@1' instead.
+     After a long time hacking, I guess the bug is in
+kernel/irq/chip.c, the important
+     base code for _ALL_ the Processor Platform! That is why this mail
+is sent to you.
 
-> +    type: object
-> +    description:
-> +      "A port node with endpoint definitions as defined in
-> +      Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +      port@0: DSI input port node, connected to the ltdc rgb output port.
-> +      port@1: DSI output port node, connected to a panel or a bridge input port"
-> +
-> +required:
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - resets
-> +  - ports
+     Shortly speaking, the bug is about wrong interrupt iteration.
+That cause the software
+     flag "IRQD_IRQ_MASKED" not refect the real masking status
+register in the interrupt
+     controller (INTC, drivers/irqchip/irq-omap-intc.c).
 
-Add an 'additionalProperties: false' here.
+     Here is my hw/sw settings:
+     (1) FPGA implements some UART, using a GPIO pin as INT signal,
 
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/stm32mp1-clks.h>
-> +    #include <dt-bindings/reset/stm32mp1-resets.h>
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    dsi: dsi@5a000000 {
-> +        compatible = "st,stm32-dsi";
-> +        reg = <0x5a000000 0x800>;
-> +        clocks = <&rcc DSI_K>, <&clk_hse>, <&rcc DSI_PX>;
-> +        clock-names = "pclk", "ref", "px_clk";
-> +        resets = <&rcc DSI_R>;
-> +        reset-names = "apb";
-> +        phy-dsi-supply = <&reg18>;
-> +
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        ports {
-> +              #address-cells = <1>;
-> +              #size-cells = <0>;
-> +
-> +              port@0 {
-> +                    reg = <0>;
-> +                    dsi_in: endpoint {
-> +                        remote-endpoint = <&ltdc_ep1_out>;
-> +                    };
-> +              };
-> +
-> +              port@1 {
-> +                    reg = <1>;
-> +                    dsi_out: endpoint {
-> +                        remote-endpoint = <&panel_in>;
-> +                    };
-> +              };
-> +        };
-> +
-> +        panel {
+     (2) In the SoC, 481ac000.gpio is under the INTC controller,
+irq=28, and hwirq=32
+         It is an level triggered IRQ.
 
-Not documented.
+     (3) The ISR calling stack shows that handle_level_irq() is the
+most important
+         function for debugging.
 
-> +              compatible = "orisetech,otm8009a";
-> +              reg = <0>;
-> +              reset-gpios = <&gpioe 4 GPIO_ACTIVE_LOW>;
-> +              power-supply = <&v3v3>;
-> +
-> +              port {
-> +                    panel_in: endpoint {
-> +                        remote-endpoint = <&dsi_out>;
-> +                    };
-> +              };
-> +        };
-> +    };
-> +
-> +...
-> +
-> +
+     There is some defects on IRQ processing:
 
-[...]
+     (1) At the beginning of handle_level_irq(), the IRQ-28 is masked,
+and ACK action is executed:
+         On my machine, it runs the 'else' branch:
+            static inline void mask_ack_irq(struct irq_desc *desc)
+            {
+                if (desc->irq_data.chip->irq_mask_ack) {
+                        desc->irq_data.chip->irq_mask_ack(&desc->irq_data);
+                        irq_state_set_masked(desc);
+                } else {
+                        mask_irq(desc);
+                        if (desc->irq_data.chip->irq_ack)
+                                desc->irq_data.chip->irq_ack(&desc->irq_data);
+                }
+            }
 
-> diff --git a/Documentation/devicetree/bindings/display/st,stm32-ltdc.yaml b/Documentation/devicetree/bindings/display/st,stm32-ltdc.yaml
-> new file mode 100644
-> index 000000000000..5d01c83234a3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/st,stm32-ltdc.yaml
-> @@ -0,0 +1,82 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/st,stm32-ltdc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: STMicroelectronics STM32 lcd-tft display controller
-> +
-> +maintainers:
-> +  - Philippe Cornu <philippe.cornu@st.com>
-> +  - Yannick Fertre <yannick.fertre@st.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: st,stm32-ltdc
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    minItems: 2
-> +    maxItems: 2
-> +
-> +  clocks:
-> +    items:
-> +      - description: Module Clock
+         It is an 2-steps procedure:
+         1. mask_irq()
+         2. desc->irq_data.chip->irq_ack()
 
-Just 'maxItems: 1' is sufficient with a single entry.
+         the 2nd step, the function ptr is omap_mask_ack_irq(), which
+         _MASK_ the hardware INTC-IRQ-32 and then do the real ACK action.
 
-> +
-> +  clock-names:
-> +    items:
-> +      - const: lcd
-> +
-> +  pinctrl-names: true
-> +
-> +  resets:
-> +        maxItems: 1
+     (2) mask_irq()/unmask_irq() are not atomic actions:
+         They check the IRQD_IRQ_MASKED flag firstly, and then
+         mask/unmask the irq by calling the function ptrs which
+installed by irq controller drv.
+         Then, those 2 functions set/clear the IRQD_IRQ_MASKED flag.
 
-Inconsistent indenting.
+         I think the sequence of the hw/sw action should be mirrored reversed:
+         mask_irq():
+            check IRQD_IRQ_MASKED;
+            set hardware IRQ mask register;
+            set software IRQD_IRQ_MASKED flag;
 
-> +
-> +  port:
-> +    type: object
-> +    description:
-> +      "Video port for DPI RGB output.
-> +      ltdc has one video port with up to 2 endpoints:
-> +      - for external dpi rgb panel or bridge, using gpios.
-> +      - for internal dpi input of the MIPI DSI host controller.
-> +      Note: These 2 endpoints cannot be activated simultaneously.
-> +      Please refer to the bindings defined in
-> +      Documentation/devicetree/bindings/media/video-interfaces.txt."
-> +
-> +patternProperties:
-> +  "^pinctrl-[0-9]+$": true
+         unmask_irq():
+            check IRQD_IRQ_MASKED;
+            clear software IRQD_IRQ_MASKED flag; /* NOTE: should
+before the hw unmask action!! */
+            clear hardware IRQ mask register;
 
-No need for this, it gets added automatically.
+         The current unmask_irq(), hw-mask action runs before sw-mask
+action, which gives an very small
+         time window. That cause an unexpected iterated IRQ.
 
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - resets
-> +  - port
+     Here is my the detail of my analyzing of handle_level_irq():
 
-Add an 'additionalProperties: false' here.
+     (1) Let record the HW-IRQ-Controller Status and the SW-Flag
+IRQD_IRQ_MASKED pair as following:
+         (hw-mask, sw-mask).
 
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/stm32mp1-clks.h>
-> +    #include <dt-bindings/reset/stm32mp1-resets.h>
-> +    ltdc: display-controller@40016800 {
-> +        compatible = "st,stm32-ltdc";
-> +        reg = <0x5a001000 0x400>;
-> +        interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-> +        clocks = <&rcc LTDC_PX>;
-> +        clock-names = "lcd";
-> +        resets = <&rcc LTDC_R>;
-> +
-> +        port {
-> +             ltdc_out_dsi: endpoint {
-> +                     remote-endpoint = <&dsi_in>;
-> +             };
-> +        };
-> +    };
-> +
-> +...
-> +
-> --
-> 2.15.0
->
+     (2) In the 1st level of IRQ-28 ISR calling, in unmask_irq(),
+after the HW unmask action, and
+         before the sw-flag IRQD_IRQ_MASKED is cleared, there is a
+VERY SMALL TIME WINDOW,
+         in which, another IRQ-28 may triggered.
+
+         In that time window, the mask status is (0, 1), which is no
+an valid value.
+
+     (3) In the 2nd level of the ISR(IRQ-28), The mask status is
+IRQ-28(0, 1), so
+         mask_irq() do nothing, because sw-flag is "1".  That is an
+wrong status, the
+         programmer thinks that IRQ-28 has been masked, but physically not!
+
+     (4) Before the ACK func-ptr calling, there comes the 3rd level IRQ (28/32)!
+         Although mask_irq() do not physically mask the IRQ, ACK acion
+(omap_mask_ack_irq)
+         of the omap-intc drv mask the IRQ physically. The 3rd ISR runs OK.
+
+         When 3rd level ISR exist, the mask status is (0, 0), that is OK!
+
+     (5) The 3rd level ISR finished, the 2nd level ISR continue.
+         It run ACK function ptr -- omap_mask_ack_irq(). The
+HW-IRQ-mask is set again!
+         Now, the mask status is (1, 0), it is unreasonable value!
+
+     (6) The 2nd level ISR run to cond_unmask_irq(). Due to the
+ill-formed mask-status
+         value(1, 0), the unmask_irq() will not be called.  Even in
+unmask_irq(), another
+         checking SW-Flag exists. The real unmask action will not run!
+
+     (7) Now, the 2nd level ISR return, with the mask status (1, 0).
+         The 1st level ISR continues, in unmask_irq(), it run
+irq_state_clr_masked();
+         And it repeatedly clear the IRQD_IRQ_MASKED. The final mask
+status is (1, 0).
+
+         What (1, 0) value means? The CPU call will not receive IRQ any more!
+         That is my bug phenomenon. If I clean the hardware interrupt
+controller's mask bit, my
+         devices work again.
+
+
+      NOTE:
+         (1) My SoC is a single core ARM chip: TI-AM3352, so the raw spin-lock
+             irq_desc->lock will be optimized to nothing.
+handle_level_irq() has no
+             spin-lock protection, right?
+
+         (2) In AM3352, INTC driver ACK the IRQ by write 0x01 into INTC Control
+             Register(offset 0x48).  The chip doc seems that bit[0] of
+INTC-Control Reg is
+             only an enable/disable flag.  The IRQ may generated even
+if no ACK action
+             done. Any one can give me an clarification?
+
+         (3) My analysis is not verified on the real machine. After
+some code change for
+             debug(add counter to indicates the iteration level, save
+the IRQ mask status
+             etc.), the device IRQ wrongly masked problem vanished. In
+fact, the original
+             code can not re-produce the phenomena easily. In tens of
+machine, only one
+             can get the bug. I have try my best to hacking the code,
+but the only
+             verified result is here: when bug occur, the HW IRQ is
+masked, but the
+             IRQD_IRQ_MASKED flag is cleared.
+
+      My fixup is in the attachment, which remove the unexpected time
+window of IRQ iteration.
+
+--000000000000c3ab1805946598f3
+Content-Type: text/x-patch; charset="US-ASCII"; name="irq-chip-fixup.patch"
+Content-Disposition: attachment; filename="irq-chip-fixup.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k1hu6qvv0>
+X-Attachment-Id: f_k1hu6qvv0
+
+LS0tIGtlcm5lbC9pcnEvY2hpcC5jCTIwMTktMDctMTMgMDk6Mjg6MjMuNjgzNzg3MzY3ICswODAw
+CisrKyAvdG1wL2NoaXAuYwkyMDE5LTEwLTA4IDExOjMyOjM1LjA4MjI1ODU3MiArMDgwMApAQCAt
+NDMyLDggKzQzMiw4IEBAIHZvaWQgdW5tYXNrX2lycShzdHJ1Y3QgaXJxX2Rlc2MgKmRlc2MpCiAJ
+CXJldHVybjsKIAogCWlmIChkZXNjLT5pcnFfZGF0YS5jaGlwLT5pcnFfdW5tYXNrKSB7Ci0JCWRl
+c2MtPmlycV9kYXRhLmNoaXAtPmlycV91bm1hc2soJmRlc2MtPmlycV9kYXRhKTsKIAkJaXJxX3N0
+YXRlX2Nscl9tYXNrZWQoZGVzYyk7CisJCWRlc2MtPmlycV9kYXRhLmNoaXAtPmlycV91bm1hc2so
+JmRlc2MtPmlycV9kYXRhKTsKIAl9CiB9CiAK
+--000000000000c3ab1805946598f3--
