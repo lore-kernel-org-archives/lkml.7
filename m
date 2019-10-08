@@ -2,103 +2,97 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D4DAC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E44C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0641F21721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:44:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570553077;
-	bh=NxrLWUDm1X7kQsjshZytRV1yXRjIKsgLp2ozIjo0cbw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lGh0h34atUsKIxGQG0LuqP9DoUgTHYzEENFarG+nK3uMA2HGt0+/ScnjLKcQkZA+K
-	 336Wm645Roek/P2zun8MoJXtLGQ1Uu1r9oClwuXit6iBQsZxXJx/+m812j/33ifkz8
-	 UXeheWfz7AYuqKcaRSgKp+OIZ79sNK3uVOksOlq0=
+	by mail.kernel.org (Postfix) with ESMTP id 38B5E21835
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:46:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729412AbfJHQog (ORCPT
+        id S1729412AbfJHQqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 12:44:36 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:36546 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727514AbfJHQog (ORCPT
+        Tue, 8 Oct 2019 12:46:36 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:36738 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725966AbfJHQqf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 12:44:36 -0400
-Received: by mail-lf1-f65.google.com with SMTP id x80so12495422lff.3;
-        Tue, 08 Oct 2019 09:44:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/oomKU3Ue2is6xiOwCMSrWMkAzmIBP6NBZwxcWGzrnw=;
-        b=Ncx0ohAi5O+mdOjWhelQZgbVSEIfc2mVvbq3bAcrUAbMlBAYvg9JVguFomb501sogo
-         AvPacSVigW5eSH7gyXED4aaEBXn9XT0jzYZl5ahUcadEQ74IP1nbTZ8UJjJ3SZzDSJaA
-         6Z1SccdhmzJdmr5IwoBp2hQrPAWFpVJY+ClWecBJEtdcVZuNiMA0FaeWGY0IozkKjIzw
-         H57sgV+vyn+WyTYD53Kh2TjkXFSSJx1nq1cFxAJly3NzWcNpI9ZaWtwLZD8q+w6Fl4xX
-         p+z9NY22O0Uue/P8bLvW3GqnamfGx5S7cKVO7Ufays+BIumjpz/Fg5s5B4Fi5fuhA9im
-         Hfew==
-X-Gm-Message-State: APjAAAVdiUnwXejkkUTaGSPWfEv9wM2ewsgoLH0gLjsQ00JDTe2gtm/e
-        OFxoe4mQkd8CXLyae07lJJU8t1Db
-X-Google-Smtp-Source: APXvYqzcteOm3uTrWh+OKbO0eERZu0OYBR+7ScJFWAjegqTtRhEImpniRIfrG2cgzJFRP/fbGIk7Mg==
-X-Received: by 2002:a19:c6d5:: with SMTP id w204mr7172045lff.53.1570553073910;
-        Tue, 08 Oct 2019 09:44:33 -0700 (PDT)
-Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
-        by smtp.gmail.com with ESMTPSA id o13sm4022281ljh.35.2019.10.08.09.44.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 08 Oct 2019 09:44:32 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92.2)
-        (envelope-from <johan@kernel.org>)
-        id 1iHsbH-0007GE-Vz; Tue, 08 Oct 2019 18:44:40 +0200
-Date:   Tue, 8 Oct 2019 18:44:39 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Siva Rebbagondla <siva8118@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Denis Efremov <efremov@linux.com>
-Subject: Re: [PATCH 1/2] Revert "rsi: fix potential null dereference in
- rsi_probe()"
-Message-ID: <20191008164439.GA27819@localhost>
-References: <20191004144422.13003-1-johan@kernel.org>
- <87a7aes2oh.fsf@codeaurora.org>
- <87pnj7grii.fsf@tynnyri.adurom.net>
+        Tue, 8 Oct 2019 12:46:35 -0400
+Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
+  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="Claudiu.Beznea@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa5.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa5.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: H6KlVa765s741gCHQkH5nrUQwU0gRzARZmFvBKiVRr9iErEDF6tXqekI06w/5/pujwWljhgBdQ
+ pwWGWhAufg4Unc+2nOYndpBuvPpctRxDVyk0xd3Ptpp5PtDJceyqrl9o5jkt/0y/nGx7sfpzY2
+ JWcIdEyiZwEIgn7vqlzZwawmgTciGGvOSp0dchFrMetUYCq0TLO3vMgivv8pkGy44+vwmgIqT0
+ L2L2dSHcjiv8QzudN4JwfZ1qoR3k7t4pKAcXfQuky+WU+2H9bunkFwjulZUgdMaWLC+/YCbMQu
+ vt4=
+X-IronPort-AV: E=Sophos;i="5.67,270,1566889200"; 
+   d="scan'208";a="50663840"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 08 Oct 2019 09:46:34 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 8 Oct 2019 09:46:32 -0700
+Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.85.251) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Tue, 8 Oct 2019 09:46:31 -0700
+From:   Claudiu Beznea <claudiu.beznea@microchip.com>
+To:     <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>
+CC:     <linux-clk@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: [PATCH] clk: at91: add compatible for sam9x60
+Date:   Tue, 8 Oct 2019 19:46:26 +0300
+Message-ID: <1570553186-24691-1-git-send-email-claudiu.beznea@microchip.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87pnj7grii.fsf@tynnyri.adurom.net>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 06:56:37PM +0300, Kalle Valo wrote:
-> Kalle Valo <kvalo@codeaurora.org> writes:
-> 
-> > Johan Hovold <johan@kernel.org> writes:
-> >
-> >> This reverts commit f170d44bc4ec2feae5f6206980e7ae7fbf0432a0.
-> >>
-> >> USB core will never call a USB-driver probe function with a NULL
-> >> device-id pointer.
-> >>
-> >> Reverting before removing the existing checks in order to document this
-> >> and prevent the offending commit from being "autoselected" for stable.
-> >>
-> >> Signed-off-by: Johan Hovold <johan@kernel.org>
-> >
-> > I'll queue these two to v5.4.
-> 
-> Actually I'll take that back. Commit f170d44bc4ec is in -next so I have
-> to also queue these to -next.
+Add compatible for SAM9X60's PMC.
 
-That's right. I'm assuming you don't rebase your branches, otherwise
-just dropping the offending patch might of course be an option instead
-of the revert.
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+---
+ drivers/clk/at91/pmc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Johan
+diff --git a/drivers/clk/at91/pmc.c b/drivers/clk/at91/pmc.c
+index db24539d5740..24975bca608e 100644
+--- a/drivers/clk/at91/pmc.c
++++ b/drivers/clk/at91/pmc.c
+@@ -271,6 +271,7 @@ static struct syscore_ops pmc_syscore_ops = {
+ 
+ static const struct of_device_id sama5d2_pmc_dt_ids[] = {
+ 	{ .compatible = "atmel,sama5d2-pmc" },
++	{ .compatible = "microchip,sam9x60-pmc" },
+ 	{ /* sentinel */ }
+ };
+ 
+-- 
+2.7.4
+
