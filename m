@@ -2,152 +2,304 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D393ECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:30:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E64DC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E5D520815
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:30:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2C1B2070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:31:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730719AbfJHMaF (ORCPT
+        id S1730816AbfJHMbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 08:30:05 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3223 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730301AbfJHMaF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 08:30:05 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 625A471954B1507DF561;
-        Tue,  8 Oct 2019 20:30:01 +0800 (CST)
-Received: from localhost (10.202.226.61) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Tue, 8 Oct 2019
- 20:29:57 +0800
-Date:   Tue, 8 Oct 2019 13:29:40 +0100
-From:   Jonathan Cameron <jonathan.cameron@huawei.com>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-CC:     "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: iio: light: Add binding for ADUX1020
-Message-ID: <20191008132940.00000eca@huawei.com>
-In-Reply-To: <b03c8de71e6d568d54ddfd07758c07c03c0eb89d.camel@analog.com>
-References: <20191007101027.8383-1-manivannan.sadhasivam@linaro.org>
-        <20191007101027.8383-2-manivannan.sadhasivam@linaro.org>
-        <a60fb9ea8922c1eb532e0b7ef0a69abcc9306255.camel@analog.com>
-        <4EC23AB5-B8BE-4E45-8E5B-FCCD5B1508BA@linaro.org>
-        <b03c8de71e6d568d54ddfd07758c07c03c0eb89d.camel@analog.com>
-Organization: Huawei
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Tue, 8 Oct 2019 08:31:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55514 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730511AbfJHMbL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 08:31:11 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DF604C0546FF;
+        Tue,  8 Oct 2019 12:31:09 +0000 (UTC)
+Received: from krava (unknown [10.40.205.103])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 5E5B0600CE;
+        Tue,  8 Oct 2019 12:31:05 +0000 (UTC)
+Date:   Tue, 8 Oct 2019 14:31:04 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Guo Ren <guoren@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, Mao Han <han_mao@c-sky.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        clang-built-linux@googlegroups.com,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v3] perf tools: avoid sample_reg_masks being const + weak
+Message-ID: <20191008123104.GA16241@krava>
+References: <20190927214341.170683-1-irogers@google.com>
+ <20191001003623.255186-1-irogers@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.61]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191001003623.255186-1-irogers@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 08 Oct 2019 12:31:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 7 Oct 2019 13:21:50 +0000
-"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
-
-> On Mon, 2019-10-07 at 18:10 +0530, Manivannan Sadhasivam wrote:
-> > [External]
-> > 
-> > Hi Ardelean, 
-> > 
-> > On 7 October 2019 3:51:16 PM IST, "Ardelean, Alexandru" <  
-> > alexandru.Ardelean@analog.com> wrote:
-> > > On Mon, 2019-10-07 at 15:40 +0530, Manivannan Sadhasivam wrote:  
-> > > > [External]
-> > > > 
-> > > > Add devicetree binding for Analog Devices ADUX1020 Photometric
-> > > > sensor.
-> > > >   
-> > > 
-> > > Hey,
-> > > 
-> > > Thanks for the patches.
-> > > 
-> > > This dt-binding docs is in text format.
-> > > dt-binding docs now need to be in YAML format.
-> > >   
-> > 
-> > Sure. I can convert to YAML binding. 
-> >   
-> > > Also, patches for dt-bindings docs usually come after the driver is
-> > > added.
-> > > So, this patch should be the second in the series, not the first.
-> > >   
-> > 
-> > I don't think so. The convention is to put dt-bindings patch upfront for
-> > all subsystems. Not sure if IIO differs here.   
+On Mon, Sep 30, 2019 at 05:36:23PM -0700, Ian Rogers wrote:
+> Being const + weak breaks with some compilers that constant-propagate
+> from the weak symbol. This behavior is outside of the specification, but
+> in LLVM is chosen to match GCC's behavior.
 > 
-> Now that you mention, I'm not sure either.
-> We typically sent the dt-bindings one last, so I assumed it was the
-> default.
+> LLVM's implementation was set in this patch:
+> https://github.com/llvm/llvm-project/commit/f49573d1eedcf1e44893d5a062ac1b72c8419646
+> A const + weak symbol is set to be weak_odr:
+> https://llvm.org/docs/LangRef.html
+> ODR is one definition rule, and given there is one constant definition
+> constant-propagation is possible. It is possible to get this code to
+> miscompile with LLVM when applying link time optimization. As compilers
+> become more aggressive, this is likely to break in more instances.
 
-I don't care either way so never comment on it :)
-
-Jonathan
+is this just aprecaution or you actualy saw some breakage?
 
 > 
-> > 
-> > Thanks, 
-> > Mani  
-> > > Alex
-> > >   
-> > > > Signed-off-by: Manivannan Sadhasivam  
-> > > <manivannan.sadhasivam@linaro.org>  
-> > > > ---
-> > > >  .../bindings/iio/light/adux1020.txt           | 22  
-> > > +++++++++++++++++++  
-> > > >  1 file changed, 22 insertions(+)
-> > > >  create mode 100644
-> > > > Documentation/devicetree/bindings/iio/light/adux1020.txt
-> > > > 
-> > > > diff --git a/Documentation/devicetree/bindings/iio/light/adux1020.txt
-> > > > b/Documentation/devicetree/bindings/iio/light/adux1020.txt
-> > > > new file mode 100644
-> > > > index 000000000000..e896dda30e36
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/iio/light/adux1020.txt
-> > > > @@ -0,0 +1,22 @@
-> > > > +Analog Devices ADUX1020 Photometric sensor
-> > > > +
-> > > > +Link to datasheet: 
-> > > >   
-> > > https://www.analog.com/media/en/technical-documentation/data-sheets/ADUX1020.pdf  
-> > > > +
-> > > > +Required properties:
-> > > > +
-> > > > + - compatible: should be "adi,adux1020"
-> > > > + - reg: the I2C address of the sensor
-> > > > +
-> > > > +Optional properties:
-> > > > +
-> > > > + - interrupts: interrupt mapping for IRQ as documented in
-> > > > +    
-> > > Documentation/devicetree/bindings/interrupt-controller/interrupts.txt  
-> > > > +
-> > > > +Example:
-> > > > +
-> > > > +adux1020@64 {
-> > > > +	compatible = "adi,adux1020";
-> > > > +	reg = <0x64>;
-> > > > +	interrupt-parent = <&msmgpio>;
-> > > > +	interrupts = <24 IRQ_TYPE_LEVEL_HIGH>;
-> > > > +};  
+> Move the definition of sample_reg_masks to the conditional part of
+> perf_regs.h and guard usage with HAVE_PERF_REGS_SUPPORT. This avoids the
+> weak symbol.
+> 
+> Fix an issue when HAVE_PERF_REGS_SUPPORT isn't defined from patch v1.
+> In v3, add perf_regs.c for architectures that HAVE_PERF_REGS_SUPPORT but
+> don't declare sample_regs_masks.
 
+looks good to me (again ;-)), let's see if it passes Arnaldo's farm
 
+thanks,
+jirka
+
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/arch/arm/util/Build         | 2 ++
+>  tools/perf/arch/arm/util/perf_regs.c   | 6 ++++++
+>  tools/perf/arch/arm64/util/Build       | 1 +
+>  tools/perf/arch/arm64/util/perf_regs.c | 6 ++++++
+>  tools/perf/arch/csky/util/Build        | 2 ++
+>  tools/perf/arch/csky/util/perf_regs.c  | 6 ++++++
+>  tools/perf/arch/riscv/util/Build       | 2 ++
+>  tools/perf/arch/riscv/util/perf_regs.c | 6 ++++++
+>  tools/perf/arch/s390/util/Build        | 1 +
+>  tools/perf/arch/s390/util/perf_regs.c  | 6 ++++++
+>  tools/perf/util/parse-regs-options.c   | 8 ++++++--
+>  tools/perf/util/perf_regs.c            | 4 ----
+>  tools/perf/util/perf_regs.h            | 4 ++--
+>  13 files changed, 46 insertions(+), 8 deletions(-)
+>  create mode 100644 tools/perf/arch/arm/util/perf_regs.c
+>  create mode 100644 tools/perf/arch/arm64/util/perf_regs.c
+>  create mode 100644 tools/perf/arch/csky/util/perf_regs.c
+>  create mode 100644 tools/perf/arch/riscv/util/perf_regs.c
+>  create mode 100644 tools/perf/arch/s390/util/perf_regs.c
+> 
+> diff --git a/tools/perf/arch/arm/util/Build b/tools/perf/arch/arm/util/Build
+> index 296f0eac5e18..37fc63708966 100644
+> --- a/tools/perf/arch/arm/util/Build
+> +++ b/tools/perf/arch/arm/util/Build
+> @@ -1,3 +1,5 @@
+> +perf-y += perf_regs.o
+> +
+>  perf-$(CONFIG_DWARF) += dwarf-regs.o
+>  
+>  perf-$(CONFIG_LOCAL_LIBUNWIND)    += unwind-libunwind.o
+> diff --git a/tools/perf/arch/arm/util/perf_regs.c b/tools/perf/arch/arm/util/perf_regs.c
+> new file mode 100644
+> index 000000000000..2864e2e3776d
+> --- /dev/null
+> +++ b/tools/perf/arch/arm/util/perf_regs.c
+> @@ -0,0 +1,6 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include "../../util/perf_regs.h"
+> +
+> +const struct sample_reg sample_reg_masks[] = {
+> +	SMPL_REG_END
+> +};
+> diff --git a/tools/perf/arch/arm64/util/Build b/tools/perf/arch/arm64/util/Build
+> index 3cde540d2fcf..0a7782c61209 100644
+> --- a/tools/perf/arch/arm64/util/Build
+> +++ b/tools/perf/arch/arm64/util/Build
+> @@ -1,4 +1,5 @@
+>  perf-y += header.o
+> +perf-y += perf_regs.o
+>  perf-y += sym-handling.o
+>  perf-$(CONFIG_DWARF)     += dwarf-regs.o
+>  perf-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
+> diff --git a/tools/perf/arch/arm64/util/perf_regs.c b/tools/perf/arch/arm64/util/perf_regs.c
+> new file mode 100644
+> index 000000000000..2864e2e3776d
+> --- /dev/null
+> +++ b/tools/perf/arch/arm64/util/perf_regs.c
+> @@ -0,0 +1,6 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include "../../util/perf_regs.h"
+> +
+> +const struct sample_reg sample_reg_masks[] = {
+> +	SMPL_REG_END
+> +};
+> diff --git a/tools/perf/arch/csky/util/Build b/tools/perf/arch/csky/util/Build
+> index 1160bb2332ba..7d3050134ae0 100644
+> --- a/tools/perf/arch/csky/util/Build
+> +++ b/tools/perf/arch/csky/util/Build
+> @@ -1,2 +1,4 @@
+> +perf-y += perf_regs.o
+> +
+>  perf-$(CONFIG_DWARF) += dwarf-regs.o
+>  perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+> diff --git a/tools/perf/arch/csky/util/perf_regs.c b/tools/perf/arch/csky/util/perf_regs.c
+> new file mode 100644
+> index 000000000000..2864e2e3776d
+> --- /dev/null
+> +++ b/tools/perf/arch/csky/util/perf_regs.c
+> @@ -0,0 +1,6 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include "../../util/perf_regs.h"
+> +
+> +const struct sample_reg sample_reg_masks[] = {
+> +	SMPL_REG_END
+> +};
+> diff --git a/tools/perf/arch/riscv/util/Build b/tools/perf/arch/riscv/util/Build
+> index 1160bb2332ba..7d3050134ae0 100644
+> --- a/tools/perf/arch/riscv/util/Build
+> +++ b/tools/perf/arch/riscv/util/Build
+> @@ -1,2 +1,4 @@
+> +perf-y += perf_regs.o
+> +
+>  perf-$(CONFIG_DWARF) += dwarf-regs.o
+>  perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+> diff --git a/tools/perf/arch/riscv/util/perf_regs.c b/tools/perf/arch/riscv/util/perf_regs.c
+> new file mode 100644
+> index 000000000000..2864e2e3776d
+> --- /dev/null
+> +++ b/tools/perf/arch/riscv/util/perf_regs.c
+> @@ -0,0 +1,6 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include "../../util/perf_regs.h"
+> +
+> +const struct sample_reg sample_reg_masks[] = {
+> +	SMPL_REG_END
+> +};
+> diff --git a/tools/perf/arch/s390/util/Build b/tools/perf/arch/s390/util/Build
+> index 22797f043b84..3d9d0f4f72ca 100644
+> --- a/tools/perf/arch/s390/util/Build
+> +++ b/tools/perf/arch/s390/util/Build
+> @@ -1,5 +1,6 @@
+>  perf-y += header.o
+>  perf-y += kvm-stat.o
+> +perf-y += perf_regs.o
+>  
+>  perf-$(CONFIG_DWARF) += dwarf-regs.o
+>  perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+> diff --git a/tools/perf/arch/s390/util/perf_regs.c b/tools/perf/arch/s390/util/perf_regs.c
+> new file mode 100644
+> index 000000000000..2864e2e3776d
+> --- /dev/null
+> +++ b/tools/perf/arch/s390/util/perf_regs.c
+> @@ -0,0 +1,6 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include "../../util/perf_regs.h"
+> +
+> +const struct sample_reg sample_reg_masks[] = {
+> +	SMPL_REG_END
+> +};
+> diff --git a/tools/perf/util/parse-regs-options.c b/tools/perf/util/parse-regs-options.c
+> index ef46c2848808..e687497b3aac 100644
+> --- a/tools/perf/util/parse-regs-options.c
+> +++ b/tools/perf/util/parse-regs-options.c
+> @@ -13,7 +13,7 @@ static int
+>  __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+>  {
+>  	uint64_t *mode = (uint64_t *)opt->value;
+> -	const struct sample_reg *r;
+> +	const struct sample_reg *r = NULL;
+>  	char *s, *os = NULL, *p;
+>  	int ret = -1;
+>  	uint64_t mask;
+> @@ -46,19 +46,23 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+>  
+>  			if (!strcmp(s, "?")) {
+>  				fprintf(stderr, "available registers: ");
+> +#ifdef HAVE_PERF_REGS_SUPPORT
+>  				for (r = sample_reg_masks; r->name; r++) {
+>  					if (r->mask & mask)
+>  						fprintf(stderr, "%s ", r->name);
+>  				}
+> +#endif
+>  				fputc('\n', stderr);
+>  				/* just printing available regs */
+>  				return -1;
+>  			}
+> +#ifdef HAVE_PERF_REGS_SUPPORT
+>  			for (r = sample_reg_masks; r->name; r++) {
+>  				if ((r->mask & mask) && !strcasecmp(s, r->name))
+>  					break;
+>  			}
+> -			if (!r->name) {
+> +#endif
+> +			if (!r || !r->name) {
+>  				ui__warning("Unknown register \"%s\", check man page or run \"perf record %s?\"\n",
+>  					    s, intr ? "-I" : "--user-regs=");
+>  				goto error;
+> diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
+> index 2774cec1f15f..5ee47ae1509c 100644
+> --- a/tools/perf/util/perf_regs.c
+> +++ b/tools/perf/util/perf_regs.c
+> @@ -3,10 +3,6 @@
+>  #include "perf_regs.h"
+>  #include "event.h"
+>  
+> -const struct sample_reg __weak sample_reg_masks[] = {
+> -	SMPL_REG_END
+> -};
+> -
+>  int __weak arch_sdt_arg_parse_op(char *old_op __maybe_unused,
+>  				 char **new_op __maybe_unused)
+>  {
+> diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
+> index 47fe34e5f7d5..e014c2c038f4 100644
+> --- a/tools/perf/util/perf_regs.h
+> +++ b/tools/perf/util/perf_regs.h
+> @@ -15,8 +15,6 @@ struct sample_reg {
+>  #define SMPL_REG2(n, b) { .name = #n, .mask = 3ULL << (b) }
+>  #define SMPL_REG_END { .name = NULL }
+>  
+> -extern const struct sample_reg sample_reg_masks[];
+> -
+>  enum {
+>  	SDT_ARG_VALID = 0,
+>  	SDT_ARG_SKIP,
+> @@ -27,6 +25,8 @@ uint64_t arch__intr_reg_mask(void);
+>  uint64_t arch__user_reg_mask(void);
+>  
+>  #ifdef HAVE_PERF_REGS_SUPPORT
+> +extern const struct sample_reg sample_reg_masks[];
+> +
+>  #include <perf_regs.h>
+>  
+>  #define DWARF_MINIMAL_REGS ((1ULL << PERF_REG_IP) | (1ULL << PERF_REG_SP))
+> -- 
+> 2.23.0.444.g18eeb5a265-goog
+> 
