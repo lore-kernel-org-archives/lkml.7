@@ -2,134 +2,120 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4913EC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7FBC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27B05206C2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13307206C2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:59:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aYDs3XHw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726322AbfJHN64 (ORCPT
+        id S1726379AbfJHN7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 09:58:56 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:46796 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbfJHN64 (ORCPT
+        Tue, 8 Oct 2019 09:59:31 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:32145 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725821AbfJHN7b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 09:58:56 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id B380B28BFB9
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     heiko@sntech.de, dianders@chromium.org, mka@chromium.org,
-        groeck@chromium.org, kernel@collabora.com, bleung@chromium.org,
-        linux-rockchip@lists.infradead.org,
-        iommu@lists.linux-foundation.org, Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] iommu/rockchip: Don't loop until failure to count interrupts
-Date:   Tue,  8 Oct 2019 15:58:43 +0200
-Message-Id: <20191008135843.30640-1-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 8 Oct 2019 09:59:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1570543169;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=YFFTjSOexeHMooQarjHjyr2PYTne3A1VZs/EDwqMyEM=;
+        b=aYDs3XHwVhOAWMx3tXO443kBzn7oXa56OOcnsozFe3Kh5pI9jcVixAyp59HNexT5wB2FXF
+        JREOgDsglimRa1a86PFVnd5ZIXmFq5IajuykJ/+Pur6nkEimZi7DUaC9Pk0xWz2WRkZ/av
+        aocyYwIaIJRXxyETPPgoFrXgoI6zyEQ=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-177-NXHJnhySOmGkuZpZveFJow-1; Tue, 08 Oct 2019 09:59:25 -0400
+Received: by mail-wr1-f72.google.com with SMTP id z1so9143858wrw.21
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 06:59:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=aqfqD77jFR41/YTDGxujsDNqPPIibJFQFpFD/Dy6A/4=;
+        b=tR8DH7yEPPeCJWVf4LcKNQPEEDFWoEBwd8eXLQB22oN7d6tQcRT0l4KIiHR/xiR2AN
+         JR25Eyoz1v0AKQdBbAJ10y3T0kjnX4hjcnNPsehoRvlDTjLykgvy6RjVAE3mPgkkiNwV
+         OjiDeLM+jBS773HoyVWsCEk1Ecbm9rc6Lm1yMJHx7YbPUj9HC19gaHUO4eKrCuDcotPG
+         98bQQy1PILAY+OItlApDVZ0yfUS8PrjLhtJn2QnOMy2rzyN5QK1Mw8Zj+B9uY5Z+ij4i
+         dxjivLUgU48jssIIT4Cv2UxUtL6YLSzvu/OQ9NrWAsUL9w0AdpfbRhM4ul7W87YK1X9F
+         Qs3w==
+X-Gm-Message-State: APjAAAWZohreTnSaJQsWcMwQekd/emAkeKPScQsQ0G9+XVuaTEGSOnok
+        6xK43zFVEVD2nuXwi0FucQ1512rXfFd5dLsQWj03wRQ3P9k9/GmIbGRtdlrEBh/Dxm5KDiZH2or
+        hA6fZPPkWHOxU62X+rOah0C3P
+X-Received: by 2002:a1c:6a06:: with SMTP id f6mr4191596wmc.113.1570543164502;
+        Tue, 08 Oct 2019 06:59:24 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqw/ERWE2a7LeeUzH669s6gkhiIQR4L5acbyEE0C/SYoSNlPe3yG5pUJi6avFFO5sObnyGJbsw==
+X-Received: by 2002:a1c:6a06:: with SMTP id f6mr4191579wmc.113.1570543164352;
+        Tue, 08 Oct 2019 06:59:24 -0700 (PDT)
+Received: from shalem.localdomain (2001-1c00-0c14-2800-ec23-a060-24d5-2453.cable.dynamic.v6.ziggo.nl. [2001:1c00:c14:2800:ec23:a060:24d5:2453])
+        by smtp.gmail.com with ESMTPSA id w9sm30461210wrt.62.2019.10.08.06.59.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Oct 2019 06:59:23 -0700 (PDT)
+Subject: Re: [PATCH v2 0/2] extcon: axp288: Move to swnodes
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+References: <20191008122600.22340-1-heikki.krogerus@linux.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <8120fbf2-08d3-6ee2-21bf-458a4e12b29c@redhat.com>
+Date:   Tue, 8 Oct 2019 15:59:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191008122600.22340-1-heikki.krogerus@linux.intel.com>
+Content-Language: en-US
+X-MC-Unique: NXHJnhySOmGkuZpZveFJow-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As platform_get_irq() now prints an error when the interrupt does not
-exist, counting interrupts by looping until failure causes the printing
-of scary messages like:
+Hi,
 
- rk_iommu ff924000.iommu: IRQ index 1 not found
- rk_iommu ff914000.iommu: IRQ index 1 not found
- rk_iommu ff903f00.iommu: IRQ index 1 not found
- rk_iommu ff8f3f00.iommu: IRQ index 1 not found
- rk_iommu ff650800.iommu: IRQ index 1 not found
+On 08-10-2019 14:25, Heikki Krogerus wrote:
+> Hi Hans,
+>=20
+> Fixed the compiler warning in this version. No other changes.
+>=20
+> The original cover letter:
+>=20
+> That AXP288 extcon driver is the last that uses build-in connection
+> description. I'm replacing it with a code that finds the role mux
+> software node instead.
+>=20
+> I'm proposing also here a little helper
+> usb_role_switch_find_by_fwnode() that uses
+> class_find_device_by_fwnode() to find the role switches.
 
-Fix this by using the platform_irq_count() helper to avoid touching
-non-existent interrupts.
+Both patches look good to me and I can confirm that things still
+work as they should on a CHT device with an AXP288 PMIC, so for both:
 
-Fixes: 7723f4c5ecdb8d83 ("driver core: platform: Add an error message to platform_get_irq*()")
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Tested-by: Hans de Goede <hdegoede@redhat.com>
 
- drivers/iommu/rockchip-iommu.c | 35 +++++++++++++++++++++++-----------
- 1 file changed, 24 insertions(+), 11 deletions(-)
+Regards,
 
-diff --git a/drivers/iommu/rockchip-iommu.c b/drivers/iommu/rockchip-iommu.c
-index 26290f310f90..8c6318bd1b37 100644
---- a/drivers/iommu/rockchip-iommu.c
-+++ b/drivers/iommu/rockchip-iommu.c
-@@ -1136,7 +1136,7 @@ static int rk_iommu_probe(struct platform_device *pdev)
- 	struct rk_iommu *iommu;
- 	struct resource *res;
- 	int num_res = pdev->num_resources;
--	int err, i, irq;
-+	int err, i, irq, num_irqs;
- 
- 	iommu = devm_kzalloc(dev, sizeof(*iommu), GFP_KERNEL);
- 	if (!iommu)
-@@ -1219,20 +1219,28 @@ static int rk_iommu_probe(struct platform_device *pdev)
- 
- 	pm_runtime_enable(dev);
- 
--	i = 0;
--	while ((irq = platform_get_irq(pdev, i++)) != -ENXIO) {
--		if (irq < 0)
--			return irq;
-+	num_irqs = platform_irq_count(pdev);
-+	if (num_irqs < 0) {
-+		err = num_irqs;
-+		goto err_disable_pm_runtime;
-+	}
-+
-+	for (i = 0; i < num_irqs; i++) {
-+		irq = platform_get_irq(pdev, i);
-+		if (irq < 0) {
-+			err = irq;
-+			goto err_disable_pm_runtime;
-+		}
- 
- 		err = devm_request_irq(iommu->dev, irq, rk_iommu_irq,
- 				       IRQF_SHARED, dev_name(dev), iommu);
--		if (err) {
--			pm_runtime_disable(dev);
--			goto err_remove_sysfs;
--		}
-+		if (err)
-+			goto err_disable_pm_runtime;
- 	}
- 
- 	return 0;
-+err_disable_pm_runtime:
-+	pm_runtime_disable(dev);
- err_remove_sysfs:
- 	iommu_device_sysfs_remove(&iommu->iommu);
- err_put_group:
-@@ -1245,10 +1253,15 @@ static int rk_iommu_probe(struct platform_device *pdev)
- static void rk_iommu_shutdown(struct platform_device *pdev)
- {
- 	struct rk_iommu *iommu = platform_get_drvdata(pdev);
--	int i = 0, irq;
-+	int i, irq, num_irqs;
- 
--	while ((irq = platform_get_irq(pdev, i++)) != -ENXIO)
-+	num_irqs = platform_irq_count(pdev);
-+	for (i = 0; i < num_irqs; i++) {
-+		irq = platform_get_irq(pdev, i);
-+		if (irq < 0)
-+			continue;
- 		devm_free_irq(iommu->dev, irq, iommu);
-+	}
- 
- 	pm_runtime_force_suspend(&pdev->dev);
- }
--- 
-2.20.1
+Hans
+
+
+
+p.s.
+
+I guess this means we can remove the build-in connection (
+device_connection_add / remove) stuff now?
 
