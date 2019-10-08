@@ -2,64 +2,117 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6491C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8744DC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A870520815
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:07:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F88E206BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:08:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uxnp6etD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbfJHPHl (ORCPT
+        id S1727350AbfJHPI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 11:07:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38354 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725976AbfJHPHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 11:07:40 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45336206BB;
-        Tue,  8 Oct 2019 15:07:39 +0000 (UTC)
-Date:   Tue, 8 Oct 2019 11:07:37 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com
-Subject: Re: [PATCH v3 0/6] Rewrite x86/ftrace to use text_poke()
-Message-ID: <20191008110737.73803008@gandalf.local.home>
-In-Reply-To: <20191007081716.07616230.8@infradead.org>
-References: <20191007090225.44108711.6@infradead.org>
-        <20191007081716.07616230.8@infradead.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 8 Oct 2019 11:08:56 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35235 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725976AbfJHPI4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 11:08:56 -0400
+Received: by mail-wr1-f65.google.com with SMTP id v8so19855942wrt.2;
+        Tue, 08 Oct 2019 08:08:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Ypd77sdI6iiTLiz63NonJkbWe8JwhMk44SAfmiueuoc=;
+        b=uxnp6etD5XoaSu0yi0hFGvxt451EBociY6enT1pSfprhEwuuqYFBrD19UZT1OiEacS
+         T5HZfM/8P8OysxhDB3Tt8nQk+vOkellJpmc8dm46/M53rikQHHCCWeShbqMDR4Oy72e2
+         QuWtlu5roeWuveMehy4a9RIjuStXydJDXXIsO8+0W634+Osbbz7/FHnKcs5vw+we10Q4
+         A1Utq+3deP54xbx7svkMPIlVPdfQkRGOx8+JntEJsRnSH903ZUr5NIg+vJOCmpCSLL/x
+         oTXcK1Tjdab6HamtyQsl4/nt9U7ZtZ3zvUoGUc0qaBh3/oQeo3UPwfVNSXL+fMUmeWCs
+         Z4kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ypd77sdI6iiTLiz63NonJkbWe8JwhMk44SAfmiueuoc=;
+        b=dYEejs3qqdi6cn5ThZMQwK4xD3mG5rQO8fopGakY8Lja48VyLtTKmKi3wELOQy9lpU
+         PxujYXug3t7ACv5jh78XZDKTRdB6YIY4lN2ot1p0xycwrqScGd3zCsda/hzxeF7mWx8J
+         dCu5WNv3ANqWPMSGHFucQ3sQBCigtrzf8V7poosDDhcBK4opdZUAPVvjXGEQlfjI19lO
+         Rx43nptq0Z3bCiVPcdXlRnQbFKADWglm0qkJHEgGZSLvRyHIiXM5MMI3gMVoCTZdBgM7
+         2JPWgKX2rTVi8S3viNVARnYQPK/4A8Oh/DLDd+qSpjdqcSKr818XWLg+yRTEaAknEZVR
+         LBzg==
+X-Gm-Message-State: APjAAAVhyW3BlnsmpmhOFjc5XYbk9rRIzfwbd7ocQijDigVHJlXK27q8
+        ACO2fo6gL82RBl8cYThNjy4ofnu3n/YcZw==
+X-Google-Smtp-Source: APXvYqwf+M20DLNB55AVht/sasmDqPwm9ID+kX0fL26iK+cUhkhDcRYCGfKb96eN7bXep+C0sqoojQ==
+X-Received: by 2002:adf:fb11:: with SMTP id c17mr29147606wrr.0.1570547334208;
+        Tue, 08 Oct 2019 08:08:54 -0700 (PDT)
+Received: from andrea (userh648.uk.uudial.com. [194.69.103.21])
+        by smtp.gmail.com with ESMTPSA id r2sm5965686wma.1.2019.10.08.08.08.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Oct 2019 08:08:53 -0700 (PDT)
+Date:   Tue, 8 Oct 2019 17:08:47 +0200
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        vkuznets <vkuznets@redhat.com>
+Subject: Re: [PATCH 0/2] Drivers: hv: vmbus: Miscellaneous improvements
+Message-ID: <20191008150847.GA15276@andrea>
+References: <20191007163115.26197-1-parri.andrea@gmail.com>
+ <PU1P153MB01691E9B0DD83E521B1E12C0BF9B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PU1P153MB01691E9B0DD83E521B1E12C0BF9B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 07 Oct 2019 10:17:16 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
-
-> Ftrace was one of the last W^X violators; these patches move it over to the
-> generic text_poke() interface and thereby get rid of this oddity.
+On Mon, Oct 07, 2019 at 05:41:10PM +0000, Dexuan Cui wrote:
+> > From: linux-hyperv-owner@vger.kernel.org
+> > <linux-hyperv-owner@vger.kernel.org> On Behalf Of Andrea Parri
+> > Sent: Monday, October 7, 2019 9:31 AM
+> > 
+> > Hi all,
+> > 
+> > The patchset:
+> > 
+> > - simplifies/refactors the VMBus negotiation code by introducing
+> >   the table of VMBus protocol versions (patch 1/2),
+> > 
+> > - enables VMBus protocol versions 5.1 and 5.2 (patch 2/2).
+> > 
+> > Thanks,
+> >   Andrea
+> > 
+> > Andrea Parri (2):
+> >   Drivers: hv: vmbus: Introduce table of VMBus protocol versions
+> >   Drivers: hv: vmbus: Enable VMBus protocol versions 5.1 and 5.2
 > 
+> Should we add a module parameter to allow the user to specify a lower
+> protocol version, when the VM runs on the latest host? 
+> 
+> This can be useful for testing and debugging purpose: the variable
+> "vmbus_proto_version" is referenced by the vmbus driver itself and
+> some VSC drivers: if we always use the latest available proto version,
+> some code paths can not be tested on the latest hosts. 
 
-Ingo, Thomas or H.Peter,
+The idea is appealing to me (altough I made no attempt to implement/test
+it yet).  What do others think about this?  Maybe can be considered as a
+follow-up patch/work to this series?
 
-If it's OK with you, can you ack this series so that I can pull it
-through my tree? I have some code that will conflict with this that I
-want to write on top of it. As well as hammer it out to make sure
-ftrace works fine.
-
-Thanks!
-
--- Steve
+Thanks,
+  Andrea
