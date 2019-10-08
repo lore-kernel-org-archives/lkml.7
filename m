@@ -2,126 +2,92 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DB8C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C14ECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D32C721721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD6C521721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:18:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="euxJ+Yol"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730288AbfJHHRv (ORCPT
+        id S1730239AbfJHHS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 03:17:51 -0400
-Received: from mga06.intel.com ([134.134.136.31]:45785 "EHLO mga06.intel.com"
+        Tue, 8 Oct 2019 03:18:59 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:39400 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730057AbfJHHRu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 03:17:50 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 00:17:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,270,1566889200"; 
-   d="scan'208";a="199737798"
-Received: from raystayl-mobl1.ger.corp.intel.com ([10.252.7.179])
-  by FMSMGA003.fm.intel.com with ESMTP; 08 Oct 2019 00:17:45 -0700
-Message-ID: <b1c63efd883452ccb5e57e107c6a0aa74bf25d49.camel@intel.com>
-Subject: Re: [PATCH] iwlwifi: fw: don't send GEO_TX_POWER_LIMIT command to
- FW version 29
-From:   Luciano Coelho <luciano.coelho@intel.com>
-To:     You-Sheng Yang <vicamo.yang@canonical.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Shahar S Matityahu <shahar.s.matityahu@intel.com>,
-        Sara Sharon <sara.sharon@intel.com>,
-        Gil Adam <gil.adam@intel.com>,
-        Mordechay Goodstein <mordechay.goodstein@intel.com>,
-        Haim Dreyfuss <haim.dreyfuss@intel.com>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 08 Oct 2019 10:17:44 +0300
-In-Reply-To: <20191008060511.18474-1-vicamo.yang@canonical.com>
-References: <20191008060511.18474-1-vicamo.yang@canonical.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        id S1730057AbfJHHS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 03:18:58 -0400
+Received: from zn.tnic (p200300EC2F0B5100ADAB1EC08AC9DA5D.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:5100:adab:1ec0:8ac9:da5d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BCFFB1EC0B7A;
+        Tue,  8 Oct 2019 09:18:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1570519132;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=wx1cOnnVFS4hMKnGzGJe6GMOySd+wRTySitm/NxFdFQ=;
+        b=euxJ+Yolh9xFp4wVjwNMAcj5xQNV3AVY77j1eUBM6KX+xsuv0UxaHHzMkIUhLFgcZtdYaR
+        NIpv5XHDDrBMxkWnRiK8kzTP2v0210UJbsVwzxgAuAjvYMgsq+fPzFHso4dzLpu3VV6G9X
+        UwpXvctFwkVJ+EvOAWM+stXiswuHnOA=
+Date:   Tue, 8 Oct 2019 09:18:45 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com
+Subject: Re: [PATCH v22 07/24] x86/sgx: Add wrappers for ENCLS leaf functions
+Message-ID: <20191008071845.GA14765@zn.tnic>
+References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
+ <20190903142655.21943-8-jarkko.sakkinen@linux.intel.com>
+ <20191004094513.GA3362@zn.tnic>
+ <20191008040405.GA1724@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191008040405.GA1724@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-10-08 at 14:05 +0800, You-Sheng Yang wrote:
-> Follow-up for commit fddbfeece9c7 ("iwlwifi: fw: don't send
-> GEO_TX_POWER_LIMIT command to FW version 36"). There is no
-> GEO_TX_POWER_LIMIT command support for all revisions of FW version
-> 29, either.
+On Mon, Oct 07, 2019 at 09:04:05PM -0700, Sean Christopherson wrote:
+> > BIT(30)
 > 
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204151
-> Signed-off-by: You-Sheng Yang <vicamo.yang@canonical.com>
-> ---
->  drivers/net/wireless/intel/iwlwifi/mvm/fw.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-> index 32a5e4e5461f..dbba616c19de 100644
-> --- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-> +++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-> @@ -889,14 +889,14 @@ static bool iwl_mvm_sar_geo_support(struct iwl_mvm *mvm)
->  	 * firmware versions.  Unfortunately, we don't have a TLV API
->  	 * flag to rely on, so rely on the major version which is in
->  	 * the first byte of ucode_ver.  This was implemented
-> -	 * initially on version 38 and then backported to29 and 17.
-> +	 * initially on version 38 and then backported to 29 and 17.
->  	 * The intention was to have it in 36 as well, but not all
->  	 * 8000 family got this feature enabled.  The 8000 family is
->  	 * the only one using version 36, so skip this version
-> -	 * entirely.
-> +	 * entirely. All revisions of -29 fw still don't have
-> +	 * GEO_TX_POWER_LIMIT supported yet.
->  	 */
->  	return IWL_UCODE_SERIAL(mvm->fw->ucode_ver) >= 38 ||
-> -	       IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 29 ||
->  	       IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 17;
->  }
+> This is intentionally open coded so that it can be stringified in asm.
 
-Thanks for the patch!
+It stringifies just fine with the BIT() macro too:
 
-But I have investigated this (even) further and now I see that 3168
-doesn't have this command, but 7265D does.  The latter also uses -29,
-so we can't blindly disable all -29 versions.
+# 187 "arch/x86/kernel/cpu/sgx/encls.h" 1
+        1: .byte 0x0f, 0x01, 0xcf;
+        2:
+.section .fixup,"ax"
+3: orl $((((1UL))) << (30)),%eax
+   jmp 2b
+.previous
 
-Can you try this instead?
+and the resulting object:
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-index 0d2229319261..38d89ee9bd28 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-@@ -906,8 +906,10 @@ static bool iwl_mvm_sar_geo_support(struct iwl_mvm
-*mvm)
-         * entirely.
-         */
-        return IWL_UCODE_SERIAL(mvm->fw->ucode_ver) >= 38 ||
--              IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 29 ||
--              IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 17;
-+              IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 17 ||
-+              (IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 29 &&
-+               (mvm->trans->hw_rev &
-+                CSR_HW_REV_TYPE_MSK) == CSR_HW_REV_TYPE_7265D);
- }
- 
- int iwl_mvm_get_sar_geo_profile(struct iwl_mvm *mvm)
+Disassembly of section .fixup:
 
+0000000000000000 <.fixup>:
+   0:   0d 00 00 00 40          or     $0x40000000,%eax
+   5:   e9 00 00 00 00          jmpq   a <__addressable_sgx_free_page107+0x2>
 
---
-Cheers,
-Luca.
+-- 
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
