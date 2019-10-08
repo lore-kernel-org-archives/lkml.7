@@ -2,131 +2,130 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE0FECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E11C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 261B12070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:58:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0742A2070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:59:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="au8NF5xY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oGuXSD/d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730992AbfJHM6n (ORCPT
+        id S1731030AbfJHM7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 08:58:43 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54116 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730317AbfJHM6n (ORCPT
+        Tue, 8 Oct 2019 08:59:02 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:40436 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730301AbfJHM7B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 08:58:43 -0400
-Received: by mail-wm1-f67.google.com with SMTP id i16so3044093wmd.3
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 05:58:41 -0700 (PDT)
+        Tue, 8 Oct 2019 08:59:01 -0400
+Received: by mail-lf1-f67.google.com with SMTP id d17so11875990lfa.7
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 05:59:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=GfvsO4/d+Aty+AebeEsW364ybAjW+zeAPcXCiQNi3OY=;
-        b=au8NF5xYwMDXKLOX11L7FwEpPZ4rNyVtbiLvU9GJnkTZiesvqWaTqlfaUzrc5+jmld
-         GCjNf3/+0KqE2CLGxVJ6PmRWNLTBcDm+BWd3oBmLpcLwYbLtqRcy+FWlcWlSbskjy5Qk
-         PDC08Tw0s01bDJBUZ4H+glTABJshk5jt67rD0Fiue4l5TXj5oLQZz6nxlpPe6vz/BZhM
-         GtWLYQaSrwaSY3fEw26Gd/0mLfYEN6NqNt8a1kYowZf0tmsgxwbY9Y+WvInlZJoPqX90
-         bKmtHLcA+4O7SBbMUeItG4uzgDxQh9aT57Af4d6j4mOteBTGqFILqYgAtUr2hILfh0OH
-         P8dg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AV2pJyjjWDwaKVr64wvB1gpLkau4/A2cAtbwElrboN4=;
+        b=oGuXSD/dVaEASsZJf+mji2Xv+VvKyMFsMJQ+WdQ1Zjo+hIjf9g014Lf5UtWrM3qZBf
+         d6YccpRj6rQgfNJ707o7eH1QlvHWoB+NbzbkgF6kEnpMiljHT6H0Or7EMiOEkmTLoNj0
+         lIAMjdRMBbOw43sjodUfnROuAIV7S8YaOlV7Qz2q3DKEQjC9EZuJnPDbGaD9tymsNc7R
+         QP2CWVtGSPsqXWo27Wql0VGs35NvkswD0gal8ggzU0AtDIVmPei4YYrL1elT5rrtw06r
+         HlHX5SKI1lik+LzT7FhBCb4mAYUPIesMiKLEBr+NMDpehk8v138yQr2qdfB1asGo8tZg
+         60Ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=GfvsO4/d+Aty+AebeEsW364ybAjW+zeAPcXCiQNi3OY=;
-        b=g5ISTt5IKPwmD3lX0yG0nmQ0Msmgo5UqZNgbwHRoYlbawv2yjkt9Ckqgu2MCyDTy5Z
-         I8m0UnEPj+8uknWdBOe0GalV9y8RZaLE6Xb1yAoDlxP3Y7tRwLqRpZsHxQkqtp/XTtC7
-         t/GUybq70nal65OwttTfm1bLi0ukseDK6RZrsEYXzmIMKvW5d+pUlpSJvxjn3pIX26WZ
-         BQZKuKaZKVuyBCB9HMzYKtHpJmRdXmf9PwQbEU3TcYycX9QNIE9+VmWckNsly5DGpLYf
-         v3Qb9VKX//O2NcXCsRvGCfT60r4JrgyoTXHduE7gGM4aAONt8ZQkUcSVijSZ5+MPKbYB
-         J2oQ==
-X-Gm-Message-State: APjAAAUwFHmBnLXxDsdEwcatAh7+IdbeK3147YwkqsVx5DrIBJN34lsa
-        mWgI3ygnLmScbcXj5fajdX23CMpuAQj/W9Mt
-X-Google-Smtp-Source: APXvYqyUkyISrmPHLuIc2O+EbAY+OLrIiU8zAiKT75g9GvR8x7VgypYedDmDUurWq68iYpkzqCbrmw==
-X-Received: by 2002:a1c:7c15:: with SMTP id x21mr3422779wmc.36.1570539520447;
-        Tue, 08 Oct 2019 05:58:40 -0700 (PDT)
-Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
-        by smtp.gmail.com with ESMTPSA id o4sm38444938wre.91.2019.10.08.05.58.39
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 08 Oct 2019 05:58:39 -0700 (PDT)
-From:   Michal Simek <michal.simek@xilinx.com>
-To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
-        michal.simek@xilinx.com, git@xilinx.com
-Cc:     Kuldeep Dave <kuldeep.dave@xilinx.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Firoz Khan <firoz.khan@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Will Deacon <will@kernel.org>, linux-pci@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Subject: [PATCH v2] PCI/MSI: Enable PCI_MSI_IRQ_DOMAIN support for Microblaze
-Date:   Tue,  8 Oct 2019 14:58:35 +0200
-Message-Id: <b5959a9f6bfa65f0ae1a6a184e1b09dcec8e8f15.1570539512.git.michal.simek@xilinx.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AV2pJyjjWDwaKVr64wvB1gpLkau4/A2cAtbwElrboN4=;
+        b=KTnYg6E3jxo7l8A1Er3tQMcaH9RxmGVlddhQFkaBITErVwC++NyOPFRp6hf5lRW523
+         +vrdZV3XudrTlQ/xsxOaaQMSsE2gItXbw5LlgyQAeYOTkBxDvkU1bvCPGW1Zoi9i24Ne
+         qM2wStz5T4HCZ4Kwfz74qSBYPruqm/tv+hfRszHVy9zJBhKD4UBaK6OwtpC2qEPW20Be
+         JF4qPU5D0ufRsWg1DeXa9Xswz7sxfajOx4IiAZ3dlQJ9VnkYRP99CKT4MZWiXuVPJ0OV
+         Y/o2qbARwFGiGVfB2ZSYblGfLlnsUEOli/l7K+izCI/zFILzHyCvezkrloX/dxk2RfAT
+         re7w==
+X-Gm-Message-State: APjAAAUnQMzUzvVaShBCLerbSEA9qwOTLSXk4IVu7M0JzQC3/KMliq7q
+        Cup2A/xisCYHyuNIHrzrKrUW6qGOAlSPfH19NGM=
+X-Google-Smtp-Source: APXvYqxXOFwGfBK9ieLGJo8RtWtyB4xoZfFG6/Ct2ex1SYLUc1Ra7p1FKiOvG7/fqUQFRk3AUXVw3A+HqkTRstr5CRk=
+X-Received: by 2002:a19:711e:: with SMTP id m30mr20571268lfc.63.1570539539703;
+ Tue, 08 Oct 2019 05:58:59 -0700 (PDT)
+MIME-Version: 1.0
+References: <CADkTA4PBT374CY+UNb85WjQEaNCDodMZu=MgpG8aMYbAu2eOGA@mail.gmail.com>
+ <20191002020100.GA6436@castle.dhcp.thefacebook.com> <CADkTA4Mbai=Q5xgKH9-md_g73UsHiKnEauVgMWev+-sG8FVNSA@mail.gmail.com>
+ <20191002181914.GA7617@castle.DHCP.thefacebook.com> <CADkTA4PmGBR7YdOXvi6sEDJ+uztuB7x2G95TCcW2u_iqjwhUNQ@mail.gmail.com>
+ <20191004000913.GA5519@castle.DHCP.thefacebook.com> <CADkTA4OJok3cmYCcDKtxBXQ5xtK1EMujh7_AgLnVaeRr18TH9w@mail.gmail.com>
+ <CADkTA4PKc6VEQYvXk4-EWMJPyOrzWQEsk4p6O_BMFo6kvT2jYg@mail.gmail.com>
+ <20191007232754.GB11171@tower.DHCP.thefacebook.com> <CADkTA4NKDn4jd2BQaGk+JEnM3B5GMDudsBi6V4YwK3Soq9q9pA@mail.gmail.com>
+ <20191008123601.GA28621@redhat.com>
+In-Reply-To: <20191008123601.GA28621@redhat.com>
+From:   Bruce Ashfield <bruce.ashfield@gmail.com>
+Date:   Tue, 8 Oct 2019 08:58:47 -0400
+Message-ID: <CADkTA4Oh5+fTEqpNFJjPOfTYhiVQEdUO4Cx2LXpPyPfO+96X1w@mail.gmail.com>
+Subject: Re: ptrace/strace and freezer oddities and v5.2+ kernels
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Roman Gushchin <guro@fb.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tj@kernel.org" <tj@kernel.org>,
+        Richard Purdie <richard.purdie@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kuldeep Dave <kuldeep.dave@xilinx.com>
+On Tue, Oct 8, 2019 at 8:36 AM Oleg Nesterov <oleg@redhat.com> wrote:
+>
+> On 10/08, Bruce Ashfield wrote:
+> >
+> > So I've been looking through the config delta's and late last night, I was
+> > able to move the runtime back to a failed 4 minute state by adding the
+> > CONFIG_PREEMPT settings that we have by default in our reference
+> > kernel.
+>
+> Aha... Can you try the patch below?
 
-Add Microblaze as an arch that supports PCI_MSI_IRQ_DOMAIN and add
-generation of msi.h in the Microblaze arch.
+Confirmed. 4 second runtime with that change, 4 minutes with it in the
+original position.
 
-The same change has been done by commit 251a44888183
-("riscv: include generic support for MSI irqdomains")
-and by commit 2a9af0273c1c
-("PCI/MSI: Enable PCI_MSI_IRQ_DOMAIN support for RISC-V").
+.. I'm kind of shocked I just didn't try that myself, since I spent
+plenty of time staring
+at the innards of cgroup_enter_frozen() for enough time to at least
+get an inkling
+to try that.
 
-Signed-off-by: Kuldeep Dave <kuldeep.dave@xilinx.com>
-Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
+I'll run this through some additional testing, but initial results are
+good. I'm not
+familiar enough with the semantics at play to even guess at any
+possible side effects.
 
-Changes in v2:
-- Squash patches together https://lkml.org/lkml/2019/10/8/277
-  https://lkml.org/lkml/2019/10/8/283
+But do let me know if i can do anything else on this .. and thanks for
+everyone's
+patience.
 
-Please take it directly via pci tree.
----
- arch/microblaze/include/asm/Kbuild | 1 +
- drivers/pci/Kconfig                | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+Bruce
 
-diff --git a/arch/microblaze/include/asm/Kbuild b/arch/microblaze/include/asm/Kbuild
-index e5c9170a07fc..83417105c00a 100644
---- a/arch/microblaze/include/asm/Kbuild
-+++ b/arch/microblaze/include/asm/Kbuild
-@@ -25,6 +25,7 @@ generic-y += local64.h
- generic-y += mcs_spinlock.h
- generic-y += mm-arch-hooks.h
- generic-y += mmiowb.h
-+generic-y += msi.h
- generic-y += parport.h
- generic-y += percpu.h
- generic-y += preempt.h
-diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-index a304f5ea11b9..9d259372fbfd 100644
---- a/drivers/pci/Kconfig
-+++ b/drivers/pci/Kconfig
-@@ -52,7 +52,7 @@ config PCI_MSI
- 	   If you don't know what to do here, say Y.
- 
- config PCI_MSI_IRQ_DOMAIN
--	def_bool ARC || ARM || ARM64 || X86 || RISCV
-+	def_bool ARC || ARM || ARM64 || X86 || RISCV || MICROBLAZE
- 	depends on PCI_MSI
- 	select GENERIC_MSI_IRQ_DOMAIN
- 
+>
+> Oleg.
+>
+> --- x/kernel/signal.c
+> +++ x/kernel/signal.c
+> @@ -2205,8 +2205,8 @@ static void ptrace_stop(int exit_code, int why, int clear_code, kernel_siginfo_t
+>                  */
+>                 preempt_disable();
+>                 read_unlock(&tasklist_lock);
+> -               preempt_enable_no_resched();
+>                 cgroup_enter_frozen();
+> +               preempt_enable_no_resched();
+>                 freezable_schedule();
+>                 cgroup_leave_frozen(true);
+>         } else {
+>
+
+
 -- 
-2.17.1
-
+- Thou shalt not follow the NULL pointer, for chaos and madness await
+thee at its end
+- "Use the force Harry" - Gandalf, Star Trek II
