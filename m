@@ -2,157 +2,200 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E49BC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 19:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D89FDC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 19:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BA7421835
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 19:51:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sUYZuEYp"
+	by mail.kernel.org (Postfix) with ESMTP id A8A2821835
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 19:52:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570564364;
+	bh=NxfSURK4m/zpe3s/DMmkIEjB5/N5cHvHZT57B/cvWjM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=mtrotTvzSSlfFuxGKMJ3H4btObjRTU5uMsUUqueGohQwTlokKhY18PhDuJVWo2X6E
+	 AcgxNS540nsJbC/7xi/sH+q+Nk7NOYC+ztuG6ZvtgHcO/v8+UQ5IIUfSI+aeOgBTcH
+	 paL+3Xva+455Jw2eUPTQdgskbAocFXau7XpWLPXo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730572AbfJHTv3 (ORCPT
+        id S1730607AbfJHTwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 15:51:29 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35911 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729854AbfJHTv2 (ORCPT
+        Tue, 8 Oct 2019 15:52:43 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:38824 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729436AbfJHTwn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 15:51:28 -0400
-Received: by mail-pg1-f194.google.com with SMTP id 23so10869905pgk.3
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 12:51:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=tVOdpEM8zYwr6A95fEdbiKaAHkoR1ATc1z7R9NfKBdo=;
-        b=sUYZuEYpMdnPU86NNv4TwIXjcaisunOJqKKRXDOVPRzLOM0ZJpMy5SNmT0gSKgUOyj
-         5ezid2WQ3js3yBhJmf1kh0drLSkVNcKBhuQuQif4BT4PNVvd5yBA41trFJ7CXFA46rLM
-         OmnsWOrSqsJS2puQZPUpkxk8FM1p3Lh9P1KHQXlQ5JRbXyzYAxTV+nPOi9P+r+e+VBhp
-         iBWO5EreivSZJ8KQnnrHb5AGL1wsXBUfzkNVDQo2/iY/+FILPhS44AIm0eAZnuphuFoA
-         ONsS0sC9LlY1eGreXLFO2Y9OP/RImUnNF6o8HXY4XdzYw/wPZ0diFgeHWQrl7fJJJHLu
-         tQXA==
+        Tue, 8 Oct 2019 15:52:43 -0400
+Received: by mail-oi1-f195.google.com with SMTP id m16so15911073oic.5;
+        Tue, 08 Oct 2019 12:52:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=tVOdpEM8zYwr6A95fEdbiKaAHkoR1ATc1z7R9NfKBdo=;
-        b=LcuiwnAu2PhQuxkLPF0RSdw2FHbRL1ODtjJbLnErmy0m9t8IS5KGo3pUSPH0pCGqe0
-         uKiDqlzvrJoLDeULLGsiZC0LhpT1z0jr2POAKDPzafoharaIrkA4Gt3Lxgur9ZLnbw2c
-         jZm2UbarHlbHwEwRj8gHJ2qcyD2H8I8d0RnC3UEHB4Psa3rIB87hPlI3ZdU5fN3r8lZL
-         IADkZpdUq7fXUIx3140wx8zzo3FtBZXWnkmSDwwAF0BTVLJlUBx04NErXWIUTVyarym1
-         thTS4J6SoeTxEMVqMRj09oO9G97hBvwP5ELagYm/cjFMUhl82ZY/7kys3SgK1CwEMFoe
-         vAwg==
-X-Gm-Message-State: APjAAAXa5mPbV7PoVIlP04ZLrVgU/03OFXW/NRwu8HE5EVZL4b6tfNlU
-        LYipfW2fq/Bd+GshjiGN0yXGxQ==
-X-Google-Smtp-Source: APXvYqw9rAK3pDOLRvbw0RQBkzSPpf/ogRjpf7rLxuQ1K92wrUhZlfrQXFPSd5BeidMsSu9S83VfvA==
-X-Received: by 2002:aa7:800d:: with SMTP id j13mr41082251pfi.187.1570564287334;
-        Tue, 08 Oct 2019 12:51:27 -0700 (PDT)
-Received: from [100.112.64.176] ([104.133.9.96])
-        by smtp.gmail.com with ESMTPSA id t13sm17427284pfh.12.2019.10.08.12.51.26
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 08 Oct 2019 12:51:26 -0700 (PDT)
-Date:   Tue, 8 Oct 2019 12:51:02 -0700 (PDT)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Ian Kent <raven@themaw.net>, Karel Zak <kzak@redhat.com>
-cc:     Hugh Dickins <hughd@google.com>, Laura Abbott <labbott@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: mount on tmpfs failing to parse context option
-In-Reply-To: <20191008125610.s4fgnnba7yhclb3z@10.255.255.10>
-Message-ID: <alpine.LSU.2.11.1910081219210.1204@eggly.anvils>
-References: <d5b67332-57b7-c19a-0462-f84d07ef1a16@redhat.com> <d7f83334-d731-b892-ee49-1065d64a4887@redhat.com> <alpine.LSU.2.11.1910071655060.4431@eggly.anvils> <59784f8ac4d458a09d40706b554432b283083938.camel@themaw.net>
- <20191008125610.s4fgnnba7yhclb3z@10.255.255.10>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2DpOnxNX3I7+J8dRMWaO+FigaTKEbqHibu1OQL1peJY=;
+        b=j3dlhm6KW0cOiXV+bPkyVeSoivS7X9TmeginrfWtccgidsF4kfE+sZDGiILG0t/zWQ
+         6sqxqCIj7X0EWpf8lNVfCCnI9eeY/zndFwdu4GlBEDlVjOtfWJbtAT4AFT2iahixJ9eh
+         MgmXw6S/MLvAgx0pOR5FffpPBk0n7k+xJDZyp/nUlCvajN3rnJ2w3J+ofn1S51pDSqmd
+         n8ThYvaEhQRV4OXkx5KSPG7CircFMr+FCYUO5hZtHGQrweIgPUgn+NDidL5BseEde/xh
+         tNRdQMPKhkol4vu+aZVFjZXck2++a2fiVDyA+EXz+WVFxppGInvjHIwvTyVOK1fStWs4
+         rDKA==
+X-Gm-Message-State: APjAAAWDIqRAlUq2jgfwlEbUl131YN/ucDas7xCe7PJzIIc0+j/0eneY
+        hVOP8ublQLwggNRUeBBm6sdYmbI=
+X-Google-Smtp-Source: APXvYqx3UCdVEhyicSwZJeq8Uk0rPo4W8xc+pe7UghGarV6P5NA3FcZJ4CC9ipmykIi72BrvPCmPhg==
+X-Received: by 2002:aca:b342:: with SMTP id c63mr5424396oif.91.1570564361631;
+        Tue, 08 Oct 2019 12:52:41 -0700 (PDT)
+Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.googlemail.com with ESMTPSA id z10sm6151032ote.54.2019.10.08.12.52.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Oct 2019 12:52:40 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: [PATCH v2] of: Make of_dma_get_range() work on bus nodes
+Date:   Tue,  8 Oct 2019 14:52:39 -0500
+Message-Id: <20191008195239.12852-1-robh@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: MULTIPART/MIXED; BOUNDARY="0-1683574798-1570564286=:1204"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+From: Robin Murphy <robin.murphy@arm.com>
 
---0-1683574798-1570564286=:1204
-Content-Type: TEXT/PLAIN; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Since the "dma-ranges" property is only valid for a node representing a
+bus, of_dma_get_range() currently assumes the node passed in is a leaf
+representing a device, and starts the walk from its parent. In cases
+like PCI host controllers on typical FDT systems, however, where the PCI
+endpoints are probed dynamically the initial leaf node represents the
+'bus' itself, and this logic means we fail to consider any "dma-ranges"
+describing the host bridge itself. Rework the logic such that
+of_dma_get_range() also works correctly starting from a bus node
+containing "dma-ranges".
 
-On Tue, 8 Oct 2019, Karel Zak wrote:
-> On Tue, Oct 08, 2019 at 08:38:18PM +0800, Ian Kent wrote:
-> > > That's because the options in shmem_parse_options() are
-> > > "size=3D4G,nr_inodes=3D0", which indeed looks like an attempt to
-> > > retroactively limit size; but the user never asked "size=3D4G" there.
-> >=20
-> > I believe that's mount(8) doing that.
-> > I don't think it's specific to the new mount api.
-> >=20
-> > AFAIK it's not new but it does mean the that things that come
-> > through that have been found in mtab by mount(8) need to be
-> > checked against the current value before failing or ignored if
-> > changing them is not allowed.
-> >=20
-> > I wonder if the problem has been present for quite a while but
-> > gone unnoticed perhaps.
-> >=20
-> > IIUC the order should always be command line options last and it
-> > must be that way to honour the last specified option takes
-> > precedence convention.
-> >=20
-> > I thought this was well known, but maybe I'm wrong ... and TBH
-> > I wasn't aware of it until recently myself.
->=20
-> Yep, the common behavior is "the last option wins". See man mount,
-> remount option:
->=20
->   remount  functionality  follows  the standard way the mount command
->   works with options from fstab.  This means that mount does not read
->   fstab (or mtab) only when both device and dir are specified.
->=20
->         mount -o remount,rw /dev/foo /dir
->=20
->   After this call all old mount options are replaced and arbitrary
->   stuff from fstab (or mtab) is ignored, except the loop=3D option which
->   is  internally  generated  and  maintained by the mount command.
->=20
->         mount -o remount,rw  /dir
->=20
->   After  this call, mount reads fstab and merges these options with
->   the options from the command line (-o).  If no mountpoint is found
->   in fstab, then a remount with unspeci=E2=80=90 fied source is allowed.
->=20
->=20
-> If you do not like this classic behavior than recent mount(8) versions
-> provide --options-mode=3D{ignore,append,prepend,replace} to keep it in
-> your hands.
+While this does mean "dma-ranges" could incorrectly be in a device leaf
+node, there isn't really any way in this function to ensure that a leaf
+node is or isn't a bus node.
 
-Ian, Karel, many thanks for your very helpful education.
-I've not yet digested all of it, but the important thing is...
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+[robh: Allow for the bus child node to still be passed in]
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+Resending, hit send too quickly.
 
-Yes, you're right: my unexpectedly failing remount sequence fails
-equally on a v5.3 kernel, and I'll hazard a guess that it has failed
-like that ever since v2.4.8.  I just never noticed (and nobody else
-ever complained) until I tried testing the new mount API: which at
-least has the courtesy to put an error message reflecting the final
-decision in dmesg, when the older kernels just silently EINVALed.
+v2:
+ - Ensure once we find dma-ranges, every parent has it.
+ - Only get the #{size,address}-cells after we find non-empty dma-ranges
+ - Add a check on the 'dma-ranges' length
 
-(And it's not impossible to remount thereafter: one just has to add
-a "size=3D0" into the options, to allow the other options through.)
+This is all that remains of the dma-ranges series. I've applied the rest 
+of the series prep and fixes. I dropped "of: Ratify of_dma_configure() 
+interface" as the assertions that the node pointer being the parent only 
+when struct device doesn't have a DT node pointer is not always 
+true.
 
-So, I've no more worries for v5.4 tmpfs mount, and if there's anything
-that can be improved, that's a background job for me to look into later,
-once I've spent more time understanding the info you've given me.
+I didn't include any tested-bys as this has changed a bit. A git branch 
+is here[1].
 
-And Laura has confirmed that Al's security_sb_eat_lsm_opts() patch
-fixes the "context" issue: thanks.
+Rob
 
-Hugh
---0-1683574798-1570564286=:1204--
+[1] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git dma-masks-v2
+
+ drivers/of/address.c | 44 ++++++++++++++++++--------------------------
+ 1 file changed, 18 insertions(+), 26 deletions(-)
+
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 5ce69d026584..99c1b8058559 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -930,47 +930,39 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
+ 	const __be32 *ranges = NULL;
+ 	int len, naddr, nsize, pna;
+ 	int ret = 0;
++	bool found_dma_ranges = false;
+ 	u64 dmaaddr;
+ 
+-	if (!node)
+-		return -EINVAL;
+-
+-	while (1) {
+-		struct device_node *parent;
+-
+-		naddr = of_n_addr_cells(node);
+-		nsize = of_n_size_cells(node);
+-
+-		parent = __of_get_dma_parent(node);
+-		of_node_put(node);
+-
+-		node = parent;
+-		if (!node)
+-			break;
+-
++	while (node) {
+ 		ranges = of_get_property(node, "dma-ranges", &len);
+ 
+ 		/* Ignore empty ranges, they imply no translation required */
+ 		if (ranges && len > 0)
+ 			break;
+ 
+-		/*
+-		 * At least empty ranges has to be defined for parent node if
+-		 * DMA is supported
+-		 */
+-		if (!ranges)
+-			break;
++		/* Once we find 'dma-ranges', then a missing one is an error */
++		if (found_dma_ranges && !ranges) {
++			ret = -ENODEV;
++			goto out;
++		}
++		found_dma_ranges = true;
++
++		node = of_get_next_dma_parent(node);
+ 	}
+ 
+-	if (!ranges) {
++	if (!node || !ranges) {
+ 		pr_debug("no dma-ranges found for node(%pOF)\n", np);
+ 		ret = -ENODEV;
+ 		goto out;
+ 	}
+ 
+-	len /= sizeof(u32);
+-
++	naddr = of_bus_n_addr_cells(node);
++	nsize = of_bus_n_size_cells(node);
+ 	pna = of_n_addr_cells(node);
++	if ((len / sizeof(__be32)) % (pna + naddr + nsize)) {
++		ret = -EINVAL;
++		goto out;
++	}
+ 
+ 	/* dma-ranges format:
+ 	 * DMA addr	: naddr cells
+@@ -978,7 +970,7 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
+ 	 * size		: nsize cells
+ 	 */
+ 	dmaaddr = of_read_number(ranges, naddr);
+-	*paddr = of_translate_dma_address(np, ranges);
++	*paddr = of_translate_dma_address(node, ranges + naddr);
+ 	if (*paddr == OF_BAD_ADDR) {
+ 		pr_err("translation of DMA address(%llx) to CPU address failed node(%pOF)\n",
+ 		       dmaaddr, np);
+-- 
+2.20.1
+
