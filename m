@@ -2,183 +2,130 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02BB4C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D7FC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6BE221721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:54:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570575291;
-	bh=B9G7S/xkZdPGkTEykG3idCdbGuVne3to/vB44gbJ5ok=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=agLiz/DOmEgJeEYLBpEVHkrYP8xMtN91N5mV3rIyHUK6axFJMkVcCkWNWR6BEOtSw
-	 6imGxQsMAkmr4xQb1kyQ0cnONHd2TVtACS5vH7WLmehs7yJROTUlA2JFYUKdyLG6PS
-	 T7Sl26Yc0I2nu2XYejhMs1/eQQbDfmhGe3Oq3mO8=
+	by mail.kernel.org (Postfix) with ESMTP id 363F021721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:57:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QDUlhMJX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728212AbfJHWyu (ORCPT
+        id S1729284AbfJHW5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 18:54:50 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:35420 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfJHWyu (ORCPT
+        Tue, 8 Oct 2019 18:57:47 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38063 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfJHW5q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 18:54:50 -0400
-Received: by mail-oi1-f194.google.com with SMTP id x3so171586oig.2;
-        Tue, 08 Oct 2019 15:54:49 -0700 (PDT)
+        Tue, 8 Oct 2019 18:57:46 -0400
+Received: by mail-pl1-f195.google.com with SMTP id w8so73079plq.5
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 15:57:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:from:to:cc:subject:user-agent:date;
+        bh=1iVg1bgTgNlX0dVm1aEShQI+wslCHb8bQCi8jJ4tNNc=;
+        b=QDUlhMJXKqmHUqSjPCk5eUuvJMAi05vnUZjLZXoyWt4EJdXtiOz2Y6Nr/MuLSLI04w
+         0toDdOgS4ewieZ4KychKuLMMZDFwLqkjBPNmy/f7ti9npdfWUKH4nlcvtVwvuKRgpJ6J
+         r20qPnrBvGNsk7IEz5JRvMz4WuJpc2KtWI6Bo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SggbRRKNXqQlH49P3KzPfRoT4FOY8o89Xl8C5FlY+KA=;
-        b=SPc7Wo/xlhNBDSK+mjqXICQ8FyFQMeZ29jL29NzY1ngXkmv2/8vxP99YnTZzZ2Y9tF
-         uS6y/MXBEIBquJW9zKQzNi3pRI9WjbqTeAPQIqNYLg9XftTR8TRpuU6EvNsnk/0DcgE9
-         u9zJaVfNBEy9urK/XXrPKZANeoEKO3eJ2hl5Z1SRROu4jszB8HEwEcEbijmJuvnTPcHF
-         brmnGa6sEyLgq6eZEeMsd4VV9cAsj4o3kSDVhlKwuEhMg/26wBNYfOD2K/CnJO2r6dA5
-         8lXKryPt1IbMABOiIH+kCJ7XjVRZdW2IQtRkcLslronRC9QGpCy8K0ShqWUM8ltnVJSN
-         KkMA==
-X-Gm-Message-State: APjAAAUwy+rF4zejMQRlDW7ml/F2chTEVw0kn3fW1sIPb+i81uywfRGs
-        iI4k18ndyWjx3q7+FT/QWigKh7uidJus9ki2VHY=
-X-Google-Smtp-Source: APXvYqzAHIWDALJmWxny85y+zNIHc6fYu7ABhv0L9fiH6TsA/vMVV+jisYkSGZMtPlgYlfymiNkZrvEQvyEMSGQl7Vo=
-X-Received: by 2002:aca:d706:: with SMTP id o6mr7215oig.57.1570575288501; Tue,
- 08 Oct 2019 15:54:48 -0700 (PDT)
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:from:to:cc:subject
+         :user-agent:date;
+        bh=1iVg1bgTgNlX0dVm1aEShQI+wslCHb8bQCi8jJ4tNNc=;
+        b=fsnjqLsDHJNHTGGF+88dy2vBNF0Zzrmfbh+y9TpPTEy4UDdKHQAUwHN79ISkSW1jRA
+         ZqqGjigfl3Y4YID2vBzs6ubr0kNmf5FQ/UBMY8OqJbqzdg5qa2u98UUnOBvkS2SPIAuu
+         e5LHCwHr7abAJOrWmPvFL1Mr8ZNA2GKtIflcEjoPlPF3jVSzanTaZPeH2Um78px1F7As
+         VhxMs3nWObDoplVo8hQsPKnCG8b2JojuL+1x3V5YEJbUZ5E/sA4mlxlXjyh1/TeO4tx0
+         BXXJHoyYf+M9nGNxzw/+AMzoFIfWCCrb6Y2RRaD0fZEEAgipIXdnBIAzJyQnJzds6r0Y
+         gRXw==
+X-Gm-Message-State: APjAAAVHDj8u6LYjE28WJkxphDVZBvqR77SfkTHihI9YFS/2QBkGDZph
+        U1GV/CFAgqxsvHl9/SAGZKmaYg==
+X-Google-Smtp-Source: APXvYqzV5T/dDRhxX/AyCWGZl/1A1CtlsmcvDIFOotNiWyYZfmr0klgV6tsCqwZoGEkXP0gf/1Z7gA==
+X-Received: by 2002:a17:902:a704:: with SMTP id w4mr37148337plq.177.1570575465981;
+        Tue, 08 Oct 2019 15:57:45 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id d4sm205853pjs.9.2019.10.08.15.57.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Oct 2019 15:57:44 -0700 (PDT)
+Message-ID: <5d9d1468.1c69fb81.1bb45.193a@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <CAJZ5v0iL4Rv=AQ-Qnma=wWaqBBbOdfRqu9uS9Gesa-G75oQpzQ@mail.gmail.com>
- <20191008211656.GA163302@google.com>
-In-Reply-To: <20191008211656.GA163302@google.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 9 Oct 2019 00:54:37 +0200
-Message-ID: <CAJZ5v0j-uSM2gheHViommWcrSaLVfzbwV3M7OOWz3GyzhHSwRA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] PCI: PCIe: ASPM: Introduce pcie_aspm_enabled()
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Keith Busch <kbusch@kernel.org>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAE=gft4Rp_GmoVc1iRFH3tiu_taC=i72_Y+xXzk6eU6J80YhQw@mail.gmail.com>
+References: <20191004233132.194336-1-swboyd@chromium.org> <CAE=gft4Rp_GmoVc1iRFH3tiu_taC=i72_Y+xXzk6eU6J80YhQw@mail.gmail.com>
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Evan Green <evgreen@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+Subject: Re: [PATCH] soc: qcom: llcc: Name regmaps to avoid collisions
+User-Agent: alot/0.8.1
+Date:   Tue, 08 Oct 2019 15:57:43 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 8, 2019 at 11:16 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Tue, Oct 08, 2019 at 11:27:51AM +0200, Rafael J. Wysocki wrote:
-> > On Tue, Oct 8, 2019 at 12:34 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Thu, Aug 08, 2019 at 11:55:07PM +0200, Rafael J. Wysocki wrote:
-> > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > >
-> > > > Add a function checking whether or not PCIe ASPM has been enabled for
-> > > > a given device.
-> > > >
-> > > > It will be used by the NVMe driver to decide how to handle the
-> > > > device during system suspend.
-> > > >
-> > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > ---
-> > > >
-> > > > v2 -> v3:
-> > > >   * Make the new function return bool.
-> > > >   * Change its name back to pcie_aspm_enabled().
-> > > >   * Fix kerneldoc comment formatting.
-> > > >
-> > > > -> v2:
-> > > >   * Move the PCI/PCIe ASPM changes to a separate patch.
-> > > >   * Add the _mask suffix to the new function name.
-> > > >   * Add EXPORT_SYMBOL_GPL() to the new function.
-> > > >   * Avoid adding an unnecessary blank line.
-> > > >
-> > > > ---
-> > > >  drivers/pci/pcie/aspm.c |   20 ++++++++++++++++++++
-> > > >  include/linux/pci.h     |    3 +++
-> > > >  2 files changed, 23 insertions(+)
-> > > >
-> > > > Index: linux-pm/drivers/pci/pcie/aspm.c
-> > > > ===================================================================
-> > > > --- linux-pm.orig/drivers/pci/pcie/aspm.c
-> > > > +++ linux-pm/drivers/pci/pcie/aspm.c
-> > > > @@ -1170,6 +1170,26 @@ static int pcie_aspm_get_policy(char *bu
-> > > >  module_param_call(policy, pcie_aspm_set_policy, pcie_aspm_get_policy,
-> > > >       NULL, 0644);
-> > > >
-> > > > +/**
-> > > > + * pcie_aspm_enabled - Check if PCIe ASPM has been enabled for a device.
-> > > > + * @pci_device: Target device.
-> > > > + */
-> > > > +bool pcie_aspm_enabled(struct pci_dev *pci_device)
-> > > > +{
-> > > > +     struct pci_dev *bridge = pci_upstream_bridge(pci_device);
-> > > > +     bool ret;
-> > > > +
-> > > > +     if (!bridge)
-> > > > +             return false;
-> > > > +
-> > > > +     mutex_lock(&aspm_lock);
-> > > > +     ret = bridge->link_state ? !!bridge->link_state->aspm_enabled : false;
-> > > > +     mutex_unlock(&aspm_lock);
-> > >
-> > > Why do we need to acquire aspm_lock here?  We aren't modifying
-> > > anything, and I don't think we're preventing a race.  If this races
-> > > with another thread that changes aspm_enabled, we'll return either the
-> > > old state or the new one, and I think that's still the case even if we
-> > > don't acquire aspm_lock.
+Quoting Evan Green (2019-10-07 14:20:47)
+> On Fri, Oct 4, 2019 at 4:31 PM Stephen Boyd <swboyd@chromium.org> wrote:
 > >
-> > Well, if we can guarantee that pci_remove_bus_device() will never be
-> > called in parallel with this helper, then I agree, but can we
-> > guarantee that?
->
-> Hmm, yeah, I guess that's the question.  It's not a race with another
-> thread changing aspm_enabled; the potential race is with another
-> thread removing the last child of "bridge", which will free the
-> link_state and set bridge->link_state = NULL.
->
-> I think it should be safe to call device-related PCI interfaces if
-> you're holding a reference to the device, e.g., from a driver bound to
-> the device or a sysfs accessor.  Since we call pcie_aspm_enabled(dev)
-> from a driver bound to "dev", another thread should not be able to
-> remove "dev" while we're using it.
->
-> I know that's a little hand-wavey, but if it weren't true, I think
-> we'd have a lot more locking sprinkled everywhere in the PCI core than
-> we do.
->
-> This has implications for Heiner's ASPM sysfs patches because we're
-> currently doing this in sysfs accessors:
->
->   static ssize_t aspm_attr_show_common(struct device *dev, ...)
->   {
->     ...
->     link = pcie_aspm_get_link(pdev);
->
->     mutex_lock(&aspm_lock);
->     enabled = link->aspm_enabled & state;
->     mutex_unlock(&aspm_lock);
->     ...
->   }
->
-> I assume sysfs must be holding a reference that guarantees "dev" is
-> valid througout this code, and therefore we should not need to hold
-> aspm_lock.
+> > We'll end up with debugfs collisions if we don't give names to the
+> > regmaps created inside this driver. Copy the template config over into
+> > this function and give the regmap the same name as the resource name.
+> >
+> > Fixes: 7f9c136216c7 ("soc: qcom: Add broadcast base for Last Level Cach=
+e Controller (LLCC)")
+> > Cc: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+> > Cc: Evan Green <evgreen@chromium.org>
+> > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> > ---
+> >  drivers/soc/qcom/llcc-slice.c | 14 +++++++-------
+> >  1 file changed, 7 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/drivers/soc/qcom/llcc-slice.c b/drivers/soc/qcom/llcc-slic=
+e.c
+> > index 9090ea12eaf3..aa342938c403 100644
+> > --- a/drivers/soc/qcom/llcc-slice.c
+> > +++ b/drivers/soc/qcom/llcc-slice.c
+> > @@ -48,13 +48,6 @@
+> >
+> >  static struct llcc_drv_data *drv_data =3D (void *) -EPROBE_DEFER;
+> >
+> > -static const struct regmap_config llcc_regmap_config =3D {
+> > -       .reg_bits =3D 32,
+> > -       .reg_stride =3D 4,
+> > -       .val_bits =3D 32,
+> > -       .fast_io =3D true,
+> > -};
+> > -
+> >  /**
+> >   * llcc_slice_getd - get llcc slice descriptor
+> >   * @uid: usecase_id for the client
+> > @@ -314,6 +307,12 @@ static struct regmap *qcom_llcc_init_mmio(struct p=
+latform_device *pdev,
+> >  {
+> >         struct resource *res;
+> >         void __iomem *base;
+> > +       static struct regmap_config llcc_regmap_config =3D {
+> > +               .reg_bits =3D 32,
+> > +               .reg_stride =3D 4,
+> > +               .val_bits =3D 32,
+> > +               .fast_io =3D true,
+> > +       };
+>=20
+> Why did you move this to be a static local? I think it works, but it
+> makes it look like this is a local variable that's possibly used out
+> of scope. Maybe leave it as a global?
 
-In principle, pcie_aspm_enabled() need not be called via sysfs.
+And have a followup patch to move it to a static local? Sounds ok to me
+if you prefer.
 
-In the particular NVMe use case, it is called from the driver's own PM
-callback, so it would be safe without the locking AFAICS.
-
-I guess it is safe to drop the locking from there, but then it would
-be good to mention in the kerneldoc that calling it is only safe under
-the assumption that the link_state object cannot go away while it is
-running.
