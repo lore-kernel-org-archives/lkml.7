@@ -2,80 +2,69 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFABDC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 23:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF474C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 23:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85A5821721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 23:40:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D10A421721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 23:42:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729808AbfJHXkV (ORCPT
+        id S1729830AbfJHXm0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 19:40:21 -0400
-Received: from mga03.intel.com ([134.134.136.65]:27588 "EHLO mga03.intel.com"
+        Tue, 8 Oct 2019 19:42:26 -0400
+Received: from mga03.intel.com ([134.134.136.65]:27718 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726822AbfJHXkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 19:40:21 -0400
+        id S1726822AbfJHXm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 19:42:26 -0400
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 16:40:20 -0700
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 16:42:25 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.67,273,1566889200"; 
-   d="scan'208";a="199961259"
-Received: from jhogan1-mobl.ger.corp.intel.com (HELO localhost) ([10.252.2.221])
-  by FMSMGA003.fm.intel.com with ESMTP; 08 Oct 2019 16:40:17 -0700
-Date:   Wed, 9 Oct 2019 02:40:17 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Vadim Sukhomlinov <sukhomlinov@google.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 002/106] tpm: Fix TPM 1.2 Shutdown sequence to
- prevent future TPM operations
-Message-ID: <20191008234017.GA13437@linux.intel.com>
-References: <20191006171124.641144086@linuxfoundation.org>
- <20191006171126.123065744@linuxfoundation.org>
- <20191008094121.GA608@amd>
+   d="scan'208";a="199961741"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by FMSMGA003.fm.intel.com with ESMTP; 08 Oct 2019 16:42:24 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+        id 83A05F9; Wed,  9 Oct 2019 02:42:23 +0300 (EEST)
+Date:   Wed, 9 Oct 2019 02:42:23 +0300
+From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc:     linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH] ARC: mm: remove __ARCH_USE_5LEVEL_HACK
+Message-ID: <20191008234223.wycjktby2t5gwz3o@black.fi.intel.com>
+References: <20191008213836.19266-1-vgupta@synopsys.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191008094121.GA608@amd>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191008213836.19266-1-vgupta@synopsys.com>
+User-Agent: NeoMutt/20170714-126-deb55f (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > --- a/drivers/char/tpm/tpm-chip.c
-> > +++ b/drivers/char/tpm/tpm-chip.c
-> > @@ -187,12 +187,13 @@ static int tpm_class_shutdown(struct device *dev)
-> >  {
-> >  	struct tpm_chip *chip = container_of(dev, struct tpm_chip, dev);
-> >  
-> > +	down_write(&chip->ops_sem);
-> >  	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
-> > -		down_write(&chip->ops_sem);
-> >  		tpm2_shutdown(chip, TPM2_SU_CLEAR);
-> >  		chip->ops = NULL;
-> > -		up_write(&chip->ops_sem);
-> >  	}
-> > +	chip->ops = NULL;
-> > +	up_write(&chip->ops_sem);
-> >  
-> >  	return 0;
-> >  }
+On Tue, Oct 08, 2019 at 09:38:36PM +0000, Vineet Gupta wrote:
+> Add the intermediate p4d accessors to make it 5 level compliant.
 > 
-> Still can be improved -- chip->ops = NULL; is done twice, copy inside
-> the if {} is redundant...
+> Thi sis non-functional change anyways since ARC has software page walker
+     ^
+     Typo.
+> with 2 lookup levels (pgd -> pte)
+> 
+> Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+> ---
+>  arch/arc/include/asm/pgtable.h |  1 -
+>  arch/arc/mm/fault.c            | 10 ++++++++--
+>  2 files changed, 8 insertions(+), 3 deletions(-)
 
-Thanks. I can update this.
+Have you tested it with CONFIG_HIGHMEM=y? alloc_kmap_pgtable() has to be
+converted too.
 
-/Jarkko
+-- 
+ Kirill A. Shutemov
