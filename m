@@ -2,125 +2,78 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA26C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5FBC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D812D20679
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:16:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Y/UWuuHg"
+	by mail.kernel.org (Postfix) with ESMTP id A83AC2070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:16:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570547792;
+	bh=HBPyM3fbQmTRXscejMZaaT3oltRHFHQ/AKn9AwmsNPM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=O33D0nScmEgDT4cdrVgx3d+vD8zPM7c6oSTVvUKGvay1CL9ZKN5rQ+3pdjBJvnJyh
+	 386LRUoEqoG2Q5c/kH59GiJ1HJztYZUvUQvK5ewB6JEONoAQfbgtXjbrFS4DdrhmVW
+	 d/QY5LNaxqitBmlshMi2K39p97O+nB2lCMyy3uNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727536AbfJHPQU (ORCPT
+        id S1727861AbfJHPQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 11:16:20 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:36682 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726291AbfJHPQU (ORCPT
+        Tue, 8 Oct 2019 11:16:32 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:47048 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726291AbfJHPQb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 11:16:20 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x98FCpaM126200;
-        Tue, 8 Oct 2019 15:15:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : in-reply-to : message-id : references : mime-version :
- content-type; s=corp-2019-08-05;
- bh=G3hEXpcqfex8tKkgNX8GKdCKE+z2Dp/2HG2CbwOSfg0=;
- b=Y/UWuuHgnhvwYn3IWR4zKaD1rSQ/rjm71tVZQVCqYNZFNBNGrbgZVRCsTXxHEVR8yLOZ
- 9aY11pb4lr+XCfrd8bN+lEIEX3L+ygZfdyZPCQFyyzYEZ9FPeYfpToKXs6VTE7yC7Nd/
- rFvt5K+lc0lSwAFSTBLtUF3tA/md7ZwZ6LIGXM1V9F5/znaFpzOBZGuL1XT0mD3efiBX
- 5mazH27pI22iMWTifvxp5IJChrmIpXVCb/w0IhRF3xqbK8sW0GmDs40PPOz9e762czG+
- 9tbefRrROSNUIVjhut6bj5p9qiHMbhdcTM7TM8WA/NrK+5i8RwCn7HNTAJ5P7XhAkMpZ JA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2vejkue1p7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 08 Oct 2019 15:15:33 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x98FFIKj143243;
-        Tue, 8 Oct 2019 15:15:32 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2vg206hdkc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 08 Oct 2019 15:15:32 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x98FFJa2016720;
-        Tue, 8 Oct 2019 15:15:19 GMT
-Received: from dhcp-10-175-191-48.vpn.oracle.com (/10.175.191.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 08 Oct 2019 15:15:18 +0000
-Date:   Tue, 8 Oct 2019 16:15:09 +0100 (BST)
-From:   Alan Maguire <alan.maguire@oracle.com>
-X-X-Sender: alan@dhcp-10-175-191-48.vpn.oracle.com
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-cc:     Alan Maguire <alan.maguire@oracle.com>,
-        linux-kselftest@vger.kernel.org, brendanhiggins@google.com,
-        skhan@linuxfoundation.org, mcgrof@kernel.org,
-        keescook@chromium.org, yzaikin@google.com,
-        akpm@linux-foundation.org, yamada.masahiro@socionext.com,
-        catalin.marinas@arm.com, joe.lawrence@redhat.com,
-        penguin-kernel@i-love.sakura.ne.jp, schowdary@nvidia.com,
-        urezki@gmail.com, changbin.du@intel.com,
-        kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Knut Omang <knut.omang@oracle.com>,
-        rdunlap@infradead.org
-Subject: Re: [PATCH linux-kselftest-test 2/3] kunit: allow kunit to be loaded
- as a module
-In-Reply-To: <20191008145552.GS32742@smile.fi.intel.com>
-Message-ID: <alpine.LRH.2.20.1910081611050.839@dhcp-10-175-191-48.vpn.oracle.com>
-References: <1570545832-32326-1-git-send-email-alan.maguire@oracle.com> <1570545832-32326-3-git-send-email-alan.maguire@oracle.com> <20191008145552.GS32742@smile.fi.intel.com>
-User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
+        Tue, 8 Oct 2019 11:16:31 -0400
+Received: by mail-pg1-f196.google.com with SMTP id b8so4058768pgm.13
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 08:16:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HBPyM3fbQmTRXscejMZaaT3oltRHFHQ/AKn9AwmsNPM=;
+        b=RDQDDpTGcJ+CU5oG20pFY3+f/912vgZHPuOBlJgUk1GvQDsUpfZWJBhtrPPKHGfKin
+         c5AdPIUJyuSFtv4Ck3+oddWe8kHzE2HPZDNDS+7KJmU8uLuldtt7ZDdvCtovD0E8VbrN
+         btPCwrL3cx9q+KOhIImmLCHtb+dFYgRngz/lyeNtpz0fdmTtEbdk7+Fz3SCLciVUP8iF
+         FOMIIRUR+k/RWlUzyE/tzCGnpQtp9VJl/Vx/3M0b8oGasvTFtiehokX7qML5vIXF4rc5
+         4aa50AzB2ptrVVEy6mvF0FrXSQg268RXPTed+3GNECqZM2flg+XDeq16K0Nqpm/XlsWf
+         +KjA==
+X-Gm-Message-State: APjAAAX0c8biphVW0Rpa9j8l9hLOVy4CF9wLPEdY5faNGKTGRdUzdxhd
+        Sgx+OpiwKwkjVNPpXDxeu6lpbGmmIKg=
+X-Google-Smtp-Source: APXvYqxL4tqZxI7W5Qba4JPc57Aq4UBeRh411inoIg4ZNNcMTEOzHxTu5bSzWPdCj/QC8rP4guJXAg==
+X-Received: by 2002:a17:90a:8001:: with SMTP id b1mr6336570pjn.10.1570547790809;
+        Tue, 08 Oct 2019 08:16:30 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id e21sm13287017pgk.57.2019.10.08.08.16.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Oct 2019 08:16:29 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id D3FE140255; Tue,  8 Oct 2019 15:16:28 +0000 (UTC)
+Date:   Tue, 8 Oct 2019 15:16:28 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Tuowen Zhao <ztuowen@gmail.com>
+Cc:     lee.jones@linaro.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
+        acelan.kao@canonical.com, bhelgaas@google.com,
+        kai.heng.feng@canonical.com
+Subject: Re: [PATCH v2] mfd: intel-lpss: use devm_ioremap_uc for MMIO
+Message-ID: <20191008151628.GA16384@42.do-not-panic.com>
+References: <20191007184231.13256-1-ztuowen@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9404 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910080135
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9403 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910080135
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191007184231.13256-1-ztuowen@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 8 Oct 2019, Andy Shevchenko wrote:
+On Mon, Oct 07, 2019 at 12:42:31PM -0600, Tuowen Zhao wrote:
+> +EXPORT_SYMBOL(devm_ioremap_uc);
 
-> On Tue, Oct 08, 2019 at 03:43:51PM +0100, Alan Maguire wrote:
-> > Making kunit itself buildable as a module allows for "always-on"
-> > kunit configuration; specifying CONFIG_KUNIT=m means the module
-> > is built but only used when loaded.  Kunit test modules will load
-> > kunit.ko as an implicit dependency, so simply running
-> > "modprobe my-kunit-tests" will load the tests along with the kunit
-> > module and run them.
-> 
-> > +#ifdef MODULE
-> 
-> > +#endif /* MODULE */
-> 
-> This is strange. Why do you need ifdef?
->
+EXPORT_SYMBOL_GPL() would be my preference.
 
-Ah, this was an incorrect assumption on my part; I thought that
-declaring a module license for built-in code might trigger a warning 
-during build. I'll remove the #ifdef MODULE around licenses in v3 (v2 has 
-already gone out as I mistakenly initially sent the wrong version of the 
-patches). I've verified that removing it triggers no warnings.
-
-Thanks to you and Randy for spotting this!
-
-Alan
-
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
-> 
+ Luis
