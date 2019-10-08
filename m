@@ -2,121 +2,69 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E65FDC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 23:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 261F1C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 23:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFBE621871
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 23:45:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TCcdP4Nb"
+	by mail.kernel.org (Postfix) with ESMTP id 09F6821871
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 23:45:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727570AbfJHXpL (ORCPT
+        id S1729905AbfJHXpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 19:45:11 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43829 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727769AbfJHXpJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 19:45:09 -0400
-Received: by mail-pf1-f193.google.com with SMTP id a2so348578pfo.10
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 16:45:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=hFAVYC3XM0iiwUmU9uc9RvZO3TOksuf/Klbv6GZY3e8=;
-        b=TCcdP4NbmK6Zd+nsndsXfWNT7g9i4ibsEB7+fNkqpXk7gUh5AYroitEfrHKYA/Hf1S
-         YM/7jXfa0Hkno3hSUrsbodKo8cY5Z1Ieqo8Fokem2qAdb5gpt6ZO97ZwtgJBbYm8tHpB
-         jP44MEzKc0rA36mIWZTVpBbjXrdEXP5iO/hro=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=hFAVYC3XM0iiwUmU9uc9RvZO3TOksuf/Klbv6GZY3e8=;
-        b=RZz/LtDcSiIvkQQraP+B5K18vH4N/qYKHZZmBR81vW7LWQUbqPUQ3r8JWvLnCxANwj
-         IKc/NplK5zix00gRWKrbY/gSS9QOPGpl8V620lPsOD0rnNfXVShJTP98v6g/OD8EFcQT
-         gUEvtHgDZLAWyaaKlMwCmif4fF6PYI7URFNEYEDboWMWRsm2jIZrE6LjkUhTvObvd8xI
-         OCnbXuBlZt2HMjA205NekXKBeSdDII7USOSFcHPdZypGTl2OEJcUfDhOCkB9flifHJQB
-         M+hWX112K8Cp1xhD7o6uiHRF21p8bKpAnOxwGG/RwruU/7bKOZ5RIv+Eb597CGPMeDFf
-         OTsw==
-X-Gm-Message-State: APjAAAUrUI7vQ326/SbuIY6m4kmJNPu2O51lQXnNLL0/OhNvwE4dF7in
-        QNMbex40PP6IXVpYSeokL+nkCw==
-X-Google-Smtp-Source: APXvYqyFFkKcFGWjRDwVFDODJz9fk+odgUjS03Z5Bp8Lldzec7aMPglCruu+rdoEmgfH13/vgMG6Aw==
-X-Received: by 2002:aa7:95a2:: with SMTP id a2mr572338pfk.252.1570578308881;
-        Tue, 08 Oct 2019 16:45:08 -0700 (PDT)
-Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id s202sm210671pfs.24.2019.10.08.16.45.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2019 16:45:08 -0700 (PDT)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>,
-        Evan Green <evgreen@chromium.org>
-Subject: [PATCH v2 2/2] soc: qcom: llcc: Move regmap config to local variable
-Date:   Tue,  8 Oct 2019 16:45:05 -0700
-Message-Id: <20191008234505.222991-3-swboyd@chromium.org>
-X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
-In-Reply-To: <20191008234505.222991-1-swboyd@chromium.org>
-References: <20191008234505.222991-1-swboyd@chromium.org>
+        Tue, 8 Oct 2019 19:45:20 -0400
+Received: from mga02.intel.com ([134.134.136.20]:19713 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729868AbfJHXpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 19:45:20 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 16:45:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,273,1566889200"; 
+   d="scan'208";a="223399081"
+Received: from jhogan1-mobl.ger.corp.intel.com (HELO localhost) ([10.252.2.221])
+  by fmsmga002.fm.intel.com with ESMTP; 08 Oct 2019 16:45:15 -0700
+Date:   Wed, 9 Oct 2019 02:45:14 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Stefan Berger <stefanb@linux.ibm.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Alexander Steffen <Alexander.Steffen@infineon.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 001/106] tpm: use tpm_try_get_ops() in tpm-sysfs.c.
+Message-ID: <20191008234514.GB13437@linux.intel.com>
+References: <20191006171124.641144086@linuxfoundation.org>
+ <20191006171125.167365005@linuxfoundation.org>
+ <20191008125120.GF608@amd>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191008125120.GF608@amd>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is now a global variable that we're modifying to fix the name.
-That isn't terribly thread safe and it's not necessary to be a global so
-let's just move this to a local variable instead. This saves space in
-the symtab and actually reduces kernel image size because the regmap
-config is large and we can replace the initialization of that structure
-with a memset and a few member assignments.
+On Tue, Oct 08, 2019 at 02:51:20PM +0200, Pavel Machek wrote:
+> For example this did not have any locking, and is now protected by
+> 
+>         get_device(&chip->dev);
+> 
+>         down_read(&chip->ops_sem);
+> 
+> . Is that intended? Is this known to fix any bugs?
 
-Cc: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-Cc: Evan Green <evgreen@chromium.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
- drivers/soc/qcom/llcc-slice.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+It is, sysfs code can otherwise race when ops is set NULL in
+class shutdown.
 
-diff --git a/drivers/soc/qcom/llcc-slice.c b/drivers/soc/qcom/llcc-slice.c
-index 4a6111635f82..50aea3f0be41 100644
---- a/drivers/soc/qcom/llcc-slice.c
-+++ b/drivers/soc/qcom/llcc-slice.c
-@@ -48,13 +48,6 @@
- 
- static struct llcc_drv_data *drv_data = (void *) -EPROBE_DEFER;
- 
--static struct regmap_config llcc_regmap_config = {
--	.reg_bits = 32,
--	.reg_stride = 4,
--	.val_bits = 32,
--	.fast_io = true,
--};
--
- /**
-  * llcc_slice_getd - get llcc slice descriptor
-  * @uid: usecase_id for the client
-@@ -314,6 +307,12 @@ static struct regmap *qcom_llcc_init_mmio(struct platform_device *pdev,
- {
- 	struct resource *res;
- 	void __iomem *base;
-+	struct regmap_config llcc_regmap_config = {
-+		.reg_bits = 32,
-+		.reg_stride = 4,
-+		.val_bits = 32,
-+		.fast_io = true,
-+	};
- 
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
- 	if (!res)
--- 
-Sent by a computer through tubes
-
+/Jarkko
