@@ -2,142 +2,81 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 537D7C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:53:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40621C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CBB420659
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:53:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570546391;
-	bh=43D7mJTidNziffTuZdsS4fBLNRTISxe76SYbSUFqmEA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PWfsPelXCEIl2VVnbV3MKiXcGLtW8ONFpmTPwa8dFjYIwR7CW8rzyr3rIjRG/39QH
-	 oVLcogqK31igngU2/ZNv+YlTDkwj31U2/EqaZOsI9RF6RLB/mwCRmHI+PUGbODzNEe
-	 8jWy3tqaw95aYRwNU6Gzn+VR1DvmzpvJf4zA9Pfc=
+	by mail.kernel.org (Postfix) with ESMTP id 047EA20815
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:54:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ZgCY1LFp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727344AbfJHOxK (ORCPT
+        id S1726253AbfJHOy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 10:53:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34988 "EHLO mail.kernel.org"
+        Tue, 8 Oct 2019 10:54:27 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:53638 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725839AbfJHOxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 10:53:09 -0400
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725939AbfJHOy0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 10:54:26 -0400
+Received: from zn.tnic (p200300EC2F0B5100B1AE7F6CCC5C3495.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:5100:b1ae:7f6c:cc5c:3495])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB79F20659;
-        Tue,  8 Oct 2019 14:53:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570546387;
-        bh=43D7mJTidNziffTuZdsS4fBLNRTISxe76SYbSUFqmEA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=1m1YJESGHnrJ5kSL4SpMFlTgPgrgMebqBQkd3RuW0i5X+8TPHwI0YSPQ21+vM0+AY
-         NhIgNS5NuszhMSn6uufNPKlPvus6kC1GTbwEfflVK5EdbSzCnctLe67flCF4YCcnce
-         mUnJQbZCZJrDRMx+BtHHcHjGw3VUYXcRWWAQ2qD8=
-Received: by mail-qk1-f176.google.com with SMTP id 201so16994579qkd.13;
-        Tue, 08 Oct 2019 07:53:07 -0700 (PDT)
-X-Gm-Message-State: APjAAAXmnZG2f+y5lNmmk9Q+urHikGAqoZt7ea8C8YRogA1EFitvsNlz
-        811gnomMJxIHFBw05sKQWWXuKSCH+UP/zC9VoA==
-X-Google-Smtp-Source: APXvYqwcuwLAT/clJ+O/meI0n2cyKwQwDkoVsvf05zAfDMSzMau5X1IcXnFIoiry9nOSZIPabNLne3OOyzFtDOAFCJA=
-X-Received: by 2002:a37:be87:: with SMTP id o129mr30275734qkf.254.1570546386900;
- Tue, 08 Oct 2019 07:53:06 -0700 (PDT)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B289B1EC067D;
+        Tue,  8 Oct 2019 16:54:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1570546465;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=jWIuzLaCmNrAtkFpesn2+ymOitb9cF5jmTsz8H7LDk0=;
+        b=ZgCY1LFprAshcWzMhuDWe3mn/94VhdlBngLvkIslTztBmQySHkKlv2YoSb6IHc71iJDCdA
+        ReBjP05rKjcS1MLsehpTaJSTB+05IoQnjFj4VaKnH/jhK6Tarzdswb36ZOPHGQyXRLl28b
+        08YexrgmrvetN4fp/RbjAtNUor8pskc=
+Date:   Tue, 8 Oct 2019 16:54:24 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com
+Subject: Re: [PATCH v3 1/6] x86/alternatives: Teach text_poke_bp() to emulate
+ instructions
+Message-ID: <20191008145423.GG14765@zn.tnic>
+References: <20191007081716.07616230.8@infradead.org>
+ <20191007081944.88332264.2@infradead.org>
+ <20191008142924.GE14765@zn.tnic>
+ <20191008144834.GD2328@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20191007124437.20367-1-jjhiblot@ti.com> <20191007124437.20367-5-jjhiblot@ti.com>
- <CAL_JsqLTqnKpU4PB8Zt9SSPSia5mkFcUgoA8ZyX_1E_HfdFyxg@mail.gmail.com> <30fcd898-aa50-bac2-b316-0d9bf2429369@ti.com>
-In-Reply-To: <30fcd898-aa50-bac2-b316-0d9bf2429369@ti.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 8 Oct 2019 09:52:55 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLzi3y8hBvx9Qpx7QKPGAzq_LyuEDdi35f9k8nEfj5wCw@mail.gmail.com>
-Message-ID: <CAL_JsqLzi3y8hBvx9Qpx7QKPGAzq_LyuEDdi35f9k8nEfj5wCw@mail.gmail.com>
-Subject: Re: [PATCH v9 4/5] dt-bindings: backlight: Add led-backlight binding
-To:     Jean-Jacques Hiblot <jjhiblot@ti.com>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Dan Murphy <dmurphy@ti.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191008144834.GD2328@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 8, 2019 at 7:51 AM Jean-Jacques Hiblot <jjhiblot@ti.com> wrote:
->
-> Hi Rob,
->
-> On 07/10/2019 18:15, Rob Herring wrote:
-> > Please send DT bindings to DT list or it's never in my queue. IOW,
-> > send patches to the lists that get_maintainers.pl tells you to.
-> >
-> > On Mon, Oct 7, 2019 at 7:45 AM Jean-Jacques Hiblot <jjhiblot@ti.com> wrote:
-> >> Add DT binding for led-backlight.
-> >>
-> >> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-> >> Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-> >> Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> >> ---
-> >>   .../bindings/leds/backlight/led-backlight.txt | 28 +++++++++++++++++++
-> >>   1 file changed, 28 insertions(+)
-> >>   create mode 100644 Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
-> > Please make this a DT schema.
->
-> OK.
->
-> BTW I used "make dt_binding_check" but had to fix a couple of YAMLs file
-> to get it to work. Do you have a kernel tree with already all the YAML
-> files in good shape ? Or do you want me to post the changes to
-> devicetree@vger.kernel.org ?
+On Tue, Oct 08, 2019 at 04:48:34PM +0200, Peter Zijlstra wrote:
+> Can, but why? That's more lines for no raisin ;-)
 
-linux-next is fixed now.
+Here's a raisin: I was looking at this and then all of a sudden went:
+"W00t, why is this do_sync part of the loop at all? Do they belong
+together? Nope."
 
-> >> diff --git a/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
-> >> new file mode 100644
-> >> index 000000000000..4c7dfbe7f67a
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
-> >> @@ -0,0 +1,28 @@
-> >> +led-backlight bindings
-> >> +
-> >> +This binding is used to describe a basic backlight device made of LEDs.
-> >> +It can also be used to describe a backlight device controlled by the output of
-> >> +a LED driver.
-> >> +
-> >> +Required properties:
-> >> +  - compatible: "led-backlight"
-> >> +  - leds: a list of LEDs
-> > 'leds' is already used as a node name and mixing is not ideal.
-> >
-> > We already have 'flash-leds' in use and with the same definition, so
-> > lets continue that and use 'backlight-leds'.
-> OK
-> >
-> >> +
-> >> +Optional properties:
-> >> +  - brightness-levels: Array of distinct brightness levels. The levels must be
-> >> +                       in the range accepted by the underlying LED devices.
-> >> +                       This is used to translate a backlight brightness level
-> >> +                       into a LED brightness level. If it is not provided, the
-> >> +                       identity mapping is used.
-> >> +
-> >> +  - default-brightness-level: The default brightness level.
-> > You can just assume these 2 get a common schema at some point. So just
-> > need to define any additional constraints if possible.
->
-> Maybe we should keep them until such a common schema is written ?
+If we're going to save on lines, we've lost long ago.
 
-I'm not saying to remove them, but you can just have a description if
-there are no other constraints.
+> Very first pass, we write INT3's everywhere.
 
-Rob
+Doh.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
