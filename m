@@ -2,106 +2,94 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B3DC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 18:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 460C2C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 18:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C90B6206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 18:45:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x/cCaZXl"
+	by mail.kernel.org (Postfix) with ESMTP id 215D621721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 18:46:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729771AbfJHSp0 (ORCPT
+        id S1729820AbfJHSqs convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 14:45:26 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44702 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbfJHSp0 (ORCPT
+        Tue, 8 Oct 2019 14:46:48 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:49846 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbfJHSqr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 14:45:26 -0400
-Received: by mail-lj1-f194.google.com with SMTP id m13so18656761ljj.11
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 11:45:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qfuM+eOrfkjY3X5vdG1L/3iSehedGNPzsEMXo/fl1Hs=;
-        b=x/cCaZXlC//XNrYXPZnfr80qisOKMZMVwbO1hNPgpVxeRN5oUwYVPUeGEo8UMHz8UQ
-         0HX5OSJ9TqTP4l2dtQJqVXJx+9TD+OaOEGLU7gKgROLqadJaT6TsSX/L/7//1Yb8V2bR
-         0k98m0Q9Bd5ttF4R05XZgHWx4t44li1DdI8LyrZl82cJiiXryA7PA+ZsCTqQWwS2NW/w
-         heIeaU0vG2FU3Vm8JO0avB5HIwD9XJLlhuP1WeCxOR+en+1VJroRKkxB/TsDSRmJSFRh
-         B/whC+YMw6uTl53LwYkRfwSKomYVg2OSJqDTWCb04dzVFnL52uzMs3QQzSdKgsr3qhGl
-         jvuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qfuM+eOrfkjY3X5vdG1L/3iSehedGNPzsEMXo/fl1Hs=;
-        b=mwiQL6aiL/vNy5mnNUl3+vJEVfnb9+VCFAbQsHdpvPGWq07gkl72ccrIu36C7grfM0
-         eFKdxbcRm1eLH7uSJfR8lfEFyecsyikQxSiRuKd0YOkdLqDNrRZPjadpxnD/k3QyhEDU
-         OwTVzc6cG/pFsDwAA/Bwhw9Jip3j0IRpAkwz1XhPlet0Ttq2xtXX5Of2o7VGAuANJ8hc
-         T1hmJe/WGNb3V5Nu/MDEprvHQhkzCkaEJVkCOA99w4t2IegA7pxnBjojMDlkhlC0Mg1w
-         JI4Xl9AONiJ/axO8Pe1twPV65891JDJf11VfDpvkWv+UfMfE7chXQWAvM99tpzYjaTu8
-         zRZQ==
-X-Gm-Message-State: APjAAAVByeDu/vaddaKeqRNvIyZhSDqYDlqv0ElpxzZTM20i3QIutcSD
-        XNfoevygXRlURUe0PLEKOqzpp+oImIzFbAZi+ta/mA==
-X-Google-Smtp-Source: APXvYqzF8GNyIxixEVMPLtfOR5UU3dmLQNgq1g59BBwDCB2AdpAwOZCF77uwxq0JzNBcTRet552JBED6lTXTPMQ6rIE=
-X-Received: by 2002:a2e:5bdd:: with SMTP id m90mr22896723lje.193.1570560323997;
- Tue, 08 Oct 2019 11:45:23 -0700 (PDT)
+        Tue, 8 Oct 2019 14:46:47 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: krisman)
+        with ESMTPSA id 967AF28F6BB
+From:   Gabriel Krisman Bertazi <krisman@collabora.com>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     =?utf-8?Q?Andr=C3=A9?= Almeida <andrealmeid@collabora.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        axboe@kernel.dk, kernel@collabora.com
+Subject: Re: [PATCH v2 1/1] blk-mq: fill header with kernel-doc
+Organization: Collabora
+References: <20191008001416.12656-1-andrealmeid@collabora.com>
+        <854l0j19go.fsf@collabora.com>
+        <6aa48cd2-5f23-a4be-f777-d65bf755a976@acm.org>
+Date:   Tue, 08 Oct 2019 14:46:31 -0400
+In-Reply-To: <6aa48cd2-5f23-a4be-f777-d65bf755a976@acm.org> (Bart Van Assche's
+        message of "Tue, 8 Oct 2019 10:30:58 -0700")
+Message-ID: <85zhibyt14.fsf@collabora.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <1568878421-12301-1-git-send-email-vincent.guittot@linaro.org>
- <1568878421-12301-5-git-send-email-vincent.guittot@linaro.org>
- <c752dd1a-731e-aae3-6a2c-aecf88901ac0@arm.com> <CAKfTPtBQNJfNmBqpuaefsLzsTrGxJ=2bTs+tRdbOAa9J3eKuVw@mail.gmail.com>
- <31cac0c1-98e4-c70e-e156-51a70813beff@arm.com> <20191008141642.GQ2294@hirez.programming.kicks-ass.net>
- <b4e29e48-a97c-67e5-a284-6ddc13222c5b@arm.com> <20191008153002.GA21999@linaro.org>
- <20191008173910.GB22902@worktop.programming.kicks-ass.net>
-In-Reply-To: <20191008173910.GB22902@worktop.programming.kicks-ass.net>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Tue, 8 Oct 2019 20:45:11 +0200
-Message-ID: <CAKfTPtB+UKLzOtt9dujGJtZBXB9jr-fm-C5xxkDCCDtGVwj78Q@mail.gmail.com>
-Subject: Re: [PATCH v3 04/10] sched/fair: rework load_balance
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Phil Auld <pauld@redhat.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <Morten.Rasmussen@arm.com>,
-        Hillf Danton <hdanton@sina.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 8 Oct 2019 at 19:39, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Tue, Oct 08, 2019 at 05:30:02PM +0200, Vincent Guittot wrote:
->
-> > This is how I plan to get ride of the problem:
-> > +             if (busiest->group_weight == 1 || sds->prefer_sibling) {
-> > +                     unsigned int nr_diff = busiest->sum_h_nr_running;
-> > +                     /*
-> > +                      * When prefer sibling, evenly spread running tasks on
-> > +                      * groups.
-> > +                      */
-> > +                     env->migration_type = migrate_task;
-> > +                     lsub_positive(&nr_diff, local->sum_h_nr_running);
-> > +                     env->imbalance = nr_diff >> 1;
-> > +                     return;
-> > +             }
->
-> I'm thinking the max_t(long, 0, ...); variant reads a lot simpler and
-> really _should_ work given that -fno-strict-overflow / -fwrapv mandates
-> 2s complement.
+Bart Van Assche <bvanassche@acm.org> writes:
 
-Another point that I have overlooked is that sum_h_nr_running is
-unsigned int whereas imbalance is long
+> On 10/8/19 9:35 AM, Gabriel Krisman Bertazi wrote:
+>> André Almeida <andrealmeid@collabora.com> writes:
+>>
+>>> diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+>>> index e0fce93ac127..8b745f229789 100644
+>>> --- a/include/linux/blk-mq.h
+>>> +++ b/include/linux/blk-mq.h
+>>> @@ -10,74 +10,153 @@ struct blk_mq_tags;
+>>>   struct blk_flush_queue;
+>>>     /**
+>>> - * struct blk_mq_hw_ctx - State for a hardware queue facing the hardware block device
+>>> + * struct blk_mq_hw_ctx - State for a hardware queue facing the hardware
+>>> + * block device
+>>>    */
+>>>   struct blk_mq_hw_ctx {
+>>>   	struct {
+>>> +		/** @lock: Lock for accessing dispatch queue */
+>>>   		spinlock_t		lock;
+>>> +		/**
+>>> +		 * @dispatch: Queue of dispatched requests, waiting for
+>>> +		 * workers to send them to the hardware.
+>>> +		 */
+>>
+>> It's been a few years since I looked at the block layer, but isn't
+>> this used to hold requests that were taken from the blk_mq_ctx,  but
+>> couldn't be dispatched because the queue was full?
+>
+> I don't think so. I think that you are looking for the requeue_list
+> member of struct request_queue.
+>
 
-In fact, (long) (unsigned long A - unsigned long B) >> 1 works correctly
-but
-(long) (unsigned int A - unsigned int B) >> 1 doesn't
+Hmm, sorry, but I'm confused.  I'm sure I'm missing something simple,
+since I haven't touched this in a while, so maybe you can quickly point
+me in the right direction?
+
+I see blk_mq_requeue_request() being used by device drivers to retry
+requests that failed, but if I read the code correctly, the flushed
+queue seems to be moved to hctx->dispatch when the device
+driver returned BLK_STS_RESOURCE or BLK_STS_DEV_RESOURCE to
+blk_mq_dispatch_rq_list(). I thought BLK_STS_RESOURCE was returned by
+the driver on .queue_rq() to signal there was no more resources on the
+hardware to service further requests.
+
+-- 
+Gabriel Krisman Bertazi
