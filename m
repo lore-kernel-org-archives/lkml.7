@@ -2,153 +2,172 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E6FC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF10C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B926C206B6
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 378482173B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:44:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="jp/vqwuD"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="ndycrZXm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730982AbfJHMnX (ORCPT
+        id S1730922AbfJHMoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 08:43:23 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:9640 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730371AbfJHMnW (ORCPT
+        Tue, 8 Oct 2019 08:44:38 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:39271 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730316AbfJHMoi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 08:43:22 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x98CefEN020734;
-        Tue, 8 Oct 2019 14:43:09 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=CYU1xh4x/15+0eiT1SpidubsI6JpkOmwy2DOuRIf9xs=;
- b=jp/vqwuDHm2N7FaOW7AyrwvRExI9ccdYVx9S5lKIOv957wQT7S14Gb2SHMQNmH7hAWuO
- 9IYvQdW2zYVaOtu0KERNG4ViqiPZ3LTEwnFVbdF4/qy1n4OUwmj3u7I9lULufQS6qW1N
- ONbYEJwX8jJ46nJC033d2Ur8pM4JIU8KV7OuNB+zi/gnLs1nz6RvDmjaBMBaLRDiAyMW
- tz4rJMJCEseuGRqfz7rK1zx0S5vXR7v09UFBB6RtiGMS8wESapKLJVe5I0aTbleH6oP7
- WFNNEnz0QWGQN47NQMzwsz/iVhzjDcUjPJrlK7beZg2dCBCM+0MyTrSDvGZkH8QsTBnT tA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2vegn0r90j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Oct 2019 14:43:08 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B1EB4100034;
-        Tue,  8 Oct 2019 14:43:06 +0200 (CEST)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8A61C2BC16D;
-        Tue,  8 Oct 2019 14:43:06 +0200 (CEST)
-Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 8 Oct 2019
- 14:43:06 +0200
-Received: from localhost (10.201.20.122) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 8 Oct 2019 14:43:06
- +0200
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <ville.syrjala@linux.intel.com>
-CC:     <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v2] drm: atomic helper: fix W=1 warnings
-Date:   Tue, 8 Oct 2019 14:42:54 +0200
-Message-ID: <20191008124254.2144-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
+        Tue, 8 Oct 2019 08:44:38 -0400
+Received: by mail-qk1-f194.google.com with SMTP id 4so16555102qki.6;
+        Tue, 08 Oct 2019 05:44:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qsTHL7dnG8pTfXN3LiTylz/fXdfLYFshNaGXKMPCVSA=;
+        b=ndycrZXm5sWbkE8ubUEk9cHyMk62s58AO9SvQliIZdhmcGyVW6JB7R2Wp5Do1V2PaJ
+         /hd6EOGnUQEJsWwJ8mHEXm9+21fl7spIUcZt6cR1YZ96BjWJc49O0fzW7e+7a8uQWMmR
+         mmMplhG2HZ7tYZ5LXMunI5Uukp1MZNqsrrBiw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qsTHL7dnG8pTfXN3LiTylz/fXdfLYFshNaGXKMPCVSA=;
+        b=HDVpAeKzrl0o30ruahzWKxCpJFY433/BQylhRUsQ7XfzhgDno01c8+d3hvw8IIZQEH
+         Gu/IcQ6eds17B+ni4q67lU2WKORHjB8UFJBRcQrc0Moi55XFtKHWg8L1DZr3mco/n/Nt
+         Py4ivGAS6f8a0BP/PocvYHW5n3Oi6mc/JrdLwXaDMD9JCYAZM5xrZQ6m7HN53fLAfgUR
+         Kek2bfOdd1DUnWtXwrmwcEE2sP03Jc8iXFyq2YtYLvnpmZEUVw3MVEzUI1ZIp4UuBiNJ
+         yOZwqeoaPz1gYY0V9vBmScoUFQ/n4zCq3H/Tr6Akwov3Z8a7GrQQJV5ZoKl8HwOvYKSz
+         gcfw==
+X-Gm-Message-State: APjAAAXZ3ktZvn6yUSpNaqnqqpcx9ujz7zAxOrrxUddgNEvV1XsQqHha
+        YnKJWtK5o/lsdFRxb8LoH06k0gkz9uv5iwSoWz4=
+X-Google-Smtp-Source: APXvYqxEAEDnOLwffSmG/Z2LwTVkYy576Ya72Q2Xui9eD1qyySpI9l4M3DUkH5opaUufU4sk4GAaGv+dFqEtKObKxJQ=
+X-Received: by 2002:a37:a44f:: with SMTP id n76mr7330825qke.414.1570538677073;
+ Tue, 08 Oct 2019 05:44:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.20.122]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-08_05:2019-10-08,2019-10-08 signatures=0
+References: <20191008115143.14149-1-andrew@aj.id.au> <20191008115143.14149-4-andrew@aj.id.au>
+In-Reply-To: <20191008115143.14149-4-andrew@aj.id.au>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Tue, 8 Oct 2019 12:44:25 +0000
+Message-ID: <CACPK8XfmtW9AY7QyBVkWJPvTQncV5o1DVkDwaPUa+ARVYZ4wJQ@mail.gmail.com>
+Subject: Re: [PATCH 3/3] net: ftgmac100: Ungate RCLK for RMII on ASPEED MACs
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     netdev@vger.kernel.org, "David S . Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Few for_each macro set variables that are never used later which led
-to generate unused-but-set-variable warnings.
-Add (void)(foo) inside the macros to remove these warnings
+On Tue, 8 Oct 2019 at 11:50, Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+> The 50MHz RCLK has to be enabled before the RMII interface will function.
+>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> ---
+>  drivers/net/ethernet/faraday/ftgmac100.c | 35 +++++++++++++++++++-----
+>  1 file changed, 28 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/faraday/ftgmac100.c b/drivers/net/ethernet/faraday/ftgmac100.c
+> index 9b7af94a40bb..9ff791fb0449 100644
+> --- a/drivers/net/ethernet/faraday/ftgmac100.c
+> +++ b/drivers/net/ethernet/faraday/ftgmac100.c
+> @@ -90,6 +90,9 @@ struct ftgmac100 {
+>         struct mii_bus *mii_bus;
+>         struct clk *clk;
+>
+> +       /* 2600 RMII clock gate */
+> +       struct clk *rclk;
+> +
+>         /* Link management */
+>         int cur_speed;
+>         int cur_duplex;
+> @@ -1718,12 +1721,14 @@ static void ftgmac100_ncsi_handler(struct ncsi_dev *nd)
+>                    nd->link_up ? "up" : "down");
+>  }
+>
+> -static void ftgmac100_setup_clk(struct ftgmac100 *priv)
+> +static int ftgmac100_setup_clk(struct ftgmac100 *priv)
+>  {
+> -       priv->clk = devm_clk_get(priv->dev, NULL);
+> -       if (IS_ERR(priv->clk))
+> -               return;
+> +       struct clk *clk;
+>
+> +       clk = devm_clk_get(priv->dev, NULL /* MACCLK */);
+> +       if (IS_ERR(clk))
+> +               return PTR_ERR(clk);
+> +       priv->clk = clk;
+>         clk_prepare_enable(priv->clk);
+>
+>         /* Aspeed specifies a 100MHz clock is required for up to
+> @@ -1732,6 +1737,14 @@ static void ftgmac100_setup_clk(struct ftgmac100 *priv)
+>          */
+>         clk_set_rate(priv->clk, priv->use_ncsi ? FTGMAC_25MHZ :
+>                         FTGMAC_100MHZ);
+> +
+> +       /* RCLK is for RMII, typically used for NCSI. Optional because its not
+> +        * necessary if it's the 2400 MAC or the MAC is configured for RGMII
+> +        */
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- include/drm/drm_atomic.h | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+Or for non-ASPEED users of this driver, assuming they exist.
 
-diff --git a/include/drm/drm_atomic.h b/include/drm/drm_atomic.h
-index 927e1205d7aa..b6c73fd9f55a 100644
---- a/include/drm/drm_atomic.h
-+++ b/include/drm/drm_atomic.h
-@@ -693,6 +693,7 @@ void drm_state_dump(struct drm_device *dev, struct drm_printer *p);
- 	     (__i)++)								\
- 		for_each_if ((__state)->connectors[__i].ptr &&			\
- 			     ((connector) = (__state)->connectors[__i].ptr,	\
-+			     (void)(connector) /* Only to avoid unused-but-set-variable warning */, \
- 			     (old_connector_state) = (__state)->connectors[__i].old_state,	\
- 			     (new_connector_state) = (__state)->connectors[__i].new_state, 1))
- 
-@@ -714,6 +715,7 @@ void drm_state_dump(struct drm_device *dev, struct drm_printer *p);
- 	     (__i)++)								\
- 		for_each_if ((__state)->connectors[__i].ptr &&			\
- 			     ((connector) = (__state)->connectors[__i].ptr,	\
-+			     (void)(connector) /* Only to avoid unused-but-set-variable warning */, \
- 			     (old_connector_state) = (__state)->connectors[__i].old_state, 1))
- 
- /**
-@@ -734,7 +736,9 @@ void drm_state_dump(struct drm_device *dev, struct drm_printer *p);
- 	     (__i)++)								\
- 		for_each_if ((__state)->connectors[__i].ptr &&			\
- 			     ((connector) = (__state)->connectors[__i].ptr,	\
--			     (new_connector_state) = (__state)->connectors[__i].new_state, 1))
-+			     (void)(connector) /* Only to avoid unused-but-set-variable warning */, \
-+			     (new_connector_state) = (__state)->connectors[__i].new_state, \
-+			     (void)(new_connector_state) /* Only to avoid unused-but-set-variable warning */, 1))
- 
- /**
-  * for_each_oldnew_crtc_in_state - iterate over all CRTCs in an atomic update
-@@ -754,7 +758,9 @@ void drm_state_dump(struct drm_device *dev, struct drm_printer *p);
- 	     (__i)++)							\
- 		for_each_if ((__state)->crtcs[__i].ptr &&		\
- 			     ((crtc) = (__state)->crtcs[__i].ptr,	\
-+			      (void)(crtc) /* Only to avoid unused-but-set-variable warning */, \
- 			     (old_crtc_state) = (__state)->crtcs[__i].old_state, \
-+			     (void)(old_crtc_state) /* Only to avoid unused-but-set-variable warning */, \
- 			     (new_crtc_state) = (__state)->crtcs[__i].new_state, 1))
- 
- /**
-@@ -793,7 +799,9 @@ void drm_state_dump(struct drm_device *dev, struct drm_printer *p);
- 	     (__i)++)							\
- 		for_each_if ((__state)->crtcs[__i].ptr &&		\
- 			     ((crtc) = (__state)->crtcs[__i].ptr,	\
--			     (new_crtc_state) = (__state)->crtcs[__i].new_state, 1))
-+			     (void)(crtc) /* Only to avoid unused-but-set-variable warning */, \
-+			     (new_crtc_state) = (__state)->crtcs[__i].new_state, \
-+			     (void)(new_crtc_state) /* Only to avoid unused-but-set-variable warning */, 1))
- 
- /**
-  * for_each_oldnew_plane_in_state - iterate over all planes in an atomic update
-@@ -813,6 +821,7 @@ void drm_state_dump(struct drm_device *dev, struct drm_printer *p);
- 	     (__i)++)							\
- 		for_each_if ((__state)->planes[__i].ptr &&		\
- 			     ((plane) = (__state)->planes[__i].ptr,	\
-+			      (void)(plane) /* Only to avoid unused-but-set-variable warning */, \
- 			      (old_plane_state) = (__state)->planes[__i].old_state,\
- 			      (new_plane_state) = (__state)->planes[__i].new_state, 1))
- 
-@@ -873,7 +882,9 @@ void drm_state_dump(struct drm_device *dev, struct drm_printer *p);
- 	     (__i)++)							\
- 		for_each_if ((__state)->planes[__i].ptr &&		\
- 			     ((plane) = (__state)->planes[__i].ptr,	\
--			      (new_plane_state) = (__state)->planes[__i].new_state, 1))
-+			      (void)(plane) /* Only to avoid unused-but-set-variable warning */, \
-+			      (new_plane_state) = (__state)->planes[__i].new_state, \
-+			      (void)(new_plane_state) /* Only to avoid unused-but-set-variable warning */, 1))
- 
- /**
-  * for_each_oldnew_private_obj_in_state - iterate over all private objects in an atomic update
--- 
-2.15.0
+Reviewed-by: Joel Stanley <joel@jms.id.au>
 
+
+> +       priv->rclk = devm_clk_get_optional(priv->dev, "RCLK");
+> +       clk_prepare_enable(priv->rclk);
+> +
+> +       return 0;
+>  }
+>
+>  static int ftgmac100_probe(struct platform_device *pdev)
+> @@ -1853,8 +1866,11 @@ static int ftgmac100_probe(struct platform_device *pdev)
+>                         goto err_setup_mdio;
+>         }
+>
+> -       if (priv->is_aspeed)
+> -               ftgmac100_setup_clk(priv);
+> +       if (priv->is_aspeed) {
+> +               err = ftgmac100_setup_clk(priv);
+> +               if (err)
+> +                       goto err_ncsi_dev;
+> +       }
+>
+>         /* Default ring sizes */
+>         priv->rx_q_entries = priv->new_rx_q_entries = DEF_RX_QUEUE_ENTRIES;
+> @@ -1886,8 +1902,11 @@ static int ftgmac100_probe(struct platform_device *pdev)
+>
+>         return 0;
+>
+> -err_ncsi_dev:
+>  err_register_netdev:
+> +       if (priv->rclk)
+> +               clk_disable_unprepare(priv->rclk);
+> +       clk_disable_unprepare(priv->clk);
+> +err_ncsi_dev:
+>         ftgmac100_destroy_mdio(netdev);
+>  err_setup_mdio:
+>         iounmap(priv->base);
+> @@ -1909,6 +1928,8 @@ static int ftgmac100_remove(struct platform_device *pdev)
+>
+>         unregister_netdev(netdev);
+>
+> +       if (priv->rclk)
+> +               clk_disable_unprepare(priv->rclk);
+>         clk_disable_unprepare(priv->clk);
+>
+>         /* There's a small chance the reset task will have been re-queued,
+> --
+> 2.20.1
+>
