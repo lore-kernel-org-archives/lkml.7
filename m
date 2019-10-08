@@ -2,138 +2,153 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD68ECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51352C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F3D221929
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:28:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570526886;
-	bh=o4JjrPE/C/7wBUmbzIV+mumH6nlKKYLQ31Y152eTPxM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=vrGHYWbFyaMn4CF0B0cHHSLwXspySFrkGBPbW6CEOZD/rjNVxpIqKzOSJAnsA/0Sh
-	 2wVRe0i0aFXkVbTaNmW/VySeEmAjdEQrNT813lEU0B9DwBmGuNgFoOQsKojNxCTqc+
-	 b9L1wBhQ0m9HlSHmXZhvXp3ODV8IerX+Omizy5zg=
+	by mail.kernel.org (Postfix) with ESMTP id 353C221871
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:28:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730093AbfJHJ2F (ORCPT
+        id S1730149AbfJHJ2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 05:28:05 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:41441 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729624AbfJHJ2F (ORCPT
+        Tue, 8 Oct 2019 05:28:19 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:52992 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729440AbfJHJ2T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 05:28:05 -0400
-Received: by mail-ot1-f66.google.com with SMTP id g13so13456005otp.8;
-        Tue, 08 Oct 2019 02:28:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QKKY+n0fqxvornYxomfHtDCFFUAFeT4prYVwRJVInPM=;
-        b=ckY+zNExIcUC5NBoOi2JKR9eIikARZcuG92gDxOfzx1zts/euVMNQnLPCRrMvePtP+
-         BmCK5G3edgMkC4rtHWGidd8P8AIMDxauNtNoEQz1VpcuGsH1FkxWzn/bi+tahuGrYRVU
-         HFN8t9qyoVdVm31Byif4xyjoNspGCdO+169HC6WNhkKDxjNO+IIl4SCrGzrKUYBOwzQq
-         T/k/KQzonObASrwnHnr9vdw8vw3RUl8EGxp74gW/eFrEIo8rFMHTelUd0uz0xHbpQJM3
-         /UT2s0mqzY4krZrk0NtgGP/LQ06PqsK/AbzC+foD0Z4rv/1qoeT+VTIGcZzoicb8nta9
-         KPSw==
-X-Gm-Message-State: APjAAAXCyXopY+au3ZExm7O6xW+PDMIZe6GGC9S/MogsQeiObdkeXm4d
-        RGUrxDOC/6eADp4hYXSl4xwFOtbIcZGEA++2O68=
-X-Google-Smtp-Source: APXvYqwQBIjj/f9VAfJwpHSCImUUYHgrpGtnMscXEcYAppVnL05e8hrF/hWaXl6pQAYZTJGneIWYEkNVNtdguXb8Mqg=
-X-Received: by 2002:a9d:664:: with SMTP id 91mr3454984otn.189.1570526882896;
- Tue, 08 Oct 2019 02:28:02 -0700 (PDT)
+        Tue, 8 Oct 2019 05:28:19 -0400
+Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
+  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="Ludovic.Desroches@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa2.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa2.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: pDzxr0OUpql/p028ANa/qShsuGwVQJ+VlFqqMdoAYI3NgErKPw/kU2uB+3PGIK3tUS8gy6VRkD
+ Weq23HT8B2olfafGZccCnOLgf69Q93nz5ojgpkiH50uFyUjnC5HGlvKic/xSR2O+wHsSPk/fDC
+ 9+le4PgmTTiJkCI8WO+YNI9TG2IGlRX0UhNfKjHdE2acXwLlEDUF6eP1GTxS5DTvOfvGSGGbWk
+ svbwmDuVNGlkJ8xw2NcOUxDu3jHDRPLlO7W3v/Kt+rP7NXSWmmBbs1KpFkj8fpT7gP8VYQGZpl
+ a5g=
+X-IronPort-AV: E=Sophos;i="5.67,270,1566889200"; 
+   d="scan'208";a="51904800"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 08 Oct 2019 02:28:18 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 8 Oct 2019 02:28:18 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex04.mchp-main.com
+ (10.10.85.152) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Tue, 8 Oct 2019 02:28:17 -0700
+Date:   Tue, 8 Oct 2019 11:28:27 +0200
+From:   Ludovic Desroches <ludovic.desroches@microchip.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <ulf.hansson@linaro.org>, <nicolas.ferre@microchip.com>,
+        <adrian.hunter@intel.com>, <linux-kernel@vger.kernel.org>,
+        <mark.rutland@arm.com>, <claudiu.beznea@microchip.com>
+Subject: Re: [PATCH 1/3] dt-bindings: sdhci-of-at91: new compatible string
+ and update properties
+Message-ID: <20191008092826.63kbia2wkggeab74@M43218.corp.atmel.com>
+Mail-Followup-To: Rob Herring <robh@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-mmc@vger.kernel.org, ulf.hansson@linaro.org,
+        nicolas.ferre@microchip.com, adrian.hunter@intel.com,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        claudiu.beznea@microchip.com
+References: <20190912200908.31318-1-ludovic.desroches@microchip.com>
+ <20190930145613.GA11254@bogus>
 MIME-Version: 1.0
-References: <1618955.HVa0YQSOW5@kreacher> <20191007223428.GA72605@google.com>
-In-Reply-To: <20191007223428.GA72605@google.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 8 Oct 2019 11:27:51 +0200
-Message-ID: <CAJZ5v0iL4Rv=AQ-Qnma=wWaqBBbOdfRqu9uS9Gesa-G75oQpzQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] PCI: PCIe: ASPM: Introduce pcie_aspm_enabled()
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Keith Busch <kbusch@kernel.org>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190930145613.GA11254@bogus>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 8, 2019 at 12:34 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> [+cc Heiner]
->
-> On Thu, Aug 08, 2019 at 11:55:07PM +0200, Rafael J. Wysocki wrote:
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > Add a function checking whether or not PCIe ASPM has been enabled for
-> > a given device.
-> >
-> > It will be used by the NVMe driver to decide how to handle the
-> > device during system suspend.
-> >
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Mon, Sep 30, 2019 at 09:56:13AM -0500, Rob Herring wrote:
+> On Thu, Sep 12, 2019 at 10:09:06PM +0200, Ludovic Desroches wrote:
+> > There is a new compatible string for the SAM9X60 sdhci device. It involves
+> > an update of the properties about the clocks stuff.
+> > 
+> > Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
 > > ---
-> >
-> > v2 -> v3:
-> >   * Make the new function return bool.
-> >   * Change its name back to pcie_aspm_enabled().
-> >   * Fix kerneldoc comment formatting.
-> >
-> > -> v2:
-> >   * Move the PCI/PCIe ASPM changes to a separate patch.
-> >   * Add the _mask suffix to the new function name.
-> >   * Add EXPORT_SYMBOL_GPL() to the new function.
-> >   * Avoid adding an unnecessary blank line.
-> >
-> > ---
-> >  drivers/pci/pcie/aspm.c |   20 ++++++++++++++++++++
-> >  include/linux/pci.h     |    3 +++
-> >  2 files changed, 23 insertions(+)
-> >
-> > Index: linux-pm/drivers/pci/pcie/aspm.c
-> > ===================================================================
-> > --- linux-pm.orig/drivers/pci/pcie/aspm.c
-> > +++ linux-pm/drivers/pci/pcie/aspm.c
-> > @@ -1170,6 +1170,26 @@ static int pcie_aspm_get_policy(char *bu
-> >  module_param_call(policy, pcie_aspm_set_policy, pcie_aspm_get_policy,
-> >       NULL, 0644);
-> >
-> > +/**
-> > + * pcie_aspm_enabled - Check if PCIe ASPM has been enabled for a device.
-> > + * @pci_device: Target device.
-> > + */
-> > +bool pcie_aspm_enabled(struct pci_dev *pci_device)
-> > +{
-> > +     struct pci_dev *bridge = pci_upstream_bridge(pci_device);
-> > +     bool ret;
+> >  .../devicetree/bindings/mmc/sdhci-atmel.txt   | 25 ++++++++++++++++---
+> >  1 file changed, 22 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mmc/sdhci-atmel.txt b/Documentation/devicetree/bindings/mmc/sdhci-atmel.txt
+> > index 1b662d7171a0..364ceea330b6 100644
+> > --- a/Documentation/devicetree/bindings/mmc/sdhci-atmel.txt
+> > +++ b/Documentation/devicetree/bindings/mmc/sdhci-atmel.txt
+> > @@ -5,12 +5,19 @@ Documentation/devicetree/bindings/mmc/mmc.txt and the properties used by the
+> >  sdhci-of-at91 driver.
+> >  
+> >  Required properties:
+> > -- compatible:		Must be "atmel,sama5d2-sdhci".
+> > +- compatible:		Must be "atmel,sama5d2-sdhci" or "microchip,sam9x60-sdhci".
+> >  - clocks:		Phandlers to the clocks.
+> > -- clock-names:		Must be "hclock", "multclk", "baseclk";
+> > +- clock-names:		Must be "hclock", "multclk", "baseclk" for
+> > +			"atmel,sama5d2-sdhci".
+> > +			Must be "hclock", "multclk" for "microchip,sam9x60-sdhci".
+> >  
+> > +Optional properties:
+> > +- assigned-clocks:	The same with "multclk".
+> > +- assigned-clock-rates	The rate of "multclk" in order to not rely on the
+> > +			gck configuration set by previous components.
+> >  
+> > -Example:
 > > +
-> > +     if (!bridge)
-> > +             return false;
+> > +Examples:
+> >  
+> >  sdmmc0: sdio-host@a0000000 {
+> >  	compatible = "atmel,sama5d2-sdhci";
+> > @@ -18,4 +25,16 @@ sdmmc0: sdio-host@a0000000 {
+> >  	interrupts = <31 IRQ_TYPE_LEVEL_HIGH 0>;
+> >  	clocks = <&sdmmc0_hclk>, <&sdmmc0_gclk>, <&main>;
+> >  	clock-names = "hclock", "multclk", "baseclk";
+> > +	assigned-clocks = <&sdmmc0_gclk>;
+> > +	assigned-clock-rates = <480000000>;
+> > +};
 > > +
-> > +     mutex_lock(&aspm_lock);
-> > +     ret = bridge->link_state ? !!bridge->link_state->aspm_enabled : false;
-> > +     mutex_unlock(&aspm_lock);
->
-> Why do we need to acquire aspm_lock here?  We aren't modifying
-> anything, and I don't think we're preventing a race.  If this races
-> with another thread that changes aspm_enabled, we'll return either the
-> old state or the new one, and I think that's still the case even if we
-> don't acquire aspm_lock.
+> > +sdmmc0: sdio-host@80000000 {
+> 
+> mmc@...
+> 
+> Though I don't see much value in a second example. Examples are not a 
+> complete enumeration of all possible dts entries.
+> 
 
-Well, if we can guarantee that pci_remove_bus_device() will never be
-called in parallel with this helper, then I agree, but can we
-guarantee that?
+Ok, I'll skip this example.
+
+Ludovic
+
+> > +	compatible = "microchip,sam9x60-sdhci";
+> > +	reg = <0x80000000 0x300>;
+> > +	interrupts = <12 IRQ_TYPE_LEVEL_HIGH 0>;
+> > +	clocks = <&pmc PMC_TYPE_PERIPHERAL 12>, <&pmc PMC_TYPE_GCK 12>;
+> > +	clock-names = "hclock", "multclk";
+> > +	assigned-clocks = <&pmc PMC_TYPE_GCK 12>;
+> > +	assigned-clock-rates = <100000000>;
+> >  };
+> > -- 
+> > 2.23.0
+> > 
