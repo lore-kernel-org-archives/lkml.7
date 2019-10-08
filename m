@@ -2,129 +2,102 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 568B5C35280
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A25C35280
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DE492070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:53:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nF6ztrce"
+	by mail.kernel.org (Postfix) with ESMTP id 332D62070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:54:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725966AbfJHQx5 (ORCPT
+        id S1729589AbfJHQyG convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 12:53:57 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:39080 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727876AbfJHQx5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 12:53:57 -0400
-Received: by mail-io1-f66.google.com with SMTP id a1so38042599ioc.6
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 09:53:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fme5fFYUj0wdKTaXtPchzRO/hZyN3IQGJxfMnt1qVJI=;
-        b=nF6ztrceJdjl9xNuXNv5mwqCWU5zJiJnq0FWCZzdURWJFCyF8lq29UW/vjWY6vTYma
-         A2vyFCS8QnTpZRdKfqpcLtymIzPuly4yfU+HNeOcaOe8C0t7yiMkXCpg2oYL6hJvEsee
-         Up6y0FoUSqnDLGgBNM9DYqZNWygDKvbsDednwj+Rj3AVL0cd8Y1O1AwblvHbnErAyM1s
-         Oq0JalZDIlpzXA79i8F9OCTZDMF/7uK8H/ZB1T0tKbINfE1H1l9gPgxcdjjjRcVQZPUw
-         RGUnyj/xgKxNMmLsrq5wWKfa0asvyNQqKOi+g7hq2lwcgkhXkMCPWXJ4T/K8unUXl+j+
-         FosQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fme5fFYUj0wdKTaXtPchzRO/hZyN3IQGJxfMnt1qVJI=;
-        b=Wauk1bLNrrXddSuqEEYDe4BHsP0INLWYkPjGe/L+FEiS+ppY7ynlFvKSeVjecKTiJb
-         pUx5P7gCoyT+3D6JgBSt+2x+x8JNZ0EWDeNyuFlOoU3ieTslTIUdOxoVjLVt9ana4+/T
-         gautdKpKR5USU3WLI8RKr1MaSoEyd1KTpQnkd48vkm8gM9FQhwJLJJUpmO18XiOMUA7L
-         nZJ7P4/NxzS/JaF7uH19Kc9SA2TValC/6F9XJ/YQRgAP26VpCtgj78KalbOja7Mk4Apm
-         ugC2A04dK0HfHqxLJYdUL9nlGOjTiM1o5VwUBgocEcIE2rRS7r0x2aTWOigA8pdyImRI
-         irKA==
-X-Gm-Message-State: APjAAAWM6NzjcHp9UQYPNwocdTjWFhSVGYTAMRh88Kdp5IWmIulCX1eO
-        MF5kSd+U8IofBpHjugNMGjxjbkQykFiCEi1nbyFPcw==
-X-Google-Smtp-Source: APXvYqwDWGOf+yElISRWjmDcwEri92PuzaR9Mbp5SH1x+dezCLs5TRcNt3I5EnwbB6Klb9T5kpEFj0FvbeItRICFmbk=
-X-Received: by 2002:a6b:1606:: with SMTP id 6mr32477437iow.108.1570553635857;
- Tue, 08 Oct 2019 09:53:55 -0700 (PDT)
+        Tue, 8 Oct 2019 12:54:06 -0400
+Received: from mga14.intel.com ([192.55.52.115]:16411 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727730AbfJHQyG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 12:54:06 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 09:54:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,270,1566889200"; 
+   d="scan'208";a="394735224"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by fmsmga006.fm.intel.com with ESMTP; 08 Oct 2019 09:54:05 -0700
+Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 8 Oct 2019 09:54:05 -0700
+Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 8 Oct 2019 09:54:05 -0700
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81]) by
+ fmsmsx601.amr.corp.intel.com ([10.18.126.81]) with mapi id 15.01.1713.004;
+ Tue, 8 Oct 2019 09:54:05 -0700
+From:   "Bowers, AndrewX" <andrewx.bowers@intel.com>
+To:     "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [Intel-wired-lan] [PATCH 1/1] ixgbe: protect TX timestamping from
+ API misuse
+Thread-Topic: [Intel-wired-lan] [PATCH 1/1] ixgbe: protect TX timestamping
+ from API misuse
+Thread-Index: AQHVfTO/dlmnz+fADEeNMRhKGINk9qdQ93Jw
+Date:   Tue, 8 Oct 2019 16:54:04 +0000
+Message-ID: <a53362a9afee4995919c117016209701@intel.com>
+References: <1570288803-14880-1-git-send-email-manjunath.b.patil@oracle.com>
+In-Reply-To: <1570288803-14880-1-git-send-email-manjunath.b.patil@oracle.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiODY3Mjk4YWUtYTgzNy00ZTYwLWJlMGItOWRjYzRhM2RhYzQ3IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiWUdEblVmbnM1b1NLVlYwVDlzN3B4NjJkMGlscFEzR3Rja3NpZVJERWh5M21wSWdkUEVHM2V0UFBPZFVzMDlXdiJ9
+dlp-reaction: no-action
+dlp-version: 11.0.400.15
+x-originating-ip: [10.22.254.132]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20191004215615.5479-1-sean.j.christopherson@intel.com>
- <20191004215615.5479-12-sean.j.christopherson@intel.com> <55f45459-47bf-df37-a12b-17c4c5c6c19a@redhat.com>
- <20191007195638.GG18016@linux.intel.com> <bd2cffea-6427-b3cc-7098-a881e3d4522d@redhat.com>
-In-Reply-To: <bd2cffea-6427-b3cc-7098-a881e3d4522d@redhat.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Tue, 8 Oct 2019 09:53:44 -0700
-Message-ID: <CALMp9eSM=rq+jEEzPwWNHNxv03F1s2Dysa7euWJ==PaE=b1sMw@mail.gmail.com>
-Subject: Re: [PATCH 11/16] x86/cpu: Print VMX features as separate line item
- in /proc/cpuinfo
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>, linux-edac@vger.kernel.org,
-        Borislav Petkov <bp@suse.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 11:57 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 07/10/19 21:56, Sean Christopherson wrote:
-> > On Mon, Oct 07, 2019 at 07:12:37PM +0200, Paolo Bonzini wrote:
-> >> On 04/10/19 23:56, Sean Christopherson wrote:
-> >>> diff --git a/arch/x86/kernel/cpu/proc.c b/arch/x86/kernel/cpu/proc.c
-> >>> index cb2e49810d68..4eec8889b0ff 100644
-> >>> --- a/arch/x86/kernel/cpu/proc.c
-> >>> +++ b/arch/x86/kernel/cpu/proc.c
-> >>> @@ -7,6 +7,10 @@
-> >>>
-> >>>  #include "cpu.h"
-> >>>
-> >>> +#ifdef CONFIG_X86_VMX_FEATURE_NAMES
-> >>> +extern const char * const x86_vmx_flags[NVMXINTS*32];
-> >>> +#endif
-> >>> +
-> >>>  /*
-> >>>   * Get CPU information for use by the procfs.
-> >>>   */
-> >>> @@ -102,6 +106,17 @@ static int show_cpuinfo(struct seq_file *m, void *v)
-> >>>             if (cpu_has(c, i) && x86_cap_flags[i] != NULL)
-> >>>                     seq_printf(m, " %s", x86_cap_flags[i]);
-> >>
-> >> I'm afraid this is going to break some scripts in the wild.  I would
-> >> simply remove the seq_puts below.
-> >
-> > Can you elaborate?  I'm having trouble connecting the dots...
->
-> Somebody is bound to have scripts doing "grep ^flags.*ept /proc/cpuinfo"
-> or checking for VMX flags under some kind of "if (/^flags/)", so it's
-> safer not to separate VMX and non-VMX flags.
+> -----Original Message-----
+> From: Intel-wired-lan [mailto:intel-wired-lan-bounces@osuosl.org] On
+> Behalf Of Manjunath Patil
+> Sent: Saturday, October 5, 2019 8:20 AM
+> To: Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>; davem@davemloft.net;
+> intel-wired-lan@lists.osuosl.org; netdev@vger.kernel.org; linux-
+> kernel@vger.kernel.org
+> Cc: manjunath.b.patil@oracle.com; christophe.jaillet@wanadoo.fr;
+> cspradlin@google.com
+> Subject: [Intel-wired-lan] [PATCH 1/1] ixgbe: protect TX timestamping from
+> API misuse
+> 
+> HW timestamping can only be requested for a packet if the NIC is first setup
+> via ioctl(SIOCSHWTSTAMP). If this step was skipped, then the ixgbe driver
+> still allowed TX packets to request HW timestamping. In this situation, we see
+> 'clearing Tx Timestamp hang' noise in the log.
+> 
+> Fix this by checking that the NIC is configured for HW TX timestamping before
+> accepting a HW TX timestamping request.
+> 
+> similar-to:
+> 	(26bd4e2 igb: protect TX timestamping from API misuse)
+> 	(0a6f2f0 igb: Fix a test with HWTSTAMP_TX_ON)
+> 
+> Signed-off-by: Manjunath Patil <manjunath.b.patil@oracle.com>
+> ---
+>  drivers/net/ethernet/intel/ixgbe/ixgbe_main.c |    3 ++-
+>  1 files changed, 2 insertions(+), 1 deletions(-)
 
-Yep. Not quite that exact syntax, but we do have, e.g.:
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
 
-./x86/feature_check.sh ept
 
-...and you can imagine what feature_check.sh does.
