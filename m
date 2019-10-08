@@ -2,77 +2,104 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F05EC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCEFC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE488206B6
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:38:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74ED520815
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:38:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570538286;
-	bh=Z0BM+J1jAE5H0wQdt5a1vbyjRdwVrmzryIUyKBCtl3Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SxE7i6al0CV/V7+ShyI/BvgVGj8CFtOCXSawuJ7461VfNp5E0o7EPRSl9wnARBG2c
-	 UMp7v1Vfi/z53hjYBSXfY6jPYuCX9b++guxFmU/LhUxBG/tVtucBYPWoK3Csj8T2I2
-	 UNXMPfYTnX+4o8vG1AyQb0j3IEuG8sxgRMqq5/Qo=
+	s=default; t=1570538309;
+	bh=0172FbZMwE+uHkpHQaDTjmrpy7r6UVMZViKRxp2jAkE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=zS2GhgPh9KCNKVeIdstMKgXvtS9DoWPHj44hYgsBUDovvX+qjqWN8zXlT3XV/KPEj
+	 gKyH0e/nZTcpp69sY5r8/FUjDzMu1crlDR1an1eHU9WkmJ6Jl6z4rMuuuJxMq2tQ9Y
+	 tHmhtW84lcCArj+ZgkwDLz9igRyYDmPwbsejJImQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730992AbfJHMiF (ORCPT
+        id S1731003AbfJHMi2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 08:38:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36920 "EHLO mail.kernel.org"
+        Tue, 8 Oct 2019 08:38:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730332AbfJHMiF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 08:38:05 -0400
-Received: from localhost (unknown [89.205.136.155])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730705AbfJHMi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 08:38:28 -0400
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBC79206B6;
-        Tue,  8 Oct 2019 12:38:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27E3F20815;
+        Tue,  8 Oct 2019 12:38:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570538284;
-        bh=Z0BM+J1jAE5H0wQdt5a1vbyjRdwVrmzryIUyKBCtl3Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gMmYkIDQkXBAhT88J0DPoQhQa4/8/x1OJpjv/bSYL3sGwlo8OzAsWSGRts5rkxYH/
-         JRm5cZPceseeNf7sgVx8jaBQCA47z9UOwFoKutVPZvJc67E/z9Jzn1fcggH3XR+tSi
-         Mywm3N5DGPb+UWbdbivk2qoxN44CAZlSC8z7ejPQ=
-Date:   Tue, 8 Oct 2019 14:38:01 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     hariprasad@osuosl.org, Kelam@osuosl.org, hariprasad.kelam@gmail.com
-Cc:     devel@driverdev.osuosl.org,
-        Payal Kshirsagar <payal.s.kshirsagar.98@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Hardik Singh Rathore <hardiksingh.k@gmail.com>,
-        Nishka Dasgupta <nishkadg.linux@gmail.com>
-Subject: Re: [PATCH] rtl8723bs: core: Remove code valid only for 5GHZ
-Message-ID: <20191008123801.GB2763989@kroah.com>
-References: <1569765348-20417-1-git-send-email-hariprasad.kelam@gmail.com>
+        s=default; t=1570538307;
+        bh=0172FbZMwE+uHkpHQaDTjmrpy7r6UVMZViKRxp2jAkE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Fj0cjOYfJqhfG7IwXrmsg43ZvERQ73aD0HiD62uK8K0QAnuFy4VbETrnvYSymrBqN
+         xM7+aR53XRnXLF/IMVEBQZral9XGk3sgp1dp0oYVgvM71fmByrgK0ow2kcUo6seEJK
+         WtzTvf6j2ztu57+zCR9T41ITyxFFnOHtYtMF77Dg=
+Received: by mail-qt1-f178.google.com with SMTP id 3so25036855qta.1;
+        Tue, 08 Oct 2019 05:38:27 -0700 (PDT)
+X-Gm-Message-State: APjAAAWy7yPA/NtOvpSA6JR3NprGx8Az19d2KJ7yNuGjuPzyDXqjvnis
+        K4kBX5jtWvt8+jEEf+4j0OI9GPFAKm8BTMhU1w==
+X-Google-Smtp-Source: APXvYqzxC6rl6FMV1ScqL2fgXOVZv3hYhSzySpUPq3nsKaUzT0TVTrLa+50ZC/gUauiPJFRY9Nd2MNSIBGFt1IYYeV8=
+X-Received: by 2002:ac8:6982:: with SMTP id o2mr35571093qtq.143.1570538306332;
+ Tue, 08 Oct 2019 05:38:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1569765348-20417-1-git-send-email-hariprasad.kelam@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191004151414.8458-1-krzk@kernel.org>
+In-Reply-To: <20191004151414.8458-1-krzk@kernel.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 8 Oct 2019 07:38:14 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJDTcHu5oXG6zszGHCBhTE6EW94AANUjyMV78SkKcn5yA@mail.gmail.com>
+Message-ID: <CAL_JsqJDTcHu5oXG6zszGHCBhTE6EW94AANUjyMV78SkKcn5yA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: arm: samsung: Force clkoutN names to be
+ unique in PMU
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Lee Jones <lee.jones@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Maciej Falkowski <m.falkowski@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 29, 2019 at 07:24:57PM +0530, hariprasad@osuosl.org wrote:
-> From: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-> 
-> As per TODO ,remove code valid only for 5 GHz(channel > 14).
-> 
-> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+On Fri, Oct 4, 2019 at 10:14 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> The clkoutN names of clocks must be unique because they represent
+> unique inputs of clock multiplexer.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
->  drivers/staging/rtl8723bs/core/rtw_ieee80211.c | 19 ++++++-------------
->  1 file changed, 6 insertions(+), 13 deletions(-)
+>  Documentation/devicetree/bindings/arm/samsung/pmu.yaml | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.yaml b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
+> index 73b56fc5bf58..d8e03716f5d2 100644
+> --- a/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
+> +++ b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
+> @@ -53,8 +53,10 @@ properties:
+>        List of clock names for particular CLKOUT mux inputs
+>      minItems: 1
+>      maxItems: 32
+> -    items:
+> -      pattern: '^clkout([0-9]|[12][0-9]|3[0-1])$'
+> +    allOf:
+> +      - items:
+> +          pattern: '^clkout([0-9]|[12][0-9]|3[0-1])$'
+> +      - uniqueItems: true
 
-Your email client is really messed up and got the From: line wrong in
-your tool.  Please fix up and resend.
+You shouldn't need the 'allOf', just add uniqueItems at the same level as items.
 
-thanks,
-
-greg k-h
+Rob
