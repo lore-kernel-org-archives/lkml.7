@@ -2,109 +2,120 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C226C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E301AECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44DFF21835
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCA702173B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:23:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y8G5bARZ"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Lu5t9332"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731093AbfJHNVK (ORCPT
+        id S1730799AbfJHNX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 09:21:10 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46097 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730316AbfJHNVH (ORCPT
+        Tue, 8 Oct 2019 09:23:56 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:39731 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730249AbfJHNXz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 09:21:07 -0400
-Received: by mail-wr1-f68.google.com with SMTP id o18so19346653wrv.13
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 06:21:05 -0700 (PDT)
+        Tue, 8 Oct 2019 09:23:55 -0400
+Received: by mail-qt1-f193.google.com with SMTP id n7so25241501qtb.6
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 06:23:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=4kY29G0Vv0LUgp77TY4nev0SFuE29dpeYRm9kekwuAs=;
-        b=y8G5bARZUMAphF+R/07LfBMyRQOM3WLFLZtB1WmAPqNPLZIXJUU3T+n8svaRVbVXXu
-         fSX0iRlglv3HdI9U7Q0BG/VcvMgxpjLBtlcMUoDlKX06EOjfoI1Yy8KUHuOqyo2WjWP3
-         1BlNGvTlBgy1WaIf/OMofwgZxax85EDM4giKt1zHyXq8VvaKWpNU8TCcjlngahA/3rTG
-         S6474/ShvWl1Qkw5H2YS++NelF3P9nlTN39EfmLrVTqDDDQvTHEXoXxFWPU8oc323mrS
-         0rCULt0aSfd+5qQPPs2jb+P37REdOfPhBv4VM663cw+IxpEopgie9YBNUsxqMIiyf766
-         b4ww==
+        bh=7Q4s6NaffGbR5MTwYJR6kw9AA12T9aVl8HZYwAcmo7U=;
+        b=Lu5t9332sw3rkpQ77idM5uwOZSTizPp/2c2Rp1i2nsuuZRt+0OoReF8QYw4QrIkH9j
+         MocrxC3BarR1EMhUfZbA1OmqvVpDV5ilFiIj3vaOwLWimihWr6R/umtjBG89Ky+w6Uth
+         mncmokFAaWDQMdXs6dq9yzQUE/EXTPE55IfIBVFlvVxHV1xgKArsQxxcgAbLKrlJIhQN
+         sxK5OsyOFD9hOeNp3NEq7TnK9DcREo7ruUau94/ECzT0gFxJr71oAxt1GUXnqImp5QVB
+         /bmtw95UKHmFKWZpK6dgTvbYS+S6yn/kidr6teEzqqTgZSTN/0byuo6uH2havtCNoCML
+         iwig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=4kY29G0Vv0LUgp77TY4nev0SFuE29dpeYRm9kekwuAs=;
-        b=k2COjrby/2sNtTcjkYysDBr4XjOz6GccBwoufYunQM24AR4HUOPruZlgDvq8AAJ+L/
-         obpI1QpJJ1VFKE5zA+PKxAg3SwfqN1A7Pk2yR1UKn/2RFUbnXi5hO7zxCmIOqoHln5Qt
-         o/+DoNB/5F0wYfMBZ5qpIevFu747O4wokOjDkNTgApsR5b8VQG6iJZ/YkZPeVttXql5+
-         QU+XnjTolgZbkZ52kncmRrOJIn5ux/26yS6WUn/RkR6py2rq5VJJl2TU0oV3VlZEMbEQ
-         aTVVHr4yUj+RJmN2P2PbuHInb4fbYGqUp1rfa1SYztsLnys39hGXQV1uoxh4S/L6GD3K
-         r+BA==
-X-Gm-Message-State: APjAAAUqDwL6bZzoQ6OFNtr04R3wHqJz0LlY/kqj0mhoASwjHgUP2YAH
-        LEPxIvh+CZvfezlkEGAgtIKbcw==
-X-Google-Smtp-Source: APXvYqxNmkd7+lu3m5HT68bq8+K8jXZJIhwyxO8fds7XHqED0zcAr0wrmRONAo9NJoIqfRGy4qAdMA==
-X-Received: by 2002:adf:f684:: with SMTP id v4mr24398220wrp.155.1570540865110;
-        Tue, 08 Oct 2019 06:21:05 -0700 (PDT)
-Received: from wychelm.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id t8sm18237214wrx.76.2019.10.08.06.21.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2019 06:21:04 -0700 (PDT)
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Jason Wessel <jason.wessel@windriver.com>,
-        Douglas Anderson <dianders@chromium.org>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        patches@linaro.org
-Subject: [PATCH v2 5/5] kdb: Tweak escape handling for vi users
-Date:   Tue,  8 Oct 2019 14:20:43 +0100
-Message-Id: <20191008132043.7966-6-daniel.thompson@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191008132043.7966-1-daniel.thompson@linaro.org>
-References: <20191008132043.7966-1-daniel.thompson@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        bh=7Q4s6NaffGbR5MTwYJR6kw9AA12T9aVl8HZYwAcmo7U=;
+        b=XM1iuTCP1scef5EgAcntiFQpEHq4pyV2V5Gnet9gC6wH13J6nKxH9mNc4YqF4jgTF8
+         UeB/2kqUpj2TsIjf9ZrjxZNUvXacvp6wpT4sq+6qPhduWQIhWs5Oj0gbjonZtg6QEzdk
+         mbF28yakdyHu0Lzkwn+uHueD5meMjt/S5Q1QMwsgWns/CVbkHXQ7FJ/dmMhYiXClbqc9
+         eIE0NchvyqGMDfyM4AXhDyY9a0ObwqkeG+A5HCno0uOze74KaB5vDhBu2dRX5VeD3u/O
+         w+chAQhc1VdBxNTV+W6ciP5p6cUrnyK8cftkXKOy4SJ7ztaW+csFo1MoPzM78LmD057B
+         QM6Q==
+X-Gm-Message-State: APjAAAVStI1BdtYc+1AafdM8kv+nznXH+JthursmfQX5E9oK7tUPxCGX
+        iA4k4T3IAVPthPV22c5E/KvKlw==
+X-Google-Smtp-Source: APXvYqyqj9bfnctaJsILCG/S8S9eIkRiOJXvoK9od3JlzBHgJYL8rQe3cIU9ce69hQodM7iUFmpHJw==
+X-Received: by 2002:ac8:4594:: with SMTP id l20mr35506879qtn.286.1570541034449;
+        Tue, 08 Oct 2019 06:23:54 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id e7sm9048646qtb.94.2019.10.08.06.23.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 08 Oct 2019 06:23:53 -0700 (PDT)
+Message-ID: <1570541032.5576.297.camel@lca.pw>
+Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
+From:   Qian Cai <cai@lca.pw>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Petr Mladek <pmladek@suse.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        sergey.senozhatsky.work@gmail.com, peterz@infradead.org,
+        linux-mm@kvack.org, john.ogness@linutronix.de,
+        akpm@linux-foundation.org, david@redhat.com,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 08 Oct 2019 09:23:52 -0400
+In-Reply-To: <20191008091349.6195830d@gandalf.local.home>
+References: <1570228005-24979-1-git-send-email-cai@lca.pw>
+         <20191007143002.l37bt2lzqtnqjqxu@pathway.suse.cz>
+         <1570460350.5576.290.camel@lca.pw> <20191007151237.GP2381@dhcp22.suse.cz>
+         <1570462407.5576.292.camel@lca.pw>
+         <20191008081510.ptwmb7zflqiup5py@pathway.suse.cz>
+         <20191008091349.6195830d@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently if sequences such as "\ehelp\r" are delivered to the console then
-the h gets eaten by the escape handling code. Since pressing escape
-becomes something of a nervous twitch for vi users (and that escape doesn't
-have much effect at a shell prompt) it is more helpful to emit the 'h' than
-the '\e'.
+On Tue, 2019-10-08 at 09:13 -0400, Steven Rostedt wrote:
+> On Tue, 8 Oct 2019 10:15:10 +0200
+> Petr Mladek <pmladek@suse.com> wrote:
+> 
+> > There are basically three possibilities:
+> > 
+> > 1. Do crazy exercises with locks all around the kernel to
+> >    avoid the deadlocks. It is usually not worth it. And
+> >    it is a "whack a mole" approach.
+> > 
+> > 2. Use printk_deferred() in problematic code paths. It is
+> >    a "whack a mole" approach as well. And we would end up
+> >    with printk_deferred() used almost everywhere.
+> > 
+> > 3. Always deffer the console handling in printk(). This would
+> >    help also to avoid soft lockups. Several people pushed
+> >    against this last few years because it might reduce
+> >    the chance to see the message in case of system crash.
+> > 
+> > As I said, there has finally been agreement to always do
+> > the offload few weeks ago. John Ogness is working on it.
+> > So we might have the systematic solution for these deadlocks
+> > rather sooner than later.
+> 
+> Another solution is to add the printk_deferred() in these places that
+> cause lockdep splats, and when John's work is done, it would be easy to
+> grep for them and remove them as they would no longer be needed.
+> 
+> This way we don't play whack-a-mole forever (only until we have a
+> proper solution) and everyone is happy that we no longer have these
+> false positive or I-don't-care lockdep splats which hide real lockdep
+> splats because lockdep shuts off as soon as it discovers its first
+> splat.
 
-We don't simply choose to emit the final character for all escape sequences
-since that will do odd things for unsupported escape sequences (in
-other words we retain the existing behaviour once we see '\e[').
-
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
----
- kernel/debug/kdb/kdb_io.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
-index 288dd1babf90..b3fb88b1ee34 100644
---- a/kernel/debug/kdb/kdb_io.c
-+++ b/kernel/debug/kdb/kdb_io.c
-@@ -158,8 +158,8 @@ static int kdb_getchar(void)
- 
- 		*pbuf++ = key;
- 		key = kdb_read_handle_escape(buf, pbuf - buf);
--		if (key < 0) /* no escape sequence; return first character */
--			return buf[0];
-+		if (key < 0) /* no escape sequence; return best character */
-+			return buf[pbuf - buf != 2 ? 0 : 1];
- 		if (key > 0)
- 			return key;
- 	}
--- 
-2.21.0
-
+I feel like that is what I trying to do, but there seems a lot of resistances
+with that approach where pragmatism met with perfectionism.
