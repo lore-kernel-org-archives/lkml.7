@@ -2,129 +2,96 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A19C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 03:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC5F3C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 03:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E913206B6
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 03:46:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="caK2KVt/"
+	by mail.kernel.org (Postfix) with ESMTP id 9D315206B6
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 03:54:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729955AbfJHDqn (ORCPT
+        id S1729949AbfJHDyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 23:46:43 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34542 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729927AbfJHDqn (ORCPT
+        Mon, 7 Oct 2019 23:54:04 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:44235 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729772AbfJHDyD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 23:46:43 -0400
-Received: by mail-pf1-f196.google.com with SMTP id b128so10018317pfa.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 20:46:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qFl2JG96ct4qaQdNKzWCXwE4r0sb40nsc6Szq0amLLM=;
-        b=caK2KVt/69FIetO/j+F/mQvB1T1lmIkD4M/Ym3pzovmMBDwSyGKyFWJgv0NbF28UBD
-         fjOEKcKBuqESKXMKm5WPWzttX89uf3jwRekaqAlpN5UOGJqsu+9hjEjmr6fzj2r2UVFy
-         0URF798o3LPYju7YYzyGV3xlkl3XWOTNHF1tfUNP8JjRiD344Tdpi4IuTDDPYqlMR3CV
-         hsP3qnje76JOL/7K484k2kPmPOpfNHkE8OdRxnlb6QdpZqsw2TtlzOAp0NYtJsNte1G0
-         yLfERjeFXHqRzqcQtpgCIN3tR09DD8OWw/ro89CYo2Frnd6PswVGQ9/JZw3KVFc2gXfY
-         zAgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qFl2JG96ct4qaQdNKzWCXwE4r0sb40nsc6Szq0amLLM=;
-        b=ozmM8K9nlWrqDOaos95b4XpCo6un0wngVkBnenR25qWt+uoXZ06I/wBG9v1ytmJGuZ
-         h8EAGj5Tr6lDU0na+0STUvOFl6JzUeESkbiBjTtB0T6lKs7gDkqoX9PpGXzKvBZPqAib
-         reJ91vtMKWPDJUjP/P23f/e3LtpJWiwedctyIMX1G8qHYIx6CvVQeKrdLQCYj/3Ev64z
-         VXPtQ68SBXHENPOouV9tRm9hMzxtiql618prCV3/a3QAZ0VbQiaRz6SVvdQqLbroVP6G
-         0bCAfEOlGYbG+Pj42UmFPaEXtGTP+WxNilZhLcME7C1+ivWq8CWOLZoy80iPaVsRXDCU
-         dAbA==
-X-Gm-Message-State: APjAAAWhFOD9XIxu3Wuk3/elDrjnajlQXgsYLJnzzOCmca9qoypNYBTu
-        dEt8ZSSveRtsZnrG4CxgWC0Ehw==
-X-Google-Smtp-Source: APXvYqz3+mfqHvMdhEbzTG1UT8a/Xp17PYp3x6VIfOSFrMyUdGVDRaOyTkraf7LX98u/PBz7QlCBKg==
-X-Received: by 2002:a63:1401:: with SMTP id u1mr1888823pgl.73.1570506400944;
-        Mon, 07 Oct 2019 20:46:40 -0700 (PDT)
-Received: from localhost.localdomain (123-204-46-122.static.seed.net.tw. [123.204.46.122])
-        by smtp.gmail.com with ESMTPSA id r24sm15671364pfh.69.2019.10.07.20.46.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2019 20:46:40 -0700 (PDT)
-From:   Jian-Hong Pan <jian-hong@endlessm.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Matthew Wilcox <willy@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux@endlesssm.com,
-        Jian-Hong Pan <jian-hong@endlessm.com>
-Subject: [PATCH] PCI/MSI: Fix restoring of MSI-X vector control's mask bit
-Date:   Tue,  8 Oct 2019 11:42:39 +0800
-Message-Id: <20191008034238.2503-1-jian-hong@endlessm.com>
-X-Mailer: git-send-email 2.23.0
+        Mon, 7 Oct 2019 23:54:03 -0400
+Received: from dread.disaster.area (pa49-181-226-196.pa.nsw.optusnet.com.au [49.181.226.196])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id E622F363F0F;
+        Tue,  8 Oct 2019 14:53:59 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.2)
+        (envelope-from <david@fromorbit.com>)
+        id 1iHgZS-0003vt-H7; Tue, 08 Oct 2019 14:53:58 +1100
+Date:   Tue, 8 Oct 2019 14:53:58 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/15] fs: Introduce i_blocks_per_page
+Message-ID: <20191008035358.GW804@dread.disaster.area>
+References: <20190925005214.27240-1-willy@infradead.org>
+ <20190925005214.27240-3-willy@infradead.org>
+ <20190925083650.GE804@dread.disaster.area>
+ <20191004192812.GK32665@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191004192812.GK32665@bombadil.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
+        a=dRuLqZ1tmBNts2YiI0zFQg==:117 a=dRuLqZ1tmBNts2YiI0zFQg==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=XobE76Q3jBoA:10
+        a=7-415B0cAAAA:8 a=Ezv6lXj58yBfwjVs_tMA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MSI-X vector control's bit 0 is the mask bit, which masks the
-corresponding interrupt request, or not. Other reserved bits might be
-used for other purpose by device vendors. For example, the values of
-Kingston NVMe SSD's MSI-X vector control are neither 0, nor 1, but other
-values [1].
+On Fri, Oct 04, 2019 at 12:28:12PM -0700, Matthew Wilcox wrote:
+> On Wed, Sep 25, 2019 at 06:36:50PM +1000, Dave Chinner wrote:
+> > I'm actually working on abstrcting this code from both block size
+> > and page size via the helpers below. We ahve need to support block
+> > size > page size, and so that requires touching a bunch of all the
+> > same code as this patchset. I'm currently trying to combine your
+> > last patch set with my patchset so I can easily test allocating 64k
+> > page cache pages on a 64k block size filesystem on a 4k page size
+> > machine with XFS....
+> 
+> This all makes sense ...
+> 
+> > > -	if (iop || i_blocksize(inode) == PAGE_SIZE)
+> > > +	if (iop || i_blocks_per_page(inode, page) <= 1)
+> > >  		return iop;
+> > 
+> > That also means checks like these become:
+> > 
+> > 	if (iop || iomap_chunks_per_page(inode, page) <= 1)
+> > 
+> > as a single file can now have multiple pages per block, a page per
+> > block and multiple blocks per page as the page size changes...
+> > 
+> > I'd like to only have to make one pass over this code to abstract
+> > out page and block sizes, so I'm guessing we'll need to do some
+> > co-ordination here....
+> 
+> Yup.  I'm happy if you want to send your patches out; I'll keep going
+> with the patches I have for the moment, and we'll figure out how to
+> merge the two series in a way that makes sense.
 
-The original restoring logic in system resuming uses the whole MSI-X
-vector control value as the flag to set/clear the mask bit. However,
-this logic conflicts the idea mentioned above. It may mislead system to
-disable the MSI-X vector entries. That makes system get no interrupt
-from Kingston NVMe SSD after resume and usually get NVMe I/O timeout
-error.
+I'm waiting for the xfs -> iomap writeback changes to land in a
+stable branch so I don't have to do things twice in slightly
+different ways in the patchset. Once we get that in an iomap-next
+branch I'll rebase my patches on top of it and go from there...
 
-[  174.715534] nvme nvme0: I/O 978 QID 3 timeout, completion polled
+Cheers,
 
-This patch takes only the mask bit of original MSI-X vector control
-value as the flag to fix this issue.
-
-[1] https://bugzilla.kernel.org/show_bug.cgi?id=204887#c8
-
-Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=204887
-Fixed: f2440d9acbe8 ("PCI MSI: Refactor interrupt masking code")
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
----
- drivers/pci/msi.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-index 0884bedcfc7a..deae3d5acaf6 100644
---- a/drivers/pci/msi.c
-+++ b/drivers/pci/msi.c
-@@ -433,6 +433,7 @@ static void __pci_restore_msi_state(struct pci_dev *dev)
- static void __pci_restore_msix_state(struct pci_dev *dev)
- {
- 	struct msi_desc *entry;
-+	u32 flag;
- 
- 	if (!dev->msix_enabled)
- 		return;
-@@ -444,8 +445,10 @@ static void __pci_restore_msix_state(struct pci_dev *dev)
- 				PCI_MSIX_FLAGS_ENABLE | PCI_MSIX_FLAGS_MASKALL);
- 
- 	arch_restore_msi_irqs(dev);
--	for_each_pci_msi_entry(entry, dev)
--		msix_mask_irq(entry, entry->masked);
-+	for_each_pci_msi_entry(entry, dev) {
-+		flag = entry->masked & PCI_MSIX_ENTRY_CTRL_MASKBIT;
-+		msix_mask_irq(entry, flag);
-+	}
- 
- 	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_MASKALL, 0);
- }
+Dave.
 -- 
-2.23.0
-
+Dave Chinner
+david@fromorbit.com
