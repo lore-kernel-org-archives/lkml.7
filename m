@@ -2,142 +2,133 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DA9ECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24AD6C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC69720659
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:57:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FVGbr4h9"
+	by mail.kernel.org (Postfix) with ESMTP id F22AB20659
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:57:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727693AbfJHO5H (ORCPT
+        id S1727730AbfJHO5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 10:57:07 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:56306 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725939AbfJHO5G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 10:57:06 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x98EnGuv060978;
-        Tue, 8 Oct 2019 14:56:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
- bh=0fdKhmSBg5zGMW+tC9KyIRxKr/NhTFbkuK5fvyAJTYM=;
- b=FVGbr4h9vWyvYagF1gJBAUPaSUs6Efsk304fXHOw/+vP1ulsVIz4SmF+03542O6Hc7Xg
- 93EYL2f7V4wZ2fT9yWUzr6Pyte8sTxNI0oTsYJnjq3oABZKX3tPyFR/29ksQ+29cRSPj
- SU5GHeHxV+jv7xAovzQmjeX4RPYp8cJMJZY4xl7zrcdp68HwdrodXKygXKSKGRUnmP/m
- 8vVR+zfXyWaiTGimDiNYD9nOVciwcG65l5W5lWYBFGZlWM/U0HMvi7GnalzZXZ6uMgvR
- EYc5F5LIQTQxn8IucHIWvPCvc78nyPv3sDaFY+XOlTxrQR141nALCrHh+wR8rOeFcMPK 9g== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2vek4qdter-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 08 Oct 2019 14:56:47 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x98EnSEp067027;
-        Tue, 8 Oct 2019 14:56:46 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2vg206g0hp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 08 Oct 2019 14:56:46 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x98EuicV026737;
-        Tue, 8 Oct 2019 14:56:44 GMT
-Received: from dhcp-10-175-191-48.vpn.oracle.com (/10.175.191.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 08 Oct 2019 14:56:44 +0000
-From:   Alan Maguire <alan.maguire@oracle.com>
-To:     linux-kselftest@vger.kernel.org, brendanhiggins@google.com,
-        skhan@linuxfoundation.org
-Cc:     mcgrof@kernel.org, keescook@chromium.org, yzaikin@google.com,
-        akpm@linux-foundation.org, yamada.masahiro@socionext.com,
-        catalin.marinas@arm.com, joe.lawrence@redhat.com,
-        penguin-kernel@i-love.sakura.ne.jp, schowdary@nvidia.com,
-        urezki@gmail.com, andriy.shevchenko@linux.intel.com,
-        changbin.du@intel.com, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Knut Omang <knut.omang@oracle.com>
-Subject: [PATCH v2 linux-kselftest-test 2/3] kunit: allow kunit to be loaded as a module
-Date:   Tue,  8 Oct 2019 15:55:45 +0100
-Message-Id: <1570546546-549-3-git-send-email-alan.maguire@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1570546546-549-1-git-send-email-alan.maguire@oracle.com>
-References: <1570546546-549-1-git-send-email-alan.maguire@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9403 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=38 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=993
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910080134
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9403 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=38 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910080134
+        Tue, 8 Oct 2019 10:57:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55290 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725939AbfJHO5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 10:57:20 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id CC763300C22E;
+        Tue,  8 Oct 2019 14:57:19 +0000 (UTC)
+Received: from vitty.brq.redhat.com (unknown [10.43.2.155])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7B4C419C69;
+        Tue,  8 Oct 2019 14:57:18 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>
+Subject: [PATCH RFC] selftests: kvm: fix sync_regs_test with newer gccs
+Date:   Tue,  8 Oct 2019 16:57:17 +0200
+Message-Id: <20191008145717.17841-1-vkuznets@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Tue, 08 Oct 2019 14:57:19 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Making kunit itself buildable as a module allows for "always-on"
-kunit configuration; specifying CONFIG_KUNIT=m means the module
-is built but only used when loaded.  Kunit test modules will load
-kunit.ko as an implicit dependency, so simply running
-"modprobe my-kunit-tests" will load the tests along with the kunit
-module and run them.
+Commit 204c91eff798a ("KVM: selftests: do not blindly clobber registers in
+ guest asm") was intended to make test more gcc-proof, however, the result
+is exactly the opposite: on newer gccs (e.g. 8.2.1)  the test breaks with
 
-Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-Signed-off-by: Knut Omang <knut.omang@oracle.com>
+==== Test Assertion Failure ====
+  x86_64/sync_regs_test.c:168: run->s.regs.regs.rbx == 0xBAD1DEA + 1
+  pid=14170 tid=14170 - Invalid argument
+     1	0x00000000004015b3: main at sync_regs_test.c:166 (discriminator 6)
+     2	0x00007f413fb66412: ?? ??:0
+     3	0x000000000040191d: _start at ??:?
+  rbx sync regs value incorrect 0x1.
 
+Disassembly show the following:
+
+00000000004019e0 <guest_code>:
+  4019e0:       55                      push   %rbp
+  4019e1:       89 dd                   mov    %ebx,%ebp
+  4019e3:       53                      push   %rbx
+  4019e4:       48 83 ec 08             sub    $0x8,%rsp
+  4019e8:       0f 1f 84 00 00 00 00    nopl   0x0(%rax,%rax,1)
+  4019ef:       00
+  4019f0:       31 c9                   xor    %ecx,%ecx
+  4019f2:       ba 10 90 40 00          mov    $0x409010,%edx
+  4019f7:       be 02 00 00 00          mov    $0x2,%esi
+  4019fc:       31 c0                   xor    %eax,%eax
+  4019fe:       bf 01 00 00 00          mov    $0x1,%edi
+  401a03:       83 c5 01                add    $0x1,%ebp
+  401a06:       e8 15 2b 00 00          callq  404520 <ucall>
+  401a0b:       89 eb                   mov    %ebp,%ebx
+  401a0d:       eb e1                   jmp    4019f0 <guest_code+0x10>
+  401a0f:       90                      nop
+
+and apparently this is broken. If we add 'volatile' qualifier to 'stage'
+we get the following code:
+
+00000000004019e0 <guest_code>:
+  4019e0:       53                      push   %rbx
+  4019e1:       0f 1f 80 00 00 00 00    nopl   0x0(%rax)
+  4019e8:       31 c9                   xor    %ecx,%ecx
+  4019ea:       ba 10 90 40 00          mov    $0x409010,%edx
+  4019ef:       be 02 00 00 00          mov    $0x2,%esi
+  4019f4:       31 c0                   xor    %eax,%eax
+  4019f6:       bf 01 00 00 00          mov    $0x1,%edi
+  4019fb:       83 c3 01                add    $0x1,%ebx
+  4019fe:       e8 1d 2b 00 00          callq  404520 <ucall>
+  401a03:       eb e3                   jmp    4019e8 <guest_code+0x8>
+  401a05:       66 66 2e 0f 1f 84 00    data16 nopw %cs:0x0(%rax,%rax,1)
+  401a0c:       00 00 00 00
+
+and everything seems to work. The only problem is that I now get a new
+warning from gcc:
+
+x86_64/sync_regs_test.c: In function ‘guest_code’:
+x86_64/sync_regs_test.c:25:6: warning: optimization may eliminate reads
+ and/or writes to register variables [-Wvolatile-register-var]
+
+checkpatch.pl doesn't like me either:
+
+"WARNING: Use of volatile is usually wrong: see
+ Documentation/process/volatile-considered-harmful.rst"
+
+I can think of an 'ultimate' solution to open code ucall() in a single
+asm block making sure the register we need is preserved but this looks
+like an overkill.
+
+Fixes: 204c91eff798a ("KVM: selftests: do not blindly clobber registers in guest asm")
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 ---
- lib/kunit/Kconfig  | 2 +-
- lib/kunit/Makefile | 4 +++-
- lib/kunit/test.c   | 4 ++++
- 3 files changed, 8 insertions(+), 2 deletions(-)
+ tools/testing/selftests/kvm/x86_64/sync_regs_test.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/kunit/Kconfig b/lib/kunit/Kconfig
-index 9ebd5e6..065aa16 100644
---- a/lib/kunit/Kconfig
-+++ b/lib/kunit/Kconfig
-@@ -3,7 +3,7 @@
- #
- 
- menuconfig KUNIT
--	bool "KUnit - Enable support for unit tests"
-+	tristate "KUnit - Enable support for unit tests"
- 	help
- 	  Enables support for kernel unit tests (KUnit), a lightweight unit
- 	  testing and mocking framework for the Linux kernel. These tests are
-diff --git a/lib/kunit/Makefile b/lib/kunit/Makefile
-index 769d940..8e2635a 100644
---- a/lib/kunit/Makefile
-+++ b/lib/kunit/Makefile
-@@ -1,4 +1,6 @@
--obj-$(CONFIG_KUNIT) +=			test.o \
-+obj-$(CONFIG_KUNIT) +=			kunit.o
-+
-+kunit-objs +=				test.o \
- 					string-stream.o \
- 					assert.o \
- 					try-catch.o
-diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-index e7896f1..6024627 100644
---- a/lib/kunit/test.c
-+++ b/lib/kunit/test.c
-@@ -484,3 +484,7 @@ void kunit_cleanup(struct kunit *test)
- 	}
- }
- EXPORT_SYMBOL_GPL(kunit_cleanup);
-+
-+#ifdef MODULE
-+MODULE_LICENSE("GPL");
-+#endif /* MODULE */
+diff --git a/tools/testing/selftests/kvm/x86_64/sync_regs_test.c b/tools/testing/selftests/kvm/x86_64/sync_regs_test.c
+index 11c2a70a7b87..25c54250d591 100644
+--- a/tools/testing/selftests/kvm/x86_64/sync_regs_test.c
++++ b/tools/testing/selftests/kvm/x86_64/sync_regs_test.c
+@@ -28,7 +28,7 @@ void guest_code(void)
+ 	 * use a callee-save register, otherwise the compiler
+ 	 * saves it around the call to GUEST_SYNC.
+ 	 */
+-	register u32 stage asm("rbx");
++	register volatile u32 stage asm("rbx");
+ 	for (;;) {
+ 		GUEST_SYNC(0);
+ 		stage++;
 -- 
-1.8.3.1
+2.20.1
 
