@@ -2,141 +2,182 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C229CC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D94C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96A0021721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:39:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570538391;
-	bh=VOehHrjoEEH/9k1qS9ryy1x3ms6XAZCSJcvTxw4RJFY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LW4Knja5vizvSxHr7R6PMnyu67fAkmRKFWrFn9XXBeBulYkRC/7x8DdUF8rNVC3xB
-	 k1aSXq7XhNTcgm6ZziIZLEUjDMLSIudQ7+QHUw/ARj0EFiaBXCFZO3LCvN5g3vwiot
-	 9PojwJVPN2s8XZhTfBXBm0pX5t3oJUOzZeIkLp4Q=
+	by mail.kernel.org (Postfix) with ESMTP id 4E044206B6
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:40:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="fydorapL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731040AbfJHMju (ORCPT
+        id S1731052AbfJHMkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 08:39:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37896 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730674AbfJHMju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 08:39:50 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A5F3206B6;
-        Tue,  8 Oct 2019 12:39:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570538389;
-        bh=VOehHrjoEEH/9k1qS9ryy1x3ms6XAZCSJcvTxw4RJFY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iwaHKDtsfJzVVQq4/IuDx7OPcJ1OZEk1TNgWyf3KSKHP241RRMNvK2Y5lbwky4ez7
-         LhZK0baYberKH77q90rA/AcHKfjADNwNqDvstzw6/4+SHednGlG0qZ90g5niGw+Fn7
-         kBQ2DxxS+dqLZTW/evaUTo8vP3LSBCsoOgQsv7Q8=
-Date:   Tue, 8 Oct 2019 13:39:44 +0100
-From:   Will Deacon <will@kernel.org>
-To:     "Justin He (Arm Technology China)" <Justin.He@arm.com>
-Cc:     Catalin Marinas <Catalin.Marinas@arm.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        James Morse <James.Morse@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Punit Agrawal <punitagrawal@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "hejianet@gmail.com" <hejianet@gmail.com>,
-        "Kaly Xin (Arm Technology China)" <Kaly.Xin@arm.com>,
-        nd <nd@arm.com>
-Subject: Re: [PATCH v10 3/3] mm: fix double page fault on arm64 if PTE_AF is
- cleared
-Message-ID: <20191008123943.j7q6dlu2qb2az6xa@willie-the-truck>
-References: <20190930015740.84362-1-justin.he@arm.com>
- <20190930015740.84362-4-justin.he@arm.com>
- <20191001125413.mhxa6qszwnuhglky@willie-the-truck>
- <DB7PR08MB3082563BD18482E5D541F019F79A0@DB7PR08MB3082.eurprd08.prod.outlook.com>
+        Tue, 8 Oct 2019 08:40:02 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:37535 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730317AbfJHMkC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 08:40:02 -0400
+Received: by mail-qt1-f195.google.com with SMTP id e15so10144476qtr.4;
+        Tue, 08 Oct 2019 05:40:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0jJTLY2axsts6GZT3PA6D788BPaMX3GUaWV0Vzd1RXM=;
+        b=fydorapLglYueHDm9H8p4AT688wrHVmN/5BLYTckwzJV/hAERlr6H3K4qoiKBtFGyo
+         Qqsz931IkrwgOJzNNIHLJ4B3AVscmOsqqQrfmBYgtSP2tKBChMznGpsmEugFmEbcT5KX
+         SkpxY/1+OmNS7lpVyQHn1fjYhxCoKBBR8JLvo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0jJTLY2axsts6GZT3PA6D788BPaMX3GUaWV0Vzd1RXM=;
+        b=KPMBd+qnb284ewzbUtuHS8Dhf5l2uVNcA7//wAaXNETb2nxO+RpcBMvv/NqRapgrJf
+         YUWJRB1zJ1IfH6/4xN9UVCLEUwbYIxyn/PJQk+4Cv26GUCBjFd5KKN50nGR7R/VnJZKp
+         emgwTGAP7XNES/4O8jgiBxnOn5+GeLXkUee3YOn4gB8+sh/AdrCZ/AJHtpiafa0VAJuC
+         HNPlsyETYXWS96SmzVVLagznaAocD43rUlA114J4R2B1bKW8ZH0oyVwjaIUlc4lfWMG5
+         vXe2Ca6fFHmON93YV4aqy4TgMhm3jQ4V4PKjorgFV9myvO0s/+AFm/L9E0wP30ZbinVs
+         A+eQ==
+X-Gm-Message-State: APjAAAUxHebDwhPhcm2Uk+f5LAtjdGjhVko0B2pphs6qm5HGO2dos7XO
+        cVgMQYddFkIVBXrqG+PdH6KtXoBeDb+U3QXPRTU=
+X-Google-Smtp-Source: APXvYqyIRMp1F0ik7vkJep0KVirm5HNPl0oLZUOXJNQc+afvhAryjXpJ1n7wrnxW5Q1z+DRlElhn/MKulVSC3i9vSX0=
+X-Received: by 2002:ac8:2e94:: with SMTP id h20mr36037220qta.234.1570538400593;
+ Tue, 08 Oct 2019 05:40:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <DB7PR08MB3082563BD18482E5D541F019F79A0@DB7PR08MB3082.eurprd08.prod.outlook.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20191008113553.13662-1-andrew@aj.id.au> <20191008113553.13662-3-andrew@aj.id.au>
+In-Reply-To: <20191008113553.13662-3-andrew@aj.id.au>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Tue, 8 Oct 2019 12:39:49 +0000
+Message-ID: <CACPK8XfSrKym55eQ91Lhf3wXtzCD5AH7P8t19jow2K-5JRb0ZA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] clk: ast2600: Add RMII RCLK gates for all four MACs
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     linux-clk@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 02:19:05AM +0000, Justin He (Arm Technology China) wrote:
-> > -----Original Message-----
-> > From: Will Deacon <will@kernel.org>
-> > Sent: 2019年10月1日 20:54
-> > To: Justin He (Arm Technology China) <Justin.He@arm.com>
-> > Cc: Catalin Marinas <Catalin.Marinas@arm.com>; Mark Rutland
-> > <Mark.Rutland@arm.com>; James Morse <James.Morse@arm.com>; Marc
-> > Zyngier <maz@kernel.org>; Matthew Wilcox <willy@infradead.org>; Kirill A.
-> > Shutemov <kirill.shutemov@linux.intel.com>; linux-arm-
-> > kernel@lists.infradead.org; linux-kernel@vger.kernel.org; linux-
-> > mm@kvack.org; Punit Agrawal <punitagrawal@gmail.com>; Thomas
-> > Gleixner <tglx@linutronix.de>; Andrew Morton <akpm@linux-
-> > foundation.org>; hejianet@gmail.com; Kaly Xin (Arm Technology China)
-> > <Kaly.Xin@arm.com>
-> > Subject: Re: [PATCH v10 3/3] mm: fix double page fault on arm64 if PTE_AF
-> > is cleared
-> > 
-> > On Mon, Sep 30, 2019 at 09:57:40AM +0800, Jia He wrote:
-> > > diff --git a/mm/memory.c b/mm/memory.c
-> > > index b1ca51a079f2..1f56b0118ef5 100644
-> > > --- a/mm/memory.c
-> > > +++ b/mm/memory.c
-> > > @@ -118,6 +118,13 @@ int randomize_va_space __read_mostly =
-> > >  					2;
-> > >  #endif
-> > >
-> > > +#ifndef arch_faults_on_old_pte
-> > > +static inline bool arch_faults_on_old_pte(void)
-> > > +{
-> > > +	return false;
-> > > +}
-> > > +#endif
-> > 
-> > Kirill has acked this, so I'm happy to take the patch as-is, however isn't
-> > it the case that /most/ architectures will want to return true for
-> > arch_faults_on_old_pte()? In which case, wouldn't it make more sense for
-> > that to be the default, and have x86 and arm64 provide an override? For
-> > example, aren't most architectures still going to hit the double fault
-> > scenario even with your patch applied?
-> 
-> No, after applying my patch series, only those architectures which don't provide
-> setting access flag by hardware AND don't implement their arch_faults_on_old_pte
-> will hit the double page fault.
-> 
-> The meaning of true for arch_faults_on_old_pte() is "this arch doesn't have the hardware
-> setting access flag way, it might cause page fault on an old pte"
-> I don't want to change other architectures' default behavior here. So by default, 
-> arch_faults_on_old_pte() is false.
+On Tue, 8 Oct 2019 at 11:35, Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+> RCLK is a fixed 50MHz clock derived from HPLL/HCLK that is described by a
+> single gate for each MAC.
+>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 
-...and my complaint is that this is the majority of supported architectures,
-so you're fixing something for arm64 which also affects arm, powerpc,
-alpha, mips, riscv, ...
+We could have mac12rclk and mac34rclk described in the device tree, as
+was mentioned in previous reviews of the aspeed driver, but I think we
+can defer that
+rework until we rework the rest of the driver. Importantly, that won't
+change the MAC bindings or the code that the drivers need to use.
 
-Chances are, they won't even realise they need to implement
-arch_faults_on_old_pte() until somebody runs into the double fault and
-wastes lots of time debugging it before they spot your patch.
+Reviewed-by: Joel Stanley <joel@jms.id.au>
 
-> Btw, currently I only observed this double pagefault on arm64's guest
-> (host is ThunderX2).  On X86 guest (host is Intel(R) Core(TM) i7-4790 CPU
-> @ 3.60GHz ), there is no such double pagefault. It has the similar setting
-> access flag way by hardware.
 
-Right, and that's why I'm not concerned about x86 for this problem.
-
-Will
+> ---
+>  drivers/clk/clk-ast2600.c | 47 ++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 46 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/clk/clk-ast2600.c b/drivers/clk/clk-ast2600.c
+> index 1c1bb39bb04e..3d6fc781fee0 100644
+> --- a/drivers/clk/clk-ast2600.c
+> +++ b/drivers/clk/clk-ast2600.c
+> @@ -15,7 +15,7 @@
+>
+>  #include "clk-aspeed.h"
+>
+> -#define ASPEED_G6_NUM_CLKS             67
+> +#define ASPEED_G6_NUM_CLKS             71
+>
+>  #define ASPEED_G6_SILICON_REV          0x004
+>
+> @@ -40,6 +40,9 @@
+>
+>  #define ASPEED_G6_STRAP1               0x500
+>
+> +#define ASPEED_MAC12_CLK_DLY           0x340
+> +#define ASPEED_MAC34_CLK_DLY           0x350
+> +
+>  /* Globally visible clocks */
+>  static DEFINE_SPINLOCK(aspeed_g6_clk_lock);
+>
+> @@ -485,6 +488,11 @@ static int aspeed_g6_clk_probe(struct platform_device *pdev)
+>                 return PTR_ERR(hw);
+>         aspeed_g6_clk_data->hws[ASPEED_CLK_SDIO] = hw;
+>
+> +       /* MAC1/2 RMII 50MHz RCLK */
+> +       hw = clk_hw_register_fixed_rate(dev, "mac12rclk", "hpll", 0, 50000000);
+> +       if (IS_ERR(hw))
+> +               return PTR_ERR(hw);
+> +
+>         /* MAC1/2 AHB bus clock divider */
+>         hw = clk_hw_register_divider_table(dev, "mac12", "hpll", 0,
+>                         scu_g6_base + ASPEED_G6_CLK_SELECTION1, 16, 3, 0,
+> @@ -494,6 +502,27 @@ static int aspeed_g6_clk_probe(struct platform_device *pdev)
+>                 return PTR_ERR(hw);
+>         aspeed_g6_clk_data->hws[ASPEED_CLK_MAC12] = hw;
+>
+> +       /* RMII1 50MHz (RCLK) output enable */
+> +       hw = clk_hw_register_gate(dev, "mac1rclk-gate", "mac12rclk", 0,
+> +                       scu_g6_base + ASPEED_MAC12_CLK_DLY, 29, 0,
+> +                       &aspeed_g6_clk_lock);
+> +       if (IS_ERR(hw))
+> +               return PTR_ERR(hw);
+> +       aspeed_g6_clk_data->hws[ASPEED_CLK_GATE_MAC1RCLK] = hw;
+> +
+> +       /* RMII2 50MHz (RCLK) output enable */
+> +       hw = clk_hw_register_gate(dev, "mac2rclk-gate", "mac12rclk", 0,
+> +                       scu_g6_base + ASPEED_MAC12_CLK_DLY, 30, 0,
+> +                       &aspeed_g6_clk_lock);
+> +       if (IS_ERR(hw))
+> +               return PTR_ERR(hw);
+> +       aspeed_g6_clk_data->hws[ASPEED_CLK_GATE_MAC2RCLK] = hw;
+> +
+> +       /* MAC1/2 RMII 50MHz RCLK */
+> +       hw = clk_hw_register_fixed_rate(dev, "mac34rclk", "hclk", 0, 50000000);
+> +       if (IS_ERR(hw))
+> +               return PTR_ERR(hw);
+> +
+>         /* MAC3/4 AHB bus clock divider */
+>         hw = clk_hw_register_divider_table(dev, "mac34", "hpll", 0,
+>                         scu_g6_base + 0x310, 24, 3, 0,
+> @@ -503,6 +532,22 @@ static int aspeed_g6_clk_probe(struct platform_device *pdev)
+>                 return PTR_ERR(hw);
+>         aspeed_g6_clk_data->hws[ASPEED_CLK_MAC34] = hw;
+>
+> +       /* RMII3 50MHz (RCLK) output enable */
+> +       hw = clk_hw_register_gate(dev, "mac3rclk-gate", "mac34rclk", 0,
+> +                       scu_g6_base + ASPEED_MAC34_CLK_DLY, 29, 0,
+> +                       &aspeed_g6_clk_lock);
+> +       if (IS_ERR(hw))
+> +               return PTR_ERR(hw);
+> +       aspeed_g6_clk_data->hws[ASPEED_CLK_GATE_MAC3RCLK] = hw;
+> +
+> +       /* RMII4 50MHz (RCLK) output enable */
+> +       hw = clk_hw_register_gate(dev, "mac4rclk-gate", "mac34rclk", 0,
+> +                       scu_g6_base + ASPEED_MAC34_CLK_DLY, 30, 0,
+> +                       &aspeed_g6_clk_lock);
+> +       if (IS_ERR(hw))
+> +               return PTR_ERR(hw);
+> +       aspeed_g6_clk_data->hws[ASPEED_CLK_GATE_MAC4RCLK] = hw;
+> +
+>         /* LPC Host (LHCLK) clock divider */
+>         hw = clk_hw_register_divider_table(dev, "lhclk", "hpll", 0,
+>                         scu_g6_base + ASPEED_G6_CLK_SELECTION1, 20, 3, 0,
+> --
+> 2.20.1
+>
