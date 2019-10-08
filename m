@@ -2,96 +2,252 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48805C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 05:36:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64081C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 05:39:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15AF72067B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 05:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 384C12173B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 05:39:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="x33VxGlY"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="RwgNlcPk";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="T6NvRb9p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729926AbfJHFgn (ORCPT
+        id S1729968AbfJHFjS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 01:36:43 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:39748 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729737AbfJHFgm (ORCPT
+        Tue, 8 Oct 2019 01:39:18 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:44648 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729568AbfJHFjR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 01:36:42 -0400
-Received: by mail-qt1-f194.google.com with SMTP id n7so23324267qtb.6
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 22:36:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DLPHIzkkF9ezFThHyrTQhaKDEGQzpylYQSibbpf1y6w=;
-        b=x33VxGlYwPV3fXI4CVn6TCAccWkMA7kLD8FTUj+N52IOu8oY1apGxB+P7yNm6SA74X
-         iOIpxrjpy9L5HPubhg09DzBYM3Oe5QhHsC+rXQt+h04pgoymCWOsZwlEruxXI6hdf6DS
-         QUkbSivkU4vQSlfsYbNGLFgyIxmmZzvySMK2mKv10Co8McU7Y+IApTBCVlwn+KJohNco
-         FjwXflM9s2Ju/YWCrtFom9cvvA9OijB8o+MQ9DHITFw5AGYNfaH85DRQp/7+sh2+zcC5
-         IOw65MbUGb3oitfVBO8MUVQnHnjEkrUGdNwNbmFbGEByl2/8TrKPB8bPmiZjhWtK0Qzl
-         /qFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DLPHIzkkF9ezFThHyrTQhaKDEGQzpylYQSibbpf1y6w=;
-        b=YP73MkZYSnwfUYDwvp/aEzZ32LcRIAimsIMvi53HKM9dMSvZOzGd2DBkVHS/If3dZx
-         T9uUl1v0sbmF24VV54BkrPP42KiN63l5K5rsgTFEryyrIcqAbATIDUiWzODlEprLNUTy
-         1rqadBVr++JxJIXw9t9tCkBz+ix3vnX2/5S8358HL9RpV227w60gEU0b/NGitvHhztAI
-         2uaR70suC4hfQUooEevOpz10QFlFbzcgIi20e7yDmBSIxyDjTOBQ0ae9jpiBygzBioYv
-         p4fRmevdSrZDOfzGvtR0RnShYa+e6CWuf++FCYHu/tQIiU0+6+hK7KrUqJAAQzjPpIjB
-         HZtw==
-X-Gm-Message-State: APjAAAVP3a3AYGuWAOICr2aUJ6c6e0WW4+rxWllxdU3q8bnz3Y5MIbfy
-        pSJd8ntrSPO6EZ1M3+1MZvn8DOY3ZzrJrgt6Wbunsw==
-X-Google-Smtp-Source: APXvYqz8dIGmMGe1TLdQVwirABfPVreobcIApuOIty+3ZDrBFsZWTLpIwa9tc6FWtMb+EXNIAFtyVGGitAImVM3qyG8=
-X-Received: by 2002:ac8:6796:: with SMTP id b22mr32097476qtp.95.1570513001536;
- Mon, 07 Oct 2019 22:36:41 -0700 (PDT)
+        Tue, 8 Oct 2019 01:39:17 -0400
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x985d7MD029851;
+        Mon, 7 Oct 2019 22:39:08 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=e7B4/bZHvy01YpoupmquNBsySRyPawYB21FZ9XJq/zA=;
+ b=RwgNlcPk8OgFM5X3/aUocwfggkBoqUr+8iQJhXwt8an41lhXEsRct967f2WObF59Yn4G
+ /l6PELV46Wq6CyJIb2I2L3D4iS6joQbNzFk2LCsDnQzh2ZHldp/LTWDAp2UOpGaGmP9A
+ 95ODx795/vHe1mwQ+PiLwvVFd/41VgC/FbM= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2vgcj21smg-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 07 Oct 2019 22:39:07 -0700
+Received: from ash-exhub204.TheFacebook.com (2620:10d:c0a8:83::4) by
+ ash-exhub204.TheFacebook.com (2620:10d:c0a8:83::4) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 7 Oct 2019 22:39:01 -0700
+Received: from NAM03-DM3-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 7 Oct 2019 22:39:01 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IE+ZOA6buX+PueEPK3kd6tfBKEE+BO4thLi4AGI2ydywi6SnCGTP6iex1dRFolyhjiKtylYvCMB/cHV7d44rnXgbFSbJc5WY1lMf/Q9gTLkdFQf2O+G5eW3szJpxx+w7WCZZ22d06wBOzGeqcQxPv2sVaPJ8NiuDXiQX89FFPeJ97EEkGfAw6Z5jx7hMdvCENjY2s9LwaNQsJ9qO3wP14JXWEt6ZBfkWFaMQdsRuC90s1TRM9BxYBh1DcB66XuxLiWRm5y8v4NQ3sMk8BNi5Vlr5ykj1QQM70infbVz1xlJntCdKhLiWE48EyWbI/e5H7mZML6rBzD+gVChiJcOM1g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=e7B4/bZHvy01YpoupmquNBsySRyPawYB21FZ9XJq/zA=;
+ b=MK9SMPGNgYZ+2eF2z5wZhWV2YKJjllgmH4sNtu1Fw1WncFrp9mYUpvxNHSRuQIE/+HCVlH3kXIG1B9kKIrwhTEjM154paaJyhoq6k/y0ogqpIFrIdf7nS6/1Zt7baVqKkRXYo5PvJZ9IjTm9bbzKcfaN3sbqyW+CqjJxdGb9a6lZ7Mn+wzS3XDuytjMx9XPtSg9AXTd2kKPU6yB5pb1qy+dHi+UPmhzeP8BkhNACOD6tX8wUCDZ5YhwWt0lwY1mQG850pIIzgVbZF5LRIfq4veuaZNSEVmV/Z/s9rtO1Ox8DYn2RjKKKyT04R1SbPaAKq3a9w/YravkZEyeSf1ZRhw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=e7B4/bZHvy01YpoupmquNBsySRyPawYB21FZ9XJq/zA=;
+ b=T6NvRb9pkbY4Go9p+ooU8U3X5L14KqYIMNVDo5E0CycNaUf2Bq0Pxcycg8HvnjTWYr9GVw5v+3dXMD+RsgiPbtsSMLfR6e/p3XaZ/EyRBxYa5cYqvoRSd4NbNp5YlnffxmQwpVKBrc05Kk8TAlBlJVqFbrSp3fNSwy2/V4IuAtw=
+Received: from BN8PR15MB2626.namprd15.prod.outlook.com (20.179.137.220) by
+ BN8PR15MB2548.namprd15.prod.outlook.com (20.179.136.216) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2327.23; Tue, 8 Oct 2019 05:39:00 +0000
+Received: from BN8PR15MB2626.namprd15.prod.outlook.com
+ ([fe80::dde5:821f:4571:dea4]) by BN8PR15MB2626.namprd15.prod.outlook.com
+ ([fe80::dde5:821f:4571:dea4%5]) with mapi id 15.20.2327.026; Tue, 8 Oct 2019
+ 05:38:59 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Dave Chinner <david@fromorbit.com>
+CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "tj@kernel.org" <tj@kernel.org>, Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH] cgroup, blkcg: prevent dirty inodes to pin dying memory
+ cgroups
+Thread-Topic: [PATCH] cgroup, blkcg: prevent dirty inodes to pin dying memory
+ cgroups
+Thread-Index: AQHVewChQOAw+GKbfEyRn45Yoe7HH6dQJYaAgAAZ0AA=
+Date:   Tue, 8 Oct 2019 05:38:59 +0000
+Message-ID: <20191008053854.GA14951@castle.dhcp.thefacebook.com>
+References: <20191004221104.646711-1-guro@fb.com>
+ <20191008040630.GA15134@dread.disaster.area>
+In-Reply-To: <20191008040630.GA15134@dread.disaster.area>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: CO2PR04CA0179.namprd04.prod.outlook.com
+ (2603:10b6:104:4::33) To BN8PR15MB2626.namprd15.prod.outlook.com
+ (2603:10b6:408:c7::28)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:180::4ffc]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fa576697-411a-4f21-b474-08d74bb1d186
+x-ms-traffictypediagnostic: BN8PR15MB2548:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN8PR15MB2548FB60123DCE27F45583FDBE9A0@BN8PR15MB2548.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 01842C458A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(376002)(39860400002)(396003)(346002)(189003)(199004)(54094003)(8936002)(6486002)(71190400001)(186003)(256004)(33656002)(4326008)(71200400001)(5660300002)(6506007)(386003)(54906003)(6916009)(6246003)(1076003)(46003)(14454004)(5024004)(6116002)(305945005)(2906002)(11346002)(446003)(14444005)(486006)(478600001)(9686003)(6512007)(316002)(86362001)(476003)(6436002)(66946007)(102836004)(81156014)(25786009)(99286004)(7736002)(8676002)(64756008)(66446008)(76176011)(66556008)(81166006)(52116002)(229853002)(66476007)(14143004);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR15MB2548;H:BN8PR15MB2626.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 3WVpRWT4o745CvmeD4vd7cW7yWWHTwAYgBn4wAiZ1i2PoHNHzmai4S0SS8EzNI+4ROJFBnqJ3uJJg4aQ0ZHySOqt/tP9xXDpUqCJN6Tdi9B7L1qur6h8ikwJdkx/cN2NYQ2egvyVp7jusCatK6eRMGljRl4t+GlhIRVuIXdBAb+E9sHL5IXEj/+E91cgHv9L6yXN5dMo8ytBXfZiDO9+syl2XbQ+dxAsKG385RjBmyUnqqYolvN6FShm1yI9J8c4OvBzwxuugStEvJnxvSyOurPMTGpGzsM7A6fWKbCyxUcH5hlgrcoHhCxzKuJHv4OS4GsFYw7jslCGC2/as7AxAKl59A4tnaLkvoStlLHZgObnjFxWLOP3+caswlGA628JJWCy+xsv93M5i8TWGaVTNfHgU8qPazjfnvyLBen1xVk=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <D8F98902AC536C44BF3CEF6196DD0833@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20191007135313.8443-1-colin.king@canonical.com>
-In-Reply-To: <20191007135313.8443-1-colin.king@canonical.com>
-From:   Chris Chiu <chiu@endlessm.com>
-Date:   Tue, 8 Oct 2019 13:36:28 +0800
-Message-ID: <CAB4CAwdd-+Oq+qrFTzUmG39yNgd_+Zn2rii=mXWOJb5x+4VHYw@mail.gmail.com>
-Subject: Re: [PATCH] rtl8xxxu: make arrays static, makes object smaller
-To:     Colin King <colin.king@canonical.com>
-Cc:     Jes Sorensen <Jes.Sorensen@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>, kernel-janitors@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: fa576697-411a-4f21-b474-08d74bb1d186
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Oct 2019 05:38:59.6383
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: NgebR5MUDA3VP7bwsPz4+Yrdo6s8bCUttqo8ak7l6s9UwujSa3udhzrxdikHoJ8x
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR15MB2548
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-08_02:2019-10-07,2019-10-08 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 impostorscore=0
+ lowpriorityscore=0 phishscore=0 clxscore=1015 mlxscore=0 mlxlogscore=999
+ priorityscore=1501 malwarescore=0 bulkscore=0 adultscore=0 spamscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1910080058
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 9:53 PM Colin King <colin.king@canonical.com> wrote:
->
-> From: Colin Ian King <colin.king@canonical.com>
->
-> Don't populate const arrays on the stack but instead make them
-> static. Makes the object code smaller by 60 bytes.
->
-> Before:
->    text    data     bss     dec     hex filename
->   15133    8768       0   23901    5d5d realtek/rtl8xxxu/rtl8xxxu_8192e.o
->   15209    6392       0   21601    5461 realtek/rtl8xxxu/rtl8xxxu_8723b.o
->  103254   31202     576  135032   20f78 realtek/rtl8xxxu/rtl8xxxu_core.o
->
-> After:
->    text    data     bss     dec     hex filename
->   14861    9024       0   23885    5d4d realtek/rtl8xxxu/rtl8xxxu_8192e.o
->   14953    6616       0   21569    5441 realtek/rtl8xxxu/rtl8xxxu_8723b.o
->  102986   31458     576  135020   20f6c realtek/rtl8xxxu/rtl8xxxu_core.o
->
-> (gcc version 9.2.1, amd64)
->
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
-Reviewed-by: Chris Chiu <chiu@endlessm.com>
+On Tue, Oct 08, 2019 at 03:06:31PM +1100, Dave Chinner wrote:
+> On Fri, Oct 04, 2019 at 03:11:04PM -0700, Roman Gushchin wrote:
+> > This is a RFC patch, which is not intended to be merged as is,
+> > but hopefully will start a discussion which can result in a good
+> > solution for the described problem.
+> >=20
+> > --
+> >=20
+> > We've noticed that the number of dying cgroups on our production hosts
+> > tends to grow with the uptime. This time it's caused by the writeback
+> > code.
+> >=20
+> > An inode which is getting dirty for the first time is associated
+> > with the wb structure (look at __inode_attach_wb()). It can later
+> > be switched to another wb under some conditions (e.g. some other
+> > cgroup is writing a lot of data to the same inode), but generally
+> > stays associated up to the end of life of the inode structure.
+> >=20
+> > The problem is that the wb structure holds a reference to the original
+> > memory cgroup. So if the inode was dirty once, it has a good chance
+> > to pin down the original memory cgroup.
+> >=20
+> > An example from the real life: some service runs periodically and
+> > updates rpm packages. Each time in a new memory cgroup. Installed
+> > .so files are heavily used by other cgroups, so corresponding inodes
+> > tend to stay alive for a long. So do pinned memory cgroups.
+> > In production I've seen many hosts with 1-2 thousands of dying
+> > cgroups.
+> >=20
+> > This is not the first problem with the dying memory cgroups. As
+> > always, the problem is with their relative size: memory cgroups
+> > are large objects, easily 100x-1000x larger that inodes. So keeping
+> > a couple of thousands of dying cgroups in memory without a good reason
+> > (what we easily do with inodes) is quite costly (and is measured
+> > in tens and hundreds of Mb).
+> >=20
+> > One possible approach to this problem is to switch inodes associated
+> > with dying wbs to the root wb. Switching is a best effort operation
+> > which can fail silently, so unfortunately we can't run once over a
+> > list of associated inodes (even if we'd have such a list). So we
+> > really have to scan all inodes.
+> >=20
+> > In the proposed patch I schedule a work on each memory cgroup
+> > deletion, which is probably too often. Alternatively, we can do it
+> > periodically under some conditions (e.g. the number of dying memory
+> > cgroups is larger than X). So it's basically a gc run.
+> >=20
+> > I wonder if there are any better ideas?
+> >=20
+> > Signed-off-by: Roman Gushchin <guro@fb.com>
+> > ---
+> >  fs/fs-writeback.c | 29 +++++++++++++++++++++++++++++
+> >  mm/memcontrol.c   |  5 +++++
+> >  2 files changed, 34 insertions(+)
+> >=20
+> > diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
+> > index 542b02d170f8..4bbc9a200b2c 100644
+> > --- a/fs/fs-writeback.c
+> > +++ b/fs/fs-writeback.c
+> > @@ -545,6 +545,35 @@ static void inode_switch_wbs(struct inode *inode, =
+int new_wb_id)
+> >  	up_read(&bdi->wb_switch_rwsem);
+> >  }
+> > =20
+> > +static void reparent_dirty_inodes_one_sb(struct super_block *sb, void =
+*arg)
+> > +{
+> > +	struct inode *inode, *next;
+> > +
+> > +	spin_lock(&sb->s_inode_list_lock);
+> > +	list_for_each_entry_safe(inode, next, &sb->s_inodes, i_sb_list) {
+> > +		spin_lock(&inode->i_lock);
+> > +		if (inode->i_state & (I_NEW | I_FREEING | I_WILL_FREE)) {
+> > +			spin_unlock(&inode->i_lock);
+> > +			continue;
+> > +		}
+> > +
+> > +		if (inode->i_wb && wb_dying(inode->i_wb)) {
+> > +			spin_unlock(&inode->i_lock);
+> > +			inode_switch_wbs(inode, root_mem_cgroup->css.id);
+> > +			continue;
+> > +		}
+> > +
+> > +		spin_unlock(&inode->i_lock);
+> > +	}
+> > +	spin_unlock(&sb->s_inode_list_lock);
+>=20
+> No idea what the best solution is, but I think this is fundamentally
+> unworkable. It's not uncommon to have a hundred million cached
+> inodes these days, often on a single filesystem. Anything that
+> requires a brute-force system wide inode scan, especially without
+> conditional reschedule points, is largely a non-starter.
+>=20
+> Also, inode_switch_wbs() is not guaranteed to move the inode to the
+> destination wb.  There can only be WB_FRN_MAX_IN_FLIGHT (1024)
+> switches in flight at once and switches are run via RCU callbacks,
+> so I suspect that using inode_switch_wbs() for bulk re-assignment is
+> going to be a lot more complex than just finding inodes to call
+> inode_switch_wbs() on....
+
+
+We can schedule it only if the number of dying cgroups exceeds a certain
+number (like 100), which will make it relatively rare event. Maybe we can
+add some other conditions, e.g. count the number of inodes associated with
+a wb and skip scanning if it's zero.
+
+Alternatively the wb structure can keep the list of associated inodes,
+and scan only them, but then it's not trivial to implement without
+additional complication of already quite complex locking scheme.
+And because inode_switch_wbs() can fail, we can't guarantee that a single
+pass over such a list will be enough. That means the we need to schedule
+scans periodically until all inodes will be switched.
+
+So I really don't know which option is better, but at the same time
+doing nothing isn't the option too. Somehow the problem should be solved.
+
+Thanks!
