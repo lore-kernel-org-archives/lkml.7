@@ -2,179 +2,143 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F3FC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 06:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 835A0C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 06:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0974206C2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 06:57:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="CBVsMat1"
+	by mail.kernel.org (Postfix) with ESMTP id 5C1352173B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 06:57:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730198AbfJHG5W (ORCPT
+        id S1730225AbfJHG5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 02:57:22 -0400
-Received: from mail-eopbgr40086.outbound.protection.outlook.com ([40.107.4.86]:49797
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730054AbfJHG5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 02:57:21 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=k/Qo6rYhvYxRItP2LV9UZoe8ulMpg5paK39ITeewmLqmApCajtrwyxHGTIz4BtauqsPyWJrgLA/QqRGmKGrOIn6DWil+/BJY2YclK74rbEEr8nC8ND3w5eSmEuVwzAa/StYYRxnd4xpsDtCz6YuhtObY9GwGD2n6d8Olo1jlfmmm1l8/hDXao2raVWpmTX5i3WU7qh7U6A4vhXfpjPvHE6Cy0JGS9ls3P9naDC4ACNGvkNpC1UyR62xSPdDg9RXMwIQ0Cc+cMmcHYgE7HuAnCBfW7Q7aG8JFTIMs0A3sRXtMuemLluAV8Ne2SNjvUuC8lyl59plWC7/W9M1T5k4yJQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Rq+pEZGTYmVcSuP7ZPH4f6e7WCPtfkRQq8jmGk6zyao=;
- b=i4j9ESFzMXdc82SagB3J3MFic2B1NRCkI00wt3rXYZChVHqkf9HWh/kKyq+jqoMSwlrwlnOsNNSbfz6yXoaPABjFbXAkpfjgxtBnb8MzvyA7s1HzHyfYpnrCSGOsv9f/FFrC50WWS9AB0gE7HCWmBb2YsxRYJCPve61/XyrX2ilUPQI+dhwz/u079t5bUnrQtnfFZURC1EYc7g/ZorABi0xrrtG5eXjNmpfj3prPm4s9iM46eTpL32xEvk68+alZG8hABhjKsooAZX6gSgip86j5K9Ho/X3KGaqurjSOzY7SvPhjUIAtGbrje3bTaU7ESSsS+ffZkxNIAyEhl72FYg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Rq+pEZGTYmVcSuP7ZPH4f6e7WCPtfkRQq8jmGk6zyao=;
- b=CBVsMat1l60KLZ1msCCrysA/s8ZsFaSks8mVukVOfChWFfqIPNR9SvCtRy2nQ1uHbZ16awNb0I/glaRmUy4kKiwE4Ki0IvTNpj4xC7W0bl8xaj9UMTwZHBOccr6PKlG+G3mif8FaJalkrI3kng7cdZF0HVPxBRxFQ39bfGERbR8=
-Received: from VI1PR04MB5327.eurprd04.prod.outlook.com (20.177.52.16) by
- VI1PR04MB6111.eurprd04.prod.outlook.com (20.179.26.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.25; Tue, 8 Oct 2019 06:56:35 +0000
-Received: from VI1PR04MB5327.eurprd04.prod.outlook.com
- ([fe80::1da:26dc:6373:4ab0]) by VI1PR04MB5327.eurprd04.prod.outlook.com
- ([fe80::1da:26dc:6373:4ab0%3]) with mapi id 15.20.2327.026; Tue, 8 Oct 2019
- 06:56:35 +0000
-From:   Peter Chen <peter.chen@nxp.com>
-To:     Pawel Laszczak <pawell@cadence.com>
-CC:     "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "rogerq@ti.com" <rogerq@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jbergsagel@ti.com" <jbergsagel@ti.com>,
-        "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>,
-        "sureshp@cadence.com" <sureshp@cadence.com>,
-        "kurahul@cadence.com" <kurahul@cadence.com>
-Subject: Re: [PATCH] usb:cdns3: Fix for CV CH9 running with g_zero driver.
-Thread-Topic: [PATCH] usb:cdns3: Fix for CV CH9 running with g_zero driver.
-Thread-Index: AQHVfNoJ++ECtmBATUSOETiOVkdrz6dQUUWA
-Date:   Tue, 8 Oct 2019 06:56:35 +0000
-Message-ID: <20191008065619.GE5670@b29397-desktop>
-References: <1570430355-26118-1-git-send-email-pawell@cadence.com>
-In-Reply-To: <1570430355-26118-1-git-send-email-pawell@cadence.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peter.chen@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 426f1bf0-91f7-44d1-8172-08d74bbca8d0
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: VI1PR04MB6111:
-x-microsoft-antispam-prvs: <VI1PR04MB6111DDEB595C99D52DF376338B9A0@VI1PR04MB6111.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 01842C458A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(346002)(376002)(396003)(39860400002)(366004)(136003)(189003)(199004)(66446008)(66556008)(64756008)(66946007)(9686003)(66476007)(7416002)(6486002)(71200400001)(71190400001)(229853002)(256004)(14444005)(6436002)(3846002)(6116002)(14454004)(66066001)(33716001)(1076003)(2906002)(4326008)(76116006)(91956017)(6512007)(6246003)(25786009)(86362001)(8676002)(476003)(8936002)(7736002)(486006)(5660300002)(478600001)(81166006)(305945005)(81156014)(53546011)(26005)(54906003)(102836004)(76176011)(316002)(44832011)(33656002)(99286004)(6916009)(11346002)(6506007)(446003)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB6111;H:VI1PR04MB5327.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: NPAchDMx6+YAJ2TAYESvrrCV2Vr83NRWBn91O5bct3gHDU8SBtLAMmEpKmuibQpgyWEHMEl8g1pKosk+ToT4NIFReY/kBMPnjnW5aQmy2YXY6CjYB36GPUC6M4QiPwd0J3H927BYh15oWFlqEF2gWUpE+Ojg2s0TKodwS5nyxBboNctxzgqbg1ppk4u6X5CharzNHgulha/JQSRm7ajtxg9Nm/SmnQ0O5fm5pxH0EgaTDZQZVlHZmMc6Y7NvZzZ1U0T6Tdtm0fh9CX1BNojzVzB5VO26eNfhVU+Dmzxo1Iu9t9MGdE5DLzU6biqiHEymF1ZfG76wG3RSB9ExDKBsYj55JWM7DL8FmToNc0SHf8I+SJTDWFymhcTRisfhI0w7+Sl33N4jm2Nu9ayzc2m4vC17djec8Yf5FVmcvqxqBW0=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <043D2AB33E221341AD0E955B526A6868@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 8 Oct 2019 02:57:30 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54624 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730129AbfJHG5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 02:57:30 -0400
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id ACB0D753C7
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Oct 2019 06:57:29 +0000 (UTC)
+Received: by mail-wm1-f70.google.com with SMTP id o188so940154wmo.5
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 23:57:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LQeVN1hH98xgpYnMm68phCOZgGPtIs2VOwfxn1PaBbs=;
+        b=CX/+8aGElatEWsOz2s9n4wG/EOHILpa0BgDRYyT2CDLoBK6jn4zle4gXWBeiKp2gbe
+         2LNjsjRmKWRlJwpytoJD6wwsQ0iC5n14JLUNDHPhtaBycUOb2tl9z3r9KGFAtazh6CIQ
+         tekHhW9b0ou/83WjXCnPa6Owh4Ar5WsTFlBqwYEs0B7KO6imGsPhYNDTnYfLAK+QTan3
+         6fFBL+eifTt5O8akUzFaNqD1Cl+arYF9cfNzCo6lH3sK2XZBT2sXslKWZFjhw4pPcGjX
+         I+GJO2R34KK/rnOCqvKXFpqJvpcZbp/ORnXIXikNjIEKFBTIRzxlozA+bo5S6eg0bnWn
+         ux7Q==
+X-Gm-Message-State: APjAAAWNKYlfVV0IH8iNtgTRR9fmklHDaNRUfx1uEUhpv/LVPCDA71yX
+        vVaNPmbCEp5g8IwBl7R0UJo94cMTiGhV+Wkh8q+I3Y3NNd+z5qVrRu+F2GXu5sBIZk+E70+WFMb
+        gGuMpOVEnPo2u2lF5RXw8X+pk
+X-Received: by 2002:a7b:caaa:: with SMTP id r10mr2604598wml.100.1570517848244;
+        Mon, 07 Oct 2019 23:57:28 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqym7378uK2SLHrM9bzukYU6fxbMPVQT8VT0yZc3RrKv9/pub3+g7Lhk8O5PyNr59Jjaojk69g==
+X-Received: by 2002:a7b:caaa:: with SMTP id r10mr2604563wml.100.1570517847946;
+        Mon, 07 Oct 2019 23:57:27 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:e876:e214:dc8e:2846? ([2001:b07:6468:f312:e876:e214:dc8e:2846])
+        by smtp.gmail.com with ESMTPSA id 90sm24379233wrr.1.2019.10.07.23.57.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Oct 2019 23:57:27 -0700 (PDT)
+Subject: Re: [PATCH 11/16] x86/cpu: Print VMX features as separate line item
+ in /proc/cpuinfo
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-edac@vger.kernel.org,
+        Borislav Petkov <bp@suse.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+References: <20191004215615.5479-1-sean.j.christopherson@intel.com>
+ <20191004215615.5479-12-sean.j.christopherson@intel.com>
+ <55f45459-47bf-df37-a12b-17c4c5c6c19a@redhat.com>
+ <20191007195638.GG18016@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <bd2cffea-6427-b3cc-7098-a881e3d4522d@redhat.com>
+Date:   Tue, 8 Oct 2019 08:57:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 426f1bf0-91f7-44d1-8172-08d74bbca8d0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Oct 2019 06:56:35.3296
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: e8MX272n752cX4k51dpi755l9rfVdCFFKZHJePgPKokAkoy5GXjLTIWvAdik6hJ2Htp++XMFYKkYEftn28EeoA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6111
+In-Reply-To: <20191007195638.GG18016@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-10-07 07:39:11, Pawel Laszczak wrote:
-> Patch fixes issue with Halt Endnpoint Test observed
+On 07/10/19 21:56, Sean Christopherson wrote:
+> On Mon, Oct 07, 2019 at 07:12:37PM +0200, Paolo Bonzini wrote:
+>> On 04/10/19 23:56, Sean Christopherson wrote:
+>>> diff --git a/arch/x86/kernel/cpu/proc.c b/arch/x86/kernel/cpu/proc.c
+>>> index cb2e49810d68..4eec8889b0ff 100644
+>>> --- a/arch/x86/kernel/cpu/proc.c
+>>> +++ b/arch/x86/kernel/cpu/proc.c
+>>> @@ -7,6 +7,10 @@
+>>>  
+>>>  #include "cpu.h"
+>>>  
+>>> +#ifdef CONFIG_X86_VMX_FEATURE_NAMES
+>>> +extern const char * const x86_vmx_flags[NVMXINTS*32];
+>>> +#endif
+>>> +
+>>>  /*
+>>>   *	Get CPU information for use by the procfs.
+>>>   */
+>>> @@ -102,6 +106,17 @@ static int show_cpuinfo(struct seq_file *m, void *v)
+>>>  		if (cpu_has(c, i) && x86_cap_flags[i] != NULL)
+>>>  			seq_printf(m, " %s", x86_cap_flags[i]);
+>>
+>> I'm afraid this is going to break some scripts in the wild.  I would
+>> simply remove the seq_puts below.
+> 
+> Can you elaborate?  I'm having trouble connecting the dots...
 
-%s/Endnpoint/Endpoint
+Somebody is bound to have scripts doing "grep ^flags.*ept /proc/cpuinfo"
+or checking for VMX flags under some kind of "if (/^flags/)", so it's
+safer not to separate VMX and non-VMX flags.
 
->
-> during using g_zero
-> driver as DUT. Bug occurred only on some testing board.
+Paolo
 
-g_zero is legacy, please use configfs function source_sink or loopback
-instead.
+>> Paolo
+>>
+>>> +#ifdef CONFIG_X86_VMX_FEATURE_NAMES
+>>> +	if (cpu_has(c, X86_FEATURE_VMX) && c->vmx_capability[0]) {
+>>> +		seq_puts(m, "\nvmx flags\t:");
+>>> +		for (i = 0; i < 32*NVMXINTS; i++) {
+>>> +			if (test_bit(i, (unsigned long *)c->vmx_capability) &&
+>>> +			    x86_vmx_flags[i] != NULL)
+>>> +				seq_printf(m, " %s", x86_vmx_flags[i]);
+>>> +		}
+>>> +	}
+>>> +#endif
+>>> +
+>>>  	seq_puts(m, "\nbugs\t\t:");
+>>>  	for (i = 0; i < 32*NBUGINTS; i++) {
+>>>  		unsigned int bug_bit = 32*NCAPINTS + i;
 
->=20
-> Endpoint can defer transition to Halted state if endpoint has pending
-> requests.
-
-The implementation of halt handling is a little complicated, you may
-consider return -EAGAIN for functional stall through usb_ep_set_halt
-from function driver if the requests are pending, it doesn't need to
-defer such kinds of functional stall.
-
-Peter
-> Patch add additional condition that allows to return correct endpoint
-> status during Get Endpoint Status request even if the halting endpoint
-> is in progress.
->=20
-> Reported-by: Rahul Kumar <kurahul@cadence.com>
-> Signed-off-by: Rahul Kumar <kurahul@cadence.com>
-> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
-> Fixes: 7733f6c32e36 ("usb: cdns3: Add Cadence USB3 DRD Driver")
-> ---
->  drivers/usb/cdns3/ep0.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/usb/cdns3/ep0.c b/drivers/usb/cdns3/ep0.c
-> index 44f652e8b5a2..10ae03430f34 100644
-> --- a/drivers/usb/cdns3/ep0.c
-> +++ b/drivers/usb/cdns3/ep0.c
-> @@ -234,9 +234,11 @@ static int cdns3_req_ep0_set_address(struct cdns3_de=
-vice *priv_dev,
->  static int cdns3_req_ep0_get_status(struct cdns3_device *priv_dev,
->  				    struct usb_ctrlrequest *ctrl)
->  {
-> +	struct cdns3_endpoint *priv_ep;
->  	__le16 *response_pkt;
->  	u16 usb_status =3D 0;
->  	u32 recip;
-> +	u8 index;
-> =20
->  	recip =3D ctrl->bRequestType & USB_RECIP_MASK;
-> =20
-> @@ -262,9 +264,13 @@ static int cdns3_req_ep0_get_status(struct cdns3_dev=
-ice *priv_dev,
->  	case USB_RECIP_INTERFACE:
->  		return cdns3_ep0_delegate_req(priv_dev, ctrl);
->  	case USB_RECIP_ENDPOINT:
-> -		/* check if endpoint is stalled */
-> +		index =3D cdns3_ep_addr_to_index(ctrl->wIndex);
-> +		priv_ep =3D priv_dev->eps[index];
-> +
-> +		/* check if endpoint is stalled or stall is pending */
->  		cdns3_select_ep(priv_dev, ctrl->wIndex);
-> -		if (EP_STS_STALL(readl(&priv_dev->regs->ep_sts)))
-> +		if (EP_STS_STALL(readl(&priv_dev->regs->ep_sts)) ||
-> +		    (priv_ep->flags & EP_STALL_PENDING))
->  			usb_status =3D  BIT(USB_ENDPOINT_HALT);
->  		break;
->  	default:
-> --=20
-> 2.17.1
->=20
-
---=20
-
-Thanks,
-Peter Chen=
