@@ -2,191 +2,111 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 615FDECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D1FC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33728206BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4980D206BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:28:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="anQG58BQ"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="hQ+5vfiV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730249AbfJHK05 (ORCPT
+        id S1730346AbfJHK2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 06:26:57 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:37231 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729790AbfJHK04 (ORCPT
+        Tue, 8 Oct 2019 06:28:36 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:60489 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729790AbfJHK2g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 06:26:56 -0400
-Received: by mail-ed1-f67.google.com with SMTP id r4so15154180edy.4
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 03:26:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TuTp4qSs/ib4dWqdltJLc9xTt5QmDdIVXlg895SiimI=;
-        b=anQG58BQbSDFEwGX4sXa027j9aWBAUcj+wsxH2AEo964GdrVfgqTdTeY8elwiU65O3
-         QuzoQ6VdSB7i2X3m4gwA0QNl5qMpSg9Euq0ViC/EtK4kjLfBpbA9B6Xov0017C6yDHHU
-         93NNIknMKE/eiFm0+EnnelPjm4r0EzvhuQJjk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TuTp4qSs/ib4dWqdltJLc9xTt5QmDdIVXlg895SiimI=;
-        b=oJicUkXcr5SrZrO9vbzxLpYuGtrrcCRvOp8/KYlTulGrnaqYujNVXIwnc6+69oL5hc
-         Mlzt6bC5x5lOOJqTOjH4OPv/CrdvOMzz3gHZLpH2hz+6sfnEu89IshFBrsSuXLxbbXQm
-         CgbToW3g4bbnqGgsNFxWvPt2/ZCdObSaH5Et55/U2pe9xZ0iKRdIoq2V1FNGzc9cxHDa
-         XQ8m7AzLR8HfPTy+ez4WbC9ssGou4gSe5zPZOaZR0E2zlhr05qqqLztpZ5UKLQI+dFe8
-         UbriPRUsrECtZDsuusQ1oAoCbQTEFTexDNK0oQ5qsJXnFBG2uzLQUh7w2k8HmaR1BpF8
-         jdTA==
-X-Gm-Message-State: APjAAAUX366f0lnKjOtzxT6FroNnJ0QSSqFOrz68Kz1kAZiLf+YRBEhq
-        5HaAWdF0YCFUGPyXfQTh5ISanypQ2HyAOg==
-X-Google-Smtp-Source: APXvYqyhEkD+1Uno1aig9TbSN3sl3imQTDaVUEKQrkJu/mP1X2o7eAbRt77a2XcAyGmyJdpCr16dOA==
-X-Received: by 2002:aa7:c555:: with SMTP id s21mr33182781edr.151.1570530414145;
-        Tue, 08 Oct 2019 03:26:54 -0700 (PDT)
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com. [209.85.221.46])
-        by smtp.gmail.com with ESMTPSA id v24sm2219222ejr.22.2019.10.08.03.26.52
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Oct 2019 03:26:52 -0700 (PDT)
-Received: by mail-wr1-f46.google.com with SMTP id j11so12953993wrp.1
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 03:26:52 -0700 (PDT)
-X-Received: by 2002:a5d:4c45:: with SMTP id n5mr28188191wrt.100.1570530411726;
- Tue, 08 Oct 2019 03:26:51 -0700 (PDT)
+        Tue, 8 Oct 2019 06:28:36 -0400
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id x98ASHZG014542
+        for <linux-kernel@vger.kernel.org>; Tue, 8 Oct 2019 19:28:18 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x98ASHZG014542
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1570530498;
+        bh=Ro3IwQhUtN8hjL6s+IXt8h05Htw+O0E3OtIDEn/I81g=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hQ+5vfiV2YicKKIWkJZx0TJhvgrlzmcjMSRMDckGKSrAyTNO5t3kHp1JwziRBkoGG
+         uz7zwiWA88BeN6Kl9sKRlO0SM8mIL75AvEAsCA+0UNxbTZ+BcAdm001Bbt/t/FEVve
+         odSHckdGk2M+ak2NQCdwjf+JrDGtN1zmtLW+wJY+pWbnC+pUuHDcx8Vouud8CY4OHC
+         rorNvJN9WwwNKIIxCgY9brgsQTgWd9EoMslUznWORzEbgJXpCFgIWVltBiTCVoLdcV
+         bPVQly57XKEeN9bTXJg3apc1lN6jPOJLWrt5RheS/ooSPddkUJU9tZ2HI5WM5e5hyn
+         P5FUBEtwIsEWw==
+X-Nifty-SrcIP: [209.85.221.169]
+Received: by mail-vk1-f169.google.com with SMTP id p189so3636996vkf.10
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 03:28:18 -0700 (PDT)
+X-Gm-Message-State: APjAAAUeUeGg3arj82RZx8JkSKyzNof61ntob71WrKcjXvFIIscVdR9k
+        h031fqI9BNafAjhYjIxLqaCA4pr2cXQ3/uSqyvw=
+X-Google-Smtp-Source: APXvYqxsLps1veCDAEnQRR5QvRopT1wbxu4cRLoJ0kisOKlDpKYN9ac5fIE8dPhAHU8KojDOLd6V4a1vtEujv/5GLKk=
+X-Received: by 2002:a1f:5243:: with SMTP id g64mr16756813vkb.26.1570530491980;
+ Tue, 08 Oct 2019 03:28:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191007174505.10681-1-ezequiel@collabora.com>
- <20191007174505.10681-4-ezequiel@collabora.com> <HE1PR06MB4011204B3FC2DAABB4BD1BACAC9B0@HE1PR06MB4011.eurprd06.prod.outlook.com>
- <CAAFQd5BEPO3nicr1PzRNWoVEzsvKvv5AkqoMVh2AG7qST+bZdA@mail.gmail.com> <HE1PR06MB40111D7287970183CF6D0DD1AC9A0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-In-Reply-To: <HE1PR06MB40111D7287970183CF6D0DD1AC9A0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Tue, 8 Oct 2019 19:26:39 +0900
-X-Gmail-Original-Message-ID: <CAAFQd5AqYsUJeM5tzOY3WNFRZu74k6Yst3TpxcfB61zZtaHJDA@mail.gmail.com>
-Message-ID: <CAAFQd5AqYsUJeM5tzOY3WNFRZu74k6Yst3TpxcfB61zZtaHJDA@mail.gmail.com>
-Subject: Re: [PATCH v2 for 5.4 3/4] media: hantro: Fix motion vectors usage condition
-To:     Jonas Karlman <jonas@kwiboo.se>
-Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "kernel@collabora.com" <kernel@collabora.com>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        "fbuergisser@chromium.org" <fbuergisser@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>
+References: <z4zhwEnRqCVnnV8RYwKbY9H_TEnHePR6grYfw1toELFA-iZidlp3T18y0w35JtWNghJQ3hwL23RrsKXIVJHYiv9wOsqmow33NU6LcHcFWyw=@protonmail.ch>
+ <874l0k3hd0.fsf@igel.home> <20191007115217.GA835482@kroah.com>
+ <87zhic212y.fsf@igel.home> <BbFL6w_pvJJ1heDKuGhto7sFNt-6M-GQSqysyQ75Lgd_MOwqEGzkFdhqvmcDhS27MbsEZ239tZ-1BMjC_ObkRB16jR8vS2Ri8HGJWul6wsw=@protonmail.ch>
+ <CAK7LNASwrKohUUY22Ru06DcG5nUpqRJW3ZjZR+2BZYsX8hfvJw@mail.gmail.com> <n5BwuDIsuq0djY79hLfkS_FlzIsHBcAKB9GQSvb448zSpNrSgpw9usv-UTKAIX1aRJ0ftwd_GVIGAVgp5WMWeWRd2mzP6YRg3lojH72oZuk=@protonmail.ch>
+In-Reply-To: <n5BwuDIsuq0djY79hLfkS_FlzIsHBcAKB9GQSvb448zSpNrSgpw9usv-UTKAIX1aRJ0ftwd_GVIGAVgp5WMWeWRd2mzP6YRg3lojH72oZuk=@protonmail.ch>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 8 Oct 2019 19:27:35 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARhd7Ogmk8wMnDS9K=jvbBNUAZjkK66U++gGHhWLvgvww@mail.gmail.com>
+Message-ID: <CAK7LNARhd7Ogmk8wMnDS9K=jvbBNUAZjkK66U++gGHhWLvgvww@mail.gmail.com>
+Subject: Re: [PATCH v2] kheaders: making headers archive reproducible
+To:     Dmitry Goldin <dgoldin@protonmail.ch>
+Cc:     Andreas Schwab <schwab@linux-m68k.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "linux-kernel\\\\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "joel\\\\@joelfernandes.org" <joel@joelfernandes.org>,
+        Ben Hutchings <ben@decadent.org.uk>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 8, 2019 at 3:23 PM Jonas Karlman <jonas@kwiboo.se> wrote:
+On Tue, Oct 8, 2019 at 6:54 PM Dmitry Goldin <dgoldin@protonmail.ch> wrote:
 >
-> On 2019-10-08 05:29, Tomasz Figa wrote:
-> > Hi Jonas,
-> >
-> > On Tue, Oct 8, 2019 at 3:33 AM Jonas Karlman <jonas@kwiboo.se> wrote:
-> >> On 2019-10-07 19:45, Ezequiel Garcia wrote:
-> >>> From: Francois Buergisser <fbuergisser@chromium.org>
-> >>>
-> >>> The setting of the motion vectors usage and the setting of motion
-> >>> vectors address are currently done under different conditions.
-> >>>
-> >>> When decoding pre-recorded videos, this results of leaving the motion
-> >>> vectors address unset, resulting in faulty memory accesses. Fix it
-> >>> by using the same condition everywhere, which matches the profiles
-> >>> that support motion vectors.
-> >> This does not fully match hantro sdk:
-> >>
-> >>   enable direct MV writing and POC tables for high/main streams.
-> >>   enable it also for any "baseline" stream which have main/high tools enabled.
-> >>
-> >>   (sps->profile_idc > 66 && sps->constrained_set0_flag == 0) ||
-> >>   sps->frame_mbs_only_flag != 1 ||
-> >>   sps->chroma_format_idc != 1 ||
-> >>   sps->scaling_matrix_present_flag != 0 ||
-> >>   pps->entropy_coding_mode_flag != 0 ||
-> >>   pps->weighted_pred_flag != 0 ||
-> >>   pps->weighted_bi_pred_idc != 0 ||
-> >>   pps->transform8x8_flag != 0 ||
-> >>   pps->scaling_matrix_present_flag != 0
-> > Thanks for double checking this. I can confirm that it's what Hantro
-> > SDK does indeed.
-> >
-> > However, would a stream with sps->profile_idc <= 66 and those other
-> > conditions met be still a compliant stream?
+> =E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90 Original =
+Message =E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90
+> On Tuesday, October 8, 2019 10:14 AM, Masahiro Yamada <yamada.masahiro@so=
+cionext.com> wrote:
 >
-> You are correct, if a non-compliant video is having decoding problems it should probably be handled
-> on userspace side (by not reporting baseline profile) and not in kernel.
-> All my video samples that was having the issue fixed in this patch are now decoded correctly.
->
+> > On Tue, Oct 8, 2019 at 5:07 PM Dmitry Goldin dgoldin@protonmail.ch wrot=
+e:
 > >
-> >> Above check is used when DIR_MV_BASE should be written.
-> >> And WRITE_MVS_E is set to nal_ref_idc != 0 when above is true.
-> >>
-> >> I think it may be safer to always set DIR_MV_BASE and keep the existing nal_ref_idc check for WRITE_MVS_E.
-> > That might have a performance penalty or some other side effects,
-> > though. Otherwise Hantro SDK wouldn't have enable it conditionally.
+> > > Hmm. --sort was introduced in 1.28 in 2014. Do you think it would war=
+rant some sort of version check and fallback or is this something we can ex=
+pect the user to handle if their distribution happens to not ship anything =
+more recent? A few sensible workarounds come to mind.
 > >
-> >> (That is what I did in my "media: hantro: H264 fixes and improvements" series, v2 is incoming)
-> >> Or have you found any video that is having issues in such case?
-> > We've been running the code with sps->profile_idc > 66 in production
-> > for 4 years and haven't seen any reports of a stream that wasn't
-> > decoded correctly.
-> >
-> > If we decide to go with a different behavior, I'd suggest thoroughly
-> > verifying the behavior on a big number of streams, including some
-> > performance measurements.
+> > I think the former.
 >
-> I agree, I would however suggest to change the if statement to the following (or similar)
-> as that should be the optimal for performance reasons and match the hantro sdk.
+> After pondering it briefly, maybe substituting the option is a bit less h=
+assle than checking for
+> the version and then degrading to a possibly non-reproducible archive.
 >
-> if (sps->profile_idc > 66 && dec_param->nal_ref_idc)
+> Maybe we could go with something like the sketch below to replace --sort=
+=3Dname. That is, if
+> that's the only problematic flag.
+>
+> find $cpio_dir -printf "%P\n" | LC_ALL=3DC sort | \
+>     tar "${KBUILD_BUILD_TIMESTAMP:+--mtime=3D$KBUILD_BUILD_TIMESTAMP}" \
+>     --owner=3D0 --group=3D0 --numeric-owner \
+>     -Jcf $tarfile -C $cpio_dir/ -T - > /dev/null
+>
+> I will look at this a bit more closely and give it a test-run later today=
+ or early tomorrow. Then we can decide if its sufficient before submitting =
+another patch. Other suggestions and pointers are welcome, of course.
 
-Sorry for my ignorance, but could you elaborate on this? What's the
-meaning of nal_ref_idc? I don't see it being checked in the Hantro SDK
-condition you mentioned earlier.
 
->
-> Regards,
-> Jonas
->
-> >
-> > Best regards,
-> > Tomasz
-> >
-> >> Regards,
-> >> Jonas
-> >>
-> >>> Fixes: dea0a82f3d22 ("media: hantro: Add support for H264 decoding on G1")
-> >>> Signed-off-by: Francois Buergisser <fbuergisser@chromium.org>
-> >>> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> >>> ---
-> >>> v2:
-> >>> * New patch.
-> >>>
-> >>>  drivers/staging/media/hantro/hantro_g1_h264_dec.c | 2 +-
-> >>>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>>
-> >>> diff --git a/drivers/staging/media/hantro/hantro_g1_h264_dec.c b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
-> >>> index 7ab534936843..c92460407613 100644
-> >>> --- a/drivers/staging/media/hantro/hantro_g1_h264_dec.c
-> >>> +++ b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
-> >>> @@ -35,7 +35,7 @@ static void set_params(struct hantro_ctx *ctx)
-> >>>       if (sps->flags & V4L2_H264_SPS_FLAG_MB_ADAPTIVE_FRAME_FIELD)
-> >>>               reg |= G1_REG_DEC_CTRL0_SEQ_MBAFF_E;
-> >>>       reg |= G1_REG_DEC_CTRL0_PICORD_COUNT_E;
-> >>> -     if (dec_param->nal_ref_idc)
-> >>> +     if (sps->profile_idc > 66)
-> >>>               reg |= G1_REG_DEC_CTRL0_WRITE_MVS_E;
-> >>>
-> >>>       if (!(sps->flags & V4L2_H264_SPS_FLAG_FRAME_MBS_ONLY) &&
->
+I am fine with this solution too.
+
+Thanks!
+
+--=20
+Best Regards
+Masahiro Yamada
