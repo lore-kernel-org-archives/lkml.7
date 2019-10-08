@@ -2,111 +2,135 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE22C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E67A9C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ECDC20673
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C041920673
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:40:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570524036;
+	bh=ztMVJu70f7Wzk4Hpyopzu5sw8UM/3NaOonTy4ToEadk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zF3O0ZecFwmZ+pBb3SMuwT9012lSFgjq2T7zbRgBasL7P9pU03eSJs/W5u10AEFV+
+	 EvQCoZ4jOdV+hlACDT71L86kVtr/kjKA5iJJcFVBO+cJWzqSYaRlOUdCwtAR0UN7XH
+	 eCJrc1bX8/TYLVW14SPzZFaLy9pHETqxwNjYEqEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730183AbfJHIim (ORCPT
+        id S1730012AbfJHIkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 04:38:42 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:41892 "EHLO huawei.com"
+        Tue, 8 Oct 2019 04:40:36 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40260 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730063AbfJHIil (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 04:38:41 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 52ADD745F3E9E7BF8522;
-        Tue,  8 Oct 2019 16:38:39 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Tue, 8 Oct 2019
- 16:38:37 +0800
-Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     Michal Hocko <mhocko@kernel.org>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
-        <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
-        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>, <mpe@ellerman.id.au>,
-        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
-        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
-        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
-        <paul.burton@mips.com>, <jhogan@kernel.org>,
-        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>,
-        <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
-        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
-        <robin.murphy@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
-        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
-        <len.brown@intel.com>, <axboe@kernel.dk>, <dledford@redhat.com>,
-        <jeffrey.t.kirsher@intel.com>, <linux-alpha@vger.kernel.org>,
-        <naveen.n.rao@linux.vnet.ibm.com>, <mwb@linux.vnet.ibm.com>,
-        <linuxppc-dev@lists.ozlabs.org>, <linux-s390@vger.kernel.org>,
-        <linux-sh@vger.kernel.org>, <sparclinux@vger.kernel.org>,
-        <tbogendoerfer@suse.de>, <linux-mips@vger.kernel.org>,
-        <rafael@kernel.org>, <gregkh@linuxfoundation.org>
-References: <20190924091714.GJ2369@hirez.programming.kicks-ass.net>
- <20190924105622.GH23050@dhcp22.suse.cz>
- <20190924112349.GJ2332@hirez.programming.kicks-ass.net>
- <20190924115401.GM23050@dhcp22.suse.cz>
- <20190924120943.GP2349@hirez.programming.kicks-ass.net>
- <20190924122500.GP23050@dhcp22.suse.cz>
- <20190924124325.GQ2349@hirez.programming.kicks-ass.net>
- <20190924125936.GR2349@hirez.programming.kicks-ass.net>
- <20190924131939.GS23050@dhcp22.suse.cz>
- <1adcbe68-6753-3497-48a0-cc84ac503372@huawei.com>
- <20190925104108.GE4553@hirez.programming.kicks-ass.net>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <47fa4cee-8528-7c23-c7de-7be1b65aa2ae@huawei.com>
-Date:   Tue, 8 Oct 2019 16:38:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        id S1728866AbfJHIkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 04:40:35 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 23F2BAF87;
+        Tue,  8 Oct 2019 08:40:33 +0000 (UTC)
+Date:   Tue, 8 Oct 2019 10:40:31 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Petr Mladek <pmladek@suse.com>, akpm@linux-foundation.org,
+        sergey.senozhatsky.work@gmail.com, rostedt@goodmis.org,
+        peterz@infradead.org, linux-mm@kvack.org,
+        john.ogness@linutronix.de, david@redhat.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
+Message-ID: <20191008084031.GC6681@dhcp22.suse.cz>
+References: <1570228005-24979-1-git-send-email-cai@lca.pw>
+ <20191007143002.l37bt2lzqtnqjqxu@pathway.suse.cz>
+ <1570460350.5576.290.camel@lca.pw>
+ <20191007151237.GP2381@dhcp22.suse.cz>
+ <1570462407.5576.292.camel@lca.pw>
 MIME-Version: 1.0
-In-Reply-To: <20190925104108.GE4553@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1570462407.5576.292.camel@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/25 18:41, Peter Zijlstra wrote:
-> On Wed, Sep 25, 2019 at 05:14:20PM +0800, Yunsheng Lin wrote:
->> From the discussion above, It seems making the node_to_cpumask_map()
->> NUMA_NO_NODE aware is the most feasible way to move forwad.
+On Mon 07-10-19 11:33:27, Qian Cai wrote:
+> On Mon, 2019-10-07 at 17:12 +0200, Michal Hocko wrote:
+> > On Mon 07-10-19 10:59:10, Qian Cai wrote:
+> > [...]
+> > > It is almost impossible to eliminate all the indirect call chains from
+> > > console_sem/console_owner_lock to zone->lock because it is too normal that
+> > > something later needs to allocate some memory dynamically, so as long as it
+> > > directly call printk() with zone->lock held, it will be in trouble.
+> > 
+> > Do you have any example where the console driver really _has_ to
+> > allocate. Because I have hard time to believe this is going to work at
+> > all as the atomic context doesn't allow to do any memory reclaim and
+> > such an allocation would be too easy to fail so the allocation cannot
+> > really rely on it.
 > 
-> That's still wrong.
-
-Hi, Peter
-
-It seems this has trapped in the dead circle.
-
-From my understanding, NUMA_NO_NODE which means not node numa preference
-is the state to describe the node of virtual device or the physical device
-that has equal distance to all cpu.
-
-We can be stricter if the device does have a nearer node, but we can not
-deny that a device does not have a node numa preference or node affinity,
-which also means the control or data buffer can be allocated at the node where
-the process is running.
-
-As you has proposed, making it -2 and have dev_to_node() warn if the device does
-have a nearer node and not set by the fw is a way to be stricter.
-
-But I think maybe being stricter is not really relevant to NUMA_NO_NODE, because
-we does need a state to describe the device that have equal distance to all node,
-even if it is not physically scalable.
-
-Any better suggestion to move this forward?
-
+> I don't know how to explain to you clearly, but let me repeat again one last
+> time. There is no necessary for console driver directly to allocate considering
+> this example,
 > 
-> .
+> CPU0:              CPU1:    CPU2:       CPU3:
+> console_sem->lock                       zone->lock
+>                    pi->lock
+> pi->lock                    rq_lock
+>                    rq->lock
+>                             zone->lock
+>                                         console_sem->lock
 > 
+> Here it only need someone held the rq_lock and allocate some memory.
 
+Is the scheduler really allocating while holding the rq lock?
+
+> There is
+> also true for port_lock. Since the deadlock could involve a lot of CPUs and a
+> longer lock chain, it is impossible to predict which one to allocate some memory
+> while held a lock could end up with the same problematic lock chain.
+
+And that is exactly what I've said earlier. Locks used by consoles
+should really better be tail locks because then they are going to create
+arbitrary dependency chains. The zone->lock is in no way special here.
+ 
+> > So again, crippling the MM code just because of lockdep false possitives
+> > or a broken console driver sounds like a wrong way to approach the
+> > problem.
+> > 
+> > > [  297.425964] -> #1 (&port_lock_key){-.-.}:
+> > > [  297.425967]        __lock_acquire+0x5b3/0xb40
+> > > [  297.425967]        lock_acquire+0x126/0x280
+> > > [  297.425968]        _raw_spin_lock_irqsave+0x3a/0x50
+> > > [  297.425969]        serial8250_console_write+0x3e4/0x450
+> > > [  297.425970]        univ8250_console_write+0x4b/0x60
+> > > [  297.425970]        console_unlock+0x501/0x750
+> > > [  297.425971]        vprintk_emit+0x10d/0x340
+> > > [  297.425972]        vprintk_default+0x1f/0x30
+> > > [  297.425972]        vprintk_func+0x44/0xd4
+> > > [  297.425973]        printk+0x9f/0xc5
+> > > [  297.425974]        register_console+0x39c/0x520
+> > > [  297.425975]        univ8250_console_init+0x23/0x2d
+> > > [  297.425975]        console_init+0x338/0x4cd
+> > > [  297.425976]        start_kernel+0x534/0x724
+> > > [  297.425977]        x86_64_start_reservations+0x24/0x26
+> > > [  297.425977]        x86_64_start_kernel+0xf4/0xfb
+> > > [  297.425978]        secondary_startup_64+0xb6/0xc0
+> > 
+> > This is an early init code again so the lockdep sounds like a false
+> > possitive to me.
+> 
+> This is just a tip of iceberg to show the lock dependency,
+
+Does this tip point to a real deadlock or merely a class of lockdep
+false dependencies?
+
+> console_owner --> port_lock_key
+> 
+> which could easily happen everywhere with a simple printk().
+
+-- 
+Michal Hocko
+SUSE Labs
