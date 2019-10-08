@@ -2,130 +2,126 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DC3C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFF2ECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 536BE20815
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:26:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F3C3206BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:27:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730902AbfJHM0K (ORCPT
+        id S1730911AbfJHM1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 08:26:10 -0400
-Received: from mga02.intel.com ([134.134.136.20]:30802 "EHLO mga02.intel.com"
+        Tue, 8 Oct 2019 08:27:15 -0400
+Received: from mga02.intel.com ([134.134.136.20]:30882 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730316AbfJHM0H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 08:26:07 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S1730317AbfJHM1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 08:27:15 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 05:26:07 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 05:27:14 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.67,270,1566889200"; 
-   d="scan'208";a="206626813"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 08 Oct 2019 05:26:05 -0700
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: [PATCH v2 2/2] extcon: axp288: Remove the build-in connection description
-Date:   Tue,  8 Oct 2019 15:26:00 +0300
-Message-Id: <20191008122600.22340-3-heikki.krogerus@linux.intel.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191008122600.22340-1-heikki.krogerus@linux.intel.com>
-References: <20191008122600.22340-1-heikki.krogerus@linux.intel.com>
+   d="scan'208";a="206626898"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 08 Oct 2019 05:27:11 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 08 Oct 2019 15:27:10 +0300
+Date:   Tue, 8 Oct 2019 15:27:10 +0300
+From:   "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "logang@deltatee.com" <logang@deltatee.com>
+Subject: Re: [PATCH v8 6/6] PCI: Fix bug resulting in double hpmemsize being
+ assigned to MMIO window
+Message-ID: <20191008122710.GK2819@lahna.fi.intel.com>
+References: <SL2P216MB018781FEDD139047FCBE42AB80C00@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SL2P216MB018781FEDD139047FCBE42AB80C00@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Getting handle to the USB role switch by first finding its
-software fwnode.
+On Fri, Jul 26, 2019 at 12:55:03PM +0000, Nicholas Johnson wrote:
+> Background
+> ==========================================================================
 
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
----
- drivers/extcon/extcon-axp288.c | 38 ++++++++++++++++++++--------------
- 1 file changed, 23 insertions(+), 15 deletions(-)
+I don't think the above are needed.
 
-diff --git a/drivers/extcon/extcon-axp288.c b/drivers/extcon/extcon-axp288.c
-index 415afaf479e7..a7f216191493 100644
---- a/drivers/extcon/extcon-axp288.c
-+++ b/drivers/extcon/extcon-axp288.c
-@@ -322,6 +322,25 @@ static void axp288_put_role_sw(void *data)
- 	usb_role_switch_put(info->role_sw);
- }
- 
-+static int axp288_extcon_find_role_sw(struct axp288_extcon_info *info)
-+{
-+	const struct software_node *swnode;
-+	struct fwnode_handle *fwnode;
-+
-+	if (!x86_match_cpu(cherry_trail_cpu_ids))
-+		return 0;
-+
-+	swnode = software_node_find_by_name(NULL, "intel-xhci-usb-sw");
-+	if (!swnode)
-+		return -EPROBE_DEFER;
-+
-+	fwnode = software_node_fwnode(swnode);
-+	info->role_sw = usb_role_switch_find_by_fwnode(fwnode);
-+	fwnode_handle_put(fwnode);
-+
-+	return info->role_sw ? 0 : -EPROBE_DEFER;
-+}
-+
- static int axp288_extcon_probe(struct platform_device *pdev)
- {
- 	struct axp288_extcon_info *info;
-@@ -343,9 +362,10 @@ static int axp288_extcon_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, info);
- 
--	info->role_sw = usb_role_switch_get(dev);
--	if (IS_ERR(info->role_sw))
--		return PTR_ERR(info->role_sw);
-+	ret = axp288_extcon_find_role_sw(info);
-+	if (ret)
-+		return ret;
-+
- 	if (info->role_sw) {
- 		ret = devm_add_action_or_reset(dev, axp288_put_role_sw, info);
- 		if (ret)
-@@ -440,26 +460,14 @@ static struct platform_driver axp288_extcon_driver = {
- 	},
- };
- 
--static struct device_connection axp288_extcon_role_sw_conn = {
--	.endpoint[0] = "axp288_extcon",
--	.endpoint[1] = "intel_xhci_usb_sw-role-switch",
--	.id = "usb-role-switch",
--};
--
- static int __init axp288_extcon_init(void)
- {
--	if (x86_match_cpu(cherry_trail_cpu_ids))
--		device_connection_add(&axp288_extcon_role_sw_conn);
--
- 	return platform_driver_register(&axp288_extcon_driver);
- }
- module_init(axp288_extcon_init);
- 
- static void __exit axp288_extcon_exit(void)
- {
--	if (x86_match_cpu(cherry_trail_cpu_ids))
--		device_connection_remove(&axp288_extcon_role_sw_conn);
--
- 	platform_driver_unregister(&axp288_extcon_driver);
- }
- module_exit(axp288_extcon_exit);
--- 
-2.23.0
+> Currently, the kernel can sometimes assign the MMIO_PREF window
+> additional size into the MMIO window, resulting in double the MMIO
+> additional size, even if the MMIO_PREF window was successful.
+> 
+> This happens if in the first pass, the MMIO_PREF succeeds but the MMIO
+> fails. In the next pass, because MMIO_PREF is already assigned, the
+> attempt to assign MMIO_PREF returns an error code instead of success
+> (nothing more to do, already allocated).
+> 
+> Example of problem (more context can be found in the bug report URL):
 
+Maybe add bit more context in the changelog. Also explain how the
+problem can be reproduced.
+
+> Mainline kernel:
+> pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0xa00fffff] = 256M
+> pci 0000:06:04.0: BAR 14: assigned [mem 0xa0200000-0xb01fffff] = 256M
+> 
+> Patched kernel:
+> pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0x980fffff] = 128M
+> pci 0000:06:04.0: BAR 14: assigned [mem 0x98200000-0xa01fffff] = 128M
+> 
+> This was using pci=realloc,hpmemsize=128M,nocrs - on the same machine
+> with the same configuration, with a Ubuntu mainline kernel and a kernel
+> patched with this patch series.
+> 
+> This patch is vital for the next patch in the series. The next patch
+
+There is no next patch in the patch series ;-)
+
+> allows the user to specify MMIO and MMIO_PREF independently. If the
+> MMIO_PREF is set to be very large, this bug will end up more than
+> doubling the MMIO size. The bug results in the MMIO_PREF being added to
+> the MMIO window, which means doubling if MMIO_PREF size == MMIO size.
+> With a large MMIO_PREF, without this patch, the MMIO window will likely
+> fail to be assigned altogether due to lack of 32-bit address space.
+> 
+> Patch notes
+> ==========================================================================
+
+Here also the above two lines are not needed.
+
+> Change find_free_bus_resource() to not skip assigned resources with
+> non-null parent.
+> 
+> Add checks in pbus_size_io() and pbus_size_mem() to return success if
+> resource returned from find_free_bus_resource() is already allocated.
+> 
+> This avoids pbus_size_io() and pbus_size_mem() returning error code to
+> __pci_bus_size_bridges() when a resource has been successfully assigned
+> in a previous pass. This fixes the existing behaviour where space for a
+> resource could be reserved multiple times in different parent bridge
+> windows. This also greatly reduces the number of failed BAR messages in
+> dmesg when Linux assigns resources.
+> 
+> See related from Logan Gunthorpe (same problem, different solution):
+> https://lore.kernel.org/lkml/20190531171216.20532-2-logang@deltatee.com/T/#u
+
+Link: https://lore.kernel.org/lkml/20190531171216.20532-2-logang@deltatee.com/T/#u
+
+> Solves bug report: https://bugzilla.kernel.org/show_bug.cgi?id=203243
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=203243
+
+The patch itself looks good to me.
