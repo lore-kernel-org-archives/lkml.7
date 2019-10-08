@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9646C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D87C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDDF72070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:11:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AD872196E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:11:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731212AbfJHMLh (ORCPT
+        id S1731214AbfJHMLn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 08:11:37 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:40896 "EHLO inva021.nxp.com"
+        Tue, 8 Oct 2019 08:11:43 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:40942 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731162AbfJHMLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 08:11:33 -0400
+        id S1731207AbfJHMLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 08:11:38 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1EDAC200301;
-        Tue,  8 Oct 2019 14:11:31 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B0A662002CF;
+        Tue,  8 Oct 2019 14:11:36 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 129E22002DE;
-        Tue,  8 Oct 2019 14:11:31 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A27782002C9;
+        Tue,  8 Oct 2019 14:11:36 +0200 (CEST)
 Received: from fsr-fed2164-101.ea.freescale.net (fsr-fed2164-101.ea.freescale.net [10.171.82.91])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id BB8C8205DB;
-        Tue,  8 Oct 2019 14:11:30 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 61CCC205DB;
+        Tue,  8 Oct 2019 14:11:36 +0200 (CEST)
 From:   Madalin Bucur <madalin.bucur@nxp.com>
 To:     davem@davemloft.net, netdev@vger.kernel.org
 Cc:     roy.pledge@nxp.com, laurentiu.tudor@nxp.com,
         linux-kernel@vger.kernel.org, Madalin Bucur <madalin.bucur@nxp.com>
-Subject: [PATCH 17/20] dpaa_eth: remove netdev_err() for user errors
-Date:   Tue,  8 Oct 2019 15:10:38 +0300
-Message-Id: <1570536641-25104-18-git-send-email-madalin.bucur@nxp.com>
+Subject: [PATCH 20/20] dpaa_eth: cleanup skb_to_contig_fd()
+Date:   Tue,  8 Oct 2019 15:10:41 +0300
+Message-Id: <1570536641-25104-21-git-send-email-madalin.bucur@nxp.com>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <1570536641-25104-1-git-send-email-madalin.bucur@nxp.com>
 References: <1570536641-25104-1-git-send-email-madalin.bucur@nxp.com>
@@ -45,52 +45,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-User reports that an application making an (incorrect) call to
-restart AN on a fixed link DPAA interface triggers an error in
-the kernel log while the returned EINVAL should be enough.
+Remove cast, align variable name, simplify DMA map size computation.
 
-Reported-by: Joakim Tjernlund <Joakim.Tjernlund@infinera.com>
 Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
 ---
- drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/net/ethernet/freescale/dpaa/dpaa_eth.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c b/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c
-index 1c689e11c61f..126c0f1d8442 100644
---- a/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c
-+++ b/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c
-@@ -81,7 +81,6 @@ static int dpaa_get_link_ksettings(struct net_device *net_dev,
- 				   struct ethtool_link_ksettings *cmd)
+diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+index c178f1b8c5e5..78651bb45cfe 100644
+--- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
++++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+@@ -1382,7 +1382,7 @@ static void count_ern(struct dpaa_percpu_priv *percpu_priv,
+ static int dpaa_enable_tx_csum(struct dpaa_priv *priv,
+ 			       struct sk_buff *skb,
+ 			       struct qm_fd *fd,
+-			       char *parse_results)
++			       void *parse_results)
  {
- 	if (!net_dev->phydev) {
--		netdev_dbg(net_dev, "phy device not initialized\n");
- 		return 0;
- 	}
- 
-@@ -96,7 +95,6 @@ static int dpaa_set_link_ksettings(struct net_device *net_dev,
+ 	struct fman_prs_result *parse_result;
+ 	u16 ethertype = ntohs(skb->protocol);
+@@ -1836,7 +1836,7 @@ static int skb_to_contig_fd(struct dpaa_priv *priv,
+ {
+ 	struct net_device *net_dev = priv->net_dev;
+ 	enum dma_data_direction dma_dir;
+-	unsigned char *buffer_start;
++	unsigned char *buff_start;
+ 	struct sk_buff **skbh;
+ 	dma_addr_t addr;
  	int err;
+@@ -1845,10 +1845,10 @@ static int skb_to_contig_fd(struct dpaa_priv *priv,
+ 	 * available, so just use that for offset.
+ 	 */
+ 	fd->bpid = FSL_DPAA_BPID_INV;
+-	buffer_start = skb->data - priv->tx_headroom;
++	buff_start = skb->data - priv->tx_headroom;
+ 	dma_dir = DMA_TO_DEVICE;
  
- 	if (!net_dev->phydev) {
--		netdev_err(net_dev, "phy device not initialized\n");
- 		return -ENODEV;
- 	}
+-	skbh = (struct sk_buff **)buffer_start;
++	skbh = (struct sk_buff **)buff_start;
+ 	*skbh = skb;
  
-@@ -143,7 +141,6 @@ static int dpaa_nway_reset(struct net_device *net_dev)
- 	int err;
+ 	/* Enable L3/L4 hardware checksum computation.
+@@ -1857,7 +1857,7 @@ static int skb_to_contig_fd(struct dpaa_priv *priv,
+ 	 * need to write into the skb.
+ 	 */
+ 	err = dpaa_enable_tx_csum(priv, skb, fd,
+-				  ((char *)skbh) + DPAA_TX_PRIV_DATA_SIZE);
++				  buff_start + DPAA_TX_PRIV_DATA_SIZE);
+ 	if (unlikely(err < 0)) {
+ 		if (net_ratelimit())
+ 			netif_err(priv, tx_err, net_dev, "HW csum error: %d\n",
+@@ -1870,8 +1870,8 @@ static int skb_to_contig_fd(struct dpaa_priv *priv,
+ 	fd->cmd |= cpu_to_be32(FM_FD_CMD_FCO);
  
- 	if (!net_dev->phydev) {
--		netdev_err(net_dev, "phy device not initialized\n");
- 		return -ENODEV;
- 	}
- 
-@@ -168,7 +165,6 @@ static void dpaa_get_pauseparam(struct net_device *net_dev,
- 	mac_dev = priv->mac_dev;
- 
- 	if (!net_dev->phydev) {
--		netdev_err(net_dev, "phy device not initialized\n");
- 		return;
- 	}
- 
+ 	/* Map the entire buffer size that may be seen by FMan, but no more */
+-	addr = dma_map_single(priv->tx_dma_dev, skbh,
+-			      skb_tail_pointer(skb) - buffer_start, dma_dir);
++	addr = dma_map_single(priv->tx_dma_dev, buff_start,
++			      priv->tx_headroom + skb->len, dma_dir);
+ 	if (unlikely(dma_mapping_error(priv->tx_dma_dev, addr))) {
+ 		if (net_ratelimit())
+ 			netif_err(priv, tx_err, net_dev, "dma_map_single() failed\n");
 -- 
 2.1.0
 
