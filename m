@@ -2,290 +2,289 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDABC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3249AC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB777206BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:54:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="ACkFV+Fv"
+	by mail.kernel.org (Postfix) with ESMTP id 088A3206BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:58:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730867AbfJHLyV (ORCPT
+        id S1730816AbfJHL63 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 07:54:21 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52121 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730835AbfJHLyU (ORCPT
+        Tue, 8 Oct 2019 07:58:29 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:56195 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730371AbfJHL62 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 07:54:20 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 7so2835775wme.1
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 04:54:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=x6cLNIibeTIK82QCll5CTrLqaXyHM8hh5YWTiuB41j4=;
-        b=ACkFV+FvXymweclUVq0OdJhTH7NFfqNnK9mz6INicNXoAbPNIXCtUFcsZYq05+UNq6
-         UeDEzAmAIi8mLdOwhG2wtj7agZjgjleaQzFhY5bVehIXJbhOTc0AQqseCP3pmz+DAyER
-         yBG4+WFKAA6KpWKul8kWYVktTlCwZ4j4hxrmpDyddQYqqa0emqgzF/dzJkl4ne5kWckG
-         AI/3u52Ks3I4ssqHLl5LeOXg3FlZzDGr/LDb9gqQcHv0vYQbImJ6IF5G17kLqGm1XvA9
-         57WPesHq7b4a4fYuTmPOhJMQpPOKfXLrjYPdlDy46iz1K49w2j/O6hzxswG8KJNOHzV5
-         rwmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=x6cLNIibeTIK82QCll5CTrLqaXyHM8hh5YWTiuB41j4=;
-        b=Qkaizyse/lL+HBLY0HBiTU9OyYOxfATA9xtLslbA3GJRpllDgIVdWN99sOXlPZIUT4
-         DPGRp/TLGch7plcLg1x7dzRMxdZspjfnrVmGIqAmjVJ/UxsBhZthIX1LQQKXylfxgsZr
-         ik8Dll3lrzWgrIQtGQ2AeFaNsuvRjpiwFVYpbHxVF33sWA/e4LEM7UrYRpBIXG9X+YM1
-         hIWHMGxNzyn1Y9K/P+eZ0jknsvMEM+ZZkJ2CnuPH84UMX7xPuqvAdiKBFuh9eB2/VNl9
-         0PwpP40C5uxmSqhebqCWisPQmBcLFX6Cv6+GdpbxnhgGU1vDSZ3pdsUuQJAo1ZDyzfFF
-         jooQ==
-X-Gm-Message-State: APjAAAXPqZFVQ4M9Vua/tpc1JgNftmu4GuiSBvBHaH8pRWDNNjkh37yn
-        ARnOFNhCV0vJKLDsjVzbDV5J7WP+cyplhxFX
-X-Google-Smtp-Source: APXvYqzezkq/bhLD4X0Q5urn8uPDzMGPxS2jlRQfQf+3znujeyyVxZjyy6T1MQGxY35UGUKQcl1VQw==
-X-Received: by 2002:a05:600c:253:: with SMTP id 19mr3245828wmj.158.1570535656798;
-        Tue, 08 Oct 2019 04:54:16 -0700 (PDT)
-Received: from rudolphp.sr1.9esec.dev (b2b-78-94-0-50.unitymedia.biz. [78.94.0.50])
-        by smtp.gmail.com with ESMTPSA id l7sm19273741wrv.77.2019.10.08.04.54.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2019 04:54:16 -0700 (PDT)
-From:   patrick.rudolph@9elements.com
-To:     linux-kernel@vger.kernel.org
-Cc:     Patrick Rudolph <patrick.rudolph@9elements.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ben Zhang <benzh@chromium.org>,
-        Filipe Brandenburger <filbranden@chromium.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Samuel Holland <samuel@sholland.org>,
-        Julius Werner <jwerner@chromium.org>
-Subject: [PATCH 2/2] firmware: coreboot: Export active CBFS partition
-Date:   Tue,  8 Oct 2019 13:53:26 +0200
-Message-Id: <20191008115342.28483-2-patrick.rudolph@9elements.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191008115342.28483-1-patrick.rudolph@9elements.com>
-References: <20191008115342.28483-1-patrick.rudolph@9elements.com>
+        Tue, 8 Oct 2019 07:58:28 -0400
+X-Originating-IP: 81.185.168.180
+Received: from [192.168.43.237] (180.168.185.81.rev.sfr.net [81.185.168.180])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 2154FC0014;
+        Tue,  8 Oct 2019 11:58:18 +0000 (UTC)
+Subject: Re: [PATCH v6 14/14] riscv: Make mmap allocation top-down by default
+To:     Atish Patra <Atish.Patra@wdc.com>
+Cc:     "ralf@linux-mips.org" <ralf@linux-mips.org>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "palmer@sifive.com" <palmer@sifive.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+        "paul.burton@mips.com" <paul.burton@mips.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "hch@lst.de" <hch@lst.de>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "jhogan@kernel.org" <jhogan@kernel.org>,
+        "mcgrof@kernel.org" <mcgrof@kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190808061756.19712-1-alex@ghiti.fr>
+ <20190808061756.19712-15-alex@ghiti.fr>
+ <208433f810b5b07b1e679d7eedb028697dff851b.camel@wdc.com>
+ <60b52f20-a2c7-dee9-7cf3-a727f07400b9@ghiti.fr>
+ <daeb33415751ef16a717f6ff6a29486110c503d7.camel@wdc.com>
+From:   Alex Ghiti <alex@ghiti.fr>
+Message-ID: <9e9a3fea-d8a3-ae62-317a-740773f0725c@ghiti.fr>
+Date:   Tue, 8 Oct 2019 07:58:18 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <daeb33415751ef16a717f6ff6a29486110c503d7.camel@wdc.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: sv-FI
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Patrick Rudolph <patrick.rudolph@9elements.com>
+On 10/7/19 8:46 PM, Atish Patra wrote:
+> On Mon, 2019-10-07 at 05:11 -0400, Alex Ghiti wrote:
+>> On 10/4/19 10:12 PM, Atish Patra wrote:
+>>> On Thu, 2019-08-08 at 02:17 -0400, Alexandre Ghiti wrote:
+>>>> In order to avoid wasting user address space by using bottom-up
+>>>> mmap
+>>>> allocation scheme, prefer top-down scheme when possible.
+>>>>
+>>>> Before:
+>>>> root@qemuriscv64:~# cat /proc/self/maps
+>>>> 00010000-00016000 r-xp 00000000 fe:00
+>>>> 6389       /bin/cat.coreutils
+>>>> 00016000-00017000 r--p 00005000 fe:00
+>>>> 6389       /bin/cat.coreutils
+>>>> 00017000-00018000 rw-p 00006000 fe:00
+>>>> 6389       /bin/cat.coreutils
+>>>> 00018000-00039000 rw-p 00000000 00:00 0          [heap]
+>>>> 1555556000-155556d000 r-xp 00000000 fe:00 7193   /lib/ld-2.28.so
+>>>> 155556d000-155556e000 r--p 00016000 fe:00 7193   /lib/ld-2.28.so
+>>>> 155556e000-155556f000 rw-p 00017000 fe:00 7193   /lib/ld-2.28.so
+>>>> 155556f000-1555570000 rw-p 00000000 00:00 0
+>>>> 1555570000-1555572000 r-xp 00000000 00:00 0      [vdso]
+>>>> 1555574000-1555576000 rw-p 00000000 00:00 0
+>>>> 1555576000-1555674000 r-xp 00000000 fe:00 7187   /lib/libc-
+>>>> 2.28.so
+>>>> 1555674000-1555678000 r--p 000fd000 fe:00 7187   /lib/libc-
+>>>> 2.28.so
+>>>> 1555678000-155567a000 rw-p 00101000 fe:00 7187   /lib/libc-
+>>>> 2.28.so
+>>>> 155567a000-15556a0000 rw-p 00000000 00:00 0
+>>>> 3fffb90000-3fffbb1000 rw-p 00000000 00:00 0      [stack]
+>>>>
+>>>> After:
+>>>> root@qemuriscv64:~# cat /proc/self/maps
+>>>> 00010000-00016000 r-xp 00000000 fe:00
+>>>> 6389       /bin/cat.coreutils
+>>>> 00016000-00017000 r--p 00005000 fe:00
+>>>> 6389       /bin/cat.coreutils
+>>>> 00017000-00018000 rw-p 00006000 fe:00
+>>>> 6389       /bin/cat.coreutils
+>>>> 2de81000-2dea2000 rw-p 00000000 00:00 0          [heap]
+>>>> 3ff7eb6000-3ff7ed8000 rw-p 00000000 00:00 0
+>>>> 3ff7ed8000-3ff7fd6000 r-xp 00000000 fe:00 7187   /lib/libc-
+>>>> 2.28.so
+>>>> 3ff7fd6000-3ff7fda000 r--p 000fd000 fe:00 7187   /lib/libc-
+>>>> 2.28.so
+>>>> 3ff7fda000-3ff7fdc000 rw-p 00101000 fe:00 7187   /lib/libc-
+>>>> 2.28.so
+>>>> 3ff7fdc000-3ff7fe2000 rw-p 00000000 00:00 0
+>>>> 3ff7fe4000-3ff7fe6000 r-xp 00000000 00:00 0      [vdso]
+>>>> 3ff7fe6000-3ff7ffd000 r-xp 00000000 fe:00 7193   /lib/ld-2.28.so
+>>>> 3ff7ffd000-3ff7ffe000 r--p 00016000 fe:00 7193   /lib/ld-2.28.so
+>>>> 3ff7ffe000-3ff7fff000 rw-p 00017000 fe:00 7193   /lib/ld-2.28.so
+>>>> 3ff7fff000-3ff8000000 rw-p 00000000 00:00 0
+>>>> 3fff888000-3fff8a9000 rw-p 00000000 00:00 0      [stack]
+>>>>
+>>>> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+>>>> Acked-by: Paul Walmsley <paul.walmsley@sifive.com>
+>>>> Reviewed-by: Christoph Hellwig <hch@lst.de>
+>>>> Reviewed-by: Kees Cook <keescook@chromium.org>
+>>>> Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+>>>> ---
+>>>>    arch/riscv/Kconfig | 12 ++++++++++++
+>>>>    1 file changed, 12 insertions(+)
+>>>>
+>>>> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+>>>> index 59a4727ecd6c..87dc5370becb 100644
+>>>> --- a/arch/riscv/Kconfig
+>>>> +++ b/arch/riscv/Kconfig
+>>>> @@ -54,6 +54,18 @@ config RISCV
+>>>>    	select EDAC_SUPPORT
+>>>>    	select ARCH_HAS_GIGANTIC_PAGE
+>>>>    	select ARCH_WANT_HUGE_PMD_SHARE if 64BIT
+>>>> +	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
+>>>> +	select HAVE_ARCH_MMAP_RND_BITS
+>>>> +
+>>>> +config ARCH_MMAP_RND_BITS_MIN
+>>>> +	default 18 if 6legacy_va_layout4BIT
+>>>> +	default 8
+>>>> +
+>>>> +# max bits determined by the following formula:
+>>>> +#  VA_BITS - PAGE_SHIFT - 3
+>>>> +config ARCH_MMAP_RND_BITS_MAX
+>>>> +	default 24 if 64BIT # SV39 based
+>>>> +	default 17
+>>>>    
+>>>>    config MMU
+>>>>    	def_bool y
+>>> With this patch, I am not able to boot a Fedora Linux(a Gnome
+>>> desktop
+>>> image) on RISC-V hardware (Unleashed + Microsemi Expansion board).
+>>> The
+>>> booting gets stuck right after systemd starts.
+>>>
+>>> https://paste.fedoraproject.org/paste/TOrUMqqKH-pGFX7CnfajDg
+>>>
+>>> Reverting just this patch allow to boot Fedora successfully on
+>>> specific
+>>> RISC-V hardware. I have not root caused the issue but it looks like
+>>> it
+>>> might have messed userpsace mapping.
+>> It might have messed userspace mapping but not enough to make
+>> userspace
+>> completely broken
+>> as systemd does some things. I would try to boot in legacy layout:
+>> if
+>> you can try to set sysctl legacy_va_layout
+>> at boottime, it will map userspace as it was before (bottom-up). If
+>> that
+>> does not work, the problem could
+>> be the randomization that is activated by default now.
+> Randomization may not be the issue. I just removed
+> ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT from the config and that seems to
+> work. Here is the bottom-up layout with randomization on.
 
-Expose the name of the active CBFS partition under
-/sys/firmware/cbfs_active_partition
+Oups, sorry for my previous answer, I missed yours that landed in 
+another folder.
 
-In case of Google's VBOOT[1] that currently can be one of:
-"FW_MAIN_A", "FW_MAIN_B" or "COREBOOT"
+Removing ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT also removes randomization
+as this config selects ARCH_HAS_ELF_RANDOMIZE.
+You could remove ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT and selects by hand
+ARCH_HAS_ELF_RANDOMIZE but you would have to implement arch_mmap_rnd and
+arch_randomize_brk (elf-randomize.h).
 
-Will be used by fwupd[2] to determinde the active partition in the
-VBOOT A/B partition update scheme.
+The simplest would be to boot in legacy layout: I did not find a way to 
+set this in kernel
+command line, but you can by modifying it directly in the code:
 
-[1]: https://doc.coreboot.org/security/vboot/index.html
-[2]: https://fwupd.org/
+https://elixir.bootlin.com/linux/v5.4-rc2/source/kernel/sysctl.c#L269
 
-Signed-off-by: Patrick Rudolph <patrick.rudolph@9elements.com>
----
- drivers/firmware/google/Kconfig              |  10 ++
- drivers/firmware/google/Makefile             |   1 +
- drivers/firmware/google/bootmedia-coreboot.c | 115 +++++++++++++++++++
- drivers/firmware/google/coreboot_table.h     |  13 +++
- 4 files changed, 139 insertions(+)
- create mode 100644 drivers/firmware/google/bootmedia-coreboot.c
+> [root@fedora-riscv ~]# cat /proc/self/maps
+> 1555556000-1555570000 r-xp 00000000 103:01
+> 280098                        /usr/lib64/ld-2.28.so
+> 1555570000-1555571000 r--p 00019000 103:01
+> 280098                        /usr/lib64/ld-2.28.so
+> 1555571000-1555572000 rw-p 0001a000 103:01
+> 280098                        /usr/lib64/ld-2.28.so
+> 1555572000-1555573000 rw-p 00000000 00:00 0
+> 1555573000-1555575000 r-xp 00000000 00:00
+> 0                              [vdso]
+> 1555575000-1555576000 r--p 00000000 103:01
+> 50936                         /usr/lib/locale/en_US.utf8/LC_IDENTIFICAT
+> ION
+> 1555576000-155557d000 r--s 00000000 103:01
+> 280826                        /usr/lib64/gconv/gconv-modules.cache
+> 155557d000-155557e000 r--p 00000000 103:01
+> 50937                         /usr/lib/locale/en_US.utf8/LC_MEASUREMENT
+> 155557e000-155557f000 r--p 00000000 103:01
+> 50939                         /usr/lib/locale/en_US.utf8/LC_TELEPHONE
+> 155557f000-1555580000 r--p 00000000 103:01
+> 3706                          /usr/lib/locale/en_US.utf8/LC_ADDRESS
+> 1555580000-1555581000 r--p 00000000 103:01
+> 50944                         /usr/lib/locale/en_US.utf8/LC_NAME
+> 1555581000-1555582000 r--p 00000000 103:01
+> 3775                          /usr/lib/locale/en_US.utf8/LC_PAPER
+> 1555582000-1555583000 r--p 00000000 103:01
+> 3758                          /usr/lib/locale/en_US.utf8/LC_MESSAGES/SY
+> S_LC_MESSAGES
+> 1555583000-1555584000 r--p 00000000 103:01
+> 50938                         /usr/lib/locale/en_US.utf8/LC_MONETARY
+> 1555584000-1555585000 r--p 00000000 103:01
+> 50940                         /usr/lib/locale/en_US.utf8/LC_TIME
+> 1555585000-1555586000 r--p 00000000 103:01
+> 50945                         /usr/lib/locale/en_US.utf8/LC_NUMERIC
+> 1555590000-1555592000 rw-p 00000000 00:00 0
+> 1555592000-15556b1000 r-xp 00000000 103:01
+> 280105                        /usr/lib64/libc-2.28.so
+> 15556b1000-15556b5000 r--p 0011e000 103:01
+> 280105                        /usr/lib64/libc-2.28.so
+> 15556b5000-15556b7000 rw-p 00122000 103:01
+> 280105                        /usr/lib64/libc-2.28.so
+> 15556b7000-15556bb000 rw-p 00000000 00:00 0
+> 15556bb000-1555933000 r--p 00000000 103:01
+> 3755                          /usr/lib/locale/en_US.utf8/LC_COLLATE
+> 1555933000-1555986000 r--p 00000000 103:01
+> 50942                         /usr/lib/locale/en_US.utf8/LC_CTYPE
+> 1555986000-15559a8000 rw-p 00000000 00:00 0
+> 2aaaaaa000-2aaaab1000 r-xp 00000000 103:01
+> 283975                        /usr/bin/cat
+> 2aaaab1000-2aaaab2000 r--p 00006000 103:01
+> 283975                        /usr/bin/cat
+> 2aaaab2000-2aaaab3000 rw-p 00007000 103:01
+> 283975                        /usr/bin/cat
+> 2aaaab3000-2aaaad4000 rw-p 00000000 00:00
+> 0                              [heap]
+> 3fffc97000-3fffcb8000 rw-p 00000000 00:00
+> 0                              [stack]
+>
+>
+>> Anyway, it's weird since userspace should not depend on how the
+>> mapping is.
+>>
+>> If you can identify the program that stalls, that would be fantastic
+>> :)
+>>
+> It stucks while booting. So I am not sure how to figure out which
+> program stalls. It is difficult to figure out from boot log as it
+> stucks at different places but soon after systemd starts.
 
-diff --git a/drivers/firmware/google/Kconfig b/drivers/firmware/google/Kconfig
-index 5fbbd7b8fef6..f58b723d77de 100644
---- a/drivers/firmware/google/Kconfig
-+++ b/drivers/firmware/google/Kconfig
-@@ -82,4 +82,14 @@ config GOOGLE_FMAP
- 	  the coreboot table.  If found, this binary file is exported to userland
- 	  in the file /sys/firmware/fmap.
- 
-+config GOOGLE_BOOTMEDIA
-+	tristate "Coreboot bootmedia params access"
-+	depends on GOOGLE_COREBOOT_TABLE
-+	depends on GOOGLE_FMAP
-+	help
-+	  This option enables the kernel to search for a boot media params
-+	  table, providing the active CBFS partition.  If found, the name of
-+	  the partition is exported to userland in the file
-+	  /sys/firmware/cbfs_active_partition.
-+
- endif # GOOGLE_FIRMWARE
-diff --git a/drivers/firmware/google/Makefile b/drivers/firmware/google/Makefile
-index 6d31fe167700..e47c59376566 100644
---- a/drivers/firmware/google/Makefile
-+++ b/drivers/firmware/google/Makefile
-@@ -7,6 +7,7 @@ obj-$(CONFIG_GOOGLE_MEMCONSOLE)            += memconsole.o
- obj-$(CONFIG_GOOGLE_MEMCONSOLE_COREBOOT)   += memconsole-coreboot.o
- obj-$(CONFIG_GOOGLE_MEMCONSOLE_X86_LEGACY) += memconsole-x86-legacy.o
- obj-$(CONFIG_GOOGLE_FMAP)                  += fmap-coreboot.o
-+obj-$(CONFIG_GOOGLE_BOOTMEDIA)             += bootmedia-coreboot.o
- 
- vpd-sysfs-y := vpd.o vpd_decode.o
- obj-$(CONFIG_GOOGLE_VPD)		+= vpd-sysfs.o
-diff --git a/drivers/firmware/google/bootmedia-coreboot.c b/drivers/firmware/google/bootmedia-coreboot.c
-new file mode 100644
-index 000000000000..09c0caedaf05
---- /dev/null
-+++ b/drivers/firmware/google/bootmedia-coreboot.c
-@@ -0,0 +1,115 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * bootmedia-coreboot.c
-+ *
-+ * Exports the active VBOOT partition name through boot media params.
-+ *
-+ * Copyright 2012-2013 David Herrmann <dh.herrmann@gmail.com>
-+ * Copyright 2017 Google Inc.
-+ * Copyright 2019 Patrick Rudolph <patrick.rudolph@9elements.com>
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/kernel.h>
-+#include <linux/mm.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/string.h>
-+#include <linux/slab.h>
-+
-+#include "coreboot_table.h"
-+#include "fmap-coreboot.h"
-+
-+#define CB_TAG_BOOT_MEDIA_PARAMS 0x30
-+
-+/* The current CBFS partition */
-+static char *name;
-+
-+static ssize_t cbfs_active_partition_read(struct file *filp,
-+					  struct kobject *kobp,
-+					  struct bin_attribute *bin_attr,
-+					  char *buf,
-+					  loff_t pos, size_t count)
-+{
-+	if (!name)
-+		return -ENODEV;
-+
-+	return memory_read_from_buffer(buf, count, &pos, name, strlen(name));
-+}
-+
-+static int bmp_probe(struct coreboot_device *dev)
-+{
-+	struct lb_boot_media_params *b = &dev->bmp;
-+	const char *tmp;
-+
-+	/* Sanity checks on the data we got */
-+	if ((b->cbfs_offset == ~0) ||
-+	    b->cbfs_size == 0 ||
-+	    ((b->cbfs_offset + b->cbfs_size) > b->boot_media_size)) {
-+		pr_warn("coreboot: Boot media params contains invalid data\n");
-+		return -ENODEV;
-+	}
-+
-+	tmp = coreboot_fmap_region_to_name(b->cbfs_offset, b->cbfs_size);
-+	if (!tmp) {
-+		pr_warn("coreboot: Active CBFS region not found in FMAP\n");
-+		return -ENODEV;
-+	}
-+
-+	name = devm_kmalloc(&dev->dev, strlen(tmp) + 2, GFP_KERNEL);
-+	if (!name) {
-+		kfree(tmp);
-+		return -ENODEV;
-+	}
-+	snprintf(name, strlen(tmp) + 2, "%s\n", tmp);
-+
-+	kfree(tmp);
-+
-+	return 0;
-+}
-+
-+static int bmp_remove(struct coreboot_device *dev)
-+{
-+	struct platform_device *pdev = dev_get_drvdata(&dev->dev);
-+
-+	platform_device_unregister(pdev);
-+
-+	return 0;
-+}
-+
-+static struct coreboot_driver bmp_driver = {
-+	.probe = bmp_probe,
-+	.remove = bmp_remove,
-+	.drv = {
-+		.name = "bootmediaparams",
-+	},
-+	.tag = CB_TAG_BOOT_MEDIA_PARAMS,
-+};
-+
-+static struct bin_attribute cbfs_partition_bin_attr = {
-+	.attr = {.name = "cbfs_active_partition", .mode = 0444},
-+	.read = cbfs_active_partition_read,
-+};
-+
-+static int __init coreboot_bmp_init(void)
-+{
-+	int err;
-+
-+	err = sysfs_create_bin_file(firmware_kobj, &cbfs_partition_bin_attr);
-+	if (err)
-+		return err;
-+
-+	return coreboot_driver_register(&bmp_driver);
-+}
-+
-+static void coreboot_bmp_exit(void)
-+{
-+	coreboot_driver_unregister(&bmp_driver);
-+	sysfs_remove_bin_file(firmware_kobj, &cbfs_partition_bin_attr);
-+}
-+
-+module_init(coreboot_bmp_init);
-+module_exit(coreboot_bmp_exit);
-+
-+MODULE_AUTHOR("9elements Agency GmbH");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/firmware/google/coreboot_table.h b/drivers/firmware/google/coreboot_table.h
-index 7b7b4a6eedda..a03e039425b8 100644
---- a/drivers/firmware/google/coreboot_table.h
-+++ b/drivers/firmware/google/coreboot_table.h
-@@ -59,6 +59,18 @@ struct lb_framebuffer {
- 	u8  reserved_mask_size;
- };
- 
-+/* coreboot table with TAG 0x30 */
-+struct lb_boot_media_params {
-+	u32 tag;
-+	u32 size;
-+
-+	/* offsets are relative to start of boot media */
-+	u64 fmap_offset;
-+	u64 cbfs_offset;
-+	u64 cbfs_size;
-+	u64 boot_media_size;
-+};
-+
- /* A device, additionally with information from coreboot. */
- struct coreboot_device {
- 	struct device dev;
-@@ -66,6 +78,7 @@ struct coreboot_device {
- 		struct coreboot_table_entry entry;
- 		struct lb_cbmem_ref cbmem_ref;
- 		struct lb_framebuffer framebuffer;
-+		struct lb_boot_media_params bmp;
- 	};
- };
- 
--- 
-2.21.0
+If you can attach the running kernel, I would use vmlinux-gdb.py commands
+to figure out which processes are running (lx-ps command in particular could
+give us a hint). You can also add traces directly in the kernel and 
+either use
+lx-dmesg command to print them from gdb or use your standard serial output:
+I would then print task_struct->comm at context switch to see which process
+is stuck.
+To use the python script, you need to recompile with DEBUG_INFO and
+GDB_SCRIPTS enabled.
 
+FYI, I have just booted a custom buildroot image based on kernel 5.4-rc2.
+
+Let me know if I can do anything.
+
+Alex
+
+>> As the code is common to mips and arm now and I did not hear from
+>> them,
+>> I imagine the problem comes
+>> from us.
+>>
+>> Alex
