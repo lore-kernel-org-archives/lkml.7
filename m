@@ -2,137 +2,166 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2E5C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF693ECE596
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D1E920673
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:54:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C294320673
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:55:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730639AbfJHKy1 (ORCPT
+        id S1730502AbfJHKzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 06:54:27 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:44762 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730118AbfJHKy1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 06:54:27 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 7DDAD28FBC6
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org, thierry.reding@gmail.com
-Cc:     heiko@sntech.de, dianders@chromium.org, mka@chromium.org,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
-        groeck@chromium.org, kernel@collabora.com, bleung@chromium.org,
-        linux-pwm@vger.kernel.org,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Subject: [PATCH] pwm: cros-ec: Let cros_ec_pwm_get_state() return the last applied state
-Date:   Tue,  8 Oct 2019 12:54:17 +0200
-Message-Id: <20191008105417.16132-1-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 8 Oct 2019 06:55:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37758 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730026AbfJHKzS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 06:55:18 -0400
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 49653806D2
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Oct 2019 10:55:17 +0000 (UTC)
+Received: by mail-wm1-f71.google.com with SMTP id 190so1210471wme.4
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 03:55:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Jr4VyvH8+nrlZUaxZqpcfLSaXw2hE019wUytfSWb3rI=;
+        b=Y6v0G8gpPG7ifWWjJhd1vLpzCr4pgqSy35v14Mq50NGG9CFPavipeEQZOeGcNAdCcq
+         w4sntmqILcyTIsf0ie9smEtyU96Imni2/AWf7lzgnK70toVubdqq6Xf63LHaLuZZBYe6
+         WhhCpnITuhTc8owzA295VLNflrXaufZaxoW8PQ0KiOMecC3jSkddXgg4kFNHb9FV6D+m
+         1zBkHRzRitLcik6pkFrY/IG1Qu9EAoa2dk1MMykn2liZtSWLx06q6YusLxCncFG1eVRo
+         pkIWExRBwfZiKd9rACgCihp4FnzACLnHkk7HQo9g4XIJ3yoTKXbJg9umuzfcHtOpZNCh
+         oHXQ==
+X-Gm-Message-State: APjAAAV5hKLQHhyxjQEHiY4bwkAd7CkwjR2zNOTvXjrH8YcfLQCi6IoH
+        8EjNSRJ/2mlEDhE/YLXygAOH/NZyV+66Y3hDAunrzeXzS3lAUI2zKMZtz1gW0auoXbmlwfze2W9
+        iRr/KQsygapUbzSscmXnhUJfy
+X-Received: by 2002:a05:600c:2107:: with SMTP id u7mr3475176wml.86.1570532115642;
+        Tue, 08 Oct 2019 03:55:15 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyGrNSa6gwRjEcpPPQ0ut0maTS6ToIdDTt4FYqN4se+LW3SVXdX7p8JCpIZiHgUMmIRnNeuGQ==
+X-Received: by 2002:a05:600c:2107:: with SMTP id u7mr3475154wml.86.1570532115396;
+        Tue, 08 Oct 2019 03:55:15 -0700 (PDT)
+Received: from minerva.home ([90.168.169.92])
+        by smtp.gmail.com with ESMTPSA id c132sm3877095wme.27.2019.10.08.03.55.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Oct 2019 03:55:14 -0700 (PDT)
+From:   Javier Martinez Canillas <javierm@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ivan Hu <ivan.hu@canonical.com>, Laszlo Ersek <lersek@redhat.com>,
+        linux-efi@vger.kernel.org, Laura Abbott <labbott@redhat.com>,
+        Josh Boyer <jwboyer@redhat.com>,
+        Peter Jones <pjones@redhat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Javier Martinez Canillas <javierm@redhat.com>,
+        Janne Karhunen <janne.karhunen@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Howells <dhowells@redhat.com>,
+        linux-security-module@vger.kernel.org,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Micah Morton <mortonm@chromium.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        James Morris <jmorris@namei.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>
+Subject: [PATCH v2] efi/efi_test: lock down /dev/efi_test and require CAP_SYS_ADMIN
+Date:   Tue,  8 Oct 2019 12:55:10 +0200
+Message-Id: <20191008105510.6975-1-javierm@redhat.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For the cros-ec-pwm, "disabled" is the same as "duty cycle == 0", and is
-not possible to program a duty cycle while the device is disabled. However,
-the PWM API allows us to configure the "duty cycle" while the device is
-"disabled". But now, pwm_get_state() is returning the real hardware state
-instead of the last applied state, and this change of behavior, broke
-the display on my rk3399-gru-kevin and doesn't turn on anymore.
+The driver exposes EFI runtime services to user-space through an IOCTL
+interface, calling the EFI services function pointers directly without
+using the efivar API.
 
-Commit 01ccf903edd6 ("pwm: Let pwm_get_state() return the last implemented
-state") introduced this change of behavior. And, assuming that this is
-the right to do, workaround this problem for the cros-ec-pwm driver by
-reverting the mentioned commit at the lowlevel driver.
+Disallow access to the /dev/efi_test character device when the kernel is
+locked down to prevent arbitrary user-space to call EFI runtime services.
 
-With that patch applied pwm_get_state() will return only the programmed
-hardware duty cycle value if the PWM is enabled. When is disabled, will
-return the last applied duty_cycle value instead. That's not ideal, but
-definetely is better than don't implement .get_state().
+Also require CAP_SYS_ADMIN to open the chardev to prevent unprivileged
+users to call the EFI runtime services, instead of just relying on the
+chardev file mode bits for this.
 
-Fixes: 01ccf903edd6 ("pwm: Let pwm_get_state() return the last implemented state")
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+The main user of this driver is the fwts [0] tool that already checks if
+the effective user ID is 0 and fails otherwise. So this change shouldn't
+cause any regression to this tool.
+
+[0]: https://wiki.ubuntu.com/FirmwareTestSuite/Reference/uefivarinfo
+
+Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
+Acked-by: Laszlo Ersek <lersek@redhat.com>
+
 ---
 
- drivers/pwm/pwm-cros-ec.c | 32 ++++++++++++++++++++++++--------
- 1 file changed, 24 insertions(+), 8 deletions(-)
+Changes in v2:
+- Also disable /dev/efi_test access when the kernel is locked down as
+  suggested by Matthew Garrett.
+- Add Acked-by tag from Laszlo Ersek.
 
-diff --git a/drivers/pwm/pwm-cros-ec.c b/drivers/pwm/pwm-cros-ec.c
-index 89497448d217..f750a3cf0c6c 100644
---- a/drivers/pwm/pwm-cros-ec.c
-+++ b/drivers/pwm/pwm-cros-ec.c
-@@ -18,11 +18,13 @@
-  * @dev: Device node
-  * @ec: Pointer to EC device
-  * @chip: PWM controller chip
-+ * @state: Holds the last state applied
-  */
- struct cros_ec_pwm_device {
- 	struct device *dev;
- 	struct cros_ec_device *ec;
- 	struct pwm_chip chip;
-+	struct pwm_state state;
- };
+ drivers/firmware/efi/test/efi_test.c | 8 ++++++++
+ include/linux/security.h             | 1 +
+ security/lockdown/lockdown.c         | 1 +
+ 3 files changed, 10 insertions(+)
+
+diff --git a/drivers/firmware/efi/test/efi_test.c b/drivers/firmware/efi/test/efi_test.c
+index 877745c3aaf..7baf48c01e7 100644
+--- a/drivers/firmware/efi/test/efi_test.c
++++ b/drivers/firmware/efi/test/efi_test.c
+@@ -14,6 +14,7 @@
+ #include <linux/init.h>
+ #include <linux/proc_fs.h>
+ #include <linux/efi.h>
++#include <linux/security.h>
+ #include <linux/slab.h>
+ #include <linux/uaccess.h>
  
- static inline struct cros_ec_pwm_device *pwm_to_cros_ec_pwm(struct pwm_chip *c)
-@@ -102,6 +104,9 @@ static int cros_ec_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	if (state->period != EC_PWM_MAX_DUTY)
- 		return -EINVAL;
+@@ -717,6 +718,13 @@ static long efi_test_ioctl(struct file *file, unsigned int cmd,
  
-+	/* Store the new state */
-+	ec_pwm->state = *state;
+ static int efi_test_open(struct inode *inode, struct file *file)
+ {
++	int ret = security_locked_down(LOCKDOWN_EFI_TEST);
 +
++	if (ret)
++		return ret;
++
++	if (!capable(CAP_SYS_ADMIN))
++		return -EACCES;
  	/*
- 	 * EC doesn't separate the concept of duty cycle and enabled, but
- 	 * kernel does. Translate.
-@@ -117,17 +122,28 @@ static void cros_ec_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 	struct cros_ec_pwm_device *ec_pwm = pwm_to_cros_ec_pwm(chip);
- 	int ret;
- 
--	ret = cros_ec_pwm_get_duty(ec_pwm->ec, pwm->hwpwm);
--	if (ret < 0) {
--		dev_err(chip->dev, "error getting initial duty: %d\n", ret);
--		return;
-+	/*
-+	 * As there is no way for this hardware to separate the concept of
-+	 * duty cycle and enabled, but the PWM API does, let return the last
-+	 * applied state when the PWM is disabled and only return the real
-+	 * hardware value when the PWM is enabled. Otherwise, a user of this
-+	 * driver, can get confused because won't be able to program a duty
-+	 * cycle while the PWM is disabled.
-+	 */
-+	state->enabled = ec_pwm->state.enabled;
-+	if (state->enabled) {
-+		ret = cros_ec_pwm_get_duty(ec_pwm->ec, pwm->hwpwm);
-+		if (ret < 0) {
-+			dev_err(chip->dev, "error getting initial duty: %d\n",
-+				ret);
-+			return;
-+		}
-+		state->duty_cycle = ret;
-+	} else {
-+		state->duty_cycle = ec_pwm->state.duty_cycle;
- 	}
- 
--	state->enabled = (ret > 0);
- 	state->period = EC_PWM_MAX_DUTY;
--
--	/* Note that "disabled" and "duty cycle == 0" are treated the same */
--	state->duty_cycle = ret;
- }
- 
- static struct pwm_device *
+ 	 * nothing special to do here
+ 	 * We do accept multiple open files at the same time as we
+diff --git a/include/linux/security.h b/include/linux/security.h
+index a8d59d612d2..9df7547afc0 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -105,6 +105,7 @@ enum lockdown_reason {
+ 	LOCKDOWN_NONE,
+ 	LOCKDOWN_MODULE_SIGNATURE,
+ 	LOCKDOWN_DEV_MEM,
++	LOCKDOWN_EFI_TEST,
+ 	LOCKDOWN_KEXEC,
+ 	LOCKDOWN_HIBERNATION,
+ 	LOCKDOWN_PCI_ACCESS,
+diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
+index 8a10b43daf7..40b790536de 100644
+--- a/security/lockdown/lockdown.c
++++ b/security/lockdown/lockdown.c
+@@ -20,6 +20,7 @@ static const char *const lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
+ 	[LOCKDOWN_NONE] = "none",
+ 	[LOCKDOWN_MODULE_SIGNATURE] = "unsigned module loading",
+ 	[LOCKDOWN_DEV_MEM] = "/dev/mem,kmem,port",
++	[LOCKDOWN_EFI_TEST] = "/dev/efi_test access",
+ 	[LOCKDOWN_KEXEC] = "kexec of unsigned images",
+ 	[LOCKDOWN_HIBERNATION] = "hibernation",
+ 	[LOCKDOWN_PCI_ACCESS] = "direct PCI access",
 -- 
-2.20.1
+2.21.0
 
