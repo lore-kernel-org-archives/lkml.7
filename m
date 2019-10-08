@@ -4,30 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1BC0C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD59C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAF7B21721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:39:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A4D4217D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:39:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730639AbfJHKjf (ORCPT
+        id S1730655AbfJHKji (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 06:39:35 -0400
+        Tue, 8 Oct 2019 06:39:38 -0400
 Received: from relmlor2.renesas.com ([210.160.252.172]:52530 "EHLO
         relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730582AbfJHKj1 (ORCPT
+        by vger.kernel.org with ESMTP id S1730627AbfJHKjg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 06:39:27 -0400
+        Tue, 8 Oct 2019 06:39:36 -0400
 X-IronPort-AV: E=Sophos;i="5.67,270,1566831600"; 
-   d="scan'208";a="28359370"
+   d="scan'208";a="28359381"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 08 Oct 2019 19:39:25 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 08 Oct 2019 19:39:34 +0900
 Received: from fabrizio-dev.ree.adwin.renesas.com (unknown [10.226.36.196])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 9A3E2400941B;
-        Tue,  8 Oct 2019 19:39:21 +0900 (JST)
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 83667400941B;
+        Tue,  8 Oct 2019 19:39:30 +0900 (JST)
 From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Simon Horman <horms@verge.net.au>,
@@ -45,9 +44,9 @@ Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
         Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH 05/10] dt-bindings: usb-xhci: Add r8a774b1 support
-Date:   Tue,  8 Oct 2019 11:38:47 +0100
-Message-Id: <1570531132-21856-6-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: [PATCH 07/10] arm64: dts: renesas: r8a774b1: Add USB2.0 phy and host (EHCI/OHCI) device nodes
+Date:   Tue,  8 Oct 2019 11:38:49 +0100
+Message-Id: <1570531132-21856-8-git-send-email-fabrizio.castro@bp.renesas.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1570531132-21856-1-git-send-email-fabrizio.castro@bp.renesas.com>
 References: <1570531132-21856-1-git-send-email-fabrizio.castro@bp.renesas.com>
@@ -56,25 +55,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document RZ/G2N (R8A774B1) SoC bindings.
+Add USB2.0 phy and host (EHCI/OHCI) device nodes on RZ/G2N SoC dtsi.
 
 Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 ---
- Documentation/devicetree/bindings/usb/usb-xhci.txt | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/renesas/r8a774b1.dtsi | 55 +++++++++++++++++++++++++++----
+ 1 file changed, 49 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-index 97400e8..2fe9f3c 100644
---- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-@@ -10,6 +10,7 @@ Required properties:
-     - "renesas,xhci-r8a7743" for r8a7743 SoC
-     - "renesas,xhci-r8a7744" for r8a7744 SoC
-     - "renesas,xhci-r8a774a1" for r8a774a1 SoC
-+    - "renesas,xhci-r8a774b1" for r8a774b1 SoC
-     - "renesas,xhci-r8a774c0" for r8a774c0 SoC
-     - "renesas,xhci-r8a7790" for r8a7790 SoC
-     - "renesas,xhci-r8a7791" for r8a7791 SoC
+diff --git a/arch/arm64/boot/dts/renesas/r8a774b1.dtsi b/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
+index 0163b284..3704ad1 100644
+--- a/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
+@@ -1209,33 +1209,76 @@
+ 		};
+ 
+ 		ohci0: usb@ee080000 {
++			compatible = "generic-ohci";
+ 			reg = <0 0xee080000 0 0x100>;
+-			/* placeholder */
++			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 703>, <&cpg CPG_MOD 704>;
++			phys = <&usb2_phy0 1>;
++			phy-names = "usb";
++			power-domains = <&sysc R8A774B1_PD_ALWAYS_ON>;
++			resets = <&cpg 703>, <&cpg 704>;
++			status = "disabled";
+ 		};
+ 
+ 		ohci1: usb@ee0a0000 {
++			compatible = "generic-ohci";
+ 			reg = <0 0xee0a0000 0 0x100>;
+-			/* placeholder */
++			interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 702>;
++			phys = <&usb2_phy1 1>;
++			phy-names = "usb";
++			power-domains = <&sysc R8A774B1_PD_ALWAYS_ON>;
++			resets = <&cpg 702>;
++			status = "disabled";
+ 		};
+ 
+ 		ehci0: usb@ee080100 {
++			compatible = "generic-ehci";
+ 			reg = <0 0xee080100 0 0x100>;
+-			/* placeholder */
++			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 703>, <&cpg CPG_MOD 704>;
++			phys = <&usb2_phy0 2>;
++			phy-names = "usb";
++			companion = <&ohci0>;
++			power-domains = <&sysc R8A774B1_PD_ALWAYS_ON>;
++			resets = <&cpg 703>, <&cpg 704>;
++			status = "disabled";
+ 		};
+ 
+ 		ehci1: usb@ee0a0100 {
++			compatible = "generic-ehci";
+ 			reg = <0 0xee0a0100 0 0x100>;
+-			/* placeholder */
++			interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 702>;
++			phys = <&usb2_phy1 2>;
++			phy-names = "usb";
++			companion = <&ohci1>;
++			power-domains = <&sysc R8A774B1_PD_ALWAYS_ON>;
++			resets = <&cpg 702>;
++			status = "disabled";
+ 		};
+ 
+ 		usb2_phy0: usb-phy@ee080200 {
++			compatible = "renesas,usb2-phy-r8a774b1",
++				     "renesas,rcar-gen3-usb2-phy";
+ 			reg = <0 0xee080200 0 0x700>;
+-			/* placeholder */
++			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 703>, <&cpg CPG_MOD 704>;
++			power-domains = <&sysc R8A774B1_PD_ALWAYS_ON>;
++			resets = <&cpg 703>, <&cpg 704>;
++			#phy-cells = <1>;
++			status = "disabled";
+ 		};
+ 
+ 		usb2_phy1: usb-phy@ee0a0200 {
++			compatible = "renesas,usb2-phy-r8a774b1",
++				     "renesas,rcar-gen3-usb2-phy";
+ 			reg = <0 0xee0a0200 0 0x700>;
+-			/* placeholder */
++			clocks = <&cpg CPG_MOD 702>;
++			power-domains = <&sysc R8A774B1_PD_ALWAYS_ON>;
++			resets = <&cpg 702>;
++			#phy-cells = <1>;
++			status = "disabled";
+ 		};
+ 
+ 		sdhi0: sd@ee100000 {
 -- 
 2.7.4
 
