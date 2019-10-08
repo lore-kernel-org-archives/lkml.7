@@ -2,87 +2,134 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35BE6C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85047C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A51D21835
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:32:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="IUn06mpS"
+	by mail.kernel.org (Postfix) with ESMTP id 5E1D92190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:32:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570527173;
+	bh=/E+drlwWb4IuqsRkWBOvUd2xUBL5PNPqh4jJFV7jHAw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ewPo0WLlRbaNPY8/mCaJNQCg2SIOgvdds6IPImdUnyWkECYMcijeXFXOro3FSyKSR
+	 ZP45z7MnJ4dJ8Jw+bPPtdLUvBkSrNFKwiZLXJFAagAiuty2U12G5bVgzWTeRqItBbt
+	 CJlsg9EW4JN+9dT0jQgNcfsgsFrp1GZYrg7Q5X3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730093AbfJHJcS (ORCPT
+        id S1730149AbfJHJcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 05:32:18 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:46262 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729375AbfJHJcR (ORCPT
+        Tue, 8 Oct 2019 05:32:52 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:32837 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729375AbfJHJcw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 05:32:17 -0400
-Received: by mail-qk1-f194.google.com with SMTP id 201so15955677qkd.13
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 02:32:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=EWJqqy29yofdCquZBPthLER+Jv293+BzSZVb1kweNlE=;
-        b=IUn06mpS2xz7vLSozYS3LnEtGuT0KW+oZs4uibzwSg/3iNgPs9KOIeGn7NQK8fYDh7
-         BnHO22WND/EsUUAyk7hGQY0w92oRpeiX21uNyO0lCj/9StMJBNCkYum35KnmCUGPl5gt
-         xi7jfmlpw9phFZyg4Ah8bxW2Krr53lopuINKHylwf2xNyN8HDTT2lRBX/X/S13MRbAe9
-         Cl+1RvM4DNB9xzTrxWo3TQfIQ9DF1JClzmwVETc/AjoAVqfW+NJS6oOqlL0Em4+qYYa7
-         a2g49hQs7d4DVeRcQDWXC4Kaq3wFRKZGIDtUhI5VKBqpLBc48MjwmdLwAP2t5Z6Kvu68
-         sf/g==
+        Tue, 8 Oct 2019 05:32:52 -0400
+Received: by mail-oi1-f195.google.com with SMTP id a15so8191511oic.0;
+        Tue, 08 Oct 2019 02:32:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=EWJqqy29yofdCquZBPthLER+Jv293+BzSZVb1kweNlE=;
-        b=OejVP2ti8egDicdOYYhZdpmi9jEzbriINqPKoz7m/5Su8ICtXhH+TCXAi//7pV/fNl
-         Va/K+NG4NcvVliEhz7lPKT5j+1/jduM61XIWz9ZGQWClHPiK6OKjhXg7i9RXaVKmBhyE
-         iiQqN8brohJtvX1wwU0xMv8PuNn5THzMd0YjO8mxkKYVzJrLnV/y3EfZNOTnLbgJS9lR
-         RfrzxtMkrygCq/Ta2/JL2SwM38AySypO61j8JKhx8bl+Nz1c5sh4HZ4XXZI9wGLZRleO
-         OgbN5mRtauWXqxrtv+4xfQjMKohoRL7uTKxp8aXy4eSfDJdOAKJa5suqiHOWcYpfc4od
-         0eDw==
-X-Gm-Message-State: APjAAAVQxYj6ayfhhpJhiLjaQGF2OnxIYrMB0iuslUkfde9BZ8s5k9LN
-        CDoT8MiYepGLAV/7ZDCHIcmsS/y2IZ0k7g==
-X-Google-Smtp-Source: APXvYqzu7RW2LzgCVPn1UYMRWg4Xv+vumYrColU+r4PBMhJWYci7G8NPsGRGFKpRPd3VwivsJ+cohQ==
-X-Received: by 2002:a37:b302:: with SMTP id c2mr28515793qkf.442.1570527136679;
-        Tue, 08 Oct 2019 02:32:16 -0700 (PDT)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id d134sm8272302qkg.133.2019.10.08.02.32.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Oct 2019 02:32:15 -0700 (PDT)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
-Date:   Tue, 8 Oct 2019 05:32:15 -0400
-Message-Id: <43AC5AD1-377D-447C-A703-7F10423E6FA0@lca.pw>
-References: <20191008081510.ptwmb7zflqiup5py@pathway.suse.cz>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        sergey.senozhatsky.work@gmail.com, rostedt@goodmis.org,
-        peterz@infradead.org, linux-mm@kvack.org,
-        john.ogness@linutronix.de, akpm@linux-foundation.org,
-        david@redhat.com, linux-kernel@vger.kernel.org
-In-Reply-To: <20191008081510.ptwmb7zflqiup5py@pathway.suse.cz>
-To:     Petr Mladek <pmladek@suse.com>
-X-Mailer: iPhone Mail (17A860)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HpyIfFhb6u0PVbeugJF5vjG519P0Ebf37EyYspX74y0=;
+        b=nsv+qxZWPdOU8zrn4NM2Dhvo5vv2AhyLv9lJf7SJ1EXhR/+1w9B8qq2ZbvpxUgFxZV
+         0T9t4Nx0NlBXgTTDB3JLEf+K1wNfwa93LMns0Wf2yHE5oEO8/jxFljv9Ug/e+6y0cZSN
+         M+HC4VWz++60RaHiQLhg9CqzLuTeZGTn0/Kncj1gkcgayNW43AUxOYvz8kl/vlWfqx9w
+         RRvdWirGK8mrzKv5CM6Bf2BqFLV948SNpcDwgXJLlq6R/8NqH9A3dr0VZEiavz67WMLE
+         gj7FqhWh5ao0FJ3Qj4w7KrK1EgKCtdSFhdBHjoP/7Vg+Oizd4h4XEf5rZC8rZGI20VCA
+         N7mg==
+X-Gm-Message-State: APjAAAUmsIN/zMhozYAwYCFAMROjAbdSfzaULlIZEd28DSB7IZ7Vk1bJ
+        WWnJOF5HJs18a7PRG6mD0T7wS4KHwNL+NpnInww=
+X-Google-Smtp-Source: APXvYqzj3VKcMMb/wWxnx/nhRa/HPA2yYO1wwxiMKhHhurdmx5hX69hbO2rtgrkjdViD+rzIh1OQwgRHC3guGHA3VCs=
+X-Received: by 2002:aca:484:: with SMTP id 126mr3035077oie.68.1570527169759;
+ Tue, 08 Oct 2019 02:32:49 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191002122926.385-1-ggherdovich@suse.cz> <1906426.HDqaVa71mF@kreacher>
+ <20191003121537.GR4536@hirez.programming.kicks-ass.net> <1990043.dY4KdrEkPr@kreacher>
+ <1570520919.25071.2.camel@suse.cz>
+In-Reply-To: <1570520919.25071.2.camel@suse.cz>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 8 Oct 2019 11:32:38 +0200
+Message-ID: <CAJZ5v0ivtBCPCUj-bQvhyuda=dh71P+YeXVeM=FffATnAU_bLw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] x86,sched: Add support for frequency invariance
+To:     Giovanni Gherdovich <ggherdovich@suse.cz>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@suse.de>,
+        Len Brown <lenb@kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Paul Turner <pjt@google.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Quentin Perret <qperret@qperret.net>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Doug Smythies <dsmythies@telus.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Oct 8, 2019 at 9:43 AM Giovanni Gherdovich <ggherdovich@suse.cz> wrote:
+>
+> On Thu, 2019-10-03 at 19:53 +0200, Rafael J. Wysocki wrote:
+> > On Thursday, October 3, 2019 2:15:37 PM CEST Peter Zijlstra wrote:
+> > > On Thu, Oct 03, 2019 at 12:27:52PM +0200, Rafael J. Wysocki wrote:
+> > > > On Wednesday, October 2, 2019 2:29:25 PM CEST Giovanni Gherdovich wrote:
+> > > > > +static bool turbo_disabled(void)
+> > > > > +{
+> > > > > +       u64 misc_en;
+> > > > > +       int err;
+> > > > > +
+> > > > > +       err = rdmsrl_safe(MSR_IA32_MISC_ENABLE, &misc_en);
+> > > > > +       if (err)
+> > > > > +               return false;
+> > > > > +
+> > > > > +       return (misc_en & MSR_IA32_MISC_ENABLE_TURBO_DISABLE);
+> > > > > +}
+> > > >
+> > > > This setting may be updated by the platform firmware (BIOS) in some cases
+> > > > (see kernel.org BZ 200759, for example), so in general checking it once
+> > > > at the init time is not enough.
+> > >
+> > > Is there anything sane we can do if the BIOS frobs stuff like that under
+> > > our feet? Other than yell bloody murder, that is?
+> >
+> > Sane?  No, I don't think so.
+> >
+> > Now, in principle *something* could be done to fix things up in the _PPC
+> > notify handler, but I guess we would just end up disabling the scale
+> > invariance code altogether in those cases.
+>
+> I'm looking at how to react to turbo being disabled at run time, assuming a
+> _PPC notification is triggered in that case.
+>
+> I don't think the correct action would be to disable scale invariance: if the
+> turbo range is not available, then max frequency is max_P, and scale
+> invariance can go on using that. The case max_freq=max_P is represented by
+> arch_max_freq=1024 in this patch (because arch_max_freq=max_freq*1024/max_P).
 
+OK, so now you have the case when the BIOS enables turbo on the fly,
+but then the scale invariance is not going to be enabled AFAICS.
 
-> On Oct 8, 2019, at 4:15 AM, Petr Mladek <pmladek@suse.com> wrote:
->=20
-> I am curious about CPU2. Does scheduler need to allocate memory?
+> Since the variable arch_max_freq is global to all CPUs, the fact that the _PPC
+> notification is sent to just one CPU is not a concern: the CPU receiving the
+> notif will set arch_max_freq=1024 (Srinivas was worried about this in another
+> message).
+>
+> This looks like a job for the ->update_limits callback you added to "struct
+> cpufreq_driver" in response to the mentioned kernel.org BZ 200759.
+> I see that only intel_pstate implements it, it's not clear to me yet if I'll
+> have to give an ->update_limits to acpi_cpufreq as well to treat this case.
 
-It happens before with debug objects. It might not 100% necessary but it cou=
-ld easily end up with this way in the current code. Moreover, this is just a=
-n example of how things could go wrong as it could happen for pi_lock or any=
- other unknown downstream locks which are not really console related.=
+If you want acpi_cpufreq and intel_pstate to be consistent with each
+other in that repsect, then yes.
