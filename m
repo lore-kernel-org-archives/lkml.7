@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F2EC47404
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F09ECE58C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49BFC20835
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E42B421721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:23:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729717AbfJHBWz (ORCPT
+        id S1729793AbfJHBXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 21:22:55 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:53038 "EHLO huawei.com"
+        Mon, 7 Oct 2019 21:23:05 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:52926 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729613AbfJHBWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729307AbfJHBWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Oct 2019 21:22:55 -0400
 Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 496E355D02756DA07D5C;
+        by Forcepoint Email with ESMTP id 38AC99F868F984062584;
         Tue,  8 Oct 2019 09:22:51 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 8 Oct 2019 09:22:42 +0800
+ 14.3.439.0; Tue, 8 Oct 2019 09:22:44 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>
-Subject: [PATCH net-next 2/6] net: hns3: add support for spoof check setting
-Date:   Tue, 8 Oct 2019 09:20:05 +0800
-Message-ID: <1570497609-36349-3-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 6/6] net: hns3: support tx-scatter-gather-fraglist feature
+Date:   Tue, 8 Oct 2019 09:20:09 +0800
+Message-ID: <1570497609-36349-7-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1570497609-36349-1-git-send-email-tanhuazhong@huawei.com>
 References: <1570497609-36349-1-git-send-email-tanhuazhong@huawei.com>
@@ -46,299 +46,521 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian Shen <shenjian15@huawei.com>
+From: Yunsheng Lin <linyunsheng@huawei.com>
 
-This patch adds support for spoof check configuration for VFs.
-When it is enabled, "spoof checking" is done for both mac address
-and VLAN. For each VF, the HW ensures that the source MAC address
-(or VLAN) of every outgoing packet exists in the MAC-list (or
-VLAN-list) configured for RX filtering for that VF. If not,
-the packet is dropped.
+The hardware supports up to 8 TX BD for non-tso skb and up to
+63 TX BD for TSO skb. Currently, the hns3 driver supports RX skb
+with fraglist when HW GRO is enabled, when the stack forwards a
+RX skb with fraglist, the stack need to linearize the skb before
+sending to other interface without TX fraglist support.
 
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
+This patch adds support for TX fraglist. The performance increases
+from 1 GByte to 1.5 GByte for one iperf TCP stream during
+forwarding test after this patch. BTW, the minimum BD number of
+ring should be updated to 72 for supporting TX fraglist.
+
+This patch also changes the error handling of some function that
+called by hns3_fill_desc, which returns BD num when there is no
+error, change some macro to more meaningful name.
+
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hnae3.h        |   4 +
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    |  14 +++
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 125 +++++++++++++++++++--
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |   1 +
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c |   3 +
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  |   2 +-
- 6 files changed, 140 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 249 +++++++++++++++---------
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.h |  12 +-
+ 2 files changed, 168 insertions(+), 93 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-index 1fc3728..b7b8169 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-@@ -368,6 +368,8 @@ struct hnae3_ae_dev {
-  *   Get the VF configuration setting by the host
-  * set_vf_link_state
-  *   Set VF link status
-+ * set_vf_spoofchk
-+ *   Enable/disable spoof check for specified vf
-  */
- struct hnae3_ae_ops {
- 	int (*init_ae_dev)(struct hnae3_ae_dev *ae_dev);
-@@ -537,6 +539,8 @@ struct hnae3_ae_ops {
- 			     struct ifla_vf_info *ivf);
- 	int (*set_vf_link_state)(struct hnae3_handle *handle, int vf,
- 				 int link_state);
-+	int (*set_vf_spoofchk)(struct hnae3_handle *handle, int vf,
-+			       bool enable);
- };
- 
- struct hnae3_dcb_ops {
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 2136323..4a5404e 100644
+index 4e304b4..6e0b261 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -1643,6 +1643,19 @@ static int hns3_ndo_set_vf_vlan(struct net_device *netdev, int vf, u16 vlan,
- 	return ret;
+@@ -681,7 +681,7 @@ static int hns3_set_tso(struct sk_buff *skb, u32 *paylen,
+ 		return 0;
+ 
+ 	ret = skb_cow_head(skb, 0);
+-	if (unlikely(ret))
++	if (unlikely(ret < 0))
+ 		return ret;
+ 
+ 	l3.hdr = skb_network_header(skb);
+@@ -962,14 +962,6 @@ static int hns3_set_l2l3l4(struct sk_buff *skb, u8 ol4_proto,
+ 	return 0;
  }
  
-+static int hns3_set_vf_spoofchk(struct net_device *netdev, int vf, bool enable)
-+{
-+	struct hnae3_handle *handle = hns3_get_handle(netdev);
-+
-+	if (hns3_nic_resetting(netdev))
-+		return -EBUSY;
-+
-+	if (!handle->ae_algo->ops->set_vf_spoofchk)
-+		return -EOPNOTSUPP;
-+
-+	return handle->ae_algo->ops->set_vf_spoofchk(handle, vf, enable);
-+}
-+
- static int hns3_nic_change_mtu(struct net_device *netdev, int new_mtu)
+-static void hns3_set_txbd_baseinfo(u16 *bdtp_fe_sc_vld_ra_ri, int frag_end)
+-{
+-	/* Config bd buffer end */
+-	if (!!frag_end)
+-		hns3_set_field(*bdtp_fe_sc_vld_ra_ri, HNS3_TXD_FE_B, 1U);
+-	hns3_set_field(*bdtp_fe_sc_vld_ra_ri, HNS3_TXD_VLD_B, 1U);
+-}
+-
+ static int hns3_handle_vtags(struct hns3_enet_ring *tx_ring,
+ 			     struct sk_buff *skb)
  {
- 	struct hnae3_handle *h = hns3_get_handle(netdev);
-@@ -1842,6 +1855,7 @@ static const struct net_device_ops hns3_nic_netdev_ops = {
- 	.ndo_vlan_rx_add_vid	= hns3_vlan_rx_add_vid,
- 	.ndo_vlan_rx_kill_vid	= hns3_vlan_rx_kill_vid,
- 	.ndo_set_vf_vlan	= hns3_ndo_set_vf_vlan,
-+	.ndo_set_vf_spoofchk	= hns3_set_vf_spoofchk,
- #ifdef CONFIG_RFS_ACCEL
- 	.ndo_rx_flow_steer	= hns3_rx_flow_steer,
- #endif
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 931a311..7c72862 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -2888,6 +2888,7 @@ static int hclge_get_vf_config(struct hnae3_handle *handle, int vf,
+@@ -1062,7 +1054,7 @@ static int hns3_fill_skb_desc(struct hns3_enet_ring *ring,
+ 		skb_reset_mac_len(skb);
  
- 	ivf->vf = vf;
- 	ivf->linkstate = vport->vf_info.link_state;
-+	ivf->spoofchk = vport->vf_info.spoofchk;
- 	ether_addr_copy(ivf->mac, vport->vf_info.mac);
+ 		ret = hns3_get_l4_protocol(skb, &ol4_proto, &il4_proto);
+-		if (unlikely(ret)) {
++		if (unlikely(ret < 0)) {
+ 			u64_stats_update_begin(&ring->syncp);
+ 			ring->stats.tx_l4_proto_err++;
+ 			u64_stats_update_end(&ring->syncp);
+@@ -1072,7 +1064,7 @@ static int hns3_fill_skb_desc(struct hns3_enet_ring *ring,
+ 		ret = hns3_set_l2l3l4(skb, ol4_proto, il4_proto,
+ 				      &type_cs_vlan_tso,
+ 				      &ol_type_vlan_len_msec);
+-		if (unlikely(ret)) {
++		if (unlikely(ret < 0)) {
+ 			u64_stats_update_begin(&ring->syncp);
+ 			ring->stats.tx_l2l3l4_err++;
+ 			u64_stats_update_end(&ring->syncp);
+@@ -1081,7 +1073,7 @@ static int hns3_fill_skb_desc(struct hns3_enet_ring *ring,
  
- 	return 0;
-@@ -7619,6 +7620,8 @@ static int hclge_set_vf_vlan_common(struct hclge_dev *hdev, u16 vfid,
- 				    __be16 proto)
+ 		ret = hns3_set_tso(skb, &paylen, &mss,
+ 				   &type_cs_vlan_tso);
+-		if (unlikely(ret)) {
++		if (unlikely(ret < 0)) {
+ 			u64_stats_update_begin(&ring->syncp);
+ 			ring->stats.tx_tso_err++;
+ 			u64_stats_update_end(&ring->syncp);
+@@ -1102,9 +1094,10 @@ static int hns3_fill_skb_desc(struct hns3_enet_ring *ring,
+ }
+ 
+ static int hns3_fill_desc(struct hns3_enet_ring *ring, void *priv,
+-			  unsigned int size, int frag_end,
+-			  enum hns_desc_type type)
++			  unsigned int size, enum hns_desc_type type)
  {
- #define HCLGE_MAX_VF_BYTES  16
++#define HNS3_LIKELY_BD_NUM	1
 +
-+	struct hclge_vport *vport = &hdev->vport[vfid];
- 	struct hclge_vlan_filter_vf_cfg_cmd *req0;
- 	struct hclge_vlan_filter_vf_cfg_cmd *req1;
- 	struct hclge_desc desc[2];
-@@ -7627,10 +7630,18 @@ static int hclge_set_vf_vlan_common(struct hclge_dev *hdev, u16 vfid,
- 	int ret;
+ 	struct hns3_desc_cb *desc_cb = &ring->desc_cb[ring->next_to_use];
+ 	struct hns3_desc *desc = &ring->desc[ring->next_to_use];
+ 	struct device *dev = ring_to_dev(ring);
+@@ -1118,7 +1111,7 @@ static int hns3_fill_desc(struct hns3_enet_ring *ring, void *priv,
+ 		int ret;
  
- 	/* if vf vlan table is full, firmware will close vf vlan filter, it
--	 * is unable and unnecessary to add new vlan id to vf vlan filter
-+	 * is unable and unnecessary to add new vlan id to vf vlan filter.
-+	 * If spoof check is enable, and vf vlan is full, it shouldn't add
-+	 * new vlan, because tx packets with these vlan id will be dropped.
- 	 */
--	if (test_bit(vfid, hdev->vf_vlan_full) && !is_kill)
-+	if (test_bit(vfid, hdev->vf_vlan_full) && !is_kill) {
-+		if (vport->vf_info.spoofchk && vlan) {
-+			dev_err(&hdev->pdev->dev,
-+				"Can't add vlan due to spoof check is on and vf vlan table is full\n");
-+			return -EPERM;
-+		}
- 		return 0;
-+	}
+ 		ret = hns3_fill_skb_desc(ring, skb, desc);
+-		if (unlikely(ret))
++		if (unlikely(ret < 0))
+ 			return ret;
  
- 	hclge_cmd_setup_basic_desc(&desc[0],
- 				   HCLGE_OPC_VLAN_FILTER_VF_CFG, false);
-@@ -8127,12 +8138,15 @@ static void hclge_restore_vlan_table(struct hnae3_handle *handle)
- 		}
+ 		dma = dma_map_single(dev, skb->data, size, DMA_TO_DEVICE);
+@@ -1137,19 +1130,16 @@ static int hns3_fill_desc(struct hns3_enet_ring *ring, void *priv,
+ 	desc_cb->length = size;
  
- 		list_for_each_entry_safe(vlan, tmp, &vport->vlan_list, node) {
--			if (vlan->hd_tbl_status)
--				hclge_set_vlan_filter_hw(hdev,
--							 htons(ETH_P_8021Q),
--							 vport->vport_id,
--							 vlan->vlan_id,
--							 false);
-+			int ret;
-+
-+			if (!vlan->hd_tbl_status)
-+				continue;
-+			ret = hclge_set_vlan_filter_hw(hdev, htons(ETH_P_8021Q),
-+						       vport->vport_id,
-+						       vlan->vlan_id, false);
-+			if (ret)
-+				break;
- 		}
+ 	if (likely(size <= HNS3_MAX_BD_SIZE)) {
+-		u16 bdtp_fe_sc_vld_ra_ri = 0;
+-
+ 		desc_cb->priv = priv;
+ 		desc_cb->dma = dma;
+ 		desc_cb->type = type;
+ 		desc->addr = cpu_to_le64(dma);
+ 		desc->tx.send_size = cpu_to_le16(size);
+-		hns3_set_txbd_baseinfo(&bdtp_fe_sc_vld_ra_ri, frag_end);
+ 		desc->tx.bdtp_fe_sc_vld_ra_ri =
+-			cpu_to_le16(bdtp_fe_sc_vld_ra_ri);
++			cpu_to_le16(BIT(HNS3_TXD_VLD_B));
+ 
+ 		ring_ptr_move_fw(ring, next_to_use);
+-		return 0;
++		return HNS3_LIKELY_BD_NUM;
  	}
  
-@@ -9374,6 +9388,97 @@ static void hclge_stats_clear(struct hclge_dev *hdev)
- 	memset(&hdev->hw_stats, 0, sizeof(hdev->hw_stats));
+ 	frag_buf_num = hns3_tx_bd_count(size);
+@@ -1158,8 +1148,6 @@ static int hns3_fill_desc(struct hns3_enet_ring *ring, void *priv,
+ 
+ 	/* When frag size is bigger than hardware limit, split this frag */
+ 	for (k = 0; k < frag_buf_num; k++) {
+-		u16 bdtp_fe_sc_vld_ra_ri = 0;
+-
+ 		/* The txbd's baseinfo of DESC_TYPE_PAGE & DESC_TYPE_SKB */
+ 		desc_cb->priv = priv;
+ 		desc_cb->dma = dma + HNS3_MAX_BD_SIZE * k;
+@@ -1170,11 +1158,8 @@ static int hns3_fill_desc(struct hns3_enet_ring *ring, void *priv,
+ 		desc->addr = cpu_to_le64(dma + HNS3_MAX_BD_SIZE * k);
+ 		desc->tx.send_size = cpu_to_le16((k == frag_buf_num - 1) ?
+ 				     (u16)sizeoflast : (u16)HNS3_MAX_BD_SIZE);
+-		hns3_set_txbd_baseinfo(&bdtp_fe_sc_vld_ra_ri,
+-				       frag_end && (k == frag_buf_num - 1) ?
+-						1 : 0);
+ 		desc->tx.bdtp_fe_sc_vld_ra_ri =
+-				cpu_to_le16(bdtp_fe_sc_vld_ra_ri);
++				cpu_to_le16(BIT(HNS3_TXD_VLD_B));
+ 
+ 		/* move ring pointer to next */
+ 		ring_ptr_move_fw(ring, next_to_use);
+@@ -1183,23 +1168,78 @@ static int hns3_fill_desc(struct hns3_enet_ring *ring, void *priv,
+ 		desc = &ring->desc[ring->next_to_use];
+ 	}
+ 
+-	return 0;
++	return frag_buf_num;
  }
  
-+static int hclge_set_mac_spoofchk(struct hclge_dev *hdev, int vf, bool enable)
-+{
-+	return hclge_config_switch_param(hdev, vf, enable,
-+					 HCLGE_SWITCH_ANTI_SPOOF_MASK);
-+}
+-static unsigned int hns3_nic_bd_num(struct sk_buff *skb)
++static unsigned int hns3_skb_bd_num(struct sk_buff *skb, unsigned int *bd_size,
++				    unsigned int bd_num)
+ {
+-	unsigned int bd_num;
++	unsigned int size;
+ 	int i;
+ 
+-	/* if the total len is within the max bd limit */
+-	if (likely(skb->len <= HNS3_MAX_BD_SIZE))
+-		return skb_shinfo(skb)->nr_frags + 1;
++	size = skb_headlen(skb);
++	while (size > HNS3_MAX_BD_SIZE) {
++		bd_size[bd_num++] = HNS3_MAX_BD_SIZE;
++		size -= HNS3_MAX_BD_SIZE;
 +
-+static int hclge_set_vlan_spoofchk(struct hclge_dev *hdev, int vf, bool enable)
-+{
-+	return hclge_set_vlan_filter_ctrl(hdev, HCLGE_FILTER_TYPE_VF,
-+					  HCLGE_FILTER_FE_NIC_INGRESS_B,
-+					  enable, vf);
-+}
++		if (bd_num > HNS3_MAX_TSO_BD_NUM)
++			return bd_num;
++	}
+ 
+-	bd_num = hns3_tx_bd_count(skb_headlen(skb));
++	if (size) {
++		bd_size[bd_num++] = size;
++		if (bd_num > HNS3_MAX_TSO_BD_NUM)
++			return bd_num;
++	}
+ 
+ 	for (i = 0; i < skb_shinfo(skb)->nr_frags; i++) {
+ 		skb_frag_t *frag = &skb_shinfo(skb)->frags[i];
+-		bd_num += hns3_tx_bd_count(skb_frag_size(frag));
++		size = skb_frag_size(frag);
++		if (!size)
++			continue;
 +
-+static int hclge_set_vf_spoofchk_hw(struct hclge_dev *hdev, int vf, bool enable)
-+{
-+	int ret;
++		while (size > HNS3_MAX_BD_SIZE) {
++			bd_size[bd_num++] = HNS3_MAX_BD_SIZE;
++			size -= HNS3_MAX_BD_SIZE;
 +
-+	ret = hclge_set_mac_spoofchk(hdev, vf, enable);
-+	if (ret) {
-+		dev_err(&hdev->pdev->dev,
-+			"Set vf %d mac spoof check %s failed, ret=%d\n",
-+			vf, enable ? "on" : "off", ret);
-+		return ret;
++			if (bd_num > HNS3_MAX_TSO_BD_NUM)
++				return bd_num;
++		}
++
++		bd_size[bd_num++] = size;
++		if (bd_num > HNS3_MAX_TSO_BD_NUM)
++			return bd_num;
 +	}
 +
-+	ret = hclge_set_vlan_spoofchk(hdev, vf, enable);
-+	if (ret)
-+		dev_err(&hdev->pdev->dev,
-+			"Set vf %d vlan spoof check %s failed, ret=%d\n",
-+			vf, enable ? "on" : "off", ret);
-+
-+	return ret;
++	return bd_num;
 +}
 +
-+static int hclge_set_vf_spoofchk(struct hnae3_handle *handle, int vf,
-+				 bool enable)
++static unsigned int hns3_tx_bd_num(struct sk_buff *skb, unsigned int *bd_size)
 +{
-+	struct hclge_vport *vport = hclge_get_vport(handle);
-+	struct hclge_dev *hdev = vport->back;
-+	u32 new_spoofchk = enable ? 1 : 0;
-+	int ret;
++	struct sk_buff *frag_skb;
++	unsigned int bd_num = 0;
 +
-+	if (hdev->pdev->revision == 0x20)
-+		return -EOPNOTSUPP;
++	/* If the total len is within the max bd limit */
++	if (likely(skb->len <= HNS3_MAX_BD_SIZE && !skb_has_frag_list(skb) &&
++		   skb_shinfo(skb)->nr_frags < HNS3_MAX_NON_TSO_BD_NUM))
++		return skb_shinfo(skb)->nr_frags + 1U;
 +
-+	vport = hclge_get_vf_vport(hdev, vf);
-+	if (!vport)
-+		return -EINVAL;
++	/* The below case will always be linearized, return
++	 * HNS3_MAX_BD_NUM_TSO + 1U to make sure it is linearized.
++	 */
++	if (unlikely(skb->len > HNS3_MAX_TSO_SIZE ||
++		     (!skb_is_gso(skb) && skb->len > HNS3_MAX_NON_TSO_SIZE)))
++		return HNS3_MAX_TSO_BD_NUM + 1U;
 +
-+	if (vport->vf_info.spoofchk == new_spoofchk)
-+		return 0;
++	bd_num = hns3_skb_bd_num(skb, bd_size, bd_num);
 +
-+	if (enable && test_bit(vport->vport_id, hdev->vf_vlan_full))
-+		dev_warn(&hdev->pdev->dev,
-+			 "vf %d vlan table is full, enable spoof check may cause its packet send fail\n",
-+			 vf);
-+	else if (enable && hclge_is_umv_space_full(vport))
-+		dev_warn(&hdev->pdev->dev,
-+			 "vf %d mac table is full, enable spoof check may cause its packet send fail\n",
-+			 vf);
++	if (!skb_has_frag_list(skb) || bd_num > HNS3_MAX_TSO_BD_NUM)
++		return bd_num;
 +
-+	ret = hclge_set_vf_spoofchk_hw(hdev, vport->vport_id, enable);
-+	if (ret)
-+		return ret;
-+
-+	vport->vf_info.spoofchk = new_spoofchk;
-+	return 0;
-+}
-+
-+static int hclge_reset_vport_spoofchk(struct hclge_dev *hdev)
++	skb_walk_frags(skb, frag_skb) {
++		bd_num = hns3_skb_bd_num(frag_skb, bd_size, bd_num);
++		if (bd_num > HNS3_MAX_TSO_BD_NUM)
++			return bd_num;
+ 	}
+ 
+ 	return bd_num;
+@@ -1218,26 +1258,26 @@ static unsigned int hns3_gso_hdr_len(struct sk_buff *skb)
+  * 7 frags to to be larger than gso header len + mss, and the remaining
+  * continuous 7 frags to be larger than MSS except the last 7 frags.
+  */
+-static bool hns3_skb_need_linearized(struct sk_buff *skb)
++static bool hns3_skb_need_linearized(struct sk_buff *skb, unsigned int *bd_size,
++				     unsigned int bd_num)
+ {
+-	int bd_limit = HNS3_MAX_BD_NUM_NORMAL - 1;
+ 	unsigned int tot_len = 0;
+ 	int i;
+ 
+-	for (i = 0; i < bd_limit; i++)
+-		tot_len += skb_frag_size(&skb_shinfo(skb)->frags[i]);
++	for (i = 0; i < HNS3_MAX_NON_TSO_BD_NUM - 1U; i++)
++		tot_len += bd_size[i];
+ 
+-	/* ensure headlen + the first 7 frags is greater than mss + header
+-	 * and the first 7 frags is greater than mss.
+-	 */
+-	if (((tot_len + skb_headlen(skb)) < (skb_shinfo(skb)->gso_size +
+-	    hns3_gso_hdr_len(skb))) || (tot_len < skb_shinfo(skb)->gso_size))
++	/* ensure the first 8 frags is greater than mss + header */
++	if (tot_len + bd_size[HNS3_MAX_NON_TSO_BD_NUM - 1U] <
++	    skb_shinfo(skb)->gso_size + hns3_gso_hdr_len(skb))
+ 		return true;
+ 
+-	/* ensure the remaining continuous 7 buffer is greater than mss */
+-	for (i = 0; i < (skb_shinfo(skb)->nr_frags - bd_limit - 1); i++) {
+-		tot_len -= skb_frag_size(&skb_shinfo(skb)->frags[i]);
+-		tot_len += skb_frag_size(&skb_shinfo(skb)->frags[i + bd_limit]);
++	/* ensure every continuous 7 buffer is greater than mss
++	 * except the last one.
++	 */
++	for (i = 0; i < bd_num - HNS3_MAX_NON_TSO_BD_NUM; i++) {
++		tot_len -= bd_size[i];
++		tot_len += bd_size[i + HNS3_MAX_NON_TSO_BD_NUM - 1U];
+ 
+ 		if (tot_len < skb_shinfo(skb)->gso_size)
+ 			return true;
+@@ -1249,15 +1289,16 @@ static bool hns3_skb_need_linearized(struct sk_buff *skb)
+ static int hns3_nic_maybe_stop_tx(struct hns3_enet_ring *ring,
+ 				  struct sk_buff **out_skb)
+ {
++	unsigned int bd_size[HNS3_MAX_TSO_BD_NUM + 1U];
+ 	struct sk_buff *skb = *out_skb;
+ 	unsigned int bd_num;
+ 
+-	bd_num = hns3_nic_bd_num(skb);
+-	if (unlikely(bd_num > HNS3_MAX_BD_NUM_NORMAL)) {
++	bd_num = hns3_tx_bd_num(skb, bd_size);
++	if (unlikely(bd_num > HNS3_MAX_NON_TSO_BD_NUM)) {
+ 		struct sk_buff *new_skb;
+ 
+-		if (skb_is_gso(skb) && bd_num <= HNS3_MAX_BD_NUM_TSO &&
+-		    !hns3_skb_need_linearized(skb))
++		if (bd_num <= HNS3_MAX_TSO_BD_NUM && skb_is_gso(skb) &&
++		    !hns3_skb_need_linearized(skb, bd_size, bd_num))
+ 			goto out;
+ 
+ 		/* manual split the send packet */
+@@ -1267,9 +1308,10 @@ static int hns3_nic_maybe_stop_tx(struct hns3_enet_ring *ring,
+ 		dev_kfree_skb_any(skb);
+ 		*out_skb = new_skb;
+ 
+-		bd_num = hns3_nic_bd_num(new_skb);
+-		if ((skb_is_gso(new_skb) && bd_num > HNS3_MAX_BD_NUM_TSO) ||
+-		    (!skb_is_gso(new_skb) && bd_num > HNS3_MAX_BD_NUM_NORMAL))
++		bd_num = hns3_tx_bd_count(new_skb->len);
++		if ((skb_is_gso(new_skb) && bd_num > HNS3_MAX_TSO_BD_NUM) ||
++		    (!skb_is_gso(new_skb) &&
++		     bd_num > HNS3_MAX_NON_TSO_BD_NUM))
+ 			return -ENOMEM;
+ 
+ 		u64_stats_update_begin(&ring->syncp);
+@@ -1314,6 +1356,37 @@ static void hns3_clear_desc(struct hns3_enet_ring *ring, int next_to_use_orig)
+ 	}
+ }
+ 
++static int hns3_fill_skb_to_desc(struct hns3_enet_ring *ring,
++				 struct sk_buff *skb, enum hns_desc_type type)
 +{
-+	struct hclge_vport *vport = hdev->vport;
-+	int ret;
-+	int i;
++	unsigned int size = skb_headlen(skb);
++	int i, ret, bd_num = 0;
 +
-+	if (hdev->pdev->revision == 0x20)
-+		return 0;
-+
-+	/* resume the vf spoof check state after reset */
-+	for (i = 0; i < hdev->num_alloc_vport; i++) {
-+		ret = hclge_set_vf_spoofchk_hw(hdev, vport->vport_id,
-+					       vport->vf_info.spoofchk);
-+		if (ret)
++	if (size) {
++		ret = hns3_fill_desc(ring, skb, size, type);
++		if (unlikely(ret < 0))
 +			return ret;
 +
-+		vport++;
++		bd_num += ret;
 +	}
 +
-+	return 0;
++	for (i = 0; i < skb_shinfo(skb)->nr_frags; i++) {
++		skb_frag_t *frag = &skb_shinfo(skb)->frags[i];
++
++		size = skb_frag_size(frag);
++		if (!size)
++			continue;
++
++		ret = hns3_fill_desc(ring, frag, size, DESC_TYPE_PAGE);
++		if (unlikely(ret < 0))
++			return ret;
++
++		bd_num += ret;
++	}
++
++	return bd_num;
 +}
 +
- static void hclge_reset_vport_state(struct hclge_dev *hdev)
+ netdev_tx_t hns3_nic_net_xmit(struct sk_buff *skb, struct net_device *netdev)
  {
- 	struct hclge_vport *vport = hdev->vport;
-@@ -9473,6 +9578,9 @@ static int hclge_reset_ae_dev(struct hnae3_ae_dev *ae_dev)
+ 	struct hns3_nic_priv *priv = netdev_priv(netdev);
+@@ -1321,58 +1394,54 @@ netdev_tx_t hns3_nic_net_xmit(struct sk_buff *skb, struct net_device *netdev)
+ 		&tx_ring_data(priv, skb->queue_mapping);
+ 	struct hns3_enet_ring *ring = ring_data->ring;
+ 	struct netdev_queue *dev_queue;
+-	skb_frag_t *frag;
+-	int next_to_use_head;
+-	int buf_num;
+-	int seg_num;
+-	int size;
++	int pre_ntu, next_to_use_head;
++	struct sk_buff *frag_skb;
++	int bd_num = 0;
+ 	int ret;
+-	int i;
+ 
+ 	/* Prefetch the data used later */
+ 	prefetch(skb->data);
+ 
+-	buf_num = hns3_nic_maybe_stop_tx(ring, &skb);
+-	if (unlikely(buf_num <= 0)) {
+-		if (buf_num == -EBUSY) {
++	ret = hns3_nic_maybe_stop_tx(ring, &skb);
++	if (unlikely(ret <= 0)) {
++		if (ret == -EBUSY) {
+ 			u64_stats_update_begin(&ring->syncp);
+ 			ring->stats.tx_busy++;
+ 			u64_stats_update_end(&ring->syncp);
+ 			goto out_net_tx_busy;
+-		} else if (buf_num == -ENOMEM) {
++		} else if (ret == -ENOMEM) {
+ 			u64_stats_update_begin(&ring->syncp);
+ 			ring->stats.sw_err_cnt++;
+ 			u64_stats_update_end(&ring->syncp);
+ 		}
+ 
+-		hns3_rl_err(netdev, "xmit error: %d!\n", buf_num);
++		hns3_rl_err(netdev, "xmit error: %d!\n", ret);
+ 		goto out_err_tx_ok;
  	}
  
- 	hclge_reset_vport_state(hdev);
-+	ret = hclge_reset_vport_spoofchk(hdev);
-+	if (ret)
-+		return ret;
+-	/* No. of segments (plus a header) */
+-	seg_num = skb_shinfo(skb)->nr_frags + 1;
+-	/* Fill the first part */
+-	size = skb_headlen(skb);
+-
+ 	next_to_use_head = ring->next_to_use;
  
- 	dev_info(&pdev->dev, "Reset done, %s driver initialization finished.\n",
- 		 HCLGE_DRIVER_NAME);
-@@ -10209,6 +10317,7 @@ static const struct hnae3_ae_ops hclge_ops = {
- 	.restore_vlan_table = hclge_restore_vlan_table,
- 	.get_vf_config = hclge_get_vf_config,
- 	.set_vf_link_state = hclge_set_vf_link_state,
-+	.set_vf_spoofchk = hclge_set_vf_spoofchk,
- };
+-	ret = hns3_fill_desc(ring, skb, size, seg_num == 1 ? 1 : 0,
+-			     DESC_TYPE_SKB);
+-	if (unlikely(ret))
++	ret = hns3_fill_skb_to_desc(ring, skb, DESC_TYPE_SKB);
++	if (unlikely(ret < 0))
+ 		goto fill_err;
  
- static struct hnae3_ae_algo ae_algo = {
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-index 6a3ccda..9483529 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-@@ -888,6 +888,7 @@ struct hclge_port_base_vlan_config {
- struct hclge_vf_info {
- 	int link_state;
- 	u8 mac[ETH_ALEN];
-+	u32 spoofchk;
- };
+-	/* Fill the fragments */
+-	for (i = 1; i < seg_num; i++) {
+-		frag = &skb_shinfo(skb)->frags[i - 1];
+-		size = skb_frag_size(frag);
++	bd_num += ret;
  
- struct hclge_vport {
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-index b842291..cad7029 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-@@ -324,6 +324,9 @@ static int hclge_set_vf_vlan_cfg(struct hclge_vport *vport,
- 		proto =  msg_cmd->proto;
- 		status = hclge_set_vlan_filter(handle, cpu_to_be16(proto),
- 					       vlan, is_kill);
-+		if (mbx_req->mbx_need_resp)
-+			return hclge_gen_resp_to_vf(vport, mbx_req, status,
-+						    NULL, 0);
- 	} else if (msg_cmd->subcode == HCLGE_MBX_VLAN_RX_OFF_CFG) {
- 		struct hnae3_handle *handle = &vport->nic;
- 		bool en = msg_cmd->is_kill ? true : false;
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-index e3090b3..2b87b70 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-@@ -1267,7 +1267,7 @@ static int hclgevf_set_vlan_filter(struct hnae3_handle *handle,
- 	memcpy(&msg_data[3], &proto, sizeof(proto));
- 	ret = hclgevf_send_mbx_msg(hdev, HCLGE_MBX_SET_VLAN,
- 				   HCLGE_MBX_VLAN_FILTER, msg_data,
--				   HCLGEVF_VLAN_MBX_MSG_LEN, false, NULL, 0);
-+				   HCLGEVF_VLAN_MBX_MSG_LEN, true, NULL, 0);
+-		ret = hns3_fill_desc(ring, frag, size,
+-				     seg_num - 1 == i ? 1 : 0,
+-				     DESC_TYPE_PAGE);
++	if (!skb_has_frag_list(skb))
++		goto out;
  
- 	/* when remove hw vlan filter failed, record the vlan id,
- 	 * and try to remove it from hw later, to be consistence
+-		if (unlikely(ret))
++	skb_walk_frags(skb, frag_skb) {
++		ret = hns3_fill_skb_to_desc(ring, frag_skb, DESC_TYPE_PAGE);
++		if (unlikely(ret < 0))
+ 			goto fill_err;
++
++		bd_num += ret;
+ 	}
++out:
++	pre_ntu = ring->next_to_use ? (ring->next_to_use - 1) :
++					(ring->desc_num - 1);
++	ring->desc[pre_ntu].tx.bdtp_fe_sc_vld_ra_ri |=
++				cpu_to_le16(BIT(HNS3_TXD_FE_B));
+ 
+ 	/* Complete translate all packets */
+ 	dev_queue = netdev_get_tx_queue(netdev, ring_data->queue_index);
+@@ -1380,7 +1449,7 @@ netdev_tx_t hns3_nic_net_xmit(struct sk_buff *skb, struct net_device *netdev)
+ 
+ 	wmb(); /* Commit all data before submit */
+ 
+-	hnae3_queue_xmit(ring->tqp, buf_num);
++	hnae3_queue_xmit(ring->tqp, bd_num);
+ 
+ 	return NETDEV_TX_OK;
+ 
+@@ -2158,9 +2227,8 @@ static void hns3_set_default_feature(struct net_device *netdev)
+ 		NETIF_F_RXCSUM | NETIF_F_SG | NETIF_F_GSO |
+ 		NETIF_F_GRO | NETIF_F_TSO | NETIF_F_TSO6 | NETIF_F_GSO_GRE |
+ 		NETIF_F_GSO_GRE_CSUM | NETIF_F_GSO_UDP_TUNNEL |
+-		NETIF_F_GSO_UDP_TUNNEL_CSUM | NETIF_F_SCTP_CRC;
+-
+-	netdev->hw_enc_features |= NETIF_F_TSO_MANGLEID;
++		NETIF_F_GSO_UDP_TUNNEL_CSUM | NETIF_F_SCTP_CRC |
++		NETIF_F_TSO_MANGLEID | NETIF_F_FRAGLIST;
+ 
+ 	netdev->gso_partial_features |= NETIF_F_GSO_GRE_CSUM;
+ 
+@@ -2170,21 +2238,24 @@ static void hns3_set_default_feature(struct net_device *netdev)
+ 		NETIF_F_RXCSUM | NETIF_F_SG | NETIF_F_GSO |
+ 		NETIF_F_GRO | NETIF_F_TSO | NETIF_F_TSO6 | NETIF_F_GSO_GRE |
+ 		NETIF_F_GSO_GRE_CSUM | NETIF_F_GSO_UDP_TUNNEL |
+-		NETIF_F_GSO_UDP_TUNNEL_CSUM | NETIF_F_SCTP_CRC;
++		NETIF_F_GSO_UDP_TUNNEL_CSUM | NETIF_F_SCTP_CRC |
++		NETIF_F_FRAGLIST;
+ 
+ 	netdev->vlan_features |=
+ 		NETIF_F_IP_CSUM | NETIF_F_IPV6_CSUM | NETIF_F_RXCSUM |
+ 		NETIF_F_SG | NETIF_F_GSO | NETIF_F_GRO |
+ 		NETIF_F_TSO | NETIF_F_TSO6 | NETIF_F_GSO_GRE |
+ 		NETIF_F_GSO_GRE_CSUM | NETIF_F_GSO_UDP_TUNNEL |
+-		NETIF_F_GSO_UDP_TUNNEL_CSUM | NETIF_F_SCTP_CRC;
++		NETIF_F_GSO_UDP_TUNNEL_CSUM | NETIF_F_SCTP_CRC |
++		NETIF_F_FRAGLIST;
+ 
+ 	netdev->hw_features |= NETIF_F_IP_CSUM | NETIF_F_IPV6_CSUM |
+ 		NETIF_F_HW_VLAN_CTAG_TX | NETIF_F_HW_VLAN_CTAG_RX |
+ 		NETIF_F_RXCSUM | NETIF_F_SG | NETIF_F_GSO |
+ 		NETIF_F_GRO | NETIF_F_TSO | NETIF_F_TSO6 | NETIF_F_GSO_GRE |
+ 		NETIF_F_GSO_GRE_CSUM | NETIF_F_GSO_UDP_TUNNEL |
+-		NETIF_F_GSO_UDP_TUNNEL_CSUM | NETIF_F_SCTP_CRC;
++		NETIF_F_GSO_UDP_TUNNEL_CSUM | NETIF_F_SCTP_CRC |
++		NETIF_F_FRAGLIST;
+ 
+ 	if (pdev->revision >= 0x21) {
+ 		netdev->hw_features |= NETIF_F_GRO_HW;
+@@ -2447,7 +2518,7 @@ void hns3_clean_tx_ring(struct hns3_enet_ring *ring)
+ 	netdev_tx_completed_queue(dev_queue, pkts, bytes);
+ 
+ 	if (unlikely(pkts && netif_carrier_ok(netdev) &&
+-		     (ring_space(ring) > HNS3_MAX_BD_PER_PKT))) {
++		     ring_space(ring) > HNS3_MAX_TSO_BD_NUM)) {
+ 		/* Make sure that anybody stopping the queue after this
+ 		 * sees the new next_to_clean.
+ 		 */
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
+index 2110fa3..c5b7c22 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
+@@ -76,7 +76,7 @@ enum hns3_nic_state {
+ #define HNS3_RING_NAME_LEN			16
+ #define HNS3_BUFFER_SIZE_2048			2048
+ #define HNS3_RING_MAX_PENDING			32760
+-#define HNS3_RING_MIN_PENDING			24
++#define HNS3_RING_MIN_PENDING			72
+ #define HNS3_RING_BD_MULTIPLE			8
+ /* max frame size of mac */
+ #define HNS3_MAC_MAX_FRAME			9728
+@@ -195,9 +195,13 @@ enum hns3_nic_state {
+ #define HNS3_VECTOR_INITED			1
+ 
+ #define HNS3_MAX_BD_SIZE			65535
+-#define HNS3_MAX_BD_NUM_NORMAL			8
+-#define HNS3_MAX_BD_NUM_TSO			63
+-#define HNS3_MAX_BD_PER_PKT			MAX_SKB_FRAGS
++#define HNS3_MAX_NON_TSO_BD_NUM			8U
++#define HNS3_MAX_TSO_BD_NUM			63U
++#define HNS3_MAX_TSO_SIZE \
++	(HNS3_MAX_BD_SIZE * HNS3_MAX_TSO_BD_NUM)
++
++#define HNS3_MAX_NON_TSO_SIZE \
++	(HNS3_MAX_BD_SIZE * HNS3_MAX_NON_TSO_BD_NUM)
+ 
+ #define HNS3_VECTOR_GL0_OFFSET			0x100
+ #define HNS3_VECTOR_GL1_OFFSET			0x200
 -- 
 2.7.4
 
