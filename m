@@ -2,178 +2,252 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC66C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DBD9C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCCAE20867
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B20F206B6
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:06:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="h7lM9RIv"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="I56+dAaU";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="I56+dAaU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730466AbfJHIEp (ORCPT
+        id S1730526AbfJHIG6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 04:04:45 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38156 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727724AbfJHIEo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 04:04:44 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w12so18210015wro.5
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 01:04:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=sIkx03StDa7wGM23OoUvenUQO77jP7HB5JK2bVe/rS8=;
-        b=h7lM9RIv6WZpI5T8d2vT8JAO0pJaYZHF3b1We8NSF2in4ZdHYIAapreRiMuIrES/9h
-         S4ucMU5PJs1DHVjAFPJa2F+DGUMNP6vzItssywSximDg+5BeYQHio0YThQr1tSVQd4rx
-         Kjo0RKo8rLzdbV4uBNKTOaP1IcM4HVqBNLihAzIvfTJMmUrTLirUVP+dRLq0QDlhAEKP
-         pWeuSYDXjzPf6lKoIO8bRdvZiA/mLscdfybOOjnr6IkfbsqIYR9UqLCpidAFXn7YqM+M
-         03S+PJ1+KKKEk0uS/9NrIVEvuuEGGASlW76UdvSHXdY9yk1GA3PK7+Z6gNCK4RObhQuC
-         CrGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=sIkx03StDa7wGM23OoUvenUQO77jP7HB5JK2bVe/rS8=;
-        b=pw0LZwe995K63MsGb8oHrS+rXQ0rJ3zb/MzsaHKbbwlvhSJ6HwVrPlIuPdNKrpSn07
-         +j9rENSR1/p58/oI9XkM0y22KwTM+jDdBhOESjJ5PUJ58+Eopfs2LGlSCHo6wyN60273
-         ArYufBFex88TWmEEP0eiXqbXIDBPE/ZPEMsKfvmXaiLQhVquOSPLA9CW4Bu14PflSwue
-         siSDVnIUFl+cB4QT8/jVbD/jdSZxS3gjZCsFdKIuvsRB6ain6ZWos8GuIIanERsm50bI
-         wb6MDSl0q41NOj5ANLO2nviueHn8dDnFseWeQLdXiQGjtDkVhFMAgtkrTzVAN41ULez1
-         L4eg==
-X-Gm-Message-State: APjAAAWWEv4R5oSeQJKPV+sdqmV0v0O0ntu6KtdXmdhNSJRp9lAg7Fuq
-        ENZEM2Uhh12DsGoOthf6mWE6KsTqH5bjKg==
-X-Google-Smtp-Source: APXvYqx6Qj8o7DfEi7574ot+hTn1OLgaBWUhYyNfM31yL/a843hf2cPPMu4uGNSxAJTV2tAXN5ZVUQ==
-X-Received: by 2002:a5d:638f:: with SMTP id p15mr25394698wru.169.1570521880659;
-        Tue, 08 Oct 2019 01:04:40 -0700 (PDT)
-Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id s1sm29778513wrg.80.2019.10.08.01.04.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 08 Oct 2019 01:04:40 -0700 (PDT)
-Subject: Re: [PATCH v2 3/4] drm/meson: Enable DRM InfoFrame support on GXL,
- GXM and G12A
-To:     Jonas Karlman <jonas@kwiboo.se>,
-        Andrzej Hajda <a.hajda@samsung.com>
-Cc:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Sandy Huang <hjc@rock-chips.com>,
-        Heiko Stubner <heiko@sntech.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "zhengyang@rock-chips.com" <zhengyang@rock-chips.com>,
+        Tue, 8 Oct 2019 04:06:58 -0400
+Received: from mail-eopbgr80055.outbound.protection.outlook.com ([40.107.8.55]:64326
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730292AbfJHIG6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 04:06:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=drQ9hLzOpV9DsXFhX7lPjxUSGbfWmD+ZWz3Ew18XLK4=;
+ b=I56+dAaUTkCHBbRnMfKI2KqFJQ5PS/YLN00+DI/5JfShqSdMRt5uNbtgk6J4rzGGlXfLG0wXK+GAyT0YcHj+vy56Ss2qeOLP6vuBXdgN68KUyynAv3deYEOmLMy4koBx6Q7mU7lU9pmLgm5EdyzxqoB0xSVscAmynN1mIK5WnVY=
+Received: from VI1PR08CA0122.eurprd08.prod.outlook.com (2603:10a6:800:d4::24)
+ by DB6PR08MB2759.eurprd08.prod.outlook.com (2603:10a6:6:1d::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2327.25; Tue, 8 Oct
+ 2019 08:06:48 +0000
+Received: from DB5EUR03FT057.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e0a::204) by VI1PR08CA0122.outlook.office365.com
+ (2603:10a6:800:d4::24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2327.24 via Frontend
+ Transport; Tue, 8 Oct 2019 08:06:48 +0000
+Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
+ header.from=arm.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of arm.com: DNS Timeout)
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ DB5EUR03FT057.mail.protection.outlook.com (10.152.20.235) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2305.15 via Frontend Transport; Tue, 8 Oct 2019 08:06:47 +0000
+Received: ("Tessian outbound 6481c7fa5a3c:v33"); Tue, 08 Oct 2019 08:06:41 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: b542d3dbdbb4a977
+X-CR-MTA-TID: 64aa7808
+Received: from 170c1393c5c0.2 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.10.55])
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 11610660-6CF2-440C-ADA4-7D45A3E50944.1;
+        Tue, 08 Oct 2019 08:06:35 +0000
+Received: from EUR03-DB5-obe.outbound.protection.outlook.com (mail-db5eur03lp2055.outbound.protection.outlook.com [104.47.10.55])
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 170c1393c5c0.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384);
+    Tue, 08 Oct 2019 08:06:35 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VZqCpZFpF/2R4ptk6Mzi0Uux555Oym0fqUa97Pr2qpR8DNtH+34mUS4Nh1REWi6zw2s725eaIIAQSMq8VEQ0nAfuHy4ja7Rx97B6eNRllAOtyH1n3LZnLled+asQXH3tsRvI5hhiDM9F0wzlIm2Qd2RF45Puvx5PLV5ytTjYZpzO8YzNKcLVwEjEeLwCQ6f55ZueZwQk5yZJHRGNphkl3nD9WLBbGwdtwIE6JiDX+ViwQwGUgG4uhSFqGLbSC0afGq3/tLYIdaktblIkw/GtEGz7L4qscaPMcduAwDFlqkzUc97HE8Yj9tT9m5gOQDwFSHIxoPg0KY60q6ME1Ga+lA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=drQ9hLzOpV9DsXFhX7lPjxUSGbfWmD+ZWz3Ew18XLK4=;
+ b=LLm03ZEqwQHkNoKAtCESAz54nZoOCqYNGibg6kmBgCEqOGfC9bV7X9muWNVIKvM9eoL4SnHezE0kxjzabpJgIRKHrC6y1vWKA+55cfgjgsJwJiV/zYAg19NTiiqw3P94T+QnsvHX5wI/UGwjA9FZ126PQ1k8QNkBNQ4TgZ/QrFE+4reRAhwo1NOYcV7Sjkv7+rFAT81ss/7eHwd0oJFPG5TDxOE/PshtqQFkdnqpQvv4Lq8t7BXZZNxpGiOtxNBscUdypkueYcrwqqINdtf1sxC3o0/9Hokd/DVnP/XFrOj5mXYXI3ERWnDZQXrmZPmrw/mlMUeI/R+fUpV56m6Iiw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=drQ9hLzOpV9DsXFhX7lPjxUSGbfWmD+ZWz3Ew18XLK4=;
+ b=I56+dAaUTkCHBbRnMfKI2KqFJQ5PS/YLN00+DI/5JfShqSdMRt5uNbtgk6J4rzGGlXfLG0wXK+GAyT0YcHj+vy56Ss2qeOLP6vuBXdgN68KUyynAv3deYEOmLMy4koBx6Q7mU7lU9pmLgm5EdyzxqoB0xSVscAmynN1mIK5WnVY=
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
+ VE1PR08MB5119.eurprd08.prod.outlook.com (10.255.159.84) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.16; Tue, 8 Oct 2019 08:06:33 +0000
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::40ed:7ed3:90cf:ece5]) by VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::40ed:7ed3:90cf:ece5%3]) with mapi id 15.20.2305.023; Tue, 8 Oct 2019
+ 08:06:33 +0000
+From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+CC:     Colin Ian King <colin.king@canonical.com>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <HE1PR06MB401113BF395C06E96503344FAC9B0@HE1PR06MB4011.eurprd06.prod.outlook.com>
- <20191007192135.4525-1-jonas@kwiboo.se>
- <HE1PR06MB4011BB614A49253FD074BCCBAC9B0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <3f11d0fe-ee5c-6692-3c4a-27f68a1c54e4@baylibre.com>
-Date:   Tue, 8 Oct 2019 10:04:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <HE1PR06MB4011BB614A49253FD074BCCBAC9B0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nd <nd@arm.com>
+Subject: Re: [PATCH][next] drm/komeda: remove redundant assignment to pointer
+ disable_done
+Thread-Topic: [PATCH][next] drm/komeda: remove redundant assignment to pointer
+ disable_done
+Thread-Index: AQHVes/ZUJmCrklP8UyDQux9AfFYh6dK3dyAgAAo5gCABCjhgIABOU0A
+Date:   Tue, 8 Oct 2019 08:06:33 +0000
+Message-ID: <20191008080626.GA20953@jamwan02-TSP300>
+References: <20191004162156.325-1-colin.king@canonical.com>
+ <20191004192720.7eiqdvsm2yv62svg@e110455-lin.cambridge.arm.com>
+ <35232014-f65a-f7a1-99db-8ed91f610a77@canonical.com>
+ <20191007132505.GV22609@kadam>
+In-Reply-To: <20191007132505.GV22609@kadam>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mutt/1.10.1 (2018-07-13)
+x-originating-ip: [113.29.88.7]
+x-clientproxiedby: HK2PR02CA0162.apcprd02.prod.outlook.com
+ (2603:1096:201:1f::22) To VE1PR08MB5006.eurprd08.prod.outlook.com
+ (2603:10a6:803:113::31)
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-Correlation-Id: e04d085b-2fae-4eb9-a4bc-08d74bc6773e
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-TrafficTypeDiagnostic: VE1PR08MB5119:|VE1PR08MB5119:|DB6PR08MB2759:
+x-ms-exchange-transport-forked: True
+X-Microsoft-Antispam-PRVS: <DB6PR08MB27592679B3B30777C572028DB39A0@DB6PR08MB2759.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+x-ms-oob-tlc-oobclassifiers: OLM:10000;OLM:10000;
+x-forefront-prvs: 01842C458A
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(39860400002)(376002)(346002)(136003)(396003)(366004)(51914003)(189003)(199004)(1076003)(305945005)(52116002)(102836004)(6916009)(229853002)(33656002)(33716001)(71190400001)(71200400001)(25786009)(8936002)(76176011)(316002)(86362001)(53546011)(386003)(5660300002)(6506007)(66066001)(6246003)(14454004)(55236004)(4326008)(26005)(6486002)(9686003)(6512007)(66476007)(2906002)(7736002)(66446008)(64756008)(66556008)(6116002)(3846002)(66946007)(6436002)(8676002)(476003)(446003)(11346002)(58126008)(478600001)(486006)(81156014)(186003)(99286004)(81166006)(256004)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB5119;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: wrKhIg88kw6f7joum39OZNMfGbAoeoP05o162+BTXP+KCjsUhXZmJ17HyaJf0cgHFfPegFWuaIxfK52AUrnVhbrDh/9zUsAheDcGJl5K9JPImseijDdQvktax1VvIo8Io1fg1+74yebi63mYHy+KJoyxWPFFerTipZFLbdX0e9F8SFsaUsykw/ae/aj9svYXiO2EdGkYUVJkQca7WN7FmuNMBiRthetyEbtjDahe1CFsCOol3arhocSrCeKPxtq8b7bB6uf6ySHg/J2f+7bA9ZOt8M7UALrTUJv7zuCVfZ1dsdHcVodmVtqU4DC/HuYvXw20qh1EKxhOQWCe5rDK2q4b5TNNSPmsrB6ITy3CNtC1JDQ9Y7zUTX/Ln87NwHyibLAjYFzzX67PCDrehPntKdmbAZpPNbmXsQLdBSUSYKM=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <280853445FFF80489C1A703653481D96@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB5119
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT057.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(7916004)(4636009)(376002)(396003)(136003)(39860400002)(346002)(51914003)(199004)(189003)(33656002)(11346002)(316002)(446003)(47776003)(25786009)(476003)(8936002)(22756006)(4326008)(76130400001)(8746002)(58126008)(54906003)(126002)(486006)(450100002)(7736002)(336012)(70586007)(305945005)(478600001)(26826003)(6246003)(70206006)(6862004)(386003)(229853002)(76176011)(6116002)(23726003)(186003)(6512007)(9686003)(102836004)(14454004)(6486002)(99286004)(46406003)(26005)(5660300002)(33716001)(50466002)(53546011)(8676002)(66066001)(81166006)(81156014)(63350400001)(1076003)(356004)(97756001)(6506007)(86362001)(3846002)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR08MB2759;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: a82089e6-05cc-4e09-52d4-08d74bc66f19
+NoDisclaimer: True
+X-Forefront-PRVS: 01842C458A
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: pGBRbmBy+f3DELS9GVyzsu3WOWGXGtuZzdXZCpaHRY7glQBTpQDzy6ffYeXkUGBmB6JV6c3jVakqsmNOjJ5+PpZRSphco3VPdKMe/rpW03sr8aDKx9T3XDxv5j5EjVsItTrbwrwK3U4j1YYjmXVmFEccTILVx8RYDZLWflflCcushD18XADw9nT0//XenrSpX1Q/GWCMEDf0ljV91OUFmKaUO2jpE/R+Oi9QWGKw9DieKfA2HwkS962kVX3DzSMDyKUUju+aVXRYKXIhGVfOLSzV5XWetlf8lQk+cTkQxl1f9XHhuUSYuz+Erly9PFIgVOf79lhumjcrU1wtsSgpntKDfvH4oxYIxBwWg84fElw9DONaLROASV08nx6WWTNu34k1eyYB6DLGsAai26C1bxkgyAiD+QcuZCvwyKjCYlk=
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Oct 2019 08:06:47.1725
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e04d085b-2fae-4eb9-a4bc-08d74bc6773e
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR08MB2759
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonas,
+On Mon, Oct 07, 2019 at 04:25:05PM +0300, Dan Carpenter wrote:
+> On Fri, Oct 04, 2019 at 10:53:44PM +0100, Colin Ian King wrote:
+> > On 04/10/2019 20:27, Liviu Dudau wrote:
+> > > On Fri, Oct 04, 2019 at 05:21:56PM +0100, Colin King wrote:
+> > >> From: Colin Ian King <colin.king@canonical.com>
+> > >>
+> > >> The pointer disable_done is being initialized with a value that
+> > >> is never read and is being re-assigned a little later on. The
+> > >> assignment is redundant and hence can be removed.
+> > >=20
+> > > Not really true, isn't it? The re-assignment is done under the condit=
+ion that
+> > > crtc->state->active is true. disable_done will be used regardless aft=
+er the if
+> > > block, so we can't skip this initialisation.
+> > >=20
+> > > Not sure why Coverity flags this, but I would NAK this patch.
+> >=20
+> > I'm patching against the driver from linux-next so I believe this is OK
+> > for that. I believe your statement is true against linux which does not
+> > have commit:
+> >=20
+> > d6cb013579e743bc7bc5590ca35a1943f2b8f3c8
+> > Author: Lowry Li (Arm Technology China) <Lowry.Li@arm.com>
+> > Date:   Fri Sep 6 07:18:06 2019 +0000
+> >=20
+>=20
+> It really does help reviewing patches when this is mentioned in the
+> commit message.
+>=20
+> There is some debate about whether this should be mentioned as a Fixes
+> since it doesn't fix a bug.  I initialy felt it shouldn't be, but now
+> I think enough people think it should be listed as Fixes that I must be
+> wrong.  Either way, it's very useful information.
+>=20
+> The other thing is that soon get_maintainer.pl will start CC'ing people
+> from the Fixes tag and right now Lowry Li is not CC'd so that's
+> unfortunate.
+>=20
+> regards,
+> dan carpenter
 
+Hi Liviu:
 
-On 07/10/2019 21:21, Jonas Karlman wrote:
-> This patch enables Dynamic Range and Mastering InfoFrame on GXL, GXM and G12A.
-> 
-> Cc: Neil Armstrong <narmstrong@baylibre.com>
-> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  drivers/gpu/drm/meson/meson_dw_hdmi.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/meson/meson_dw_hdmi.c b/drivers/gpu/drm/meson/meson_dw_hdmi.c
-> index 022286dc6ab2..3bb7ffe5fc39 100644
-> --- a/drivers/gpu/drm/meson/meson_dw_hdmi.c
-> +++ b/drivers/gpu/drm/meson/meson_dw_hdmi.c
-> @@ -977,6 +977,11 @@ static int meson_dw_hdmi_bind(struct device *dev, struct device *master,
->  	dw_plat_data->input_bus_format = MEDIA_BUS_FMT_YUV8_1X24;
->  	dw_plat_data->input_bus_encoding = V4L2_YCBCR_ENC_709;
->  
-> +	if (dw_hdmi_is_compatible(meson_dw_hdmi, "amlogic,meson-gxl-dw-hdmi") ||
-> +	    dw_hdmi_is_compatible(meson_dw_hdmi, "amlogic,meson-gxm-dw-hdmi") ||
-> +	    dw_hdmi_is_compatible(meson_dw_hdmi, "amlogic,meson-g12a-dw-hdmi"))
+Colin's code is right.
 
-The API of dw_hdmi_is_compatible() has changed for v5.4, but I'll fix it while applying.
+Following code I copied from linux-next, and I checked drm-misc, the
+code are same.=20
 
-Neil
+        struct komeda_pipeline *slave  =3D kcrtc->slave;
+//---- First initialization.
+        struct completion *disable_done =3D &crtc->state->commit->flip_done=
+;
+        bool needs_phase2 =3D false;
 
-> +		dw_plat_data->use_drm_infoframe = true;
-> +
->  	platform_set_drvdata(pdev, meson_dw_hdmi);
->  
->  	meson_dw_hdmi->hdmi = dw_hdmi_bind(pdev, encoder,
-> 
+        DRM_DEBUG_ATOMIC("CRTC%d_DISABLE: active_pipes: 0x%x, affected: 0x%=
+x\n",
+                         drm_crtc_index(crtc),
+                         old_st->active_pipes, old_st->affected_pipes);
+
+        if (slave && has_bit(slave->id, old_st->active_pipes))
+                komeda_pipeline_disable(slave, old->state);
+
+        if (has_bit(master->id, old_st->active_pipes))
+                needs_phase2 =3D komeda_pipeline_disable(master, old->state=
+);
+
+//---- Secondary initialization.
+        disable_done =3D (needs_phase2 || crtc->state->active) ?
+                       NULL : &crtc->state->commit->flip_done;
+
+//--- First using is here.
+        /* wait phase 1 disable done */
+        komeda_crtc_flush_and_wait_for_flip_done(kcrtc, disable_done);
+
+So the first initialization with the delcaration is unnecessary.
+
+And I also checked our internal testing branch which actually doesn't have
+the first initialization. seems somethings wrong when lowry submit this to
+upstream.
+
+Hi Colin:
+
+Thanks for the fix. I'll push it to drm-misc-fixes
+
+Reviewed-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.co=
+m>
+
+Best Regards
+James
 
