@@ -2,79 +2,105 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B4BC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 05:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A919FECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 05:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 861A0206BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 05:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7611C20867
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 05:15:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570511704;
+	bh=YCW5X3BjS2i51EyVNfbxFVuo9U5hDS8jaqwxFAFPNMg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=j7SyxeirRAxH9K7DvoIO5vldRbd7is1jQknl7/R58CTYz2WEpc+Taml93jyGcLC/E
+	 rsHnufZYhuVra5XKnf2UsKRWAmVfRmSVbLzBSdo+/cMpUWoVZNnpjHFMNmgAgOrulz
+	 mru0ctfa6r5mQolo19V7DfdylOrQqmsSeFv4//po=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729802AbfJHFCk (ORCPT
+        id S1729737AbfJHFPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 01:02:40 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:51206 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbfJHFCk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 01:02:40 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iHhdu-0002fc-EL; Tue, 08 Oct 2019 05:02:38 +0000
-Date:   Tue, 8 Oct 2019 06:02:38 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to
- unsafe_put_user()
-Message-ID: <20191008050238.GS26530@ZenIV.linux.org.uk>
-References: <5f06c138-d59a-d811-c886-9e73ce51924c@roeck-us.net>
- <CAHk-=whAQWEMADgxb_qAw=nEY4OnuDn6HU4UCSDMNT5ULKvg3g@mail.gmail.com>
- <20191007012437.GK26530@ZenIV.linux.org.uk>
- <CAHk-=whKJfX579+2f-CHc4_YmEmwvMe_Csr0+CPfLAsSAdfDoA@mail.gmail.com>
- <20191007025046.GL26530@ZenIV.linux.org.uk>
- <CAHk-=whraNSys_Lj=Ut1EA=CJEfw2Uothh+5-WL+7nDJBegWcQ@mail.gmail.com>
- <CAHk-=witTXMGsc9ZAK4hnKnd_O7u8b1eiou-6cfjt4aOcWvruQ@mail.gmail.com>
- <20191008032912.GQ26530@ZenIV.linux.org.uk>
- <CAHk-=wiAyZmsEp6oQQgHiuaDU0bLj=OVHSGV_OfvHRSXNPYABw@mail.gmail.com>
- <CAHk-=wjE_9x02o=6Kgu9XWD7RTaRMKOXXYc0CPwAx87i-FZ70w@mail.gmail.com>
+        Tue, 8 Oct 2019 01:15:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45084 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726193AbfJHFPD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 01:15:03 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F47B2084D;
+        Tue,  8 Oct 2019 05:15:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570511700;
+        bh=YCW5X3BjS2i51EyVNfbxFVuo9U5hDS8jaqwxFAFPNMg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IIExwIqOhzf1dLwTzR/1Qfh58BDozdE32CPzSQuOvaIazGf5nqGzPTaZSiz5i5Kap
+         6K4Y1oU2K0IHvQRJvNrxMuZScsLjLtsE3SeY8aPCGTXuT2ZKpb5r5/LuIw3FGAYzAn
+         mEaRP1e5LIA24/QgaI9lsD9bUgx7fblruPZ6xJlE=
+Date:   Tue, 8 Oct 2019 07:14:57 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.4 00/36] 4.4.196-stable review
+Message-ID: <20191008051457.GA2058179@kroah.com>
+References: <20191006171038.266461022@linuxfoundation.org>
+ <d3e1e6ae-8ca4-a43b-d30d-9a9a9a7e5752@roeck-us.net>
+ <20191007144951.GB966828@kroah.com>
+ <fbce4eb8-ebc8-5246-ea03-3af2ebb97a16@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wjE_9x02o=6Kgu9XWD7RTaRMKOXXYc0CPwAx87i-FZ70w@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fbce4eb8-ebc8-5246-ea03-3af2ebb97a16@roeck-us.net>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 09:14:51PM -0700, Linus Torvalds wrote:
-> On Mon, Oct 7, 2019 at 9:09 PM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > Try the attached patch, and then count the number of "rorx"
-> > instructions in the kernel. Hint: not many. On my personal config,
-> > this triggers 15 times in the whole kernel build (not counting
-> > modules).
+On Mon, Oct 07, 2019 at 03:36:46PM -0700, Guenter Roeck wrote:
+> On 10/7/19 7:49 AM, Greg Kroah-Hartman wrote:
+> > On Mon, Oct 07, 2019 at 05:53:55AM -0700, Guenter Roeck wrote:
+> > > On 10/6/19 10:18 AM, Greg Kroah-Hartman wrote:
+> > > > This is the start of the stable review cycle for the 4.4.196 release.
+> > > > There are 36 patches in this series, all will be posted as a response
+> > > > to this one.  If anyone has any issues with these being applied, please
+> > > > let me know.
+> > > > 
+> > > > Responses should be made by Tue 08 Oct 2019 05:07:10 PM UTC.
+> > > > Anything received after that time might be too late.
+> > > > 
+> > > 
+> > > powerpc:defconfig fails to build.
+> > > 
+> > > arch/powerpc/kernel/eeh_driver.c: In function ‘eeh_handle_normal_event’:
+> > > arch/powerpc/kernel/eeh_driver.c:678:2: error: implicit declaration of function ‘eeh_for_each_pe’; did you mean ‘bus_for_each_dev’?
+> > > 
+> > > It has a point:
+> > > 
+> > > ... HEAD is now at 13cac61d31df Linux 4.4.196-rc1
+> > > $ git grep eeh_for_each_pe
+> > > arch/powerpc/kernel/eeh_driver.c:       eeh_for_each_pe(pe, tmp_pe)
+> > > arch/powerpc/kernel/eeh_driver.c:                               eeh_for_each_pe(pe, tmp_pe)
+> > > 
+> > > Caused by commit 3fb431be8de3a ("powerpc/eeh: Clear stale EEH_DEV_NO_HANDLER flag").
+> > > Full report will follow later.
+> > 
+> > Thanks for letting me know, I've dropped this from the queue now and
+> > pushed out a -rc2 with that removed.
+> > 
 > 
-> So here's a serious patch that doesn't just mark things for counting -
-> it just removes the cases entirely.
+> For v4.4.195-36-g898f6e5cf82f:
 > 
-> Doesn't this look nice:
-> 
->   2 files changed, 2 insertions(+), 133 deletions(-)
-> 
-> and it is one less thing to worry about when doing further cleanup.
-> 
-> Seriously, if any of those __copy_{to,from}_user() constant cases were
-> a big deal, we can turn them into get_user/put_user calls. But only
-> after they show up as an actual performance issue.
+> Build results:
+> 	total: 170 pass: 170 fail: 0
+> Qemu test results:
+> 	total: 324 pass: 324 fail: 0
 
-Makes sense.  I'm not arguing against doing that.  Moreover, I suspect
-that other architectures will be similar, at least once the
-sigframe-related code for given architecture is dealt with.  But that's
-more of a "let's look at that later" thing (hopefully with maintainers
-of architectures getting involved).
+Wonderful, thanks for letting me know!
+
+greg k-h
