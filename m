@@ -5,52 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC23ECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:58:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5EFCECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46F1820659
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:58:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A51F020659
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:59:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TqBLoisE"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gBgn8M9M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbfJHO6O (ORCPT
+        id S1726948AbfJHO7R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 10:58:14 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:34806 "EHLO
+        Tue, 8 Oct 2019 10:59:17 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:36118 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbfJHO6O (ORCPT
+        with ESMTP id S1725821AbfJHO7Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 10:58:14 -0400
+        Tue, 8 Oct 2019 10:59:16 -0400
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x98EnAa2089216;
-        Tue, 8 Oct 2019 14:56:54 GMT
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x98En8h7089193;
+        Tue, 8 Oct 2019 14:58:36 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
- bh=/P+uORyC+xIaC1IrzTzZKPatt1FDmQI8eceQUtAHl6w=;
- b=TqBLoisEttWViHviH6+7vCTIU1WSOy0My6f7dNgmxprS7eoudzSJHUgWRMv7PcoVls7i
- W+bFZjPVibKURAmxHY2eFdJ2CLQnwKjNOAKRFAbM+svcC7kpUFmjVO56XVYRmIOGqYpB
- t1eLvedx4bX7UHKPNhMxChahqcio9gumfSuD3CkH/YH3ol80CR09IdRzX/sQiL3fL8KX
- ZngX72S0r+4HYTJ8Kq4YIOql1cdN/tyl/m0aNmNMGrsgvEl82b6hZwBe5Nlkthh026Vp
- mpW3vWgU321eZxwaNBqzDQmlylzTkAsb4KgSwf0J99VYBA4//9OUpnyNOjs2SQiwkf2A pg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2vektrdmkb-1
+ bh=Yep5tuQjKyGoRlsvtcPJzZ92rd1eW1dnoUOZBoSIsZg=;
+ b=gBgn8M9MAzHD4h0pJr780NqKUejbDQ+7HTIXu7cT1S2V4DV41/gnbyUoG8FqP0PuQQbQ
+ 1Edqspp5Ue37Cpgv5WwWkgh/x7gQOJInEVBCcfc6c6CxS3eQYqy5TuVMVXUECutVk08L
+ QCjna2TKDnVrCBQPCLnJAPyNnNuPEsdDrgcFlptIsl/n29ZTr6FUoiDbmNLzYMf/0Wu6
+ xYYXexfl91v/U0M9RxkMQUGzoXFBpNULV6+5lke9uc7DmPUKYc8pAiMTYvYPtUcghZX8
+ 8ZvP4Jk5ki9R0jv86Hd6h/epPR6MoKAy0v3DyxyhYUeDburHbrherAsdYDp2PaRJf+MW cA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2vektrdn1p-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 08 Oct 2019 14:56:53 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x98En8Lj141448;
-        Tue, 8 Oct 2019 14:56:53 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2vgefarjuq-1
+        Tue, 08 Oct 2019 14:58:35 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x98EnVuT067159;
+        Tue, 8 Oct 2019 14:56:35 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2vg206g033-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 08 Oct 2019 14:56:52 +0000
+        Tue, 08 Oct 2019 14:56:35 +0000
 Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x98EupIe026779;
-        Tue, 8 Oct 2019 14:56:51 GMT
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x98EuUIK032159;
+        Tue, 8 Oct 2019 14:56:30 GMT
 Received: from dhcp-10-175-191-48.vpn.oracle.com (/10.175.191.48)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 08 Oct 2019 14:56:51 +0000
+        with ESMTP ; Tue, 08 Oct 2019 14:56:30 +0000
 From:   Alan Maguire <alan.maguire@oracle.com>
 To:     linux-kselftest@vger.kernel.org, brendanhiggins@google.com,
         skhan@linuxfoundation.org
@@ -63,21 +64,21 @@ Cc:     mcgrof@kernel.org, keescook@chromium.org, yzaikin@google.com,
         linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         Alan Maguire <alan.maguire@oracle.com>,
         Knut Omang <knut.omang@oracle.com>
-Subject: [PATCH v2 linux-kselftest-test 3/3] kunit: update documentation to describe module-based build
-Date:   Tue,  8 Oct 2019 15:55:46 +0100
-Message-Id: <1570546546-549-4-git-send-email-alan.maguire@oracle.com>
+Subject: [PATCH v2 linux-kselftest-test 1/3] kunit: allow kunit tests to be loaded as a module
+Date:   Tue,  8 Oct 2019 15:55:44 +0100
+Message-Id: <1570546546-549-2-git-send-email-alan.maguire@oracle.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1570546546-549-1-git-send-email-alan.maguire@oracle.com>
 References: <1570546546-549-1-git-send-email-alan.maguire@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9403 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=43 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=11 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=812
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1908290000 definitions=main-1910080134
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9403 signatures=668684
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=43 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ suspectscore=11 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=895 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
  definitions=main-1910080134
 Sender: linux-kernel-owner@vger.kernel.org
@@ -85,73 +86,438 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Documentation should describe how to build kunit and tests as
-modules.
+as tests are added to kunit, it will become less feasible to execute
+all built tests together.  By supporting modular tests we provide
+a simple way to do selective execution on a running system; specifying
+
+CONFIG_KUNIT=y
+CONFIG_KUNIT_EXAMPLE_TEST=m
+
+...means we can simply "insmod example-test.ko" to run the tests.
+
+To achieve this we need to
+
+o export the required symbols in kunit
+o support a new way of declaring test suites.  Because a module cannot
+  do multiple late_initcall()s, we provide a kunit_test_suites() macro
+  to declare multiple suites within the same module at once.
 
 Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
 Signed-off-by: Knut Omang <knut.omang@oracle.com>
 
 ---
- Documentation/dev-tools/kunit/faq.rst   |  3 ++-
- Documentation/dev-tools/kunit/index.rst |  3 +++
- Documentation/dev-tools/kunit/usage.rst | 16 ++++++++++++++++
- 3 files changed, 21 insertions(+), 1 deletion(-)
+ include/kunit/test.h           | 30 +++++++++++++++++++++++-------
+ kernel/sysctl-test.c           |  6 +++++-
+ lib/Kconfig.debug              |  4 ++--
+ lib/kunit/Kconfig              |  4 ++--
+ lib/kunit/assert.c             |  8 ++++++++
+ lib/kunit/example-test.c       |  6 +++++-
+ lib/kunit/string-stream-test.c |  9 +++++++--
+ lib/kunit/string-stream.c      |  7 +++++++
+ lib/kunit/test-test.c          |  8 ++++++--
+ lib/kunit/test.c               |  8 ++++++++
+ lib/kunit/try-catch.c          |  8 ++++++--
+ 11 files changed, 79 insertions(+), 19 deletions(-)
 
-diff --git a/Documentation/dev-tools/kunit/faq.rst b/Documentation/dev-tools/kunit/faq.rst
-index bf20951..ea55b24 100644
---- a/Documentation/dev-tools/kunit/faq.rst
-+++ b/Documentation/dev-tools/kunit/faq.rst
-@@ -29,7 +29,8 @@ Yes, well, mostly.
+diff --git a/include/kunit/test.h b/include/kunit/test.h
+index dba4830..9fc6c1b 100644
+--- a/include/kunit/test.h
++++ b/include/kunit/test.h
+@@ -12,6 +12,7 @@
+ #include <kunit/assert.h>
+ #include <kunit/try-catch.h>
+ #include <linux/kernel.h>
++#include <linux/module.h>
+ #include <linux/slab.h>
+ #include <linux/types.h>
  
- For the most part, the KUnit core framework (what you use to write the tests)
- can compile to any architecture; it compiles like just another part of the
--kernel and runs when the kernel boots. However, there is some infrastructure,
-+kernel and runs when the kernel boots, or when built as a module, when the
-+module is loaded.  However, there is some infrastructure,
- like the KUnit Wrapper (``tools/testing/kunit/kunit.py``) that does not support
- other architectures.
+@@ -204,24 +205,39 @@ struct kunit {
+  * Registers @suite with the test framework. See &struct kunit_suite for
+  * more information.
+  *
+- * NOTE: Currently KUnit tests are all run as late_initcalls; this means
++ * When builtin,  KUnit tests are all run as late_initcalls; this means
+  * that they cannot test anything where tests must run at a different init
+  * phase. One significant restriction resulting from this is that KUnit
+  * cannot reliably test anything that is initialize in the late_init phase;
+  * another is that KUnit is useless to test things that need to be run in
+  * an earlier init phase.
+  *
++ * An alternative is to build the tests as a module.  Because modules
++ * do not support multiple late_initcall()s, we need to initialize an
++ * array of suites for a module.
++ *
+  * TODO(brendanhiggins@google.com): Don't run all KUnit tests as
+  * late_initcalls.  I have some future work planned to dispatch all KUnit
+  * tests from the same place, and at the very least to do so after
+  * everything else is definitely initialized.
+  */
+-#define kunit_test_suite(suite)						       \
+-	static int kunit_suite_init##suite(void)			       \
+-	{								       \
+-		return kunit_run_tests(&suite);				       \
+-	}								       \
+-	late_initcall(kunit_suite_init##suite)
++#define kunit_test_suites(...)						\
++	static struct kunit_suite *suites[] = { __VA_ARGS__, NULL};	\
++	static int kunit_test_suites_init(void)				\
++	{								\
++		unsigned int i;						\
++		for (i = 0; suites[i] != NULL; i++)			\
++			kunit_run_tests(suites[i]);			\
++		return 0;						\
++	}								\
++	late_initcall(kunit_test_suites_init);				\
++	static void __exit kunit_test_suites_exit(void)			\
++	{								\
++		return;							\
++	}								\
++	module_exit(kunit_test_suites_exit)
++
++#define	kunit_test_suite(suite)	kunit_test_suites(suite)
  
-diff --git a/Documentation/dev-tools/kunit/index.rst b/Documentation/dev-tools/kunit/index.rst
-index 26ffb46..7ddc385 100644
---- a/Documentation/dev-tools/kunit/index.rst
-+++ b/Documentation/dev-tools/kunit/index.rst
-@@ -48,6 +48,9 @@ to a standalone program that can be run like any other program directly inside
- of a host operating system; to be clear, it does not require any virtualization
- support; it is just a regular program.
+ /*
+  * Like kunit_alloc_resource() below, but returns the struct kunit_resource
+diff --git a/kernel/sysctl-test.c b/kernel/sysctl-test.c
+index 2a63241..15161c5 100644
+--- a/kernel/sysctl-test.c
++++ b/kernel/sysctl-test.c
+@@ -389,4 +389,8 @@ static void sysctl_test_api_dointvec_write_single_greater_int_max(
+ 	.test_cases = sysctl_test_cases,
+ };
  
-+Alternatively, kunit and kunit tests can be built as modules and tests will
-+run when the test module is loaded.
+-kunit_test_suite(sysctl_test_suite);
++kunit_test_suite(&sysctl_test_suite);
 +
- KUnit is fast. Excluding build time, from invocation to completion KUnit can run
- several dozen tests in only 10 to 20 seconds; this might not sound like a big
- deal to some people, but having such fast and easy to run tests fundamentally
-diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
-index c6e6963..fa0f03f 100644
---- a/Documentation/dev-tools/kunit/usage.rst
-+++ b/Documentation/dev-tools/kunit/usage.rst
-@@ -539,6 +539,22 @@ Interspersed in the kernel logs you might see the following:
++#ifdef MODULE
++MODULE_LICENSE("GPL");
++#endif /* MODULE */
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index a3017a5..f9f411a6 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -1951,10 +1951,10 @@ config TEST_SYSCTL
+ 	  If unsure, say N.
  
- Congratulations, you just ran a KUnit test on the x86 architecture!
+ config SYSCTL_KUNIT_TEST
+-	bool "KUnit test for sysctl"
++	tristate "KUnit test for sysctl"
+ 	depends on KUNIT
+ 	help
+-	  This builds the proc sysctl unit test, which runs on boot.
++	  This builds the proc sysctl unit test, which runs on boot/module load.
+ 	  Tests the API contract and implementation correctness of sysctl.
+ 	  For more information on KUnit and unit tests in general please refer
+ 	  to the KUnit documentation in Documentation/dev-tools/kunit/.
+diff --git a/lib/kunit/Kconfig b/lib/kunit/Kconfig
+index af37016..9ebd5e6 100644
+--- a/lib/kunit/Kconfig
++++ b/lib/kunit/Kconfig
+@@ -15,7 +15,7 @@ menuconfig KUNIT
+ if KUNIT
  
-+In a similar manner, kunit and kunit tests can also be built as modules,
-+so if you wanted to run tests in this way you might add the following config
-+options to your ``.config``:
-+
-+.. code-block:: none
-+
-+        CONFIG_KUNIT=m
-+        CONFIG_KUNIT_EXAMPLE_TEST=m
-+
-+Once the kernel is built and installed, a simple
-+
-+.. code-block:: bash
-+	modprobe example-test
-+
-+...will run the tests.
-+
- Writing new tests for other architectures
- -----------------------------------------
+ config KUNIT_TEST
+-	bool "KUnit test for KUnit"
++	tristate "KUnit test for KUnit"
+ 	help
+ 	  Enables the unit tests for the KUnit test framework. These tests test
+ 	  the KUnit test framework itself; the tests are both written using
+@@ -24,7 +24,7 @@ config KUNIT_TEST
+ 	  expected.
  
+ config KUNIT_EXAMPLE_TEST
+-	bool "Example test for KUnit"
++	tristate "Example test for KUnit"
+ 	help
+ 	  Enables an example unit test that illustrates some of the basic
+ 	  features of KUnit. This test only exists to help new users understand
+diff --git a/lib/kunit/assert.c b/lib/kunit/assert.c
+index 86013d4..92eba2a 100644
+--- a/lib/kunit/assert.c
++++ b/lib/kunit/assert.c
+@@ -24,6 +24,7 @@ void kunit_base_assert_format(const struct kunit_assert *assert,
+ 	string_stream_add(stream, "%s FAILED at %s:%d\n",
+ 			 expect_or_assert, assert->file, assert->line);
+ }
++EXPORT_SYMBOL_GPL(kunit_base_assert_format);
+ 
+ void kunit_assert_print_msg(const struct kunit_assert *assert,
+ 			    struct string_stream *stream)
+@@ -31,6 +32,7 @@ void kunit_assert_print_msg(const struct kunit_assert *assert,
+ 	if (assert->message.fmt)
+ 		string_stream_add(stream, "\n%pV", &assert->message);
+ }
++EXPORT_SYMBOL_GPL(kunit_assert_print_msg);
+ 
+ void kunit_fail_assert_format(const struct kunit_assert *assert,
+ 			      struct string_stream *stream)
+@@ -38,6 +40,7 @@ void kunit_fail_assert_format(const struct kunit_assert *assert,
+ 	kunit_base_assert_format(assert, stream);
+ 	string_stream_add(stream, "%pV", &assert->message);
+ }
++EXPORT_SYMBOL_GPL(kunit_fail_assert_format);
+ 
+ void kunit_unary_assert_format(const struct kunit_assert *assert,
+ 			       struct string_stream *stream)
+@@ -56,6 +59,7 @@ void kunit_unary_assert_format(const struct kunit_assert *assert,
+ 				 unary_assert->condition);
+ 	kunit_assert_print_msg(assert, stream);
+ }
++EXPORT_SYMBOL_GPL(kunit_unary_assert_format);
+ 
+ void kunit_ptr_not_err_assert_format(const struct kunit_assert *assert,
+ 				     struct string_stream *stream)
+@@ -76,6 +80,7 @@ void kunit_ptr_not_err_assert_format(const struct kunit_assert *assert,
+ 	}
+ 	kunit_assert_print_msg(assert, stream);
+ }
++EXPORT_SYMBOL_GPL(kunit_ptr_not_err_assert_format);
+ 
+ void kunit_binary_assert_format(const struct kunit_assert *assert,
+ 				struct string_stream *stream)
+@@ -97,6 +102,7 @@ void kunit_binary_assert_format(const struct kunit_assert *assert,
+ 			 binary_assert->right_value);
+ 	kunit_assert_print_msg(assert, stream);
+ }
++EXPORT_SYMBOL_GPL(kunit_binary_assert_format);
+ 
+ void kunit_binary_ptr_assert_format(const struct kunit_assert *assert,
+ 				    struct string_stream *stream)
+@@ -118,6 +124,7 @@ void kunit_binary_ptr_assert_format(const struct kunit_assert *assert,
+ 			 binary_assert->right_value);
+ 	kunit_assert_print_msg(assert, stream);
+ }
++EXPORT_SYMBOL_GPL(kunit_binary_ptr_assert_format);
+ 
+ void kunit_binary_str_assert_format(const struct kunit_assert *assert,
+ 				    struct string_stream *stream)
+@@ -139,3 +146,4 @@ void kunit_binary_str_assert_format(const struct kunit_assert *assert,
+ 			 binary_assert->right_value);
+ 	kunit_assert_print_msg(assert, stream);
+ }
++EXPORT_SYMBOL_GPL(kunit_binary_str_assert_format);
+diff --git a/lib/kunit/example-test.c b/lib/kunit/example-test.c
+index f64a829..6c6a408 100644
+--- a/lib/kunit/example-test.c
++++ b/lib/kunit/example-test.c
+@@ -85,4 +85,8 @@ static int example_test_init(struct kunit *test)
+  * This registers the above test suite telling KUnit that this is a suite of
+  * tests that need to be run.
+  */
+-kunit_test_suite(example_test_suite);
++kunit_test_suite(&example_test_suite);
++
++#ifdef MODULE
++MODULE_LICENSE("GPL");
++#endif /* MODULE */
+diff --git a/lib/kunit/string-stream-test.c b/lib/kunit/string-stream-test.c
+index 76cc05e..7a3e7a0 100644
+--- a/lib/kunit/string-stream-test.c
++++ b/lib/kunit/string-stream-test.c
+@@ -45,8 +45,13 @@ static void string_stream_test_get_string(struct kunit *test)
+ 	{}
+ };
+ 
+-static struct kunit_suite string_stream_test_suite = {
++struct kunit_suite string_stream_test_suite = {
+ 	.name = "string-stream-test",
+ 	.test_cases = string_stream_test_cases
+ };
+-kunit_test_suite(string_stream_test_suite);
++
++kunit_test_suite(&string_stream_test_suite);
++
++#ifdef MODULE
++MODULE_LICENSE("GPL");
++#endif /* MODULE */
+diff --git a/lib/kunit/string-stream.c b/lib/kunit/string-stream.c
+index e6d17aa..e4f3a97 100644
+--- a/lib/kunit/string-stream.c
++++ b/lib/kunit/string-stream.c
+@@ -100,6 +100,7 @@ int string_stream_vadd(struct string_stream *stream,
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(string_stream_vadd);
+ 
+ int string_stream_add(struct string_stream *stream, const char *fmt, ...)
+ {
+@@ -112,6 +113,7 @@ int string_stream_add(struct string_stream *stream, const char *fmt, ...)
+ 
+ 	return result;
+ }
++EXPORT_SYMBOL_GPL(string_stream_add);
+ 
+ static void string_stream_clear(struct string_stream *stream)
+ {
+@@ -145,6 +147,7 @@ char *string_stream_get_string(struct string_stream *stream)
+ 
+ 	return buf;
+ }
++EXPORT_SYMBOL_GPL(string_stream_get_string);
+ 
+ int string_stream_append(struct string_stream *stream,
+ 			 struct string_stream *other)
+@@ -158,11 +161,13 @@ int string_stream_append(struct string_stream *stream,
+ 
+ 	return string_stream_add(stream, other_content);
+ }
++EXPORT_SYMBOL_GPL(string_stream_append);
+ 
+ bool string_stream_is_empty(struct string_stream *stream)
+ {
+ 	return list_empty(&stream->fragments);
+ }
++EXPORT_SYMBOL_GPL(string_stream_is_empty);
+ 
+ struct string_stream_alloc_context {
+ 	struct kunit *test;
+@@ -207,6 +212,7 @@ struct string_stream *alloc_string_stream(struct kunit *test, gfp_t gfp)
+ 				    gfp,
+ 				    &context);
+ }
++EXPORT_SYMBOL_GPL(alloc_string_stream);
+ 
+ int string_stream_destroy(struct string_stream *stream)
+ {
+@@ -215,3 +221,4 @@ int string_stream_destroy(struct string_stream *stream)
+ 				      string_stream_free,
+ 				      stream);
+ }
++EXPORT_SYMBOL_GPL(string_stream_destroy);
+diff --git a/lib/kunit/test-test.c b/lib/kunit/test-test.c
+index 5ebe059..b5fdbe3 100644
+--- a/lib/kunit/test-test.c
++++ b/lib/kunit/test-test.c
+@@ -100,7 +100,6 @@ static int kunit_try_catch_test_init(struct kunit *test)
+ 	.init = kunit_try_catch_test_init,
+ 	.test_cases = kunit_try_catch_test_cases,
+ };
+-kunit_test_suite(kunit_try_catch_test_suite);
+ 
+ /*
+  * Context for testing test managed resources
+@@ -328,4 +327,9 @@ static void kunit_resource_test_exit(struct kunit *test)
+ 	.exit = kunit_resource_test_exit,
+ 	.test_cases = kunit_resource_test_cases,
+ };
+-kunit_test_suite(kunit_resource_test_suite);
++kunit_test_suites(&kunit_resource_test_suite,
++		  &kunit_try_catch_test_suite);
++
++#ifdef MODULE
++MODULE_LICENSE("GPL");
++#endif /* MODULE */
+diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+index c83c0fa..e7896f1 100644
+--- a/lib/kunit/test.c
++++ b/lib/kunit/test.c
+@@ -171,6 +171,7 @@ void kunit_do_assertion(struct kunit *test,
+ 	if (assert->type == KUNIT_ASSERTION)
+ 		kunit_abort(test);
+ }
++EXPORT_SYMBOL_GPL(kunit_do_assertion);
+ 
+ void kunit_init_test(struct kunit *test, const char *name)
+ {
+@@ -179,6 +180,7 @@ void kunit_init_test(struct kunit *test, const char *name)
+ 	test->name = name;
+ 	test->success = true;
+ }
++EXPORT_SYMBOL_GPL(kunit_init_test);
+ 
+ /*
+  * Initializes and runs test case. Does not clean up or do post validations.
+@@ -317,6 +319,7 @@ int kunit_run_tests(struct kunit_suite *suite)
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(kunit_run_tests);
+ 
+ struct kunit_resource *kunit_alloc_and_get_resource(struct kunit *test,
+ 						    kunit_resource_init_t init,
+@@ -342,6 +345,7 @@ struct kunit_resource *kunit_alloc_and_get_resource(struct kunit *test,
+ 
+ 	return res;
+ }
++EXPORT_SYMBOL_GPL(kunit_alloc_and_get_resource);
+ 
+ static void kunit_resource_free(struct kunit *test, struct kunit_resource *res)
+ {
+@@ -400,6 +404,7 @@ int kunit_resource_destroy(struct kunit *test,
+ 	kunit_resource_free(test, resource);
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(kunit_resource_destroy);
+ 
+ struct kunit_kmalloc_params {
+ 	size_t size;
+@@ -435,6 +440,7 @@ void *kunit_kmalloc(struct kunit *test, size_t size, gfp_t gfp)
+ 				    gfp,
+ 				    &params);
+ }
++EXPORT_SYMBOL_GPL(kunit_kmalloc);
+ 
+ void kunit_kfree(struct kunit *test, const void *ptr)
+ {
+@@ -447,6 +453,7 @@ void kunit_kfree(struct kunit *test, const void *ptr)
+ 
+ 	WARN_ON(rc);
+ }
++EXPORT_SYMBOL_GPL(kunit_kfree);
+ 
+ void kunit_cleanup(struct kunit *test)
+ {
+@@ -476,3 +483,4 @@ void kunit_cleanup(struct kunit *test)
+ 		kunit_resource_free(test, resource);
+ 	}
+ }
++EXPORT_SYMBOL_GPL(kunit_cleanup);
+diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
+index 55686839..a288012 100644
+--- a/lib/kunit/try-catch.c
++++ b/lib/kunit/try-catch.c
+@@ -19,6 +19,7 @@ void __noreturn kunit_try_catch_throw(struct kunit_try_catch *try_catch)
+ 	try_catch->try_result = -EFAULT;
+ 	complete_and_exit(try_catch->try_completion, -EFAULT);
+ }
++EXPORT_SYMBOL_GPL(kunit_try_catch_throw);
+ 
+ static int kunit_generic_run_threadfn_adapter(void *data)
+ {
+@@ -50,6 +51,7 @@ static unsigned long kunit_test_timeout(void)
+ 	 * For more background on this topic, see:
+ 	 * https://mike-bland.com/2011/11/01/small-medium-large.html
+ 	 */
++#ifndef MODULE
+ 	if (sysctl_hung_task_timeout_secs) {
+ 		/*
+ 		 * If sysctl_hung_task is active, just set the timeout to some
+@@ -60,9 +62,9 @@ static unsigned long kunit_test_timeout(void)
+ 		 */
+ 		timeout_msecs = (sysctl_hung_task_timeout_secs - 1) *
+ 				MSEC_PER_SEC;
+-	} else {
++	} else
++#endif
+ 		timeout_msecs = 300 * MSEC_PER_SEC; /* 5 min */
+-	}
+ 
+ 	return timeout_msecs;
+ }
+@@ -106,6 +108,7 @@ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
+ 
+ 	try_catch->catch(try_catch->context);
+ }
++EXPORT_SYMBOL_GPL(kunit_try_catch_run);
+ 
+ void kunit_try_catch_init(struct kunit_try_catch *try_catch,
+ 			  struct kunit *test,
+@@ -116,3 +119,4 @@ void kunit_try_catch_init(struct kunit_try_catch *try_catch,
+ 	try_catch->try = try;
+ 	try_catch->catch = catch;
+ }
++EXPORT_SYMBOL_GPL(kunit_try_catch_init);
 -- 
 1.8.3.1
 
