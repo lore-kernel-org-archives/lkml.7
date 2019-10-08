@@ -2,126 +2,123 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A8EC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B6EC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6E6320873
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:21:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 093E720873
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:23:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZLi8SVXF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=valentin-vidic.from.hr header.i=@valentin-vidic.from.hr header.b="o51vqbae"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729610AbfJHWVm (ORCPT
+        id S1727572AbfJHWXR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 18:21:42 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46551 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfJHWVm (ORCPT
+        Tue, 8 Oct 2019 18:23:17 -0400
+Received: from valentin-vidic.from.hr ([94.229.67.141]:41895 "EHLO
+        valentin-vidic.from.hr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfJHWXQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 18:21:42 -0400
-Received: by mail-io1-f67.google.com with SMTP id c6so425828ioo.13
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 15:21:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=u4tftPbCrv3Ywdv/Yr7lGlylwby5ziOgn4R8Izjj4JY=;
-        b=ZLi8SVXF0W7jPNHHCEk2AUCffy+7zMrgf0XWhZS7LbFvNSuPfTRfCpgfafY+GDGc1S
-         gvMSvpsBQ00YM+ZXcT24vvny2NYdRTh9ZM+Nb11hw2fYcf2WKkl3yANCI2NUvjeXX+rM
-         eQijQ+fVF6zxiHRtsHL1nGLB4Iy3EXAkasznY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=u4tftPbCrv3Ywdv/Yr7lGlylwby5ziOgn4R8Izjj4JY=;
-        b=oWluw/5Gcio9TsCakyngKyMqxxA8urvZH+X0JvfC2Sdj/H7ZoozXTqjkj5K7aHV4t2
-         TB8/+g5Q9YQl97ZE9t6/Lt46NpiFNtpR5TPDXaMJQzpDUrOYSeorULlQ686/F5zv/qws
-         W5SJgXQsfODNh+cKiGFY4GAOjDtVCEbpQXaaC2OAj8zERzbTv8Yx9od4NcOATGdD8m6c
-         EowNbO5pTbhjbzuOF+UD8K8jpNZ2ZKTv3XYx4XPI6wv+ccsTjEHtQwAKV6BIY+cmoR7Y
-         LVC0XocQ2HjvLnP60JKpO5tXvizpA1F/iA1317T4iI7EtuSaDTOEug339w7jH6x/3wG9
-         YfdA==
-X-Gm-Message-State: APjAAAVKHpeYHUC+DsPWsB93o+XfUvCVFkxoMYF+KxUtAGpqmGNOy/2c
-        aRxnK4f5kOtDoCH83/+nPAoJ2Eh618g=
-X-Google-Smtp-Source: APXvYqypFd33UDBwh7o77TvaoauNKdHmg3rSS56FzcJ5T+UbB34rj8jH5rQgSV7Uqj8KhvrTRi/XwA==
-X-Received: by 2002:a02:bb85:: with SMTP id g5mr301626jan.7.1570573301282;
-        Tue, 08 Oct 2019 15:21:41 -0700 (PDT)
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com. [209.85.166.44])
-        by smtp.gmail.com with ESMTPSA id v70sm232043ilk.58.2019.10.08.15.21.40
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Oct 2019 15:21:40 -0700 (PDT)
-Received: by mail-io1-f44.google.com with SMTP id w12so455552iol.11
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 15:21:40 -0700 (PDT)
-X-Received: by 2002:a02:b691:: with SMTP id i17mr300479jam.132.1570573300103;
- Tue, 08 Oct 2019 15:21:40 -0700 (PDT)
+        Tue, 8 Oct 2019 18:23:16 -0400
+X-Virus-Scanned: Debian amavisd-new at valentin-vidic.from.hr
+Received: by valentin-vidic.from.hr (Postfix, from userid 1000)
+        id 42C6925D; Wed,  9 Oct 2019 00:23:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+        d=valentin-vidic.from.hr; s=2017; t=1570573389;
+        bh=gCUfr9ijiKWav6o1R8261PlBXptRHXBtHMu8ZFIIfpk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=o51vqbaeFl/Epd2UP3431uHmkB3LyFRMsIDBxyj5/LXOGIymF0eb8IEWXc/Vihpr0
+         k5cO4FAOh1pCcK1b5Jm1oZfwRaPKJQW3uKl5I/0FO1/RQbWDSFmm2y+iL+gXpoFCPv
+         ECwAHqJv1SPvNl7ayGq7fVfiUClOOgETB2doDWZkcxt90DhHMC+n4TWidh/i2zD1uG
+         lfo0LsWUUsrMTn9PO8paQ344Z/4/sx1PM/Ebo73LdzhUm6jZJsWuCIuXY/QYI46GZt
+         +TdgZ9+fvZtSNcF4b4WpvqEcn7AI9o+yF/ph8LJADYzAfwhzvh1T2oBQ9gi6C84Q8R
+         viDMTzmFsDP1Q==
+From:   Valentin Vidic <vvidic@valentin-vidic.from.hr>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Oliver Neukum <oneukum@suse.com>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Valentin Vidic <vvidic@valentin-vidic.from.hr>,
+        syzbot+0761012cebf7bdb38137@syzkaller.appspotmail.com
+Subject: [PATCH] usb: iowarrior: fix access to freed data structure
+Date:   Wed,  9 Oct 2019 00:23:07 +0200
+Message-Id: <20191008222307.18587-1-vvidic@valentin-vidic.from.hr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20191008132043.7966-1-daniel.thompson@linaro.org> <20191008132043.7966-6-daniel.thompson@linaro.org>
-In-Reply-To: <20191008132043.7966-6-daniel.thompson@linaro.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 8 Oct 2019 15:21:28 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=US8y=JrcQy3mB9MqFCaMd-N8FS2=JDe2zGWZhyHtTZtw@mail.gmail.com>
-Message-ID: <CAD=FV=US8y=JrcQy3mB9MqFCaMd-N8FS2=JDe2zGWZhyHtTZtw@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] kdb: Tweak escape handling for vi users
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Jason Wessel <jason.wessel@windriver.com>,
-        kgdb-bugreport@lists.sourceforge.net,
-        LKML <linux-kernel@vger.kernel.org>,
-        Patch Tracking <patches@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+struct iowarrior gets freed prematurely in iowarrior_release while
+it is still being referenced from usb_interface, so let only
+iowarrior_disconnect call iowarrior_delete.
 
-On Tue, Oct 8, 2019 at 6:21 AM Daniel Thompson
-<daniel.thompson@linaro.org> wrote:
->
-> Currently if sequences such as "\ehelp\r" are delivered to the console then
-> the h gets eaten by the escape handling code. Since pressing escape
-> becomes something of a nervous twitch for vi users (and that escape doesn't
-> have much effect at a shell prompt) it is more helpful to emit the 'h' than
-> the '\e'.
+Fixes: KMSAN: uninit-value in iowarrior_disconnect
+Reported-by: syzbot+0761012cebf7bdb38137@syzkaller.appspotmail.com
+Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
+---
+ drivers/usb/misc/iowarrior.c | 35 +++++++++++++++--------------------
+ 1 file changed, 15 insertions(+), 20 deletions(-)
 
-I have no objection to this change.
+diff --git a/drivers/usb/misc/iowarrior.c b/drivers/usb/misc/iowarrior.c
+index f5bed9f29e56..0492ea76c4bf 100644
+--- a/drivers/usb/misc/iowarrior.c
++++ b/drivers/usb/misc/iowarrior.c
+@@ -638,7 +638,6 @@ static int iowarrior_open(struct inode *inode, struct file *file)
+ static int iowarrior_release(struct inode *inode, struct file *file)
+ {
+ 	struct iowarrior *dev;
+-	int retval = 0;
+ 
+ 	dev = file->private_data;
+ 	if (!dev)
+@@ -650,27 +649,23 @@ static int iowarrior_release(struct inode *inode, struct file *file)
+ 	mutex_lock(&dev->mutex);
+ 
+ 	if (dev->opened <= 0) {
+-		retval = -ENODEV;	/* close called more than once */
+ 		mutex_unlock(&dev->mutex);
+-	} else {
+-		dev->opened = 0;	/* we're closing now */
+-		retval = 0;
+-		if (dev->present) {
+-			/*
+-			   The device is still connected so we only shutdown
+-			   pending read-/write-ops.
+-			 */
+-			usb_kill_urb(dev->int_in_urb);
+-			wake_up_interruptible(&dev->read_wait);
+-			wake_up_interruptible(&dev->write_wait);
+-			mutex_unlock(&dev->mutex);
+-		} else {
+-			/* The device was unplugged, cleanup resources */
+-			mutex_unlock(&dev->mutex);
+-			iowarrior_delete(dev);
+-		}
++		return -ENODEV;	/* close called more than once */
+ 	}
+-	return retval;
++
++	dev->opened = 0;	/* we're closing now */
++	if (dev->present) {
++		/*
++		 * The device is still connected so we only shutdown
++		 * pending read/write ops.
++		 */
++		usb_kill_urb(dev->int_in_urb);
++		wake_up_interruptible(&dev->read_wait);
++		wake_up_interruptible(&dev->write_wait);
++	}
++
++	mutex_unlock(&dev->mutex);
++	return 0;
+ }
+ 
+ static __poll_t iowarrior_poll(struct file *file, poll_table * wait)
+-- 
+2.20.1
 
-
-> We don't simply choose to emit the final character for all escape sequences
-> since that will do odd things for unsupported escape sequences (in
-> other words we retain the existing behaviour once we see '\e[').
-
-It's not like it handles unsupported escape sequences terribly well
-anyway, of course.  As soon as if finds something it doesn't recognize
-then it stops processing the escape sequence and will just interpret
-the rest of it verbatim.  Like if I press Ctrl-Home on my keyboard I
-see "5H" spit out, for instance.
-
-
-> Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-> ---
->  kernel/debug/kdb/kdb_io.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
-> index 288dd1babf90..b3fb88b1ee34 100644
-> --- a/kernel/debug/kdb/kdb_io.c
-> +++ b/kernel/debug/kdb/kdb_io.c
-> @@ -158,8 +158,8 @@ static int kdb_getchar(void)
->
->                 *pbuf++ = key;
->                 key = kdb_read_handle_escape(buf, pbuf - buf);
-> -               if (key < 0) /* no escape sequence; return first character */
-> -                       return buf[0];
-> +               if (key < 0) /* no escape sequence; return best character */
-> +                       return buf[pbuf - buf != 2 ? 0 : 1];
-
-optional nit: for me the inverse is easier to conceptualize, AKA:
-
-buf[pbuf - buf == 2 ? 1 : 0];
-
--Doug
