@@ -2,75 +2,151 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E77C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 151A6C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 754A6217D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:48:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570542515;
-	bh=VKc7Xxn5RL2X3cXGk70B3QLiIVOG5siFsmbVAIQfhbA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mwbwfXxqCdEsDIvrn3tQH1dfgZkjArnBX7z56beYgjsrvhSPGqQ1qeDbiE2TsamG6
-	 P97DCqYeCizV5Bn2i3iiks5Sd5YovlHpkleFUB8oLrR3LWJQqV34YfjZSTsyyET+Ia
-	 MIiHsMbTxD9oc9bmXy5EXNtxrYhcQQBH165Bncuc=
+	by mail.kernel.org (Postfix) with ESMTP id E8FA3206BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:49:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725939AbfJHNse (ORCPT
+        id S1726070AbfJHNtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 09:48:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45350 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725834AbfJHNse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 09:48:34 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 13FFBB1AC;
-        Tue,  8 Oct 2019 13:48:32 +0000 (UTC)
-Date:   Tue, 8 Oct 2019 15:48:31 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Qian Cai <cai@lca.pw>, Steven Rostedt <rostedt@goodmis.org>,
-        sergey.senozhatsky.work@gmail.com, peterz@infradead.org,
-        linux-mm@kvack.org, john.ogness@linutronix.de,
-        akpm@linux-foundation.org, david@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
-Message-ID: <20191008134831.GL6681@dhcp22.suse.cz>
-References: <1570228005-24979-1-git-send-email-cai@lca.pw>
- <20191007143002.l37bt2lzqtnqjqxu@pathway.suse.cz>
- <1570460350.5576.290.camel@lca.pw>
- <20191007151237.GP2381@dhcp22.suse.cz>
- <1570462407.5576.292.camel@lca.pw>
- <20191008081510.ptwmb7zflqiup5py@pathway.suse.cz>
- <20191008091349.6195830d@gandalf.local.home>
- <1570541032.5576.297.camel@lca.pw>
- <20191008134256.5ti6rjkvadn5b5q4@pathway.suse.cz>
+        Tue, 8 Oct 2019 09:49:13 -0400
+Received: from muru.com ([72.249.23.125]:35878 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725834AbfJHNtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 09:49:12 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 657CD8081;
+        Tue,  8 Oct 2019 13:49:43 +0000 (UTC)
+Date:   Tue, 8 Oct 2019 06:49:06 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Tero Kristo <t-kristo@ti.com>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Adam Ford <aford173@gmail.com>,
+        Philipp Rossak <embed3d@gmail.com>,
+        =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>,
+        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+        moaz korena <moaz@korena.xyz>,
+        James Hilliard <james.hilliard1@gmail.com>,
+        kernel@pyra-handheld.com,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, maemo-leste@lists.dyne.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>
+Subject: Re: Lay common foundation to make PVR/SGX work without hacks on
+ OMAP34xx, OMAP36xx, AM335x and potentially OMAP4, OMAP5
+Message-ID: <20191008134906.GX5610@atomide.com>
+References: <84cac9b8-0eff-33f8-464d-4f8045d7db19@wizzup.org>
+ <BFAA7FA6-A352-476A-99F9-02EA663A6AAD@goldelico.com>
+ <CAHCN7x+87xTsA3MeHy7kUWU0SU3X8HmSc2wbk5gKvYm1dRNe6A@mail.gmail.com>
+ <04809E3E-A690-4931-B949-1CFDAF407C14@goldelico.com>
+ <ebb50954-b456-4dab-0765-9dfa06c67075@wizzup.org>
+ <C3A56737-6187-4B31-8697-3A02DD164429@goldelico.com>
+ <20191007155252.GQ5610@atomide.com>
+ <64474fb1-f6d2-52d0-175a-65bb493dc1fe@ti.com>
+ <9253CFB5-0AF7-4EA0-AC7F-6DE37318238A@goldelico.com>
+ <0bb4739d-e26f-de49-fd80-257a836e892a@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191008134256.5ti6rjkvadn5b5q4@pathway.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <0bb4739d-e26f-de49-fd80-257a836e892a@ti.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 08-10-19 15:42:56, Petr Mladek wrote:
-[...]
-> I am not -mm maintainer so I could not guarantee that a patch
-> using printk_deferred() will get accepted. But it will have much
-> bigger chance than the original patch.
+* Tero Kristo <t-kristo@ti.com> [191008 08:01]:
+> On 07/10/2019 22:24, H. Nikolaus Schaller wrote:
+> > Hi Tero,
+> > 
+> > > Am 07.10.2019 um 21:18 schrieb Tero Kristo <t-kristo@ti.com>:
+> > > 
+> > > On 07/10/2019 18:52, Tony Lindgren wrote:
+> > > > Hi,
+> > > > * H. Nikolaus Schaller <hns@goldelico.com> [191005 16:59]:
+> > > > Please try with Tero's current github branch at github.com/t-kristo/linux-pm.git
+> > > > 5.4-rc1-ipc from few days ago, the earlier versions had still issues.
+> > > 
+> > > Yeah, this one should be fixed now.
+> > 
+> > Ok! Will try asap.
+> > 
+> > > 
+> > > > > * OMAP5 (Pyra): fails to enable the clocks (did work with the previous version)
+> > > > > [  304.140363] clock-controller:clk:0000:0: failed to enable
+> > > > > [  304.147388] PVR_K:(Error): EnableSGXClocks: pm_runtime_get_sync failed (16)
+> > > > Hmm no idea what might be up with this one. Did some clkctrl clock
+> > > > fixes maybe cause a regression here? Tero do you have any ideas?
+> > > 
+> > > So, this one I am not too sure, I haven't looked at omap5 graphics clocking. I don't think it has anything to do with reset handling though.
+> > > 
+> > > Is there some simple way to try this out on board; without PVR module that is?
+> > 
+> > Yes, I have also seen it when just running the commands in the original commit message [1]:
+> > 
+> > # echo on > $(find /sys -name control | grep \/5600)
+> > # rwmem 0x5600fe00	# OCP Revision
+> > 0x5600fe00 = 0x40000000
+> > # echo auto > $(find /sys -name control | grep \/5600)
+> > # rwmem 0x5600fe10
+> > # rwmem 0x56000024
+> > 
+> > But I have not yet tested with 5.4-rc2, just 5.4-rc1.
+> 
+> Ok, there is a one liner DTS data fix for this issue, attached.
 
-I am not going to ack any such patch until it is clear what is the
-actual problem. The disucssion in this thread boils down to point to
-lockdep splats which are most likely false possitives and there is no
-clear evidence that the is any actual deadlock as those would be clearly
-identifiable if the zone->lock or any other spinlock spinlock were
-participating.
--- 
-Michal Hocko
-SUSE Labs
+Arhg OK that thing again.. I must have changed node name while
+cleaning up the patch or something. Thanks, will apply into fixes.
+
+Then for v5.5, we should start using custom compatible properties
+for the clock controller instances. I'll be posting a patch for that.
+Otherwise scripts/checkpatch.pl --strict type clean-up will cause
+unexpected issues.
+
+Regards,
+
+Tony
+
+> From 57f9fecb167c0ef9f1ae2a1aa93a05ca8add52a2 Mon Sep 17 00:00:00 2001
+> From: Tero Kristo <t-kristo@ti.com>
+> Date: Tue, 8 Oct 2019 10:56:42 +0300
+> Subject: [PATCH 1/1] ARM: dts: omap5: fix gpu_cm clock provider name
+> 
+> The clkctrl code searches for the parent clockdomain based on the name
+> of the CM provider node. The introduction of SGX node for omap5 made
+> the node name for the gpu_cm to be clock-controller. There is no
+> clockdomain named like this, so the lookup fails. Fix by changing
+> the node name properly.
+> 
+> Fixes: 394534cb07d8 ("ARM: dts: Configure sgx for omap5")
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> ---
+>  arch/arm/boot/dts/omap54xx-clocks.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/omap54xx-clocks.dtsi b/arch/arm/boot/dts/omap54xx-clocks.dtsi
+> index 939ec7dfc366..db9885103099 100644
+> --- a/arch/arm/boot/dts/omap54xx-clocks.dtsi
+> +++ b/arch/arm/boot/dts/omap54xx-clocks.dtsi
+> @@ -1160,7 +1160,7 @@
+>  		};
+>  	};
+>  
+> -	gpu_cm: clock-controller@1500 {
+> +	gpu_cm: gpu_cm@1500 {
+>  		compatible = "ti,omap4-cm";
+>  		reg = <0x1500 0x100>;
+>  		#address-cells = <1>;
+> -- 
+> 2.17.1
+> 
+
