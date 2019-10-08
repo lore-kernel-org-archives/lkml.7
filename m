@@ -2,157 +2,108 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C6EECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9375BC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B9D52070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:27:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A5C8205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:27:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LEeiApTa"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZZO3tmZ3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726217AbfJHO1c (ORCPT
+        id S1726490AbfJHO1v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 10:27:32 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54489 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbfJHO1b (ORCPT
+        Tue, 8 Oct 2019 10:27:51 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:56596 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbfJHO1v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 10:27:31 -0400
-Received: by mail-wm1-f67.google.com with SMTP id p7so3391204wmp.4;
-        Tue, 08 Oct 2019 07:27:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=CL2CjFqr/gvx4UlhjNVujT9/noY+ERwIiRCikO9IMQY=;
-        b=LEeiApTaiq7CfDNq5uCLKajW+ZEy2fWSgKnxKJ9Lg752aMUR8cQhi9xUgKy1FIrJra
-         Sa/Adp/MiQIG9W8YCUrWGbinyiwzKl4V9RZbPCSic6tZ6zFv55oiwyWxkrr7aoO2lBvk
-         Molo2zpKRcfJs/0AwXi7McLziq233XCJbYTrexhJNrnQjtZwUDyvBlCdJJ8XzIbwPnf4
-         sjEXS9LAb/B44GvsdOdDGEuGzDT+s+ONWzW/b9QASEcClhKjuti2eg/5XZKPYJmKK/JZ
-         MYpF0mOTZrLgFV7nDApB4gQwK3ESRHYgFC8nzkR8Hd+bZPT2TxxcKRk1T9GQUtaaFvP5
-         Caaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=CL2CjFqr/gvx4UlhjNVujT9/noY+ERwIiRCikO9IMQY=;
-        b=XjbHWm0WfJ4t/faicGEyH6wDI3mI8T2VPhhkHqum9E8865J9uOGh1BQFZvjQPQoi0D
-         XdFGQHuWHKTx8IdAmP/qFly0JYKelebzrJbjeKxUiDHN7UeUEw8Kt5MBOo0DWUluB4Xu
-         MWI3cKJZMPfs4kClIAgOvivb4V4CW5iyVx7NDCqabHK0gcXtnGheqHEihFkS3DKQwi4K
-         K3mol0+LzhhmyiHi+fo/FzZ91aCKVIzmdSfAymukvLKvMzLn6tukHY3PnypkHh++Pgh/
-         DbVno9FRbpcjrBsIqdyvq05FQaEe7+RwWpzVVSZ1MtdNkScngTMbRgT1gYKdBtQQfal4
-         hFSw==
-X-Gm-Message-State: APjAAAWEpmbuTlyL0jd/oHlPkRzOd8QdZ4CBslgRNwG+HId8cTk1Ocrg
-        IFf3Cclr+1WxxOSoJDAYm7a5Jf8p
-X-Google-Smtp-Source: APXvYqwuwmMmSFL5Shm5tAx7yjvMTFKADXBaHLGWBHrHcBLifllEkCr0OcX7qpOWrWct1Ybyc4d/AQ==
-X-Received: by 2002:a1c:7c16:: with SMTP id x22mr4379378wmc.113.1570544847653;
-        Tue, 08 Oct 2019 07:27:27 -0700 (PDT)
-Received: from [10.0.20.253] ([95.157.63.22])
-        by smtp.gmail.com with ESMTPSA id m16sm2898141wml.11.2019.10.08.07.27.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Oct 2019 07:27:26 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        linux-man <linux-man@vger.kernel.org>,
-        Containers <containers@lists.linux-foundation.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jordan Ogas <jogas@lanl.gov>, werner@almesberger.net,
-        Al Viro <viro@ftp.linux.org.uk>
-Subject: Re: pivot_root(".", ".") and the fchdir() dance
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-References: <CAKgNAki0bR5zZr+kp_xjq+bNUky6-F+s2ep+jnR0YrjHhNMB1g@mail.gmail.com>
- <20190805103630.tu4kytsbi5evfrhi@mikami>
- <3a96c631-6595-b75e-f6a7-db703bf89bcf@gmail.com>
- <da747415-4c7a-f931-6f2e-2962da63c161@philippwendler.de>
- <CAKgNAkjS+x7aMVUiVSgCRwgi8rnukqJv=svtTARE-tt-oxQxWw@mail.gmail.com>
- <87r24piwhm.fsf@x220.int.ebiederm.org>
- <CAKgNAkhK2qBbz5aVY9VdK0UzvpZ=c7c7LWQ1MK2gu-rVKUz9_g@mail.gmail.com>
- <87ftl5donm.fsf@x220.int.ebiederm.org>
- <b8b9d8bd-e959-633f-b879-4bfe4eb0df23@gmail.com>
- <20190910111551.scam5payogqqvlri@wittgenstein>
- <30545c5c-ff4c-8b87-e591-40cc0a631304@gmail.com>
- <871rwnda47.fsf@x220.int.ebiederm.org>
- <448138b8-0d0c-5eb3-d5e5-04a26912d3a8@gmail.com>
- <87ef0hbezt.fsf@x220.int.ebiederm.org>
- <cc21557f-1568-68c3-e322-47ceb52fdf53@gmail.com>
- <71cad40b-0f9f-24de-b650-8bc4fce78fa8@gmail.com>
- <87y2y6j9i1.fsf@x220.int.ebiederm.org>
- <7e4b23df-ab83-3d5a-3dc5-54025e3682cf@gmail.com>
- <87k19geey0.fsf@x220.int.ebiederm.org>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <c7041c6a-a4c6-75f2-5380-4fed67cd60b1@gmail.com>
-Date:   Tue, 8 Oct 2019 16:27:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 8 Oct 2019 10:27:51 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x98E9LSo051875;
+        Tue, 8 Oct 2019 14:27:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=GfyLIyqEXxIaQ2ACVoOP4oi4Ygck8YSsBITIQGuPxKk=;
+ b=ZZO3tmZ3gQVSLd44qJDLr14aTBJ+45hTD+0oLHKe/QFJkx0wt0+8Il93UI62MOadCgun
+ ZJ6zZ+pZDxJ8ldFJczwGgP3YcL323c84s04yGngHjtNTGa3YupuII/vmevf4fbw8yyKz
+ CsjdpASsKjfV/5bpfHS0lbMEFOtckUmr0sWbL8zxzSj4oARMSlbtv2EQtc5RYqqE7g5D
+ RYhNfxPXQRVlSBJbtYj8jpV/KpNztCyDVpYY+46TBuTAFVcve+zYzNa73qQMx+djrK++
+ E/F1OxThFaX+iDXcuPfjZDmHVJ//uYpVYONh2FpX9igLgaDKbimL1ytGoG0Pp670fdXc oA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2vektrde4w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 08 Oct 2019 14:27:29 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x98E92iE155480;
+        Tue, 8 Oct 2019 14:25:28 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2vg206ds9x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 08 Oct 2019 14:25:28 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x98EPP4U015274;
+        Tue, 8 Oct 2019 14:25:25 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 08 Oct 2019 07:25:24 -0700
+Date:   Tue, 8 Oct 2019 17:25:17 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Matteo Croce <mcroce@redhat.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>, devel@driverdev.osuosl.org
+Subject: Re: [PATCH] staging: vchiq: don't leak kernel address
+Message-ID: <20191008142517.GO21515@kadam>
+References: <20191008123346.3931-1-mcroce@redhat.com>
+ <20191008131518.GH25098@kadam>
+ <CAGnkfhxefH+3YKDWQMCOYoj1skcq6rUmHuiHZQ-76YixFqbQjg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <87k19geey0.fsf@x220.int.ebiederm.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGnkfhxefH+3YKDWQMCOYoj1skcq6rUmHuiHZQ-76YixFqbQjg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9403 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=748
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910080132
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9403 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=830 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910080132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Eric,
-
->>> Creating of a mount namespace in a user namespace automatically does
->>> 'mount("", "/", MS_SLAVE | MS_REC, NULL);' if the starting mount
->>> namespace was not created in that user namespace.  AKA creating
->>> a mount namespace in a user namespace does the unshare for you.
->>
->> Oh -- I had forgotten that detail. But it is documented
->> (by you, I think) in mount_namespaces(7):
->>
->>        *  A  mount  namespace  has  an  owner user namespace.  A
->>           mount namespace whose owner user namespace is  differ‐
->>           ent  from the owner user namespace of its parent mount
->>           namespace is considered a less privileged mount names‐
->>           pace.
->>
->>        *  When  creating  a  less  privileged  mount  namespace,
->>           shared mounts are reduced to  slave  mounts.   (Shared
->>           and  slave  mounts are discussed below.)  This ensures
->>           that  mappings  performed  in  less  privileged  mount
->>           namespaces will not propagate to more privileged mount
->>           namespaces.
->>
->> There's one point that description that troubles me. There is a
->> reference to "parent mount namespace", but as I understand things
->> there is no parental relationship among mount namespaces instances
->> (or am I wrong?). Should that wording not be rather something
->> like "the mount namespace of the process that created this mount
->> namespace"?
+On Tue, Oct 08, 2019 at 04:21:54PM +0200, Matteo Croce wrote:
+> On Tue, Oct 8, 2019 at 3:16 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+> >
+> > The subject doesn't match the patch.  It should just be "remove useless
+> > printk".
+> >
+> > regards,
+> > dan carpenter
+> >
 > 
-> How about "the mount namespace this mount namespace started as a copy of"
-> 
-> You are absolutely correct there is no relationship between mount
-> namespaces.  There is just the propagation tree between mounts.  (Which
-> acts similarly to a parent/child relationship but is not at all the same
-> thing).
+> Well, it avoids leaking an address by removing an useless printk.
+> It seems that GKH already picked the patch in his staging tree, but
+> I'm fine with both subjects, really,
 
-Thanks. I made the text as follows:
+The address wasn't leaked because it was already %pK.  The subject
+says there is an info leak security problem, when the opposite is true.
 
-       *  Each  mount  namespace  has  an owner user namespace.  As noted
-          above, when a new mount namespace is  created,  it  inherits  a
-          copy  of  the  mount  points  from  the  mount namespace of the
-          process that created the new mount namespace.  If the two mount
-          namespaces are owned by different user namespaces, then the new
-          mount namespace is considered less privileged.
+regards,
+dan carpenter
 
-Cheers,
-
-Michael
-
-
--- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
