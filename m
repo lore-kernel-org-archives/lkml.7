@@ -2,250 +2,299 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A17C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 23:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E05AC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 23:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E9BD21721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 23:31:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=eecs-berkeley-edu.20150623.gappssmtp.com header.i=@eecs-berkeley-edu.20150623.gappssmtp.com header.b="TNInimJ9"
+	by mail.kernel.org (Postfix) with ESMTP id CAFD321721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 23:31:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729734AbfJHXbU (ORCPT
+        id S1729761AbfJHXbl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 19:31:20 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33413 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725908AbfJHXbU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 19:31:20 -0400
-Received: by mail-pl1-f194.google.com with SMTP id d22so118707pls.0
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 16:31:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=eecs-berkeley-edu.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:comments:mime-version
-         :content-id:content-transfer-encoding:date:message-id;
-        bh=l1pNyE3/ypBPj3KYLx4NoFd3cbEq25ItIhYszhCrZaQ=;
-        b=TNInimJ9HufK1KFrWxBnkKKOAF2I92fr42GfIBIFxtY1fmaLRS6EeduqrYo/jHl2dr
-         wKZVWSqdv+tNwGs8IxzUu4Z1H+GEwiqIM7d6NlWCtaSB7R9MabuXQ2tyLFBkuVXf/xES
-         blxcc09t5EdrfgQqvw8WdAW7lqeYyBxQgBZjUbnUBChbUVf6xcvqRPGApfg/2YQEGJxG
-         PMII4GskDoYAoTc3BEBLFkbjNFyjOCN2MGdlbFSSccxvu1vhLqCsYPPotIjnwFuAmvyC
-         VyCBrKZdyIAHFzZEq1fsZLKCfuFVUxwU9K6E/6OnHBd7hp/CrMbn8NmvquQbKOAGUs/C
-         aECw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references
-         :comments:mime-version:content-id:content-transfer-encoding:date
-         :message-id;
-        bh=l1pNyE3/ypBPj3KYLx4NoFd3cbEq25ItIhYszhCrZaQ=;
-        b=I+3UAZnZqpAR+Pk9WrKxcHCxnCKe95KOV+QfvPez6I4lve+Io/6XZ4kNiMM76doQxZ
-         32/jfgMZLqR/6kNXNqMvnjPnyoGuVgLho0z8hutnvbFCBGCFb5dqKdJmZOoYd/4cm56V
-         Ago3Yx08fL4AVr2HeCIGyZPrk+iQe/dZc0F5ux6XNHhNytxn3wzqqOQH5gKau+QEVpeV
-         nQLWvxQ9EEbtLDya/Gp6imuxwCz0e5rJKELDu7V8WV4B7nzdgwYF62ZAol5RJtIMqqrV
-         m6+L8KbWgcqopcgd4iw5X3IMo1IVV/w11NLLynBoYOrcEWXaJQd+bP1fdx6pv0SMkljb
-         dlmg==
-X-Gm-Message-State: APjAAAV+GAyKm22FNrsrEnWDDy9Q6CQetaYVa06IfLUxEScNo4to4KJi
-        wPhVVRPUsirKJ/TQtvv04OuhkQ==
-X-Google-Smtp-Source: APXvYqwSfw2Qo/LT+fqD7RJh5I8b3bSKQU5hBm2KqrkBAWtmLpBa1mZskznpOqIyutrlritjF4gj2Q==
-X-Received: by 2002:a17:902:8608:: with SMTP id f8mr88788plo.185.1570577478928;
-        Tue, 08 Oct 2019 16:31:18 -0700 (PDT)
-Received: from localhost (dhcp-35-38.EECS.Berkeley.EDU. [128.32.35.38])
-        by smtp.gmail.com with ESMTPSA id d3sm242576pgb.3.2019.10.08.16.31.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 08 Oct 2019 16:31:18 -0700 (PDT)
-From:   Albert Ou <aou@eecs.berkeley.edu>
-To:     Palmer Dabbelt <palmer@sifive.com>
-cc:     anup@brainfault.org, Paul Walmsley <paul.walmsley@sifive.com>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] riscv: Fix memblock reservation for device tree blob
-In-reply-to: <mhng-464b0376-8728-4ca9-a090-e785ffb2df14@palmer-si-x1e>
-References: <mhng-464b0376-8728-4ca9-a090-e785ffb2df14@palmer-si-x1e>
-Comments: In-reply-to Palmer Dabbelt <palmer@sifive.com>
-   message dated "Tue, 08 Oct 2019 15:38:15 -0700."
+        Tue, 8 Oct 2019 19:31:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:48526 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725908AbfJHXbl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 19:31:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 192BD337;
+        Tue,  8 Oct 2019 16:31:40 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8FB4F3F68E;
+        Tue,  8 Oct 2019 16:31:39 -0700 (PDT)
+Date:   Wed, 9 Oct 2019 00:31:38 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH v2] arm64: lse: fix LSE atomics with LLVM's integrated
+ assembler
+Message-ID: <20191008233137.GL42880@e119886-lin.cambridge.arm.com>
+References: <20191007201452.208067-1-samitolvanen@google.com>
+ <20191008212730.185532-1-samitolvanen@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <46781.1570577453.1@ratiocinator.vaxen.org>
-Content-Transfer-Encoding: quoted-printable
-Date:   Tue, 08 Oct 2019 16:31:17 -0700
-Message-ID: <46808.1570577477@ratiocinator.vaxen.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191008212730.185532-1-samitolvanen@google.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-08 15:38:15 -0700, Palmer Dabbelt <palmer@sifive.com> wrote:
-> On Fri, 20 Sep 2019 21:34:57 PDT (-0700), anup@brainfault.org wrote:
-> > On Sat, Sep 21, 2019 at 6:30 AM Albert Ou <aou@eecs.berkeley.edu> wrot=
-e:
-> >>
-> >> This fixes an error with how the FDT blob is reserved in memblock.
-> >> An incorrect physical address calculation exposed the FDT header to
-> >> unintended corruption, which typically manifested with of_fdt_raw_ini=
-t()
-> >> faulting during late boot after fdt_totalsize() returned a wrong valu=
-e.
-> >> Systems with smaller physical memory sizes more frequently trigger th=
-is
-> >> issue, as the kernel is more likely to allocate from the DMA32 zone
-> >> where bbl places the DTB after the kernel image.
-> >>
-> >> Commit 671f9a3e2e24 ("RISC-V: Setup initial page tables in two stages=
-")
-> >> changed the mapping of the DTB to reside in the fixmap area.
-> >> Consequently, early_init_fdt_reserve_self() cannot be used anymore in
-> >> setup_bootmem() since it relies on __pa() to derive a physical addres=
-s,
-> >> which does not work with dtb_early_va that is no longer a valid kerne=
-l
-> >> logical address.
-> >>
-> >> The reserved[0x1] region shows the effect of the pointer underflow
-> >> resulting from the __pa(initial_boot_params) offset subtraction:
-> >>
-> >> [    0.000000] MEMBLOCK configuration:
-> >> [    0.000000]  memory size =3D 0x000000001fe00000 reserved size =3D =
-0x0000000000a2e514
-> >> [    0.000000]  memory.cnt  =3D 0x1
-> >> [    0.000000]  memory[0x0]     [0x0000000080200000-0x000000009ffffff=
-f], 0x000000001fe00000 bytes flags: 0x0
-> >> [    0.000000]  reserved.cnt  =3D 0x2
-> >> [    0.000000]  reserved[0x0]   [0x0000000080200000-0x0000000080c2dfe=
-b], 0x0000000000a2dfec bytes flags: 0x0
-> >> [    0.000000]  reserved[0x1]   [0xfffffff080100000-0xfffffff08010052=
-7], 0x0000000000000528 bytes flags: 0x0
-> >>
-> >> With the fix applied:
-> >>
-> >> [    0.000000] MEMBLOCK configuration:
-> >> [    0.000000]  memory size =3D 0x000000001fe00000 reserved size =3D =
-0x0000000000a2e514
-> >> [    0.000000]  memory.cnt  =3D 0x1
-> >> [    0.000000]  memory[0x0]     [0x0000000080200000-0x000000009ffffff=
-f], 0x000000001fe00000 bytes flags: 0x0
-> >> [    0.000000]  reserved.cnt  =3D 0x2
-> >> [    0.000000]  reserved[0x0]   [0x0000000080200000-0x0000000080c2dfe=
-b], 0x0000000000a2dfec bytes flags: 0x0
-> >> [    0.000000]  reserved[0x1]   [0x0000000080e00000-0x0000000080e0052=
-7], 0x0000000000000528 bytes flags: 0x0
-> >
-> > Thanks for catching this issue.
-> >
-> > Most of us did not notice this issue most likely because:
-> > 1. We generally have good enough RAM on QEMU and SiFive Unleashed
-> > 2. Most of people use OpenSBI FW_JUMP on QEMU and U-Boot  on
-> >     SiFive Unleashed to boot in Linux which places FDT quite far away
-> >     from Linux kernel end
-> >
-> > Linux ARM64 kernel also uses FIXMAP to access FDT and over there
-> > as well early_init_fdt_reserve_self() is not used.
-> >
-> >>
-> >> Fixes: 671f9a3e2e24 ("RISC-V: Setup initial page tables in two stages=
-")
-> >> Signed-off-by: Albert Ou <aou@eecs.berkeley.edu>
-> >> ---
-> >>  arch/riscv/mm/init.c | 13 ++++++++++++-
-> >>  1 file changed, 12 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> >> index f0ba713..52d007c 100644
-> >> --- a/arch/riscv/mm/init.c
-> >> +++ b/arch/riscv/mm/init.c
-> >> @@ -11,6 +11,7 @@
-> >>  #include <linux/swap.h>
-> >>  #include <linux/sizes.h>
-> >>  #include <linux/of_fdt.h>
-> >> +#include <linux/libfdt.h>
-> >>
-> >>  #include <asm/fixmap.h>
-> >>  #include <asm/tlbflush.h>
-> >> @@ -82,6 +83,8 @@ static void __init setup_initrd(void)
-> >>  }
-> >>  #endif /* CONFIG_BLK_DEV_INITRD */
-> >>
-> >> +static phys_addr_t __dtb_pa __initdata;
-> >
-> > May be dtb_early_pa will be more consistent name
-> > instead of __dtb_pa because it matches dtb_early_va
-> > used below.
-> >
-> >> +
-> >>  void __init setup_bootmem(void)
-> >>  {
-> >>         struct memblock_region *reg;
-> >> @@ -117,7 +120,12 @@ void __init setup_bootmem(void)
-> >>         setup_initrd();
-> >>  #endif /* CONFIG_BLK_DEV_INITRD */
-> >>
-> >> -       early_init_fdt_reserve_self();
-> >> +       /*
-> >> +        * Avoid using early_init_fdt_reserve_self() since __pa() doe=
-s
-> >> +        * not work for DTB pointers that are fixmap addresses
-> >> +        */
-> >> +       memblock_reserve(__dtb_pa, fdt_totalsize(dtb_early_va));
-> >> +
-> >>         early_init_fdt_scan_reserved_mem();
-> >>         memblock_allow_resize();
-> >>         memblock_dump_all();
-> >> @@ -333,6 +341,7 @@ static uintptr_t __init best_map_size(phys_addr_t=
- base, phys_addr_t size)
-> >>         "not use absolute addressing."
-> >>  #endif
-> >>
-> >> +
-> >
-> > Please remove this newline addition.
-> >
-> >>  asmlinkage void __init setup_vm(uintptr_t dtb_pa)
-> >>  {
-> >>         uintptr_t va, end_va;
-> >> @@ -393,6 +402,8 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
-> >>
-> >>         /* Save pointer to DTB for early FDT parsing */
-> >>         dtb_early_va =3D (void *)fix_to_virt(FIX_FDT) + (dtb_pa & ~PA=
-GE_MASK);
-> >> +       /* Save physical address for memblock reservation */
-> >> +       __dtb_pa =3D dtb_pa;
-> >>  }
-> >>
-> >>  static void __init setup_vm_final(void)
-> >> --
-> >> 2.7.4
-> >>
-> >>
-> >> _______________________________________________
-> >> linux-riscv mailing list
-> >> linux-riscv@lists.infradead.org
-> >> http://lists.infradead.org/mailman/listinfo/linux-riscv
-> >
-> > This deserves to be stable kernel fix as well.
-> > You should add:
-> > Cc: stable@vger.kernel.org
-> > in your commit description.
-> >
-> > Apart from minor nits above.
-> >
-> > Reviewed-by: Anup Patel <anup@brainfault.org>
-> >
-> > I tried this patch for both RV64 and RV32 on QEMU with
-> > Yocto rootfs.
-> >
-> > Tested-by: Anup Patel <anup@brainfault.org>
-> >
-> > Regards,
-> > Anup
->
-> Albert: Do you plan on spinning a v2 of the patch set?
->
+On Tue, Oct 08, 2019 at 02:27:30PM -0700, Sami Tolvanen wrote:
+> Unlike gcc, clang considers each inline assembly block to be independent
+> and therefore, when using the integrated assembler for inline assembly,
+> any preambles that enable features must be repeated in each block.
+> 
+> This change defines __LSE_PREAMBLE and adds it to each inline assembly
+> block that has LSE instructions, which allows them to be compiled also
+> with clang's assembler.
+> 
+> Link: https://github.com/ClangBuiltLinux/linux/issues/671
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 
-v2 was sent last week and has already been applied as
-922b0375fc93fb1a20c5617e37c389c26bbccb70 by Paul.
+This looks good to me. I can build and boot in a model with both Clang
+(9.0.6) and GCC (7.3.1) and boot a guest without anything going bang.
 
--- =
+Though when I build with AS=clang, e.g.
 
-Albert Ou
+make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- CC=clang AS=clang Image
+
+I get errors like this:
+
+  CC      init/main.o
+In file included from init/main.c:17:
+In file included from ./include/linux/module.h:9:
+In file included from ./include/linux/list.h:9:
+In file included from ./include/linux/kernel.h:12:
+In file included from ./include/linux/bitops.h:26:
+In file included from ./arch/arm64/include/asm/bitops.h:26:
+In file included from ./include/asm-generic/bitops/atomic.h:5:
+In file included from ./include/linux/atomic.h:7:
+In file included from ./arch/arm64/include/asm/atomic.h:16:
+In file included from ./arch/arm64/include/asm/cmpxchg.h:14:
+In file included from ./arch/arm64/include/asm/lse.h:13:
+In file included from ./include/linux/jump_label.h:117:
+./arch/arm64/include/asm/jump_label.h:24:20: error: expected a symbol reference in '.long' directive
+                 "      .align          3                       \n\t"
+                                                                  ^
+<inline asm>:4:21: note: instantiated into assembly here
+                .long           1b - ., "" - .  
+                                           ^
+
+I'm assuming that I'm doing something wrong?
+
+Thanks,
+
+Andrew Murray
+
+> ---
+> v2:
+>  - Add a preamble to inline assembly blocks that use LSE instead
+>    of allowing the compiler to emit LSE instructions everywhere.
+> 
+> ---
+>  arch/arm64/include/asm/atomic_lse.h | 19 +++++++++++++++++++
+>  arch/arm64/include/asm/lse.h        |  6 +++---
+>  2 files changed, 22 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/atomic_lse.h b/arch/arm64/include/asm/atomic_lse.h
+> index c6bd87d2915b..3ee600043042 100644
+> --- a/arch/arm64/include/asm/atomic_lse.h
+> +++ b/arch/arm64/include/asm/atomic_lse.h
+> @@ -14,6 +14,7 @@
+>  static inline void __lse_atomic_##op(int i, atomic_t *v)			\
+>  {									\
+>  	asm volatile(							\
+> +	__LSE_PREAMBLE							\
+>  "	" #asm_op "	%w[i], %[v]\n"					\
+>  	: [i] "+r" (i), [v] "+Q" (v->counter)				\
+>  	: "r" (v));							\
+> @@ -30,6 +31,7 @@ ATOMIC_OP(add, stadd)
+>  static inline int __lse_atomic_fetch_##op##name(int i, atomic_t *v)	\
+>  {									\
+>  	asm volatile(							\
+> +	__LSE_PREAMBLE							\
+>  "	" #asm_op #mb "	%w[i], %w[i], %[v]"				\
+>  	: [i] "+r" (i), [v] "+Q" (v->counter)				\
+>  	: "r" (v)							\
+> @@ -58,6 +60,7 @@ static inline int __lse_atomic_add_return##name(int i, atomic_t *v)	\
+>  	u32 tmp;							\
+>  									\
+>  	asm volatile(							\
+> +	__LSE_PREAMBLE							\
+>  	"	ldadd" #mb "	%w[i], %w[tmp], %[v]\n"			\
+>  	"	add	%w[i], %w[i], %w[tmp]"				\
+>  	: [i] "+r" (i), [v] "+Q" (v->counter), [tmp] "=&r" (tmp)	\
+> @@ -77,6 +80,7 @@ ATOMIC_OP_ADD_RETURN(        , al, "memory")
+>  static inline void __lse_atomic_and(int i, atomic_t *v)
+>  {
+>  	asm volatile(
+> +	__LSE_PREAMBLE
+>  	"	mvn	%w[i], %w[i]\n"
+>  	"	stclr	%w[i], %[v]"
+>  	: [i] "+&r" (i), [v] "+Q" (v->counter)
+> @@ -87,6 +91,7 @@ static inline void __lse_atomic_and(int i, atomic_t *v)
+>  static inline int __lse_atomic_fetch_and##name(int i, atomic_t *v)	\
+>  {									\
+>  	asm volatile(							\
+> +	__LSE_PREAMBLE							\
+>  	"	mvn	%w[i], %w[i]\n"					\
+>  	"	ldclr" #mb "	%w[i], %w[i], %[v]"			\
+>  	: [i] "+&r" (i), [v] "+Q" (v->counter)				\
+> @@ -106,6 +111,7 @@ ATOMIC_FETCH_OP_AND(        , al, "memory")
+>  static inline void __lse_atomic_sub(int i, atomic_t *v)
+>  {
+>  	asm volatile(
+> +	__LSE_PREAMBLE
+>  	"	neg	%w[i], %w[i]\n"
+>  	"	stadd	%w[i], %[v]"
+>  	: [i] "+&r" (i), [v] "+Q" (v->counter)
+> @@ -118,6 +124,7 @@ static inline int __lse_atomic_sub_return##name(int i, atomic_t *v)	\
+>  	u32 tmp;							\
+>  									\
+>  	asm volatile(							\
+> +	__LSE_PREAMBLE							\
+>  	"	neg	%w[i], %w[i]\n"					\
+>  	"	ldadd" #mb "	%w[i], %w[tmp], %[v]\n"			\
+>  	"	add	%w[i], %w[i], %w[tmp]"				\
+> @@ -139,6 +146,7 @@ ATOMIC_OP_SUB_RETURN(        , al, "memory")
+>  static inline int __lse_atomic_fetch_sub##name(int i, atomic_t *v)	\
+>  {									\
+>  	asm volatile(							\
+> +	__LSE_PREAMBLE							\
+>  	"	neg	%w[i], %w[i]\n"					\
+>  	"	ldadd" #mb "	%w[i], %w[i], %[v]"			\
+>  	: [i] "+&r" (i), [v] "+Q" (v->counter)				\
+> @@ -159,6 +167,7 @@ ATOMIC_FETCH_OP_SUB(        , al, "memory")
+>  static inline void __lse_atomic64_##op(s64 i, atomic64_t *v)		\
+>  {									\
+>  	asm volatile(							\
+> +	__LSE_PREAMBLE							\
+>  "	" #asm_op "	%[i], %[v]\n"					\
+>  	: [i] "+r" (i), [v] "+Q" (v->counter)				\
+>  	: "r" (v));							\
+> @@ -175,6 +184,7 @@ ATOMIC64_OP(add, stadd)
+>  static inline long __lse_atomic64_fetch_##op##name(s64 i, atomic64_t *v)\
+>  {									\
+>  	asm volatile(							\
+> +	__LSE_PREAMBLE							\
+>  "	" #asm_op #mb "	%[i], %[i], %[v]"				\
+>  	: [i] "+r" (i), [v] "+Q" (v->counter)				\
+>  	: "r" (v)							\
+> @@ -203,6 +213,7 @@ static inline long __lse_atomic64_add_return##name(s64 i, atomic64_t *v)\
+>  	unsigned long tmp;						\
+>  									\
+>  	asm volatile(							\
+> +	__LSE_PREAMBLE							\
+>  	"	ldadd" #mb "	%[i], %x[tmp], %[v]\n"			\
+>  	"	add	%[i], %[i], %x[tmp]"				\
+>  	: [i] "+r" (i), [v] "+Q" (v->counter), [tmp] "=&r" (tmp)	\
+> @@ -222,6 +233,7 @@ ATOMIC64_OP_ADD_RETURN(        , al, "memory")
+>  static inline void __lse_atomic64_and(s64 i, atomic64_t *v)
+>  {
+>  	asm volatile(
+> +	__LSE_PREAMBLE
+>  	"	mvn	%[i], %[i]\n"
+>  	"	stclr	%[i], %[v]"
+>  	: [i] "+&r" (i), [v] "+Q" (v->counter)
+> @@ -232,6 +244,7 @@ static inline void __lse_atomic64_and(s64 i, atomic64_t *v)
+>  static inline long __lse_atomic64_fetch_and##name(s64 i, atomic64_t *v)	\
+>  {									\
+>  	asm volatile(							\
+> +	__LSE_PREAMBLE							\
+>  	"	mvn	%[i], %[i]\n"					\
+>  	"	ldclr" #mb "	%[i], %[i], %[v]"			\
+>  	: [i] "+&r" (i), [v] "+Q" (v->counter)				\
+> @@ -251,6 +264,7 @@ ATOMIC64_FETCH_OP_AND(        , al, "memory")
+>  static inline void __lse_atomic64_sub(s64 i, atomic64_t *v)
+>  {
+>  	asm volatile(
+> +	__LSE_PREAMBLE
+>  	"	neg	%[i], %[i]\n"
+>  	"	stadd	%[i], %[v]"
+>  	: [i] "+&r" (i), [v] "+Q" (v->counter)
+> @@ -263,6 +277,7 @@ static inline long __lse_atomic64_sub_return##name(s64 i, atomic64_t *v)	\
+>  	unsigned long tmp;						\
+>  									\
+>  	asm volatile(							\
+> +	__LSE_PREAMBLE							\
+>  	"	neg	%[i], %[i]\n"					\
+>  	"	ldadd" #mb "	%[i], %x[tmp], %[v]\n"			\
+>  	"	add	%[i], %[i], %x[tmp]"				\
+> @@ -284,6 +299,7 @@ ATOMIC64_OP_SUB_RETURN(        , al, "memory")
+>  static inline long __lse_atomic64_fetch_sub##name(s64 i, atomic64_t *v)	\
+>  {									\
+>  	asm volatile(							\
+> +	__LSE_PREAMBLE							\
+>  	"	neg	%[i], %[i]\n"					\
+>  	"	ldadd" #mb "	%[i], %[i], %[v]"			\
+>  	: [i] "+&r" (i), [v] "+Q" (v->counter)				\
+> @@ -305,6 +321,7 @@ static inline s64 __lse_atomic64_dec_if_positive(atomic64_t *v)
+>  	unsigned long tmp;
+>  
+>  	asm volatile(
+> +	__LSE_PREAMBLE
+>  	"1:	ldr	%x[tmp], %[v]\n"
+>  	"	subs	%[ret], %x[tmp], #1\n"
+>  	"	b.lt	2f\n"
+> @@ -331,6 +348,7 @@ static inline u##sz __lse__cmpxchg_case_##name##sz(volatile void *ptr,	\
+>  	unsigned long tmp;						\
+>  									\
+>  	asm volatile(							\
+> +	__LSE_PREAMBLE							\
+>  	"	mov	%" #w "[tmp], %" #w "[old]\n"			\
+>  	"	cas" #mb #sfx "\t%" #w "[tmp], %" #w "[new], %[v]\n"	\
+>  	"	mov	%" #w "[ret], %" #w "[tmp]"			\
+> @@ -377,6 +395,7 @@ static inline long __lse__cmpxchg_double##name(unsigned long old1,	\
+>  	register unsigned long x4 asm ("x4") = (unsigned long)ptr;	\
+>  									\
+>  	asm volatile(							\
+> +	__LSE_PREAMBLE							\
+>  	"	casp" #mb "\t%[old1], %[old2], %[new1], %[new2], %[v]\n"\
+>  	"	eor	%[old1], %[old1], %[oldval1]\n"			\
+>  	"	eor	%[old2], %[old2], %[oldval2]\n"			\
+> diff --git a/arch/arm64/include/asm/lse.h b/arch/arm64/include/asm/lse.h
+> index 80b388278149..73834996c4b6 100644
+> --- a/arch/arm64/include/asm/lse.h
+> +++ b/arch/arm64/include/asm/lse.h
+> @@ -6,6 +6,8 @@
+>  
+>  #if defined(CONFIG_AS_LSE) && defined(CONFIG_ARM64_LSE_ATOMICS)
+>  
+> +#define __LSE_PREAMBLE	".arch armv8-a+lse\n"
+> +
+>  #include <linux/compiler_types.h>
+>  #include <linux/export.h>
+>  #include <linux/jump_label.h>
+> @@ -14,8 +16,6 @@
+>  #include <asm/atomic_lse.h>
+>  #include <asm/cpucaps.h>
+>  
+> -__asm__(".arch_extension	lse");
+> -
+>  extern struct static_key_false cpu_hwcap_keys[ARM64_NCAPS];
+>  extern struct static_key_false arm64_const_caps_ready;
+>  
+> @@ -34,7 +34,7 @@ static inline bool system_uses_lse_atomics(void)
+>  
+>  /* In-line patching at runtime */
+>  #define ARM64_LSE_ATOMIC_INSN(llsc, lse)				\
+> -	ALTERNATIVE(llsc, lse, ARM64_HAS_LSE_ATOMICS)
+> +	ALTERNATIVE(llsc, __LSE_PREAMBLE lse, ARM64_HAS_LSE_ATOMICS)
+>  
+>  #else	/* CONFIG_AS_LSE && CONFIG_ARM64_LSE_ATOMICS */
+>  
+> -- 
+> 2.23.0.581.g78d2f28ef7-goog
+> 
