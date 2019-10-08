@@ -2,176 +2,121 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0862AECE596
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9233C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:47:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D299F206C2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:46:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="bfF5cj/8";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jaRU91A6"
+	by mail.kernel.org (Postfix) with ESMTP id 8CBA02053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:47:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730449AbfJHHq2 (ORCPT
+        id S1730406AbfJHHrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 03:46:28 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:38926 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730317AbfJHHq1 (ORCPT
+        Tue, 8 Oct 2019 03:47:35 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:60429 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730209AbfJHHre (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 03:46:27 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 27B0F60DB4; Tue,  8 Oct 2019 07:46:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570520786;
-        bh=A9BCbGOjmqwtj2L/5i06hDZ7sKrRR5cdNSR1GYqDj+A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bfF5cj/844sFOGVt8M1OvDqMwJ6mH5Br0BmI/rCqcKx27811YscFHMP1tIkSQjZV+
-         U9CQV4r2GuQRxsNtcQGg9Vvr3LPprrQhysD5nPE0khDwf7g5Gy8Eijr0ad8mECGVyQ
-         tnJeLm5kO6VGXE/FGzST/lm92y8r1oMdz/SGOxYk=
-Received: from jackp-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jackp@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8119A60ACA;
-        Tue,  8 Oct 2019 07:46:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570520784;
-        bh=A9BCbGOjmqwtj2L/5i06hDZ7sKrRR5cdNSR1GYqDj+A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jaRU91A6W5PBtoTpOxLpLhSr/jD2aG1HwXJeG6yawVLR7KbU8CpKE3nw8ml8aXbvy
-         ObU/LNST9pgiymszgaUUuuNXS8iPTkJukM9WuNzfsTvI7LkZLfoOxfe0olwYHC/1Hf
-         5dklUZwKpimwZNzl6/xsFfm8HfyNTmi0e8PgdUs0=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8119A60ACA
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jackp@codeaurora.org
-Date:   Tue, 8 Oct 2019 00:46:20 -0700
-From:   Jack Pham <jackp@codeaurora.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v2 3/3] phy: qcom-qmp: Add SM8150 QMP UFS PHY support
-Message-ID: <20191008074619.GA20801@jackp-linux.qualcomm.com>
-References: <20190906051017.26846-1-vkoul@kernel.org>
- <20190906051017.26846-4-vkoul@kernel.org>
+        Tue, 8 Oct 2019 03:47:34 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 0165380477; Tue,  8 Oct 2019 09:47:16 +0200 (CEST)
+Date:   Tue, 8 Oct 2019 09:47:31 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Guru Das Srinagesh <gurus@codeaurora.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, linux-leds@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, linux-kernel@vger.kernel.org,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+Subject: Re: [PATCH 1/2] leds: Add flag to keep trigger always
+Message-ID: <20191008074731.GB633@amd>
+References: <1565398367-11811-1-git-send-email-gurus@codeaurora.org>
+ <20190810071322.GA13760@amd>
+ <20190930133902.GA2249614@kroah.com>
+ <20190930172239.GA26107@amd>
+ <20190930172743.GA2409822@kroah.com>
+ <20191004200932.GA28140@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="jho1yZJdad60DJr+"
 Content-Disposition: inline
-In-Reply-To: <20190906051017.26846-4-vkoul@kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20191004200932.GA28140@codeaurora.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinod,
 
-On Fri, Sep 06, 2019 at 10:40:17AM +0530, Vinod Koul wrote:
-> SM8150 UFS PHY is v4 of QMP phy. Add support for V4 QMP phy register
-> defines and support for SM8150 QMP UFS PHY.
-> 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  drivers/phy/qualcomm/phy-qcom-qmp.c | 125 ++++++++++++++++++++++++++++
->  drivers/phy/qualcomm/phy-qcom-qmp.h |  96 +++++++++++++++++++++
->  2 files changed, 221 insertions(+)
-> 
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> index 34ff6434da8f..92d3048f2b36 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> @@ -164,6 +164,11 @@ static const unsigned int sdm845_ufsphy_regs_layout[] = {
->  	[QPHY_PCS_READY_STATUS]		= 0x160,
->  };
->  
-> +static const unsigned int sm8150_ufsphy_regs_layout[] = {
-> +	[QPHY_START_CTRL]		= 0x00,
-> +	[QPHY_PCS_READY_STATUS]		= 0x180,
-> +};
-> +
->  static const struct qmp_phy_init_tbl msm8996_pcie_serdes_tbl[] = {
->  	QMP_PHY_INIT_CFG(QSERDES_COM_BIAS_EN_CLKBUFLR_EN, 0x1c),
->  	QMP_PHY_INIT_CFG(QSERDES_COM_CLK_ENABLE1, 0x10),
-> @@ -878,6 +883,93 @@ static const struct qmp_phy_init_tbl msm8998_usb3_pcs_tbl[] = {
->  	QMP_PHY_INIT_CFG(QPHY_V3_PCS_RXEQTRAINING_RUN_TIME, 0x13),
->  };
->  
-> +static const struct qmp_phy_init_tbl sm8150_ufsphy_serdes_tbl[] = {
-> +	QMP_PHY_INIT_CFG(QPHY_POWER_DOWN_CONTROL, 0x01),
-> +	QMP_PHY_INIT_CFG(QSERDES_COM_V4_SYSCLK_EN_SEL, 0xd9),
+--jho1yZJdad60DJr+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-QSERDES_V4_COM? See below.
+Hi!
 
-<snip>
+> > > > I don't understand.  The original commit broke userspace operations.
+> > > > Shouldn't it be reverted, or fixed this way in order to have usersp=
+ace
+> > > > work properly again?
+> > >=20
+> > > So, what it is exactly that is not working? :-). Yes, root can
+> > > disconnect LED from v4l2 interface; he can also connect it
+> > > back. Documentation says that happens.
+> > >=20
+> > > Yes, root can do stupid things.
+> > >=20
+> > > Commit 0013b23d66a2768f5babbb0ea9f03ab067a990d8 is from 2008. I'd
+> > > prefer we did not apply it in 2008, but...
+> >=20
+> > Ah, my fault, I thought this was a new commit.
+> >=20
+> > Guru, what are you doing here that this is required all of a sudden?  No
+> > other kernel seems to need these changes, what is different in your
+> > Android userspace that requires this patch series?
+> >=20
+> > thanks,
+> >=20
+> > greg k-h
+>=20
+> Hi Greg,
+>=20
+> Our camera flash driver first requests the available current from the
+> flash LED before setting its brightness. It passes a trigger as argument
+> to the function that determines the available current. This function
+> uses trigger_to_lcdev() to look up the led_classdev associated with that
+> trigger as a first step. This lookup will fail if the trigger has been
+> dissociated from its led_classdev as a result of a user setting that
+> led_classdev's brightness to zero manually through sysfs.=20
+>=20
+> Why would the user set the brightness to zero? The user does this as
+> part of camera and LED testing activities which include, amongst other
+> things, visual inspection of the operation of various onboard LEDs. The
+> user uses sysfs to manually turn on and off the LEDs by setting their
+> brightness to max and then to zero in order to verify that they are
+> working as expected.
 
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.h b/drivers/phy/qualcomm/phy-qcom-qmp.h
-> index 335ea5d7ef40..0eefd8621669 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp.h
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.h
-> @@ -313,4 +313,100 @@
->  #define QPHY_V3_PCS_MISC_OSC_DTCT_MODE2_CONFIG4		0x5c
->  #define QPHY_V3_PCS_MISC_OSC_DTCT_MODE2_CONFIG5		0x60
->  
-> +/* Only for QMP V4 PHY - QSERDES COM registers */
-> +#define QSERDES_COM_V4_SYSCLK_EN_SEL			0x094
+Yes, so you should really set trigger to none before changing
+brightness manually and restore it back to whatever it was when you
+are done with manual testing.
 
-Should these rather be prefixed as QSERDES_V4_COM? There are already
-QSERDES_V3_COM_* in this header so the convention appears to be
-Q{SERDES,PHY}_VX_{COM,TX,RX,PCS}.
+Thanks,
+								Pavel
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
 
-> +#define QSERDES_COM_V4_HSCLK_SEL			0x158
-> +#define QSERDES_COM_V4_HSCLK_HS_SWITCH_SEL		0x15C
-> +#define QSERDES_COM_V4_LOCK_CMP_EN			0x0A4
-> +#define QSERDES_COM_V4_VCO_TUNE_MAP			0x10C
+--jho1yZJdad60DJr+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Nit: sort in ascending offset order, and make the hex values lowercase?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-<snip>
+iEYEARECAAYFAl2cPxMACgkQMOfwapXb+vK+0wCfbggq9YJMl4GKAkrHg3LbJdu+
+1ggAoJ2ZqAt2XqJvPsCjsdv/ac8rlt0v
+=gqzV
+-----END PGP SIGNATURE-----
 
-> +/* Only for QMP V4 PHY - PCS registers */
-> +#define QPHY_V4_PHY_START				0x000
-> +#define QPHY_V4_POWER_DOWN_CONTROL			0x004
-> +#define QPHY_V4_SW_RESET				0x008
-> +#define QPHY_V4_PCS_READY_STATUS			0x180
-> +#define QPHY_V4_LINECFG_DISABLE				0x148
-> +#define QPHY_V4_MULTI_LANE_CTRL1			0x1E0
-> +#define QPHY_V4_RX_SIGDET_CTRL2				0x158
-> +#define QPHY_V4_TX_LARGE_AMP_DRV_LVL			0x030
-> +#define QPHY_V4_TX_SMALL_AMP_DRV_LVL			0x038
-> +#define QPHY_V4_TX_MID_TERM_CTRL1			0x1D8
-> +#define QPHY_V4_DEBUG_BUS_CLKSEL			0x124
-> +#define QPHY_V4_PLL_CNTL				0x02C
-> +#define QPHY_V4_TIMER_20US_CORECLK_STEPS_MSB		0x00C
-> +#define QPHY_V4_TIMER_20US_CORECLK_STEPS_LSB		0x010
-> +#define QPHY_V4_TX_PWM_GEAR_BAND			0x160
-> +#define QPHY_V4_TX_HS_GEAR_BAND				0x168
-> +#define QPHY_V4_TX_HSGEAR_CAPABILITY			0x074
-> +#define QPHY_V4_RX_HSGEAR_CAPABILITY			0x0B4
-> +#define QPHY_V4_RX_MIN_HIBERN8_TIME			0x150
-> +#define QPHY_V4_BIST_FIXED_PAT_CTRL			0x060
-
-Interesting. These offsets appear to be valid only for the UFS instance
-of the QMP PHY. For PCIe and USB the PCS layout is completely different.
-Wonder if we need to add _UFS_ to  the prefix to differentiate them? Or
-can this be deferred to when PCIe/USB PHY driver support for SM8150 gets
-added?
-
-I was thinking of taking a stab at USB if I get time, not sure if that's
-already on your or somebody's (Bjorn?) radar.
-
-Thanks
-Jack
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+--jho1yZJdad60DJr+--
