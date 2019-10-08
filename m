@@ -2,227 +2,126 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E52C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C175C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A1C721835
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:31:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 198C421835
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:32:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=ucr.edu header.i=@ucr.edu header.b="Si9beN4r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730766AbfJHUbn (ORCPT
+        id S1730909AbfJHUcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 16:31:43 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:56007 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730565AbfJHUbm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 16:31:42 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iHw8x-0001v9-1N; Tue, 08 Oct 2019 22:31:39 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iHw8v-0005Xa-FM; Tue, 08 Oct 2019 22:31:37 +0200
-Date:   Tue, 8 Oct 2019 22:31:37 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel@vger.kernel.org, thierry.reding@gmail.com,
-        heiko@sntech.de, dianders@chromium.org, mka@chromium.org,
-        groeck@chromium.org, kernel@collabora.com, bleung@chromium.org,
-        linux-pwm@vger.kernel.org
-Subject: Re: [PATCH] pwm: cros-ec: Let cros_ec_pwm_get_state() return the
- last applied state
-Message-ID: <20191008203137.s22clq6v2om5ktio@pengutronix.de>
-References: <20191008105417.16132-1-enric.balletbo@collabora.com>
- <20191008143432.pbhcqamd6f4qwbqn@pengutronix.de>
- <4f009344-242e-19a7-6872-2c55df086044@collabora.com>
+        Tue, 8 Oct 2019 16:32:07 -0400
+Received: from mx1.ucr.edu ([138.23.248.2]:32159 "EHLO mx1.ucr.edu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730787AbfJHUcG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 16:32:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=ucr.edu; i=@ucr.edu; q=dns/txt; s=selector3;
+  t=1570566726; x=1602102726;
+  h=mime-version:from:date:message-id:subject:to;
+  bh=Ov+TaJEUL5MZ2MuVlEdFPUX9o96HuIazEg8XGXB2Y+Y=;
+  b=Si9beN4r2hb+ZeCjuisQzkxAtApPV29gP3HKWLbOBThddnGfBg0BWGbw
+   22RWV0jtWmYVi6LzqaVVQvH1mzRj3SO9XyL8rurtvuodhtPQNb1JyjPVs
+   DrmVf+TqZdjvhM8BppPtw4T8jH5llc7NfxGlUr96mlri6h4mtwg9PtBJh
+   RioBRkuAEe2O0ul4lxcST9GippuKAxl/GhEuLcy21efCsu32BMex4O6h0
+   goRt7TTe9W5yaP8ItdKTpZBUpipTurCW+NqUUASrXyTc0ZFV079Wu+x9b
+   eP5K7JiNqEFmGe0+rMOOgHGk5krh5x9xZLzc4GB4BvObChE3gJcbhErRb
+   w==;
+IronPort-SDR: GAinxH1N2M3SwjwS0AitUWy0vrnK/QypkxI6gpGvSiLSe8I4AURSXGw4CcIVHoTbbOq5koupat
+ CyN38ZUXrrz18yYprZ/ddtJ/jt3tcYP/7MnUcbWt87HjThGkZLRPtn50L31+qCnYwn2mqliwAN
+ tODgLU8tiqRDN8AssVzWHhmNe48dOUv6UFpGgxWvJUTIz5gWcNQYJxl9TNLTfeShrrIVcTkwZR
+ w7Y4977esZeIt2VDj+ahbtx3h9RvtVxTIl4FJkOMqlW/h1vuxII9DEmgXZygLEDv6Ui3AcvBhq
+ Khs=
+IronPort-PHdr: =?us-ascii?q?9a23=3AZaGBGRKunnS3ZODb79mcpTZWNBhigK39O0sv0r?=
+ =?us-ascii?q?FitYgeIvTxwZ3uMQTl6Ol3ixeRBMOHsqkC1rud6v25EUU7or+5+EgYd5JNUx?=
+ =?us-ascii?q?JXwe43pCcHRPC/NEvgMfTxZDY7FskRHHVs/nW8LFQHUJ2mPw6arXK99yMdFQ?=
+ =?us-ascii?q?viPgRpOOv1BpTSj8Oq3Oyu5pHfeQpFiCezbL9oLBi7qQrdutQWjId/N6081g?=
+ =?us-ascii?q?bHrnxUdupM2GhmP0iTnxHy5sex+J5s7SFdsO8/+sBDTKv3Yb02QaRXAzo6PW?=
+ =?us-ascii?q?814tbrtQTYQguU+nQcSGQWnQFWDAXD8Rr3Q43+sir+tup6xSmaIcj7Rq06VD?=
+ =?us-ascii?q?i+86tmTgLjhTwZPDAl7m7Yls1wjLpaoB2/oRx/35XUa5yROPZnY6/RYc8WSW?=
+ =?us-ascii?q?9HU81MVSJOH5m8YpMAAOQBM+hWrJTzqUUSohalGQmgGPnixiNUinPq36A31f?=
+ =?us-ascii?q?kqHwHc3AwnGtIDqHbbrNT0NacSTOC1y7TDwjbDb/xM2Df29Y/FcxAgoPGMR7?=
+ =?us-ascii?q?1wcNbdxVUhGg7ek1WftZblMymL2esQrmiW9uxtXv+shW4/swx9vCSjy8M2ho?=
+ =?us-ascii?q?TKho8Z0E7I+Tl6zYovONG1TE12bNi5G5VKrS6aLZF5QsY6TmFtvyY116MJtI?=
+ =?us-ascii?q?agfCgP1JQn3xnfa+Gbc4SQ4hLsSuKRITBgiXJgYr2/hhKy/VGkyu3+S8W4yV?=
+ =?us-ascii?q?hKojdBn9TPrHwN2BvT6s+ISvt54EitwyqA1wfW6u1cIEA0k7TUK4I5z7Iuip?=
+ =?us-ascii?q?YetV7PEyz2lUnskqOaakYp9vK15+njYbjqvpqcOJV1igH6PKQugMu/AeEgPw?=
+ =?us-ascii?q?kOXmmb+f6z1Lz/8UHlTrhHleA2nbXDsJzAO8sUu7O5DxdP0ok/8xa/Eyum0N?=
+ =?us-ascii?q?MAkHkDLVJFfg+HjofwN1HNPv/4F/G/jEqokDpw2fDGMaPuAo/XInjAjrjhZ7?=
+ =?us-ascii?q?B95FBYyAYpytBf/Z1UWfk9J6fZU1XtsNvdDxI7ez6zx+DmBc9+144BWGmdSv?=
+ =?us-ascii?q?uTdrHVtVmJ6/gsIuSkf4YQoyv7JL4u4Pu4yTc1g15YcaS30J8/bHGjAu8gLV?=
+ =?us-ascii?q?+UbHbhmdQdFn9MuRAxCKTuiVufQXtdbXq/QYoi6TwhToGrF4HOQsaqmrPFlC?=
+ =?us-ascii?q?O6GIBGI2NLEFaBFV/2eIieHfQBciSfJolmiDNXe6KmTtoQ1AOuqQiy+bpuL6?=
+ =?us-ascii?q?KA6z8YvJO7jINd+ubJ0xw+6GonXIymz2iRQjQszSszTDgs0fU6+BQlxw=3D?=
+ =?us-ascii?q?=3D?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2EcAwD98Jxdh8bQVdFmgkGEEIRNjmG?=
+ =?us-ascii?q?FFwGGeIZxiDmBewEIAQEBDi8BAYcIIzYHDgIDCQEBBQEBAQEBBQQBAQIQAQE?=
+ =?us-ascii?q?BCA0JCCmFQII6KQGDVRF8AwwCJgIkEgEFASIBNIMAgguiF4EDPIsmgTKIZgE?=
+ =?us-ascii?q?JDYFIEnoojA6CF4Rhh1KCWASBOQEBAZUvllcBBgKCEBSMVIhFG4IqAZcVji2?=
+ =?us-ascii?q?ZTw8jgTYDgggzGiV/BmeBT08QFIFpjkwkkUQBAQ?=
+X-IPAS-Result: =?us-ascii?q?A2EcAwD98Jxdh8bQVdFmgkGEEIRNjmGFFwGGeIZxiDmBe?=
+ =?us-ascii?q?wEIAQEBDi8BAYcIIzYHDgIDCQEBBQEBAQEBBQQBAQIQAQEBCA0JCCmFQII6K?=
+ =?us-ascii?q?QGDVRF8AwwCJgIkEgEFASIBNIMAgguiF4EDPIsmgTKIZgEJDYFIEnoojA6CF?=
+ =?us-ascii?q?4Rhh1KCWASBOQEBAZUvllcBBgKCEBSMVIhFG4IqAZcVji2ZTw8jgTYDgggzG?=
+ =?us-ascii?q?iV/BmeBT08QFIFpjkwkkUQBAQ?=
+X-IronPort-AV: E=Sophos;i="5.67,272,1566889200"; 
+   d="scan'208";a="13033644"
+Received: from mail-lj1-f198.google.com ([209.85.208.198])
+  by smtp1.ucr.edu with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 08 Oct 2019 13:32:05 -0700
+Received: by mail-lj1-f198.google.com with SMTP id y12so4529562ljc.8
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 13:32:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=Y5uvD0KVI1iYImauUvxo4V9KaiRqMOMx+KR5+x6L9WM=;
+        b=Kh/PPJQjwE0ZFUZSrO6UuP3bOREVYiYfHnCc8U0TgrmHBCVk2d2QJjfumLmYoYJ4C+
+         CZULpgcSBeoH/sFV0U3/Ad7tqWEvRlofaZI3wuAJcHFv0LRWsZmB6YduBJ/dpnMjwkzI
+         BbVuA6k9vBn8SzrO4Ley4nyWaCeCzjxM9EfhIAQeB7rwmD+s6zkpHqElYJO+662XXOOa
+         RKtEDUy8wfmFHCcyBQWL3cwU6D8yQLoyVJz76hqB6dmC3y/uQufjaDgVmB7D+QV5DTqJ
+         ++dozIFNYqS1vJLcqqwj+IqrWQl/5G8BI6WAsa88aucuatB5jynzCKtGtyLt2+qlI3Vv
+         uNnw==
+X-Gm-Message-State: APjAAAX+m4Qa/q+x3kJyPpXCyQust79mfAHHrk+DDWWg74YyC3ESlZmH
+        /lkZs+rcQexZdmPDrMG5UESyoPt+zgnUdUITpKodQjnBlVaGH+dl9nil4CSSPQWb+kJjDk/sxUw
+        fwWXgClSENAQvfNhXO06YrCdfTKE1/q7O3U0lCokioA==
+X-Received: by 2002:ac2:44d2:: with SMTP id d18mr22257162lfm.67.1570566723360;
+        Tue, 08 Oct 2019 13:32:03 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzKXb5GhB8uOBl0EocLC+TY8jhaYV0Q9PE/EonJZ2i5JDTwYHHUoHWPpSFGT7Ou1l0SIUv9Vaan38rSSzyLys0=
+X-Received: by 2002:ac2:44d2:: with SMTP id d18mr22257148lfm.67.1570566723127;
+ Tue, 08 Oct 2019 13:32:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4f009344-242e-19a7-6872-2c55df086044@collabora.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+From:   Yizhuo Zhai <yzhai003@ucr.edu>
+Date:   Tue, 8 Oct 2019 13:32:45 -0700
+Message-ID: <CABvMjLRE_Nxa1jC1o9uw_jsuAABdm+nE0ZNu-yh0hMzmfqEr_g@mail.gmail.com>
+Subject: Uninitialized Variable Use in video: fbdev: pm3fb
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 06:33:15PM +0200, Enric Balletbo i Serra wrote:
-> Hi Uwe,
-> 
-> Thanks for the quick reply.
-> 
-> On 8/10/19 16:34, Uwe Kleine-König wrote:
-> > Hello Enric,
-> > 
-> > On Tue, Oct 08, 2019 at 12:54:17PM +0200, Enric Balletbo i Serra wrote:
-> >> @@ -117,17 +122,28 @@ static void cros_ec_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-> >>  	struct cros_ec_pwm_device *ec_pwm = pwm_to_cros_ec_pwm(chip);
-> >>  	int ret;
-> >>  
-> >> -	ret = cros_ec_pwm_get_duty(ec_pwm->ec, pwm->hwpwm);
-> >> -	if (ret < 0) {
-> >> -		dev_err(chip->dev, "error getting initial duty: %d\n", ret);
-> >> -		return;
-> >> +	/*
-> >> +	 * As there is no way for this hardware to separate the concept of
-> >> +	 * duty cycle and enabled, but the PWM API does, let return the last
-> >> +	 * applied state when the PWM is disabled and only return the real
-> >> +	 * hardware value when the PWM is enabled. Otherwise, a user of this
-> >> +	 * driver, can get confused because won't be able to program a duty
-> >> +	 * cycle while the PWM is disabled.
-> >> +	 */
-> >> +	state->enabled = ec_pwm->state.enabled;
-> > 
-> >> +	if (state->enabled) {
-> > 
-> > As part of registration of the pwm .get_state is called. In this case
-> > .apply wasn't called before and so state->enabled is probably 0. So this
-> > breaks reporting the initial state ...
-> > 
-> >> +		ret = cros_ec_pwm_get_duty(ec_pwm->ec, pwm->hwpwm);
-> >> +		if (ret < 0) {
-> >> +			dev_err(chip->dev, "error getting initial duty: %d\n",
-> >> +				ret);
-> >> +			return;
-> >> +		}
-> >> +		state->duty_cycle = ret;
-> >> +	} else {
-> >> +		state->duty_cycle = ec_pwm->state.duty_cycle;
-> >>  	}
-> >>  
-> >> -	state->enabled = (ret > 0);
-> >>  	state->period = EC_PWM_MAX_DUTY;
-> >> -
-> >> -	/* Note that "disabled" and "duty cycle == 0" are treated the same */
-> >> -	state->duty_cycle = ret;
-> > 
-> > A few thoughts to your approach here ...:
-> > 
-> >  - Would it make sense to only store duty_cycle and enabled in the
-> >    driver struct?
-> > 
-> 
-> Yes, in fact, my first approach (that I didn't send) was only storing enabled
-> and duty cycle. For some reason I ended storing the full pwm_state struct, but I
-> guess is not really needed.
-> 
-> 
-> >  - Which driver is the consumer of your pwm? If I understand correctly
-> >    the following sequence is the bad one:
-> > 
-> 
-> The consumer is the pwm_bl driver. Actually I'n trying to identify
-> other consumers.
+Hi All:
 
-Ah, I see why I missed to identify the problem back when I checked this
-driver. The problem is not that .duty_cycle isn't set but there .enabled
-isn't set. So maybe we just want:
+drivers/video/fbdev/pm3fb.c:
 
-diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index 2201b8c78641..0468c6ee4448 100644
---- a/drivers/video/backlight/pwm_bl.c
-+++ b/drivers/video/backlight/pwm_bl.c
-@@ -123,6 +123,7 @@ static int pwm_backlight_update_status(struct backlight_device *bl)
-        if (brightness > 0) {
-                pwm_get_state(pb->pwm, &state);
-                state.duty_cycle = compute_duty_cycle(pb, brightness);
-+               state.enabled = true;
-                pwm_apply_state(pb->pwm, &state);
-                pwm_backlight_power_on(pb);
-        } else
+Inside function pm3fb_write_mode(),  variable "m" "n" "p" could leave
+uninitialized after pm3fb_calculate_clock(), however, they are used
+later in PM3_WRITE_DAC_REG, which is potentially unsafe.
 
-? On a side note: It's IMHO strange that pwm_backlight_power_on
-reconfigures the PWM once more.
-
-> > 	state.period = P;
-> > 	state.duty_cycle = D;
-> > 	state.enabled = 0;
-> >    	pwm_apply_state(pwm, &state);
-> > 
-> > 	...
-> > 
-> > 	pwm_get_state(pwm, &state);
-> > 	state.enabled = 1;
-> >    	pwm_apply_state(pwm, &state);
-> > 
-> 
-> Yes that's the sequence.
-> 
-> >    Before my patch there was an implicit promise in the PWM framework
-> >    that the last pwm_apply_state has .duty_cycle = D (and .period = P).
-> >    Is this worthwile, or should we instead declare this as
-> >    non-guaranteed and fix the caller?
-> > 
-> 
-> pwm_bl is compliant with this, the problem in the pwm-cros-ec driver is when you
-> set the duty_cycle but enable is 0.
-
-pwm_bl *relies* on this behaviour. The question is: Is this a valid
-assumption to rely on (for consumers) resp. to guarantee (for the PWM
-framework)? I'm not sure it is because each PWM that doesn't know the
-concept of "disabled" (not sure how many there are) needs some effort to
-simulate it (by caching duty_cycle and period on disable).
-
-Dropping this promise and fix pwm_bl (and maybe other consumers that
-rely on it) is my preferred solution.
- 
-> >  - If this is a more or less common property that hardware doesn't know
-> >    the concept of "disabled" maybe it would make sense to drop this from
-> >    the PWM framework, too. (This is a question that I discussed some
-> >    time ago already with Thierry, but without an result. The key
-> >    question is: What is the difference between "disabled" and
-> >    "duty_cycle = 0" in general and does any consumer care about it.)
-> > 
-> 
-> Good question, I don't really know all consumer requirements, but AFAIK, usually
-> when you want to program duty_cycle to 0 you also want to disable the PWM.
-
-Note that hardware designers are "creative" and "disable the PWM" has
-different semantics for different PWMs. Some PWMs just stop the output
-at the level that it happens to be in, some stop in the inactive level,
-some stop at 0, some stop driving the pin. Currently the intended
-semantic of a disabled PWM is that it drives the inactive level (but it
-might be smart and stop driving if there is a pull in the right
-direction). I see no benefit of this semantic as it can also be
-accomplished by setting .duty_cycle = 0, .period = $something_small.
-Thierry doesn't agree and I fail to understand his reasoning.
-
-> At least for the backlight case doesn't make sense program first the
-> duty_cycle and then enable the PWM, is implicit, if duty_cycle is 0
-> the PWM is disabled, if duty_cycle > 0 the PWM is enabled.
-
-Yeah, that's my conclusion of above, too. After all the pwm_apply_state
-function is there for being able to go from one state to each other
-state with a single function call.
-
-> >  - A softer variant of the above: Should pwm_get_state() anticipate that
-> >    with .enabled = 0 the duty_cycle (and maybe also period) is
-> >    unreliable and cache that for callers?
-> 
-> Sorry, when you say pwm_get_state(), you mean the core call or the lowlevel
-> driver call?
-
-The suggestion is to do what you do in the driver (i.e. remember
-duty_cycle and in the general case also period) in the framework
-instead and fix the problem for all lowlevel drivers that behave similar
-to the implementation in question. i.e. don't rely on .duty_cycle and
-.period having a sensible value after .get_state() if the PWM is off.
-This is IMHO the second best option.
-
-Best regards
-Uwe
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Kind Regards,
+
+Yizhuo Zhai
+
+Computer Science, Graduate Student
+University of California, Riverside
