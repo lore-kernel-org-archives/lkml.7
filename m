@@ -2,123 +2,85 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED446C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0CC9C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C74EE2070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:11:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="O74tYwgU"
+	by mail.kernel.org (Postfix) with ESMTP id D157F2070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:11:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731267AbfJHMLy (ORCPT
+        id S1731197AbfJHMLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 08:11:54 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35068 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731226AbfJHMLw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 08:11:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=el0DYGZ+UtD3Q7bf+tloYS3IVTjk0rUS+bONbgMT2Rg=; b=O74tYwgUjbjFkwHNi6ZU+HaR6
-        LBkK8REqe9k40pVT68Vf1bZ875QNzej49ZWHpedsMDiJGCyVXElI/WYMpzBequQwZQVxzCvGsqycR
-        1Eo3sHvlUSL/B1zyyKLRGDs0KZFQ00BLfbPtTEoQPZFPo2j2OY6DHN/ia/ea4oX4QPXsw5Q2sqE66
-        FA2i/hjj6056Mr6HBGA/HW7QvtuWNTBvA8Y9v3TTDYwe8ImhMa7IiT3bARuiUKS7RHE9oYafG+HMr
-        q3yB4iMkdE0a6FKcVTvl/5KaggJ8OxdgMRG+Y23uk7kjteTIGJ11T0ySqwJJEPPEdHpYy4PDVnJqr
-        0kSH4reeg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iHoL9-0007Qk-R3; Tue, 08 Oct 2019 12:11:44 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A8440306C53;
-        Tue,  8 Oct 2019 14:10:49 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 0714D202A1952; Tue,  8 Oct 2019 14:11:41 +0200 (CEST)
-Date:   Tue, 8 Oct 2019 14:11:40 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Like Xu <like.xu@linux.intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
-        vkuznets@redhat.com, Jim Mattson <jmattson@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        ak@linux.intel.com, wei.w.wang@intel.com, kan.liang@intel.com,
-        like.xu@intel.com, ehankland@google.com, arbel.moshe@oracle.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] KVM: x86/vPMU: Add lazy mechanism to release
- perf_event per vPMC
-Message-ID: <20191008121140.GN2294@hirez.programming.kicks-ass.net>
-References: <20190930072257.43352-1-like.xu@linux.intel.com>
- <20190930072257.43352-4-like.xu@linux.intel.com>
- <20191001082321.GL4519@hirez.programming.kicks-ass.net>
- <e77fe471-1c65-571d-2b9e-d97c2ee0706f@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e77fe471-1c65-571d-2b9e-d97c2ee0706f@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 8 Oct 2019 08:11:36 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:54290 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730671AbfJHMLa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 08:11:30 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1EEF51A00FC;
+        Tue,  8 Oct 2019 14:11:29 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 123C31A002E;
+        Tue,  8 Oct 2019 14:11:29 +0200 (CEST)
+Received: from fsr-fed2164-101.ea.freescale.net (fsr-fed2164-101.ea.freescale.net [10.171.82.91])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id BB877205DB;
+        Tue,  8 Oct 2019 14:11:28 +0200 (CEST)
+From:   Madalin Bucur <madalin.bucur@nxp.com>
+To:     davem@davemloft.net, netdev@vger.kernel.org
+Cc:     roy.pledge@nxp.com, laurentiu.tudor@nxp.com,
+        linux-kernel@vger.kernel.org, Madalin Bucur <madalin.bucur@nxp.com>
+Subject: [PATCH 16/20] dpaa_eth: add dropped frames to percpu ethtool stats
+Date:   Tue,  8 Oct 2019 15:10:37 +0300
+Message-Id: <1570536641-25104-17-git-send-email-madalin.bucur@nxp.com>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1570536641-25104-1-git-send-email-madalin.bucur@nxp.com>
+References: <1570536641-25104-1-git-send-email-madalin.bucur@nxp.com>
+Reply-to: madalin.bucur@nxp.com
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 08:33:45PM +0800, Like Xu wrote:
-> Hi Peter,
-> 
-> On 2019/10/1 16:23, Peter Zijlstra wrote:
-> > On Mon, Sep 30, 2019 at 03:22:57PM +0800, Like Xu wrote:
-> > > +	union {
-> > > +		u8 event_count :7; /* the total number of created perf_events */
-> > > +		bool enable_cleanup :1;
-> > 
-> > That's atrocious, don't ever create a bitfield with base _Bool.
-> 
-> I saw this kind of usages in the tree such as "struct
-> arm_smmu_master/tipc_mon_state/regmap_irq_chip".
+Prior to this change, the frames dropped on receive or transmit
+were not displayed in the ethtool statistics, leaving the dropped
+frames unaccounted for.
 
-Because other people do tasteless things doesn't make it right.
+Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
+---
+ drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> I'm not sure is this your personal preference or is there a technical
-> reason such as this usage is not incompatible with union syntax?
+diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c b/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c
+index bc6ed1df53ca..1c689e11c61f 100644
+--- a/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c
++++ b/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c
+@@ -47,6 +47,8 @@ static const char dpaa_stats_percpu[][ETH_GSTRING_LEN] = {
+ 	"tx S/G",
+ 	"tx error",
+ 	"rx error",
++	"rx dropped",
++	"tx dropped",
+ };
+ 
+ static char dpaa_stats_global[][ETH_GSTRING_LEN] = {
+@@ -262,6 +264,12 @@ static void copy_stats(struct dpaa_percpu_priv *percpu_priv, int num_cpus,
+ 	data[crr * num_values + crr_cpu] = percpu_priv->stats.rx_errors;
+ 	data[crr++ * num_values + num_cpus] += percpu_priv->stats.rx_errors;
+ 
++	data[crr * num_values + crr_cpu] = percpu_priv->stats.rx_dropped;
++	data[crr++ * num_values + num_cpus] += percpu_priv->stats.rx_dropped;
++
++	data[crr * num_values + crr_cpu] = percpu_priv->stats.tx_dropped;
++	data[crr++ * num_values + num_cpus] += percpu_priv->stats.tx_dropped;
++
+ 	data[crr * num_values + crr_cpu] = bp_count;
+ 	data[crr++ * num_values + num_cpus] += bp_count;
+ }
+-- 
+2.1.0
 
-Apparently it 'works', so there is no hard technical reason, but
-consider that _Bool is specified as an integer type large enough to
-store the values 0 and 1, then consider it as a base type for a
-bitfield. That's just disguisting.
-
-Now, I suppose it 'works', but there is no actual benefit over just
-using a single bit of any other base type.
-
-> My design point is to save a little bit space without introducing
-> two variables such as "int event_count & bool enable_cleanup".
-
-Your design is questionable, the structure is _huge_, and your union has
-event_count:0 and enable_cleanup:0 as the same bit, which I don't think
-was intentional.
-
-Did you perhaps want to write:
-
-	struct {
-		u8 event_count : 7;
-		u8 event_cleanup : 1;
-	};
-
-which has a total size of 1 byte and uses the low 7 bits as count and the
-msb as cleanup.
-
-Also, the structure has plenty holes to stick proper variables in
-without further growing it.
-
-> By the way, is the lazy release mechanism looks reasonable to you?
-
-I've no idea how it works.. I don't know much about virt.
