@@ -2,97 +2,104 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE10C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 06:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F3C2C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 06:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0632520673
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 06:03:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00E5920673
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 06:05:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729963AbfJHGDS (ORCPT
+        id S1730008AbfJHGFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 02:03:18 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:44925 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728297AbfJHGDR (ORCPT
+        Tue, 8 Oct 2019 02:05:16 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37209 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728297AbfJHGFP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 02:03:17 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iHiaX-00038n-G6; Tue, 08 Oct 2019 08:03:13 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iHiaV-0001dd-UC; Tue, 08 Oct 2019 08:03:11 +0200
-Date:   Tue, 8 Oct 2019 08:03:11 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Doug Anderson <dianders@chromium.org>,
-        Chunyan Zhang <zhang.chunyan@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        ckeepax@opensource.cirrus.com, LKML <linux-kernel@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>
-Subject: Re: [PATCH 1/3] regulator: core: fix boot-on regulators use_count
- usage
-Message-ID: <20191008060311.3ukim22vv7ywmlhs@pengutronix.de>
-References: <20190923181431.GU2036@sirena.org.uk>
- <CAD=FV=WVGj8xzKFFxsjpeuqtVzSvv22cHmWBRJtTbH00eC=E9w@mail.gmail.com>
- <20190923184907.GY2036@sirena.org.uk>
- <CAD=FV=VkaXDn034EFnJWYvWwyLgvq7ajfgMRm9mbhQeRKmPDRQ@mail.gmail.com>
- <20190924182758.GC2036@sirena.org.uk>
- <CAD=FV=WZSy6nHjsY2pvjcoR4iy64b35OPGEb3EPSSc5vpeTTuA@mail.gmail.com>
- <20190927084710.mt42454vsrjm3yh3@pengutronix.de>
- <CAD=FV=XM0i=GsvttJjug6VPOJJGHRqFmsmCp-1XXNvmsYp9sJA@mail.gmail.com>
- <20191007093429.qekysnxufvkbirit@pengutronix.de>
- <20191007182907.GB5614@sirena.co.uk>
+        Tue, 8 Oct 2019 02:05:15 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y5so10175922pfo.4;
+        Mon, 07 Oct 2019 23:05:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=v6XPWvTzTNM9h297e855Iegd93fJRV+8wlRBEJwrHzk=;
+        b=LzK5smRLhxgfNNVkdeJ2/eBsdZqhSbwI76zXSst0Y4a7oj+3H/lyK9u74sGg7VYCTv
+         ulfLGOGUrXWdLi7JjH0PgUisrupW2N4lnatebslFpSpo2TyKOfygaTpSm/Ayofyrgjtn
+         Ns5e4ln8g5Wd9ryP8w//KsuPimSXmSLS9LkYZ5p0uuOWw8Kaf6nyYfFGdxs2GdDMHtNT
+         cPjoIJYLv7GpmiORg3iQulJvAhdgih23zD3H70LFMfN53wf/Qk4ec7n72lc6eqVt5TpA
+         A2a0Qf4AbNrZdxZV78LUOp16owiF4WuR1I9NQhM53B1mOKlaCjWfjxrHhY5sMJhU/RNa
+         bWpA==
+X-Gm-Message-State: APjAAAVBnpeNNp21YkeqR4/r+e8FaGg0qDHVI16+IfKtdEBw0GGSZDf2
+        P303qsGcZ9xxdf7OrMM2oKShZBBoNaM=
+X-Google-Smtp-Source: APXvYqwcshMidoQ5fZUhw7ynmteehEgUBfFn5kIT0zoo7uwr+6i431XEQrkyBBzhmWpWYPn95OD6Pg==
+X-Received: by 2002:a63:2406:: with SMTP id k6mr34458056pgk.420.1570514714468;
+        Mon, 07 Oct 2019 23:05:14 -0700 (PDT)
+Received: from localhost (61-220-137-37.HINET-IP.hinet.net. [61.220.137.37])
+        by smtp.gmail.com with ESMTPSA id z4sm1052231pjt.17.2019.10.07.23.05.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2019 23:05:13 -0700 (PDT)
+From:   You-Sheng Yang <vicamo.yang@canonical.com>
+To:     Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Shahar S Matityahu <shahar.s.matityahu@intel.com>,
+        Sara Sharon <sara.sharon@intel.com>,
+        Gil Adam <gil.adam@intel.com>,
+        Mordechay Goodstein <mordechay.goodstein@intel.com>,
+        Haim Dreyfuss <haim.dreyfuss@intel.com>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] iwlwifi: fw: don't send GEO_TX_POWER_LIMIT command to FW version 29
+Date:   Tue,  8 Oct 2019 14:05:11 +0800
+Message-Id: <20191008060511.18474-1-vicamo.yang@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191007182907.GB5614@sirena.co.uk>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 07:54:41 up 143 days, 12:12, 94 users,  load average: 0.03, 0.03,
- 0.00
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-10-07 19:29, Mark Brown wrote:
-> On Mon, Oct 07, 2019 at 11:34:29AM +0200, Marco Felsch wrote:
-> 
-> > Sorry that won't fix my problem. If I drop the regulator-boot-on state
-> > the fixed-regulator will disable this regulator but disable/enable this
-> > regulator is only valid during suspend/resume. I don't say that my fix
-> > is correct but we should fix this.
-> 
-> I'm having a bit of trouble parsing this but it sounds like you want the
-> regulator to be always on in which case you should use the property
-> specifically for that.
+Follow-up for commit fddbfeece9c7 ("iwlwifi: fw: don't send
+GEO_TX_POWER_LIMIT command to FW version 36"). There is no
+GEO_TX_POWER_LIMIT command support for all revisions of FW version
+29, either.
 
-Sorry my english wasn't the best.. Imagine this case: The bootloader
-turned the display on to show an early bootlogo. Now if I miss the
-regulator-boot-on property the display is turned off and on. The turn
-off comes from the regulator probe, the turn on comes from the cosumer.
-Is that assumption correct?
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204151
+Signed-off-by: You-Sheng Yang <vicamo.yang@canonical.com>
+---
+ drivers/net/wireless/intel/iwlwifi/mvm/fw.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Regards,
-  Marco
-
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
+index 32a5e4e5461f..dbba616c19de 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
+@@ -889,14 +889,14 @@ static bool iwl_mvm_sar_geo_support(struct iwl_mvm *mvm)
+ 	 * firmware versions.  Unfortunately, we don't have a TLV API
+ 	 * flag to rely on, so rely on the major version which is in
+ 	 * the first byte of ucode_ver.  This was implemented
+-	 * initially on version 38 and then backported to29 and 17.
++	 * initially on version 38 and then backported to 29 and 17.
+ 	 * The intention was to have it in 36 as well, but not all
+ 	 * 8000 family got this feature enabled.  The 8000 family is
+ 	 * the only one using version 36, so skip this version
+-	 * entirely.
++	 * entirely. All revisions of -29 fw still don't have
++	 * GEO_TX_POWER_LIMIT supported yet.
+ 	 */
+ 	return IWL_UCODE_SERIAL(mvm->fw->ucode_ver) >= 38 ||
+-	       IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 29 ||
+ 	       IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 17;
+ }
+ 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.20.1
+
