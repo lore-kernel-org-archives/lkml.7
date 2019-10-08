@@ -4,36 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F09ECE58C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F682ECE58C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E42B421721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E8B020835
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:23:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729793AbfJHBXF (ORCPT
+        id S1729817AbfJHBXQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 21:23:05 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:52926 "EHLO huawei.com"
+        Mon, 7 Oct 2019 21:23:16 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:52958 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729307AbfJHBWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 21:22:55 -0400
+        id S1729285AbfJHBWy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 21:22:54 -0400
 Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 38AC99F868F984062584;
+        by Forcepoint Email with ESMTP id 43B6DAB69B184AD771AB;
         Tue,  8 Oct 2019 09:22:51 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 8 Oct 2019 09:22:44 +0800
+ 14.3.439.0; Tue, 8 Oct 2019 09:22:43 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>
-Subject: [PATCH net-next 6/6] net: hns3: support tx-scatter-gather-fraglist feature
-Date:   Tue, 8 Oct 2019 09:20:09 +0800
-Message-ID: <1570497609-36349-7-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 3/6] net: hns3: add support for setting VF trust
+Date:   Tue, 8 Oct 2019 09:20:06 +0800
+Message-ID: <1570497609-36349-4-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1570497609-36349-1-git-send-email-tanhuazhong@huawei.com>
 References: <1570497609-36349-1-git-send-email-tanhuazhong@huawei.com>
@@ -46,521 +45,425 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunsheng Lin <linyunsheng@huawei.com>
+From: Jian Shen <shenjian15@huawei.com>
 
-The hardware supports up to 8 TX BD for non-tso skb and up to
-63 TX BD for TSO skb. Currently, the hns3 driver supports RX skb
-with fraglist when HW GRO is enabled, when the stack forwards a
-RX skb with fraglist, the stack need to linearize the skb before
-sending to other interface without TX fraglist support.
+This patch adds supports for setting VF trust by host. If specified
+VF is trusted, then it can enable promisc(include allmulti mode).
+If a trusted VF enabled promisc, and being untrusted, host will
+disable promisc mode for this VF.
 
-This patch adds support for TX fraglist. The performance increases
-from 1 GByte to 1.5 GByte for one iperf TCP stream during
-forwarding test after this patch. BTW, the minimum BD number of
-ring should be updated to 72 for supporting TX fraglist.
+For VF will update its promisc mode from set_rx_mode now, so it's
+unnecessary to set broadcst promisc mode when initialization or
+reset.
 
-This patch also changes the error handling of some function that
-called by hns3_fill_desc, which returns BD num when there is no
-error, change some macro to more meaningful name.
-
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Signed-off-by: Jian Shen <shenjian15@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 249 +++++++++++++++---------
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.h |  12 +-
- 2 files changed, 168 insertions(+), 93 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h    |  1 +
+ drivers/net/ethernet/hisilicon/hns3/hnae3.h        |  4 ++
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    | 11 ++++
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h |  3 --
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 60 ++++++++++++++++++----
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |  8 +--
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c | 36 +++++++++++--
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  | 34 +++++-------
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c   | 12 +++++
+ 9 files changed, 129 insertions(+), 40 deletions(-)
 
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
+index f8a87f8..0059d44 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
+@@ -45,6 +45,7 @@ enum HCLGE_MBX_OPCODE {
+ 	HCLGE_MBX_GET_LINK_MODE,	/* (VF -> PF) get the link mode of pf */
+ 	HCLGE_MBX_PUSH_VLAN_INFO,	/* (PF -> VF) push port base vlan */
+ 	HCLGE_MBX_GET_MEDIA_TYPE,       /* (VF -> PF) get media type */
++	HCLGE_MBX_PUSH_PROMISC_INFO,	/* (PF -> VF) push vf promisc info */
+ 
+ 	HCLGE_MBX_GET_VF_FLR_STATUS = 200, /* (M7 -> PF) get vf reset status */
+ 	HCLGE_MBX_PUSH_LINK_STATUS,	/* (M7 -> PF) get port link status */
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
+index b7b8169..ef56f37 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
+@@ -370,6 +370,9 @@ struct hnae3_ae_dev {
+  *   Set VF link status
+  * set_vf_spoofchk
+  *   Enable/disable spoof check for specified vf
++ * set_vf_trust
++ *   Enable/disable trust for specified vf, if the vf being trusted, then
++ *   it can enable promisc mode
+  */
+ struct hnae3_ae_ops {
+ 	int (*init_ae_dev)(struct hnae3_ae_dev *ae_dev);
+@@ -541,6 +544,7 @@ struct hnae3_ae_ops {
+ 				 int link_state);
+ 	int (*set_vf_spoofchk)(struct hnae3_handle *handle, int vf,
+ 			       bool enable);
++	int (*set_vf_trust)(struct hnae3_handle *handle, int vf, bool enable);
+ };
+ 
+ struct hnae3_dcb_ops {
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 4e304b4..6e0b261 100644
+index 4a5404e..5c50555 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -681,7 +681,7 @@ static int hns3_set_tso(struct sk_buff *skb, u32 *paylen,
- 		return 0;
+@@ -1656,6 +1656,16 @@ static int hns3_set_vf_spoofchk(struct net_device *netdev, int vf, bool enable)
+ 	return handle->ae_algo->ops->set_vf_spoofchk(handle, vf, enable);
+ }
  
- 	ret = skb_cow_head(skb, 0);
--	if (unlikely(ret))
-+	if (unlikely(ret < 0))
- 		return ret;
++static int hns3_set_vf_trust(struct net_device *netdev, int vf, bool enable)
++{
++	struct hnae3_handle *handle = hns3_get_handle(netdev);
++
++	if (!handle->ae_algo->ops->set_vf_trust)
++		return -EOPNOTSUPP;
++
++	return handle->ae_algo->ops->set_vf_trust(handle, vf, enable);
++}
++
+ static int hns3_nic_change_mtu(struct net_device *netdev, int new_mtu)
+ {
+ 	struct hnae3_handle *h = hns3_get_handle(netdev);
+@@ -1856,6 +1866,7 @@ static const struct net_device_ops hns3_nic_netdev_ops = {
+ 	.ndo_vlan_rx_kill_vid	= hns3_vlan_rx_kill_vid,
+ 	.ndo_set_vf_vlan	= hns3_ndo_set_vf_vlan,
+ 	.ndo_set_vf_spoofchk	= hns3_set_vf_spoofchk,
++	.ndo_set_vf_trust	= hns3_set_vf_trust,
+ #ifdef CONFIG_RFS_ACCEL
+ 	.ndo_rx_flow_steer	= hns3_rx_flow_steer,
+ #endif
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
+index 4821fe0..265695a 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
+@@ -1090,9 +1090,6 @@ void hclge_cmd_setup_basic_desc(struct hclge_desc *desc,
+ 				enum hclge_opcode_type opcode, bool is_read);
+ void hclge_cmd_reuse_desc(struct hclge_desc *desc, bool is_read);
  
- 	l3.hdr = skb_network_header(skb);
-@@ -962,14 +962,6 @@ static int hns3_set_l2l3l4(struct sk_buff *skb, u8 ol4_proto,
+-int hclge_cmd_set_promisc_mode(struct hclge_dev *hdev,
+-			       struct hclge_promisc_param *param);
+-
+ enum hclge_cmd_status hclge_cmd_mdio_write(struct hclge_hw *hw,
+ 					   struct hclge_desc *desc);
+ enum hclge_cmd_status hclge_cmd_mdio_read(struct hclge_hw *hw,
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 7c72862..c63f723 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -2889,6 +2889,7 @@ static int hclge_get_vf_config(struct hnae3_handle *handle, int vf,
+ 	ivf->vf = vf;
+ 	ivf->linkstate = vport->vf_info.link_state;
+ 	ivf->spoofchk = vport->vf_info.spoofchk;
++	ivf->trusted = vport->vf_info.trusted;
+ 	ether_addr_copy(ivf->mac, vport->vf_info.mac);
+ 
+ 	return 0;
+@@ -4614,8 +4615,8 @@ static int hclge_unmap_ring_frm_vector(struct hnae3_handle *handle, int vector,
+ 	return ret;
+ }
+ 
+-int hclge_cmd_set_promisc_mode(struct hclge_dev *hdev,
+-			       struct hclge_promisc_param *param)
++static int hclge_cmd_set_promisc_mode(struct hclge_dev *hdev,
++				      struct hclge_promisc_param *param)
+ {
+ 	struct hclge_promisc_cfg_cmd *req;
+ 	struct hclge_desc desc;
+@@ -4642,8 +4643,9 @@ int hclge_cmd_set_promisc_mode(struct hclge_dev *hdev,
+ 	return ret;
+ }
+ 
+-void hclge_promisc_param_init(struct hclge_promisc_param *param, bool en_uc,
+-			      bool en_mc, bool en_bc, int vport_id)
++static void hclge_promisc_param_init(struct hclge_promisc_param *param,
++				     bool en_uc, bool en_mc, bool en_bc,
++				     int vport_id)
+ {
+ 	if (!param)
+ 		return;
+@@ -4658,12 +4660,21 @@ void hclge_promisc_param_init(struct hclge_promisc_param *param, bool en_uc,
+ 	param->vf_id = vport_id;
+ }
+ 
++int hclge_set_vport_promisc_mode(struct hclge_vport *vport, bool en_uc_pmc,
++				 bool en_mc_pmc, bool en_bc_pmc)
++{
++	struct hclge_dev *hdev = vport->back;
++	struct hclge_promisc_param param;
++
++	hclge_promisc_param_init(&param, en_uc_pmc, en_mc_pmc, en_bc_pmc,
++				 vport->vport_id);
++	return hclge_cmd_set_promisc_mode(hdev, &param);
++}
++
+ static int hclge_set_promisc_mode(struct hnae3_handle *handle, bool en_uc_pmc,
+ 				  bool en_mc_pmc)
+ {
+ 	struct hclge_vport *vport = hclge_get_vport(handle);
+-	struct hclge_dev *hdev = vport->back;
+-	struct hclge_promisc_param param;
+ 	bool en_bc_pmc = true;
+ 
+ 	/* For revision 0x20, if broadcast promisc enabled, vlan filter is
+@@ -4673,9 +4684,8 @@ static int hclge_set_promisc_mode(struct hnae3_handle *handle, bool en_uc_pmc,
+ 	if (handle->pdev->revision == 0x20)
+ 		en_bc_pmc = handle->netdev_flags & HNAE3_BPE ? true : false;
+ 
+-	hclge_promisc_param_init(&param, en_uc_pmc, en_mc_pmc, en_bc_pmc,
+-				 vport->vport_id);
+-	return hclge_cmd_set_promisc_mode(hdev, &param);
++	return hclge_set_vport_promisc_mode(vport, en_uc_pmc, en_mc_pmc,
++					    en_bc_pmc);
+ }
+ 
+ static int hclge_get_fd_mode(struct hclge_dev *hdev, u8 *fd_mode)
+@@ -9479,6 +9489,37 @@ static int hclge_reset_vport_spoofchk(struct hclge_dev *hdev)
  	return 0;
  }
  
--static void hns3_set_txbd_baseinfo(u16 *bdtp_fe_sc_vld_ra_ri, int frag_end)
--{
--	/* Config bd buffer end */
--	if (!!frag_end)
--		hns3_set_field(*bdtp_fe_sc_vld_ra_ri, HNS3_TXD_FE_B, 1U);
--	hns3_set_field(*bdtp_fe_sc_vld_ra_ri, HNS3_TXD_VLD_B, 1U);
--}
--
- static int hns3_handle_vtags(struct hns3_enet_ring *tx_ring,
- 			     struct sk_buff *skb)
- {
-@@ -1062,7 +1054,7 @@ static int hns3_fill_skb_desc(struct hns3_enet_ring *ring,
- 		skb_reset_mac_len(skb);
- 
- 		ret = hns3_get_l4_protocol(skb, &ol4_proto, &il4_proto);
--		if (unlikely(ret)) {
-+		if (unlikely(ret < 0)) {
- 			u64_stats_update_begin(&ring->syncp);
- 			ring->stats.tx_l4_proto_err++;
- 			u64_stats_update_end(&ring->syncp);
-@@ -1072,7 +1064,7 @@ static int hns3_fill_skb_desc(struct hns3_enet_ring *ring,
- 		ret = hns3_set_l2l3l4(skb, ol4_proto, il4_proto,
- 				      &type_cs_vlan_tso,
- 				      &ol_type_vlan_len_msec);
--		if (unlikely(ret)) {
-+		if (unlikely(ret < 0)) {
- 			u64_stats_update_begin(&ring->syncp);
- 			ring->stats.tx_l2l3l4_err++;
- 			u64_stats_update_end(&ring->syncp);
-@@ -1081,7 +1073,7 @@ static int hns3_fill_skb_desc(struct hns3_enet_ring *ring,
- 
- 		ret = hns3_set_tso(skb, &paylen, &mss,
- 				   &type_cs_vlan_tso);
--		if (unlikely(ret)) {
-+		if (unlikely(ret < 0)) {
- 			u64_stats_update_begin(&ring->syncp);
- 			ring->stats.tx_tso_err++;
- 			u64_stats_update_end(&ring->syncp);
-@@ -1102,9 +1094,10 @@ static int hns3_fill_skb_desc(struct hns3_enet_ring *ring,
- }
- 
- static int hns3_fill_desc(struct hns3_enet_ring *ring, void *priv,
--			  unsigned int size, int frag_end,
--			  enum hns_desc_type type)
-+			  unsigned int size, enum hns_desc_type type)
- {
-+#define HNS3_LIKELY_BD_NUM	1
++static int hclge_set_vf_trust(struct hnae3_handle *handle, int vf, bool enable)
++{
++	struct hclge_vport *vport = hclge_get_vport(handle);
++	struct hclge_dev *hdev = vport->back;
++	u32 new_trusted = enable ? 1 : 0;
++	bool en_bc_pmc;
++	int ret;
 +
- 	struct hns3_desc_cb *desc_cb = &ring->desc_cb[ring->next_to_use];
- 	struct hns3_desc *desc = &ring->desc[ring->next_to_use];
- 	struct device *dev = ring_to_dev(ring);
-@@ -1118,7 +1111,7 @@ static int hns3_fill_desc(struct hns3_enet_ring *ring, void *priv,
- 		int ret;
- 
- 		ret = hns3_fill_skb_desc(ring, skb, desc);
--		if (unlikely(ret))
-+		if (unlikely(ret < 0))
- 			return ret;
- 
- 		dma = dma_map_single(dev, skb->data, size, DMA_TO_DEVICE);
-@@ -1137,19 +1130,16 @@ static int hns3_fill_desc(struct hns3_enet_ring *ring, void *priv,
- 	desc_cb->length = size;
- 
- 	if (likely(size <= HNS3_MAX_BD_SIZE)) {
--		u16 bdtp_fe_sc_vld_ra_ri = 0;
--
- 		desc_cb->priv = priv;
- 		desc_cb->dma = dma;
- 		desc_cb->type = type;
- 		desc->addr = cpu_to_le64(dma);
- 		desc->tx.send_size = cpu_to_le16(size);
--		hns3_set_txbd_baseinfo(&bdtp_fe_sc_vld_ra_ri, frag_end);
- 		desc->tx.bdtp_fe_sc_vld_ra_ri =
--			cpu_to_le16(bdtp_fe_sc_vld_ra_ri);
-+			cpu_to_le16(BIT(HNS3_TXD_VLD_B));
- 
- 		ring_ptr_move_fw(ring, next_to_use);
--		return 0;
-+		return HNS3_LIKELY_BD_NUM;
- 	}
- 
- 	frag_buf_num = hns3_tx_bd_count(size);
-@@ -1158,8 +1148,6 @@ static int hns3_fill_desc(struct hns3_enet_ring *ring, void *priv,
- 
- 	/* When frag size is bigger than hardware limit, split this frag */
- 	for (k = 0; k < frag_buf_num; k++) {
--		u16 bdtp_fe_sc_vld_ra_ri = 0;
--
- 		/* The txbd's baseinfo of DESC_TYPE_PAGE & DESC_TYPE_SKB */
- 		desc_cb->priv = priv;
- 		desc_cb->dma = dma + HNS3_MAX_BD_SIZE * k;
-@@ -1170,11 +1158,8 @@ static int hns3_fill_desc(struct hns3_enet_ring *ring, void *priv,
- 		desc->addr = cpu_to_le64(dma + HNS3_MAX_BD_SIZE * k);
- 		desc->tx.send_size = cpu_to_le16((k == frag_buf_num - 1) ?
- 				     (u16)sizeoflast : (u16)HNS3_MAX_BD_SIZE);
--		hns3_set_txbd_baseinfo(&bdtp_fe_sc_vld_ra_ri,
--				       frag_end && (k == frag_buf_num - 1) ?
--						1 : 0);
- 		desc->tx.bdtp_fe_sc_vld_ra_ri =
--				cpu_to_le16(bdtp_fe_sc_vld_ra_ri);
-+				cpu_to_le16(BIT(HNS3_TXD_VLD_B));
- 
- 		/* move ring pointer to next */
- 		ring_ptr_move_fw(ring, next_to_use);
-@@ -1183,23 +1168,78 @@ static int hns3_fill_desc(struct hns3_enet_ring *ring, void *priv,
- 		desc = &ring->desc[ring->next_to_use];
- 	}
- 
--	return 0;
-+	return frag_buf_num;
- }
- 
--static unsigned int hns3_nic_bd_num(struct sk_buff *skb)
-+static unsigned int hns3_skb_bd_num(struct sk_buff *skb, unsigned int *bd_size,
-+				    unsigned int bd_num)
- {
--	unsigned int bd_num;
-+	unsigned int size;
- 	int i;
- 
--	/* if the total len is within the max bd limit */
--	if (likely(skb->len <= HNS3_MAX_BD_SIZE))
--		return skb_shinfo(skb)->nr_frags + 1;
-+	size = skb_headlen(skb);
-+	while (size > HNS3_MAX_BD_SIZE) {
-+		bd_size[bd_num++] = HNS3_MAX_BD_SIZE;
-+		size -= HNS3_MAX_BD_SIZE;
++	vport = hclge_get_vf_vport(hdev, vf);
++	if (!vport)
++		return -EINVAL;
 +
-+		if (bd_num > HNS3_MAX_TSO_BD_NUM)
-+			return bd_num;
-+	}
- 
--	bd_num = hns3_tx_bd_count(skb_headlen(skb));
-+	if (size) {
-+		bd_size[bd_num++] = size;
-+		if (bd_num > HNS3_MAX_TSO_BD_NUM)
-+			return bd_num;
-+	}
- 
- 	for (i = 0; i < skb_shinfo(skb)->nr_frags; i++) {
- 		skb_frag_t *frag = &skb_shinfo(skb)->frags[i];
--		bd_num += hns3_tx_bd_count(skb_frag_size(frag));
-+		size = skb_frag_size(frag);
-+		if (!size)
-+			continue;
++	if (vport->vf_info.trusted == new_trusted)
++		return 0;
 +
-+		while (size > HNS3_MAX_BD_SIZE) {
-+			bd_size[bd_num++] = HNS3_MAX_BD_SIZE;
-+			size -= HNS3_MAX_BD_SIZE;
-+
-+			if (bd_num > HNS3_MAX_TSO_BD_NUM)
-+				return bd_num;
-+		}
-+
-+		bd_size[bd_num++] = size;
-+		if (bd_num > HNS3_MAX_TSO_BD_NUM)
-+			return bd_num;
++	/* Disable promisc mode for VF if it is not trusted any more. */
++	if (!enable && vport->vf_info.promisc_enable) {
++		en_bc_pmc = hdev->pdev->revision != 0x20;
++		ret = hclge_set_vport_promisc_mode(vport, false, false,
++						   en_bc_pmc);
++		if (ret)
++			return ret;
++		vport->vf_info.promisc_enable = 0;
++		hclge_inform_vf_promisc_info(vport);
 +	}
 +
-+	return bd_num;
++	vport->vf_info.trusted = new_trusted;
++
++	return 0;
 +}
 +
-+static unsigned int hns3_tx_bd_num(struct sk_buff *skb, unsigned int *bd_size)
-+{
-+	struct sk_buff *frag_skb;
-+	unsigned int bd_num = 0;
-+
-+	/* If the total len is within the max bd limit */
-+	if (likely(skb->len <= HNS3_MAX_BD_SIZE && !skb_has_frag_list(skb) &&
-+		   skb_shinfo(skb)->nr_frags < HNS3_MAX_NON_TSO_BD_NUM))
-+		return skb_shinfo(skb)->nr_frags + 1U;
-+
-+	/* The below case will always be linearized, return
-+	 * HNS3_MAX_BD_NUM_TSO + 1U to make sure it is linearized.
-+	 */
-+	if (unlikely(skb->len > HNS3_MAX_TSO_SIZE ||
-+		     (!skb_is_gso(skb) && skb->len > HNS3_MAX_NON_TSO_SIZE)))
-+		return HNS3_MAX_TSO_BD_NUM + 1U;
-+
-+	bd_num = hns3_skb_bd_num(skb, bd_size, bd_num);
-+
-+	if (!skb_has_frag_list(skb) || bd_num > HNS3_MAX_TSO_BD_NUM)
-+		return bd_num;
-+
-+	skb_walk_frags(skb, frag_skb) {
-+		bd_num = hns3_skb_bd_num(frag_skb, bd_size, bd_num);
-+		if (bd_num > HNS3_MAX_TSO_BD_NUM)
-+			return bd_num;
- 	}
- 
- 	return bd_num;
-@@ -1218,26 +1258,26 @@ static unsigned int hns3_gso_hdr_len(struct sk_buff *skb)
-  * 7 frags to to be larger than gso header len + mss, and the remaining
-  * continuous 7 frags to be larger than MSS except the last 7 frags.
-  */
--static bool hns3_skb_need_linearized(struct sk_buff *skb)
-+static bool hns3_skb_need_linearized(struct sk_buff *skb, unsigned int *bd_size,
-+				     unsigned int bd_num)
+ static void hclge_reset_vport_state(struct hclge_dev *hdev)
  {
--	int bd_limit = HNS3_MAX_BD_NUM_NORMAL - 1;
- 	unsigned int tot_len = 0;
- 	int i;
+ 	struct hclge_vport *vport = hdev->vport;
+@@ -10318,6 +10359,7 @@ static const struct hnae3_ae_ops hclge_ops = {
+ 	.get_vf_config = hclge_get_vf_config,
+ 	.set_vf_link_state = hclge_set_vf_link_state,
+ 	.set_vf_spoofchk = hclge_set_vf_spoofchk,
++	.set_vf_trust = hclge_set_vf_trust,
+ };
  
--	for (i = 0; i < bd_limit; i++)
--		tot_len += skb_frag_size(&skb_shinfo(skb)->frags[i]);
-+	for (i = 0; i < HNS3_MAX_NON_TSO_BD_NUM - 1U; i++)
-+		tot_len += bd_size[i];
+ static struct hnae3_ae_algo ae_algo = {
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+index 9483529..66e8833 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+@@ -889,6 +889,8 @@ struct hclge_vf_info {
+ 	int link_state;
+ 	u8 mac[ETH_ALEN];
+ 	u32 spoofchk;
++	u32 trusted;
++	u16 promisc_enable;
+ };
  
--	/* ensure headlen + the first 7 frags is greater than mss + header
--	 * and the first 7 frags is greater than mss.
--	 */
--	if (((tot_len + skb_headlen(skb)) < (skb_shinfo(skb)->gso_size +
--	    hns3_gso_hdr_len(skb))) || (tot_len < skb_shinfo(skb)->gso_size))
-+	/* ensure the first 8 frags is greater than mss + header */
-+	if (tot_len + bd_size[HNS3_MAX_NON_TSO_BD_NUM - 1U] <
-+	    skb_shinfo(skb)->gso_size + hns3_gso_hdr_len(skb))
- 		return true;
+ struct hclge_vport {
+@@ -929,9 +931,8 @@ struct hclge_vport {
+ 	struct list_head vlan_list;     /* Store VF vlan table */
+ };
  
--	/* ensure the remaining continuous 7 buffer is greater than mss */
--	for (i = 0; i < (skb_shinfo(skb)->nr_frags - bd_limit - 1); i++) {
--		tot_len -= skb_frag_size(&skb_shinfo(skb)->frags[i]);
--		tot_len += skb_frag_size(&skb_shinfo(skb)->frags[i + bd_limit]);
-+	/* ensure every continuous 7 buffer is greater than mss
-+	 * except the last one.
-+	 */
-+	for (i = 0; i < bd_num - HNS3_MAX_NON_TSO_BD_NUM; i++) {
-+		tot_len -= bd_size[i];
-+		tot_len += bd_size[i + HNS3_MAX_NON_TSO_BD_NUM - 1U];
- 
- 		if (tot_len < skb_shinfo(skb)->gso_size)
- 			return true;
-@@ -1249,15 +1289,16 @@ static bool hns3_skb_need_linearized(struct sk_buff *skb)
- static int hns3_nic_maybe_stop_tx(struct hns3_enet_ring *ring,
- 				  struct sk_buff **out_skb)
+-void hclge_promisc_param_init(struct hclge_promisc_param *param, bool en_uc,
+-			      bool en_mc, bool en_bc, int vport_id);
+-
++int hclge_set_vport_promisc_mode(struct hclge_vport *vport, bool en_uc_pmc,
++				 bool en_mc_pmc, bool en_bc_pmc);
+ int hclge_add_uc_addr_common(struct hclge_vport *vport,
+ 			     const unsigned char *addr);
+ int hclge_rm_uc_addr_common(struct hclge_vport *vport,
+@@ -1000,4 +1001,5 @@ int hclge_query_bd_num_cmd_send(struct hclge_dev *hdev,
+ 				struct hclge_desc *desc);
+ void hclge_report_hw_error(struct hclge_dev *hdev,
+ 			   enum hnae3_hw_error_type type);
++void hclge_inform_vf_promisc_info(struct hclge_vport *vport);
+ #endif
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
+index cad7029..131b47b 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
+@@ -205,12 +205,38 @@ static int hclge_map_unmap_ring_to_vf_vector(struct hclge_vport *vport, bool en,
+ static int hclge_set_vf_promisc_mode(struct hclge_vport *vport,
+ 				     struct hclge_mbx_vf_to_pf_cmd *req)
  {
-+	unsigned int bd_size[HNS3_MAX_TSO_BD_NUM + 1U];
- 	struct sk_buff *skb = *out_skb;
- 	unsigned int bd_num;
+-	bool en_bc = req->msg[1] ? true : false;
+-	struct hclge_promisc_param param;
++#define HCLGE_MBX_BC_INDEX	1
++#define HCLGE_MBX_UC_INDEX	2
++#define HCLGE_MBX_MC_INDEX	3
  
--	bd_num = hns3_nic_bd_num(skb);
--	if (unlikely(bd_num > HNS3_MAX_BD_NUM_NORMAL)) {
-+	bd_num = hns3_tx_bd_num(skb, bd_size);
-+	if (unlikely(bd_num > HNS3_MAX_NON_TSO_BD_NUM)) {
- 		struct sk_buff *new_skb;
- 
--		if (skb_is_gso(skb) && bd_num <= HNS3_MAX_BD_NUM_TSO &&
--		    !hns3_skb_need_linearized(skb))
-+		if (bd_num <= HNS3_MAX_TSO_BD_NUM && skb_is_gso(skb) &&
-+		    !hns3_skb_need_linearized(skb, bd_size, bd_num))
- 			goto out;
- 
- 		/* manual split the send packet */
-@@ -1267,9 +1308,10 @@ static int hns3_nic_maybe_stop_tx(struct hns3_enet_ring *ring,
- 		dev_kfree_skb_any(skb);
- 		*out_skb = new_skb;
- 
--		bd_num = hns3_nic_bd_num(new_skb);
--		if ((skb_is_gso(new_skb) && bd_num > HNS3_MAX_BD_NUM_TSO) ||
--		    (!skb_is_gso(new_skb) && bd_num > HNS3_MAX_BD_NUM_NORMAL))
-+		bd_num = hns3_tx_bd_count(new_skb->len);
-+		if ((skb_is_gso(new_skb) && bd_num > HNS3_MAX_TSO_BD_NUM) ||
-+		    (!skb_is_gso(new_skb) &&
-+		     bd_num > HNS3_MAX_NON_TSO_BD_NUM))
- 			return -ENOMEM;
- 
- 		u64_stats_update_begin(&ring->syncp);
-@@ -1314,6 +1356,37 @@ static void hns3_clear_desc(struct hns3_enet_ring *ring, int next_to_use_orig)
- 	}
- }
- 
-+static int hns3_fill_skb_to_desc(struct hns3_enet_ring *ring,
-+				 struct sk_buff *skb, enum hns_desc_type type)
-+{
-+	unsigned int size = skb_headlen(skb);
-+	int i, ret, bd_num = 0;
+-	/* vf is not allowed to enable unicast/multicast broadcast */
+-	hclge_promisc_param_init(&param, false, false, en_bc, vport->vport_id);
+-	return hclge_cmd_set_promisc_mode(vport->back, &param);
++	bool en_bc = req->msg[HCLGE_MBX_BC_INDEX] ? true : false;
++	bool en_uc = req->msg[HCLGE_MBX_UC_INDEX] ? true : false;
++	bool en_mc = req->msg[HCLGE_MBX_MC_INDEX] ? true : false;
++	int ret;
 +
-+	if (size) {
-+		ret = hns3_fill_desc(ring, skb, size, type);
-+		if (unlikely(ret < 0))
-+			return ret;
-+
-+		bd_num += ret;
++	if (!vport->vf_info.trusted) {
++		en_uc = false;
++		en_mc = false;
 +	}
 +
-+	for (i = 0; i < skb_shinfo(skb)->nr_frags; i++) {
-+		skb_frag_t *frag = &skb_shinfo(skb)->frags[i];
++	ret = hclge_set_vport_promisc_mode(vport, en_uc, en_mc, en_bc);
++	if (req->mbx_need_resp)
++		hclge_gen_resp_to_vf(vport, req, ret, NULL, 0);
 +
-+		size = skb_frag_size(frag);
-+		if (!size)
-+			continue;
++	vport->vf_info.promisc_enable = (en_uc || en_mc) ? 1 : 0;
 +
-+		ret = hns3_fill_desc(ring, frag, size, DESC_TYPE_PAGE);
-+		if (unlikely(ret < 0))
-+			return ret;
-+
-+		bd_num += ret;
-+	}
-+
-+	return bd_num;
++	return ret;
 +}
 +
- netdev_tx_t hns3_nic_net_xmit(struct sk_buff *skb, struct net_device *netdev)
++void hclge_inform_vf_promisc_info(struct hclge_vport *vport)
++{
++	u8 dest_vfid = (u8)vport->vport_id;
++	u8 msg_data[2];
++
++	memcpy(&msg_data[0], &vport->vf_info.promisc_enable, sizeof(u16));
++
++	hclge_send_mbx_msg(vport, msg_data, sizeof(msg_data),
++			   HCLGE_MBX_PUSH_PROMISC_INFO, dest_vfid);
+ }
+ 
+ static int hclge_set_vf_uc_mac_addr(struct hclge_vport *vport,
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+index 2b87b70..1732668 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+@@ -1105,6 +1105,7 @@ static int hclgevf_put_vector(struct hnae3_handle *handle, int vector)
+ }
+ 
+ static int hclgevf_cmd_set_promisc_mode(struct hclgevf_dev *hdev,
++					bool en_uc_pmc, bool en_mc_pmc,
+ 					bool en_bc_pmc)
  {
- 	struct hns3_nic_priv *priv = netdev_priv(netdev);
-@@ -1321,58 +1394,54 @@ netdev_tx_t hns3_nic_net_xmit(struct sk_buff *skb, struct net_device *netdev)
- 		&tx_ring_data(priv, skb->queue_mapping);
- 	struct hns3_enet_ring *ring = ring_data->ring;
- 	struct netdev_queue *dev_queue;
--	skb_frag_t *frag;
--	int next_to_use_head;
--	int buf_num;
--	int seg_num;
--	int size;
-+	int pre_ntu, next_to_use_head;
-+	struct sk_buff *frag_skb;
-+	int bd_num = 0;
+ 	struct hclge_mbx_vf_to_pf_cmd *req;
+@@ -1112,10 +1113,11 @@ static int hclgevf_cmd_set_promisc_mode(struct hclgevf_dev *hdev,
  	int ret;
--	int i;
  
- 	/* Prefetch the data used later */
- 	prefetch(skb->data);
+ 	req = (struct hclge_mbx_vf_to_pf_cmd *)desc.data;
+-
+ 	hclgevf_cmd_setup_basic_desc(&desc, HCLGEVF_OPC_MBX_VF_TO_PF, false);
+ 	req->msg[0] = HCLGE_MBX_SET_PROMISC_MODE;
+ 	req->msg[1] = en_bc_pmc ? 1 : 0;
++	req->msg[2] = en_uc_pmc ? 1 : 0;
++	req->msg[3] = en_mc_pmc ? 1 : 0;
  
--	buf_num = hns3_nic_maybe_stop_tx(ring, &skb);
--	if (unlikely(buf_num <= 0)) {
--		if (buf_num == -EBUSY) {
-+	ret = hns3_nic_maybe_stop_tx(ring, &skb);
-+	if (unlikely(ret <= 0)) {
-+		if (ret == -EBUSY) {
- 			u64_stats_update_begin(&ring->syncp);
- 			ring->stats.tx_busy++;
- 			u64_stats_update_end(&ring->syncp);
- 			goto out_net_tx_busy;
--		} else if (buf_num == -ENOMEM) {
-+		} else if (ret == -ENOMEM) {
- 			u64_stats_update_begin(&ring->syncp);
- 			ring->stats.sw_err_cnt++;
- 			u64_stats_update_end(&ring->syncp);
- 		}
+ 	ret = hclgevf_cmd_send(&hdev->hw, &desc, 1);
+ 	if (ret)
+@@ -1125,9 +1127,17 @@ static int hclgevf_cmd_set_promisc_mode(struct hclgevf_dev *hdev,
+ 	return ret;
+ }
  
--		hns3_rl_err(netdev, "xmit error: %d!\n", buf_num);
-+		hns3_rl_err(netdev, "xmit error: %d!\n", ret);
- 		goto out_err_tx_ok;
+-static int hclgevf_set_promisc_mode(struct hclgevf_dev *hdev, bool en_bc_pmc)
++static int hclgevf_set_promisc_mode(struct hnae3_handle *handle, bool en_uc_pmc,
++				    bool en_mc_pmc)
+ {
+-	return hclgevf_cmd_set_promisc_mode(hdev, en_bc_pmc);
++	struct hclgevf_dev *hdev = hclgevf_ae_get_hdev(handle);
++	struct pci_dev *pdev = hdev->pdev;
++	bool en_bc_pmc;
++
++	en_bc_pmc = pdev->revision != 0x20;
++
++	return hclgevf_cmd_set_promisc_mode(hdev, en_uc_pmc, en_mc_pmc,
++					    en_bc_pmc);
+ }
+ 
+ static int hclgevf_tqp_enable(struct hclgevf_dev *hdev, unsigned int tqp_id,
+@@ -2626,12 +2636,6 @@ static int hclgevf_reset_hdev(struct hclgevf_dev *hdev)
+ 		return ret;
  	}
  
--	/* No. of segments (plus a header) */
--	seg_num = skb_shinfo(skb)->nr_frags + 1;
--	/* Fill the first part */
--	size = skb_headlen(skb);
+-	if (pdev->revision >= 0x21) {
+-		ret = hclgevf_set_promisc_mode(hdev, true);
+-		if (ret)
+-			return ret;
+-	}
 -
- 	next_to_use_head = ring->next_to_use;
+ 	dev_info(&hdev->pdev->dev, "Reset done\n");
  
--	ret = hns3_fill_desc(ring, skb, size, seg_num == 1 ? 1 : 0,
--			     DESC_TYPE_SKB);
--	if (unlikely(ret))
-+	ret = hns3_fill_skb_to_desc(ring, skb, DESC_TYPE_SKB);
-+	if (unlikely(ret < 0))
- 		goto fill_err;
+ 	return 0;
+@@ -2706,17 +2710,6 @@ static int hclgevf_init_hdev(struct hclgevf_dev *hdev)
+ 	if (ret)
+ 		goto err_config;
  
--	/* Fill the fragments */
--	for (i = 1; i < seg_num; i++) {
--		frag = &skb_shinfo(skb)->frags[i - 1];
--		size = skb_frag_size(frag);
-+	bd_num += ret;
- 
--		ret = hns3_fill_desc(ring, frag, size,
--				     seg_num - 1 == i ? 1 : 0,
--				     DESC_TYPE_PAGE);
-+	if (!skb_has_frag_list(skb))
-+		goto out;
- 
--		if (unlikely(ret))
-+	skb_walk_frags(skb, frag_skb) {
-+		ret = hns3_fill_skb_to_desc(ring, frag_skb, DESC_TYPE_PAGE);
-+		if (unlikely(ret < 0))
- 			goto fill_err;
-+
-+		bd_num += ret;
- 	}
-+out:
-+	pre_ntu = ring->next_to_use ? (ring->next_to_use - 1) :
-+					(ring->desc_num - 1);
-+	ring->desc[pre_ntu].tx.bdtp_fe_sc_vld_ra_ri |=
-+				cpu_to_le16(BIT(HNS3_TXD_FE_B));
- 
- 	/* Complete translate all packets */
- 	dev_queue = netdev_get_tx_queue(netdev, ring_data->queue_index);
-@@ -1380,7 +1449,7 @@ netdev_tx_t hns3_nic_net_xmit(struct sk_buff *skb, struct net_device *netdev)
- 
- 	wmb(); /* Commit all data before submit */
- 
--	hnae3_queue_xmit(ring->tqp, buf_num);
-+	hnae3_queue_xmit(ring->tqp, bd_num);
- 
- 	return NETDEV_TX_OK;
- 
-@@ -2158,9 +2227,8 @@ static void hns3_set_default_feature(struct net_device *netdev)
- 		NETIF_F_RXCSUM | NETIF_F_SG | NETIF_F_GSO |
- 		NETIF_F_GRO | NETIF_F_TSO | NETIF_F_TSO6 | NETIF_F_GSO_GRE |
- 		NETIF_F_GSO_GRE_CSUM | NETIF_F_GSO_UDP_TUNNEL |
--		NETIF_F_GSO_UDP_TUNNEL_CSUM | NETIF_F_SCTP_CRC;
+-	/* vf is not allowed to enable unicast/multicast promisc mode.
+-	 * For revision 0x20, default to disable broadcast promisc mode,
+-	 * firmware makes sure broadcast packets can be accepted.
+-	 * For revision 0x21, default to enable broadcast promisc mode.
+-	 */
+-	if (pdev->revision >= 0x21) {
+-		ret = hclgevf_set_promisc_mode(hdev, true);
+-		if (ret)
+-			goto err_config;
+-	}
 -
--	netdev->hw_enc_features |= NETIF_F_TSO_MANGLEID;
-+		NETIF_F_GSO_UDP_TUNNEL_CSUM | NETIF_F_SCTP_CRC |
-+		NETIF_F_TSO_MANGLEID | NETIF_F_FRAGLIST;
+ 	/* Initialize RSS for this VF */
+ 	ret = hclgevf_rss_init_hw(hdev);
+ 	if (ret) {
+@@ -3130,6 +3123,7 @@ static const struct hnae3_ae_ops hclgevf_ops = {
+ 	.get_global_queue_id = hclgevf_get_qid_global,
+ 	.set_timer_task = hclgevf_set_timer_task,
+ 	.get_link_mode = hclgevf_get_link_mode,
++	.set_promisc_mode = hclgevf_set_promisc_mode,
+ };
  
- 	netdev->gso_partial_features |= NETIF_F_GSO_GRE_CSUM;
+ static struct hnae3_ae_algo ae_algovf = {
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
+index a108191..72bacf8 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
+@@ -205,6 +205,7 @@ void hclgevf_mbx_handler(struct hclgevf_dev *hdev)
+ 		case HCLGE_MBX_ASSERTING_RESET:
+ 		case HCLGE_MBX_LINK_STAT_MODE:
+ 		case HCLGE_MBX_PUSH_VLAN_INFO:
++		case HCLGE_MBX_PUSH_PROMISC_INFO:
+ 			/* set this mbx event as pending. This is required as we
+ 			 * might loose interrupt event when mbx task is busy
+ 			 * handling. This shall be cleared when mbx task just
+@@ -248,6 +249,14 @@ void hclgevf_mbx_handler(struct hclgevf_dev *hdev)
+ 			  crq->next_to_use);
+ }
  
-@@ -2170,21 +2238,24 @@ static void hns3_set_default_feature(struct net_device *netdev)
- 		NETIF_F_RXCSUM | NETIF_F_SG | NETIF_F_GSO |
- 		NETIF_F_GRO | NETIF_F_TSO | NETIF_F_TSO6 | NETIF_F_GSO_GRE |
- 		NETIF_F_GSO_GRE_CSUM | NETIF_F_GSO_UDP_TUNNEL |
--		NETIF_F_GSO_UDP_TUNNEL_CSUM | NETIF_F_SCTP_CRC;
-+		NETIF_F_GSO_UDP_TUNNEL_CSUM | NETIF_F_SCTP_CRC |
-+		NETIF_F_FRAGLIST;
- 
- 	netdev->vlan_features |=
- 		NETIF_F_IP_CSUM | NETIF_F_IPV6_CSUM | NETIF_F_RXCSUM |
- 		NETIF_F_SG | NETIF_F_GSO | NETIF_F_GRO |
- 		NETIF_F_TSO | NETIF_F_TSO6 | NETIF_F_GSO_GRE |
- 		NETIF_F_GSO_GRE_CSUM | NETIF_F_GSO_UDP_TUNNEL |
--		NETIF_F_GSO_UDP_TUNNEL_CSUM | NETIF_F_SCTP_CRC;
-+		NETIF_F_GSO_UDP_TUNNEL_CSUM | NETIF_F_SCTP_CRC |
-+		NETIF_F_FRAGLIST;
- 
- 	netdev->hw_features |= NETIF_F_IP_CSUM | NETIF_F_IPV6_CSUM |
- 		NETIF_F_HW_VLAN_CTAG_TX | NETIF_F_HW_VLAN_CTAG_RX |
- 		NETIF_F_RXCSUM | NETIF_F_SG | NETIF_F_GSO |
- 		NETIF_F_GRO | NETIF_F_TSO | NETIF_F_TSO6 | NETIF_F_GSO_GRE |
- 		NETIF_F_GSO_GRE_CSUM | NETIF_F_GSO_UDP_TUNNEL |
--		NETIF_F_GSO_UDP_TUNNEL_CSUM | NETIF_F_SCTP_CRC;
-+		NETIF_F_GSO_UDP_TUNNEL_CSUM | NETIF_F_SCTP_CRC |
-+		NETIF_F_FRAGLIST;
- 
- 	if (pdev->revision >= 0x21) {
- 		netdev->hw_features |= NETIF_F_GRO_HW;
-@@ -2447,7 +2518,7 @@ void hns3_clean_tx_ring(struct hns3_enet_ring *ring)
- 	netdev_tx_completed_queue(dev_queue, pkts, bytes);
- 
- 	if (unlikely(pkts && netif_carrier_ok(netdev) &&
--		     (ring_space(ring) > HNS3_MAX_BD_PER_PKT))) {
-+		     ring_space(ring) > HNS3_MAX_TSO_BD_NUM)) {
- 		/* Make sure that anybody stopping the queue after this
- 		 * sees the new next_to_clean.
- 		 */
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-index 2110fa3..c5b7c22 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-@@ -76,7 +76,7 @@ enum hns3_nic_state {
- #define HNS3_RING_NAME_LEN			16
- #define HNS3_BUFFER_SIZE_2048			2048
- #define HNS3_RING_MAX_PENDING			32760
--#define HNS3_RING_MIN_PENDING			24
-+#define HNS3_RING_MIN_PENDING			72
- #define HNS3_RING_BD_MULTIPLE			8
- /* max frame size of mac */
- #define HNS3_MAC_MAX_FRAME			9728
-@@ -195,9 +195,13 @@ enum hns3_nic_state {
- #define HNS3_VECTOR_INITED			1
- 
- #define HNS3_MAX_BD_SIZE			65535
--#define HNS3_MAX_BD_NUM_NORMAL			8
--#define HNS3_MAX_BD_NUM_TSO			63
--#define HNS3_MAX_BD_PER_PKT			MAX_SKB_FRAGS
-+#define HNS3_MAX_NON_TSO_BD_NUM			8U
-+#define HNS3_MAX_TSO_BD_NUM			63U
-+#define HNS3_MAX_TSO_SIZE \
-+	(HNS3_MAX_BD_SIZE * HNS3_MAX_TSO_BD_NUM)
++static void hclgevf_parse_promisc_info(struct hclgevf_dev *hdev,
++				       u16 promisc_info)
++{
++	if (!promisc_info)
++		dev_info(&hdev->pdev->dev,
++			 "Promisc mode is closed by host for being untrusted.\n");
++}
 +
-+#define HNS3_MAX_NON_TSO_SIZE \
-+	(HNS3_MAX_BD_SIZE * HNS3_MAX_NON_TSO_BD_NUM)
- 
- #define HNS3_VECTOR_GL0_OFFSET			0x100
- #define HNS3_VECTOR_GL1_OFFSET			0x200
+ void hclgevf_mbx_async_handler(struct hclgevf_dev *hdev)
+ {
+ 	enum hnae3_reset_type reset_type;
+@@ -313,6 +322,9 @@ void hclgevf_mbx_async_handler(struct hclgevf_dev *hdev)
+ 			hclgevf_update_port_base_vlan_info(hdev, state,
+ 							   (u8 *)vlan_info, 8);
+ 			break;
++		case HCLGE_MBX_PUSH_PROMISC_INFO:
++			hclgevf_parse_promisc_info(hdev, msg_q[1]);
++			break;
+ 		default:
+ 			dev_err(&hdev->pdev->dev,
+ 				"fetched unsupported(%d) message from arq\n",
 -- 
 2.7.4
 
