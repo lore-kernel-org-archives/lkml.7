@@ -2,315 +2,116 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AFDFC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 04:36:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED59C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 04:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 219B220659
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 04:36:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F232218DE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 04:41:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="ZrpVFpTO";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZPUKBnkC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729999AbfJHEgL (ORCPT
+        id S1730012AbfJHEl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 00:36:11 -0400
-Received: from foss.arm.com ([217.140.110.172]:54278 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729656AbfJHEgK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 00:36:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A34FF142F;
-        Mon,  7 Oct 2019 21:36:09 -0700 (PDT)
-Received: from [10.162.40.139] (p8cg001049571a15.blr.arm.com [10.162.40.139])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A1A7B3F703;
-        Mon,  7 Oct 2019 21:36:02 -0700 (PDT)
-Subject: Re: [PATCH V8 2/2] arm64/mm: Enable memory hot remove
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
-        will@kernel.org, mark.rutland@arm.com, mhocko@suse.com,
-        david@redhat.com, cai@lca.pw, logang@deltatee.com,
-        cpandya@codeaurora.org, arunks@codeaurora.org,
-        dan.j.williams@intel.com, mgorman@techsingularity.net,
-        osalvador@suse.de, ard.biesheuvel@arm.com, steve.capper@arm.com,
-        broonie@kernel.org, valentin.schneider@arm.com,
-        Robin.Murphy@arm.com, steven.price@arm.com, suzuki.poulose@arm.com,
-        ira.weiny@intel.com
-References: <1569217425-23777-1-git-send-email-anshuman.khandual@arm.com>
- <1569217425-23777-3-git-send-email-anshuman.khandual@arm.com>
- <20191007141738.GA93112@E120351.arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <6c277085-a430-eab4-3a4e-99fcfa170c10@arm.com>
-Date:   Tue, 8 Oct 2019 10:06:26 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 8 Oct 2019 00:41:27 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:49007 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729973AbfJHEl1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 00:41:27 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 9CE865B5D;
+        Tue,  8 Oct 2019 00:41:25 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 08 Oct 2019 00:41:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
+        :to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm3; bh=0/MbfkSuw2RSJPd8KBeC7Wk9MN
+        1nZHnVaswofQbs1mU=; b=ZrpVFpTOOLUr64sBh7etgDbjoWGm7uCK3yDAPlhTue
+        hLYVj4Q7KB00soEftml2+GO0mjtlHc1jE3ORfpSoyNFs8iR03ZA7u9L4HkMUkaF2
+        NpPYt2Sot552QifGSTnFPHnvJSsEZNqCxh9wwIbLswhNWNp5NMqb7Dl8bATnzgKc
+        cyD5uTSls3dogAM49fhc10Cgtv5AM3AT/r1NIToOKanZPWeFwvzaWPMcvnCNCP7Z
+        B0KUzXMYqxazq8lgauk/78f6UagvrWpS3GvoXQSmhW89eI+UKbgfUaoXk3AXFAiy
+        GrKwp2y6SX4BGj9WDapX8Pl+H0+yihKaVnN3cw7ewkJg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=0/MbfkSuw2RSJPd8K
+        BeC7Wk9MN1nZHnVaswofQbs1mU=; b=ZPUKBnkCxSpI5JwzWHuQ8agTBBVhyk6S0
+        IMNDSRWriNuK47GmfmHCUcQ+sHtDukbA5muJ092G68mDmXD8NYjTwX+ugpshWqoq
+        +roaDR4gJYJpzsVdRH5OeXJLVLz5RFsQ3QyiszYv3TOYtItTMLT209nAw++R4mNW
+        UBArhO4pPdp3UjLlKjD5GmkBuqrB/OvN1LZY+jl5j7nVckmj6ffSJzn0PZ4JvlZX
+        K29uSm1KsRXxvrkUeER7gqhuWVYWlg+SLJaFgVlvdZZNIbt89FPpFCKKhIbULxEr
+        EBvclIAsiuJ6pyBlDg6bOhffa9j2l2YcpvsVqG7SkTQUrufYJ0IMw==
+X-ME-Sender: <xms:bxOcXc8BvFgpyiyHvHbWz-06VU0PAXJEWfQ7BgYam9zVYgtSgsgsgg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrheekgdekgecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffoggfgsedtkeertdertd
+    dtnecuhfhrohhmpeetnhgurhgvficulfgvfhhfvghrhicuoegrnhgurhgvfiesrghjrdhi
+    ugdrrghuqeenucfkphepvddtvddrkedurddukedrfedtnecurfgrrhgrmhepmhgrihhlfh
+    hrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:bxOcXTWzME8ZicGT72q9I2QUqe8fd9ggwqvj8eDT20M2QM4q12FNpA>
+    <xmx:bxOcXRp7VOgsL6egZy3dbIkNPugOaxDFyd-c6Mubf_HF2aYsDnZ8WA>
+    <xmx:bxOcXSonE1u_8X41nSABIqcihVA7uvgsLJ_HJwwUXgsrgE1q-aVBmg>
+    <xmx:dROcXTJNQq3E_kvFO-nAbGSVguYjon4iMcZkIR7lCi8vMtaoUhHdfQ>
+Received: from mistburn.au.ibm.com (bh02i525f01.au.ibm.com [202.81.18.30])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 2F35D80064;
+        Tue,  8 Oct 2019 00:41:15 -0400 (EDT)
+From:   Andrew Jeffery <andrew@aj.id.au>
+To:     linux-gpio@vger.kernel.org
+Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        joel@jms.id.au, linux-aspeed@lists.ozlabs.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, johnny_huang@aspeedtech.com,
+        ryanchen.aspeed@gmail.com
+Subject: [PATCH 0/7] pinctrl: Fixes for AST2600 support
+Date:   Tue,  8 Oct 2019 15:11:46 +1030
+Message-Id: <20191008044153.12734-1-andrew@aj.id.au>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20191007141738.GA93112@E120351.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
+This series resolves several issues found in testing by Johnny Huang from
+ASPEED, who also contributed the patches to fix them. We'll have more patches
+from him in the near future (which I'm pretty happy about).
 
-On 10/07/2019 07:47 PM, Catalin Marinas wrote:
-> On Mon, Sep 23, 2019 at 11:13:45AM +0530, Anshuman Khandual wrote:
->> The arch code for hot-remove must tear down portions of the linear map and
->> vmemmap corresponding to memory being removed. In both cases the page
->> tables mapping these regions must be freed, and when sparse vmemmap is in
->> use the memory backing the vmemmap must also be freed.
->>
->> This patch adds unmap_hotplug_range() and free_empty_tables() helpers which
->> can be used to tear down either region and calls it from vmemmap_free() and
->> ___remove_pgd_mapping(). The sparse_vmap argument determines whether the
->> backing memory will be freed.
-> 
-> Can you change the 'sparse_vmap' name to something more meaningful which
-> would suggest freeing of the backing memory?
+The major issue resolved is the way I grouped the eMMC pins. What I had was
+ugly and I want to get rid of it before the binding is solidified with the 5.4
+release.
 
-free_mapped_mem or free_backed_mem ? Even shorter forms like free_mapped or
-free_backed might do as well. Do you have a particular preference here ? But
-yes, sparse_vmap has been very much specific to vmemmap for these functions
-which are now very generic in nature.
+The remaining fixes are minor issues that stem from lack of documentation or
+understanding on my part, and at least one brain-fart.
 
-> 
->> It makes two distinct passes over the kernel page table. In the first pass
->> with unmap_hotplug_range() it unmaps, invalidates applicable TLB cache and
->> frees backing memory if required (vmemmap) for each mapped leaf entry. In
->> the second pass with free_empty_tables() it looks for empty page table
->> sections whose page table page can be unmapped, TLB invalidated and freed.
->>
->> While freeing intermediate level page table pages bail out if any of its
->> entries are still valid. This can happen for partially filled kernel page
->> table either from a previously attempted failed memory hot add or while
->> removing an address range which does not span the entire page table page
->> range.
->>
->> The vmemmap region may share levels of table with the vmalloc region.
->> There can be conflicts between hot remove freeing page table pages with
->> a concurrent vmalloc() walking the kernel page table. This conflict can
->> not just be solved by taking the init_mm ptl because of existing locking
->> scheme in vmalloc(). So free_empty_tables() implements a floor and ceiling
->> method which is borrowed from user page table tear with free_pgd_range()
->> which skips freeing page table pages if intermediate address range is not
->> aligned or maximum floor-ceiling might not own the entire page table page.
->>
->> While here update arch_add_memory() to handle __add_pages() failures by
->> just unmapping recently added kernel linear mapping. Now enable memory hot
->> remove on arm64 platforms by default with ARCH_ENABLE_MEMORY_HOTREMOVE.
->>
->> This implementation is overall inspired from kernel page table tear down
->> procedure on X86 architecture and user page table tear down method.
->>
->> Acked-by: Steve Capper <steve.capper@arm.com>
->> Acked-by: David Hildenbrand <david@redhat.com>
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> 
-> Given the amount of changes since version 7, do the acks still stand?
+Please review!
 
-I had taken the liberty to carry them till V7 where the implementation has
-been sort of structurally similar but as you mention, there have been some
-basic changes in the approach since V7. Will drop these tags in next version
-and request their fresh ACKs once again.
+Andrew
 
-> 
-> [...]
->> +static void free_pte_table(pmd_t *pmdp, unsigned long addr, unsigned long end,
->> +			   unsigned long floor, unsigned long ceiling)
->> +{
->> +	struct page *page;
->> +	pte_t *ptep;
->> +	int i;
->> +
->> +	if (!pgtable_range_aligned(addr, end, floor, ceiling, PMD_MASK))
->> +		return;
->> +
->> +	ptep = pte_offset_kernel(pmdp, 0UL);
->> +	for (i = 0; i < PTRS_PER_PTE; i++) {
->> +		if (!pte_none(READ_ONCE(ptep[i])))
->> +			return;
->> +	}
->> +
->> +	page = pmd_page(READ_ONCE(*pmdp));
-> 
-> Arguably, that's not the pmd page we are freeing here. Even if you get
-> the same result, pmd_page() is normally used for huge pages pointed at
-> by the pmd entry. Since you have the ptep already, why not use
-> virt_to_page(ptep)?
+Andrew Jeffery (4):
+  dt-bindings: pinctrl: aspeed-g6: Rework SD3 function and groups
+  pinctrl: aspeed-g6: Sort pins for sanity
+  pinctrl: aspeed-g6: Fix I2C14 SDA description
+  pinctrl: aspeed-g6: Make SIG_DESC_CLEAR() behave intuitively
 
-Makes sense, will do.
+Johnny Huang (3):
+  pinctrl: aspeed-g6: Fix I3C3/I3C4 pinmux configuration
+  pinctrl: aspeed-g6: Fix UART13 group pinmux
+  pinctrl: aspeed-g6: Rename SD3 to EMMC and rework pin groups
 
-> 
->> +	pmd_clear(pmdp);
->> +	__flush_tlb_kernel_pgtable(addr);
->> +	free_hotplug_pgtable_page(page);
->> +}
->> +
->> +static void free_pmd_table(pud_t *pudp, unsigned long addr, unsigned long end,
->> +			   unsigned long floor, unsigned long ceiling)
->> +{
->> +	struct page *page;
->> +	pmd_t *pmdp;
->> +	int i;
->> +
->> +	if (CONFIG_PGTABLE_LEVELS <= 2)
->> +		return;
->> +
->> +	if (!pgtable_range_aligned(addr, end, floor, ceiling, PUD_MASK))
->> +		return;
->> +
->> +	pmdp = pmd_offset(pudp, 0UL);
->> +	for (i = 0; i < PTRS_PER_PMD; i++) {
->> +		if (!pmd_none(READ_ONCE(pmdp[i])))
->> +			return;
->> +	}
->> +
->> +	page = pud_page(READ_ONCE(*pudp));
-> 
-> Same here, virt_to_page(pmdp).
+ .../pinctrl/aspeed,ast2600-pinctrl.yaml       |  86 ++++++------
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c    | 124 ++++++++----------
+ drivers/pinctrl/aspeed/pinmux-aspeed.h        |   3 +-
+ 3 files changed, 98 insertions(+), 115 deletions(-)
 
-Will do.
+-- 
+2.20.1
 
-> 
->> +	pud_clear(pudp);
->> +	__flush_tlb_kernel_pgtable(addr);
->> +	free_hotplug_pgtable_page(page);
->> +}
->> +
->> +static void free_pud_table(pgd_t *pgdp, unsigned long addr, unsigned  long end,
->> +			   unsigned long floor, unsigned long ceiling)
->> +{
->> +	struct page *page;
->> +	pud_t *pudp;
->> +	int i;
->> +
->> +	if (CONFIG_PGTABLE_LEVELS <= 3)
->> +		return;
->> +
->> +	if (!pgtable_range_aligned(addr, end, floor, ceiling, PGDIR_MASK))
->> +		return;
->> +
->> +	pudp = pud_offset(pgdp, 0UL);
->> +	for (i = 0; i < PTRS_PER_PUD; i++) {
->> +		if (!pud_none(READ_ONCE(pudp[i])))
->> +			return;
->> +	}
->> +
->> +	page = pgd_page(READ_ONCE(*pgdp));
-> 
-> As above.
-
-Will do.
-
-> 
->> +	pgd_clear(pgdp);
->> +	__flush_tlb_kernel_pgtable(addr);
->> +	free_hotplug_pgtable_page(page);
->> +}
->> +
->> +static void unmap_hotplug_pte_range(pmd_t *pmdp, unsigned long addr,
->> +				    unsigned long end, bool sparse_vmap)
->> +{
->> +	struct page *page;
->> +	pte_t *ptep, pte;
->> +
->> +	do {
->> +		ptep = pte_offset_kernel(pmdp, addr);
->> +		pte = READ_ONCE(*ptep);
->> +		if (pte_none(pte))
->> +			continue;
->> +
->> +		WARN_ON(!pte_present(pte));
->> +		page = sparse_vmap ? pte_page(pte) : NULL;
->> +		pte_clear(&init_mm, addr, ptep);
->> +		flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
->> +		if (sparse_vmap)
->> +			free_hotplug_page_range(page, PAGE_SIZE);
-> 
-> You could only set 'page' if sparse_vmap (or even drop 'page' entirely).
-
-I am afraid 'page' is being used to hold pte_page(pte) extraction which
-needs to be freed (sparse_vmap) as we are going to clear the ptep entry
-in the next statement and lose access to it for good. We will need some
-where to hold onto pte_page(pte) across pte_clear() as we cannot free it
-before clearing it's entry and flushing the TLB. Hence wondering how the
-'page' can be completely dropped.
-
-> The compiler is probably smart enough to optimise it but using a
-> pointless ternary operator just makes the code harder to follow.
-
-Not sure I got this but are you suggesting for an 'if' statement here
-
-if (sparse_vmap)
-	page = pte_page(pte);
-
-instead of the current assignment ?
-
-page = sparse_vmap ? pte_page(pte) : NULL;
-
-> 
->> +	} while (addr += PAGE_SIZE, addr < end);
->> +}
-> [...]
->> +static void free_empty_pte_table(pmd_t *pmdp, unsigned long addr,
->> +				 unsigned long end)
->> +{
->> +	pte_t *ptep, pte;
->> +
->> +	do {
->> +		ptep = pte_offset_kernel(pmdp, addr);
->> +		pte = READ_ONCE(*ptep);
->> +		WARN_ON(!pte_none(pte));
->> +	} while (addr += PAGE_SIZE, addr < end);
->> +}
->> +
->> +static void free_empty_pmd_table(pud_t *pudp, unsigned long addr,
->> +				 unsigned long end, unsigned long floor,
->> +				 unsigned long ceiling)
->> +{
->> +	unsigned long next;
->> +	pmd_t *pmdp, pmd;
->> +
->> +	do {
->> +		next = pmd_addr_end(addr, end);
->> +		pmdp = pmd_offset(pudp, addr);
->> +		pmd = READ_ONCE(*pmdp);
->> +		if (pmd_none(pmd))
->> +			continue;
->> +
->> +		WARN_ON(!pmd_present(pmd) || !pmd_table(pmd) || pmd_sect(pmd));
->> +		free_empty_pte_table(pmdp, addr, next);
->> +		free_pte_table(pmdp, addr, next, floor, ceiling);
-> 
-> Do we need two closely named functions here? Can you not collapse
-> free_empty_pud_table() and free_pte_table() into a single one? The same
-> comment for the pmd/pud variants. I just find this confusing.
-
-The two functions could be collapsed into a single one. But just wanted to
-keep free_pxx_table() part which checks floor/ceiling alignment, non-zero
-entries clear off the actual page table walking.
-
-> 
->> +	} while (addr = next, addr < end);
-> 
-> You could make these function in two steps: first, as above, invoke the
-> next level recursively; second, after the do..while loop, check whether
-> it's empty and free the pmd page as in free_pmd_table().
-
-free_pte_table() freeing attempt actually belongs to free_empty_pte_table().
-Yes, free_pte_table() part can be moved inside free_empty_pte_table() after
-it's do..while(). Also s/free_pte_table/free_pte_page to make it sound more
-distinct with respect to free_empty_pte_table(). Just that the pgtable page
-freeing part is still wrapped in a helper function to hide it's details.
-
-But if you prefer not to have these helpers free_pxx_page() and directly
-encode the second step in free_empty_pxx_table(), then will that instead.
-
-> 
->> +}
-> [...]
-> 
