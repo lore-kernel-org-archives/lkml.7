@@ -2,114 +2,119 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 715D6C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 19:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A10E5C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 19:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5403521871
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 19:50:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76EB121871
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 19:50:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NEknN+An"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730409AbfJHTu0 (ORCPT
+        id S1730533AbfJHTum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 15:50:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42322 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729385AbfJHTuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 15:50:25 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BEC321835;
-        Tue,  8 Oct 2019 19:50:24 +0000 (UTC)
-Date:   Tue, 8 Oct 2019 15:50:22 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Joe Lawrence <joe.lawrence@redhat.com>
-Cc:     Miroslav Benes <mbenes@suse.cz>, mingo@redhat.com,
-        jpoimboe@redhat.com, jikos@kernel.org, pmladek@suse.com,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
-Subject: Re: [PATCH 0/3] ftrace: Introduce PERMANENT ftrace_ops flag
-Message-ID: <20191008155022.61db3108@gandalf.local.home>
-In-Reply-To: <20191008193534.GA16675@redhat.com>
-References: <20191007081714.20259-1-mbenes@suse.cz>
-        <20191008193534.GA16675@redhat.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 8 Oct 2019 15:50:42 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42004 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729385AbfJHTum (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 15:50:42 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q12so11393883pff.9
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 12:50:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=m4uzQSP3Au83CY4u9n7jhItUEp/vcRKY4n5Lv4fKXM4=;
+        b=NEknN+AncK8N4y3dBTFRjlKwCZTSN45tB2R19Wdue51byzRgFK6nM32RciwiCAIrZZ
+         xFqf5RC0mQTk3lG5OYT8jlQFtxEBNHC9dp5Dhh2m3Q9+oWws25Vy7E6OKTWyvUj2aAbJ
+         H6ONAOSSaHWDlCR1ES2lfPvBhbkhjW1I+N6Xs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=m4uzQSP3Au83CY4u9n7jhItUEp/vcRKY4n5Lv4fKXM4=;
+        b=B2WJMSH1X9CAHRgf5U+7F2VgyMnRpHLgeUKtlAZJyik2nlbDIgrJHteQMzN5KnVqoS
+         Yd87N1M22WJXhhDpUZ/bvNOyhIX9knhFrF9M4IexJHxSpeTJf6eh2V6/Rj8oe0bwGGMr
+         uVOpJaaIJ6FILn4Ki02D+CD1w/BN3s3F/V1L4KkqDZVI1wjqTxzbfX+7pr/8Tj5szW73
+         N+kJar5ZFcWpV1bQ6sIUrzyzojN5nvHA1eV2QQb//r0EZCG49IjHBMptZHrv4bSjSzZU
+         CMsaSRUAPn+WNAGl80Ep0YdkdnTot33Et8GYkbz97HnsznqVvNGOhYLFoTWMTXLW08eY
+         B0ng==
+X-Gm-Message-State: APjAAAXcJgIdJHx6WHHkUXnUlClmvmarVGCmSdNoFaw9eiTunx5xTSAi
+        vwMUF3z46GKQT1/KJAePDpJzTA==
+X-Google-Smtp-Source: APXvYqzF88Vn4VUDh5dsiErTZYveKRuzhv1DkFqI04BEQC732nyRt5k8P/3eBe/8j0xqwAB7yvXHCw==
+X-Received: by 2002:a17:90a:730a:: with SMTP id m10mr6682606pjk.80.1570564239809;
+        Tue, 08 Oct 2019 12:50:39 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id 30sm13313pjk.25.2019.10.08.12.50.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Oct 2019 12:50:39 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>, devicetree@vger.kernel.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] arm64: dts: rockchip: Fix override mode for rk3399-kevin panel
+Date:   Tue,  8 Oct 2019 12:49:54 -0700
+Message-Id: <20191008124949.1.I674acd441997dd0690c86c9003743aacda1cf5dd@changeid>
+X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 8 Oct 2019 15:35:34 -0400
-Joe Lawrence <joe.lawrence@redhat.com> wrote:
+When I re-posted Sean's original commit to add the override mode for
+the kevin panel, for some reason I didn't notice that the pixel clock
+wasn't quite right.  Looking at /sys/kernel/debug/clk/clk_summary on
+downstream kernels it can be seen that the VOP clock is supposed to be
+266,666,667 Hz achieved by dividing the 800 MHz PLL by 3.
 
-> 
-> I wonder if the opposite would be more intuitive: when ftrace_enabled is
-> not set, don't allow livepatches to register ftrace filters and
-> likewise, don't allow ftrace_enabled to be unset if any livepatches are
-> already registered.  I guess you could make an argument either way, but
-> just offering another option.  Perhaps livepatches should follow similar
-> behavior of other ftrace clients (like perf probes?)
+Looking at history, it seems that even Sean's first patch [1] had this
+funny clock rate.  I'm not sure where it came from since the commit
+message specifically mentioned 26666 kHz and the Chrome OS tree [2]
+can be seen to request 266667 kHz.
 
-I believe I suggested the "PERMANENT" flag, but disabling ftrace_enable
-may be another approach. Might be much easier to maintain.
+In any case, let's fix it up.  This together with my patch [3] to do
+the proper rounding when setting the clock rate makes the VOP clock
+more proper as seen in /sys/kernel/debug/clk/clk_summary.
 
-> 
-> As for the approach in this patchset, is it consistent that livepatches
-> loaded after setting ftrace_enabled to 0 will successfully load, but not
-> execute their new code...  but then when ftrace_enabled is toggled, the
-> new livepatch code remains on?
-> 
-> For example:
-> 
-> 1 - Turn ftrace_enabled off and load the /proc/cmdline livepatch test
->     case, note that it reports a success patching transition, but
->     doesn't run new its code:
-> 
->   % dmesg -C
->   % sysctl kernel.ftrace_enabled=0
->   kernel.ftrace_enabled = 0
->   % insmod lib/livepatch/test_klp_livepatch.ko 
->   % echo $?
->   0
->   % dmesg
->   [  450.579980] livepatch: enabling patch 'test_klp_livepatch'
->   [  450.581243] livepatch: 'test_klp_livepatch': starting patching transition
->   [  451.942971] livepatch: 'test_klp_livepatch': patching complete
->   % cat /proc/cmdline 
->   BOOT_IMAGE=(hd0,msdos1)/boot/vmlinuz-5.4.0-rc2+ root=UUID=c42bb089-b5c1-4e17-82bd-132f55bee54c ro console=ttyS0 console=ttyS0,115200n8 no_timer_check net.ifnames=0 crashkernel=auto
-> 
-> 2 - Turn ftrace_enabled on and see that the livepatch now works:
-> 
->   % sysctl kernel.ftrace_enabled=1
->   kernel.ftrace_enabled = 1
->   % cat /proc/cmdline 
->   test_klp_livepatch: this has been live patched
-> 
-> 3 - Turn ftrace_enabled off and see that it's still enabled:
-> 
->   % sysctl kernel.ftrace_enabled=0
->   kernel.ftrace_enabled = 0
->   % cat /proc/cmdline 
->   test_klp_livepatch: this has been live patched
-> 
-> Steps 2 and 3 match the behavior described by the patchset, but I was
-> particularly wondering what you thought about step 1.
-> 
-> IMHO, I would expect step 1 to fully enable the livepatch, or at the
-> very least, not report a patch transition (though that may confuse
-> userspace tools waiting for that report).
-> 
+[1] https://lore.kernel.org/r/20180206165626.37692-4-seanpaul@chromium.org
+[2] https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-4.4/drivers/gpu/drm/panel/panel-simple.c#1172
+[3] https://lkml.kernel.org/r/20191003114726.v2.1.Ib233b3e706cf6317858384264d5b0ed35657456e@changeid
 
-I think I like your idea better. To prevent ftrace_enable from being
-disabled if a "permanent" option is set. Then we only need to have a
-permanent flag for the ftrace_ops, that will disable the ftrace_enable
-from being cleared. We can also prevent the ftrace_ops from being
-loaded if ftrace_enable is not set and the ftrace_ops has the PERMANENT
-flag set.
+Fixes: 84ebd2da6d04 ("arm64: dts: rockchip: Specify override mode for kevin panel")
+Cc: Sean Paul <seanpaul@chromium.org>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
--- Steve
+ arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
+index e152b0ca0290..b8066868a3fe 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
+@@ -44,7 +44,7 @@
+ 		power-supply = <&pp3300_disp>;
+ 
+ 		panel-timing {
+-			clock-frequency = <266604720>;
++			clock-frequency = <266666667>;
+ 			hactive = <2400>;
+ 			hfront-porch = <48>;
+ 			hback-porch = <84>;
+-- 
+2.23.0.581.g78d2f28ef7-goog
+
