@@ -2,120 +2,161 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E301AECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B0CCC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCA702173B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:23:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 136CE21721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:24:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Lu5t9332"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nCgo7IYz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730799AbfJHNX4 (ORCPT
+        id S1731055AbfJHNYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 09:23:56 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:39731 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730249AbfJHNXz (ORCPT
+        Tue, 8 Oct 2019 09:24:23 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:41093 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730759AbfJHNYX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 09:23:55 -0400
-Received: by mail-qt1-f193.google.com with SMTP id n7so25241501qtb.6
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 06:23:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7Q4s6NaffGbR5MTwYJR6kw9AA12T9aVl8HZYwAcmo7U=;
-        b=Lu5t9332sw3rkpQ77idM5uwOZSTizPp/2c2Rp1i2nsuuZRt+0OoReF8QYw4QrIkH9j
-         MocrxC3BarR1EMhUfZbA1OmqvVpDV5ilFiIj3vaOwLWimihWr6R/umtjBG89Ky+w6Uth
-         mncmokFAaWDQMdXs6dq9yzQUE/EXTPE55IfIBVFlvVxHV1xgKArsQxxcgAbLKrlJIhQN
-         sxK5OsyOFD9hOeNp3NEq7TnK9DcREo7ruUau94/ECzT0gFxJr71oAxt1GUXnqImp5QVB
-         /bmtw95UKHmFKWZpK6dgTvbYS+S6yn/kidr6teEzqqTgZSTN/0byuo6uH2havtCNoCML
-         iwig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7Q4s6NaffGbR5MTwYJR6kw9AA12T9aVl8HZYwAcmo7U=;
-        b=XM1iuTCP1scef5EgAcntiFQpEHq4pyV2V5Gnet9gC6wH13J6nKxH9mNc4YqF4jgTF8
-         UeB/2kqUpj2TsIjf9ZrjxZNUvXacvp6wpT4sq+6qPhduWQIhWs5Oj0gbjonZtg6QEzdk
-         mbF28yakdyHu0Lzkwn+uHueD5meMjt/S5Q1QMwsgWns/CVbkHXQ7FJ/dmMhYiXClbqc9
-         eIE0NchvyqGMDfyM4AXhDyY9a0ObwqkeG+A5HCno0uOze74KaB5vDhBu2dRX5VeD3u/O
-         w+chAQhc1VdBxNTV+W6ciP5p6cUrnyK8cftkXKOy4SJ7ztaW+csFo1MoPzM78LmD057B
-         QM6Q==
-X-Gm-Message-State: APjAAAVStI1BdtYc+1AafdM8kv+nznXH+JthursmfQX5E9oK7tUPxCGX
-        iA4k4T3IAVPthPV22c5E/KvKlw==
-X-Google-Smtp-Source: APXvYqyqj9bfnctaJsILCG/S8S9eIkRiOJXvoK9od3JlzBHgJYL8rQe3cIU9ce69hQodM7iUFmpHJw==
-X-Received: by 2002:ac8:4594:: with SMTP id l20mr35506879qtn.286.1570541034449;
-        Tue, 08 Oct 2019 06:23:54 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id e7sm9048646qtb.94.2019.10.08.06.23.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 08 Oct 2019 06:23:53 -0700 (PDT)
-Message-ID: <1570541032.5576.297.camel@lca.pw>
-Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
-From:   Qian Cai <cai@lca.pw>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Petr Mladek <pmladek@suse.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        sergey.senozhatsky.work@gmail.com, peterz@infradead.org,
-        linux-mm@kvack.org, john.ogness@linutronix.de,
-        akpm@linux-foundation.org, david@redhat.com,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 08 Oct 2019 09:23:52 -0400
-In-Reply-To: <20191008091349.6195830d@gandalf.local.home>
-References: <1570228005-24979-1-git-send-email-cai@lca.pw>
-         <20191007143002.l37bt2lzqtnqjqxu@pathway.suse.cz>
-         <1570460350.5576.290.camel@lca.pw> <20191007151237.GP2381@dhcp22.suse.cz>
-         <1570462407.5576.292.camel@lca.pw>
-         <20191008081510.ptwmb7zflqiup5py@pathway.suse.cz>
-         <20191008091349.6195830d@gandalf.local.home>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
+        Tue, 8 Oct 2019 09:24:23 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20191008132420euoutp01b301fe134f7db6a8387681969aef22e0~LrsYZw6Cc2203922039euoutp01_
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Oct 2019 13:24:20 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20191008132420euoutp01b301fe134f7db6a8387681969aef22e0~LrsYZw6Cc2203922039euoutp01_
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1570541060;
+        bh=Ob1Na4W4T90eV8j0YqGB5NBJ6UrQf6fMR9mVLlx9hhw=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=nCgo7IYz1TWaLHYa52sUL/O9rler0R8vLsNYMo3y5hpYnKuZoY/2vqT7Ht4NwvVja
+         K6Jze2JVETi96V5cLRDTZDWZCAiHAoU1VmNm6Nlrp+YhfZEfoGDLzqpo5BR8pa/1KU
+         0fZmUmE3lY3j6Mgy4jzb+ke1TVZNnB2ymdixUlMU=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20191008132420eucas1p2477fe55bd0955c16161bd7902774b0bd~LrsX-rr2a3151731517eucas1p2y;
+        Tue,  8 Oct 2019 13:24:20 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 7D.12.04374.40E8C9D5; Tue,  8
+        Oct 2019 14:24:20 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20191008132420eucas1p2667e629e69d2ebd5953e12db59310d44~LrsXm2jxh2657326573eucas1p2z;
+        Tue,  8 Oct 2019 13:24:20 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191008132420eusmtrp1d11b204830bd986678526ae9a1d81d1b~LrsXmJ76d2042520425eusmtrp1T;
+        Tue,  8 Oct 2019 13:24:20 +0000 (GMT)
+X-AuditID: cbfec7f5-4ddff70000001116-2b-5d9c8e040063
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id E3.9E.04117.30E8C9D5; Tue,  8
+        Oct 2019 14:24:20 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191008132419eusmtip15df08db38d5589c35b0c9fa22a9d9a1c~LrsXK_Cse2389723897eusmtip1_;
+        Tue,  8 Oct 2019 13:24:19 +0000 (GMT)
+Subject: Re: [PATCH] regulator: core: Skip balancing of the enabled
+ regulators in regulator_enable()
+To:     Mark Brown <broonie@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     linux-kernel@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-samsung-soc@vger.kernel.org,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Kamil Konieczny <k.konieczny@samsung.com>
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <86b9b4b5-cca5-9052-7c87-c5679dfffff4@samsung.com>
+Date:   Tue, 8 Oct 2019 15:24:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20191008124736.GJ4382@sirena.co.uk>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHfXd2zo7D6XGaPmhajOhDkU0qOTkTtT6M+hJ9iKjUZh6neG3H
+        u0WG91maimVzmRQ2b4Wt5S0VbzhEVLTwmqHoBzEGeStKp7UdBb/9nsv/eZ7/y0ti4k7cjYyK
+        S2RUcYoYCSHkNw/8GTnFL9IGS+d07nT5whJBN6wuIrp6rQKnR0ebBPT8y2ke/etrPo/+0q4l
+        6IrRLh79rn9OQH/YlAcI5W2aOYFcX19AyL9NdBDyYrNUXmSoR/J1vedV4qbQL5yJiUpmVKf9
+        7wgj83SVWEKuXaq+uxPLRLO2akSSQJ2FmpwraiQkxVQtguHcdpwLNhBMF5YSXLCOwPS5iqdG
+        tlaFMcuMuIIOQclmGd9SEFMmBI+6cAs7URFQurJhzTtT16CquQGzMEYZeDCYlWJhgvKFkrx6
+        ZGER5Q/rHTNWLZ86Bk09P6z9h6gbsDbfh3M9jjD4Ysk605byhr6/3Tg3Uwr9r7V77AozS694
+        HB+BFpMWsxwK1IgApkaeEZyDS1Ci78E5doIVo0HA8WEYKnvM5wTvEZjzl/fULQh0ZTt7ahn0
+        Gcdw7vUCIbsxnEN7mDI5covtobT5OcalRZCfK+aEx6HpbROxv0rdVoc9RRLNAWuaA3Y0B+xo
+        DtipRvx65MoksbFKhj0Tx6R4sYpYNilO6XU3PlaP/n+qoR3jZivq2g7rRRSJJHaigHRtsBhX
+        JLNpsb0ISEziLPKsqQgWi8IVaemMKj5UlRTDsL3IneRLXEUZNvO3xJRSkchEM0wCo9qv8khb
+        t0w0vbzbrkzLzjpnGPO9H1Ew6VIuS90KcglhpZ8uTI2sRqu+U/cCn2R6eLSG6Vo7Hcyy6wvj
+        IeejhrcLg4uTWY83nj6XZx865ExUIhTw++OkTH173BA0VC7YfbDVXL1I+dQZpX4nQxuP7jS6
+        TpZGuRR1G3K7Ltba7MoGoDj1Z8aqhM9GKrxPYCpW8Q8fTSFdUAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPIsWRmVeSWpSXmKPExsVy+t/xu7osfXNiDX7NZrKY+vAJm8Xqj48Z
+        LRZ8msFqcf78BnaLB3NvMll8u9LBZHF51xw2ixnn9zFZrD1yl91i41cPBy6PnbPusntsWtXJ
+        5nHn2h42j/6/Bh59W1YxenzeJBfAFqVnU5RfWpKqkJFfXGKrFG1oYaRnaGmhZ2RiqWdobB5r
+        ZWSqpG9nk5Kak1mWWqRvl6CX0b58NnNBG0/FpgN7mRsYb3N2MXJySAiYSBxv/svYxcjFISSw
+        lFHi88H3TF2MHEAJGYnj68sgaoQl/lzrYoOoec0o8b77DitIQlggTeL+4ceMILaIQJDE5nmb
+        2UFsZoEtTBL3/yRBNHxgkph76zELSIJNwEpiYvsqsAZeATuJz3tugQ1iEVCR2HDwNTOILSoQ
+        IXF4xyyoGkGJkzOfgPVyChhKHP51gBVigZ7Ejuu/oGxxiVtP5jNB2PIS29/OYZ7AKDQLSfss
+        JC2zkLTMQtKygJFlFaNIamlxbnpusZFecWJucWleul5yfu4mRmBkbjv2c8sOxq53wYcYBTgY
+        lXh4HarmxAqxJpYVV+YeYpTgYFYS4ZVbOiNWiDclsbIqtSg/vqg0J7X4EKMp0HMTmaVEk/OB
+        SSOvJN7Q1NDcwtLQ3Njc2MxCSZy3Q+BgjJBAemJJanZqakFqEUwfEwenVANjg9hL7ykOpk+V
+        Bdd2f5NurjnRb1c/6eaUcrdrR1e6SYmvZ+XQMTbV8OiOiDh2J9FbyXi3lwW3wJq4xWqKPl/3
+        T9Ks/H4/9OTriEnrV646tEpY4sNMPp8bb3YFdq78xseYeNV3ySupeT/8n0qe519/aNriJ5ti
+        liQpJ+15t6dM/C5H++4kRTsBJZbijERDLeai4kQAOk+I/eICAAA=
+X-CMS-MailID: 20191008132420eucas1p2667e629e69d2ebd5953e12db59310d44
+X-Msg-Generator: CA
+X-RootMTR: 20191008101720eucas1p2e0d1bca6e696848bf689067e05620679
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191008101720eucas1p2e0d1bca6e696848bf689067e05620679
+References: <CGME20191008101720eucas1p2e0d1bca6e696848bf689067e05620679@eucas1p2.samsung.com>
+        <20191008101709.13827-1-m.szyprowski@samsung.com>
+        <20191008115025.GF4382@sirena.co.uk>
+        <0e222fdd-4407-51ea-b75c-a62621cbe622@samsung.com>
+        <20191008120611.GG4382@sirena.co.uk>
+        <9268b455-ec66-97e1-909d-f964ac31c0ef@samsung.com>
+        <20191008124736.GJ4382@sirena.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-10-08 at 09:13 -0400, Steven Rostedt wrote:
-> On Tue, 8 Oct 2019 10:15:10 +0200
-> Petr Mladek <pmladek@suse.com> wrote:
-> 
-> > There are basically three possibilities:
-> > 
-> > 1. Do crazy exercises with locks all around the kernel to
-> >    avoid the deadlocks. It is usually not worth it. And
-> >    it is a "whack a mole" approach.
-> > 
-> > 2. Use printk_deferred() in problematic code paths. It is
-> >    a "whack a mole" approach as well. And we would end up
-> >    with printk_deferred() used almost everywhere.
-> > 
-> > 3. Always deffer the console handling in printk(). This would
-> >    help also to avoid soft lockups. Several people pushed
-> >    against this last few years because it might reduce
-> >    the chance to see the message in case of system crash.
-> > 
-> > As I said, there has finally been agreement to always do
-> > the offload few weeks ago. John Ogness is working on it.
-> > So we might have the systematic solution for these deadlocks
-> > rather sooner than later.
-> 
-> Another solution is to add the printk_deferred() in these places that
-> cause lockdep splats, and when John's work is done, it would be easy to
-> grep for them and remove them as they would no longer be needed.
-> 
-> This way we don't play whack-a-mole forever (only until we have a
-> proper solution) and everyone is happy that we no longer have these
-> false positive or I-don't-care lockdep splats which hide real lockdep
-> splats because lockdep shuts off as soon as it discovers its first
-> splat.
 
-I feel like that is what I trying to do, but there seems a lot of resistances
-with that approach where pragmatism met with perfectionism.
+On 10/8/19 2:47 PM, Mark Brown wrote:
+> On Tue, Oct 08, 2019 at 02:38:55PM +0200, Marek Szyprowski wrote:
+> 
+>> Then if I get it right, the issue is caused by the commit 7f93ff73f7c8 
+>> ("opp: core: add regulators enable and disable"). I've checked and 
+>> indeed reverting it fixes Peach Pi to boot properly. The question is if 
+>> this is desired behavior or not?
+> 
+> That doesn't seem ideal - either it's redundant for regulators that need
+> to be marked as always-on anyway or it's going to force the regulators
+> on when a device could do runtime PM (eg, if the same code can run on
+> something like a GPU which can be turned off while the screen is off or
+> is displaying a static image).
+
+Commit 7f93ff73f7c8 ("opp: core: add regulators enable and disable")
+currently can be safely reverted as all affected users use always-on
+regulators. However IMHO it should be possible to enable always-on
+regulator without side-effects.
+
+When it comes to setting regulator constraints before doing enable
+operation, it also seems to be possible solution but would require
+splitting regulator_set_voltage() operation on two functions:
+
+- one for setting constraints (before regulator_enable() operation)
+
+- the other one actually setting voltage (after enable operation)
+
+Unfortunately this is much bigger task and doesn't seem to be -rc
+time material so I'm in favor of just applying Marek's fix as it is
+for now.
+ 
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
