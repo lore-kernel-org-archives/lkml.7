@@ -2,105 +2,86 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB2E2C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 950B0C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BADF2206BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EAD62070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:07:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730586AbfJHLF0 (ORCPT
+        id S1730532AbfJHLHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 07:05:26 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47755 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730118AbfJHLFZ (ORCPT
+        Tue, 8 Oct 2019 07:07:45 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:51062 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730278AbfJHLHo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 07:05:25 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iHnIt-0007nn-Su; Tue, 08 Oct 2019 13:05:20 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 78CEA1C0325;
-        Tue,  8 Oct 2019 13:05:19 +0200 (CEST)
-Date:   Tue, 08 Oct 2019 11:05:19 -0000
-From:   "tip-bot2 for Colin Ian King" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: efi/urgent] efi/tpm: Fix sanity check of unsigned tbl_size
- being less than zero
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kernel-janitors@vger.kernel.org, linux-efi@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191008100153.8499-1-colin.king@canonical.com>
-References: <20191008100153.8499-1-colin.king@canonical.com>
+        Tue, 8 Oct 2019 07:07:44 -0400
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iHnLC-0006Y9-JQ; Tue, 08 Oct 2019 12:07:42 +0100
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1iHnLB-0003al-Rh; Tue, 08 Oct 2019 12:07:41 +0100
+From:   Ben Dooks <ben.dooks@codethink.co.uk>
+To:     linux-kernel@vger.kernel.org, nouveau@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Cc:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: [PATCH 3/3] drm/nouveau/kms/nv50-: include n50_display.h for nv50_display_create
+Date:   Tue,  8 Oct 2019 12:07:39 +0100
+Message-Id: <20191008110739.13757-3-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191008110739.13757-1-ben.dooks@codethink.co.uk>
+References: <20191008110739.13757-1-ben.dooks@codethink.co.uk>
 MIME-Version: 1.0
-Message-ID: <157053271938.9978.4783819046234300891.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the efi/urgent branch of tip:
+Include n50_display.h for the definition of nv50_display_create to
+fix the warning (and remove the now non-exported definitions in the
+n50_display.h to allow the code to build):
 
-Commit-ID:     be59d57f98065af0b8472f66a0a969207b168680
-Gitweb:        https://git.kernel.org/tip/be59d57f98065af0b8472f66a0a969207b168680
-Author:        Colin Ian King <colin.king@canonical.com>
-AuthorDate:    Tue, 08 Oct 2019 11:01:53 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 08 Oct 2019 13:01:09 +02:00
+drivers/gpu/drm/nouveau/dispnv50/disp.c:2297:1: warning: symbol 'nv50_display_create' was not declared. Should it be static?
 
-efi/tpm: Fix sanity check of unsigned tbl_size being less than zero
-
-Currently the check for tbl_size being less than zero is always false
-because tbl_size is unsigned. Fix this by making it a signed int.
-
-Addresses-Coverity: ("Unsigned compared against 0")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Jerry Snitselaar <jsnitsel@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: kernel-janitors@vger.kernel.org
-Cc: linux-efi@vger.kernel.org
-Fixes: e658c82be556 ("efi/tpm: Only set 'efi_tpm_final_log_size' after successful event log parsing")
-Link: https://lkml.kernel.org/r/20191008100153.8499-1-colin.king@canonical.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
 ---
- drivers/firmware/efi/tpm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/nouveau/dispnv50/disp.c | 2 ++
+ drivers/gpu/drm/nouveau/nv50_display.h  | 3 ---
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/firmware/efi/tpm.c b/drivers/firmware/efi/tpm.c
-index 703469c..ebd7977 100644
---- a/drivers/firmware/efi/tpm.c
-+++ b/drivers/firmware/efi/tpm.c
-@@ -40,7 +40,7 @@ int __init efi_tpm_eventlog_init(void)
- {
- 	struct linux_efi_tpm_eventlog *log_tbl;
- 	struct efi_tcg2_final_events_table *final_tbl;
--	unsigned int tbl_size;
-+	int tbl_size;
- 	int ret = 0;
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+index b46be8a091e9..f7774cc927d8 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+@@ -53,6 +53,8 @@
+ #include "nouveau_fence.h"
+ #include "nouveau_fbcon.h"
  
- 	if (efi.tpm_log == EFI_INVALID_TABLE_ADDR) {
++#include "nv50_display.h"
++
+ #include <subdev/bios/dp.h>
+ 
+ /******************************************************************************
+diff --git a/drivers/gpu/drm/nouveau/nv50_display.h b/drivers/gpu/drm/nouveau/nv50_display.h
+index fbd3b15583bc..2421401d1263 100644
+--- a/drivers/gpu/drm/nouveau/nv50_display.h
++++ b/drivers/gpu/drm/nouveau/nv50_display.h
+@@ -31,7 +31,4 @@
+ #include "nouveau_reg.h"
+ 
+ int  nv50_display_create(struct drm_device *);
+-void nv50_display_destroy(struct drm_device *);
+-int  nv50_display_init(struct drm_device *);
+-void nv50_display_fini(struct drm_device *);
+ #endif /* __NV50_DISPLAY_H__ */
+-- 
+2.23.0
+
