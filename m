@@ -2,106 +2,86 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3CA0C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D669AC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2E70206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:20:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAD9221721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:22:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v8a8BLbd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727412AbfJHPU5 (ORCPT
+        id S1727409AbfJHPWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 11:20:57 -0400
-Received: from smtprelay0242.hostedemail.com ([216.40.44.242]:41673 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725989AbfJHPU5 (ORCPT
+        Tue, 8 Oct 2019 11:22:20 -0400
+Received: from mail-vk1-f195.google.com ([209.85.221.195]:33436 "EHLO
+        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbfJHPWU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 11:20:57 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 0BBCA180A68B4;
-        Tue,  8 Oct 2019 15:20:56 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: horn44_806ca6b72c2e
-X-Filterd-Recvd-Size: 2257
-Received: from XPS-9350.home (unknown [47.151.152.152])
-        (Authenticated sender: joe@perches.com)
-        by omf13.hostedemail.com (Postfix) with ESMTPA;
-        Tue,  8 Oct 2019 15:20:55 +0000 (UTC)
-Message-ID: <19c54ca5b3750bebc057e20542ad6c0c2acef960.camel@perches.com>
-Subject: Re: [PATCH] checkpatch: use patch subject when reading from stdin
-From:   Joe Perches <joe@perches.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Andy Whitcroft <apw@canonical.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org
-Date:   Tue, 08 Oct 2019 08:20:53 -0700
-In-Reply-To: <20191008094006.8251-1-geert+renesas@glider.be>
-References: <20191008094006.8251-1-geert+renesas@glider.be>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
+        Tue, 8 Oct 2019 11:22:20 -0400
+Received: by mail-vk1-f195.google.com with SMTP id s21so117341vkm.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 08:22:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OaNDrHWuf2YNQdBBfgofGBEnuYpRlrKz3qdtkWdVupc=;
+        b=v8a8BLbdp886LwnyKcfcEzNg2DWslLphnhUYmwRCdeDXyhD/wXHxf4UFzmxxSVDOfX
+         Y1SLDNnrIm9He9kujuCj924lKLMQu5Z3O+l7M4oWU3xCNqMchlsFmC+n4ehVTSlrfS76
+         2ulnZTIoMM5YedI9n6jmBy5xfZxmHnXDV4ysoXI05s5LhCKxOyheUE7elUKrTUdsJ8l9
+         CPqMlgBUGzW78/ZkC+FSC3BgoztHmMZbNFcXHrzGI0dLP2Dx8+3rzPcTlTJBPgAEuMny
+         8kjO/eWWuhQ8pv7o+C/E/TMu/Yz49mJfamMWzKXbV24ANgzodOhPMegFzlnq2x103GLK
+         ZClQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OaNDrHWuf2YNQdBBfgofGBEnuYpRlrKz3qdtkWdVupc=;
+        b=eqtEXTkxG6ZwgkL6UuAk7a68vHC3e6EHfDEY6cb+pj0wXHM+9R1fMHmYBPaosgn9AY
+         PLcaaZVfee9yr1EGrjPXKIIIfvxhyxbXzZxijq9NPe/40FzVnciap1782khTE7A1bidm
+         HH+IGTtaGjrdAkjKxR5me4wIxYqa2km2Jad8qM4cAkuddKdVVfoQM8OqFBSDPblXte7u
+         jn12lFngCItgq/PxSgfSvBnDfohCyCgVg2Sno9SV+D89dSQdlKnHzZii68ndSebzIIys
+         puQKrmKJIfLPql6h9zBzkCmGPdc72FNNYQsHhH9eK7bgN9NlUgdhZvGIQsVjO7rvenom
+         aNDg==
+X-Gm-Message-State: APjAAAWOr9XVeS4ZUfFAXKO2HDgQhNq+qFJmvT3zDl1gnV6SdJt/SytX
+        Tif9BL73E70nsLwgJXY49cAzeuANUik1DSAzfLq92Q==
+X-Google-Smtp-Source: APXvYqw0cdHQAFUr9qXPA3syc72BDMnRBk0iMwv2cwlFyFw144X/NmOqKsuIGB6TOtCy8QxQCPWIn0sPHjmd721wUpk=
+X-Received: by 2002:a1f:5003:: with SMTP id e3mr3693062vkb.35.1570548138747;
+ Tue, 08 Oct 2019 08:22:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20191007201452.208067-1-samitolvanen@google.com>
+ <CAKwvOdmaMaO-Gpv2x0CWG+CRUCNKbNWJij97Jr0LaRaZXjAiTA@mail.gmail.com>
+ <CABCJKufxncBPOx6==57asbMF_On=g1sZAv+w6RnqHJFSwOSeTw@mail.gmail.com> <CAKwvOd=k5iE8L5xbxwYDF=hSftqUXDdpgKYBDBa35XOkAx3d0w@mail.gmail.com>
+In-Reply-To: <CAKwvOd=k5iE8L5xbxwYDF=hSftqUXDdpgKYBDBa35XOkAx3d0w@mail.gmail.com>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Tue, 8 Oct 2019 08:22:07 -0700
+Message-ID: <CABCJKucPcqSS=8dP-6hOwGpKUYxOk8Q_Av83O0A2A85JKznypQ@mail.gmail.com>
+Subject: Re: [PATCH] arm64: lse: fix LSE atomics with LLVM's integrated assembler
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-10-08 at 11:40 +0200, Geert Uytterhoeven wrote:
-> When reading a patch file from standard input, checkpatch calls it "Your
-> patch", and reports its state as:
-> 
->     Your patch has style problems, please review.
-> 
-> or:
-> 
->     Your patch has no obvious style problems and is ready for submission.
-> 
-> Hence when checking multiple patches by piping them to checkpatch, e.g.
-> when checking patchwork bundles using:
-> 
->     formail -s scripts/checkpatch.pl < bundle-foo.mbox
-> 
-> it is difficult to identify which patches need to be reviewed and
-> improved.
-> 
-> Fix this by replacing "Your patch" by the patch subject, if present.
-[]
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-[]
-> @@ -1047,6 +1047,10 @@ for my $filename (@ARGV) {
->  	}
->  	while (<$FILE>) {
->  		chomp;
-> +		if ($vname eq 'Your patch') {
-> +			my ($subject) = $_ =~ /^Subject:\s*(.*)/;
-> +			$vname = '"' . $subject . '"' if $subject;
+On Mon, Oct 7, 2019 at 2:46 PM 'Nick Desaulniers' via Clang Built
+Linux <clang-built-linux@googlegroups.com> wrote:
+> I'm worried that one of these might lower to LSE atomics without
+> ALTERNATIVE guards by blanketing all C code with `-march=armv8-a+lse`.
 
-Hi again Geert.
+True, that's a valid concern. I think adding the directive to each
+assembly block is the way forward then, assuming the maintainers are
+fine with that.
 
-Just some stylistic nits:
-
-$filename is not quoted so I think adding quotes
-before and after $subject may not be useful.
-
-Can you please use what checkpatch uses as a more
-common parenthesis style after an if?
-
-i.e. use:
-	if (foo)
-not
-	if foo
-
-so maybe:
-
-	if ($filename eq '-' && $_ =~ /^Subject:\s*(.*)/) {
-		$vname = $1;
-	}
-
-or maybe
-
-	$vname = $1 if ($filename eq '-' && $_ =~ /^Subject:\s*(.*)/);
-
-
+Sami
