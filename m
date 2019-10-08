@@ -2,87 +2,125 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F5AC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA26C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E283420815
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:15:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570547753;
-	bh=14pGX9PvbF+akybdQEtzMfsaYMZBPxv3t73fc4rSR1c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lskElpdCbaYJKlUYCWse7NntSfSgfvgHJEfSMNS4+hybl3g65W6mrIlvKPxsTU1hD
-	 HyVSJvHIUPIh8dexlNvkiiGMXJmcOGmaT/knWX5DoZJOBAn0AwMPuttwsryJdaVx+4
-	 Rzge+/20oNPF3M0YkH+PV2HVbuCzDkgGIuZ+QtJE=
+	by mail.kernel.org (Postfix) with ESMTP id D812D20679
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:16:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Y/UWuuHg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726257AbfJHPPw (ORCPT
+        id S1727536AbfJHPQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 11:15:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40298 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725908AbfJHPPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 11:15:51 -0400
-Received: from localhost (unknown [89.205.136.99])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E17ED20679;
-        Tue,  8 Oct 2019 15:15:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570547751;
-        bh=14pGX9PvbF+akybdQEtzMfsaYMZBPxv3t73fc4rSR1c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dD0f4/Z5w+0yDxR21yp+DBWrDToCk0WdffreftjEXgmXWBmbOGKpMREZAX8+0CUC5
-         v2DPKAbAyvHTJyNq4Kw8+v/wgKwA8I5FELERJD97xvmb4FEYc2TvWQHc2zquFVl923
-         G5CZH3Bgwdd2iA2v4L7suNTZzttz8DbGtJ90luLc=
-Date:   Tue, 8 Oct 2019 17:15:47 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Matteo Croce <mcroce@redhat.com>, devel@driverdev.osuosl.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Eric Anholt <eric@anholt.net>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        Stefan Wahren <wahrenst@gmx.net>
-Subject: Re: [PATCH] staging: vchiq: don't leak kernel address
-Message-ID: <20191008151547.GA2864822@kroah.com>
-References: <20191008123346.3931-1-mcroce@redhat.com>
- <20191008131518.GH25098@kadam>
- <CAGnkfhxefH+3YKDWQMCOYoj1skcq6rUmHuiHZQ-76YixFqbQjg@mail.gmail.com>
- <20191008142517.GO21515@kadam>
+        Tue, 8 Oct 2019 11:16:20 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:36682 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726291AbfJHPQU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 11:16:20 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x98FCpaM126200;
+        Tue, 8 Oct 2019 15:15:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : in-reply-to : message-id : references : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=G3hEXpcqfex8tKkgNX8GKdCKE+z2Dp/2HG2CbwOSfg0=;
+ b=Y/UWuuHgnhvwYn3IWR4zKaD1rSQ/rjm71tVZQVCqYNZFNBNGrbgZVRCsTXxHEVR8yLOZ
+ 9aY11pb4lr+XCfrd8bN+lEIEX3L+ygZfdyZPCQFyyzYEZ9FPeYfpToKXs6VTE7yC7Nd/
+ rFvt5K+lc0lSwAFSTBLtUF3tA/md7ZwZ6LIGXM1V9F5/znaFpzOBZGuL1XT0mD3efiBX
+ 5mazH27pI22iMWTifvxp5IJChrmIpXVCb/w0IhRF3xqbK8sW0GmDs40PPOz9e762czG+
+ 9tbefRrROSNUIVjhut6bj5p9qiHMbhdcTM7TM8WA/NrK+5i8RwCn7HNTAJ5P7XhAkMpZ JA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2vejkue1p7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 08 Oct 2019 15:15:33 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x98FFIKj143243;
+        Tue, 8 Oct 2019 15:15:32 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2vg206hdkc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 08 Oct 2019 15:15:32 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x98FFJa2016720;
+        Tue, 8 Oct 2019 15:15:19 GMT
+Received: from dhcp-10-175-191-48.vpn.oracle.com (/10.175.191.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 08 Oct 2019 15:15:18 +0000
+Date:   Tue, 8 Oct 2019 16:15:09 +0100 (BST)
+From:   Alan Maguire <alan.maguire@oracle.com>
+X-X-Sender: alan@dhcp-10-175-191-48.vpn.oracle.com
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+cc:     Alan Maguire <alan.maguire@oracle.com>,
+        linux-kselftest@vger.kernel.org, brendanhiggins@google.com,
+        skhan@linuxfoundation.org, mcgrof@kernel.org,
+        keescook@chromium.org, yzaikin@google.com,
+        akpm@linux-foundation.org, yamada.masahiro@socionext.com,
+        catalin.marinas@arm.com, joe.lawrence@redhat.com,
+        penguin-kernel@i-love.sakura.ne.jp, schowdary@nvidia.com,
+        urezki@gmail.com, changbin.du@intel.com,
+        kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Knut Omang <knut.omang@oracle.com>,
+        rdunlap@infradead.org
+Subject: Re: [PATCH linux-kselftest-test 2/3] kunit: allow kunit to be loaded
+ as a module
+In-Reply-To: <20191008145552.GS32742@smile.fi.intel.com>
+Message-ID: <alpine.LRH.2.20.1910081611050.839@dhcp-10-175-191-48.vpn.oracle.com>
+References: <1570545832-32326-1-git-send-email-alan.maguire@oracle.com> <1570545832-32326-3-git-send-email-alan.maguire@oracle.com> <20191008145552.GS32742@smile.fi.intel.com>
+User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191008142517.GO21515@kadam>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=US-ASCII
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9404 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910080135
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9403 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910080135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 05:25:17PM +0300, Dan Carpenter wrote:
-> On Tue, Oct 08, 2019 at 04:21:54PM +0200, Matteo Croce wrote:
-> > On Tue, Oct 8, 2019 at 3:16 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
-> > >
-> > > The subject doesn't match the patch.  It should just be "remove useless
-> > > printk".
-> > >
-> > > regards,
-> > > dan carpenter
-> > >
-> > 
-> > Well, it avoids leaking an address by removing an useless printk.
-> > It seems that GKH already picked the patch in his staging tree, but
-> > I'm fine with both subjects, really,
+On Tue, 8 Oct 2019, Andy Shevchenko wrote:
+
+> On Tue, Oct 08, 2019 at 03:43:51PM +0100, Alan Maguire wrote:
+> > Making kunit itself buildable as a module allows for "always-on"
+> > kunit configuration; specifying CONFIG_KUNIT=m means the module
+> > is built but only used when loaded.  Kunit test modules will load
+> > kunit.ko as an implicit dependency, so simply running
+> > "modprobe my-kunit-tests" will load the tests along with the kunit
+> > module and run them.
 > 
-> The address wasn't leaked because it was already %pK.  The subject
-> says there is an info leak security problem, when the opposite is true.
+> > +#ifdef MODULE
+> 
+> > +#endif /* MODULE */
+> 
+> This is strange. Why do you need ifdef?
+>
 
-I've edited the subject line now.
+Ah, this was an incorrect assumption on my part; I thought that
+declaring a module license for built-in code might trigger a warning 
+during build. I'll remove the #ifdef MODULE around licenses in v3 (v2 has 
+already gone out as I mistakenly initially sent the wrong version of the 
+patches). I've verified that removing it triggers no warnings.
 
-thanks,
+Thanks to you and Randy for spotting this!
 
-greg k-h
+Alan
+
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
+> 
