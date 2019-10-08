@@ -2,90 +2,75 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FF1C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22326ECE58C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A92A21721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:51:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 045B821721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:52:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728429AbfJHWvh (ORCPT
+        id S1729627AbfJHWwH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 18:51:37 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58532 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725848AbfJHWvh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 18:51:37 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 58E5AAE8B;
-        Tue,  8 Oct 2019 22:51:35 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     "J . Bruce Fields" <bfields@fieldses.org>,
-        Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
-Date:   Wed, 09 Oct 2019 09:51:23 +1100
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Neil F Brown <nfbrown@suse.com>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nfs\@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
-        Konstantin Khorenko <khorenko@virtuozzo.com>,
-        Vasiliy Averin <vvs@virtuozzo.com>
-Subject: Re: [PATCH] sunrpc: fix crash when cache_head become valid before update
-In-Reply-To: <20191008202332.GB9151@fieldses.org>
-References: <20191001080359.6034-1-ptikhomirov@virtuozzo.com> <3e455bb4-2a03-551e-6efb-1d41b5258327@virtuozzo.com> <20191008202332.GB9151@fieldses.org>
-Message-ID: <87wodergus.fsf@notabene.neil.brown.name>
+        Tue, 8 Oct 2019 18:52:07 -0400
+Received: from mga05.intel.com ([192.55.52.43]:1870 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725848AbfJHWwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 18:52:07 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 15:52:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,272,1566889200"; 
+   d="scan'208";a="187448951"
+Received: from jhogan1-mobl.ger.corp.intel.com (HELO localhost) ([10.252.2.221])
+  by orsmga008.jf.intel.com with ESMTP; 08 Oct 2019 15:52:02 -0700
+Date:   Wed, 9 Oct 2019 01:52:02 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     James Bottomley <jejb@linux.ibm.com>
+Cc:     linux-integrity@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/2] tpm: Use GFP_KERNEL for allocating struct tpm_buf
+Message-ID: <20191008225202.GA12089@linux.intel.com>
+References: <20191003185103.26347-1-jarkko.sakkinen@linux.intel.com>
+ <20191003185103.26347-2-jarkko.sakkinen@linux.intel.com>
+ <1570148716.10818.19.camel@linux.ibm.com>
+ <20191006095005.GA7660@linux.intel.com>
+ <1570475528.4242.2.camel@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1570475528.4242.2.camel@linux.ibm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+On Mon, Oct 07, 2019 at 12:12:08PM -0700, James Bottomley wrote:
+> From: James Bottomley <James.Bottomley@HansenPartnership.com>
+> Subject: [PATCH] tpm: use GFP kernel for tpm_buf allocations
+> 
+> The current code uses GFP_HIGHMEM, which is wrong because GFP_HIGHMEM
+> (on 32 bit systems) is memory ordinarily inaccessible to the kernel
+> and should only be used for allocations affecting userspace.  In order
+> to make highmem visible to the kernel on 32 bit it has to be kmapped,
+> which consumes valuable entries in the kmap region.  Since the tpm_buf
+> is only ever used in the kernel, switch to using a GFP_KERNEL
+> allocation so as not to waste kmap space on 32 bits.
+> 
+> Fixes: a74f8b36352e (tpm: introduce tpm_buf)
+> Signed-off-by: James Bottomley <James.Bottomley@HansenPartnership.com>
 
-On Tue, Oct 08 2019,  J . Bruce Fields  wrote:
+Thanks a lot. Makes a lot more sense than the patch that I sent.
 
-> On Tue, Oct 08, 2019 at 10:02:53AM +0000, Pavel Tikhomirov wrote:
->> Add Neil to CC, sorry, had lost it somehow...
->
-> Always happy when we can fix a bug by deleting code, and your
-> explanation makes sense to me, but I'll give Neil a chance to look it
-> over if he wants.
+Reviewed-by:  Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-Yes, it makes sense to me.  But I'm not sure that is worth much.  The
-original fix got a Reviewed-by from me but was wrong.
- Acked-by: NeilBrown <neilb@suse.de>
-
-'Acked' is weaker than 'reviewed' - isn't it? :-)
-
-NeilBrown
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl2dEusACgkQOeye3VZi
-gbnopA//SlaMhjk5SD0KTN4tOa1phmLsB+AQGBNeBjJ7F7JVNoqphvHbWqdp8uYG
-Uy1NulqZGk2MKQ7vDdUDR82S5Y8y5s3bf9UJnpfLYdSEg21m2qTqDFYlt1ldvKsE
-mO0tL9Dz/tAMu+a4OUyEGL7j/3c6/R/U1PFFzNXJKKzlKdfZaWV979BKMoEq+pep
-c9Qiibl6GBIGzbfUZ/mZy77qM5Lrw/mj56P9amfiSL2DdCY4vukray/KTvE4Vbfq
-4WcZ9AgFRayGa7EHlcVObz6Ut3ab46IR+uPG7Sl5VdNaDQRzSmES1cOGl5pK8K4J
-YHdAucVq877MG+/PEzVVhLx5OO3TqV5I+rpuKYiwUD963erdmMa3MAlZJftURubA
-nCIle/g3ngLQnnuu4Ui+kOqJDcABdniuyegSl0fDD2e1Vh+Aj0CXovtu3u/ORsm+
-klK4ndDG2G0ORTuDKrFlqaIVJQ0NrtGkokNWHY3/CPPfguFewId23KwuXfrd4GLm
-fdcCPAvufoGosLA9K1bF+hzBKGhAIwVg1KDmFN4rM1pNF3GfAUg+gWWqQlF7aPy3
-egPYUmrts3RzmuDTinLZ0eEfwNGq4k1B7iJj+1L4ejuZ9XtF7l0wWmCBaWmsoWA7
-1MvBIKLWjBswO64nsIFzz5nBuJkMezQ4n1VjBs4DVJJILTdlryI=
-=5YfV
------END PGP SIGNATURE-----
---=-=-=--
+/Jarkko
