@@ -2,112 +2,137 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 484C4C35280
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:26:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20142C35280
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D04A206C2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:26:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECEB4206C2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:30:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="swu2CpUI"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="qVn3MqVk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729320AbfJHQ0T (ORCPT
+        id S1728429AbfJHQab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 12:26:19 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41291 "EHLO
+        Tue, 8 Oct 2019 12:30:31 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38662 "EHLO
         mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbfJHQ0T (ORCPT
+        with ESMTP id S1727730AbfJHQab (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 12:26:19 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q7so11045000pfh.8;
-        Tue, 08 Oct 2019 09:26:18 -0700 (PDT)
+        Tue, 8 Oct 2019 12:30:31 -0400
+Received: by mail-pf1-f193.google.com with SMTP id h195so11075323pfe.5
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 09:30:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=nUEi7b2Xg516Vucqorkh6nwu1M0azdgypl+CVmTornQ=;
-        b=swu2CpUIg8OQXUWKvhzJvvxfnjce9dVwGW+Kp4Yhmnc1bony+SLXPqGadZxoMQ4X3K
-         ZbwuWTsEGJC+SSZBmHbdlkiEgJ6xLEoBool16ohacH09/pmV5epWPyyKXnGdpgJsJsd9
-         IH6K0bjoidSfQwjaQRtw1bEqSbsTqM9lfgFLYQKo8F2p2UogSrIS7Wy0+oWSt9EFwbFG
-         c5EgQ4SPBSHMMPpjRLT9thMWIthzCrKjCzqXqp40AYQZ846Lzj6LQincDbw44UjK7SFS
-         pc2KNdtk49cYUzCT6YF4+ikr61GIINh3zd9cL3YIsLqFxXRVCoV8L3kEk/tq8ZmlaG0b
-         VF3A==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Jb1e68IiBAcctWybGAcBifRERsBYBG2XWgpUo+6+j8s=;
+        b=qVn3MqVktxq2PUYzf97Mb1SsnXuU+CFrRmTeW9eaoQCcqc50A6TjepVChlhQLfxJZI
+         eYrx9Up4Gdlbf5bIb8lWUhiLDhQAqDJWA7l6T0Xv4Icv/pU8iWZwMdT+a/XvwA0n+jnF
+         56H1E9/RMO6FNRHq4K14CXMhUJ90a+rGI1IiM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nUEi7b2Xg516Vucqorkh6nwu1M0azdgypl+CVmTornQ=;
-        b=tt1SShwh/uVHrRcHtUlZ93LlobBNnPgur/Va5ADgMew2TbuCWBf9EXgK4F7aGxI3gu
-         DkVMnmhXFHge4c4hsxXjOmf1ACKBi6Ne4YXtEP2wgjtJLOxZiIVYvKN6vdcsEwUXSYbB
-         aeo7SzWcV+bWjuYGGUr7YCu7w0QS85K2pfK55DcmV8k5+qHzpQ1cH0cPDkixJMO05KKh
-         Pfdnm5HIdaVRWZ9gkt4Oy6sqKgE3q81SWrn4YWRJIuolCvJSV0IBXy1PIJBLMCd20pcR
-         fnsXGNg9gD+rMLSjxRTueIcZAOPvvhIA7P0paTfqYbRdtKX2phIfRIAt5MVtUNHLSbxH
-         oR4A==
-X-Gm-Message-State: APjAAAW88g/ghdgO4z8nAhw78gNC9TLzIcJcBm4yutvDCcW7Y6x+xQgD
-        LFf97HwfEogrD4FIbfdzxU9IMC3Z
-X-Google-Smtp-Source: APXvYqxSZ5mR4npwRvdNOAmaoGhD0NoABC2Uc6OTEhDb1PsXAYOYcKbb6QmxcLci24zWb95HA6Jg9A==
-X-Received: by 2002:a62:2f84:: with SMTP id v126mr40203018pfv.167.1570551977393;
-        Tue, 08 Oct 2019 09:26:17 -0700 (PDT)
-Received: from ?IPv6:2620:10d:c082:1055::2a69? ([2620:10d:c090:200::3:df92])
-        by smtp.gmail.com with ESMTPSA id b5sm15704840pgb.68.2019.10.08.09.26.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Oct 2019 09:26:16 -0700 (PDT)
-From:   Jes Sorensen <jes.sorensen@gmail.com>
-X-Google-Original-From: Jes Sorensen <Jes.Sorensen@gmail.com>
-Subject: Re: [PATCH] rtl8xxxu: make arrays static, makes object smaller
-To:     Colin King <colin.king@canonical.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191007135313.8443-1-colin.king@canonical.com>
-Message-ID: <87e99b3b-6b1d-4eeb-f08f-00cfff5e3b2b@gmail.com>
-Date:   Tue, 8 Oct 2019 12:26:15 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Jb1e68IiBAcctWybGAcBifRERsBYBG2XWgpUo+6+j8s=;
+        b=aCadKLwJoxKPjwLBm/Xs6wDs9ZI3LFCzeucKhcTUZ15KWWmxFOYGTFF0eYJgoabn+a
+         9ilHQ4qDDCKp1L5Ov6RmGNoxOfyu/DImYoxJgpGRa+O5SjJCnU5iITnxg4VMgU1uWpeR
+         NQAgNJI9ydJpPSzF3glM+8YrP++IkBXwQGuwAH3drfwqDECB/X4AGnwMNvbvSIxN8xxf
+         armNtBshIbgUdjIV2EAg/6hJbCS62pri4DI+I81qJVD3EdgmVK2EszKJNEAB2hj2XTQt
+         O3HP9G0Ktefp5xRoeU5s/H8Dy/Pcvv0MGId0L+d5yejWRLi5hr9iWhCSreVZAfKu/wyy
+         7iYQ==
+X-Gm-Message-State: APjAAAX9f/XslXCU0HU50iYPJxoW9IFeFCPyxIxZv+JFCT+cZIt6F9aL
+        ZMinHlBH1TxqfMoiH76aop/l/A==
+X-Google-Smtp-Source: APXvYqwjuiy6CnH1/xDdp+rt+p65xPZO6oE3SNppoNWoz7D5UyGsdWqbYJXadjf/wHbWyR+ZjUvoLw==
+X-Received: by 2002:a63:60e:: with SMTP id 14mr10751012pgg.179.1570552230117;
+        Tue, 08 Oct 2019 09:30:30 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id l192sm25589080pga.92.2019.10.08.09.30.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Oct 2019 09:30:29 -0700 (PDT)
+Date:   Tue, 8 Oct 2019 12:30:28 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, elver@google.com,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>, rcu@vger.kernel.org
+Subject: Re: [PATCH] rcu: Avoid to modify mask_ofl_ipi in
+ sync_rcu_exp_select_node_cpus()
+Message-ID: <20191008163028.GA136151@google.com>
+References: <20191008050145.4041702-1-boqun.feng@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191007135313.8443-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191008050145.4041702-1-boqun.feng@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/7/19 9:53 AM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+On Tue, Oct 08, 2019 at 01:01:40PM +0800, Boqun Feng wrote:
+> "mask_ofl_ipi" is used for iterate CPUs which IPIs are needed to send
+> to, however in the IPI sending loop, "mask_ofl_ipi" along with another
+> variable "mask_ofl_test" might also get modified to record which CPU's
+> quiesent state can be reported by sync_rcu_exp_select_node_cpus(). Two
+> variables seems to be redundant for such a propose, so this patch clean
+> things a little by solely using "mask_ofl_test" for recording and
+> "mask_ofl_ipi" for iteration. This would improve the readibility of the
+> IPI sending loop in sync_rcu_exp_select_node_cpus().
 > 
-> Don't populate const arrays on the stack but instead make them
-> static. Makes the object code smaller by 60 bytes.
-> 
-> Before:
->     text	   data	    bss	    dec	    hex	filename
->    15133	   8768	      0	  23901	   5d5d	realtek/rtl8xxxu/rtl8xxxu_8192e.o
->    15209	   6392	      0	  21601	   5461	realtek/rtl8xxxu/rtl8xxxu_8723b.o
->   103254	  31202	    576	 135032	  20f78	realtek/rtl8xxxu/rtl8xxxu_core.o
-> 
-> After:
->     text	   data	    bss	    dec	    hex	filename
->    14861	   9024	      0	  23885	   5d4d	realtek/rtl8xxxu/rtl8xxxu_8192e.o
->    14953	   6616	      0	  21569	   5441	realtek/rtl8xxxu/rtl8xxxu_8723b.o
->   102986	  31458	    576	 135020	  20f6c	realtek/rtl8xxxu/rtl8xxxu_core.o
-> 
-> (gcc version 9.2.1, amd64)
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> ---
 
-Looks fine to me!
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-Assume you mean x86_64 since there's no such thing as an amd64 
-architecture :)
+thanks,
 
-Cheers,
-Jes
+ - Joel
 
+>  kernel/rcu/tree_exp.h | 13 ++++++-------
+>  1 file changed, 6 insertions(+), 7 deletions(-)
+> 
+> diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
+> index 69c5aa64fcfd..212470018752 100644
+> --- a/kernel/rcu/tree_exp.h
+> +++ b/kernel/rcu/tree_exp.h
+> @@ -387,10 +387,10 @@ static void sync_rcu_exp_select_node_cpus(struct work_struct *wp)
+>  		}
+>  		ret = smp_call_function_single(cpu, rcu_exp_handler, NULL, 0);
+>  		put_cpu();
+> -		if (!ret) {
+> -			mask_ofl_ipi &= ~mask;
+> +		/* The CPU responses the IPI, and will report QS itself */
+> +		if (!ret)
+>  			continue;
+> -		}
+> +
+>  		/* Failed, raced with CPU hotplug operation. */
+>  		raw_spin_lock_irqsave_rcu_node(rnp, flags);
+>  		if ((rnp->qsmaskinitnext & mask) &&
+> @@ -401,13 +401,12 @@ static void sync_rcu_exp_select_node_cpus(struct work_struct *wp)
+>  			schedule_timeout_uninterruptible(1);
+>  			goto retry_ipi;
+>  		}
+> -		/* CPU really is offline, so we can ignore it. */
+> -		if (!(rnp->expmask & mask))
+> -			mask_ofl_ipi &= ~mask;
+> +		/* CPU really is offline, and we need its QS to pass GP. */
+> +		if (rnp->expmask & mask)
+> +			mask_ofl_test |= mask;
+>  		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+>  	}
+>  	/* Report quiescent states for those that went offline. */
+> -	mask_ofl_test |= mask_ofl_ipi;
+>  	if (mask_ofl_test)
+>  		rcu_report_exp_cpu_mult(rnp, mask_ofl_test, false);
+>  }
+> -- 
+> 2.23.0
+> 
