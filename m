@@ -2,119 +2,192 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 870D4ECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DDB3C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EEAF20679
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:46:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iD4XLUGb"
+	by mail.kernel.org (Postfix) with ESMTP id 1C678206C2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:48:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730647AbfJHLq5 (ORCPT
+        id S1730668AbfJHLsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 07:46:57 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:38228 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730439AbfJHLq5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 07:46:57 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x98Bd9DM132304;
-        Tue, 8 Oct 2019 11:46:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=PzmxrTRLPOfP7XbIeOlj3jtYPqIjtHAyOsTpJymwyfM=;
- b=iD4XLUGbH1qsplCHkkPpUMAHG9eaaqqFGuDMDYfqSvIP08kPvTQvx3HlpwLTqJBYMdzY
- trYXOMFenVL3ZstTuSwUCesO4KI9KM5Z3WKTO11aIZSN6CMUJnF6I7tXuSfaSKfeTIce
- vaLQcc1VFrQaVDzqBGzIMOFXu6ji/MsXJ5hD+TTJwFBdkP49K9iVA7FZtMlHDv6aOvBp
- AZOH64SgcykAiBUqWg/T1eF1Gdjeu1ELFiF+IeV4dRAU0SFDoBf45gP5wjPzzldyX+ZT
- a6rlDfXfodeNyCR8754OV41Ml3EtJ0S3GQHgZ2aD1XkLQjhUGusuajSqgB5qPnxRmkbg Qg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2vejkucscy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 08 Oct 2019 11:46:46 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x98BhSq1017050;
-        Tue, 8 Oct 2019 11:46:46 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2vgeuxqpyt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 08 Oct 2019 11:46:46 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x98Bki1f024655;
-        Tue, 8 Oct 2019 11:46:44 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 08 Oct 2019 04:46:44 -0700
-Date:   Tue, 8 Oct 2019 14:46:37 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Colin King <colin.king@canonical.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>, linux-efi@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] efi/tpm: fix sanity check of unsigned tbl_size
- being less than zero
-Message-ID: <20191008114559.GD25098@kadam>
-References: <20191008100153.8499-1-colin.king@canonical.com>
+        Tue, 8 Oct 2019 07:48:38 -0400
+Received: from foss.arm.com ([217.140.110.172]:34512 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730316AbfJHLsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 07:48:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4E0A315BE;
+        Tue,  8 Oct 2019 04:48:37 -0700 (PDT)
+Received: from [10.162.40.139] (p8cg001049571a15.blr.arm.com [10.162.40.139])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5087D3F703;
+        Tue,  8 Oct 2019 04:48:30 -0700 (PDT)
+Subject: Re: [PATCH V8 2/2] arm64/mm: Enable memory hot remove
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
+        will@kernel.org, mark.rutland@arm.com, mhocko@suse.com,
+        david@redhat.com, cai@lca.pw, logang@deltatee.com,
+        cpandya@codeaurora.org, arunks@codeaurora.org,
+        dan.j.williams@intel.com, mgorman@techsingularity.net,
+        osalvador@suse.de, ard.biesheuvel@arm.com, steve.capper@arm.com,
+        broonie@kernel.org, valentin.schneider@arm.com,
+        Robin.Murphy@arm.com, steven.price@arm.com, suzuki.poulose@arm.com,
+        ira.weiny@intel.com
+References: <1569217425-23777-1-git-send-email-anshuman.khandual@arm.com>
+ <1569217425-23777-3-git-send-email-anshuman.khandual@arm.com>
+ <20191007141738.GA93112@E120351.arm.com>
+ <6c277085-a430-eab4-3a4e-99fcfa170c10@arm.com>
+ <20191008105520.GA5694@arrakis.emea.arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <a352b560-f7f2-489c-4439-5214afde9ae5@arm.com>
+Date:   Tue, 8 Oct 2019 17:18:53 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191008100153.8499-1-colin.king@canonical.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9403 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910080114
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9403 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910080114
+In-Reply-To: <20191008105520.GA5694@arrakis.emea.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 11:01:53AM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+
+
+On 10/08/2019 04:25 PM, Catalin Marinas wrote:
+> On Tue, Oct 08, 2019 at 10:06:26AM +0530, Anshuman Khandual wrote:
+>> On 10/07/2019 07:47 PM, Catalin Marinas wrote:
+>>> On Mon, Sep 23, 2019 at 11:13:45AM +0530, Anshuman Khandual wrote:
+>>>> The arch code for hot-remove must tear down portions of the linear map and
+>>>> vmemmap corresponding to memory being removed. In both cases the page
+>>>> tables mapping these regions must be freed, and when sparse vmemmap is in
+>>>> use the memory backing the vmemmap must also be freed.
+>>>>
+>>>> This patch adds unmap_hotplug_range() and free_empty_tables() helpers which
+>>>> can be used to tear down either region and calls it from vmemmap_free() and
+>>>> ___remove_pgd_mapping(). The sparse_vmap argument determines whether the
+>>>> backing memory will be freed.
+>>>
+>>> Can you change the 'sparse_vmap' name to something more meaningful which
+>>> would suggest freeing of the backing memory?
+>>
+>> free_mapped_mem or free_backed_mem ? Even shorter forms like free_mapped or
+>> free_backed might do as well. Do you have a particular preference here ? But
+>> yes, sparse_vmap has been very much specific to vmemmap for these functions
+>> which are now very generic in nature.
 > 
-> Currently the check for tbl_size being less than zero is always false
-> because tbl_size is unsigned. Fix this by making it a signed int.
+> free_mapped would do.
+
+Sure.
+
 > 
-> Addresses-Coverity: ("Unsigned compared against 0")
-> Fixes: e658c82be556 ("efi/tpm: Only set 'efi_tpm_final_log_size' after successful event log parsing")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/firmware/efi/tpm.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>> +static void unmap_hotplug_pte_range(pmd_t *pmdp, unsigned long addr,
+>>>> +				    unsigned long end, bool sparse_vmap)
+>>>> +{
+>>>> +	struct page *page;
+>>>> +	pte_t *ptep, pte;
+>>>> +
+>>>> +	do {
+>>>> +		ptep = pte_offset_kernel(pmdp, addr);
+>>>> +		pte = READ_ONCE(*ptep);
+>>>> +		if (pte_none(pte))
+>>>> +			continue;
+>>>> +
+>>>> +		WARN_ON(!pte_present(pte));
+>>>> +		page = sparse_vmap ? pte_page(pte) : NULL;
+>>>> +		pte_clear(&init_mm, addr, ptep);
+>>>> +		flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
+>>>> +		if (sparse_vmap)
+>>>> +			free_hotplug_page_range(page, PAGE_SIZE);
+>>>
+>>> You could only set 'page' if sparse_vmap (or even drop 'page' entirely).
+>>
+>> I am afraid 'page' is being used to hold pte_page(pte) extraction which
+>> needs to be freed (sparse_vmap) as we are going to clear the ptep entry
+>> in the next statement and lose access to it for good.
 > 
-> diff --git a/drivers/firmware/efi/tpm.c b/drivers/firmware/efi/tpm.c
-> index 703469c1ab8e..ebd7977653a8 100644
-> --- a/drivers/firmware/efi/tpm.c
-> +++ b/drivers/firmware/efi/tpm.c
-> @@ -40,7 +40,7 @@ int __init efi_tpm_eventlog_init(void)
->  {
->  	struct linux_efi_tpm_eventlog *log_tbl;
->  	struct efi_tcg2_final_events_table *final_tbl;
-> -	unsigned int tbl_size;
-> +	int tbl_size;
->  	int ret = 0;
+> You clear *ptep, not pte.
 
+Ahh, missed that. We have already captured the contents with READ_ONCE().
 
-Do we need to do a "ret = tbl_size;"?  Currently we return success.
-It's a pitty that tpm2_calc_event_log_size() returns a -1 instead of
--EINVAL.
+> 
+>> We will need some
+>> where to hold onto pte_page(pte) across pte_clear() as we cannot free it
+>> before clearing it's entry and flushing the TLB. Hence wondering how the
+>> 'page' can be completely dropped.
+>>
+>>> The compiler is probably smart enough to optimise it but using a
+>>> pointless ternary operator just makes the code harder to follow.
+>>
+>> Not sure I got this but are you suggesting for an 'if' statement here
+>>
+>> if (sparse_vmap)
+>> 	page = pte_page(pte);
+>>
+>> instead of the current assignment ?
+>>
+>> page = sparse_vmap ? pte_page(pte) : NULL;
+> 
+> I suggest:
+> 
+> 	if (sparse_vmap)
+> 		free_hotplug_pgtable_page(pte_page(pte), PAGE_SIZE);
 
-regards,
-dan carpenter
+Sure, will do.
 
+> 
+>>>> +	} while (addr += PAGE_SIZE, addr < end);
+>>>> +}
+>>> [...]
+>>>> +static void free_empty_pte_table(pmd_t *pmdp, unsigned long addr,
+>>>> +				 unsigned long end)
+>>>> +{
+>>>> +	pte_t *ptep, pte;
+>>>> +
+>>>> +	do {
+>>>> +		ptep = pte_offset_kernel(pmdp, addr);
+>>>> +		pte = READ_ONCE(*ptep);
+>>>> +		WARN_ON(!pte_none(pte));
+>>>> +	} while (addr += PAGE_SIZE, addr < end);
+>>>> +}
+>>>> +
+>>>> +static void free_empty_pmd_table(pud_t *pudp, unsigned long addr,
+>>>> +				 unsigned long end, unsigned long floor,
+>>>> +				 unsigned long ceiling)
+>>>> +{
+>>>> +	unsigned long next;
+>>>> +	pmd_t *pmdp, pmd;
+>>>> +
+>>>> +	do {
+>>>> +		next = pmd_addr_end(addr, end);
+>>>> +		pmdp = pmd_offset(pudp, addr);
+>>>> +		pmd = READ_ONCE(*pmdp);
+>>>> +		if (pmd_none(pmd))
+>>>> +			continue;
+>>>> +
+>>>> +		WARN_ON(!pmd_present(pmd) || !pmd_table(pmd) || pmd_sect(pmd));
+>>>> +		free_empty_pte_table(pmdp, addr, next);
+>>>> +		free_pte_table(pmdp, addr, next, floor, ceiling);
+>>>
+>>> Do we need two closely named functions here? Can you not collapse
+>>> free_empty_pud_table() and free_pte_table() into a single one? The same
+>>> comment for the pmd/pud variants. I just find this confusing.
+>>
+>> The two functions could be collapsed into a single one. But just wanted to
+>> keep free_pxx_table() part which checks floor/ceiling alignment, non-zero
+>> entries clear off the actual page table walking.
+> 
+> With the pmd variant, they both take the floor/ceiling argument while
+> the free_empty_pte_table() doesn't even free anything. So not entirely
+> consistent.> 
+> Can you not just copy the free_pgd_range() functions but instead of
+> p*d_free_tlb() just do the TLB invalidation followed by page freeing?
+> That seems to be an easier pattern to follow.
+> 
+
+Sure, will follow that pattern.
