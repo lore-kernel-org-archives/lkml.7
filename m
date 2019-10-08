@@ -2,68 +2,112 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C80C35280
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA99C35280
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9923620815
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:12:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 555FE2070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:14:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cvu49PSP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbfJHQMu (ORCPT
+        id S1728340AbfJHQOJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 12:12:50 -0400
-Received: from mga04.intel.com ([192.55.52.120]:42615 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725908AbfJHQMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 12:12:49 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 09:12:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,270,1566889200"; 
-   d="scan'208";a="206667983"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga001.fm.intel.com with ESMTP; 08 Oct 2019 09:12:47 -0700
-Received: from andy by smile with local (Exim 4.92.2)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iHs6P-0003r1-Mi; Tue, 08 Oct 2019 19:12:45 +0300
-Date:   Tue, 8 Oct 2019 19:12:45 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Tuowen Zhao <ztuowen@gmail.com>, lee.jones@linaro.org,
-        linux-kernel@vger.kernel.org, mika.westerberg@linux.intel.com,
-        acelan.kao@canonical.com, bhelgaas@google.com,
-        kai.heng.feng@canonical.com
-Subject: Re: [PATCH v2] mfd: intel-lpss: use devm_ioremap_uc for MMIO
-Message-ID: <20191008161245.GU32742@smile.fi.intel.com>
-References: <20191007184231.13256-1-ztuowen@gmail.com>
- <20191008151628.GA16384@42.do-not-panic.com>
+        Tue, 8 Oct 2019 12:14:09 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44995 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbfJHQOJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 12:14:09 -0400
+Received: by mail-pg1-f196.google.com with SMTP id u12so2159918pgb.11;
+        Tue, 08 Oct 2019 09:14:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=h9OB7Yk9goI+UzOkxyLvvhXJ7MAQ379CvgaFUxSopZw=;
+        b=Cvu49PSPRSV3frD32/kcP2m7fxOSMEyZJvINAWGErwan5nIXONWLGw3Vc8kN2tfWUk
+         +3L8Dd8fosSyGosULR6NZJ8B+orK2EgxLTq2wDYIG4kgD4nY5oYtTDDmyy7AUEN6ffXi
+         DUonMG6MCMsmI/GV36K2LZ6G9zvydnmg/oQ1cQ1UlABLucD2Z4DxyskXlqopKA5B4IBt
+         PoKD14/W9zjUAh4rqsz2bAaRd72iBVuL5Q2kfhIQ1krF0VRfHeeuJRyrAShNPg8TOLhx
+         AYE27kXmZ7gwRe/MSqfeOCJQ8Q0jBVqXL2xWGOdufq2XbQJy2t2uEEyorcoBIRoGI6UP
+         UHpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=h9OB7Yk9goI+UzOkxyLvvhXJ7MAQ379CvgaFUxSopZw=;
+        b=qJ9Pe+c+gSFQLYYZfYFXB7vmJJjaMZMO6W6QBPCen1ERoGlXYjp5yfEsffljoBZ4ty
+         BK5Ieep+Tqvby2LjoIrWCNM7AjJpopb6RHEZLjnwlUJzmu67WDDqnRr5uMl9psaCHEGe
+         fmgiUQ6kqLw/A1c0sMWYzG5yeAgyrBDRbVltonZhHhHEPabZQ4S9TaBF16RrU9nOFVa9
+         wN5vaKXgphasb/jy8oPxj/iTgvJEYPneD1LyXvv870VClGOgEDVIlIhP/HqXUubDsCE3
+         QOyoxawLDvx9EOk6Oj75+NELNCKD+db82Bx9h2ra656Os/1CBf1YCXuopN8hNkn6AJZ4
+         5HYA==
+X-Gm-Message-State: APjAAAXkjATckx2nwhnXTpVnBFxL+Hk1Jdvtn4m0yAYjHGMEv9rKGw6l
+        kS5mrW5eL0GVbsffojqAMAuTO1wIsV0=
+X-Google-Smtp-Source: APXvYqya6l4jN9TuA4DVxkJGnlOxcv4zyG07PBW6CGV79h86Mvid7dWhwDhjKRdC0nfv9qvD3evaPQ==
+X-Received: by 2002:a63:1749:: with SMTP id 9mr5280034pgx.212.1570551248451;
+        Tue, 08 Oct 2019 09:14:08 -0700 (PDT)
+Received: from gmail.com (c-76-21-95-192.hsd1.ca.comcast.net. [76.21.95.192])
+        by smtp.gmail.com with ESMTPSA id j24sm17416469pff.71.2019.10.08.09.14.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 08 Oct 2019 09:14:07 -0700 (PDT)
+Date:   Tue, 8 Oct 2019 09:14:03 -0700
+From:   William Tu <u9012063@gmail.com>
+To:     Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ip6erspan: remove the incorrect mtu limit for ip6erspan
+Message-ID: <20191008161403.GB118819@gmail.com>
+References: <1570528563-8062-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191008151628.GA16384@42.do-not-panic.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1570528563-8062-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 03:16:28PM +0000, Luis Chamberlain wrote:
-> On Mon, Oct 07, 2019 at 12:42:31PM -0600, Tuowen Zhao wrote:
-> > +EXPORT_SYMBOL(devm_ioremap_uc);
+On Tue, Oct 08, 2019 at 05:56:03PM +0800, Haishuang Yan wrote:
+> ip6erspan driver calls ether_setup(), after commit 61e84623ace3
+> ("net: centralize net_device min/max MTU checking"), the range
+> of mtu is [min_mtu, max_mtu], which is [68, 1500] by default.
 > 
-> EXPORT_SYMBOL_GPL() would be my preference.
+> It causes the dev mtu of the erspan device to not be greater
+> than 1500, this limit value is not correct for ip6erspan tap
+> device.
+> 
+> Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
 
-Maybe we can even split this to two patches?
+Thanks for the patch.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Acked-by: William Tu <u9012063@gmail.com>
 
-
+> ---
+>  net/ipv6/ip6_gre.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/net/ipv6/ip6_gre.c b/net/ipv6/ip6_gre.c
+> index d5779d6..787d9f2 100644
+> --- a/net/ipv6/ip6_gre.c
+> +++ b/net/ipv6/ip6_gre.c
+> @@ -2192,6 +2192,7 @@ static void ip6erspan_tap_setup(struct net_device *dev)
+>  {
+>  	ether_setup(dev);
+>  
+> +	dev->max_mtu = 0;
+>  	dev->netdev_ops = &ip6erspan_netdev_ops;
+>  	dev->needs_free_netdev = true;
+>  	dev->priv_destructor = ip6gre_dev_free;
+> -- 
+> 1.8.3.1
+> 
+> 
+> 
