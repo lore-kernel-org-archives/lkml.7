@@ -6,72 +6,62 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE812C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6167DC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC05021721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:43:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C5872070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:45:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727496AbfJHRng (ORCPT
+        id S1727824AbfJHRpj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 13:43:36 -0400
-Received: from foss.arm.com ([217.140.110.172]:42238 "EHLO foss.arm.com"
+        Tue, 8 Oct 2019 13:45:39 -0400
+Received: from mga14.intel.com ([192.55.52.115]:20436 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725939AbfJHRnf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 13:43:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CD54315BE;
-        Tue,  8 Oct 2019 10:36:53 -0700 (PDT)
-Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8F35B3F6C4;
-        Tue,  8 Oct 2019 10:36:52 -0700 (PDT)
-Subject: Re: [PATCH v3 04/10] sched/fair: rework load_balance
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Phil Auld <pauld@redhat.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <Morten.Rasmussen@arm.com>,
-        Hillf Danton <hdanton@sina.com>
-References: <1568878421-12301-1-git-send-email-vincent.guittot@linaro.org>
- <1568878421-12301-5-git-send-email-vincent.guittot@linaro.org>
- <c752dd1a-731e-aae3-6a2c-aecf88901ac0@arm.com>
- <CAKfTPtBQNJfNmBqpuaefsLzsTrGxJ=2bTs+tRdbOAa9J3eKuVw@mail.gmail.com>
- <31cac0c1-98e4-c70e-e156-51a70813beff@arm.com>
- <20191008141642.GQ2294@hirez.programming.kicks-ass.net>
- <b4e29e48-a97c-67e5-a284-6ddc13222c5b@arm.com>
- <20191008163357.GF2328@hirez.programming.kicks-ass.net>
- <5de71c9f-cd6b-0284-f4a0-0d1fe4059099@arm.com>
-Message-ID: <df8cff7b-a83c-42d1-f1c7-1a711dc1b2ce@arm.com>
-Date:   Tue, 8 Oct 2019 18:36:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1725939AbfJHRpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 13:45:38 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 10:45:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,272,1566889200"; 
+   d="scan'208";a="368487975"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga005.jf.intel.com with ESMTP; 08 Oct 2019 10:45:37 -0700
+Date:   Tue, 8 Oct 2019 10:45:37 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com
+Subject: Re: [PATCH v22 10/24] x86/sgx: Add sgx_einit() for wrapping
+ ENCLS[EINIT]
+Message-ID: <20191008174537.GC14020@linux.intel.com>
+References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
+ <20190903142655.21943-11-jarkko.sakkinen@linux.intel.com>
+ <20191008173035.GK14765@zn.tnic>
 MIME-Version: 1.0
-In-Reply-To: <5de71c9f-cd6b-0284-f4a0-0d1fe4059099@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191008173035.GK14765@zn.tnic>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/10/2019 17:39, Valentin Schneider wrote:
->>
->> But -fno-strict-overflow mandates 2s complement for all such signed
->> issues.
->>
-> 
-> So then there really shouldn't be any ambiguity. I have no idea if
-> -fno-strict-overflow then also lifts the undefinedness of the right shifts,
-> gotta get my spade and dig some more.
-> 
+On Tue, Oct 08, 2019 at 07:30:35PM +0200, Borislav Petkov wrote:
+> I was about to ask why isn't this export _GPL() but it goes away in a
+> later patch.
 
-Bleh, no luck really.
-
-Thinking about it some more you can't overflow by right shifting
-(logical/arithmetic), so I dunno if signed right shift counts as "such
-signed issues".
+Speaking of later patches, don't bother reviewing patches 19/24 or 20/20,
+the vDSO function and selftest respectively.  I'm in the process of
+reworking them for v23, reviewing them in their current state is likely a
+waste of your time.
