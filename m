@@ -2,102 +2,82 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A25C35280
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B4BECE58C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 332D62070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B62C2070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:54:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729589AbfJHQyG convert rfc822-to-8bit (ORCPT
+        id S1727180AbfJHQyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 12:54:06 -0400
-Received: from mga14.intel.com ([192.55.52.115]:16411 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727730AbfJHQyG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 12:54:06 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 09:54:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,270,1566889200"; 
-   d="scan'208";a="394735224"
-Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
-  by fmsmga006.fm.intel.com with ESMTP; 08 Oct 2019 09:54:05 -0700
-Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
- FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 8 Oct 2019 09:54:05 -0700
-Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 8 Oct 2019 09:54:05 -0700
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81]) by
- fmsmsx601.amr.corp.intel.com ([10.18.126.81]) with mapi id 15.01.1713.004;
- Tue, 8 Oct 2019 09:54:05 -0700
-From:   "Bowers, AndrewX" <andrewx.bowers@intel.com>
-To:     "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [Intel-wired-lan] [PATCH 1/1] ixgbe: protect TX timestamping from
- API misuse
-Thread-Topic: [Intel-wired-lan] [PATCH 1/1] ixgbe: protect TX timestamping
- from API misuse
-Thread-Index: AQHVfTO/dlmnz+fADEeNMRhKGINk9qdQ93Jw
-Date:   Tue, 8 Oct 2019 16:54:04 +0000
-Message-ID: <a53362a9afee4995919c117016209701@intel.com>
-References: <1570288803-14880-1-git-send-email-manjunath.b.patil@oracle.com>
-In-Reply-To: <1570288803-14880-1-git-send-email-manjunath.b.patil@oracle.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiODY3Mjk4YWUtYTgzNy00ZTYwLWJlMGItOWRjYzRhM2RhYzQ3IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiWUdEblVmbnM1b1NLVlYwVDlzN3B4NjJkMGlscFEzR3Rja3NpZVJERWh5M21wSWdkUEVHM2V0UFBPZFVzMDlXdiJ9
-dlp-reaction: no-action
-dlp-version: 11.0.400.15
-x-originating-ip: [10.22.254.132]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 8 Oct 2019 12:54:52 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:51365 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725900AbfJHQyw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 12:54:52 -0400
+Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 4886D240003;
+        Tue,  8 Oct 2019 16:54:50 +0000 (UTC)
+Date:   Tue, 8 Oct 2019 18:54:49 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org,
+        nicolas.ferre@microchip.com, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] clk: at91: add compatible for sam9x60
+Message-ID: <20191008165449.GA4254@piout.net>
+References: <1570553186-24691-1-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1570553186-24691-1-git-send-email-claudiu.beznea@microchip.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Intel-wired-lan [mailto:intel-wired-lan-bounces@osuosl.org] On
-> Behalf Of Manjunath Patil
-> Sent: Saturday, October 5, 2019 8:20 AM
-> To: Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>; davem@davemloft.net;
-> intel-wired-lan@lists.osuosl.org; netdev@vger.kernel.org; linux-
-> kernel@vger.kernel.org
-> Cc: manjunath.b.patil@oracle.com; christophe.jaillet@wanadoo.fr;
-> cspradlin@google.com
-> Subject: [Intel-wired-lan] [PATCH 1/1] ixgbe: protect TX timestamping from
-> API misuse
+Hi,
+
+On 08/10/2019 19:46:26+0300, Claudiu Beznea wrote:
+> Add compatible for SAM9X60's PMC.
+
+I think the commit log could be clearer and mention why this is needed
+and the compatible string in sam9x60 is not sufficient.
+
 > 
-> HW timestamping can only be requested for a packet if the NIC is first setup
-> via ioctl(SIOCSHWTSTAMP). If this step was skipped, then the ixgbe driver
-> still allowed TX packets to request HW timestamping. In this situation, we see
-> 'clearing Tx Timestamp hang' noise in the log.
-> 
-> Fix this by checking that the NIC is configured for HW TX timestamping before
-> accepting a HW TX timestamping request.
-> 
-> similar-to:
-> 	(26bd4e2 igb: protect TX timestamping from API misuse)
-> 	(0a6f2f0 igb: Fix a test with HWTSTAMP_TX_ON)
-> 
-> Signed-off-by: Manjunath Patil <manjunath.b.patil@oracle.com>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 > ---
->  drivers/net/ethernet/intel/ixgbe/ixgbe_main.c |    3 ++-
->  1 files changed, 2 insertions(+), 1 deletions(-)
+>  drivers/clk/at91/pmc.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/clk/at91/pmc.c b/drivers/clk/at91/pmc.c
+> index db24539d5740..24975bca608e 100644
+> --- a/drivers/clk/at91/pmc.c
+> +++ b/drivers/clk/at91/pmc.c
+> @@ -271,6 +271,7 @@ static struct syscore_ops pmc_syscore_ops = {
+>  
+>  static const struct of_device_id sama5d2_pmc_dt_ids[] = {
 
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Maybe rename the array?
 
+>  	{ .compatible = "atmel,sama5d2-pmc" },
+> +	{ .compatible = "microchip,sam9x60-pmc" },
+>  	{ /* sentinel */ }
+>  };
+>  
+> -- 
+> 2.7.4
+> 
 
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
