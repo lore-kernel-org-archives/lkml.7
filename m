@@ -2,75 +2,103 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E2AC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 06:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A9DC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 06:44:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF146206C2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 06:43:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46CC821721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 06:44:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730139AbfJHGnW (ORCPT
+        id S1730148AbfJHGoY convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 02:43:22 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3218 "EHLO huawei.com"
+        Tue, 8 Oct 2019 02:44:24 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:2058 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730026AbfJHGnW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 02:43:22 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id B17D6B10E7C79921EC36;
-        Tue,  8 Oct 2019 14:43:19 +0800 (CST)
-Received: from [127.0.0.1] (10.133.213.239) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Tue, 8 Oct 2019
- 14:43:17 +0800
-Subject: Re: [PATCH -next] misc: watch_queue: Fix build error
-To:     David Howells <dhowells@redhat.com>
-References: <20190903073726.21880-1-yuehaibing@huawei.com>
- <32674.1567599622@warthog.procyon.org.uk>
-CC:     <jannh@google.com>, <axboe@kernel.dk>,
-        <james.morris@microsoft.com>, <linux-kernel@vger.kernel.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <5f6acfef-2eda-e33a-f7cb-37f3735e60a0@huawei.com>
-Date:   Tue, 8 Oct 2019 14:43:17 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        id S1729693AbfJHGoY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 02:44:24 -0400
+Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id F2842D9559FCC1541F18;
+        Tue,  8 Oct 2019 14:44:18 +0800 (CST)
+Received: from dggeme716-chm.china.huawei.com (10.1.199.112) by
+ DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 8 Oct 2019 14:44:18 +0800
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ dggeme716-chm.china.huawei.com (10.1.199.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Tue, 8 Oct 2019 14:44:18 +0800
+Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
+ dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
+ Tue, 8 Oct 2019 14:44:18 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "dhowells@redhat.com" <dhowells@redhat.com>,
+        "cyphar@cyphar.com" <cyphar@cyphar.com>,
+        "christian@brauner.io" <christian@brauner.io>,
+        "aubrey.li@linux.intel.com" <aubrey.li@linux.intel.com>
+CC:     Mingfangsen <mingfangsen@huawei.com>,
+        linmiaohe <linmiaohe@huawei.com>,
+        "mm-commits@vger.kernel.org" <mm-commits@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH] proc:fix confusing macro arg name
+Thread-Topic: [PATCH] proc:fix confusing macro arg name
+Thread-Index: AdV9gOdeS5V1IJ1hQmaaEj6tyX7o5A==
+Date:   Tue, 8 Oct 2019 06:44:18 +0000
+Message-ID: <165631b964b644dfa933653def533e41@huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.184.189.20]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <32674.1567599622@warthog.procyon.org.uk>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.133.213.239]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/4 20:20, David Howells wrote:
-> Thanks, I've folded that in.
+Add suitable additional cc's as Andrew Morton suggested.
+Get cc list from get_maintainer script:
+[root@localhost mm]# ./scripts/get_maintainer.pl 0001-proc-fix-confusing-macro-arg-name.patch 
+Alexey Dobriyan <adobriyan@gmail.com> (reviewer:PROC FILESYSTEM)
+linux-kernel@vger.kernel.org (open list:PROC FILESYSTEM)
+linux-fsdevel@vger.kernel.org (open list:PROC FILESYSTEM)
 
-This issue still occur in linux-next 20191008 :
+------------------------------------------------------
+From: Miaohe Lin <linmiaohe@huawei.com>
+Subject: fix confusing macro arg name
 
-drivers/misc/watch_queue.c: In function ‘watch_queue_account_mem’:
-drivers/misc/watch_queue.c:315:38: error: ‘struct user_struct’ has no member named ‘locked_vm’; did you mean ‘locked_shm’?
-  cur_pages = atomic_long_read(&user->locked_vm);
-                                      ^~~~~~~~~
-                                      locked_shm
-drivers/misc/watch_queue.c:321:50: error: ‘struct user_struct’ has no member named ‘locked_vm’; did you mean ‘locked_shm’?
-  } while (atomic_long_try_cmpxchg_relaxed(&user->locked_vm, &cur_pages,
-                                                  ^~~~~~~~~
-                                                  locked_shm
-drivers/misc/watch_queue.c: In function ‘watch_queue_unaccount_mem’:
-drivers/misc/watch_queue.c:333:44: error: ‘struct user_struct’ has no member named ‘locked_vm’; did you mean ‘locked_shm’?
-   atomic_long_sub(wqueue->nr_pages, &user->locked_vm);
-                                            ^~~~~~~~~
-                                            locked_shm
-scripts/Makefile.build:265: recipe for target 'drivers/misc/watch_queue.o' failed
+state_size and ops are in the wrong position, fix it.
 
-> 
-> David
-> 
-> .
-> 
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+---
+
+ include/linux/proc_fs.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h index a705aa2d03f9..0640be56dcbd 100644
+--- a/include/linux/proc_fs.h
++++ b/include/linux/proc_fs.h
+@@ -58,8 +58,8 @@ extern int remove_proc_subtree(const char *, struct proc_dir_entry *);  struct proc_dir_entry *proc_create_net_data(const char *name, umode_t mode,
+ 		struct proc_dir_entry *parent, const struct seq_operations *ops,
+ 		unsigned int state_size, void *data);
+-#define proc_create_net(name, mode, parent, state_size, ops) \
+-	proc_create_net_data(name, mode, parent, state_size, ops, NULL)
++#define proc_create_net(name, mode, parent, ops, state_size) \
++	proc_create_net_data(name, mode, parent, ops, state_size, NULL)
+ struct proc_dir_entry *proc_create_net_single(const char *name, umode_t mode,
+ 		struct proc_dir_entry *parent,
+ 		int (*show)(struct seq_file *, void *), void *data);
+--
+2.21.GIT
 
