@@ -2,56 +2,121 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3CB0C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF29ECE58C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C39C9206C2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:07:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 795A0217D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:10:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="iHd/rtuI";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="iHd/rtuI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729211AbfJHRHy (ORCPT
+        id S1727771AbfJHRKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 13:07:54 -0400
-Received: from utopia.booyaka.com ([74.50.51.50]:60682 "EHLO
-        utopia.booyaka.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726264AbfJHRHx (ORCPT
+        Tue, 8 Oct 2019 13:10:10 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:57020 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725900AbfJHRKJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 13:07:53 -0400
-Received: (qmail 6504 invoked by uid 1019); 8 Oct 2019 17:07:52 -0000
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 8 Oct 2019 17:07:52 -0000
-Date:   Tue, 8 Oct 2019 17:07:52 +0000 (UTC)
-From:   Paul Walmsley <paul@pwsan.com>
-To:     Vincent Chen <vincent.chen@sifive.com>
-cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>
-Subject: Re: [PATCH 4/4] riscv: remove the switch statement in
- do_trap_break()
-In-Reply-To: <CABvJ_xiHJSB7P5QekuLRP=LBPzXXghAfuUpPUYb=a_HbnOQ6BA@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.999.1910081707220.4786@utopia.booyaka.com>
-References: <1569199517-5884-1-git-send-email-vincent.chen@sifive.com> <1569199517-5884-5-git-send-email-vincent.chen@sifive.com> <20190927224711.GI4700@infradead.org> <alpine.DEB.2.21.9999.1910070906570.10936@viisi.sifive.com> <20191007161050.GA20596@infradead.org>
- <alpine.DEB.2.21.9999.1910070930270.10936@viisi.sifive.com> <CABvJ_xiHJSB7P5QekuLRP=LBPzXXghAfuUpPUYb=a_HbnOQ6BA@mail.gmail.com>
-User-Agent: Alpine 2.21.999 (DEB 260 2018-02-26)
+        Tue, 8 Oct 2019 13:10:09 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id E718660709; Tue,  8 Oct 2019 17:10:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1570554608;
+        bh=Hl31l3HzL5RJakGhA/0Av14OVr8Gji2rQOUJ4T9TSIs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=iHd/rtuIymcUsQq10MFmlHuU9cEYiM4GYFrSEl3S23iWaDpmqcmlBoOCpep8jyllw
+         c7+wworL1NhWBSDjBDgYTBLyW0CsQk6npOTgHsAhloZvOkV0nhh2fvb9kag7HYRGEC
+         tHNyZHimMeuAfcVzpxoNYWWTy2DiPPK0iDCIqcT4=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 0B153602C8;
+        Tue,  8 Oct 2019 17:10:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1570554608;
+        bh=Hl31l3HzL5RJakGhA/0Av14OVr8Gji2rQOUJ4T9TSIs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=iHd/rtuIymcUsQq10MFmlHuU9cEYiM4GYFrSEl3S23iWaDpmqcmlBoOCpep8jyllw
+         c7+wworL1NhWBSDjBDgYTBLyW0CsQk6npOTgHsAhloZvOkV0nhh2fvb9kag7HYRGEC
+         tHNyZHimMeuAfcVzpxoNYWWTy2DiPPK0iDCIqcT4=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 08 Oct 2019 10:10:08 -0700
+From:   mnalajal@codeaurora.org
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>, rafael@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bjorn.andersson@linaro.org
+Subject: Re: [PATCH v2] base: soc: Handle custom soc information sysfs entries
+In-Reply-To: <20191008154346.GA2881455@kroah.com>
+References: <1570480662-25252-1-git-send-email-mnalajal@codeaurora.org>
+ <5d9cac38.1c69fb81.682ec.053a@mx.google.com>
+ <20191008154346.GA2881455@kroah.com>
+Message-ID: <463ec0b5a3f1946df0ed2771ba741545@codeaurora.org>
+X-Sender: mnalajal@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 8 Oct 2019, Vincent Chen wrote:
+On 2019-10-08 08:43, Greg KH wrote:
+> On Tue, Oct 08, 2019 at 08:33:11AM -0700, Stephen Boyd wrote:
+>> Quoting Murali Nalajala (2019-10-07 13:37:42)
+>> > Soc framework exposed sysfs entries are not sufficient for some
+>> > of the h/w platforms. Currently there is no interface where soc
+>> > drivers can expose further information about their SoCs via soc
+>> > framework. This change address this limitation where clients can
+>> > pass their custom entries as attribute group and soc framework
+>> > would expose them as sysfs properties.
+>> >
+>> > Signed-off-by: Murali Nalajala <mnalajal@codeaurora.org>
+>> > ---
+>> 
+>> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+>> 
+> 
+> Nice, can we convert the existing soc drivers to use this interface
+> instead of the "export the device pointer" mess that they currently
+> have?  That way we can drop that function entirely.
+> 
+Thank you for the reviews.
+In the current linux tree i can find these driver instances who is using 
+"soc_device_to_device" for populating their sysfs entries.
 
-> Sorry,  I missed the comment. Christoph's suggestion is also good to me.
-> I will modify it as you suggested.
+drivers/soc/ux500/ux500-soc-id.c:       parent = 
+soc_device_to_device(soc_dev);
+drivers/soc/tegra/fuse/fuse-tegra.c:    return 
+soc_device_to_device(dev);
+drivers/soc/amlogic/meson-gx-socinfo.c: dev = 
+soc_device_to_device(soc_dev);
+drivers/soc/amlogic/meson-mx-socinfo.c: 
+dev_info(soc_device_to_device(soc_dev), "Amlogic %s %s detected\n",
+drivers/soc/imx/soc-imx8.c:     ret = 
+device_create_file(soc_device_to_device(soc_dev),
+drivers/soc/imx/soc-imx-scu.c:  ret = 
+device_create_file(soc_device_to_device(soc_dev),
+drivers/soc/versatile/soc-realview.c:   
+device_create_file(soc_device_to_device(soc_dev), &realview_manf_attr);
+drivers/soc/versatile/soc-realview.c:   
+device_create_file(soc_device_to_device(soc_dev), &realview_board_attr);
+drivers/soc/versatile/soc-realview.c:   
+device_create_file(soc_device_to_device(soc_dev), &realview_arch_attr);
+drivers/soc/versatile/soc-realview.c:   
+device_create_file(soc_device_to_device(soc_dev), &realview_build_attr);
+drivers/soc/versatile/soc-integrator.c: dev = 
+soc_device_to_device(soc_dev);
 
-Thanks - no need to resend, I'll queue the modified patch up here.
+These drivers can use the current proposed approach to expose their 
+sysfs entries.
+Will try to address these and submit. But i can't able to test these 
+changes because i do not have these h/w's
 
-
-- Paul
+> thanks,
+> 
+> greg k-h
