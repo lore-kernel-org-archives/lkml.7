@@ -2,251 +2,127 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 675B3ECE58D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 03:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1BCECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 03:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 355982173B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 03:33:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570505637;
-	bh=Ot8+NOZBIDrqd2aRnfsQFej1a7Y9MNqi7g1z3uyZK9c=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=qEzi5bQH1ne4MF/cm7PN8bD+BbVOmqu4NtttunwS185Gm01jXTCd3OXH1zkLcUtPB
-	 Y3rhBH7hzvjFny3oGB5j8fRn7jQy34jkRZUZYRRohKUq/fgpmJg9nbze2x8BuixdD5
-	 gfbw1p/xeKzRw8M/q/47i4aIoENgmSJFUjg2J9lU=
+	by mail.kernel.org (Postfix) with ESMTP id 82111218AC
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 03:44:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Jv62sIcz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729968AbfJHDd4 (ORCPT
+        id S1729917AbfJHDob (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 23:33:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53692 "EHLO mail.kernel.org"
+        Mon, 7 Oct 2019 23:44:31 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:55701 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729772AbfJHDd4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 23:33:56 -0400
-Received: from paulmck-ThinkPad-P72 (unknown [12.12.162.101])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729772AbfJHDob (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 23:44:31 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70F5821721;
-        Tue,  8 Oct 2019 03:33:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570505634;
-        bh=Ot8+NOZBIDrqd2aRnfsQFej1a7Y9MNqi7g1z3uyZK9c=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=SVEcAmR++AwjI9MH5d9o1Y9ALydl/VPGdjdHvV0FU3MBtT9qrtdAkI7aLexz+gxmQ
-         gnm9Zs1W93jXQvtA0pG5MX124fVisnZsPqIS302oQKPC3TIl/wj8+Ooc8tTRalV6B+
-         quxYYejbCYOiGTzjas/WuhDkq3NJvJXLMrfe9cPk=
-Date:   Mon, 7 Oct 2019 20:33:53 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Marco Elver <elver@google.com>,
-        syzbot <syzbot+134336b86f728d6e55a0@syzkaller.appspotmail.com>,
-        josh@joshtriplett.org, rostedt@goodmis.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        rcu@vger.kernel.org, a@unstable.cc,
-        b.a.t.m.a.n@lists.open-mesh.org, davem@davemloft.net,
-        LKML <linux-kernel@vger.kernel.org>, mareklindner@neomailbox.ch,
-        netdev@vger.kernel.org, sw@simonwunderlich.de,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: KCSAN: data-race in find_next_bit / rcu_report_exp_cpu_mult
-Message-ID: <20191008033353.GK2689@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <000000000000604e8905944f211f@google.com>
- <CANpmjNNmSOagbTpffHr4=Yedckx9Rm2NuGqC9UqE+AOz5f1-ZQ@mail.gmail.com>
- <20191007134304.GA2609633@tardis>
- <20191008001131.GB255532@google.com>
- <20191008021233.GD2689@paulmck-ThinkPad-P72>
- <20191008025056.GA2701514@tardis>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46nNWc6p6vz9sN1;
+        Tue,  8 Oct 2019 14:44:28 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1570506269;
+        bh=qVUvg5eUzi+xbVw93VditaCtDJH22M296dmyUJg5xss=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Jv62sIcz58cn78k296RK/Dn1UlPyBD6Oxi2PQ+ApclHWCd/PAHEcr3EIrUaX9txvY
+         QkHHk22k7KEIqKCYXqqzpr3BW9NnZW73dJIla8H1s247am/ERZeTlr7ffastTn5SAP
+         bYnf/hboovWRnhZTWP7rpZHVUqxb0uu8OP+mJrx78ldIO1OTGwJEm1zd1C3sCKY1gg
+         A30moEzMpwuBQ+95tel8ojzlXFSJ00o5wFi6x6fOaO2zA4imZG84PqwNLW7bMbtbKq
+         CMaPxG6EVOjK2yv9hAJp9kQg6KfqPNERxh8UjZ64P+OXZpYtJnPny7/i+qKUv2NUMH
+         N+ftxPHMw2NYg==
+Date:   Tue, 8 Oct 2019 14:44:28 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Branden Bonaby <brandonbonaby94@gmail.com>,
+        Changbin Du <changbin.du@gmail.com>
+Subject: linux-next: manual merge of the akpm tree with the hyperv tree
+Message-ID: <20191008144428.49143860@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191008025056.GA2701514@tardis>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/signed; boundary="Sig_/UOIwwKO65pwrsB6ikXZ4nzM";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 10:50:56AM +0800, Boqun Feng wrote:
-> On Mon, Oct 07, 2019 at 07:12:33PM -0700, Paul E. McKenney wrote:
-> > On Mon, Oct 07, 2019 at 08:11:31PM -0400, Joel Fernandes wrote:
-> > > On Mon, Oct 07, 2019 at 09:43:04PM +0800, Boqun Feng wrote:
-> > > > Hi Marco,
-> > > 
-> > > Hi Boqun, Steve and Paul, fun times!
-> > > 
-> > > Marco, good catch ;-)
-> > 
-> > Indeed!  ;-)
-> > 
-> [...]
-> > > > +	mask_ofl_ipi_snap = mask_ofl_ipi;
-> > > >  	/* IPI the remaining CPUs for expedited quiescent state. */
-> > > > -	for_each_leaf_node_cpu_mask(rnp, cpu, rnp->expmask) {
-> > > > +	for_each_leaf_node_cpu_mask(rnp, cpu, mask_ofl_ipi_snap) {
-> > 
-> > Why can't we just use mask_ofl_ipi?  The bits removed are only those
-> > bits just now looked at, right?  Also, the test of mask_ofl_ipi can be
-> > dropped, since that branch will never be taken, correct?
-> > 
-> 
-> You're correct. But I think we can further simplify the code a little
-> bit so that we won't need to modify the mask_ofl_ipi:
-> 
-> In the second loop:
-> 
-> 1) if the target CPU is online and response the IPI we do nothing.
-> 
-> 2) if the target CPU is offline but it doesn't block current GP, we do
-> nothing.
-> 
-> 3) otherwise, the target CPU is offline and blocks current GP, we add
-> the corresponding bit in mask_ofl_test.
-> 
-> Thoughts?
-> 
-> Please see the end of email for a patch.
-> 
-> > > This looks good to me. Just a nit, I prefer if the comment to IPI the
-> > > remaining CPUs is before the assignment to mask_ofl_ipi_snap since the
-> > > new assignment is done for consumption by the for_each..(..) loop itself.
-> > > 
-> > > Steve's patch looks good as well and I was thinking along the same lines but
-> > > Boqun's patch is slightly better because he doesn't need to snapshot exp_mask
-> > > inside the locked section.
-> > 
-> > There are also similar lockless accesses to ->expmask in the stall-warning
-> > code.
-> > 
-> > > Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > 
-> > But thank all three of you for looking this over!  My original patch
-> > was overly ornate.  ;-)
-> > 
-> > 							Thanx, Paul
-> > 
-> 
-> -------------------->8
-> Subject: [PATCH v2] rcu: exp: Avoid race on lockless rcu_node::expmask loop
-> 
-> KCSAN reported an issue:
-> 
-> | BUG: KCSAN: data-race in find_next_bit / rcu_report_exp_cpu_mult
-> |
-> | write to 0xffffffff85a7f140 of 8 bytes by task 7 on cpu 0:
-> |   rcu_report_exp_cpu_mult+0x4f/0xa0 kernel/rcu/tree_exp.h:244
-> |   rcu_report_exp_rdp+0x6c/0x90 kernel/rcu/tree_exp.h:254
-> |   rcu_preempt_deferred_qs_irqrestore+0x3bb/0x580 kernel/rcu/tree_plugin.h:475
-> |   rcu_read_unlock_special+0xec/0x370 kernel/rcu/tree_plugin.h:659
-> |   __rcu_read_unlock+0xcf/0xe0 kernel/rcu/tree_plugin.h:394
-> |   rcu_read_unlock include/linux/rcupdate.h:645 [inline]
-> |   batadv_nc_purge_orig_hash net/batman-adv/network-coding.c:411 [inline]
-> |   batadv_nc_worker+0x13a/0x390 net/batman-adv/network-coding.c:718
-> |   process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
-> |   worker_thread+0xa0/0x800 kernel/workqueue.c:2415
-> |   kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
-> |   ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
-> |
-> | read to 0xffffffff85a7f140 of 8 bytes by task 7251 on cpu 1:
-> |   _find_next_bit lib/find_bit.c:39 [inline]
-> |   find_next_bit+0x57/0xe0 lib/find_bit.c:70
-> |   sync_rcu_exp_select_node_cpus+0x28e/0x510 kernel/rcu/tree_exp.h:375
-> |   sync_rcu_exp_select_cpus+0x30c/0x590 kernel/rcu/tree_exp.h:439
-> |   rcu_exp_sel_wait_wake kernel/rcu/tree_exp.h:575 [inline]
-> |   wait_rcu_exp_gp+0x25/0x40 kernel/rcu/tree_exp.h:589
-> |   process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
-> |   worker_thread+0xa0/0x800 kernel/workqueue.c:2415
-> |   kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
-> |   ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
-> 
-> The root cause of this is the second for_each_leaf_node_cpu_mask() loop
-> in sync_rcu_exp_select_node_cpus() accesses the rcu_node::expmask
-> without holding rcu_node's lock. This is by design, because the second
-> loop may issue IPIs to other CPUs, and the IPI handler (rcu_exp_handler)
-> may acquire the same rcu_node's lock. So the rcu_node's lock has to be
-> dropped before the second loop.
-> 
-> The problem will occur when the normal unsetting of rcu_node::expmask
-> results into some intermediate state (because it's a plain access),
-> where an extra bit gets zeroed. The second loop will skip the
-> corrensponding CPU, but treat it as offline and in quesient state. This
-> will cause trouble because that CPU may be in a RCU read-side critical
-> section.
-> 
-> To fix this, make the second loop iterate on mask_ofl_ipi, as a result,
-> the find_next_bit() of the second loop doesn't access any variables that
-> may get changed in parallel, so the race is avoided. While we are at it,
-> remove the unset of mask_ofl_ipi to improve the readiblity, because we
-> can always use mask_ofl_test to record which CPU's QS should be
-> reported.
+--Sig_/UOIwwKO65pwrsB6ikXZ4nzM
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Good point on the second loop!
+Hi all,
 
-> Reported-by: syzbot+134336b86f728d6e55a0@syzkaller.appspotmail.com
-> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> ---
->  kernel/rcu/tree_exp.h | 17 +++++++----------
->  1 file changed, 7 insertions(+), 10 deletions(-)
-> 
-> diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
-> index af7e7b9c86af..fb51752ac9a6 100644
-> --- a/kernel/rcu/tree_exp.h
-> +++ b/kernel/rcu/tree_exp.h
-> @@ -372,12 +372,10 @@ static void sync_rcu_exp_select_node_cpus(struct work_struct *wp)
->  	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
->  
->  	/* IPI the remaining CPUs for expedited quiescent state. */
-> -	for_each_leaf_node_cpu_mask(rnp, cpu, rnp->expmask) {
-> +	for_each_leaf_node_cpu_mask(rnp, cpu, mask_ofl_ipi) {
->  		unsigned long mask = leaf_node_cpu_bit(rnp, cpu);
->  		struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
->  
-> -		if (!(mask_ofl_ipi & mask))
-> -			continue;
->  retry_ipi:
->  		if (rcu_dynticks_in_eqs_since(rdp, rdp->exp_dynticks_snap)) {
->  			mask_ofl_test |= mask;
+Today's linux-next merge of the akpm tree got a conflict in:
 
-This part I have already on -rcu branch "dev".
+  lib/Kconfig.debug
 
-> @@ -389,10 +387,10 @@ static void sync_rcu_exp_select_node_cpus(struct work_struct *wp)
->  		}
->  		ret = smp_call_function_single(cpu, rcu_exp_handler, NULL, 0);
->  		put_cpu();
-> -		if (!ret) {
-> -			mask_ofl_ipi &= ~mask;
-> +		/* the CPU responses the IPI, and it will report QS itself */
-> +		if (!ret)
->  			continue;
-> -		}
-> +
->  		/* Failed, raced with CPU hotplug operation. */
->  		raw_spin_lock_irqsave_rcu_node(rnp, flags);
->  		if ((rnp->qsmaskinitnext & mask) &&
-> @@ -403,13 +401,12 @@ static void sync_rcu_exp_select_node_cpus(struct work_struct *wp)
->  			schedule_timeout_uninterruptible(1);
->  			goto retry_ipi;
->  		}
-> -		/* CPU really is offline, so we can ignore it. */
-> -		if (!(rnp->expmask & mask))
-> -			mask_ofl_ipi &= ~mask;
-> +		/* CPU really is offline, and we need its QS. */
-> +		if (rnp->expmask & mask)
-> +			mask_ofl_test |= mask;
->  		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
->  	}
->  	/* Report quiescent states for those that went offline. */
-> -	mask_ofl_test |= mask_ofl_ipi;
->  	if (mask_ofl_test)
->  		rcu_report_exp_cpu_mult(rnp, mask_ofl_test, false);
->  }
+between commit:
 
-Would you be willing to port this optimization on top of current -rcu
-branch "dev" with an suitably modified commit message?
+  54dc8d00a0be ("drivers: hv: vmbus: Introduce latency testing")
 
-							Thanx, Paul
+from the hyperv tree and patch:
+
+  "kernel-hacking: create submenu for arch special debugging options"
+
+from the akpm tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc lib/Kconfig.debug
+index 905ce80e6ac4,9a6d7e4955a5..000000000000
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@@ -2156,13 -2156,10 +2156,17 @@@ config DEBUG_AID_FOR_SYZBO
+         help
+           This option is intended for testing by syzbot.
+ =20
++ menu "$(SRCARCH) Debugging"
++=20
+  source "arch/$(SRCARCH)/Kconfig.debug"
+ =20
++ endmenu
++=20
+ +config HYPERV_TESTING
+ +	bool "Microsoft Hyper-V driver testing"
+ +	default n
+ +	depends on HYPERV && DEBUG_FS
+ +	help
+ +	  Select this option to enable Hyper-V vmbus testing.
+ +
+  endmenu # Kernel hacking
+
+--Sig_/UOIwwKO65pwrsB6ikXZ4nzM
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2cBhwACgkQAVBC80lX
+0Gw0nQf/Wtq8UKGSqCvqgIl4myoTYNWLxJNSuf8EQvioR5wo5GgNaA6MoKdNFaEC
+fLF/iDPZrZTAOCE02g5ErVaqBBNnEMDhNnp3AGpslXivm4ZkLApv8WJl6+j8tWgC
+8QXo3khnKsRZ3tWnDLBep9ngrXQtvo3wHYX4ibGGe/Owr8/voDR60aTbcAr1WOO5
+eoXO7DI0QzJ7VibUNX3NTVRKiyUlXQP3U08anVEhhWUslJojZyExhX3dDtOhuUsT
+Xf4d2HAr/33PoRqu3s/LfChI002rKLZwHuCrnwxbrs96aFOfsYHVoTbt8MZWNgOn
+5jUHPCULDTYOi1Rxa0coZ3Ektddv8g==
+=RXLL
+-----END PGP SIGNATURE-----
+
+--Sig_/UOIwwKO65pwrsB6ikXZ4nzM--
