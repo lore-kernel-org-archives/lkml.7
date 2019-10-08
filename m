@@ -2,171 +2,121 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2F5C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C96C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 300F0206BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:21:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBDC6206BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:21:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="aDHG2U/R"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cdJSJvCO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730278AbfJHKVH (ORCPT
+        id S1730307AbfJHKVy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 06:21:07 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:58985 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729989AbfJHKVF (ORCPT
+        Tue, 8 Oct 2019 06:21:54 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38958 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728866AbfJHKVx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 06:21:05 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191008102103euoutp02bdfd28b39ee09d784b30ec07b9597b9c~LpMWa-fZU2063120631euoutp02F
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Oct 2019 10:21:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191008102103euoutp02bdfd28b39ee09d784b30ec07b9597b9c~LpMWa-fZU2063120631euoutp02F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1570530063;
-        bh=H/kw4DJsjV6o+Fou4PFGpSHdLnjfelrJIG1q6VWCXCo=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=aDHG2U/ROaS0gmJ5btjpUc3JM9lbLFY1AUktvjlhaa4jwAuaMzAkdml0HXdnniEle
-         XVdfdKCpdxsEJGIL1hAK1tg/1mR2XVcNw92C1RCJ83PXfkfgOTH4IlAtB6TkiIgpgg
-         38/6gmRT8pLGkPUQB+taj0cXWpZG1SYdJ8blotOw=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20191008102103eucas1p2f8e816066d457bfdfad155a023929272~LpMWASsNb0403404034eucas1p24;
-        Tue,  8 Oct 2019 10:21:03 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id D9.C7.04469.F036C9D5; Tue,  8
-        Oct 2019 11:21:03 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191008102102eucas1p1c4bed382d768dbf4f573396be7d7c7ed~LpMVqriML3009830098eucas1p1_;
-        Tue,  8 Oct 2019 10:21:02 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191008102102eusmtrp10c6a09db26174f80b1c35cb53abe54bd~LpMVpyKLu2792727927eusmtrp1i;
-        Tue,  8 Oct 2019 10:21:02 +0000 (GMT)
-X-AuditID: cbfec7f2-54fff70000001175-aa-5d9c630f35a5
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 31.05.04117.E036C9D5; Tue,  8
-        Oct 2019 11:21:02 +0100 (BST)
-Received: from [106.120.51.15] (unknown [106.120.51.15]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191008102101eusmtip2f43e78fb96e166fe15f5fc269182c3a1~LpMUwx__30418404184eusmtip2d;
-        Tue,  8 Oct 2019 10:21:01 +0000 (GMT)
-Subject: Re: krzysztof/for-next boot bisection: v5.4-rc1-48-g0bc9c79979ea on
- peach-pi
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        "kernelci.org bot" <bot@kernelci.org>
-Cc:     tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com,
-        mgalka@collabora.com, Chanwoo Choi <cw00.choi@samsung.com>,
-        broonie@kernel.org, matthew.hart@linaro.org, khilman@baylibre.com,
-        enric.balletbo@collabora.com,
-        Kamil Konieczny <k.konieczny@partner.samsung.com>,
-        devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <b62e8793-a428-6a06-fb30-c0a9c1322fa9@samsung.com>
-Date:   Tue, 8 Oct 2019 12:21:01 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
-        Thunderbird/60.9.0
+        Tue, 8 Oct 2019 06:21:53 -0400
+Received: by mail-pl1-f194.google.com with SMTP id s17so8263417plp.6
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 03:21:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GeMDvxk000kDXZOF/cVkZFJMD0gb/5P7FfXKteqfPL8=;
+        b=cdJSJvCOf5lwlnvWxJxswCx6xNQ3AjanFRiUtsdswxZMfYmCMtj1PGMFewsVic258v
+         Obg7GqwttJcCpt7nuw95onf8KC58807n8gbnHZJ/LRcDAza2N53eImEePNyxIg99BHpt
+         Ebgr4PpV4SPUtutXxqVqDceBd9fiuEQOlx/sE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GeMDvxk000kDXZOF/cVkZFJMD0gb/5P7FfXKteqfPL8=;
+        b=ghnxh/9O2jWqkf3NZN9mnFiJL0KsjpCmL/VjJpKU6z/wvC95CFvf0XUYJUkmkD1/He
+         7X12eaaa5o/r6FrjXS3oAD0DE11pqzUPzdV/5kWcoCaTNlorz1z5Yf7j0fDkJhXK8LcP
+         d7KZihgYrOFz/za8KNiD8JJS1JrWeD6SiU4i2And+AlxocI4KN8umptSijDHwK29z+SS
+         yuodOZGl4z8Q126Nhov7pJ1Py4aMmjhMrS2wbQP4YkU33oA8FCau6rrfBiwu54Nhem38
+         fnDdAbF0bnlIxMptN/n+urKLFvwF3UHRb3yaIkMwqYCsGC+vJBsLHfcLvg1z9gK4gCqM
+         h5/g==
+X-Gm-Message-State: APjAAAVMoeaVRfLuPfCrI8cnw1wkKTdeJL6I5zG/BH//LF3M6ppkfeji
+        TnwAbVoGC1+6P4c1ZAO8sGSqQ8S4Y2I=
+X-Google-Smtp-Source: APXvYqw2a0XI5XUbrLM3Qio4U723/Y5fi8MXrTnqZEIoVScPrqDX2SVFu2OcatshFfvpyWcA9OlBRA==
+X-Received: by 2002:a17:902:7895:: with SMTP id q21mr33495295pll.94.1570530112854;
+        Tue, 08 Oct 2019 03:21:52 -0700 (PDT)
+Received: from localhost ([2401:fa00:1:10:79b4:bd83:e4a5:a720])
+        by smtp.gmail.com with ESMTPSA id b9sm15111763pfo.105.2019.10.08.03.21.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Oct 2019 03:21:52 -0700 (PDT)
+From:   Cheng-Yi Chiang <cychiang@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        dianders@chromium.org, dgreid@chromium.org, tzungbi@chromium.org,
+        alsa-devel@alsa-project.org, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
+        Yakir Yang <ykk@rock-chips.com>
+Subject: [PATCH v3] drm/bridge: dw-hdmi: Restore audio when setting a mode
+Date:   Tue,  8 Oct 2019 18:21:45 +0800
+Message-Id: <20191008102145.55134-1-cychiang@chromium.org>
+X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
 MIME-Version: 1.0
-In-Reply-To: <CAJKOXPeZQ_hZqUdtFrr-wGiwdM4KVjD_7CArEWhZgo+1EJPqew@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SbUhTYRjt3b27uw6n12ntyaxgRNCnSl8vFVZQdCOK6kcfltQtLzPaVLZc
-        moH24UfDtLLS1kjNZCFmsszELHJWQ6wtZ01dWZmSWE1JVyZF5bxZ/jvPec7znnPgpQn5iDiU
-        Phh/mNfGc2olJSVrnozYFwQeMMVEnCqTYmfHQzG+2NVD4TZvrxgXPbKLccUrK8KfB0sJnPvg
-        N8J53Z8IPJJVLcIOR5UEW7pdYtxaZ6JwoeOBCJe1tYhwk9uAcOabAgnOuP9IgnNvOqnVcrbi
-        agViB9ozJGxt53XEWspPU2x9nz/72lVPsbevp7EN/fUiNre6HLFDlhlbpNHSlbG8+qCe14ZH
-        7ZPGvfx8hkjMC0n+kW0WpaPSQAPyo4FZDOaiTokBSWk5cwOB7esFQhi8CPLvdpPCMISg+HEG
-        OX7iuveW8GE5Y0Zwx5gmiDwI3OYfyLcIZnaA58zwmCiE2QZVPx1iHyYYOwk5vcE+TDGRYPAY
-        KB+WMVHQ4a4a05PMLPhS3DBmNpmJgTffbYSgCYKmyz1jvB+zFb4YrkqEN2fCXY+JELAC3D1F
-        Il8gYMpo6HrqQkLqtZD58DQl4GD4aKuWCDgMmvNzSOHgJIIu+02JMOQgaD1R+Pd6BTTaWkYr
-        0KMWc+BWXbhAr4H2+lukjwYmANo9QUKIADhfU0AItAyyM+WCejYYbZX/bBueO4mzSGmcUM04
-        oY5xQh3jf99iRJYjBZ+k06h4XWQ8f2ShjtPokuJVCw8kaCxo9EM2/7IN1qKvzv1WxNBI6S9L
-        XHAlRi7m9LoUjRUBTShDZDPKCmPkslgu5SivTdirTVLzOiuaRpNKhSx10rvdckbFHeYP8Xwi
-        rx3fimi/0HR06WLnte1FLcnrQoMbg0L3Fm/w7tl0tu3DsCrZMnAS31Ns/v5t6pwlbYqd019d
-        2ZJvNzffLskujahUL+13nNv4iVt+4v28vjzRMb03latRofnquGWt7cwUU4Ar7HjWi0X6F7uI
-        566EafrmZxc61+Pl/dsW72kIryvZ0FPSUdsX7f65Sknq4rjIuYRWx/0BdPAFb4wDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupileLIzCtJLcpLzFFi42I5/e/4PV2+5DmxBit/61lcunmA1WLqwyds
-        Fte/PGe1mH/kHKvFmtuHGC3efFrMbNG37z+jRf/j18wWP9u3MFmcP7+B3WLT42usFpd3zWGz
-        mHF+H5PF0usXmSxO3upitGi7N53donXvEXaLvrWX2ByEPNbMW8Po8f5GK7vHjrtLGD02repk
-        89jzksfjzrU9bB6bl9R7HHy3h8mjb8sqRo/Pm+QCuKL0bIryS0tSFTLyi0tslaINLYz0DC0t
-        9IxMLPUMjc1jrYxMlfTtbFJSczLLUov07RL0Mq6+6WUu6Bep+N2xnKmBcTF/FyMnh4SAicS1
-        3feZuxi5OIQEljJKXPjxjB0iISNxcloDK4QtLPHnWhcbRNFrRomz/SvBioQFwiXe9n5nBrFF
-        BIIkOg6sYgOxmQUusEgsm+0PYgsJXGaU6JkAVsMmYCjR9bYLrIZXwE7i5q0NYHEWARWJjwsO
-        snQxcnCICsRKbNprBlEiKHFy5hMWEJtTIFDiY9c8dojxZhLzNj9khrDlJba/nQNli0vcejKf
-        aQKj0Cwk7bOQtMxC0jILScsCRpZVjCKppcW56bnFRnrFibnFpXnpesn5uZsYgelg27GfW3Yw
-        dr0LPsQowMGoxMNbqDs7Vog1say4MvcQowQHs5IIr9zSGbFCvCmJlVWpRfnxRaU5qcWHGE2B
-        fpvILCWanA9MVXkl8YamhuYWlobmxubGZhZK4rwdAgdjhATSE0tSs1NTC1KLYPqYODilGhjX
-        nOvNO3ic12ydr+TWo4X+NaF1bdKTfnGmSMteuv46L9OWYfH3HQ87ZhgyCtkvPpLyW7bRdvuq
-        pmMhTJwrX1+ZviAuZf20DJXAnN5893Sm5+yh/FxJmxeYWW3c+TXeX6j/xybjL2x1Sj8TeJc1
-        MeX++3jlm4sUe9KiiMCb105e1g2UMNjKUanEUpyRaKjFXFScCACSP/8yHQMAAA==
-X-CMS-MailID: 20191008102102eucas1p1c4bed382d768dbf4f573396be7d7c7ed
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20191007170946epcas3p2e91287115265a9efc7038b762cc8e17e
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20191007170946epcas3p2e91287115265a9efc7038b762cc8e17e
-References: <5d9a8a3c.1c69fb81.14b6f.10d1@mx.google.com>
-        <CGME20191007170946epcas3p2e91287115265a9efc7038b762cc8e17e@epcas3p2.samsung.com>
-        <CAJKOXPeZQ_hZqUdtFrr-wGiwdM4KVjD_7CArEWhZgo+1EJPqew@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
+From: Daniel Kurtz <djkurtz@chromium.org>
 
-On 07.10.2019 19:09, Krzysztof Kozlowski wrote:
-> On Mon, 7 Oct 2019 at 02:43, kernelci.org bot <bot@kernelci.org> wrote:
->> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
->> * This automated bisection report was sent to you on the basis  *
->> * that you may be involved with the breaking commit it has      *
->> * found.  No manual investigation has been done to verify it,   *
->> * and the root cause of the problem may be somewhere else.      *
->> *                                                               *
->> * If you do send a fix, please include this trailer:            *
->> *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
->> *                                                               *
->> * Hope this helps!                                              *
->> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
->>
->> krzysztof/for-next boot bisection: v5.4-rc1-48-g0bc9c79979ea on peach-pi
->>
->> Summary:
->>    Start:      0bc9c79979ea Merge branch 'for-v5.5/memory-samsung-dmc-dt' into for-next
->>    Details:    https://protect2.fireeye.com/url?k=57d30a4c-0ab44e6a-57d28103-0cc47a31384a-5c0d93fa4eb95f2e&u=https://kernelci.org/boot/id/5d9a50af59b5141ce5857c07
->>    Plain log:  https://protect2.fireeye.com/url?k=7e18d090-237f94b6-7e195bdf-0cc47a31384a-b693d6da384e8a14&u=https://storage.kernelci.org//krzysztof/for-next/v5.4-rc1-48-g0bc9c79979ea/arm/multi_v7_defconfig/gcc-8/lab-collabora/boot-exynos5800-peach-pi.txt
->>    HTML log:   https://protect2.fireeye.com/url?k=e9c39b5b-b4a4df7d-e9c21014-0cc47a31384a-5f31e671f969cef8&u=https://storage.kernelci.org//krzysztof/for-next/v5.4-rc1-48-g0bc9c79979ea/arm/multi_v7_defconfig/gcc-8/lab-collabora/boot-exynos5800-peach-pi.html
->>    Result:     0899a480ac65 ARM: dts: exynos: Add initial data for coupled regulators for Exynos5422/5800
-> Thanks for the report. Marek Szyprowski reported it on last Friday. I
-> dropped the patch as of now as it exposes some deadlock in regulator
-> code.
+When setting a new display mode, dw_hdmi_setup() calls
+dw_hdmi_enable_video_path(), which disables all hdmi clocks, including
+the audio clock.
 
-Thanks for dropping this patch.
+We should only (re-)enable the audio clock if audio was already enabled
+when setting the new mode.
 
-This turned out to be an issue in the regulator core logic, not the 
-deadlock as I initially suspected. See 
-https://lkml.org/lkml/2019/10/8/265 for more details.
+Without this patch, on RK3288, there will be HDMI audio on some monitors
+if i2s was played to headphone when the monitor was plugged.
+ACER H277HU and ASUS PB278 are two of the monitors showing this issue.
 
-I will send an updated version of this patch, because it turned out that 
-the v7 had incorrectly resolved conflicts and in case of Odroids 
-coupling were added to wrong regulators, what hide the issue in my 
-initial tests on Odroid XU4.
+Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
+Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+---
+ Change from v2 to v3:
+ - Remove spinlock around setting clock.
 
-Best regards
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+index a15fbf71b9d7..af060162b0af 100644
+--- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
++++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+@@ -2054,7 +2054,7 @@ static int dw_hdmi_setup(struct dw_hdmi *hdmi, struct drm_display_mode *mode)
+ 
+ 		/* HDMI Initialization Step E - Configure audio */
+ 		hdmi_clk_regenerator_update_pixel_clock(hdmi);
+-		hdmi_enable_audio_clk(hdmi, true);
++		hdmi_enable_audio_clk(hdmi, hdmi->audio_enable);
+ 	}
+ 
+ 	/* not for DVI mode */
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+2.23.0.581.g78d2f28ef7-goog
 
