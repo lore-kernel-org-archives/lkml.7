@@ -2,111 +2,108 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5450AC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C108AC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0242120679
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:34:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="RBvmbRVj"
+	by mail.kernel.org (Postfix) with ESMTP id A460321871
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:34:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730915AbfJHMeW (ORCPT
+        id S1730922AbfJHMes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 08:34:22 -0400
-Received: from pio-pvt-msa3.bahnhof.se ([79.136.2.42]:39830 "EHLO
-        pio-pvt-msa3.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730763AbfJHMeV (ORCPT
+        Tue, 8 Oct 2019 08:34:48 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:10186 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730605AbfJHMer (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 08:34:21 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTP id B3B493FA9A;
-        Tue,  8 Oct 2019 14:34:19 +0200 (CEST)
-Authentication-Results: pio-pvt-msa3.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=RBvmbRVj;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa3.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa3.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id ahkiahV7a3lc; Tue,  8 Oct 2019 14:34:18 +0200 (CEST)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTPA id 1BA573FA16;
-        Tue,  8 Oct 2019 14:34:17 +0200 (CEST)
-Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 7B26C36014C;
-        Tue,  8 Oct 2019 14:34:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1570538057; bh=YVSzd0MqV7won9JFSsoZRiwEMwhD7Xyu+FymKYBpowA=;
-        h=To:Cc:From:Subject:Date:From;
-        b=RBvmbRVjIhnW1mzTIJgBvKh61ASOlOick3JL0homIAy980483edV+0Y50vArqEScX
-         2URhS27aeWDunvwBOxAJhoL/jLNIkSU8YAiWSuXV7kc6eVMGe4GPbjMHNV8u9PR73t
-         9kJhkCWZobiw3GBq7JhmHz0satvW+ODdRR3WAL90=
-To:     Christoph Hellwig <hch@infradead.org>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Subject: dma coherent memory user-space maps
-Organization: VMware Inc.
-Message-ID: <b811f66d-2353-23c6-c9fa-e279cdb0f832@shipmail.org>
-Date:   Tue, 8 Oct 2019 14:34:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 8 Oct 2019 08:34:47 -0400
+Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
+  Nicolas.Ferre@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Nicolas.Ferre@microchip.com";
+  x-sender="Nicolas.Ferre@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa6.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Nicolas.Ferre@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa6.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Nicolas.Ferre@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: WhkBNvq3jsOp2cyfmV0+lPJQ1VKmrmpaIiaKSptI7W1Ff6RnMsBmfbNQpUBAPc+ovIn+vQnxBS
+ 41+4SHKSC6OZwlXR+uw3XZsEMODm3QfSQLtApT7ReFe290q99kHpMn0NhuIFtEI8bBNYVTA9J1
+ HEXvSo6HnQinu8CGN5E1jZ006EdJmtpdfoxIk4bPoBhW1Ce+wVZ9UtX6QjHcRPJUH7eyMPRe0l
+ 1nPJgLo72x6qtYQMDV+D/CAYpHOJYwlo82+ziBVupWT+hFBW5J1KzoN4XaFSjoivSuYlB3zAEh
+ 4uc=
+X-IronPort-AV: E=Sophos;i="5.67,270,1566889200"; 
+   d="scan'208";a="49212609"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 08 Oct 2019 05:34:46 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 8 Oct 2019 05:34:46 -0700
+Received: from tenerife.corp.atmel.com (10.10.85.251) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Tue, 8 Oct 2019 05:34:44 -0700
+From:   Nicolas Ferre <nicolas.ferre@microchip.com>
+To:     Ludovic Desroches <ludovic.desroches@microchip.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <robh+dt@kernel.org>
+CC:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        <linux-kernel@vger.kernel.org>, <ulf.hansson@linaro.org>,
+        <adrian.hunter@intel.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>
+Subject: [PATCH 1/2] dt-bindings: sdhci-of-at91: add the microchip,sdcal-inverted property
+Date:   Tue, 8 Oct 2019 14:34:31 +0200
+Message-ID: <4d269f30b1122487a2b5c8b48e24f78f2b75a509.1570537903.git.nicolas.ferre@microchip.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Christoph,
+Add the specific microchip,sdcal-inverted property to at91 sdhci
+device binding.
+This optional property describes how the SoC SDCAL pin is connected.
+It could be handled at SiP, SoM or board level.
 
-Following our previous discussion I wonder if something along the lines 
-of the following could work / be acceptible
+This property read by at91 sdhci driver will allow to put in place a
+software workaround that would reduce power consumption.
 
-typedef unsigned long dma_pfn_t /* Opaque pfn type. Arch dependent. This 
-could if needed be a struct with a pointer and an offset */
+Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+---
+ Documentation/devicetree/bindings/mmc/sdhci-atmel.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-/* Similar to vmf_insert_mixed() */
-vm_fault_t dma_vmf_insert_mixed(struct device *dev,
-                 struct vm_area_struct *vma,
-                 unsigned long addr,
-                 dma_pfn_t dpfn,
-                 unsigned long attrs);
-
-/* Similar to vmf_insert_pfn_pmd() */
-vm_fault_t dma_vmf_insert_pfn_pmd(struct device *dev,
-                   struct vm_area_struct *vma,
-                   unsigned long addr,
-                   dma_pfn_t dpfn,
-                   unsigned long attrs);
-
-/* Like vmap, but takes struct dma_pfns. */
-extern void *dma_vmap(struct device *dev,
-               dma_pfn_t dpfns[],
-               unsigned int count, unsigned long flags,
-               unsigned long attrs);
-
-/* Obtain struct dma_pfn pointers from a dma coherent allocation */
-int dma_get_dpfns(struct device *dev, void *cpu_addr, dma_addr_t dma_addr,
-           pgoff_t offset, pgoff_t num, dma_pfn_t dpfns[]);
-
-I figure, for most if not all architectures we could use an ordinary pfn 
-as dma_pfn_t, but the dma layer would still have control over how those 
-pfns are obtained and how they are used in the kernel's mapping APIs.
-
-If so, I could start looking at this, time permitting,  for the cases 
-where the pfn can be obtained from the kernel address or from 
-arch_dma_coherent_to_pfn(), and also the needed work to have a tailored 
-vmap_pfn().
-
-Thanks,
-/Thomas
-
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci-atmel.txt b/Documentation/devicetree/bindings/mmc/sdhci-atmel.txt
+index 1b662d7171a0..503c6dbac1b2 100644
+--- a/Documentation/devicetree/bindings/mmc/sdhci-atmel.txt
++++ b/Documentation/devicetree/bindings/mmc/sdhci-atmel.txt
+@@ -9,6 +9,11 @@ Required properties:
+ - clocks:		Phandlers to the clocks.
+ - clock-names:		Must be "hclock", "multclk", "baseclk";
+ 
++Optional properties:
++- microchip,sdcal-inverted: when present, polarity on the SDCAL SoC pin is
++  inverted. The default polarity for this signal is described in the datasheet.
++  For instance on SAMA5D2, the pin is usually tied to the GND with a resistor
++  and a capacitor (see "SDMMC I/O Calibration" chapter).
+ 
+ Example:
+ 
+-- 
+2.17.1
 
