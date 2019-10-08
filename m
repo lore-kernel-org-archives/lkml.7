@@ -2,315 +2,325 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E3CC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D452CC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2653920815
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:35:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B3DC2070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:35:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="Yh8IKFTN";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="Yh8IKFTN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730128AbfJHJff (ORCPT
+        id S1730170AbfJHJfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 05:35:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44336 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729375AbfJHJff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 05:35:35 -0400
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 511DD85543
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Oct 2019 09:35:34 +0000 (UTC)
-Received: by mail-wr1-f69.google.com with SMTP id z17so8889047wru.13
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 02:35:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rYQbtKBKne4ecHd8MqLNXHTzN59LTiSeMUIzD+b26dM=;
-        b=VhvDZFgzeKEb0f5P/mtSLIV9yeUBHjzLf0KoUvrkc6prKdAou+70v60qgZGo8BbNXG
-         /i4R9HGs+JnfQoz8kgHlyxgXLzBJNS3O4jc5bBFoO2q6bKycYGRG85cWTaykGK2UQxKE
-         +x24hqH+1Q5LkPgcVCy/R/gaqUFOT3svaylpAVdEw83xD7x6p5gXwCpUMpKsEiHcx2Y4
-         tRslMt9sCENJA+nM9JharRpj6CrLR3NrFxPobc4OlQfM1cpsH+sBmDEaRjv0AI/IWI+C
-         LXrTQixU/8qp1/sGk43DdzaKPE57Du9yBt0I4HNs9v3f/8lBCslFCJ06P+2k6738Hz0w
-         6dog==
-X-Gm-Message-State: APjAAAUWC1TdSMCyE+tYL7E2jTZ4Wxa6BOzdxhn5lQaI6uviLCSuQH3c
-        Sb+/xav22nkOPxEwvpuw8LvNgemPv1QoIZKG8zSm15AfGWrrYtWEjJXlLpROlCZNw7VFCJeYmME
-        iv0HnIIrrWYTf87b7Dn2ne8ho
-X-Received: by 2002:a7b:c451:: with SMTP id l17mr2713225wmi.61.1570527332840;
-        Tue, 08 Oct 2019 02:35:32 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyg+uc8leCI2/IjSBHH3vY6BjPvvbk0gliL/w1NrUe4xAquHPZi8D64XZFB7Cim1pCgaatxog==
-X-Received: by 2002:a7b:c451:: with SMTP id l17mr2713195wmi.61.1570527332337;
-        Tue, 08 Oct 2019 02:35:32 -0700 (PDT)
-Received: from shalem.localdomain (2001-1c00-0c14-2800-ec23-a060-24d5-2453.cable.dynamic.v6.ziggo.nl. [2001:1c00:c14:2800:ec23:a060:24d5:2453])
-        by smtp.gmail.com with ESMTPSA id g1sm17657184wrv.68.2019.10.08.02.35.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Oct 2019 02:35:31 -0700 (PDT)
-Subject: Re: [PATCH v7 0/8] efi/firmware/platform-x86: Add EFI embedded fw
- support
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Peter Jones <pjones@redhat.com>,
-        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-input@vger.kernel.org
-References: <20191004145056.43267-1-hdegoede@redhat.com>
- <20191007141956.GA25347@gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <c7f1678f-ff03-1c3a-02e3-a68025b87969@redhat.com>
-Date:   Tue, 8 Oct 2019 11:35:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <20191007141956.GA25347@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Tue, 8 Oct 2019 05:35:38 -0400
+Received: from mail-eopbgr30088.outbound.protection.outlook.com ([40.107.3.88]:65249
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728866AbfJHJfh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 05:35:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=u9L3+imPDX/KEb8UvgiO9nbSknawneWULxiBOKHuxxI=;
+ b=Yh8IKFTNPMLRno9041t5d6DM/H7R+MsXh7zCqti1w9elL7/fXPdKtqxFIzJqKZDvvNTf7YZcZ9mM4Tk0hzEMdlYWHxLsmPRlKhTgbC1rf9LJFah7ydHCIDG1bhKQhN62hOAj4OJErhjIvYGl523QsIRHK8mzqq4kGGpj91IUvis=
+Received: from AM4PR08CA0051.eurprd08.prod.outlook.com (2603:10a6:205:2::22)
+ by VE1PR08MB5040.eurprd08.prod.outlook.com (2603:10a6:803:114::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2327.24; Tue, 8 Oct
+ 2019 09:35:28 +0000
+Received: from VE1EUR03FT037.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e09::205) by AM4PR08CA0051.outlook.office365.com
+ (2603:10a6:205:2::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2347.16 via Frontend
+ Transport; Tue, 8 Oct 2019 09:35:28 +0000
+Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
+ header.from=arm.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of arm.com: DNS Timeout)
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ VE1EUR03FT037.mail.protection.outlook.com (10.152.19.70) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2305.15 via Frontend Transport; Tue, 8 Oct 2019 09:35:26 +0000
+Received: ("Tessian outbound 6481c7fa5a3c:v33"); Tue, 08 Oct 2019 09:35:22 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 2bf21b3adae9510c
+X-CR-MTA-TID: 64aa7808
+Received: from 8e943aff869d.2 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.12.51])
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 4DF80D64-ACC6-46B0-885E-B32C09DD3D0A.1;
+        Tue, 08 Oct 2019 09:35:17 +0000
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04lp2051.outbound.protection.outlook.com [104.47.12.51])
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 8e943aff869d.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Tue, 08 Oct 2019 09:35:17 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KS5YhvvqN1V6f6ZG7/W68zVYsdso1zNJ8YaTZTSYtryvpQMdk39681GFHz3x/5pztjNf0dKnwNul8ONRJp5cXdtJWtWjZBSn+FMRvYUDk/pXaAK1VFXpbMAeRjlDOXpIH1FXIkxExgbL9q6WHyt82TyG7SrW4ze3tAQZVhOjoZtA9ssg7kpMWpeNaEOH32Gn/jlTwI/qP2900rO5vIScd6RLwbrkBsBFy1fAZAlcgLGuoj8CdCf6N7AmpuAMuvmP8/fq/A5O2eJLSmG0zkmSyyv+d00Z5js6BYf+SaTauAxT3nPb3LC8bUJ6/7jeWe+aGwBQcjH/++88BWe8mIVeNA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=u9L3+imPDX/KEb8UvgiO9nbSknawneWULxiBOKHuxxI=;
+ b=T5sl8I+Q8vGyu5KGSSVGFOim51BTEVO15FA3E1+6m14WNZnGBKyqzBrp+Kaz9idt9z1ZtJy+dYLDkL6HOR5BNuY7VnDBHZgs00IKfrhoOXQeU0m4QMHyk83JPMEIv5TDy/LR0Vrk9GR7+tepVFCPQ65KTaoB91Q3XMskIdJ/U54yt6ILKF3CAxWgzfzO4damVxEoXGkHsvD6SirZ1gY3ZVUKzEEFz/PVNsDFXTSsW0mWBBjor11e4MDkwj/E2kcJ7pDimelcKRumrCSYowL1Zfupt6Tcy4++1qt3yNOyBLIj/6dUFkOkSnvWo07Hxw08W11ovjo8ynfoaKgVgUGUZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=u9L3+imPDX/KEb8UvgiO9nbSknawneWULxiBOKHuxxI=;
+ b=Yh8IKFTNPMLRno9041t5d6DM/H7R+MsXh7zCqti1w9elL7/fXPdKtqxFIzJqKZDvvNTf7YZcZ9mM4Tk0hzEMdlYWHxLsmPRlKhTgbC1rf9LJFah7ydHCIDG1bhKQhN62hOAj4OJErhjIvYGl523QsIRHK8mzqq4kGGpj91IUvis=
+Received: from VI1PR08MB4078.eurprd08.prod.outlook.com (20.178.127.92) by
+ VI1PR08MB2941.eurprd08.prod.outlook.com (10.170.238.161) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2327.23; Tue, 8 Oct 2019 09:35:15 +0000
+Received: from VI1PR08MB4078.eurprd08.prod.outlook.com
+ ([fe80::7d25:d1f2:e3eb:868b]) by VI1PR08MB4078.eurprd08.prod.outlook.com
+ ([fe80::7d25:d1f2:e3eb:868b%6]) with mapi id 15.20.2327.026; Tue, 8 Oct 2019
+ 09:35:15 +0000
+From:   Mihail Atanassov <Mihail.Atanassov@arm.com>
+To:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+CC:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nd <nd@arm.com>
+Subject: Re: [PATCH] drm/komeda: Set output color depth for output
+Thread-Topic: [PATCH] drm/komeda: Set output color depth for output
+Thread-Index: AQHVfblD7I+ubO1huUCp0qQz7Z0Q4adQe+uA
+Date:   Tue, 8 Oct 2019 09:35:15 +0000
+Message-ID: <3337512.00vBK9FLud@e123338-lin.cambridge.arm.com>
+References: <20191008091734.19509-1-lowry.li@arm.com>
+In-Reply-To: <20191008091734.19509-1-lowry.li@arm.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [217.140.106.52]
+x-clientproxiedby: LO2P265CA0204.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:9e::24) To VI1PR08MB4078.eurprd08.prod.outlook.com
+ (2603:10a6:803:e5::28)
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=Mihail.Atanassov@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-Correlation-Id: a268c5b2-8aa7-48ac-45fe-08d74bd2da06
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-TrafficTypeDiagnostic: VI1PR08MB2941:|VI1PR08MB2941:|VE1PR08MB5040:
+x-ms-exchange-transport-forked: True
+X-Microsoft-Antispam-PRVS: <VE1PR08MB504021D98F5F54F3B5A90A4F8F9A0@VE1PR08MB5040.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+x-ms-oob-tlc-oobclassifiers: OLM:418;OLM:418;
+x-forefront-prvs: 01842C458A
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(376002)(396003)(366004)(39860400002)(189003)(199004)(81166006)(6636002)(8676002)(3846002)(81156014)(8936002)(6862004)(71190400001)(2906002)(6246003)(14444005)(6116002)(66066001)(256004)(14454004)(6436002)(6486002)(25786009)(4326008)(229853002)(99286004)(478600001)(476003)(11346002)(446003)(71200400001)(386003)(486006)(6506007)(54906003)(102836004)(6512007)(86362001)(76176011)(52116002)(316002)(26005)(186003)(305945005)(7736002)(66476007)(66556008)(64756008)(66446008)(5660300002)(66946007)(39026011);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB2941;H:VI1PR08MB4078.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: gvV6HRjzV03bNVTVKi8DPYM+pgOxIB9mp/qjBSu11TOKpyoC4SD+eizZW7A1kfKt24tQaLusWkqBoL68kXzuE/ylMBkfB6aQP9DXeHKVizZHiSztSLuVbsqO/mT7erzFltzcXw7enu9IxebzB6sNl5MQ9v5zBNB/iuhH1lQEGq+Ux0nKrx+rEFeetEQXksasPX5Xrgbt3Imm2btTE9avpj75t0XLEiJhWYU8stK5Jouo/qKcjv/TceZl9J9FgRTSakXOa2q8De3YnsuuKVrXAPTAsV2IR7+cw90zu6swhqZUdcEk/CGG9U9kJLEiMdEMYbh/0LUWbmptW4lmwUSuygUMzd9sOLWfcprKUY58eWT6142qjOOtu+IrMxvCCSBethlG/KTClfJE4G+cyyIxVZulPonzYuafJaZRutg3yak=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <9B7F00DD901F17478EF1242A28829348@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB2941
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Mihail.Atanassov@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: VE1EUR03FT037.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(346002)(136003)(376002)(199004)(189003)(126002)(25786009)(76130400001)(14444005)(305945005)(47776003)(8746002)(8936002)(70586007)(63350400001)(486006)(478600001)(99286004)(70206006)(26826003)(86362001)(446003)(11346002)(6512007)(7736002)(6636002)(66066001)(6486002)(476003)(26005)(54906003)(76176011)(356004)(4326008)(186003)(316002)(50466002)(23726003)(6506007)(6116002)(36906005)(386003)(22756006)(3846002)(102836004)(336012)(8676002)(46406003)(6246003)(97756001)(2906002)(14454004)(81166006)(229853002)(5660300002)(6862004)(81156014)(39026011);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB5040;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 4c9b7b64-07e1-4684-0d6f-08d74bd2d2f8
+NoDisclaimer: True
+X-Forefront-PRVS: 01842C458A
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: fzXiMeM4r6BTBrEcpdNyxdtSeyzBW4APa56gg0FdfVXeG59TwWIFxhG2t2qI0wGMkHSMqISBvuVM9PIqeJvUbabLzoutw5pPnLYnyTyDc9gbhfBhT5u4x1LIbgSLiaVQ8zlhJVVdagyVH4gxw6W1L0wWuaJPdI9uG2I9yVF/grsaiUpxkn7jqp2AgM+yUVNoKQRH7/REYRV8ovrb01NHUQU3UZGoF7+bJKN55HZDjeBhd/gJc7hVkKF7N6MzZLcHR4y2H/onngbUVTBeaTm9KAZ11o4n9GSE2BG4BBiZtNbwKXOscm43xrOpZ+cHt2URSehc4/7oU6nSIaVAx7vCdfsCgdDaq5rHTRb15oMmBUV81k1zLmx3EN1u3Edt2MOXwuoWGg2ggURzTmuVAS93ywRHYL1L5xaUjr9p65rWCh0=
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Oct 2019 09:35:26.8043
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a268c5b2-8aa7-48ac-45fe-08d74bd2da06
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB5040
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ingo,
+Hi Lowry,
 
-On 07-10-2019 16:19, Ingo Molnar wrote:
-> 
-> * Hans de Goede <hdegoede@redhat.com> wrote:
-> 
->> Hi All,
->>
->> Here is v7 of my patch-set to add support for EFI embedded fw to the kernel.
->>
->> v6 was posted a long time ago, around the 4.18 days. The long wait was for
->> a suitable secure-hash for checking the firmware we find embedded in the EFI
->> is the one we expect.
->>
->> With 5.4-rc1 we finally have a standalone sha256 lib, so that hurdle for
->> this patch-set is now gone.
->>
->> I've tried to address all review-remarks against v6 in this new version:
->>
->> Changes in v7:
->> - Split drivers/firmware/efi and drivers/base/firmware_loader changes into
->>    2 patches
->> - Use new, standalone, lib/crypto/sha256.c code
->> - Address kdoc comments from Randy Dunlap
->> - Add new FW_OPT_FALLBACK_PLATFORM flag and firmware_request_platform()
->>    _request_firmware() wrapper, as requested by Luis R. Rodriguez
->> - Stop using "efi-embedded-firmware" device-property, now that drivers need to
->>    use the new firmware_request_platform() to enable fallback to a device fw
->>    copy embedded in the platform's main firmware, we no longer need a property
->>    on the device to trigger this behavior
->> - Use security_kernel_load_data instead of calling
->>    security_kernel_read_file with a NULL file pointer argument
->> - Move the docs to Documentation/driver-api/firmware/fallback-mechanisms.rst
->> - Document the new firmware_request_platform() function in
->>    Documentation/driver-api/firmware/request_firmware.rst
->> - Add 2 new patches for the silead and chipone-icn8505 touchscreen drivers
->>    to use the new firmware_request_platform() method
->> - Rebased on top of 5.4-rc1
->>
->> I guess this will probably need another round (or two) of review + fixing,
->> but eventually this can hopefully be merged. Since this touches a bunch
->> of different subsystems the question is how to merge this? Most of the
->> touched files outside of the firmware-loader code do not see a lot of
->> churn, so my proposal would be to merge patches 1-6 through the tree
->> which carries firmware-loader changes; and then provide an immutable
->> branch for the platform/x86 maintainers to merge and then they can merge
->> the last 2 patches (as the touchscreen_dmi.c file does see quite a bit
->> of changes every release).
-> 
-> So I was looking for a high level 0/ boilerplate description of this
-> series, to explain what "EFI embedded fw" is, what problems it solves and
-> how it helps the kernel in general - and found this in 2/8:
+On Tuesday, 8 October 2019 10:17:52 BST Lowry Li (Arm Technology China) wro=
+te:
+> Set color_depth according to connector->bpc.
+>=20
+> Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
+> ---
+>  .../arm/display/komeda/d71/d71_component.c    |  1 +
+>  .../gpu/drm/arm/display/komeda/komeda_crtc.c  | 20 +++++++++++++++++++
+>  .../gpu/drm/arm/display/komeda/komeda_kms.h   |  2 ++
+>  .../drm/arm/display/komeda/komeda_pipeline.h  |  1 +
+>  .../display/komeda/komeda_pipeline_state.c    | 19 ++++++++++++++++++
+>  .../arm/display/komeda/komeda_wb_connector.c  |  4 ++++
+>  6 files changed, 47 insertions(+)
+>=20
+> diff --git a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c b/dri=
+vers/gpu/drm/arm/display/komeda/d71/d71_component.c
+> index c3d29c0b051b..27cdb03573c1 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
+> @@ -951,6 +951,7 @@ static void d71_improc_update(struct komeda_component=
+ *c,
+>  			       to_d71_input_id(state, index));
+> =20
+>  	malidp_write32(reg, BLK_SIZE, HV_SIZE(st->hsize, st->vsize));
+> +	malidp_write32(reg, IPS_DEPTH, st->color_depth);
+>  }
+> =20
+>  static void d71_improc_dump(struct komeda_component *c, struct seq_file =
+*sf)
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c b/drivers/g=
+pu/drm/arm/display/komeda/komeda_crtc.c
+> index 75263d8cd0bd..baa986b70876 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
+> @@ -17,6 +17,26 @@
+>  #include "komeda_dev.h"
+>  #include "komeda_kms.h"
+> =20
+> +void komeda_crtc_get_color_config(struct drm_crtc_state *crtc_st,
+> +				  u32 *color_depths)
+> +{
+> +	struct drm_connector *conn;
+> +	struct drm_connector_state *conn_st;
+> +	int i, min_bpc =3D 31, conn_bpc =3D 0;
+> +
+> +	for_each_new_connector_in_state(crtc_st->state, conn, conn_st, i) {
+> +		if (conn_st->crtc !=3D crtc_st->crtc)
+> +			continue;
+> +
+> +		conn_bpc =3D conn->display_info.bpc ? conn->display_info.bpc : 8;
+> +
+> +		if (conn_bpc < min_bpc)
+> +			min_bpc =3D conn_bpc;
+Something doesn't add up here. min_bpc is effectively set but not used.
+> +	}
+> +
+> +	*color_depths =3D GENMASK(conn_bpc, 0);
+> +}
+> +
+>  static void komeda_crtc_update_clock_ratio(struct komeda_crtc_state *kcr=
+tc_st)
+>  {
+>  	u64 pxlclk, aclk;
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_kms.h b/drivers/gp=
+u/drm/arm/display/komeda/komeda_kms.h
+> index 45c498e15e7a..a42503451b5d 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_kms.h
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_kms.h
+> @@ -166,6 +166,8 @@ static inline bool has_flip_h(u32 rot)
+>  		return !!(rotation & DRM_MODE_REFLECT_X);
+>  }
+> =20
+> +void komeda_crtc_get_color_config(struct drm_crtc_state *crtc_st,
+> +				  u32 *color_depths);
+>  unsigned long komeda_crtc_get_aclk(struct komeda_crtc_state *kcrtc_st);
+> =20
+>  int komeda_kms_setup_crtcs(struct komeda_kms_dev *kms, struct komeda_dev=
+ *mdev);
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h b/drive=
+rs/gpu/drm/arm/display/komeda/komeda_pipeline.h
+> index b322f52ba8f2..7653f134a8eb 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
+> @@ -323,6 +323,7 @@ struct komeda_improc {
+> =20
+>  struct komeda_improc_state {
+>  	struct komeda_component_state base;
+> +	u8 color_depth;
+>  	u16 hsize, vsize;
+>  };
+> =20
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c b=
+/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
+> index 0ba9c6aa3708..e68e8f85ab27 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
+> @@ -743,6 +743,7 @@ komeda_improc_validate(struct komeda_improc *improc,
+>  		       struct komeda_data_flow_cfg *dflow)
+>  {
+>  	struct drm_crtc *crtc =3D kcrtc_st->base.crtc;
+> +	struct drm_crtc_state *crtc_st =3D &kcrtc_st->base;
+>  	struct komeda_component_state *c_st;
+>  	struct komeda_improc_state *st;
+> =20
+> @@ -756,6 +757,24 @@ komeda_improc_validate(struct komeda_improc *improc,
+>  	st->hsize =3D dflow->in_w;
+>  	st->vsize =3D dflow->in_h;
+> =20
+> +	if (drm_atomic_crtc_needs_modeset(crtc_st)) {
+> +		u32 output_depths;
+> +		u32 avail_depths;
+> +
+> +		komeda_crtc_get_color_config(crtc_st,
+> +					     &output_depths);
+> +
+> +		avail_depths =3D output_depths & improc->supported_color_depths;
+> +		if (avail_depths =3D=3D 0) {
+> +			DRM_DEBUG_ATOMIC("No available color depths, conn depths: 0x%x & disp=
+lay: 0x%x\n",
+> +					 output_depths,
+> +					 improc->supported_color_depths);
+> +			return -EINVAL;
+> +		}
+> +
+> +		st->color_depth =3D __fls(avail_depths);
+> +	}
+> +
+>  	komeda_component_add_input(&st->base, &dflow->input, 0);
+>  	komeda_component_set_output(&dflow->input, &improc->base, 0);
+> =20
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c b/d=
+rivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c
+> index 2851cac94d86..740a81250630 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c
+> @@ -142,6 +142,7 @@ static int komeda_wb_connector_add(struct komeda_kms_=
+dev *kms,
+>  	struct komeda_dev *mdev =3D kms->base.dev_private;
+>  	struct komeda_wb_connector *kwb_conn;
+>  	struct drm_writeback_connector *wb_conn;
+> +	struct drm_display_info *info;
+>  	u32 *formats, n_formats =3D 0;
+>  	int err;
+> =20
+> @@ -171,6 +172,9 @@ static int komeda_wb_connector_add(struct komeda_kms_=
+dev *kms,
+> =20
+>  	drm_connector_helper_add(&wb_conn->base, &komeda_wb_conn_helper_funcs);
+> =20
+> +	info =3D &kwb_conn->base.base.display_info;
+> +	info->bpc =3D __fls(kcrtc->master->improc->supported_color_depths);
+> +
+>  	kcrtc->wb_conn =3D kwb_conn;
+> =20
+>  	return 0;
+>=20
 
-Sorry you had to dig into the individual patch changelogs for that
-I sorta assumed that everyone involved would still vaguely remember
-what this series is about.
 
->>> Just like with PCI options ROMs, which we save in the setup_efi_pci*
->>> functions from arch/x86/boot/compressed/eboot.c, the EFI code / ROM itself
->>> sometimes may contain data which is useful/necessary for peripheral drivers
->>> to have access to.
->>>
->>> Specifically the EFI code may contain an embedded copy of firmware which
->>> needs to be (re)loaded into the peripheral. Normally such firmware would be
->>> part of linux-firmware, but in some cases this is not feasible, for 2
->>> reasons:
->>>
->>> 1) The firmware is customized for a specific use-case of the chipset / use
->>> with a specific hardware model, so we cannot have a single firmware file
->>> for the chipset. E.g. touchscreen controller firmwares are compiled
->>> specifically for the hardware model they are used with, as they are
->>> calibrated for a specific model digitizer.
->>>
->>> 2) Despite repeated attempts we have failed to get permission to
->>> redistribute the firmware. This is especially a problem with customized
->>> firmwares, these get created by the chip vendor for a specific ODM and the
->>> copyright may partially belong with the ODM, so the chip vendor cannot
->>> give a blanket permission to distribute these.
->>>
->>> This commit adds support for finding peripheral firmware embedded in the
->>> EFI code and makes the found firmware available through the new
->>> efi_get_embedded_fw() function.
->>>
->>> Support for loading these firmwares through the standard firmware loading
->>> mechanism is added in a follow-up commit in this patch-series.
->>>
->>> Note we check the EFI_BOOT_SERVICES_CODE for embedded firmware near the end
->>> of start_kernel(), just before calling rest_init(), this is on purpose
->>> because the typical EFI_BOOT_SERVICES_CODE memory-segment is too large for
->>> early_memremap(), so the check must be done after mm_init(). This relies
->>> on EFI_BOOT_SERVICES_CODE not being free-ed until efi_free_boot_services()
->>> is called, which means that this will only work on x86 for now.
->>>
->>> Reported-by: Dave Olsthoorn <dave@bewaar.me>
->>> Suggested-by: Peter Jones <pjones@redhat.com>
->>> Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
->>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> 
-> There's also patch #3, which explains how this is used:
-> 
->>> This commit adds a new platform fallback mechanism to the firmware loader
->>> which will try to lookup a device fw copy embedded in the platform's main
->>> firmware if direct filesystem lookup fails.
->>>
->>> Drivers which need such embedded fw copies can enable this fallback
->>> mechanism by using the new firmware_request_platform() function.
->>>
->>> Note that for now this is only supported on EFI platforms and even on
->>> these platforms firmware_fallback_platform() only works if
->>> CONFIG_EFI_EMBEDDED_FIRMWARE is enabled (this gets selected by drivers
->>> which need this), in all other cases firmware_fallback_platform() simply
->>> always returns -ENOENT.
-> 
-> Plus there's 3 patches that opt in three drivers to this new EFI-firmware
-> loading mechanism, right?
+--=20
+Mihail
 
-There is 1 pseudo driver drivers/platform/touchscreen_dmi.c which provides
-info which under Windows is hardcoded in device-model specific drivers to
-the touchscreen drivers as device-properties.
 
-This pseudo driver is modified to provide the info which
-drivers/firmware/efi/embedded-firmware.c needs to find the firmware,
-so that we keep the per-model info in 1 file.
 
-Then 2 normal touchscreen drivers are modified to opt-in into the
-new EFI-firmware loading mechanism.
-
-> A couple of high level questions:
-> 
-> - How common are these kinds of firmware files that should be loaded into
->    the device by the OS device driver? Common? Or 1% of systems? 0.1% of
->    systems? 0.0001%?
-
-This whole thing is a clever hack to get around us being unable to get
-redistribution permission for (touchscreen) firmwares where the chip vendor
-says the firmware is model specific so part of the copyright lays with the
-odm/oem and we should talk to them (the odm) and the odm/oem points back
-to the chip vendor...
-
-Windows does not get the firmware from the UEFI copy, the windows driver
-is model specific. The windows driver is part of the os-image the device ships
-with and you are in trouble if you loose the driver. This windows driver
-has its own embedded copy of the model specific touchscreen firmware
-(oh if only they had put said firmware in some nvram on the chip).
-
-In some cases, mostly on Intel Cherry Trail based tablets, which are
-cheap and thus use the cheapest touchscreens which have this problem,
-the UEFI contains a "mouse" driver which has a copy, which is what this
-patch set adds support for to get around the not being able to distribute
-problem.
-
-As such this is not really common, still there are a lot of those cheap
-Cherry Trail tablets and new ones are still being manufactured. One of the
-reasons I'm spending time on making these work 100% OOTB is to get around
-the standard Linux sucks at tablets because desktop devs have no tablet
-hw to develop a tablet ui on issue.
-
-I also have tried to make the mechanism generic since I guess it might
-become in handy for some other scenarios in the future.
-
-Putting a number on this is hard. I do know several members of my
-local hackerspace have such tablets since they are cheap and it is nice
-to play around with Linux on them. I would guess a number would be between
-1% and 0.1%, but I may be way off.
-
-> - Can there be a situation where linux-firmware already includes an older
->    copy of the firmware, and the EFI firmware has a newer version? If this
->    can plausibly happen, shouldn't the fallback mechanism do some sort of
->    version check (if that's possible), and load the newer version?
-
-I would assume that if we can get distribution permission we will also
-be able to update the linux-firmware version later. So atm I'm not worried
-about this scenario.
-
-> - I'm worried about the explicit opt-in nature of these firmware files -
->    the OS driver has to be explicitly aware of this possibility. Shouldn't
->    we at minimum have some sort of boot time check to see whether a device
->    has an embedded fw blob, and warn the user if we don't actually load
->    it? Which would generate some gentle pressure to fix our drivers?
-
-The way this works is that drivers/firmware/efi/embedded-firmware.c
-only checks for firmwares listed in its embedded_fw_table[]. Entries in
-this table need to be manually added. We basically do a brute-force
-search of the EFI_BOOT_SERVICES_CODE segments looking for a magic prefix
-and then checking for a known SHA256 sum. This is triggered by a DMI
-match to avoid slowing the boot with the search on other devices
-(UEFI has no standard way to get embedded firmware copies out of it).
-
-I would assume someone going through the trouble to add an entry
-to embedded_fw_table[] to also check that things work without a copy
-in /lib/firmware.
-
-So the scenario of a new entry showing up, without the matching driver
-getting modified is somewhat unlikely. At the same time the firmware-loader
-people want to avoid changing the fw-load code paths for all drivers, for
-something which so far is used by only very few drivers.
-
-> - I think the config option should be default-y, because AFAICS this
->    mechanism makes broken drivers/devices work.
-
-It is a hidden option and drivers which need this already select it in
-this patch-set.
-
-> - Finally, is there any question of trust or a potential for other
->    security pitfalls here, where we'd trust linux-firmware over what the
->    EFI firmware says is the proper firmware for a device? My default
->    assumption would be that we are exposed to the EFI firmware anyway, and
->    it comes with the hardware just like the devices come with the
->    hardware, so we can generally trust it. But I might be missing
->    something. If there's any plausible question of trust (for example can
->    attackers hide rooted firmware in the EFI image, without triggering
->    filesystem integrity checks on the regular filesystem side?) then it
->    might make sense to offer a boot parameter to disable this, beyond the
->    config parameter.
-
-You are right that we are exposed to the EFI firmware anyway on top we
-only load embedded firmwares with a known SHA256 and so far the firmware
-only gets used for touchscreen controllers which cannot do DMA.
-
-So all in all I am not concerned about security. An attacker would need
-to be able to write EFI_BOOT_SERVICES_CODE segments, yet not be able to
-find a better attack vector then this; and he would need to be able to
-fake an expected SHA256 sum on a Trojan firmware payload, which all
-is quite unlikely.
-
-Regards,
-
-Hans
