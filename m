@@ -2,219 +2,185 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0985DC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3691FC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:49:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE11F20679
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:49:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fiKEYopP"
+	by mail.kernel.org (Postfix) with ESMTP id 17C6820679
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:49:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730705AbfJHLtp (ORCPT
+        id S1730740AbfJHLtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 07:49:45 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:40668 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730317AbfJHLtn (ORCPT
+        Tue, 8 Oct 2019 07:49:49 -0400
+Received: from regular1.263xmail.com ([211.150.70.199]:56782 "EHLO
+        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730699AbfJHLtr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 07:49:43 -0400
-Received: by mail-vs1-f68.google.com with SMTP id v10so11076510vsc.7
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 04:49:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gashf1ZAzd7Key4/NTgvhc64QRBwluBpWB6I3jCKxOs=;
-        b=fiKEYopPXYm6rnp9NjGkZ1KcxJYHZsxjBsMcc4hv/5OjHpyX6k5WIZm5dG9fad39cl
-         Xtf1v1I9/muc4vBfWDoHarMolIog9R7edzArMf/o2czUC+w50R5TMNqP3rzykMDI+E2t
-         jnjKDrirhh3DlISSyuneGArhMkA2RopW8++mtlSmrDMvtMFAzq9nh1UcDtrWzpFldPSp
-         21K/vLD74zrdAEg567mSi9sOZcJWbTBZK/S+CBLwbF26h+hAilx7tORo5YQ8GMwtXwpf
-         CfMcWqI2vDL/JiCrV2asdoqPcJOctLMLTRciRj0d9PNZtHT3HwjFlBCRWjkFcBA1eH1+
-         Qs5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gashf1ZAzd7Key4/NTgvhc64QRBwluBpWB6I3jCKxOs=;
-        b=F9lNVthrzXEplzvzsoAR1F70xi3o7k3dJL9eBtBOpfHeD3ottEGFetzBerJkztOYun
-         RzTMGn8Qt8AMes5CqBUtNF2BbsLYhvJnBugCwEJm8d1tvsEBJ3U5Eu/oyDQXdq5IPG0O
-         rVvZoSXg6jrGwGEkRFgADW1YcP9IQG9mFdfmlU5mpdnYGiF975PAWeC4F0RAolEbOUNK
-         j13pfSHqWUSuy9PuN0ttES4XJvfQYPTvWYEsSOpsSpH84HBTPIdA4KBaplgn4AiswJtx
-         PH3dqDincWNFKy3e0YuwjuIHlKTlJ9jq92T5mK4U+5y6exjESyoJybIcmqwAOcrZBA+d
-         sDoQ==
-X-Gm-Message-State: APjAAAWLJmfpR/0tyrlV/sosMTbFtdBR2IXy+GbYAI94lDd5LnOlLrYd
-        nyj5WzCvWwFJ8cP0W7uDwIOTPal7gAl6vrJvJ0kIOQ==
-X-Google-Smtp-Source: APXvYqx1S5aRGmUgzD93NIsrCsojrRb50hnb1dlLYGdT6Yjq5noW1W3AgzaTaEm3MSleilsKWehRv1NgQwfNWVYKRbE=
-X-Received: by 2002:a67:eb84:: with SMTP id e4mr17918307vso.165.1570535380644;
- Tue, 08 Oct 2019 04:49:40 -0700 (PDT)
+        Tue, 8 Oct 2019 07:49:47 -0400
+Received: from localhost (unknown [192.168.167.13])
+        by regular1.263xmail.com (Postfix) with ESMTP id D7C533DD;
+        Tue,  8 Oct 2019 19:49:34 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-SKE-CHECKED: 1
+X-ABS-CHECKED: 1
+Received: from [172.16.10.69] (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P5322T139950326527744S1570535374143958_;
+        Tue, 08 Oct 2019 19:49:34 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <22671dc7acf9fc0b92f2f382ec646b55>
+X-RL-SENDER: hjc@rock-chips.com
+X-SENDER: hjc@rock-chips.com
+X-LOGIN-NAME: hjc@rock-chips.com
+X-FST-TO: linux-kernel@vger.kernel.org
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+Subject: Re: [PATCH v2 1/3] drm: Add some new format DRM_FORMAT_NVXX_10
+To:     =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
+References: <1569486289-152061-1-git-send-email-hjc@rock-chips.com>
+ <1569486289-152061-2-git-send-email-hjc@rock-chips.com>
+ <20190930104849.GA1208@intel.com>
+ <2c46d532-f810-392d-b9c0-3b9aaccae7f4@rock-chips.com>
+ <20191008113338.GP1208@intel.com>
+From:   "sandy.huang" <hjc@rock-chips.com>
+Message-ID: <a5fa3d8e-9e8e-8aa8-8abb-f00e8357acb5@rock-chips.com>
+Date:   Tue, 8 Oct 2019 19:49:33 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190722193939.125578-1-dianders@chromium.org>
- <CAPDyKFoND5Kaam72zxO4wChO0z_1XL2KWX6oNjVcMUGA7G8RFg@mail.gmail.com>
- <CAD=FV=VTLoqGbxFFMT8h72cfHCLupyvZpD75JB0N86+kFA+vzw@mail.gmail.com>
- <CAPDyKFrPHguMrMvXN0yHbD9GmEg4m=J1Un=LcpE0PB7WqMRYSg@mail.gmail.com> <CAD=FV=W-qh2NnDc-C1_Tki3=D7vzNGG2PgnZjCjdLU9gL68AxA@mail.gmail.com>
-In-Reply-To: <CAD=FV=W-qh2NnDc-C1_Tki3=D7vzNGG2PgnZjCjdLU9gL68AxA@mail.gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 8 Oct 2019 13:49:04 +0200
-Message-ID: <CAPDyKFoXh9dzunsac9M43gHky1HjWvEBXXGp5Mj=0g3APM36aw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] mmc: core: Fix Marvell WiFi reset by adding SDIO
- API to replug card
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ganapathi Bhat <gbhat@marvell.com>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Andreas Fenkart <afenkart@gmail.com>,
-        Brian Norris <briannorris@chromium.org>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        netdev <netdev@vger.kernel.org>,
-        Avri Altman <avri.altman@wdc.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191008113338.GP1208@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 8 Oct 2019 at 01:39, Doug Anderson <dianders@chromium.org> wrote:
+
+在 2019/10/8 下午7:33, Ville Syrjälä 写道:
+> On Tue, Oct 08, 2019 at 10:40:20AM +0800, sandy.huang wrote:
+>> Hi ville syrjala,
+>>
+>> 在 2019/9/30 下午6:48, Ville Syrjälä 写道:
+>>> On Thu, Sep 26, 2019 at 04:24:47PM +0800, Sandy Huang wrote:
+>>>> These new format is supported by some rockchip socs:
+>>>>
+>>>> DRM_FORMAT_NV12_10/DRM_FORMAT_NV21_10
+>>>> DRM_FORMAT_NV16_10/DRM_FORMAT_NV61_10
+>>>> DRM_FORMAT_NV24_10/DRM_FORMAT_NV42_10
+>>>>
+>>>> Signed-off-by: Sandy Huang <hjc@rock-chips.com>
+>>>> ---
+>>>>    drivers/gpu/drm/drm_fourcc.c  | 18 ++++++++++++++++++
+>>>>    include/uapi/drm/drm_fourcc.h | 14 ++++++++++++++
+>>>>    2 files changed, 32 insertions(+)
+>>>>
+>>>> diff --git a/drivers/gpu/drm/drm_fourcc.c b/drivers/gpu/drm/drm_fourcc.c
+>>>> index c630064..ccd78a3 100644
+>>>> --- a/drivers/gpu/drm/drm_fourcc.c
+>>>> +++ b/drivers/gpu/drm/drm_fourcc.c
+>>>> @@ -261,6 +261,24 @@ const struct drm_format_info *__drm_format_info(u32 format)
+>>>>    		{ .format = DRM_FORMAT_P016,		.depth = 0,  .num_planes = 2,
+>>>>    		  .char_per_block = { 2, 4, 0 }, .block_w = { 1, 0, 0 }, .block_h = { 1, 0, 0 },
+>>>>    		  .hsub = 2, .vsub = 2, .is_yuv = true},
+>>>> +		{ .format = DRM_FORMAT_NV12_10,		.depth = 0,  .num_planes = 2,
+>>>> +		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
+>>>> +		  .hsub = 2, .vsub = 2, .is_yuv = true},
+>>>> +		{ .format = DRM_FORMAT_NV21_10,		.depth = 0,  .num_planes = 2,
+>>>> +		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
+>>>> +		  .hsub = 2, .vsub = 2, .is_yuv = true},
+>>>> +		{ .format = DRM_FORMAT_NV16_10,		.depth = 0,  .num_planes = 2,
+>>>> +		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
+>>>> +		  .hsub = 2, .vsub = 1, .is_yuv = true},
+>>>> +		{ .format = DRM_FORMAT_NV61_10,		.depth = 0,  .num_planes = 2,
+>>>> +		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
+>>>> +		  .hsub = 2, .vsub = 1, .is_yuv = true},
+>>>> +		{ .format = DRM_FORMAT_NV24_10,		.depth = 0,  .num_planes = 2,
+>>>> +		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
+>>>> +		  .hsub = 1, .vsub = 1, .is_yuv = true},
+>>>> +		{ .format = DRM_FORMAT_NV42_10,		.depth = 0,  .num_planes = 2,
+>>>> +		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
+>>>> +		  .hsub = 1, .vsub = 1, .is_yuv = true},
+>>>>    		{ .format = DRM_FORMAT_P210,		.depth = 0,
+>>>>    		  .num_planes = 2, .char_per_block = { 2, 4, 0 },
+>>>>    		  .block_w = { 1, 0, 0 }, .block_h = { 1, 0, 0 }, .hsub = 2,
+>>>> diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
+>>>> index 3feeaa3..08e2221 100644
+>>>> --- a/include/uapi/drm/drm_fourcc.h
+>>>> +++ b/include/uapi/drm/drm_fourcc.h
+>>>> @@ -238,6 +238,20 @@ extern "C" {
+>>>>    #define DRM_FORMAT_NV42		fourcc_code('N', 'V', '4', '2') /* non-subsampled Cb:Cr plane */
+>>>>    
+>>>>    /*
+>>>> + * 2 plane YCbCr
+>>>> + * index 0 = Y plane, Y3:Y2:Y1:Y0 10:10:10:10
+>>>> + * index 1 = Cb:Cr plane, Cb3:Cr3:Cb2:Cr2:Cb1:Cr1:Cb0:Cr0 10:10:10:10:10:10:10:10
+>>>> + * or
+>>>> + * index 1 = Cr:Cb plane, Cr3:Cb3:Cr2:Cb2:Cr1:Cb1:Cr0:Cb0 10:10:10:10:10:10:10:10
+>>> So now you're defining it as some kind of byte aligned block.
+>>> With that specifying endianness would now make sense since
+>>> otherwise this tells us absolutely nothing about the memory
+>>> layout.
+>>>
+>>> So I'd either do that, or go back to not specifying anything and
+>>> use some weasel words like "mamory layout is implementation defined"
+>>> which of course means no one can use it for anything that involves
+>>> any kind of cross vendor stuff.
+>> /*
+>>    * 2 plane YCbCr
+>>    * index 0 = Y plane, [39: 0] Y3:Y2:Y1:Y0 10:10:10:10  little endian
+>>    * index 1 = Cb:Cr plane, [79: 0] Cb3:Cr3:Cb2:Cr2:Cb1:Cr1:Cb0:Cr0
+>> 10:10:10:10:10:10:10:10  little endian
+>>    * or
+>>    * index 1 = Cr:Cb plane, [79: 0] Cr3:Cb3:Cr2:Cb2:Cr1:Cb1:Cr0:Cb0
+>> 10:10:10:10:10:10:10:10  little endian
+>>    */
+>>
+>> Is this description ok?
+> Seems OK to me, if it actually describes the format correctly.
 >
-> Hi,
+> Though I'm not sure why the CbCr is defines as an 80bit block
+> and Y has a 40bit block. 40bits should be enough for CbCr as well.
 >
-> On Mon, Sep 16, 2019 at 2:25 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> >
-> > On Wed, 11 Sep 2019 at 23:26, Doug Anderson <dianders@chromium.org> wrote:
-> > >
-> > > Hi,
-> > >
-> > > On Thu, Jul 25, 2019 at 6:28 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> > > >
-> > > > On Mon, 22 Jul 2019 at 21:41, Douglas Anderson <dianders@chromium.org> wrote:
-> > > > >
-> > > > > As talked about in the thread at:
-> > > > >
-> > > > > http://lkml.kernel.org/r/CAD=FV=X7P2F1k_zwHc0mbtfk55-rucTz_GoDH=PL6zWqKYcpuw@mail.gmail.com
-> > > > >
-> > > > > ...when the Marvell WiFi card tries to reset itself it kills
-> > > > > Bluetooth.  It was observed that we could re-init the card properly by
-> > > > > unbinding / rebinding the host controller.  It was also observed that
-> > > > > in the downstream Chrome OS codebase the solution used was
-> > > > > mmc_remove_host() / mmc_add_host(), which is similar to the solution
-> > > > > in this series.
-> > > > >
-> > > > > So far I've only done testing of this series using the reset test
-> > > > > source that can be simulated via sysfs.  Specifically I ran this test:
-> > > > >
-> > > > > for i in $(seq 1000); do
-> > > > >   echo "LOOP $i --------"
-> > > > >   echo 1 > /sys/kernel/debug/mwifiex/mlan0/reset
-> > > > >
-> > > > >   while true; do
-> > > > >     if ! ping -w15 -c1 "${GW}" >/dev/null 2>&1; then
-> > > > >       fail=$(( fail + 1 ))
-> > > > >       echo "Fail WiFi ${fail}"
-> > > > >       if [[ ${fail} == 3 ]]; then
-> > > > >         exit 1
-> > > > >       fi
-> > > > >     else
-> > > > >       fail=0
-> > > > >       break
-> > > > >     fi
-> > > > >   done
-> > > > >
-> > > > >   hciconfig hci0 down
-> > > > >   sleep 1
-> > > > >   if ! hciconfig hci0 up; then
-> > > > >     echo "Fail BT"
-> > > > >     exit 1
-> > > > >   fi
-> > > > > done
-> > > > >
-> > > > > I ran this several times and got several hundred iterations each
-> > > > > before a failure.  When I saw failures:
-> > > > >
-> > > > > * Once I saw a "Fail BT"; manually resetting the card again fixed it.
-> > > > >   I didn't give it time to see if it would have detected this
-> > > > >   automatically.
-> > > > > * Once I saw the ping fail because (for some reason) my device only
-> > > > >   got an IPv6 address from my router and the IPv4 ping failed.  I
-> > > > >   changed my script to use 'ping6' to see if that would help.
-> > > > > * Once I saw the ping fail because the higher level network stack
-> > > > >   ("shill" in my case) seemed to crash.  A few minutes later the
-> > > > >   system recovered itself automatically.  https://crbug.com/984593 if
-> > > > >   you want more details.
-> > > > > * Sometimes while I was testing I saw "Fail WiFi 1" indicating a
-> > > > >   transitory failure.  Usually this was an association failure, but in
-> > > > >   one case I saw the device do "Firmware wakeup failed" after I
-> > > > >   triggered the reset.  This caused the driver to trigger a re-reset
-> > > > >   of itself which eventually recovered things.  This was good because
-> > > > >   it was an actual test of the normal reset flow (not the one
-> > > > >   triggered via sysfs).
-> > > > >
-> > > > > Changes in v2:
-> > > > > - s/routnine/routine (Brian Norris, Matthias Kaehlcke).
-> > > > > - s/contining/containing (Matthias Kaehlcke).
-> > > > > - Add Matthias Reviewed-by tag.
-> > > > > - Removed clear_bit() calls and old comment (Brian Norris).
-> > > > > - Explicit CC of Andreas Fenkart.
-> > > > > - Explicit CC of Brian Norris.
-> > > > > - Add "Fixes" pointing at the commit Brian talked about.
-> > > > > - Add Brian's Reviewed-by tag.
-> > > > >
-> > > > > Douglas Anderson (2):
-> > > > >   mmc: core: Add sdio_trigger_replug() API
-> > > > >   mwifiex: Make use of the new sdio_trigger_replug() API to reset
-> > > > >
-> > > > >  drivers/mmc/core/core.c                     | 28 +++++++++++++++++++--
-> > > > >  drivers/mmc/core/sdio_io.c                  | 20 +++++++++++++++
-> > > > >  drivers/net/wireless/marvell/mwifiex/sdio.c | 16 +-----------
-> > > > >  include/linux/mmc/host.h                    | 15 ++++++++++-
-> > > > >  include/linux/mmc/sdio_func.h               |  2 ++
-> > > > >  5 files changed, 63 insertions(+), 18 deletions(-)
-> > > > >
-> > > >
-> > > > Doug, thanks for sending this!
-> > > >
-> > > > As you know, I have been working on additional changes for SDIO
-> > > > suspend/resume (still WIP and not ready for sharing) and this series
-> > > > is related.
-> > > >
-> > > > The thing is, that even during system suspend/resume, synchronizations
-> > > > are needed between the different layers (mmc host, mmc core and
-> > > > sdio-funcs), which is common to the problem you want to solve.
-> > > >
-> > > > That said, I need to scratch my head a bit more before I can provide
-> > > > you some feedback on $subject series. Moreover, it's vacation period
-> > > > at my side so things are moving a bit slower. Please be patient.
-> > >
-> > > I had kinda forgotten about this series after we landed it locally in
-> > > Chrome OS, but I realized that it never got resolved upstream.  Any
-> > > chance your head has been sufficiently scratched and you're now happy
-> > > with $subject series?  ;-)
-> >
-> > It's still on my TODO list. Apologize for the delay, but I still need
-> > more time to look into it, possibly later this week.
-> >
-> > In any case, let's make sure we get this problem resolved for v5.5.
->
-> Hi Ulf.  It's your friendly pest, Doug, here to ask how things are going.  :-P
+well, this is taken into account yuv444,  4 y point corresponding with 4 
+uv point.
 
-:-)
+if only describes the layout memory, here can change to 40bit block.
 
-The series on the top of my "things to review" list. I will definitely
-provide you with some feedback then next days or so.
+thanks.
 
-Again, sorry for the delay!
+>>>> + */
+>>>> +#define DRM_FORMAT_NV12_10	fourcc_code('N', 'A', '1', '2') /* 2x2 subsampled Cr:Cb plane */
+>>>> +#define DRM_FORMAT_NV21_10	fourcc_code('N', 'A', '2', '1') /* 2x2 subsampled Cb:Cr plane */
+>>>> +#define DRM_FORMAT_NV16_10	fourcc_code('N', 'A', '1', '6') /* 2x1 subsampled Cr:Cb plane */
+>>>> +#define DRM_FORMAT_NV61_10	fourcc_code('N', 'A', '6', '1') /* 2x1 subsampled Cb:Cr plane */
+>>>> +#define DRM_FORMAT_NV24_10	fourcc_code('N', 'A', '2', '4') /* non-subsampled Cr:Cb plane */
+>>>> +#define DRM_FORMAT_NV42_10	fourcc_code('N', 'A', '4', '2') /* non-subsampled Cb:Cr plane */
+>>>> +
+>>>> +/*
+>>>>     * 2 plane YCbCr MSB aligned
+>>>>     * index 0 = Y plane, [15:0] Y:x [10:6] little endian
+>>>>     * index 1 = Cr:Cb plane, [31:0] Cr:x:Cb:x [10:6:10:6] little endian
+>>>> -- 
+>>>> 2.7.4
+>>>>
+>>>>
+>>>>
+>>>> _______________________________________________
+>>>> dri-devel mailing list
+>>>> dri-devel@lists.freedesktop.org
+>>>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-Kind regards
-Uffe
+
