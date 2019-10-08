@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D065C10F14
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED0CECE58C
 	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 341D8206BB
+	by mail.kernel.org (Postfix) with ESMTP id 5BC742190F
 	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:41:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G7Zs/eDV"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="flY5qlCG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbfJHWlE (ORCPT
+        id S1728828AbfJHWlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 18:41:04 -0400
-Received: from mail-pl1-f201.google.com ([209.85.214.201]:36745 "EHLO
-        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727696AbfJHWlE (ORCPT
+        Tue, 8 Oct 2019 18:41:06 -0400
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:45203 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728116AbfJHWlF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 18:41:04 -0400
-Received: by mail-pl1-f201.google.com with SMTP id s24so261016plp.3
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 15:41:02 -0700 (PDT)
+        Tue, 8 Oct 2019 18:41:05 -0400
+Received: by mail-pg1-f201.google.com with SMTP id x31so220257pgl.12
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 15:41:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=8xYYdVPDbLYWuy/r3QHNRnmZwULqpKRssQ9cASv5JWA=;
-        b=G7Zs/eDVn/uanxN6w46x4YMCymXFcID0KY0Ndd5m7/kcGYFJOQrhUeK3BHikppEDnv
-         zW6abxd7MEbPlZ4zrH3nsJlqU8dtsnKhDWFRsrcyKAs5PpClcNLbbS1vsdeRym97Grp6
-         gAUhKX7fQcgroMjDhiU+vpBdWIaef+vVwBPNL/DluHaF6axH5u4WVzqyPZMyt+CuK8TI
-         /vIEjVqVZGIa1aOkTONp1CvMdsXLMWS3BlNQqHBwDBeshWGKQfyHDVL2w8D/UTFavNF6
-         pcZ2ii4wl+t+uNVL/svB3ntcdBgea48Ss4eZR7us9Ea5ICTi4+6qcYaPawLIwAHAngAl
-         76wA==
+        bh=6CRaByPmwZZbYHACg7k1nT3qVKizFi1JIygNj2Eu6tU=;
+        b=flY5qlCGmPdESWqrzPRhJ6fA000kiBKtv7ouLl1zCVc9abIPurp5+foDKJes/TAbVP
+         BOvnlmpWOKZGnlsbPDIs6d1FSZsgIQHXTjeU58N2yA/eeB3Sw/+OsL1I+GXKq9XNT0AD
+         OIclucvqSWN3FFzU9JlGO9HR767pQM/LRt+oGaJM/clIrViIOItWiFv97xjGlBCTMfnZ
+         J421CZp9Uc1+eiXJjZLZsmhtYJNUNB1nQZ72C+hcWV69er5Yrp6PWpwIcpC6U8Z9Dv2p
+         reYfp1mTlUl4bqOU8FcubPHiMACGVpwptF2AZ6R0BI/4SXQwP5VnqDzht2vJ5ViwQmyi
+         25aA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=8xYYdVPDbLYWuy/r3QHNRnmZwULqpKRssQ9cASv5JWA=;
-        b=Pf7v5iHaSNZ32Hv2SVpsNhNnfsCi+mkYhe4NDRHaSkChejZ4a792KGehB78jQju3ku
-         Uin0PbNKW6k4923uJ03KUaiuLQR5rU41JU9jh9BZnCIysRYSU/DR7FYhON8dtncExWyg
-         B9kvX0EDrJhDdjFj639r8k/H0RzR/YO1oir0PUKU0gmkb7uXaFNF3wQNVOcRzykhGNbF
-         j3WBXRy3G9qiEemuPA4GIBvrLiwuYBa+8ZNbQniaZHKw3trf+g6vWQpRGY9NVaksJjeb
-         iDiq+y6hjcMrBHAmF2wwK2ojGYKV1Rf5mkFDfeDfdr7MYnEasR4TMdbBgsiHYGw+OQ4s
-         Teqg==
-X-Gm-Message-State: APjAAAXxZ5qXRFeZAXs6ayClK3YQaRNaR+WUHtVgimWXorD75nNaQ9Rp
-        BDh/lUEkLE0DU9RhB1QI/FlGnXy4g3f/Z3fF1VI=
-X-Google-Smtp-Source: APXvYqzvIfQH0j7UHo4XSoVaXhVI0bk5MEK95tRWP7OzVQT98p6JdNhNo1TJeCIRCNTLMDpxZbedcoiu9tJ9OBNKiBs=
-X-Received: by 2002:a63:709:: with SMTP id 9mr773057pgh.445.1570574461652;
- Tue, 08 Oct 2019 15:41:01 -0700 (PDT)
-Date:   Tue,  8 Oct 2019 15:40:45 -0700
+        bh=6CRaByPmwZZbYHACg7k1nT3qVKizFi1JIygNj2Eu6tU=;
+        b=VbOqhiZxvsIvJkFE7g1DCb4TMr8cBZboaC4vHptNl/0L5buWI3l/aa8VuHo5wCjODm
+         0rV3hmoCXELarogrTfFaEel7MtKqks75T34MmsJsfNWYinSQiNgbdtGhbBzeDIl64nHu
+         UVYalenxac5S5X8riJzXT5xJmb+w8enQ/iGfrB2fmH9cxW71wbKYaFYbFMDN2IQ6GrzY
+         xCrOJNMCBhOodV1vDH1N4Wnmr+h7oKOOPbf7yHR2SZFAec/U1qG9lva4vhLfskjuio/X
+         Qit75l6BGtIzWr0XcCOQt/yLf5IZU7RnaCTJbzMKxCZLPT7geGqj+ToF3qVBLiTI29jd
+         vfhg==
+X-Gm-Message-State: APjAAAX7mquUg6tG7T6HqSSMXi2iESGLLlBnBDrV9q6+fuiUe4Xfo1bg
+        AlSs1KNg8DAgx4ygPf9nhBt0x5DrUtlAQYr0kVg=
+X-Google-Smtp-Source: APXvYqyx2Zu73kfLvNByNSHZTqrz36zsEhp5z58ZxJrKO+1xLooAIVRmOoecfTmKXbfbRCujP+XgqbeZYdiAL7YQyUk=
+X-Received: by 2002:a65:434c:: with SMTP id k12mr820592pgq.141.1570574464142;
+ Tue, 08 Oct 2019 15:41:04 -0700 (PDT)
+Date:   Tue,  8 Oct 2019 15:40:46 -0700
 In-Reply-To: <20191008224049.115427-1-samitolvanen@google.com>
-Message-Id: <20191008224049.115427-2-samitolvanen@google.com>
+Message-Id: <20191008224049.115427-3-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20190913210018.125266-1-samitolvanen@google.com> <20191008224049.115427-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
-Subject: [RESEND PATCH v2 1/5] x86: use the correct function type in SYSCALL_DEFINE0
+Subject: [RESEND PATCH v2 2/5] x86/syscalls: Wire up COMPAT_SYSCALL_DEFINE0
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Andy Lutomirski <luto@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -73,57 +73,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Although a syscall defined using SYSCALL_DEFINE0 doesn't accept
-parameters, use the correct function type to avoid type mismatches
-with Control-Flow Integrity (CFI) checking.
+From: Andy Lutomirski <luto@kernel.org>
 
+x86 has special handling for COMPAT_SYSCALL_DEFINEx, but there was
+no override for COMPAT_SYSCALL_DEFINE0.  Wire it up so that we can
+use it for rt_sigreturn.
+
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Acked-by: Andy Lutomirski <luto@kernel.org>
 ---
- arch/x86/include/asm/syscall_wrapper.h | 23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+ arch/x86/include/asm/syscall_wrapper.h | 32 ++++++++++++++++++++++++--
+ 1 file changed, 30 insertions(+), 2 deletions(-)
 
 diff --git a/arch/x86/include/asm/syscall_wrapper.h b/arch/x86/include/asm/syscall_wrapper.h
-index e046a405743d..90eb70df0b18 100644
+index 90eb70df0b18..3dab04841494 100644
 --- a/arch/x86/include/asm/syscall_wrapper.h
 +++ b/arch/x86/include/asm/syscall_wrapper.h
-@@ -48,12 +48,13 @@
-  * To keep the naming coherent, re-define SYSCALL_DEFINE0 to create an alias
-  * named __ia32_sys_*()
+@@ -28,13 +28,21 @@
+  * kernel/sys_ni.c and SYS_NI in kernel/time/posix-stubs.c to cover this
+  * case as well.
   */
--#define SYSCALL_DEFINE0(sname)					\
--	SYSCALL_METADATA(_##sname, 0);				\
--	asmlinkage long __x64_sys_##sname(void);		\
--	ALLOW_ERROR_INJECTION(__x64_sys_##sname, ERRNO);	\
--	SYSCALL_ALIAS(__ia32_sys_##sname, __x64_sys_##sname);	\
--	asmlinkage long __x64_sys_##sname(void)
++#define __IA32_COMPAT_SYS_STUB0(x, name)				\
++	asmlinkage long __ia32_compat_sys_##name(const struct pt_regs *regs);\
++	ALLOW_ERROR_INJECTION(__ia32_compat_sys_##name, ERRNO);		\
++	asmlinkage long __ia32_compat_sys_##name(const struct pt_regs *regs)\
++	{								\
++		return __se_compat_sys_##name();			\
++	}
 +
-+#define SYSCALL_DEFINE0(sname)						\
-+	SYSCALL_METADATA(_##sname, 0);					\
-+	asmlinkage long __x64_sys_##sname(const struct pt_regs *__unused);\
-+	ALLOW_ERROR_INJECTION(__x64_sys_##sname, ERRNO);		\
-+	SYSCALL_ALIAS(__ia32_sys_##sname, __x64_sys_##sname);		\
-+	asmlinkage long __x64_sys_##sname(const struct pt_regs *__unused)
+ #define __IA32_COMPAT_SYS_STUBx(x, name, ...)				\
+ 	asmlinkage long __ia32_compat_sys##name(const struct pt_regs *regs);\
+ 	ALLOW_ERROR_INJECTION(__ia32_compat_sys##name, ERRNO);		\
+ 	asmlinkage long __ia32_compat_sys##name(const struct pt_regs *regs)\
+ 	{								\
+ 		return __se_compat_sys##name(SC_IA32_REGS_TO_ARGS(x,__VA_ARGS__));\
+-	}								\
++	}
  
- #define COND_SYSCALL(name)						\
- 	cond_syscall(__x64_sys_##name);					\
-@@ -181,11 +182,11 @@
-  * macros to work correctly.
+ #define __IA32_SYS_STUBx(x, name, ...)					\
+ 	asmlinkage long __ia32_sys##name(const struct pt_regs *regs);	\
+@@ -76,15 +84,24 @@
+  * of the x86-64-style parameter ordering of x32 syscalls. The syscalls common
+  * with x86_64 obviously do not need such care.
   */
- #ifndef SYSCALL_DEFINE0
--#define SYSCALL_DEFINE0(sname)					\
--	SYSCALL_METADATA(_##sname, 0);				\
--	asmlinkage long __x64_sys_##sname(void);		\
--	ALLOW_ERROR_INJECTION(__x64_sys_##sname, ERRNO);	\
--	asmlinkage long __x64_sys_##sname(void)
-+#define SYSCALL_DEFINE0(sname)						\
-+	SYSCALL_METADATA(_##sname, 0);					\
-+	asmlinkage long __x64_sys_##sname(const struct pt_regs *__unused);\
-+	ALLOW_ERROR_INJECTION(__x64_sys_##sname, ERRNO);		\
-+	asmlinkage long __x64_sys_##sname(const struct pt_regs *__unused)
- #endif
++#define __X32_COMPAT_SYS_STUB0(x, name, ...)				\
++	asmlinkage long __x32_compat_sys_##name(const struct pt_regs *regs);\
++	ALLOW_ERROR_INJECTION(__x32_compat_sys_##name, ERRNO);		\
++	asmlinkage long __x32_compat_sys_##name(const struct pt_regs *regs)\
++	{								\
++		return __se_compat_sys_##name();\
++	}
++
+ #define __X32_COMPAT_SYS_STUBx(x, name, ...)				\
+ 	asmlinkage long __x32_compat_sys##name(const struct pt_regs *regs);\
+ 	ALLOW_ERROR_INJECTION(__x32_compat_sys##name, ERRNO);		\
+ 	asmlinkage long __x32_compat_sys##name(const struct pt_regs *regs)\
+ 	{								\
+ 		return __se_compat_sys##name(SC_X86_64_REGS_TO_ARGS(x,__VA_ARGS__));\
+-	}								\
++	}
  
- #ifndef COND_SYSCALL
+ #else /* CONFIG_X86_X32 */
++#define __X32_COMPAT_SYS_STUB0(x, name)
+ #define __X32_COMPAT_SYS_STUBx(x, name, ...)
+ #endif /* CONFIG_X86_X32 */
+ 
+@@ -95,6 +112,17 @@
+  * mapping of registers to parameters, we need to generate stubs for each
+  * of them.
+  */
++#define COMPAT_SYSCALL_DEFINE0(name)					\
++	static long __se_compat_sys_##name(void);			\
++	static inline long __do_compat_sys_##name(void);		\
++	__IA32_COMPAT_SYS_STUB0(x, name)				\
++	__X32_COMPAT_SYS_STUB0(x, name)					\
++	static long __se_compat_sys_##name(void)			\
++	{								\
++		return __do_compat_sys_##name();			\
++	}								\
++	static inline long __do_compat_sys_##name(void)
++
+ #define COMPAT_SYSCALL_DEFINEx(x, name, ...)					\
+ 	static long __se_compat_sys##name(__MAP(x,__SC_LONG,__VA_ARGS__));	\
+ 	static inline long __do_compat_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__));\
 -- 
 2.23.0.581.g78d2f28ef7-goog
 
