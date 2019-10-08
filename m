@@ -2,101 +2,106 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BE8C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2787FC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A391206B6
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:42:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0052920815
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:43:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MJh4luQX"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="c2NaqQYh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730925AbfJHMmh (ORCPT
+        id S1730980AbfJHMnE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 08:42:37 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43707 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730317AbfJHMmh (ORCPT
+        Tue, 8 Oct 2019 08:43:04 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:38061 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730719AbfJHMnE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 08:42:37 -0400
-Received: by mail-wr1-f68.google.com with SMTP id j18so18436998wrq.10;
-        Tue, 08 Oct 2019 05:42:34 -0700 (PDT)
+        Tue, 8 Oct 2019 08:43:04 -0400
+Received: by mail-qt1-f195.google.com with SMTP id j31so25044978qta.5;
+        Tue, 08 Oct 2019 05:43:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6c0bIYvUZKGgcQz0qQT8eHB8QDSPvevhTwLKKCbgKZc=;
-        b=MJh4luQXeQi7f9Ak7rJ9cENXSF16UCUQUHf9om/Lt2IZs/9jwpjpkKHdljR+QOA3Pw
-         TpdFvdQSmz1nWKEhJbX1UUsPJ6f4lNmVr3l9Bnt5sklDIpPXyiH6PayCVTC9rYYoxHnI
-         bn/MH+7zkfYeM6VeqZUxOUm/ws09gIJfP9Pno3EAc2wZr0duw7pCjxeSBo0MsetJHf4R
-         9XA9/I+vecwLhE7m9XU7w0HxTCXY+uk5cHApv9bNc4FzbhF+rjYg6EGm25cOepH+dEdw
-         PyTjtgUKHub28KqaC9bDtVozEjrckD8p6fkBeYp9NUAiLaVyHTamuXzhPcd0GqgI8RVt
-         Qq/Q==
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1UppyCbMsWAT7YFPxGZqvx3UTT7ui0zT5iHhMGwW6vU=;
+        b=c2NaqQYhTaLYQ+SdhBdPFFyH5v82CBLStq5IcHjVyox/QkA4YRuwcsIhlkpqlXzH/H
+         zZ1xgdrYF3AcpmAahz9PfOh2F4Z7UUatDv6rmFC9oYGyN7ob7QUgWNKgXx3rW7c7pX16
+         1Mk9AOwen5fcsCVo+nsSXjAT8mYoaG64nEWpA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6c0bIYvUZKGgcQz0qQT8eHB8QDSPvevhTwLKKCbgKZc=;
-        b=tJmVJ5eM5iNc+uugziFc5mwtVxCnXV00uY7bqS2SskE4sxB2EjFw0mB1dlz/cmbEXv
-         Y2HTed8TAFeFsFfDHuCGi4c8fX0JDCOez06zuzpf/4cJlZNJme43NB3PiOdFdTab/G61
-         KA8ZZSs2BdwYXTpYE55Op71QVWlAv2m4ZiaNA3yI/xA7iTUBT47dJ5EkrSTrmBw9MUSt
-         hgCyMF0HxKIcRJMNLLxzbAmv5kmH59DAZsunpcDfRgXEcGgCxT9J2FWFuw0Fjj2qCBMR
-         2sZTDDaixpZDE7fX0ZR9VRsEuV3rbjVI2YXknTBgBPBO7gmBJzIXi4M+L2qT4UJLqOOp
-         iZGw==
-X-Gm-Message-State: APjAAAVCXaa/uqDCijkhlPegI9KoApdAm0HKH7AUYBoalWguK4CIKsJ5
-        dfzIHLxSurwhHowMNjw/kys=
-X-Google-Smtp-Source: APXvYqyhlTtpTotzacKg7J3FXg+j4u+TgibODownoyxwBafj/HAGqEkPAKaAbGcq2/hb5PM/Sdoo1A==
-X-Received: by 2002:adf:e50e:: with SMTP id j14mr3618220wrm.178.1570538553708;
-        Tue, 08 Oct 2019 05:42:33 -0700 (PDT)
-Received: from andrea.guest.corp.microsoft.com ([2a01:110:8012:1012:c582:959a:923b:9ec])
-        by smtp.gmail.com with ESMTPSA id a3sm5147517wmc.3.2019.10.08.05.42.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2019 05:42:33 -0700 (PDT)
-Date:   Tue, 8 Oct 2019 14:42:30 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        vkuznets <vkuznets@redhat.com>
-Subject: Re: [PATCH 1/2] Drivers: hv: vmbus: Introduce table of VMBus
- protocol versions
-Message-ID: <20191008124230.GB11245@andrea.guest.corp.microsoft.com>
-References: <20191007163115.26197-1-parri.andrea@gmail.com>
- <20191007163115.26197-2-parri.andrea@gmail.com>
- <PU1P153MB0169CAC756996A623CFDFBA7BF9B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1UppyCbMsWAT7YFPxGZqvx3UTT7ui0zT5iHhMGwW6vU=;
+        b=OzWd5+4a7GxhaRloUFP+zPMqw4qJY/JOUgm/oPDxZOloPxDSEsG6Lzopyp8eNOTEhR
+         kL+T+9pVPOgKlcUYXvB81Rs9t4YSdy61nkqi31PuyKARpjZouHMhayp+ZjTHYsXqTUGK
+         dWQrOG+W4xoP1pXs/bCyzOUa6rq8xgqGy/QqvGvjA3S/x3o5zhPTiwvAga303y7yJjxX
+         PYzHtYqorgifMrOgaFsWGexK3reKK/dPqlKC0bcoSa31UPFznKQNEREBXzw7rfLRRNi6
+         w0xt59q3eJLP0vjxaFltZTw/v9BW/TmdWEDsZM3ibXzHAS9y6lnfVe2M1xV7D1EUPJJO
+         jbEQ==
+X-Gm-Message-State: APjAAAWEbsOAM89BLJ6ybM5x/ky7JsYLQ2qK3KPp1CeQnmxIy5pKVJFE
+        yssU+3jIL8BYEClwDmJmgiSoVJORB2Nptb6/Obg=
+X-Google-Smtp-Source: APXvYqwVGP5UDPlHhVNwIbeMXipPnJtqO4XgNXWCIOwfUk1ZWseBIXlErjwslmqMf19cGZs9SXWwfgtTEcP1O1T/NTY=
+X-Received: by 2002:ac8:2f81:: with SMTP id l1mr35912975qta.269.1570538582975;
+ Tue, 08 Oct 2019 05:43:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PU1P153MB0169CAC756996A623CFDFBA7BF9B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191008115143.14149-1-andrew@aj.id.au> <20191008115143.14149-3-andrew@aj.id.au>
+In-Reply-To: <20191008115143.14149-3-andrew@aj.id.au>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Tue, 8 Oct 2019 12:42:51 +0000
+Message-ID: <CACPK8XcWLCGupAF1EX1LB6A=mQY0s9kjgagr3EKEKJhnbt+j0g@mail.gmail.com>
+Subject: Re: [PATCH 2/3] dt-bindings: net: ftgmac100: Describe clock properties
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     netdev@vger.kernel.org, "David S . Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 05:25:18PM +0000, Dexuan Cui wrote:
-> > From: linux-hyperv-owner@vger.kernel.org
-> > <linux-hyperv-owner@vger.kernel.org> On Behalf Of Andrea Parri
-> > Sent: Monday, October 7, 2019 9:31 AM
-> > ....
-> > +/*
-> > + * Table of VMBus versions listed from newest to oldest; the table
-> > + * must terminate with VERSION_INVAL.
-> > + */
-> > +__u32 vmbus_versions[] = {
-> > +	VERSION_WIN10_V5,
-> 
-> This should be "static"?
+On Tue, 8 Oct 2019 at 11:50, Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+> Critically, the AST2600 requires ungating the RMII RCLK if e.g. NCSI is
+> in use.
+>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> ---
+>  Documentation/devicetree/bindings/net/ftgmac100.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/net/ftgmac100.txt b/Documentation/devicetree/bindings/net/ftgmac100.txt
+> index 04cc0191b7dd..c443b0b84be5 100644
+> --- a/Documentation/devicetree/bindings/net/ftgmac100.txt
+> +++ b/Documentation/devicetree/bindings/net/ftgmac100.txt
+> @@ -24,6 +24,12 @@ Optional properties:
+>  - no-hw-checksum: Used to disable HW checksum support. Here for backward
+>    compatibility as the driver now should have correct defaults based on
+>    the SoC.
+> +- clocks: In accordance with the generic clock bindings. Must describe the MAC
+> +  IP clock, and optionally an RMII RCLK gate for the AST2600.
 
-I think so, will add in v2.  Thank you for pointing this out, Dexuan.
+ or AST2500.
 
-  Andrea
+With that fixed you can add my ack.
+
+
+> +- clock-names:
+> +
+> +      - "MACCLK": The MAC IP clock
+> +      - "RCLK": Clock gate for the RMII RCLK
+>
+>  Example:
+>
+> --
+> 2.20.1
+>
