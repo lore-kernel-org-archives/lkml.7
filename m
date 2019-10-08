@@ -2,110 +2,107 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D46F3C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A7EDC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:43:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A901B21721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:42:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eN9IOY1D"
+	by mail.kernel.org (Postfix) with ESMTP id 3CFD82173B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 07:43:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730381AbfJHHmB (ORCPT
+        id S1730396AbfJHHnI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 03:42:01 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45004 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729740AbfJHHl7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 03:41:59 -0400
-Received: by mail-pl1-f194.google.com with SMTP id q15so8082543pll.11
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 00:41:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=2fURBUxy7kUtYmeZp2XZ00W6cQyOn6QtabdpUGQ4D60=;
-        b=eN9IOY1D4JQEhqeD44A6DLSptkIVd9EhQ/T4ofBMp9tMybypG0GD+jceTeEDFwcwV7
-         pX90ySjQ5ypCgooLkJtxt3hhiI9btIxC2oZWRlJTA/XGY2xE465JEYP/jh6TVRHRbRei
-         +iZFx52+vEmaikMY6Xd65ZTnvtPZZhVEITp09SG76jmRAi9ykhVh54pgk6wweIWH0A6k
-         qZtrJhqn4zf9OSEs3ILwYWXfAdJ/tmC/KKvMP3qhdl5TIfCg2mwvzpbgxFFAB/Rklut/
-         WC1HZnyvgj4kDwjviC8/NfJEL78LAc/JWbztrIUBvdsL14/6NBJ8/H6YV5r8icot/B+E
-         9t9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=2fURBUxy7kUtYmeZp2XZ00W6cQyOn6QtabdpUGQ4D60=;
-        b=cfgoW6/gfZmg9pz1uNy3XBkf3q//F8ivIZm9pEefmQWctYCQCjU/REqGueH361oAAO
-         bhgjkpz6U8/7+/ETbeJzpZCbXXgf4+R6lpiAcP3nqGSw5j2q6u4xp+FFP2kehYkWiBR8
-         ZfvHVyF2oz/z8OBn/VdVxudwr/Y0loRfoaWIt3z5yLHMCHE7yRC8Kpwx1Oxxuz5yrCvS
-         y7/EKDlbj8LIyS/N3yWfiUn1gIwzbm401MFB/EPUpFyPrNNx0dDw/4XQeypOMwr553eh
-         lRwKgJkvr2K6BnX7/Ah+u+7/Lp7A373qCPi4YjYS2jTXLsUwS5CaYkZKA9tbKCYZegBb
-         AOjA==
-X-Gm-Message-State: APjAAAWQjUVkWgFJZ16TBSy30QaNT7yIU/JflrCSpDv8i1I29txgCFDK
-        U/J8F/z9moo099lCKcGoJJc2yA==
-X-Google-Smtp-Source: APXvYqx4yx63wHZRg9innu1QmsE+S9mEbWtE9KI7zgBRFk/4iSCLPMEPKXa8fosu99z/4tYcXy5EOg==
-X-Received: by 2002:a17:902:8c8d:: with SMTP id t13mr2644087plo.3.1570520519051;
-        Tue, 08 Oct 2019 00:41:59 -0700 (PDT)
-Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id y8sm18231363pge.21.2019.10.08.00.41.56
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 08 Oct 2019 00:41:58 -0700 (PDT)
-From:   Baolin Wang <baolin.wang@linaro.org>
-To:     mturquette@baylibre.com, sboyd@kernel.org
-Cc:     orsonzhai@gmail.com, baolin.wang@linaro.org, zhang.lyra@gmail.com,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] clk: sprd: Change to use devm_platform_ioremap_resource()
-Date:   Tue,  8 Oct 2019 15:41:39 +0800
-Message-Id: <841d26a2adb4bf3b4423f82a41dd3f1346413db6.1570520268.git.baolin.wang@linaro.org>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1995139bee5248ff3e9d46dc715968f212cfc4cc.1570520268.git.baolin.wang@linaro.org>
-References: <1995139bee5248ff3e9d46dc715968f212cfc4cc.1570520268.git.baolin.wang@linaro.org>
-In-Reply-To: <1995139bee5248ff3e9d46dc715968f212cfc4cc.1570520268.git.baolin.wang@linaro.org>
-References: <1995139bee5248ff3e9d46dc715968f212cfc4cc.1570520268.git.baolin.wang@linaro.org>
+        Tue, 8 Oct 2019 03:43:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39514 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730218AbfJHHnI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 03:43:08 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3AC18AEF1;
+        Tue,  8 Oct 2019 07:43:06 +0000 (UTC)
+Message-ID: <1570520919.25071.2.camel@suse.cz>
+Subject: Re: [PATCH v2 1/2] x86,sched: Add support for frequency invariance
+From:   Giovanni Gherdovich <ggherdovich@suse.cz>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@suse.de>,
+        Len Brown <lenb@kernel.org>, x86@kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Paul Turner <pjt@google.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Quentin Perret <qperret@qperret.net>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Doug Smythies <dsmythies@telus.net>
+Date:   Tue, 08 Oct 2019 09:48:39 +0200
+In-Reply-To: <1990043.dY4KdrEkPr@kreacher>
+References: <20191002122926.385-1-ggherdovich@suse.cz>
+         <1906426.HDqaVa71mF@kreacher>
+         <20191003121537.GR4536@hirez.programming.kicks-ass.net>
+         <1990043.dY4KdrEkPr@kreacher>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the new helper that wraps the calls to platform_get_resource()
-and devm_ioremap_resource() together, which can simpify the code.
+On Thu, 2019-10-03 at 19:53 +0200, Rafael J. Wysocki wrote:
+> On Thursday, October 3, 2019 2:15:37 PM CEST Peter Zijlstra wrote:
+> > On Thu, Oct 03, 2019 at 12:27:52PM +0200, Rafael J. Wysocki wrote:
+> > > On Wednesday, October 2, 2019 2:29:25 PM CEST Giovanni Gherdovich wrote:
+> > > > +static bool turbo_disabled(void)
+> > > > +{
+> > > > +	u64 misc_en;
+> > > > +	int err;
+> > > > +
+> > > > +	err = rdmsrl_safe(MSR_IA32_MISC_ENABLE, &misc_en);
+> > > > +	if (err)
+> > > > +		return false;
+> > > > +
+> > > > +	return (misc_en & MSR_IA32_MISC_ENABLE_TURBO_DISABLE);
+> > > > +}
+> > > 
+> > > This setting may be updated by the platform firmware (BIOS) in some cases
+> > > (see kernel.org BZ 200759, for example), so in general checking it once
+> > > at the init time is not enough.
+> > 
+> > Is there anything sane we can do if the BIOS frobs stuff like that under
+> > our feet? Other than yell bloody murder, that is?
+> 
+> Sane?  No, I don't think so.
+> 
+> Now, in principle *something* could be done to fix things up in the _PPC
+> notify handler, but I guess we would just end up disabling the scale
+> invariance code altogether in those cases.
 
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
----
-Changes from v1:
- - None.
----
- drivers/clk/sprd/common.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+I'm looking at how to react to turbo being disabled at run time, assuming a
+_PPC notification is triggered in that case.
 
-diff --git a/drivers/clk/sprd/common.c b/drivers/clk/sprd/common.c
-index 7ad5ba2..c0af477 100644
---- a/drivers/clk/sprd/common.c
-+++ b/drivers/clk/sprd/common.c
-@@ -42,7 +42,6 @@ int sprd_clk_regmap_init(struct platform_device *pdev,
- 	void __iomem *base;
- 	struct device_node *node = pdev->dev.of_node;
- 	struct regmap *regmap;
--	struct resource *res;
- 
- 	if (of_find_property(node, "sprd,syscon", NULL)) {
- 		regmap = syscon_regmap_lookup_by_phandle(node, "sprd,syscon");
-@@ -51,8 +50,7 @@ int sprd_clk_regmap_init(struct platform_device *pdev,
- 			return PTR_ERR(regmap);
- 		}
- 	} else {
--		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--		base = devm_ioremap_resource(&pdev->dev, res);
-+		base = devm_platform_ioremap_resource(pdev, 0);
- 		if (IS_ERR(base))
- 			return PTR_ERR(base);
- 
--- 
-1.7.9.5
+I don't think the correct action would be to disable scale invariance: if the
+turbo range is not available, then max frequency is max_P, and scale
+invariance can go on using that. The case max_freq=max_P is represented by
+arch_max_freq=1024 in this patch (because arch_max_freq=max_freq*1024/max_P).
 
+Since the variable arch_max_freq is global to all CPUs, the fact that the _PPC
+notification is sent to just one CPU is not a concern: the CPU receiving the
+notif will set arch_max_freq=1024 (Srinivas was worried about this in another
+message).
+
+This looks like a job for the ->update_limits callback you added to "struct
+cpufreq_driver" in response to the mentioned kernel.org BZ 200759.
+I see that only intel_pstate implements it, it's not clear to me yet if I'll
+have to give an ->update_limits to acpi_cpufreq as well to treat this case.
+
+
+Giovanni
