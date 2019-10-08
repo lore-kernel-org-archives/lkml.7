@@ -2,101 +2,144 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED984C47404
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 03:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD374C47404
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 03:13:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0ED321479
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 03:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A388F218AC
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 03:13:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="ZIJVWUrY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l5DQgPL2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729906AbfJHDLt (ORCPT
+        id S1729915AbfJHDNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 23:11:49 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:31574 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729536AbfJHDLs (ORCPT
+        Mon, 7 Oct 2019 23:13:09 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41917 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729536AbfJHDNI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 23:11:48 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id x983AYQL004728;
-        Tue, 8 Oct 2019 12:10:34 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x983AYQL004728
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1570504235;
-        bh=AG4ExTv6VHlw3h/+9FrYXRCm3WD49M9U2lAW3xkyHFs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ZIJVWUrYAiYYyMAUSb67GEjn/1xztX0tiv5+TQFBoVwCHMGDA0iS/Gq4+bnElaUEQ
-         zEteCz4yBsjIWnOExpIy3EtL5bMyqaCw9tj2NqZvX7smvXV1odfzwKS3WP99q8pIpw
-         HIzdDi0IZAQQCLfGyOcrnUhcuIDT4q7Lkfzk5w6XarMCgI3e8kquUR95STGqpCS6BB
-         19CpEtg2wFMbwRPdGL91upESuq5XO087LlpZeviKzuGbWb+erua75GMt7TTnyFaS78
-         1uRzRMWMjG55YBNQfknVOXCy2r1UrXL5KSyql+SsDDXiaj7yRgvWvnrwsoRiCPIpS5
-         c2AV68Up9rX3Q==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Cc:     Jessica Yu <jeyu@kernel.org>,
-        Matthias Maennich <maennich@google.com>,
-        Adam Zerella <adam.zerella@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] doc: move namespaces.rst from kbuild/ to core-api/
-Date:   Tue,  8 Oct 2019 12:10:09 +0900
-Message-Id: <20191008031009.17364-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 7 Oct 2019 23:13:08 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q7so9921300pfh.8;
+        Mon, 07 Oct 2019 20:13:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=MwOr1Yqsq0vV0L2I0NuVxBn/YJkcXrSl5bx2uwm6GME=;
+        b=l5DQgPL2Y+0qJXzGNoIaNDOAAIUJAk63EXpupbo+H3/fiTJ5modtP5d7iA6U+VfMhk
+         OBjVGHCy6FaDj3AuFsasOQQ8RUord7oybiI12W0qKEl+M2XXUgqu8VSGVzSOCmtzA2CH
+         sEF363igvp2bC4v0mTB6FF5EU/rszyjfER5wfETyzGteql8Teb70RDknSIosrHaQJ9+K
+         LcBvIcdTTMTBtoa1SOxNtaKzR7PamQaMwo58AIbfWdd6uS8ppsJcf5egYQLwYl/fFV/o
+         bKGFMP7VN5YYhOp2pzHsBggjiBYGDcejwSMIdLrAHNwHruk9+8gGSlFK0gotavTOaqiS
+         lzpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MwOr1Yqsq0vV0L2I0NuVxBn/YJkcXrSl5bx2uwm6GME=;
+        b=RFelGU2khEtrAa8WN4mNYOaFLGZLUoHmDCd74sWchbWPWMm1eVy+pKXrZg8KT4wmYt
+         AN9VvI5NOfFr36NLSHuHkm4o/nSD1ROrIY4TKGzFcG4CrYbC1HRTuoQHg2zTXvFmbLvu
+         6kBEvBis4UHExZHfq/lQph2vfcHZHCM+Z1/wum8J9uOaPmqNE7VO2wGy42x8EFLuAiye
+         DwN5cCb5TSvWS3Jwzi1SwpSg+qgrd2zbIuH6Xc3KYI2/4O3oUU45UZ/ZAITvb4oo0+yy
+         S02oaXN/t4MwPoAfDO0sOHAAS++3ByFUU7j5ZLm3tMHPJOXLDJVH8zxrqixDI8oIta6n
+         Vl4Q==
+X-Gm-Message-State: APjAAAXzjea5UAZiG5ooG6By5a6gPv9dG/158lygUwuOlNraux5rWxEN
+        qeP2Hs8rVILm90PH2nrU32DgW3wP
+X-Google-Smtp-Source: APXvYqz/aTjJrRNMzNO1/XB1zmUl5/r7tcj7a/bk8SorwCF5Qq9Ugle+lKHLjSticXDM+CViaWRbDg==
+X-Received: by 2002:a63:2348:: with SMTP id u8mr2860808pgm.344.1570504387491;
+        Mon, 07 Oct 2019 20:13:07 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id s1sm9574747pgi.52.2019.10.07.20.13.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 07 Oct 2019 20:13:06 -0700 (PDT)
+Subject: Re: [PATCH 4.4 00/36] 4.4.196-stable review
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20191006171038.266461022@linuxfoundation.org>
+ <d3e1e6ae-8ca4-a43b-d30d-9a9a9a7e5752@roeck-us.net>
+ <20191007144951.GB966828@kroah.com> <20191007230708.GA1396@sasha-vm>
+ <35f5fb99-6c35-9afd-1a4e-3fa7d4ba213a@roeck-us.net>
+ <20191008014954.GB1396@sasha-vm>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <4e0e8cf2-a085-9bdf-b084-a3cb205bb100@roeck-us.net>
+Date:   Mon, 7 Oct 2019 20:13:04 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20191008014954.GB1396@sasha-vm>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We discussed a better location for this file, and agreed that
-core-api/ is a good fit. Rename it to symbol-namespaces.rst
-for disambiguation, and also add it to index.rst and MAINTAINERS.
+On 10/7/19 6:49 PM, Sasha Levin wrote:
+> On Mon, Oct 07, 2019 at 04:16:51PM -0700, Guenter Roeck wrote:
+>> On 10/7/19 4:07 PM, Sasha Levin wrote:
+>>> On Mon, Oct 07, 2019 at 04:49:51PM +0200, Greg Kroah-Hartman wrote:
+>>>> On Mon, Oct 07, 2019 at 05:53:55AM -0700, Guenter Roeck wrote:
+>>>>> On 10/6/19 10:18 AM, Greg Kroah-Hartman wrote:
+>>>>>> This is the start of the stable review cycle for the 4.4.196 release.
+>>>>>> There are 36 patches in this series, all will be posted as a response
+>>>>>> to this one.  If anyone has any issues with these being applied, please
+>>>>>> let me know.
+>>>>>>
+>>>>>> Responses should be made by Tue 08 Oct 2019 05:07:10 PM UTC.
+>>>>>> Anything received after that time might be too late.
+>>>>>>
+>>>>>
+>>>>> powerpc:defconfig fails to build.
+>>>>>
+>>>>> arch/powerpc/kernel/eeh_driver.c: In function ‘eeh_handle_normal_event’:
+>>>>> arch/powerpc/kernel/eeh_driver.c:678:2: error: implicit declaration of function ‘eeh_for_each_pe’; did you mean ‘bus_for_each_dev’?
+>>>>>
+>>>>> It has a point:
+>>>>>
+>>>>> ... HEAD is now at 13cac61d31df Linux 4.4.196-rc1
+>>>>> $ git grep eeh_for_each_pe
+>>>>> arch/powerpc/kernel/eeh_driver.c:       eeh_for_each_pe(pe, tmp_pe)
+>>>>> arch/powerpc/kernel/eeh_driver.c:                               eeh_for_each_pe(pe, tmp_pe)
+>>>>>
+>>>>> Caused by commit 3fb431be8de3a ("powerpc/eeh: Clear stale EEH_DEV_NO_HANDLER flag").
+>>>>> Full report will follow later.
+>>>>
+>>>> Thanks for letting me know, I've dropped this from the queue now and
+>>>> pushed out a -rc2 with that removed.
+>>>>
+>>>> Sasha, I thought your builder would have caught stuff like this?
+>>>
+>>> Interesting, the 4.4 build fails for me with vanilla 4.4 LTS kernel
+>>> (which is why this was missed):
+>>>
+>>>  AS      arch/powerpc/kernel/systbl.o
+>>> arch/powerpc/kernel/exceptions-64s.S: Assembler messages:
+>>> arch/powerpc/kernel/exceptions-64s.S:1599: Warning: invalid register expression
+>>> arch/powerpc/kernel/exceptions-64s.S:1640: Warning: invalid register expression
+>>> arch/powerpc/kernel/exceptions-64s.S:839: Error: attempt to move .org backwards
+>>> arch/powerpc/kernel/exceptions-64s.S:840: Error: attempt to move .org backwards
+>>> arch/powerpc/kernel/exceptions-64s.S:864: Error: attempt to move .org backwards
+>>> arch/powerpc/kernel/exceptions-64s.S:865: Error: attempt to move .org backwards
+>>> scripts/Makefile.build:375: recipe for target 'arch/powerpc/kernel/head_64.o' failed
+>>>
+>>
+>> Is this allmodconfig ? That is correct - it won't build in 4.4.y, and it would not be
+>> easy to fix.
+> 
+> Oh, interesting, so no allmodconfig? I've disabled everything but
+> allmodconfig on a few architectures in an attempt to save to build time.
+> 
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+If I recall correctly, it stopped working quite some time ago for v4.4.y, and the powerpc
+maintainers didn't want to spend the time fixing it. It works with v4.9.y and later.
 
- Documentation/core-api/index.rst                                 | 1 +
- .../{kbuild/namespaces.rst => core-api/symbol-namespaces.rst}    | 0
- MAINTAINERS                                                      | 1 +
- 3 files changed, 2 insertions(+)
- rename Documentation/{kbuild/namespaces.rst => core-api/symbol-namespaces.rst} (100%)
-
-diff --git a/Documentation/core-api/index.rst b/Documentation/core-api/index.rst
-index fa16a0538dcb..ab0eae1c153a 100644
---- a/Documentation/core-api/index.rst
-+++ b/Documentation/core-api/index.rst
-@@ -38,6 +38,7 @@ Core utilities
-    protection-keys
-    ../RCU/index
-    gcc-plugins
-+   symbol-namespaces
- 
- 
- Interfaces for kernel debugging
-diff --git a/Documentation/kbuild/namespaces.rst b/Documentation/core-api/symbol-namespaces.rst
-similarity index 100%
-rename from Documentation/kbuild/namespaces.rst
-rename to Documentation/core-api/symbol-namespaces.rst
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 55199ef7fa74..a0ca64057b0d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11547,6 +11547,7 @@ NSDEPS
- M:	Matthias Maennich <maennich@google.com>
- S:	Maintained
- F:	scripts/nsdeps
-+F:	Documentation/core-api/symbol-namespaces.rst
- 
- NTB AMD DRIVER
- M:	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
--- 
-2.17.1
-
+Guenter
