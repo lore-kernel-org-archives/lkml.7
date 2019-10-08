@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BDAC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41222C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 381DE21871
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:17:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08AC7218AC
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 17:17:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cu35hN4/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RxZqeu6j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728561AbfJHRRi (ORCPT
+        id S1728929AbfJHRRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 13:17:38 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34108 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725966AbfJHRRg (ORCPT
+        Tue, 8 Oct 2019 13:17:40 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42735 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726253AbfJHRRg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Oct 2019 13:17:36 -0400
-Received: by mail-wr1-f65.google.com with SMTP id j11so14537135wrp.1;
-        Tue, 08 Oct 2019 10:17:34 -0700 (PDT)
+Received: by mail-wr1-f68.google.com with SMTP id n14so20284438wrw.9;
+        Tue, 08 Oct 2019 10:17:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
         bh=ZE8PGEIi76YGMsXY8il0PtLXvzSxK3hR1oe5Tgh3d28=;
-        b=Cu35hN4/32NXTftmvQFvaafUTxd+iPBleiXiw2Ks90GzL30vMoWvDweANUS8D9JqlC
-         mwMIbnX7h19b95PsHYAOQ2qP6wjwLRf5+ZQWojwf/07NznY4AF4Q9lpo1jCyMC0K6mmA
-         A0tHJFLGCONzrPvtzsJu5lyImqH4odlEr5NoGNiVr/OcKrlIvV0gutSashqEfWpY4SBb
-         eYE9/ODb5Rgsut9KNYw+7LXDWvwcunScgV5MW1P10IN1BJgAui4R8kAcQshqcuPnsD0Y
-         hSdx794zEJs2pAIsQusO1VDxDz0PQQlPToOyGvQ60vCdyaiQ9bPQxm4DxlmFJ/F5VOvB
-         endA==
+        b=RxZqeu6jgSrqT4kqT1iSbT2OORuSOCIw/HTA4JdmixgnxwSe89je1O0xW80y9UyrgE
+         QHAHxg9ks8hE1Ssfo8LmTF0GENd3zSdydQPqCEPid5JmB/lRbXKh13Oiyrs9mUk/COx0
+         Kw9sbeC7+ajUgnUm0vfEAyFC1/zW0SXOoeMRNsksu5zmHIuPXGvv39P/zv6GYRi6FRig
+         YLX3BLUN+HBdM/Qfm5yQDjlT7BP+evPf0BiaEpO0vfvLYC3r/qqwhZ0B9u7LAwg7EBT3
+         M9rEdLOVDH3PKO+MEatPK8Kch5vzn9uNwhLQJBzb5dZFmGhVdC4zPp6bLvisLlfNh9FE
+         9D2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
         bh=ZE8PGEIi76YGMsXY8il0PtLXvzSxK3hR1oe5Tgh3d28=;
-        b=H+2UdIyXRfvr8Hj9WRBn/K3z/0IGxpyRFBtyS0kljSVVteGtiEdfazL8Ocwv1V6o0G
-         HV9wHw+u0x5TOYm0LghrNujN61QWezU9z4C6HEyMl/d+0isOpOcWnDdgTu3Iy491E5Us
-         arG39/zRU9DQO2U3HdnE1hoSawJtHdSoMbQcFHOSzrC0GXCwIyyW7aILGz+H20CS6qW5
-         yJdWNuRclvDsIw6qcJ//oGe7KmZ9J+d3JVEsn8jFzdWkja4LEqW4oxrn3x17N6bEhxfe
-         YPYVAF11LY7zGhIuk6ixOZq17D1i5adcxxr8+n/znWMuFfTAtLEbjDGy8eyZtcMW91co
-         FnWg==
-X-Gm-Message-State: APjAAAVugW9mCBOlv+vT+dlsZkw8uxkk6t430BO4I9DiqEFmNGIxo6wm
-        OAAFFIvinoNyadh7Ll8Rq84=
-X-Google-Smtp-Source: APXvYqwdvHBwsG2mR58wj08mieKyPRIn3OlKuHJNjL0SDJXT3RQKCGDdtrc6V1G1wPnCYqtirzLW8Q==
-X-Received: by 2002:a5d:67c3:: with SMTP id n3mr6371932wrw.294.1570555053468;
+        b=I5ToioZr0StQsSONKzRzt+q1VK1ml3Cz9DJposoROqVVGx5es8rALYsNKGK7iCwOce
+         8eUWcLxmUiwe6MvZe9PlZqVd6bgXfrrT+KlF1Bpd8P1zgAyT7oLUF+Zw+sRE+0QlbtJO
+         JwRuPGlB5O27+1Vzb0Ryb7og3FX/yj4ftM3eVrgYq5Bv0VLnQ06AiN5PANbid/mJx3vM
+         Vearo/Slb0aztebt2jkAmZt2U9SqiOwDA0f/vRlJgDagi1yEnZBWnD6IUTDlOlQ3KiJU
+         Bo+Xkmvuolxb0dODIel+K2MYveQeGCh4558VUQ6ABKF+VsCZKAYYoaMfRM97RwQEVkak
+         0hAw==
+X-Gm-Message-State: APjAAAWLIQ5CrySJZrJqykP/RFjVmRx2Cx92elc8Uq8arGIZsq9vChe/
+        CqAWXktyKMhVI50NTd3K1XM=
+X-Google-Smtp-Source: APXvYqy2bdvWWVGsdauftl8KYOQK2Cgl5ukUts+LsdvewFRq1Tg7hCgZbbPe7PQNQeEDqzqemrd8qw==
+X-Received: by 2002:a5d:4983:: with SMTP id r3mr21266968wrq.194.1570555053006;
         Tue, 08 Oct 2019 10:17:33 -0700 (PDT)
 Received: from [192.168.1.19] (bgs228.neoplus.adsl.tpnet.pl. [83.28.82.228])
-        by smtp.gmail.com with ESMTPSA id t123sm4621928wma.40.2019.10.08.10.17.31
+        by smtp.gmail.com with ESMTPSA id s9sm4891585wme.36.2019.10.08.10.17.31
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
         Tue, 08 Oct 2019 10:17:32 -0700 (PDT)
 Subject: Re: [PATCH v9 4/5] dt-bindings: backlight: Add led-backlight binding
@@ -135,7 +135,7 @@ Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
  qqFCBWmTHXfwsfW0VgBmRtPO7eXVBybjJ1VXKR2RZxwSq/GoNXh/yrRXQxbcpZ+QP3/Tttsb
  FdKciZ4u3ts+5UwYra0BRuvb51RiZR2wRNnUeBnXWagJVTlG7RHBO/2jJOE6wrcdCMjs0Iiw
  PNWmiVoZA930TvHA5UeGENxdGqo2MvMdRJ54YaIR
-Message-ID: <80378f6c-24ed-ff6b-fef5-1865c3f84b60@gmail.com>
+Message-ID: <edadb121-cebd-b8ea-e07d-f5495a581dfd@gmail.com>
 Date:   Tue, 8 Oct 2019 19:17:29 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
