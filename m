@@ -2,99 +2,134 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 173D8C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A379C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEE5C20673
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:22:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Cszw21Rs"
+	by mail.kernel.org (Postfix) with ESMTP id 77995217D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:23:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbfJHOWh (ORCPT
+        id S1726761AbfJHOXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 10:22:37 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34736 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725839AbfJHOWg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 10:22:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1570544555;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jMpWj4uOPxcgbjJ4IsWoC4M5sQShlFz4NNLvVWf/x6o=;
-        b=Cszw21RsBE2P8aVTe7ByjPE3OXu768c33Lf6s+jGwrRzqcpeyfCrvF2LWtAwhKPMXC2Adn
-        bgOw/C2La2SEtla0gcAz0opspVDHhce8gpXBtDZapr5/0wAGPM6rnDM2ZfMpJBOA9WCUm8
-        D5gRbMyHefonYwdNtpH5wDc8KSBWIq4=
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
- [209.85.167.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-330-DAMSSagpMD6PALxAVV3EIQ-1; Tue, 08 Oct 2019 10:22:33 -0400
-Received: by mail-lf1-f72.google.com with SMTP id w193so2275453lff.3
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 07:22:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=izWGXNhra/3fh2DCf3llnwEjW05viNBlyod0b16IslA=;
-        b=NtFMET7yNImU3yBrof/SJJOWPNGHwK827qSIYn98yEkKoIk7jt5C9ku0khij7HjiEN
-         /von2AqXE6xg/6izO7LCYWUIkqm/IKmnnvlr2ElYMAO7sOOEGjmIVRTKgMIKE1WG/knL
-         B6bw4qOURpLGccaKdNaH7vjP9htigVvzarDOpDQkXYPR5f4Brx+V/fNGDNI+/X9r7FUS
-         wzenvR2wSnkxS4eG18P2PxCTKpXdddKtW/zxr+jLY0HoZt62po/J6Elky/wVC+Jk1dWe
-         GGX0GK88uxcMtkqFowCdrhhHDhGRK6m/Q9KCvY58Oy7q5DM2Hac0VTfduKw6glKfIXRA
-         KiTw==
-X-Gm-Message-State: APjAAAVln7KxcjvgvzEFCAwgaJ/JmXIrXDgEZ3UgB17/ytNSIN9sPCI4
-        2rg37PGWP3mCJV5IVZkhUvGgzlYcIaMxl0J16bgyNyJcGDRBvZHOqDjYL28LtT6Cnb0WaLluSnz
-        PKlryfSOr+S5p3CfppsEjaf5AX1ztAf7feBeCrCFV
-X-Received: by 2002:a19:f617:: with SMTP id x23mr20131655lfe.97.1570544551405;
-        Tue, 08 Oct 2019 07:22:31 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwQ5BIwFckGkZoqMa3dajoTZI5b2H0V7PwZ9+q73PFB53Spl/+fGoimtc5lTyv7g1Hv5kaHN9PjZmq2Rci2J+I=
-X-Received: by 2002:a19:f617:: with SMTP id x23mr20131648lfe.97.1570544551211;
- Tue, 08 Oct 2019 07:22:31 -0700 (PDT)
+        Tue, 8 Oct 2019 10:23:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59186 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725839AbfJHOXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 10:23:11 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E3BB1B199;
+        Tue,  8 Oct 2019 14:23:08 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 22C2DDA7FB; Tue,  8 Oct 2019 16:23:22 +0200 (CEST)
+Date:   Tue, 8 Oct 2019 16:23:22 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, kernel-team@fb.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] btrfs: Avoid getting stuck during cyclic writebacks
+Message-ID: <20191008142322.GP2751@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Tejun Heo <tj@kernel.org>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, kernel-team@fb.com,
+        linux-kernel@vger.kernel.org
+References: <20191003142713.GA2622251@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-References: <20191008123346.3931-1-mcroce@redhat.com> <20191008131518.GH25098@kadam>
-In-Reply-To: <20191008131518.GH25098@kadam>
-From:   Matteo Croce <mcroce@redhat.com>
-Date:   Tue, 8 Oct 2019 16:21:54 +0200
-Message-ID: <CAGnkfhxefH+3YKDWQMCOYoj1skcq6rUmHuiHZQ-76YixFqbQjg@mail.gmail.com>
-Subject: Re: [PATCH] staging: vchiq: don't leak kernel address
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>, devel@driverdev.osuosl.org
-X-MC-Unique: DAMSSagpMD6PALxAVV3EIQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191003142713.GA2622251@devbig004.ftw2.facebook.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 8, 2019 at 3:16 PM Dan Carpenter <dan.carpenter@oracle.com> wro=
-te:
->
-> The subject doesn't match the patch.  It should just be "remove useless
-> printk".
->
-> regards,
-> dan carpenter
->
+On Thu, Oct 03, 2019 at 07:27:13AM -0700, Tejun Heo wrote:
+> During a cyclic writeback, extent_write_cache_pages() uses done_index
+> to update the writeback_index after the current run is over.  However,
+> instead of current index + 1, it gets to to the current index itself.
+> 
+> Unfortunately, this, combined with returning on EOF instead of looping
+> back, can lead to the following pathlogical behavior.
 
-Well, it avoids leaking an address by removing an useless printk.
-It seems that GKH already picked the patch in his staging tree, but
-I'm fine with both subjects, really,
+Tricky stuff.
 
-Greg?
+> 1. There is a single file which has accumulated enough dirty pages to
+>    trigger balance_dirty_pages() and the writer appending to the file
+>    with a series of short writes.
+> 
+> 2. bdp kicks in, wakes up background writeback and sleeps.
 
---=20
-Matteo Croce
-per aspera ad upstream
+What does 'bdp' refer to?
 
+> 3. Writeback kicks in and the cursor is on the last page of the dirty
+>    file.  Writeback is started or skipped if already in progress.  As
+>    it's EOF, extent_write_cache_pages() returns and the cursor is set
+>    to done_index which is pointing to the last page.
+> 
+> 4. Writeback is done.  Nothing happens till bdp finishes, at which
+>    point we go back to #1.
+> 
+> This can almost completely stall out writing back of the file and keep
+> the system over dirty threshold for a long time which can mess up the
+> whole system.  We encountered this issue in production with a package
+> handling application which can reliably reproduce the issue when
+> running under tight memory limits.
+> 
+> Reading the comment in the error handling section, this seems to be to
+> avoid accidentally skipping a page in case the write attempt on the
+> page doesn't succeed.  However, this concern seems bogus.
+> 
+> On each page, the code either:
+> 
+> * Skips and moves onto the next page.
+> 
+> * Fails issue and sets done_index to index + 1.
+> 
+> * Successfully issues and continue to the next page if budget allows
+>   and not EOF.
+> 
+> IOW, as long as it's not EOF and there's budget, the code never
+> retries writing back the same page.  Only when a page happens to be
+> the last page of a particular run, we end up retrying the page, which
+> can't possibly guarantee anything data integrity related.  Besides,
+> cyclic writes are only used for non-syncing writebacks meaning that
+> there's no data integrity implication to begin with.
+
+The code was added in a91326679f2a0a4c239 ("Btrfs: make
+mapping->writeback_index point to the last written page") after a user
+report in https://www.spinics.net/lists/linux-btrfs/msg52628.html , slow
+appends that caused fragmentation
+
+What you describe as the cause is similar, but you're partially
+reverting the fix that was supposed to fix it. As there's more code
+added by the original patch, the revert won't probably bring back the
+bug.
+
+The whole function and states are hard to follow, I agree with your
+reasoning about the check being bogus and overall I'd rather see fewer
+special cases in the function.
+
+Also the removed comment mentions media errors but this was not the
+problem for the original report and is not a common scenario either. So
+as long as the fallback in such case is sane (ie. set done = 1 and
+exit), I don't see futher problems.
+
+> Fix it by always setting done_index past the current page being
+> processed.
+> 
+> Note that this problem exists in other writepages too.
+
+I can see that write_cache_pages does the same done_index updates.  So
+it makes sense that the page walking and writeback index tracking
+behaviour is consistent, unless extent_write_cache_pages has diverged
+too much.
+
+I'll add the patch to misc-next. Thanks.
