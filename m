@@ -2,136 +2,104 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4FDC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8636C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75F09205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:02:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wr+YXFbD"
+	by mail.kernel.org (Postfix) with ESMTP id B865C2070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 15:02:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727278AbfJHPCp (ORCPT
+        id S1727437AbfJHPCz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 11:02:45 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:35851 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725908AbfJHPCo (ORCPT
+        Tue, 8 Oct 2019 11:02:55 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:44027 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727306AbfJHPCy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 11:02:44 -0400
-Received: by mail-lf1-f65.google.com with SMTP id x80so12231221lff.3;
-        Tue, 08 Oct 2019 08:02:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hanP64qrgvYP3vcHeIcVDhG/zEHvopBb2ZM93vS38+E=;
-        b=Wr+YXFbDG3SuKJgcC8V6ICw1ifCnCImtHQRsskiQ0R+DvOgI7lzWJwXLdjwWrrcld9
-         2w6Em2HQOzrhddTgsyP7oyfYqCyuJ1Tfc5bBc/Zd38d8th6Kdutpu4E7w83DSbCrPyJT
-         3TgzGwp50rxctT7CwmaLEcPNXj/R+9LhxK/+fV+jpJ3C/2vGN798qQMipU0MpYNhTEjv
-         l0WKTRWN9McoM1wZB4MeSHLOm3WnvKQO5Q6MzXCMaeai6kyAY0dxFk1DAE0a+C2+W75x
-         FCZ5jr5kG1UV1qtMO9aIVKTJHdeyPYqyqnSvDP5LYPcXlvBctZR+DSqCtLV7/rMyI17B
-         ycNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hanP64qrgvYP3vcHeIcVDhG/zEHvopBb2ZM93vS38+E=;
-        b=pGISBUnv/024TJucCP8NjUM+QhG/lpLW+xgkDOYAQt472P+M8L3c/z0KpF6f6VLaTO
-         AHPt36K6RRJR7up3QZuhBRjmOjEjcGqo5K+DAeZuHw+wvDhwfUzE2sZUIJg1rxIZJEqt
-         kCbmdnwJQpOJn9WmVzxUrS+vukiVE5X9HE5bSH9Co4wG2KviN+JKEw2haKdKgjfILHiv
-         5U6onnkxcfAaJxvKQGY49uBskqM6Xfgy79HUGdrh59rUzcgbV85bGPKaWHv68wEWvd28
-         5MY25LJVZ5HZpbscM3nnmLPCBJBjM3mkzW3fR0tTqiZtLMP7Pf/yvTZ/xebTAVdQP0Vx
-         9CDA==
-X-Gm-Message-State: APjAAAURI7CRpQUa3i60CXh92RVKvn06B9Fl6KYAvu5647XqfgU2F8Lg
-        ZFKLg6XhyU7/TVnZ/jtzm6o=
-X-Google-Smtp-Source: APXvYqynG39rtW8ewBqivAhxBMiEYn8Rg0jVcXQa/Zub1o83LOmidrw9zWPspJtxHGVFbVYdYlUwQQ==
-X-Received: by 2002:a19:c002:: with SMTP id q2mr21169179lff.62.1570546958611;
-        Tue, 08 Oct 2019 08:02:38 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.34.231])
-        by smtp.googlemail.com with ESMTPSA id t16sm4066596ljj.29.2019.10.08.08.02.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Oct 2019 08:02:37 -0700 (PDT)
-Subject: Re: [PATCH] regulator: core: Skip balancing of the enabled regulators
- in regulator_enable()
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Mark Brown <broonie@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-samsung-soc@vger.kernel.org,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Kamil Konieczny <k.konieczny@samsung.com>
-References: <CGME20191008101720eucas1p2e0d1bca6e696848bf689067e05620679@eucas1p2.samsung.com>
- <20191008101709.13827-1-m.szyprowski@samsung.com>
- <20191008115025.GF4382@sirena.co.uk>
- <0e222fdd-4407-51ea-b75c-a62621cbe622@samsung.com>
- <20191008120611.GG4382@sirena.co.uk>
- <9268b455-ec66-97e1-909d-f964ac31c0ef@samsung.com>
- <20191008124736.GJ4382@sirena.co.uk>
- <86b9b4b5-cca5-9052-7c87-c5679dfffff4@samsung.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <be8d3280-9855-ed18-b2ab-d7fb28d80b82@gmail.com>
-Date:   Tue, 8 Oct 2019 18:02:36 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 8 Oct 2019 11:02:54 -0400
+X-Originating-IP: 86.250.200.211
+Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id DB95C24000F;
+        Tue,  8 Oct 2019 15:02:50 +0000 (UTC)
+Date:   Tue, 8 Oct 2019 17:02:49 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     masonccyang@mxic.com.tw
+Cc:     bbrezillon@kernel.org, computersforpeace@gmail.com,
+        dwmw2@infradead.org, frieder.schrempf@kontron.de,
+        gregkh@linuxfoundation.org, juliensu@mxic.com.tw,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        marcel.ziswiler@toradex.com, marek.vasut@gmail.com, richard@nod.at,
+        tglx@linutronix.de, vigneshr@ti.com
+Subject: Re: [PATCH RFC 2/3] mtd: rawnand: Add support Macronix Block
+ Protection function
+Message-ID: <20191008170249.06bd45ce@xps13>
+In-Reply-To: <OFEDE76FEE.8BC48D9E-ON4825848D.000BCC94-4825848D.000E0643@mxic.com.tw>
+References: <1568793387-25199-1-git-send-email-masonccyang@mxic.com.tw>
+        <1568793387-25199-2-git-send-email-masonccyang@mxic.com.tw>
+        <20191007104511.5aa7b8f2@xps13>
+        <20191007112442.783e4fbe@xps13>
+        <OFEDE76FEE.8BC48D9E-ON4825848D.000BCC94-4825848D.000E0643@mxic.com.tw>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <86b9b4b5-cca5-9052-7c87-c5679dfffff4@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-08.10.2019 16:24, Bartlomiej Zolnierkiewicz пишет:
-> 
-> On 10/8/19 2:47 PM, Mark Brown wrote:
->> On Tue, Oct 08, 2019 at 02:38:55PM +0200, Marek Szyprowski wrote:
->>
->>> Then if I get it right, the issue is caused by the commit 7f93ff73f7c8 
->>> ("opp: core: add regulators enable and disable"). I've checked and 
->>> indeed reverting it fixes Peach Pi to boot properly.
+Hi Mason,
 
-Yes, please note that the "ww_mutex" patch didn't change the original logic and only
-rearranged the code a tad.
+masonccyang@mxic.com.tw wrote on Tue, 8 Oct 2019 10:33:11 +0800:
 
- The question is if
->>> this is desired behavior or not?
->>
->> That doesn't seem ideal - either it's redundant for regulators that need
->> to be marked as always-on anyway or it's going to force the regulators
->> on when a device could do runtime PM (eg, if the same code can run on
->> something like a GPU which can be turned off while the screen is off or
->> is displaying a static image).
+> Hi Miquel,
 > 
-> Commit 7f93ff73f7c8 ("opp: core: add regulators enable and disable")
-> currently can be safely reverted as all affected users use always-on
-> regulators. However IMHO it should be possible to enable always-on
-> regulator without side-effects.
+> > >   
+> > > > Macronix AC series support using SET/GET_FEATURES to change
+> > > > Block Protection and Unprotection.
+> > > > 
+> > > > MTD default _lock/_unlock function replacement by manufacturer
+> > > > postponed initialization.   
+> > > 
+> > > Why would we do that?
+> > > 
+> > > Anyway your solution looks overkill, if we ever decide to
+> > > implement these hooks for raw nand, it is better just to not
+> > > overwrite them in nand_scan_tail() if they have been filled
+> > > previously (ie. by the manufacturer code).  
+> > 
+> > Actually you should add two NAND hooks that do the interface with the
+> > MTD hooks. In the NAND hooks, check that the request is to lock all the
+> > device, otherwise return -ENOTSUPP.  
 > 
-> When it comes to setting regulator constraints before doing enable
-> operation, it also seems to be possible solution but would require
-> splitting regulator_set_voltage() operation on two functions:
+> sorry, can't get your point.
 > 
-> - one for setting constraints (before regulator_enable() operation)
-> 
-> - the other one actually setting voltage (after enable operation)
-> 
-> Unfortunately this is much bigger task and doesn't seem to be -rc
-> time material so I'm in favor of just applying Marek's fix as it is
-> for now.
+> Because the NAND entire chip will be protected if PT(protection) pin 
+> is active high at power-on.
 
-That OPP patch caused the same problem for the NVIDIA Tegra20 CPUFreq driver (in-progress)
-and I resolved it in the coupler's code [0]. Perhaps the generic coupler could do the same
-thing by assuming that min_uV=current_uV until any consumer sets the voltage, i.e. if
-regulator_check_consumers(min_uV=0) returns min_uV=0.
+In your implementation of the locking, you should check that the
+locking request is over the entire device, unless you can lock a
+smaller portion of course.
 
-[0] https://lkml.org/lkml/2019/7/25/892
+> 
+> > 
+> > Then fill-in these two hooks from the manufacturer code, without the
+> > postponed init.
+> >   
+> 
+> But in the final of nand_scan_tail(), mtd->_lock/_unlock will be
+> filled by NULL, right ?
+
+The NAND core should set mtd->_lock/_unlock() to NAND specific hooks so
+that the MTD layer is abstracted and and drivers do not see it. Then,
+in the NAND helper, either there is no specific hook defined by a
+manufacturer driver and you return -ENOTSUPP, or you execute the
+defined hook.
+
+Thanks,
+Miquèl
