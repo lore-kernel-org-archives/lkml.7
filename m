@@ -2,131 +2,132 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3535BC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 260AEC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 159A820873
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:29:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E76A2206BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:37:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CzDAXewQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbfJHW3J (ORCPT
+        id S1726062AbfJHWhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 18:29:09 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:40141 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725879AbfJHW3J (ORCPT
+        Tue, 8 Oct 2019 18:37:24 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42737 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfJHWhY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 18:29:09 -0400
-Received: by mail-io1-f69.google.com with SMTP id r20so932002ioh.7
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 15:29:09 -0700 (PDT)
+        Tue, 8 Oct 2019 18:37:24 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q12so252568pff.9
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 15:37:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VC4mv5XGXFruUlsFXW0NMhXbbPQw/AuYeawaNDJPGzY=;
+        b=CzDAXewQ/uqRQSI/BP3FF11jEUDkE2OG4DlXubxjf9hE0jRUkIjqtwa9rzyJvPHRzN
+         gElY4mMMN9fKegzA4yKqmZQVgnUjTGcQjkV3VMgYyF/8uZFntijtBWPWy2pkOHPRlPiv
+         0TjdJ5pvEWIvM6QbQDQdLz14P0gYPaLsp7Obk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=jVNpj39i7xvK8MWgtKNyHcAmTmAx0cA9HUYpZ02atfs=;
-        b=oL2kzy9pXik/zNBRo8n+qHyOrDqDU2EpGvGwwMJZJwWdHOukA8W8/TWny+b3b0KpFR
-         foB/Ox4+qjqtyqgFV7GNDs7VdIMsDlekKHAH/o9CKOgwfqQTk8Wq2X9RJaOvDqfBTXwd
-         zSiEDA2HbJrYKb9n8TPxsqi93f2V9euPKvlSoqCCPMgaM0eU468e6fPYrLLMk4nwo54G
-         NECG/uh6n2JdBkvRaZmwUF1XUfpJVWoHfmARqkCn5Om2kKnli7+FOranWSaP8X8ToRXr
-         +tuMT2kORqk6M8f9MhLEi9rf/Ckwd5OpV+iMwwsMSSCpwkOpwIndXfhXVm6/QZmYAFHY
-         V/6g==
-X-Gm-Message-State: APjAAAVLL/fThz6I4zg6pVpzZlBddYNJyLukFWHRhfb5PfIMu/zGhl8o
-        sBj4Jhudr0L/ow8a+VnfztoLteM+VVP9BGMBqIMZffQQ4A93
-X-Google-Smtp-Source: APXvYqwL0qHuZSap+ExhhuRbTa9K5CfNjcj8eimDFS5NP3QrMmCUb4Dk1KGAKMjlKfYDqC4T4wxdh0NGmkoVr8VnUQ9eu9IByaJ/
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VC4mv5XGXFruUlsFXW0NMhXbbPQw/AuYeawaNDJPGzY=;
+        b=U/3chgJhPK6BoSFw1sAaK9EDeNBHYH15UuayxJZ0A8c7N24YEBOOpEaT+jb0QP9Wvj
+         LYhixwaCXRjFc7o3852a6M+UDr9iWdQsVom2ZiwUN7oomwzbvwf4t3stq/SF0GjKS9Uz
+         FRYa4wTTDzQt6qnFUNeK2V7JlOcX+FNHJ0+lT+gAWg1rkhadXXC/o6+T5f4KDyxols+G
+         r97LhRig025H18AbpeLwCVMoQa+/MX42q00xBhYk1Da7X0eQn1HSQ8G2CaA45dRRplfQ
+         sBDSYwQbQdlYciOuaomQAmJe3lSLRGGFhi3canCKVlGqpMScOG3cGNCn9YfQJFSIsupM
+         EsZw==
+X-Gm-Message-State: APjAAAW9Oa2OmqwX3mz+G++OItwZP4dNFaScUjBCT7/6gL7s0HT5M6Tf
+        hHXsjkFCPZ5oCNl770+I1WGV/g==
+X-Google-Smtp-Source: APXvYqyvaJMeZH6ePWzFr5kVaFOzZKJbJs8zMQFzVdOdIeH5Wqei8ceB+YRil6sz2ZBr/2TdtbWKvw==
+X-Received: by 2002:a63:27c1:: with SMTP id n184mr771895pgn.193.1570574243485;
+        Tue, 08 Oct 2019 15:37:23 -0700 (PDT)
+Received: from evgreen2.mtv.corp.google.com ([2620:15c:202:201:ffda:7716:9afc:1301])
+        by smtp.gmail.com with ESMTPSA id p11sm183106pgb.1.2019.10.08.15.37.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 08 Oct 2019 15:37:22 -0700 (PDT)
+From:   Evan Green <evgreen@chromium.org>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Evan Green <evgreen@chromium.org>, Pan Bian <bianpan2016@163.com>,
+        Allison Randal <allison@lohutok.net>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        linux-input@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH] Input: synaptics-rmi4 - Avoid processing unknown IRQs
+Date:   Tue,  8 Oct 2019 15:36:57 -0700
+Message-Id: <20191008223657.163366-1-evgreen@chromium.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-Received: by 2002:a92:17c4:: with SMTP id 65mr704706ilx.28.1570573748770;
- Tue, 08 Oct 2019 15:29:08 -0700 (PDT)
-Date:   Tue, 08 Oct 2019 15:29:08 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000639e6005946db2ed@google.com>
-Subject: KMSAN: uninit-value in bsearch
-From:   syzbot <syzbot+427ce10b72235583ef69@syzkaller.appspotmail.com>
-To:     benpicco@googlemail.com, glider@google.com, hias@horus.com,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        mchehab@kernel.org, patrick9876@free.fr, sean@mess.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+rmi_process_interrupt_requests() calls handle_nested_irq() for
+each interrupt status bit it finds. If the irq domain mapping for
+this bit had not yet been set up, then it ends up calling
+handle_nested_irq(0), which causes a NULL pointer dereference.
 
-syzbot found the following crash on:
+There's already code that masks the irq_status bits coming out of the
+hardware with current_irq_mask, presumably to avoid this situation.
+However current_irq_mask seems to more reflect the actual mask set
+in the hardware rather than the IRQs software has set up and registered
+for. For example, in rmi_driver_reset_handler(), the current_irq_mask
+is initialized based on what is read from the hardware. If the reset
+value of this mask enables IRQs that Linux has not set up yet, then
+we end up in this situation.
 
-HEAD commit:    1e76a3e5 kmsan: replace __GFP_NO_KMSAN_SHADOW with kmsan_i..
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=130b16fd600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f03c659d0830ab8d
-dashboard link: https://syzkaller.appspot.com/bug?extid=427ce10b72235583ef69
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
+There appears to be a third unused bitmask that used to serve this
+purpose, fn_irq_bits. Use that bitmask instead of current_irq_mask
+to avoid calling handle_nested_irq() on IRQs that have not yet been
+set up.
 
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+427ce10b72235583ef69@syzkaller.appspotmail.com
-
-dvb-usb: bulk message failed: -22 (1/-30591)
-=====================================================
-BUG: KMSAN: uninit-value in ir_lookup_by_scancode  
-drivers/media/rc/rc-main.c:494 [inline]
-BUG: KMSAN: uninit-value in rc_g_keycode_from_table  
-drivers/media/rc/rc-main.c:582 [inline]
-BUG: KMSAN: uninit-value in rc_keydown+0x1a6/0x6f0  
-drivers/media/rc/rc-main.c:816
-CPU: 1 PID: 11436 Comm: kworker/1:2 Not tainted 5.3.0-rc7+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events dvb_usb_read_remote_control
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
-  kmsan_report+0x13a/0x2b0 mm/kmsan/kmsan_report.c:108
-  __msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:250
-  bsearch+0x1dd/0x250 lib/bsearch.c:41
-  ir_lookup_by_scancode drivers/media/rc/rc-main.c:494 [inline]
-  rc_g_keycode_from_table drivers/media/rc/rc-main.c:582 [inline]
-  rc_keydown+0x1a6/0x6f0 drivers/media/rc/rc-main.c:816
-  cxusb_rc_query+0x2e1/0x360 drivers/media/usb/dvb-usb/cxusb.c:548
-  dvb_usb_read_remote_control+0xf9/0x290  
-drivers/media/usb/dvb-usb/dvb-usb-remote.c:261
-  process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
-  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
-  kthread+0x4b5/0x4f0 kernel/kthread.c:256
-  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
-
-Uninit was stored to memory at:
-  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:150 [inline]
-  kmsan_internal_chain_origin+0xd2/0x170 mm/kmsan/kmsan.c:314
-  __msan_chain_origin+0x6b/0xe0 mm/kmsan/kmsan_instr.c:184
-  rc_g_keycode_from_table drivers/media/rc/rc-main.c:583 [inline]
-  rc_keydown+0x2c4/0x6f0 drivers/media/rc/rc-main.c:816
-  cxusb_rc_query+0x2e1/0x360 drivers/media/usb/dvb-usb/cxusb.c:548
-  dvb_usb_read_remote_control+0xf9/0x290  
-drivers/media/usb/dvb-usb/dvb-usb-remote.c:261
-  process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
-  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
-  kthread+0x4b5/0x4f0 kernel/kthread.c:256
-  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
-
-Local variable description: ----ircode@cxusb_rc_query
-Variable was created at:
-  cxusb_rc_query+0x4d/0x360 drivers/media/usb/dvb-usb/cxusb.c:543
-  dvb_usb_read_remote_control+0xf9/0x290  
-drivers/media/usb/dvb-usb/dvb-usb-remote.c:261
-=====================================================
-
-
+Signed-off-by: Evan Green <evgreen@chromium.org>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+ drivers/input/rmi4/rmi_driver.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/input/rmi4/rmi_driver.c b/drivers/input/rmi4/rmi_driver.c
+index 772493b1f665..190b9974526b 100644
+--- a/drivers/input/rmi4/rmi_driver.c
++++ b/drivers/input/rmi4/rmi_driver.c
+@@ -146,7 +146,7 @@ static int rmi_process_interrupt_requests(struct rmi_device *rmi_dev)
+ 	}
+ 
+ 	mutex_lock(&data->irq_mutex);
+-	bitmap_and(data->irq_status, data->irq_status, data->current_irq_mask,
++	bitmap_and(data->irq_status, data->irq_status, data->fn_irq_bits,
+ 	       data->irq_count);
+ 	/*
+ 	 * At this point, irq_status has all bits that are set in the
+@@ -385,6 +385,8 @@ static int rmi_driver_set_irq_bits(struct rmi_device *rmi_dev,
+ 	bitmap_copy(data->current_irq_mask, data->new_irq_mask,
+ 		    data->num_of_irq_regs);
+ 
++	bitmap_or(data->fn_irq_bits, data->fn_irq_bits, mask, data->irq_count);
++
+ error_unlock:
+ 	mutex_unlock(&data->irq_mutex);
+ 	return error;
+@@ -398,6 +400,8 @@ static int rmi_driver_clear_irq_bits(struct rmi_device *rmi_dev,
+ 	struct device *dev = &rmi_dev->dev;
+ 
+ 	mutex_lock(&data->irq_mutex);
++	bitmap_andnot(data->fn_irq_bits,
++		      data->fn_irq_bits, mask, data->irq_count);
+ 	bitmap_andnot(data->new_irq_mask,
+ 		  data->current_irq_mask, mask, data->irq_count);
+ 
+-- 
+2.21.0
+
