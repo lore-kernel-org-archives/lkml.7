@@ -2,136 +2,141 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA7BDC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 18:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD7FAC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 18:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E5382070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 18:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AD532070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 18:29:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rr1wYHsW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729285AbfJHS2H (ORCPT
+        id S1729535AbfJHS3r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 14:28:07 -0400
-Received: from mout2.fh-giessen.de ([212.201.18.46]:37420 "EHLO
-        mout2.fh-giessen.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbfJHS2G (ORCPT
+        Tue, 8 Oct 2019 14:29:47 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:39762 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbfJHS3q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 14:28:06 -0400
-Received: from mx1.fh-giessen.de ([212.201.18.40])
-        by mout2.fh-giessen.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <tobias.johannes.klausmann@mni.thm.de>)
-        id 1iHuDK-0000Kj-EC; Tue, 08 Oct 2019 20:28:02 +0200
-Received: from mailgate-3.its.fh-giessen.de ([212.201.18.34])
-        by mx1.fh-giessen.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <tobias.johannes.klausmann@mni.thm.de>)
-        id 1iHuDK-004ZxS-BA; Tue, 08 Oct 2019 20:28:02 +0200
-Received: from p4fed2d78.dip0.t-ipconnect.de ([79.237.45.120] helo=zwei.fritz.box)
-        by mailgate-3.its.fh-giessen.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <tobias.johannes.klausmann@mni.thm.de>)
-        id 1iHuDK-0008nX-5S; Tue, 08 Oct 2019 20:28:02 +0200
-Subject: Re: e1000e regression - 5.4rc1
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     jeffrey.t.kirsher@intel.com, intel-wired-lan@lists.osuosl.org,
-        linux-kernel@vger.kernel.org, tobias.klausmann@freenet.de
-References: <171f0c61-73a2-81c2-5c8a-7c140f548803@mni.thm.de>
- <56242322-D549-4E23-97AB-153CC392B107@canonical.com>
- <76fc2204-0786-03b3-773d-110912d48168@mni.thm.de>
- <2994F2A2-D844-40B0-9971-C002E5EC49CD@canonical.com>
-From:   Tobias Klausmann <tobias.johannes.klausmann@mni.thm.de>
-Message-ID: <940da657-a8af-ccde-34ca-7a93fad94567@mni.thm.de>
-Date:   Tue, 8 Oct 2019 20:28:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:71.0) Gecko/20100101
- Thunderbird/71.0a1
+        Tue, 8 Oct 2019 14:29:46 -0400
+Received: by mail-io1-f66.google.com with SMTP id a1so38710115ioc.6
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 11:29:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nFBqKrWYzVevAqWlj4MwUnoGvm5LwGQa7c/udw32/uk=;
+        b=rr1wYHsWE+EyQTfXmtPkbAae+AJF1dzTGin2U3uKmmzk2hp+/QHdrkZyJETn8YqklD
+         c1Q6on7G5uUDJ7RoAa3O9givoK0OUo/hc4XKx66TY4OrJOl3HOT1kNlsYFj8mLVoon15
+         xpnHfpnD1b9yXc/A682iDYG6rONW8R8s5l1Gmws9beBQXQ1zZWQ3RBdEnPXOSUpeN6zy
+         x/j1CWVPbo/bqVWQ6SbK9N2SINsFtagA1MFnyrDN9vSBhj7YgxmDs+piLLpDzNWtRd7W
+         jMqPjI3TTQBFbATaKPaoLAlwvylsMkdueRvJ/s/+M80icDmygl7sHPnf2sUjFpsGrxmq
+         xm3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nFBqKrWYzVevAqWlj4MwUnoGvm5LwGQa7c/udw32/uk=;
+        b=jX3gHBlO9lJNdNSnIO9YBWKWR5wW9jhkeqwRLlWdBr3hkMphdNIy2IwejF9p6nID1m
+         gVoZTo7DeZmt7l/dL9CPED3E1Oji9ECKtqVgLULHrRnOV+ojokC/L+kOgCHQQlL2Gpo5
+         yAaGV6jH6yivEBCLaWk/W+WQT4Kixce+Mi2JzlsGl3YOu//SxIQNYAFp4nr0bGucU9NO
+         U70UpEL/JIgC7wwFO8THwv3qtxNJ/8fFWC4Osai4xIZJ7vQEzlu30fG14Vf4QfjwpYiF
+         oS/RNIywZPPw23BYgGEz6/fIuJBlmGY8JXrYvAGTvwmvpUyqj87w0mVqPXG6iZxbQ1an
+         7YmQ==
+X-Gm-Message-State: APjAAAXmLTCB8l/JRRbPjiqRiDzYcTSrWB2JlRkDpSrlR4ifZteyNICV
+        vFyXz6c7tGT7yaom7I9n6X9rUxl+HFk0A1EfTjftUg==
+X-Google-Smtp-Source: APXvYqwV50Ef2BQ2bOQ//cj94vmb5seQktGMXKEZow3ymAb6uwbdVxDT6gUCrPVayZAzCFWsHbu1/lw1iwAXQlZm8kE=
+X-Received: by 2002:a5e:8a43:: with SMTP id o3mr31593126iom.296.1570559384010;
+ Tue, 08 Oct 2019 11:29:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <2994F2A2-D844-40B0-9971-C002E5EC49CD@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20191008180808.14181-1-vkuznets@redhat.com>
+In-Reply-To: <20191008180808.14181-1-vkuznets@redhat.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Tue, 8 Oct 2019 11:29:32 -0700
+Message-ID: <CALMp9eTqu2zff2g4pX-aR3P-AFNochKfJGZrA6zecE864FuwVQ@mail.gmail.com>
+Subject: Re: [PATCH] selftests: kvm: fix sync_regs_test with newer gccs
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 08.10.19 09:46, Kai-Heng Feng wrote:
-> Hi Tobias,
+On Tue, Oct 8, 2019 at 11:08 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
 >
->> On Oct 5, 2019, at 03:52, Tobias Klausmann <tobias.johannes.klausmann@mni.thm.de> wrote:
->>
->> Hello,
->>
->> On 04.10.19 19:36, Kai-Heng Feng wrote:
->>> Hi Tobias
->>>
->>>> On Oct 4, 2019, at 18:34, Tobias Klausmann <tobias.johannes.klausmann@mni.thm.de> wrote:
->>>>
->>>> Hello all,
->>>>
->>>> While testing the 5.4rc1 release, i noticed my Ethernet never coming fully up, seemingly having a timeout problem. While bisecting this i landed at the commit dee23594d587386e9fda76732aa5f5a487709510 ("e1000e: Make speed detection on hotplugging cable more reliable") as the first bad commit. And indeed just reverting the commit on top of 5.4rc1 resolves the problem. Let me know if you have further questions, or patches to test!
->>> Is runtime PM enabled (i.e. "power/control" = auto)?
->>
->> Yes it is set to auto.
-> Is something like TLP or `powertop --auto-tune` is in use?
+> Commit 204c91eff798a ("KVM: selftests: do not blindly clobber registers in
+>  guest asm") was intended to make test more gcc-proof, however, the result
+> is exactly the opposite: on newer gccs (e.g. 8.2.1) the test breaks with
 >
-> Do you still see the issue when "power/control" keeps at "on"?
-
-
-With "power/control" set to "on" it does still cycle between up and 
-down. But yes i have upower and powerdevil running. After killing them 
-the connection comes up with "power/control" set to "on", yet not with 
-"auto".
-
-
-Greetings,
-
-Tobias
-
-
+> ==== Test Assertion Failure ====
+>   x86_64/sync_regs_test.c:168: run->s.regs.regs.rbx == 0xBAD1DEA + 1
+>   pid=14170 tid=14170 - Invalid argument
+>      1  0x00000000004015b3: main at sync_regs_test.c:166 (discriminator 6)
+>      2  0x00007f413fb66412: ?? ??:0
+>      3  0x000000000040191d: _start at ??:?
+>   rbx sync regs value incorrect 0x1.
 >
-> Kai-Heng
+> Apparently, compile is still free to play games with registers even
+> when they have variables attaches.
 >
->>
->>> Also please attach full dmesg, thanks!
->> Attached,
->>
->> Tobias
->>
->>> Kai-Heng
->>>
->>>> Greetings,
->>>>
->>>> Tobias
->>>>
->>>>
->>>> lspci:
->>>>
->>>> 00:19.0 Ethernet controller: Intel Corporation 82579V Gigabit Network Connection (rev 06)
->>>>          DeviceName:  Onboard LAN
->>>>          Subsystem: ASUSTeK Computer Inc. P8P67 Deluxe Motherboard
->>>>          Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
->>>>          Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
->>>>          Latency: 0
->>>>          Interrupt: pin A routed to IRQ 56
->>>>          Region 0: Memory at fbf00000 (32-bit, non-prefetchable) [size=128K]
->>>>          Region 1: Memory at fbf28000 (32-bit, non-prefetchable) [size=4K]
->>>>          Region 2: I/O ports at f040 [size=32]
->>>>          Capabilities: [c8] Power Management version 2
->>>>                  Flags: PMEClk- DSI+ D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
->>>>                  Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=1 PME-
->>>>          Capabilities: [d0] MSI: Enable+ Count=1/1 Maskable- 64bit+
->>>>                  Address: 00000000fee00698  Data: 0000
->>>>          Capabilities: [e0] PCI Advanced Features
->>>>                  AFCap: TP+ FLR+
->>>>                  AFCtrl: FLR-
->>>>                  AFStatus: TP-
->>>>          Kernel driver in use: e1000e
->>>>          Kernel modules: e1000e
->>>>
->> <dmesg.txt>
+> Re-write guest code with 'asm volatile' by embedding ucall there and
+> making sure rbx is preserved.
+>
+> Fixes: 204c91eff798a ("KVM: selftests: do not blindly clobber registers in guest asm")
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>  .../selftests/kvm/x86_64/sync_regs_test.c     | 21 ++++++++++---------
+>  1 file changed, 11 insertions(+), 10 deletions(-)
+>
+> diff --git a/tools/testing/selftests/kvm/x86_64/sync_regs_test.c b/tools/testing/selftests/kvm/x86_64/sync_regs_test.c
+> index 11c2a70a7b87..5c8224256294 100644
+> --- a/tools/testing/selftests/kvm/x86_64/sync_regs_test.c
+> +++ b/tools/testing/selftests/kvm/x86_64/sync_regs_test.c
+> @@ -22,18 +22,19 @@
+>
+>  #define VCPU_ID 5
+>
+> +#define UCALL_PIO_PORT ((uint16_t)0x1000)
+> +
+> +/*
+> + * ucall is embedded here to protect against compiler reshuffling registers
+> + * before calling a function. In this test we only need to get KVM_EXIT_IO
+> + * vmexit and preserve RBX, no additional information is needed.
+> + */
+>  void guest_code(void)
+>  {
+> -       /*
+> -        * use a callee-save register, otherwise the compiler
+> -        * saves it around the call to GUEST_SYNC.
+> -        */
+> -       register u32 stage asm("rbx");
+> -       for (;;) {
+> -               GUEST_SYNC(0);
+> -               stage++;
+> -               asm volatile ("" : : "r" (stage));
+> -       }
+> +       asm volatile("1: in %[port], %%al\n"
+> +                    "add $0x1, %%rbx\n"
+> +                    "jmp 1b"
+> +                    : : [port] "d" (UCALL_PIO_PORT) : "rax", "rbx");
+>  }
+A better solution might be something like:
+
+register u32 stage = 0;
+for (;;) {
+        asm volatile("in %[port], %%al"
+             :
+             : "b" (stage), [port] "d" (UCALL_PIO_PORT)
+             : "rax");
+        stage++;
+}
+
+(Gmail no doubt has mangled the indentation. Sorry.)
