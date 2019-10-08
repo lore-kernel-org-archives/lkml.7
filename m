@@ -2,154 +2,156 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 045D3C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC78C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7CB42173B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:34:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3645F20659
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:37:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mz4tTuSo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727136AbfJHOeg (ORCPT
+        id S1726177AbfJHOhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 10:34:36 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:35023 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbfJHOeg (ORCPT
+        Tue, 8 Oct 2019 10:37:07 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40258 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725795AbfJHOhH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 10:34:36 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iHqZN-0008Ug-CK; Tue, 08 Oct 2019 16:34:33 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iHqZM-0001bw-44; Tue, 08 Oct 2019 16:34:32 +0200
-Date:   Tue, 8 Oct 2019 16:34:32 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel@vger.kernel.org, thierry.reding@gmail.com,
-        heiko@sntech.de, dianders@chromium.org, mka@chromium.org,
-        groeck@chromium.org, kernel@collabora.com, bleung@chromium.org,
-        linux-pwm@vger.kernel.org
-Subject: Re: [PATCH] pwm: cros-ec: Let cros_ec_pwm_get_state() return the
- last applied state
-Message-ID: <20191008143432.pbhcqamd6f4qwbqn@pengutronix.de>
-References: <20191008105417.16132-1-enric.balletbo@collabora.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191008105417.16132-1-enric.balletbo@collabora.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Tue, 8 Oct 2019 10:37:07 -0400
+Received: by mail-pg1-f196.google.com with SMTP id d26so10348098pgl.7;
+        Tue, 08 Oct 2019 07:37:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=/LkLNZyXllVODaNA4v6SjRbRTQO3k0FhwJL3ACT+pc8=;
+        b=mz4tTuSopA61Uk2c4cwTxPD1ttgQPVt23a8s2ab5wZNvSsN58+xofcbe8p2AlOqMvb
+         q0ClxaWzdCAX/ZztkYIusI1VP7spYpRsUEOay6if9370EKjvHasB+I5mypjmn9UPxdYJ
+         4nCJ0s1uvUBHMfthAvg+E+SrYLAfbZwlB+3K/THlXoNXtIuQf3UBLxuGPnnpoSZO0TRh
+         /4pEiyVn8CBlYUBVgJloR5A405qAtMBHasSYUesTHSYrn7qfIqt9AihFG2SMmHG0J6jj
+         7BIY5SQiUQvIAUaGSCYbHkSsTWihgp/2ggOh3m7dISP6JA9Q7Jyy5LXLyFjyRjSpxWih
+         R/og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=/LkLNZyXllVODaNA4v6SjRbRTQO3k0FhwJL3ACT+pc8=;
+        b=iWDSQd7LYvFcCOdYNpSrHvSp3VsY4rAGISEYANchJIgLL69QRHv2/YTE+ZGay6JQuo
+         CtZHjnCBvvTGO6qcuCnSwLNPOYupVOYsi4lMwTbUUsQDh0iK3Sd++nVb8wdZQkBa7XUu
+         AjCeCDZmvpHflVW/x/ot62Nf9AfCEx5RNNxUIAR5Yj+2vgRKvOvfdjSHAJprqJY2vdK1
+         7lziHxp5rUfJrmYVqjSs66q8CSPp4HPo722PSalV/UfPULAvXSkc7MymA9WKO8udu4IA
+         sCPSZFZU+MkrtrSJApGBkzzkJESIN4DXDihCig6eeEsmxPE3ZHyHcpLpmbimiQDEq9oN
+         affw==
+X-Gm-Message-State: APjAAAVo5px36GXSMEkd1IHz5oikgkWsBSkLQgNtggqy29zWjYwjmqio
+        cwWEBpNsnxSNZmjbMiNcryY=
+X-Google-Smtp-Source: APXvYqzVmLYxVnf7lMb8Y0OcU8us4+UeXkrqpUjxJeb+iLiGDzZdEaRy3btAdo69l4i1EIElQVrmLw==
+X-Received: by 2002:a63:a48:: with SMTP id z8mr19160809pgk.328.1570545426091;
+        Tue, 08 Oct 2019 07:37:06 -0700 (PDT)
+Received: from localhost.corp.microsoft.com ([167.220.255.39])
+        by smtp.googlemail.com with ESMTPSA id 74sm20603109pfy.78.2019.10.08.07.36.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 08 Oct 2019 07:37:05 -0700 (PDT)
+From:   lantianyu1986@gmail.com
+X-Google-Original-From: Tianyu.Lan@microsoft.com
+To:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org, akpm@linux-foundation.org, rppt@linux.ibm.com,
+        jgross@suse.com, mhocko@suse.com, paul.burton@mips.com,
+        m.mizuma@jp.fujitsu.com, huang.zijiang@zte.com.cn,
+        karahmed@amazon.de, dan.j.williams@intel.com, bhelgaas@google.com,
+        osalvador@suse.de, rdunlap@infradead.org,
+        richardw.yang@linux.intel.com, david@redhat.com,
+        pavel.tatashin@microsoft.com, cai@lca.pw, arunks@codeaurora.org,
+        vbabka@suse.cz, mgorman@techsingularity.net,
+        alexander.h.duyck@linux.intel.com, glider@google.com,
+        logang@deltatee.com, bsingharora@gmail.com, bhe@redhat.com,
+        Tianyu.Lan@microsoft.com, michael.h.kelley@microsoft.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-mm@kvack.org,
+        vkuznets@redhat.com
+Subject: [RFC PATCH] mm: set memory section offline when all its pages are offline.
+Date:   Tue,  8 Oct 2019 22:36:48 +0800
+Message-Id: <20191008143648.11882-1-Tianyu.Lan@microsoft.com>
+X-Mailer: git-send-email 2.14.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Enric,
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-On Tue, Oct 08, 2019 at 12:54:17PM +0200, Enric Balletbo i Serra wrote:
-> @@ -117,17 +122,28 @@ static void cros_ec_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
->  	struct cros_ec_pwm_device *ec_pwm = pwm_to_cros_ec_pwm(chip);
->  	int ret;
->  
-> -	ret = cros_ec_pwm_get_duty(ec_pwm->ec, pwm->hwpwm);
-> -	if (ret < 0) {
-> -		dev_err(chip->dev, "error getting initial duty: %d\n", ret);
-> -		return;
-> +	/*
-> +	 * As there is no way for this hardware to separate the concept of
-> +	 * duty cycle and enabled, but the PWM API does, let return the last
-> +	 * applied state when the PWM is disabled and only return the real
-> +	 * hardware value when the PWM is enabled. Otherwise, a user of this
-> +	 * driver, can get confused because won't be able to program a duty
-> +	 * cycle while the PWM is disabled.
-> +	 */
-> +	state->enabled = ec_pwm->state.enabled;
+If size of offline memory region passed to offline_pages() is
+not aligned with PAGES_PER_SECTION, memory section will be set
+to offline in the offline_mem_sections() with some pages of
+memory section online. Fix it, Update memory section status after
+marking offline pages as "reserved" in __offline_isolated_pages()
+and check all pages in memory are reserved or not before setting
+memory section offline.
 
-> +	if (state->enabled) {
+Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+---
+This patch is to prepare for hot remove memory function in Hyper-V
+balloon driver. It requests to offline memory with random size.
+---
+ mm/page_alloc.c |  3 ++-
+ mm/sparse.c     | 10 ++++++++++
+ 2 files changed, 12 insertions(+), 1 deletion(-)
 
-As part of registration of the pwm .get_state is called. In this case
-.apply wasn't called before and so state->enabled is probably 0. So this
-breaks reporting the initial state ...
-
-> +		ret = cros_ec_pwm_get_duty(ec_pwm->ec, pwm->hwpwm);
-> +		if (ret < 0) {
-> +			dev_err(chip->dev, "error getting initial duty: %d\n",
-> +				ret);
-> +			return;
-> +		}
-> +		state->duty_cycle = ret;
-> +	} else {
-> +		state->duty_cycle = ec_pwm->state.duty_cycle;
->  	}
->  
-> -	state->enabled = (ret > 0);
->  	state->period = EC_PWM_MAX_DUTY;
-> -
-> -	/* Note that "disabled" and "duty cycle == 0" are treated the same */
-> -	state->duty_cycle = ret;
-
-A few thoughts to your approach here ...:
-
- - Would it make sense to only store duty_cycle and enabled in the
-   driver struct?
-
- - Which driver is the consumer of your pwm? If I understand correctly
-   the following sequence is the bad one:
-
-	state.period = P;
-	state.duty_cycle = D;
-	state.enabled = 0;
-   	pwm_apply_state(pwm, &state);
-
-	...
-
-	pwm_get_state(pwm, &state);
-	state.enabled = 1;
-   	pwm_apply_state(pwm, &state);
-
-   Before my patch there was an implicit promise in the PWM framework
-   that the last pwm_apply_state has .duty_cycle = D (and .period = P).
-   Is this worthwile, or should we instead declare this as
-   non-guaranteed and fix the caller?
-
- - If this is a more or less common property that hardware doesn't know
-   the concept of "disabled" maybe it would make sense to drop this from
-   the PWM framework, too. (This is a question that I discussed some
-   time ago already with Thierry, but without an result. The key
-   question is: What is the difference between "disabled" and
-   "duty_cycle = 0" in general and does any consumer care about it.)
-
- - A softer variant of the above: Should pwm_get_state() anticipate that
-   with .enabled = 0 the duty_cycle (and maybe also period) is
-   unreliable and cache that for callers?
-
-Unrelated to the patch in question I noticed that the cros-ec-pwm driver
-doesn't handle polarity. We need
-
-	state->polarity = PWM_POLARITY_NORMAL;
-
-in cros_ec_pwm_get_state() and
-
-	if (state->polarity != PWM_POLARITY_NORMAL)
-		return -ERANGE;
-
-in cros_ec_pwm_apply(). (Not sure -ERANGE is the right value, I think
-there is no global rule in force that tells the right value though.)
-
-Best regards
-Uwe
-
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index dbd0d5cbbcbb..cc02866924ae 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -8540,7 +8540,6 @@ __offline_isolated_pages(unsigned long start_pfn, unsigned long end_pfn)
+ 	if (pfn == end_pfn)
+ 		return offlined_pages;
+ 
+-	offline_mem_sections(pfn, end_pfn);
+ 	zone = page_zone(pfn_to_page(pfn));
+ 	spin_lock_irqsave(&zone->lock, flags);
+ 	pfn = start_pfn;
+@@ -8576,6 +8575,8 @@ __offline_isolated_pages(unsigned long start_pfn, unsigned long end_pfn)
+ 	}
+ 	spin_unlock_irqrestore(&zone->lock, flags);
+ 
++	offline_mem_sections(pfn, end_pfn);
++
+ 	return offlined_pages;
+ }
+ #endif
+diff --git a/mm/sparse.c b/mm/sparse.c
+index fd13166949b5..eb5860487b84 100644
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -571,6 +571,7 @@ void online_mem_sections(unsigned long start_pfn, unsigned long end_pfn)
+ void offline_mem_sections(unsigned long start_pfn, unsigned long end_pfn)
+ {
+ 	unsigned long pfn;
++	int i;
+ 
+ 	for (pfn = start_pfn; pfn < end_pfn; pfn += PAGES_PER_SECTION) {
+ 		unsigned long section_nr = pfn_to_section_nr(pfn);
+@@ -583,6 +584,15 @@ void offline_mem_sections(unsigned long start_pfn, unsigned long end_pfn)
+ 		if (WARN_ON(!valid_section_nr(section_nr)))
+ 			continue;
+ 
++		/*
++		 * Check whether all pages in the section are reserverd before
++		 * setting setction offline.
++		 */
++		for (i = 0; i < PAGES_PER_SECTION; i++)
++			if (!PageReserved(pfn_to_page(
++			    SECTION_ALIGN_DOWN(pfn + i))))
++				continue;
++
+ 		ms = __nr_to_section(section_nr);
+ 		ms->section_mem_map &= ~SECTION_IS_ONLINE;
+ 	}
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+2.14.5
+
