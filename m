@@ -2,132 +2,190 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73987C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB31ECE58C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 418D021835
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E8D321835
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:43:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=victronenergy.com header.i=@victronenergy.com header.b="e064i82h"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UVxD0KlO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728702AbfJHQmv (ORCPT
+        id S1729070AbfJHQnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 12:42:51 -0400
-Received: from mail-eopbgr10129.outbound.protection.outlook.com ([40.107.1.129]:62532
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726138AbfJHQmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 12:42:51 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Jp9/7TZOL+JQhhZis1fnQch0lKhrOGl5El76MynekUTHDho2MrjBL6877ZAypgUUVk0V3AaxNxkn+9nkE8J4/MQW+WHZr/F5HPndOz3rAM1ypLy09jT/+UQkcH8yegWbHdo0nf5k0GW6PpMhawGnoDG5207bp9A2InbwDMM0wzRyk6Bg24F7t/uWG328zYcPk5xOGjO2Q46U6SbJUQTdB/RmRit1ZZ3oz3dbZFQW/q3jXlm7rqI3ufWoQ5K1hyXu1i6PlvNpKKM2JSc5xdskRTKFuNexJA//OAxbZ1a/z1CNWa/AzYbN387uPXE+eLUeqQXnmwrkGDNLKMNbKzPtAw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hetplaNK77tsE1ORzZ46JT/WxlSAplenEzaXRqzKxp8=;
- b=hZaPd8mLhMWowYMEL5S6rdNwQtp5WL0PVQUpDeutJAFl9+/Mci0q0s7ezaOh0vEOlfWPiMfpali8xICCs3YjnEU/JgTkPId8KnYoac9BXo94buFVCI2DANFZeCBU2qrNH52E017IKlJiplLt6nxOd0oWmvLHNZjbn1sG5y8LrFyjseJlY1X6OM9SjsklO1T+U+0OmpiVVMb5DUKHPrINxkXjw1YfIbX/FK7Jh6uKyk5Iq8K32CqkzSoOZdyYuT3uIXBiDfQw7QY3zDIhtUdv2Jgt0O/9PJEJ6WbPi//ctZZ3v/uqjdba6kx5ELWN50iBXcfTRe0MnlYxFfWEQ/8vjA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=victronenergy.com; dmarc=pass action=none
- header.from=victronenergy.com; dkim=pass header.d=victronenergy.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=victronenergy.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hetplaNK77tsE1ORzZ46JT/WxlSAplenEzaXRqzKxp8=;
- b=e064i82hoQKWSz86JyNewv+3aO8F5RwVFl9YKRcAZX39C3nO/T8vVsnMCewXD51AodXP8Ybi3QCAInxPiWdceeaATwAZ5rEUv4KLVOxUIPQdx1c5kJv46LwDCmiBnq06n4+0RRyVEhl8e/3ClJNiYuwc3WiHfcTDiX1hDEk244o=
-Received: from VI1PR0701MB2623.eurprd07.prod.outlook.com (10.173.82.19) by
- VI1PR0701MB2528.eurprd07.prod.outlook.com (10.168.133.146) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.13; Tue, 8 Oct 2019 16:42:47 +0000
-Received: from VI1PR0701MB2623.eurprd07.prod.outlook.com
- ([fe80::49b7:a244:d3e4:396c]) by VI1PR0701MB2623.eurprd07.prod.outlook.com
- ([fe80::49b7:a244:d3e4:396c%9]) with mapi id 15.20.2347.016; Tue, 8 Oct 2019
- 16:42:47 +0000
-From:   Jeroen Hofstee <jhofstee@victronenergy.com>
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
-        Koen Kooi <koen@dominion.thruhere.net>,
-        =?utf-8?B?QmVub8OudCBDb3Vzc29u?= <bcousson@baylibre.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ARM: dts: am335x-sancloud-bbe: Fix PHY mode for ethernet
-Thread-Topic: [PATCH] ARM: dts: am335x-sancloud-bbe: Fix PHY mode for ethernet
-Thread-Index: AQHVeQdofKkOWkby2kaW5oWVx4ahWqdHbuCAgAFGYQD///NzgIAILT2AgAA9LID//+GwAIAAB/aA
-Date:   Tue, 8 Oct 2019 16:42:47 +0000
-Message-ID: <4fa5393d-0b2c-4b8c-128a-81ab05a14a82@victronenergy.com>
-References: <20191002095416.19603-1-jhofstee@victronenergy.com>
- <d027ef07-807d-6a7b-2939-b67be4542469@ti.com>
- <436f1712-7dec-db40-d08f-1a3032af3596@victronenergy.com>
- <d85cd860-22a3-6142-7f2d-736a428d7a31@ti.com>
- <20191008142349.GE5610@atomide.com>
- <1f779973-1702-47eb-158f-7000770c435a@victronenergy.com>
- <20191008161416.GG5610@atomide.com>
-In-Reply-To: <20191008161416.GG5610@atomide.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-x-originating-ip: [2001:1c01:3bc5:4e00:71f7:17:8b3a:e5f1]
-x-clientproxiedby: AM4P190CA0009.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:200:56::19) To VI1PR0701MB2623.eurprd07.prod.outlook.com
- (2603:10a6:801:b::19)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jhofstee@victronenergy.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0c1b6bda-bee2-4976-6ad6-08d74c0e8cbe
-x-ms-traffictypediagnostic: VI1PR0701MB2528:
-x-microsoft-antispam-prvs: <VI1PR0701MB2528D137CF1D6C6F9E3CB127C09A0@VI1PR0701MB2528.eurprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 01842C458A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(346002)(39850400004)(396003)(376002)(366004)(199004)(189003)(4326008)(186003)(6436002)(99286004)(6116002)(6486002)(2906002)(6246003)(76176011)(66556008)(31686004)(66946007)(71200400001)(102836004)(36756003)(66476007)(25786009)(6916009)(64756008)(66446008)(52116002)(6512007)(229853002)(71190400001)(305945005)(65956001)(65806001)(53546011)(256004)(386003)(7736002)(6506007)(14454004)(446003)(11346002)(31696002)(86362001)(58126008)(54906003)(316002)(486006)(46003)(5660300002)(478600001)(81156014)(8936002)(81166006)(8676002)(2616005)(476003);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0701MB2528;H:VI1PR0701MB2623.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: victronenergy.com does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: rQTwgVADyjSlbhBQffTH9lz9Sjnq3D2SiNNz+kwxIjA8TwsRiUgbYnJpagjIvFct+vEo3GnGq2/jtS0Ow2+ONDCAJthqb3PSoP6ZZ8wLnHUeKfVAf2zjaRYOqDIiC9tkIjYHk/6g2jgwZfA/4zrVRBfmseUUafsy9bgIWShO6y3aTNijDhdIMbhsAZdRAZZFw5OQacGm7Sizd5stmNeK1nGn86Sgmbzt8hZxTjVAqTH14p1ZsTMQV0dhGWXHDgmfbfV5il+dTGTAqGj0fluBxXvNE4ZDYf/Q3lw76lBAg04RXV7ESOTeyiOrOmcf6y0TFGr27lpxQyf3sP2/1DfEmYGx0MME1b5V0r+OQp9TDHyn2OEhQG0MEOGQjjnV2IaZCotQpxg7OiEn+7CbkUl6Llm9z19kdOQRC+f8ZHtR1k4=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <3D3318AB959123469B049ABE63C6EF67@eurprd07.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 8 Oct 2019 12:43:24 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34069 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727514AbfJHQnY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 12:43:24 -0400
+Received: by mail-wm1-f67.google.com with SMTP id y135so2772050wmc.1;
+        Tue, 08 Oct 2019 09:43:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:references:from:autocrypt:subject:message-id:date:user-agent
+         :mime-version:in-reply-to;
+        bh=OykkNXCy5PK1k0apMLzKAwMrOuslEtQSur8czIWDomY=;
+        b=UVxD0KlO5gu9E+82OgC7TTOA+3ZuKXyhsiJsFWdKr577+b6mxaSwhQVQYWQ6ijdkDr
+         uuaKjnoxc+0H+yUkZ4ybrTrfTFudmtp9lIVoWQQBi/PAgmoks2h8mpZMoCsrmnB1oEqa
+         b549BAhZJfU95bci2nqCtezLSNLhMmQ1NuSnfxxAEA18qnFMSXHWdHrE0cgVY3zaqt6F
+         lEqAQE8GkpNh/TWuCxPeNWYbd3V4ToHi9SQeneiFZlPIAG9gc2XMmDTPW6Y8ptNWqUhc
+         +5hLWj2lzI+9wsSwAD2EaopDNf8LUOXWiOQw6h7aOoMw4pHVcNBhrA3vEKku0CiZJeQA
+         mexA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:references:from:autocrypt:subject:message-id
+         :date:user-agent:mime-version:in-reply-to;
+        bh=OykkNXCy5PK1k0apMLzKAwMrOuslEtQSur8czIWDomY=;
+        b=eHp6gg1P+QqtHNtV/L+bD+q/MouQPXiJREUaek6tx9Xb/okX0pHh3SBAyUdc/bxFs/
+         GhPI9I2Euvshjqc4Bp9zU2Jvy3IpWSk3oJlJKr1Rho25OKEzpt6niMQOxIz44VEtfz+K
+         ogYVa1GerA8Diq9ljThLasVtWMaZu7mds4IPoFsqkndEWhUA9A72PaVYim90uJR56wZv
+         sjGU7fnZDYh/0nU0dP0QcQM8iKc8pdicAYzetLYTgQSDpWD+gtrGZZYi/lA4Bo8Pw46M
+         66J0L6aR/Pih4zizg1u+PfSO05yCC0/NBiyrOz0YyzpFuuJVZbQSqE/rJiicdwm93PiG
+         zgLA==
+X-Gm-Message-State: APjAAAUxTgK1ByIaAyINnQfuDX8HaAjM0bPncSKtrmoaBpVKWNgJEuLu
+        8RojHum6Uq1QxiQVr+WQ3sXy7Mg9
+X-Google-Smtp-Source: APXvYqyB7tWMuAZqZIwOG/p84gmh+/OWWX3Gt1yAk8LMXlOd2rBBt6eZCpLVfDesF9CjQyrjdXTVZg==
+X-Received: by 2002:a1c:7fcc:: with SMTP id a195mr4683336wmd.27.1570553001324;
+        Tue, 08 Oct 2019 09:43:21 -0700 (PDT)
+Received: from [192.168.43.133] ([109.126.138.202])
+        by smtp.gmail.com with ESMTPSA id z125sm3877572wme.37.2019.10.08.09.43.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Oct 2019 09:43:20 -0700 (PDT)
+To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <936cd758d6c694fe1b8b9de050e24cfecdc2e60d.1570489620.git.asml.silence@gmail.com>
+ <e11a0716-eb18-4ce3-9902-3247beafe65a@kernel.dk>
+From:   Pavel Begunkov <asml.silence@gmail.com>
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ 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 bA==
+Subject: Re: [PATCH] io_uring: remove wait loop spurious wakeups
+Message-ID: <d035bb1b-e6f0-77db-a434-1761b0a7a142@gmail.com>
+Date:   Tue, 8 Oct 2019 19:43:16 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-X-OriginatorOrg: victronenergy.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0c1b6bda-bee2-4976-6ad6-08d74c0e8cbe
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Oct 2019 16:42:47.2476
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 60b95f08-3558-4e94-b0f8-d690c498e225
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WlF8xztmSSwo41mTeffQeJ2XUC+mAIu7CD7DTouBrBxu/Z4Xh9tcg6JnVokp3oXDZLrRAdnWzUpXhQ+p98Kh4ZmzC+KVf2dgh03Sv8wDmfI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0701MB2528
+In-Reply-To: <e11a0716-eb18-4ce3-9902-3247beafe65a@kernel.dk>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="hLu72yIEVK9xBJIR5otQrTc17jYRh5NPx"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gVG9ueSwNCg0KT24gMTAvOC8xOSA2OjE0IFBNLCBUb255IExpbmRncmVuIHdyb3RlOg0K
-PiAqIEplcm9lbiBIb2ZzdGVlIDxqaG9mc3RlZUB2aWN0cm9uZW5lcmd5LmNvbT4gWzE5MTAwOCAx
-NjowM106DQo+PiBIZWxsbyBUb255LA0KPj4NCj4+IE9uIDEwLzgvMTkgNDoyMyBQTSwgVG9ueSBM
-aW5kZ3JlbiB3cm90ZToNCj4+PiAqIEdyeWdvcmlpIFN0cmFzaGtvIDxncnlnb3JpaS5zdHJhc2hr
-b0B0aS5jb20+IFsxOTEwMDMgMDI6MzJdOg0KPj4+PiBPbiAwMy8xMC8yMDE5IDExOjE2LCBKZXJv
-ZW4gSG9mc3RlZSB3cm90ZToNCj4+Pj4+IEZ1cnRoZXJtb3JlIDQuMTkgaXMgZmluZSwgc28gdGhl
-cmUgaXMgbm8gbmVlZCB0byBpbmNsdWRlIGl0IGluIHN0YWJsZQ0KPj4+Pj4gYW5kIGhhdmUgYSBu
-b3RlIHRvIG1ha2Ugc3VyZSBhbHNvIG90aGVyIHBhdGNoZXMgYXJlIHJlcXVpcmVkIGV0Yy4NCj4+
-Pj4gSGVuY2UgYWxsIGFib3ZlIHBhdGNoZXMgd2VudCBpbiA1LjEgaXQgd291bGQgYmUgY29ycmVj
-dCB0byBtZW50aW9uIG9ubHkNCj4+Pj4gNmQ0Y2QwNDFmMGFmIG5ldDogcGh5OiBhdDgwM3g6IGRp
-c2FibGUgZGVsYXkgb25seSBmb3IgUkdNSUkgbW9kZQ0KPj4+IEplcm9lbiwgY2FuIHlvdSBwbGVh
-c2Ugc2VuZCBhbiB1cGRhdGVkIHBhdGNoIHdpdGggdGhlIGZpeGVzDQo+Pj4gdGFnIGNoYW5nZWQ/
-DQo+Pj4NCj4+IEZvciBjb21wbGV0ZW5lc3MsIHRoZXJlIGlzIG5vICJGaXhlcyB0YWciIGFzIHlv
-dSBtZW50aW9uZWQuDQo+PiBUaGUgY29tbWl0IG9ubHkgcmVmZXJzIHRvIGFub3RoZXIgY29tbWl0
-IHdoaWNoIGludHJvZHVjZXMNCj4+IGEgcHJvYmxlbS4NCj4gV2VsbCBwbGVhc2UgYWRkIHRoZSBm
-aXhlcyB0YWcsIHRoYXQgd2F5IHRoaXMgd2lsbCBnZXQNCj4gcHJvcGVybHkgYXBwbGllZCB0byBl
-YXJsaWVyIHN0YWJsZSBrZXJuZWxzIHRvbyA6KQ0KDQpCdXQgNC4xOSBpcyBmaW5lLCB0aGlzIGlz
-IGFuIGlzc3VlIGluIDUuMSBhcyBpbiBFT0wuLi4NCkkgcmVhbGx5IGRvbid0IHVuZGVyc3RhbmQg
-d2h5IEkgc2hvdWxkIHdhc3RlIHRpbWUNCnRvIGZpZ3VyZSBvdXQgd2hhdCBoYXBwZW5lZCBleGFj
-dGx5IGR1cmluZyB0aGUgNS4xDQpyZWxlYXNlIGN5Y2xlLi4uDQoNClJlZ2FyZHMsDQoNCkplcm9l
-bg0KDQo=
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--hLu72yIEVK9xBJIR5otQrTc17jYRh5NPx
+Content-Type: multipart/mixed; boundary="2iADUy5gFpKbFUgaLFu9N6SXPlkEiUQwB";
+ protected-headers="v1"
+From: Pavel Begunkov <asml.silence@gmail.com>
+To: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-ID: <d035bb1b-e6f0-77db-a434-1761b0a7a142@gmail.com>
+Subject: Re: [PATCH] io_uring: remove wait loop spurious wakeups
+References: <936cd758d6c694fe1b8b9de050e24cfecdc2e60d.1570489620.git.asml.silence@gmail.com>
+ <e11a0716-eb18-4ce3-9902-3247beafe65a@kernel.dk>
+In-Reply-To: <e11a0716-eb18-4ce3-9902-3247beafe65a@kernel.dk>
+
+--2iADUy5gFpKbFUgaLFu9N6SXPlkEiUQwB
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+On 08/10/2019 06:16, Jens Axboe wrote:
+> On 10/7/19 5:18 PM, Pavel Begunkov (Silence) wrote:
+>> From: Pavel Begunkov <asml.silence@gmail.com>
+>>
+>> Any changes interesting to tasks waiting in io_cqring_wait() are
+>> commited with io_cqring_ev_posted(). However, io_ring_drop_ctx_refs()
+>> also tries to do that but with no reason, that means spurious wakeups
+>> every io_free_req() and io_uring_enter().
+>>
+>> Just use percpu_ref_put() instead.
+>=20
+> Looks good, this is a leftover from when the ctx teardown used
+> the waitqueue as well.
+>=20
+BTW, is there a reason for ref-counting in struct io_kiocb? I understand
+the idea behind submission reference, but don't see any actual part
+needing it.
+
+Tested with another ref-counting patch and got +5-8% to
+nops performance.
+
+
+--=20
+Yours sincerely,
+Pavel Begunkov
+
+
+--2iADUy5gFpKbFUgaLFu9N6SXPlkEiUQwB--
+
+--hLu72yIEVK9xBJIR5otQrTc17jYRh5NPx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE+6JuPTjTbx479o3OWt5b1Glr+6UFAl2cvKgACgkQWt5b1Glr
++6XVlA//X8GGiOoLXlFyQO5BZ9N3oU4Qr0hmy3II+7MJFnaD9+idQxE2xbROePEI
+k0XyR064RJ53xEiP3t8aYrZ1BEpBSMb8pzWUYY5rydmLaCzXIbVVEKKCe8c0ox4D
+EZUvNI4y7eNF+5PO2fIEcktl5sBeq764yLEQbuGJZFAq2BXU3bHtmg3/zjfj/8Fe
+DfbNn7cscjFtgY3PFDy7rnCNlquGpbZKBtfXz6YH0s7Qz99LjRRSfU/2RLDjThqV
+cuZkdgBj3S+oeRXw8phnHLEhGOe49F90Odi4qVqQg5DoafV4zxB90d9RpqdCbIDs
+cam6wI2PoLBpYiE97uZzs0WxK/ic8yOfPI35zlzlrKq5gVD+q2rUhYsVGPYiy+j2
+QZ5UHQE60VLZ4h+C0dKgxMsFs23JbaDqp+8HIUujoTbVuFnqQFUjiEBKInKLc2hq
+66izvZxsH9HzmTgR3KAiJWq2z9+Pun7KknxOV5Fy/NczD+POoido7t/mTVcotiyq
+1tNvj5Z8HHfAcZf2VnsVa96n8eHdYH5nltML1pHiqj/WEazACq1eRLYMWr5g0Wcn
+RICsH1bOLwX5XVUXSsDnckyyllJRassam42NtKqgdlYzJfeL046TgugLB3gvkwSi
+1z3QxdHGiRAi82halG1Icf4yr0AcspYkPBXyzbPICTlwZX4Q3+8=
+=VKL6
+-----END PGP SIGNATURE-----
+
+--hLu72yIEVK9xBJIR5otQrTc17jYRh5NPx--
