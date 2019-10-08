@@ -2,78 +2,88 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B17C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A06EEC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38FE8206C2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:40:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68F26206C2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:41:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="B7wDgQ9g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730626AbfJHKje (ORCPT
+        id S1730332AbfJHKle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 06:39:34 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:52530 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730580AbfJHKjb (ORCPT
+        Tue, 8 Oct 2019 06:41:34 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46190 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729876AbfJHKle (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 06:39:31 -0400
-X-IronPort-AV: E=Sophos;i="5.67,270,1566831600"; 
-   d="scan'208";a="28359376"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 08 Oct 2019 19:39:30 +0900
-Received: from fabrizio-dev.ree.adwin.renesas.com (unknown [10.226.36.196])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 14755400941B;
-        Tue,  8 Oct 2019 19:39:25 +0900 (JST)
-From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms@verge.net.au>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH 06/10] dt-bindings: usb: renesas_usb3: Document r8a774b1 support
-Date:   Tue,  8 Oct 2019 11:38:48 +0100
-Message-Id: <1570531132-21856-7-git-send-email-fabrizio.castro@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1570531132-21856-1-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1570531132-21856-1-git-send-email-fabrizio.castro@bp.renesas.com>
+        Tue, 8 Oct 2019 06:41:34 -0400
+Received: by mail-qt1-f195.google.com with SMTP id u22so24409110qtq.13
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 03:41:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ingics-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Tk6htHWDZvZCH07nwYndLGD24Vgw/DSGreBenVs56Hs=;
+        b=B7wDgQ9ge4X2R3aZQ0cISLoy2ririBZnyzt6LQBMUQQL3VSzWRQTcgxBfREY49npby
+         L3BuN9zZzzprT4et05jJ5Jg477G8ZsJS3TmroAcUMqOd69UVfySDBdCOYizq7FlXmrYJ
+         LhinKCRXu4aM3ntw+7XdWVddYXCMPdB6Ic+9l67e7pzIqO5Yrir357zi8wUlIXlIQv5e
+         POUudyGvMDW812m1+5wEgcRoDxD4dJRFM+7fJgXGYTiV3Uyj/K93m/GHQhioCLqVxwcJ
+         N1yj+WaUV6rvMm6Mo/yzq965X/YMq296nrwD57+PZCicYC9L4rZ32Z+oTOi1SlQU7MhT
+         iHUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Tk6htHWDZvZCH07nwYndLGD24Vgw/DSGreBenVs56Hs=;
+        b=FEo9KCoSTutW7fbytVtsQ4nOJ5y4/vBFfXUUKWLlqqs4Q9bLjPGHIGbGnxwEqGzBdF
+         uGJT+lJNWThVR7eg/RtVZxz1AaF615uB2GjFJ+M7KYgfZb1X1zEnDswlzj2qaKEScEeN
+         5Dg3p5r8WieGSnYXvi34JxdReuQ6Tr4E8dVRwZhn55NaAzEmRZNkjn0MIIDEm3Urtopy
+         8efrMYzHECH2/Q1xxd/Mo45rFh3ZJ9JqFiZjogySSHhfIyhotKfXQ8eEZ0MtLBD9v+6q
+         0m4P3/0fjjDAj3fsj1eL5GmRR8Lquws6VIdJXGUZv3zll1TGx9M659Wbm4XRNsJ5T6BC
+         N4wA==
+X-Gm-Message-State: APjAAAUm2QQZeCGs41cwCeNG2Zcq3hlFd5AaF8izq0Jzoa6VXaV+q3+J
+        JUw/5yTVRRFQddAA29EfRGFDwKVRcVd7dzOC4q9xvw==
+X-Google-Smtp-Source: APXvYqybpf83/dqFUb0/N890BX6HKINavzfHrhqTBPjVu8aLdmYYDq13WEqW+gZuiOgtWtQgcRKFfoSM9V3mUdK0i7Q=
+X-Received: by 2002:a05:6214:c4:: with SMTP id f4mr31270966qvs.111.1570531292882;
+ Tue, 08 Oct 2019 03:41:32 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191007115009.25672-1-axel.lin@ingics.com> <20191007115009.25672-2-axel.lin@ingics.com>
+In-Reply-To: <20191007115009.25672-2-axel.lin@ingics.com>
+From:   Axel Lin <axel.lin@ingics.com>
+Date:   Tue, 8 Oct 2019 18:41:21 +0800
+Message-ID: <CAFRkauCW5-+u6npP2fpAaNL5kPdKXQ_wWrZ_7qZkJr=uMP1BsA@mail.gmail.com>
+Subject: Re: [RESEND][PATCH 2/2] regulator: da9062: Simplify
+ da9062_buck_set_mode for BUCK_MODE_MANUAL case
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Steve Twiss <stwiss.opensource@diasemi.com>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document RZ/G2N (R8A774B1) SoC bindings.
+Axel Lin <axel.lin@ingics.com> =E6=96=BC 2019=E5=B9=B410=E6=9C=887=E6=97=A5=
+ =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=887:50=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> The sleep flag bit decides the mode for BUCK_MODE_MANUAL case, simplify
+> the logic as the result is the same.
+>
+> Signed-off-by: Axel Lin <axel.lin@ingics.com>
+> Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Hi Mark,
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
----
- Documentation/devicetree/bindings/usb/renesas,usb3-peri.txt | 1 +
- 1 file changed, 1 insertion(+)
+I'm wondering if any issue with this patch?
+Note, this patch is for da9062 (not for da9063 which is already applied).
 
-diff --git a/Documentation/devicetree/bindings/usb/renesas,usb3-peri.txt b/Documentation/devicetree/bindings/usb/renesas,usb3-peri.txt
-index 5eecfbc..1343dfc 100644
---- a/Documentation/devicetree/bindings/usb/renesas,usb3-peri.txt
-+++ b/Documentation/devicetree/bindings/usb/renesas,usb3-peri.txt
-@@ -3,6 +3,7 @@ Renesas Electronics USB3.0 Peripheral driver
- Required properties:
-   - compatible: Must contain one of the following:
- 	- "renesas,r8a774a1-usb3-peri"
-+	- "renesas,r8a774b1-usb3-peri"
- 	- "renesas,r8a774c0-usb3-peri"
- 	- "renesas,r8a7795-usb3-peri"
- 	- "renesas,r8a7796-usb3-peri"
--- 
-2.7.4
-
+Regards,
+Axel
