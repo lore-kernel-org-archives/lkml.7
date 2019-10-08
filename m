@@ -2,115 +2,145 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A2EECE58C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A600C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B85BB21721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57BF321721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 22:08:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RO0taNum"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbfJHWGs (ORCPT
+        id S1727010AbfJHWId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 18:06:48 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52902 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725848AbfJHWGs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 18:06:48 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CDCE110CC1E9;
-        Tue,  8 Oct 2019 22:06:47 +0000 (UTC)
-Received: from [10.3.117.216] (ovpn-117-216.phx2.redhat.com [10.3.117.216])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CE8535D71C;
-        Tue,  8 Oct 2019 22:06:46 +0000 (UTC)
-Subject: Re: [PATCH] PCI/IOV: update num_VFs earlier
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        CREGUT Pierre IMT/OLN <pierre.cregut@orange.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexander Duyck <alexander.h.duyck@intel.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-References: <20191008213835.GA230403@google.com>
-From:   Don Dutile <ddutile@redhat.com>
-Message-ID: <4ac38c7a-b8d4-9a1c-10ab-ce8b4cf2991f@redhat.com>
-Date:   Tue, 8 Oct 2019 18:06:46 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20191008213835.GA230403@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.65]); Tue, 08 Oct 2019 22:06:48 +0000 (UTC)
+        Tue, 8 Oct 2019 18:08:33 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46115 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfJHWIc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 18:08:32 -0400
+Received: by mail-qt1-f195.google.com with SMTP id u22so412676qtq.13
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 15:08:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=zLB6UH61hboTBGSGqJl91EXRJvTD/qzhPv92zVVjRxk=;
+        b=RO0taNumliylndcto+7lvjMZPARXjWXE4KjjrLHzE8etCEvB7pUkPYTfwb8tJxrFSH
+         RSF+tu0BWjDzLiEKk2syAhcM6/LOS5BiUoJV/f+VtmXp6GnY7AUgmmvIExdtgc+0lOtS
+         T26ArMul1CjhydAmROYii9xdf3NZaC3y0vDouj+HEGq3H9wsYuqJhWHU3LlXES1o61q/
+         mbKffbB/C7lDhXY+HKhvqGs8OYN6mPpXjBia5Ju3zxAgKGAKqb+W8S4Sm7h/TzeUUMJR
+         F5hgwt3trwGzbpb4n93LgHBgwN/0iYZfVKciip6z4OfNzLqPXIBaAUC4LOYaUmMib8Ai
+         1YUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=zLB6UH61hboTBGSGqJl91EXRJvTD/qzhPv92zVVjRxk=;
+        b=UjCCAyCiuMcvAlPrdG/D/Ey8pZIBasEmfZKDDROkorCCTR9BbokwkX3GWEK5kdWspN
+         6ME/XYjRXzIAcTXkkwy/VYTYEMqG5PHGACDQtDIsESrW2wwPr9nLIj1vxiovmg/MRjj3
+         W+yr8FwdLA0nxI/DZ3inOI1ZTqh4bNa/VapJRezw2W0hDWGDfwRnfsI3ZLDNITwOFfF8
+         1950FbnIMb8PlgFPms3rnNcij4vyR+LUC92WrJrqzA8o0xrDVpfy3zyE+bpxYTXsS1WV
+         imiMFqIih0LLccibkV7/FucvVlVkmVYV0EvdF4xw6WMbmYixoFZemTCy5U5k4eX8l4M5
+         YfJg==
+X-Gm-Message-State: APjAAAVi9FSIbhW2dk0pj/kEVe5gKHN3DRORjEN4dFiKc8pGdvWH6lYd
+        ZkGgN1QI+k+8mtKheSgOvQ==
+X-Google-Smtp-Source: APXvYqwFjFPpL+OngsFhU/IFzJLehoDbYX6XaU35C+dT3mRercJxrSuxSa62IlQImLrOMQ00tEZktQ==
+X-Received: by 2002:ad4:4449:: with SMTP id l9mr416095qvt.81.1570572511613;
+        Tue, 08 Oct 2019 15:08:31 -0700 (PDT)
+Received: from localhost.localdomain ([92.117.168.143])
+        by smtp.gmail.com with ESMTPSA id m19sm42346qke.22.2019.10.08.15.08.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Oct 2019 15:08:30 -0700 (PDT)
+From:   "Viktor Rosendahl (BMW)" <viktor.rosendahl@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        "Viktor Rosendahl (BMW)" <viktor.rosendahl@gmail.com>
+Subject: [PATCH v8 0/4] Some new features for the preempt/irqsoff tracers
+Date:   Wed,  9 Oct 2019 00:08:20 +0200
+Message-Id: <20191008220824.7911-1-viktor.rosendahl@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/08/2019 05:38 PM, Bjorn Helgaas wrote:
-> On Thu, Oct 03, 2019 at 05:10:07PM -0500, Bjorn Helgaas wrote:
->> On Thu, Oct 03, 2019 at 11:04:45AM +0200, CREGUT Pierre IMT/OLN wrote:
->>> ...
-> 
->>> NIC drivers send netlink events when their state change, but it is
->>> the core that changes the value of num_vfs. So I would think it is
->>> the core responsibility to make sure the exposed value makes sense
->>> and it would be better to ignore the details of the driver
->>> implementation.
->>
->> Yes, I think you're right.  And I like your previous suggestion of
->> just locking the device in the reader.  I'm not enough of a sysfs
->> expert to know if there's a good reason to avoid a lock there.  Does
->> the following look reasonable to you?
-> 
-> I applied the patch below to pci/virtualization for v5.5, thanks for
-I hope not... see below
+Hello all,
 
-> your great patience!
-> 
->> commit 0940fc95da45
->> Author: Pierre Crégut <pierre.cregut@orange.com>
->> Date:   Wed Sep 11 09:27:36 2019 +0200
->>
->>      PCI/IOV: Serialize sysfs sriov_numvfs reads vs writes
->>      
->>      When sriov_numvfs is being updated, drivers may notify about new devices
->>      before they are reflected in sriov->num_VFs, so concurrent sysfs reads
->>      previously returned stale values.
->>      
->>      Serialize the sysfs read vs the write so the read returns the correct
->>      num_VFs value.
->>      
->>      Link: https://bugzilla.kernel.org/show_bug.cgi?id=202991
->>      Link: https://lore.kernel.org/r/20190911072736.32091-1-pierre.cregut@orange.com
->>      Signed-off-by: Pierre Crégut <pierre.cregut@orange.com>
->>      Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
->>
->> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
->> index b3f972e8cfed..e77562aabbae 100644
->> --- a/drivers/pci/iov.c
->> +++ b/drivers/pci/iov.c
->> @@ -254,8 +254,14 @@ static ssize_t sriov_numvfs_show(struct device *dev,
->>   				 char *buf)
->>   {
->>   	struct pci_dev *pdev = to_pci_dev(dev);
->> +	u16 num_vfs;
->> +
->> +	/* Serialize vs sriov_numvfs_store() so readers see valid num_VFs */
->> +	device_lock(&pdev->dev);
-                ^^^^^ lock
->> +	num_vfs = pdev->sriov->num_VFs;
->> +	device_lock(&pdev->dev);
-                ^^^^ and lock again!
->>   
->> -	return sprintf(buf, "%u\n", pdev->sriov->num_VFs);
->> +	return sprintf(buf, "%u\n", num_vfs);
->>   }
->>   
->>   /*
+I have retained the fourth patch, although it was suggested that is becoming
+obsolete soon. I have retained it only because I do not know the status of
+the code that will make it obsolete. It's the last patch of the series and
+if there indeed is some code that will remove the latency issues from the
+printk code, then of course it makes sense to drop it. The first three patches
+will work without it.
+
+Changes in v8:
+
+- [PATCH 1/4]:
+  * Moved a forward declaration in order to make code a bit more robust.
+  * Converted a macro NOP to a static function so that the type is checked.
+
+- [PATCH 2/4]:
+  * No change.
+
+- [PATCH 3/4]:
+  * No change
+
+- [PACTH 4/4]:
+  * Added a comment to explain an optimization in console_tracing_disabled().
+
+This series is meant to address two issues with the latency tracing.
+
+The first three patches provide a method to trace latencies that always
+occurs very close to each other and to differentiate between them, in spite
+of the fact that the latency tracers work in overwrite mode.
+
+[PATCH 1/4] This implement fs notification for tracing_max_latency. It
+makes it possible for userspace to detect when a new latency has been
+detected.
+
+[PATCH 2/4] This extends the preemptirq_delay_test module so that it can be
+used to generate a burst of closely occurring latencies.
+
+[PATCH 3/4] This adds a user space program to the tools directory that
+utilizes the fs notification feature and a randomized algorithm to print out
+any of the latencies in a burst with approximately equal probability.
+
+The last patch is not directly connected but earlier it didn't apply
+cleanly on its own. However, now it does, so in principle it could be
+applied separately from the others.
+
+[PATCH 4/4] This adds the option console-latency to the trace options. This
+makes it possible to enable tracing of console latencies.
+
+best regards,
+
+Viktor
+
+Viktor Rosendahl (BMW) (4):
+  ftrace: Implement fs notification for tracing_max_latency
+  preemptirq_delay_test: Add the burst feature and a sysfs trigger
+  Add the latency-collector to tools
+  ftrace: Add an option for tracing console latencies
+
+ include/linux/irqflags.h             |   22 +
+ kernel/printk/printk.c               |    6 +-
+ kernel/trace/Kconfig                 |    6 +-
+ kernel/trace/preemptirq_delay_test.c |  144 ++-
+ kernel/trace/trace.c                 |   75 +-
+ kernel/trace/trace.h                 |   19 +
+ kernel/trace/trace_hwlat.c           |    4 +-
+ kernel/trace/trace_irqsoff.c         |   18 +
+ tools/Makefile                       |   14 +-
+ tools/trace/Makefile                 |   20 +
+ tools/trace/latency-collector.c      | 1212 ++++++++++++++++++++++++++
+ 11 files changed, 1507 insertions(+), 33 deletions(-)
+ create mode 100644 tools/trace/Makefile
+ create mode 100644 tools/trace/latency-collector.c
+
+-- 
+2.17.1
 
