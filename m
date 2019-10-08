@@ -2,98 +2,99 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF55C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B037C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66F2621721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:06:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="IOQ7bFge"
+	by mail.kernel.org (Postfix) with ESMTP id 2379120815
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:07:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570536420;
+	bh=Uj5x6J2gH97vDiZFnRpH5rNfDhiBDOr6x+X7q7iJ0jw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pbaQzUwdfPUD5lna2ICk/nLJMmQs65j0O6ba6bmOU7+DuK0jVjBDCVmRgQYSACKlo
+	 waUI006FuSPlx45YanP3JI85wmSkVfpBCJ2+bU0mCIgfur9XyUVAwfoTYJZdMy2jHW
+	 gn3YQG5NKcac90gH0xLu0jK2sI9ME9ZqIk681FG0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731013AbfJHMG4 (ORCPT
+        id S1731002AbfJHMG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 8 Oct 2019 08:06:56 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:28280 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730727AbfJHMGn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 08:06:43 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id x98C6133021176;
-        Tue, 8 Oct 2019 21:06:01 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x98C6133021176
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1570536362;
-        bh=5sMplte1orpkOBofj2bSvoYhmGY/7D1FKE2MtMgI2c0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=IOQ7bFgeGXun0TVQbxqC2WiLnBmTXZJ29pNWIZOiuQ4PdzzSneeEoT/1cYhD4lEX6
-         OrpTDrJxbx2/LOImspUh8yHQKHPo3r+UdwAI8j2kzXBV8S3lSN9Il+xqjGQG3iCL0L
-         m/qA3wQQNmanGuxtEkXuWfQIKvenYeGMNTwdijJj5sWX/npbg4KyZAIG/NpL7zvoPD
-         XhreK5JkAxhlNBLmDyDosTRUC4cYbAaORTr+MpQlB62yDTOGpHneft7FLJX/smuXJs
-         hKZraK5ERsohMeC7TbYfm6w0++8827zMXqB3fYmd5c8fDS78xiTkUIFAf1gMDosYHp
-         W/RBZl3FlCcew==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/5] kheaders: remove unneeded 'cat' command piped to 'head' / 'tail'
-Date:   Tue,  8 Oct 2019 21:05:52 +0900
-Message-Id: <20191008120556.4263-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+Received: from mail.kernel.org ([198.145.29.99]:57548 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730249AbfJHMGy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 08:06:54 -0400
+Received: from localhost (92-111-67-33.static.v4.ziggozakelijk.nl [92.111.67.33])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF2C3206C2;
+        Tue,  8 Oct 2019 12:06:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570536412;
+        bh=Uj5x6J2gH97vDiZFnRpH5rNfDhiBDOr6x+X7q7iJ0jw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Q5WIB6Znd6MmUFiZe7cgph9CBc1fO+biOlU76MaIEDNoUNutRckaP5t2Mm/TuJqDL
+         hZEp9E9sM4a0nfrAhj/SvTFS+aWmGcwUdO7KNlJL+H6BYWG0F7pX61N9N98tq/NcQi
+         KU49X+7gCqZLnPY/GrThfiKaOrzaW1+JYR1bKFuc=
+Date:   Tue, 8 Oct 2019 14:06:49 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Cheng-Yi Chiang <cychiang@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
+        Guenter Roeck <linux@roeck-us.net>,
+        Hung-Te Lin <hungte@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Shuming Fan <shumingf@realtek.com>,
+        sathya.prakash.m.r@intel.com,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        dgreid@chromium.org, tzungbi@chromium.org
+Subject: Re: [PATCH v2] firmware: vpd: Add an interface to read VPD value
+Message-ID: <20191008120649.GC2761030@kroah.com>
+References: <20191008101144.39342-1-cychiang@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191008101144.39342-1-cychiang@chromium.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 'head' and 'tail' commands can take a file path directly.
-So, you do not need to run 'cat'.
+On Tue, Oct 08, 2019 at 06:11:44PM +0800, Cheng-Yi Chiang wrote:
+> Add an interface for other driver to query VPD value.
+> This will be used for ASoC machine driver to query calibration
+> data stored in VPD for smart amplifier speaker resistor
+> calibration.
+> 
+> The example usage in ASoC machine driver is like:
+> 
+> #define DSM_CALIB_KEY "dsm_calib"
+> static int load_calibration_data(struct cml_card_private *ctx) {
+>     char *data = NULL;
+>     int ret;
+>     u32 value_len;
+> 
+>     /* Read calibration data from VPD. */
+>     ret = vpd_attribute_read(1, DSM_CALIB_KEY,
+>                             (u8 **)&data, &value_len);
+> 
+>     /* Parsing of this string...*/
+> }
+> 
+> 
+> Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+> ---
 
-  cat kernel/kheaders.md5 | head -1
+I can't take this patch without a real user of this function in the
+kernel tree at the same time.  Please submit it as part of a patch
+series with that change as well.
 
-... is equivalent to:
+thanks,
 
-  head -1 kernel/kheaders.md5
-
-and the latter saves forking one process.
-
-While I was here, I replaced 'head -1' with 'head -n 1'.
-
-I also replaced '==' with '=' since we do not have a good reason to
-use the bashism.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- kernel/gen_kheaders.sh | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/gen_kheaders.sh b/kernel/gen_kheaders.sh
-index aff79e461fc9..8aa6d3c37ba7 100755
---- a/kernel/gen_kheaders.sh
-+++ b/kernel/gen_kheaders.sh
-@@ -41,10 +41,10 @@ obj_files_md5="$(find $dir_list -name "*.h"			   |
- this_file_md5="$(ls -l $sfile | md5sum | cut -d ' ' -f1)"
- if [ -f $tarfile ]; then tarfile_md5="$(md5sum $tarfile | cut -d ' ' -f1)"; fi
- if [ -f kernel/kheaders.md5 ] &&
--	[ "$(cat kernel/kheaders.md5|head -1)" == "$src_files_md5" ] &&
--	[ "$(cat kernel/kheaders.md5|head -2|tail -1)" == "$obj_files_md5" ] &&
--	[ "$(cat kernel/kheaders.md5|head -3|tail -1)" == "$this_file_md5" ] &&
--	[ "$(cat kernel/kheaders.md5|tail -1)" == "$tarfile_md5" ]; then
-+	[ "$(head -n 1 kernel/kheaders.md5)" = "$src_files_md5" ] &&
-+	[ "$(head -n 2 kernel/kheaders.md5 | tail -n 1)" = "$obj_files_md5" ] &&
-+	[ "$(head -n 3 kernel/kheaders.md5 | tail -n 1)" = "$this_file_md5" ] &&
-+	[ "$(tail -n 1 kernel/kheaders.md5)" = "$tarfile_md5" ]; then
- 		exit
- fi
- 
--- 
-2.17.1
-
+greg k-h
