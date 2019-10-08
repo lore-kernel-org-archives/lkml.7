@@ -2,108 +2,87 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 448C8C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B39BC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A78621835
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:43:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F67321835
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:43:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OnuQJfIi"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BW2yauUx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731047AbfJHUnI (ORCPT
+        id S1731060AbfJHUnk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 16:43:08 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44537 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730523AbfJHUnI (ORCPT
+        Tue, 8 Oct 2019 16:43:40 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55064 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730523AbfJHUnj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 16:43:08 -0400
-Received: by mail-wr1-f65.google.com with SMTP id z9so20922757wrl.11;
-        Tue, 08 Oct 2019 13:43:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=WWwn+BDhcbOGBxgKsYFakYG+EwuX3cbPf1a14GVaBTU=;
-        b=OnuQJfIibD7d3RvSZZN35NnxUvR85Sf/r20VXLk3biySO4yxKmevZnQ/kQVQZ/Wzm6
-         TzpLZvszOoDVaibLNoJA/ahk0O0T9QlGkTIHmwZiZ4CJgcRC5YpDXJlD/W0ivkvtGmeq
-         HlgCzwBNy5j8T5q6+gZLDnujBLohWcmUz2+qRlk4AFF/WL4NS7+YYDhx1fpJZaauRlJ8
-         x/m2ZZ028CerRFTrONV1FbnS5ass2/2Brt8FaHpKzgzNA0YiMigbxpWSHZEzpPGFpPGP
-         bvlMZLIu0B2ZrzyWw2VkVE82pUFsd8XR0Vrh4U790DNdxADq8J62P0W+86GKW6S3+beD
-         Mivw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=WWwn+BDhcbOGBxgKsYFakYG+EwuX3cbPf1a14GVaBTU=;
-        b=UyfZ6oUBm+SxIXcNtnU2Mly2uTokKtALHJh0UbBvEAmpSArGw5H3aNIg7S6r4R1Igm
-         UAXxt4ctiwTc8PTM1vlrtrYVcnzrpP+gWgoGH7E7kDZNZt3YJxk9mCcaHCXZ70vkTxOa
-         8tL4Tt7YV3MrkQBB6HgqgA7sSqmVbkDmsrJGH1zw8h8ad2QXyB73t9b1jmts9Hozkko+
-         Hs6Q/kvu6BRBeSdol/7M6ahJ9WctzCNERAxol6RjL/q5B/i0Q+JX/g5qZI0honKkge1p
-         WX5uL7ul58fmjwuvc6+yD8lut+QDhX56TpaeIzylociUcl0DPcjhJA/vL2Ac67mxA7oO
-         HqmQ==
-X-Gm-Message-State: APjAAAVBl5AhJLLfukv45O2TNf4lx+zZltSmYX+U6n/t/vpBmlmWfLnk
-        sWmjmcLC5USZoXNOOWOcmFj3eZ19
-X-Google-Smtp-Source: APXvYqwcR1fV/EF1kGFCUEGey7i/HTucQnwdHVUFMdyl3+SmC/etQNtGJHI8CKcHrGRn+wnXKQKAbA==
-X-Received: by 2002:a5d:6a09:: with SMTP id m9mr26979486wru.12.1570567386394;
-        Tue, 08 Oct 2019 13:43:06 -0700 (PDT)
-Received: from myhost.home (bgs228.neoplus.adsl.tpnet.pl. [83.28.82.228])
-        by smtp.gmail.com with ESMTPSA id o22sm47057989wra.96.2019.10.08.13.43.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 08 Oct 2019 13:43:05 -0700 (PDT)
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        jacek.anaszewski@gmail.com
-Subject: [GIT PULL] LED fixes for 5.4-rc3.
-Date:   Tue,  8 Oct 2019 22:42:58 +0200
-Message-Id: <20191008204258.22196-1-jacek.anaszewski@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Tue, 8 Oct 2019 16:43:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=dLnpeex3KKFOsysPFCnugkF5/r74EsXAIKBPbaZtxDM=; b=BW2yauUxp3Wlwx/nriYdxhFvF
+        uUJSui2vU6dupAyaCN+NfgjQCz0D+ObxuSkwVLmdkd1zEPnEMGXtmUnmQzYl6ardzXfz+3OeHgZQF
+        IxZ81S5liZ/3s8QJGbXeY/QBfApoGLrtNQUyibhl2DXEcEfbbDgtF0L8u/c0dgbuuyCt2kaW1JNdR
+        GVQnWbBvHOgNdXVcxs8m9R+xJHRlLWsLEenW9XntuaKoRTm6bhOlA4+5+eABPDSpbKs442A8FKPgh
+        wC52dJfpncKwHUL9REbnd2yldTK0IMR1Bleq4aCiXUAupwFzGxTSVhve2HMC9uzWswA4yelOcH+vQ
+        qn2SbkWrg==;
+Received: from [2601:1c0:6280:3f0::9ef4]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iHwKZ-0004Fv-CP; Tue, 08 Oct 2019 20:43:39 +0000
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] xarray.h: fix kernel-doc warning
+Message-ID: <89ba2134-ce23-7c10-5ee1-ef83b35aa984@infradead.org>
+Date:   Tue, 8 Oct 2019 13:43:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+From: Randy Dunlap <rdunlap@infradead.org>
 
-Please pull two patches for 5.4-rc3:
+Fix (Sphinx) kernel-doc warning in <linux/xarray.h>:
 
-- fix a leftover from earlier stage of development in the documentation
-  of recently added led_compose_name() and fix old mistake in
-  the documentation of led_set_brightness_sync() parameter name.
+../include/linux/xarray.h:232: WARNING: Unexpected indentation.
 
-- MAINTAINERS: add pointer to Pavel Machek's linux-leds.git tree.
-  Pavel is going to take over LED tree maintainership
-  from myself.
+Fixes: a3e4d3f97ec8 ("XArray: Redesign xa_alloc API")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+---
+# mainline
 
-The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
+ include/linux/xarray.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
+--- linux-next-20191008.orig/include/linux/xarray.h
++++ linux-next-20191008/include/linux/xarray.h
+@@ -230,8 +230,8 @@ static inline int xa_err(void *entry)
+  * This structure is used either directly or via the XA_LIMIT() macro
+  * to communicate the range of IDs that are valid for allocation.
+  * Two common ranges are predefined for you:
+- *  * xa_limit_32b	- [0 - UINT_MAX]
+- *  * xa_limit_31b	- [0 - INT_MAX]
++ * * xa_limit_32b	- [0 - UINT_MAX]
++ * * xa_limit_31b	- [0 - INT_MAX]
+  */
+ struct xa_limit {
+ 	u32 max;
 
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git tags/led-fixes-for-5.4-rc3
-
-for you to fetch changes up to 4050d21d2009faccae5cab74eeb9f460f25d5108:
-
-  Add my linux-leds branch to MAINTAINERS (2019-10-08 22:09:08 +0200)
-
-Thanks,
-Jacek Anaszewski
-
-----------------------------------------------------------------
-LED fixes for 5.4-rc3.
-----------------------------------------------------------------
-Dan Murphy (1):
-      leds: core: Fix leds.h structure documentation
-
-Pavel Machek (1):
-      Add my linux-leds branch to MAINTAINERS
-
- MAINTAINERS          | 1 +
- include/linux/leds.h | 5 ++---
- 2 files changed, 3 insertions(+), 3 deletions(-)
