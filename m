@@ -2,93 +2,109 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22512C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:39:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EEB6C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 057FD20815
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:39:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ED062070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:40:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727243AbfJHOjF (ORCPT
+        id S1726593AbfJHOkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 10:39:05 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:43927 "EHLO
-        mail.loongson.cn" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfJHOjF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 10:39:05 -0400
-Received: from linux.loongson.cn (unknown [10.20.41.27])
-        by mail (Coremail) with SMTP id QMiowPDxv2CAn5xdu7sLAA--.72S2;
-        Tue, 08 Oct 2019 22:38:56 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     paul.burton@mips.com, ralf@linux-mips.org, jhogan@kernel.org
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] MIPS: generic: Use __initconst for const init data
-Date:   Tue,  8 Oct 2019 22:38:53 +0800
-Message-Id: <1570545533-12718-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: QMiowPDxv2CAn5xdu7sLAA--.72S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrKw1rKrW8uryxGFWkuF15urg_yoWkCwb_uw
-        s2yF18Gr1rCrWY9FsFvw15Ja4IkaySvF9rA34kKan8A3s3tF15Cw4q9r13Jry8WFZ0yry5
-        JF4rXa45Cr17ujkaLaAFLSUrUUUUYb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb6AYjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
-        6I8E6xAIw20EY4v20xvaj40_JFC_Wr1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
-        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0
-        cI8IcVCY1x0267AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4
-        A2jsIEc7CjxVAFwI0_GcCE3s1ln4kS14v26r1q6r43M2AIxVAIcxkEcVAq07x20xvEncxI
-        r21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87
-        Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7xvr2IY
-        c2Ij64vIr40E4x8a64kEw24lc7CjxVAaw2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I
-        8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jw0_GFylx2IqxVAqx4xG67AKxVWU
-        JVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7V
-        AKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j
-        6r4UMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJr1lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIx
-        AIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU51GQDUUUUU=
-        =
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Tue, 8 Oct 2019 10:40:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57536 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725962AbfJHOkO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 10:40:14 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4375720659;
+        Tue,  8 Oct 2019 14:40:12 +0000 (UTC)
+Date:   Tue, 8 Oct 2019 10:40:10 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com
+Subject: Re: [PATCH v3 1/6] x86/alternatives: Teach text_poke_bp() to
+ emulate instructions
+Message-ID: <20191008104010.181c4927@gandalf.local.home>
+In-Reply-To: <20191008142924.GE14765@zn.tnic>
+References: <20191007081716.07616230.8@infradead.org>
+        <20191007081944.88332264.2@infradead.org>
+        <20191008142924.GE14765@zn.tnic>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following checkpatch errors:
+On Tue, 8 Oct 2019 16:29:24 +0200
+Borislav Petkov <bp@alien8.de> wrote:
 
-$ ./scripts/checkpatch.pl --no-tree -f arch/mips/generic/init.c
-ERROR: Use of const init definition must use __initconst
-+static __initdata const void *fdt;
+> On Mon, Oct 07, 2019 at 10:17:17AM +0200, Peter Zijlstra wrote:
+> > In preparation for static_call and variable size jump_label support,
+> > teach text_poke_bp() to emulate instructions, namely:
+> > 
+> >   JMP32, JMP8, CALL, NOP2, NOP_ATOMIC5, INT3
+> > 
+> > The current text_poke_bp() takes a @handler argument which is used as
+> > a jump target when the temporary INT3 is hit by a different CPU.
+> > 
+> > When patching CALL instructions, this doesn't work because we'd miss
+> > the PUSH of the return address. Instead, teach poke_int3_handler() to
+> > emulate an instruction, typically the instruction we're patching in.
+> > 
+> > This fits almost all text_poke_bp() users, except
+> > arch_unoptimize_kprobe() which restores random text, and for that site
+> > we have to build an explicit emulate instruction.  
+> 
+> ...
+> 
+> > @@ -63,8 +66,17 @@ static inline void int3_emulate_jmp(stru
+> >  	regs->ip = ip;
+> >  }
+> >  
+> > -#define INT3_INSN_SIZE 1
+> > -#define CALL_INSN_SIZE 5
+> > +#define INT3_INSN_SIZE		1
+> > +#define INT3_INSN_OPCODE	0xCC
+> > +
+> > +#define CALL_INSN_SIZE		5
+> > +#define CALL_INSN_OPCODE	0xE8
+> > +
+> > +#define JMP32_INSN_SIZE		5
+> > +#define JMP32_INSN_OPCODE	0xE9
+> > +
+> > +#define JMP8_INSN_SIZE		2
+> > +#define JMP8_INSN_OPCODE	0xEB  
+> 
+> You probably should switch those to have the name prefix come first and
+> make them even shorter:
+> 
+> OPCODE_CALL
+> INSN_SIZE_CALL
+> OPCODE_JMP32
+> INSN_SIZE_JMP32
+> OPCODE_JMP8
+> ...
+> 
+> This way you have the opcodes prefixed with OPCODE_ and the insn sizes
+> with INSN_SIZE_. I.e., what they actually are.
 
-ERROR: Use of const init definition must use __initconst
-+static __initdata const struct mips_machine *mach;
+Honestly, I like the original way better.
 
-ERROR: Use of const init definition must use __initconst
-+static __initdata const void *mach_match_data;
+Seeing OPCODE_JMP32 and INSN_SIZE_JMP32 doesn't look like they are
+related to me.
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/mips/generic/init.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/mips/generic/init.c b/arch/mips/generic/init.c
-index d5b8c47..1de215b 100644
---- a/arch/mips/generic/init.c
-+++ b/arch/mips/generic/init.c
-@@ -20,9 +20,9 @@
- #include <asm/smp-ops.h>
- #include <asm/time.h>
- 
--static __initdata const void *fdt;
--static __initdata const struct mips_machine *mach;
--static __initdata const void *mach_match_data;
-+static __initconst const void *fdt;
-+static __initconst const struct mips_machine *mach;
-+static __initconst const void *mach_match_data;
- 
- void __init prom_init(void)
- {
--- 
-2.1.0
-
-
+-- Steve
