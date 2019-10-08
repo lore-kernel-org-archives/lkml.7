@@ -2,90 +2,132 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C8BCC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73987C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52003217D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 418D021835
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:42:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=victronenergy.com header.i=@victronenergy.com header.b="e064i82h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728567AbfJHQjb (ORCPT
+        id S1728702AbfJHQmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 12:39:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:40992 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725966AbfJHQjb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 12:39:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7B9701570;
-        Tue,  8 Oct 2019 09:39:30 -0700 (PDT)
-Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3ED123F6C4;
-        Tue,  8 Oct 2019 09:39:29 -0700 (PDT)
-Subject: Re: [PATCH v3 04/10] sched/fair: rework load_balance
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Phil Auld <pauld@redhat.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <Morten.Rasmussen@arm.com>,
-        Hillf Danton <hdanton@sina.com>
-References: <1568878421-12301-1-git-send-email-vincent.guittot@linaro.org>
- <1568878421-12301-5-git-send-email-vincent.guittot@linaro.org>
- <c752dd1a-731e-aae3-6a2c-aecf88901ac0@arm.com>
- <CAKfTPtBQNJfNmBqpuaefsLzsTrGxJ=2bTs+tRdbOAa9J3eKuVw@mail.gmail.com>
- <31cac0c1-98e4-c70e-e156-51a70813beff@arm.com>
- <20191008141642.GQ2294@hirez.programming.kicks-ass.net>
- <b4e29e48-a97c-67e5-a284-6ddc13222c5b@arm.com>
- <20191008163357.GF2328@hirez.programming.kicks-ass.net>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <5de71c9f-cd6b-0284-f4a0-0d1fe4059099@arm.com>
-Date:   Tue, 8 Oct 2019 17:39:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20191008163357.GF2328@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
+        Tue, 8 Oct 2019 12:42:51 -0400
+Received: from mail-eopbgr10129.outbound.protection.outlook.com ([40.107.1.129]:62532
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726138AbfJHQmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 12:42:51 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Jp9/7TZOL+JQhhZis1fnQch0lKhrOGl5El76MynekUTHDho2MrjBL6877ZAypgUUVk0V3AaxNxkn+9nkE8J4/MQW+WHZr/F5HPndOz3rAM1ypLy09jT/+UQkcH8yegWbHdo0nf5k0GW6PpMhawGnoDG5207bp9A2InbwDMM0wzRyk6Bg24F7t/uWG328zYcPk5xOGjO2Q46U6SbJUQTdB/RmRit1ZZ3oz3dbZFQW/q3jXlm7rqI3ufWoQ5K1hyXu1i6PlvNpKKM2JSc5xdskRTKFuNexJA//OAxbZ1a/z1CNWa/AzYbN387uPXE+eLUeqQXnmwrkGDNLKMNbKzPtAw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hetplaNK77tsE1ORzZ46JT/WxlSAplenEzaXRqzKxp8=;
+ b=hZaPd8mLhMWowYMEL5S6rdNwQtp5WL0PVQUpDeutJAFl9+/Mci0q0s7ezaOh0vEOlfWPiMfpali8xICCs3YjnEU/JgTkPId8KnYoac9BXo94buFVCI2DANFZeCBU2qrNH52E017IKlJiplLt6nxOd0oWmvLHNZjbn1sG5y8LrFyjseJlY1X6OM9SjsklO1T+U+0OmpiVVMb5DUKHPrINxkXjw1YfIbX/FK7Jh6uKyk5Iq8K32CqkzSoOZdyYuT3uIXBiDfQw7QY3zDIhtUdv2Jgt0O/9PJEJ6WbPi//ctZZ3v/uqjdba6kx5ELWN50iBXcfTRe0MnlYxFfWEQ/8vjA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=victronenergy.com; dmarc=pass action=none
+ header.from=victronenergy.com; dkim=pass header.d=victronenergy.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=victronenergy.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hetplaNK77tsE1ORzZ46JT/WxlSAplenEzaXRqzKxp8=;
+ b=e064i82hoQKWSz86JyNewv+3aO8F5RwVFl9YKRcAZX39C3nO/T8vVsnMCewXD51AodXP8Ybi3QCAInxPiWdceeaATwAZ5rEUv4KLVOxUIPQdx1c5kJv46LwDCmiBnq06n4+0RRyVEhl8e/3ClJNiYuwc3WiHfcTDiX1hDEk244o=
+Received: from VI1PR0701MB2623.eurprd07.prod.outlook.com (10.173.82.19) by
+ VI1PR0701MB2528.eurprd07.prod.outlook.com (10.168.133.146) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.13; Tue, 8 Oct 2019 16:42:47 +0000
+Received: from VI1PR0701MB2623.eurprd07.prod.outlook.com
+ ([fe80::49b7:a244:d3e4:396c]) by VI1PR0701MB2623.eurprd07.prod.outlook.com
+ ([fe80::49b7:a244:d3e4:396c%9]) with mapi id 15.20.2347.016; Tue, 8 Oct 2019
+ 16:42:47 +0000
+From:   Jeroen Hofstee <jhofstee@victronenergy.com>
+To:     Tony Lindgren <tony@atomide.com>
+CC:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
+        Koen Kooi <koen@dominion.thruhere.net>,
+        =?utf-8?B?QmVub8OudCBDb3Vzc29u?= <bcousson@baylibre.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ARM: dts: am335x-sancloud-bbe: Fix PHY mode for ethernet
+Thread-Topic: [PATCH] ARM: dts: am335x-sancloud-bbe: Fix PHY mode for ethernet
+Thread-Index: AQHVeQdofKkOWkby2kaW5oWVx4ahWqdHbuCAgAFGYQD///NzgIAILT2AgAA9LID//+GwAIAAB/aA
+Date:   Tue, 8 Oct 2019 16:42:47 +0000
+Message-ID: <4fa5393d-0b2c-4b8c-128a-81ab05a14a82@victronenergy.com>
+References: <20191002095416.19603-1-jhofstee@victronenergy.com>
+ <d027ef07-807d-6a7b-2939-b67be4542469@ti.com>
+ <436f1712-7dec-db40-d08f-1a3032af3596@victronenergy.com>
+ <d85cd860-22a3-6142-7f2d-736a428d7a31@ti.com>
+ <20191008142349.GE5610@atomide.com>
+ <1f779973-1702-47eb-158f-7000770c435a@victronenergy.com>
+ <20191008161416.GG5610@atomide.com>
+In-Reply-To: <20191008161416.GG5610@atomide.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+x-originating-ip: [2001:1c01:3bc5:4e00:71f7:17:8b3a:e5f1]
+x-clientproxiedby: AM4P190CA0009.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:200:56::19) To VI1PR0701MB2623.eurprd07.prod.outlook.com
+ (2603:10a6:801:b::19)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jhofstee@victronenergy.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0c1b6bda-bee2-4976-6ad6-08d74c0e8cbe
+x-ms-traffictypediagnostic: VI1PR0701MB2528:
+x-microsoft-antispam-prvs: <VI1PR0701MB2528D137CF1D6C6F9E3CB127C09A0@VI1PR0701MB2528.eurprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 01842C458A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(346002)(39850400004)(396003)(376002)(366004)(199004)(189003)(4326008)(186003)(6436002)(99286004)(6116002)(6486002)(2906002)(6246003)(76176011)(66556008)(31686004)(66946007)(71200400001)(102836004)(36756003)(66476007)(25786009)(6916009)(64756008)(66446008)(52116002)(6512007)(229853002)(71190400001)(305945005)(65956001)(65806001)(53546011)(256004)(386003)(7736002)(6506007)(14454004)(446003)(11346002)(31696002)(86362001)(58126008)(54906003)(316002)(486006)(46003)(5660300002)(478600001)(81156014)(8936002)(81166006)(8676002)(2616005)(476003);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0701MB2528;H:VI1PR0701MB2623.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: victronenergy.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: rQTwgVADyjSlbhBQffTH9lz9Sjnq3D2SiNNz+kwxIjA8TwsRiUgbYnJpagjIvFct+vEo3GnGq2/jtS0Ow2+ONDCAJthqb3PSoP6ZZ8wLnHUeKfVAf2zjaRYOqDIiC9tkIjYHk/6g2jgwZfA/4zrVRBfmseUUafsy9bgIWShO6y3aTNijDhdIMbhsAZdRAZZFw5OQacGm7Sizd5stmNeK1nGn86Sgmbzt8hZxTjVAqTH14p1ZsTMQV0dhGWXHDgmfbfV5il+dTGTAqGj0fluBxXvNE4ZDYf/Q3lw76lBAg04RXV7ESOTeyiOrOmcf6y0TFGr27lpxQyf3sP2/1DfEmYGx0MME1b5V0r+OQp9TDHyn2OEhQG0MEOGQjjnV2IaZCotQpxg7OiEn+7CbkUl6Llm9z19kdOQRC+f8ZHtR1k4=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <3D3318AB959123469B049ABE63C6EF67@eurprd07.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: victronenergy.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0c1b6bda-bee2-4976-6ad6-08d74c0e8cbe
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Oct 2019 16:42:47.2476
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 60b95f08-3558-4e94-b0f8-d690c498e225
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: WlF8xztmSSwo41mTeffQeJ2XUC+mAIu7CD7DTouBrBxu/Z4Xh9tcg6JnVokp3oXDZLrRAdnWzUpXhQ+p98Kh4ZmzC+KVf2dgh03Sv8wDmfI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0701MB2528
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/10/2019 17:33, Peter Zijlstra wrote:
-> On Tue, Oct 08, 2019 at 03:34:04PM +0100, Valentin Schneider wrote:
->> On 08/10/2019 15:16, Peter Zijlstra wrote:
->>> On Wed, Oct 02, 2019 at 11:47:59AM +0100, Valentin Schneider wrote:
->>>
->>>> Yeah, right shift on signed negative values are implementation defined.
->>>
->>> Seriously? Even under -fno-strict-overflow? There is a perfectly
->>> sensible operation for signed shift right, this stuff should not be
->>> undefined.
->>>
->>
->> Mmm good point. I didn't see anything relevant in the description of that
->> flag. All my copy of the C99 standard (draft) says at 6.5.7.5 is:
->>
->> """
->> The result of E1 >> E2 [...] If E1 has a signed type and a negative value,
->> the resulting value is implementation-defined.
->> """
->>
->> Arithmetic shift would make sense, but I think this stems from twos'
->> complement not being imposed: 6.2.6.2.2 says sign can be done with
->> sign + magnitude, twos complement or ones' complement...
-> 
-> But -fno-strict-overflow mandates 2s complement for all such signed
-> issues.
-> 
-
-So then there really shouldn't be any ambiguity. I have no idea if
--fno-strict-overflow then also lifts the undefinedness of the right shifts,
-gotta get my spade and dig some more.
+SGVsbG8gVG9ueSwNCg0KT24gMTAvOC8xOSA2OjE0IFBNLCBUb255IExpbmRncmVuIHdyb3RlOg0K
+PiAqIEplcm9lbiBIb2ZzdGVlIDxqaG9mc3RlZUB2aWN0cm9uZW5lcmd5LmNvbT4gWzE5MTAwOCAx
+NjowM106DQo+PiBIZWxsbyBUb255LA0KPj4NCj4+IE9uIDEwLzgvMTkgNDoyMyBQTSwgVG9ueSBM
+aW5kZ3JlbiB3cm90ZToNCj4+PiAqIEdyeWdvcmlpIFN0cmFzaGtvIDxncnlnb3JpaS5zdHJhc2hr
+b0B0aS5jb20+IFsxOTEwMDMgMDI6MzJdOg0KPj4+PiBPbiAwMy8xMC8yMDE5IDExOjE2LCBKZXJv
+ZW4gSG9mc3RlZSB3cm90ZToNCj4+Pj4+IEZ1cnRoZXJtb3JlIDQuMTkgaXMgZmluZSwgc28gdGhl
+cmUgaXMgbm8gbmVlZCB0byBpbmNsdWRlIGl0IGluIHN0YWJsZQ0KPj4+Pj4gYW5kIGhhdmUgYSBu
+b3RlIHRvIG1ha2Ugc3VyZSBhbHNvIG90aGVyIHBhdGNoZXMgYXJlIHJlcXVpcmVkIGV0Yy4NCj4+
+Pj4gSGVuY2UgYWxsIGFib3ZlIHBhdGNoZXMgd2VudCBpbiA1LjEgaXQgd291bGQgYmUgY29ycmVj
+dCB0byBtZW50aW9uIG9ubHkNCj4+Pj4gNmQ0Y2QwNDFmMGFmIG5ldDogcGh5OiBhdDgwM3g6IGRp
+c2FibGUgZGVsYXkgb25seSBmb3IgUkdNSUkgbW9kZQ0KPj4+IEplcm9lbiwgY2FuIHlvdSBwbGVh
+c2Ugc2VuZCBhbiB1cGRhdGVkIHBhdGNoIHdpdGggdGhlIGZpeGVzDQo+Pj4gdGFnIGNoYW5nZWQ/
+DQo+Pj4NCj4+IEZvciBjb21wbGV0ZW5lc3MsIHRoZXJlIGlzIG5vICJGaXhlcyB0YWciIGFzIHlv
+dSBtZW50aW9uZWQuDQo+PiBUaGUgY29tbWl0IG9ubHkgcmVmZXJzIHRvIGFub3RoZXIgY29tbWl0
+IHdoaWNoIGludHJvZHVjZXMNCj4+IGEgcHJvYmxlbS4NCj4gV2VsbCBwbGVhc2UgYWRkIHRoZSBm
+aXhlcyB0YWcsIHRoYXQgd2F5IHRoaXMgd2lsbCBnZXQNCj4gcHJvcGVybHkgYXBwbGllZCB0byBl
+YXJsaWVyIHN0YWJsZSBrZXJuZWxzIHRvbyA6KQ0KDQpCdXQgNC4xOSBpcyBmaW5lLCB0aGlzIGlz
+IGFuIGlzc3VlIGluIDUuMSBhcyBpbiBFT0wuLi4NCkkgcmVhbGx5IGRvbid0IHVuZGVyc3RhbmQg
+d2h5IEkgc2hvdWxkIHdhc3RlIHRpbWUNCnRvIGZpZ3VyZSBvdXQgd2hhdCBoYXBwZW5lZCBleGFj
+dGx5IGR1cmluZyB0aGUgNS4xDQpyZWxlYXNlIGN5Y2xlLi4uDQoNClJlZ2FyZHMsDQoNCkplcm9l
+bg0KDQo=
