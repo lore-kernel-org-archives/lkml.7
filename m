@@ -4,115 +4,287 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 963C2C47404
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 228D8ECE58C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72B8B20867
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:15:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E984C20835
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:23:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729802AbfJHBPY (ORCPT
+        id S1729670AbfJHBWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 21:15:24 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51546 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729789AbfJHBPW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 21:15:22 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x981C4hr105045
-        for <linux-kernel@vger.kernel.org>; Mon, 7 Oct 2019 21:15:21 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vgd2c62j0-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 21:15:20 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <nayna@linux.ibm.com>;
-        Tue, 8 Oct 2019 02:15:19 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 8 Oct 2019 02:15:15 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x981FD3A23855144
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 8 Oct 2019 01:15:13 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7EAD311C04A;
-        Tue,  8 Oct 2019 01:15:13 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EFAED11C058;
-        Tue,  8 Oct 2019 01:15:10 +0000 (GMT)
-Received: from swastik.ibm.com (unknown [9.80.231.8])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  8 Oct 2019 01:15:10 +0000 (GMT)
-From:   Nayna Jain <nayna@linux.ibm.com>
-To:     linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org,
-        linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Eric Ricther <erichte@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Nayna Jain <nayna@linux.ibm.com>
-Subject: [PATCH v7 8/8] powerpc/ima: update ima arch policy to check for blacklist
-Date:   Mon,  7 Oct 2019 21:14:27 -0400
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1570497267-13672-1-git-send-email-nayna@linux.ibm.com>
-References: <1570497267-13672-1-git-send-email-nayna@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19100801-0012-0000-0000-00000354FE16
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19100801-0013-0000-0000-000021901093
-Message-Id: <1570497267-13672-9-git-send-email-nayna@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-07_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910080011
+        Mon, 7 Oct 2019 21:22:54 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:52992 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729375AbfJHBWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 21:22:53 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 547A0C915A3F05747E90;
+        Tue,  8 Oct 2019 09:22:51 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.132) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 8 Oct 2019 09:22:42 +0800
+From:   Huazhong Tan <tanhuazhong@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
+        <linuxarm@huawei.com>
+Subject: [PATCH net-next 1/6] net: hns3: add support for setting VF link status on the host
+Date:   Tue, 8 Oct 2019 09:20:04 +0800
+Message-ID: <1570497609-36349-2-git-send-email-tanhuazhong@huawei.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1570497609-36349-1-git-send-email-tanhuazhong@huawei.com>
+References: <1570497609-36349-1-git-send-email-tanhuazhong@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.132]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch updates the arch specific policies for PowernV systems
-to add check against blacklisted binary hashes before doing the
-verification.
+From: Yufeng Mo <moyufeng@huawei.com>
 
-Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+This patch adds support to configure VF link properties.
+The options are auto, enable, and disable. Even if the PF
+is down, the communication between VFs will be normal
+if the VFs are set to enable. The commands are as follows:
+
+'ip link set <pf> vf <vf_id> state <auto|enable|disable>'
+change the VF status
+
+'ip link show'
+show the setting status
+
+Signed-off-by: Yufeng Mo <moyufeng@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- arch/powerpc/kernel/ima_arch.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hnae3.h        |  8 +++
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    | 24 +++++++++
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 57 ++++++++++++++++++++++
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |  6 +++
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c | 17 ++++++-
+ 5 files changed, 111 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/ima_arch.c b/arch/powerpc/kernel/ima_arch.c
-index 88bfe4a1a9a5..4fa41537b846 100644
---- a/arch/powerpc/kernel/ima_arch.c
-+++ b/arch/powerpc/kernel/ima_arch.c
-@@ -25,9 +25,9 @@ bool arch_ima_get_secureboot(void)
- static const char *const arch_rules[] = {
- 	"measure func=KEXEC_KERNEL_CHECK template=ima-modsig",
- 	"measure func=MODULE_CHECK template=ima-modsig",
--	"appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig",
-+	"appraise func=KEXEC_KERNEL_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig",
- #if !IS_ENABLED(CONFIG_MODULE_SIG_FORCE)
--	"appraise func=MODULE_CHECK appraise_type=imasig|modsig",
-+	"appraise func=MODULE_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig",
- #endif
- 	NULL
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
+index c4b7bf8..1fc3728 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
+@@ -364,6 +364,10 @@ struct hnae3_ae_dev {
+  *   Enable/disable HW GRO
+  * add_arfs_entry
+  *   Check the 5-tuples of flow, and create flow director rule
++ * get_vf_config
++ *   Get the VF configuration setting by the host
++ * set_vf_link_state
++ *   Set VF link status
+  */
+ struct hnae3_ae_ops {
+ 	int (*init_ae_dev)(struct hnae3_ae_dev *ae_dev);
+@@ -529,6 +533,10 @@ struct hnae3_ae_ops {
+ 	int (*mac_connect_phy)(struct hnae3_handle *handle);
+ 	void (*mac_disconnect_phy)(struct hnae3_handle *handle);
+ 	void (*restore_vlan_table)(struct hnae3_handle *handle);
++	int (*get_vf_config)(struct hnae3_handle *handle, int vf,
++			     struct ifla_vf_info *ivf);
++	int (*set_vf_link_state)(struct hnae3_handle *handle, int vf,
++				 int link_state);
  };
+ 
+ struct hnae3_dcb_ops {
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index 616cad0..2136323 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -1805,6 +1805,28 @@ static int hns3_rx_flow_steer(struct net_device *dev, const struct sk_buff *skb,
+ }
+ #endif
+ 
++static int hns3_nic_get_vf_config(struct net_device *ndev, int vf,
++				  struct ifla_vf_info *ivf)
++{
++	struct hnae3_handle *h = hns3_get_handle(ndev);
++
++	if (!h->ae_algo->ops->get_vf_config)
++		return -EOPNOTSUPP;
++
++	return h->ae_algo->ops->get_vf_config(h, vf, ivf);
++}
++
++static int hns3_nic_set_vf_link_state(struct net_device *ndev, int vf,
++				      int link_state)
++{
++	struct hnae3_handle *h = hns3_get_handle(ndev);
++
++	if (!h->ae_algo->ops->set_vf_link_state)
++		return -EOPNOTSUPP;
++
++	return h->ae_algo->ops->set_vf_link_state(h, vf, link_state);
++}
++
+ static const struct net_device_ops hns3_nic_netdev_ops = {
+ 	.ndo_open		= hns3_nic_net_open,
+ 	.ndo_stop		= hns3_nic_net_stop,
+@@ -1823,6 +1845,8 @@ static const struct net_device_ops hns3_nic_netdev_ops = {
+ #ifdef CONFIG_RFS_ACCEL
+ 	.ndo_rx_flow_steer	= hns3_rx_flow_steer,
+ #endif
++	.ndo_get_vf_config	= hns3_nic_get_vf_config,
++	.ndo_set_vf_link_state	= hns3_nic_set_vf_link_state,
+ 
+ };
+ 
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index fd7f943..931a311 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -55,6 +55,8 @@
+ 
+ #define HCLGE_LINK_STATUS_MS	10
+ 
++#define HCLGE_VF_VPORT_START_NUM	1
++
+ static int hclge_set_mac_mtu(struct hclge_dev *hdev, int new_mps);
+ static int hclge_init_vlan_config(struct hclge_dev *hdev);
+ static void hclge_sync_vlan_filter(struct hclge_dev *hdev);
+@@ -1633,6 +1635,7 @@ static int hclge_alloc_vport(struct hclge_dev *hdev)
+ 	for (i = 0; i < num_vport; i++) {
+ 		vport->back = hdev;
+ 		vport->vport_id = i;
++		vport->vf_info.link_state = IFLA_VF_LINK_STATE_AUTO;
+ 		vport->mps = HCLGE_MAC_DEFAULT_FRAME;
+ 		vport->port_base_vlan_cfg.state = HNAE3_PORT_BASE_VLAN_DISABLE;
+ 		vport->rxvlan_cfg.rx_vlan_offload_en = true;
+@@ -2853,6 +2856,58 @@ static int hclge_get_status(struct hnae3_handle *handle)
+ 	return hdev->hw.mac.link;
+ }
+ 
++static struct hclge_vport *hclge_get_vf_vport(struct hclge_dev *hdev, int vf)
++{
++	if (pci_num_vf(hdev->pdev) == 0) {
++		dev_err(&hdev->pdev->dev,
++			"SRIOV is disabled, can not get vport(%d) info.\n", vf);
++		return NULL;
++	}
++
++	if (vf < 0 || vf >= pci_num_vf(hdev->pdev)) {
++		dev_err(&hdev->pdev->dev,
++			"vf id(%d) is out of range(0 <= vfid < %d)\n",
++			vf, pci_num_vf(hdev->pdev));
++		return NULL;
++	}
++
++	/* VF start from 1 in vport */
++	vf += HCLGE_VF_VPORT_START_NUM;
++	return &hdev->vport[vf];
++}
++
++static int hclge_get_vf_config(struct hnae3_handle *handle, int vf,
++			       struct ifla_vf_info *ivf)
++{
++	struct hclge_vport *vport = hclge_get_vport(handle);
++	struct hclge_dev *hdev = vport->back;
++
++	vport = hclge_get_vf_vport(hdev, vf);
++	if (!vport)
++		return -EINVAL;
++
++	ivf->vf = vf;
++	ivf->linkstate = vport->vf_info.link_state;
++	ether_addr_copy(ivf->mac, vport->vf_info.mac);
++
++	return 0;
++}
++
++static int hclge_set_vf_link_state(struct hnae3_handle *handle, int vf,
++				   int link_state)
++{
++	struct hclge_vport *vport = hclge_get_vport(handle);
++	struct hclge_dev *hdev = vport->back;
++
++	vport = hclge_get_vf_vport(hdev, vf);
++	if (!vport)
++		return -EINVAL;
++
++	vport->vf_info.link_state = link_state;
++
++	return 0;
++}
++
+ static u32 hclge_check_event_cause(struct hclge_dev *hdev, u32 *clearval)
+ {
+ 	u32 rst_src_reg, cmdq_src_reg, msix_src_reg;
+@@ -10152,6 +10207,8 @@ static const struct hnae3_ae_ops hclge_ops = {
+ 	.mac_connect_phy = hclge_mac_connect_phy,
+ 	.mac_disconnect_phy = hclge_mac_disconnect_phy,
+ 	.restore_vlan_table = hclge_restore_vlan_table,
++	.get_vf_config = hclge_get_vf_config,
++	.set_vf_link_state = hclge_set_vf_link_state,
+ };
+ 
+ static struct hnae3_ae_algo ae_algo = {
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+index 3e9574a..6a3ccda 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+@@ -885,6 +885,11 @@ struct hclge_port_base_vlan_config {
+ 	struct hclge_vlan_info vlan_info;
+ };
+ 
++struct hclge_vf_info {
++	int link_state;
++	u8 mac[ETH_ALEN];
++};
++
+ struct hclge_vport {
+ 	u16 alloc_tqps;	/* Allocated Tx/Rx queues */
+ 
+@@ -916,6 +921,7 @@ struct hclge_vport {
+ 	unsigned long state;
+ 	unsigned long last_active_jiffies;
+ 	u32 mps; /* Max packet size */
++	struct hclge_vf_info vf_info;
+ 
+ 	struct list_head uc_mac_list;   /* Store VF unicast table */
+ 	struct list_head mc_mac_list;   /* Store VF multicast table */
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
+index f5da28a..b842291 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
+@@ -428,6 +428,9 @@ static int hclge_get_vf_media_type(struct hclge_vport *vport,
+ static int hclge_get_link_info(struct hclge_vport *vport,
+ 			       struct hclge_mbx_vf_to_pf_cmd *mbx_req)
+ {
++#define HCLGE_VF_LINK_STATE_UP		1U
++#define HCLGE_VF_LINK_STATE_DOWN	0U
++
+ 	struct hclge_dev *hdev = vport->back;
+ 	u16 link_status;
+ 	u8 msg_data[8];
+@@ -435,7 +438,19 @@ static int hclge_get_link_info(struct hclge_vport *vport,
+ 	u16 duplex;
+ 
+ 	/* mac.link can only be 0 or 1 */
+-	link_status = (u16)hdev->hw.mac.link;
++	switch (vport->vf_info.link_state) {
++	case IFLA_VF_LINK_STATE_ENABLE:
++		link_status = HCLGE_VF_LINK_STATE_UP;
++		break;
++	case IFLA_VF_LINK_STATE_DISABLE:
++		link_status = HCLGE_VF_LINK_STATE_DOWN;
++		break;
++	case IFLA_VF_LINK_STATE_AUTO:
++	default:
++		link_status = (u16)hdev->hw.mac.link;
++		break;
++	}
++
+ 	duplex = hdev->hw.mac.duplex;
+ 	memcpy(&msg_data[0], &link_status, sizeof(u16));
+ 	memcpy(&msg_data[2], &hdev->hw.mac.speed, sizeof(u32));
 -- 
-2.20.1
+2.7.4
 
