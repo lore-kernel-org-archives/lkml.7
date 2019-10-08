@@ -7,197 +7,155 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F33C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 867B7C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA2EF2173B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:12:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FA44206BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:17:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Trn1r5D9"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nm7OjTKL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730207AbfJHKMC (ORCPT
+        id S1730106AbfJHKRY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 06:12:02 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42752 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728866AbfJHKMB (ORCPT
+        Tue, 8 Oct 2019 06:17:24 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:50719 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729790AbfJHKRY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 06:12:01 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q12so10495277pff.9
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 03:12:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oJBL7qyzxoDJRRddYXK54hndGf2KGEetfbRWryMKt2E=;
-        b=Trn1r5D9cGQW5wjoTVdST1Vr+Nt4P4YpIV2bWoatnDDPis7Dy9jpi4NP/IkdP5+fej
-         ZbRZqPfICPJGzhNgYmI6sibzynWOpiZ5k2L0YfGRG0X9mDpgl5puTbYLT5nXIT88PR7n
-         VBfHcTrONdTja6s5V1shQdAHCQFgGN8IIegi8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oJBL7qyzxoDJRRddYXK54hndGf2KGEetfbRWryMKt2E=;
-        b=PL3zJoe6ajlNtomuOSUbZ4eCmaNwDm3djd4KULhZgFi2CUVbCUGu4snrnY1ADRBItH
-         YNhlrXEQtLxYSFpCLdwu1iKxyM8/U44VUoHdgnT/+3pOKWO4dRxW0JJME9U1RYmBZxMb
-         KzhIN5rmBR4ydDhsvwueXdZ3QKLynt0OeFLytK4F9ofPdJPSa4gPNxvr5z8BrphctEwB
-         DUzJjQ4OcwzzCYCf9faYkmD1Wk44BUdqBarffiJGXYyzY7zYXeAqmoD9hvl1zqDT2MWw
-         1hOjdHQ6G0FwQvvmJPQk/w3XjtFNkyZYlAM8JljII63gSmSL0JVVLiEICb+66NEW29fV
-         j3Aw==
-X-Gm-Message-State: APjAAAVpobmQ1Nc06R2mfhXrcKGCaChXNNg95Mi4t/RnNjPsa7dCgW7p
-        mFexbK7SSh4MFqbWXdXYAPRJ1NR4wo8=
-X-Google-Smtp-Source: APXvYqwuL/NpT53t//3HEQqYcM39S9q70cMotyVyM1K2EG7T0EBBhKzkMC/651IeZcvTwB6aGwIs8A==
-X-Received: by 2002:a63:e5c:: with SMTP id 28mr35543545pgo.133.1570529519761;
-        Tue, 08 Oct 2019 03:11:59 -0700 (PDT)
-Received: from localhost ([2401:fa00:1:10:79b4:bd83:e4a5:a720])
-        by smtp.gmail.com with ESMTPSA id t3sm1894936pje.7.2019.10.08.03.11.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Oct 2019 03:11:58 -0700 (PDT)
-From:   Cheng-Yi Chiang <cychiang@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     alsa-devel@alsa-project.org, Guenter Roeck <linux@roeck-us.net>,
-        Hung-Te Lin <hungte@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Shuming Fan <shumingf@realtek.com>,
-        sathya.prakash.m.r@intel.com,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Cheng-Yi Chiang <cychiang@chromium.org>, dgreid@chromium.org,
-        tzungbi@chromium.org
-Subject: [PATCH v2] firmware: vpd: Add an interface to read VPD value
-Date:   Tue,  8 Oct 2019 18:11:44 +0800
-Message-Id: <20191008101144.39342-1-cychiang@chromium.org>
-X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 8 Oct 2019 06:17:24 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20191008101721euoutp018e9aa1af31f071803d1a05054f8b2214~LpJHdmC_t2380023800euoutp01w
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Oct 2019 10:17:21 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20191008101721euoutp018e9aa1af31f071803d1a05054f8b2214~LpJHdmC_t2380023800euoutp01w
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1570529841;
+        bh=1+wZF/yU9WuHHeCcFGJivWrHNea0iGZi/g3TN9MHMQQ=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=nm7OjTKL2jIZ17MS8Abj8htkibYpqdqRN0ySelF9tMGmbhnKj7uv8jA1q4H2s4qqf
+         +OvKfqpuJpUkjxUkgyrE3BP9Fmb5kdoBWDhDrfHRuJY5TZ3aPEiovXfd+ZW0T5MpmB
+         h7L0pB3Du9khHUApYRoy9dH4pmB94kohYarbSO8k=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20191008101721eucas1p1959717783bc3f42f1083c985297e554d~LpJHCsV5Q1445114451eucas1p1D;
+        Tue,  8 Oct 2019 10:17:21 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id F6.47.04469.0326C9D5; Tue,  8
+        Oct 2019 11:17:20 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20191008101720eucas1p2e0d1bca6e696848bf689067e05620679~LpJGmXLmf1974719747eucas1p2b;
+        Tue,  8 Oct 2019 10:17:20 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191008101720eusmtrp1356238c80a62f8bf1e2d8fd7539fd755~LpJGltx-A2547325473eusmtrp1E;
+        Tue,  8 Oct 2019 10:17:20 +0000 (GMT)
+X-AuditID: cbfec7f2-569ff70000001175-2b-5d9c6230050c
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 11.AE.04166.0326C9D5; Tue,  8
+        Oct 2019 11:17:20 +0100 (BST)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191008101719eusmtip26fec61e9f7b9e5ce9dfb2afff62043ab~LpJGFA3Rj0176301763eusmtip2L;
+        Tue,  8 Oct 2019 10:17:19 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Dmitry Osipenko <digetx@gmail.com>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-samsung-soc@vger.kernel.org
+Subject: [PATCH] regulator: core: Skip balancing of the enabled regulators
+ in regulator_enable()
+Date:   Tue,  8 Oct 2019 12:17:09 +0200
+Message-Id: <20191008101709.13827-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrBIsWRmVeSWpSXmKPExsWy7djPc7oGSXNiDZa+s7LYOGM9q8XUh0/Y
+        LFZ/fMxocf78BnaLB3NvMll8u9LBZHF51xw2ixnn9zFZrD1yl92B02PnrLvsHptWdbJ59P81
+        8OjbsorR4/MmuQDWKC6blNSczLLUIn27BK6Mlg+3WQpOC1bM/fSQsYHxCV8XIyeHhICJxM0P
+        z9m6GLk4hARWMEq8+HyPGSQhJPCFUWLBDXaIxGdGib/v1zHCdCy785cFIrGcUaL59QEmCAeo
+        41L/OlaQKjYBQ4mut11sILaIQLrE2vdbwYqYBRqYJF5f/gy2Q1ggSWLOqtVgY1kEVCVuLTgO
+        1swrYCsxo/EN1Dp5idUbDjCDNEsIPGeT+LV3JwtEwkVide8hVghbWOLV8S3sELaMxOnJPSwQ
+        Dc2MEg/PrWWHcHoYJS43zYAaay1x+PhFoG4OoJs0Jdbv0gcxJQQcJVrWpECYfBI33gqCFDMD
+        mZO2TWeGCPNKdLQJQcxQk5h1fB3c1oMXLjFD2B4SX37sY4UEY6zEhX0vmCYwys1CWLWAkXEV
+        o3hqaXFuemqxYV5quV5xYm5xaV66XnJ+7iZGYHo4/e/4px2MXy8lHWIU4GBU4uEt0J0dK8Sa
+        WFZcmXuIUYKDWUmEV27pjFgh3pTEyqrUovz4otKc1OJDjNIcLErivNUMD6KFBNITS1KzU1ML
+        UotgskwcnFINjFl5C7+fFrMrLDmTapWx90vCrsm84nsLF1VnMFQ9WPP5qc/p1/vueTxV+PK3
+        6lGlgobsl0ma+ywz/L+krrj58ahy049vLM6Lz0//aN5kYr2l5dAfqedlAXXC3Ee0GE63r9ih
+        /oZJquC+4juf7YdvhVX1aZhbXdt9LMx29yfZI91iNSeqprxPXKnEUpyRaKjFXFScCACIRwL/
+        CwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrHLMWRmVeSWpSXmKPExsVy+t/xe7oGSXNiDQ7fkbbYOGM9q8XUh0/Y
+        LFZ/fMxocf78BnaLB3NvMll8u9LBZHF51xw2ixnn9zFZrD1yl92B02PnrLvsHptWdbJ59P81
+        8OjbsorR4/MmuQDWKD2bovzSklSFjPziElulaEMLIz1DSws9IxNLPUNj81grI1MlfTublNSc
+        zLLUIn27BL2Mlg+3WQpOC1bM/fSQsYHxCV8XIyeHhICJxLI7f1lAbCGBpYwSOy8nQsRlJE5O
+        a2CFsIUl/lzrYuti5AKq+cQocfXJbiaQBJuAoUTXW5AEJ4eIQKbE+j1NLCBFzAItTBKz/l8A
+        SwgLJEjsvzmbEcRmEVCVuLXgONhUXgFbiRmNbxghNshLrN5wgHkCI88CRoZVjCKppcW56bnF
+        hnrFibnFpXnpesn5uZsYgWG57djPzTsYL20MPsQowMGoxMNboDs7Vog1say4MvcQowQHs5II
+        r9zSGbFCvCmJlVWpRfnxRaU5qcWHGE2Blk9klhJNzgfGTF5JvKGpobmFpaG5sbmxmYWSOG+H
+        wMEYIYH0xJLU7NTUgtQimD4mDk6pBsbmrKycucw57czHbBW1t9ucutNr+eHFzqJbLtK1v15/
+        nL/1ZMrRtaY/W744S3kv3CZ36gHzjKjs/eVi2/o1Xor4/xe2zVlae3Xi4YwqMTH5G8Fa0+8W
+        9ryotTxV/vWH1KPeiz9/NvpeO77a1GB97eGnl05rehlPyFQvkni37oKICdudB6f2T5RXYinO
+        SDTUYi4qTgQA/D4bhmECAAA=
+X-CMS-MailID: 20191008101720eucas1p2e0d1bca6e696848bf689067e05620679
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191008101720eucas1p2e0d1bca6e696848bf689067e05620679
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191008101720eucas1p2e0d1bca6e696848bf689067e05620679
+References: <CGME20191008101720eucas1p2e0d1bca6e696848bf689067e05620679@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an interface for other driver to query VPD value.
-This will be used for ASoC machine driver to query calibration
-data stored in VPD for smart amplifier speaker resistor
-calibration.
+Commit f8702f9e4aa7 ("regulator: core: Use ww_mutex for regulators
+locking"), regardless of the subject, added additional call to
+regulator_balance_voltage() during regulator_enable(). This is basically
+a good idea, however it causes some issue for the regulators which are
+already enabled at boot and are critical for system operation (for example
+provides supply to the CPU).
 
-The example usage in ASoC machine driver is like:
+CPUfreq or other drivers typically call regulator_enable() on such
+regulators during their probe, although the regulators are already enabled
+by bootloader. The mentioned patch however added a call to
+regulator_balance_voltage(), what in case of system boot, where no
+additional requirements are set yet, typically causes to limit the voltage
+to the minimal value defined at regulator constraints. This causes a crash
+of the system when voltage on the CPU regulator is set to the lowest
+possible value without adjusting the operation frequency. Fix this by
+adding a check if regulator is already enabled - if so, then skip the
+balancing procedure. The voltage will be balanced later anyway once the
+required voltage value is requested.
 
-#define DSM_CALIB_KEY "dsm_calib"
-static int load_calibration_data(struct cml_card_private *ctx) {
-    char *data = NULL;
-    int ret;
-    u32 value_len;
-
-    /* Read calibration data from VPD. */
-    ret = vpd_attribute_read(1, DSM_CALIB_KEY,
-                            (u8 **)&data, &value_len);
-
-    /* Parsing of this string...*/
-}
-
-
-Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+Fixes: f8702f9e4aa7 ("regulator: core: Use ww_mutex for regulators locking")
+Reported-by: "kernelci.org bot" <bot@kernelci.org>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 ---
-Change from v1 to v2:
-- Use kmemdup to copy data.
-- Set value_len according to bin_attr.size.
-- Check return value of kmemdup.
-- Rename the function to vpd_attribute_read.
-- Add docstrings for the function.
-- Returns -ENOENT when the key is not found.
-- Use EXPORT_SYMBOL_GPL.
+This patch fixes enabling coupled requlators on Exynos5800-based Peach-Pi
+board done by the following patch:
+https://patchwork.kernel.org/patch/11172427/
+Once it has been applied, the following issue has been reported:
+https://patchwork.kernel.org/patch/11176661/
+---
+ drivers/regulator/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Note:
-
-The user of this API is in ASoC machine driver cml_rt1011_rt5682.
-It is pending on the initial machine driver change
-
-https://patchwork.kernel.org/patch/11161145/
-
-and the codec driver change to provide API to do calibration.
-
-https://patchwork.kernel.org/patch/11179237/
-
-The draft patch of machine driver change which uses this API is at
-
-https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1838091
-
-
-
- drivers/firmware/google/vpd.c              | 31 ++++++++++++++++++++++
- include/linux/firmware/google/google_vpd.h | 18 +++++++++++++
- 2 files changed, 49 insertions(+)
- create mode 100644 include/linux/firmware/google/google_vpd.h
-
-diff --git a/drivers/firmware/google/vpd.c b/drivers/firmware/google/vpd.c
-index db0812263d46..c2be0e756402 100644
---- a/drivers/firmware/google/vpd.c
-+++ b/drivers/firmware/google/vpd.c
-@@ -65,6 +65,37 @@ static ssize_t vpd_attrib_read(struct file *filp, struct kobject *kobp,
- 				       info->bin_attr.size);
- }
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index afe94470b67f..aca74b83f3bc 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -2481,7 +2481,8 @@ static int _regulator_enable(struct regulator *regulator)
+ 	}
  
-+/**
-+ *	vpd_attribute_read - Read VPD value for a key.
-+ *	@ro: True for RO section. False for RW section.
-+ *	@key: A string for key.
-+ *	@value: Where to write the VPD value on success. The caller
-+ *	        must free the memory.
-+ *	@value_len: The length of value in bytes.
-+ *
-+ *	Returns 0 on success, -ENOENT when the key is not found, and
-+ *	-ENOMEM when failed to allocate memory for value.
-+ */
-+int vpd_attribute_read(bool ro, const char *key,
-+		       u8 **value, u32 *value_len)
-+{
-+	struct vpd_attrib_info *info;
-+	struct vpd_section *sec = ro ? &ro_vpd : &rw_vpd;
-+
-+	list_for_each_entry(info, &sec->attribs, list) {
-+		if (strcmp(info->key, key) == 0) {
-+			*value = kmemdup(info->value, info->bin_attr.size,
-+					 GFP_KERNEL);
-+			if (!*value)
-+				return -ENOMEM;
-+			*value_len = info->bin_attr.size;
-+			return 0;
-+		}
-+	}
-+	return -ENOENT;
-+}
-+EXPORT_SYMBOL_GPL(vpd_attribute_read);
-+
- /*
-  * vpd_section_check_key_name()
-  *
-diff --git a/include/linux/firmware/google/google_vpd.h b/include/linux/firmware/google/google_vpd.h
-new file mode 100644
-index 000000000000..4364eaa4e1e3
---- /dev/null
-+++ b/include/linux/firmware/google/google_vpd.h
-@@ -0,0 +1,18 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Google VPD interface.
-+ *
-+ * Copyright 2019 Google Inc.
-+ */
-+
-+/* Interface for reading VPD value on Chrome platform. */
-+
-+#ifndef __GOOGLE_VPD_H
-+#define __GOOGLE_VPD_H
-+
-+#include <linux/types.h>
-+
-+int vpd_attribute_read(bool ro, const char *key,
-+		       u8 **value, u32 *value_len);
-+
-+#endif  /* __GOOGLE_VPD_H */
+ 	/* balance only if there are regulators coupled */
+-	if (rdev->coupling_desc.n_coupled > 1) {
++	if (rdev->coupling_desc.n_coupled > 1 &&
++	    !_regulator_is_enabled(rdev)) {
+ 		ret = regulator_balance_voltage(rdev, PM_SUSPEND_ON);
+ 		if (ret < 0)
+ 			goto err_disable_supply;
 -- 
-2.23.0.581.g78d2f28ef7-goog
+2.17.1
 
