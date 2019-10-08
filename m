@@ -2,93 +2,92 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA64C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 23:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DFBC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 23:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51C3321721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 23:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41D4B20873
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 23:02:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="ZFzM3Avg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729725AbfJHXBK (ORCPT
+        id S1729730AbfJHXCg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 19:01:10 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:52126 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727769AbfJHXBI (ORCPT
+        Tue, 8 Oct 2019 19:02:36 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:37754 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726068AbfJHXCf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 19:01:08 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id C0F9D28D5F1
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     linux-rockchip@lists.infradead.org,
-        =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
-        Sandy Huang <hjc@rock-chips.com>, kernel@collabora.com,
-        Sean Paul <seanpaul@chromium.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Ilia Mirkin <imirkin@alum.mit.edu>,
-        Rob Herring <robh+dt@kernel.org>,
+        Tue, 8 Oct 2019 19:02:35 -0400
+Received: by mail-qk1-f194.google.com with SMTP id u184so473806qkd.4
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 16:02:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=FMMLRXtAe40zCMcCtxvdP8i9kT/PLF62chlFdNDSpa8=;
+        b=ZFzM3Avgh1nIZ9kRcYhwKQbctGHGKBEN6jhP8dxhduJ+4EPcJfdb2kEs36EGwPKTgY
+         GDu8aQ/hL/5/0pTwv3fuQIb7NEH80mv1qvtHUPcsc7IUlxs5BVnnMg1tTykwNYvNgV8e
+         U6cvjWUrJCi32I4kQ9et1ar15nltNXj7yQLsGBAHP5fONJlcWrRWecoAIR0PCwqx/fah
+         AohsRSAmEUBkgvOT6hpYM+z0EAqfUnvZowytJBkjh18ZY1GnBTSZJ5Jm4uRphbNrAzgv
+         0249cyY1Six4SoTA371Mti6zSmwExvlG7oCD2Xv9qNzjaPKZVK7C7/2o2RoBWuVuYZO7
+         CgOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=FMMLRXtAe40zCMcCtxvdP8i9kT/PLF62chlFdNDSpa8=;
+        b=hhz562IfrMm9YXiq5g0EQOqE040VyDLSLKPCQD7/yaN4qlAG4J6iawML7UH+dfPvbp
+         u+xyI5n8vcwL1V2rwzZfeFyMsTP2cdJrTKK7p8oh0Yg85vsi6bw8UCKhrRSDmbYVUeUh
+         /bMTEouoOHSGKhrMWUrSThFk+t78bY9VLuKbnMb0fdqDNKYZTyCwLyU4BHKtH6Ai7uSt
+         7vQBFx8KK8BoEvO4OHVxfAd/h8mYYBeTDgS6icEkjJarh7nu0yT0wBr9cntczxVavNdt
+         VpJaUeiSGrVH4nnfHRaJCUuwzWINmyyyun3d4Ofcd/iUwllBDCzaDeVmzRSvh2b1nvQu
+         nKpg==
+X-Gm-Message-State: APjAAAW9EhxMDDxysxBRwszBFotWDtwupEnyPrfTBvpsYpkHqnOJlDd4
+        NHPvkQysjEoJtrpfMLSU8Gw54w==
+X-Google-Smtp-Source: APXvYqxvRqb+z5HpoQj48byKYFHJWFucwPuLS22/dDgDrpAZfGfXzGsk3d6nAPeBA6lls6A278C1Zg==
+X-Received: by 2002:a37:a646:: with SMTP id p67mr569346qke.489.1570575754654;
+        Tue, 08 Oct 2019 16:02:34 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id a19sm204875qtc.58.2019.10.08.16.02.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Oct 2019 16:02:34 -0700 (PDT)
+Date:   Tue, 8 Oct 2019 16:02:22 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     MarkLee <Mark-MC.Lee@mediatek.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Sean Wang <sean.wang@mediatek.com>,
+        John Crispin <john@phrozen.org>,
+        Nelson Chang <nelson.chang@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH v4 3/3] ARM: dts: rockchip: Add RK3288 VOP gamma LUT address
-Date:   Tue,  8 Oct 2019 20:00:38 -0300
-Message-Id: <20191008230038.24037-4-ezequiel@collabora.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20191008230038.24037-1-ezequiel@collabora.com>
-References: <20191008230038.24037-1-ezequiel@collabora.com>
+        Rene van Dorst <opensource@vdorst.com>,
+        <devicetree@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net,v2 0/2] Update MT7629 to support PHYLINK API
+Message-ID: <20191008160222.0bdb7f47@cakuba.netronome.com>
+In-Reply-To: <20191007070844.14212-1-Mark-MC.Lee@mediatek.com>
+References: <20191007070844.14212-1-Mark-MC.Lee@mediatek.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RK3288 SoC VOPs have optional support Gamma LUT setting,
-which requires specifying the Gamma LUT address in the devicetree.
+On Mon, 7 Oct 2019 15:08:42 +0800, MarkLee wrote:
+> This patch target to update mt7629 eth driver and dts to support PHYLINK
 
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
----
-Changes from v3:
-* None.
-Changes from v2:
-* None.
-Changes from v1:
-* Drop reg-names, as suggested by Doug.
----
- arch/arm/boot/dts/rk3288.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index cc893e154fe5..c6fc633ace80 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -1023,7 +1023,7 @@
- 
- 	vopb: vop@ff930000 {
- 		compatible = "rockchip,rk3288-vop";
--		reg = <0x0 0xff930000 0x0 0x19c>;
-+		reg = <0x0 0xff930000 0x0 0x19c>, <0x0 0xff931000 0x0 0x1000>;
- 		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&cru ACLK_VOP0>, <&cru DCLK_VOP0>, <&cru HCLK_VOP0>;
- 		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
-@@ -1073,7 +1073,7 @@
- 
- 	vopl: vop@ff940000 {
- 		compatible = "rockchip,rk3288-vop";
--		reg = <0x0 0xff940000 0x0 0x19c>;
-+		reg = <0x0 0xff940000 0x0 0x19c>, <0x0 0xff941000 0x0 0x1000>;
- 		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&cru ACLK_VOP1>, <&cru DCLK_VOP1>, <&cru HCLK_VOP1>;
- 		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
--- 
-2.22.0
-
+Thanks for the patches Mark. The description of the set should probably
+say that it _fixes_ some issues. Right now it sounds a little bit like
+you were adding a new feature. Could you rewrite the cover letter to
+give us a better idea what issues this patch set is fixing and why
+those issues occur?
