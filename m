@@ -2,176 +2,176 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7133ECE58D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 03:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D81D8ECE58D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 03:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 866B520867
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 03:29:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A33F320867
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 03:29:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Bqopbd1f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729935AbfJHD3Q (ORCPT
+        id S1729962AbfJHD3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 23:29:16 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:50270 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729772AbfJHD3Q (ORCPT
+        Mon, 7 Oct 2019 23:29:37 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:43094 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729772AbfJHD3h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 23:29:16 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iHgBU-0008EB-JK; Tue, 08 Oct 2019 03:29:13 +0000
-Date:   Tue, 8 Oct 2019 04:29:12 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to
- unsafe_put_user()
-Message-ID: <20191008032912.GQ26530@ZenIV.linux.org.uk>
-References: <20191006222046.GA18027@roeck-us.net>
- <CAHk-=wgrqwuZJmwbrjhjCFeSUu2i57unaGOnP4qZAmSyuGwMZA@mail.gmail.com>
- <CAHk-=wjRPerXedTDoBbJL=tHBpH+=sP6pX_9NfgWxpnmHC5RtQ@mail.gmail.com>
- <5f06c138-d59a-d811-c886-9e73ce51924c@roeck-us.net>
- <CAHk-=whAQWEMADgxb_qAw=nEY4OnuDn6HU4UCSDMNT5ULKvg3g@mail.gmail.com>
- <20191007012437.GK26530@ZenIV.linux.org.uk>
- <CAHk-=whKJfX579+2f-CHc4_YmEmwvMe_Csr0+CPfLAsSAdfDoA@mail.gmail.com>
- <20191007025046.GL26530@ZenIV.linux.org.uk>
- <CAHk-=whraNSys_Lj=Ut1EA=CJEfw2Uothh+5-WL+7nDJBegWcQ@mail.gmail.com>
- <CAHk-=witTXMGsc9ZAK4hnKnd_O7u8b1eiou-6cfjt4aOcWvruQ@mail.gmail.com>
+        Mon, 7 Oct 2019 23:29:37 -0400
+Received: by mail-ed1-f68.google.com with SMTP id r9so14314143edl.10
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 20:29:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EvafDVJviid1Lod+sDu0bEw60oGKxGZ5GVF0o7ApXbk=;
+        b=Bqopbd1fSDtzVkQJrSaKPt8f5oWAzVJy4oUD3Au2A8ZU2xbsPXki7QEQ6F8ZTZSZHz
+         V2zz9TR2KCF5Ma3jlofSqdC+ChNfxdcaa07+hMltQlqqZRRE21I+gpOzAJJLkuhBAzq5
+         rZ5Z0ip3O/EYiXMt0uDz40T+TuPpnGDBil6u4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EvafDVJviid1Lod+sDu0bEw60oGKxGZ5GVF0o7ApXbk=;
+        b=Ps8T5WombfWzWVlRi/akqAoOcdQw9PwN4dp5dTHCY5JjuovzNWywiTbRPMyZqwSp9I
+         FwY7+os5y+2aZYjv42EwikbQhfMUG2Z0GRehttgxbcz7c0YSt2Qf0orie8to6zcbk1tE
+         XWQJBSNH8X5iugMBi3nvQpyprnzpx9G5p1OZZKEaA++gv5oV4BTWn2YbuoA473aIQjhF
+         5ENewnUYuxEpkP0iw9pJfpd9tZ2cwopZ0vjm45dc6VbKO/hCUjaIXmp5B/ORBPgJb3Nu
+         V+VjdwrhN5kPOBKIuf2TxF2j2gr5WjNmRQ8G7H6GvQQLV5goaSTNyFZMkpoc/HWv3JlD
+         ETDA==
+X-Gm-Message-State: APjAAAVj7y31Bx0lVFN3NZqtCS/sEWq/gnuTZ50mfRsTLf2iY/bF+kDP
+        Fzoq66lmrv8fIHTpartFDtWbHH86dCgwPQ==
+X-Google-Smtp-Source: APXvYqxE3+eYn6cxUc5jnO4MVZyt76S58DMKZoFM19NYtMzmyac2dhG0upCyDOIXl5ei/PhuXt/CXg==
+X-Received: by 2002:a17:906:b742:: with SMTP id fx2mr27079848ejb.205.1570505374999;
+        Mon, 07 Oct 2019 20:29:34 -0700 (PDT)
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com. [209.85.128.48])
+        by smtp.gmail.com with ESMTPSA id bq13sm2100472ejb.25.2019.10.07.20.29.34
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Oct 2019 20:29:34 -0700 (PDT)
+Received: by mail-wm1-f48.google.com with SMTP id 3so1474127wmi.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 20:29:34 -0700 (PDT)
+X-Received: by 2002:a1c:a516:: with SMTP id o22mr1979936wme.116.1570505374139;
+ Mon, 07 Oct 2019 20:29:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=witTXMGsc9ZAK4hnKnd_O7u8b1eiou-6cfjt4aOcWvruQ@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191007174505.10681-1-ezequiel@collabora.com>
+ <20191007174505.10681-4-ezequiel@collabora.com> <HE1PR06MB4011204B3FC2DAABB4BD1BACAC9B0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+In-Reply-To: <HE1PR06MB4011204B3FC2DAABB4BD1BACAC9B0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Tue, 8 Oct 2019 12:29:22 +0900
+X-Gmail-Original-Message-ID: <CAAFQd5BEPO3nicr1PzRNWoVEzsvKvv5AkqoMVh2AG7qST+bZdA@mail.gmail.com>
+Message-ID: <CAAFQd5BEPO3nicr1PzRNWoVEzsvKvv5AkqoMVh2AG7qST+bZdA@mail.gmail.com>
+Subject: Re: [PATCH v2 for 5.4 3/4] media: hantro: Fix motion vectors usage condition
+To:     Jonas Karlman <jonas@kwiboo.se>
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "kernel@collabora.com" <kernel@collabora.com>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        "fbuergisser@chromium.org" <fbuergisser@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 11:26:35AM -0700, Linus Torvalds wrote:
+Hi Jonas,
 
-> But on x86, if we move the STAC/CLAC out of the low-level copy
-> routines and into the callers, we'll have a _lot_ of churn. I thought
-> it would be mostly a "teach objtool" thing, but we have lots of
-> different versions of it. Not just the 32-bit vs 64-bit, it's embedded
-> in all the low-level asm implementations.
-> 
-> And we don't want the regular "copy_to/from_user()" to then have to
-> add the STAC/CLAC at the call-site. So then we'd want to un-inline
-> copy_to_user() entirely.
+On Tue, Oct 8, 2019 at 3:33 AM Jonas Karlman <jonas@kwiboo.se> wrote:
+>
+> On 2019-10-07 19:45, Ezequiel Garcia wrote:
+> > From: Francois Buergisser <fbuergisser@chromium.org>
+> >
+> > The setting of the motion vectors usage and the setting of motion
+> > vectors address are currently done under different conditions.
+> >
+> > When decoding pre-recorded videos, this results of leaving the motion
+> > vectors address unset, resulting in faulty memory accesses. Fix it
+> > by using the same condition everywhere, which matches the profiles
+> > that support motion vectors.
+>
+> This does not fully match hantro sdk:
+>
+>   enable direct MV writing and POC tables for high/main streams.
+>   enable it also for any "baseline" stream which have main/high tools enabled.
+>
+>   (sps->profile_idc > 66 && sps->constrained_set0_flag == 0) ||
+>   sps->frame_mbs_only_flag != 1 ||
+>   sps->chroma_format_idc != 1 ||
+>   sps->scaling_matrix_present_flag != 0 ||
+>   pps->entropy_coding_mode_flag != 0 ||
+>   pps->weighted_pred_flag != 0 ||
+>   pps->weighted_bi_pred_idc != 0 ||
+>   pps->transform8x8_flag != 0 ||
+>   pps->scaling_matrix_present_flag != 0
 
-For x86?  Sure, why not...  Note, BTW, that for short constant-sized
-copies we *do* STAC/CLAC at the call site - see those
-		__uaccess_begin_nospec();
-in raw_copy_{from,to}_user() in the switches...
+Thanks for double checking this. I can confirm that it's what Hantro
+SDK does indeed.
 
-> Which all sounds like a really good idea, don't get me wrong. I think
-> we inline it way too aggressively now. But it'sa  _big_ job.
-> 
-> So we probably _should_
-> 
->  - remove INLINE_COPY_TO/FROM_USER
-> 
->  - remove all the "small constant size special cases".
-> 
->  - make "raw_copy_to/from_user()" have the "unsafe" semantics and make
-> the out-of-line copy in lib/usercopy.c be the only real interface
-> 
->  - get rid of a _lot_ of oddities
+However, would a stream with sps->profile_idc <= 66 and those other
+conditions met be still a compliant stream?
 
-Not that many, really.  All we need is a temporary cross-architecture
-__uaccess_begin_nospec(), so that __copy_{to,from}_user() could have
-that used, instead of having it done in (x86) raw_copy_..._...().
+>
+> Above check is used when DIR_MV_BASE should be written.
+> And WRITE_MVS_E is set to nal_ref_idc != 0 when above is true.
+>
+> I think it may be safer to always set DIR_MV_BASE and keep the existing nal_ref_idc check for WRITE_MVS_E.
 
-Other callers of raw_copy_...() would simply wrap it into user_access_begin()/
-user_access_end() pairs; this kludge is needed only in __copy_from_user()
-and __copy_to_user(), and only until we kill their callers outside of
-arch/*.  Which we can do, in a cycle or two.  _ANY_ use of
-that temporary kludge outside of those two functions will be grepped
-for and LARTed into the ground.
+That might have a performance penalty or some other side effects,
+though. Otherwise Hantro SDK wouldn't have enable it conditionally.
 
-> I hope you prove me wrong. But I'll look at a smaller change to just
-> make x86 use the current special copy loop (as
-> "unsafe_copy_to_user()") and have everybody else do the trivial
-> wrapper.
-> 
-> Because we definitely should do that cleanup (it also fixes the whole
-> "atomic copy in kernel space" issue that you pointed to that doesn't
-> actually want STAC/CLAC at all), but it just looks fairly massive to
-> me.
+> (That is what I did in my "media: hantro: H264 fixes and improvements" series, v2 is incoming)
+> Or have you found any video that is having issues in such case?
 
-AFAICS, it splits nicely.
+We've been running the code with sps->profile_idc > 66 in production
+for 4 years and haven't seen any reports of a stream that wasn't
+decoded correctly.
 
-1) cross-architecture user_access_begin_dont_use(): on everything
-except x86 it's empty, on x86 - __uaccess_begin_nospec().
+If we decide to go with a different behavior, I'd suggest thoroughly
+verifying the behavior on a big number of streams, including some
+performance measurements.
 
-2) stac/clac lifted into x86 raw_copy_..._user() out of
-copy_user_generic_unrolled(), copy_user_generic_string() and
-copy_user_enhanced_fast_string().  Similar lift out of
-__copy_user_nocache().
+Best regards,
+Tomasz
 
-3) lifting that thing as user_access_begin_dont_use() into
-__copy_..._user...() and as user_access_begin() into other
-generic callers, consuming access_ok() in the latter.
-__copy_to_user_inatomic() can die at the same stage.
-
-4) possibly uninlining on x86 (and yes, killing the special
-size handling off).  We don't need to touch the inlining
-decisions for any other architectures.
-
-At that point raw_copy_to_user() is available for e.g.
-readdir.c to play with.
-
-And up to that point only x86 sees any kind of code changes,
-so we don't have to worry about other architectures.
-
-5) kill the __copy_...() users outside of arch/*, alone with
-quite a few other weird shits in there.  A cycle or two,
-with the final goal being to kill the damn things off.
-
-6) arch/* users get arch-by-arch treatment - mostly
-it's sigframe handling.  Won't affect the generic code
-and would be independent for different architectures.
-Can happen in parallel with (5), actually.
-
-7) ... at that point user_access_begin_dont_user() gets
-removed and thrown into the pile of mangled fingers of
-those who'd ignored all warnings and used it somewhere
-else.
-
-I don't believe that (5) would be doable entirely in
-this cycle, but quite a few bits might be.
-
-On a somewhat related note, do you see any problems with
-
-void *copy_mount_options(const void __user * data)
-{
-        unsigned offs, size;
-        char *copy;
-
-        if (!data)
-                return NULL;
-
-        copy = kmalloc(PAGE_SIZE, GFP_KERNEL);
-        if (!copy)
-                return ERR_PTR(-ENOMEM);
-
-        offs = (unsigned long)untagged_addr(data) & (PAGE_SIZE - 1);
-
-	if (copy_from_user(copy, data, PAGE_SIZE - offs)) {
-                kfree(copy);
-                return ERR_PTR(-EFAULT);
-	}
-	if (offs) {
-		if (copy_from_user(copy, data + PAGE_SIZE - offs, offs))
-			memset(copy + PAGE_SIZE - offs, 0, offs);
-	}
-        return copy;
-}
-
-on the theory that any fault halfway through a page means a race with
-munmap/mprotect/etc. and we can just pretend we'd lost the race entirely.
-And to hell with exact_copy_from_user(), byte-by-byte copying, etc.
+>
+> Regards,
+> Jonas
+>
+> >
+> > Fixes: dea0a82f3d22 ("media: hantro: Add support for H264 decoding on G1")
+> > Signed-off-by: Francois Buergisser <fbuergisser@chromium.org>
+> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > ---
+> > v2:
+> > * New patch.
+> >
+> >  drivers/staging/media/hantro/hantro_g1_h264_dec.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/staging/media/hantro/hantro_g1_h264_dec.c b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
+> > index 7ab534936843..c92460407613 100644
+> > --- a/drivers/staging/media/hantro/hantro_g1_h264_dec.c
+> > +++ b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
+> > @@ -35,7 +35,7 @@ static void set_params(struct hantro_ctx *ctx)
+> >       if (sps->flags & V4L2_H264_SPS_FLAG_MB_ADAPTIVE_FRAME_FIELD)
+> >               reg |= G1_REG_DEC_CTRL0_SEQ_MBAFF_E;
+> >       reg |= G1_REG_DEC_CTRL0_PICORD_COUNT_E;
+> > -     if (dec_param->nal_ref_idc)
+> > +     if (sps->profile_idc > 66)
+> >               reg |= G1_REG_DEC_CTRL0_WRITE_MVS_E;
+> >
+> >       if (!(sps->flags & V4L2_H264_SPS_FLAG_FRAME_MBS_ONLY) &&
+>
