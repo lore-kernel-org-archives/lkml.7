@@ -2,122 +2,164 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D083C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76451C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44C4121721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:02:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=victronenergy.com header.i=@victronenergy.com header.b="eWcS1Fu8"
+	by mail.kernel.org (Postfix) with ESMTP id 504AC21835
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:03:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570550627;
+	bh=d+bnSj+aUj4AkXaZ4Ba8QnLrU2qyvLx31uOPqtiUmhI=;
+	h=From:To:Subject:Date:List-ID:From;
+	b=AESz56u1Rw3OUbSIcKqu4eR3Hd7m87q/dDOUSV/6KUmwB7zimdeA+cMyJWhnhzlp6
+	 tdxtYx8qWftCTDdFfkjTy6W+RN2fzRkcZbpgjQrWOvdPnb1oRYWptbOWvJyhi6+80T
+	 J8gLqgg+6kl2rdtrpTga/hOoDTI7SPzPgWvot08w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728792AbfJHQCv (ORCPT
+        id S1728792AbfJHQDr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 12:02:51 -0400
-Received: from mail-eopbgr80091.outbound.protection.outlook.com ([40.107.8.91]:40270
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726211AbfJHQCv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 12:02:51 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=i8stZ60f+48Y9X0BHh7NwFVnjpf1uY1/lTXpvIAX6uwsm6+a6gH4qy8jyxLYgiy32S0kjUB+bbv9az0Ymtmvc2W6abo3UGrV3p0TtwcsIgPsTH+F0xCKpCBQnEkJY6q5GYNaubOAv03WAbloC5hiyt7Tn01jQS7vAvfhA6IvXHOH/L52sTiCx5jChpPYYtbedbWl4HsphX9H1m+bWfoVOY+VY2wyQSlgJtZ5nuNQXTlMjLxD2gbEzJ68vjJVmyB4JvgT7CIpebf8FKxcoc/oCoUPbBk3xOvmv4fRy7hSLxacBVSGvMWgpbfOW2twS6oSObuV1lH6V1fBfPKxqb8RpA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MPbiwc2u+DOMU9ienA5ScEKJdDxtjzBcZLyObfwc8Oc=;
- b=Q1AYipSEIGvOReD7qORCA1XVtudkrPrs0317EidXxUqbNxLaGXmOwBXlpX30uvTf4B6iYVQu/sF7HXnmtw9De+fYzWTI6EGf/Qy4ii4HxdncpV5Y+jvzwbIvLmLs/Kua090jp0gEZFqa4hvoSbA5K/1ZG0DWbHiLzHI38GAlIgGc92jke02zVRNtAe+4zV2P9T2271B3WwGrqsHq46dYzZAsuZVlNLzG94qVDCK86MGSJKY4NWls8A6zz1m1TyYZxPch51lPdDP0JVzFIedklaPtAseRPmEZG/0jG9e3HuHBpa0/kKR0ZKu5n0RRJ29ZQGesjZhF8rrBb9d9ic6y0w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=victronenergy.com; dmarc=pass action=none
- header.from=victronenergy.com; dkim=pass header.d=victronenergy.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=victronenergy.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MPbiwc2u+DOMU9ienA5ScEKJdDxtjzBcZLyObfwc8Oc=;
- b=eWcS1Fu8ZckNzONUc+cioQp93IrnIoY8Ci4Z40KQwWvWfke3oDpPgr0TDSSsFI9puH01DOP69yc7qAlg31/QB51rXFEqBDMQxn4na5Mt4X4/PyjYRuH3funa9ElrAP6Vt6jhMcyz3wNvmCPexf9Oae95soI7XWGg/Pxsq04uB8w=
-Received: from VI1PR0701MB2623.eurprd07.prod.outlook.com (10.173.82.19) by
- VI1PR0701MB2767.eurprd07.prod.outlook.com (10.173.81.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.15; Tue, 8 Oct 2019 16:02:47 +0000
-Received: from VI1PR0701MB2623.eurprd07.prod.outlook.com
- ([fe80::49b7:a244:d3e4:396c]) by VI1PR0701MB2623.eurprd07.prod.outlook.com
- ([fe80::49b7:a244:d3e4:396c%9]) with mapi id 15.20.2347.016; Tue, 8 Oct 2019
- 16:02:47 +0000
-From:   Jeroen Hofstee <jhofstee@victronenergy.com>
-To:     Tony Lindgren <tony@atomide.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-CC:     "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
-        Koen Kooi <koen@dominion.thruhere.net>,
-        =?utf-8?B?QmVub8OudCBDb3Vzc29u?= <bcousson@baylibre.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ARM: dts: am335x-sancloud-bbe: Fix PHY mode for ethernet
-Thread-Topic: [PATCH] ARM: dts: am335x-sancloud-bbe: Fix PHY mode for ethernet
-Thread-Index: AQHVeQdofKkOWkby2kaW5oWVx4ahWqdHbuCAgAFGYQD///NzgIAILT2AgAAbpYA=
-Date:   Tue, 8 Oct 2019 16:02:47 +0000
-Message-ID: <1f779973-1702-47eb-158f-7000770c435a@victronenergy.com>
-References: <20191002095416.19603-1-jhofstee@victronenergy.com>
- <d027ef07-807d-6a7b-2939-b67be4542469@ti.com>
- <436f1712-7dec-db40-d08f-1a3032af3596@victronenergy.com>
- <d85cd860-22a3-6142-7f2d-736a428d7a31@ti.com>
- <20191008142349.GE5610@atomide.com>
-In-Reply-To: <20191008142349.GE5610@atomide.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-x-originating-ip: [2001:1c01:3bc5:4e00:58f1:a5aa:4c48:a7ed]
-x-clientproxiedby: AM0PR10CA0016.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:208:17c::26) To VI1PR0701MB2623.eurprd07.prod.outlook.com
- (2603:10a6:801:b::19)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jhofstee@victronenergy.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2ac11550-4419-4fcc-5913-08d74c08f613
-x-ms-traffictypediagnostic: VI1PR0701MB2767:
-x-microsoft-antispam-prvs: <VI1PR0701MB27675FD68D211F1B5AE4E4E0C09A0@VI1PR0701MB2767.eurprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 01842C458A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(366004)(346002)(396003)(39850400004)(136003)(199004)(189003)(58126008)(386003)(110136005)(31696002)(486006)(52116002)(76176011)(2616005)(446003)(476003)(11346002)(316002)(6506007)(54906003)(53546011)(46003)(102836004)(66476007)(2906002)(66446008)(64756008)(31686004)(6116002)(71200400001)(186003)(71190400001)(66946007)(66556008)(6512007)(4326008)(229853002)(6486002)(6436002)(305945005)(36756003)(7736002)(99286004)(81166006)(65806001)(65956001)(256004)(8936002)(8676002)(6246003)(5660300002)(14454004)(81156014)(4744005)(25786009)(478600001)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0701MB2767;H:VI1PR0701MB2623.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: victronenergy.com does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: TkKtyQw/6461im1gKvbuxN2JmsgV978+sJVr79VB7FBMiAJ/Gcyb18k96CRQp8hjMOJxOPv1KIeNL4vz4r08LLEB4IhpIDBiVSwuNvaN9DNjMB8gpuOxLyrHlaNmMWhh1jpNH9yjnpEbNip9eJfDZh8cY7rN9p2XI61eUGK2HkjuJlGQlZNd6wl//fG0U48p1ZwgufHFTtqkfmVQlw7lqXDQNQ1agN0OvVzwfB41VjIWG/GnZJf9ho6sErxKHqXMsdLi7Y91KYohP+KlOl91sUolcj5a8i0uMb8FQnFPWNEmx8T24eHwD7p/PLRi/gUisolk4DEVOv/J3GxmabQ1JRzzuNB7t7xYwq+B4XhoLJ2jhM3rSCmRljIthN0A4w+2jx/xvQSmYVwW/a+cXgdilyY+SB9Yp5kOC2wlATgyfhQ=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D25751073CDE47498688199522BD3F1F@eurprd07.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: victronenergy.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2ac11550-4419-4fcc-5913-08d74c08f613
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Oct 2019 16:02:47.0885
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 60b95f08-3558-4e94-b0f8-d690c498e225
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 52N2+ffncErrgmYFd24NIX/nDs2AmCdk65G11mNkcdQdQ/rxXcZr6NCADaSOx8WNVx6RNXfmLydECehXoWXsKhhUxQcg1R0Vft8BQzV1cBI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0701MB2767
+        Tue, 8 Oct 2019 12:03:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52300 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725966AbfJHQDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 12:03:46 -0400
+Received: from localhost.localdomain (unknown [194.230.155.145])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 635102070B;
+        Tue,  8 Oct 2019 16:03:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570550625;
+        bh=d+bnSj+aUj4AkXaZ4Ba8QnLrU2qyvLx31uOPqtiUmhI=;
+        h=From:To:Subject:Date:From;
+        b=H2xcjj4P9W2tviDzgYjGRTTxuPxOYpcSgIF9pxhrONAgj/21fvrOlOBAu9EZevDa1
+         7HTk8iy6+edgjN0a98y2RvXdk9Yfi6Iax6chhjUZ2cJC5jsKmRjRnfioXLPQ1N6Ja+
+         eJtv0Qiovj1wieTVz4OVlcniEhwYfQck63F6nc/A=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Russell King <linux@armlinux.org.uk>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Olof Johansson <olof@lixom.net>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v2 1/2] ARM: multi_v7_defconfig: Enable options for boards with Exynos SoC
+Date:   Tue,  8 Oct 2019 18:02:33 +0200
+Message-Id: <20191008160234.3106-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gVG9ueSwNCg0KT24gMTAvOC8xOSA0OjIzIFBNLCBUb255IExpbmRncmVuIHdyb3RlOg0K
-PiAqIEdyeWdvcmlpIFN0cmFzaGtvIDxncnlnb3JpaS5zdHJhc2hrb0B0aS5jb20+IFsxOTEwMDMg
-MDI6MzJdOg0KPj4gT24gMDMvMTAvMjAxOSAxMToxNiwgSmVyb2VuIEhvZnN0ZWUgd3JvdGU6DQo+
-Pj4gRnVydGhlcm1vcmUgNC4xOSBpcyBmaW5lLCBzbyB0aGVyZSBpcyBubyBuZWVkIHRvIGluY2x1
-ZGUgaXQgaW4gc3RhYmxlDQo+Pj4gYW5kIGhhdmUgYSBub3RlIHRvIG1ha2Ugc3VyZSBhbHNvIG90
-aGVyIHBhdGNoZXMgYXJlIHJlcXVpcmVkIGV0Yy4NCj4+IEhlbmNlIGFsbCBhYm92ZSBwYXRjaGVz
-IHdlbnQgaW4gNS4xIGl0IHdvdWxkIGJlIGNvcnJlY3QgdG8gbWVudGlvbiBvbmx5DQo+PiA2ZDRj
-ZDA0MWYwYWYgbmV0OiBwaHk6IGF0ODAzeDogZGlzYWJsZSBkZWxheSBvbmx5IGZvciBSR01JSSBt
-b2RlDQo+IEplcm9lbiwgY2FuIHlvdSBwbGVhc2Ugc2VuZCBhbiB1cGRhdGVkIHBhdGNoIHdpdGgg
-dGhlIGZpeGVzDQo+IHRhZyBjaGFuZ2VkPw0KPg0KDQpGb3IgY29tcGxldGVuZXNzLCB0aGVyZSBp
-cyBubyAiRml4ZXMgdGFnIiBhcyB5b3UgbWVudGlvbmVkLg0KVGhlIGNvbW1pdCBvbmx5IHJlZmVy
-cyB0byBhbm90aGVyIGNvbW1pdCB3aGljaCBpbnRyb2R1Y2VzDQphIHByb2JsZW0uDQoNClJlZ2Fy
-ZHMsDQoNCkplcm9lbg0KDQo=
+Sync with exynos_defconfig and enable following options for Samsung
+Exynos SoC based boards:
+1. NFC_S3FWRN5_I2C (with NFC stack): Samsung S3FWRN5 NCI NFC Controller,
+   used for example on Exynos5433 (if booted in 32-bit mode),
+2. S3C2410_WATCHDOG: watchdog driver used on S3C, S5P and Exynos SoCs,
+3. REGULATOR_S2MPA01: Samsung S2MPA01 regulators driver present on
+   Exynos5260 RexNos REX-RED board,
+4. SND_SOC_ARNDALE: sound support on Arndale boards,
+5. EXYNOS_IOMMU: IOMMU driver used on all Exynos SocS,,
+6. EXTCON_MAX14577, EXTCON_MAX77693 and EXTCON_MAX8997: extcon drivers
+   for handling micro USB on mobile Samsung boards (Trats, Trats2,
+   Rinato),
+7. PHY_EXYNOS5250_SATA: SATA phy for Exynos5250 present on Arndale and
+   SMDK5250 boards.
+
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+
+---
+
+SND_SOC_ARNDALE is in progress (patch introducing it was not yet applied)
+
+Changes since v1:
+1. Bring back REMOTEPROC.
+---
+ arch/arm/configs/multi_v7_defconfig | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index 198de8e36d92..d576845acd6f 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -168,6 +168,14 @@ CONFIG_MAC80211=m
+ CONFIG_RFKILL=y
+ CONFIG_RFKILL_INPUT=y
+ CONFIG_RFKILL_GPIO=y
++CONFIG_NFC=m
++CONFIG_NFC_DIGITAL=m
++CONFIG_NFC_NCI=m
++CONFIG_NFC_NCI_SPI=m
++CONFIG_NFC_NCI_UART=m
++CONFIG_NFC_HCI=m
++CONFIG_NFC_SHDLC=y
++CONFIG_NFC_S3FWRN5_I2C=m
+ CONFIG_PCIEPORTBUS=y
+ CONFIG_PCI_MVEBU=y
+ CONFIG_PCI_TEGRA=y
+@@ -491,12 +499,12 @@ CONFIG_BCM2835_THERMAL=m
+ CONFIG_BRCMSTB_THERMAL=m
+ CONFIG_ST_THERMAL_MEMMAP=y
+ CONFIG_UNIPHIER_THERMAL=y
+-CONFIG_WATCHDOG=y
+ CONFIG_DA9063_WATCHDOG=m
+ CONFIG_XILINX_WATCHDOG=y
+ CONFIG_ARM_SP805_WATCHDOG=y
+ CONFIG_AT91SAM9X_WATCHDOG=y
+ CONFIG_SAMA5D4_WATCHDOG=y
++CONFIG_S3C2410_WATCHDOG=m
+ CONFIG_DW_WATCHDOG=y
+ CONFIG_DAVINCI_WATCHDOG=m
+ CONFIG_ORION_WATCHDOG=y
+@@ -581,6 +589,7 @@ CONFIG_REGULATOR_QCOM_RPM=y
+ CONFIG_REGULATOR_QCOM_SMD_RPM=m
+ CONFIG_REGULATOR_RK808=y
+ CONFIG_REGULATOR_RN5T618=y
++CONFIG_REGULATOR_S2MPA01=m
+ CONFIG_REGULATOR_S2MPS11=y
+ CONFIG_REGULATOR_S5M8767=y
+ CONFIG_REGULATOR_STM32_BOOSTER=m
+@@ -711,6 +720,7 @@ CONFIG_SND_SOC_SAMSUNG_SMDK_WM8994=m
+ CONFIG_SND_SOC_SMDK_WM8994_PCM=m
+ CONFIG_SND_SOC_SNOW=m
+ CONFIG_SND_SOC_ODROID=m
++CONFIG_SND_SOC_ARNDALE=m
+ CONFIG_SND_SOC_SH4_FSI=m
+ CONFIG_SND_SOC_RCAR=m
+ CONFIG_SND_SOC_STI=m
+@@ -933,6 +943,7 @@ CONFIG_BCM2835_MBOX=y
+ CONFIG_ROCKCHIP_IOMMU=y
+ CONFIG_TEGRA_IOMMU_GART=y
+ CONFIG_TEGRA_IOMMU_SMMU=y
++CONFIG_EXYNOS_IOMMU=y
+ CONFIG_REMOTEPROC=y
+ CONFIG_ST_REMOTEPROC=m
+ CONFIG_RPMSG_VIRTIO=m
+@@ -968,6 +979,9 @@ CONFIG_ARCH_TEGRA_3x_SOC=y
+ CONFIG_ARCH_TEGRA_114_SOC=y
+ CONFIG_ARCH_TEGRA_124_SOC=y
+ CONFIG_ARM_TEGRA_DEVFREQ=m
++CONFIG_EXTCON_MAX14577=m
++CONFIG_EXTCON_MAX77693=m
++CONFIG_EXTCON_MAX8997=m
+ CONFIG_TI_AEMIF=y
+ CONFIG_IIO=y
+ CONFIG_IIO_SW_TRIGGER=y
+@@ -1026,6 +1040,7 @@ CONFIG_PHY_RCAR_GEN2=m
+ CONFIG_PHY_ROCKCHIP_DP=m
+ CONFIG_PHY_ROCKCHIP_USB=y
+ CONFIG_PHY_SAMSUNG_USB2=m
++CONFIG_PHY_EXYNOS5250_SATA=m
+ CONFIG_PHY_UNIPHIER_USB2=y
+ CONFIG_PHY_UNIPHIER_USB3=y
+ CONFIG_PHY_MIPHY28LP=y
+-- 
+2.17.1
+
