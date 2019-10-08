@@ -2,216 +2,93 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E05C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA60C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1F9B206C2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:51:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570528305;
-	bh=sZv4aqSOD7cAvov8mBecUf7/pJZWeTt7DAg6gCWRInI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DNFtx0jE0Y1h3lcJnJMlG94QeXIZchvEDTHgfdpkUSZLYLYVs3QltveuhCQcNWvId
-	 tv8YyglKzle1+zWRfV23W340X4rR5Q8cG1apC2TaXGFtxfkgqofpt0zGWIefx0dhIT
-	 ThrJlbqJ+YeV3lpLZsQcyFrDdGYnWcLVvV4lpw6Y=
+	by mail.kernel.org (Postfix) with ESMTP id 0802C2070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:54:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=protonmail.ch header.i=@protonmail.ch header.b="J87nWh58"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730206AbfJHJvo (ORCPT
+        id S1730056AbfJHJyx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 05:51:44 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33296 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729375AbfJHJvn (ORCPT
+        Tue, 8 Oct 2019 05:54:53 -0400
+Received: from mail2.protonmail.ch ([185.70.40.22]:21640 "EHLO
+        mail2.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729375AbfJHJyx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 05:51:43 -0400
-Received: by mail-oi1-f196.google.com with SMTP id a15so8229285oic.0;
-        Tue, 08 Oct 2019 02:51:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MTWQeRdbAy3yNwBYxrxnBzfQyj2S2eIHLnU9sLLV9Pc=;
-        b=dppyD01aJxMOn93UIAhjiJFlSBL2pIJkG+T4CphPmkVYRGkdW2xVKn6AW/hopSEtnq
-         9vUBbeziM/2zI1Pabr6k9GbyocThUHacCsVmi465eIKVOHfXeYiutbHbObs5SXFopV4R
-         dDUHPsOcWAzChPqxUjv1v0VzafZKTYZp0CljUOov2GygBVD++jsIelODp0q2U+yzWG4x
-         aQX2zOoesjS2Ehcu/3LF4YoAsopbambwK3r0cVSATvE8jvRH9j4CdC2nBWTWD7kqpwby
-         QU/FRREwWUILD2puCXOuRPM4oK/l34ovS1Btr8B2SRol4RWStnV2Vbm0hbyQ2Uss1uW1
-         jCXw==
-X-Gm-Message-State: APjAAAVaFpRWU1X2tGaqdDLHJMwNC+PITSSF76HWiVkd5UM37/Z5TIrK
-        jApMJdjUZqXxXsuIGQolGv6lHubhw07wjmc5FWc=
-X-Google-Smtp-Source: APXvYqwc2KxXM43lmvZ97dI0n0GSTOgxhKyupGgCeWeBfk87jri4fpIXegBrjOEkcYVbCg1zHKXQgXNop3abDuRCBKA=
-X-Received: by 2002:aca:484:: with SMTP id 126mr3089684oie.68.1570528302549;
- Tue, 08 Oct 2019 02:51:42 -0700 (PDT)
+        Tue, 8 Oct 2019 05:54:53 -0400
+Date:   Tue, 08 Oct 2019 09:54:43 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.ch;
+        s=default; t=1570528490;
+        bh=xaYziXcn3PAogMjdsVmux+RpIIeoIUGVyhfe2ngISyU=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:
+         Feedback-ID:From;
+        b=J87nWh58/WbHccqw04w1aFW617Wn/Y3uSdwQzjpiLOjEXCHPITPvPGKTxof3gNKZP
+         E0PIAz9EHOSiK6dBoqI2ka1HMswUGC4giG5LT9bFLSsxrAiUSmk8jlhN79dpNJNBCz
+         xRj+NJFVBq1WL3/toghW6kw1f6j0b69ehIuV79y4=
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+From:   Dmitry Goldin <dgoldin@protonmail.ch>
+Cc:     Andreas Schwab <schwab@linux-m68k.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "linux-kernel\\\\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "joel\\\\@joelfernandes.org" <joel@joelfernandes.org>,
+        Ben Hutchings <ben@decadent.org.uk>
+Reply-To: Dmitry Goldin <dgoldin@protonmail.ch>
+Subject: Re: [PATCH v2] kheaders: making headers archive reproducible
+Message-ID: <n5BwuDIsuq0djY79hLfkS_FlzIsHBcAKB9GQSvb448zSpNrSgpw9usv-UTKAIX1aRJ0ftwd_GVIGAVgp5WMWeWRd2mzP6YRg3lojH72oZuk=@protonmail.ch>
+In-Reply-To: <CAK7LNASwrKohUUY22Ru06DcG5nUpqRJW3ZjZR+2BZYsX8hfvJw@mail.gmail.com>
+References: <z4zhwEnRqCVnnV8RYwKbY9H_TEnHePR6grYfw1toELFA-iZidlp3T18y0w35JtWNghJQ3hwL23RrsKXIVJHYiv9wOsqmow33NU6LcHcFWyw=@protonmail.ch>
+ <874l0k3hd0.fsf@igel.home>
+ <20191007115217.GA835482@kroah.com>
+ <87zhic212y.fsf@igel.home>
+ <BbFL6w_pvJJ1heDKuGhto7sFNt-6M-GQSqysyQ75Lgd_MOwqEGzkFdhqvmcDhS27MbsEZ239tZ-1BMjC_ObkRB16jR8vS2Ri8HGJWul6wsw=@protonmail.ch>
+ <CAK7LNASwrKohUUY22Ru06DcG5nUpqRJW3ZjZR+2BZYsX8hfvJw@mail.gmail.com>
+Feedback-ID: Z14zYPZ70AFJyYagXjx-jk2Vw9RTvF5p9C9xp4Pq6DJAMFg9PDsfB7GoMmtR_dfa0BaFgToZb9Q4V0UiY2YiMQ==:Ext:ProtonMail
 MIME-Version: 1.0
-References: <001601d57487$e1029ef0$a307dcd0$@net> <000f01d576df$a6b87a30$f4296e90$@net>
- <CAJZ5v0gu=rALS9ZLNMDT3cw_sT2m8XCKP6+AW3488x2Q9EXM3g@mail.gmail.com>
- <000001d57c54$db31f8c0$9195ea40$@net> <CAJZ5v0jo-KQouuE3P51THvU33kViBVtDq1WknBFx+FWUY0e=ag@mail.gmail.com>
- <000d01d57da0$8410f1c0$8c32d540$@net>
-In-Reply-To: <000d01d57da0$8410f1c0$8c32d540$@net>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 8 Oct 2019 11:51:31 +0200
-Message-ID: <CAJZ5v0gRSpNtwDXrRr9GW2O9ZQpM0yBdKfQDXLwsZua5692yUQ@mail.gmail.com>
-Subject: Re: [RFC/RFT][PATCH v8] cpuidle: New timer events oriented governor
- for tickless systems
-To:     Doug Smythies <dsmythies@telus.net>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Chen, Hu" <hu1.chen@intel.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Giovanni Gherdovich <ggherdovich@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 8, 2019 at 8:20 AM Doug Smythies <dsmythies@telus.net> wrote:
->
-> On 2019.10.06 08:34 Rafael J. Wysocki wrote:
-> > On Sun, Oct 6, 2019 at 4:46 PM Doug Smythies <dsmythies@telus.net> wrote:
-> >> On 2019.10.01 02:32 Rafael J. Wysocki wrote:
-> >>> On Sun, Sep 29, 2019 at 6:05 PM Doug Smythies <dsmythies@telus.net> wrote:
-> >>>> On 2019.09.26 09:32 Doug Smythies wrote:
-> >>>>
-> >>>>> If the deepest idle state is disabled, the system
-> >>>>> can become somewhat unstable, with anywhere between no problem
-> >>>>> at all, to the occasional temporary jump using a lot more
-> >>>>> power for a few seconds, to a permanent jump using a lot more
-> >>>>> power continuously. I have been unable to isolate the exact
-> >>>>> test load conditions under which this will occur. However,
-> >>>>> temporarily disabling and then enabling other idle states
-> >>>>> seems to make for a somewhat repeatable test. It is important
-> >>>>> to note that the issue occurs with only ever disabling the deepest
-> >>>>> idle state, just not reliably.
-> >>>>>
-> >>>>> I want to know how you want to proceed before I do a bunch of
-> >>>>> regression testing.
-> >>>>
-> >> I do not think I stated it clearly before: The problem here is that some CPUs
-> >> seem to get stuck in idle state 0, and when they do power consumption spikes,
-> >> often by several hundred % and often indefinitely.
-> >
-> > That indeed has not been clear to me, thanks for the clarification!
->
-> >
-> >> I made a hack job automated test:
-> >> Kernel  tests                 fail rate
-> >> 5.4-rc1                6616           13.45%
-> >> 5.3              2376            4.50%
-> >> 5.3-teov7       12136            0.00%  <<< teo.c reverted and teov7 put in its place.
-> >> 5.4-rc1-ds      11168        0.00%  <<< [old] proposed patch (> 7 hours test time)
->
->
->    5.4-rc1-ds12   4224          0.005 <<< new proposed patch
->
-> >>
-> >> [old] Proposed patch (on top of kernel 5.4-rc1): [deleted]
->
-> > This change may cause the deepest state to be selected even if its
-> > "hits" metric is less than the "misses" one AFAICS, in which case the
-> > max_early_index state should be selected instead.
-> >
-> > It looks like the max_early_index computation is broken when the
-> > deepest state is disabled.
->
-> O.K. Thanks for your quick reply, and insight.
->
-> I think long durations always need to be counted, but currently if
-> the deepest idle state is disabled, they are not.
-> How about this?:
-> (test results added above, more tests pending if this might be a path forward.)
->
-> diff --git a/drivers/cpuidle/governors/teo.c b/drivers/cpuidle/governors/teo.c
-> index b5a0e49..a970d2c 100644
-> --- a/drivers/cpuidle/governors/teo.c
-> +++ b/drivers/cpuidle/governors/teo.c
-> @@ -155,10 +155,12 @@ static void teo_update(struct cpuidle_driver *drv, struct cpuidle_device *dev)
->
->                 cpu_data->states[i].early_hits -= early_hits >> DECAY_SHIFT;
->
-> -               if (drv->states[i].target_residency <= sleep_length_us) {
-> -                       idx_timer = i;
-> -                       if (drv->states[i].target_residency <= measured_us)
-> -                               idx_hit = i;
-> +               if (!(drv->states[i].disabled || dev->states_usage[i].disable)){
-> +                       if (drv->states[i].target_residency <= sleep_length_us) {
-> +                               idx_timer = i;
-> +                               if (drv->states[i].target_residency <= measured_us)
-> +                                       idx_hit = i;
-> +                       }
+=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90 Original Me=
+ssage =E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90
+On Tuesday, October 8, 2019 10:14 AM, Masahiro Yamada <yamada.masahiro@soci=
+onext.com> wrote:
 
-What if the state is enabled again after some time?
+> On Tue, Oct 8, 2019 at 5:07 PM Dmitry Goldin dgoldin@protonmail.ch wrote:
+>
+> > Hmm. --sort was introduced in 1.28 in 2014. Do you think it would warra=
+nt some sort of version check and fallback or is this something we can expe=
+ct the user to handle if their distribution happens to not ship anything mo=
+re recent? A few sensible workarounds come to mind.
+>
+> I think the former.
 
->                 }
->         }
->
-> @@ -256,39 +258,25 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
->                 struct cpuidle_state *s = &drv->states[i];
->                 struct cpuidle_state_usage *su = &dev->states_usage[i];
->
-> -               if (s->disabled || su->disable) {
-> -                       /*
-> -                        * If the "early hits" metric of a disabled state is
-> -                        * greater than the current maximum, it should be taken
-> -                        * into account, because it would be a mistake to select
-> -                        * a deeper state with lower "early hits" metric.  The
-> -                        * index cannot be changed to point to it, however, so
-> -                        * just increase the max count alone and let the index
-> -                        * still point to a shallower idle state.
-> -                        */
-> -                       if (max_early_idx >= 0 &&
-> -                           count < cpu_data->states[i].early_hits)
-> -                               count = cpu_data->states[i].early_hits;
-> -
-> -                       continue;
+After pondering it briefly, maybe substituting the option is a bit less has=
+sle than checking for
+the version and then degrading to a possibly non-reproducible archive.
 
-AFAICS, adding early_hits to count is not a mistake if there are still
-enabled states deeper than the current one.
+Maybe we could go with something like the sketch below to replace --sort=3D=
+name. That is, if
+that's the only problematic flag.
 
-Besides, can you just leave the "continue" here instead of changing
-the indentation level for everything below?
+find $cpio_dir -printf "%P\n" | LC_ALL=3DC sort | \
+    tar "${KBUILD_BUILD_TIMESTAMP:+--mtime=3D$KBUILD_BUILD_TIMESTAMP}" \
+    --owner=3D0 --group=3D0 --numeric-owner \
+    -Jcf $tarfile -C $cpio_dir/ -T - > /dev/null
 
-> -               }
->
-> -               if (idx < 0)
-> -                       idx = i; /* first enabled state */
-> +               if (!(s->disabled || su->disable)) {
-> +                       if (idx < 0)
-> +                               idx = i; /* first enabled state */
->
-> -               if (s->target_residency > duration_us)
-> -                       break;
-> +                       if (s->target_residency > duration_us)
-> +                               break;
->
-> -               if (s->exit_latency > latency_req && constraint_idx > i)
-> -                       constraint_idx = i;
-> +                       if (s->exit_latency > latency_req && constraint_idx > i)
-> +                               constraint_idx = i;
->
-> -               idx = i;
-> +                       idx = i;
->
-> -               if (count < cpu_data->states[i].early_hits &&
-> -                   !(tick_nohz_tick_stopped() &&
-> -                     drv->states[i].target_residency < TICK_USEC)) {
-> -                       count = cpu_data->states[i].early_hits;
-> -                       max_early_idx = i;
-> +                       if (count < cpu_data->states[i].early_hits &&
-> +                           !(tick_nohz_tick_stopped() &&
-> +                             drv->states[i].target_residency < TICK_USEC)) {
-> +                               count = cpu_data->states[i].early_hits;
-> +                               max_early_idx = i;
-> +                       }
->                 }
->         }
+I will look at this a bit more closely and give it a test-run later today o=
+r early tomorrow. Then we can decide if its sufficient before submitting an=
+other patch. Other suggestions and pointers are welcome, of course.
+
+--
+Best regards,
+    Dmitry
