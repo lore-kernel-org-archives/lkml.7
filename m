@@ -2,718 +2,227 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE084C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E52C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D11721721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:27:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="KUQ2jqii"
+	by mail.kernel.org (Postfix) with ESMTP id 3A1C721835
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 20:31:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730858AbfJHU1X (ORCPT
+        id S1730766AbfJHUbn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 16:27:23 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:34903 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727835AbfJHU1W (ORCPT
+        Tue, 8 Oct 2019 16:31:43 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:56007 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730565AbfJHUbm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 16:27:22 -0400
-Received: by mail-qt1-f194.google.com with SMTP id m15so138230qtq.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 13:27:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version;
-        bh=pGoqueZQ/QI/rpFs9SQ0ukSegXjhclNBbOmj8c+PVNY=;
-        b=KUQ2jqiiS+Be6kjsoBWX0MVisSK7xJabXkSWD7BtTPNRgk51QsdxYItZWvETcmhxQI
-         1ElRBETQ5uldRvBa3K1qPdjLHNFlkrgn+wRHfnxch4Qpzl2TNwf1f8r6k8/NvaY1l6vG
-         Bs/YL3KeCK0fnDWlN0TBcaTXmIFDZLKc13q1nlR84v7UkF7K8xHizx3SOGkWdxMAarmG
-         T36di2wjKsRCxVPkj8lQYn07iQH3IN+qAwxKv/Za+tPBAMYqkbvD8rDZ6SF0hNsmpqk5
-         TKFBsmQ5k9JEx6Ep9UOSgbyREyWQKTo/RYg9Bi2P+UmFkWwTM/LZ8OORq/VN/sKbYFAq
-         7JKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version;
-        bh=pGoqueZQ/QI/rpFs9SQ0ukSegXjhclNBbOmj8c+PVNY=;
-        b=Nc5l2atS5EdcP2IiKN/gv2k+3YQkhe3CtSO/5ArEMldDjh0gpWNCZgN5KiOYeNHxxG
-         W4DAuV+jKhACJi7937jXArdFHJkQ9lQD0MTcroJB1lj5ptMB/nAl6kn6sFb+PD2JAryc
-         w5pRvR9zVjjgQMlKjbyU4R7W3uX/Yn23C/dX4cOnGTOfqg7lP7K26UMi/XD5rS13cPFV
-         0pNLqGyqrJcxbBVGMOwX+WsLWTTIP7jY/Yo1vVfD/cbC/AE9WE1S17819Uvk9+EtU7dI
-         f5jvTH6f8U/2HZTw21C5Q7MEurKfa2JpjNFlJGTtZsS+xt4ueOPvwrrotvka6x3B394+
-         KB+A==
-X-Gm-Message-State: APjAAAVIDl1E7hDUWvw9BCxDUmMXZCdBM0TSyE/F9bYf5FzRs0t1pffw
-        PZJS3VJyXi6tWgftBlLyGZ56lg==
-X-Google-Smtp-Source: APXvYqydeh4r2EZwMfRY2ofr3N+sKCDyKsKZ3hcVgqMad4Og5guaUzsllZCFWlHNeY/yOC6p3S17Rg==
-X-Received: by 2002:a0c:c603:: with SMTP id v3mr26619qvi.28.1570566438748;
-        Tue, 08 Oct 2019 13:27:18 -0700 (PDT)
-Received: from tpx230-nicolas.collaboramtl (modemcable154.55-37-24.static.videotron.ca. [24.37.55.154])
-        by smtp.gmail.com with ESMTPSA id t19sm8532389qto.55.2019.10.08.13.27.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2019 13:27:17 -0700 (PDT)
-Message-ID: <912dfabbaafc6eb4dce343ad43914ae54fc99343.camel@ndufresne.ca>
-Subject: Re: [PATCH 2/2] media: meson: vdec: add H.264 decoding support
-From:   Nicolas Dufresne <nicolas@ndufresne.ca>
-To:     Maxime Jourdan <mjourdan@baylibre.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Date:   Tue, 08 Oct 2019 16:27:14 -0400
-In-Reply-To: <20191007145909.29979-3-mjourdan@baylibre.com>
-References: <20191007145909.29979-1-mjourdan@baylibre.com>
-         <20191007145909.29979-3-mjourdan@baylibre.com>
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-        boundary="=-OmJTcNTLraoYNa4SPA7W"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Tue, 8 Oct 2019 16:31:42 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iHw8x-0001v9-1N; Tue, 08 Oct 2019 22:31:39 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iHw8v-0005Xa-FM; Tue, 08 Oct 2019 22:31:37 +0200
+Date:   Tue, 8 Oct 2019 22:31:37 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, thierry.reding@gmail.com,
+        heiko@sntech.de, dianders@chromium.org, mka@chromium.org,
+        groeck@chromium.org, kernel@collabora.com, bleung@chromium.org,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH] pwm: cros-ec: Let cros_ec_pwm_get_state() return the
+ last applied state
+Message-ID: <20191008203137.s22clq6v2om5ktio@pengutronix.de>
+References: <20191008105417.16132-1-enric.balletbo@collabora.com>
+ <20191008143432.pbhcqamd6f4qwbqn@pengutronix.de>
+ <4f009344-242e-19a7-6872-2c55df086044@collabora.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4f009344-242e-19a7-6872-2c55df086044@collabora.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Oct 08, 2019 at 06:33:15PM +0200, Enric Balletbo i Serra wrote:
+> Hi Uwe,
+> 
+> Thanks for the quick reply.
+> 
+> On 8/10/19 16:34, Uwe Kleine-König wrote:
+> > Hello Enric,
+> > 
+> > On Tue, Oct 08, 2019 at 12:54:17PM +0200, Enric Balletbo i Serra wrote:
+> >> @@ -117,17 +122,28 @@ static void cros_ec_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+> >>  	struct cros_ec_pwm_device *ec_pwm = pwm_to_cros_ec_pwm(chip);
+> >>  	int ret;
+> >>  
+> >> -	ret = cros_ec_pwm_get_duty(ec_pwm->ec, pwm->hwpwm);
+> >> -	if (ret < 0) {
+> >> -		dev_err(chip->dev, "error getting initial duty: %d\n", ret);
+> >> -		return;
+> >> +	/*
+> >> +	 * As there is no way for this hardware to separate the concept of
+> >> +	 * duty cycle and enabled, but the PWM API does, let return the last
+> >> +	 * applied state when the PWM is disabled and only return the real
+> >> +	 * hardware value when the PWM is enabled. Otherwise, a user of this
+> >> +	 * driver, can get confused because won't be able to program a duty
+> >> +	 * cycle while the PWM is disabled.
+> >> +	 */
+> >> +	state->enabled = ec_pwm->state.enabled;
+> > 
+> >> +	if (state->enabled) {
+> > 
+> > As part of registration of the pwm .get_state is called. In this case
+> > .apply wasn't called before and so state->enabled is probably 0. So this
+> > breaks reporting the initial state ...
+> > 
+> >> +		ret = cros_ec_pwm_get_duty(ec_pwm->ec, pwm->hwpwm);
+> >> +		if (ret < 0) {
+> >> +			dev_err(chip->dev, "error getting initial duty: %d\n",
+> >> +				ret);
+> >> +			return;
+> >> +		}
+> >> +		state->duty_cycle = ret;
+> >> +	} else {
+> >> +		state->duty_cycle = ec_pwm->state.duty_cycle;
+> >>  	}
+> >>  
+> >> -	state->enabled = (ret > 0);
+> >>  	state->period = EC_PWM_MAX_DUTY;
+> >> -
+> >> -	/* Note that "disabled" and "duty cycle == 0" are treated the same */
+> >> -	state->duty_cycle = ret;
+> > 
+> > A few thoughts to your approach here ...:
+> > 
+> >  - Would it make sense to only store duty_cycle and enabled in the
+> >    driver struct?
+> > 
+> 
+> Yes, in fact, my first approach (that I didn't send) was only storing enabled
+> and duty cycle. For some reason I ended storing the full pwm_state struct, but I
+> guess is not really needed.
+> 
+> 
+> >  - Which driver is the consumer of your pwm? If I understand correctly
+> >    the following sequence is the bad one:
+> > 
+> 
+> The consumer is the pwm_bl driver. Actually I'n trying to identify
+> other consumers.
 
---=-OmJTcNTLraoYNa4SPA7W
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Ah, I see why I missed to identify the problem back when I checked this
+driver. The problem is not that .duty_cycle isn't set but there .enabled
+isn't set. So maybe we just want:
 
-Le lundi 07 octobre 2019 =C3=A0 16:59 +0200, Maxime Jourdan a =C3=A9crit :
-> Add support for the H264 compressed format (V4L2_PIX_FMT_H264).
->=20
-> Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
-> ---
->  drivers/staging/media/meson/vdec/Makefile     |   2 +-
->  drivers/staging/media/meson/vdec/codec_h264.c | 482 ++++++++++++++++++
->  drivers/staging/media/meson/vdec/codec_h264.h |  14 +
->  .../staging/media/meson/vdec/vdec_platform.c  |  37 ++
->  4 files changed, 534 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/staging/media/meson/vdec/codec_h264.c
->  create mode 100644 drivers/staging/media/meson/vdec/codec_h264.h
->=20
-> diff --git a/drivers/staging/media/meson/vdec/Makefile b/drivers/staging/=
-media/meson/vdec/Makefile
-> index 6bea129084b7..711d990c760e 100644
-> --- a/drivers/staging/media/meson/vdec/Makefile
-> +++ b/drivers/staging/media/meson/vdec/Makefile
-> @@ -3,6 +3,6 @@
-> =20
->  meson-vdec-objs =3D esparser.o vdec.o vdec_helpers.o vdec_platform.o
->  meson-vdec-objs +=3D vdec_1.o
-> -meson-vdec-objs +=3D codec_mpeg12.o
-> +meson-vdec-objs +=3D codec_mpeg12.o codec_h264.o
-> =20
->  obj-$(CONFIG_VIDEO_MESON_VDEC) +=3D meson-vdec.o
-> diff --git a/drivers/staging/media/meson/vdec/codec_h264.c b/drivers/stag=
-ing/media/meson/vdec/codec_h264.c
-> new file mode 100644
-> index 000000000000..4528a6a01c3d
-> --- /dev/null
-> +++ b/drivers/staging/media/meson/vdec/codec_h264.c
-> @@ -0,0 +1,482 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright (C) 2019 BayLibre, SAS
-> + * Author: Maxime Jourdan <mjourdan@baylibre.com>
-> + */
-> +
-> +#include <media/v4l2-mem2mem.h>
-> +#include <media/videobuf2-dma-contig.h>
-> +
-> +#include "vdec_helpers.h"
-> +#include "dos_regs.h"
-> +
-> +#define SIZE_EXT_FW	(20 * SZ_1K)
-> +#define SIZE_WORKSPACE	0x1ee000
-> +#define SIZE_SEI	(8 * SZ_1K)
-> +
-> +/*
-> + * Offset added by the firmware which must be substracted
-> + * from the workspace phyaddr
-> + */
-> +#define WORKSPACE_BUF_OFFSET	0x1000000
-> +
-> +/* ISR status */
-> +#define CMD_MASK		GENMASK(7, 0)
-> +#define CMD_SRC_CHANGE		1
-> +#define CMD_FRAMES_READY	2
-> +#define CMD_FATAL_ERROR		6
-> +#define CMD_BAD_WIDTH		7
-> +#define CMD_BAD_HEIGHT		8
-> +
-> +#define SEI_DATA_READY	BIT(15)
-> +
-> +/* Picture type */
-> +#define PIC_TOP_BOT	5
-> +#define PIC_BOT_TOP	6
-> +
-> +/* Size of Motion Vector per macroblock */
-> +#define MB_MV_SIZE	96
-> +
-> +/* Frame status data */
-> +#define PIC_STRUCT_BIT	5
-> +#define PIC_STRUCT_MASK	GENMASK(2, 0)
-> +#define BUF_IDX_MASK	GENMASK(4, 0)
-> +#define ERROR_FLAG	BIT(9)
-> +#define OFFSET_BIT	16
-> +#define OFFSET_MASK	GENMASK(15, 0)
-> +
-> +/* Bitstream parsed data */
-> +#define MB_TOTAL_BIT	8
-> +#define MB_TOTAL_MASK	GENMASK(15, 0)
-> +#define MB_WIDTH_MASK	GENMASK(7, 0)
-> +#define MAX_REF_BIT	24
-> +#define MAX_REF_MASK	GENMASK(6, 0)
-> +#define AR_IDC_BIT	16
-> +#define AR_IDC_MASK	GENMASK(7, 0)
-> +#define AR_PRESENT_FLAG	BIT(0)
-> +#define AR_EXTEND	0xff
-> +
-> +/*
-> + * Buffer to send to the ESPARSER to signal End Of Stream for H.264.
-> + * This is a 16x16 encoded picture that will trigger drain firmware-side=
-.
-> + * There is no known alternative.
-> + */
-> +static const u8 eos_sequence[SZ_4K] =3D {
-> +	0x00, 0x00, 0x00, 0x01, 0x06, 0x05, 0xff, 0xe4, 0xdc, 0x45, 0xe9, 0xbd,
-> +	0xe6, 0xd9, 0x48, 0xb7,	0x96, 0x2c, 0xd8, 0x20, 0xd9, 0x23, 0xee, 0xef,
-> +	0x78, 0x32, 0x36, 0x34, 0x20, 0x2d, 0x20, 0x63,	0x6f, 0x72, 0x65, 0x20,
-> +	0x36, 0x37, 0x20, 0x72, 0x31, 0x31, 0x33, 0x30, 0x20, 0x38, 0x34, 0x37,
-> +	0x35, 0x39, 0x37, 0x37, 0x20, 0x2d, 0x20, 0x48, 0x2e, 0x32, 0x36, 0x34,
-> +	0x2f, 0x4d, 0x50, 0x45,	0x47, 0x2d, 0x34, 0x20, 0x41, 0x56, 0x43, 0x20,
-> +	0x63, 0x6f, 0x64, 0x65, 0x63, 0x20, 0x2d, 0x20,	0x43, 0x6f, 0x70, 0x79,
-> +	0x6c, 0x65, 0x66, 0x74, 0x20, 0x32, 0x30, 0x30, 0x33, 0x2d, 0x32, 0x30,
-> +	0x30, 0x39, 0x20, 0x2d, 0x20, 0x68, 0x74, 0x74, 0x70, 0x3a, 0x2f, 0x2f,
-> +	0x77, 0x77, 0x77, 0x2e,	0x76, 0x69, 0x64, 0x65, 0x6f, 0x6c, 0x61, 0x6e,
-> +	0x2e, 0x6f, 0x72, 0x67, 0x2f, 0x78, 0x32, 0x36,	0x34, 0x2e, 0x68, 0x74,
-> +	0x6d, 0x6c, 0x20, 0x2d, 0x20, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x73,
-> +	0x3a, 0x20, 0x63, 0x61, 0x62, 0x61, 0x63, 0x3d, 0x31, 0x20, 0x72, 0x65,
-> +	0x66, 0x3d, 0x31, 0x20,	0x64, 0x65, 0x62, 0x6c, 0x6f, 0x63, 0x6b, 0x3d,
-> +	0x31, 0x3a, 0x30, 0x3a, 0x30, 0x20, 0x61, 0x6e,	0x61, 0x6c, 0x79, 0x73,
-> +	0x65, 0x3d, 0x30, 0x78, 0x31, 0x3a, 0x30, 0x78, 0x31, 0x31, 0x31, 0x20,
-> +	0x6d, 0x65, 0x3d, 0x68, 0x65, 0x78, 0x20, 0x73, 0x75, 0x62, 0x6d, 0x65,
-> +	0x3d, 0x36, 0x20, 0x70,	0x73, 0x79, 0x5f, 0x72, 0x64, 0x3d, 0x31, 0x2e,
-> +	0x30, 0x3a, 0x30, 0x2e, 0x30, 0x20, 0x6d, 0x69,	0x78, 0x65, 0x64, 0x5f,
-> +	0x72, 0x65, 0x66, 0x3d, 0x30, 0x20, 0x6d, 0x65, 0x5f, 0x72, 0x61, 0x6e,
-> +	0x67, 0x65, 0x3d, 0x31, 0x36, 0x20, 0x63, 0x68, 0x72, 0x6f, 0x6d, 0x61,
-> +	0x5f, 0x6d, 0x65, 0x3d,	0x31, 0x20, 0x74, 0x72, 0x65, 0x6c, 0x6c, 0x69,
-> +	0x73, 0x3d, 0x30, 0x20, 0x38, 0x78, 0x38, 0x64,	0x63, 0x74, 0x3d, 0x30,
-> +	0x20, 0x63, 0x71, 0x6d, 0x3d, 0x30, 0x20, 0x64, 0x65, 0x61, 0x64, 0x7a,
-> +	0x6f, 0x6e, 0x65, 0x3d, 0x32, 0x31, 0x2c, 0x31, 0x31, 0x20, 0x63, 0x68,
-> +	0x72, 0x6f, 0x6d, 0x61,	0x5f, 0x71, 0x70, 0x5f, 0x6f, 0x66, 0x66, 0x73,
-> +	0x65, 0x74, 0x3d, 0x2d, 0x32, 0x20, 0x74, 0x68,	0x72, 0x65, 0x61, 0x64,
-> +	0x73, 0x3d, 0x31, 0x20, 0x6e, 0x72, 0x3d, 0x30, 0x20, 0x64, 0x65, 0x63,
-> +	0x69, 0x6d, 0x61, 0x74, 0x65, 0x3d, 0x31, 0x20, 0x6d, 0x62, 0x61, 0x66,
-> +	0x66, 0x3d, 0x30, 0x20,	0x62, 0x66, 0x72, 0x61, 0x6d, 0x65, 0x73, 0x3d,
-> +	0x30, 0x20, 0x6b, 0x65, 0x79, 0x69, 0x6e, 0x74,	0x3d, 0x32, 0x35, 0x30,
-> +	0x20, 0x6b, 0x65, 0x79, 0x69, 0x6e, 0x74, 0x5f, 0x6d, 0x69, 0x6e, 0x3d,
-> +	0x32, 0x35, 0x20, 0x73, 0x63, 0x65, 0x6e, 0x65, 0x63, 0x75, 0x74, 0x3d,
-> +	0x34, 0x30, 0x20, 0x72,	0x63, 0x3d, 0x61, 0x62, 0x72, 0x20, 0x62, 0x69,
-> +	0x74, 0x72, 0x61, 0x74, 0x65, 0x3d, 0x31, 0x30,	0x20, 0x72, 0x61, 0x74,
-> +	0x65, 0x74, 0x6f, 0x6c, 0x3d, 0x31, 0x2e, 0x30, 0x20, 0x71, 0x63, 0x6f,
-> +	0x6d, 0x70, 0x3d, 0x30, 0x2e, 0x36, 0x30, 0x20, 0x71, 0x70, 0x6d, 0x69,
-> +	0x6e, 0x3d, 0x31, 0x30,	0x20, 0x71, 0x70, 0x6d, 0x61, 0x78, 0x3d, 0x35,
-> +	0x31, 0x20, 0x71, 0x70, 0x73, 0x74, 0x65, 0x70,	0x3d, 0x34, 0x20, 0x69,
-> +	0x70, 0x5f, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x3d, 0x31, 0x2e, 0x34, 0x30,
-> +	0x20, 0x61, 0x71, 0x3d, 0x31, 0x3a, 0x31, 0x2e, 0x30, 0x30, 0x00, 0x80,
-> +	0x00, 0x00, 0x00, 0x01,	0x67, 0x4d, 0x40, 0x0a, 0x9a, 0x74, 0xf4, 0x20,
-> +	0x00, 0x00, 0x03, 0x00, 0x20, 0x00, 0x00, 0x06,	0x51, 0xe2, 0x44, 0xd4,
-> +	0x00, 0x00, 0x00, 0x01, 0x68, 0xee, 0x32, 0xc8, 0x00, 0x00, 0x00, 0x01,
-> +	0x65, 0x88, 0x80, 0x20, 0x00, 0x08, 0x7f, 0xea, 0x6a, 0xe2, 0x99, 0xb6,
-> +	0x57, 0xae, 0x49, 0x30,	0xf5, 0xfe, 0x5e, 0x46, 0x0b, 0x72, 0x44, 0xc4,
-> +	0xe1, 0xfc, 0x62, 0xda, 0xf1, 0xfb, 0xa2, 0xdb,	0xd6, 0xbe, 0x5c, 0xd7,
-> +	0x24, 0xa3, 0xf5, 0xb9, 0x2f, 0x57, 0x16, 0x49, 0x75, 0x47, 0x77, 0x09,
-> +	0x5c, 0xa1, 0xb4, 0xc3, 0x4f, 0x60, 0x2b, 0xb0, 0x0c, 0xc8, 0xd6, 0x66,
-> +	0xba, 0x9b, 0x82, 0x29,	0x33, 0x92, 0x26, 0x99, 0x31, 0x1c, 0x7f, 0x9b,
-> +	0x00, 0x00, 0x01, 0x0ff,
-> +};
+diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+index 2201b8c78641..0468c6ee4448 100644
+--- a/drivers/video/backlight/pwm_bl.c
++++ b/drivers/video/backlight/pwm_bl.c
+@@ -123,6 +123,7 @@ static int pwm_backlight_update_status(struct backlight_device *bl)
+        if (brightness > 0) {
+                pwm_get_state(pb->pwm, &state);
+                state.duty_cycle = compute_duty_cycle(pb, brightness);
++               state.enabled = true;
+                pwm_apply_state(pb->pwm, &state);
+                pwm_backlight_power_on(pb);
+        } else
 
-I can read that this contains a pretty large SEI, SPS, PPS, IDR and
-finally this unspecified Nal 15 with no size, but I don't expect every
-can. Maybe you could format this into nals, and document whatever you
-know about this blob ? If you need info, I may suggest you do put that
-into a file and use YUView software to parse it.
+? On a side note: It's IMHO strange that pwm_backlight_power_on
+reconfigures the PWM once more.
 
-> +
-> +static const u8 *codec_h264_eos_sequence(u32 *len)
-> +{
-> +	*len =3D ARRAY_SIZE(eos_sequence);
-> +	return eos_sequence;
-> +}
-> +
-> +struct codec_h264 {
-> +	/* H.264 decoder requires an extended firmware */
-> +	void      *ext_fw_vaddr;
-> +	dma_addr_t ext_fw_paddr;
-> +
-> +	/* Buffer for the H.264 Workspace */
-> +	void      *workspace_vaddr;
-> +	dma_addr_t workspace_paddr;
-> +
-> +	/* Buffer for the H.264 references MV */
-> +	void      *ref_vaddr;
-> +	dma_addr_t ref_paddr;
-> +	u32	   ref_size;
-> +
-> +	/* Buffer for parsed SEI data */
-> +	void      *sei_vaddr;
-> +	dma_addr_t sei_paddr;
-> +
-> +	u32 mb_width;
-> +	u32 mb_height;
-> +	u32 max_refs;
-> +};
-> +
-> +static int codec_h264_can_recycle(struct amvdec_core *core)
-> +{
-> +	return !amvdec_read_dos(core, AV_SCRATCH_7) ||
-> +	       !amvdec_read_dos(core, AV_SCRATCH_8);
-> +}
-> +
-> +static void codec_h264_recycle(struct amvdec_core *core, u32 buf_idx)
-> +{
-> +	/*
-> +	 * Tell the firmware it can recycle this buffer.
-> +	 * AV_SCRATCH_8 serves the same purpose.
-> +	 */
-> +	if (!amvdec_read_dos(core, AV_SCRATCH_7))
-> +		amvdec_write_dos(core, AV_SCRATCH_7, buf_idx + 1);
-> +	else
-> +		amvdec_write_dos(core, AV_SCRATCH_8, buf_idx + 1);
-> +}
-> +
-> +static int codec_h264_start(struct amvdec_session *sess)
-> +{
-> +	u32 workspace_offset;
-> +	struct amvdec_core *core =3D sess->core;
-> +	struct codec_h264 *h264 =3D sess->priv;
-> +
-> +	/* Allocate some memory for the H.264 decoder's state */
-> +	h264->workspace_vaddr =3D
-> +		dma_alloc_coherent(core->dev, SIZE_WORKSPACE,
-> +				   &h264->workspace_paddr, GFP_KERNEL);
-> +	if (!h264->workspace_vaddr)
-> +		return -ENOMEM;
-> +
-> +	/* Allocate some memory for the H.264 SEI dump */
-> +	h264->sei_vaddr =3D dma_alloc_coherent(core->dev, SIZE_SEI,
-> +					     &h264->sei_paddr, GFP_KERNEL);
-> +	if (!h264->sei_vaddr)
-> +		return -ENOMEM;
-> +
-> +	amvdec_write_dos_bits(core, POWER_CTL_VLD, BIT(9) | BIT(6));
-> +
-> +	workspace_offset =3D h264->workspace_paddr - WORKSPACE_BUF_OFFSET;
-> +	amvdec_write_dos(core, AV_SCRATCH_1, workspace_offset);
-> +	amvdec_write_dos(core, AV_SCRATCH_G, h264->ext_fw_paddr);
-> +	amvdec_write_dos(core, AV_SCRATCH_I, h264->sei_paddr -
-> +					     workspace_offset);
-> +
-> +	/* Enable "error correction" */
-> +	amvdec_write_dos(core, AV_SCRATCH_F,
-> +			 (amvdec_read_dos(core, AV_SCRATCH_F) & 0xffffffc3) |
-> +			 BIT(4) | BIT(7));
-> +
-> +	amvdec_write_dos(core, MDEC_PIC_DC_THRESH, 0x404038aa);
-> +
-> +	return 0;
-> +}
-> +
-> +static int codec_h264_stop(struct amvdec_session *sess)
-> +{
-> +	struct codec_h264 *h264 =3D sess->priv;
-> +	struct amvdec_core *core =3D sess->core;
-> +
-> +	if (h264->ext_fw_vaddr)
-> +		dma_free_coherent(core->dev, SIZE_EXT_FW,
-> +				  h264->ext_fw_vaddr, h264->ext_fw_paddr);
-> +
-> +	if (h264->workspace_vaddr)
-> +		dma_free_coherent(core->dev, SIZE_WORKSPACE,
-> +				 h264->workspace_vaddr, h264->workspace_paddr);
-> +
-> +	if (h264->ref_vaddr)
-> +		dma_free_coherent(core->dev, h264->ref_size,
-> +				  h264->ref_vaddr, h264->ref_paddr);
-> +
-> +	if (h264->sei_vaddr)
-> +		dma_free_coherent(core->dev, SIZE_SEI,
-> +				  h264->sei_vaddr, h264->sei_paddr);
-> +
-> +	return 0;
-> +}
-> +
-> +static int codec_h264_load_extended_firmware(struct amvdec_session *sess=
-,
-> +					     const u8 *data, u32 len)
-> +{
-> +	struct codec_h264 *h264;
-> +	struct amvdec_core *core =3D sess->core;
-> +
-> +	if (len < SIZE_EXT_FW)
-> +		return -EINVAL;
-> +
-> +	h264 =3D kzalloc(sizeof(*h264), GFP_KERNEL);
-> +	if (!h264)
-> +		return -ENOMEM;
-> +
-> +	h264->ext_fw_vaddr =3D dma_alloc_coherent(core->dev, SIZE_EXT_FW,
-> +					      &h264->ext_fw_paddr, GFP_KERNEL);
-> +	if (!h264->ext_fw_vaddr) {
-> +		kfree(h264);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	memcpy(h264->ext_fw_vaddr, data, SIZE_EXT_FW);
-> +	sess->priv =3D h264;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct v4l2_fract par_table[] =3D {
-> +	{ 1, 1 },   { 1, 1 },    { 12, 11 }, { 10, 11 },
-> +	{ 16, 11 }, { 40, 33 },  { 24, 11 }, { 20, 11 },
-> +	{ 32, 11 }, { 80, 33 },  { 18, 11 }, { 15, 11 },
-> +	{ 64, 33 }, { 160, 99 }, { 4, 3 },   { 3, 2 },
-> +	{ 2, 1 }
-> +};
-> +
-> +static void codec_h264_set_par(struct amvdec_session *sess)
-> +{
-> +	struct amvdec_core *core =3D sess->core;
-> +	u32 seq_info =3D amvdec_read_dos(core, AV_SCRATCH_2);
-> +	u32 ar_idc =3D (seq_info >> AR_IDC_BIT) & AR_IDC_MASK;
-> +
-> +	if (!(seq_info & AR_PRESENT_FLAG))
-> +		return;
-> +
-> +	if (ar_idc =3D=3D AR_EXTEND) {
-> +		u32 ar_info =3D amvdec_read_dos(core, AV_SCRATCH_3);
-> +
-> +		sess->pixelaspect.numerator =3D ar_info & 0xffff;
-> +		sess->pixelaspect.denominator =3D (ar_info >> 16) & 0xffff;
-> +		return;
-> +	}
-> +
-> +	if (ar_idc >=3D ARRAY_SIZE(par_table))
-> +		return;
-> +
-> +	sess->pixelaspect =3D par_table[ar_idc];
-> +}
-> +
-> +static void codec_h264_resume(struct amvdec_session *sess)
-> +{
-> +	struct amvdec_core *core =3D sess->core;
-> +	struct codec_h264 *h264 =3D sess->priv;
-> +	u32 mb_width, mb_height, mb_total;
-> +
-> +	amvdec_set_canvases(sess, (u32[]){ ANC0_CANVAS_ADDR, 0 },
-> +				  (u32[]){ 24, 0 });
-> +
-> +	dev_dbg(core->dev, "max_refs =3D %u; actual_dpb_size =3D %u\n",
-> +		h264->max_refs, sess->num_dst_bufs);
-> +
-> +	/* Align to a multiple of 4 macroblocks */
-> +	mb_width =3D ALIGN(h264->mb_width, 4);
-> +	mb_height =3D ALIGN(h264->mb_height, 4);
-> +	mb_total =3D mb_width * mb_height;
-> +
-> +	h264->ref_size =3D mb_total * MB_MV_SIZE * h264->max_refs;
-> +	h264->ref_vaddr =3D dma_alloc_coherent(core->dev, h264->ref_size,
-> +					     &h264->ref_paddr, GFP_KERNEL);
-> +	if (!h264->ref_vaddr) {
-> +		amvdec_abort(sess);
-> +		return;
-> +	}
-> +
-> +	/* Address to store the references' MVs */
-> +	amvdec_write_dos(core, AV_SCRATCH_1, h264->ref_paddr);
-> +	/* End of ref MV */
-> +	amvdec_write_dos(core, AV_SCRATCH_4, h264->ref_paddr + h264->ref_size);
-> +
-> +	amvdec_write_dos(core, AV_SCRATCH_0, (h264->max_refs << 24) |
-> +					     (sess->num_dst_bufs << 16) |
-> +					     ((h264->max_refs - 1) << 8));
-> +}
-> +
-> +/**
-> + * Configure the H.264 decoder when the parser detected a parameter set =
-change
-> + */
-> +static void codec_h264_src_change(struct amvdec_session *sess)
-> +{
-> +	struct amvdec_core *core =3D sess->core;
-> +	struct codec_h264 *h264 =3D sess->priv;
-> +	u32 parsed_info, mb_total;
-> +	u32 crop_infor, crop_bottom, crop_right;
-> +	u32 frame_width, frame_height;
-> +
-> +	sess->keyframe_found =3D 1;
-> +
-> +	parsed_info =3D amvdec_read_dos(core, AV_SCRATCH_1);
-> +
-> +	/* Total number of 16x16 macroblocks */
-> +	mb_total =3D (parsed_info >> MB_TOTAL_BIT) & MB_TOTAL_MASK;
-> +	/* Number of macroblocks per line */
-> +	h264->mb_width =3D parsed_info & MB_WIDTH_MASK;
-> +	/* Number of macroblock lines */
-> +	h264->mb_height =3D mb_total / h264->mb_width;
-> +
-> +	h264->max_refs =3D ((parsed_info >> MAX_REF_BIT) & MAX_REF_MASK) + 1;
-> +
-> +	crop_infor =3D amvdec_read_dos(core, AV_SCRATCH_6);
-> +	crop_bottom =3D (crop_infor & 0xff);
-> +	crop_right =3D (crop_infor >> 16) & 0xff;
-> +
-> +	frame_width =3D h264->mb_width * 16 - crop_right;
-> +	frame_height =3D h264->mb_height * 16 - crop_bottom;
-> +
-> +	dev_dbg(core->dev, "frame: %ux%u; crop: %u %u\n",
-> +		frame_width, frame_height, crop_right, crop_bottom);
-> +
-> +	codec_h264_set_par(sess);
-> +	amvdec_src_change(sess, frame_width, frame_height, h264->max_refs + 5);
-> +}
-> +
-> +/**
-> + * The bitstream offset is split in half in 2 different registers.
-> + * Fetch its MSB here, which location depends on the frame number.
-> + */
-> +static u32 get_offset_msb(struct amvdec_core *core, int frame_num)
-> +{
-> +	int take_msb =3D frame_num % 2;
-> +	int reg_offset =3D (frame_num / 2) * 4;
-> +	u32 offset_msb =3D amvdec_read_dos(core, AV_SCRATCH_A + reg_offset);
-> +
-> +	if (take_msb)
-> +		return offset_msb & 0xffff0000;
-> +
-> +	return (offset_msb & 0x0000ffff) << 16;
-> +}
-> +
-> +static void codec_h264_frames_ready(struct amvdec_session *sess, u32 sta=
-tus)
-> +{
-> +	struct amvdec_core *core =3D sess->core;
-> +	int error_count;
-> +	int num_frames;
-> +	int i;
-> +
-> +	error_count =3D amvdec_read_dos(core, AV_SCRATCH_D);
-> +	num_frames =3D (status >> 8) & 0xff;
-> +	if (error_count) {
-> +		dev_warn(core->dev,
-> +			 "decoder error(s) happened, count %d\n", error_count);
-> +		amvdec_write_dos(core, AV_SCRATCH_D, 0);
-> +	}
-> +
-> +	for (i =3D 0; i < num_frames; i++) {
-> +		u32 frame_status =3D amvdec_read_dos(core, AV_SCRATCH_1 + i * 4);
-> +		u32 buffer_index =3D frame_status & BUF_IDX_MASK;
-> +		u32 pic_struct =3D (frame_status >> PIC_STRUCT_BIT) &
-> +				 PIC_STRUCT_MASK;
-> +		u32 offset =3D (frame_status >> OFFSET_BIT) & OFFSET_MASK;
-> +		u32 field =3D V4L2_FIELD_NONE;
-> +
-> +		/*
-> +		 * A buffer decode error means it was decoded,
-> +		 * but part of the picture will have artifacts.
-> +		 * Typical reason is a temporarily corrupted bitstream
-> +		 */
-> +		if (frame_status & ERROR_FLAG)
-> +			dev_dbg(core->dev, "Buffer %d decode error\n",
-> +				buffer_index);
-> +
-> +		if (pic_struct =3D=3D PIC_TOP_BOT)
-> +			field =3D V4L2_FIELD_INTERLACED_TB;
-> +		else if (pic_struct =3D=3D PIC_BOT_TOP)
-> +			field =3D V4L2_FIELD_INTERLACED_BT;
-> +
-> +		offset |=3D get_offset_msb(core, i);
-> +		amvdec_dst_buf_done_idx(sess, buffer_index, offset, field);
-> +	}
-> +}
-> +
-> +static irqreturn_t codec_h264_threaded_isr(struct amvdec_session *sess)
-> +{
-> +	struct amvdec_core *core =3D sess->core;
-> +	u32 status;
-> +	u32 size;
-> +	u8 cmd;
-> +
-> +	status =3D amvdec_read_dos(core, AV_SCRATCH_0);
-> +	cmd =3D status & CMD_MASK;
-> +
-> +	switch (cmd) {
-> +	case CMD_SRC_CHANGE:
-> +		codec_h264_src_change(sess);
-> +		break;
-> +	case CMD_FRAMES_READY:
-> +		codec_h264_frames_ready(sess, status);
-> +		break;
-> +	case CMD_FATAL_ERROR:
-> +		dev_err(core->dev, "H.264 decoder fatal error\n");
-> +		goto abort;
-> +	case CMD_BAD_WIDTH:
-> +		size =3D (amvdec_read_dos(core, AV_SCRATCH_1) + 1) * 16;
-> +		dev_err(core->dev, "Unsupported video width: %u\n", size);
-> +		goto abort;
-> +	case CMD_BAD_HEIGHT:
-> +		size =3D (amvdec_read_dos(core, AV_SCRATCH_1) + 1) * 16;
-> +		dev_err(core->dev, "Unsupported video height: %u\n", size);
-> +		goto abort;
-> +	case 0: /* Unused but not worth printing for */
-> +	case 9:
-> +		break;
-> +	default:
-> +		dev_info(core->dev, "Unexpected H264 ISR: %08X\n", cmd);
-> +		break;
-> +	}
-> +
-> +	if (cmd && cmd !=3D CMD_SRC_CHANGE)
-> +		amvdec_write_dos(core, AV_SCRATCH_0, 0);
-> +
-> +	/* Decoder has some SEI data for us ; ignore */
-> +	if (amvdec_read_dos(core, AV_SCRATCH_J) & SEI_DATA_READY)
-> +		amvdec_write_dos(core, AV_SCRATCH_J, 0);
-> +
-> +	return IRQ_HANDLED;
-> +abort:
-> +	amvdec_abort(sess);
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static irqreturn_t codec_h264_isr(struct amvdec_session *sess)
-> +{
-> +	struct amvdec_core *core =3D sess->core;
-> +
-> +	amvdec_write_dos(core, ASSIST_MBOX1_CLR_REG, 1);
-> +
-> +	return IRQ_WAKE_THREAD;
-> +}
-> +
-> +struct amvdec_codec_ops codec_h264_ops =3D {
-> +	.start =3D codec_h264_start,
-> +	.stop =3D codec_h264_stop,
-> +	.load_extended_firmware =3D codec_h264_load_extended_firmware,
-> +	.isr =3D codec_h264_isr,
-> +	.threaded_isr =3D codec_h264_threaded_isr,
-> +	.can_recycle =3D codec_h264_can_recycle,
-> +	.recycle =3D codec_h264_recycle,
-> +	.eos_sequence =3D codec_h264_eos_sequence,
-> +	.resume =3D codec_h264_resume,
-> +};
-> diff --git a/drivers/staging/media/meson/vdec/codec_h264.h b/drivers/stag=
-ing/media/meson/vdec/codec_h264.h
-> new file mode 100644
-> index 000000000000..7cb4fb86ff36
-> --- /dev/null
-> +++ b/drivers/staging/media/meson/vdec/codec_h264.h
-> @@ -0,0 +1,14 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ */
-> +/*
-> + * Copyright (C) 2019 BayLibre, SAS
-> + * Author: Maxime Jourdan <mjourdan@baylibre.com>
-> + */
-> +
-> +#ifndef __MESON_VDEC_CODEC_H264_H_
-> +#define __MESON_VDEC_CODEC_H264_H_
-> +
-> +#include "vdec.h"
-> +
-> +extern struct amvdec_codec_ops codec_h264_ops;
-> +
-> +#endif
-> diff --git a/drivers/staging/media/meson/vdec/vdec_platform.c b/drivers/s=
-taging/media/meson/vdec/vdec_platform.c
-> index accad8f8929a..025371ff8fae 100644
-> --- a/drivers/staging/media/meson/vdec/vdec_platform.c
-> +++ b/drivers/staging/media/meson/vdec/vdec_platform.c
-> @@ -9,9 +9,22 @@
-> =20
->  #include "vdec_1.h"
->  #include "codec_mpeg12.h"
-> +#include "codec_h264.h"
-> =20
->  static const struct amvdec_format vdec_formats_gxbb[] =3D {
->  	{
-> +		.pixfmt =3D V4L2_PIX_FMT_H264,
-> +		.min_buffers =3D 2,
-> +		.max_buffers =3D 24,
-> +		.max_width =3D 1920,
-> +		.max_height =3D 1080,
-> +		.vdec_ops =3D &vdec_1_ops,
-> +		.codec_ops =3D &codec_h264_ops,
-> +		.firmware_path =3D "meson/vdec/gxbb_h264.bin",
-> +		.pixfmts_cap =3D { V4L2_PIX_FMT_NV12M, 0 },
-> +		.flags =3D V4L2_FMT_FLAG_COMPRESSED |
-> +			 V4L2_FMT_FLAG_DYN_RESOLUTION,
-> +	}, {
->  		.pixfmt =3D V4L2_PIX_FMT_MPEG1,
->  		.min_buffers =3D 8,
->  		.max_buffers =3D 8,
-> @@ -38,6 +51,18 @@ static const struct amvdec_format vdec_formats_gxbb[] =
-=3D {
-> =20
->  static const struct amvdec_format vdec_formats_gxl[] =3D {
->  	{
-> +		.pixfmt =3D V4L2_PIX_FMT_H264,
-> +		.min_buffers =3D 2,
-> +		.max_buffers =3D 24,
-> +		.max_width =3D 3840,
-> +		.max_height =3D 2160,
-> +		.vdec_ops =3D &vdec_1_ops,
-> +		.codec_ops =3D &codec_h264_ops,
-> +		.firmware_path =3D "meson/vdec/gxl_h264.bin",
-> +		.pixfmts_cap =3D { V4L2_PIX_FMT_NV12M, 0 },
-> +		.flags =3D V4L2_FMT_FLAG_COMPRESSED |
-> +			 V4L2_FMT_FLAG_DYN_RESOLUTION,
-> +	}, {
->  		.pixfmt =3D V4L2_PIX_FMT_MPEG1,
->  		.min_buffers =3D 8,
->  		.max_buffers =3D 8,
-> @@ -64,6 +89,18 @@ static const struct amvdec_format vdec_formats_gxl[] =
-=3D {
-> =20
->  static const struct amvdec_format vdec_formats_gxm[] =3D {
->  	{
-> +		.pixfmt =3D V4L2_PIX_FMT_H264,
-> +		.min_buffers =3D 2,
-> +		.max_buffers =3D 24,
-> +		.max_width =3D 3840,
-> +		.max_height =3D 2160,
-> +		.vdec_ops =3D &vdec_1_ops,
-> +		.codec_ops =3D &codec_h264_ops,
-> +		.firmware_path =3D "meson/vdec/gxm_h264.bin",
-> +		.pixfmts_cap =3D { V4L2_PIX_FMT_NV12M, 0 },
-> +		.flags =3D V4L2_FMT_FLAG_COMPRESSED |
-> +			 V4L2_FMT_FLAG_DYN_RESOLUTION,
-> +	}, {
->  		.pixfmt =3D V4L2_PIX_FMT_MPEG1,
->  		.min_buffers =3D 8,
->  		.max_buffers =3D 8,
+> > 	state.period = P;
+> > 	state.duty_cycle = D;
+> > 	state.enabled = 0;
+> >    	pwm_apply_state(pwm, &state);
+> > 
+> > 	...
+> > 
+> > 	pwm_get_state(pwm, &state);
+> > 	state.enabled = 1;
+> >    	pwm_apply_state(pwm, &state);
+> > 
+> 
+> Yes that's the sequence.
+> 
+> >    Before my patch there was an implicit promise in the PWM framework
+> >    that the last pwm_apply_state has .duty_cycle = D (and .period = P).
+> >    Is this worthwile, or should we instead declare this as
+> >    non-guaranteed and fix the caller?
+> > 
+> 
+> pwm_bl is compliant with this, the problem in the pwm-cros-ec driver is when you
+> set the duty_cycle but enable is 0.
 
---=-OmJTcNTLraoYNa4SPA7W
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+pwm_bl *relies* on this behaviour. The question is: Is this a valid
+assumption to rely on (for consumers) resp. to guarantee (for the PWM
+framework)? I'm not sure it is because each PWM that doesn't know the
+concept of "disabled" (not sure how many there are) needs some effort to
+simulate it (by caching duty_cycle and period on disable).
 
------BEGIN PGP SIGNATURE-----
+Dropping this promise and fix pwm_bl (and maybe other consumers that
+rely on it) is my preferred solution.
+ 
+> >  - If this is a more or less common property that hardware doesn't know
+> >    the concept of "disabled" maybe it would make sense to drop this from
+> >    the PWM framework, too. (This is a question that I discussed some
+> >    time ago already with Thierry, but without an result. The key
+> >    question is: What is the difference between "disabled" and
+> >    "duty_cycle = 0" in general and does any consumer care about it.)
+> > 
+> 
+> Good question, I don't really know all consumer requirements, but AFAIK, usually
+> when you want to program duty_cycle to 0 you also want to disable the PWM.
 
-iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCXZzxIgAKCRBxUwItrAao
-HHxaAJoCflhx0U9R7xvQMv7BlzMyUP66EwCdGtPpyyAYO+e+oUaEchLBD5mwidI=
-=3Fdv
------END PGP SIGNATURE-----
+Note that hardware designers are "creative" and "disable the PWM" has
+different semantics for different PWMs. Some PWMs just stop the output
+at the level that it happens to be in, some stop in the inactive level,
+some stop at 0, some stop driving the pin. Currently the intended
+semantic of a disabled PWM is that it drives the inactive level (but it
+might be smart and stop driving if there is a pull in the right
+direction). I see no benefit of this semantic as it can also be
+accomplished by setting .duty_cycle = 0, .period = $something_small.
+Thierry doesn't agree and I fail to understand his reasoning.
 
---=-OmJTcNTLraoYNa4SPA7W--
+> At least for the backlight case doesn't make sense program first the
+> duty_cycle and then enable the PWM, is implicit, if duty_cycle is 0
+> the PWM is disabled, if duty_cycle > 0 the PWM is enabled.
 
+Yeah, that's my conclusion of above, too. After all the pwm_apply_state
+function is there for being able to go from one state to each other
+state with a single function call.
+
+> >  - A softer variant of the above: Should pwm_get_state() anticipate that
+> >    with .enabled = 0 the duty_cycle (and maybe also period) is
+> >    unreliable and cache that for callers?
+> 
+> Sorry, when you say pwm_get_state(), you mean the core call or the lowlevel
+> driver call?
+
+The suggestion is to do what you do in the driver (i.e. remember
+duty_cycle and in the general case also period) in the framework
+instead and fix the problem for all lowlevel drivers that behave similar
+to the implementation in question. i.e. don't rely on .duty_cycle and
+.period having a sensible value after .get_state() if the PWM is off.
+This is IMHO the second best option.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
