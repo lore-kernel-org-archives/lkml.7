@@ -2,177 +2,111 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88589C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B65BAC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 602392064A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:12:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 850922064A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:15:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="TZMym48p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbfJHOM2 (ORCPT
+        id S1726240AbfJHOP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 10:12:28 -0400
-Received: from mail-oln040092068048.outbound.protection.outlook.com ([40.92.68.48]:23129
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725795AbfJHOM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 10:12:28 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NlPExkRgL6GgtBUt6tAKl1E7DS6OayhU6PwmnrLtQklwq+w4XaQ/CQmVo0wtnC6fegmcVWrQ4bJxpD7sVZkOgm+NjTYoRYMtar1bESO6el0bTUfmHcL0hCvymSvY9ThJfLpNaFT8uDUCKi4ty/DJeLQ4s3IeNTcXgWJLI9GNrn941EfWbgiMAYIKrNGr7cJ8g9+PbsuHce/fv61+QkWwWqL0pncUmOqKxGimuFiHfzI8RJOL9vQlxtULqFkwcW8iDqzGnpLIz+WfI6EM5GzcXO/LjCmOdbNus38w15aTg1SVcorS30U/jw3uJLkXUAX4YlXxGb9fq64dU3BX4R3fIw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BlZhZ6DUvhbUmRfdizhoGIvpuA2o4G6ZArFrtTIvP8k=;
- b=iEFDleA5xvbA+gyE1lLHi9WwaOTSRh5hBpW0QpuaeGs4ZLlncul2OlSuCUEl1PhYv4+RCSaLnAH/y0nx29bQCkq8Ex+kS8E0+DrivTD6+vXAxjUDML5VHrc0YPBUGMjYSwaRvZZu2LHyBvwd/mfG6Gi4BoRHMdHCtIYr1o2d9iapG4zIvow0kip7Q3IXoSRmrvX3i7bzJxHcDD2FUFE6jWMYXaN7PXzhPGID0eKidMmTyLp9Ok2TERr1i6IBJvsN7DXqE+7bGnZbaocbq1y2GdrF+kqYiXHG2ZfyxV2FeA2W5NUP9Fh07/k6tXWOAOPIYY6UZwk+IV5nYtzh89jjDg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from VE1EUR02FT011.eop-EUR02.prod.protection.outlook.com
- (10.152.12.60) by VE1EUR02HT132.eop-EUR02.prod.protection.outlook.com
- (10.152.13.79) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2327.20; Tue, 8 Oct
- 2019 14:12:20 +0000
-Received: from HE1PR06MB4011.eurprd06.prod.outlook.com (10.152.12.51) by
- VE1EUR02FT011.mail.protection.outlook.com (10.152.12.150) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2327.20 via Frontend Transport; Tue, 8 Oct 2019 14:12:20 +0000
-Received: from HE1PR06MB4011.eurprd06.prod.outlook.com
- ([fe80::5c5a:1160:a2e0:43d8]) by HE1PR06MB4011.eurprd06.prod.outlook.com
- ([fe80::5c5a:1160:a2e0:43d8%4]) with mapi id 15.20.2305.023; Tue, 8 Oct 2019
- 14:12:20 +0000
-From:   Jonas Karlman <jonas@kwiboo.se>
-To:     Tomasz Figa <tfiga@chromium.org>
-CC:     Ezequiel Garcia <ezequiel@collabora.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "kernel@collabora.com" <kernel@collabora.com>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        "fbuergisser@chromium.org" <fbuergisser@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 for 5.4 2/4] media: hantro: Fix H264 max frmsize
- supported on RK3288
-Thread-Topic: [PATCH v2 for 5.4 2/4] media: hantro: Fix H264 max frmsize
- supported on RK3288
-Thread-Index: AQHVfTc2RvTWvQQ6Z06gn22kTgvMXqdQN9WAgAARyQCAAEYFgIAAMH0AgAAFHICAAAUdgA==
-Date:   Tue, 8 Oct 2019 14:12:20 +0000
-Message-ID: <HE1PR06MB4011B897EA5497659A19BCC6AC9A0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-References: <20191007174505.10681-1-ezequiel@collabora.com>
- <20191007174505.10681-3-ezequiel@collabora.com>
- <CAAFQd5BNu2ea3ei_imHmEwmdna0+iiSbQSv_SBsdHfP4Uh1h4Q@mail.gmail.com>
- <HE1PR06MB4011EC9E93ECBB6773252247AC9A0@HE1PR06MB4011.eurprd06.prod.outlook.com>
- <CAAFQd5CWoAP1psrEW6bVMkRmhFeTvFKtDSLjT7nefc2YiFovqQ@mail.gmail.com>
- <CAAFQd5AYCiKcA9pGc44L3gGHLPx6iMSb7KywkO8OqVv4gS8KvQ@mail.gmail.com>
- <CAAFQd5AQXGX_2gmKLfymH5mLG-uVh-v+XXtGXzbfzYzVVV42mA@mail.gmail.com>
-In-Reply-To: <CAAFQd5AQXGX_2gmKLfymH5mLG-uVh-v+XXtGXzbfzYzVVV42mA@mail.gmail.com>
-Accept-Language: sv-SE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR0802CA0024.eurprd08.prod.outlook.com
- (2603:10a6:3:bd::34) To HE1PR06MB4011.eurprd06.prod.outlook.com
- (2603:10a6:7:9c::32)
-x-incomingtopheadermarker: OriginalChecksum:D9264EE44C9BBA1C3C6011B3BCA1A6C674403C17A193C976153EB9A155F18205;UpperCasedChecksum:EBE47D720E54C1965C40B6989CBEE2D73E4BF2991CD66B099D8DC625E8E616F6;SizeAsReceived:8553;Count:50
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [nYzaafeuMhtjNOccHZLbNFzcPtR56TrI]
-x-microsoft-original-message-id: <a13d9d30-9c5d-2512-9a25-0b42d5495f49@kwiboo.se>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 50
-x-eopattributedmessage: 0
-x-ms-traffictypediagnostic: VE1EUR02HT132:
-x-ms-exchange-purlcount: 2
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: rkI+XNDLm1r0OjqK9cXlOLRMEroubczgD6zEoq4J7nbyD+mOxoZe1Q9jAEbNwmK4adO19M0nNghcTbqmuyWCm75dfBOTYsajeuOkO9wIqw6HC5kjqBTk6pO9ZhwMogvRe79ELYdfoq2//XjrEDpZt4jIgoJ+mSMqj1WJhuqEnWjwqNWwfM0UyZh6hWpzdz73nPHtifZ33wpZAJZ/uP4OXa69kYIvuinQbYTifyFzNIw=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9ED18B5529866441AD1264E8026A38ED@eurprd06.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1bdffa7d-e86e-472b-199f-08d74bf98824
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Oct 2019 14:12:20.2799
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1EUR02HT132
+        Tue, 8 Oct 2019 10:15:26 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:46827 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbfJHOP0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 10:15:26 -0400
+Received: by mail-qt1-f196.google.com with SMTP id u22so25452745qtq.13
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 07:15:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=uwFtPUZwVRjZpH4kYXqEMZKLuNiu2uGm9J01G5C31U4=;
+        b=TZMym48pDuPlxKUUJxLI1VhchjsRC2fmrqBBPap+SODl1xzDYd05ajV2SylRND62bO
+         bsbi9QiNsOeHyrkxc1T8PMfnEVyGtZU/tstXPZPdqpi/r/SG03aKj6IL8MkWEFOKQ4DN
+         3f4YBg6x0du9c/0m7Zff5oT6cG+1xLylMOdmnT76XH6MVzW5/VfQJB7D8Wp93g8Fj5OF
+         u1BDxyOZalZh7/RdjWMs1UaWwvdaHTmimJ5ck0CeTwUeTkZOCXu8/AP8Z7OTxF45ANzG
+         ue3iKCq0AQ6K3jMwQDMrFVn/OsXjgGpjgc/e/687dO0aE0fzoRrhRMeZaN1QBSKp8cQ7
+         rlbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=uwFtPUZwVRjZpH4kYXqEMZKLuNiu2uGm9J01G5C31U4=;
+        b=TpKrCql9zO7xGG3LnoSyBj8BV1mYeruvNkapstkgNzS4XQR/7uNJEmdAuvhKFqsUY0
+         RRs/NP+GHr5dQm4AzLNYVxgFun7joZvVaGzoBYFYxfcdf6DO4RKaAojKolXf18MOkOng
+         3/xyJ9WGUHcCuN7oeD/oKlBMGPnJeaSHIa3pXZf1hlAW7iaigsIWYkzZ+uggByB3FXhZ
+         9Ytiw9AOOjTc12RtU7oEf6V1xjU24hTYi0VcZlRXOs8bIkEbE+Gy7yNTx4yPxDvOCtjI
+         gdBubfu3ejIE1opNSulqO9t2oMIc3RrnZm1XYsA2QmZT/sirGzraSXbmMdXKNbi+Arma
+         A11w==
+X-Gm-Message-State: APjAAAWmd4Uk/5fvQDPtpbeLSHsAVc8a8TBH8e+9OGWz4YH6eUiw8m3l
+        HbN/H8/5tTzy4ARKilFDBg/yHg==
+X-Google-Smtp-Source: APXvYqwD03tQqikk2X5yhay3dM1yanfnAHyiYLgkAuyI8Spf2jLueDyyZ1kZCYsdrYuY0WXdQg5TcA==
+X-Received: by 2002:aed:2a3d:: with SMTP id c58mr37138594qtd.263.1570544125543;
+        Tue, 08 Oct 2019 07:15:25 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id d133sm9563134qkg.31.2019.10.08.07.15.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 08 Oct 2019 07:15:24 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH -next] mm/userfaultfd: fix a GCC compilation warning
+Date:   Tue,  8 Oct 2019 10:15:08 -0400
+Message-Id: <1570544108-32331-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0xMC0wOCAxNTo1MywgVG9tYXN6IEZpZ2Egd3JvdGU6DQo+IE9uIFR1ZSwgT2N0IDgs
-IDIwMTkgYXQgMTA6MzUgUE0gVG9tYXN6IEZpZ2EgPHRmaWdhQGNocm9taXVtLm9yZz4gd3JvdGU6
-DQo+PiBPbiBUdWUsIE9jdCA4LCAyMDE5IGF0IDc6NDIgUE0gVG9tYXN6IEZpZ2EgPHRmaWdhQGNo
-cm9taXVtLm9yZz4gd3JvdGU6DQo+Pj4gT24gVHVlLCBPY3QgOCwgMjAxOSBhdCAzOjMxIFBNIEpv
-bmFzIEthcmxtYW4gPGpvbmFzQGt3aWJvby5zZT4gd3JvdGU6DQo+Pj4+IE9uIDIwMTktMTAtMDgg
-MDc6MjcsIFRvbWFzeiBGaWdhIHdyb3RlOg0KPj4+Pj4gSGkgRXplcXVpZWwsIEpvbmFzLA0KPj4+
-Pj4NCj4+Pj4+IE9uIFR1ZSwgT2N0IDgsIDIwMTkgYXQgMjo0NiBBTSBFemVxdWllbCBHYXJjaWEg
-PGV6ZXF1aWVsQGNvbGxhYm9yYS5jb20+IHdyb3RlOg0KPj4+Pj4+IEZyb206IEpvbmFzIEthcmxt
-YW4gPGpvbmFzQGt3aWJvby5zZT4NCj4+Pj4+Pg0KPj4+Pj4+IFRSTSBzcGVjaWZ5IHN1cHBvcnRl
-ZCBpbWFnZSBzaXplIDQ4eDQ4IHRvIDQwOTZ4MjMwNCBhdCBzdGVwIHNpemUgMTYgcGl4ZWxzLA0K
-Pj4+Pj4+IGNoYW5nZSBmcm1zaXplIG1heF93aWR0aC9tYXhfaGVpZ2h0IHRvIG1hdGNoIFRSTS4N
-Cj4+Pj4+Pg0KPj4+Pj4+IEZpeGVzOiA3NjAzMjc5MzBlMTAgKCJtZWRpYTogaGFudHJvOiBFbmFi
-bGUgSDI2NCBkZWNvZGluZyBvbiByazMyODgiKQ0KPj4+Pj4+IFNpZ25lZC1vZmYtYnk6IEpvbmFz
-IEthcmxtYW4gPGpvbmFzQGt3aWJvby5zZT4NCj4+Pj4+PiAtLS0NCj4+Pj4+PiB2MjoNCj4+Pj4+
-PiAqIE5vIGNoYW5nZXMuDQo+Pj4+Pj4NCj4+Pj4+PiAgZHJpdmVycy9zdGFnaW5nL21lZGlhL2hh
-bnRyby9yazMyODhfdnB1X2h3LmMgfCA0ICsrLS0NCj4+Pj4+PiAgMSBmaWxlIGNoYW5nZWQsIDIg
-aW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4+Pj4+Pg0KPj4+Pj4+IGRpZmYgLS1naXQg
-YS9kcml2ZXJzL3N0YWdpbmcvbWVkaWEvaGFudHJvL3JrMzI4OF92cHVfaHcuYyBiL2RyaXZlcnMv
-c3RhZ2luZy9tZWRpYS9oYW50cm8vcmszMjg4X3ZwdV9ody5jDQo+Pj4+Pj4gaW5kZXggNmJmY2M0
-N2QxZTU4Li5lYmIwMTdiOGEzMzQgMTAwNjQ0DQo+Pj4+Pj4gLS0tIGEvZHJpdmVycy9zdGFnaW5n
-L21lZGlhL2hhbnRyby9yazMyODhfdnB1X2h3LmMNCj4+Pj4+PiArKysgYi9kcml2ZXJzL3N0YWdp
-bmcvbWVkaWEvaGFudHJvL3JrMzI4OF92cHVfaHcuYw0KPj4+Pj4+IEBAIC02NywxMCArNjcsMTAg
-QEAgc3RhdGljIGNvbnN0IHN0cnVjdCBoYW50cm9fZm10IHJrMzI4OF92cHVfZGVjX2ZtdHNbXSA9
-IHsNCj4+Pj4+PiAgICAgICAgICAgICAgICAgLm1heF9kZXB0aCA9IDIsDQo+Pj4+Pj4gICAgICAg
-ICAgICAgICAgIC5mcm1zaXplID0gew0KPj4+Pj4+ICAgICAgICAgICAgICAgICAgICAgICAgIC5t
-aW5fd2lkdGggPSA0OCwNCj4+Pj4+PiAtICAgICAgICAgICAgICAgICAgICAgICAubWF4X3dpZHRo
-ID0gMzg0MCwNCj4+Pj4+PiArICAgICAgICAgICAgICAgICAgICAgICAubWF4X3dpZHRoID0gNDA5
-NiwNCj4+Pj4+PiAgICAgICAgICAgICAgICAgICAgICAgICAuc3RlcF93aWR0aCA9IEgyNjRfTUJf
-RElNLA0KPj4+Pj4+ICAgICAgICAgICAgICAgICAgICAgICAgIC5taW5faGVpZ2h0ID0gNDgsDQo+
-Pj4+Pj4gLSAgICAgICAgICAgICAgICAgICAgICAgLm1heF9oZWlnaHQgPSAyMTYwLA0KPj4+Pj4+
-ICsgICAgICAgICAgICAgICAgICAgICAgIC5tYXhfaGVpZ2h0ID0gMjMwNCwNCj4+Pj4+IFRoaXMg
-ZG9lc24ndCBtYXRjaCB0aGUgZGF0YXNoZWV0IEkgaGF2ZSwgd2hpY2ggaXMgUkszMjg4IERhdGFz
-aGVldCBSZXYNCj4+Pj4+IDEuNCBhbmQgd2hpY2ggaGFzIHRoZSB2YWx1ZXMgYXMgaW4gY3VycmVu
-dCBjb2RlLiBXaGF0J3MgdGhlIG9uZSB5b3UNCj4+Pj4+IGdvdCB0aGUgdmFsdWVzIGZyb20/DQo+
-Pj4+IFRoZSBSSzMyODggVFJNIHZjb2RlYyBjaGFwdGVyIGZyb20gWzFdLCB1bmtub3duIHJldmlz
-aW9uIGFuZCBkYXRlLCBsaXN0cyA0OHg0OCB0byA0MDk2eDIzMDQgc3RlcCBzaXplIDE2IHBpeGVs
-cyB1bmRlciAyNS41LjEgSC4yNjQgZGVjb2Rlci4NCj4+Pj4NCj4+Pj4gSSBjYW4gYWxzbyBjb25m
-aXJtIHRoYXQgb25lIG9mIG15IHRlc3Qgc2FtcGxlcyAoUFVQUElFUyBCQVRIIElOIDRLKSBpcyA0
-MDk2eDIzMDQgYW5kIGNhbiBiZSBkZWNvZGVkIGFmdGVyIHRoaXMgcGF0Y2guDQo+Pj4+IEhvd2V2
-ZXIgdGhlIGRlY29kaW5nIHNwZWVkIGlzIG5vdCBvcHRpbWFsIGF0IDQwME1oeiwgaWYgSSByZWNh
-bGwgY29ycmVjdGx5IHlvdSBuZWVkIHRvIHNldCB0aGUgVlBVMSBjbG9jayB0byA2MDBNaHogZm9y
-IDRLIGRlY29kaW5nIG9uIFJLMzI4OC4NCj4+Pj4NCj4+Pj4gSSBhbSBub3Qgc3VyZSBpZiBJIHNo
-b3VsZCBpbmNsdWRlIGEgdjIgb2YgdGhpcyBwYXRjaCBpbiBteSB2MiBzZXJpZXMsIGFzLWlzIHRo
-aXMgcGF0Y2ggZG8gbm90IGFwcGx5IG9uIG1hc3RlciAoSDI2NF9NQl9ESU0gaGFzIGNoYW5nZWQg
-dG8gTUJfRElNIGluIG1hc3RlcikuDQo+Pj4+DQo+Pj4+IFsxXSBodHRwOi8vd3d3LnQtZmlyZWZs
-eS5jb20vZG93bmxvYWQvZmlyZWZseS1yazMyODgvZG9jcy9UUk0vcmszMjg4LWNoYXB0ZXItMjUt
-dmlkZW8tZW5jb2Rlci1kZWNvZGVyLXVuaXQtKHZjb2RlYykucGRmDQo+Pj4gSSBjaGVja2VkIHRo
-ZSBSSzMyODggVFJNIFYxLjEgdG9vIGFuZCBpdCByZWZlcnMgdG8gMzg0MHgyMTYwQDI0ZnBzIGFz
-DQo+Pj4gdGhlIG1heGltdW0uDQo+Pj4NCj4+PiBBcyBmb3IgcGVyZm9ybWFuY2UsIHdlJ3ZlIGFj
-dHVhbGx5IGJlZW4gZ2V0dGluZyBhcm91bmQgMzMgZnBzIGF0IDQwMA0KPj4+IE1IeiB3aXRoIDM4
-NDB4MjE2MCBvbiBvdXIgZGV2aWNlcyAodGhlIG9sZCBSSzMyODggQXN1cyBDaHJvbWVib29rDQo+
-Pj4gRmxpcCkuDQo+Pj4NCj4+PiBJIGd1ZXNzIHdlIG1pZ2h0IHdhbnQgdG8gY2hlY2sgdGhhdCB3
-aXRoIEhhbnRyby4NCj4+IENvdWxkIHlvdSBjaGVjayB0aGUgdmFsdWUgb2YgYml0cyAxMDowIGlu
-IHJlZ2lzdGVyIGF0IDB4MGM4PyBUaGF0DQo+PiBzaG91bGQgYmUgdGhlIG1heGltdW0gc3VwcG9y
-dGVkIHN0cmVhbSB3aWR0aCBpbiB0aGUgdW5pdHMgb2YgMTYNCj4+IHBpeGVscy4NCj4gQ29ycmVj
-dGlvbjogVGhlIHVuaXQgaXMgMSBwaXhlbCBhbmQgdGhlcmUgYXJlIGFkZGl0aW9uYWwgMiBtb3N0
-DQo+IHNpZ25pZmljYW50IGJpdHMgYXQgMHgwZDgsIDE1OjE0Lg0KDQpJIHdpbGwgY2hlY2sgdGhp
-cyBsYXRlciB0b25pZ2h0IHdoZW4gSSBoYXZlIGFjY2VzcyB0byBteSBkZXZpY2VzLg0KVGhlIFBV
-UFBJRVMgQkFUSCBJTiA0SyAoNDA5NngyMzA0KSBzYW1wbGUgZGVjb2RlZCB3aXRob3V0IGlzc3Vl
-IHVzaW5nIHJvY2tjaGlwIDQuNCBCU1Aga2VybmVsIGFuZCBtcHAgbGFzdCB0aW1lIEkgdGVzdGVk
-Lg0KDQpUaGUgdmNvZGVjIGRyaXZlciBpbiA0LjQgQlNQIGtlcm5lbCB1c2UgMzAwLzQwMCBNaHog
-YXMgZGVmYXVsdCBjbG9jayByYXRlIGFuZCB3aWxsIGNoYW5nZSB0byA2MDAgTWh6IHdoZW4gd2lk
-dGggaXMgb3ZlciAyNTYwLCBzZWUgWzFdOg0KwqAgcmFpc2UgZnJlcXVlbmN5IGZvciByZXNvbHV0
-aW9uIGxhcmdlciB0aGFuIDE0NDBwIGF2Yw0KDQpbMV0gaHR0cHM6Ly9naXRodWIuY29tL3JvY2tj
-aGlwLWxpbnV4L2tlcm5lbC9ibG9iL2RldmVsb3AtNC40L2RyaXZlcnMvdmlkZW8vcm9ja2NoaXAv
-dmNvZGVjL3Zjb2RlY19zZXJ2aWNlLmMjTDI1NTEtTDI1NzANCg0KUmVnYXJkcywNCkpvbmFzDQoN
-Cj4NCj4gQmVzdCByZWdhcmRzLA0KPiBUb21hc3oNCg0K
+The linux-next commit
+"hugetlb-remove-unused-hstate-in-hugetlb_fault_mutex_hash-fix" seems
+accidentally add back an unused variable that was correctly removed in
+the commit "hugetlb: remove unused hstate in hugetlb_fault_mutex_hash()"
+[1].
+
+mm/userfaultfd.c: In function '__mcopy_atomic_hugetlb':
+mm/userfaultfd.c:217:17: warning: variable 'h' set but not used
+[-Wunused-but-set-variable]
+  struct hstate *h;
+                 ^
+
+[1] http://lkml.kernel.org/r/20191005003302.785-1-richardw.yang@linux.intel.com
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ mm/userfaultfd.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+index 4cb4ef3d9128..1b0d7abad1d4 100644
+--- a/mm/userfaultfd.c
++++ b/mm/userfaultfd.c
+@@ -214,7 +214,6 @@ static __always_inline ssize_t __mcopy_atomic_hugetlb(struct mm_struct *dst_mm,
+ 	unsigned long src_addr, dst_addr;
+ 	long copied;
+ 	struct page *page;
+-	struct hstate *h;
+ 	unsigned long vma_hpagesize;
+ 	pgoff_t idx;
+ 	u32 hash;
+@@ -271,8 +270,6 @@ static __always_inline ssize_t __mcopy_atomic_hugetlb(struct mm_struct *dst_mm,
+ 			goto out_unlock;
+ 	}
+ 
+-	h = hstate_vma(dst_vma);
+-
+ 	while (src_addr < src_start + len) {
+ 		pte_t dst_pteval;
+ 
+-- 
+1.8.3.1
+
