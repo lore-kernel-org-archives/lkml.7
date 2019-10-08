@@ -2,98 +2,154 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D33F1C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 660CAC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD2EE206B6
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38689206B6
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 12:41:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="LNvQQGLF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kQ/feqhK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730317AbfJHMkf (ORCPT
+        id S1730876AbfJHMle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 08:40:35 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:46337 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730608AbfJHMke (ORCPT
+        Tue, 8 Oct 2019 08:41:34 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39012 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730332AbfJHMle (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 08:40:34 -0400
-Received: by mail-qk1-f194.google.com with SMTP id 201so16510739qkd.13;
-        Tue, 08 Oct 2019 05:40:34 -0700 (PDT)
+        Tue, 8 Oct 2019 08:41:34 -0400
+Received: by mail-wm1-f67.google.com with SMTP id v17so2959586wml.4;
+        Tue, 08 Oct 2019 05:41:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QcaaD2Kkp9q1dKv4LCmVZwmcx3ne0cSQScXyx4+4l/0=;
-        b=LNvQQGLFdee2VJ1Y8N1LhQq2QMKUXTBwBZ3jHB9RKlLXGeS8tFB2htIFHPVSE5hC0O
-         ZfF4QMtgO0b1IFeftV5/OOyooHK6DXs35+xcIKJXJrFJaudh2JduSyo5RvsAUj+845uX
-         TH1PbE6C1uZXfJK1Tuegsc5acEEE287hO5Vyc=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IX48zcw0hHbQ+qkGCrH/k9CNB0tesSY9qolmQpCaa38=;
+        b=kQ/feqhKZqOhEiMl9EqpWN3ZBcmBBS5KZKhjLd9WrsivqVclKascK3kYXKIcsU/cYL
+         7Gr+h/pY5FRQXLcOFyUbeg9WMQLwIEZanYZ227fQQx/JFTBYaOzVpdxcyo3SLV2uy+hi
+         T791PwKBRrGoMF1VptlWAewkQTpfTptEFFfAGDsxxVnOHKy61jmHWPFRvs3300cfbtWq
+         cw5MDItifsTCnX3ZUX7A/j0ejrabrl/dmCtLqY/jo+BSTHGafV+cQPXgSio9hUtyHkyp
+         N6C0iaDbsawugInLQwA5GBAeXN39KKB1n3wk7HHZFkL0fxYivwomcTRtG3UMv2unDDji
+         VYYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QcaaD2Kkp9q1dKv4LCmVZwmcx3ne0cSQScXyx4+4l/0=;
-        b=JVSjNfskoh5F//n1UqY6fKU9axSmS6WfPhMhOxWtehcbYQIjvBNiboVMxnZl0iYMi7
-         2vb+t6re+OPvR7uz91G2q12rseQ+6fnTdmDkf5sOLL/z5/DnlFvw8iaXviMdX4KvTgcs
-         xFZO22obOcHJ825z4kdjMX4YBeWBB9gz2grsDHZ9XB5nWl11AxXgJP6Sz7XamURsOxsq
-         S4SZ6JUr5P+xclDHGnfdDGtlCv96U+xKlgrlDGJyhzSo5CyTssQF9RUs5fw5aUbhltYL
-         ApK5BK4q4kDm8p14FVh2xjuRUL0UomNuy/+PU1R0CyVc8Njkz1273yJS70Geo5uwyYM6
-         +Zjw==
-X-Gm-Message-State: APjAAAVERcQ16JVtKjaV0xBERsCzb4upytSRNflwDGofO7MukRUage3V
-        rPd25VZgK7BF7eDEBPciRXKYaygitSPNj3gBWOMyZcjj
-X-Google-Smtp-Source: APXvYqwkF6lq+t3CBdhUlmPrseGRIVSYeVvqMPJ6fXPG/nPcYV3BhIqU06DGPVBFxB6scD/DUZvx8Fb0j+IrJWbXzdQ=
-X-Received: by 2002:a37:4f4c:: with SMTP id d73mr28718632qkb.171.1570538433471;
- Tue, 08 Oct 2019 05:40:33 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IX48zcw0hHbQ+qkGCrH/k9CNB0tesSY9qolmQpCaa38=;
+        b=NaZgC7Kxj95ACBZRkTZymKUvVWlUcaIqkx4AJxJ41F4O6uy8dmSt8vL8Za83u+KX/b
+         KrgV2iySqcHJ+3dLOKk/PUfwtEPxy6AUZ+nddsQSlYhOq1ouzmkB2n+6RhCB4qMzN7Vg
+         F6shmPz0FZX8ZqFnPwYKNwqqo78E33hlfH0I5dJP8HQt3RgC9O4RVL3+bEefVIw04W3w
+         1WnRv8Sb1NO+a8HkJ4pL1Ys+wbDJ3Sah50tsOtcrYoqIM4X102O3NN1auS9ODFpXoHxC
+         wn2vFe8LHmYuQrCitZKLH/F1Vq8iUT+Goegq/ckIz7iQF0kkO+so7PzBKE/qavA/iAH0
+         kA7Q==
+X-Gm-Message-State: APjAAAXDa6MysbBcFd22/n0OtmCrBxAyJqY5N38oPfGCN5EuTkEYp+v0
+        gobJjrH0sIDSwW56cn67ssk=
+X-Google-Smtp-Source: APXvYqzzN3+65OFEz9NJyk6+7y5N2iq7FEG+F5NSQb4S8qN+rFA2TF9Zp0DHZS0bWsSWO96xq1TIUA==
+X-Received: by 2002:a7b:cd95:: with SMTP id y21mr3732775wmj.53.1570538491517;
+        Tue, 08 Oct 2019 05:41:31 -0700 (PDT)
+Received: from andrea.guest.corp.microsoft.com ([2a01:110:8012:1012:c582:959a:923b:9ec])
+        by smtp.gmail.com with ESMTPSA id w5sm19765471wrs.34.2019.10.08.05.41.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Oct 2019 05:41:30 -0700 (PDT)
+Date:   Tue, 8 Oct 2019 14:41:24 +0200
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>
+Subject: Re: [PATCH 1/2] Drivers: hv: vmbus: Introduce table of VMBus
+ protocol versions
+Message-ID: <20191008124052.GA11245@andrea.guest.corp.microsoft.com>
+References: <20191007163115.26197-1-parri.andrea@gmail.com>
+ <20191007163115.26197-2-parri.andrea@gmail.com>
+ <87eezo1nrr.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-References: <20191008115143.14149-1-andrew@aj.id.au> <20191008115143.14149-2-andrew@aj.id.au>
-In-Reply-To: <20191008115143.14149-2-andrew@aj.id.au>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Tue, 8 Oct 2019 12:40:21 +0000
-Message-ID: <CACPK8Xeqpx3f_rMOGOqE8cXENREHH3MBjm0Eco9Dr4-ocs+DLg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: net: ftgmac100: Document AST2600 compatible
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     netdev@vger.kernel.org, "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87eezo1nrr.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 8 Oct 2019 at 11:50, Andrew Jeffery <andrew@aj.id.au> wrote:
->
-> The AST2600 contains an FTGMAC100-compatible MAC, although it no-longer
-> contains an MDIO controller.
->
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> > @@ -244,21 +234,18 @@ int vmbus_connect(void)
+> >  	 * version.
+> >  	 */
+> >  
+> > -	version = VERSION_CURRENT;
+> > +	for (i = 0; ; i++) {
+> > +		version = vmbus_versions[i];
+> > +		if (version == VERSION_INVAL)
+> > +			goto cleanup;
+> 
+> If you use e.g. ARRAY_SIZE() you can get rid of VERSION_INVAL - and make
+> this code look more natural.
 
-Acked-by: Joel Stanley <joel@jms.id.au>
+Thank you for pointing this out, Vitaly.
 
-> ---
->  Documentation/devicetree/bindings/net/ftgmac100.txt | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/net/ftgmac100.txt b/Documentation/devicetree/bindings/net/ftgmac100.txt
-> index 72e7aaf7242e..04cc0191b7dd 100644
-> --- a/Documentation/devicetree/bindings/net/ftgmac100.txt
-> +++ b/Documentation/devicetree/bindings/net/ftgmac100.txt
-> @@ -9,6 +9,7 @@ Required properties:
->
->       - "aspeed,ast2400-mac"
->       - "aspeed,ast2500-mac"
-> +     - "aspeed,ast2600-mac"
->
->  - reg: Address and length of the register set for the device
->  - interrupts: Should contain ethernet controller interrupt
-> --
-> 2.20.1
->
+IIUC, you're suggesting that I do:
+
+	for (i = 0; i < ARRAY_SIZE(vmbus_versions); i++) {
+		version = vmbus_versions[i];
+
+		ret = vmbus_negotiate_version(msginfo, version);
+		if (ret == -ETIMEDOUT)
+			goto cleanup;
+
+		if (vmbus_connection.conn_state == CONNECTED)
+			break;
+	}
+
+	if (vmbus_connection.conn_state != CONNECTED)
+		break;
+
+and that I remove VERSION_INVAL from vmbus_versions, yes?
+
+Looking at the uses of VERSION_INVAL, I find one remaining occurrence
+of this macro in vmbus_bus_resume(), which does:
+
+	if (vmbus_proto_version == VERSION_INVAL ||
+	    vmbus_proto_version == 0) {
+		...
+	}
+
+TBH I'm looking at vmbus_bus_resume() and vmbus_bus_suspend() for the
+first time and I'm not sure about how to change such check yet... any
+suggestions?
+
+Mmh, I see that vmbus_bus_resume() and vmbus_bus_suspend() can access
+vmbus_connection.conn_state: can such accesses race with a concurrent
+vmbus_connect()?
+
+Thanks,
+  Andrea
+
+
+> >  
+> > -	do {
+> >  		ret = vmbus_negotiate_version(msginfo, version);
+> >  		if (ret == -ETIMEDOUT)
+> >  			goto cleanup;
+> >  
+> >  		if (vmbus_connection.conn_state == CONNECTED)
+> >  			break;
+> > -
+> > -		version = vmbus_get_next_version(version);
+> > -	} while (version != VERSION_INVAL);
+> > -
+> > -	if (version == VERSION_INVAL)
+> > -		goto cleanup;
+> > +	}
+> >  
+> >  	vmbus_proto_version = version;
+> >  	pr_info("Vmbus version:%d.%d\n",
