@@ -2,155 +2,90 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_PAST_12_24,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA0FC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A77ECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73BD1206C2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:04:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ug0V9g2/"
+	by mail.kernel.org (Postfix) with ESMTP id 8E007206B6
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:05:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730358AbfJHJEH (ORCPT
+        id S1729987AbfJHJFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 05:04:07 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:39164 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727724AbfJHJEH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 05:04:07 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x988hY9d149324;
-        Tue, 8 Oct 2019 09:01:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
- bh=IGWEYxl9bWVz7EM8e449J5MsQV400hBu8xSSmkfuH5Y=;
- b=Ug0V9g2/xFiWAJ9gcJT8JwES+xE+q3crBqwiDt+3vEZjyAEiYxPiOJCW0sL7jN4S7hcH
- 9aTMssjDRoIPNznIfnd81gstSNC5WWpOb54GtDMRMvPL6lPjF96gJIyHmlwUXTAVJ4ID
- HyBRfAEfQftQ3Ew9mNEpv17J4iBx+y/9AJ+oXvGO64kseVDmURntDsqKi7XA7soTVPyL
- yWRJ50BYI2Vo+VBkcQoOPjGyx623d5GY2TzhIZ/HgcGJpYfmOdxeSBVxN9mT0JZJrtqO
- Z9+ZKU4M9UOCp/aAQqxfWSg4qkVAwvk07DSVnVnCMxAAVUOxXMxeW/CHUjM9KQE544jO ag== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2vek4qc3ds-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 08 Oct 2019 09:01:59 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x988hvL1027599;
-        Tue, 8 Oct 2019 08:59:58 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2vg205ur7t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 08 Oct 2019 08:59:58 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x988xtpe023595;
-        Tue, 8 Oct 2019 08:59:55 GMT
-Received: from z2.cn.oracle.com (/10.182.71.205)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 08 Oct 2019 01:59:55 -0700
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     vkuznets@redhat.com, linux-hyperv@vger.kernel.org,
-        kvm@vger.kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, sashal@kernel.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, pbonzini@redhat.com,
-        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        boris.ostrovsky@oracle.com, jgross@suse.com,
-        sstabellini@kernel.org, peterz@infradead.org,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH v5 1/5] Revert "KVM: X86: Fix setup the virt_spin_lock_key before static key get initialized"
-Date:   Mon,  7 Oct 2019 17:04:27 +0800
-Message-Id: <1570439071-9814-2-git-send-email-zhenzhong.duan@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1570439071-9814-1-git-send-email-zhenzhong.duan@oracle.com>
-References: <1570439071-9814-1-git-send-email-zhenzhong.duan@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9403 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910080089
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9403 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910080089
+        Tue, 8 Oct 2019 05:05:47 -0400
+Received: from mga01.intel.com ([192.55.52.88]:13503 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729440AbfJHJFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 05:05:46 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 02:05:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,270,1566889200"; 
+   d="scan'208";a="206603137"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 08 Oct 2019 02:05:41 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 08 Oct 2019 12:05:40 +0300
+Date:   Tue, 8 Oct 2019 12:05:40 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Matthias Andree <matthias.andree@gmx.de>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] PCI: Add missing link delays
+Message-ID: <20191008090540.GY2819@lahna.fi.intel.com>
+References: <20191004123947.11087-1-mika.westerberg@linux.intel.com>
+ <811277ae-bec1-1724-23ce-c13407bd79c5@gmx.de>
+ <20191004130619.GI2819@lahna.fi.intel.com>
+ <ed169065-1a2a-4729-b052-6ec8b1bf4835@gmx.de>
+ <20191007093236.GP2819@lahna.fi.intel.com>
+ <a5cfebd8-a9f8-ce68-21b7-f38514f9be87@gmx.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a5cfebd8-a9f8-ce68-21b7-f38514f9be87@gmx.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 34226b6b70980a8f81fff3c09a2c889f77edeeff.
+On Mon, Oct 07, 2019 at 05:15:24PM +0200, Matthias Andree wrote:
+> Am 07.10.19 um 11:32 schrieb Mika Westerberg:
+> > On Sat, Oct 05, 2019 at 09:34:41AM +0200, Matthias Andree wrote:
+> >> Am 04.10.19 um 15:06 schrieb Mika Westerberg:
+> >>> On Fri, Oct 04, 2019 at 02:57:21PM +0200, Matthias Andree wrote:
+> >>>> Am 04.10.19 um 14:39 schrieb Mika Westerberg:
+> >>>>> @Matthias, @Paul and @Nicholas, I appreciate if you could check that this
+> >>>>> does not cause any issues for your systems.
+> >>>> Just to be sure: is this intended to be applied against the 5.4-rc*
+> >>>> master branch?
+> >>> Yes, it applies on top of v5.4-rc1.
+> >> I am sorry to say that I cannot currently test - my computer has a
+> >> GeForce 1060-6GB an no onboard/on-chip graphics.
+> >> The nvidia module 435.21 does not compile against 5.4-rc* for me (5.3.1
+> >> was fine).
+> > I think the two patches should apply cleanly on 5.3.x as well.
+> 
+> Mika, that worked.
+> 
+> With your two patches on top of Linux 5.3.4, two Suspend-to-RAM cycles
+> (ACPI S3), one Suspend-to-disk cycle (ACPI S4),
+> no regressions observed => success?
 
-Commit 8990cac6e5ea ("x86/jump_label: Initialize static branching
-early") adds jump_label_init() call in setup_arch() to make static
-keys initialized early, so we could use the original simpler code
-again.
+Yes, if it did not hang during resume (because of the PME loop) I think
+it should be declared as success :)
 
-The similar change for XEN is in commit 090d54bcbc54 ("Revert
-"x86/paravirt: Set up the virt_spin_lock_key after static keys get
-initialized"")
-
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krcmar <rkrcmar@redhat.com>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: Wanpeng Li <wanpengli@tencent.com>
-Cc: Jim Mattson <jmattson@google.com>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
----
- arch/x86/kernel/kvm.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
-
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index e820568..3bc6a266 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -527,13 +527,6 @@ static void kvm_smp_send_call_func_ipi(const struct cpumask *mask)
- 	}
- }
- 
--static void __init kvm_smp_prepare_cpus(unsigned int max_cpus)
--{
--	native_smp_prepare_cpus(max_cpus);
--	if (kvm_para_has_hint(KVM_HINTS_REALTIME))
--		static_branch_disable(&virt_spin_lock_key);
--}
--
- static void __init kvm_smp_prepare_boot_cpu(void)
- {
- 	/*
-@@ -633,7 +626,6 @@ static void __init kvm_guest_init(void)
- 		apic_set_eoi_write(kvm_guest_apic_eoi_write);
- 
- #ifdef CONFIG_SMP
--	smp_ops.smp_prepare_cpus = kvm_smp_prepare_cpus;
- 	smp_ops.smp_prepare_boot_cpu = kvm_smp_prepare_boot_cpu;
- 	if (kvm_para_has_feature(KVM_FEATURE_PV_SCHED_YIELD) &&
- 	    !kvm_para_has_hint(KVM_HINTS_REALTIME) &&
-@@ -835,8 +827,10 @@ void __init kvm_spinlock_init(void)
- 	if (!kvm_para_has_feature(KVM_FEATURE_PV_UNHALT))
- 		return;
- 
--	if (kvm_para_has_hint(KVM_HINTS_REALTIME))
-+	if (kvm_para_has_hint(KVM_HINTS_REALTIME)) {
-+		static_branch_disable(&virt_spin_lock_key);
- 		return;
-+	}
- 
- 	/* Don't use the pvqspinlock code if there is only 1 vCPU. */
- 	if (num_possible_cpus() == 1)
--- 
-1.8.3.1
-
+Thanks a lot for testing!
