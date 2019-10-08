@@ -2,65 +2,88 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5684CECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26339C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39A2B206C2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:08:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA1B3206C2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:09:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="d86V74O5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730057AbfJHJIQ (ORCPT
+        id S1730065AbfJHJJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 05:08:16 -0400
-Received: from 8bytes.org ([81.169.241.247]:46464 "EHLO theia.8bytes.org"
+        Tue, 8 Oct 2019 05:09:44 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:56482 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729799AbfJHJIP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 05:08:15 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 51E203D0; Tue,  8 Oct 2019 11:08:13 +0200 (CEST)
-Date:   Tue, 8 Oct 2019 11:08:13 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Tom Murphy <murphyt7@tcd.ie>
-Cc:     iommu@lists.linux-foundation.org, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Andy Gross <agross@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-tegra@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v6 0/5] iommu/amd: Convert the AMD iommu driver to the
- dma-iommu api
-Message-ID: <20191008090813.GB2514@8bytes.org>
-References: <20190908165642.22253-1-murphyt7@tcd.ie>
+        id S1729784AbfJHJJn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 05:09:43 -0400
+Received: from zn.tnic (p200300EC2F0B510054990CC7734BB19B.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:5100:5499:cc7:734b:b19b])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5B0CA1EC0586;
+        Tue,  8 Oct 2019 11:09:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1570525781;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=qt4hy0nHJpZzoW+FdanfkOoQrJ3VcoxYAWMats/0cuY=;
+        b=d86V74O523mB29Lrfe7xMwqw93h5ms5psG6yR7hcCoIgxSi5PEiyu47/agTwTCT/IIbWt8
+        BIPm+2KnntWEpPpFkLTdYVjBIJGPdxzc8Fx1QGdGlywjgUm9KrGXOXOAK2Hv55GNrYdbnX
+        jAVfXJiG0V9CQyCuFjQXb2IFyFQxr34=
+Date:   Tue, 8 Oct 2019 11:09:31 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com
+Subject: Re: [PATCH v22 09/24] x86/sgx: Add functions to allocate and free
+ EPC pages
+Message-ID: <20191008090931.GC14765@zn.tnic>
+References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
+ <20190903142655.21943-10-jarkko.sakkinen@linux.intel.com>
+ <20191005164408.GB25699@zn.tnic>
+ <20191007145011.GA18016@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190908165642.22253-1-murphyt7@tcd.ie>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191007145011.GA18016@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 08, 2019 at 09:56:36AM -0700, Tom Murphy wrote:
-> Convert the AMD iommu driver to the dma-iommu api. Remove the iova
-> handling and reserve region code from the AMD iommu driver.
+On Mon, Oct 07, 2019 at 07:50:11AM -0700, Sean Christopherson wrote:
+> The caller is responsible for ensuring EREMOVE can be safely executed,
+> e.g. by holding the enclave's lock.
 
-Applied, thanks. Note that it will not show up in linux-next before
--rc3.
+lockdep_assert_held() here maybe?
+
+> For many ENCLS leafs, EREMOVE included, the CPU requires exclusive access
+> to the SGX Enclave Control Structures (SECS)[*] and will signal a #GP if
+> a different logical CPU is already executing an ENCLS leaf that requires
+> exclusive SECS access.  The SGX subsystem uses a per-enclave mutex to
+> serialize such ENCLS leafs, among other things.
+>
+> [*] The SECS is a per-enclave page that resides in the EPC and can only be
+>     directly accessed by the CPU.  It's used to track metadata about the
+>     enclave, e.g. number of child pages, base, size, etc...
+
+Ok.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
