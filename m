@@ -2,114 +2,114 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07456C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8873BC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D085F206BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:24:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="A/lNeYcx"
+	by mail.kernel.org (Postfix) with ESMTP id 5B32520815
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 10:25:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570530318;
+	bh=xvQs2o0EkBO2YHBiV+0D/Vc9/Ghl0Vhxiv3685TLTIY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Q4VomKHUH8dulAHf3pTde1pR6YZ9x/4WXV+i7YMjZbIVuUdSGLMlNTHnvL+hKSZCu
+	 kxIomuWrQZsNDy/A0/hF1ge5BgV7hqIXqQwBcKfvDvrgDru3Qppand5MuBHEsA7IVE
+	 aRI4C0FuWjoCdJYvUUs/FqbJYdvJkY6y8A9f0C5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730414AbfJHKYn (ORCPT
+        id S1730450AbfJHKZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 06:24:43 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37440 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730008AbfJHKYm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 06:24:42 -0400
-Received: by mail-wm1-f65.google.com with SMTP id f22so2544041wmc.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 03:24:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=sjfFuDwqO1AuvoKSjvoaPz/4rXLLUzUv8rusbSInkFk=;
-        b=A/lNeYcxz2GnaQ18zAN30eHxaW1n3Ev9eqdPPE7xK4n9GPDyv8I1vtoQS9b6wBkc0g
-         79dSvRzCae7vnTglys8XqD5qgjI5BjUNP2VCRFVasU31Fg0ksElKTob41oY/VhJuXPIN
-         DGx7b2uEOrrtJzc+Qi1U0OGRUBYtbkEsEXqB9x8fPduJMQcmEVGQ1AHisWeJaNt9z8JO
-         /rg9Ai7t/0OAAU19q5Flzrxa2mZXgvPbT4CILF0fkkn9fozTSfN6hsiAerk1U8k915Kn
-         ZxFyaSKQG0XVR+7f0Nk1zCY9ClLy1orPM2IEIDMzMmcH06UGIdNpQEnmiAI8NZm87N9X
-         NRDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=sjfFuDwqO1AuvoKSjvoaPz/4rXLLUzUv8rusbSInkFk=;
-        b=VeENG6SW+tOIMU194QSb9dBaoWZiVSjWBE2oMEy6ST0TPDcJ0QgYFmAwTnDljzrpZP
-         Lcp7+YkNwTDyUAj5evhmcGzJqDrGsihJhTq0gqJwHV6m6McfosTg3b0b5cjgBzfytN9m
-         lIBTXDM+obPA7nglvzHQkWgj94MnzSeyeqjbVqODX0BMxTKk26r07JIo5fbnsfSIi2Lq
-         gj2yzGavJtR2KfC7qXLDOTul4C++iVOTeivNaoWANR7lbKEh9Pk614533ZELKsTUyscx
-         +Ql99/wX1UAEhMyTVWxudz3BhGO2Xf51wvTOQs/wswpVF9E0k7P/S7A10E5cFvAQjo35
-         Q+5g==
-X-Gm-Message-State: APjAAAVI2m+/i2clddNgeyFs+jI2qkcTZtmvNG11RPE6peqf/+huE7/S
-        rPJWV2bnV5LtqY3xigpimoQH+6yI5tnO9pHf
-X-Google-Smtp-Source: APXvYqwuRA/6MX6a7YgFLjdBZKhtPkTr1LdeM2uUSxLL4Wht9iFeHb+QYy234AceMwqVl+9VaPks4A==
-X-Received: by 2002:a1c:f714:: with SMTP id v20mr3284424wmh.55.1570530280651;
-        Tue, 08 Oct 2019 03:24:40 -0700 (PDT)
-Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
-        by smtp.gmail.com with ESMTPSA id r27sm53397272wrc.55.2019.10.08.03.24.39
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 08 Oct 2019 03:24:39 -0700 (PDT)
-From:   Michal Simek <michal.simek@xilinx.com>
-To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
-        michal.simek@xilinx.com, git@xilinx.com
-Cc:     Siva Durga Prasad Paladugu <siva.durga.paladugu@xilinx.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        James Morris <james.morris@microsoft.com>,
-        John Johansen <john.johansen@canonical.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH] microblaze: Increase max dtb size to 64K from 32K
-Date:   Tue,  8 Oct 2019 12:24:37 +0200
-Message-Id: <051fa6cf19fac4ae7029ac9e85fe12caa29b4011.1570530267.git.michal.simek@xilinx.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 8 Oct 2019 06:25:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59970 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730416AbfJHKZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 06:25:17 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D277D206BB;
+        Tue,  8 Oct 2019 10:25:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570530316;
+        bh=xvQs2o0EkBO2YHBiV+0D/Vc9/Ghl0Vhxiv3685TLTIY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=egWENj8PwMc2WcACRDBMWTlZGkW2pxt0YBJ7nm9KJu66YC/B3eUUpWGJru2vDHShm
+         y8GbOMhvNSP5KfEG7Mn2kqQJwJp9SJwvvvQdIjqT0GBG/zr9n9qbrMqb5DU+wnlPMN
+         uVv8njYO0qCDjrf5+MVm+HJGhXvh6DjojbuhonbA=
+Date:   Tue, 8 Oct 2019 11:25:12 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Yunfeng Ye <yeyunfeng@huawei.com>
+Cc:     catalin.marinas@arm.com, will.deacon@arm.com,
+        kstewart@linuxfoundation.org, gregkh@linuxfoundation.org,
+        tglx@linutronix.de, info@metux.net, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2] arm64: armv8_deprecated: Checking return value for
+ memory allocation
+Message-ID: <20191008102511.pmkqcpf7spkogarp@willie-the-truck>
+References: <bd558d56-18a9-3607-3db0-ad203ab12aa8@huawei.com>
+ <20191007153710.7xpx27kgeewz75kt@willie-the-truck>
+ <e58c36f6-23e3-12b2-bd9c-1ef731b5f8fd@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e58c36f6-23e3-12b2-bd9c-1ef731b5f8fd@huawei.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Siva Durga Prasad Paladugu <siva.durga.paladugu@xilinx.com>
+On Tue, Oct 08, 2019 at 10:33:17AM +0800, Yunfeng Ye wrote:
+> On 2019/10/7 23:37, Will Deacon wrote:
+> > On Mon, Oct 07, 2019 at 06:06:35PM +0800, Yunfeng Ye wrote:
+> >> @@ -617,25 +624,47 @@ static int t16_setend_handler(struct pt_regs *regs, u32 instr)
+> >>   */
+> >>  static int __init armv8_deprecated_init(void)
+> >>  {
+> >> -	if (IS_ENABLED(CONFIG_SWP_EMULATION))
+> >> -		register_insn_emulation(&swp_ops);
+> >> +	int ret = 0;
+> >> +	int err = 0;
+> >> +
+> >> +	if (IS_ENABLED(CONFIG_SWP_EMULATION)) {
+> >> +		ret = register_insn_emulation(&swp_ops);
+> >> +		if (ret) {
+> >> +			pr_err("register insn emulation swp: fail\n");
+> >> +			err = ret;
+> >> +		}
+> >> +	}
+> > 
+> > Is there much point in continuing here? May as well just return ret, I
+> > think. I also don't think you need to print anything, since kmalloc
+> > should already have shouted.
+> > 
+> The registration of each instruction simulation is independent. I think
+> that one failure does not affect the registration of other instructions.
 
-This patch increases max dtb size to 64K from 32K. This fixes the issue  of
-kernel hang with larger dtb of size greater than 32KB.
+Dunno, I think that if kmalloc() starts failing then it's time to give up!
 
-Signed-off-by: Siva Durga Prasad Paladugu <siva.durga.paladugu@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
+> In addition, if return directly, is it need to unregister? Of course,
+> the first instruction registration can be directly returned, If the
+> following instruction registration fails, is it need unregister operation?
+> currently the unregistration of instruction simulation is not be implemented
+> yet.
 
- arch/microblaze/kernel/head.S        | 2 +-
- arch/microblaze/kernel/vmlinux.lds.S | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+That's an interesting one -- currently there isn't a way to unregister
+an emulation hook afaict. We could add unregister_insn_emulation() to
+remove the emulation hook from the insn_emulation list and free it, but
+I'm actually now starting to prefer your initial patch after all. The only
+way these failures will happen are either because the system is doomed
+or kmalloc fault injection is being used; so keeping things simple rather
+than add rarely executed complexity is probably best.
 
-diff --git a/arch/microblaze/kernel/head.S b/arch/microblaze/kernel/head.S
-index f264fdcf152a..7d2894418691 100644
---- a/arch/microblaze/kernel/head.S
-+++ b/arch/microblaze/kernel/head.S
-@@ -99,7 +99,7 @@ big_endian:
- _prepare_copy_fdt:
- 	or	r11, r0, r0 /* incremment */
- 	ori	r4, r0, TOPHYS(_fdt_start)
--	ori	r3, r0, (0x8000 - 4)
-+	ori	r3, r0, (0x10000 - 4)
- _copy_fdt:
- 	lw	r12, r7, r11 /* r12 = r7 + r11 */
- 	sw	r12, r4, r11 /* addr[r4 + r11] = r12 */
-diff --git a/arch/microblaze/kernel/vmlinux.lds.S b/arch/microblaze/kernel/vmlinux.lds.S
-index e1f3e8741292..71072c5cf61f 100644
---- a/arch/microblaze/kernel/vmlinux.lds.S
-+++ b/arch/microblaze/kernel/vmlinux.lds.S
-@@ -46,7 +46,7 @@ SECTIONS {
- 	__fdt_blob : AT(ADDR(__fdt_blob) - LOAD_OFFSET) {
- 		_fdt_start = . ;		/* place for fdt blob */
- 		*(__fdt_blob) ;			/* Any link-placed DTB */
--	        . = _fdt_start + 0x8000;	/* Pad up to 32kbyte */
-+	        . = _fdt_start + 0x10000;	/* Pad up to 64kbyte */
- 		_fdt_end = . ;
- 	}
- 
--- 
-2.17.1
+> The purpose of printing information is to replace the direct return, which
+> can distinguish which instruction failed to register. There is no need to print
+> information if it returns directly.
 
+What do you expect people to do with that information?
+
+Are you ok with me applying your original patch?
+
+Will
