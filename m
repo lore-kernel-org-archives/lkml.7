@@ -2,122 +2,107 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E9E4C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2617BECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4344C206BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:47:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BkRMuuut"
+	by mail.kernel.org (Postfix) with ESMTP id E8BC2205F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 08:47:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570524476;
+	bh=84c0CAkK+uRKdAQR9RnZ8+2qy47Y0X6g19thMY6VjIo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2Sr4jzRmg2FGcRERc+8ccj5aVJfrtjVaJ4157EZRJUcoSuKnnt/VhnEv2YeBgyM8C
+	 gNoEqMgc/CvKZfVJTLOX+SrY7N/2pHJ+Kjjqr6NT27M3cE4AZaaEDhlZtS6xokt7AD
+	 C1nTfnYtNzXYIC79j+0RvzT7GKRX4qnIS0adFxmo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730188AbfJHIrT (ORCPT
+        id S1730268AbfJHIrz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 04:47:19 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:35035 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730006AbfJHIrT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 04:47:19 -0400
-Received: by mail-lj1-f193.google.com with SMTP id m7so16636558lji.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 01:47:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=l8gpydJYA0YDgp2JmqFlI7k3M5woSWANVYThPnzBSyg=;
-        b=BkRMuuut74Tg4ql3czpGBiGETKQ47t0yfFGj9qUtoNECtFLrPq7patqxRQTIKUPosJ
-         e5ij5XG6gLCR9aH2tMBlyg4nicWRgSUUeguPdBLCGj5e+fmO4WBOWHqbIrjN23GcV9X+
-         9UiM5zuZ8kUOjmbmakyLfk3DNm7gDqehMEcBVhaBie4GaVJqRz5rpcUAluJLllJOF3Mf
-         +y7BzcB/eQ1ZrGH8gN2u8Rxxi+fzSaghOC5xViRMArZNRSxn2csNz/W1bUfwb6lH8tnt
-         yTgKoyASrJ8JwI3YQxZpWYMIBXyHXAIoXg2BD9qf9M9BjKJeDzu0rw7W+YgoKaSJzGqP
-         eNYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=l8gpydJYA0YDgp2JmqFlI7k3M5woSWANVYThPnzBSyg=;
-        b=Hek0fmge9nfx+mCShDVw4VYn1Q9v0/LAKZOm2F4BqNAadmFXuOWKU1b49kUhlXNJbD
-         tHubP+z2BZJJ8NCzIgfxqofh6uZb2ph8y7HjW/YWeJfW/kUbwMoxOEvx2d+LMAYG0rzl
-         Earix/ijlBU8xApamwoYOAC4I5SOxfCfxY6IDbnXKOpNfoe5V4HgcKv6I1wk0gvvWM+L
-         kQpNZNAnqYIABvE77tRM/W2m4xbAzAiCEzjKOgOKVlPeNdqI2DpEzhYdcVOFECibdl6H
-         LTZi3YoYdorNHOXY5bADo/4Razn+hL4y3T8nDarUSl6xbeQLpHcdlPrb2+ftm1XIb8bV
-         Xgfw==
-X-Gm-Message-State: APjAAAV9xk+ELKfye+mEg28ESRM7ojStG3QGZi1lFdk3d43Xn6No7HBU
-        OiunQV7nDfwvQACESlJVzdPsIjiEKINPgCsgE2P3vA==
-X-Google-Smtp-Source: APXvYqxbNM71HM7CPR6QRsIgEbU3UU9U/CSiMXaA2SIbIfrQl+rWLBRuuYXoBIaSEvilchXKRH21ww7tus0XXj0qkXw=
-X-Received: by 2002:a2e:63da:: with SMTP id s87mr20899729lje.79.1570524436968;
- Tue, 08 Oct 2019 01:47:16 -0700 (PDT)
+        Tue, 8 Oct 2019 04:47:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42592 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730137AbfJHIrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 04:47:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DD2F1AFAE;
+        Tue,  8 Oct 2019 08:47:52 +0000 (UTC)
+Date:   Tue, 8 Oct 2019 10:47:51 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Qian Cai <cai@lca.pw>, tj@kernel.org, vdavydov.dev@gmail.com,
+        hannes@cmpxchg.org, guro@fb.com, cl@linux.com, penberg@kernel.org,
+        rientjes@google.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2] mm/slub: fix a deadlock in show_slab_objects()
+Message-ID: <20191008084751.GD6681@dhcp22.suse.cz>
+References: <1570192309-10132-1-git-send-email-cai@lca.pw>
+ <20191004125701.GJ9578@dhcp22.suse.cz>
+ <20191007081621.GE2381@dhcp22.suse.cz>
+ <20191007145902.a1ae6aac11c29d466a445a94@linux-foundation.org>
 MIME-Version: 1.0
-References: <20190617221134.9930-1-f.fainelli@gmail.com> <CACRpkdbqW2kJNdPi6JPupaHA_qRTWG-MsUxeCz0c38MRujOSSA@mail.gmail.com>
- <0ba50ae2-be09-f633-ab1f-860e8b053882@broadcom.com> <CAK8P3a2QBQrBU+bBBL20kR+qJfmspCNjiw05jHTa-q6EDfodMg@mail.gmail.com>
- <fbdc3788-3a24-2885-b61b-8480e8464a51@gmail.com> <CAK8P3a1E_1=_+eJXvcFMLd=a=YW_WGwjm3nzRZV7SzzZqovzRw@mail.gmail.com>
-In-Reply-To: <CAK8P3a1E_1=_+eJXvcFMLd=a=YW_WGwjm3nzRZV7SzzZqovzRw@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 8 Oct 2019 10:47:05 +0200
-Message-ID: <CACRpkdbuwn-YBYd324OsfC4efBU_1pfnyS+N=+3DmrYOEKKFJw@mail.gmail.com>
-Subject: Re: [PATCH v6 0/6] KASan for arm
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        kvmarm@lists.cs.columbia.edu, Jonathan Corbet <corbet@lwn.net>,
-        Abbott Liu <liuwenliang@huawei.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Russell King <linux@armlinux.org.uk>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        drjones@redhat.com, Vladimir Murzin <vladimir.murzin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Andre Przywara <andre.przywara@arm.com>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Jinbum Park <jinb.park7@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Landley <rob@landley.net>, philip@cog.systems,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Garnier <thgarnie@google.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191007145902.a1ae6aac11c29d466a445a94@linux-foundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 8, 2019 at 12:10 AM Arnd Bergmann <arnd@arndb.de> wrote:
-> On Mon, Oct 7, 2019 at 11:35 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+On Mon 07-10-19 14:59:02, Andrew Morton wrote:
+> On Mon, 7 Oct 2019 10:16:21 +0200 Michal Hocko <mhocko@kernel.org> wrote:
+> 
+> > On Fri 04-10-19 14:57:01, Michal Hocko wrote:
+> > > On Fri 04-10-19 08:31:49, Qian Cai wrote:
+> > > > Long time ago, there fixed a similar deadlock in show_slab_objects()
+> > > > [1]. However, it is apparently due to the commits like 01fb58bcba63
+> > > > ("slab: remove synchronous synchronize_sched() from memcg cache
+> > > > deactivation path") and 03afc0e25f7f ("slab: get_online_mems for
+> > > > kmem_cache_{create,destroy,shrink}"), this kind of deadlock is back by
+> > > > just reading files in /sys/kernel/slab which will generate a lockdep
+> > > > splat below.
+> > > > 
+> > > > Since the "mem_hotplug_lock" here is only to obtain a stable online node
+> > > > mask while racing with NUMA node hotplug, in the worst case, the results
+> > > > may me miscalculated while doing NUMA node hotplug, but they shall be
+> > > > corrected by later reads of the same files.
+> > > 
+> > > I think it is important to mention that this doesn't expose the
+> > > show_slab_objects to use-after-free. There is only a single path that
+> > > might really race here and that is the slab hotplug notifier callback
+> > > __kmem_cache_shrink (via slab_mem_going_offline_callback) but that path
+> > > doesn't really destroy kmem_cache_node data structures.
+> 
+> Yes, I noted this during review.  It's a bit subtle and is worthy of
+> more than a changelog note, I think.  How about this?
+> 
+> --- a/mm/slub.c~mm-slub-fix-a-deadlock-in-show_slab_objects-fix
+> +++ a/mm/slub.c
+> @@ -4851,6 +4851,10 @@ static ssize_t show_slab_objects(struct
+>  	 * already held which will conflict with an existing lock order:
+>  	 *
+>  	 * mem_hotplug_lock->slab_mutex->kernfs_mutex
+> +	 *
+> +	 * We don't really need mem_hotplug_lock (to hold off
+> +	 * slab_mem_going_offline_callback()) here because slab's memory hot
+> +	 * unplug code doesn't destroy the kmem_cache->node[] data.
+>  	 */
 
-> > > 053555034bdf kasan: disable CONFIG_KASAN_STACK with clang on arm32
-> >
-> > This one I did not take based on Linus' feedback that is breaks booting
-> > on his RealView board.
->
-> That likely means that there is still a bigger problem somewhere.
+Yes please! 
 
-I will try to look into it. I got pretty puzzled by this, it makes no sense.
+>  #ifdef CONFIG_SLUB_DEBUG
+> _
+> 
+> > Andrew, please add this to the changelog so that we do not have to
+> > scratch heads again when looking into that code.
+> 
+> I did that as well.
 
-One possible problem is that some of the test chips on the RealViews
-are not that stable, especially with caches. The plan is to test in QEMU
-and hardware in parallel.
-
-Yours,
-Linus Walleij
+Thanks!
+-- 
+Michal Hocko
+SUSE Labs
