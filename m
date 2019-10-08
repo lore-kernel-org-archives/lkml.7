@@ -2,95 +2,170 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F11FC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 21:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 051ACC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 21:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6165C206BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 21:54:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ez5+sEPi"
+	by mail.kernel.org (Postfix) with ESMTP id D166F21835
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 21:55:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbfJHVyi (ORCPT
+        id S1726698AbfJHVzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 17:54:38 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39647 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbfJHVyi (ORCPT
+        Tue, 8 Oct 2019 17:55:47 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:51598 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfJHVzr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 17:54:38 -0400
-Received: by mail-pg1-f196.google.com with SMTP id e1so23939pgj.6;
-        Tue, 08 Oct 2019 14:54:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BtHDZ0PRtKhQIM9Q2m33t5tA8QUCKAJDqO8TCXWjIjM=;
-        b=ez5+sEPiCoBWMsSnAzDT2s4hNSG1DNwiT4tK0Yb1faoE86vKvCcANQa98TnLswaiwQ
-         oz5OVVo12m1rntflHTTPbkYKOh6jhlBktUsTryZ7l2UxY17aKHXknJX+86qXPyMmnNom
-         RqX6a7YHwtOiyDdCiEv80xiHWZ+oBmIBGFqatkF6g2Uas6lz1zF2UJbW8iwBnMd2Bgn8
-         0VVm98/l0zapzqnkw+PFTPh0WzYSJR18tfOLCpuMpKadPajH+5wMkz95lYbQmNY1VRwh
-         t/WGA1C4DIW2Ps/iUKjiZPdvEu2ji6I0ga+EQH3tWRl2QwuPYN8I/mZDhZQGnTnGFXuf
-         ZNvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BtHDZ0PRtKhQIM9Q2m33t5tA8QUCKAJDqO8TCXWjIjM=;
-        b=GqQNgrF0dX1gNRsSEwM/UBfsMU050qkrzg3t1NlIOUCS41BNungAx7/DcJi33uPE38
-         rsnnstT50jufSpAQUYAmbKkzTdagRfjOYNCpGwhkXYsiFXPNilGF8m3dQvMHlc54CTiA
-         9PDWSuzs+v22vpsDrXmRS9TPO1Ta4f+XYuoM6EZKP2n2NPoCyHnNOgjePAG46Mu+vvmM
-         bUf1prgJCx8uhchEPnmwCCetEEVSHKuFx5TGllk0JUIjiX90qIfIeb/t3TVIIsy7FPPC
-         o36B9R2oXs5ss349OwgGB35+p/YCgHMN9TTWKX8p1xbZZSz4EYeNqdZFV5bRkgrbBxHl
-         0F1Q==
-X-Gm-Message-State: APjAAAWW65XGFSf2cBKqykp5K8HhfRBjRONbTrk9Euhfk7nNJEVcivaj
-        xfUaiccW8Equ052G9cUsYOk=
-X-Google-Smtp-Source: APXvYqyhjOkrrVMwhSewlrHX5gf2yJrw9cRFovIZ/xrHXPgiqei0wHiZ5dzpXNghSLGC8XUtq3e3qA==
-X-Received: by 2002:a65:5a8c:: with SMTP id c12mr656375pgt.140.1570571676907;
-        Tue, 08 Oct 2019 14:54:36 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id s14sm94553pfe.52.2019.10.08.14.54.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2019 14:54:35 -0700 (PDT)
-Date:   Tue, 8 Oct 2019 14:54:33 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Andi Shyti <andi@etezian.org>
-Cc:     Stephan Gerhold <stephan@gerhold.net>,
-        Andi Shyti <andi.shyti@samsung.com>,
-        Simon Shields <simon@lineageos.org>,
-        linux-input@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Tue, 8 Oct 2019 17:55:47 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id A5CDD28D7B3
+Message-ID: <d37e781548fbcb1cb891d681b322645b7af7f01b.camel@collabora.com>
+Subject: Re: [PATCH v3 3/5] drm/rockchip: Add optional support for CRTC
+ gamma LUT
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Sean Paul <sean@poorly.run>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-rockchip@lists.infradead.org,
+        Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
+        Sandy Huang <hjc@rock-chips.com>, kernel@collabora.com,
+        Sean Paul <seanpaul@chromium.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Ilia Mirkin <imirkin@alum.mit.edu>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] Input: mms114 - use device_get_match_data
-Message-ID: <20191008215433.GH22365@dtor-ws>
-References: <20191007203343.101466-1-stephan@gerhold.net>
- <20191007203343.101466-2-stephan@gerhold.net>
- <20191008114426.GC4015@jack.zhora.eu>
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>
+Date:   Tue, 08 Oct 2019 18:55:34 -0300
+In-Reply-To: <20191008200339.GD85762@art_vandelay>
+References: <20190930222802.32088-1-ezequiel@collabora.com>
+         <20190930222802.32088-4-ezequiel@collabora.com>
+         <20191007185432.GG126146@art_vandelay>
+         <dad6ee9aa3699af0f794f467224a8a01798d86b2.camel@collabora.com>
+         <9cdd23c20ed91d4c4654aaae27d8c3addfd9af3f.camel@collabora.com>
+         <20191008200339.GD85762@art_vandelay>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191008114426.GC4015@jack.zhora.eu>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 02:44:26PM +0300, Andi Shyti wrote:
-> Hi Stephan,
-> 
-> > device_get_match_data is available now, so we can replace the call
-> > to of_device_get_match_data and remove the FIXME comment.
+On Tue, 2019-10-08 at 16:03 -0400, Sean Paul wrote:
+> On Tue, Oct 08, 2019 at 04:33:35PM -0300, Ezequiel Garcia wrote:
+> > On Tue, 2019-10-08 at 16:23 -0300, Ezequiel Garcia wrote:
+> > > Hello Sean,
+> > > 
+> > > On Mon, 2019-10-07 at 14:54 -0400, Sean Paul wrote:
+> > > > On Mon, Sep 30, 2019 at 07:28:00PM -0300, Ezequiel Garcia wrote:
+> > > > > Add an optional CRTC gamma LUT support, and enable it on RK3288.
+> > > > > This is currently enabled via a separate address resource,
+> > > > > which needs to be specified in the devicetree.
+> > > > > 
+> > > > > The address resource is required because on some SoCs, such as
+> > > > > RK3288, the LUT address is after the MMU address, and the latter
+> > > > > is supported by a different driver. This prevents the DRM driver
+> > > > > from requesting an entire register space.
+> > > > > 
+> > > > > The current implementation works for RGB 10-bit tables, as that
+> > > > > is what seems to work on RK3288.
+> > > > > 
+> > > > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > > > > Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> > > > > Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > > > > ---
+> > > > > Changes from v2:
+> > > > > * None.
+> > > > > 
+> > > > > Changes from v1:
+> > > > > * drop explicit linear LUT after finding a proper
+> > > > >   way to disable gamma correction.
+> > > > > * avoid setting gamma is the CRTC is not active.
+> > > > > * s/int/unsigned int as suggested by Jacopo.
+> > > > > * only enable color management and set gamma size
+> > > > >   if gamma LUT is supported, suggested by Doug.
+> > > > > * drop the reg-names usage, and instead just use indexed reg
+> > > > >   specifiers, suggested by Doug.
+> > > > > 
+> > > > > Changes from RFC:
+> > > > > * Request (an optional) address resource for the LUT.
+> > > > > * Drop support for RK3399, which doesn't seem to work
+> > > > >   out of the box and needs more research.
+> > > > > * Support pass-thru setting when GAMMA_LUT is NULL.
+> > > > > * Add a check for the gamma size, as suggested by Ilia.
+> > > > > * Move gamma setting to atomic_commit_tail, as pointed
+> > > > >   out by Jacopo/Laurent, is the correct way.
+> > > > > ---
+> > > > >  drivers/gpu/drm/rockchip/rockchip_drm_fb.c  |   3 +
+> > > > >  drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 114 ++++++++++++++++++++
+> > > > >  drivers/gpu/drm/rockchip/rockchip_drm_vop.h |   7 ++
+> > > > >  drivers/gpu/drm/rockchip/rockchip_vop_reg.c |   2 +
+> > > > >  4 files changed, 126 insertions(+)
+> > > > > 
+> > > > > diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
+> > > > > index dba352ec0ee3..fd1d987698ab 100644
+> > > > > --- a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
+> > > > > +++ b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
+> > > > > @@ -17,6 +17,7 @@
+> > > > >  #include "rockchip_drm_drv.h"
+> > > > >  #include "rockchip_drm_fb.h"
+> > > > >  #include "rockchip_drm_gem.h"
+> > > > > +#include "rockchip_drm_vop.h"
+> > > > >  
+> > > > >  static const struct drm_framebuffer_funcs rockchip_drm_fb_funcs = {
+> > > > >  	.destroy       = drm_gem_fb_destroy,
+> > > > > @@ -112,6 +113,8 @@ rockchip_atomic_helper_commit_tail_rpm(struct drm_atomic_state *old_state)
+> > > > >  
+> > > > >  	drm_atomic_helper_commit_modeset_disables(dev, old_state);
+> > > > >  
+> > > > > +	rockchip_drm_vop_gamma_set(old_state);
+> > > > > +
+> > > > 
+> > > > Instead of duplicating the commit_tail helper, could you just implement
+> > > > .atomic_begin() and call this from there? I think the only hitch is if you
+> > > > need this to be completed before crtc->atomic_enable(), at which point you
+> > > > might need to call it from vop_crtc_atomic_enable() and then detect that in
+> > > > atomic_begin()
+> > > > 
+> > > 
+> > > I think moving this to .atomic_begin might be enough. Let me send a new
+> > > series and we can see how that goes.
+> > > 
 > > 
-> > Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+> > Oh, before going forward, pleaste note that the first iteration
+> > of this patch (as noted in the changelog) was applying the gamma lut
+> > on .atomic_flush. However, Laurent and Jacopo pointed out that
+> > it might add some tearing to do so, and that's why it was moved
+> > to commit_tail.
+> > 
+> > I have to admit I'm not too sure about the difference between
+> > applying this gamma LUT on atomic_begin or atomic_flush,
+> > perhaps you can clarify that?
 > 
-> Reviewed-by: Andi Shyti <andi@etezian.org>
+> The only difference between what you have now and calling it in atomic_begin
+> is that as you have it now, it's set before crtc->atomic_enable() is called.
+> I think in order to address Ville's concerns on the other patch, you'll need
+> to set it the lut in .atomic_enable() anyways, so here's what I would suggest:
+> 
+> - Set the LUT in .atomic_enable() wherever it makes sense (you have it at the
+>   start now)
+> - Add an .atomic_begin() implementation and check state->color_mgmt_changed and
+>   state->active_changed. color_mgmt_changed && !active_changed, set the lut
+> - Remove patches 1 & 5
+> 
+> ...I think :-)
+> 
 
-Applied, thank you.
+OK, that helped! Patches in 3...2...
 
--- 
-Dmitry
+Regards,
+Ezequiel
+
