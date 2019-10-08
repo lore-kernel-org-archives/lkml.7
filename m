@@ -2,81 +2,182 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E7AC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E209BC4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A26520815
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:14:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAE06206BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 13:15:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570540461;
-	bh=+u+cQxm8JdKrCxdpcSAMzhnyHTqxMj49DMlRcdTVypE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=M7BDJ+hQPEwtqp/yOIvR0mCQDUHJkXRKA8Qv76RCDRVTEr1OLk/3SizsAwsUuGC2o
-	 oJbV3feTU2zJLVpQdfYGfUMJneUrV+kWIXAlx+opxD5M/1V8k5rpQ0MazTYDdwWFgm
-	 Xiv4U33kRbClHXNGjkSTSmazAR4twFG8v0c6Jrwk=
+	s=default; t=1570540526;
+	bh=EU3vigokk2amXCAg1j1/Eno4BfUX7lFSsSjyDhUftUo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=y6pZrGs9IY8xYjEusyIe62punLXVE4qdHLDOvJBXeAf/KY+DVDk35qzjVETu15hhO
+	 R/zIidkvuv3lkUFZC4KFrlzLiuhxfspf+MgtU/9wo/tU8UXa8ZvGxhOWurbp21zx9x
+	 sD8YgG3Hw1fj55B3fU7AFYPjaOnhrq1uiPCpRdHg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730439AbfJHNOU (ORCPT
+        id S1731071AbfJHNP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 09:14:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51798 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730332AbfJHNOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 09:14:20 -0400
-Received: from localhost (unknown [89.205.136.155])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1974206BB;
-        Tue,  8 Oct 2019 13:14:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570540459;
-        bh=+u+cQxm8JdKrCxdpcSAMzhnyHTqxMj49DMlRcdTVypE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=r7IdQRdCuoVQPBLHBE/wFlWAXSiz3PulERsfbY7K3SllRrGQrk5I0PPHrlqgzVCM2
-         qnW9f8bri5cmEQaGA8jU368KV87F3NM3zEqungOR2miW1fAcLoEKSPLJXk4jLD4/UQ
-         9XtLQsSWfHA/y9ijL+KvAf5w9uYmMdlv78MwvD3M=
-Date:   Tue, 8 Oct 2019 15:14:16 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to
- unsafe_put_user()
-Message-ID: <20191008131416.GA2860109@kroah.com>
-References: <5f06c138-d59a-d811-c886-9e73ce51924c@roeck-us.net>
- <CAHk-=whAQWEMADgxb_qAw=nEY4OnuDn6HU4UCSDMNT5ULKvg3g@mail.gmail.com>
- <20191007012437.GK26530@ZenIV.linux.org.uk>
- <CAHk-=whKJfX579+2f-CHc4_YmEmwvMe_Csr0+CPfLAsSAdfDoA@mail.gmail.com>
- <20191007025046.GL26530@ZenIV.linux.org.uk>
- <CAHk-=whraNSys_Lj=Ut1EA=CJEfw2Uothh+5-WL+7nDJBegWcQ@mail.gmail.com>
- <CAHk-=witTXMGsc9ZAK4hnKnd_O7u8b1eiou-6cfjt4aOcWvruQ@mail.gmail.com>
- <20191008032912.GQ26530@ZenIV.linux.org.uk>
- <CAHk-=wiAyZmsEp6oQQgHiuaDU0bLj=OVHSGV_OfvHRSXNPYABw@mail.gmail.com>
- <20191008045712.GR26530@ZenIV.linux.org.uk>
+        Tue, 8 Oct 2019 09:15:26 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37211 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730371AbfJHNPZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 09:15:25 -0400
+Received: by mail-wm1-f67.google.com with SMTP id f22so3097952wmc.2;
+        Tue, 08 Oct 2019 06:15:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PkpF12I5oQshYFWC4o9XSkqiU1qpyK9lT1SgMd5gkK4=;
+        b=Y1k4Wk9UX+Y9FRbroM6LtBWf93FOcq6kDKkBB2zP1Ah52Lg0AHcaF4VIzXzWoYT7IC
+         +P30xMZV7MRbPmGKDLslptAl/YYVdrEXIIwiabicfU6Dq/MnLygAfMF48ESEZe/Ztroq
+         bjzhD+XQWcWcGRoQlhFsN66f2DQ02LLmGTH2AAE03JY1yx37ncmZNo7l2agzMoZLr5Ia
+         deKG5kKYS0LjvEqfK1E1ArC5is/MR6M/j3DDhA0HcZknap4HfREj72uHvE4CR2oWW6py
+         DVBNk6GZkwM8t4oJ4KbsGPjeF1Dd34gcpuUxR6WBd5MVY7klDfN9Fk5jfnDBK3JwJvmy
+         AUQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=PkpF12I5oQshYFWC4o9XSkqiU1qpyK9lT1SgMd5gkK4=;
+        b=DL845Di1RHEnn0pUwZFMRVSP6HejnEECmwb5rAZeNDByaKF/qI4byHOi4DNOplgqpw
+         125dKA+tvNCQgHdzhZTk0zsgMJ32n1uDA0QVtGFyzfB8Z2IpOIeItagZbg/6anbfDwZv
+         zyYFtPzK+CT7Feff1ugGXs7/R0Dhwf7jkhaTQiREzqs5ECxVOXXi+ydX4Pph9MqFzPQp
+         TQWC9r9G7wbsex0vyLWD9JwUA1jK3UajV3mQgGlHXh3SEoEt7iaJZRaJx+Ilrc/OiaZv
+         poSwUM7keKqADhvpHEDejesQ0tv7Z2nkLE7hFmjATHz893sDvbzvN9CuhNS3TEIAYtzr
+         SgrQ==
+X-Gm-Message-State: APjAAAVu0XPKl2wV51xycHfeBukNRfljANMrpuqqjZ2JpGehyOjObpls
+        jKBdG8QX7nc0ruXQ+sTOVwCTeWIR
+X-Google-Smtp-Source: APXvYqxi2eXP5iDv1oV+9RJSekAwMNi7Dl5XfE0GwzX7za55ZRZfFZHCKBd3pI2e5P/gIz2GO+HO4A==
+X-Received: by 2002:a1c:ed0d:: with SMTP id l13mr3709880wmh.54.1570540523490;
+        Tue, 08 Oct 2019 06:15:23 -0700 (PDT)
+Received: from debian.mshome.net (207.148.159.143.dyn.plus.net. [143.159.148.207])
+        by smtp.gmail.com with ESMTPSA id 79sm5485377wmb.7.2019.10.08.06.15.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Oct 2019 06:15:22 -0700 (PDT)
+From:   Wei Liu <wei.liu@kernel.org>
+X-Google-Original-From: Wei Liu <liuw@liuw.name>
+To:     Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
+Cc:     Linux Kernel List <linux-kernel@vger.kernel.org>,
+        Linux Kconfig List <linux-kbuild@vger.kernel.org>,
+        Wei Liu <liuwe@microsoft.com>
+Subject: [PATCH RFC] kconfig: add hvconfig for Linux on Hyper-V
+Date:   Tue,  8 Oct 2019 14:15:08 +0100
+Message-Id: <20191008131508.21189-1-liuw@liuw.name>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191008045712.GR26530@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 05:57:12AM +0100, Al Viro wrote:
-> 
-> 	OK...  BTW, do you agree that the use of access_ok() in
-> drivers/tty/n_hdlc.c:n_hdlc_tty_read() is wrong?  It's used as an early
-> cutoff, so we don't bother waiting if user has passed an obviously bogus
-> address.  copy_to_user() is used for actual copying there...
+From: Wei Liu <liuwe@microsoft.com>
 
-Yes, it's wrong, and not needed.  I'll go rip it out unless you want to?
+Add an config file snippet which enalbes additional options useful for
+running the kernel in a Hyper-V guest.
 
-thanks,
+The expected use case is a user provides an existing config file then
+executes `make hvconfig`. It will merge those options with the
+provided config file.
 
-greg k-h
+Based on similar concept for Xen and KVM.
+
+Signed-off-by: Wei Liu <liuwe@microsoft.com>
+---
+RFC: I only tested this on x86.  Although the config options included in
+hv_guest.config don't seem to be arch-specific, we should probably
+move the ones not yet implemented on Arm to an x86 specific config
+file.
+---
+ Documentation/admin-guide/README.rst |  3 +++
+ kernel/configs/hv_guest.config       | 33 ++++++++++++++++++++++++++++
+ scripts/kconfig/Makefile             |  5 +++++
+ 3 files changed, 41 insertions(+)
+ create mode 100644 kernel/configs/hv_guest.config
+
+diff --git a/Documentation/admin-guide/README.rst b/Documentation/admin-guide/README.rst
+index cc6151fc0845..d5f4389a7a2f 100644
+--- a/Documentation/admin-guide/README.rst
++++ b/Documentation/admin-guide/README.rst
+@@ -224,6 +224,9 @@ Configuring the kernel
+      "make xenconfig"   Enable additional options for xen dom0 guest kernel
+                         support.
+ 
++     "make hvconfig"    Enable additional options for Hyper-V guest kernel
++                        support.
++
+      "make tinyconfig"  Configure the tiniest possible kernel.
+ 
+    You can find more information on using the Linux kernel config tools
+diff --git a/kernel/configs/hv_guest.config b/kernel/configs/hv_guest.config
+new file mode 100644
+index 000000000000..0e71e34a2d4d
+--- /dev/null
++++ b/kernel/configs/hv_guest.config
+@@ -0,0 +1,33 @@
++CONFIG_NET=y
++CONFIG_NET_CORE=y
++CONFIG_NETDEVICES=y
++CONFIG_BLOCK=y
++CONFIG_BLK_DEV=y
++CONFIG_NETWORK_FILESYSTEMS=y
++CONFIG_INET=y
++CONFIG_TTY=y
++CONFIG_SERIAL_8250=y
++CONFIG_SERIAL_8250_CONSOLE=y
++CONFIG_IP_PNP=y
++CONFIG_IP_PNP_DHCP=y
++CONFIG_BINFMT_ELF=y
++CONFIG_PCI=y
++CONFIG_PCI_MSI=y
++CONFIG_DEBUG_KERNEL=y
++CONFIG_VIRTUALIZATION=y
++CONFIG_HYPERVISOR_GUEST=y
++CONFIG_PARAVIRT=y
++CONFIG_HYPERV=y
++CONFIG_HYPERV_VSOCKETS=y
++CONFIG_PCI_HYPERV=y
++CONFIG_PCI_HYPERV_INTERFACE=y
++CONFIG_HYPERV_STORAGE=y
++CONFIG_HYPERV_NET=y
++CONFIG_HYPERV_KEYBOARD=y
++CONFIG_FB_HYPERV=y
++CONFIG_HID_HYPERV_MOUSE=y
++CONFIG_HYPERV=y
++CONFIG_HYPERV_TIMER=y
++CONFIG_HYPERV_UTILS=y
++CONFIG_HYPERV_BALLOON=y
++CONFIG_HYPERV_IOMMU=y
+diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
+index ef2f2336c469..2ee46301b22e 100644
+--- a/scripts/kconfig/Makefile
++++ b/scripts/kconfig/Makefile
+@@ -104,6 +104,10 @@ PHONY += xenconfig
+ xenconfig: xen.config
+ 	@:
+ 
++PHONY += hvconfig
++hvconfig: hv_guest.config
++	@:
++
+ PHONY += tinyconfig
+ tinyconfig:
+ 	$(Q)$(MAKE) -f $(srctree)/Makefile allnoconfig tiny.config
+@@ -138,6 +142,7 @@ help:
+ 	@echo  '                    default value without prompting'
+ 	@echo  '  kvmconfig	  - Enable additional options for kvm guest kernel support'
+ 	@echo  '  xenconfig       - Enable additional options for xen dom0 and guest kernel support'
++	@echo  '  hvconfig        - Enable additional options for Hyper-V guest kernel support'
+ 	@echo  '  tinyconfig	  - Configure the tiniest possible kernel'
+ 	@echo  '  testconfig	  - Run Kconfig unit tests (requires python3 and pytest)'
+ 
+-- 
+2.20.1
+
