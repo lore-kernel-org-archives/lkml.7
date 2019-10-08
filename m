@@ -2,115 +2,87 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4BDC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35BE6C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50321206BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:31:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A51D21835
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:32:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LvRJZ6xd"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="IUn06mpS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729989AbfJHJbu (ORCPT
+        id S1730093AbfJHJcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 05:31:50 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42266 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729375AbfJHJbu (ORCPT
+        Tue, 8 Oct 2019 05:32:18 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:46262 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729375AbfJHJcR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 05:31:50 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n14so18486730wrw.9
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 02:31:49 -0700 (PDT)
+        Tue, 8 Oct 2019 05:32:17 -0400
+Received: by mail-qk1-f194.google.com with SMTP id 201so15955677qkd.13
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 02:32:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=EazPgAo0KA2L5bP4whOU0gOC5nZeJshj93xKT7W2t+s=;
-        b=LvRJZ6xdJUrFyuFeAodhiVrfTO3DINKsAGx5CCndd95qCzlD3/66+r3BM6b4TVrhk8
-         Qcgcu2flQ2+Umci8gVj+SNBnKTRagow1zCD7w+Nc1xtPRN+0+xMTp+adeKR92rYh5Y8P
-         ZL9bIDvNsNdzq3OwbVBOY+1I/eF0YDPhfTzMPpOFZ9rtQrdHk86cgQLIN0q44I0qa2yG
-         9+WhoLIspFeot/bC/hvdfCot1SYQi0S+uCAJe2t9uzGAPIC0waYd+AnylUcFUXwyWG7w
-         6h/9fe1CFTmkV24gQe0sTW8D8A8y3Cutm0sZgtDX6ywbw6oa6vDO4xmLo0+HvVKuYwL2
-         hKDw==
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=EWJqqy29yofdCquZBPthLER+Jv293+BzSZVb1kweNlE=;
+        b=IUn06mpS2xz7vLSozYS3LnEtGuT0KW+oZs4uibzwSg/3iNgPs9KOIeGn7NQK8fYDh7
+         BnHO22WND/EsUUAyk7hGQY0w92oRpeiX21uNyO0lCj/9StMJBNCkYum35KnmCUGPl5gt
+         xi7jfmlpw9phFZyg4Ah8bxW2Krr53lopuINKHylwf2xNyN8HDTT2lRBX/X/S13MRbAe9
+         Cl+1RvM4DNB9xzTrxWo3TQfIQ9DF1JClzmwVETc/AjoAVqfW+NJS6oOqlL0Em4+qYYa7
+         a2g49hQs7d4DVeRcQDWXC4Kaq3wFRKZGIDtUhI5VKBqpLBc48MjwmdLwAP2t5Z6Kvu68
+         sf/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EazPgAo0KA2L5bP4whOU0gOC5nZeJshj93xKT7W2t+s=;
-        b=cJdUo/MjkK6Es0HVZJ0eh6wbZHzev2nZMUpYCVPd0RLwQFUxjqh9VlWtXSpgsMHemQ
-         l4F2GobftWSXNA4XosVcPuxWK+4S9QEt1fwcHYg7sg7lkewWGx8tyCVHG79aGupCRflw
-         fxXf1d/xzOFPaKE1WmvwNsRNGPnauZKBd95hKkA/gPAYiqXPvC+rX7q+7IYU6DpSUi1g
-         KrrOY24+tNQIfvdQAS/fR4SQcVnclQ6MQqNg3JJ3eekpEDNNpV4zIj5QHmpRyDKbjHcW
-         nkeQgtmAvITie1UhHm2ovK3haiWbokQUfaRGmXgADpv55Cro96JPqJJPW2mems4OQncj
-         Lk6Q==
-X-Gm-Message-State: APjAAAUw9hCxnimg7HpWxPHiXvy7ElIAQSWKcOJ8v3Kt9mHUT5FGYnR5
-        oa1IGYHY6/DuWUW8f/l0YzGkrA==
-X-Google-Smtp-Source: APXvYqwB7AB3D9uRJhoIYfpbGU3+i/oZ+UjAk1ESfaX46FXfeAEMx/zSwkXAZlDmwRpq//zo58NovA==
-X-Received: by 2002:adf:e3c8:: with SMTP id k8mr14526118wrm.268.1570527108416;
-        Tue, 08 Oct 2019 02:31:48 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id i11sm7291389wrw.57.2019.10.08.02.31.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2019 02:31:47 -0700 (PDT)
-Date:   Tue, 8 Oct 2019 10:31:45 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/5] backlight: pwm_bl: drop use of int_pow()
-Message-ID: <20191008093145.kgx6ytkbycmmkist@holly.lan>
-References: <20190919140620.32407-1-linux@rasmusvillemoes.dk>
- <20190919140620.32407-3-linux@rasmusvillemoes.dk>
- <20191007152800.3nhbf7h7knumriz4@holly.lan>
- <5f19e307-29c4-f077-568d-b2bd6ae74608@rasmusvillemoes.dk>
-MIME-Version: 1.0
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=EWJqqy29yofdCquZBPthLER+Jv293+BzSZVb1kweNlE=;
+        b=OejVP2ti8egDicdOYYhZdpmi9jEzbriINqPKoz7m/5Su8ICtXhH+TCXAi//7pV/fNl
+         Va/K+NG4NcvVliEhz7lPKT5j+1/jduM61XIWz9ZGQWClHPiK6OKjhXg7i9RXaVKmBhyE
+         iiQqN8brohJtvX1wwU0xMv8PuNn5THzMd0YjO8mxkKYVzJrLnV/y3EfZNOTnLbgJS9lR
+         RfrzxtMkrygCq/Ta2/JL2SwM38AySypO61j8JKhx8bl+Nz1c5sh4HZ4XXZI9wGLZRleO
+         OgbN5mRtauWXqxrtv+4xfQjMKohoRL7uTKxp8aXy4eSfDJdOAKJa5suqiHOWcYpfc4od
+         0eDw==
+X-Gm-Message-State: APjAAAVQxYj6ayfhhpJhiLjaQGF2OnxIYrMB0iuslUkfde9BZ8s5k9LN
+        CDoT8MiYepGLAV/7ZDCHIcmsS/y2IZ0k7g==
+X-Google-Smtp-Source: APXvYqzu7RW2LzgCVPn1UYMRWg4Xv+vumYrColU+r4PBMhJWYci7G8NPsGRGFKpRPd3VwivsJ+cohQ==
+X-Received: by 2002:a37:b302:: with SMTP id c2mr28515793qkf.442.1570527136679;
+        Tue, 08 Oct 2019 02:32:16 -0700 (PDT)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id d134sm8272302qkg.133.2019.10.08.02.32.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Oct 2019 02:32:15 -0700 (PDT)
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5f19e307-29c4-f077-568d-b2bd6ae74608@rasmusvillemoes.dk>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
+Date:   Tue, 8 Oct 2019 05:32:15 -0400
+Message-Id: <43AC5AD1-377D-447C-A703-7F10423E6FA0@lca.pw>
+References: <20191008081510.ptwmb7zflqiup5py@pathway.suse.cz>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        sergey.senozhatsky.work@gmail.com, rostedt@goodmis.org,
+        peterz@infradead.org, linux-mm@kvack.org,
+        john.ogness@linutronix.de, akpm@linux-foundation.org,
+        david@redhat.com, linux-kernel@vger.kernel.org
+In-Reply-To: <20191008081510.ptwmb7zflqiup5py@pathway.suse.cz>
+To:     Petr Mladek <pmladek@suse.com>
+X-Mailer: iPhone Mail (17A860)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 08:43:31PM +0200, Rasmus Villemoes wrote:
-> On 07/10/2019 17.28, Daniel Thompson wrote:
-> > On Thu, Sep 19, 2019 at 04:06:18PM +0200, Rasmus Villemoes wrote:
-> > 
-> > It feels like there is some rationale missing in the description here.
-> > 
-> > What is the benefit of replacing the explicit int_pow() with the
-> > implicit multiplications?
-> > 
-> > 
-> > Daniel.
-> > 
-> > 
-> >>
-> >> We could (and a following patch will) change to use a power-of-2 scale,
-> >> but for a fixed small exponent of 3, there's no advantage in using
-> >> repeated squaring.
-> 
->    ^^^^^^^^^^^^^^^^^^                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> 
-> Apart from the function call overhead (and resulting register pressure
-> etc.), using int_pow is less efficient (for an exponent of 3, it ends up
-> doing four 64x64 multiplications instead of just two). But feel free to
-> drop it, I'm not going to pursue it further - it just seemed like a
-> sensible thing to do while I was optimizing the code anyway.
-> 
-> [At the time I wrote the patch, this was also the only user of int_pow
-> in the tree, so it also allowed removing int_pow altogether.]
-
-To be honest the change is fine but the patch description doesn't make
-sense if the only current purpose of the patch is as a optimization.
 
 
-Daniel.
+> On Oct 8, 2019, at 4:15 AM, Petr Mladek <pmladek@suse.com> wrote:
+>=20
+> I am curious about CPU2. Does scheduler need to allocate memory?
+
+It happens before with debug objects. It might not 100% necessary but it cou=
+ld easily end up with this way in the current code. Moreover, this is just a=
+n example of how things could go wrong as it could happen for pi_lock or any=
+ other unknown downstream locks which are not really console related.=
