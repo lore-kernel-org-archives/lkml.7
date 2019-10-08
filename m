@@ -2,122 +2,133 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D427C35280
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B00C35280
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 767D9218AC
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:23:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570551821;
-	bh=7LSvG7Z2/shv9SD/4ep9F4XsDMDUqCWfKeBaQ6bS/iM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nZ9VhpniJhJFkONt7kj/QAd0DKgYJ6VoT04ZNjZAvbfNMSJUvnqcTfgeQ490dFXkf
-	 HpKG5gZkGXDdcx7AWiDRXCXY1qLkK06BFxJgmzRsXWwH+1zVGnL/yeDxOVFALn1AV8
-	 rjOfqppARfxAJQqrZ9UEY+bLrDpgWGXlcH80EM4Q=
+	by mail.kernel.org (Postfix) with ESMTP id 460D8206C2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:24:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728636AbfJHQXk (ORCPT
+        id S1729069AbfJHQYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 12:23:40 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:39156 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725966AbfJHQXk (ORCPT
+        Tue, 8 Oct 2019 12:24:47 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:35122 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725795AbfJHQYr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 12:23:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Ii7hnic6xKdkLBwpZElFY044FUzKz7oXyF0dN3nO9SM=; b=MTZKPqsnxtWOHMIpMUPYFu5Vw
-        wOxnm0fVU4p3m5h3f/rNDOyIoSObvw/GUtbQkeTb16pXVksMvyC1Y7BfYDXsNjAE8OXTx/yEGy9Lf
-        XkfkK7fHfJM0gT5JG0kBpoZBe3WBdmKu+49HbeZAXMgF0MwvaMqJL3xSUstUEnodhlCRQ=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iHsGs-0000Sd-Fc; Tue, 08 Oct 2019 16:23:34 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id DEBA62740D4A; Tue,  8 Oct 2019 17:23:33 +0100 (BST)
-Date:   Tue, 8 Oct 2019 17:23:33 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Doug Anderson <dianders@chromium.org>,
-        Chunyan Zhang <zhang.chunyan@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        ckeepax@opensource.cirrus.com, LKML <linux-kernel@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>
-Subject: Re: [PATCH 1/3] regulator: core: fix boot-on regulators use_count
- usage
-Message-ID: <20191008162333.GP4382@sirena.co.uk>
-References: <CAD=FV=WZSy6nHjsY2pvjcoR4iy64b35OPGEb3EPSSc5vpeTTuA@mail.gmail.com>
- <20190927084710.mt42454vsrjm3yh3@pengutronix.de>
- <CAD=FV=XM0i=GsvttJjug6VPOJJGHRqFmsmCp-1XXNvmsYp9sJA@mail.gmail.com>
- <20191007093429.qekysnxufvkbirit@pengutronix.de>
- <20191007182907.GB5614@sirena.co.uk>
- <20191008060311.3ukim22vv7ywmlhs@pengutronix.de>
- <20191008125140.GK4382@sirena.co.uk>
- <20191008145605.5yf4hura7qu4fuyg@pengutronix.de>
- <20191008154213.GL4382@sirena.co.uk>
- <20191008161640.2fzqhrbc4ox6gjal@pengutronix.de>
+        Tue, 8 Oct 2019 12:24:47 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iHsI1-0000ac-MD; Tue, 08 Oct 2019 16:24:45 +0000
+Subject: Re: [PATCH][next] efi/tpm: fix sanity check of unsigned tbl_size
+ being less than zero
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>, linux-efi@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191008100153.8499-1-colin.king@canonical.com>
+ <20191008114559.GD25098@kadam> <20191008161553.qls5lbyaxlasw25v@cantor>
+From:   Colin Ian King <colin.king@canonical.com>
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <37d9c70e-12e0-f0a1-b3ff-b2aefb39c223@canonical.com>
+Date:   Tue, 8 Oct 2019 17:24:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="OmL7C/BU0IhhC9Of"
-Content-Disposition: inline
-In-Reply-To: <20191008161640.2fzqhrbc4ox6gjal@pengutronix.de>
-X-Cookie: Do not disturb.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191008161553.qls5lbyaxlasw25v@cantor>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 08/10/2019 17:15, Jerry Snitselaar wrote:
+> On Tue Oct 08 19, Dan Carpenter wrote:
+>> On Tue, Oct 08, 2019 at 11:01:53AM +0100, Colin King wrote:
+>>> From: Colin Ian King <colin.king@canonical.com>
+>>>
+>>> Currently the check for tbl_size being less than zero is always false
+>>> because tbl_size is unsigned. Fix this by making it a signed int.
+>>>
+>>> Addresses-Coverity: ("Unsigned compared against 0")
+>>> Fixes: e658c82be556 ("efi/tpm: Only set 'efi_tpm_final_log_size'
+>>> after successful event log parsing")
+>>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>>> ---
+>>>  drivers/firmware/efi/tpm.c | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/firmware/efi/tpm.c b/drivers/firmware/efi/tpm.c
+>>> index 703469c1ab8e..ebd7977653a8 100644
+>>> --- a/drivers/firmware/efi/tpm.c
+>>> +++ b/drivers/firmware/efi/tpm.c
+>>> @@ -40,7 +40,7 @@ int __init efi_tpm_eventlog_init(void)
+>>>  {
+>>>      struct linux_efi_tpm_eventlog *log_tbl;
+>>>      struct efi_tcg2_final_events_table *final_tbl;
+>>> -    unsigned int tbl_size;
+>>> +    int tbl_size;
+>>>      int ret = 0;
+>>
+>>
+>> Do we need to do a "ret = tbl_size;"?  Currently we return success.
+>> It's a pitty that tpm2_calc_event_log_size() returns a -1 instead of
+>> -EINVAL.
+>>
+>> regards,
+>> dan carpenter
+>>
+> 
+> perhaps "ret = -EINVAL;"? Currently nothing checks the return value of
+> efi_tpm_eventlog_init though.
 
---OmL7C/BU0IhhC9Of
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I doubt I'll fix that for my current fix as a V2.
 
-On Tue, Oct 08, 2019 at 06:16:40PM +0200, Marco Felsch wrote:
-> On 19-10-08 16:42, Mark Brown wrote:
-
-> > If this is a GPIO regulator then the Linux APIs mean you can't read the
-> > status back so it's one of the regulators for which this property was
-> > invented.  This is a real limitation of the Linux APIs, with most
-> > hardware you can actually read the status back so we shouldn't need
-> > this.
-
-> I know and I followed the discussion between you and Doug. But it
-> is a valid use-case to have a external gpio-enabled regualtor connected
-> to a panel. If I don't mark the regulator as 'regualtor-boot-on' and use
-> the fixed.c driver (IMHO this is correct), the regulator gets disabled
-> during probe. So I will have a panel off/ panel on sequence during boot.
-
-Right, this is why I am saying that this is one of the regulators for
-which this property was defined and where you should be using it.
-
-> To avoid this I set the 'regualtor-boot-on' property but then I can't
-> disable the panel during suspend..
-
-As you'll have seen from the discussion that's a bug, nothing should be
-taking a reference to the regulator outside of explicit enable calls.
-
---OmL7C/BU0IhhC9Of
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2cuAUACgkQJNaLcl1U
-h9DJ8Af/d9MHeegO3mG0aWykYncA/Uz7MQ8AB1ExPlJrkChn+k1IhFInP0BUaEMf
-xR6K6jBZRAiFiehJJWMFY8b73OLLaWhqjVEz7VHSIyGotcFPykDF6ESj8w279FiZ
-wZEeXbW366ztz7GqWo0U60Hv+yp5wUVrdxtFTKHOzl+kSHDgpy+Fq4sTu5GEtlmb
-T8XI50JK1npkImJ4a+MutR4DQhZm9hoSR7Tq4FSiP6Wlex2jvMgLrDxexgUQhbkY
-iGFt5TAgSy4WSds2O9o9ujNU6evUhr8mzh0Ze7k4FAz4EhrsfibuJBHGoSl0oPdY
-0vUrqwoqjuPTzftepnXUcghNVuhubg==
-=LEgR
------END PGP SIGNATURE-----
-
---OmL7C/BU0IhhC9Of--
