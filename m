@@ -2,99 +2,115 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35387C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17357C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06B0120659
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:45:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E43062064A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 14:45:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="q+TsZBhQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727409AbfJHOpk (ORCPT
+        id S1727537AbfJHOpy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 10:45:40 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:54565 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726416AbfJHOpk (ORCPT
+        Tue, 8 Oct 2019 10:45:54 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:48700 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725795AbfJHOpx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 10:45:40 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iHqk0-0001Zs-Vp; Tue, 08 Oct 2019 16:45:32 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iHqjz-0001yc-As; Tue, 08 Oct 2019 16:45:31 +0200
-Date:   Tue, 8 Oct 2019 16:45:31 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc:     thierry.reding@gmail.com, alexandre.torgue@st.com,
-        benjamin.gaignard@st.com, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH] pwm: stm32: add comment to better describe breakinput
- feature
-Message-ID: <20191008144531.pjt525xuz7n5a3hq@pengutronix.de>
-References: <1570534887-26181-1-git-send-email-fabrice.gasnier@st.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1570534887-26181-1-git-send-email-fabrice.gasnier@st.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Tue, 8 Oct 2019 10:45:53 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x98ESp9c070052;
+        Tue, 8 Oct 2019 14:44:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2019-08-05;
+ bh=bmUUyXdPet1IcRfhw6Xp6Zh40UK2k91Okb0Yfi2nf3I=;
+ b=q+TsZBhQZK1mG82uogKprFD4wzpJfpLeZNkjHKJrya+W4l0Ew/IIymnaoOPVmkdVVl+n
+ 3rXrlXEabI7amMxsUyYe9Hb/Wu2KoLQuSFuvzlfGevSA++/V8rHKOTktzvLUYEZRcjnI
+ fCPz6mwunGgJ2lCXnFAuvMdCT9DcFrcc/DSk1ghVsoK1kvlw4IonWNHzwi8/hUxWtNlF
+ a2NgxopA6ENRMnRLmCprRF/60AlDXRnZPkbGDl3PZFc/lKlSuR5ftNZwaY3+jbA83LL+
+ S/Bolo2aqdLWb/vbJsQcSgQCA5Pk5ooSr5KTIfKm8rLUc+xJ/9fnFBFPSLc+57a2EI91 zw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2vektrdhtb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 08 Oct 2019 14:44:31 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x98ERt6S047811;
+        Tue, 8 Oct 2019 14:44:30 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2vgeuy2976-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 08 Oct 2019 14:44:30 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x98EiPf2031757;
+        Tue, 8 Oct 2019 14:44:25 GMT
+Received: from dhcp-10-175-191-48.vpn.oracle.com (/10.175.191.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 08 Oct 2019 14:44:24 +0000
+From:   Alan Maguire <alan.maguire@oracle.com>
+To:     linux-kselftest@vger.kernel.org, brendanhiggins@google.com,
+        skhan@linuxfoundation.org
+Cc:     mcgrof@kernel.org, keescook@chromium.org, yzaikin@google.com,
+        akpm@linux-foundation.org, yamada.masahiro@socionext.com,
+        catalin.marinas@arm.com, joe.lawrence@redhat.com,
+        penguin-kernel@i-love.sakura.ne.jp, schowdary@nvidia.com,
+        urezki@gmail.com, andriy.shevchenko@linux.intel.com,
+        changbin.du@intel.com, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Alan Maguire <alan.maguire@oracle.com>
+Subject: [PATCH linux-kselftest-test 0/3] kunit: support module-based build
+Date:   Tue,  8 Oct 2019 15:43:49 +0100
+Message-Id: <1570545832-32326-1-git-send-email-alan.maguire@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9403 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=38 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=899
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910080133
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9403 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=38 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=976 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910080133
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 01:41:27PM +0200, Fabrice Gasnier wrote:
-> Add a comment to better describe the purpose of breakinput feature that
-> can be found on some STM32 timer instances. Briefly comment on the
-> characteristics of this input for PWM, and pinmuxing as suggested in [1].
-> 
-> [1] https://lkml.org/lkml/2019/10/1/207
-> 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> ---
->  drivers/pwm/pwm-stm32.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
-> index 359b085..6406ebb 100644
-> --- a/drivers/pwm/pwm-stm32.c
-> +++ b/drivers/pwm/pwm-stm32.c
-> @@ -522,8 +522,14 @@ static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv,
->  					     sizeof(struct stm32_breakinput));
->  
->  	/*
-> +	 * Some timer instances can have BRK input pins (e.g. basically a fault
-> +	 * pin from the output power stage). The break feature allows a safe
-> +	 * shut-down of the PWM outputs to a predefined state. Further details
-> +	 * are available in application note AN4277, "Using STM32 device PWM
-> +	 * shut-down features..."
+For consumers wishing to run kunit on real hardware, it would be
+ideal if the kunit framework and tests supported module-based builds.
+This is an advantage as it reduces the test task to running
+"modprobe mytests.ko", and CONFIG_KUNIT* options can be "always on"
+(or rather "always m").  KUnit based tests will load the kunit module
+as an implicit dependency.
 
-Without having read the application note I don't understand the purpose.
-Not sure if this should be a show stopper though.
+Alan Maguire (3):
+  kunit: allow kunit tests to be loaded as a module
+  kunit: allow kunit to be loaded as a module
+  kunit: update documentation to describe module-based build
 
->  	 * Because "st,breakinput" parameter is optional do not make probe
-> -	 * failed if it doesn't exist.
-> +	 * failed if it doesn't exist. The pinctrl handle must hold the BRK
-> +	 * pin(s) when using "st,breakinput" property.
-
-Is this a comment that has a better place in the binding doc?
-
-Best regards
-Uwe
-
+ Documentation/dev-tools/kunit/faq.rst   |  3 ++-
+ Documentation/dev-tools/kunit/index.rst |  3 +++
+ Documentation/dev-tools/kunit/usage.rst | 16 +++++++++++++++
+ include/kunit/test.h                    | 36 ++++++++++++++++++++++++---------
+ kernel/sysctl-test.c                    |  6 +++++-
+ kunit/Kconfig                           |  6 +++---
+ kunit/Makefile                          |  9 +++++++++
+ kunit/assert.c                          |  8 ++++++++
+ kunit/example-test.c                    |  6 +++++-
+ kunit/string-stream-test.c              |  9 +++++++--
+ kunit/string-stream.c                   |  7 +++++++
+ kunit/test-test.c                       |  8 ++++++--
+ kunit/test.c                            | 12 +++++++++++
+ kunit/try-catch.c                       |  8 ++++++--
+ lib/Kconfig.debug                       |  4 ++--
+ 15 files changed, 117 insertions(+), 24 deletions(-)
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+1.8.3.1
+
