@@ -4,117 +4,130 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A2DC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 704D6C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5600206BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:38:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53C71206BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 09:39:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730128AbfJHJix (ORCPT
+        id S1730249AbfJHJjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 05:38:53 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53990 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729767AbfJHJix (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 05:38:53 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x989RIGa095767
-        for <linux-kernel@vger.kernel.org>; Tue, 8 Oct 2019 05:38:51 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vgnkwnmvp-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 05:38:51 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <tmricht@linux.ibm.com>;
-        Tue, 8 Oct 2019 10:38:49 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 8 Oct 2019 10:38:46 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x989ciw131260718
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 8 Oct 2019 09:38:44 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C558FA4065;
-        Tue,  8 Oct 2019 09:38:44 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 83161A4060;
-        Tue,  8 Oct 2019 09:38:44 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  8 Oct 2019 09:38:44 +0000 (GMT)
-From:   Thomas Richter <tmricht@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Cc:     gor@linux.ibm.com, heiko.carstens@de.ibm.com,
-        Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf jvmti: Link against tools/lib/ctype.h to have weak strlcpy()
-Date:   Tue,  8 Oct 2019 11:38:41 +0200
+        Tue, 8 Oct 2019 05:39:00 -0400
+Received: from spam01.hygon.cn ([110.188.70.11]:40787 "EHLO spam2.hygon.cn"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729624AbfJHJjA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 05:39:00 -0400
+Received: from MK-FE.hygon.cn ([172.23.18.61])
+        by spam2.hygon.cn with ESMTP id x989btVM098946;
+        Tue, 8 Oct 2019 17:37:55 +0800 (GMT-8)
+        (envelope-from fanjinke@hygon.cn)
+Received: from cncheex01.Hygon.cn ([172.23.18.10])
+        by MK-FE.hygon.cn with ESMTP id x989bmqS049399;
+        Tue, 8 Oct 2019 17:37:48 +0800 (GMT-8)
+        (envelope-from fanjinke@hygon.cn)
+Received: from bogon.higon.com (172.23.18.44) by cncheex01.Hygon.cn
+ (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Tue, 8 Oct 2019
+ 17:37:50 +0800
+From:   Jinke Fan <fanjinke@hygon.cn>
+To:     <a.zummo@towertech.it>, <alexandre.belloni@bootlin.com>,
+        <puwen@hygon.cn>, <thomas.lendacky@amd.com>, <kim.phillips@amd.com>
+CC:     <linux-rtc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Jinke Fan <fanjinke@hygon.cn>
+Subject: [PATCH v2] rtc: Fix the AltCentury value on AMD/Hygon platform
+Date:   Tue, 8 Oct 2019 17:37:12 +0800
+Message-ID: <20191008093712.102158-1-fanjinke@hygon.cn>
 X-Mailer: git-send-email 2.17.1
-X-TM-AS-GCONF: 00
-x-cbid: 19100809-0016-0000-0000-000002B605B3
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19100809-0017-0000-0000-000033170657
-Message-Id: <20191008093841.59387-1-tmricht@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-08_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=688 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910080092
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [172.23.18.44]
+X-ClientProxiedBy: cncheex01.Hygon.cn (172.23.18.10) To cncheex01.Hygon.cn
+ (172.23.18.10)
+X-MAIL: spam2.hygon.cn x989btVM098946
+X-DNSRBL: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The build of file libperf-jvmti.so succeeds but the resulting
-object fails to load:
+When using following operations:
+date -s "21190910 19:20:00"
+hwclock -w
+to change date from 2019 to 2119 for test, it will fail on Hygon
+Dhyana and AMD Zen CPUs, while the same operations run ok on Intel i7
+platform.
 
- # ~/linux/tools/perf/perf record -k mono -- java  \
-      -XX:+PreserveFramePointer \
-      -agentpath:/root/linux/tools/perf/libperf-jvmti.so \
-       hog 100000 123450
-  Error occurred during initialization of VM
-  Could not find agent library /root/linux/tools/perf/libperf-jvmti.so
-      in absolute path, with error:
-      /root/linux/tools/perf/libperf-jvmti.so: undefined symbol: _ctype
+MC146818 driver use function mc146818_set_time() to set register
+RTC_FREQ_SELECT(RTC_REG_A)'s bit4-bit6 field which means divider stage
+reset value on Intel platform to 0x7.
 
-Add the missing _ctype symbol into the build script.
+While AMD/Hygon RTC_REG_A(0Ah)'s bit4 is defined as DV0 [Reference]:
+DV0 = 0 selects Bank 0, DV0 = 1 selects Bank 1. Bit5-bit6 is defined
+as reserved.
 
-Fixes: c5d048240e49 ("perf jvmti: Link against tools/lib/string.h to have weak strlcpy()")
+DV0 is set to 1, it will select Bank 1, which will disable AltCentury
+register(0x32) access. As UEFI pass acpi_gbl_FADT.century 0x32
+(AltCentury), the CMOS write will be failed on code:
+CMOS_WRITE(century, acpi_gbl_FADT.century).
 
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Correct RTC_REG_A bank select bit(DV0) to 0 on AMD/Hygon CPUs, it will
+enable AltCentury(0x32) register writing and finally setup century as
+expected.
+
+Test results on AMD/Hygon machine show that it works as expected.
+
+Reference:
+https://www.amd.com/system/files/TechDocs/51192_Bolton_FCH_RRG.pdf
+section: 3.13 Real Time Clock (RTC)
+
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Jinke Fan <fanjinke@hygon.cn>
 ---
- tools/perf/jvmti/Build | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/rtc/rtc-mc146818-lib.c | 9 +++++++--
+ include/linux/mc146818rtc.h    | 6 ++++++
+ 2 files changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/jvmti/Build b/tools/perf/jvmti/Build
-index 1e148bbdf820..202cadaaf097 100644
---- a/tools/perf/jvmti/Build
-+++ b/tools/perf/jvmti/Build
-@@ -2,7 +2,7 @@ jvmti-y += libjvmti.o
- jvmti-y += jvmti_agent.o
+diff --git a/drivers/rtc/rtc-mc146818-lib.c b/drivers/rtc/rtc-mc146818-lib.c
+index 2ecd8752b088..a821dbe215d3 100644
+--- a/drivers/rtc/rtc-mc146818-lib.c
++++ b/drivers/rtc/rtc-mc146818-lib.c
+@@ -170,9 +170,14 @@ int mc146818_set_time(struct rtc_time *time)
+ 	}
  
- # For strlcpy
--jvmti-y += libstring.o
-+jvmti-y += libstring.o libctype.o
- 
- CFLAGS_jvmti         = -fPIC -DPIC -I$(JDIR)/include -I$(JDIR)/include/linux
- CFLAGS_REMOVE_jvmti  = -Wmissing-declarations
-@@ -15,3 +15,7 @@ CFLAGS_libstring.o += -Wno-unused-parameter -DETC_PERFCONFIG="BUILD_STR($(ETC_PE
- $(OUTPUT)jvmti/libstring.o: ../lib/string.c FORCE
- 	$(call rule_mkdir)
- 	$(call if_changed_dep,cc_o_c)
+ 	save_control = CMOS_READ(RTC_CONTROL);
+-	CMOS_WRITE((save_control|RTC_SET), RTC_CONTROL);
++	CMOS_WRITE((save_control | RTC_SET), RTC_CONTROL);
+ 	save_freq_select = CMOS_READ(RTC_FREQ_SELECT);
+-	CMOS_WRITE((save_freq_select|RTC_DIV_RESET2), RTC_FREQ_SELECT);
 +
-+$(OUTPUT)jvmti/libctype.o: ../lib/ctype.c FORCE
-+	$(call rule_mkdir)
-+	$(call if_changed_dep,cc_o_c)
++#if defined(CONFIG_CPU_SUP_AMD) || defined(CONFIG_CPU_SUP_HYGON)
++	CMOS_WRITE((save_freq_select & (~RTC_DV0)), RTC_FREQ_SELECT);
++#else
++	CMOS_WRITE((save_freq_select | RTC_DIV_RESET2), RTC_FREQ_SELECT);
++#endif
+ 
+ #ifdef CONFIG_MACH_DECSTATION
+ 	CMOS_WRITE(real_yrs, RTC_DEC_YEAR);
+diff --git a/include/linux/mc146818rtc.h b/include/linux/mc146818rtc.h
+index 0661af17a758..590ac7849c78 100644
+--- a/include/linux/mc146818rtc.h
++++ b/include/linux/mc146818rtc.h
+@@ -86,6 +86,12 @@ struct cmos_rtc_board_info {
+    /* 2 values for divider stage reset, others for "testing purposes only" */
+ #  define RTC_DIV_RESET1	0x60
+ #  define RTC_DIV_RESET2	0x70
++
++#if defined(CONFIG_CPU_SUP_AMD) || defined(CONFIG_CPU_SUP_HYGON)
++   /* DV0 = 0 selects Bank 0, DV0 = 1 selects Bank 1 on AMD/Hygon platform */
++#  define RTC_DV0		0x10
++#endif
++
+   /* Periodic intr. / Square wave rate select. 0=none, 1=32.8kHz,... 15=2Hz */
+ # define RTC_RATE_SELECT 	0x0F
+ 
 -- 
-2.21.0
+2.17.1
 
