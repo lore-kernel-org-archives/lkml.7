@@ -2,177 +2,116 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6825C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4640EC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8DBE20679
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15126206BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 11:51:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="F0GFv3SH";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QYeT+5ty"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n7NbUBcW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730851AbfJHLux (ORCPT
+        id S1730857AbfJHLvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 07:50:53 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:51549 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730830AbfJHLuv (ORCPT
+        Tue, 8 Oct 2019 07:51:08 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:33766 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730371AbfJHLvH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 07:50:51 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id A241521731;
-        Tue,  8 Oct 2019 07:50:50 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 08 Oct 2019 07:50:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
-        :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=VrOAEo8fPhIsF
-        bZtqUbj1skBfTPYiCz0Pda7Yzm4W+M=; b=F0GFv3SHAweg9VKRWBWSm49fES2dG
-        DiL+MkSrWVl7JEvrPn5q2ebHFq9tIoDLcPOTeD1jL8+rJYrUJUzGU5ft3eLvt/z0
-        oeYb2+8elIjzXdljcieL9SbGtsZSfC7D1J2ZdwZJG0Mi/KhWhYFo6ORabsEXANBp
-        jueiQl2PF+9MgmT/hqKW6bSRQ4L95cA0USVTm1nkn6utt+R1EMF8tfONSqLjTTPf
-        Q6elFtq1UkzPJ7xwi2RJoaCr4zWFlPJsbqlgyb/mvem8TbIxUJrffoZR1o9yzEqe
-        6S+OPx7rkk6jX5Ic5DQ9GEdw10M+NFzLsJGYQ75mljExsMgu9e1ESqb+w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=VrOAEo8fPhIsFbZtqUbj1skBfTPYiCz0Pda7Yzm4W+M=; b=QYeT+5ty
-        bVq8RQ8KHMH7IYLgjjl9m0WyN/o1iD+luGHtgtuAFtsdYKOj8ozmj+qn8iLsJij5
-        g3ZSc5K+Nl0gPag46fYzzzXDqOrjkmKsAX+UuyN9Lln9+3Qtlnk+b4Z64++6Uysc
-        fxO0XX0Ez2h3MJRLXmOoIi79oW2LP7mx4hugqRH/S7a1CHkDFLNb5UvsTzQHHnJk
-        V9LjuFGBIHrx5AolvEo7TTJaDsb096K/3BKYEJhNOT9YCqjDcLA+LXyEBnehGo6M
-        ZjVPLaWJpA5gG7PlSZEQqoNwakiD0wRWqOtkcnryrGKDLvo4R4iVO6PHeDwGsZHP
-        N3sv/snH3yCLBg==
-X-ME-Sender: <xms:GnicXaS8VTXBAB32LzINknBRRVQD5VMtXniwjh9uqJ2b8WNlv8_GJA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrheelgdegjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffojghfggfgsedtkeertd
-    ertddtnecuhfhrohhmpeetnhgurhgvficulfgvfhhfvghrhicuoegrnhgurhgvfiesrghj
-    rdhiugdrrghuqeenucfkphepvddtfedrheejrddvudehrddujeeknecurfgrrhgrmhepmh
-    grihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgvrhfuihii
-    vgepvd
-X-ME-Proxy: <xmx:GnicXd9cW1aJF-3am5rhr-_SE9kCbS5Ko3nuOjj7VB-P10Pn19g0Yg>
-    <xmx:GnicXeLJWAwF2uBTDzCd8uM0APmjr28czYULdr6GyPkvxc9OjKJGgw>
-    <xmx:GnicXZ7G5wJhD6ZV7qg76dkWlxHhvHIxqVJH_nj1dhA-WVINuk5dlg>
-    <xmx:GnicXerjwpMXHNdHXRBeIOpkXrp9amYj3WsDJvcTIg0xrIqTiNrzng>
-Received: from mistburn.lan (203-57-215-178.dyn.iinet.net.au [203.57.215.178])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 4738D8005A;
-        Tue,  8 Oct 2019 07:50:47 -0400 (EDT)
-From:   Andrew Jeffery <andrew@aj.id.au>
-To:     netdev@vger.kernel.org
-Cc:     davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        joel@jms.id.au, benh@kernel.crashing.org
-Subject: [PATCH 3/3] net: ftgmac100: Ungate RCLK for RMII on ASPEED MACs
-Date:   Tue,  8 Oct 2019 22:21:43 +1030
-Message-Id: <20191008115143.14149-4-andrew@aj.id.au>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191008115143.14149-1-andrew@aj.id.au>
-References: <20191008115143.14149-1-andrew@aj.id.au>
+        Tue, 8 Oct 2019 07:51:07 -0400
+Received: by mail-qt1-f196.google.com with SMTP id r5so24837354qtd.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 04:51:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TP0fuYtSeZDOT7CrZEihsRgw5tOuh/8kOVD2u7lNDTk=;
+        b=n7NbUBcWkVFWs+SNEwxjt2F/wAULZ8WYp6vM1sr8jzMVnzGQBAUaUwdbXY7YB1I/hI
+         2An88SwgNSk9ss7fOYeCvQ3oGI8JzXhLJyW7yJ+h6F5JIPK5FF+HvDwMwDKxQ40i1/c1
+         TTuI5D3HAX79cKWrvg14Izzuly3WQLKm29/qyCSPn0iJIw6JuZW28NOdjtz4U9Uws3xP
+         JXMXI3A2XaXqDlWQ0jP+oXJw89H/94k4Shd7DW5lZGw0H7us0ArtCDym0zX5Ejf2X9CZ
+         62CzjaDm6cv/om+O1A4EUz0/cr+/YOF3xGIcpXKJeUuoXhekEzdYP5vYkVu8tH2Y+t5Y
+         rxrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TP0fuYtSeZDOT7CrZEihsRgw5tOuh/8kOVD2u7lNDTk=;
+        b=DrRM3bU37cXbPGecUUIpqdQyJZu6soGzdQm7xvuODOKtyzZdD6W9V3ajUxBMCeETL1
+         IWqwFo+Bztofk8bM6UeFCwHbsMd8biZDmUXEGoMsrJkG8FlRn4eLwT9dxLZQR66Xoh02
+         uvnQizfAkQ5DKx5jLnBBRXkgVJZS6ngE6zGM8inV5xjC1BOXR6DnvcvDb1d3QEV6Aij/
+         P5GOhQDfRen5UqgDGmF0JckUo5O+qemdRXK5L5Lfwyk0ZXi7sxgIFIVHZquFJfsyFTXz
+         KDGpJudF57C1SJJEw3YI2+aea3mVRNkYOYiEtnvvY4Veyy9yNwus1y6kuWgW/OOSPdQ/
+         NIXA==
+X-Gm-Message-State: APjAAAXeI9fNwr3ZA1AOTFlNRUVFMEi2KJSrPCtjlFYahZG8DVT3s21h
+        iuFU15Gzp0KLtmQmx68O9vdvt+GT3BDCag==
+X-Google-Smtp-Source: APXvYqwAnQv5oYaT67RRjPtBW6WIjMuNwzonJT372UgMKyREbq2IqlSwhJ/AzDCWkGdXAMv4byeyUQ==
+X-Received: by 2002:a0c:e90e:: with SMTP id a14mr32637560qvo.184.1570535466036;
+        Tue, 08 Oct 2019 04:51:06 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id x12sm12289720qtb.32.2019.10.08.04.51.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 08 Oct 2019 04:51:05 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Tue, 8 Oct 2019 07:51:03 -0400
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: ehci-pci breakage with dma-mapping changes in 5.4-rc2
+Message-ID: <20191008115103.GA463127@rani.riverdale.lan>
+References: <20191007073448.GA882@lst.de>
+ <20191007175430.GA32537@rani.riverdale.lan>
+ <20191007175528.GA21857@lst.de>
+ <20191007175630.GA28861@infradead.org>
+ <20191007175856.GA42018@rani.riverdale.lan>
+ <20191007183206.GA13589@rani.riverdale.lan>
+ <20191007184754.GB31345@lst.de>
+ <20191007221054.GA409402@rani.riverdale.lan>
+ <20191007235401.GA608824@rani.riverdale.lan>
+ <20191008073210.GB9452@lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191008073210.GB9452@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 50MHz RCLK has to be enabled before the RMII interface will function.
+On Tue, Oct 08, 2019 at 09:32:10AM +0200, Christoph Hellwig wrote:
+> On Mon, Oct 07, 2019 at 07:54:02PM -0400, Arvind Sankar wrote:
+> > > Do you want me to resend the patch as its own mail, or do you just take
+> > > it with a Tested-by: from me? If the former, I assume you're ok with me
+> > > adding your Signed-off-by?
+> > > 
+> > > Thanks
+> > 
+> > A question on the original change though -- what happens if a single
+> > device (or a single IOMMU domain really) does want >4G DMA address
+> > space? Was that not previously allowed either?
+> 
+> Your EHCI device actually supports the larger addressing.  Without an
+> IOMMU (or with accidentally enabled passthrough mode as in your report)
+> that will use bounce buffers for physical address that are too large.
+> With an iommu we can just remap, and by default those remap addresses
+> are under 32-bit just to make everyones life easier.
+> 
+> The dma_get_required_mask function is misnamed unfortunately, what it
+> really means is the optimal mask, that is one that avoids bounce
+> buffering or other complications.
 
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
----
- drivers/net/ethernet/faraday/ftgmac100.c | 35 +++++++++++++++++++-----
- 1 file changed, 28 insertions(+), 7 deletions(-)
+I understand that my EHCI device, even though it only supports 32-bit
+adddressing, will be able to DMA into anywhere in physical RAM, whether
+below 4G or not, via the IOMMU or bounce buffering.
 
-diff --git a/drivers/net/ethernet/faraday/ftgmac100.c b/drivers/net/ethernet/faraday/ftgmac100.c
-index 9b7af94a40bb..9ff791fb0449 100644
---- a/drivers/net/ethernet/faraday/ftgmac100.c
-+++ b/drivers/net/ethernet/faraday/ftgmac100.c
-@@ -90,6 +90,9 @@ struct ftgmac100 {
- 	struct mii_bus *mii_bus;
- 	struct clk *clk;
- 
-+	/* 2600 RMII clock gate */
-+	struct clk *rclk;
-+
- 	/* Link management */
- 	int cur_speed;
- 	int cur_duplex;
-@@ -1718,12 +1721,14 @@ static void ftgmac100_ncsi_handler(struct ncsi_dev *nd)
- 		   nd->link_up ? "up" : "down");
- }
- 
--static void ftgmac100_setup_clk(struct ftgmac100 *priv)
-+static int ftgmac100_setup_clk(struct ftgmac100 *priv)
- {
--	priv->clk = devm_clk_get(priv->dev, NULL);
--	if (IS_ERR(priv->clk))
--		return;
-+	struct clk *clk;
- 
-+	clk = devm_clk_get(priv->dev, NULL /* MACCLK */);
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+	priv->clk = clk;
- 	clk_prepare_enable(priv->clk);
- 
- 	/* Aspeed specifies a 100MHz clock is required for up to
-@@ -1732,6 +1737,14 @@ static void ftgmac100_setup_clk(struct ftgmac100 *priv)
- 	 */
- 	clk_set_rate(priv->clk, priv->use_ncsi ? FTGMAC_25MHZ :
- 			FTGMAC_100MHZ);
-+
-+	/* RCLK is for RMII, typically used for NCSI. Optional because its not
-+	 * necessary if it's the 2400 MAC or the MAC is configured for RGMII
-+	 */
-+	priv->rclk = devm_clk_get_optional(priv->dev, "RCLK");
-+	clk_prepare_enable(priv->rclk);
-+
-+	return 0;
- }
- 
- static int ftgmac100_probe(struct platform_device *pdev)
-@@ -1853,8 +1866,11 @@ static int ftgmac100_probe(struct platform_device *pdev)
- 			goto err_setup_mdio;
- 	}
- 
--	if (priv->is_aspeed)
--		ftgmac100_setup_clk(priv);
-+	if (priv->is_aspeed) {
-+		err = ftgmac100_setup_clk(priv);
-+		if (err)
-+			goto err_ncsi_dev;
-+	}
- 
- 	/* Default ring sizes */
- 	priv->rx_q_entries = priv->new_rx_q_entries = DEF_RX_QUEUE_ENTRIES;
-@@ -1886,8 +1902,11 @@ static int ftgmac100_probe(struct platform_device *pdev)
- 
- 	return 0;
- 
--err_ncsi_dev:
- err_register_netdev:
-+	if (priv->rclk)
-+		clk_disable_unprepare(priv->rclk);
-+	clk_disable_unprepare(priv->clk);
-+err_ncsi_dev:
- 	ftgmac100_destroy_mdio(netdev);
- err_setup_mdio:
- 	iounmap(priv->base);
-@@ -1909,6 +1928,8 @@ static int ftgmac100_remove(struct platform_device *pdev)
- 
- 	unregister_netdev(netdev);
- 
-+	if (priv->rclk)
-+		clk_disable_unprepare(priv->rclk);
- 	clk_disable_unprepare(priv->clk);
- 
- 	/* There's a small chance the reset task will have been re-queued,
--- 
-2.20.1
-
+What I mean is, do there exist devices (which would necessarily support
+64-bit DMA) that want to DMA using bigger than 4Gb buffers. Eg a GPU
+accelerator card with 16Gb of RAM on-board that wants to map 6Gb for DMA
+in one go, or 5 accelerator cards that are in one IOMMU domain and want
+to simultaneously map 1Gb each.
