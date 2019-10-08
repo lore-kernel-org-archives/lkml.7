@@ -2,118 +2,110 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D618C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 18:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23926C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 18:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 205092070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 18:16:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="c3Y+k5fg"
+	by mail.kernel.org (Postfix) with ESMTP id 0B4F12070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 18:17:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729888AbfJHSQW (ORCPT
+        id S1729206AbfJHSRz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 14:16:22 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:54948 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbfJHSQW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 14:16:22 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x98IFZYd055295;
-        Tue, 8 Oct 2019 13:15:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570558535;
-        bh=MHbt/egTxGNc/lCwyNbm8rdYzujVZ7DY1baO8ocVABU=;
-        h=From:To:CC:Subject:Date;
-        b=c3Y+k5fgd7o03DtgIecpJ/TGaYIJGTN0hde/Hu9HP21ivAvfZjAR1Ej1ZJJ/XE1L6
-         HKJQrAhfAZyVGu4GLaEEjfgtY7u0vlZ5E12Fos/zlSNhfsz9UI38rlD2FwzH/GdKza
-         OtOaDPet+pflnPMTxUc8wzLPMsCDRKOlogeoJTKo=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x98IFZ72085052
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 8 Oct 2019 13:15:35 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 8 Oct
- 2019 13:15:32 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 8 Oct 2019 13:15:35 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x98IFZD4029023;
-        Tue, 8 Oct 2019 13:15:35 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <broonie@kernel.org>
-CC:     <alsa-devel@alsa-project.org>, <lgirdwood@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <navada@ti.com>, <perex@perex.cz>,
-        <tiwai@suse.com>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH 1/2] ASoc: Add Texas Instruments TAS2562 amplifier binding
-Date:   Tue, 8 Oct 2019 13:15:16 -0500
-Message-ID: <20191008181517.5332-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
+        Tue, 8 Oct 2019 14:17:55 -0400
+Received: from mga18.intel.com ([134.134.136.126]:55600 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726138AbfJHSRz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 14:17:55 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 11:17:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,272,1566889200"; 
+   d="scan'208";a="393428590"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga005.fm.intel.com with ESMTP; 08 Oct 2019 11:17:54 -0700
+Date:   Tue, 8 Oct 2019 11:17:52 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com, Suresh Siddha <suresh.b.siddha@intel.com>
+Subject: Re: [PATCH v22 12/24] x86/sgx: Linux Enclave Driver
+Message-ID: <20191008181752.GE14020@linux.intel.com>
+References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
+ <20190903142655.21943-13-jarkko.sakkinen@linux.intel.com>
+ <20191008175924.GN14765@zn.tnic>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20191008175924.GN14765@zn.tnic>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the DT binding for the TAS2562 amplifier.
+On Tue, Oct 08, 2019 at 07:59:24PM +0200, Borislav Petkov wrote:
+> > diff --git a/arch/x86/include/uapi/asm/sgx.h b/arch/x86/include/uapi/asm/sgx.h
+> > new file mode 100644
+> > index 000000000000..c45eeed68144
+> > --- /dev/null
+> > +++ b/arch/x86/include/uapi/asm/sgx.h
+> > @@ -0,0 +1,55 @@
+> > +/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) WITH Linux-syscall-note */
+> 
+> checkpatch is bitching for some reason, I guess it doesn't like the
+> "WITH" thing or so:
+> 
+> WARNING: 'SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) WITH Linux-syscall-note */' is not supported in LICENSES/...
+> #98: FILE: arch/x86/include/uapi/asm/sgx.h:1:
+> +/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) WITH Linux-syscall-note */
+> 
+> WARNING: 'SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause WITH Linux-syscall-note */' is not supported in LICENSES/...
+> #159: FILE: arch/x86/include/uapi/asm/sgx_errno.h:1:
+> +/* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause WITH Linux-syscall-note */
+> 
+> And building this fails:
+> 
+> arch/x86/kernel/cpu/sgx/encl.c: In function ‘sgx_mmu_notifier_release’:
+> arch/x86/kernel/cpu/sgx/encl.c:77:3: error: implicit declaration of function ‘mmu_notifier_unregister_no_release’; did you mean ‘mmu_notifier_unregister’? [-Werror=implicit-function-declaration]
+>    mmu_notifier_unregister_no_release(mn, mm);
+>    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>    mmu_notifier_unregister
+> arch/x86/kernel/cpu/sgx/encl.c:78:3: error: implicit declaration of function ‘mmu_notifier_call_srcu’; did you mean ‘mmu_notifier_release’? [-Werror=implicit-function-declaration]
+>    mmu_notifier_call_srcu(&encl_mm->rcu,
+>    ^~~~~~~~~~~~~~~~~~~~~~
+>    mmu_notifier_release
+> cc1: some warnings being treated as errors
+> make[4]: *** [scripts/Makefile.build:265: arch/x86/kernel/cpu/sgx/encl.o] Error 1
+> make[4]: *** Waiting for unfinished jobs....
+> make[3]: *** [scripts/Makefile.build:509: arch/x86/kernel/cpu/sgx] Error 2
+> make[2]: *** [scripts/Makefile.build:509: arch/x86/kernel/cpu] Error 2
+> make[1]: *** [scripts/Makefile.build:509: arch/x86/kernel] Error 2
+> make: *** [Makefile:1670: arch/x86] Error 2
+> make: *** Waiting for unfinished jobs....
+> 
+> Got a fixed version which I can review instead?
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- .../devicetree/bindings/sound/tas2562.txt     | 34 +++++++++++++++++++
- 1 file changed, 34 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/tas2562.txt
+The build error is due to mmu notifier changes that are going into 5.4,
+whereas I believe this is based on 5.3.
 
-diff --git a/Documentation/devicetree/bindings/sound/tas2562.txt b/Documentation/devicetree/bindings/sound/tas2562.txt
-new file mode 100644
-index 000000000000..658e1fb18a99
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/tas2562.txt
-@@ -0,0 +1,34 @@
-+Texas Instruments TAS2562 Smart PA
-+
-+The TAS2562 is a mono, digital input Class-D audio amplifier optimized for
-+efficiently driving high peak power into small loudspeakers.
-+Integrated speaker voltage and current sense provides for
-+real time monitoring of loudspeaker behavior.
-+
-+Required properties:
-+ - #address-cells  - Should be <1>.
-+ - #size-cells     - Should be <0>.
-+ - compatible:	   - Should contain "ti,tas2562".
-+ - reg:		   - The i2c address. Should be 0x4c, 0x4d, 0x4e or 0x4f.
-+ - ti,imon-slot-no:- TDM TX current sense time slot.
-+
-+Optional properties:
-+- interrupt-parent: phandle to the interrupt controller which provides
-+                    the interrupt.
-+- interrupts: (GPIO) interrupt to which the chip is connected.
-+- shut-down: GPIO used to control the state of the device.
-+
-+Examples:
-+tas2562@4c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        compatible = "ti,tas2562";
-+        reg = <0x4c>;
-+
-+        interrupt-parent = <&gpio1>;
-+        interrupts = <14>;
-+
-+	shut-down = <&gpio1 15 0>;
-+        ti,imon-slot-no = <0>;
-+};
-+
--- 
-2.22.0.214.g8dca754b1e
+Jarkko has rebased to 5.4-rc1 and addressed the mmu notifier issue, but I
+don't know exact status of his branch.  I'd prefer not to send you a borked
+patch.
 
+There are already a handful of driver changes on our todo list for v23, as
+well as the vDSO and selftest updates.  What if you stop here for now and
+restart when Jarkko sends v23?  In theory that'll happen later this week.
