@@ -2,167 +2,166 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC2DECE58C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0CC0ECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3392920835
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCD3C206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 01:26:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="eM3HEeM7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729727AbfJHBZj (ORCPT
+        id S1729767AbfJHB0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 21:25:39 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:52193 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729327AbfJHBZi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 21:25:38 -0400
-X-UUID: fdc1729b23f040bcba897059c71b9714-20191008
-X-UUID: fdc1729b23f040bcba897059c71b9714-20191008
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
-        (envelope-from <weiyi.lu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 307946823; Tue, 08 Oct 2019 09:25:32 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 8 Oct 2019 09:25:30 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 8 Oct 2019 09:25:30 +0800
-Message-ID: <1570497930.1483.0.camel@mtksdaap41>
-Subject: Re: [PATCH v7 02/13] dt-bindings: soc: Add MT8183 power dt-bindings
-From:   Weiyi Lu <weiyi.lu@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-CC:     Nicolas Boichat <drinkcat@chromium.org>,
-        Rob Herring <robh@kernel.org>,
-        James Liao <jamesjj.liao@mediatek.com>,
-        Fan Chen <fan.chen@mediatek.com>,
+        Mon, 7 Oct 2019 21:26:21 -0400
+Received: from mail-eopbgr40078.outbound.protection.outlook.com ([40.107.4.78]:38686
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729327AbfJHB0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 21:26:21 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=n4IVedDv+aY0SN8PlCLNUWq4ximfboWNIm3uZKER1FIJ9Povj688j7pPmeNK/yR6XflyK8RYaBV2hwss8SlMUYV3TVjk/HhaX3yVQEB/ocgQ4264Fqs3pF0bY/McUX6BUr4n4TeAaa37NsM/jkPHHbyyEXYv+zz2R193Aei61GJ+eLoWEvG5ZG9GXsoh4AfDwuQpIBNxef8K9LTfqkF3CanCGosxbxxFyYP1+PixyJmik6BDJh5RYdOApEdZ1NmT+DMP/g6vlZTPAhwDYgBzyGlDQuu5lX4mUVHjzNMcu7vBbmG5u7B/5XzQ91hSouCnmxEoZkW41SkJPqrA/H9ITw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=q2kpPk9ZS/dex92xd1QfUtScy86W9EeJ3jcvgP9YRH4=;
+ b=Cs2BRBWkqWWGPfvlJGud0B4WfH1sML2eN8pRVLOhneUCTtrNzytnzewG/gCOTdtlHiyFDBj6LjaRnGPDWtzBvk6QAwtD+It9PbQ7F72UfpbapsG0QkwdrjFRY/MgPHMd8K7/fCP3Nzi79/wZValBO9oRUj7TA0UXb5Jg3FYySYIBoeahtsd6Cc+a33ecqY/SZpu7V2clDy2XkIXhOYxv4pZgeMiNfZ6XzqOAN4zmOv9Dvb5YQ3eN2mBpw+R8lKMVX0LpfJzOJCDAwIYbo07iwJeul9GIs/cBc9izTU56e11EuqEEDSuGZ3mgroj8nhaoGBf2TIAOCsATcrxFwEPuGA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=q2kpPk9ZS/dex92xd1QfUtScy86W9EeJ3jcvgP9YRH4=;
+ b=eM3HEeM78oaSojLbmMayvVlxIJSWLa5oHgsbkjti711FSamvxarbIeeHqEitJgVMs8Yfquu1ZX7ioYAFBSnw2nNMm+kBffWzZ8QEgmwOes9phYwnjCVgSdufTU8NOojDkVNSiMfjR3iIzOhG3LJlS6S06ZqlIeYgbdycwO0SFR0=
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) by
+ AM5PR04MB3027.eurprd04.prod.outlook.com (10.173.254.142) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2327.24; Tue, 8 Oct 2019 01:26:15 +0000
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::5dd3:ddc9:411a:db41]) by AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::5dd3:ddc9:411a:db41%3]) with mapi id 15.20.2305.023; Tue, 8 Oct 2019
+ 01:26:15 +0000
+From:   Xiaowei Bao <xiaowei.bao@nxp.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "Z.q. Hou" <zhiqiang.hou@nxp.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, Yong Wu <yong.wu@mediatek.com>
-Date:   Tue, 8 Oct 2019 09:25:30 +0800
-In-Reply-To: <48655b84-fd20-f417-529c-b81a7d64d63d@gmail.com>
-References: <1566983506-26598-1-git-send-email-weiyi.lu@mediatek.com>
-         <1566983506-26598-3-git-send-email-weiyi.lu@mediatek.com>
-         <48655b84-fd20-f417-529c-b81a7d64d63d@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 2/6] dt-bindings: Add DT binding for PCIE GEN4 EP of the
+ layerscape
+Thread-Topic: [PATCH 2/6] dt-bindings: Add DT binding for PCIE GEN4 EP of the
+ layerscape
+Thread-Index: AQHVbDZrgKqekKwvukSM1HLkRzBd6adE4qCAgAszjUA=
+Date:   Tue, 8 Oct 2019 01:26:15 +0000
+Message-ID: <AM5PR04MB3299504E1D4869B3B727233EF59A0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+References: <20190916021742.22844-1-xiaowei.bao@nxp.com>
+ <20190916021742.22844-3-xiaowei.bao@nxp.com> <20190930222221.GA13251@bogus>
+In-Reply-To: <20190930222221.GA13251@bogus>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=xiaowei.bao@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e091f15a-e021-45e3-78b7-08d74b8e8360
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: AM5PR04MB3027:|AM5PR04MB3027:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM5PR04MB3027750193C63263A0FA7D6FF59A0@AM5PR04MB3027.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3513;
+x-forefront-prvs: 01842C458A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(136003)(396003)(366004)(376002)(13464003)(199004)(189003)(305945005)(66446008)(64756008)(9686003)(6436002)(102836004)(76176011)(53546011)(229853002)(6506007)(14444005)(256004)(8936002)(7416002)(14454004)(33656002)(81166006)(81156014)(4326008)(44832011)(54906003)(66476007)(478600001)(66556008)(74316002)(316002)(8676002)(6246003)(55016002)(52536014)(6116002)(86362001)(25786009)(26005)(71190400001)(71200400001)(7696005)(7736002)(486006)(2906002)(76116006)(11346002)(446003)(5660300002)(66066001)(66946007)(6916009)(3846002)(186003)(99286004)(476003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR04MB3027;H:AM5PR04MB3299.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: h60ZB8SyCsbiZS7fR5mZBGidta7AyWVW3ecNkZkAvguh9E/XRBTtnO0z9mHAfjBm3SvBOawNQyq9RTdmvasPuf6fhXkf2r+0wd0dN0eY+JJ1x3YB9xujiKp1pmZXjf7c2LkEPuh3Vp/zAQ/CYAsw77aE5g3N55TSnhiTrUIkz8n1HADguF7yrqcMlaflRQbnIUZrr2Oi5mSX8C1xc0LmKw+t5FENF+vRHOnQ3uqpCWdLrh6600+Dv7oKlfM53AbIkHG68tDP3LYmNkE2UQDasGYLqohTdZjGvKvoPhtcjDEwRvGWpbLzUfolme4eWPHbcJZQM3iGZHCUKYWrdyIYQ5HXlB57C6NoFFnkJKTDsGFkMZ5iEmjlK61s8Y4foAUbTscrAMkuCqXb4qCsi9BE2hQbSwIFEwJwUrvC0zKKgoo=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: 578EE69AAD1693E32ACFE0DC740AB3F9176CFE3AF9905C35F6FC95A5F7A7086C2000:8
-X-MTK:  N
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e091f15a-e021-45e3-78b7-08d74b8e8360
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Oct 2019 01:26:15.7141
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: o9YVkN61QqdIMK+AtiLFE44Y5H5IBhVOnV8ZJ5PAWDBByGZwDw9KlbYxWrUfRcvujntcb9EChU1W3vtl+Wsk8g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3027
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-08-28 at 11:39 +0200, Matthias Brugger wrote:
-> 
-> On 28/08/2019 11:11, Weiyi Lu wrote:
-> > Add power dt-bindings of MT8183 and introduces "BASIC" and
-> > "SUBSYS" clock types in binding document.
-> > The "BASIC" type is compatible to the original power control with
-> > clock name [a-z]+[0-9]*, e.g. mm, vpu1.
-> > The "SUBSYS" type is used for bus protection control with clock
-> > name [a-z]+-[0-9]+, e.g. isp-0, cam-1.
-> > 
-> > Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
-> > ---
-> >  .../devicetree/bindings/soc/mediatek/scpsys.txt    | 14 ++++++++++++
-> >  include/dt-bindings/power/mt8183-power.h           | 26 ++++++++++++++++++++++
-> >  2 files changed, 40 insertions(+)
-> >  create mode 100644 include/dt-bindings/power/mt8183-power.h
-> > 
-> > diff --git a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
-> > index 876693a..00eab7e 100644
-> > --- a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
-> > +++ b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
-> > @@ -14,6 +14,7 @@ power/power_domain.txt. It provides the power domains defined in
-> >  - include/dt-bindings/power/mt2701-power.h
-> >  - include/dt-bindings/power/mt2712-power.h
-> >  - include/dt-bindings/power/mt7622-power.h
-> > +- include/dt-bindings/power/mt8183-power.h
-> >  
-> >  Required properties:
-> >  - compatible: Should be one of:
-> > @@ -25,18 +26,31 @@ Required properties:
-> >  	- "mediatek,mt7623a-scpsys": For MT7623A SoC
-> >  	- "mediatek,mt7629-scpsys", "mediatek,mt7622-scpsys": For MT7629 SoC
-> >  	- "mediatek,mt8173-scpsys"
-> > +	- "mediatek,mt8183-scpsys"
-> >  - #power-domain-cells: Must be 1
-> >  - reg: Address range of the SCPSYS unit
-> >  - infracfg: must contain a phandle to the infracfg controller
-> >  - clock, clock-names: clocks according to the common clock binding.
-> >                        These are clocks which hardware needs to be
-> >                        enabled before enabling certain power domains.
-> > +                      The new clock type "BASIC" belongs to the type above.
-> > +                      As to the new clock type "SUBSYS" needs to be
-> > +                      enabled before releasing bus protection.
-> 
-> The new clock type won't be new in a couple of month, better reword this. E.g.:
-> Some SoCs have to groups of clocks. BASIC clocks need to be enabled before
-> enabling the corresponding power domain. SUBSYS clocks need to be enabled before
-> releasing the bus protection.
-> 
-
-Got it, I'll reword in next version. Many thanks.
-
-> >  	Required clocks for MT2701 or MT7623: "mm", "mfg", "ethif"
-> >  	Required clocks for MT2712: "mm", "mfg", "venc", "jpgdec", "audio", "vdec"
-> >  	Required clocks for MT6797: "mm", "mfg", "vdec"
-> >  	Required clocks for MT7622 or MT7629: "hif_sel"
-> >  	Required clocks for MT7623A: "ethif"
-> >  	Required clocks for MT8173: "mm", "mfg", "venc", "venc_lt"
-> > +	Required clocks for MT8183: BASIC: "audio", "mfg", "mm", "cam", "isp",
-> > +					   "vpu", "vpu1", "vpu2", "vpu3"
-> > +				    SUBSYS: "mm-0", "mm-1", "mm-2", "mm-3",
-> > +					    "mm-4", "mm-5", "mm-6", "mm-7",
-> > +					    "mm-8", "mm-9", "isp-0", "isp-1",
-> > +					    "cam-0", "cam-1", "cam-2", "cam-3",
-> > +					    "cam-4", "cam-5", "cam-6", "vpu-0",
-> > +					    "vpu-1", "vpu-2", "vpu-3", "vpu-4",
-> > +					    "vpu-5"
-> >  
-> >  Optional properties:
-> >  - vdec-supply: Power supply for the vdec power domain
-> > diff --git a/include/dt-bindings/power/mt8183-power.h b/include/dt-bindings/power/mt8183-power.h
-> > new file mode 100644
-> > index 0000000..5c0c8c7
-> > --- /dev/null
-> > +++ b/include/dt-bindings/power/mt8183-power.h
-> > @@ -0,0 +1,26 @@
-> > +/* SPDX-License-Identifier: GPL-2.0
-> > + *
-> > + * Copyright (c) 2018 MediaTek Inc.
-> > + * Author: Weiyi Lu <weiyi.lu@mediatek.com>
-> > + */
-> > +
-> > +#ifndef _DT_BINDINGS_POWER_MT8183_POWER_H
-> > +#define _DT_BINDINGS_POWER_MT8183_POWER_H
-> > +
-> > +#define MT8183_POWER_DOMAIN_AUDIO	0
-> > +#define MT8183_POWER_DOMAIN_CONN	1
-> > +#define MT8183_POWER_DOMAIN_MFG_ASYNC	2
-> > +#define MT8183_POWER_DOMAIN_MFG		3
-> > +#define MT8183_POWER_DOMAIN_MFG_CORE0	4
-> > +#define MT8183_POWER_DOMAIN_MFG_CORE1	5
-> > +#define MT8183_POWER_DOMAIN_MFG_2D	6
-> > +#define MT8183_POWER_DOMAIN_DISP	7
-> > +#define MT8183_POWER_DOMAIN_CAM		8
-> > +#define MT8183_POWER_DOMAIN_ISP		9
-> > +#define MT8183_POWER_DOMAIN_VDEC	10
-> > +#define MT8183_POWER_DOMAIN_VENC	11
-> > +#define MT8183_POWER_DOMAIN_VPU_TOP	12
-> > +#define MT8183_POWER_DOMAIN_VPU_CORE0	13
-> > +#define MT8183_POWER_DOMAIN_VPU_CORE1	14
-> > +
-> > +#endif /* _DT_BINDINGS_POWER_MT8183_POWER_H */
-> > 
-
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iIEhlcnJpbmcgPHJv
+YmhAa2VybmVsLm9yZz4NCj4gU2VudDogMjAxOcTqMTDUwjHI1SA2OjIyDQo+IFRvOiBYaWFvd2Vp
+IEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gQ2M6IFoucS4gSG91IDx6aGlxaWFuZy5ob3VA
+bnhwLmNvbT47IGJoZWxnYWFzQGdvb2dsZS5jb207DQo+IG1hcmsucnV0bGFuZEBhcm0uY29tOyBz
+aGF3bmd1b0BrZXJuZWwub3JnOyBMZW8gTGkNCj4gPGxlb3lhbmcubGlAbnhwLmNvbT47IGtpc2hv
+bkB0aS5jb207IGxvcmVuem8ucGllcmFsaXNpQGFybS5jb207IE0uaC4gTGlhbg0KPiA8bWluZ2h1
+YW4ubGlhbkBueHAuY29tPjsgYW5kcmV3Lm11cnJheUBhcm0uY29tOyBNaW5na2FpIEh1DQo+IDxt
+aW5na2FpLmh1QG54cC5jb20+OyBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1h
+cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3Jn
+Ow0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0gg
+Mi82XSBkdC1iaW5kaW5nczogQWRkIERUIGJpbmRpbmcgZm9yIFBDSUUgR0VONCBFUCBvZiB0aGUN
+Cj4gbGF5ZXJzY2FwZQ0KPiANCj4gT24gTW9uLCBTZXAgMTYsIDIwMTkgYXQgMTA6MTc6MzhBTSAr
+MDgwMCwgWGlhb3dlaSBCYW8gd3JvdGU6DQo+ID4gQWRkIHRoZSBkb2N1bWVudGF0aW9uIGZvciB0
+aGUgRGV2aWNlIFRyZWUgYmluZGluZyBvZiB0aGUgbGF5ZXJzY2FwZQ0KPiA+IFBDSWUgR0VONCBj
+b250cm9sbGVyIHdpdGggRVAgbW9kZS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFhpYW93ZWkg
+QmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiA+IC0tLQ0KPiA+ICAuLi4vYmluZGluZ3MvcGNp
+L2xheWVyc2NhcGUtcGNpZS1nZW40LnR4dCAgICAgICAgICB8IDI4DQo+ICsrKysrKysrKysrKysr
+KysrKysrKy0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDI3IGluc2VydGlvbnMoKyksIDEgZGVsZXRp
+b24oLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQNCj4gPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2llLWdlbjQudHh0DQo+ID4gYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2xheWVyc2NhcGUtcGNpZS1nZW40LnR4dA0KPiA+
+IGluZGV4IGI0MGZiNWQuLjQxNGE4NmMgMTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9sYXllcnNjYXBlLXBjaWUtZ2VuNC50eHQNCj4gPiArKysg
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2xheWVyc2NhcGUtcGNpZS1n
+ZW40LnR4dA0KPiA+IEBAIC0zLDYgKzMsOCBAQCBOWFAgTGF5ZXJzY2FwZSBQQ0llIEdlbjQgY29u
+dHJvbGxlciAgVGhpcyBQQ0llDQo+ID4gY29udHJvbGxlciBpcyBiYXNlZCBvbiB0aGUgTW9iaXZl
+aWwgUENJZSBJUCBhbmQgdGh1cyBpbmhlcml0cyBhbGwgIHRoZQ0KPiA+IGNvbW1vbiBwcm9wZXJ0
+aWVzIGRlZmluZWQgaW4gbW9iaXZlaWwtcGNpZS50eHQuDQo+ID4NCj4gPiArSE9TVCBNT0RFDQo+
+ID4gKz09PT09PT09PQ0KPiA+ICBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICAtIGNvbXBhdGli
+bGU6IHNob3VsZCBjb250YWluIHRoZSBwbGF0Zm9ybSBpZGVudGlmaWVyIHN1Y2ggYXM6DQo+ID4g
+ICAgImZzbCxseDIxNjBhLXBjaWUiDQo+ID4gQEAgLTIzLDcgKzI1LDIwIEBAIFJlcXVpcmVkIHBy
+b3BlcnRpZXM6DQo+ID4gIC0gbXNpLXBhcmVudCA6IFNlZSB0aGUgZ2VuZXJpYyBNU0kgYmluZGlu
+ZyBkZXNjcmliZWQgaW4NCj4gPiAgICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+aW50ZXJydXB0LWNvbnRyb2xsZXIvbXNpLnR4dC4NCj4gPg0KPiA+IC1FeGFtcGxlOg0KPiA+ICtE
+RVZJQ0UgTU9ERQ0KPiA+ICs9PT09PT09PT0NCj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4g
+PiArLSBjb21wYXRpYmxlOiBzaG91bGQgY29udGFpbiB0aGUgcGxhdGZvcm0gaWRlbnRpZmllciBz
+dWNoIGFzOg0KPiA+ICsgICJmc2wsbHgyMTYwYS1wY2llLWVwIg0KPiA+ICstIHJlZzogYmFzZSBh
+ZGRyZXNzZXMgYW5kIGxlbmd0aHMgb2YgdGhlIFBDSWUgY29udHJvbGxlciByZWdpc3RlciBibG9j
+a3MuDQo+ID4gKyAgInJlZ3MiOiBQQ0llIGNvbnRyb2xsZXIgcmVnaXN0ZXJzLg0KPiA+ICsgICJh
+ZGRyX3NwYWNlIiBFUCBkZXZpY2UgQ1BVIGFkZHJlc3MuDQo+ID4gKy0gYXBpby13aW5zOiBudW1i
+ZXIgb2YgcmVxdWVzdGVkIGFwaW8gb3V0Ym91bmQgd2luZG93cy4NCj4gPiArDQo+ID4gK09wdGlv
+bmFsIFByb3BlcnR5Og0KPiA+ICstIG1heC1mdW5jdGlvbnM6IE1heGltdW0gbnVtYmVyIG9mIGZ1
+bmN0aW9ucyB0aGF0IGNhbiBiZSBjb25maWd1cmVkDQo+IChkZWZhdWx0IDEpLg0KPiA+ICsNCj4g
+PiArUkMgRXhhbXBsZToNCj4gPg0KPiA+ICAJcGNpZUAzNDAwMDAwIHsNCj4gPiAgCQljb21wYXRp
+YmxlID0gImZzbCxseDIxNjBhLXBjaWUiOw0KPiA+IEBAIC01MCwzICs2NSwxNCBAQCBFeGFtcGxl
+Og0KPiA+ICAJCQkJPDAwMDAgMCAwIDMgJmdpYyAwIDAgR0lDX1NQSSAxMTENCj4gSVJRX1RZUEVf
+TEVWRUxfSElHSD4sDQo+ID4gIAkJCQk8MDAwMCAwIDAgNCAmZ2ljIDAgMCBHSUNfU1BJIDExMg0K
+PiBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gPiAgCX07DQo+ID4gKw0KPiA+ICtFUCBFeGFtcGxl
+Og0KPiA+ICsNCj4gPiArCXBjaWVfZXBAMzQwMDAwMCB7DQo+IA0KPiBwY2llLWVuZHBvaW50QC4u
+Lg0KPiANCj4gPiArCQljb21wYXRpYmxlID0gImZzbCxseDIxNjBhLXBjaWUtZXAiOw0KPiA+ICsJ
+CXJlZyA9IDwweDAwIDB4MDM0MDAwMDAgMHgwIDB4MDAxMDAwMDANCj4gPiArCQkgICAgICAgMHg4
+MCAweDAwMDAwMDAwIDB4OCAweDAwMDAwMDAwPjsNCj4gPiArCQlyZWctbmFtZXMgPSAicmVncyIs
+ICJhZGRyX3NwYWNlIjsNCj4gPiArCQlhcGlvLXdpbnMgPSA8OD47DQo+ID4gKwkJc3RhdHVzID0g
+ImRpc2FibGVkIjsNCj4gDQo+IERvbid0IHNob3cgc3RhdHVzIGluIGV4YW1wbGVzLg0KDQpTb3Jy
+eSwgSSB3aWxsIGFkZCBpdCwgdGhhbmtzDQoNClRoYW5rcw0KWGlhb3dlaQ0KDQo+IA0KPiA+ICsJ
+fTsNCj4gPiAtLQ0KPiA+IDIuOS41DQo+ID4NCg==
