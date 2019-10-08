@@ -2,167 +2,109 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 101B7C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 23:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F1B7C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 23:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCC9321721
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 23:44:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1530D21721
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 23:45:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BKQ1xzf8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="B6RHNGrO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729814AbfJHXoF (ORCPT
+        id S1729831AbfJHXpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 19:44:05 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41217 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726822AbfJHXoF (ORCPT
+        Tue, 8 Oct 2019 19:45:08 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36679 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727769AbfJHXpI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 19:44:05 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q7so353022pfh.8;
-        Tue, 08 Oct 2019 16:44:04 -0700 (PDT)
+        Tue, 8 Oct 2019 19:45:08 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 23so196919pgk.3
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 16:45:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=giOz/dRSNjcjaoPCpsFIM1SwpAO5uvYzKokl/9Bvn60=;
-        b=BKQ1xzf8hhuxcflOm7bvqSjeqcU3Oqibixhqnm42Va7LWUpPnr+GdX8aP8G2VO/89p
-         pYkhYPNmFH5gVC59PBt3DSld5qKt7DE0odsOK+BiUnjbO8YbhumJSkuoGS6Q30c9wuoA
-         LXRlFqiUsneDzDCIKpxXRVpzPqioFR2g77XHdAqCPXX8LcYV5ieJ4b4BflWtMciUg9nz
-         N7FwdWhkT32oWPn63OeCnBtuvaUIbEq2XPsOjGFy/v5uGPn58k3sOvloAkFY30PLPZRd
-         ZDoFCd2diAX+9xhT3LdThYbTmNMZjk6VEJDKlEWKlgwdQsq71/v3um030qSAhUpOHuwJ
-         69Eg==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=g6+fgv7o5Mc/zUQb4lUQ0sPjn9LWoOyx6TnpyyZahZg=;
+        b=B6RHNGrOm07WuboIxNb1d1jtA7CxE+Hg4E/LLnretKo9zn+WzF/8/gnt7eHlHC7kuV
+         a6O5MtzttqIam4d9/Sfwv7663+um+CwN1uJMQAk6inURP47Sw3biIBa5adylsqJrHD7k
+         eAh0rhspz/fShqdgLZyVDhAKqUlBvWElg4vrk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=giOz/dRSNjcjaoPCpsFIM1SwpAO5uvYzKokl/9Bvn60=;
-        b=lDemhlECazjHK6I+FJnC18PboZTqtFvFYVLTGZhHwXRkitGt076c69v50Rxd82Y7CQ
-         cAuzadk/UuWwYGwG7U2ed3cgenMHhbAo7UEgXf+ioD3Pdg7H+a5N5kqkNBqzFYLIQbGt
-         hlr7aEKo6yFk9pKekjK9LQyoyCEKLVCLzIuAjyU3T9gPL5PvfETKs0aB8qreKhRbY+Tw
-         qH/xqdt0kCwSAAqh78ektkdOARUxseI7Nih2NlmcifQGXhM14YVLLrleOPIX2gj38E9S
-         whXi7VuJ/CvUBmFXHKrIFoxIAq9hB9Lzx2U9odztcIk2IMHt5hA5yB/tK81p3bZV/cxO
-         Hq1Q==
-X-Gm-Message-State: APjAAAVL3Aqbtngrd3+DIWfRQwhKDPOVnskxNWr4iqatXC09cDNFSN1m
-        QlFgUdFFBpoth9GRyb/ZrME=
-X-Google-Smtp-Source: APXvYqyZm6Xavx10KziFI2ZriRe5b6hI9rLlLzyI1VzXZOmZ5IeJZNNGJ6qatjgVlbEfyXZRtyr3SQ==
-X-Received: by 2002:a63:5b07:: with SMTP id p7mr1132507pgb.416.1570578243596;
-        Tue, 08 Oct 2019 16:44:03 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id 127sm203127pfy.56.2019.10.08.16.44.02
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=g6+fgv7o5Mc/zUQb4lUQ0sPjn9LWoOyx6TnpyyZahZg=;
+        b=FpwVG0mtNqfOcNToJL/pFBsXj6wXy4ubJMZBhubaD7rbvnH9i0puVhSIvobUvHEkNq
+         9O1hPMdFoNzMrXZQ5kMggR/DICr6REx1MvlkqaLgdb8ogWJjEVCUugKCeJ9sY+IQLOLF
+         AY5P9Lplu0Ub0VgKt/wKh9DAgjR2ZzALv1RaGS4a5vwwRB22YX6pSjXdWmSaDwGzVcX+
+         bEAkBLM8gzxWTLLZThS/xGvr7CkoHaNwf/VL6DO9SO/BMxgw9NhfVCDUGr21glb2GKal
+         isietZonC2uVIVHqDXlZ+9PWiOp7dXyaBfT5Iv0lgwp+iaRdXnhC+EQnUdDa689QtVIN
+         bu5Q==
+X-Gm-Message-State: APjAAAVqUK3WAgYVVYHT2rqnVlCJag9JDjsJYnZ0it6m57SZbH/PLTFS
+        VYvCTzIbSJ0K5Q/d8IJYctBKyg==
+X-Google-Smtp-Source: APXvYqyhBo3fTurEQKhDAY4F2lAq09MkB0eqZgCj9Vojx0DdkadMQ+Ue0N/CEyFcdaBCAoLbQXbrFA==
+X-Received: by 2002:a63:eb08:: with SMTP id t8mr1120368pgh.49.1570578307734;
+        Tue, 08 Oct 2019 16:45:07 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id s202sm210671pfs.24.2019.10.08.16.45.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2019 16:44:02 -0700 (PDT)
-Date:   Tue, 8 Oct 2019 16:44:00 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Andy Shevchenko <andy@infradead.org>, linux-input@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Maximilian Luz <luzmaximilian@gmail.com>
-Subject: Re: [PATCH 5.4 regression fix] Input: soc_button_array - partial
- revert of support for newer surface devices
-Message-ID: <20191008234400.GJ22365@dtor-ws>
-References: <20191005105551.353273-1-hdegoede@redhat.com>
+        Tue, 08 Oct 2019 16:45:07 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>,
+        Evan Green <evgreen@chromium.org>
+Subject: [PATCH v2 1/2] soc: qcom: llcc: Name regmaps to avoid collisions
+Date:   Tue,  8 Oct 2019 16:45:04 -0700
+Message-Id: <20191008234505.222991-2-swboyd@chromium.org>
+X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
+In-Reply-To: <20191008234505.222991-1-swboyd@chromium.org>
+References: <20191008234505.222991-1-swboyd@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191005105551.353273-1-hdegoede@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 05, 2019 at 12:55:51PM +0200, Hans de Goede wrote:
-> Commit c394159310d0 ("Input: soc_button_array - add support for newer
-> surface devices") not only added support for the MSHW0040 ACPI HID,
-> but for some reason it also makes changes to the error handling of the
-> soc_button_lookup_gpio() call in soc_button_device_create(). Note ideally
-> this seamingly unrelated change would have been made in a separate commit,
-> with a message explaining the what and why of this change.
-> 
-> I guess this change may have been added to deal with -EPROBE_DEFER errors,
-> but in case of the existing support for PNP0C40 devices, treating
-> -EPROBE_DEFER as any other error is deliberate, see the comment this
-> commit adds for why.
-> 
-> The actual returning of -EPROBE_DEFER to the caller of soc_button_probe()
-> introduced by the new error checking causes a serious regression:
-> 
-> On devices with so called virtual GPIOs soc_button_lookup_gpio() will
-> always return -EPROBE_DEFER for these fake GPIOs, when this happens
-> during the second call of soc_button_device_create() we already have
-> successfully registered our first child. This causes the kernel to think
-> we are making progress with probing things even though we unregister the
-> child before again before we return the -EPROBE_DEFER. Since we are making
-> progress the kernel will retry deferred-probes again immediately ending
-> up stuck in a loop with the following showing in dmesg:
-> 
-> [  124.022697] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6537
-> [  124.040764] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6538
-> [  124.056967] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6539
-> [  124.072143] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6540
-> [  124.092373] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6541
-> [  124.108065] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6542
-> [  124.128483] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6543
-> [  124.147141] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6544
-> [  124.165070] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6545
-> [  124.179775] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6546
-> [  124.202726] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6547
-> <continues on and on and on>
-> 
-> And 1 CPU core being stuck at 100% and udev hanging since it is waiting
-> for the modprobe of soc_button_array to return.
-> 
-> This patch reverts the soc_button_lookup_gpio() error handling changes,
-> fixing this regression.
-> 
-> Fixes: c394159310d0 ("Input: soc_button_array - add support for newer surface devices")
-> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=205031
-> Cc: Maximilian Luz <luzmaximilian@gmail.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+We'll end up with debugfs collisions if we don't give names to the
+regmaps created by this driver. Change the name of the config before
+registering it so we don't collide in debugfs.
 
-Applied, thank you.
+Fixes: 7f9c136216c7 ("soc: qcom: Add broadcast base for Last Level Cache Controller (LLCC)")
+Cc: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+Cc: Evan Green <evgreen@chromium.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+---
+ drivers/soc/qcom/llcc-slice.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> ---
->  drivers/input/misc/soc_button_array.c | 17 ++++++++++++-----
->  1 file changed, 12 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/input/misc/soc_button_array.c b/drivers/input/misc/soc_button_array.c
-> index 97e3639e99d0..97761421d6dd 100644
-> --- a/drivers/input/misc/soc_button_array.c
-> +++ b/drivers/input/misc/soc_button_array.c
-> @@ -92,11 +92,18 @@ soc_button_device_create(struct platform_device *pdev,
->  			continue;
->  
->  		gpio = soc_button_lookup_gpio(&pdev->dev, info->acpi_index);
-> -		if (gpio < 0 && gpio != -ENOENT) {
-> -			error = gpio;
-> -			goto err_free_mem;
-> -		} else if (!gpio_is_valid(gpio)) {
-> -			/* Skip GPIO if not present */
-> +		if (!gpio_is_valid(gpio)) {
-> +			/*
-> +			 * Skip GPIO if not present. Note we deliberately
-> +			 * ignore -EPROBE_DEFER errors here. On some devices
-> +			 * Intel is using so called virtual GPIOs which are not
-> +			 * GPIOs at all but some way for AML code to check some
-> +			 * random status bits without need a custom opregion.
-> +			 * In some cases the resources table we parse points to
-> +			 * such a virtual GPIO, since these are not real GPIOs
-> +			 * we do not have a driver for these so they will never
-> +			 * show up, therefor we ignore -EPROBE_DEFER.
-> +			 */
->  			continue;
->  		}
->  
-> -- 
-> 2.23.0
-> 
-
+diff --git a/drivers/soc/qcom/llcc-slice.c b/drivers/soc/qcom/llcc-slice.c
+index 9090ea12eaf3..4a6111635f82 100644
+--- a/drivers/soc/qcom/llcc-slice.c
++++ b/drivers/soc/qcom/llcc-slice.c
+@@ -48,7 +48,7 @@
+ 
+ static struct llcc_drv_data *drv_data = (void *) -EPROBE_DEFER;
+ 
+-static const struct regmap_config llcc_regmap_config = {
++static struct regmap_config llcc_regmap_config = {
+ 	.reg_bits = 32,
+ 	.reg_stride = 4,
+ 	.val_bits = 32,
+@@ -323,6 +323,7 @@ static struct regmap *qcom_llcc_init_mmio(struct platform_device *pdev,
+ 	if (IS_ERR(base))
+ 		return ERR_CAST(base);
+ 
++	llcc_regmap_config.name = name;
+ 	return devm_regmap_init_mmio(&pdev->dev, base, &llcc_regmap_config);
+ }
+ 
 -- 
-Dmitry
+Sent by a computer through tubes
+
