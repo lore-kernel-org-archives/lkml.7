@@ -2,95 +2,229 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDDBECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A62C5ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0413321721
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:56:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VYcWVAND"
+	by mail.kernel.org (Postfix) with ESMTP id 79F3B21721
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:57:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730641AbfJIJ4o (ORCPT
+        id S1730680AbfJIJ5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 05:56:44 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:51150 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbfJIJ4n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 05:56:43 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x999uYfE051750;
-        Wed, 9 Oct 2019 04:56:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570614994;
-        bh=hJk1QqWDxBHr549Ey1KHH9as6OvUiWG5ahTGSI2IUBw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=VYcWVANDFQ1nxQtSs3/YpAlV00C0bShS2xPdsfd7yp6ECQ/wnvpe5FNh9bUDrETmd
-         rUd9zmGgOcmJNanqN51f5jsmpsS8a3krb9+1jYezhRRtC6LpTyP8P6r+jlNNBKo0wU
-         SCvf5ks1k/oWOB609ML8KI66VMxw0avoRwil8S1k=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x999uY4T038772;
-        Wed, 9 Oct 2019 04:56:34 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 9 Oct
- 2019 04:56:34 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 9 Oct 2019 04:56:31 -0500
-Received: from [172.24.190.215] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x999uVjm033887;
-        Wed, 9 Oct 2019 04:56:32 -0500
-Subject: Re: [PATCH 0/2] Add Support for MMC/SD for J721e-base-board
-To:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <mark.rutland@arm.com>, <nm@ti.com>, <robh+dt@kernel.org>,
-        <t-kristo@ti.com>
-References: <20190919153242.29399-1-faiz_abbas@ti.com>
-From:   Faiz Abbas <faiz_abbas@ti.com>
-Message-ID: <f176e389-d181-8848-2bce-6680232b8fa8@ti.com>
-Date:   Wed, 9 Oct 2019 15:27:14 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 9 Oct 2019 05:57:44 -0400
+Received: from mx2a.mailbox.org ([80.241.60.219]:35551 "EHLO mx2a.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729742AbfJIJ5o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 05:57:44 -0400
+Received: from smtp2.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx2a.mailbox.org (Postfix) with ESMTPS id BE529A1A7B;
+        Wed,  9 Oct 2019 11:57:39 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.240])
+        by spamfilter01.heinlein-hosting.de (spamfilter01.heinlein-hosting.de [80.241.56.115]) (amavisd-new, port 10030)
+        with ESMTP id NafKbfNF4tGm; Wed,  9 Oct 2019 11:57:33 +0200 (CEST)
+Date:   Wed, 9 Oct 2019 20:57:21 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Aleksa Sarai <asarai@suse.de>, linux-man@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 1/3] symlink.7: document magic-links more completely
+Message-ID: <20191009095721.ruheswshfxcgbbkp@yavin>
+References: <20191003145542.17490-1-cyphar@cyphar.com>
+ <20191003145542.17490-2-cyphar@cyphar.com>
+ <2fd9e82d-2a9c-cda9-0c17-3a20034eca1d@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190919153242.29399-1-faiz_abbas@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cllqcbo6bs3bqn24"
+Content-Disposition: inline
+In-Reply-To: <2fd9e82d-2a9c-cda9-0c17-3a20034eca1d@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 19/09/19 9:02 PM, Faiz Abbas wrote:
-> The following are dts patches to add MMC/SD Support on TI's J721e base
-> board.
-> 
-> Patches depend on Lokesh's gpio patches[1] and device exclusivity patches[2].
-> 
-> [1] https://patchwork.kernel.org/cover/11085643/
-> [2] https://patchwork.kernel.org/cover/11051559/
-> 
-> Faiz Abbas (2):
->   arm64: dts: ti: j721e-main: Add SDHCI nodes
->   arm64: dts: ti: j721e-common-proc-board: Add Support for eMMC and SD
->     card
-> 
->  .../dts/ti/k3-j721e-common-proc-board.dts     | 34 +++++++++++++
->  arch/arm64/boot/dts/ti/k3-j721e-main.dtsi     | 50 +++++++++++++++++++
->  2 files changed, 84 insertions(+)
-> 
+--cllqcbo6bs3bqn24
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Gentle ping.
+On 2019-10-09, Michael Kerrisk (man-pages) <mtk.manpages@gmail.com> wrote:
+> On 10/3/19 4:55 PM, Aleksa Sarai wrote:
+> > Traditionally, magic-links have not been a well-understood topic in
+> > Linux. Given the new changes in their semantics (related to the link
+> > mode of trailing magic-links), it seems like a good opportunity to shine
+> > more light on magic-links and their semantics.
+> >=20
+> > Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+>=20
+> Thanks for doing this. Some comments below.
 
-Thanks,
-Faiz
+No problem -- just a heads-up that I'm going to split off the magic-link
+changes from the openat2(2) series (there are quite a few things that
+need to be done). So I will drop this man page for now.
+
+> > ---
+> >  man7/path_resolution.7 | 15 +++++++++++++++
+> >  man7/symlink.7         | 39 ++++++++++++++++++++++++++++++---------
+> >  2 files changed, 45 insertions(+), 9 deletions(-)
+> >=20
+> > diff --git a/man7/path_resolution.7 b/man7/path_resolution.7
+> > index 07664ed8faec..46f25ec4cdfa 100644
+> > --- a/man7/path_resolution.7
+> > +++ b/man7/path_resolution.7
+> > @@ -136,6 +136,21 @@ we are just creating it.
+> >  The details on the treatment
+> >  of the final entry are described in the manual pages of the specific
+> >  system calls.
+> > +.PP
+> > +Since Linux 5.FOO, if the final entry is a "magic-link" (see
+>=20
+> "magic link". As Jann points out, this is more normal English usage.
+>=20
+> > +.BR symlink (7)),
+> > +and the user is attempting to
+> > +.BR open (2)
+> > +it, then there is an additional permission-related restriction applied=
+ to the
+> > +operation: the requested access mode must not exceed the "link mode" o=
+f the
+> > +magic-link (unlike ordinary symlinks, magic-links have their own file =
+mode.)
+>=20
+> Remove the hyphens (magic link). And also, as someone else pointed out,
+> manual pages fairly consistently uses the term "symbolic link"
+> (written in full).
+
+Will do.
+
+> You use the term "file mode" here. Do you mean the file permissions bits?
+
+Yes.
+
+> If yes, it is a bit misleading to suggest that symbolic links don't
+> have these mode bits. They do, but--as noted in the existing symlink(7)
+> manual page text--these bits are ignored. I suggest just removing the
+> parenthesized text.
+
+I was trying to say that their file mode can be non-0777 -- but I can
+just drop the entire thing.
+
+> > +For example, if
+> > +.I /proc/[pid]/fd/[num]
+> > +has a link mode of
+> > +.BR 0500 ,
+> > +unprivileged users are not permitted to
+> > +.BR open ()
+> > +the magic-link for writing.
+> >  .SS . and ..
+> >  By convention, every directory has the entries "." and "..",
+> >  which refer to the directory itself and to its parent directory,
+> > diff --git a/man7/symlink.7 b/man7/symlink.7
+> > index 9f5bddd5dc21..33f0ec703acd 100644
+> > --- a/man7/symlink.7
+> > +++ b/man7/symlink.7
+> > @@ -84,6 +84,25 @@ as they are implemented on Linux and other systems,
+> >  are outlined here.
+> >  It is important that site-local applications also conform to these rul=
+es,
+> >  so that the user interface can be as consistent as possible.
+> > +.SS Magic-links
+> > +There is a special class of symlink-like objects known as "magic-links=
+" which
+>=20
+> "magic links" (and through the rest of the page).
+>=20
+> > +can be found in certain pseudo-filesystems such as
+>=20
+> pseudofilesystems
+>=20
+> > +.BR proc (5)
+> > +(examples include
+> > +.IR /proc/[pid]/exe " and " /proc/[pid]/fd/* .)
+> > +Unlike normal symlinks, magic-links are not resolved through
+>=20
+> symbolic links
+>=20
+> > +pathname-expansion, but instead act as direct references to the kernel=
+'s own
+>=20
+> pathname expansion
+
+Will do all of the above.
+
+> > +representation of a file handle. As such, these magic-links allow user=
+s to
+> > +access files which cannot be referenced with normal paths (such as unl=
+inked
+> > +files still referenced by a running program.)
+> > +.PP
+> > +Because they can bypass ordinary
+> > +.BR mount_namespaces (7)-based
+> > +restrictions, magic-links have been used as attack vectors in various =
+exploits.
+> > +As such (since Linux 5.FOO), there are additional restrictions placed =
+on the
+> > +re-opening of magic-links (see
+> > +.BR path_resolution (7)
+> > +for more details.)
+> >  .SS Symbolic link ownership, permissions, and timestamps
+> >  The owner and group of an existing symbolic link can be changed
+> >  using
+> > @@ -99,16 +118,18 @@ of a symbolic link can be changed using
+> >  or
+> >  .BR lutimes (3).
+> >  .PP
+> > -On Linux, the permissions of a symbolic link are not used
+> > -in any operations; the permissions are always
+> > -0777 (read, write, and execute for all user categories),
+> >  .\" Linux does not currently implement an lchmod(2).
+> > -and can't be changed.
+> > -(Note that there are some "magic" symbolic links in the
+> > -.I /proc
+> > -directory tree\(emfor example, the
+> > -.IR /proc/[pid]/fd/*
+> > -files\(emthat have different permissions.)
+> > +On Linux, the permissions of an ordinary symbolic link are not used in=
+ any
+> > +operations; the permissions are always 0777 (read, write, and execute =
+for all
+> > +user categories), and can't be changed.
+> > +.PP
+> > +However, magic-links do not follow this rule. They can have a non-0777=
+ mode,
+> > +which is used for permission checks when the final
+> > +component of an
+> > +.BR open (2)'s
+> > +path is a magic-link (see
+> > +.BR path_resolution (7).)
+> > +
+> >  .\"
+> >  .\" The
+> >  .\" 4.4BSD
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--cllqcbo6bs3bqn24
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXZ2u/gAKCRCdlLljIbnQ
+EjRSAQD3mdmhcqPvPn9QRxIs/5ozFNFVHki8T6u+CFbUm3DsCQD+LtXhgKHyrZ9s
+KEbVGN3G7nFnzi2ZDaPYj7apZfVNCgI=
+=THxq
+-----END PGP SIGNATURE-----
+
+--cllqcbo6bs3bqn24--
