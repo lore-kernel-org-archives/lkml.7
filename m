@@ -2,202 +2,148 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FCCECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:16:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65443ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C3A220B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:16:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UXvK3a1D"
+	by mail.kernel.org (Postfix) with ESMTP id 37BA1218DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:17:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570641433;
+	bh=azVcBauMb2GNwRnAVAwRm4vtVfwBRKCa0m5Pzh8jMZo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=TxQZT2pUg0OosCdzk8R1AfdRVOy4/iMD38lcj9XCChadSe6y04aI5R7hZeKvbR5+e
+	 EaiVgRIupPkk9Cyo95XqNdUTi8bZYGwVIGlbGc5BfT+T2+o6IjMnmggn7sv8FrTeVA
+	 K3OX3U5HWarJeYtfvXJBwR5x2eZpiVv4LvoAINv8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732068AbfJIRQM (ORCPT
+        id S1732073AbfJIRRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:16:12 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:33631 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731907AbfJIRPV (ORCPT
+        Wed, 9 Oct 2019 13:17:12 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42398 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731173AbfJIRRL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 13:15:21 -0400
-Received: by mail-yw1-f65.google.com with SMTP id w140so1101052ywd.0;
-        Wed, 09 Oct 2019 10:15:20 -0700 (PDT)
+        Wed, 9 Oct 2019 13:17:11 -0400
+Received: by mail-lj1-f195.google.com with SMTP id y23so3267691lje.9
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 10:17:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=DSd0IOl/SfIaZDr2U/8RUT6ZXyKiyqc5Z3E1jM5LeZE=;
-        b=UXvK3a1DzK8YhcxCfRPFpKmLpSGquvCZAFIXwU/b+bsTaTEeZZuCDRApHde3p5KudE
-         nZ8Zgj0YZEOX/S+ikrDoMM9cswIaJyd0oBEH9m6yBTyt7s90ktnvOb1Fi8DZt6JAD/1W
-         IjrJ/iBMMNV4ycv/5qpPNxVM0PxNwLRbXwh9ppkeQykrR9nxlpDl0yVTHdCihU9BAro1
-         hIeEPDHpumwUDBnphJdXSIKraHcQyqzvbZ4G4jFU824ZeGdWDb5DOGM7HjlazjkgzqQz
-         X8o91fIernfsy8SQ1aErMDiyq0qc9PgLdIYbuHgkAqmgsAjVzmuSHFWsj9qeeDVLEqEx
-         NPdw==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=WYDrRYPHs0j7kH6nvfHacya6cMEOhB6fPC+Nemlqhfc=;
+        b=AOAkA+oySTesOPMVYaXrzFKziTaxffb4NvaLlldPxDNma8iMLawniVil20T4VPFBT/
+         lJMODrpuJPMyGcX5A2MSdkt5UwkF3L8ZbQNgFABx5dhefmgUO+tHZ4ey9D0lN9erNqVg
+         hnHobkTbmoNLfTwLN96hilGvYMpN12W8DR9gI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=DSd0IOl/SfIaZDr2U/8RUT6ZXyKiyqc5Z3E1jM5LeZE=;
-        b=KZAnPwP86F+Kqp1shnnnY1yekl13cBOf9B4ZMek7UZpxGl8iy3t1jolQwXfRlPJ0F6
-         Cknel1pLaYcq2My4eqi48vAyoTuAdFiMsjQwiEUa2AeQN/gPM9ERbSAAnW8b1fuU1xXq
-         dYOEyBPZ66DtV4cm0iQH2Q2ql7olj7r1BKn1/V00zwF9jZ7yEey2HwVb6LOy4AzxTc7d
-         E0KmbYhHHASnfMyOuA1g40+y2cpF5lribLEHHS25DTsPlVT0LbmHEU9+P2wdoa2MNp0h
-         tJmO5XAkn4/KTUWoxInT74nv46t2QysLD8O3TY0eNFcsJXpWffYDyzMJKtmCripoSl43
-         cr6Q==
-X-Gm-Message-State: APjAAAUcqKeSKap0CqMItk+H3ioW+uthIdzn2rke2Hr7/woaKnEfdDCK
-        d7LjSc/HBMbL4Lb2aEnwQnw=
-X-Google-Smtp-Source: APXvYqzsApzNZpe228+5FVco77ADvnrdm8wsf1MQtSLRInz2WOiJ03ZxlCm2ygp8a611VBL5BWwF1g==
-X-Received: by 2002:a81:83c7:: with SMTP id t190mr3525655ywf.88.1570641319886;
-        Wed, 09 Oct 2019 10:15:19 -0700 (PDT)
-Received: from localhost.localdomain (072-189-084-142.res.spectrum.com. [72.189.84.142])
-        by smtp.gmail.com with ESMTPSA id r63sm743292ywg.36.2019.10.09.10.15.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 10:15:19 -0700 (PDT)
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        akpm@linux-foundation.org
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, andriy.shevchenko@linux.intel.com,
-        linux@rasmusvillemoes.dk, yamada.masahiro@socionext.com,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-        geert@linux-m68k.org, preid@electromag.com.au, lukas@wunner.de,
-        William Breathitt Gray <vilhelm.gray@gmail.com>
-Subject: [PATCH v18 05/14] gpio: gpio-mm: Utilize for_each_set_clump8 macro
-Date:   Wed,  9 Oct 2019 13:14:41 -0400
-Message-Id: <0de53d7021b2d6db10294473cd8a1b6102bcec94.1570641097.git.vilhelm.gray@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1570641097.git.vilhelm.gray@gmail.com>
-References: <cover.1570641097.git.vilhelm.gray@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=WYDrRYPHs0j7kH6nvfHacya6cMEOhB6fPC+Nemlqhfc=;
+        b=j0yxFzv+Eo9AEphcPo3gKeqRr4geT2mY7bPAJioq91ceDtYRpc5wjiq/YbLwa6xiu1
+         0zOO3SMaB53yRGElqEFn27QguAkAkFiN5tPBH7cpKymjqI6WXLo7HNK+4tlzSUUOBUYf
+         MnAFhDwsIcOU5QanqX3wymJHiW1MdZaVyGc8LL25VwPf3wHoY1Sg3Q0tG6CGnSWANQtU
+         nmSPve7aROK/rbobAwVBf/iQ5ZGg29eHoYW0KrNz4yekKvwUuGfmcCf7uMnuHZt/t+uW
+         nn1EbdwjTkQFtYkXhWdJIuB+R2wim8evF87V2hT65eajs/qf6s4UrO24VL4e0mHJDc26
+         JEEQ==
+X-Gm-Message-State: APjAAAXnbE9JHURTYDlXxqmWYCgi2uBHWYYJ5RC0pFUITw4WGTRzYCDo
+        NSBELajnalwiUjLrDYSkXUeHbZspReg=
+X-Google-Smtp-Source: APXvYqwEqKKtsSFNgZYBf8LOAmNf9R+KCSYw9QROpKPcWgzN42iNW223FQu8hBKrfW75ptSDNc72EQ==
+X-Received: by 2002:a2e:98d8:: with SMTP id s24mr2973536ljj.72.1570641429405;
+        Wed, 09 Oct 2019 10:17:09 -0700 (PDT)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id m15sm568852ljh.50.2019.10.09.10.17.06
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Oct 2019 10:17:06 -0700 (PDT)
+Received: by mail-lf1-f48.google.com with SMTP id u28so2247049lfc.5
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 10:17:06 -0700 (PDT)
+X-Received: by 2002:a19:6f0e:: with SMTP id k14mr2845221lfc.79.1570641426174;
+ Wed, 09 Oct 2019 10:17:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191008091508.2682-1-thomas_os@shipmail.org> <20191008091508.2682-4-thomas_os@shipmail.org>
+ <20191009152737.p42w7w456zklxz72@box> <CAHk-=wh4waroKr-Xtcv+5pTxBcHxGEj-g73eQvXVawML_C0EXw@mail.gmail.com>
+ <03d85a6a-e24a-82f4-93b8-86584b463471@shipmail.org>
+In-Reply-To: <03d85a6a-e24a-82f4-93b8-86584b463471@shipmail.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 9 Oct 2019 10:16:49 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whhdRSqjX5wy1LzFYnOG58UztpifkNvbxBcTVbT3Mzv4g@mail.gmail.com>
+Message-ID: <CAHk-=whhdRSqjX5wy1LzFYnOG58UztpifkNvbxBcTVbT3Mzv4g@mail.gmail.com>
+Subject: Re: [PATCH v4 3/9] mm: pagewalk: Don't split transhuge pmds when a
+ pmd_entry is present
+To:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rik van Riel <riel@surriel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Huang Ying <ying.huang@intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace verbose implementation in get_multiple/set_multiple callbacks
-with for_each_set_clump8 macro to simplify code and improve clarity.
+On Wed, Oct 9, 2019 at 10:03 AM Thomas Hellstr=C3=B6m (VMware)
+<thomas_os@shipmail.org> wrote:
+>
+> Nope, it handles the hugepages by ignoring them, since they should be
+> read-only, but if pmd_entry() was called with something else than a
+> hugepage, then it requests the fallback, but never a split.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
----
- drivers/gpio/gpio-gpio-mm.c | 73 +++++++++++--------------------------
- 1 file changed, 21 insertions(+), 52 deletions(-)
+But  PAGE_WALK_FALLBACK _is_ a split.
 
-diff --git a/drivers/gpio/gpio-gpio-mm.c b/drivers/gpio/gpio-gpio-mm.c
-index 78a1db24e931..72196ea36358 100644
---- a/drivers/gpio/gpio-gpio-mm.c
-+++ b/drivers/gpio/gpio-gpio-mm.c
-@@ -164,46 +164,25 @@ static int gpiomm_gpio_get(struct gpio_chip *chip, unsigned int offset)
- 	return !!(port_state & mask);
- }
- 
-+static const size_t ports[] = { 0, 1, 2, 4, 5, 6 };
-+
- static int gpiomm_gpio_get_multiple(struct gpio_chip *chip, unsigned long *mask,
- 	unsigned long *bits)
- {
- 	struct gpiomm_gpio *const gpiommgpio = gpiochip_get_data(chip);
--	size_t i;
--	static const size_t ports[] = { 0, 1, 2, 4, 5, 6 };
--	const unsigned int gpio_reg_size = 8;
--	unsigned int bits_offset;
--	size_t word_index;
--	unsigned int word_offset;
--	unsigned long word_mask;
--	const unsigned long port_mask = GENMASK(gpio_reg_size - 1, 0);
-+	unsigned long offset;
-+	unsigned long gpio_mask;
-+	unsigned int port_addr;
- 	unsigned long port_state;
- 
- 	/* clear bits array to a clean slate */
- 	bitmap_zero(bits, chip->ngpio);
- 
--	/* get bits are evaluated a gpio port register at a time */
--	for (i = 0; i < ARRAY_SIZE(ports); i++) {
--		/* gpio offset in bits array */
--		bits_offset = i * gpio_reg_size;
--
--		/* word index for bits array */
--		word_index = BIT_WORD(bits_offset);
--
--		/* gpio offset within current word of bits array */
--		word_offset = bits_offset % BITS_PER_LONG;
--
--		/* mask of get bits for current gpio within current word */
--		word_mask = mask[word_index] & (port_mask << word_offset);
--		if (!word_mask) {
--			/* no get bits in this port so skip to next one */
--			continue;
--		}
--
--		/* read bits from current gpio port */
--		port_state = inb(gpiommgpio->base + ports[i]);
-+	for_each_set_clump8(offset, gpio_mask, mask, ARRAY_SIZE(ports) * 8) {
-+		port_addr = gpiommgpio->base + ports[offset / 8];
-+		port_state = inb(port_addr) & gpio_mask;
- 
--		/* store acquired bits at respective bits array offset */
--		bits[word_index] |= (port_state << word_offset) & word_mask;
-+		bitmap_set_value8(bits, port_state, offset);
- 	}
- 
- 	return 0;
-@@ -234,37 +213,27 @@ static void gpiomm_gpio_set_multiple(struct gpio_chip *chip,
- 	unsigned long *mask, unsigned long *bits)
- {
- 	struct gpiomm_gpio *const gpiommgpio = gpiochip_get_data(chip);
--	unsigned int i;
--	const unsigned int gpio_reg_size = 8;
--	unsigned int port;
--	unsigned int out_port;
--	unsigned int bitmask;
-+	unsigned long offset;
-+	unsigned long gpio_mask;
-+	size_t index;
-+	unsigned int port_addr;
-+	unsigned long bitmask;
- 	unsigned long flags;
- 
--	/* set bits are evaluated a gpio register size at a time */
--	for (i = 0; i < chip->ngpio; i += gpio_reg_size) {
--		/* no more set bits in this mask word; skip to the next word */
--		if (!mask[BIT_WORD(i)]) {
--			i = (BIT_WORD(i) + 1) * BITS_PER_LONG - gpio_reg_size;
--			continue;
--		}
-+	for_each_set_clump8(offset, gpio_mask, mask, ARRAY_SIZE(ports) * 8) {
-+		index = offset / 8;
-+		port_addr = gpiommgpio->base + ports[index];
- 
--		port = i / gpio_reg_size;
--		out_port = (port > 2) ? port + 1 : port;
--		bitmask = mask[BIT_WORD(i)] & bits[BIT_WORD(i)];
-+		bitmask = bitmap_get_value8(bits, offset) & gpio_mask;
- 
- 		spin_lock_irqsave(&gpiommgpio->lock, flags);
- 
- 		/* update output state data and set device gpio register */
--		gpiommgpio->out_state[port] &= ~mask[BIT_WORD(i)];
--		gpiommgpio->out_state[port] |= bitmask;
--		outb(gpiommgpio->out_state[port], gpiommgpio->base + out_port);
-+		gpiommgpio->out_state[index] &= ~gpio_mask;
-+		gpiommgpio->out_state[index] |= bitmask;
-+		outb(gpiommgpio->out_state[index], port_addr);
- 
- 		spin_unlock_irqrestore(&gpiommgpio->lock, flags);
--
--		/* prepare for next gpio register set */
--		mask[BIT_WORD(i)] >>= gpio_reg_size;
--		bits[BIT_WORD(i)] >>= gpio_reg_size;
- 	}
- }
- 
--- 
-2.23.0
+Oh, except you did this
 
+-               split_huge_pmd(walk->vma, pmd, addr);
++               if (!ops->pmd_entry)
++                       split_huge_pmd(walk->vma, pmd, addr);
+
+
+so it avoids the split.
+
+No, that's unacceptable. And makes no sense anyway. If it doesn't
+split the pmd, then it shouldn't walk the pte's - because they don't
+exist. And if it's not a hugepmd, then the split is a no-op, so the
+test makes no sense.
+
+I hadn't noticed that part of the patch. That simply can't be right. I
+don't think you've tested this, because you never actually have
+hugepages, do you?
+
+You didn't notice or realize that split_huge_pmd() just does that
+
+                if (is_swap_pmd(*____pmd) || pmd_trans_huge(*____pmd)   \
+                                        || pmd_devmap(*____pmd))        \
+
+thing and doesn't do anythign at all if it's not huge.
+
+So no. That code makes no sense at all, and I didn't realize how
+senseless it was, becasue I stupidly missed that "make the split
+conditional" - which is insane and wrong - and I thought that you
+wanted PAGE_WALK_FALLBACK to split a pmd and fall back to per-pte
+entries, which is what the name implies.
+
+But that's not what you wanted at all.
+
+Just get rid of PAGE_WALK_FALLBACK entirely then, and make the rule be
+that a zero return value just means "split and do ptes". Which is what
+you want (see above why "split" simply is wrong, and isn't an issue
+for you anyway.
+
+That won't change any existing cases, since even if they do have a
+zero return value, they don't have a pte_entry() callback, so they
+won't do that "split and do ptes" anyway.
+
+             Linus
