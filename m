@@ -2,94 +2,86 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C1FECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B7BAECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A80F20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:25:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570649133;
-	bh=WepKEfiglGfT0PHp7z0qXsGnaB12Dhk4g6jPezZVFis=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=fEgdlakyCpVelag9hWD6iPit2nDRxI3Q9qA7iCNwHuy//GoEfSeHiSImVkSsATo3n
-	 oubrEYLT3BGVsHqxsRoBjGB6Gku6nHplIyTf2Dw7j4lc/RqNtR/Zv8e10A4tyb8htr
-	 7nomPq5u32oH+oQxt7iIsVdCIdjU+GH3i3qjNhNY=
+	by mail.kernel.org (Postfix) with ESMTP id 11E43206B6
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:25:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731771AbfJITZc (ORCPT
+        id S1731832AbfJITZi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 15:25:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49492 "EHLO mail.kernel.org"
+        Wed, 9 Oct 2019 15:25:38 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:37610 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728804AbfJITZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 15:25:31 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 264BF206B6;
-        Wed,  9 Oct 2019 19:25:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570649130;
-        bh=WepKEfiglGfT0PHp7z0qXsGnaB12Dhk4g6jPezZVFis=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=EaWUP/42y0bxL0r0NFrzsCiGNcy8bDLv4JjVBLPdiLTsWpGY25sLmOawyP5o4WGmQ
-         CtoITtngjPZamHUZR6EP1g8dg/23dtcz7eJM8vY8nwZl/wse4HznM10v5rLx+tMXgP
-         pjfKoRFIPghMM7Y3qBxgnQ+cxRO9jaHJZhByXdic=
-Date:   Wed, 9 Oct 2019 21:25:00 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     "Shah, Nehal-bakulchandra" <nbshah@amd.com>
-cc:     Kurt Garloff <kurt@garloff.de>, Joerg Roedel <joro@8bytes.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Shah, Nehal-bakulchandra" <Nehal-bakulchandra.Shah@amd.com>,
-        "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
-        "Singh, Sandeep" <Sandeep.Singh@amd.com>
-Subject: Re: IOMMU vs Ryzen embedded EMMC controller
-In-Reply-To: <63913cd8-a0c5-61e3-2f52-139bade01afc@amd.com>
-Message-ID: <nycvar.YFH.7.76.1910092124260.13160@cbobk.fhfr.pm>
-References: <643f99a4-4613-50af-57e4-5ea6ac975314@garloff.de> <47da1247-fbc1-fe50-041c-3808b0e140bf@garloff.de> <nycvar.YEU.7.76.1909251726550.15418@gjva.wvxbf.pm> <20190925154256.GB4643@8bytes.org> <70b2d326-6257-025c-5ffa-1f543a900073@garloff.de>
- <63913cd8-a0c5-61e3-2f52-139bade01afc@amd.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        id S1728804AbfJITZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 15:25:38 -0400
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1iIHaa-0002g9-6c; Wed, 09 Oct 2019 13:25:37 -0600
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1iIHaY-0003QJ-UV; Wed, 09 Oct 2019 13:25:34 -0600
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Wed,  9 Oct 2019 13:25:26 -0600
+Message-Id: <20191009192530.13079-10-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191009192530.13079-1-logang@deltatee.com>
+References: <20191009192530.13079-1-logang@deltatee.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, Chaitanya.Kulkarni@wdc.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+Subject: [PATCH v9 08/12] nvmet-tcp: don't check data_len in nvmet_tcp_map_data()
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 27 Sep 2019, Shah, Nehal-bakulchandra wrote:
+With passthru, the data_len is no longer guaranteed to be set
+for all requests. Therefore, we should not check for it to be
+non-zero. Instead check if the SGL length is zero and map
+when appropriate.
 
-> >>> Do you have BAR memory allocation failures in dmesg with IOMMU on?
-> > 
-> > No. The device is *not* treated as PCI device and I still think that 
-> > this is the source of the evil.
-> > 
-> >>> Actually, sharing both working and non-working dmesg, as well as 
-> >>> /proc/iomem contents, would be helpful.
+None of the other transports check data_len which is verified
+in core code.
 
-> >> Yes, can you please grab dmesg from a boot with iommu enabled and add 
-> >> 'amd_iommu_dump' to the kernel command line? That should give some 
-> >> hints on what is going on.
-> > 
-> > For now I attach a dmesg and iomem from the boot with IOMMU enabled. 
-> > Nothing much interesting without IOMMU, sdhci-acpi there just works -- 
-> > let me know if you still want me to send the kernel msg.
-> > 
-> > Thanks for looking into this!
-> > 
-> 
-> I have added Suravee from AMD in the mail loop. He works on IOMMU part. 
-> As per my understanding, it needs a patch in IOMMU driver for adding 
-> support of EMMC. Note that on Ryzen platform we have EMMC 5.0 as ACPI 
-> device.
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+---
+ drivers/nvme/target/tcp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Friendly ping ... any news here?
-
-Thanks,
-
+diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
+index d535080b781f..1e2d92f818ad 100644
+--- a/drivers/nvme/target/tcp.c
++++ b/drivers/nvme/target/tcp.c
+@@ -320,7 +320,7 @@ static int nvmet_tcp_map_data(struct nvmet_tcp_cmd *cmd)
+ 	struct nvme_sgl_desc *sgl = &cmd->req.cmd->common.dptr.sgl;
+ 	u32 len = le32_to_cpu(sgl->length);
+ 
+-	if (!cmd->req.data_len)
++	if (!len)
+ 		return 0;
+ 
+ 	if (sgl->type == ((NVME_SGL_FMT_DATA_DESC << 4) |
 -- 
-Jiri Kosina
-SUSE Labs
+2.20.1
 
