@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 147DAECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F48C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8A8E20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:25:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3145920B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:25:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570641941;
-	bh=7fAjbK0SIu6mwvNpnw29B0AVcrZ6A43tQQapzgn8thA=;
+	s=default; t=1570641952;
+	bh=3DN114tNWiQYNOeR12I4zf5O8W1+ZE6ef1ZgEVGHZec=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zH2AHqBz/WXhwFNMyhxmWCu8+f5f4mT8d/225kpy2f3yaa/pREBj9ookdH4sjeWPa
-	 zU1kvnEXJnGv4JEaqEe8+YW5G6iTxwi9cQz3uRcb3Qti+erusAv/Bfa9uINOYFA1aQ
-	 CCI4RK8I91wh6nNhKU6fqX/425lp3yYsGMNUv+oY=
+	b=fLs30LGe6K5/ZnwmgCPafpiOC3P+3QW0ceAit53zpBIUnBehrUAMAUobA55LLNBnt
+	 hiBC1Eq0HWgCE+5HdKjjlghO6wvN2g3dFcgkd+saA/UI3DtPxSPYfVA5Z04ut8voVk
+	 GSDlHWxPzaP2x93OnrKLPY9wzUoV/FdED1i6Ep6c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732650AbfJIRZk (ORCPT
+        id S1732661AbfJIRZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:25:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49998 "EHLO mail.kernel.org"
+        Wed, 9 Oct 2019 13:25:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732521AbfJIRY5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 13:24:57 -0400
+        id S1732496AbfJIRYy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 13:24:54 -0400
 Received: from sasha-vm.mshome.net (unknown [167.220.2.234])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC26521A4A;
-        Wed,  9 Oct 2019 17:24:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 215FB206BB;
+        Wed,  9 Oct 2019 17:24:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570641896;
-        bh=7fAjbK0SIu6mwvNpnw29B0AVcrZ6A43tQQapzgn8thA=;
+        s=default; t=1570641894;
+        bh=3DN114tNWiQYNOeR12I4zf5O8W1+ZE6ef1ZgEVGHZec=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QrBn27MRlShQGzvqaPrxut8VdShtRhH/PNZiayZuiWYsq1AJEuS9yMvhYNIeDMF3c
-         9wIuI4QcRfat80WhLOxpIzGu1tXmtydB2n3dcjZbU25czMn8Z/FYpwh3ylGrcs+qv+
-         5fRVtoruPbbxvEUcJoe8TJxZYBWESAYZa1Sk3WZw=
+        b=sTLk1pby5+12EpnKhQVeArL0ReHzY1HDWmSwvIYmJIgYedvQPGj1DNgBnDELSOPTO
+         QtFw2Rzn2mOkdhwTcGYGNLDnZD2ifnjKqURlz/vob07j1j3d42cUrx2mTDAIUPyu4V
+         liQBBBHVVW1KiKaFuocpGJqbY0d3b7xtjL9Fv7zE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yizhuo <yzhai003@ucr.edu>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 09/11] net: hisilicon: Fix usage of uninitialized variable in function mdio_sc_cfg_reg_write()
-Date:   Wed,  9 Oct 2019 13:06:43 -0400
-Message-Id: <20191009170646.696-9-sashal@kernel.org>
+Cc:     Jim Mattson <jmattson@google.com>, Marc Orr <marcorr@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 06/11] kvm: vmx: Limit guest PMCs to those supported on the host
+Date:   Wed,  9 Oct 2019 13:06:40 -0400
+Message-Id: <20191009170646.696-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191009170646.696-1-sashal@kernel.org>
 References: <20191009170646.696-1-sashal@kernel.org>
@@ -59,43 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yizhuo <yzhai003@ucr.edu>
+From: Jim Mattson <jmattson@google.com>
 
-[ Upstream commit 53de429f4e88f538f7a8ec2b18be8c0cd9b2c8e1 ]
+[ Upstream commit e1fba49cc1e965a3dacd897367ba1e7b340cf0f4 ]
 
-In function mdio_sc_cfg_reg_write(), variable "reg_value" could be
-uninitialized if regmap_read() fails. However, "reg_value" is used
-to decide the control flow later in the if statement, which is
-potentially unsafe.
+KVM can only virtualize as many PMCs as the host supports.
 
-Signed-off-by: Yizhuo <yzhai003@ucr.edu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Limit the number of generic counters and fixed counters to the number
+of corresponding counters supported on the host, rather than to
+INTEL_PMC_MAX_GENERIC and INTEL_PMC_MAX_FIXED, respectively.
+
+Note that INTEL_PMC_MAX_GENERIC is currently 32, which exceeds the 18
+contiguous MSR indices reserved by Intel for event selectors. Since
+the existing code relies on a contiguous range of MSR indices for
+event selectors, it can't possibly work for more than 18 general
+purpose counters.
+
+Fixes: f5132b01386b5a ("KVM: Expose a version 2 architectural PMU to a guests")
+Signed-off-by: Jim Mattson <jmattson@google.com>
+Reviewed-by: Marc Orr <marcorr@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns_mdio.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/x86/kvm/pmu_intel.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns_mdio.c b/drivers/net/ethernet/hisilicon/hns_mdio.c
-index 6ff13c559e527..09fcc821b7da9 100644
---- a/drivers/net/ethernet/hisilicon/hns_mdio.c
-+++ b/drivers/net/ethernet/hisilicon/hns_mdio.c
-@@ -156,11 +156,15 @@ static int mdio_sc_cfg_reg_write(struct hns_mdio_device *mdio_dev,
+diff --git a/arch/x86/kvm/pmu_intel.c b/arch/x86/kvm/pmu_intel.c
+index 8fc07ea23344e..d837af5d5980f 100644
+--- a/arch/x86/kvm/pmu_intel.c
++++ b/arch/x86/kvm/pmu_intel.c
+@@ -260,6 +260,7 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
  {
- 	u32 time_cnt;
- 	u32 reg_value;
-+	int ret;
+ 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
++	struct x86_pmu_capability x86_pmu;
+ 	struct kvm_cpuid_entry2 *entry;
+ 	union cpuid10_eax eax;
+ 	union cpuid10_edx edx;
+@@ -281,8 +282,10 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+ 	if (!pmu->version)
+ 		return;
  
- 	regmap_write(mdio_dev->subctrl_vbase, cfg_reg, set_val);
- 
- 	for (time_cnt = MDIO_TIMEOUT; time_cnt; time_cnt--) {
--		regmap_read(mdio_dev->subctrl_vbase, st_reg, &reg_value);
-+		ret = regmap_read(mdio_dev->subctrl_vbase, st_reg, &reg_value);
-+		if (ret)
-+			return ret;
++	perf_get_x86_pmu_capability(&x86_pmu);
 +
- 		reg_value &= st_msk;
- 		if ((!!check_st) == (!!reg_value))
- 			break;
+ 	pmu->nr_arch_gp_counters = min_t(int, eax.split.num_counters,
+-					INTEL_PMC_MAX_GENERIC);
++					 x86_pmu.num_counters_gp);
+ 	pmu->counter_bitmask[KVM_PMC_GP] = ((u64)1 << eax.split.bit_width) - 1;
+ 	pmu->available_event_types = ~entry->ebx &
+ 					((1ull << eax.split.mask_length) - 1);
+@@ -292,7 +295,7 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+ 	} else {
+ 		pmu->nr_arch_fixed_counters =
+ 			min_t(int, edx.split.num_counters_fixed,
+-				INTEL_PMC_MAX_FIXED);
++			      x86_pmu.num_counters_fixed);
+ 		pmu->counter_bitmask[KVM_PMC_FIXED] =
+ 			((u64)1 << edx.split.bit_width_fixed) - 1;
+ 	}
 -- 
 2.20.1
 
