@@ -2,403 +2,235 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D917EC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACFA0C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A39BC206B6
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F984206B6
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:49:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WaYhSBL2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729566AbfJIIrL (ORCPT
+        id S1729575AbfJIItB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 04:47:11 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49614 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725440AbfJIIrK (ORCPT
+        Wed, 9 Oct 2019 04:49:01 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44659 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbfJIItB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 04:47:10 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x998hWYZ086016
-        for <linux-kernel@vger.kernel.org>; Wed, 9 Oct 2019 04:47:08 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vhbp9se90-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 04:47:07 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
-        Wed, 9 Oct 2019 09:47:06 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 9 Oct 2019 09:47:01 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x998l0Ok47644786
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 9 Oct 2019 08:47:00 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 24DC642052;
-        Wed,  9 Oct 2019 08:47:00 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EF92A4204D;
-        Wed,  9 Oct 2019 08:46:57 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.124.35.210])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  9 Oct 2019 08:46:57 +0000 (GMT)
-Subject: Re: [RFC v5 4/6] sched/fair: Tune task wake-up logic to pack small
- background tasks on fewer cores
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Doug Smythies <dsmythies@telus.net>,
-        Quentin Perret <quentin.perret@arm.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-References: <20191007083051.4820-1-parth@linux.ibm.com>
- <20191007083051.4820-5-parth@linux.ibm.com>
- <CAKfTPtCgoTJXxbYyza1W55ayw9QeM7fue2e91Xpt804sL9GQWA@mail.gmail.com>
- <80bb34ec-6358-f4dc-d20d-cde6c9d7e197@linux.ibm.com>
- <CAKfTPtDEp7s-1F2mOHd0sYqD=TzGcufKS0orddMLaMePUp8T2g@mail.gmail.com>
-From:   Parth Shah <parth@linux.ibm.com>
-Date:   Wed, 9 Oct 2019 14:16:57 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.0
+        Wed, 9 Oct 2019 04:49:01 -0400
+Received: by mail-io1-f68.google.com with SMTP id w12so3149980iol.11;
+        Wed, 09 Oct 2019 01:49:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6fjFEQA6Bis4Kn8//oB0C9jpdDmkRZ41dqbmTV7c3SQ=;
+        b=WaYhSBL2qLmHAw/cL0ZrWpsm4ha4n7C20aghmPPB/v9aNbqiCNPeYLW1MJNwIJRbx5
+         yv/K+Kur15MY6n0mowuWY/WNJ/vpNTlTfAydD0WnqZceZ9me/DgjggTE0gp2BFJwoDHV
+         gy57dIlBNL+b95yckfwSG8w3Vql1FeLVbyDtj3YA3oMHT4cgON5p1KHmByQSTp6nbkfZ
+         Vk3Avw75rBKz04VxykLEzYYmwjgsdUwy9XnJUSocLbC2TBk+Pr4WWBtiIQKNM4IwnsFT
+         0ViEwoBjbhFw6dPokuGFIVAjFPNXPqe+PNSVvi8a9b8tW/Ks6Z9oBJ7HHnlEmNHR3aMI
+         8aKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6fjFEQA6Bis4Kn8//oB0C9jpdDmkRZ41dqbmTV7c3SQ=;
+        b=AoM6lVe1A0l4Qx7mkPrJuxV32HhdtzZiplSlSAKJVksIcPC3wAXZxODFNGxyz4I+73
+         xWwEPq5QOTejWvlePI2UMd4x4TqgvkMeJ//rMKz1ZDx0iu/5sTKqtNsZ7UGFO1OdfLH6
+         lmIl83rwEE/pe2fksQzESgBVprVN4koFwZOAD2OnV3AKmoBV7Xp/UozXW7clQ9wmGyXi
+         2nXi3BtJupfDurCN1k2YuCC+EJz+9HPUizjYZQGRIQXOIVC2HWYwjNVhx6sOj4lfTqom
+         L+4mRrq9rSm4ktB+b+QRq/xiMl2rhyxtJzeAQ7tRXzjHeWv28Cd6QnmAekCqqifRjHDm
+         WWgw==
+X-Gm-Message-State: APjAAAWhG1MfLBbPFjzQuDpfn79hPTAYQUHgZ2ax6CRV9/SJBz/RMYzn
+        nsp3ysxefdJ0/lWXyOt0EjlU9o4N6Mrf9V3e6Cs=
+X-Google-Smtp-Source: APXvYqxMQYQOWMiMwjv8i0P4w/7rpRlfgxBWulH8ZLJq0svPKZntLFqJJnvsUmd2Qng0jhbsmRsx7OZe5UA1rV2rTNU=
+X-Received: by 2002:a92:6e0d:: with SMTP id j13mr2187423ilc.75.1570610940134;
+ Wed, 09 Oct 2019 01:49:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAKfTPtDEp7s-1F2mOHd0sYqD=TzGcufKS0orddMLaMePUp8T2g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19100908-0016-0000-0000-000002B660FF
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19100908-0017-0000-0000-00003317669A
-Message-Id: <c29325c6-1185-d060-335b-a279d3bb0507@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-09_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910090083
+References: <20191007131649.1768-1-linux.amoon@gmail.com> <20191007131649.1768-6-linux.amoon@gmail.com>
+ <CAFBinCAoJLZj9Kh+SfF4Q+0OCzac2+huon_BU=Q3yE7Fu38U3w@mail.gmail.com>
+ <7hsgo4cgeg.fsf@baylibre.com> <CANAwSgRfcFa6uBNtpqz6y=9Uwsa4gcp_4tDD+Chhg4SynJCq0Q@mail.gmail.com>
+ <CAFBinCA6ZoeR4m4bhj08HF1DqxY1qB5mygpaQCGbo3d8M+Wr9Q@mail.gmail.com>
+In-Reply-To: <CAFBinCA6ZoeR4m4bhj08HF1DqxY1qB5mygpaQCGbo3d8M+Wr9Q@mail.gmail.com>
+From:   Anand Moon <linux.amoon@gmail.com>
+Date:   Wed, 9 Oct 2019 14:18:48 +0530
+Message-ID: <CANAwSgSeYTnUkLnjw-RORw76Fyj3_WT0cdM9D0vFsY8g=9L94Q@mail.gmail.com>
+Subject: Re: [RFCv1 5/5] arm64/ARM: configs: Change CONFIG_PWM_MESON from m to y
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic@lists.infradead.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Martin,
 
+Thanks for your inputs.
 
-On 10/8/19 9:50 PM, Vincent Guittot wrote:
-> On Mon, 7 Oct 2019 at 18:54, Parth Shah <parth@linux.ibm.com> wrote:
->>
->>
->>
->> On 10/7/19 5:49 PM, Vincent Guittot wrote:
->>> On Mon, 7 Oct 2019 at 10:31, Parth Shah <parth@linux.ibm.com> wrote:
->>>>
->>>> The algorithm finds the first non idle core in the system and tries to
->>>> place a task in the idle CPU in the chosen core. To maintain
->>>> cache hotness, work of finding non idle core starts from the prev_cpu,
->>>> which also reduces task ping-pong behaviour inside of the core.
->>>>
->>>> Define a new method to select_non_idle_core which keep tracks of the idle
->>>> and non-idle CPUs in the core and based on the heuristics determines if the
->>>> core is sufficiently busy to place the incoming backgroung task. The
->>>> heuristic further defines the non-idle CPU into either busy (>12.5% util)
->>>> CPU and overutilized (>80% util) CPU.
->>>> - The core containing more idle CPUs and no busy CPUs is not selected for
->>>>   packing
->>>> - The core if contains more than 1 overutilized CPUs are exempted from
->>>>   task packing
->>>> - Pack if there is atleast one busy CPU and overutilized CPUs count is <2
->>>>
->>>> Value of 12.5% utilization for busy CPU gives sufficient heuristics for CPU
->>>> doing enough work and not become idle in nearby timeframe.
->>>>
->>>> Signed-off-by: Parth Shah <parth@linux.ibm.com>
->>>> ---
->>>>  kernel/sched/core.c |  3 ++
->>>>  kernel/sched/fair.c | 95 ++++++++++++++++++++++++++++++++++++++++++++-
->>>>  2 files changed, 97 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
->>>> index 6e1ae8046fe0..7e3aff59540a 100644
->>>> --- a/kernel/sched/core.c
->>>> +++ b/kernel/sched/core.c
->>>> @@ -6402,6 +6402,7 @@ static struct kmem_cache *task_group_cache __read_mostly;
->>>>
->>>>  DECLARE_PER_CPU(cpumask_var_t, load_balance_mask);
->>>>  DECLARE_PER_CPU(cpumask_var_t, select_idle_mask);
->>>> +DECLARE_PER_CPU(cpumask_var_t, turbo_sched_mask);
->>>>
->>>>  void __init sched_init(void)
->>>>  {
->>>> @@ -6442,6 +6443,8 @@ void __init sched_init(void)
->>>>                         cpumask_size(), GFP_KERNEL, cpu_to_node(i));
->>>>                 per_cpu(select_idle_mask, i) = (cpumask_var_t)kzalloc_node(
->>>>                         cpumask_size(), GFP_KERNEL, cpu_to_node(i));
->>>> +               per_cpu(turbo_sched_mask, i) = (cpumask_var_t)kzalloc_node(
->>>> +                       cpumask_size(), GFP_KERNEL, cpu_to_node(i));
->>>>         }
->>>>  #endif /* CONFIG_CPUMASK_OFFSTACK */
->>>>
->>>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->>>> index b798fe7ff7cd..d4a1b6474338 100644
->>>> --- a/kernel/sched/fair.c
->>>> +++ b/kernel/sched/fair.c
->>>> @@ -5353,6 +5353,8 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
->>>>  /* Working cpumask for: load_balance, load_balance_newidle. */
->>>>  DEFINE_PER_CPU(cpumask_var_t, load_balance_mask);
->>>>  DEFINE_PER_CPU(cpumask_var_t, select_idle_mask);
->>>> +/* A cpumask to find active cores in the system. */
->>>> +DEFINE_PER_CPU(cpumask_var_t, turbo_sched_mask);
->>>>
->>>>  #ifdef CONFIG_NO_HZ_COMMON
->>>>
->>>> @@ -5964,6 +5966,76 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
->>>>         return cpu;
->>>>  }
->>>>
->>>> +#ifdef CONFIG_SCHED_SMT
->>>> +static inline bool is_background_task(struct task_struct *p)
->>>> +{
->>>> +       if (p->flags & PF_CAN_BE_PACKED)
->>>> +               return true;
->>>> +
->>>> +       return false;
->>>> +}
->>>> +
->>>> +#define busyness_threshold     (100 >> 3)
->>>> +#define is_cpu_busy(util) ((util) > busyness_threshold)
->>>> +
->>>> +/*
->>>> + * Try to find a non idle core in the system  based on few heuristics:
->>>> + * - Keep track of overutilized (>80% util) and busy (>12.5% util) CPUs
->>>> + * - If none CPUs are busy then do not select the core for task packing
->>>> + * - If atleast one CPU is busy then do task packing unless overutilized CPUs
->>>> + *   count is < busy/2 CPU count
->>>> + * - Always select idle CPU for task packing
->>>> + */
->>>> +static int select_non_idle_core(struct task_struct *p, int prev_cpu, int target)
->>>> +{
->>>> +       struct cpumask *cpus = this_cpu_cpumask_var_ptr(turbo_sched_mask);
->>>> +       int iter_cpu, sibling;
->>>> +
->>>> +       cpumask_and(cpus, cpu_online_mask, p->cpus_ptr);
->>>> +
->>>> +       for_each_cpu_wrap(iter_cpu, cpus, prev_cpu) {
->>>> +               int idle_cpu_count = 0, non_idle_cpu_count = 0;
->>>> +               int overutil_cpu_count = 0;
->>>> +               int busy_cpu_count = 0;
->>>> +               int best_cpu = iter_cpu;
->>>> +
->>>> +               for_each_cpu(sibling, cpu_smt_mask(iter_cpu)) {
->>>> +                       __cpumask_clear_cpu(sibling, cpus);
->>>> +                       if (idle_cpu(iter_cpu)) {
->>>> +                               idle_cpu_count++;
->>>> +                               best_cpu = iter_cpu;
->>>> +                       } else {
->>>> +                               non_idle_cpu_count++;
->>>> +                               if (cpu_overutilized(iter_cpu))
->>>> +                                       overutil_cpu_count++;
->>>> +                               if (is_cpu_busy(cpu_util(iter_cpu)))
->>>> +                                       busy_cpu_count++;
->>>> +                       }
->>>> +               }
->>>> +
->>>> +               /*
->>>> +                * Pack tasks to this core if
->>>> +                * 1. Idle CPU count is higher and atleast one is busy
->>>> +                * 2. If idle_cpu_count < non_idle_cpu_count then ideally do
->>>> +                * packing but if there are more CPUs overutilized then don't
->>>> +                * overload it.
->>>
->>> Could you give details about the rationale behind these conditions ?
->>
->> sure. but first maybe some background is required for busy_cpu.
->> Task packing needs to be done across cores minimizing number of busy cores
->> in the chip. Hence when picking a core for packing a background task it
->> will be good to not select a core which is in deeper idle-states.
-> 
-> Make sense.
-> find_idlest_group_cpu() is doing something similar with the help of cpuidle
-> Don't you have such information available in your cpuidle driver ?
-> 
+On Tue, 8 Oct 2019 at 23:11, Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
+>
+> Hi Anand,
+>
+> On Tue, Oct 8, 2019 at 4:39 PM Anand Moon <linux.amoon@gmail.com> wrote:
+> >
+> > Hi Kevin / Martin,
+> >
+> > On Tue, 8 Oct 2019 at 04:28, Kevin Hilman <khilman@baylibre.com> wrote:
+> > >
+> > > Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
+> > >
+> > > > On Mon, Oct 7, 2019 at 3:17 PM Anand Moon <linux.amoon@gmail.com> wrote:
+> > > > [...]
+> > > >> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> > > >> index c9a867ac32d4..72f6a7dca0d6 100644
+> > > >> --- a/arch/arm64/configs/defconfig
+> > > >> +++ b/arch/arm64/configs/defconfig
+> > > >> @@ -774,7 +774,7 @@ CONFIG_MPL3115=m
+> > > >>  CONFIG_PWM=y
+> > > >>  CONFIG_PWM_BCM2835=m
+> > > >>  CONFIG_PWM_CROS_EC=m
+> > > >> -CONFIG_PWM_MESON=m
+> > > >> +CONFIG_PWM_MESON=y
+> > > >
+> > > > some time ago I submitted a similar patch for the 32-bit SoCs
+> > > > it turned that that pwm-meson can be built as module because the
+> > > > kernel will run without CPU DVFS as long as the clock and regulator
+> > > > drivers are returning -EPROBE_DEFER (-517)
+> > >
+> > > On 64-bit SoCs, the kernel boots with PWM as a module also, but DVFS
+> > > only works sometimes, and making it built-in fixes the problem.
+> > > Actually, it doesn't fix, it just hides the problem, which is likely a
+> > > race or timeout happening during deferred probing.
+> > >
+> > > > did you check whether there's some other problem like some unused
+> > > > clock which is being disabled at that moment?
+> > > > I've been hunting weird problems in the past where it turned out that
+> > > > changing kernel config bits changed the boot timing - that masked the
+> > > > original problem
+> > >
+> > > Right, I would definitely prefer to not make this built-in without a lot
+> > > more information to *why* this is needed.  In figuring that out, we'll
+> > > probably find the race/timeout that's the root cause.
+> > >
+> > > Kevin
+> > >
+> > >
+> >
+> > Kevin,
+> >
+> > As per my understanding from the kernelci.org logs it seen that
+> > pwm-meson driver is requested more than once before it finally load the module.
+> >
+> > [0] https://storage.kernelci.org/next/master/next-20191008/arm64/defconfig/gcc-8/lab-baylibre/boot-meson-g12b-odroid-n2.txt
+> my understanding is that:
+> - the PWM regulator driver is built in (=y)
+> - the Meson PWM controller driver is built as module (=m)
+> - during boot the PWM regulator node is found and it has a matching
+> driver (built-in)
+> - the PWM regulator driver tries to find the PWM controller but cannot
+> find it yet (and reports "Failed to get PWM: -517")
+> - (this repeats a few times)
+> - then the filesystem / initramfs is loaded where the modules are located
+> - now the Meson PWM controller driver is loaded
+> - the PWM regulator driver tries to find the PWM controller -> now it found it
+>
 
-yes that can be done but 12.5% utilization is a derived entity from
-resulted from pelt decaying and seems to be a good prediction for a CPU not
-going to idle states. whereas...
+Thanks of this information.
+At my end on archlinux I also tried to update my initramfs to
+add support for *pwm-meson* to but it did not work for me.
 
->>
->> Usually deeper idle states have target_residency >= 10ms which are really
->> power saving states and saved power can be channeled to active cores.
->> A CPU with utilization of 12.5% is most probably not going to those deeper
->> idle states and picking a CPU with >= 12.5% util seems to be a good
->> approximation.
-> 
-> you should better use idle_get_state(rq)
+> > Hi Martin,
+> >
+> > I have tired your Martin's patch [1] and still the boot fails to move
+> > ahead with below logs.
+> > [1] https://lore.kernel.org/patchwork/patch/1034186/
+> this patch only silences the "Failed to get PWM: -517" message
+> Mark didn't apply it back then because without that message it would
+> be harder to debug these issues
+>
+> > [    1.543928] xhci-hcd xhci-hcd.0.auto: Host supports USB 3.0 SuperSpeed
+> > [    1.550422] usb usb2: We don't know the algorithms for LPM for this
+> > host, disabling LPM.
+> > [    1.558702] hub 2-0:1.0: USB hub found
+> > [    1.562131] hub 2-0:1.0: 1 port detected
+> > [    1.566206] dwc3-meson-g12a ffe09000.usb: switching to Device Mode
+> > [    1.573252] meson-gx-mmc ffe05000.sd: Got CD GPIO
+> > [    1.607405] hctosys: unable to open rtc device (rtc0)
+> >
+> > I have put some more prints in pwm-meson.c it fails to load the module
+> > as microsSD card is not completely initialized.
+> what makes you think that there's a problem with pwm-meson?
+>
+> can you please share a boot log with the command line parameter
+> "initcall_debug" [0]?
+> from Documentation/admin-guide/kernel-parameters.txt:
+>  initcall_debug [KNL] Trace initcalls as they are executed.  Useful
+>  for working out where the kernel is dying during
+>  startup.
+>
 
-... idle_get_state(rq) is a point in time a value and may not give better
-decision capability.>
->>
->>
->> Thank you very much for looking at the patches.
->> Parth
->>
+Well I have tied to add this command  *initcall_debug* to kernel command prompt.
+Here is the console log,  but I did not see any init kernel timer logs
 
-Though 12.5% is an experimental value, it can be backed by some explanation
-as stated above. I wish to do task packing on a core which really is busy
-and 12.5% is a better prediction indicating that it won't go deep idle in
-near future and we can pack it here. Whereas when using idle_get_state(rq),
-we might read the rq as busy for the instance we look at it but still
-cannot predict future though, right?
+Kernel command line: console=ttyAML0,115200n8
+root=PARTUUID=45d7d61e-01 rw rootwait
+earlyprintk=serial,ttyAML0,115200 initcall_debug printk.time=y
 
-Hope that explains to go with 12.5%util but I would be happy to hear your
-thoughts on using something generic like the idle_get_state().
+[0] https://pastebin.com/eBgJrSKe
 
-> 
->>
->> Now going to the _main point_, task packing needs to take care of the
->> following scenarios:
->> 1. Not select a core having all the CPUs idle or <= 12.5% util
->> 2. Do not select a core with 2 or more CPUs overloaded (>=80% util)
-> 
-> Why is it always 2 CPUs ? it seems that you can have 1/2/4/8 CPUs but
-> you keep using 2 CPUs as a threshold
+> you can also try the command line parameter "clk_ignore_unused" (it's
+> just a gut feeling: maybe a "critical" clock is being disabled because
+> it's not wired up correctly).
+>
 
-I thought of going absolute here because of no good reason but to just
-eliminate the computation of counting the online sibling in a core (similar
-was done in RFC v4)
-But now I think this can be done here by simply adding:
-"overutil_cpu_count < (idle_cpu_count + non_idle_cpu_count)/2"
-*unless* we can get rid of any of the counter here.
+It look like some clk issue after I added the *clk_ignore_unused* to
+kernel command line
+it booted further to login prompt and cpufreq DVFS seem to be loaded.
+So I could conclude this is clk issue.below is the boot log
 
-> 
->> 3. Select a core even if 1 CPU is overloaded as background tasks are
->> usually short running and spending time for selecting better alternative is
->> not worth the investment here
->> 4. Select a core if at least one CPU is busy (>=12.5% util)
->> 5. On selecting a core, select an idle CPU in it.
->>
->> Hence to satisfy this scenarios for SMT-1/2/4 (POWER9) or 8 (POWER8 has
->> 8-threads per core/ POWER9 has feature to make fake SMT-8), the approach
->> keeps track of idle, non-idle, busy and overloaded CPU count in the core
->> and uses above approach to find _sufficiently_ non-idle core, which seems
->> to be a good heuristics to do task packing without much of regression on
->> CPU intensive threads.
->>
->> So as per the comments in this patch, first point covers tadding he scenario 1 and
->> 4 (if part in the code), and second point covers scenario 2 and 3 (else
->> part in the code).
->>
->>>> +                */
->>>> +               if (idle_cpu_count > non_idle_cpu_count) {
->>>> +                       if (busy_cpu_count)
->>>> +                               return best_cpu;
->>>> +               } else {
->>>> +                       /*
->>>> +                        * Pack tasks if at max 1 CPU is overutilized
->>>> +                        */
->>>> +                       if (overutil_cpu_count < 2)
->>>> +                               return best_cpu;
->>>> +               }
->>>> +       }
->>>> +
->>>> +       return select_idle_sibling(p, prev_cpu, target);
->>>> +}
->>>> +#endif /* CONFIG_SCHED_SMT */
->>>> +
->>>>  /*
->>>>   * Try and locate an idle core/thread in the LLC cache domain.
->>>>   */
->>>> @@ -6418,6 +6490,23 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
->>>>         return -1;
->>>>  }
->>>>
->>>> +#ifdef CONFIG_SCHED_SMT
->>>> +/*
->>>> + * Select all classified background tasks for task packing
->>>> + */
->>>> +static inline int turbosched_select_non_idle_core(struct task_struct *p,
->>>> +                                                 int prev_cpu, int target)
->>>> +{
->>>> +       return select_non_idle_core(p, prev_cpu, target);
->>>> +}
->>>> +#else
->>>> +static inline int turbosched_select_non_idle_core(struct task_struct *p,
->>>> +                                                 int prev_cpu, int target)
->>>> +{
->>>> +       return select_idle_sibling(p, prev_cpu, target);
->>>
->>> should be better to make turbosched_select_non_idle_core empty and
->>> make sure that __turbo_sched_enabled is never enabled if
->>> CONFIG_SCHED_SMT is disabled
->>>
->>
->> Totally agreed. I thought keeping like this so as to not have any "#def.."
->> in select_task_rq_fair method.
->> So can I do this by adding a new method like __select_idle_sibling() which
->> will call turbosched_select_non_idle_core() in case of SCHED_SMT present
->> and otherwise will call the regular select_idle_sibling()?
->>
->>>> +}
->>>> +#endif
->>>> +
->>>>  /*
->>>>   * select_task_rq_fair: Select target runqueue for the waking task in domains
->>>>   * that have the 'sd_flag' flag set. In practice, this is SD_BALANCE_WAKE,
->>>> @@ -6483,7 +6572,11 @@ select_task_rq_fair(struct task_struct *p, int prev_cpu, int sd_flag, int wake_f
->>>>         } else if (sd_flag & SD_BALANCE_WAKE) { /* XXX always ? */
->>>>                 /* Fast path */
->>>>
->>>> -               new_cpu = select_idle_sibling(p, prev_cpu, new_cpu);
->>>> +               if (is_turbosched_enabled() && unlikely(is_background_task(p)))
->>>> +                       new_cpu = turbosched_select_non_idle_core(p, prev_cpu,
->>>> +                                                                 new_cpu);
->>>
->>> Could you add turbosched_select_non_idle_core() similarly to
->>> find_energy_efficient_cpu() ?
->>> Add it at the beg select_task_rq_fair()
->>> Return immediately with theCPU if you have found one
->>> Or let the normal path select a CPU if the
->>> turbosched_select_non_idle_core() has not been able to find a suitable
->>> CPU for packing
->>>
->>
->> of course. I can do that.
->> I was just not aware about the effect of wake_affine and so was waiting for
->> such comments to be sure of. Thanks for this.
->> Maybe I can add just below the sched_energy_present(){...} construct giving
->> precedence to EAS? I'm asking this because I remember Patrick telling me to
->> leverage task packing for android as well?
-> 
-> After  sched_energy_present(){...} seems to be a good place.
-> 
-> Leveraging task packing for android means that it task pacing should
-> collaborate with EAS and find_energy_efficient_cpu()
+Kernel command line: console=ttyAML0,115200n8
+root=PARTUUID=45d7d61e-01 rw rootwait
+earlyprintk=serial,ttyAML0,115200 initcall_debug printk.time=y
+clk_ignore_unused
 
-ok, noted.
+[1] https://pastebin.com/Nsk0wZQJ
 
-Thanks,
-Parth
+> back when I was working out the CPU clock tree for the 32-bit SoCs I
+> had a bad parent clock in one of the muxes which resulted in sporadic
+> lockups if CPU DVFS was enabled.
+> you can try to disable CPU DVFS by dropping the OPP table and it's
+> references from the .dtsi
+>
 
->>>
->>>> +               else
->>>> +                       new_cpu = select_idle_sibling(p, prev_cpu, new_cpu);
->>>>
->>>>                 if (want_affine)
->>>>                         current->recent_used_cpu = cpu;
->>>> --
->>>> 2.17.1
->>>>
->>
+Yep yesterday my focus was to disable PWM feature and get boot up-to
+login prompt
+But not I have to look into clk feature.
 
+*Many thanks for your valuable inputs, I learned a lot of things.*
+
+>
+> Martin
+>
+>
+> [0] https://elinux.org/Initcall_Debug
+
+Best Regards
+-Anand
