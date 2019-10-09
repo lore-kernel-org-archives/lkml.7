@@ -2,140 +2,92 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B95C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE38ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A516A21721
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:00:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BF382133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:01:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729320AbfJIJAt (ORCPT
+        id S1729817AbfJIJBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 05:00:49 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:50961 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725440AbfJIJAt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 05:00:49 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iI7ps-0007lp-GU; Wed, 09 Oct 2019 11:00:44 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iI7pr-0007Ux-7Q; Wed, 09 Oct 2019 11:00:43 +0200
-Date:   Wed, 9 Oct 2019 11:00:43 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, aisheng.dong@nxp.com, leonard.crestez@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH V2] firmware: imx: Skip return value check for some
- special SCU firmware APIs
-Message-ID: <20191009090043.4yq4l7iac3zgytnp@pengutronix.de>
-References: <1570410959-32563-1-git-send-email-Anson.Huang@nxp.com>
+        Wed, 9 Oct 2019 05:01:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39746 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726765AbfJIJBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 05:01:21 -0400
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5919D51EFE
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Oct 2019 09:01:21 +0000 (UTC)
+Received: by mail-wm1-f71.google.com with SMTP id o8so749351wmc.2
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 02:01:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=THMxQozkuZcvJWHmfL9vI/wdlPo7narpF+xJ9DGd+Vo=;
+        b=cQGkZ3vUdXZ7cLS3nR+MtQyTpdim6xCDERoWhLXm2I2fUyDLdeR3n44Q08vxTbVqC/
+         DhjefZt31AgjEsTf0hBXKfgpN81BhyP3MNiPDn7zzFVQkUIlMOavCSEhAYIbOkejzxfL
+         TazRaJ6uSksfmL15y2AS7+Xg0Tn6rZH4dCtJza+LFroh0dZmed0gn+VNj95jKDE4hPI7
+         NB/8LEfGI0R7fi6DcQxIU6++NNxBxrPTpSoqeJFSWLdZx58M9y9lRapCt5ZK4fizVnK4
+         EAfb0yGWjhP8X4m//vcs+YQA3qO634cAJpPM4hcyTgQ+pDm2C5+C+ooIViQDIgvzUnaP
+         bJ5g==
+X-Gm-Message-State: APjAAAXIWmx6U1jiZ0GCJ0AZm/wRlNRP6tNMWVDDN1aHLIG0MH6rCAe7
+        X1JFiVl7jBNOmW1aiAZxhORK4wF9zwHgaBqYQp7lujIkUEN/nlrVOme3IZkbj6k05e5D1GhLE5T
+        Fft26A/xi3mAMwtZ4RbxnNl7Y
+X-Received: by 2002:a1c:444:: with SMTP id 65mr1729333wme.73.1570611679950;
+        Wed, 09 Oct 2019 02:01:19 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwQ0Spy7U6b79LWUb5d3SO9ulf2mGM4h5mzhDt6TJ71iR8Wgb7O4B9ro7AFV3M6sQU7wVNQOQ==
+X-Received: by 2002:a1c:444:: with SMTP id 65mr1729308wme.73.1570611679704;
+        Wed, 09 Oct 2019 02:01:19 -0700 (PDT)
+Received: from [192.168.10.150] ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id a192sm1558196wma.1.2019.10.09.02.01.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Oct 2019 02:01:19 -0700 (PDT)
+Subject: Re: [PATCH v3 00/16] kvm: x86: Support AMD SVM AVIC w/ in-kernel
+ irqchip mode
+To:     "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Cc:     "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "graf@amazon.com" <graf@amazon.com>,
+        "jschoenh@amazon.de" <jschoenh@amazon.de>,
+        "karahmed@amazon.de" <karahmed@amazon.de>,
+        "rimasluk@amazon.com" <rimasluk@amazon.com>,
+        "Grimm, Jon" <Jon.Grimm@amd.com>
+References: <1568401242-260374-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <ea9dd7d9-f02c-6b05-88b5-d766bb837ed3@amd.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <ea6fd945-f341-8577-2640-d0d74013a500@redhat.com>
+Date:   Wed, 9 Oct 2019 11:01:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1570410959-32563-1-git-send-email-Anson.Huang@nxp.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 10:58:09 up 144 days, 15:16, 97 users,  load average: 0.08, 0.07,
- 0.07
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <ea9dd7d9-f02c-6b05-88b5-d766bb837ed3@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Anson,
-
-On 19-10-07 09:15, Anson Huang wrote:
-> The SCU firmware does NOT always have return value stored in message
-> header's function element even the API has response data, those special
-> APIs are defined as void function in SCU firmware, so they should be
-> treated as return success always.
+On 08/10/19 20:44, Suthikulpanit, Suravee wrote:
+> Ping:
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Changes since V1:
-> 	- Use direct API check instead of calling another function to check.
-> 	- This patch is based on https://patchwork.kernel.org/patch/11129553/
-> ---
->  drivers/firmware/imx/imx-scu.c | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
+> Hi All,
 > 
-> diff --git a/drivers/firmware/imx/imx-scu.c b/drivers/firmware/imx/imx-scu.c
-> index 869be7a..03b43b7 100644
-> --- a/drivers/firmware/imx/imx-scu.c
-> +++ b/drivers/firmware/imx/imx-scu.c
-> @@ -162,6 +162,7 @@ static int imx_scu_ipc_write(struct imx_sc_ipc *sc_ipc, void *msg)
->   */
->  int imx_scu_call_rpc(struct imx_sc_ipc *sc_ipc, void *msg, bool have_resp)
->  {
-> +	uint8_t saved_svc, saved_func;
->  	struct imx_sc_rpc_msg *hdr;
->  	int ret;
->  
-> @@ -171,8 +172,11 @@ int imx_scu_call_rpc(struct imx_sc_ipc *sc_ipc, void *msg, bool have_resp)
->  	mutex_lock(&sc_ipc->lock);
->  	reinit_completion(&sc_ipc->done);
->  
-> -	if (have_resp)
-> +	if (have_resp) {
->  		sc_ipc->msg = msg;
-> +		saved_svc = ((struct imx_sc_rpc_msg *)msg)->svc;
+> Are there other concerns or suggestions for this series?
 
-Why do we need to check the svc too?
+I've now reviewed it---sorry for the delay.
 
-> +		saved_func = ((struct imx_sc_rpc_msg *)msg)->func;
-
-Nitpick, should we call it requested_func/req_func?
-
-Regards,
-  Marco
-
-> +	}
->  	sc_ipc->count = 0;
->  	ret = imx_scu_ipc_write(sc_ipc, msg);
->  	if (ret < 0) {
-> @@ -191,6 +195,16 @@ int imx_scu_call_rpc(struct imx_sc_ipc *sc_ipc, void *msg, bool have_resp)
->  		/* response status is stored in hdr->func field */
->  		hdr = msg;
->  		ret = hdr->func;
-> +		/*
-> +		 * Some special SCU firmware APIs do NOT have return value
-> +		 * in hdr->func, but they do have response data, those special
-> +		 * APIs are defined as void function in SCU firmware, so they
-> +		 * should be treated as return success always.
-> +		 */
-> +		if ((saved_svc == IMX_SC_RPC_SVC_MISC) &&
-> +			(saved_func == IMX_SC_MISC_FUNC_UNIQUE_ID ||
-> +			 saved_func == IMX_SC_MISC_FUNC_GET_BUTTON_STATUS))
-> +			ret = 0;
->  	}
->  
->  out:
-> -- 
-> 2.7.4
-> 
-> 
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Paolo
