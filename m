@@ -4,54 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D11ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4998FC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2219421848
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:31:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 260FA206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:31:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570642312;
-	bh=R3+/hJX/2rD8flEe2XZwxCvvYNQNQxgQCV+Xkg2vBdw=;
+	s=default; t=1570642317;
+	bh=Rmt2vC1gq7Y1SdH5bjjb7PSiYPSvnWGQM7T5c8N6Eh4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z0VQRBwpKOBSl0pqSwEQAOagTQLTbV35eem8eVI0dGiCBZelzf2N8cWd4q2lIPDP+
-	 3uQzfMk2QHy874TSbyE7okQkQWfUOhkZAm1wJH1yzGcW3RNCfEXhji+BQnzjnfnj93
-	 tbv34t0QLFKW8czr0nlqClRJAJIICPRL3NvSNGic=
+	b=O8CQD/i3qVNVdYmNW1fKGwKfgfJIMJD6Khmvenq9EhZr6TNsgzvlHR4vOfSvmNWCp
+	 OZ6/VHpHQGk1dmWOObPFJqOyJRb+ZOB1XwZzKRZOCdxAMEC9rrsg0srfkXQdLvX8Ku
+	 /CY1XY/nUx0h55MrTRlLRGmFEzZUU4QTCad8gir0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732963AbfJIRbu (ORCPT
+        id S1732394AbfJIRb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:31:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47988 "EHLO mail.kernel.org"
+        Wed, 9 Oct 2019 13:31:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732037AbfJIRX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 13:23:59 -0400
+        id S1732024AbfJIRX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 13:23:58 -0400
 Received: from sasha-vm.mshome.net (unknown [167.220.2.234])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9938921D56;
+        by mail.kernel.org (Postfix) with ESMTPSA id 18A4021D7E;
         Wed,  9 Oct 2019 17:23:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1570641838;
-        bh=R3+/hJX/2rD8flEe2XZwxCvvYNQNQxgQCV+Xkg2vBdw=;
+        bh=Rmt2vC1gq7Y1SdH5bjjb7PSiYPSvnWGQM7T5c8N6Eh4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kxngq0O07xbxdf3ZEEveYUR2Rp5zNJWzvBZGtI1qLBTcqJm6KwotGk83acEJuZz3H
-         M6z2NcGdWdAZ4TrslWHICCxbwIywIhFO70JzgN18cukMcdltxcNf086V9JRm0+CM+M
-         VxXmhG2u+6Vy8nAFTZmK0X+d4BS60wZh46AzONXw=
+        b=pFniKJdYyRPvwvFQ/j6ejvnx8Qm0xDtmlABw0aNgKKfXaqy2EQfn237XWFqlt9qRN
+         mqAkci0ly3NkhVkQGQQC89tzVrUsmVuvys3v1p79qoTVeIJTAz2WAI5N8i1VLhjSTM
+         mjMLe9DXJra61xqlidr2uq0aNBiiKU0ac33d81mQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mario Limonciello <mario.limonciello@dell.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.3 19/68] nvme-pci: Save PCI state before putting drive into deepest state
-Date:   Wed,  9 Oct 2019 13:04:58 -0400
-Message-Id: <20191009170547.32204-19-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>, Adam Ford <aford173@gmail.com>,
+        =?UTF-8?q?Andr=C3=A9=20Roth?= <neolynx@gmail.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 17/68] ARM: OMAP2+: Fix warnings with broken omap2_set_init_voltage()
+Date:   Wed,  9 Oct 2019 13:04:56 -0400
+Message-Id: <20191009170547.32204-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191009170547.32204-1-sashal@kernel.org>
 References: <20191009170547.32204-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,72 +62,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mario Limonciello <mario.limonciello@dell.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 7cbb5c6f9aa7cfda7175d82a9cf77a92965b0c5e ]
+[ Upstream commit cf395f7ddb9ebc6b2d28d83b53d18aa4e7c19701 ]
 
-The action of saving the PCI state will cause numerous PCI configuration
-space reads which depending upon the vendor implementation may cause
-the drive to exit the deepest NVMe state.
+This code is currently unable to find the dts opp tables as ti-cpufreq
+needs to set them up first based on speed binning.
 
-In these cases ASPM will typically resolve the PCIe link state and APST
-may resolve the NVMe power state.  However it has also been observed
-that this register access after quiesced will cause PC10 failure
-on some device combinations.
+We stopped initializing the opp tables with platform code years ago for
+device tree based booting with commit 92d51856d740 ("ARM: OMAP3+: do not
+register non-dt OPP tables for device tree boot"), and all of mach-omap2
+is now booting using device tree.
 
-To resolve this, move the PCI state saving to before SetFeatures has been
-called.  This has been proven to resolve the issue across a 5000 sample
-test on previously failing disk/system combinations.
+We currently get the following errors on init:
 
-Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-Reviewed-by: Keith Busch <kbusch@kernel.org>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+omap2_set_init_voltage: unable to find boot up OPP for vdd_mpu
+omap2_set_init_voltage: unable to set vdd_mpu
+omap2_set_init_voltage: unable to find boot up OPP for vdd_core
+omap2_set_init_voltage: unable to set vdd_core
+omap2_set_init_voltage: unable to find boot up OPP for vdd_iva
+omap2_set_init_voltage: unable to set vdd_iva
+
+Let's just drop the unused code. Nowadays ti-cpufreq should be used to
+to initialize things properly.
+
+Cc: Adam Ford <aford173@gmail.com>
+Cc: André Roth <neolynx@gmail.com>
+Cc: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Nishanth Menon <nm@ti.com>
+Cc: Tero Kristo <t-kristo@ti.com>
+Tested-by: Adam Ford <aford173@gmail.com> #logicpd-torpedo-37xx-devkit
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ arch/arm/mach-omap2/pm.c | 100 ---------------------------------------
+ 1 file changed, 100 deletions(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 732d5b63ec054..19458e85dab34 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -2894,11 +2894,21 @@ static int nvme_suspend(struct device *dev)
- 	if (ret < 0)
- 		goto unfreeze;
+diff --git a/arch/arm/mach-omap2/pm.c b/arch/arm/mach-omap2/pm.c
+index 1fde1bf53fb65..7ac9af56762df 100644
+--- a/arch/arm/mach-omap2/pm.c
++++ b/arch/arm/mach-omap2/pm.c
+@@ -74,83 +74,6 @@ int omap_pm_clkdms_setup(struct clockdomain *clkdm, void *unused)
+ 	return 0;
+ }
  
-+	/*
-+	 * A saved state prevents pci pm from generically controlling the
-+	 * device's power. If we're using protocol specific settings, we don't
-+	 * want pci interfering.
-+	 */
-+	pci_save_state(pdev);
-+
- 	ret = nvme_set_power_state(ctrl, ctrl->npss);
- 	if (ret < 0)
- 		goto unfreeze;
+-/*
+- * This API is to be called during init to set the various voltage
+- * domains to the voltage as per the opp table. Typically we boot up
+- * at the nominal voltage. So this function finds out the rate of
+- * the clock associated with the voltage domain, finds out the correct
+- * opp entry and sets the voltage domain to the voltage specified
+- * in the opp entry
+- */
+-static int __init omap2_set_init_voltage(char *vdd_name, char *clk_name,
+-					 const char *oh_name)
+-{
+-	struct voltagedomain *voltdm;
+-	struct clk *clk;
+-	struct dev_pm_opp *opp;
+-	unsigned long freq, bootup_volt;
+-	struct device *dev;
+-
+-	if (!vdd_name || !clk_name || !oh_name) {
+-		pr_err("%s: invalid parameters\n", __func__);
+-		goto exit;
+-	}
+-
+-	if (!strncmp(oh_name, "mpu", 3))
+-		/* 
+-		 * All current OMAPs share voltage rail and clock
+-		 * source, so CPU0 is used to represent the MPU-SS.
+-		 */
+-		dev = get_cpu_device(0);
+-	else
+-		dev = omap_device_get_by_hwmod_name(oh_name);
+-
+-	if (IS_ERR(dev)) {
+-		pr_err("%s: Unable to get dev pointer for hwmod %s\n",
+-			__func__, oh_name);
+-		goto exit;
+-	}
+-
+-	voltdm = voltdm_lookup(vdd_name);
+-	if (!voltdm) {
+-		pr_err("%s: unable to get vdd pointer for vdd_%s\n",
+-			__func__, vdd_name);
+-		goto exit;
+-	}
+-
+-	clk =  clk_get(NULL, clk_name);
+-	if (IS_ERR(clk)) {
+-		pr_err("%s: unable to get clk %s\n", __func__, clk_name);
+-		goto exit;
+-	}
+-
+-	freq = clk_get_rate(clk);
+-	clk_put(clk);
+-
+-	opp = dev_pm_opp_find_freq_ceil(dev, &freq);
+-	if (IS_ERR(opp)) {
+-		pr_err("%s: unable to find boot up OPP for vdd_%s\n",
+-			__func__, vdd_name);
+-		goto exit;
+-	}
+-
+-	bootup_volt = dev_pm_opp_get_voltage(opp);
+-	dev_pm_opp_put(opp);
+-
+-	if (!bootup_volt) {
+-		pr_err("%s: unable to find voltage corresponding to the bootup OPP for vdd_%s\n",
+-		       __func__, vdd_name);
+-		goto exit;
+-	}
+-
+-	voltdm_scale(voltdm, bootup_volt);
+-	return 0;
+-
+-exit:
+-	pr_err("%s: unable to set vdd_%s\n", __func__, vdd_name);
+-	return -EINVAL;
+-}
+-
+ #ifdef CONFIG_SUSPEND
+ static int omap_pm_enter(suspend_state_t suspend_state)
+ {
+@@ -208,25 +131,6 @@ void omap_common_suspend_init(void *pm_suspend)
+ }
+ #endif /* CONFIG_SUSPEND */
  
- 	if (ret) {
-+		/* discard the saved state */
-+		pci_load_saved_state(pdev, NULL);
-+
- 		/*
- 		 * Clearing npss forces a controller reset on resume. The
- 		 * correct value will be resdicovered then.
-@@ -2906,14 +2916,7 @@ static int nvme_suspend(struct device *dev)
- 		nvme_dev_disable(ndev, true);
- 		ctrl->npss = 0;
- 		ret = 0;
--		goto unfreeze;
- 	}
--	/*
--	 * A saved state prevents pci pm from generically controlling the
--	 * device's power. If we're using protocol specific settings, we don't
--	 * want pci interfering.
--	 */
--	pci_save_state(pdev);
- unfreeze:
- 	nvme_unfreeze(ctrl);
- 	return ret;
+-static void __init omap3_init_voltages(void)
+-{
+-	if (!soc_is_omap34xx())
+-		return;
+-
+-	omap2_set_init_voltage("mpu_iva", "dpll1_ck", "mpu");
+-	omap2_set_init_voltage("core", "l3_ick", "l3_main");
+-}
+-
+-static void __init omap4_init_voltages(void)
+-{
+-	if (!soc_is_omap44xx())
+-		return;
+-
+-	omap2_set_init_voltage("mpu", "dpll_mpu_ck", "mpu");
+-	omap2_set_init_voltage("core", "l3_div_ck", "l3_main_1");
+-	omap2_set_init_voltage("iva", "dpll_iva_m5x2_ck", "iva");
+-}
+-
+ int __maybe_unused omap_pm_nop_init(void)
+ {
+ 	return 0;
+@@ -246,10 +150,6 @@ int __init omap2_common_pm_late_init(void)
+ 	omap4_twl_init();
+ 	omap_voltage_late_init();
+ 
+-	/* Initialize the voltages */
+-	omap3_init_voltages();
+-	omap4_init_voltages();
+-
+ 	/* Smartreflex device init */
+ 	omap_devinit_smartreflex();
+ 
 -- 
 2.20.1
 
