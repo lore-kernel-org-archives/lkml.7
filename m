@@ -2,121 +2,136 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F378C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 516B0C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E0DB21848
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:49:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B39721835
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:52:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T7djoM65"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730946AbfJILtt (ORCPT
+        id S1730662AbfJILwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 07:49:49 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:33486 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727002AbfJILts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 07:49:48 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id BCA2ABB2A54D7503D44C;
-        Wed,  9 Oct 2019 19:49:46 +0800 (CST)
-Received: from [127.0.0.1] (10.133.215.182) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Wed, 9 Oct 2019
- 19:49:37 +0800
-Subject: Re: [RFC PATCH 2/3] perf tools: Add support for "report" for some spe
- events
-From:   Tan Xiaojun <tanxiaojun@huawei.com>
-To:     James Clark <James.Clark@arm.com>,
-        Jeremy Linton <Jeremy.Linton@arm.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "jolsa@redhat.com" <jolsa@redhat.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-        "yao.jin@linux.intel.com" <yao.jin@linux.intel.com>,
-        "tmricht@linux.ibm.com" <tmricht@linux.ibm.com>,
-        "brueckner@linux.ibm.com" <brueckner@linux.ibm.com>,
-        "songliubraving@fb.com" <songliubraving@fb.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Kim Phillips <Kim.Phillips@amd.com>
-CC:     "gengdongjiu@huawei.com" <gengdongjiu@huawei.com>,
-        "wxf.wang@hisilicon.com" <wxf.wang@hisilicon.com>,
-        "liwei391@huawei.com" <liwei391@huawei.com>,
-        "huawei.libin@huawei.com" <huawei.libin@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "Al Grant" <Al.Grant@arm.com>, nd <nd@arm.com>
-References: <1564738813-10944-1-git-send-email-tanxiaojun@huawei.com>
- <1564738813-10944-3-git-send-email-tanxiaojun@huawei.com>
- <0ac06995-273c-034d-52a3-921ea0337be2@arm.com>
- <016c1ce8-7220-75a2-43fa-0efe150f897c@huawei.com>
- <805660ca-1cf3-4c7f-3aa2-61fed59afa8b@arm.com>
- <637836d6-c884-1a55-7730-eeb45b590d39@huawei.com>
- <b7e5ca2d-8c6c-8ab8-637e-a9aaebaf62a5@arm.com>
- <2b1fc8c7-c0b9-f4b9-a24f-444bc22129af@huawei.com>
-Message-ID: <335fedb8-128c-7d34-c5e8-15cd660fe12e@huawei.com>
-Date:   Wed, 9 Oct 2019 19:49:35 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Wed, 9 Oct 2019 07:52:36 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38715 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727228AbfJILwg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 07:52:36 -0400
+Received: by mail-wr1-f67.google.com with SMTP id w12so2560139wro.5;
+        Wed, 09 Oct 2019 04:52:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7VJ857xf7kJYbDvUJe6HpwVbXrE5Sy9/QjGlnISt5HI=;
+        b=T7djoM651ASFiFStwI/GcZ1ev87dCbWYHE4844UaAiakzYGNKTEdAI6/YNqDn7Wi/4
+         ZP4Dz/F3ge+7+PuusD6uSZp62tzMYb9gOX8y3qdTiQ7JE9ezVO2RkrVUemDK0YhxZHKN
+         V5XgqFhS6TMLfO7W47Xl8aHEAdSPe54UsqJ+Rr9XLuTy8W7ykO6UzrVH6PyT0SJ4eepl
+         0t/fizwIdnfLxT612IAaLs6mA3A4hYhCJe97tIaS701tBHccNS6OLgBQC9WOg0dZIMDl
+         SrF8ICiBeLIks97sM6yd9X9Jw21ImVbBqur27N6Fdup98+vGlbyF5r+Q44lCgqPUSsGY
+         CDBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7VJ857xf7kJYbDvUJe6HpwVbXrE5Sy9/QjGlnISt5HI=;
+        b=hDR1ogLG4Q6O+YCSwJlFRoY5Rf+tA4ZmQcvjCrDpseEYxI3PTpn1BOdIM1cINkqn09
+         8fU7fEa4rUoox8FQC/n2siGh8YHqhrmYvKW/iTgkc/8cflURF97tGim2a0erq+Qit7CE
+         oyDD5toOdKXYzfZJk5WR4GEaGK9VY1eQox8jiqM9FJWJvOAWdwcM7c6Wuvysu/xbJc92
+         DfrAgOWtgrHw1KoM/Bn8yfXKM6yfD7KhrU7EWp3tBBuypGsyIFm4Tv24M50Tb6eLrdT/
+         ty+Vq9zQz6nIxT5hP/cleGx+RPwiiiCbMMUY9qg1yaC5r0H5Uufc/ksxP+TOtVH6QZ63
+         6JOQ==
+X-Gm-Message-State: APjAAAU1WKEYHt+9gio+cXqyI1smxHtrah+l37qoRkJLmGG3X9WeL3Hb
+        P5ZDwJTzZ3YY2VOUPXjbAO8=
+X-Google-Smtp-Source: APXvYqyvW0+QHKMoLgMknuglsyzr1heZ22+8CzIumVTWiRFwX8xngBSj/o885RGQvdjZD+abrBDN+w==
+X-Received: by 2002:a05:6000:1288:: with SMTP id f8mr2476859wrx.111.1570621954039;
+        Wed, 09 Oct 2019 04:52:34 -0700 (PDT)
+Received: from localhost ([51.15.41.238])
+        by smtp.gmail.com with ESMTPSA id r140sm3122984wme.47.2019.10.09.04.52.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Oct 2019 04:52:33 -0700 (PDT)
+Date:   Wed, 9 Oct 2019 12:52:31 +0100
+From:   Stefan Hajnoczi <stefanha@gmail.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     netdev@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
+        linux-hyperv@vger.kernel.org,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        kvm@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jorgen Hansen <jhansen@vmware.com>
+Subject: Re: [RFC PATCH 05/13] vsock/virtio: add transport parameter to the
+ virtio_transport_reset_no_sock()
+Message-ID: <20191009115231.GF5747@stefanha-x1.localdomain>
+References: <20190927112703.17745-1-sgarzare@redhat.com>
+ <20190927112703.17745-6-sgarzare@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <2b1fc8c7-c0b9-f4b9-a24f-444bc22129af@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.215.182]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="yRA+Bmk8aPhU85Qt"
+Content-Disposition: inline
+In-Reply-To: <20190927112703.17745-6-sgarzare@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/10/9 19:09, Tan Xiaojun wrote:
-> On 2019/10/9 17:48, James Clark wrote:
->> Hi Xiaojun,
->>
->>> By the way, you mentioned before that you want the spe event to be in the form of "event:pp" like pebs. Is that the whole framework should be made similar to pebs? Or is it just a modification to the command format? 
->>
->> We're currently still investigating if it makes sense to modify the Perf event open syscall to use SPE when the "precise_ip" attribute is set. And then synthesize samples using the SPE data when available. This would keep the syscall interface more consistent between architectures.
->>
->> And if tools other than Perf want more precise data, they don't have to be aware of SPE or any of the implementation defined details of it. For example the 'data source' encoding can be different from one micro architecture to the next. The kernel is probably the best place to handle this.
->>
->> At the moment, every tool that wants to use the Perf syscall to get precise data on ARM would have to be aware of SPE and implement their own decoding.
->>
-> 
-> Hi James,
-> 
-> What do you mean when the user specifies "event:pp", if the SPE is available, configure and record the spe data directly via the perf event open syscall?
-> (perf.data itself is the same as using -e arm_spe_0//xxx?)
 
-I mean, for the perf record, if the user does not add ":pp" to these events, the original process is taken, and if ":pp" is added, the spe process is taken.
+--yRA+Bmk8aPhU85Qt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Xiaojun.
+On Fri, Sep 27, 2019 at 01:26:55PM +0200, Stefano Garzarella wrote:
+> We are going to add 'struct vsock_sock *' parameter to
+> virtio_transport_get_ops().
+>=20
+> In some cases, like in the virtio_transport_reset_no_sock(),
+> we don't have any socket assigned to the packet received,
+> so we can't use the virtio_transport_get_ops().
+>=20
+> In order to allow virtio_transport_reset_no_sock() to use the
+> '.send_pkt' callback from the 'vhost_transport' or 'virtio_transport',
+> we add the 'struct virtio_transport *' to it and to its caller:
+> virtio_transport_recv_pkt().
+>=20
+> We moved the 'vhost_transport' and 'virtio_transport' definition,
+> to pass their address to the virtio_transport_recv_pkt().
+>=20
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> ---
+>  drivers/vhost/vsock.c                   |  94 +++++++-------
+>  include/linux/virtio_vsock.h            |   3 +-
+>  net/vmw_vsock/virtio_transport.c        | 160 ++++++++++++------------
+>  net/vmw_vsock/virtio_transport_common.c |  12 +-
+>  4 files changed, 135 insertions(+), 134 deletions(-)
 
-> 
-> OK. If I have not misunderstood, I think I know how to do it.
-> Thank you.
-> 
->>> For the former, this may be a bit difficult. For the latter, there is currently no modification to the record part, so "-c -F, etc." is only for instructions rather than events, so it may be misunderstood by users.
->>>
->>> So I haven't figured out how to do. What do you think of this?
->>
->> I think the patch at the moment is a good start to make SPE more accessible. And the changes I mentioned above wouldn't change the fact that the raw SPE data would still be available via the SPE PMU. So I think continuing with the patch as-is for now is the best idea.
->>
-> 
-> Yes. I agree.
-> 
-> Xiaojun.
-> 
->>
->> James
->>
->>
-> 
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
 
+--yRA+Bmk8aPhU85Qt
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl2dyf8ACgkQnKSrs4Gr
+c8ipQAf+N9DOIP9BQ9hDc3C/yWPRdpws712iHQbOHVNiBXDKyxZsYFY51fCC7KyF
+9YxSDHJ+9RDm2jzHdItNAwmxXaSpULxrORIVG2c67hxwahN9r90kpWe+yp90NJR9
+WPk9aEgIxgSbypf1nzAbI4ZqJDmTXq7zd3yG6QngmvRhrYF0s81JSSYeVo+rN96G
+qFFiYYEEA7nlESBV9INveLYF1W9qtNIyy0IgxM3gCrWOkNbRYTWDNAnBEipM/siE
+apf48ghnlNeD77gwbjk0SREQStWdle319cCM03Fw1kYT4WoUOOulI2B2opJ2N0qt
+eDpkxHTBrmJpGg+NU9sLUblRs7Rikg==
+=d4Pb
+-----END PGP SIGNATURE-----
+
+--yRA+Bmk8aPhU85Qt--
