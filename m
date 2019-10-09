@@ -4,45 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDC0C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 04:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD8B3ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 04:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF2E5206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 04:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0F2021835
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 04:39:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730038AbfJIEiA (ORCPT
+        id S1730516AbfJIEjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 00:38:00 -0400
-Received: from gate.crashing.org ([63.228.1.57]:34610 "EHLO gate.crashing.org"
+        Wed, 9 Oct 2019 00:39:03 -0400
+Received: from gate.crashing.org ([63.228.1.57]:34629 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729040AbfJIEiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 00:38:00 -0400
+        id S1729040AbfJIEjC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 00:39:02 -0400
 Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x994b9XK015980;
-        Tue, 8 Oct 2019 23:37:11 -0500
-Message-ID: <95e215664612c0487808c02232852ef2188c95a5.camel@kernel.crashing.org>
-Subject: Re: [PATCH] ftgmac100: Disable HW checksum generation on AST2500
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x994cklP016126;
+        Tue, 8 Oct 2019 23:38:47 -0500
+Message-ID: <75d915aec936be64ea5ebd63402efd90bb1c29d9.camel@kernel.crashing.org>
+Subject: Re: [PATCH 1/3] dt-bindings: net: ftgmac100: Document AST2600
+ compatible
 From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Joel Stanley <joel@jms.id.au>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Vijay Khemka <vijaykhemka@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        YueHaibing <yuehaibing@huawei.com>, Andrew Lunn <andrew@lunn.ch>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, netdev@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        Sai Dasari <sdasari@fb.com>
-Date:   Wed, 09 Oct 2019 15:37:09 +1100
-In-Reply-To: <CACPK8XcS4iKfKigPbPg0BFbmjbT-kdyjiPDXjk1k5XaS5bCdAA@mail.gmail.com>
-References: <20190910213734.3112330-1-vijaykhemka@fb.com>
-         <bd5eab2e-6ba6-9e27-54d4-d9534da9d5f7@gmail.com>
-         <CACPK8XcS4iKfKigPbPg0BFbmjbT-kdyjiPDXjk1k5XaS5bCdAA@mail.gmail.com>
+To:     Andrew Jeffery <andrew@aj.id.au>, netdev@vger.kernel.org
+Cc:     davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        joel@jms.id.au
+Date:   Wed, 09 Oct 2019 15:38:46 +1100
+In-Reply-To: <20191008115143.14149-2-andrew@aj.id.au>
+References: <20191008115143.14149-1-andrew@aj.id.au>
+         <20191008115143.14149-2-andrew@aj.id.au>
 Content-Type: text/plain; charset="UTF-8"
 X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
 Mime-Version: 1.0
@@ -52,60 +44,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-09-11 at 14:48 +0000, Joel Stanley wrote:
-> Hi Ben,
-> 
-> On Tue, 10 Sep 2019 at 22:05, Florian Fainelli <f.fainelli@gmail.com>
-> wrote:
-> > 
-> > On 9/10/19 2:37 PM, Vijay Khemka wrote:
-> > > HW checksum generation is not working for AST2500, specially with
-> > > IPV6
-> > > over NCSI. All TCP packets with IPv6 get dropped. By disabling
-> > > this
-> > > it works perfectly fine with IPV6.
-> > > 
-> > > Verified with IPV6 enabled and can do ssh.
-> > 
-> > How about IPv4, do these packets have problem? If not, can you
-> > continue
-> > advertising NETIF_F_IP_CSUM but take out NETIF_F_IPV6_CSUM?
-> > 
-> > > 
-> > > Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
-> > > ---
-> > >  drivers/net/ethernet/faraday/ftgmac100.c | 5 +++--
-> > >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/net/ethernet/faraday/ftgmac100.c
-> > > b/drivers/net/ethernet/faraday/ftgmac100.c
-> > > index 030fed65393e..591c9725002b 100644
-> > > --- a/drivers/net/ethernet/faraday/ftgmac100.c
-> > > +++ b/drivers/net/ethernet/faraday/ftgmac100.c
-> > > @@ -1839,8 +1839,9 @@ static int ftgmac100_probe(struct
-> > > platform_device *pdev)
-> > >       if (priv->use_ncsi)
-> > >               netdev->hw_features |= NETIF_F_HW_VLAN_CTAG_FILTER;
-> > > 
-> > > -     /* AST2400  doesn't have working HW checksum generation */
-> > > -     if (np && (of_device_is_compatible(np, "aspeed,ast2400-
-> > > mac")))
-> > > +     /* AST2400  and AST2500 doesn't have working HW checksum
-> > > generation */
-> > > +     if (np && (of_device_is_compatible(np, "aspeed,ast2400-
-> > > mac") ||
-> > > +                of_device_is_compatible(np, "aspeed,ast2500-
-> > > mac")))
-> 
-> Do you recall under what circumstances we need to disable hardware
-> checksumming?
+On Tue, 2019-10-08 at 22:21 +1030, Andrew Jeffery wrote:
+> The AST2600 contains an FTGMAC100-compatible MAC, although it no-
+> longer
+> contains an MDIO controller.
 
-Any news on this ? AST2400 has no HW checksum logic in HW, AST2500
-should work for IPV4 fine, we should only selectively disable it for
-IPV6.
-
-Can you do an updated patch ?
+How do you talk to the PHY then ?
 
 Cheers,
 Ben.
+
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> ---
+>  Documentation/devicetree/bindings/net/ftgmac100.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/ftgmac100.txt
+> b/Documentation/devicetree/bindings/net/ftgmac100.txt
+> index 72e7aaf7242e..04cc0191b7dd 100644
+> --- a/Documentation/devicetree/bindings/net/ftgmac100.txt
+> +++ b/Documentation/devicetree/bindings/net/ftgmac100.txt
+> @@ -9,6 +9,7 @@ Required properties:
+>  
+>       - "aspeed,ast2400-mac"
+>       - "aspeed,ast2500-mac"
+> +     - "aspeed,ast2600-mac"
+>  
+>  - reg: Address and length of the register set for the device
+>  - interrupts: Should contain ethernet controller interrupt
 
