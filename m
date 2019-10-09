@@ -2,158 +2,130 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2143FECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C92B4C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF3772133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:04:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="msHx5Po+"
+	by mail.kernel.org (Postfix) with ESMTP id A91CD2133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:05:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728200AbfJIJEB (ORCPT
+        id S1729841AbfJIJFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 05:04:01 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:44202 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfJIJEB (ORCPT
+        Wed, 9 Oct 2019 05:05:17 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:42481 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725776AbfJIJFR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 05:04:01 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9993t0W028585;
-        Wed, 9 Oct 2019 04:03:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570611835;
-        bh=jEegimTNJbOHR+TosMTLwdjur6SlXV6/KlNYDlpB+PY=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=msHx5Po+NS1W0yV7jb93vkkntFsEo2/fRtzCPbZeUcmzvjub+48Ad0mNAkFa5RZ4L
-         VWQXJg+kABGl4W/oR9lOFqJBJwSenFn3Rlv/QmLVAK4W6AyoGgM5obdtHTKF0y6csv
-         7AJQXBMkbQsJ2Fuuz+l15U7ci/Hv9386Xp1Hswdk=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9993tSJ093996;
-        Wed, 9 Oct 2019 04:03:55 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 9 Oct
- 2019 04:03:52 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 9 Oct 2019 04:03:52 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9993oSZ076819;
-        Wed, 9 Oct 2019 04:03:52 -0500
-Subject: Re: [PATCH] PCI: endpoint: cast the page number to phys_addr_t
-To:     Alan Mikhak <alan.mikhak@sifive.com>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-References: <1570240177-8934-1-git-send-email-alan.mikhak@sifive.com>
- <CABEDWGx5MzsdcKzNzCtt3DxXAEWK69Bm-QBK0248rGAvWaU22w@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <69ec3cdf-a7e8-d926-ccba-a1edbb92348d@ti.com>
-Date:   Wed, 9 Oct 2019 14:33:26 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 9 Oct 2019 05:05:17 -0400
+X-UUID: 81f012e1f9b44c2c851bb795067c102c-20191009
+X-UUID: 81f012e1f9b44c2c851bb795067c102c-20191009
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 556026422; Wed, 09 Oct 2019 17:05:06 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 9 Oct 2019 17:05:04 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 9 Oct 2019 17:05:03 +0800
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-usb@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH 1/2] usb: mtu3: add a new function to do status stage
+Date:   Wed, 9 Oct 2019 17:04:59 +0800
+Message-ID: <1570611900-7112-1-git-send-email-chunfeng.yun@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-In-Reply-To: <CABEDWGx5MzsdcKzNzCtt3DxXAEWK69Bm-QBK0248rGAvWaU22w@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 78F6DC5777EFE46E7CDDFEAA2B0951DD3B205190962CA1F84679D165410B24462000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alan,
+Exact a new static function to do status stage
 
-On 07/10/19 11:14 PM, Alan Mikhak wrote:
-> On Fri, Oct 4, 2019 at 6:49 PM Alan Mikhak <alan.mikhak@sifive.com> wrote:
->>
->> From: Alan Mikhak <alan.mikhak@sifive.com>
->>
->> Modify pci_epc_mem_alloc_addr() to cast the variable 'pageno'
->> from type 'int' to 'phys_addr_t' before shifting left. This
->> cast is needed to avoid treating bit 31 of 'pageno' as the
->> sign bit which would otherwise get sign-extended to produce
->> a negative value. When added to the base address of PCI memory
->> space, the negative value would produce an invalid physical
->> address which falls before the start of the PCI memory space.
->>
->> Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+---
+ drivers/usb/mtu3/mtu3_gadget_ep0.c | 23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
 
-Thanks for the patch.
+diff --git a/drivers/usb/mtu3/mtu3_gadget_ep0.c b/drivers/usb/mtu3/mtu3_gadget_ep0.c
+index 4da216c99726..df3fd055792f 100644
+--- a/drivers/usb/mtu3/mtu3_gadget_ep0.c
++++ b/drivers/usb/mtu3/mtu3_gadget_ep0.c
+@@ -153,6 +153,15 @@ static void ep0_stall_set(struct mtu3_ep *mep0, bool set, u32 pktrdy)
+ 		set ? "SEND" : "CLEAR", decode_ep0_state(mtu));
+ }
+ 
++static void ep0_do_status_stage(struct mtu3 *mtu)
++{
++	void __iomem *mbase = mtu->mac_base;
++	u32 value;
++
++	value = mtu3_readl(mbase, U3D_EP0CSR) & EP0_W1C_BITS;
++	mtu3_writel(mbase, U3D_EP0CSR, value | EP0_SETUPPKTRDY | EP0_DATAEND);
++}
++
+ static int ep0_queue(struct mtu3_ep *mep0, struct mtu3_request *mreq);
+ 
+ static void ep0_dummy_complete(struct usb_ep *ep, struct usb_request *req)
+@@ -297,8 +306,7 @@ static int handle_test_mode(struct mtu3 *mtu, struct usb_ctrlrequest *setup)
+ 		ep0_load_test_packet(mtu);
+ 
+ 	/* send status before entering test mode. */
+-	value = mtu3_readl(mbase, U3D_EP0CSR) & EP0_W1C_BITS;
+-	mtu3_writel(mbase, U3D_EP0CSR, value | EP0_SETUPPKTRDY | EP0_DATAEND);
++	ep0_do_status_stage(mtu);
+ 
+ 	/* wait for ACK status sent by host */
+ 	readl_poll_timeout_atomic(mbase + U3D_EP0CSR, value,
+@@ -632,7 +640,6 @@ __acquires(mtu->lock)
+ {
+ 	struct usb_ctrlrequest setup;
+ 	struct mtu3_request *mreq;
+-	void __iomem *mbase = mtu->mac_base;
+ 	int handled = 0;
+ 
+ 	ep0_read_setup(mtu, &setup);
+@@ -668,10 +675,7 @@ __acquires(mtu->lock)
+ 		mtu->delayed_status = true;
+ 	} else if (le16_to_cpu(setup.wLength) == 0) { /* no data stage */
+ 
+-		mtu3_writel(mbase, U3D_EP0CSR,
+-			(mtu3_readl(mbase, U3D_EP0CSR) & EP0_W1C_BITS)
+-			| EP0_SETUPPKTRDY | EP0_DATAEND);
+-
++		ep0_do_status_stage(mtu);
+ 		/* complete zlp request directly */
+ 		mreq = next_ep0_request(mtu);
+ 		if (mreq && !mreq->request.length)
+@@ -802,12 +806,9 @@ static int ep0_queue(struct mtu3_ep *mep, struct mtu3_request *mreq)
+ 	}
+ 
+ 	if (mtu->delayed_status) {
+-		u32 csr;
+ 
+ 		mtu->delayed_status = false;
+-		csr = mtu3_readl(mtu->mac_base, U3D_EP0CSR) & EP0_W1C_BITS;
+-		csr |= EP0_SETUPPKTRDY | EP0_DATAEND;
+-		mtu3_writel(mtu->mac_base, U3D_EP0CSR, csr);
++		ep0_do_status_stage(mtu);
+ 		/* needn't giveback the request for handling delay STATUS */
+ 		return 0;
+ 	}
+-- 
+2.23.0
 
-The change-log title should start with "capitalized verb"
-
-linux-pci follows certain guidelines listed here
-
-https://lore.kernel.org/r/20171026223701.GA25649@bhelgaas-glaptop.roam.corp.google.com/
-
-Once that gets fixed
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-
->> ---
->>  drivers/pci/endpoint/pci-epc-mem.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
->> index 2bf8bd1f0563..d2b174ce15de 100644
->> --- a/drivers/pci/endpoint/pci-epc-mem.c
->> +++ b/drivers/pci/endpoint/pci-epc-mem.c
->> @@ -134,7 +134,7 @@ void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
->>         if (pageno < 0)
->>                 return NULL;
->>
->> -       *phys_addr = mem->phys_base + (pageno << page_shift);
->> +       *phys_addr = mem->phys_base + ((phys_addr_t)pageno << page_shift);
->>         virt_addr = ioremap(*phys_addr, size);
->>         if (!virt_addr)
->>                 bitmap_release_region(mem->bitmap, pageno, order);
->> --
->> 2.7.4
->>
-> 
-> Hi Kishon,
-> 
-> This issue was observed when requesting pci_epc_mem_alloc_addr()
-> to allocate a region of size 0x40010000ULL (1GB + 64KB) from a
-> 128GB PCI address space with page sizes being 64KB. This resulted
-> in 'pageno' value of '0x8000' as the first available page in a
-> contiguous region for the requested size due to other smaller
-> regions having been allocated earlier. With 64KB page sizes,
-> the variable 'page_shift' holds a value of 0x10. Shifting 'pageno'
-> 16 bits to the left results in an 'int' value whose bit 31 is set.
-> 
-> [   10.565256] __pci_epc_mem_init: mem size 0x2000000000 page_size 0x10000
-> [   10.571613] __pci_epc_mem_init: mem pages 0x200000 bitmap_size
-> 0x40000 page_shift 0x10
-> 
-> PCI memory base 0x2000000000
-> PCI memory size 128M 0x2000000000
-> page_size 64K 0x10000
-> page_shift  16 0x10
-> pages 2M 0x200000
-> bitmap_size 256K 0x40000
-> 
-> [  702.050299] pci_epc_mem_alloc_addr: size 0x10000 order 0x0 pageno
-> 0x4 virt_add 0xffffffd0047b0000 phys_addr 0x2000040000
-> [  702.061424] pci_epc_mem_alloc_addr: size 0x10000 order 0x0 pageno
-> 0x5 virt_add 0xffffffd0047d0000 phys_addr 0x2000050000
-> [  702.203933] pci_epc_mem_alloc_addr: size 0x40010000 order 0xf
-> pageno 0x8000 virt_add 0xffffffd004800000 phys_addr 0x1f80000000
-> [  702.216547] Oops - store (or AMO) access fault [#1]
-> :::
-> [  702.310198] sstatus: 0000000200000120 sbadaddr: ffffffd004804000
-> scause: 0000000000000007
-
-Thank you Alan for testing this and sending a patch to fix it.
-
-Cheers
-Kishon
