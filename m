@@ -2,169 +2,91 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ECF1C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D27C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02A7F21848
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:18:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="mNnrhg1j"
+	by mail.kernel.org (Postfix) with ESMTP id 68CF42067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:18:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731677AbfJIQSJ (ORCPT
+        id S1731734AbfJIQSS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 12:18:09 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:57340 "EHLO mail.skyhub.de"
+        Wed, 9 Oct 2019 12:18:18 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:35238 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729644AbfJIQSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 12:18:09 -0400
-Received: from zn.tnic (p200300EC2F0C2000D4AB68DE84D2DF26.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:2000:d4ab:68de:84d2:df26])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C96521EC0A91;
-        Wed,  9 Oct 2019 18:18:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1570637887;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=bvwkXAXhg+KG+yEXnbCW6bYT14rWgG9307Z/GR1yYlU=;
-        b=mNnrhg1jbqttD53dG+1plrFMoW0qLAmK3iEaey5ML2fn3zPIwVT712pbTKsgdOxbxeBNe8
-        YGRPY/hiOax73PxGAGYaO2gT6mzU22phyU9bwRgWZGBivpYL46kfPYCes2WRNX7ZzN4l+C
-        sBKENldjQ6wnpMW7bXB/rWz1zOvopQU=
-Date:   Wed, 9 Oct 2019 18:17:59 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH 2/6] x86/fpu/xstate: Define new macros for supervisor and
- user xstates
-Message-ID: <20191009161759.GF10395@zn.tnic>
-References: <20190925151022.21688-1-yu-cheng.yu@intel.com>
- <20190925151022.21688-3-yu-cheng.yu@intel.com>
+        id S1731688AbfJIQSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 12:18:18 -0400
+Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1iIEfE-0007Md-Fx; Wed, 09 Oct 2019 10:18:13 -0600
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Joerg Roedel <joro@8bytes.org>, Kit Chow <kchow@gigaio.com>
+References: <20191008221837.13067-1-logang@deltatee.com>
+ <20191008221837.13067-2-logang@deltatee.com>
+ <20191009065750.GA17832@infradead.org>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <c5f6750f-b415-3562-9abe-0937bae94f75@deltatee.com>
+Date:   Wed, 9 Oct 2019 10:17:36 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20191009065750.GA17832@infradead.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190925151022.21688-3-yu-cheng.yu@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 70.73.163.230
+X-SA-Exim-Rcpt-To: kchow@gigaio.com, joro@8bytes.org, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org, hch@infradead.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH 1/3] iommu/amd: Implement dma_[un]map_resource()
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 08:10:18AM -0700, Yu-cheng Yu wrote:
-> From: Fenghua Yu <fenghua.yu@intel.com>
+
+
+On 2019-10-09 12:57 a.m., Christoph Hellwig wrote:
+> On Tue, Oct 08, 2019 at 04:18:35PM -0600, Logan Gunthorpe wrote:
+>> From: Kit Chow <kchow@gigaio.com>
+>>
+>> Currently the Intel IOMMU uses the default dma_[un]map_resource()
 > 
-> XCNTXT_MASK is 'all supported xfeatures' before introducing supervisor
-> xstates.  It is hereby renamed to SUPPORTED_XFEATURES_MASK_USER to make it
-	    ^^^^^^^^^^^^^^^^^^^^
+> s/Intel/AMD/ ?
 
-To quote straight from Documentation/process/submitting-patches.rst:
+Oops, yes, my mistake.
 
- "Describe your changes in imperative mood, e.g. "make xyzzy do frotz"
-  instead of "[This patch] makes xyzzy do frotz" or "[I] changed xyzzy
-  to do frotz", as if you are giving orders to the codebase to change
-  its behaviour."
-
-IOW, s/It is hereby renamed/Rename it/ - much simpler. Check all your
-commit messages too pls.
-
-> clear that these are user xstates.
+>> +static dma_addr_t map_resource(struct device *dev, phys_addr_t paddr,
+>> +		size_t size, enum dma_data_direction dir, unsigned long attrs)
+>> +{
+>> +	struct protection_domain *domain;
+>> +	struct dma_ops_domain *dma_dom;
+>> +
+>> +	domain = get_domain(dev);
+>> +	if (PTR_ERR(domain) == -EINVAL)
+>> +		return (dma_addr_t)paddr;
 > 
-> XFEATURE_MASK_SUPERVISOR is replaced with the following:
-> - SUPPORTED_XFEATURES_MASK_SUPERVISOR: Currently nothing.  ENQCMD and
->   Control-flow Enforcement Technology (CET) will be introduced in separate
->   series.
-> - UNSUPPORTED_XFEATURES_MASK_SUPERVISOR: Currently only Processor Trace.
-> - ALL_XFEATURES_MASK_SUPERVISOR: the combination of above.
+> I thought that case can't happen anymore?
 > 
-> Co-developed-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-> Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+> Also note that Joerg just applied the patch to convert the AMD iommu
+> driver to use the dma-iommu ops.  Can you test that series and check
+> it does the right thing for your use case?  From looking at the code
+> I think it should.
 
-Your SOB needs to come after Fenghua's since you're sending the patch:
+Yes, looking at the new code, it looks like this patch will not be
+needed. So we can drop it. We'll test it to make sure.
 
-Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-Co-developed-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+I believe the other two patches in this series are still needed though.
 
-This way, the SOB chain shows the path the patch has taken and who has
-handled it along the way.
+Thanks,
 
-Check your other SOB chains too because they have the same/similar
-issue.
+Logan
 
-> Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-> Reviewed-by: Tony Luck <tony.luck@intel.com>
-> ---
->  arch/x86/include/asm/fpu/xstate.h | 36 ++++++++++++++++++++-----------
->  arch/x86/kernel/fpu/init.c        |  3 ++-
->  arch/x86/kernel/fpu/xstate.c      | 26 +++++++++++-----------
->  3 files changed, 38 insertions(+), 27 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/fpu/xstate.h b/arch/x86/include/asm/fpu/xstate.h
-> index c6136d79f8c0..014c386deaa3 100644
-> --- a/arch/x86/include/asm/fpu/xstate.h
-> +++ b/arch/x86/include/asm/fpu/xstate.h
-> @@ -21,19 +21,29 @@
->  #define XSAVE_YMM_SIZE	    256
->  #define XSAVE_YMM_OFFSET    (XSAVE_HDR_SIZE + XSAVE_HDR_OFFSET)
->  
-> -/* Supervisor features */
-> -#define XFEATURE_MASK_SUPERVISOR (XFEATURE_MASK_PT)
-> -
-> -/* All currently supported features */
-> -#define XCNTXT_MASK		(XFEATURE_MASK_FP | \
-> -				 XFEATURE_MASK_SSE | \
-> -				 XFEATURE_MASK_YMM | \
-> -				 XFEATURE_MASK_OPMASK | \
-> -				 XFEATURE_MASK_ZMM_Hi256 | \
-> -				 XFEATURE_MASK_Hi16_ZMM	 | \
-> -				 XFEATURE_MASK_PKRU | \
-> -				 XFEATURE_MASK_BNDREGS | \
-> -				 XFEATURE_MASK_BNDCSR)
-> +/* All currently supported user features */
-> +#define SUPPORTED_XFEATURES_MASK_USER (XFEATURE_MASK_FP | \
-> +				       XFEATURE_MASK_SSE | \
-> +				       XFEATURE_MASK_YMM | \
-> +				       XFEATURE_MASK_OPMASK | \
-> +				       XFEATURE_MASK_ZMM_Hi256 | \
-> +				       XFEATURE_MASK_Hi16_ZMM	 | \
-> +				       XFEATURE_MASK_PKRU | \
-> +				       XFEATURE_MASK_BNDREGS | \
-> +				       XFEATURE_MASK_BNDCSR)
-> +
-> +/* All currently supported supervisor features */
-> +#define SUPPORTED_XFEATURES_MASK_SUPERVISOR (0)
-> +
-> +/*
-> + * Unsupported supervisor features. When a supervisor feature in this mask is
-> + * supported in the future, move it to the supported supervisor feature mask.
-> + */
-> +#define UNSUPPORTED_XFEATURES_MASK_SUPERVISOR (XFEATURE_MASK_PT)
-> +
-> +/* All supervisor states including supported and unsupported states. */
-> +#define ALL_XFEATURES_MASK_SUPERVISOR (SUPPORTED_XFEATURES_MASK_SUPERVISOR | \
-> +				       UNSUPPORTED_XFEATURES_MASK_SUPERVISOR)
 
-Those are kinda too long for my taste but they're at least descriptive... :-)
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
