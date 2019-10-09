@@ -5,56 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AED6FC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5293ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88918218AC
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A01BA2190F
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:22:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570641739;
-	bh=+T3HrBaC8iJw79I/fjPsmIR+l5WzLqBxllDdKvIpNVg=;
+	s=default; t=1570641750;
+	bh=L+vaemT5IciX304h5JnLNTKQTD7IwxPdQqSfYRG/nEw=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=KDgC2x1w48EPIfKZ5Znk7eGtF/mC/0ivtLDlVjtEVCcMr6Oya7UWxaUyjgheOrZPN
-	 VuRiRFEMBIPBvgmCQ0CHLNThG3WjvVzXGA6te8d5oDTUEl4F+/GMlrZ15rHPPDrQuD
-	 xt9LJwq9nPismBE2rfYZlRpbHfUFj17Fo9XIJ2pQ=
+	b=vzHaJoLJkNxFEOdnTYQQZpzmMyEkq4Qwg+iQjnaquW0Dz4mggbLeGdTyKNpwXQ/yE
+	 KMeIJQXZqmXFLIu8B3BAm3AjdXqO6/N6SF6UaaWxh4g3rk3oI7mnmlg4EseViwwi2y
+	 /qsPocOn3Q3+RLj2wpdGzvEjqigrH0juNDUb1zqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731945AbfJIRWS (ORCPT
+        id S1731964AbfJIRW3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:22:18 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44350 "EHLO
+        Wed, 9 Oct 2019 13:22:29 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44636 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731562AbfJIRWR (ORCPT
+        with ESMTP id S1731173AbfJIRW3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 13:22:17 -0400
+        Wed, 9 Oct 2019 13:22:29 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=ZqoRPUiivC6EpdSad1Ty+09CGENkeEfQlMO3yMsb9R8=; b=VshWyjC8OQXd
-        pZ7klgvUITEzZKn8bmo2GI9g1276VVYg9qmw3A/yk4Hvj5UCqItQPkn36yn+m1j22qY1Z4ZwwZByx
-        0msQxA87c1WkdzT+IKV3qZc3f5YmM7ofIGzN9lvFOHmfRPqkZymKOsXRkrsJN8F7v26GQ2jsGR2sS
-        +m0xs=;
+        List-Archive; bh=IxAhdgaQrq0J/VgaJk4Li88x6ZuphvJhRzy9YVZATI4=; b=W3atcQgxz0VK
+        qgwUx5C1pL778u1fRvJ9j/go4rghn/bptabdJwPMJmvuyM7Vzkp62SQGGbye3VAobT7d9+r8qije7
+        /XUiFec4C+pAbueudkV6i9q9LykahBuQXmZZLBP4RuQ4lCQkFItbejvf4fyl0LLbXJrg+vnmw2Npk
+        UQpuw=;
 Received: from 188.31.199.195.threembb.co.uk ([188.31.199.195] helo=fitzroy.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1iIFf5-0005KP-3i; Wed, 09 Oct 2019 17:22:07 +0000
+        id 1iIFer-0005Jq-Jg; Wed, 09 Oct 2019 17:21:54 +0000
 Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 96F10D03ED3; Wed,  9 Oct 2019 18:22:00 +0100 (BST)
+        id 59243D03ED4; Wed,  9 Oct 2019 18:21:48 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     broonie@kernel.org, lgirdwood@gmail.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, yamada.masahiro@socionext.com
-Subject: Applied "regulator: uniphier: use devm_platform_ioremap_resource() to simplify code" to the regulator tree
-In-Reply-To: <20191009150203.8052-1-yuehaibing@huawei.com>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, navada@ti.com, perex@perex.cz,
+        tiwai@suse.com
+Subject: Applied "ASoc: Add Texas Instruments TAS2562 amplifier binding" to the asoc tree
+In-Reply-To: <20191008181517.5332-1-dmurphy@ti.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191009172200.96F10D03ED3@fitzroy.sirena.org.uk>
-Date:   Wed,  9 Oct 2019 18:22:00 +0100 (BST)
+Message-Id: <20191009172148.59243D03ED4@fitzroy.sirena.org.uk>
+Date:   Wed,  9 Oct 2019 18:21:48 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -62,11 +63,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: uniphier: use devm_platform_ioremap_resource() to simplify code
+   ASoc: Add Texas Instruments TAS2562 amplifier binding
 
-has been applied to the regulator tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.5
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -87,44 +88,61 @@ to this mail.
 Thanks,
 Mark
 
-From 907becb2638df95b78581381bed225c4f3e35799 Mon Sep 17 00:00:00 2001
-From: YueHaibing <yuehaibing@huawei.com>
-Date: Wed, 9 Oct 2019 23:02:03 +0800
-Subject: [PATCH] regulator: uniphier: use devm_platform_ioremap_resource() to
- simplify code
+From ac84b8b21b8e305b82d2b204999ee3140990d1b5 Mon Sep 17 00:00:00 2001
+From: Dan Murphy <dmurphy@ti.com>
+Date: Tue, 8 Oct 2019 13:15:16 -0500
+Subject: [PATCH] ASoc: Add Texas Instruments TAS2562 amplifier binding
 
-Use devm_platform_ioremap_resource() to simplify the code a bit.
-This is detected by coccinelle.
+Add the DT binding for the TAS2562 amplifier.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Link: https://lore.kernel.org/r/20191009150203.8052-1-yuehaibing@huawei.com
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+Link: https://lore.kernel.org/r/20191008181517.5332-1-dmurphy@ti.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/uniphier-regulator.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ .../devicetree/bindings/sound/tas2562.txt     | 34 +++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/tas2562.txt
 
-diff --git a/drivers/regulator/uniphier-regulator.c b/drivers/regulator/uniphier-regulator.c
-index 2311924c3103..2e02e26b516c 100644
---- a/drivers/regulator/uniphier-regulator.c
-+++ b/drivers/regulator/uniphier-regulator.c
-@@ -45,7 +45,6 @@ static int uniphier_regulator_probe(struct platform_device *pdev)
- 	struct regulator_config config = { };
- 	struct regulator_dev *rdev;
- 	struct regmap *regmap;
--	struct resource *res;
- 	void __iomem *base;
- 	const char *name;
- 	int i, ret, nr;
-@@ -58,8 +57,7 @@ static int uniphier_regulator_probe(struct platform_device *pdev)
- 	if (WARN_ON(!priv->data))
- 		return -EINVAL;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	base = devm_ioremap_resource(dev, res);
-+	base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(base))
- 		return PTR_ERR(base);
- 
+diff --git a/Documentation/devicetree/bindings/sound/tas2562.txt b/Documentation/devicetree/bindings/sound/tas2562.txt
+new file mode 100644
+index 000000000000..658e1fb18a99
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/tas2562.txt
+@@ -0,0 +1,34 @@
++Texas Instruments TAS2562 Smart PA
++
++The TAS2562 is a mono, digital input Class-D audio amplifier optimized for
++efficiently driving high peak power into small loudspeakers.
++Integrated speaker voltage and current sense provides for
++real time monitoring of loudspeaker behavior.
++
++Required properties:
++ - #address-cells  - Should be <1>.
++ - #size-cells     - Should be <0>.
++ - compatible:	   - Should contain "ti,tas2562".
++ - reg:		   - The i2c address. Should be 0x4c, 0x4d, 0x4e or 0x4f.
++ - ti,imon-slot-no:- TDM TX current sense time slot.
++
++Optional properties:
++- interrupt-parent: phandle to the interrupt controller which provides
++                    the interrupt.
++- interrupts: (GPIO) interrupt to which the chip is connected.
++- shut-down: GPIO used to control the state of the device.
++
++Examples:
++tas2562@4c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        compatible = "ti,tas2562";
++        reg = <0x4c>;
++
++        interrupt-parent = <&gpio1>;
++        interrupts = <14>;
++
++	shut-down = <&gpio1 15 0>;
++        ti,imon-slot-no = <0>;
++};
++
 -- 
 2.20.1
 
