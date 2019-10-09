@@ -2,95 +2,127 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 222A5ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AFE9C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E87B821835
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:18:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=archlinux-us.20150623.gappssmtp.com header.i=@archlinux-us.20150623.gappssmtp.com header.b="KLKMdMzN"
+	by mail.kernel.org (Postfix) with ESMTP id 50C822190F
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:19:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570605584;
+	bh=98OfNYTmd0ZJ5b8/Q20kF+ue5inCBGi/sdE7mC+Z6QY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=BYclXHZrHbH3ksVU/JGP9Ttrjv+wNQrG43T0CuW8mSluTb7f/vITRyPQsoPywyjkN
+	 yi4vVqaMTSfChf02YNXaDmu1VC4gQSK42/Q7mwfZbLyPvvEJaN/bolqnoScnaSEE4t
+	 EcbI+PGoV/xRtAW2mS7PbQv3wVeCqHLMqAnW2b00=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729285AbfJIHSv (ORCPT
+        id S1729457AbfJIHTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 03:18:51 -0400
-Received: from mail-wr1-f41.google.com ([209.85.221.41]:35109 "EHLO
-        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725440AbfJIHSv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 03:18:51 -0400
-Received: by mail-wr1-f41.google.com with SMTP id v8so1400378wrt.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 00:18:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=archlinux-us.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=TiNDWTtk2uKC1AzF4yMLeYYctvJHg7/7iKFSYlemv/Y=;
-        b=KLKMdMzNPKJXMv+x9JRT6Be+ViWnc7GqPneU0lxeNWuJ/Gx0eATUM593vYkaalh1BM
-         au6CMne8VM+cNVLDm+FHC/mfAxqQCff+PZ/t/oojvI4qIWQKFpKgrPSxAmWq3+wubKqf
-         w+V01JagsYXS4LWdwOcduPPIeKr/ZkfxA8x8G44bw1BYCLe9CrUsgwMCuEGpgyvILOZI
-         NJkgNu7HJxCAFmm2R1sOExWug8BErBUgRc3/SDm5ouVAtvUE2fx2dEtAQBu1O5jx54Ti
-         so4NtwDp6QK9tLqIlENriFjnZb6iBdNl8zsm2cv6S8T8C5q5AvRa/zRo8nJKKXncSM6p
-         CfLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=TiNDWTtk2uKC1AzF4yMLeYYctvJHg7/7iKFSYlemv/Y=;
-        b=TGn21NZadXhzVP50kuZK77T6H2PEEK1+6C2a0aB3zFIafWA+y+tVjOV32y7m2/lviW
-         CvrKvPqyb1Q4LdxzFol6suRR+5Ync3GzxXFRHZ4QHXDdRashEW3QmLRmtjFhXZQo9q8L
-         OxNeeTo7zNN5xhlQwoW2LBCLSzzhGF3XRdg8feEyhRi6p8Wp60HRn81tUAgtkNuDt2LG
-         hWwcpmL7+DO4gwISv6G2fpN3XFXy4aGnY1Z/wjJp5Oswxvm015HuZ86VZ8KzPgIH2jPD
-         7TwxBHjSuP+/R3jIC8qU3FClJCyZ3oIHZcaOTvETaVyQGG31G0R8Ql0N776yy2QuY3R1
-         ii4g==
-X-Gm-Message-State: APjAAAUpbEjjXLnGZ/kEvnFBnGJIbnB9LiCZvAtiUQOsF9WEkQMlrFpz
-        6ilWFB+gt+xjcOHmfsLJLbhbvHqW4TkBwMkq7UeO4zuoUYk=
-X-Google-Smtp-Source: APXvYqx1hsKleJAEafk2d6mfhaNBUpK04PlQiZonvDHDE6O3pctlth6FvZZ2/f+uIPhzJHMjf+0jyj3VXDq6mL+m1Pg=
-X-Received: by 2002:adf:9221:: with SMTP id 30mr1682706wrj.126.1570605525581;
- Wed, 09 Oct 2019 00:18:45 -0700 (PDT)
+        Wed, 9 Oct 2019 03:19:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36966 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725440AbfJIHTm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 03:19:42 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E323D21835;
+        Wed,  9 Oct 2019 07:19:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570605582;
+        bh=98OfNYTmd0ZJ5b8/Q20kF+ue5inCBGi/sdE7mC+Z6QY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hfnB75/bX831YM/IPk/sTW4JoHaL+a43/uazEHpZWKRC7EA5iMrR/NcEmkMlCnfpW
+         ME4DFV34DcPxwanPZMsM77nLjrQcY67uSTeIhT8j2XPS/JF/hf1N328nKaMZeEj8Jz
+         IUxCzqZJcn5FniBnva4q1B8d5LBLTKgyv1nphhHE=
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org
+Cc:     Deepa Dinamani <deepa.kernel@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Subject: [PATCH] fs/namespace.c: fix use-after-free of mount in mnt_warn_timestamp_expiry()
+Date:   Wed,  9 Oct 2019 00:18:50 -0700
+Message-Id: <20191009071850.258463-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <000000000000805e5505945a234b@google.com>
+References: <000000000000805e5505945a234b@google.com>
 MIME-Version: 1.0
-From:   John <graysky@archlinux.us>
-Date:   Wed, 9 Oct 2019 03:18:34 -0400
-Message-ID: <CAO_nJAYi-bjbtuXGFiwwomaS_PzB9=2w17AH21Jp_z4Swx4RbA@mail.gmail.com>
-Subject: Failure to distribute distcc jobs compiling kernel versions >=5.2.0
-To:     LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Compiling the kernel using distcc since version 5.1.16 works but
-versions >=5.2.0 fail to distribute jobs. This is true compiling
-5.4-rc2.  Whatever is causing this breakage, it has not been
-backported to the 4.19-lts series. I can build 4.19.78 with distcc
-working just fine.
+From: Eric Biggers <ebiggers@google.com>
 
-distcc v3.3.3
-gcc v9.2.0
+After do_add_mount() returns success, the caller doesn't hold a
+reference to the 'struct mount' anymore.  So it's invalid to access it
+in mnt_warn_timestamp_expiry().
 
-I am not subscribed so please CC my personal email address with any replies.
+Fix it by instead passing the super_block and the mnt_flags.  It's safe
+to access the super_block because it's pinned by fs_context::root.
 
-Example compiling a recent kernel on the distcc client:
-distcc[22629] (dcc_readx) ERROR: unexpected eof on fd5
-distcc[22629] (dcc_r_token_int) ERROR: read failed while waiting for
-token "DONE"
-distcc[22629] (dcc_r_result_header) ERROR: server provided no answer.
-Is the server configured to allow access from your IP address? Is the
-server performing authentication and your client isn't? Does the
-server have the compiler installed? Is the server configured to access
-the compiler?
-distcc[22629] Warning: failed to distribute
-scripts/mod/devicetable-offsets.c to 10.1.1.102/5, running locally
-instead
-distcc[22635] (dcc_readx) ERROR: unexpected eof on fd5
-distcc[22635] (dcc_r_token_int) ERROR: read failed while waiting for
-token "DONE"
-distcc[22635] (dcc_r_result_header) ERROR: server provided no answer.
-Is the server configured to allow access from your IP address? Is the
-server performing authentication and your client isn't? Does the
-server have the compiler installed? Is the server configured to access
-the compiler?
-distcc[22635] Warning: failed to distribute scripts/mod/empty.c to
-10.1.1.102/5, running locally instead
+Reported-by: syzbot+da4f525235510683d855@syzkaller.appspotmail.com
+Fixes: f8b92ba67c5d ("mount: Add mount warning for impending timestamp expiry")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+ fs/namespace.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
+
+diff --git a/fs/namespace.c b/fs/namespace.c
+index fe0e9e1410fe..7ef8edaaed69 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -2466,12 +2466,11 @@ static void set_mount_attributes(struct mount *mnt, unsigned int mnt_flags)
+ 	unlock_mount_hash();
+ }
+ 
+-static void mnt_warn_timestamp_expiry(struct path *mountpoint, struct vfsmount *mnt)
++static void mnt_warn_timestamp_expiry(struct path *mountpoint,
++				      struct super_block *sb, int mnt_flags)
+ {
+-	struct super_block *sb = mnt->mnt_sb;
+-
+-	if (!__mnt_is_readonly(mnt) &&
+-	   (ktime_get_real_seconds() + TIME_UPTIME_SEC_MAX > sb->s_time_max)) {
++	if (!(mnt_flags & MNT_READONLY) && !sb_rdonly(sb) &&
++	    (ktime_get_real_seconds() + TIME_UPTIME_SEC_MAX > sb->s_time_max)) {
+ 		char *buf = (char *)__get_free_page(GFP_KERNEL);
+ 		char *mntpath = buf ? d_path(mountpoint, buf, PAGE_SIZE) : ERR_PTR(-ENOMEM);
+ 		struct tm tm;
+@@ -2512,7 +2511,7 @@ static int do_reconfigure_mnt(struct path *path, unsigned int mnt_flags)
+ 		set_mount_attributes(mnt, mnt_flags);
+ 	up_write(&sb->s_umount);
+ 
+-	mnt_warn_timestamp_expiry(path, &mnt->mnt);
++	mnt_warn_timestamp_expiry(path, sb, mnt_flags);
+ 
+ 	return ret;
+ }
+@@ -2555,7 +2554,7 @@ static int do_remount(struct path *path, int ms_flags, int sb_flags,
+ 		up_write(&sb->s_umount);
+ 	}
+ 
+-	mnt_warn_timestamp_expiry(path, &mnt->mnt);
++	mnt_warn_timestamp_expiry(path, sb, mnt_flags);
+ 
+ 	put_fs_context(fc);
+ 	return err;
+@@ -2770,7 +2769,7 @@ static int do_new_mount_fc(struct fs_context *fc, struct path *mountpoint,
+ 		return error;
+ 	}
+ 
+-	mnt_warn_timestamp_expiry(mountpoint, mnt);
++	mnt_warn_timestamp_expiry(mountpoint, sb, mnt_flags);
+ 
+ 	return error;
+ }
+-- 
+2.23.0
+
