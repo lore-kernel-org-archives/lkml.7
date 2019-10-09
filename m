@@ -2,122 +2,111 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB95ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 22:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CAC6ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 22:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F180021920
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 22:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AC1D218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 22:41:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570660892;
+	bh=luGiKPn3ZU8w68DlafUoK10zfzRgHpkeep6teIAuOgQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zq2wpneZB38KI3SpJPvuBbhFaScdDcjWEvPGIzV4zybJRr9WDcbFFZqwNquRQtC65
+	 Vrp9eEdYHz3YpWkbjrJkSBekawvAUAGXpyVGArHOG1eEd/jMy8VUc+xH8FBWiFTM2l
+	 7lGULwqZEJEH4I9THUTOWD9zSyXgYioa02s9mwiA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732404AbfJIWkk (ORCPT
+        id S1732436AbfJIWlb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 18:40:40 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:46371 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730999AbfJIWkN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 18:40:13 -0400
-X-Originating-IP: 86.202.229.42
-Received: from localhost (lfbn-lyo-1-146-42.w86-202.abo.wanadoo.fr [86.202.229.42])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id D0D55C0003;
-        Wed,  9 Oct 2019 22:40:11 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH 2/8] dt-bindings: mfd: atmel,at91rm9200-tcb: add sama5d2 compatible
-Date:   Thu, 10 Oct 2019 00:40:00 +0200
-Message-Id: <20191009224006.5021-3-alexandre.belloni@bootlin.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191009224006.5021-1-alexandre.belloni@bootlin.com>
-References: <20191009224006.5021-1-alexandre.belloni@bootlin.com>
+        Wed, 9 Oct 2019 18:41:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58870 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731763AbfJIWlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 18:41:31 -0400
+Received: from localhost (unknown [167.220.2.234])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57856206A1;
+        Wed,  9 Oct 2019 22:41:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570660890;
+        bh=luGiKPn3ZU8w68DlafUoK10zfzRgHpkeep6teIAuOgQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Rc+irKPrpeqwQXpHSoFE706kLoxQRqfJ4NCeM0WtUSQT+q5uICxdJzogjbqxY5P3j
+         JkMocUaDBVj+nyR0jXTypZNF+enLHpy30f3R84LqUesXoViZZzLzsvuR7mK8KX6St2
+         5xJzqjsa/nm2GLyP0YOcVKzcyNj0mNo7z2JFWBmg=
+Date:   Wed, 9 Oct 2019 18:41:29 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Jim Mattson <jmattson@google.com>,
+        Marc Orr <marcorr@google.com>, Peter Shier <pshier@google.com>,
+        Jacob Xu <jacobhxu@google.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 4.19 08/26] kvm: x86: Improve emulation of CPUID
+ leaves 0BH and 1FH
+Message-ID: <20191009224129.GX1396@sasha-vm>
+References: <20191009170558.32517-1-sashal@kernel.org>
+ <20191009170558.32517-8-sashal@kernel.org>
+ <5fcb0e38-3542-dd39-6a1c-449b4f9f435e@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <5fcb0e38-3542-dd39-6a1c-449b4f9f435e@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sama5d2 TC block TIMER_CLOCK1 is different from the at91sam9x5 one.
-Instead of being MCK / 2, it is the TCB GCLK.
+On Wed, Oct 09, 2019 at 10:58:35PM +0200, Paolo Bonzini wrote:
+>On 09/10/19 19:05, Sasha Levin wrote:
+>> From: Jim Mattson <jmattson@google.com>
+>>
+>> [ Upstream commit 43561123ab3759eb6ff47693aec1a307af0aef83 ]
+>>
+>> For these CPUID leaves, the EDX output is not dependent on the ECX
+>> input (i.e. the SIGNIFCANT_INDEX flag doesn't apply to
+>> EDX). Furthermore, the low byte of the ECX output is always identical
+>> to the low byte of the ECX input. KVM does not produce the correct ECX
+>> and EDX outputs for any undefined subleaves beyond the first.
+>>
+>> Special-case these CPUID leaves in kvm_cpuid, so that the ECX and EDX
+>> outputs are properly generated for all undefined subleaves.
+>>
+>> Fixes: 0771671749b59a ("KVM: Enhance guest cpuid management")
+>> Fixes: a87f2d3a6eadab ("KVM: x86: Add Intel CPUID.1F cpuid emulation support")
+>> Signed-off-by: Jim Mattson <jmattson@google.com>
+>> Reviewed-by: Marc Orr <marcorr@google.com>
+>> Reviewed-by: Peter Shier <pshier@google.com>
+>> Reviewed-by: Jacob Xu <jacobhxu@google.com>
+>> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+>> Cc: Paolo Bonzini <pbonzini@redhat.com>
+>> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> ---
+>>  arch/x86/kvm/cpuid.c | 83 +++++++++++++++++++++++++-------------------
+>>  1 file changed, 47 insertions(+), 36 deletions(-)
+>
+>This is absolutely not stable material.  Is it possible for KVM to opt
+>out of this AUTOSEL nonsense?
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
----
-Cc: Rob Herring <robh+dt@kernel.org>
+Sure, I've opted out KVM and removed all KVM patches from this series:
 
- .../bindings/mfd/atmel,at91rm9200-tcb.yaml    | 36 +++++++++++++++----
- 1 file changed, 30 insertions(+), 6 deletions(-)
+c1fac4516a61d kvm: vmx: Limit guest PMCs to those supported on the host
+75b118586ec81 kvm: x86, powerpc: do not allow clearing largepages debugfs entry
+06cd1710feaed KVM: VMX: Set VMENTER_L1D_FLUSH_NOT_REQUIRED if !X86_BUG_L1TF
+c89fc5c082aa6 KVM: x86: Expose XSAVEERPTR to the guest
+1eec6b4068e2e kvm: x86: Use AMD CPUID semantics for AMD vCPUs
+5c56e6ba0afc8 kvm: x86: Improve emulation of CPUID leaves 0BH and 1FH
+94a3c6f010bd2 kvm: x86: Fix a spurious -E2BIG in __do_cpuid_func
+79a7ad6330bc5 KVM: arm/arm64: vgic: Use the appropriate TRACE_INCLUDE_PATH
 
-diff --git a/Documentation/devicetree/bindings/mfd/atmel,at91rm9200-tcb.yaml b/Documentation/devicetree/bindings/mfd/atmel,at91rm9200-tcb.yaml
-index 4d9247fc0593..4fc5bd34d38b 100644
---- a/Documentation/devicetree/bindings/mfd/atmel,at91rm9200-tcb.yaml
-+++ b/Documentation/devicetree/bindings/mfd/atmel,at91rm9200-tcb.yaml
-@@ -19,6 +19,7 @@ properties:
-       - enum:
-           - atmel,at91rm9200-tcb
-           - atmel,at91sam9x5-tcb
-+          - atmel,sama5d2-tcb
-       - const: simple-mfd
-       - const: syscon
- 
-@@ -38,12 +39,6 @@ properties:
-       t1_clk and t2_clk if a clock per channel is available.
-     minItems: 2
-     maxItems: 4
--    items:
--      enum:
--        - t0_clk
--        - t1_clk
--        - t2_clk
--        - slow_clk
- 
-   clocks:
-     minItems: 2
-@@ -55,6 +50,35 @@ properties:
-   '#size-cells':
-     const: 0
- 
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: atmel,sama5d2-tcb
-+    then:
-+      properties:
-+        clocks:
-+          minItems: 3
-+          maxItems: 3
-+        clock-names:
-+          items:
-+            - const: t0_clk
-+            - const: gclk
-+            - const: slow_clk
-+    else:
-+      properties:
-+        clocks:
-+          minItems: 2
-+          maxItems: 4
-+        clock-names:
-+          items:
-+            enum:
-+              - t0_clk
-+              - t1_clk
-+              - t2_clk
-+              - slow_clk
-+
- required:
-   - compatible
-   - reg
--- 
-2.21.0
-
+--
+Thanks,
+Sasha
