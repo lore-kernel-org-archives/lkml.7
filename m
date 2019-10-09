@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C576ECE58E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1B8ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCA9D21929
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A6E421848
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:59:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731477AbfJIO7Q (ORCPT
+        id S1731550AbfJIO7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 10:59:16 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3287 "EHLO huawei.com"
+        Wed, 9 Oct 2019 10:59:25 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3673 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728019AbfJIO7P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 10:59:15 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 2A3E64E2F09D693439AE;
-        Wed,  9 Oct 2019 22:59:11 +0800 (CST)
+        id S1730955AbfJIO7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 10:59:23 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 33D8429321D2634C5162;
+        Wed,  9 Oct 2019 22:59:16 +0800 (CST)
 Received: from linux-ibm.site (10.175.102.37) by
  DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 9 Oct 2019 22:59:04 +0800
+ 14.3.439.0; Wed, 9 Oct 2019 22:59:06 +0800
 From:   zhong jiang <zhongjiang@huawei.com>
 To:     <mchehab@kernel.org>, <sean@mess.org>, <hansverk@cisco.com>,
         <daniel.vetter@ffwll.ch>
 CC:     <linux-media@vger.kernel.org>, <zhongjiang@huawei.com>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 2/4] media: tuners/qm1d1c0042: Use DIV_ROUND_CLOSEST directly to make it readable
-Date:   Wed, 9 Oct 2019 22:55:23 +0800
-Message-ID: <1570632925-14926-3-git-send-email-zhongjiang@huawei.com>
+Subject: [PATCH v2 4/4] media: v4l2-dv-timings: Use DIV_ROUND_CLOSEST directly to make it readable
+Date:   Wed, 9 Oct 2019 22:55:25 +0800
+Message-ID: <1570632925-14926-5-git-send-email-zhongjiang@huawei.com>
 X-Mailer: git-send-email 1.7.12.4
 In-Reply-To: <1570632925-14926-1-git-send-email-zhongjiang@huawei.com>
 References: <1570632925-14926-1-git-send-email-zhongjiang@huawei.com>
@@ -50,22 +50,22 @@ but is perhaps more readable.
 
 Signed-off-by: zhong jiang <zhongjiang@huawei.com>
 ---
- drivers/media/tuners/qm1d1c0042.c | 2 +-
+ drivers/media/v4l2-core/v4l2-dv-timings.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/tuners/qm1d1c0042.c b/drivers/media/tuners/qm1d1c0042.c
-index 83ca5dc..0e26d22 100644
---- a/drivers/media/tuners/qm1d1c0042.c
-+++ b/drivers/media/tuners/qm1d1c0042.c
-@@ -206,7 +206,7 @@ static int qm1d1c0042_set_params(struct dvb_frontend *fe)
- 	if (ret < 0)
- 		return ret;
+diff --git a/drivers/media/v4l2-core/v4l2-dv-timings.c b/drivers/media/v4l2-core/v4l2-dv-timings.c
+index 4f23e93..2b399c0 100644
+--- a/drivers/media/v4l2-core/v4l2-dv-timings.c
++++ b/drivers/media/v4l2-core/v4l2-dv-timings.c
+@@ -757,7 +757,7 @@ bool v4l2_detect_gtf(unsigned frame_height,
+ 	pix_clk = pix_clk / GTF_PXL_CLK_GRAN * GTF_PXL_CLK_GRAN;
  
--	a = (freq + state->cfg.xtal_freq / 2) / state->cfg.xtal_freq;
-+	a = DIV_ROUND_CLOSEST(freq, state->cfg.xtal_freq);
+ 	hsync = (frame_width * 8 + 50) / 100;
+-	hsync = ((hsync + GTF_CELL_GRAN / 2) / GTF_CELL_GRAN) * GTF_CELL_GRAN;
++	hsync = DIV_ROUND_CLOSEST(hsync, GTF_CELL_GRAN) * GTF_CELL_GRAN;
  
- 	state->regs[0x06] &= 0x40;
- 	state->regs[0x06] |= (a - 12) / 4;
+ 	h_fp = h_blank / 2 - hsync;
+ 
 -- 
 1.7.12.4
 
