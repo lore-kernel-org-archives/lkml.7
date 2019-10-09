@@ -2,123 +2,142 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1661C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BEB7ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6D6A2133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 658DD206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:32:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="GCxTBJV2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NhZ3NqWV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730006AbfJIIaA (ORCPT
+        id S1729548AbfJIIc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 04:30:00 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:33807 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfJIIaA (ORCPT
+        Wed, 9 Oct 2019 04:32:56 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35885 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbfJIIcz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 04:30:00 -0400
-Received: by mail-lf1-f65.google.com with SMTP id r22so990557lfm.1
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 01:29:57 -0700 (PDT)
+        Wed, 9 Oct 2019 04:32:55 -0400
+Received: by mail-wm1-f68.google.com with SMTP id m18so1494662wmc.1
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 01:32:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9aF36gaw1IL/nWzuDiTqLh7zzkv/1MrK93P5SQw9amo=;
-        b=GCxTBJV2TpfN5yh9793aMppv3nFyV0gP/CEpN0FhqOU0FI3HvIFnrG7SFVPFndQfQ/
-         en0lxtP89WPAMPk9DT2k4QLmsY/06k1uBFGbZdUotZ1kLMHjlj1cckoaflNScKeGwaSP
-         zH8Mh9H5zvvq0fR8ajjoqoQ65WsgxjdxOhaqw=
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JxJNRe0Hszsg2U+Mp+z1v4R0II23QRMT5ghWEEi5RWE=;
+        b=NhZ3NqWVqaig7QVQN06AhJ9BzVpRIStl4PO90WhabZkYR4TZahH1FZFVa8AuhAbYOQ
+         mr+y43IuW+Gz2TUSN3DRidWkigXShaqiFNEe5CZ6+KRlHt3+1ZwCmVc3UF1NBIJ5RYgd
+         QcYM/Mk3PAJmjItLNhySrm+th3lCHLvsMBYAZgw0JlFyEfKyatS7ULxI8HuZzirdcHgQ
+         m1hYLIHicmZKXs26cm/Zj0ixcud7v4a9MU7G7cH7QMoulEEmtNoQaAbApLxrLKuy5xHV
+         tb/8Skr5Hm4WCRtpABjq1M3h1U53H+OEJDU3ALp15Ck91Zqv7iiwohtLzjX1PVGLLSQc
+         PoyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=9aF36gaw1IL/nWzuDiTqLh7zzkv/1MrK93P5SQw9amo=;
-        b=LYJjcPmklZFkAuihOWZqD6V261hO8oRac4qSFh/oho7zEOC398rnBnPq8hyeP5aWcr
-         Jd+T5QWg7Ex5jfrVzlxySG22sLBlVdySncOGd+bT/EpMAnw5R/Va7BqsuIig0l4A/HXi
-         PbSYodg4M7x/6G9FN1oUSaNoxw7gF93Npux4L05SRi0RV9JM2MFEs7rGFbdZRmXg9MIi
-         KFv6KX2QEmzPAo7gSZ7db+G14nxDX86RJvKrk5p0ja+Ik8hIe8Ta1hpiOyTg/7Ihsadh
-         zXv9RC5/FKJlYYa1q6LaL5GK23NDK8fZ2jdMDcyiS1ojOXDiC+O0alfyEuzfgWaz9YMo
-         BHEA==
-X-Gm-Message-State: APjAAAU5wTBS61WI/q4cktW+HZMrMpHoEt4wrw6Pc0aKbuGtR7TbZuDe
-        0SneVSaiibjxLhKAfToLPSd7qw==
-X-Google-Smtp-Source: APXvYqwyVvKlZ6JkfpoobL/avlhFPf8iTiuVHztmuz8Xa/Adw/gnkVXMZ4sZyLvmYLarOMoAhzv/og==
-X-Received: by 2002:ac2:4345:: with SMTP id o5mr1342574lfl.60.1570609796736;
-        Wed, 09 Oct 2019 01:29:56 -0700 (PDT)
-Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id p86sm273799lja.100.2019.10.09.01.29.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 01:29:56 -0700 (PDT)
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-To:     James Morris <jamorris@linux.microsoft.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Frederic Weisbecker <frederic@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] kernel/cred.c: make init_groups static
-Date:   Wed,  9 Oct 2019 10:29:52 +0200
-Message-Id: <20191009082953.8864-1-linux@rasmusvillemoes.dk>
-X-Mailer: git-send-email 2.20.1
+        bh=JxJNRe0Hszsg2U+Mp+z1v4R0II23QRMT5ghWEEi5RWE=;
+        b=pQZ38PsBjXRiy8x5/bZKD3cAXF0cikW2sj598Hcbo3JTgUM7y1WstvjlL92eq75fxJ
+         VgjaM/NnzdnkGQ+UcSCdqsuk3WUa7GLddBbxBQPyF/tzVEtmQwWeVW/TENE0twbR3Yxb
+         yKSSsHkXn235GpQA+eJFiVrZbH2jYgMk4hF5IV9n3GWyn8gr46ziMsv0cpIoMZYfDako
+         sxWUlD/R92OZEPHiXZBLYarmucElOevhwkheGcQPOYdnFY2LyvWrNueJX+u70bf46yJD
+         bR6aaO5mv5eDrdTx4TYURJe+jarP7o/7FUfLd297kvd6yCtHlfaUDhvHr4bP5+SAWl3F
+         9t2g==
+X-Gm-Message-State: APjAAAXiO2vBKYzHCQYIaJBz//8QfMaHpVOK+sRFy2hPSRoyOYG+3WfT
+        C9/Sc9O5fzWjv3V1yEk3dXgmbQ==
+X-Google-Smtp-Source: APXvYqywaXIHFEarJCg72s40634GXF/8q5QIy4svArSx2M3KgbShup6P+88T7XbSi5C97I9i5mw2Kw==
+X-Received: by 2002:a7b:c74a:: with SMTP id w10mr1647617wmk.30.1570609973203;
+        Wed, 09 Oct 2019 01:32:53 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id x5sm1478910wrt.75.2019.10.09.01.32.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 09 Oct 2019 01:32:52 -0700 (PDT)
+Subject: Re: [alsa-devel] [PATCH v2 3/5] ASoC: core: add support to
+ snd_soc_dai_get_sdw_stream()
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>
+Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        bgoswami@codeaurora.org, linux-kernel@vger.kernel.org,
+        plai@codeaurora.org, lgirdwood@gmail.com, robh+dt@kernel.org,
+        spapothi@codeaurora.org
+References: <20190813083550.5877-1-srinivas.kandagatla@linaro.org>
+ <20190813083550.5877-4-srinivas.kandagatla@linaro.org>
+ <ba88e0f9-ae7d-c26e-d2dc-83bf910c2c01@linux.intel.com>
+ <c2eecd44-f06a-7287-2862-0382bf697f8d@linaro.org>
+ <d2b7773b-d52a-7769-aa5b-ef8c8845d447@linux.intel.com>
+ <d7c1fdb2-602f-ecb1-9b32-91b893e7f408@linaro.org>
+ <f0228cb4-0a6f-17f3-fe03-9be7f5f2e59d@linux.intel.com>
+ <20190813191827.GI5093@sirena.co.uk>
+ <cc360858-571a-6a46-1789-1020bcbe4bca@linux.intel.com>
+ <20190813195804.GL5093@sirena.co.uk>
+ <20190814041142.GU12733@vkoul-mobl.Dlink>
+ <99d35a9d-cbd8-f0da-4701-92ef650afe5a@linux.intel.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <5e08f822-3507-6c69-5d83-4ce2a9f5c04f@linaro.org>
+Date:   Wed, 9 Oct 2019 09:32:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <99d35a9d-cbd8-f0da-4701-92ef650afe5a@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-init_groups is declared in both cred.h and init_task.h, but it is not
-actually referenced anywhere outside of cred.c where it is defined. So
-make it static and remove the declarations.
+Hi Pierre,
 
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
----
- include/linux/cred.h      | 1 -
- include/linux/init_task.h | 1 -
- kernel/cred.c             | 2 +-
- 3 files changed, 1 insertion(+), 3 deletions(-)
+On 14/08/2019 15:09, Pierre-Louis Bossart wrote:
+> 
+> 
+> On 8/13/19 11:11 PM, Vinod Koul wrote:
+>> On 13-08-19, 20:58, Mark Brown wrote:
+>>> On Tue, Aug 13, 2019 at 02:38:53PM -0500, Pierre-Louis Bossart wrote:
+>>>
+>>>> Indeed. I don't have a full understanding of that part to be honest, 
+>>>> nor why
+>>>> we need something SoundWire-specific. We already abused the 
+>>>> set_tdm_slot API
+>>>> to store an HDaudio stream, now we have a rather confusing stream
+>>>> information for SoundWire and I have about 3 other 'stream' contexts in
+>>>> SOF... I am still doing basic cleanups but this has been on my radar 
+>>>> for a
+>>>> while.
+>>>
+>>> There is something to be said for not abusing the TDM slot API if it can
+>>> make things clearer by using bus-idiomatic mechanisms, but it does mean
+>>> everything needs to know about each individual bus :/ .
+>>
+>> Here ASoC doesn't need to know about sdw bus. As Srini explained, this
+>> helps in the case for him to get the stream context and set the stream
+>> context from the machine driver.
+>>
+>> Nothing else is expected to be done from this API. We already do a set
+>> using snd_soc_dai_set_sdw_stream(). Here we add the 
+>> snd_soc_dai_get_sdw_stream() to query
+> 
+> I didn't see a call to snd_soc_dai_set_sdw_stream() in Srini's code?
 
-diff --git a/include/linux/cred.h b/include/linux/cred.h
-index 18639c069263..4f4af62fe8f9 100644
---- a/include/linux/cred.h
-+++ b/include/linux/cred.h
-@@ -53,7 +53,6 @@ do {							\
- 		groups_free(group_info);		\
- } while (0)
- 
--extern struct group_info init_groups;
- #ifdef CONFIG_MULTIUSER
- extern struct group_info *groups_alloc(int);
- extern void groups_free(struct group_info *);
-diff --git a/include/linux/init_task.h b/include/linux/init_task.h
-index 2c620d7ac432..6a046030ffad 100644
---- a/include/linux/init_task.h
-+++ b/include/linux/init_task.h
-@@ -25,7 +25,6 @@
- extern struct files_struct init_files;
- extern struct fs_struct init_fs;
- extern struct nsproxy init_nsproxy;
--extern struct group_info init_groups;
- extern struct cred init_cred;
- 
- #ifndef CONFIG_VIRT_CPU_ACCOUNTING_NATIVE
-diff --git a/kernel/cred.c b/kernel/cred.c
-index c0a4c12d38b2..87983c9f82e9 100644
---- a/kernel/cred.c
-+++ b/kernel/cred.c
-@@ -33,7 +33,7 @@ do {									\
- static struct kmem_cache *cred_jar;
- 
- /* init to 2 - one for init_task, one to ensure it is never freed */
--struct group_info init_groups = { .usage = ATOMIC_INIT(2) };
-+static struct group_info init_groups = { .usage = ATOMIC_INIT(2) };
- 
- /*
-  * The initial credentials for the initial task
--- 
-2.20.1
 
+There is a snd_soc_dai_get_sdw_stream() to get stream context and we add 
+slave streams(amplifier in this case) to that context using 
+sdw_stream_add_slave() in machine driver[1].
+
+Without this helper there is no way to link slave streams to stream 
+context in non dai based setup like smart speaker amplifiers.
+
+Currently this driver is blocked on this patch, If you think there are 
+other ways to do this, am happy to try them out.
+
+Thanks,
+srini
+
+[1] 
+https://git.linaro.org/people/srinivas.kandagatla/linux.git/tree/sound/soc/qcom/db845c.c?h=release/db845c/qcomlt-5.2
