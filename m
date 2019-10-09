@@ -2,112 +2,163 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DAC8ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 18:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B1DECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 18:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BAE320679
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 18:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0063120679
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 18:53:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SUg/sdQb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731607AbfJISxc (ORCPT
+        id S1731636AbfJISxi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 14:53:32 -0400
-Received: from baldur.buserror.net ([165.227.176.147]:58054 "EHLO
-        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730490AbfJISxb (ORCPT
+        Wed, 9 Oct 2019 14:53:38 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:47736 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730490AbfJISxi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 14:53:31 -0400
-Received: from [2601:449:8480:af0:12bf:48ff:fe84:c9a0]
-        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <oss@buserror.net>)
-        id 1iIGyv-000329-9o; Wed, 09 Oct 2019 13:46:41 -0500
-Message-ID: <34ef1980887c8a6d635c20bdaf748bb0548e51b5.camel@buserror.net>
-From:   Scott Wood <oss@buserror.net>
-To:     Jason Yan <yanaijie@huawei.com>, mpe@ellerman.id.au,
-        linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com,
-        christophe.leroy@c-s.fr, benh@kernel.crashing.org,
-        paulus@samba.org, npiggin@gmail.com, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com
-Cc:     wangkefeng.wang@huawei.com, linux-kernel@vger.kernel.org,
-        jingxiangfeng@huawei.com, zhaohongjiang@huawei.com,
-        thunder.leizhen@huawei.com, yebin10@huawei.com
-Date:   Wed, 09 Oct 2019 13:46:38 -0500
-In-Reply-To: <90bb659a-bde4-3b8e-8f01-bf22d7534f44@huawei.com>
-References: <20190920094546.44948-1-yanaijie@huawei.com>
-         <9c2dd2a8-83f2-983c-383e-956e19a7803a@huawei.com>
-         <c4769b34-95f6-81b9-4856-50459630aa0d@huawei.com>
-         <38141b946f3376ce471e46eaf065e357ac540354.camel@buserror.net>
-         <90bb659a-bde4-3b8e-8f01-bf22d7534f44@huawei.com>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2601:449:8480:af0:12bf:48ff:fe84:c9a0
-X-SA-Exim-Rcpt-To: yanaijie@huawei.com, mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com, christophe.leroy@c-s.fr, benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com, keescook@chromium.org, kernel-hardening@lists.openwall.com, wangkefeng.wang@huawei.com, linux-kernel@vger.kernel.org, jingxiangfeng@huawei.com, zhaohongjiang@huawei.com, thunder.leizhen@huawei.com, yebin10@huawei.com
-X-SA-Exim-Mail-From: oss@buserror.net
-Subject: Re: [PATCH v7 00/12] implement KASLR for powerpc/fsl_booke/32
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
+        Wed, 9 Oct 2019 14:53:38 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x99InC1R129243;
+        Wed, 9 Oct 2019 18:53:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=QJPma1OkIbKt5epIKIB9FNekUDlByT3TewuVPlsRzTQ=;
+ b=SUg/sdQb2S0NQd8Bhh2XGdzfX0jmUa56XIdiGQe9ybNdoCh0jdpgGqpHBQkqtPqrNFp/
+ +za8xGRqIcFbDB9nZGUhyXXZLN4Eq0II+rak5SE7KiQA2HFuPOSs7sLxuvYl7KBoh1DX
+ ybfCC6QnewfVKommtjm667YuTvVX9oMOkRij/9WlMCWF9JoQImAUOSgvDOhtNXPDBe/n
+ eAuweRJhnC+6juVlgacND08L2t8HGDsMZ6qhl7w31EbXyFQ3yhqxiY01fzF+lmfC1RP9
+ +IIcuTKR/SncFI36u1jbX3AFxqsFDllOzTc4trOBoauJqMLBvcyV/thJW0XYvFYIHT4E UQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2vektrpdr0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 09 Oct 2019 18:53:32 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x99Im31n190825;
+        Wed, 9 Oct 2019 18:53:32 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2vh5cba087-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 09 Oct 2019 18:53:32 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x99IrVVv023878;
+        Wed, 9 Oct 2019 18:53:31 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 09 Oct 2019 11:53:30 -0700
+Date:   Wed, 9 Oct 2019 21:53:23 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Alexander Gordeev <a.gordeev.box@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        Michael Chen <micchen@altera.com>, dmaengine@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dmaengine: avalon: Intel Avalon-MM DMA Interface
+ for PCIe
+Message-ID: <20191009185323.GG13286@kadam>
+References: <cover.1570558807.git.a.gordeev.box@gmail.com>
+ <3ed3c016b7fbe69e36023e7ee09c53acac8a064c.1570558807.git.a.gordeev.box@gmail.com>
+ <20191009121441.GM25098@kadam>
+ <20191009145811.GA3823@AlexGordeev-DPT-VI0092>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191009145811.GA3823@AlexGordeev-DPT-VI0092>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9405 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910090153
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9405 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910090153
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-10-09 at 16:41 +0800, Jason Yan wrote:
-> Hi Scott,
-> 
-> On 2019/10/9 15:13, Scott Wood wrote:
-> > On Wed, 2019-10-09 at 14:10 +0800, Jason Yan wrote:
-> > > Hi Scott,
-> > > 
-> > > Would you please take sometime to test this?
-> > > 
-> > > Thank you so much.
-> > > 
-> > > On 2019/9/24 13:52, Jason Yan wrote:
-> > > > Hi Scott,
-> > > > 
-> > > > Can you test v7 to see if it works to load a kernel at a non-zero
-> > > > address?
-> > > > 
-> > > > Thanks,
+On Wed, Oct 09, 2019 at 04:58:12PM +0200, Alexander Gordeev wrote:
+> On Wed, Oct 09, 2019 at 03:14:41PM +0300, Dan Carpenter wrote:
+> > > +config AVALON_DMA_PCI_VENDOR_ID
+> > > +	hex "PCI vendor ID"
+> > > +	default "0x1172"
+> > > +
+> > > +config AVALON_DMA_PCI_DEVICE_ID
+> > > +	hex "PCI device ID"
+> > > +	default "0xe003"
 > > 
-> > Sorry for the delay.  Here's the output:
+> > This feels wrong.  Why isn't it known in advance.
+> 
+> Because device designers would likely use they own IDs. The ones I
+> put are just defaults inherited from the (Altera) reference design.
+> 
+> > > +	u32 *rd_flags = hw->dma_desc_table_rd.cpu_addr->flags;
+> > > +	u32 *wr_flags = hw->dma_desc_table_wr.cpu_addr->flags;
+> > > +	struct avalon_dma_desc *desc;
+> > > +	struct virt_dma_desc *vdesc;
+> > > +	bool rd_done;
+> > > +	bool wr_done;
+> > > +
+> > > +	spin_lock(lock);
+> > > +
+> > > +	rd_done = (hw->h2d_last_id < 0);
+> > > +	wr_done = (hw->d2h_last_id < 0);
+> > > +
+> > > +	if (rd_done && wr_done) {
+> > > +		spin_unlock(lock);
+> > > +		return IRQ_NONE;
+> > > +	}
+> > > +
+> > > +	do {
+> > > +		if (!rd_done && rd_flags[hw->h2d_last_id])
+> > > +			rd_done = true;
+> > > +
+> > > +		if (!wr_done && wr_flags[hw->d2h_last_id])
+> > > +			wr_done = true;
+> > > +	} while (!rd_done || !wr_done);
 > > 
+> > This loop is very strange.  It feels like the last_id indexes needs
+> > to atomic or protected from racing somehow so we don't do an out of
+> > bounds read.
 > 
-> Thanks for the test.
+> My bad. I should have put a comment on this. This polling comes from my
+> reading of the Intel documentation:
 > 
-> > ## Booting kernel from Legacy Image at 10000000 ...
-> >     Image Name:   Linux-5.4.0-rc2-00050-g8ac2cf5b4
-> >     Image Type:   PowerPC Linux Kernel Image (gzip compressed)
-> >     Data Size:    7521134 Bytes = 7.2 MiB
-> >     Load Address: 04000000
-> >     Entry Point:  04000000
-> >     Verifying Checksum ... OK
-> > ## Flattened Device Tree blob at 1fc00000
-> >     Booting using the fdt blob at 0x1fc00000
-> >     Uncompressing Kernel Image ... OK
-> >     Loading Device Tree to 07fe0000, end 07fff65c ... OK
-> > KASLR: No safe seed for randomizing the kernel base.
-> > OF: reserved mem: initialized node qman-fqd, compatible id fsl,qman-fqd
-> > OF: reserved mem: initialized node qman-pfdr, compatible id fsl,qman-pfdr
-> > OF: reserved mem: initialized node bman-fbpr, compatible id fsl,bman-fbpr
-> > Memory CAM mapping: 64/64/64 Mb, residual: 12032Mb
+> "The MSI interrupt notifies the host when a DMA operation has completed.
+> After the host receives this interrupt, it can poll the DMA read or write
+> status table to determine which entry or entries have the done bit set."
 > 
-> When boot from 04000000, the max CAM value is 64M. And
-> you have a board with 12G memory, CONFIG_LOWMEM_CAM_NUM=3 means only
-> 192M memory is mapped and when kernel is randomized at the middle of 
-> this 192M memory, we will not have enough continuous memory for node map.
+> "The Descriptor Controller writes a 1 to the done bit of the status DWORD
+> to indicate successful completion. The Descriptor Controller also sends
+> an MSI interrupt for the final descriptor. After receiving this MSI,
+> host software can poll the done bit to determine status."
 > 
-> Can you set CONFIG_LOWMEM_CAM_NUM=8 and see if it works?
+> I sense an ambiguity above. It sounds possible an MSI interrupt could be
+> delivered before corresponding done bit is set. May be imperfect wording..
+> Anyway, the loop does look weird and in reality I doubt I observed the
+> done bit unset even once. So I put this polling just in case.
 
-OK, that worked.
+You're missing my point.  When we set
+hw->d2h_last_id = 1;
+...
+hw->d2h_last_id = 2;
 
--Scott
+There is a tiny moment where ->d2h_last_id is transitioning from 1 to 2
+where its value is unknown.  We're in a busy loop here so we have a
+decent chance of hitting that 1/1000,000th of a second.  If we happen to
+hit it at exactly the right time then we're reading from a random
+address and it will cause an oops.
 
+We have to use atomic_t types or something to handle race conditions.
+
+regards,
+dan carpenter
 
