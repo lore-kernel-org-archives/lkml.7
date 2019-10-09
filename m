@@ -2,94 +2,145 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF64ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59772ECE58E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94D3B21721
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:02:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GHo82XUA"
+	by mail.kernel.org (Postfix) with ESMTP id 3CA3021721
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:03:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731315AbfJINC2 (ORCPT
+        id S1731375AbfJINDH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 09:02:28 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55678 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730901AbfJINC2 (ORCPT
+        Wed, 9 Oct 2019 09:03:07 -0400
+Received: from mx0b-00176a03.pphosted.com ([67.231.157.48]:41762 "EHLO
+        mx0a-00176a03.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730901AbfJINDG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 09:02:28 -0400
-Received: by mail-wm1-f68.google.com with SMTP id a6so2493986wma.5
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 06:02:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6gKyU2lVUG9r8tkVXQwlslVrnGaZcT+vH7d3AbPHYB0=;
-        b=GHo82XUApFZmoJ9rbUiaxY0lPH5g1hfz9r8MSUnSI3GN9JdNoZQcA4UQ6OJo1rICO0
-         qzfEEIaPLpbItb/8PbB0tgtmMY3OvSBeFhFZiL7aO0dIhyWBySy0Gc4iZkpX6vcuzMon
-         Wj//7wE6Nd30Th7JDUX9ivMJk8/CkfEoL9COKkOw/OLGxaSlPBMlO4GEdXfniAHaK+uV
-         ThL1YwwiUvNrQ4RoX+Gkqtnk4np+XvZsHPcUah8iL/Z2af9/saPP/imUSPit0/RkYjkD
-         lCQnoyj1ClCApdV1FAhLZTizqvX7pcIkRlATP26I2RICqhtg4PmooQaeKNBqRXA5MyyA
-         j92g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6gKyU2lVUG9r8tkVXQwlslVrnGaZcT+vH7d3AbPHYB0=;
-        b=GZDh9BQ9xPARU/mCI9JbiBgCn0fTGJR1rM074yj+WfDmG4UoVJGQJ80+UNSMopooib
-         yz1RewPfwcp1+HbHe7IyvOU/fnwfJQeq1SD7SyyJUWMOZhf/S9Y9ih8no31Hiomlc7nH
-         z/h7ipPOcbykxTqaTlIWlQamtMEQSINHie6QXVuyPI+iR1gOZgK+zkRh/Vj9itj74ikh
-         XWKT49PA6XK1YvSG+yWTSTEKZVdVblPs1X+ct7Fh7kRTBIKe0tTAgm1krARZQjuyV1Mi
-         BKd2BDjVf5qVYschH6OFjPH8QL/1OwfzitfSQegX8EvaHQWYcl5jI8+PT/vH6TfxDarK
-         KsKg==
-X-Gm-Message-State: APjAAAUDCWm9T6AOH6Mgdd1OwcK9Za7HosZyRr4NF6rJZWqVOs2qvMD2
-        PHOoFMBbmzvDD26ukWEx4lH1X0EhleGaUZP/wSpZaA==
-X-Google-Smtp-Source: APXvYqx+LxYtjcQzWODIZ+2Z6/00LXRbD8qwCw7fnhTtTZ7OXnXpkwtdFXmQrWSQSDmS0fILF/nvqqpHFCBNgF8/Vuo=
-X-Received: by 2002:a7b:cb54:: with SMTP id v20mr2412915wmj.119.1570626144905;
- Wed, 09 Oct 2019 06:02:24 -0700 (PDT)
+        Wed, 9 Oct 2019 09:03:06 -0400
+X-Greylist: delayed 3109 seconds by postgrey-1.27 at vger.kernel.org; Wed, 09 Oct 2019 09:03:05 EDT
+Received: from pps.filterd (m0048205.ppops.net [127.0.0.1])
+        by m0048205.ppops.net-00176a03. (8.16.0.27/8.16.0.27) with SMTP id x99C9XgY029449;
+        Wed, 9 Oct 2019 08:11:15 -0400
+From:   "Safford, David (GE Global Research, US)" <david.safford@ge.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Ken Goldman <kgold@linux.ibm.com>
+CC:     Mimi Zohar <zohar@linux.ibm.com>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Thread-Topic: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
+Thread-Index: AQHVdI4g9L3xPAeMJki3mq4fpV79C6dHrWSAgAFrf4CAABaxAIAAUs4AgAAPVoCAAOxxAIAAnnWA///LRNCAA7fgAIABcvOAgAGtUICAAAEjgIAAiUkQ
+Date:   Wed, 9 Oct 2019 12:11:06 +0000
+Message-ID: <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2B995@ALPMBAPA12.e2k.ad.ge.com>
+References: <20191003114119.GF8933@linux.intel.com>
+ <1570107752.4421.183.camel@linux.ibm.com>
+ <20191003175854.GB19679@linux.intel.com>
+ <1570128827.5046.19.camel@linux.ibm.com>
+ <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A22E@ALPMBAPA12.e2k.ad.ge.com>
+ <20191004182711.GC6945@linux.intel.com>
+ <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A38B@ALPMBAPA12.e2k.ad.ge.com>
+ <20191007000520.GA17116@linux.intel.com>
+ <59b88042-9c56-c891-f75e-7c0719eb5ff9@linux.ibm.com>
+ <20191008234935.GA13926@linux.intel.com>
+ <20191008235339.GB13926@linux.intel.com>
+In-Reply-To: <20191008235339.GB13926@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcMjEyNDczOTUw?=
+ =?us-ascii?Q?XGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0?=
+ =?us-ascii?Q?YmEyOWUzNWJcbXNnc1xtc2ctZGRkMDhkMzItZWE4ZC0xMWU5LThlNjQtYTRj?=
+ =?us-ascii?Q?M2YwYjU5OGE2XGFtZS10ZXN0XGRkZDA4ZDM0LWVhOGQtMTFlOS04ZTY0LWE0?=
+ =?us-ascii?Q?YzNmMGI1OThhNmJvZHkudHh0IiBzej0iMjA5NSIgdD0iMTMyMTUwOTY2NjU0?=
+ =?us-ascii?Q?NTEyMTE0IiBoPSJOeUxXaXhaaHFjUHNKaXhDWEppNWF4MkppRkE9IiBpZD0i?=
+ =?us-ascii?Q?IiBibD0iMCIgYm89IjEiIGNpPSJjQUFBQUVSSFUxUlNSVUZOQ2dVQUFFb0NB?=
+ =?us-ascii?Q?QUR5cXlxZ21uN1ZBZGZLMWFPdHBmaG4xOHJWbzYybCtHY0RBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBSEFBQUFEYUFRQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBRUFBUUFCQUFBQUZ0R2VRd0FBQUFBQUFBQUFBQUFBQUo0QUFBQm5BR1VB?=
+ =?us-ascii?Q?WHdCakFHOEFiZ0JtQUdrQVpBQmxBRzRBZEFCcEFHRUFiQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdjQVpRQmZBR2dBYVFCbkFHZ0Fi?=
+ =?us-ascii?Q?QUI1QUdNQWJ3QnVBR1lBYVFCa0FHVUFiZ0IwQUdrQVlRQnNBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNB?=
+ =?us-ascii?Q?QUFBQUFDZUFBQUFad0JsQUY4QWJnQnZBRzRBY0FCMUFHSUFiQUJwQUdNQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBQT09Ii8+PC9t?=
+ =?us-ascii?Q?ZXRhPg=3D=3D?=
+x-dg-rorf: 
+x-originating-ip: [3.159.16.111]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20191008105510.6975-1-javierm@redhat.com> <CACdnJusuMQf8B9u83mB2Wye+aZ4aV8v4j2eFrokURHkLGA0G_w@mail.gmail.com>
-In-Reply-To: <CACdnJusuMQf8B9u83mB2Wye+aZ4aV8v4j2eFrokURHkLGA0G_w@mail.gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Wed, 9 Oct 2019 15:02:13 +0200
-Message-ID: <CAKv+Gu8xgqEqeRPQSyEkcW6q0rosFRsGNdDxfOL2QdQXzkKvWw@mail.gmail.com>
-Subject: Re: [PATCH v2] efi/efi_test: lock down /dev/efi_test and require CAP_SYS_ADMIN
-To:     Matthew Garrett <mjg59@google.com>
-Cc:     Javier Martinez Canillas <javierm@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ivan Hu <ivan.hu@canonical.com>,
-        Laszlo Ersek <lersek@redhat.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Josh Boyer <jwboyer@redhat.com>,
-        Peter Jones <pjones@redhat.com>,
-        Janne Karhunen <janne.karhunen@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Howells <dhowells@redhat.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Micah Morton <mortonm@chromium.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        James Morris <jmorris@namei.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-09_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910090115
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 9 Oct 2019 at 04:18, Matthew Garrett <mjg59@google.com> wrote:
->
-> On Tue, Oct 8, 2019 at 9:55 PM Javier Martinez Canillas
-> <javierm@redhat.com> wrote:
-> > Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
-> > Acked-by: Laszlo Ersek <lersek@redhat.com>
->
-> Acked-by: Matthew Garrett <mjg59@google.com>
 
-Thanks all. Queued as a fix.
+> From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Sent: Tuesday, October 8, 2019 7:54 PM
+> To: Ken Goldman <kgold@linux.ibm.com>
+> Cc: Safford, David (GE Global Research, US) <david.safford@ge.com>; Mimi
+> Zohar <zohar@linux.ibm.com>; linux-integrity@vger.kernel.org;
+> stable@vger.kernel.org; open list:ASYMMETRIC KEYS
+> <keyrings@vger.kernel.org>; open list:CRYPTO API <linux-
+> crypto@vger.kernel.org>; open list <linux-kernel@vger.kernel.org>
+> Subject: EXT: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
+> 
+> On Wed, Oct 09, 2019 at 02:49:35AM +0300, Jarkko Sakkinen wrote:
+> > On Mon, Oct 07, 2019 at 06:13:01PM -0400, Ken Goldman wrote:
+> > > The TPM library specification states that the TPM must comply with
+> > > NIST
+> > > SP800-90 A.
+> > >
+> > > https://trustedcomputinggroup.org/membership/certification/tpm-certi
+> > > fied-products/
+> > >
+> > > shows that the TPMs get third party certification, Common Criteria EAL 4+.
+> > >
+> > > While it's theoretically possible that an attacker could compromise
+> > > both the TPM vendors and the evaluation agencies, we do have EAL 4+
+> > > assurance against both 1 and 2.
+> >
+> > Certifications do not equal to trust.
+> 
+> And for trusted keys the least trust solution is to do generation with the kernel
+> assets and sealing with TPM. With TEE the least trust solution is equivalent.
+> 
+> Are you proposing that the kernel random number generation should be
+> removed? That would be my conclusion of this discussion if I would agree any
+> of this (I don't).
+> 
+> /Jarkko
+
+No one is suggesting that.
+
+You are suggesting changing the documented behavior of trusted keys, and
+that would cause problems for some of our use cases. While certification
+may not in your mind be equal to trust, it is equal to compliance with 
+mandatory regulations.
+
+Perhaps rather than arguing past each other, we should look into 
+providing users the ability to choose, as an argument to keyctl?
+
+dave
