@@ -2,79 +2,125 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B4E7ECE58E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B3FC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F90821721
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:40:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E4F821721
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:41:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TPCovcmH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730904AbfJILko (ORCPT
+        id S1730962AbfJILlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 07:40:44 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:58708 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbfJILko (ORCPT
+        Wed, 9 Oct 2019 07:41:39 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41758 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725914AbfJILli (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 07:40:44 -0400
-Received: from [79.140.115.128] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iIAKg-0000Lg-97; Wed, 09 Oct 2019 11:40:42 +0000
-Date:   Wed, 9 Oct 2019 13:40:41 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     parri.andrea@gmail.com
-Cc:     bsingharora@gmail.com, dvyukov@google.com, elver@google.com,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH] taskstats: fix data-race
-Message-ID: <20191009114040.tqbbdxmkvvt6mia5@wittgenstein>
-References: <20191008154418.GA16972@andrea>
- <20191009113134.5171-1-christian.brauner@ubuntu.com>
+        Wed, 9 Oct 2019 07:41:38 -0400
+Received: by mail-wr1-f68.google.com with SMTP id q9so2506543wrm.8;
+        Wed, 09 Oct 2019 04:41:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mMvvYTkM4tkX/zo2Ao0DeJUC7rPkTo80uGcij47czrg=;
+        b=TPCovcmHJMC1pvZXwISoRuCV1Sfonuzn0BlRI4oKPe/hzHj3w6Nl8+hnu5qVdPvcBl
+         eGA+CYXbem4TVh6WET1EKfA3HwV+lDKzOavXpS2D74h5UWzTp9iQ+4zKkTm4Mbz5ypxg
+         9ba2YcuTYX0CqMPqieHUCeefpfHiIFS2Q2AOFAhVQHeDKGZdlZSWKrAqMiHYnAhbcSgf
+         GL/99s2KguOl4JzxwCT9LDZEwRZFV7pKOp+1iaZiSYkuZoQ/80MefTf3Ubv8gZD/oeEG
+         CS5OLib2PdeApMdcwMiosDnbiSsuNPtD5ls7ElllaEQObVROkac2MzarZ+mJWhrS/z/8
+         b68w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mMvvYTkM4tkX/zo2Ao0DeJUC7rPkTo80uGcij47czrg=;
+        b=hu4fJ77kK6b4NX/vNtE/NOMjJIfsbLvanxnM6kUMdND4HWxIB85U1t362TYTnlBzxm
+         YqWCLBW2m6M0u5rUsxVaDKZW4nU3vtdwYKuuPGZuhU9VD21+ppmVTm5b/WxvkRWd3Yg/
+         TWc2M+TyN405mlzOV0doRxP9BLnrGQxF+lVOZH1CBmlG2kfcSdAVi2dFHFQ9bSe5Io54
+         lLxsyh8LKObkWCiFjjsPeO6tiCWPAk1LRJqoGOn2OcSy4dEEzj5EUs72YJTzFUd0VPqb
+         lPs54zqHNqadA2N9AW6D963fg7nELJhTqEPKPvQlimzPKhcz56DdOfgt7GQB/h31ULzT
+         mKuw==
+X-Gm-Message-State: APjAAAW1GfXyDmGjjMcOqRcCC9v0IxrJ2TV23zrUKEFRlZbFcAcAPGsi
+        8vINSqAXnRZOCp3HE14Z3HQ=
+X-Google-Smtp-Source: APXvYqxuonZuaW/TjLvUCvWw0cX8AjeIVxfiHs749gIi+aa0PGQZLcC696dUFWCro0Q5KN+pZ/fRog==
+X-Received: by 2002:a05:6000:1190:: with SMTP id g16mr2490550wrx.133.1570621295757;
+        Wed, 09 Oct 2019 04:41:35 -0700 (PDT)
+Received: from localhost ([51.15.41.238])
+        by smtp.gmail.com with ESMTPSA id h63sm3844894wmf.15.2019.10.09.04.41.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Oct 2019 04:41:34 -0700 (PDT)
+Date:   Wed, 9 Oct 2019 12:41:33 +0100
+From:   Stefan Hajnoczi <stefanha@gmail.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     netdev@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
+        linux-hyperv@vger.kernel.org,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        kvm@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jorgen Hansen <jhansen@vmware.com>
+Subject: Re: [RFC PATCH 01/13] vsock/vmci: remove unused
+ VSOCK_DEFAULT_CONNECT_TIMEOUT
+Message-ID: <20191009114133.GB5747@stefanha-x1.localdomain>
+References: <20190927112703.17745-1-sgarzare@redhat.com>
+ <20190927112703.17745-2-sgarzare@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="oLBj+sq0vYjzfsbl"
 Content-Disposition: inline
-In-Reply-To: <20191009113134.5171-1-christian.brauner@ubuntu.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190927112703.17745-2-sgarzare@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 01:31:34PM +0200, Christian Brauner wrote:
-> When assiging and testing taskstats in taskstats_exit() there's a race
-> when writing and reading sig->stats when a thread-group with more than
-> one thread exits:
-> 
-> cpu0:
-> thread catches fatal signal and whole thread-group gets taken down
->  do_exit()
->  do_group_exit()
->  taskstats_exit()
->  taskstats_tgid_alloc()
-> The tasks reads sig->stats without holding sighand lock seeing garbage.
-> 
-> cpu1:
-> task calls exit_group()
->  do_exit()
->  do_group_exit()
->  taskstats_exit()
->  taskstats_tgid_alloc()
-> The task takes sighand lock and assigns new stats to sig->stats.
-> 
-> Fix this by using smp_load_acquire() and smp_store_release().
-> 
-> Reported-by: syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com
-> Fixes: 34ec12349c8a ("taskstats: cleanup ->signal->stats allocation")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
 
-_sigh_, let me resend since i fcked this one up.
+--oLBj+sq0vYjzfsbl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Christian
+On Fri, Sep 27, 2019 at 01:26:51PM +0200, Stefano Garzarella wrote:
+> The VSOCK_DEFAULT_CONNECT_TIMEOUT definition was introduced with
+> commit d021c344051af ("VSOCK: Introduce VM Sockets"), but it is
+> never used in the net/vmw_vsock/vmci_transport.c.
+>=20
+> VSOCK_DEFAULT_CONNECT_TIMEOUT is used and defined in
+> net/vmw_vsock/af_vsock.c
+>=20
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> ---
+>  net/vmw_vsock/vmci_transport.c | 5 -----
+>  1 file changed, 5 deletions(-)
+
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+
+--oLBj+sq0vYjzfsbl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl2dx20ACgkQnKSrs4Gr
+c8hIqAgAvhL+0GDmzG+IqoyqU4u4zMGfhwqu1Tuctdk+5o6AtyHB9jF8qW0lxKfG
+m9BlFbKLMcxjmiirqBXOj24o7GMoko98x8mhqBxofFG0/WTAEqe80ibGyAR8f5/t
+jNyonyKpw3UU9kuYwlQBDZoCjh6ZAOofpmKrtCbE63GntiCzX3waJ5mlK/5Dqtcy
+l7Ol7BjACIKs7gG7i9kF/TtFcU93EcjC8OJuqJ/1bx0y38wMEfCnlpwBkvh2/hQo
+K2Lv1qJHosKW+CqXelAYdeT1YWXmAiE2AYfNTPFzVdStra5QV+O3UDGr536IHmDD
+Y7Mo+oe8VRerZV4xgiCKHY+E7FUw/A==
+=dBuq
+-----END PGP SIGNATURE-----
+
+--oLBj+sq0vYjzfsbl--
