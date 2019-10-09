@@ -2,221 +2,121 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F18FC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B36C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEA9820B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:28:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09BEA20B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:28:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="rjK5QeDq"
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="ItyJ0r9P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731472AbfJIO2V (ORCPT
+        id S1731532AbfJIO2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 10:28:21 -0400
-Received: from mail-eopbgr30056.outbound.protection.outlook.com ([40.107.3.56]:19623
+        Wed, 9 Oct 2019 10:28:40 -0400
+Received: from mail-eopbgr30099.outbound.protection.outlook.com ([40.107.3.99]:36216
         "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731390AbfJIO2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 10:28:21 -0400
+        id S1730546AbfJIO2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 10:28:40 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q0xgr8HZV+ruZCQLKdjBhk/DVGmtPfe8fIozJsA8oseAOziLJkzVldV1YYbfJ6eip2zGEWhL7a35uWJ+GhyAIybdP+UB7nB8JmQm1ijN4JJP4pq1ciDZdUJpq9/U6YG9WLxn7x9GGmJgH96kSUhCfxChJBuW4T+9cbA1JB8oRUZtvmX6zr5igt86ySslikQSqP2S4aOS0RK6iXpKdJ6jM03F7YsIUby7omOV5RfXrqEwX610V6hNzghHTnSttRibr5TGJq8xXb8p9rLGPmR4IBnvzjg+VDLYey0oqQ9KzspXxYZsJlrz0NfgftwV90xpbW23omZ85mUbuEpddg+aqg==
+ b=Q/HcL4uKJJmOVfgwNvWA/dk65hWSj09SDKm7B0IKb7N6Gex9QseR6b7u/lDKt/XJTb8UrjC78Ll9bVyTgxIkXbT8IXrAUv+boBda/vdtx4CDIsVQmQoHsNeHuf+71C2kxusrcaMoQ4RoBqmUQ4NJqN+TWN7S9+GG1EMRxr3ll7jqdWnEyt4KG4/fUphmGehbqI2XVTFFNWOH6qmTvrjWfs/RM6Qz7ie08WSNK4FUOIj1xojf769fhPUWfnKjin8yAIJxesmcvXLU7guI/VOPyxg6X4mEVSd4SWthheUowLVll5LT6M9FhbHwJC5wR68oxBDkXLBoffbTX2O+h8uW3A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9DvsMKUIWhMOTO1UNS8MAXBFHvZXgSZGqZ7pMFY59BI=;
- b=NEufk4yhoH2F27J6oWJ9ggwhfqkE0FW1aMoEOLra4oBgsearx1vaaMZMbQvxQbSfBFeEOlIizKy0P9ljoRGiSn4B2nChO0g/7r0u9YHdvi4nvJj0zYnOw6zf0g3v5G93P0UnsjuB53nu3MPnjpSGk1aRetKWcAJTjHZir4uG/3f1EYRM1yJLdHlWHiuJJac2VbI6gVWsriZzQe7Y5i5q5DMvjWNalMmjH0l/FVBJFA0u2YaAW/Dm11GtS7mwZtZF4sL0dA03NJw2BTTqFkuXX+oezCos2ZvqSkhF9t8vqNjgcvptw18xj3O+dCntKtIIJErsWZUegXRDSvmqlDpfDw==
+ bh=UrD69piIq4Bn04MqSuhVHNBiiZq28QlR6iycYkJ3sqU=;
+ b=kTrMmEAURmtiLtrvzrWeejbCQakiWD5/jdBoJPVEHFAqtWWMSB1hO9vQBA9lbp810Zs+n+0PjY7SedjqAgaBRrmqQgjgsfYwhzZtV0D7r5oF5TrrTlzTU1PiRmSi/vnOFW8///rOaLmQhloLqeh2tONqhwjf+KtqZtazYzHJStNKMTMezLIfOWu9qjBhjst9qGQUaOf8e5MRPfeIGpcQCpcc+6NyAFkufUZ3Ln0lBnmNFY7ncUgP0UUUrdzN1a4UJ5epHUwhktTG32/a7uRuZJ2BQ8NqYVI33FMwzE0KcB7FlP2/MFXVRw4/UmOaoiGGz8BzDbs4c8vPBriwxzl2uA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
+ dkim=pass header.d=toradex.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9DvsMKUIWhMOTO1UNS8MAXBFHvZXgSZGqZ7pMFY59BI=;
- b=rjK5QeDqMpTfje7swtn7F7xpac9XcmvucDxthvzJoJoV4U2DKWovnRKEyboejeQGphtsS5xtt6pZGH3o3zK/ImpzOdozka5faFSq+pHRUHTgGCOooaCnvbwqCN5KQtqzf0v0AKVf2PnjtGTWJkdvVOme8zjFsD6FTSTvCR6Th0g=
-Received: from DB7PR05MB4138.eurprd05.prod.outlook.com (52.135.129.16) by
- DB7PR05MB5660.eurprd05.prod.outlook.com (20.178.106.221) with Microsoft SMTP
+ bh=UrD69piIq4Bn04MqSuhVHNBiiZq28QlR6iycYkJ3sqU=;
+ b=ItyJ0r9PgaTo6icA/o/vL394Pk3F/r//eiyz2S6ksf4MGvbnGNZS0BcadGOGebCKLlm+GHkoovitomv7CA8kVIrr5/sYZibAr92imrjvzFYB3pEE7D6Pa3GLFuYTEFoCUPBtcNuv1HruD0+fcKT1fvXLfRtfjd8MvUm0cUntsLc=
+Received: from AM6PR05MB6535.eurprd05.prod.outlook.com (20.179.18.212) by
+ AM6PR05MB6582.eurprd05.prod.outlook.com (20.179.7.86) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.24; Wed, 9 Oct 2019 14:28:15 +0000
-Received: from DB7PR05MB4138.eurprd05.prod.outlook.com
- ([fe80::18c2:3d9e:4f04:4043]) by DB7PR05MB4138.eurprd05.prod.outlook.com
- ([fe80::18c2:3d9e:4f04:4043%3]) with mapi id 15.20.2327.023; Wed, 9 Oct 2019
- 14:28:15 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Doug Ledford <dledford@redhat.com>
-CC:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] Please pull RDMA subsystem changes
-Thread-Topic: [GIT PULL] Please pull RDMA subsystem changes
-Thread-Index: AQHVfq3JiPPlLGHm0U+89M4HCo82oQ==
-Date:   Wed, 9 Oct 2019 14:28:15 +0000
-Message-ID: <20191009142811.GA29521@ziepe.ca>
+ 15.20.2347.16; Wed, 9 Oct 2019 14:28:36 +0000
+Received: from AM6PR05MB6535.eurprd05.prod.outlook.com
+ ([fe80::c9f9:f21d:d401:7f35]) by AM6PR05MB6535.eurprd05.prod.outlook.com
+ ([fe80::c9f9:f21d:d401:7f35%5]) with mapi id 15.20.2347.016; Wed, 9 Oct 2019
+ 14:28:36 +0000
+From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+To:     "stable@vger.kernel.org" <stable@vger.kernel.org>
+CC:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Subject: [PATCH 0/1] [for 4.4/4.9] VAG power control improvement for sgtl5000
+ codec
+Thread-Topic: [PATCH 0/1] [for 4.4/4.9] VAG power control improvement for
+ sgtl5000 codec
+Thread-Index: AQHVfq3WATxnFgRN2ki7elTKWYg1Dw==
+Date:   Wed, 9 Oct 2019 14:28:36 +0000
+Message-ID: <20191009142822.14808-1-oleksandr.suvorov@toradex.com>
 Accept-Language: en-US
 Content-Language: en-US
-X-MS-Has-Attach: yes
+X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: BN8PR04CA0001.namprd04.prod.outlook.com
- (2603:10b6:408:70::14) To DB7PR05MB4138.eurprd05.prod.outlook.com
- (2603:10a6:5:23::16)
+x-clientproxiedby: AM4PR08CA0062.eurprd08.prod.outlook.com
+ (2603:10a6:205:2::33) To AM6PR05MB6535.eurprd05.prod.outlook.com
+ (2603:10a6:20b:74::20)
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
+ smtp.mailfrom=oleksandr.suvorov@toradex.com; 
 x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [142.162.113.180]
+x-mailer: git-send-email 2.20.1
+x-originating-ip: [194.105.145.90]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 075d0292-ce12-4387-df26-08d74cc4ebc8
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: DB7PR05MB5660:
-x-microsoft-antispam-prvs: <DB7PR05MB566071946F7BB9B51B75A828CF950@DB7PR05MB5660.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:130;
+x-ms-office365-filtering-correlation-id: 45bad5a5-d5cb-4404-7233-08d74cc4f88e
+x-ms-traffictypediagnostic: AM6PR05MB6582:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR05MB65821D82B51873E3190DC639F9950@AM6PR05MB6582.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1332;
 x-forefront-prvs: 018577E36E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(346002)(136003)(366004)(396003)(189003)(199004)(6116002)(5660300002)(7736002)(6506007)(2906002)(386003)(305945005)(1076003)(486006)(99936001)(66066001)(256004)(25786009)(476003)(36756003)(14444005)(4326008)(186003)(26005)(66616009)(66446008)(64756008)(66556008)(66476007)(66946007)(6486002)(33656002)(54906003)(6436002)(316002)(110136005)(8676002)(52116002)(3846002)(9686003)(6512007)(81156014)(81166006)(86362001)(99286004)(71200400001)(71190400001)(14454004)(102836004)(8936002)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR05MB5660;H:DB7PR05MB4138.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(376002)(396003)(366004)(39850400004)(136003)(199004)(189003)(2501003)(54906003)(316002)(36756003)(3846002)(6116002)(478600001)(256004)(6436002)(66556008)(64756008)(4326008)(66476007)(66446008)(25786009)(66946007)(5640700003)(6486002)(558084003)(66066001)(14454004)(6512007)(8936002)(2906002)(6506007)(1730700003)(386003)(81156014)(305945005)(5660300002)(476003)(2351001)(7736002)(6916009)(71200400001)(26005)(102836004)(8676002)(2616005)(44832011)(71190400001)(186003)(52116002)(86362001)(1076003)(99286004)(81166006)(486006)(50226002);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR05MB6582;H:AM6PR05MB6535.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: toradex.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Mu48uZS3R0EfXAiePib7nZLmXdP3RSH7FjgnIYWwFd6NqEXdgxBGH8wF5QpnDS8XXyQJVjNbZLjjRWiVxO/Szj9kWKHPjWmMkZhjRb23EF8POdz0Dv/cK70lOPdJlJF876qxLGNxdKVLKZGnLnMdJ/BXRQv7xoCCcl/tOdPrhT/CpAgyAZ7X/6BBlnZFq3SPB+XfM6jFGLkxUQySK8jEVrrbUAMkYZImhUSE3tiXRszxtqzG4t/vBUmoD2ugGdtlSeRYX1NgS3h6aDYMKwiKHyDgFQ3d9DKwyiHKNlobyAY81n8nd/IWwMu929qAOcFzux8oo82xL9OnOuTvFXW+ZbcivES5fZ6+jhXvqNxP4+NcrJ1xCbYPWr2k4uSZMKzj9SJvhuLDR9h1YEOYlkIPGYUUDvlPz1/d+5CKFBPeHyw=
-x-ms-exchange-transport-forked: True
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="LQksG6bCIzRHxTLp"
+x-microsoft-antispam-message-info: 5htMwHyfWrw4FvBFMhQB0CtN3qvqf9K4zhR8TCq8Nb5tkU7qAI1KaXX8jkQOoDla1HweBvrknkyCIAmIXTUglDVqSoF3os7eTvEJ1LIno4kuzv34AKNBFoQNVchJEzqyHDXMdDT7oEK8fJjr2yCSFWpI1kkmZggg/ffxZxXI711adaSVHRS/Wem3qbgce+2/WBSy5HciC3PkMYb8x7XHqeO3RmygymsPiI8kNQ5SJqAc/Z+PCzei2xVYkzQsROvBDaUPoM8ze6WVf2xdelLH3SuKiEEcFYRCthSOoLZyfB8NAi3iKXsllB5rea4V4Z8odPYtRJoL9OF9BchUjLkyDMYEHxxdKn8YZudhsjOFcIoWv1G6QFjnnHSfH/T1VOyU1KAH0BukHCWC1+jZW3LPki0p+1ZUcwEfFYbZCfrOEk8=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 075d0292-ce12-4387-df26-08d74cc4ebc8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Oct 2019 14:28:15.1464
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 45bad5a5-d5cb-4404-7233-08d74cc4f88e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Oct 2019 14:28:36.7058
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: HvivC+vXyUtshK+4QVVli09cdX+sxSriH134RAHhmczpvECmBqJnzq1/IJFR0sAnLYvtqbV4NEyLWymg0Pp2PQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR05MB5660
+X-MS-Exchange-CrossTenant-userprincipalname: Hn8eKEXJyyPTZ8SNbqOOWodovpEDKpRA3ZkXO3/5lnXpX0F6z5ogGLacJQCddbsf/JFXaS5qm86a/97ljSnhau65l402xDcop/z2mhuJYaw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB6582
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---LQksG6bCIzRHxTLp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-Hi Linus,
+This is a backport to stable kernel versions 4.4 and 4.9.
 
-First rc pull request
 
-The usual collection of driver bug fixes, and a few regressions from the merge
-window. Nothing particularly worrisome.
+Oleksandr Suvorov (1):
+  ASoC: sgtl5000: Improve VAG power and mute control
 
-The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
+ sound/soc/codecs/sgtl5000.c | 234 +++++++++++++++++++++++++++++++-----
+ 1 file changed, 203 insertions(+), 31 deletions(-)
 
-  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
+--=20
+2.20.1
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
-
-for you to fetch changes up to 0417791536ae1e28d7f0418f1d20048ec4d3c6cf:
-
-  RDMA/mlx5: Add missing synchronize_srcu() for MW cases (2019-10-04 15:54:22 -0300)
-
-----------------------------------------------------------------
-RDMA subsystem updates for 5.4-rc
-
-Various minor bug fixes posted in the last couple of weeks:
-
-- Various missed memory frees and error unwind bugs
-
-- Fix regressions in a few iwarp drivers from 5.4 patches
-
-- A few regressions added in past kernels
-
-- Squash a number of races in mlx5 ODP code
-
-----------------------------------------------------------------
-Adit Ranadive (1):
-      RDMA/vmw_pvrdma: Free SRQ only once
-
-Bart Van Assche (1):
-      RDMA/iwcm: Fix a lock inversion issue
-
-Christophe JAILLET (1):
-      RDMA/core: Fix an error handling path in 'res_get_common_doit()'
-
-Greg KH (1):
-      RDMA/cxgb4: Do not dma memory off of the stack
-
-Jack Morgenstein (1):
-      RDMA/cm: Fix memory leak in cm_add/remove_one
-
-Jason Gunthorpe (6):
-      RDMA/mlx5: Do not allow rereg of a ODP MR
-      RDMA/mlx5: Fix a race with mlx5_ib_update_xlt on an implicit MR
-      RDMA/odp: Lift umem_mutex out of ib_umem_odp_unmap_dma_pages()
-      RDMA/mlx5: Order num_pending_prefetch properly with synchronize_srcu
-      RDMA/mlx5: Put live in the correct place for ODP MRs
-      RDMA/mlx5: Add missing synchronize_srcu() for MW cases
-
-Krishnamraju Eraparaju (1):
-      RDMA/siw: Fix serialization issue in write_space()
-
-Leon Romanovsky (1):
-      RDMA/nldev: Reshuffle the code to avoid need to rebind QP in error path
-
-Michal Kalderon (1):
-      RDMA/core: Fix use after free and refcnt leak on ndev in_device in iwarp_query_port
-
-Mohamad Heib (1):
-      IB/core: Fix wrong iterating on ports
-
-Navid Emamdoost (1):
-      RDMA/hfi1: Prevent memory leak in sdma_init
-
-Potnuri Bharat Teja (1):
-      RDMA/iw_cxgb4: fix SRQ access from dump_qp()
-
-Shiraz, Saleem (1):
-      RDMA/i40iw: Associate ibdev to netdev before IB device registration
-
- drivers/infiniband/core/cm.c                  |  3 ++
- drivers/infiniband/core/cma.c                 |  3 +-
- drivers/infiniband/core/device.c              |  9 ++--
- drivers/infiniband/core/nldev.c               | 12 ++---
- drivers/infiniband/core/security.c            |  2 +-
- drivers/infiniband/core/umem_odp.c            |  6 ++-
- drivers/infiniband/hw/cxgb4/device.c          |  7 ++-
- drivers/infiniband/hw/cxgb4/mem.c             | 28 ++++++-----
- drivers/infiniband/hw/cxgb4/qp.c              | 10 +---
- drivers/infiniband/hw/hfi1/sdma.c             |  5 +-
- drivers/infiniband/hw/i40iw/i40iw_verbs.c     |  4 ++
- drivers/infiniband/hw/mlx5/devx.c             | 58 +++++++----------------
- drivers/infiniband/hw/mlx5/mlx5_ib.h          |  3 +-
- drivers/infiniband/hw/mlx5/mr.c               | 68 +++++++++++----------------
- drivers/infiniband/hw/mlx5/odp.c              | 58 ++++++++++++++++++-----
- drivers/infiniband/hw/vmw_pvrdma/pvrdma_srq.c |  2 -
- drivers/infiniband/sw/siw/siw_qp.c            | 15 ++++--
- drivers/net/ethernet/mellanox/mlx5/core/mr.c  |  8 +---
- 18 files changed, 154 insertions(+), 147 deletions(-)
-
---LQksG6bCIzRHxTLp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEfB7FMLh+8QxL+6i3OG33FX4gmxoFAl2d7nkACgkQOG33FX4g
-mxpxgRAAhF8UrKU9CW2mmqyYjZ7pAtM9IVgfN0Vn17fijXrYc1hC9dDwlQv1dk1c
-EUlucKp7jTQxRHqNpZ++W0acGF7TO8rh03aty8KGqQN8jQs6xQOYyFUJNCdri6Mp
-s2e/0Hk7x2H1xXwyDGnZAARZZ3rvdJ29AXxzC5ZXwHsssS8oM+ox19W22MtrZCV2
-y6vSFFue7xi+TDPCUFgS8nacebfsM3gkkGShNEP1LNTM95UoLtYrdvrcyuXCXoWP
-ty+X6p+r1riyU+deVboWOkwetRDDfgS0y1X2c4XidWE1HqzrsVh4vDZAptbmW6aB
-hOcBO4Ofm1W1WBJLc2Tnq3SGQ9XcR8Ezns3ZX/qtdQ6QCrt7YpiMe+kSPE/ZKf7g
-RDL6lvMHFM8Qr2c/EzHCyeZbGWwy/XV5awNrOmk6WBT11vvg8pBKeUrimlnIqo0a
-ft9MfHSAmVVsOxUgNrQOUSLEPxNTn9v++Ou6Bqv+F6Go1ODS5gKWtRKfyJGH6D6j
-ETDGctGU7IOerkBqMIhN/RrwEU/ync/iDxEirSzLoHCAWgs9vUBTWwP/efLVC+ef
-v5V7rfVIlIKQZHjmz3bzuqnR/e4cRgjRwGWxy4JvohlyS8vPxQQssys0/exRRTwW
-mIS7RZYmBAiacT3kNhhav4yJbBfxEENzJeZmMhWBUoLv4t3wBwg=
-=Fhmu
------END PGP SIGNATURE-----
-
---LQksG6bCIzRHxTLp--
