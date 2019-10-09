@@ -4,96 +4,122 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB571ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC19ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7616A218AC
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BF72218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:11:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732037AbfJITL3 (ORCPT
+        id S1731534AbfJITLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 15:11:29 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:44075 "EHLO
+        Wed, 9 Oct 2019 15:11:34 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:48089 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731925AbfJITLU (ORCPT
+        with ESMTP id S1731986AbfJITLY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 15:11:20 -0400
+        Wed, 9 Oct 2019 15:11:24 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1Ml6Zo-1hohFn2sKC-00lYdf; Wed, 09 Oct 2019 21:11:15 +0200
+ 1N8XgH-1i5VgB1LZh-014SRC; Wed, 09 Oct 2019 21:11:22 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Al Viro <viro@zeniv.linux.org.uk>
 Cc:     linux-kernel@vger.kernel.org, y2038@lists.linaro.org,
         linux-fsdevel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        linux-raid@vger.kernel.org, Song Liu <song@kernel.org>
-Subject: [PATCH v6 27/43] compat_ioctl: remove last RAID handling code
-Date:   Wed,  9 Oct 2019 21:10:27 +0200
-Message-Id: <20191009191044.308087-27-arnd@arndb.de>
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
+Subject: [PATCH v6 42/43] pktcdvd: add compat_ioctl handler
+Date:   Wed,  9 Oct 2019 21:10:43 +0200
+Message-Id: <20191009191044.308087-43-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191009190853.245077-1-arnd@arndb.de>
 References: <20191009190853.245077-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:3CRT9Z12XUAyRUQyiP/Ny9jsvP99Xt3bB4wOaOH4lYcwl+MCQmr
- 4ny/SJ3flpq9XK569lBll1lT+ZebWGdnOOHMhvGO3qCwoz3R1rpUDMrZlo3M/drYoWDwS97
- fHvSUA8p0sJNSXSBi2aKEM5iDl0xiG4oz9jUNO3T4N9PHEyZTyWhwc5eOnRcJolaM34C1Cw
- +qLzsqgP6uZJnGqvz02Tg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Q7U5lfH9wpw=:NS4oi3Rk6pVuu5vooRritq
- cps6Gej39jDT2cTqPxuf34ErLBzJwUGbB9MHBLGdxFjlZ/BTru2GpXZI1bTfCCCuZ+0rUTasl
- xW6GAbhakr3dpYLVvCIcRfAoC/W7nOo4muDIL6OrOt8LRkhBQszFs7KInwH2hwZs2FS+cHQU8
- N0NJuAQn1l4YAvTkkUPHnxDtUKEnx1Znl9aNbVSXwL5WA2jrcS0Nl5mXBamrkbfbLEhaOyw4C
- hqKkI96iPLmGYNwJGA4JC9S1uSIza7xXW+aYpZq3uasQAEEDgMuhXNXbN2/DHnyiM4uXdgwoB
- VTCUMQBCZIQDSca7ZyanfcjhQfGWxWiqAVqhDSQEppX/ZmxU+TJzHDcXg2gjzBU1BnHIEmAVH
- GdLqDg4mrT7dkULbGuvDiwhKlbnpdzYYyts0e9HmXsD7m4U04tW7USN1szd1Pqn1xercATVMv
- P+NkntIgTyWqM2Y/WTtdmUoIXqLvYP5r/DgXUwf6uKRqWMM9uu5sqgDfE39d0Vn1pRxL49bQm
- Q/dTVVHR+6M8f8ltlaI/aXDeMpWOuH4O1/QBVTCOfb1QSjULoid4X+Suh/pYR/9O6kGSdcP41
- 7S/8IBIHfDS1XJQmSEMB06ZlPF5egvAADFn+pEdw5nGlyt5PKKSy4sRXwUyndJ1eKsCCP1FDo
- pto1YyLZmQxa3Of/gudfvp4mGSNUKISXxtBUlu5CYQZHRFx5YO/wkWXAZOC89Pa8ZLiYLXyFi
- BXEerVpyU1zR5QL3cKpidsyN6Cn6zCags5Exsxglfn+3h7+l/r7MnkqH5KFFx2RzIO2X8Z2Jt
- CWZS8ZdZVV275ynQNraysjmfCUP6dXdE2oXnTjzwdLThEuOlPtFLS1zXl+UTd03zc59oNqV6m
- pyOKfuVdbxzihoVzqPDA==
+X-Provags-ID: V03:K1:93xVR2PSRzNKK3F6eEf3KloUW20yUoSchuNU1iTvhPWVCYwsH8H
+ z13+p8ef1mAztjV2JdOjKqOYgaMbqp2tn3Z/Vg8IrXIlrGafn4DCxbrq/pChzzAUUHcuEV9
+ RtB6cLBqK0HwCVek/0QpPj02Twg2C0IwFQBlScLKqgWIJIg8/tqbCevylU4jhp4uvGMzVBl
+ 3NURu7wv2UyKvLx5eGCaQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:/Z06bO3lT6w=:6NXRRLxYm/LA0XwBWwo6Q7
+ p/KW3+sAt3EnBV6ubbtZExBdcmG9keJjb1cALDVt3+5J5dZnQNtMCpQZqSQrSXht8Ch+KQEUG
+ MD2bQvKIe+STPbvBSWGqwieBm7Nb6k22/aNSgdTepdK37zcaLHlAzt6ETugYcc8i8qCuQ23vz
+ QbqIM810G2lWNY8Ap3z60/POVSiooVUxgflLJ3iW/d3y2muXKmPowKXUdofL+6iQnTQ5dlXmg
+ dJKsOBWOfEtAvFnUtTy5qpbgVx1UCb1x0dYR19li7QIxHQbGImIFi4sxCanHAnpvZjTgO3XRr
+ lS+mJFtS4nU8uGOxE8cu06ALG8S0LQQeYCNXgIdS8+qw9i2WqSYUCmt0JRXwhh/ACr54BSerh
+ hOHIW0lShwaiuv8KRezSH42mGEBA2P0tK0W8I6MPKy9a4UZjVI/q46Fcll4C3+oun5NOK8F8r
+ 1HgADAwxOEctsr516d5iH4xzz/LDcZvyldyWsSEED9n7CZ7Hib4KnZNhkN4my+gFp3AySkUMs
+ 9Vysmz9349cTarI7TFSsIxmLZrho7bEtMoHh0NQYpq4yWmyl1sxk0RcMpATWBX/dgXoTAmlJQ
+ +br7DNaAzWs8uXFUdM5iiVhmD/dZQGeJF05wYsF33UeeuY9JyZRK44XrOIulA0ppKA799aIxY
+ TrlyWvXwzLaEUVi2Gmpcr6yonfuurYg1p7+y1oi0I2K5hDIBiYRbNzbWR3PD+8Z3jnrCsT0+X
+ DOM8GRXm297v4+bx+scA0bJ1R7XBVvz8IxrtzT3bwNAfxyXinOjCqZK68Ml/P0kfC/EZF8Bwt
+ FvkQTEKTAA29QbZszpwY36dp9F5SUveI9RVSd/U6TyhfPb2x6mbg0h+M1etFyQdCq8Ug/HyjY
+ r8LwN/SEfrpnWkDGz16Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit aa98aa31987a ("md: move compat_ioctl handling into md.c")
-already removed the COMPATIBLE_IOCTL() table entries and added
-a complete implementation, but a few lines got left behind and
-should also be removed here.
+pkt_ioctl() implements the generic SCSI_IOCTL_SEND_COMMAND
+and some cdrom ioctls by forwarding to the underlying block
+device. For compat_ioctl handling, this always takes a
+roundtrip through fs/compat_ioctl.c that we should try
+to avoid, at least for the compatible commands.
 
-Cc: linux-raid@vger.kernel.org
-Cc: Song Liu <song@kernel.org>
+CDROM_SEND_PACKET is an exception here, it requires special
+translation in compat_blkdev_driver_ioctl().
+
+CDROM_LAST_WRITTEN has no compat handling at the moment.
+
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: linux-block@vger.kernel.org
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- fs/compat_ioctl.c | 13 -------------
- 1 file changed, 13 deletions(-)
+ drivers/block/pktcdvd.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/fs/compat_ioctl.c b/fs/compat_ioctl.c
-index 6070481f2b6a..1ed32cca2176 100644
---- a/fs/compat_ioctl.c
-+++ b/fs/compat_ioctl.c
-@@ -462,19 +462,6 @@ static long do_ioctl_trans(unsigned int cmd,
- #endif
- 	}
- 
--	/*
--	 * These take an integer instead of a pointer as 'arg',
--	 * so we must not do a compat_ptr() translation.
--	 */
--	switch (cmd) {
--	/* RAID */
--	case HOT_REMOVE_DISK:
--	case HOT_ADD_DISK:
--	case SET_DISK_FAULTY:
--	case SET_BITMAP_FILE:
--		return vfs_ioctl(file, cmd, arg);
--	}
--
- 	return -ENOIOCTLCMD;
+diff --git a/drivers/block/pktcdvd.c b/drivers/block/pktcdvd.c
+index 76457003f140..ee67bf929fac 100644
+--- a/drivers/block/pktcdvd.c
++++ b/drivers/block/pktcdvd.c
+@@ -2663,6 +2663,28 @@ static int pkt_ioctl(struct block_device *bdev, fmode_t mode, unsigned int cmd,
+ 	return ret;
  }
+ 
++#ifdef CONFIG_COMPAT
++static int pkt_compat_ioctl(struct block_device *bdev, fmode_t mode, unsigned int cmd, unsigned long arg)
++{
++	switch (cmd) {
++	/* compatible */
++	case CDROMEJECT:
++	case CDROMMULTISESSION:
++	case CDROMREADTOCENTRY:
++	case SCSI_IOCTL_SEND_COMMAND:
++		return pkt_ioctl(bdev, mode, cmd, (unsigned long)compat_ptr(arg));
++
++
++	/* FIXME: no handler so far */
++	case CDROM_LAST_WRITTEN:
++	/* handled in compat_blkdev_driver_ioctl */
++	case CDROM_SEND_PACKET:
++	default:
++		return -ENOIOCTLCMD;
++	}
++}
++#endif
++
+ static unsigned int pkt_check_events(struct gendisk *disk,
+ 				     unsigned int clearing)
+ {
+@@ -2684,6 +2706,9 @@ static const struct block_device_operations pktcdvd_ops = {
+ 	.open =			pkt_open,
+ 	.release =		pkt_close,
+ 	.ioctl =		pkt_ioctl,
++#ifdef CONFIG_COMPAT
++	.ioctl =		pkt_compat_ioctl,
++#endif
+ 	.check_events =		pkt_check_events,
+ };
  
 -- 
 2.20.0
