@@ -2,208 +2,107 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9F7ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F2DBC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18F3320B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:41:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570632105;
-	bh=jc71WNpC3MZfHvf5s+XbA13mLFopbjxF2T5tg1XYETc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fBv4T5BPAfnwJWZFvRYNCGyYPS8SUYbLP7UQ3zXDt12K9Ov0MkxV7LH7Xb7gsRwTY
-	 rENPMHPELuqEHuF9ddDjUXbr1e8YzF98HW/lo9BrfTw+24oCyATK84EABVUGgoSap+
-	 C5axhsvDgi2rWf1tdpsyHulqbPslnC1mPKhxXXO4=
+	by mail.kernel.org (Postfix) with ESMTP id 37F5C218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:41:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f7ss43sX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731611AbfJIOln (ORCPT
+        id S1731622AbfJIOlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 9 Oct 2019 10:41:46 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46688 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731586AbfJIOln (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 9 Oct 2019 10:41:43 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33988 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731597AbfJIOlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 10:41:42 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id EFE1AAD12;
-        Wed,  9 Oct 2019 14:41:38 +0000 (UTC)
-Date:   Wed, 9 Oct 2019 16:41:37 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Qian Cai <cai@lca.pw>, Dan Williams <dan.j.williams@intel.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>,
-        Pankaj gupta <pagupta@redhat.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] mm: Don't access uninitialized memmaps in
- fs/proc/page.c
-Message-ID: <20191009144137.GG6681@dhcp22.suse.cz>
-References: <20191009142435.3975-1-david@redhat.com>
- <20191009142435.3975-2-david@redhat.com>
+Received: by mail-wr1-f67.google.com with SMTP id o18so3309807wrv.13
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 07:41:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=HkWnKjTS7NNaz0B8BlFiWfLhS4jldKU7yfNvUhiWaQM=;
+        b=f7ss43sXwKeRE+g80ck8yRpx+79MpXlAU1ICqgUsyPCZ2LLoVvxA6BOR3KRt21gjwW
+         kj915Hpw47CWN/pKnCTCFjdRM/v5W+s/gP8vs150QmXsqlTTQOTwS72avXQMVZWJnN7w
+         zKo+Hh6J9IYLXPkRfaF7Ab76QKgZTdMr2EHbyDJ9DLBwwO7YhAOjCf8xeg7skOoPZ1nv
+         ya8FNp987bJwuINtL34bTWlctIy/qGZ5UVjvTb+h2al2y5U2fwK9m3feljXXWwWmPa36
+         LAFwBkOEVebcAmYlLeNYoSRxrgjlVI1E80f6VOPl5n2DSZaCAuOuebstfC8IHlKoC0RQ
+         o8BA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=HkWnKjTS7NNaz0B8BlFiWfLhS4jldKU7yfNvUhiWaQM=;
+        b=EuYPytcpsJx/5G76K1XhesLtWHneHysCSyf2RJbp41yQVMGWWDj7GEb+5Lc4ynHYbE
+         PEhNmk4qqiUdVJHNXLc6hm79rG5WdidkKBHsh9k8fVOJtVqWzFVwXnirimNsUXrHsXrh
+         IS/0p0Z5dpHY4JqjD/BJ28JJZFCMh5pvseLazx00nmzIbw7AocK3KZy9WOQtMFiZ7a1H
+         tn3AEmojXrIn799rpFlCjInTR8Q+29hxR//ZMwLjqsm4LeT2xhOv0uch73rmJopewm11
+         D1Iu7Kpnz+CXq4VZGZBjdKzovoaTYJLEbYVjGy8WTdfATtx9ZRz4PimhLyXTKPT+k5l7
+         4dbQ==
+X-Gm-Message-State: APjAAAVqYFaCqczMMiUKKA7K4EsSFrAvXIdHpnzyeekoq9e4mI+klTkJ
+        b+V6XDLdg4q/A36Pa1DN7UuxRg==
+X-Google-Smtp-Source: APXvYqxrW+4MKBUxqo35A6KxiZEfmmI3wiTuBUBugFCDOTeazkkMYZAnEeaq00wfCfqQUYZZKfSnrQ==
+X-Received: by 2002:adf:dfc4:: with SMTP id q4mr3238951wrn.302.1570632099807;
+        Wed, 09 Oct 2019 07:41:39 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id b7sm3031770wrx.56.2019.10.09.07.41.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Oct 2019 07:41:36 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     gregkh@linuxfoundation.org
+Cc:     arnd@arndb.de, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v3 5/5] misc: fastrpc: revert max init file size back to 2MB
+Date:   Wed,  9 Oct 2019 15:41:23 +0100
+Message-Id: <20191009144123.24583-6-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191009144123.24583-1-srinivas.kandagatla@linaro.org>
+References: <20191009144123.24583-1-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191009142435.3975-2-david@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 09-10-19 16:24:34, David Hildenbrand wrote:
-> There are three places where we access uninitialized memmaps, namely:
-> - /proc/kpagecount
-> - /proc/kpageflags
-> - /proc/kpagecgroup
-> 
-> We have initialized memmaps either when the section is online or when
-> the page was initialized to the ZONE_DEVICE. Uninitialized memmaps contain
-> garbage and in the worst case trigger kernel BUGs, especially with
-> CONFIG_PAGE_POISONING.
-> 
-> For example, not onlining a DIMM during boot and calling /proc/kpagecount
-> with CONFIG_PAGE_POISONING:
-> :/# cat /proc/kpagecount > tmp.test
-> [   95.600592] BUG: unable to handle page fault for address: fffffffffffffffe
-> [   95.601238] #PF: supervisor read access in kernel mode
-> [   95.601675] #PF: error_code(0x0000) - not-present page
-> [   95.602116] PGD 114616067 P4D 114616067 PUD 114618067 PMD 0
-> [   95.602596] Oops: 0000 [#1] SMP NOPTI
-> [   95.602920] CPU: 0 PID: 469 Comm: cat Not tainted 5.4.0-rc1-next-20191004+ #11
-> [   95.603547] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.4
-> [   95.604521] RIP: 0010:kpagecount_read+0xce/0x1e0
-> [   95.604917] Code: e8 09 83 e0 3f 48 0f a3 02 73 2d 4c 89 e7 48 c1 e7 06 48 03 3d ab 51 01 01 74 1d 48 8b 57 08 480
-> [   95.606450] RSP: 0018:ffffa14e409b7e78 EFLAGS: 00010202
-> [   95.606904] RAX: fffffffffffffffe RBX: 0000000000020000 RCX: 0000000000000000
-> [   95.607519] RDX: 0000000000000001 RSI: 00007f76b5595000 RDI: fffff35645000000
-> [   95.608128] RBP: 00007f76b5595000 R08: 0000000000000001 R09: 0000000000000000
-> [   95.608731] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000140000
-> [   95.609327] R13: 0000000000020000 R14: 00007f76b5595000 R15: ffffa14e409b7f08
-> [   95.609924] FS:  00007f76b577d580(0000) GS:ffff8f41bd400000(0000) knlGS:0000000000000000
-> [   95.610599] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   95.611083] CR2: fffffffffffffffe CR3: 0000000078960000 CR4: 00000000000006f0
-> [   95.611686] Call Trace:
-> [   95.611906]  proc_reg_read+0x3c/0x60
-> [   95.612228]  vfs_read+0xc5/0x180
-> [   95.612505]  ksys_read+0x68/0xe0
-> [   95.612785]  do_syscall_64+0x5c/0xa0
-> [   95.613092]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
-> For now, let's drop support for ZONE_DEVICE from the three pseudo files
-> in order to fix this. To distinguish offline memory (with garbage memmap)
-> from ZONE_DEVICE memory with properly initialized memmaps, we would have to
-> check get_dev_pagemap() and pfn_zone_device_reserved() right now. The usage
-> of both (especially, special casing devmem) is frowned upon and needs to
-> be reworked. The fundamental issue we have is:
-> 
-> 	if (pfn_to_online_page(pfn)) {
-> 		/* memmap initialized */
-> 	} else if (pfn_valid(pfn)) {
-> 		/*
-> 		 * ???
-> 		 * a) offline memory. memmap garbage.
-> 		 * b) devmem: memmap initialized to ZONE_DEVICE.
-> 		 * c) devmem: reserved for driver. memmap garbage.
-> 		 * (d) devmem: memmap currently initializing - garbage)
-> 		 */
-> 	}
-> 
-> We'll leave the pfn_zone_device_reserved() check in stable_page_flags()
-> in place as that function is also used from memory failure. We now
-> no longer dump information about pages that are not in use anymore -
-> offline.
-> 
-> Reported-by: Qian Cai <cai@lca.pw>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Alexey Dobriyan <adobriyan@gmail.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-> Cc: Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
-> Cc: Pankaj gupta <pagupta@redhat.com>
-> Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-> Cc: Anthony Yznaga <anthony.yznaga@oracle.com>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-> Cc: linux-fsdevel@vger.kernel.org
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-Fixes: f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded memory to zones until online") # visible after d0dc12e86b319
+From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 
-usage of pfn_to_online_page is the right way to dereference the pfn
-here. My understanding of the zone device internals is limited to see
-whether this fixes it as well.
+With the integration of the mmap/unmap functionality, it is no longer
+necessary to allow large memory allocations upfront since they can be
+handled during runtime.
 
-Acked-by: Michal Hocko <mhocko@suse.com>
+Tested on QCS404 with CDSP Neural Processing test suite.
 
-> ---
->  fs/proc/page.c | 28 ++++++++++++++++------------
->  1 file changed, 16 insertions(+), 12 deletions(-)
-> 
-> diff --git a/fs/proc/page.c b/fs/proc/page.c
-> index decd3fe39674..e40dbfe1168e 100644
-> --- a/fs/proc/page.c
-> +++ b/fs/proc/page.c
-> @@ -42,10 +42,12 @@ static ssize_t kpagecount_read(struct file *file, char __user *buf,
->  		return -EINVAL;
->  
->  	while (count > 0) {
-> -		if (pfn_valid(pfn))
-> -			ppage = pfn_to_page(pfn);
-> -		else
-> -			ppage = NULL;
-> +		/*
-> +		 * TODO: ZONE_DEVICE support requires to identify
-> +		 * memmaps that were actually initialized.
-> +		 */
-> +		ppage = pfn_to_online_page(pfn);
-> +
->  		if (!ppage || PageSlab(ppage) || page_has_type(ppage))
->  			pcount = 0;
->  		else
-> @@ -218,10 +220,11 @@ static ssize_t kpageflags_read(struct file *file, char __user *buf,
->  		return -EINVAL;
->  
->  	while (count > 0) {
-> -		if (pfn_valid(pfn))
-> -			ppage = pfn_to_page(pfn);
-> -		else
-> -			ppage = NULL;
-> +		/*
-> +		 * TODO: ZONE_DEVICE support requires to identify
-> +		 * memmaps that were actually initialized.
-> +		 */
-> +		ppage = pfn_to_online_page(pfn);
->  
->  		if (put_user(stable_page_flags(ppage), out)) {
->  			ret = -EFAULT;
-> @@ -263,10 +266,11 @@ static ssize_t kpagecgroup_read(struct file *file, char __user *buf,
->  		return -EINVAL;
->  
->  	while (count > 0) {
-> -		if (pfn_valid(pfn))
-> -			ppage = pfn_to_page(pfn);
-> -		else
-> -			ppage = NULL;
-> +		/*
-> +		 * TODO: ZONE_DEVICE support requires to identify
-> +		 * memmaps that were actually initialized.
-> +		 */
-> +		ppage = pfn_to_online_page(pfn);
->  
->  		if (ppage)
->  			ino = page_cgroup_ino(ppage);
-> -- 
-> 2.21.0
+Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ drivers/misc/fastrpc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+index eef2cdc00672..b6420aae45b9 100644
+--- a/drivers/misc/fastrpc.c
++++ b/drivers/misc/fastrpc.c
+@@ -32,7 +32,7 @@
+ #define FASTRPC_CTX_MAX (256)
+ #define FASTRPC_INIT_HANDLE	1
+ #define FASTRPC_CTXID_MASK (0xFF0)
+-#define INIT_FILELEN_MAX (64 * 1024 * 1024)
++#define INIT_FILELEN_MAX (2 * 1024 * 1024)
+ #define FASTRPC_DEVICE_NAME	"fastrpc"
+ #define ADSP_MMAP_ADD_PAGES 0x1000
+ 
 -- 
-Michal Hocko
-SUSE Labs
+2.21.0
+
