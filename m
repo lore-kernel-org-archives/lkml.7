@@ -2,121 +2,241 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C360ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8509ECE58E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7543B206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:43:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cBeTh2vW"
+	by mail.kernel.org (Postfix) with ESMTP id 93CAF218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:44:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731037AbfJIMnj (ORCPT
+        id S1731072AbfJIMoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 08:43:39 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42247 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727878AbfJIMnj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 08:43:39 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n14so2774636wrw.9;
-        Wed, 09 Oct 2019 05:43:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2aP3QyiaeBnkG3DxeeYQ4nlgffh90nk86KCIg/jKuaU=;
-        b=cBeTh2vWr29qPnCY2i41SlQjI/XBacikQbSAfARZjWlXqMa4R0bf+DQEUlB2oKlYps
-         iealIxs9gvtcIqskd11+6UvPOgcd7wcX/O8YrOP2zvjXiDZEUW7iJYWr1r5nbVm91mD3
-         L4qXbiun3ZpgtKy4Rvj04jASWWV/3tLGIVq8VMhxXpNxzRq4kSl/ISHRiN0fSARF5MaX
-         nfy6dbj5T3cBpUQ3Zepj9sLhfGQ5bUpW8AC6DEWv9SsdmCx380Z+m2MNgLCbfX8bx2n/
-         8gzyan4ExcLnYW4P/ZJgrrwm0ZhkIZKS64TUjuIJRtONtN+gXnZReW0m6JFJ19hvnd+W
-         yY+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2aP3QyiaeBnkG3DxeeYQ4nlgffh90nk86KCIg/jKuaU=;
-        b=M4pf+Y+oz2TTQTcpBITMG1xUbyhIiwSP/QZMDVJ9DEsSnoLWlNgGcHOOBhNyJx4XMW
-         Q0BMst/m6iy1imE+x9vgdW0M3jISswbgxF+zvTVjI7pS8Nvoentu3CvUyQCwptAZMfDj
-         DTcviFWh77W9mCTDIg0522OkukcFEHNOdYQHcR6WRHyJ9sV1y4S/HJyMkjG6iFMVlyDp
-         r/ZDXJlwqNv6nDLLm4UgRNv7eyRUO7ilceQ2W1c8Wf9Wqu4Dld1Tw8SmgIec1N4mrsgF
-         appS6VF8U+lVuOHrwt8xBtrtqVm0oEmMFP5aRVlWnXQ1OyhS0KPrZCXNIRz+ohhQ1Gn8
-         JAuw==
-X-Gm-Message-State: APjAAAXvFqIrOKhGTuHC3T/s3kCsStN0u5PxTUq/bGEtZqewZ1kELC/Z
-        7jKCm5dO11Vn06Ca9eOsKL4=
-X-Google-Smtp-Source: APXvYqyg+4+QGfZoqRK4FuRALg+eUJqhWP99UpdMPJ7+2+soui8JmB5yzjg3klnpqUwKUnTcJwVpCw==
-X-Received: by 2002:a5d:654a:: with SMTP id z10mr2727157wrv.159.1570625017013;
-        Wed, 09 Oct 2019 05:43:37 -0700 (PDT)
-Received: from [192.168.1.35] (46.red-83-42-66.dynamicip.rima-tde.net. [83.42.66.46])
-        by smtp.gmail.com with ESMTPSA id g4sm2599857wrw.9.2019.10.09.05.43.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Oct 2019 05:43:36 -0700 (PDT)
-Subject: Re: [PATCH] MIPS: include: Mark __xchg as __always_inline
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
-References: <20191009100600.10572-1-tbogendoerfer@suse.de>
-From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>
-Message-ID: <a685a8fe-7cd9-7d94-54c8-3b6e133cfd74@amsat.org>
-Date:   Wed, 9 Oct 2019 14:43:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
-MIME-Version: 1.0
-In-Reply-To: <20191009100600.10572-1-tbogendoerfer@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Wed, 9 Oct 2019 08:44:22 -0400
+Received: from 8bytes.org ([81.169.241.247]:46702 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727878AbfJIMoW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 08:44:22 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 46814401; Wed,  9 Oct 2019 14:44:20 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+Cc:     hpa@zytor.com, x86@kernel.org, rjw@rjwysocki.net, lenb@kernel.org,
+        james.morse@arm.com, tony.luck@intel.com,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-mm@kvack.org, Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH V2] x86/mm: Split vmalloc_sync_all()
+Date:   Wed,  9 Oct 2019 14:44:18 +0200
+Message-Id: <20191009124418.8286-1-joro@8bytes.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/9/19 12:06 PM, Thomas Bogendoerfer wrote:
-> Commit ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING
-> forcibly") allows compiler to uninline functions marked as 'inline'.
-> In cace of __xchg this would cause to reference function
+From: Joerg Roedel <jroedel@suse.de>
 
-Typo: "in case of"
+Git commit 3f8fd02b1bf1 ("mm/vmalloc: Sync unmappings in
+__purge_vmap_area_lazy()") introduced a call to vmalloc_sync_all() in
+the vunmap() code-path.  While this change was necessary to maintain
+correctness on x86-32-pae kernels, it also adds additional cycles for
+architectures that don't need it.
 
-> __xchg_called_with_bad_pointer, which is an error case
-> for catching bugs and will not happen for correct code, if
-> __xchg is inlined.
-> 
+Specifically on x86-64 with CONFIG_VMAP_STACK=y some people reported
+severe performance regressions in micro-benchmarks because it now also
+calls the x86-64 implementation of vmalloc_sync_all() on vunmap(). But
+the vmalloc_sync_all() implementation on x86-64 is only needed for
+newly created mappings.
 
-Ah, this is the equivalent of ARM commit 920fdab7b3c.
+To avoid the unnecessary work on x86-64 and to gain the performance
+back, split up vmalloc_sync_all() into two functions:
 
-Maybe add:
+	* vmalloc_sync_mappings(), and
+	* vmalloc_sync_unmappings()
 
-Fixes: ac7c3e4ff401
+Most call-sites to vmalloc_sync_all() only care about new mappings
+being synchronized. The only exception is the new call-site
+added in the above mentioned commit.
 
-> Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-> ---
->   arch/mips/include/asm/cmpxchg.h | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/mips/include/asm/cmpxchg.h b/arch/mips/include/asm/cmpxchg.h
-> index 012dcf7046ad..f6136871561d 100644
-> --- a/arch/mips/include/asm/cmpxchg.h
-> +++ b/arch/mips/include/asm/cmpxchg.h
-> @@ -77,8 +77,8 @@ extern unsigned long __xchg_called_with_bad_pointer(void)
->   extern unsigned long __xchg_small(volatile void *ptr, unsigned long val,
->   				  unsigned int size);
->   
-> -static inline unsigned long __xchg(volatile void *ptr, unsigned long x,
-> -				   int size)
-> +static __always_inline
-> +unsigned long __xchg(volatile void *ptr, unsigned long x, int size)
->   {
->   	switch (size) {
->   	case 1:
-> 
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Fixes: 3f8fd02b1bf1 ("mm/vmalloc: Sync unmappings in __purge_vmap_area_lazy()")
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+Changes to initial post:
+	- Added comments to x86-64 version of
+	  vmalloc_sync_[un]mappings() as suggested by Dave
+	  Hansen.
 
-Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+ arch/x86/mm/fault.c      | 26 ++++++++++++++++++++++++--
+ drivers/acpi/apei/ghes.c |  2 +-
+ include/linux/vmalloc.h  |  5 +++--
+ kernel/notifier.c        |  2 +-
+ mm/nommu.c               | 10 +++++++---
+ mm/vmalloc.c             | 11 +++++++----
+ 6 files changed, 43 insertions(+), 13 deletions(-)
+
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 9ceacd1156db..94174361f524 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -189,7 +189,7 @@ static inline pmd_t *vmalloc_sync_one(pgd_t *pgd, unsigned long address)
+ 	return pmd_k;
+ }
+ 
+-void vmalloc_sync_all(void)
++static void vmalloc_sync(void)
+ {
+ 	unsigned long address;
+ 
+@@ -216,6 +216,16 @@ void vmalloc_sync_all(void)
+ 	}
+ }
+ 
++void vmalloc_sync_mappings(void)
++{
++	vmalloc_sync();
++}
++
++void vmalloc_sync_unmappings(void)
++{
++	vmalloc_sync();
++}
++
+ /*
+  * 32-bit:
+  *
+@@ -318,11 +328,23 @@ static void dump_pagetable(unsigned long address)
+ 
+ #else /* CONFIG_X86_64: */
+ 
+-void vmalloc_sync_all(void)
++void vmalloc_sync_mappings(void)
+ {
++	/*
++	 * 64-bit mappings might allocate new p4d/pud pages
++	 * that need to be propagated to all tasks' PGDs.
++	 */
+ 	sync_global_pgds(VMALLOC_START & PGDIR_MASK, VMALLOC_END);
+ }
+ 
++void vmalloc_sync_unmappings(void)
++{
++	/*
++	 * Unmappings never allocate or free p4d/pud pages.
++	 * No work is required here.
++	 */
++}
++
+ /*
+  * 64-bit:
+  *
+diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+index 777f6f7122b4..e0d82fab1f44 100644
+--- a/drivers/acpi/apei/ghes.c
++++ b/drivers/acpi/apei/ghes.c
+@@ -171,7 +171,7 @@ int ghes_estatus_pool_init(int num_ghes)
+ 	 * New allocation must be visible in all pgd before it can be found by
+ 	 * an NMI allocating from the pool.
+ 	 */
+-	vmalloc_sync_all();
++	vmalloc_sync_mappings();
+ 
+ 	rc = gen_pool_add(ghes_estatus_pool, addr, PAGE_ALIGN(len), -1);
+ 	if (rc)
+diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+index 4e7809408073..decac0790fc1 100644
+--- a/include/linux/vmalloc.h
++++ b/include/linux/vmalloc.h
+@@ -126,8 +126,9 @@ extern int remap_vmalloc_range_partial(struct vm_area_struct *vma,
+ 
+ extern int remap_vmalloc_range(struct vm_area_struct *vma, void *addr,
+ 							unsigned long pgoff);
+-void vmalloc_sync_all(void);
+- 
++void vmalloc_sync_mappings(void);
++void vmalloc_sync_unmappings(void);
++
+ /*
+  *	Lowlevel-APIs (not for driver use!)
+  */
+diff --git a/kernel/notifier.c b/kernel/notifier.c
+index d9f5081d578d..157d7c29f720 100644
+--- a/kernel/notifier.c
++++ b/kernel/notifier.c
+@@ -554,7 +554,7 @@ NOKPROBE_SYMBOL(notify_die);
+ 
+ int register_die_notifier(struct notifier_block *nb)
+ {
+-	vmalloc_sync_all();
++	vmalloc_sync_mappings();
+ 	return atomic_notifier_chain_register(&die_chain, nb);
+ }
+ EXPORT_SYMBOL_GPL(register_die_notifier);
+diff --git a/mm/nommu.c b/mm/nommu.c
+index 99b7ec318824..3b67bd20c2af 100644
+--- a/mm/nommu.c
++++ b/mm/nommu.c
+@@ -359,10 +359,14 @@ void vm_unmap_aliases(void)
+ EXPORT_SYMBOL_GPL(vm_unmap_aliases);
+ 
+ /*
+- * Implement a stub for vmalloc_sync_all() if the architecture chose not to
+- * have one.
++ * Implement a stub for vmalloc_sync_[un]mapping() if the architecture
++ * chose not to have one.
+  */
+-void __weak vmalloc_sync_all(void)
++void __weak vmalloc_sync_mappings(void)
++{
++}
++
++void __weak vmalloc_sync_unmappings(void)
+ {
+ }
+ 
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index a3c70e275f4e..c0be707db434 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -1259,7 +1259,7 @@ static bool __purge_vmap_area_lazy(unsigned long start, unsigned long end)
+ 	 * First make sure the mappings are removed from all page-tables
+ 	 * before they are freed.
+ 	 */
+-	vmalloc_sync_all();
++	vmalloc_sync_unmappings();
+ 
+ 	/*
+ 	 * TODO: to calculate a flush range without looping.
+@@ -3050,16 +3050,19 @@ int remap_vmalloc_range(struct vm_area_struct *vma, void *addr,
+ EXPORT_SYMBOL(remap_vmalloc_range);
+ 
+ /*
+- * Implement a stub for vmalloc_sync_all() if the architecture chose not to
+- * have one.
++ * Implement stubs for vmalloc_sync_[un]mappings () if the architecture chose
++ * not to have one.
+  *
+  * The purpose of this function is to make sure the vmalloc area
+  * mappings are identical in all page-tables in the system.
+  */
+-void __weak vmalloc_sync_all(void)
++void __weak vmalloc_sync_mappings(void)
+ {
+ }
+ 
++void __weak vmalloc_sync_unmappings(void)
++{
++}
+ 
+ static int f(pte_t *pte, unsigned long addr, void *data)
+ {
+-- 
+2.16.4
+
