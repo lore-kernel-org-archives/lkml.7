@@ -2,43 +2,43 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6208BC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 22:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1755DECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 22:27:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39A8A206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 22:27:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E024B218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 22:27:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="XvdFUi+Z"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="GgP6kaNk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732300AbfJIW1J (ORCPT
+        id S1732263AbfJIW1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 9 Oct 2019 18:27:09 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:55084 "EHLO
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:55048 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732216AbfJIW1I (ORCPT
+        by vger.kernel.org with ESMTP id S1731916AbfJIW1I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 9 Oct 2019 18:27:08 -0400
 Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 259C4C03E9;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 32D33C03EA;
         Wed,  9 Oct 2019 22:27:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1570660027; bh=XxzbN0PHHliJ1GEgTBBhwhTwFL7gliZm+a80vwiducE=;
+        t=1570660027; bh=VhQHSn2scrt/qLb1cp8mUcqKwCHy/B+Kzh4ZumuFBfE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XvdFUi+ZLbje6h/k7NQ+34A51uDkE4f0v62XxLwgo5K4i6n/pQIc8QGF8929MXasd
-         4dHo69SZnO+cf4qoy1n915cdiAwVb9PWQdgcqdkU1a7XPqLvspjhePiYVTWGIOKdpx
-         10MtHWYcdFiGuS8ceKnSxwYF9ueaiHOmvC6eQ5fwPJzXEcpOD689UpJCANu55ZAGsv
-         4Qwa2dTx5DSW/8pDRpIC8glXW///WreThFJZo2dwSGt6I+wtjggkOdrfE2wSpejs32
-         pIA5UyCEwI5cDUS/1wxpFWQieMn/bz8qenl8YJsFQNwqs+Hk3Nvm2/ewIlZ4vV9qpx
-         lxKnoQGk8Gcgw==
+        b=GgP6kaNk3OUsXe+9Z6UeDQpLd4pr7C/0F+HHRYYvvgbB5T0xlOdbnFyJCbSVRQBH6
+         tY0qa8Or/HpDF2v0Vyt0djRcdRkjPKoWYRcV8Yq58z9jgIJjeBmcmHYSQR56aaOmuV
+         0yDM4ohgjmBXm86vMIVuQ3M8OPao9yPvvOyefPnWg8PsqdsAH1Ncav3x3a5mPfLwVU
+         M7LbqxQq7WTtjw/BAbf58djskxwaJDMalSv2pXnY7/WTrvAPYXNygzhZRaB3UoC5YN
+         Zcpp0Gw23/hIBUudH7a5CSvjNOxJoezUSr1ZS/9iVXtIT/T3yyBS4LwG6NB+OoA6lH
+         LjGChWQGNroPQ==
 Received: from vineetg-Latitude-E7450.internal.synopsys.com (vineetg-latitude-e7450.internal.synopsys.com [10.10.161.61])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 9A5B7A0074;
+        by mailhost.synopsys.com (Postfix) with ESMTP id AA9C8A0072;
         Wed,  9 Oct 2019 22:27:06 +0000 (UTC)
 From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
 To:     linux-mm@kvack.org
@@ -51,9 +51,9 @@ Cc:     linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
         "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
         Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: [PATCH 2/3] asm-generic/tlb: stub out p4d_free_tlb() if __PAGETABLE_P4D_FOLDED ...
-Date:   Wed,  9 Oct 2019 15:26:57 -0700
-Message-Id: <20191009222658.961-3-vgupta@synopsys.com>
+Subject: [PATCH 3/3] asm-generic/mm: stub out p{4,d}d_clear_bad() if __PAGETABLE_P{4,u}D_FOLDED
+Date:   Wed,  9 Oct 2019 15:26:58 -0700
+Message-Id: <20191009222658.961-4-vgupta@synopsys.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191009222658.961-1-vgupta@synopsys.com>
 References: <20191009222658.961-1-vgupta@synopsys.com>
@@ -64,58 +64,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-... independent of __ARCH_HAS_5LEVEL_HACK
+This removes the code for 2 level paging as seen on ARC
 
-This came up when removing __ARCH_HAS_5LEVEL_HACK for ARC as code bloat
-from p4d_free_tlb() despite pud being folded (with 2 levels on ARC)
-
-| bloat-o-meter2 vmlinux-C-elide-pud_free_tlb vmlinux-D-elide-p4d_free_tlb
-| add/remove: 0/0 grow/shrink: 0/1 up/down: 0/-104 (-104)
+| bloat-o-meter2 vmlinux-D-elide-p4d_free_tlb vmlinux-E-elide-p?d_clear_bad
+| add/remove: 0/2 grow/shrink: 0/0 up/down: 0/-22 (-22)
 | function                                     old     new   delta
-| free_pgd_range                               552     422    -130
-| Total: Before=4137172, After=4137042, chg -1.000000%
+| pud_clear_bad                                 20       -     -20
+| p4d_clear_bad                                 20       -     -20
+| Total: Before=4137104, After=4137082, chg -1.000000%
 
 Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 ---
- include/asm-generic/5level-fixup.h | 2 --
- include/asm-generic/tlb.h          | 4 +++-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ include/asm-generic/pgtable.h | 11 +++++++++++
+ mm/pgtable-generic.c          |  4 ++++
+ 2 files changed, 15 insertions(+)
 
-diff --git a/include/asm-generic/5level-fixup.h b/include/asm-generic/5level-fixup.h
-index f6947da70d71..c855b5cf4425 100644
---- a/include/asm-generic/5level-fixup.h
-+++ b/include/asm-generic/5level-fixup.h
-@@ -48,8 +48,6 @@ static inline int p4d_present(p4d_t p4d)
- #define __p4d(x)			__pgd(x)
- #define set_p4d(p4dp, p4d)		set_pgd(p4dp, p4d)
- 
--#undef p4d_free_tlb
--#define p4d_free_tlb(tlb, x, addr)	do { } while (0)
- #define p4d_free(mm, x)			do { } while (0)
- #define __p4d_free_tlb(tlb, x, addr)	do { } while (0)
- 
-diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
-index 1f83188cb331..f3dad87f4ecc 100644
---- a/include/asm-generic/tlb.h
-+++ b/include/asm-generic/tlb.h
-@@ -598,7 +598,7 @@ static inline void tlb_end_vma(struct mmu_gather *tlb, struct vm_area_struct *vm
- #define pud_free_tlb(tlb, pudp, address)	do { } while (0)
- #endif
- 
--#ifndef __ARCH_HAS_5LEVEL_HACK
+diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
+index 818691846c90..9cdcbc7c0b7b 100644
+--- a/include/asm-generic/pgtable.h
++++ b/include/asm-generic/pgtable.h
+@@ -558,8 +558,19 @@ static inline pgprot_t pgprot_modify(pgprot_t oldprot, pgprot_t newprot)
+  * Do the tests inline, but report and clear the bad entry in mm/memory.c.
+  */
+ void pgd_clear_bad(pgd_t *);
++
 +#ifndef __PAGETABLE_P4D_FOLDED
- #ifndef p4d_free_tlb
- #define p4d_free_tlb(tlb, pudp, address)			\
- 	do {							\
-@@ -607,6 +607,8 @@ static inline void tlb_end_vma(struct mmu_gather *tlb, struct vm_area_struct *vm
- 		__p4d_free_tlb(tlb, pudp, address);		\
- 	} while (0)
- #endif
+ void p4d_clear_bad(p4d_t *);
 +#else
-+#define p4d_free_tlb(tlb, pudp, address)	do { } while (0)
- #endif
++#define p4d_clear_bad(p4d)        do { } while (0)
++#endif
++
++#ifndef __PAGETABLE_PUD_FOLDED
+ void pud_clear_bad(pud_t *);
++#else
++#define pud_clear_bad(p4d)        do { } while (0)
++#endif
++
+ void pmd_clear_bad(pmd_t *);
  
- #endif /* CONFIG_MMU */
+ static inline int pgd_none_or_clear_bad(pgd_t *pgd)
+diff --git a/mm/pgtable-generic.c b/mm/pgtable-generic.c
+index 532c29276fce..856dc3bb77e6 100644
+--- a/mm/pgtable-generic.c
++++ b/mm/pgtable-generic.c
+@@ -24,17 +24,21 @@ void pgd_clear_bad(pgd_t *pgd)
+ 	pgd_clear(pgd);
+ }
+ 
++#ifndef __PAGETABLE_P4D_FOLDED
+ void p4d_clear_bad(p4d_t *p4d)
+ {
+ 	p4d_ERROR(*p4d);
+ 	p4d_clear(p4d);
+ }
++#endif
+ 
++#ifndef __PAGETABLE_PUD_FOLDED
+ void pud_clear_bad(pud_t *pud)
+ {
+ 	pud_ERROR(*pud);
+ 	pud_clear(pud);
+ }
++#endif
+ 
+ void pmd_clear_bad(pmd_t *pmd)
+ {
 -- 
 2.20.1
 
