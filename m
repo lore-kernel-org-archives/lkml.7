@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD07AECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A6BC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A2AA218AC
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:24:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF50920B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:24:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570641860;
-	bh=BnNP/S94t0ycyVIws48GAEBsgOMeY35JYl69u3+93fc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=oz9ZdtpyNzxl7AZ3WtcwnQ/PfQ27+sXWOXkeclSwh2a5akB/FzQGzOnPPU+16Pad9
-	 jZuLWWcbFzVvg7oW2ZFJ+gGNZqm/gMnOLvsIV8EeI4UOZYhcGCGi8AAkjQhX+KvmS2
-	 6JcS2JgGjMRKKm1XBatOWV0wPuJBUXtlWootMnU4=
+	s=default; t=1570641867;
+	bh=5AlLPhD4yO09XfSZ0TEnVnoz8yf0tp9B6US8uShCF+k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2M6nKp1hxbUIGn0h2+3eijvRwX/MC/wvbxQhl9K7qlqr4P7rZSbg14qLElnG4IDpF
+	 UoNfTnQodZRTxGiyTOXinxvKmmyH1n+Ynuq7InWYH6UK/fQAARX4Cz14lmIWWr5cgn
+	 +M8j9HEO51RwWET02A8EjlY2FW1xlsdmEe5qp8Ik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732248AbfJIRYT (ORCPT
+        id S1732316AbfJIRY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:24:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48498 "EHLO mail.kernel.org"
+        Wed, 9 Oct 2019 13:24:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732094AbfJIRYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 13:24:03 -0400
+        id S1732155AbfJIRYJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 13:24:09 -0400
 Received: from sasha-vm.mshome.net (unknown [167.220.2.234])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78752206BB;
-        Wed,  9 Oct 2019 17:24:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAC9121D71;
+        Wed,  9 Oct 2019 17:24:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570641843;
-        bh=BnNP/S94t0ycyVIws48GAEBsgOMeY35JYl69u3+93fc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=2K95rJMeoMxMEN3j4dvRQ/3zglAiNfgn35uBRtZzX3SsdVnZKSiXnq25C9eM/ZU12
-         oT1pYff8dT66YjCYyPeppFpiO9kkKpNfN2tJH40dAQeOzRcP1IUIQ1zvnlpOD0O68X
-         Lgk/1E6he3a7wrJwuDhUGnh7zcJsMR85AwtRq+W4=
+        s=default; t=1570641848;
+        bh=5AlLPhD4yO09XfSZ0TEnVnoz8yf0tp9B6US8uShCF+k=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YLNpg9A/SHR3tM5p/tM7wrvACU7rA4bV58ZK7r5xJgH1PJS3o7rM1vX/PHksNG/yc
+         4Dy6SNneYdGov+7XV+JLTSoMxV94zLJ/rs9twuoiHBz1omUKBd2EMYZmyEoTFganr7
+         fEcyseZ8g6Zy8O9Gk39CyuVoyf6VpmW/DffcGUKo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zenghui Yu <yuzenghui@huawei.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        kvmarm@lists.cs.columbia.edu
-Subject: [PATCH AUTOSEL 4.19 01/26] KVM: arm/arm64: vgic: Use the appropriate TRACE_INCLUDE_PATH
-Date:   Wed,  9 Oct 2019 13:05:33 -0400
-Message-Id: <20191009170558.32517-1-sashal@kernel.org>
+Cc:     Jim Mattson <jmattson@google.com>, Marc Orr <marcorr@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 15/26] kvm: vmx: Limit guest PMCs to those supported on the host
+Date:   Wed,  9 Oct 2019 13:05:47 -0400
+Message-Id: <20191009170558.32517-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191009170558.32517-1-sashal@kernel.org>
+References: <20191009170558.32517-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,37 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zenghui Yu <yuzenghui@huawei.com>
+From: Jim Mattson <jmattson@google.com>
 
-[ Upstream commit aac60f1a867773de9eb164013d89c99f3ea1f009 ]
+[ Upstream commit e1fba49cc1e965a3dacd897367ba1e7b340cf0f4 ]
 
-Commit 49dfe94fe5ad ("KVM: arm/arm64: Fix TRACE_INCLUDE_PATH") fixes
-TRACE_INCLUDE_PATH to the correct relative path to the define_trace.h
-and explains why did the old one work.
+KVM can only virtualize as many PMCs as the host supports.
 
-The same fix should be applied to virt/kvm/arm/vgic/trace.h.
+Limit the number of generic counters and fixed counters to the number
+of corresponding counters supported on the host, rather than to
+INTEL_PMC_MAX_GENERIC and INTEL_PMC_MAX_FIXED, respectively.
 
-Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
+Note that INTEL_PMC_MAX_GENERIC is currently 32, which exceeds the 18
+contiguous MSR indices reserved by Intel for event selectors. Since
+the existing code relies on a contiguous range of MSR indices for
+event selectors, it can't possibly work for more than 18 general
+purpose counters.
+
+Fixes: f5132b01386b5a ("KVM: Expose a version 2 architectural PMU to a guests")
+Signed-off-by: Jim Mattson <jmattson@google.com>
+Reviewed-by: Marc Orr <marcorr@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- virt/kvm/arm/vgic/trace.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/pmu_intel.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/virt/kvm/arm/vgic/trace.h b/virt/kvm/arm/vgic/trace.h
-index 55fed77a9f739..4fd4f6db181b0 100644
---- a/virt/kvm/arm/vgic/trace.h
-+++ b/virt/kvm/arm/vgic/trace.h
-@@ -30,7 +30,7 @@ TRACE_EVENT(vgic_update_irq_pending,
- #endif /* _TRACE_VGIC_H */
+diff --git a/arch/x86/kvm/pmu_intel.c b/arch/x86/kvm/pmu_intel.c
+index c3f103e2b08e1..0fd2a511605b5 100644
+--- a/arch/x86/kvm/pmu_intel.c
++++ b/arch/x86/kvm/pmu_intel.c
+@@ -265,6 +265,7 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+ {
+ 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
++	struct x86_pmu_capability x86_pmu;
+ 	struct kvm_cpuid_entry2 *entry;
+ 	union cpuid10_eax eax;
+ 	union cpuid10_edx edx;
+@@ -286,8 +287,10 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+ 	if (!pmu->version)
+ 		return;
  
- #undef TRACE_INCLUDE_PATH
--#define TRACE_INCLUDE_PATH ../../../virt/kvm/arm/vgic
-+#define TRACE_INCLUDE_PATH ../../virt/kvm/arm/vgic
- #undef TRACE_INCLUDE_FILE
- #define TRACE_INCLUDE_FILE trace
- 
++	perf_get_x86_pmu_capability(&x86_pmu);
++
+ 	pmu->nr_arch_gp_counters = min_t(int, eax.split.num_counters,
+-					INTEL_PMC_MAX_GENERIC);
++					 x86_pmu.num_counters_gp);
+ 	pmu->counter_bitmask[KVM_PMC_GP] = ((u64)1 << eax.split.bit_width) - 1;
+ 	pmu->available_event_types = ~entry->ebx &
+ 					((1ull << eax.split.mask_length) - 1);
+@@ -297,7 +300,7 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+ 	} else {
+ 		pmu->nr_arch_fixed_counters =
+ 			min_t(int, edx.split.num_counters_fixed,
+-				INTEL_PMC_MAX_FIXED);
++			      x86_pmu.num_counters_fixed);
+ 		pmu->counter_bitmask[KVM_PMC_FIXED] =
+ 			((u64)1 << edx.split.bit_width_fixed) - 1;
+ 	}
 -- 
 2.20.1
 
