@@ -2,110 +2,101 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F75C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 02:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3438ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 02:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82D9220859
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 02:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE5B920859
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 02:50:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570589403;
+	bh=c9ZsUO3Tnqh9b6HhdHVMOjLdz1Zzv2yW4eAWutX54fw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=MU7B8vn0GRDkhD5C4eVjAx5Ewzr+qw3nGX8HXmxKBrNJqA4Y8HfCobJokcHygFXtV
+	 9UpcKuOqulDNj3q8qDxpaYhllO01xOLx1nDJWXmS/0MhEPfQykYR6t+IoAWv9sWn0H
+	 GujAM5C1AUVglVj4bkEXGiRmXNxbTX1JWMQcbbL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730091AbfJICrb (ORCPT
+        id S1730218AbfJICuC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 22:47:31 -0400
-Received: from mga02.intel.com ([134.134.136.20]:32127 "EHLO mga02.intel.com"
+        Tue, 8 Oct 2019 22:50:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726490AbfJICrb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 22:47:31 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 19:47:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,273,1566889200"; 
-   d="scan'208";a="192748823"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by fmsmga008.fm.intel.com with ESMTP; 08 Oct 2019 19:47:28 -0700
-Cc:     baolu.lu@linux.intel.com, Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH] iommu/vt-d: Return the correct dma mask when we are
- bypassing the IOMMU
-To:     Arvind Sankar <nivedita@alum.mit.edu>, linux-kernel@vger.kernel.org
-References: <20191008143357.GA599223@rani.riverdale.lan>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <76d680ab-a454-4a69-597a-c0edbfc5014b@linux.intel.com>
-Date:   Wed, 9 Oct 2019 10:45:15 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20191008143357.GA599223@rani.riverdale.lan>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        id S1726490AbfJICuC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 22:50:02 -0400
+Received: from devnote2 (p242255-mobac01.tokyo.ocn.ne.jp [153.233.233.255])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA9B220859;
+        Wed,  9 Oct 2019 02:49:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570589401;
+        bh=c9ZsUO3Tnqh9b6HhdHVMOjLdz1Zzv2yW4eAWutX54fw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=FHY4vzrRmHCoNoJUr2tDT7SUWxayXbylpuEe1ZedDwK38y9KqavCvnmMbork9vq0r
+         rx5xDFQZJT9qGZXamrOnhTzXTJmfX8s5EOtdSXilktmrbwVFA+E0OwN1qZHK7HK/B5
+         swC+H09+2847A0KuJhaZ6M/O4TJMw82cbu8TVEFU=
+Date:   Wed, 9 Oct 2019 11:49:56 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Alexey Dobriyan <adobriyan@gmail.com>
+Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jaswinder.singh@linaro.org
+Subject: Re: [BUGFIX PATCH 1/5] selftests: proc: Make va_max 3GB on 32bit
+ arch
+Message-Id: <20191009114956.37f3771b700e438a90945408@kernel.org>
+In-Reply-To: <20191008175916.GA20780@avx2>
+References: <157046101671.20724.9561877942986463668.stgit@devnote2>
+        <157046102656.20724.3358140818300189230.stgit@devnote2>
+        <20191008175916.GA20780@avx2>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, 8 Oct 2019 20:59:16 +0300
+Alexey Dobriyan <adobriyan@gmail.com> wrote:
 
-On 10/8/19 10:33 PM, Arvind Sankar wrote:
-> We must return a mask covering the full physical RAM when bypassing the
-> IOMMU mapping. Also, in iommu_need_mapping, we need to check using
-> dma_direct_get_required_mask to ensure that the device's dma_mask can
-> cover physical RAM before deciding to bypass IOMMU mapping.
+> On Tue, Oct 08, 2019 at 12:10:26AM +0900, Masami Hiramatsu wrote:
+> > Currently proc-self-map-files-002.c sets va_max (max test address
+> > of user virtual address) to 4GB, but it is too big for 32bit
+> > arch and 1UL << 32 is overflow on 32bit long.
+> > 
+> > Make va_max 3GB on 32bit arch like i386 and arm.
 > 
-> Fixes: 249baa547901 ("dma-mapping: provide a better default ->get_required_mask")
-> Reported-by: Arvind Sankar <nivedita@alum.mit.edu>
-> Tested-by: Arvind Sankar <nivedita@alum.mit.edu>
-> Originally-by: Christoph Hellwig <hch@lst.de>
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Fixed-by: Arvind Sankar <nivedita@alum.mit.edu>
-> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-> ---
->   drivers/iommu/intel-iommu.c | 10 +++++++++-
->   1 file changed, 9 insertions(+), 1 deletion(-)
+> IIRC i386 had 1G/3G split, so 3GB would be too much still.
+
+Hmm, would you know what is the best value for that?
+i386 can also be configured 3G/1G, 2G/2G and 1G/3G, so it
+depends on the build configuration. Would 1G is enough for test?
+
+Thank you,
+
 > 
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index 3f974919d3bd..79e35b3180ac 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -3471,7 +3471,7 @@ static bool iommu_need_mapping(struct device *dev)
->   		if (dev->coherent_dma_mask && dev->coherent_dma_mask < dma_mask)
->   			dma_mask = dev->coherent_dma_mask;
->   
-> -		if (dma_mask >= dma_get_required_mask(dev))
-> +		if (dma_mask >= dma_direct_get_required_mask(dev))
->   			return false;
->   
->   		/*
-> @@ -3775,6 +3775,13 @@ static int intel_map_sg(struct device *dev, struct scatterlist *sglist, int nele
->   	return nelems;
->   }
->   
-> +static u64 intel_get_required_mask(struct device *dev)
-> +{
-> +	if (!iommu_need_mapping(dev))
-> +		return dma_direct_get_required_mask(dev);
-> +	return DMA_BIT_MASK(32);
-
-Do you mind explaining why we always return 32 bit here?
-
-Best regards,
-Baolu
-
-> +}
-> +
->   static const struct dma_map_ops intel_dma_ops = {
->   	.alloc = intel_alloc_coherent,
->   	.free = intel_free_coherent,
-> @@ -3787,6 +3794,7 @@ static const struct dma_map_ops intel_dma_ops = {
->   	.dma_supported = dma_direct_supported,
->   	.mmap = dma_common_mmap,
->   	.get_sgtable = dma_common_get_sgtable,
-> +	.get_required_mask = intel_get_required_mask,
->   };
->   
->   static void
+> > --- a/tools/testing/selftests/proc/proc-self-map-files-002.c
+> > +++ b/tools/testing/selftests/proc/proc-self-map-files-002.c
 > 
+> > +#if __BITS_PER_LONG == 32
+> > +# define VA_MAX (3UL << 30)
+> > +#elif __BITS_PER_LONG == 64
+> > +# define VA_MAX (1UL << 32)
+> > +#else
+> > +# define VA_MAX 0
+> > +#endif
+> > +
+> >  int main(void)
+> >  {
+> >  	const int PAGE_SIZE = sysconf(_SC_PAGESIZE);
+> > -	const unsigned long va_max = 1UL << 32;
+> > +	const unsigned long va_max = VA_MAX;
+> 
+> This limit doesn't need to be precise, 1GB is "big enough".
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
