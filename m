@@ -4,51 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69329ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABBD4ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3840521D56
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:23:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84A4B21924
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570641835;
-	bh=BnNP/S94t0ycyVIws48GAEBsgOMeY35JYl69u3+93fc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Fw+wBpwDq/Mvzp2wlta2J4AAkOF9/lQ4hmFabE+MZOjems0+1s0r+GI3JzQ7cBY9e
-	 9rV3893JOmBBlC7av/juVoL5BMZ+yCkH91cZRt0WKEXHr5YRXSf5vW9rxp5f9Irlp6
-	 QavSy5XzlzgJRqrRIDRrKnOjUjX/NHiZEMwvqWDA=
+	s=default; t=1570641837;
+	bh=/4mMuhJyPwKfQfkFTTqyLam8OguJfnlyat4cAdt/7VI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PiUUdZ2/npGxpDpPsRUrz72B2gxa8bqzfInoEcqpiAliJYXfb+ihZRu9NaM3y86uU
+	 enBngV4l2dBbdJbFK0ThsCx8lNObmjdlzDHunMkRDjNGT2fG4i4koGs7eZSo3VcIAq
+	 naJMY3pWmfKyqVg2KMikuIy9IZLIMcRP7Nl8X8F0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731970AbfJIRXy (ORCPT
+        id S1731997AbfJIRX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:23:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47952 "EHLO mail.kernel.org"
+        Wed, 9 Oct 2019 13:23:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730490AbfJIRXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 13:23:53 -0400
+        id S1730490AbfJIRXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 13:23:54 -0400
 Received: from sasha-vm.mshome.net (unknown [167.220.2.234])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 126CA206BB;
-        Wed,  9 Oct 2019 17:23:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 119A121920;
+        Wed,  9 Oct 2019 17:23:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570641833;
-        bh=BnNP/S94t0ycyVIws48GAEBsgOMeY35JYl69u3+93fc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=kU6CQGlrQqr5rwGxHL3NP8rtMt8jQRFHeJcBGjHpZkp9ry50kUKJs9rL2p3hWTihu
-         tT+/xZgCS1iO/FqE8mKljpiJju3puOerUBhhuY13uy3st7nM9WHd00Nt5XyneaES2/
-         4khjHPm+/pgHD9XJkm77SZiL+hpfjr9WMHEoMuNU=
+        s=default; t=1570641834;
+        bh=/4mMuhJyPwKfQfkFTTqyLam8OguJfnlyat4cAdt/7VI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=A6GS984hK9CM5ZnARTBXIjvK6o0cJl8roJSSmMXGxyPdViHpTRvz4T82OrdPDfOhL
+         cr+hLkjOHi8RyQFbbrFg5583BmCCDUZ08U7j40MZY/BGD2nphT4vXN9zD76Oru/vS/
+         owwuI5j8DQRv1Gtdx6VllZzfqo8jHOTd33YRCXFI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zenghui Yu <yuzenghui@huawei.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 01/68] KVM: arm/arm64: vgic: Use the appropriate TRACE_INCLUDE_PATH
-Date:   Wed,  9 Oct 2019 13:04:40 -0400
-Message-Id: <20191009170547.32204-1-sashal@kernel.org>
+Cc:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        Lowry Li <lowry.li@arm.com>,
+        Brian Starkey <brian.starkey@arm.com>,
+        James Qian Wang <james.qian.wang@arm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.3 03/68] drm: Clear the fence pointer when writeback job signaled
+Date:   Wed,  9 Oct 2019 13:04:42 -0400
+Message-Id: <20191009170547.32204-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191009170547.32204-1-sashal@kernel.org>
+References: <20191009170547.32204-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,37 +62,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zenghui Yu <yuzenghui@huawei.com>
+From: "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
 
-[ Upstream commit aac60f1a867773de9eb164013d89c99f3ea1f009 ]
+[ Upstream commit b1066a123538044117f0a78ba8c6a50cf5a04c86 ]
 
-Commit 49dfe94fe5ad ("KVM: arm/arm64: Fix TRACE_INCLUDE_PATH") fixes
-TRACE_INCLUDE_PATH to the correct relative path to the define_trace.h
-and explains why did the old one work.
+During it signals the completion of a writeback job, after releasing
+the out_fence, we'd clear the pointer.
 
-The same fix should be applied to virt/kvm/arm/vgic/trace.h.
+Check if fence left over in drm_writeback_cleanup_job(), release it.
 
-Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
+Reviewed-by: Brian Starkey <brian.starkey@arm.com>
+Reviewed-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.com>
+Signed-off-by: james qian wang (Arm Technology China) <james.qian.wang@arm.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/1564571048-15029-3-git-send-email-lowry.li@arm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- virt/kvm/arm/vgic/trace.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/drm_writeback.c | 23 +++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
 
-diff --git a/virt/kvm/arm/vgic/trace.h b/virt/kvm/arm/vgic/trace.h
-index 55fed77a9f739..4fd4f6db181b0 100644
---- a/virt/kvm/arm/vgic/trace.h
-+++ b/virt/kvm/arm/vgic/trace.h
-@@ -30,7 +30,7 @@ TRACE_EVENT(vgic_update_irq_pending,
- #endif /* _TRACE_VGIC_H */
+diff --git a/drivers/gpu/drm/drm_writeback.c b/drivers/gpu/drm/drm_writeback.c
+index ff138b6ec48ba..43d9e3bb3a943 100644
+--- a/drivers/gpu/drm/drm_writeback.c
++++ b/drivers/gpu/drm/drm_writeback.c
+@@ -324,6 +324,9 @@ void drm_writeback_cleanup_job(struct drm_writeback_job *job)
+ 	if (job->fb)
+ 		drm_framebuffer_put(job->fb);
  
- #undef TRACE_INCLUDE_PATH
--#define TRACE_INCLUDE_PATH ../../../virt/kvm/arm/vgic
-+#define TRACE_INCLUDE_PATH ../../virt/kvm/arm/vgic
- #undef TRACE_INCLUDE_FILE
- #define TRACE_INCLUDE_FILE trace
++	if (job->out_fence)
++		dma_fence_put(job->out_fence);
++
+ 	kfree(job);
+ }
+ EXPORT_SYMBOL(drm_writeback_cleanup_job);
+@@ -366,25 +369,29 @@ drm_writeback_signal_completion(struct drm_writeback_connector *wb_connector,
+ {
+ 	unsigned long flags;
+ 	struct drm_writeback_job *job;
++	struct dma_fence *out_fence;
  
+ 	spin_lock_irqsave(&wb_connector->job_lock, flags);
+ 	job = list_first_entry_or_null(&wb_connector->job_queue,
+ 				       struct drm_writeback_job,
+ 				       list_entry);
+-	if (job) {
++	if (job)
+ 		list_del(&job->list_entry);
+-		if (job->out_fence) {
+-			if (status)
+-				dma_fence_set_error(job->out_fence, status);
+-			dma_fence_signal(job->out_fence);
+-			dma_fence_put(job->out_fence);
+-		}
+-	}
++
+ 	spin_unlock_irqrestore(&wb_connector->job_lock, flags);
+ 
+ 	if (WARN_ON(!job))
+ 		return;
+ 
++	out_fence = job->out_fence;
++	if (out_fence) {
++		if (status)
++			dma_fence_set_error(out_fence, status);
++		dma_fence_signal(out_fence);
++		dma_fence_put(out_fence);
++		job->out_fence = NULL;
++	}
++
+ 	INIT_WORK(&job->cleanup_work, cleanup_work);
+ 	queue_work(system_long_wq, &job->cleanup_work);
+ }
 -- 
 2.20.1
 
