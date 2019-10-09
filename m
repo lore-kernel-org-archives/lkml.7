@@ -2,75 +2,68 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D5DDC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 00:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE5FECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 00:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65DFE20859
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 00:38:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 378CA20873
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 00:49:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jtgB8a9R"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ZdZLIS4Q";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QLjzV1hl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729997AbfJIAiK (ORCPT
+        id S1729950AbfJIAtc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 20:38:10 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42664 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727051AbfJIAiK (ORCPT
+        Tue, 8 Oct 2019 20:49:32 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:48536 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727051AbfJIAtc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 20:38:10 -0400
-Received: by mail-io1-f66.google.com with SMTP id n197so1048608iod.9;
-        Tue, 08 Oct 2019 17:38:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3Xf/GFIKYoOdVh68AnbPaEIIVn/hMGh9iJb/+ai1QK8=;
-        b=jtgB8a9RWkm5zmaO9y/tbFwrFnudl5vEGLeA3UiVbRJ8Rr5LGjZyu/6+Yie0ONXUHm
-         Iu/FnR/vVPrcLITJiB9f2kvKmZ3+3wXmp2zY+uLdqZ3eDOKAQmX567UaM9ap+nZAkkSk
-         tdj/FVoQDFQe8oiTJFBy6F40OkqUAnCqDwe0VijzFdzBOJzFgMC9TpEodDT7FiNBMIXQ
-         Yn6LFR7gEvvhgn9um4IWhDxNffuyHQdZz2gbq+aTUoTrKGA4Ux271Ql50QaPdDQF8dFl
-         SROrMt8cv1ZnD9Ng3CgHyKdXR3zK9up5O7DOEsppjXPZ5RJ8o4IewAD+Ngll1EB1uJzS
-         LLdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3Xf/GFIKYoOdVh68AnbPaEIIVn/hMGh9iJb/+ai1QK8=;
-        b=HolluDwZYZ4kFcVpBuWTvDghEzwO8OTiEdmbrza8KQfPIW9xsVbOnVgJE7jYvN40EP
-         PgI2Ey4sre1aLCZRynS8lT6XcPir6tqrtASz+9g7wudnIzNdP0yuX2GgpwSX1pswhpgg
-         b3bEHrcnU/87BM9e84lHaMMoSfv/jpL0xgv9vL05LArwr1LbiDCPorEwPJe3EHgc8HOw
-         qhgkZzG3YgBtDvQ2YD8jXf+YFPmEOOy1zUF85cjnbeHryfFioLZoy+znjBtAxQiQFnXb
-         ZOfsY8exB5l0orAUlc/PeC6cP3THU5ePjbJ7F2fh5WCqmn+Fb8/5g5kPyq/TN9SRAP8S
-         VzXw==
-X-Gm-Message-State: APjAAAWDJGTCSMzkAPIP7gKvtn+263wBb1kEWIFx4vcQp0Q2UPxiid6f
-        1XoT1wvKeeYkdBJL4bO60v2O/S2e
-X-Google-Smtp-Source: APXvYqxmypy4pEKgt/DUa4XJDz0ybkdFALxv3Xsd7qwVBXMyeM7mUctV2Vhhia+OSnAtqNlhMLpk+Q==
-X-Received: by 2002:a05:6638:68b:: with SMTP id i11mr843994jab.63.1570581488905;
-        Tue, 08 Oct 2019 17:38:08 -0700 (PDT)
-Received: from [10.230.24.186] ([192.19.224.250])
-        by smtp.gmail.com with ESMTPSA id q17sm322619ile.5.2019.10.08.17.38.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Oct 2019 17:38:08 -0700 (PDT)
-Subject: Re: [PATCH 0/3] net: ftgmac100: Ungate RCLK for RMII on ASPEED MACs
-To:     Andrew Jeffery <andrew@aj.id.au>, netdev@vger.kernel.org
-Cc:     davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        joel@jms.id.au, benh@kernel.crashing.org
-References: <20191008115143.14149-1-andrew@aj.id.au>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <938706da-d329-c4aa-fcce-2d390a4e98f7@gmail.com>
-Date:   Tue, 8 Oct 2019 17:38:05 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 8 Oct 2019 20:49:32 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 0206560ACA; Wed,  9 Oct 2019 00:49:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1570582171;
+        bh=H6YaNArkGuc3fuAMFOk1zbKLBbvYg8Y8HDQPakVxx04=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ZdZLIS4Q8T7M7aCIdidVevKxJywkhvXp6g5dtBrNuNKwQlmDqgAnU6muc83VsK2H9
+         BX9RmNBNHulMTmcxd4j7EVABSk1ff+LyGzxdVQU81Ol4POJr3f5GLBM86R/o7I+D/o
+         u70siJ1WRb3dHSx3wWmSA7Oo7JdXURn9t38uff1k=
+Received: from [192.168.142.6] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: clew@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 59011602C8;
+        Wed,  9 Oct 2019 00:49:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1570582170;
+        bh=H6YaNArkGuc3fuAMFOk1zbKLBbvYg8Y8HDQPakVxx04=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=QLjzV1hlQo9QdIh7pR8i2L0CtssDRtDQaTOA+UelrN4QzEIoe3COu+w4mmMErzf9D
+         UWvyzDgZ6oEOrqRyl1Tc1TQ/imfqq4V3F3fGhdX6gn3n7gUi3doi3F+5RrlOcekmR/
+         khIv6Hn6IA/Vj1AIKQj/tROOXeZHhg9KJaVpGdNs=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 59011602C8
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=clew@codeaurora.org
+Subject: Re: [PATCH v2 1/6] rpmsg: glink: Fix reuse intents memory leak issue
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>
+Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20191004222702.8632-1-bjorn.andersson@linaro.org>
+ <20191004222702.8632-2-bjorn.andersson@linaro.org>
+From:   Chris Lew <clew@codeaurora.org>
+Message-ID: <22fc76bf-9d2e-f016-fb63-a481f69f0a6c@codeaurora.org>
+Date:   Tue, 8 Oct 2019 17:49:29 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191008115143.14149-1-andrew@aj.id.au>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191004222702.8632-2-bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -80,30 +73,24 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 10/8/2019 4:51 AM, Andrew Jeffery wrote:
-> Hello,
+On 10/4/2019 3:26 PM, Bjorn Andersson wrote:
+> From: Arun Kumar Neelakantam <aneela@codeaurora.org>
 > 
-> This series slightly extends the devicetree binding and driver for the
-> FTGMAC100 to describe an optional RMII RCLK gate in the clocks property.
-> Currently it's necessary for the kernel to ungate RCLK on the AST2600 in NCSI
-> configurations as u-boot does not yet support NCSI (which uses the RMII).
+> Memory allocated for re-usable intents are not freed during channel
+> cleanup which causes memory leak in system.
+> 
+> Check and free all re-usable memory to avoid memory leak.
+> 
+> Fixes: 933b45da5d1d ("rpmsg: glink: Add support for TX intents")
+> Cc: stable@vger.kernel.org
+> Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Signed-off-by: Arun Kumar Neelakantam <aneela@codeaurora.org>
+> Reported-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
 
-RMII as in Reduced MII or Reverse MII in that context?
-
-> 
-> Please review!
-> 
-> Andrew
-> 
-> Andrew Jeffery (3):
->   dt-bindings: net: ftgmac100: Document AST2600 compatible
->   dt-bindings: net: ftgmac100: Describe clock properties
->   net: ftgmac100: Ungate RCLK for RMII on ASPEED MACs
-> 
->  .../devicetree/bindings/net/ftgmac100.txt     |  7 ++++
->  drivers/net/ethernet/faraday/ftgmac100.c      | 35 +++++++++++++++----
->  2 files changed, 35 insertions(+), 7 deletions(-)
-> 
+Acked-By: Chris Lew <clew@codeaurora.org>
 
 -- 
-Florian
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
