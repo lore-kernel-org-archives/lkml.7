@@ -2,358 +2,165 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 823BCC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FA9ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35D8D206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:38:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8032206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:39:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IYjx9gve"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k2ve4K34"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731856AbfJIQil (ORCPT
+        id S1731686AbfJIQjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 12:38:41 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:43138 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731759AbfJIQij (ORCPT
+        Wed, 9 Oct 2019 12:39:45 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42917 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731413AbfJIQjp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 12:38:39 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x99GOErC181153;
-        Wed, 9 Oct 2019 16:36:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : in-reply-to : message-id : references : mime-version :
- content-type; s=corp-2019-08-05;
- bh=WuKv1QsjRp4tTuG2TpUYHzro1gAW9j7CGX0cX2UY0Uo=;
- b=IYjx9gveAlZM0E6IP/mJiR8gYABs/9vIJxw55nR8tNkNqynNK1plpFes/gKIuecP4Fx7
- cKsl/jyuztv4T0Pt2rlTiQX4vTHgEED949410XBO9ipq8n6FoJZcKHBeCzThcRS1grVW
- dh60Ymr9D6icg2kRxe1fl9lOPxi0uKn8izJfI2bVgSvnpedDH2aKFHyteVLbCEflkDMR
- zC8GdVh5goSBVNyx+nq5IrCN3emSJ3wsaNWZ63Py9/UgcxBY1hNwHT8xHPHsoFK87Xep
- 8HMYG+82oLmhQAu7Bn1bW+OF7OW/S6QgZYVJNrDm1wJG5woXMgClH9Ie14+tEE9q6ucB BQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2vek4qnw9k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 09 Oct 2019 16:36:15 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x99GNZwl088166;
-        Wed, 9 Oct 2019 16:36:15 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2vh8k13exh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 09 Oct 2019 16:36:15 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x99GaAbW014088;
-        Wed, 9 Oct 2019 16:36:10 GMT
-Received: from dhcp-10-175-191-127.vpn.oracle.com (/10.175.191.127)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 09 Oct 2019 16:36:10 +0000
-Date:   Wed, 9 Oct 2019 17:35:51 +0100 (BST)
-From:   Alan Maguire <alan.maguire@oracle.com>
-X-X-Sender: alan@dhcp-10-175-191-127.vpn.oracle.com
-To:     Brendan Higgins <brendanhiggins@google.com>
-cc:     Alan Maguire <alan.maguire@oracle.com>,
-        linux-kselftest@vger.kernel.org, skhan@linuxfoundation.org,
-        mcgrof@kernel.org, keescook@chromium.org, yzaikin@google.com,
-        akpm@linux-foundation.org, yamada.masahiro@socionext.com,
-        catalin.marinas@arm.com, joe.lawrence@redhat.com,
-        penguin-kernel@i-love.sakura.ne.jp, schowdary@nvidia.com,
-        urezki@gmail.com, andriy.shevchenko@linux.intel.com,
-        changbin.du@intel.com, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Knut Omang <knut.omang@oracle.com>
-Subject: Re: [PATCH v2 linux-kselftest-test 1/3] kunit: allow kunit tests to
- be loaded as a module
-In-Reply-To: <20191008213535.GB186342@google.com>
-Message-ID: <alpine.LRH.2.20.1910091726010.2517@dhcp-10-175-191-127.vpn.oracle.com>
-References: <1570546546-549-1-git-send-email-alan.maguire@oracle.com> <1570546546-549-2-git-send-email-alan.maguire@oracle.com> <20191008213535.GB186342@google.com>
-User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
+        Wed, 9 Oct 2019 12:39:45 -0400
+Received: by mail-pl1-f196.google.com with SMTP id e5so1299848pls.9
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 09:39:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=iTXErS40hwDITsEWC+0LMux5phAFBMz4ZCrgGz4WsI0=;
+        b=k2ve4K3407ETx11T824r0FXXv0/2D1ydw8Xu3gJEFhJb87htUUnfjYZSlNKn7JGpmh
+         KK3tGb/hbrmwRzC8+KB4UKyf0n50RzEg/afvqv32T80ygvuHd+PNfllOxK8x+0BaH9cX
+         eceF+vxJes1sIIo7zVLJBIuQwScC/WYG/liMzQ6HZlJhtoImFSAxwI68FoYAH5i/+YTR
+         NnLlWltz2k1ejbGSTXRlHHLHnyzM1c8PJqVwaCvKw+zW/t07oV5Vl0XRIAfvUMS38Z6t
+         O7YnbSy8RnNd8R7u5zYzP8Gky/2xlNnyDIB4jKlC7ebe2dSATfL7mFjQowmczcXIwxPE
+         nBGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=iTXErS40hwDITsEWC+0LMux5phAFBMz4ZCrgGz4WsI0=;
+        b=Ar8zyySAZROHiycHRWqz37uvN6/nwVh8LiKbIpWs+QJj1dTPSHs+/QAH8juXKte9FA
+         7bB4IvEAIbNjkyQ2tjSfg8eR3teIHd7MPaNdhTT53mHPvaMTV+lMts9bZZ53t1Y9s0Ma
+         l2s2fPBts6pZTMonCAf56w2WwbUasKncjdK0g7ryhMC/HsRbt7gyP/z9n+OM3rblRKDI
+         6fGXmUUfyLohH2cPuwKDRJzWBi9xaATB/ErcwhsVJS0dqKZolu+bv4qzBPnsL2B/oP3p
+         C1XYfQBq74t+gjtTU/jzbJtKVl+l0LTxC5Jl7t1O8i+PZ2dvX3v2gAmV3Wak78CLRNw2
+         hf/A==
+X-Gm-Message-State: APjAAAVD/yj2UglTjE6EzK1JkebH0z8SoZBb0ZGCn3FNkN/zM3AYicMw
+        sEZTA7+jmwZBf0aClrBb8SY=
+X-Google-Smtp-Source: APXvYqytWElfiLLTTzrLW5HtWyckx/nZYQRdlUc96aizGGB9+1EpfQbEOpxoEmhd6/YSNOVC6k5Ujw==
+X-Received: by 2002:a17:902:a717:: with SMTP id w23mr4184536plq.27.1570639184433;
+        Wed, 09 Oct 2019 09:39:44 -0700 (PDT)
+Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
+        by smtp.gmail.com with ESMTPSA id ce16sm2742759pjb.29.2019.10.09.09.39.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Oct 2019 09:39:43 -0700 (PDT)
+Subject: Re: Kernel Concurrency Sanitizer (KCSAN)
+To:     Dmitry Vyukov <dvyukov@google.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     Will Deacon <will@kernel.org>, Marco Elver <elver@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Paul Turner <pjt@google.com>, Daniel Axtens <dja@axtens.net>,
+        Anatol Pomazau <anatol@google.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>
+References: <CANpmjNPJ_bHjfLZCAPV23AXFfiPiyXXqqu72n6TgWzb2Gnu1eA@mail.gmail.com>
+ <20190920155420.rxiflqdrpzinncpy@willie-the-truck>
+ <0715d98b-12e9-fd81-31d1-67bcb752b0a1@gmail.com>
+ <CACT4Y+bdPKQDGag1rZG6mCj2EKwEsgWdMuHZq_um2KuWOrog6Q@mail.gmail.com>
+ <CACT4Y+Z+rX_cvDLwkzCvmudR6brCNM-8yA+hx9V6nXe159tf6A@mail.gmail.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <a47cfff6-e5b7-bf05-fe42-73d9545f3ffb@gmail.com>
+Date:   Wed, 9 Oct 2019 09:39:42 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9405 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910090146
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9405 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910090146
+In-Reply-To: <CACT4Y+Z+rX_cvDLwkzCvmudR6brCNM-8yA+hx9V6nXe159tf6A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 8 Oct 2019, Brendan Higgins wrote:
 
-> On Tue, Oct 08, 2019 at 03:55:44PM +0100, Alan Maguire wrote:
-> > as tests are added to kunit, it will become less feasible to execute
-> > all built tests together.  By supporting modular tests we provide
-> > a simple way to do selective execution on a running system; specifying
-> > 
-> > CONFIG_KUNIT=y
-> > CONFIG_KUNIT_EXAMPLE_TEST=m
-> > 
-> > ...means we can simply "insmod example-test.ko" to run the tests.
-> > 
-> > To achieve this we need to
-> > 
-> > o export the required symbols in kunit
-> > o support a new way of declaring test suites.  Because a module cannot
-> >   do multiple late_initcall()s, we provide a kunit_test_suites() macro
-> >   to declare multiple suites within the same module at once.
-> > 
-> > Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-> > Signed-off-by: Knut Omang <knut.omang@oracle.com>
-> > 
-> > ---
-> >  include/kunit/test.h           | 30 +++++++++++++++++++++++-------
-> >  kernel/sysctl-test.c           |  6 +++++-
-> >  lib/Kconfig.debug              |  4 ++--
-> >  lib/kunit/Kconfig              |  4 ++--
-> >  lib/kunit/assert.c             |  8 ++++++++
-> >  lib/kunit/example-test.c       |  6 +++++-
-> >  lib/kunit/string-stream-test.c |  9 +++++++--
-> >  lib/kunit/string-stream.c      |  7 +++++++
-> >  lib/kunit/test-test.c          |  8 ++++++--
-> >  lib/kunit/test.c               |  8 ++++++++
-> >  lib/kunit/try-catch.c          |  8 ++++++--
-> >  11 files changed, 79 insertions(+), 19 deletions(-)
-> > 
-> > diff --git a/include/kunit/test.h b/include/kunit/test.h
-> > index dba4830..9fc6c1b 100644
-> > --- a/include/kunit/test.h
-> > +++ b/include/kunit/test.h
-> > @@ -12,6 +12,7 @@
-> >  #include <kunit/assert.h>
-> >  #include <kunit/try-catch.h>
-> >  #include <linux/kernel.h>
-> > +#include <linux/module.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/types.h>
-> >  
-> > @@ -204,24 +205,39 @@ struct kunit {
-> >   * Registers @suite with the test framework. See &struct kunit_suite for
-> >   * more information.
-> >   *
-> > - * NOTE: Currently KUnit tests are all run as late_initcalls; this means
-> > + * When builtin,  KUnit tests are all run as late_initcalls; this means
-> >   * that they cannot test anything where tests must run at a different init
-> >   * phase. One significant restriction resulting from this is that KUnit
-> >   * cannot reliably test anything that is initialize in the late_init phase;
-> >   * another is that KUnit is useless to test things that need to be run in
-> >   * an earlier init phase.
-> >   *
-> > + * An alternative is to build the tests as a module.  Because modules
-> > + * do not support multiple late_initcall()s, we need to initialize an
-> > + * array of suites for a module.
-> > + *
-> >   * TODO(brendanhiggins@google.com): Don't run all KUnit tests as
-> >   * late_initcalls.  I have some future work planned to dispatch all KUnit
-> >   * tests from the same place, and at the very least to do so after
-> >   * everything else is definitely initialized.
-> >   */
-> > -#define kunit_test_suite(suite)						       \
-> > -	static int kunit_suite_init##suite(void)			       \
-> > -	{								       \
-> > -		return kunit_run_tests(&suite);				       \
-> > -	}								       \
-> > -	late_initcall(kunit_suite_init##suite)
-> > +#define kunit_test_suites(...)						\
-> > +	static struct kunit_suite *suites[] = { __VA_ARGS__, NULL};	\
-> > +	static int kunit_test_suites_init(void)				\
-> > +	{								\
-> > +		unsigned int i;						\
-> > +		for (i = 0; suites[i] != NULL; i++)			\
-> > +			kunit_run_tests(suites[i]);			\
-> > +		return 0;						\
-> > +	}								\
-> > +	late_initcall(kunit_test_suites_init);				\
-> > +	static void __exit kunit_test_suites_exit(void)			\
-> > +	{								\
-> > +		return;							\
-> > +	}								\
-> > +	module_exit(kunit_test_suites_exit)
-> > +
-> > +#define	kunit_test_suite(suite)	kunit_test_suites(suite)
+
+On 10/9/19 12:45 AM, Dmitry Vyukov wrote:
+> On Sat, Oct 5, 2019 at 6:16 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+>>
+>> On Sat, Oct 5, 2019 at 2:58 AM Eric Dumazet <eric.dumazet@gmail.com> wrote:
+>>>> This one is tricky. What I think we need to avoid is an onslaught of
+>>>> patches adding READ_ONCE/WRITE_ONCE without a concrete analysis of the
+>>>> code being modified. My worry is that Joe Developer is eager to get their
+>>>> first patch into the kernel, so runs this tool and starts spamming
+>>>> maintainers with these things to the point that they start ignoring KCSAN
+>>>> reports altogether because of the time they take up.
+>>>>
+>>>> I suppose one thing we could do is to require each new READ_ONCE/WRITE_ONCE
+>>>> to have a comment describing the racy access, a bit like we do for memory
+>>>> barriers. Another possibility would be to use atomic_t more widely if
+>>>> there is genuine concurrency involved.
+>>>>
+>>>
+>>> About READ_ONCE() and WRITE_ONCE(), we will probably need
+>>>
+>>> ADD_ONCE(var, value)  for arches that can implement the RMW in a single instruction.
+>>>
+>>> WRITE_ONCE(var, var + value) does not look pretty, and increases register pressure.
+>>
+>> FWIW modern compilers can handle this if we tell them what we are trying to do:
+>>
+>> void foo(int *p, int x)
+>> {
+>>     x += __atomic_load_n(p, __ATOMIC_RELAXED);
+>>     __atomic_store_n(p, x, __ATOMIC_RELAXED);
+>> }
+>>
+>> $ clang test.c -c -O2 && objdump -d test.o
+>>
+>> 0000000000000000 <foo>:
+>>    0: 01 37                add    %esi,(%rdi)
+>>    2: c3                    retq
+>>
+>> We can have syntactic sugar on top of this of course.
 > 
-> I think it is fine to just rename this kunit_test_suites.
+> An interesting precedent come up in another KCSAN bug report. Namely,
+> it may be reasonable for a compiler to use different optimization
+> heuristics for concurrent and non-concurrent code. Consider there are
+> some legal code transformations, but it's unclear if they are
+> profitable or not. It may be the case that for non-concurrent code the
+> expectation is that it's a profitable transformation, but for
+> concurrent code it is not. So that may be another reason to
+> communicate to compiler what we want to do, rather than trying to
+> trick and play against each other. I've added the concrete example
+> here:
+> https://github.com/google/ktsan/wiki/READ_ONCE-and-WRITE_ONCE#it-may-improve-performance
 > 
 
-Will do.
+Note that for bit fields, READ_ONCE() wont work.
 
-> >  /*
-> >   * Like kunit_alloc_resource() below, but returns the struct kunit_resource
-> > diff --git a/kernel/sysctl-test.c b/kernel/sysctl-test.c
-> > index 2a63241..15161c5 100644
-> > --- a/kernel/sysctl-test.c
-> > +++ b/kernel/sysctl-test.c
-> > @@ -389,4 +389,8 @@ static void sysctl_test_api_dointvec_write_single_greater_int_max(
-> >  	.test_cases = sysctl_test_cases,
-> >  };
-> >  
-> > -kunit_test_suite(sysctl_test_suite);
-> > +kunit_test_suite(&sysctl_test_suite);
-> > +
-> > +#ifdef MODULE
-> > +MODULE_LICENSE("GPL");
-> > +#endif /* MODULE */
-> 
-> Here and elsewhere: the "ifdef/endif MODULE" should not be necessary.
-> 
+Concrete example in net/xfrm/xfrm_algo.c:xfrm_probe_algs(void)
+...
+if (aalg_list[i].available != status)
+        aalg_list[i].available = status;
+...
+if (ealg_list[i].available != status)
+        ealg_list[i].available = status;
+...
+if (calg_list[i].available != status)
+        calg_list[i].available = status;
 
-Will fix, thanks!
-
-> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> > index a3017a5..f9f411a6 100644
-> > --- a/lib/Kconfig.debug
-> > +++ b/lib/Kconfig.debug
-> > @@ -1951,10 +1951,10 @@ config TEST_SYSCTL
-> >  	  If unsure, say N.
-> >  
-> >  config SYSCTL_KUNIT_TEST
-> > -	bool "KUnit test for sysctl"
-> > +	tristate "KUnit test for sysctl"
-> >  	depends on KUNIT
-> >  	help
-> > -	  This builds the proc sysctl unit test, which runs on boot.
-> > +	  This builds the proc sysctl unit test, which runs on boot/module load.
-> >  	  Tests the API contract and implementation correctness of sysctl.
-> >  	  For more information on KUnit and unit tests in general please refer
-> >  	  to the KUnit documentation in Documentation/dev-tools/kunit/.
-> [...]
-> > diff --git a/lib/kunit/example-test.c b/lib/kunit/example-test.c
-> > index f64a829..6c6a408 100644
-> > --- a/lib/kunit/example-test.c
-> > +++ b/lib/kunit/example-test.c
-> > @@ -85,4 +85,8 @@ static int example_test_init(struct kunit *test)
-> >   * This registers the above test suite telling KUnit that this is a suite of
-> >   * tests that need to be run.
-> >   */
-> > -kunit_test_suite(example_test_suite);
-> > +kunit_test_suite(&example_test_suite);
-> > +
-> > +#ifdef MODULE
-> > +MODULE_LICENSE("GPL");
-> > +#endif /* MODULE */
-> 
-> nit: The "ifdef/endif MODULE" should not be necessary.
-> 
-> > diff --git a/lib/kunit/string-stream-test.c b/lib/kunit/string-stream-test.c
-> > index 76cc05e..7a3e7a0 100644
-> > --- a/lib/kunit/string-stream-test.c
-> > +++ b/lib/kunit/string-stream-test.c
-> > @@ -45,8 +45,13 @@ static void string_stream_test_get_string(struct kunit *test)
-> >  	{}
-> >  };
-> >  
-> > -static struct kunit_suite string_stream_test_suite = {
-> > +struct kunit_suite string_stream_test_suite = {
-> >  	.name = "string-stream-test",
-> >  	.test_cases = string_stream_test_cases
-> >  };
-> > -kunit_test_suite(string_stream_test_suite);
-> > +
-> > +kunit_test_suite(&string_stream_test_suite);
-> > +
-> > +#ifdef MODULE
-> > +MODULE_LICENSE("GPL");
-> > +#endif /* MODULE */
-> > diff --git a/lib/kunit/string-stream.c b/lib/kunit/string-stream.c
-> > index e6d17aa..e4f3a97 100644
-> > --- a/lib/kunit/string-stream.c
-> > +++ b/lib/kunit/string-stream.c
-> > @@ -100,6 +100,7 @@ int string_stream_vadd(struct string_stream *stream,
-> >  
-> >  	return 0;
-> >  }
-> > +EXPORT_SYMBOL_GPL(string_stream_vadd);
-> 
-> Is this actually needed by anything other than lib/kunit/test.c right
-> now? Maybe we should move the include file into the kunit/ directory to
-> hide these so no one else can use them.
->
-
-I tried this, and it's the right answer I think but it exposes
-a problem with symbol visibility when kunit is compiled as a module.
-More on this below...
- 
-> >  int string_stream_add(struct string_stream *stream, const char *fmt, ...)
-> >  {
-> > @@ -112,6 +113,7 @@ int string_stream_add(struct string_stream *stream, const char *fmt, ...)
-> >  
-> >  	return result;
-> >  }
-> > +EXPORT_SYMBOL_GPL(string_stream_add);
-> [...]
-> > diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-> > index c83c0fa..e7896f1 100644
-> > --- a/lib/kunit/test.c
-> > +++ b/lib/kunit/test.c
-> [...]
-> > @@ -50,6 +51,7 @@ static unsigned long kunit_test_timeout(void)
-> >  	 * For more background on this topic, see:
-> >  	 * https://mike-bland.com/2011/11/01/small-medium-large.html
-> >  	 */
-> > +#ifndef MODULE
-> 
-> Why is this block of code "ifndef MODULE"?
->
-
-Symbol visibility is the problem again; sysctl_hung_task_timeout_secs
-isn't exported so when kunit is a module it can't find the symbol.
-
-I think I saw Kees mentioned something about symbol lookup too; in KTF 
-Knut solved this by defining ktf_find_symbol(). I'd suggest we may need a 
-kunit_find_symbol() with a function signature
-
-void *kunit_find_symbol(const char *modname, const char *symbol_name);
-
-...which does a [module_]kallsyms_lookup_sym().
-
-If the above makes sense I can look at adding it as a patch (and adding
-a test of it of course!). What do you think?
-
-> >  	if (sysctl_hung_task_timeout_secs) {
-> >  		/*
-> >  		 * If sysctl_hung_task is active, just set the timeout to some
-> > @@ -60,9 +62,9 @@ static unsigned long kunit_test_timeout(void)
-> >  		 */
-> >  		timeout_msecs = (sysctl_hung_task_timeout_secs - 1) *
-> >  				MSEC_PER_SEC;
-> > -	} else {
-> > +	} else
-> > +#endif
-> >  		timeout_msecs = 300 * MSEC_PER_SEC; /* 5 min */
-> > -	}
-> >  
-> >  	return timeout_msecs;
-> >  }
-> > @@ -106,6 +108,7 @@ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
-> >  
-> >  	try_catch->catch(try_catch->context);
-> >  }
-> > +EXPORT_SYMBOL_GPL(kunit_try_catch_run);
-> >  
-> >  void kunit_try_catch_init(struct kunit_try_catch *try_catch,
-> >  			  struct kunit *test,
-> > @@ -116,3 +119,4 @@ void kunit_try_catch_init(struct kunit_try_catch *try_catch,
-> >  	try_catch->try = try;
-> >  	try_catch->catch = catch;
-> >  }
-> > +EXPORT_SYMBOL_GPL(kunit_try_catch_init);
-> 
-> This code should also probably be hidden from outside of kunit/.
-> 
-
-Sure, will do.
-
-Thanks again for the review!
-
-Alan
