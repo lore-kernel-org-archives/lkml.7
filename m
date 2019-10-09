@@ -4,241 +4,152 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65342C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D64C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D44F218AC
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:13:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FBAD21D7F
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:13:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732470AbfJITNw (ORCPT
+        id S1732458AbfJITNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 15:13:52 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:51095 "EHLO
+        Wed, 9 Oct 2019 15:13:51 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:56219 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731922AbfJITLU (ORCPT
+        with ESMTP id S1731932AbfJITLU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 9 Oct 2019 15:11:20 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MXXdn-1iajhJ3863-00YxNA; Wed, 09 Oct 2019 21:11:10 +0200
+ 1MEFfB-1iQDzd118v-00AIwU; Wed, 09 Oct 2019 21:11:16 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Al Viro <viro@zeniv.linux.org.uk>
 Cc:     linux-kernel@vger.kernel.org, y2038@lists.linaro.org,
         linux-fsdevel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: [PATCH v6 13/43] compat_ioctl: use correct compat_ptr() translation in drivers
-Date:   Wed,  9 Oct 2019 21:10:13 +0200
-Message-Id: <20191009191044.308087-13-arnd@arndb.de>
+        Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>
+Subject: [PATCH v6 29/43] gfs2: add compat_ioctl support
+Date:   Wed,  9 Oct 2019 21:10:29 +0200
+Message-Id: <20191009191044.308087-29-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191009190853.245077-1-arnd@arndb.de>
 References: <20191009190853.245077-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:2Ri+AmqHP2IgSyuBrP8IXouAO/GywqDxk3Oop8VJyII1VjvrXgG
- g9gF3z2VGIP5Ci2S3stEsEM2C9eWsVyZmsGxAiDAfzJw7LKUcEYJOFbJRXQkXmcdsOMKvw9
- fORHBgakc1Gdv3KXkP8MUEYgTFVmyg5fHUUjBj/mYAHfrWwOIE/hUagBclbnVofe8zyZPa+
- CH0sYmDNlNMuFz+vaBFhg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:2NQGECvoGC4=:S58aRpaPBAOZ8FNVwSW1SG
- 50dLXpGb+RJ5ycryuKaEPzaJ1PXl9S/CSYXP7wskUMoL5TZTX90q6pTa0t/7dUQRPTcR3KGQv
- Zyp8IomcQKdRb1MXkib3kFg+OsuNBdJE3XNbg2F6XdrfvZtvoo54Wo8J3uQzc4NdkeHoA1IKk
- 9+aNqCP6mRUcOu4v+6xkZK493jV1ag1oywXC5C+DDpT/hA1SQEm8zi9PLsvLSAfWgs+0FnzQ2
- dOdiy/L9Azg57TodxpwlT0k0OdGDx+Hu2NTmeYGzKE3RC3zw6BDs6NvU5LbLY6O7CZrMqbUoG
- vjTMTPty4v2H+kFxYR+4iM6V8TR5BedxaMMWtM3BNfBzGLWklJ5Z7p8vaQw3k+q6fDEUHrHIg
- 2xx3aNmLyQJPK/VT4DTujtqiqNaKl1nUEIae/axjp+Xx/jNI1nrKLqd0C/gu+igGT8NFXuJ5O
- iz3Yh6E1xlkPhdBcvwviyh6ExMfef9Q3fFcT1gurQlJbOiOQUiTPY4dUbfNSzSq84vMFYhFqB
- 0zFWpev0UXhtamltB3ITKlXky5E0xj2JMhvdm7Rrux71FRQSIGkpLNNSYhl8qSWdCZco7TDbb
- d4vnw3oUL4UTXPOJhQxB4IiwB4srl8Kn+eDSCAkyWHgGlGebIc4fQUR05mHqI9K3knM9xc17K
- onwIUjw6wnOdCIZWLeYI4X0jBotHQ6ayJ+w4+zt0o5bHDF0doVwq/BV5pCa3QCANq43sTm2+Z
- YJRM4LWvZ7WC2QFFFAmEudb2J3yOCZ3d4RhR72YT57dPqbHZVsMhD1tqMYzLTF9YPyvB8c5BV
- Jsk0u6lFgMhckIw48ZYmnchOh82+4BgBWm0snIHhbyUUYgNzs+oOoEZY5NT/hkgSJ8tTiDENu
- N7NoF0vA3e3mY2dhv16A==
+X-Provags-ID: V03:K1:7jCKQawljNZjnSFT863FA1hhtX5dPDFfB12E/nVCyioFJdqknCe
+ L9BKW4WrOA4wAs00JkEHPmNcOlR7bZveM71zN1NKta7NfCnoql3BSZwF2SjLldXUaRHfm1t
+ hoCHWSBdm2IJ9GKtnEzjVXLsfNPnbG65DbPFZs2jU2gRROyHV3bRuuAgW7zhsWb7dWA3XfU
+ nHvThfhdWVHzdMyvYMGkQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:DY83x9iTJwY=:05tW64lXHkUiTYHRncVdeq
+ pmRnkjw14EHD0tH84Us6D83DQ4jSo6Lfk2Jwxa6EvnwZOFI1WQQie+D2/pBtfqUQ6VT3QD9Cw
+ LR5ZoDJ/YWe1FlgG3FYnSVRUNdQfedKIOaOCH+IRs6OWYs7IXtxI6PSeGUYd44HrLzwu2+gCU
+ 45EZD4w4BCyQAbTEQUJZzXriYMkvgS6QS8WCaDqWOW4spEdlWZOrI+JfUPQHgYKX5/vZ7fjnX
+ bwz3nzpDL+V7eT6244tXsV7RTi8XBhyrXuob0uyRewJkHzg5AVuD1lgeYSVO1cVFUcNqzw0/B
+ iZo85vBvnLGm8Q/wcW1xCpb6dD7H6qDdLDYushs8mRplHIwWZ6FBamwlnTTmJaTYSPDUEPDAw
+ lPRPDkEx7xMbeS0L9kzoJQg24CMZTmusBfAVnuPNEM3ikIRu1m4ww+9jbejXWkAno9n3tuQHP
+ vPlX0dZPnaKw3V/ieJgumWYOQIudsJAttyrb/at4shBlIWLZK+END877WVJl0fGgL+f/edAwN
+ gkNmGu7zof55myTrIdoj8K9Ss2nrVHpeqDoXMaz3hScOHY0kqrY0WTzQqJGBkF0Sh6oRE86FO
+ dgraGartHXSEZJ2M1minvRUWzpVe1rLBxPLXJ4LIIbKQt2I299OGuCDR0N7YWPv7/VnA3LaJX
+ Etg61+5jgF5kDYiPfx7TAhf0zD+zr0NdyxzR5TKyU+W7EinRarED0JLp5QEORXj0Y+A6tLfDC
+ o3hKNhiiUjF4IPos+II151K8Ayc3lO1CWcLdGiBET9BpzKtNqTrC3xcl+xfDs8YZu5mH71Iq9
+ e6MxK/qhuf6uDGgVWMEZ+QpDMr+vHpMAzTzmDNe9mwzsclkK2EJVzA7UqSsOZsH3rFBtzYGQ3
+ YsqyHQ+Rpu9+2IxHSw+w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A handful of drivers all have a trivial wrapper around their ioctl
-handler, but don't call the compat_ptr() conversion function at the
-moment. In practice this does not matter, since none of them are used
-on the s390 architecture and for all other architectures, compat_ptr()
-does not do anything, but using the new compat_ptr_ioctl()
-helper makes it more correct in theory, and simplifies the code.
+Out of the four ioctl commands supported on gfs2, only FITRIM
+works in compat mode.
 
-I checked that all ioctl handlers in these files are compatible
-and take either pointer arguments or no argument.
+Add a proper handler based on the ext4 implementation.
 
-Acked-by: Al Viro <viro@zeniv.linux.org.uk>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Acked-by: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
-Acked-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Fixes: 6ddc5c3ddf25 ("gfs2: getlabel support")
+Reviewed-by: Bob Peterson <rpeterso@redhat.com>
+Cc: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/misc/cxl/flash.c            |  8 +-------
- drivers/misc/genwqe/card_dev.c      | 23 +----------------------
- drivers/scsi/megaraid/megaraid_mm.c | 28 +---------------------------
- drivers/usb/gadget/function/f_fs.c  | 12 +-----------
- 4 files changed, 4 insertions(+), 67 deletions(-)
+ fs/gfs2/file.c | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/drivers/misc/cxl/flash.c b/drivers/misc/cxl/flash.c
-index 4d6836f19489..cb9cca35a226 100644
---- a/drivers/misc/cxl/flash.c
-+++ b/drivers/misc/cxl/flash.c
-@@ -473,12 +473,6 @@ static long device_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 		return -EINVAL;
+diff --git a/fs/gfs2/file.c b/fs/gfs2/file.c
+index 997b326247e2..e073050c1f2a 100644
+--- a/fs/gfs2/file.c
++++ b/fs/gfs2/file.c
+@@ -6,6 +6,7 @@
+ 
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
++#include <linux/compat.h>
+ #include <linux/completion.h>
+ #include <linux/buffer_head.h>
+ #include <linux/pagemap.h>
+@@ -354,6 +355,31 @@ static long gfs2_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ 	return -ENOTTY;
  }
  
--static long device_compat_ioctl(struct file *file, unsigned int cmd,
--				unsigned long arg)
--{
--	return device_ioctl(file, cmd, arg);
--}
--
- static int device_close(struct inode *inode, struct file *file)
- {
- 	struct cxl *adapter = file->private_data;
-@@ -514,7 +508,7 @@ static const struct file_operations fops = {
- 	.owner		= THIS_MODULE,
- 	.open		= device_open,
- 	.unlocked_ioctl	= device_ioctl,
--	.compat_ioctl	= device_compat_ioctl,
-+	.compat_ioctl	= compat_ptr_ioctl,
- 	.release	= device_close,
- };
- 
-diff --git a/drivers/misc/genwqe/card_dev.c b/drivers/misc/genwqe/card_dev.c
-index 0e34c0568fed..040a0bda3125 100644
---- a/drivers/misc/genwqe/card_dev.c
-+++ b/drivers/misc/genwqe/card_dev.c
-@@ -1215,34 +1215,13 @@ static long genwqe_ioctl(struct file *filp, unsigned int cmd,
- 	return rc;
- }
- 
--#if defined(CONFIG_COMPAT)
--/**
-- * genwqe_compat_ioctl() - Compatibility ioctl
-- *
-- * Called whenever a 32-bit process running under a 64-bit kernel
-- * performs an ioctl on /dev/genwqe<n>_card.
-- *
-- * @filp:        file pointer.
-- * @cmd:         command.
-- * @arg:         user argument.
-- * Return:       zero on success or negative number on failure.
-- */
--static long genwqe_compat_ioctl(struct file *filp, unsigned int cmd,
--				unsigned long arg)
--{
--	return genwqe_ioctl(filp, cmd, arg);
--}
--#endif /* defined(CONFIG_COMPAT) */
--
- static const struct file_operations genwqe_fops = {
- 	.owner		= THIS_MODULE,
- 	.open		= genwqe_open,
- 	.fasync		= genwqe_fasync,
- 	.mmap		= genwqe_mmap,
- 	.unlocked_ioctl	= genwqe_ioctl,
--#if defined(CONFIG_COMPAT)
--	.compat_ioctl   = genwqe_compat_ioctl,
--#endif
-+	.compat_ioctl   = compat_ptr_ioctl,
- 	.release	= genwqe_release,
- };
- 
-diff --git a/drivers/scsi/megaraid/megaraid_mm.c b/drivers/scsi/megaraid/megaraid_mm.c
-index 59cca898f088..e83163c66884 100644
---- a/drivers/scsi/megaraid/megaraid_mm.c
-+++ b/drivers/scsi/megaraid/megaraid_mm.c
-@@ -41,10 +41,6 @@ static int mraid_mm_setup_dma_pools(mraid_mmadp_t *);
- static void mraid_mm_free_adp_resources(mraid_mmadp_t *);
- static void mraid_mm_teardown_dma_pools(mraid_mmadp_t *);
- 
--#ifdef CONFIG_COMPAT
--static long mraid_mm_compat_ioctl(struct file *, unsigned int, unsigned long);
--#endif
--
- MODULE_AUTHOR("LSI Logic Corporation");
- MODULE_DESCRIPTION("LSI Logic Management Module");
- MODULE_LICENSE("GPL");
-@@ -68,9 +64,7 @@ static wait_queue_head_t wait_q;
- static const struct file_operations lsi_fops = {
- 	.open	= mraid_mm_open,
- 	.unlocked_ioctl = mraid_mm_unlocked_ioctl,
--#ifdef CONFIG_COMPAT
--	.compat_ioctl = mraid_mm_compat_ioctl,
--#endif
-+	.compat_ioctl = compat_ptr_ioctl,
- 	.owner	= THIS_MODULE,
- 	.llseek = noop_llseek,
- };
-@@ -224,7 +218,6 @@ mraid_mm_unlocked_ioctl(struct file *filep, unsigned int cmd,
- {
- 	int err;
- 
--	/* inconsistent: mraid_mm_compat_ioctl doesn't take the BKL */
- 	mutex_lock(&mraid_mm_mutex);
- 	err = mraid_mm_ioctl(filep, cmd, arg);
- 	mutex_unlock(&mraid_mm_mutex);
-@@ -1228,25 +1221,6 @@ mraid_mm_init(void)
- }
- 
- 
--#ifdef CONFIG_COMPAT
--/**
-- * mraid_mm_compat_ioctl	- 32bit to 64bit ioctl conversion routine
-- * @filep	: file operations pointer (ignored)
-- * @cmd		: ioctl command
-- * @arg		: user ioctl packet
-- */
--static long
--mraid_mm_compat_ioctl(struct file *filep, unsigned int cmd,
--		      unsigned long arg)
--{
--	int err;
--
--	err = mraid_mm_ioctl(filep, cmd, arg);
--
--	return err;
--}
--#endif
--
++#ifdef CONFIG_COMPAT
++static long gfs2_compat_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
++{
++	switch(cmd) {
++	/* These are just misnamed, they actually get/put from/to user an int */
++	case FS_IOC32_GETFLAGS:
++		cmd = FS_IOC_GETFLAGS;
++		break;
++	case FS_IOC32_SETFLAGS:
++		cmd = FS_IOC_SETFLAGS;
++		break;
++	/* Keep this list in sync with gfs2_ioctl */
++	case FITRIM:
++	case FS_IOC_GETFSLABEL:
++		break;
++	default:
++		return -ENOIOCTLCMD;
++	}
++
++	return gfs2_ioctl(filp, cmd, (unsigned long)compat_ptr(arg));
++}
++#else
++#define gfs2_compat_ioctl NULL
++#endif
++
  /**
-  * mraid_mm_exit	- Module exit point
-  */
-diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
-index 59d9d512dcda..ce1d0235969c 100644
---- a/drivers/usb/gadget/function/f_fs.c
-+++ b/drivers/usb/gadget/function/f_fs.c
-@@ -1352,14 +1352,6 @@ static long ffs_epfile_ioctl(struct file *file, unsigned code,
- 	return ret;
- }
- 
--#ifdef CONFIG_COMPAT
--static long ffs_epfile_compat_ioctl(struct file *file, unsigned code,
--		unsigned long value)
--{
--	return ffs_epfile_ioctl(file, code, value);
--}
--#endif
--
- static const struct file_operations ffs_epfile_operations = {
- 	.llseek =	no_llseek,
- 
-@@ -1368,9 +1360,7 @@ static const struct file_operations ffs_epfile_operations = {
- 	.read_iter =	ffs_epfile_read_iter,
- 	.release =	ffs_epfile_release,
- 	.unlocked_ioctl =	ffs_epfile_ioctl,
--#ifdef CONFIG_COMPAT
--	.compat_ioctl = ffs_epfile_compat_ioctl,
--#endif
-+	.compat_ioctl = compat_ptr_ioctl,
- };
- 
- 
+  * gfs2_size_hint - Give a hint to the size of a write request
+  * @filep: The struct file
+@@ -1293,6 +1319,7 @@ const struct file_operations gfs2_file_fops = {
+ 	.write_iter	= gfs2_file_write_iter,
+ 	.iopoll		= iomap_dio_iopoll,
+ 	.unlocked_ioctl	= gfs2_ioctl,
++	.compat_ioctl	= gfs2_compat_ioctl,
+ 	.mmap		= gfs2_mmap,
+ 	.open		= gfs2_open,
+ 	.release	= gfs2_release,
+@@ -1308,6 +1335,7 @@ const struct file_operations gfs2_file_fops = {
+ const struct file_operations gfs2_dir_fops = {
+ 	.iterate_shared	= gfs2_readdir,
+ 	.unlocked_ioctl	= gfs2_ioctl,
++	.compat_ioctl	= gfs2_compat_ioctl,
+ 	.open		= gfs2_open,
+ 	.release	= gfs2_release,
+ 	.fsync		= gfs2_fsync,
+@@ -1324,6 +1352,7 @@ const struct file_operations gfs2_file_fops_nolock = {
+ 	.write_iter	= gfs2_file_write_iter,
+ 	.iopoll		= iomap_dio_iopoll,
+ 	.unlocked_ioctl	= gfs2_ioctl,
++	.compat_ioctl	= gfs2_compat_ioctl,
+ 	.mmap		= gfs2_mmap,
+ 	.open		= gfs2_open,
+ 	.release	= gfs2_release,
+@@ -1337,6 +1366,7 @@ const struct file_operations gfs2_file_fops_nolock = {
+ const struct file_operations gfs2_dir_fops_nolock = {
+ 	.iterate_shared	= gfs2_readdir,
+ 	.unlocked_ioctl	= gfs2_ioctl,
++	.compat_ioctl	= gfs2_compat_ioctl,
+ 	.open		= gfs2_open,
+ 	.release	= gfs2_release,
+ 	.fsync		= gfs2_fsync,
 -- 
 2.20.0
 
