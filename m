@@ -2,91 +2,152 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E57ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:26:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA389C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46FDE20679
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:26:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iKWeJdmG"
+	by mail.kernel.org (Postfix) with ESMTP id B7A5520679
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:27:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731656AbfJIP0P (ORCPT
+        id S1731702AbfJIP1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 11:26:15 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:38938 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729471AbfJIP0O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 11:26:14 -0400
-Received: by mail-lj1-f194.google.com with SMTP id y3so2928659ljj.6
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 08:26:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wOcaopzXOXD+usHp96MLejtldLwmcKRCmKe5gubp3hM=;
-        b=iKWeJdmGRHccgf9FoMbmzUbBRxoUHujF6DrYvq+P3h8z3/GprEMW5NrvUjL0ldy49E
-         5QO1X2+wfCkASte84vp+wlGB00QffleBOZHr5Vylz1e/euzezmmJhMQSGN2L25t50xla
-         PkmWcucmGn2OMDcU9YwHCf4Q5ArXbKCXWL2Lg=
+        Wed, 9 Oct 2019 11:27:10 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35758 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731689AbfJIP1K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 11:27:10 -0400
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 95D2872FD4
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Oct 2019 15:27:09 +0000 (UTC)
+Received: by mail-wr1-f71.google.com with SMTP id n3so1278317wrt.9
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 08:27:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wOcaopzXOXD+usHp96MLejtldLwmcKRCmKe5gubp3hM=;
-        b=FSwFX7v5na5zMyXeTfCnfHnUL+lwPCaCDiJ087Txc638CE4gvvBBlz9kv4wRk/lGu1
-         HlMOj40czhGb54UUYCcl5qk7heyUMXk1AZFZXb2kLcjcOJBz8Y1CwnBrnbX6K29zR6t8
-         qgH2wDnsATLbxUxI6ijfQ5utggDBYDUe+5vWd8091ZOoXyDFpo7fdpkIC70HtoHOV7q6
-         cfogBibPAa5LsOCyHmFflBMA/NiBvfF/IjpDzs7EOvQD2Y68B/QJ6Yd72vrKI1DzaHPe
-         mnsUD01IxPSWMcA+/VamBwWmQs6qSNCHpi4j0yy1PIlHANj2AwFeDwog1YJDj6kfgrFR
-         7SlA==
-X-Gm-Message-State: APjAAAX36qxiBg8TfTN9QiGBIVansN19SwjthJO7O1PuTbv9nZ0PX28v
-        p3aTMqoQkJDGF19/Jn2SXnfnu+FMK0I=
-X-Google-Smtp-Source: APXvYqz4UEpG17P4h2ph/7rj039LHdl/ezi1N02mfm3us+eAS50plIin9HS6dVbN5jkmD6kDpQUlRA==
-X-Received: by 2002:a2e:87ca:: with SMTP id v10mr2689880ljj.43.1570634772242;
-        Wed, 09 Oct 2019 08:26:12 -0700 (PDT)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
-        by smtp.gmail.com with ESMTPSA id d6sm523182lfa.50.2019.10.09.08.26.11
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Oct 2019 08:26:11 -0700 (PDT)
-Received: by mail-lj1-f172.google.com with SMTP id n14so2902007ljj.10
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 08:26:11 -0700 (PDT)
-X-Received: by 2002:a2e:9ec2:: with SMTP id h2mr2389130ljk.85.1570634770860;
- Wed, 09 Oct 2019 08:26:10 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=LnjHlFJZ3FGQs1QMmZ0Kw4G8OSYD5KUzSAtQFbnF6ZY=;
+        b=KyPP10Lrk39V7LYEh3Y9SMWqjFVL6eY2ABOT+SPACfdzAVnMqD1KfjuyH0LrjoiQNr
+         rS8ZefsRpJdHi7oJReaGlAIPfwSr8GLX1RW80jo3UCIF+0uAID5NhGs1nsM0FPwSMFC4
+         nGGnbpPBNm7p58GHBNeYkHRgLKQYUFqDtiRYMmXYULkBIxuJyFwIff1/KdF53Y8/M/qE
+         Efi/CUEwhV/WyvxhGRiT+8pzicMfo/HB3zU3rtiXe8C3dOzX1yBaOQBJ1BZV7gb6KRB2
+         6TYpRJ5mEatnCJYLxm6AY8cszA8nIKave7QkFps79KRdniOVd/ztVihm4l3nNnByrvJv
+         U5QA==
+X-Gm-Message-State: APjAAAXKrTFafKkV8wa9ilm6vUu5oUm5vImi52W0Be1i2ea04vhpzUNR
+        NYvd8KLkiei8eUugKKgti2bdOf/AcJAktR4dk8Sfp2lAbYFh9XEQmRrZ/Un5fmMNzGrbh3X7BEZ
+        gYsto5I1wjXeiOWI2dSZTqbUX
+X-Received: by 2002:a5d:558b:: with SMTP id i11mr3472660wrv.166.1570634827932;
+        Wed, 09 Oct 2019 08:27:07 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqz0yhf0MXP9Ng1677vjj7N5mFHVu5KZ31jlXdy5OfBdWtvgpCjVAte/20NBF1wNoCg+0aCTPg==
+X-Received: by 2002:a5d:558b:: with SMTP id i11mr3472632wrv.166.1570634827634;
+        Wed, 09 Oct 2019 08:27:07 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id h125sm3559380wmf.31.2019.10.09.08.27.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Oct 2019 08:27:07 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Roman Kagan <rkagan@virtuozzo.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Cc:     "kvm\@vger.kernel.org" <kvm@vger.kernel.org>,
+        Lan Tianyu <Tianyu.Lan@microsoft.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "x86\@kernel.org" <x86@kernel.org>,
+        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] x86/hyperv: make vapic support x2apic mode
+In-Reply-To: <20191009145022.28442-1-rkagan@virtuozzo.com>
+References: <20191009145022.28442-1-rkagan@virtuozzo.com>
+Date:   Wed, 09 Oct 2019 17:27:06 +0200
+Message-ID: <87r23mx7lh.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-References: <20191008234505.222991-1-swboyd@chromium.org> <20191008234505.222991-2-swboyd@chromium.org>
-In-Reply-To: <20191008234505.222991-2-swboyd@chromium.org>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Wed, 9 Oct 2019 08:25:32 -0700
-X-Gmail-Original-Message-ID: <CAE=gft76a_UFaSjca-1nR0Pf5TUU1FqWaEjzRyRhn_SkFmLsTA@mail.gmail.com>
-Message-ID: <CAE=gft76a_UFaSjca-1nR0Pf5TUU1FqWaEjzRyRhn_SkFmLsTA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] soc: qcom: llcc: Name regmaps to avoid collisions
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 8, 2019 at 4:45 PM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> We'll end up with debugfs collisions if we don't give names to the
-> regmaps created by this driver. Change the name of the config before
-> registering it so we don't collide in debugfs.
->
-> Fixes: 7f9c136216c7 ("soc: qcom: Add broadcast base for Last Level Cache Controller (LLCC)")
-> Cc: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-> Cc: Evan Green <evgreen@chromium.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Roman Kagan <rkagan@virtuozzo.com> writes:
 
-Reviewed-by: Evan Green <evgreen@chromium.org>
+> Now that there's Hyper-V IOMMU driver, Linux can switch to x2apic mode
+> when supported by the vcpus.
+>
+> However, the apic access functions for Hyper-V enlightened apic assume
+> xapic mode only.
+>
+> As a result, Linux fails to bring up secondary cpus when run as a guest
+> in QEMU/KVM with both hv_apic and x2apic enabled.
+>
+> According to Michael Kelley, when in x2apic mode, the Hyper-V synthetic
+> apic MSRs behave exactly the same as the corresponding architectural
+> x2apic MSRs, so there's no need to override the apic accessors.  The
+> only exception is hv_apic_eoi_write, which benefits from lazy EOI when
+> available; however, its implementation works for both xapic and x2apic
+> modes.
+>
+> Fixes: 29217a474683 ("iommu/hyper-v: Add Hyper-V stub IOMMU driver")
+> Fixes: 6b48cb5f8347 ("X86/Hyper-V: Enlighten APIC access")
+> Cc: stable@vger.kernel.org
+> Suggested-by: Michael Kelley <mikelley@microsoft.com>
+> Signed-off-by: Roman Kagan <rkagan@virtuozzo.com>
+> ---
+> v2 -> v3:
+> - do not introduce x2apic-capable hv_apic accessors; leave original
+>   x2apic accessors instead
+>
+> v1 -> v2:
+> - add ifdefs to handle !CONFIG_X86_X2APIC
+>
+>  arch/x86/hyperv/hv_apic.c | 17 +++++++++++++----
+>  1 file changed, 13 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
+> index 5c056b8aebef..26eeff5bd535 100644
+> --- a/arch/x86/hyperv/hv_apic.c
+> +++ b/arch/x86/hyperv/hv_apic.c
+> @@ -261,10 +261,19 @@ void __init hv_apic_init(void)
+>  
+>  	if (ms_hyperv.hints & HV_X64_APIC_ACCESS_RECOMMENDED) {
+>  		pr_info("Hyper-V: Using MSR based APIC access\n");
+
+This pr_info() becomes a bit misleading in x2apic mode, maybe do
+something like
+
+pr_info("Hyper-V: using Enlightened APIC (%s mode)",
+        x2apic_enabled() ? "x2apic" : "xapic");
+
+> +		/*
+> +		 * With x2apic, architectural x2apic MSRs are equivalent to the
+> +		 * respective synthetic MSRs, so there's no need to override
+> +		 * the apic accessors.  The only exception is
+> +		 * hv_apic_eoi_write, because it benefits from lazy EOI when
+> +		 * available, but it works for both xapic and x2apic modes.
+> +		 */
+>  		apic_set_eoi_write(hv_apic_eoi_write);
+> -		apic->read      = hv_apic_read;
+> -		apic->write     = hv_apic_write;
+> -		apic->icr_write = hv_apic_icr_write;
+> -		apic->icr_read  = hv_apic_icr_read;
+> +		if (!x2apic_enabled()) {
+> +			apic->read      = hv_apic_read;
+> +			apic->write     = hv_apic_write;
+> +			apic->icr_write = hv_apic_icr_write;
+> +			apic->icr_read  = hv_apic_icr_read;
+> +		}
+>  	}
+>  }
+
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+
+-- 
+Vitaly
