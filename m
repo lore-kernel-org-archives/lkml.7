@@ -3,104 +3,102 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6217ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAFBBECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB1C9218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:43:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 913182190F
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:43:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b82CPx+f"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zq3v1jke"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732361AbfJIUnB (ORCPT
+        id S1732380AbfJIUn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 16:43:01 -0400
-Received: from mail-lj1-f180.google.com ([209.85.208.180]:34767 "EHLO
-        mail-lj1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731884AbfJIUlo (ORCPT
+        Wed, 9 Oct 2019 16:43:26 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35549 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731884AbfJIUnZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 16:41:44 -0400
-Received: by mail-lj1-f180.google.com with SMTP id j19so3921592lja.1
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 13:41:43 -0700 (PDT)
+        Wed, 9 Oct 2019 16:43:25 -0400
+Received: by mail-wr1-f68.google.com with SMTP id v8so4699665wrt.2;
+        Wed, 09 Oct 2019 13:43:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=y12OqUDXt0uUd8S/w/N9B4j5fJB9b6dEGe48WxLpJQ0=;
-        b=b82CPx+fPly56w9MPycjqjk9NJFrcqTUC+lMTY5z15BMRw4pELbH/XPZ+RJefWuxPY
-         Ve+lIxc6pQd+2yDHo9zcMjT2RLJUqoXNChE9oUJ1xBcEkkjBJsESNa9GWmIK6Li9Rbkw
-         2gsZITjElYlpNfxDj0t7SIHmbzIKhfrXgQQ0eutD4pIHkl55qf+nSBf/bZYmQNvZSkgO
-         bLliGWmkU+bpjvxPedusjcxCZqk6Z8tNN3fiXpA9lu1SC9hixLlHu7am+/BzaOY0OlQc
-         nx3uyOZj9pepIabNtCEHnzksYGri285CEa6jAL/ZaogaUkfB9TcjD1KrdFRk5hVdInNL
-         Q7yg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Lpln8geciAg4JbtsomIIKLOvA7kf5IwzYvS8cTZ6WVo=;
+        b=Zq3v1jke+W/GXtjRbhGK/s7oBsB1wxO6GbK2me7gUkAwQawUoK/3KI/TseJwLbGnzt
+         ARybW3WTsltkrseBEKdY/nn2GxLEHDFLv8nf5sLBx4Np1p9VXzLM0QiawEVcf71ZfDYq
+         McMmuR9U9XSaD0qwNvPfnALJ+yniImr45Gc9gI8DgkmPct4ytA8kKU8Uesmj0Yc7Ohdi
+         3Gd7wLNwvwwqIPr3Xw2llSqbV5CK+Ou4BDbD9GwH07EOsr+jQZRPh7NWW6dOClPjMFVW
+         uFFduiRwcygYh199z6579/wKVKMjOrGmfLkI3e0TrWzKiAjSuUtUs2FkhSm3YehUag0a
+         lUxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=y12OqUDXt0uUd8S/w/N9B4j5fJB9b6dEGe48WxLpJQ0=;
-        b=Qb6DyYxqfqK14IPhvXt19tahb9ijPNOd1QNnA8Gi8NZ73wwpHDUHl7pGoAqnJjZ9zc
-         JfXKQyIJMJ7Zzdgiz2C3CMwwNHqQ00etJSRmyyMayaGtQ6nWcJmTX4XIzOK9DqsNrv5h
-         LF0Vu/WA35XTClyYHHoB0jwuV75JGHtYc7yaTzb1W5SgiPRhe2b21c7nsNXRSlyVmqm/
-         f588BbuYvGbnQojNyJ/Vea3BwyH8g9f6W/S6P47F+mvCucMUNNL9nBQWQ+kX4+jgYUL8
-         HPBk/XQXljRSlDlt3uYqVUCgk9gemoxxVqyFSaf3XX6Eq8H9Pu890tu3aZCxS7J7+M7T
-         pEXw==
-X-Gm-Message-State: APjAAAXeiDDAt30Kkhbo0Bk+x2dAtrp73cBnLcEuRrc/wIPIid6Di5Hj
-        0FrqNECI9LFToOi2k6eA3OYYYg==
-X-Google-Smtp-Source: APXvYqz9ZmT3mmRmWoZneEqLxJDx7rmmR3dC+5Tb7MVDbitwoik3uWhRkcyt0PDRQ6WmBWMTwbR9xA==
-X-Received: by 2002:a2e:7e05:: with SMTP id z5mr3623227ljc.120.1570653702474;
-        Wed, 09 Oct 2019 13:41:42 -0700 (PDT)
-Received: from localhost.localdomain (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
-        by smtp.gmail.com with ESMTPSA id h3sm730871ljf.12.2019.10.09.13.41.41
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Lpln8geciAg4JbtsomIIKLOvA7kf5IwzYvS8cTZ6WVo=;
+        b=a7MPZj5ewih8azZWQ0E3ozSVE2WFtZwfABry68ZDX2BNys9xM3LzDjxCQN0uJ6tyPb
+         b9jJhZ0KRRDp4UUxFKJ8/0zXB+6lVSKLauPZD/brkrYajQQAe5EReNCmyWJJr97MXmjT
+         O4LkVdc750eU1sdb3lWLE+K0k+HkQyPW9Du+Z9FUpnsCoJJzJAgkY5xKntQMynZ1qNUk
+         1h2fapXufjQEfuNF8LFlGsRRlJGbDyRSuuxFcYciaLPhSazaofiytAEW/+584T3SGawx
+         AUTj0Ipo2WKnSfWtQS5Mq2ZYqXp5o4C+z5dIP5bhBiTJknFu4Fba9cv7zsO8wIZPwCIZ
+         8qzA==
+X-Gm-Message-State: APjAAAUhFz9k1wrlPa+fH6U5HG/RC7JRSDMzcc7OY+qBm3Fpv/EgJT1W
+        s/aIqiDbLffASoN0S/ha6Q==
+X-Google-Smtp-Source: APXvYqwmkgUaym+RBIuuknYDK4XTZEQuWJzx9o7ZWqA1RdSGXschjm+nGXM4knVx56JAXAXYj0eAHQ==
+X-Received: by 2002:a5d:4a81:: with SMTP id o1mr4349969wrq.291.1570653803279;
+        Wed, 09 Oct 2019 13:43:23 -0700 (PDT)
+Received: from ninjahub.lan (host-2-102-13-201.as13285.net. [2.102.13.201])
+        by smtp.googlemail.com with ESMTPSA id f8sm3601546wmb.37.2019.10.09.13.43.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 13:41:41 -0700 (PDT)
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com,
-        davem@davemloft.net, jakub.kicinski@netronome.com, hawk@kernel.org,
-        john.fastabend@gmail.com
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
-        ilias.apalodimas@linaro.org, sergei.shtylyov@cogentembedded.com,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Subject: [PATCH v4 bpf-next 02/15] samples/bpf: fix cookie_uid_helper_example obj build
-Date:   Wed,  9 Oct 2019 23:41:21 +0300
-Message-Id: <20191009204134.26960-3-ivan.khoronzhuk@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191009204134.26960-1-ivan.khoronzhuk@linaro.org>
-References: <20191009204134.26960-1-ivan.khoronzhuk@linaro.org>
+        Wed, 09 Oct 2019 13:43:22 -0700 (PDT)
+From:   Jules Irenge <jbi.octave@gmail.com>
+To:     outreachy-kernel@googlegroups.com
+Cc:     gregkh@linuxfoundation.org, GR-Linux-NIC-Dev@marvell.com,
+        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, Jules Irenge <jbi.octave@gmail.com>
+Subject: [PATCH] staging: qlge: Fix multiple assignments warning by splitting the assignement into two each
+Date:   Wed,  9 Oct 2019 21:43:11 +0100
+Message-Id: <20191009204311.7988-1-jbi.octave@gmail.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't list userspace "cookie_uid_helper_example" object in list for
-bpf objects.
+Fix multiple assignments warning " check
+ issued by checkpatch.pl tool:
+"CHECK: multiple assignments should be avoided".
 
-'always' target is used for listing bpf programs, but
-'cookie_uid_helper_example.o' is a user space ELF file, and covered
-by rule `per_socket_stats_example`, so shouldn't be in 'always'.
-Let us remove `always += cookie_uid_helper_example.o`, which avoids
-breaking cross compilation due to mismatched includes.
-
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- samples/bpf/Makefile | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/staging/qlge/qlge_dbg.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
-index 4f61725b1d86..045fa43842e6 100644
---- a/samples/bpf/Makefile
-+++ b/samples/bpf/Makefile
-@@ -145,7 +145,6 @@ always += sampleip_kern.o
- always += lwt_len_hist_kern.o
- always += xdp_tx_iptunnel_kern.o
- always += test_map_in_map_kern.o
--always += cookie_uid_helper_example.o
- always += tcp_synrto_kern.o
- always += tcp_rwnd_kern.o
- always += tcp_bufs_kern.o
+diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
+index 086f067fd899..69bd4710c5ec 100644
+--- a/drivers/staging/qlge/qlge_dbg.c
++++ b/drivers/staging/qlge/qlge_dbg.c
+@@ -141,8 +141,10 @@ static int ql_get_serdes_regs(struct ql_adapter *qdev,
+ 	u32 *direct_ptr, temp;
+ 	u32 *indirect_ptr;
+ 
+-	xfi_direct_valid = xfi_indirect_valid = 0;
+-	xaui_direct_valid = xaui_indirect_valid = 1;
++	xfi_indirect_valid = 0;
++	xfi_direct_valid = xfi_indirect_valid;
++	xaui_indirect_valid = 1;
++	xaui_direct_valid = xaui_indirect_valid
+ 
+ 	/* The XAUI needs to be read out per port */
+ 	status = ql_read_other_func_serdes_reg(qdev,
 -- 
-2.17.1
+2.21.0
 
