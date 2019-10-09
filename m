@@ -2,69 +2,67 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDD2C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B153BC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:31:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3529020B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:30:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570649413;
-	bh=JJ5I9OVWtkwkRq2I70I9m+OltylDY3E9ybe8AUc5jGE=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=0wDfjAsVCv4tVFY9toWUF6a8P3E1LQmceoPe+EXD8RZ01BIQ/XJSyWucQo7I8o++B
-	 +wZUFaks30r2xOTwPAbiGyex95uzTN0JvC3RJjfdAmeDpVeM7EVP46yu8Qwu5UitNq
-	 T3Bmd9f57p1ZjCaEPTwDuwozoxNdn7/ibW4Hziq4=
+	by mail.kernel.org (Postfix) with ESMTP id 8E83920679
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:31:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731750AbfJITaL (ORCPT
+        id S1731777AbfJITbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 15:30:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51078 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730708AbfJITaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 15:30:10 -0400
-Subject: Re: [GIT PULL] Please pull RDMA subsystem changes
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570649410;
-        bh=JJ5I9OVWtkwkRq2I70I9m+OltylDY3E9ybe8AUc5jGE=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=tb4EmhwdpNyI6jrgmIV42aT98s0RiyYFR3xJMegVm1/80YxWttg2vTU1iNUYm2BkI
-         o5ljmLd7p89u/Elcu3nKSH9TceMe5vNb4GL7XHTfcJfe30HP+vE+8LfCqkj/lu0wdR
-         +4Gmjsxh3jHdl+FtppW57JH/Uwi/o0r8gTP7NVCQ=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191009142811.GA29521@ziepe.ca>
-References: <20191009142811.GA29521@ziepe.ca>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191009142811.GA29521@ziepe.ca>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
-X-PR-Tracked-Commit-Id: 0417791536ae1e28d7f0418f1d20048ec4d3c6cf
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 8a8c600de5dc1d9a7f4b83269fddc80ebd3dd045
-Message-Id: <157064940999.25372.866898993735455801.pr-tracker-bot@kernel.org>
-Date:   Wed, 09 Oct 2019 19:30:09 +0000
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Doug Ledford <dledford@redhat.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        Wed, 9 Oct 2019 15:31:51 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:44685 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729535AbfJITbv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 15:31:51 -0400
+Received: by mail-qk1-f195.google.com with SMTP id u22so3276663qkk.11;
+        Wed, 09 Oct 2019 12:31:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jUusHZnfWO6yMQOFQ+VtWA65o/Iz6fBliSGz9QEZwDg=;
+        b=Gm5HwDXVyVrEOxieRL46FWN78itw3QMAGcQZjwh2MjVLn+9TRxpzkVuLn08u47LxPW
+         qGoa5dNUUkTClS9z41PdxtIJLkAdwSGlJaieomYEwOnRvutnLaB7ZZ0Of24U3Qzx+zty
+         6sUHr8/H8ozxSl2UDe/q9OhWX5tQh5lfSQ0C3KyammWVYPHNZiqx3cOuVQ0LdW5gMUjY
+         qjJKcLl6CAIbcxPDxTi1CLNO9jbaW/twUb42nipqa2xf10yYD77Q/4xdqsJfcyUDdYSj
+         hju89HMEQge/OXdjfkmDXcuVef48U/jf6lxfcmvwoyIHZm33OIDpDh9zAUPj19eGYRRT
+         eF5A==
+X-Gm-Message-State: APjAAAVQ7YZ3IishH+kOO0n1RhbF0w1QunPNLD4WbMS0pmrSSyhPDqzF
+        xuvd4JDGYU6ehFVJ0hjiaB7PPA5f7GTkWgn9QNW0APTB
+X-Google-Smtp-Source: APXvYqxDcZcqVm8Nm1eqPFmKZDJyPAWkGBqwBEf2+Yye78l/7+Ho8Fxl+0VisC2hYNFeNCXUJ1GsSgs0/Q3IYnRco7U=
+X-Received: by 2002:a05:620a:1592:: with SMTP id d18mr5478352qkk.286.1570649509847;
+ Wed, 09 Oct 2019 12:31:49 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191009190853.245077-1-arnd@arndb.de> <20191009191044.308087-10-arnd@arndb.de>
+ <20191009192524.GK4254@piout.net>
+In-Reply-To: <20191009192524.GK4254@piout.net>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 9 Oct 2019 21:31:32 +0200
+Message-ID: <CAK8P3a1zf5kwsRcE1a-GranGz2BEjwdQ_fBcfRLVs-vmC=CjGw@mail.gmail.com>
+Subject: Re: [PATCH v6 10/43] compat_ioctl: move rtc handling into rtc-dev.c
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 9 Oct 2019 14:28:15 +0000:
+On Wed, Oct 9, 2019 at 9:25 PM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
+>
+> If you ever have to resend, the file is now named rtc/dev.c so you could
+> adjust the subject.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
+Ok, I fixed up my local copy.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/8a8c600de5dc1d9a7f4b83269fddc80ebd3dd045
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+      Arnd
