@@ -2,188 +2,132 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C383DC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B21C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96976206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:34:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11C6A206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:34:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z6Vl8jzw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731168AbfJIMeG (ORCPT
+        id S1731278AbfJIMe2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 08:34:06 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:42232 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730696AbfJIMeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 08:34:06 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 51FF9588FBDDDBD42A78;
-        Wed,  9 Oct 2019 20:34:03 +0800 (CST)
-Received: from [127.0.0.1] (10.133.216.73) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Wed, 9 Oct 2019
- 20:33:55 +0800
-From:   Guoheyi <guoheyi@huawei.com>
-Subject: Re: [RFC PATCH 1/2] kvm/arm: add capability to forward hypercall to
- user space
-To:     James Morse <james.morse@arm.com>
-References: <1569338454-26202-1-git-send-email-guoheyi@huawei.com>
- <1569338454-26202-2-git-send-email-guoheyi@huawei.com>
- <e097fb69-1e68-4082-d310-e7666e30b5d6@arm.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <qemu-arm@nongnu.org>, <wanghaibin.wang@huawei.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "Catalin Marinas" <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, <kvmarm@lists.cs.columbia.edu>
-Message-ID: <d62b84ac-1a7e-de05-a1c1-c52dfb463462@huawei.com>
-Date:   Wed, 9 Oct 2019 20:33:45 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Wed, 9 Oct 2019 08:34:28 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43834 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731229AbfJIMe2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 08:34:28 -0400
+Received: by mail-wr1-f66.google.com with SMTP id j18so2732000wrq.10;
+        Wed, 09 Oct 2019 05:34:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=M4DGzZVz3C9CsIT3+orcem5mC7xRelRKri3ygcgFcYg=;
+        b=Z6Vl8jzwQZv1XXQ8Mh9He/cTpu97fQsfQ1cBmapxrThVkgpqVmy7iiglrNrsC5cwvA
+         6IBWyUGhvzVd5dfOS6+lL1zTXjc4zliF5u8ROdz7wF+d4iNr9lc+3q+kGVj91ZHEOJCU
+         KWEBZTD6ETHecKoRnKjnjDsrMTsfHZXE4IasyxVGusXKO6jWu7i2N62HMTD3W1mTxpUt
+         aIEBA3zVKnhpy140JOHqe+f8Tq0cE/s4Enn5W0O54FTnsp1Jvvw1Q5tB7FkVnOsNisXr
+         7mme3cylQ/y7LAc4TxD/ZIps/GWHqcE/hGZ/tggDg4aWu/kUBfnDGjUZtYpFbe2CjSc6
+         Y0mQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=M4DGzZVz3C9CsIT3+orcem5mC7xRelRKri3ygcgFcYg=;
+        b=GxkxmNJYLoEOrb1HJ7jBuSDj1avHb8+wALE6IOuaxHu+zPyB1GWQk7Rf94X/KVzeTU
+         zWdBI3bC2Urlbnq/2dbtEMQeG5U6yWPfj8ICQBf3XRBwyfnKCjRXv0bVLtReYELIxX+x
+         0+nGSIEFHr2I9iWy+k4pUyCjUc49ffxLqOwmp5p7nRDPX0vY6gTGHA6UKzl+jWu1moXH
+         IRxnavb+4Q/NYUMtgOthDRutfsl8oIkvp3jp55rOJa6LEjS7U4nflh8b0u61D+G3uBdG
+         oIJWMKKs7hhN9QoJMM01YNozxseUYftnz6NGdx/t1ThbclRxCmDVAgMm5WxFgETeYAJH
+         xhcw==
+X-Gm-Message-State: APjAAAU8ELRbfMtD6aNa2FYUNADY6lvd7PYAEd20ZVSldr5JURAbmcKs
+        yu9uRJGM5BLE/XdLFhOAbCY=
+X-Google-Smtp-Source: APXvYqwApF/DZjfteDasDL2Kkb76g7OqjJVm+JG00dcX3k7i+hz7lkgviUk2SMygweyq2OJ7IZaCyQ==
+X-Received: by 2002:adf:e284:: with SMTP id v4mr2653792wri.21.1570624466138;
+        Wed, 09 Oct 2019 05:34:26 -0700 (PDT)
+Received: from localhost ([51.15.41.238])
+        by smtp.gmail.com with ESMTPSA id t13sm4438023wra.70.2019.10.09.05.34.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Oct 2019 05:34:25 -0700 (PDT)
+Date:   Wed, 9 Oct 2019 13:34:23 +0100
+From:   Stefan Hajnoczi <stefanha@gmail.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     netdev@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
+        linux-hyperv@vger.kernel.org,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        kvm@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jorgen Hansen <jhansen@vmware.com>
+Subject: Re: [RFC PATCH 08/13] vsock: move vsock_insert_unbound() in the
+ vsock_create()
+Message-ID: <20191009123423.GI5747@stefanha-x1.localdomain>
+References: <20190927112703.17745-1-sgarzare@redhat.com>
+ <20190927112703.17745-9-sgarzare@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <e097fb69-1e68-4082-d310-e7666e30b5d6@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.216.73]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="+PbGPm1eXpwOoWkI"
+Content-Disposition: inline
+In-Reply-To: <20190927112703.17745-9-sgarzare@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry for late response as we had our long holiday last week :)
 
+--+PbGPm1eXpwOoWkI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 2019/10/2 1:19, James Morse wrote:
-> Hi Heyi,
->
-> On 24/09/2019 16:20, Heyi Guo wrote:
->> As more SMC/HVC usages emerge on arm64 platforms, like SDEI, it makes
->> sense for kvm to have the capability of forwarding such calls to user
->> space for further emulation.
-> (what do you mean by further? Doesn't user-space have to do all of it?)
-For kvm will always handle hvc/smc guest exit for the first step, even 
-if it is only a simple forwarding, I called the user-space processing as 
-"further emulation".
+On Fri, Sep 27, 2019 at 01:26:58PM +0200, Stefano Garzarella wrote:
+> vsock_insert_unbound() was called only when 'sock' parameter of
+> __vsock_create() was not null. This only happened when
+> __vsock_create() was called by vsock_create().
+>=20
+> In order to simplify the multi-transports support, this patch
+> moves vsock_insert_unbound() at the end of vsock_create().
+>=20
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> ---
+>  net/vmw_vsock/af_vsock.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
 
->> We reuse the existing term "hypercall" for SMC/HVC, as well as the
->> hypercall structure in kvm_run to exchange arguments and return
->> values. The definition on arm64 is as below:
->>
->> exit_reason: KVM_EXIT_HYPERCALL
->>
->> Input:
->>    nr: the immediate value of SMC/HVC calls; not really used today.
->>    args[6]: x0..x5 (This is not fully conform with SMCCC which requires
->>             x6 as argument as well, but use space can use GET_ONE_REG
->>             ioctl for such rare case).
-> If this structure isn't right for us, we could define a different one for arm/arm64.
-> (we did this for kvm_vcpu_events)
-Do you mean that we can move the hypercall struct definition to arch 
-specific kvm_host.h? For it is in the common kvm_run structure, we'll 
-need to change every kvm supported architectures, including x86, mips, 
-powerpc, s390. Is it acceptable?
+Maybe transports shouldn't call __vsock_create() directly.  They always
+pass NULL as the parent socket, so we could have a more specific
+function that transports call without a parent sock argument.  This
+would eliminate any concern over moving vsock_insert_unbound() out of
+this function.  In any case, I've checked the code and this patch is
+correct.
 
-I found another solution from papr which defines its own hypercall 
-structure in the kvm_run union definition:
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
 
-         /* KVM_EXIT_PAPR_HCALL */
-         struct {
-             __u64 nr;
-             __u64 ret;
-             __u64 args[9];
-         } papr_hcall;
+--+PbGPm1eXpwOoWkI
+Content-Type: application/pgp-signature; name="signature.asc"
 
-How about we define a new structure for ARM/ARM64 specifically?
+-----BEGIN PGP SIGNATURE-----
 
->
->> Return:
->>    args[0..3]: x0..x3 as defined in SMCCC. We need to extract
->>                args[0..3] and write them to x0..x3 when hypercall exit
->>                returns.
-> Are we saying that KVM_EXIT_HYPERCALL expects to be used with SMC-CC?
-> (if so, we should state that).
-Yes I followed SMC-CC when writing this.
->
-> I'm not certain we should tie this to SMC-CC.
->
-> If we don't tie it to SMC-CC this selection of in/out registers looks odd, there is
-> nothing about HVC/SMC that uses these registers, its just the SMC convention.
-Maybe we don't need to tie it to SMC-CC, and simply load all values in 
-args[6] to GP registers...
-And then there is either no strong reason to extend hypercall structure 
-for ARM.
->
->> Flag hypercall_forward is added to turn on/off hypercall forwarding
->> and the default is false. Another flag hypercall_excl_psci is to
->> exclude PSCI from forwarding for backward compatible, and it only
->> makes sense to check its value when hypercall_forward is enabled.
-> Calling out PSCI like this is something we shouldn't do. There will be, (are!) other
-> SMC-CC calls that the kernel provides emulation for, we can't easily add to this list.
-Yes; I didn't figure out good way to keep compatibility and future 
-extension...
-> I think the best way to avoid this, is to say the hypercall mechanism forwards 'unhandled
-> SMC/HVC' to user-space. Which things the kernel chooses to handle can change.
->
-> We need a way for user-space to know which SMC/HVC calls the kernel will handle, and will
-> not forward. A suggestion is to add a co-processor that lists these by #imm and r0/x0
-> value. User-space can then query any call to find out if it would be exported if the guest
-> made that call. Something like kvm_arm_get_fw_reg().
-Do you mean we add only one co-processor to list all SMC/HVC calls 
-kernel will handle? So the reg size should be large enough to hold the 
-list, each entry of which contains a #imm and r0/x0 pair? Is the reg 
-size fixed by definition or it can be queried by user-space? If it is 
-fixed, what's the size should we choose?
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl2d088ACgkQnKSrs4Gr
+c8jGUgf/flGT/To2png0jPgQV5oe1jDDk+0D39ubcCGjdMLuOwLdwey4BUbOWK3I
+KFEzw7U6CmXNnW15vqqckacUNgL6OXgHKrOxKpiwYvonz2/C0JNLMaTIbsSfcR8u
+sXWnnoihq8NTRIJhSxHFaWgqBLWFW8G3sAfFA2oCIiNI8HQhewIy0Sfh2vfuyypU
+SjCHAwlodeIMuEmeIlTUEd4RKWqZ3dDAOs5xnl87OWUdzTtgmKEccQLZSvJ/t2Qi
+QVVO07S3r7ASe2bpjmTgQuV1ZZ3iz/jyFOYAD3WmE6D6a+afcU+4gUTa9Tbu1TL4
+en7c7jB5XF98CqjwO5kjMLozykqVWg==
+=Fgki
+-----END PGP SIGNATURE-----
 
-Does it make sense to extend the entry to hold the function ID base and 
-limit, so that it can describe the whole range for each function group, 
-like PSCI, SDEI, etc?
-
->
-> I agree it should be possible to export the PSCI range to user-space, so that user-space
-> can provide a newer/better version than the kernel emulates, or prevent secondary cores
-> coming online. (we should check how gracefully the kernel handles that... it doesn't
-> happen on real systems)
-> This could be done with something like kvm_vm_ioctl_enable_cap(), one option is to use the
-> args to toggle the on/off value, but it may be simpler to expose a
-> KVM_CAP_ARM_PSCI_TO_USER that can be enabled.
-Sounds good. Then it may not be something we need to do in this patch 
-set :) We can postpone this change when user-space PSCI is ready.
->
->
-> Please update Documentation/virt/kvm/api.txt as part of the patches that make user-visible
-> changes.
-Sure; I can do that when we determine the interfaces.
->
-> For 32bit, are we going to export SMC/HVC calls that failed their condition-code checks?
-I'm not familiar with 32bit, either we don't have 32bit platforms to 
-test the code. So my preference is not to make many changes to 32bit...
->
-> The hypercall structure should probably indicate whether the SMC/HVC call came from
-> aarch32 or aarch64, as the behaviour may be different.
-How about to use the longmode field in hypercall structure? Standard 
-service calls will indicate this in function ID, but we may need to know 
-before parsing the function ID, isn't it?
-
-Really appreciate your comments and suggestions. They are really helpful.
-
-Heyi
-
->
->
-> Thanks,
->
-> James
->
-> .
->
-
-
+--+PbGPm1eXpwOoWkI--
