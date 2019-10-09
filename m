@@ -2,224 +2,196 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC5FECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB3BECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB9A920679
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:28:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E722420679
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:28:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="b6eo6v+r"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XhKVN2b3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731839AbfJIP2e (ORCPT
+        id S1731705AbfJIP1h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 11:28:34 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:45319 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731731AbfJIP1l (ORCPT
+        Wed, 9 Oct 2019 11:27:37 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:34387 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731328AbfJIP1g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 11:27:41 -0400
-Received: by mail-lf1-f66.google.com with SMTP id r134so1970622lff.12
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 08:27:39 -0700 (PDT)
+        Wed, 9 Oct 2019 11:27:36 -0400
+Received: by mail-yw1-f65.google.com with SMTP id d192so967329ywa.1;
+        Wed, 09 Oct 2019 08:27:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=iQQlvVf1KnrDupGieXQiT31DlPt7ngRIn+oWlntJbrA=;
-        b=b6eo6v+rJT+f5py5qdHxkFUU24IJk6MDtdyK7QsLn5YNoKS2Io8CSF0unhd5MezXos
-         Zcuj2GnoBTJD8FPhZkv6DgFglV++T/ayZ7WfL5L/JCfX8hi4+TFrRhJtoe8aioxyRDC8
-         8R1TGet8cI2X4kMc9Rp2nDGt0wlPtuBiAC5QaDp2Gw0riGJYv9trGOuAejkpce1fjL7m
-         eCQH6ukjMWp9Q3WJELgsKxfUS7ETB6y4Hb1KuzPPpY8yCj+FwgltC+wQgNo7Qt4xUKQ5
-         tpy+fcFouWSBQE+IzBCPJDBGo/dfFbpXZ1m/UiXErfewbR48Bge918/6LA9Uvr/NQ0/Y
-         +4Jw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=BimiSAhIyu/wlnbGZzM5zv98VeK3KGxYKaa4VCWD3vc=;
+        b=XhKVN2b3nsHyExn5g3F5i4nQkLizp/ml0iJ6nyIDo8RaY41ylVOc0vRug0oE+UZAge
+         i7aiVMFgkmpOpjS+c3EgFzlyN1cpWIrthK7jSW3uToSXKlX6Jhrxju0R21SjsGZRuyKp
+         Ga2EQkW+onKg8Z5LYWuREGeksADsfpjrH1z7JxA9BcGLXN0APRwI6mj/NaV9cMwQ5/s7
+         vLz1sfqnQZKxpvaGz8S5aITVxusnXfh4S1dYizvCFDbrftaqF0O+58Ig46PBWrt4xcrC
+         9uobcnenyu1GareDW34LUr2PUsF4xO+ILnWyjuSck5fNf8YWAoNZs6EPQI4kSCK72LVQ
+         1Gmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=iQQlvVf1KnrDupGieXQiT31DlPt7ngRIn+oWlntJbrA=;
-        b=XlHcD2gpvpf3gRDDmH9dXOUEfa10KbR8m6ujyx0cd16oytECjJfgYZGksFazuzGYfP
-         bzVmPms94onNQeibodD8YQGQDojn/AwQvR6hcGhO0X2tUD4AjDy6VAUgNmyf9q152H4i
-         nI4/FSzMk58QCLBZfpC9W2ubVx1jCiDzcqSYcw7c0goa+rGNuQ5NDV6uIUz8PFrNbhvi
-         veZzsRiUuIYZNHCTrBtaynRvM5X+LAbJolp2TqEa1U+FgiWx+c4mWYfZFpr1JcNqzKcM
-         EYfFURXFzjOpu5lSWQtdla7JchAK2S3I3kxiTW+zhFL1MFWE99yzPjRRJp8rqD4iBktD
-         pMXw==
-X-Gm-Message-State: APjAAAWVfad82pgejrbb5peCpy/+3wU2gQKri/A/HLcfkVW2RzP7f2sP
-        WqrVT4n3GZeKxFEsIwVW8F8vMw==
-X-Google-Smtp-Source: APXvYqyAYIbpIxwbWzio0EZMQsTyoULCSbdhI02dK/m5+S3lmVAsOItzeHSa2fMvA22WHbAMrkXg9Q==
-X-Received: by 2002:ac2:5c4b:: with SMTP id s11mr2521837lfp.18.1570634858609;
-        Wed, 09 Oct 2019 08:27:38 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id t27sm542192lfl.48.2019.10.09.08.27.37
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=BimiSAhIyu/wlnbGZzM5zv98VeK3KGxYKaa4VCWD3vc=;
+        b=IcsVKC1gDfXwBrSk+wcQnLC5qdrAl2jPn2KkAZB1txZOGGxYGjjscvgrAilA+U9Tto
+         Ne08m6OqxkfwnmUDVZbRum/FgyJW5LnDUxeNZLDzqUVMB/wBx9xveVRNZo6nZfTSJshE
+         57KLSg/jMzv2ydeTbOGoNVrTO2e5ymX9OpSVK3azmBHS3nROub1EpFkb15JrFEWlOSPm
+         V3IgxkOmXUblAMfGqvOrIaL7elqxBKDU6ZlEFtoCipR6D7JZgapJh2TG5pHYAl1Cgy+A
+         oOsQtFWqpGnZxwP9Sb0VmvXpMTPtAZHv5VMIe9IS0n52EQ+hvKeYM4PGyQVQQ4gXxBhH
+         UVdg==
+X-Gm-Message-State: APjAAAUhNuRTnM4AptJ+9hsjeEl2tr604oZLmAOozHDLyZZpqU2VEdAP
+        UqsK6mDRKvpFtxIz0G9N9GQ=
+X-Google-Smtp-Source: APXvYqwFyDfey8Cksi+zaDC4bwYRec4uXM/PDJXCjftXpBCynaS44f28FBJDexcQJTmMprUYCuEbow==
+X-Received: by 2002:a81:a303:: with SMTP id a3mr3065880ywh.133.1570634854880;
+        Wed, 09 Oct 2019 08:27:34 -0700 (PDT)
+Received: from localhost.localdomain (072-189-084-142.res.spectrum.com. [72.189.84.142])
+        by smtp.gmail.com with ESMTPSA id g40sm611863ywk.14.2019.10.09.08.27.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 08:27:37 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id C2409102BFA; Wed,  9 Oct 2019 18:27:37 +0300 (+03)
-Date:   Wed, 9 Oct 2019 18:27:37 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Thomas =?utf-8?Q?Hellstr=C3=B6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        torvalds@linux-foundation.org,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rik van Riel <riel@surriel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Huang Ying <ying.huang@intel.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>
-Subject: Re: [PATCH v4 3/9] mm: pagewalk: Don't split transhuge pmds when a
- pmd_entry is present
-Message-ID: <20191009152737.p42w7w456zklxz72@box>
-References: <20191008091508.2682-1-thomas_os@shipmail.org>
- <20191008091508.2682-4-thomas_os@shipmail.org>
+        Wed, 09 Oct 2019 08:27:33 -0700 (PDT)
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        akpm@linux-foundation.org
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, andriy.shevchenko@linux.intel.com,
+        linux@rasmusvillemoes.dk, yamada.masahiro@socionext.com,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        geert@linux-m68k.org, preid@electromag.com.au, lukas@wunner.de,
+        sean.nyekjaer@prevas.dk, morten.tiljeset@prevas.dk,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH v17 02/14] lib/test_bitmap.c: Add for_each_set_clump8 test cases
+Date:   Wed,  9 Oct 2019 11:27:00 -0400
+Message-Id: <febc0fb8151e3e3fdd61c34da9193d1c4d7e6c12.1570633189.git.vilhelm.gray@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1570633189.git.vilhelm.gray@gmail.com>
+References: <cover.1570633189.git.vilhelm.gray@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191008091508.2682-4-thomas_os@shipmail.org>
-User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 11:15:02AM +0200, Thomas Hellström (VMware) wrote:
-> From: Thomas Hellstrom <thellstrom@vmware.com>
-> 
-> The pagewalk code was unconditionally splitting transhuge pmds when a
-> pte_entry was present. However ideally we'd want to handle transhuge pmds
-> in the pmd_entry function and ptes in pte_entry function. So don't split
-> huge pmds when there is a pmd_entry function present, but let the callback
-> take care of it if necessary.
+The introduction of the for_each_set_clump8 macro warrants test cases to
+verify the implementation. This patch adds test case checks for whether
+an out-of-bounds clump index is returned, a zero clump is returned, or
+the returned clump value differs from the expected clump value.
 
-Do we have any current user that expect split_huge_pmd() in this scenario.
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Acked-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+---
+ lib/test_bitmap.c | 65 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 65 insertions(+)
 
-> 
-> In order to make sure a virtual address range is handled by one and only
-> one callback, and since pmd entries may be unstable, we introduce a
-> pmd_entry return code that tells the walk code to continue processing this
-> pmd entry rather than to move on. Since caller-defined positive return
-> codes (up to 2) are used by current callers, use a high value that allows a
-> large range of positive caller-defined return codes for future users.
-> 
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Rik van Riel <riel@surriel.com>
-> Cc: Minchan Kim <minchan@kernel.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Huang Ying <ying.huang@intel.com>
-> Cc: Jérôme Glisse <jglisse@redhat.com>
-> Cc: Kirill A. Shutemov <kirill@shutemov.name>
-> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-> ---
->  include/linux/pagewalk.h |  8 ++++++++
->  mm/pagewalk.c            | 28 +++++++++++++++++++++-------
->  2 files changed, 29 insertions(+), 7 deletions(-)
-> 
-> diff --git a/include/linux/pagewalk.h b/include/linux/pagewalk.h
-> index bddd9759bab9..c4a013eb445d 100644
-> --- a/include/linux/pagewalk.h
-> +++ b/include/linux/pagewalk.h
-> @@ -4,6 +4,11 @@
->  
->  #include <linux/mm.h>
->  
-> +/* Highest positive pmd_entry caller-specific return value */
-> +#define PAGE_WALK_CALLER_MAX     (INT_MAX / 2)
-> +/* The handler did not handle the entry. Fall back to the next level */
-> +#define PAGE_WALK_FALLBACK       (PAGE_WALK_CALLER_MAX + 1)
-> +
-
-That's hacky.
-
-Maybe just use an error code for this? -EAGAIN?
-
->  struct mm_walk;
->  
->  /**
-> @@ -16,6 +21,9 @@ struct mm_walk;
->   *			this handler is required to be able to handle
->   *			pmd_trans_huge() pmds.  They may simply choose to
->   *			split_huge_page() instead of handling it explicitly.
-> + *                      If the handler did not handle the PMD, or split the
-> + *                      PMD and wants it handled by the PTE handler, it
-> + *                      should return PAGE_WALK_FALLBACK.
-
-Indentation is broken. Use tabs.
-
->   * @pte_entry:		if set, called for each non-empty PTE (4th-level) entry
->   * @pte_hole:		if set, called for each hole at all levels
->   * @hugetlb_entry:	if set, called for each hugetlb entry
-> diff --git a/mm/pagewalk.c b/mm/pagewalk.c
-> index 83c0b78363b4..f844c2a2aa60 100644
-> --- a/mm/pagewalk.c
-> +++ b/mm/pagewalk.c
-> @@ -50,10 +50,18 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
->  		 * This implies that each ->pmd_entry() handler
->  		 * needs to know about pmd_trans_huge() pmds
->  		 */
-> -		if (ops->pmd_entry)
-> +		if (ops->pmd_entry) {
->  			err = ops->pmd_entry(pmd, addr, next, walk);
-> -		if (err)
-> -			break;
-> +			if (!err)
-> +				continue;
-> +			else if (err <= PAGE_WALK_CALLER_MAX)
-> +				break;
-> +			WARN_ON(err != PAGE_WALK_FALLBACK);
-> +			err = 0;
-> +			if (pmd_trans_unstable(pmd))
-> +				goto again;
-> +			/* Fall through */
-> +		}
->  
->  		/*
->  		 * Check this here so we only break down trans_huge
-> @@ -61,8 +69,8 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
->  		 */
->  		if (!ops->pte_entry)
->  			continue;
-> -
-> -		split_huge_pmd(walk->vma, pmd, addr);
-> +		if (!ops->pmd_entry)
-> +			split_huge_pmd(walk->vma, pmd, addr);
->  		if (pmd_trans_unstable(pmd))
->  			goto again;
->  		err = walk_pte_range(pmd, addr, next, walk);
-> @@ -281,11 +289,17 @@ static int __walk_page_range(unsigned long start, unsigned long end,
->   *
->   *  - 0  : succeeded to handle the current entry, and if you don't reach the
->   *         end address yet, continue to walk.
-> - *  - >0 : succeeded to handle the current entry, and return to the caller
-> - *         with caller specific value.
-> + *  - >0, and <= PAGE_WALK_CALLER_MAX : succeeded to handle the current entry,
-> + *         and return to the caller with caller specific value.
->   *  - <0 : failed to handle the current entry, and return to the caller
->   *         with error code.
->   *
-> + * For pmd_entry(), a value <= PAGE_WALK_CALLER_MAX indicates that the entry
-> + * was handled by the callback. PAGE_WALK_FALLBACK indicates that the entry
-> + * could not be handled by the callback and should be re-checked. If the
-> + * callback needs the entry to be handled by the next level, it should
-> + * split the entry and then return PAGE_WALK_FALLBACK.
-> + *
->   * Before starting to walk page table, some callers want to check whether
->   * they really want to walk over the current vma, typically by checking
->   * its vm_flags. walk_page_test() and @ops->test_walk() are used for this
-> -- 
-> 2.21.0
-> 
-
+diff --git a/lib/test_bitmap.c b/lib/test_bitmap.c
+index 51a98f7ee79e..dc167c13eb39 100644
+--- a/lib/test_bitmap.c
++++ b/lib/test_bitmap.c
+@@ -92,6 +92,36 @@ __check_eq_u32_array(const char *srcfile, unsigned int line,
+ 	return true;
+ }
+ 
++static bool __init __check_eq_clump8(const char *srcfile, unsigned int line,
++				    const unsigned int offset,
++				    const unsigned int size,
++				    const unsigned char *const clump_exp,
++				    const unsigned long *const clump)
++{
++	unsigned long exp;
++
++	if (offset >= size) {
++		pr_warn("[%s:%u] bit offset for clump out-of-bounds: expected less than %u, got %u\n",
++			srcfile, line, size, offset);
++		return false;
++	}
++
++	exp = clump_exp[offset / 8];
++	if (!exp) {
++		pr_warn("[%s:%u] bit offset for zero clump: expected nonzero clump, got bit offset %u with clump value 0",
++			srcfile, line, offset);
++		return false;
++	}
++
++	if (*clump != exp) {
++		pr_warn("[%s:%u] expected clump value of 0x%lX, got clump value of 0x%lX",
++			srcfile, line, exp, *clump);
++		return false;
++	}
++
++	return true;
++}
++
+ #define __expect_eq(suffix, ...)					\
+ 	({								\
+ 		int result = 0;						\
+@@ -108,6 +138,7 @@ __check_eq_u32_array(const char *srcfile, unsigned int line,
+ #define expect_eq_bitmap(...)		__expect_eq(bitmap, ##__VA_ARGS__)
+ #define expect_eq_pbl(...)		__expect_eq(pbl, ##__VA_ARGS__)
+ #define expect_eq_u32_array(...)	__expect_eq(u32_array, ##__VA_ARGS__)
++#define expect_eq_clump8(...)		__expect_eq(clump8, ##__VA_ARGS__)
+ 
+ static void __init test_zero_clear(void)
+ {
+@@ -404,6 +435,39 @@ static void noinline __init test_mem_optimisations(void)
+ 	}
+ }
+ 
++static const unsigned char clump_exp[] __initconst = {
++	0x01,	/* 1 bit set */
++	0x02,	/* non-edge 1 bit set */
++	0x00,	/* zero bits set */
++	0x38,	/* 3 bits set across 4-bit boundary */
++	0x38,	/* Repeated clump */
++	0x0F,	/* 4 bits set */
++	0xFF,	/* all bits set */
++	0x05,	/* non-adjacent 2 bits set */
++};
++
++static void __init test_for_each_set_clump8(void)
++{
++#define CLUMP_EXP_NUMBITS 64
++	DECLARE_BITMAP(bits, CLUMP_EXP_NUMBITS);
++	unsigned int start;
++	unsigned long clump;
++
++	/* set bitmap to test case */
++	bitmap_zero(bits, CLUMP_EXP_NUMBITS);
++	bitmap_set(bits, 0, 1);		/* 0x01 */
++	bitmap_set(bits, 9, 1);		/* 0x02 */
++	bitmap_set(bits, 27, 3);	/* 0x28 */
++	bitmap_set(bits, 35, 3);	/* 0x28 */
++	bitmap_set(bits, 40, 4);	/* 0x0F */
++	bitmap_set(bits, 48, 8);	/* 0xFF */
++	bitmap_set(bits, 56, 1);	/* 0x05 - part 1 */
++	bitmap_set(bits, 58, 1);	/* 0x05 - part 2 */
++
++	for_each_set_clump8(start, clump, bits, CLUMP_EXP_NUMBITS)
++		expect_eq_clump8(start, CLUMP_EXP_NUMBITS, clump_exp, &clump);
++}
++
+ static void __init selftest(void)
+ {
+ 	test_zero_clear();
+@@ -413,6 +477,7 @@ static void __init selftest(void)
+ 	test_bitmap_parselist();
+ 	test_bitmap_parselist_user();
+ 	test_mem_optimisations();
++	test_for_each_set_clump8();
+ }
+ 
+ KSTM_MODULE_LOADERS(test_bitmap);
 -- 
- Kirill A. Shutemov
+2.23.0
+
