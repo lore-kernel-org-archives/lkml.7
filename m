@@ -2,106 +2,122 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E030ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 21:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4EDDC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 21:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7268120B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 21:30:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1FD7206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 21:35:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t9EwRTa0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732130AbfJIVaX (ORCPT
+        id S1731656AbfJIVfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 17:30:23 -0400
-Received: from mga14.intel.com ([192.55.52.115]:5036 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729908AbfJIVaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 17:30:22 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 14:30:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,277,1566889200"; 
-   d="scan'208";a="205880605"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga002.jf.intel.com with ESMTP; 09 Oct 2019 14:30:21 -0700
-Date:   Wed, 9 Oct 2019 14:30:21 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Reto Buerki <reet@codelabs.ch>,
-        Liran Alon <liran.alon@oracle.com>
-Subject: Re: [PATCH v2 4/8] KVM: VMX: Optimize vmx_set_rflags() for
- unrestricted guest
-Message-ID: <20191009213021.GH19952@linux.intel.com>
-References: <20190927214523.3376-1-sean.j.christopherson@intel.com>
- <20190927214523.3376-5-sean.j.christopherson@intel.com>
- <99e57095-d855-99d7-e10e-a415c6ef13b2@redhat.com>
- <20191009163835.GB19952@linux.intel.com>
- <aee0fe86-6a5a-680a-4147-3b68fc3718c9@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aee0fe86-6a5a-680a-4147-3b68fc3718c9@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Wed, 9 Oct 2019 17:35:00 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:32939 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728804AbfJIVfA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 17:35:00 -0400
+Received: by mail-pg1-f196.google.com with SMTP id i76so2272045pgc.0;
+        Wed, 09 Oct 2019 14:34:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=93XeND10daxMH10mUwFpx+iBqyMkuxVptnzWDGZ5rAE=;
+        b=t9EwRTa0xVN+CnzMK1VtNToY63kjkFdBHNGmDJKvSh5OpWOkXi73cg74gjLP3/zpE9
+         8hDObmZpCkDo7ajMaDTaC0YqBqm/gLqP/YWhIZtuNWsiIUm4xXYrryOSGFhNh+4sEfcJ
+         YrzNkCeLcHwbWrDTGSE02GDGEfL6uYCHwZYH0Bnx7cedasuYNHoYp8tEsYkW8LOrUeR8
+         qs0gVgJeN1yLXWsHHBJgI6UBnJAZOTMAwEjaNQoClUyj5wg4SX9ZXiJoQ2HcsgDqG/mK
+         VyQ+caX2EITecNehpw8oXyriS+EHejuw9GUEOLGzfH7reWdxnj16hHMXmhKKJSep448w
+         QJFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=93XeND10daxMH10mUwFpx+iBqyMkuxVptnzWDGZ5rAE=;
+        b=hGcS3eWkJpIe5s1RparBe4PqHTzzGP0h/2DUeq+DJpdzh5DPZ4Sxmw2GB1yGmoVdl9
+         LK96TGxfS/xitgYCeF4zPCGdOXQpElBSCll/JK9OGoMtk2Kv2ZaabnpAk9wiH28ddMLx
+         +H3cz62dVpL7G36gXpBW3BAsF1YIw6mwFH6fJQHnI74FkM+0wu1Ke+rXF6m23TmF9Mf+
+         r71gpbB1H7TRW3cAEZeYX3fkDBManV6+Oeuamho81qIdfaojLNMkyVL72tBD9P7u4fJ5
+         z80DCyjZDaK4elHNnroQ9WCNoI3IPJ9L7ssVZpEyvrcJpWacDrUiS3s8Wi3ShPe7+EBB
+         AtAw==
+X-Gm-Message-State: APjAAAWULsNbXn7HfyGKFx1/vhaxXMFhsmn01Bn0OtsbQ9fSxSOzp2C+
+        oWL4loIpvBpTkiDIoGwnzBrfInfH
+X-Google-Smtp-Source: APXvYqwrTT1N5CbtoW7bGcow975hWrDFM7VA+ZKxMMKBQH74XTjBbjGPFN7q5ngTfy00REM0jSRMPA==
+X-Received: by 2002:a63:734a:: with SMTP id d10mr4055370pgn.334.1570656898956;
+        Wed, 09 Oct 2019 14:34:58 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id h4sm3336017pfg.159.2019.10.09.14.34.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 09 Oct 2019 14:34:58 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     robdclark@gmail.com, sean@poorly.run, airlied@linux.ie,
+        daniel@ffwll.ch
+Cc:     linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH] drm/msm/dsi: Implement reset correctly
+Date:   Wed,  9 Oct 2019 14:34:54 -0700
+Message-Id: <20191009213454.32891-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 10:59:10PM +0200, Paolo Bonzini wrote:
-> On 09/10/19 18:38, Sean Christopherson wrote:
-> > On Wed, Oct 09, 2019 at 12:40:53PM +0200, Paolo Bonzini wrote:
-> >> On 27/09/19 23:45, Sean Christopherson wrote:
-> >>> Rework vmx_set_rflags() to avoid the extra code need to handle emulation
-> >>> of real mode and invalid state when unrestricted guest is disabled.  The
-> >>> primary reason for doing so is to avoid the call to vmx_get_rflags(),
-> >>> which will incur a VMREAD when RFLAGS is not already available.  When
-> >>> running nested VMs, the majority of calls to vmx_set_rflags() will occur
-> >>> without an associated vmx_get_rflags(), i.e. when stuffing GUEST_RFLAGS
-> >>> during transitions between vmcs01 and vmcs02.
-> >>>
-> >>> Note, vmx_get_rflags() guarantees RFLAGS is marked available.
-> >>
-> >> Slightly nicer this way:
-> >>
-> >> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> >> index 8de9853d7ab6..62ab19d65efd 100644
-> >> --- a/arch/x86/kvm/vmx/vmx.c
-> >> +++ b/arch/x86/kvm/vmx/vmx.c
-> >> @@ -1431,9 +1431,17 @@ unsigned long vmx_get_rflags(struct kvm_vcpu *vcpu)
-> >>  void vmx_set_rflags(struct kvm_vcpu *vcpu, unsigned long rflags)
-> >>  {
-> >>  	struct vcpu_vmx *vmx = to_vmx(vcpu);
-> >> -	unsigned long old_rflags = vmx_get_rflags(vcpu);
-> >> +	unsigned long old_rflags;
-> >> +
-> >> +	if (enable_unrestricted_guest) {
-> >> +		__set_bit(VCPU_EXREG_RFLAGS, (ulong *)&vcpu->arch.regs_avail);
-> >> +		vmx->rflags = rflags;
-> >> +		vmcs_writel(GUEST_RFLAGS, rflags);
-> >> +		return;
-> >> +	}
-> >> +
-> >> +	old_rflags = vmx_get_rflags(vcpu);
-> >>  
-> >> -	__set_bit(VCPU_EXREG_RFLAGS, (ulong *)&vcpu->arch.regs_avail);
-> >>  	vmx->rflags = rflags;
-> >>  	if (vmx->rmode.vm86_active) {
-> >>  		vmx->rmode.save_rflags = rflags;
-> > 
-> > Works for me.  Do you want me to spin a v3 to incorporate this and remove
-> > the open coding of the RIP/RSP accessors?  Or are you planning on squashing
-> > the changes as you apply?
-> 
-> If it's okay for you I can squash it.
+On msm8998, vblank timeouts are observed because the DSI controller is not
+reset properly, which ends up stalling the MDP.  This is because the reset
+logic is not correct per the hardware documentation.
 
-Squash away.
+The documentation states that after asserting reset, software should wait
+some time (no indication of how long), or poll the status register until it
+returns 0 before deasserting reset.
+
+wmb() is insufficient for this purpose since it just ensures ordering, not
+timing between writes.  Since asserting and deasserting reset occurs on the
+same register, ordering is already guaranteed by the architecture, making
+the wmb extraneous.
+
+Since we would define a timeout for polling the status register to avoid a
+possible infinite loop, lets just use a static delay of 20 ms, since 16.666
+ms is the time available to process one frame at 60 fps.
+
+Fixes: a689554ba6ed (drm/msm: Initial add DSI connector support)
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+
+Rob et al, is it possible for this to go into a 5.4-rc?
+
+ drivers/gpu/drm/msm/dsi/dsi_host.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
+index 663ff9f4fac9..68ded9b4735d 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_host.c
++++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
+@@ -986,7 +986,7 @@ static void dsi_sw_reset(struct msm_dsi_host *msm_host)
+ 	wmb(); /* clocks need to be enabled before reset */
+ 
+ 	dsi_write(msm_host, REG_DSI_RESET, 1);
+-	wmb(); /* make sure reset happen */
++	msleep(20); /* make sure reset happen */
+ 	dsi_write(msm_host, REG_DSI_RESET, 0);
+ }
+ 
+@@ -1396,7 +1396,7 @@ static void dsi_sw_reset_restore(struct msm_dsi_host *msm_host)
+ 
+ 	/* dsi controller can only be reset while clocks are running */
+ 	dsi_write(msm_host, REG_DSI_RESET, 1);
+-	wmb();	/* make sure reset happen */
++	msleep(20);	/* make sure reset happen */
+ 	dsi_write(msm_host, REG_DSI_RESET, 0);
+ 	wmb();	/* controller out of reset */
+ 	dsi_write(msm_host, REG_DSI_CTRL, data0);
+-- 
+2.17.1
+
