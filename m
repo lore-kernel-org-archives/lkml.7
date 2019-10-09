@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 736EDC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A8B5C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 408EF20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:29:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01EE120679
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:29:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570642153;
-	bh=a+jnrrLUjZCnLTg1MYH2H3uUUeyvZnRqF6KjRTHV+GY=;
+	s=default; t=1570642161;
+	bh=pzYismJLfx4vIF4SyCyhbDR9A3inGA4T9Ll9hlAjaDc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cc2nnu66mRpSWUIs5WlKLklsEEYJ3IjwD4uTitG+ND67p99oEfmZagBV7qJ8/g56J
-	 cWzn9W/tKbnlD76U8KlhMf+Mp/QWcsXmAg2wE5sLoBm0EjBL636plMc1BKk5d3EkGm
-	 7geJmajFns7rLTN8UHh1PJMkx1QexOsunU4nahyI=
+	b=x7Yp3r7zSu+iBJTI0hymy+jBMvnL85Kk1B3sIAD4wAzCj8GWwobYdblxd5Vg/pCT/
+	 McHegoTmcZ2yxoCAkIQbPgrJSriGeZ2nw3WXDI+HVc4xfLETkaEuErF9tYO8+J55Fk
+	 gtCXG21bRheb9126v7DjtSnvhbd/XTQJg5Zlq0TE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732311AbfJIR3M (ORCPT
+        id S1732861AbfJIR3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:29:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48848 "EHLO mail.kernel.org"
+        Wed, 9 Oct 2019 13:29:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732221AbfJIRYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 13:24:16 -0400
+        id S1732213AbfJIRYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 13:24:14 -0400
 Received: from sasha-vm.mshome.net (unknown [167.220.2.234])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FC812196E;
-        Wed,  9 Oct 2019 17:24:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1684A21D56;
+        Wed,  9 Oct 2019 17:24:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570641856;
-        bh=a+jnrrLUjZCnLTg1MYH2H3uUUeyvZnRqF6KjRTHV+GY=;
+        s=default; t=1570641854;
+        bh=pzYismJLfx4vIF4SyCyhbDR9A3inGA4T9Ll9hlAjaDc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a80hqOndue49JhE9aBAcvhgUtSd+2kXohLai90K5PFJxng0Ak0Mm4skb1uOwn+AzV
-         d+pLBc7w8Xbqv24cwCgUtdKIoZGZHDwg/7X4nTN2tALigSnlpHc1NJG0ecjNGc45a7
-         /VhK+Q46uz5VZUzSi8d9hc8lXyWTyvkVcZgc17yM=
+        b=gobPve6otbB5UBCpr2m+2faLZCL9pNjwcVTYHogXAZtbDeDCYgXroqrhCrUCwgQs5
+         MXFmjmZmeAD/jGOgN+ipwDIQSNg5ICR1NS9LOnELvrTRniAjlekiSjG0iP155SZXvY
+         zTlCXXbhvDpr2CoU4rahOhYEsHQup5yWcmJ1/MSQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 24/26] r8152: Set macpassthru in reset_resume callback
-Date:   Wed,  9 Oct 2019 13:05:56 -0400
-Message-Id: <20191009170558.32517-24-sashal@kernel.org>
+Cc:     Eric Sandeen <sandeen@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 23/26] vfs: Fix EOVERFLOW testing in put_compat_statfs64
+Date:   Wed,  9 Oct 2019 13:05:55 -0400
+Message-Id: <20191009170558.32517-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191009170558.32517-1-sashal@kernel.org>
 References: <20191009170558.32517-1-sashal@kernel.org>
@@ -60,44 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Eric Sandeen <sandeen@redhat.com>
 
-[ Upstream commit a54cdeeb04fc719e4c7f19d6e28dba7ea86cee5b ]
+[ Upstream commit cc3a7bfe62b947b423fcb2cfe89fcba92bf48fa3 ]
 
-r8152 may fail to establish network connection after resume from system
-suspend.
+Today, put_compat_statfs64() disallows nearly any field value over
+2^32 if f_bsize is only 32 bits, but that makes no sense.
+compat_statfs64 is there for the explicit purpose of providing 64-bit
+fields for f_files, f_ffree, etc.  And f_bsize is always only 32 bits.
 
-If the USB port connects to r8152 lost its power during system suspend,
-the MAC address was written before is lost. The reason is that The MAC
-address doesn't get written again in its reset_resume callback.
+As a result, 32-bit userspace gets -EOVERFLOW for i.e.  large file
+counts even with -D_FILE_OFFSET_BITS=64 set.
 
-So let's set MAC address again in reset_resume callback. Also remove
-unnecessary lock as no other locking attempt will happen during
-reset_resume.
+In reality, only f_bsize and f_frsize can legitimately overflow
+(fields like f_type and f_namelen should never be large), so test
+only those fields.
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This bug was discussed at length some time ago, and this is the proposal
+Al suggested at https://lkml.org/lkml/2018/8/6/640.  It seemed to get
+dropped amid the discussion of other related changes, but this
+part seems obviously correct on its own, so I've picked it up and
+sent it, for expediency.
+
+Fixes: 64d2ab32efe3 ("vfs: fix put_compat_statfs64() does not handle errors")
+Signed-off-by: Eric Sandeen <sandeen@redhat.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/r8152.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/statfs.c | 17 ++++-------------
+ 1 file changed, 4 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index a065a6184f7e4..a291e5f2daef6 100644
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -4474,10 +4474,9 @@ static int rtl8152_reset_resume(struct usb_interface *intf)
- 	struct r8152 *tp = usb_get_intfdata(intf);
- 
- 	clear_bit(SELECTIVE_SUSPEND, &tp->flags);
--	mutex_lock(&tp->control);
- 	tp->rtl_ops.init(tp);
- 	queue_delayed_work(system_long_wq, &tp->hw_phy_work, 0);
--	mutex_unlock(&tp->control);
-+	set_ethernet_addr(tp);
- 	return rtl8152_resume(intf);
- }
- 
+diff --git a/fs/statfs.c b/fs/statfs.c
+index f0216629621d6..56f655f757ffb 100644
+--- a/fs/statfs.c
++++ b/fs/statfs.c
+@@ -304,19 +304,10 @@ COMPAT_SYSCALL_DEFINE2(fstatfs, unsigned int, fd, struct compat_statfs __user *,
+ static int put_compat_statfs64(struct compat_statfs64 __user *ubuf, struct kstatfs *kbuf)
+ {
+ 	struct compat_statfs64 buf;
+-	if (sizeof(ubuf->f_bsize) == 4) {
+-		if ((kbuf->f_type | kbuf->f_bsize | kbuf->f_namelen |
+-		     kbuf->f_frsize | kbuf->f_flags) & 0xffffffff00000000ULL)
+-			return -EOVERFLOW;
+-		/* f_files and f_ffree may be -1; it's okay
+-		 * to stuff that into 32 bits */
+-		if (kbuf->f_files != 0xffffffffffffffffULL
+-		 && (kbuf->f_files & 0xffffffff00000000ULL))
+-			return -EOVERFLOW;
+-		if (kbuf->f_ffree != 0xffffffffffffffffULL
+-		 && (kbuf->f_ffree & 0xffffffff00000000ULL))
+-			return -EOVERFLOW;
+-	}
++
++	if ((kbuf->f_bsize | kbuf->f_frsize) & 0xffffffff00000000ULL)
++		return -EOVERFLOW;
++
+ 	memset(&buf, 0, sizeof(struct compat_statfs64));
+ 	buf.f_type = kbuf->f_type;
+ 	buf.f_bsize = kbuf->f_bsize;
 -- 
 2.20.1
 
