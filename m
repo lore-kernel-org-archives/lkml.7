@@ -2,111 +2,60 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E61ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A4DAC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 552E2206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:06:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="NtwYq9c0"
+	by mail.kernel.org (Postfix) with ESMTP id 3ECCC206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:06:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730607AbfJIKGQ (ORCPT
+        id S1730696AbfJIKGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 06:06:16 -0400
-Received: from mail-eopbgr130074.outbound.protection.outlook.com ([40.107.13.74]:48091
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        Wed, 9 Oct 2019 06:06:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56990 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726211AbfJIKGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 06:06:15 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=busMzihIkZvFRqLT24Nxld+vkaQhngaibRF4AT95XVPTyaYfvIpemwPbdJjC571/lwcFtshpQLwFhD0Z5tr/dgav2AHhGsKc3aP4Ddj3FOXUOBS09xWly1y2dPAk1hKVnMZ2JByR/NIw9StChxOXDyM9G/BITLqy8GrRfT+j/mV46R5VFlsxo+bhmjqMogrs1Ftj6rbjrPmDribRC+6WeDL2gc57bgHqHlg2+pRuuDEPD7urmkgSGp/HpI1Xic6dVg0h6/4uMTPb84ZOiSm1gfgOHJz1kjrOGW2rmkVntMxoN1CJjmOJ9vb0GWFjMD5IxLNHJqGYQVued+qXDwjpIg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GZT9u+RBMF7VJB8rHfS+hh8hXsxwlSDetzzMFroy8pg=;
- b=K05kw/ffdO6N+s8Xbf/loZo6qIzJpjSwTLv4FSqA3/N6bYh3UZWobbqIoBtiiFIiJdP/rVIADloJGBQAjyOWLXvb4tQDwCGrZN0P/Jbwd74TYST+gRySHOt0SNQz3o15M47tJAp7T2yNd0DMaCCGbl9WvqMwbeEUT6qLrknJFGgkmxJnW6GywH3pcOeGHOv3A2qozGUpqiUKUDxZVO0zOuk1WdCm1v9gYXQJ61rbnCeeA/GwI4JLkCqER41Wmj2V8MRgejJSkiuQ1JS+HBd0O93VuEBI90yw3LOhA+Zz0FqoNURAqp5kE5kf/VF4TD18Fh/EdFA5cGGfrctZzni3pg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GZT9u+RBMF7VJB8rHfS+hh8hXsxwlSDetzzMFroy8pg=;
- b=NtwYq9c0ocEkWeOHluq/B88O2HGtBRMq9ZFZImnyJk/O8q6fwOtpi2NOKqOwzsIbY9exQxOIgUkjCK17BGLxqVMIiRnLgAEu/vjq80mwCdRJhhfgwhUDF42bRHd+h0kVA/HcCrW4yVL9efCTTKUlNaGBx1W8eq39h30sNeY9F+Y=
-Received: from VI1PR04MB5134.eurprd04.prod.outlook.com (20.177.51.208) by
- VI1PR04MB4400.eurprd04.prod.outlook.com (20.177.55.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.16; Wed, 9 Oct 2019 10:06:12 +0000
-Received: from VI1PR04MB5134.eurprd04.prod.outlook.com
- ([fe80::10f0:af2c:76ac:dfb]) by VI1PR04MB5134.eurprd04.prod.outlook.com
- ([fe80::10f0:af2c:76ac:dfb%7]) with mapi id 15.20.2347.016; Wed, 9 Oct 2019
- 10:06:12 +0000
-From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
-To:     Christoph Hellwig <hch@infradead.org>,
-        Madalin-cristian Bucur <madalin.bucur@nxp.com>
-CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Roy Pledge <roy.pledge@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 19/20] dpaa_eth: add dpaa_dma_to_virt()
-Thread-Topic: [PATCH 19/20] dpaa_eth: add dpaa_dma_to_virt()
-Thread-Index: AQHVfdGJ8BuiEujlUEakPeKI2HGGx6dR7bYAgAApAYA=
-Date:   Wed, 9 Oct 2019 10:06:12 +0000
-Message-ID: <43b4dba2-cf0a-8f8f-e44a-d76833e28dd2@nxp.com>
-References: <1570536641-25104-1-git-send-email-madalin.bucur@nxp.com>
- <1570536641-25104-20-git-send-email-madalin.bucur@nxp.com>
- <20191009073926.GA6916@infradead.org>
-In-Reply-To: <20191009073926.GA6916@infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=laurentiu.tudor@nxp.com; 
-x-originating-ip: [89.37.124.34]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 47de30cf-c49f-4f86-2651-08d74ca050a6
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: VI1PR04MB4400:|VI1PR04MB4400:
-x-ms-exchange-purlcount: 1
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB4400C07EC25E3E43DF8771A8EC950@VI1PR04MB4400.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 018577E36E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(396003)(39860400002)(136003)(376002)(189003)(199004)(486006)(99286004)(446003)(476003)(966005)(2616005)(11346002)(76176011)(14454004)(478600001)(76116006)(25786009)(6116002)(26005)(91956017)(229853002)(66946007)(3846002)(66446008)(64756008)(66556008)(66476007)(86362001)(186003)(6512007)(2906002)(6246003)(31686004)(6506007)(53546011)(31696002)(4326008)(44832011)(6436002)(102836004)(6486002)(6636002)(7736002)(36756003)(110136005)(6306002)(81156014)(81166006)(54906003)(66066001)(5660300002)(71200400001)(71190400001)(8676002)(305945005)(316002)(256004)(4744005)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4400;H:VI1PR04MB5134.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 57n5dgbSKs0auHVu7ntUPEYSqeooHTyF1VsLI6dJ4VThyVIqh3poG2S12VfrxzneH3r1yHFzQR4ca90IovqxdQcoyqdZLyqKNs6EQ3W+CiHLDTVTn5m6G9duCUeRBZYF/BjzVICy1bGK9RF0tkK0nB/oSMGTqtfDUKRrp5Kgy9/sQQ0BvC3jLO01CB8vbyQ0BZwjMV8GAOaiMaHkb1xttxiUL1QZao0Ftdp5US+Dcu9LrpDPiu4dal+DoSUvQ1B2wAXgC/UxYKaUSWPbpvc2x2+oeHYZyWkqMnFMpISdzLk/8iNEnhP9vjaNYh/+v+nzs48g8/Xbl4IsK8XONMH7A7sJnN0YLMbVqpquHKQiTdC7neTIgDq8TzVWiekoa0x+3CtiDz9q7BMKgl2vV/Mr7ukp2xACxoNIevQ/pJp9z6WmERJmqcLCcT2LqYAO5a+W4lL9LwA/fJ54HL6F7jsX7Q==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <130FB95E19AFDD4D806208373DE41922@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1726211AbfJIKGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 06:06:24 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9E888AE48;
+        Wed,  9 Oct 2019 10:06:22 +0000 (UTC)
+From:   Andreas Schwab <schwab@suse.de>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "open list\:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list\:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH] Documentation: admin-guide: add earlycon documentation for the sifive serial driver
+References: <alpine.DEB.2.21.9999.1910081606370.11044@viisi.sifive.com>
+        <CAMuHMdVdPFSU_3VEtO=P73kqLezV5Dmki=N3nxsKibzy-U5pBg@mail.gmail.com>
+X-Yow:  My pants just went to high school in the Carlsbad Caverns!!!
+Date:   Wed, 09 Oct 2019 12:06:22 +0200
+In-Reply-To: <CAMuHMdVdPFSU_3VEtO=P73kqLezV5Dmki=N3nxsKibzy-U5pBg@mail.gmail.com>
+        (Geert Uytterhoeven's message of "Wed, 9 Oct 2019 08:56:29 +0200")
+Message-ID: <mvmv9syz10h.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 47de30cf-c49f-4f86-2651-08d74ca050a6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Oct 2019 10:06:12.5740
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jzrC5QPrQ/dcEUlWSTFD2/IV3QCxax9NeH7L3wxllzV1Lp3Ym07VR7WPSYT2uZqQ2A/jHuFULS1EY9bceqOJTA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4400
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMDkuMTAuMjAxOSAxMDozOSwgQ2hyaXN0b3BoIEhlbGx3aWcgd3JvdGU6DQo+IE9uIFR1ZSwg
-T2N0IDA4LCAyMDE5IGF0IDAzOjEwOjQwUE0gKzAzMDAsIE1hZGFsaW4gQnVjdXIgd3JvdGU6DQo+
-PiBDZW50cmFsaXplIHRoZSBwaHlzX3RvX3ZpcnQoKSBjYWxscy4NCj4gDQo+IFlvdSBkb24ndCBu
-ZWVkIHRvIGNlbnRyYWxpemUgdGhvc2UsIHlvdSBuZWVkIHRvIGZpeCB0aGVtLiAgQ2FsbGluZw0K
-PiBwaHlzX3RvX3ZpcnQgb24gYSBkbWFfYWRkciBpcyBjb21wbGV0ZWx5IGJvZ3VzLg0KPiANCg0K
-WWVhaCwgdGhhdCdzIG9uIG15IFRPRE8gbGlzdCBbMV0gZm9yIHF1aXRlIGEgd2hpbGUsIGFtb25n
-IG90aGVycy4gSSdsbCANCnJldHVybiB0byBpdCBhcyBzb29uIGFzIEknbSBkb25lIHdpdGggdGhl
-IGJ1cm5pbmcgc3R1ZmYgSSdtIGN1cnJlbnRseSBvbi4NCg0KWzFdIGh0dHBzOi8vcGF0Y2h3b3Jr
-Lmtlcm5lbC5vcmcvcGF0Y2gvMTA5Njg5NDcvDQoNCi0tLQ0KQmVzdCBSZWdhcmRzLCBMYXVyZW50
-aXU=
+On Okt 09 2019, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+
+> I believe risc-v is DT-only, so if chosen/stdout-path is set up
+
+If.  Currently, it isn't.
+
+Andreas.
+
+-- 
+Andreas Schwab, SUSE Labs, schwab@suse.de
+GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+"And now for something completely different."
