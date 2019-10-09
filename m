@@ -2,116 +2,111 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDEB7ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6716ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9098D20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:29:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8BD8206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:31:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A2nkh74P"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="smeXb+Ta"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731755AbfJIQ3x (ORCPT
+        id S1731361AbfJIQby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 12:29:53 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:34024 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729644AbfJIQ3w (ORCPT
+        Wed, 9 Oct 2019 12:31:54 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36964 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729644AbfJIQby (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 12:29:52 -0400
-Received: by mail-qk1-f193.google.com with SMTP id q203so2798833qke.1;
-        Wed, 09 Oct 2019 09:29:52 -0700 (PDT)
+        Wed, 9 Oct 2019 12:31:54 -0400
+Received: by mail-pg1-f193.google.com with SMTP id p1so1743557pgi.4
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 09:31:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=cNuKAskLo6OM546RPPVM8Bvdimr1385wBhczsSTW8LY=;
-        b=A2nkh74PjNB0cXeMqxfGl0lwGBoh8BlmZt1wPeYWN0Ok9RjJ3CyBSbpM+0QVIgKxmx
-         n8m96GJGEyT+lpL9Kk2pTfrmO6GkBy55qnZHQa1cKcgimQEnlasq8OlOVULAf7BvyaG+
-         ul3iOdySy3ePaUo6syWPTIQ1B5X+Edm6zDkaXJ6D4jdsvXS4jfh2Oaw1Yk3QrFTIPP92
-         YZ4sYmR4ze/GIlzNLiNYs/wfq1sFPUhVhX0Y5XKJ12lq4Gbe0jFMin9l0De6i46AUJGB
-         0UcJk7OTYY22ufYxr/KNPbWnBmiUGuEkPwTOgMqx9F8AHiTRy7iYG7MuAAV58HYwVNXG
-         xgmg==
+        bh=9nf7u/DpN+UvmOc+X6Pn/TOzCQgvjuIAoUeIrKDqhOs=;
+        b=smeXb+TaQDZzPZI77MMQ6A+FAFRKVsfqu9h7bS9KWiVMXnCuy1IjjGiaJW7S2F+qnx
+         Y8psAq4+fKEWqaspnehwoziKN/deGKig46ZPlKc5UXSknlPmtxAGqFByMwmcKThJv0wE
+         uJLgBecBcDil6Rznj6xin25vBbInmRkAzb/dyqMIPOdsFpgFAnG1f8Q+8P/pdOcGPYiX
+         dk9Fh/FOo/+HYbJiGAXdi5QUM5ZBWkWGcJDAd9E3m5X91OeNETZJEO0r8Qv5DTfwD7yb
+         Ow1M92Pifwmih8DqNAKXrVyDvsVczkLkkcxybHBnrMJCBruFmQT3e5ad4Y/6FSJdGum1
+         PF7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=cNuKAskLo6OM546RPPVM8Bvdimr1385wBhczsSTW8LY=;
-        b=nMJOW4lrPa7MKgG1rz9NeDd7oE9nxTT2ZXqnkPbNwJth+ViRyTSV/cuPOItxc8VYYI
-         23YMrw/TLycK3gpwPpaa4v6pRvCUufkazneYtuv4FC3hZTBOIsBkV2YaUzXnxhGuEHtX
-         vxhAUBBCgpt0DBQ9g1UsFsLFLN7H8Wrzk7wYFKlHYlYD/sUXPod2yKdsxfi4d+jqDlXt
-         nekb9d/tFvHKOW4MQEoBsVDTByjEmkt2Ec5h7miL9GGbtMFXLzcl1teSrb6r6/ncOULM
-         zr/XC3d9FVixy0HAaVZQBXa5DcVk4hfjEpzdW9Mwrs172RdS20am3MwSEdC9rmh94GFd
-         5dRg==
-X-Gm-Message-State: APjAAAWGkj2mxBchzZmH6KNMGW+gduORGLbQHU9Szmxz8prvfKSr3pRx
-        qd1GF/0ZXGHCZMsZowEJE3mIjlLugGZGWSVCXKA=
-X-Google-Smtp-Source: APXvYqzgq8qYqIV2JD8zEMGlXoEhFvZb4i55oFH8asoIQa4+GEZBCuBJV3Rx5ys8eQCG0het/opnqXkrCZVdOubivGc=
-X-Received: by 2002:a37:6d04:: with SMTP id i4mr4623849qkc.36.1570638591744;
- Wed, 09 Oct 2019 09:29:51 -0700 (PDT)
+        bh=9nf7u/DpN+UvmOc+X6Pn/TOzCQgvjuIAoUeIrKDqhOs=;
+        b=OTFkGzHXaESNmr0C+MqdMz5YQGafUdUodRynZDCggNtcZnQ0pA1NJ6xtI+MtXOHYxy
+         l+u7bnx6yLhJrBKmXNrD+U5iqVjUI8yw6CDo1bwFhRJwcTD28fJgBslPtHSA6xNA+v7j
+         cdeSIFS35ubqmgbNYTMUWRsAmUfZyHfVosQIYfZ09bKoZhui8XSdzSOuZzqiEhEVUEe4
+         2TGoIrdrlGToXFWoFWKgEZwMgTjRZCwQg6crDoSgpGqiYbk6aKo63DmUJ9G/592f5Uts
+         3m+frOZCf6cD4D7SsZX4pMP3iDBcfhB9/S8Qn0Mr1pjObu923SJxC/ms+lcx9MwssjZT
+         /eZA==
+X-Gm-Message-State: APjAAAXiLd7W0SbVIWVapFnjkscN7EwmgYWGScO9D8pQ0g1aT1Ywuuu1
+        mZog6gCOHfWT+0drdnAZibJJI6s3vvMo8wc2xKxe8A==
+X-Google-Smtp-Source: APXvYqyWTYeRXxu0NnZwGgg4GtwrNDKfF3Z+RAYdz4/TLEgzyStHnPhscZc65pKeJf+euEPpuQikDtxAoadVPBfeVwo=
+X-Received: by 2002:a65:464b:: with SMTP id k11mr5398978pgr.263.1570638712909;
+ Wed, 09 Oct 2019 09:31:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191009154238.15410-1-i.maximets@ovn.org>
-In-Reply-To: <20191009154238.15410-1-i.maximets@ovn.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 9 Oct 2019 09:29:40 -0700
-Message-ID: <CAEf4BzYtftYQaUa53pKE77cd5tnz3WDY2KDaixhT7XHQ8hyObg@mail.gmail.com>
-Subject: Re: [PATCH bpf] libbpf: fix passing uninitialized bytes to setsockopt
-To:     Ilya Maximets <i.maximets@ovn.org>
-Cc:     Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>
+References: <75f70e5e-9ece-d6d1-a2c5-2f3ad79b9ccb@web.de> <954c5d70-742f-7b0e-57ad-ea967e93be89@rasmusvillemoes.dk>
+ <20191009135522.GA20194@kadam> <b1f055ec-b4ec-d0ed-a03d-7d9828fa9440@rasmusvillemoes.dk>
+ <20191009143000.GD13286@kadam>
+In-Reply-To: <20191009143000.GD13286@kadam>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 9 Oct 2019 09:31:41 -0700
+Message-ID: <CAKwvOd=Jkd_qJULB+i1u31VJAex6KB=wFAyXO04V0UcAAEZeXw@mail.gmail.com>
+Subject: Re: [PATCH] string.h: Mark 34 functions with __must_check
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Markus Elfring <Markus.Elfring@web.de>,
+        kernel-janitors@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Joe Perches <joe@perches.com>,
+        Kees Cook <keescook@chromium.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 9, 2019 at 8:43 AM Ilya Maximets <i.maximets@ovn.org> wrote:
+On Wed, Oct 9, 2019 at 7:30 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
 >
-> 'struct xdp_umem_reg' has 4 bytes of padding at the end that makes
-> valgrind complain about passing uninitialized stack memory to the
-> syscall:
+> On Wed, Oct 09, 2019 at 04:21:20PM +0200, Rasmus Villemoes wrote:
+> > On 09/10/2019 15.56, Dan Carpenter wrote:
+> > > That's because glibc strlen is annotated with __attribute_pure__ which
+> > > means it has no side effects.
+> >
+> > I know, except it has nothing to do with glibc headers. Just try the
+> > same thing in the kernel. gcc itself knows this about __builtin_strlen()
+> > etc. If anything, we could annotate some of our non-standard functions
+> > (say, memchr_inv) with __pure - then we'd both get the Wunused-value in
+> > the nonsense cases, and allow gcc to optimize or reorder the calls.
 >
->   Syscall param socketcall.setsockopt() points to uninitialised byte(s)
->     at 0x4E7AB7E: setsockopt (in /usr/lib64/libc-2.29.so)
->     by 0x4BDE035: xsk_umem__create@@LIBBPF_0.0.4 (xsk.c:172)
->   Uninitialised value was created by a stack allocation
->     at 0x4BDDEBA: xsk_umem__create@@LIBBPF_0.0.4 (xsk.c:140)
->
-> Padding bytes appeared after introducing of a new 'flags' field.
->
-> Fixes: 10d30e301732 ("libbpf: add flags to umem config")
-> Signed-off-by: Ilya Maximets <i.maximets@ovn.org>
-> ---
->  tools/lib/bpf/xsk.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/lib/bpf/xsk.c b/tools/lib/bpf/xsk.c
-> index a902838f9fcc..26d9db783560 100644
-> --- a/tools/lib/bpf/xsk.c
-> +++ b/tools/lib/bpf/xsk.c
-> @@ -139,7 +139,7 @@ int xsk_umem__create_v0_0_4(struct xsk_umem **umem_ptr, void *umem_area,
->                             const struct xsk_umem_config *usr_config)
->  {
->         struct xdp_mmap_offsets off;
-> -       struct xdp_umem_reg mr;
-> +       struct xdp_umem_reg mr = {};
+> Huh.  You're right.  GCC already knows.  So this patch is pointless like
+> you say.
 
-well, guess what, even with this explicit initialization, padding is
-not guaranteed to be initialized (and it's sometimes is not in
-practice, I ran into such problems), only since C11 standard it is
-specified that padding is also zero-initialized. You have to do memset
-to 0.
+Is it? None of the functions in include/linux/string.h are currently
+marked __pure today.  (Side note, I'm surprised that any function that
+accepts a pointer could be considered pure. I could reassign pointed
+to value without changing the pointers value. I can see strlen being
+"pure" for string literals, but not for char[].  This is something
+I'll play with more, I've already spotted one missed optimization in
+LLVM: https://bugs.llvm.org/show_bug.cgi?id=43624).
 
->         struct xsk_umem *umem;
->         socklen_t optlen;
->         void *map;
-> --
-> 2.17.1
->
+I think it would be an interesting study to see how often functions
+that have return codes are ok to not check vs aren't ok (in a large
+production codebase like the Linux kernel), similar to how 97% of
+cases fallthrough is unintentional (which to me sounds like maybe the
+default behavior of the language is incorrect).
+-- 
+Thanks,
+~Nick Desaulniers
