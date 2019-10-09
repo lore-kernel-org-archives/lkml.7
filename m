@@ -2,201 +2,124 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B782C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A5A0C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 441A4218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:02:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E3AF21848
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:05:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MV7CRBzo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r0N9yf2b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731376AbfJIOCI (ORCPT
+        id S1731037AbfJIOFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 10:02:08 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38872 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731336AbfJIOCI (ORCPT
+        Wed, 9 Oct 2019 10:05:17 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54870 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727769AbfJIOFQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 10:02:08 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w12so3158781wro.5
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 07:02:05 -0700 (PDT)
+        Wed, 9 Oct 2019 10:05:16 -0400
+Received: by mail-wm1-f66.google.com with SMTP id p7so2773005wmp.4
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 07:05:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZGDUmf8vQElxXW6jlDEJJ26hKrxEvdzngHjwzVdydCI=;
-        b=MV7CRBzotQ1VCRustpsQe1/OamCkR6/QHzmRMP9C1rqyIGQQBMUsKMaH6R4yksGlFC
-         wTuer6mkSjer8uPDRDhDyq0gopJLuz8qQhBBtJTz+HEUFf8/G8g9qrYQbE45vyTg0Egv
-         FY1DRqmw53YVZvszSbwqeZOBRMNdw637nZNQelAOB/Sc5iW8NHI7/s2YqKT3PJS5vf10
-         ow1YVlxUleDtCxbb4tR/16B6MlRqkLZ8GjW3G+9u+bBRm6GyWGRuoWWBW2id2cCD9Pxs
-         eTt9WU9BrU+lcsHxEyOk0prD9pvx506E/DGYNaI2JRUpIHXSgYR0F2FPTainkwtfOisC
-         vtkQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Uj3uK+PXxvqbeopMnt61nNLWeJ5KhO8l4CJVLwumEdU=;
+        b=r0N9yf2b+byu4vuI8y0JeeHavanBpTMDQpn/KaBT8Gm4fGqhrZiXJi0RqeKptEsRWn
+         Br9sL6Yil/FWaiOqUwPcODWe94yJNRyZzu/B8LEWYVr9gHUdwbSDbtiDcmi2byyJImGC
+         YXqINhsTJVv9QKm5SIub8rUPhTw6lqrIfQDn6bO+Fhi9lPH2JT8Tz16ne+srPsgphekB
+         7HBBcyqyGGKSqEmo58Ndwm8VYH6Q/cg0zXvAVuOMeGHts28iFJiR2szzJePhV1zYuapJ
+         ORG/XU7r4bwCNqLU+5GO4AscWIvAVeOsZPxTu36s4L+htHTizyP8MCAdOnMgeKp0V12x
+         8nKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZGDUmf8vQElxXW6jlDEJJ26hKrxEvdzngHjwzVdydCI=;
-        b=JVvvTy488kHpnXvP5oEupnerSuDy6wZqPz8cGwuJmBHtmIaGy3yPRWO7BnROEEVL86
-         9V06JoXDh+ZXAa2ZNXKu62NKx1MU27EDBeyFLGIhHatstRqJP7R/sV0kfWPJL3w89Z5v
-         2Z83GsMmziIY+yYu2H+wnmMFWrfZa/rlgXiuCfgqPL5wTSkeBd60tl2E7ZsNDAHAqjB+
-         zcX3dkj2ad4mbb4/LKz3D459Gfof9BcayjjGbliJngmKlb4Qa/s/2upxyb4pOb73fruA
-         G89tmBuZ8Y3OE9dhG0p9qNCOLZflj8uvte4pSGrgDTSA8m8XqbdUCiENOS2/lxtnb+tB
-         FvnA==
-X-Gm-Message-State: APjAAAVOGYMwVjUOocvWsSgdT/uJhHEv6z+TRtOIGUBMtwrQQOTGIH6t
-        e7NSyqlwSsGTckJKKYiY0YNUf+j+gg7zbADxFeNmiQ==
-X-Google-Smtp-Source: APXvYqxXsXcxHW2JT3gu+25BnBOo2zJYevT1fUUUiXoZf/pfeoaZAGuBbvOTwiv9z1XVkFvK7IgN305kAzNL96RO0Dg=
-X-Received: by 2002:adf:f5c2:: with SMTP id k2mr3313430wrp.0.1570629724936;
- Wed, 09 Oct 2019 07:02:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191004145056.43267-1-hdegoede@redhat.com> <20191004145056.43267-2-hdegoede@redhat.com>
- <CAKv+Gu9OU3rS-j+L+pxpK7HZi41XtQZTq9BDs6VpUC8RCq5X6g@mail.gmail.com>
- <c0256726-0aa3-b005-0a18-7b6a41533a0b@redhat.com> <CAKv+Gu9YLesC1abXAcUMe+0BE8Vv52Y_BhN-1Ps+h161Q00KKQ@mail.gmail.com>
- <81c648d6-428e-d978-246b-9a87d43c5d21@redhat.com>
-In-Reply-To: <81c648d6-428e-d978-246b-9a87d43c5d21@redhat.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Wed, 9 Oct 2019 16:01:53 +0200
-Message-ID: <CAKv+Gu-Mj4+nqmAeKGSAzLPpnqOO=yDug_S4MVUQ7B+Sw6WBYQ@mail.gmail.com>
-Subject: Re: [PATCH v7 1/8] efi: Export boot-services code and data as debugfs-blobs
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Peter Jones <pjones@redhat.com>,
-        Dave Olsthoorn <dave@bewaar.me>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        linux-efi <linux-efi@vger.kernel.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Uj3uK+PXxvqbeopMnt61nNLWeJ5KhO8l4CJVLwumEdU=;
+        b=MboPDVKK4O1PKNiPwtFMTrz4cymj4wdsqKViKcoiG//X75DTe47X66Gr/vu9S5w8Qo
+         mPpqpQiEZHT/fkUAAgWG0zzYFhJrL1vJE1pv/lLApinI9Qb/OKfBDti7wB0zqx19R1im
+         Oeq6Ib3VBli1yVxlHXiL0xX/xJ/HdlGl4ihx1L98+E7Bro8rgkhcFLY62r5E8hQfyJzE
+         J5x9t/nIVLPYZ0d8c2fskMfH6gnAI69ttpOdVdXr9xTtuWJM3j8lgTMBFKfmA6XVXtOo
+         Pa7ZWOWThMHKlMX/aj3b+mccGpNHfalMpLcc1biqJj9tjPcbKH5IYB60S/o5vy2HC1h/
+         5aSA==
+X-Gm-Message-State: APjAAAX+wAaL1tKroY49WZ0NZizsOnNo7+u/7eO5uBzBZCcJpNxig1hf
+        Flhy0RjIz1LAv1bvX3hcdZlcJw==
+X-Google-Smtp-Source: APXvYqwTU1rnlyXZsfzUTaF2tYxe+uafBqiZSZYxBNpBuDzM8Nr7Tt4r2+AOyoXwV4lcRyYbLYeo8Q==
+X-Received: by 2002:a7b:ce12:: with SMTP id m18mr2759228wmc.108.1570629914590;
+        Wed, 09 Oct 2019 07:05:14 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id s12sm2897774wra.82.2019.10.09.07.05.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 09 Oct 2019 07:05:13 -0700 (PDT)
+Subject: Re: [PATCH] firmware: vpd: Add an interface to read VPD value
+To:     Stephen Boyd <swboyd@chromium.org>,
+        Cheng-yi Chiang <cychiang@chromium.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Tzung-Bi Shih <tzungbi@google.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-input@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        ALSA development <alsa-devel@alsa-project.org>,
+        Hung-Te Lin <hungte@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        Dylan Reid <dgreid@chromium.org>,
+        Tzung-Bi Shih <tzungbi@chromium.org>
+References: <20191007071610.65714-1-cychiang@chromium.org>
+ <CA+Px+wWkr1xmSpgEkSaGS7UZu8TKUYvSnbjimBRH29=kDtcHKA@mail.gmail.com>
+ <ebf9bc3f-a531-6c5b-a146-d80fe6c5d772@roeck-us.net>
+ <CAFv8NwLuYKHJoG9YR3WvofwiMnXCgYv-Sk7t5jCvTZbST+Ctjw@mail.gmail.com>
+ <5d9b5b3e.1c69fb81.7203c.1215@mx.google.com>
+ <CAFv8Nw+x6V-995ijyws1Q36W1MpaP=kNJeiVtNakH-uC3Vgg9Q@mail.gmail.com>
+ <5d9ca7e4.1c69fb81.7f8fa.3f7d@mx.google.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <e968e478-bb48-5b05-b6c4-ae1bf77f714f@linaro.org>
+Date:   Wed, 9 Oct 2019 15:05:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <5d9ca7e4.1c69fb81.7f8fa.3f7d@mx.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 9 Oct 2019 at 15:59, Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi,
->
-> On 09-10-2019 15:35, Ard Biesheuvel wrote:
-> > On Wed, 9 Oct 2019 at 15:18, Hans de Goede <hdegoede@redhat.com> wrote:
-> >>
-> >> Hi,
-> >>
-> >> On 09-10-2019 15:07, Ard Biesheuvel wrote:
-> >>> On Fri, 4 Oct 2019 at 16:51, Hans de Goede <hdegoede@redhat.com> wrote:
-> >>>>
-> >>>> Sometimes it is useful to be able to dump the efi boot-services code and
-> >>>> data. This commit adds these as debugfs-blobs to /sys/kernel/debug/efi,
-> >>>> but only if efi=debug is passed on the kernel-commandline as this requires
-> >>>> not freeing those memory-regions, which costs 20+ MB of RAM.
-> >>>>
-> >>>> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >>>> Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> >>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> >>>> ---
-> >>>> Changes in v5:
-> >>>> -Rename the EFI_BOOT_SERVICES flag to EFI_PRESERVE_BS_REGIONS
-> >>>>
-> >>>> Changes in v4:
-> >>>> -Add new EFI_BOOT_SERVICES flag and use it to determine if the boot-services
-> >>>>    memory segments are available (and thus if it makes sense to register the
-> >>>>    debugfs bits for them)
-> >>>>
-> >>>> Changes in v2:
-> >>>> -Do not call pr_err on debugfs call failures
-> >>>> ---
-> >>>>    arch/x86/platform/efi/efi.c    |  1 +
-> >>>>    arch/x86/platform/efi/quirks.c |  4 +++
-> >>>>    drivers/firmware/efi/efi.c     | 53 ++++++++++++++++++++++++++++++++++
-> >>>>    include/linux/efi.h            |  1 +
-> >>>>    4 files changed, 59 insertions(+)
-> >>>>
-> >>>> diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-> >>>> index c202e1b07e29..847730f7e74b 100644
-> >>>> --- a/arch/x86/platform/efi/efi.c
-> >>>> +++ b/arch/x86/platform/efi/efi.c
-> >>>> @@ -232,6 +232,7 @@ int __init efi_memblock_x86_reserve_range(void)
-> >>>>                efi.memmap.desc_version);
-> >>>>
-> >>>>           memblock_reserve(pmap, efi.memmap.nr_map * efi.memmap.desc_size);
-> >>>> +       set_bit(EFI_PRESERVE_BS_REGIONS, &efi.flags);
-> >>>
-> >>> Should we add a Kconfig symbol to opt into this behavior [set by the
-> >>> driver in question], instead of always preserving all boot services
-> >>> regions on all x86 systems?
-> >>
-> >> This bit does not control anything, it merely signals that the arch early
-> >> boot EFI code keeps the boot-services code around, which is something
-> >> which the x86 code already does. Where as e.g. on arm / aarch64 this is
-> >> freed early on, this ties in with the other bits:
-> >>
-> >>>
-> >>>>
-> >>>>           return 0;
-> >>>>    }
-> >>>> diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-> >>>> index 3b9fd679cea9..fab12ebf0ada 100644
-> >>>> --- a/arch/x86/platform/efi/quirks.c
-> >>>> +++ b/arch/x86/platform/efi/quirks.c
-> >>>> @@ -411,6 +411,10 @@ void __init efi_free_boot_services(void)
-> >>>>           int num_entries = 0;
-> >>>>           void *new, *new_md;
-> >>>>
-> >>>> +       /* Keep all regions for /sys/kernel/debug/efi */
-> >>>> +       if (efi_enabled(EFI_DBG))
-> >>>> +               return;
-> >>>> +
-> >>
-> >> This is the point where normally on x86 we do actually free the boot-services
-> >> code which is a lot later then on other arches. And this new code actually
-> >> does change things to keep the boot-services code *forever* but only
-> >> if EFI debugging is enabled on the kernel commandline.
-> >>
-> >
-> > I get this part. But at some point, your driver is going to expect
-> > this memory to be preserved even if EFI_DBG is not set, right? My
-> > question was whether we should only opt into that if such a driver is
-> > enabled in the first place.
->
-> Ah, I see. No even with CONFIG_EFI_EMBEDDED_FIRMWARE selected, the
-> boot-services code still gets free-ed. The efi_get_embedded_fw()
-> function from drivers/firmware/efi/embedded-firmware.c runs before
-> efi_free_boot_services() and it memdup-s any found firmwares, so it
-> does not cause the EFI boot-services code to stick around longer
-> then usual.
->
-> The only thing which does cause it to stick around is enabling
-> EFI debugging with efi=debug, so that the various efi segments
-> (not only the code-services ones) can be inspected as debugfs
-> blobs.
->
-> Basically this first patch of the series is independent of the
-> rest. It is part of the series, because adding new
-> efi_embedded_fw_desc structs to the table of firmwares to check
-> for becomes a lot easier when we can easily inspect the efi
-> segments and see if they contain the firmware we want.
->
->
-> As for Kconfig options, the compiling of
-> drivers/firmware/efi/embedded-firmware.c is controlled by
-> CONFIG_EFI_EMBEDDED_FIRMWARE which is a hidden option, which
-> can be selected by code which needs this. currently this is
-> only selected by CONFIG_TOUCHSCREEN_DMI which is defined
-> in drivers/platform/x86/Kconfig.
->
 
-OK, thanks for clearing that up.
+
+On 08/10/2019 16:14, Stephen Boyd wrote:
+>> 3) As my use case does not use device tree, it is hard for ASoC
+>> machine to access nvmem device. I am wondering if I can use
+>> nvm_cell_lookup so machine driver can find the nvmem device using a
+>> con_id. But currently the cell lookup API requires a matched device,
+>> which does not fit my usage because there will be different machine
+>> drivers requesting the value.
+>> I think I can still workaround this by adding the lookup table in
+>> machine driver. This would seem to be a bit weird because I found that
+>> most lookup table is added in provider side, not consumer side. Not
+>> sure if this is logically correct.
+> Maybe Srini has some input here. It looks like your main concern is
+> consumer to provider mapping?
+> 
+
+In non-DT setup, there are various ways to lookup nvmem provider.
+
+1> nvmem_device_get()/put() using provider devid/name. I think you 
+should be able to use this in your case.
+2> nvmem_register_notifier() which notifies when nvmem provider is added 
+to system.
+3> nvmem_device_find() with own match function this will be merged in 
+next window (https://lkml.org/lkml/2019/10/3/215)
+
+
+If none of these are of any help, could explain what exactly are you 
+looking for w.r.t nvmem to be able to move to what Stephen Boyd suggested?
+
+--srini
+
