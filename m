@@ -2,89 +2,177 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E62ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D739ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7887C20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D11520B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:55:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fA8MVhIc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730843AbfJIKw2 (ORCPT
+        id S1729831AbfJIKzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 06:52:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51330 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726579AbfJIKw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 06:52:28 -0400
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E904683F40
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Oct 2019 10:52:27 +0000 (UTC)
-Received: by mail-wm1-f69.google.com with SMTP id p6so360529wmc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 03:52:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=P0MsNQfXnUWl/0sGblTAdgyCu1Yy72Z6SXuCSt57gtc=;
-        b=O39ZaQm13zailWI2+O3hY7mGT1jkCHEWn+G93Khtj2nwPysug4Kgb02JRF1Fx0mq0X
-         0ImFnoQ4hxCxRW7YgpNpP9xNW2BBa4ILl1byyj6Xt8C68D0q/yW9z0eA/Z1AwHBUX+pO
-         oJU/pRzxwWfbTPRE/95MZaTRLGcV2XivQ+g/QJVYHmLoIZWpM1qFeWTsgZCyvg5fQ0Ss
-         WsX9dRf5818AgtSpiBflzAYwEw5wwqqcNAFajyUSWHh2NXRNeKDzB9jGXup09mB7J1vA
-         +E07qc0vX5bD5Pg6puR5SoeqFqKeNIyAaPdhb0dTmo0zDDhkgdfOqLDTk0e7zlIQtGTa
-         P6ng==
-X-Gm-Message-State: APjAAAWpH3BQLSfPpxAAlH48lKIPYvuK2ovaQn6aNyOPTutqKtLLTfw6
-        ACGzGOa4SY6ai1nmBLRaVYxwpOH0IY0U/Ca5B04FSqmZPNaiWbg4HqxH182O0PYufaDVGgpKW59
-        MsFuGPo47Zy6ya5e7c1DzpK69
-X-Received: by 2002:adf:fa86:: with SMTP id h6mr2319362wrr.186.1570618346575;
-        Wed, 09 Oct 2019 03:52:26 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxmJzk1u2HM8iYqz2RgPoWZLZRsaTlP8C1e8mq6Mn5bVWWmvWx4BsMaX0BzdRLhQT3V0cWn6w==
-X-Received: by 2002:adf:fa86:: with SMTP id h6mr2319339wrr.186.1570618346361;
-        Wed, 09 Oct 2019 03:52:26 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:f4b0:55d4:57da:3527? ([2001:b07:6468:f312:f4b0:55d4:57da:3527])
-        by smtp.gmail.com with ESMTPSA id y14sm2575792wrd.84.2019.10.09.03.52.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Oct 2019 03:52:25 -0700 (PDT)
-Subject: Re: [PATCH v2 6/8] KVM: x86: Fold 'enum kvm_ex_reg' definitions into
- 'enum kvm_reg'
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Reto Buerki <reet@codelabs.ch>,
-        Liran Alon <liran.alon@oracle.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-References: <20190927214523.3376-1-sean.j.christopherson@intel.com>
- <20190927214523.3376-7-sean.j.christopherson@intel.com>
- <87ftke3zll.fsf@vitty.brq.redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <57cae37d-acd0-074c-26cd-aaf7a7989905@redhat.com>
-Date:   Wed, 9 Oct 2019 12:52:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <87ftke3zll.fsf@vitty.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 9 Oct 2019 06:55:09 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:49854 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726734AbfJIKzJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 06:55:09 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x99AnjSO040844;
+        Wed, 9 Oct 2019 10:54:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
+ bh=D1DI7s8LFQ5/QtMZA4sUUJEJOvqF3NRZbFcaYtB93A0=;
+ b=fA8MVhIcTxHSUNaf18CxFk+ddGB/CrPPI8kjZjxTa/QYiZXAb1Ct3G+ctvV0FvIBmYol
+ RHiqFAYimxe9YvNkmCpA7ZeEUNh78cV3Hh3jxh8zWpUJUtpWhxauzLnULS909JZTW2TS
+ C7VAlmt3nE86jazen8bPdg3YNKiE5/cVPVYeoE9Isba0fNE9bkcVsQ3ZP3/H1Wwwhrfd
+ 5t+l9Xldgcs2NXnAa23xbSqOmc3O8h8aQU94Ia7jsJm7UTqpJYxb5fFJNtcai2OOZWw/
+ L4Ivw7w2u273SMDa0JO8UJLkzgC/bsf+KCMkY+Y+MVsK18r5qZXK0kHoM1/1vwS/O/52 NQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2vek4qka7r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 09 Oct 2019 10:54:26 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x99AmsxB119322;
+        Wed, 9 Oct 2019 10:54:26 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2vh8k0hgam-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 09 Oct 2019 10:54:25 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x99AsOhm031195;
+        Wed, 9 Oct 2019 10:54:25 GMT
+Received: from tomti.i.net-space.pl (/10.175.167.68)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 09 Oct 2019 03:54:24 -0700
+From:   Daniel Kiper <daniel.kiper@oracle.com>
+To:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, xen-devel@lists.xenproject.org
+Cc:     ard.biesheuvel@linaro.org, boris.ostrovsky@oracle.com,
+        bp@alien8.de, corbet@lwn.net, dave.hansen@linux.intel.com,
+        luto@kernel.org, peterz@infradead.org, eric.snowberg@oracle.com,
+        hpa@zytor.com, jgross@suse.com, konrad.wilk@oracle.com,
+        mingo@redhat.com, ross.philipson@oracle.com, tglx@linutronix.de
+Subject: [PATCH v3 2/3] x86/boot: Introduce the kernel_info.setup_type_max
+Date:   Wed,  9 Oct 2019 12:53:57 +0200
+Message-Id: <20191009105358.32256-3-daniel.kiper@oracle.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20191009105358.32256-1-daniel.kiper@oracle.com>
+References: <20191009105358.32256-1-daniel.kiper@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9404 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910090101
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9404 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910090101
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/09/19 11:25, Vitaly Kuznetsov wrote:
->> -enum kvm_reg_ex {
->>  	VCPU_EXREG_PDPTR = NR_VCPU_REGS,
-> (Personally, I would've changed that to NR_VCPU_REGS + 1)
-> 
+This field contains maximal allowed type for setup_data.
 
-Why?
+Now bump the setup_header version in arch/x86/boot/header.S.
 
-Paolo
+Suggested-by: H. Peter Anvin <hpa@zytor.com>
+Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
+Reviewed-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Reviewed-by: Ross Philipson <ross.philipson@oracle.com>
+---
+ Documentation/x86/boot.rst             | 9 ++++++++-
+ arch/x86/boot/compressed/kernel_info.S | 5 +++++
+ arch/x86/boot/header.S                 | 2 +-
+ arch/x86/include/uapi/asm/bootparam.h  | 3 +++
+ 4 files changed, 17 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/x86/boot.rst b/Documentation/x86/boot.rst
+index d5323a39f5e3..4c536bc8816d 100644
+--- a/Documentation/x86/boot.rst
++++ b/Documentation/x86/boot.rst
+@@ -73,7 +73,7 @@ Protocol 2.14:	BURNT BY INCORRECT COMMIT ae7e1238e68f2a472a125673ab506d49158c188
+ 		(x86/boot: Add ACPI RSDP address to setup_header)
+ 		DO NOT USE!!! ASSUME SAME AS 2.13.
+ 
+-Protocol 2.15:	(Kernel 5.5) Added the kernel_info.
++Protocol 2.15:	(Kernel 5.5) Added the kernel_info and kernel_info.setup_type_max.
+ =============	============================================================
+ 
+ .. note::
+@@ -976,6 +976,13 @@ Offset/size:	0x0008/4
+   This field contains the size of the kernel_info including kernel_info.header
+   and kernel_info.kernel_info_var_len_data.
+ 
++============	==============
++Field name:	setup_type_max
++Offset/size:	0x0008/4
++============	==============
++
++  This field contains maximal allowed type for setup_data and setup_indirect structs.
++
+ 
+ The Image Checksum
+ ==================
+diff --git a/arch/x86/boot/compressed/kernel_info.S b/arch/x86/boot/compressed/kernel_info.S
+index 8ea6f6e3feef..f818ee8fba38 100644
+--- a/arch/x86/boot/compressed/kernel_info.S
++++ b/arch/x86/boot/compressed/kernel_info.S
+@@ -1,5 +1,7 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ 
++#include <asm/bootparam.h>
++
+ 	.section ".rodata.kernel_info", "a"
+ 
+ 	.global kernel_info
+@@ -12,6 +14,9 @@ kernel_info:
+ 	/* Size total. */
+ 	.long	kernel_info_end - kernel_info
+ 
++	/* Maximal allowed type for setup_data and setup_indirect structs. */
++	.long	SETUP_TYPE_MAX
++
+ kernel_info_var_len_data:
+ 	/* Empty for time being... */
+ kernel_info_end:
+diff --git a/arch/x86/boot/header.S b/arch/x86/boot/header.S
+index 22dcecaaa898..97d9b6d6c1af 100644
+--- a/arch/x86/boot/header.S
++++ b/arch/x86/boot/header.S
+@@ -300,7 +300,7 @@ _start:
+ 	# Part 2 of the header, from the old setup.S
+ 
+ 		.ascii	"HdrS"		# header signature
+-		.word	0x020d		# header version number (>= 0x0105)
++		.word	0x020f		# header version number (>= 0x0105)
+ 					# or else old loadlin-1.5 will fail)
+ 		.globl realmode_swtch
+ realmode_swtch:	.word	0, 0		# default_switch, SETUPSEG
+diff --git a/arch/x86/include/uapi/asm/bootparam.h b/arch/x86/include/uapi/asm/bootparam.h
+index a1ebcd7a991c..dbb41128e5a0 100644
+--- a/arch/x86/include/uapi/asm/bootparam.h
++++ b/arch/x86/include/uapi/asm/bootparam.h
+@@ -11,6 +11,9 @@
+ #define SETUP_APPLE_PROPERTIES		5
+ #define SETUP_JAILHOUSE			6
+ 
++/* max(SETUP_*) */
++#define SETUP_TYPE_MAX			SETUP_JAILHOUSE
++
+ /* ram_size flags */
+ #define RAMDISK_IMAGE_START_MASK	0x07FF
+ #define RAMDISK_PROMPT_FLAG		0x8000
+-- 
+2.11.0
+
