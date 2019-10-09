@@ -2,142 +2,80 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0986C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 622D1C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7E5521721
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:51:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ygm2/EHf"
+	by mail.kernel.org (Postfix) with ESMTP id 3C56121835
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:51:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730041AbfJIJvS (ORCPT
+        id S1730339AbfJIJvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 05:51:18 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:14316 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727228AbfJIJvS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 05:51:18 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x999k2Tq018596;
-        Wed, 9 Oct 2019 11:51:07 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=wZHBdNbfW8cemZbtM4EyVZqKxEgCY/Nj31PdlfGQS9w=;
- b=ygm2/EHfTI96Znm/14gtNcEhtO2j8lgebssB8pz/Uu2kujmiis96wSn+laxTxviRv3hc
- 0VG8qHKo6ajKRj/bkz7qTLPzNhySRBzi/C7vlVBSD4SpTsXP+/Zq6cmqJVHxyVFfrM5L
- e80fsS3gxj0xHLWXMIIF2HF20gYN12D1oZMDN8M/dE3w8Y1E1qMY5gL+DChB3UEoUNuR
- lqWdXvBmTLOTETuApSs9mdvAB+zdeSOat4Vr61wJg+i+V1oXcOJGT6wB59wRDBuOsstL
- vDbKaDt5rMrFff+4fOCcWkMRB4RdY8iTN9GKrcuYv2uodGBnPkCLXcqi3aqcuzkCtCjY qg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2vegah5vm0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 09 Oct 2019 11:51:07 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B681B10002A;
-        Wed,  9 Oct 2019 11:51:06 +0200 (CEST)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A777320681A;
-        Wed,  9 Oct 2019 11:51:06 +0200 (CEST)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.46) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 9 Oct 2019
- 11:51:06 +0200
-Received: from [10.48.0.192] (10.48.0.192) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 9 Oct 2019 11:51:06
- +0200
-Subject: Re: [PATCH] pwm: stm32: add comment to better describe breakinput
- feature
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-CC:     <thierry.reding@gmail.com>, <alexandre.torgue@st.com>,
-        <benjamin.gaignard@st.com>, <linux-pwm@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <1570534887-26181-1-git-send-email-fabrice.gasnier@st.com>
- <20191008144531.pjt525xuz7n5a3hq@pengutronix.de>
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-Message-ID: <5c05893b-e938-4db8-e33a-803b1a498f97@st.com>
-Date:   Wed, 9 Oct 2019 11:51:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20191008144531.pjt525xuz7n5a3hq@pengutronix.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.48.0.192]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-09_05:2019-10-08,2019-10-09 signatures=0
+        Wed, 9 Oct 2019 05:51:50 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:35598 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727657AbfJIJvu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 05:51:50 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6275C2003A5;
+        Wed,  9 Oct 2019 11:51:48 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 452862001C1;
+        Wed,  9 Oct 2019 11:51:42 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 9025E402B1;
+        Wed,  9 Oct 2019 17:51:34 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     gregkh@linuxfoundation.org, jslaby@suse.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        rafael.j.wysocki@intel.com, swboyd@chromium.org,
+        andy.shevchenko@gmail.com, linux-serial@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V2] tty: serial: imx: Use platform_get_irq_optional() for optional IRQs
+Date:   Wed,  9 Oct 2019 17:49:19 +0800
+Message-Id: <1570614559-11900-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/8/19 4:45 PM, Uwe Kleine-König wrote:
-> On Tue, Oct 08, 2019 at 01:41:27PM +0200, Fabrice Gasnier wrote:
->> Add a comment to better describe the purpose of breakinput feature that
->> can be found on some STM32 timer instances. Briefly comment on the
->> characteristics of this input for PWM, and pinmuxing as suggested in [1].
->>
->> [1] https://lkml.org/lkml/2019/10/1/207
->>
->> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
->> ---
->>  drivers/pwm/pwm-stm32.c | 8 +++++++-
->>  1 file changed, 7 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
->> index 359b085..6406ebb 100644
->> --- a/drivers/pwm/pwm-stm32.c
->> +++ b/drivers/pwm/pwm-stm32.c
->> @@ -522,8 +522,14 @@ static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv,
->>  					     sizeof(struct stm32_breakinput));
->>  
->>  	/*
->> +	 * Some timer instances can have BRK input pins (e.g. basically a fault
->> +	 * pin from the output power stage). The break feature allows a safe
->> +	 * shut-down of the PWM outputs to a predefined state. Further details
->> +	 * are available in application note AN4277, "Using STM32 device PWM
->> +	 * shut-down features..."
-> 
-> Without having read the application note I don't understand the purpose.
-> Not sure if this should be a show stopper though.
+All i.MX SoCs except i.MX1 have ONLY one necessary IRQ, use
+platform_get_irq_optional() to get second/third IRQ which are
+optional to avoid below error message during probe:
 
-Hi Uwe,
+[    0.726219] imx-uart 30860000.serial: IRQ index 1 not found
+[    0.731329] imx-uart 30860000.serial: IRQ index 2 not found
 
-I can rephrase this. Do you think the bellow comment would be more
-relevant and easy to understand ?
+Fixes: 7723f4c5ecdb8d83 ("driver core: platform: Add an error message to platform_get_irq*()")
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+Changes since V1:
+	- use platform_get_irq_optional() directly instead of getting irq count.
+---
+ drivers/tty/serial/imx.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-/*
- * The break feature allows a safe shut-down of the PWM outputs.
- * It's based on the BRK event signal defined in the dt-bindings
- * by <index level filter> values.
- * Because "st,breakinput" parameter is optional do not make probe
- * failed if it doesn't exist.
- */
+diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
+index 504d81c..357d3ff 100644
+--- a/drivers/tty/serial/imx.c
++++ b/drivers/tty/serial/imx.c
+@@ -2221,8 +2221,8 @@ static int imx_uart_probe(struct platform_device *pdev)
+ 		return PTR_ERR(base);
+ 
+ 	rxirq = platform_get_irq(pdev, 0);
+-	txirq = platform_get_irq(pdev, 1);
+-	rtsirq = platform_get_irq(pdev, 2);
++	txirq = platform_get_irq_optional(pdev, 1);
++	rtsirq = platform_get_irq_optional(pdev, 2);
+ 
+ 	sport->port.dev = &pdev->dev;
+ 	sport->port.mapbase = res->start;
+-- 
+2.7.4
 
-> 
->>  	 * Because "st,breakinput" parameter is optional do not make probe
->> -	 * failed if it doesn't exist.
->> +	 * failed if it doesn't exist. The pinctrl handle must hold the BRK
->> +	 * pin(s) when using "st,breakinput" property.
-> 
-> Is this a comment that has a better place in the binding doc?
-
-You're right, this is unneeded here. I'll remove this.
-
-Please advise,
-BR,
-Fabrice
-
-> 
-> Best regards
-> Uwe
-> 
-> 
