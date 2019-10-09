@@ -2,230 +2,263 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D1D4ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1CE2ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBD72206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:27:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="tDOPphOt"
+	by mail.kernel.org (Postfix) with ESMTP id 9B28C21848
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:27:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729841AbfJIJ1L (ORCPT
+        id S1730611AbfJIJ1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 05:27:11 -0400
-Received: from mail-eopbgr690090.outbound.protection.outlook.com ([40.107.69.90]:61291
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729747AbfJIJ1J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 05:27:09 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Pd4CzFu/GmvKFTXoNKPsuJCB4WKUQoRkusqTBi7t5/DAP3zqwWVZn3eWuC+UXLjsrb5uTVWK5A2x5ldMZZF7k9/je2vlIDDJQdv98wwgZ5E6sMvr/CHgxOpQ+4Golpp0TSnYYfyQR1SxUnJ0CilfsPVSDn0cYD3Vn+jmyyX5Tyk8vVaJGY7BnVxeE6WyB9nWGslQ+m3bpGne0nWqNRewtplh1HRlvVBla+NIirEVkufnDEW1P8tzlha4SsWgwvML9iATlibgJS+A2o43eo4c6Z2ub+b86A3CcCoo2OsvuvyCuAhW3ZxociCtS0VTDfmcO3BaheTXsAaGgo+Hekf0Mg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f8tUA9PN3+q8T4MJJ0kraCUMeebvhUfsvzI0Hu1LZug=;
- b=HXkW1LxKaMOD4p6th/7mOxEPdgh4w8q1r8MFoy3g+moTXr7Wu7+LtPFUBFaiLNQuBJ3e+b4fIGMwwchTpGOem6rHsdHCtkIrtqzsX/2payzgc7zEONFgUHrM74lmybfXhVbI6rJTFVpu17/8ARnMDlISk1nOJQq0c/d6LobCQ4XTJ0j7toTt1BK1CCrt4mGaGIL9uDY5r31F9RGR1lCzlwo+SUMZ9ocKl5LwZD/eI5mIFdF8g6f3dUTUG7BAii37n0ZA1hpaA6Jfp7hjjC71WzQ10WCCiRR9Jri486gnLNfKZhalNb8hUrdXQLmaCQ6y8n9teN1jOgiLYlePTslcgw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
- header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f8tUA9PN3+q8T4MJJ0kraCUMeebvhUfsvzI0Hu1LZug=;
- b=tDOPphOtJVU2vdhhADv+dGOVsg3MUG64lawGBbdBd+xBoUjhDmiSoE8hmvJv9vQhwemsKZZZeN4hlTaizjlZ/tO0HcPF3Je60jMO9LJg6GrOdPN/fB0UucwDvPD3PVoQg7PTwHamnboZ37TJICPT3Guv9Cx0cxBUDoVk4gsk7GU=
-Received: from SN6PR04MB4543.namprd04.prod.outlook.com (52.135.120.29) by
- SN6PR04MB4189.namprd04.prod.outlook.com (52.135.71.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.24; Wed, 9 Oct 2019 09:27:07 +0000
-Received: from SN6PR04MB4543.namprd04.prod.outlook.com
- ([fe80::c55e:6c70:adbb:cf87]) by SN6PR04MB4543.namprd04.prod.outlook.com
- ([fe80::c55e:6c70:adbb:cf87%5]) with mapi id 15.20.2347.016; Wed, 9 Oct 2019
- 09:27:07 +0000
-From:   Xin Ji <xji@analogixsemi.com>
-To:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Andrzej Hajda <a.hajda@samsung.com>
-CC:     Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Sheng Pan <span@analogixsemi.com>
-Subject: [PATCH v2 1/2] dt-bindings: drm/bridge: anx7625: MIPI to DP
- transmitter binding
-Thread-Topic: [PATCH v2 1/2] dt-bindings: drm/bridge: anx7625: MIPI to DP
- transmitter binding
-Thread-Index: AQHVfoO4ZRVMsEYORESrPx4IOG5NEQ==
-Date:   Wed, 9 Oct 2019 09:27:07 +0000
-Message-ID: <82d9e3d505699da8f32069844b3cfe7c9fbfd0f1.1570588741.git.xji@analogixsemi.com>
-References: <cover.1570588741.git.xji@analogixsemi.com>
-In-Reply-To: <cover.1570588741.git.xji@analogixsemi.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HK0PR03CA0023.apcprd03.prod.outlook.com
- (2603:1096:203:2e::35) To SN6PR04MB4543.namprd04.prod.outlook.com
- (2603:10b6:805:a8::29)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=xji@analogixsemi.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [114.247.245.252]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1cd23233-6faf-4e39-95e2-08d74c9ada74
-x-ms-traffictypediagnostic: SN6PR04MB4189:
-x-ms-exchange-purlcount: 2
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR04MB4189D1C521073916C1542E27C7950@SN6PR04MB4189.namprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:854;
-x-forefront-prvs: 018577E36E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(376002)(39850400004)(346002)(396003)(136003)(199004)(189003)(478600001)(64756008)(66476007)(486006)(446003)(26005)(66946007)(66556008)(66446008)(2906002)(186003)(86362001)(11346002)(2616005)(476003)(52116002)(7736002)(66066001)(71200400001)(71190400001)(76176011)(99286004)(305945005)(54906003)(118296001)(6486002)(6436002)(6306002)(8676002)(25786009)(7416002)(81156014)(81166006)(8936002)(107886003)(6512007)(102836004)(14454004)(316002)(5660300002)(386003)(6506007)(110136005)(3846002)(4326008)(6116002)(36756003)(2501003)(256004);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB4189;H:SN6PR04MB4543.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: analogixsemi.com does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 6FI33n5Rwbg50xg9GcQDrYm/Su8yaMcXcI1fcwz0VvBleT+VeZuPn7JZu43knASjzi6DxWqYqvF4Vdc3HjH9aRyq2xQFfgb8vUZOULZXH8cDFV5iv2cSnOb4EL1aWZMyPQxRMdMk6557QxTIWi+6G3AHRcONBYKauIqYrl6X60NGZGFMM4Os5b2FmY0Ve9nW/FvuD2bb/Ba5OfqQR/oVwXzTfc3uRv8K47t6qll3f0h/kZbj5m/4X6gvAyn9nk++6VutnjQcV51sLWrLnfdQtawKbOdpJxOigGhAf/WEwMJyNiSOpko7MpEZ37VJhAp4s1SvnHcW0RMvX1BOnpwjUA1aiYBu+wSBtRpgGySx+cYq2iDRLyua2CimTkHSU/tSr6MWGiYcGoBiHD/SWKu4i+TICB530CEeIp8U8sZamELOL9tps9LxDMrZ9sCU28pueI0vu0O7MpyqSK714teaAQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3F4D1B719F23EB478B5541F140A3EE1A@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 9 Oct 2019 05:27:20 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:58290 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729742AbfJIJ1T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 05:27:19 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id DEC2228FD3C
+Subject: Re: [PATCH] pwm: cros-ec: Let cros_ec_pwm_get_state() return the last
+ applied state
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     linux-kernel@vger.kernel.org, thierry.reding@gmail.com,
+        heiko@sntech.de, dianders@chromium.org, mka@chromium.org,
+        groeck@chromium.org, kernel@collabora.com, bleung@chromium.org,
+        linux-pwm@vger.kernel.org,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>
+References: <20191008105417.16132-1-enric.balletbo@collabora.com>
+ <20191008143432.pbhcqamd6f4qwbqn@pengutronix.de>
+ <4f009344-242e-19a7-6872-2c55df086044@collabora.com>
+ <20191008203137.s22clq6v2om5ktio@pengutronix.de>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <53b7d02b-1a2d-11da-fdd0-5378f360d876@collabora.com>
+Date:   Wed, 9 Oct 2019 11:27:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: analogixsemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1cd23233-6faf-4e39-95e2-08d74c9ada74
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Oct 2019 09:27:07.2111
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: hhtWbDgRj80oXyPBGZTUkrn94rnQYlP/3CsisHSXuG0gHnTpCy9vTC7u2Fmdn+cuYdvGs0Nqwo+zGElfUzjWYQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4189
+In-Reply-To: <20191008203137.s22clq6v2om5ktio@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ANX7625 is an ultra-low power 4K Mobile HD Transmitter designed
-for portable device. It converts MIPI to DisplayPort 1.3 4K.
+Hi Uwe,
 
-You can add support to your board with binding.
+Adding Daniel and Lee to the discussion ...
 
-Example:
-	anx_bridge: anx7625@58 {
-		compatible =3D "analogix,anx7625";
-		reg =3D <0x58>;
-		enable-gpios =3D <&gpio0 45 GPIO_ACTIVE_LOW>;
-		reset-gpios =3D <&gpio0 73 GPIO_ACTIVE_LOW>;
-		status =3D "okay";
-		port@0 {
-			reg =3D <0>;
-			anx7625_1_in: endpoint {
-				remote-endpoint =3D <&mipi_dsi_bridge_1>;
-			};
-		};
-	};
 
-Signed-off-by: Xin Ji <xji@analogixsemi.com>
----
- .../bindings/display/bridge/anx7625.yaml           | 79 ++++++++++++++++++=
-++++
- 1 file changed, 79 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/anx762=
-5.yaml
+On 8/10/19 22:31, Uwe Kleine-König wrote:
+> On Tue, Oct 08, 2019 at 06:33:15PM +0200, Enric Balletbo i Serra wrote:
+>> Hi Uwe,
+>>
+>> Thanks for the quick reply.
+>>
+>> On 8/10/19 16:34, Uwe Kleine-König wrote:
+>>> Hello Enric,
+>>>
+>>> On Tue, Oct 08, 2019 at 12:54:17PM +0200, Enric Balletbo i Serra wrote:
+>>>> @@ -117,17 +122,28 @@ static void cros_ec_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+>>>>  	struct cros_ec_pwm_device *ec_pwm = pwm_to_cros_ec_pwm(chip);
+>>>>  	int ret;
+>>>>  
+>>>> -	ret = cros_ec_pwm_get_duty(ec_pwm->ec, pwm->hwpwm);
+>>>> -	if (ret < 0) {
+>>>> -		dev_err(chip->dev, "error getting initial duty: %d\n", ret);
+>>>> -		return;
+>>>> +	/*
+>>>> +	 * As there is no way for this hardware to separate the concept of
+>>>> +	 * duty cycle and enabled, but the PWM API does, let return the last
+>>>> +	 * applied state when the PWM is disabled and only return the real
+>>>> +	 * hardware value when the PWM is enabled. Otherwise, a user of this
+>>>> +	 * driver, can get confused because won't be able to program a duty
+>>>> +	 * cycle while the PWM is disabled.
+>>>> +	 */
+>>>> +	state->enabled = ec_pwm->state.enabled;
+>>>
+>>>> +	if (state->enabled) {
+>>>
+>>> As part of registration of the pwm .get_state is called. In this case
+>>> .apply wasn't called before and so state->enabled is probably 0. So this
+>>> breaks reporting the initial state ...
+>>>
+>>>> +		ret = cros_ec_pwm_get_duty(ec_pwm->ec, pwm->hwpwm);
+>>>> +		if (ret < 0) {
+>>>> +			dev_err(chip->dev, "error getting initial duty: %d\n",
+>>>> +				ret);
+>>>> +			return;
+>>>> +		}
+>>>> +		state->duty_cycle = ret;
+>>>> +	} else {
+>>>> +		state->duty_cycle = ec_pwm->state.duty_cycle;
+>>>>  	}
+>>>>  
+>>>> -	state->enabled = (ret > 0);
+>>>>  	state->period = EC_PWM_MAX_DUTY;
+>>>> -
+>>>> -	/* Note that "disabled" and "duty cycle == 0" are treated the same */
+>>>> -	state->duty_cycle = ret;
+>>>
+>>> A few thoughts to your approach here ...:
+>>>
+>>>  - Would it make sense to only store duty_cycle and enabled in the
+>>>    driver struct?
+>>>
+>>
+>> Yes, in fact, my first approach (that I didn't send) was only storing enabled
+>> and duty cycle. For some reason I ended storing the full pwm_state struct, but I
+>> guess is not really needed.
+>>
+>>
+>>>  - Which driver is the consumer of your pwm? If I understand correctly
+>>>    the following sequence is the bad one:
+>>>
+>>
+>> The consumer is the pwm_bl driver. Actually I'n trying to identify
+>> other consumers.
+> 
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/anx7625.yaml =
-b/Documentation/devicetree/bindings/display/bridge/anx7625.yaml
-new file mode 100644
-index 0000000..0ef6271
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/anx7625.yaml
-@@ -0,0 +1,79 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright 2019 Analogix Semiconductor, Inc.
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/display/bridge/anx7625.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Analogix ANX7625 SlimPort (4K Mobile HD Transmitter)
-+
-+maintainers:
-+  - Xin Ji <xji@analogixsemi.com>
-+
-+description: |
-+  The ANX7625 is an ultra-low power 4K Mobile HD Transmitter
-+  designed for portable devices.
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: analogix,anx7625
-+
-+  reg:
-+    maxItems: 1
-+
-+  hpd-gpios:
-+    description: used for HPD interrupt
-+    maxItems: 1
-+
-+  enable-gpios:
-+    description: used for power on chip control
-+    maxItems: 1
-+
-+  reset-gpios:
-+    description: used for reset chip control
-+    maxItems: 1
-+
-+  port@0:
-+    type: object
-+    description:
-+      A port node pointing to MIPI DSI host port node.
-+
-+  port@1:
-+    type: object
-+    description:
-+      A port node pointing to MIPI DPI host port node.
-+
-+  port@2:
-+    type: object
-+    description:
-+      A port node pointing to external connector port node.
-+
-+  port@3:
-+    type: object
-+    description:
-+      A port node pointing to internal panel port node.
-+
-+  port@4:
-+    type: object
-+    description:
-+      A port node pointing to normal eDP port node.
-+
-+required:
-+  - compatible
-+  - reg
-+  - port@0 | port@1
-+
-+example:
-+  - |
-+    anx_bridge: anx7625@58 {
-+        compatible =3D "analogix,anx7625";
-+        reg =3D <0x58>;
-+        status =3D "okay";
-+        port@0 {
-+          reg =3D <0>;
-+          anx7625_1_in: endpoint {
-+            remote-endpoint =3D <&mipi_dsi_bridge_1>;
-+          };
-+        };
-+    };
---=20
-2.7.4
+So far, the pwm_bl driver is the only consumer of cros-ec-pwm.
 
+> Ah, I see why I missed to identify the problem back when I checked this
+> driver. The problem is not that .duty_cycle isn't set but there .enabled
+> isn't set. So maybe we just want:
+> 
+> diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+> index 2201b8c78641..0468c6ee4448 100644
+> --- a/drivers/video/backlight/pwm_bl.c
+> +++ b/drivers/video/backlight/pwm_bl.c
+> @@ -123,6 +123,7 @@ static int pwm_backlight_update_status(struct backlight_device *bl)
+>         if (brightness > 0) {
+>                 pwm_get_state(pb->pwm, &state);
+>                 state.duty_cycle = compute_duty_cycle(pb, brightness);
+> +               state.enabled = true;
+>                 pwm_apply_state(pb->pwm, &state);
+>                 pwm_backlight_power_on(pb);
+>         } else
+> 
+> ? On a side note: It's IMHO strange that pwm_backlight_power_on
+> reconfigures the PWM once more.
+> 
+
+Looking again to the pwm_bl code, now, I am not sure this is correct (although
+it probably solves the problem for me).
+
+Current behaviour is:
+
+* If brightness > 0 and pwm_bl is disabled
+
+   pwm_get_state(pb->pwm, &state);
+   state.duty_cycle = compute_duty_cycle(pb, brightness);
+   pwm_apply_state(pb->pwm, &state);
+   pwm_backlight_power_on(pb);
+      regulator_enable(pb->power_supply);
+      state.enabled = true;
+      pwm_apply_state(pb->pwm, &state);
+
+* If brightness > 0 and pwm_bl is already enabled
+
+   pwm_get_state(pb->pwm, &state);
+   state.duty_cycle = compute_duty_cycle(pb, brightness);
+   pwm_apply_state(pb->pwm, &state);
+
+The sequence:'first' set duty_cycle and 'second' enable the PWM makes some kind
+of sense because there is a regulator_enable in the middle of the power on sequence.
+
+To work for me I need to submit state.enabled && state.duty_cycle atomically. So
+I thin that solving the problem at lowlevel driver (aka cros-ec-pwm) makes more
+sense. At the end, is really a problem of the lowlevel driver, and the PWM
+framework is enough flexible which is fine.
+
+Note: I did a quick look at different PWM drivers that implement .get_state()
+and looks like the cros-ec-pwm is the only driver that has this restriction.
+
+>>> 	state.period = P;
+>>> 	state.duty_cycle = D;
+>>> 	state.enabled = 0;
+>>>    	pwm_apply_state(pwm, &state);
+>>>
+>>> 	...
+>>>
+>>> 	pwm_get_state(pwm, &state);
+>>> 	state.enabled = 1;
+>>>    	pwm_apply_state(pwm, &state);
+>>>
+>>
+>> Yes that's the sequence.
+>>
+>>>    Before my patch there was an implicit promise in the PWM framework
+>>>    that the last pwm_apply_state has .duty_cycle = D (and .period = P).
+>>>    Is this worthwile, or should we instead declare this as
+>>>    non-guaranteed and fix the caller?
+>>>
+>>
+>> pwm_bl is compliant with this, the problem in the pwm-cros-ec driver is when you
+>> set the duty_cycle but enable is 0.
+> 
+> pwm_bl *relies* on this behaviour. The question is: Is this a valid
+> assumption to rely on (for consumers) resp. to guarantee (for the PWM
+> framework)? I'm not sure it is because each PWM that doesn't know the
+> concept of "disabled" (not sure how many there are) needs some effort to
+> simulate it (by caching duty_cycle and period on disable).
+> 
+> Dropping this promise and fix pwm_bl (and maybe other consumers that
+> rely on it) is my preferred solution.
+>  
+>>>  - If this is a more or less common property that hardware doesn't know
+>>>    the concept of "disabled" maybe it would make sense to drop this from
+>>>    the PWM framework, too. (This is a question that I discussed some
+>>>    time ago already with Thierry, but without an result. The key
+>>>    question is: What is the difference between "disabled" and
+>>>    "duty_cycle = 0" in general and does any consumer care about it.)
+>>>
+>>
+>> Good question, I don't really know all consumer requirements, but AFAIK, usually
+>> when you want to program duty_cycle to 0 you also want to disable the PWM.
+> 
+> Note that hardware designers are "creative" and "disable the PWM" has
+> different semantics for different PWMs. Some PWMs just stop the output
+> at the level that it happens to be in, some stop in the inactive level,
+> some stop at 0, some stop driving the pin. Currently the intended
+> semantic of a disabled PWM is that it drives the inactive level (but it
+> might be smart and stop driving if there is a pull in the right
+> direction). I see no benefit of this semantic as it can also be
+> accomplished by setting .duty_cycle = 0, .period = $something_small.
+> Thierry doesn't agree and I fail to understand his reasoning.
+> 
+>> At least for the backlight case doesn't make sense program first the
+>> duty_cycle and then enable the PWM, is implicit, if duty_cycle is 0
+>> the PWM is disabled, if duty_cycle > 0 the PWM is enabled.
+> 
+> Yeah, that's my conclusion of above, too. After all the pwm_apply_state
+> function is there for being able to go from one state to each other
+> state with a single function call.
+> 
+
+Looking at the code again cahnged my point of view on this, see my comment above.
+
+>>>  - A softer variant of the above: Should pwm_get_state() anticipate that
+>>>    with .enabled = 0 the duty_cycle (and maybe also period) is
+>>>    unreliable and cache that for callers?
+>>
+>> Sorry, when you say pwm_get_state(), you mean the core call or the lowlevel
+>> driver call?
+> 
+> The suggestion is to do what you do in the driver (i.e. remember
+> duty_cycle and in the general case also period) in the framework
+> instead and fix the problem for all lowlevel drivers that behave similar
+> to the implementation in question. i.e. don't rely on .duty_cycle and
+> .period having a sensible value after .get_state() if the PWM is off.
+> This is IMHO the second best option.
+> 
+> Best regards
+> Uwe
+> 
