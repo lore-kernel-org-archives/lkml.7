@@ -2,89 +2,92 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E308FECE596
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2FBDECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBD0020B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:43:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C0B2218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:43:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570632206;
+	bh=LXkVwdwxi6dhLgKLBPf7u0duHW3JVRoVbFhzCiczVFY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nX7MPtoQYQnXdH+9GoyKPI7BvRnI7w0J3+WfoEJJL8rZSCUNZvWGyzsoRgTheEX1y
+	 xx0VJQsFIQ159YfCMiOQv5+4gYcELlU5HUQU/eoV+pB7Sx8hfOi0kBugr8ysHj8u7a
+	 X8hSjXXG1aVzR5jfCSjh/AzqOxzvQt5KyJVw3NM4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731496AbfJIOnI (ORCPT
+        id S1731646AbfJIOnZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 10:43:08 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42965 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731133AbfJIOnI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 10:43:08 -0400
-Received: by mail-ot1-f66.google.com with SMTP id c10so1917075otd.9;
-        Wed, 09 Oct 2019 07:43:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yOIw38zD/ngNIg+xiz6Rbo3Jdwlcuf3nU+5nbTT8sV0=;
-        b=borU7pg/yY7wtYipu5Oq8+zMUmREUzW0w29JTbrIek4Hb20hPKiSrGcPwa2V14Qjum
-         oYRAidRZF2a7AlQpm8GkoquqgKLL6pLHfIkZTNtD4vkE/39sO7NhxpYn+HfEXJnIDQ1A
-         BxYabMa+fSRpnlDJ3y8hnqgbSzDTevwCHXMocr3UvYD6oAirjpWOKSOEHEiqzv5ZvKSX
-         sJf3H6sEDaKaCDoDbB+uccM16trZUh+J4Fj9HGjmag+SiR2nLgHF0/55WSbFHfA4Nv13
-         wunZSKQKDeOF1wHK4NdKguHQsTZtWpdLPNyId2qACcXau1/bm1pmw1b9zPdZMQcQiykM
-         kodA==
-X-Gm-Message-State: APjAAAVUh4sM3Z6LqLbyts+7jmdrRqI2NPgVw8fRol0v80l0zg1YFonA
-        yzYlx+xoX2v61LM276ATbDsMqJUpYR03D0FhG2Y=
-X-Google-Smtp-Source: APXvYqxft/u7/XRb6nPeiCWFxPpaJowaExImgMdOt4nCer4aDN+X7hyxDQILaidnjOoe0WuTCqJnO3OSvFCZ8bO3zVk=
-X-Received: by 2002:a05:6830:1b75:: with SMTP id d21mr3231975ote.145.1570632187381;
- Wed, 09 Oct 2019 07:43:07 -0700 (PDT)
+        Wed, 9 Oct 2019 10:43:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35940 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730674AbfJIOnZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 10:43:25 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A297DAD12;
+        Wed,  9 Oct 2019 14:43:23 +0000 (UTC)
+Date:   Wed, 9 Oct 2019 16:43:23 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v2 2/2] mm/memory-failure.c: Don't access uninitialized
+ memmaps in memory_failure()
+Message-ID: <20191009144323.GH6681@dhcp22.suse.cz>
+References: <20191009142435.3975-1-david@redhat.com>
+ <20191009142435.3975-3-david@redhat.com>
 MIME-Version: 1.0
-References: <1570531132-21856-1-git-send-email-fabrizio.castro@bp.renesas.com> <1570531132-21856-11-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1570531132-21856-11-git-send-email-fabrizio.castro@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 9 Oct 2019 16:42:56 +0200
-Message-ID: <CAMuHMdVSqWMqTq3wS43jX5bi+RhjzfH8CEJpTz5JySUUxq_DfA@mail.gmail.com>
-Subject: Re: [PATCH 10/10] arm64: dts: renesas: r8a774b1: Add INTC-EX device node
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Simon Horman <horms@verge.net.au>, Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>, dmaengine@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191009142435.3975-3-david@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 8, 2019 at 12:39 PM Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
-> Add support for the Interrupt Controller for External Devices
-> (INTC-EX) on RZ/G2N.
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+On Wed 09-10-19 16:24:35, David Hildenbrand wrote:
+> We should check for pfn_to_online_page() to not access uninitialized
+> memmaps. Reshuffle the code so we don't have to duplicate the error
+> message.
+> 
+> Cc: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  mm/memory-failure.c | 14 ++++++++------
+>  1 file changed, 8 insertions(+), 6 deletions(-)
+> 
+> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+> index 7ef849da8278..e866e6e5660b 100644
+> --- a/mm/memory-failure.c
+> +++ b/mm/memory-failure.c
+> @@ -1253,17 +1253,19 @@ int memory_failure(unsigned long pfn, int flags)
+>  	if (!sysctl_memory_failure_recovery)
+>  		panic("Memory failure on page %lx", pfn);
+>  
+> -	if (!pfn_valid(pfn)) {
+> +	p = pfn_to_online_page(pfn);
+> +	if (!p) {
+> +		if (pfn_valid(pfn)) {
+> +			pgmap = get_dev_pagemap(pfn, NULL);
+> +			if (pgmap)
+> +				return memory_failure_dev_pagemap(pfn, flags,
+> +								  pgmap);
+> +		}
+>  		pr_err("Memory failure: %#lx: memory outside kernel control\n",
+>  			pfn);
+>  		return -ENXIO;
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.5.
-
-Gr{oetje,eeting}s,
-
-                        Geert
+Don't we need that earlier at hwpoison_inject level?
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Michal Hocko
+SUSE Labs
