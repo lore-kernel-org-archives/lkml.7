@@ -2,341 +2,291 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D81C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 493CEECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E311321721
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:46:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16CB020B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:47:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="fXBFCO32"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730793AbfJIKql (ORCPT
+        id S1730780AbfJIKrc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 06:46:41 -0400
-Received: from foss.arm.com ([217.140.110.172]:59522 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730728AbfJIKql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 06:46:41 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3236128;
-        Wed,  9 Oct 2019 03:46:40 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B01843F703;
-        Wed,  9 Oct 2019 03:46:38 -0700 (PDT)
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org, Qais Yousef <qais.yousef@arm.com>
-Subject: [PATCH v2] sched: rt: Make RT capacity aware
-Date:   Wed,  9 Oct 2019 11:46:11 +0100
-Message-Id: <20191009104611.15363-1-qais.yousef@arm.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 9 Oct 2019 06:47:32 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:46246 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbfJIKrc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 06:47:32 -0400
+Received: by mail-ed1-f66.google.com with SMTP id t3so1540470edw.13
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 03:47:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=C/f6/fe6l9qpOq8K1lx4cS1L0t1Hq00anJTRcpjdZaY=;
+        b=fXBFCO323Bm+FQBU/+LL08XySBNen3E6T9qKA4aIio7ZnVTc1qrmiXWPHfafjaF5OM
+         5+mK5egfmwUECqbtv1EY9REiXUiGHZdUls0/dxznEkib+Mj3bSSpPBFsRkZrfsTEJLTB
+         MelIIKF4vIGWv96w8TwbvIWb5b5NsUUnkfhjM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=C/f6/fe6l9qpOq8K1lx4cS1L0t1Hq00anJTRcpjdZaY=;
+        b=qTMFR12zSupuPQrowxur/JXLiCjaZaFsv018jMTodfmlZ+6OCuEIALvz7I7f8eazog
+         Y/B+YxDqB46ep5PUx5+bKSVpSxJjJH61TVHHFZd04dKGNXk8Be1OxQLh5203tysI6mbw
+         a3zwaIvHEjdKKvRxcXmCALkrDx99qZMOYHgYdWdem2Zw3be0HU2MqnbIoRzXx4k7I2DA
+         i1qChzgEE0bFByn8NwlnLPHNxuUD4gt+iKbQiNA+IXXIBvfs2pEXG9I+qGxaeo04sByy
+         I8M1LqNOTrbizmaxBD97Z3xdSJnL+iV0IAv3hVQxPudm5u6PoLjgN6Czfo8zdiQpPfgO
+         pe9w==
+X-Gm-Message-State: APjAAAW28SaIIhvNYZJRGdYqTSTOVZ14iByrLJpcFsWl9QuovA1Fw9vl
+        kZdDlGLm+M6lkgAGeDKiiYFIrBzZaJ8=
+X-Google-Smtp-Source: APXvYqwFKxcsVszGn80rMYG6TMaGo4tkWTwu1HVt5uwb1ZbnJ6lXbxPzQggnmUgneVU6eJIaIg8Pmw==
+X-Received: by 2002:a50:f10a:: with SMTP id w10mr2253640edl.247.1570618050207;
+        Wed, 09 Oct 2019 03:47:30 -0700 (PDT)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id dv15sm208287ejb.49.2019.10.09.03.47.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Oct 2019 03:47:29 -0700 (PDT)
+Date:   Wed, 9 Oct 2019 12:47:27 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Jeykumar Sankaran <jsanka@codeaurora.org>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH] drm/meson: fix max mode_config height/width
+Message-ID: <20191009104727.GX16989@phenom.ffwll.local>
+Mail-Followup-To: Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+References: <1538642563-22465-1-git-send-email-narmstrong@baylibre.com>
+ <20181004100958.GI31561@phenom.ffwll.local>
+ <0ef7fa13-ce77-f8a5-f5f3-6568be3d6145@baylibre.com>
+ <CAKMK7uHxiDF3z19cMBb0o2o4Ev0DFJkhMR7Ny6U2776Ry4oc=A@mail.gmail.com>
+ <8e980de4-5a52-8f3d-fba2-734617e40d1b@baylibre.com>
+ <CAKMK7uE71OeOdDPb+5-cs9bByD-unYPxBV_R1t+4A0Nb4H6CAw@mail.gmail.com>
+ <5dbd6337-7e08-f3f7-6d4a-d6bcaddfd3be@baylibre.com>
+ <91cd8a2aebefd4ea3e9bcee5a4ef796a@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <91cd8a2aebefd4ea3e9bcee5a4ef796a@codeaurora.org>
+X-Operating-System: Linux phenom 5.2.0-2-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Capacity Awareness refers to the fact that on heterogeneous systems
-(like Arm big.LITTLE), the capacity of the CPUs is not uniform, hence
-when placing tasks we need to be aware of this difference of CPU
-capacities.
+On Tue, Sep 24, 2019 at 10:28:48AM -0700, Jeykumar Sankaran wrote:
+> Reviving this thread from the context of the below conversion:
+> 
+> https://lore.kernel.org/linux-arm-msm/db26145b-3f64-a334-f698-76f972332881@baylibre.com/T/#u
+> 
+> On 2018-10-05 01:19, Neil Armstrong wrote:
+> > On 05/10/2018 09:58, Daniel Vetter wrote:
+> > > On Fri, Oct 5, 2018 at 9:39 AM Neil Armstrong
+> > > <narmstrong@baylibre.com> wrote:
+> > > > 
+> > 
+> > [...]
+> > 
+> > > > OK, won't this be enough ?
+> > > > --- a/include/drm/drm_mode_config.h
+> > > > +++ b/include/drm/drm_mode_config.h
+> > > > @@ -333,6 +333,8 @@ struct drm_mode_config_funcs {
+> > > >   * @min_height: minimum fb pixel height on this device
+> > > >   * @max_width: maximum fb pixel width on this device
+> > > >   * @max_height: maximum fb pixel height on this device
+> > > > + * @max_fb_width: maximum fb buffer width if differs from max_width
+> > > > + * @max_fb_height: maximum fb buffer height if differs from
+> > > > max_height
+> > > >   * @funcs: core driver provided mode setting functions
+> > > >   * @fb_base: base address of the framebuffer
+> > > >   * @poll_enabled: track polling support for this device
+> > > > @@ -508,6 +510,7 @@ struct drm_mode_config {
+> > > > 
+> > > >         int min_width, min_height;
+> > > >         int max_width, max_height;
+> > > > +       int max_fb_width, max_fb_height;
+> > > >         const struct drm_mode_config_funcs *funcs;
+> > > >         resource_size_t fb_base;
+> > > > 
+> > > > --- a/drivers/gpu/drm/drm_framebuffer.c
+> > > > +++ b/drivers/gpu/drm/drm_framebuffer.c
+> > > > @@ -283,14 +283,20 @@ drm_internal_framebuffer_create(struct
+> > > > drm_device *dev,
+> > > >                 return ERR_PTR(-EINVAL);
+> > > >         }
+> > > > 
+> > > > -       if ((config->min_width > r->width) || (r->width >
+> > > > config->max_width)) {
+> > > > +       if ((config->min_width > r->width) ||
+> > > > +           (!config->max_fb_width && r->width >
+> > > > config->max_width) ||
+> > > > +           (config->max_fb_width && r->width >
+> > > > config->max_fb_width)) {
+> > > >                 DRM_DEBUG_KMS("bad framebuffer width %d, should
+> > > > be >= %d && <= %d\n",
+> > > > -                         r->width, config->min_width,
+> > > > config->max_width);
+> > > > +                         r->width, config->min_width,
+> > > > config->max_fb_width ?
+> > > > +                         config->max_fb_width : config->max_width);
+> > > >                 return ERR_PTR(-EINVAL);
+> > > >         }
+> > > > -       if ((config->min_height > r->height) || (r->height >
+> > > > config->max_height)) {
+> > > > +       if ((config->min_height > r->height) ||
+> > > > +           (!config->max_fb_height && r->height >
+> > > > config->max_height) ||
+> > > > +           (config->max_fb_height && r->height >
+> > > > config->max_fb_height)) {
+> > > >                 DRM_DEBUG_KMS("bad framebuffer height %d, should
+> > > > be >= %d && <= %d\n",
+> > > > -                         r->height, config->min_height,
+> > > > config->max_height);
+> > > > +                         r->height, config->min_height,
+> > > > config->max_fb_height ?
+> > > > +                         config->max_fb_height :
+> > > > config->max_height);
+> > > >                 return ERR_PTR(-EINVAL);
+> > > >         }
+> > > > 
+> > > > and in the driver :
+> > > > 
+> > > > +       drm->mode_config.max_width = 4096;
+> > > > +       drm->mode_config.max_height = 3840;
+> > > > +       drm->mode_config.max_fb_width = 16384;
+> > > > +       drm->mode_config.max_fb_height = 8192;
+> > > > 
+> > > > With this I leave the mode filtering intact.
+> > > 
+> > > Not enough. See
+> > > https://dri.freedesktop.org/docs/drm/gpu/drm-kms-helpers.html#c.drm_connector_helper_funcs
+> > > and scroll down to mode_valid. You need to filter modes both in the
+> > > detect paths, and the atomic_check paths.
+> > > 
+> > > Detect is explicitly filtered out, but atomic_check was only
+> > > implicitly filtered, through the max fb size checks. Ok, you could
+> > > light up a mode that's bigger than max fb, but in practice, no
+> > > userspace ever did that.
+> 
+> Daniel, MSM and few other vendor hardware have upscale blocks where the
+> driver can expose fb sizes smaller than
+> the mode resolution and use h/w upscaling to fill the screen. This would
+> optimize the fetch bandwidth.
+> 
+> But with your code we're missing crucial
+> > > validation now, and userspace could fall over that. What I think we
+> > > need is to add mode filter against mode_config.max_width/height in
+> > > drm_atomic_helper_check_modeset(). Probably best to stuff that into
+> > > the mode_valid() function.
+> > 
+> Agreed! Since the above patch from Niel is taking care of cases where
+> max/min fb values
+> are not set, by checking against the original max/min values, can we
+> separate out this
+> core change from the driver level mode_valid changes? If Niel couldn't find
+> the time, I can
+> repost the above change.
 
-In such scenarios we want to ensure that the selected CPU has enough
-capacity to meet the requirement of the running task. Enough capacity
-means here that capacity_orig_of(cpu) >= task.requirement.
+Sure, I think Neil wouldn't mind if you take this over and get it ready
+for merging. Just need to make sure we're not leaving any validation gaps
+in core/helper code.
+-Daniel
 
-The definition of task.requirement is dependent on the scheduling class.
+> 
+> Thanks and Regards,
+> Jeykumar S.
+> 
+> > Ok I understood now, thanks for pointer, I'll try to add this.
+> > 
+> > Neil
+> > 
+> > > 
+> > > Cheers, Daniel
+> > > > 
+> > > > Neil
+> > > > 
+> > > > 
+> > > > > -Daniel
+> > > > > 
+> > > > > > 
+> > > > > > Neil
+> > > > > > 
+> > > > > > > 
+> > > > > > > Bunch of igt to make sure we're not missing anything
+> > > > > > > would be sweet on
+> > > > > > > top, e.g. e.g. trying to set a mode over the limit
+> > > > > > > and making sure it
+> > > > > > > fails.
+> > > > > > > 
+> > > > > > > Cheers, Daniel
+> > > > > > > 
+> > > > > > > > ---
+> > > > > > > >  drivers/gpu/drm/meson/meson_drv.c | 4 ++--
+> > > > > > > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > > > > > > 
+> > > > > > > > diff --git a/drivers/gpu/drm/meson/meson_drv.c
+> > > > > > > > b/drivers/gpu/drm/meson/meson_drv.c
+> > > > > > > > index d344312..2e29968 100644
+> > > > > > > > --- a/drivers/gpu/drm/meson/meson_drv.c
+> > > > > > > > +++ b/drivers/gpu/drm/meson/meson_drv.c
+> > > > > > > > @@ -243,8 +243,8 @@ static int
+> > > > > > > > meson_drv_bind_master(struct device *dev, bool
+> > > > > > > > has_components)
+> > > > > > > >              goto free_drm;
+> > > > > > > > 
+> > > > > > > >      drm_mode_config_init(drm);
+> > > > > > > > -    drm->mode_config.max_width = 3840;
+> > > > > > > > -    drm->mode_config.max_height = 2160;
+> > > > > > > > +    drm->mode_config.max_width = 16384;
+> > > > > > > > +    drm->mode_config.max_height = 8192;
+> > > > > > > >      drm->mode_config.funcs = &meson_mode_config_funcs;
+> > > > > > > > 
+> > > > > > > >      /* Hardware Initialization */
+> > > > > > > > --
+> > > > > > > > 2.7.4
+> > > > > > > > 
+> > > > > > > > _______________________________________________
+> > > > > > > > dri-devel mailing list
+> > > > > > > > dri-devel@lists.freedesktop.org
+> > > > > > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > > > > > > 
+> > > > > > 
+> > > > > > _______________________________________________
+> > > > > > dri-devel mailing list
+> > > > > > dri-devel@lists.freedesktop.org
+> > > > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > > > > 
+> > > > > 
+> > > > > 
+> > > > 
+> > > 
+> > > 
+> > 
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> 
+> -- 
+> Jeykumar S
 
-For CFS, utilization is used to select a CPU that has >= capacity value
-than the cfs_task.util.
-
-	capacity_orig_of(cpu) >= cfs_task.util
-
-DL isn't capacity aware at the moment but can make use of the bandwidth
-reservation to implement that in a similar manner CFS uses utilization.
-The following patchset implements that:
-
-https://lore.kernel.org/lkml/20190506044836.2914-1-luca.abeni@santannapisa.it/
-
-	capacity_orig_of(cpu)/SCHED_CAPACITY >= dl_deadline/dl_runtime
-
-For RT we don't have a per task utilization signal and we lack any
-information in general about what performance requirement the RT task
-needs. But with the introduction of uclamp, RT tasks can now control
-that by setting uclamp_min to guarantee a minimum performance point.
-
-ATM the uclamp value are only used for frequency selection; but on
-heterogeneous systems this is not enough and we need to ensure that the
-capacity of the CPU is >= uclamp_min. Which is what implemented here.
-
-	capacity_orig_of(cpu) >= rt_task.uclamp_min
-
-Note that by default uclamp.min is 1024, which means that RT tasks will
-always be biased towards the big CPUs, which make for a better more
-predictable behavior for the default case.
-
-Must stress that the bias acts as a hint rather than a definite
-placement strategy. For example, if all big cores are busy executing
-other RT tasks we can't guarantee that a new RT task will be placed
-there.
-
-On non-heterogeneous systems the original behavior of RT should be
-retained. Similarly if uclamp is not selected in the config.
-
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
----
-
-Changes in v2:
-	- Use cpupri_find() to check the fitness of the task instead of
-	  sprinkling find_lowest_rq() with several checks of
-	  rt_task_fits_capacity().
-
-	  The selected implementation opted to pass the fitness function as an
-	  argument rather than call rt_task_fits_capacity() capacity which is
-	  a cleaner to keep the logical separation of the 2 modules; but it
-	  means the compiler has less room to optimize rt_task_fits_capacity()
-	  out when it's a constant value.
-
-The logic is not perfect. For example if a 'small' task is occupying a big CPU
-and another big task wakes up; we won't force migrate the small task to clear
-the big cpu for the big task that woke up.
-
-IOW, the logic is best effort and can't give hard guarantees. But improves the
-current situation where a task can randomly end up on any CPU regardless of
-what it needs. ie: without this patch an RT task can wake up on a big or small
-CPU, but with this it will always wake up on a big CPU (assuming the big CPUs
-aren't overloaded) - hence provide a consistent performance.
-
-I'm looking at ways to improve this best effort, but this patch should be
-a good start to discuss our Capacity Awareness requirement. There's a trade-off
-of complexity to be made here and I'd like to keep things as simple as
-possible and build on top as needed.
-
-
- kernel/sched/cpupri.c | 23 ++++++++++--
- kernel/sched/cpupri.h |  4 ++-
- kernel/sched/rt.c     | 81 +++++++++++++++++++++++++++++++++++--------
- 3 files changed, 91 insertions(+), 17 deletions(-)
-
-diff --git a/kernel/sched/cpupri.c b/kernel/sched/cpupri.c
-index b7abca987d94..799791c01d60 100644
---- a/kernel/sched/cpupri.c
-+++ b/kernel/sched/cpupri.c
-@@ -57,7 +57,8 @@ static int convert_prio(int prio)
-  * Return: (int)bool - CPUs were found
-  */
- int cpupri_find(struct cpupri *cp, struct task_struct *p,
--		struct cpumask *lowest_mask)
-+		struct cpumask *lowest_mask,
-+		bool (*fitness_fn)(struct task_struct *p, int cpu))
- {
- 	int idx = 0;
- 	int task_pri = convert_prio(p->prio);
-@@ -98,6 +99,8 @@ int cpupri_find(struct cpupri *cp, struct task_struct *p,
- 			continue;
- 
- 		if (lowest_mask) {
-+			int cpu;
-+
- 			cpumask_and(lowest_mask, p->cpus_ptr, vec->mask);
- 
- 			/*
-@@ -108,7 +111,23 @@ int cpupri_find(struct cpupri *cp, struct task_struct *p,
- 			 * condition, simply act as though we never hit this
- 			 * priority level and continue on.
- 			 */
--			if (cpumask_any(lowest_mask) >= nr_cpu_ids)
-+			if (cpumask_empty(lowest_mask))
-+				continue;
-+
-+			if (!fitness_fn)
-+				return 1;
-+
-+			/* Ensure the capacity of the CPUs fit the task */
-+			for_each_cpu(cpu, lowest_mask) {
-+				if (!fitness_fn(p, cpu))
-+					cpumask_clear_cpu(cpu, lowest_mask);
-+			}
-+
-+			/*
-+			 * If no CPU at the current priority can fit the task
-+			 * continue looking
-+			 */
-+			if (cpumask_empty(lowest_mask))
- 				continue;
- 		}
- 
-diff --git a/kernel/sched/cpupri.h b/kernel/sched/cpupri.h
-index 7dc20a3232e7..32dd520db11f 100644
---- a/kernel/sched/cpupri.h
-+++ b/kernel/sched/cpupri.h
-@@ -18,7 +18,9 @@ struct cpupri {
- };
- 
- #ifdef CONFIG_SMP
--int  cpupri_find(struct cpupri *cp, struct task_struct *p, struct cpumask *lowest_mask);
-+int  cpupri_find(struct cpupri *cp, struct task_struct *p,
-+		 struct cpumask *lowest_mask,
-+		 bool (*fitness_fn)(struct task_struct *p, int cpu));
- void cpupri_set(struct cpupri *cp, int cpu, int pri);
- int  cpupri_init(struct cpupri *cp);
- void cpupri_cleanup(struct cpupri *cp);
-diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index ebaa4e619684..3a68054e15b3 100644
---- a/kernel/sched/rt.c
-+++ b/kernel/sched/rt.c
-@@ -437,6 +437,45 @@ static inline int on_rt_rq(struct sched_rt_entity *rt_se)
- 	return rt_se->on_rq;
- }
- 
-+#ifdef CONFIG_UCLAMP_TASK
-+/*
-+ * Verify the fitness of task @p to run on @cpu taking into account the uclamp
-+ * settings.
-+ *
-+ * This check is only important for heterogeneous systems where uclamp_min value
-+ * is higher than the capacity of a @cpu. For non-heterogeneous system this
-+ * function will always return true.
-+ *
-+ * The function will return true if the capacity of the @cpu is >= the
-+ * uclamp_min and false otherwise.
-+ *
-+ * Note that uclamp_min will be clamped to uclamp_max if uclamp_min
-+ * > uclamp_max.
-+ */
-+inline bool rt_task_fits_capacity(struct task_struct *p, int cpu)
-+{
-+	unsigned int min_cap;
-+	unsigned int max_cap;
-+	unsigned int cpu_cap;
-+
-+	/* Only heterogeneous systems can benefit from this check */
-+	if (!static_branch_unlikely(&sched_asym_cpucapacity))
-+		return true;
-+
-+	min_cap = uclamp_eff_value(p, UCLAMP_MIN);
-+	max_cap = uclamp_eff_value(p, UCLAMP_MAX);
-+
-+	cpu_cap = capacity_orig_of(cpu);
-+
-+	return cpu_cap >= min(min_cap, max_cap);
-+}
-+#else
-+static inline bool rt_task_fits_capacity(struct task_struct *p, int cpu)
-+{
-+	return true;
-+}
-+#endif
-+
- #ifdef CONFIG_RT_GROUP_SCHED
- 
- static inline u64 sched_rt_runtime(struct rt_rq *rt_rq)
-@@ -1391,6 +1430,7 @@ select_task_rq_rt(struct task_struct *p, int cpu, int sd_flag, int flags)
- {
- 	struct task_struct *curr;
- 	struct rq *rq;
-+	bool test;
- 
- 	/* For anything but wake ups, just return the task_cpu */
- 	if (sd_flag != SD_BALANCE_WAKE && sd_flag != SD_BALANCE_FORK)
-@@ -1422,10 +1462,16 @@ select_task_rq_rt(struct task_struct *p, int cpu, int sd_flag, int flags)
- 	 *
- 	 * This test is optimistic, if we get it wrong the load-balancer
- 	 * will have to sort it out.
-+	 *
-+	 * We take into account the capacity of the cpu to ensure it fits the
-+	 * requirement of the task - which is only important on heterogeneous
-+	 * systems like big.LITTLE.
- 	 */
--	if (curr && unlikely(rt_task(curr)) &&
--	    (curr->nr_cpus_allowed < 2 ||
--	     curr->prio <= p->prio)) {
-+	test = curr &&
-+	       unlikely(rt_task(curr)) &&
-+	       (curr->nr_cpus_allowed < 2 || curr->prio <= p->prio);
-+
-+	if (test || !rt_task_fits_capacity(p, cpu)) {
- 		int target = find_lowest_rq(p);
- 
- 		/*
-@@ -1449,7 +1495,7 @@ static void check_preempt_equal_prio(struct rq *rq, struct task_struct *p)
- 	 * let's hope p can move out.
- 	 */
- 	if (rq->curr->nr_cpus_allowed == 1 ||
--	    !cpupri_find(&rq->rd->cpupri, rq->curr, NULL))
-+	    !cpupri_find(&rq->rd->cpupri, rq->curr, NULL, NULL))
- 		return;
- 
- 	/*
-@@ -1457,7 +1503,7 @@ static void check_preempt_equal_prio(struct rq *rq, struct task_struct *p)
- 	 * see if it is pushed or pulled somewhere else.
- 	 */
- 	if (p->nr_cpus_allowed != 1
--	    && cpupri_find(&rq->rd->cpupri, p, NULL))
-+	    && cpupri_find(&rq->rd->cpupri, p, NULL, NULL))
- 		return;
- 
- 	/*
-@@ -1600,7 +1646,8 @@ static void put_prev_task_rt(struct rq *rq, struct task_struct *p, struct rq_fla
- static int pick_rt_task(struct rq *rq, struct task_struct *p, int cpu)
- {
- 	if (!task_running(rq, p) &&
--	    cpumask_test_cpu(cpu, p->cpus_ptr))
-+	    cpumask_test_cpu(cpu, p->cpus_ptr) &&
-+	    rt_task_fits_capacity(p, cpu))
- 		return 1;
- 
- 	return 0;
-@@ -1642,7 +1689,8 @@ static int find_lowest_rq(struct task_struct *task)
- 	if (task->nr_cpus_allowed == 1)
- 		return -1; /* No other targets possible */
- 
--	if (!cpupri_find(&task_rq(task)->rd->cpupri, task, lowest_mask))
-+	if (!cpupri_find(&task_rq(task)->rd->cpupri, task, lowest_mask,
-+			 rt_task_fits_capacity))
- 		return -1; /* No targets found */
- 
- 	/*
-@@ -2146,12 +2194,14 @@ static void pull_rt_task(struct rq *this_rq)
-  */
- static void task_woken_rt(struct rq *rq, struct task_struct *p)
- {
--	if (!task_running(rq, p) &&
--	    !test_tsk_need_resched(rq->curr) &&
--	    p->nr_cpus_allowed > 1 &&
--	    (dl_task(rq->curr) || rt_task(rq->curr)) &&
--	    (rq->curr->nr_cpus_allowed < 2 ||
--	     rq->curr->prio <= p->prio))
-+	bool need_to_push = !task_running(rq, p) &&
-+			    !test_tsk_need_resched(rq->curr) &&
-+			    p->nr_cpus_allowed > 1 &&
-+			    (dl_task(rq->curr) || rt_task(rq->curr)) &&
-+			    (rq->curr->nr_cpus_allowed < 2 ||
-+			     rq->curr->prio <= p->prio);
-+
-+	if (need_to_push || !rt_task_fits_capacity(p, cpu_of(rq)))
- 		push_rt_tasks(rq);
- }
- 
-@@ -2223,7 +2273,10 @@ static void switched_to_rt(struct rq *rq, struct task_struct *p)
- 	 */
- 	if (task_on_rq_queued(p) && rq->curr != p) {
- #ifdef CONFIG_SMP
--		if (p->nr_cpus_allowed > 1 && rq->rt.overloaded)
-+		bool need_to_push = rq->rt.overloaded ||
-+				    !rt_task_fits_capacity(p, cpu_of(rq));
-+
-+		if (p->nr_cpus_allowed > 1 && need_to_push)
- 			rt_queue_push_tasks(rq);
- #endif /* CONFIG_SMP */
- 		if (p->prio < rq->curr->prio && cpu_online(cpu_of(rq)))
 -- 
-2.17.1
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
