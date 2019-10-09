@@ -2,144 +2,346 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E42C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 18:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13115ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 18:39:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED86121848
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 18:38:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m6HcceqR"
+	by mail.kernel.org (Postfix) with ESMTP id 781D421848
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 18:39:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731497AbfJISim (ORCPT
+        id S1731541AbfJISjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 14:38:42 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34163 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731144AbfJISil (ORCPT
+        Wed, 9 Oct 2019 14:39:54 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:59013 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729535AbfJISjx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 14:38:41 -0400
-Received: by mail-pg1-f196.google.com with SMTP id y35so1985070pgl.1
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 11:38:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=j0n59WzArHfQMzstAxFmGI72O6KtfqlxGh29MRLODnU=;
-        b=m6HcceqRf2wGKOqUYOjvtR2PtrECgc/10hW7VmFmjIxHNJ+aLeTno0M5Xw4gsnxoZ0
-         QCeeLfgwmgo4fKUSSC3xn8cA1XYioaoIY+Nw7N+64/jInn80rfovpWHhm0mNdpSWOVGV
-         bfgG74Mtc777+cRhUaGv0wra2z3J8h89fGLEx1mFSH1TdaBOlFXOEKIg4MM8ZBFErHUe
-         hzJIcq+TSrv9/sqdhn0Aw4n3fTLdlIzZmXO7xenvibMG5x4WsBi57Es9RvOmEKJlZk/R
-         rLSGb1YN2gX8VzVkIjkYEcdy4Ym7dtGIIztJpcA7HYSMy1fMInvyGDZZBii1xnDCbIBM
-         7GIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=j0n59WzArHfQMzstAxFmGI72O6KtfqlxGh29MRLODnU=;
-        b=A0HTmAs8ic5r0ga2tXvBSzSqQkodngyvp6k1AZDD/nPrbClcj3TfVX3vt2LwEtJkao
-         w2jAZ6S+sA89l7KwTIHNYSCBNEJIvvYcnGyBg/tEFp16xQqXH9zlhuj4ZY37k8ZKU4oY
-         bbjuM4wXE9QN5WNrZIjC4Hx3otzhPSUNYHc8cqPlAjNEjKzgiBnwerUj86GIifgSSU5B
-         jlMNn/TeaePuXn+YfxVzQ60mvpRHQLg8iaHl3qJ25kJb2vmaT9JR0klFCei2thc8CmlG
-         9ZzKfGy8QjPJhHpUpT58Czv3xCNbFelesBb9R7HRxVYN4DKsqg1M4EoCkdumEyflR60z
-         RZsg==
-X-Gm-Message-State: APjAAAUJQRKRZEiTm2ru3/5V7oH4Y9GLJwLSD8diQOxA1UXiNGJGsDBQ
-        PZSxHyFZtUsZrb+kb2CPMHqcWxUu4tmRJA==
-X-Google-Smtp-Source: APXvYqyDspO+cU/FPFy206BicfFs00WU0uWXf4UKpKqglndEEJSpZkzDvErJP3RJxj8tj0QPCN3QIA==
-X-Received: by 2002:a63:f646:: with SMTP id u6mr5743350pgj.71.1570646320648;
-        Wed, 09 Oct 2019 11:38:40 -0700 (PDT)
-Received: from [192.168.104.168] ([198.182.47.47])
-        by smtp.gmail.com with ESMTPSA id c14sm5088565pfm.179.2019.10.09.11.38.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 09 Oct 2019 11:38:39 -0700 (PDT)
-Subject: Re: [PATCH] ARC: mm: remove __ARCH_USE_5LEVEL_HACK
-To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc:     linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-References: <20191008213836.19266-1-vgupta@synopsys.com>
- <20191008234223.wycjktby2t5gwz3o@black.fi.intel.com>
-From:   Vineet Gupta <vineetg76@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=vineetg76@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- deE0Dvw98SWmZSNtdOPnJZ0D
-Message-ID: <adaa82a2-b143-d49f-f38c-24ef52a200b8@gmail.com>
-Date:   Wed, 9 Oct 2019 11:38:37 -0700
+        Wed, 9 Oct 2019 14:39:53 -0400
+X-Originating-IP: 79.86.19.127
+Received: from [192.168.0.12] (127.19.86.79.rev.sfr.net [79.86.19.127])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 919701C0002;
+        Wed,  9 Oct 2019 18:39:44 +0000 (UTC)
+From:   Alex Ghiti <alex@ghiti.fr>
+To:     Atish Patra <atish.patra@wdc.com>
+Cc:     "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "jhogan@kernel.org" <jhogan@kernel.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "palmer@sifive.com" <palmer@sifive.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "ralf@linux-mips.org" <ralf@linux-mips.org>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "paul.burton@mips.com" <paul.burton@mips.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "hch@lst.de" <hch@lst.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "mcgrof@kernel.org" <mcgrof@kernel.org>
+Subject: Re: [PATCH v6 14/14] riscv: Make mmap allocation top-down by default
+References: <20190808061756.19712-1-alex@ghiti.fr>
+ <20190808061756.19712-15-alex@ghiti.fr>
+ <208433f810b5b07b1e679d7eedb028697dff851b.camel@wdc.com>
+ <60b52f20-a2c7-dee9-7cf3-a727f07400b9@ghiti.fr>
+ <daeb33415751ef16a717f6ff6a29486110c503d7.camel@wdc.com>
+ <9e9a3fea-d8a3-ae62-317a-740773f0725c@ghiti.fr>
+ <d9bc696aa9d1e306e4cff04a2926b0faa2dc5587.camel@wdc.com>
+Message-ID: <4192e5ef-2e9c-950c-1899-ee8ce9a05ec3@ghiti.fr>
+Date:   Wed, 9 Oct 2019 14:39:43 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191008234223.wycjktby2t5gwz3o@black.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <d9bc696aa9d1e306e4cff04a2926b0faa2dc5587.camel@wdc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/8/19 4:42 PM, Kirill A. Shutemov wrote:
-> On Tue, Oct 08, 2019 at 09:38:36PM +0000, Vineet Gupta wrote:
->> Add the intermediate p4d accessors to make it 5 level compliant.
+On 10/8/19 10:07 PM, Atish Patra wrote:
+> On Tue, 2019-10-08 at 07:58 -0400, Alex Ghiti wrote:
+>> On 10/7/19 8:46 PM, Atish Patra wrote:
+>>> On Mon, 2019-10-07 at 05:11 -0400, Alex Ghiti wrote:
+>>>> On 10/4/19 10:12 PM, Atish Patra wrote:
+>>>>> On Thu, 2019-08-08 at 02:17 -0400, Alexandre Ghiti wrote:
+>>>>>> In order to avoid wasting user address space by using bottom-
+>>>>>> up
+>>>>>> mmap
+>>>>>> allocation scheme, prefer top-down scheme when possible.
+>>>>>>
+>>>>>> Before:
+>>>>>> root@qemuriscv64:~# cat /proc/self/maps
+>>>>>> 00010000-00016000 r-xp 00000000 fe:00
+>>>>>> 6389       /bin/cat.coreutils
+>>>>>> 00016000-00017000 r--p 00005000 fe:00
+>>>>>> 6389       /bin/cat.coreutils
+>>>>>> 00017000-00018000 rw-p 00006000 fe:00
+>>>>>> 6389       /bin/cat.coreutils
+>>>>>> 00018000-00039000 rw-p 00000000 00:00 0          [heap]
+>>>>>> 1555556000-155556d000 r-xp 00000000 fe:00 7193   /lib/ld-
+>>>>>> 2.28.so
+>>>>>> 155556d000-155556e000 r--p 00016000 fe:00 7193   /lib/ld-
+>>>>>> 2.28.so
+>>>>>> 155556e000-155556f000 rw-p 00017000 fe:00 7193   /lib/ld-
+>>>>>> 2.28.so
+>>>>>> 155556f000-1555570000 rw-p 00000000 00:00 0
+>>>>>> 1555570000-1555572000 r-xp 00000000 00:00 0      [vdso]
+>>>>>> 1555574000-1555576000 rw-p 00000000 00:00 0
+>>>>>> 1555576000-1555674000 r-xp 00000000 fe:00 7187   /lib/libc-
+>>>>>> 2.28.so
+>>>>>> 1555674000-1555678000 r--p 000fd000 fe:00 7187   /lib/libc-
+>>>>>> 2.28.so
+>>>>>> 1555678000-155567a000 rw-p 00101000 fe:00 7187   /lib/libc-
+>>>>>> 2.28.so
+>>>>>> 155567a000-15556a0000 rw-p 00000000 00:00 0
+>>>>>> 3fffb90000-3fffbb1000 rw-p 00000000 00:00 0      [stack]
+>>>>>>
+>>>>>> After:
+>>>>>> root@qemuriscv64:~# cat /proc/self/maps
+>>>>>> 00010000-00016000 r-xp 00000000 fe:00
+>>>>>> 6389       /bin/cat.coreutils
+>>>>>> 00016000-00017000 r--p 00005000 fe:00
+>>>>>> 6389       /bin/cat.coreutils
+>>>>>> 00017000-00018000 rw-p 00006000 fe:00
+>>>>>> 6389       /bin/cat.coreutils
+>>>>>> 2de81000-2dea2000 rw-p 00000000 00:00 0          [heap]
+>>>>>> 3ff7eb6000-3ff7ed8000 rw-p 00000000 00:00 0
+>>>>>> 3ff7ed8000-3ff7fd6000 r-xp 00000000 fe:00 7187   /lib/libc-
+>>>>>> 2.28.so
+>>>>>> 3ff7fd6000-3ff7fda000 r--p 000fd000 fe:00 7187   /lib/libc-
+>>>>>> 2.28.so
+>>>>>> 3ff7fda000-3ff7fdc000 rw-p 00101000 fe:00 7187   /lib/libc-
+>>>>>> 2.28.so
+>>>>>> 3ff7fdc000-3ff7fe2000 rw-p 00000000 00:00 0
+>>>>>> 3ff7fe4000-3ff7fe6000 r-xp 00000000 00:00 0      [vdso]
+>>>>>> 3ff7fe6000-3ff7ffd000 r-xp 00000000 fe:00 7193   /lib/ld-
+>>>>>> 2.28.so
+>>>>>> 3ff7ffd000-3ff7ffe000 r--p 00016000 fe:00 7193   /lib/ld-
+>>>>>> 2.28.so
+>>>>>> 3ff7ffe000-3ff7fff000 rw-p 00017000 fe:00 7193   /lib/ld-
+>>>>>> 2.28.so
+>>>>>> 3ff7fff000-3ff8000000 rw-p 00000000 00:00 0
+>>>>>> 3fff888000-3fff8a9000 rw-p 00000000 00:00 0      [stack]
+>>>>>>
+>>>>>> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+>>>>>> Acked-by: Paul Walmsley <paul.walmsley@sifive.com>
+>>>>>> Reviewed-by: Christoph Hellwig <hch@lst.de>
+>>>>>> Reviewed-by: Kees Cook <keescook@chromium.org>
+>>>>>> Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+>>>>>> ---
+>>>>>>     arch/riscv/Kconfig | 12 ++++++++++++
+>>>>>>     1 file changed, 12 insertions(+)
+>>>>>>
+>>>>>> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+>>>>>> index 59a4727ecd6c..87dc5370becb 100644
+>>>>>> --- a/arch/riscv/Kconfig
+>>>>>> +++ b/arch/riscv/Kconfig
+>>>>>> @@ -54,6 +54,18 @@ config RISCV
+>>>>>>     	select EDAC_SUPPORT
+>>>>>>     	select ARCH_HAS_GIGANTIC_PAGE
+>>>>>>     	select ARCH_WANT_HUGE_PMD_SHARE if 64BIT
+>>>>>> +	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
+>>>>>> +	select HAVE_ARCH_MMAP_RND_BITS
+>>>>>> +
+>>>>>> +config ARCH_MMAP_RND_BITS_MIN
+>>>>>> +	default 18 if 6legacy_va_layout4BIT
+>>>>>> +	default 8
+>>>>>> +
+>>>>>> +# max bits determined by the following formula:
+>>>>>> +#  VA_BITS - PAGE_SHIFT - 3
+>>>>>> +config ARCH_MMAP_RND_BITS_MAX
+>>>>>> +	default 24 if 64BIT # SV39 based
+>>>>>> +	default 17
+>>>>>>     
+>>>>>>     config MMU
+>>>>>>     	def_bool y
+>>>>> With this patch, I am not able to boot a Fedora Linux(a Gnome
+>>>>> desktop
+>>>>> image) on RISC-V hardware (Unleashed + Microsemi Expansion
+>>>>> board).
+>>>>> The
+>>>>> booting gets stuck right after systemd starts.
+>>>>>
+>>>>> https://paste.fedoraproject.org/paste/TOrUMqqKH-pGFX7CnfajDg
+>>>>>
+>>>>> Reverting just this patch allow to boot Fedora successfully on
+>>>>> specific
+>>>>> RISC-V hardware. I have not root caused the issue but it looks
+>>>>> like
+>>>>> it
+>>>>> might have messed userpsace mapping.
+>>>> It might have messed userspace mapping but not enough to make
+>>>> userspace
+>>>> completely broken
+>>>> as systemd does some things. I would try to boot in legacy
+>>>> layout:
+>>>> if
+>>>> you can try to set sysctl legacy_va_layout
+>>>> at boottime, it will map userspace as it was before (bottom-up).
+>>>> If
+>>>> that
+>>>> does not work, the problem could
+>>>> be the randomization that is activated by default now.
+>>> Randomization may not be the issue. I just removed
+>>> ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT from the config and that
+>>> seems to
+>>> work. Here is the bottom-up layout with randomization on.
+>> Oups, sorry for my previous answer, I missed yours that landed in
+>> another folder.
 >>
->> Thi sis non-functional change anyways since ARC has software page walker
->      ^
->      Typo.
+>> Removing ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT also removes
+>> randomization
+>> as this config selects ARCH_HAS_ELF_RANDOMIZE.
+>> You could remove ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT and selects by
+>> hand
+>> ARCH_HAS_ELF_RANDOMIZE but you would have to implement arch_mmap_rnd
+>> and
+>> arch_randomize_brk (elf-randomize.h).
+>>
+> Ahh okay.
+>
+>> The simplest would be to boot in legacy layout: I did not find a way
+>> to
+>> set this in kernel
+>> command line, but you can by modifying it directly in the code:
+>>
+>> https://elixir.bootlin.com/linux/v5.4-rc2/source/kernel/sysctl.c#L269
+>>
+> Setting this to 1 works.
+>
+>>> [root@fedora-riscv ~]# cat /proc/self/maps
+>>> 1555556000-1555570000 r-xp 00000000 103:01
+>>> 280098                        /usr/lib64/ld-2.28.so
+>>> 1555570000-1555571000 r--p 00019000 103:01
+>>> 280098                        /usr/lib64/ld-2.28.so
+>>> 1555571000-1555572000 rw-p 0001a000 103:01
+>>> 280098                        /usr/lib64/ld-2.28.so
+>>> 1555572000-1555573000 rw-p 00000000 00:00 0
+>>> 1555573000-1555575000 r-xp 00000000 00:00
+>>> 0                              [vdso]
+>>> 1555575000-1555576000 r--p 00000000 103:01
+>>> 50936                         /usr/lib/locale/en_US.utf8/LC_IDENTIF
+>>> ICAT
+>>> ION
+>>> 1555576000-155557d000 r--s 00000000 103:01
+>>> 280826                        /usr/lib64/gconv/gconv-modules.cache
+>>> 155557d000-155557e000 r--p 00000000 103:01
+>>> 50937                         /usr/lib/locale/en_US.utf8/LC_MEASURE
+>>> MENT
+>>> 155557e000-155557f000 r--p 00000000 103:01
+>>> 50939                         /usr/lib/locale/en_US.utf8/LC_TELEPHO
+>>> NE
+>>> 155557f000-1555580000 r--p 00000000 103:01
+>>> 3706                          /usr/lib/locale/en_US.utf8/LC_ADDRESS
+>>> 1555580000-1555581000 r--p 00000000 103:01
+>>> 50944                         /usr/lib/locale/en_US.utf8/LC_NAME
+>>> 1555581000-1555582000 r--p 00000000 103:01
+>>> 3775                          /usr/lib/locale/en_US.utf8/LC_PAPER
+>>> 1555582000-1555583000 r--p 00000000 103:01
+>>> 3758                          /usr/lib/locale/en_US.utf8/LC_MESSAGE
+>>> S/SY
+>>> S_LC_MESSAGES
+>>> 1555583000-1555584000 r--p 00000000 103:01
+>>> 50938                         /usr/lib/locale/en_US.utf8/LC_MONETAR
+>>> Y
+>>> 1555584000-1555585000 r--p 00000000 103:01
+>>> 50940                         /usr/lib/locale/en_US.utf8/LC_TIME
+>>> 1555585000-1555586000 r--p 00000000 103:01
+>>> 50945                         /usr/lib/locale/en_US.utf8/LC_NUMERIC
+>>> 1555590000-1555592000 rw-p 00000000 00:00 0
+>>> 1555592000-15556b1000 r-xp 00000000 103:01
+>>> 280105                        /usr/lib64/libc-2.28.so
+>>> 15556b1000-15556b5000 r--p 0011e000 103:01
+>>> 280105                        /usr/lib64/libc-2.28.so
+>>> 15556b5000-15556b7000 rw-p 00122000 103:01
+>>> 280105                        /usr/lib64/libc-2.28.so
+>>> 15556b7000-15556bb000 rw-p 00000000 00:00 0
+>>> 15556bb000-1555933000 r--p 00000000 103:01
+>>> 3755                          /usr/lib/locale/en_US.utf8/LC_COLLATE
+>>> 1555933000-1555986000 r--p 00000000 103:01
+>>> 50942                         /usr/lib/locale/en_US.utf8/LC_CTYPE
+>>> 1555986000-15559a8000 rw-p 00000000 00:00 0
+>>> 2aaaaaa000-2aaaab1000 r-xp 00000000 103:01
+>>> 283975                        /usr/bin/cat
+>>> 2aaaab1000-2aaaab2000 r--p 00006000 103:01
+>>> 283975                        /usr/bin/cat
+>>> 2aaaab2000-2aaaab3000 rw-p 00007000 103:01
+>>> 283975                        /usr/bin/cat
+>>> 2aaaab3000-2aaaad4000 rw-p 00000000 00:00
+>>> 0                              [heap]
+>>> 3fffc97000-3fffcb8000 rw-p 00000000 00:00
+>>> 0                              [stack]
+>>>
+>>>
+>>>> Anyway, it's weird since userspace should not depend on how the
+>>>> mapping is.
+>>>>
+>>>> If you can identify the program that stalls, that would be
+>>>> fantastic
+>>>> :)
+>>>>
+>>> It stucks while booting. So I am not sure how to figure out which
+>>> program stalls. It is difficult to figure out from boot log as it
+>>> stucks at different places but soon after systemd starts.
+>> If you can attach the running kernel, I would use vmlinux-gdb.py
+>> commands
+>> to figure out which processes are running (lx-ps command in
+>> particular could
+>> give us a hint). You can also add traces directly in the kernel and
+>> either use
+>> lx-dmesg command to print them from gdb or use your standard serial
+>> output:
+>> I would then print task_struct->comm at context switch to see which
+>> process
+>> is stuck.
+>> To use the python script, you need to recompile with DEBUG_INFO and
+>> GDB_SCRIPTS enabled.
+>>
+>> FYI, I have just booted a custom buildroot image based on kernel 5.4-
+>> rc2.
+>>
+> vmlinux-gdb.py works only if you are running in Qemu or have a JTAG.
+> Right ?
 
-Oops, fixed now !
+Yes. Does the problem appear on qemu too ?
 
-...
+> I am seeing this issue only on HiFive Unleashed + Microsemi Expansion
+> board with Fedora Gnome desktop image. I can even boot a Fedora
+> developer image on same hardware and a busybox image in Unleashed
+> without any issues. But the issue is not specific to fedora as we see
+> the same issue in OpenEmbedded disk image as well (HiFive Unleashed +
+> Microsemi Expansion board).
+>
+> May be it gets triggerd only if bigger userspace ?
 
-> Have you tested it with CONFIG_HIGHMEM=y? alloc_kmap_pgtable() has to be
-> converted too.
+The purpose of this patch is, on the contrary, to not lose address space by
+setting an arbitrary starting point (TASK_UNMAPPED_BASE) for mmap.
 
-No I didn't. Fixed that as well.
+Do you a link to an image that fails to boot and reproduce the problem 
+on Qemu ?
 
-Thx for looking
--Vineet
+I don't have much idea here, the only thing I can think of is finding 
+the application
+that makes the boot stall and understand what is wrong.
 
+>
+>> Let me know if I can do anything.
+>>
+>> Alex
+>>
+>>>> As the code is common to mips and arm now and I did not hear from
+>>>> them,
+>>>> I imagine the problem comes
+>>>> from us.
+>>>>
+>>>> Alex
