@@ -2,134 +2,201 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DC9ECE58E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CDF5C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:47:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 709BA21924
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:43:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="jEaNuP3r"
+	by mail.kernel.org (Postfix) with ESMTP id 4201E21835
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:47:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731416AbfJINnR (ORCPT
+        id S1731243AbfJINrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 09:43:17 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:38480 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731072AbfJINnQ (ORCPT
+        Wed, 9 Oct 2019 09:47:48 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:33332 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730985AbfJINrs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 09:43:16 -0400
-Received: by mail-qt1-f196.google.com with SMTP id j31so3473959qta.5
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 06:43:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=GbmW8oMNpcfaVBYTBCBL+jTjm9GV5hpZALa8v3HrwBI=;
-        b=jEaNuP3rdCVFGZxQzP6IhXiwIvWzYOR2BOnjGW/ZS/MZDjw4lhUkTbFwedoTYx7O8s
-         O2oViWttfCcTpn/JPLgmoylmDFj0c3QJtiwW181yaxlV1ZrQCOCiSUe87N4rAIi/2GFS
-         hczkgK9kOA5i24jZ5RqZhw4PEsqR2QQTcnb+17TRWPfgHI2x5RA4i6LkQX5Wr2/dzAKO
-         WLxa7Azghv0uV36wRLw7JBKD5DWWdWbz/wvm73wvc0M73yHflabvhFxKxxnyQP+jmKPC
-         lApfCuu5ddOQyatXSzIyqkDQz/TBf2fjiGSm6mvVzfxgYWg6Y5k7T8TyGT8q5li4Mbyi
-         ebYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GbmW8oMNpcfaVBYTBCBL+jTjm9GV5hpZALa8v3HrwBI=;
-        b=eZQzYIrq0UGpXPMyoPMx3q7hbfnsFh1/Kz1mmD/w1EZRoonwue8pYu8oaXlRxGGsP4
-         h0mG1zbT/Lh62EL76d4BVrXZoEn5Q17AGdvt/f8XChHnC17zGucFzF8T5oXV8kWrdJms
-         T40gabYGlhRLLbTcdZGGTtJeK1AiU+FZ3sm0ZF8JoM+TjmLOq92MvR7QAn2Jmeg08Aem
-         WjsfGAbdiHLN+2Lc/SrZqdkHv3VhhHZLPzvsOCZyt/bFfvwdnFkkDJ3jD6hPinUf2+xZ
-         TEEIIY4ySUju93FJ0oTtjbCK75peU6zjsN6rqHAt7TtSAnhqve8y/jwFP+C3QC/IY9Jv
-         ziKA==
-X-Gm-Message-State: APjAAAU6BVZWl/Sz6ozrMEm/RtupSxvbd6Fou2gL1PGx4Ucrr6PjWhG2
-        gbcqeLrzOOkPtaBrOkppa6FbgA==
-X-Google-Smtp-Source: APXvYqwqYbj/zGNpmimC3/YGl2R7OxFdKZ71uQmOs9/bcaIv7w/W7Ed5fVY8a+QSBxB1jax1AN+JWA==
-X-Received: by 2002:a0c:c10d:: with SMTP id f13mr3745220qvh.88.1570628595720;
-        Wed, 09 Oct 2019 06:43:15 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id o14sm1321995qtk.52.2019.10.09.06.43.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 09 Oct 2019 06:43:15 -0700 (PDT)
-Message-ID: <1570628593.5937.3.camel@lca.pw>
-Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
-From:   Qian Cai <cai@lca.pw>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        sergey.senozhatsky.work@gmail.com, rostedt@goodmis.org,
-        peterz@infradead.org, linux-mm@kvack.org,
-        john.ogness@linutronix.de, akpm@linux-foundation.org,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>, david@redhat.com,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 09 Oct 2019 09:43:13 -0400
-In-Reply-To: <20191009132746.GA6681@dhcp22.suse.cz>
-References: <20191008074357.f33f6pbs4cw5majk@pathway.suse.cz>
-         <20191008082752.GB6681@dhcp22.suse.cz>
-         <aefe7f75-b0ec-9e99-a77e-87324edb24e0@de.ibm.com>
-         <1570550917.5576.303.camel@lca.pw> <20191008183525.GQ6681@dhcp22.suse.cz>
-         <1570561573.5576.307.camel@lca.pw> <20191008191728.GS6681@dhcp22.suse.cz>
-         <1570563324.5576.309.camel@lca.pw>
-         <20191009114903.aa6j6sa56z2cssom@pathway.suse.cz>
-         <1570626402.5937.1.camel@lca.pw> <20191009132746.GA6681@dhcp22.suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
+        Wed, 9 Oct 2019 09:47:48 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id D8C89290000
+Subject: Re: [PATCH] pwm: cros-ec: Let cros_ec_pwm_get_state() return the last
+ applied state
+To:     Daniel Thompson <daniel.thompson@linaro.org>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     linux-kernel@vger.kernel.org, thierry.reding@gmail.com,
+        heiko@sntech.de, dianders@chromium.org, mka@chromium.org,
+        groeck@chromium.org, kernel@collabora.com, bleung@chromium.org,
+        linux-pwm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+References: <20191008105417.16132-1-enric.balletbo@collabora.com>
+ <20191008143432.pbhcqamd6f4qwbqn@pengutronix.de>
+ <4f009344-242e-19a7-6872-2c55df086044@collabora.com>
+ <20191008203137.s22clq6v2om5ktio@pengutronix.de>
+ <53b7d02b-1a2d-11da-fdd0-5378f360d876@collabora.com>
+ <20191009095635.yysr33lnwldicyng@holly.lan>
+ <20191009101637.gmvghwdvcmfw4yyk@pengutronix.de>
+ <20191009104236.ux23ywnhvsym2qcb@holly.lan>
+ <20191009112126.slpyxhnuqpiqgmes@pengutronix.de>
+ <20191009113540.x6uxo3ryiuf7ql55@holly.lan>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <49990b56-44f9-7c3c-ce81-ed295895f90a@collabora.com>
+Date:   Wed, 9 Oct 2019 15:47:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191009113540.x6uxo3ryiuf7ql55@holly.lan>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-10-09 at 15:27 +0200, Michal Hocko wrote:
-> On Wed 09-10-19 09:06:42, Qian Cai wrote:
-> [...]
-> > https://lore.kernel.org/linux-mm/1570460350.5576.290.camel@lca.pw/
-> > 
-> > [  297.425964] -> #1 (&port_lock_key){-.-.}:
-> > [  297.425967]        __lock_acquire+0x5b3/0xb40
-> > [  297.425967]        lock_acquire+0x126/0x280
-> > [  297.425968]        _raw_spin_lock_irqsave+0x3a/0x50
-> > [  297.425969]        serial8250_console_write+0x3e4/0x450
-> > [  297.425970]        univ8250_console_write+0x4b/0x60
-> > [  297.425970]        console_unlock+0x501/0x750
-> > [  297.425971]        vprintk_emit+0x10d/0x340
-> > [  297.425972]        vprintk_default+0x1f/0x30
-> > [  297.425972]        vprintk_func+0x44/0xd4
-> > [  297.425973]        printk+0x9f/0xc5
-> > [  297.425974]        register_console+0x39c/0x520
-> > [  297.425975]        univ8250_console_init+0x23/0x2d
-> > [  297.425975]        console_init+0x338/0x4cd
-> > [  297.425976]        start_kernel+0x534/0x724
-> > [  297.425977]        x86_64_start_reservations+0x24/0x26
-> > [  297.425977]        x86_64_start_kernel+0xf4/0xfb
-> > [  297.425978]        secondary_startup_64+0xb6/0xc0
-> > 
-> > where the report again show the early boot call trace for the locking
-> > dependency,
-> > 
-> > console_owner --> port_lock_key
-> > 
-> > but that dependency clearly not only happen in the early boot.
+Hi Uwe, Daniel,
+
+On 9/10/19 13:35, Daniel Thompson wrote:
+> On Wed, Oct 09, 2019 at 01:21:26PM +0200, Uwe Kleine-König wrote:
+>> On Wed, Oct 09, 2019 at 11:42:36AM +0100, Daniel Thompson wrote:
+>>> On Wed, Oct 09, 2019 at 12:16:37PM +0200, Uwe Kleine-König wrote:
+>>>> On Wed, Oct 09, 2019 at 10:56:35AM +0100, Daniel Thompson wrote:
+>>>>> On Wed, Oct 09, 2019 at 11:27:13AM +0200, Enric Balletbo i Serra wrote:
+>>>>>> Hi Uwe,
+>>>>>>
+>>>>>> Adding Daniel and Lee to the discussion ...
+>>>>>
+>>>>> Thanks!
+>>>>>
+>>>>>> On 8/10/19 22:31, Uwe Kleine-König wrote:
+>>>>>>> On Tue, Oct 08, 2019 at 06:33:15PM +0200, Enric Balletbo i Serra wrote:
+>>>>>>>>> A few thoughts to your approach here ...:
+>>>>>>>>>
+>>>>>>>>>  - Would it make sense to only store duty_cycle and enabled in the
+>>>>>>>>>    driver struct?
+>>>>>>>>>
+>>>>>>>>
+>>>>>>>> Yes, in fact, my first approach (that I didn't send) was only storing enabled
+>>>>>>>> and duty cycle. For some reason I ended storing the full pwm_state struct, but I
+>>>>>>>> guess is not really needed.
+>>>>>>>>
+>>>>>>>>
+>>>>>>>>>  - Which driver is the consumer of your pwm? If I understand correctly
+>>>>>>>>>    the following sequence is the bad one:
+>>>>>>>>>
+>>>>>>>>
+>>>>>>>> The consumer is the pwm_bl driver. Actually I'n trying to identify
+>>>>>>>> other consumers.
+>>>>>>>
+>>>>>>
+>>>>>> So far, the pwm_bl driver is the only consumer of cros-ec-pwm.
+>>>>>>
+>>>>>>> Ah, I see why I missed to identify the problem back when I checked this
+>>>>>>> driver. The problem is not that .duty_cycle isn't set but there .enabled
+>>>>>>> isn't set. So maybe we just want:
+>>>>>>>
+>>>>>>> diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+>>>>>>> index 2201b8c78641..0468c6ee4448 100644
+>>>>>>> --- a/drivers/video/backlight/pwm_bl.c
+>>>>>>> +++ b/drivers/video/backlight/pwm_bl.c
+>>>>>>> @@ -123,6 +123,7 @@ static int pwm_backlight_update_status(struct backlight_device *bl)
+>>>>>>>         if (brightness > 0) {
+>>>>>>>                 pwm_get_state(pb->pwm, &state);
+>>>>>>>                 state.duty_cycle = compute_duty_cycle(pb, brightness);
+>>>>>>> +               state.enabled = true;
+>>>>>>>                 pwm_apply_state(pb->pwm, &state);
+>>>>>>>                 pwm_backlight_power_on(pb);
+>>>>>>>         } else
+>>>>>>>
+>>>>>>> ? On a side note: It's IMHO strange that pwm_backlight_power_on
+>>>>>>> reconfigures the PWM once more.
+>>>>>>>
+>>>>>>
+>>>>>> Looking again to the pwm_bl code, now, I am not sure this is correct (although
+>>>>>> it probably solves the problem for me).
+>>>>>
+>>>>> Looking at the pwm_bl code I wouldn't accept the above as it is but I'd
+>>>>> almost certainly accept a patch to pwm_bl to move the PWM enable/disable
+>>>>> out of both the power on/off functions so the duty-cycle/enable or
+>>>>> disable can happen in one go within the update_status function. I don't
+>>>>> think such a change would interfere with the power and enable sequencing
+>>>>> needed by panels and it would therefore be a nice continuation of the
+>>>>> work to convert over to the pwm_apply_state() API.
+>>>>
+>>>> OK for me. Enric, do you care enough to come up with a patch for pwm_bl?
+>>>> I'd expect that this alone should already fix your issue.
+>>>>  
+>>>>> None of the above has anything to do with what is right or wrong for
+>>>>> the PWM API evolution. Of course, if this thread does conclude that it
+>>>>> is OK the duty cycle of a disabled PWM to be retained for some drivers
+>>>>> and not others then I'd hope to see some WARN_ON()s added to the PWM
+>>>>> framework to help bring problems to the surface with all drivers.
+>>>>
+>>>> I think it's not possible to add a reliable WARN_ON for that issue. It
+>>>> is quite expected that .get_state returns something that doesn't
+>>>> completely match the requested configuration. So if a consumer requests
+>>>>
+>>>> 	.duty_cycle = 1
+>>>> 	.period = 100000000
+>>>> 	.enabled = false
+>>>>
+>>>> pwm_get_state possibly returns .duty_cycle = 0 even for drivers/hardware
+>>>> that has a concept of duty_cycle for disabled hardware.
+>>>>
+>>>> A bit this is addressed in https://patchwork.ozlabs.org/patch/1147517/.
+>>>
+>>> Isn't that intended to help identify "odd" PWM drivers rather than "odd"
+>>> clients?
+>>>
+>>> Initially I was thinking that a WARN_ON() could be emitted when:
+>>>
+>>> 1. .duty_cycle is non-zero
+>>> 2. .enabled is false
+>>> 3. the PWM is not already enabled
+>>>
+>>> (#3 included to avoid too many false positives when disabling a PWM)
+>>
+>> I think I created a patch for that in the past, don't remember the
+>> details.
+>>
+>>> A poisoning approach might be equally valid. If some drivers are
+>>> permitted to "round" .duty_cycle to 0 when .enabled is false then the
+>>> framework could get *all* drivers to behave in the same way by
+>>> zeroing it out before calling the drivers apply method. It is not that
+>>> big a deal but minimising the difference between driver behaviour should
+>>> automatically reduce the difference in API usage by clients.
+>>
+>> I like it, but that breaks consumers that set .duty_cycle once during
+>> probe and then only do:
+>>
+>> 	pwm_get_state(pwm, &state);
+>> 	state.enabled = ...
+>> 	pwm_apply_state(pwm, &state);
+>>
+>> which is a common idiom.
 > 
-> Can you provide an example of the runtime dependency without any early
-> boot artifacts? Because this discussion really doens't make much sense
-> without a clear example of a _real_ lockdep report that is not a false
-> possitive. All of them so far have been concluded to be false possitive
-> AFAIU.
+> Sorry I must have missed something. That appears to be identical to
+> what pwm_bl.c currently does, albeit for rather better reasons.
+> 
+> If setting the duty cycle and then separately enabling it is a
+> reasonable idiom then the cros-ec-pwm driver is a broken implementation
+> of the API and needs to be fixed regardless of any changes to pwm_bl.c .
+> 
 
-An obvious one is in the above link. Just replace the trace in #1 above with
-printk() from anywhere, i.e., just ignore the early boot calls there as they are
- not important.
+I think that Daniel has reason here. Just come to my mind that, if the fix is
+not in the cros-ec-pwm driver we will also have the PWM sysfs user space
+interface broken for that driver, apart from future consumers.
 
-printk()
-  console_unlock()
-    console_lock_spinning_enable() --> console_owner_lock
-  call_console_drivers()
-    serial8250_console_write() --> port->lock
+This turns on to my first approach, this patch. Uwe, You had some complains
+regarding is if I can only store enabled and duty_cycle instead of all the
+pwm_state, that should also work for me. If I solve that concern, might be this
+solution acceptable for you? Do you have more concerns?
+
+Regards,
+ Enric
+
+> 
+> Daniel.
+> 
