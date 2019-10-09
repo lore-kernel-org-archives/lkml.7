@@ -2,122 +2,99 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D45C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBE4C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 552C621835
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:31:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DF7C2133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:33:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729655AbfJIHbw (ORCPT
+        id S1729566AbfJIHdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 03:31:52 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:31182 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725776AbfJIHbv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 03:31:51 -0400
-X-UUID: fc0c3191f177453c81ef62b7eb8b4885-20191009
-X-UUID: fc0c3191f177453c81ef62b7eb8b4885-20191009
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
-        (envelope-from <biao.huang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 415846299; Wed, 09 Oct 2019 15:31:43 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 9 Oct 2019 15:31:38 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 9 Oct 2019 15:31:37 +0800
-From:   Biao Huang <biao.huang@mediatek.com>
-To:     <davem@davemloft.net>, Jose Abreu <joabreu@synopsys.com>,
-        <andrew@lunn.ch>
-CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <netdev@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <yt.shen@mediatek.com>,
-        <biao.huang@mediatek.com>, <jianguo.zhang@mediatek.com>,
-        <boon.leong.ong@intel.com>
-Subject: [PATCH] net: stmmac: dwmac-mediatek: fix wrong delay value issue when resume back
-Date:   Wed, 9 Oct 2019 15:31:29 +0800
-Message-ID: <20191009073129.5439-1-biao.huang@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Wed, 9 Oct 2019 03:33:21 -0400
+Received: from mga12.intel.com ([192.55.52.136]:34804 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725440AbfJIHdU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 03:33:20 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 00:33:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,273,1566889200"; 
+   d="scan'208";a="345280689"
+Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.125])
+  by orsmga004.jf.intel.com with ESMTP; 09 Oct 2019 00:33:16 -0700
+Date:   Wed, 9 Oct 2019 10:33:15 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Ken Goldman <kgold@linux.ibm.com>
+Cc:     "Safford, David (GE Global Research, US)" <david.safford@ge.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
+Message-ID: <20191009073315.GA5884@linux.intel.com>
+References: <1570107752.4421.183.camel@linux.ibm.com>
+ <20191003175854.GB19679@linux.intel.com>
+ <1570128827.5046.19.camel@linux.ibm.com>
+ <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A22E@ALPMBAPA12.e2k.ad.ge.com>
+ <20191004182711.GC6945@linux.intel.com>
+ <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A38B@ALPMBAPA12.e2k.ad.ge.com>
+ <20191007000520.GA17116@linux.intel.com>
+ <59b88042-9c56-c891-f75e-7c0719eb5ff9@linux.ibm.com>
+ <20191008234935.GA13926@linux.intel.com>
+ <20191008235339.GB13926@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: B285750855EC341362F90DB9DFAED3B70120BD807D577E25220679B16259FE2E2000:8
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191008235339.GB13926@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mac_delay value will be divided by 550/170 in mt2712_delay_stage2ps(),
-which is invoked at the beginning of mt2712_set_delay(), and the value
-should be restored at the end of mt2712_set_delay().
-Or, mac_delay will be divided again when invoking mt2712_set_delay()
-when resume back.
-So, add mt2712_delay_ps2stage() to mt2712_set_delay() to recovery the
-original mac_delay value.
+On Wed, Oct 09, 2019 at 02:53:39AM +0300, Jarkko Sakkinen wrote:
+> On Wed, Oct 09, 2019 at 02:49:35AM +0300, Jarkko Sakkinen wrote:
+> > On Mon, Oct 07, 2019 at 06:13:01PM -0400, Ken Goldman wrote:
+> > > The TPM library specification states that the TPM must comply with NIST
+> > > SP800-90 A.
+> > > 
+> > > https://trustedcomputinggroup.org/membership/certification/tpm-certified-products/
+> > > 
+> > > shows that the TPMs get third party certification, Common Criteria EAL 4+.
+> > > 
+> > > While it's theoretically possible that an attacker could compromise
+> > > both the TPM vendors and the evaluation agencies, we do have EAL 4+
+> > > assurance against both 1 and 2.
+> > 
+> > Certifications do not equal to trust.
+> 
+> And for trusted keys the least trust solution is to do generation
+> with the kernel assets and sealing with TPM. With TEE the least
+> trust solution is equivalent.
+> 
+> Are you proposing that the kernel random number generation should
+> be removed? That would be my conclusion of this discussion if I
+> would agree any of this (I don't).
 
-Signed-off-by: Biao Huang <biao.huang@mediatek.com>
----
- .../ethernet/stmicro/stmmac/dwmac-mediatek.c  | 27 +++++++++++++++++++
- 1 file changed, 27 insertions(+)
+The whole point of rng in kernel has been to use multiple entropy
+sources in order to disclose the trust issue.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
-index 79f2ee37afed..cea7a0c7ce68 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
-@@ -130,6 +130,31 @@ static void mt2712_delay_ps2stage(struct mediatek_dwmac_plat_data *plat)
- 	}
- }
- 
-+static void mt2712_delay_stage2ps(struct mediatek_dwmac_plat_data *plat)
-+{
-+	struct mac_delay_struct *mac_delay = &plat->mac_delay;
-+
-+	switch (plat->phy_mode) {
-+	case PHY_INTERFACE_MODE_MII:
-+	case PHY_INTERFACE_MODE_RMII:
-+		/* 550ps per stage for MII/RMII */
-+		mac_delay->tx_delay *= 550;
-+		mac_delay->rx_delay *= 550;
-+		break;
-+	case PHY_INTERFACE_MODE_RGMII:
-+	case PHY_INTERFACE_MODE_RGMII_TXID:
-+	case PHY_INTERFACE_MODE_RGMII_RXID:
-+	case PHY_INTERFACE_MODE_RGMII_ID:
-+		/* 170ps per stage for RGMII */
-+		mac_delay->tx_delay *= 170;
-+		mac_delay->rx_delay *= 170;
-+		break;
-+	default:
-+		dev_err(plat->dev, "phy interface not supported\n");
-+		break;
-+	}
-+}
-+
- static int mt2712_set_delay(struct mediatek_dwmac_plat_data *plat)
- {
- 	struct mac_delay_struct *mac_delay = &plat->mac_delay;
-@@ -199,6 +224,8 @@ static int mt2712_set_delay(struct mediatek_dwmac_plat_data *plat)
- 	regmap_write(plat->peri_regmap, PERI_ETH_DLY, delay_val);
- 	regmap_write(plat->peri_regmap, PERI_ETH_DLY_FINE, fine_val);
- 
-+	mt2712_delay_stage2ps(plat);
-+
- 	return 0;
- }
- 
--- 
-2.18.0
+Even with weaker entropy than TPM RNG it is still a better choice for
+*non-TPM* keys because of better trustworthiness. Using only TPM RNG is
+a design flaw that has existed probably because when trusted keys were
+introduced TPM was more niche than it is today.
 
+Please remember that a trusted key is not a TPM key. The reality
+distortion field is strong here it seems.
+
+/Jarkko
