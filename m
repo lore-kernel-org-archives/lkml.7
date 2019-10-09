@@ -2,102 +2,120 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E260C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 01:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4AB5C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 02:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34535206C2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 01:59:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e584x4yH"
+	by mail.kernel.org (Postfix) with ESMTP id 5F9BE20859
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 02:02:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729472AbfJIB6r (ORCPT
+        id S1729566AbfJICCG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 21:58:47 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35771 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbfJIB6r (ORCPT
+        Tue, 8 Oct 2019 22:02:06 -0400
+Received: from shells.gnugeneration.com ([66.240.222.126]:37466 "EHLO
+        shells.gnugeneration.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbfJICCF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 21:58:47 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 205so554884pfw.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 18:58:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:from:to:cc:subject:user-agent:date;
-        bh=N4NGesu7+LudHzth0OydBmbsxdfqhnx8W8LYisp+NrQ=;
-        b=e584x4yHx18hiFqvlc698JaAJA95f63sgzOILU9VL7hd8XxZsETHI1Hgg5kMcFNlTB
-         rX3XXUZmzjiIM+R+nW4VPyPXUaqLD53pZRQvV8pQry6JiifTX4fXgC7qCaveTDEf7TYP
-         22RWf715Z5yz7lH5RjQMmCBm2c9aua5ju4IVA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:from:to:cc:subject
-         :user-agent:date;
-        bh=N4NGesu7+LudHzth0OydBmbsxdfqhnx8W8LYisp+NrQ=;
-        b=HGkEgjeJX10e8EgY3/Dkn/RAnLoPrv80lhjfE1Np3zmgo7c690cd+0/yG/oWbxKVoY
-         wFuqLmoqwOTlrDvQ2pE5YHXCVDWZnQ+nTTvSwsMQ0s9siWyGb1GNzbwtISUNK+LUogaa
-         a87C6lGCGa7d6G53n1qHrgVN623azQim0gbuOxETEa3l3GLkVUMSabx1gnz/G1HfD6bl
-         gO49uwBUQ0ABgk9SdFTEnQrhudN34osARf8JgUhD7Gtnh8E9qnHRYawFXOwePjMybPyY
-         UatC5xVOKEA1RKi9ITsWvk7jb8Pj9R2t4p/nrt6h9pKBE5xgP/fmtOdltCG3Y7HEoACb
-         0JQg==
-X-Gm-Message-State: APjAAAWnEcjCiaXUjydiQxkZEQmfprVaZUhVa/707ZOrEWNK0Ym7Hr3t
-        ASd3I+mO/JR7w/Fzo1pdJDi4tA==
-X-Google-Smtp-Source: APXvYqwQUXs/txuT157faSRndetKLyxoEajKjIqDLEVK13dzHpkQoILsZ9lcR3OuVfBhpTOSfejTsA==
-X-Received: by 2002:a63:5d1e:: with SMTP id r30mr1732669pgb.68.1570586325138;
-        Tue, 08 Oct 2019 18:58:45 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id z12sm366340pfj.41.2019.10.08.18.58.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2019 18:58:44 -0700 (PDT)
-Message-ID: <5d9d3ed4.1c69fb81.5a936.2b18@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Tue, 8 Oct 2019 22:02:05 -0400
+Received: by shells.gnugeneration.com (Postfix, from userid 1000)
+        id 809B51A40559; Tue,  8 Oct 2019 19:02:05 -0700 (PDT)
+Date:   Tue, 8 Oct 2019 19:02:05 -0700
+From:   Vito Caputo <vcaputo@pengaru.com>
+To:     viro@zeniv.linux.org.uk
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] seq_file: move seq_read() flushing into a function
+Message-ID: <20191009020205.2ezkdwzisnhtoau4@shells.gnugeneration.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191008235504.GN63675@minitux>
-References: <20191008234505.222991-1-swboyd@chromium.org> <20191008235504.GN63675@minitux>
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>,
-        Evan Green <evgreen@chromium.org>
-Subject: Re: [PATCH v2 0/2] Avoid regmap debugfs collisions in qcom llcc driver
-User-Agent: alot/0.8.1
-Date:   Tue, 08 Oct 2019 18:58:43 -0700
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Bjorn Andersson (2019-10-08 16:55:04)
-> On Tue 08 Oct 16:45 PDT 2019, Stephen Boyd wrote:
-> >     @@ drivers/soc/qcom/llcc-slice.c
-> >      =20
-> >       static struct llcc_drv_data *drv_data =3D (void *) -EPROBE_DEFER;
-> >      =20
-> >     --static const struct regmap_config llcc_regmap_config =3D {
-> >     +-static struct regmap_config llcc_regmap_config =3D {
-> >      -        .reg_bits =3D 32,
-> >      -        .reg_stride =3D 4,
-> >      -        .val_bits =3D 32,
-> >     @@ drivers/soc/qcom/llcc-slice.c: static struct regmap *qcom_llcc_i=
-nit_mmio(struct
-> >       {
-> >               struct resource *res;
-> >               void __iomem *base;
-> >     -+        static struct regmap_config llcc_regmap_config =3D {
-> >     ++        struct regmap_config llcc_regmap_config =3D {
->=20
-> Now that this isn't static I like the end result better. Not sure about
-> the need for splitting it in two patches, but if Evan is happy I'll take
-> it.
->=20
+Consolidate some duplicated bookkeeping from seq_read() into a
+function.
 
-Well I split it into bug fix and micro-optimization so backport choices
-can be made. But yeah, I hope Evan is happy enough to provide a
-reviewed-by tag!
+Signed-off-by: Vito Caputo <vcaputo@pengaru.com>
+---
+ fs/seq_file.c | 34 +++++++++++++++++++++-------------
+ 1 file changed, 21 insertions(+), 13 deletions(-)
+
+diff --git a/fs/seq_file.c b/fs/seq_file.c
+index 1600034a929b..e5d2bccf5ac4 100644
+--- a/fs/seq_file.c
++++ b/fs/seq_file.c
+@@ -141,6 +141,25 @@ static int traverse(struct seq_file *m, loff_t offset)
+ 	return !m->buf ? -ENOMEM : -EAGAIN;
+ }
+ 
++static int flush(struct seq_file *m, char __user **buf, size_t *size, size_t *copied)
++{
++	int err = 0;
++	size_t n;
++
++	if (!m->count)
++		return err;
++	n = min(m->count, *size);
++	err = copy_to_user(*buf, m->buf + m->from, n);
++	if (err)
++		return err;
++	m->count -= n;
++	m->from += n;
++	*size -= n;
++	*buf += n;
++	*copied += n;
++	return err;
++}
++
+ /**
+  *	seq_read -	->read() method for sequential files.
+  *	@file: the file to read from
+@@ -154,7 +173,6 @@ ssize_t seq_read(struct file *file, char __user *buf, size_t size, loff_t *ppos)
+ {
+ 	struct seq_file *m = file->private_data;
+ 	size_t copied = 0;
+-	size_t n;
+ 	void *p;
+ 	int err = 0;
+ 
+@@ -207,15 +225,9 @@ ssize_t seq_read(struct file *file, char __user *buf, size_t size, loff_t *ppos)
+ 	}
+ 	/* if not empty - flush it first */
+ 	if (m->count) {
+-		n = min(m->count, size);
+-		err = copy_to_user(buf, m->buf + m->from, n);
++		err = flush(m, &buf, &size, &copied);
+ 		if (err)
+ 			goto Efault;
+-		m->count -= n;
+-		m->from += n;
+-		size -= n;
+-		buf += n;
+-		copied += n;
+ 		if (!size)
+ 			goto Done;
+ 	}
+@@ -273,13 +285,9 @@ ssize_t seq_read(struct file *file, char __user *buf, size_t size, loff_t *ppos)
+ 		}
+ 	}
+ 	m->op->stop(m, p);
+-	n = min(m->count, size);
+-	err = copy_to_user(buf, m->buf, n);
++	err = flush(m, &buf, &size, &copied);
+ 	if (err)
+ 		goto Efault;
+-	copied += n;
+-	m->count -= n;
+-	m->from = n;
+ Done:
+ 	if (!copied)
+ 		copied = err;
+-- 
+2.11.0
 
