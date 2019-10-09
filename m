@@ -2,121 +2,112 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A44C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF311ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2182B206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:31:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570624299;
-	bh=qJNqWYgUP04FWWOyhZUVfn25DZyG752Qo/ZuAv9t3z4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=fCVdSh1d2Gg1xgt0nHd8hizIV314hWw2e7H1QuSgZ0McRGAjqUp43Y6kbDnyJ3lO6
-	 tQaSQuBAblgQ/CeZJ42ur5dcGwa57tqgRPPzq6uzfdzjvoniQmX1phKAAPkTM93vpF
-	 LHsHkDqWzu0X3mbNyKC65TvMbuefrHqIKN7yh3WI=
+	by mail.kernel.org (Postfix) with ESMTP id 9FD0C206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:31:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731124AbfJIMbi (ORCPT
+        id S1731155AbfJIMbq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 08:31:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45098 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728200AbfJIMbh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 08:31:37 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 750C1206C0;
-        Wed,  9 Oct 2019 12:31:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570624296;
-        bh=qJNqWYgUP04FWWOyhZUVfn25DZyG752Qo/ZuAv9t3z4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=X/2o/lHUYyW9dA4IpOQVPKDMvH3l27/o6Z66nGTPND3rmtqUV1O78exJmzZ8Gjm/S
-         HOfqHqGyaed1ol3CEOaFIHLSZSIsLVKL3C9u8WLQhgGJp5Rq8wpjnJO+rhBBNxxhNA
-         QtYKzn1Jyc3QBA0hDNZGCtjFXoYU/0wXzCW9ufus=
-Date:   Wed, 9 Oct 2019 07:31:35 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Don Dutile <ddutile@redhat.com>
-Cc:     CREGUT Pierre IMT/OLN <pierre.cregut@orange.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexander Duyck <alexander.h.duyck@intel.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: Re: [PATCH] PCI/IOV: update num_VFs earlier
-Message-ID: <20191009123135.GA62790@google.com>
+        Wed, 9 Oct 2019 08:31:46 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3670 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727029AbfJIMbq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 08:31:46 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 95FD72B76B81C23962B2;
+        Wed,  9 Oct 2019 20:31:41 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 9 Oct 2019 20:31:32 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     David Howells <dhowells@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vitaly Wool <vitaly.wool@konsulko.com>,
+        "Henry Burns" <henryburns@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        "Stephen Rothwell" <sfr@canb.auug.org.au>
+CC:     YueHaibing <yuehaibing@huawei.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+Subject: [PATCH -next] mm/z3fold.c: remove set but not used variable 'newpage'
+Date:   Wed, 9 Oct 2019 12:31:11 +0000
+Message-ID: <20191009123111.80425-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4ac38c7a-b8d4-9a1c-10ab-ce8b4cf2991f@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 06:06:46PM -0400, Don Dutile wrote:
-> On 10/08/2019 05:38 PM, Bjorn Helgaas wrote:
-> > On Thu, Oct 03, 2019 at 05:10:07PM -0500, Bjorn Helgaas wrote:
-> > > On Thu, Oct 03, 2019 at 11:04:45AM +0200, CREGUT Pierre IMT/OLN wrote:
-> > > > ...
-> > 
-> > > > NIC drivers send netlink events when their state change, but it is
-> > > > the core that changes the value of num_vfs. So I would think it is
-> > > > the core responsibility to make sure the exposed value makes sense
-> > > > and it would be better to ignore the details of the driver
-> > > > implementation.
-> > > 
-> > > Yes, I think you're right.  And I like your previous suggestion of
-> > > just locking the device in the reader.  I'm not enough of a sysfs
-> > > expert to know if there's a good reason to avoid a lock there.  Does
-> > > the following look reasonable to you?
-> > 
-> > I applied the patch below to pci/virtualization for v5.5, thanks for
-> I hope not... see below
-> 
-> > your great patience!
-> > 
-> > > commit 0940fc95da45
-> > > Author: Pierre Crégut <pierre.cregut@orange.com>
-> > > Date:   Wed Sep 11 09:27:36 2019 +0200
-> > > 
-> > >      PCI/IOV: Serialize sysfs sriov_numvfs reads vs writes
-> > >      When sriov_numvfs is being updated, drivers may notify about new devices
-> > >      before they are reflected in sriov->num_VFs, so concurrent sysfs reads
-> > >      previously returned stale values.
-> > >      Serialize the sysfs read vs the write so the read returns the correct
-> > >      num_VFs value.
-> > >      Link: https://bugzilla.kernel.org/show_bug.cgi?id=202991
-> > >      Link: https://lore.kernel.org/r/20190911072736.32091-1-pierre.cregut@orange.com
-> > >      Signed-off-by: Pierre Crégut <pierre.cregut@orange.com>
-> > >      Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > > 
-> > > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> > > index b3f972e8cfed..e77562aabbae 100644
-> > > --- a/drivers/pci/iov.c
-> > > +++ b/drivers/pci/iov.c
-> > > @@ -254,8 +254,14 @@ static ssize_t sriov_numvfs_show(struct device *dev,
-> > >   				 char *buf)
-> > >   {
-> > >   	struct pci_dev *pdev = to_pci_dev(dev);
-> > > +	u16 num_vfs;
-> > > +
-> > > +	/* Serialize vs sriov_numvfs_store() so readers see valid num_VFs */
-> > > +	device_lock(&pdev->dev);
->                ^^^^^ lock
-> > > +	num_vfs = pdev->sriov->num_VFs;
-> > > +	device_lock(&pdev->dev);
->                ^^^^ and lock again!
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Oops, sorry, my fault.  Fixed.
+mm/z3fold.c: In function 'compact_single_buddy':
+mm/z3fold.c:693:16: warning:
+ variable 'newpage' set but not used [-Wunused-but-set-variable]
 
-> > > -	return sprintf(buf, "%u\n", pdev->sriov->num_VFs);
-> > > +	return sprintf(buf, "%u\n", num_vfs);
-> > >   }
-> > >   /*
-> 
+mm/z3fold.c:664:13: warning:
+ variable 'bud' set but not used [-Wunused-but-set-variable]
+
+It is never used, so can be removed.
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ mm/z3fold.c | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/mm/z3fold.c b/mm/z3fold.c
+index 25713a4a7186..d48d0ec3bcdd 100644
+--- a/mm/z3fold.c
++++ b/mm/z3fold.c
+@@ -661,7 +661,6 @@ static struct z3fold_header *compact_single_buddy(struct z3fold_header *zhdr)
+ 	struct z3fold_pool *pool = zhdr_to_pool(zhdr);
+ 	void *p = zhdr;
+ 	unsigned long old_handle = 0;
+-	enum buddy bud;
+ 	size_t sz = 0;
+ 	struct z3fold_header *new_zhdr = NULL;
+ 	int first_idx = __idx(zhdr, FIRST);
+@@ -673,24 +672,20 @@ static struct z3fold_header *compact_single_buddy(struct z3fold_header *zhdr)
+ 	 * the page lock is already taken
+ 	 */
+ 	if (zhdr->first_chunks && zhdr->slots->slot[first_idx]) {
+-		bud = FIRST;
+ 		p += ZHDR_SIZE_ALIGNED;
+ 		sz = zhdr->first_chunks << CHUNK_SHIFT;
+ 		old_handle = (unsigned long)&zhdr->slots->slot[first_idx];
+ 	} else if (zhdr->middle_chunks && zhdr->slots->slot[middle_idx]) {
+-		bud = MIDDLE;
+ 		p += zhdr->start_middle << CHUNK_SHIFT;
+ 		sz = zhdr->middle_chunks << CHUNK_SHIFT;
+ 		old_handle = (unsigned long)&zhdr->slots->slot[middle_idx];
+ 	} else if (zhdr->last_chunks && zhdr->slots->slot[last_idx]) {
+-		bud = LAST;
+ 		p += PAGE_SIZE - (zhdr->last_chunks << CHUNK_SHIFT);
+ 		sz = zhdr->last_chunks << CHUNK_SHIFT;
+ 		old_handle = (unsigned long)&zhdr->slots->slot[last_idx];
+ 	}
+ 
+ 	if (sz > 0) {
+-		struct page *newpage;
+ 		enum buddy new_bud = HEADLESS;
+ 		short chunks = size_to_chunks(sz);
+ 		void *q;
+@@ -699,7 +694,6 @@ static struct z3fold_header *compact_single_buddy(struct z3fold_header *zhdr)
+ 		if (!new_zhdr)
+ 			return NULL;
+ 
+-		newpage = virt_to_page(new_zhdr);
+ 		if (WARN_ON(new_zhdr == zhdr))
+ 			goto out_fail;
+
+
+
