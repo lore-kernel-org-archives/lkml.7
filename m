@@ -2,145 +2,87 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1583DECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE72ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E29382053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:14:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="b1sQezSL"
+	by mail.kernel.org (Postfix) with ESMTP id E94FA2053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:15:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731534AbfJIPOE (ORCPT
+        id S1731603AbfJIPPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 11:14:04 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35161 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727920AbfJIPOE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 11:14:04 -0400
-Received: by mail-lj1-f194.google.com with SMTP id m7so2918978lji.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 08:14:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=i5+F8lTtk0Euakn/RjiS7V/Gyf5iIdmbIbnkhbAYeuk=;
-        b=b1sQezSLJ2RpHRT6G4RPpFNQ9QPWcbccuCz+q+XxR+aRGGya3h3HiebQHOKMqCV8Av
-         KRFMjlIEMpRE8zpXTYAcDUO682DRTfznIM86/Wf8Lw7JuirqVcfggs2x1V7D1HCHAgVg
-         tgBj2YXSfG9eaGuA9qsTLKLFP+ONR6Y6GScGSWQYnLYb/2mkSRN1lzgpRB9tPKcG+Rnr
-         ONJbPZZTUQQ1xOjbyvYsrZVwp8vMAxcscwQ1/XgDbpIbpQaMKwOlhtUkvJPpQF6mq3VT
-         L2ja+Bf3HNQzKolLib9YqCey4AvVnpMQOseDvlBIh+St5bVyQP59B+lfLVzIh4843QK/
-         7BTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=i5+F8lTtk0Euakn/RjiS7V/Gyf5iIdmbIbnkhbAYeuk=;
-        b=SPJDzYGZ9zagAEmXWUkO21MaUUAhd2jtw/JbDWDaLVdDStt07X11Be456YZNPiNsPz
-         CaHRIx8b6kv0al+/VfkMA7FPj0HBIyjcmLz9p8NxfChSimFgSfsoSiogCTJHmLSMBpFq
-         PqEWZSTdxnBQZKCGs6ucuKTb5j/aizDE/o9nhH+CFz+JNGpGRGPCVJMBvkyfWoGwqbbk
-         Zr4S7zCuNBeahb8K8uHkSsVtad7aTCVhXdGut76R7vv713fl/sXHwTgt/FStd0cSDEBd
-         6yS6uQPr59vqFgPGvYN8zYD+7nx7f9K2O+Vib3idgNXGNVfVzKtFpL82rhpd/KRhGa2I
-         GtRA==
-X-Gm-Message-State: APjAAAUka5zmqF9a+3wzOgbwyHIl4ngcovfmFiokWImueEVDP31KBBL3
-        KoerRtY8fxWNn45GD7q+27n2Yg==
-X-Google-Smtp-Source: APXvYqzonBoG6yUhGVsnPYjcbe2zvWGkU0ePqWPljYB4I3KPXOX9/PxY9scZ4tjLKi0uvWWGIqsxiA==
-X-Received: by 2002:a2e:750c:: with SMTP id q12mr2662432ljc.138.1570634040984;
-        Wed, 09 Oct 2019 08:14:00 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id w27sm525557ljd.55.2019.10.09.08.14.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 08:14:00 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 7BDF8102BFA; Wed,  9 Oct 2019 18:14:00 +0300 (+03)
-Date:   Wed, 9 Oct 2019 18:14:00 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Thomas =?utf-8?Q?Hellstr=C3=B6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        torvalds@linux-foundation.org,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rik van Riel <riel@surriel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Huang Ying <ying.huang@intel.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>
-Subject: Re: [PATCH v4 2/9] mm: pagewalk: Take the pagetable lock in
- walk_pte_range()
-Message-ID: <20191009151400.bserdtpoczmawqn5@box>
-References: <20191008091508.2682-1-thomas_os@shipmail.org>
- <20191008091508.2682-3-thomas_os@shipmail.org>
+        Wed, 9 Oct 2019 11:15:08 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46812 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727920AbfJIPPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 11:15:08 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1C35D3084032;
+        Wed,  9 Oct 2019 15:15:08 +0000 (UTC)
+Received: from localhost (ovpn-116-110.ams2.redhat.com [10.36.116.110])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 649F960167;
+        Wed,  9 Oct 2019 15:15:05 +0000 (UTC)
+Date:   Wed, 9 Oct 2019 16:15:03 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     netdev@vger.kernel.org, kvm <kvm@vger.kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        virtualization@lists.linux-foundation.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jorgen Hansen <jhansen@vmware.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 07/11] VSOCK: add AF_VSOCK test cases
+Message-ID: <20191009151503.GA13568@stefanha-x1.localdomain>
+References: <20190801152541.245833-1-sgarzare@redhat.com>
+ <20190801152541.245833-8-sgarzare@redhat.com>
+ <CAGxU2F4N5ACePf6YLQCBFMHPu8wDLScF+AGQ2==JAuBUj0GB-A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="x+6KMIRAuhnl3hBn"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191008091508.2682-3-thomas_os@shipmail.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAGxU2F4N5ACePf6YLQCBFMHPu8wDLScF+AGQ2==JAuBUj0GB-A@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 09 Oct 2019 15:15:08 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 11:15:01AM +0200, Thomas Hellström (VMware) wrote:
-> From: Thomas Hellstrom <thellstrom@vmware.com>
-> 
-> Without the lock, anybody modifying a pte from within this function might
-> have it concurrently modified by someone else.
-> 
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Rik van Riel <riel@surriel.com>
-> Cc: Minchan Kim <minchan@kernel.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Huang Ying <ying.huang@intel.com>
-> Cc: Jérôme Glisse <jglisse@redhat.com>
-> Cc: Kirill A. Shutemov <kirill@shutemov.name>
-> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-> ---
->  mm/pagewalk.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/mm/pagewalk.c b/mm/pagewalk.c
-> index d48c2a986ea3..83c0b78363b4 100644
-> --- a/mm/pagewalk.c
-> +++ b/mm/pagewalk.c
-> @@ -10,8 +10,9 @@ static int walk_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
->  	pte_t *pte;
->  	int err = 0;
->  	const struct mm_walk_ops *ops = walk->ops;
-> +	spinlock_t *ptl;
->  
-> -	pte = pte_offset_map(pmd, addr);
-> +	pte = pte_offset_map_lock(walk->mm, pmd, addr, &ptl);
->  	for (;;) {
->  		err = ops->pte_entry(pte, addr, addr + PAGE_SIZE, walk);
->  		if (err)
-> @@ -22,7 +23,7 @@ static int walk_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
->  		pte++;
->  	}
->  
-> -	pte_unmap(pte);
-> +	pte_unmap_unlock(pte - 1, ptl);
 
-NAK.
+--x+6KMIRAuhnl3hBn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-If ->pte_entry() fails on the first entry of the page table, pte - 1 will
-point out side the page table.
+On Wed, Oct 09, 2019 at 12:03:53PM +0200, Stefano Garzarella wrote:
+> Hi Stefan,
+> I'm thinking about dividing this test into single applications, one
+> for each test, do you think it makes sense?
+> Or is it just a useless complication?
 
-And the '- 1' is totally unnecessary as we break the loop before pte++ on
-the last iteration.
+I don't mind either way but personally I would leave it as a single
+program.
 
--- 
- Kirill A. Shutemov
+Stefan
+
+--x+6KMIRAuhnl3hBn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl2d+XcACgkQnKSrs4Gr
+c8iLyQf/Zhb+RZJm3omrM8JeMvDADeG1HsilYyQHLlWrpKPJHyQVtNqGNx9bJxd+
+Eq68BTkMmICqtmYwilCPPVlrx8et8zehRq871XzI6O/sXIme49zDJ056dPX1R1Gb
++HAyhD9QD3YqFicOy1eA7YAtT8/VsQdXMQTUVkwcv/Nzi37O0xyd7KVV0TJvBVka
+0NwoQYWegJqj48HghPtJrhr6xjOjj2xbBgW2AI9SFwSYNW9asQeEgfWbYAZZU/Ri
+Q2/xQjZbaaEKRhiIw+WoWJ4eXSZXzAzqh4cnyHVvJnoyLnO0Ed7qEUf4tcwFS1Eu
+KaaYezbOhj4tIKbacDvJ5+HM6M2QYA==
+=fCBd
+-----END PGP SIGNATURE-----
+
+--x+6KMIRAuhnl3hBn--
