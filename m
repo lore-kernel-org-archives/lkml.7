@@ -2,190 +2,115 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E93ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB2CC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEFA4218AC
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:58:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="dQBWMf3H"
+	by mail.kernel.org (Postfix) with ESMTP id E5A61206B6
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:59:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731991AbfJIU65 (ORCPT
+        id S1732023AbfJIU7H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 16:58:57 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41591 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731937AbfJIU64 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 16:58:56 -0400
-Received: by mail-ot1-f68.google.com with SMTP id g13so2953907otp.8
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 13:58:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rPbqS3tT6apUPZNL8e9qPJ5+PJ+1PHYB4MklTNjcg7Q=;
-        b=dQBWMf3H/PvQKnpQCE/xXFK5cdl6vgjIUZnFDnhYtxUeRUv5TAU237uS/UY4gEdaJ4
-         evIak4UxlwBTDer2oj6m4t6VhITkuf9Np68sXJX3SFaxbactYYyJKsvlu1N6yk15qZ7q
-         7+kzPwHZaDYRyj4+/q9irb16VkOCuflzKZG5Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rPbqS3tT6apUPZNL8e9qPJ5+PJ+1PHYB4MklTNjcg7Q=;
-        b=BlznYGHla+9LFqtzXExyEmELjtGkfELVOY8YVf72HrsUMPfKfkszIPQE95shI1oHn9
-         d6U33A0CpsJWNRaqvYMm4CK7mqzlQdTKqUCqSHzsevGq8YSmVjJD973dGyM3CXPAXHtb
-         xtzHx+O/kF3q1HceLfanfj7nX9Pk5RgnvoXctJSunMmux82sMYNV1pIcnd6JuzXX5KH9
-         mRb0+1ucbz4jtI5jykXnQWIrO28RwyS0HgQQMLckWzi8ENUR1xq/SgEiJjeN7Z887d4Q
-         2jdLz0UvM1dSFQ58kqbiUqDY14WP5nIGBNfvM1rqj+KRssEybi2bL7UK5Ol0zc1jfTup
-         2Ogg==
-X-Gm-Message-State: APjAAAXzQ3nBh8oYT6pwLOgFf00pYRceeMDmiXGI8ei6mgWjk/43hEuM
-        SqPxXWpbv5+OAt9GwHJwbmpHD1O0vixtmeKIBiklDQ==
-X-Google-Smtp-Source: APXvYqw7SNW6UiNehcwGcGcth3oBqtUprIQlt3rBUJYxzyaunZSWngUWFNWkMKJxlZHMmMHOdorEjCmd5hkIOtgYUYA=
-X-Received: by 2002:a9d:2a88:: with SMTP id e8mr4915763otb.188.1570654733557;
- Wed, 09 Oct 2019 13:58:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <951eb7dc-bebe-5049-4998-f199e18b0bf3@canonical.com>
- <20191009163235.GT16989@phenom.ffwll.local> <a0d5f3a3-a2b3-5367-42f9-bde514571e25@amd.com>
- <CAKMK7uEtJRDhibWDv2TB2WrFzFooMWPSbveDD2N-rudAwvzVFA@mail.gmail.com> <c8f96b46-e81e-1e41-aafc-5f6ec236d66f@amd.com>
-In-Reply-To: <c8f96b46-e81e-1e41-aafc-5f6ec236d66f@amd.com>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Wed, 9 Oct 2019 22:58:41 +0200
-Message-ID: <CAKMK7uHr3aeJRqJAscDDfsuBBnVXCeN9SS36-1UGuK84NyOD5Q@mail.gmail.com>
-Subject: Re: drm/amd/display: Add HDCP module - static analysis bug report
-To:     "Lakha, Bhawanpreet" <Bhawanpreet.Lakha@amd.com>
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        "Wentland, Harry" <Harry.Wentland@amd.com>,
-        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        amd-gfx mailing list <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 9 Oct 2019 16:59:07 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51262 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731937AbfJIU7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 16:59:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 1A2B3B231;
+        Wed,  9 Oct 2019 20:59:04 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id B10CAE3786; Wed,  9 Oct 2019 22:59:03 +0200 (CEST)
+Message-Id: <31de19d474dcce77dc17d31d2f31f015ddccb713.1570654310.git.mkubecek@suse.cz>
+In-Reply-To: <cover.1570654310.git.mkubecek@suse.cz>
+References: <cover.1570654310.git.mkubecek@suse.cz>
+From:   Michal Kubecek <mkubecek@suse.cz>
+Subject: [PATCH net-next v7 01/17] rtnetlink: provide permanent hardware
+ address in RTM_NEWLINK
+To:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org
+Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Date:   Wed,  9 Oct 2019 22:59:03 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 9, 2019 at 10:46 PM Lakha, Bhawanpreet
-<Bhawanpreet.Lakha@amd.com> wrote:
->
-> I misunderstood and was talking about the ksv validation specifically
-> (usage of drm_hdcp_check_ksvs_revoked()).
+Permanent hardware address of a network device was traditionally provided
+via ethtool ioctl interface but as Jiri Pirko pointed out in a review of
+ethtool netlink interface, rtnetlink is much more suitable for it so let's
+add it to the RTM_NEWLINK message.
 
-Hm for that specifically I think you want to do both, i.e. both
-consult your psp, but also check for revoked ksvs with the core
-helper. At least on some platforms only the core helper might have the
-updated revoke list.
+Add IFLA_PERM_ADDRESS attribute to RTM_NEWLINK messages unless the
+permanent address is all zeros (i.e. device driver did not fill it). As
+permanent address is not modifiable, reject userspace requests containing
+IFLA_PERM_ADDRESS attribute.
 
-> For the defines I will create patches to use drm_hdcp where it is usable.
+Note: we already provide permanent hardware address for bond slaves;
+unfortunately we cannot drop that attribute for backward compatibility
+reasons.
 
-Thanks a lot. Ime once we have shared definitions it's much easier to
-also share some helpers, where it makes sense.
+v5 -> v6: only add the attribute if permanent address is not zero
 
-Aside I think the hdcp code could also use a bit of demidlayering. At
-least I'm not understanding why you add a 2nd abstraction layer for
-i2c/dpcd, dm_helper already has that. That seems like one abstraction
-layer too much.
--Daniel
+Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Acked-by: Stephen Hemminger <stephen@networkplumber.org>
+---
+ include/uapi/linux/if_link.h | 1 +
+ net/core/rtnetlink.c         | 5 +++++
+ 2 files changed, 6 insertions(+)
 
->
->
-> Bhawan
->
-> On 2019-10-09 2:43 p.m., Daniel Vetter wrote:
-> > On Wed, Oct 9, 2019 at 8:23 PM Lakha, Bhawanpreet
-> > <Bhawanpreet.Lakha@amd.com> wrote:
-> >> Hi,
-> >>
-> >> The reason we don't use drm_hdcp is because our policy is to do hdcp
-> >> verification using PSP/HW (onboard secure processor).
-> > i915 also uses hw to auth, we still use the parts from drm_hdcp ...
-> > Did you actually look at what's in there? It's essentially just shared
-> > defines and data structures from the standard, plus a few minimal
-> > helpers to en/decode some bits. Just from a quick read the entire
-> > patch very much looks like midlayer everywhere design that we
-> > discussed back when DC landed ...
-> > -Daniel
-> >
-> >> Bhawan
-> >>
-> >> On 2019-10-09 12:32 p.m., Daniel Vetter wrote:
-> >>> On Thu, Oct 03, 2019 at 11:08:03PM +0100, Colin Ian King wrote:
-> >>>> Hi,
-> >>>>
-> >>>> Static analysis with Coverity has detected a potential issue with
-> >>>> function validate_bksv in
-> >>>> drivers/gpu/drm/amd/display/modules/hdcp/hdcp1_execution.c with recent
-> >>>> commit:
-> >>>>
-> >>>> commit ed9d8e2bcb003ec94658cafe9b1bb3960e2139ec
-> >>>> Author: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-> >>>> Date:   Tue Aug 6 17:52:01 2019 -0400
-> >>>>
-> >>>>       drm/amd/display: Add HDCP module
-> >>> I think the real question here is ... why is this not using drm_hdcp?
-> >>> -Daniel
-> >>>
-> >>>> The analysis is as follows:
-> >>>>
-> >>>>    28 static inline enum mod_hdcp_status validate_bksv(struct mod_hdcp *hdcp)
-> >>>>    29 {
-> >>>>
-> >>>> CID 89852 (#1 of 1): Out-of-bounds read (OVERRUN)
-> >>>>
-> >>>> 1. overrun-local:
-> >>>> Overrunning array of 5 bytes at byte offset 7 by dereferencing pointer
-> >>>> (uint64_t *)hdcp->auth.msg.hdcp1.bksv.
-> >>>>
-> >>>>    30        uint64_t n = *(uint64_t *)hdcp->auth.msg.hdcp1.bksv;
-> >>>>    31        uint8_t count = 0;
-> >>>>    32
-> >>>>    33        while (n) {
-> >>>>    34                count++;
-> >>>>    35                n &= (n - 1);
-> >>>>    36        }
-> >>>>
-> >>>> hdcp->auth.msg.hdcp1.bksv is an array of 5 uint8_t as defined in
-> >>>> drivers/gpu/drm/amd/display/modules/hdcp/hdcp.h as follows:
-> >>>>
-> >>>> struct mod_hdcp_message_hdcp1 {
-> >>>>           uint8_t         an[8];
-> >>>>           uint8_t         aksv[5];
-> >>>>           uint8_t         ainfo;
-> >>>>           uint8_t         bksv[5];
-> >>>>           uint16_t        r0p;
-> >>>>           uint8_t         bcaps;
-> >>>>           uint16_t        bstatus;
-> >>>>           uint8_t         ksvlist[635];
-> >>>>           uint16_t        ksvlist_size;
-> >>>>           uint8_t         vp[20];
-> >>>>
-> >>>>           uint16_t        binfo_dp;
-> >>>> };
-> >>>>
-> >>>> variable n is going to contain the contains of r0p and bcaps. I'm not
-> >>>> sure if that is intentional. If not, then the count is going to be
-> >>>> incorrect if these are non-zero.
-> >>>>
-> >>>> Colin
-> >> _______________________________________________
-> >> dri-devel mailing list
-> >> dri-devel@lists.freedesktop.org
-> >> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> >
-> >
-
-
-
+diff --git a/include/uapi/linux/if_link.h b/include/uapi/linux/if_link.h
+index 8aec8769d944..1d69f637c5d6 100644
+--- a/include/uapi/linux/if_link.h
++++ b/include/uapi/linux/if_link.h
+@@ -169,6 +169,7 @@ enum {
+ 	IFLA_MAX_MTU,
+ 	IFLA_PROP_LIST,
+ 	IFLA_ALT_IFNAME, /* Alternative ifname */
++	IFLA_PERM_ADDRESS,
+ 	__IFLA_MAX
+ };
+ 
+diff --git a/net/core/rtnetlink.c b/net/core/rtnetlink.c
+index 49fa910b58af..a3c1228db273 100644
+--- a/net/core/rtnetlink.c
++++ b/net/core/rtnetlink.c
+@@ -1041,6 +1041,7 @@ static noinline size_t if_nlmsg_size(const struct net_device *dev,
+ 	       + nla_total_size(4)  /* IFLA_MIN_MTU */
+ 	       + nla_total_size(4)  /* IFLA_MAX_MTU */
+ 	       + rtnl_prop_list_size(dev)
++	       + nla_total_size(MAX_ADDR_LEN) /* IFLA_PERM_ADDRESS */
+ 	       + 0;
+ }
+ 
+@@ -1741,6 +1742,9 @@ static int rtnl_fill_ifinfo(struct sk_buff *skb,
+ 	    nla_put_s32(skb, IFLA_NEW_IFINDEX, new_ifindex) < 0)
+ 		goto nla_put_failure;
+ 
++	if (memchr_inv(dev->perm_addr, '\0', dev->addr_len) &&
++	    nla_put(skb, IFLA_PERM_ADDRESS, dev->addr_len, dev->perm_addr))
++		goto nla_put_failure;
+ 
+ 	rcu_read_lock();
+ 	if (rtnl_fill_link_af(skb, dev, ext_filter_mask))
+@@ -1806,6 +1810,7 @@ static const struct nla_policy ifla_policy[IFLA_MAX+1] = {
+ 	[IFLA_PROP_LIST]	= { .type = NLA_NESTED },
+ 	[IFLA_ALT_IFNAME]	= { .type = NLA_STRING,
+ 				    .len = ALTIFNAMSIZ - 1 },
++	[IFLA_PERM_ADDRESS]	= { .type = NLA_REJECT },
+ };
+ 
+ static const struct nla_policy ifla_info_policy[IFLA_INFO_MAX+1] = {
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+2.23.0
+
