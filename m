@@ -2,105 +2,119 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 560FDC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 00:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A882BECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 00:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC6D2070B
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 00:12:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8227B2070B
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 00:14:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WF41jcLY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gzi+Iqn+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729958AbfJIAMu (ORCPT
+        id S1729922AbfJIAOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 20:12:50 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:58123 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727051AbfJIAMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 20:12:49 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46nvmv0mWQz9sPJ;
-        Wed,  9 Oct 2019 11:12:47 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1570579967;
-        bh=vAup+659lPd1ASmnyomCIW0xLz9wRcLPa+2Do81bXgM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=WF41jcLYgu4Uv+GBMZ/Mp1L3os8q3hZDunmWQz1BIrDEFo1cGbAqTspEE2tDjoMe/
-         DyQkGU4hAiJILAqKwbOHS+uwWkVwGPT1sS2ljMxQm3qDIj5leXfeWVMrzc+BLRgAAi
-         FejNY7FDWTDoY+htXiWDIAlkazkAqjhd4YtgoOfknEkIQvYKy56/S2eXa3TdEFdA7h
-         MojgoJ5WP1siksuZzZ2hre2ee+z6movEb235m6loU6jCOePQ3dRxyIC5NKogtA9xLB
-         3Rv5kPvF0f85NUr5DmLFz4mHyYTpLRvRxINQWYo3LNRnKnhOOOYzNPPOrJd8os4jJ+
-         8g6/r1kv0E2lQ==
-Date:   Wed, 9 Oct 2019 11:12:46 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matthew Auld <matthew.auld@intel.com>
-Subject: linux-next: manual merge of the drm-misc tree with the drm tree
-Message-ID: <20191009111246.243cf33d@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/i1R2DXqdvhH8qO80EbdFI30";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Tue, 8 Oct 2019 20:14:49 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36981 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728792AbfJIAOt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 20:14:49 -0400
+Received: by mail-pg1-f193.google.com with SMTP id p1so233605pgi.4
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 17:14:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=2daljnqJ+TtRPEyYLJ4e1aRJCyE8bNHOU/f2G9I+p7o=;
+        b=gzi+Iqn+b7UyW+Nn5p2dSIEhAAfOdFiPkN+vo4RpC07gdosWLT/KX3vesssNIs1Zi6
+         cGPzjR1SNhZm5gov+c5mEkEb7yM3Ub1kxh7Oe3FJC3Pl3By1UgUY8sqqXuXi3lsOmI8m
+         DQSd3Fdcpu8+qwy+tS0rVgU391WWmA6aLrcnJS9IPZBH4yVW3L+Dv/3Z1cgOe/YqQSnm
+         Cyb82QPumv1lT9O2GRLn/u/Q/MMPvmS4mcDb0X+C6Z3r3O16dkUjJi+y8ot0f1poSCt/
+         ZlriLBgN9QW/tXS563BQs3cTeI+MC7Lr55OlDBFudWzjcFij36DsUnPQogs0nxHuTe2L
+         U26Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=2daljnqJ+TtRPEyYLJ4e1aRJCyE8bNHOU/f2G9I+p7o=;
+        b=qfwf5n10yxhjktOdZBmVPBooTUqP7+rkGL6me9bIBCNlu2U/C2JzTyz3ilsMYZ/zDA
+         g7T63n0uFMDrJSEsU9sLh6+c/2seZELT6WmXZAQs8xdHG8TgO5HsijqDECq3B/X4ON/a
+         pgF/GXBSM4oFlBZ670jCnjpRibWvYSNno5oivMb/C+kTzb0WqyxuxpT4Od/TVajlisiG
+         RJ0ZapUV6qO67acBfJSVqjpIzObO7pll5LlRKT2Cx20BnWhOFQ5QhzV9m37m/JzMKBJs
+         si7HecRgaZJw7uzp4RFR7mVFujaNDokLxBFbX6dYkPUBRus8JyWoDgNOSZZogA9t99e1
+         BlwQ==
+X-Gm-Message-State: APjAAAXWvLZHYWLjR0PP19jAqRDSARbMiKt1KqgLBRMjJauFPGG92prb
+        NP0gjf/9MzWbeLQMN+pJLgQumg==
+X-Google-Smtp-Source: APXvYqxXp6F2cO1CIJ92gpJFgWmn49fZlqWDTCkmzg84veYWn8c3Rr5ldjJ0xnGY2Y06Ve/FVc+wWA==
+X-Received: by 2002:a17:90a:2302:: with SMTP id f2mr661674pje.132.1570580087804;
+        Tue, 08 Oct 2019 17:14:47 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id v3sm241289pfn.18.2019.10.08.17.14.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 08 Oct 2019 17:14:47 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Maxime Ripard <mripard@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Alex Elder <elder@linaro.org>
+Subject: [PATCH] arm64: defconfig: Enable Qualcomm remoteproc dependencies
+Date:   Tue,  8 Oct 2019 17:14:42 -0700
+Message-Id: <20191009001442.15719-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/i1R2DXqdvhH8qO80EbdFI30
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Enable the the power domains, reset controllers and remote block device
+memory access drivers necessary to boot the Audio, Compute and Modem
+DSPs on Qualcomm SDM845.
 
-Hi all,
+None of the power domains are system critical, but needs to be builtin
+as the driver core prohibits probe deferal past late initcall.
 
-Today's linux-next merge of the drm-misc tree got a conflict in:
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ arch/arm64/configs/defconfig | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-  drivers/gpu/drm/i915/i915_gem_gtt.c
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index c9a867ac32d4..42f042ba1039 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -732,10 +732,13 @@ CONFIG_RPMSG_QCOM_GLINK_SMEM=m
+ CONFIG_RPMSG_QCOM_SMD=y
+ CONFIG_RASPBERRYPI_POWER=y
+ CONFIG_IMX_SCU_SOC=y
++CONFIG_QCOM_AOSS_QMP=y
+ CONFIG_QCOM_COMMAND_DB=y
+ CONFIG_QCOM_GENI_SE=y
+ CONFIG_QCOM_GLINK_SSR=m
++CONFIG_QCOM_RMTFS_MEM=m
+ CONFIG_QCOM_RPMH=y
++CONFIG_QCOM_RPMHPD=y
+ CONFIG_QCOM_SMEM=y
+ CONFIG_QCOM_SMD_RPM=y
+ CONFIG_QCOM_SMP2P=y
+@@ -780,6 +783,8 @@ CONFIG_PWM_ROCKCHIP=y
+ CONFIG_PWM_SAMSUNG=y
+ CONFIG_PWM_SUN4I=m
+ CONFIG_PWM_TEGRA=m
++CONFIG_RESET_QCOM_AOSS=y
++CONFIG_RESET_QCOM_PDC=m
+ CONFIG_RESET_TI_SCI=y
+ CONFIG_PHY_XGENE=y
+ CONFIG_PHY_SUN4I_USB=y
+-- 
+2.18.0
 
-between commit:
-
-  1e0a96e50882 ("drm/i915: export color_differs")
-
-from the drm tree and commit:
-
-  71724f708997 ("drm/mm: Use helpers for drm_mm_node booleans")
-
-from the drm-misc tree.
-
-I fixed it up (I used the former change) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/i1R2DXqdvhH8qO80EbdFI30
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2dJf4ACgkQAVBC80lX
-0GysLwf+IO36ficMeJST+QHGnwBRRQVIvGtXwdnZ1vcH2MkDjf/CduplUQEq1w4Q
-eMiQDKKfLHf3g0rzCkTCzMYGjBbY98ybBsns58LL6aBj1iaUKXCkgSFnkwen91/3
-qsPrvfWB1qpg24pQsUneg7n1vuVogXX8cepiYqgcPNjAqMrW5+kzbI7IeYo/6tI9
-R1c1Uo3kS94yntorQFTZxan/lhsEEUUyGSCd2jZNauhmBhCPdsjkyhndwrrgfWav
-FqI+HtHA4NINK26xAc2pm+NnfWGGxnixPcVYJSvDNzyat3tQgORkqy7IxI2/D+ZW
-7halNB3GB+bz7s/VyNNzBcoqjNr+mg==
-=IIun
------END PGP SIGNATURE-----
-
---Sig_/i1R2DXqdvhH8qO80EbdFI30--
