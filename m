@@ -2,151 +2,241 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC4FC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B310C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 136E020B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:08:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF8DC20B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:08:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="AJHLJi81"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ifDZMaGb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731315AbfJIPIj (ORCPT
+        id S1731508AbfJIPIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 11:08:39 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:33319 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729865AbfJIPIj (ORCPT
+        Wed, 9 Oct 2019 11:08:55 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:45755 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727920AbfJIPIz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 11:08:39 -0400
-Received: by mail-qt1-f193.google.com with SMTP id r5so3947652qtd.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 08:08:39 -0700 (PDT)
+        Wed, 9 Oct 2019 11:08:55 -0400
+Received: by mail-ed1-f66.google.com with SMTP id h33so2329883edh.12
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 08:08:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=6qPsXR/T23d2yQXhVGAwdewXonUCgZDbn2dZYxeSHVw=;
-        b=AJHLJi81MFFfsyyMX6muUq1/ofBVohlqThw40+CF8J3lqWlzpfqESlx74nHjmwarmH
-         CJu5PzafVtvyg86U+DrhZM8iHUu5ckEOf26KfmQ/v4tyq7R2aly7xpSr7DF8UH8UA47X
-         Q5pfKtrwBgu3eq4ar1CKrkfb6A9hZt+OPV8abxQUC8obXkwjiGfWIYaNds8VV4LgIne0
-         /rK1jYvqs6dnoMacVaR3ppmAMuEVvfavi2GsCJPU2IS820TA6e7rGDWacvNGc/pVy4Ye
-         ESIia2cW8kk8bDNKYkk966/ZIe82ygy1mv91PjKDv67k6jfy5vh0LbHkrh48W1D6wa9k
-         kzvQ==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4dVOT/zwpO/iVlKT34i6lLt8un5vjwtrCBmaYK+BcfI=;
+        b=ifDZMaGbzZ5zS8oLCskFTxsRDRy0vcmM6IDugkmp5x82gdumWWGf6drBBSbP2zXj1X
+         keZnbytz7jKV9Bc7Px0ObzoVxcVnraGGKYROf0qAcLNCkS7CrVkbKcLA6O1VtlsCeaNB
+         k//x58dAPebQUDYg1zX1dmiP1ryeq3hqRi88I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6qPsXR/T23d2yQXhVGAwdewXonUCgZDbn2dZYxeSHVw=;
-        b=jpIdM60x440vwzBJgNot+UyQRVCMZ3VnZpIYSHN4z4kXpmdSERwYovYlhxvh7PlqCR
-         U1nbn4GxG4ruxnCus27p0IVUCZiFBR+TGg7t87pioFtudrxm2yTe4vKBBQoveprQ5wjr
-         PuS2fJ+VTfmmdQGKs9a36U65pmedu91KNDIpwmt5pQ57y3GeT6WZ8paCkjTdxmUhnPbN
-         N1LtBE+KaCwhxID45Ml+3igm7gFRtNr7nF8sm/SOF88B0gBS5AA+Gr7wyO+dPcoWxPzg
-         e+f7F8tN1yt9273kt6/7lgNiuW/w7qX7hm9pWuWyGrw0hKQyzVarBEs0ZxJlKZ5PPECF
-         wtnA==
-X-Gm-Message-State: APjAAAUiyisnvhEhNlTRXXVI8HuBIqJNchtGVJtfIKDwlKGcqgFYHsCK
-        uq8mEPndAVO+0w6OqscTPpL3gQ==
-X-Google-Smtp-Source: APXvYqx4ZHLPpIlLgc8wAMy6Uv0C9n/Nzaxln6HO9c+OEP5hBmcbu6XmCqN7xb1WEkHsGmzovG/v+w==
-X-Received: by 2002:ac8:fb6:: with SMTP id b51mr4260217qtk.70.1570633718500;
-        Wed, 09 Oct 2019 08:08:38 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id k2sm1043678qtm.42.2019.10.09.08.08.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 09 Oct 2019 08:08:37 -0700 (PDT)
-Message-ID: <1570633715.5937.10.camel@lca.pw>
-Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
-From:   Qian Cai <cai@lca.pw>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        sergey.senozhatsky.work@gmail.com, rostedt@goodmis.org,
-        peterz@infradead.org, linux-mm@kvack.org,
-        john.ogness@linutronix.de, akpm@linux-foundation.org,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>, david@redhat.com,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 09 Oct 2019 11:08:35 -0400
-In-Reply-To: <20191009143439.GF6681@dhcp22.suse.cz>
-References: <20191008183525.GQ6681@dhcp22.suse.cz>
-         <1570561573.5576.307.camel@lca.pw> <20191008191728.GS6681@dhcp22.suse.cz>
-         <1570563324.5576.309.camel@lca.pw>
-         <20191009114903.aa6j6sa56z2cssom@pathway.suse.cz>
-         <1570626402.5937.1.camel@lca.pw> <20191009132746.GA6681@dhcp22.suse.cz>
-         <1570628593.5937.3.camel@lca.pw> <20191009135155.GC6681@dhcp22.suse.cz>
-         <1570630784.5937.5.camel@lca.pw> <20191009143439.GF6681@dhcp22.suse.cz>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4dVOT/zwpO/iVlKT34i6lLt8un5vjwtrCBmaYK+BcfI=;
+        b=ZTLihjdE5nDtlOLnDtRHOFjyAmvIRVy47QzK1i3giMWXkdlREnhE+WnCFDiU+xH55d
+         NV1RUgfY9vZSHusHxwchjCBE5CsbpAMZON1kUztnajdpaxdZrACH/EwVRYVPg0q/YNj8
+         OubTmC9Ty+GUTOMckRuMyofRGhfKS1CJ4xAF9rhGbGOcWU+7qo1n6eGNabyjDVOGjhoP
+         Cy+GgOq6ST/bKYnXWU4+G7QtfblkdGzGy1H5R64YG5KPmnuEuaNVz+X/wVsZDRKd+Dj0
+         NAXb2YZzY26NjRqlOxWUhcTkQ9U0znEyrpxj0Jq//4UOd8hXiHh7kWmLLhDE3uH8Cs+6
+         yXIQ==
+X-Gm-Message-State: APjAAAW2Hb9rZlTQbzWOtIUtp/gBhsVj1FpIYnTKV8vWNH31gAimm6Eb
+        nNTMIExR7+WgIKqqvkdkx1WQ27kjDidMcw==
+X-Google-Smtp-Source: APXvYqwAn773ovYSm9xgQmDHSA08lcoTrzaJC/T04SOXarbE+OKIesfMCxS2v1+xIhYtlopztK/pPA==
+X-Received: by 2002:a05:6402:13d5:: with SMTP id a21mr3540134edx.242.1570633732228;
+        Wed, 09 Oct 2019 08:08:52 -0700 (PDT)
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com. [209.85.128.52])
+        by smtp.gmail.com with ESMTPSA id e44sm391862ede.34.2019.10.09.08.08.49
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Oct 2019 08:08:50 -0700 (PDT)
+Received: by mail-wm1-f52.google.com with SMTP id y21so3027703wmi.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 08:08:49 -0700 (PDT)
+X-Received: by 2002:a1c:dcd6:: with SMTP id t205mr3094517wmg.10.1570633728709;
+ Wed, 09 Oct 2019 08:08:48 -0700 (PDT)
+MIME-Version: 1.0
+References: <1569822142-14303-1-git-send-email-yong.wu@mediatek.com>
+ <CAAFQd5C+FM3n-Ww4C+qDD1QZOGZrqEYw4EvYECfadGcDH0fmew@mail.gmail.com>
+ <1570522162.19130.38.camel@mhfsdcap03> <CAAFQd5C3U7pZo4SSUJ52Q7E+0FaUoORQFbQC5RhCHBhi=NFYTw@mail.gmail.com>
+ <1570628307.19130.53.camel@mhfsdcap03>
+In-Reply-To: <1570628307.19130.53.camel@mhfsdcap03>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Thu, 10 Oct 2019 00:08:37 +0900
+X-Gmail-Original-Message-ID: <CAAFQd5Aj-DDofzQ1vyKT9OcXpf-Udfx4zeWtVGcQf7S-o+mStQ@mail.gmail.com>
+Message-ID: <CAAFQd5Aj-DDofzQ1vyKT9OcXpf-Udfx4zeWtVGcQf7S-o+mStQ@mail.gmail.com>
+Subject: Re: [PATCH] iommu/mediatek: Move the tlb_sync into tlb_flush
+To:     Yong Wu <yong.wu@mediatek.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Evan Green <evgreen@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>,
+        anan.sun@mediatek.com, cui.zhang@mediatek.com,
+        chao.hao@mediatek.com
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-10-09 at 16:34 +0200, Michal Hocko wrote:
-> On Wed 09-10-19 10:19:44, Qian Cai wrote:
-> > On Wed, 2019-10-09 at 15:51 +0200, Michal Hocko wrote:
-> 
-> [...]
-> > > Can you paste the full lock chain graph to be sure we are on the same
-> > > page?
-> > 
-> > WARNING: possible circular locking dependency detected
-> > 5.3.0-next-20190917 #8 Not tainted
-> > ------------------------------------------------------
-> > test.sh/8653 is trying to acquire lock:
-> > ffffffff865a4460 (console_owner){-.-.}, at:
-> > console_unlock+0x207/0x750
-> > 
-> > but task is already holding lock:
-> > ffff88883fff3c58 (&(&zone->lock)->rlock){-.-.}, at:
-> > __offline_isolated_pages+0x179/0x3e0
-> > 
-> > which lock already depends on the new lock.
-> > 
-> > 
-> > the existing dependency chain (in reverse order) is:
-> > 
-> > -> #3 (&(&zone->lock)->rlock){-.-.}:
-> >        __lock_acquire+0x5b3/0xb40
-> >        lock_acquire+0x126/0x280
-> >        _raw_spin_lock+0x2f/0x40
-> >        rmqueue_bulk.constprop.21+0xb6/0x1160
-> >        get_page_from_freelist+0x898/0x22c0
-> >        __alloc_pages_nodemask+0x2f3/0x1cd0
-> >        alloc_pages_current+0x9c/0x110
-> >        allocate_slab+0x4c6/0x19c0
-> >        new_slab+0x46/0x70
-> >        ___slab_alloc+0x58b/0x960
-> >        __slab_alloc+0x43/0x70
-> >        __kmalloc+0x3ad/0x4b0
-> >        __tty_buffer_request_room+0x100/0x250
-> >        tty_insert_flip_string_fixed_flag+0x67/0x110
-> >        pty_write+0xa2/0xf0
-> >        n_tty_write+0x36b/0x7b0
-> >        tty_write+0x284/0x4c0
-> >        __vfs_write+0x50/0xa0
-> >        vfs_write+0x105/0x290
-> >        redirected_tty_write+0x6a/0xc0
-> >        do_iter_write+0x248/0x2a0
-> >        vfs_writev+0x106/0x1e0
-> >        do_writev+0xd4/0x180
-> >        __x64_sys_writev+0x45/0x50
-> >        do_syscall_64+0xcc/0x76c
-> >        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
-> This one looks indeed legit. pty_write is allocating memory from inside
-> the port->lock. But this seems to be quite broken, right? The forward
-> progress depends on GFP_ATOMIC allocation which might fail easily under
-> memory pressure. So the preferred way to fix this should be to change
-> the allocation scheme to use the preallocated buffer and size it from a
-> context when it doesn't hold internal locks. It might be a more complex
-> fix than using printk_deferred or other games but addressing that would
-> make the pty code more robust as well.
+On Wed, Oct 9, 2019 at 10:38 PM Yong Wu <yong.wu@mediatek.com> wrote:
+>
+> On Wed, 2019-10-09 at 16:56 +0900, Tomasz Figa wrote:
+> > On Tue, Oct 8, 2019 at 5:09 PM Yong Wu <yong.wu@mediatek.com> wrote:
+> > >
+> > > Hi Tomasz,
+> > >
+> > > Sorry for reply late.
+> > >
+> > > On Wed, 2019-10-02 at 14:18 +0900, Tomasz Figa wrote:
+> > > > Hi Yong,
+> > > >
+> > > > On Mon, Sep 30, 2019 at 2:42 PM Yong Wu <yong.wu@mediatek.com> wrote:
+> > > > >
+> > > > > The commit 4d689b619445 ("iommu/io-pgtable-arm-v7s: Convert to IOMMU API
+> > > > > TLB sync") help move the tlb_sync of unmap from v7s into the iommu
+> > > > > framework. It helps add a new function "mtk_iommu_iotlb_sync", But it
+> > > > > lacked the dom->pgtlock, then it will cause the variable
+> > > > > "tlb_flush_active" may be changed unexpectedly, we could see this warning
+> > > > > log randomly:
+> > > > >
+> > > >
+> > > > Thanks for the patch! Please see my comments inline.
+> > > >
+> > > > > mtk-iommu 10205000.iommu: Partial TLB flush timed out, falling back to
+> > > > > full flush
+> > > > >
+> > > > > To fix this issue, we can add dom->pgtlock in the "mtk_iommu_iotlb_sync".
+> > > > > And when checking this issue, we find that __arm_v7s_unmap call
+> > > > > io_pgtable_tlb_add_flush consecutively when it is supersection/largepage,
+> > > > > this also is potential unsafe for us. There is no tlb flush queue in the
+> > > > > MediaTek M4U HW. The HW always expect the tlb_flush/tlb_sync one by one.
+> > > > > If v7s don't always gurarantee the sequence, Thus, In this patch I move
+> > > > > the tlb_sync into tlb_flush(also rename the function deleting "_nosync").
+> > > > > and we don't care if it is leaf, rearrange the callback functions. Also,
+> > > > > the tlb flush/sync was already finished in v7s, then iotlb_sync and
+> > > > > iotlb_sync_all is unnecessary.
+> > > >
+> > > > Performance-wise, we could do much better. Instead of synchronously
+> > > > syncing at the end of mtk_iommu_tlb_add_flush(), we could sync at the
+> > > > beginning, if there was any previous flush still pending. We would
+> > > > also have to keep the .iotlb_sync() callback, to take care of waiting
+> > > > for the last flush. That would allow better pipelining with CPU in
+> > > > cases like this:
+> > > >
+> > > > for (all pages in range) {
+> > > >    change page table();
+> > > >    flush();
+> > > > }
+> > > >
+> > > > "change page table()" could execute while the IOMMU is flushing the
+> > > > previous change.
+> > >
+> > > Do you mean adding a new tlb_sync before tlb_flush_no_sync, like below:
+> > >
+> > > mtk_iommu_tlb_add_flush_nosync {
+> > >    + mtk_iommu_tlb_sync();
+> > >    tlb_flush_no_sync();
+> > >    data->tlb_flush_active = true;
+> > > }
+> > >
+> > > mtk_iommu_tlb_sync {
+> > >         if (!data->tlb_flush_active)
+> > >                 return;
+> > >         tlb_sync();
+> > >         data->tlb_flush_active = false;
+> > > }
+> > >
+> > > This way look improve the flow, But adjusting the flow is not the root
+> > > cause of this issue. the problem is "data->tlb_flush_active" may be
+> > > changed from mtk_iommu_iotlb_sync which don't have a dom->pglock.
+> >
+> > That was not the only problem with existing code. Existing code also
+> > assumed that add_flush and sync always go in pairs, but that's not
+> > true.
+>
+> Yes. Thus I put the tlb_flush always followed by tlb_sync to make sure
+> they always go in pairs.
+>
+> >
+> > My suggestion is to fix the locking in the driver and keep the sync
+> > deferred as much as possible, so that performance is not degraded. I
+>
+> I really didn't get this timeout warning log in previous kernel(Many
+> tlb_flush followed by one tlb_sync),
 
-I am not really sure if doing a surgery in pty code is better than fixing the
-memory offline side as a short-term fix.
+Locking issues typically lead to timing problems (race conditions), so
+it might just be that the sequence or timing of calls changed between
+kernel versions, enough to trigger the issue.
+
+> But deferring the sync is not
+> suggested by our DE, thus I still would like to fix the sequence in this
+> patch with putting them together.
+>
+
+What's the reason it's not suggested? From my understanding, there
+shouldn't be any dependency on hardware design here, it's just a
+simple software optimization - we can pipeline other CPU operations
+while the IOMMU is flushing the TLB.
+
+Basically, right now:
+
+CPU writes page tables 1
+IOMMU flushes 1 | CPU busy waits
+CPU writes page tables 2
+IOMMU flushes 2 | CPU busy waits
+CPU writes page tables 3
+IOMMU flushes 3 | CPU busy waits
+...
+
+With my suggestion that could be:
+
+CPU writes page tables 1 I
+IOMMU flushes 1 | CPU writes page tables 2
+IOMMU flushes 1 | CPU busy waits less time
+IOMMU flushes 2 | CPU writes page tables 3
+IOMMU flushes 2 | CPU busy waits less time
+IOMMU flushes 3 | CPU busy waits
+
+It reduces the time the CPU spends on busy waiting rather than doing
+something useful. It also reduces the total time of maps and unmaps.
+
+Actually, we can optimize even more. Please consider the case below.
+
+CPU writes PTE for IOVA 0x1000.
+IOMMU flushes 0x1000 | CPU busy waits
+CPU writes PTE for IOVA 0x2000.
+IOMMU flushes 0x2000 | CPU busy waits
+CPU writes PTE for IOVA 0x3000.
+IOMMU flushes 0x3000 | CPU busy waits
+CPU writes PTE for IOVA 0x8000.
+IOMMU flushes 0x8000 | CPU busy waits
+
+However, depending on the way the hardware implements TLB flush, the
+optimal sequence of operations could be:
+
+CPU writes PTE for IOVA 0x1000.
+CPU writes PTE for IOVA 0x2000.
+CPU writes PTE for IOVA 0x3000.
+IOMMU flushes 0x1000-0x3000 | CPU writes PTE for IOVA 0x8000.
+IOMMU flushes 0x1000-0x3000 | CPU busy waits remaining flush time.
+IOMMU flushes 0x8000 | CPU busy waits.
+
+What's the algorithmic complexity of the TLB flush operation on
+MediaTek IOMMU? If N is the number of pages to flush, is it O(N), O(1)
+or something else?
+
+Best regards,
+Tomasz
