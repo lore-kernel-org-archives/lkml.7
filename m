@@ -2,92 +2,89 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77879ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1469C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58657218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CCA6218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:52:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="IbJUJaF1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731976AbfJIUvZ (ORCPT
+        id S1731992AbfJIUwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 16:51:25 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:61985 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729535AbfJIUvY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 16:51:24 -0400
-X-IronPort-AV: E=Sophos;i="5.67,277,1566856800"; 
-   d="scan'208";a="405491272"
-Received: from 81-65-53-202.rev.numericable.fr (HELO hadrien) ([81.65.53.202])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 22:51:23 +0200
-Date:   Wed, 9 Oct 2019 22:51:22 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     Jules Irenge <jbi.octave@gmail.com>
-cc:     outreachy-kernel@googlegroups.com, gregkh@linuxfoundation.org,
-        GR-Linux-NIC-Dev@marvell.com, netdev@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [Outreachy kernel] [PATCH] staging: qlge: correct misspelled
- word
-In-Reply-To: <20191009194115.5513-1-jbi.octave@gmail.com>
-Message-ID: <alpine.DEB.2.21.1910092249300.2570@hadrien>
-References: <20191009194115.5513-1-jbi.octave@gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 9 Oct 2019 16:52:49 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:59271 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729535AbfJIUwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 16:52:49 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46pRHf28Gzz9s7T;
+        Thu, 10 Oct 2019 07:52:45 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1570654366;
+        bh=sW/uIIEg3HKL73QILNG9s2yJg+52FrkQF9LHdLytVsU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=IbJUJaF1BZ0bM152YY+HMES7UXrN8g/WJ5zHBkDKzH9EsqrhG+J6iwu6+5LP45z9C
+         9T/tep5hmCe0HvXtFC7xlfz2b2b396prFvRmlrSxNIvjp9ZZna4q/8a3XL943GXVwV
+         nv1PYM4eWapVoL5Aiohl+JZ9xAnfeTpofAcqMDB3xv3FtGPluECrlfRu3j25AjATlk
+         8O7Ly9dIJj5PEzvs/vwG9+eLO3XRGJFkrMwBRQSPASPMM/EGSpudjV6G6pfP1BBuCz
+         u1TU4MdRpjSVxm+6Ql8ePULgYa6w+ViD2iRJ/JkX7+D2216mhZW6dkAgO1jA+Cpa/8
+         AscsEdJIa+IDg==
+Date:   Thu, 10 Oct 2019 07:52:39 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Trond Myklebust <trondmy@gmail.com>,
+        NFS Mailing List <linux-nfs@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Benjamin Coddington <bcodding@redhat.com>
+Subject: linux-next: Signed-off-by missing for commit in the nfs-anna tree
+Message-ID: <20191010075239.31b27125@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; boundary="Sig_/+TkQYyCh_PTG3H1PY/n+nTN";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/+TkQYyCh_PTG3H1PY/n+nTN
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On Wed, 9 Oct 2019, Jules Irenge wrote:
+Commit
 
-> Correct misspelled word " check
+  cb6aed8363f9 ("SUNRPC: fix race to sk_err after xs_error_report")
 
-Why is there a " in the above line?
+is missing a Signed-off-by from its author.
 
-You don't need to put a newline after check.
+--=20
+Cheers,
+Stephen Rothwell
 
->  issued by checkpatch.pl tool:
-> "CHECK: serveral may be misspelled - perhaps several?".
+--Sig_/+TkQYyCh_PTG3H1PY/n+nTN
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-It's not reall necessary to give the checkpatch message in this case,
-although it is good to acknowledge checkpatch.  You could say something
-like:
+-----BEGIN PGP SIGNATURE-----
 
-Fix a misspelling of "several" detected by checkpatch.
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2eSJcACgkQAVBC80lX
+0GzZNgf/Wj+VRvFw0dozkQMbZzRnTeXsDdI8zHyjEksp24e11dFu+kE3695cV0Oz
+peqDWNsP4L1CcFN9H88oXl2/dHrnq9p2n9fQe84Z2FDB1dXBkou83Z3kZlSG8sB2
+BEleGaiUeVwERz+T5pRnNbHK3pBlhokf30OLFlxXKkvouwqGlaFYZC+U4+7A+Gzh
+nvTyKWhrVxtUgA2nuFw7W0ZW2UusaS4PKTgdADfWzlFxbdSPsZe4Q4dKiB8JzJVF
+IAzvyoj7XWjhfBlb7Ot2/GyY/ATh2GurEGNJzhcDWRKh57uSxSh5Lc0Cz8VXxNhz
+u+txOKLnDcCI7OOdKNJminOv0tSGYA==
+=LPLe
+-----END PGP SIGNATURE-----
 
-julia
-
-> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
-> ---
->  drivers/staging/qlge/qlge_dbg.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
-> index 086f067fd899..097fab7b4287 100644
-> --- a/drivers/staging/qlge/qlge_dbg.c
-> +++ b/drivers/staging/qlge/qlge_dbg.c
-> @@ -354,7 +354,7 @@ static int ql_get_xgmac_regs(struct ql_adapter *qdev, u32 *buf,
->
->  	for (i = PAUSE_SRC_LO; i < XGMAC_REGISTER_END; i += 4, buf++) {
->  		/* We're reading 400 xgmac registers, but we filter out
-> -		 * serveral locations that are non-responsive to reads.
-> +		 * several locations that are non-responsive to reads.
->  		 */
->  		if ((i == 0x00000114) ||
->  			(i == 0x00000118) ||
-> --
-> 2.21.0
->
-> --
-> You received this message because you are subscribed to the Google Groups "outreachy-kernel" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to outreachy-kernel+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/outreachy-kernel/20191009194115.5513-1-jbi.octave%40gmail.com.
->
+--Sig_/+TkQYyCh_PTG3H1PY/n+nTN--
