@@ -6,160 +6,133 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80416ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCEB0C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DFFB21924
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:11:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC11E218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:11:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731786AbfJITLM (ORCPT
+        id S1731910AbfJITLR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 15:11:12 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:42423 "EHLO
+        Wed, 9 Oct 2019 15:11:17 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:38647 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731144AbfJITLK (ORCPT
+        with ESMTP id S1731771AbfJITLO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 15:11:10 -0400
+        Wed, 9 Oct 2019 15:11:14 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MLzSD-1iaDr11Rab-00HuC6; Wed, 09 Oct 2019 21:11:06 +0200
+ 1MiJIk-1hd9qo47VO-00fSl7; Wed, 09 Oct 2019 21:11:13 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Al Viro <viro@zeniv.linux.org.uk>
 Cc:     linux-kernel@vger.kernel.org, y2038@lists.linaro.org,
-        linux-fsdevel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v6 09/43] compat_ioctl: add compat_ptr_ioctl()
-Date:   Wed,  9 Oct 2019 21:10:09 +0200
-Message-Id: <20191009191044.308087-9-arnd@arndb.de>
+        linux-fsdevel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: [PATCH v6 17/43] compat_ioctl: move rfcomm handlers into driver
+Date:   Wed,  9 Oct 2019 21:10:17 +0200
+Message-Id: <20191009191044.308087-17-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191009190853.245077-1-arnd@arndb.de>
 References: <20191009190853.245077-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:CIXoOECmE4Ydk1Z/lGazuni0y3AvvhSKErUXxmDj6hoc/lGA6n1
- n1JlKtouYc5tmlB+Q0qfvmbnzsEuxX7hKdQa2JHuL5CbZvzjIiuTQGKRq74WhfL6aTIaqQu
- ugfbzDyybpOxAhTqrHD7Xo3Y+Tnhg9Yme/2A73obzZ+qbRLV76a0k5db+nae2Zl1AsN45CK
- gtCOqiLMNHBYx/+WpJMug==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:L2RMaJB5fME=:MXyBXS3UeBoG8NcHVgoKuK
- MhLtWnuMnfitDST7C/KybKwwmxC8yLd9aolr0idFbtXPC6CbseSRmKmAFb1Wt3gctoigO09TG
- h0vo3IYCesuUmnVs8SRrAYReBXQ8P15VP6JxgXwhYB/neR6VADupowpTtFKsGUUup6KnROs6+
- p+w06FOM7EkxXLz1+aX2BYY8yZ2ObSjaeJMNXYIcjeGRjnfpVNx7vkS+Vc+CkTSFI42dWt8/N
- f4TNoPEwHoDNUo0Z7ojIFDBgb2QVyD+770070FNgYrip6T0PeQKY2k0Ej2+NzByIfyFeIHclT
- GFgbbQM5TwJr0p+zOBEhR1+Ehzym4HvGYV8fv0UGrsUKhUGIv3UdLLskYKL0/q35fBVKWHgW1
- KvD477V5wvPX+Z7YcSsvwCSJ5OXdr9XNn5yjvDLYwqixkUuJYFEHaHM+zgTkfF4xvM6xVDQ1e
- fgm3jqHglitHN/q0GWd4Ji7EKRQhA+6p4ZGc1lGKG/8oCUDAQe+x/GRL5uH2BbyHkq65RnCOZ
- LOB0bFrfbVEbEML7Q+hKl1fkz08eZXcWVGgj02M/aV2c0hGRh184tYG0HSa8oqY3LPWCY0hcr
- /H730wsVLn9EycoOWqgo09mXJd0YHb5ks/eJcTHJWWwDuy+qlZuS12fvv0A7H3E4Ks5K5xbW3
- 1cxSb2Nk9D23xcqeC4QV/mw9VLArrFmZTkMoPr8Uh3RGaEMrvleEOUzu2RaFC1qgrqoDQP/yQ
- jDm5nwfmDFYxuYrJ41njHCzr1VQAU0yCWAhF6ZB8z9r3oftMA77eUqD3xHW1ow52dlByyaMpw
- yQEZs3SjRLApN8tx+F8n2kc0hrXCP/2EYILdsSZ48BoEOqlucRA1rIYz+ZQy5rC8uxzvXklrj
- w1dVDe9K83tZ//NSsSKg==
+X-Provags-ID: V03:K1:6o+fXd+jknkQ9Kt+dvDcH2dQqv7QFvYbBe3gxSyUw1PSROtnjoC
+ 7emE8+IitiN6xjQXFyhJvQU8e1C2V+fxOFrCYIjgXTdqqHASt08GP0Z1d5xH9MzPLbtu66P
+ J9oEstuey1r2im/khtnqN9ZUzi0/bdwd6fjul/INAkUaVFJARkaZ6IBSzGf5Q1Pru86T3TC
+ RUO7i6kp1LdP3l2dPUNFA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:TfUEyc2+NPc=:HQ0oFvhTGn1RZEKc3Ghs8F
+ mZuFQC5DGwW0zJ1yLyyIvNeHvHuFx2WYnZpYMUgR75C8zilFGgZTc4FT5B6U4YrtxF94LBsT1
+ aFMmGPdcXt3X3Aa3biEa6q2oPA+4wDN+MLN/zPKC3nFn3fip0Y8Ph9g6D+O4LLGBpgPmBOQai
+ L313sbBBBn8EOvb9RlOjvEr0BvXcNml2Udlk1AZ0uMGYovu1N/CrBckv/sNivfiofL7H+n6OL
+ 5lPE/xH8R4808YhlRKFaObMEh7wUTg1X0m0VgvitGjs+vFHoqHpN0EkjVJF5mGEsdHsPSCIhZ
+ Zvk8BvJDJJDvoNqa6XQyxJgiicAHJmt6WogcBOLTkKkfYiBx7vFVcI3OalPhRXlz9skpAyosl
+ aol1tZ9f05XoxVAZSnA4S/wsNUlVhl9dvb3AAt/U1MaJ/wiIvB/YnHdgIVcRNuZ1y1Dgegx/E
+ 3/kLeXDYe+WOmNrgbmQejT1UE0eiMez6lxw+Z3n7huo5J2ceBwVLX8Q1z01DCfbRK1utQAOLJ
+ QzJtytYoLkP8jVy0gIiZVyeaC6Ls73n9P7B0k/2i2aZ0zPruP52dMpl3d7jrxoNEG09l7k4cE
+ ICvpgihvMHXrUVrfYGnn7WV+0KxeLDFBeobqJ59+jkBO2qc4MyZ2ca7nCYLsIGI+NcINZ3IO7
+ 8as8Yb2CgQBuqBm3B/qFhfjL7wrryfshgIMCxyI9eWyV0bHZEDC+S7Qtrr0T51BE+q2saKwmw
+ JkbP3mfikcWSzZ5f27InGlbpd+5I8g9LLtKFRMpD3PR4Nt2Np/9m9DIE1f9Xr1/gSZarciwhE
+ 9I94MxMItu1Wl/uS3Uu3Uygx/LjFAFM3nWx2mamLAUG0Bx2iYbWpCa8qU3NQ/gSDMdGSGchra
+ KsI1SHv+a3ZDDUWuGHLw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Many drivers have ioctl() handlers that are completely compatible between
-32-bit and 64-bit architectures, except for the argument that is passed
-down from user space and may have to be passed through compat_ptr()
-in order to become a valid 64-bit pointer.
+All these ioctl commands are compatible, so we can handle
+them with a trivial wrapper in rfcomm/sock.c and remove
+the listing in fs/compat_ioctl.c.
 
-Using ".compat_ptr = compat_ptr_ioctl" in file operations should let
-us simplify a lot of those drivers to avoid #ifdef checks, and convert
-additional drivers that don't have proper compat handling yet.
-
-On most architectures, the compat_ptr_ioctl() just passes all arguments
-to the corresponding ->ioctl handler. The exception is arch/s390, where
-compat_ptr() clears the top bit of a 32-bit pointer value, so user space
-pointers to the second 2GB alias the first 2GB, as is the case for native
-32-bit s390 user space.
-
-The compat_ptr_ioctl() function must therefore be used only with
-ioctl functions that either ignore the argument or pass a pointer to a
-compatible data type.
-
-If any ioctl command handled by fops->unlocked_ioctl passes a plain
-integer instead of a pointer, or any of the passed data types is
-incompatible between 32-bit and 64-bit architectures, a proper handler
-is required instead of compat_ptr_ioctl.
-
+Acked-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
-v3: add a better description
-v2: use compat_ptr_ioctl instead of generic_compat_ioctl_ptrarg,
-as suggested by Al Viro
----
- fs/ioctl.c         | 35 +++++++++++++++++++++++++++++++++++
- include/linux/fs.h |  7 +++++++
- 2 files changed, 42 insertions(+)
+ fs/compat_ioctl.c           |  6 ------
+ net/bluetooth/rfcomm/sock.c | 14 ++++++++++++--
+ 2 files changed, 12 insertions(+), 8 deletions(-)
 
-diff --git a/fs/ioctl.c b/fs/ioctl.c
-index 9d26251f34a9..812061ba667a 100644
---- a/fs/ioctl.c
-+++ b/fs/ioctl.c
-@@ -8,6 +8,7 @@
- #include <linux/syscalls.h>
- #include <linux/mm.h>
- #include <linux/capability.h>
-+#include <linux/compat.h>
- #include <linux/file.h>
- #include <linux/fs.h>
- #include <linux/security.h>
-@@ -748,3 +749,37 @@ SYSCALL_DEFINE3(ioctl, unsigned int, fd, unsigned int, cmd, unsigned long, arg)
- {
- 	return ksys_ioctl(fd, cmd, arg);
- }
-+
-+#ifdef CONFIG_COMPAT
-+/**
-+ * compat_ptr_ioctl - generic implementation of .compat_ioctl file operation
-+ *
-+ * This is not normally called as a function, but instead set in struct
-+ * file_operations as
-+ *
-+ *     .compat_ioctl = compat_ptr_ioctl,
-+ *
-+ * On most architectures, the compat_ptr_ioctl() just passes all arguments
-+ * to the corresponding ->ioctl handler. The exception is arch/s390, where
-+ * compat_ptr() clears the top bit of a 32-bit pointer value, so user space
-+ * pointers to the second 2GB alias the first 2GB, as is the case for
-+ * native 32-bit s390 user space.
-+ *
-+ * The compat_ptr_ioctl() function must therefore be used only with ioctl
-+ * functions that either ignore the argument or pass a pointer to a
-+ * compatible data type.
-+ *
-+ * If any ioctl command handled by fops->unlocked_ioctl passes a plain
-+ * integer instead of a pointer, or any of the passed data types
-+ * is incompatible between 32-bit and 64-bit architectures, a proper
-+ * handler is required instead of compat_ptr_ioctl.
-+ */
-+long compat_ptr_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-+{
-+	if (!file->f_op->unlocked_ioctl)
-+		return -ENOIOCTLCMD;
-+
-+	return file->f_op->unlocked_ioctl(file, cmd, (unsigned long)compat_ptr(arg));
-+}
-+EXPORT_SYMBOL(compat_ptr_ioctl);
-+#endif
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index e0d909d35763..0b4d8fc79e0f 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -1727,6 +1727,13 @@ int vfs_mkobj(struct dentry *, umode_t,
+diff --git a/fs/compat_ioctl.c b/fs/compat_ioctl.c
+index f3b4179d6dff..8dbef92b10fd 100644
+--- a/fs/compat_ioctl.c
++++ b/fs/compat_ioctl.c
+@@ -42,7 +42,6 @@
  
- extern long vfs_ioctl(struct file *file, unsigned int cmd, unsigned long arg);
+ #include <net/bluetooth/bluetooth.h>
+ #include <net/bluetooth/hci_sock.h>
+-#include <net/bluetooth/rfcomm.h>
  
-+#ifdef CONFIG_COMPAT
-+extern long compat_ptr_ioctl(struct file *file, unsigned int cmd,
-+					unsigned long arg);
-+#else
-+#define compat_ptr_ioctl NULL
-+#endif
-+
+ #ifdef CONFIG_BLOCK
+ #include <linux/cdrom.h>
+@@ -673,11 +672,6 @@ COMPATIBLE_IOCTL(HCIUARTGETPROTO)
+ COMPATIBLE_IOCTL(HCIUARTGETDEVICE)
+ COMPATIBLE_IOCTL(HCIUARTSETFLAGS)
+ COMPATIBLE_IOCTL(HCIUARTGETFLAGS)
+-COMPATIBLE_IOCTL(RFCOMMCREATEDEV)
+-COMPATIBLE_IOCTL(RFCOMMRELEASEDEV)
+-COMPATIBLE_IOCTL(RFCOMMGETDEVLIST)
+-COMPATIBLE_IOCTL(RFCOMMGETDEVINFO)
+-COMPATIBLE_IOCTL(RFCOMMSTEALDLC)
+ /* Misc. */
+ COMPATIBLE_IOCTL(PCIIOC_CONTROLLER)
+ COMPATIBLE_IOCTL(PCIIOC_MMAP_IS_IO)
+diff --git a/net/bluetooth/rfcomm/sock.c b/net/bluetooth/rfcomm/sock.c
+index 90bb53aa4bee..b4eaf21360ef 100644
+--- a/net/bluetooth/rfcomm/sock.c
++++ b/net/bluetooth/rfcomm/sock.c
+@@ -24,7 +24,7 @@
  /*
-  * VFS file helper functions.
+  * RFCOMM sockets.
   */
+-
++#include <linux/compat.h>
+ #include <linux/export.h>
+ #include <linux/debugfs.h>
+ #include <linux/sched/signal.h>
+@@ -909,6 +909,13 @@ static int rfcomm_sock_ioctl(struct socket *sock, unsigned int cmd, unsigned lon
+ 	return err;
+ }
+ 
++#ifdef CONFIG_COMPAT
++static int rfcomm_sock_compat_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
++{
++	return rfcomm_sock_ioctl(sock, cmd, (unsigned long)compat_ptr(arg));
++}
++#endif
++
+ static int rfcomm_sock_shutdown(struct socket *sock, int how)
+ {
+ 	struct sock *sk = sock->sk;
+@@ -1042,7 +1049,10 @@ static const struct proto_ops rfcomm_sock_ops = {
+ 	.gettstamp	= sock_gettstamp,
+ 	.poll		= bt_sock_poll,
+ 	.socketpair	= sock_no_socketpair,
+-	.mmap		= sock_no_mmap
++	.mmap		= sock_no_mmap,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl	= rfcomm_sock_compat_ioctl,
++#endif
+ };
+ 
+ static const struct net_proto_family rfcomm_sock_family_ops = {
 -- 
 2.20.0
 
