@@ -2,87 +2,111 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 568FCC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A593ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A8C120B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:50:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44B3120B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:52:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="X1yDGh7j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730696AbfJIKus (ORCPT
+        id S1730662AbfJIKwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 06:50:48 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34792 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726579AbfJIKus (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 06:50:48 -0400
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 30A12859FE
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Oct 2019 10:50:48 +0000 (UTC)
-Received: by mail-wr1-f71.google.com with SMTP id c17so915256wro.18
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 03:50:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Bmn/r0BsJ/ckLkCEhbCCOJ9mUA04B3GjpaUyic1itQY=;
-        b=M8ANC+WwMGvqbVU7ujzpozTS/YE3PGt6XMsAwOin9idvzgkA5ATaK5k+8aoHa10prH
-         mugySxZEtOt33LFJUal/sSvgEVOw4ASbY7H03pBhaC1MtLsKmU0AHiaa3ACOV2k6Yy7d
-         xKN3EIfooIqpkYiSmLVTpynmKQxkFwoliEsHmN4x0mq4G4dhMrMQsnsXyzYM/AYVAkS+
-         2O1EALH7plf1ejhaqub/DY7vaPgkdG68aSOXee1Ltd6GibZMEdMdMLNqVXEOgObWvCxg
-         kkvsC+NJ/DQQPcWMlB2Oqi3pFABCXK3tW8ui+p1jcKI9MzwydcBeWmqNNVFZwsKSNF6G
-         KSVA==
-X-Gm-Message-State: APjAAAV1wOt7M6X+5P++K3BwKLvFWszDWciwEVjTuTt2RNN3EHZPgc8J
-        yM3x9bcKbjx5OAqBu3gAFYQCGrgzwXoWRdA4+9tU9Ec2wxeCbUIiLJRcFcKu4Ifi9JxbUkXIVBk
-        wcOLPHpcMDYPYOmkpQhEfpjHS
-X-Received: by 2002:a1c:990a:: with SMTP id b10mr2059256wme.39.1570618246852;
-        Wed, 09 Oct 2019 03:50:46 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwhBZEvSW0EUo/Gi5mU/wgwGG9A2c5aEjG6Esfy9ahvDY3vtdaKuBgF6plJ2JQLOMY1Q38/Fg==
-X-Received: by 2002:a1c:990a:: with SMTP id b10mr2059238wme.39.1570618246602;
-        Wed, 09 Oct 2019 03:50:46 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:f4b0:55d4:57da:3527? ([2001:b07:6468:f312:f4b0:55d4:57da:3527])
-        by smtp.gmail.com with ESMTPSA id n1sm2469406wrg.67.2019.10.09.03.50.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Oct 2019 03:50:46 -0700 (PDT)
-Subject: Re: [PATCH v2 5/8] KVM: x86: Add WARNs to detect out-of-bounds
- register indices
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Reto Buerki <reet@codelabs.ch>,
-        Liran Alon <liran.alon@oracle.com>
-References: <20190927214523.3376-1-sean.j.christopherson@intel.com>
- <20190927214523.3376-6-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <9e4570a4-1da1-1109-32d3-1fba25de1963@redhat.com>
-Date:   Wed, 9 Oct 2019 12:50:44 +0200
+        Wed, 9 Oct 2019 06:52:19 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:55772 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726579AbfJIKwS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 06:52:18 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x99Aq8Ax054543;
+        Wed, 9 Oct 2019 05:52:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1570618328;
+        bh=ktaw6ZnLw43SX95dpH3rXIgCjNUTGzTpN+8L4m/vs/Y=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=X1yDGh7j+sP2kNWxJn5JnuCiiLGI3v4qBTGsbDfS0dsxdBrgiUCxVNcOU4FDs9oNw
+         b7YWKBh40kM9kw/QPHp59SjF8371NF0L/e/N/Kl8dCqRhiFdPUmjfOImt2e6LloLed
+         ot8oonamk3lff7E8XNCm8Xea7qPTaoa2qxR98STg=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x99Aq8dN114672
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 9 Oct 2019 05:52:08 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 9 Oct
+ 2019 05:52:05 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 9 Oct 2019 05:52:08 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x99Aq5Ig029117;
+        Wed, 9 Oct 2019 05:52:06 -0500
+Subject: Re: [PATCH v10 1/6] leds: populate the device's of_node
+To:     Jean-Jacques Hiblot <jjhiblot@ti.com>,
+        <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <sre@kernel.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <lee.jones@linaro.org>, <daniel.thompson@linaro.org>
+CC:     <dmurphy@ti.com>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>
+References: <20191009085127.22843-1-jjhiblot@ti.com>
+ <20191009085127.22843-2-jjhiblot@ti.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <2291da29-22d4-0637-a711-07c480120be6@ti.com>
+Date:   Wed, 9 Oct 2019 13:52:05 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190927214523.3376-6-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191009085127.22843-2-jjhiblot@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/09/19 23:45, Sean Christopherson wrote:
-> Open code the RIP and RSP accessors so as to avoid pointless overhead of
-> WARN_ON_ONCE().
+Hi JJ,
 
-Is there actually an overhead here?  It is effectively WARN_ON_ONCE(0)
-which should be compiled out just fine.
+On 09/10/2019 11:51, Jean-Jacques Hiblot wrote:
+> If initialization data is available and its fwnode is actually a of_node,
+> store this information in the led device's structure. This will allow the
+> device to use or provide OF-based API such (devm_xxx).
+> 
+> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+> ---
+>   drivers/leds/led-class.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+> index 647b1263c579..bfa1b1033274 100644
+> --- a/drivers/leds/led-class.c
+> +++ b/drivers/leds/led-class.c
+> @@ -276,8 +276,10 @@ int led_classdev_register_ext(struct device *parent,
+>   		mutex_unlock(&led_cdev->led_access);
+>   		return PTR_ERR(led_cdev->dev);
+>   	}
+> -	if (init_data && init_data->fwnode)
+> +	if (init_data && init_data->fwnode) {
+>   		led_cdev->dev->fwnode = init_data->fwnode;
+> +		led_cdev->dev->of_node = to_of_node(init_data->fwnode);
+> +	}
+>   
+>   	if (ret)
+>   		dev_warn(parent, "Led %s renamed to %s due to name collision",
 
-Paolo
+This doesn't compile, as it's missing #include <linux/of.h> (which you 
+add in the next patch).
+
+  Tomi
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
