@@ -2,141 +2,99 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F225C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A619C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5939C21721
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:48:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="NJnHVtg9"
+	by mail.kernel.org (Postfix) with ESMTP id 1085920B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:49:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570618143;
+	bh=1M1XrMh9JT7e0vh4LLSd/AJht3EPiEbYR2YQ2NjMBRg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Q3J1hBIqsCpYqjSH5vK+VRBEzE5WFApg8dbeyGm+6c0alN0hHpvnT1Mr1y2pzYH/r
+	 2aov5oJOASCL1v3uIthSmSPmSDqWH8HB4TDZkHv1G4wa6yPYlVGOqcP3n1lkOEh+fc
+	 p9ywGpGDPsFuqx29VDQm16IHbumMb9ehF+tUX0h0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730876AbfJIKr7 (ORCPT
+        id S1730881AbfJIKtB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 06:47:59 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:18184 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbfJIKr6 (ORCPT
+        Wed, 9 Oct 2019 06:49:01 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:39443 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726734AbfJIKtB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 06:47:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1570618075;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=3dKq3sIIM6raJ7lBf23mWetvB95AhRcJIG4eXafZHQs=;
-        b=NJnHVtg9Oxumekq1Z0TWrTRV8LqJ009XThYONNvOdgnPyccsFrNygx3Nv/HXtM5bcp
-        Nbr1HZ5fq5QdLthDnK5cYJsewnk/SmiMI9RvNcwsTGYVQfuCXnf7hJR2/iH9SZKqM3SP
-        zH+HxDAmeVjvChydTn0mS7iXUzXxn2mzd2whUpmJOiDqUSLWBUq/ck7Q0+YnRvLzu153
-        98ZgUkTuT24GWDz0iaJxOBAXFHbqHAtAkLeMhF3facpZ+l6/pD5pWqgpZOv8LCzv3FHh
-        hmz4T7uzC6WQMuituORl+JAY8RBDK6xs/kENPvSG1ZUJNWHD3oiO9/+2LezYOnpMqZez
-        XNug==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u266EZF6ORJL0PVgt6Qm"
-X-RZG-CLASS-ID: mo00
-Received: from gerhold.net
-        by smtp.strato.de (RZmta 44.28.0 AUTH)
-        with ESMTPSA id L0811cv99AloE8W
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Wed, 9 Oct 2019 12:47:50 +0200 (CEST)
-Date:   Wed, 9 Oct 2019 12:47:40 +0200
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Andi Shyti <andi@etezian.org>, Simon Shields <simon@lineageos.org>,
-        linux-input@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] Input: mms114 - add support for mms345l
-Message-ID: <20191009104740.GA107000@gerhold.net>
-References: <20191007203343.101466-1-stephan@gerhold.net>
- <20191007205021.104402-1-stephan@gerhold.net>
- <20191008220014.GI22365@dtor-ws>
+        Wed, 9 Oct 2019 06:49:01 -0400
+Received: by mail-lf1-f65.google.com with SMTP id 72so1279907lfh.6;
+        Wed, 09 Oct 2019 03:48:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=91+TSRKJghsxG22RU/266qtsCLX3btiIv7LB4QXaP0o=;
+        b=Vh/jbl/nE/Em2wCszjDlLF1lupRr8Ot7h6ejW/TV4x/NbdT4So6UJIRhmX3ATj3QmL
+         tt7ySgH8gAHffBrPw7dYvXBoM70ZKYKQz1xi8XH6AqvpwkXXAlze3vYM7b4uuC79dw1/
+         jmu2MFBtUKxY2kwUIqCdaGcnt2aVrxxCXsk2SHPqCUmNpC89681axrHaDzHPK37FedO0
+         IY0hKeOz9+i+qX+IY4CIMuhmCOsDYW2TuHyqKUQz//oJOdootsgR72uMJeAkO8YmOBxv
+         Gfkm0ZgwXYtAbK5zLI3tjJpXbIZf+3Dn0XxOkWbR0voBbg67gt9j966b6pXMMzmzntQW
+         slnQ==
+X-Gm-Message-State: APjAAAXBf5igZ/qzKUBB1LvXkfXMj47aOx+lpfQeNJnn7VpGmyFmQWyw
+        M18Em+AmgADqRuu2qkUkjP8=
+X-Google-Smtp-Source: APXvYqwGtYNicm/aWG0i+juqqfFgyIPgydUr49mNBX55/fmOZw2d70MkxGcnBcd+q8q4m9gwjFVs0g==
+X-Received: by 2002:ac2:4d1b:: with SMTP id r27mr1606804lfi.133.1570618139048;
+        Wed, 09 Oct 2019 03:48:59 -0700 (PDT)
+Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
+        by smtp.gmail.com with ESMTPSA id g3sm358175ljj.59.2019.10.09.03.48.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 09 Oct 2019 03:48:57 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.92.2)
+        (envelope-from <johan@xi.terra>)
+        id 1iI9Wk-0001Ye-1Q; Wed, 09 Oct 2019 12:49:06 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Oliver Neukum <oneukum@suse.com>,
+        Valentin Vidic <vvidic@valentin-vidic.from.hr>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 0/6] USB: iowarrior: disconnect fixes and locking cleanups
+Date:   Wed,  9 Oct 2019 12:48:40 +0200
+Message-Id: <20191009104846.5925-1-johan@kernel.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191008220014.GI22365@dtor-ws>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 03:00:14PM -0700, Dmitry Torokhov wrote:
-> On Mon, Oct 07, 2019 at 10:50:21PM +0200, Stephan Gerhold wrote:
-> > MMS345L is another first generation touch screen from Melfas,
-> > which uses the same registers as MMS152.
-> > 
-> > However, using I2C_M_NOSTART for it causes errors when reading:
-> > 
-> > 	i2c i2c-0: sendbytes: NAK bailout.
-> > 	mms114 0-0048: __mms114_read_reg: i2c transfer failed (-5)
-> > 
-> > The driver works fine as soon as I2C_M_NOSTART is removed.
-> > 
-> > Add a separate melfas,mms345l binding, and make use of I2C_M_NOSTART
-> > only for MMS114 and MMS152.
-> > 
-> > Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-> > ---
-> > Note: I was not able to find a datasheet for any of the models,
-> > so this change is merely based on testing and comparison with
-> > the downstream driver [1].
-> > 
-> > There was a related patch [2] that removes I2C_M_NOSTART for all models,
-> > but it seems abandoned and I do not have any other model for testing.
-> > Therefore, this patch implements the least instrusive solution
-> > and only removes I2C_M_NOSTART for MMS345L.
-> 
-> Hmm,  at this point I am inclined to pick up Andi's patch since it seems
-> to work for you and him and it looks like Android drivers are not using
-> I2C_M_NOSTART. I wonder if this was some quirk/big on the platform where
-> it was originally developed.
-> 
-> Any objections?
+This series fixes a use-after-free bug introduced by a recent
+disconnect-deadlock fix that was reported by syzbot. Turns out there was
+already a related bug in the driver, and the first patch addresses both
+issues.
 
-I cannot really speak for any of the other models, but no objections for
-removing I2C_M_NOSTART from my side. I'm actually rather confused by it
-since it is used on the first partial message.
+While looking at the code I found two more use-after-free bugs, which
+the next two patches fix.
 
-The documentation [1] says:
-  If you set the I2C_M_NOSTART variable for the first partial message,
-  we do not generate Addr, but we do generate the startbit S.
-  ** This will probably confuse all other clients on your bus,
-  so don't try this. **
+The next two clean up the driver by dropping two redundant locks.
 
-Yet, someone felt like trying this here. ;)
+Tested using a mockup device.
 
-I have tested the following two patches from Andy on MMS345L:
-  - Input: mms114 - use smbus functions whenever possible [2]
-  - Input: mms114 - get read of custm i2c read/write functions [3]
+Johan
 
-Indeed, with I2C_M_NOSTART removed I can actually use "melfas,mms152"
-and the touchscreen appears to work without further changes.
-(The only weird thing is that it displays an empty "Compat group" in
-  "TSP FW Rev: bootloader 0x6 / core 0x26 / config 0x26, Compat group: ",
- I suspect that register does not exist on MMS345L...)
 
-But there is a limitation that won't let us take these two patches as-is:
-i2c_smbus_read_i2c_block_data() is limited to I2C_SMBUS_BLOCK_MAX,
-which is: 32 /* As specified in SMBus standard */
+Johan Hovold (6):
+  USB: iowarrior: fix use-after-free on disconnect
+  USB: iowarrior: fix use-after-free on release
+  USB: iowarrior: fix use-after-free after driver unbind
+  USB: iowarrior: drop redundant disconnect mutex
+  USB: iowarrior: drop redundant iowarrior mutex
+  USB: iowarrior: use pr_err()
 
-According to "Input: mms114 - use smbus functions whenever possible":
-> The exchange of data to and from the mms114 touchscreen never
-> exceeds 256 bytes. In the worst case it goes up to 80 bytes in
-> the interrupt handler while reading the events.
+ drivers/usb/misc/iowarrior.c | 48 +++++++++++-------------------------
+ 1 file changed, 15 insertions(+), 33 deletions(-)
 
-Since i2c_smbus_read_i2c_block_data() is limited to 32, larger packets
-won't be read correctly. For example, if you use more than 4 fingers you
-can easily trigger a situation where one of the fingers gets "stuck",
-together with: mms114 4-0048: Wrong touch type (0)
-(It attempts to read uninitialized data in this case...)
+-- 
+2.23.0
 
-So we still need the custom functions for reading the touch packet,
-or maybe change the driver to use regmap instead.
-
-[1]: https://www.kernel.org/doc/html/latest/i2c/i2c-protocol.html
-[2]: https://patchwork.kernel.org/patch/10189551/
-[3]: https://patchwork.kernel.org/patch/10189541/
