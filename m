@@ -2,197 +2,169 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E0CFC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8A9ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E85FE21848
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A31F421848
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:58:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="VstX66QS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OYuPtr1j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731214AbfJIO4D (ORCPT
+        id S1731291AbfJIO6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 10:56:03 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38557 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729491AbfJIO4D (ORCPT
+        Wed, 9 Oct 2019 10:58:17 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39107 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728019AbfJIO6Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 10:56:03 -0400
-Received: by mail-pf1-f195.google.com with SMTP id h195so1789134pfe.5
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 07:56:01 -0700 (PDT)
+        Wed, 9 Oct 2019 10:58:16 -0400
+Received: by mail-wr1-f68.google.com with SMTP id r3so3428806wrj.6;
+        Wed, 09 Oct 2019 07:58:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=aOgn8mw5G0zCorohTbiBhErE9Htr2eH0PTcfAgZzeCI=;
-        b=VstX66QSqpiEh6mLaTLvPTUKIxieH1clx0lHan9qg0sh7wSLa9o1SAHAsDn45Y1LEX
-         VnvHVqpzptArvIVOzmNnYmTvkQoS8/kmuZZoq6M0C8NPelxANZI7SXzH1WJ+NCXymblC
-         8P4YVNu/EppaFy48zVDd4SMI+oGovUArNlnRM=
+        bh=bLOSHRRPDzF4u9wV1pAUxn+EtmiKCY8TCQWeWSJQ6Uo=;
+        b=OYuPtr1jHzPRfv++Z2pCkoqLuGO/0+qLoBHw9RCheLRJMgSMKtaoTukrtr+lCdWivc
+         jE0dSWd/VHkytRBntY3rh029k9/55x66tZhRxtPQCmxtwpvNb6V4J8TRdMP1SGBp1FkB
+         e1aKT53MDA9G/4sgbLJzaWAt4ctbVmjqdxlkl0FXWKlk95JNfVajJmpI9ydLJ0n+y/eW
+         Du/txE1OMchSZGkIlhVzo7xXk1iNsCsNPZFv+dWmIgtNSCAHdePd+2pTeTEzssDhyiPw
+         W1f9LWAFCXKKZ8uFc8+8m/sPYN4lb1DKUYldNzxDewYdpm+wCva3BgwXIhh8dXEjOdyN
+         PMWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aOgn8mw5G0zCorohTbiBhErE9Htr2eH0PTcfAgZzeCI=;
-        b=VnSS77fUdLXhAjU5nnev6vgwFPmSBuhSpDGpxvPhAKsARWdsoC0wBR8AsSce7YxX/J
-         dQ//ZZhbCfMGQD8VzrU3gQO1krH8ZgLVvVqZBn7i0dNwVHG/ma/c8f7W3x9UeSGJ/xY3
-         9DFR7BBKGjCMStmp3sAVvzxMD40PCYHhxucGlSf5lHZSzirlWsuEH8F0GygNWFRKWF7Q
-         9fAFtES8Pqgl07aMchorwIPoqwFgPUuE2n4nIBkiazjG2LvH+0ukPtswDFImu7y64mPZ
-         y5Fpw7IDOYpvy9Zd1WrH1yB+qOibymVOcHxFnXtFCX7e+zQ814HiZH8omW4q4Jzbv3Qb
-         PN0Q==
-X-Gm-Message-State: APjAAAVSqP5BWgetdpfCznWfRzsdSZJSfJhZcGs4H7oaJCDNESsCE14M
-        4k7RxsPMMy52C6koibPLrW1JnA==
-X-Google-Smtp-Source: APXvYqxG4MfEe0DJOggwz01Le1Ib2Ew4XpzR9Ciw+7fCKsEz4kX7uyIeV9AIXk2h68uhE2I+UsKqfg==
-X-Received: by 2002:a63:287:: with SMTP id 129mr4814068pgc.190.1570632960950;
-        Wed, 09 Oct 2019 07:56:00 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id v9sm2866264pfe.1.2019.10.09.07.55.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 07:56:00 -0700 (PDT)
-Date:   Wed, 9 Oct 2019 10:55:58 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Todd Kjos <tkjos@android.com>, jannh@google.com, arve@android.com,
-        christian@brauner.io, devel@driverdev.osuosl.org,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        maco@android.com, tkjos@google.com,
-        Hridya Valsaraju <hridya@google.com>
-Subject: Re: [PATCH] binder: prevent UAF read in
- print_binder_transaction_log_entry()
-Message-ID: <20191009145558.GA96813@google.com>
-References: <CAG48ez14Q0-F8LqsvcNbyR2o6gPW8SHXsm4u5jmD9MpsteM2Tw@mail.gmail.com>
- <20191008130159.10161-1-christian.brauner@ubuntu.com>
- <20191008180516.GB143258@google.com>
- <20191009104011.rzfdvq7otkkj533m@wittgenstein>
- <20191009142129.GD143258@google.com>
- <20191009142910.ggerxqxkft2ifhdn@wittgenstein>
+        bh=bLOSHRRPDzF4u9wV1pAUxn+EtmiKCY8TCQWeWSJQ6Uo=;
+        b=EcjHdAQB3qd/CBX22jmcyBknx/VPVhi6nMaYyf4PBBUg/SChQKjiZDMfAtdEkqhFfv
+         sGthj3iPBe7OQO1OReEtJHt4lnl/a4KPw0ugBesAJ8WiHhK04Pl44E3X3fTTLaEQAHK5
+         CiQROq5s/i13PVHnJrTjpb30/0tD4THqqIj/ezdYsd/KWUXK5h1DbKzwJONnAD41896X
+         +9e1NHMV/V/lPh+4f6kdodbH6g/0CSuuvERjA+Y8f75zNKPNekyTkNoK/gQkFK1yhBL2
+         AgbtwbgAhDs6XXMzEgAZ6Y5kakJlpJsazQw14LFaYtlAj0MXW0Ib5aOVuqlxCo3glrCU
+         LAQA==
+X-Gm-Message-State: APjAAAUKn/IIDZEV0IH0FNF7Usn+W12KfVw31TDsfYMq5w75j0iWZHpY
+        4MeghLOiP1gvGgjC+Ov1fE0=
+X-Google-Smtp-Source: APXvYqzhuDvocnI5zvw34t/95cTa0BVorSk8YqtdkDxCZqRGi0eKZU91Ddkfq2+aCFgxSIWAdDvDAA==
+X-Received: by 2002:a5d:540d:: with SMTP id g13mr438062wrv.8.1570633094550;
+        Wed, 09 Oct 2019 07:58:14 -0700 (PDT)
+Received: from AlexGordeev-DPT-VI0092 ([213.86.25.46])
+        by smtp.gmail.com with ESMTPSA id n18sm1645825wrq.20.2019.10.09.07.58.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 09 Oct 2019 07:58:14 -0700 (PDT)
+Date:   Wed, 9 Oct 2019 16:58:12 +0200
+From:   Alexander Gordeev <a.gordeev.box@gmail.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        Michael Chen <micchen@altera.com>, dmaengine@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dmaengine: avalon: Intel Avalon-MM DMA Interface
+ for PCIe
+Message-ID: <20191009145811.GA3823@AlexGordeev-DPT-VI0092>
+References: <cover.1570558807.git.a.gordeev.box@gmail.com>
+ <3ed3c016b7fbe69e36023e7ee09c53acac8a064c.1570558807.git.a.gordeev.box@gmail.com>
+ <20191009121441.GM25098@kadam>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191009142910.ggerxqxkft2ifhdn@wittgenstein>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191009121441.GM25098@kadam>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 04:29:11PM +0200, Christian Brauner wrote:
-> On Wed, Oct 09, 2019 at 10:21:29AM -0400, Joel Fernandes wrote:
-> > On Wed, Oct 09, 2019 at 12:40:12PM +0200, Christian Brauner wrote:
-> > > On Tue, Oct 08, 2019 at 02:05:16PM -0400, Joel Fernandes wrote:
-> > > > On Tue, Oct 08, 2019 at 03:01:59PM +0200, Christian Brauner wrote:
-> > > > > When a binder transaction is initiated on a binder device coming from a
-> > > > > binderfs instance, a pointer to the name of the binder device is stashed
-> > > > > in the binder_transaction_log_entry's context_name member. Later on it
-> > > > > is used to print the name in print_binder_transaction_log_entry(). By
-> > > > > the time print_binder_transaction_log_entry() accesses context_name
-> > > > > binderfs_evict_inode() might have already freed the associated memory
-> > > > > thereby causing a UAF. Do the simple thing and prevent this by copying
-> > > > > the name of the binder device instead of stashing a pointer to it.
-> > > > > 
-> > > > > Reported-by: Jann Horn <jannh@google.com>
-> > > > > Fixes: 03e2e07e3814 ("binder: Make transaction_log available in binderfs")
-> > > > > Link: https://lore.kernel.org/r/CAG48ez14Q0-F8LqsvcNbyR2o6gPW8SHXsm4u5jmD9MpsteM2Tw@mail.gmail.com
-> > > > > Cc: Joel Fernandes <joel@joelfernandes.org>
-> > > > > Cc: Todd Kjos <tkjos@android.com>
-> > > > > Cc: Hridya Valsaraju <hridya@google.com>
-> > > > > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> > > > > ---
-> > > > >  drivers/android/binder.c          | 4 +++-
-> > > > >  drivers/android/binder_internal.h | 2 +-
-> > > > >  2 files changed, 4 insertions(+), 2 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-> > > > > index c0a491277aca..5b9ac2122e89 100644
-> > > > > --- a/drivers/android/binder.c
-> > > > > +++ b/drivers/android/binder.c
-> > > > > @@ -57,6 +57,7 @@
-> > > > >  #include <linux/sched/signal.h>
-> > > > >  #include <linux/sched/mm.h>
-> > > > >  #include <linux/seq_file.h>
-> > > > > +#include <linux/string.h>
-> > > > >  #include <linux/uaccess.h>
-> > > > >  #include <linux/pid_namespace.h>
-> > > > >  #include <linux/security.h>
-> > > > > @@ -66,6 +67,7 @@
-> > > > >  #include <linux/task_work.h>
-> > > > >  
-> > > > >  #include <uapi/linux/android/binder.h>
-> > > > > +#include <uapi/linux/android/binderfs.h>
-> > > > >  
-> > > > >  #include <asm/cacheflush.h>
-> > > > >  
-> > > > > @@ -2876,7 +2878,7 @@ static void binder_transaction(struct binder_proc *proc,
-> > > > >  	e->target_handle = tr->target.handle;
-> > > > >  	e->data_size = tr->data_size;
-> > > > >  	e->offsets_size = tr->offsets_size;
-> > > > > -	e->context_name = proc->context->name;
-> > > > > +	strscpy(e->context_name, proc->context->name, BINDERFS_MAX_NAME);
-> > > > 
-> > > > Strictly speaking, proc-context->name can also be initialized for !BINDERFS
-> > > > so the BINDERFS in the MAX_NAME macro is misleading. So probably there should
-> > > > be a BINDER_MAX_NAME (and associated checks for whether non BINDERFS names
-> > > > fit within the MAX.
-> > > 
-> > > I know but I don't think it's worth special-casing non-binderfs devices.
-> > > First, non-binderfs devices can only be created through a KCONFIG option
-> > > determined at compile time. For stock Android the names are the same for
-> > > all vendors afaik.
-> > 
-> > I am just talking about the name of weirdly named macro here.
+On Wed, Oct 09, 2019 at 03:14:41PM +0300, Dan Carpenter wrote:
+> > +config AVALON_DMA_PCI_VENDOR_ID
+> > +	hex "PCI vendor ID"
+> > +	default "0x1172"
+> > +
+> > +config AVALON_DMA_PCI_DEVICE_ID
+> > +	hex "PCI device ID"
+> > +	default "0xe003"
 > 
-> You might miss context here: It's named that way because currently only
-> binderfs binder devices are bound to that limit. That's a point I made
-> further below in my previous mail. Non-binderfs devices are not subject
-> to that restriction and when we tried to make them subject to the same
-> it as rejected.
+> This feels wrong.  Why isn't it known in advance.
 
-I know that. I am saying the memcpy is happening for regular binder devices
-as well but the macro has BINDERFS in the name. That's all. It is not a
-significant eye sore. But is a bit odd.
+Because device designers would likely use they own IDs. The ones I
+put are just defaults inherited from the (Altera) reference design.
 
-> <snip>
+> > +	u32 *rd_flags = hw->dma_desc_table_rd.cpu_addr->flags;
+> > +	u32 *wr_flags = hw->dma_desc_table_wr.cpu_addr->flags;
+> > +	struct avalon_dma_desc *desc;
+> > +	struct virt_dma_desc *vdesc;
+> > +	bool rd_done;
+> > +	bool wr_done;
+> > +
+> > +	spin_lock(lock);
+> > +
+> > +	rd_done = (hw->h2d_last_id < 0);
+> > +	wr_done = (hw->d2h_last_id < 0);
+> > +
+> > +	if (rd_done && wr_done) {
+> > +		spin_unlock(lock);
+> > +		return IRQ_NONE;
+> > +	}
+> > +
+> > +	do {
+> > +		if (!rd_done && rd_flags[hw->h2d_last_id])
+> > +			rd_done = true;
+> > +
+> > +		if (!wr_done && wr_flags[hw->d2h_last_id])
+> > +			wr_done = true;
+> > +	} while (!rd_done || !wr_done);
 > 
-> > 
-> > > Fifth, I already tried to push for validation of non-binderfs binder
-> > > devices a while back when I wrote binderfs and was told that it's not
-> > > needed. Hrydia tried the same and we decided the same thing. So you get
-> > > to be the next person to send a patch. :)
-> > 
-> > I don't follow why we are talking about non-binderfs validation. I am just
-> 
-> Because above you said
-> 
-> > > > so the BINDERFS in the MAX_NAME macro is misleading. So probably there should
-> > > > be a BINDER_MAX_NAME (and associated checks for whether non BINDERFS names
-> > > > fit within the MAX.
-> 
-> which to me reads like you want generic checks for _all_ binder devices
-> not just for the ones from binderfs.
+> This loop is very strange.  It feels like the last_id indexes needs
+> to atomic or protected from racing somehow so we don't do an out of
+> bounds read.
 
-No I am not talking about the checks at all, I am talking about the unwanted
-mem copy you are doing for regular binder devices now. Before binderfs this
-would not have happened, but now for regular binder devices we have to do the
-extra mem copies which were avoided before. That was what I was talking about.
+My bad. I should have put a comment on this. This polling comes from my
+reading of the Intel documentation:
 
-But this discussing is getting to bike shedding at this point, and since the
-overhead is likely small, I am Ok with the change (though I don't like very
-much the additional memcpy and the associated space wastage in the
-transaction buffer for regular binder devices).
+"The MSI interrupt notifies the host when a DMA operation has completed.
+After the host receives this interrupt, it can poll the DMA read or write
+status table to determine which entry or entries have the done bit set."
 
-thanks!
+"The Descriptor Controller writes a 1 to the done bit of the status DWORD
+to indicate successful completion. The Descriptor Controller also sends
+an MSI interrupt for the final descriptor. After receiving this MSI,
+host software can poll the done bit to determine status."
 
- - Joel
+I sense an ambiguity above. It sounds possible an MSI interrupt could be
+delivered before corresponding done bit is set. May be imperfect wording..
+Anyway, the loop does look weird and in reality I doubt I observed the
+done bit unset even once. So I put this polling just in case.
 
+> > +	struct avalon_dma_chan *chan = to_avalon_dma_chan(dma_chan);
+> > +	struct avalon_dma_desc *desc;
+> > +	gfp_t gfp_flags = in_interrupt() ? GFP_NOWAIT : GFP_KERNEL;
+> > +	dma_addr_t dev_addr;
+> > +
+> > +	if (direction == DMA_MEM_TO_DEV)
+> > +		dev_addr = chan->dst_addr;
+> > +	else if (direction == DMA_DEV_TO_MEM)
+> > +		dev_addr = chan->src_addr;
+> > +	else
+> > +		return NULL;
+> > +
+> > +	desc = kzalloc(sizeof(*desc), gfp_flags);
 > 
-> (Btw, I didn't read your comments as pointing it out the patch is buggy.
-> I mostly wanted to provide context why we ended up with the
-> binderfs-specific restriction. Maybe the list sounded like a complaint
-> but it wasn't meant to. :))
+> Everyone else does GFP_WAIT or GFP_ATOMIC.  Is GFP_KERNEL really okay?
+
+I am not sure why not to use GFP_KERNEL from non-atomic context.
+Documentation/driver-api/dmaengine/provider.rst claims always to
+use GFP_NOWAIT though:
+
+  - Any allocation you might do should be using the GFP_NOWAIT
+    flag, in order not to potentially sleep, but without depleting
+    the emergency pool either.
+
+So probably I just should use GFP_NOWAIT.
+
+Thanks, Dan!
+
+> regards,
+> dan carpenter
 > 
-> Thanks!
-> Christian
