@@ -2,105 +2,165 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AFF0ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC74AECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1774821721
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:35:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Y694wE5g"
+	by mail.kernel.org (Postfix) with ESMTP id A013E21848
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:39:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730858AbfJILf4 (ORCPT
+        id S1730111AbfJILjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 07:35:56 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:47790 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727769AbfJILfz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 07:35:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8Yr1FW4On0yNCPPq7f7/xwfMz7g6v57wl9cPrSdGuhk=; b=Y694wE5gb1GeRhhWJDn5psT2x
-        ykm82kw/AKTVmZ5KKQ5iGq2+Jw38xGVZBlWe8/6TRZByY18TcJ4IVebGJqRsYo+hOmoOJE9wfufXr
-        1vahL7gtUFccf4APavJeU5p/vpccl+mSwOQaajBd5uHseD6RZmDdnD24+rPcSrs59TAZy5vofZsqG
-        8sgogZ6PLBSnRZIhxcbIVX3rWtDlIaSz8TQI0/txHb1R4K8HKxHf7UQKm0DK1ZOWVoAB7Bc4hi1Ye
-        Gvgj+QIYk+R+NuBtXwKm4x2Z3Ma4R94BCAk4lYmKZAs1F8kkPE03W9cWrDWUDhMTDZoU8nD/C6ltj
-        PLIEVQixw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iIAFm-0001lm-5E; Wed, 09 Oct 2019 11:35:38 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CD6FB300565;
-        Wed,  9 Oct 2019 13:34:43 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 923D3209EC5F0; Wed,  9 Oct 2019 13:35:35 +0200 (CEST)
-Date:   Wed, 9 Oct 2019 13:35:35 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Jan Glauber <jglauber@marvell.com>
-Subject: Re: [PATCH v3 05/10] lib/refcount: Improve performance of generic
- REFCOUNT_FULL code
-Message-ID: <20191009113535.GC2359@hirez.programming.kicks-ass.net>
-References: <20191007154703.5574-1-will@kernel.org>
- <20191007154703.5574-6-will@kernel.org>
- <20191009092508.GH2311@hirez.programming.kicks-ass.net>
+        Wed, 9 Oct 2019 07:39:19 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43628 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728054AbfJILjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 07:39:19 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 430DBAFD4;
+        Wed,  9 Oct 2019 11:39:16 +0000 (UTC)
+Date:   Wed, 9 Oct 2019 13:39:15 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        sergey.senozhatsky.work@gmail.com, rostedt@goodmis.org,
+        peterz@infradead.org, linux-mm@kvack.org,
+        john.ogness@linutronix.de, akpm@linux-foundation.org,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>, david@redhat.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
+Message-ID: <20191009113915.xhjswocremwmdum7@pathway.suse.cz>
+References: <1570228005-24979-1-git-send-email-cai@lca.pw>
+ <20191007143002.l37bt2lzqtnqjqxu@pathway.suse.cz>
+ <20191007144937.GO2381@dhcp22.suse.cz>
+ <20191008074357.f33f6pbs4cw5majk@pathway.suse.cz>
+ <20191008082752.GB6681@dhcp22.suse.cz>
+ <aefe7f75-b0ec-9e99-a77e-87324edb24e0@de.ibm.com>
+ <1570550917.5576.303.camel@lca.pw>
+ <20191008183525.GQ6681@dhcp22.suse.cz>
+ <1570561573.5576.307.camel@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191009092508.GH2311@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1570561573.5576.307.camel@lca.pw>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 11:25:08AM +0200, Peter Zijlstra wrote:
-> On Mon, Oct 07, 2019 at 04:46:58PM +0100, Will Deacon wrote:
-> >  static inline __must_check bool refcount_sub_and_test(int i, refcount_t *r)
-> >  {
-> > +	int old = atomic_fetch_sub_release(i, &r->refs);
-> >  
-> > +	if (old == i) {
-> >  		smp_acquire__after_ctrl_dep();
-> >  		return true;
-> >  	}
-> >  
-> > +	if (unlikely(old - i < 0)) {
-> > +		refcount_set(r, REFCOUNT_SATURATED);
-> > +		WARN_ONCE(1, "refcount_t: underflow; use-after-free.\n");
-> > +	}
+On Tue 2019-10-08 15:06:13, Qian Cai wrote:
+> On Tue, 2019-10-08 at 20:35 +0200, Michal Hocko wrote:
+> > On Tue 08-10-19 12:08:37, Qian Cai wrote:
+> > > On Tue, 2019-10-08 at 14:56 +0200, Christian Borntraeger wrote:
+> > > > Adding Peter Oberparleiter.
+> > > > Peter, can you have a look?
+> > > > 
+> > > > On 08.10.19 10:27, Michal Hocko wrote:
+> > > > > On Tue 08-10-19 09:43:57, Petr Mladek wrote:
+> > > > > > On Mon 2019-10-07 16:49:37, Michal Hocko wrote:
+> > > > > > > [Cc s390 maintainers - the lockdep is http://lkml.kernel.org/r/1570228005-24979-1-git-send-email-cai@lca.pw
+> > > > > > >  Petr has explained it is a false positive
+> > > > > > >  http://lkml.kernel.org/r/20191007143002.l37bt2lzqtnqjqxu@pathway.suse.cz]
+> > > > > > > On Mon 07-10-19 16:30:02, Petr Mladek wrote:
+> > > > > > > [...]
+> > > > > > > > I believe that it cannot really happen because:
+> > > > > > > > 
+> > > > > > > > 	static int __init
+> > > > > > > > 	sclp_console_init(void)
+> > > > > > > > 	{
+> > > > > > > > 	[...]
+> > > > > > > > 		rc = sclp_rw_init();
+> > > > > > > > 	[...]
+> > > > > > > > 		register_console(&sclp_console);
+> > > > > > > > 		return 0;
+> > > > > > > > 	}
+> > > > > > > > 
+> > > > > > > > sclp_rw_init() is called before register_console(). And
+> > > > > > > > console_unlock() will never call sclp_console_write() before
+> > > > > > > > the console is registered.
+> > > > > > > > 
+> > > > > > > > AFAIK, lockdep only compares existing chain of locks. It does
+> > > > > > > > not know about console registration that would make some
+> > > > > > > > code paths mutually exclusive.
+> > > > > > > > 
+> > > > > > > > I believe that it is a false positive. I do not know how to
+> > > > > > > > avoid this lockdep report. I hope that it will disappear
+> > > > > > > > by deferring all printk() calls rather soon.
+> > > > > > > 
+> > > > > > > Thanks a lot for looking into this Petr. I have also checked the code
+> > > > > > > and I really fail to see why the allocation has to be done under the
+> > > > > > > lock in the first place. sclp_read_sccb and sclp_init_sccb are global
+> > > > > > > variables but I strongly suspect that they need a synchronization during
+> > > > > > > early init, callbacks are registered only later IIUC:
+> > > > > > 
+> > > > > > Good idea. It would work when the init function is called only once.
+> > > > > > But see below.
+> > > > > > 
+> > > > > > > diff --git a/drivers/s390/char/sclp.c b/drivers/s390/char/sclp.c
+> > > > > > > index d2ab3f07c008..4b1c033e3255 100644
+> > > > > > > --- a/drivers/s390/char/sclp.c
+> > > > > > > +++ b/drivers/s390/char/sclp.c
+> > > > > > > @@ -1169,13 +1169,13 @@ sclp_init(void)
+> > > > > > >  	unsigned long flags;
+> > > > > > >  	int rc = 0;
+> > > > > > >  
+> > > > > > > +	sclp_read_sccb = (void *) __get_free_page(GFP_ATOMIC | GFP_DMA);
+> > > > > > > +	sclp_init_sccb = (void *) __get_free_page(GFP_ATOMIC | GFP_DMA);
+> > > > > > >  	spin_lock_irqsave(&sclp_lock, flags);
+> > > > > > >  	/* Check for previous or running initialization */
+> > > > > > >  	if (sclp_init_state != sclp_init_state_uninitialized)
+> > > > > > >  		goto fail_unlock;
+> > > > > > 
+> > > > > > It seems that sclp_init() could be called several times in parallel.
+> > > > > > I see it called from sclp_register() and sclp_initcall().
+> > > > > 
+> > > > > Interesting. Something for s390 people to answer I guess.
+> > > > > Anyway, this should be quite trivial to workaround by a cmpxch or alike.
+> > > > > 
+> > > 
+> > > The above fix is simply insufficient,
+> > 
+> > Isn't this yet another init time lockdep false possitive?
 > 
-> I'm failing to see how this preserves REFCOUNT_SATURATED for
-> non-underflow. AFAICT this should have:
+> Again, this is not 100% false positive for sure yet.
 > 
-> 	if (unlikely(old == REFCOUNT_SATURATED || old - i < 0))
-
-Hmm, that is not sufficient, since you can be arbitrarily far away from
-it due to all the races (and add/sub really suck as a refcount
-interface). The same will make fixing the cmpxchg loops like
-dec_not_one() 'interesting'.
-
-It is important though; to keep saturated, otherwise something that can
-do INT_MAX+n actual increments will get freed after INT_MAX decrements
-and still have n 'proper' references, *whoopsie*.
-
+> > 
+> > > 00: [    3.654337] -> #3 (console_owner){....}:                                 
+> > > 00: [    3.654343]        lock_acquire+0x21a/0x468                              
+> > > 00: [    3.654345]        console_unlock+0x3a6/0xa30                            
+> > > 00: [    3.654346]        vprintk_emit+0x184/0x3c8                              
+> > > 00: [    3.654348]        vprintk_default+0x44/0x50                             
+> > > 00: [    3.654349]        printk+0xa8/0xc0                                      
+> > > 00: [    3.654351]        get_random_u64+0x40/0x108                             
+> > > 00: [    3.654360]        add_to_free_area_random+0x188/0x1c0                   
+> > > 00: [    3.654364]        free_one_page+0x72/0x128                              
+> > > 00: [    3.654366]        __free_pages_ok+0x51c/0xca0                           
+> > > 00: [    3.654368]        memblock_free_all+0x30a/0x3b0                         
+> > > 00: [    3.654370]        mem_init+0x84/0x200                                   
+> > > 00: [    3.654371]        start_kernel+0x384/0x6a0                              
+> > > 00: [    3.654373]        startup_continue+0x70/0xd0                            
+> > 
+> > This one is actually a nice example why trying to get printk out of the
+> > zone->lock is simply not viable. This one is likely a printk to warn
+> > that the random pool is not fully intiailized. Just because the
+> > allocator tries to randomize the initial free memory pool. You are not
+> > going to remove that printk, right?
 > 
-> > +	return false;
-> >  }
-> >  
-> >  /**
+> Well, Sergey had a patch to convert that one to printk_deferred(), but even with
+> his patch, it will still trigger the lockdep splat here because the lock
+> dependency between zone->lock --> console_owner is still there from memory
+> offline.
+
+Is's this another printk() that might need to become printk_deferred()?
+
+Best Regards,
+Petr
