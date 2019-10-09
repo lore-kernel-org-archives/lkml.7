@@ -2,88 +2,131 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80764C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 02:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3592C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 02:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F48A20859
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 02:53:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBEB520859
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 02:54:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="o6YUX3IX"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="QszbxjMP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730289AbfJICxg (ORCPT
+        id S1730302AbfJICyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 22:53:36 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38461 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726490AbfJICxf (ORCPT
+        Tue, 8 Oct 2019 22:54:45 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40972 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726490AbfJICyp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 22:53:35 -0400
-Received: by mail-pg1-f193.google.com with SMTP id x10so435637pgi.5
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 19:53:35 -0700 (PDT)
+        Tue, 8 Oct 2019 22:54:45 -0400
+Received: by mail-pg1-f194.google.com with SMTP id t3so428087pga.8
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 19:54:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=xRim+mhOCJGTKowYRKV3NyzpsEfdlIUKsJKh+AqHYlY=;
-        b=o6YUX3IXKgDqRkUUB4jAxrLKnMv9u195epNuQDHWd79lRXpQirVzbkaFATUmcZpM6K
-         qoOjmkCRW6UzwmI75V4bOke728nN3TleOlK3XILJxb/QVApSfoQMb0a/1/Wi1HTr/BHJ
-         4WnO3FeJrmNvL94QuM2HGLvvVbx1/be8SvV1kZvt3SMN7K5atHeLqetDo9P3b8FltOTm
-         viiU5dbJaAxgEIbjxz65RyTApcQ06iTAJH7XXk6Eir97XkFJanXGPakVZ2KAF5PRipaj
-         mHJs1KZtfy5pzdy52G/kwXpfv2FOQ1swcnZIfhtp6aWErREG76rbIYVOyFVRLn9sdq1n
-         Ifdw==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=aAug75V7sXllLnHgZ5CCYBYO9dt8RE+I/rj5oKotaPY=;
+        b=QszbxjMPmr3p3n5L6OHNxCtKiobxczj4dLZiltQUwboe309N5tUp4lLvWywf8GN8tz
+         Kb+jqJNMy3gGn2aTFQ0Nrb1T2fnqsqzlOhF1FLjBReHF0DXtacNc0/f7Bt7TNW9/+5fX
+         Ggsj4zOjcX6igciC1dBqWloa6oNbUYW5PGtrlj2UA02bF6NKAM4aNFHfPn6t2sMYJkCO
+         pHLZ8qNr42Io4oIG+cSXzs9st8jJf3Y6Bv/P8swTnMtAVC23nmNYRgTq59uRrihaQyvS
+         364Zbbf6/9spSLPGZ8Ht/77XUsY3fmsdIkcsHI39RYRXPpoVz0/+OxqNCni+0oqhCHVG
+         vQnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=xRim+mhOCJGTKowYRKV3NyzpsEfdlIUKsJKh+AqHYlY=;
-        b=GPeq3rADcFNuCKLHIXgfpgiXFuEE6LH7Onu2GVUf7AJHO0zsd6orw+5WTB5sQpP9wS
-         iw4eozY/c+nRr9sCG+j7mC9eMOANDIYS3870hG+3DOfgFwSLaKTmSvHzRwaOm/ZwyJtm
-         D/GtYwQI0BqvFmwJHiMCMAKt0gKanBpfTjYvoTR4FSPwJNZqYeNteeb4A+2FVieQOgwG
-         CAg3ey/8Ncjn6VMtgXJ5oHvdx/uhy8s6xbB5fkjl0S1ucHx+7M6JSzWpyM2PB6D3zzT+
-         2XkzRNg0h5lF1MuyN6wmK7A5vRtE8MixHKxZMzL5rJWk7j7jAicQG7T9DiOM/MtQI+HH
-         J+TQ==
-X-Gm-Message-State: APjAAAWltt3sIuoxqKFTytCvcKEZIt9V3yZUSzw6zdfj9a8n/tvogfOB
-        EJ9CCdpzygxmBsrxj9koxSxizQ==
-X-Google-Smtp-Source: APXvYqwNNIA2eblAs30xCvzP9eU1wrJ7mImszORsLZV+sqLleDGhwp90qDeB6BRWfW/r8geWDh1P9g==
-X-Received: by 2002:a17:90a:ba83:: with SMTP id t3mr68082pjr.139.1570589614966;
-        Tue, 08 Oct 2019 19:53:34 -0700 (PDT)
-Received: from cakuba.netronome.com (c-73-202-202-92.hsd1.ca.comcast.net. [73.202.202.92])
-        by smtp.gmail.com with ESMTPSA id 196sm529853pfz.99.2019.10.08.19.53.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2019 19:53:34 -0700 (PDT)
-Date:   Tue, 8 Oct 2019 19:53:22 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        William Tu <u9012063@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ip6erspan: remove the incorrect mtu limit for ip6erspan
-Message-ID: <20191008195322.5787f7c6@cakuba.netronome.com>
-In-Reply-To: <1570528563-8062-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
-References: <1570528563-8062-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
-Organization: Netronome Systems, Ltd.
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=aAug75V7sXllLnHgZ5CCYBYO9dt8RE+I/rj5oKotaPY=;
+        b=BKA/0jqUjj5Zxy36BoD4Vl8xPw/Ik9jishrRFuL+fVtaKSWSWcdDQx5nqR75LEBaXV
+         KJn0FpQrWtftANwefYcuiQ0EgnGGy3hsvyEFeUM770jVFLOEtZPU0GqT3qjkDzXEfFB0
+         oZzTdN4fIGcLCn/CBvDkoq/8TXXKDPAT/nIRqvcKc2h/Yf5IZOJU1Kij/YX3CUwuwFTO
+         G1UNI2a0XdHS0EWEHd2rWKbs0B8eJ84a597QmRUJOH0DRxkd52qtJX2drr6GuDgIE+7X
+         hiXe71w2Bgn23FyNhBJXp08RThzcGWahmvXe7GxHrmzWAugEhto/ELzPDAMhSwePhYms
+         ssfg==
+X-Gm-Message-State: APjAAAUNogN9tCXI3z2oyi28vHk4bcTjOoJiPKANL5S2CP/d1YNoulP0
+        a4bp9XTHrzPNovMA9oEoSY9kQOm7ZkXFKw==
+X-Google-Smtp-Source: APXvYqwHKEOgIQIln3eLIO81SIgsLyShBjX0nD7O0h2CW/+7Poo4XZw/acErNtYIAS0Bt4cI7Of3ww==
+X-Received: by 2002:a17:90a:8c02:: with SMTP id a2mr1329170pjo.79.1570589682713;
+        Tue, 08 Oct 2019 19:54:42 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.79])
+        by smtp.gmail.com with ESMTPSA id z13sm452971pfg.172.2019.10.08.19.54.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 08 Oct 2019 19:54:41 -0700 (PDT)
+Subject: Re: [PATCH] io_uring: remove wait loop spurious wakeups
+To:     Pavel Begunkov <asml.silence@gmail.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <936cd758d6c694fe1b8b9de050e24cfecdc2e60d.1570489620.git.asml.silence@gmail.com>
+ <e11a0716-eb18-4ce3-9902-3247beafe65a@kernel.dk>
+ <d035bb1b-e6f0-77db-a434-1761b0a7a142@gmail.com>
+ <62a8a6c7-9c5b-c9a4-9c73-c77db87c6637@kernel.dk>
+ <99bfb7aa-6980-fc14-32f7-a479dea63eb4@gmail.com>
+ <a1f8de23-fcad-7252-cbd4-8f5e617056cd@kernel.dk>
+ <4004b5bc-edf0-cc8f-8efc-7f848c95f0ba@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <adc20cef-bc8e-2e67-399c-30c2f4af1a93@kernel.dk>
+Date:   Tue, 8 Oct 2019 20:54:38 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <4004b5bc-edf0-cc8f-8efc-7f848c95f0ba@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  8 Oct 2019 17:56:03 +0800, Haishuang Yan wrote:
-> ip6erspan driver calls ether_setup(), after commit 61e84623ace3
-> ("net: centralize net_device min/max MTU checking"), the range
-> of mtu is [min_mtu, max_mtu], which is [68, 1500] by default.
+On 10/8/19 4:05 PM, Pavel Begunkov wrote:
+> On 09/10/2019 00:22, Jens Axboe wrote:
+>> On 10/8/19 2:58 PM, Pavel Begunkov wrote:
+>>> On 08/10/2019 20:00, Jens Axboe wrote:
+>>>> On 10/8/19 10:43 AM, Pavel Begunkov wrote:
+>>>>> On 08/10/2019 06:16, Jens Axboe wrote:
+>>>>>> On 10/7/19 5:18 PM, Pavel Begunkov (Silence) wrote:
+>>>>>>> From: Pavel Begunkov <asml.silence@gmail.com>
+>>>>>>>
+>>>>>>> Any changes interesting to tasks waiting in io_cqring_wait() are
+>>>>>>> commited with io_cqring_ev_posted(). However, io_ring_drop_ctx_refs()
+>>>>>>> also tries to do that but with no reason, that means spurious wakeups
+>>>>>>> every io_free_req() and io_uring_enter().
+>>>>>>>
+>>>>>>> Just use percpu_ref_put() instead.
+>>>>>>
+>>>>>> Looks good, this is a leftover from when the ctx teardown used
+>>>>>> the waitqueue as well.
+>>>>>>
+>>>>> BTW, is there a reason for ref-counting in struct io_kiocb? I understand
+>>>>> the idea behind submission reference, but don't see any actual part
+>>>>> needing it.
+>>>>
+>>>> In short, it's to prevent the completion running before we're done with
+>>>> the iocb on the submission side.
+>>>
+>>> Yep, that's what I expected. Perhaps I missed something, but what I've
+>>> seen following code paths all the way down, it either
+>>> 1. gets error / completes synchronously and then frees req locally
+>>> 2. or passes it further (e.g. async list) and never accesses it after
+>>
+>> As soon as the IO is passed on, it can complete. In fact, it can complete
+>> even _before_ that call returns. That's the issue. Obviously this isn't
+>> true for purely polled IO, but it is true for IRQ based IO.
 > 
-> It causes the dev mtu of the erspan device to not be greater
-> than 1500, this limit value is not correct for ip6erspan tap
-> device.
-> 
-> Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+> And the idea was to not use io_kiocb after submission. Except when we know,
+> that it won't complete asynchronously (e.g. error), that could be checked
+> with return code, I guess.
 
-Applied, but next time please make sure you add a Fixes tag, 
-and put [PATCH net] in the subject for bug fixes. Thanks!
+I think you're still missing the point. During the submission it can go
+away, it can be deep in a call chain. So it's not enough to say "we
+won't touch it after completion returns", we need to hold a reference to
+ensure it doesn't go away WHILE being submitted.
+
+Hope that helps!
+
+-- 
+Jens Axboe
+
