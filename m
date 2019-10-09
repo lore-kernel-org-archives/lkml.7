@@ -2,122 +2,73 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4EDDC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 21:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62364ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 21:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1FD7206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 21:35:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t9EwRTa0"
+	by mail.kernel.org (Postfix) with ESMTP id 4859C2054F
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 21:36:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731656AbfJIVfA (ORCPT
+        id S1731956AbfJIVgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 17:35:00 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:32939 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728804AbfJIVfA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 17:35:00 -0400
-Received: by mail-pg1-f196.google.com with SMTP id i76so2272045pgc.0;
-        Wed, 09 Oct 2019 14:34:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=93XeND10daxMH10mUwFpx+iBqyMkuxVptnzWDGZ5rAE=;
-        b=t9EwRTa0xVN+CnzMK1VtNToY63kjkFdBHNGmDJKvSh5OpWOkXi73cg74gjLP3/zpE9
-         8hDObmZpCkDo7ajMaDTaC0YqBqm/gLqP/YWhIZtuNWsiIUm4xXYrryOSGFhNh+4sEfcJ
-         YrzNkCeLcHwbWrDTGSE02GDGEfL6uYCHwZYH0Bnx7cedasuYNHoYp8tEsYkW8LOrUeR8
-         qs0gVgJeN1yLXWsHHBJgI6UBnJAZOTMAwEjaNQoClUyj5wg4SX9ZXiJoQ2HcsgDqG/mK
-         VyQ+caX2EITecNehpw8oXyriS+EHejuw9GUEOLGzfH7reWdxnj16hHMXmhKKJSep448w
-         QJFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=93XeND10daxMH10mUwFpx+iBqyMkuxVptnzWDGZ5rAE=;
-        b=hGcS3eWkJpIe5s1RparBe4PqHTzzGP0h/2DUeq+DJpdzh5DPZ4Sxmw2GB1yGmoVdl9
-         LK96TGxfS/xitgYCeF4zPCGdOXQpElBSCll/JK9OGoMtk2Kv2ZaabnpAk9wiH28ddMLx
-         +H3cz62dVpL7G36gXpBW3BAsF1YIw6mwFH6fJQHnI74FkM+0wu1Ke+rXF6m23TmF9Mf+
-         r71gpbB1H7TRW3cAEZeYX3fkDBManV6+Oeuamho81qIdfaojLNMkyVL72tBD9P7u4fJ5
-         z80DCyjZDaK4elHNnroQ9WCNoI3IPJ9L7ssVZpEyvrcJpWacDrUiS3s8Wi3ShPe7+EBB
-         AtAw==
-X-Gm-Message-State: APjAAAWULsNbXn7HfyGKFx1/vhaxXMFhsmn01Bn0OtsbQ9fSxSOzp2C+
-        oWL4loIpvBpTkiDIoGwnzBrfInfH
-X-Google-Smtp-Source: APXvYqwrTT1N5CbtoW7bGcow975hWrDFM7VA+ZKxMMKBQH74XTjBbjGPFN7q5ngTfy00REM0jSRMPA==
-X-Received: by 2002:a63:734a:: with SMTP id d10mr4055370pgn.334.1570656898956;
-        Wed, 09 Oct 2019 14:34:58 -0700 (PDT)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id h4sm3336017pfg.159.2019.10.09.14.34.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 09 Oct 2019 14:34:58 -0700 (PDT)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     robdclark@gmail.com, sean@poorly.run, airlied@linux.ie,
-        daniel@ffwll.ch
-Cc:     linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH] drm/msm/dsi: Implement reset correctly
-Date:   Wed,  9 Oct 2019 14:34:54 -0700
-Message-Id: <20191009213454.32891-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 9 Oct 2019 17:36:16 -0400
+Received: from mga11.intel.com ([192.55.52.93]:10309 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730490AbfJIVgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 17:36:15 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 14:36:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,277,1566889200"; 
+   d="scan'208";a="200262511"
+Received: from thomaske-mobl.ger.corp.intel.com (HELO localhost) ([10.252.3.55])
+  by FMSMGA003.fm.intel.com with ESMTP; 09 Oct 2019 14:36:12 -0700
+Date:   Thu, 10 Oct 2019 00:36:10 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     James Bottomley <jejb@linux.ibm.com>
+Cc:     linux-integrity@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/2] tpm: Use GFP_KERNEL for allocating struct tpm_buf
+Message-ID: <20191009213559.GA30044@linux.intel.com>
+References: <20191003185103.26347-1-jarkko.sakkinen@linux.intel.com>
+ <20191003185103.26347-2-jarkko.sakkinen@linux.intel.com>
+ <1570148716.10818.19.camel@linux.ibm.com>
+ <20191006095005.GA7660@linux.intel.com>
+ <1570475528.4242.2.camel@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1570475528.4242.2.camel@linux.ibm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On msm8998, vblank timeouts are observed because the DSI controller is not
-reset properly, which ends up stalling the MDP.  This is because the reset
-logic is not correct per the hardware documentation.
+On Mon, Oct 07, 2019 at 12:12:08PM -0700, James Bottomley wrote:
+> From: James Bottomley <James.Bottomley@HansenPartnership.com>
+> Subject: [PATCH] tpm: use GFP kernel for tpm_buf allocations
+> 
+> The current code uses GFP_HIGHMEM, which is wrong because GFP_HIGHMEM
+> (on 32 bit systems) is memory ordinarily inaccessible to the kernel
+> and should only be used for allocations affecting userspace.  In order
+> to make highmem visible to the kernel on 32 bit it has to be kmapped,
+> which consumes valuable entries in the kmap region.  Since the tpm_buf
+> is only ever used in the kernel, switch to using a GFP_KERNEL
+> allocation so as not to waste kmap space on 32 bits.
+> 
+> Fixes: a74f8b36352e (tpm: introduce tpm_buf)
+> Signed-off-by: James Bottomley <James.Bottomley@HansenPartnership.com>
 
-The documentation states that after asserting reset, software should wait
-some time (no indication of how long), or poll the status register until it
-returns 0 before deasserting reset.
+Pushed to master branch.
 
-wmb() is insufficient for this purpose since it just ensures ordering, not
-timing between writes.  Since asserting and deasserting reset occurs on the
-same register, ordering is already guaranteed by the architecture, making
-the wmb extraneous.
-
-Since we would define a timeout for polling the status register to avoid a
-possible infinite loop, lets just use a static delay of 20 ms, since 16.666
-ms is the time available to process one frame at 60 fps.
-
-Fixes: a689554ba6ed (drm/msm: Initial add DSI connector support)
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
----
-
-Rob et al, is it possible for this to go into a 5.4-rc?
-
- drivers/gpu/drm/msm/dsi/dsi_host.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
-index 663ff9f4fac9..68ded9b4735d 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_host.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
-@@ -986,7 +986,7 @@ static void dsi_sw_reset(struct msm_dsi_host *msm_host)
- 	wmb(); /* clocks need to be enabled before reset */
- 
- 	dsi_write(msm_host, REG_DSI_RESET, 1);
--	wmb(); /* make sure reset happen */
-+	msleep(20); /* make sure reset happen */
- 	dsi_write(msm_host, REG_DSI_RESET, 0);
- }
- 
-@@ -1396,7 +1396,7 @@ static void dsi_sw_reset_restore(struct msm_dsi_host *msm_host)
- 
- 	/* dsi controller can only be reset while clocks are running */
- 	dsi_write(msm_host, REG_DSI_RESET, 1);
--	wmb();	/* make sure reset happen */
-+	msleep(20);	/* make sure reset happen */
- 	dsi_write(msm_host, REG_DSI_RESET, 0);
- 	wmb();	/* controller out of reset */
- 	dsi_write(msm_host, REG_DSI_CTRL, data0);
--- 
-2.17.1
-
+/Jarkko
