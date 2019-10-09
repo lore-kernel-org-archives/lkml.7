@@ -2,263 +2,133 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FA0C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C936ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:01:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAD0021848
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47B5E20B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:01:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MGcSnGnx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DBFu8F8p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731598AbfJIPAg (ORCPT
+        id S1731606AbfJIPBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 11:00:36 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:37197 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729644AbfJIPAg (ORCPT
+        Wed, 9 Oct 2019 11:01:01 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:41304 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729644AbfJIPBA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 11:00:36 -0400
-Received: by mail-oi1-f196.google.com with SMTP id i16so2020571oie.4
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 08:00:34 -0700 (PDT)
+        Wed, 9 Oct 2019 11:01:00 -0400
+Received: by mail-io1-f65.google.com with SMTP id n26so5623428ioj.8;
+        Wed, 09 Oct 2019 08:01:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ut10a4G8K7hTMXl6//BmSb4hIjvYhn5dvYI1LmSgCOw=;
-        b=MGcSnGnxSYoBepUW47fuuVDs9AqP+d48cS4ZdmQrMoUGjayvpr03MFQFEOZ0YJEvUv
-         bIql3w1CC1pQfX52lo0qAl7NGSSJnQR+EU6sOq+L0M85u/XGsO1njJuobx94unFSvBTU
-         SnBHyy4lz1BTHzfXUADrGu8G5dLmfLPoXFtP4=
+        bh=Qg77rKEV8sqoLJ5jhRaIbmkXA6q29h9mmik7MN3d40o=;
+        b=DBFu8F8pitsJc/XeCuYmIOmz/XeDfO8iPVA5qBl0Hng0UDpOL5c85YOX10xJ/DBJDM
+         H4f78gzVwHqM1KZF97D5vu6jvUtumy0W9niJ+VX6xMTuS+VpULdhVQPqrznKVSo9KcC1
+         1awuWTNRBljBx9Fu6ns5Ju2PoxcE8kRnb05yz7IsI7cIXgsdG734iOjuBbHL/M43bKu7
+         8mlnOVhYASOcJQgv4QlT8A6V4TsHwLn/lScfytU5PtpwJ7Y0owJeL9CXwpoHaTu7tZsZ
+         yyxK+lN12zN6fKmqYRlDgDh4/rTMBfM0BvMpDXvtRAtBuncjeG7yXEHH+4X67COdXw0a
+         wn9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ut10a4G8K7hTMXl6//BmSb4hIjvYhn5dvYI1LmSgCOw=;
-        b=d+6zOER6VZOq5FsjwPNaThwAONBW8BET4rTme/XfoV0xl3NvQkbSDe4oxB2t0Qdyfh
-         H4qirXLEJmOA864uHM+LNkGZ21WtgeTxsRhElAma8t6sACHTXlZPSGzzto77S25baWsR
-         8l5QcxWXY7YEujY1AJEvIODf72znXNTuilorehxVoBkaB75MCjF4G/R6os8qJ80mN56T
-         xv+KGM934BVlKGW/ZsmQ8X+Abb9lL0zzqQ+3jsCTCf4knEFSVri5VxSYkssj8i52U4aC
-         /YOH2UNPNAI1xYUVevg5A22mZrft1PymXVN/LBCmXAC4KWYkdZufCZW0TsWco5IMaYoE
-         AjqA==
-X-Gm-Message-State: APjAAAWHgVZMHEgZYD6vF50S8l9FJCnq9V/R1agzHselrLrBoRA23vET
-        tw+beTvFyTwTkoV5shCdQ9N29h6dQEI=
-X-Google-Smtp-Source: APXvYqw7hEQUjY+lCnyF1+V4E+U7rXAiOzPVaOljk67hhhEsHJgr/60iB7m5wYsFBbJzkp9iNr15+Q==
-X-Received: by 2002:aca:3001:: with SMTP id w1mr2776693oiw.178.1570633233481;
-        Wed, 09 Oct 2019 08:00:33 -0700 (PDT)
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com. [209.85.167.182])
-        by smtp.gmail.com with ESMTPSA id b4sm675399oiy.30.2019.10.09.08.00.32
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Oct 2019 08:00:32 -0700 (PDT)
-Received: by mail-oi1-f182.google.com with SMTP id k9so2004438oib.7
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 08:00:32 -0700 (PDT)
-X-Received: by 2002:a05:6808:249:: with SMTP id m9mr2760741oie.49.1570633231923;
- Wed, 09 Oct 2019 08:00:31 -0700 (PDT)
+        bh=Qg77rKEV8sqoLJ5jhRaIbmkXA6q29h9mmik7MN3d40o=;
+        b=s0VD+56FWGTjTAiWdfn+2JlCgDwffpNhG92JQFAINqVNjV5pvCL4xBfkQS+hNAwoGw
+         0r9ayFq0BK3qro5bapuP3a+Ubcq0QAMtNAG0tNAqcS/klWzXqnlW59ygUEvyCZmZpck5
+         EmxJGgFA3Thesw3UNn9bvtcMBh5LT+ROJU8pZtIaTYBUeboLV4Lb3IqzlLUbfBcp2zs1
+         awJxo7gmtym6OSxx03C3r/Y/Xswqgmy9uvLl0Ae2uaGtzQ1L03X3KrwVe7+iVCcdPtgu
+         7QBVG1ObLGJl0iLOjyy53ZNoqcSqF+DTlI8oB1PJYtg2t3Ivrb8W4GykAs3gU3GwMu64
+         4aTA==
+X-Gm-Message-State: APjAAAWmlDplDyXHz5wOH5VSJz7oXDENIUku4ZlCmEPsAkz6AQzPw3sj
+        Q1pYibyGILuL9pIzRyJqrH/wrz7mnZVjEMHlTFI=
+X-Google-Smtp-Source: APXvYqw93Pdi9hgF7K3HQPP09GXqR3W0N7qXz2FnTwPB5ntxxhR0Ilu7PEHpEagAUY05ysSuXX5kkMLZK+pHevvrnW8=
+X-Received: by 2002:a5e:8711:: with SMTP id y17mr3922522ioj.227.1570633259375;
+ Wed, 09 Oct 2019 08:00:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191008161749.1.I4476e6e2b1026ff388eb11813310264e25aa9cc9@changeid>
-In-Reply-To: <20191008161749.1.I4476e6e2b1026ff388eb11813310264e25aa9cc9@changeid>
-From:   Nick Crews <ncrews@chromium.org>
-Date:   Wed, 9 Oct 2019 09:00:19 -0600
-X-Gmail-Original-Message-ID: <CAHX4x85WTGKMDn22T6SmaemVS1km8yNRgXNj3AgyAzB=69B3nA@mail.gmail.com>
-Message-ID: <CAHX4x85WTGKMDn22T6SmaemVS1km8yNRgXNj3AgyAzB=69B3nA@mail.gmail.com>
-Subject: Re: [PATCH v4] wilco_ec: Add Dell's USB PowerShare Policy control
-To:     Daniel Campello <campello@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Benson Leung <bleung@chromium.org>,
-        Raul E Rangel <rrangel@chromium.org>
+References: <20190913235505.9164-1-navid.emamdoost@gmail.com> <6de2396d-eaa4-5cb4-9a1d-f253503bcf48@xs4all.nl>
+In-Reply-To: <6de2396d-eaa4-5cb4-9a1d-f253503bcf48@xs4all.nl>
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Date:   Wed, 9 Oct 2019 10:00:48 -0500
+Message-ID: <CAEkB2ESWm2woq6LLxOUGaLVwszg4uRNMmVEatnPXsyu1XDvSvA@mail.gmail.com>
+Subject: Re: [PATCH] media: usb: fix memory leak in af9005_identify_state
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Navid Emamdoost <emamd001@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        linux-media@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 8, 2019 at 4:18 PM Daniel Campello <campello@chromium.org> wrote:
->
-> USB PowerShare is a policy which affects charging via the special
-> USB PowerShare port (marked with a small lightning bolt or battery icon)
-> when in low power states:
-> - In S0, the port will always provide power.
-> - In S0ix, if usb_charge is enabled, then power will be supplied to
->   the port when on AC or if battery is > 50%. Else no power is supplied.
-> - In S5, if usb_charge is enabled, then power will be supplied to
->   the port when on AC. Else no power is supplied.
->
-> Signed-off-by: Daniel Campello <campello@chromium.org>
-> Signed-off-by: Nick Crews <ncrews@chromium.org>
-> ---
->
-> v4 changes:
-> - Renamed from usb_power_share to usb_charge to match existing feature
-> in other platforms in the kernel (i.e., sony-laptop, samsung-laptop,
-> lg-laptop)
+Hi Hans,
 
-Daniel and I put in considerable effort trying to get this integrated
-with the USB subsystem. However, it was becoming much too
-complicated, so we hoped that if we made this more consistent
-with the three existing examples it would be acceptable.
+On Wed, Oct 9, 2019 at 7:42 AM Hans Verkuil <hverkuil@xs4all.nl> wrote:
+>
+> On 9/14/19 1:55 AM, Navid Emamdoost wrote:
+> > In af9005_identify_state when returning -EIO the allocated buffer should
+> > be released.
+> >
+> > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> > ---
+> >  drivers/media/usb/dvb-usb/af9005.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/media/usb/dvb-usb/af9005.c b/drivers/media/usb/dvb-usb/af9005.c
+> > index 02697d86e8c1..aee500beaab6 100644
+> > --- a/drivers/media/usb/dvb-usb/af9005.c
+> > +++ b/drivers/media/usb/dvb-usb/af9005.c
+> > @@ -975,8 +975,10 @@ static int af9005_identify_state(struct usb_device *udev,
+> >               *cold = 1;
+> >       else if (reply == 0x02)
+> >               *cold = 0;
+> > -     else
+> > +     else {
+> > +             kfree(buf);
+> >               return -EIO;
+> > +     }
+>
+> Why not just set ret = -EIO; here?
+>
+This makes sense. I will send a v2.
 
-Thanks for the thoughts,
-Nick
+> You only need to add a
+>
+>         if (!ret)
+> >       deb_info("Identify state cold = %d\n", *cold);
+>
+> before this line.
+>
+> So this becomes:
+>
+>         else
+>                 ret = -EIO;
+>         if (!ret)
+>                 deb_info("Identify state cold = %d\n", *cold);
+>
+> Regards,
+>
+>         Hans
+>
+> >
+> >  err:
+> >
+>
 
-> v3 changes:
-> - Drop a silly blank line
-> - Use val > 1 instead of val != 0 && val != 1
-> v2 changes:
-> - Move documentation to Documentation/ABI/testing/sysfs-platform-wilco-ec
-> - Zero out reserved bytes in requests.
->
->  .../ABI/testing/sysfs-platform-wilco-ec       | 17 ++++
->  drivers/platform/chrome/wilco_ec/sysfs.c      | 91 +++++++++++++++++++
->  2 files changed, 108 insertions(+)
->
-> diff --git a/Documentation/ABI/testing/sysfs-platform-wilco-ec b/Documentation/ABI/testing/sysfs-platform-wilco-ec
-> index 8827a734f933..bb7ba67cae97 100644
-> --- a/Documentation/ABI/testing/sysfs-platform-wilco-ec
-> +++ b/Documentation/ABI/testing/sysfs-platform-wilco-ec
-> @@ -31,6 +31,23 @@ Description:
->                 Output will a version string be similar to the example below:
->                 08B6
->
-> +What:          /sys/bus/platform/devices/GOOG000C\:00/usb_charge
-> +Date:          October 2019
-> +KernelVersion: 5.5
-> +Description:
-> +               Control the USB PowerShare Policy. USB PowerShare is a policy
-> +               which affects charging via the special USB PowerShare port
-> +               (marked with a small lightning bolt or battery icon) when in
-> +               low power states:
-> +               - In S0, the port will always provide power.
-> +               - In S0ix, if usb_charge is enabled, then power will be
-> +                 supplied to the port when on AC or if battery is > 50%.
-> +                 Else no power is supplied.
-> +               - In S5, if usb_charge is enabled, then power will be supplied
-> +                 to the port when on AC. Else no power is supplied.
-> +
-> +               Input should be either "0" or "1".
-> +
->  What:          /sys/bus/platform/devices/GOOG000C\:00/version
->  Date:          May 2019
->  KernelVersion: 5.3
-> diff --git a/drivers/platform/chrome/wilco_ec/sysfs.c b/drivers/platform/chrome/wilco_ec/sysfs.c
-> index 3b86a21005d3..f0d174b6bb21 100644
-> --- a/drivers/platform/chrome/wilco_ec/sysfs.c
-> +++ b/drivers/platform/chrome/wilco_ec/sysfs.c
-> @@ -23,6 +23,26 @@ struct boot_on_ac_request {
->         u8 reserved7;
->  } __packed;
->
-> +#define CMD_USB_CHARGE 0x39
-> +
-> +enum usb_charge_op {
-> +       USB_CHARGE_GET = 0,
-> +       USB_CHARGE_SET = 1,
-> +};
-> +
-> +struct usb_charge_request {
-> +       u8 cmd;         /* Always CMD_USB_CHARGE */
-> +       u8 reserved;
-> +       u8 op;          /* One of enum usb_charge_op */
-> +       u8 val;         /* When setting, either 0 or 1 */
-> +} __packed;
-> +
-> +struct usb_charge_response {
-> +       u8 reserved;
-> +       u8 status;      /* Set by EC to 0 on success, other value on failure */
-> +       u8 val;         /* When getting, set by EC to either 0 or 1 */
-> +} __packed;
-> +
->  #define CMD_EC_INFO                    0x38
->  enum get_ec_info_op {
->         CMD_GET_EC_LABEL        = 0,
-> @@ -131,12 +151,83 @@ static ssize_t model_number_show(struct device *dev,
->
->  static DEVICE_ATTR_RO(model_number);
->
-> +static int send_usb_charge(struct wilco_ec_device *ec,
-> +                               struct usb_charge_request *rq,
-> +                               struct usb_charge_response *rs)
-> +{
-> +       struct wilco_ec_message msg;
-> +       int ret;
-> +
-> +       memset(&msg, 0, sizeof(msg));
-> +       msg.type = WILCO_EC_MSG_LEGACY;
-> +       msg.request_data = rq;
-> +       msg.request_size = sizeof(*rq);
-> +       msg.response_data = rs;
-> +       msg.response_size = sizeof(*rs);
-> +       ret = wilco_ec_mailbox(ec, &msg);
-> +       if (ret < 0)
-> +               return ret;
-> +       if (rs->status)
-> +               return -EIO;
-> +
-> +       return 0;
-> +}
-> +
-> +static ssize_t usb_charge_show(struct device *dev,
-> +                                   struct device_attribute *attr, char *buf)
-> +{
-> +       struct wilco_ec_device *ec = dev_get_drvdata(dev);
-> +       struct usb_charge_request rq;
-> +       struct usb_charge_response rs;
-> +       int ret;
-> +
-> +       memset(&rq, 0, sizeof(rq));
-> +       rq.cmd = CMD_USB_CHARGE;
-> +       rq.op = USB_CHARGE_GET;
-> +
-> +       ret = send_usb_charge(ec, &rq, &rs);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       return sprintf(buf, "%d\n", rs.val);
-> +}
-> +
-> +static ssize_t usb_charge_store(struct device *dev,
-> +                                    struct device_attribute *attr,
-> +                                    const char *buf, size_t count)
-> +{
-> +       struct wilco_ec_device *ec = dev_get_drvdata(dev);
-> +       struct usb_charge_request rq;
-> +       struct usb_charge_response rs;
-> +       int ret;
-> +       u8 val;
-> +
-> +       ret = kstrtou8(buf, 10, &val);
-> +       if (ret < 0)
-> +               return ret;
-> +       if (val > 1)
-> +               return -EINVAL;
-> +
-> +       memset(&rq, 0, sizeof(rq));
-> +       rq.cmd = CMD_USB_CHARGE;
-> +       rq.op = USB_CHARGE_SET;
-> +       rq.val = val;
-> +
-> +       ret = send_usb_charge(ec, &rq, &rs);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       return count;
-> +}
-> +
-> +static DEVICE_ATTR_RW(usb_charge);
->
->  static struct attribute *wilco_dev_attrs[] = {
->         &dev_attr_boot_on_ac.attr,
->         &dev_attr_build_date.attr,
->         &dev_attr_build_revision.attr,
->         &dev_attr_model_number.attr,
-> +       &dev_attr_usb_charge.attr,
->         &dev_attr_version.attr,
->         NULL,
->  };
-> --
-> 2.23.0.581.g78d2f28ef7-goog
->
+
+-- 
+Navid.
