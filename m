@@ -2,124 +2,151 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C811ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A89ABC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50F5C20673
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:19:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A33E20673
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:19:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731208AbfJIKTC (ORCPT
+        id S1730823AbfJIKTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 06:19:02 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:57181 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726211AbfJIKTA (ORCPT
+        Wed, 9 Oct 2019 06:19:45 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:58898 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725935AbfJIKTo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 06:19:00 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iI93Y-00014K-Fc; Wed, 09 Oct 2019 10:18:56 +0000
-To:     Shawn Lin <shawn.lin@rock-chips.com>,
-        linux-rockchip@lists.infradead.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Potential issue setting vid_regs in Rockchip AXI PCIe endpoint
- controller driver
-Message-ID: <cd70cd13-5b0e-ea14-f7b1-fb8866c4dbbf@canonical.com>
-Date:   Wed, 9 Oct 2019 11:18:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 9 Oct 2019 06:19:44 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 3236C28F6C7
+Subject: Re: [PATCH] pwm: cros-ec: Let cros_ec_pwm_get_state() return the last
+ applied state
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, thierry.reding@gmail.com,
+        heiko@sntech.de, dianders@chromium.org, mka@chromium.org,
+        groeck@chromium.org, kernel@collabora.com, bleung@chromium.org,
+        linux-pwm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+References: <20191008105417.16132-1-enric.balletbo@collabora.com>
+ <20191008143432.pbhcqamd6f4qwbqn@pengutronix.de>
+ <4f009344-242e-19a7-6872-2c55df086044@collabora.com>
+ <20191008203137.s22clq6v2om5ktio@pengutronix.de>
+ <53b7d02b-1a2d-11da-fdd0-5378f360d876@collabora.com>
+ <20191009095635.yysr33lnwldicyng@holly.lan>
+ <20191009101637.gmvghwdvcmfw4yyk@pengutronix.de>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <2b24df87-10fb-f590-3643-ffca5f180f5d@collabora.com>
+Date:   Wed, 9 Oct 2019 12:19:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20191009101637.gmvghwdvcmfw4yyk@pengutronix.de>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-Static analysis with Coverity has detected a potential issue in the
-Rockchip AXI PCIe endpoint controller driver.  The issue is in
-drivers/pci/controller/pcie-rockchip-ep.c, function
-rockchip_pcie_ep_write_header:
 
-The coverity report is as follows:
+On 9/10/19 12:16, Uwe Kleine-König wrote:
+> On Wed, Oct 09, 2019 at 10:56:35AM +0100, Daniel Thompson wrote:
+>> On Wed, Oct 09, 2019 at 11:27:13AM +0200, Enric Balletbo i Serra wrote:
+>>> Hi Uwe,
+>>>
+>>> Adding Daniel and Lee to the discussion ...
+>>
+>> Thanks!
+>>
+>>> On 8/10/19 22:31, Uwe Kleine-König wrote:
+>>>> On Tue, Oct 08, 2019 at 06:33:15PM +0200, Enric Balletbo i Serra wrote:
+>>>>>> A few thoughts to your approach here ...:
+>>>>>>
+>>>>>>  - Would it make sense to only store duty_cycle and enabled in the
+>>>>>>    driver struct?
+>>>>>>
+>>>>>
+>>>>> Yes, in fact, my first approach (that I didn't send) was only storing enabled
+>>>>> and duty cycle. For some reason I ended storing the full pwm_state struct, but I
+>>>>> guess is not really needed.
+>>>>>
+>>>>>
+>>>>>>  - Which driver is the consumer of your pwm? If I understand correctly
+>>>>>>    the following sequence is the bad one:
+>>>>>>
+>>>>>
+>>>>> The consumer is the pwm_bl driver. Actually I'n trying to identify
+>>>>> other consumers.
+>>>>
+>>>
+>>> So far, the pwm_bl driver is the only consumer of cros-ec-pwm.
+>>>
+>>>> Ah, I see why I missed to identify the problem back when I checked this
+>>>> driver. The problem is not that .duty_cycle isn't set but there .enabled
+>>>> isn't set. So maybe we just want:
+>>>>
+>>>> diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+>>>> index 2201b8c78641..0468c6ee4448 100644
+>>>> --- a/drivers/video/backlight/pwm_bl.c
+>>>> +++ b/drivers/video/backlight/pwm_bl.c
+>>>> @@ -123,6 +123,7 @@ static int pwm_backlight_update_status(struct backlight_device *bl)
+>>>>         if (brightness > 0) {
+>>>>                 pwm_get_state(pb->pwm, &state);
+>>>>                 state.duty_cycle = compute_duty_cycle(pb, brightness);
+>>>> +               state.enabled = true;
+>>>>                 pwm_apply_state(pb->pwm, &state);
+>>>>                 pwm_backlight_power_on(pb);
+>>>>         } else
+>>>>
+>>>> ? On a side note: It's IMHO strange that pwm_backlight_power_on
+>>>> reconfigures the PWM once more.
+>>>>
+>>>
+>>> Looking again to the pwm_bl code, now, I am not sure this is correct (although
+>>> it probably solves the problem for me).
+>>
+>> Looking at the pwm_bl code I wouldn't accept the above as it is but I'd
+>> almost certainly accept a patch to pwm_bl to move the PWM enable/disable
+>> out of both the power on/off functions so the duty-cycle/enable or
+>> disable can happen in one go within the update_status function. I don't
+>> think such a change would interfere with the power and enable sequencing
+>> needed by panels and it would therefore be a nice continuation of the
+>> work to convert over to the pwm_apply_state() API.
+> 
+> OK for me. Enric, do you care enough to come up with a patch for pwm_bl?
+> I'd expect that this alone should already fix your issue.
+>  
 
-124 static int rockchip_pcie_ep_write_header(struct pci_epc *epc, u8 fn,
-125                                         struct pci_epf_header *hdr)
-126 {
-127        struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
-128        struct rockchip_pcie *rockchip = &ep->rockchip;
-129
-130        /* All functions share the same vendor ID with function 0 */
-131        if (fn == 0) {
-132                u32 vid_regs = (hdr->vendorid & GENMASK(15, 0)) |
+Yes, I'll work on a proposal and send. Thanks you all.
 
-   CID 12883 (#1 of 1): Operands don't affect result
+Regards,
+ Enric
 
-(CONSTANT_EXPRESSION_RESULT) result_independent_of_operands:
-
-hdr->subsys_vendor_id & (4294901760UL /* ~0UL - (1UL << 16) + 1 & (~0UL
->> 64 - 1 - 31) */) is always 0 regardless of the values of its
-operands. This occurs as a value.
-
-133                               (hdr->subsys_vendor_id & GENMASK(31,
-16)) << 16;
-
-The expression (hdr->subsys_vendor_id & GENMASK(31, 16)) << 16 always
-results in zero. Since the GENMASK gets the top 16 bits of
-hdr->subsys_vendor_id then it looks like the 16 bit left shift is not
-required, but I don't know if that is a correct assumption or not.
-
-Colin
+>> None of the above has anything to do with what is right or wrong for
+>> the PWM API evolution. Of course, if this thread does conclude that it
+>> is OK the duty cycle of a disabled PWM to be retained for some drivers
+>> and not others then I'd hope to see some WARN_ON()s added to the PWM
+>> framework to help bring problems to the surface with all drivers.
+> 
+> I think it's not possible to add a reliable WARN_ON for that issue. It
+> is quite expected that .get_state returns something that doesn't
+> completely match the requested configuration. So if a consumer requests
+> 
+> 	.duty_cycle = 1
+> 	.period = 100000000
+> 	.enabled = false
+> 
+> pwm_get_state possibly returns .duty_cycle = 0 even for drivers/hardware
+> that has a concept of duty_cycle for disabled hardware.
+> 
+> A bit this is addressed in https://patchwork.ozlabs.org/patch/1147517/.
+> 
+> Best regards
+> Uwe
+> 
