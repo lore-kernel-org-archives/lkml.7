@@ -6,109 +6,86 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE576C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D246C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B63720659
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:09:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF57720659
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:11:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730618AbfJILJf (ORCPT
+        id S1730663AbfJILL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 07:09:35 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:42178 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727228AbfJILJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 07:09:34 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 311C1DA3E4D34CCC7F61;
-        Wed,  9 Oct 2019 19:09:32 +0800 (CST)
-Received: from [127.0.0.1] (10.133.215.182) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Wed, 9 Oct 2019
- 19:09:23 +0800
-Subject: Re: [RFC PATCH 2/3] perf tools: Add support for "report" for some spe
- events
-To:     James Clark <James.Clark@arm.com>,
-        Jeremy Linton <Jeremy.Linton@arm.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "jolsa@redhat.com" <jolsa@redhat.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-        "yao.jin@linux.intel.com" <yao.jin@linux.intel.com>,
-        "tmricht@linux.ibm.com" <tmricht@linux.ibm.com>,
-        "brueckner@linux.ibm.com" <brueckner@linux.ibm.com>,
-        "songliubraving@fb.com" <songliubraving@fb.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Kim Phillips <Kim.Phillips@amd.com>
-CC:     "gengdongjiu@huawei.com" <gengdongjiu@huawei.com>,
-        "wxf.wang@hisilicon.com" <wxf.wang@hisilicon.com>,
-        "liwei391@huawei.com" <liwei391@huawei.com>,
-        "huawei.libin@huawei.com" <huawei.libin@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "Al Grant" <Al.Grant@arm.com>, nd <nd@arm.com>
-References: <1564738813-10944-1-git-send-email-tanxiaojun@huawei.com>
- <1564738813-10944-3-git-send-email-tanxiaojun@huawei.com>
- <0ac06995-273c-034d-52a3-921ea0337be2@arm.com>
- <016c1ce8-7220-75a2-43fa-0efe150f897c@huawei.com>
- <805660ca-1cf3-4c7f-3aa2-61fed59afa8b@arm.com>
- <637836d6-c884-1a55-7730-eeb45b590d39@huawei.com>
- <b7e5ca2d-8c6c-8ab8-637e-a9aaebaf62a5@arm.com>
-From:   Tan Xiaojun <tanxiaojun@huawei.com>
-Message-ID: <2b1fc8c7-c0b9-f4b9-a24f-444bc22129af@huawei.com>
-Date:   Wed, 9 Oct 2019 19:09:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Wed, 9 Oct 2019 07:11:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34496 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727035AbfJILL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 07:11:28 -0400
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 18F812A09CC
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Oct 2019 11:11:28 +0000 (UTC)
+Received: by mail-wm1-f69.google.com with SMTP id l3so896079wmf.8
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 04:11:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jGWgKZBUMvfPdzfHcqjjwuG5He2iv9Vy4sHR01HU1S8=;
+        b=Dsd7pHyEnOIa8e+up05cQf3xSgmcgzVqwe1Vy3unMvGmzhQW4t31Ver/IHmF3JhTDj
+         +VApgatmdcQ/FNKBTJHPw4sIHBU17RiBTw05r/Q2dkeSNvFIL+Zm5Wk///6x7XlXEkXk
+         Notw9qYmLRL5kC3WcRwj+Uqwv5T0D8klD3rVBbhv1X9w+s4xg/j+lnTQA++UrzXHy1kZ
+         2j8QuVcfX1+Bw6ka52Urj+ugc/uO+J8fNBlSd/fn6Di9y40hc48en84rGrcm7hYjD6t+
+         d2yGDNXZEEgs7X0R7vlMQz9UpR0oToOvC0CliAwUKZndkuzQa3YXfGR1gJteXedYXod7
+         cCLg==
+X-Gm-Message-State: APjAAAWVmhy6QcmeqSLNoRFkrGrc211vPq4gvsIaFsLctGJOJrG6w4kI
+        26GyTz1ehqOWOZgGtP2lwrXgJAUqrt2W1Tn/X9mEZVYOaiAL1daFI3JCO55W6Lc+gE4E5ozBtgX
+        tJSjPexgURZcZshe3A41cb1kd
+X-Received: by 2002:adf:a50b:: with SMTP id i11mr2567244wrb.308.1570619486789;
+        Wed, 09 Oct 2019 04:11:26 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxJge5bT4Fndd0jKpf2bsQCbdfhi5IMzvx6cG1fbrcbsmBTC0oy38p5pvjjVOE2QUkWlM6YLg==
+X-Received: by 2002:adf:a50b:: with SMTP id i11mr2567234wrb.308.1570619486543;
+        Wed, 09 Oct 2019 04:11:26 -0700 (PDT)
+Received: from [192.168.10.150] ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id 36sm2872921wrp.30.2019.10.09.04.11.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Oct 2019 04:11:26 -0700 (PDT)
+Subject: Re: [PATCH] selftests: kvm: fix sync_regs_test with newer gccs
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jim Mattson <jmattson@google.com>
+References: <20191008180808.14181-1-vkuznets@redhat.com>
+ <20191008183634.GF14020@linux.intel.com>
+ <b7d20806-4e88-91af-31c1-8cbb0a8a330b@redhat.com>
+ <87d0f6yzd3.fsf@vitty.brq.redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <5b1b95e5-4836-ab55-fe4d-e9cc78a7a95e@redhat.com>
+Date:   Wed, 9 Oct 2019 13:11:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <b7e5ca2d-8c6c-8ab8-637e-a9aaebaf62a5@arm.com>
-Content-Type: text/plain; charset="windows-1252"
+In-Reply-To: <87d0f6yzd3.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.215.182]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/10/9 17:48, James Clark wrote:
-> Hi Xiaojun,
+On 09/10/19 12:42, Vitaly Kuznetsov wrote:
+> Paolo Bonzini <pbonzini@redhat.com> writes:
+>> There is no practical difference with Vitaly's patch.  The first
+>> _vcpu_run has no pre-/post-conditions on the value of %rbx:
 > 
->> By the way, you mentioned before that you want the spe event to be in the form of "event:pp" like pebs. Is that the whole framework should be made similar to pebs? Or is it just a modification to the command format? 
-> 
-> We're currently still investigating if it makes sense to modify the Perf event open syscall to use SPE when the "precise_ip" attribute is set. And then synthesize samples using the SPE data when available. This would keep the syscall interface more consistent between architectures.
-> 
-> And if tools other than Perf want more precise data, they don't have to be aware of SPE or any of the implementation defined details of it. For example the 'data source' encoding can be different from one micro architecture to the next. The kernel is probably the best place to handle this.
-> 
-> At the moment, every tool that wants to use the Perf syscall to get precise data on ARM would have to be aware of SPE and implement their own decoding.
-> 
+> I think what Sean was suggesting is to prevent GCC from inserting
+> anything (and thus clobbering RBX) between the call to guest_call() and
+> the beginning of 'asm volatile' block by calling *inside* 'asm volatile'
+> block instead.
 
-Hi James,
+Yes, but there is no way that clobbering RBX will break the test,
+because RBX is not initialized until after the first _vcpu_run succeeds.
 
-What do you mean when the user specifies "event:pp", if the SPE is available, configure and record the spe data directly via the perf event open syscall?
-(perf.data itself is the same as using -e arm_spe_0//xxx?)
-
-OK. If I have not misunderstood, I think I know how to do it.
-Thank you.
-
->> For the former, this may be a bit difficult. For the latter, there is currently no modification to the record part, so "-c -F, etc." is only for instructions rather than events, so it may be misunderstood by users.
->>
->> So I haven't figured out how to do. What do you think of this?
-> 
-> I think the patch at the moment is a good start to make SPE more accessible. And the changes I mentioned above wouldn't change the fact that the raw SPE data would still be available via the SPE PMU. So I think continuing with the patch as-is for now is the best idea.
-> 
-
-Yes. I agree.
-
-Xiaojun.
-
-> 
-> James
-> 
-> 
-
-
+Paolo
