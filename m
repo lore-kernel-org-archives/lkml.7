@@ -3,247 +3,115 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E7A3ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDEB7ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E55820B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:28:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9098D20B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:29:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="SQPud2h0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A2nkh74P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731829AbfJIQ2x (ORCPT
+        id S1731755AbfJIQ3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 12:28:53 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:53370 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729644AbfJIQ2x (ORCPT
+        Wed, 9 Oct 2019 12:29:53 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:34024 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729644AbfJIQ3w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 12:28:53 -0400
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x99GSjFp013815;
-        Thu, 10 Oct 2019 01:28:46 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x99GSjFp013815
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1570638527;
-        bh=zM7dxD3GmLuJA27n7tj6vmU9wclV7umhFu5rYXOd+6c=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=SQPud2h0OWu0HF3XYWYxty13tni/EzU9iRFSRy6Ulcx1nol+bNQtyk6jfN+yVAkj9
-         h+1IgrHE8gA9JeygREhqo4gg9/wYVIGeKZhCmqsSUE6VXOrLL+ACe9eQZsn4NawO2s
-         AlEmlOyZcmN613ziPcn6hFKqxpPkhCRc6qGmrQYUaN/7OF+NQB9oJIHQnk0EW9ucMD
-         Az87WvdwWY3kelGhzYJoMQobsQcGwf1gRZkrRUmeb6p+B7GF/l92EYD0vsO7aPfvCC
-         5WvOZTmb6JWM+lY+xsEmT7fmfk1tXwa/EMz5qmVGOJZMNHXRwJd28CPdhWITzNvYTB
-         jKj3Q/x9Dcqlw==
-X-Nifty-SrcIP: [209.85.217.51]
-Received: by mail-vs1-f51.google.com with SMTP id m22so1910937vsl.9;
-        Wed, 09 Oct 2019 09:28:46 -0700 (PDT)
-X-Gm-Message-State: APjAAAV9TeKYg9gLswCJwGEiVSqpbtKjisMiA2+QcRscDA7Wd1+OiVTF
-        cLef8Vw7m7fhqQgzglAeGVjFnzeKVDTafYuOWIE=
-X-Google-Smtp-Source: APXvYqzH0lno0Jfiz/rFQhtYHfui45CzQbPKiMY0yhhlnjAVEgFdHdM9+zJ7EOc9vXnfVbLZJAT9ZLaAw0J1HbDFjmA=
-X-Received: by 2002:a67:2e81:: with SMTP id u123mr1224042vsu.155.1570638525039;
- Wed, 09 Oct 2019 09:28:45 -0700 (PDT)
+        Wed, 9 Oct 2019 12:29:52 -0400
+Received: by mail-qk1-f193.google.com with SMTP id q203so2798833qke.1;
+        Wed, 09 Oct 2019 09:29:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cNuKAskLo6OM546RPPVM8Bvdimr1385wBhczsSTW8LY=;
+        b=A2nkh74PjNB0cXeMqxfGl0lwGBoh8BlmZt1wPeYWN0Ok9RjJ3CyBSbpM+0QVIgKxmx
+         n8m96GJGEyT+lpL9Kk2pTfrmO6GkBy55qnZHQa1cKcgimQEnlasq8OlOVULAf7BvyaG+
+         ul3iOdySy3ePaUo6syWPTIQ1B5X+Edm6zDkaXJ6D4jdsvXS4jfh2Oaw1Yk3QrFTIPP92
+         YZ4sYmR4ze/GIlzNLiNYs/wfq1sFPUhVhX0Y5XKJ12lq4Gbe0jFMin9l0De6i46AUJGB
+         0UcJk7OTYY22ufYxr/KNPbWnBmiUGuEkPwTOgMqx9F8AHiTRy7iYG7MuAAV58HYwVNXG
+         xgmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cNuKAskLo6OM546RPPVM8Bvdimr1385wBhczsSTW8LY=;
+        b=nMJOW4lrPa7MKgG1rz9NeDd7oE9nxTT2ZXqnkPbNwJth+ViRyTSV/cuPOItxc8VYYI
+         23YMrw/TLycK3gpwPpaa4v6pRvCUufkazneYtuv4FC3hZTBOIsBkV2YaUzXnxhGuEHtX
+         vxhAUBBCgpt0DBQ9g1UsFsLFLN7H8Wrzk7wYFKlHYlYD/sUXPod2yKdsxfi4d+jqDlXt
+         nekb9d/tFvHKOW4MQEoBsVDTByjEmkt2Ec5h7miL9GGbtMFXLzcl1teSrb6r6/ncOULM
+         zr/XC3d9FVixy0HAaVZQBXa5DcVk4hfjEpzdW9Mwrs172RdS20am3MwSEdC9rmh94GFd
+         5dRg==
+X-Gm-Message-State: APjAAAWGkj2mxBchzZmH6KNMGW+gduORGLbQHU9Szmxz8prvfKSr3pRx
+        qd1GF/0ZXGHCZMsZowEJE3mIjlLugGZGWSVCXKA=
+X-Google-Smtp-Source: APXvYqzgq8qYqIV2JD8zEMGlXoEhFvZb4i55oFH8asoIQa4+GEZBCuBJV3Rx5ys8eQCG0het/opnqXkrCZVdOubivGc=
+X-Received: by 2002:a37:6d04:: with SMTP id i4mr4623849qkc.36.1570638591744;
+ Wed, 09 Oct 2019 09:29:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1570633189.git.vilhelm.gray@gmail.com> <893c3b4f03266c9496137cc98ac2b1bd27f92c73.1570633189.git.vilhelm.gray@gmail.com>
-In-Reply-To: <893c3b4f03266c9496137cc98ac2b1bd27f92c73.1570633189.git.vilhelm.gray@gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 10 Oct 2019 01:28:08 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATgW7bXUmqV=3QAaJ0Qu73Kox-TgDCQJb=s0=mwewSCUg@mail.gmail.com>
-Message-ID: <CAK7LNATgW7bXUmqV=3QAaJ0Qu73Kox-TgDCQJb=s0=mwewSCUg@mail.gmail.com>
-Subject: Re: [PATCH v17 01/14] bitops: Introduce the for_each_set_clump8 macro
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux PM mailing list <linux-pm@vger.kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        preid@electromag.com.au, Lukas Wunner <lukas@wunner.de>,
-        sean.nyekjaer@prevas.dk, morten.tiljeset@prevas.dk,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>
+References: <20191009154238.15410-1-i.maximets@ovn.org>
+In-Reply-To: <20191009154238.15410-1-i.maximets@ovn.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Wed, 9 Oct 2019 09:29:40 -0700
+Message-ID: <CAEf4BzYtftYQaUa53pKE77cd5tnz3WDY2KDaixhT7XHQ8hyObg@mail.gmail.com>
+Subject: Re: [PATCH bpf] libbpf: fix passing uninitialized bytes to setsockopt
+To:     Ilya Maximets <i.maximets@ovn.org>
+Cc:     Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 12:27 AM William Breathitt Gray
-<vilhelm.gray@gmail.com> wrote:
+On Wed, Oct 9, 2019 at 8:43 AM Ilya Maximets <i.maximets@ovn.org> wrote:
 >
-> This macro iterates for each 8-bit group of bits (clump) with set bits,
-> within a bitmap memory region. For each iteration, "start" is set to the
-> bit offset of the found clump, while the respective clump value is
-> stored to the location pointed by "clump". Additionally, the
-> bitmap_get_value8 and bitmap_set_value8 functions are introduced to
-> respectively get and set an 8-bit value in a bitmap memory region.
+> 'struct xdp_umem_reg' has 4 bytes of padding at the end that makes
+> valgrind complain about passing uninitialized stack memory to the
+> syscall:
 >
-> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> Suggested-by: Lukas Wunner <lukas@wunner.de>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+>   Syscall param socketcall.setsockopt() points to uninitialised byte(s)
+>     at 0x4E7AB7E: setsockopt (in /usr/lib64/libc-2.29.so)
+>     by 0x4BDE035: xsk_umem__create@@LIBBPF_0.0.4 (xsk.c:172)
+>   Uninitialised value was created by a stack allocation
+>     at 0x4BDDEBA: xsk_umem__create@@LIBBPF_0.0.4 (xsk.c:140)
+>
+> Padding bytes appeared after introducing of a new 'flags' field.
+>
+> Fixes: 10d30e301732 ("libbpf: add flags to umem config")
+> Signed-off-by: Ilya Maximets <i.maximets@ovn.org>
 > ---
->  include/asm-generic/bitops/find.h | 17 +++++++++++++++
->  include/linux/bitmap.h            | 35 +++++++++++++++++++++++++++++++
->  include/linux/bitops.h            |  5 +++++
->  lib/find_bit.c                    | 14 +++++++++++++
->  4 files changed, 71 insertions(+)
+>  tools/lib/bpf/xsk.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/include/asm-generic/bitops/find.h b/include/asm-generic/bitops/find.h
-> index 8a1ee10014de..9fdf21302fdf 100644
-> --- a/include/asm-generic/bitops/find.h
-> +++ b/include/asm-generic/bitops/find.h
-> @@ -80,4 +80,21 @@ extern unsigned long find_first_zero_bit(const unsigned long *addr,
->
->  #endif /* CONFIG_GENERIC_FIND_FIRST_BIT */
->
-> +/**
-> + * find_next_clump8 - find next 8-bit clump with set bits in a memory region
-> + * @clump: location to store copy of found clump
-> + * @addr: address to base the search on
-> + * @size: bitmap size in number of bits
-> + * @offset: bit offset at which to start searching
-> + *
-> + * Returns the bit offset for the next set clump; the found clump value is
-> + * copied to the location pointed by @clump. If no bits are set, returns @size.
-> + */
-> +extern unsigned long find_next_clump8(unsigned long *clump,
-> +                                     const unsigned long *addr,
-> +                                     unsigned long size, unsigned long offset);
-> +
-> +#define find_first_clump8(clump, bits, size) \
-> +       find_next_clump8((clump), (bits), (size), 0)
-> +
->  #endif /*_ASM_GENERIC_BITOPS_FIND_H_ */
-> diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
-> index 90528f12bdfa..761fab5b60a7 100644
-> --- a/include/linux/bitmap.h
-> +++ b/include/linux/bitmap.h
-> @@ -66,6 +66,8 @@
->   *  bitmap_allocate_region(bitmap, pos, order)  Allocate specified bit region
->   *  bitmap_from_arr32(dst, buf, nbits)          Copy nbits from u32[] buf to dst
->   *  bitmap_to_arr32(buf, src, nbits)            Copy nbits from buf to u32[] dst
-> + *  bitmap_get_value8(map, start)               Get 8bit value from map at start
-> + *  bitmap_set_value8(map, value, start)        Set 8bit value to map at start
->   *
->   * Note, bitmap_zero() and bitmap_fill() operate over the region of
->   * unsigned longs, that is, bits behind bitmap till the unsigned long
-> @@ -488,6 +490,39 @@ static inline void bitmap_from_u64(unsigned long *dst, u64 mask)
->                 dst[1] = mask >> 32;
->  }
->
-> +/**
-> + * bitmap_get_value8 - get an 8-bit value within a memory region
-> + * @map: address to the bitmap memory region
-> + * @start: bit offset of the 8-bit value; must be a multiple of 8
-> + *
-> + * Returns the 8-bit value located at the @start bit offset within the @src
-> + * memory region.
-> + */
-> +static inline unsigned long bitmap_get_value8(const unsigned long *map,
-> +                                             unsigned long start)
-
-Why is the return type "unsigned long" where you know
-it return the 8-bit value ?
-
-u8?
-
-
-
-> +{
-> +       const size_t index = BIT_WORD(start);
-> +       const unsigned long offset = start % BITS_PER_LONG;
-> +
-> +       return (map[index] >> offset) & 0xFF;
-> +}
-> +
-> +/**
-> + * bitmap_set_value8 - set an 8-bit value within a memory region
-> + * @map: address to the bitmap memory region
-> + * @value: the 8-bit value; values wider than 8 bits may clobber bitmap
-> + * @start: bit offset of the 8-bit value; must be a multiple of 8
-> + */
-> +static inline void bitmap_set_value8(unsigned long *map, unsigned long value,
-
-
-Same here,   "u8 value"
-
-
-
-> +                                    unsigned long start)
-> +{
-> +       const size_t index = BIT_WORD(start);
-> +       const unsigned long offset = start % BITS_PER_LONG;
-> +
-> +       map[index] &= ~(0xFF << offset);
-> +       map[index] |= value << offset;
-> +}
-> +
->  #endif /* __ASSEMBLY__ */
->
->  #endif /* __LINUX_BITMAP_H */
-> diff --git a/include/linux/bitops.h b/include/linux/bitops.h
-> index cf074bce3eb3..fb94a10f7853 100644
-> --- a/include/linux/bitops.h
-> +++ b/include/linux/bitops.h
-> @@ -40,6 +40,11 @@ extern unsigned long __sw_hweight64(__u64 w);
->              (bit) < (size);                                    \
->              (bit) = find_next_zero_bit((addr), (size), (bit) + 1))
->
-> +#define for_each_set_clump8(start, clump, bits, size) \
-> +       for ((start) = find_first_clump8(&(clump), (bits), (size)); \
-> +            (start) < (size); \
-> +            (start) = find_next_clump8(&(clump), (bits), (size), (start) + 8))
-> +
->  static inline int get_bitmask_order(unsigned int count)
+> diff --git a/tools/lib/bpf/xsk.c b/tools/lib/bpf/xsk.c
+> index a902838f9fcc..26d9db783560 100644
+> --- a/tools/lib/bpf/xsk.c
+> +++ b/tools/lib/bpf/xsk.c
+> @@ -139,7 +139,7 @@ int xsk_umem__create_v0_0_4(struct xsk_umem **umem_ptr, void *umem_area,
+>                             const struct xsk_umem_config *usr_config)
 >  {
->         int order;
-> diff --git a/lib/find_bit.c b/lib/find_bit.c
-> index 5c51eb45178a..e35a76b291e6 100644
-> --- a/lib/find_bit.c
-> +++ b/lib/find_bit.c
-> @@ -214,3 +214,17 @@ EXPORT_SYMBOL(find_next_bit_le);
->  #endif
->
->  #endif /* __BIG_ENDIAN */
-> +
-> +unsigned long find_next_clump8(unsigned long *clump, const unsigned long *addr,
+>         struct xdp_mmap_offsets off;
+> -       struct xdp_umem_reg mr;
+> +       struct xdp_umem_reg mr = {};
 
+well, guess what, even with this explicit initialization, padding is
+not guaranteed to be initialized (and it's sometimes is not in
+practice, I ran into such problems), only since C11 standard it is
+specified that padding is also zero-initialized. You have to do memset
+to 0.
 
-Ditto.   "u8 *clump"
-
-
-
-
-> +                              unsigned long size, unsigned long offset)
-> +{
-> +       offset = find_next_bit(addr, size, offset);
-> +       if (offset == size)
-> +               return size;
-> +
-> +       offset = round_down(offset, 8);
-> +       *clump = bitmap_get_value8(addr, offset);
-> +
-> +       return offset;
-> +}
-> +EXPORT_SYMBOL(find_next_clump8);
+>         struct xsk_umem *umem;
+>         socklen_t optlen;
+>         void *map;
 > --
-> 2.23.0
+> 2.17.1
 >
-
-
---
-Best Regards
-
-Masahiro Yamada
