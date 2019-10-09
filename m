@@ -2,185 +2,165 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F87ECE58E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB4E1ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9B7621835
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:49:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570625382;
-	bh=BS4jso9hypNio5lXJwUJxoGbh/2wvN6PY7GhM+KUNGo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=jXmW5s0F5U8W72r3zF0Z5MuB+cLNgq9bYgDD6opPfwsQSGaCYmUgFpd+5R7KRnskj
-	 f3/EAB6QIj5B3f9q2gCUUNvMYQ5BA0sJnL5cM46wdghvbdjh0ev9KR93DmUQhF40l9
-	 XKuJwqbXBQQ9WKvN88mnX2bSbCXKgnPQ3w+RdChk=
+	by mail.kernel.org (Postfix) with ESMTP id 9877821835
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:53:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="INz+ylf3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730955AbfJIMtl (ORCPT
+        id S1731152AbfJIMxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 08:49:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48454 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729784AbfJIMtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 08:49:41 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C2C920B7C;
-        Wed,  9 Oct 2019 12:49:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570625380;
-        bh=BS4jso9hypNio5lXJwUJxoGbh/2wvN6PY7GhM+KUNGo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=jH2fwKYGgUAT3yvVwlPaj40RpZcpMd28Pv1P0XTRASzDbfUec6elVvevVNgQPnl5L
-         SUolQjQLJky2IL2PxOIjStpZNm3Mnb717g61/tSzlO+i2tTIQjv1Iuy6WMQv+h9rJA
-         n0oJqlQTsS8MU9UPyPVj6ija2LN0Ad0y9AwzM7es=
-Date:   Wed, 9 Oct 2019 07:49:38 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Keith Busch <kbusch@kernel.org>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v3 1/2] PCI: PCIe: ASPM: Introduce pcie_aspm_enabled()
-Message-ID: <20191009124938.GA67585@google.com>
-MIME-Version: 1.0
+        Wed, 9 Oct 2019 08:53:48 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:9475 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730994AbfJIMxr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 08:53:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1570625625;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=6vH2V5lHL3NiigClBhih4XYbxC61BJAkQyYykew5ddI=;
+        b=INz+ylf3frHd2ICtBuH4ZYk3fs3opbXWj5KXnqL9FIUhpTqQ3cOpyjuVO+e2e4JSOg
+        Xy+T8ByHSdz/UoHEmbPauw4zobOU4BjBdlncRHfXlo2raqgLl6KmDef4226KuG1WKwJz
+        M6QSL5xSmZFxc1Liu1Bx2MtrYrV1IUShO1iXPTlISkQ8/yjBdj7gtFMc4A/hAL24eQ5p
+        GSiQWMf2NVgrGvBKgB1NimQrElTfmHxamQEDPEV2StjobkElJUvz/gV5sr1h2ZW9CNbb
+        voO6EP9qopwOcWwJZ+zcant19OjRjezmiN2qwT3hNCB+b1bucb38hwp9aLXCnU2klwQY
+        uGoA==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/ztwDqvvQ=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 44.28.0 DYNA|AUTH)
+        with ESMTPSA id v00409v99CrhzeG
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Wed, 9 Oct 2019 14:53:43 +0200 (CEST)
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0j-uSM2gheHViommWcrSaLVfzbwV3M7OOWz3GyzhHSwRA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: Lay common foundation to make PVR/SGX work without hacks on OMAP34xx, OMAP36xx, AM335x and potentially OMAP4, OMAP5
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <0FEF1AB1-5FE0-4EEE-BEB9-0957BB424C18@goldelico.com>
+Date:   Wed, 9 Oct 2019 14:53:42 +0200
+Cc:     Merlijn Wajer <merlijn@wizzup.org>, Adam Ford <aford173@gmail.com>,
+        Philipp Rossak <embed3d@gmail.com>,
+        =?utf-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        =?utf-8?Q?Filip_Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>,
+        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+        moaz korena <moaz@korena.xyz>,
+        James Hilliard <james.hilliard1@gmail.com>,
+        kernel@pyra-handheld.com,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, maemo-leste@lists.dyne.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <270E1695-9B1F-4470-AEA2-724E2139BCF5@goldelico.com>
+References: <d0cbfaaf-813e-8803-f90b-931a38396750@wizzup.org> <3A03FF16-C203-43ED-AEEF-0260F6B3331A@goldelico.com> <3b0a5e78-c4c2-1963-bac7-b49496a1e9b9@wizzup.org> <1F942AAB-1648-46C0-ADD5-90F6898778BE@goldelico.com> <84cac9b8-0eff-33f8-464d-4f8045d7db19@wizzup.org> <BFAA7FA6-A352-476A-99F9-02EA663A6AAD@goldelico.com> <CAHCN7x+87xTsA3MeHy7kUWU0SU3X8HmSc2wbk5gKvYm1dRNe6A@mail.gmail.com> <04809E3E-A690-4931-B949-1CFDAF407C14@goldelico.com> <ebb50954-b456-4dab-0765-9dfa06c67075@wizzup.org> <C3A56737-6187-4B31-8697-3A02DD164429@goldelico.com> <20191007155252.GQ5610@atomide.com> <64474fb1-f6d2-52d0-175a-65bb493dc1fe@ti.com> <9253CFB5-0AF7-4EA0-AC7F-6DE37318238A@goldelico.com> <0bb4739d-e26f-de49-fd80-257a836e892a@ti.com> <0FEF1AB1-5FE0-4EEE-BEB9-0957BB424C18@goldelico.com>
+To:     Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 12:54:37AM +0200, Rafael J. Wysocki wrote:
-> On Tue, Oct 8, 2019 at 11:16 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > On Tue, Oct 08, 2019 at 11:27:51AM +0200, Rafael J. Wysocki wrote:
-> > > On Tue, Oct 8, 2019 at 12:34 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > On Thu, Aug 08, 2019 at 11:55:07PM +0200, Rafael J. Wysocki wrote:
-> > > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > >
-> > > > > Add a function checking whether or not PCIe ASPM has been enabled for
-> > > > > a given device.
-> > > > >
-> > > > > It will be used by the NVMe driver to decide how to handle the
-> > > > > device during system suspend.
-> > > > >
-> > > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > > ---
-> > > > >
-> > > > > v2 -> v3:
-> > > > >   * Make the new function return bool.
-> > > > >   * Change its name back to pcie_aspm_enabled().
-> > > > >   * Fix kerneldoc comment formatting.
-> > > > >
-> > > > > -> v2:
-> > > > >   * Move the PCI/PCIe ASPM changes to a separate patch.
-> > > > >   * Add the _mask suffix to the new function name.
-> > > > >   * Add EXPORT_SYMBOL_GPL() to the new function.
-> > > > >   * Avoid adding an unnecessary blank line.
-> > > > >
-> > > > > ---
-> > > > >  drivers/pci/pcie/aspm.c |   20 ++++++++++++++++++++
-> > > > >  include/linux/pci.h     |    3 +++
-> > > > >  2 files changed, 23 insertions(+)
-> > > > >
-> > > > > Index: linux-pm/drivers/pci/pcie/aspm.c
-> > > > > ===================================================================
-> > > > > --- linux-pm.orig/drivers/pci/pcie/aspm.c
-> > > > > +++ linux-pm/drivers/pci/pcie/aspm.c
-> > > > > @@ -1170,6 +1170,26 @@ static int pcie_aspm_get_policy(char *bu
-> > > > >  module_param_call(policy, pcie_aspm_set_policy, pcie_aspm_get_policy,
-> > > > >       NULL, 0644);
-> > > > >
-> > > > > +/**
-> > > > > + * pcie_aspm_enabled - Check if PCIe ASPM has been enabled for a device.
-> > > > > + * @pci_device: Target device.
-> > > > > + */
-> > > > > +bool pcie_aspm_enabled(struct pci_dev *pci_device)
-> > > > > +{
-> > > > > +     struct pci_dev *bridge = pci_upstream_bridge(pci_device);
-> > > > > +     bool ret;
-> > > > > +
-> > > > > +     if (!bridge)
-> > > > > +             return false;
-> > > > > +
-> > > > > +     mutex_lock(&aspm_lock);
-> > > > > +     ret = bridge->link_state ? !!bridge->link_state->aspm_enabled : false;
-> > > > > +     mutex_unlock(&aspm_lock);
-> > > >
-> > > > Why do we need to acquire aspm_lock here?  We aren't modifying
-> > > > anything, and I don't think we're preventing a race.  If this races
-> > > > with another thread that changes aspm_enabled, we'll return either the
-> > > > old state or the new one, and I think that's still the case even if we
-> > > > don't acquire aspm_lock.
-> > >
-> > > Well, if we can guarantee that pci_remove_bus_device() will never be
-> > > called in parallel with this helper, then I agree, but can we
-> > > guarantee that?
-> >
-> > Hmm, yeah, I guess that's the question.  It's not a race with another
-> > thread changing aspm_enabled; the potential race is with another
-> > thread removing the last child of "bridge", which will free the
-> > link_state and set bridge->link_state = NULL.
-> >
-> > I think it should be safe to call device-related PCI interfaces if
-> > you're holding a reference to the device, e.g., from a driver bound to
-> > the device or a sysfs accessor.  Since we call pcie_aspm_enabled(dev)
-> > from a driver bound to "dev", another thread should not be able to
-> > remove "dev" while we're using it.
-> >
-> > I know that's a little hand-wavey, but if it weren't true, I think
-> > we'd have a lot more locking sprinkled everywhere in the PCI core than
-> > we do.
-> >
-> > This has implications for Heiner's ASPM sysfs patches because we're
-> > currently doing this in sysfs accessors:
-> >
-> >   static ssize_t aspm_attr_show_common(struct device *dev, ...)
-> >   {
-> >     ...
-> >     link = pcie_aspm_get_link(pdev);
-> >
-> >     mutex_lock(&aspm_lock);
-> >     enabled = link->aspm_enabled & state;
-> >     mutex_unlock(&aspm_lock);
-> >     ...
-> >   }
-> >
-> > I assume sysfs must be holding a reference that guarantees "dev" is
-> > valid througout this code, and therefore we should not need to hold
-> > aspm_lock.
-> 
-> In principle, pcie_aspm_enabled() need not be called via sysfs.
-> 
-> In the particular NVMe use case, it is called from the driver's own PM
-> callback, so it would be safe without the locking AFAICS.
 
-Right, pcie_aspm_enabled() is only used by drivers (actually only by
-the nvme driver so far).  And aspm_attr_show_common() is only used via
-new sysfs code being added by Heiner.
+> Am 08.10.2019 um 22:15 schrieb H. Nikolaus Schaller =
+<hns@goldelico.com>:
+>=20
+>=20
+>> Am 08.10.2019 um 10:00 schrieb Tero Kristo <t-kristo@ti.com>:
+>>=20
+>> On 07/10/2019 22:24, H. Nikolaus Schaller wrote:
+>>> Hi Tero,
+>>>> Am 07.10.2019 um 21:18 schrieb Tero Kristo <t-kristo@ti.com>:
+>>>>=20
+>>>> On 07/10/2019 18:52, Tony Lindgren wrote:
+>>>>> Hi,
+>>>>> * H. Nikolaus Schaller <hns@goldelico.com> [191005 16:59]:
+>>>>> Please try with Tero's current github branch at =
+github.com/t-kristo/linux-pm.git
+>>>>> 5.4-rc1-ipc from few days ago, the earlier versions had still =
+issues.
+>>>>=20
+>>>> Yeah, this one should be fixed now.
+>>> Ok! Will try asap.
+>>>>=20
+>>>>>> * OMAP5 (Pyra): fails to enable the clocks (did work with the =
+previous version)
+>>>>>> [  304.140363] clock-controller:clk:0000:0: failed to enable
+>>>>>> [  304.147388] PVR_K:(Error): EnableSGXClocks: =
+pm_runtime_get_sync failed (16)
+>>>>> Hmm no idea what might be up with this one. Did some clkctrl clock
+>>>>> fixes maybe cause a regression here? Tero do you have any ideas?
+>>>>=20
+>>>> So, this one I am not too sure, I haven't looked at omap5 graphics =
+clocking. I don't think it has anything to do with reset handling =
+though.
+>>>>=20
+>>>> Is there some simple way to try this out on board; without PVR =
+module that is?
+>>> Yes, I have also seen it when just running the commands in the =
+original commit message [1]:
+>>> # echo on > $(find /sys -name control | grep \/5600)
+>>> # rwmem 0x5600fe00	# OCP Revision
+>>> 0x5600fe00 =3D 0x40000000
+>>> # echo auto > $(find /sys -name control | grep \/5600)
+>>> # rwmem 0x5600fe10
+>>> # rwmem 0x56000024
+>>> But I have not yet tested with 5.4-rc2, just 5.4-rc1.
+>>=20
+>> Ok, there is a one liner DTS data fix for this issue, attached.
+>=20
+> Yes, have tested and it fixes omap5. I have the 3D demo running again =
+on the Pyra. Yay!
+>=20
+> Together with the latest rstcrtl patches, am335x is now better.
+> No omap_reset_deassert: timedout waiting for gfx:0 any more.
+>=20
+> But I can't access the sgx registers and get memory faults. Maybe
+> my script has a bug and is trying the wrong address. Have to check
+> with some distance...
 
-> I guess it is safe to drop the locking from there, but then it would
-> be good to mention in the kerneldoc that calling it is only safe under
-> the assumption that the link_state object cannot go away while it is
-> running.
+Now I have done more tests on am335x. It is not my script but something =
+else.
 
-I'll post a patch to that effect.  Thanks!
+Trying to read 0x5600fe00 after doing
 
-Bjorn
+echo on > /sys/bus/platform/devices/5600fe00.target-module/power/control
+
+gives page faults.
+
+When trying to load the kernel driver, the omap_reset_deassert message =
+has
+gone but the driver does no initialize:
+
+root@letux:~# modprobe pvrsrvkm_omap_am335x_sgx530_125
+[   45.774712] pvrsrvkm_omap_am335x_sgx530_125: module is from the =
+staging directory, the quality is unknown, you have been warned.
+root@letux:~#
+
+Here is the CM/PM register dump after enabling power/control
+
+*** SGX Register Dump ***
+0x44E00900 00000301 CM_GFX_L3_CLKSTCTRL
+0x44E00904 00050000 CM_GFX_GFX_CLKCTRL
+0x44E0090c 00000002 CM_GFX_L4LS_GFX_CLKSTCTR
+0x44E00910 00030000 CM_GFX_MMUCFG_CLKCTRL
+0x44E00914 00030000 CM_GFX_MMUDATA_CLKCTRL
+0x44E0052c 00000000 CM_DPLL.CLKSEL_GFX_FCLK
+0x44E01100 00060047 PM_GFX_PWRSTCTRL
+0x44E01104 00000001 RM_GFX_RSTCTRL
+0x44E01110 00000037 PM_GFX_PWRSTST
+
+BR,
+Nikolaus
+
+
