@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A04E7ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:25:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02ABBECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7794C206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:25:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C55FD206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:25:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570641910;
-	bh=OEMEAnqXLXECNbzBi+S+06vmw7HQa6AKkVWSqlb1UlM=;
+	s=default; t=1570641912;
+	bh=MAUIFzvj0oCaU6nDVjrgFqLlv1Ar4V2sW0PJ1BSPT3A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GHEwaKVzARmpqMf1WOh1BGZ405vhPM4XrPyI6BqJcR6RA5lPUo5+Z1E0fVwEvvyAJ
-	 cY6MXdPJnwzYR4/xUgkrNDMsSV1YxCIUzCC9N1ptXUT2fgkS+D05GtAXUMqdKUP4Z7
-	 TCeOsk+Hx9SQ6UIpe0PWzsTnZNDIPvQw9Gl4t14E=
+	b=lV6K16OCuReot/79Sg7f+sYpsJTqPg8OboGyMnnVF6Dmjr3HpRTOkmC2/7wBxnX8e
+	 oYi+Xl2Ai0IdLD6Ov4BVmIeU5uxPwp7O/7vkwPZllwor0z6L9IdbINGRuUqTk+jCfF
+	 srcn4JXDbjESfZRn9Lc31kmLRFoLeLAkPgRguLRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732568AbfJIRZH (ORCPT
+        id S1732583AbfJIRZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:25:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49806 "EHLO mail.kernel.org"
+        Wed, 9 Oct 2019 13:25:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731916AbfJIRYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 13:24:50 -0400
+        id S1732483AbfJIRYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 13:24:53 -0400
 Received: from sasha-vm.mshome.net (unknown [167.220.2.234])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7A5321920;
-        Wed,  9 Oct 2019 17:24:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F4E321920;
+        Wed,  9 Oct 2019 17:24:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570641888;
-        bh=OEMEAnqXLXECNbzBi+S+06vmw7HQa6AKkVWSqlb1UlM=;
+        s=default; t=1570641892;
+        bh=MAUIFzvj0oCaU6nDVjrgFqLlv1Ar4V2sW0PJ1BSPT3A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MvBdh4s3wI32fa6cbXKFs2slWhrp+wygOaQlpi6Nd8krCPTni7PsWBTh/L1VkC47F
-         BO0VxajevwCaBbScnlzffcpQW8WBfZ3+LZHofIOQQJhDv+fdGXQ13N7l8MmZbQXH1S
-         6SvtX3kGIeOEbDEI31HG46ZmLfPY5ycpDsGDwPQE=
+        b=n//kR9OjvPATfzntjC7rPZYejxVpp5GMSSwiIzWpByyDYv17rCayLwdA5EKB0I82L
+         EwejGtnTzRliv9yRTqGIJH5xdlsLeOAQuMsapLyG+4NpkicTUI6SGgek+ogdiv5pFz
+         ze3AlwzaoP8BfsXAJ3uzkCOZAhMjvbVdfj46ZbrQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jacob Keller <jacob.e.keller@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 12/13] namespace: fix namespace.pl script to support relative paths
-Date:   Wed,  9 Oct 2019 13:06:31 -0400
-Message-Id: <20191009170635.536-12-sashal@kernel.org>
+Cc:     Xiang Chen <chenxiang66@hisilicon.com>,
+        John Garry <john.garry@huawei.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>,
+        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 02/11] scsi: megaraid: disable device when probe failed after enabled device
+Date:   Wed,  9 Oct 2019 13:06:36 -0400
+Message-Id: <20191009170646.696-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191009170635.536-1-sashal@kernel.org>
-References: <20191009170635.536-1-sashal@kernel.org>
+In-Reply-To: <20191009170646.696-1-sashal@kernel.org>
+References: <20191009170646.696-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,84 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacob Keller <jacob.e.keller@intel.com>
+From: Xiang Chen <chenxiang66@hisilicon.com>
 
-[ Upstream commit 82fdd12b95727640c9a8233c09d602e4518e71f7 ]
+[ Upstream commit 70054aa39a013fa52eff432f2223b8bd5c0048f8 ]
 
-The namespace.pl script does not work properly if objtree is not set to
-an absolute path. The do_nm function is run from within the find
-function, which changes directories.
+For pci device, need to disable device when probe failed after enabled
+device.
 
-Because of this, appending objtree, $File::Find::dir, and $source, will
-return a path which is not valid from the current directory.
-
-This used to work when objtree was set to an absolute path when using
-"make namespacecheck". It appears to have not worked when calling
-./scripts/namespace.pl directly.
-
-This behavior was changed in 7e1c04779efd ("kbuild: Use relative path
-for $(objtree)", 2014-05-14)
-
-Rather than fixing the Makefile to set objtree to an absolute path, just
-fix namespace.pl to work when srctree and objtree are relative. Also fix
-the script to use an absolute path for these by default.
-
-Use the File::Spec module for this purpose. It's been part of perl
-5 since 5.005.
-
-The curdir() function is used to get the current directory when the
-objtree and srctree aren't set in the environment.
-
-rel2abs() is used to convert possibly relative objtree and srctree
-environment variables to absolute paths.
-
-Finally, the catfile() function is used instead of string appending
-paths together, since this is more robust when joining paths together.
-
-Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Link: https://lore.kernel.org/r/1567818450-173315-1-git-send-email-chenxiang66@hisilicon.com
+Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
+Reviewed-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/namespace.pl | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/scsi/megaraid.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/scripts/namespace.pl b/scripts/namespace.pl
-index 9f3c9d47a4a5d..4dddd4c01b625 100755
---- a/scripts/namespace.pl
-+++ b/scripts/namespace.pl
-@@ -65,13 +65,14 @@
- require 5;	# at least perl 5
- use strict;
- use File::Find;
-+use File::Spec;
- 
- my $nm = ($ENV{'NM'} || "nm") . " -p";
- my $objdump = ($ENV{'OBJDUMP'} || "objdump") . " -s -j .comment";
--my $srctree = "";
--my $objtree = "";
--$srctree = "$ENV{'srctree'}/" if (exists($ENV{'srctree'}));
--$objtree = "$ENV{'objtree'}/" if (exists($ENV{'objtree'}));
-+my $srctree = File::Spec->curdir();
-+my $objtree = File::Spec->curdir();
-+$srctree = File::Spec->rel2abs($ENV{'srctree'}) if (exists($ENV{'srctree'}));
-+$objtree = File::Spec->rel2abs($ENV{'objtree'}) if (exists($ENV{'objtree'}));
- 
- if ($#ARGV != -1) {
- 	print STDERR "usage: $0 takes no parameters\n";
-@@ -231,9 +232,9 @@ sub do_nm
+diff --git a/drivers/scsi/megaraid.c b/drivers/scsi/megaraid.c
+index 19bffe0b2cc0a..2cbfec6a74662 100644
+--- a/drivers/scsi/megaraid.c
++++ b/drivers/scsi/megaraid.c
+@@ -4219,11 +4219,11 @@ megaraid_probe_one(struct pci_dev *pdev, const struct pci_device_id *id)
+ 		 */
+ 		if (pdev->subsystem_vendor == PCI_VENDOR_ID_COMPAQ &&
+ 		    pdev->subsystem_device == 0xC000)
+-		   	return -ENODEV;
++			goto out_disable_device;
+ 		/* Now check the magic signature byte */
+ 		pci_read_config_word(pdev, PCI_CONF_AMISIG, &magic);
+ 		if (magic != HBA_SIGNATURE_471 && magic != HBA_SIGNATURE)
+-			return -ENODEV;
++			goto out_disable_device;
+ 		/* Ok it is probably a megaraid */
  	}
- 	($source = $basename) =~ s/\.o$//;
- 	if (-e "$source.c" || -e "$source.S") {
--		$source = "$objtree$File::Find::dir/$source";
-+		$source = File::Spec->catfile($objtree, $File::Find::dir, $source)
- 	} else {
--		$source = "$srctree$File::Find::dir/$source";
-+		$source = File::Spec->catfile($srctree, $File::Find::dir, $source)
- 	}
- 	if (! -e "$source.c" && ! -e "$source.S") {
- 		# No obvious source, exclude the object if it is conglomerate
+ 
 -- 
 2.20.1
 
