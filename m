@@ -2,81 +2,88 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6151EC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 01:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30639C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 01:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4343A206C2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 01:14:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEA6E20859
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 01:17:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oiw1UQs+";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oiw1UQs+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730166AbfJIBO5 (ORCPT
+        id S1730086AbfJIBRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 21:14:57 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3663 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727051AbfJIBO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 21:14:57 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id CCD477714687AFCF4908;
-        Wed,  9 Oct 2019 09:14:55 +0800 (CST)
-Received: from [127.0.0.1] (10.74.221.148) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Wed, 9 Oct 2019
- 09:14:46 +0800
-Subject: Re: [PATCH 0/4] HiSilicon hip08 uncore PMU events additions
-To:     John Garry <john.garry@huawei.com>, <peterz@infradead.org>,
-        <mingo@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
-        <namhyung@kernel.org>
-References: <1567612484-195727-1-git-send-email-john.garry@huawei.com>
-CC:     <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-        <will@kernel.org>, <mark.rutland@arm.com>
-From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
-Message-ID: <80d5b29a-64fe-7c0f-6e5d-74a030851fd8@hisilicon.com>
-Date:   Wed, 9 Oct 2019 09:14:45 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.1.1
+        Tue, 8 Oct 2019 21:17:23 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:57222 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727051AbfJIBRX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 21:17:23 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 5D8A060AA8; Wed,  9 Oct 2019 01:17:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1570583842;
+        bh=XVsNK4IrJQqEtygFw4GniV7xzf57ICAUT9ZaI0ARlGg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=oiw1UQs+13t72DOqHm+xVhKHd7YlYy+qbHCjGbze04GI921sf7Pcc3om49Fj+ppCx
+         E5tUEkiGtNgvJ+6vkJ6/Itb9NH42n19dvdLIx3RqmxyY0wenhI0cmXKistLHqF+joV
+         GTMRmIesVf4259RLdz7Jbd5QOxOk9jmMh6U7tuCI=
+Received: from [192.168.142.6] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: clew@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BC10660709;
+        Wed,  9 Oct 2019 01:17:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1570583842;
+        bh=XVsNK4IrJQqEtygFw4GniV7xzf57ICAUT9ZaI0ARlGg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=oiw1UQs+13t72DOqHm+xVhKHd7YlYy+qbHCjGbze04GI921sf7Pcc3om49Fj+ppCx
+         E5tUEkiGtNgvJ+6vkJ6/Itb9NH42n19dvdLIx3RqmxyY0wenhI0cmXKistLHqF+joV
+         GTMRmIesVf4259RLdz7Jbd5QOxOk9jmMh6U7tuCI=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BC10660709
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=clew@codeaurora.org
+Subject: Re: [PATCH v2 6/6] rpmsg: glink: Free pending deferred work on remove
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>
+Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20191004222702.8632-1-bjorn.andersson@linaro.org>
+ <20191004222702.8632-7-bjorn.andersson@linaro.org>
+From:   Chris Lew <clew@codeaurora.org>
+Message-ID: <e50eabc6-c8d3-f47f-dab8-91e85ad38fb8@codeaurora.org>
+Date:   Tue, 8 Oct 2019 18:17:21 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <1567612484-195727-1-git-send-email-john.garry@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
+In-Reply-To: <20191004222702.8632-7-bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.221.148]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
 
-Thanks for your nice work, these are useful for performance profiling
-if anyone is unfamiliar with the uncore PMU events on hip08.
-For this patchset, please feel free to add
-Reviewed-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
 
-Thanks,
-Shaokun
+On 10/4/2019 3:27 PM, Bjorn Andersson wrote:
+> By just cancelling the deferred rx worker during GLINK instance teardown
+> any pending deferred commands are leaked, so free them.
+> 
+> Fixes: b4f8e52b89f6 ("rpmsg: Introduce Qualcomm RPM glink driver")
+> Cc: stable@vger.kernel.org
+> Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+Acked-By: Chris Lew <clew@codeaurora.org>
 
-On 2019/9/4 23:54, John Garry wrote:
-> This patchset adds some missing uncore PMU events for the hip08 arm64
-> platform.
-> 
-> The missing events were originally mentioned in
-> https://lkml.org/lkml/2019/6/14/645, when upstreaming the JSONs initially.
-> 
-> It also includes a fix for a DDRC eventname.
-> 
-> John Garry (4):
->   perf jevents: Fix Hisi hip08 DDRC PMU eventname
->   perf jevents: Add some missing events for Hisi hip08 DDRC PMU
->   perf jevents: Add some missing events for Hisi hip08 L3C PMU
->   perf jevents: Add some missing events for Hisi hip08 HHA PMU
-> 
->  .../arm64/hisilicon/hip08/uncore-ddrc.json    | 16 +++++-
->  .../arm64/hisilicon/hip08/uncore-hha.json     | 23 +++++++-
->  .../arm64/hisilicon/hip08/uncore-l3c.json     | 56 +++++++++++++++++++
->  3 files changed, 93 insertions(+), 2 deletions(-)
-> 
-
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
