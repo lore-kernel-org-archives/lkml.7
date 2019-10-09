@@ -2,90 +2,85 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70288ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A377C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AB5E206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:50:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NaGfnVf9"
+	by mail.kernel.org (Postfix) with ESMTP id 3BEC1206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:55:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731340AbfJIPuU (ORCPT
+        id S1731331AbfJIPzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 11:50:20 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:36666 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731145AbfJIPuT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 11:50:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=xTB9MslzzB0F5KW3M1C+wJKgHCO3oHuoENVSbmRi9/U=; b=NaGfnVf9Rz6Oqnpod4/niOtwX
-        lFqaxyhhHoNAbPvpU3qz3WiE4rkibJOPnUTGZMhnnZHoQXT0GowkKZFTAs0cxzOj9MifiybbXzApj
-        ibTB/WqX2oaMGrFHdAw3iomnG5hQZPoL5r85z89ElM5wg4wkEWeoVVoIKQ0Pl3LCOjiFlzt2XJAfo
-        9bsQDh/RVHitGFnqd/8SpxrzPpnn44OTXJPQ6I6HK2eUm6BLSx1WHz521ssppPtZMTNhkcMPmmKzl
-        3RAqpaAQ5WlIGfTww5HPqlUCYk9YS0XWoqubSG1f0KAm66IhetRehJ9u6Jpy7HJt3TTSbAci4RK6I
-        6OIl2P4ZA==;
-Received: from [2601:1c0:6280:3f0::9ef4]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iIEDV-0003nX-Hg; Wed, 09 Oct 2019 15:49:33 +0000
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Cc:     Antoine Tenart <antoine.tenart@free-electrons.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        David Miller <davem@davemloft.net>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH -next] crypto: inside-secure: fix build error for
- safexcel_hash.c
-Message-ID: <6670b7d4-224c-cfd8-2cba-96a60ea98d1c@infradead.org>
-Date:   Wed, 9 Oct 2019 08:49:31 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 9 Oct 2019 11:55:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60802 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729883AbfJIPzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 11:55:22 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C8A4630BB370;
+        Wed,  9 Oct 2019 15:55:21 +0000 (UTC)
+Received: from ben-x1.muc.redhat.com (dhcp-64-153.muc.redhat.com [10.32.64.153])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9B44C60920;
+        Wed,  9 Oct 2019 15:55:19 +0000 (UTC)
+From:   Benjamin Berg <bberg@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Benjamin Berg <bberg@redhat.com>,
+        Christian Kellner <ckellner@redhat.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-edac@vger.kernel.org
+Subject: [PATCH] x86/mce: Lower throttling MCE messages to warnings
+Date:   Wed,  9 Oct 2019 17:54:24 +0200
+Message-Id: <20191009155424.249277-1-bberg@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Wed, 09 Oct 2019 15:55:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+On modern CPUs it is quite normal that the temperature limits are
+reached and the CPU is throttled. In fact, often the thermal design is
+not sufficient to cool the CPU at full load and limits can quickly be
+reached when a burst in load happens. This will even happen with
+technologies like RAPL limitting the long term power consumption of
+the package.
 
-safexcel_hash.c (CRYPTO_DEV_SAFEXCEL) needs to select CRYPTO_SM3.
+So these messages do not usually indicate a hardware issue (e.g.
+insufficient cooling). Log them as warnings to avoid confusion about
+their severity.
 
-Fixes this build error:
-
-safexcel_hash.c:(.text+0x1b17): undefined reference to `sm3_zero_message_hash'
-
-Fixes: 1b44c5a60c13 ("crypto: inside-secure - add SafeXcel EIP197 crypto engine driver")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Antoine Tenart <antoine.tenart@free-electrons.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: linux-crypto@vger.kernel.org
+Signed-off-by: Benjamin Berg <bberg@redhat.com>
+Tested-by: Christian Kellner <ckellner@redhat.com>
 ---
- drivers/crypto/Kconfig |    1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kernel/cpu/mce/therm_throt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- linux-next-20191009.orig/drivers/crypto/Kconfig
-+++ linux-next-20191009/drivers/crypto/Kconfig
-@@ -751,6 +751,7 @@ config CRYPTO_DEV_SAFEXCEL
- 	select CRYPTO_SHA512
- 	select CRYPTO_CHACHA20POLY1305
- 	select CRYPTO_SHA3
-+	select CRYPTO_SM3
- 	help
- 	  This driver interfaces with the SafeXcel EIP-97 and EIP-197 cryptographic
- 	  engines designed by Inside Secure. It currently accelerates DES, 3DES and
-
+diff --git a/arch/x86/kernel/cpu/mce/therm_throt.c b/arch/x86/kernel/cpu/mce/therm_throt.c
+index 6e2becf547c5..bc441d68d060 100644
+--- a/arch/x86/kernel/cpu/mce/therm_throt.c
++++ b/arch/x86/kernel/cpu/mce/therm_throt.c
+@@ -188,7 +188,7 @@ static void therm_throt_process(bool new_event, int event, int level)
+ 	/* if we just entered the thermal event */
+ 	if (new_event) {
+ 		if (event == THERMAL_THROTTLING_EVENT)
+-			pr_crit("CPU%d: %s temperature above threshold, cpu clock throttled (total events = %lu)\n",
++			pr_warn("CPU%d: %s temperature above threshold, cpu clock throttled (total events = %lu)\n",
+ 				this_cpu,
+ 				level == CORE_LEVEL ? "Core" : "Package",
+ 				state->count);
+-- 
+2.23.0
 
