@@ -2,110 +2,99 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48CA3C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4771C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C236206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:30:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4C43206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:31:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="OOvnWUKC"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="htQS7103"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731514AbfJIOay (ORCPT
+        id S1731500AbfJIObU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 10:30:54 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:34858 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729865AbfJIOax (ORCPT
+        Wed, 9 Oct 2019 10:31:20 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:41241 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730674AbfJIObU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 10:30:53 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x99ET5EP091425;
-        Wed, 9 Oct 2019 14:30:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=xieOlnCZNdH9rUJsmmz2r6xC3pikyG8vEfffwj7nqrw=;
- b=OOvnWUKCQhvigjaczx/qR1uBte5t61Z/QDolYiL05qZxUCsWNHdRQKhJWREdJEd50eVy
- S5jenrGsYWmitNcsX/IDCRwufe6OiXJ5UQ5M2ppSpZWaa+AcSSoJTDT7DWzaNvZ92hVO
- uMGSXQCEW/N2FRRMCg0SbTziGa6IWx3O+KfE46GFbifC9CUGDfZt+0c7VUvcHx2pt6Gs
- NE04+Y6luipnF1BAt8CfIXyGgYtIyvqAw9xs4V9B/QLW/mdy86Nk8Lju35NBFPsrTu+E
- kiSOurdkp2EDfP9qCSs9784af8DYrJeekHVKz5Tay4qF9HKcwM/8yngIl6RdKmbPI7a4 Nw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2vektrmsct-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 09 Oct 2019 14:30:15 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x99ENELC032173;
-        Wed, 9 Oct 2019 14:30:15 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2vgev1gx1s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 09 Oct 2019 14:30:15 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x99EUAlf020123;
-        Wed, 9 Oct 2019 14:30:12 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 09 Oct 2019 07:30:10 -0700
-Date:   Wed, 9 Oct 2019 17:30:01 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Markus Elfring <Markus.Elfring@web.de>,
-        kernel-janitors@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Joe Perches <joe@perches.com>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] string.h: Mark 34 functions with __must_check
-Message-ID: <20191009143000.GD13286@kadam>
-References: <75f70e5e-9ece-d6d1-a2c5-2f3ad79b9ccb@web.de>
- <954c5d70-742f-7b0e-57ad-ea967e93be89@rasmusvillemoes.dk>
- <20191009135522.GA20194@kadam>
- <b1f055ec-b4ec-d0ed-a03d-7d9828fa9440@rasmusvillemoes.dk>
+        Wed, 9 Oct 2019 10:31:20 -0400
+Received: by mail-io1-f67.google.com with SMTP id n26so5388941ioj.8
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 07:31:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=pKB7Ijnwk47zF1Sui8uqCszhqTFAlw2ztEvx8myXms8=;
+        b=htQS71038oSKVcTiOiVBOPZdKlFBEupsi5wTlAWKgcmpPZsoGM+chhV5THF95PQDNU
+         0/0Z2dbhHOSz6tOXL1Yl5rrkVlFrJksyHWU0SyopxFJpF7f8SbQ/Kb9WqvJm3njgsWIT
+         HInMDSyhVGUD1TmbdaXL84YyIKOcLKkDHiyNE8Zz3pZ/85bOpTHJJYC1Ll+vUsmqF1T7
+         TGPR2iFI4IKoj8vtpa6x2DQGg/8a/Fr9v2oMHrHeFRpK7X40bVdS8zmotwCkGZnzyRE8
+         OFgih4WKih5Cx9AUvmozvkzfQqPbJj2uKDV2r1JpciuQiC0E4JVJWyh1Y9OW5/hqWiik
+         sOMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=pKB7Ijnwk47zF1Sui8uqCszhqTFAlw2ztEvx8myXms8=;
+        b=eNiTibgQ7rxyfpJHDE49nPf4b1WDBL1ML6Qi0awbGWupYKQ+Z5VR8rEgUpU2AK+QNP
+         mjfIfZoxFVMYjOA/QQOVK7WySXqpd1tAmI0DuYfv8sWHGqWuwKGeeFjAwNjaq26dP5Aj
+         OAi7iGhYXYI7fpEkH/YqHiICzoRpAUBJR+T2B2vOiqURZ0h6WC/oXJTDPEcggbzps1CH
+         U7dRkRxOsccrhRVk11p+OhwLH/I1+SYE2jL1rzV00L8LEfmeLtWzCr2UOOKP5vHJjhdZ
+         ccYF1ZOMS8kUfR+QTJkC1wsof+a5UMauoU9cH74h6DA/QixryF4pbp4eGVY3nVq6CWrz
+         zIXA==
+X-Gm-Message-State: APjAAAWmi7Br0G9Yg/6U+WBvempuRQ4aDzVQ0J8fOy5S1cb+MHxV5up9
+        t1U0PVT6Pp6m1MZZ5zL7MCyzd1Qjw1Y=
+X-Google-Smtp-Source: APXvYqxbDM6b4U2rzv0BGL/QF62gtvZXMwLwAcbvx/3w5WEHhaoahcynYrpIG1KyHIdJKvv4G99y9Q==
+X-Received: by 2002:a02:a156:: with SMTP id m22mr3333754jah.62.1570631479110;
+        Wed, 09 Oct 2019 07:31:19 -0700 (PDT)
+Received: from localhost ([64.62.168.194])
+        by smtp.gmail.com with ESMTPSA id x12sm1044888ioh.76.2019.10.09.07.31.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Oct 2019 07:31:18 -0700 (PDT)
+Date:   Wed, 9 Oct 2019 07:31:16 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+cc:     Andreas Schwab <schwab@suse.de>, Jonathan Corbet <corbet@lwn.net>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH] Documentation: admin-guide: add earlycon documentation
+ for the sifive serial driver
+In-Reply-To: <CAMuHMdVh=CUXKwnXee067cRccVBDVuwWpo1wP7crAaCFA=y2Tw@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.9999.1910090720290.11044@viisi.sifive.com>
+References: <alpine.DEB.2.21.9999.1910081606370.11044@viisi.sifive.com> <CAMuHMdVdPFSU_3VEtO=P73kqLezV5Dmki=N3nxsKibzy-U5pBg@mail.gmail.com> <mvmv9syz10h.fsf@suse.de> <CAMuHMdVh=CUXKwnXee067cRccVBDVuwWpo1wP7crAaCFA=y2Tw@mail.gmail.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b1f055ec-b4ec-d0ed-a03d-7d9828fa9440@rasmusvillemoes.dk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9404 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=814
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910090139
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9404 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=894 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910090140
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 04:21:20PM +0200, Rasmus Villemoes wrote:
-> On 09/10/2019 15.56, Dan Carpenter wrote:
-> > That's because glibc strlen is annotated with __attribute_pure__ which
-> > means it has no side effects.
+Hi Geert,
+
+On Wed, 9 Oct 2019, Geert Uytterhoeven wrote:
+
+> On Wed, Oct 9, 2019 at 12:06 PM Andreas Schwab <schwab@suse.de> wrote:
+> > On Okt 09 2019, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > I believe risc-v is DT-only, so if chosen/stdout-path is set up
+> >
+> > If.  Currently, it isn't.
 > 
-> I know, except it has nothing to do with glibc headers. Just try the
-> same thing in the kernel. gcc itself knows this about __builtin_strlen()
-> etc. If anything, we could annotate some of our non-standard functions
-> (say, memchr_inv) with __pure - then we'd both get the Wunused-value in
-> the nonsense cases, and allow gcc to optimize or reorder the calls.
+> IC. So isn't it better to fix that, instead of pointing people to more obscure
+> legacy solutions?
 
-Huh.  You're right.  GCC already knows.  So this patch is pointless like
-you say.
+There's nothing that's RISC-V specific about the SiFive serial IP or 
+its driver.  So the issue of whether RISC-V is DT-only or not probably 
+shouldn't impact whether we document that the SiFive serial driver 
+supports earlycon.
 
-regards,
-dan carpenter
+best regards,
 
+- Paul
