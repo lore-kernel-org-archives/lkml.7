@@ -2,294 +2,598 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DB0C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D6CC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 241DB218AC
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D655218DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:12:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732285AbfJITMO (ORCPT
+        id S1732271AbfJITML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 15:12:14 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:59681 "EHLO
+        Wed, 9 Oct 2019 15:12:11 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:41379 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732061AbfJITLf (ORCPT
+        with ESMTP id S1731909AbfJITMK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 15:11:35 -0400
+        Wed, 9 Oct 2019 15:12:10 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1M9Frd-1iCUhU1UAx-006S0r; Wed, 09 Oct 2019 21:09:11 +0200
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1M9WiK-1iClac1ot2-005Zyd; Wed, 09 Oct 2019 21:11:10 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Al Viro <viro@zeniv.linux.org.uk>
 Cc:     linux-kernel@vger.kernel.org, y2038@lists.linaro.org,
-        linux-fsdevel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v6 00/43] compat_ioctl: remove most of fs/compat_ioctl.c
-Date:   Wed,  9 Oct 2019 21:08:52 +0200
-Message-Id: <20191009190853.245077-1-arnd@arndb.de>
+        linux-fsdevel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Sterba <dsterba@suse.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: [PATCH v6 12/43] compat_ioctl: move more drivers to compat_ptr_ioctl
+Date:   Wed,  9 Oct 2019 21:10:12 +0200
+Message-Id: <20191009191044.308087-12-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20191009190853.245077-1-arnd@arndb.de>
+References: <20191009190853.245077-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:soRfA8GEsLyL6KJg7pQMmF7Bo5SXBVsSv+VAvypPv38g8t9aDtn
- 3y0GeYyEh9Ep2hbXg3Lgcef44HAU8BgCX5p0M8kyvLrlCTJan4SAkA/P7hpL88VyJP8xOqx
- WDz/UwhCf549lXsxlbiA1d0aA+bUwFqCIzBu3kWkC4G9ZxtTrn47udvoEX8UQyIcUxYqKra
- 4x1+N9IJOh6o18fVm/DYg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:q9EmiQP5Hoc=:HeLrSdtqCXfrAstU0aO7OD
- 884C2iPGS1h17y6cvncKVzY7Rh+WZvsveod21s3AMUX6zEPTX4OV2KmfDwGPPQf0hejWYCJbV
- OGiqdwt8W1012ByoFy9WMhEg1qB6V+/F6DVYrtAfM0b9pn7P8VTjMa3K0n5oKQA/RluYkP+Tv
- CTD4vr9OPALoSZkA9MXJ26tR5j4KoT6rdtZcb6D74ib/xLy+WdW6Uh96552Zb32nOXYPfQm/P
- urDGniIgVPa3PSjVOYcV4BzO8qqVeM8oeDPiSSFEbirsBH+/CPjGgIsR2UCmceeSQlqTRelnf
- Oci0xFbSJpZ7apksCk0/Fps4gl6B8+kL+c8kI9/8fDrmCUHEs7/gkchidTf4aL9t8fWVPnoKz
- NoabhvGvwUwR+LlmizruvBi0IXG1wQvMH5we7gOBbO6aqrrlFwl/XTDGYf1TN12JPvQZitMtz
- Jb3bhe6iE5io+NuBey6HpUCVQ7kKJn2kdIj9cvH57maGC5StNvBPRC/BNVgvMyci0CZaQJMUx
- iXcp7gh10qMZNlnOMhHMEO0wxiE0xib8XC5PRcPCTrZr8Gk8AzkgfiihJG0BE9LNTez9e4jWm
- Lyd8sFOPqqIYpMkMhcQpaTGpwgg05yjqT8TYD3rnCI8QBkDG5aCPiCw2hti6e7g76O7v2GIZv
- Lrh5y8x5j32XSdtk26K5V4B5y6+3xcrol+uyeYIY45s/bP6oRsgVHzeMtMhtWjQhn70QRH6VJ
- Mny9K9XEHt3dm7f3uu3k6U2Ip/kW3x5+7o5HK9+7HQFXccoMg8buR/iQh5PZMzcrBlYC30x4v
- d36CIWAEEHEUamoKgqnAzBSpP5dLcEPavVuKaJuEe7jT4VPam9B63/cWl12SAckf9GzCTYOgu
- Zxrg5El2sPCxv4k9iMhA==
+X-Provags-ID: V03:K1:m/6i5wT46mVkS5np72aX6YPC6vwimP9tyAJ3g7NP0hD/zBLPQHz
+ hr84EpwlvKjdgj/jD/gdmAoiRv76mmUZvzpw4tpETR37tkTGExEfMCjfcF7koZv3EecBuoe
+ ogHHi8yof9wQ7sFQHdOxSAgbg4clb00/c3Un1hqpulzUqj+jqpZV84lnO38Oj/KmqlyhoM+
+ o05a8cqPcD0o4XJJ43BMw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:9Bsv0YOoYw0=:rZ1oWU1n+hsHf6PpIOrbgy
+ ajXztjkj8o+lASSN3mM5sOJ5AhrF66WC/eYdiWpB5JFgNhFMbFGt+IPye0vAf1AYoLE/HJNbk
+ l0eJMi3aB6a2LOChhCSp7Ls6BJ7qf5cPeLR4y2PiznylWFmzkuFjrrnGQL/uye3HXATKOyICI
+ 1AnD2XcJHNCjprgjWfttboJdhymKmk8oNkPzbK3PXzw4XDwEAOmFzTJCVcWCqyYF5aF+UgV8b
+ SlzRgxcPFVRmO3JhEl/l2ldxRxNH2crmBwnZKxayuZglp6MH1bRuG+x7x9HMAhO7VQigJZmiR
+ IWey44i0FJc2ktGZ5DjF9MZlt+uan6plHI6QsrOz0JcNB2nsO5N1krS1hWGYFnqq87zAa6v7e
+ VFV86oEQIhvHpqNu/1ea8jtWQkbZRnM7fdud/QTnbvw/eNY7WXkT/HZvs9AzxFG+5pzvQm4Dm
+ HzFvgk+24dcHbPdqOcc6QW+TesMjicoZABWxBaybRRltPukZjSTPjfaYaqnEswPz32gq9uYaF
+ WEdUYM+o1rMDBSLzSo/bN49+HNV1CwBAfWyGUXNtU312latWBKQZQTM7NK+01F4E3BxYjZqak
+ w04piPZOE0d3f+RD7Xkj6eGkFFGHvNTgCasFdI6+9g2OSAtCdvVuxNnwGATM8YTo7ymLUOdlZ
+ 9hIAcv/Ztfb1AexnHyQomySQ3IEJk/fP3GHMGSLnnQz+I5hJSi8Os3mI5kR4hpdkQqy0AK0GM
+ iqhxt55ky0SS23k84Cpfd1lSIRHTPC7H5Hn7duf+IDKkjex2Pv4VmkuFpd/p8yOpriV91PxAJ
+ +rLjDEX+MzNZuZI4hBARwnYSwRjEWixsyxZHBZ/TT8HfuuO6lWTaGaTEqg/0wTaVngce7ogh/
+ YRDRguogXPVheRS5YO1Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As part of the cleanup of some remaining y2038 issues, I came to
-fs/compat_ioctl.c, which still has a couple of commands that need support
-for time64_t.
+The .ioctl and .compat_ioctl file operations have the same prototype so
+they can both point to the same function, which works great almost all
+the time when all the commands are compatible.
 
-In completely unrelated work, I spent time on cleaning up parts of this
-file in the past, moving things out into drivers instead.
+One exception is the s390 architecture, where a compat pointer is only
+31 bit wide, and converting it into a 64-bit pointer requires calling
+compat_ptr(). Most drivers here will never run in s390, but since we now
+have a generic helper for it, it's easy enough to use it consistently.
 
-After Al Viro reviewed an earlier version of this series and did a lot
-more of that cleanup, I decided to try to completely eliminate the rest
-of it and move it all into drivers.
+I double-checked all these drivers to ensure that all ioctl arguments
+are used as pointers or are ignored, but are not interpreted as integer
+values.
 
-This series incorporates some of Al's work and many patches of my own,
-but in the end stops short of actually removing the last part, which is
-the scsi ioctl handlers. I have patches for those as well, but they need
-more testing or possibly a rewrite.
-
+Acked-by: Jason Gunthorpe <jgg@mellanox.com>
+Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Acked-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Acked-by: David Sterba <dsterba@suse.com>
+Acked-by: Darren Hart (VMware) <dvhart@infradead.org>
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Acked-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
+ drivers/android/binder.c                    | 2 +-
+ drivers/crypto/qat/qat_common/adf_ctl_drv.c | 2 +-
+ drivers/dma-buf/dma-buf.c                   | 4 +---
+ drivers/dma-buf/sw_sync.c                   | 2 +-
+ drivers/dma-buf/sync_file.c                 | 2 +-
+ drivers/gpu/drm/amd/amdkfd/kfd_chardev.c    | 2 +-
+ drivers/hid/hidraw.c                        | 4 +---
+ drivers/iio/industrialio-core.c             | 2 +-
+ drivers/infiniband/core/uverbs_main.c       | 4 ++--
+ drivers/media/rc/lirc_dev.c                 | 4 +---
+ drivers/misc/vmw_vmci/vmci_host.c           | 2 +-
+ drivers/nvdimm/bus.c                        | 4 ++--
+ drivers/nvme/host/core.c                    | 2 +-
+ drivers/pci/switch/switchtec.c              | 2 +-
+ drivers/platform/x86/wmi.c                  | 2 +-
+ drivers/rpmsg/rpmsg_char.c                  | 4 ++--
+ drivers/sbus/char/display7seg.c             | 2 +-
+ drivers/sbus/char/envctrl.c                 | 4 +---
+ drivers/scsi/3w-xxxx.c                      | 4 +---
+ drivers/scsi/cxlflash/main.c                | 2 +-
+ drivers/scsi/esas2r/esas2r_main.c           | 2 +-
+ drivers/scsi/pmcraid.c                      | 4 +---
+ drivers/staging/android/ion/ion.c           | 4 +---
+ drivers/staging/vme/devices/vme_user.c      | 2 +-
+ drivers/tee/tee_core.c                      | 2 +-
+ drivers/usb/class/cdc-wdm.c                 | 2 +-
+ drivers/usb/class/usbtmc.c                  | 4 +---
+ drivers/virt/fsl_hypervisor.c               | 2 +-
+ fs/btrfs/super.c                            | 2 +-
+ fs/fuse/dev.c                               | 2 +-
+ fs/notify/fanotify/fanotify_user.c          | 2 +-
+ fs/userfaultfd.c                            | 2 +-
+ net/rfkill/core.c                           | 2 +-
+ 33 files changed, 36 insertions(+), 52 deletions(-)
 
-Everything in here was posted one or more times already, sending
-the whole series again for review, I hope to get some input on those
-patches that have not already been reviewed.
-
-The entire series is also part of linux-next through
-https://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git/commit/?h=y2038
-
-
-Al Viro (8):
-  fix compat handling of FICLONERANGE, FIDEDUPERANGE and FS_IOC_FIEMAP
-  FIGETBSZ: fix compat
-  compat: itanic doesn't have one
-  do_vfs_ioctl(): use saner types
-  compat: move FS_IOC_RESVSP_32 handling to fs/ioctl.c
-  compat_sys_ioctl(): make parallel to do_vfs_ioctl()
-  compat_ioctl: unify copy-in of ppp filters
-  compat_ioctl: move PPPIOCSCOMPRESS to ppp_generic
-
-Arnd Bergmann (35):
-  ceph: fix compat_ioctl for ceph_dir_operations
-  compat_ioctl: drop FIOQSIZE table entry
-  compat_ioctl: add compat_ptr_ioctl()
-  compat_ioctl: move rtc handling into rtc-dev.c
-  compat_ioctl: move drivers to compat_ptr_ioctl
-  compat_ioctl: move more drivers to compat_ptr_ioctl
-  compat_ioctl: use correct compat_ptr() translation in drivers
-  compat_ioctl: move tape handling into drivers
-  compat_ioctl: move ATYFB_CLK handling to atyfb driver
-  compat_ioctl: move isdn/capi ioctl translation into driver
-  compat_ioctl: move rfcomm handlers into driver
-  compat_ioctl: move hci_sock handlers into driver
-  compat_ioctl: remove HCIUART handling
-  compat_ioctl: remove HIDIO translation
-  compat_ioctl: remove translation for sound ioctls
-  compat_ioctl: remove IGNORE_IOCTL()
-  compat_ioctl: remove /dev/random commands
-  compat_ioctl: remove joystick ioctl translation
-  compat_ioctl: remove PCI ioctl translation
-  compat_ioctl: remove /dev/raw ioctl translation
-  compat_ioctl: remove last RAID handling code
-  compat_ioctl: remove unused convert_in_user macro
-  gfs2: add compat_ioctl support
-  fs: compat_ioctl: move FITRIM emulation into file systems
-  compat_ioctl: move WDIOC handling into wdt drivers
-  compat_ioctl: reimplement SG_IO handling
-  af_unix: add compat_ioctl support
-  compat_ioctl: handle SIOCOUTQNSD
-  compat_ioctl: move SIOCOUTQ out of compat_ioctl.c
-  tty: handle compat PPP ioctls
-  compat_ioctl: handle PPPIOCGIDLE for 64-bit time_t
-  compat_ioctl: ppp: move simple commands into ppp_generic.c
-  compat_ioctl: move SG_GET_REQUEST_TABLE handling
-  pktcdvd: add compat_ioctl handler
-  scsi: sd: enable compat ioctls for sed-opal
-
- Documentation/networking/ppp_generic.txt    |   2 +
- arch/powerpc/platforms/52xx/mpc52xx_gpt.c   |   1 +
- arch/um/drivers/harddog_kern.c              |   1 +
- arch/um/drivers/hostaudio_kern.c            |   1 +
- block/scsi_ioctl.c                          | 132 ++-
- drivers/android/binder.c                    |   2 +-
- drivers/block/pktcdvd.c                     |  25 +
- drivers/char/ipmi/ipmi_watchdog.c           |   1 +
- drivers/char/ppdev.c                        |  12 +-
- drivers/char/random.c                       |   1 +
- drivers/char/tpm/tpm_vtpm_proxy.c           |  12 +-
- drivers/crypto/qat/qat_common/adf_ctl_drv.c |   2 +-
- drivers/dma-buf/dma-buf.c                   |   4 +-
- drivers/dma-buf/sw_sync.c                   |   2 +-
- drivers/dma-buf/sync_file.c                 |   2 +-
- drivers/firewire/core-cdev.c                |  12 +-
- drivers/gpu/drm/amd/amdkfd/kfd_chardev.c    |   2 +-
- drivers/hid/hidraw.c                        |   4 +-
- drivers/hid/usbhid/hiddev.c                 |  11 +-
- drivers/hwmon/fschmd.c                      |   1 +
- drivers/hwtracing/stm/core.c                |  12 +-
- drivers/ide/ide-tape.c                      |  27 +-
- drivers/iio/industrialio-core.c             |   2 +-
- drivers/infiniband/core/uverbs_main.c       |   4 +-
- drivers/isdn/capi/capi.c                    |  31 +
- drivers/media/rc/lirc_dev.c                 |   4 +-
- drivers/misc/cxl/flash.c                    |   8 +-
- drivers/misc/genwqe/card_dev.c              |  23 +-
- drivers/misc/mei/main.c                     |  22 +-
- drivers/misc/vmw_vmci/vmci_host.c           |   2 +-
- drivers/mtd/ubi/cdev.c                      |  36 +-
- drivers/net/ppp/ppp_generic.c               | 245 ++++--
- drivers/net/tap.c                           |  12 +-
- drivers/nvdimm/bus.c                        |   4 +-
- drivers/nvme/host/core.c                    |   2 +-
- drivers/pci/switch/switchtec.c              |   2 +-
- drivers/platform/x86/wmi.c                  |   2 +-
- drivers/rpmsg/rpmsg_char.c                  |   4 +-
- drivers/rtc/dev.c                           |  13 +-
- drivers/rtc/rtc-ds1374.c                    |   1 +
- drivers/rtc/rtc-vr41xx.c                    |  10 +
- drivers/s390/char/tape_char.c               |  41 +-
- drivers/sbus/char/display7seg.c             |   2 +-
- drivers/sbus/char/envctrl.c                 |   4 +-
- drivers/scsi/3w-xxxx.c                      |   4 +-
- drivers/scsi/cxlflash/main.c                |   2 +-
- drivers/scsi/esas2r/esas2r_main.c           |   2 +-
- drivers/scsi/megaraid/megaraid_mm.c         |  28 +-
- drivers/scsi/pmcraid.c                      |   4 +-
- drivers/scsi/sd.c                           |  14 +-
- drivers/scsi/sg.c                           |  59 +-
- drivers/scsi/st.c                           |  28 +-
- drivers/staging/android/ion/ion.c           |   4 +-
- drivers/staging/pi433/pi433_if.c            |  12 +-
- drivers/staging/vme/devices/vme_user.c      |   2 +-
- drivers/tee/tee_core.c                      |   2 +-
- drivers/tty/tty_io.c                        |   5 +
- drivers/usb/class/cdc-wdm.c                 |   2 +-
- drivers/usb/class/usbtmc.c                  |   4 +-
- drivers/usb/core/devio.c                    |  16 +-
- drivers/usb/gadget/function/f_fs.c          |  12 +-
- drivers/vfio/vfio.c                         |  39 +-
- drivers/vhost/net.c                         |  12 +-
- drivers/vhost/scsi.c                        |  12 +-
- drivers/vhost/test.c                        |  12 +-
- drivers/vhost/vsock.c                       |  12 +-
- drivers/video/fbdev/aty/atyfb_base.c        |  12 +-
- drivers/virt/fsl_hypervisor.c               |   2 +-
- drivers/watchdog/acquirewdt.c               |   1 +
- drivers/watchdog/advantechwdt.c             |   1 +
- drivers/watchdog/alim1535_wdt.c             |   1 +
- drivers/watchdog/alim7101_wdt.c             |   1 +
- drivers/watchdog/ar7_wdt.c                  |   1 +
- drivers/watchdog/at91rm9200_wdt.c           |   1 +
- drivers/watchdog/ath79_wdt.c                |   1 +
- drivers/watchdog/bcm63xx_wdt.c              |   1 +
- drivers/watchdog/cpu5wdt.c                  |   1 +
- drivers/watchdog/eurotechwdt.c              |   1 +
- drivers/watchdog/f71808e_wdt.c              |   1 +
- drivers/watchdog/gef_wdt.c                  |   1 +
- drivers/watchdog/geodewdt.c                 |   1 +
- drivers/watchdog/ib700wdt.c                 |   1 +
- drivers/watchdog/ibmasr.c                   |   1 +
- drivers/watchdog/indydog.c                  |   1 +
- drivers/watchdog/intel_scu_watchdog.c       |   1 +
- drivers/watchdog/iop_wdt.c                  |   1 +
- drivers/watchdog/it8712f_wdt.c              |   1 +
- drivers/watchdog/ixp4xx_wdt.c               |   1 +
- drivers/watchdog/m54xx_wdt.c                |   1 +
- drivers/watchdog/machzwd.c                  |   1 +
- drivers/watchdog/mixcomwd.c                 |   1 +
- drivers/watchdog/mtx-1_wdt.c                |   1 +
- drivers/watchdog/mv64x60_wdt.c              |   1 +
- drivers/watchdog/nv_tco.c                   |   1 +
- drivers/watchdog/pc87413_wdt.c              |   1 +
- drivers/watchdog/pcwd.c                     |   1 +
- drivers/watchdog/pcwd_pci.c                 |   1 +
- drivers/watchdog/pcwd_usb.c                 |   1 +
- drivers/watchdog/pika_wdt.c                 |   1 +
- drivers/watchdog/pnx833x_wdt.c              |   1 +
- drivers/watchdog/rc32434_wdt.c              |   1 +
- drivers/watchdog/rdc321x_wdt.c              |   1 +
- drivers/watchdog/riowd.c                    |   1 +
- drivers/watchdog/sa1100_wdt.c               |   1 +
- drivers/watchdog/sb_wdog.c                  |   1 +
- drivers/watchdog/sbc60xxwdt.c               |   1 +
- drivers/watchdog/sbc7240_wdt.c              |   1 +
- drivers/watchdog/sbc_epx_c3.c               |   1 +
- drivers/watchdog/sbc_fitpc2_wdt.c           |   1 +
- drivers/watchdog/sc1200wdt.c                |   1 +
- drivers/watchdog/sc520_wdt.c                |   1 +
- drivers/watchdog/sch311x_wdt.c              |   1 +
- drivers/watchdog/scx200_wdt.c               |   1 +
- drivers/watchdog/smsc37b787_wdt.c           |   1 +
- drivers/watchdog/w83877f_wdt.c              |   1 +
- drivers/watchdog/w83977f_wdt.c              |   1 +
- drivers/watchdog/wafer5823wdt.c             |   1 +
- drivers/watchdog/watchdog_dev.c             |   1 +
- drivers/watchdog/wdrtas.c                   |   1 +
- drivers/watchdog/wdt.c                      |   1 +
- drivers/watchdog/wdt285.c                   |   1 +
- drivers/watchdog/wdt977.c                   |   1 +
- drivers/watchdog/wdt_pci.c                  |   1 +
- fs/btrfs/super.c                            |   2 +-
- fs/ceph/dir.c                               |   1 +
- fs/ceph/file.c                              |   2 +-
- fs/ceph/super.h                             |   1 +
- fs/compat_ioctl.c                           | 917 +-------------------
- fs/ecryptfs/file.c                          |   1 +
- fs/ext4/ioctl.c                             |   1 +
- fs/f2fs/file.c                              |   1 +
- fs/fat/file.c                               |  13 +-
- fs/fuse/dev.c                               |   2 +-
- fs/gfs2/file.c                              |  30 +
- fs/hpfs/dir.c                               |   1 +
- fs/hpfs/file.c                              |   1 +
- fs/ioctl.c                                  |  80 +-
- fs/nilfs2/ioctl.c                           |   1 +
- fs/notify/fanotify/fanotify_user.c          |   2 +-
- fs/ocfs2/ioctl.c                            |   1 +
- fs/userfaultfd.c                            |   2 +-
- include/linux/blkdev.h                      |   2 +
- include/linux/falloc.h                      |  20 +
- include/linux/fs.h                          |   7 +
- include/linux/mtio.h                        |  60 ++
- include/uapi/linux/ppp-ioctl.h              |   2 +
- include/uapi/linux/ppp_defs.h               |  14 +
- lib/iov_iter.c                              |   1 +
- net/bluetooth/hci_sock.c                    |  21 +-
- net/bluetooth/rfcomm/sock.c                 |  14 +-
- net/rfkill/core.c                           |   2 +-
- net/socket.c                                |   3 +
- net/unix/af_unix.c                          |  19 +
- sound/core/oss/pcm_oss.c                    |   4 +
- sound/oss/dmasound/dmasound_core.c          |   2 +
- 155 files changed, 935 insertions(+), 1394 deletions(-)
- create mode 100644 include/linux/mtio.h
-
+diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+index c0a491277aca..c7079f071e23 100644
+--- a/drivers/android/binder.c
++++ b/drivers/android/binder.c
+@@ -6063,7 +6063,7 @@ const struct file_operations binder_fops = {
+ 	.owner = THIS_MODULE,
+ 	.poll = binder_poll,
+ 	.unlocked_ioctl = binder_ioctl,
+-	.compat_ioctl = binder_ioctl,
++	.compat_ioctl = compat_ptr_ioctl,
+ 	.mmap = binder_mmap,
+ 	.open = binder_open,
+ 	.flush = binder_flush,
+diff --git a/drivers/crypto/qat/qat_common/adf_ctl_drv.c b/drivers/crypto/qat/qat_common/adf_ctl_drv.c
+index abc7a7f64d64..ef0e482ee04f 100644
+--- a/drivers/crypto/qat/qat_common/adf_ctl_drv.c
++++ b/drivers/crypto/qat/qat_common/adf_ctl_drv.c
+@@ -68,7 +68,7 @@ static long adf_ctl_ioctl(struct file *fp, unsigned int cmd, unsigned long arg);
+ static const struct file_operations adf_ctl_ops = {
+ 	.owner = THIS_MODULE,
+ 	.unlocked_ioctl = adf_ctl_ioctl,
+-	.compat_ioctl = adf_ctl_ioctl,
++	.compat_ioctl = compat_ptr_ioctl,
+ };
+ 
+ struct adf_ctl_drv_info {
+diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+index 433d91d710e4..5b8797be80df 100644
+--- a/drivers/dma-buf/dma-buf.c
++++ b/drivers/dma-buf/dma-buf.c
+@@ -415,9 +415,7 @@ static const struct file_operations dma_buf_fops = {
+ 	.llseek		= dma_buf_llseek,
+ 	.poll		= dma_buf_poll,
+ 	.unlocked_ioctl	= dma_buf_ioctl,
+-#ifdef CONFIG_COMPAT
+-	.compat_ioctl	= dma_buf_ioctl,
+-#endif
++	.compat_ioctl	= compat_ptr_ioctl,
+ 	.show_fdinfo	= dma_buf_show_fdinfo,
+ };
+ 
+diff --git a/drivers/dma-buf/sw_sync.c b/drivers/dma-buf/sw_sync.c
+index 6713cfb1995c..348b3a9170fa 100644
+--- a/drivers/dma-buf/sw_sync.c
++++ b/drivers/dma-buf/sw_sync.c
+@@ -408,5 +408,5 @@ const struct file_operations sw_sync_debugfs_fops = {
+ 	.open           = sw_sync_debugfs_open,
+ 	.release        = sw_sync_debugfs_release,
+ 	.unlocked_ioctl = sw_sync_ioctl,
+-	.compat_ioctl	= sw_sync_ioctl,
++	.compat_ioctl	= compat_ptr_ioctl,
+ };
+diff --git a/drivers/dma-buf/sync_file.c b/drivers/dma-buf/sync_file.c
+index 25c5c071645b..76fb072c22dc 100644
+--- a/drivers/dma-buf/sync_file.c
++++ b/drivers/dma-buf/sync_file.c
+@@ -480,5 +480,5 @@ static const struct file_operations sync_file_fops = {
+ 	.release = sync_file_release,
+ 	.poll = sync_file_poll,
+ 	.unlocked_ioctl = sync_file_ioctl,
+-	.compat_ioctl = sync_file_ioctl,
++	.compat_ioctl = compat_ptr_ioctl,
+ };
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_chardev.c b/drivers/gpu/drm/amd/amdkfd/kfd_chardev.c
+index 1d3cd5c50d5f..6283944387d6 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_chardev.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_chardev.c
+@@ -49,7 +49,7 @@ static const char kfd_dev_name[] = "kfd";
+ static const struct file_operations kfd_fops = {
+ 	.owner = THIS_MODULE,
+ 	.unlocked_ioctl = kfd_ioctl,
+-	.compat_ioctl = kfd_ioctl,
++	.compat_ioctl = compat_ptr_ioctl,
+ 	.open = kfd_open,
+ 	.mmap = kfd_mmap,
+ };
+diff --git a/drivers/hid/hidraw.c b/drivers/hid/hidraw.c
+index bbc6ec1aa5cb..a925f9fa7011 100644
+--- a/drivers/hid/hidraw.c
++++ b/drivers/hid/hidraw.c
+@@ -468,9 +468,7 @@ static const struct file_operations hidraw_ops = {
+ 	.release =      hidraw_release,
+ 	.unlocked_ioctl = hidraw_ioctl,
+ 	.fasync =	hidraw_fasync,
+-#ifdef CONFIG_COMPAT
+-	.compat_ioctl   = hidraw_ioctl,
+-#endif
++	.compat_ioctl   = compat_ptr_ioctl,
+ 	.llseek =	noop_llseek,
+ };
+ 
+diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+index 524a686077ca..9dd687534035 100644
+--- a/drivers/iio/industrialio-core.c
++++ b/drivers/iio/industrialio-core.c
+@@ -1610,7 +1610,7 @@ static const struct file_operations iio_buffer_fileops = {
+ 	.owner = THIS_MODULE,
+ 	.llseek = noop_llseek,
+ 	.unlocked_ioctl = iio_ioctl,
+-	.compat_ioctl = iio_ioctl,
++	.compat_ioctl = compat_ptr_ioctl,
+ };
+ 
+ static int iio_check_unique_scan_index(struct iio_dev *indio_dev)
+diff --git a/drivers/infiniband/core/uverbs_main.c b/drivers/infiniband/core/uverbs_main.c
+index db98111b47f4..c4c652e87044 100644
+--- a/drivers/infiniband/core/uverbs_main.c
++++ b/drivers/infiniband/core/uverbs_main.c
+@@ -1139,7 +1139,7 @@ static const struct file_operations uverbs_fops = {
+ 	.release = ib_uverbs_close,
+ 	.llseek	 = no_llseek,
+ 	.unlocked_ioctl = ib_uverbs_ioctl,
+-	.compat_ioctl = ib_uverbs_ioctl,
++	.compat_ioctl = compat_ptr_ioctl,
+ };
+ 
+ static const struct file_operations uverbs_mmap_fops = {
+@@ -1150,7 +1150,7 @@ static const struct file_operations uverbs_mmap_fops = {
+ 	.release = ib_uverbs_close,
+ 	.llseek	 = no_llseek,
+ 	.unlocked_ioctl = ib_uverbs_ioctl,
+-	.compat_ioctl = ib_uverbs_ioctl,
++	.compat_ioctl = compat_ptr_ioctl,
+ };
+ 
+ static int ib_uverbs_get_nl_info(struct ib_device *ibdev, void *client_data,
+diff --git a/drivers/media/rc/lirc_dev.c b/drivers/media/rc/lirc_dev.c
+index f078f8a3aec8..9a8c1cf54ac4 100644
+--- a/drivers/media/rc/lirc_dev.c
++++ b/drivers/media/rc/lirc_dev.c
+@@ -720,9 +720,7 @@ static const struct file_operations lirc_fops = {
+ 	.owner		= THIS_MODULE,
+ 	.write		= ir_lirc_transmit_ir,
+ 	.unlocked_ioctl	= ir_lirc_ioctl,
+-#ifdef CONFIG_COMPAT
+-	.compat_ioctl	= ir_lirc_ioctl,
+-#endif
++	.compat_ioctl	= compat_ptr_ioctl,
+ 	.read		= ir_lirc_read,
+ 	.poll		= ir_lirc_poll,
+ 	.open		= ir_lirc_open,
+diff --git a/drivers/misc/vmw_vmci/vmci_host.c b/drivers/misc/vmw_vmci/vmci_host.c
+index 833e2bd248a5..903e321e8e87 100644
+--- a/drivers/misc/vmw_vmci/vmci_host.c
++++ b/drivers/misc/vmw_vmci/vmci_host.c
+@@ -961,7 +961,7 @@ static const struct file_operations vmuser_fops = {
+ 	.release	= vmci_host_close,
+ 	.poll		= vmci_host_poll,
+ 	.unlocked_ioctl	= vmci_host_unlocked_ioctl,
+-	.compat_ioctl	= vmci_host_unlocked_ioctl,
++	.compat_ioctl	= compat_ptr_ioctl,
+ };
+ 
+ static struct miscdevice vmci_host_miscdev = {
+diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
+index d47412dcdf38..38d41bbf178a 100644
+--- a/drivers/nvdimm/bus.c
++++ b/drivers/nvdimm/bus.c
+@@ -1227,7 +1227,7 @@ static const struct file_operations nvdimm_bus_fops = {
+ 	.owner = THIS_MODULE,
+ 	.open = nd_open,
+ 	.unlocked_ioctl = bus_ioctl,
+-	.compat_ioctl = bus_ioctl,
++	.compat_ioctl = compat_ptr_ioctl,
+ 	.llseek = noop_llseek,
+ };
+ 
+@@ -1235,7 +1235,7 @@ static const struct file_operations nvdimm_fops = {
+ 	.owner = THIS_MODULE,
+ 	.open = nd_open,
+ 	.unlocked_ioctl = dimm_ioctl,
+-	.compat_ioctl = dimm_ioctl,
++	.compat_ioctl = compat_ptr_ioctl,
+ 	.llseek = noop_llseek,
+ };
+ 
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index fd7dea36c3b6..522280eb4115 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -2947,7 +2947,7 @@ static const struct file_operations nvme_dev_fops = {
+ 	.owner		= THIS_MODULE,
+ 	.open		= nvme_dev_open,
+ 	.unlocked_ioctl	= nvme_dev_ioctl,
+-	.compat_ioctl	= nvme_dev_ioctl,
++	.compat_ioctl	= compat_ptr_ioctl,
+ };
+ 
+ static ssize_t nvme_sysfs_reset(struct device *dev,
+diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
+index 8c94cd3fd1f2..66610f04d76d 100644
+--- a/drivers/pci/switch/switchtec.c
++++ b/drivers/pci/switch/switchtec.c
+@@ -1025,7 +1025,7 @@ static const struct file_operations switchtec_fops = {
+ 	.read = switchtec_dev_read,
+ 	.poll = switchtec_dev_poll,
+ 	.unlocked_ioctl = switchtec_dev_ioctl,
+-	.compat_ioctl = switchtec_dev_ioctl,
++	.compat_ioctl = compat_ptr_ioctl,
+ };
+ 
+ static void link_event_work(struct work_struct *work)
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index 59e9aa0f9643..dc2e966a5c25 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -911,7 +911,7 @@ static const struct file_operations wmi_fops = {
+ 	.read		= wmi_char_read,
+ 	.open		= wmi_char_open,
+ 	.unlocked_ioctl	= wmi_ioctl,
+-	.compat_ioctl	= wmi_ioctl,
++	.compat_ioctl	= compat_ptr_ioctl,
+ };
+ 
+ static int wmi_dev_probe(struct device *dev)
+diff --git a/drivers/rpmsg/rpmsg_char.c b/drivers/rpmsg/rpmsg_char.c
+index eea5ebbb5119..507bfe163883 100644
+--- a/drivers/rpmsg/rpmsg_char.c
++++ b/drivers/rpmsg/rpmsg_char.c
+@@ -290,7 +290,7 @@ static const struct file_operations rpmsg_eptdev_fops = {
+ 	.write_iter = rpmsg_eptdev_write_iter,
+ 	.poll = rpmsg_eptdev_poll,
+ 	.unlocked_ioctl = rpmsg_eptdev_ioctl,
+-	.compat_ioctl = rpmsg_eptdev_ioctl,
++	.compat_ioctl = compat_ptr_ioctl,
+ };
+ 
+ static ssize_t name_show(struct device *dev, struct device_attribute *attr,
+@@ -451,7 +451,7 @@ static const struct file_operations rpmsg_ctrldev_fops = {
+ 	.open = rpmsg_ctrldev_open,
+ 	.release = rpmsg_ctrldev_release,
+ 	.unlocked_ioctl = rpmsg_ctrldev_ioctl,
+-	.compat_ioctl = rpmsg_ctrldev_ioctl,
++	.compat_ioctl = compat_ptr_ioctl,
+ };
+ 
+ static void rpmsg_ctrldev_release_device(struct device *dev)
+diff --git a/drivers/sbus/char/display7seg.c b/drivers/sbus/char/display7seg.c
+index 971fe074d7c9..fad936eb845f 100644
+--- a/drivers/sbus/char/display7seg.c
++++ b/drivers/sbus/char/display7seg.c
+@@ -156,7 +156,7 @@ static long d7s_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ static const struct file_operations d7s_fops = {
+ 	.owner =		THIS_MODULE,
+ 	.unlocked_ioctl =	d7s_ioctl,
+-	.compat_ioctl =		d7s_ioctl,
++	.compat_ioctl =		compat_ptr_ioctl,
+ 	.open =			d7s_open,
+ 	.release =		d7s_release,
+ 	.llseek = noop_llseek,
+diff --git a/drivers/sbus/char/envctrl.c b/drivers/sbus/char/envctrl.c
+index a63d5e402ff2..12d66aa61ede 100644
+--- a/drivers/sbus/char/envctrl.c
++++ b/drivers/sbus/char/envctrl.c
+@@ -715,9 +715,7 @@ static const struct file_operations envctrl_fops = {
+ 	.owner =		THIS_MODULE,
+ 	.read =			envctrl_read,
+ 	.unlocked_ioctl =	envctrl_ioctl,
+-#ifdef CONFIG_COMPAT
+-	.compat_ioctl =		envctrl_ioctl,
+-#endif
++	.compat_ioctl =		compat_ptr_ioctl,
+ 	.open =			envctrl_open,
+ 	.release =		envctrl_release,
+ 	.llseek =		noop_llseek,
+diff --git a/drivers/scsi/3w-xxxx.c b/drivers/scsi/3w-xxxx.c
+index 2b1e0d503020..fb6444d0409c 100644
+--- a/drivers/scsi/3w-xxxx.c
++++ b/drivers/scsi/3w-xxxx.c
+@@ -1049,9 +1049,7 @@ static int tw_chrdev_open(struct inode *inode, struct file *file)
+ static const struct file_operations tw_fops = {
+ 	.owner		= THIS_MODULE,
+ 	.unlocked_ioctl	= tw_chrdev_ioctl,
+-#ifdef CONFIG_COMPAT
+-	.compat_ioctl   = tw_chrdev_ioctl,
+-#endif
++	.compat_ioctl   = compat_ptr_ioctl,
+ 	.open		= tw_chrdev_open,
+ 	.release	= NULL,
+ 	.llseek		= noop_llseek,
+diff --git a/drivers/scsi/cxlflash/main.c b/drivers/scsi/cxlflash/main.c
+index 93ef97af22df..2dbf35f82787 100644
+--- a/drivers/scsi/cxlflash/main.c
++++ b/drivers/scsi/cxlflash/main.c
+@@ -3593,7 +3593,7 @@ static const struct file_operations cxlflash_chr_fops = {
+ 	.owner          = THIS_MODULE,
+ 	.open           = cxlflash_chr_open,
+ 	.unlocked_ioctl	= cxlflash_chr_ioctl,
+-	.compat_ioctl	= cxlflash_chr_ioctl,
++	.compat_ioctl	= compat_ptr_ioctl,
+ };
+ 
+ /**
+diff --git a/drivers/scsi/esas2r/esas2r_main.c b/drivers/scsi/esas2r/esas2r_main.c
+index fdbda5c05aa0..80c5a235d193 100644
+--- a/drivers/scsi/esas2r/esas2r_main.c
++++ b/drivers/scsi/esas2r/esas2r_main.c
+@@ -613,7 +613,7 @@ static int __init esas2r_init(void)
+ 
+ /* Handle ioctl calls to "/proc/scsi/esas2r/ATTOnode" */
+ static const struct file_operations esas2r_proc_fops = {
+-	.compat_ioctl	= esas2r_proc_ioctl,
++	.compat_ioctl	= compat_ptr_ioctl,
+ 	.unlocked_ioctl = esas2r_proc_ioctl,
+ };
+ 
+diff --git a/drivers/scsi/pmcraid.c b/drivers/scsi/pmcraid.c
+index 398d2af60832..7eb88fe1eb0b 100644
+--- a/drivers/scsi/pmcraid.c
++++ b/drivers/scsi/pmcraid.c
+@@ -3973,9 +3973,7 @@ static const struct file_operations pmcraid_fops = {
+ 	.open = pmcraid_chr_open,
+ 	.fasync = pmcraid_chr_fasync,
+ 	.unlocked_ioctl = pmcraid_chr_ioctl,
+-#ifdef CONFIG_COMPAT
+-	.compat_ioctl = pmcraid_chr_ioctl,
+-#endif
++	.compat_ioctl = compat_ptr_ioctl,
+ 	.llseek = noop_llseek,
+ };
+ 
+diff --git a/drivers/staging/android/ion/ion.c b/drivers/staging/android/ion/ion.c
+index e6b1ca141b93..c394686a8e7d 100644
+--- a/drivers/staging/android/ion/ion.c
++++ b/drivers/staging/android/ion/ion.c
+@@ -533,9 +533,7 @@ static long ion_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ static const struct file_operations ion_fops = {
+ 	.owner          = THIS_MODULE,
+ 	.unlocked_ioctl = ion_ioctl,
+-#ifdef CONFIG_COMPAT
+-	.compat_ioctl	= ion_ioctl,
+-#endif
++	.compat_ioctl	= compat_ptr_ioctl,
+ };
+ 
+ static int debug_shrink_set(void *data, u64 val)
+diff --git a/drivers/staging/vme/devices/vme_user.c b/drivers/staging/vme/devices/vme_user.c
+index 6a33aaa1a49f..fd0ea4dbcb91 100644
+--- a/drivers/staging/vme/devices/vme_user.c
++++ b/drivers/staging/vme/devices/vme_user.c
+@@ -494,7 +494,7 @@ static const struct file_operations vme_user_fops = {
+ 	.write = vme_user_write,
+ 	.llseek = vme_user_llseek,
+ 	.unlocked_ioctl = vme_user_unlocked_ioctl,
+-	.compat_ioctl = vme_user_unlocked_ioctl,
++	.compat_ioctl = compat_ptr_ioctl,
+ 	.mmap = vme_user_mmap,
+ };
+ 
+diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
+index 0f16d9ffd8d1..37d22e39fd8d 100644
+--- a/drivers/tee/tee_core.c
++++ b/drivers/tee/tee_core.c
+@@ -675,7 +675,7 @@ static const struct file_operations tee_fops = {
+ 	.open = tee_open,
+ 	.release = tee_release,
+ 	.unlocked_ioctl = tee_ioctl,
+-	.compat_ioctl = tee_ioctl,
++	.compat_ioctl = compat_ptr_ioctl,
+ };
+ 
+ static void tee_release_device(struct device *dev)
+diff --git a/drivers/usb/class/cdc-wdm.c b/drivers/usb/class/cdc-wdm.c
+index 70afb2ca1eab..e3db6fbeadef 100644
+--- a/drivers/usb/class/cdc-wdm.c
++++ b/drivers/usb/class/cdc-wdm.c
+@@ -734,7 +734,7 @@ static const struct file_operations wdm_fops = {
+ 	.release =	wdm_release,
+ 	.poll =		wdm_poll,
+ 	.unlocked_ioctl = wdm_ioctl,
+-	.compat_ioctl = wdm_ioctl,
++	.compat_ioctl = compat_ptr_ioctl,
+ 	.llseek =	noop_llseek,
+ };
+ 
+diff --git a/drivers/usb/class/usbtmc.c b/drivers/usb/class/usbtmc.c
+index dcd7066ffba2..ffc9c6fdd7e1 100644
+--- a/drivers/usb/class/usbtmc.c
++++ b/drivers/usb/class/usbtmc.c
+@@ -2217,9 +2217,7 @@ static const struct file_operations fops = {
+ 	.release	= usbtmc_release,
+ 	.flush		= usbtmc_flush,
+ 	.unlocked_ioctl	= usbtmc_ioctl,
+-#ifdef CONFIG_COMPAT
+-	.compat_ioctl	= usbtmc_ioctl,
+-#endif
++	.compat_ioctl	= compat_ptr_ioctl,
+ 	.fasync         = usbtmc_fasync,
+ 	.poll           = usbtmc_poll,
+ 	.llseek		= default_llseek,
+diff --git a/drivers/virt/fsl_hypervisor.c b/drivers/virt/fsl_hypervisor.c
+index 93d5bebf9572..1b0b11b55d2a 100644
+--- a/drivers/virt/fsl_hypervisor.c
++++ b/drivers/virt/fsl_hypervisor.c
+@@ -706,7 +706,7 @@ static const struct file_operations fsl_hv_fops = {
+ 	.poll = fsl_hv_poll,
+ 	.read = fsl_hv_read,
+ 	.unlocked_ioctl = fsl_hv_ioctl,
+-	.compat_ioctl = fsl_hv_ioctl,
++	.compat_ioctl = compat_ptr_ioctl,
+ };
+ 
+ static struct miscdevice fsl_hv_misc_dev = {
+diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
+index 1b151af25772..d9ba089a4973 100644
+--- a/fs/btrfs/super.c
++++ b/fs/btrfs/super.c
+@@ -2297,7 +2297,7 @@ static const struct super_operations btrfs_super_ops = {
+ static const struct file_operations btrfs_ctl_fops = {
+ 	.open = btrfs_control_open,
+ 	.unlocked_ioctl	 = btrfs_control_ioctl,
+-	.compat_ioctl = btrfs_control_ioctl,
++	.compat_ioctl = compat_ptr_ioctl,
+ 	.owner	 = THIS_MODULE,
+ 	.llseek = noop_llseek,
+ };
+diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+index dadd617d826c..23b089e6880a 100644
+--- a/fs/fuse/dev.c
++++ b/fs/fuse/dev.c
+@@ -2260,7 +2260,7 @@ const struct file_operations fuse_dev_operations = {
+ 	.release	= fuse_dev_release,
+ 	.fasync		= fuse_dev_fasync,
+ 	.unlocked_ioctl = fuse_dev_ioctl,
+-	.compat_ioctl   = fuse_dev_ioctl,
++	.compat_ioctl   = compat_ptr_ioctl,
+ };
+ EXPORT_SYMBOL_GPL(fuse_dev_operations);
+ 
+diff --git a/fs/notify/fanotify/fanotify_user.c b/fs/notify/fanotify/fanotify_user.c
+index 8508ab575017..0aa362b88550 100644
+--- a/fs/notify/fanotify/fanotify_user.c
++++ b/fs/notify/fanotify/fanotify_user.c
+@@ -523,7 +523,7 @@ static const struct file_operations fanotify_fops = {
+ 	.fasync		= NULL,
+ 	.release	= fanotify_release,
+ 	.unlocked_ioctl	= fanotify_ioctl,
+-	.compat_ioctl	= fanotify_ioctl,
++	.compat_ioctl	= compat_ptr_ioctl,
+ 	.llseek		= noop_llseek,
+ };
+ 
+diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+index f9fd18670e22..d7f54e535294 100644
+--- a/fs/userfaultfd.c
++++ b/fs/userfaultfd.c
+@@ -1923,7 +1923,7 @@ static const struct file_operations userfaultfd_fops = {
+ 	.poll		= userfaultfd_poll,
+ 	.read		= userfaultfd_read,
+ 	.unlocked_ioctl = userfaultfd_ioctl,
+-	.compat_ioctl	= userfaultfd_ioctl,
++	.compat_ioctl	= compat_ptr_ioctl,
+ 	.llseek		= noop_llseek,
+ };
+ 
+diff --git a/net/rfkill/core.c b/net/rfkill/core.c
+index f9b08a6d8dbe..c4be6a94ba97 100644
+--- a/net/rfkill/core.c
++++ b/net/rfkill/core.c
+@@ -1311,7 +1311,7 @@ static const struct file_operations rfkill_fops = {
+ 	.release	= rfkill_fop_release,
+ #ifdef CONFIG_RFKILL_INPUT
+ 	.unlocked_ioctl	= rfkill_fop_ioctl,
+-	.compat_ioctl	= rfkill_fop_ioctl,
++	.compat_ioctl	= compat_ptr_ioctl,
+ #endif
+ 	.llseek		= no_llseek,
+ };
 -- 
 2.20.0
 
