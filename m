@@ -2,148 +2,174 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65443ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59614C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37BA1218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E040206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:22:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570641433;
-	bh=azVcBauMb2GNwRnAVAwRm4vtVfwBRKCa0m5Pzh8jMZo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=TxQZT2pUg0OosCdzk8R1AfdRVOy4/iMD38lcj9XCChadSe6y04aI5R7hZeKvbR5+e
-	 EaiVgRIupPkk9Cyo95XqNdUTi8bZYGwVIGlbGc5BfT+T2+o6IjMnmggn7sv8FrTeVA
-	 K3OX3U5HWarJeYtfvXJBwR5x2eZpiVv4LvoAINv8=
+	s=default; t=1570641721;
+	bh=WkhdNaWxd3a73BO4Ua8knvtZh2HAZ0i2yMLwb1p3hqg=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=YsYmDq7IfSORylhWi64+chzKl5hCo3d1rl5OVCvCArQ3cxGm6nyuRglkpd946Y3vq
+	 F4loY4R1b/nOOuvLvV23jxQr7i4WQ48SYGuQi50wxTDzepcNns1fADi2TJIE21l0a6
+	 H5hhCfX5H+sYiT9y6VvsgRQyaayTka8oiwk8AYcY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732073AbfJIRRM (ORCPT
+        id S1731852AbfJIRV7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:17:12 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42398 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731173AbfJIRRL (ORCPT
+        Wed, 9 Oct 2019 13:21:59 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43806 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731173AbfJIRV7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 13:17:11 -0400
-Received: by mail-lj1-f195.google.com with SMTP id y23so3267691lje.9
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 10:17:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=WYDrRYPHs0j7kH6nvfHacya6cMEOhB6fPC+Nemlqhfc=;
-        b=AOAkA+oySTesOPMVYaXrzFKziTaxffb4NvaLlldPxDNma8iMLawniVil20T4VPFBT/
-         lJMODrpuJPMyGcX5A2MSdkt5UwkF3L8ZbQNgFABx5dhefmgUO+tHZ4ey9D0lN9erNqVg
-         hnHobkTbmoNLfTwLN96hilGvYMpN12W8DR9gI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=WYDrRYPHs0j7kH6nvfHacya6cMEOhB6fPC+Nemlqhfc=;
-        b=j0yxFzv+Eo9AEphcPo3gKeqRr4geT2mY7bPAJioq91ceDtYRpc5wjiq/YbLwa6xiu1
-         0zOO3SMaB53yRGElqEFn27QguAkAkFiN5tPBH7cpKymjqI6WXLo7HNK+4tlzSUUOBUYf
-         MnAFhDwsIcOU5QanqX3wymJHiW1MdZaVyGc8LL25VwPf3wHoY1Sg3Q0tG6CGnSWANQtU
-         nmSPve7aROK/rbobAwVBf/iQ5ZGg29eHoYW0KrNz4yekKvwUuGfmcCf7uMnuHZt/t+uW
-         nn1EbdwjTkQFtYkXhWdJIuB+R2wim8evF87V2hT65eajs/qf6s4UrO24VL4e0mHJDc26
-         JEEQ==
-X-Gm-Message-State: APjAAAXnbE9JHURTYDlXxqmWYCgi2uBHWYYJ5RC0pFUITw4WGTRzYCDo
-        NSBELajnalwiUjLrDYSkXUeHbZspReg=
-X-Google-Smtp-Source: APXvYqwEqKKtsSFNgZYBf8LOAmNf9R+KCSYw9QROpKPcWgzN42iNW223FQu8hBKrfW75ptSDNc72EQ==
-X-Received: by 2002:a2e:98d8:: with SMTP id s24mr2973536ljj.72.1570641429405;
-        Wed, 09 Oct 2019 10:17:09 -0700 (PDT)
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
-        by smtp.gmail.com with ESMTPSA id m15sm568852ljh.50.2019.10.09.10.17.06
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Oct 2019 10:17:06 -0700 (PDT)
-Received: by mail-lf1-f48.google.com with SMTP id u28so2247049lfc.5
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 10:17:06 -0700 (PDT)
-X-Received: by 2002:a19:6f0e:: with SMTP id k14mr2845221lfc.79.1570641426174;
- Wed, 09 Oct 2019 10:17:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191008091508.2682-1-thomas_os@shipmail.org> <20191008091508.2682-4-thomas_os@shipmail.org>
- <20191009152737.p42w7w456zklxz72@box> <CAHk-=wh4waroKr-Xtcv+5pTxBcHxGEj-g73eQvXVawML_C0EXw@mail.gmail.com>
- <03d85a6a-e24a-82f4-93b8-86584b463471@shipmail.org>
-In-Reply-To: <03d85a6a-e24a-82f4-93b8-86584b463471@shipmail.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 9 Oct 2019 10:16:49 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whhdRSqjX5wy1LzFYnOG58UztpifkNvbxBcTVbT3Mzv4g@mail.gmail.com>
-Message-ID: <CAHk-=whhdRSqjX5wy1LzFYnOG58UztpifkNvbxBcTVbT3Mzv4g@mail.gmail.com>
-Subject: Re: [PATCH v4 3/9] mm: pagewalk: Don't split transhuge pmds when a
- pmd_entry is present
-To:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rik van Riel <riel@surriel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Huang Ying <ying.huang@intel.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 9 Oct 2019 13:21:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=DhO1lhFWMD157dxNth9KK8xifPRfFHFsba37Wl3UBJ0=; b=Xyzbpa1PLU2+
+        r7JWoQveHm0Ugw4QDoPeaqS7JOzp5enjB+wkuHDY+4QoovdMMzYeo1MwQVUe3ls44KR+9ASXrzGfN
+        d/394yMOfyAH9aVa8fR3CTNa/WIVpTcV1TVa/IvUoxwtmzx3JNmZ0JGV85djkbuAX5ZxM1AnLoaB5
+        wNnIU=;
+Received: from 188.31.199.195.threembb.co.uk ([188.31.199.195] helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1iIFer-0005Jr-J9; Wed, 09 Oct 2019 17:21:55 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 96BEFD03ED6; Wed,  9 Oct 2019 18:21:48 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Stephan Gerhold <stephan@gerhold.net>
+Subject: Applied "ASoC: msm8916-wcd-digital: add missing MIX2 path for RX1/2" to the asoc tree
+In-Reply-To: <20191009111944.28069-1-srinivas.kandagatla@linaro.org>
+X-Patchwork-Hint: ignore
+Message-Id: <20191009172148.96BEFD03ED6@fitzroy.sirena.org.uk>
+Date:   Wed,  9 Oct 2019 18:21:48 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 9, 2019 at 10:03 AM Thomas Hellstr=C3=B6m (VMware)
-<thomas_os@shipmail.org> wrote:
->
-> Nope, it handles the hugepages by ignoring them, since they should be
-> read-only, but if pmd_entry() was called with something else than a
-> hugepage, then it requests the fallback, but never a split.
+The patch
 
-But  PAGE_WALK_FALLBACK _is_ a split.
+   ASoC: msm8916-wcd-digital: add missing MIX2 path for RX1/2
 
-Oh, except you did this
+has been applied to the asoc tree at
 
--               split_huge_pmd(walk->vma, pmd, addr);
-+               if (!ops->pmd_entry)
-+                       split_huge_pmd(walk->vma, pmd, addr);
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
 
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-so it avoids the split.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-No, that's unacceptable. And makes no sense anyway. If it doesn't
-split the pmd, then it shouldn't walk the pte's - because they don't
-exist. And if it's not a hugepmd, then the split is a no-op, so the
-test makes no sense.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-I hadn't noticed that part of the patch. That simply can't be right. I
-don't think you've tested this, because you never actually have
-hugepages, do you?
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-You didn't notice or realize that split_huge_pmd() just does that
+Thanks,
+Mark
 
-                if (is_swap_pmd(*____pmd) || pmd_trans_huge(*____pmd)   \
-                                        || pmd_devmap(*____pmd))        \
+From bcab05880f9306e94531b0009c627421db110a74 Mon Sep 17 00:00:00 2001
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Date: Wed, 9 Oct 2019 12:19:44 +0100
+Subject: [PATCH] ASoC: msm8916-wcd-digital: add missing MIX2 path for RX1/2
 
-thing and doesn't do anythign at all if it's not huge.
+This patch adds missing MIX2 path on RX1/2 which take IIR1 and
+IIR2 as inputs.
 
-So no. That code makes no sense at all, and I didn't realize how
-senseless it was, becasue I stupidly missed that "make the split
-conditional" - which is insane and wrong - and I thought that you
-wanted PAGE_WALK_FALLBACK to split a pmd and fall back to per-pte
-entries, which is what the name implies.
+Without this patch sound card fails to intialize with below warning:
 
-But that's not what you wanted at all.
+ ASoC: no sink widget found for RX1 MIX2 INP1
+ ASoC: Failed to add route IIR1 -> IIR1 -> RX1 MIX2 INP1
+ ASoC: no sink widget found for RX2 MIX2 INP1
+ ASoC: Failed to add route IIR1 -> IIR1 -> RX2 MIX2 INP1
+ ASoC: no sink widget found for RX1 MIX2 INP1
+ ASoC: Failed to add route IIR2 -> IIR2 -> RX1 MIX2 INP1
+ ASoC: no sink widget found for RX2 MIX2 INP1
+ ASoC: Failed to add route IIR2 -> IIR2 -> RX2 MIX2 INP1
 
-Just get rid of PAGE_WALK_FALLBACK entirely then, and make the rule be
-that a zero return value just means "split and do ptes". Which is what
-you want (see above why "split" simply is wrong, and isn't an issue
-for you anyway.
+Reported-by: Stephan Gerhold <stephan@gerhold.net>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Tested-by: Stephan Gerhold <stephan@gerhold.net>
+Link: https://lore.kernel.org/r/20191009111944.28069-1-srinivas.kandagatla@linaro.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/codecs/msm8916-wcd-digital.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-That won't change any existing cases, since even if they do have a
-zero return value, they don't have a pte_entry() callback, so they
-won't do that "split and do ptes" anyway.
+diff --git a/sound/soc/codecs/msm8916-wcd-digital.c b/sound/soc/codecs/msm8916-wcd-digital.c
+index 9fa5d44fdc79..58b2468fb2a7 100644
+--- a/sound/soc/codecs/msm8916-wcd-digital.c
++++ b/sound/soc/codecs/msm8916-wcd-digital.c
+@@ -243,6 +243,10 @@ static const char *const rx_mix1_text[] = {
+ 	"ZERO", "IIR1", "IIR2", "RX1", "RX2", "RX3"
+ };
+ 
++static const char * const rx_mix2_text[] = {
++	"ZERO", "IIR1", "IIR2"
++};
++
+ static const char *const dec_mux_text[] = {
+ 	"ZERO", "ADC1", "ADC2", "ADC3", "DMIC1", "DMIC2"
+ };
+@@ -270,6 +274,16 @@ static const struct soc_enum rx3_mix1_inp_enum[] = {
+ 	SOC_ENUM_SINGLE(LPASS_CDC_CONN_RX3_B2_CTL, 0, 6, rx_mix1_text),
+ };
+ 
++/* RX1 MIX2 */
++static const struct soc_enum rx_mix2_inp1_chain_enum =
++	SOC_ENUM_SINGLE(LPASS_CDC_CONN_RX1_B3_CTL,
++		0, 3, rx_mix2_text);
++
++/* RX2 MIX2 */
++static const struct soc_enum rx2_mix2_inp1_chain_enum =
++	SOC_ENUM_SINGLE(LPASS_CDC_CONN_RX2_B3_CTL,
++		0, 3, rx_mix2_text);
++
+ /* DEC */
+ static const struct soc_enum dec1_mux_enum = SOC_ENUM_SINGLE(
+ 				LPASS_CDC_CONN_TX_B1_CTL, 0, 6, dec_mux_text);
+@@ -309,6 +323,10 @@ static const struct snd_kcontrol_new rx3_mix1_inp2_mux = SOC_DAPM_ENUM(
+ 				"RX3 MIX1 INP2 Mux", rx3_mix1_inp_enum[1]);
+ static const struct snd_kcontrol_new rx3_mix1_inp3_mux = SOC_DAPM_ENUM(
+ 				"RX3 MIX1 INP3 Mux", rx3_mix1_inp_enum[2]);
++static const struct snd_kcontrol_new rx1_mix2_inp1_mux = SOC_DAPM_ENUM(
++				"RX1 MIX2 INP1 Mux", rx_mix2_inp1_chain_enum);
++static const struct snd_kcontrol_new rx2_mix2_inp1_mux = SOC_DAPM_ENUM(
++				"RX2 MIX2 INP1 Mux", rx2_mix2_inp1_chain_enum);
+ 
+ /* Digital Gain control -38.4 dB to +38.4 dB in 0.3 dB steps */
+ static const DECLARE_TLV_DB_SCALE(digital_gain, -3840, 30, 0);
+@@ -740,6 +758,10 @@ static const struct snd_soc_dapm_widget msm8916_wcd_digital_dapm_widgets[] = {
+ 			 &rx3_mix1_inp2_mux),
+ 	SND_SOC_DAPM_MUX("RX3 MIX1 INP3", SND_SOC_NOPM, 0, 0,
+ 			 &rx3_mix1_inp3_mux),
++	SND_SOC_DAPM_MUX("RX1 MIX2 INP1", SND_SOC_NOPM, 0, 0,
++			 &rx1_mix2_inp1_mux),
++	SND_SOC_DAPM_MUX("RX2 MIX2 INP1", SND_SOC_NOPM, 0, 0,
++			 &rx2_mix2_inp1_mux),
+ 
+ 	SND_SOC_DAPM_MUX("CIC1 MUX", SND_SOC_NOPM, 0, 0, &cic1_mux),
+ 	SND_SOC_DAPM_MUX("CIC2 MUX", SND_SOC_NOPM, 0, 0, &cic2_mux),
+-- 
+2.20.1
 
-             Linus
