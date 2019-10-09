@@ -4,33 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF55EECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55488ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABF81206B6
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37B8B206B6
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:59:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732206AbfJIU7V (ORCPT
+        id S1732235AbfJIU70 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 16:59:21 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51414 "EHLO mx1.suse.de"
+        Wed, 9 Oct 2019 16:59:26 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51524 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732074AbfJIU7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 16:59:18 -0400
+        id S1732074AbfJIU7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 16:59:24 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 338A8B237;
-        Wed,  9 Oct 2019 20:59:16 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 37F8EB23A;
+        Wed,  9 Oct 2019 20:59:22 +0000 (UTC)
 Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id CCC72E3785; Wed,  9 Oct 2019 22:59:15 +0200 (CEST)
-Message-Id: <061af34c9f34205ed18a126cef9ebe1534de8bc7.1570654310.git.mkubecek@suse.cz>
+        id DA44BE3785; Wed,  9 Oct 2019 22:59:21 +0200 (CEST)
+Message-Id: <6d0ae02e0a58cfd9cb9cab6c7f05aa0c647547c6.1570654310.git.mkubecek@suse.cz>
 In-Reply-To: <cover.1570654310.git.mkubecek@suse.cz>
 References: <cover.1570654310.git.mkubecek@suse.cz>
 From:   Michal Kubecek <mkubecek@suse.cz>
-Subject: [PATCH net-next v7 05/17] ethtool: helper functions for netlink
- interface
+Subject: [PATCH net-next v7 07/17] ethtool: support for netlink notifications
 To:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org
 Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
         Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
@@ -39,459 +38,151 @@ Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
         Stephen Hemminger <stephen@networkplumber.org>,
         Johannes Berg <johannes@sipsolutions.net>,
         linux-kernel@vger.kernel.org
-Date:   Wed,  9 Oct 2019 22:59:15 +0200 (CEST)
+Date:   Wed,  9 Oct 2019 22:59:21 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add common request/reply header definition and helpers to parse request
-header and fill reply header. Provide ethnl_update_* helpers to update
-structure members from request attributes (to be used for *_SET requests).
+Add infrastructure for ethtool netlink notifications. There is only one
+multicast group "monitor" which is used to notify userspace about changes
+and actions performed. Notification messages (types using suffix _NTF)
+share the format with replies to GET requests.
+
+Notifications are supposed to be broadcasted on every configuration change,
+whether it is done using the netlink interface or ioctl one. Netlink SET
+requests only trigger a notification if some data is actually changed.
+
+To trigger an ethtool notification, both ethtool netlink and external code
+use ethtool_notify() helper. This helper requires RTNL to be held and may
+sleep. Handlers sending messages for specific notification message types
+are registered in ethnl_notify_handlers array. As notifications can be
+triggered from other code, ethnl_ok flag is used to prevent an attempt to
+send notification before genetlink family is registered.
 
 Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
 ---
- include/uapi/linux/ethtool_netlink.h |  22 +++
- net/ethtool/netlink.c                | 172 ++++++++++++++++++++++
- net/ethtool/netlink.h                | 208 +++++++++++++++++++++++++++
- 3 files changed, 402 insertions(+)
+ include/linux/ethtool_netlink.h      |  5 +++++
+ include/linux/netdevice.h            |  9 ++++++++
+ include/uapi/linux/ethtool_netlink.h |  2 ++
+ net/ethtool/netlink.c                | 32 ++++++++++++++++++++++++++++
+ 4 files changed, 48 insertions(+)
 
+diff --git a/include/linux/ethtool_netlink.h b/include/linux/ethtool_netlink.h
+index 0412adb4f42f..2a15e64a16f3 100644
+--- a/include/linux/ethtool_netlink.h
++++ b/include/linux/ethtool_netlink.h
+@@ -5,5 +5,10 @@
+ 
+ #include <uapi/linux/ethtool_netlink.h>
+ #include <linux/ethtool.h>
++#include <linux/netdevice.h>
++
++enum ethtool_multicast_groups {
++	ETHNL_MCGRP_MONITOR,
++};
+ 
+ #endif /* _LINUX_ETHTOOL_NETLINK_H_ */
+diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+index 3207e0b9ec4e..a50b3c6e5b2e 100644
+--- a/include/linux/netdevice.h
++++ b/include/linux/netdevice.h
+@@ -4377,6 +4377,15 @@ struct netdev_notifier_bonding_info {
+ void netdev_bonding_info_change(struct net_device *dev,
+ 				struct netdev_bonding_info *bonding_info);
+ 
++#if IS_ENABLED(CONFIG_ETHTOOL_NETLINK)
++void ethtool_notify(struct net_device *dev, unsigned int cmd, const void *data);
++#else
++static inline void ethtool_notify(struct net_device *dev, unsigned int cmd,
++				  const void *data)
++{
++}
++#endif
++
+ static inline
+ struct sk_buff *skb_gso_segment(struct sk_buff *skb, netdev_features_t features)
+ {
 diff --git a/include/uapi/linux/ethtool_netlink.h b/include/uapi/linux/ethtool_netlink.h
-index 468f5b00edcc..c58d9fd52ffc 100644
+index 418f28965a04..c3d2e950e728 100644
 --- a/include/uapi/linux/ethtool_netlink.h
 +++ b/include/uapi/linux/ethtool_netlink.h
-@@ -29,6 +29,28 @@ enum {
- 	ETHTOOL_MSG_KERNEL_MAX = __ETHTOOL_MSG_KERNEL_CNT - 1
- };
- 
-+/* request header */
-+
-+/* use compact bitsets in reply */
-+#define ETHTOOL_GFLAG_COMPACT_BITSETS	(1 << 0)
-+/* provide optional reply for SET or ACT requests */
-+#define ETHTOOL_GFLAG_OMIT_REPLY	(1 << 1)
-+
-+#define ETHTOOL_GFLAG_ALL (ETHTOOL_GFLAG_COMPACT_BITSETS | \
-+			   ETHTOOL_GFLAG_OMIT_REPLY)
-+
-+enum {
-+	ETHTOOL_A_HEADER_UNSPEC,
-+	ETHTOOL_A_HEADER_DEV_INDEX,		/* u32 */
-+	ETHTOOL_A_HEADER_DEV_NAME,		/* string */
-+	ETHTOOL_A_HEADER_GFLAGS,		/* u32 - ETHTOOL_GFLAG_* */
-+	ETHTOOL_A_HEADER_RFLAGS,		/* u32 - ETHTOOL_RFLAG_*_* */
-+
-+	/* add new constants above here */
-+	__ETHTOOL_A_HEADER_CNT,
-+	ETHTOOL_A_HEADER_MAX = __ETHTOOL_A_HEADER_CNT - 1
-+};
-+
- /* generic netlink info */
+@@ -90,4 +90,6 @@ enum {
  #define ETHTOOL_GENL_NAME "ethtool"
  #define ETHTOOL_GENL_VERSION 1
+ 
++#define ETHTOOL_MCGRP_MONITOR_NAME "monitor"
++
+ #endif /* _UAPI_LINUX_ETHTOOL_NETLINK_H_ */
 diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
-index 3c98b41f04e5..71145dace79a 100644
+index 71145dace79a..ed9c0f82aca4 100644
 --- a/net/ethtool/netlink.c
 +++ b/net/ethtool/netlink.c
-@@ -1,8 +1,180 @@
- // SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
+@@ -6,6 +6,8 @@
  
-+#include <net/sock.h>
- #include <linux/ethtool_netlink.h>
- #include "netlink.h"
+ static struct genl_family ethtool_genl_family;
  
-+static struct genl_family ethtool_genl_family;
++static bool ethnl_ok __read_mostly;
 +
-+static const struct nla_policy dflt_header_policy[ETHTOOL_A_HEADER_MAX + 1] = {
-+	[ETHTOOL_A_HEADER_UNSPEC]	= { .type = NLA_REJECT },
-+	[ETHTOOL_A_HEADER_DEV_INDEX]	= { .type = NLA_U32 },
-+	[ETHTOOL_A_HEADER_DEV_NAME]	= { .type = NLA_NUL_STRING,
-+					    .len = IFNAMSIZ - 1 },
-+	[ETHTOOL_A_HEADER_GFLAGS]	= { .type = NLA_U32 },
-+	[ETHTOOL_A_HEADER_RFLAGS]	= { .type = NLA_U32 },
+ static const struct nla_policy dflt_header_policy[ETHTOOL_A_HEADER_MAX + 1] = {
+ 	[ETHTOOL_A_HEADER_UNSPEC]	= { .type = NLA_REJECT },
+ 	[ETHTOOL_A_HEADER_DEV_INDEX]	= { .type = NLA_U32 },
+@@ -175,11 +177,38 @@ struct sk_buff *ethnl_reply_init(size_t payload, struct net_device *dev, u8 cmd,
+ 	return NULL;
+ }
+ 
++/* notifications */
++
++typedef void (*ethnl_notify_handler_t)(struct net_device *dev, unsigned int cmd,
++				       const void *data);
++
++static const ethnl_notify_handler_t ethnl_notify_handlers[] = {
 +};
 +
-+/**
-+ * ethnl_parse_header() - parse request header
-+ * @req_info:    structure to put results into
-+ * @header:      nest attribute with request header
-+ * @net:         request netns
-+ * @extack:      netlink extack for error reporting
-+ * @policy:      netlink attribute policy to validate header; use
-+ *               @dflt_header_policy (all attributes allowed) if null
-+ * @require_dev: fail if no device identiified in header
-+ *
-+ * Parse request header in nested attribute @nest and puts results into
-+ * the structure pointed to by @req_info. Extack from @info is used for error
-+ * reporting. If req_info->dev is not null on return, reference to it has
-+ * been taken. If error is returned, *req_info is null initialized and no
-+ * reference is held.
-+ *
-+ * Return: 0 on success or negative error code
-+ */
-+int ethnl_parse_header(struct ethnl_req_info *req_info,
-+		       const struct nlattr *header, struct net *net,
-+		       struct netlink_ext_ack *extack,
-+		       const struct nla_policy *policy, bool require_dev)
++void ethtool_notify(struct net_device *dev, unsigned int cmd, const void *data)
 +{
-+	struct nlattr *tb[ETHTOOL_A_HEADER_MAX + 1];
-+	const struct nlattr *devname_attr;
-+	struct net_device *dev = NULL;
-+	int ret;
++	if (unlikely(!ethnl_ok))
++		return;
++	ASSERT_RTNL();
 +
-+	if (!header) {
-+		NL_SET_ERR_MSG(extack, "request header missing");
-+		return -EINVAL;
-+	}
-+	ret = nla_parse_nested(tb, ETHTOOL_A_HEADER_MAX, header,
-+			       policy ?: dflt_header_policy, extack);
-+	if (ret < 0)
-+		return ret;
-+	devname_attr = tb[ETHTOOL_A_HEADER_DEV_NAME];
-+
-+	if (tb[ETHTOOL_A_HEADER_DEV_INDEX]) {
-+		u32 ifindex = nla_get_u32(tb[ETHTOOL_A_HEADER_DEV_INDEX]);
-+
-+		dev = dev_get_by_index(net, ifindex);
-+		if (!dev) {
-+			NL_SET_ERR_MSG_ATTR(extack,
-+					    tb[ETHTOOL_A_HEADER_DEV_INDEX],
-+					    "no device matches ifindex");
-+			return -ENODEV;
-+		}
-+		/* if both ifindex and ifname are passed, they must match */
-+		if (devname_attr &&
-+		    strncmp(dev->name, nla_data(devname_attr), IFNAMSIZ)) {
-+			dev_put(dev);
-+			NL_SET_ERR_MSG_ATTR(extack, header,
-+					    "ifindex and name do not match");
-+			return -ENODEV;
-+		}
-+	} else if (devname_attr) {
-+		dev = dev_get_by_name(net, nla_data(devname_attr));
-+		if (!dev) {
-+			NL_SET_ERR_MSG_ATTR(extack, devname_attr,
-+					    "no device matches name");
-+			return -ENODEV;
-+		}
-+	} else if (require_dev) {
-+		NL_SET_ERR_MSG_ATTR(extack, header,
-+				    "neither ifindex nor name specified");
-+		return -EINVAL;
-+	}
-+
-+	if (dev && !netif_device_present(dev)) {
-+		dev_put(dev);
-+		NL_SET_ERR_MSG(extack, "device not present");
-+		return -ENODEV;
-+	}
-+
-+	req_info->dev = dev;
-+	if (tb[ETHTOOL_A_HEADER_GFLAGS])
-+		req_info->global_flags = nla_get_u32(tb[ETHTOOL_A_HEADER_GFLAGS]);
-+	if (tb[ETHTOOL_A_HEADER_RFLAGS])
-+		req_info->req_flags = nla_get_u32(tb[ETHTOOL_A_HEADER_RFLAGS]);
-+
-+	return 0;
++	if (likely(cmd < ARRAY_SIZE(ethnl_notify_handlers) &&
++		   ethnl_notify_handlers[cmd]))
++		ethnl_notify_handlers[cmd](dev, cmd, data);
++	else
++		WARN_ONCE(1, "notification %u not implemented (dev=%s)\n",
++			  cmd, netdev_name(dev));
 +}
-+
-+/**
-+ * ethnl_fill_reply_header() - Put standard header into a reply message
-+ * @skb:      skb with the message
-+ * @dev:      network device to describe in header
-+ * @attrtype: attribute type to use for the nest
-+ *
-+ * Create a nested attribute with attributes describing given network device.
-+ *
-+ * Return: 0 on success, error value (-EMSGSIZE only) on error
-+ */
-+int ethnl_fill_reply_header(struct sk_buff *skb, struct net_device *dev,
-+			    u16 attrtype)
-+{
-+	struct nlattr *nest;
-+
-+	if (!dev)
-+		return 0;
-+	nest = nla_nest_start(skb, attrtype);
-+	if (!nest)
-+		return -EMSGSIZE;
-+
-+	if (nla_put_u32(skb, ETHTOOL_A_HEADER_DEV_INDEX, (u32)dev->ifindex) ||
-+	    nla_put_string(skb, ETHTOOL_A_HEADER_DEV_NAME, dev->name))
-+		goto nla_put_failure;
-+	/* If more attributes are put into reply header, ethnl_header_size()
-+	 * must be updated to account for them.
-+	 */
-+
-+	nla_nest_end(skb, nest);
-+	return 0;
-+
-+nla_put_failure:
-+	nla_nest_cancel(skb, nest);
-+	return -EMSGSIZE;
-+}
-+
-+/**
-+ * ethnl_reply_init() - Create skb for a reply and fill device identification
-+ * @payload: payload length (without netlink and genetlink header)
-+ * @dev:     device the reply is about (may be null)
-+ * @cmd:     ETHTOOL_MSG_* message type for reply
-+ * @info:    genetlink info of the received packet we respond to
-+ * @ehdrp:   place to store payload pointer returned by genlmsg_new()
-+ *
-+ * Return: pointer to allocated skb on success, NULL on error
-+ */
-+struct sk_buff *ethnl_reply_init(size_t payload, struct net_device *dev, u8 cmd,
-+				 u16 hdr_attrtype, struct genl_info *info,
-+				 void **ehdrp)
-+{
-+	struct sk_buff *skb;
-+
-+	skb = genlmsg_new(payload, GFP_KERNEL);
-+	if (!skb)
-+		goto err;
-+	*ehdrp = genlmsg_put_reply(skb, info, &ethtool_genl_family, 0, cmd);
-+	if (!*ehdrp)
-+		goto err_free;
-+
-+	if (dev) {
-+		int ret;
-+
-+		ret = ethnl_fill_reply_header(skb, dev, hdr_attrtype);
-+		if (ret < 0)
-+			goto err_free;
-+	}
-+	return skb;
-+
-+err_free:
-+	nlmsg_free(skb);
-+err:
-+	if (info)
-+		GENL_SET_ERR_MSG(info, "failed to setup reply message");
-+	return NULL;
-+}
++EXPORT_SYMBOL(ethtool_notify);
 +
  /* genetlink setup */
  
  static const struct genl_ops ethtool_genl_ops[] = {
-diff --git a/net/ethtool/netlink.h b/net/ethtool/netlink.h
-index 257ae55ccc82..f7c0368a9fa0 100644
---- a/net/ethtool/netlink.h
-+++ b/net/ethtool/netlink.h
-@@ -6,5 +6,213 @@
- #include <linux/ethtool_netlink.h>
- #include <linux/netdevice.h>
- #include <net/genetlink.h>
-+#include <net/sock.h>
-+
-+struct ethnl_req_info;
-+
-+int ethnl_parse_header(struct ethnl_req_info *req_info,
-+		       const struct nlattr *nest, struct net *net,
-+		       struct netlink_ext_ack *extack,
-+		       const struct nla_policy *policy, bool require_dev);
-+int ethnl_fill_reply_header(struct sk_buff *skb, struct net_device *dev,
-+			    u16 attrtype);
-+struct sk_buff *ethnl_reply_init(size_t payload, struct net_device *dev, u8 cmd,
-+				 u16 hdr_attrtype, struct genl_info *info,
-+				 void **ehdrp);
-+
-+/**
-+ * ethnl_strz_size() - calculate attribute length for fixed size string
-+ * @s: ETH_GSTRING_LEN sized string (may not be null terminated)
-+ *
-+ * Return: total length of an attribute with null terminated string from @s
-+ */
-+static inline int ethnl_strz_size(const char *s)
-+{
-+	return nla_total_size(strnlen(s, ETH_GSTRING_LEN) + 1);
-+}
-+
-+/**
-+ * ethnl_put_strz() - put string attribute with fixed size string
-+ * @skb:     skb with the message
-+ * @attrype: attribute type
-+ * @s:       ETH_GSTRING_LEN sized string (may not be null terminated)
-+ *
-+ * Puts an attribute with null terminated string from @s into the message.
-+ *
-+ * Return: 0 on success, negative error code on failure
-+ */
-+static inline int ethnl_put_strz(struct sk_buff *skb, u16 attrtype,
-+				 const char *s)
-+{
-+	unsigned int len = strnlen(s, ETH_GSTRING_LEN);
-+	struct nlattr *attr;
-+
-+	attr = nla_reserve(skb, attrtype, len + 1);
-+	if (!attr)
-+		return -EMSGSIZE;
-+
-+	memcpy(nla_data(attr), s, len);
-+	((char *)nla_data(attr))[len] = '\0';
-+	return 0;
-+}
-+
-+/**
-+ * ethnl_update_u32() - update u32 value from NLA_U32 attribute
-+ * @dst:  value to update
-+ * @attr: netlink attribute with new value or null
-+ * @mod:  pointer to bool for modification tracking
-+ *
-+ * Copy the u32 value from NLA_U32 netlink attribute @attr into variable
-+ * pointed to by @dst; do nothing if @attr is null. Bool pointed to by @mod
-+ * is set to true if this function changed the value of *dst, otherwise it
-+ * is left as is.
-+ */
-+static inline void ethnl_update_u32(u32 *dst, const struct nlattr *attr,
-+				    bool *mod)
-+{
-+	u32 val;
-+
-+	if (!attr)
-+		return;
-+	val = nla_get_u32(attr);
-+	if (*dst == val)
-+		return;
-+
-+	*dst = val;
-+	*mod = true;
-+}
-+
-+/**
-+ * ethnl_update_u8() - update u8 value from NLA_U8 attribute
-+ * @dst:  value to update
-+ * @attr: netlink attribute with new value or null
-+ * @mod:  pointer to bool for modification tracking
-+ *
-+ * Copy the u8 value from NLA_U8 netlink attribute @attr into variable
-+ * pointed to by @dst; do nothing if @attr is null. Bool pointed to by @mod
-+ * is set to true if this function changed the value of *dst, otherwise it
-+ * is left as is.
-+ */
-+static inline void ethnl_update_u8(u8 *dst, const struct nlattr *attr,
-+				   bool *mod)
-+{
-+	u8 val;
-+
-+	if (!attr)
-+		return;
-+	val = nla_get_u32(attr);
-+	if (*dst == val)
-+		return;
-+
-+	*dst = val;
-+	*mod = true;
-+}
-+
-+/**
-+ * ethnl_update_bool32() - update u32 used as bool from NLA_U8 attribute
-+ * @dst:  value to update
-+ * @attr: netlink attribute with new value or null
-+ * @mod:  pointer to bool for modification tracking
-+ *
-+ * Use the u8 value from NLA_U8 netlink attribute @attr to set u32 variable
-+ * pointed to by @dst to 0 (if zero) or 1 (if not); do nothing if @attr is
-+ * null. Bool pointed to by @mod is set to true if this function changed the
-+ * logical value of *dst, otherwise it is left as is.
-+ */
-+static inline void ethnl_update_bool32(u32 *dst, const struct nlattr *attr,
-+				       bool *mod)
-+{
-+	u8 val;
-+
-+	if (!attr)
-+		return;
-+	val = !!nla_get_u8(attr);
-+	if (!!*dst == val)
-+		return;
-+
-+	*dst = val;
-+	*mod = true;
-+}
-+
-+/**
-+ * ethnl_update_binary() - update binary data from NLA_BINARY atribute
-+ * @dst:  value to update
-+ * @len:  destination buffer length
-+ * @attr: netlink attribute with new value or null
-+ * @mod:  pointer to bool for modification tracking
-+ *
-+ * Use the u8 value from NLA_U8 netlink attribute @attr to rewrite data block
-+ * of length @len at @dst by attribute payload; do nothing if @attr is null.
-+ * Bool pointed to by @mod is set to true if this function changed the logical
-+ * value of *dst, otherwise it is left as is.
-+ */
-+static inline void ethnl_update_binary(void *dst, unsigned int len,
-+				       const struct nlattr *attr, bool *mod)
-+{
-+	if (!attr)
-+		return;
-+	if (nla_len(attr) < len)
-+		len = nla_len(attr);
-+	if (!memcmp(dst, nla_data(attr), len))
-+		return;
-+
-+	memcpy(dst, nla_data(attr), len);
-+	*mod = true;
-+}
-+
-+/**
-+ * ethnl_update_bitfield32() - update u32 value from NLA_BITFIELD32 attribute
-+ * @dst:  value to update
-+ * @attr: netlink attribute with new value or null
-+ * @mod:  pointer to bool for modification tracking
-+ *
-+ * Update bits in u32 value which are set in attribute's mask to values from
-+ * attribute's value. Do nothing if @attr is null or the value wouldn't change;
-+ * otherwise, set bool pointed to by @mod to true.
-+ */
-+static inline void ethnl_update_bitfield32(u32 *dst, const struct nlattr *attr,
-+					   bool *mod)
-+{
-+	struct nla_bitfield32 change;
-+	u32 newval;
-+
-+	if (!attr)
-+		return;
-+	change = nla_get_bitfield32(attr);
-+	newval = (*dst & ~change.selector) | (change.value & change.selector);
-+	if (*dst == newval)
-+		return;
-+
-+	*dst = newval;
-+	*mod = true;
-+}
-+
-+/**
-+ * ethnl_reply_header_size() - total size of reply header
-+ *
-+ * This is an upper estimate so that we do not need to hold RTNL lock longer
-+ * than necessary (to prevent rename between size estimate and composing the
-+ * message). Accounts only for device ifindex and name as those are the only
-+ * attributes ethnl_fill_reply_header() puts into the reply header.
-+ */
-+static inline unsigned int ethnl_reply_header_size(void)
-+{
-+	return nla_total_size(nla_total_size(sizeof(u32)) +
-+			      nla_total_size(IFNAMSIZ));
-+}
-+
-+/**
-+ * struct ethnl_req_info - base type of request information for GET requests
-+ * @dev:          network device the request is for (may be null)
-+ * @global_flags: request flags common for all request types
-+ * @req_flags:    request flags specific for each request type
-+ *
-+ * This is a common base, additional members may follow after this structure.
-+ */
-+struct ethnl_req_info {
-+	struct net_device		*dev;
-+	u32				global_flags;
-+	u32				req_flags;
-+};
+ };
  
- #endif /* _NET_ETHTOOL_NETLINK_H */
++static const struct genl_multicast_group ethtool_nl_mcgrps[] = {
++	[ETHNL_MCGRP_MONITOR] = { .name = ETHTOOL_MCGRP_MONITOR_NAME },
++};
++
+ static struct genl_family ethtool_genl_family = {
+ 	.name		= ETHTOOL_GENL_NAME,
+ 	.version	= ETHTOOL_GENL_VERSION,
+@@ -187,6 +216,8 @@ static struct genl_family ethtool_genl_family = {
+ 	.parallel_ops	= true,
+ 	.ops		= ethtool_genl_ops,
+ 	.n_ops		= ARRAY_SIZE(ethtool_genl_ops),
++	.mcgrps		= ethtool_nl_mcgrps,
++	.n_mcgrps	= ARRAY_SIZE(ethtool_nl_mcgrps),
+ };
+ 
+ /* module setup */
+@@ -198,6 +229,7 @@ static int __init ethnl_init(void)
+ 	ret = genl_register_family(&ethtool_genl_family);
+ 	if (WARN(ret < 0, "ethtool: genetlink family registration failed"))
+ 		return ret;
++	ethnl_ok = true;
+ 
+ 	return 0;
+ }
 -- 
 2.23.0
 
