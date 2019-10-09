@@ -4,123 +4,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC19ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3425ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BF72218AC
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:11:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB37721924
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:11:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731534AbfJITLe (ORCPT
+        id S1732112AbfJITLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 15:11:34 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:48089 "EHLO
+        Wed, 9 Oct 2019 15:11:35 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:56199 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731986AbfJITLY (ORCPT
+        with ESMTP id S1731824AbfJITL1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 15:11:24 -0400
+        Wed, 9 Oct 2019 15:11:27 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1N8XgH-1i5VgB1LZh-014SRC; Wed, 09 Oct 2019 21:11:22 +0200
+ 1N8oOk-1i3afR3chC-015pLd; Wed, 09 Oct 2019 21:11:20 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Al Viro <viro@zeniv.linux.org.uk>
 Cc:     linux-kernel@vger.kernel.org, y2038@lists.linaro.org,
         linux-fsdevel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
-Subject: [PATCH v6 42/43] pktcdvd: add compat_ioctl handler
-Date:   Wed,  9 Oct 2019 21:10:43 +0200
-Message-Id: <20191009191044.308087-43-arnd@arndb.de>
+        Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH v6 34/43] compat_ioctl: handle SIOCOUTQNSD
+Date:   Wed,  9 Oct 2019 21:10:35 +0200
+Message-Id: <20191009191044.308087-35-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191009190853.245077-1-arnd@arndb.de>
 References: <20191009190853.245077-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:93xVR2PSRzNKK3F6eEf3KloUW20yUoSchuNU1iTvhPWVCYwsH8H
- z13+p8ef1mAztjV2JdOjKqOYgaMbqp2tn3Z/Vg8IrXIlrGafn4DCxbrq/pChzzAUUHcuEV9
- RtB6cLBqK0HwCVek/0QpPj02Twg2C0IwFQBlScLKqgWIJIg8/tqbCevylU4jhp4uvGMzVBl
- 3NURu7wv2UyKvLx5eGCaQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/Z06bO3lT6w=:6NXRRLxYm/LA0XwBWwo6Q7
- p/KW3+sAt3EnBV6ubbtZExBdcmG9keJjb1cALDVt3+5J5dZnQNtMCpQZqSQrSXht8Ch+KQEUG
- MD2bQvKIe+STPbvBSWGqwieBm7Nb6k22/aNSgdTepdK37zcaLHlAzt6ETugYcc8i8qCuQ23vz
- QbqIM810G2lWNY8Ap3z60/POVSiooVUxgflLJ3iW/d3y2muXKmPowKXUdofL+6iQnTQ5dlXmg
- dJKsOBWOfEtAvFnUtTy5qpbgVx1UCb1x0dYR19li7QIxHQbGImIFi4sxCanHAnpvZjTgO3XRr
- lS+mJFtS4nU8uGOxE8cu06ALG8S0LQQeYCNXgIdS8+qw9i2WqSYUCmt0JRXwhh/ACr54BSerh
- hOHIW0lShwaiuv8KRezSH42mGEBA2P0tK0W8I6MPKy9a4UZjVI/q46Fcll4C3+oun5NOK8F8r
- 1HgADAwxOEctsr516d5iH4xzz/LDcZvyldyWsSEED9n7CZ7Hib4KnZNhkN4my+gFp3AySkUMs
- 9Vysmz9349cTarI7TFSsIxmLZrho7bEtMoHh0NQYpq4yWmyl1sxk0RcMpATWBX/dgXoTAmlJQ
- +br7DNaAzWs8uXFUdM5iiVhmD/dZQGeJF05wYsF33UeeuY9JyZRK44XrOIulA0ppKA799aIxY
- TrlyWvXwzLaEUVi2Gmpcr6yonfuurYg1p7+y1oi0I2K5hDIBiYRbNzbWR3PD+8Z3jnrCsT0+X
- DOM8GRXm297v4+bx+scA0bJ1R7XBVvz8IxrtzT3bwNAfxyXinOjCqZK68Ml/P0kfC/EZF8Bwt
- FvkQTEKTAA29QbZszpwY36dp9F5SUveI9RVSd/U6TyhfPb2x6mbg0h+M1etFyQdCq8Ug/HyjY
- r8LwN/SEfrpnWkDGz16Q==
+X-Provags-ID: V03:K1:uemQDqA8yQ6MG7MO2w2hB7mLVVCYHFMtePKjKuwvfP+fKw479wi
+ +3XH2jpG2j8lBDQxUHlpmJugPSEVHS4OBNcQQA0NBvEAx6hzxafXBAI2rIJOiSHd0Arteyp
+ h8w7y6xun7yngr4VavE/jm0+bod5rapG7AgX0+V0MVAbkqWohYWJZroUHvaveum+3A13lwE
+ P3MRbIbyNK22sOumQLM8Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:jCWR5TpYalo=:JEiqSw2ynBAY/yIo966rNk
+ okajkQuPa+YtaOW3JvOQHr+J6t8i2U/E4DRyD7qU9Ft7WHk+5KHDWKi9OdMFrr5DNtmbNju8D
+ 6H0QHl4hlMfud+pWBSsw9QVG5J5Ri4meSjWM3ZwSZpsgXizmK6bS7m+FTQxmPWgLml8oyxO3N
+ 9V+iyQjFE7BvalkRhehCpZqW3nNDJ/0I0/K1KDXVTCRi5AGqLCbDV0p15Vre6MgNgkIVEE1EH
+ p5cpk/NEyWW7OdKW2VrazYGL8xfVB7cy7zTrvynJQGjUIUOMNnJP1BNg/+OZccrThMqnA8uCV
+ sdGpN2tJxi39qlX+cqcgRqtkzTXxRrEaGAaL19qWhfnLJRUovmlrtiNyEHdMisOtodXqIcBcT
+ xQpN1lTgYPOGorSDbBasrYiwhCEmiLOhxMEXiRzerRza0j+43fYSp86LEtJXdFI50q51Gz7km
+ iCe+h8m8pMU+xDFOm24REu5YOnyVUeqUZluBytLM6HZCeoop0nMMMz9BlDAJEc4wh+fD1ostO
+ nGlel+ejpQxWbR1V69v8cZIPTG4LVMtI3iERXe9SDeVyyL6YJyAtDCfKJYrslnC5lfqq2eEwL
+ 7ADmRETHmHk3FEubMm/ESuUxcC7H7vRpxbTRD74H4fQufRgTlmagVPaqZ/u4SfbE6XJY91cw1
+ O5jVvINrL+juEKnOMyYYQOgI1tiDx273l5T+B5gVZX5jPMjUpChv+6KqqnnSxmHdedN7nT2K5
+ HbfNwN6FIlcvrqnbAw2gYkDwTwSmzsDiUlvrrlvynVt4uy7E9/czPv8DIL76UJQgQYuB4S33J
+ 9KvWA4DH/RO8FAbFVMoqgC8sNNmMyqOeIJ9FW0v17DZoX5xEU7WbvVbexDdpLX/cp6tvl+N3s
+ 3Y7W252bI8BKRpjTbgXQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pkt_ioctl() implements the generic SCSI_IOCTL_SEND_COMMAND
-and some cdrom ioctls by forwarding to the underlying block
-device. For compat_ioctl handling, this always takes a
-roundtrip through fs/compat_ioctl.c that we should try
-to avoid, at least for the compatible commands.
+Unlike the normal SIOCOUTQ, SIOCOUTQNSD was never handled in compat
+mode. Add it to the common socket compat handler along with similar
+ones.
 
-CDROM_SEND_PACKET is an exception here, it requires special
-translation in compat_blkdev_driver_ioctl().
-
-CDROM_LAST_WRITTEN has no compat handling at the moment.
-
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: linux-block@vger.kernel.org
+Fixes: 2f4e1b397097 ("tcp: ioctl type SIOCOUTQNSD returns amount of data not sent")
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: netdev@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/block/pktcdvd.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ net/socket.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/block/pktcdvd.c b/drivers/block/pktcdvd.c
-index 76457003f140..ee67bf929fac 100644
---- a/drivers/block/pktcdvd.c
-+++ b/drivers/block/pktcdvd.c
-@@ -2663,6 +2663,28 @@ static int pkt_ioctl(struct block_device *bdev, fmode_t mode, unsigned int cmd,
- 	return ret;
- }
- 
-+#ifdef CONFIG_COMPAT
-+static int pkt_compat_ioctl(struct block_device *bdev, fmode_t mode, unsigned int cmd, unsigned long arg)
-+{
-+	switch (cmd) {
-+	/* compatible */
-+	case CDROMEJECT:
-+	case CDROMMULTISESSION:
-+	case CDROMREADTOCENTRY:
-+	case SCSI_IOCTL_SEND_COMMAND:
-+		return pkt_ioctl(bdev, mode, cmd, (unsigned long)compat_ptr(arg));
-+
-+
-+	/* FIXME: no handler so far */
-+	case CDROM_LAST_WRITTEN:
-+	/* handled in compat_blkdev_driver_ioctl */
-+	case CDROM_SEND_PACKET:
-+	default:
-+		return -ENOIOCTLCMD;
-+	}
-+}
-+#endif
-+
- static unsigned int pkt_check_events(struct gendisk *disk,
- 				     unsigned int clearing)
- {
-@@ -2684,6 +2706,9 @@ static const struct block_device_operations pktcdvd_ops = {
- 	.open =			pkt_open,
- 	.release =		pkt_close,
- 	.ioctl =		pkt_ioctl,
-+#ifdef CONFIG_COMPAT
-+	.ioctl =		pkt_compat_ioctl,
-+#endif
- 	.check_events =		pkt_check_events,
- };
- 
+diff --git a/net/socket.c b/net/socket.c
+index 6a9ab7a8b1d2..a60f48ab2130 100644
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -3452,6 +3452,7 @@ static int compat_sock_ioctl_trans(struct file *file, struct socket *sock,
+ 	case SIOCSARP:
+ 	case SIOCGARP:
+ 	case SIOCDARP:
++	case SIOCOUTQNSD:
+ 	case SIOCATMARK:
+ 		return sock_do_ioctl(net, sock, cmd, arg);
+ 	}
 -- 
 2.20.0
 
