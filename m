@@ -2,116 +2,81 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED6D9ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7CDC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6F8D20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:54:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570625689;
-	bh=qNajV4k7ysF/GxGupzDezf3Ry+Nr35HvIQS4AvSFaVE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=jNnzonPZqx3G+0j5GfGCmzAPHRpS8RcgWPjd2SofHhBUzkx7gnagQjyxH02T4/vLo
-	 Xj8Wo0g85StJKq0fYT89bVArhSvDq27G/hTgpBWPxSQUt5oa607evbl+JZ6gJ6kPJe
-	 W+6kVq54gYwwuCjttvvPIyjgwMVzcJVxJuAWUNa0=
+	by mail.kernel.org (Postfix) with ESMTP id E52B320B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:55:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731243AbfJIMys (ORCPT
+        id S1731270AbfJIMzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 08:54:48 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53976 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730757AbfJIMys (ORCPT
+        Wed, 9 Oct 2019 08:55:24 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:51651 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731252AbfJIMzY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 08:54:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=k5TxblSZf2IuXWK7WL2O815ZfD+uD0inXCDcm1S7FoI=; b=tisLDzszi0X6OWW++ayPEDQ7f
-        tvCQ72kYedXEXf6w0+mmECXepSg1K8MaEsyhlJTytdr7SNYz8swKiItIvkn1GjXPi2QvvcHsv3rXm
-        SydPOEfntcL4CX3DEmU3sakbmMPoRletbjyurt9jxlKOCZ6zsmYlpsGIcJJkBljDeQWudgCFWFAB5
-        Z4ZAvnN+MzarzP+zQs/7+3MuG3DDdZ4fHtGPgGye+MqwiumJQIiOfkAZxWY6fs/ZMv3sEXmZa7MFp
-        Ic92R18eKW8SqxCdn8DOFherE28vaETfQ7hCT6q7qAyoyQ5KMNUK9OM9WZyR9L8d67uvWkqwyYpLj
-        5791pxU+Q==;
-Received: from 177.205.100.4.dynamic.adsl.gvt.net.br ([177.205.100.4] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iIBUM-0002v7-4W; Wed, 09 Oct 2019 12:54:46 +0000
-Date:   Wed, 9 Oct 2019 09:54:40 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH 02/10] media: renesas-ceu: Use
- of_device_get_match_data()
-Message-ID: <20191009095440.6e834ecf@coco.lan>
-In-Reply-To: <20191004214334.149976-3-swboyd@chromium.org>
-References: <20191004214334.149976-1-swboyd@chromium.org>
-        <20191004214334.149976-3-swboyd@chromium.org>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 9 Oct 2019 08:55:24 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 481D88034D; Wed,  9 Oct 2019 14:55:06 +0200 (CEST)
+Date:   Wed, 9 Oct 2019 14:55:21 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, sfr@canb.auug.org.au
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org
+Subject: leds in -next -- update address was Re: [GIT PULL] LED fixes for
+ 5.4-rc3.
+Message-ID: <20191009125520.GA1436@amd>
+References: <20191008204258.22196-1-jacek.anaszewski@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="VS++wcV0S1rZb1Fb"
+Content-Disposition: inline
+In-Reply-To: <20191008204258.22196-1-jacek.anaszewski@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri,  4 Oct 2019 14:43:26 -0700
-Stephen Boyd <swboyd@chromium.org> escreveu:
 
-> This driver can use the replacement API instead of calling
-> of_match_device() and then dereferencing the pointer that is returned.
-> This nicely avoids referencing the match table when it is undefined with
-> configurations where CONFIG_OF=n.
-> 
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> Cc: Jacopo Mondi <jacopo@jmondi.org>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: <linux-media@vger.kernel.org>
-> Cc: <linux-renesas-soc@vger.kernel.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
-> 
-> Please ack or pick for immediate merge so the last patch can be merged.
+--VS++wcV0S1rZb1Fb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Feel free to merge it via your tree:
+Hi!
 
-Acked-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> - MAINTAINERS: add pointer to Pavel Machek's linux-leds.git tree.
+>   Pavel is going to take over LED tree maintainership
+>   from myself.
 
+I pulled latest changes from for-next, so I can take over -next
+maintainance for now.
 
-> 
->  drivers/media/platform/renesas-ceu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/platform/renesas-ceu.c b/drivers/media/platform/renesas-ceu.c
-> index 197b3991330d..60518bbc2cd5 100644
-> --- a/drivers/media/platform/renesas-ceu.c
-> +++ b/drivers/media/platform/renesas-ceu.c
-> @@ -1679,7 +1679,7 @@ static int ceu_probe(struct platform_device *pdev)
->  	v4l2_async_notifier_init(&ceudev->notifier);
->  
->  	if (IS_ENABLED(CONFIG_OF) && dev->of_node) {
-> -		ceu_data = of_match_device(ceu_of_match, dev)->data;
-> +		ceu_data = of_device_get_match_data(dev);
->  		num_subdevs = ceu_parse_dt(ceudev);
->  	} else if (dev->platform_data) {
->  		/* Assume SH4 if booting with platform data. */
-
-
+Stephen, could you update your scripts to pull from
+git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git ?
 
 Thanks,
-Mauro
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--VS++wcV0S1rZb1Fb
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl2d2LgACgkQMOfwapXb+vJFDwCgsNu+90cQFxK7dhNVr2W3KEE0
+E9gAn0INDeKhrh+ZxpqjqqZH7mkRzufi
+=NDJS
+-----END PGP SIGNATURE-----
+
+--VS++wcV0S1rZb1Fb--
