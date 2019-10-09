@@ -2,137 +2,164 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F608ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C9BC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED62921721
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C16D21721
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:55:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ghGng6jv"
+	dkim=pass (1024-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="ryKArQaD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730606AbfJIJyc (ORCPT
+        id S1730121AbfJIJzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 05:54:32 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52339 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726211AbfJIJyc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 05:54:32 -0400
-Received: by mail-wm1-f68.google.com with SMTP id r19so1747161wmh.2;
-        Wed, 09 Oct 2019 02:54:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pjzPB8hZxTlvLEbGNCa+B9mKE/gfU2JFjpfrgoII7AM=;
-        b=ghGng6jvRuyoU5VrK0M9LvMWPWhWdUWwRxombiYF7h7LD50JfxHYeWYouqmkjHJz09
-         g9dlBr51y5GlMYcXM4xu50W/QQc79U4pFR4liuW4rMqWKAf/oaJppWvy0IwpZotfgGDe
-         OozCn6XAOtih00mC5qmCslTQe6qatrfpHQfmb+4VAplOwofiEuFTMnDBVj6vvkPyiyGQ
-         lsUMvgMkhUWDfp5fuaRvqFSu6rKqM0S6KlFWKPQ7nWUX81uOGAMcM8uy9kgBKfD4dClC
-         Eo1tKxNNeGqFNKK/eEow2mEJHXeMyRlGpuYq6XI1hPLJuFiVVKBZD2/7uwz65znyPb1s
-         cM+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pjzPB8hZxTlvLEbGNCa+B9mKE/gfU2JFjpfrgoII7AM=;
-        b=aRxguDB7jCz+fFF7E94GbXRi1LAk9KCJmi1kmGpZkcNA9Ggby8AK0JVnt05D6D2pQQ
-         GTfdY2Eh5WBHu574HukpUFk3Iic8wQrBaxc3uHiwWltzr8tkOvzaEMObehWevD+kWJF0
-         XnVIoc0OVLyGg1oQpwkSW5H2HUgh+18xMVXgYnmDLWOQ8B8CM0f6XVbJAJ2gQ6BrcPkF
-         JUsotzfFHzK/wQneyT5OJYdUkPOU1vwUvtFnKb2/nUMAHlArUSs+ui6kFqRskhJp4SFE
-         0JRkLzv2P0FqznhWeGUoRpuEWB1VkNagm7ihARfdWs4NPAbj0D+pW7x3maoRqb4AHXFT
-         3F/A==
-X-Gm-Message-State: APjAAAWR9BLFNecSfvYzFy6BeOljtU8mA1b4l3hY75eispAVIb4aWdPV
-        GRH/iB6B06BL/w6rGzbeiRk=
-X-Google-Smtp-Source: APXvYqyzSzpbZLdrScmzqUjPE+OgHqQuRNExZtlUOLssA5O9RU+O+jSTmgzNcsK0Vq+2zD9vSNJZOg==
-X-Received: by 2002:a1c:5587:: with SMTP id j129mr1915601wmb.15.1570614869657;
-        Wed, 09 Oct 2019 02:54:29 -0700 (PDT)
-Received: from andrea.guest.corp.microsoft.com ([2a01:110:8012:1012:e0c:643a:f61b:5721])
-        by smtp.gmail.com with ESMTPSA id a3sm3065408wmc.3.2019.10.09.02.54.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 02:54:29 -0700 (PDT)
-Date:   Wed, 9 Oct 2019 11:54:23 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     vkuznets <vkuznets@redhat.com>,
+        Wed, 9 Oct 2019 05:55:45 -0400
+Received: from mail-bgr052101129101.outbound.protection.outlook.com ([52.101.129.101]:9539
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726211AbfJIJzp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 05:55:45 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lQFrq4S+GY5Lh9PDQbvN7S35jKnPJu99ewQgiFZUltzsoh71Faww+yHxBhrfPSLWJnRKXqUfLSTmh1/3AC7KkZclPknjnggYbdULgH9CIajk7hZAiNQk+h6hKeWltGRg0/esEEGaCw/8Hi9W+pk5iveX8prZM86Q05OJ12Y2lDGoLeKPSSmLtUMHVfHC03ELQcAQIChTgaav62nPQsxkIcqzxmbmBpvaXDMuWE/O23blqGA5UejsU1bkFcEG26hec6uQkz5FUna5dhGOjb56fvMqLokyWG+hI2LdA1uYnpJk+IYqwjin75AAhYSPtWl7fLPsfXNIfbsdUhCt16wAgA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ScyB/Ckz0aXOnfKzzKIPdYQaKlFllZWVNbJuHSuoGeQ=;
+ b=VUlCocgZLdwPKyKpmeHYchg9KHs4mZOt/MLLExwoh9UbXlAZna3O6/npypFKkiI3Dxfq2WHYsT1eSIRWJ3kT9e/cCxgzfCRTVEn6S0KbHmd0l7tBoO/rJI+PT53Kn5IlHHsZaNfdW8k9yI8FmNR8estQBzv8YuoFXGkV8gLADER55FALWpqmRmQfmChcWVx//FDGZjw8DMwuvVDSUhdmZRsw6B2j0fHlbi1lg2dcGEJfHHdmizj7Sr7pkxJnNpP7V06UfrAaNwl8Gs5TnPHVm+ydPLh3wxITOQqF5VbPtcjJDJwhIHx0NkHDXKbb20DkQ8PEj96yQm+gk3l70resiQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
+ header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ScyB/Ckz0aXOnfKzzKIPdYQaKlFllZWVNbJuHSuoGeQ=;
+ b=ryKArQaDRfYanrzEb8sqQbC7z2zaOnGFvevkUlALNmCJsHR3sbDck1I0IpIYCeLf3EJRtXzDTFCIaJRWw7TeMHOQJ/LAzIzrjucvujbS9NiRDD8RwYoYx1amDaCmv6RJxDzuMIs66sOQgsxS/5DVabIXiH9CWrzGppITbNkfxLo=
+Received: from AM0PR08MB5537.eurprd08.prod.outlook.com (20.179.36.87) by
+ AM0PR08MB5235.eurprd08.prod.outlook.com (10.255.31.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2327.23; Wed, 9 Oct 2019 09:55:29 +0000
+Received: from AM0PR08MB5537.eurprd08.prod.outlook.com
+ ([fe80::a8ea:5223:db78:dd3]) by AM0PR08MB5537.eurprd08.prod.outlook.com
+ ([fe80::a8ea:5223:db78:dd3%7]) with mapi id 15.20.2327.026; Wed, 9 Oct 2019
+ 09:55:29 +0000
+From:   Roman Kagan <rkagan@virtuozzo.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+CC:     "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: Re: [PATCH 1/2] Drivers: hv: vmbus: Introduce table of VMBus
- protocol versions
-Message-ID: <20191009095423.GA9510@andrea.guest.corp.microsoft.com>
-References: <20191007163115.26197-1-parri.andrea@gmail.com>
- <20191007163115.26197-2-parri.andrea@gmail.com>
- <87eezo1nrr.fsf@vitty.brq.redhat.com>
- <20191008124052.GA11245@andrea.guest.corp.microsoft.com>
- <87zhibz91y.fsf@vitty.brq.redhat.com>
- <PU1P153MB0169B3B15DB8D220F8E1A728BF9A0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "graf@amazon.com" <graf@amazon.com>,
+        "jschoenh@amazon.de" <jschoenh@amazon.de>,
+        "karahmed@amazon.de" <karahmed@amazon.de>,
+        "rimasluk@amazon.com" <rimasluk@amazon.com>,
+        "Grimm, Jon" <Jon.Grimm@amd.com>
+Subject: Re: [PATCH v3 15/16] kvm: x86: ioapic: Lazy update IOAPIC EOI
+Thread-Topic: [PATCH v3 15/16] kvm: x86: ioapic: Lazy update IOAPIC EOI
+Thread-Index: AQHVamXHKc1e3KeD0Ee/A+4BnLuUFadSMR+AgAAJbgA=
+Date:   Wed, 9 Oct 2019 09:55:29 +0000
+Message-ID: <20191009095526.GA10154@rkaganb.sw.ru>
+References: <1568401242-260374-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <1568401242-260374-16-git-send-email-suravee.suthikulpanit@amd.com>
+ <3771e33d-365b-c214-3d40-bca67c2fa841@redhat.com>
+In-Reply-To: <3771e33d-365b-c214-3d40-bca67c2fa841@redhat.com>
+Accept-Language: en-US, ru-RU
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mutt/1.12.1 (2019-06-15)
+mail-followup-to: Roman Kagan <rkagan@virtuozzo.com>,   Paolo Bonzini
+ <pbonzini@redhat.com>, "Suthikulpanit, Suravee"
+ <Suravee.Suthikulpanit@amd.com>,       "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>,        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,      "joro@8bytes.org"
+ <joro@8bytes.org>,     "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "graf@amazon.com" <graf@amazon.com>,    "jschoenh@amazon.de"
+ <jschoenh@amazon.de>,  "karahmed@amazon.de" <karahmed@amazon.de>,
+        "rimasluk@amazon.com" <rimasluk@amazon.com>,    "Grimm, Jon" <Jon.Grimm@amd.com>
+x-originating-ip: [185.231.240.5]
+x-clientproxiedby: HE1PR09CA0082.eurprd09.prod.outlook.com
+ (2603:10a6:7:3d::26) To AM0PR08MB5537.eurprd08.prod.outlook.com
+ (2603:10a6:208:148::23)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=rkagan@virtuozzo.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b60ecfa7-819e-44bf-96d2-08d74c9ed0f2
+x-ms-traffictypediagnostic: AM0PR08MB5235:|AM0PR08MB5235:|AM0PR08MB5235:
+x-microsoft-antispam-prvs: <AM0PR08MB5235D985B64B1867F8CBAFF7C9950@AM0PR08MB5235.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 018577E36E
+x-forefront-antispam-report: SFV:SPM;SFS:(10019020)(396003)(39840400004)(376002)(346002)(366004)(136003)(189003)(199004)(52116002)(81156014)(33656002)(478600001)(5660300002)(8676002)(99286004)(14454004)(76176011)(1076003)(8936002)(7416002)(54906003)(6916009)(81166006)(25786009)(58126008)(7736002)(316002)(305945005)(14444005)(66946007)(64756008)(66476007)(66446008)(66556008)(446003)(486006)(71190400001)(71200400001)(476003)(11346002)(6512007)(9686003)(66066001)(86362001)(229853002)(6436002)(256004)(6486002)(102836004)(4326008)(6116002)(2906002)(36756003)(26005)(186003)(386003)(6246003)(3846002)(6506007)(53546011)(15650500001)(30126002);DIR:OUT;SFP:1501;SCL:5;SRVR:AM0PR08MB5235;H:AM0PR08MB5537.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: virtuozzo.com does not designate
+ permitted sender hosts)
+x-ms-exchange-transport-forked: True
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: zn6Tr505xNcb6INKemjiQVOlLewsUVIQJ+MttsgZEmOZ5C/pOXhafVVxJnD2iItWEf89XnYHkgi+vQ0HVDepY/Pk4cTA+m3giew08+5yIv9/8KPAbBOw3VRWLzBDg4GeiDf7XkLZ9YQgEdv2tREoqvBD2X+jFfMzcaZc4BWWGqe0YW0J2uTW/4gWy/LbiVIUNn+RkWdwMRjVcjk4wRHvgRCep4XyN1T6FEK4+t2LqUO7dmxSIwe6A4u3hQMTW2yzVg/ALOY4BYNIkfRponK+kvbc7MnlGiyUi4lKW0wlr2HDSz9Chw7+BTkZ8DLgfPdvYWl7fsK7IA8q7SwV99r+U0BvaNWOBh4Po2SAwTphC44hlzWMVSlj5nMnCiZxkrHll2U7UfGvaAhzKWiAM164LCgKnun6HqVhLv8oLRObTawXQN95w4/QOx9sTfeGkdxDIEHbAJ/aW0u/xLxjIww3ZdZcj3M5LDvPl39isXHr2kawAgUPsjlx3aOnS8+1yPhi
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <C1F78026C90CED43A60EC1EF3B89E055@eurprd08.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PU1P153MB0169B3B15DB8D220F8E1A728BF9A0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: virtuozzo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b60ecfa7-819e-44bf-96d2-08d74c9ed0f2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Oct 2019 09:55:29.2826
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: lBvjILs2iaKJe3QdWVjcncSrLNoTsh+YZXGvBNm97s6mO10x3VApralrRhekYuEC2Zyn4Jx4JVcxK8MQh+tnXQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB5235
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 10:41:42PM +0000, Dexuan Cui wrote:
-> > From: Vitaly Kuznetsov <vkuznets@redhat.com>
-> > Sent: Tuesday, October 8, 2019 6:00 AM
-> >  ...
-> > > Looking at the uses of VERSION_INVAL, I find one remaining occurrence
-> > > of this macro in vmbus_bus_resume(), which does:
-> > >
-> > > 	if (vmbus_proto_version == VERSION_INVAL ||
-> > > 	    vmbus_proto_version == 0) {
-> > > 		...
-> > > 	}
-> > >
-> > > TBH I'm looking at vmbus_bus_resume() and vmbus_bus_suspend() for the
-> > > first time and I'm not sure about how to change such check yet... any
-> > > suggestions?
-> > 
-> > Hm, I don't think vmbus_proto_version can ever become == VERSION_INVAL
-> > if we rewrite the code the way you suggest, right? So you'll reduce this
-> > to 'if (!vmbus_proto_version)' meaning we haven't negotiated any version
-> > (yet).
+On Wed, Oct 09, 2019 at 11:21:41AM +0200, Paolo Bonzini wrote:
+> On 13/09/19 21:01, Suthikulpanit, Suravee wrote:
+> >  	/*
+> > +	 * In case APICv accelerate EOI write and do not trap,
+> > +	 * in-kernel IOAPIC will not be able to receive the EOI.
+> > +	 * In this case, we do lazy update of the pending EOI when
+> > +	 * trying to set IOAPIC irq.
+> > +	 */
+> > +	if (kvm_apicv_eoi_accelerate(ioapic->kvm, edge))
+> > +		ioapic_lazy_update_eoi(ioapic, irq);
+> > +
 > 
-> Yeah, Vitaly is correct. The check may be a little paranoid as I believe 
-> "vmbus_proto_version" must be a negotiated value in vmbus_bus_resume()
-> and vmbus_bus_suspend().  I added the check just in case.
+> This is okay for the RTC, and in fact I suggest that you make it work
+> like this even for Intel.  This will get rid of kvm_apicv_eoi_accelerate
+> and be nicer overall.
 > 
-> > > Mmh, I see that vmbus_bus_resume() and vmbus_bus_suspend() can access
-> > > vmbus_connection.conn_state: can such accesses race with a concurrent
-> > > vmbus_connect()?
-> > 
-> > Let's summon Dexuan who's the author! :-)
+> However, it cannot work for the in-kernel PIT, because it is currently
+> checking ps->irq_ack before kvm_set_irq.  Unfortunately, the in-kernel
+> PIT is relying on the ack notifier to timely queue the pt->worker work
+> item and reinject the missed tick.
 > 
-> There should not be an issue:
+> Thus, you cannot enable APICv if ps->reinject is true.
 > 
-> vmbus_connect() is called in the early subsys_initcall(hv_acpi_init).
-> 
-> vmbus_bus_suspend() is called late in the PM code after the kernel boots up, e.g.
-> in the hibernation function hibernation_snapshot() -> dpm_suspend(). 
-> 
-> vmbus_bus_resume() is also called later in late_initcall_sync(software_resume).
-> 
-> In the hibernatin process, vmbus_bus_suspend()/resume() can also be called a
-> few times, and vmbus_bus_resume() calls vmbus_negotiate_version(). As I
-> checked, there is no issue, either.
+> Perhaps you can make kvm->arch.apicv_state a disabled counter?  Then
+> Hyper-V can increment it when enabled, PIT can increment it when
+> ps->reinject becomes true and decrement it when it becomes false;
+> finally, svm.c can increment it when an SVM guest is launched and
+> increment/decrement it around ExtINT handling?
 
-Thank you both for these remarks.
+This can benefit Hyper-V emulation too.  The point is that it's only
+AutoEOI feature in SynIC that is incompatible with APICv.  So the VM can
+use APICv until the guest configures its first AutoEOI SINT.  If the
+hypervisor sets HV_DEPRECATING_AEOI_RECOMMENDED (bit 9) in
+HYPERV_CPUID_ENLIGHTMENT_INFO (0x40000004) cpuid this may never happen
+so we will not be pessimizing guests on modern hardware by merely
+enabling SynIC.  I started looking into this recently and would be happy
+to piggy-back on this series.
 
-So, I'll proceed with the removal of VERSION_INVAL in v2 of this series.
+Roman.
 
-Thanks,
-  Andrea
+> (This conflicts with some of the suggestions I made earlier, which
+> implied the existence of apicv_state, but everything should if anything
+> become easier).
+> 
+> Paolo
