@@ -2,242 +2,247 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D537ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 452BAECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4DA52190F
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:43:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 180E5206B6
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:46:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730080AbfJIInb (ORCPT
+        id S1726384AbfJIIq6 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 04:43:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:56806 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725935AbfJIIna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 04:43:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8F06B1000;
-        Wed,  9 Oct 2019 01:43:29 -0700 (PDT)
-Received: from localhost.localdomain (entos-thunderx2-02.shanghai.arm.com [10.169.40.54])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id EAD153F68E;
-        Wed,  9 Oct 2019 01:43:24 -0700 (PDT)
-From:   Jia He <justin.he@arm.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>, hejianet@gmail.com,
-        Kaly Xin <Kaly.Xin@arm.com>, nd@arm.com,
-        Jia He <justin.he@arm.com>
-Subject: [PATCH v11 4/4] mm: fix double page fault on arm64 if PTE_AF is cleared
-Date:   Wed,  9 Oct 2019 16:42:46 +0800
-Message-Id: <20191009084246.123354-5-justin.he@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191009084246.123354-1-justin.he@arm.com>
-References: <20191009084246.123354-1-justin.he@arm.com>
+        Wed, 9 Oct 2019 04:46:58 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:55042 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbfJIIq5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 04:46:57 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1iI7cP-0002a4-HA; Wed, 09 Oct 2019 02:46:49 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1iI7cO-0003fB-9m; Wed, 09 Oct 2019 02:46:49 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     "Michael Kerrisk \(man-pages\)" <mtk.manpages@gmail.com>
+Cc:     Philipp Wendler <ml@philippwendler.de>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Christian Brauner <christian@brauner.io>,
+        Aleksa Sarai <asarai@suse.de>,
+        Reid Priedhorsky <reidpr@lanl.gov>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Yang Bo <rslovers@yandex.com>, Jakub Wilk <jwilk@jwilk.net>,
+        Joseph Sible <josephcsible@gmail.com>,
+        Al Viro <viro@ftp.linux.org.uk>, werner@almesberger.net,
+        linux-man <linux-man@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Containers <containers@lists.linux-foundation.org>,
+        =?utf-8?Q?St=C3=A9p?= =?utf-8?Q?hane?= Graber 
+        <stgraber@ubuntu.com>
+References: <620c691a-065e-b894-4f06-7453012bc8d3@gmail.com>
+        <d449305b-f87c-f26e-e43f-d193fd8f4332@philippwendler.de>
+        <e51e454c-b0e7-e5d1-7810-e8f023574aa2@gmail.com>
+Date:   Wed, 09 Oct 2019 03:46:02 -0500
+In-Reply-To: <e51e454c-b0e7-e5d1-7810-e8f023574aa2@gmail.com> (Michael
+        Kerrisk's message of "Wed, 9 Oct 2019 09:41:34 +0200")
+Message-ID: <87y2xu71dh.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-XM-SPF: eid=1iI7cO-0003fB-9m;;;mid=<87y2xu71dh.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/c/bS/iIQza/ug6UXm9TOVVep9XRjAqd8=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: For review: rewritten pivot_root(2) manual page
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When we tested pmdk unit test [1] vmmalloc_fork TEST3 on arm64 guest, there
-will be a double page fault in __copy_from_user_inatomic of cow_user_page.
+"Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com> writes:
 
-To reproduce the bug, the cmd is as follows after you deployed everything:
-make -C src/test/vmmalloc_fork/ TEST_TIME=60m check
+> Hello Philipp,
+>
+> My apologies that it has taken a while to reply. (I had been hoping
+> and waiting that a few more people might weigh in on this thread.)
+>
+> On 9/23/19 3:42 PM, Philipp Wendler wrote:
+>> Hello Michael,
+>> 
+>> Am 23.09.19 um 14:04 schrieb Michael Kerrisk (man-pages):
+>> 
+>>> I'm considering to rewrite these pieces to exactly
+>>> describe what the system call does (which I already
+>>> do in the third paragraph) and remove the "may or may not"
+>>> pieces in the second paragraph. I'd welcome comments
+>>> on making that change.
+>> 
+>> I think that it would make the man page significantly easier to
+>> understand if if the vague wording and the meta discussion about it are
+>> removed.
+>
+> It is my inclination to make this change, but I'd love to get more
+> feedback on this point.
+>
+>>> DESCRIPTION
+>> [...]>        pivot_root()  changes  the
+>>>        root  directory  and the current working directory of each process
+>>>        or thread in the same mount namespace to new_root if they point to
+>>>        the  old  root  directory.   (See also NOTES.)  On the other hand,
+>>>        pivot_root() does not change the caller's current  working  direc‐
+>>>        tory  (unless it is on the old root directory), and thus it should
+>>>        be followed by a chdir("/") call.
+>> 
+>> There is a contradiction here with the NOTES (cf. below).
+>
+> See below.
+>
+>>>        The following restrictions apply:
+>>>
+>>>        -  new_root and put_old must be directories.
+>>>
+>>>        -  new_root and put_old must not be on the same filesystem as  the
+>>>           current root.  In particular, new_root can't be "/" (but can be
+>>>           a bind mounted directory on the current root filesystem).
+>> 
+>> Wouldn't "must not be on the same mountpoint" or something similar be
+>> more clear, at least for new_root? The note in parentheses indicates
+>> that new_root can actually be on the same filesystem as the current
+>> note. However, ...
+>
+> For 'put_old', it really is "filesystem".
 
-Below call trace is from arm64 do_page_fault for debugging purpose:
-[  110.016195] Call trace:
-[  110.016826]  do_page_fault+0x5a4/0x690
-[  110.017812]  do_mem_abort+0x50/0xb0
-[  110.018726]  el1_da+0x20/0xc4
-[  110.019492]  __arch_copy_from_user+0x180/0x280
-[  110.020646]  do_wp_page+0xb0/0x860
-[  110.021517]  __handle_mm_fault+0x994/0x1338
-[  110.022606]  handle_mm_fault+0xe8/0x180
-[  110.023584]  do_page_fault+0x240/0x690
-[  110.024535]  do_mem_abort+0x50/0xb0
-[  110.025423]  el0_da+0x20/0x24
+If we are going to be pedantic "filesystem" is really the wrong concept
+here.  The section about bind mount clarifies it, but I wonder if there
+is a better term.
 
-The pte info before __copy_from_user_inatomic is (PTE_AF is cleared):
-[ffff9b007000] pgd=000000023d4f8003, pud=000000023da9b003,
-               pmd=000000023d4b3003, pte=360000298607bd3
+I think I would say: "new_root and put_old must not be on the same mount
+as the current root."
 
-As told by Catalin: "On arm64 without hardware Access Flag, copying from
-user will fail because the pte is old and cannot be marked young. So we
-always end up with zeroed page after fork() + CoW for pfn mappings. we
-don't always have a hardware-managed access flag on arm64."
+I think using "mount" instead of "filesystem" keeps the concepts less
+confusing.
 
-This patch fixes it by calling pte_mkyoung. Also, the parameter is
-changed because vmf should be passed to cow_user_page()
+As I am reading through this email and seeing text that is trying to be
+precise and clear then hitting the term "filesystem" is a bit jarring.
+pivot_root doesn't care a thing for file systems.  pivot_root only cares
+about mounts.
 
-Add a WARN_ON_ONCE when __copy_from_user_inatomic() returns error
-in case there can be some obscure use-case (by Kirill).
+And by a "mount" I mean the thing that you get when you create a bind
+mount or you call mount normally.
 
-[1] https://github.com/pmem/pmdk/tree/master/src/test/vmmalloc_fork
+Michael do you have man pages for the new mount api yet?
 
-Signed-off-by: Jia He <justin.he@arm.com>
-Reported-by: Yibo Cai <Yibo.Cai@arm.com>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
----
- mm/memory.c | 104 ++++++++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 89 insertions(+), 15 deletions(-)
+> For 'new_root', see below.
+>
+>>>        -  put_old must be at or underneath new_root; that  is,  adding  a
+>>>           nonnegative  number  of /.. to the string pointed to by put_old
+>>>           must yield the same directory as new_root.
+>>>
+>>>        -  new_root must be a mount point.  (If  it  is  not  otherwise  a
+>>>           mount  point,  it  suffices  to  bind  mount new_root on top of
+>>>           itself.)
+>> 
+>> ... this item actually makes the above item almost redundant regarding
+>> new_root (except for the "/") case. So one could replace this item with
+>> something like this:
+>> 
+>> - new_root must be a mount point different from "/". (If it is not
+>>   otherwise a mount point, it suffices  to bind mount new_root on top
+>>   of itself.)
+>> 
+>> The above item would then only mention put_old (and maybe use clarified
+>> wording on whether actually a different file system is necessary for
+>> put_old or whether a different mount point is enough).
+>
+> Thanks. That's a good suggestion. I simplified the earlier bullet
+> point as you suggested, and changed the text here to say:
+>
+>        -  new_root must be a mount point, but can't be "/".  If it is not
+>           otherwise  a mount point, it suffices to bind mount new_root on
+>           top of itself.  (new_root can be a bind  mounted  directory  on
+>           the current root filesystem.)
 
-diff --git a/mm/memory.c b/mm/memory.c
-index b1ca51a079f2..b6a5d6a08438 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -118,6 +118,18 @@ int randomize_va_space __read_mostly =
- 					2;
- #endif
- 
-+#ifndef arch_faults_on_old_pte
-+static inline bool arch_faults_on_old_pte(void)
-+{
-+	/*
-+	 * Those arches which don't have hw access flag feature need to
-+	 * implement their own helper. By default, "true" means pagefault
-+	 * will be hit on old pte.
-+	 */
-+	return true;
-+}
-+#endif
-+
- static int __init disable_randmaps(char *s)
- {
- 	randomize_va_space = 0;
-@@ -2145,32 +2157,82 @@ static inline int pte_unmap_same(struct mm_struct *mm, pmd_t *pmd,
- 	return same;
- }
- 
--static inline void cow_user_page(struct page *dst, struct page *src, unsigned long va, struct vm_area_struct *vma)
-+static inline bool cow_user_page(struct page *dst, struct page *src,
-+				 struct vm_fault *vmf)
- {
-+	bool ret;
-+	void *kaddr;
-+	void __user *uaddr;
-+	bool force_mkyoung;
-+	struct vm_area_struct *vma = vmf->vma;
-+	struct mm_struct *mm = vma->vm_mm;
-+	unsigned long addr = vmf->address;
-+
- 	debug_dma_assert_idle(src);
- 
-+	if (likely(src)) {
-+		copy_user_highpage(dst, src, addr, vma);
-+		return true;
-+	}
-+
- 	/*
- 	 * If the source page was a PFN mapping, we don't have
- 	 * a "struct page" for it. We do a best-effort copy by
- 	 * just copying from the original user address. If that
- 	 * fails, we just zero-fill it. Live with it.
- 	 */
--	if (unlikely(!src)) {
--		void *kaddr = kmap_atomic(dst);
--		void __user *uaddr = (void __user *)(va & PAGE_MASK);
-+	kaddr = kmap_atomic(dst);
-+	uaddr = (void __user *)(addr & PAGE_MASK);
-+
-+	/*
-+	 * On architectures with software "accessed" bits, we would
-+	 * take a double page fault, so mark it accessed here.
-+	 */
-+	force_mkyoung = arch_faults_on_old_pte() && !pte_young(vmf->orig_pte);
-+	if (force_mkyoung) {
-+		pte_t entry;
-+
-+		vmf->pte = pte_offset_map_lock(mm, vmf->pmd, addr, &vmf->ptl);
-+		if (!likely(pte_same(*vmf->pte, vmf->orig_pte))) {
-+			/*
-+			 * Other thread has already handled the fault
-+			 * and we don't need to do anything. If it's
-+			 * not the case, the fault will be triggered
-+			 * again on the same address.
-+			 */
-+			ret = false;
-+			goto pte_unlock;
-+		}
- 
-+		entry = pte_mkyoung(vmf->orig_pte);
-+		if (ptep_set_access_flags(vma, addr, vmf->pte, entry, 0))
-+			update_mmu_cache(vma, addr, vmf->pte);
-+	}
-+
-+	/*
-+	 * This really shouldn't fail, because the page is there
-+	 * in the page tables. But it might just be unreadable,
-+	 * in which case we just give up and fill the result with
-+	 * zeroes.
-+	 */
-+	if (__copy_from_user_inatomic(kaddr, uaddr, PAGE_SIZE)) {
- 		/*
--		 * This really shouldn't fail, because the page is there
--		 * in the page tables. But it might just be unreadable,
--		 * in which case we just give up and fill the result with
--		 * zeroes.
-+		 * Give a warn in case there can be some obscure
-+		 * use-case
- 		 */
--		if (__copy_from_user_inatomic(kaddr, uaddr, PAGE_SIZE))
--			clear_page(kaddr);
--		kunmap_atomic(kaddr);
--		flush_dcache_page(dst);
--	} else
--		copy_user_highpage(dst, src, va, vma);
-+		WARN_ON_ONCE(1);
-+		clear_page(kaddr);
-+	}
-+
-+	ret = true;
-+
-+pte_unlock:
-+	if (force_mkyoung)
-+		pte_unmap_unlock(vmf->pte, vmf->ptl);
-+	kunmap_atomic(kaddr);
-+	flush_dcache_page(dst);
-+
-+	return ret;
- }
- 
- static gfp_t __get_fault_gfp_mask(struct vm_area_struct *vma)
-@@ -2327,7 +2389,19 @@ static vm_fault_t wp_page_copy(struct vm_fault *vmf)
- 				vmf->address);
- 		if (!new_page)
- 			goto oom;
--		cow_user_page(new_page, old_page, vmf->address, vma);
-+
-+		if (!cow_user_page(new_page, old_page, vmf)) {
-+			/*
-+			 * COW failed, if the fault was solved by other,
-+			 * it's fine. If not, userspace would re-fault on
-+			 * the same address and we will handle the fault
-+			 * from the second attempt.
-+			 */
-+			put_page(new_page);
-+			if (old_page)
-+				put_page(old_page);
-+			return 0;
-+		}
- 	}
- 
- 	if (mem_cgroup_try_charge_delay(new_page, mm, GFP_KERNEL, &memcg, false))
--- 
-2.17.1
+How about:
+          - new_root must be the path to a mount, but can't be "/".  Any
+          path that is not already a mount can be converted into one by
+          bind mounting the path onto itself.
+          
+>>> NOTES
+>> [...]
+>>>        pivot_root() allows the caller to switch to a new root  filesystem
+>>>        while  at  the  same time placing the old root mount at a location
+>>>        under new_root from where it can subsequently be unmounted.   (The
+>>>        fact  that  it  moves  all processes that have a root directory or
+>>>        current working directory on the old root filesystem  to  the  new
+>>>        root  filesystem  frees the old root filesystem of users, allowing
+>>>        it to be unmounted more easily.)
+>> 
+>> Here is the contradiction:
+>> The DESCRIPTION says that root and current working dir are only changed
+>> "if they point to the old root directory". Here in the NOTES it says
+>> that any root or working directories on the old root file system (i.e.,
+>> even if somewhere below the root) are changed.
+>> 
+>> Which is correct?
+>
+> The first text is correct. I must have accidentally inserted
+> "filesystem" into the paragraph just here during a global edit.
+> Thanks for catching that.
+>
+>> If it indeed affects all processes with root and/or current working
+>> directory below the old root, the text here does not clearly state what
+>> the new root/current working directory of theses processes is.
+>> E.g., if a process is at /foo and we pivot to /bar, will the process be
+>> moved to /bar (i.e., at / after pivot_root), or will the kernel attempt
+>> to move it to some location like /bar/foo? Because the latter might not
+>> even exist, I suspect that everything is just moved to new_root, but
+>> this could be stated explicitly by replacing "to the new root
+>> filesystem" in the above paragraph with "to the new root directory"
+>> (after checking whether this is true).
+>
+> The text here now reads:
+>
+>        pivot_root() allows the caller to switch to a new root  filesystem
+>        while  at  the  same time placing the old root mount at a location
+>        under new_root from where it can subsequently be unmounted.   (The
+>        fact  that  it  moves  all processes that have a root directory or
+>        current working directory on the old root  directory  to  the  new
+>        root  frees the old root directory of users, allowing the old root
+>        filesystem to be unmounted more easily.)
 
+
+Please "mount" instead of "filesystem".
+
+>>> EXAMPLE>        The program below demonstrates the use of  pivot_root()  inside  a
+>>>        mount namespace that is created using clone(2).  After pivoting to
+>>>        the root directory named in the program's first command-line argu‐
+>>>        ment,  the  child  created  by  clone(2) then executes the program
+>>>        named in the remaining command-line arguments.
+>> 
+>> Why not use the pivot_root(".", ".") in the example program?
+>> It would make the example shorter, and also works if the process cannot
+>> write to new_root (e..g., in a user namespace).
+>
+> I'm not sure. Some people have a bit of trouble to wrap their head
+> around the pivot_root(".", ".") idea. (I possibly am one of them.)
+> I'd be quite keen to hear other opinions on this. Unfortunately,
+> few people have commented on this manual page rewrite.
+
+I am happy as long as it is pivot_root(".", ".") is documented
+somewhere.  There is real code that uses it so it is not going away.
+Plus pivot_root(".", ".") is really what is desired in a lot of
+situations where the caller of pivot_root is an intermediary and
+does not control the new root filesystem.  At which point the only
+path you can be guaranteed to exit on the new root filesystem is "/".
+
+Eric
