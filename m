@@ -2,231 +2,95 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B7BECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 18:31:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B91ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 18:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16C4C206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 18:31:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fBXibqoj"
+	by mail.kernel.org (Postfix) with ESMTP id 84F1721848
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 18:35:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731473AbfJISbr (ORCPT
+        id S1731442AbfJISff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 14:31:47 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46785 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728804AbfJISbq (ORCPT
+        Wed, 9 Oct 2019 14:35:35 -0400
+Received: from www17.your-server.de ([213.133.104.17]:49446 "EHLO
+        www17.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731144AbfJISfe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 14:31:46 -0400
-Received: by mail-wr1-f66.google.com with SMTP id o18so4179707wrv.13;
-        Wed, 09 Oct 2019 11:31:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oWkC+BZoP7VUQ2ztR/WpAMsp2lmAnOuXDnBIIvOWkGA=;
-        b=fBXibqojDDDkc/wCUNSb61Yv2drYaMkqP3mLDqbt3jY14GYujTmNyVtSeArNy3SKY5
-         O6Cnf3Kc/T8PlTbMRdFdYqn9xJIa/9P21Z+DdyXFEyos8HYToaXTY9MU5rH7lFi4zuUb
-         WDG4cGlaTup0y2JDh40tvzq63bOy5SfoqiHPuR7W4/2m4rMREjvXl+Ug+oLNKoo/3rU2
-         cKt+zez5VJTiapdvMxSsRjFgS/z21dZGiaQcL9j8Y5Ly1oJU2goc547ZpAJXsQwFi2E1
-         P9HMaFUGt0kOXL+jc1Ugo9cKSYi6DKKVEFMSNqpJ4ZA72+LNnuSTvFRWtWWLSoqQaQq8
-         0pnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=oWkC+BZoP7VUQ2ztR/WpAMsp2lmAnOuXDnBIIvOWkGA=;
-        b=p6t15eMkEoF3h3ubVnuIdxXibcIGFFUPJtRIViosM+VC/5uTegdb08X1AIdvCItH0n
-         HuzZrJIR8ETVgS2a8AS+qZvGfLGIk1jk/C2VLphcTJdyTdl3ZKv0koC8MnC+1q47IuT4
-         ad61kv+6vKu159evtpTJbS2IBe72kNcbIEZAMomj/SSTz8ZVHNUw311Yoicz72FNIOSt
-         uBpTuZ6Yw6YwAGZiWY879Px6H0TKVRW5oB4w7DEqJN48OZdhnYPw9gXWSfyiQLaGUt0t
-         1jJ89ho9oodZYm4MUE9uJQuH/WYWc0kYOfpVZuCkq9FdlR2EhDpOgBGGFm4hsuLaSqci
-         C7qA==
-X-Gm-Message-State: APjAAAW4H0KH/hTQyLi18w64KG3KoMgvy6x2BML+xp1aiEF4aYjL3m8x
-        IjTufIBunYMwDI3Hbj5Huvs=
-X-Google-Smtp-Source: APXvYqyM2etDyWUPu7v7d+CD4W0SPXOldpjlksplBTMaO9G/jxiazmJNGIb74AbxqheyQL0cI2KRgw==
-X-Received: by 2002:a5d:5270:: with SMTP id l16mr4118079wrc.201.1570645903148;
-        Wed, 09 Oct 2019 11:31:43 -0700 (PDT)
-Received: from [192.168.1.19] (cjk130.neoplus.adsl.tpnet.pl. [83.31.60.130])
-        by smtp.gmail.com with ESMTPSA id y14sm4359437wrd.84.2019.10.09.11.31.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 09 Oct 2019 11:31:42 -0700 (PDT)
-Subject: Re: [PATCH v9 4/5] dt-bindings: backlight: Add led-backlight binding
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Jean-Jacques Hiblot <jjhiblot@ti.com>, Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Dan Murphy <dmurphy@ti.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>
-References: <20191007124437.20367-1-jjhiblot@ti.com>
- <20191007124437.20367-5-jjhiblot@ti.com>
- <CAL_JsqLTqnKpU4PB8Zt9SSPSia5mkFcUgoA8ZyX_1E_HfdFyxg@mail.gmail.com>
- <30fcd898-aa50-bac2-b316-0d9bf2429369@ti.com>
- <bc5e4094-2b58-c917-9b9e-0f646c04dd78@ti.com>
- <CAL_JsqL8b0gWPTt3oJ8ScY_AwP+uB__dZP6Eednfa5Fq9vAptw@mail.gmail.com>
- <edadb121-cebd-b8ea-e07d-f5495a581dfd@gmail.com>
- <CAL_JsqJLp65f6g2OG5uJPrcZ2uuc5cgREaiQ-AXeBp6reqvbkw@mail.gmail.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <a0b161a3-afc7-a00f-2a22-79ebe360f2ad@gmail.com>
-Date:   Wed, 9 Oct 2019 20:31:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 9 Oct 2019 14:35:34 -0400
+Received: from sslproxy01.your-server.de ([88.198.220.130])
+        by www17.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <thomas@m3y3r.de>)
+        id 1iIGo8-0003dQ-9e; Wed, 09 Oct 2019 20:35:32 +0200
+Received: from [2a02:908:4c22:ec00:8ad5:993:4cda:a89f] (helo=localhost.localdomain)
+        by sslproxy01.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <thomas@m3y3r.de>)
+        id 1iIGo7-0008Ma-Ve; Wed, 09 Oct 2019 20:35:32 +0200
+From:   Thomas Meyer <thomas@m3y3r.de>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kernel/groups.c: use bsearch library function
+References: <20191007192632.29535-1-thomas@m3y3r.de>
+        <60e43953-a7f9-c52e-150c-74059d1b377b@rasmusvillemoes.dk>
+Date:   Wed, 09 Oct 2019 20:35:29 +0200
+In-Reply-To: <60e43953-a7f9-c52e-150c-74059d1b377b@rasmusvillemoes.dk> (Rasmus
+        Villemoes's message of "Wed, 9 Oct 2019 09:46:21 +0200")
+Message-ID: <875zkxydfy.fsf@m3y3r.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJLp65f6g2OG5uJPrcZ2uuc5cgREaiQ-AXeBp6reqvbkw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Authenticated-Sender: thomas@m3y3r.de
+X-Virus-Scanned: Clear (ClamAV 0.101.4/25597/Wed Oct  9 10:39:14 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/8/19 10:00 PM, Rob Herring wrote:
-> On Tue, Oct 8, 2019 at 12:17 PM Jacek Anaszewski
-> <jacek.anaszewski@gmail.com> wrote:
->>
->> On 10/8/19 5:00 PM, Rob Herring wrote:
->>> On Tue, Oct 8, 2019 at 8:30 AM Jean-Jacques Hiblot <jjhiblot@ti.com> wrote:
->>>>
->>>> Rob,
->>>>
->>>> On 08/10/2019 14:51, Jean-Jacques Hiblot wrote:
->>>>> Hi Rob,
->>>>>
->>>>> On 07/10/2019 18:15, Rob Herring wrote:
->>>>>> Please send DT bindings to DT list or it's never in my queue. IOW,
->>>>>> send patches to the lists that get_maintainers.pl tells you to.
->>>>>>
->>>>>> On Mon, Oct 7, 2019 at 7:45 AM Jean-Jacques Hiblot <jjhiblot@ti.com>
->>>>>> wrote:
->>>>>>> Add DT binding for led-backlight.
->>>>>>>
->>>>>>> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
->>>>>>> Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
->>>>>>> Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
->>>>>>> ---
->>>>>>>   .../bindings/leds/backlight/led-backlight.txt | 28
->>>>>>> +++++++++++++++++++
->>>>>>>   1 file changed, 28 insertions(+)
->>>>>>>   create mode 100644
->>>>>>> Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
->>>>>> Please make this a DT schema.
->>>>>
->>>>> OK.
->>>>>
->>>>> BTW I used "make dt_binding_check" but had to fix a couple of YAMLs
->>>>> file to get it to work. Do you have a kernel tree with already all the
->>>>> YAML files in good shape ? Or do you want me to post the changes to
->>>>> devicetree@vger.kernel.org ?
->>>>>
->>>>>
->>>>>>
->>>>>>> diff --git
->>>>>>> a/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
->>>>>>> b/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
->>>>>>> new file mode 100644
->>>>>>> index 000000000000..4c7dfbe7f67a
->>>>>>> --- /dev/null
->>>>>>> +++
->>>>>>> b/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
->>>>>>> @@ -0,0 +1,28 @@
->>>>>>> +led-backlight bindings
->>>>>>> +
->>>>>>> +This binding is used to describe a basic backlight device made of
->>>>>>> LEDs.
->>>>>>> +It can also be used to describe a backlight device controlled by
->>>>>>> the output of
->>>>>>> +a LED driver.
->>>>>>> +
->>>>>>> +Required properties:
->>>>>>> +  - compatible: "led-backlight"
->>>>>>> +  - leds: a list of LEDs
->>>>>> 'leds' is already used as a node name and mixing is not ideal.
->>
->> for the record: child node names (if that was what you had on mind)
->> have singular form 'led'.
-> 
-> I did actually grep this and not rely on my somewhat faulty memory:
-> 
-> $ git grep '\sleds {' | wc -l
-> 463
-> 
-> These are mostly gpio-leds I think.
+Rasmus Villemoes <linux@rasmusvillemoes.dk> writes:
 
-Indeed. So this is legacy, but common LED bindings have never stated
-that. If should be OK to add leds property to common bindings with
-proper description.
+> On 07/10/2019 21.26, Thomas Meyer wrote:
+>> commit b7b2562f7252 ("kernel/groups.c: use sort library function")
+>> introduced the sort library function.
+>> also use the bsearch library function instead of open-coding the binary
+>> search.
 
--- 
-Best regards,
-Jacek Anaszewski
+Hi,
+
+> Yes, but please note the difference between sorting the group_info and
+> searching it: The former is done quite rarely - the setgroups syscall is
+> used roughly once per login-session.
+>
+> But the searching of that structure is done more or less every time a
+> user accesses a file not owned by that user (e.g., any time a normal
+> user accesses anything in /usr) - at least if I'm reading
+> acl_permission_check() right.
+>
+> So using a callback-based interface, especially in a post-spectre world,
+> may have a somewhat large performance impact.
+
+okay, so the code is duplicated for performance reasons? nothing a
+compiler can inline, I guess.
+
+so what about a comment instead:
+
+diff --git a/kernel/groups.c b/kernel/groups.c
+index daae2f2dc6d4f..46b5d4cd53c2e 100644
+--- a/kernel/groups.c
++++ b/kernel/groups.c
+@@ -93,7 +93,7 @@ void groups_sort(struct group_info *group_info)
+ }
+ EXPORT_SYMBOL(groups_sort);
+ 
+-/* a simple bsearch */
++/* duplicate code from lib/bsearch.c for performance reasons */
+ int groups_search(const struct group_info *group_info, kgid_t grp)
+ {
+        unsigned int left, right;
+
+
+Mfg
+thomas
