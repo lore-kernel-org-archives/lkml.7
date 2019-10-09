@@ -2,200 +2,199 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39FA5C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 06:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B96BC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 06:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 107F320679
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 06:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4096A20679
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 06:13:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728187AbfJIGKn (ORCPT
+        id S1728734AbfJIGNQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 02:10:43 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:41086 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726698AbfJIGKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 02:10:42 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 67AE8BE9F0EFCB45E312;
-        Wed,  9 Oct 2019 14:10:39 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.203) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Wed, 9 Oct 2019
- 14:10:29 +0800
-Subject: Re: [PATCH v7 00/12] implement KASLR for powerpc/fsl_booke/32
-From:   Jason Yan <yanaijie@huawei.com>
-To:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
-        <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
-        <benh@kernel.crashing.org>, <paulus@samba.org>,
-        <npiggin@gmail.com>, <keescook@chromium.org>,
-        <kernel-hardening@lists.openwall.com>, <oss@buserror.net>
-CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
-        <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
-        <jingxiangfeng@huawei.com>, <zhaohongjiang@huawei.com>
-References: <20190920094546.44948-1-yanaijie@huawei.com>
- <9c2dd2a8-83f2-983c-383e-956e19a7803a@huawei.com>
-Message-ID: <c4769b34-95f6-81b9-4856-50459630aa0d@huawei.com>
-Date:   Wed, 9 Oct 2019 14:10:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Wed, 9 Oct 2019 02:13:16 -0400
+Received: from mga06.intel.com ([134.134.136.31]:24049 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726254AbfJIGNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 02:13:15 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 23:13:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,273,1566889200"; 
+   d="scan'208";a="196829032"
+Received: from unknown (HELO localhost) ([10.239.159.128])
+  by orsmga003.jf.intel.com with ESMTP; 08 Oct 2019 23:13:12 -0700
+Date:   Wed, 9 Oct 2019 14:15:09 +0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     Jim Mattson <jmattson@google.com>
+Cc:     Yang Weijiang <weijiang.yang@intel.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Subject: Re: [PATCH v7 3/7] KVM: VMX: Pass through CET related MSRs to Guest
+Message-ID: <20191009061509.GB27851@local-michael-cet-test>
+References: <20190927021927.23057-1-weijiang.yang@intel.com>
+ <20190927021927.23057-4-weijiang.yang@intel.com>
+ <CALMp9eT3HJ3S6Mzzntje2Kb4m-y86GvkhaNXun-mLJukEy6wbA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <9c2dd2a8-83f2-983c-383e-956e19a7803a@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.177.96.203]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALMp9eT3HJ3S6Mzzntje2Kb4m-y86GvkhaNXun-mLJukEy6wbA@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Scott,
+On Wed, Oct 02, 2019 at 11:18:32AM -0700, Jim Mattson wrote:
+> On Thu, Sep 26, 2019 at 7:17 PM Yang Weijiang <weijiang.yang@intel.com> wrote:
+> >
+> > CET MSRs pass through Guest directly to enhance performance.
+> > CET runtime control settings are stored in MSR_IA32_{U,S}_CET,
+> > Shadow Stack Pointer(SSP) are stored in MSR_IA32_PL{0,1,2,3}_SSP,
+> > SSP table base address is stored in MSR_IA32_INT_SSP_TAB,
+> > these MSRs are defined in kernel and re-used here.
+> 
+> All of these new guest MSRs will have to be enumerated by
+> KVM_GET_MSR_INDEX_LIST.
+> 
+Since CET feature is Intel platform specific, but looks like KVM_GET_MSR_INDEX_LIST
+fetchs x86 common MSRs, I have patch in QEMU to support CET
+MSRs, the patch is here:
+https://patchwork.ozlabs.org/patch/1058265/
 
-Would you please take sometime to test this?
+> > MSR_IA32_U_CET and MSR_IA32_PL3_SSP are used for user mode protection,
+> > the contents could differ from process to process, therefore,
+> > kernel needs to save/restore them during context switch, it makes
+> > sense to pass through them so that the guest kernel can
+> > use xsaves/xrstors to operate them efficiently. Other MSRs are used
+> > for non-user mode protection. See CET spec for detailed info.
+> 
+> I assume that XSAVES & XRSTORS bypass the MSR permission bitmap, like
+> other instructions that manipulate MSRs (e.g. SWAPGS, RDTSCP, etc.).
+> Is the guest OS likely to use RDMSR/WRMSR to access these MSRs?
+> 
+Yes, exactly, you may check the CET kernel code.
 
-Thank you so much.
+> > The difference between CET VMCS state fields and xsave components is that,
+> > the former used for CET state storage during VMEnter/VMExit,
+> > whereas the latter used for state retention between Guest task/process
+> > switch.
+> >
+> > Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+> > Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+> > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> > ---
+> >  arch/x86/kvm/cpuid.c   |  1 +
+> >  arch/x86/kvm/cpuid.h   |  2 ++
+> >  arch/x86/kvm/vmx/vmx.c | 39 +++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 42 insertions(+)
+> >
+> > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> > index 1aa86b87b6ab..0a47b9e565be 100644
+> > --- a/arch/x86/kvm/cpuid.c
+> > +++ b/arch/x86/kvm/cpuid.c
+> > @@ -66,6 +66,7 @@ u64 kvm_supported_xss(void)
+> >  {
+> >         return KVM_SUPPORTED_XSS & kvm_x86_ops->supported_xss();
+> >  }
+> > +EXPORT_SYMBOL_GPL(kvm_supported_xss);
+> >
+> >  #define F(x) bit(X86_FEATURE_##x)
+> >
+> > diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
+> > index d78a61408243..1d77b880084d 100644
+> > --- a/arch/x86/kvm/cpuid.h
+> > +++ b/arch/x86/kvm/cpuid.h
+> > @@ -27,6 +27,8 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+> >
+> >  int cpuid_query_maxphyaddr(struct kvm_vcpu *vcpu);
+> >
+> > +u64 kvm_supported_xss(void);
+> > +
+> >  static inline int cpuid_maxphyaddr(struct kvm_vcpu *vcpu)
+> >  {
+> >         return vcpu->arch.maxphyaddr;
+> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > index a84198cff397..f720baa7a9ba 100644
+> > --- a/arch/x86/kvm/vmx/vmx.c
+> > +++ b/arch/x86/kvm/vmx/vmx.c
+> > @@ -7001,6 +7001,43 @@ static void update_intel_pt_cfg(struct kvm_vcpu *vcpu)
+> >                 vmx->pt_desc.ctl_bitmask &= ~(0xfULL << (32 + i * 4));
+> >  }
+> >
+> > +static void vmx_intercept_cet_msrs(struct kvm_vcpu *vcpu)
+> 
+> Nit: It seems like this function adjusts the MSR permission bitmap so
+> as *not* to intercept the CET MSRs.
+>
+OK, will rename it.
+> > +{
+> > +       struct vcpu_vmx *vmx = to_vmx(vcpu);
+> > +       unsigned long *msr_bitmap;
+> > +       u64 kvm_xss;
+> > +       bool cet_en;
+> > +
+> > +       msr_bitmap = vmx->vmcs01.msr_bitmap;
+> 
+> What about nested guests? (i.e. vmcs02).
+> 
+Hmm, I need to check the nested case, thank you.
 
-On 2019/9/24 13:52, Jason Yan wrote:
-> Hi Scott,
+> > +       kvm_xss = kvm_supported_xss();
+> > +       cet_en = guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) ||
+> > +                guest_cpuid_has(vcpu, X86_FEATURE_IBT);
+> > +       /*
+> > +        * U_CET is a must for USER CET, per CET spec., U_CET and PL3_SPP are
+> > +        * a bundle for USER CET xsaves.
+> > +        */
+> > +       if (cet_en && (kvm_xss & XFEATURE_MASK_CET_USER)) {
+> > +               vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_U_CET, MSR_TYPE_RW);
+> > +               vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL3_SSP, MSR_TYPE_RW);
+> > +       }
 > 
-> Can you test v7 to see if it works to load a kernel at a non-zero address?
+> Since this is called from vmx_cpuid_update, what happens if cet_en was
+> previously true and now it's false?
 > 
-> Thanks,
-> 
-> On 2019/9/20 17:45, Jason Yan wrote:
->> This series implements KASLR for powerpc/fsl_booke/32, as a security
->> feature that deters exploit attempts relying on knowledge of the location
->> of kernel internals.
->>
->> Since CONFIG_RELOCATABLE has already supported, what we need to do is
->> map or copy kernel to a proper place and relocate. Freescale Book-E
->> parts expect lowmem to be mapped by fixed TLB entries(TLB1). The TLB1
->> entries are not suitable to map the kernel directly in a randomized
->> region, so we chose to copy the kernel to a proper place and restart to
->> relocate.
->>
->> Entropy is derived from the banner and timer base, which will change 
->> every
->> build and boot. This not so much safe so additionally the bootloader may
->> pass entropy via the /chosen/kaslr-seed node in device tree.
->>
->> We will use the first 512M of the low memory to randomize the kernel
->> image. The memory will be split in 64M zones. We will use the lower 8
->> bit of the entropy to decide the index of the 64M zone. Then we chose a
->> 16K aligned offset inside the 64M zone to put the kernel in.
->>
->>      KERNELBASE
->>
->>          |-->   64M   <--|
->>          |               |
->>          +---------------+    +----------------+---------------+
->>          |               |....|    |kernel|    |               |
->>          +---------------+    +----------------+---------------+
->>          |                         |
->>          |----->   offset    <-----|
->>
->>                                kernstart_virt_addr
->>
->> We also check if we will overlap with some areas like the dtb area, the
->> initrd area or the crashkernel area. If we cannot find a proper area,
->> kaslr will be disabled and boot from the original kernel.
->>
->> Changes since v6:
->>   - Rename create_tlb_entry() to create_kaslr_tlb_entry()
->>   - Remove MAS2_VAL since there is no more users.
->>   - Move kaslr_booke.c to arch/powerpc/mm/nohash.
->>   - Call flush_icache_range() after copying the kernel.
->>   - Warning if no kaslr-seed provided by the bootloader
->>   - Use the right physical address when checking if the new position 
->> will overlap with other regions.
->>   - Do not clear bss for the second pass because some global variables 
->> will not be initialized again
->>   - Use tabs instead of spaces between the mnemonic and the 
->> arguments(in fsl_booke_entry_mapping.S).
->>
->> Changes since v5:
->>   - Rename M_IF_NEEDED to MAS2_M_IF_NEEDED
->>   - Define some global variable as __ro_after_init
->>   - Replace kimage_vaddr with kernstart_virt_addr
->>   - Depend on RELOCATABLE, not select it
->>   - Modify the comment block below the SPDX tag
->>   - Remove some useless headers in kaslr_booke.c and move is_second_reloc
->>     declarationto mmu_decl.h
->>   - Remove DBG() and use pr_debug() and rewrite comment above 
->> get_boot_seed().
->>   - Add a patch to document the KASLR implementation.
->>   - Split a patch from patch #10 which exports kaslr offset in 
->> VMCOREINFO ELF notes.
->>   - Remove extra logic around finding nokaslr string in cmdline.
->>   - Make regions static global and __initdata
->>
->> Changes since v4:
->>   - Add Reviewed-by tag from Christophe
->>   - Remove an unnecessary cast
->>   - Remove unnecessary parenthesis
->>   - Fix checkpatch warning
->>
->> Changes since v3:
->>   - Add Reviewed-by and Tested-by tag from Diana
->>   - Change the comment in fsl_booke_entry_mapping.S to be consistent
->>     with the new code.
->>
->> Changes since v2:
->>   - Remove unnecessary #ifdef
->>   - Use SZ_64M instead of0x4000000
->>   - Call early_init_dt_scan_chosen() to init boot_command_line
->>   - Rename kaslr_second_init() to kaslr_late_init()
->>
->> Changes since v1:
->>   - Remove some useless 'extern' keyword.
->>   - Replace EXPORT_SYMBOL with EXPORT_SYMBOL_GPL
->>   - Improve some assembly code
->>   - Use memzero_explicit instead of memset
->>   - Use boot_command_line and remove early_command_line
->>   - Do not print kaslr offset if kaslr is disabled
->>
->> Jason Yan (12):
->>    powerpc: unify definition of M_IF_NEEDED
->>    powerpc: move memstart_addr and kernstart_addr to init-common.c
->>    powerpc: introduce kernstart_virt_addr to store the kernel base
->>    powerpc/fsl_booke/32: introduce create_kaslr_tlb_entry() helper
->>    powerpc/fsl_booke/32: introduce reloc_kernel_entry() helper
->>    powerpc/fsl_booke/32: implement KASLR infrastructure
->>    powerpc/fsl_booke/32: randomize the kernel image offset
->>    powerpc/fsl_booke/kaslr: clear the original kernel if randomized
->>    powerpc/fsl_booke/kaslr: support nokaslr cmdline parameter
->>    powerpc/fsl_booke/kaslr: dump out kernel offset information on panic
->>    powerpc/fsl_booke/kaslr: export offset in VMCOREINFO ELF notes
->>    powerpc/fsl_booke/32: Document KASLR implementation
->>
->>   Documentation/powerpc/kaslr-booke32.rst       |  42 ++
->>   arch/powerpc/Kconfig                          |  11 +
->>   arch/powerpc/include/asm/nohash/mmu-book3e.h  |  11 +-
->>   arch/powerpc/include/asm/page.h               |   7 +
->>   arch/powerpc/kernel/early_32.c                |   5 +-
->>   arch/powerpc/kernel/exceptions-64e.S          |  12 +-
->>   arch/powerpc/kernel/fsl_booke_entry_mapping.S |  25 +-
->>   arch/powerpc/kernel/head_fsl_booke.S          |  61 ++-
->>   arch/powerpc/kernel/machine_kexec.c           |   1 +
->>   arch/powerpc/kernel/misc_64.S                 |   7 +-
->>   arch/powerpc/kernel/setup-common.c            |  20 +
->>   arch/powerpc/mm/init-common.c                 |   7 +
->>   arch/powerpc/mm/init_32.c                     |   5 -
->>   arch/powerpc/mm/init_64.c                     |   5 -
->>   arch/powerpc/mm/mmu_decl.h                    |  11 +
->>   arch/powerpc/mm/nohash/Makefile               |   1 +
->>   arch/powerpc/mm/nohash/fsl_booke.c            |   8 +-
->>   arch/powerpc/mm/nohash/kaslr_booke.c          | 401 ++++++++++++++++++
->>   18 files changed, 587 insertions(+), 53 deletions(-)
->>   create mode 100644 Documentation/powerpc/kaslr-booke32.rst
->>   create mode 100644 arch/powerpc/mm/nohash/kaslr_booke.c
->>
-> 
-> 
-> .
-> 
-
+Yes, it's likely, but guest CPUID usually is fixed before
+guest is launched, do you have any suggestion?
+> > +       /*
+> > +        * S_CET is a must for KERNEL CET, PL0_SSP ... PL2_SSP are a bundle
+> > +        * for CET KERNEL xsaves.
+> > +        */
+> > +       if (cet_en && (kvm_xss & XFEATURE_MASK_CET_KERNEL)) {
+> > +               vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_S_CET, MSR_TYPE_RW);
+> > +               vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL0_SSP, MSR_TYPE_RW);
+> > +               vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL1_SSP, MSR_TYPE_RW);
+> > +               vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL2_SSP, MSR_TYPE_RW);
+> > +
+> > +               /* SSP_TAB only available for KERNEL SHSTK.*/
+> > +               if (guest_cpuid_has(vcpu, X86_FEATURE_SHSTK))
+> > +                       vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_INT_SSP_TAB,
+> > +                                                     MSR_TYPE_RW);
+> > +       }
+> > +}
+> > +
+> >  static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
+> >  {
+> >         struct vcpu_vmx *vmx = to_vmx(vcpu);
+> > @@ -7025,6 +7062,8 @@ static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
+> >         if (boot_cpu_has(X86_FEATURE_INTEL_PT) &&
+> >                         guest_cpuid_has(vcpu, X86_FEATURE_INTEL_PT))
+> >                 update_intel_pt_cfg(vcpu);
+> > +
+> > +       vmx_intercept_cet_msrs(vcpu);
+> >  }
+> >
+> >  static void vmx_set_supported_cpuid(u32 func, struct kvm_cpuid_entry2 *entry)
+> > --
+> > 2.17.2
+> >
