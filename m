@@ -2,130 +2,149 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2DAEC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87ED5C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C74F420B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B8C720B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:16:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SMrVR8pe"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="eVlJScwC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729747AbfJIIQK (ORCPT
+        id S1729820AbfJIIQy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 04:16:10 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:34790 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfJIIQK (ORCPT
+        Wed, 9 Oct 2019 04:16:54 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:33016 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725914AbfJIIQx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 04:16:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=qXbwHkBIFZYF51iyX+HVbhmA7krzX3BgMfbry1nriAw=; b=SMrVR8peDVRyLLTU1bVJQy9k8
-        a1el6p2XG6UcVTPgcvGUV2LUhhympq1Cb81XxlU8eZ93sfCvz4ScUaPZksod+0T64ikHsSwSwR5Fa
-        LsFxm4Zdthq9NcYBuNhgLM5zxzdByTdA55F26Qhg+73j6E9U42j7YU10Fx2xTGMt4k4kMidx97IXt
-        NgAmxUfpZ8pKKBshqb7qnc35AVMxcRbkCM+0Bt6dfYBhDZSUCKRbB58a4V3Wtm+JgP7fx/Dupp5yi
-        MdkZRba29pd7caT0z4FxX7doQT3IAcm1ONgbbDLqZAW0FlMep4glLH72g37DsK2rCosoNwosQNDO7
-        1NrnYqKzg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iI78e-0006I4-On; Wed, 09 Oct 2019 08:16:04 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9B65F3008C1;
-        Wed,  9 Oct 2019 10:15:10 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 16F6920299B7A; Wed,  9 Oct 2019 10:16:02 +0200 (CEST)
-Date:   Wed, 9 Oct 2019 10:16:02 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Like Xu <like.xu@linux.intel.com>, kvm@vger.kernel.org,
-        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
-        vkuznets@redhat.com, Jim Mattson <jmattson@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        ak@linux.intel.com, wei.w.wang@intel.com, kan.liang@intel.com,
-        like.xu@intel.com, ehankland@google.com, arbel.moshe@oracle.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] KVM: x86/vPMU: Add lazy mechanism to release
- perf_event per vPMC
-Message-ID: <20191009081602.GI2328@hirez.programming.kicks-ass.net>
-References: <20190930072257.43352-1-like.xu@linux.intel.com>
- <20190930072257.43352-4-like.xu@linux.intel.com>
- <20191001082321.GL4519@hirez.programming.kicks-ass.net>
- <e77fe471-1c65-571d-2b9e-d97c2ee0706f@linux.intel.com>
- <20191008121140.GN2294@hirez.programming.kicks-ass.net>
- <d492e08e-bf14-0a8b-bc8c-397f8893ddb5@linux.intel.com>
- <bfd23868-064e-4bf5-4dfb-211d36c409c1@redhat.com>
+        Wed, 9 Oct 2019 04:16:53 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C16264FF;
+        Wed,  9 Oct 2019 10:16:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1570609011;
+        bh=dfCYYmVUWtdv4zBsKgd4ZyXxFLnPVhNwwZgG6/vSvNg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eVlJScwCub0+GmlR5SL43r9WCQGHvo9eM6c3APruewM0PbYssfq970wql++ufnvrm
+         IEgxyFr9psKDOwHspLVplOYzuPu0y7Z2YECA8WMOwNtwWgwBfXoF2kgdWWUaVSsdKz
+         C1trqy9ctIwsYWPhlB9Hmh24hDRxkzWbPMSNiF9w=
+Date:   Wed, 9 Oct 2019 11:16:48 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND] gpu: drm: bridge: sii9234: convert to
+ devm_i2c_new_dummy_device
+Message-ID: <20191009081648.GC22998@pendragon.ideasonboard.com>
+References: <20191008203322.3238-1-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <bfd23868-064e-4bf5-4dfb-211d36c409c1@redhat.com>
+In-Reply-To: <20191008203322.3238-1-wsa+renesas@sang-engineering.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 09:15:03AM +0200, Paolo Bonzini wrote:
-> For stuff like hardware registers, bitfields are probably a bad idea
-> anyway, so let's only consider the case of space optimization.
+Hi Wolfram,
 
-Except for hardware registers? I actually like bitfields to describe
-hardware registers.
+Thank you for the patch.
 
-> bool:2 would definitely cause an eyebrow raise, but I don't see why
-> bool:1 bitfields are a problem.  An integer type large enough to store
-> the values 0 and 1 can be of any size bigger than one bit.
-
-Consider:
-
-	bool	foo:1;
-	bool	bar:1;
-
-Will bar use the second bit of _Bool? Does it have one? (yes it does,
-but it's still weird).
-
-But worse, as used in the parent thread:
-
-	u8	count:7;
-	bool	flag:1;
-
-Who says the @flag thing will even be the msb of the initial u8 and not
-a whole new variable due to change in base type?
-
-> bool bitfields preserve the magic behavior where something like this:
+On Tue, Oct 08, 2019 at 10:33:22PM +0200, Wolfram Sang wrote:
+> Move from the deprecated i2c_new_dummy() to devm_i2c_new_dummy_device().
+> We now get an ERRPTR which we use in error handling and we can skip
+> removal of the created devices.
 > 
->   foo->x = y;
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> ---
 > 
-> (x is a bool bitfield) would be compiled as
+> Rebased to v5.4-rc2 since last time. One of the last two users of the
+> old API, so please apply soon, so I can remove the old interface. Only
+> build tested.
 > 
->   foo->x = (y != 0);
+>  drivers/gpu/drm/bridge/sii9234.c | 36 +++++++++++---------------------
+>  1 file changed, 12 insertions(+), 24 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/sii9234.c b/drivers/gpu/drm/bridge/sii9234.c
+> index 25d4ad8c7ad6..8a6c85693a88 100644
+> --- a/drivers/gpu/drm/bridge/sii9234.c
+> +++ b/drivers/gpu/drm/bridge/sii9234.c
+> @@ -841,39 +841,28 @@ static int sii9234_init_resources(struct sii9234 *ctx,
+>  
+>  	ctx->client[I2C_MHL] = client;
+>  
+> -	ctx->client[I2C_TPI] = i2c_new_dummy(adapter, I2C_TPI_ADDR);
+> -	if (!ctx->client[I2C_TPI]) {
+> +	ctx->client[I2C_TPI] = devm_i2c_new_dummy_device(&client->dev, adapter,
+> +							 I2C_TPI_ADDR);
+> +	if (IS_ERR(ctx->client[I2C_TPI])) {
+>  		dev_err(ctx->dev, "failed to create TPI client\n");
+> -		return -ENODEV;
+> +		return PTR_ERR(ctx->client[I2C_TPI]);
+>  	}
+>  
+> -	ctx->client[I2C_HDMI] = i2c_new_dummy(adapter, I2C_HDMI_ADDR);
+> -	if (!ctx->client[I2C_HDMI]) {
+> +	ctx->client[I2C_HDMI] = devm_i2c_new_dummy_device(&client->dev, adapter,
+> +							  I2C_HDMI_ADDR);
+> +	if (IS_ERR(ctx->client[I2C_HDMI])) {
+>  		dev_err(ctx->dev, "failed to create HDMI RX client\n");
+> -		goto fail_tpi;
+> +		return PTR_ERR(ctx->client[I2C_HDMI]);
+>  	}
+>  
+> -	ctx->client[I2C_CBUS] = i2c_new_dummy(adapter, I2C_CBUS_ADDR);
+> -	if (!ctx->client[I2C_CBUS]) {
+> +	ctx->client[I2C_CBUS] = devm_i2c_new_dummy_device(&client->dev, adapter,
+> +							  I2C_CBUS_ADDR);
+> +	if (IS_ERR(ctx->client[I2C_CBUS])) {
+>  		dev_err(ctx->dev, "failed to create CBUS client\n");
+> -		goto fail_hdmi;
+> +		return PTR_ERR(ctx->client[I2C_CBUS]);
+>  	}
+>  
+>  	return 0;
+> -
+> -fail_hdmi:
+> -	i2c_unregister_device(ctx->client[I2C_HDMI]);
+> -fail_tpi:
+> -	i2c_unregister_device(ctx->client[I2C_TPI]);
+> -
+> -	return -ENODEV;
+> -}
+> -
+> -static void sii9234_deinit_resources(struct sii9234 *ctx)
+> -{
+> -	i2c_unregister_device(ctx->client[I2C_CBUS]);
+> -	i2c_unregister_device(ctx->client[I2C_HDMI]);
+> -	i2c_unregister_device(ctx->client[I2C_TPI]);
+>  }
+>  
+>  static inline struct sii9234 *bridge_to_sii9234(struct drm_bridge *bridge)
+> @@ -950,7 +939,6 @@ static int sii9234_remove(struct i2c_client *client)
+>  
+>  	sii9234_cable_out(ctx);
+>  	drm_bridge_remove(&ctx->bridge);
+> -	sii9234_deinit_resources(ctx);
+>  
+>  	return 0;
+>  }
 
-This is confusion; if y is a single bit bitfield, then there is
-absolutely _NO_ difference between these two expressions.
+-- 
+Regards,
 
-The _only_ thing about _Bool is that it magically casts values to 0,1.
-Single bit bitfield variables have no choice but to already be in that
-range.
-
-So expressions where it matters are:
-
-	x = (7&2)	// x == 2
-vs
-	x = !!(7&2)	// x == 1
-
-But it is impossible for int:1 and _Bool to behave differently.
-
-> However, in this patch bitfields are unnecessary and they result in
-> worse code from the compiler.
-
-Fully agreed :-)
+Laurent Pinchart
