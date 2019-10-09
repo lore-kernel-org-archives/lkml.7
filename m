@@ -2,213 +2,120 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B18F0ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 888C0ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BC1121848
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:37:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="CJAd+CcA"
+	by mail.kernel.org (Postfix) with ESMTP id 6BDC721848
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:37:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731527AbfJIPhN (ORCPT
+        id S1731557AbfJIPhg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 11:37:13 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46565 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729742AbfJIPhM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 11:37:12 -0400
-Received: by mail-pg1-f193.google.com with SMTP id b8so1627752pgm.13
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 08:37:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5ZGdcOkmNChI8GwI1qcidl2FDH4Bb9peSC073dz7RNI=;
-        b=CJAd+CcAELyW05E819LLecs1+gJPqyY2RarShACD41RGixMe/lGk9gk+HKPTR0iujG
-         9xuBZ/ZnoAXPZrSkM7jSeVMUUrHV/wbM3iX0EF/wFkliAQ97f6hs8Ygj7ZVpsUUk69wb
-         KAINJ+IZp/QNxiqEXUtoUAgd/uU6Pgo5IT+O4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5ZGdcOkmNChI8GwI1qcidl2FDH4Bb9peSC073dz7RNI=;
-        b=hwecIYmiwZcmSOGPu0t3NFcVIu/HxH5Jw0barGu0V7qxG5GG6zKXgiQSiwiOIsVaaZ
-         sOx48zLGdi2Nco6IB62f59BtPtWWh7kGlgVt9wQbGX8FFXMBx2rG7ir0G73m89TQV8Py
-         LwWBOoVOeSKO8FUT3jTBUkav3Sxhf8Zpu1SAAfOFOzHdcr6Gu524hHO6JkxoIiMpeNWu
-         9T+xVWuxGOh6qEdnbxR9j/b/OJan1hcAsM77iWT2zr246fkUM2oFL0x5lfJxM1P9Vo5f
-         uFXQKFw5f5ess7wEcZWHSAYerfij+KofIM/GoKBEXlcaUIMhfIoLzYj8qarUkOcNNvD8
-         uZQg==
-X-Gm-Message-State: APjAAAXs0PaWmuk8Y02W5VD0k2sUmWBKXZNVM36GZczxcBTXIi38ti0c
-        9PfaPXsZU1Rfi50pSEmyeKtm/w==
-X-Google-Smtp-Source: APXvYqwYRXAeX7S2oT8FjXdl9BCAH/zKp7xscFhn8VCIxBtgH911ZQui6ZAkGOu1jgRdabCyxN4ztg==
-X-Received: by 2002:a17:90b:313:: with SMTP id ay19mr4821052pjb.25.1570635431802;
-        Wed, 09 Oct 2019 08:37:11 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id k5sm2222328pgo.45.2019.10.09.08.37.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 08:37:11 -0700 (PDT)
-Date:   Wed, 9 Oct 2019 11:37:10 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Todd Kjos <tkjos@android.com>, jannh@google.com, arve@android.com,
-        christian@brauner.io, devel@driverdev.osuosl.org,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        maco@android.com, tkjos@google.com,
-        Hridya Valsaraju <hridya@google.com>
-Subject: Re: [PATCH] binder: prevent UAF read in
- print_binder_transaction_log_entry()
-Message-ID: <20191009153710.GC13654@google.com>
-References: <CAG48ez14Q0-F8LqsvcNbyR2o6gPW8SHXsm4u5jmD9MpsteM2Tw@mail.gmail.com>
- <20191008130159.10161-1-christian.brauner@ubuntu.com>
- <20191008180516.GB143258@google.com>
- <20191009104011.rzfdvq7otkkj533m@wittgenstein>
- <20191009142129.GD143258@google.com>
- <20191009142910.ggerxqxkft2ifhdn@wittgenstein>
- <20191009145558.GA96813@google.com>
- <20191009151044.t2jo3mo4acjtyhez@wittgenstein>
+        Wed, 9 Oct 2019 11:37:36 -0400
+Received: from mga06.intel.com ([134.134.136.31]:3516 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729742AbfJIPhg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 11:37:36 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 08:37:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,276,1566889200"; 
+   d="scan'208";a="223620857"
+Received: from mmahler-mobl1.amr.corp.intel.com (HELO [10.251.30.188]) ([10.251.30.188])
+  by fmsmga002.fm.intel.com with ESMTP; 09 Oct 2019 08:37:33 -0700
+Subject: Re: [alsa-devel] [PATCH v2 3/5] ASoC: core: add support to
+ snd_soc_dai_get_sdw_stream()
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>
+Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        bgoswami@codeaurora.org, linux-kernel@vger.kernel.org,
+        plai@codeaurora.org, lgirdwood@gmail.com, robh+dt@kernel.org,
+        spapothi@codeaurora.org
+References: <20190813083550.5877-1-srinivas.kandagatla@linaro.org>
+ <20190813083550.5877-4-srinivas.kandagatla@linaro.org>
+ <ba88e0f9-ae7d-c26e-d2dc-83bf910c2c01@linux.intel.com>
+ <c2eecd44-f06a-7287-2862-0382bf697f8d@linaro.org>
+ <d2b7773b-d52a-7769-aa5b-ef8c8845d447@linux.intel.com>
+ <d7c1fdb2-602f-ecb1-9b32-91b893e7f408@linaro.org>
+ <f0228cb4-0a6f-17f3-fe03-9be7f5f2e59d@linux.intel.com>
+ <20190813191827.GI5093@sirena.co.uk>
+ <cc360858-571a-6a46-1789-1020bcbe4bca@linux.intel.com>
+ <20190813195804.GL5093@sirena.co.uk>
+ <20190814041142.GU12733@vkoul-mobl.Dlink>
+ <99d35a9d-cbd8-f0da-4701-92ef650afe5a@linux.intel.com>
+ <5e08f822-3507-6c69-5d83-4ce2a9f5c04f@linaro.org>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <53bb3105-8e85-a972-fce8-a7911ae4d461@linux.intel.com>
+Date:   Wed, 9 Oct 2019 09:29:39 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191009151044.t2jo3mo4acjtyhez@wittgenstein>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <5e08f822-3507-6c69-5d83-4ce2a9f5c04f@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 05:10:45PM +0200, Christian Brauner wrote:
-> On Wed, Oct 09, 2019 at 10:55:58AM -0400, Joel Fernandes wrote:
-> > On Wed, Oct 09, 2019 at 04:29:11PM +0200, Christian Brauner wrote:
-> > > On Wed, Oct 09, 2019 at 10:21:29AM -0400, Joel Fernandes wrote:
-> > > > On Wed, Oct 09, 2019 at 12:40:12PM +0200, Christian Brauner wrote:
-> > > > > On Tue, Oct 08, 2019 at 02:05:16PM -0400, Joel Fernandes wrote:
-> > > > > > On Tue, Oct 08, 2019 at 03:01:59PM +0200, Christian Brauner wrote:
-> > > > > > > When a binder transaction is initiated on a binder device coming from a
-> > > > > > > binderfs instance, a pointer to the name of the binder device is stashed
-> > > > > > > in the binder_transaction_log_entry's context_name member. Later on it
-> > > > > > > is used to print the name in print_binder_transaction_log_entry(). By
-> > > > > > > the time print_binder_transaction_log_entry() accesses context_name
-> > > > > > > binderfs_evict_inode() might have already freed the associated memory
-> > > > > > > thereby causing a UAF. Do the simple thing and prevent this by copying
-> > > > > > > the name of the binder device instead of stashing a pointer to it.
-> > > > > > > 
-> > > > > > > Reported-by: Jann Horn <jannh@google.com>
-> > > > > > > Fixes: 03e2e07e3814 ("binder: Make transaction_log available in binderfs")
-> > > > > > > Link: https://lore.kernel.org/r/CAG48ez14Q0-F8LqsvcNbyR2o6gPW8SHXsm4u5jmD9MpsteM2Tw@mail.gmail.com
-> > > > > > > Cc: Joel Fernandes <joel@joelfernandes.org>
-> > > > > > > Cc: Todd Kjos <tkjos@android.com>
-> > > > > > > Cc: Hridya Valsaraju <hridya@google.com>
-> > > > > > > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> > > > > > > ---
-> > > > > > >  drivers/android/binder.c          | 4 +++-
-> > > > > > >  drivers/android/binder_internal.h | 2 +-
-> > > > > > >  2 files changed, 4 insertions(+), 2 deletions(-)
-> > > > > > > 
-> > > > > > > diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-> > > > > > > index c0a491277aca..5b9ac2122e89 100644
-> > > > > > > --- a/drivers/android/binder.c
-> > > > > > > +++ b/drivers/android/binder.c
-> > > > > > > @@ -57,6 +57,7 @@
-> > > > > > >  #include <linux/sched/signal.h>
-> > > > > > >  #include <linux/sched/mm.h>
-> > > > > > >  #include <linux/seq_file.h>
-> > > > > > > +#include <linux/string.h>
-> > > > > > >  #include <linux/uaccess.h>
-> > > > > > >  #include <linux/pid_namespace.h>
-> > > > > > >  #include <linux/security.h>
-> > > > > > > @@ -66,6 +67,7 @@
-> > > > > > >  #include <linux/task_work.h>
-> > > > > > >  
-> > > > > > >  #include <uapi/linux/android/binder.h>
-> > > > > > > +#include <uapi/linux/android/binderfs.h>
-> > > > > > >  
-> > > > > > >  #include <asm/cacheflush.h>
-> > > > > > >  
-> > > > > > > @@ -2876,7 +2878,7 @@ static void binder_transaction(struct binder_proc *proc,
-> > > > > > >  	e->target_handle = tr->target.handle;
-> > > > > > >  	e->data_size = tr->data_size;
-> > > > > > >  	e->offsets_size = tr->offsets_size;
-> > > > > > > -	e->context_name = proc->context->name;
-> > > > > > > +	strscpy(e->context_name, proc->context->name, BINDERFS_MAX_NAME);
-> > > > > > 
-> > > > > > Strictly speaking, proc-context->name can also be initialized for !BINDERFS
-> > > > > > so the BINDERFS in the MAX_NAME macro is misleading. So probably there should
-> > > > > > be a BINDER_MAX_NAME (and associated checks for whether non BINDERFS names
-> > > > > > fit within the MAX.
-> > > > > 
-> > > > > I know but I don't think it's worth special-casing non-binderfs devices.
-> > > > > First, non-binderfs devices can only be created through a KCONFIG option
-> > > > > determined at compile time. For stock Android the names are the same for
-> > > > > all vendors afaik.
-> > > > 
-> > > > I am just talking about the name of weirdly named macro here.
-> > > 
-> > > You might miss context here: It's named that way because currently only
-> > > binderfs binder devices are bound to that limit. That's a point I made
-> > > further below in my previous mail. Non-binderfs devices are not subject
-> > > to that restriction and when we tried to make them subject to the same
-> > > it as rejected.
-> > 
-> > I know that. I am saying the memcpy is happening for regular binder devices
-> > as well but the macro has BINDERFS in the name. That's all. It is not a
-> > significant eye sore. But is a bit odd.
+
+
+On 10/9/19 3:32 AM, Srinivas Kandagatla wrote:
+> Hi Pierre,
 > 
-> Right, and I told you that we _can't_ rename it to BINDER_MAX because
-> that check only happens for binderfs devices since you were suggesting
-> this. If you want to rename to get rid of the this being somehow
-> apparently odd then you need to introduce that check for non-binderfs
-> devices too. Or just rename the macro in a follow-up patch. I don't care.
-
-Here in this patch we are doing mem copy for regular binder device name using
-a BINDERFS macro name.
-
-> > 
-> > > <snip>
-> > > 
-> > > > 
-> > > > > Fifth, I already tried to push for validation of non-binderfs binder
-> > > > > devices a while back when I wrote binderfs and was told that it's not
-> > > > > needed. Hrydia tried the same and we decided the same thing. So you get
-> > > > > to be the next person to send a patch. :)
-> > > > 
-> > > > I don't follow why we are talking about non-binderfs validation. I am just
-> > > 
-> > > Because above you said
-> > > 
-> > > > > > so the BINDERFS in the MAX_NAME macro is misleading. So probably there should
-> > > > > > be a BINDER_MAX_NAME (and associated checks for whether non BINDERFS names
-> > > > > > fit within the MAX.
-> > > 
-> > > which to me reads like you want generic checks for _all_ binder devices
-> > > not just for the ones from binderfs.
-> > 
-> > No I am not talking about the checks at all, I am talking about the unwanted
-> > mem copy you are doing for regular binder devices now. Before binderfs this
-> > would not have happened, but now for regular binder devices we have to do the
-> > extra mem copies which were avoided before. That was what I was talking about.
+> On 14/08/2019 15:09, Pierre-Louis Bossart wrote:
+>>
+>>
+>> On 8/13/19 11:11 PM, Vinod Koul wrote:
+>>> On 13-08-19, 20:58, Mark Brown wrote:
+>>>> On Tue, Aug 13, 2019 at 02:38:53PM -0500, Pierre-Louis Bossart wrote:
+>>>>
+>>>>> Indeed. I don't have a full understanding of that part to be 
+>>>>> honest, nor why
+>>>>> we need something SoundWire-specific. We already abused the 
+>>>>> set_tdm_slot API
+>>>>> to store an HDaudio stream, now we have a rather confusing stream
+>>>>> information for SoundWire and I have about 3 other 'stream' 
+>>>>> contexts in
+>>>>> SOF... I am still doing basic cleanups but this has been on my 
+>>>>> radar for a
+>>>>> while.
+>>>>
+>>>> There is something to be said for not abusing the TDM slot API if it 
+>>>> can
+>>>> make things clearer by using bus-idiomatic mechanisms, but it does mean
+>>>> everything needs to know about each individual bus :/ .
+>>>
+>>> Here ASoC doesn't need to know about sdw bus. As Srini explained, this
+>>> helps in the case for him to get the stream context and set the stream
+>>> context from the machine driver.
+>>>
+>>> Nothing else is expected to be done from this API. We already do a set
+>>> using snd_soc_dai_set_sdw_stream(). Here we add the 
+>>> snd_soc_dai_get_sdw_stream() to query
+>>
+>> I didn't see a call to snd_soc_dai_set_sdw_stream() in Srini's code?
 > 
-> I'm sorry but I did not get this at all from:
-> "So probably there should be a BINDER_MAX_NAME (and associated checks
-> for whether non BINDERFS names fit within the MAX." 
-
-Sorry for the misleading statement. That means I have to improve my
-communication game, sorry it is my fault.
-
-> > 
-> > But this discussing is getting to bike shedding at this point, and since the
-> > overhead is likely small, I am Ok with the change (though I don't like very
-> > much the additional memcpy and the associated space wastage in the
-> > transaction buffer for regular binder devices).
 > 
-> Feel free to send a follow-up patch handling both separately.
+> There is a snd_soc_dai_get_sdw_stream() to get stream context and we add 
+> slave streams(amplifier in this case) to that context using 
+> sdw_stream_add_slave() in machine driver[1].
+> 
+> Without this helper there is no way to link slave streams to stream 
+> context in non dai based setup like smart speaker amplifiers.
+> 
+> Currently this driver is blocked on this patch, If you think there are 
+> other ways to do this, am happy to try them out.
 
-Ok will do once I get a chance. Thanks for working on the fix!
+So to be clear, you are *not* using snd_soc_dai_set_sdw_stream?
 
--  Joel
+
+
+
 
