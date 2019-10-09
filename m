@@ -2,142 +2,115 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC1BECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B5CC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06AF12190F
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:05:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E7CE206B6
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:06:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BXzcJOi0"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="rnUqYRov"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731890AbfJIUFn (ORCPT
+        id S1731935AbfJIUGp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 16:05:43 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:45197 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731581AbfJIUFg (ORCPT
+        Wed, 9 Oct 2019 16:06:45 -0400
+Received: from pio-pvt-msa2.bahnhof.se ([79.136.2.41]:42398 "EHLO
+        pio-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731452AbfJIUGo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 16:05:36 -0400
-Received: by mail-oi1-f195.google.com with SMTP id o205so2844462oib.12;
-        Wed, 09 Oct 2019 13:05:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=d+6hFZoHACGNLzXY4zt7VjE/7ALYWlPRw2g+xMBt8zU=;
-        b=BXzcJOi0VBbyw8HsGC4b5rLu43Ha89Jm3OU4Lhqj+hlFY9FO6OB5WUp4Mvp6Xq6N2z
-         mzl4szDU+BbK4s0ye7Zb0/pw+E9LQKmPajuzUMbP9uaixRU/cWjEmH955wtTjzVZ4lba
-         iAYaAOJJYu2xQczpAVxlVjQHcl/+apZwCZO35Jvd2AYvqm1tIOUIKcCMdf9ZxhRh2jpn
-         i0Sdp/o7ncNVaxy3Gr3oiz08NMQiWiHcKJvvLXHgKUbGvTGC30Iz+bcwDLJxP+IR1xmn
-         cZTNrADoId4wf+RTMpSZIzSabg4RV1k8QhHi+kpnzVnHytlAADEDV1c6w7xu8apdNoLU
-         +w7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=d+6hFZoHACGNLzXY4zt7VjE/7ALYWlPRw2g+xMBt8zU=;
-        b=SmikYJZGOK8k7X2jq/TIf0cgIA3S6Z6Z1/2NRLNsCuHRXqL+ZCXQh5ADCdkOe9TRei
-         R8JttRt1qgjGRs1OhaZL06OVUBlkkwL+7ZC8WE4pvU2HoEn6qnzJbfIHSxXmP4M1JYNg
-         AVWTbDCDKrcWLJaAJ8Gx06+3bpqKtBxgmy5XzpraeimvK8k2Iheg7s6KsO8LSIt9GmtZ
-         Rwa7P/LVB+kMMim9pIatiYD90rpzXs76oD1c6SGz6VWfGBNjgYSzO+ddfnp90oMdSl6L
-         n/Ectj13QIrfhiuPncFTJ9b2dhiBReUZ31hFDJO83FuHHhUGqDq8W2Z2LZ84wY8Yfv6P
-         hLXQ==
-X-Gm-Message-State: APjAAAVydcfHY+0AcFbvCArMsVBcAcrT/a0JSen0YwRWZhTM7AnnK/Xg
-        EjTBRZqD1ARUm6oGULK0mOg=
-X-Google-Smtp-Source: APXvYqzg6pDmQSDrh2PPmjHffNPx2FnYSrC8a9qremp6+ETBwyqhP4mJTmI6123FL5xbWuOq7G9PAw==
-X-Received: by 2002:aca:b841:: with SMTP id i62mr3884441oif.123.1570651534124;
-        Wed, 09 Oct 2019 13:05:34 -0700 (PDT)
-Received: from localhost.localdomain ([143.166.81.254])
-        by smtp.gmail.com with ESMTPSA id b5sm976883oia.20.2019.10.09.13.05.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 13:05:33 -0700 (PDT)
-From:   Stuart Hayes <stuart.w.hayes@gmail.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lukas@wunner.de,
-        Stuart Hayes <stuart.w.hayes@gmail.com>
-Subject: [PATCH 2/3] PCI: pciehp: Wait for PDS if in-band presence is disabled
-Date:   Wed,  9 Oct 2019 16:05:22 -0400
-Message-Id: <20191009200523.8436-3-stuart.w.hayes@gmail.com>
-X-Mailer: git-send-email 2.18.1
-In-Reply-To: <20191009200523.8436-1-stuart.w.hayes@gmail.com>
-References: <20191009200523.8436-1-stuart.w.hayes@gmail.com>
+        Wed, 9 Oct 2019 16:06:44 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 1245140283;
+        Wed,  9 Oct 2019 22:06:37 +0200 (CEST)
+Authentication-Results: pio-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=rnUqYRov;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id HgnOJi0KOPz9; Wed,  9 Oct 2019 22:06:34 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 12D363FC34;
+        Wed,  9 Oct 2019 22:06:32 +0200 (CEST)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 64CEC36016C;
+        Wed,  9 Oct 2019 22:06:32 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1570651592; bh=vMGxm9pZDwGkNVJyzKKG8CHgzWvHnRo9CbPaujwY7dI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=rnUqYRovvZ2i8GbdNSe5v6n5CIMlncF95E2mKDseexkW7r9I4LnOfhZU4ee/Dq/3O
+         F3FMKMWMCkaUpqF/vbTSvXt4ggbt3+qS9vmuH1lEraRg+WGpNk0rgetaHI8LqBWjUT
+         jF1UrexXsFRHgQWCw39+t+RQgA4Wim6ms/1HqdZU=
+Subject: Re: [PATCH v4 3/9] mm: pagewalk: Don't split transhuge pmds when a
+ pmd_entry is present
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rik van Riel <riel@surriel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Huang Ying <ying.huang@intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
+References: <20191008091508.2682-1-thomas_os@shipmail.org>
+ <20191008091508.2682-4-thomas_os@shipmail.org>
+ <20191009152737.p42w7w456zklxz72@box>
+ <CAHk-=wh4waroKr-Xtcv+5pTxBcHxGEj-g73eQvXVawML_C0EXw@mail.gmail.com>
+ <03d85a6a-e24a-82f4-93b8-86584b463471@shipmail.org>
+ <CAHk-=whhdRSqjX5wy1LzFYnOG58UztpifkNvbxBcTVbT3Mzv4g@mail.gmail.com>
+ <MN2PR05MB6141B981C2CAB4955D59747EA1950@MN2PR05MB6141.namprd05.prod.outlook.com>
+ <CAHk-=wgy-ULe8UmEDn9gCCmTtw65chS0h309WrTaQhK3RAXM-A@mail.gmail.com>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <c054849e-1e24-6b27-6a54-740ea9d17054@shipmail.org>
+Date:   Wed, 9 Oct 2019 22:06:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <CAHk-=wgy-ULe8UmEDn9gCCmTtw65chS0h309WrTaQhK3RAXM-A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+On 10/9/19 9:20 PM, Linus Torvalds wrote:
+>
+> No. Your logic is garbage. The above code is completely broken.
+>
+> YOU CAN NOT AVOID TRHE SPLIT AND THEN GO ON AT THE PTE LEVEL.
+>
+> Don't you get it? There *is* no PTE level if you didn't split.
 
-When inband presence is disabled, PDS may come up at any time, or not
-at all. PDS being low may indicate that the card is still mating, and
-we could expect contact bounce to bring down the link as well.
+Hmm, This paragraph makes me think we have very different perceptions about what I'm trying to achieve.
 
-It is reasonable to assume that most cards will mate in a hotplug slot
-in about a second. Thus, when we know PDS only reflects out-of-band
-presence, it's worthwhile to wait the extra second or so to make sure
-the card is properly mated before loading the driver, and to prevent
-the hotplug code from disabling a device if the presence detect change
-goes active after the device is enabled.
+I wanted the pte level to *only* get called for *pre-existing* pte entries.
+Surely those must be able to exist even if we don't split occasional huge pmds in the pagewalk code?
 
-Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
-Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
----
- drivers/pci/hotplug/pciehp_hpc.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+>
+> So what you should do is to just always return 0 in your pmd_entry().
+> Boom, done. The only reason for the pmd_entry existing at all is to
+> get the warning. Then, if you don't want to split it, you make that
+> warning just return an error (or a positive value) instead and say
+> "ok, that was bad, we don't handle it at all".
+>
+> And in some _future_ life, if anybody wants to actually say "yeah,
+> let's not split it", make it have some "yeah I handled it" case.
 
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index dc109d521f30..1282641c6458 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -242,6 +242,25 @@ static bool pci_bus_check_dev(struct pci_bus *bus, int devfn)
- 	return found;
- }
- 
-+static void pcie_wait_for_presence(struct pci_dev *pdev)
-+{
-+	int timeout = 1250;
-+	bool pds;
-+	u16 slot_status;
-+
-+	while (true) {
-+		pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
-+		pds = !!(slot_status & PCI_EXP_SLTSTA_PDS);
-+		if (pds || timeout <= 0)
-+			break;
-+		msleep(10);
-+		timeout -= 10;
-+	}
-+
-+	if (!pds)
-+		pci_info(pdev, "Presence Detect state not set in 1250 msec\n");
-+}
-+
- int pciehp_check_link_status(struct controller *ctrl)
- {
- 	struct pci_dev *pdev = ctrl_dev(ctrl);
-@@ -251,6 +270,9 @@ int pciehp_check_link_status(struct controller *ctrl)
- 	if (!pcie_wait_for_link(pdev, true))
- 		return -1;
- 
-+	if (ctrl->inband_presence_disabled)
-+		pcie_wait_for_presence(pdev);
-+
- 	found = pci_bus_check_dev(ctrl->pcie->port->subordinate,
- 					PCI_DEVFN(0, 0));
- 
--- 
-2.18.1
+Well yes, this is exactly what I want. Because any huge pmd we encounter 
+should be read-only.
+
+/Thomas
+
 
