@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD4BCC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D2DAECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A608221D71
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:25:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A4DE206B6
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:25:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731925AbfJITZl (ORCPT
+        id S1732001AbfJITZo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 15:25:41 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:37616 "EHLO ale.deltatee.com"
+        Wed, 9 Oct 2019 15:25:44 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:37626 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728804AbfJITZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 15:25:39 -0400
+        id S1731874AbfJITZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 15:25:41 -0400
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1iIHaa-0002gB-6e; Wed, 09 Oct 2019 13:25:38 -0600
+        id 1iIHaa-0002g3-6l; Wed, 09 Oct 2019 13:25:40 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1iIHaZ-0003QP-4s; Wed, 09 Oct 2019 13:25:35 -0600
+        id 1iIHaY-0003Q1-AO; Wed, 09 Oct 2019 13:25:34 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
@@ -35,18 +35,19 @@ Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
         Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
         Max Gurtovoy <maxg@mellanox.com>,
         Stephen Bates <sbates@raithlin.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Wed,  9 Oct 2019 13:25:28 -0600
-Message-Id: <20191009192530.13079-12-logang@deltatee.com>
+Date:   Wed,  9 Oct 2019 13:25:20 -0600
+Message-Id: <20191009192530.13079-4-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191009192530.13079-1-logang@deltatee.com>
 References: <20191009192530.13079-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, Chaitanya.Kulkarni@wdc.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com
+X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, maxg@mellanox.com, sbates@raithlin.com, Chaitanya.Kulkarni@wdc.com, chaitanya.kulkarni@wdc.com, logang@deltatee.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v9 10/12] block: don't check blk_rq_is_passthrough() in blk_do_io_stat()
+Subject: [PATCH v9 03/12] nvmet: add return value to  nvmet_add_async_event()
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,51 +55,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of checking blk_rq_is_passthruough() for every call to
-blk_do_io_stat(), don't set RQF_IO_STAT for passthrough requests.
-This should be equivalent, and opens the possibility of passthrough
-requests specifically requesting statistics tracking.
+From: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 
+Change the return value for nvmet_add_async_event().
+
+This change is needed for the target passthru code which will
+submit async events on namespaces changes and can fail the command
+should adding the event fail (on -ENOMEM).
+
+Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+[logang@deltatee.com:
+ * fleshed out commit message
+ * change to using int as a return type instead of bool
+]
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
 ---
- block/blk-mq.c | 2 +-
- block/blk.h    | 5 ++---
- 2 files changed, 3 insertions(+), 4 deletions(-)
+ drivers/nvme/target/core.c  | 6 ++++--
+ drivers/nvme/target/nvmet.h | 2 +-
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index ec791156e9cc..618814fcc8a7 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -319,7 +319,7 @@ static struct request *blk_mq_rq_ctx_init(struct blk_mq_alloc_data *data,
- 	rq->cmd_flags = op;
- 	if (data->flags & BLK_MQ_REQ_PREEMPT)
- 		rq->rq_flags |= RQF_PREEMPT;
--	if (blk_queue_io_stat(data->q))
-+	if (blk_queue_io_stat(data->q) && !blk_rq_is_passthrough(rq))
- 		rq->rq_flags |= RQF_IO_STAT;
- 	INIT_LIST_HEAD(&rq->queuelist);
- 	INIT_HLIST_NODE(&rq->hash);
-diff --git a/block/blk.h b/block/blk.h
-index 47fba9362e60..6b7ebc2e61b8 100644
---- a/block/blk.h
-+++ b/block/blk.h
-@@ -243,13 +243,12 @@ int blk_dev_init(void);
-  *
-  *	a) it's attached to a gendisk, and
-  *	b) the queue had IO stats enabled when this request was started, and
-- *	c) it's a file system request
-+ *	c) it's a file system request (RQF_IO_STAT will not be set otherwise)
-  */
- static inline bool blk_do_io_stat(struct request *rq)
- {
- 	return rq->rq_disk &&
--	       (rq->rq_flags & RQF_IO_STAT) &&
--		!blk_rq_is_passthrough(rq);
-+	       (rq->rq_flags & RQF_IO_STAT);
+diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
+index 3a67e244e568..d6dcb86d8be7 100644
+--- a/drivers/nvme/target/core.c
++++ b/drivers/nvme/target/core.c
+@@ -173,14 +173,14 @@ static void nvmet_async_event_work(struct work_struct *work)
+ 	}
  }
  
- static inline void req_set_nomerge(struct request_queue *q, struct request *req)
+-void nvmet_add_async_event(struct nvmet_ctrl *ctrl, u8 event_type,
++int nvmet_add_async_event(struct nvmet_ctrl *ctrl, u8 event_type,
+ 		u8 event_info, u8 log_page)
+ {
+ 	struct nvmet_async_event *aen;
+ 
+ 	aen = kmalloc(sizeof(*aen), GFP_KERNEL);
+ 	if (!aen)
+-		return;
++		return -ENOMEM;
+ 
+ 	aen->event_type = event_type;
+ 	aen->event_info = event_info;
+@@ -191,6 +191,8 @@ void nvmet_add_async_event(struct nvmet_ctrl *ctrl, u8 event_type,
+ 	mutex_unlock(&ctrl->lock);
+ 
+ 	schedule_work(&ctrl->async_event_work);
++
++	return 0;
+ }
+ 
+ static void nvmet_add_to_changed_ns_log(struct nvmet_ctrl *ctrl, __le32 nsid)
+diff --git a/drivers/nvme/target/nvmet.h b/drivers/nvme/target/nvmet.h
+index c51f8dd01dc4..3d313a6452cc 100644
+--- a/drivers/nvme/target/nvmet.h
++++ b/drivers/nvme/target/nvmet.h
+@@ -441,7 +441,7 @@ void nvmet_port_disc_changed(struct nvmet_port *port,
+ 		struct nvmet_subsys *subsys);
+ void nvmet_subsys_disc_changed(struct nvmet_subsys *subsys,
+ 		struct nvmet_host *host);
+-void nvmet_add_async_event(struct nvmet_ctrl *ctrl, u8 event_type,
++int nvmet_add_async_event(struct nvmet_ctrl *ctrl, u8 event_type,
+ 		u8 event_info, u8 log_page);
+ 
+ #define NVMET_QUEUE_SIZE	1024
 -- 
 2.20.1
 
