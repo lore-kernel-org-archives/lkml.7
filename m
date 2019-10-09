@@ -2,112 +2,104 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2DFCECE58E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F6A5ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:45:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 968B621835
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:44:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C42320673
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:45:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730741AbfJIJoi (ORCPT
+        id S1730731AbfJIJpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 05:44:38 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51722 "EHLO mx1.redhat.com"
+        Wed, 9 Oct 2019 05:45:03 -0400
+Received: from foss.arm.com ([217.140.110.172]:58302 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728054AbfJIJoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 05:44:38 -0400
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5D3D551F0B
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Oct 2019 09:44:37 +0000 (UTC)
-Received: by mail-wm1-f72.google.com with SMTP id o128so1969189wmo.1
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 02:44:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IgLlslTtHyY/DsCT/GempjMqnPIRbjKjjsT71GS80BU=;
-        b=r4BZM8vnmGbxL3rF09AbWD/i6ZGf4JuJtkOpwbyodnMMCqhwJiVwm3QxjMLQpcFcWQ
-         Ntg0nXhJIr+7qRoHYHH/97hOQ7WF/PynVZu4PU5WHjzkx4q2nWTKshj6iAks+uxV4Qbp
-         2e1LQGtbQCElSJ5KvN5wfc2UCMi287bK/HqduJLMCERWcPHF8iL4bfN1hdyW2s5JUuPf
-         8gzVrfNt9vqPcGABSgqMGu0WYQcJCHP97B4sbunfSDYYkNccsmiNQPtIQoq/V7v8PKu8
-         tu3hvZLhevHbWymjY8hJIrTw1uRxkvDHVOBzPDkJQ0+SDl7Ln6YEjYS919aJbUyum9yI
-         wFKg==
-X-Gm-Message-State: APjAAAXLEO8kVFiLveK8lZ4igF1Q6QMx9jjxzQjQPLGlZvNUwK8grdku
-        b7/TP2QvQjtO1J867sZG8sT2Un4K17OD2U1MTcT9mF8xVcLrbmbOQuMByTjffVhGj0QpuGSb7K5
-        wTtEobh6eOFaK+e9HWOHdlCb/
-X-Received: by 2002:a1c:7311:: with SMTP id d17mr1768163wmb.49.1570614275927;
-        Wed, 09 Oct 2019 02:44:35 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqy4Wse3vGoQIgd/ml9oYw6+IUa/k66QMkr3IXKbfsrgPgFKxrYzXylx/6gMsMm5PeJvNXxJPg==
-X-Received: by 2002:a1c:7311:: with SMTP id d17mr1768146wmb.49.1570614275686;
-        Wed, 09 Oct 2019 02:44:35 -0700 (PDT)
-Received: from steredhat (host174-200-dynamic.52-79-r.retail.telecomitalia.it. [79.52.200.174])
-        by smtp.gmail.com with ESMTPSA id a3sm1320859wmj.35.2019.10.09.02.44.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 02:44:35 -0700 (PDT)
-Date:   Wed, 9 Oct 2019 11:44:32 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     netdev@vger.kernel.org, Stefan Hajnoczi <stefanha@redhat.com>
-Cc:     linux-hyperv@vger.kernel.org,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Jorgen Hansen <jhansen@vmware.com>
-Subject: Re: [RFC PATCH 11/13] vsock: add 'transport_hg' to handle g2h\h2g
- transports
-Message-ID: <20191009094432.by5zs4c3binrznpp@steredhat>
-References: <20190927112703.17745-1-sgarzare@redhat.com>
- <20190927112703.17745-12-sgarzare@redhat.com>
+        id S1729742AbfJIJpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 05:45:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2CA8128;
+        Wed,  9 Oct 2019 02:45:02 -0700 (PDT)
+Received: from e112269-lin.arm.com (unknown [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E759A3F68E;
+        Wed,  9 Oct 2019 02:45:00 -0700 (PDT)
+From:   Steven Price <steven.price@arm.com>
+To:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
+        Rob Herring <robh@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v2 1/2] drm/panfrost: Handle resetting on timeout better
+Date:   Wed,  9 Oct 2019 10:44:55 +0100
+Message-Id: <20191009094456.9704-1-steven.price@arm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190927112703.17745-12-sgarzare@redhat.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 01:27:01PM +0200, Stefano Garzarella wrote:
-> VMCI transport provides both g2h and h2g behaviors in a single
-> transport.
-> We are able to set (or not) the g2h behavior, detecting if we
-> are in a VMware guest (or not), but the h2g feature is always set.
-> This prevents to load other h2g transports while we are in a
-> VMware guest.
-> 
-> This patch adds a new 'transport_hg' to handle this case, reducing
-> the priority of transports that provide both g2h and h2g
-> behaviors. A transport that has g2h and h2g features, can be
-> bypassed by a transport that has only the h2g feature.
-> 
+Panfrost uses multiple schedulers (one for each slot, so 2 in reality),
+and on a timeout has to stop all the schedulers to safely perform a
+reset. However more than one scheduler can trigger a timeout at the same
+time. This race condition results in jobs being freed while they are
+still in use.
 
-Since I'm enabling the VSOCK_TRANSPORT_F_G2H in the vmci_transport only
-when we run in a VMware guest, this patch doesn't work well if a KVM (or
-HyperV) guest application create an AF_VSOCK socket and no transports are
-loaded, because in this case the vmci_transport is loaded
-(MODULE_ALIAS_NETPROTO(PF_VSOCK)) and it is registered as transport_h2g.
+When stopping other slots use cancel_delayed_work_sync() to ensure that
+any timeout started for that slot has completed. Also use
+mutex_trylock() to obtain reset_lock. This means that only one thread
+attempts the reset, the other threads will simply complete without doing
+anything (the first thread will wait for this in the call to
+cancel_delayed_work_sync()).
 
-At this point, if we want to run a nested VM using vhost_transport, we
-can't load it.
+While we're here and since the function is already dependent on
+sched_job not being NULL, let's remove the unnecessary checks.
 
-So, I can leave VSOCK_TRANSPORT_F_G2H always set in the vmci_transport
-and this should fix this issue.
-Or maybe I need to change how the registering works, e.g. handling a list
-of transport registered, setting priority or using the last registered
-transport.
+Fixes: aa20236784ab ("drm/panfrost: Prevent concurrent resets")
+Tested-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Steven Price <steven.price@arm.com>
+---
+v2:
+ * Added fixes and tested-by tags
+ * Moved cleanup of panfrost_core_dump() comment to separate patch
 
-Any suggestion?
+ drivers/gpu/drm/panfrost/panfrost_job.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-Thanks,
-Stefano
+diff --git a/drivers/gpu/drm/panfrost/panfrost_job.c b/drivers/gpu/drm/panfrost/panfrost_job.c
+index a58551668d9a..21f34d44aac2 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_job.c
++++ b/drivers/gpu/drm/panfrost/panfrost_job.c
+@@ -381,13 +381,19 @@ static void panfrost_job_timedout(struct drm_sched_job *sched_job)
+ 		job_read(pfdev, JS_TAIL_LO(js)),
+ 		sched_job);
+ 
+-	mutex_lock(&pfdev->reset_lock);
++	if (!mutex_trylock(&pfdev->reset_lock))
++		return;
+ 
+-	for (i = 0; i < NUM_JOB_SLOTS; i++)
+-		drm_sched_stop(&pfdev->js->queue[i].sched, sched_job);
++	for (i = 0; i < NUM_JOB_SLOTS; i++) {
++		struct drm_gpu_scheduler *sched = &pfdev->js->queue[i].sched;
++
++		drm_sched_stop(sched, sched_job);
++		if (js != i)
++			/* Ensure any timeouts on other slots have finished */
++			cancel_delayed_work_sync(&sched->work_tdr);
++	}
+ 
+-	if (sched_job)
+-		drm_sched_increase_karma(sched_job);
++	drm_sched_increase_karma(sched_job);
+ 
+ 	spin_lock_irqsave(&pfdev->js->job_lock, flags);
+ 	for (i = 0; i < NUM_JOB_SLOTS; i++) {
+-- 
+2.20.1
+
