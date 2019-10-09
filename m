@@ -2,78 +2,121 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B142C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A44C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AFF1206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:31:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="g306avEz"
+	by mail.kernel.org (Postfix) with ESMTP id 2182B206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:31:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570624299;
+	bh=qJNqWYgUP04FWWOyhZUVfn25DZyG752Qo/ZuAv9t3z4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=fCVdSh1d2Gg1xgt0nHd8hizIV314hWw2e7H1QuSgZ0McRGAjqUp43Y6kbDnyJ3lO6
+	 tQaSQuBAblgQ/CeZJ42ur5dcGwa57tqgRPPzq6uzfdzjvoniQmX1phKAAPkTM93vpF
+	 LHsHkDqWzu0X3mbNyKC65TvMbuefrHqIKN7yh3WI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731090AbfJIMbc (ORCPT
+        id S1731124AbfJIMbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 08:31:32 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:48084 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728200AbfJIMbc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 08:31:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ge6IyJp6CtTVfQFWwPeoTTgBQJKNq3jXQ5sYXlhTiXg=; b=g306avEzv3jgEY934wrhMuzKR
-        zIhvCldX2J/FPckX6Bx/kBxHWTpxiX98Ymnv29/3esKUagx5w3x+LrTTAh4z1Y2080usgkbf7u+Iq
-        z7g82y1WIFQxYLPVH/VDXjWoAQOnXDGBpENx8994QU3c9hi2lCXYdclO2jvAa8O+37nhZs1h3mu8j
-        g8uN96gsUtdqn4774KU9dF91S0bOQn98mn04mcRt21yJsyuWW/QtYFAYqGcZD6kTSFCQHN5kNl5cb
-        YEy0+TZSJRUTNwUpQDB3YhcHUlcGYjhpQHzATA8YCohK7Gre/A8r04eU92qgVGbTWbSXErljCa6s2
-        kzqkxRnHw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iIB7Y-0002Ki-Kw; Wed, 09 Oct 2019 12:31:12 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Wed, 9 Oct 2019 08:31:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45098 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728200AbfJIMbh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 08:31:37 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 703A0300565;
-        Wed,  9 Oct 2019 14:30:19 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3B7732009B59E; Wed,  9 Oct 2019 14:31:06 +0200 (CEST)
-Date:   Wed, 9 Oct 2019 14:31:06 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
-Subject: Re: [PATCH -tip v4 0/4] x86: kprobes: Prohibit kprobes on Xen/KVM
- emulate prefixes
-Message-ID: <20191009123106.GK2311@hirez.programming.kicks-ass.net>
-References: <156777561745.25081.1205321122446165328.stgit@devnote2>
- <20190917151403.60023814bda80304777a35e5@kernel.org>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 750C1206C0;
+        Wed,  9 Oct 2019 12:31:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570624296;
+        bh=qJNqWYgUP04FWWOyhZUVfn25DZyG752Qo/ZuAv9t3z4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=X/2o/lHUYyW9dA4IpOQVPKDMvH3l27/o6Z66nGTPND3rmtqUV1O78exJmzZ8Gjm/S
+         HOfqHqGyaed1ol3CEOaFIHLSZSIsLVKL3C9u8WLQhgGJp5Rq8wpjnJO+rhBBNxxhNA
+         QtYKzn1Jyc3QBA0hDNZGCtjFXoYU/0wXzCW9ufus=
+Date:   Wed, 9 Oct 2019 07:31:35 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Don Dutile <ddutile@redhat.com>
+Cc:     CREGUT Pierre IMT/OLN <pierre.cregut@orange.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexander Duyck <alexander.h.duyck@intel.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Subject: Re: [PATCH] PCI/IOV: update num_VFs earlier
+Message-ID: <20191009123135.GA62790@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190917151403.60023814bda80304777a35e5@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4ac38c7a-b8d4-9a1c-10ab-ce8b4cf2991f@redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 03:14:03PM +0900, Masami Hiramatsu wrote:
-> Hi Peter,
+On Tue, Oct 08, 2019 at 06:06:46PM -0400, Don Dutile wrote:
+> On 10/08/2019 05:38 PM, Bjorn Helgaas wrote:
+> > On Thu, Oct 03, 2019 at 05:10:07PM -0500, Bjorn Helgaas wrote:
+> > > On Thu, Oct 03, 2019 at 11:04:45AM +0200, CREGUT Pierre IMT/OLN wrote:
+> > > > ...
+> > 
+> > > > NIC drivers send netlink events when their state change, but it is
+> > > > the core that changes the value of num_vfs. So I would think it is
+> > > > the core responsibility to make sure the exposed value makes sense
+> > > > and it would be better to ignore the details of the driver
+> > > > implementation.
+> > > 
+> > > Yes, I think you're right.  And I like your previous suggestion of
+> > > just locking the device in the reader.  I'm not enough of a sysfs
+> > > expert to know if there's a good reason to avoid a lock there.  Does
+> > > the following look reasonable to you?
+> > 
+> > I applied the patch below to pci/virtualization for v5.5, thanks for
+> I hope not... see below
 > 
-> Could you review this version?
+> > your great patience!
+> > 
+> > > commit 0940fc95da45
+> > > Author: Pierre Crégut <pierre.cregut@orange.com>
+> > > Date:   Wed Sep 11 09:27:36 2019 +0200
+> > > 
+> > >      PCI/IOV: Serialize sysfs sriov_numvfs reads vs writes
+> > >      When sriov_numvfs is being updated, drivers may notify about new devices
+> > >      before they are reflected in sriov->num_VFs, so concurrent sysfs reads
+> > >      previously returned stale values.
+> > >      Serialize the sysfs read vs the write so the read returns the correct
+> > >      num_VFs value.
+> > >      Link: https://bugzilla.kernel.org/show_bug.cgi?id=202991
+> > >      Link: https://lore.kernel.org/r/20190911072736.32091-1-pierre.cregut@orange.com
+> > >      Signed-off-by: Pierre Crégut <pierre.cregut@orange.com>
+> > >      Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> > > 
+> > > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> > > index b3f972e8cfed..e77562aabbae 100644
+> > > --- a/drivers/pci/iov.c
+> > > +++ b/drivers/pci/iov.c
+> > > @@ -254,8 +254,14 @@ static ssize_t sriov_numvfs_show(struct device *dev,
+> > >   				 char *buf)
+> > >   {
+> > >   	struct pci_dev *pdev = to_pci_dev(dev);
+> > > +	u16 num_vfs;
+> > > +
+> > > +	/* Serialize vs sriov_numvfs_store() so readers see valid num_VFs */
+> > > +	device_lock(&pdev->dev);
+>                ^^^^^ lock
+> > > +	num_vfs = pdev->sriov->num_VFs;
+> > > +	device_lock(&pdev->dev);
+>                ^^^^ and lock again!
 
-These look good to me; shall I merge them or what was the plan?
+Oops, sorry, my fault.  Fixed.
+
+> > > -	return sprintf(buf, "%u\n", pdev->sriov->num_VFs);
+> > > +	return sprintf(buf, "%u\n", num_vfs);
+> > >   }
+> > >   /*
+> 
