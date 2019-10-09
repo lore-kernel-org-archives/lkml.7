@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F2DBC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B60EECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37F5C218AC
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:41:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62CF020B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:41:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f7ss43sX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S37KM856"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731622AbfJIOlq (ORCPT
+        id S1731631AbfJIOlw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 10:41:46 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46688 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731586AbfJIOln (ORCPT
+        Wed, 9 Oct 2019 10:41:52 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39488 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731570AbfJIOlg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 10:41:43 -0400
-Received: by mail-wr1-f67.google.com with SMTP id o18so3309807wrv.13
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 07:41:40 -0700 (PDT)
+        Wed, 9 Oct 2019 10:41:36 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v17so2903758wml.4
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 07:41:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=HkWnKjTS7NNaz0B8BlFiWfLhS4jldKU7yfNvUhiWaQM=;
-        b=f7ss43sXwKeRE+g80ck8yRpx+79MpXlAU1ICqgUsyPCZ2LLoVvxA6BOR3KRt21gjwW
-         kj915Hpw47CWN/pKnCTCFjdRM/v5W+s/gP8vs150QmXsqlTTQOTwS72avXQMVZWJnN7w
-         zKo+Hh6J9IYLXPkRfaF7Ab76QKgZTdMr2EHbyDJ9DLBwwO7YhAOjCf8xeg7skOoPZ1nv
-         ya8FNp987bJwuINtL34bTWlctIy/qGZ5UVjvTb+h2al2y5U2fwK9m3feljXXWwWmPa36
-         LAFwBkOEVebcAmYlLeNYoSRxrgjlVI1E80f6VOPl5n2DSZaCAuOuebstfC8IHlKoC0RQ
-         o8BA==
+        bh=x6OiJB7EuLtp7p4md9nfqD7cxFgmkO+0cPK10Zj1xY4=;
+        b=S37KM856wHDnECg/1FKkIy1yjXEgnkQZyXIgt16MoukNlQDooW2oElREMEGO9tw42c
+         AN0H2HND1RtIjiWZr5Fo+xtOP9xOk176a+hD22LrL5O9GSyT4botIELjYdWGET/4hcDF
+         MSnQufVUYttCnPzEAqqOarb+lb97gnpLlsqgoN9KOEiH629AypzkAIhnbqv3tknO6SkK
+         FRN+R9m1a/e1/sTZ2XFgbsuZdeP8lIROsVWrKCc9X5BLqc22aK4ZCiTbb0gi/H/ZCFF8
+         iUyxB5Om0WyMwD3xAeu98dsJPGZ06bln/EFt4pVLcPpPvIdRTLhK3woc13l4ShOYOBVW
+         1Klw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=HkWnKjTS7NNaz0B8BlFiWfLhS4jldKU7yfNvUhiWaQM=;
-        b=EuYPytcpsJx/5G76K1XhesLtWHneHysCSyf2RJbp41yQVMGWWDj7GEb+5Lc4ynHYbE
-         PEhNmk4qqiUdVJHNXLc6hm79rG5WdidkKBHsh9k8fVOJtVqWzFVwXnirimNsUXrHsXrh
-         IS/0p0Z5dpHY4JqjD/BJ28JJZFCMh5pvseLazx00nmzIbw7AocK3KZy9WOQtMFiZ7a1H
-         tn3AEmojXrIn799rpFlCjInTR8Q+29hxR//ZMwLjqsm4LeT2xhOv0uch73rmJopewm11
-         D1Iu7Kpnz+CXq4VZGZBjdKzovoaTYJLEbYVjGy8WTdfATtx9ZRz4PimhLyXTKPT+k5l7
-         4dbQ==
-X-Gm-Message-State: APjAAAVqYFaCqczMMiUKKA7K4EsSFrAvXIdHpnzyeekoq9e4mI+klTkJ
-        b+V6XDLdg4q/A36Pa1DN7UuxRg==
-X-Google-Smtp-Source: APXvYqxrW+4MKBUxqo35A6KxiZEfmmI3wiTuBUBugFCDOTeazkkMYZAnEeaq00wfCfqQUYZZKfSnrQ==
-X-Received: by 2002:adf:dfc4:: with SMTP id q4mr3238951wrn.302.1570632099807;
-        Wed, 09 Oct 2019 07:41:39 -0700 (PDT)
+        bh=x6OiJB7EuLtp7p4md9nfqD7cxFgmkO+0cPK10Zj1xY4=;
+        b=Vwemqg0xqYlPJJjomThQE+RO8zjBfHcW3gKrMhK0Ri07yQy2qyea0bTdP47+Ax1A9q
+         l1lluopgAGScw4AsBfRb8qO0N7ovaK3aTvf/K3l3eDTrOjKXj3g3dGZco1p6vX9jEBWi
+         GtncpguoKHKr4mWlzYqR8ApzjpeKRqM4da1rKVGpvmirZiNJDhq7pKxBlA1B2Mmx9Z3u
+         whHaSn8GbAR1N1DNTtHR2bJxICCaMhMilYcEIHhIHUddqr4pxEtntCNB8Mu678PnW+df
+         x+TReLRJje8A59NhalU21cp1JEZvaOpY/SINE3unalL0CFdPZhj4wE6Qj0nsdQ1e92Kv
+         +30A==
+X-Gm-Message-State: APjAAAW6EV1u6u4hvgPZsDWtGr2r1x9ssRej7M3pwdNr8vPoxRo+n7ud
+        C97S0eyTrU+G3kVugiNbVHlOJg==
+X-Google-Smtp-Source: APXvYqzdoajYxUt+SlTTO0rYrQtFoWl/VHou2VgKvHy8Q2cy4h9n2LvSPVFWSoFcClx2YWzAtQ95gQ==
+X-Received: by 2002:a7b:ce89:: with SMTP id q9mr2928113wmj.2.1570632095145;
+        Wed, 09 Oct 2019 07:41:35 -0700 (PDT)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id b7sm3031770wrx.56.2019.10.09.07.41.35
+        by smtp.gmail.com with ESMTPSA id b7sm3031770wrx.56.2019.10.09.07.41.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 07:41:36 -0700 (PDT)
+        Wed, 09 Oct 2019 07:41:33 -0700 (PDT)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     gregkh@linuxfoundation.org
 Cc:     arnd@arndb.de, linux-kernel@vger.kernel.org,
         linux-arm-msm@vger.kernel.org,
         Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v3 5/5] misc: fastrpc: revert max init file size back to 2MB
-Date:   Wed,  9 Oct 2019 15:41:23 +0100
-Message-Id: <20191009144123.24583-6-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v3 4/5] misc: fastrpc: handle interrupted contexts
+Date:   Wed,  9 Oct 2019 15:41:22 +0100
+Message-Id: <20191009144123.24583-5-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191009144123.24583-1-srinivas.kandagatla@linaro.org>
 References: <20191009144123.24583-1-srinivas.kandagatla@linaro.org>
@@ -77,31 +77,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 
-With the integration of the mmap/unmap functionality, it is no longer
-necessary to allow large memory allocations upfront since they can be
-handled during runtime.
+Buffers owned by a context that has been interrupted either by a
+signal or a timeout might still be being accessed by the DSP.
 
-Tested on QCS404 with CDSP Neural Processing test suite.
+delegate returning the associated memory to a later time when the
+device is released.
 
 Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- drivers/misc/fastrpc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/misc/fastrpc.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
-index eef2cdc00672..b6420aae45b9 100644
+index 666c431380ce..eef2cdc00672 100644
 --- a/drivers/misc/fastrpc.c
 +++ b/drivers/misc/fastrpc.c
-@@ -32,7 +32,7 @@
- #define FASTRPC_CTX_MAX (256)
- #define FASTRPC_INIT_HANDLE	1
- #define FASTRPC_CTXID_MASK (0xFF0)
--#define INIT_FILELEN_MAX (64 * 1024 * 1024)
-+#define INIT_FILELEN_MAX (2 * 1024 * 1024)
- #define FASTRPC_DEVICE_NAME	"fastrpc"
- #define ADSP_MMAP_ADD_PAGES 0x1000
+@@ -984,12 +984,13 @@ static int fastrpc_internal_invoke(struct fastrpc_user *fl,  u32 kernel,
+ 	}
+ 
+ bail:
+-	/* We are done with this compute context, remove it from pending list */
+-	spin_lock(&fl->lock);
+-	list_del(&ctx->node);
+-	spin_unlock(&fl->lock);
+-	fastrpc_context_put(ctx);
+-
++	if (err != -ERESTARTSYS && err != -ETIMEDOUT) {
++		/* We are done with this compute context */
++		spin_lock(&fl->lock);
++		list_del(&ctx->node);
++		spin_unlock(&fl->lock);
++		fastrpc_context_put(ctx);
++	}
+ 	if (err)
+ 		dev_dbg(fl->sctx->dev, "Error: Invoke Failed %d\n", err);
  
 -- 
 2.21.0
