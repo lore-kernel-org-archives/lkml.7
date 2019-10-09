@@ -2,355 +2,97 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98AD1C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:27:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E40C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68F9B21721
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:27:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B50221721
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:28:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="DY1/Tvh+"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="K538711D";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GwhbOQpX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730339AbfJII10 (ORCPT
+        id S1729863AbfJII2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 04:27:26 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43256 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730030AbfJII1W (ORCPT
+        Wed, 9 Oct 2019 04:28:34 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:35686 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfJII2d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 04:27:22 -0400
-Received: by mail-wr1-f65.google.com with SMTP id j18so1643069wrq.10
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 01:27:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=lyFGOMvzJRvRLnrXurGxaQ0Nu5Wk4ufrAp+cP234a3A=;
-        b=DY1/Tvh+4xaSWIl+/gKrEzXLZTPyAFTQGizikCgRfR540tVvs7OAWKjS2gsrs2DY6W
-         FPaZYzH+pBx/h63dCDgDY+E/XG1gPcvjkLfHQLqU1wXUjS0/TBnRGIFIV0NoT3PlPhon
-         GYdUKbSE4q886nCK/vp1pRZwVgi2fkGG/7Bssm0bHWP/GQ6nk3hDGEUwwsTvYmr4P2ir
-         7pHLEnwjssNQQtqlFz37iclAHymiA6HUIX2Hxu4W9Ye5Win2D7Lvc0rEUR5LXzgeqvb3
-         dK/RH5a2UX0lfG5V2CR7doiYWffBTOLi7vRPvfdDApyw/XFFxMFo5PtWTxNfOYNZ0/BE
-         kROQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=lyFGOMvzJRvRLnrXurGxaQ0Nu5Wk4ufrAp+cP234a3A=;
-        b=fwCb3k1xL4QBpcsLQ8RrGJrG2C4ZdHgP1CcsIUnpk3I33jEAk/zfXEkBZEtHfs0IT/
-         hJerGaUCrCqmJdk84iJA3c7yZUnyyrQqXY5UFSeyZOCb5LCSG9qiVQMEfg1/opyN4n1G
-         oJJLHCEF6aUuCWc6rFsgIn5DiWkn7dUd0bplIKppYsXY413uY9i1gc3A5SPtIU8xDGoG
-         QGgUhe5hifZVHJ69kEql0fR7xkizlUYBTv3dtBSYvNYomx+bArQOAcAM2L3PdfFtxcKa
-         QvKzXqq7V+jdk2VY33d3Hu+Fx8OfCQOtLKs+VJvyv7jXVZ4l1+N3sJPFxYdh0+f7XKmH
-         VmCw==
-X-Gm-Message-State: APjAAAWNwcePrrUU0hgQA30OVa3GQTakqLvyP7NhphpwL0DqcgccUTUs
-        XBKRtqtDcFSoSGSo0VmaypzO3Q==
-X-Google-Smtp-Source: APXvYqw/bM83RnLh+j3aVWasZ8XbgV4OG1pkdT4nSZIv7horM5uQb/MwHMlszSgYDzw9mzSGmG+Ybg==
-X-Received: by 2002:a5d:6984:: with SMTP id g4mr1827568wru.43.1570609639322;
-        Wed, 09 Oct 2019 01:27:19 -0700 (PDT)
-Received: from starbuck.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id r18sm2545364wme.48.2019.10.09.01.27.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 01:27:18 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] arm64: dts: meson: sei610: enable audio
-Date:   Wed,  9 Oct 2019 10:27:08 +0200
-Message-Id: <20191009082708.6337-3-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191009082708.6337-1-jbrunet@baylibre.com>
-References: <20191009082708.6337-1-jbrunet@baylibre.com>
+        Wed, 9 Oct 2019 04:28:33 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 7B8BC61AC6; Wed,  9 Oct 2019 08:28:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1570609712;
+        bh=HbZdDa2cOuuT9V7lXu+I+zSgZiv78NTVmAzMtH+i/9M=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=K538711DcIhJnteovFc+JdlEiNz8SUHYidnlAfp6Gb6qnSJLjSrdb0KxuwRZTs9un
+         qbNbyEa5+iBx05gnGWeqMUAgou/imCNgEdL7pjPwGoMvuJmxCGUUxP5KPN0EBq1gjN
+         2/6yqPonn1gb4mVOr/qJnYmgBEugoGNhAeaymc6M=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2CF80602A9;
+        Wed,  9 Oct 2019 08:28:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1570609710;
+        bh=HbZdDa2cOuuT9V7lXu+I+zSgZiv78NTVmAzMtH+i/9M=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=GwhbOQpX0nN5FqRep6gJ9G4j4uj/jE9vs51Jc0GzV/UNTdLpTeil51JcZK7RCUC5+
+         1cDMabGFzmeYpTrD6YwB1NuEAgerDcnT5UwjE+ZD854Baes9OxLIFpTp3iaHDpIlSY
+         PLPzDV2rpsAlgvABiJ8bHVRiPDMnaUApMuKBx9dw=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2CF80602A9
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] iwlegacy: make array interval static, makes object smaller
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20191007134113.5647-1-colin.king@canonical.com>
+References: <20191007134113.5647-1-colin.king@canonical.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Stanislaw Gruszka <sgruszka@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20191009082832.7B8BC61AC6@smtp.codeaurora.org>
+Date:   Wed,  9 Oct 2019 08:28:31 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add and enable the audio devices on the sei610.
+Colin King <colin.king@canonical.com> wrote:
 
-The new FRDDR/TODDR D of the SM1 have been left out on purpose. The
-plaftorm has 2 possible playback interfaces and 3 possible capture
-interfaces. 3 pcm interfaces for each direction is enough.
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Don't populate the array interval on the stack but instead make it
+> static. Makes the object code smaller by 121 bytes.
+> 
+> Before:
+>    text	   data	    bss	    dec	    hex	filename
+>  167797	  29676	    448	 197921	  30521	wireless/intel/iwlegacy/common.o
+> 
+> After:
+>    text	   data	    bss	    dec	    hex	filename
+>  167580	  29772	    448	 197800	  304a8	wireless/intel/iwlegacy/common.o
+> 
+> (gcc version 9.2.1, amd64)
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- .../boot/dts/amlogic/meson-sm1-sei610.dts     | 205 ++++++++++++++++++
- 1 file changed, 205 insertions(+)
+Patch applied to wireless-drivers-next.git, thanks.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
-index 1d627f7f47b2..5bd07469766b 100644
---- a/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
-@@ -9,6 +9,7 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/gpio/meson-g12a-gpio.h>
-+#include <dt-bindings/sound/meson-g12a-tohdmitx.h>
- 
- / {
- 	compatible = "seirobotics,sei610", "amlogic,sm1";
-@@ -19,6 +20,22 @@
- 		ethernet0 = &ethmac;
- 	};
- 
-+	mono_dac: audio-codec-0 {
-+		compatible = "maxim,max98357a";
-+		#sound-dai-cells = <0>;
-+		sound-name-prefix = "U16";
-+		sdmode-gpios = <&gpio GPIOX_8 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	dmics: audio-codec-1 {
-+		#sound-dai-cells = <0>;
-+		compatible = "dmic-codec";
-+		num-channels = <2>;
-+		wakeup-delay-ms = <50>;
-+		status = "okay";
-+		sound-name-prefix = "MIC";
-+	};
-+
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-@@ -179,6 +196,120 @@
- 		clock-names = "ext_clock";
- 	};
- 
-+	sound {
-+		compatible = "amlogic,axg-sound-card";
-+		model = "SM1-SEI610";
-+		audio-aux-devs = <&tdmout_a>, <&tdmout_b>,
-+				 <&tdmin_a>, <&tdmin_b>;
-+		audio-routing = "TDMOUT_A IN 0", "FRDDR_A OUT 0",
-+				"TDMOUT_A IN 1", "FRDDR_B OUT 0",
-+				"TDMOUT_A IN 2", "FRDDR_C OUT 0",
-+				"TDM_A Playback", "TDMOUT_A OUT",
-+				"TDMOUT_B IN 0", "FRDDR_A OUT 1",
-+				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
-+				"TDMOUT_B IN 2", "FRDDR_C OUT 1",
-+				"TDM_B Playback", "TDMOUT_B OUT",
-+				"TODDR_A IN 4", "PDM Capture",
-+				"TODDR_B IN 4", "PDM Capture",
-+				"TODDR_C IN 4", "PDM Capture",
-+				"TDMIN_A IN 0", "TDM_A Capture",
-+				"TDMIN_A IN 3", "TDM_A Loopback",
-+				"TDMIN_B IN 0", "TDM_A Capture",
-+				"TDMIN_B IN 3", "TDM_A Loopback",
-+				"TDMIN_A IN 1", "TDM_B Capture",
-+				"TDMIN_A IN 4", "TDM_B Loopback",
-+				"TDMIN_B IN 1", "TDM_B Capture",
-+				"TDMIN_B IN 4", "TDM_B Loopback",
-+				"TODDR_A IN 0", "TDMIN_A OUT",
-+				"TODDR_B IN 0", "TDMIN_A OUT",
-+				"TODDR_C IN 0", "TDMIN_A OUT",
-+				"TODDR_A IN 1", "TDMIN_B OUT",
-+				"TODDR_B IN 1", "TDMIN_B OUT",
-+				"TODDR_C IN 1", "TDMIN_B OUT";
-+
-+		assigned-clocks = <&clkc CLKID_MPLL2>,
-+				  <&clkc CLKID_MPLL0>,
-+				  <&clkc CLKID_MPLL1>;
-+		assigned-clock-parents = <0>, <0>, <0>;
-+		assigned-clock-rates = <294912000>,
-+				       <270950400>,
-+				       <393216000>;
-+		status = "okay";
-+
-+		dai-link-0 {
-+			sound-dai = <&frddr_a>;
-+		};
-+
-+		dai-link-1 {
-+			sound-dai = <&frddr_b>;
-+		};
-+
-+		dai-link-2 {
-+			sound-dai = <&frddr_c>;
-+		};
-+
-+		dai-link-3 {
-+			sound-dai = <&toddr_a>;
-+		};
-+
-+		dai-link-4 {
-+			sound-dai = <&toddr_b>;
-+		};
-+
-+		dai-link-5 {
-+			sound-dai = <&toddr_c>;
-+		};
-+
-+		/* internal speaker interface */
-+		dai-link-6 {
-+			sound-dai = <&tdmif_a>;
-+			dai-format = "i2s";
-+			dai-tdm-slot-tx-mask-0 = <1 1>;
-+			mclk-fs = <256>;
-+
-+			codec-0 {
-+				sound-dai = <&mono_dac>;
-+			};
-+
-+			codec-1 {
-+				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_A>;
-+			};
-+		};
-+
-+		/* 8ch hdmi interface */
-+		dai-link-7 {
-+			sound-dai = <&tdmif_b>;
-+			dai-format = "i2s";
-+			dai-tdm-slot-tx-mask-0 = <1 1>;
-+			dai-tdm-slot-tx-mask-1 = <1 1>;
-+			dai-tdm-slot-tx-mask-2 = <1 1>;
-+			dai-tdm-slot-tx-mask-3 = <1 1>;
-+			mclk-fs = <256>;
-+
-+			codec {
-+				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_B>;
-+			};
-+		};
-+
-+		/* internal digital mics */
-+		dai-link-8 {
-+			sound-dai = <&pdm>;
-+
-+			codec {
-+				sound-dai = <&dmics>;
-+			};
-+		};
-+
-+		/* hdmi glue */
-+		dai-link-9 {
-+			sound-dai = <&tohdmitx TOHDMITX_I2S_OUT>;
-+
-+			codec {
-+				sound-dai = <&hdmi_tx>;
-+			};
-+		};
-+	};
-+
- 	wifi32k: wifi32k {
- 		compatible = "pwm-clock";
- 		#clock-cells = <0>;
-@@ -187,6 +318,10 @@
- 	};
- };
- 
-+&arb {
-+	status = "okay";
-+};
-+
- &cec_AO {
- 	pinctrl-0 = <&cec_ao_a_h_pins>;
- 	pinctrl-names = "default";
-@@ -201,6 +336,10 @@
- 	hdmi-phandle = <&hdmi_tx>;
- };
- 
-+&clkc_audio {
-+	status = "okay";
-+};
-+
- &cpu0 {
- 	cpu-supply = <&vddcpu>;
- 	operating-points-v2 = <&cpu_opp_table>;
-@@ -235,6 +374,18 @@
- 	phy-mode = "rmii";
- };
- 
-+&frddr_a {
-+	status = "okay";
-+};
-+
-+&frddr_b {
-+	status = "okay";
-+};
-+
-+&frddr_c {
-+	status = "okay";
-+};
-+
- &hdmi_tx {
- 	status = "okay";
- 	pinctrl-0 = <&hdmitx_hpd_pins>, <&hdmitx_ddc_pins>;
-@@ -259,6 +410,12 @@
- 	pinctrl-names = "default";
- };
- 
-+&pdm {
-+	pinctrl-0 = <&pdm_din0_z_pins>, <&pdm_dclk_z_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
- &pwm_AO_ab {
- 	status = "okay";
- 	pinctrl-0 = <&pwm_ao_a_pins>;
-@@ -356,6 +513,54 @@
- 	vqmmc-supply = <&emmc_1v8>;
- };
- 
-+&tdmif_a {
-+	pinctrl-0 = <&tdm_a_dout0_pins>, <&tdm_a_fs_pins>, <&tdm_a_sclk_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+
-+	assigned-clocks = <&clkc_audio AUD_CLKID_TDM_SCLK_PAD0>,
-+			  <&clkc_audio AUD_CLKID_TDM_LRCLK_PAD0>;
-+	assigned-clock-parents = <&clkc_audio AUD_CLKID_MST_A_SCLK>,
-+				 <&clkc_audio AUD_CLKID_MST_A_LRCLK>;
-+	assigned-clock-rates = <0>, <0>;
-+};
-+
-+&tdmif_b {
-+	status = "okay";
-+};
-+
-+&tdmin_a {
-+	status = "okay";
-+};
-+
-+&tdmin_b {
-+	status = "okay";
-+};
-+
-+&tdmout_a {
-+	status = "okay";
-+};
-+
-+&tdmout_b {
-+	status = "okay";
-+};
-+
-+&toddr_a {
-+	status = "okay";
-+};
-+
-+&toddr_b {
-+	status = "okay";
-+};
-+
-+&toddr_c {
-+	status = "okay";
-+};
-+
-+&tohdmitx {
-+	status = "okay";
-+};
-+
- &uart_A {
- 	status = "okay";
- 	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
+55047fb783e0 iwlegacy: make array interval static, makes object smaller
+
 -- 
-2.21.0
+https://patchwork.kernel.org/patch/11177531/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
