@@ -2,111 +2,276 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C1AECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFE3ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FD5421848
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:00:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570640400;
-	bh=Ix2LISwnINrg5/TxVckaeESYmmQSFSkxHfTMO6PEgT4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=O4PQX5bX8SiM2ILhPhrMQCIOZwzjrMI+gkxTD+2zxBmvY1RKPzzhSDikOiA5AxqZP
-	 GKgbHgSq4uyhb7oE+H+bTWfBQ10k8f7qL7fXSwtrIX5XUPsn1uN6kmMuQMRkIRpIQQ
-	 BHcqG5bNyEqG+tRE2H5KmxN87NWwHVbVlwr6melM=
+	by mail.kernel.org (Postfix) with ESMTP id 8A6CC20B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:01:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731720AbfJIQ77 (ORCPT
+        id S1731768AbfJIRBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 12:59:59 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35070 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730546AbfJIQ77 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 12:59:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Rj06Tv5j+rvhEcTqvvqFPxXNxUI4Mfz6LMD0PqzgMF4=; b=wnmE+fItLg2W6Q9JuGiFzyNtF
-        Hn5rFYVs1CrEiohk66VdhhmARG+r/KAFLkPbtAbHUTN6IXR4w5tV4MDBnF1qr5mWmTkMGcAChts1f
-        /D/pJ3wR2vnnQczB01F9vf05nuT2dzVeJgbvo8DohPDZ16Ck4T3wz33eEkJJXEZ4rSveI=;
-Received: from 188.31.199.195.threembb.co.uk ([188.31.199.195] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1iIFJa-0005HN-L7; Wed, 09 Oct 2019 16:59:54 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 8DBA3D03ED3; Wed,  9 Oct 2019 17:59:53 +0100 (BST)
-Date:   Wed, 9 Oct 2019 17:59:53 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     spapothi@codeaurora.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, lgirdwood@gmail.com,
-        vkoul@kernel.org, bgoswami@codeaurora.org
-Subject: Re: [RFC PATCH] ASoC: soc-dapm: Invalidate DAPM path during dapm
- addition of routes
-Message-ID: <20191009165953.GM2036@sirena.org.uk>
-References: <20191009102127.7860-1-srinivas.kandagatla@linaro.org>
+        Wed, 9 Oct 2019 13:01:54 -0400
+Received: from mx2.suse.de ([195.135.220.15]:32960 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730546AbfJIRBx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 13:01:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9B4DDAFBF;
+        Wed,  9 Oct 2019 17:01:50 +0000 (UTC)
+Message-ID: <d739f691b677fb3ed88a23476d221527a87c363d.camel@suse.de>
+Subject: Re: [PATCH v2] HID: core: check whether usage page item is after
+ usage id item
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Candle Sun <candlesea@gmail.com>, jikos@kernel.org,
+        benjamin.tissoires@redhat.com
+Cc:     orson.zhai@unisoc.com, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Candle Sun <candle.sun@unisoc.com>,
+        Nianfu Bai <nianfu.bai@unisoc.com>
+Date:   Wed, 09 Oct 2019 19:01:26 +0200
+In-Reply-To: <1570625609-11083-1-git-send-email-candlesea@gmail.com>
+References: <1570625609-11083-1-git-send-email-candlesea@gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-+cgRzwSHq0mjN6hyjB+b"
+User-Agent: Evolution 3.32.4 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5y45gzHVJWc99xXB"
-Content-Disposition: inline
-In-Reply-To: <20191009102127.7860-1-srinivas.kandagatla@linaro.org>
-X-Cookie: Be careful!  UGLY strikes 9 out of 10!
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---5y45gzHVJWc99xXB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--=-+cgRzwSHq0mjN6hyjB+b
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 09, 2019 at 11:21:27AM +0100, Srinivas Kandagatla wrote:
-> From: Sudheer Papothi <spapothi@codeaurora.org>
+On Wed, 2019-10-09 at 20:53 +0800, Candle Sun wrote:
+> From: Candle Sun <candle.sun@unisoc.com>
 >=20
-> During sound card registration, dapm adds routes of
-> codec and other component paths, but the invalidation of
-> the widgets in these paths will happen only when the
-> sound card is instantiated. As these routes are added
+> Upstream commit 58e75155009c ("HID: core: move Usage Page concatenation
+> to Main item") adds support for Usage Page item after Usage ID items
+> (such as keyboards manufactured by Primax).
+>=20
+> Usage Page concatenation in Main item works well for following report
+> descriptor patterns:
+>=20
+>     USAGE_PAGE (Keyboard)                   05 07
+>     USAGE_MINIMUM (Keyboard LeftControl)    19 E0
+>     USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
+>     LOGICAL_MINIMUM (0)                     15 00
+>     LOGICAL_MAXIMUM (1)                     25 01
+>     REPORT_SIZE (1)                         75 01
+>     REPORT_COUNT (8)                        95 08
+>     INPUT (Data,Var,Abs)                    81 02
+>=20
+> -------------
+>=20
+>     USAGE_MINIMUM (Keyboard LeftControl)    19 E0
+>     USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
+>     LOGICAL_MINIMUM (0)                     15 00
+>     LOGICAL_MAXIMUM (1)                     25 01
+>     REPORT_SIZE (1)                         75 01
+>     REPORT_COUNT (8)                        95 08
+>     USAGE_PAGE (Keyboard)                   05 07
+>     INPUT (Data,Var,Abs)                    81 02
+>=20
+> But it makes the parser act wrong for the following report
+> descriptor pattern(such as some Gamepads):
+>=20
+>     USAGE_PAGE (Button)                     05 09
+>     USAGE (Button 1)                        09 01
+>     USAGE (Button 2)                        09 02
+>     USAGE (Button 4)                        09 04
+>     USAGE (Button 5)                        09 05
+>     USAGE (Button 7)                        09 07
+>     USAGE (Button 8)                        09 08
+>     USAGE (Button 14)                       09 0E
+>     USAGE (Button 15)                       09 0F
+>     USAGE (Button 13)                       09 0D
+>     USAGE_PAGE (Consumer Devices)           05 0C
+>     USAGE (Back)                            0a 24 02
+>     USAGE (HomePage)                        0a 23 02
+>     LOGICAL_MINIMUM (0)                     15 00
+>     LOGICAL_MAXIMUM (1)                     25 01
+>     REPORT_SIZE (1)                         75 01
+>     REPORT_COUNT (11)                       95 0B
+>     INPUT (Data,Var,Abs)                    81 02
+>=20
+> With Usage Page concatenation in Main item, parser recognizes all the
+> 11 Usages as consumer keys, it is not the HID device's real intention.
+>=20
+> This patch adds usage_page_last to flag whether Usage Page is after
+> Usage ID items. usage_page_last is false default, it is set as true
+> once Usage Page item is encountered and is reverted by next Usage ID
+> item.
+>=20
+> Usage Page concatenation on the currently defined Usage Page will do
+> firstly in Local parsing when Usage ID items encountered.
+>=20
+> When Main item is parsing, concatenation will do again with last
+> defined Usage Page if usage_page_last flag is true.
 
-The whole point with this check is that as you say we're
-validating everything as we instantiate the card, not piecemeal
-while the map is partially constructed.  Doing that is wasteful
-and noisy.
+Functionally I think this is the right approach. Sadly I don't have access =
+to
+any  Primax device anymore so I can't test it. But I suggest you update
+hid-tools' parser and add a new unit test to verify we aren't missing anyth=
+ing.
 
-> before sound card instantiation, these widgets are
-> not invalidated until a playback or recording usecase
-> is started.
+You can base your code on this:
 
-You said yourself that we sync everything when the card is
-instantiated.  Not on first capture or record, when the card is
-instantiated.  If for some reason there is some problem with that
-on your system please fix that, don't add a bodge somewhere else
-to mask the problem.
+https://gitlab.freedesktop.org/libevdev/hid-tools/merge_requests/37/commits
 
---5y45gzHVJWc99xXB
+> Signed-off-by: Candle Sun <candle.sun@unisoc.com>
+> Signed-off-by: Nianfu Bai <nianfu.bai@unisoc.com>
+> ---
+> Changes in v2:
+> - Update patch title
+> - Add GET_COMPLETE_USAGE macro
+> - Change the logic of checking whether to concatenate usage page again
+>   in main parsing
+> ---
+>  drivers/hid/hid-core.c | 31 +++++++++++++++++++++++++------
+>  include/linux/hid.h    |  1 +
+>  2 files changed, 26 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
+> index 3eaee2c..3394222 100644
+> --- a/drivers/hid/hid-core.c
+> +++ b/drivers/hid/hid-core.c
+> @@ -35,6 +35,8 @@
+> =20
+>  #include "hid-ids.h"
+> =20
+> +#define GET_COMPLETE_USAGE(page, id) (((page) << 16) + ((id) & 0xffff))
+
+Not sure I like the macro. I'd rather have the explicit code. That said, le=
+ts
+see what Benjamin has to say.
+
+> +
+>  /*
+>   * Version Information
+>   */
+> @@ -221,7 +223,15 @@ static int hid_add_usage(struct hid_parser *parser,
+> unsigned usage, u8 size)
+>  		hid_err(parser->device, "usage index exceeded\n");
+>  		return -1;
+>  	}
+> -	parser->local.usage[parser->local.usage_index] =3D usage;
+> +
+> +	if (size <=3D 2) {
+> +		parser->local.usage_page_last =3D false;
+> +		parser->local.usage[parser->local.usage_index] =3D
+> +			GET_COMPLETE_USAGE(parser->global.usage_page, usage);
+> +	} else {
+> +		parser->local.usage[parser->local.usage_index] =3D usage;
+> +	}
+> +
+>  	parser->local.usage_size[parser->local.usage_index] =3D size;
+>  	parser->local.collection_index[parser->local.usage_index] =3D
+>  		parser->collection_stack_ptr ?
+> @@ -366,6 +376,7 @@ static int hid_parser_global(struct hid_parser *parse=
+r,
+> struct hid_item *item)
+> =20
+>  	case HID_GLOBAL_ITEM_TAG_USAGE_PAGE:
+>  		parser->global.usage_page =3D item_udata(item);
+> +		parser->local.usage_page_last =3D true;
+>  		return 0;
+> =20
+>  	case HID_GLOBAL_ITEM_TAG_LOGICAL_MINIMUM:
+> @@ -543,13 +554,21 @@ static int hid_parser_local(struct hid_parser *pars=
+er,
+> struct hid_item *item)
+>   * usage value."
+>   */
+
+I'd expand the comment above to further explain what we're doing here.
+
+> =20
+> -static void hid_concatenate_usage_page(struct hid_parser *parser)
+> +static void hid_concatenate_last_usage_page(struct hid_parser *parser)
+>  {
+>  	int i;
+> +	unsigned int usage;
+> +	unsigned int usage_page =3D parser->global.usage_page;
+> +
+> +	if (!parser->local.usage_page_last)
+> +		return;
+> =20
+>  	for (i =3D 0; i < parser->local.usage_index; i++)
+
+Technically correct but it's preferred if you use braces here.
+
+> -		if (parser->local.usage_size[i] <=3D 2)
+> -			parser->local.usage[i] +=3D parser->global.usage_page <<
+> 16;
+> +		if (parser->local.usage_size[i] <=3D 2) {
+> +			usage =3D parser->local.usage[i];
+> +			parser->local.usage[i] =3D
+> +				GET_COMPLETE_USAGE(usage_page, usage);
+> +		}
+>  }
+> =20
+>  /*
+> @@ -561,7 +580,7 @@ static int hid_parser_main(struct hid_parser *parser,
+> struct hid_item *item)
+>  	__u32 data;
+>  	int ret;
+> =20
+> -	hid_concatenate_usage_page(parser);
+> +	hid_concatenate_last_usage_page(parser);
+> =20
+>  	data =3D item_udata(item);
+> =20
+> @@ -772,7 +791,7 @@ static int hid_scan_main(struct hid_parser *parser, s=
+truct
+> hid_item *item)
+>  	__u32 data;
+>  	int i;
+> =20
+> -	hid_concatenate_usage_page(parser);
+> +	hid_concatenate_last_usage_page(parser);
+> =20
+>  	data =3D item_udata(item);
+> =20
+> diff --git a/include/linux/hid.h b/include/linux/hid.h
+> index cd41f20..2e0ea2f7 100644
+> --- a/include/linux/hid.h
+> +++ b/include/linux/hid.h
+> @@ -412,6 +412,7 @@ struct hid_local {
+>  	unsigned usage_minimum;
+>  	unsigned delimiter_depth;
+>  	unsigned delimiter_branch;
+> +	bool usage_page_last;      /* whether usage page is after usage id */
+>  };
+> =20
+>  /*
+
+Regards,
+Nicolas
+
+
+--=-+cgRzwSHq0mjN6hyjB+b
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEyBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2eEggACgkQJNaLcl1U
-h9BgPgf3RQI51vbBRTM40x54ZfHusQX6D6EE8gGPuMWgrrPkxU6CroFzRmvr5jps
-n2voRmRkI7TsiHIRL7qYwCwjsNxwRi7J/s3SLem7WoC64io0f+yU7z/hTmuMK9Js
-NejKG2uFU0o3Cmtzn6I160MCnav+FsCJ5UgwqTcZdUxLmMJJoOScM8BEK3ExdUf5
-06YQGcMpaZtB1XbfyCNqy7KpHkOpFxAerW5Df5Vkv5WEs0zZNZpbvUKpyKBD8lOY
-iBIq48MHlsZ7sp55FKhTKqfs5Uj2DZ2zkF7fSeqTBQuaZK/o2zRTxEB5lnkD/88Q
-dNCBvlCBtU4PiMfgJ0mvrUbjD4lQ
-=rzwa
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2eEmYACgkQlfZmHno8
+x/78WAf/VdRG9KkWWsJBI1HnxULNw7ZULq4MQ+4PrC+qXn8u5dxxfMLpNxGwRQvN
+FBBqrjXfDvcZDqUE2kqOTOqAnbs2mheNejQCY33L7wSYwWPKzDlejZDAF6lH1Bsv
+a3QfRf9oV2iRDvxR4WZKtoLTm/SeX/VaMOvjQUX4JgxsQzeCkxCRY4GXqQrXrU/s
+YzJBCYDs9SNnfamnkcZOnfnd/LGLA8VBbHE5krpdcV3ivgOv3oZ1OUkBzrz8GSnu
+0VR0T5oGhy3pXHfcXH08eKZE1j2zhhscqNYGtkECZHphq8eAqUDQ7tCBfrILs2Ty
+HY4HB+i+ZDtjDkE/e48W3vix5yGoJQ==
+=TRI3
 -----END PGP SIGNATURE-----
 
---5y45gzHVJWc99xXB--
+--=-+cgRzwSHq0mjN6hyjB+b--
+
