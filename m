@@ -2,110 +2,210 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 197C8C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 00:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2230FC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 00:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E33582070B
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 00:10:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDDAA2070B
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 00:12:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MXrg8WZV"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C2B+kKRx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729817AbfJIAKM (ORCPT
+        id S1729928AbfJIAMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 20:10:12 -0400
-Received: from ozlabs.org ([203.11.71.1]:53451 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727051AbfJIAKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 20:10:12 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46nvjr741Pz9sPJ;
-        Wed,  9 Oct 2019 11:10:08 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1570579809;
-        bh=M2JGGKz6pf/UCv2VzRT9RzRQgEvwfLMOyVP1wpLhvRw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=MXrg8WZVJH4VaXD5zteICeGGPj0TZK6h0n734yA74Ka7eLXyF5I57LR707EIDw+jI
-         lpXidsHBUDJygCOmYf7E3BYInfwCRhh+pkIEturQXJVZ+IQxGs8ym2utkSkZ4tROiS
-         Hp8LlesS2w3t5XTO4JtTH+Et+uPIZM6qAcixwIIzu3e9W36dapKZCAScEJ6GpAMwKv
-         Jab6AeAsZFKvk5Z0CO8R4ZkZCVWD97DSNp2O0bfQG/NOb1kJU/cgg6zphIVqrV46oL
-         3B8qXbJdkD1ap0TJ7empmeFW6+yCQh6tqqwS3P7YExgalR2hjrgVOdX+w80P/Nqr+N
-         yOw7JdOKXfzjQ==
-Date:   Wed, 9 Oct 2019 11:10:08 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Matthew Auld <matthew.auld@intel.com>
-Subject: linux-next: manual merge of the drm-misc tree with the drm tree
-Message-ID: <20191009111008.0853cad8@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/J9iT0kQmK2lprFt7nC9I6dj";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Tue, 8 Oct 2019 20:12:05 -0400
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:41955 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727051AbfJIAMF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 20:12:05 -0400
+Received: by mail-pl1-f202.google.com with SMTP id q3so380727pll.8
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 17:12:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=cNdhJyeG5GjZBd+aVbSImZd8WSDzEG5SHRL3gOPr830=;
+        b=C2B+kKRxBmnboQ58DGVk4sq36JsCS6eLlr5yxMvcDGkQZQqR36FuEpUVDnKLBBTFhE
+         2n8g2QXfc+4VQuaAgjo7mnb+mp3sjeNBCpuWXtwDkxo/p6x35jVJvdh8V12H7TUfCB6D
+         CPurcGcVqslBeikqXcPleaeTfgH5rwnaVguteREmCA/AlarppMrGoUvTAeHpkLi+uUFV
+         G/IEp2UiRc+4vnOP67GMbZb83jOxDKBxIfnJQoPmXwIbU4jgB9XRHTDGAgPCOUm+sOHx
+         r5X0J/CPVhHhaFXfd9rqqgUjIts5xjH4nkb7F+KiXeF8iaDO7BFMefxUWl7Ey4jYm7+U
+         1oaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=cNdhJyeG5GjZBd+aVbSImZd8WSDzEG5SHRL3gOPr830=;
+        b=Xxq6GUsFKmzGYV+geOJdsrS16FWCnRYJvN97rLpyV2KO2xV9JsOfNNenN+G6MMj43U
+         6yqLYMSiPHuIIHeIILAj6qNyqBQyRKGz67f5fHFiOED/QfedUOgMr1/rww5gr1L04CpJ
+         5YgA9/mamweg0rogu0tIbV49rKM2bV+SYbBRPDEVBjzMjIIuA3YZ/B5zKrrKsV0RkKUQ
+         wW4AWlaYOAB7qpYYqDD5menNkAmjRU1YcMneuAlx0NbVxg2mtd/I/DRw014X9xEz8QSp
+         tNuf7geRwo1xBGzfoRiCesStkYb37X99HeLD6q8REXeegqKF9V8i5sCfN7/gLbjTMsRf
+         yHCA==
+X-Gm-Message-State: APjAAAVwivVIl+RsRww4f9mdSqj0LfuRZI1yO/YfeM/HUoQ9RKzLvU4H
+        zH7t8NsJmATwcItjcOv08ZhjnCJCVZqIBK8=
+X-Google-Smtp-Source: APXvYqzUwAUJ7ef6Z4sewmUfC6phFFrRCVw1qdTo+qrXYj7G3r0BMPlJ4k5A3b/HEGwE1y+5rQc91D/hZAbEt9Q=
+X-Received: by 2002:a63:1609:: with SMTP id w9mr1270591pgl.184.1570579924013;
+ Tue, 08 Oct 2019 17:12:04 -0700 (PDT)
+Date:   Tue,  8 Oct 2019 17:11:59 -0700
+In-Reply-To: <5d978bf9.1c69fb81.7b927.b6ac@mx.google.com>
+Message-Id: <20191009001159.27761-1-saravanak@google.com>
+Mime-Version: 1.0
+References: <5d978bf9.1c69fb81.7b927.b6ac@mx.google.com>
+X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
+Subject: [RFC PATCH] interconnect: Replace of_icc_get() with icc_get() and
+ reduce DT binding
+From:   Saravana Kannan <saravanak@google.com>
+To:     swboyd@chromium.org
+Cc:     bjorn.andersson@linaro.org, daidavid1@codeaurora.org,
+        devicetree@vger.kernel.org, evgreen@chromium.org,
+        georgi.djakov@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, mripard@kernel.org, robh+dt@kernel.org,
+        saravanak@google.com, kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/J9iT0kQmK2lprFt7nC9I6dj
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Quoting Stephen Boyd:
+> Quoting David Dai (2019-09-27 10:16:07)
+> > On 9/25/2019 6:28 AM, Stephen Boyd wrote:
+> > > Quoting Bjorn Andersson (2019-09-24 22:59:33)
+> > >> On Tue 24 Sep 22:41 PDT 2019, Stephen Boyd wrote:
+> > >>
+> > >>> The DT binding could also be simplified somewhat. Currently a path needs
+> > >>> to be specified in DT for each and every use case that is possible for a
+> > >>> device to want. Typically the path is to memory, which looks to be
+> > >>> reserved for in the binding with the "dma-mem" named path, but sometimes
+> > >>> the path is from a device to the CPU or more generically from a device
+> > >>> to another device which could be a CPU, cache, DMA master, or another
+> > >>> device if some sort of DMA to DMA scenario is happening. Let's remove
+> > >>> the pair part of the binding so that we just list out a device's
+> > >>> possible endpoints on the bus or busses that it's connected to.
+> > >>>
+> > >>> If the kernel wants to figure out what the path is to memory or the CPU
+> > >>> or a cache or something else it should be able to do that by finding the
+> > >>> node for the "destination" endpoint, extracting that node's
+> > >>> "interconnects" property, and deriving the path in software. For
+> > >>> example, we shouldn't need to write out each use case path by path in DT
+> > >>> for each endpoint node that wants to set a bandwidth to memory. We
+> > >>> should just be able to indicate what endpoint(s) a device sits on based
+> > >>> on the interconnect provider in the system and then walk the various
+> > >>> interconnects to find the path from that source endpoint to the
+> > >>> destination endpoint.
+> > >>>
+> > >> But doesn't this implies that the other end of the path is always some
+> > >> specific node, e.g. DDR? With a single node how would you describe
+> > >> CPU->LLCC or GPU->OCIMEM?
+> > > By only specifying the endpoint the device uses it describes what the
+> > > hardware block interfaces with. It doesn't imply that there's only one
+> > > other end of the path. It implies that the paths should be discoverable
+> > > by walking the interconnect graph given some source device node and
+> > > target device node. In most cases the target device node will be a DDR
+> > > controller node, but sometimes it could be LLCC or OCIMEM. We may need
+> > > to add some sort of "get the DDR controller device" API or work it into
+> > > the interconnect API somehow to indicate what target endpoint is
+> > > desired. By not listing all those paths in DT we gain flexibility to add
+> > > more paths later on without having to update or tweak DT to describe
+> > > more paths/routes through the interconnect.
+> >
+> >
+> > I'm unsure that using the target device node or target source device is
+> > the correct way to represent the constraints that the consumers apply on
+> > the interconnects. While it's true the traffic is intended for the
+> > targeted devices, the constraints(QoS or BW) are for the interconnect or 
+> > specifically the paths that span across the ports of various
+> > interconnects(NoC devices in this case). I think having both src and dst 
+> > properties is still the simplest way to achieve the flexibility that we
+> > require to set the constraints for ports(that may not have a target
+> > device defined in DT or exists as some intermediate port across multiple 
+> > interconnects).
+> 
+> 
+> The need for paths described in DT may make sense for certain cases but
+> that seems to be the minority. My guess is that maybe an OPP binding
+> would need to describe the path to apply the bandwidth to. Otherwise I
+> don't see what the need is for. Maybe you can list out more scenarios?
+> 
+> Either way, the binding has been designed to cover all the possibilities
+> by just saying that we have to describe at least two points for an
+> 'interconnect'. It is a path based binding. I'd rather see us have an
+> endpoint based binding with the option to fallback to paths if we need
+> to constrain something. Maybe this can be a new property that is used
+> the majority of the time?
+> 
+> gpu@f00 {
+>   interconnect-endpoints =3D <&icc GPU_SLAVE_PORT>, <&icc GPU_MASTER_PORT0>, <&icc GPU_MASTER_PORT1>;
+>   interconnect-endpoint-names =3D "slave", "master0", "master1";
+> };
+> 
+> (Or we can invert it and make interconnect-paths be non-standard)
+> 
+> The property would describe what's going to this device and how it's
+> integrated into the SoC. This is similar to how we describe what port is
+> connected to a device with the of graph binding or how we only list the
+> clk or regulator that goes to a device and not the whole path to the
+> root of the respective tree.
+> 
+> There can be a driver API that gets these port numbers out and
+> constructs a path to another struct device or struct device_node. I
+> imagine that 90% of the time a driver is going to request some bandwidth
+> from their master port (or ports) to the DDR controller. We could either
+> make the DDR controller a device that can be globally acquired or
+> integrate it deeply into the API to the point that it looks for a DDR
+> controller somewhere or relies on interconnect providers to tell the
+> framework about the controller.
+> 
+> TL;DR is that I don't want to have to specify paths in each and every
+> node to say that some port on this device here is connected to some port
+> on the DDR controller and that we want to adjust the bandwidth or QoS
+> across this path. I'd like to describe a device "hermetically" by
+> listing out the ports the device has. Then we can rely on the OS to
+> figure out what paths to construct and change. If we need to constrain
+> or tweak those paths then we can do that with the existing interconnects
+> binding, but let's worry about that when we get there.
 
-Hi all,
+I think I understand what you are trying to do here. Correct me if my
+understanding is wrong. Each device just lists what interconnects (and their
+ports) it's connected to -- let's call this device endpoints.
 
-Today's linux-next merge of the drm-misc tree got a conflict in:
+If a device is making bandwidth votes from itself to some other device, it just
+specifies the other end point (as a device? path name?) in icc_get(). The
+interconnect framework can then figure out what two interconnect ports the
+icc_get() is about (by looking at the device endpoints info) and then construct
+the path.
 
-  drivers/gpu/drm/i915/i915_vma.c
+But it's not clear how you'll handle the case where a Device-A wants to make a
+bandwidth vote from a Device-B to Device-C. This is necessary for multiple
+scenarios. Eg: booting a remote proc where the CPU needs to make sure the
+remote proc has its path to DDR active. icc_get() can't always assume the
+source is the device making the request. So, I don't think you can omit the
+source of the path in the DT binding.
 
-between commits:
+If we take the above into account, would the only change in your proposal be to
+list the source and destination device in DT instead of their interconnect and
+ports?  I don't have a strong opinion on whether this is necessary, but want to
+make sure that we are all talking about the same thing.
 
-  1e0a96e50882 ("drm/i915: export color_differs")
-  33dd88992313 ("drm/i915: cleanup cache-coloring")
-  b290a78b5c3d ("drm/i915: Use helpers for drm_mm_node booleans")
-  5e053450c1c3 ("drm/i915: Only track bound elements of the GTT")
-  2850748ef876 ("drm/i915: Pull i915_vma_pin under the vm->mutex")
+Another way to look at this: There's one crucial difference between clocks and
+interconnects. Given a clock controller and it's "output port", the clock that
+you referring to doesn't change irrespective of what device is asking for it.
+But in the case of an interconnect, if you specify just a destination
+interconnect and it's port, the path that you are referring to changes based on
+which device is requesting it. And if you want a device independent of
+referring to a path, you need to specify the source and destination explicitly.
 
-from the drm tree and commit:
+Also, if a firmware isn't used, how do you see your icc_get() proposal working
+with just the "name"? In what way is it better than the current icc_get() API?
 
-  71724f708997 ("drm/mm: Use helpers for drm_mm_node booleans")
-
-from the drm-misc tree.
-
-I fixed it up (the subset of 71724f708997 affecting this file is in
-b290a78b5c3d) and can carry the fix as necessary. This is now fixed as
-far as linux-next is concerned, but any non trivial conflicts should be
-mentioned to your upstream maintainer when your tree is submitted for
-merging.  You may also want to consider cooperating with the maintainer
-of the conflicting tree to minimise any particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/J9iT0kQmK2lprFt7nC9I6dj
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2dJWAACgkQAVBC80lX
-0GzoKgf5AVtlP9pdgCnVoOOOW8BNUxg2ew2ZT5rd6HpZgufsLFDkG+3zIj0jpJ4n
-3dAYd0HryL6JTGU4JvDIvbwEd/yloSjx6p1mFK+7GjUHpy0W/gluGv5jHOrOdeRe
-bPnmRsb94Q7nCY0Gv0X3nao+oerB7l3hYRm9YdqCbzk4pdTzMG183tm3IrZ6MF1N
-18d6kMGNbEBlm+ybpyAvE0oM3028J/M2GqszSm25vj3C2f+tFW/NcmIpR2CxiNma
-FlDuUUcgNi7ZsHK+Fgb4RLVmq2gx1YTDiXOt+iggaPMLeFHArv/kn/iZdor0bO7Y
-vCtR4SHLZnfBEyr7JeFJ4l4/X6VP4g==
-=Nyqk
------END PGP SIGNATURE-----
-
---Sig_/J9iT0kQmK2lprFt7nC9I6dj--
+Thanks,
+Saravana
+P.S: Sorry about any messy quoting/indentation. I'm hand editing the quoting
+from the raw email text and using git to send a response.
