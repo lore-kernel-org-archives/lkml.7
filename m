@@ -4,53 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E52CBECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0282AECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD2B520679
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:27:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C46C620679
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:27:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570642041;
-	bh=IjH+bROqetUGmXA7UF4W5sV7vyoaBnjMEt2boHPj0CE=;
+	s=default; t=1570642044;
+	bh=DBMaSU6DKS4TAqhmNY3mmHiGPosqmVwGEwfGAIWsNPk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZYEK7Bc8tIrkEVHdKSU5hAx9GqBByZBFsd61K4WZd+xEIK7doeX1VxwzEabhferDp
-	 272liPQaTiLnDRSFpv7WknbzRuotULWf/28EDsgHhGffRVNxKo5swUpWC8fAIn0Yln
-	 s+mJuj/Fvr9q5ME24liPtX7wLWLfMA+QKljPsMeE=
+	b=Ka42xXPXA/ftAXpjuC9DAaxU+7cgQ+JDkO0gg8K3FzA7eXPSqolJyEgUYd/2amu6b
+	 yHlbS9xPPY/D/ZfTxr4zqy1kfXS5tc3kN8lD65rIjLs1OhMTJgsfVC0dXXcVo22bmg
+	 HveSfLQeIy5D8fqvyY1Iar/RuvSsbf1v8icyNfCk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732811AbfJIR1U (ORCPT
+        id S1732373AbfJIR1T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:27:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49202 "EHLO mail.kernel.org"
+        Wed, 9 Oct 2019 13:27:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732342AbfJIRYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732348AbfJIRYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 9 Oct 2019 13:24:30 -0400
 Received: from sasha-vm.mshome.net (unknown [167.220.2.234])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 946A121920;
-        Wed,  9 Oct 2019 17:24:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4063E222D1;
+        Wed,  9 Oct 2019 17:24:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570641869;
-        bh=IjH+bROqetUGmXA7UF4W5sV7vyoaBnjMEt2boHPj0CE=;
+        s=default; t=1570641870;
+        bh=DBMaSU6DKS4TAqhmNY3mmHiGPosqmVwGEwfGAIWsNPk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bqYdZpy5a223ipmxyE9X42uSREekM1b4Xf8KeQAyH4qvHDCh3FhT/5Ju4N/gqWRL1
-         XGetRdT/8nTTNCs21Hlu6SGWxEnvuekLT36uChN5ZhRdpdem0aeA2BeCg25UWwUukn
-         88oMw2gJa2/eMQ4WMn3NweuAgg+iHSOb3Ji/FBe0=
+        b=QcdEzyJJK/GrWKG4zsGxiZgpgNYEwfhZjmvRgW6Udy1SEKKzCucXQI+PzlRhbWh6b
+         zE/vs+I1a8aakT6XEqV5QwviPN5qQUxAEALgYFuvbnjd3jwRUHSmaV8IxNT92d7BCA
+         ydoQkBn7EoI2TDvwJdRT3r+6MzPeASbKWvl9Erls=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jim Mattson <jmattson@google.com>, Marc Orr <marcorr@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 13/21] kvm: vmx: Limit guest PMCs to those supported on the host
-Date:   Wed,  9 Oct 2019 13:06:06 -0400
-Message-Id: <20191009170615.32750-13-sashal@kernel.org>
+Cc:     Miaoqing Pan <miaoqing@codeaurora.org>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 15/21] mac80211: fix txq null pointer dereference
+Date:   Wed,  9 Oct 2019 13:06:08 -0400
+Message-Id: <20191009170615.32750-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191009170615.32750-1-sashal@kernel.org>
 References: <20191009170615.32750-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,64 +62,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jim Mattson <jmattson@google.com>
+From: Miaoqing Pan <miaoqing@codeaurora.org>
 
-[ Upstream commit e1fba49cc1e965a3dacd897367ba1e7b340cf0f4 ]
+[ Upstream commit 8ed31a264065ae92058ce54aa3cc8da8d81dc6d7 ]
 
-KVM can only virtualize as many PMCs as the host supports.
+If the interface type is P2P_DEVICE or NAN, read the file of
+'/sys/kernel/debug/ieee80211/phyx/netdev:wlanx/aqm' will get a
+NULL pointer dereference. As for those interface type, the
+pointer sdata->vif.txq is NULL.
 
-Limit the number of generic counters and fixed counters to the number
-of corresponding counters supported on the host, rather than to
-INTEL_PMC_MAX_GENERIC and INTEL_PMC_MAX_FIXED, respectively.
+Unable to handle kernel NULL pointer dereference at virtual address 00000011
+CPU: 1 PID: 30936 Comm: cat Not tainted 4.14.104 #1
+task: ffffffc0337e4880 task.stack: ffffff800cd20000
+PC is at ieee80211_if_fmt_aqm+0x34/0xa0 [mac80211]
+LR is at ieee80211_if_fmt_aqm+0x34/0xa0 [mac80211]
+[...]
+Process cat (pid: 30936, stack limit = 0xffffff800cd20000)
+[...]
+[<ffffff8000b7cd00>] ieee80211_if_fmt_aqm+0x34/0xa0 [mac80211]
+[<ffffff8000b7c414>] ieee80211_if_read+0x60/0xbc [mac80211]
+[<ffffff8000b7ccc4>] ieee80211_if_read_aqm+0x28/0x30 [mac80211]
+[<ffffff80082eff94>] full_proxy_read+0x2c/0x48
+[<ffffff80081eef00>] __vfs_read+0x2c/0xd4
+[<ffffff80081ef084>] vfs_read+0x8c/0x108
+[<ffffff80081ef494>] SyS_read+0x40/0x7c
 
-Note that INTEL_PMC_MAX_GENERIC is currently 32, which exceeds the 18
-contiguous MSR indices reserved by Intel for event selectors. Since
-the existing code relies on a contiguous range of MSR indices for
-event selectors, it can't possibly work for more than 18 general
-purpose counters.
-
-Fixes: f5132b01386b5a ("KVM: Expose a version 2 architectural PMU to a guests")
-Signed-off-by: Jim Mattson <jmattson@google.com>
-Reviewed-by: Marc Orr <marcorr@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Miaoqing Pan <miaoqing@codeaurora.org>
+Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Link: https://lore.kernel.org/r/1569549796-8223-1-git-send-email-miaoqing@codeaurora.org
+[trim useless data from commit message]
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/pmu_intel.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ net/mac80211/debugfs_netdev.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kvm/pmu_intel.c b/arch/x86/kvm/pmu_intel.c
-index 2729131fe9bfc..170ca7eeb15b7 100644
---- a/arch/x86/kvm/pmu_intel.c
-+++ b/arch/x86/kvm/pmu_intel.c
-@@ -260,6 +260,7 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+diff --git a/net/mac80211/debugfs_netdev.c b/net/mac80211/debugfs_netdev.c
+index c813207bb1236..928b6b0464b82 100644
+--- a/net/mac80211/debugfs_netdev.c
++++ b/net/mac80211/debugfs_netdev.c
+@@ -490,9 +490,14 @@ static ssize_t ieee80211_if_fmt_aqm(
+ 	const struct ieee80211_sub_if_data *sdata, char *buf, int buflen)
  {
- 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-+	struct x86_pmu_capability x86_pmu;
- 	struct kvm_cpuid_entry2 *entry;
- 	union cpuid10_eax eax;
- 	union cpuid10_edx edx;
-@@ -281,8 +282,10 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
- 	if (!pmu->version)
- 		return;
+ 	struct ieee80211_local *local = sdata->local;
+-	struct txq_info *txqi = to_txq_info(sdata->vif.txq);
++	struct txq_info *txqi;
+ 	int len;
  
-+	perf_get_x86_pmu_capability(&x86_pmu);
++	if (!sdata->vif.txq)
++		return 0;
 +
- 	pmu->nr_arch_gp_counters = min_t(int, eax.split.num_counters,
--					INTEL_PMC_MAX_GENERIC);
-+					 x86_pmu.num_counters_gp);
- 	pmu->counter_bitmask[KVM_PMC_GP] = ((u64)1 << eax.split.bit_width) - 1;
- 	pmu->available_event_types = ~entry->ebx &
- 					((1ull << eax.split.mask_length) - 1);
-@@ -292,7 +295,7 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
- 	} else {
- 		pmu->nr_arch_fixed_counters =
- 			min_t(int, edx.split.num_counters_fixed,
--				INTEL_PMC_MAX_FIXED);
-+			      x86_pmu.num_counters_fixed);
- 		pmu->counter_bitmask[KVM_PMC_FIXED] =
- 			((u64)1 << edx.split.bit_width_fixed) - 1;
- 	}
++	txqi = to_txq_info(sdata->vif.txq);
++
+ 	spin_lock_bh(&local->fq.lock);
+ 	rcu_read_lock();
+ 
+@@ -659,7 +664,9 @@ static void add_common_files(struct ieee80211_sub_if_data *sdata)
+ 	DEBUGFS_ADD(rc_rateidx_vht_mcs_mask_5ghz);
+ 	DEBUGFS_ADD(hw_queues);
+ 
+-	if (sdata->local->ops->wake_tx_queue)
++	if (sdata->local->ops->wake_tx_queue &&
++	    sdata->vif.type != NL80211_IFTYPE_P2P_DEVICE &&
++	    sdata->vif.type != NL80211_IFTYPE_NAN)
+ 		DEBUGFS_ADD(aqm);
+ }
+ 
 -- 
 2.20.1
 
