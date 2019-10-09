@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB4CAC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD07AECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AB6121D7D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:24:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A2AA218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:24:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570641857;
-	bh=1oXKVfkAFl97KrAILvEm5RI32+UeZ6F9r+7sJe2Yyx4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e5Dtui7pn+ZYCY7qRIbLQiGY3PhNSr50pNJhi9b7xJ+q9tJ1yVhXeyAtCBYL5WY0Y
-	 Z29mr1yQg6pjNpPon+tJ40UzPHnFaH1OGwJSZ3dMljVOI/+fQaARMxcACW6vGovKeS
-	 RHj3cr9XTAar5WQwFRvrPUibFWjuTRmcTG47f5Lc=
+	s=default; t=1570641860;
+	bh=BnNP/S94t0ycyVIws48GAEBsgOMeY35JYl69u3+93fc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=oz9ZdtpyNzxl7AZ3WtcwnQ/PfQ27+sXWOXkeclSwh2a5akB/FzQGzOnPPU+16Pad9
+	 jZuLWWcbFzVvg7oW2ZFJ+gGNZqm/gMnOLvsIV8EeI4UOZYhcGCGi8AAkjQhX+KvmS2
+	 6JcS2JgGjMRKKm1XBatOWV0wPuJBUXtlWootMnU4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732224AbfJIRYQ (ORCPT
+        id S1732248AbfJIRYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:24:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48316 "EHLO mail.kernel.org"
+        Wed, 9 Oct 2019 13:24:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732061AbfJIRX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 13:23:59 -0400
+        id S1732094AbfJIRYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 13:24:03 -0400
 Received: from sasha-vm.mshome.net (unknown [167.220.2.234])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5445821D71;
-        Wed,  9 Oct 2019 17:23:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78752206BB;
+        Wed,  9 Oct 2019 17:24:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570641839;
-        bh=1oXKVfkAFl97KrAILvEm5RI32+UeZ6F9r+7sJe2Yyx4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uyIpD77mU4vu19ivNVi8AN2c69NfobWjo8XEy/87iS9Dn1ATLc0u6daTCjkXMYBsd
-         OjUrr/wTvkGRw9h/qtImaq9nxOIHRoUuxB9vS8ezym9nyiUl0BdhwPgirKeIMoRxVI
-         nwEKyjcODgpoJm2mtmL3cdCOqNaIh//3WOBIRwlQ=
+        s=default; t=1570641843;
+        bh=BnNP/S94t0ycyVIws48GAEBsgOMeY35JYl69u3+93fc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=2K95rJMeoMxMEN3j4dvRQ/3zglAiNfgn35uBRtZzX3SsdVnZKSiXnq25C9eM/ZU12
+         oT1pYff8dT66YjCYyPeppFpiO9kkKpNfN2tJH40dAQeOzRcP1IUIQ1zvnlpOD0O68X
+         Lgk/1E6he3a7wrJwuDhUGnh7zcJsMR85AwtRq+W4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gabriel Craciunescu <nix.or.die@gmail.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.3 22/68] Added QUIRKs for ADATA XPG SX8200 Pro 512GB
-Date:   Wed,  9 Oct 2019 13:05:01 -0400
-Message-Id: <20191009170547.32204-22-sashal@kernel.org>
+Cc:     Zenghui Yu <yuzenghui@huawei.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        kvmarm@lists.cs.columbia.edu
+Subject: [PATCH AUTOSEL 4.19 01/26] KVM: arm/arm64: vgic: Use the appropriate TRACE_INCLUDE_PATH
+Date:   Wed,  9 Oct 2019 13:05:33 -0400
+Message-Id: <20191009170558.32517-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191009170547.32204-1-sashal@kernel.org>
-References: <20191009170547.32204-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,42 +58,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gabriel Craciunescu <nix.or.die@gmail.com>
+From: Zenghui Yu <yuzenghui@huawei.com>
 
-[ Upstream commit f03e42c6af60f778a6d1ccfb857db9b2ec835279 ]
+[ Upstream commit aac60f1a867773de9eb164013d89c99f3ea1f009 ]
 
-Booting with default_ps_max_latency_us >6000 makes the device fail.
-Also SUBNQN is NULL and gives a warning on each boot/resume.
- $ nvme id-ctrl /dev/nvme0 | grep ^subnqn
-   subnqn    : (null)
+Commit 49dfe94fe5ad ("KVM: arm/arm64: Fix TRACE_INCLUDE_PATH") fixes
+TRACE_INCLUDE_PATH to the correct relative path to the define_trace.h
+and explains why did the old one work.
 
-I use this device with an Acer Nitro 5 (AN515-43-R8BF) Laptop.
-To be sure is not a Laptop issue only, I tested the device on
-my server board  with the same results.
-( with 2x,4x link on the board and 4x link on a PCI-E card ).
+The same fix should be applied to virt/kvm/arm/vgic/trace.h.
 
-Signed-off-by: Gabriel Craciunescu <nix.or.die@gmail.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 3 +++
- 1 file changed, 3 insertions(+)
+ virt/kvm/arm/vgic/trace.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 19458e85dab34..86763969e7cb0 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -3041,6 +3041,9 @@ static const struct pci_device_id nvme_id_table[] = {
- 		.driver_data = NVME_QUIRK_LIGHTNVM, },
- 	{ PCI_DEVICE(0x10ec, 0x5762),   /* ADATA SX6000LNP */
- 		.driver_data = NVME_QUIRK_IGNORE_DEV_SUBNQN, },
-+	{ PCI_DEVICE(0x1cc1, 0x8201),   /* ADATA SX8200PNP 512GB */
-+		.driver_data = NVME_QUIRK_NO_DEEPEST_PS |
-+				NVME_QUIRK_IGNORE_DEV_SUBNQN, },
- 	{ PCI_DEVICE_CLASS(PCI_CLASS_STORAGE_EXPRESS, 0xffffff) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_APPLE, 0x2001) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_APPLE, 0x2003) },
+diff --git a/virt/kvm/arm/vgic/trace.h b/virt/kvm/arm/vgic/trace.h
+index 55fed77a9f739..4fd4f6db181b0 100644
+--- a/virt/kvm/arm/vgic/trace.h
++++ b/virt/kvm/arm/vgic/trace.h
+@@ -30,7 +30,7 @@ TRACE_EVENT(vgic_update_irq_pending,
+ #endif /* _TRACE_VGIC_H */
+ 
+ #undef TRACE_INCLUDE_PATH
+-#define TRACE_INCLUDE_PATH ../../../virt/kvm/arm/vgic
++#define TRACE_INCLUDE_PATH ../../virt/kvm/arm/vgic
+ #undef TRACE_INCLUDE_FILE
+ #define TRACE_INCLUDE_FILE trace
+ 
 -- 
 2.20.1
 
