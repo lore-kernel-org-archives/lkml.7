@@ -4,51 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD21C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3764C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E5BB21929
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86F29206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:24:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570641884;
-	bh=AfTVmmdd1JtrLrEZVG/I2M2smUQ/qzHak5qpjOvJ+yk=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=GNN12NV3hEFAEwSJtXDjkrdU8Clymus/zWZZaqy0ptdz63Pc1QdhCS+6iSub8T4gF
-	 +VlIpTFFVSNW+rXMiySM1oEsFcxpWIgJ6x/F0YjRjFymkFXcS4+Ui/Dt5NxcqqvsxN
-	 sKyeAeNO8f1Kf9XCbaIDPQYGg2Grr/dQqEurjW+k=
+	s=default; t=1570641890;
+	bh=E1p83cVGBh/VObNOpqqftqKRBwPpNj8M5LZKNYhZfR8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=SL6PnylOakb6EWXLpj3ozOFIuxMObOgixO7pm1HCqvkrqhTQzNnuDCxMpqj+l1+98
+	 2jY8wyHLQKHhdEMdOhomf801Mp7Sv+uelWxXokQ/Jl/a75WNUyx9jsguXDyEwqVdDi
+	 SGiS9lnQOtA/mmSaG6ivdtM3u/UwIkKAOU1LEtuc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732429AbfJIRYn (ORCPT
+        id S1732468AbfJIRYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:24:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49516 "EHLO mail.kernel.org"
+        Wed, 9 Oct 2019 13:24:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731916AbfJIRYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 13:24:41 -0400
+        id S1731916AbfJIRYo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 13:24:44 -0400
 Received: from sasha-vm.mshome.net (unknown [167.220.2.234])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C969A21929;
-        Wed,  9 Oct 2019 17:24:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A150218AC;
+        Wed,  9 Oct 2019 17:24:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570641880;
-        bh=AfTVmmdd1JtrLrEZVG/I2M2smUQ/qzHak5qpjOvJ+yk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=cjD9Xpx/IJjfeY23zI7J+N7pXTzQAKet1SVdCG8BElj2UQYY+qtrDApkj/Kn0b5+f
-         eM7cJnUQDOA62Pu9CtiOO4xB6gSJ9lHncg0ioQFGwMheq8EFqczsJtFADwB92shYdn
-         cwGzxQaySS0nDS+9DZTTRFlnDUQDM6/Il5lXRs+E=
+        s=default; t=1570641884;
+        bh=E1p83cVGBh/VObNOpqqftqKRBwPpNj8M5LZKNYhZfR8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=G866P2qEJnSZsuER1Ha1BWAeYm2ZfeggwmAlF9rdaVDe7XTnpK1Aab4WKaSduPhqy
+         5wJ8hgavjzUzFAITvLaN+HwSoXSRjb5muwt9tGugbIUY1pImO3MuVxWdobKBeWuAhP
+         R+SozMK951zOt8AdUIW0nAcbuY30gfcq/kZAEXX0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 01/13] scsi: ufs: skip shutdown if hba is not powered
-Date:   Wed,  9 Oct 2019 13:06:20 -0400
-Message-Id: <20191009170635.536-1-sashal@kernel.org>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Paul Burton <paul.burton@mips.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 06/13] MIPS: dts: ar9331: fix interrupt-controller size
+Date:   Wed,  9 Oct 2019 13:06:25 -0400
+Message-Id: <20191009170635.536-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191009170635.536-1-sashal@kernel.org>
+References: <20191009170635.536-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,44 +64,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanley Chu <stanley.chu@mediatek.com>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
 
-[ Upstream commit f51913eef23f74c3bd07899dc7f1ed6df9e521d8 ]
+[ Upstream commit 0889d07f3e4b171c453b2aaf2b257f9074cdf624 ]
 
-In some cases, hba may go through shutdown flow without successful
-initialization and then make system hang.
+It is two registers each of 4 byte.
 
-For example, if ufshcd_change_power_mode() gets error and leads to
-ufshcd_hba_exit() to release resources of the host, future shutdown flow
-may hang the system since the host register will be accessed in unpowered
-state.
-
-To solve this issue, simply add checking to skip shutdown for above kind of
-situation.
-
-Link: https://lore.kernel.org/r/1568780438-28753-1-git-send-email-stanley.chu@mediatek.com
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Acked-by: Bean Huo <beanhuo@micron.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: devicetree@vger.kernel.org
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/mips/boot/dts/qca/ar9331.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index a9c172692f21d..26f259fb6e3ca 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -6492,6 +6492,9 @@ int ufshcd_shutdown(struct ufs_hba *hba)
- {
- 	int ret = 0;
+diff --git a/arch/mips/boot/dts/qca/ar9331.dtsi b/arch/mips/boot/dts/qca/ar9331.dtsi
+index cf47ed4d85694..1fda24fc18606 100644
+--- a/arch/mips/boot/dts/qca/ar9331.dtsi
++++ b/arch/mips/boot/dts/qca/ar9331.dtsi
+@@ -98,7 +98,7 @@
  
-+	if (!hba->is_powered)
-+		goto out;
-+
- 	if (ufshcd_is_ufs_dev_poweroff(hba) && ufshcd_is_link_off(hba))
- 		goto out;
+ 			miscintc: interrupt-controller@18060010 {
+ 				compatible = "qca,ar7240-misc-intc";
+-				reg = <0x18060010 0x4>;
++				reg = <0x18060010 0x8>;
  
+ 				interrupt-parent = <&cpuintc>;
+ 				interrupts = <6>;
 -- 
 2.20.1
 
