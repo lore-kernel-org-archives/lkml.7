@@ -2,93 +2,93 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC82ECE58E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 06:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C72C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 06:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3745A21835
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 06:25:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 696002133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 06:28:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lnainmCL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728567AbfJIGZq (ORCPT
+        id S1729206AbfJIG2r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 02:25:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48104 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726651AbfJIGZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 02:25:45 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6367018C8924;
-        Wed,  9 Oct 2019 06:25:45 +0000 (UTC)
-Received: from ovpn-117-172.phx2.redhat.com (ovpn-117-172.phx2.redhat.com [10.3.117.172])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C82F860A9F;
-        Wed,  9 Oct 2019 06:25:39 +0000 (UTC)
-Message-ID: <a1098e5f95a1ab202fdf79a73aedfeeb8e02dd47.camel@redhat.com>
-Subject: Re: [PATCH RT 5/8] sched/deadline: Reclaim cpuset bandwidth in
- .migrate_task_rq()
-From:   Scott Wood <swood@redhat.com>
-To:     Juri Lelli <juri.lelli@redhat.com>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Date:   Wed, 09 Oct 2019 01:25:38 -0500
-In-Reply-To: <20191001085209.GA6481@localhost.localdomain>
-References: <20190727055638.20443-1-swood@redhat.com>
-         <20190727055638.20443-6-swood@redhat.com>
-         <20190927081141.GB31660@localhost.localdomain>
-         <9a4cc499e6de4690c682c03c0c880363fe3c9307.camel@redhat.com>
-         <20190930071233.GE31660@localhost.localdomain>
-         <9acc5f1bd0fe06acb2b7b518c5ef1f082e89ad63.camel@redhat.com>
-         <20191001085209.GA6481@localhost.localdomain>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Wed, 9 Oct 2019 02:28:47 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45070 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbfJIG2r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 02:28:47 -0400
+Received: by mail-pf1-f193.google.com with SMTP id y72so922870pfb.12
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 23:28:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Le57krV/V2M5bV3ruPXTMG0AMTBpKunAb7kJzZ/0mTU=;
+        b=lnainmCLAk/7lQrp3Adzja6aKxP/R/YDsPMKuNdNCdXdmStbxmfHQFbb5FALCPixkY
+         7YXFkTl8otZ1PWyZOofORO8VXYk+NbZXKlER6frnkS80LjFYRtbSUZvVgukTq4kkQYVS
+         hbh6qYpIKU/+HTRBRmfGOOGK2aMloZlMEIRamrgomTTmHPSg8f+hissWA9h0JNk5e4OQ
+         dRUwkacOeIpMfzjcQ1xjw5Th4EB7BOgd91iiLHnGIoy2xUhQIzXk/C+WgtSAG2BN3k0K
+         BR6x3g9s33M47SrcWZp3hFhMUinSTD1Q/Kz5nJHi/dUD3aXZQCC/DQiPb6Qm17roO5DO
+         da+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Le57krV/V2M5bV3ruPXTMG0AMTBpKunAb7kJzZ/0mTU=;
+        b=FOM4V7Mv3sRnxV4wjubUZPE7FYU7zSXw0ekZfSb4Nvpa5V3hKX28vO0M7m40cqAou8
+         4MC3xnj5WPGUkmqVYiXSxr10wu6cGkK0vl2br6CeORCgLUYA2Ux/xvp21KAjAQvutJ8n
+         MqTsMuOsPG/MvqGEj2bqezwTki0Vsq9hsmyQ01TtgNxwB2L2cd2zEXwueYmdidiu0uJT
+         Q3TCvP48ftMnzSqhp6GMK2etueg8dUp9DkBPec+BI1bEMj1lrsprqIJBIIiuNMPttfFv
+         fFO20mgulPjOeIKOG9KwePW3ff1Enw7JMcIo1bjgxZK6/ifrjXT14hRqjvC8h9Ph+OzQ
+         H5gA==
+X-Gm-Message-State: APjAAAVFhrBlsJWEf5GkEvViDEDLSIFPC8e0xAUb8gBtVtUFIQw+V5yC
+        8FCH5j/jvO+rjF3aDUZhmoGz9UL9OIlOGGemLCQ=
+X-Google-Smtp-Source: APXvYqz7MN7zzGCQlZmkXodNececiOgvYkeFqpNC5VqRvTLJiIoXLOWLDmxxEduUQXroXIBh0Mv6eV24GXgD3dCIDHg=
+X-Received: by 2002:a17:90a:db4a:: with SMTP id u10mr2217076pjx.30.1570602526438;
+ Tue, 08 Oct 2019 23:28:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Wed, 09 Oct 2019 06:25:45 +0000 (UTC)
+References: <20191007184231.13256-1-ztuowen@gmail.com> <20191008151628.GA16384@42.do-not-panic.com>
+ <20191008161245.GU32742@smile.fi.intel.com> <CAB=NE6V64g5WLMYFxkpC_wsnSbGG-5Nn9uFo1zpcqjP9NsRB+w@mail.gmail.com>
+ <56c3808b29838ff37852e196184a7b995f5f1336.camel@gmail.com>
+In-Reply-To: <56c3808b29838ff37852e196184a7b995f5f1336.camel@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 9 Oct 2019 09:28:34 +0300
+Message-ID: <CAHp75VfLxoxXTBfM+q2xWDheAsAWNpSFKPv6UAVWxz-goCVPyQ@mail.gmail.com>
+Subject: Re: [PATCH v2] mfd: intel-lpss: use devm_ioremap_uc for MMIO
+To:     GMAIL <ztuowen@gmail.com>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        AceLan Kao <acelan.kao@canonical.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-10-01 at 10:52 +0200, Juri Lelli wrote:
-> On 30/09/19 11:24, Scott Wood wrote:
-> > On Mon, 2019-09-30 at 09:12 +0200, Juri Lelli wrote:
-> 
-> [...]
-> 
-> > > Hummm, I was actually more worried about the fact that we call
-> > > free_old_
-> > > cpuset_bw_dl() only if p->state != TASK_WAKING.
-> > 
-> > Oh, right. :-P  Not sure what I had in mind there; we want to call it
-> > regardless.
-> > 
-> > I assume we need rq->lock in free_old_cpuset_bw_dl()?  So something like
-> 
-> I think we can do with rcu_read_lock_sched() (see dl_task_can_attach()).
+On Wed, Oct 9, 2019 at 12:09 AM GMAIL <ztuowen@gmail.com> wrote:
+>
+> I think that's a fair point. Sorry for not noticing it earlier.
+>
+> > On Tue, Oct 8, 2019, 6:12 PM Andy Shevchenko <
+> > andriy.shevchenko@linux.intel.com> wrote:
+> > > Maybe we can even split this to two patches?
+>
+> I assume splitting means one to add devm_ioremap_uc and one to use it
+> for intel-lpss-pci.
 
-RCU will keep dl_bw from being freed under us (we're implicitly in an RCU
-sched read section due to atomic context).  It won't stop rq->rd from
-changing, but that could have happened before we took rq->lock.  If the cpu
-the task was running on was removed from the cpuset, and that raced with the
-task being moved to a different cpuset, couldn't we end up erroneously
-subtracting from the cpu's new root domain (or failing to subtract at all if
-the old cpu's new cpuset happens to be the task's new cpuset)?  I don't see
-anything that forces tasks off of the cpu when a cpu is removed from a
-cpuset (though maybe I'm not looking in the right place), so the race window
-could be quite large.  In any case, that's an existing problem that's not
-going to get solved in this patchset.
+Yes. And please, include Luis to Cc list.
 
--Scott
-
-
+-- 
+With Best Regards,
+Andy Shevchenko
