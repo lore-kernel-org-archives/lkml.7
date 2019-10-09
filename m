@@ -2,164 +2,219 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5250ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 23:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCAD8C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 23:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3269206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 23:19:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570663189;
-	bh=lUJoAmwVYmxxiLBq1t4lFuiOCc5wh99DLAMa0XWi83Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=aqUCNezoSblA/YrkzAyYn4wP6DMSrk9D7zrpfCOcxvwen1VupYk4a7XiYl8CaCd0A
-	 RRffb2dVM5KfLJ03woPTSM+7lwXZI/+6YW3on6l3KJrl6/x0pUDTCXaR5nOmNFmx0a
-	 w2eeBQayl+yo7ZnZ9+Wz004xv1Jgyk0mqPyq/iMA=
+	by mail.kernel.org (Postfix) with ESMTP id AA366206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 23:19:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732678AbfJIXTs (ORCPT
+        id S1732691AbfJIXTv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 19:19:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37828 "EHLO mail.kernel.org"
+        Wed, 9 Oct 2019 19:19:51 -0400
+Received: from mga07.intel.com ([134.134.136.100]:59994 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732643AbfJIXTp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 19:19:45 -0400
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2D9E21D7A;
-        Wed,  9 Oct 2019 23:19:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570663184;
-        bh=lUJoAmwVYmxxiLBq1t4lFuiOCc5wh99DLAMa0XWi83Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=EX0XvZkUqRywUXEZluTpt8by0lHIdCK0jXPS5QiWzgkmoqtDPcb8vs+/4csID0idh
-         iuI+A4/4AaNMjW05zuB+OIPXeaO34GcyKyEEFea6ZOiHHQWZbwVX282H6ZDd85uWqB
-         rao57zDmN4mh8HK9pAEEpRfTKZvfVL1wt33VE2d4=
-Received: by mail-qk1-f172.google.com with SMTP id u22so3824978qkk.11;
-        Wed, 09 Oct 2019 16:19:44 -0700 (PDT)
-X-Gm-Message-State: APjAAAW/S3U+viHuqTPO6nNFg62Bl9HrPhquxkCeNpod6CkTE4JCcTHZ
-        BOjKpIW04FN+zxbUD48OOlW+4LF7LGNHtXIeiA==
-X-Google-Smtp-Source: APXvYqyPSfTjVLV3COlA1kAK+1OFfKGo6+mldinX14j08Mhg6XsRIJdoe4XiZTLLEwhEamG94ntdDl3vE8H5N2e0G8U=
-X-Received: by 2002:a05:620a:12f1:: with SMTP id f17mr6421929qkl.152.1570663183781;
- Wed, 09 Oct 2019 16:19:43 -0700 (PDT)
+        id S1732665AbfJIXTs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 19:19:48 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 16:19:47 -0700
+X-IronPort-AV: E=Sophos;i="5.67,277,1566889200"; 
+   d="scan'208";a="345518305"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 16:19:47 -0700
+Subject: [PATCH v6 10/12] device-dax: Add a driver for "hmem" devices
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     mingo@redhat.com
+Cc:     Vishal Verma <vishal.l.verma@intel.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Dave Jiang <dave.jiang@intel.com>,
+        kbuild test robot <lkp@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        peterz@infradead.org, ard.biesheuvel@linaro.org, x86@kernel.org,
+        linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Date:   Wed, 09 Oct 2019 16:05:29 -0700
+Message-ID: <157066232989.1059972.17944824166396672432.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <157066227329.1059972.5659620631541203458.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <157066227329.1059972.5659620631541203458.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-2-gc94f
 MIME-Version: 1.0
-References: <20191007151730.7705-1-hhhawa@amazon.com> <20191007151730.7705-4-hhhawa@amazon.com>
-In-Reply-To: <20191007151730.7705-4-hhhawa@amazon.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 9 Oct 2019 18:19:32 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLZOHx=3d9jPy+7y0a92wA-VKEDQ4PVNvo6L8fRe7xJCQ@mail.gmail.com>
-Message-ID: <CAL_JsqLZOHx=3d9jPy+7y0a92wA-VKEDQ4PVNvo6L8fRe7xJCQ@mail.gmail.com>
-Subject: Re: [PATCH v6 3/3] edac: Add support for Amazon's Annapurna Labs L2 EDAC
-To:     Hanna Hawa <hhhawa@amazon.com>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>, daniel@iogearbox.net,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        devicetree@vger.kernel.org, "Woodhouse, David" <dwmw@amazon.co.uk>,
-        benh@amazon.com, "Krupnik, Ronen" <ronenk@amazon.com>,
-        Talel Shenhar <talel@amazon.com>,
-        Jonathan Chocron <jonnyc@amazon.com>,
-        "Hanoch, Uri" <hanochu@amazon.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 10:18 AM Hanna Hawa <hhhawa@amazon.com> wrote:
->
-> Adds support for Amazon's Annapurna Labs L2 EDAC driver to detect and
-> report L2 errors.
->
-> Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
-> ---
->  MAINTAINERS               |   5 +
->  drivers/edac/Kconfig      |   8 ++
->  drivers/edac/Makefile     |   1 +
->  drivers/edac/al_l2_edac.c | 251 ++++++++++++++++++++++++++++++++++++++
->  4 files changed, 265 insertions(+)
->  create mode 100644 drivers/edac/al_l2_edac.c
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 7887a62dc843..0eabcfcf91a9 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -748,6 +748,11 @@ M: Hanna Hawa <hhhawa@amazon.com>
->  S:     Maintained
->  F:     drivers/edac/al_l1_edac.c
->
-> +AMAZON ANNAPURNA LABS L2 EDAC
-> +M:     Hanna Hawa <hhhawa@amazon.com>
-> +S:     Maintained
-> +F:     drivers/edac/al_l2_edac.c
-> +
->  AMAZON ANNAPURNA LABS THERMAL MMIO DRIVER
->  M:     Talel Shenhar <talel@amazon.com>
->  S:     Maintained
-> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-> index e8161d7c7469..cb394aff1cab 100644
-> --- a/drivers/edac/Kconfig
-> +++ b/drivers/edac/Kconfig
-> @@ -82,6 +82,14 @@ config EDAC_AL_L1
->           for Amazon's Annapurna Labs SoCs.
->           This driver detects errors of L1 caches.
->
-> +config EDAC_AL_L2
-> +       tristate "Amazon's Annapurna Labs L2 EDAC"
+Platform firmware like EFI/ACPI may publish "hmem" platform devices.
+Such a device is a performance differentiated memory range likely
+reserved for an application specific use case. The driver gives access
+to 100% of the capacity via a device-dax mmap instance by default.
 
-I still think this should be an "A57 L2 ECC" driver, but if no one
-cares I'll shut up and the 2nd person can rename everything.
+However, if over-subscription and other kernel memory management is
+desired the resulting dax device can be assigned to the core-mm via the
+kmem driver.
 
-> +       depends on ARCH_ALPINE
+This consumes "hmem" devices the producer of "hmem" devices is saved for
+a follow-on patch so that it can reference the new CONFIG_DEV_DAX_HMEM
+symbol to gate performing the enumeration work.
 
-|| COMPILE_TEST
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Keith Busch <kbusch@kernel.org>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+ drivers/dax/Kconfig       |   27 ++++++++++++++++++----
+ drivers/dax/Makefile      |    2 ++
+ drivers/dax/hmem.c        |   56 +++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/memregion.h |    4 +++
+ 4 files changed, 84 insertions(+), 5 deletions(-)
+ create mode 100644 drivers/dax/hmem.c
 
-Maybe it needs an ARM64 dependency too in this case?
+diff --git a/drivers/dax/Kconfig b/drivers/dax/Kconfig
+index f33c73e4af41..3b6c06f07326 100644
+--- a/drivers/dax/Kconfig
++++ b/drivers/dax/Kconfig
+@@ -32,19 +32,36 @@ config DEV_DAX_PMEM
+ 
+ 	  Say M if unsure
+ 
++config DEV_DAX_HMEM
++	tristate "HMEM DAX: direct access to 'specific purpose' memory"
++	depends on EFI_SOFT_RESERVE
++	default DEV_DAX
++	help
++	  EFI 2.8 platforms, and others, may advertise 'specific purpose'
++	  memory. For example, a high bandwidth memory pool. The
++	  indication from platform firmware is meant to reserve the
++	  memory from typical usage by default. This driver creates
++	  device-dax instances for these memory ranges, and that also
++	  enables the possibility to assign them to the DEV_DAX_KMEM
++	  driver to override the reservation and add them to kernel
++	  "System RAM" pool.
++
++	  Say M if unsure.
++
+ config DEV_DAX_KMEM
+ 	tristate "KMEM DAX: volatile-use of persistent memory"
+ 	default DEV_DAX
+ 	depends on DEV_DAX
+ 	depends on MEMORY_HOTPLUG # for add_memory() and friends
+ 	help
+-	  Support access to persistent memory as if it were RAM.  This
+-	  allows easier use of persistent memory by unmodified
+-	  applications.
++	  Support access to persistent, or other performance
++	  differentiated memory as if it were System RAM. This allows
++	  easier use of persistent memory by unmodified applications, or
++	  adds core kernel memory services to heterogeneous memory types
++	  (HMEM) marked "reserved" by platform firmware.
+ 
+ 	  To use this feature, a DAX device must be unbound from the
+-	  device_dax driver (PMEM DAX) and bound to this kmem driver
+-	  on each boot.
++	  device_dax driver and bound to this kmem driver on each boot.
+ 
+ 	  Say N if unsure.
+ 
+diff --git a/drivers/dax/Makefile b/drivers/dax/Makefile
+index 81f7d54dadfb..80065b38b3c4 100644
+--- a/drivers/dax/Makefile
++++ b/drivers/dax/Makefile
+@@ -2,9 +2,11 @@
+ obj-$(CONFIG_DAX) += dax.o
+ obj-$(CONFIG_DEV_DAX) += device_dax.o
+ obj-$(CONFIG_DEV_DAX_KMEM) += kmem.o
++obj-$(CONFIG_DEV_DAX_HMEM) += dax_hmem.o
+ 
+ dax-y := super.o
+ dax-y += bus.o
+ device_dax-y := device.o
++dax_hmem-y := hmem.o
+ 
+ obj-y += pmem/
+diff --git a/drivers/dax/hmem.c b/drivers/dax/hmem.c
+new file mode 100644
+index 000000000000..fe7214daf62e
+--- /dev/null
++++ b/drivers/dax/hmem.c
+@@ -0,0 +1,56 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/platform_device.h>
++#include <linux/memregion.h>
++#include <linux/module.h>
++#include <linux/pfn_t.h>
++#include "bus.h"
++
++static int dax_hmem_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct dev_pagemap pgmap = { };
++	struct dax_region *dax_region;
++	struct memregion_info *mri;
++	struct dev_dax *dev_dax;
++	struct resource *res;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res)
++		return -ENOMEM;
++
++	mri = dev->platform_data;
++	memcpy(&pgmap.res, res, sizeof(*res));
++
++	dax_region = alloc_dax_region(dev, pdev->id, res, mri->target_node,
++			PMD_SIZE, PFN_DEV|PFN_MAP);
++	if (!dax_region)
++		return -ENOMEM;
++
++	dev_dax = devm_create_dev_dax(dax_region, 0, &pgmap);
++	if (IS_ERR(dev_dax))
++		return PTR_ERR(dev_dax);
++
++	/* child dev_dax instances now own the lifetime of the dax_region */
++	dax_region_put(dax_region);
++	return 0;
++}
++
++static int dax_hmem_remove(struct platform_device *pdev)
++{
++	/* devm handles teardown */
++	return 0;
++}
++
++static struct platform_driver dax_hmem_driver = {
++	.probe = dax_hmem_probe,
++	.remove = dax_hmem_remove,
++	.driver = {
++		.name = "hmem",
++	},
++};
++
++module_platform_driver(dax_hmem_driver);
++
++MODULE_ALIAS("platform:hmem*");
++MODULE_LICENSE("GPL v2");
++MODULE_AUTHOR("Intel Corporation");
+diff --git a/include/linux/memregion.h b/include/linux/memregion.h
+index 7de7c0a1444e..e11595256cac 100644
+--- a/include/linux/memregion.h
++++ b/include/linux/memregion.h
+@@ -4,6 +4,10 @@
+ #include <linux/types.h>
+ #include <linux/errno.h>
+ 
++struct memregion_info {
++	int target_node;
++};
++
+ #ifdef CONFIG_MEMREGION
+ int memregion_alloc(gfp_t gfp);
+ void memregion_free(int id);
 
-> +       help
-> +         Support for L2 error detection and correction
-> +         for Amazon's Annapurna Labs SoCs.
-> +         This driver detects errors of L2 caches.
-> +
-
-> +
-> +       ret = platform_driver_register(&al_l2_edac_driver);
-> +       if (ret) {
-> +               pr_err("Failed to register %s (%d)\n", DRV_NAME, ret);
-> +               return ret;
-> +       }
-> +
-> +       edac_l2_device = platform_device_register_simple(DRV_NAME, -1, NULL, 0);
-> +       if (IS_ERR(edac_l2_device)) {
-> +               pr_err("Failed to register EDAC AL L2 platform device\n");
-> +               return PTR_ERR(edac_l2_device);
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static void __exit al_l2_exit(void)
-> +{
-> +       platform_device_unregister(edac_l2_device);
-> +       platform_driver_unregister(&al_l2_edac_driver);
-> +}
-> +
-> +late_initcall(al_l2_init);
-> +module_exit(al_l2_exit);
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_AUTHOR("Hanna Hawa <hhhawa@amazon.com>");
-> +MODULE_DESCRIPTION("Amazon's Annapurna Lab's L2 EDAC Driver");
-> --
-> 2.17.1
->
