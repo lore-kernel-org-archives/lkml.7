@@ -2,76 +2,121 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F13BAC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC89ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D04D920B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F3BF206B6
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:23:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ik6w0eB4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731734AbfJITVI (ORCPT
+        id S1731683AbfJITXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 15:21:08 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:51958 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728804AbfJITVI (ORCPT
+        Wed, 9 Oct 2019 15:23:35 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38184 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730708AbfJITXf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 15:21:08 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iIHWD-000215-PY; Wed, 09 Oct 2019 19:21:05 +0000
-Date:   Wed, 9 Oct 2019 20:21:05 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Max Filippov <jcmvbkbc@gmail.com>
-Cc:     linux-xtensa@linux-xtensa.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] xtensa: fix {get,put}_user() for 64bit values
-Message-ID: <20191009192105.GC26530@ZenIV.linux.org.uk>
+        Wed, 9 Oct 2019 15:23:35 -0400
+Received: by mail-lj1-f195.google.com with SMTP id b20so3670241ljj.5;
+        Wed, 09 Oct 2019 12:23:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=RjL6aeL+yB6TH6pYK3+ft/SKEqM4F474X+76FvzFX/g=;
+        b=Ik6w0eB4orUeDmq8LzqH6DyV81I9I0LFBNRL/z8AXi1llhQHVMkjypPACqPElc8x2w
+         c1XL6l/C0CqtG3jX05+8AxX8rnssUQd1VoUCj24+Ct3GjN5TsrCzWucUlQh6DRpSj5lH
+         FB40Tz7KDlJbFV9STZQFwyIvooqAMLNbzVZ3EIGcY679sKOpzgclbMI0njxkHLbOlYJ0
+         ZiewZi34+U4d4ul8HZXU8X9ULOuNKrDBtdsWPQSAmRCGe7JXPSF7ZuCjjbrlPmCOvOid
+         ztgamoWlb6Hg0euNJ4cPFxtCk4ZAh83hbkcBJxDXE6OrLnynPhHtHzIA/Zs/6O9vnUu7
+         8acA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RjL6aeL+yB6TH6pYK3+ft/SKEqM4F474X+76FvzFX/g=;
+        b=tUYRUnyx+XHTBrUccSR2sueoPDKXtwsjdEuM7giKabqBaqqymcFmJfpQToy1gyB9sv
+         FfVHlw5Qrw0dE7wB86NtUytQ+fYFfl2xC9SnQoDo2V+Lif18bKI7q4ovDtII/EnrOiGZ
+         4MNjLH3B9BA0pC0mfew9zkI3PQbdtCQPHFODTwF4kZZNf9tFgsHC1wk4Ry13hh9krc6r
+         tYaINQ+mpJ4sIDxjVtM31+BxpIvPlF1/ow5MyPrBS6Q2viOR4UEFtujjx1f2YyWm0YK0
+         ktBbZBM8UHm/0Ge9coX/zItUvXsIcLHJNIaHEgxpK6h6P0tLMmZvHWU5nFt3JAN++etJ
+         DvRw==
+X-Gm-Message-State: APjAAAWyTjKRf4UXHQiks5tr3/SmtCfG2FT05V0jyWDFo6OWIr9GL4qE
+        RWEvK/IZwz7cX6w2XXscIDMzNjaJrYQ=
+X-Google-Smtp-Source: APXvYqwAzAWlJ8momOLfd+IzLb8ETNR8DVUq0T2CQK01RB20qrbuF6Dp9LG7GLIhlUwcidi59JcwIA==
+X-Received: by 2002:a2e:6101:: with SMTP id v1mr3434522ljb.132.1570649012345;
+        Wed, 09 Oct 2019 12:23:32 -0700 (PDT)
+Received: from [192.168.1.244] (81-233-89-221-no75.tbcn.telia.com. [81.233.89.221])
+        by smtp.gmail.com with ESMTPSA id 77sm648652ljj.84.2019.10.09.12.23.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Oct 2019 12:23:31 -0700 (PDT)
+Subject: Re: [PATCH 2/2] ath10k: switch to ieee80211_tx_dequeue_ni
+To:     Peter Oh <peter.oh@eero.com>, Kalle Valo <kvalo@codeaurora.org>
+Cc:     johannes@sipsolutions.net, davem@davemloft.net,
+        linux-wireless@vger.kernel.org, ath10k@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20190617200140.6189-1-erik.stromdahl@gmail.com>
+ <20190617200140.6189-2-erik.stromdahl@gmail.com>
+ <87eezw660r.fsf@kamboji.qca.qualcomm.com>
+ <19f8023a-1943-9bf5-9a59-a7643f7692bf@eero.com>
+From:   Erik Stromdahl <erik.stromdahl@gmail.com>
+Message-ID: <fd43b218-7dc7-22dd-664b-46c55c3dd94e@gmail.com>
+Date:   Wed, 9 Oct 2019 21:23:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <19f8023a-1943-9bf5-9a59-a7643f7692bf@eero.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-First of all, on short copies __copy_{to,from}_user() return the amount
-of bytes left uncopied, *not* -EFAULT.  get_user() and put_user() are
-expected to return -EFAULT on failure.
 
-Another problem is get_user(v32, (__u64 __user *)p); that should
-fetch 64bit value and the assign it to v32, truncating it in process.
-Current code, OTOH, reads 8 bytes of data and stores them at the
-address of v32, stomping on the 4 bytes that follow v32 itself.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
---
-diff --git a/arch/xtensa/include/asm/uaccess.h b/arch/xtensa/include/asm/uaccess.h
-index 6792928ba84a..155174ddb7ae 100644
---- a/arch/xtensa/include/asm/uaccess.h
-+++ b/arch/xtensa/include/asm/uaccess.h
-@@ -100,7 +100,7 @@ do {									\
- 	case 4: __put_user_asm(x, ptr, retval, 4, "s32i", __cb); break;	\
- 	case 8: {							\
- 		     __typeof__(*ptr) __v64 = x;			\
--		     retval = __copy_to_user(ptr, &__v64, 8);		\
-+		     retval = __copy_to_user(ptr, &__v64, 8) ? -EFAULT : 0;	\
- 		     break;						\
- 	        }							\
- 	default: __put_user_bad();					\
-@@ -198,7 +198,12 @@ do {									\
- 	case 1: __get_user_asm(x, ptr, retval, 1, "l8ui", __cb);  break;\
- 	case 2: __get_user_asm(x, ptr, retval, 2, "l16ui", __cb); break;\
- 	case 4: __get_user_asm(x, ptr, retval, 4, "l32i", __cb);  break;\
--	case 8: retval = __copy_from_user(&x, ptr, 8);    break;	\
-+	case 8: {							\
-+		__u64 __x = 0;						\
-+		retval = __copy_from_user(&__x, ptr, 8) ? -EFAULT : 0;	\
-+		(x) = *(__force __typeof__(*(ptr)) *) &__x;		\
-+		break;							\
-+	}								\
- 	default: (x) = __get_user_bad();				\
- 	}								\
- } while (0)
+On 10/1/19 7:13 PM, Peter Oh wrote:
+> 
+> On 10/1/19 4:48 AM, Kalle Valo wrote:
+>> Erik Stromdahl <erik.stromdahl@gmail.com> writes:
+>>
+>>> Since ath10k_mac_tx_push_txq() can be called from process context, we
+>>> must explicitly disable softirqs before the call into mac80211.
+>>>
+>>> By calling ieee80211_tx_dequeue_ni() instead of ieee80211_tx_dequeue()
+>>> we make sure softirqs are always disabled even in the case when
+>>> ath10k_mac_tx_push_txq() is called from process context.
+>>>
+>>> Calling ieee80211_tx_dequeue_ni() with softirq's already disabled
+>>> (e.g., from softirq context) should be safe as the local_bh_disable()
+>>> and local_bh_enable() functions (called from ieee80211_tx_dequeue_ni)
+>>> are fully reentrant.
+>>>
+>>> Signed-off-by: Erik Stromdahl <erik.stromdahl@gmail.com>
+>> I already applied this, but I still want to check _why_ you are changing
+>> this? Is it that you want to call ath10k_mac_tx_push_pending() from a
+>> workqueue in sdio.c in a future patch, or what? Because at the moment me
+>> and Johannes were not able to find where this is called in process
+>> context.
+>>
+SDIO irqs are threaded irqs (at least on my iMX6 board) and hence process context.
+I will see if I can find a trace that shows the call chain more exactly.
+
+
+> It seems Johannes wants to fix it in mac80211.
+> 
+> [PATCH v2] mac80211: keep BHs disabled while calling drv_tx_wake_queue()
+> 
+> Drivers typically expect this, as it's the case for almost all cases
+> where this is called (i.e. from the TX path). Also, the code in mac80211
+> itself (if the driver calls ieee80211_tx_dequeue()) expects this as it
+> uses this_cpu_ptr() without additional protection.
+> 
