@@ -2,131 +2,127 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B73A0ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 536DDECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97338206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:29:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2831420679
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:30:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570642204;
+	bh=WxL+isxSLqVyP/vPvSWCFfVBslLsA4hnCVMimY/E5uU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=fqRZA3qLOC00cXQAyNWCGIl4qIlDTXcFaN+EvHGpbgM5hI+NbnaW6lpN47uBcc/w9
+	 vNznNDirqRBx0j9JRhITYIiQ50ISxMk+S/xe0eJARQ4t26sVyMFLaD9xdDEBnvz5pN
+	 DNj1DVRaJ4iHxXggfoSjGA/oSNQniSPoa3LBgQS0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732901AbfJIR3w (ORCPT
+        id S1732907AbfJIRaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:29:52 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:49541 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732184AbfJIR3t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 13:29:49 -0400
-Received: from [213.220.153.21] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iIFmU-0002kv-Qn; Wed, 09 Oct 2019 17:29:46 +0000
-Date:   Wed, 9 Oct 2019 19:29:46 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Christian Kellner <ckellner@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        Christian Kellner <christian@kellner.me>,
-        Christian Brauner <christian@brauner.io>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Michal Hocko <mhocko@suse.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Roman Gushchin <guro@fb.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Dmitry V. Levin" <ldv@altlinux.org>
-Subject: Re: [PATCH v2 1/2] pidfd: show pids for nested pid namespaces in
- fdinfo
-Message-ID: <20191009172944.if5x3rpkb54zs4ry@wittgenstein>
-References: <20191008133641.23019-1-ckellner@redhat.com>
- <20191009160532.20674-1-ckellner@redhat.com>
+        Wed, 9 Oct 2019 13:30:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48626 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732165AbfJIRYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 13:24:10 -0400
+Received: from sasha-vm.mshome.net (unknown [167.220.2.234])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD11821D6C;
+        Wed,  9 Oct 2019 17:24:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570641849;
+        bh=WxL+isxSLqVyP/vPvSWCFfVBslLsA4hnCVMimY/E5uU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RuPvJtzWPaNkQYPMmFawFJJIsZe5ktwdYsAiNueWKyipNKr5iwq+6aETsBjxPOjfB
+         6yIe0wJbHQvhYIWCE8mYtaLWmuTsXEGvBRBfNHkMButOFXh8PeAcdabDuQLQjJ3+Z3
+         lAb0wxRHIqetiZoNORdsL6g+/JIZrMAi7h6N23wc=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Laura Garcia Liebana <nevola@gmail.com>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 18/26] netfilter: nft_connlimit: disable bh on garbage collection
+Date:   Wed,  9 Oct 2019 13:05:50 -0400
+Message-Id: <20191009170558.32517-18-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191009170558.32517-1-sashal@kernel.org>
+References: <20191009170558.32517-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191009160532.20674-1-ckellner@redhat.com>
-User-Agent: NeoMutt/20180716
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 06:05:30PM +0200, Christian Kellner wrote:
-> From: Christian Kellner <christian@kellner.me>
-> 
-> The fdinfo file for a process file descriptor already contains the
-> pid of the process in the callers namespaces. Additionally, if pid
-> namespaces are configured, show the process ids of the process in
-> all nested namespaces in the same format as in the procfs status
-> file, i.e. "NSPid:\t%d\%d...". This allows the easy identification
-> of the processes in nested namespaces.
-> 
-> Signed-off-by: Christian Kellner <christian@kellner.me>
-> ---
-> 
-> Changes in v2:
-> - Moved into separate function to avoid multiple ifdefs as suggested
->   by Michal Hocko
-> 
->  kernel/fork.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index 5a0fd518e04e..f7a59ef046e9 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -1681,12 +1681,27 @@ static int pidfd_release(struct inode *inode, struct file *file)
->  }
->  
->  #ifdef CONFIG_PROC_FS
-> +static void pidfd_nspid(struct seq_file *m, struct pid *pid)
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-If it has to be a separate helper then please make it:
+[ Upstream commit 34a4c95abd25ab41fb390b985a08a651b1fa0b0f ]
 
-static inline void print_pidfd_nspid(struct seq_file *m, struct pid_namespace *ns, struct pid *pid)
-{
-#ifdef CONFIG_PID_NS
-	int i;
+BH must be disabled when invoking nf_conncount_gc_list() to perform
+garbage collection, otherwise deadlock might happen.
 
-	seq_puts(m, "\nNSpid:");
-	for (i = ns->level; i <= pid->level; i++) {
-		ns = pid->numbers[i].ns;
-		seq_put_decimal_ull(m, "\t", pid_nr_ns(pid, ns));
-	}
-#endif
-}
+  nf_conncount_add+0x1f/0x50 [nf_conncount]
+  nft_connlimit_eval+0x4c/0xe0 [nft_connlimit]
+  nft_dynset_eval+0xb5/0x100 [nf_tables]
+  nft_do_chain+0xea/0x420 [nf_tables]
+  ? sch_direct_xmit+0x111/0x360
+  ? noqueue_init+0x10/0x10
+  ? __qdisc_run+0x84/0x510
+  ? tcp_packet+0x655/0x1610 [nf_conntrack]
+  ? ip_finish_output2+0x1a7/0x430
+  ? tcp_error+0x130/0x150 [nf_conntrack]
+  ? nf_conntrack_in+0x1fc/0x4c0 [nf_conntrack]
+  nft_do_chain_ipv4+0x66/0x80 [nf_tables]
+  nf_hook_slow+0x44/0xc0
+  ip_rcv+0xb5/0xd0
+  ? ip_rcv_finish_core.isra.19+0x360/0x360
+  __netif_receive_skb_one_core+0x52/0x70
+  netif_receive_skb_internal+0x34/0xe0
+  napi_gro_receive+0xba/0xe0
+  e1000_clean_rx_irq+0x1e9/0x420 [e1000e]
+  e1000e_poll+0xbe/0x290 [e1000e]
+  net_rx_action+0x149/0x3b0
+  __do_softirq+0xde/0x2d8
+  irq_exit+0xba/0xc0
+  do_IRQ+0x85/0xd0
+  common_interrupt+0xf/0xf
+  </IRQ>
+  RIP: 0010:nf_conncount_gc_list+0x3b/0x130 [nf_conncount]
 
-It's called nowhere else and we've already retrieved the pid_namespace
-in pidfd_show_fdinfo().
+Fixes: 2f971a8f4255 ("netfilter: nf_conncount: move all list iterations under spinlock")
+Reported-by: Laura Garcia Liebana <nevola@gmail.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/netfilter/nft_connlimit.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-> +{
-> +#ifdef CONFIG_PID_NS
-> +	struct pid_namespace *ns = proc_pid_ns(file_inode(m->file));
-> +	int i;
-> +
-> +	seq_puts(m, "\nNSpid:");
-> +	for (i = ns->level; i <= pid->level; i++) {
-> +		ns = pid->numbers[i].ns;
-> +		seq_put_decimal_ull(m, "\t", pid_nr_ns(pid, ns));
-> +	}
-> +#endif
-> +}
-> +
->  static void pidfd_show_fdinfo(struct seq_file *m, struct file *f)
->  {
->  	struct pid_namespace *ns = proc_pid_ns(file_inode(m->file));
->  	struct pid *pid = f->private_data;
->  
->  	seq_put_decimal_ull(m, "Pid:\t", pid_nr_ns(pid, ns));
-> +	pidfd_nspid(m, pid);
->  	seq_putc(m, '\n');
->  }
->  #endif
-> -- 
-> 2.21.0
-> 
+diff --git a/net/netfilter/nft_connlimit.c b/net/netfilter/nft_connlimit.c
+index af1497ab94642..69d6173f91e2b 100644
+--- a/net/netfilter/nft_connlimit.c
++++ b/net/netfilter/nft_connlimit.c
+@@ -218,8 +218,13 @@ static void nft_connlimit_destroy_clone(const struct nft_ctx *ctx,
+ static bool nft_connlimit_gc(struct net *net, const struct nft_expr *expr)
+ {
+ 	struct nft_connlimit *priv = nft_expr_priv(expr);
++	bool ret;
+ 
+-	return nf_conncount_gc_list(net, &priv->list);
++	local_bh_disable();
++	ret = nf_conncount_gc_list(net, &priv->list);
++	local_bh_enable();
++
++	return ret;
+ }
+ 
+ static struct nft_expr_type nft_connlimit_type;
+-- 
+2.20.1
+
