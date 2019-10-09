@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEFECECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF3DECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A64D206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:32:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D77B6206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:32:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570642351;
-	bh=dlmTroG9Z6e2QxL9z2QYYH/+HCwazBgRl60ITiwDM9c=;
+	s=default; t=1570642358;
+	bh=KfIBcyEnuRceF3vKSjN16F7+m+qFJm3bdbFB9alfQcw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CYwHaSzp+Ecgla4Qj24mjvFr20w4zFaCEbP2jnOQAqs4pQfwQkbcVDp/twtdGtJhB
-	 MlhMAQ/k1IIMKtDcDkH71APTik6OUV7x62lunM7YKpzgl/BqEtxaNDIiGUqhFtmO4U
-	 jCvJHGH/+mxHwZtTDN9UEEzcu1VovM6eaVcePrY8=
+	b=O2Bd4gWcBgBnx5fHSdQMDrKPTI8alhPAkUVu0BmODqxiTpqOefG7bm83bM3wriMJX
+	 V6ojfneKW5CU9BFb4p5DMwO0FEpHAyHhEjoaTCgAg/zYMYgtzuYTpK0ouo4N5nCf0H
+	 YwFeQQ/BArfKM2oz4BM62ugBJN/vSPhQ5IHwGxxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732451AbfJIRca (ORCPT
+        id S1732491AbfJIRch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:32:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48098 "EHLO mail.kernel.org"
+        Wed, 9 Oct 2019 13:32:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732001AbfJIRX5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 13:23:57 -0400
+        id S1731973AbfJIRXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 13:23:55 -0400
 Received: from sasha-vm.mshome.net (unknown [167.220.2.234])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A9AA21D6C;
-        Wed,  9 Oct 2019 17:23:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58DC521924;
+        Wed,  9 Oct 2019 17:23:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570641836;
-        bh=dlmTroG9Z6e2QxL9z2QYYH/+HCwazBgRl60ITiwDM9c=;
+        s=default; t=1570641834;
+        bh=KfIBcyEnuRceF3vKSjN16F7+m+qFJm3bdbFB9alfQcw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LYc9p4jqDhGiX+blbeRzNv/ODThzkGnS4EwqhSUjraWbnhkaAKo1bF/JFkboCFXcS
-         AkqhRPSBCGXeqAB+6nPzqc0cV2u/iJyqLalSydaAU0DM6zUphgBiGv4wvzJuyPGaHB
-         BWR6Q9n2fexvSMdhEBRleUviGAneQGBUSN/VregA=
+        b=Xc6xD5fto+m6fkpJsNkNSYrywQhsSHUDrej8sYLjT7EJ0Su9yVlGjKIUNtCmsu2zO
+         PXlqdlfYZwG/ZFpJK/xWzYZGq7WG3z5jIKC6UZIt6UZ+Fh+nLPShuuR48DKLTx1T/M
+         s7OFm2zRdjNB9/FM8/dwjDfqUpOqi+YWB6MDFSB0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Quinn Tran <qutran@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 10/68] scsi: qla2xxx: Fix unbound sleep in fcport delete path.
-Date:   Wed,  9 Oct 2019 13:04:49 -0400
-Message-Id: <20191009170547.32204-10-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>, linux-clk@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, Sasha Levin <sashal@kernel.org>,
+        linux-omap@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 04/68] clk: ti: dra7: Fix mcasp8 clock bits
+Date:   Wed,  9 Oct 2019 13:04:43 -0400
+Message-Id: <20191009170547.32204-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191009170547.32204-1-sashal@kernel.org>
 References: <20191009170547.32204-1-sashal@kernel.org>
@@ -60,45 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <qutran@marvell.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit c3b6a1d397420a0fdd97af2f06abfb78adc370df ]
+[ Upstream commit dd8882a255388ba66175098b1560d4f81c100d30 ]
 
-There are instances, though rare, where a LOGO request cannot be sent out
-and the thread in free session done can wait indefinitely. Fix this by
-putting an upper bound to sleep.
+There's a typo for dra7 mcasp clkctrl bit, it should be 22 like the other
+macasp instances, and not 24. And in dra7xx_clks[] we have the bits wrong
+way around.
 
-Link: https://lore.kernel.org/r/20190912180918.6436-3-hmadhani@marvell.com
-Signed-off-by: Quinn Tran <qutran@marvell.com>
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: dffa9051d546 ("clk: ti: dra7: add new clkctrl data")
+Cc: linux-clk@vger.kernel.org
+Cc: Michael Turquette <mturquette@baylibre.com>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: Suman Anna <s-anna@ti.com>
+Cc: Tero Kristo <t-kristo@ti.com>
+Acked-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_target.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/clk/ti/clk-7xx.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
-index 459c28aa3b94a..f77baf107024f 100644
---- a/drivers/scsi/qla2xxx/qla_target.c
-+++ b/drivers/scsi/qla2xxx/qla_target.c
-@@ -1021,6 +1021,7 @@ void qlt_free_session_done(struct work_struct *work)
- 
- 	if (logout_started) {
- 		bool traced = false;
-+		u16 cnt = 0;
- 
- 		while (!READ_ONCE(sess->logout_completed)) {
- 			if (!traced) {
-@@ -1030,6 +1031,9 @@ void qlt_free_session_done(struct work_struct *work)
- 				traced = true;
- 			}
- 			msleep(100);
-+			cnt++;
-+			if (cnt > 200)
-+				break;
- 		}
- 
- 		ql_dbg(ql_dbg_disc, vha, 0xf087,
+diff --git a/drivers/clk/ti/clk-7xx.c b/drivers/clk/ti/clk-7xx.c
+index b57fe09b428be..9dd6185a4b4e2 100644
+--- a/drivers/clk/ti/clk-7xx.c
++++ b/drivers/clk/ti/clk-7xx.c
+@@ -683,7 +683,7 @@ static const struct omap_clkctrl_reg_data dra7_l4per2_clkctrl_regs[] __initconst
+ 	{ DRA7_L4PER2_MCASP2_CLKCTRL, dra7_mcasp2_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:0154:22" },
+ 	{ DRA7_L4PER2_MCASP3_CLKCTRL, dra7_mcasp3_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:015c:22" },
+ 	{ DRA7_L4PER2_MCASP5_CLKCTRL, dra7_mcasp5_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:016c:22" },
+-	{ DRA7_L4PER2_MCASP8_CLKCTRL, dra7_mcasp8_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:0184:24" },
++	{ DRA7_L4PER2_MCASP8_CLKCTRL, dra7_mcasp8_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:0184:22" },
+ 	{ DRA7_L4PER2_MCASP4_CLKCTRL, dra7_mcasp4_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:018c:22" },
+ 	{ DRA7_L4PER2_UART7_CLKCTRL, dra7_uart7_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:01c4:24" },
+ 	{ DRA7_L4PER2_UART8_CLKCTRL, dra7_uart8_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:01d4:24" },
+@@ -828,8 +828,8 @@ static struct ti_dt_clk dra7xx_clks[] = {
+ 	DT_CLK(NULL, "mcasp6_aux_gfclk_mux", "l4per2-clkctrl:01f8:22"),
+ 	DT_CLK(NULL, "mcasp7_ahclkx_mux", "l4per2-clkctrl:01fc:24"),
+ 	DT_CLK(NULL, "mcasp7_aux_gfclk_mux", "l4per2-clkctrl:01fc:22"),
+-	DT_CLK(NULL, "mcasp8_ahclkx_mux", "l4per2-clkctrl:0184:22"),
+-	DT_CLK(NULL, "mcasp8_aux_gfclk_mux", "l4per2-clkctrl:0184:24"),
++	DT_CLK(NULL, "mcasp8_ahclkx_mux", "l4per2-clkctrl:0184:24"),
++	DT_CLK(NULL, "mcasp8_aux_gfclk_mux", "l4per2-clkctrl:0184:22"),
+ 	DT_CLK(NULL, "mmc1_clk32k", "l3init-clkctrl:0008:8"),
+ 	DT_CLK(NULL, "mmc1_fclk_div", "l3init-clkctrl:0008:25"),
+ 	DT_CLK(NULL, "mmc1_fclk_mux", "l3init-clkctrl:0008:24"),
 -- 
 2.20.1
 
