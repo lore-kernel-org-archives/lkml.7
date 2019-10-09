@@ -2,157 +2,162 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CCA0ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C59FC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:35:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C31421848
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:35:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5501E206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:35:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570638947;
+	bh=gowZPOzO9GoC/v9xcaDziafDeKQX9l734G0RKbEh9vw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0CuTo3rem7QonCgpyLwZrsAHKKxTKXhc3eqBGdoq4J5/0Ybmie+2rDhsjSIZ4NRi1
+	 MpyMcIf1a/XUAYGcf32Z5JWl3Bb0Zkrvl+JweXnA+vB87zK2ylikUB/YHjPSSdKKnk
+	 1Zd9fgiJNvEBNoLsXu3ZvbLd4UeID9gHvsiGdCfI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731747AbfJIQfT (ORCPT
+        id S1731778AbfJIQfq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 12:35:19 -0400
-Received: from mga14.intel.com ([192.55.52.115]:46952 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730490AbfJIQfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 12:35:19 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 09:35:18 -0700
-X-IronPort-AV: E=Sophos;i="5.67,276,1566889200"; 
-   d="scan'208";a="187670690"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 09:35:17 -0700
-Message-ID: <22ce946f7a5cf0b7b4c8058c400d8b9b4c63a5a5.camel@linux.intel.com>
-Subject: Re: [PATCH v11 0/6] mm / virtio: Provide support for unused page
- reporting
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
-        "Wang, Wei W" <wei.w.wang@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 09 Oct 2019 09:35:17 -0700
-In-Reply-To: <5c640ecb-cfef-2fa6-57aa-1352f1036f4e@redhat.com>
-References: <20191001152441.27008.99285.stgit@localhost.localdomain>
-         <7233498c-2f64-d661-4981-707b59c78fd5@redhat.com>
-         <1ea1a4e11617291062db81f65745b9c95fd0bb30.camel@linux.intel.com>
-         <8bd303a6-6e50-b2dc-19ab-4c3f176c4b02@redhat.com>
-         <CAKgT0Uf37xAFK2CWqUZJgn7bWznSAi6qncLxBpC55oSpBMG1HQ@mail.gmail.com>
-         <c06b68cb-5e94-ae3e-f84e-48087d675a8f@redhat.com>
-         <CAKgT0Ud6TT=XxqFx6ePHzbUYqMp5FHVPozRvnNZK3tKV7j2xjg@mail.gmail.com>
-         <0a16b11e-ec3b-7196-5b7f-e7395876cf28@redhat.com>
-         <d96f744d2c48f5a96c6962c6a0a89d2429e5cab8.camel@linux.intel.com>
-         <7fc13837-546c-9c4a-1456-753df199e171@redhat.com>
-         <5b6e0b6df46c03bfac906313071ac0362d43c432.camel@linux.intel.com>
-         <c2fd074b-1c86-cd93-41ea-ae1a6b2ca841@redhat.com>
-         <5c640ecb-cfef-2fa6-57aa-1352f1036f4e@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Wed, 9 Oct 2019 12:35:46 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50796 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730546AbfJIQfp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 12:35:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=owdfGfpxxrkSa3bEZCcNRIXecf20ZOjPIlOoM7dfj2Q=; b=xxg1yPso5ztQ/T7iDk98vnYtJ
+        yNHDZeAYSyQgIshsARNOL1FqCQHj1VaXP/dJo3gUYOY4qNXNjz8JpcxJEkFrKPBIfNIu4MnUjB0X/
+        mrL0zJGtyr4YRB57vqtiNy9kEoc+5kEgCnwLvlhTUdhlab7uBtEBflGAKjCp4spvsCDHE=;
+Received: from 188.31.199.195.threembb.co.uk ([188.31.199.195] helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1iIEw5-0005Em-A6; Wed, 09 Oct 2019 16:35:37 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 19E0BD03ED3; Wed,  9 Oct 2019 17:35:35 +0100 (BST)
+Date:   Wed, 9 Oct 2019 17:35:35 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     spapothi@codeaurora.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, lgirdwood@gmail.com,
+        devicetree@vger.kernel.org, vkoul@kernel.org,
+        pierre-louis.bossart@linux.intel.com
+Subject: Re: [PATCH v7 2/2] ASoC: codecs: add wsa881x amplifier support
+Message-ID: <20191009163535.GK2036@sirena.org.uk>
+References: <20191009085108.4950-1-srinivas.kandagatla@linaro.org>
+ <20191009085108.4950-3-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="4+GP5VtpSFAXb8tV"
+Content-Disposition: inline
+In-Reply-To: <20191009085108.4950-3-srinivas.kandagatla@linaro.org>
+X-Cookie: Be careful!  UGLY strikes 9 out of 10!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-10-09 at 11:21 -0400, Nitesh Narayan Lal wrote:
-> On 10/7/19 1:06 PM, Nitesh Narayan Lal wrote:
-> [...]
-> > > So what was the size of your guest? One thing that just occurred to me is
-> > > that you might be running a much smaller guest than I was.
-> > I am running a 30 GB guest.
-> > 
-> > > > >  If so I would have expected a much higher difference versus
-> > > > > baseline as zeroing/faulting the pages in the host gets expensive fairly
-> > > > > quick. What is the host kernel you are running your test on? I'm just
-> > > > > wondering if there is some additional overhead currently limiting your
-> > > > > setup. My host kernel was just the same kernel I was running in the guest,
-> > > > > just built without the patches applied.
-> > > > Right now I have a different host-kernel. I can install the same kernel to the
-> > > > host as well and see if that changes anything.
-> > > The host kernel will have a fairly significant impact as I recall. For
-> > > example running a stock CentOS kernel lowered the performance compared to
-> > > running a linux-next kernel. As a result the numbers looked better since
-> > > the overall baseline was lower to begin with as the host OS was
-> > > introducing additional overhead.
-> > I see in that case I will try by installing the same guest kernel
-> > to the host as well.
-> 
-> As per your suggestion, I tried replacing the host kernel with an
-> upstream kernel without my patches i.e., my host has a kernel built on top
-> of the upstream kernel's master branch which has Sept 23rd commit and the guest
-> has the same kernel for the no-hinting case and same kernel + my patches
-> for the page reporting case.
-> 
-> With the changes reported earlier on top of v12, I am not seeing any further
-> degradation (other than what I have previously reported).
-> 
-> To be sure that THP is actively used, I did an experiment where I changed the
-> MEMSIZE in the page_fault. On doing so THP usage checked via /proc/meminfo also
-> increased as I expected.
-> 
-> In any case, if you find something else please let me know and I will look into it
-> again.
-> 
-> 
-> I am still looking into your suggestion about cache line bouncing and will reply
-> to it, if I have more questions.
-> 
-> 
-> [...]
 
-I really feel like this discussion has gone off course. The idea here is
-to review this patch set[1] and provide working alternatives if there are
-issues with the current approach.
+--4+GP5VtpSFAXb8tV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The bitmap based approach still has a number of outstanding issues
-including sparse memory and hotplug which have yet to be addressed. We can
-gloss over that, but there is a good chance that resolving those would
-have potential performance implications. With this most recent change
-there is now also the fact that it can only really support reporting at
-one page order so the solution is now much more prone to issues with
-memory fragmentation than it was before. I would consider the fact that my
-solution works with multiple page orders while the bitmap approach
-requires MAX_ORDER - 1 seems like another obvious win for my solution.
-Until we can get back to the point where we are comparing apples to apples
-I would prefer not to benchmark the bitmap solution as without the extra
-order limitation it was over 20% worse then my solution performance wise.
+On Wed, Oct 09, 2019 at 09:51:08AM +0100, Srinivas Kandagatla wrote:
 
-Ideally I would like to get code review for patches 3 and 4, and spend my
-time addressing issues reported there. The main things I need input on is
-if the solution of allowing the list iterators to be reset is good enough
-to address the compaction issues that were pointed out several releases
-ago or if I have to look for another solution. Also I have changed things
-so that page_reporting.h was split over two files with the new one now
-living in the mm/ folder. By doing that I was hoping to reduce the
-exposure of the internal state of the free-lists so that essentially all
-we end up providing is an interface for the notifier to be used by virtio-
-balloon.
+> +static const u8 wsa881x_reg_readable[WSA881X_CACHE_SIZE] = {
 
-Thanks.
+> +static bool wsa881x_readable_register(struct device *dev, unsigned int reg)
+> +{
+> +	return wsa881x_reg_readable[reg];
+u
+There's no bounds check and that array size is not...
 
-- Alex
+> +static struct regmap_config wsa881x_regmap_config = {
+> +	.reg_bits = 32,
+> +	.val_bits = 8,
+> +	.cache_type = REGCACHE_RBTREE,
+> +	.reg_defaults = wsa881x_defaults,
+> +	.num_reg_defaults = ARRAY_SIZE(wsa881x_defaults),
+> +	.max_register = WSA881X_MAX_REGISTER,
 
-[1]: https://lore.kernel.org/lkml/20191001152441.27008.99285.stgit@localhost.localdomain/
+...what regmap has as max_register.  Uusually you'd render as a
+switch statement (as you did for volatile) and let the compiler
+figure out a sensible way to do the lookup.
 
+> +static void wsa881x_init(struct wsa881x_priv *wsa881x)
+> +{
+> +	struct regmap *rm = wsa881x->regmap;
+> +	unsigned int val = 0;
+> +
+> +	regmap_read(rm, WSA881X_CHIP_ID1, &wsa881x->version);
+> +	regcache_cache_only(rm, true);
+> +	regmap_multi_reg_write(rm, wsa881x_rev_2_0,
+> +			       ARRAY_SIZE(wsa881x_rev_2_0));
+> +	regcache_cache_only(rm, false);
+
+This looks broken, what is it supposed to be doing?  It looks
+like it should be a register patch but it's not documented.
+
+> +static const struct snd_kcontrol_new wsa881x_snd_controls[] = {
+> +	SOC_ENUM("Smart Boost Level", smart_boost_lvl_enum),
+> +	WSA881X_PA_GAIN_TLV("PA Gain", WSA881X_SPKR_DRV_GAIN,
+> +			    4, 0xC, 1, pa_gain),
+
+As covered in control-names.rst all volume controls should end in
+Volume.
+
+> +static void wsa881x_clk_ctrl(struct snd_soc_component *comp, bool enable)
+> +{
+> +	struct wsa881x_priv *wsa881x = snd_soc_component_get_drvdata(comp);
+> +
+> +	mutex_lock(&wsa881x->res_lock);
+
+What is this lock supposed to be protecting?  As far as I can
+tell this function is the only place it is used and this function
+has exactly one caller which itself has only one caller which is
+a DAPM widget and hence needs no locking.  It looks awfully like
+it should just be a widget itself, or inlined into the single
+caller.
+
+> +static void wsa881x_bandgap_ctrl(struct snd_soc_component *comp, bool enable)
+> +{
+> +	struct wsa881x_priv *wsa881x = snd_soc_component_get_drvdata(comp);
+
+Similarly here.
+
+> +static int32_t wsa881x_resource_acquire(struct snd_soc_component *comp,
+> +					bool enable)
+> +{
+> +	wsa881x_clk_ctrl(comp, enable);
+> +	wsa881x_bandgap_ctrl(comp, enable);
+> +
+> +	return 0;
+> +}
+
+There's no corresponding disables.
+
+--4+GP5VtpSFAXb8tV
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2eDFYACgkQJNaLcl1U
+h9CtLgf8CePH7+ZsY0W4cRF5zvZs+qrkT8EShEl1pRNhR80s4tivFZnFYccKkM1a
+NSlUywoTsagGw1dijsM7tCzj82aQ5pxABSezmv0erVwZv9cFqnbfNG/yh3epnLbH
+/T/MBashmZA7sR02wH7y3PFvxlWkH3buk6jlwKeCJtZNnX6pGpv5mfwy5p9nkygB
+iIgIG6WEd8pB0/pGk4MVArDRhLIGkH2C+cyxEC46zIG6FVrfi1DlNffgYjmbne6N
+UO6g0GtmdlI6HyuLCQ4DO56BrExtnjieHzCJgyyFN6vn86S6OFLwFGfj8P8lduk7
+GAvcrZSHg8UKdrOLheSE57TbN6KqGQ==
+=ijUj
+-----END PGP SIGNATURE-----
+
+--4+GP5VtpSFAXb8tV--
