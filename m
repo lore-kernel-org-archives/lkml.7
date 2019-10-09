@@ -2,160 +2,133 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9092ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86253C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B08720B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:25:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Rsd8aSnR"
+	by mail.kernel.org (Postfix) with ESMTP id 6930D20B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:26:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731505AbfJIOZM (ORCPT
+        id S1731339AbfJIO0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 10:25:12 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35082 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731335AbfJIOZL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 10:25:11 -0400
-Received: by mail-pl1-f195.google.com with SMTP id c3so1146180plo.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 07:25:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZfOkB528FPvVmEaRKHaiWpNxM3xg1dR37magrnuxY2g=;
-        b=Rsd8aSnRA1bBCEecP7/HgMrIQ6l/y/cRNKiSAk3lzeVj6Oj7cIC0ZoxVnClKqn2aZM
-         utU35f2ZiUhYheloCIeFLlNrMCtOQJPoKH6IZV0P/4BpboOfPFC0qqSAdV8EF1PeJvvM
-         r6o/arsiVlMJVYgtu9Yt/cC6jGyEZddTD6HJ0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZfOkB528FPvVmEaRKHaiWpNxM3xg1dR37magrnuxY2g=;
-        b=aUjQQZVP1gw21O1Uk8yr3xzTmIyX/8XbsPQb09fiK9uMfg7JdFNY2XTc0mopFz7k6T
-         5VnlDW+aZW8/PX36v6m224Y0tf/Hs01tUGnsmZnsr5pAMdxzCIpeWeMzxDojCWHNpm4O
-         xFuUirh4iF7Frb3I4LpG6oHtviQqp+MON1BzAtF2k90X0l3orcX1i78J3OEGOkq581rd
-         kjg9rR27w7J20I+nHsfPRG0avBqdn3ExrAk8KkafO5ynWoX5gj5Big4kcr6dLuQJKm4x
-         QVhXzrYfmv8b/LM5A6StNcD+O9zx2+yrQILeS6419dBGKne/Nsr96h3MgR9e1l+2OH43
-         hVrA==
-X-Gm-Message-State: APjAAAULxjKgyhAJxxz7Vga4oM6Ahp4LgQKn86NUs4yrZr6uBH7h5q6o
-        RM+PtnUAwORScObYuVElKOo2vg==
-X-Google-Smtp-Source: APXvYqwyKMc7Shz9xHarkvwuwc/8wg6cVkasAbMF7VeiZGSHYy+mYzqSy76oHBIQlpMUbYBM9cwGvA==
-X-Received: by 2002:a17:902:b70f:: with SMTP id d15mr3479799pls.210.1570631109717;
-        Wed, 09 Oct 2019 07:25:09 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id o11sm2300417pgp.13.2019.10.09.07.25.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 07:25:09 -0700 (PDT)
-Date:   Wed, 9 Oct 2019 10:25:08 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     Marco Elver <elver@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>, rcu@vger.kernel.org
-Subject: Re: [PATCH] rcu: Avoid to modify mask_ofl_ipi in
- sync_rcu_exp_select_node_cpus()
-Message-ID: <20191009142508.GE143258@google.com>
-References: <20191008050145.4041702-1-boqun.feng@gmail.com>
- <20191008163028.GA136151@google.com>
- <CANpmjNP0Vt4i7nWXPd2g4vaqkE3J2K1M_BiEMrtGqVcRE8khtw@mail.gmail.com>
- <20191008170121.GA143258@google.com>
- <20191009022017.GA664@boqun-laptop.fareast.corp.microsoft.com>
+        Wed, 9 Oct 2019 10:26:16 -0400
+Received: from foss.arm.com ([217.140.110.172]:35562 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727769AbfJIO0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 10:26:16 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 19D451576;
+        Wed,  9 Oct 2019 07:26:15 -0700 (PDT)
+Received: from [192.168.0.9] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CB8103F71A;
+        Wed,  9 Oct 2019 07:26:12 -0700 (PDT)
+Subject: Re: [RFC v5 4/6] sched/fair: Tune task wake-up logic to pack small
+ background tasks on fewer cores
+To:     Parth Shah <parth@linux.ibm.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Doug Smythies <dsmythies@telus.net>,
+        Quentin Perret <qperret@qperret.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+References: <20191007083051.4820-1-parth@linux.ibm.com>
+ <20191007083051.4820-5-parth@linux.ibm.com>
+ <CAKfTPtCgoTJXxbYyza1W55ayw9QeM7fue2e91Xpt804sL9GQWA@mail.gmail.com>
+ <80bb34ec-6358-f4dc-d20d-cde6c9d7e197@linux.ibm.com>
+ <d55c593d-af8e-c8ba-cc0e-c9917df5d593@arm.com>
+ <86dc25e4-9f19-627f-9581-d74608b7f20c@linux.ibm.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <eef32b9e-1f24-e8a9-cd91-dcc6546a636f@arm.com>
+Date:   Wed, 9 Oct 2019 16:26:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191009022017.GA664@boqun-laptop.fareast.corp.microsoft.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <86dc25e4-9f19-627f-9581-d74608b7f20c@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 10:20:17AM +0800, Boqun Feng wrote:
-[snip] 
-> > Boqun, are you going to be posting another patch which just uses mask_ofl_ipi
-> > in the for_each(..) loop? (without using _snap) as Paul suggested?
-> > 
-> 
-> IIUC, Paul already has this fix along with other ->expmask queued in his
-> dev branch:
-> 
-> 	https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git/commit/?h=dev&id=4e4fefe0630dcf7415d62e6d9171c8f209444376
-> 
-> , and with the proper "Reported-by" tag to give syzbot credit.
+On 09/10/2019 10:57, Parth Shah wrote:
 
-Yes, I see it now. So Marco you should be good ;)
+[...]
 
-thanks!
+>> On 07/10/2019 18:53, Parth Shah wrote:
+>>>
+>>>
+>>> On 10/7/19 5:49 PM, Vincent Guittot wrote:
+>>>> On Mon, 7 Oct 2019 at 10:31, Parth Shah <parth@linux.ibm.com> wrote:
 
- - Joel
+[...]
+
+>>> Maybe I can add just below the sched_energy_present(){...} construct giving
+>>> precedence to EAS? I'm asking this because I remember Patrick telling me to
+>>> leverage task packing for android as well?
+>>
+>> I have a hard time imaging that Turbosched will be used in Android next
+>> to EAS in the foreseeable future.
+>>
+>> First of all, EAS provides task packing already on Performance Domain
+>> (PD) level (a.k.a. as cluster on traditional 2-cluster Arm/Arm64
+>> big.LITTLE or DynamIQ (with Phantom domains (out of tree solution)).
+>> This is where we can safe energy without harming latency.
+>>
+>> See the tests results under '2.1 Energy test case' in
+>>
+>> https://lore.kernel.org/r/20181203095628.11858-1-quentin.perret@arm.com
+>>
+>> There are 10 to 50 small (classified solely by task utilization) tasks
+>> per test case and EAS shows an effect on energy consumption by packing
+>> them onto the PD (cluster) of the small CPUs.
+>>
+>> And second, the CPU supported topology is different to the one you're
+>> testing on.
+>>
+> 
+> cool. I was just keeping in mind the following quote
+> " defining a generic spread-vs-pack wakeup policy which is something
+> Android also could benefit from " (https://lkml.org/lkml/2019/6/28/628)
+
+The main thing is that in case we want to introduce a new functionality
+into CFS, we should try hard to use existing infrastructure (or
+infrastructure there is agreement on that we'll need it) as much as
+possible.
+
+If I understand Patrick here correctly, he suggested not to use uclamp
+but the task latency nice approach. There is agreement that we would
+need something like this as infrastructure:
+
+https://lore.kernel.org/r/20190830174944.21741-1-subhra.mazumdar@oracle.com
+
+So p->latency_nice is suitable to include your p->flags |=
+PF_CAN_BE_PACKED concept nicely.
 
 > 
-> Regards,
-> Boqun
-> 
-> > Paul mentioned other places where rnp->expmask is locklessly accessed so I
-> > think that may be fixed separately (such as the stall-warning code). Paul,
-> > were you planning on fixing all such accesses together (other than this code)
-> > or should I look into it more? I guess for the stall case, KCSAN would have
-> > to trigger stalls to see those issues.
-> > 
-> > thanks,
-> > 
-> >  - Joel
-> > 
-> > > 
-> > > Thanks!
-> > > -- Marco
-> > > 
-> > > > >  kernel/rcu/tree_exp.h | 13 ++++++-------
-> > > > >  1 file changed, 6 insertions(+), 7 deletions(-)
-> > > > >
-> > > > > diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
-> > > > > index 69c5aa64fcfd..212470018752 100644
-> > > > > --- a/kernel/rcu/tree_exp.h
-> > > > > +++ b/kernel/rcu/tree_exp.h
-> > > > > @@ -387,10 +387,10 @@ static void sync_rcu_exp_select_node_cpus(struct work_struct *wp)
-> > > > >               }
-> > > > >               ret = smp_call_function_single(cpu, rcu_exp_handler, NULL, 0);
-> > > > >               put_cpu();
-> > > > > -             if (!ret) {
-> > > > > -                     mask_ofl_ipi &= ~mask;
-> > > > > +             /* The CPU responses the IPI, and will report QS itself */
-> > > > > +             if (!ret)
-> > > > >                       continue;
-> > > > > -             }
-> > > > > +
-> > > > >               /* Failed, raced with CPU hotplug operation. */
-> > > > >               raw_spin_lock_irqsave_rcu_node(rnp, flags);
-> > > > >               if ((rnp->qsmaskinitnext & mask) &&
-> > > > > @@ -401,13 +401,12 @@ static void sync_rcu_exp_select_node_cpus(struct work_struct *wp)
-> > > > >                       schedule_timeout_uninterruptible(1);
-> > > > >                       goto retry_ipi;
-> > > > >               }
-> > > > > -             /* CPU really is offline, so we can ignore it. */
-> > > > > -             if (!(rnp->expmask & mask))
-> > > > > -                     mask_ofl_ipi &= ~mask;
-> > > > > +             /* CPU really is offline, and we need its QS to pass GP. */
-> > > > > +             if (rnp->expmask & mask)
-> > > > > +                     mask_ofl_test |= mask;
-> > > > >               raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
-> > > > >       }
-> > > > >       /* Report quiescent states for those that went offline. */
-> > > > > -     mask_ofl_test |= mask_ofl_ipi;
-> > > > >       if (mask_ofl_test)
-> > > > >               rcu_report_exp_cpu_mult(rnp, mask_ofl_test, false);
-> > > > >  }
-> > > > > --
-> > > > > 2.23.0
-> > > > >
+> BTW, IIUC that does task consolidation only on single CPU unless
+> rd->overload is set, right?
+
+Task consolidation on Performance Domains (PDs) w/ multiple CPUs (e.g.
+on a per-cluster PD big.LITTLE system) only works when the system is not
+overutilized:
+
+6326 int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
+6327 {
+...
+6337         if (!pd || *READ_ONCE(rd->overutilized)*)
+6338                 goto fail;
+...
+
+[...]
