@@ -2,223 +2,115 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 680D8C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C171AECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BB352133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:37:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97CE82133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:40:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="adk4q/LA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730490AbfJIKhX (ORCPT
+        id S1730384AbfJIKkJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 06:37:23 -0400
-Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:49825 "EHLO
-        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726579AbfJIKhW (ORCPT
+        Wed, 9 Oct 2019 06:40:09 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:36398 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726579AbfJIKkJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 06:37:22 -0400
-Received: from [IPv6:2001:983:e9a7:1:2801:e038:f2c3:e060] ([IPv6:2001:983:e9a7:1:2801:e038:f2c3:e060])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id I9LKibmEEop0AI9LLiOw8P; Wed, 09 Oct 2019 12:37:19 +0200
-Subject: Re: [PATCH v2] media: cec-adap: add debounce support when setting an
- invalid phys addr
-To:     Jonas Karlman <jonas@kwiboo.se>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <DB6PR06MB400724D0DD41B208D405F44FACBF0@DB6PR06MB4007.eurprd06.prod.outlook.com>
- <HE1PR06MB40115700084D1D875673D60EAC9D0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <e1ea769e-f3d0-767e-9671-86d6d107b49c@xs4all.nl>
-Date:   Wed, 9 Oct 2019 12:37:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 9 Oct 2019 06:40:09 -0400
+Received: by mail-ed1-f67.google.com with SMTP id h2so1572900edn.3
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 03:40:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pu7YyA32IAxSpGaf7UJZEaSuEYYlTRI6oCWAxFzbJXY=;
+        b=adk4q/LAAbwwFzgWpWMggclWXes1NLlMfwEAu7/GRAECCtq0szTh+ZGk69R3LGBtPs
+         n4RyZaacxk/cxSmShZLOjt8g7scuRr2iymwZ00dLTV+rtUYTDLcnulhQ/bmdubzPubQC
+         Co+98zwwlg32faR9RwAR/awjgX162VhOr8Dgk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=pu7YyA32IAxSpGaf7UJZEaSuEYYlTRI6oCWAxFzbJXY=;
+        b=ekdSw677bcbensFZAWNRl4A3DkMiA/Mu2+ax4MrmVc2/MRJqwIThVmbMEINUOrJcEo
+         dyYmAIRs+N/wj/uWXVelhPhWAbw0JwY/Bj7iSdxxcwO5lZQq3sZDDou8q/986Da77GLk
+         Us426IrI9t/PGmVXDCB9OIZW6FWl58/xnJlJzfljqG3y6cB5nGgdw8n6C7HpTmzsJCuE
+         pShTfBF/EhDn4pWnYvu6lZPSiWtFchvis6H1DsUYRDTpqfTW4EpNVUYNaX6iBrhq/TyQ
+         dCjihIjj5LcCd8+qwC8y03dev+OQ7bnivqaALNV6tESrvhmyCQy+98BLBgc21d+iiAol
+         e1Pw==
+X-Gm-Message-State: APjAAAUeI/n36hrpl8XF0Pu99lxs+tjeQqPSw5k2l+vpyyaNaIHOIGY9
+        zgY9OhnClgB7pMwXVvgGPOE49w==
+X-Google-Smtp-Source: APXvYqwyGOINerZEr5dHBn3PNkXe0aIw+CM4KDKXiIPYgSTADOGQMh/xYZcxW5vRZMAyYKZIEzcc7g==
+X-Received: by 2002:a17:906:3488:: with SMTP id g8mr2062845ejb.162.1570617605611;
+        Wed, 09 Oct 2019 03:40:05 -0700 (PDT)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id i63sm293464edi.65.2019.10.09.03.40.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Oct 2019 03:40:04 -0700 (PDT)
+Date:   Wed, 9 Oct 2019 12:40:02 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     zhong jiang <zhongjiang@huawei.com>
+Cc:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        sean@poorly.run, airlied@linux.ie, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] drm/vkms: Fix an undefined reference error in
+ vkms_composer_worker
+Message-ID: <20191009104002.GV16989@phenom.ffwll.local>
+Mail-Followup-To: zhong jiang <zhongjiang@huawei.com>,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        sean@poorly.run, airlied@linux.ie, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+References: <1569201883-18779-1-git-send-email-zhongjiang@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <HE1PR06MB40115700084D1D875673D60EAC9D0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfB6tmS3eQjyUK1ZE74PH7TgesnJiWQN8a3HrnmTeueCrjXg61xMu6d3En0Iie/HgTnEYI8X4ZBodTT03m0ib5nr07DMBSsEqYWWovSFHk9XiwXoFXQL5
- FD5LzbG+0NGdWI2OvVX3Zp9DhhVnEqbNM9GVVXu5osGK1SbnFGLoUBAVgLXPtwCLwO1XuZ+MFFBdC8CL7Rrllrum++oZy4i3LtmjGoaEQwIwtiueG7D9sSs1
- 3lXhFcr91qxQhViz67bGVlVGAxeHeRvQpfJsZdURaPpTULGMoS4EcPVovJtOTOlxI4IYFXQJKUqgwlD98ICiVyE14BJE31Oniw6LQun1xiMSGiyjf9KlSHu+
- UC/+aMKAXrBRgEQ1jLc9KkaTjLMpLA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1569201883-18779-1-git-send-email-zhongjiang@huawei.com>
+X-Operating-System: Linux phenom 5.2.0-2-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonas,
+On Mon, Sep 23, 2019 at 09:24:43AM +0800, zhong jiang wrote:
+> I hit the following error when compile the kernel.
+> 
+> drivers/gpu/drm/vkms/vkms_composer.o: In function `vkms_composer_worker':
+> vkms_composer.c:(.text+0x5e4): undefined reference to `crc32_le'
+> make: *** [vmlinux] Error 1
+> 
+> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
 
-On 10/1/19 10:52 PM, Jonas Karlman wrote:
-> When EDID is refreshed, HDMI cable is unplugged/replugged or
-> an AVR is power cycled the CEC phys addr gets invalidated.
-> 
-> This can cause some disruption of CEC communication when
-> adapter is being reconfigured.
-> 
-> Add a debounce module option that can be used to debounce setting
-> an invalid phys addr. Default is not to use debouncing.
-> 
-> Using a configured debounce of e.g. 5000 ms, cec reconfiguring
-> could be avoided when AVR was power cycled on my setup.
-> 
-> Power off AVR (default cec.debounce=0):
-> [  101.536866] cec-dw_hdmi: new physical address f.f.f.f
-> [  102.495686] cec-dw_hdmi: new physical address 2.1.0.0
-> [  102.495913] cec-dw_hdmi: physical address: 2.1.0.0, claim 1 logical addresses
-> [  102.628574] cec-dw_hdmi: config: la 1 pa 2.1.0.0
-> [  105.130115] cec-dw_hdmi: new physical address f.f.f.f
-> [  106.979705] cec-dw_hdmi: new physical address 2.1.0.0
-> [  106.979872] cec-dw_hdmi: physical address: 2.1.0.0, claim 1 logical addresses
-> [  107.112399] cec-dw_hdmi: config: la 1 pa 2.1.0.0
-> [  108.979408] cec-dw_hdmi: reported physical address 2.0.0.0 for logical address 5
-> [  109.205386] cec-dw_hdmi: reported physical address 2.0.0.0 for logical address 11
-> 
-> Power on AVR (default cec.debounce=0):
-> [  158.398447] cec-dw_hdmi: new physical address f.f.f.f
-> [  161.977714] cec-dw_hdmi: new physical address 2.1.0.0
-> [  161.978766] cec-dw_hdmi: physical address: 2.1.0.0, claim 1 logical addresses
-> [  162.115624] cec-dw_hdmi: config: la 1 pa 2.1.0.0
-> [  162.402750] cec-dw_hdmi: new physical address f.f.f.f
-> [  162.403389] cec-dw_hdmi: cec_transmit_msg_fh: adapter is unconfigured
-> [  162.886757] cec-dw_hdmi: new physical address 2.1.0.0
-> [  162.886964] cec-dw_hdmi: physical address: 2.1.0.0, claim 1 logical addresses
-> [  163.510725] cec-dw_hdmi: config: la 1 pa 2.1.0.0
-> [  173.034200] cec-dw_hdmi: message 10 89 02 05 timed out
-> 
-> Power off AVR (cec.debounce=5000):
-> [  251.720471] cec-dw_hdmi: reported physical address 2.0.0.0 for logical address 5
-> [  251.922432] cec-dw_hdmi: reported physical address 2.0.0.0 for logical address 11
-> 
-> Power on AVR (cec.debounce=5000):
-> [  291.154262] cec-dw_hdmi: reported physical address 2.0.0.0 for logical address 5
-> [  291.296199] cec-dw_hdmi: reported physical address 2.0.0.0 for logical address 11
-> 
-> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+Queued for -next, thanks for your patch.
+-Daniel
 > ---
->  drivers/media/cec/cec-adap.c |  9 ++++++++-
->  drivers/media/cec/cec-core.c | 18 ++++++++++++++++++
->  drivers/media/cec/cec-priv.h |  1 +
->  include/media/cec.h          |  2 ++
->  4 files changed, 29 insertions(+), 1 deletion(-)
-
-This patch looks pretty good. It's surprisingly little code for a feature like this,
-nice!
-
-This module option should be documented in Documentation/media/uapi/cec/cec-intro.rst.
-Make a section "1.1 Debouncing" that explains this module option.
-
-I also have one code comment:
-
+>  drivers/gpu/drm/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/media/cec/cec-adap.c b/drivers/media/cec/cec-adap.c
-> index 5ef7daeb8cbd..4c94f6da526b 100644
-> --- a/drivers/media/cec/cec-adap.c
-> +++ b/drivers/media/cec/cec-adap.c
-> @@ -1593,8 +1593,15 @@ void cec_s_phys_addr(struct cec_adapter *adap, u16 phys_addr, bool block)
->  	if (IS_ERR_OR_NULL(adap))
->  		return;
->  
-> +	cancel_delayed_work_sync(&adap->debounce_work);
-> +
->  	mutex_lock(&adap->lock);
-> -	__cec_s_phys_addr(adap, phys_addr, block);
-> +	if (cec_debounce > 0 && !block && phys_addr == CEC_PHYS_ADDR_INVALID &&
-> +	    adap->phys_addr != phys_addr)
-> +		schedule_delayed_work(&adap->debounce_work,
-> +				      msecs_to_jiffies(cec_debounce));
-> +	else
-> +		__cec_s_phys_addr(adap, phys_addr, block);
->  	mutex_unlock(&adap->lock);
->  }
->  EXPORT_SYMBOL_GPL(cec_s_phys_addr);
-> diff --git a/drivers/media/cec/cec-core.c b/drivers/media/cec/cec-core.c
-> index 9c610e1e99b8..fa93a724d7aa 100644
-> --- a/drivers/media/cec/cec-core.c
-> +++ b/drivers/media/cec/cec-core.c
-> @@ -28,6 +28,10 @@ static bool debug_phys_addr;
->  module_param(debug_phys_addr, bool, 0644);
->  MODULE_PARM_DESC(debug_phys_addr, "add CEC_CAP_PHYS_ADDR if set");
->  
-> +int cec_debounce;
-> +module_param_named(debounce, cec_debounce, int, 0644);
-> +MODULE_PARM_DESC(debounce, "debounce invalid phys addr");
-
-This should say: "invalid physical address debounce time in ms"
-
-I also recommend renaming 'debounce' to 'debounce_ms' to signal that this
-is in ms.
-
-Regards,
-
-	Hans
-
-> +
->  static dev_t cec_dev_t;
->  
->  /* Active devices */
-> @@ -174,6 +178,8 @@ static void cec_devnode_unregister(struct cec_adapter *adap)
->  	devnode->unregistered = true;
->  	mutex_unlock(&devnode->lock);
->  
-> +	cancel_delayed_work_sync(&adap->debounce_work);
-> +
->  	mutex_lock(&adap->lock);
->  	__cec_s_phys_addr(adap, CEC_PHYS_ADDR_INVALID, false);
->  	__cec_s_log_addrs(adap, NULL, false);
-> @@ -250,6 +256,17 @@ static const struct file_operations cec_error_inj_fops = {
->  };
->  #endif
->  
-> +static void cec_s_phys_addr_debounce(struct work_struct *work)
-> +{
-> +	struct delayed_work *delayed_work = to_delayed_work(work);
-> +	struct cec_adapter *adap =
-> +		container_of(delayed_work, struct cec_adapter, debounce_work);
-> +
-> +	mutex_lock(&adap->lock);
-> +	__cec_s_phys_addr(adap, CEC_PHYS_ADDR_INVALID, false);
-> +	mutex_unlock(&adap->lock);
-> +}
-> +
->  struct cec_adapter *cec_allocate_adapter(const struct cec_adap_ops *ops,
->  					 void *priv, const char *name, u32 caps,
->  					 u8 available_las)
-> @@ -293,6 +310,7 @@ struct cec_adapter *cec_allocate_adapter(const struct cec_adap_ops *ops,
->  	INIT_LIST_HEAD(&adap->transmit_queue);
->  	INIT_LIST_HEAD(&adap->wait_queue);
->  	init_waitqueue_head(&adap->kthread_waitq);
-> +	INIT_DELAYED_WORK(&adap->debounce_work, cec_s_phys_addr_debounce);
->  
->  	/* adap->devnode initialization */
->  	INIT_LIST_HEAD(&adap->devnode.fhs);
-> diff --git a/drivers/media/cec/cec-priv.h b/drivers/media/cec/cec-priv.h
-> index 7bdf855aaecd..65176294fcf0 100644
-> --- a/drivers/media/cec/cec-priv.h
-> +++ b/drivers/media/cec/cec-priv.h
-> @@ -27,6 +27,7 @@ static inline bool msg_is_raw(const struct cec_msg *msg)
->  
->  /* cec-core.c */
->  extern int cec_debug;
-> +extern int cec_debounce;
->  int cec_get_device(struct cec_devnode *devnode);
->  void cec_put_device(struct cec_devnode *devnode);
->  
-> diff --git a/include/media/cec.h b/include/media/cec.h
-> index 4d59387bc61b..4d96ece01ba2 100644
-> --- a/include/media/cec.h
-> +++ b/include/media/cec.h
-> @@ -195,6 +195,8 @@ struct cec_adapter {
->  	wait_queue_head_t kthread_waitq;
->  	wait_queue_head_t waitq;
->  
-> +	struct delayed_work debounce_work;
-> +
->  	const struct cec_adap_ops *ops;
->  	void *priv;
->  	u32 capabilities;
+> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+> index e67c194..285d649 100644
+> --- a/drivers/gpu/drm/Kconfig
+> +++ b/drivers/gpu/drm/Kconfig
+> @@ -257,6 +257,7 @@ config DRM_VKMS
+>  	tristate "Virtual KMS (EXPERIMENTAL)"
+>  	depends on DRM
+>  	select DRM_KMS_HELPER
+> +	select CRC32
+>  	default n
+>  	help
+>  	  Virtual Kernel Mode-Setting (VKMS) is used for testing or for
+> -- 
+> 2.7.4
 > 
 
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
