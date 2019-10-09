@@ -2,159 +2,140 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA16C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6820ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ED2C206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6571206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:34:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="fB1vGK0Y"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="MsS3ZQ20"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731496AbfJIQcl (ORCPT
+        id S1731679AbfJIQeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 12:32:41 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:34290 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729644AbfJIQcl (ORCPT
+        Wed, 9 Oct 2019 12:34:06 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:28439 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731612AbfJIQeG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 12:32:41 -0400
-Received: by mail-ed1-f66.google.com with SMTP id p10so2631605edq.1
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 09:32:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AsRzV/el8Z6unpKMWQXs9f6o4tkguJYdwjPl71MzeO4=;
-        b=fB1vGK0Y8IInxFoNinBQl0U63Vrn/sGBs87QB1fHlAaA5THnBwVuB525lH71sSRqWR
-         7u1F+4BGnXGpVDrX7Bmj2uK4hNBPzwIGfgKefHgP83Q/0Hj/fXjMRQbg9fNZeitUzVxK
-         Vs+yuhtfDH6rElufVAUHv2i4AxeQ+P45uTWyY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=AsRzV/el8Z6unpKMWQXs9f6o4tkguJYdwjPl71MzeO4=;
-        b=UVNbnBinAhyQbwBDQJM4AA2ddt/tH01/Y7AahQzFCcS7oC+zTuTh0sPkpODsqGtno/
-         qSaNRHzKdyzUPc2LynwPV/1goXIqB6UDfsZYqlJpgCAjRfto8s69oR4HA912zo4yhRBN
-         8KLJJfJFoRmuAV4cBKmNt0Qb+Zkuv3uxGNj/mgeJsTWJyk7hmg/Of89QeLH01xdOZpXc
-         2n6xy4Rzn/TajjBrYiFbZUJTozrPgIJTz+UhwN4DFzp5AZnvpBKCvyJaulJAXotiQPV0
-         lARWocny6v/1vR8urfu+B/k02/rV2mvhEN/fKDBVzPlSgl2OBq6dBMrKXAgk78N1nFm6
-         tBOg==
-X-Gm-Message-State: APjAAAXHTip2i01sRBhinv2kA+jjYRqsOELoejPgZx2HoMZQ1zMbtvEV
-        5wNl0jDXo6DszyENh9vQaaPGNw==
-X-Google-Smtp-Source: APXvYqzwQw06TGxsSqHcjDC/wNFmpzXbSCEbJZ3820d/3Ps2IPTfJXCgo1jOu1txUjeab2Rpd2iaBQ==
-X-Received: by 2002:a17:907:4150:: with SMTP id od24mr3627781ejb.135.1570638758954;
-        Wed, 09 Oct 2019 09:32:38 -0700 (PDT)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id h7sm425812edn.73.2019.10.09.09.32.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 09:32:37 -0700 (PDT)
-Date:   Wed, 9 Oct 2019 18:32:35 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        amd-gfx mailing list <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: drm/amd/display: Add HDCP module - static analysis bug report
-Message-ID: <20191009163235.GT16989@phenom.ffwll.local>
-Mail-Followup-To: Colin Ian King <colin.king@canonical.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        amd-gfx mailing list <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <951eb7dc-bebe-5049-4998-f199e18b0bf3@canonical.com>
+        Wed, 9 Oct 2019 12:34:06 -0400
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id x99GXhxY009609;
+        Thu, 10 Oct 2019 01:33:43 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x99GXhxY009609
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1570638824;
+        bh=y7V7634zQnspw5C5IJL3KPw/IDKbvhhOq4Dz/8oh3dQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=MsS3ZQ20/OfPGrsMG5IyzSZauuNMqtsxIcdmU7pNnKcntklAvx/7zJDpvaPX3+PQC
+         YDxZTkiLEqLn9oPGmJdCvJECLI8dFyVq2vS0dsGe+NYDKgNjM05Hrg8DIctf99V1F5
+         oER2VyTZ4WwhcVy3va2uzGTpz1WEeicEkMdkQRSRR1CYdpYzaIJdRxHLBQqjRgfitH
+         MDxgGdTLCElhyNuFu4PnLPyuPqRLr8VU+Ren4+1DmOGOhdSRcE8J1A6VaOTdBJlUBz
+         ioBL50QAv0d422bx2Ik9XUFY2jy+nGel9ea8TRaSpK7S9NP5z2/0q9aiEK3cwarHwU
+         QYnmyxZVjuxDw==
+X-Nifty-SrcIP: [209.85.217.41]
+Received: by mail-vs1-f41.google.com with SMTP id w195so1912625vsw.11;
+        Wed, 09 Oct 2019 09:33:43 -0700 (PDT)
+X-Gm-Message-State: APjAAAVxi43/ISGtq51ADyXmhh9eD47DCk3WHkMiUgQ3lgcclp5iBdEZ
+        YB6VcYqAVG0DYICVE1ioCxNCCHHVdDHJTOGVzCc=
+X-Google-Smtp-Source: APXvYqyVz/TISAP9X9dWqRgp4AQ7poq8KBQqo3Tv8o3GwtVkP0izbYG6Zxk1diURj0JSGqrOxub3fGjbdk2bFZQOcHU=
+X-Received: by 2002:a05:6102:97:: with SMTP id t23mr2437001vsp.179.1570638822621;
+ Wed, 09 Oct 2019 09:33:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <951eb7dc-bebe-5049-4998-f199e18b0bf3@canonical.com>
-X-Operating-System: Linux phenom 5.2.0-2-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1570633189.git.vilhelm.gray@gmail.com> <271a7735b02b6a8b1f54c018e38ea932d1fd299e.1570633189.git.vilhelm.gray@gmail.com>
+In-Reply-To: <271a7735b02b6a8b1f54c018e38ea932d1fd299e.1570633189.git.vilhelm.gray@gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 10 Oct 2019 01:33:06 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQStJsZ4cYTJyAPvjyngWkKs+5y=yzJb6vz3-cco+2-ug@mail.gmail.com>
+Message-ID: <CAK7LNAQStJsZ4cYTJyAPvjyngWkKs+5y=yzJb6vz3-cco+2-ug@mail.gmail.com>
+Subject: Re: [PATCH v17 09/14] gpio: uniphier: Utilize for_each_set_clump8 macro
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux PM mailing list <linux-pm@vger.kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        preid@electromag.com.au, Lukas Wunner <lukas@wunner.de>,
+        sean.nyekjaer@prevas.dk, morten.tiljeset@prevas.dk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 11:08:03PM +0100, Colin Ian King wrote:
-> Hi,
-> 
-> Static analysis with Coverity has detected a potential issue with
-> function validate_bksv in
-> drivers/gpu/drm/amd/display/modules/hdcp/hdcp1_execution.c with recent
-> commit:
-> 
-> commit ed9d8e2bcb003ec94658cafe9b1bb3960e2139ec
-> Author: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-> Date:   Tue Aug 6 17:52:01 2019 -0400
-> 
->     drm/amd/display: Add HDCP module
+On Thu, Oct 10, 2019 at 12:27 AM William Breathitt Gray
+<vilhelm.gray@gmail.com> wrote:
+>
+> Replace verbose implementation in set_multiple callback with
+> for_each_set_clump8 macro to simplify code and improve clarity. An
+> improvement in this case is that banks that are not masked will now be
+> skipped.
+>
+> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+> ---
+>  drivers/gpio/gpio-uniphier.c | 16 ++++++----------
+>  1 file changed, 6 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-uniphier.c b/drivers/gpio/gpio-uniphier.c
+> index 93cdcc41e9fb..3e4b15d0231e 100644
+> --- a/drivers/gpio/gpio-uniphier.c
+> +++ b/drivers/gpio/gpio-uniphier.c
+> @@ -15,9 +15,6 @@
+>  #include <linux/spinlock.h>
+>  #include <dt-bindings/gpio/uniphier-gpio.h>
+>
+> -#define UNIPHIER_GPIO_BANK_MASK                \
+> -                               GENMASK((UNIPHIER_GPIO_LINES_PER_BANK) - 1, 0)
+> -
+>  #define UNIPHIER_GPIO_IRQ_MAX_NUM      24
+>
+>  #define UNIPHIER_GPIO_PORT_DATA                0x0     /* data */
+> @@ -147,15 +144,14 @@ static void uniphier_gpio_set(struct gpio_chip *chip,
+>  static void uniphier_gpio_set_multiple(struct gpio_chip *chip,
+>                                        unsigned long *mask, unsigned long *bits)
+>  {
+> -       unsigned int bank, shift, bank_mask, bank_bits;
+> -       int i;
+> +       unsigned long i;
+> +       unsigned long bank_mask;
+> +       unsigned long bank;
+> +       unsigned long bank_bits;
 
-I think the real question here is ... why is this not using drm_hdcp?
--Daniel
 
-> 
-> 
-> The analysis is as follows:
-> 
->  28 static inline enum mod_hdcp_status validate_bksv(struct mod_hdcp *hdcp)
->  29 {
-> 
-> CID 89852 (#1 of 1): Out-of-bounds read (OVERRUN)
-> 
-> 1. overrun-local:
-> Overrunning array of 5 bytes at byte offset 7 by dereferencing pointer
-> (uint64_t *)hdcp->auth.msg.hdcp1.bksv.
-> 
->  30        uint64_t n = *(uint64_t *)hdcp->auth.msg.hdcp1.bksv;
->  31        uint8_t count = 0;
->  32
->  33        while (n) {
->  34                count++;
->  35                n &= (n - 1);
->  36        }
-> 
-> hdcp->auth.msg.hdcp1.bksv is an array of 5 uint8_t as defined in
-> drivers/gpu/drm/amd/display/modules/hdcp/hdcp.h as follows:
-> 
-> struct mod_hdcp_message_hdcp1 {
->         uint8_t         an[8];
->         uint8_t         aksv[5];
->         uint8_t         ainfo;
->         uint8_t         bksv[5];
->         uint16_t        r0p;
->         uint8_t         bcaps;
->         uint16_t        bstatus;
->         uint8_t         ksvlist[635];
->         uint16_t        ksvlist_size;
->         uint8_t         vp[20];
-> 
->         uint16_t        binfo_dp;
-> };
-> 
-> variable n is going to contain the contains of r0p and bcaps. I'm not
-> sure if that is intentional. If not, then the count is going to be
-> incorrect if these are non-zero.
-> 
-> Colin
+Please do not split it into multiple lines
+unless you need to do so.
+
+Thanks.
+
+
+
+
+> -       for (i = 0; i < chip->ngpio; i += UNIPHIER_GPIO_LINES_PER_BANK) {
+> +       for_each_set_clump8(i, bank_mask, mask, chip->ngpio) {
+>                 bank = i / UNIPHIER_GPIO_LINES_PER_BANK;
+> -               shift = i % BITS_PER_LONG;
+> -               bank_mask = (mask[BIT_WORD(i)] >> shift) &
+> -                                               UNIPHIER_GPIO_BANK_MASK;
+> -               bank_bits = bits[BIT_WORD(i)] >> shift;
+> +               bank_bits = bitmap_get_value8(bits, i);
+>
+>                 uniphier_gpio_bank_write(chip, bank, UNIPHIER_GPIO_PORT_DATA,
+>                                          bank_mask, bank_bits);
+> --
+> 2.23.0
+>
+
 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Best Regards
+Masahiro Yamada
