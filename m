@@ -2,167 +2,201 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F41CC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2416CECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 672B720679
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:22:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E523E20679
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:22:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="l8MZnwbc";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="T3/HR+pF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jo0D7FVI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731461AbfJIPWA (ORCPT
+        id S1731511AbfJIPWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 11:22:00 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:4482 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731340AbfJIPV7 (ORCPT
+        Wed, 9 Oct 2019 11:22:04 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40906 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728019AbfJIPWE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 11:21:59 -0400
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x99FJqe5024453;
-        Wed, 9 Oct 2019 08:21:46 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=RSwVoYYtqeQs0uAmApLtNxJN96yWZ5eQLOSAfu1Rjeo=;
- b=l8MZnwbcB7mn5jXy8IwMSnhfyOFX1WyiDvP4fm6NfVf6HBQ06aYBW41gQK4M/rcpKAk7
- t/zUE63EjX3gv3Wx7Z9kJUgAunMBOCvUc2RdKlb7/YDzk941pw9Gl+YwWXuAyXyxvwmy
- jxDZMQPKqlBAQ23BkpC2B1SekiunOj6h30s= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2vgbjxj5w6-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 09 Oct 2019 08:21:45 -0700
-Received: from prn-mbx07.TheFacebook.com (2620:10d:c081:6::21) by
- prn-hub03.TheFacebook.com (2620:10d:c081:35::127) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Wed, 9 Oct 2019 08:21:44 -0700
-Received: from prn-hub04.TheFacebook.com (2620:10d:c081:35::128) by
- prn-mbx07.TheFacebook.com (2620:10d:c081:6::21) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Wed, 9 Oct 2019 08:21:44 -0700
-Received: from NAM04-BN3-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.28) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Wed, 9 Oct 2019 08:21:44 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UP05cgeKjvmgpxLLsGHgAhcPg0WTlVl3oLbPixiZCKkgSHIXpkXgvB3wUcCVvbIXbP7akuvYey61U0nZDRhA/hhogXthwNFKlxJUTlR8cknuWT+dZ0GMq7y8onFTIqJ3sWZ4HPRVAycoOcPnYOaZscceeVDFxg1HfyMlDlSHI99ku0OhQ3Ko1VskAjBayjJ9vYvDL1JVzVnDg832uv6zDCEUMbioGP2QLP9iAt/lTkjss8IR8viD0E0W9U+UILFWcSrDVMKld6ueFiN+uhMitaqo2VeRODWtXNw3XmSwQ7aFUdzZdSGghMhNoURpAjjsnYWQnPD0y6ZslS1KFNQlCQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RSwVoYYtqeQs0uAmApLtNxJN96yWZ5eQLOSAfu1Rjeo=;
- b=ZGxe3kwEUe2K0GkolfkBE22tnQb7LUXwtRhfv/TQN67I2BqKWA5QttWs56RCOEHU1NUS++su/jc7Ai8SRzHvYuZ+EMpTgoiJtZHOgnIZg++XfDF+toZGfvEQ3AmBrBqyDuC5QtWCmtIaR9x7xeo06zph4KGw8QmlF57zujJ5qg7JnCjT2MEN0bEyW59FlqDRoaw6FWyJbiqNLPzhh7sWyhlI9gwTxJB4aCibcY9SAuRTr4I7G3m7WNoN8C0WpuLn3cJcQ8ksiXz0y+Z0VWIWrXPlqdV4Hp2zBwP2kxLS7rUVu6D50YC+g+LdHSLqTkqn1h8wW4bmZI3Yt/iBrGQjug==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RSwVoYYtqeQs0uAmApLtNxJN96yWZ5eQLOSAfu1Rjeo=;
- b=T3/HR+pFzcFE/CZ7ccAkBl1d4dVUAJsjZmHTgZTa8EElS2ME2kr+MAe8RZqKHgLREJ1ihsLZm+E96LOFLmZUGufns8+jFgtp1coVHdmVU5x3n1NvCFq+QqiD4aOarlgI0Tq18pTzYDwMDy24V2FTWMRZ36mK6s8gLI2YfxwWD0s=
-Received: from BN8PR15MB2626.namprd15.prod.outlook.com (20.179.137.220) by
- BN8PR15MB3411.namprd15.prod.outlook.com (20.179.75.221) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.16; Wed, 9 Oct 2019 15:21:42 +0000
-Received: from BN8PR15MB2626.namprd15.prod.outlook.com
- ([fe80::dde5:821f:4571:dea4]) by BN8PR15MB2626.namprd15.prod.outlook.com
- ([fe80::dde5:821f:4571:dea4%5]) with mapi id 15.20.2327.026; Wed, 9 Oct 2019
- 15:21:42 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     Oleg Nesterov <oleg@redhat.com>
-CC:     Tejun Heo <tj@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Richard Purdie <richard.purdie@linuxfoundation.org>,
-        Bruce Ashfield <bruce.ashfield@gmail.com>
-Subject: Re: [PATCH] cgroup: freezer: call cgroup_enter_frozen() with
- preemption disabled in ptrace_stop()
-Thread-Topic: [PATCH] cgroup: freezer: call cgroup_enter_frozen() with
- preemption disabled in ptrace_stop()
-Thread-Index: AQHVfrKaoLG3P0+w5kG0208VkVoMq6dSbRUA
-Date:   Wed, 9 Oct 2019 15:21:41 +0000
-Message-ID: <20191009152136.GA19519@castle.dhcp.thefacebook.com>
-References: <CADkTA4PBT374CY+UNb85WjQEaNCDodMZu=MgpG8aMYbAu2eOGA@mail.gmail.com>
- <20191009150230.GB12511@redhat.com>
-In-Reply-To: <20191009150230.GB12511@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR13CA0020.namprd13.prod.outlook.com
- (2603:10b6:300:16::30) To BN8PR15MB2626.namprd15.prod.outlook.com
- (2603:10b6:408:c7::28)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:180::7da4]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 106cf5e9-b35e-45fc-9f9e-08d74ccc6338
-x-ms-traffictypediagnostic: BN8PR15MB3411:
-x-microsoft-antispam-prvs: <BN8PR15MB3411CF3C896DB8A754F8B6D0BE950@BN8PR15MB3411.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
-x-forefront-prvs: 018577E36E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(376002)(346002)(136003)(396003)(39860400002)(199004)(189003)(14454004)(4744005)(386003)(486006)(25786009)(476003)(1076003)(11346002)(6116002)(478600001)(446003)(6506007)(102836004)(64756008)(66556008)(66476007)(66946007)(99286004)(66446008)(76176011)(52116002)(2906002)(186003)(46003)(7736002)(33656002)(305945005)(14444005)(6916009)(9686003)(6512007)(316002)(229853002)(6436002)(54906003)(8936002)(8676002)(6486002)(81166006)(81156014)(256004)(71190400001)(71200400001)(6246003)(86362001)(4326008)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR15MB3411;H:BN8PR15MB2626.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: d7xgJ4CftQJljvMhhSJAYVZds3DGy6j2b3ZvKwqoaY1T6HtwqjkgpTIHsDSx6FSKX3XBB6qF/74GpY18kHO8eRjlgZgW91ZQKFmvbFB+XYyiUR/f2KegkHFy2oKM51Lf2tHGv5vYn3GieSg9CXEeH1E/HpW0KLqJEw4GWXeE02FqgHxQ8c/uuEz/UhQYrgWEv+nL0YMgHi1zwmoo1uvwTDoB640TXm64hDJxjDJYVwlL5legzUA5yeyrNRf6T7g1jW+ctoZ/KOxrZnWwwlT7Jwqhd0QTsKmJYuT8+e471zLQA0ij1bmoQRgKRvdcDNa/K1Tzjgih0P+hcMP39fi7DqZsR8avTI8eVnGA3FvIwPY+sBoSvIrBnUwK5ikc4NDNleXBuJf3bNmS8rc5zPRxL+Tc/55F8sEBPf00MzKUWII=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <67F1D49F8697B644929005C8CFB08CD8@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 106cf5e9-b35e-45fc-9f9e-08d74ccc6338
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Oct 2019 15:21:41.9997
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VtPRD3LN+Zl5FO7i82cIXpcreBnS9kpyl/BL3TYRcQC0aVqjB0NhiI9Hsz5aOUWR
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR15MB3411
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-09_07:2019-10-08,2019-10-09 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 impostorscore=0
- priorityscore=1501 mlxscore=0 adultscore=0 lowpriorityscore=0 spamscore=0
- phishscore=0 suspectscore=0 clxscore=1015 mlxlogscore=876 bulkscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1910090143
-X-FB-Internal: deliver
+        Wed, 9 Oct 2019 11:22:04 -0400
+Received: by mail-pg1-f194.google.com with SMTP id d26so1621085pgl.7
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 08:22:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=T84zFmO42nbUzgLTJpkaQAq6A6ocHYBnhFxVngdSKr4=;
+        b=jo0D7FVIHUBDCB+50tpx961qMwi+Ll3o+WbCw7LdPww5xwZMbl2+g+2aUpSrf7Zq98
+         SPyQznWoVlO67wV2ixuEVX8zJiLdj2vqGQukc22prBfbxr0RUC2DBxT3DymmVA5p4Mt3
+         CXYD5q42Cy82ToM4O3Rym9LjFGKfcx7ROqyHF8WBw3LU3tAGVR4eRM/ZK63cswUlH80T
+         rq1tS3HwnnrfDjsVrXmyvJOIgs+ZmBMzdKiTP/NeX9wuOy/w1J/zYVEFH+fgi73pK8Xx
+         i+2XOBLujnNz9mJ0FhyKjtjsZEa/7prtLzVyc36HO1U2ptjCShMkAKi0kZkQpV61nYry
+         mHVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=T84zFmO42nbUzgLTJpkaQAq6A6ocHYBnhFxVngdSKr4=;
+        b=Qic0m4ZVz+3lVBCoLRJHyPYwN5760dmZpXarIJa5rOu7OPWFEmHFD2NDvzd4ZZsezi
+         B3h3uXoWjXtlrNFlDpNudkdwz4qa6XB0FdlJZDdiOqVIMlCytUxTRMld6F6zzDe8jxHr
+         jtQ8ZfHCKbKCssxY7kNAHMpbIra2ITXgRNnQkZ9gO/ZISERj6ll+on4tU2apD7rOyyg0
+         mVMB8gykoPmrDrJKcwyQDELK4riHrbqouWptXhB55p/T/FfBZQiu1Ut/WdK+GlY8AiKy
+         3AazI+X2c1Yygzxf7OqNUX6Ojmui1EeCPM6HqwO+Fn6xWCLFUpfhfcCaPnjb/si4j8Ku
+         iabg==
+X-Gm-Message-State: APjAAAUFhkATBGo2OkYCY//ZQHfjq4Tia41PQS4s/OVQwmIv3G1RLZyq
+        QeH9cMUKeSGCC1tG1uuJt+76xA==
+X-Google-Smtp-Source: APXvYqwYdmt7LdffGfHn+xN9LhF6QT6xzfmGlCotOAqgwADoJX92Wh73x3TxJas5GxB69mtF9/7FyQ==
+X-Received: by 2002:a17:90a:9416:: with SMTP id r22mr4896064pjo.20.1570634523256;
+        Wed, 09 Oct 2019 08:22:03 -0700 (PDT)
+Received: from localhost.localdomain ([85.203.47.40])
+        by smtp.gmail.com with ESMTPSA id h68sm3279597pfb.149.2019.10.09.08.21.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 09 Oct 2019 08:22:02 -0700 (PDT)
+From:   Zhangfei Gao <zhangfei.gao@linaro.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, jonathan.cameron@huawei.com,
+        grant.likely@arm.com, jean-philippe <jean-philippe@linaro.org>,
+        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>
+Cc:     linux-accelerators@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Zhangfei Gao <zhangfei.gao@linaro.org>
+Subject: [RESEND PATCH v4 0/2] Add uacce module for Accelerator
+Date:   Wed,  9 Oct 2019 23:21:40 +0800
+Message-Id: <1570634502-20923-1-git-send-email-zhangfei.gao@linaro.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 05:02:30PM +0200, Oleg Nesterov wrote:
-> ptrace_stop() does preempt_enable_no_resched() to avoid the preemption,
-> but after that cgroup_enter_frozen() does spin_lock/unlock and this adds
-> another preemption point.
->=20
-> Reported-and-tested-by: Bruce Ashfield <bruce.ashfield@gmail.com>
-> Fixes: 76f969e8948d ("cgroup: cgroup v2 freezer")
-> Cc: stable@vger.kernel.org # v5.2+
-> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-> ---
->  kernel/signal.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/kernel/signal.c b/kernel/signal.c
-> index 534fec2..f8eed86 100644
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -2205,8 +2205,8 @@ static void ptrace_stop(int exit_code, int why, int=
- clear_code, kernel_siginfo_t
->  		 */
->  		preempt_disable();
->  		read_unlock(&tasklist_lock);
-> -		preempt_enable_no_resched();
->  		cgroup_enter_frozen();
-> +		preempt_enable_no_resched();
+Uacce (Unified/User-space-access-intended Accelerator Framework) targets to
+provide Shared Virtual Addressing (SVA) between accelerators and processes.
+So accelerator can access any data structure of the main cpu.
+This differs from the data sharing between cpu and io device, which share
+data content rather than address.
+Because of unified address, hardware and user space of process can share
+the same virtual address in the communication.
 
-Acked-by: Roman Gushchin <guro@fb.com>
+Uacce is intended to be used with Jean Philippe Brucker's SVA
+patchset[1], which enables IO side page fault and PASID support. 
+We have keep verifying with Jean's sva/current [2]
+We also keep verifying with Eric's SMMUv3 Nested Stage patch [3]
 
-Thank you!
+This series and related zip & qm driver
+https://github.com/Linaro/linux-kernel-warpdrive/tree/5.4-rc1-uacce-v4
+
+The library and user application:
+https://github.com/Linaro/warpdrive/tree/wdprd-v1-upstream
+
+References:
+[1] http://jpbrucker.net/sva/
+[2] http://www.linux-arm.org/git?p=linux-jpb.git;a=shortlog;h=refs/heads/sva/current
+[3] https://github.com/eauger/linux/tree/v5.3.0-rc0-2stage-v9
+
+Change History:
+v4:
+Based on 5.4-rc1
+Considering other driver integrating uacce, 
+if uacce not compiled, uacce_register return error and uacce_unregister is empty.
+Simplify uacce flag: UACCE_DEV_SVA.
+Address Greg's comments: 
+Fix state machine, remove potential syslog triggered from user space etc.
+
+v3:
+Recommended by Greg, use sturct uacce_device instead of struct uacce,
+and use struct *cdev in struct uacce_device, as a result, 
+cdev can be released by itself when refcount decreased to 0.
+So the two structures are decoupled and self-maintained by themsleves.
+Also add dev.release for put_device.
+
+v2:
+Address comments from Greg and Jonathan
+Modify interface uacce_register
+Drop noiommu mode first
+
+v1:
+1. Rebase to 5.3-rc1
+2. Build on iommu interface
+3. Verifying with Jean's sva and Eric's nested mode iommu.
+4. User library has developed a lot: support zlib, openssl etc.
+5. Move to misc first
+
+RFC3:
+https://lkml.org/lkml/2018/11/12/1951
+
+RFC2:
+https://lwn.net/Articles/763990/
+
+
+Background of why Uacce:
+Von Neumann processor is not good at general data manipulation.
+It is designed for control-bound rather than data-bound application.
+The latter need less control path facility and more/specific ALUs.
+So there are more and more heterogeneous processors, such as
+encryption/decryption accelerators, TPUs, or
+EDGE (Explicated Data Graph Execution) processors, introduced to gain
+better performance or power efficiency for particular applications
+these days.
+
+There are generally two ways to make use of these heterogeneous processors:
+
+The first is to make them co-processors, just like FPU.
+This is good for some application but it has its own cons:
+It changes the ISA set permanently.
+You must save all state elements when the process is switched out.
+But most data-bound processors have a huge set of state elements.
+It makes the kernel scheduler more complex.
+
+The second is Accelerator.
+It is taken as a IO device from the CPU's point of view
+(but it need not to be physically). The process, running on CPU,
+hold a context of the accelerator and send instructions to it as if
+it calls a function or thread running with FPU.
+The context is bound with the processor itself.
+So the state elements remain in the hardware context until
+the context is released.
+
+We believe this is the core feature of an "Accelerator" vs. Co-processor
+or other heterogeneous processors.
+
+The intention of Uacce is to provide the basic facility to backup
+this scenario. Its first step is to make sure the accelerator and process
+can share the same address space. So the accelerator ISA can directly
+address any data structure of the main CPU.
+This differs from the data sharing between CPU and IO device,
+which share data content rather than address.
+So it is different comparing to the other DMA libraries.
+
+In the future, we may add more facility to support linking accelerator
+library to the main application, or managing the accelerator context as
+special thread.
+But no matter how, this can be a solid start point for new processor
+to be used as an "accelerator" as this is the essential requirement.
+
+Kenneth Lee (2):
+  uacce: Add documents for uacce
+  uacce: add uacce driver
+
+ Documentation/ABI/testing/sysfs-driver-uacce |   47 ++
+ Documentation/misc-devices/uacce.rst         |  297 ++++++++
+ drivers/misc/Kconfig                         |    1 +
+ drivers/misc/Makefile                        |    1 +
+ drivers/misc/uacce/Kconfig                   |   13 +
+ drivers/misc/uacce/Makefile                  |    2 +
+ drivers/misc/uacce/uacce.c                   | 1013 ++++++++++++++++++++++++++
+ include/linux/uacce.h                        |  167 +++++
+ include/uapi/misc/uacce.h                    |   36 +
+ 9 files changed, 1577 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-uacce
+ create mode 100644 Documentation/misc-devices/uacce.rst
+ create mode 100644 drivers/misc/uacce/Kconfig
+ create mode 100644 drivers/misc/uacce/Makefile
+ create mode 100644 drivers/misc/uacce/uacce.c
+ create mode 100644 include/linux/uacce.h
+ create mode 100644 include/uapi/misc/uacce.h
+
+-- 
+2.7.4
+
