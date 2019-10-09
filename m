@@ -2,104 +2,113 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49645ECE58E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B83C9C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CA1E21835
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:41:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 985D821835
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:41:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730314AbfJIHln (ORCPT
+        id S1730404AbfJIHlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 03:41:43 -0400
-Received: from mga05.intel.com ([192.55.52.43]:10388 "EHLO mga05.intel.com"
+        Wed, 9 Oct 2019 03:41:47 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44266 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729983AbfJIHlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 03:41:39 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 00:41:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,273,1566889200"; 
-   d="scan'208";a="277350156"
-Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.125])
-  by orsmga001.jf.intel.com with ESMTP; 09 Oct 2019 00:41:34 -0700
-Date:   Wed, 9 Oct 2019 10:41:33 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Ken Goldman <kgold@linux.ibm.com>
-Cc:     "Safford, David (GE Global Research, US)" <david.safford@ge.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
-Message-ID: <20191009074133.GA6202@linux.intel.com>
-References: <20191003175854.GB19679@linux.intel.com>
- <1570128827.5046.19.camel@linux.ibm.com>
- <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A22E@ALPMBAPA12.e2k.ad.ge.com>
- <20191004182711.GC6945@linux.intel.com>
- <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A38B@ALPMBAPA12.e2k.ad.ge.com>
- <20191007000520.GA17116@linux.intel.com>
- <59b88042-9c56-c891-f75e-7c0719eb5ff9@linux.ibm.com>
- <20191008234935.GA13926@linux.intel.com>
- <20191008235339.GB13926@linux.intel.com>
- <20191009073315.GA5884@linux.intel.com>
+        id S1730059AbfJIHle (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 03:41:34 -0400
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 679C63CBE2
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Oct 2019 07:41:34 +0000 (UTC)
+Received: by mail-pf1-f200.google.com with SMTP id i28so1218969pfq.16
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 00:41:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yhETDPyjdDu1zKZMAXWTw+RFTVrPTgy3NIktVBvTB1s=;
+        b=lhIGYG+qyB5mWQ6z7+4NOUEHNDbw5snSu7WmNWeisoc1aYQbdviB+dEi9x56st0SzQ
+         OE5pvF3mfhufYEHs1tZq9w0oUIPovyLJxVwq4lxRcOUZc/2JkMAUxJrFNeUdLmBUhFsu
+         5F6sYiPzEcBViOcJC6KPWPeUXxMuoAJGPWgE/NrxCWi92F09Vlt8iRT507+rA06dNK7K
+         fHkiu7xAsT/TdcyAfzq99N0Zv/Tkl6VgByKlVpyIWd2FoQkBblW70n68xEWTIrQfe4vD
+         PGDYXjaLWB0dr5ypnnRVXZbvpp54wmFErjujSrnnBs8TI6qQviTa+JVSdREszeFRM9Hc
+         6jIg==
+X-Gm-Message-State: APjAAAXmtt339FtJi+Jxbf5z7Q3qcoxSxOwZlm3NFUzTiCO07Ho7TCqc
+        BLZqyNyKs5Iwrbqp+zQyHjrhjgv8Ui4iuQJxjcpUM6jcs8NuHIqSOG9VoBoW7NUkYu+GHXyx1jb
+        4AOzLfGh1BnFEnDU16JchXvIU
+X-Received: by 2002:a17:90a:aa98:: with SMTP id l24mr2457572pjq.96.1570606893822;
+        Wed, 09 Oct 2019 00:41:33 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyHkBK4xiTE3izO6J9VCbcfdAGwtWs5QRjTXypAY/ib7aR15lQSUQgpvx4dIhx/8cAOR0z2oQ==
+X-Received: by 2002:a17:90a:aa98:: with SMTP id l24mr2457553pjq.96.1570606893552;
+        Wed, 09 Oct 2019 00:41:33 -0700 (PDT)
+Received: from xz-x1 ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id 19sm1294409pjd.23.2019.10.09.00.41.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Oct 2019 00:41:32 -0700 (PDT)
+Date:   Wed, 9 Oct 2019 15:41:18 +0800
+From:   Peter Xu <peterx@redhat.com>
+To:     Palmer Dabbelt <palmer@sifive.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org, david@redhat.com,
+        hughd@google.com, gokhale2@llnl.gov, jglisse@redhat.com,
+        xemul@virtuozzo.com, hannes@cmpxchg.org, cracauer@cons.org,
+        mcfadden8@llnl.gov, shli@fb.com, aarcange@redhat.com,
+        mike.kravetz@oracle.com, dplotnikov@virtuozzo.com,
+        rppt@linux.vnet.ibm.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        mgorman@suse.de, kirill@shutemov.name, dgilbert@redhat.com
+Subject: Re: [PATCH v4 05/10] mm: Return faster for non-fatal signals in user
+ mode faults
+Message-ID: <20191009074118.GC1039@xz-x1>
+References: <20190923042523.10027-6-peterx@redhat.com>
+ <mhng-2f8b3ac1-9d2a-4c81-9417-62cff5f4190f@palmer-si-x1e>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191009073315.GA5884@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <mhng-2f8b3ac1-9d2a-4c81-9417-62cff5f4190f@palmer-si-x1e>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 10:33:15AM +0300, Jarkko Sakkinen wrote:
-> On Wed, Oct 09, 2019 at 02:53:39AM +0300, Jarkko Sakkinen wrote:
-> > On Wed, Oct 09, 2019 at 02:49:35AM +0300, Jarkko Sakkinen wrote:
-> > > On Mon, Oct 07, 2019 at 06:13:01PM -0400, Ken Goldman wrote:
-> > > > The TPM library specification states that the TPM must comply with NIST
-> > > > SP800-90 A.
-> > > > 
-> > > > https://trustedcomputinggroup.org/membership/certification/tpm-certified-products/
-> > > > 
-> > > > shows that the TPMs get third party certification, Common Criteria EAL 4+.
-> > > > 
-> > > > While it's theoretically possible that an attacker could compromise
-> > > > both the TPM vendors and the evaluation agencies, we do have EAL 4+
-> > > > assurance against both 1 and 2.
-> > > 
-> > > Certifications do not equal to trust.
+On Tue, Oct 08, 2019 at 03:43:19PM -0700, Palmer Dabbelt wrote:
+> > diff --git a/arch/riscv/mm/fault.c b/arch/riscv/mm/fault.c
+> > index deeb820bd855..ea8f301de65b 100644
+> > --- a/arch/riscv/mm/fault.c
+> > +++ b/arch/riscv/mm/fault.c
+> > @@ -111,11 +111,12 @@ asmlinkage void do_page_fault(struct pt_regs *regs)
+> >  	fault = handle_mm_fault(vma, addr, flags);
 > > 
-> > And for trusted keys the least trust solution is to do generation
-> > with the kernel assets and sealing with TPM. With TEE the least
-> > trust solution is equivalent.
+> >  	/*
+> > -	 * If we need to retry but a fatal signal is pending, handle the
+> > +	 * If we need to retry but a signal is pending, try to handle the
+> >  	 * signal first. We do not need to release the mmap_sem because it
+> >  	 * would already be released in __lock_page_or_retry in mm/filemap.c.
+> >  	 */
+> > -	if ((fault & VM_FAULT_RETRY) && fatal_signal_pending(tsk))
+> > +	if ((fault & VM_FAULT_RETRY) &&
+> > +	    fault_should_check_signal(user_mode(regs)))
+> >  		return;
 > > 
-> > Are you proposing that the kernel random number generation should
-> > be removed? That would be my conclusion of this discussion if I
-> > would agree any of this (I don't).
+> >  	if (unlikely(fault & VM_FAULT_ERROR)) {
 > 
-> The whole point of rng in kernel has been to use multiple entropy
-> sources in order to disclose the trust issue.
+> Acked-by: Palmer Dabbelt <palmer@sifive.com> # RISC-V parts
 > 
-> Even with weaker entropy than TPM RNG it is still a better choice for
-> *non-TPM* keys because of better trustworthiness. Using only TPM RNG is
-> a design flaw that has existed probably because when trusted keys were
-> introduced TPM was more niche than it is today.
-> 
-> Please remember that a trusted key is not a TPM key. The reality
-> distortion field is strong here it seems.
+> I'm assuming this is going in through some other tree.
 
-And why not use RDRAND on x86 instead of TPM RNG here? It is also FIPS
-compliant and has less latency than TPM RNG. :-) If we go with this
-route, lets pick the HRNG that performs best.
+Hi, Palmer,
 
-/Jarkko
+Thanks for reviewing!
+
+There's a new version here, please feel free to have a look too:
+
+https://lore.kernel.org/lkml/20190926093904.5090-1-peterx@redhat.com/
+
+Regards,
+
+-- 
+Peter Xu
