@@ -2,104 +2,113 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CE5C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 02:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D70F8ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 02:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2C362070B
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 02:23:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ez12gg+l"
+	by mail.kernel.org (Postfix) with ESMTP id B02C820873
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 02:25:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570587936;
+	bh=/QrBYB469HZKoP2i/Ui/nDSLpglSMZz/YjFahCD1rJ8=;
+	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
+	b=MQW+tN79XRkerznvONVaoy/Gk4h7dQbZAsvBubFzEnNRy5uh1O894poD5s82bBXhi
+	 sHZWkrdZ/tHf6etfxgleulsuMylJBTuhzBFQEzFUyaF1cr1IAxXmXl0hFicCgXqYm0
+	 6UCejG4/ep+FcQLrNfLHW1/CnC0md/rf+iGqILm4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729983AbfJICXS (ORCPT
+        id S1730024AbfJICZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 22:23:18 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:9155 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726257AbfJICXS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 22:23:18 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d9d44990000>; Tue, 08 Oct 2019 19:23:21 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 08 Oct 2019 19:23:17 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 08 Oct 2019 19:23:17 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 9 Oct
- 2019 02:23:16 +0000
-Received: from [10.19.101.249] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 9 Oct 2019
- 02:23:13 +0000
-Subject: Re: [PATCH v3 0/7] add Tegra194 XUSB host and pad controller support
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-CC:     <jonathanh@nvidia.com>, <linux-tegra@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <nkristam@nvidia.com>,
-        <skomatineni@nvidia.com>
-References: <20191004162906.4818-1-jckuo@nvidia.com>
- <20191007110311.GA614644@kroah.com> <20191008112907.GC228118@ulmo>
-From:   JC Kuo <jckuo@nvidia.com>
-Message-ID: <454e29a6-bf31-c75c-0f29-abd18a4ae071@nvidia.com>
-Date:   Wed, 9 Oct 2019 10:23:11 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20191008112907.GC228118@ulmo>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
+        Tue, 8 Oct 2019 22:25:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46506 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729734AbfJICZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 22:25:35 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD6C62070B;
+        Wed,  9 Oct 2019 02:25:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570587934;
+        bh=/QrBYB469HZKoP2i/Ui/nDSLpglSMZz/YjFahCD1rJ8=;
+        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
+        b=i2KzweRXVvxB7h86Tlqn50OZGHqsVOrbbZwc36eE86FnOw8DMeoKQcaMRO0hOv2VO
+         uQDjjQWyoKv9boVcqw6DR4nCX6k/FhqApJk2KWhw0FYDFxeONL0xXEoa3ULHmNbx0c
+         kk4xAGf4rGLx76mitQjqpjP8IrWrEJI7uA0YjrCo=
 Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1570587801; bh=vnyW6vcYjvIgUWxen6TD2VOhh0h48/42kmnZQsDavJA=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=ez12gg+le8K5PmWmR8YWC3VmIeWSmk35/9k5fY9ASesDIKMbncNvPGPoJEGRfdthe
-         1/H2cq2Mngi83sb65hai4L+ksuGs2YwIpJa4Pq4dfIA5cx9/Zw85jEPP+eXCZt/E/v
-         jAPV8AmzoBggSvN8Ub9LcHQ29KqawE9sv02x8gRR4MvgOl/1En7C/q/fk+v9tTby3/
-         8oFnp6Qh7Yqs9yLtExGoulqFTTqOaBuf7OP2rqPhOZjgE5ZbYVm1oLN9Tn07NuLM24
-         fwKF2yVodh4R4fDfeYZQpIAU825y7+UXL2bHyHl62k2mHWmOlzYEXO81EdZLPrf9Bs
-         /4bzHxzCp+8HA==
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191007014509.25180-6-masneyb@onstation.org>
+References: <20191007014509.25180-1-masneyb@onstation.org> <20191007014509.25180-6-masneyb@onstation.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Brian Masney <masneyb@onstation.org>, robdclark@gmail.com,
+        sean@poorly.run
+Cc:     bjorn.andersson@linaro.org, a.hajda@samsung.com,
+        Laurent.pinchart@ideasonboard.com, airlied@linux.ie,
+        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, jonathan@marek.ca,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH RFC v2 5/5] ARM: dts: qcom: msm8974-hammerhead: add support for external display
+User-Agent: alot/0.8.1
+Date:   Tue, 08 Oct 2019 19:25:33 -0700
+Message-Id: <20191009022534.BD6C62070B@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/8/19 7:29 PM, Thierry Reding wrote:
-> On Mon, Oct 07, 2019 at 01:03:11PM +0200, Greg KH wrote:
->> On Sat, Oct 05, 2019 at 12:28:59AM +0800, JC Kuo wrote:
->>> Hi,
->>>
->>> This series introduces support for Tegra194 XUSB host and pad
->>> controller. Tegra194 XUSB host and pad controller are highly
->>> similar to the controllers found on Tegra186. Therefore, it's
->>> possible to resue xhci-tegra.c and xusb-tegra186.c for Tegra194.
->>
->> I've taken patches 1 and 2 through my USB tree.  If you want/need me to
->> take the others, please get acks from those maintainers on them so I can
->> do so.
-> 
-> I can pick up patches 6 and 7 into the Tegra tree. There are a few
-> patches in there already that conflict with the DT changes in this
-> series and those will be easier to resolve in the Tegra tree.
-> 
-> JC, I noticed that you didn't Cc Kishon as the PHY subsystem maintainer.
-> Please resend the series with Kishon added in the To: line to make sure
-> he sees them and can apply or ack them.
-> 
-> Given that Greg's already applied patches 1 and 2, maybe leave them out
-> of the series.
-Thanks Thierry. I will send v4 accordingly.
-> 
-> Thierry
-> 
+Quoting Brian Masney (2019-10-06 18:45:09)
+> diff --git a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts b/a=
+rch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
+> index b607c9ff9e12..380a805cd1f0 100644
+> --- a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
+> +++ b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
+> @@ -371,6 +401,40 @@
+>                                 function =3D "gpio";
+>                         };
+>                 };
+> +
+> +               hdmi_pin: hdmi {
+> +                       cec {
+> +                               pins =3D "gpio31";
+> +                               function =3D "hdmi_cec";
+> +                       };
+> +
+> +                       ddc {
+> +                               pins =3D "gpio32", "gpio33";
+> +                               function =3D "hdmi_ddc";
+> +                       };
+> +
+> +                       hpd {
+> +                               pins =3D "gpio34";
+> +                               function =3D "hdmi_hpd";
+> +                       };
+> +               };
+> +
+> +               anx_msm_pin: anx {
+> +                       irq {
+> +                               pins =3D "gpio28";
+> +                               function =3D "gpio";
+
+Is function =3D "gpio" necessary anymore? I thought we would turn gpios
+into gpio function when it's requested as a gpio by some consumer.
+
+> +                               drive-strength =3D <8>;
+> +                               bias-pull-up;
+> +                               input-enable;
+> +                       };
+> +
+> +                       reset {
+> +                               pins =3D "gpio68";
+> +                               function =3D "gpio";
+> +                               drive-strength =3D <8>;
+> +                               bias-pull-up;
+> +                       };
+> +               };
+>         };
+> =20
+>         vibrator@fd8c3450 {
