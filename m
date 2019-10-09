@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE1FC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84738ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D69F2067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F70C21920
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:31:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570642257;
-	bh=jaQ1a5oZ215Cx3h26Jqy++OBZ3GCo9SChM6Fjaz6eNs=;
+	s=default; t=1570642261;
+	bh=N0zoL5YhrO/1NDUD4wR1V+S0xXE5d5+U9/T9JZWM2ZM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Exn7Oq8Q0GYQL28daHq2YUktu9qwUKZwudT5863o85FrrlJOHCYVksyFthByIWsEL
-	 mOyhoVIbaTzkf6NIU2hqBOcPrud96APjpo8XeUQshPk9iFvWcXCbxnNl1JVJnq75lO
-	 FkIu5TmtPLXYfI7Yr4VNxDeEQsvYnMrFq0bS7gX0=
+	b=oufeeoxhbNDNSzUO84PN4OQ5NFnAI6LAb9D9zIzTzT9s1YPh266P3lUGfY3iDn71X
+	 AG8DOufLa61HME4agNPikXLx3seZgjN0mPNCRyOBdW+jIiCh170k2HNCUfa/D2cR1q
+	 GXAJx3UDI7o9gR43q/OR00S6JUgdIgszWj3AquRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732803AbfJIRa4 (ORCPT
+        id S1732110AbfJIRYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:30:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48600 "EHLO mail.kernel.org"
+        Wed, 9 Oct 2019 13:24:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732003AbfJIRYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 13:24:06 -0400
+        id S1732003AbfJIRX5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 13:23:57 -0400
 Received: from sasha-vm.mshome.net (unknown [167.220.2.234])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95ECC21A4A;
-        Wed,  9 Oct 2019 17:24:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03C3F21D7C;
+        Wed,  9 Oct 2019 17:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570641845;
-        bh=jaQ1a5oZ215Cx3h26Jqy++OBZ3GCo9SChM6Fjaz6eNs=;
+        s=default; t=1570641837;
+        bh=N0zoL5YhrO/1NDUD4wR1V+S0xXE5d5+U9/T9JZWM2ZM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZuCihMeTkDNFrcpl7dx5pMgQxdVKjBZf16sd906VTCBduqMqBNxivZbo7cfHII0t8
-         +WMpw60S1afC7Fi/ILlt3P7/lgOuP9WU0D8sJ8HshdaW1WUcr0Ie3URGt/dfh7pa60
-         J2GV+6ggS/Pg6H4MPyIwfYKqj2No1a1Eseu3BTFs=
+        b=yY4g+Ltr/tg7qG92fTx/EMK0JvQ7gNUSF1HOz3ttRFblDwMMJsTRf4i68n6RcrZiZ
+         hEE2NxilxYaSmZ0nimC2d6l5cNnGGcQrMVeLH007eLzZP2uOsQagB+hAh9R+qUbPL8
+         Zi21xNGGIOy7qrZx3KDEuBzn9MBIG0/BZ1uxx9xo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>, Adam Ford <aford173@gmail.com>,
-        =?UTF-8?q?Andr=C3=A9=20Roth?= <neolynx@gmail.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 07/26] ARM: OMAP2+: Fix warnings with broken omap2_set_init_voltage()
-Date:   Wed,  9 Oct 2019 13:05:39 -0400
-Message-Id: <20191009170558.32517-7-sashal@kernel.org>
+Cc:     Quinn Tran <qutran@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 13/68] scsi: qla2xxx: Fix N2N link up fail
+Date:   Wed,  9 Oct 2019 13:04:52 -0400
+Message-Id: <20191009170547.32204-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191009170558.32517-1-sashal@kernel.org>
-References: <20191009170558.32517-1-sashal@kernel.org>
+In-Reply-To: <20191009170547.32204-1-sashal@kernel.org>
+References: <20191009170547.32204-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,167 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Quinn Tran <qutran@marvell.com>
 
-[ Upstream commit cf395f7ddb9ebc6b2d28d83b53d18aa4e7c19701 ]
+[ Upstream commit f3f1938bb673b1b5ad182c4608f5f8a24921eea3 ]
 
-This code is currently unable to find the dts opp tables as ti-cpufreq
-needs to set them up first based on speed binning.
+During link up/bounce, qla driver would do command flush as part of
+cleanup.  In this case, the flush can intefere with FW state.  This patch
+allows FW to be in control of link up.
 
-We stopped initializing the opp tables with platform code years ago for
-device tree based booting with commit 92d51856d740 ("ARM: OMAP3+: do not
-register non-dt OPP tables for device tree boot"), and all of mach-omap2
-is now booting using device tree.
-
-We currently get the following errors on init:
-
-omap2_set_init_voltage: unable to find boot up OPP for vdd_mpu
-omap2_set_init_voltage: unable to set vdd_mpu
-omap2_set_init_voltage: unable to find boot up OPP for vdd_core
-omap2_set_init_voltage: unable to set vdd_core
-omap2_set_init_voltage: unable to find boot up OPP for vdd_iva
-omap2_set_init_voltage: unable to set vdd_iva
-
-Let's just drop the unused code. Nowadays ti-cpufreq should be used to
-to initialize things properly.
-
-Cc: Adam Ford <aford173@gmail.com>
-Cc: André Roth <neolynx@gmail.com>
-Cc: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Nishanth Menon <nm@ti.com>
-Cc: Tero Kristo <t-kristo@ti.com>
-Tested-by: Adam Ford <aford173@gmail.com> #logicpd-torpedo-37xx-devkit
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Link: https://lore.kernel.org/r/20190912180918.6436-7-hmadhani@marvell.com
+Signed-off-by: Quinn Tran <qutran@marvell.com>
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-omap2/pm.c | 100 ---------------------------------------
- 1 file changed, 100 deletions(-)
+ drivers/scsi/qla2xxx/qla_mbx.c | 2 ++
+ drivers/scsi/qla2xxx/qla_os.c  | 6 ++----
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/mach-omap2/pm.c b/arch/arm/mach-omap2/pm.c
-index ca03af8fe43ff..ddf96adf65ab3 100644
---- a/arch/arm/mach-omap2/pm.c
-+++ b/arch/arm/mach-omap2/pm.c
-@@ -77,83 +77,6 @@ int omap_pm_clkdms_setup(struct clockdomain *clkdm, void *unused)
- 	return 0;
- }
+diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
+index aadff0124f39f..abfb9c800ce28 100644
+--- a/drivers/scsi/qla2xxx/qla_mbx.c
++++ b/drivers/scsi/qla2xxx/qla_mbx.c
+@@ -3905,6 +3905,7 @@ qla24xx_report_id_acquisition(scsi_qla_host_t *vha,
+ 				fcport->dm_login_expire = jiffies + 2*HZ;
+ 				fcport->scan_state = QLA_FCPORT_FOUND;
+ 				fcport->n2n_flag = 1;
++				fcport->keep_nport_handle = 1;
+ 				if (vha->flags.nvme_enabled)
+ 					fcport->fc4f_nvme = 1;
  
--/*
-- * This API is to be called during init to set the various voltage
-- * domains to the voltage as per the opp table. Typically we boot up
-- * at the nominal voltage. So this function finds out the rate of
-- * the clock associated with the voltage domain, finds out the correct
-- * opp entry and sets the voltage domain to the voltage specified
-- * in the opp entry
-- */
--static int __init omap2_set_init_voltage(char *vdd_name, char *clk_name,
--					 const char *oh_name)
--{
--	struct voltagedomain *voltdm;
--	struct clk *clk;
--	struct dev_pm_opp *opp;
--	unsigned long freq, bootup_volt;
--	struct device *dev;
--
--	if (!vdd_name || !clk_name || !oh_name) {
--		pr_err("%s: invalid parameters\n", __func__);
--		goto exit;
--	}
--
--	if (!strncmp(oh_name, "mpu", 3))
--		/* 
--		 * All current OMAPs share voltage rail and clock
--		 * source, so CPU0 is used to represent the MPU-SS.
--		 */
--		dev = get_cpu_device(0);
--	else
--		dev = omap_device_get_by_hwmod_name(oh_name);
--
--	if (IS_ERR(dev)) {
--		pr_err("%s: Unable to get dev pointer for hwmod %s\n",
--			__func__, oh_name);
--		goto exit;
--	}
--
--	voltdm = voltdm_lookup(vdd_name);
--	if (!voltdm) {
--		pr_err("%s: unable to get vdd pointer for vdd_%s\n",
--			__func__, vdd_name);
--		goto exit;
--	}
--
--	clk =  clk_get(NULL, clk_name);
--	if (IS_ERR(clk)) {
--		pr_err("%s: unable to get clk %s\n", __func__, clk_name);
--		goto exit;
--	}
--
--	freq = clk_get_rate(clk);
--	clk_put(clk);
--
--	opp = dev_pm_opp_find_freq_ceil(dev, &freq);
--	if (IS_ERR(opp)) {
--		pr_err("%s: unable to find boot up OPP for vdd_%s\n",
--			__func__, vdd_name);
--		goto exit;
--	}
--
--	bootup_volt = dev_pm_opp_get_voltage(opp);
--	dev_pm_opp_put(opp);
--
--	if (!bootup_volt) {
--		pr_err("%s: unable to find voltage corresponding to the bootup OPP for vdd_%s\n",
--		       __func__, vdd_name);
--		goto exit;
--	}
--
--	voltdm_scale(voltdm, bootup_volt);
--	return 0;
--
--exit:
--	pr_err("%s: unable to set vdd_%s\n", __func__, vdd_name);
--	return -EINVAL;
--}
--
- #ifdef CONFIG_SUSPEND
- static int omap_pm_enter(suspend_state_t suspend_state)
- {
-@@ -211,25 +134,6 @@ void omap_common_suspend_init(void *pm_suspend)
- }
- #endif /* CONFIG_SUSPEND */
+@@ -4050,6 +4051,7 @@ qla24xx_report_id_acquisition(scsi_qla_host_t *vha,
+ 			fcport->login_retry = vha->hw->login_retry_count;
+ 			fcport->plogi_nack_done_deadline = jiffies + HZ;
+ 			fcport->scan_state = QLA_FCPORT_FOUND;
++			fcport->keep_nport_handle = 1;
+ 			fcport->n2n_flag = 1;
+ 			fcport->d_id.b.domain =
+ 				rptid_entry->u.f2.remote_nport_id[2];
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index 12d5f50646fba..2835afbd2edc7 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -5150,11 +5150,9 @@ void qla24xx_create_new_sess(struct scsi_qla_host *vha, struct qla_work_evt *e)
+ 			if (dfcp)
+ 				qlt_schedule_sess_for_deletion(tfcp);
  
--static void __init omap3_init_voltages(void)
--{
--	if (!soc_is_omap34xx())
--		return;
 -
--	omap2_set_init_voltage("mpu_iva", "dpll1_ck", "mpu");
--	omap2_set_init_voltage("core", "l3_ick", "l3_main");
--}
+-			if (N2N_TOPO(vha->hw))
+-				fcport->flags &= ~FCF_FABRIC_DEVICE;
 -
--static void __init omap4_init_voltages(void)
--{
--	if (!soc_is_omap44xx())
--		return;
--
--	omap2_set_init_voltage("mpu", "dpll_mpu_ck", "mpu");
--	omap2_set_init_voltage("core", "l3_div_ck", "l3_main_1");
--	omap2_set_init_voltage("iva", "dpll_iva_m5x2_ck", "iva");
--}
--
- int __maybe_unused omap_pm_nop_init(void)
- {
- 	return 0;
-@@ -249,10 +153,6 @@ int __init omap2_common_pm_late_init(void)
- 	omap4_twl_init();
- 	omap_voltage_late_init();
- 
--	/* Initialize the voltages */
--	omap3_init_voltages();
--	omap4_init_voltages();
--
- 	/* Smartreflex device init */
- 	omap_devinit_smartreflex();
- 
+ 			if (N2N_TOPO(vha->hw)) {
++				fcport->flags &= ~FCF_FABRIC_DEVICE;
++				fcport->keep_nport_handle = 1;
+ 				if (vha->flags.nvme_enabled) {
+ 					fcport->fc4f_nvme = 1;
+ 					fcport->n2n_flag = 1;
 -- 
 2.20.1
 
