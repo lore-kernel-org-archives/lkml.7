@@ -7,33 +7,34 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C461C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FF2ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B65921848
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:00:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4743321848
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:00:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731481AbfJINAP (ORCPT
+        id S1731489AbfJINAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 09:00:15 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:50928 "EHLO
+        Wed, 9 Oct 2019 09:00:20 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:50920 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731330AbfJIM7e (ORCPT
+        with ESMTP id S1731328AbfJIM7d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 08:59:34 -0400
+        Wed, 9 Oct 2019 08:59:33 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iIBYr-0002sn-OD; Wed, 09 Oct 2019 14:59:25 +0200
+        id 1iIBYo-0002pz-8t; Wed, 09 Oct 2019 14:59:22 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A643A1C0322;
-        Wed,  9 Oct 2019 14:59:20 +0200 (CEST)
-Date:   Wed, 09 Oct 2019 12:59:20 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id F00851C01BD;
+        Wed,  9 Oct 2019 14:59:19 +0200 (CEST)
+Date:   Wed, 09 Oct 2019 12:59:19 -0000
 From:   "tip-bot2 for Frederic Weisbecker" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/vtime: Fix guest/system mis-accounting on task switch
+Subject: [tip: sched/urgent] sched/vtime: Fix guest/system mis-accounting on
+ task switch
 Cc:     Frederic Weisbecker <frederic@kernel.org>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
@@ -45,7 +46,7 @@ Cc:     Frederic Weisbecker <frederic@kernel.org>,
 In-Reply-To: <20190925214242.21873-1-frederic@kernel.org>
 References: <20190925214242.21873-1-frederic@kernel.org>
 MIME-Version: 1.0
-Message-ID: <157062596061.9978.8958739331326748237.tip-bot2@tip-bot2>
+Message-ID: <157062595991.9978.4513600041871696751.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,7 +60,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/core branch of tip:
+The following commit has been merged into the sched/urgent branch of tip:
 
 Commit-ID:     68e7a4d66b0ce04bf18ff2ffded5596ab3618585
 Gitweb:        https://git.kernel.org/tip/68e7a4d66b0ce04bf18ff2ffded5596ab3618585
