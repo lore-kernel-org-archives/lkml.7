@@ -2,192 +2,100 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9AF9C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D5BC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD46F20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:31:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFB2B20B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:32:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Qr7myM7Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730407AbfJIJbp (ORCPT
+        id S1730588AbfJIJcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 05:31:45 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:64494 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726734AbfJIJbp (ORCPT
+        Wed, 9 Oct 2019 05:32:18 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:46406 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730069AbfJIJcR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 05:31:45 -0400
-X-UUID: 2eea609e1e5745fd93ffaac457cc30fa-20191009
-X-UUID: 2eea609e1e5745fd93ffaac457cc30fa-20191009
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1807387151; Wed, 09 Oct 2019 17:31:38 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 9 Oct 2019 17:31:32 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 9 Oct 2019 17:31:32 +0800
-Message-ID: <1570613495.7713.10.camel@mtksdaap41>
-Subject: Re: [PATCH v5, 07/32] drm/mediatek: add mutex mod into ddp private
- data
-From:   CK Hu <ck.hu@mediatek.com>
-To:     <yongqiang.niu@mediatek.com>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Wed, 9 Oct 2019 17:31:35 +0800
-In-Reply-To: <1567090254-15566-8-git-send-email-yongqiang.niu@mediatek.com>
-References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1567090254-15566-8-git-send-email-yongqiang.niu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 9 Oct 2019 05:32:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=48pe5fCaWDIwrzy6iukfLBqQeWQALW/aO1iPRgAYzPk=; b=Qr7myM7ZXdn2gg2NbRatgtVte
+        4xY/GjCZbskHfRr4Cczc+KOR1pRiR951pP6CQP5A+9339Mz1PM0p+aWCtg/uHmI9D4mHzlKcokwP2
+        xw7RDSd0CZg2//zf3knh2p0OwG/cfLZkun5oitVOXrAw86jmuFq8XL+g+uDc4aQlkReuoWm6ySIVq
+        SFM5DZr5QaqMhdcEGN82EcXStgfvOuJQzilPfDkj7FlEQQAmdrr2Uu50ySAANCXb3sdpR49504dyH
+        RW276ytHQtKwThS9bSL7wqGxYRNXg2xw7sc9QXciwiDfYmhXc6+OHzqJE3XNeZAzGNHWRZNhsVI3H
+        VMyWaJ8bA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iI8KK-00045E-MD; Wed, 09 Oct 2019 09:32:12 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BDAEC305DE2;
+        Wed,  9 Oct 2019 11:31:18 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8167B2022BA0D; Wed,  9 Oct 2019 11:32:10 +0200 (CEST)
+Date:   Wed, 9 Oct 2019 11:32:10 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Like Xu <like.xu@linux.intel.com>, kvm@vger.kernel.org,
+        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
+        vkuznets@redhat.com, Jim Mattson <jmattson@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        ak@linux.intel.com, wei.w.wang@intel.com, kan.liang@intel.com,
+        like.xu@intel.com, ehankland@google.com, arbel.moshe@oracle.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] KVM: x86/vPMU: Add lazy mechanism to release
+ perf_event per vPMC
+Message-ID: <20191009093210.GK2328@hirez.programming.kicks-ass.net>
+References: <20190930072257.43352-1-like.xu@linux.intel.com>
+ <20190930072257.43352-4-like.xu@linux.intel.com>
+ <20191001082321.GL4519@hirez.programming.kicks-ass.net>
+ <e77fe471-1c65-571d-2b9e-d97c2ee0706f@linux.intel.com>
+ <20191008121140.GN2294@hirez.programming.kicks-ass.net>
+ <d492e08e-bf14-0a8b-bc8c-397f8893ddb5@linux.intel.com>
+ <bfd23868-064e-4bf5-4dfb-211d36c409c1@redhat.com>
+ <20191009081602.GI2328@hirez.programming.kicks-ass.net>
+ <795f5e36-0211-154f-fcf0-f2f1771bf724@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: AC71247C6AD1EBD0EEC01AB4ACDE9E930FA1EC53344276BD50221E780C817EF22000:8
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <795f5e36-0211-154f-fcf0-f2f1771bf724@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Yongqiang:
+On Wed, Oct 09, 2019 at 11:21:30AM +0200, Paolo Bonzini wrote:
+> On 09/10/19 10:16, Peter Zijlstra wrote:
 
-On Thu, 2019-08-29 at 22:50 +0800, yongqiang.niu@mediatek.com wrote:
-> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> >> bool bitfields preserve the magic behavior where something like this:
+> >>
+> >>   foo->x = y;
+> >>
+> >> (x is a bool bitfield) would be compiled as
+> >>
+> >>   foo->x = (y != 0);
+> > 
+> > This is confusion; if y is a single bit bitfield, then there is
+> > absolutely _NO_ difference between these two expressions.
 > 
-> except mutex mod, mutex mod reg,mutex sof reg,
-> and mutex sof id will be ddp private data
+> y is not in a struct so it cannot be a single bit bitfield. :) If y is
+> an int and foo->x is a bool bitfield, you get the following:
+> 
+> 	foo->x = 6;	/* foo->x is 1, it would be 0 for int:1 */
+> 	foo->x = 7;	/* foo->x is 1, it would be 1 for int:1 */
 > 
 
-Applied to mediatek-drm-next-5.5 [1], thanks.
-
-[1]
-https://github.com/ckhu-mediatek/linux.git-tags/commits/mediatek-drm-next-5.5
-
-Regards,
-CK
-
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> Reviewed-by: CK Hu <ck.hu@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 41 +++++++++++++++++++++++++---------
->  1 file changed, 30 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> index 8106a71..b6cc3d8 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> @@ -139,12 +139,16 @@ struct mtk_disp_mutex {
->  	bool claimed;
->  };
->  
-> +struct mtk_ddp_data {
-> +	const unsigned int *mutex_mod;
-> +};
-> +
->  struct mtk_ddp {
->  	struct device			*dev;
->  	struct clk			*clk;
->  	void __iomem			*regs;
->  	struct mtk_disp_mutex		mutex[10];
-> -	const unsigned int		*mutex_mod;
-> +	const struct mtk_ddp_data	*data;
->  };
->  
->  static const unsigned int mt2701_mutex_mod[DDP_COMPONENT_ID_MAX] = {
-> @@ -194,6 +198,18 @@ struct mtk_ddp {
->  	[DDP_COMPONENT_WDMA1] = MT8173_MUTEX_MOD_DISP_WDMA1,
->  };
->  
-> +static const struct mtk_ddp_data mt2701_ddp_driver_data = {
-> +	.mutex_mod = mt2701_mutex_mod,
-> +};
-> +
-> +static const struct mtk_ddp_data mt2712_ddp_driver_data = {
-> +	.mutex_mod = mt2712_mutex_mod,
-> +};
-> +
-> +static const struct mtk_ddp_data mt8173_ddp_driver_data = {
-> +	.mutex_mod = mt8173_mutex_mod,
-> +};
-> +
->  static unsigned int mtk_ddp_mout_en(enum mtk_ddp_comp_id cur,
->  				    enum mtk_ddp_comp_id next,
->  				    unsigned int *addr)
-> @@ -456,15 +472,15 @@ void mtk_disp_mutex_add_comp(struct mtk_disp_mutex *mutex,
->  		reg = MUTEX_SOF_DPI1;
->  		break;
->  	default:
-> -		if (ddp->mutex_mod[id] < 32) {
-> +		if (ddp->data->mutex_mod[id] < 32) {
->  			offset = DISP_REG_MUTEX_MOD(mutex->id);
->  			reg = readl_relaxed(ddp->regs + offset);
-> -			reg |= 1 << ddp->mutex_mod[id];
-> +			reg |= 1 << ddp->data->mutex_mod[id];
->  			writel_relaxed(reg, ddp->regs + offset);
->  		} else {
->  			offset = DISP_REG_MUTEX_MOD2(mutex->id);
->  			reg = readl_relaxed(ddp->regs + offset);
-> -			reg |= 1 << (ddp->mutex_mod[id] - 32);
-> +			reg |= 1 << (ddp->data->mutex_mod[id] - 32);
->  			writel_relaxed(reg, ddp->regs + offset);
->  		}
->  		return;
-> @@ -494,15 +510,15 @@ void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
->  			       ddp->regs + DISP_REG_MUTEX_SOF(mutex->id));
->  		break;
->  	default:
-> -		if (ddp->mutex_mod[id] < 32) {
-> +		if (ddp->data->mutex_mod[id] < 32) {
->  			offset = DISP_REG_MUTEX_MOD(mutex->id);
->  			reg = readl_relaxed(ddp->regs + offset);
-> -			reg &= ~(1 << ddp->mutex_mod[id]);
-> +			reg &= ~(1 << ddp->data->mutex_mod[id]);
->  			writel_relaxed(reg, ddp->regs + offset);
->  		} else {
->  			offset = DISP_REG_MUTEX_MOD2(mutex->id);
->  			reg = readl_relaxed(ddp->regs + offset);
-> -			reg &= ~(1 << (ddp->mutex_mod[id] - 32));
-> +			reg &= ~(1 << (ddp->data->mutex_mod[id] - 32));
->  			writel_relaxed(reg, ddp->regs + offset);
->  		}
->  		break;
-> @@ -577,7 +593,7 @@ static int mtk_ddp_probe(struct platform_device *pdev)
->  		return PTR_ERR(ddp->regs);
->  	}
->  
-> -	ddp->mutex_mod = of_device_get_match_data(dev);
-> +	ddp->data = of_device_get_match_data(dev);
->  
->  	platform_set_drvdata(pdev, ddp);
->  
-> @@ -590,9 +606,12 @@ static int mtk_ddp_remove(struct platform_device *pdev)
->  }
->  
->  static const struct of_device_id ddp_driver_dt_match[] = {
-> -	{ .compatible = "mediatek,mt2701-disp-mutex", .data = mt2701_mutex_mod},
-> -	{ .compatible = "mediatek,mt2712-disp-mutex", .data = mt2712_mutex_mod},
-> -	{ .compatible = "mediatek,mt8173-disp-mutex", .data = mt8173_mutex_mod},
-> +	{ .compatible = "mediatek,mt2701-disp-mutex",
-> +	  .data = &mt2701_ddp_driver_data},
-> +	{ .compatible = "mediatek,mt2712-disp-mutex",
-> +	  .data = &mt2712_ddp_driver_data},
-> +	{ .compatible = "mediatek,mt8173-disp-mutex",
-> +	  .data = &mt8173_ddp_driver_data},
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, ddp_driver_dt_match);
-
-
+Urgh, reading hard. You're right!
