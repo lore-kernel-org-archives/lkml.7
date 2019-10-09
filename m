@@ -2,124 +2,239 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E890C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AECBECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 517B42133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:41:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AAE721835
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:41:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JMiEwo3k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730156AbfJIHlh (ORCPT
+        id S1730260AbfJIHll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 03:41:37 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:19142 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729983AbfJIHlc (ORCPT
+        Wed, 9 Oct 2019 03:41:41 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35117 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725935AbfJIHlj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 03:41:32 -0400
-X-UUID: 6562670a30264e0fa84464cf32ffd9c0-20191009
-X-UUID: 6562670a30264e0fa84464cf32ffd9c0-20191009
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 27623975; Wed, 09 Oct 2019 15:41:16 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 9 Oct 2019 15:41:13 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 9 Oct 2019 15:41:12 +0800
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [RESEND PATCH v3 07/11] phy: phy-mtk-tphy: add a property for internal resistance
-Date:   Wed, 9 Oct 2019 15:40:30 +0800
-Message-ID: <1570606834-5644-7-git-send-email-chunfeng.yun@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-In-Reply-To: <1570606834-5644-1-git-send-email-chunfeng.yun@mediatek.com>
-References: <1570606834-5644-1-git-send-email-chunfeng.yun@mediatek.com>
+        Wed, 9 Oct 2019 03:41:39 -0400
+Received: by mail-wr1-f67.google.com with SMTP id v8so1496773wrt.2;
+        Wed, 09 Oct 2019 00:41:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9UY2QbIEGmOf3Zlgv93V9GQZjtls83MvwklkIbK7UcU=;
+        b=JMiEwo3kLUZJRv2GBcyt2r2G8LVII7f8OPxj12em9L3VP3COd7cFJ33hUC9hRAd7WZ
+         feuVyW9Sp9WZh4QGXupeNhxrMGL6+S/8UsHsTL2g4jiFPaO166TnOKYgt/wsc6z4DCTx
+         hi3bXzh873VRscdE8Da5DtsvMmDR0FNzjFRDEDWD9GpdLX4jg9l5Y7l1Nbn0ku3C+u6P
+         WbmHyeXaGxegWzc4jXi/lDrydbY3lRCpn4uCEr6OHj/NnQtg77Lbvx8iIC7zC3pRclYh
+         v1nRtZ7sPbKrQ09XOwFGTv3uxdb6HIMjtp0Ctt5t3Sfj2F64BwgUCpuMwZnqblmCnRJj
+         SV7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9UY2QbIEGmOf3Zlgv93V9GQZjtls83MvwklkIbK7UcU=;
+        b=XPyhM6JHS+v9SEayuTivjg3GK/U0eif2omTDPZduCffEoRRCd7Qy2MBm5bNciyUpz1
+         a+JBbFg9SY/m6t0ZysU2HvU7Gy1rJuSMurh28pwTn2or1Ng67H0sbZL7Fw9s0x+ctUmy
+         w1YgxtYRVZKhEV9pYJhaPbHQzqWF5CzDllqUzCSZbNxZHm4SNw0FqGtNiElWe2WQCEA2
+         RQNhJynfCQrK7LI/jVX8k+txs2uR9KYP9Nqc9rnzzIYcJcPeYG0rexixZX576rCmddTn
+         iQ5C03yEKv/aLh6ap7pVrgmjCGvCh3C54KS3RVhEfD7qIbtcinBgym6SzFNbdbob6iJq
+         Rfug==
+X-Gm-Message-State: APjAAAVho1kV8LeV+mRa92EOpzNVEXh39wv4+8V5suR+l0En9hwpqfnx
+        g0E+CKBzQHu44RJYtI7iGKU=
+X-Google-Smtp-Source: APXvYqw4KVm55RedrhNoQvGBxTLCBpdNABz/XYNmtniV22b3bGHJOBJ4Ro7i6BxQYdm2QGYdCZ+stg==
+X-Received: by 2002:adf:c143:: with SMTP id w3mr1678433wre.77.1570606895856;
+        Wed, 09 Oct 2019 00:41:35 -0700 (PDT)
+Received: from [10.0.20.253] ([95.157.63.22])
+        by smtp.gmail.com with ESMTPSA id s1sm1742156wrg.80.2019.10.09.00.41.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Oct 2019 00:41:35 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com, linux-man <linux-man@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Containers <containers@lists.linux-foundation.org>,
+        =?UTF-8?Q?St=c3=a9phane_Graber?= <stgraber@ubuntu.com>
+Subject: Re: For review: rewritten pivot_root(2) manual page
+To:     Philipp Wendler <ml@philippwendler.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Christian Brauner <christian@brauner.io>,
+        Aleksa Sarai <asarai@suse.de>,
+        Reid Priedhorsky <reidpr@lanl.gov>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Yang Bo <rslovers@yandex.com>, Jakub Wilk <jwilk@jwilk.net>,
+        Joseph Sible <josephcsible@gmail.com>,
+        Al Viro <viro@ftp.linux.org.uk>, werner@almesberger.net
+References: <620c691a-065e-b894-4f06-7453012bc8d3@gmail.com>
+ <d449305b-f87c-f26e-e43f-d193fd8f4332@philippwendler.de>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <e51e454c-b0e7-e5d1-7810-e8f023574aa2@gmail.com>
+Date:   Wed, 9 Oct 2019 09:41:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: D6193D412A76A036B9AA2F1A8EC1E37A62667789B8F9CB6CC8C6E466BB1A36CF2000:8
-X-MTK:  N
+In-Reply-To: <d449305b-f87c-f26e-e43f-d193fd8f4332@philippwendler.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is used to tune J-K voltage by internal R (resistance)
+Hello Philipp,
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
-v3: change commit log
+My apologies that it has taken a while to reply. (I had been hoping
+and waiting that a few more people might weigh in on this thread.)
 
-v2: no changes
----
- drivers/phy/mediatek/phy-mtk-tphy.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+On 9/23/19 3:42 PM, Philipp Wendler wrote:
+> Hello Michael,
+> 
+> Am 23.09.19 um 14:04 schrieb Michael Kerrisk (man-pages):
+> 
+>> I'm considering to rewrite these pieces to exactly
+>> describe what the system call does (which I already
+>> do in the third paragraph) and remove the "may or may not"
+>> pieces in the second paragraph. I'd welcome comments
+>> on making that change.
+> 
+> I think that it would make the man page significantly easier to
+> understand if if the vague wording and the meta discussion about it are
+> removed.
 
-diff --git a/drivers/phy/mediatek/phy-mtk-tphy.c b/drivers/phy/mediatek/phy-mtk-tphy.c
-index 5afe33621dbc..4a2dc92f10f5 100644
---- a/drivers/phy/mediatek/phy-mtk-tphy.c
-+++ b/drivers/phy/mediatek/phy-mtk-tphy.c
-@@ -43,6 +43,8 @@
- #define PA0_RG_USB20_INTR_EN		BIT(5)
- 
- #define U3P_USBPHYACR1		0x004
-+#define PA1_RG_INTR_CAL		GENMASK(23, 19)
-+#define PA1_RG_INTR_CAL_VAL(x)	((0x1f & (x)) << 19)
- #define PA1_RG_VRT_SEL			GENMASK(14, 12)
- #define PA1_RG_VRT_SEL_VAL(x)	((0x7 & (x)) << 12)
- #define PA1_RG_TERM_SEL		GENMASK(10, 8)
-@@ -302,6 +304,7 @@ struct mtk_phy_instance {
- 	int eye_src;
- 	int eye_vrt;
- 	int eye_term;
-+	int intr;
- 	int discth;
- 	bool bc12_en;
- };
-@@ -853,12 +856,14 @@ static void phy_parse_property(struct mtk_tphy *tphy,
- 				 &instance->eye_vrt);
- 	device_property_read_u32(dev, "mediatek,eye-term",
- 				 &instance->eye_term);
-+	device_property_read_u32(dev, "mediatek,intr",
-+				 &instance->intr);
- 	device_property_read_u32(dev, "mediatek,discth",
- 				 &instance->discth);
--	dev_dbg(dev, "bc12:%d, src:%d, vrt:%d, term:%d, disc:%d\n",
-+	dev_dbg(dev, "bc12:%d, src:%d, vrt:%d, term:%d, intr:%d, disc:%d\n",
- 		instance->bc12_en, instance->eye_src,
- 		instance->eye_vrt, instance->eye_term,
--		instance->discth);
-+		instance->intr, instance->discth);
- }
- 
- static void u2_phy_props_set(struct mtk_tphy *tphy,
-@@ -895,6 +900,13 @@ static void u2_phy_props_set(struct mtk_tphy *tphy,
- 		writel(tmp, com + U3P_USBPHYACR1);
- 	}
- 
-+	if (instance->intr) {
-+		tmp = readl(com + U3P_USBPHYACR1);
-+		tmp &= ~PA1_RG_INTR_CAL;
-+		tmp |= PA1_RG_INTR_CAL_VAL(instance->intr);
-+		writel(tmp, com + U3P_USBPHYACR1);
-+	}
-+
- 	if (instance->discth) {
- 		tmp = readl(com + U3P_USBPHYACR6);
- 		tmp &= ~PA6_RG_U2_DISCTH;
+It is my inclination to make this change, but I'd love to get more
+feedback on this point.
+
+>> DESCRIPTION
+> [...]>        pivot_root()  changes  the
+>>        root  directory  and the current working directory of each process
+>>        or thread in the same mount namespace to new_root if they point to
+>>        the  old  root  directory.   (See also NOTES.)  On the other hand,
+>>        pivot_root() does not change the caller's current  working  direc‐
+>>        tory  (unless it is on the old root directory), and thus it should
+>>        be followed by a chdir("/") call.
+> 
+> There is a contradiction here with the NOTES (cf. below).
+
+See below.
+
+>>        The following restrictions apply:
+>>
+>>        -  new_root and put_old must be directories.
+>>
+>>        -  new_root and put_old must not be on the same filesystem as  the
+>>           current root.  In particular, new_root can't be "/" (but can be
+>>           a bind mounted directory on the current root filesystem).
+> 
+> Wouldn't "must not be on the same mountpoint" or something similar be
+> more clear, at least for new_root? The note in parentheses indicates
+> that new_root can actually be on the same filesystem as the current
+> note. However, ...
+
+For 'put_old', it really is "filesystem".
+
+For 'new_root', see below.
+
+>>        -  put_old must be at or underneath new_root; that  is,  adding  a
+>>           nonnegative  number  of /.. to the string pointed to by put_old
+>>           must yield the same directory as new_root.
+>>
+>>        -  new_root must be a mount point.  (If  it  is  not  otherwise  a
+>>           mount  point,  it  suffices  to  bind  mount new_root on top of
+>>           itself.)
+> 
+> ... this item actually makes the above item almost redundant regarding
+> new_root (except for the "/") case. So one could replace this item with
+> something like this:
+> 
+> - new_root must be a mount point different from "/". (If it is not
+>   otherwise a mount point, it suffices  to bind mount new_root on top
+>   of itself.)
+> 
+> The above item would then only mention put_old (and maybe use clarified
+> wording on whether actually a different file system is necessary for
+> put_old or whether a different mount point is enough).
+
+Thanks. That's a good suggestion. I simplified the earlier bullet
+point as you suggested, and changed the text here to say:
+
+       -  new_root must be a mount point, but can't be "/".  If it is not
+          otherwise  a mount point, it suffices to bind mount new_root on
+          top of itself.  (new_root can be a bind  mounted  directory  on
+          the current root filesystem.)
+
+>> NOTES
+> [...]
+>>        pivot_root() allows the caller to switch to a new root  filesystem
+>>        while  at  the  same time placing the old root mount at a location
+>>        under new_root from where it can subsequently be unmounted.   (The
+>>        fact  that  it  moves  all processes that have a root directory or
+>>        current working directory on the old root filesystem  to  the  new
+>>        root  filesystem  frees the old root filesystem of users, allowing
+>>        it to be unmounted more easily.)
+> 
+> Here is the contradiction:
+> The DESCRIPTION says that root and current working dir are only changed
+> "if they point to the old root directory". Here in the NOTES it says
+> that any root or working directories on the old root file system (i.e.,
+> even if somewhere below the root) are changed.
+> 
+> Which is correct?
+
+The first text is correct. I must have accidentally inserted
+"filesystem" into the paragraph just here during a global edit.
+Thanks for catching that.
+
+> If it indeed affects all processes with root and/or current working
+> directory below the old root, the text here does not clearly state what
+> the new root/current working directory of theses processes is.
+> E.g., if a process is at /foo and we pivot to /bar, will the process be
+> moved to /bar (i.e., at / after pivot_root), or will the kernel attempt
+> to move it to some location like /bar/foo? Because the latter might not
+> even exist, I suspect that everything is just moved to new_root, but
+> this could be stated explicitly by replacing "to the new root
+> filesystem" in the above paragraph with "to the new root directory"
+> (after checking whether this is true).
+
+The text here now reads:
+
+       pivot_root() allows the caller to switch to a new root  filesystem
+       while  at  the  same time placing the old root mount at a location
+       under new_root from where it can subsequently be unmounted.   (The
+       fact  that  it  moves  all processes that have a root directory or
+       current working directory on the old root  directory  to  the  new
+       root  frees the old root directory of users, allowing the old root
+       filesystem to be unmounted more easily.)
+
+
+>> EXAMPLE>        The program below demonstrates the use of  pivot_root()  inside  a
+>>        mount namespace that is created using clone(2).  After pivoting to
+>>        the root directory named in the program's first command-line argu‐
+>>        ment,  the  child  created  by  clone(2) then executes the program
+>>        named in the remaining command-line arguments.
+> 
+> Why not use the pivot_root(".", ".") in the example program?
+> It would make the example shorter, and also works if the process cannot
+> write to new_root (e..g., in a user namespace).
+
+I'm not sure. Some people have a bit of trouble to wrap their head
+around the pivot_root(".", ".") idea. (I possibly am one of them.)
+I'd be quite keen to hear other opinions on this. Unfortunately,
+few people have commented on this manual page rewrite.
+
+Thanks,
+
+Michael
+
+
 -- 
-2.23.0
-
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
