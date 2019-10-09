@@ -7,137 +7,282 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6B4ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08942ECE58E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA834206B6
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:12:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4380206B6
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:13:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731267AbfJINMj (ORCPT
+        id S1731303AbfJINNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 09:12:39 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:34429 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731049AbfJINMj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 09:12:39 -0400
-X-Originating-IP: 2.224.242.101
-Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id B38171BF20F;
-        Wed,  9 Oct 2019 13:12:34 +0000 (UTC)
-Date:   Wed, 9 Oct 2019 15:14:20 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH 02/10] media: renesas-ceu: Use of_device_get_match_data()
-Message-ID: <20191009131420.g4wdxa5t2ljiab2l@uno.localdomain>
-References: <20191004214334.149976-1-swboyd@chromium.org>
- <20191004214334.149976-3-swboyd@chromium.org>
- <20191009095440.6e834ecf@coco.lan>
+        Wed, 9 Oct 2019 09:13:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37200 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731145AbfJINNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 09:13:17 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DD171ABCB;
+        Wed,  9 Oct 2019 13:13:13 +0000 (UTC)
+Subject: Re: [PATCH v2 6/8] mm: prevent get_user_pages() from overflowing page
+ refcount
+To:     Ajay Kaher <akaher@vmware.com>, gregkh@linuxfoundation.org
+Cc:     torvalds@linux-foundation.org, punit.agrawal@arm.com,
+        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
+        willy@infradead.org, will.deacon@arm.com, mszeredi@redhat.com,
+        stable@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, srivatsab@vmware.com,
+        srivatsa@csail.mit.edu, amakhalov@vmware.com, srinidhir@vmware.com,
+        bvikas@vmware.com, anishs@vmware.com, vsirnapalli@vmware.com,
+        srostedt@vmware.com, stable@kernel.org,
+        Ben Hutchings <ben@decadent.org.uk>
+References: <1570581863-12090-1-git-send-email-akaher@vmware.com>
+ <1570581863-12090-7-git-send-email-akaher@vmware.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <f899be71-4bc0-d07b-f650-d85a335cdebb@suse.cz>
+Date:   Wed, 9 Oct 2019 15:13:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="yyqmrurhzcbwilu3"
-Content-Disposition: inline
-In-Reply-To: <20191009095440.6e834ecf@coco.lan>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1570581863-12090-7-git-send-email-akaher@vmware.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 10/9/19 2:44 AM, Ajay Kaher wrote:
+> From: Linus Torvalds <torvalds@linux-foundation.org>
+> 
+> commit 8fde12ca79aff9b5ba951fce1a2641901b8d8e64 upstream.
+> 
+> If the page refcount wraps around past zero, it will be freed while
+> there are still four billion references to it.  One of the possible
+> avenues for an attacker to try to make this happen is by doing direct IO
+> on a page multiple times.  This patch makes get_user_pages() refuse to
+> take a new page reference if there are already more than two billion
+> references to the page.
+> 
+> Reported-by: Jann Horn <jannh@google.com>
+> Acked-by: Matthew Wilcox <willy@infradead.org>
+> Cc: stable@kernel.org
+> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+> [ 4.4.y backport notes:
+>   Ajay: Added local variable 'err' with-in follow_hugetlb_page()
+>         from 2be7cfed995e, to resolve compilation error
+>   Srivatsa: Replaced call to get_page_foll() with try_get_page_foll() ]
+> Signed-off-by: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
+> Signed-off-by: Ajay Kaher <akaher@vmware.com>
+> ---
+>  mm/gup.c     | 43 ++++++++++++++++++++++++++++++++-----------
+>  mm/hugetlb.c | 16 +++++++++++++++-
+>  2 files changed, 47 insertions(+), 12 deletions(-)
 
---yyqmrurhzcbwilu3
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+This seems to have the same issue as the 4.9 stable version [1], in not
+touching the arch-specific gup.c variants.
 
-Sorry,
-   totally missed it
+[1]
+https://lore.kernel.org/lkml/6650323f-dbc9-f069-000b-f6b0f941a065@suse.cz/
 
-On Wed, Oct 09, 2019 at 09:54:40AM -0300, Mauro Carvalho Chehab wrote:
-> Em Fri,  4 Oct 2019 14:43:26 -0700
-> Stephen Boyd <swboyd@chromium.org> escreveu:
->
-> > This driver can use the replacement API instead of calling
-> > of_match_device() and then dereferencing the pointer that is returned.
-> > This nicely avoids referencing the match table when it is undefined with
-> > configurations where CONFIG_OF=n.
-> >
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> > Cc: Jacopo Mondi <jacopo@jmondi.org>
-> > Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Frank Rowand <frowand.list@gmail.com>
-> > Cc: <linux-media@vger.kernel.org>
-> > Cc: <linux-renesas-soc@vger.kernel.org>
-> > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> > ---
-> >
-> > Please ack or pick for immediate merge so the last patch can be merged.
->
-> Feel free to merge it via your tree:
->
-> Acked-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
->
+> diff --git a/mm/gup.c b/mm/gup.c
+> index fae4d1e..171b460 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -126,8 +126,12 @@ retry:
+>  		}
+>  	}
+>  
+> -	if (flags & FOLL_GET)
+> -		get_page_foll(page);
+> +	if (flags & FOLL_GET) {
+> +		if (unlikely(!try_get_page_foll(page))) {
+> +			page = ERR_PTR(-ENOMEM);
+> +			goto out;
+> +		}
+> +	}
+>  	if (flags & FOLL_TOUCH) {
+>  		if ((flags & FOLL_WRITE) &&
+>  		    !pte_dirty(pte) && !PageDirty(page))
+> @@ -289,7 +293,10 @@ static int get_gate_page(struct mm_struct *mm, unsigned long address,
+>  			goto unmap;
+>  		*page = pte_page(*pte);
+>  	}
+> -	get_page(*page);
+> +	if (unlikely(!try_get_page(*page))) {
+> +		ret = -ENOMEM;
+> +		goto unmap;
+> +	}
+>  out:
+>  	ret = 0;
+>  unmap:
+> @@ -1053,6 +1060,20 @@ struct page *get_dump_page(unsigned long addr)
+>   */
+>  #ifdef CONFIG_HAVE_GENERIC_RCU_GUP
+>  
+> +/*
+> + * Return the compund head page with ref appropriately incremented,
+> + * or NULL if that failed.
+> + */
+> +static inline struct page *try_get_compound_head(struct page *page, int refs)
+> +{
+> +	struct page *head = compound_head(page);
+> +	if (WARN_ON_ONCE(atomic_read(&head->_count) < 0))
+> +		return NULL;
+> +	if (unlikely(!page_cache_add_speculative(head, refs)))
+> +		return NULL;
+> +	return head;
+> +}
+> +
+>  #ifdef __HAVE_ARCH_PTE_SPECIAL
+>  static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
+>  			 int write, struct page **pages, int *nr)
+> @@ -1082,9 +1103,9 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
+>  
+>  		VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
+>  		page = pte_page(pte);
+> -		head = compound_head(page);
+>  
+> -		if (!page_cache_get_speculative(head))
+> +		head = try_get_compound_head(page, 1);
+> +		if (!head)
+>  			goto pte_unmap;
+>  
+>  		if (unlikely(pte_val(pte) != pte_val(*ptep))) {
+> @@ -1141,8 +1162,8 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
+>  		refs++;
+>  	} while (addr += PAGE_SIZE, addr != end);
+>  
+> -	head = compound_head(pmd_page(orig));
+> -	if (!page_cache_add_speculative(head, refs)) {
+> +	head = try_get_compound_head(pmd_page(orig), refs);
+> +	if (!head) {
+>  		*nr -= refs;
+>  		return 0;
+>  	}
+> @@ -1187,8 +1208,8 @@ static int gup_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
+>  		refs++;
+>  	} while (addr += PAGE_SIZE, addr != end);
+>  
+> -	head = compound_head(pud_page(orig));
+> -	if (!page_cache_add_speculative(head, refs)) {
+> +	head = try_get_compound_head(pud_page(orig), refs);
+> +	if (!head) {
+>  		*nr -= refs;
+>  		return 0;
+>  	}
+> @@ -1229,8 +1250,8 @@ static int gup_huge_pgd(pgd_t orig, pgd_t *pgdp, unsigned long addr,
+>  		refs++;
+>  	} while (addr += PAGE_SIZE, addr != end);
+>  
+> -	head = compound_head(pgd_page(orig));
+> -	if (!page_cache_add_speculative(head, refs)) {
+> +	head = try_get_compound_head(pgd_page(orig), refs);
+> +	if (!head) {
+>  		*nr -= refs;
+>  		return 0;
+>  	}
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index fd932e7..3a1501e 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -3886,6 +3886,7 @@ long follow_hugetlb_page(struct mm_struct *mm, struct vm_area_struct *vma,
+>  	unsigned long vaddr = *position;
+>  	unsigned long remainder = *nr_pages;
+>  	struct hstate *h = hstate_vma(vma);
+> +	int err = -EFAULT;
+>  
+>  	while (vaddr < vma->vm_end && remainder) {
+>  		pte_t *pte;
+> @@ -3957,6 +3958,19 @@ long follow_hugetlb_page(struct mm_struct *mm, struct vm_area_struct *vma,
+>  
+>  		pfn_offset = (vaddr & ~huge_page_mask(h)) >> PAGE_SHIFT;
+>  		page = pte_page(huge_ptep_get(pte));
+> +
+> +		/*
+> +		 * Instead of doing 'try_get_page_foll()' below in the same_page
+> +		 * loop, just check the count once here.
+> +		 */
+> +		if (unlikely(page_count(page) <= 0)) {
+> +			if (pages) {
+> +				spin_unlock(ptl);
+> +				remainder = 0;
+> +				err = -ENOMEM;
+> +				break;
+> +			}
+> +		}
+>  same_page:
+>  		if (pages) {
+>  			pages[i] = mem_map_offset(page, pfn_offset);
+> @@ -3983,7 +3997,7 @@ same_page:
+>  	*nr_pages = remainder;
+>  	*position = vaddr;
+>  
+> -	return i ? i : -EFAULT;
+> +	return i ? i : err;
+>  }
+>  
+>  unsigned long hugetlb_change_protection(struct vm_area_struct *vma,
+> 
 
-The CEU driver does probably not need this as the dereferencing of the
-pointer returned by of_match_device() is guarded by
-IS_ENABLED(CONFIG_OF), but surely this does not hurt and it's nicer to
-read.
-
-With Mauro's ack mine is probably not needed, but:
-Acked-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-
-Thanks
-   j
->
-> >
-> >  drivers/media/platform/renesas-ceu.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/media/platform/renesas-ceu.c b/drivers/media/platform/renesas-ceu.c
-> > index 197b3991330d..60518bbc2cd5 100644
-> > --- a/drivers/media/platform/renesas-ceu.c
-> > +++ b/drivers/media/platform/renesas-ceu.c
-> > @@ -1679,7 +1679,7 @@ static int ceu_probe(struct platform_device *pdev)
-> >  	v4l2_async_notifier_init(&ceudev->notifier);
-> >
-> >  	if (IS_ENABLED(CONFIG_OF) && dev->of_node) {
-> > -		ceu_data = of_match_device(ceu_of_match, dev)->data;
-> > +		ceu_data = of_device_get_match_data(dev);
-> >  		num_subdevs = ceu_parse_dt(ceudev);
-> >  	} else if (dev->platform_data) {
-> >  		/* Assume SH4 if booting with platform data. */
->
->
->
-> Thanks,
-> Mauro
-
---yyqmrurhzcbwilu3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl2d3SwACgkQcjQGjxah
-VjygUhAAhXBeSvuYWzjdo23jPGMvoLueN77MU0RKZYyiVTxGeOygwNSJIqYYQCoD
-4J/QfP05RmeX++f0mAwX0Pcizyki7nwWBkT6+6EfLYQKWgariDZlbeI6dThQxK+Z
-ErdTfceYG/9XPPlfKbdVbJuzg9boZ6FBc1+KQ96ceP05FeFwX/LrF7ythI/KOfkL
-OBDu1vCgrDUCX1EdUWyHRyXvrMKK1CJ4EVpYJzWBuElUtTjMNAkYg8jGb65uYzWn
-ko3nDjSWA22pUMXULfJ2UbL+U9zH0OMRwErNF2Vxnd5+xk8ikxLopBEg2iNJhKVT
-BMQs0DGbsZgt9A1hEWGG1z8Ucvai9FKdW158CVPcHdey+JUlcR/Rc8IBvtoYMwrW
-cr/Aeyws3qQXty3R0+XeVD3ROhOyAm1IN3yqBMdaBpy3uOiBXY3EF23ytEcA0tYz
-STOg445+0m7Zwj2rt35abAp0KVfBcz3KMoxYKjQwTVWM1LAiV58nangbBWYspm/x
-L5PspcBXjfhMIr4HclYh5KsXqt2ELmFKt7Yzn0zcQ7hwyt7EhiCpl56viQLUttka
-jIx3+LbPEC+oo1GZAfVR2oBdvLuYxvT2eH6RWP4G4sWjfaAPviL9W7c+4B+DQpc5
-DBk9GLxIlYI+Oip/M/dwhFj9lFiP+AovjRjGq5l9HshDrPbBDlU=
-=1szO
------END PGP SIGNATURE-----
-
---yyqmrurhzcbwilu3--
