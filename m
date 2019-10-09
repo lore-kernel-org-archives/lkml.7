@@ -7,51 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3764C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 804ACC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86F29206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:24:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58232218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:24:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570641890;
-	bh=E1p83cVGBh/VObNOpqqftqKRBwPpNj8M5LZKNYhZfR8=;
+	s=default; t=1570641897;
+	bh=5Nr5wkSF+b1goWgQ2aphtBeiCNf2n7oAmLzI4t7+QnQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SL6PnylOakb6EWXLpj3ozOFIuxMObOgixO7pm1HCqvkrqhTQzNnuDCxMpqj+l1+98
-	 2jY8wyHLQKHhdEMdOhomf801Mp7Sv+uelWxXokQ/Jl/a75WNUyx9jsguXDyEwqVdDi
-	 SGiS9lnQOtA/mmSaG6ivdtM3u/UwIkKAOU1LEtuc=
+	b=sAiXB2s8FJGdh/eZ7S1PATkMnBACeaonkIpVzaGq1bRnILo75D6tlzbJ1qvIGXqCH
+	 fdz/e3xsZsVND0wvE9fnijuuQ60QEasJM20o0za7guUYHYKxB42fa8uu9M6fSW8iAW
+	 DU2t2nSsoHcbkj7GeA7d7V7MbmWLnY4Y6o1pj0iE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732468AbfJIRYs (ORCPT
+        id S1732517AbfJIRY4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:24:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49648 "EHLO mail.kernel.org"
+        Wed, 9 Oct 2019 13:24:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731916AbfJIRYo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 13:24:44 -0400
+        id S1732418AbfJIRYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 13:24:42 -0400
 Received: from sasha-vm.mshome.net (unknown [167.220.2.234])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A150218AC;
-        Wed,  9 Oct 2019 17:24:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C240C2196E;
+        Wed,  9 Oct 2019 17:24:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570641884;
-        bh=E1p83cVGBh/VObNOpqqftqKRBwPpNj8M5LZKNYhZfR8=;
+        s=default; t=1570641881;
+        bh=5Nr5wkSF+b1goWgQ2aphtBeiCNf2n7oAmLzI4t7+QnQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G866P2qEJnSZsuER1Ha1BWAeYm2ZfeggwmAlF9rdaVDe7XTnpK1Aab4WKaSduPhqy
-         5wJ8hgavjzUzFAITvLaN+HwSoXSRjb5muwt9tGugbIUY1pImO3MuVxWdobKBeWuAhP
-         R+SozMK951zOt8AdUIW0nAcbuY30gfcq/kZAEXX0=
+        b=DVfmb/7bkFqK9zm8+NJt0qiCicki76KLV4WG1+f/wifDtWQj53WsQQl85qPseYA8u
+         Fw78G5a7WT7ZhMmYpNO12CzXGzcpSgm6+K8U5ZQHpFh4IQjlsl5qJHwMacHgbu8D5y
+         gPLw8BYkRwABlF17zVwxkouzy7hj99W46rLQJ1hU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Paul Burton <paul.burton@mips.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 06/13] MIPS: dts: ar9331: fix interrupt-controller size
-Date:   Wed,  9 Oct 2019 13:06:25 -0400
-Message-Id: <20191009170635.536-6-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>,
+        linux-omap@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 04/13] ARM: OMAP2+: Fix missing reset done flag for am3 and am43
+Date:   Wed,  9 Oct 2019 13:06:23 -0400
+Message-Id: <20191009170635.536-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191009170635.536-1-sashal@kernel.org>
 References: <20191009170635.536-1-sashal@kernel.org>
@@ -64,40 +58,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksij Rempel <o.rempel@pengutronix.de>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 0889d07f3e4b171c453b2aaf2b257f9074cdf624 ]
+[ Upstream commit 8ad8041b98c665b6147e607b749586d6e20ba73a ]
 
-It is two registers each of 4 byte.
+For ti,sysc-omap4 compatible devices with no sysstatus register, we do have
+reset done status available in the SOFTRESET bit that clears when the reset
+is done. This is documented for example in am437x TRM for DMTIMER_TIOCP_CFG
+register. The am335x TRM just says that SOFTRESET bit value 1 means reset is
+ongoing, but it behaves the same way clearing after reset is done.
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: devicetree@vger.kernel.org
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+With the ti-sysc driver handling this automatically based on no sysstatus
+register defined, we see warnings if SYSC_HAS_RESET_STATUS is missing in the
+legacy platform data:
+
+ti-sysc 48042000.target-module: sysc_flags 00000222 != 00000022
+ti-sysc 48044000.target-module: sysc_flags 00000222 != 00000022
+ti-sysc 48046000.target-module: sysc_flags 00000222 != 00000022
+...
+
+Let's fix these warnings by adding SYSC_HAS_RESET_STATUS. Let's also
+remove the useless parentheses while at it.
+
+If it turns out we do have ti,sysc-omap4 compatible devices without a
+working SOFTRESET bit we can set up additional quirk handling for it.
+
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/boot/dts/qca/ar9331.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/boot/dts/qca/ar9331.dtsi b/arch/mips/boot/dts/qca/ar9331.dtsi
-index cf47ed4d85694..1fda24fc18606 100644
---- a/arch/mips/boot/dts/qca/ar9331.dtsi
-+++ b/arch/mips/boot/dts/qca/ar9331.dtsi
-@@ -98,7 +98,7 @@
- 
- 			miscintc: interrupt-controller@18060010 {
- 				compatible = "qca,ar7240-misc-intc";
--				reg = <0x18060010 0x4>;
-+				reg = <0x18060010 0x8>;
- 
- 				interrupt-parent = <&cpuintc>;
- 				interrupts = <6>;
+diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
+index e2d84aa7f595f..fa1c6707877a7 100644
+--- a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
+@@ -939,7 +939,8 @@ static struct omap_hwmod_class_sysconfig am33xx_timer_sysc = {
+ 	.rev_offs	= 0x0000,
+ 	.sysc_offs	= 0x0010,
+ 	.syss_offs	= 0x0014,
+-	.sysc_flags	= (SYSC_HAS_SIDLEMODE | SYSC_HAS_SOFTRESET),
++	.sysc_flags	= SYSC_HAS_SIDLEMODE | SYSC_HAS_SOFTRESET |
++			  SYSC_HAS_RESET_STATUS,
+ 	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
+ 			  SIDLE_SMART_WKUP),
+ 	.sysc_fields	= &omap_hwmod_sysc_type2,
 -- 
 2.20.1
 
