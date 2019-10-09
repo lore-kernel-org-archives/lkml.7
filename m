@@ -2,147 +2,138 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33BADC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 23:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 184F2C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 23:51:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07F88218AC
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 23:50:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0F0F218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 23:51:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I3G816pI"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="GeA+SrrO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732357AbfJIXuR (ORCPT
+        id S1732420AbfJIXu7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 19:50:17 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:29156 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730955AbfJIXuR (ORCPT
+        Wed, 9 Oct 2019 19:50:59 -0400
+Received: from ste-pvt-msa1.bahnhof.se ([213.80.101.70]:26992 "EHLO
+        ste-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730955AbfJIXu7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 19:50:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1570665015;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=YAtqhT5ONsjqWUWONs3upOQbCcX6WU5MkOT7sl7Bewo=;
-        b=I3G816pIrs5JzNswH8L+jg79EoPY0ZBz4gJVEMxnRSCdz/uvZh9bwsSGYPFqBA1tYXdlEz
-        Gp+8G3K47wZHXAo9D8Poj8yTZMaO5lvilRgpdwYs16iXQRrCyX5uEILYoJSC7D+kVgzubP
-        88tSYzqOeI+s3FtBBYZcMe1lK9iMBB8=
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
- [209.85.166.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-293-_y_RH_CvP06kFIOVtWUGfQ-1; Wed, 09 Oct 2019 19:50:14 -0400
-Received: by mail-io1-f72.google.com with SMTP id r13so6721800ioj.22
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 16:50:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=focIOQfcQNyrOXPkI531vbndDZb3WURIChJxW2xJzLs=;
-        b=UWP1B+81rqEk5+uFAvbBxMvRR6IZCBOtCtdD7ND/1GicL+7FffFBPBWScXQIlsc9oU
-         TOgrbc8AhbNIaNryhogLH9TsybtLE7P0mqBJx2PqqbgEDIdlsAT6ieDaDMZQIh9ET7RU
-         dYo3SgfbyXsKG2RgmjP55sZnT0mDK6jdA7szpg0VeRc9N6rtMAmxKsTaT/hCMoNZFp9d
-         vno/uC2fW5GJvLbo7eP6BxoSGyA3DWxDqGlDmASdIVsImRz9pvUVusN6QEcH09wK+h3+
-         FBFJKDRy+9VVdsceiXaBpBAlYYaxVvXnCeSrfTAGxwHzWv0Ttqf+QD/czDssr+smshD2
-         nwVQ==
-X-Gm-Message-State: APjAAAVvJeg/WpDfMxQJwPnc8WMU1lZVj/lI1PrCkpy9kxEWpRy3t6je
-        ubkirhARJ3QxFhz8Plvvp0NFRH3aG5jO3nYGT8Y3rNFQUb1cTe6+fwJ8zo+jUdn/pWE1jkhe7v7
-        MPIAsNpPjTwcijzkXQFd8+ABC
-X-Received: by 2002:a5d:8b49:: with SMTP id c9mr4491126iot.209.1570665013831;
-        Wed, 09 Oct 2019 16:50:13 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyBHaFMxZO0WJshtgxh7/OOthnkRt0Ri0Ng2qxBJgBmVLrUfw4ehvtKeNCwBnq7zLTnWQxQQg==
-X-Received: by 2002:a5d:8b49:: with SMTP id c9mr4491111iot.209.1570665013586;
-        Wed, 09 Oct 2019 16:50:13 -0700 (PDT)
-Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
-        by smtp.gmail.com with ESMTPSA id f23sm2553411ioc.36.2019.10.09.16.50.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 16:50:12 -0700 (PDT)
-Date:   Wed, 9 Oct 2019 16:50:09 -0700
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Keith Busch <keith.busch@intel.com>,
-        iommu@lists.linux-foundation.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 0/2] iommu/vt-d: Select PCI_PRI for INTEL_IOMMU_SVM
-Message-ID: <20191009235009.a3mxw4qrklkqwuzf@cantor>
-Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
-Mail-Followup-To: Bjorn Helgaas <helgaas@kernel.org>,
-        Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>, Ashok Raj <ashok.raj@intel.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Keith Busch <keith.busch@intel.com>,
-        iommu@lists.linux-foundation.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-References: <20191009224551.179497-1-helgaas@kernel.org>
+        Wed, 9 Oct 2019 19:50:59 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 400B83F839;
+        Thu, 10 Oct 2019 01:50:56 +0200 (CEST)
+Authentication-Results: ste-pvt-msa1.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=GeA+SrrO;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
+        by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ibc0yJzAbMJS; Thu, 10 Oct 2019 01:50:55 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id CB6493F835;
+        Thu, 10 Oct 2019 01:50:50 +0200 (CEST)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 187533600A4;
+        Thu, 10 Oct 2019 01:50:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1570665050; bh=/mXBG9fUSN09uVUSznrWUrKQ++9rbFkU/mzTR08+/2s=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=GeA+SrrOMNr6lhvJ2Q2/28UsCPDub1BZHgWz7m2Vu71tMVhQutH2OkL+5nlJ0ZoBZ
+         l9thmhwXVC4yToimTkvopjgKI3JUiihZt36pN9rXKZp8+GGbmtoYcf0R0KEFUAR1bn
+         BKzVILbWZSfanwjBHnBP10es3FeULLF0MnsWrJ6U=
+Subject: Re: [PATCH v4 3/9] mm: pagewalk: Don't split transhuge pmds when a
+ pmd_entry is present
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rik van Riel <riel@surriel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Huang Ying <ying.huang@intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
+References: <20191008091508.2682-1-thomas_os@shipmail.org>
+ <20191008091508.2682-4-thomas_os@shipmail.org>
+ <20191009152737.p42w7w456zklxz72@box>
+ <CAHk-=wh4waroKr-Xtcv+5pTxBcHxGEj-g73eQvXVawML_C0EXw@mail.gmail.com>
+ <03d85a6a-e24a-82f4-93b8-86584b463471@shipmail.org>
+ <CAHk-=whhdRSqjX5wy1LzFYnOG58UztpifkNvbxBcTVbT3Mzv4g@mail.gmail.com>
+ <MN2PR05MB6141B981C2CAB4955D59747EA1950@MN2PR05MB6141.namprd05.prod.outlook.com>
+ <CAHk-=wgy-ULe8UmEDn9gCCmTtw65chS0h309WrTaQhK3RAXM-A@mail.gmail.com>
+ <c054849e-1e24-6b27-6a54-740ea9d17054@shipmail.org>
+ <CAHk-=wgmr-BPMTnSuKrAMoHL_A0COV_sZkdcNB9aosYfouA_fw@mail.gmail.com>
+ <80f25292-585c-7729-2a23-7c46b3309a1a@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <54e65cdd-1b6a-d4d6-0305-dcb36bc49c41@shipmail.org>
+Date:   Thu, 10 Oct 2019 01:50:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20191009224551.179497-1-helgaas@kernel.org>
-User-Agent: NeoMutt/20180716
-X-MC-Unique: _y_RH_CvP06kFIOVtWUGfQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+In-Reply-To: <80f25292-585c-7729-2a23-7c46b3309a1a@shipmail.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed Oct 09 19, Bjorn Helgaas wrote:
->From: Bjorn Helgaas <bhelgaas@google.com>
+On 10/10/19 12:30 AM, Thomas Hellström (VMware) wrote:
+> On 10/9/19 10:20 PM, Linus Torvalds wrote:
+>> On Wed, Oct 9, 2019 at 1:06 PM Thomas Hellström (VMware)
+>> <thomas_os@shipmail.org> wrote:
+>>> On 10/9/19 9:20 PM, Linus Torvalds wrote:
+>>>> Don't you get it? There *is* no PTE level if you didn't split.
+>>> Hmm, This paragraph makes me think we have very different 
+>>> perceptions about what I'm trying to achieve.
+>> It's not about what you're trying to achieve.
+>>
+>> It's about the actual code.
+>>
+>> You cannot do that
+>>
+>>> - split_huge_pmd(walk->vma, pmd, addr);
+>>> +               if (!ops->pmd_entry)
+>>> +                       split_huge_pmd(walk->vma, pmd, addr);
+>> it's insane.
+>>
+>> You *have* to call split_huge_pmd() if you're doing to call the
+>> pte_entry() function.
+>>
+>> I don't understand why you are arguing. This is not about "feelings"
+>> and "intentions" or about "trying to achieve".
+>>
+>> This is about cold hard "you can't do that", and this is now the third
+>> time I tell you _why_ you can't do that: you can't walk the last level
+>> if you don't _have_ a last level. You have to split the pmd to do so.
+> It's not so much arguing but rather trying to understand your concerns 
+> and your perception of what the final code should look like.
+>>
+>> End of story.
 >
->I think intel-iommu.c depends on CONFIG_AMD_IOMMU in an undesirable way:
->
->When CONFIG_INTEL_IOMMU_SVM=3Dy, iommu_enable_dev_iotlb() calls PRI
->interfaces (pci_reset_pri() and pci_enable_pri()), but those are only
->implemented when CONFIG_PCI_PRI is enabled.  If CONFIG_PCI_PRI is not
->enabled, there are stubs that just return failure.
->
->The INTEL_IOMMU_SVM Kconfig does nothing with PCI_PRI, but AMD_IOMMU
->selects PCI_PRI.  So if AMD_IOMMU is enabled, intel-iommu.c gets the full
->PRI interfaces.  If AMD_IOMMU is not enabled, it gets the PRI stubs.
->
->This seems wrong.  The first patch here makes INTEL_IOMMU_SVM select
->PCI_PRI so intel-iommu.c always gets the full PRI interfaces.
->
->The second patch moves pci_prg_resp_pasid_required(), which simply returns
->a bit from the PCI capability, from #ifdef CONFIG_PCI_PASID to #ifdef
->CONFIG_PCI_PRI.  This is related because INTEL_IOMMU_SVM already *does*
->select PCI_PASID, so it previously always got pci_prg_resp_pasid_required(=
-)
->even though it got stubs for other PRI things.
->
->Since these are related and I have several follow-on ATS-related patches i=
-n
->the queue, I'd like to take these both via the PCI tree.
->
->Bjorn Helgaas (2):
->  iommu/vt-d: Select PCI_PRI for INTEL_IOMMU_SVM
->  PCI/ATS: Move pci_prg_resp_pasid_required() to CONFIG_PCI_PRI
->
-> drivers/iommu/Kconfig   |  1 +
-> drivers/pci/ats.c       | 55 +++++++++++++++++++----------------------
-> include/linux/pci-ats.h | 11 ++++-----
-> 3 files changed, 31 insertions(+), 36 deletions(-)
->
->--=20
->2.23.0.581.g78d2f28ef7-goog
->
->_______________________________________________
->iommu mailing list
->iommu@lists.linux-foundation.org
->https://lists.linuxfoundation.org/mailman/listinfo/iommu
+> So is it that you want pte_entry() to be strictly called for *each* 
+> virtual address, even if we have a pmd_entry()?
+> In that case I completely follow your arguments, meaning we skip this 
+> patch completely?
 
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Or if you're still OK with your original patch
+
+https://lore.kernel.org/lkml/CAHk-=wj5NiFPouYd6zUgY4K7VovOAxQT-xhDRjD6j5hifBWi_g@mail.gmail.com/
+
+I'd happily use that instead.
+
+Thanks,
+
+Thomas
+
 
