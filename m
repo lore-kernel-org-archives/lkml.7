@@ -2,144 +2,220 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B708ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A21EECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5603F20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDC0B20B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:35:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GNKbqmw/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731423AbfJINcx (ORCPT
+        id S1731287AbfJINfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 09:32:53 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43512 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731152AbfJINcw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 09:32:52 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BC70130832EA;
-        Wed,  9 Oct 2019 13:32:51 +0000 (UTC)
-Received: from [10.36.118.16] (unknown [10.36.118.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9D9F05C1D6;
-        Wed,  9 Oct 2019 13:32:47 +0000 (UTC)
-Subject: Re: [PATCH v1] mm: Fix access of uninitialized memmaps in
- fs/proc/page.c
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Qian Cai <cai@lca.pw>, Alexey Dobriyan <adobriyan@gmail.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>,
-        Konstantin Khlebnikov <koct9i@gmail.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        linux-fsdevel@vger.kernel.org
-References: <20191009091205.11753-1-david@redhat.com>
- <20191009093756.GV6681@dhcp22.suse.cz>
- <67aeaacc-d850-5c81-bd17-e95c7f7f75df@redhat.com>
- <20191009112424.GY6681@dhcp22.suse.cz>
- <a9659e39-3516-13c8-b9ab-d42bdaf4a488@redhat.com>
- <20191009132256.GZ6681@dhcp22.suse.cz>
- <8f0542f4-92c6-d450-7343-62bf9f08d5ed@redhat.com>
- <20191009132950.GB6681@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <d1516f32-8031-8ad2-7d69-1272b5ee480e@redhat.com>
-Date:   Wed, 9 Oct 2019 15:32:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 9 Oct 2019 09:35:38 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:47020 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731178AbfJINfi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 09:35:38 -0400
+Received: by mail-wr1-f65.google.com with SMTP id o18so2988795wrv.13
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 06:35:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aekLAqw/SyFzluuZiv2f7cjxSmW6M4TksSOK9MFHyds=;
+        b=GNKbqmw/Ez/9tL9tN5+uFGJyaucl9FtnIu+vsfpWGJLyFz6iK0DF0Y6MtHVaTloJpd
+         Mo339XSUn/o7Axz/n+N9e+IkkI78vszz5BD9V0DN4rmIsGxwO+UZJ2MaJDLoVXp+ApUv
+         P4WbnHWKt+PuXtX12OFZok5yCbMKnwM4KzTMifygJDG7P7qvJ/2/zhfOx+2DNxbDBnEd
+         RFtQC7AiqDrw8yakcBSXvwmXdKHHPnYTdybqPXFh49DEgzcyO6+Z6msiiFYs/KJ6Zdwe
+         PW9JDu/v4ck142AiqMDCUYZ2mgXO178ShgqbJO1xbUgwbknXTDKcOjs/BoE26yalNZOZ
+         gVLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aekLAqw/SyFzluuZiv2f7cjxSmW6M4TksSOK9MFHyds=;
+        b=uaommprxqylpy7tW5R99DCdg0h8ib7aV6kh1Pe8tnQVALKqFQUm39U9nvglcse5XhJ
+         NzgrqM5rAIpwlxbo5CFl8tGdbGo9WDyoVztjuwcHfBfnKo3lx6jpdwShpHDJnICODvDb
+         hDwB71TkrJfQzagAzkc1PiH86jgBWe194B5nN57Lupx+Uu62BxI5RFnhO0YFUYcLSYqW
+         ny1Eu7dtCFd5MTySbN0d+gK0oDUqZplJrxFXs00r9t0BVfkPQAgi7M110Kk0e2kVuJdV
+         XzkARhoePLK0MS3rvU6qph+bW0oBMT3jij/OUHP+csch5gI4UeiXrRnaq6XB3r/X9jP/
+         c/Kg==
+X-Gm-Message-State: APjAAAVwluMsdnd45MpooT9+4xJOGcChzlPGgg4R8oCjGDpgZ0x+buZ5
+        xEQm5PubB5YcHjhw/4v1MDCWUfDlEQK6Z8EwOc0vAg==
+X-Google-Smtp-Source: APXvYqxxCoAS7hYRFHPfYs76Tb409aHh+6XfZ+16gKSnc9u/XR3xEJcwmzQrsK4r3505PJyIjEp9Hw1AiyMl9V14elc=
+X-Received: by 2002:a5d:6449:: with SMTP id d9mr3149794wrw.246.1570628136354;
+ Wed, 09 Oct 2019 06:35:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191009132950.GB6681@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 09 Oct 2019 13:32:52 +0000 (UTC)
+References: <20191004145056.43267-1-hdegoede@redhat.com> <20191004145056.43267-2-hdegoede@redhat.com>
+ <CAKv+Gu9OU3rS-j+L+pxpK7HZi41XtQZTq9BDs6VpUC8RCq5X6g@mail.gmail.com> <c0256726-0aa3-b005-0a18-7b6a41533a0b@redhat.com>
+In-Reply-To: <c0256726-0aa3-b005-0a18-7b6a41533a0b@redhat.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Wed, 9 Oct 2019 15:35:24 +0200
+Message-ID: <CAKv+Gu9YLesC1abXAcUMe+0BE8Vv52Y_BhN-1Ps+h161Q00KKQ@mail.gmail.com>
+Subject: Re: [PATCH v7 1/8] efi: Export boot-services code and data as debugfs-blobs
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Peter Jones <pjones@redhat.com>,
+        Dave Olsthoorn <dave@bewaar.me>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-input@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.10.19 15:29, Michal Hocko wrote:
-> On Wed 09-10-19 15:24:05, David Hildenbrand wrote:
->> On 09.10.19 15:22, Michal Hocko wrote:
->>> On Wed 09-10-19 14:58:24, David Hildenbrand wrote:
->>> [...]
->>>> I would be fine with this, but it means that - for now - the three
->>>> /proc/ files won't be able to deal with ZONE_DEVICE memory.
->>>
->>> Thanks for the clarification. Is this an actual problem though? Do we
->>> have any consumers of the functionality?
->>>
->>
->> I don't know, that's why I was being careful in not changing its behavior.
-> 
-> Can we simply go with pfn_to_online_page. I would be quite surprised if
-> anybody was really examining zone device memory ranges as they are
-> static IIUC. If there is some usecase I am pretty sure we will learn
-> that and can address it accordingly.
-> 
+On Wed, 9 Oct 2019 at 15:18, Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi,
+>
+> On 09-10-2019 15:07, Ard Biesheuvel wrote:
+> > On Fri, 4 Oct 2019 at 16:51, Hans de Goede <hdegoede@redhat.com> wrote:
+> >>
+> >> Sometimes it is useful to be able to dump the efi boot-services code and
+> >> data. This commit adds these as debugfs-blobs to /sys/kernel/debug/efi,
+> >> but only if efi=debug is passed on the kernel-commandline as this requires
+> >> not freeing those memory-regions, which costs 20+ MB of RAM.
+> >>
+> >> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >> Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> >> ---
+> >> Changes in v5:
+> >> -Rename the EFI_BOOT_SERVICES flag to EFI_PRESERVE_BS_REGIONS
+> >>
+> >> Changes in v4:
+> >> -Add new EFI_BOOT_SERVICES flag and use it to determine if the boot-services
+> >>   memory segments are available (and thus if it makes sense to register the
+> >>   debugfs bits for them)
+> >>
+> >> Changes in v2:
+> >> -Do not call pr_err on debugfs call failures
+> >> ---
+> >>   arch/x86/platform/efi/efi.c    |  1 +
+> >>   arch/x86/platform/efi/quirks.c |  4 +++
+> >>   drivers/firmware/efi/efi.c     | 53 ++++++++++++++++++++++++++++++++++
+> >>   include/linux/efi.h            |  1 +
+> >>   4 files changed, 59 insertions(+)
+> >>
+> >> diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+> >> index c202e1b07e29..847730f7e74b 100644
+> >> --- a/arch/x86/platform/efi/efi.c
+> >> +++ b/arch/x86/platform/efi/efi.c
+> >> @@ -232,6 +232,7 @@ int __init efi_memblock_x86_reserve_range(void)
+> >>               efi.memmap.desc_version);
+> >>
+> >>          memblock_reserve(pmap, efi.memmap.nr_map * efi.memmap.desc_size);
+> >> +       set_bit(EFI_PRESERVE_BS_REGIONS, &efi.flags);
+> >
+> > Should we add a Kconfig symbol to opt into this behavior [set by the
+> > driver in question], instead of always preserving all boot services
+> > regions on all x86 systems?
+>
+> This bit does not control anything, it merely signals that the arch early
+> boot EFI code keeps the boot-services code around, which is something
+> which the x86 code already does. Where as e.g. on arm / aarch64 this is
+> freed early on, this ties in with the other bits:
+>
+> >
+> >>
+> >>          return 0;
+> >>   }
+> >> diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+> >> index 3b9fd679cea9..fab12ebf0ada 100644
+> >> --- a/arch/x86/platform/efi/quirks.c
+> >> +++ b/arch/x86/platform/efi/quirks.c
+> >> @@ -411,6 +411,10 @@ void __init efi_free_boot_services(void)
+> >>          int num_entries = 0;
+> >>          void *new, *new_md;
+> >>
+> >> +       /* Keep all regions for /sys/kernel/debug/efi */
+> >> +       if (efi_enabled(EFI_DBG))
+> >> +               return;
+> >> +
+>
+> This is the point where normally on x86 we do actually free the boot-services
+> code which is a lot later then on other arches. And this new code actually
+> does change things to keep the boot-services code *forever* but only
+> if EFI debugging is enabled on the kernel commandline.
+>
 
-I consider it mostly a debug interface either way. Will rework, test and
-resend. Thanks!
+I get this part. But at some point, your driver is going to expect
+this memory to be preserved even if EFI_DBG is not set, right? My
+question was whether we should only opt into that if such a driver is
+enabled in the first place.
 
--- 
-
-Thanks,
-
-David / dhildenb
+> This ties in with the next bit:
+>
+> >>          for_each_efi_memory_desc(md) {
+> >>                  unsigned long long start = md->phys_addr;
+> >>                  unsigned long long size = md->num_pages << EFI_PAGE_SHIFT;
+> >> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> >> index 8d3e778e988b..abba49c4c46d 100644
+> >> --- a/drivers/firmware/efi/efi.c
+> >> +++ b/drivers/firmware/efi/efi.c
+>
+> <snip>
+>
+> >> @@ -370,6 +420,9 @@ static int __init efisubsys_init(void)
+> >>                  goto err_remove_group;
+> >>          }
+> >>
+> >> +       if (efi_enabled(EFI_DBG) && efi_enabled(EFI_PRESERVE_BS_REGIONS))
+> >> +               efi_debugfs_init();
+> >> +
+> >>          return 0;
+> >>
+> >>   err_remove_group:
+>
+> Here we register the debugfs dir + files, but only when the
+> boot services code has been kept around, so only if the
+> EFI_PRESERVE_BS_REGIONS arch feature flag has been set and
+> EFI debugging has been requested on the kernel commandline.
+>
+> IOW this patch already offers to configurability you ask for, but instead
+> of through a Kconfig option (which IMHO would be cumbersome) the decision
+> is made runtime based on the presence of efi=debug on the kernel commandline.
+>
+> Regards,
+>
+> Hans
+>
+>
+>
+>
+> >> diff --git a/include/linux/efi.h b/include/linux/efi.h
+> >> index bd3837022307..2a30a1bd8bdf 100644
+> >> --- a/include/linux/efi.h
+> >> +++ b/include/linux/efi.h
+> >> @@ -1202,6 +1202,7 @@ extern int __init efi_setup_pcdp_console(char *);
+> >>   #define EFI_DBG                        8       /* Print additional debug info at runtime */
+> >>   #define EFI_NX_PE_DATA         9       /* Can runtime data regions be mapped non-executable? */
+> >>   #define EFI_MEM_ATTR           10      /* Did firmware publish an EFI_MEMORY_ATTRIBUTES table? */
+> >> +#define EFI_PRESERVE_BS_REGIONS        11      /* Are EFI boot-services memory segments available? */
+> >>
+> >>   #ifdef CONFIG_EFI
+> >>   /*
+> >> --
+> >> 2.23.0
+> >>
