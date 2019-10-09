@@ -2,171 +2,194 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E310CECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D60B8C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF3B72133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:42:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4E262133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:42:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gE6og7rg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730765AbfJIKmG (ORCPT
+        id S1730789AbfJIKmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 06:42:06 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47994 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729320AbfJIKmF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 06:42:05 -0400
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9AF177EBAE
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Oct 2019 10:42:04 +0000 (UTC)
-Received: by mail-wr1-f71.google.com with SMTP id k2so920206wrn.7
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 03:42:04 -0700 (PDT)
+        Wed, 9 Oct 2019 06:42:42 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33677 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbfJIKmm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 06:42:42 -0400
+Received: by mail-wr1-f66.google.com with SMTP id b9so2281566wrs.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 03:42:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=K/8jkJc7wc7u6udSGdjINbk+0yMvperAB6aWTlp1WT0=;
+        b=gE6og7rgU8o5Rlz2ZI6A6EhutjxNfdftMOg7MInNxNp92eEck/fsA/l5SVqKU+e7DC
+         tOjV8/2S0tkCi5+d2NDfquRnEEGvAOSw9YLG0DEWhDb3OCz+ZNqpYU40pt101L2T7G1E
+         oiCPuyj5xUmAOGirz1/4rCrp/5sQTZqMVTJtW3nX4j3ctGZcwm8kPXN7llubCxytlCbY
+         HZAlu/o1Ikd8JbwCfKslIr53DD0l1p9KzYt6vhi9HSlLb+qtrPflLY8kd3fItlbMrFl/
+         csMNLjJLpP14UMthQp/pHeaaSpzlBX7ePmEeSN7yF2gZvt2RYlyKHrRFOeryKXH8sFbm
+         PKQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=J8hSvrVM0n390UEyk1W8JHtorTgdd/DsWaNeJyfqLMw=;
-        b=WXbe4o4AnMSUcbB7Qw6gZ92+m7sKsBEKCZLOaqYwDP/s6uGuB1a6FnOgfIQ/Gbpi5b
-         EZhp2PztSx9i4Pr5zwqPW6DoGAn4QQzTjB45MpbsGx/bGW4GpAqjpkVVFMJyElxjQHyW
-         WPg877Ns9gZ42FTfZ3fzp8iLMpVfVMJ1eDDBrMJ63c3xq22j8F93VS+LPApBEi1XP3Zz
-         j776w6zZi8P3UlHAAIn0D4AHMGkiUw4QBPDLfkkaKjSvVzhQB9GubxEPsuJvUAmmFV/C
-         iZsVg5KRZVXsO+gkJsh9VfWbLOw6u8w0kGj/UsqGkAnUhqgkLdx/sNHBk+INrK2DbxXa
-         EomA==
-X-Gm-Message-State: APjAAAVRxiTyyf7VoTHIVBs9H9s6p3FaD/dcTWDtCdEgJY7z+cdZaYyi
-        qXC7nAV9FE4dshh893AARmzvM5c4g7METiimnNVYKHX4oXzP/9iXMcWD/VaolwqxyiV+5QOG3M/
-        9AYgUbl1ZFCRShH/zt2A8XlZ3
-X-Received: by 2002:adf:910d:: with SMTP id j13mr2335541wrj.128.1570617722372;
-        Wed, 09 Oct 2019 03:42:02 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzwmwVD31cDLK8BjOCmTyIAFDGFk9Cn8qZooiVBtZuUy2HwZA2nWc9whzpr9tFtVykpjpOVaA==
-X-Received: by 2002:adf:910d:: with SMTP id j13mr2335514wrj.128.1570617722044;
-        Wed, 09 Oct 2019 03:42:02 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id w9sm3591809wrt.62.2019.10.09.03.42.01
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=K/8jkJc7wc7u6udSGdjINbk+0yMvperAB6aWTlp1WT0=;
+        b=RePSLnliNuNwgn3wUo/WelXFRma15JSFTTgw77ufQw8nHFzhVPM3oCYvOQejSfszzM
+         QNU2ZjNB0aU/azabCrGBLiLBNheBAUUszGy59ZpOG42H8j5tmxb73Vh0QJuw7PDfVu38
+         vnQgajD6i8f0POzs0J88WyeR3k/hzajAAVjMETVhpzDV+vsd4EKrg3ly0najP9Xwzbm5
+         vpNh8D+4nF6cwJCLY9eqLWCcvuyzoDxMnNKkTqYlMkbOAHqSh2nCQnbw95MILZIfV8Ic
+         gbqEtJih25Gwg3FbGS3O7GXc06ED9gK4iOMIg+auMzhglFlUxcbcH4BMiUO7Ls5jsZom
+         SNMw==
+X-Gm-Message-State: APjAAAXKMyYSLHRuhbfp+cGV+YH6bmjqoJzYGJfzZ/YXXNiZeBUoiIek
+        WVIjK2zEBnWpQ0Cu6wh2mA9Vwg==
+X-Google-Smtp-Source: APXvYqx4WIEy/7qJ94hIy8ENASggcnfwGTDmcb6vVAwNjKFf7pZqhO3uSlODVxx+IjTeKRTH9Qw7kg==
+X-Received: by 2002:a5d:5309:: with SMTP id e9mr2448771wrv.276.1570617758872;
+        Wed, 09 Oct 2019 03:42:38 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id k24sm7128343wmi.1.2019.10.09.03.42.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 03:42:01 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jim Mattson <jmattson@google.com>
-Subject: Re: [PATCH] selftests: kvm: fix sync_regs_test with newer gccs
-In-Reply-To: <b7d20806-4e88-91af-31c1-8cbb0a8a330b@redhat.com>
-References: <20191008180808.14181-1-vkuznets@redhat.com> <20191008183634.GF14020@linux.intel.com> <b7d20806-4e88-91af-31c1-8cbb0a8a330b@redhat.com>
-Date:   Wed, 09 Oct 2019 12:42:00 +0200
-Message-ID: <87d0f6yzd3.fsf@vitty.brq.redhat.com>
+        Wed, 09 Oct 2019 03:42:37 -0700 (PDT)
+Date:   Wed, 9 Oct 2019 11:42:36 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-kernel@vger.kernel.org, thierry.reding@gmail.com,
+        heiko@sntech.de, dianders@chromium.org, mka@chromium.org,
+        groeck@chromium.org, kernel@collabora.com, bleung@chromium.org,
+        linux-pwm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH] pwm: cros-ec: Let cros_ec_pwm_get_state() return the
+ last applied state
+Message-ID: <20191009104236.ux23ywnhvsym2qcb@holly.lan>
+References: <20191008105417.16132-1-enric.balletbo@collabora.com>
+ <20191008143432.pbhcqamd6f4qwbqn@pengutronix.de>
+ <4f009344-242e-19a7-6872-2c55df086044@collabora.com>
+ <20191008203137.s22clq6v2om5ktio@pengutronix.de>
+ <53b7d02b-1a2d-11da-fdd0-5378f360d876@collabora.com>
+ <20191009095635.yysr33lnwldicyng@holly.lan>
+ <20191009101637.gmvghwdvcmfw4yyk@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191009101637.gmvghwdvcmfw4yyk@pengutronix.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paolo Bonzini <pbonzini@redhat.com> writes:
+On Wed, Oct 09, 2019 at 12:16:37PM +0200, Uwe Kleine-König wrote:
+> On Wed, Oct 09, 2019 at 10:56:35AM +0100, Daniel Thompson wrote:
+> > On Wed, Oct 09, 2019 at 11:27:13AM +0200, Enric Balletbo i Serra wrote:
+> > > Hi Uwe,
+> > > 
+> > > Adding Daniel and Lee to the discussion ...
+> > 
+> > Thanks!
+> > 
+> > > On 8/10/19 22:31, Uwe Kleine-König wrote:
+> > > > On Tue, Oct 08, 2019 at 06:33:15PM +0200, Enric Balletbo i Serra wrote:
+> > > >>> A few thoughts to your approach here ...:
+> > > >>>
+> > > >>>  - Would it make sense to only store duty_cycle and enabled in the
+> > > >>>    driver struct?
+> > > >>>
+> > > >>
+> > > >> Yes, in fact, my first approach (that I didn't send) was only storing enabled
+> > > >> and duty cycle. For some reason I ended storing the full pwm_state struct, but I
+> > > >> guess is not really needed.
+> > > >>
+> > > >>
+> > > >>>  - Which driver is the consumer of your pwm? If I understand correctly
+> > > >>>    the following sequence is the bad one:
+> > > >>>
+> > > >>
+> > > >> The consumer is the pwm_bl driver. Actually I'n trying to identify
+> > > >> other consumers.
+> > > > 
+> > > 
+> > > So far, the pwm_bl driver is the only consumer of cros-ec-pwm.
+> > > 
+> > > > Ah, I see why I missed to identify the problem back when I checked this
+> > > > driver. The problem is not that .duty_cycle isn't set but there .enabled
+> > > > isn't set. So maybe we just want:
+> > > > 
+> > > > diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+> > > > index 2201b8c78641..0468c6ee4448 100644
+> > > > --- a/drivers/video/backlight/pwm_bl.c
+> > > > +++ b/drivers/video/backlight/pwm_bl.c
+> > > > @@ -123,6 +123,7 @@ static int pwm_backlight_update_status(struct backlight_device *bl)
+> > > >         if (brightness > 0) {
+> > > >                 pwm_get_state(pb->pwm, &state);
+> > > >                 state.duty_cycle = compute_duty_cycle(pb, brightness);
+> > > > +               state.enabled = true;
+> > > >                 pwm_apply_state(pb->pwm, &state);
+> > > >                 pwm_backlight_power_on(pb);
+> > > >         } else
+> > > > 
+> > > > ? On a side note: It's IMHO strange that pwm_backlight_power_on
+> > > > reconfigures the PWM once more.
+> > > > 
+> > > 
+> > > Looking again to the pwm_bl code, now, I am not sure this is correct (although
+> > > it probably solves the problem for me).
+> > 
+> > Looking at the pwm_bl code I wouldn't accept the above as it is but I'd
+> > almost certainly accept a patch to pwm_bl to move the PWM enable/disable
+> > out of both the power on/off functions so the duty-cycle/enable or
+> > disable can happen in one go within the update_status function. I don't
+> > think such a change would interfere with the power and enable sequencing
+> > needed by panels and it would therefore be a nice continuation of the
+> > work to convert over to the pwm_apply_state() API.
+> 
+> OK for me. Enric, do you care enough to come up with a patch for pwm_bl?
+> I'd expect that this alone should already fix your issue.
+>  
+> > None of the above has anything to do with what is right or wrong for
+> > the PWM API evolution. Of course, if this thread does conclude that it
+> > is OK the duty cycle of a disabled PWM to be retained for some drivers
+> > and not others then I'd hope to see some WARN_ON()s added to the PWM
+> > framework to help bring problems to the surface with all drivers.
+> 
+> I think it's not possible to add a reliable WARN_ON for that issue. It
+> is quite expected that .get_state returns something that doesn't
+> completely match the requested configuration. So if a consumer requests
+> 
+> 	.duty_cycle = 1
+> 	.period = 100000000
+> 	.enabled = false
+> 
+> pwm_get_state possibly returns .duty_cycle = 0 even for drivers/hardware
+> that has a concept of duty_cycle for disabled hardware.
+> 
+> A bit this is addressed in https://patchwork.ozlabs.org/patch/1147517/.
 
-> On 08/10/19 20:36, Sean Christopherson wrote:
->> On Tue, Oct 08, 2019 at 08:08:08PM +0200, Vitaly Kuznetsov wrote:
->>> Commit 204c91eff798a ("KVM: selftests: do not blindly clobber registers in
->>>  guest asm") was intended to make test more gcc-proof, however, the result
->>> is exactly the opposite: on newer gccs (e.g. 8.2.1) the test breaks with
->>>
->>> ==== Test Assertion Failure ====
->>>   x86_64/sync_regs_test.c:168: run->s.regs.regs.rbx == 0xBAD1DEA + 1
->>>   pid=14170 tid=14170 - Invalid argument
->>>      1	0x00000000004015b3: main at sync_regs_test.c:166 (discriminator 6)
->>>      2	0x00007f413fb66412: ?? ??:0
->>>      3	0x000000000040191d: _start at ??:?
->>>   rbx sync regs value incorrect 0x1.
->>>
->>> Apparently, compile is still free to play games with registers even
->>> when they have variables attaches.
->>>
->>> Re-write guest code with 'asm volatile' by embedding ucall there and
->>> making sure rbx is preserved.
->>>
->>> Fixes: 204c91eff798a ("KVM: selftests: do not blindly clobber registers in guest asm")
->>> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->>> ---
->>>  .../selftests/kvm/x86_64/sync_regs_test.c     | 21 ++++++++++---------
->>>  1 file changed, 11 insertions(+), 10 deletions(-)
->>>
->>> diff --git a/tools/testing/selftests/kvm/x86_64/sync_regs_test.c b/tools/testing/selftests/kvm/x86_64/sync_regs_test.c
->>> index 11c2a70a7b87..5c8224256294 100644
->>> --- a/tools/testing/selftests/kvm/x86_64/sync_regs_test.c
->>> +++ b/tools/testing/selftests/kvm/x86_64/sync_regs_test.c
->>> @@ -22,18 +22,19 @@
->>>  
->>>  #define VCPU_ID 5
->>>  
->>> +#define UCALL_PIO_PORT ((uint16_t)0x1000)
->>> +
->>> +/*
->>> + * ucall is embedded here to protect against compiler reshuffling registers
->>> + * before calling a function. In this test we only need to get KVM_EXIT_IO
->>> + * vmexit and preserve RBX, no additional information is needed.
->>> + */
->>>  void guest_code(void)
->>>  {
->>> -	/*
->>> -	 * use a callee-save register, otherwise the compiler
->>> -	 * saves it around the call to GUEST_SYNC.
->>> -	 */
->>> -	register u32 stage asm("rbx");
->>> -	for (;;) {
->>> -		GUEST_SYNC(0);
->>> -		stage++;
->>> -		asm volatile ("" : : "r" (stage));
->>> -	}
->>> +	asm volatile("1: in %[port], %%al\n"
->>> +		     "add $0x1, %%rbx\n"
->>> +		     "jmp 1b"
->>> +		     : : [port] "d" (UCALL_PIO_PORT) : "rax", "rbx");
->>>  }
->> 
->> To make the code truly bulletproof, is it possible to rename guest_code()
->> to guest_code_wrapper() and then export 1: as guest_code?  VM-Enter will
->> jump directly to the relevant code and gcc can't touch rbx.  E.g.:
->> 
->> 	asm volatile("1: ..."
->> 		     ".global guest_code"
->> 		     "guest_code: " _ASM_PTR " 1b");
->> 
->> Not sure if that works with how the selftests are compiled.  It may also
->> be possible to simply replace '1' with 'guest_code'.
->
-> There is no practical difference with Vitaly's patch.  The first
-> _vcpu_run has no pre-/post-conditions on the value of %rbx:
->
+Isn't that intended to help identify "odd" PWM drivers rather than "odd"
+clients?
 
-I think what Sean was suggesting is to prevent GCC from inserting
-anything (and thus clobbering RBX) between the call to guest_call() and
-the beginning of 'asm volatile' block by calling *inside* 'asm volatile'
-block instead.
+Initially I was thinking that a WARN_ON() could be emitted when:
 
->
->         run->kvm_valid_regs = TEST_SYNC_FIELDS;
->         rv = _vcpu_run(vm, VCPU_ID);
->         TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
->                     "Unexpected exit reason: %u (%s),\n",
->                     run->exit_reason,
->                     exit_reason_str(run->exit_reason));
->
-> 	/*
-> 	 * Then it goes on comparing regs/sregs/events, but does not
-> 	 * check for specific values.
-> 	 */
->
-> As soon as that first _vcpu_run succeeds, you're stuck in the in/add/jmp
-> loop and the compiler can't trick you anymore.
->
-> So, I'm queuing the patch.
->
+1. .duty_cycle is non-zero
+2. .enabled is false
+3. the PWM is not already enabled
 
-Thanks!
+(#3 included to avoid too many false positives when disabling a PWM)
 
--- 
-Vitaly
+A poisoning approach might be equally valid. If some drivers are
+permitted to "round" .duty_cycle to 0 when .enabled is false then the
+framework could get *all* drivers to behave in the same way by
+zeroing it out before calling the drivers apply method. It is not that
+big a deal but minimising the difference between driver behaviour should
+automatically reduce the difference in API usage by clients.
+
+
+Daniel.
