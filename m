@@ -2,219 +2,213 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E26C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D92C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D963321835
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:55:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2828120B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:57:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uc+IQZoT"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Wy+fMCn6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729664AbfJIHzN (ORCPT
+        id S1729618AbfJIH5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 03:55:13 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39685 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725903AbfJIHzM (ORCPT
+        Wed, 9 Oct 2019 03:57:07 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:33039 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725879AbfJIH5H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 03:55:12 -0400
-Received: by mail-wm1-f66.google.com with SMTP id v17so1335163wml.4;
-        Wed, 09 Oct 2019 00:55:10 -0700 (PDT)
+        Wed, 9 Oct 2019 03:57:07 -0400
+Received: by mail-ed1-f68.google.com with SMTP id c4so1168710edl.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 00:57:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=IL43E3a4vEuIX1bXl8WBoZ420raidLdkMkzdVHu6VyY=;
-        b=Uc+IQZoT3dj7FFk7OEo+Gt39fnbx+Mq9gUo5iX5Q36BNwpEDCsNI6ddNzBSKCarOcE
-         1PXAdSbV0eDtYGxRgy5ETzqQDCnmxesgYeYN8zuLK+RTVY63Kq8lqnWMAPsA8mpjy4TT
-         jHCMgeyWfLFtSXVOxLWcUMolNQczVufuAHSk3OunZvvVpp/EcuO6OlmtEKCW1T20Lors
-         1wunMqdLZ0AUROZfqO6uSIe5Moi3EnqepmMrH/AAXvLo84ys422g84sMbNrb5i57isPQ
-         ffUurUenZ3b4/1XAS5+8b02FUfDEHPeeYby5OFA5VOyIqmNW3MCX4t0T04/HuwL0+WXv
-         wY/g==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3E0V0aOu3g2aASZWIE15ppPWG2zpJ6BIMHadxXwPGJM=;
+        b=Wy+fMCn6bQNsAvH2t7CAUcAbS0cogbGpbonr79/Lnr7QOUcYd/LWBCJdHdu1K1Arbl
+         phmWYeGx0sM1IHdel9vQN+wNn7Mo71abv6iR6p7CudVLWdWKI4H06xYrhZNYC8yAziOc
+         pRb6FXFj/rsG4B4qjhfvNcor1b2INvR9lRefc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IL43E3a4vEuIX1bXl8WBoZ420raidLdkMkzdVHu6VyY=;
-        b=rd6QnNs/aXxyNorgyor4YSXUUSE20UZ5YIRyt/lVxl+CiIgM1iffkcDfDS/6tML+rf
-         nyr1kGL3rqE35427JRN283kt8JRYACF/FsnfRmBhFfqAYFowjismdZvqlhAvWNZb0VkS
-         TBzkFlMqWrwCg5veBLUK4WSSBtU8TiDbKVsGZ334zbAVfP+QT5GBGukt5cfKDvzEt0w7
-         8vlfn2qhkIVXNoER9JJUvgOkURv+o4nF24ie+KZAtWj5CM8ODTkDwYretymJBZmDxa+o
-         wi1AXQTiFYiHDyFgNb1W0m67R+ofBLfHsBI1P/qiHmbU27X8NfV+J93FLp31VRK3jnxM
-         P3ZA==
-X-Gm-Message-State: APjAAAUWOdqkZOKkw7jrC8/GNp5eUULoqfIv8p4eFAFL8ijMId5my28k
-        S3B2Hiohl3PX9VY1XgtHO/k6j/ch
-X-Google-Smtp-Source: APXvYqxaNioJYq6FZZ185dHSdZfmm/Xv2YkqnhfPXa4a0kdU7ungo8D4jDJCw2rWvDScIh6BmvJHJg==
-X-Received: by 2002:a1c:7401:: with SMTP id p1mr1445015wmc.144.1570607709357;
-        Wed, 09 Oct 2019 00:55:09 -0700 (PDT)
-Received: from [10.0.20.253] ([95.157.63.22])
-        by smtp.gmail.com with ESMTPSA id g185sm1949016wme.10.2019.10.09.00.55.08
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3E0V0aOu3g2aASZWIE15ppPWG2zpJ6BIMHadxXwPGJM=;
+        b=bZLqQWjlNhaw2tt5d5qVVSsD+TE57nuSygJrlq/HRGAnh2TIjyS+0dR1gJ/rL6nvKs
+         fzNVFfHxzxkRZ/44WAeBC1OPDnQgLZS1HExAuIgqgx51CgTOGhkgJhGw25wEiMTRjcg0
+         SRI26N8JkoKkheI9x5QB45JpHnP2pP3P3RUEgCvP8r7YJdydzVnGLBH5dZCEF4Ty1y8h
+         ZMvadnXvWcbJ7hSsU2Yh8M9NTXitQh+e0BmJR/ByKgfGVVwdUz36Ef0qmIm69H6Mssir
+         /jiB0x0u1fkOG8Hc3BlaBDxJ/NsEeQ5pXPqmhA70Z6OBmLHY/NgUyrmyet42ey9a7+1x
+         v+XQ==
+X-Gm-Message-State: APjAAAU5F3vtWfMxbGSwYixg8Z/Z/mBizOZIaH3x63XhuZlIN8U6mJxr
+        8N4XRzSGiNoGes4h2Z971kOSIeBnLVnRqQ==
+X-Google-Smtp-Source: APXvYqzSGcaYUyj8ZUSL8WROrF+2Ns9IxjkS3IDPXJayrzuRPTGfPdvxRoRxJHj7eWw72M5Xm0uKmg==
+X-Received: by 2002:aa7:ce94:: with SMTP id y20mr1702820edv.189.1570607824982;
+        Wed, 09 Oct 2019 00:57:04 -0700 (PDT)
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com. [209.85.128.54])
+        by smtp.gmail.com with ESMTPSA id r18sm241227edx.94.2019.10.09.00.57.03
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Oct 2019 00:55:08 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com, Christian Brauner <christian@brauner.io>,
-        Aleksa Sarai <asarai@suse.de>, linux-man@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 1/3] symlink.7: document magic-links more completely
-To:     Aleksa Sarai <cyphar@cyphar.com>, Al Viro <viro@zeniv.linux.org.uk>
-References: <20191003145542.17490-1-cyphar@cyphar.com>
- <20191003145542.17490-2-cyphar@cyphar.com>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <2fd9e82d-2a9c-cda9-0c17-3a20034eca1d@gmail.com>
-Date:   Wed, 9 Oct 2019 09:55:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 09 Oct 2019 00:57:03 -0700 (PDT)
+Received: by mail-wm1-f54.google.com with SMTP id 3so1347164wmi.3
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 00:57:03 -0700 (PDT)
+X-Received: by 2002:a1c:a516:: with SMTP id o22mr1631005wme.116.1570607822816;
+ Wed, 09 Oct 2019 00:57:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191003145542.17490-2-cyphar@cyphar.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1569822142-14303-1-git-send-email-yong.wu@mediatek.com>
+ <CAAFQd5C+FM3n-Ww4C+qDD1QZOGZrqEYw4EvYECfadGcDH0fmew@mail.gmail.com> <1570522162.19130.38.camel@mhfsdcap03>
+In-Reply-To: <1570522162.19130.38.camel@mhfsdcap03>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Wed, 9 Oct 2019 16:56:50 +0900
+X-Gmail-Original-Message-ID: <CAAFQd5C3U7pZo4SSUJ52Q7E+0FaUoORQFbQC5RhCHBhi=NFYTw@mail.gmail.com>
+Message-ID: <CAAFQd5C3U7pZo4SSUJ52Q7E+0FaUoORQFbQC5RhCHBhi=NFYTw@mail.gmail.com>
+Subject: Re: [PATCH] iommu/mediatek: Move the tlb_sync into tlb_flush
+To:     Yong Wu <yong.wu@mediatek.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Evan Green <evgreen@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>,
+        anan.sun@mediatek.com, cui.zhang@mediatek.com,
+        chao.hao@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Aleksa,
+On Tue, Oct 8, 2019 at 5:09 PM Yong Wu <yong.wu@mediatek.com> wrote:
+>
+> Hi Tomasz,
+>
+> Sorry for reply late.
+>
+> On Wed, 2019-10-02 at 14:18 +0900, Tomasz Figa wrote:
+> > Hi Yong,
+> >
+> > On Mon, Sep 30, 2019 at 2:42 PM Yong Wu <yong.wu@mediatek.com> wrote:
+> > >
+> > > The commit 4d689b619445 ("iommu/io-pgtable-arm-v7s: Convert to IOMMU API
+> > > TLB sync") help move the tlb_sync of unmap from v7s into the iommu
+> > > framework. It helps add a new function "mtk_iommu_iotlb_sync", But it
+> > > lacked the dom->pgtlock, then it will cause the variable
+> > > "tlb_flush_active" may be changed unexpectedly, we could see this warning
+> > > log randomly:
+> > >
+> >
+> > Thanks for the patch! Please see my comments inline.
+> >
+> > > mtk-iommu 10205000.iommu: Partial TLB flush timed out, falling back to
+> > > full flush
+> > >
+> > > To fix this issue, we can add dom->pgtlock in the "mtk_iommu_iotlb_sync".
+> > > And when checking this issue, we find that __arm_v7s_unmap call
+> > > io_pgtable_tlb_add_flush consecutively when it is supersection/largepage,
+> > > this also is potential unsafe for us. There is no tlb flush queue in the
+> > > MediaTek M4U HW. The HW always expect the tlb_flush/tlb_sync one by one.
+> > > If v7s don't always gurarantee the sequence, Thus, In this patch I move
+> > > the tlb_sync into tlb_flush(also rename the function deleting "_nosync").
+> > > and we don't care if it is leaf, rearrange the callback functions. Also,
+> > > the tlb flush/sync was already finished in v7s, then iotlb_sync and
+> > > iotlb_sync_all is unnecessary.
+> >
+> > Performance-wise, we could do much better. Instead of synchronously
+> > syncing at the end of mtk_iommu_tlb_add_flush(), we could sync at the
+> > beginning, if there was any previous flush still pending. We would
+> > also have to keep the .iotlb_sync() callback, to take care of waiting
+> > for the last flush. That would allow better pipelining with CPU in
+> > cases like this:
+> >
+> > for (all pages in range) {
+> >    change page table();
+> >    flush();
+> > }
+> >
+> > "change page table()" could execute while the IOMMU is flushing the
+> > previous change.
+>
+> Do you mean adding a new tlb_sync before tlb_flush_no_sync, like below:
+>
+> mtk_iommu_tlb_add_flush_nosync {
+>    + mtk_iommu_tlb_sync();
+>    tlb_flush_no_sync();
+>    data->tlb_flush_active = true;
+> }
+>
+> mtk_iommu_tlb_sync {
+>         if (!data->tlb_flush_active)
+>                 return;
+>         tlb_sync();
+>         data->tlb_flush_active = false;
+> }
+>
+> This way look improve the flow, But adjusting the flow is not the root
+> cause of this issue. the problem is "data->tlb_flush_active" may be
+> changed from mtk_iommu_iotlb_sync which don't have a dom->pglock.
 
+That was not the only problem with existing code. Existing code also
+assumed that add_flush and sync always go in pairs, but that's not
+true.
 
-On 10/3/19 4:55 PM, Aleksa Sarai wrote:
-> Traditionally, magic-links have not been a well-understood topic in
-> Linux. Given the new changes in their semantics (related to the link
-> mode of trailing magic-links), it seems like a good opportunity to shine
-> more light on magic-links and their semantics.
-> 
-> Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+My suggestion is to fix the locking in the driver and keep the sync
+deferred as much as possible, so that performance is not degraded. I
+changed my mind, though. I think we would need to make more changes to
+the driver to make it implement the flushing efficiently, so let's go
+with the current simple approach for now and improve incrementally.
 
-Thanks for doing this. Some comments below.
+>
+> Currently the synchronisation of the tlb_flush/tlb_sync flow are
+> controlled by the variable "data->tlb_flush_active".
+>
+> In this patch putting the tlb_flush/tlb_sync together looks make
+> the flow simpler:
+> a) Don't need the sensitive variable "tlb_flush_active".
+> b) Remove mtk_iommu_iotlb_sync, Don't need add lock in it.
+> c) Simplify the tlb_flush_walk/tlb_flush_leaf.
+> is it ok?
+>
 
-> ---
->  man7/path_resolution.7 | 15 +++++++++++++++
->  man7/symlink.7         | 39 ++++++++++++++++++++++++++++++---------
->  2 files changed, 45 insertions(+), 9 deletions(-)
-> 
-> diff --git a/man7/path_resolution.7 b/man7/path_resolution.7
-> index 07664ed8faec..46f25ec4cdfa 100644
-> --- a/man7/path_resolution.7
-> +++ b/man7/path_resolution.7
-> @@ -136,6 +136,21 @@ we are just creating it.
->  The details on the treatment
->  of the final entry are described in the manual pages of the specific
->  system calls.
-> +.PP
-> +Since Linux 5.FOO, if the final entry is a "magic-link" (see
+Okay, let's do so as a first step to fix the issue. Then we can
+optimize in follow up patches.
 
-"magic link". As Jann points out, this is more normal English usage.
+> >
+> > >
+> > > Besides, there are two minor changes:
+> > > a) Use writel for the register F_MMU_INV_RANGE which is for triggering the
+> > > HW work. We expect all the setting(iova_start/iova_end...) have already
+> > > been finished before F_MMU_INV_RANGE.
+> > > b) Reduce the tlb timeout value from 100000us to 1000us. the original value
+> > > is so long that affect the multimedia performance.
+> >
+> > By definition, timeout is something that should not normally happen.
+> > Too long timeout affecting multimedia performance would suggest that
+> > the timeout was actually happening, which is the core problem, not the
+> > length of the timeout. Could you provide more details on this?
+>
+> As description above, this issue is because there is no dom->pgtlock in
+> the mtk_iommu_iotlb_sync. I have tried that the issue will disappear
+> after adding lock in it.
+>
+> Although the issue is fixed after this patch, I still would like to
+> reduce the timeout value for somehow error happen in the future. 100ms
+> is unnecessary for us. It looks a minor improvement rather than fixing
+> the issue. I will use a new patch for it.
+>
 
-> +.BR symlink (7)),
-> +and the user is attempting to
-> +.BR open (2)
-> +it, then there is an additional permission-related restriction applied to the
-> +operation: the requested access mode must not exceed the "link mode" of the
-> +magic-link (unlike ordinary symlinks, magic-links have their own file mode.)
+Okay, makes sense.
 
-Remove the hyphens (magic link). And also, as someone else pointed out,
-manual pages fairly consistently uses the term "symbolic link"
-(written in full).
-
-You use the term "file mode" here. Do you mean the file permissions bits?
-If yes, it is a bit misleading to suggest that symbolic links don't
-have these mode bits. They do, but--as noted in the existing symlink(7)
-manual page text--these bits are ignored. I suggest just removing the
-parenthesized text.
-
-> +For example, if
-> +.I /proc/[pid]/fd/[num]
-> +has a link mode of
-> +.BR 0500 ,
-> +unprivileged users are not permitted to
-> +.BR open ()
-> +the magic-link for writing.
->  .SS . and ..
->  By convention, every directory has the entries "." and "..",
->  which refer to the directory itself and to its parent directory,
-> diff --git a/man7/symlink.7 b/man7/symlink.7
-> index 9f5bddd5dc21..33f0ec703acd 100644
-> --- a/man7/symlink.7
-> +++ b/man7/symlink.7
-> @@ -84,6 +84,25 @@ as they are implemented on Linux and other systems,
->  are outlined here.
->  It is important that site-local applications also conform to these rules,
->  so that the user interface can be as consistent as possible.
-> +.SS Magic-links
-> +There is a special class of symlink-like objects known as "magic-links" which
-
-"magic links" (and through the rest of the page).
-
-> +can be found in certain pseudo-filesystems such as
-
-pseudofilesystems
-
-> +.BR proc (5)
-> +(examples include
-> +.IR /proc/[pid]/exe " and " /proc/[pid]/fd/* .)
-> +Unlike normal symlinks, magic-links are not resolved through
-
-symbolic links
-
-> +pathname-expansion, but instead act as direct references to the kernel's own
-
-pathname expansion
-
-> +representation of a file handle. As such, these magic-links allow users to
-> +access files which cannot be referenced with normal paths (such as unlinked
-> +files still referenced by a running program.)
-> +.PP
-> +Because they can bypass ordinary
-> +.BR mount_namespaces (7)-based
-> +restrictions, magic-links have been used as attack vectors in various exploits.
-> +As such (since Linux 5.FOO), there are additional restrictions placed on the
-> +re-opening of magic-links (see
-> +.BR path_resolution (7)
-> +for more details.)
->  .SS Symbolic link ownership, permissions, and timestamps
->  The owner and group of an existing symbolic link can be changed
->  using
-> @@ -99,16 +118,18 @@ of a symbolic link can be changed using
->  or
->  .BR lutimes (3).
->  .PP
-> -On Linux, the permissions of a symbolic link are not used
-> -in any operations; the permissions are always
-> -0777 (read, write, and execute for all user categories),
->  .\" Linux does not currently implement an lchmod(2).
-> -and can't be changed.
-> -(Note that there are some "magic" symbolic links in the
-> -.I /proc
-> -directory tree\(emfor example, the
-> -.IR /proc/[pid]/fd/*
-> -files\(emthat have different permissions.)
-> +On Linux, the permissions of an ordinary symbolic link are not used in any
-> +operations; the permissions are always 0777 (read, write, and execute for all
-> +user categories), and can't be changed.
-> +.PP
-> +However, magic-links do not follow this rule. They can have a non-0777 mode,
-> +which is used for permission checks when the final
-> +component of an
-> +.BR open (2)'s
-> +path is a magic-link (see
-> +.BR path_resolution (7).)
-> +
->  .\"
->  .\" The
->  .\" 4.4BSD
-
-Thanks,
-
-Michael
-
-
--- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+Best regards,
+Tomasz
