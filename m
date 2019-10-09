@@ -2,204 +2,219 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC39C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 283DDECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4B4A2190F
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:03:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=verimatrix.com header.i=@verimatrix.com header.b="fgbKF5F6"
+	by mail.kernel.org (Postfix) with ESMTP id F24E1206B6
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:06:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729814AbfJIIDA (ORCPT
+        id S1729548AbfJIIGH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 04:03:00 -0400
-Received: from mail-eopbgr690041.outbound.protection.outlook.com ([40.107.69.41]:10633
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728429AbfJIIC6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 04:02:58 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=k/vW4uYTw4Zi/ap/t8CiNxKVXNy5f+OlAG1i2PkJfE0yssuevMpDkCPU3sM0gBDK2tCNt42nmZCBS8mgDepNTd8q+IGpKSIheoaZy0kCi5EROU1EVWcgE9pwykn4gDHEjJTC0C+UwDs5xv1rogWqm4b+z/Y8vmLwja1UzXZM6WrpTmGyhAECO9KdVv4AtvQEVUN2nhZWFQLyygC3ckEdveuaZVddyjjuJpbJaj/utfY8MpYTC8Zk+RuVRZ6bQ638eavbsnd0g7oNVJIZuejOmNSdtOEDdmo8iVkPaFZSowDjMLFHXNzfpJQzV7Gn1D3zBmD9Q3tkguLiawov7ibJbA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bItYDZp3f3y6Y5NKrtL5yfpJz+2BWJLq8nvDvjp/zfk=;
- b=Cz+J/L8JhguvOjE93hr92H7/WU/UjJAzRXfCb05oR2D7vgAAzGqayIhpPAd79FvjCs2EQUkHIqbpiGhoQzCv8oneMouxLbO7YS9W1yCWZK82LZAIzkdDPqsiGXOqmCrcSXbkBbz2ZyyzDkf4rwuZMNnWIsoHFrACM8Z4Z6U9/nQBUPcEQcwHKzq9JvLMWOuScK0B6pYQPTBhgLHwkMu/IeSIn2s+zJH+ezPxrCtErjmPM2xHhHOJnP9yz2QMtrmGgK8UYXQ2pW5SUZJMxyhxsEGcjqYuem5nba7CJKU3I30yvj/hK0I1y3AVtFG+qrgMZ+ru0k8o2HXiEWj3DpHXYA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=verimatrix.com; dmarc=pass action=none
- header.from=verimatrix.com; dkim=pass header.d=verimatrix.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=verimatrix.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bItYDZp3f3y6Y5NKrtL5yfpJz+2BWJLq8nvDvjp/zfk=;
- b=fgbKF5F6tPzpvGrfxFWE+feKkpchXisORqqDJ9d4Tssr3tgpMxSuE9FokHy29h3V0msJiF0HiQNZiez/sAq+LNKmNCX3CwHGERCSJft6P1JBcUPrQS0TtRohiuqnfjm+dmJRxw+uDc/yTbA2OEajrE8zKpKBVNmfnmbzYnwn8U4=
-Received: from MN2PR20MB2973.namprd20.prod.outlook.com (52.132.172.86) by
- MN2PR20MB3246.namprd20.prod.outlook.com (52.132.175.147) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.16; Wed, 9 Oct 2019 08:02:53 +0000
-Received: from MN2PR20MB2973.namprd20.prod.outlook.com
- ([fe80::b986:4f02:3206:31e4]) by MN2PR20MB2973.namprd20.prod.outlook.com
- ([fe80::b986:4f02:3206:31e4%7]) with mapi id 15.20.2347.016; Wed, 9 Oct 2019
- 08:02:52 +0000
-From:   Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Ken Goldman <kgold@linux.ibm.com>
-CC:     "Safford, David (GE Global Research, US)" <david.safford@ge.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
-Thread-Topic: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
-Thread-Index: AQHVdI4da48CsX6QxkCmhP/96hjLv6dHalaAgAFrf4CAABaxAIAAUs4AgAAPVYCAATcGAIAAU+GAgAAY0oCAA2pSAIABcvOAgAGtUICAAAEjgIAAgGmAgAABCDA=
-Date:   Wed, 9 Oct 2019 08:02:52 +0000
-Message-ID: <MN2PR20MB29732A856A40131A671F949FCA950@MN2PR20MB2973.namprd20.prod.outlook.com>
-References: <1570107752.4421.183.camel@linux.ibm.com>
- <20191003175854.GB19679@linux.intel.com>
- <1570128827.5046.19.camel@linux.ibm.com>
- <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A22E@ALPMBAPA12.e2k.ad.ge.com>
- <20191004182711.GC6945@linux.intel.com>
- <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A38B@ALPMBAPA12.e2k.ad.ge.com>
- <20191007000520.GA17116@linux.intel.com>
- <59b88042-9c56-c891-f75e-7c0719eb5ff9@linux.ibm.com>
- <20191008234935.GA13926@linux.intel.com>
- <20191008235339.GB13926@linux.intel.com>
- <20191009073315.GA5884@linux.intel.com>
-In-Reply-To: <20191009073315.GA5884@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pvanleeuwen@verimatrix.com; 
-x-originating-ip: [188.204.2.113]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 41018c77-fd8a-4f46-e891-08d74c8f15f4
-x-ms-traffictypediagnostic: MN2PR20MB3246:
-x-ms-exchange-purlcount: 2
-x-microsoft-antispam-prvs: <MN2PR20MB3246958C95991AF953D19426CA950@MN2PR20MB3246.namprd20.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 018577E36E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(39840400004)(376002)(396003)(136003)(189003)(199004)(13464003)(52536014)(71190400001)(6116002)(99286004)(476003)(478600001)(71200400001)(33656002)(966005)(4326008)(5660300002)(14444005)(7736002)(256004)(3846002)(74316002)(54906003)(110136005)(316002)(76116006)(229853002)(305945005)(2906002)(6436002)(446003)(14454004)(53546011)(6506007)(11346002)(8936002)(66446008)(7696005)(66476007)(55016002)(64756008)(76176011)(66556008)(6246003)(25786009)(486006)(9686003)(6306002)(66946007)(81166006)(86362001)(66066001)(26005)(81156014)(186003)(15974865002)(102836004)(8676002)(18886075002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR20MB3246;H:MN2PR20MB2973.namprd20.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: verimatrix.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: idKhIqPGnv5ii4HY+P6vKBANR8BK7UzDLueU3zhsB5vaOITqqOXQqHoK9GS69PwVNhGTPmb/tL038N6G7+eWwLbVcI6S6z8S9MgPTtRSStvxurxJ8C4lhufR2oSpOm8G1MpgGuD1cibFAfwNY0kjSFORELOgLzKYE3WNUqrJIb5ozB/w+NOw2KoK2RvhF9i68eXoqXntBwsXmSgOai30P+yd1MFzDtDuT4pb+YEjwara3EkX5l/vP2esLSVvovrMNUm2407lkGMsBdsokS62bLnRUxOPmuwv4iOKEEYLd1EUsNL3OA/MSxhBVhxgo/vqd4RuPgeDAOAUsZ6h8UHzrefVOyK7kU9ZhATnRpkdDbQOWoPLZh9c2kKTsS9xqCcBu+OKXP1P0mquJJG3gnoCZa4ld/gl3dCAzh8nILMD1L48JwK+Yhaq0ow13/oWBj3geeCE/gRoXOpp+QGXRU4JHw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 9 Oct 2019 04:06:07 -0400
+Received: from mga09.intel.com ([134.134.136.24]:9156 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725776AbfJIIGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 04:06:06 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 01:06:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,273,1566889200"; 
+   d="scan'208";a="206827005"
+Received: from shao2-debian.sh.intel.com (HELO [10.239.13.6]) ([10.239.13.6])
+  by fmsmga001.fm.intel.com with ESMTP; 09 Oct 2019 01:06:03 -0700
+Subject: Re: [kbuild-all] [PATCH] net: stmmac: socfpga: re-use the `interface`
+ parameter from platform data
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "lkp@intel.com" <lkp@intel.com>
+Cc:     "alexandre.torgue@st.com" <alexandre.torgue@st.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "joabreu@synopsys.com" <joabreu@synopsys.com>,
+        "kbuild-all@01.org" <kbuild-all@01.org>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        "peppe.cavallaro@st.com" <peppe.cavallaro@st.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190906123054.5514-1-alexandru.ardelean@analog.com>
+ <201909072036.v1rX0Vwh%lkp@intel.com>
+ <a7dc54d6e1fad0dc464a30101c8740b8c11f2d8b.camel@analog.com>
+From:   Rong Chen <rong.a.chen@intel.com>
+Message-ID: <147dd25f-c474-c5f7-11fd-9feab327b4b4@intel.com>
+Date:   Wed, 9 Oct 2019 16:05:46 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: verimatrix.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41018c77-fd8a-4f46-e891-08d74c8f15f4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Oct 2019 08:02:52.6132
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: dcb260f9-022d-4495-8602-eae51035a0d0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: abmUcUe3PYsnVIyYNceW7/FRWPqVQeq81rTUFD8mIZzc3jMIt7KqzVaYUltmqbxRY3zjJi4Vb8z9Gry4Sn0DvMPbSCouW5JfP10L7ekGVNM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR20MB3246
+In-Reply-To: <a7dc54d6e1fad0dc464a30101c8740b8c11f2d8b.camel@analog.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: linux-crypto-owner@vger.kernel.org <linux-crypto-owner@vger.kernel.=
-org> On Behalf Of
-> Jarkko Sakkinen
-> Sent: Wednesday, October 9, 2019 9:33 AM
-> To: Ken Goldman <kgold@linux.ibm.com>
-> Cc: Safford, David (GE Global Research, US) <david.safford@ge.com>; Mimi =
-Zohar
-> <zohar@linux.ibm.com>; linux-integrity@vger.kernel.org; stable@vger.kerne=
-l.org; open
-> list:ASYMMETRIC KEYS <keyrings@vger.kernel.org>; open list:CRYPTO API <li=
-nux-
-> crypto@vger.kernel.org>; open list <linux-kernel@vger.kernel.org>
-> Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
->=20
-> On Wed, Oct 09, 2019 at 02:53:39AM +0300, Jarkko Sakkinen wrote:
-> > On Wed, Oct 09, 2019 at 02:49:35AM +0300, Jarkko Sakkinen wrote:
-> > > On Mon, Oct 07, 2019 at 06:13:01PM -0400, Ken Goldman wrote:
-> > > > The TPM library specification states that the TPM must comply with =
-NIST
-> > > > SP800-90 A.
-> > > >
-> > > > https://trustedcomputinggroup.org/membership/certification/tpm-cert=
-ified-products/
-> > > >
-> > > > shows that the TPMs get third party certification, Common Criteria =
-EAL 4+.
-> > > >
-> > > > While it's theoretically possible that an attacker could compromise
-> > > > both the TPM vendors and the evaluation agencies, we do have EAL 4+
-> > > > assurance against both 1 and 2.
-> > >
-> > > Certifications do not equal to trust.
-> >
-> > And for trusted keys the least trust solution is to do generation
-> > with the kernel assets and sealing with TPM. With TEE the least
-> > trust solution is equivalent.
-> >
-> > Are you proposing that the kernel random number generation should
-> > be removed? That would be my conclusion of this discussion if I
-> > would agree any of this (I don't).
->=20
-> The whole point of rng in kernel has been to use multiple entropy
-> sources in order to disclose the trust issue.
->=20
-I do understand that, and combining multiple entropy sources, if
-you have them available to get _more_ entropy is a good idea, at=20
-least in theory. But ...
 
-How do I know the mixing of entropy happens properly? Especially
-if I'm not capable of judging this by myself.=20
-And how do I know the SW entropy pool and/or code cannot be influenced
-_somehow_? (either directly or indirectly by influencing one of the
-contributors). More code and/or HW involved means more attack vectors
-and complication of the review process.
 
-The point is, if you want to certify such an application, you would
-have to have _all_ contributors _plus_ the kernel rng code certified.
-And you would have to have it _recertified_ every time a _single_
-component - including the kernel code itself! - changes.
+On 9/9/19 4:53 PM, Ardelean, Alexandru wrote:
+> On Sat, 2019-09-07 at 20:54 +0800, kbuild test robot wrote:
+>> [External]
+>>
+>> Hi Alexandru,
+>>
+>> I love your patch! Yet something to improve:
+>>
+>> [auto build test ERROR on linus/master]
+> Hmm, this error should be expectable I guess: I applied this on net-next/master.
 
-> Even with weaker entropy than TPM RNG it is still a better choice for
-> *non-TPM* keys because of better trustworthiness.
+Sorry for the inconvenience, we'll take a look. btw, 0day-CI introduced 
+'--base' option to record base tree info in format-patch.
+please see https://stackoverflow.com/a/37406982
+
+Best Regards,
+Rong Chen
+
 >
-"Even with weaker entropy"? Now that's just silly. If you _know_ and
-_trust_ the TPM to have _better_ entropy, then obviously that is the
-better choice. I guess the key word being the trust you don't have.
-
-> Using only TPM RNG is
-> a design flaw that has existed probably because when trusted keys were
-> introduced TPM was more niche than it is today.
+> Alex
 >
-For non-TPM keys, possibly. Assuming the kernel RNG indeed adds=20
-(or at least does not weaken) entropy. And assuming I _can_ trust
-the kernel RNG implementation. Question is: why would I trust that
-more than the TPM implementation? Sure, I could look at the code,
-but would I truly and fully understand it? (so maybe _I_ would,
-but would Joe Random User?)
-
-> Please remember that a trusted key is not a TPM key. The reality
-> distortion field is strong here it seems.
->=20
-Agree. But you should not mess with the possibility to generate
-keys based on _just_ the TPM RNG _where that is required_ (and
-perhaps _only_ where that is required, if possible)
-
-> /Jarkko
-
-Regards,
-Pascal van Leeuwen
-Silicon IP Architect, Multi-Protocol Engines @ Verimatrix
-www.insidesecure.com
+>> [cannot apply to v5.3-rc7 next-20190904]
+>> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+>>
+>> url:
+>> https://github.com/0day-ci/linux/commits/Alexandru-Ardelean/net-stmmac-socfpga-re-use-the-interface-parameter-from-platform-data/20190907-190627
+>> config: sparc64-allmodconfig (attached as .config)
+>> compiler: sparc64-linux-gcc (GCC) 7.4.0
+>> reproduce:
+>>          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>>          chmod +x ~/bin/make.cross
+>>          # save the attached .config to linux build tree
+>>          GCC_VERSION=7.4.0 make.cross ARCH=sparc64
+>>
+>> If you fix the issue, kindly add following tag
+>> Reported-by: kbuild test robot <lkp@intel.com>
+>>
+>> All errors (new ones prefixed by >>):
+>>
+>>     In file included from include/linux/dma-mapping.h:7:0,
+>>                      from include/linux/skbuff.h:30,
+>>                      from include/linux/if_ether.h:19,
+>>                      from include/uapi/linux/ethtool.h:19,
+>>                      from include/linux/ethtool.h:18,
+>>                      from include/linux/phy.h:16,
+>>                      from drivers/net//ethernet/stmicro/stmmac/dwmac-socfpga.c:11:
+>>     drivers/net//ethernet/stmicro/stmmac/dwmac-socfpga.c: In function 'socfpga_gen5_set_phy_mode':
+>>>> drivers/net//ethernet/stmicro/stmmac/dwmac-socfpga.c:264:44: error: 'phymode' undeclared (first use in this
+>>>> function); did you mean 'phy_modes'?
+>>        dev_err(dwmac->dev, "bad phy mode %d\n", phymode);
+>>                                                 ^
+>>     include/linux/device.h:1499:32: note: in definition of macro 'dev_err'
+>>       _dev_err(dev, dev_fmt(fmt), ##__VA_ARGS__)
+>>                                     ^~~~~~~~~~~
+>>     drivers/net//ethernet/stmicro/stmmac/dwmac-socfpga.c:264:44: note: each undeclared identifier is reported only once
+>> for each function it appears in
+>>        dev_err(dwmac->dev, "bad phy mode %d\n", phymode);
+>>                                                 ^
+>>     include/linux/device.h:1499:32: note: in definition of macro 'dev_err'
+>>       _dev_err(dev, dev_fmt(fmt), ##__VA_ARGS__)
+>>                                     ^~~~~~~~~~~
+>>     drivers/net//ethernet/stmicro/stmmac/dwmac-socfpga.c: In function 'socfpga_gen10_set_phy_mode':
+>>     drivers/net//ethernet/stmicro/stmmac/dwmac-socfpga.c:340:6: error: 'phymode' undeclared (first use in this
+>> function); did you mean 'phy_modes'?
+>>           phymode == PHY_INTERFACE_MODE_MII ||
+>>           ^~~~~~~
+>>           phy_modes
+>>
+>> vim +264 drivers/net//ethernet/stmicro/stmmac/dwmac-socfpga.c
+>>
+>> 40ae25505fe834 Dinh Nguyen        2019-06-05  255
+>> 40ae25505fe834 Dinh Nguyen        2019-06-05  256  static int socfpga_gen5_set_phy_mode(struct socfpga_dwmac *dwmac)
+>> 40ae25505fe834 Dinh Nguyen        2019-06-05  257  {
+>> 40ae25505fe834 Dinh Nguyen        2019-06-05  258  	struct regmap *sys_mgr_base_addr = dwmac->sys_mgr_base_addr;
+>> 40ae25505fe834 Dinh Nguyen        2019-06-05  259  	u32 reg_offset = dwmac->reg_offset;
+>> 40ae25505fe834 Dinh Nguyen        2019-06-05  260  	u32 reg_shift = dwmac->reg_shift;
+>> 40ae25505fe834 Dinh Nguyen        2019-06-05  261  	u32 ctrl, val, module;
+>> 40ae25505fe834 Dinh Nguyen        2019-06-05  262
+>> 6169afbe4a340b Alexandru Ardelean 2019-09-06  263  	if (socfpga_set_phy_mode_common(dwmac, &val)) {
+>> 801d233b7302ee Dinh Nguyen        2014-03-26 @264  		dev_err(dwmac->dev, "bad phy mode %d\n", phymode);
+>> 801d233b7302ee Dinh Nguyen        2014-03-26  265  		return -EINVAL;
+>> 801d233b7302ee Dinh Nguyen        2014-03-26  266  	}
+>> 801d233b7302ee Dinh Nguyen        2014-03-26  267
+>> b4834c86e11baf Ley Foon Tan       2014-08-20  268  	/* Overwrite val to GMII if splitter core is enabled. The
+>> phymode here
+>> b4834c86e11baf Ley Foon Tan       2014-08-20  269  	 * is the actual phy mode on phy hardware, but phy interface
+>> from
+>> b4834c86e11baf Ley Foon Tan       2014-08-20  270  	 * EMAC core is GMII.
+>> b4834c86e11baf Ley Foon Tan       2014-08-20  271  	 */
+>> b4834c86e11baf Ley Foon Tan       2014-08-20  272  	if (dwmac->splitter_base)
+>> b4834c86e11baf Ley Foon Tan       2014-08-20  273  		val = SYSMGR_EMACGRP_CTRL_PHYSEL_ENUM_GMII_MII;
+>> b4834c86e11baf Ley Foon Tan       2014-08-20  274
+>> 70cb136f773083 Joachim Eastwood   2016-05-01  275  	/* Assert reset to the enet controller before changing the phy
+>> mode */
+>> bc8a2d9bcbf1ca Dinh Nguyen        2018-06-19  276  	reset_control_assert(dwmac->stmmac_ocp_rst);
+>> 70cb136f773083 Joachim Eastwood   2016-05-01  277  	reset_control_assert(dwmac->stmmac_rst);
+>> 70cb136f773083 Joachim Eastwood   2016-05-01  278
+>> 801d233b7302ee Dinh Nguyen        2014-03-26  279  	regmap_read(sys_mgr_base_addr, reg_offset, &ctrl);
+>> 801d233b7302ee Dinh Nguyen        2014-03-26  280  	ctrl &= ~(SYSMGR_EMACGRP_CTRL_PHYSEL_MASK << reg_shift);
+>> 801d233b7302ee Dinh Nguyen        2014-03-26  281  	ctrl |= val << reg_shift;
+>> 801d233b7302ee Dinh Nguyen        2014-03-26  282
+>> 013dae5dbc07aa Stephan Gatzka     2017-08-22  283  	if (dwmac->f2h_ptp_ref_clk ||
+>> 013dae5dbc07aa Stephan Gatzka     2017-08-22  284  	    phymode == PHY_INTERFACE_MODE_MII ||
+>> 013dae5dbc07aa Stephan Gatzka     2017-08-22  285  	    phymode == PHY_INTERFACE_MODE_GMII ||
+>> 013dae5dbc07aa Stephan Gatzka     2017-08-22  286  	    phymode == PHY_INTERFACE_MODE_SGMII) {
+>> 43569814fa35b2 Phil Reid          2015-12-14  287  		ctrl |= SYSMGR_EMACGRP_CTRL_PTP_REF_CLK_MASK <<
+>> (reg_shift / 2);
+>> 734e00fa02eff5 Phil Reid          2016-04-07  288  		regmap_read(sys_mgr_base_addr,
+>> SYSMGR_FPGAGRP_MODULE_REG,
+>> 734e00fa02eff5 Phil Reid          2016-04-07  289  			    &module);
+>> 734e00fa02eff5 Phil Reid          2016-04-07  290  		module |= (SYSMGR_FPGAGRP_MODULE_EMAC << (reg_shift /
+>> 2));
+>> 734e00fa02eff5 Phil Reid          2016-04-07  291  		regmap_write(sys_mgr_base_addr,
+>> SYSMGR_FPGAGRP_MODULE_REG,
+>> 734e00fa02eff5 Phil Reid          2016-04-07  292  			     module);
+>> 734e00fa02eff5 Phil Reid          2016-04-07  293  	} else {
+>> 43569814fa35b2 Phil Reid          2015-12-14  294  		ctrl &= ~(SYSMGR_EMACGRP_CTRL_PTP_REF_CLK_MASK <<
+>> (reg_shift / 2));
+>> 734e00fa02eff5 Phil Reid          2016-04-07  295  	}
+>> 43569814fa35b2 Phil Reid          2015-12-14  296
+>> 801d233b7302ee Dinh Nguyen        2014-03-26  297  	regmap_write(sys_mgr_base_addr, reg_offset, ctrl);
+>> 734e00fa02eff5 Phil Reid          2016-04-07  298
+>> 70cb136f773083 Joachim Eastwood   2016-05-01  299  	/* Deassert reset for the phy configuration to be sampled by
+>> 70cb136f773083 Joachim Eastwood   2016-05-01  300  	 * the enet controller, and operation to start in requested mode
+>> 70cb136f773083 Joachim Eastwood   2016-05-01  301  	 */
+>> bc8a2d9bcbf1ca Dinh Nguyen        2018-06-19  302  	reset_control_deassert(dwmac->stmmac_ocp_rst);
+>> 70cb136f773083 Joachim Eastwood   2016-05-01  303  	reset_control_deassert(dwmac->stmmac_rst);
+>> fb3bbdb859891e Tien Hock Loh      2016-07-07  304  	if (phymode == PHY_INTERFACE_MODE_SGMII) {
+>> fb3bbdb859891e Tien Hock Loh      2016-07-07  305  		if (tse_pcs_init(dwmac->pcs.tse_pcs_base, &dwmac->pcs)
+>> != 0) {
+>> fb3bbdb859891e Tien Hock Loh      2016-07-07  306  			dev_err(dwmac->dev, "Unable to initialize TSE
+>> PCS");
+>> fb3bbdb859891e Tien Hock Loh      2016-07-07  307  			return -EINVAL;
+>> fb3bbdb859891e Tien Hock Loh      2016-07-07  308  		}
+>> fb3bbdb859891e Tien Hock Loh      2016-07-07  309  	}
+>> 70cb136f773083 Joachim Eastwood   2016-05-01  310
+>> 801d233b7302ee Dinh Nguyen        2014-03-26  311  	return 0;
+>> 801d233b7302ee Dinh Nguyen        2014-03-26  312  }
+>> 801d233b7302ee Dinh Nguyen        2014-03-26  313
+>>
+>> :::::: The code at line 264 was first introduced by commit
+>> :::::: 801d233b7302eeab94750427a623c10c044cb0ca net: stmmac: Add SOCFPGA glue driver
+>>
+>> :::::: TO: Dinh Nguyen <dinguyen@altera.com>
+>> :::::: CC: David S. Miller <davem@davemloft.net>
+>>
+>> ---
+>> 0-DAY kernel test infrastructure                Open Source Technology Center
+>> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+> _______________________________________________
+> kbuild-all mailing list
+> kbuild-all@lists.01.org
+> https://lists.01.org/mailman/listinfo/kbuild-all
 
