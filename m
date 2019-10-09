@@ -6,162 +6,104 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AD4C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F992C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34B72218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:14:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F0BC2190F
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:14:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732551AbfJITOq (ORCPT
+        id S1732540AbfJITOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 15:14:46 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:59773 "EHLO
+        Wed, 9 Oct 2019 15:14:45 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:45961 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731804AbfJITLP (ORCPT
+        with ESMTP id S1731801AbfJITLP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 9 Oct 2019 15:11:15 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MacjC-1hgTm41Y0A-00cAyD; Wed, 09 Oct 2019 21:11:14 +0200
+ 1MeknF-1hiOma24ph-00ao3W; Wed, 09 Oct 2019 21:11:13 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Al Viro <viro@zeniv.linux.org.uk>
 Cc:     linux-kernel@vger.kernel.org, y2038@lists.linaro.org,
-        linux-fsdevel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v6 22/43] compat_ioctl: remove IGNORE_IOCTL()
-Date:   Wed,  9 Oct 2019 21:10:22 +0200
-Message-Id: <20191009191044.308087-22-arnd@arndb.de>
+        linux-fsdevel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        linux-bluetooth@vger.kernel.org,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>
+Subject: [PATCH v6 19/43] compat_ioctl: remove HCIUART handling
+Date:   Wed,  9 Oct 2019 21:10:19 +0200
+Message-Id: <20191009191044.308087-19-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191009190853.245077-1-arnd@arndb.de>
 References: <20191009190853.245077-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:4ibtuu83t8J3I3nx9gtJjn6IFOwAlacfixwPLywJPqpQL/tXpS1
- FygjVs+7RNbo33Hl3Ps7NIL+XmxrAfbBfr+6JPmj1fbg2SfZnhDI6em5cdEoaCCHzg8C4Kb
- d7bNfYn5lk4T7ZnfkBPkWIGQMefp3eoztuKlhWglncgAtQr3gGD3qoILQFO1sZN9Q05kd1b
- ih6cVAqbzYsltwW0OpZ3w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:AcH8bIy42IU=:Mdqu1BVs/UAgPHhPWIU1fg
- xfeL1NPaBTP8tG0CaCM/etZWHcZFyqZ/JcvGFiXZQFXAqbuVKR3JuwMi2FKFfMSehbIQBshL5
- KeMkOFWYNR//Kb1gxf3/CoMzWtkQ7lxoT2FMiqiDRKOjGdW6Efh6IIXN9HOr7vOdGChqpWj2e
- fB/4+tj51O15u5zdmWSLY1id+RBNWkH3+rWtQt/UeOj7yFWxycB/HCACK0/Xej90uH6cNCdXb
- zmXhXwDLgZ0LZVH8GHO5siybAXh5SGZJ1wuCSBfnjxmALzOJAd1d7wBilIHT6MpoU4u0Ly8kz
- iHHSKluTiEbv0j+DBC8jvr2fxY99oCPzH1PEoqP/ci/5IyyLSBuQH3HftjVDxsD2XBeDPtEh0
- LHrhYaykEhpmZMklBDd/x8e4kcW1/0ZWQmRHrIVpA8q2r4BxeBL2egnOqJ8Hrh+Id7q3/+oHu
- Z9VGaAA3BqBoLT06xEjqjkREQaTtjVdd+isHMTbjCG8kl2P2Gox7Oo2w4gIBWZcZRPt4iJD3o
- /4FaxRBnOKYhkP5pCfJQbukqRZ1A3c095UeMe5/rk9s/uHNlbAW0AhSeXaTXVL8DdVLQ0l4eb
- jKXcwEPK+RsGPlj8Uj4nLmUJAxxzO7YuqHiF6KZ3DSjycA2xVM3/b/aL60224KS+VySLka3m8
- ScCgugnwewPeLD4n+S9sbU3gBQJGcw6fK7oIbNoqAiQ1q1hJAPU7BX0taqkpvBCtPxUwoOaCM
- ZiszSJxrqe1Rk60LNiScbulAusAlnKaXXTg2gjYcWm8ubKESDgZW60+tWUbS0otMtf+ujF4Pe
- xklC2Cjmlz0iE+D03CPf0s014ailuTfCTMuvbrArcH7d//4ao6BM0qmv5eiqc6tnasN4JaXsq
- meTGtpVPr9ivOZDUjojg==
+X-Provags-ID: V03:K1:8aOTXX6TdEpU5/KgUIDONK80ND60yvXM5iK1bsPvn2pkU6Qv7sB
+ n/GqURBo1FAIM5bXKDZazKJNmUMRNOCbXlFqat9iQsMxjMHEOb1c/aeZJIVOlrfV238DfTO
+ kwvpU5H7UvxKocPekysrSHac5yjk8q0H/UkP0dhbsP+jMXmAwlylYAfz23ozNqL1nlUZ8Rq
+ zPi3DjTuBjmifhy+Ncn7Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:SrUTzCjBBoI=:BECAHyoNcZAW+KdZHIWkUJ
+ 2C39Q9P1Dd/xKvUP3Jsq0hr/FmPw46oP2wGHfrYJ5XzoQXHHWNsuNccN/bjT2E2c5x2Xn8M/X
+ ezAZPafZ5IlFnRsaWK0OWDO2MG0NUeO7R0Qn/fvx85MFFy5nJ9ULFM7kxwz+e/nEAVyd0NKZw
+ 0PExVtFaIkubIXtjIhsrUxQNMZQxK/0xPS77hkL/ILy+TyZYeY+bnKpOGh1nqABGHvvVJutLd
+ yj+lEdtRdp0dBodYoww7V0xXEwSxXwGaOUE6gJoTHtbEI4qxmRN0OYNdr/CPUUk/hLa54rCJR
+ WivIwdUieHhhtM1PeTxsLbCEMQTDUHlSHlXKVVzNXeiUE94lS25xNUi/2xZDLbNc8zpnq/C5f
+ PE/g7EYT9egMa6u+IkveEtFUyM3dvHHOC2tnDOHo60UpWU4W4XKb/VwAMd6WJcQmfDNKeuQyo
+ HMJxG9gc0lkg+kA7r8CV6Sr3b359LYoMTvEk5r8dGOKx9XWYYjsTVswgHoVg8RRI3m5FYW9ek
+ DJAfXEMHu7+EMGbXQQBf535jz/VAgZI2js1TauHADNOwzkeCeviTqMPf3r+/TsN+blUMrr0tO
+ lDI6A+InPPdbUcXvJ9/D6hZSQXKtFYOwWOcFxMWGrKh/ANvTTqU54/J/8nd7KfBE2EZ5rNrT5
+ FJ125P6CJWssSCQTPj1Lw0UD/BsqqKRXb5Ebq9K0naUWJE+mNrwjJphtkHRDWXQazxtKILNAU
+ bUN4s0FH3ujrGTB8/Wmjsclu8gOABaDqkM4zrQcjDdEr7n0LpOSJtKntIiRnnyHmYP39KTnxP
+ bGprJkQ9uUQ6Q/pwoOAXUTqyy+QQCNDKof9cM+olwAYI4B2PEsFcYUzdFJYaqaAyQ1XHxfbxd
+ 0gOha65Em5TnZKzkHHGQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 07d106d0a33d ("vfs: fix up ENOIOCTLCMD error handling"),
-we don't warn about unhandled compat-ioctl command code any more, but
-just return the same error that a native file descriptor returns when
-there is no handler.
+As of commit f0193d3ea73b ("change semantics of ldisc ->compat_ioctl()"),
+all hciuart ioctl commands are handled correctly in the driver, and we
+never need to go through the table here.
 
-This means the IGNORE_IOCTL() annotations are completely useless and
-can all be removed. TIOCSTART/TIOCSTOP and KDGHWCLK/KDSHWCLK fall into
-the same category, but for some reason were listed as COMPATIBLE_IOCTL().
-
+Cc: linux-bluetooth@vger.kernel.org
+Cc: Marcel Holtmann <marcel@holtmann.org>
+Cc: Johan Hedberg <johan.hedberg@gmail.com>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- fs/compat_ioctl.c | 56 -----------------------------------------------
- 1 file changed, 56 deletions(-)
+ fs/compat_ioctl.c | 13 -------------
+ 1 file changed, 13 deletions(-)
 
 diff --git a/fs/compat_ioctl.c b/fs/compat_ioctl.c
-index 33f732979f45..10dfe4d80bbd 100644
+index 9302157d1471..758b8b934b70 100644
 --- a/fs/compat_ioctl.c
 +++ b/fs/compat_ioctl.c
-@@ -56,11 +56,6 @@
+@@ -353,13 +353,6 @@ static int ppp_scompress(struct file *file, unsigned int cmd,
+ 	return do_ioctl(file, PPPIOCSCOMPRESS, (unsigned long) odata);
+ }
  
- #include <linux/sort.h>
- 
--#ifdef CONFIG_SPARC
--#include <linux/fb.h>
--#include <asm/fbio.h>
--#endif
+-/* Bluetooth ioctls */
+-#define HCIUARTSETPROTO		_IOW('U', 200, int)
+-#define HCIUARTGETPROTO		_IOR('U', 201, int)
+-#define HCIUARTGETDEVICE	_IOR('U', 202, int)
+-#define HCIUARTSETFLAGS		_IOW('U', 203, int)
+-#define HCIUARTGETFLAGS		_IOR('U', 204, int)
 -
- #define convert_in_user(srcptr, dstptr)			\
- ({							\
- 	typeof(*srcptr) val;				\
-@@ -358,17 +353,7 @@ static int ppp_scompress(struct file *file, unsigned int cmd,
- #define XFORM(i) (((i) ^ ((i) << 27) ^ ((i) << 17)) & 0xffffffff)
- 
- #define COMPATIBLE_IOCTL(cmd) XFORM((u32)cmd),
--/* ioctl should not be warned about even if it's not implemented.
--   Valid reasons to use this:
--   - It is implemented with ->compat_ioctl on some device, but programs
--   call it on others too.
--   - The ioctl is not implemented in the native kernel, but programs
--   call it commonly anyways.
--   Most other reasons are not valid. */
--#define IGNORE_IOCTL(cmd) COMPATIBLE_IOCTL(cmd)
--
- static unsigned int ioctl_pointer[] = {
--/* compatible ioctls first */
- /* Little t */
- COMPATIBLE_IOCTL(TIOCOUTQ)
- /* 'X' - originally XFS but some now in the VFS */
-@@ -384,23 +369,7 @@ COMPATIBLE_IOCTL(SCSI_IOCTL_SEND_COMMAND)
- COMPATIBLE_IOCTL(SCSI_IOCTL_PROBE_HOST)
- COMPATIBLE_IOCTL(SCSI_IOCTL_GET_PCI)
- #endif
--/* Big V (don't complain on serial console) */
--IGNORE_IOCTL(VT_OPENQRY)
--IGNORE_IOCTL(VT_GETMODE)
--/*
-- * These two are only for the sbus rtc driver, but
-- * hwclock tries them on every rtc device first when
-- * running on sparc.  On other architectures the entries
-- * are useless but harmless.
-- */
--COMPATIBLE_IOCTL(_IOR('p', 20, int[7])) /* RTCGET */
--COMPATIBLE_IOCTL(_IOW('p', 21, int[7])) /* RTCSET */
- #ifdef CONFIG_BLOCK
--/* md calls this on random blockdevs */
--IGNORE_IOCTL(RAID_VERSION)
--/* qemu/qemu-img might call these two on plain files for probing */
--IGNORE_IOCTL(CDROM_DRIVE_STATUS)
--IGNORE_IOCTL(FDGETPRM32)
- /* SG stuff */
- COMPATIBLE_IOCTL(SG_SET_TIMEOUT)
- COMPATIBLE_IOCTL(SG_GET_TIMEOUT)
-@@ -487,31 +456,6 @@ COMPATIBLE_IOCTL(JSIOCGVERSION)
- COMPATIBLE_IOCTL(JSIOCGAXES)
- COMPATIBLE_IOCTL(JSIOCGBUTTONS)
- COMPATIBLE_IOCTL(JSIOCGNAME(0))
--
--/* fat 'r' ioctls. These are handled by fat with ->compat_ioctl,
--   but we don't want warnings on other file systems. So declare
--   them as compatible here. */
--#define VFAT_IOCTL_READDIR_BOTH32       _IOR('r', 1, struct compat_dirent[2])
--#define VFAT_IOCTL_READDIR_SHORT32      _IOR('r', 2, struct compat_dirent[2])
--
--IGNORE_IOCTL(VFAT_IOCTL_READDIR_BOTH32)
--IGNORE_IOCTL(VFAT_IOCTL_READDIR_SHORT32)
--
--#ifdef CONFIG_SPARC
--/* Sparc framebuffers, handled in sbusfb_compat_ioctl() */
--IGNORE_IOCTL(FBIOGTYPE)
--IGNORE_IOCTL(FBIOSATTR)
--IGNORE_IOCTL(FBIOGATTR)
--IGNORE_IOCTL(FBIOSVIDEO)
--IGNORE_IOCTL(FBIOGVIDEO)
--IGNORE_IOCTL(FBIOSCURPOS)
--IGNORE_IOCTL(FBIOGCURPOS)
--IGNORE_IOCTL(FBIOGCURMAX)
--IGNORE_IOCTL(FBIOPUTCMAP32)
--IGNORE_IOCTL(FBIOGETCMAP32)
--IGNORE_IOCTL(FBIOSCURSOR32)
--IGNORE_IOCTL(FBIOGCURSOR32)
--#endif
- };
- 
  /*
+  * simple reversible transform to make our table more evenly
+  * distributed after sorting.
+@@ -642,12 +635,6 @@ COMPATIBLE_IOCTL(RNDGETPOOL)
+ COMPATIBLE_IOCTL(RNDADDENTROPY)
+ COMPATIBLE_IOCTL(RNDZAPENTCNT)
+ COMPATIBLE_IOCTL(RNDCLEARPOOL)
+-/* Bluetooth */
+-COMPATIBLE_IOCTL(HCIUARTSETPROTO)
+-COMPATIBLE_IOCTL(HCIUARTGETPROTO)
+-COMPATIBLE_IOCTL(HCIUARTGETDEVICE)
+-COMPATIBLE_IOCTL(HCIUARTSETFLAGS)
+-COMPATIBLE_IOCTL(HCIUARTGETFLAGS)
+ /* Misc. */
+ COMPATIBLE_IOCTL(PCIIOC_CONTROLLER)
+ COMPATIBLE_IOCTL(PCIIOC_MMAP_IS_IO)
 -- 
 2.20.0
 
