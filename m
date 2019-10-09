@@ -2,523 +2,185 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A0DC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD347C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58E0420B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:20:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SEJpxVGM"
+	by mail.kernel.org (Postfix) with ESMTP id 8FABE20B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:21:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570648860;
+	bh=x0u3S30mcubcHvtacAww+Z9a66+nZ65gq2CzKM+6820=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=NSzd8gr5mBsV+UcywtmND3SLH5DczwE4uvzuz+ePAkQ2u8ePBwEsTuaXQgnG3ZZo3
+	 M+aW6Yf1yY05vQLkdwC6/x7dKXXDhTgzSf9r5ybb7aLwmeYemqfAftGGn5iwycoIra
+	 lDZJjGiAufirn91p9QVeDqU7gyVr8rx2H0JnGVw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731663AbfJITUO (ORCPT
+        id S1731664AbfJITU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 15:20:14 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44758 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728804AbfJITUN (ORCPT
+        Wed, 9 Oct 2019 15:20:59 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45347 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728804AbfJITU7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 15:20:13 -0400
-Received: by mail-wr1-f65.google.com with SMTP id z9so4360692wrl.11;
-        Wed, 09 Oct 2019 12:20:10 -0700 (PDT)
+        Wed, 9 Oct 2019 15:20:59 -0400
+Received: by mail-lj1-f193.google.com with SMTP id q64so3629824ljb.12
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 12:20:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xoxulzaRyQscCaDwFnb4tf9qTGZ4dgmiLRI8H9N5w10=;
-        b=SEJpxVGMm1Rt3wntfk8Rkyxeinff3jLrBBwEc9C8gjVAUhM35OYMsRzyAz+frl7xh1
-         IiyheQlnkv+jFjcMSIY+5CTZkd84mU75z+zHOViD5WHZlTJK7ik1w+lyMv2LnONwqXQS
-         fKwVCB/vbrsrQ5mv6JJO/NMixU1G+ugX1WFutdEV81zdgGN7Ci2/vWIF/IvYYhnRpyaa
-         krYaO5y/DKw7HsQpSGo+5f2A/58H6XIRsKFa3dEGQgXQQ0Q+9OQE7xVtjqDfT4g8YJ0B
-         QqUIVL90DL+MtT3gzo+FcXSf18c4uckPid2QoJ6ip29AnHY3c6B4VXU3x95Kj0IJoIZt
-         zJAg==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dPeGPmQ1EwLkB4czEwZbdMTSScSNuUeFvbx9+vGLyj8=;
+        b=D46ylTyFQpmTxNtqelt7zxhnC3byp9q3f9PTo/a94ejiNeNdqMcUWmos4AUnosIsO+
+         gqTW1DrlrDqXpkljL0stS9FtPlLnIfQBa4RDyvr49Gwqkoi+iy05ObLtvffsIACoNTqi
+         qysGIPlWJMMJH9gr+V7z0SS/H1hLxX17nBkyo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xoxulzaRyQscCaDwFnb4tf9qTGZ4dgmiLRI8H9N5w10=;
-        b=Nyy/w1qQnLW1/4zxSn/EYYpxPvCNCfrVzeDgUADtzL1MKWoFtW6CzFqqbfQUvHUp1K
-         G1Tt89UJPjdHQ1ciECBTeiiCzlwGjKu9yre7so/MmDOeVlFFRkkRYGwZ2tzEj8o+9fW6
-         RRNQshklPO9oZ/nKkRODaux2qk7Li+MPtR2QobDBUxvHzXwfDTfActI/qemi87/wXgez
-         JW38zJ5zgqQiBiCppEjJCdfK6rQS+73twma4aI9YkXALNzdGjDxCg619UCtds6VSLPBO
-         yRWvPlM6M7a7kmTl3KyZGyPppyhSPEJEdFhK/PLdVGUtLx5dX5dtO3xAmXlnUpgRLhOU
-         AFUQ==
-X-Gm-Message-State: APjAAAUrIN7fdwI5UWlNVH32+HwgjC3hD6Zu14Qh3Zlolyymsb6LM88f
-        QV2ozcuBc0C3z45tEjXiiQ==
-X-Google-Smtp-Source: APXvYqztxNt5Mk+0B92vEF1GgJu7oP5CaKrw8o6pUgaYvU46RxRttdUBUSa9viWhR65UqG4yhEeSiA==
-X-Received: by 2002:adf:f68f:: with SMTP id v15mr4182316wrp.234.1570648808635;
-        Wed, 09 Oct 2019 12:20:08 -0700 (PDT)
-Received: from ninjahub.lan (host-2-102-13-201.as13285.net. [2.102.13.201])
-        by smtp.googlemail.com with ESMTPSA id t6sm5083379wmf.8.2019.10.09.12.20.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 12:20:07 -0700 (PDT)
-From:   Jules Irenge <jbi.octave@gmail.com>
-To:     outreachy-kernel@googlegroups.com
-Cc:     grekh@linuxfoundation.org, GR-Linux-NIC-Dev@marvell.com,
-        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, Jules Irenge <jbi.octave@gmail.com>
-Subject: [PATCH] staging: qlge: fix "alignment should match open parenthesis" checks
-Date:   Wed,  9 Oct 2019 20:19:53 +0100
-Message-Id: <20191009191953.3986-1-jbi.octave@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dPeGPmQ1EwLkB4czEwZbdMTSScSNuUeFvbx9+vGLyj8=;
+        b=RXeL61DmEaBPdjWYolZzr91RG+oqnUhpI/vhJFEeJuql1KJoEeunGP61oOGPey6CV2
+         w0W7Ei+Ce9yJzebSuCPD+l7ppQ6x1Pk8X87JOukbDt71qUuAMb6zeErpTq+NHBggGTM4
+         tp+lQCYJ73b1/m5eEBcbzFzcB1XxyV61Qbp0djy+T8wmLQmQGdcxkImBdnX/rOufntUY
+         10sb2s0ZAyfawjiRF1nT/tZU5Mr8IkfpMNXgYt5IJRdHDkPAP2K8f7N/GVCTTvqq2+iC
+         B/YZFn0Lwkz6yqXjOim0kekHsXDp6Aqnx72t1mtyXqGgp+kXS/0+kurCib/zbfRfyOmy
+         2hIA==
+X-Gm-Message-State: APjAAAWBF0+b+CwZOEuhNiutcSnUtg2j4LcqtdOINuUnU8e8sjmZNTRr
+        73/uV23BSBsiDGuU5jvFy8FSD0PsyR0=
+X-Google-Smtp-Source: APXvYqxufdZ7xNOm4LkDwVnfo5KUA9bJ1S0YWam7aAdfp/tmAIGj+3xWW1/DZxFE222crVHjPX6DCg==
+X-Received: by 2002:a2e:9816:: with SMTP id a22mr3286336ljj.206.1570648855683;
+        Wed, 09 Oct 2019 12:20:55 -0700 (PDT)
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
+        by smtp.gmail.com with ESMTPSA id y3sm716522lfh.97.2019.10.09.12.20.53
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Oct 2019 12:20:53 -0700 (PDT)
+Received: by mail-lf1-f41.google.com with SMTP id q12so2497547lfc.11
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 12:20:53 -0700 (PDT)
+X-Received: by 2002:ac2:5306:: with SMTP id c6mr3143152lfh.106.1570648853109;
+ Wed, 09 Oct 2019 12:20:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191008091508.2682-1-thomas_os@shipmail.org> <20191008091508.2682-4-thomas_os@shipmail.org>
+ <20191009152737.p42w7w456zklxz72@box> <CAHk-=wh4waroKr-Xtcv+5pTxBcHxGEj-g73eQvXVawML_C0EXw@mail.gmail.com>
+ <03d85a6a-e24a-82f4-93b8-86584b463471@shipmail.org> <CAHk-=whhdRSqjX5wy1LzFYnOG58UztpifkNvbxBcTVbT3Mzv4g@mail.gmail.com>
+ <MN2PR05MB6141B981C2CAB4955D59747EA1950@MN2PR05MB6141.namprd05.prod.outlook.com>
+In-Reply-To: <MN2PR05MB6141B981C2CAB4955D59747EA1950@MN2PR05MB6141.namprd05.prod.outlook.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 9 Oct 2019 12:20:36 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgy-ULe8UmEDn9gCCmTtw65chS0h309WrTaQhK3RAXM-A@mail.gmail.com>
+Message-ID: <CAHk-=wgy-ULe8UmEDn9gCCmTtw65chS0h309WrTaQhK3RAXM-A@mail.gmail.com>
+Subject: Re: [PATCH v4 3/9] mm: pagewalk: Don't split transhuge pmds when a
+ pmd_entry is present
+To:     Thomas Hellstrom <thellstrom@vmware.com>
+Cc:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rik van Riel <riel@surriel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Huang Ying <ying.huang@intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix "alignment should mactch open parenthesis" checks
- issued by checkpatch.pl tool:
-"CHECK: Alignment should match open parenthesis".
+On Wed, Oct 9, 2019 at 11:52 AM Thomas Hellstrom <thellstrom@vmware.com> wrote:
+>
+> Hmm, so we have the following cases we need to handle when returning
+> from the pmd_entry() handler.
 
-Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
----
- drivers/staging/qlge/qlge_dbg.c | 127 ++++++++++++++++----------------
- 1 file changed, 64 insertions(+), 63 deletions(-)
+No, we really don't.
 
-diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
-index 086f067fd899..c57d7e722974 100644
---- a/drivers/staging/qlge/qlge_dbg.c
-+++ b/drivers/staging/qlge/qlge_dbg.c
-@@ -26,7 +26,7 @@ static u32 ql_read_other_func_reg(struct ql_adapter *qdev,
- 
- /* Write a NIC register from the alternate function. */
- static int ql_write_other_func_reg(struct ql_adapter *qdev,
--					u32 reg, u32 reg_val)
-+				   u32 reg, u32 reg_val)
- {
- 	u32 register_to_read;
- 	int status = 0;
-@@ -41,7 +41,7 @@ static int ql_write_other_func_reg(struct ql_adapter *qdev,
- }
- 
- static int ql_wait_other_func_reg_rdy(struct ql_adapter *qdev, u32 reg,
--					u32 bit, u32 err_bit)
-+				      u32 bit, u32 err_bit)
- {
- 	u32 temp;
- 	int count = 10;
-@@ -61,13 +61,13 @@ static int ql_wait_other_func_reg_rdy(struct ql_adapter *qdev, u32 reg,
- }
- 
- static int ql_read_other_func_serdes_reg(struct ql_adapter *qdev, u32 reg,
--							u32 *data)
-+					 u32 *data)
- {
- 	int status;
- 
- 	/* wait for reg to come ready */
- 	status = ql_wait_other_func_reg_rdy(qdev, XG_SERDES_ADDR / 4,
--						XG_SERDES_ADDR_RDY, 0);
-+					    XG_SERDES_ADDR_RDY, 0);
- 	if (status)
- 		goto exit;
- 
-@@ -76,7 +76,7 @@ static int ql_read_other_func_serdes_reg(struct ql_adapter *qdev, u32 reg,
- 
- 	/* wait for reg to come ready */
- 	status = ql_wait_other_func_reg_rdy(qdev, XG_SERDES_ADDR / 4,
--						XG_SERDES_ADDR_RDY, 0);
-+					    XG_SERDES_ADDR_RDY, 0);
- 	if (status)
- 		goto exit;
- 
-@@ -111,7 +111,7 @@ static int ql_read_serdes_reg(struct ql_adapter *qdev, u32 reg, u32 *data)
- }
- 
- static void ql_get_both_serdes(struct ql_adapter *qdev, u32 addr,
--			u32 *direct_ptr, u32 *indirect_ptr,
-+			       u32 *direct_ptr, u32 *indirect_ptr,
- 			unsigned int direct_valid, unsigned int indirect_valid)
- {
- 	unsigned int status;
-@@ -133,7 +133,7 @@ static void ql_get_both_serdes(struct ql_adapter *qdev, u32 addr,
- }
- 
- static int ql_get_serdes_regs(struct ql_adapter *qdev,
--				struct ql_mpi_coredump *mpi_coredump)
-+			      struct ql_mpi_coredump *mpi_coredump)
- {
- 	int status;
- 	unsigned int xfi_direct_valid, xfi_indirect_valid, xaui_direct_valid;
-@@ -146,7 +146,8 @@ static int ql_get_serdes_regs(struct ql_adapter *qdev,
- 
- 	/* The XAUI needs to be read out per port */
- 	status = ql_read_other_func_serdes_reg(qdev,
--			XG_SERDES_XAUI_HSS_PCS_START, &temp);
-+					       XG_SERDES_XAUI_HSS_PCS_START,
-+					       &temp);
- 	if (status)
- 		temp = XG_SERDES_ADDR_XAUI_PWR_DOWN;
- 
-@@ -203,7 +204,7 @@ static int ql_get_serdes_regs(struct ql_adapter *qdev,
- 
- 	for (i = 0; i <= 0x000000034; i += 4, direct_ptr++, indirect_ptr++)
- 		ql_get_both_serdes(qdev, i, direct_ptr, indirect_ptr,
--					xaui_direct_valid, xaui_indirect_valid);
-+				   xaui_direct_valid, xaui_indirect_valid);
- 
- 	/* Get XAUI_HSS_PCS register block. */
- 	if (qdev->func & 1) {
-@@ -220,7 +221,7 @@ static int ql_get_serdes_regs(struct ql_adapter *qdev,
- 
- 	for (i = 0x800; i <= 0x880; i += 4, direct_ptr++, indirect_ptr++)
- 		ql_get_both_serdes(qdev, i, direct_ptr, indirect_ptr,
--					xaui_direct_valid, xaui_indirect_valid);
-+				   xaui_direct_valid, xaui_indirect_valid);
- 
- 	/* Get XAUI_XFI_AN register block. */
- 	if (qdev->func & 1) {
-@@ -233,7 +234,7 @@ static int ql_get_serdes_regs(struct ql_adapter *qdev,
- 
- 	for (i = 0x1000; i <= 0x1034; i += 4, direct_ptr++, indirect_ptr++)
- 		ql_get_both_serdes(qdev, i, direct_ptr, indirect_ptr,
--					xfi_direct_valid, xfi_indirect_valid);
-+				   xfi_direct_valid, xfi_indirect_valid);
- 
- 	/* Get XAUI_XFI_TRAIN register block. */
- 	if (qdev->func & 1) {
-@@ -248,7 +249,7 @@ static int ql_get_serdes_regs(struct ql_adapter *qdev,
- 
- 	for (i = 0x1050; i <= 0x107c; i += 4, direct_ptr++, indirect_ptr++)
- 		ql_get_both_serdes(qdev, i, direct_ptr, indirect_ptr,
--					xfi_direct_valid, xfi_indirect_valid);
-+				   xfi_direct_valid, xfi_indirect_valid);
- 
- 	/* Get XAUI_XFI_HSS_PCS register block. */
- 	if (qdev->func & 1) {
-@@ -265,7 +266,7 @@ static int ql_get_serdes_regs(struct ql_adapter *qdev,
- 
- 	for (i = 0x1800; i <= 0x1838; i += 4, direct_ptr++, indirect_ptr++)
- 		ql_get_both_serdes(qdev, i, direct_ptr, indirect_ptr,
--					xfi_direct_valid, xfi_indirect_valid);
-+				   xfi_direct_valid, xfi_indirect_valid);
- 
- 	/* Get XAUI_XFI_HSS_TX register block. */
- 	if (qdev->func & 1) {
-@@ -280,7 +281,7 @@ static int ql_get_serdes_regs(struct ql_adapter *qdev,
- 	}
- 	for (i = 0x1c00; i <= 0x1c1f; i++, direct_ptr++, indirect_ptr++)
- 		ql_get_both_serdes(qdev, i, direct_ptr, indirect_ptr,
--					xfi_direct_valid, xfi_indirect_valid);
-+				   xfi_direct_valid, xfi_indirect_valid);
- 
- 	/* Get XAUI_XFI_HSS_RX register block. */
- 	if (qdev->func & 1) {
-@@ -296,7 +297,7 @@ static int ql_get_serdes_regs(struct ql_adapter *qdev,
- 
- 	for (i = 0x1c40; i <= 0x1c5f; i++, direct_ptr++, indirect_ptr++)
- 		ql_get_both_serdes(qdev, i, direct_ptr, indirect_ptr,
--					xfi_direct_valid, xfi_indirect_valid);
-+				   xfi_direct_valid, xfi_indirect_valid);
- 
- 
- 	/* Get XAUI_XFI_HSS_PLL register block. */
-@@ -313,18 +314,18 @@ static int ql_get_serdes_regs(struct ql_adapter *qdev,
- 	}
- 	for (i = 0x1e00; i <= 0x1e1f; i++, direct_ptr++, indirect_ptr++)
- 		ql_get_both_serdes(qdev, i, direct_ptr, indirect_ptr,
--					xfi_direct_valid, xfi_indirect_valid);
-+				   xfi_direct_valid, xfi_indirect_valid);
- 	return 0;
- }
- 
- static int ql_read_other_func_xgmac_reg(struct ql_adapter *qdev, u32 reg,
--							u32 *data)
-+					u32 *data)
- {
- 	int status = 0;
- 
- 	/* wait for reg to come ready */
- 	status = ql_wait_other_func_reg_rdy(qdev, XGMAC_ADDR / 4,
--						XGMAC_ADDR_RDY, XGMAC_ADDR_XME);
-+					    XGMAC_ADDR_RDY, XGMAC_ADDR_XME);
- 	if (status)
- 		goto exit;
- 
-@@ -333,7 +334,7 @@ static int ql_read_other_func_xgmac_reg(struct ql_adapter *qdev, u32 reg,
- 
- 	/* wait for reg to come ready */
- 	status = ql_wait_other_func_reg_rdy(qdev, XGMAC_ADDR / 4,
--						XGMAC_ADDR_RDY, XGMAC_ADDR_XME);
-+					    XGMAC_ADDR_RDY, XGMAC_ADDR_XME);
- 	if (status)
- 		goto exit;
- 
-@@ -347,7 +348,7 @@ static int ql_read_other_func_xgmac_reg(struct ql_adapter *qdev, u32 reg,
-  * skipping unused locations.
-  */
- static int ql_get_xgmac_regs(struct ql_adapter *qdev, u32 *buf,
--					unsigned int other_function)
-+			     unsigned int other_function)
- {
- 	int status = 0;
- 	int i;
-@@ -357,17 +358,17 @@ static int ql_get_xgmac_regs(struct ql_adapter *qdev, u32 *buf,
- 		 * serveral locations that are non-responsive to reads.
- 		 */
- 		if ((i == 0x00000114) ||
--			(i == 0x00000118) ||
--			(i == 0x0000013c) ||
--			(i == 0x00000140) ||
--			(i > 0x00000150 && i < 0x000001fc) ||
--			(i > 0x00000278 && i < 0x000002a0) ||
--			(i > 0x000002c0 && i < 0x000002cf) ||
--			(i > 0x000002dc && i < 0x000002f0) ||
--			(i > 0x000003c8 && i < 0x00000400) ||
--			(i > 0x00000400 && i < 0x00000410) ||
--			(i > 0x00000410 && i < 0x00000420) ||
--			(i > 0x00000420 && i < 0x00000430) ||
-+		    (i == 0x00000118) ||
-+		    (i == 0x0000013c) ||
-+		    (i == 0x00000140) ||
-+		    (i > 0x00000150 && i < 0x000001fc) ||
-+		    (i > 0x00000278 && i < 0x000002a0) ||
-+		    (i > 0x000002c0 && i < 0x000002cf) ||
-+		    (i > 0x000002dc && i < 0x000002f0) ||
-+		    (i > 0x000003c8 && i < 0x00000400) ||
-+		    (i > 0x00000400 && i < 0x00000410) ||
-+		    (i > 0x00000410 && i < 0x00000420) ||
-+		    (i > 0x00000420 && i < 0x00000430) ||
- 			(i > 0x00000430 && i < 0x00000440) ||
- 			(i > 0x00000440 && i < 0x00000450) ||
- 			(i > 0x00000450 && i < 0x00000500) ||
-@@ -410,7 +411,7 @@ static void ql_get_intr_states(struct ql_adapter *qdev, u32 *buf)
- 
- 	for (i = 0; i < qdev->rx_ring_count; i++, buf++) {
- 		ql_write32(qdev, INTR_EN,
--				qdev->intr_context[i].intr_read_mask);
-+			   qdev->intr_context[i].intr_read_mask);
- 		*buf = ql_read32(qdev, INTR_EN);
- 	}
- }
-@@ -426,7 +427,7 @@ static int ql_get_cam_entries(struct ql_adapter *qdev, u32 *buf)
- 
- 	for (i = 0; i < 16; i++) {
- 		status = ql_get_mac_addr_reg(qdev,
--					MAC_ADDR_TYPE_CAM_MAC, i, value);
-+					     MAC_ADDR_TYPE_CAM_MAC, i, value);
- 		if (status) {
- 			netif_err(qdev, drv, qdev->ndev,
- 				  "Failed read of mac index register\n");
-@@ -438,7 +439,7 @@ static int ql_get_cam_entries(struct ql_adapter *qdev, u32 *buf)
- 	}
- 	for (i = 0; i < 32; i++) {
- 		status = ql_get_mac_addr_reg(qdev,
--					MAC_ADDR_TYPE_MULTI_MAC, i, value);
-+					     MAC_ADDR_TYPE_MULTI_MAC, i, value);
- 		if (status) {
- 			netif_err(qdev, drv, qdev->ndev,
- 				  "Failed read of mac index register\n");
-@@ -497,7 +498,7 @@ static int ql_get_mpi_shadow_regs(struct ql_adapter *qdev, u32 *buf)
- 
- /* Read the MPI Processor core registers */
- static int ql_get_mpi_regs(struct ql_adapter *qdev, u32 *buf,
--				u32 offset, u32 count)
-+			   u32 offset, u32 count)
- {
- 	int i, status = 0;
- 	for (i = 0; i < count; i++, buf++) {
-@@ -510,7 +511,7 @@ static int ql_get_mpi_regs(struct ql_adapter *qdev, u32 *buf,
- 
- /* Read the ASIC probe dump */
- static unsigned int *ql_get_probe(struct ql_adapter *qdev, u32 clock,
--					u32 valid, u32 *buf)
-+				  u32 valid, u32 *buf)
- {
- 	u32 module, mux_sel, probe, lo_val, hi_val;
- 
-@@ -545,13 +546,13 @@ static int ql_get_probe_dump(struct ql_adapter *qdev, unsigned int *buf)
- 	/* First we have to enable the probe mux */
- 	ql_write_mpi_reg(qdev, MPI_TEST_FUNC_PRB_CTL, MPI_TEST_FUNC_PRB_EN);
- 	buf = ql_get_probe(qdev, PRB_MX_ADDR_SYS_CLOCK,
--			PRB_MX_ADDR_VALID_SYS_MOD, buf);
-+			   PRB_MX_ADDR_VALID_SYS_MOD, buf);
- 	buf = ql_get_probe(qdev, PRB_MX_ADDR_PCI_CLOCK,
--			PRB_MX_ADDR_VALID_PCI_MOD, buf);
-+			   PRB_MX_ADDR_VALID_PCI_MOD, buf);
- 	buf = ql_get_probe(qdev, PRB_MX_ADDR_XGM_CLOCK,
--			PRB_MX_ADDR_VALID_XGM_MOD, buf);
-+			   PRB_MX_ADDR_VALID_XGM_MOD, buf);
- 	buf = ql_get_probe(qdev, PRB_MX_ADDR_FC_CLOCK,
--			PRB_MX_ADDR_VALID_FC_MOD, buf);
-+			   PRB_MX_ADDR_VALID_FC_MOD, buf);
- 	return 0;
- 
- }
-@@ -666,7 +667,7 @@ static void ql_get_mac_protocol_registers(struct ql_adapter *qdev, u32 *buf)
- 				result_index = 0;
- 				while ((result_index & MAC_ADDR_MR) == 0) {
- 					result_index = ql_read32(qdev,
--								MAC_ADDR_IDX);
-+								 MAC_ADDR_IDX);
- 				}
- 				result_data = ql_read32(qdev, MAC_ADDR_DATA);
- 				*buf = result_index;
-@@ -740,7 +741,7 @@ int ql_core_dump(struct ql_adapter *qdev, struct ql_mpi_coredump *mpi_coredump)
- 
- 	/* Insert the global header */
- 	memset(&(mpi_coredump->mpi_global_header), 0,
--		sizeof(struct mpi_coredump_global_header));
-+	       sizeof(struct mpi_coredump_global_header));
- 	mpi_coredump->mpi_global_header.cookie = MPI_COREDUMP_COOKIE;
- 	mpi_coredump->mpi_global_header.headerSize =
- 		sizeof(struct mpi_coredump_global_header);
-@@ -751,23 +752,23 @@ int ql_core_dump(struct ql_adapter *qdev, struct ql_mpi_coredump *mpi_coredump)
- 
- 	/* Get generic NIC reg dump */
- 	ql_build_coredump_seg_header(&mpi_coredump->nic_regs_seg_hdr,
--			NIC1_CONTROL_SEG_NUM,
-+				     NIC1_CONTROL_SEG_NUM,
- 			sizeof(struct mpi_coredump_segment_header) +
- 			sizeof(mpi_coredump->nic_regs), "NIC1 Registers");
- 
- 	ql_build_coredump_seg_header(&mpi_coredump->nic2_regs_seg_hdr,
--			NIC2_CONTROL_SEG_NUM,
-+				     NIC2_CONTROL_SEG_NUM,
- 			sizeof(struct mpi_coredump_segment_header) +
- 			sizeof(mpi_coredump->nic2_regs), "NIC2 Registers");
- 
- 	/* Get XGMac registers. (Segment 18, Rev C. step 21) */
- 	ql_build_coredump_seg_header(&mpi_coredump->xgmac1_seg_hdr,
--			NIC1_XGMAC_SEG_NUM,
-+				     NIC1_XGMAC_SEG_NUM,
- 			sizeof(struct mpi_coredump_segment_header) +
- 			sizeof(mpi_coredump->xgmac1), "NIC1 XGMac Registers");
- 
- 	ql_build_coredump_seg_header(&mpi_coredump->xgmac2_seg_hdr,
--			NIC2_XGMAC_SEG_NUM,
-+				     NIC2_XGMAC_SEG_NUM,
- 			sizeof(struct mpi_coredump_segment_header) +
- 			sizeof(mpi_coredump->xgmac2), "NIC2 XGMac Registers");
- 
-@@ -798,14 +799,14 @@ int ql_core_dump(struct ql_adapter *qdev, struct ql_mpi_coredump *mpi_coredump)
- 
- 	/* Rev C. Step 20a */
- 	ql_build_coredump_seg_header(&mpi_coredump->xaui_an_hdr,
--			XAUI_AN_SEG_NUM,
-+				     XAUI_AN_SEG_NUM,
- 			sizeof(struct mpi_coredump_segment_header) +
- 			sizeof(mpi_coredump->serdes_xaui_an),
- 			"XAUI AN Registers");
- 
- 	/* Rev C. Step 20b */
- 	ql_build_coredump_seg_header(&mpi_coredump->xaui_hss_pcs_hdr,
--			XAUI_HSS_PCS_SEG_NUM,
-+				     XAUI_HSS_PCS_SEG_NUM,
- 			sizeof(struct mpi_coredump_segment_header) +
- 			sizeof(mpi_coredump->serdes_xaui_hss_pcs),
- 			"XAUI HSS PCS Registers");
-@@ -816,31 +817,31 @@ int ql_core_dump(struct ql_adapter *qdev, struct ql_mpi_coredump *mpi_coredump)
- 			"XFI AN Registers");
- 
- 	ql_build_coredump_seg_header(&mpi_coredump->xfi_train_hdr,
--			XFI_TRAIN_SEG_NUM,
-+				     XFI_TRAIN_SEG_NUM,
- 			sizeof(struct mpi_coredump_segment_header) +
- 			sizeof(mpi_coredump->serdes_xfi_train),
- 			"XFI TRAIN Registers");
- 
- 	ql_build_coredump_seg_header(&mpi_coredump->xfi_hss_pcs_hdr,
--			XFI_HSS_PCS_SEG_NUM,
-+				     XFI_HSS_PCS_SEG_NUM,
- 			sizeof(struct mpi_coredump_segment_header) +
- 			sizeof(mpi_coredump->serdes_xfi_hss_pcs),
- 			"XFI HSS PCS Registers");
- 
- 	ql_build_coredump_seg_header(&mpi_coredump->xfi_hss_tx_hdr,
--			XFI_HSS_TX_SEG_NUM,
-+				     XFI_HSS_TX_SEG_NUM,
- 			sizeof(struct mpi_coredump_segment_header) +
- 			sizeof(mpi_coredump->serdes_xfi_hss_tx),
- 			"XFI HSS TX Registers");
- 
- 	ql_build_coredump_seg_header(&mpi_coredump->xfi_hss_rx_hdr,
--			XFI_HSS_RX_SEG_NUM,
-+				     XFI_HSS_RX_SEG_NUM,
- 			sizeof(struct mpi_coredump_segment_header) +
- 			sizeof(mpi_coredump->serdes_xfi_hss_rx),
- 			"XFI HSS RX Registers");
- 
- 	ql_build_coredump_seg_header(&mpi_coredump->xfi_hss_pll_hdr,
--			XFI_HSS_PLL_SEG_NUM,
-+				     XFI_HSS_PLL_SEG_NUM,
- 			sizeof(struct mpi_coredump_segment_header) +
- 			sizeof(mpi_coredump->serdes_xfi_hss_pll),
- 			"XFI HSS PLL Registers");
-@@ -858,7 +859,7 @@ int ql_core_dump(struct ql_adapter *qdev, struct ql_mpi_coredump *mpi_coredump)
- 			"XAUI2 HSS PCS Registers");
- 
- 	ql_build_coredump_seg_header(&mpi_coredump->xfi2_an_hdr,
--			XFI2_AN_SEG_NUM,
-+				     XFI2_AN_SEG_NUM,
- 			sizeof(struct mpi_coredump_segment_header) +
- 			sizeof(mpi_coredump->serdes2_xfi_an),
- 			"XFI2 AN Registers");
-@@ -870,7 +871,7 @@ int ql_core_dump(struct ql_adapter *qdev, struct ql_mpi_coredump *mpi_coredump)
- 			"XFI2 TRAIN Registers");
- 
- 	ql_build_coredump_seg_header(&mpi_coredump->xfi2_hss_pcs_hdr,
--			XFI2_HSS_PCS_SEG_NUM,
-+				     XFI2_HSS_PCS_SEG_NUM,
- 			sizeof(struct mpi_coredump_segment_header) +
- 			sizeof(mpi_coredump->serdes2_xfi_hss_pcs),
- 			"XFI2 HSS PCS Registers");
-@@ -882,13 +883,13 @@ int ql_core_dump(struct ql_adapter *qdev, struct ql_mpi_coredump *mpi_coredump)
- 			"XFI2 HSS TX Registers");
- 
- 	ql_build_coredump_seg_header(&mpi_coredump->xfi2_hss_rx_hdr,
--			XFI2_HSS_RX_SEG_NUM,
-+				     XFI2_HSS_RX_SEG_NUM,
- 			sizeof(struct mpi_coredump_segment_header) +
- 			sizeof(mpi_coredump->serdes2_xfi_hss_rx),
- 			"XFI2 HSS RX Registers");
- 
- 	ql_build_coredump_seg_header(&mpi_coredump->xfi2_hss_pll_hdr,
--			XFI2_HSS_PLL_SEG_NUM,
-+				     XFI2_HSS_PLL_SEG_NUM,
- 			sizeof(struct mpi_coredump_segment_header) +
- 			sizeof(mpi_coredump->serdes2_xfi_hss_pll),
- 			"XFI2 HSS PLL Registers");
-@@ -943,10 +944,10 @@ int ql_core_dump(struct ql_adapter *qdev, struct ql_mpi_coredump *mpi_coredump)
- 
- 	/* Get the FCMAC1 Registers */
- 	ql_build_coredump_seg_header(&mpi_coredump->fcmac1_regs_seg_hdr,
--				FCMAC1_SEG_NUM,
--				sizeof(struct mpi_coredump_segment_header)
--				+ sizeof(mpi_coredump->fcmac1_regs),
--				"FCMAC1 Registers");
-+				     FCMAC1_SEG_NUM,
-+				     sizeof(struct mpi_coredump_segment_header)
-+				     + sizeof(mpi_coredump->fcmac1_regs),
-+				     "FCMAC1 Registers");
- 	status = ql_get_mpi_regs(qdev, &mpi_coredump->fcmac1_regs[0],
- 				 FCMAC1_REGS_ADDR, FCMAC_REGS_CNT);
- 	if (status)
-@@ -1141,7 +1142,7 @@ int ql_core_dump(struct ql_adapter *qdev, struct ql_mpi_coredump *mpi_coredump)
- 		goto err;
- 
- 	ql_build_coredump_seg_header(&mpi_coredump->mac_prot_reg_seg_hdr,
--				MAC_PROTOCOL_SEG_NUM,
-+					MAC_PROTOCOL_SEG_NUM,
- 				sizeof(struct mpi_coredump_segment_header)
- 				+ sizeof(mpi_coredump->mac_prot_regs),
- 				"MAC Prot Regs");
-@@ -1991,7 +1992,7 @@ void ql_dump_ib_mac_rsp(struct ib_mac_iocb_rsp *ib_mac_rsp)
- 		       le16_to_cpu(ib_mac_rsp->vlan_id));
- 
- 	pr_err("flags4 = %s%s%s\n",
--		ib_mac_rsp->flags4 & IB_MAC_IOCB_RSP_HV ? "HV " : "",
-+	       ib_mac_rsp->flags4 & IB_MAC_IOCB_RSP_HV ? "HV " : "",
- 		ib_mac_rsp->flags4 & IB_MAC_IOCB_RSP_HS ? "HS " : "",
- 		ib_mac_rsp->flags4 & IB_MAC_IOCB_RSP_HL ? "HL " : "");
- 
--- 
-2.21.0
+> 1) Huge pmd was handled - Returns 0 and continues.
 
+No.
+
+That case simply DOES NOT EXIST.
+
+The only case that exists is
+
+"pmd was seen, we return 0 and then look at wherer pte level is relevant".
+
+Note that this has nothing to do with huge or not.
+
+> 2) A pmd is otherwise unstable, typically someone just zapped a huge
+> pmd. Returns PAGE_WALK_FALLBACK, gets caught in the pmd_trans_unstable()
+> test and retries.
+
+No. PAGE_WALK_FALLBACK doesn't exist, is completely broken in your
+patch, and is immaterial.
+
+It falls under the previous heading: a pmd was seen, returns zero, and
+we go on with life.
+
+If you don't have a pte callback - like EVERY SINGLE CURRENT USER -
+that "goes on with life" is just "go to the next pmd entry".
+
+And if you do have a pte callback - like your new case, that "go on
+with life" is to look at the pte cases.
+
+> 3) A pte directory - Returns PAGE_WALK_FALLBACK, falls through, avoids
+> the split and continues to the next level. Yeah that split avoidance
+> test is indeed made unnecessary by the preceding pmd_trans_unstable() test.
+
+Again, no. This case does not exist. It's the same case as above: it
+returns 0 and goes on to the pte level.
+
+
+> -               split_huge_pmd(walk->vma, pmd, addr);
+> +               if (!ops->pmd_entry)
+> +                       split_huge_pmd(walk->vma, pmd, addr);
+>
+> But as the commit message says, PAGE_WALK_FALLBACK is necessary to have
+> a virtual address range being handled once and only once.
+
+No. Your logic is garbage. The above code is completely broken.
+
+YOU CAN NOT AVOID TRHE SPLIT AND THEN GO ON AT THE PTE LEVEL.
+
+Don't you get it? There *is* no PTE level if you didn't split.
+
+And your "being handled once and only once" is garbage too. If you ask
+for both a pmd callback and a pte callback, you get both. It's that
+simple.
+
+There are zero users that actually do it now, and you don't want to do
+it either, so all your arguments are just pointless.
+
+> So we need the PAGE_WALK_FALLBACK.
+
+No we don't. You make no sense. Your case doesn't want it, no existing
+cases want it, nobody wants it.
+
+When you actually have a case that wants it, let's look at it then.
+Right now, you introduced fundamentally buggy code because your
+thinking is fuzzy and broken.
+
+So what you should do is to just always return 0 in your pmd_entry().
+Boom, done. The only reason for the pmd_entry existing at all is to
+get the warning. Then, if you don't want to split it, you make that
+warning just return an error (or a positive value) instead and say
+"ok, that was bad, we don't handle it at all".
+
+And in some _future_ life, if anybody wants to actually say "yeah,
+let's not split it", make it have some "yeah I handled it" case.
+
+In fact, I would suggest that positive return values be exactly that
+"I did it" case, and that they just add up instead of breaking out.
+Only an actual error would break out, and 0 would then (continue to)
+mean "continue with next level".
+
+But right now, no such user even exists.
+
+               Linus
