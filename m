@@ -2,108 +2,87 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3C1C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:25:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD16C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 134CD21721
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:25:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uP1ipqzG"
+	by mail.kernel.org (Postfix) with ESMTP id 54EF821721
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:28:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731108AbfJIMZ3 (ORCPT
+        id S1730606AbfJIM2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 08:25:29 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51015 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730861AbfJIMZ2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 08:25:28 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 5so2360281wmg.0;
-        Wed, 09 Oct 2019 05:25:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Nua5OwsPnbNn30zwIcxj0beDs8kg/5lbLMEpadI7ppk=;
-        b=uP1ipqzGDpN1R6Nms0UCBk1psp927dNjLCNGdZSxCo+8XEWhWNKOBg2RDaDB96DfJf
-         4UcrqRQT1wSnZsimngeyACcA8nV1/CnBjndXcc4tYxxKeVv8luxk3yXgeJivxXsjHyRT
-         6S0xgVerM2OXSriKBG6ds8XFggKkZ40+NU22lk2cyO/7EKYS2JND/BHaH/4zOSfaR/Xe
-         Sf1UL9AAASTFnrPT9ivMJspyLF+L27cDatMKG9wUnfTnaCzmsoFqJWnaCF7DzEbMi1Fx
-         tujQZcAddlMeuvOamIWxHm4Ew+uJWu23j/EQDkTUPcJE/DIqfSQ64EU5Z5JC/pg94v/c
-         dq6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Nua5OwsPnbNn30zwIcxj0beDs8kg/5lbLMEpadI7ppk=;
-        b=Rx59OopVrgZwKGy3RH0geJDQYRB7cPZhN/fwClAzAKxotaRgr64guOQERFdcbcomuE
-         PRT78GPGHfmi4Rv0JNLxVniE96u83HvGwtB0S6tXdeMEhmzzIAcEM4hhm/7MJd2aP7Ik
-         VmRIwEYmC+v7NRpo2sTyr0bMPSdPq/vjRzx9jOaJN9pjU+ECvAMZtrslIApuTJ8bCxM4
-         BcWpFRX+Jnk7dIApY7o4N+dhG1q9H6rNwdtObM76zvNndkdbrlA0v+lhvIw5F305iwAk
-         jIcI6h3074UEulRFZJa0gkmhbvB+a4tZrqr0FP6i2Uqt2pvoX2NkPAWBWT9EzRqoVDii
-         4+NQ==
-X-Gm-Message-State: APjAAAVbc05YkRp8Yh+g1uiKlVpTICm7PvrnQAAy+aI7pNo8z2LEC0EP
-        EYytKombXMvmmyH/vKsio1Og/6grfiU=
-X-Google-Smtp-Source: APXvYqz5OSnwj4duPROK4v5pcFuX2jdZ4kqAmKthfByNi0LQaLJaPXjjt0a4ls1yw/qM1y0+vza2EA==
-X-Received: by 2002:a1c:3908:: with SMTP id g8mr2311817wma.34.1570623925358;
-        Wed, 09 Oct 2019 05:25:25 -0700 (PDT)
-Received: from [192.168.1.35] (46.red-83-42-66.dynamicip.rima-tde.net. [83.42.66.46])
-        by smtp.gmail.com with ESMTPSA id c17sm2807618wrc.60.2019.10.09.05.25.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Oct 2019 05:25:24 -0700 (PDT)
-Subject: Re: [PATCH v8 2/5] MIPS: PCI: use information from 1-wire PROM for
- IOC3 detection
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-serial@vger.kernel.org
-References: <20191009101713.12238-1-tbogendoerfer@suse.de>
- <20191009101713.12238-3-tbogendoerfer@suse.de>
-From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>
-Message-ID: <ea44d4a2-3011-fba8-4d6a-7b63c77ba00a@amsat.org>
-Date:   Wed, 9 Oct 2019 14:25:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Wed, 9 Oct 2019 08:28:15 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:45038 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727878AbfJIM2O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 08:28:14 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 9F1BDB972E4E356DC9F2;
+        Wed,  9 Oct 2019 20:28:12 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 9 Oct 2019 20:28:02 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     Andrea Arcangeli <aarcange@redhat.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Mike Kravetz" <mike.kravetz@oracle.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Wei Yang <richardw.yang@linux.intel.com>,
+        Hugh Dickins <hughd@google.com>
+CC:     YueHaibing <yuehaibing@huawei.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+Subject: [PATCH -next] userfaultfd: remove set but not used variable 'h'
+Date:   Wed, 9 Oct 2019 12:27:40 +0000
+Message-ID: <20191009122740.70517-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20191009101713.12238-3-tbogendoerfer@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/9/19 12:17 PM, Thomas Bogendoerfer wrote:
-> IOC3 chips in SGI system are conntected to a bridge ASIC, which has
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Typo: "connected".
+mm/userfaultfd.c: In function '__mcopy_atomic_hugetlb':
+mm/userfaultfd.c:217:17: warning:
+ variable 'h' set but not used [-Wunused-but-set-variable]
 
-> a 1-wire prom attached with part number information. This changeset
-> uses this information to create PCI subsystem information, which
-> the MFD driver uses for further platform device setup.
-> 
-> Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-> ---
->   arch/mips/include/asm/pci/bridge.h |   1 +
->   arch/mips/include/asm/sn/ioc3.h    |   9 +++
->   arch/mips/pci/pci-xtalk-bridge.c   | 135 ++++++++++++++++++++++++++++++++++++-
->   arch/mips/sgi-ip27/ip27-xtalk.c    |  38 +++++++++--
->   4 files changed, 175 insertions(+), 8 deletions(-)
+It is not used since commit 78911d0e18ac ("userfaultfd: use vma_pagesize
+for all huge page size calculation")
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ mm/userfaultfd.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+index 4cb4ef3d9128..1b0d7abad1d4 100644
+--- a/mm/userfaultfd.c
++++ b/mm/userfaultfd.c
+@@ -214,7 +214,6 @@ static __always_inline ssize_t __mcopy_atomic_hugetlb(struct mm_struct *dst_mm,
+ 	unsigned long src_addr, dst_addr;
+ 	long copied;
+ 	struct page *page;
+-	struct hstate *h;
+ 	unsigned long vma_hpagesize;
+ 	pgoff_t idx;
+ 	u32 hash;
+@@ -271,8 +270,6 @@ static __always_inline ssize_t __mcopy_atomic_hugetlb(struct mm_struct *dst_mm,
+ 			goto out_unlock;
+ 	}
+ 
+-	h = hstate_vma(dst_vma);
+-
+ 	while (src_addr < src_start + len) {
+ 		pte_t dst_pteval;
+
+
+
