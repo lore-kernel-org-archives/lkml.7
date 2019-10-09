@@ -2,110 +2,107 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA998C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24AC5ECE596
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9009F2133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0710F2133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:25:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729457AbfJIIZE (ORCPT
+        id S1729924AbfJIIZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 04:25:04 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:36891 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725440AbfJIIZD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 04:25:03 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iI7HI-0002TE-DS; Wed, 09 Oct 2019 10:25:00 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iI7HD-0006LE-Q6; Wed, 09 Oct 2019 10:24:55 +0200
-Date:   Wed, 9 Oct 2019 10:24:55 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
+        Wed, 9 Oct 2019 04:25:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57756 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725440AbfJIIZG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 04:25:06 -0400
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6100C3B717
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Oct 2019 08:25:06 +0000 (UTC)
+Received: by mail-wr1-f71.google.com with SMTP id y18so751464wrw.8
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 01:25:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FGjIyp+V4zvVe8nGelmZ1TCF9IV0uDpPZ4FIyT58LwQ=;
+        b=WR9I+inV5bNN4kwZQ7ADlHbpa5vXe5fjapBGsNmZ1VM2TMpIisdHA/MzUs04BbSWnk
+         wyhXzzGJ1Uo7yCgXwkleTLrIZEifKGjpiIYrdeIrUxoEKqAjXfzNItnMvsTvPiE3zLEg
+         /lTJLcjqgEv8FeLm5Ghpzb+3ENuvQ2ilfGUF7xwHebz7UYftXaQJ9uKqij7/PzVjvdcv
+         ItxYBD9sPAWr5q3zxHCB/+soPHshgVq3RsMNAalKFcZQulydBCb1ZDfLhNbf0oHmYVEJ
+         uBp2RyLBDe3NJk2vO6MOdKGU0AArGdUc9rtbEVDtzK2F54b+ZgSqdxn+lLHOHX7VyUqE
+         Ytlw==
+X-Gm-Message-State: APjAAAUVANizcYlYLjIGvHv7zFsbueb5UU9uLyvKVQEccYtIDk0VnIS+
+        FRYQllr9c5R0EXyOSs7gnvv7GjOO+Uf+XlJEUEhOxEMeCZ5GH9rLC0CTxsavVDy9XGKuEc76fFE
+        q+xkjD8yWKIUvPePNv7ytpYZn
+X-Received: by 2002:a1c:7d92:: with SMTP id y140mr1738598wmc.151.1570609505003;
+        Wed, 09 Oct 2019 01:25:05 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqy//6CNNk9hUQud3U2UoX3ktP6Hte2hMVzeCR9fMVrPj3cI2AfYDQdE2xyUu9Pm90qtjWUvFg==
+X-Received: by 2002:a1c:7d92:: with SMTP id y140mr1738573wmc.151.1570609504741;
+        Wed, 09 Oct 2019 01:25:04 -0700 (PDT)
+Received: from [192.168.10.150] ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id b12sm1168930wrt.21.2019.10.09.01.25.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Oct 2019 01:25:04 -0700 (PDT)
+Subject: Re: [PATCH v3 06/16] kvm: x86: svm: Add support to
+ activate/deactivate posted interrupts
+To:     "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH V2] firmware: imx: Skip return value check for some
- special SCU firmware APIs
-Message-ID: <20191009082455.5hqhotkbozsr7mgo@pengutronix.de>
-References: <1570410959-32563-1-git-send-email-Anson.Huang@nxp.com>
- <20191007080135.4e5ljhh6z2rbx5bw@pengutronix.de>
- <AM6PR0402MB39118DABDE62496539D7EE6DF59A0@AM6PR0402MB3911.eurprd04.prod.outlook.com>
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Cc:     "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "graf@amazon.com" <graf@amazon.com>,
+        "jschoenh@amazon.de" <jschoenh@amazon.de>,
+        "karahmed@amazon.de" <karahmed@amazon.de>,
+        "rimasluk@amazon.com" <rimasluk@amazon.com>,
+        "Grimm, Jon" <Jon.Grimm@amd.com>
+References: <1568401242-260374-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <1568401242-260374-7-git-send-email-suravee.suthikulpanit@amd.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <f3fc86e3-e20f-e84c-237d-d1dbcb5d60a8@redhat.com>
+Date:   Wed, 9 Oct 2019 10:25:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM6PR0402MB39118DABDE62496539D7EE6DF59A0@AM6PR0402MB3911.eurprd04.prod.outlook.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:48:00 up 144 days, 14:06, 97 users,  load average: 0.05, 0.17,
- 0.14
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <1568401242-260374-7-git-send-email-suravee.suthikulpanit@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Anson,
+On 13/09/19 21:00, Suthikulpanit, Suravee wrote:
+> +++ b/arch/x86/kvm/x86.c
+> @@ -7198,6 +7198,9 @@ void kvm_vcpu_activate_apicv(struct kvm_vcpu *vcpu)
+>  	kvm_apic_update_apicv(vcpu);
+>  
+>  	kvm_x86_ops->refresh_apicv_exec_ctrl(vcpu);
+> +
+> +	if (kvm_x86_ops->activate_pi_irte)
+> +		kvm_x86_ops->activate_pi_irte(vcpu);
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_vcpu_activate_apicv);
+>  
+> @@ -7212,6 +7215,8 @@ void kvm_vcpu_deactivate_apicv(struct kvm_vcpu *vcpu)
+>  
+>  	vcpu->arch.apicv_active = false;
+>  	kvm_apic_update_apicv(vcpu);
+> +	if (kvm_x86_ops->deactivate_pi_irte)
+> +		kvm_x86_ops->deactivate_pi_irte(vcpu);
+>  	kvm_x86_ops->refresh_apicv_exec_ctrl(vcpu);
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_vcpu_deactivate_apicv);
 
-On 19-10-08 00:48, Anson Huang wrote:
-> Hi, Marco
-> 
-> > On 19-10-07 09:15, Anson Huang wrote:
-> > > The SCU firmware does NOT always have return value stored in message
-> > > header's function element even the API has response data, those
-> > > special APIs are defined as void function in SCU firmware, so they
-> > > should be treated as return success always.
-> > >
-> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > > ---
-> > > Changes since V1:
-> > > 	- Use direct API check instead of calling another function to check.
-> > > 	- This patch is based on
-> > > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fpatc
-> > >
-> > hwork.kernel.org%2Fpatch%2F11129553%2F&amp;data=02%7C01%7Canson.
-> > huang%
-> > >
-> > 40nxp.com%7C2de0a6be69b74cc249ad08d74afc9730%7C686ea1d3bc2b4c6f
-> > a92cd99
-> > >
-> > c5c301635%7C0%7C0%7C637060321046247040&amp;sdata=RMFAdLKGKb6
-> > mEdhycrzHX
-> > > R03E6Qr5pWyRc8Zk6ErlBc%3D&amp;reserved=0
-> > 
-> > Thanks for this v2. It would be good to change the callers within this series.
-> 
-> NOT quite understand your point, the callers does NOT need to be changed, those
-> 2 special APIs callers are already following the right way of calling the APIs.
+This can be done in refresh_apicv_exec_ctrl.
 
-Ah okay. I searched the 5.4-rc2 tag and found the soc_uid_show() as only
-user but this user sets the have_resp field to false. Is this intended?
-
-Regards,
-  Marco
-
-> Anson
-
+Paolo
