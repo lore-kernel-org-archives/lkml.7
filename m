@@ -2,92 +2,162 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC8DC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 00:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7823ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 00:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A38B0206C2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 00:29:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CD5E20640
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 00:36:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="If0hR/Jn"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Q5c1fMRc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729907AbfJIA3O (ORCPT
+        id S1729937AbfJIAgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 20:29:14 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:35372 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727051AbfJIA3N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 20:29:13 -0400
-Received: by mail-qk1-f196.google.com with SMTP id w2so651463qkf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 17:29:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=vMfnOWFS7hoWopzdoB/oP+pX4lMqDN2ogIeLAMjJGpM=;
-        b=If0hR/JnkxYsI1Z4+aQDuJsc7pPcOuPTjovsySgEzTR4B3O0xKQ4yCLqc9vEg0ccJr
-         LQLZDlOGBkfL8d+Z4M/3P+eYUbNtvcwt3RItgkkuO4WasVlNdGJDzz4Ncb7/mFshlRxc
-         DBYrZvDlXLHlPjKoC99DM+anc75DH1mDFD7vBfBxRmr1dfBsFr/yBN9Ma2iz/v7sLofo
-         AMgLRfmhjmasCGAWKC92AGecDYvl8hGeT22WF6b9rT0EI/eDlK6YKUhaHR1/WGC7mUuk
-         fRd5oxpVFaDn2MmgdaPP8r8GeOzRd8za+Pk29f6t1RtgK2GMPl4IL9BZOx1zSxD89NRn
-         3JMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=vMfnOWFS7hoWopzdoB/oP+pX4lMqDN2ogIeLAMjJGpM=;
-        b=jp8lNjJWs8HBMFVx6v0tCDWqDsySRFCMtn/dYUCLGtBgxhYnFdSYNlRWV3Dqjat2wp
-         KWLyXQu6zJhsP1AL9eE+0720Drlt9wcnNYyVnz+iCzQFeRUJAiVZwBGW89jepPoi+4Ys
-         +l5et7rBBFgOA+s68w57VX5TI7SDKnYNwBiU3VDXrKLMvHjz1kFqyXLh6QZ+/IF6Fosb
-         psUwB1bfpvOBIxc21ykuNFJdBAbeRC9lqt5dXmF9LIg0dChQC4Q23O/kAUF0lVE6NalV
-         ldV2+U/Venib+119OiNCtWvMW/lwZvaTReNJUdfiyWK0PKXWSVsYLK8YVjax4CiYShww
-         YlYQ==
-X-Gm-Message-State: APjAAAUw7FPGGcrmO0zeQcIcFGHmN3/LSC6WobWMd1WR/M4qmg7wMzBv
-        Iep47RUBPlMMta9F5J7HiqyWvw==
-X-Google-Smtp-Source: APXvYqwQ+sdgsS7xDoPKiu50I19WbFiRgi00VyFLOHwL2uyul3taQAjfTRkwnAgc9Z1koRFgNmhSZQ==
-X-Received: by 2002:a37:a546:: with SMTP id o67mr1029746qke.392.1570580951221;
-        Tue, 08 Oct 2019 17:29:11 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id a11sm193305qkc.123.2019.10.08.17.29.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2019 17:29:10 -0700 (PDT)
-Date:   Tue, 8 Oct 2019 17:28:58 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Huazhong Tan <tanhuazhong@huawei.com>
-Cc:     <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <salil.mehta@huawei.com>,
-        <yisen.zhuang@huawei.com>, <linuxarm@huawei.com>
-Subject: Re: [PATCH net-next 0/6] net: hns3: add some new feature
-Message-ID: <20191008172858.44fd300a@cakuba.netronome.com>
-In-Reply-To: <1570497609-36349-1-git-send-email-tanhuazhong@huawei.com>
-References: <1570497609-36349-1-git-send-email-tanhuazhong@huawei.com>
-Organization: Netronome Systems, Ltd.
+        Tue, 8 Oct 2019 20:36:01 -0400
+Received: from ozlabs.org ([203.11.71.1]:34893 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729742AbfJIAgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 20:36:01 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46nwHf173jz9sDB;
+        Wed,  9 Oct 2019 11:35:58 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1570581359;
+        bh=hjJjL/ozQrg33SwOSe/5cE0JrIJlL2UK7Xv7UiyjKvU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Q5c1fMRcW2DjlwospuJTfTmx6lD90/9vQLamOPSg49xJbmdptqXpRhjYu4jVllD36
+         8zE0swWHmMB688MmGmzrACzpEA8CZXJ1nJZX9b0wfCUxt4qYEvRKAro2TIVQkKV3GR
+         L1Y418l2N7+ABK/4SjHuJJYX4vxzSlC6tztgI6ep6oHuA4/Y+Yf4DfEbZ35QyiF+0t
+         RNHPcgZkGr3RL0uCpxSWul8wZXFtPSa0uGTYQ5Ul7JB4UrVU4Qn/7Guf7VXjHNMJvT
+         i5dZFv0l5JqlHyG7qimG9xWJs2qQ41K4VI5v7tk5fKG56dsyYxwNO+6Tmv47pbIfCu
+         +Hk9hQknr/p3w==
+Date:   Wed, 9 Oct 2019 11:35:57 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Alex Deucher <alexdeucher@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Harish Kasiviswanathan <Harish.Kasiviswanathan@amd.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Subject: linux-next: build failure after merge of the drm-misc tree
+Message-ID: <20191009113557.41ced49e@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/fCeB9E99v+6r5u9dD0w7vTz";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 8 Oct 2019 09:20:03 +0800, Huazhong Tan wrote:
-> This patch-set includes some new features for the HNS3 ethernet
-> controller driver.
-> 
-> [patch 01/06] adds support for configuring VF link status on the host.
-> 
-> [patch 02/06] adds support for configuring VF spoof check.
-> 
-> [patch 03/06] adds support for configuring VF trust.
-> 
-> [patch 04/06] adds support for configuring VF bandwidth on the host.
-> 
-> [patch 05/06] adds support for configuring VF MAC on the host.
-> 
-> [patch 06/06] adds support for tx-scatter-gather-fraglist.
+--Sig_/fCeB9E99v+6r5u9dD0w7vTz
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Applied.
+Hi all,
+
+After merging the drm-misc tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
+
+In file included from drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_module.c:25:
+drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_priv.h:40:10: fatal error: drm/drm=
+P.h: No such file or directory
+   40 | #include <drm/drmP.h>
+      |          ^~~~~~~~~~~~
+In file included from drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_chardev.c:38:
+drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_priv.h:40:10: fatal error: drm/drm=
+P.h: No such file or directory
+   40 | #include <drm/drmP.h>
+      |          ^~~~~~~~~~~~
+In file included from drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_device.c:26:
+drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_priv.h:40:10: fatal error: drm/drm=
+P.h: No such file or directory
+   40 | #include <drm/drmP.h>
+      |          ^~~~~~~~~~~~
+In file included from drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_topology.c:3=
+4:
+drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_priv.h:40:10: fatal error: drm/drm=
+P.h: No such file or directory
+   40 | #include <drm/drmP.h>
+      |          ^~~~~~~~~~~~
+
+
+Caused by commit
+
+  4e98f871bcff ("drm: delete drmP.h + drm_os_linux.h")
+
+interacting with commit
+
+  6b855f7b83d2 ("drm/amdkfd: Check against device cgroup")
+
+from the amdgpu tree.
+
+I added the following merge fix patch for today:
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Wed, 9 Oct 2019 11:24:38 +1100
+Subject: [PATCH] drm/amdkfd: update for drmP.h removal
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/gpu/drm/amd/amdkfd/kfd_priv.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_priv.h b/drivers/gpu/drm/amd/am=
+dkfd/kfd_priv.h
+index b8b4485c8f74..41bc0428bfc0 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_priv.h
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_priv.h
+@@ -37,7 +37,9 @@
+ #include <linux/kref.h>
+ #include <linux/sysfs.h>
+ #include <linux/device_cgroup.h>
+-#include <drm/drmP.h>
++#include <drm/drm_file.h>
++#include <drm/drm_drv.h>
++#include <drm/drm_device.h>
+ #include <kgd_kfd_interface.h>
+=20
+ #include "amd_shared.h"
+@@ -49,8 +51,6 @@
+ /* GPU ID hash width in bits */
+ #define KFD_GPU_ID_HASH_WIDTH 16
+=20
+-struct drm_device;
+-
+ /* Use upper bits of mmap offset to store KFD driver specific information.
+  * BITS[63:62] - Encode MMAP type
+  * BITS[61:46] - Encode gpu_id. To identify to which GPU the offset belong=
+s to
+--=20
+2.23.0
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/fCeB9E99v+6r5u9dD0w7vTz
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2dK20ACgkQAVBC80lX
+0Gxn3gf+IeA2Y+XMWHNmZjY3J/ZSjXHuL2Fk4IL8EYqsPnnO3a7bgqa06ZbtfepV
+ai4XV/7ox+aTGpSXiR5nDAxW9iJSavwGWDT+25V60542eBSijPOkCqSeKza27yL0
+HSpjg+1ZKfY/pbN2oyBKoSbvO22NQGA0hy4K6hUuzYA00KzFLd6b/7LiX2461qeW
+0uA7DpyHc+Fw3D8kprrYnmI+0xPpM/ZyVtvDtMPVpoAPobQJB6DNYjroxsdiRPqb
+jp4dBlxBVMHCOSqbMIe6KnyF6/+NwSxsHvw6fiTDCvwMBkszFZwTWaNiW5tyvpLi
+GgTYESuyuDaEIXT64VFFz0wjhNdmJg==
+=mmD0
+-----END PGP SIGNATURE-----
+
+--Sig_/fCeB9E99v+6r5u9dD0w7vTz--
