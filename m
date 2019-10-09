@@ -2,166 +2,142 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 159D1C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6B4ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9B0C206B6
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:11:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mk+INmVR"
+	by mail.kernel.org (Postfix) with ESMTP id CA834206B6
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:12:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731224AbfJINL2 (ORCPT
+        id S1731267AbfJINMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 09:11:28 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:33995 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730822AbfJINL2 (ORCPT
+        Wed, 9 Oct 2019 09:12:39 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:34429 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731049AbfJINMj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 09:11:28 -0400
-Received: by mail-wm1-f66.google.com with SMTP id y135so4751191wmc.1;
-        Wed, 09 Oct 2019 06:11:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2pQmxSEy5O4RUtCVnV8Yf/x1Ag/UDy5/MGukZNn79Q0=;
-        b=mk+INmVRkRDoT4Bs6Nxmev59RMyapJN7jDswk5JjtC0k+6bcGsazyhsWJHx6SpDK0l
-         AbIEM7i85+3V47TX+c/cWTSk3II/7EJOtPtPGYrtsqwNgScxLyWHiPn1y9zW0KjI+n2i
-         0e3b43fc/X/+nRTUDhdzwyCoowAL2fHXihzFMq8Vh5y46dkn7YZ7GHiT3XHwBYKWErX0
-         Taf00CbGmtxWROZd3GNRQAXSA0Ksx818dA/SC6oT/3qQ/xRqJ8mWvhuJqT8OmcAgfsG9
-         AU4yyL/nBsYSfSpobna5dmmUBYw5ym3Hai7uW9DWQzef+CEPNQ/C0SuUAqeBS1DOJP6r
-         ryjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2pQmxSEy5O4RUtCVnV8Yf/x1Ag/UDy5/MGukZNn79Q0=;
-        b=g9SpOLmaSrFFsTQWMpkm55YqgMDYpUCr1OJPbedu5jY2774GjrNV9x4LfLymlwdZ13
-         +uZu6/bjQN6Nx0vvoAKUoQR9vq6bJU8BOABsGjBu7ZVRsERjOJcXVNPvNmGWDfFePmrd
-         Rgkx4yGeo/5fYtyprhZixpGZO+zcyLAdnaPjsEfZ3iUTqAJEwt2jwlVil3Zvuzv7dQpJ
-         S3b+A47PcehxM+vq18ugTOX1siMeq961gDUwANb/f7fIk0UEMUVjAkfIeWuzCqpAZncS
-         kXd+qqZJa0dToXCcCTbQMAch4dRUyrZdRf7L6Zc8LRRymeZHrnSCXGcEKIORl73Aitg8
-         Hlsg==
-X-Gm-Message-State: APjAAAUb+OovhlDN64DoufSWslAJ1hT60/93mhKktxJUoFcKbxH/5Vyg
-        ZYCyDVn0j1ZTWEcuXwvERJY=
-X-Google-Smtp-Source: APXvYqxK8FcAs+SBpkNlf7mfE+EHGTKFvUN/qAClYU9GQc9ACK8NpwSGL0VEqOAY9F4eXxCOAphvIQ==
-X-Received: by 2002:a7b:c74a:: with SMTP id w10mr2605040wmk.30.1570626685433;
-        Wed, 09 Oct 2019 06:11:25 -0700 (PDT)
-Received: from localhost ([51.15.41.238])
-        by smtp.gmail.com with ESMTPSA id r18sm3705058wme.48.2019.10.09.06.11.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 06:11:24 -0700 (PDT)
-Date:   Wed, 9 Oct 2019 14:11:23 +0100
-From:   Stefan Hajnoczi <stefanha@gmail.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     netdev@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
-        linux-hyperv@vger.kernel.org,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        kvm@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jorgen Hansen <jhansen@vmware.com>
-Subject: Re: [RFC PATCH 10/13] vsock: add multi-transports support
-Message-ID: <20191009131123.GK5747@stefanha-x1.localdomain>
-References: <20190927112703.17745-1-sgarzare@redhat.com>
- <20190927112703.17745-11-sgarzare@redhat.com>
+        Wed, 9 Oct 2019 09:12:39 -0400
+X-Originating-IP: 2.224.242.101
+Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id B38171BF20F;
+        Wed,  9 Oct 2019 13:12:34 +0000 (UTC)
+Date:   Wed, 9 Oct 2019 15:14:20 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH 02/10] media: renesas-ceu: Use of_device_get_match_data()
+Message-ID: <20191009131420.g4wdxa5t2ljiab2l@uno.localdomain>
+References: <20191004214334.149976-1-swboyd@chromium.org>
+ <20191004214334.149976-3-swboyd@chromium.org>
+ <20191009095440.6e834ecf@coco.lan>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="IA03tywDYuoVKXrw"
+        protocol="application/pgp-signature"; boundary="yyqmrurhzcbwilu3"
 Content-Disposition: inline
-In-Reply-To: <20190927112703.17745-11-sgarzare@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191009095440.6e834ecf@coco.lan>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---IA03tywDYuoVKXrw
-Content-Type: text/plain; charset=us-ascii
+--yyqmrurhzcbwilu3
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 27, 2019 at 01:27:00PM +0200, Stefano Garzarella wrote:
-> RFC:
-> - I'd like to move MODULE_ALIAS_NETPROTO(PF_VSOCK) to af_vsock.c.
->   @Jorgen could this break the VMware products?
+Sorry,
+   totally missed it
 
-What will cause the vmw_vsock_vmci_transport.ko module to be loaded
-after you remove MODULE_ALIAS_NETPROTO(PF_VSOCK)?  Perhaps
-drivers/misc/vmw_vmci/vmci_guest.c:vmci_guest_probe_device() could do
-something when the guest driver loads.  There would need to be something
-equivalent for the host side too.
+On Wed, Oct 09, 2019 at 09:54:40AM -0300, Mauro Carvalho Chehab wrote:
+> Em Fri,  4 Oct 2019 14:43:26 -0700
+> Stephen Boyd <swboyd@chromium.org> escreveu:
+>
+> > This driver can use the replacement API instead of calling
+> > of_match_device() and then dereferencing the pointer that is returned.
+> > This nicely avoids referencing the match table when it is undefined with
+> > configurations where CONFIG_OF=n.
+> >
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> > Cc: Jacopo Mondi <jacopo@jmondi.org>
+> > Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Frank Rowand <frowand.list@gmail.com>
+> > Cc: <linux-media@vger.kernel.org>
+> > Cc: <linux-renesas-soc@vger.kernel.org>
+> > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> > ---
+> >
+> > Please ack or pick for immediate merge so the last patch can be merged.
+>
+> Feel free to merge it via your tree:
+>
+> Acked-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+>
 
-This will solve another issue too.  Today the VMCI transport can be
-loaded if an application creates an AF_VSOCK socket during early boot
-before the virtio transport has been probed.  This happens because the
-VMCI transport uses MODULE_ALIAS_NETPROTO(PF_VSOCK) *and* it does not
-probe whether this system is actually a VMware guest.
+The CEU driver does probably not need this as the dereferencing of the
+pointer returned by of_match_device() is guarded by
+IS_ENABLED(CONFIG_OF), but surely this does not hurt and it's nicer to
+read.
 
-If we instead load the core af_vsock.ko module and transports are only
-loaded based on hardware feature probing (e.g. the presence of VMware
-guest mode, a virtio PCI adapter, etc) then transports will be
-well-behaved.
+With Mauro's ack mine is probably not needed, but:
+Acked-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-> - DGRAM sockets are handled as before, I don't know if make sense work
->   on it now, or when another transport will support DGRAM. The big
->   issues here is that we cannot link 1-1 a socket to transport as
->   for stream sockets since DGRAM is not connection-oriented.
+Thanks
+   j
+>
+> >
+> >  drivers/media/platform/renesas-ceu.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/media/platform/renesas-ceu.c b/drivers/media/platform/renesas-ceu.c
+> > index 197b3991330d..60518bbc2cd5 100644
+> > --- a/drivers/media/platform/renesas-ceu.c
+> > +++ b/drivers/media/platform/renesas-ceu.c
+> > @@ -1679,7 +1679,7 @@ static int ceu_probe(struct platform_device *pdev)
+> >  	v4l2_async_notifier_init(&ceudev->notifier);
+> >
+> >  	if (IS_ENABLED(CONFIG_OF) && dev->of_node) {
+> > -		ceu_data = of_match_device(ceu_of_match, dev)->data;
+> > +		ceu_data = of_device_get_match_data(dev);
+> >  		num_subdevs = ceu_parse_dt(ceudev);
+> >  	} else if (dev->platform_data) {
+> >  		/* Assume SH4 if booting with platform data. */
+>
+>
+>
+> Thanks,
+> Mauro
 
-Let's ignore DGRAM for now since only VMCI supports it and we therefore
-do not require multi-transport support.
-
-> diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
-> index 86f8f463e01a..2a081d19e20d 100644
-> --- a/include/net/af_vsock.h
-> +++ b/include/net/af_vsock.h
-> @@ -94,7 +94,13 @@ struct vsock_transport_send_notify_data {
->  	u64 data2; /* Transport-defined. */
->  };
-> =20
-> +#define VSOCK_TRANSPORT_F_H2G		0x00000001
-> +#define VSOCK_TRANSPORT_F_G2H		0x00000002
-> +#define VSOCK_TRANSPORT_F_DGRAM		0x00000004
-
-Documentation comments, please.
-
-> +void vsock_core_unregister(const struct vsock_transport *t)
-> +{
-> +	mutex_lock(&vsock_register_mutex);
-> +
-> +	/* RFC-TODO: maybe we should check if there are open sockets
-> +	 * assigned to that transport and avoid the unregistration
-> +	 */
-
-If unregister() is only called from module_exit() functions then holding
-a reference to the transport module would be enough to prevent this
-case.  The transport could only be removed once all sockets have been
-destroyed (and dropped their transport module reference).
-
---IA03tywDYuoVKXrw
+--yyqmrurhzcbwilu3
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl2d3HoACgkQnKSrs4Gr
-c8hckgf/ZTFwJLw3fxdGNwt8fds62hVvtGGsVru3VbLN9WrtPanY8WHTVxqC18Vp
-pF78jglD8L0LV3gjDG4rc5A4Op4a/ND2IjjaEwixZzEeuzkxO+tw/zuGsEQM63jz
-Kckudl+xi6pD5hgxV4a3qH07yLcdBdDXyUdbrHOpxfhvvOEAHaNLdXZhXjvtrrtd
-XnsSEr9/3Be4cTcwhN1+nugiFit8xhonF/zYnIv3rZsouWpJnwUKcy4fEazCSRTz
-6yWFh/iRSwq/5roe5KrD6rJFh4XoW3VDF4oVQKwZ8vaviYSl1kw8AJY/W7tErbrd
-yneRuN0muehGfAMpX1z/jwcR05p6Hg==
-=sE/v
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl2d3SwACgkQcjQGjxah
+VjygUhAAhXBeSvuYWzjdo23jPGMvoLueN77MU0RKZYyiVTxGeOygwNSJIqYYQCoD
+4J/QfP05RmeX++f0mAwX0Pcizyki7nwWBkT6+6EfLYQKWgariDZlbeI6dThQxK+Z
+ErdTfceYG/9XPPlfKbdVbJuzg9boZ6FBc1+KQ96ceP05FeFwX/LrF7ythI/KOfkL
+OBDu1vCgrDUCX1EdUWyHRyXvrMKK1CJ4EVpYJzWBuElUtTjMNAkYg8jGb65uYzWn
+ko3nDjSWA22pUMXULfJ2UbL+U9zH0OMRwErNF2Vxnd5+xk8ikxLopBEg2iNJhKVT
+BMQs0DGbsZgt9A1hEWGG1z8Ucvai9FKdW158CVPcHdey+JUlcR/Rc8IBvtoYMwrW
+cr/Aeyws3qQXty3R0+XeVD3ROhOyAm1IN3yqBMdaBpy3uOiBXY3EF23ytEcA0tYz
+STOg445+0m7Zwj2rt35abAp0KVfBcz3KMoxYKjQwTVWM1LAiV58nangbBWYspm/x
+L5PspcBXjfhMIr4HclYh5KsXqt2ELmFKt7Yzn0zcQ7hwyt7EhiCpl56viQLUttka
+jIx3+LbPEC+oo1GZAfVR2oBdvLuYxvT2eH6RWP4G4sWjfaAPviL9W7c+4B+DQpc5
+DBk9GLxIlYI+Oip/M/dwhFj9lFiP+AovjRjGq5l9HshDrPbBDlU=
+=1szO
 -----END PGP SIGNATURE-----
 
---IA03tywDYuoVKXrw--
+--yyqmrurhzcbwilu3--
