@@ -2,81 +2,130 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E04C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBAEC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 562F821848
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84827218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:44:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570635893;
+	bh=455RXi27qe5dtbw0NFBsN3pauhdn6Ix/HhbI3M5wM2g=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=n88IdEzCPM5gft1VLUPyYyfCr8ljGTFaw/8s7yJW65vo7/p25K8pjpbnOvYySXuay
+	 Ac/oD8heNsHRkP0/nqhLZZwV6wya+O1ma1QRrcY5y2seqjlZ57v/ygVQv+fj36T+Bq
+	 qFtn3a/PH+0UhhuBGTwRfTt5sZCgzrmezwAUekuY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731493AbfJIPnm (ORCPT
+        id S1731507AbfJIPow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 11:43:42 -0400
-Received: from 12.mo6.mail-out.ovh.net ([178.32.125.228]:53761 "EHLO
-        12.mo6.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729471AbfJIPnl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 11:43:41 -0400
-X-Greylist: delayed 29401 seconds by postgrey-1.27 at vger.kernel.org; Wed, 09 Oct 2019 11:43:40 EDT
-Received: from player755.ha.ovh.net (unknown [10.108.57.226])
-        by mo6.mail-out.ovh.net (Postfix) with ESMTP id 21E3F1E4ABA
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Oct 2019 09:26:25 +0200 (CEST)
-Received: from etezian.org (81-175-223-118.bb.dnainternet.fi [81.175.223.118])
-        (Authenticated sender: andi@etezian.org)
-        by player755.ha.ovh.net (Postfix) with ESMTPSA id 845A2AD418DA;
-        Wed,  9 Oct 2019 07:26:14 +0000 (UTC)
-Date:   Wed, 9 Oct 2019 10:26:12 +0300
-From:   Andi Shyti <andi@etezian.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Stephan Gerhold <stephan@gerhold.net>,
-        Andi Shyti <andi@etezian.org>,
-        Simon Shields <simon@lineageos.org>,
-        linux-input@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] Input: mms114 - add support for mms345l
-Message-ID: <20191009072612.GA2814@jack.zhora.eu>
-References: <20191007203343.101466-1-stephan@gerhold.net>
- <20191007205021.104402-1-stephan@gerhold.net>
- <20191008220014.GI22365@dtor-ws>
+        Wed, 9 Oct 2019 11:44:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43086 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729865AbfJIPov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 11:44:51 -0400
+Received: from paulmck-ThinkPad-P72 (mobile-166-170-42-80.mycingular.net [166.170.42.80])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B83521848;
+        Wed,  9 Oct 2019 15:44:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570635891;
+        bh=455RXi27qe5dtbw0NFBsN3pauhdn6Ix/HhbI3M5wM2g=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=xvmErgJ7fXy0Wft7hYtVrXfw/mgp7QIKTEqAy05R82xhaI4tPhOmyrWmjAUgcxOx0
+         LTuKTu4J9eUYQglGb3BLs7MfawbYTL8KhNYO5PP6erRGv+ER1fvlC8m4IErh6l1GTA
+         hjLWN224KvRXH+IAViwCzchyBz1mios+nG6XDtdI=
+Date:   Wed, 9 Oct 2019 08:44:46 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org,
+        elver@google.com, Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>, rcu@vger.kernel.org
+Subject: Re: [PATCH] rcu: Avoid to modify mask_ofl_ipi in
+ sync_rcu_exp_select_node_cpus()
+Message-ID: <20191009154446.GA2689@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191008050145.4041702-1-boqun.feng@gmail.com>
+ <20191008163028.GA136151@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191008220014.GI22365@dtor-ws>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Ovh-Tracer-Id: 10061041571171844762
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedufedriedtgdduvddtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddm
+In-Reply-To: <20191008163028.GA136151@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
-
-> > There was a related patch [2] that removes I2C_M_NOSTART for all models,
-> > but it seems abandoned and I do not have any other model for testing.
-> > Therefore, this patch implements the least instrusive solution
-> > and only removes I2C_M_NOSTART for MMS345L.
+On Tue, Oct 08, 2019 at 12:30:28PM -0400, Joel Fernandes wrote:
+> On Tue, Oct 08, 2019 at 01:01:40PM +0800, Boqun Feng wrote:
+> > "mask_ofl_ipi" is used for iterate CPUs which IPIs are needed to send
+> > to, however in the IPI sending loop, "mask_ofl_ipi" along with another
+> > variable "mask_ofl_test" might also get modified to record which CPU's
+> > quiesent state can be reported by sync_rcu_exp_select_node_cpus(). Two
+> > variables seems to be redundant for such a propose, so this patch clean
+> > things a little by solely using "mask_ofl_test" for recording and
+> > "mask_ofl_ipi" for iteration. This would improve the readibility of the
+> > IPI sending loop in sync_rcu_exp_select_node_cpus().
+> > 
+> > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> > ---
 > 
-> Hmm,  at this point I am inclined to pick up Andi's patch since it seems
-> to work for you and him and it looks like Android drivers are not using
-> I2C_M_NOSTART. I wonder if this was some quirk/big on the platform where
-> it was originally developed.
+> Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-I completely forgot about that patch :)
+Applied, thank you!
 
-I should refresh some old work on that device which was left
-undone.
+							Thanx, Paul
 
-> Any objections?
-
-It's OK for me. If you can just update my e-mail, please, when
-applying the patch to "andi@etezian.org". Thanks!
-
-Thank you,
-Andi
+> thanks,
+> 
+>  - Joel
+> 
+> >  kernel/rcu/tree_exp.h | 13 ++++++-------
+> >  1 file changed, 6 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
+> > index 69c5aa64fcfd..212470018752 100644
+> > --- a/kernel/rcu/tree_exp.h
+> > +++ b/kernel/rcu/tree_exp.h
+> > @@ -387,10 +387,10 @@ static void sync_rcu_exp_select_node_cpus(struct work_struct *wp)
+> >  		}
+> >  		ret = smp_call_function_single(cpu, rcu_exp_handler, NULL, 0);
+> >  		put_cpu();
+> > -		if (!ret) {
+> > -			mask_ofl_ipi &= ~mask;
+> > +		/* The CPU responses the IPI, and will report QS itself */
+> > +		if (!ret)
+> >  			continue;
+> > -		}
+> > +
+> >  		/* Failed, raced with CPU hotplug operation. */
+> >  		raw_spin_lock_irqsave_rcu_node(rnp, flags);
+> >  		if ((rnp->qsmaskinitnext & mask) &&
+> > @@ -401,13 +401,12 @@ static void sync_rcu_exp_select_node_cpus(struct work_struct *wp)
+> >  			schedule_timeout_uninterruptible(1);
+> >  			goto retry_ipi;
+> >  		}
+> > -		/* CPU really is offline, so we can ignore it. */
+> > -		if (!(rnp->expmask & mask))
+> > -			mask_ofl_ipi &= ~mask;
+> > +		/* CPU really is offline, and we need its QS to pass GP. */
+> > +		if (rnp->expmask & mask)
+> > +			mask_ofl_test |= mask;
+> >  		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+> >  	}
+> >  	/* Report quiescent states for those that went offline. */
+> > -	mask_ofl_test |= mask_ofl_ipi;
+> >  	if (mask_ofl_test)
+> >  		rcu_report_exp_cpu_mult(rnp, mask_ofl_test, false);
+> >  }
+> > -- 
+> > 2.23.0
+> > 
