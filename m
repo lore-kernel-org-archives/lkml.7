@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 217D7ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 987CBECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04DDB218AC
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C06221835
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:41:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730466AbfJIHlu (ORCPT
+        id S1730347AbfJIHlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 03:41:50 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:21826 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730030AbfJIHlr (ORCPT
+        Wed, 9 Oct 2019 03:41:46 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:16127 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730069AbfJIHlf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 03:41:47 -0400
-X-UUID: 7160bee8a5d04664a054e80c671e541d-20191009
-X-UUID: 7160bee8a5d04664a054e80c671e541d-20191009
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        Wed, 9 Oct 2019 03:41:35 -0400
+X-UUID: c95b8a532c764525bbf11b23f72e0024-20191009
+X-UUID: c95b8a532c764525bbf11b23f72e0024-20191009
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
         (envelope-from <chunfeng.yun@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 92424197; Wed, 09 Oct 2019 15:41:20 +0800
+        with ESMTP id 604307787; Wed, 09 Oct 2019 15:41:25 +0800
 Received: from mtkcas09.mediatek.inc (172.21.101.178) by
  MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 9 Oct 2019 15:41:18 +0800
+ 15.0.1395.4; Wed, 9 Oct 2019 15:41:21 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 9 Oct 2019 15:41:17 +0800
+ Transport; Wed, 9 Oct 2019 15:41:20 +0800
 From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
 To:     Kishon Vijay Abraham I <kishon@ti.com>,
         Rob Herring <robh+dt@kernel.org>
@@ -42,89 +42,122 @@ CC:     Mark Rutland <mark.rutland@arm.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [RESEND PATCH v3 09/11] phy: phy-mtk-tphy: remove unused u3phya_ref clock
-Date:   Wed, 9 Oct 2019 15:40:32 +0800
-Message-ID: <1570606834-5644-9-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [RESEND PATCH v3 11/11] arm64: dts: mt2712: use non-empty ranges for usb-phy
+Date:   Wed, 9 Oct 2019 15:40:34 +0800
+Message-ID: <1570606834-5644-11-git-send-email-chunfeng.yun@mediatek.com>
 X-Mailer: git-send-email 1.8.1.1.dirty
 In-Reply-To: <1570606834-5644-1-git-send-email-chunfeng.yun@mediatek.com>
 References: <1570606834-5644-1-git-send-email-chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: D6C41A4D74DE96817B7385794DF738CCE62E479FA5869CF8D05E66AC4BB88A682000:8
+X-TM-SNTS-SMTP: E56153EA5545E5E2433EF65763DAD8837C8B9780F19A68941507259F603247B62000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The u3phya_ref clock is already moved into sub-node, and
-renamed as ref clock, no used anymore now, so remove it,
-this can avoid confusion when support new platforms
+Use non-empty ranges for usb-phy to make the layout of
+its registers clearer;
+Replace deprecated compatible by generic
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
-v2~3: no changes
----
- drivers/phy/mediatek/phy-mtk-tphy.c | 18 ------------------
- 1 file changed, 18 deletions(-)
+v3: no changes
 
-diff --git a/drivers/phy/mediatek/phy-mtk-tphy.c b/drivers/phy/mediatek/phy-mtk-tphy.c
-index 96c62e3a3300..c6424fd2a06d 100644
---- a/drivers/phy/mediatek/phy-mtk-tphy.c
-+++ b/drivers/phy/mediatek/phy-mtk-tphy.c
-@@ -312,8 +312,6 @@ struct mtk_phy_instance {
- struct mtk_tphy {
- 	struct device *dev;
- 	void __iomem *sif_base;	/* only shared sif */
--	/* deprecated, use @ref_clk instead in phy instance */
--	struct clk *u3phya_ref;	/* reference clock of usb3 anolog phy */
- 	const struct mtk_phy_pdata *pdata;
- 	struct mtk_phy_instance **phys;
- 	int nphys;
-@@ -921,12 +919,6 @@ static int mtk_phy_init(struct phy *phy)
- 	struct mtk_tphy *tphy = dev_get_drvdata(phy->dev.parent);
- 	int ret;
+v2: use generic compatible
+---
+ arch/arm64/boot/dts/mediatek/mt2712e.dtsi | 42 ++++++++++++-----------
+ 1 file changed, 22 insertions(+), 20 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+index 43307bad3f0d..e24f2f2f6004 100644
+--- a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+@@ -697,30 +697,31 @@
+ 	};
  
--	ret = clk_prepare_enable(tphy->u3phya_ref);
--	if (ret) {
--		dev_err(tphy->dev, "failed to enable u3phya_ref\n");
--		return ret;
--	}
--
- 	ret = clk_prepare_enable(instance->ref_clk);
- 	if (ret) {
- 		dev_err(tphy->dev, "failed to enable ref_clk\n");
-@@ -992,7 +984,6 @@ static int mtk_phy_exit(struct phy *phy)
- 		u2_phy_instance_exit(tphy, instance);
+ 	u3phy0: usb-phy@11290000 {
+-		compatible = "mediatek,mt2712-u3phy";
+-		#address-cells = <2>;
+-		#size-cells = <2>;
+-		ranges;
++		compatible = "mediatek,mt2712-tphy",
++			     "mediatek,generic-tphy-v2";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0 0x11290000 0x9000>;
+ 		status = "okay";
  
- 	clk_disable_unprepare(instance->ref_clk);
--	clk_disable_unprepare(tphy->u3phya_ref);
- 	return 0;
- }
+-		u2port0: usb-phy@11290000 {
+-			reg = <0 0x11290000 0 0x700>;
++		u2port0: usb-phy@0 {
++			reg = <0x0 0x700>;
+ 			clocks = <&clk26m>;
+ 			clock-names = "ref";
+ 			#phy-cells = <1>;
+ 			status = "okay";
+ 		};
  
-@@ -1127,11 +1118,6 @@ static int mtk_tphy_probe(struct platform_device *pdev)
- 		}
- 	}
+-		u2port1: usb-phy@11298000 {
+-			reg = <0 0x11298000 0 0x700>;
++		u2port1: usb-phy@8000 {
++			reg = <0x8000 0x700>;
+ 			clocks = <&clk26m>;
+ 			clock-names = "ref";
+ 			#phy-cells = <1>;
+ 			status = "okay";
+ 		};
  
--	/* it's deprecated, make it optional for backward compatibility */
--	tphy->u3phya_ref = devm_clk_get_optional(dev, "u3phya_ref");
--	if (IS_ERR(tphy->u3phya_ref))
--		return PTR_ERR(tphy->u3phya_ref);
--
- 	tphy->src_ref_clk = U3P_REF_CLK;
- 	tphy->src_coef = U3P_SLEW_RATE_COEF;
- 	/* update parameters of slew rate calibrate if exist */
-@@ -1178,10 +1164,6 @@ static int mtk_tphy_probe(struct platform_device *pdev)
- 		phy_set_drvdata(phy, instance);
- 		port++;
+-		u3port0: usb-phy@11298700 {
+-			reg = <0 0x11298700 0 0x900>;
++		u3port0: usb-phy@8700 {
++			reg = <0x8700 0x900>;
+ 			clocks = <&clk26m>;
+ 			clock-names = "ref";
+ 			#phy-cells = <1>;
+@@ -760,30 +761,31 @@
+ 	};
  
--		/* if deprecated clock is provided, ignore instance's one */
--		if (tphy->u3phya_ref)
--			continue;
--
- 		instance->ref_clk = devm_clk_get_optional(&phy->dev, "ref");
- 		if (IS_ERR(instance->ref_clk)) {
- 			dev_err(dev, "failed to get ref_clk(id-%d)\n", port);
+ 	u3phy1: usb-phy@112e0000 {
+-		compatible = "mediatek,mt2712-u3phy";
+-		#address-cells = <2>;
+-		#size-cells = <2>;
+-		ranges;
++		compatible = "mediatek,mt2712-tphy",
++			     "mediatek,generic-tphy-v2";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0 0x112e0000 0x9000>;
+ 		status = "okay";
+ 
+-		u2port2: usb-phy@112e0000 {
+-			reg = <0 0x112e0000 0 0x700>;
++		u2port2: usb-phy@0 {
++			reg = <0x0 0x700>;
+ 			clocks = <&clk26m>;
+ 			clock-names = "ref";
+ 			#phy-cells = <1>;
+ 			status = "okay";
+ 		};
+ 
+-		u2port3: usb-phy@112e8000 {
+-			reg = <0 0x112e8000 0 0x700>;
++		u2port3: usb-phy@8000 {
++			reg = <0x8000 0x700>;
+ 			clocks = <&clk26m>;
+ 			clock-names = "ref";
+ 			#phy-cells = <1>;
+ 			status = "okay";
+ 		};
+ 
+-		u3port1: usb-phy@112e8700 {
+-			reg = <0 0x112e8700 0 0x900>;
++		u3port1: usb-phy@8700 {
++			reg = <0x8700 0x900>;
+ 			clocks = <&clk26m>;
+ 			clock-names = "ref";
+ 			#phy-cells = <1>;
 -- 
 2.23.0
 
