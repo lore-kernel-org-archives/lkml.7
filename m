@@ -2,93 +2,110 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6DFC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA998C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FD112133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:24:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ZmLP9UMQ";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KNXveYci"
+	by mail.kernel.org (Postfix) with ESMTP id 9009F2133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:25:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729882AbfJIIYH (ORCPT
+        id S1729457AbfJIIZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 04:24:07 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:56998 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbfJIIYG (ORCPT
+        Wed, 9 Oct 2019 04:25:04 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:36891 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbfJIIZD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 04:24:06 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 7B18A61A81; Wed,  9 Oct 2019 08:24:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570609445;
-        bh=gk+Iu3xI3mpVS78D5WgnLWyU9HVaeDM2lRyYaVDJTak=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=ZmLP9UMQn8H42q9iRFGBKy9XCPOjknjcn7beaP7LxwUuuCLrVPHT0LypyGjkXh64w
-         XfsSdFkzI6V+qYVNdr7RygMgluvYKAh0iHNFUlq0JYQYJW9v39kndlnGNMHfBZ1iix
-         rgXdByohYBO3TLNeTdOVZKD7A5X+eTq6QfvzMDV8=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BEADE60AD1;
-        Wed,  9 Oct 2019 08:24:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570609444;
-        bh=gk+Iu3xI3mpVS78D5WgnLWyU9HVaeDM2lRyYaVDJTak=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=KNXveYciZj7X5Zel1mmXX5dfsFwHj2PDoaOwfT49Bo/zQXv2NHTwpaZsMpJMtfHuU
-         Yj1XG6auay5q8enHbq/i4ZSMUy+NoAyaXuWo8Yf9QEnW06fFnqgMDh2IJA4PRmbrP6
-         AOou5NilrSGAxXkVDsohp3W8z1ySzFP/ntkDTouo=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BEADE60AD1
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Wed, 9 Oct 2019 04:25:03 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iI7HI-0002TE-DS; Wed, 09 Oct 2019 10:25:00 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iI7HD-0006LE-Q6; Wed, 09 Oct 2019 10:24:55 +0200
+Date:   Wed, 9 Oct 2019 10:24:55 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH V2] firmware: imx: Skip return value check for some
+ special SCU firmware APIs
+Message-ID: <20191009082455.5hqhotkbozsr7mgo@pengutronix.de>
+References: <1570410959-32563-1-git-send-email-Anson.Huang@nxp.com>
+ <20191007080135.4e5ljhh6z2rbx5bw@pengutronix.de>
+ <AM6PR0402MB39118DABDE62496539D7EE6DF59A0@AM6PR0402MB3911.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 1/2] Revert "rsi: fix potential null dereference in
- rsi_probe()"
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20191004144422.13003-1-johan@kernel.org>
-References: <20191004144422.13003-1-johan@kernel.org>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
-        Siva Rebbagondla <siva8118@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Denis Efremov <efremov@linux.com>,
-        Johan Hovold <johan@kernel.org>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20191009082405.7B18A61A81@smtp.codeaurora.org>
-Date:   Wed,  9 Oct 2019 08:24:05 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM6PR0402MB39118DABDE62496539D7EE6DF59A0@AM6PR0402MB3911.eurprd04.prod.outlook.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:48:00 up 144 days, 14:06, 97 users,  load average: 0.05, 0.17,
+ 0.14
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Johan Hovold <johan@kernel.org> wrote:
+Hi Anson,
 
-> This reverts commit f170d44bc4ec2feae5f6206980e7ae7fbf0432a0.
+On 19-10-08 00:48, Anson Huang wrote:
+> Hi, Marco
 > 
-> USB core will never call a USB-driver probe function with a NULL
-> device-id pointer.
+> > On 19-10-07 09:15, Anson Huang wrote:
+> > > The SCU firmware does NOT always have return value stored in message
+> > > header's function element even the API has response data, those
+> > > special APIs are defined as void function in SCU firmware, so they
+> > > should be treated as return success always.
+> > >
+> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > > ---
+> > > Changes since V1:
+> > > 	- Use direct API check instead of calling another function to check.
+> > > 	- This patch is based on
+> > > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fpatc
+> > >
+> > hwork.kernel.org%2Fpatch%2F11129553%2F&amp;data=02%7C01%7Canson.
+> > huang%
+> > >
+> > 40nxp.com%7C2de0a6be69b74cc249ad08d74afc9730%7C686ea1d3bc2b4c6f
+> > a92cd99
+> > >
+> > c5c301635%7C0%7C0%7C637060321046247040&amp;sdata=RMFAdLKGKb6
+> > mEdhycrzHX
+> > > R03E6Qr5pWyRc8Zk6ErlBc%3D&amp;reserved=0
+> > 
+> > Thanks for this v2. It would be good to change the callers within this series.
 > 
-> Reverting before removing the existing checks in order to document this
-> and prevent the offending commit from being "autoselected" for stable.
-> 
-> Signed-off-by: Johan Hovold <johan@kernel.org>
+> NOT quite understand your point, the callers does NOT need to be changed, those
+> 2 special APIs callers are already following the right way of calling the APIs.
 
-2 patches applied to wireless-drivers-next.git, thanks.
+Ah okay. I searched the 5.4-rc2 tag and found the soc_uid_show() as only
+user but this user sets the have_resp field to false. Is this intended?
 
-c5dcf8f0e850 Revert "rsi: fix potential null dereference in rsi_probe()"
-39e50f5ce26c rsi: drop bogus device-id checks from probe
+Regards,
+  Marco
 
--- 
-https://patchwork.kernel.org/patch/11174711/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+> Anson
 
