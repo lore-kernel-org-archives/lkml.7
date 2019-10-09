@@ -2,314 +2,170 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5583ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22EEDECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9148D20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:35:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEA6B20B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:35:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eODIBGQq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729865AbfJIJfW (ORCPT
+        id S1730212AbfJIJfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 05:35:22 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:29956 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725942AbfJIJfW (ORCPT
+        Wed, 9 Oct 2019 05:35:40 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:25546 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725942AbfJIJfk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 05:35:22 -0400
-X-UUID: 747c342f1ff34ecb9c796a7a033aff24-20191009
-X-UUID: 747c342f1ff34ecb9c796a7a033aff24-20191009
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
-        (envelope-from <michael.kao@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 992297874; Wed, 09 Oct 2019 17:35:13 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 9 Oct 2019 17:35:04 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 9 Oct 2019 17:35:04 +0800
-From:   <michael.kao@mediatek.com>
-To:     <michael.kao@mediatek.com>, Zhang Rui <rui.zhang@intel.com>,
-        "Eduardo Valentin" <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <hsinyi@chromium.org>
-CC:     <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Louis Yu <louis.yu@mediatek.com>
-Subject: [RESEND PATCH] thermal: mediatek: add suspend/resume callback
-Date:   Wed, 9 Oct 2019 17:35:04 +0800
-Message-ID: <1570613704-16609-1-git-send-email-michael.kao@mediatek.com>
-X-Mailer: git-send-email 1.9.1
+        Wed, 9 Oct 2019 05:35:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1570613739;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=wIiSU13TZ9jZ/7OA/RD49mIlEHsSk7raamqZN0rBDDk=;
+        b=eODIBGQqCXTVEr2XhiebbpB53Q/3zKTQWwvsSLVvTPFLF5g6SVjt5Nu7GAWzwL4vLdpR8E
+        KlUFS1xXToWB7Jm0dGouehe1fqEN5v95X20Lvw9ttTY3L2wzhAEnemaCHBQhL9Gf4jhC3R
+        ADmxV6fP3mNnh6yVKeEWNAtIaUr95OI=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-309-BR_jnFwrMc6LyOCfD7YDIA-1; Wed, 09 Oct 2019 05:35:35 -0400
+Received: by mail-ed1-f69.google.com with SMTP id c23so1010105edb.14
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 02:35:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=m+EOjV/VuUDotBWP2JnVujV9Hl44RjnHb49OdTmGiVo=;
+        b=alKW9kRhImpwQW2OVjE+vaJYYhDBSgI8i4cYCR3LztaeGq48Js6LIYch94YxktS2N/
+         cKbmBN+7WdX+w+y4fwqM0qJnoM4pwxESPzDl7s0A0Rtf6KIoP9eI/9x64Xij2BQ2VHup
+         Lw0Xao/NRlmg5SYJikv5OCDu7JIgyAhTa2LzndH28QqW8HLrZ8SLcY/b4kRJEE2vJVWy
+         Xm+D8CXAYJsJO0hD9jAmRXn1LbaPHHeZoqAyw/tlO74JOu/HEuKDutFBXpYgCXHi1+oC
+         fKyiXLkvstSH0uneh+Flv9Q8OL8lpwvWd/HD4BDwIkF9y3paIKHmY3tMx/GltwtMh1q4
+         xSZg==
+X-Gm-Message-State: APjAAAUU47DYfCDm8k3DlUNV7E8fJeLjW4b/mmsxYry4TjZShBgr0P3x
+        /Mdlpr+a1Fd9FbbWBxr+/rDIUMdlGg0m64L9EWL2alXRFG6YLT247vvyYNU7AL3Zi/QtCF3ztHM
+        ukyzT+InLFhSQmkLBzfVI4va4
+X-Received: by 2002:a05:6402:88d:: with SMTP id e13mr1973738edy.246.1570613734716;
+        Wed, 09 Oct 2019 02:35:34 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxZmm9V3I2YhZskIm1cKbboIQy+yXFRdaHYKIvjJsZB5tj/g9zi5Ehci5uDueRmNCpIZouewQ==
+X-Received: by 2002:a05:6402:88d:: with SMTP id e13mr1973726edy.246.1570613734526;
+        Wed, 09 Oct 2019 02:35:34 -0700 (PDT)
+Received: from shalem.localdomain (2001-1c00-0c14-2800-ec23-a060-24d5-2453.cable.dynamic.v6.ziggo.nl. [2001:1c00:c14:2800:ec23:a060:24d5:2453])
+        by smtp.gmail.com with ESMTPSA id l7sm271377edv.84.2019.10.09.02.35.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Oct 2019 02:35:33 -0700 (PDT)
+Subject: Re: [PATCH] staging: rtl8723bs: hal: Fix memcpy calls
+To:     Denis Efremov <efremov@linux.com>, devel@driverdev.osuosl.org
+Cc:     linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bastien Nocera <hadess@hadess.net>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Jes Sorensen <jes.sorensen@gmail.com>, stable@vger.kernel.org
+References: <20190930110141.29271-1-efremov@linux.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <94af475e-dd7a-6066-146a-30a9915cd325@redhat.com>
+Date:   Wed, 9 Oct 2019 11:35:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+In-Reply-To: <20190930110141.29271-1-efremov@linux.com>
+Content-Language: en-US
+X-MC-Unique: BR_jnFwrMc6LyOCfD7YDIA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Louis Yu <louis.yu@mediatek.com>
+Hi Denis,
 
-Add suspend/resume callback to disable/enable Mediatek thermal sensor
-respectively. Since thermal power domain is off in suspend, thermal driver
-needs re-initialization during resume.
+On 30-09-2019 13:01, Denis Efremov wrote:
+> memcpy() in phy_ConfigBBWithParaFile() and PHY_ConfigRFWithParaFile() is
+> called with "src =3D=3D NULL && len =3D=3D 0". This is an undefined behav=
+ior.
+> Moreover this if pre-condition "pBufLen && (*pBufLen =3D=3D 0) && !pBuf"
+> is constantly false because it is a nested if in the else brach, i.e.,
+> "if (cond) { ... } else { if (cond) {...} }". This patch alters the
+> if condition to check "pBufLen && pBuf" pointers are not NULL.
+>=20
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: Bastien Nocera <hadess@hadess.net>
+> Cc: Larry Finger <Larry.Finger@lwfinger.net>
+> Cc: Jes Sorensen <jes.sorensen@gmail.com>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Denis Efremov <efremov@linux.com>
+> ---
+> Not tested. I don't have the hardware. The fix is based on my guess.
 
-Signed-off-by: Louis Yu <louis.yu@mediatek.com>
-Signed-off-by: Michael Kao <michael.kao@mediatek.com>
----
-This patch series base on these patches [1][2].
+Thsnk you for your patch.
 
-[1]thermal: mediatek: mt8183: fix bank number settings (https://patchwork.kernel.org/patch/10938817/)
-[2]thermal: mediatek: add another get_temp ops for thermal sensors (https://patchwork.kernel.org/patch/10938829/)
+So I've been doing some digging and this code normally never executes.
 
- drivers/thermal/mtk_thermal.c | 134 +++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 125 insertions(+), 9 deletions(-)
+For this to execute the user would need to change the rtw_load_phy_file mod=
+ule
+param from its default of 0x44 (LOAD_BB_PG_PARA_FILE | LOAD_RF_TXPWR_LMT_PA=
+RA_FILE)
+to something which includes 0x02 (LOAD_BB_PARA_FILE) as mask.
 
-diff --git a/drivers/thermal/mtk_thermal.c b/drivers/thermal/mtk_thermal.c
-index 6bdd9c2..22ff2cf 100644
---- a/drivers/thermal/mtk_thermal.c
-+++ b/drivers/thermal/mtk_thermal.c
-@@ -22,6 +22,7 @@
- #include <linux/thermal.h>
- #include <linux/reset.h>
- #include <linux/types.h>
-+#include <linux/iopoll.h>
- 
- /* AUXADC Registers */
- #define AUXADC_CON1_SET_V	0x008
-@@ -31,6 +32,8 @@
- 
- #define APMIXED_SYS_TS_CON1	0x604
- 
-+#define APMIXED_SYS_TS_CON1_BUFFER_OFF	0x30
-+
- /* Thermal Controller Registers */
- #define TEMP_MONCTL0		0x000
- #define TEMP_MONCTL1		0x004
-@@ -38,6 +41,7 @@
- #define TEMP_MONIDET0		0x014
- #define TEMP_MONIDET1		0x018
- #define TEMP_MSRCTL0		0x038
-+#define TEMP_MSRCTL1		0x03c
- #define TEMP_AHBPOLL		0x040
- #define TEMP_AHBTO		0x044
- #define TEMP_ADCPNP0		0x048
-@@ -87,6 +91,9 @@
- #define TEMP_ADCVALIDMASK_VALID_HIGH		BIT(5)
- #define TEMP_ADCVALIDMASK_VALID_POS(bit)	(bit)
- 
-+#define TEMP_MSRCTL1_BUS_STA	(BIT(0) | BIT(7))
-+#define TEMP_MSRCTL1_SENSING_POINTS_PAUSE	0x10E
-+
- /* MT8173 thermal sensors */
- #define MT8173_TS1	0
- #define MT8173_TS2	1
-@@ -258,6 +265,10 @@ struct mtk_thermal_data {
- struct mtk_thermal {
- 	struct device *dev;
- 	void __iomem *thermal_base;
-+	void __iomem *apmixed_base;
-+	void __iomem *auxadc_base;
-+	u64 apmixed_phys_base;
-+	u64 auxadc_phys_base;
- 
- 	struct clk *clk_peri_therm;
- 	struct clk *clk_auxadc;
-@@ -787,6 +798,42 @@ static void mtk_thermal_init_bank(struct mtk_thermal *mt, int num,
- 	mtk_thermal_put_bank(bank);
- }
- 
-+static int mtk_thermal_disable_sensing(struct mtk_thermal *mt, int num)
-+{
-+	struct mtk_thermal_bank *bank = &mt->banks[num];
-+	u32 val;
-+	unsigned long timeout;
-+	void __iomem *addr;
-+	int ret = 0;
-+
-+	bank->id = num;
-+	bank->mt = mt;
-+
-+	mtk_thermal_get_bank(bank);
-+
-+	val = readl(mt->thermal_base + TEMP_MSRCTL1);
-+	/* pause periodic temperature measurement for sensing points */
-+	writel(val | TEMP_MSRCTL1_SENSING_POINTS_PAUSE,
-+	       mt->thermal_base + TEMP_MSRCTL1);
-+
-+	/* wait until temperature measurement bus idle */
-+	timeout = jiffies + HZ;
-+	addr = mt->thermal_base + TEMP_MSRCTL1;
-+
-+	ret = readl_poll_timeout(addr, val, (val & TEMP_MSRCTL1_BUS_STA) == 0x0,
-+				 0, timeout);
-+	if (ret < 0)
-+		goto out;
-+
-+	/* disable periodic temperature meausrement on sensing points */
-+	writel(0x0, mt->thermal_base + TEMP_MONCTL0);
-+
-+out:
-+	mtk_thermal_put_bank(bank);
-+
-+	return ret;
-+}
-+
- static u64 of_get_phys_base(struct device_node *np)
- {
- 	u64 size64;
-@@ -909,7 +956,6 @@ static int mtk_thermal_probe(struct platform_device *pdev)
- 	struct device_node *auxadc, *apmixedsys, *np = pdev->dev.of_node;
- 	struct mtk_thermal *mt;
- 	struct resource *res;
--	u64 auxadc_phys_base, apmixed_phys_base;
- 	struct thermal_zone_device *tzdev;
- 	struct mtk_thermal_zone *tz;
- 
-@@ -946,11 +992,11 @@ static int mtk_thermal_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
- 
--	auxadc_phys_base = of_get_phys_base(auxadc);
-+	mt->auxadc_phys_base = of_get_phys_base(auxadc);
- 
- 	of_node_put(auxadc);
- 
--	if (auxadc_phys_base == OF_BAD_ADDR) {
-+	if (mt->auxadc_phys_base == OF_BAD_ADDR) {
- 		dev_err(&pdev->dev, "Can't get auxadc phys address\n");
- 		return -EINVAL;
- 	}
-@@ -961,11 +1007,12 @@ static int mtk_thermal_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
- 
--	apmixed_phys_base = of_get_phys_base(apmixedsys);
-+	mt->apmixed_phys_base = of_get_phys_base(apmixedsys);
-+	mt->apmixed_base = of_iomap(apmixedsys, 0);
- 
- 	of_node_put(apmixedsys);
- 
--	if (apmixed_phys_base == OF_BAD_ADDR) {
-+	if (mt->apmixed_phys_base == OF_BAD_ADDR) {
- 		dev_err(&pdev->dev, "Can't get auxadc phys address\n");
- 		return -EINVAL;
- 	}
-@@ -977,19 +1024,19 @@ static int mtk_thermal_probe(struct platform_device *pdev)
- 	ret = clk_prepare_enable(mt->clk_auxadc);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Can't enable auxadc clk: %d\n", ret);
--		return ret;
-+		goto err_disable_clk_auxadc;
- 	}
- 
- 	ret = clk_prepare_enable(mt->clk_peri_therm);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Can't enable peri clk: %d\n", ret);
--		goto err_disable_clk_auxadc;
-+		goto err_disable_clk_peri_therm;
- 	}
- 
- 	for (ctrl_id = 0; ctrl_id < mt->conf->num_controller ; ctrl_id++)
- 		for (i = 0; i < mt->conf->num_banks; i++)
--			mtk_thermal_init_bank(mt, i, apmixed_phys_base,
--					      auxadc_phys_base, ctrl_id);
-+			mtk_thermal_init_bank(mt, i, mt->apmixed_phys_base,
-+					      mt->auxadc_phys_base, ctrl_id);
- 
- 	platform_set_drvdata(pdev, mt);
- 
-@@ -1033,11 +1080,80 @@ static int mtk_thermal_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int __maybe_unused mtk_thermal_suspend(struct device *dev)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct mtk_thermal *mt = platform_get_drvdata(pdev);
-+	int i, ret;
-+
-+	for (i = 0; i < mt->conf->num_banks; i++) {
-+		ret = mtk_thermal_disable_sensing(mt, i);
-+		if (ret)
-+			goto out;
-+	}
-+
-+	/* disable buffer */
-+	writel(readl(mt->apmixed_base + APMIXED_SYS_TS_CON1) |
-+	       APMIXED_SYS_TS_CON1_BUFFER_OFF,
-+	       mt->apmixed_base + APMIXED_SYS_TS_CON1);
-+
-+	clk_disable_unprepare(mt->clk_peri_therm);
-+	clk_disable_unprepare(mt->clk_auxadc);
-+
-+	return 0;
-+
-+out:
-+	dev_err(&pdev->dev, "Failed to wait until bus idle\n");
-+
-+	return ret;
-+}
-+
-+static int __maybe_unused mtk_thermal_resume(struct device *dev)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct mtk_thermal *mt = platform_get_drvdata(pdev);
-+	int i, ret, ctrl_id;
-+
-+	ret = device_reset(&pdev->dev);
-+	if (ret)
-+		return ret;
-+
-+	ret = clk_prepare_enable(mt->clk_auxadc);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Can't enable auxadc clk: %d\n", ret);
-+		goto err_disable_clk_auxadc;
-+	}
-+
-+	ret = clk_prepare_enable(mt->clk_peri_therm);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Can't enable peri clk: %d\n", ret);
-+		goto err_disable_clk_peri_therm;
-+	}
-+
-+	for (ctrl_id = 0; ctrl_id < mt->conf->num_controller ; ctrl_id++)
-+		for (i = 0; i < mt->conf->num_banks; i++)
-+			mtk_thermal_init_bank(mt, i, mt->apmixed_phys_base,
-+					      mt->auxadc_phys_base, ctrl_id);
-+
-+	return 0;
-+
-+err_disable_clk_peri_therm:
-+	clk_disable_unprepare(mt->clk_peri_therm);
-+err_disable_clk_auxadc:
-+	clk_disable_unprepare(mt->clk_auxadc);
-+
-+	return ret;
-+}
-+
-+static SIMPLE_DEV_PM_OPS(mtk_thermal_pm_ops,
-+			 mtk_thermal_suspend, mtk_thermal_resume);
-+
- static struct platform_driver mtk_thermal_driver = {
- 	.probe = mtk_thermal_probe,
- 	.remove = mtk_thermal_remove,
- 	.driver = {
- 		.name = "mtk-thermal",
-+		.pm = &mtk_thermal_pm_ops,
- 		.of_match_table = mtk_thermal_of_match,
- 	},
- };
--- 
-1.9.1
+And even with that param set for this code to actually do something /
+for pBuf to ever not be NULL the following conditions would have to
+be true:
+
+1) Set the rtw_load_phy_file module param from its default of
+    0x44 (LOAD_BB_PG_PARA_FILE | LOAD_RF_TXPWR_LMT_PARA_FILE) to something
+    which includes 0x02 as mask; and
+2) Set rtw_phy_file_path module parameter to say "/lib/firmware/"; and
+3) Store a /lib/firmware/rtl8723b/PHY_REG.txt file in the expected format.
+
+So I've come to the conclusion that all the phy_Config*WithParaFile functio=
+ns
+(and a bunch of stuff they use) can be removed.
+
+I will prepare and submit a patch for this.
+
+Regards,
+
+Hans
+
+
+
+>=20
+>   drivers/staging/rtl8723bs/hal/hal_com_phycfg.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c b/drivers/sta=
+ging/rtl8723bs/hal/hal_com_phycfg.c
+> index 6539bee9b5ba..0902dc3c1825 100644
+> --- a/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c
+> +++ b/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c
+> @@ -2320,7 +2320,7 @@ int phy_ConfigBBWithParaFile(
+>   =09=09=09}
+>   =09=09}
+>   =09} else {
+> -=09=09if (pBufLen && (*pBufLen =3D=3D 0) && !pBuf) {
+> +=09=09if (pBufLen && pBuf) {
+>   =09=09=09memcpy(pHalData->para_file_buf, pBuf, *pBufLen);
+>   =09=09=09rtStatus =3D _SUCCESS;
+>   =09=09} else
+> @@ -2752,7 +2752,7 @@ int PHY_ConfigRFWithParaFile(
+>   =09=09=09}
+>   =09=09}
+>   =09} else {
+> -=09=09if (pBufLen && (*pBufLen =3D=3D 0) && !pBuf) {
+> +=09=09if (pBufLen && pBuf) {
+>   =09=09=09memcpy(pHalData->para_file_buf, pBuf, *pBufLen);
+>   =09=09=09rtStatus =3D _SUCCESS;
+>   =09=09} else
+>=20
 
