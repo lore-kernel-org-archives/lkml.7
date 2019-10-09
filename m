@@ -2,140 +2,98 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 115B7C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F1EC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D513A206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:38:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AYnKIC6J"
+	by mail.kernel.org (Postfix) with ESMTP id 5DC4C206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:38:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731817AbfJIQiB (ORCPT
+        id S1731767AbfJIQig (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 12:38:01 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37583 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730674AbfJIQiB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 12:38:01 -0400
-Received: by mail-pg1-f195.google.com with SMTP id p1so1754302pgi.4
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 09:38:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=cm6xEVsGwYj1bOXieZbPy4ZDP5MnNDK2qjTeg6wz+bE=;
-        b=AYnKIC6JYHYX+sRMiD66kmxh0HDrEQyjtJreNsMiRGvD5zRNXvpo0NYn/dYwGvpqjx
-         BLXXdFyvPUmR3WONaA4zuEKsF3MNz8ISYlA4MtwRPTP9i48G/xBxottH/Qb1q9M63bjv
-         GVSrWArmpiaw4n/jK+3QxEXi9cm222bVlI2E7jd3oqkSQTXpbH817Kp37H8ZSnrsDv7z
-         SMDCBEOc+uf8CMCGFcNlPeZGdQ1g8Q5Xw3jqXbrIR1/tC6rJCfF9rAWHn95PMmOqg2fN
-         avrZkSVfygy5NZ8Xh9D4emZhrqZYmNx3oecZaY4YlhkazYMqam+WU2Q33JHO2JTzJwv1
-         USyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=cm6xEVsGwYj1bOXieZbPy4ZDP5MnNDK2qjTeg6wz+bE=;
-        b=qESMvCyUJRcDn6xm7DizF9uh6YvUbe3v8z+8oahvlxnt9e0odL+YCgGh6lb5GsFKlU
-         wJWKrRKVLrPBhomBFrWi5T+BQlr8axZwKmwaZfgoIe/AQm5sKQTi1lnjDu4YBBgmdVdl
-         wAw/EHxB5lMQjdZJGYOVvUMt4ZmzrDiktDopWmBmtFF+oDqfx2Qf4IIfQDklG/mPA+yp
-         16VD2yMzNA7SQDik/zajtMhF+qCarVamRcsUvUoJCJ4PF4/P77UtzxJEedD32vWbJO8R
-         LsVg4sxnGgbSk5Sa/rabYV/L2HAokh3RXdlPecRxTdPdY8Aut29GsTPJaphnlL3OZTKP
-         z1KQ==
-X-Gm-Message-State: APjAAAXGR3bLduj3LM6+m2N0uuTKOpnVfYHyGmpgPEayg1ErB48eODVD
-        knFrrzKfLKrkf5noYoIBw8V7D51dqmKgSwkNggVK9w==
-X-Google-Smtp-Source: APXvYqy9jmbib5q9+OgtD8RKDzUQtFD3Y8lqoqffqsCvclsctxjTw5AKZGiJUAAsaeB2F9ac4ltyDo+thzV44VziO8k=
-X-Received: by 2002:aa7:8210:: with SMTP id k16mr4787726pfi.84.1570639079561;
- Wed, 09 Oct 2019 09:37:59 -0700 (PDT)
+        Wed, 9 Oct 2019 12:38:36 -0400
+Received: from mga06.intel.com ([134.134.136.31]:9175 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730674AbfJIQif (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 12:38:35 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 09:38:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,276,1566889200"; 
+   d="scan'208";a="205799690"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga002.jf.intel.com with ESMTP; 09 Oct 2019 09:38:35 -0700
+Date:   Wed, 9 Oct 2019 09:38:35 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Reto Buerki <reet@codelabs.ch>,
+        Liran Alon <liran.alon@oracle.com>
+Subject: Re: [PATCH v2 4/8] KVM: VMX: Optimize vmx_set_rflags() for
+ unrestricted guest
+Message-ID: <20191009163835.GB19952@linux.intel.com>
+References: <20190927214523.3376-1-sean.j.christopherson@intel.com>
+ <20190927214523.3376-5-sean.j.christopherson@intel.com>
+ <99e57095-d855-99d7-e10e-a415c6ef13b2@redhat.com>
 MIME-Version: 1.0
-References: <75f70e5e-9ece-d6d1-a2c5-2f3ad79b9ccb@web.de> <954c5d70-742f-7b0e-57ad-ea967e93be89@rasmusvillemoes.dk>
-In-Reply-To: <954c5d70-742f-7b0e-57ad-ea967e93be89@rasmusvillemoes.dk>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 9 Oct 2019 09:37:48 -0700
-Message-ID: <CAKwvOdnvqj+w5hMYYe0SmcKNAJooKbMd9ULcG+mGzKd9ZRjW7g@mail.gmail.com>
-Subject: Re: [PATCH] string.h: Mark 34 functions with __must_check
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Markus Elfring <Markus.Elfring@web.de>,
-        kernel-janitors@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Joe Perches <joe@perches.com>,
-        Kees Cook <keescook@chromium.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <99e57095-d855-99d7-e10e-a415c6ef13b2@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 9, 2019 at 6:26 AM Rasmus Villemoes
-<linux@rasmusvillemoes.dk> wrote:
->
-> On 09/10/2019 14.14, Markus Elfring wrote:
-> > From: Markus Elfring <elfring@users.sourceforge.net>
-> > Date: Wed, 9 Oct 2019 13:53:59 +0200
-> >
-> > Several functions return values with which useful data processing
-> > should be performed. These values must not be ignored then.
-> > Thus use the annotation =E2=80=9C__must_check=E2=80=9D in the shown fun=
-ction declarations.
->
-> This _might_ make sense for those that are basically kmalloc() wrappers
-> in one way or another [1]. But what's the point of annotating pure
-> functions such as strchr, strstr, memchr etc? Nobody is calling those
-> for their side effects (they don't have any...), so obviously the return
-> value is used. If somebody does a strcmp() without using the result, so
-> what? OK, it's odd code that might be worth flagging, but I don't think
-> that's the kind of thing one accidentally adds. You're also not
+On Wed, Oct 09, 2019 at 12:40:53PM +0200, Paolo Bonzini wrote:
+> On 27/09/19 23:45, Sean Christopherson wrote:
+> > Rework vmx_set_rflags() to avoid the extra code need to handle emulation
+> > of real mode and invalid state when unrestricted guest is disabled.  The
+> > primary reason for doing so is to avoid the call to vmx_get_rflags(),
+> > which will incur a VMREAD when RFLAGS is not already available.  When
+> > running nested VMs, the majority of calls to vmx_set_rflags() will occur
+> > without an associated vmx_get_rflags(), i.e. when stuffing GUEST_RFLAGS
+> > during transitions between vmcs01 and vmcs02.
+> > 
+> > Note, vmx_get_rflags() guarantees RFLAGS is marked available.
+> 
+> Slightly nicer this way:
+> 
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 8de9853d7ab6..62ab19d65efd 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -1431,9 +1431,17 @@ unsigned long vmx_get_rflags(struct kvm_vcpu *vcpu)
+>  void vmx_set_rflags(struct kvm_vcpu *vcpu, unsigned long rflags)
+>  {
+>  	struct vcpu_vmx *vmx = to_vmx(vcpu);
+> -	unsigned long old_rflags = vmx_get_rflags(vcpu);
+> +	unsigned long old_rflags;
+> +
+> +	if (enable_unrestricted_guest) {
+> +		__set_bit(VCPU_EXREG_RFLAGS, (ulong *)&vcpu->arch.regs_avail);
+> +		vmx->rflags = rflags;
+> +		vmcs_writel(GUEST_RFLAGS, rflags);
+> +		return;
+> +	}
+> +
+> +	old_rflags = vmx_get_rflags(vcpu);
+>  
+> -	__set_bit(VCPU_EXREG_RFLAGS, (ulong *)&vcpu->arch.regs_avail);
+>  	vmx->rflags = rflags;
+>  	if (vmx->rmode.vm86_active) {
+>  		vmx->rmode.save_rflags = rflags;
 
-Just seeing the amount of trivial errors that folks push that 0day bot
-spots, I don't think this would hurt.  "No true Scotsman" writes C
-code without properly checking their return types (today), but if
-anything it would help cut down on silly trivial mistakes before they
-reach code review (assuming the code was compile tested before sent,
-which a lot of it is not, as per the many many many 0day bot emails I
-ignore because it's obvious folks didn't even try compiling their
-code).
-
-> consistent - strlen() is not annotated. And, for the standard C
-> functions, -Wall already seems to warn about an unused call:
->
->  #include <string.h>
-> int f(const char *s)
-> {
->         strlen(s);
->         return 3;
-> }
-> $ gcc -Wall -o a.o -c a.c
-> a.c: In function =E2=80=98f=E2=80=99:
-> a.c:5:2: warning: statement with no effect [-Wunused-value]
->   strlen(s);
->   ^~~~~~~~~
->
-> [1] Just might. The problem is the __must_check does not mean that the
-> return value must be followed by a comparison to NULL and bailing out
-> (that can't really be checked), it simply ensures the return value is
-> assigned somewhere or used in an if(). So foo->bar =3D kstrdup() not
-
-Which is better than nothing, IMO.
-
-> followed by a check of foo->bar won't warn. So one would essentially
-> only catch instant-leaks. __must_check is much better suited for
-> functions that mutate a passed-in or global object, e.g.
-> start_engine(engine).
->
-> Rasmus
-
-
-
---=20
-Thanks,
-~Nick Desaulniers
+Works for me.  Do you want me to spin a v3 to incorporate this and remove
+the open coding of the RIP/RSP accessors?  Or are you planning on squashing
+the changes as you apply?
