@@ -2,111 +2,159 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A44FECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 21:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0502ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 21:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D299421D80
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 21:19:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 736BC21929
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 21:22:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gR2NJ1g0"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PhmzBC2f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732007AbfJIVT3 (ORCPT
+        id S1731978AbfJIVWF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 17:19:29 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:36500 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729535AbfJIVT3 (ORCPT
+        Wed, 9 Oct 2019 17:22:05 -0400
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:35402 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731072AbfJIVWE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 17:19:29 -0400
-Received: by mail-io1-f66.google.com with SMTP id b136so8715611iof.3
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 14:19:27 -0700 (PDT)
+        Wed, 9 Oct 2019 17:22:04 -0400
+Received: by mail-pf1-f201.google.com with SMTP id r7so2876723pfg.2
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 14:22:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pEvMf+0kr2/VtI7iR8vJad63M42yhFV0Lj4bFqwB+U8=;
-        b=gR2NJ1g0seeDBWLfQzU17h5OCt5i8vfnZuYN9HUzSU6DKZRuB20ul/IdUfUw78OUpx
-         n6FN40EHj5ynUBThXPa0SQivE454fmBvG6Gsj7Z25mhy8BCkEgAP8BhqVhD+BKKadhYz
-         xsLdjWmAkgCxie2voD4ABfh28sQCHon/638Uo=
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=q0LB3QrONlXjAoBwDCOcxOPcisCnwhBvfOg7a2tY6E0=;
+        b=PhmzBC2fsyARm6XVttUCQKhmD6+4+G5xMCGRRIkHtH5rEuDyUufDIG2szKalIzK/7N
+         k1RDJ3puuJxbc3rkNJmKFGPEEclfdFDR6Uo6xKQxJmYxIb0CupE7ukObLN6PohAJfgHo
+         5V7XAHc3a8r5WI3/cYifO4fj25ANyVeAJpj7zGMkQWYe+s2g87LExflvlTK2tozbGtrq
+         3fRlGmzsP4EjJen0RT13ct1ThQDZOwmLH9lDK4nmb3l8LjVemHbD5sWdx3oRC+af+UvU
+         qeKVK3fcLQvBX1v5pJ/PqxpGyZrmeI9MS+2m7u3wVZSaU23+iV1ZPcdjeZ+cd2bjHqct
+         1ArQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pEvMf+0kr2/VtI7iR8vJad63M42yhFV0Lj4bFqwB+U8=;
-        b=ZM+lBwAtkT5yvPhYktUkdTfCO0u7OsUGN8Mjx9QqNXV66vwRTqTplYvwSqpEH7csFn
-         Ebm0nKAqrb8BdOZzKGFHI4GUWPWyKA9VYfNbviBfG2ho2fseOb3NuSDVe6l3l5ZD8jXT
-         2wjeL5AmTw79PSnL06urwvB34KKLiKrI3LXkJnUUFdu/8PqW1s5uyvtGLGISNcygcPbZ
-         BxMGn6VH55ytzbp613GSm/oAB9sbiIdl/4etvsbGCcEHqqBDTkKfVPIVWTkGlgSp5jgj
-         ZgkT0ogVQTlxOqKpvXkawbCU8i8KyYTzo6nW4cDeD2hidCkwUjbFglqZP6lUaF2N0WCY
-         hPLQ==
-X-Gm-Message-State: APjAAAWcGD9fNpnCVLYiARtCDKsT2rtpMLrflRaGK1n+AMeH/hAmssko
-        q9x2j9FjCzmsTuA6/6wIhCBZ7N0yDgRSr2oQUXApbQ==
-X-Google-Smtp-Source: APXvYqyitaxgWG/aTAXjYNlE4Tnqpxaj6ZObio/L+bScivdIkv+8t37EFBnbH7eX6Vcl0ai6QXKYdfVz7E0q1pt1ZZQ=
-X-Received: by 2002:a6b:ee18:: with SMTP id i24mr5938245ioh.163.1570655966954;
- Wed, 09 Oct 2019 14:19:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191008115342.28483-1-patrick.rudolph@9elements.com>
- <20191008115342.28483-2-patrick.rudolph@9elements.com> <5d9d120b.1c69fb81.b6201.1477@mx.google.com>
-In-Reply-To: <5d9d120b.1c69fb81.b6201.1477@mx.google.com>
-From:   Julius Werner <jwerner@chromium.org>
-Date:   Wed, 9 Oct 2019 14:19:15 -0700
-Message-ID: <CAODwPW-mfySMQUejCwT+G45BtOysq_JCRQa8GwoYTkjY_yRwgA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] firmware: coreboot: Export active CBFS partition
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Patrick Rudolph <patrick.rudolph@9elements.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ben Zhang <benzh@chromium.org>,
-        Filipe Brandenburger <filbranden@chromium.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Samuel Holland <samuel@sholland.org>,
-        Julius Werner <jwerner@chromium.org>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=q0LB3QrONlXjAoBwDCOcxOPcisCnwhBvfOg7a2tY6E0=;
+        b=Iu8V+mR0c9gQ9YsdgNFYFwuckBrySoYPy09+aYm0mWX1QQAN1ofqDQ8ZDTr62U7AFn
+         dvB7Z2UglILzSvOuq2rD5AJqsozmV04DVg0zTzLcwDI6CXAMZSDRXcIeQJOYsM+yov1i
+         XGjc+Tknihg7jhy+IYKtZ+izvlnwnL/kR2NAa6ESPG/6Xbdumi0eR3+CKo/RlNOwRswL
+         UwP/XLH/vHvvAuip70/jGxR1Vp4LCTJvvN23W3vo9xnn0rA76kHgFPyb87y3Qav8rPQH
+         gBIimVZ9Y/HMTBlGNR5jd+rlJyfAzb/+OFi9vRpjTJ1qbEWR8n0odc95Q8CX2S+S5+e2
+         DoYw==
+X-Gm-Message-State: APjAAAUIAd/GwECYrJ+NnlJKJKlCeL2DJluVGmt/8SqXkWIg5la2xX5V
+        grFpBnwbtLz+atUxMTP8figzTlPbYrC2Tw==
+X-Google-Smtp-Source: APXvYqzUTrcdF1BbmP/YYnLNsnu751gq08cftEjXdT8Pz0u14fvqRJg4xL9Wmc+EbPrwGOmH0sqHiVp2onMbsA==
+X-Received: by 2002:a65:640e:: with SMTP id a14mr6423870pgv.392.1570656123876;
+ Wed, 09 Oct 2019 14:22:03 -0700 (PDT)
+Date:   Wed,  9 Oct 2019 14:21:54 -0700
+Message-Id: <20191009212154.24709-1-edumazet@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
+Subject: [PATCH] rcu: avoid data-race in rcu_gp_fqs_check_wake()
+From:   Eric Dumazet <edumazet@google.com>
+To:     "Paul E . McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        syzbot <syzkaller@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Somehow we've gotten /sys/firmware/log to be the coreboot log, and quite
-> frankly that blows my mind that this path was accepted upstream.
-> Userspace has to know it's running on coreboot firmware to know that
-> /sys/firmware/log is actually the coreboot log.
+rcu_gp_fqs_check_wake() uses rcu_preempt_blocked_readers_cgp()
+to read ->gp_tasks while otehr cpus might write over this field.
 
-Not really sure I understand your concern here? That's the generic
-node for the log from the mainboard firmware, whatever it is. It was
-originally added for non-coreboot firmware and that use is still
-supported. If some other non-coreboot firmware wants to join in, it's
-welcome to do so -- the interface is separated out enough to make it
-easy to add more backends.
+We need READ_ONCE()/WRITE_ONCE() pairs to avoid compiler
+tricks and KCSAN splats like the following :
 
-I do agree that if we want to add other, more coreboot-specific nodes,
-they should be explicitly namespaced.
+BUG: KCSAN: data-race in rcu_gp_fqs_check_wake / rcu_preempt_deferred_qs_irqrestore
 
-> But I also wonder why this is being exposed by the kernel at all?
+write to 0xffffffff85a7f190 of 8 bytes by task 7317 on cpu 0:
+ rcu_preempt_deferred_qs_irqrestore+0x43d/0x580 kernel/rcu/tree_plugin.h:507
+ rcu_read_unlock_special+0xec/0x370 kernel/rcu/tree_plugin.h:659
+ __rcu_read_unlock+0xcf/0xe0 kernel/rcu/tree_plugin.h:394
+ rcu_read_unlock include/linux/rcupdate.h:645 [inline]
+ __ip_queue_xmit+0x3b0/0xa40 net/ipv4/ip_output.c:533
+ ip_queue_xmit+0x45/0x60 include/net/ip.h:236
+ __tcp_transmit_skb+0xdeb/0x1cd0 net/ipv4/tcp_output.c:1158
+ __tcp_send_ack+0x246/0x300 net/ipv4/tcp_output.c:3685
+ tcp_send_ack+0x34/0x40 net/ipv4/tcp_output.c:3691
+ tcp_cleanup_rbuf+0x130/0x360 net/ipv4/tcp.c:1575
+ tcp_recvmsg+0x633/0x1a30 net/ipv4/tcp.c:2179
+ inet_recvmsg+0xbb/0x250 net/ipv4/af_inet.c:838
+ sock_recvmsg_nosec net/socket.c:871 [inline]
+ sock_recvmsg net/socket.c:889 [inline]
+ sock_recvmsg+0x92/0xb0 net/socket.c:885
+ sock_read_iter+0x15f/0x1e0 net/socket.c:967
+ call_read_iter include/linux/fs.h:1864 [inline]
+ new_sync_read+0x389/0x4f0 fs/read_write.c:414
 
-I share Stephen's concern that I'm not sure this belongs in the kernel
-at all. There are existing ways for userspace to access this
-information like the cbmem utility does... if you want it accessible
-from fwupd, it could chain-call into cbmem or we could factor that
-functionality out into a library. If you want to get away from using
-/dev/mem for this, we could maybe add a driver that exports CBMEM or
-coreboot table areas via sysfs... but then I think that should be a
-generic driver which makes them all accessible in one go, rather than
-having to add yet another driver whenever someone needs to parse
-another coreboot table blob for some reason. We could design an
-interface like /sys/firmware/coreboot/table/<tag> where every entry in
-the table gets exported as a binary file.
+read to 0xffffffff85a7f190 of 8 bytes by task 10 on cpu 1:
+ rcu_gp_fqs_check_wake kernel/rcu/tree.c:1556 [inline]
+ rcu_gp_fqs_check_wake+0x93/0xd0 kernel/rcu/tree.c:1546
+ rcu_gp_fqs_loop+0x36c/0x580 kernel/rcu/tree.c:1611
+ rcu_gp_kthread+0x143/0x220 kernel/rcu/tree.c:1768
+ kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
 
-I think a specific sysfs driver only makes sense for things that are
-human readable and that you'd actually expect a human to want to go
-read directly, like the log. Maybe exporting FMAP entries one by one
-like Stephen suggests could be such a case, but I doubt that there's a
-common enough need for that since there are plenty of existing ways to
-show FMAP entries from userspace (and if there was a generic interface
-like /sys/firmware/coreboot/table/37 to access it, we could just add a
-new flag to the dump_fmap utility to read it from there).
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 1 PID: 10 Comm: rcu_preempt Not tainted 5.3.0+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+---
+ kernel/rcu/tree_plugin.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index 2defc7fe74c3991b03d1968a18c4d208bccf25f9..5500a8ba92da19f49fecf8db583ac7b5a21f5e7b 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -220,7 +220,7 @@ static void rcu_preempt_ctxt_queue(struct rcu_node *rnp, struct rcu_data *rdp)
+ 	 * blocked tasks.
+ 	 */
+ 	if (!rnp->gp_tasks && (blkd_state & RCU_GP_BLKD)) {
+-		rnp->gp_tasks = &t->rcu_node_entry;
++		WRITE_ONCE(rnp->gp_tasks, &t->rcu_node_entry);
+ 		WARN_ON_ONCE(rnp->completedqs == rnp->gp_seq);
+ 	}
+ 	if (!rnp->exp_tasks && (blkd_state & RCU_EXP_BLKD))
+@@ -340,7 +340,7 @@ EXPORT_SYMBOL_GPL(rcu_note_context_switch);
+  */
+ static int rcu_preempt_blocked_readers_cgp(struct rcu_node *rnp)
+ {
+-	return rnp->gp_tasks != NULL;
++	return READ_ONCE(rnp->gp_tasks) != NULL;
+ }
+ 
+ /* Bias and limit values for ->rcu_read_lock_nesting. */
+@@ -493,7 +493,7 @@ rcu_preempt_deferred_qs_irqrestore(struct task_struct *t, unsigned long flags)
+ 		trace_rcu_unlock_preempted_task(TPS("rcu_preempt"),
+ 						rnp->gp_seq, t->pid);
+ 		if (&t->rcu_node_entry == rnp->gp_tasks)
+-			rnp->gp_tasks = np;
++			WRITE_ONCE(rnp->gp_tasks, np);
+ 		if (&t->rcu_node_entry == rnp->exp_tasks)
+ 			rnp->exp_tasks = np;
+ 		if (IS_ENABLED(CONFIG_RCU_BOOST)) {
+@@ -663,7 +663,7 @@ static void rcu_preempt_check_blocked_tasks(struct rcu_node *rnp)
+ 		dump_blkd_tasks(rnp, 10);
+ 	if (rcu_preempt_has_tasks(rnp) &&
+ 	    (rnp->qsmaskinit || rnp->wait_blkd_tasks)) {
+-		rnp->gp_tasks = rnp->blkd_tasks.next;
++		WRITE_ONCE(rnp->gp_tasks, rnp->blkd_tasks.next);
+ 		t = container_of(rnp->gp_tasks, struct task_struct,
+ 				 rcu_node_entry);
+ 		trace_rcu_unlock_preempted_task(TPS("rcu_preempt-GPS"),
+-- 
+2.23.0.581.g78d2f28ef7-goog
+
