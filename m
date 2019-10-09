@@ -2,248 +2,147 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CAAEECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E32ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:01:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BF432190F
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:00:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A5CF206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:01:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570615262;
+	bh=YgOjU5Sgri59uwpefAOu+FC+ua5aVoImUjeKvrNwJLs=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=X2YH/PXKcBirNeLbOfjPBiDwSI7d1ffRfEK+Srmcrg7ID4VRjnD5FeqPlxwC2TpFL
+	 BThqUhUNQhcMVGHwx+nose5uhJR1auAZ9bRvQv7xKDuKMIko5rifd8wdc6Pgn25M7q
+	 W1h6H38CaLfrT3OS3Pv9nxowJc+a/QZejGB2GOgg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730568AbfJIKAu (ORCPT
+        id S1730717AbfJIKBA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 06:00:50 -0400
-Received: from mx2a.mailbox.org ([80.241.60.219]:41189 "EHLO mx2a.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726211AbfJIKAt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 06:00:49 -0400
-Received: from smtp2.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx2a.mailbox.org (Postfix) with ESMTPS id 00312A1954;
-        Wed,  9 Oct 2019 12:00:46 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.240])
-        by spamfilter03.heinlein-hosting.de (spamfilter03.heinlein-hosting.de [80.241.56.117]) (amavisd-new, port 10030)
-        with ESMTP id M1X-GLUNr7re; Wed,  9 Oct 2019 12:00:39 +0200 (CEST)
-Date:   Wed, 9 Oct 2019 21:00:30 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Aleksa Sarai <asarai@suse.de>, linux-man@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 2/3] open.2: add O_EMPTYPATH documentation
-Message-ID: <20191009100030.lnvglfvo6jcsobez@yavin>
-References: <20191003145542.17490-1-cyphar@cyphar.com>
- <20191003145542.17490-3-cyphar@cyphar.com>
- <c4485b10-692d-ed24-a1d9-a047bb1054bf@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="safzalfmrbpglft2"
-Content-Disposition: inline
-In-Reply-To: <c4485b10-692d-ed24-a1d9-a047bb1054bf@gmail.com>
+        Wed, 9 Oct 2019 06:01:00 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37080 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726211AbfJIKBA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 06:01:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=jOarO4Eh1p5RlVKQTdwkeSKmVo158ikbV07LA/3FdDo=; b=aCDZm1Nf3xp6
+        igbdigKiPb3bn0i2AlS3zvwXQW0nA0XXHef4E/YVTznUtatHRZ1+CwWA+1MxFvZMeJp56FLz3wH1Y
+        z7gggxhm3dwxt/C8wzzmClCEGH3R7xQJuxA0kRm7bXadp5pq5UtyDI44q/BcdlRNFj4kK1hXd7bfn
+        Y7+Nc=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iI8lY-0004Lx-4n; Wed, 09 Oct 2019 10:00:20 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 5E7B02741DF9; Wed,  9 Oct 2019 11:00:19 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     <alsa-devel@alsa-project.org>, alsa-devel@alsa-project.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: jz4740: Remove unused match variable" to the asoc tree
+In-Reply-To: <20191008235212.228856-1-swboyd@chromium.org>
+X-Patchwork-Hint: ignore
+Message-Id: <20191009100019.5E7B02741DF9@ypsilon.sirena.org.uk>
+Date:   Wed,  9 Oct 2019 11:00:19 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The patch
 
---safzalfmrbpglft2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+   ASoC: jz4740: Remove unused match variable
 
-On 2019-10-09, Michael Kerrisk (man-pages) <mtk.manpages@gmail.com> wrote:
-> Hello Aleksa,
->=20
-> You write "5.FOO" in these patches. When do you expect these changes to=
-=20
-> land in the kernel?
+has been applied to the asoc tree at
 
-Probably 5.6 (I'd hope for 5.5, but I don't know how the v14 review will
-go). I'm not too sure though, and the magic-link changes (plus
-O_EMPTYPATH) will probably land after openat2(2) since there is some
-remaining work to do.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
 
-> On 10/3/19 4:55 PM, Aleksa Sarai wrote:
-> > Some of the wording around empty paths in path_resolution(7) also needed
-> > to be reworked since it's now legal (if you pass O_EMPTYPATH).
-> >=20
-> > Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
-> > ---
-> >  man2/open.2            | 42 +++++++++++++++++++++++++++++++++++++++++-
-> >  man7/path_resolution.7 | 17 ++++++++++++++++-
-> >  2 files changed, 57 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/man2/open.2 b/man2/open.2
-> > index b0f485b41589..7217fe056e5e 100644
-> > --- a/man2/open.2
-> > +++ b/man2/open.2
-> > @@ -48,7 +48,7 @@
-> >  .\" FIXME . Apr 08: The next POSIX revision has O_EXEC, O_SEARCH, and
-> >  .\" O_TTYINIT.  Eventually these may need to be documented.  --mtk
-> >  .\"
-> > -.TH OPEN 2 2018-04-30 "Linux" "Linux Programmer's Manual"
-> > +.TH OPEN 2 2019-10-03 "Linux" "Linux Programmer's Manual"
->=20
-> No need to update the timestamp. I have scripts that handle this
-> automatically.
->=20
-> >  .SH NAME
-> >  open, openat, creat \- open and possibly create a file
-> >  .SH SYNOPSIS
-> > @@ -421,6 +421,21 @@ was followed by a call to
-> >  .BR fdatasync (2)).
-> >  .IR "See NOTES below" .
-> >  .TP
-> > +.BR O_EMPTYPATH " (since Linux 5.FOO)"
-> > +If \fIpathname\fP is an empty string, re-open the the file descriptor =
-given as
->=20
-> In general, I prefer the general form
->=20
-> .I pathname
->=20
-> over \fIpathname\fP.=20
->=20
-> If you would be willing to cahnge that, it would  save me a little work.
-> (And likewise throughout the rest of the patch.)
->=20
-> > +the \fIdirfd\fP argument to
-> > +.BR openat (2).
-> > +This can be used with both ordinary (file and directory) and \fBO_PATH=
-\fP file
-> > +descriptors, but cannot be used with
-> > +.BR AT_FDCWD
-> > +(or as an argument to plain
-> > +.BR open (2).) When re-opening an \fBO_PATH\fP file descriptor, the sa=
-me "link
->=20
-> There's a formatting problem here which can be fixed by inserting a=20
-> newline before "When".
->=20
-> > +mode" restrictions apply as with re-opening through
-> > +.BR proc (5)
-> > +(see
-> > +.BR path_resolution "(7) and " symlink (7)
-> > +for more details.)
-> > +.TP
-> >  .B O_EXCL
-> >  Ensure that this call creates the file:
-> >  if this flag is specified in conjunction with
-> > @@ -668,6 +683,13 @@ with
-> >  (or via procfs using
-> >  .BR AT_SYMLINK_FOLLOW )
-> >  even if the file is not a directory.
-> > +You can even "re-open" (or upgrade) an
-> > +.BR O_PATH
-> > +file descriptor by using
-> > +.BR O_EMPTYPATH
-> > +(see the section for
-> > +.BR O_EMPTYPATH
-> > +for more details.)
-> >  .IP *
-> >  Passing the file descriptor to another process via a UNIX domain socket
-> >  (see
-> > @@ -958,6 +980,15 @@ is not allowed.
-> >  (See also
-> >  .BR path_resolution (7).)
-> >  .TP
-> > +.B EBADF
-> > +.I pathname
-> > +was an empty string (and
-> > +.B O_EMPTYPATH
-> > +was passed) with
-> > +.BR open (2)
-> > +(instead of
-> > +.BR openat (2).)
-> > +.TP
-> >  .B EDQUOT
-> >  Where
-> >  .B O_CREAT
-> > @@ -1203,6 +1234,15 @@ The following additional errors can occur for
-> >  .I dirfd
-> >  is not a valid file descriptor.
-> >  .TP
-> > +.B EBADF
-> > +.I pathname
-> > +was an empty string (and
-> > +.B O_EMPTYPATH
-> > +was passed), but the provided
-> > +.I dirfd
-> > +was an invalid file descriptor (or was
-> > +.BR AT_FDCWD .)
-> > +.TP
-> >  .B ENOTDIR
-> >  .I pathname
-> >  is a relative pathname and
-> > diff --git a/man7/path_resolution.7 b/man7/path_resolution.7
-> > index 46f25ec4cdfa..85dd354e9a93 100644
-> > --- a/man7/path_resolution.7
-> > +++ b/man7/path_resolution.7
-> > @@ -22,7 +22,7 @@
-> >  .\" the source, must acknowledge the copyright and authors of this wor=
-k.
-> >  .\" %%%LICENSE_END
-> >  .\"
-> > -.TH PATH_RESOLUTION 7 2017-11-26 "Linux" "Linux Programmer's Manual"
-> > +.TH PATH_RESOLUTION 7 2019-10-03 "Linux" "Linux Programmer's Manual"
-> >  .SH NAME
-> >  path_resolution \- how a pathname is resolved to a file
-> >  .SH DESCRIPTION
-> > @@ -198,6 +198,21 @@ successfully.
-> >  Linux returns
-> >  .B ENOENT
-> >  in this case.
-> > +.PP
-> > +As of Linux 5.FOO, an empty path argument can be used to indicate the =
-"re-open"
-> > +an existing file descriptor if
-> > +.B O_EMPTYPATH
-> > +is passed as a flag argument to
-> > +.BR openat (2),
-> > +with the
-> > +.I dfd
-> > +argument indicating which file descriptor to "re-open". This is approx=
-imately
-> > +equivalent to opening
-> > +.I /proc/self/fd/$fd
->=20
-> .IR /proc/self/fd/$fd ,
->=20
-> > +where
-> > +.I $fd
-> > +is the open file descriptor to be "re-opened".
-> > +
->=20
-> No blank line here.
->=20
-> >  .SS Permissions
-> >  The permission bits of a file consist of three groups of three bits; s=
-ee
-> >  .BR chmod (1)
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-Will fix all of the above -- thanks!
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
---safzalfmrbpglft2
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks,
+Mark
 
------BEGIN PGP SIGNATURE-----
+From ad4abed36433a4fc18d21c0f0eaede84006f219f Mon Sep 17 00:00:00 2001
+From: Stephen Boyd <swboyd@chromium.org>
+Date: Tue, 8 Oct 2019 16:52:12 -0700
+Subject: [PATCH] ASoC: jz4740: Remove unused match variable
 
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXZ2vugAKCRCdlLljIbnQ
-EsbVAQD5xDig2A54+r7gr4A1LzNImXSFvlv/K27Oa7IcbazcggEAs50kZAq+7MdM
-15Y5f1BT2jg01oMFBON7sOhBaP6dZwI=
-=S8p1
------END PGP SIGNATURE-----
+After commit 67ad656bdd70 ("ASoC: jz4740: Use
+of_device_get_match_data()"), the match local variable is unused and the
+compiler rightly warns.
 
---safzalfmrbpglft2--
+sound/soc/jz4740/jz4740-i2s.c: In function 'jz4740_i2s_dev_probe':
+sound/soc/jz4740/jz4740-i2s.c:500:29: warning: unused variable 'match' [-Wunused-variable]
+  500 |  const struct of_device_id *match;
+
+Drop it.
+
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Paul Cercueil <paul@crapouillou.net>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: <alsa-devel@alsa-project.org>
+Fixes: 67ad656bdd70 ("ASoC: jz4740: Use of_device_get_match_data()")
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Link: https://lore.kernel.org/r/20191008235212.228856-1-swboyd@chromium.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/jz4740/jz4740-i2s.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/sound/soc/jz4740/jz4740-i2s.c b/sound/soc/jz4740/jz4740-i2s.c
+index d2dab4d24b87..38d48d101783 100644
+--- a/sound/soc/jz4740/jz4740-i2s.c
++++ b/sound/soc/jz4740/jz4740-i2s.c
+@@ -497,7 +497,6 @@ static int jz4740_i2s_dev_probe(struct platform_device *pdev)
+ 	struct jz4740_i2s *i2s;
+ 	struct resource *mem;
+ 	int ret;
+-	const struct of_device_id *match;
+ 
+ 	i2s = devm_kzalloc(&pdev->dev, sizeof(*i2s), GFP_KERNEL);
+ 	if (!i2s)
+-- 
+2.20.1
+
