@@ -2,103 +2,130 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4550C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C99A8ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEA0721835
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:12:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BccNwjKJ"
+	by mail.kernel.org (Postfix) with ESMTP id AA80F21721
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:13:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730294AbfJIJM5 (ORCPT
+        id S1730383AbfJIJND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 05:12:57 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:46218 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbfJIJM4 (ORCPT
+        Wed, 9 Oct 2019 05:13:03 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:49460 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbfJIJND (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 05:12:56 -0400
-Received: by mail-ua1-f68.google.com with SMTP id m21so522185ual.13
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 02:12:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=p1GmngvaE0ei9mnU0CMOs2O9a2/80q1j0u6r2u5SeZc=;
-        b=BccNwjKJUEGqADR82Dz9D/6hW+muC5tovZ4TZzhwUcNnNClOKsj/TwIl0wYjsBc6x/
-         k1jtHRsZBJkB5XEBmk3c3UjCkpbbJEm71c44rBeHs/1RinFqBdS/F2PzyJWDllL97ZWq
-         R36grS6Yw8KUikd970xY+zw1tW0efxzzxuwQj++jIOgnM40NPOcZT1j0GIHNir/gUb9D
-         SsbIN4DTBuySQXcqwM56bQmkLUurSE8OGIOQjpx5TF3imZWJgl5h8U/i/wbheVJOR3uU
-         XV1QEGFlVmSwqtsGm4UUlvuHWl+RqT5TEvnUXoXnM54OWXZ+iKW12DFa69CWmIskhgBS
-         w/Aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p1GmngvaE0ei9mnU0CMOs2O9a2/80q1j0u6r2u5SeZc=;
-        b=Og7XL8/RkFaEdsQbCBZftC6+C4a1eLN7Tuu6PZRjZjm/fEiL59vZgmc+u46yW4FSx5
-         qIhQJlPzhpoq54p/sD5j9N6PoXa3hmiVf4C3YY3nWEf6DNuh6Um5QamfENhkOQC2F3S5
-         iYamvr8SoDrWCDVm3AylhvrywLj2hjSfKto1gUhY0hy9BxcXJizUCNuAIoZaiBqV77f/
-         Vc/UeEqGJT5vYr1WCqESWgKhLz16a1qDsjTgDZhk3Ipm5EPmb1cXgto9eH3Oc8/uvdjO
-         kb3eMZLYw+mS+kZjyZAKFdvBqo0J5Pe3sHi2VPk6uz4tuiwpitp9ricqauEQo4jW7tUS
-         Ereg==
-X-Gm-Message-State: APjAAAUF+9xRcMraVc97+ZJsGjIv1LXE5iUCRLatf6qMJnuKg+04Cp4z
-        9edsMxwgaR8gAow4tzV7N93zUI/xwPqDdWiEwrtb5w==
-X-Google-Smtp-Source: APXvYqzHUvKtG9TlAFWzdGLKFE3B3LLPRPS/NhDVFx+CEadl3quKcUNTlMODJCYW2p+AVM5OUZYunx3BcWwMwDCc9Ds=
-X-Received: by 2002:ab0:331a:: with SMTP id r26mr1234478uao.104.1570612375253;
- Wed, 09 Oct 2019 02:12:55 -0700 (PDT)
+        Wed, 9 Oct 2019 05:13:03 -0400
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iI81i-0000Dd-71; Wed, 09 Oct 2019 10:12:58 +0100
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1iI81h-0003Mo-OI; Wed, 09 Oct 2019 10:12:57 +0100
+From:   Ben Dooks <ben.dooks@codethink.co.uk>
+To:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        linux-kernel@lists.codethink.co.uk,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: [PATCH] crypto: jitter - add header to fix buildwarnings
+Date:   Wed,  9 Oct 2019 10:12:56 +0100
+Message-Id: <20191009091256.12896-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <20191009012818.32763-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-In-Reply-To: <20191009012818.32763-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 9 Oct 2019 11:12:19 +0200
-Message-ID: <CAPDyKFqDB_aOikZYSDEvQKF3PsD=AXq0PZJTj8AUAH0XaGj8Eg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] mmc: sdhci-of-arasan: Add Support for Intel LGM SDXC
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Rob Herring <robh+dt@kernel.org>, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 9 Oct 2019 at 03:28, Ramuthevar,Vadivel MuruganX
-<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->
-> The current arasan sdhci PHY configuration isn't compatible
-> with the PHY on Intel's LGM(Lightning Mountain) SoC devices.
->
-> Therefore, add a new compatible, to adapt the Intel's LGM
-> SDXC PHY with arasan-sdhc controller to configure the PHY.
->
-> Linux code base : V5.4-rc1
->
-> Ramuthevar Vadivel Murugan (2):
->   dt-bindings: mmc: sdhci-of-arasan: Add new compatible for Intel LGM
->     SDXC
->   mmc: sdhci-of-arasan: Add Support for Intel LGM SDXC
->
-> changes from v1:
->  -  commit message updated
->  -  Acked-by tag added
->
->  Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 17 +++++++++++++++++
->  drivers/mmc/host/sdhci-of-arasan.c                     | 15 +++++++++++++++
->  2 files changed, 32 insertions(+)
+Fix the following build warnings by adding a header for
+the definitions shared between jitterentropy.c and
+jitterentropy-kcapi.c. Fixes the following:
 
-Applied for next, thanks!
+crypto/jitterentropy.c:445:5: warning: symbol 'jent_read_entropy' was not declared. Should it be static?
+crypto/jitterentropy.c:475:18: warning: symbol 'jent_entropy_collector_alloc' was not declared. Should it be static?
+crypto/jitterentropy.c:509:6: warning: symbol 'jent_entropy_collector_free' was not declared. Should it be static?
+crypto/jitterentropy.c:516:5: warning: symbol 'jent_entropy_init' was not declared. Should it be static?
+crypto/jitterentropy-kcapi.c:59:6: warning: symbol 'jent_zalloc' was not declared. Should it be static?
+crypto/jitterentropy-kcapi.c:64:6: warning: symbol 'jent_zfree' was not declared. Should it be static?
+crypto/jitterentropy-kcapi.c:69:5: warning: symbol 'jent_fips_enabled' was not declared. Should it be static?
+crypto/jitterentropy-kcapi.c:74:6: warning: symbol 'jent_panic' was not declared. Should it be static?
+crypto/jitterentropy-kcapi.c:79:6: warning: symbol 'jent_memcpy' was not declared. Should it be static?
+crypto/jitterentropy-kcapi.c:93:6: warning: symbol 'jent_get_nstime' was not declared. Should it be static?
 
-Kind regards
-Uffe
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+---
+ crypto/jitterentropy-kcapi.c |  8 +-------
+ crypto/jitterentropy.c       |  7 +------
+ crypto/jitterentropy.h       | 17 +++++++++++++++++
+ 3 files changed, 19 insertions(+), 13 deletions(-)
+ create mode 100644 crypto/jitterentropy.h
+
+diff --git a/crypto/jitterentropy-kcapi.c b/crypto/jitterentropy-kcapi.c
+index 701b8d86ab49..a5ce8f96790f 100644
+--- a/crypto/jitterentropy-kcapi.c
++++ b/crypto/jitterentropy-kcapi.c
+@@ -44,13 +44,7 @@
+ #include <linux/crypto.h>
+ #include <crypto/internal/rng.h>
+ 
+-struct rand_data;
+-int jent_read_entropy(struct rand_data *ec, unsigned char *data,
+-		      unsigned int len);
+-int jent_entropy_init(void);
+-struct rand_data *jent_entropy_collector_alloc(unsigned int osr,
+-					       unsigned int flags);
+-void jent_entropy_collector_free(struct rand_data *entropy_collector);
++#include "jitterentropy.h"
+ 
+ /***************************************************************************
+  * Helper function
+diff --git a/crypto/jitterentropy.c b/crypto/jitterentropy.c
+index 77fa2120fe0c..e342db4084d3 100644
+--- a/crypto/jitterentropy.c
++++ b/crypto/jitterentropy.c
+@@ -103,12 +103,7 @@ struct rand_data {
+  * Helper functions
+  ***************************************************************************/
+ 
+-void jent_get_nstime(__u64 *out);
+-void *jent_zalloc(unsigned int len);
+-void jent_zfree(void *ptr);
+-int jent_fips_enabled(void);
+-void jent_panic(char *s);
+-void jent_memcpy(void *dest, const void *src, unsigned int n);
++#include "jitterentropy.h"
+ 
+ /**
+  * Update of the loop count used for the next round of
+diff --git a/crypto/jitterentropy.h b/crypto/jitterentropy.h
+new file mode 100644
+index 000000000000..c83fff32d130
+--- /dev/null
++++ b/crypto/jitterentropy.h
+@@ -0,0 +1,17 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++extern void *jent_zalloc(unsigned int len);
++extern void jent_zfree(void *ptr);
++extern int jent_fips_enabled(void);
++extern void jent_panic(char *s);
++extern void jent_memcpy(void *dest, const void *src, unsigned int n);
++extern void jent_get_nstime(__u64 *out);
++
++struct rand_data;
++extern int jent_entropy_init(void);
++extern int jent_read_entropy(struct rand_data *ec, unsigned char *data,
++			     unsigned int len);
++
++extern struct rand_data *jent_entropy_collector_alloc(unsigned int osr,
++						      unsigned int flags);
++extern void jent_entropy_collector_free(struct rand_data *entropy_collector);
+-- 
+2.23.0
+
