@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C92B4C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A232C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A91CD2133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:05:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 447522133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:05:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729841AbfJIJFR (ORCPT
+        id S1730041AbfJIJFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 05:05:17 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:42481 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725776AbfJIJFR (ORCPT
+        Wed, 9 Oct 2019 05:05:22 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:17409 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725776AbfJIJFV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 05:05:17 -0400
-X-UUID: 81f012e1f9b44c2c851bb795067c102c-20191009
-X-UUID: 81f012e1f9b44c2c851bb795067c102c-20191009
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        Wed, 9 Oct 2019 05:05:21 -0400
+X-UUID: 9d9bf73284104f7db2e055d7b6849c23-20191009
+X-UUID: 9d9bf73284104f7db2e055d7b6849c23-20191009
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
         (envelope-from <chunfeng.yun@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 556026422; Wed, 09 Oct 2019 17:05:06 +0800
+        with ESMTP id 1219660673; Wed, 09 Oct 2019 17:05:09 +0800
 Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 9 Oct 2019 17:05:04 +0800
+ MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 9 Oct 2019 17:05:05 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 9 Oct 2019 17:05:03 +0800
+ Transport; Wed, 9 Oct 2019 17:05:04 +0800
 From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 CC:     Felipe Balbi <felipe.balbi@linux.intel.com>,
@@ -42,90 +42,87 @@ CC:     Felipe Balbi <felipe.balbi@linux.intel.com>,
         <linux-mediatek@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>,
         Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH 1/2] usb: mtu3: add a new function to do status stage
-Date:   Wed, 9 Oct 2019 17:04:59 +0800
-Message-ID: <1570611900-7112-1-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH 2/2] usb: mtu3: fix race condition about delayed_status
+Date:   Wed, 9 Oct 2019 17:05:00 +0800
+Message-ID: <1570611900-7112-2-git-send-email-chunfeng.yun@mediatek.com>
 X-Mailer: git-send-email 1.8.1.1.dirty
+In-Reply-To: <1570611900-7112-1-git-send-email-chunfeng.yun@mediatek.com>
+References: <1570611900-7112-1-git-send-email-chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: 78F6DC5777EFE46E7CDDFEAA2B0951DD3B205190962CA1F84679D165410B24462000:8
+X-TM-SNTS-SMTP: 1984517D90B470CD343F26B3BA7716B584D48C68D26AABCE3CE16C6BDD6E72ED2000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Exact a new static function to do status stage
+usb_composite_setup_continue() may be called before composite_setup()
+return USB_GADGET_DELAYED_STATUS, then the controller driver will
+delay status stage after composite_setup() finish, but the class driver
+don't ask the controller to continue delayed status anymore, this will
+cause control transfer timeout.
+
+happens when use mass storage (also enabled other class driver):
+
+cpu1:                               cpu2
+handle_setup(SET_CONFIG) //gadget driver
+  unlock (g->lock)
+  gadget_driver->setup()
+    composite_setup()
+      lock(cdev->lock)
+        set_config()
+          fsg_set_alt() // maybe some times due to many class are enabled
+            raise FSG_STATE_CONFIG_CHANGE
+            return USB_GADGET_DELAYED_STATUS
+                                    handle_exception()
+                                    usb_composite_setup_continue()
+      unlock(cdev->lock)
+                                      lock(cdev->lock)
+                                        ep0_queue()
+                                          lock (g->lock)
+                                          //no delayed status, nothing todo
+                                          unlock (g->lock)
+                                      unlock(cdev->lock)
+    return USB_GADGET_DELAYED_STATUS // composite_setup
+  lock (g->lock)
+get USB_GADGET_DELAYED_STATUS //handle_setup [1]
+
+Try to fix the race condition as following:
+After the driver gets USB_GADGET_DELAYED_STATUS at [1], if we find
+there is a usb_request in ep0 request list, it means composite already
+asked us to continue delayed status by usb_composite_setup_continue(),
+so we skip request about delayed_status by composite_setup() and still
+do status stage.
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- drivers/usb/mtu3/mtu3_gadget_ep0.c | 23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+ drivers/usb/mtu3/mtu3_gadget_ep0.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/usb/mtu3/mtu3_gadget_ep0.c b/drivers/usb/mtu3/mtu3_gadget_ep0.c
-index 4da216c99726..df3fd055792f 100644
+index df3fd055792f..2be182bd793a 100644
 --- a/drivers/usb/mtu3/mtu3_gadget_ep0.c
 +++ b/drivers/usb/mtu3/mtu3_gadget_ep0.c
-@@ -153,6 +153,15 @@ static void ep0_stall_set(struct mtu3_ep *mep0, bool set, u32 pktrdy)
- 		set ? "SEND" : "CLEAR", decode_ep0_state(mtu));
- }
- 
-+static void ep0_do_status_stage(struct mtu3 *mtu)
-+{
-+	void __iomem *mbase = mtu->mac_base;
-+	u32 value;
+@@ -671,8 +671,16 @@ __acquires(mtu->lock)
+ 	if (mtu->test_mode) {
+ 		;	/* nothing to do */
+ 	} else if (handled == USB_GADGET_DELAYED_STATUS) {
+-		/* handle the delay STATUS phase till receive ep_queue on ep0 */
+-		mtu->delayed_status = true;
 +
-+	value = mtu3_readl(mbase, U3D_EP0CSR) & EP0_W1C_BITS;
-+	mtu3_writel(mbase, U3D_EP0CSR, value | EP0_SETUPPKTRDY | EP0_DATAEND);
-+}
-+
- static int ep0_queue(struct mtu3_ep *mep0, struct mtu3_request *mreq);
- 
- static void ep0_dummy_complete(struct usb_ep *ep, struct usb_request *req)
-@@ -297,8 +306,7 @@ static int handle_test_mode(struct mtu3 *mtu, struct usb_ctrlrequest *setup)
- 		ep0_load_test_packet(mtu);
- 
- 	/* send status before entering test mode. */
--	value = mtu3_readl(mbase, U3D_EP0CSR) & EP0_W1C_BITS;
--	mtu3_writel(mbase, U3D_EP0CSR, value | EP0_SETUPPKTRDY | EP0_DATAEND);
-+	ep0_do_status_stage(mtu);
- 
- 	/* wait for ACK status sent by host */
- 	readl_poll_timeout_atomic(mbase + U3D_EP0CSR, value,
-@@ -632,7 +640,6 @@ __acquires(mtu->lock)
- {
- 	struct usb_ctrlrequest setup;
- 	struct mtu3_request *mreq;
--	void __iomem *mbase = mtu->mac_base;
- 	int handled = 0;
- 
- 	ep0_read_setup(mtu, &setup);
-@@ -668,10 +675,7 @@ __acquires(mtu->lock)
- 		mtu->delayed_status = true;
++		mreq = next_ep0_request(mtu);
++		if (mreq) {
++			/* already asked us to continue delayed status */
++			ep0_do_status_stage(mtu);
++			ep0_req_giveback(mtu, &mreq->request);
++		} else {
++			/* do delayed STATUS stage till receive ep0_queue */
++			mtu->delayed_status = true;
++		}
  	} else if (le16_to_cpu(setup.wLength) == 0) { /* no data stage */
  
--		mtu3_writel(mbase, U3D_EP0CSR,
--			(mtu3_readl(mbase, U3D_EP0CSR) & EP0_W1C_BITS)
--			| EP0_SETUPPKTRDY | EP0_DATAEND);
--
-+		ep0_do_status_stage(mtu);
- 		/* complete zlp request directly */
- 		mreq = next_ep0_request(mtu);
- 		if (mreq && !mreq->request.length)
-@@ -802,12 +806,9 @@ static int ep0_queue(struct mtu3_ep *mep, struct mtu3_request *mreq)
- 	}
- 
- 	if (mtu->delayed_status) {
--		u32 csr;
- 
- 		mtu->delayed_status = false;
--		csr = mtu3_readl(mtu->mac_base, U3D_EP0CSR) & EP0_W1C_BITS;
--		csr |= EP0_SETUPPKTRDY | EP0_DATAEND;
--		mtu3_writel(mtu->mac_base, U3D_EP0CSR, csr);
-+		ep0_do_status_stage(mtu);
- 		/* needn't giveback the request for handling delay STATUS */
- 		return 0;
- 	}
+ 		ep0_do_status_stage(mtu);
 -- 
 2.23.0
 
