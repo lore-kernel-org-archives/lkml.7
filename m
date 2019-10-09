@@ -2,109 +2,114 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69789C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 23:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DDCECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 23:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 456BE218AC
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 23:10:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="RsKHCYwl"
+	by mail.kernel.org (Postfix) with ESMTP id D3992218DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 23:13:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570662784;
+	bh=oCRn3JjATva9R6bAW/lMjEkdJaPC+cn6csIMs4uFiPw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2TuAvSRF3K+zGD5cflSnSSrs5aRbt2nDzkJeaNPpv8QAjkJu69qLva0zIKO/HHQ8D
+	 S9Lhscc8JyrNUplXsdv6UTEbEwYX1iC2L1Q8i0bxQ8ttajWPlDdJUXj47vZvVAg29D
+	 KbxTio6x7hiVQQLSuTaCE0PcmScNOU9XWpXORgls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732571AbfJIXKe (ORCPT
+        id S1732375AbfJIXND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 19:10:34 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:42662 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732545AbfJIXKd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 19:10:33 -0400
-Received: by mail-qk1-f194.google.com with SMTP id f16so3828464qkl.9
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 16:10:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=PnjQOHepBuv9rYKnDUFewaU2wDCjjihpShjTxB7TXsk=;
-        b=RsKHCYwlEK2MnPGOLw3WfXus/DDmivqcNdxalAOy3hlZ/qAQSBLq1JTB/kxeHQl1W3
-         fEwIP+vV4b7VINYF3fxCLVX+ZDMkWBpk33nzXxBQmUpj4mWuG2L1jy25vxDQhUPJNWnI
-         OLb2oVqDMOyZgZQyDg6NrudDbB/NlkOEj+xKnjOlzXp1VGahGeHGqixJ8EuWEWwbe/id
-         YlS1JRQZpPp/HilLmm9nFyT5AF3dNB/7dQo58dqWYl5hSu2X7bxBDOVqcajUu1Et5uAU
-         UjiSceUeTP8BfdtMBu2nPvkOfXRv/+k5TJe551yvWspUt8b5fhRsLOf6cs+3Uwk4mvNl
-         hK3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=PnjQOHepBuv9rYKnDUFewaU2wDCjjihpShjTxB7TXsk=;
-        b=RgJzgGLm2G2aklQJ593AirpmhOEsRK+EIKidkUPq9zEcqeyjuyV4aMuuU2fmoR90P5
-         VLeP4CtpShfglK0S5MIeSVMWOB7sAE7KhDLgDpD2brqtJQ4KqvAMt2mfy+10DuqegKfO
-         fNyMHukS3z3AzM1QkFmZtr4Qs6uSJecCgXQ+i2gXZ30qSSEUm1zG9LVNK/t9QStkIL4L
-         SfE+lJKdLqFJL9uoKpxg9nTwfBhpauqb2xO0sa4K7siPtRuVvU+WosoTeSndEp37SlxR
-         6rbDhz4/0LC4s/UfhPOhKrNibeiYZItKk2AZZXU+iuCfhr9XGJlGJWI+f9Iv2JV49FoG
-         xbYQ==
-X-Gm-Message-State: APjAAAVy1GMun8I5fUG2s33chOw0xukG9etbJ5WzjmgrfNRG/k2Fc8tk
-        DBkWL9wDnCT7sl8hny/aJvkSpQ==
-X-Google-Smtp-Source: APXvYqzDsg7VvPjwvTLuHucNP0B1UJPXSz1g9Ec4z5pbH0OhF3aJ6PEN0n9s/5rnpedoNj2WEr1nyw==
-X-Received: by 2002:a05:620a:1355:: with SMTP id c21mr6444676qkl.288.1570662632760;
-        Wed, 09 Oct 2019 16:10:32 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id m186sm1709799qkb.88.2019.10.09.16.10.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 16:10:32 -0700 (PDT)
-Date:   Wed, 9 Oct 2019 16:10:18 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Antonio Borneo <antonio.borneo@st.com>
-Cc:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net: stmmac: fix length of PTP clock's name string
-Message-ID: <20191009161018.3b4919cd@cakuba.netronome.com>
-In-Reply-To: <20191007154306.95827-3-antonio.borneo@st.com>
-References: <20191007154306.95827-1-antonio.borneo@st.com>
-        <20191007154306.95827-3-antonio.borneo@st.com>
-Organization: Netronome Systems, Ltd.
+        Wed, 9 Oct 2019 19:13:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35492 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731542AbfJIXND (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 19:13:03 -0400
+Received: from gmail.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5ECAE206BB;
+        Wed,  9 Oct 2019 23:13:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570662782;
+        bh=oCRn3JjATva9R6bAW/lMjEkdJaPC+cn6csIMs4uFiPw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YxgfdepboPDcp50suajDKZE/jFrWOWYBnGVR4FSn2qQjsRNg+b9CmsuTOAsRCHJjB
+         BwW76CsJVUUb3/Ec8lupsntFXyszdN5pHcf3HMVZKuC5aqbYfaOy7yS73Pu8Rg8lnQ
+         VsQDblnJTIxudsD45Dh4kH8dRJnckGlSDiDGAamU=
+Date:   Wed, 9 Oct 2019 16:13:00 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-kernel@lists.codethink.co.uk,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fs/namespace: make to_mnt_ns static
+Message-ID: <20191009231259.GA125579@gmail.com>
+Mail-Followup-To: Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-kernel@lists.codethink.co.uk,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191009145211.16614-1-ben.dooks@codethink.co.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191009145211.16614-1-ben.dooks@codethink.co.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 7 Oct 2019 17:43:04 +0200, Antonio Borneo wrote:
-> The field "name" in struct ptp_clock_info has a fixed size of 16
-> chars and is used as zero terminated string by clock_name_show()
-> in drivers/ptp/ptp_sysfs.c
-> The current initialization value requires 17 chars to fit also the
-> null termination, and this causes overflow to the next bytes in
-> the struct when the string is read as null terminated:
-> 	hexdump -C /sys/class/ptp/ptp0/clock_name
-> 	00000000  73 74 6d 6d 61 63 5f 70  74 70 5f 63 6c 6f 63 6b  |stmmac_ptp_clock|
-> 	00000010  a0 ac b9 03 0a                                    |.....|
-> where the extra 4 bytes (excluding the newline) after the string
-> represent the integer 0x03b9aca0 = 62500000 assigned to the field
-> "max_adj" that follows "name" in the same struct.
+On Wed, Oct 09, 2019 at 03:52:11PM +0100, Ben Dooks wrote:
+> The to_mnt_ns() is not exported outside the file so
+> make it static to fix the following sparse warning:
 > 
-> There is no strict requirement for the "name" content and in the
-> comment in ptp_clock_kernel.h it's reported it should just be 'A
-> short "friendly name" to identify the clock'.
-> Replace it with "stmmac ptp".
+> fs/namespace.c:1731:22: warning: symbol 'to_mnt_ns' was not declared. Should it be static?
 > 
-> Signed-off-by: Antonio Borneo <antonio.borneo@st.com>
-> Fixes: 92ba6888510c ("stmmac: add the support for PTP hw clock driver")
+> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+> ---
+> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+> Cc: linux-fsdevel@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  fs/namespace.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/namespace.c b/fs/namespace.c
+> index fe0e9e1410fe..b87b127fdce4 100644
+> --- a/fs/namespace.c
+> +++ b/fs/namespace.c
+> @@ -1728,7 +1728,7 @@ static bool is_mnt_ns_file(struct dentry *dentry)
+>  	       dentry->d_fsdata == &mntns_operations;
+>  }
+>  
+> -struct mnt_namespace *to_mnt_ns(struct ns_common *ns)
+> +static struct mnt_namespace *to_mnt_ns(struct ns_common *ns)
+>  {
+>  	return container_of(ns, struct mnt_namespace, ns);
+>  }
+> -- 
+> 2.23.0
+> 
 
-Applied to net, queued for stable.
+Al, this patch has been sent to you 11 times by 8 different people over 2 years:
 
-For future submissions please indicate the target tree. Networking fixes
-should go to the net tree and have [PATCH net] in the subject, while
-normal patches such as new features and clean ups should be tagged as
-[PATCH net-next].
+https://lore.kernel.org/linux-fsdevel/20191009145211.16614-1-ben.dooks@codethink.co.uk/
+https://lore.kernel.org/linux-fsdevel/20190822154014.14401-1-ebiggers@kernel.org/
+https://lore.kernel.org/linux-fsdevel/20190529212108.164246-1-ebiggers@kernel.org/
+https://lore.kernel.org/linux-fsdevel/20190414191913.GA11798@bharath12345-Inspiron-5559/
+https://lore.kernel.org/linux-fsdevel/20190319151756.96768-1-maowenan@huawei.com/
+https://lore.kernel.org/linux-fsdevel/20190110204147.120073-1-ebiggers@kernel.org/
+https://lore.kernel.org/linux-fsdevel/20181115000930.47611-1-ebiggers@kernel.org/
+https://lore.kernel.org/linux-fsdevel/20180630120447.17861-1-colin.king@canonical.com/
+https://lore.kernel.org/linux-fsdevel/20170111104846.26220-1-tklauser@distanz.ch/
+https://lore.kernel.org/linux-fsdevel/20181207204318.1920-1-malat@debian.org/
+https://lore.kernel.org/linux-fsdevel/a2cc7bd9cd4cd5be54303090c7ba6654d7b04b4f.1443364195.git.geliangtang@163.com/
+
+No response from you to any of them.  I guess this means you're just not taking
+these types of obvious cleanups?  Should people be sending them to Andrew Morton
+instead?
+
+- Eric
