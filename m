@@ -2,181 +2,98 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AF2ECE58E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB99C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:22:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC2AF21920
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:22:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cdi+f4aC"
+	by mail.kernel.org (Postfix) with ESMTP id 0EA1E2133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:22:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730030AbfJIIWP (ORCPT
+        id S1730103AbfJIIWk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 04:22:15 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:43309 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbfJIIWP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 04:22:15 -0400
-Received: by mail-qk1-f195.google.com with SMTP id h126so1373588qke.10
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 01:22:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2vS6ftWv38t6sGsCONON8A/FlGoTEEeUhyw2u38Psys=;
-        b=Cdi+f4aCoQax6/k08emQ2lJLcJma2WQWPj2sDWaUAIyNxc1z4FKB8BqfKmJ9Z5SarE
-         DE3N/4o2O2mNISHES1onvLTvuRpQiyEXHitSlBua8rinA6JART4GoBf7vdEvu+n7rN9U
-         XvCz6sm2vxFbnosUIiTDnUCTP07dZZ94GVayWBBS7bbGQdwhuhTe2jwZepH8sWdDtNgP
-         G5SCwFbB+xNM+G2nK1s/aU9B2cvG+KpT0+/ggvOzIUE441IEmQK1CKPgRbnFUH/5+41b
-         b45CSPFkm3mrlWBB2+nVpXXqESBNOTSmaanoB4L6eg4BXILbn5BcpREj3YdWgO9VnM0i
-         6Obg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2vS6ftWv38t6sGsCONON8A/FlGoTEEeUhyw2u38Psys=;
-        b=mD+mPaO+Nlu52AObNstoCddwK3xzTNOIOIGYI49+W9F/ap38K9MQkxWtkrEAe7FEnC
-         y1RfcZVulEMi0NUwVyPJttV7voaGe2GcMSjo43+49GvG0qPuMRDlxpoRpfWXWPv94k9Q
-         fflpt4zfAXmARI9KkRF4Xm3+/OBH9K+fuV7Jl3vDnA78k2R/poW5HmlUr4JzBaDXh9UI
-         iWncqTQvD/w0Pq2hulXZ9FTWC7wprTWSK1sfaUkQZMChY92xqxvxiumRDSFOq5YFmlZB
-         jIbVX5+CCXlF86aKjkdFzOyW5DFdNksXhJovKUcGgrE1sgvoVdqv7/4Ok2MG7QVCxR62
-         zkMg==
-X-Gm-Message-State: APjAAAWM08q+96WxGJ328fdOe6nqcdmgE0hY7D5C1tVLS+9BJqhrIREk
-        5NyLT63ErFm7mR38/CVykg2f7P9jtVPt/d5neKJ5Nkl2mhQ=
-X-Google-Smtp-Source: APXvYqxsOXmemHID6heONiV8vI+KimCDKqoQrtNjmYG58JhuwE01IW+RdWPgGIjDI48XZ9ZREJZcjouZaIm3zI7sOfA=
-X-Received: by 2002:a05:620a:a55:: with SMTP id j21mr2361419qka.402.1570609334042;
- Wed, 09 Oct 2019 01:22:14 -0700 (PDT)
+        Wed, 9 Oct 2019 04:22:40 -0400
+Received: from mga03.intel.com ([134.134.136.65]:64466 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725914AbfJIIWj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 04:22:39 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 01:22:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,273,1566889200"; 
+   d="scan'208";a="206829981"
+Received: from kuha.fi.intel.com ([10.237.72.53])
+  by fmsmga001.fm.intel.com with SMTP; 09 Oct 2019 01:22:35 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 09 Oct 2019 11:22:35 +0300
+Date:   Wed, 9 Oct 2019 11:22:35 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Mao Wenan <maowenan@huawei.com>
+Cc:     gregkh@linuxfoundation.org, biju.das@bp.renesas.com,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, Hulk Robot <hulkci@huawei.com>
+Subject: Re: [PATCH -next] usb: typec: add dependency for TYPEC_HD3SS3220
+Message-ID: <20191009082235.GE12909@kuha.fi.intel.com>
+References: <20191009014707.38716-1-maowenan@huawei.com>
 MIME-Version: 1.0
-References: <20190925184346.14121-1-heiko@sntech.de>
-In-Reply-To: <20190925184346.14121-1-heiko@sntech.de>
-From:   Enric Balletbo Serra <eballetbo@gmail.com>
-Date:   Wed, 9 Oct 2019 10:22:02 +0200
-Message-ID: <CAFqH_53xE7fH-Mf0_qokamUCBNDedadSLQa=uxiP_v7TW7DPfw@mail.gmail.com>
-Subject: Re: [PATCH] iommu/rockchip: don't use platform_get_irq to implicitly
- count irqs
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        iommu@lists.linux-foundation.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191009014707.38716-1-maowenan@huawei.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Oct 09, 2019 at 09:47:07AM +0800, Mao Wenan wrote:
+> If CONFIG_TYPEC_HD3SS3220=y, CONFIG_USB_ROLE_SWITCH=m, below errors
+> can be found:
+> drivers/usb/typec/hd3ss3220.o: In function `hd3ss3220_remove':
+> hd3ss3220.c:(.text+0x64): undefined reference to `usb_role_switch_put'
+> drivers/usb/typec/hd3ss3220.o: In function `hd3ss3220_dr_set':
+> hd3ss3220.c:(.text+0x154): undefined reference to `usb_role_switch_set_role'
+> drivers/usb/typec/hd3ss3220.o: In function `hd3ss3220_set_role':
+> hd3ss3220.c:(.text+0x294): undefined reference to `usb_role_switch_set_role'
+> hd3ss3220.c:(.text+0x2f4): undefined reference to `usb_role_switch_set_role'
+> hd3ss3220.c:(.text+0x348): undefined reference to `usb_role_switch_set_role'
+> hd3ss3220.c:(.text+0x390): undefined reference to `usb_role_switch_set_role'
+> drivers/usb/typec/hd3ss3220.o: In function `hd3ss3220_probe':
+> hd3ss3220.c:(.text+0x5e8): undefined reference to `fwnode_usb_role_switch_get'
+> hd3ss3220.c:(.text+0x8a4): undefined reference to `usb_role_switch_put'
+> make: *** [vmlinux] Error 1
+> 
+> This patch add dependency USB_ROLE_SWITCH for TYPEC_HD3SS3220.
+> 
+> Fixes: 1c48c759ef4b ("usb: typec: driver for TI HD3SS3220 USB Type-C DRP port controller")
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Mao Wenan <maowenan@huawei.com>
 
-Missatge de Heiko Stuebner <heiko@sntech.de> del dia dc., 25 de set.
-2019 a les 20:44:
->
-> Till now the Rockchip iommu driver walked through the irq list via
-> platform_get_irq() until it encountered an ENXIO error. With the
-> recent change to add a central error message, this always results
-> in such an error for each iommu on probe and shutdown.
->
-> To not confuse people, switch to platform_count_irqs() to get the
-> actual number of interrupts before walking through them.
->
-> Fixes: 7723f4c5ecdb ("driver core: platform: Add an error message to platform_get_irq*()")
-> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+
 > ---
+>  drivers/usb/typec/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/usb/typec/Kconfig b/drivers/usb/typec/Kconfig
+> index aceb2af..b4f2aac 100644
+> --- a/drivers/usb/typec/Kconfig
+> +++ b/drivers/usb/typec/Kconfig
+> @@ -53,6 +53,7 @@ source "drivers/usb/typec/ucsi/Kconfig"
+>  config TYPEC_HD3SS3220
+>  	tristate "TI HD3SS3220 Type-C DRP Port controller driver"
+>  	depends on I2C
+> +	depends on USB_ROLE_SWITCH
+>  	help
+>  	  Say Y or M here if your system has TI HD3SS3220 Type-C DRP Port
+>  	  controller driver.
+> -- 
+> 2.7.4
 
-This patch definitely removes the annoying messages on my Samsung
-Chromebook Plus like:
+thanks,
 
- rk_iommu ff924000.iommu: IRQ index 1 not found
- rk_iommu ff914000.iommu: IRQ index 1 not found
- rk_iommu ff903f00.iommu: IRQ index 1 not found
- rk_iommu ff8f3f00.iommu: IRQ index 1 not found
- rk_iommu ff650800.iommu: IRQ index 1 not found
-
-FWIW, I sent a similar patch [1] to fix this, but can be rejected in
-favour of the Heiko's patch. So,
-
-Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-
-Thanks,
- Enric
-
-[1] https://lkml.org/lkml/2019/10/8/551
-
->  drivers/iommu/rockchip-iommu.c | 19 ++++++++++++++-----
->  1 file changed, 14 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/iommu/rockchip-iommu.c b/drivers/iommu/rockchip-iommu.c
-> index 26290f310f90..4dcbf68dfda4 100644
-> --- a/drivers/iommu/rockchip-iommu.c
-> +++ b/drivers/iommu/rockchip-iommu.c
-> @@ -100,6 +100,7 @@ struct rk_iommu {
->         struct device *dev;
->         void __iomem **bases;
->         int num_mmu;
-> +       int num_irq;
->         struct clk_bulk_data *clocks;
->         int num_clocks;
->         bool reset_disabled;
-> @@ -1136,7 +1137,7 @@ static int rk_iommu_probe(struct platform_device *pdev)
->         struct rk_iommu *iommu;
->         struct resource *res;
->         int num_res = pdev->num_resources;
-> -       int err, i, irq;
-> +       int err, i;
->
->         iommu = devm_kzalloc(dev, sizeof(*iommu), GFP_KERNEL);
->         if (!iommu)
-> @@ -1163,6 +1164,10 @@ static int rk_iommu_probe(struct platform_device *pdev)
->         if (iommu->num_mmu == 0)
->                 return PTR_ERR(iommu->bases[0]);
->
-> +       iommu->num_irq = platform_irq_count(pdev);
-> +       if (iommu->num_irq < 0)
-> +               return iommu->num_irq;
-> +
->         iommu->reset_disabled = device_property_read_bool(dev,
->                                         "rockchip,disable-mmu-reset");
->
-> @@ -1219,8 +1224,9 @@ static int rk_iommu_probe(struct platform_device *pdev)
->
->         pm_runtime_enable(dev);
->
-> -       i = 0;
-> -       while ((irq = platform_get_irq(pdev, i++)) != -ENXIO) {
-> +       for (i = 0; i < iommu->num_irq; i++) {
-> +               int irq = platform_get_irq(pdev, i);
-> +
->                 if (irq < 0)
->                         return irq;
->
-> @@ -1245,10 +1251,13 @@ static int rk_iommu_probe(struct platform_device *pdev)
->  static void rk_iommu_shutdown(struct platform_device *pdev)
->  {
->         struct rk_iommu *iommu = platform_get_drvdata(pdev);
-> -       int i = 0, irq;
-> +       int i;
-> +
-> +       for (i = 0; i < iommu->num_irq; i++) {
-> +               int irq = platform_get_irq(pdev, i);
->
-> -       while ((irq = platform_get_irq(pdev, i++)) != -ENXIO)
->                 devm_free_irq(iommu->dev, irq, iommu);
-> +       }
->
->         pm_runtime_force_suspend(&pdev->dev);
->  }
-> --
-> 2.23.0
->
->
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+-- 
+heikki
