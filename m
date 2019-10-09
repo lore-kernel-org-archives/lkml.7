@@ -4,135 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCEB0C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A90ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC11E218AC
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B31D218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:11:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731910AbfJITLR (ORCPT
+        id S1731984AbfJITLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 15:11:17 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:38647 "EHLO
+        Wed, 9 Oct 2019 15:11:23 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:33525 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731771AbfJITLO (ORCPT
+        with ESMTP id S1731839AbfJITLQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 15:11:14 -0400
+        Wed, 9 Oct 2019 15:11:16 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MiJIk-1hd9qo47VO-00fSl7; Wed, 09 Oct 2019 21:11:13 +0200
+ 1MUY9w-1iiiBO3dmy-00QSut; Wed, 09 Oct 2019 21:11:14 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Al Viro <viro@zeniv.linux.org.uk>
 Cc:     linux-kernel@vger.kernel.org, y2038@lists.linaro.org,
         linux-fsdevel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH v6 17/43] compat_ioctl: move rfcomm handlers into driver
-Date:   Wed,  9 Oct 2019 21:10:17 +0200
-Message-Id: <20191009191044.308087-17-arnd@arndb.de>
+        linux-input@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH v6 24/43] compat_ioctl: remove joystick ioctl translation
+Date:   Wed,  9 Oct 2019 21:10:24 +0200
+Message-Id: <20191009191044.308087-24-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191009190853.245077-1-arnd@arndb.de>
 References: <20191009190853.245077-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:6o+fXd+jknkQ9Kt+dvDcH2dQqv7QFvYbBe3gxSyUw1PSROtnjoC
- 7emE8+IitiN6xjQXFyhJvQU8e1C2V+fxOFrCYIjgXTdqqHASt08GP0Z1d5xH9MzPLbtu66P
- J9oEstuey1r2im/khtnqN9ZUzi0/bdwd6fjul/INAkUaVFJARkaZ6IBSzGf5Q1Pru86T3TC
- RUO7i6kp1LdP3l2dPUNFA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:TfUEyc2+NPc=:HQ0oFvhTGn1RZEKc3Ghs8F
- mZuFQC5DGwW0zJ1yLyyIvNeHvHuFx2WYnZpYMUgR75C8zilFGgZTc4FT5B6U4YrtxF94LBsT1
- aFMmGPdcXt3X3Aa3biEa6q2oPA+4wDN+MLN/zPKC3nFn3fip0Y8Ph9g6D+O4LLGBpgPmBOQai
- L313sbBBBn8EOvb9RlOjvEr0BvXcNml2Udlk1AZ0uMGYovu1N/CrBckv/sNivfiofL7H+n6OL
- 5lPE/xH8R4808YhlRKFaObMEh7wUTg1X0m0VgvitGjs+vFHoqHpN0EkjVJF5mGEsdHsPSCIhZ
- Zvk8BvJDJJDvoNqa6XQyxJgiicAHJmt6WogcBOLTkKkfYiBx7vFVcI3OalPhRXlz9skpAyosl
- aol1tZ9f05XoxVAZSnA4S/wsNUlVhl9dvb3AAt/U1MaJ/wiIvB/YnHdgIVcRNuZ1y1Dgegx/E
- 3/kLeXDYe+WOmNrgbmQejT1UE0eiMez6lxw+Z3n7huo5J2ceBwVLX8Q1z01DCfbRK1utQAOLJ
- QzJtytYoLkP8jVy0gIiZVyeaC6Ls73n9P7B0k/2i2aZ0zPruP52dMpl3d7jrxoNEG09l7k4cE
- ICvpgihvMHXrUVrfYGnn7WV+0KxeLDFBeobqJ59+jkBO2qc4MyZ2ca7nCYLsIGI+NcINZ3IO7
- 8as8Yb2CgQBuqBm3B/qFhfjL7wrryfshgIMCxyI9eWyV0bHZEDC+S7Qtrr0T51BE+q2saKwmw
- JkbP3mfikcWSzZ5f27InGlbpd+5I8g9LLtKFRMpD3PR4Nt2Np/9m9DIE1f9Xr1/gSZarciwhE
- 9I94MxMItu1Wl/uS3Uu3Uygx/LjFAFM3nWx2mamLAUG0Bx2iYbWpCa8qU3NQ/gSDMdGSGchra
- KsI1SHv+a3ZDDUWuGHLw==
+X-Provags-ID: V03:K1:x2cKbCWiwvtTu0Qle1GTAXaofujFu4TqPOSrzfs49dxShM/dHOg
+ AM8+FdkHPUNbbcajz9XAKdK/00jXiMqsA7QxZ7e5Elfsjj/JgJHiRfQpUiydME6xnaHzZFE
+ DICT07/ckpbdTm8x6zSAJ7ENEf5ADRKW4Hzfzb0uCmZhtzEFqUgBNACJf1folSnv14Ykzwa
+ uLzFp/WEybLIr+pcSNFzg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:3WaeOwFJhJc=:nuObE3Ol7NblOV2/MWCAkC
+ xS4Mgc2fhrU4MUe0GtkE61H5snv7FwEBJsrBMARTxrQ1txWFb5+jhksnjxb9pzXvgtHYoXm3C
+ yH+bOdbsD7kqWzFzzeHZZaKlKuWtx2HuWP0mhVvTgQGuVY4TSSjleq20X6bZOfOU9opdffRir
+ T8/drHeM1JKBUMfsM5iT/JMrtmappIQ2kUea89pFUNVRTDplxOZqdQZYbbEttsejmtLL9f20B
+ h4cegT7gWt0L2WfK1d4VrXqU+ITwBYdNh8VVVCV2Wzk6seGnEzdZgt0Oym8AUP0ShNLv9gMid
+ ACCVpUU89VV3h6sT+mAQ8WfWq4mHBvnVMfojL9NiQvN8E8k6f0PTp9BnIh38xCxiLy/hy9y2e
+ ABmCVY/m7tMwgyTm57UAg514liHZ45SAxnJxu3Vt/3iwrS4dyDiPofBKlWxuVi8C+S7KSIw6y
+ RzL4L6lyQnIvBvMvvlZjXC0FJo5a99j43r2IT88DkGIyvCI57Li2+hCrPg/Dg1E7gtk4sQnnF
+ zYQzkOylD9/IosZV4QxXgS3CQic3e68j23wUHvyd8CbfL0t8MeNB869d9q4jYKBQz74tOpRkv
+ tUHX+uvgRdTG/d3csFoFAUT2DYOuKUyru+Y/52KOXJZsZZLB6OKJF4nwnZWjVTANxC1UG6rFR
+ D+vPkiBVz2icsVJiyw9H6qpoQtvwmMmTzAR84wY6yWhp9v+uTI5ibhcdi1QzQasynrsAmMRx7
+ JSG7gnWJLTjuBSNfEGz/qAzZ9meKQeivQi18CLzyv5q4zMQ9PXsM4iL7oGbT8jgUuWrCPfbFf
+ Flp1lEd5dd4RKIkV2cBqTDt62t4eYcrFaQez+alalTIGHvZSOxOZGUiIoamsDeP8F0htoga76
+ uVLyPKoiSKplEYNIawfg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All these ioctl commands are compatible, so we can handle
-them with a trivial wrapper in rfcomm/sock.c and remove
-the listing in fs/compat_ioctl.c.
+The joystick driver already handles these just fine, so
+the entries in the table are not needed any more.
 
-Acked-by: Marcel Holtmann <marcel@holtmann.org>
+Cc: linux-input@vger.kernel.org
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- fs/compat_ioctl.c           |  6 ------
- net/bluetooth/rfcomm/sock.c | 14 ++++++++++++--
- 2 files changed, 12 insertions(+), 8 deletions(-)
+ fs/compat_ioctl.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
 diff --git a/fs/compat_ioctl.c b/fs/compat_ioctl.c
-index f3b4179d6dff..8dbef92b10fd 100644
+index 398268604ab7..a214ae052596 100644
 --- a/fs/compat_ioctl.c
 +++ b/fs/compat_ioctl.c
-@@ -42,7 +42,6 @@
- 
- #include <net/bluetooth/bluetooth.h>
- #include <net/bluetooth/hci_sock.h>
--#include <net/bluetooth/rfcomm.h>
- 
- #ifdef CONFIG_BLOCK
- #include <linux/cdrom.h>
-@@ -673,11 +672,6 @@ COMPATIBLE_IOCTL(HCIUARTGETPROTO)
- COMPATIBLE_IOCTL(HCIUARTGETDEVICE)
- COMPATIBLE_IOCTL(HCIUARTSETFLAGS)
- COMPATIBLE_IOCTL(HCIUARTGETFLAGS)
--COMPATIBLE_IOCTL(RFCOMMCREATEDEV)
--COMPATIBLE_IOCTL(RFCOMMRELEASEDEV)
--COMPATIBLE_IOCTL(RFCOMMGETDEVLIST)
--COMPATIBLE_IOCTL(RFCOMMGETDEVINFO)
--COMPATIBLE_IOCTL(RFCOMMSTEALDLC)
- /* Misc. */
- COMPATIBLE_IOCTL(PCIIOC_CONTROLLER)
- COMPATIBLE_IOCTL(PCIIOC_MMAP_IS_IO)
-diff --git a/net/bluetooth/rfcomm/sock.c b/net/bluetooth/rfcomm/sock.c
-index 90bb53aa4bee..b4eaf21360ef 100644
---- a/net/bluetooth/rfcomm/sock.c
-+++ b/net/bluetooth/rfcomm/sock.c
-@@ -24,7 +24,7 @@
- /*
-  * RFCOMM sockets.
+@@ -11,8 +11,6 @@
+  * ioctls.
   */
--
-+#include <linux/compat.h>
- #include <linux/export.h>
- #include <linux/debugfs.h>
- #include <linux/sched/signal.h>
-@@ -909,6 +909,13 @@ static int rfcomm_sock_ioctl(struct socket *sock, unsigned int cmd, unsigned lon
- 	return err;
- }
  
-+#ifdef CONFIG_COMPAT
-+static int rfcomm_sock_compat_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
-+{
-+	return rfcomm_sock_ioctl(sock, cmd, (unsigned long)compat_ptr(arg));
-+}
-+#endif
-+
- static int rfcomm_sock_shutdown(struct socket *sock, int how)
- {
- 	struct sock *sk = sock->sk;
-@@ -1042,7 +1049,10 @@ static const struct proto_ops rfcomm_sock_ops = {
- 	.gettstamp	= sock_gettstamp,
- 	.poll		= bt_sock_poll,
- 	.socketpair	= sock_no_socketpair,
--	.mmap		= sock_no_mmap
-+	.mmap		= sock_no_mmap,
-+#ifdef CONFIG_COMPAT
-+	.compat_ioctl	= rfcomm_sock_compat_ioctl,
-+#endif
+-#include <linux/joystick.h>
+-
+ #include <linux/types.h>
+ #include <linux/compat.h>
+ #include <linux/kernel.h>
+@@ -444,11 +442,6 @@ COMPATIBLE_IOCTL(PCIIOC_CONTROLLER)
+ COMPATIBLE_IOCTL(PCIIOC_MMAP_IS_IO)
+ COMPATIBLE_IOCTL(PCIIOC_MMAP_IS_MEM)
+ COMPATIBLE_IOCTL(PCIIOC_WRITE_COMBINE)
+-/* joystick */
+-COMPATIBLE_IOCTL(JSIOCGVERSION)
+-COMPATIBLE_IOCTL(JSIOCGAXES)
+-COMPATIBLE_IOCTL(JSIOCGBUTTONS)
+-COMPATIBLE_IOCTL(JSIOCGNAME(0))
  };
  
- static const struct net_proto_family rfcomm_sock_family_ops = {
+ /*
 -- 
 2.20.0
 
