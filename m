@@ -2,103 +2,133 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAFBBECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63AC5ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:44:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 913182190F
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CE5A20B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:44:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zq3v1jke"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QTs4jMd2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732380AbfJIUn0 (ORCPT
+        id S1731869AbfJIUop (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 16:43:26 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35549 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731884AbfJIUnZ (ORCPT
+        Wed, 9 Oct 2019 16:44:45 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:46972 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730955AbfJIUoo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 16:43:25 -0400
-Received: by mail-wr1-f68.google.com with SMTP id v8so4699665wrt.2;
-        Wed, 09 Oct 2019 13:43:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Lpln8geciAg4JbtsomIIKLOvA7kf5IwzYvS8cTZ6WVo=;
-        b=Zq3v1jke+W/GXtjRbhGK/s7oBsB1wxO6GbK2me7gUkAwQawUoK/3KI/TseJwLbGnzt
-         ARybW3WTsltkrseBEKdY/nn2GxLEHDFLv8nf5sLBx4Np1p9VXzLM0QiawEVcf71ZfDYq
-         McMmuR9U9XSaD0qwNvPfnALJ+yniImr45Gc9gI8DgkmPct4ytA8kKU8Uesmj0Yc7Ohdi
-         3Gd7wLNwvwwqIPr3Xw2llSqbV5CK+Ou4BDbD9GwH07EOsr+jQZRPh7NWW6dOClPjMFVW
-         uFFduiRwcygYh199z6579/wKVKMjOrGmfLkI3e0TrWzKiAjSuUtUs2FkhSm3YehUag0a
-         lUxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Lpln8geciAg4JbtsomIIKLOvA7kf5IwzYvS8cTZ6WVo=;
-        b=a7MPZj5ewih8azZWQ0E3ozSVE2WFtZwfABry68ZDX2BNys9xM3LzDjxCQN0uJ6tyPb
-         b9jJhZ0KRRDp4UUxFKJ8/0zXB+6lVSKLauPZD/brkrYajQQAe5EReNCmyWJJr97MXmjT
-         O4LkVdc750eU1sdb3lWLE+K0k+HkQyPW9Du+Z9FUpnsCoJJzJAgkY5xKntQMynZ1qNUk
-         1h2fapXufjQEfuNF8LFlGsRRlJGbDyRSuuxFcYciaLPhSazaofiytAEW/+584T3SGawx
-         AUTj0Ipo2WKnSfWtQS5Mq2ZYqXp5o4C+z5dIP5bhBiTJknFu4Fba9cv7zsO8wIZPwCIZ
-         8qzA==
-X-Gm-Message-State: APjAAAUhFz9k1wrlPa+fH6U5HG/RC7JRSDMzcc7OY+qBm3Fpv/EgJT1W
-        s/aIqiDbLffASoN0S/ha6Q==
-X-Google-Smtp-Source: APXvYqwmkgUaym+RBIuuknYDK4XTZEQuWJzx9o7ZWqA1RdSGXschjm+nGXM4knVx56JAXAXYj0eAHQ==
-X-Received: by 2002:a5d:4a81:: with SMTP id o1mr4349969wrq.291.1570653803279;
-        Wed, 09 Oct 2019 13:43:23 -0700 (PDT)
-Received: from ninjahub.lan (host-2-102-13-201.as13285.net. [2.102.13.201])
-        by smtp.googlemail.com with ESMTPSA id f8sm3601546wmb.37.2019.10.09.13.43.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 13:43:22 -0700 (PDT)
-From:   Jules Irenge <jbi.octave@gmail.com>
-To:     outreachy-kernel@googlegroups.com
-Cc:     gregkh@linuxfoundation.org, GR-Linux-NIC-Dev@marvell.com,
-        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, Jules Irenge <jbi.octave@gmail.com>
-Subject: [PATCH] staging: qlge: Fix multiple assignments warning by splitting the assignement into two each
-Date:   Wed,  9 Oct 2019 21:43:11 +0100
-Message-Id: <20191009204311.7988-1-jbi.octave@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Wed, 9 Oct 2019 16:44:44 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x99Kid12082323;
+        Wed, 9 Oct 2019 15:44:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1570653879;
+        bh=YA1WU586yiuQsLm90Wav7tyFG1FM8+LIvO3AWd1ofHs=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=QTs4jMd2slKKTBhgT5dYCoLFBH9V8USwFTUvYhe5Wgd/q7GrFur+UNpHhzyVNqJTL
+         l2p+jm13OIwjeWIvFxIPM7GHdr13gzfr9PaKqTZ5FEsPtAbymbdWGyZlua3fz6sTw3
+         4gMT2WYp8+Qo1GCkDTT/jLm8vH2g4BowdHHJ15zU=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x99KidsH022638
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 9 Oct 2019 15:44:39 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 9 Oct
+ 2019 15:44:39 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 9 Oct 2019 15:44:35 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x99KicoM125755;
+        Wed, 9 Oct 2019 15:44:38 -0500
+Subject: Re: [PATCH v11 04/16] leds: multicolor: Introduce a multicolor class
+ definition
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+CC:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+References: <20191008204800.19870-1-dmurphy@ti.com>
+ <20191008204800.19870-5-dmurphy@ti.com>
+ <CAOCOHw5uQL56T_DcZA47721yS1tLsp9cyUEdmiWr+Ccfh7YpRQ@mail.gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <d6b68a79-235a-0a9b-bbf3-519571646eff@ti.com>
+Date:   Wed, 9 Oct 2019 15:44:20 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <CAOCOHw5uQL56T_DcZA47721yS1tLsp9cyUEdmiWr+Ccfh7YpRQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix multiple assignments warning " check
- issued by checkpatch.pl tool:
-"CHECK: multiple assignments should be avoided".
+Bjorn
 
-Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
----
- drivers/staging/qlge/qlge_dbg.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+On 10/9/19 3:11 PM, Bjorn Andersson wrote:
+> On Tue, Oct 8, 2019 at 1:49 PM Dan Murphy <dmurphy@ti.com> wrote:
+>> Introduce a multicolor class that groups colored LEDs
+>> within a LED node.
+>>
+>> The multi color class groups monochrome LEDs and allows controlling two
+>> aspects of the final combined color: hue and lightness. The former is
+>> controlled via <color>_intensity files and the latter is controlled
+>> via brightness file.
+>>
+> Thanks for making progress on this, it's been the one outstanding
+> question mark for the long overdue respin of the Qualcomm LPG driver.
 
-diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
-index 086f067fd899..69bd4710c5ec 100644
---- a/drivers/staging/qlge/qlge_dbg.c
-+++ b/drivers/staging/qlge/qlge_dbg.c
-@@ -141,8 +141,10 @@ static int ql_get_serdes_regs(struct ql_adapter *qdev,
- 	u32 *direct_ptr, temp;
- 	u32 *indirect_ptr;
- 
--	xfi_direct_valid = xfi_indirect_valid = 0;
--	xaui_direct_valid = xaui_indirect_valid = 1;
-+	xfi_indirect_valid = 0;
-+	xfi_direct_valid = xfi_indirect_valid;
-+	xaui_indirect_valid = 1;
-+	xaui_direct_valid = xaui_indirect_valid
- 
- 	/* The XAUI needs to be read out per port */
- 	status = ql_read_other_func_serdes_reg(qdev,
--- 
-2.21.0
+> But while it works for the LPG, in that it has outputs named "RGB" I
+> have boards with "generic" LED drivers that are connected to RGB LEDs.
+> So per your proposed solution we would need to add the additional
+
+You don't have to add the MC class to those drivers.  This is an 
+optional framework but if you wanted to use the framework for specific 
+devices then yes you would need to add that support. This is why I did 
+the LP55xx patches to demonstrate the feasibility since the LP50xx has 
+the MC class intelligence already.
+
+The LP55xx driver can register to the LED class and/or the MC LED class 
+pending on the DT organization.
+
+I don't plan on going through all of TI's RGB drivers and retrofitting 
+them to the MC class.  I do have to update the GPIO LED driver to use 
+the class but that work is still pending.
+
+I may also update the Motorola PCAP driver as well since I have a Droid4 
+to test.
+
+> mc_class handling to every single LED driver that might be used to
+> sink current into an RGB LED.
+>
+> I also don't see anything preventing hardware designers from feeding
+> single RGB LEDs from multiple different LED controllers, something the
+> current proposal would prohibit.
+
+What do you mean by a single RGB LED? Are you referring to a RGB module?
+
+http://wiki.sunfounder.cc/index.php?title=RGB_LED_Module
+
+There is no prevention for HW designers to put a driver on each LED 
+output but I am not sure why they would incur
+
+the additional BOM cost seems quite silly unless you have an unlimited 
+budget ;)
+
+If they did design the system that way then the SW would need to revert 
+back to the standard LED class as it is done today.
+
+Dan
+
 
