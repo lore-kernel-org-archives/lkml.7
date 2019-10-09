@@ -2,85 +2,113 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD857C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5584C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC01E20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:24:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E3BF20B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:24:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731328AbfJIOYY (ORCPT
+        id S1731386AbfJIOYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 10:24:24 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:60996 "EHLO huawei.com"
+        Wed, 9 Oct 2019 10:24:41 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54988 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729491AbfJIOYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 10:24:24 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id D5B68D1D3597239601EF;
-        Wed,  9 Oct 2019 22:24:21 +0800 (CST)
-Received: from [127.0.0.1] (10.177.29.68) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Wed, 9 Oct 2019
- 22:24:19 +0800
-Message-ID: <5D9DED92.8060201@huawei.com>
-Date:   Wed, 9 Oct 2019 22:24:18 +0800
-From:   zhong jiang <zhongjiang@huawei.com>
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
+        id S1729491AbfJIOYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 10:24:41 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7BEAEAD2C;
+        Wed,  9 Oct 2019 14:24:39 +0000 (UTC)
+Date:   Wed, 9 Oct 2019 16:24:38 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        sergey.senozhatsky.work@gmail.com, rostedt@goodmis.org,
+        peterz@infradead.org, linux-mm@kvack.org,
+        john.ogness@linutronix.de, akpm@linux-foundation.org,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        PeterOberparleiter <oberpar@linux.ibm.com>, david@redhat.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
+Message-ID: <20191009142438.yx74ukfqwy2hr4fz@pathway.suse.cz>
+References: <aefe7f75-b0ec-9e99-a77e-87324edb24e0@de.ibm.com>
+ <1570550917.5576.303.camel@lca.pw>
+ <20191008183525.GQ6681@dhcp22.suse.cz>
+ <1570561573.5576.307.camel@lca.pw>
+ <20191008191728.GS6681@dhcp22.suse.cz>
+ <1570563324.5576.309.camel@lca.pw>
+ <20191009114903.aa6j6sa56z2cssom@pathway.suse.cz>
+ <1570626402.5937.1.camel@lca.pw>
+ <20191009132746.GA6681@dhcp22.suse.cz>
+ <1570628593.5937.3.camel@lca.pw>
 MIME-Version: 1.0
-To:     Sean Young <sean@mess.org>
-CC:     <mchehab@kernel.org>, <hansverk@cisco.com>,
-        <daniel.vetter@ffwll.ch>, <linux-media@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/4] media: dvb-frontends: Use DIV_ROUND_CLOSEST directly
- to make it readable
-References: <1567700092-27769-1-git-send-email-zhongjiang@huawei.com> <1567700092-27769-2-git-send-email-zhongjiang@huawei.com> <20191001111552.GA18622@gofer.mess.org>
-In-Reply-To: <20191001111552.GA18622@gofer.mess.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.29.68]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1570628593.5937.3.camel@lca.pw>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/10/1 19:15, Sean Young wrote:
-> Hi,
->
-> On Fri, Sep 06, 2019 at 12:14:49AM +0800, zhong jiang wrote:
->> The kernel.h macro DIV_ROUND_CLOSEST performs the computation (x + d/2)/d
->> but is perhaps more readable.
->>
->> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
->> ---
->>  drivers/media/dvb-frontends/mt312.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/media/dvb-frontends/mt312.c b/drivers/media/dvb-frontends/mt312.c
->> index 7cae7d6..251ff41 100644
->> --- a/drivers/media/dvb-frontends/mt312.c
->> +++ b/drivers/media/dvb-frontends/mt312.c
->> @@ -137,7 +137,7 @@ static inline int mt312_writereg(struct mt312_state *state,
->>  
->>  static inline u32 mt312_div(u32 a, u32 b)
->>  {
->> -	return (a + (b / 2)) / b;
->> +	return DIV_ROUND_CLOSEST(a, b);
-> Well spotted, that is absolutely correct. However now mt312_div() is just
-> a wrapper for DIV_ROUND_CLOSEST() -- and even marked inline. Really all
-> the callers to mt312_div() should be replaced with DIV_ROUND_CLOSEST().
-Thanks for your suggestion.   I will use DIV_ROUND_CLOSEST directly in v2.
+On Wed 2019-10-09 09:43:13, Qian Cai wrote:
+> On Wed, 2019-10-09 at 15:27 +0200, Michal Hocko wrote:
+> > On Wed 09-10-19 09:06:42, Qian Cai wrote:
+> > [...]
+> > > https://lore.kernel.org/linux-mm/1570460350.5576.290.camel@lca.pw/
+> > > 
+> > > [  297.425964] -> #1 (&port_lock_key){-.-.}:
+> > > [  297.425967]        __lock_acquire+0x5b3/0xb40
+> > > [  297.425967]        lock_acquire+0x126/0x280
+> > > [  297.425968]        _raw_spin_lock_irqsave+0x3a/0x50
+> > > [  297.425969]        serial8250_console_write+0x3e4/0x450
+> > > [  297.425970]        univ8250_console_write+0x4b/0x60
+> > > [  297.425970]        console_unlock+0x501/0x750
+> > > [  297.425971]        vprintk_emit+0x10d/0x340
+> > > [  297.425972]        vprintk_default+0x1f/0x30
+> > > [  297.425972]        vprintk_func+0x44/0xd4
+> > > [  297.425973]        printk+0x9f/0xc5
+> > > [  297.425974]        register_console+0x39c/0x520
+> > > [  297.425975]        univ8250_console_init+0x23/0x2d
+> > > [  297.425975]        console_init+0x338/0x4cd
+> > > [  297.425976]        start_kernel+0x534/0x724
+> > > [  297.425977]        x86_64_start_reservations+0x24/0x26
+> > > [  297.425977]        x86_64_start_kernel+0xf4/0xfb
+> > > [  297.425978]        secondary_startup_64+0xb6/0xc0
+> > > 
+> > > where the report again show the early boot call trace for the locking
+> > > dependency,
+> > > 
+> > > console_owner --> port_lock_key
+> > > 
+> > > but that dependency clearly not only happen in the early boot.
+> > 
+> > Can you provide an example of the runtime dependency without any early
+> > boot artifacts? Because this discussion really doens't make much sense
+> > without a clear example of a _real_ lockdep report that is not a false
+> > possitive. All of them so far have been concluded to be false possitive
+> > AFAIU.
+> 
+> An obvious one is in the above link. Just replace the trace in #1 above with
+> printk() from anywhere, i.e., just ignore the early boot calls there as they are
+>  not important.
+> 
+> printk()
+>   console_unlock()
+>     console_lock_spinning_enable() --> console_owner_lock
+>   call_console_drivers()
+>     serial8250_console_write() --> port->lock
 
-Sincerely,
-zhong jiang
-> Thanks,
->
-> Sean
->
-> .
->
+Please, find the location where this really happens and then suggests
+how the real deadlock could get fixed. So far, we have seen only
+false positives and theoretical scenarios.
 
-
+Best Regards,
+Petr
