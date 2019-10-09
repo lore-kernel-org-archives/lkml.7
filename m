@@ -2,55 +2,82 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C30AAECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57CB9C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70D342067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:20:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="L1LgQkaa"
+	by mail.kernel.org (Postfix) with ESMTP id 3127320B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:21:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570638090;
+	bh=LEzIqYLEwZd653HisuQ3ELs+bt1nadciXzOjOdsyZQE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qxUwhzi3gGFs9eu5gvR34Ug4yAk04LPTfErK54a+bLjF3ztSAY0WXywDIJNYkKkgZ
+	 2ty7sYXucrDhJxFkcS+0U/AImcv4CA75sh6Lbzg9ZLw3DfUuZLBcyroMTlluVEN/Jn
+	 9SxKQn4yC8DZQGLsV8Upvrb5WNCF4KiTX/qY3c90=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731798AbfJIQUg (ORCPT
+        id S1731805AbfJIQV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 12:20:36 -0400
-Received: from pio-pvt-msa3.bahnhof.se ([79.136.2.42]:49724 "EHLO
-        pio-pvt-msa3.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731083AbfJIQUg (ORCPT
+        Wed, 9 Oct 2019 12:21:29 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:41361 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729644AbfJIQV2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 12:20:36 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTP id E43AA3F503;
-        Wed,  9 Oct 2019 18:20:27 +0200 (CEST)
-Authentication-Results: pio-pvt-msa3.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=L1LgQkaa;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa3.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa3.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id XHAqkNolIUYl; Wed,  9 Oct 2019 18:20:24 +0200 (CEST)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTPA id 95D1C3F315;
-        Wed,  9 Oct 2019 18:20:22 +0200 (CEST)
-Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id F0AC936016C;
-        Wed,  9 Oct 2019 18:20:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1570638022; bh=15nrot/7wNjB0kN4+a5UAu154h85Yrs+uYJfO3V81ZI=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=L1LgQkaa61DY0KI5m3lwcwTx0pPa3Jl4tKDsCKiHxLn2Kv4bhXtKKhdHjJ9ok69OA
-         qe44WjgVeRB0eyhf7YyfKwgHD/7TdPOHPUqMlkgNbvNT4BOBMdejyxs93VMYaGe8r/
-         neaDUtO2LuwYqORXgYFLnzZdZxFrgwiM3vlYJVtk=
+        Wed, 9 Oct 2019 12:21:28 -0400
+Received: by mail-lf1-f68.google.com with SMTP id r2so2109441lfn.8
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 09:21:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=irS7MxIYNB2GnGgL6wf/xO0qtWPCVd7suxRiO2KO4D4=;
+        b=hgOaZG0duKaUR4d25pSryy7RdP9qviemEvzHvt19d0TSAxr0BfqQR3ZWYSTwR0r+9u
+         i9iGymA9O3sH36uqhsrDUmdMcx0o8kfeXMJ8ye9WqAc6tizygENJM3wRYYfRkyG/AtPb
+         7SOGImdQZPDoEJKjK/Y9RwyexInoc9meO+hR0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=irS7MxIYNB2GnGgL6wf/xO0qtWPCVd7suxRiO2KO4D4=;
+        b=s7qNf92+8rGOw0CTPGshX55OfmaeOfOa7+icxWPft9EuMagAAZf/ZfPAKdYSNxJt+8
+         +Qlzk/AbjGQwf7wqM/TNVh81otUcbbaoVjcXenf0iMcEvsg56C/hYrNROGbusq9BfkEg
+         K3vPGIe7yEAav8Bh7ectR3zDuguPLxdtumz265H1T3pxhuUjmquIoK8pMJUCAk+J2o2u
+         ncdbh3e6pMKlvyoSrk1DvNNoBA5favPsaxlIbXi/3KZ3sJVK8WfYcMUZQhx5UJ+bRgZj
+         BK/MU5Iv0oPH3Y4sImkuiB3whjpDs7kSHi8tHPLr6DL5hJz2WpnJQo+7mmqPdGuuXXZC
+         vu5A==
+X-Gm-Message-State: APjAAAVzxZsd9zLN0me4+ZEIUaQ0MJWm8XDW0xGKAzITGMYoy4WU07XW
+        IZ7bHWs9M4QQ+XAWRh5jeLhW0JH97vk=
+X-Google-Smtp-Source: APXvYqx6Hzcam3Ypq+uO0EThIbAXbuamzgKedPDH9H04UCAxe/N17wkL0ltqQAX02aff/F4sfTqLiQ==
+X-Received: by 2002:a19:4b8f:: with SMTP id y137mr2730491lfa.19.1570638086080;
+        Wed, 09 Oct 2019 09:21:26 -0700 (PDT)
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
+        by smtp.gmail.com with ESMTPSA id g3sm561999lja.61.2019.10.09.09.21.25
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Oct 2019 09:21:25 -0700 (PDT)
+Received: by mail-lj1-f177.google.com with SMTP id y23so3088426lje.9
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 09:21:25 -0700 (PDT)
+X-Received: by 2002:a2e:8315:: with SMTP id a21mr2891882ljh.133.1570638084772;
+ Wed, 09 Oct 2019 09:21:24 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191008091508.2682-1-thomas_os@shipmail.org> <20191008091508.2682-4-thomas_os@shipmail.org>
+ <20191009152737.p42w7w456zklxz72@box>
+In-Reply-To: <20191009152737.p42w7w456zklxz72@box>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 9 Oct 2019 09:21:08 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh4waroKr-Xtcv+5pTxBcHxGEj-g73eQvXVawML_C0EXw@mail.gmail.com>
+Message-ID: <CAHk-=wh4waroKr-Xtcv+5pTxBcHxGEj-g73eQvXVawML_C0EXw@mail.gmail.com>
 Subject: Re: [PATCH v4 3/9] mm: pagewalk: Don't split transhuge pmds when a
  pmd_entry is present
 To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        torvalds@linux-foundation.org,
+Cc:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
         Thomas Hellstrom <thellstrom@vmware.com>,
         Matthew Wilcox <willy@infradead.org>,
         Will Deacon <will.deacon@arm.com>,
@@ -60,100 +87,48 @@ Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         Michal Hocko <mhocko@suse.com>,
         Huang Ying <ying.huang@intel.com>,
         =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
-References: <20191008091508.2682-1-thomas_os@shipmail.org>
- <20191008091508.2682-4-thomas_os@shipmail.org>
- <20191009152737.p42w7w456zklxz72@box>
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Organization: VMware Inc.
-Message-ID: <467a4a34-27be-8f46-2c9a-c5b335d11438@shipmail.org>
-Date:   Wed, 9 Oct 2019 18:20:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20191009152737.p42w7w456zklxz72@box>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Kirill.
-
-Thanks for reviewing.
-
-On 10/9/19 5:27 PM, Kirill A. Shutemov wrote:
-> On Tue, Oct 08, 2019 at 11:15:02AM +0200, Thomas Hellström (VMware) wrote:
->> From: Thomas Hellstrom <thellstrom@vmware.com>
->>
->> The pagewalk code was unconditionally splitting transhuge pmds when a
->> pte_entry was present. However ideally we'd want to handle transhuge pmds
->> in the pmd_entry function and ptes in pte_entry function. So don't split
->> huge pmds when there is a pmd_entry function present, but let the callback
->> take care of it if necessary.
+On Wed, Oct 9, 2019 at 8:27 AM Kirill A. Shutemov <kirill@shutemov.name> wrote:
+>
 > Do we have any current user that expect split_huge_pmd() in this scenario.
 
-No. All current users either have pmd_entry (no splitting) or pte_entry 
-(unconditional splitting)
+No. There are no current users of the pmd callback and the pte
+callback at all, that I could find.
 
->
->> In order to make sure a virtual address range is handled by one and only
->> one callback, and since pmd entries may be unstable, we introduce a
->> pmd_entry return code that tells the walk code to continue processing this
->> pmd entry rather than to move on. Since caller-defined positive return
->> codes (up to 2) are used by current callers, use a high value that allows a
->> large range of positive caller-defined return codes for future users.
->>
->> Cc: Matthew Wilcox <willy@infradead.org>
->> Cc: Will Deacon <will.deacon@arm.com>
->> Cc: Peter Zijlstra <peterz@infradead.org>
->> Cc: Rik van Riel <riel@surriel.com>
->> Cc: Minchan Kim <minchan@kernel.org>
->> Cc: Michal Hocko <mhocko@suse.com>
->> Cc: Huang Ying <ying.huang@intel.com>
->> Cc: Jérôme Glisse <jglisse@redhat.com>
->> Cc: Kirill A. Shutemov <kirill@shutemov.name>
->> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
->> Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
->> ---
->>   include/linux/pagewalk.h |  8 ++++++++
->>   mm/pagewalk.c            | 28 +++++++++++++++++++++-------
->>   2 files changed, 29 insertions(+), 7 deletions(-)
->>
->> diff --git a/include/linux/pagewalk.h b/include/linux/pagewalk.h
->> index bddd9759bab9..c4a013eb445d 100644
->> --- a/include/linux/pagewalk.h
->> +++ b/include/linux/pagewalk.h
->> @@ -4,6 +4,11 @@
->>   
->>   #include <linux/mm.h>
->>   
->> +/* Highest positive pmd_entry caller-specific return value */
->> +#define PAGE_WALK_CALLER_MAX     (INT_MAX / 2)
->> +/* The handler did not handle the entry. Fall back to the next level */
->> +#define PAGE_WALK_FALLBACK       (PAGE_WALK_CALLER_MAX + 1)
->> +
+But it looks like the new drm use does want a "I can't handle the
+hugepage, please split it and I'll fo the ptes instead".
+
 > That's hacky.
 >
 > Maybe just use an error code for this? -EAGAIN?
 
-I agree this is hacky. But IMO it's a reasonably safe option. My 
-thinking was that in the long run we'd move the positive return codes to 
-the mm_walk private and introduce a PAGE_WALK_TERMINATE code as well.
+I actually like the PAGE_WALK_FALLBACK thing as more documentation
+than "it's an error, but not one you return", although I do detest the
+particular value chosen, which is just a nasty bitpattern.
 
-Perhaps a completely clean and safe way would be to add an "int 
-walk_control" in the struct mm_walk?
+Maybe it could use an error value, just one that makes no sense, and
+is hidden by the PAGE_WALK_FALLBACK define, ie something like
 
-I'm pretty sure using an error code will come back and bite us at some 
-point, if someone just blindly forwards error messages. But if you 
-insist, I'll use -EAGAIN.
+  #define PAGE_WALK_FALLBACK (-ECHILD)
 
-Please let me know what you think.
+or something like that.
 
-Thanks,
+And I suspect the conditional would be cleaner if it was written something like
 
-Thomas
+        if (!err)
+                continue;
+        if (err != PAGE_WALK_FALLBACK)
+                break;
+        err = 0;
+        if (pmd_trans_unstable(pmd))
+                goto again;
+        .. do the split ..
 
+and skip the WARN_ON() and the odd "non-zero but smaller than MAX test"
 
+            Linus
