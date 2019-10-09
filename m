@@ -2,224 +2,356 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11503ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 21:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33CECECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 21:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D399E206B6
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 21:00:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7075206B6
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 21:01:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IEYB+GZZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732063AbfJIU7K (ORCPT
+        id S1731967AbfJIVBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 16:59:10 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51280 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731940AbfJIU7I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 16:59:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B4020B232;
-        Wed,  9 Oct 2019 20:59:05 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id ABD6DE3785; Wed,  9 Oct 2019 22:59:00 +0200 (CEST)
-Message-Id: <cover.1570654310.git.mkubecek@suse.cz>
-From:   Michal Kubecek <mkubecek@suse.cz>
-Subject: [PATCH net-next v7 00/17] ethtool netlink interface, part 1
-To:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org
-Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-Date:   Wed,  9 Oct 2019 22:59:00 +0200 (CEST)
+        Wed, 9 Oct 2019 17:01:40 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35289 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731103AbfJIVBj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 17:01:39 -0400
+Received: by mail-wr1-f68.google.com with SMTP id v8so4775747wrt.2;
+        Wed, 09 Oct 2019 14:01:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=1f8MiSCn36EaC4PnT+e2p+YG7qwf6/0i13EnSQrmCsw=;
+        b=IEYB+GZZdGeNaglv0sGtj+RrtXZtHwgEC1OtrWfFPjTNb/ywNXyrLHVzUBfL6D46h5
+         rvlaOl7n3s5Yx3tocQArD60J9lMUAP6THpkU7J+z3bYqRB+H4KLduc8zQhMzbf5tKE3V
+         GMwTwWM2/AXMsTd2MSQmmK+ieGcJDIXyyJeOo9z/36saD8/y2BKO1Tp0I3yLFLoDfto0
+         KHGeyIjYZlGGMoBvjx0KoNKBAG3A6d+XEW0UDIulejYRbxs9h5WAZYF0xC+O2CIWJbFW
+         0qQGnGZFQ88g3dNhBcVkLP7l+b1WJgytROsTyKPvROj8hVrJPFx138gRADRUQp+CFLVU
+         cCDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1f8MiSCn36EaC4PnT+e2p+YG7qwf6/0i13EnSQrmCsw=;
+        b=CnskNHANyQJc47PheXfCTvJPvDemYsHPTYHY9Dxd40wjgQwP9DZak7Uk25ICkxZRyA
+         wWdcLKqWc6m+MXuD98zlUQbwacJRbKv8j05MQ6Yptdtv3YJ6pCujsy4rjYobH5yM7P33
+         8+qEECcec+nzPkUfQeCNB9vUkGkgulA2eZwQ04RKO6tZAKcp5RblUdP1srWVQeEnW8Nd
+         2+Dab8nAnI1nbWd0gc0gn76N+uRWr0XE7n5yfvNFldZupTr0nnB/LNUGL4Uq8suuG9j/
+         Bk0fyDtcD2k5l4+bg4BOCoNIJM6vs+uh4MhYR70dUyUlBiABll38qyE5RBI+Ok41uYEo
+         Yq7w==
+X-Gm-Message-State: APjAAAW72LWp1c96XE5s5M4pHFbgQ29xA4MCm1W7FvUPDt+wbVvXmtLi
+        p97G70kXKsZ+TXGtdfnZToU=
+X-Google-Smtp-Source: APXvYqxy12ivCleGYEmDO6nsvuCZ9BRPzOL9dMbTn7sONGNVJ2P1US/r41YeoTdzHeJLWE3yM9IgrA==
+X-Received: by 2002:adf:fd04:: with SMTP id e4mr4793691wrr.371.1570654895924;
+        Wed, 09 Oct 2019 14:01:35 -0700 (PDT)
+Received: from ?IPv6:2001:a61:3a5c:9a01:fb47:94a9:abbd:4835? ([2001:a61:3a5c:9a01:fb47:94a9:abbd:4835])
+        by smtp.gmail.com with ESMTPSA id a3sm5829311wmc.3.2019.10.09.14.01.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Oct 2019 14:01:34 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com, Philipp Wendler <ml@philippwendler.de>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Christian Brauner <christian@brauner.io>,
+        Aleksa Sarai <asarai@suse.de>,
+        Reid Priedhorsky <reidpr@lanl.gov>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Yang Bo <rslovers@yandex.com>, Jakub Wilk <jwilk@jwilk.net>,
+        Joseph Sible <josephcsible@gmail.com>,
+        Al Viro <viro@ftp.linux.org.uk>, werner@almesberger.net,
+        linux-man <linux-man@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Containers <containers@lists.linux-foundation.org>,
+        =?UTF-8?Q?St=c3=a9phane_Graber?= <stgraber@ubuntu.com>
+Subject: Re: For review: rewritten pivot_root(2) manual page
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+References: <620c691a-065e-b894-4f06-7453012bc8d3@gmail.com>
+ <d449305b-f87c-f26e-e43f-d193fd8f4332@philippwendler.de>
+ <e51e454c-b0e7-e5d1-7810-e8f023574aa2@gmail.com>
+ <87y2xu71dh.fsf@x220.int.ebiederm.org>
+ <c1e7f140-ca5b-2c8c-7b9d-54b61984cd3b@gmail.com>
+ <87o8yp52oa.fsf@x220.int.ebiederm.org>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <7f2907f5-442a-6187-d0ad-e2fd345cd450@gmail.com>
+Date:   Wed, 9 Oct 2019 23:01:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <87o8yp52oa.fsf@x220.int.ebiederm.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is first part of netlink based alternative userspace interface for
-ethtool. It aims to address some long known issues with the ioctl
-interface, mainly lack of extensibility, raciness, limited error reporting
-and absence of notifications. The goal is to allow userspace ethtool
-utility to provide all features it currently does but without using the
-ioctl interface. However, some features provided by ethtool ioctl API will
-be available through other netlink interfaces (rtnetlink, devlink) if it's
-more appropriate.
+Hello Eric,
 
-The interface uses generic netlink family "ethtool" and provides multicast
-group "monitor" which is used for notifications. Documentation for the
-interface is in Documentation/networking/ethtool-netlink.rst file. The
-netlink interface is optional, it is built when CONFIG_ETHTOOL_NETLINK
-(bool) option is enabled.
+On 10/9/19 6:00 PM, Eric W. Biederman wrote:
+> "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com> writes:
+> 
+>> Hello Eric,
+>>
+>> Thank you. I was hoping you might jump in on this thread.
+>>
+>> Please see below.
+>>
+>> On 10/9/19 10:46 AM, Eric W. Biederman wrote:
+>>> "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com> writes:
+>>>
+>>>> Hello Philipp,
+>>>>
+>>>> My apologies that it has taken a while to reply. (I had been hoping
+>>>> and waiting that a few more people might weigh in on this thread.)
+>>>>
+>>>> On 9/23/19 3:42 PM, Philipp Wendler wrote:
+>>>>> Hello Michael,
+>>>>>
+>>>>> Am 23.09.19 um 14:04 schrieb Michael Kerrisk (man-pages):
+>>>>>
+>>>>>> I'm considering to rewrite these pieces to exactly
+>>>>>> describe what the system call does (which I already
+>>>>>> do in the third paragraph) and remove the "may or may not"
+>>>>>> pieces in the second paragraph. I'd welcome comments
+>>>>>> on making that change.
+>>
+>> What did you think about my proposal above? To put it in context,
+>> this was my initial comment in the mail:
+>>
+>> [[
+>> One area of the page that I'm still not really happy with
+>> is the "vague" wording in the second paragraph and the note
+>> in the third paragraph about the system call possibly
+>> changing. These pieces survive (in somewhat modified form)
+>> from the original page, which was written before the
+>> system call was released, and it seems there was some
+>> question about whether the system call might still change
+>> its behavior with respect to the root directory and current
+>> working directory of other processes. However, after 19
+>> years, nothing has changed, and surely it will not in the
+>> future, since that would constitute an ABI breakage.
+>> I'm considering to rewrite these pieces to exactly
+>> describe what the system call does (which I already
+>> do in the third paragraph) and remove the "may or may not"
+>> pieces in the second paragraph. I'd welcome comments
+>> on making that change.
+>> ]]
+>>
+>> And the second and third paragraphs of the manual page currently
+>> read:
+>>
+>> [[
+>>        pivot_root()  may  or may not change the current root and the cur‐
+>>        rent working directory of any processes or threads  that  use  the
+>>        old  root  directory  and which are in the same mount namespace as
+>>        the caller of pivot_root().  The  caller  of  pivot_root()  should
+>>        ensure  that  processes  with root or current working directory at
+>>        the old root operate correctly in either case.   An  easy  way  to
+>>        ensure  this is to change their root and current working directory
+>>        to  new_root  before  invoking  pivot_root().   Note   also   that
+>>        pivot_root()  may  or may not affect the calling process's current
+>>        working directory.  It is therefore recommended to call chdir("/")
+>>        immediately after pivot_root().
+>>
+>>        The  paragraph  above  is  intentionally vague because at the time
+>>        when pivot_root() was first implemented, it  was  unclear  whether
+>>        its  affect  on  other process's root and current working directo‐
+>>        ries—and the caller's current working  directory—might  change  in
+>>        the  future.   However, the behavior has remained consistent since
+>>        this system call was first implemented: pivot_root()  changes  the
+>>        root  directory  and the current working directory of each process
+>>        or thread in the same mount namespace to new_root if they point to
+>>        the  old  root  directory.   (See also NOTES.)  On the other hand,
+>>        pivot_root() does not change the caller's current  working  direc‐
+>>        tory  (unless it is on the old root directory), and thus it should
+>>        be followed by a chdir("/") call.
+>> ]]
+> 
+> Apologies I saw that concern I didn't realize it was a questio
+> 
+> I think it is very reasonable to remove warning the behavior might
+> change.  We have pivot_root(8) in common use that to use it requires
+> the semantic of changing processes other than the current process.
+> Which means any attempt to noticably change the behavior of
+> pivot_root(2) will break userspace.
 
-There are three types of request messages distinguished by suffix "_GET"
-(query for information), "_SET" (modify parameters) and "_ACT" (perform an
-action). Kernel reply messages have name with additional suffix "_REPLY"
-(e.g. ETHTOOL_MSG_SETTINGS_GET_REPLY). Most "_SET" and "_ACT" message types
-do not have matching reply type as only some of them need additional reply
-data beyond numeric error code and extack. Kernel also broadcasts
-notification messages ("_NTF" suffix) on changes.
+Thanks for the confirmation that this change would be okay.
+I will make this change soon, unless I hear a counterargument.
 
-Basic concepts:
+> Now the documented semantics in behavior above are not quite what
+> pivot_root(2) does.  It walks all processes on the system and if the
+> working directory or the root directory refer to the root mount that is
+> being replaced, then pivot_root(2) will update them.
+> 
+> In practice the above is limited to a mount namespace.  But something as
+> simple as "cd /proc/<somepid>/root" can allow a process to have a
+> working directory in a different mount namespace.
 
-- make extensions easier not only by allowing new attributes but also by
-  imposing as few artificial limits as possible, e.g. by using arbitrary
-  size bit sets for most bitmap attributes or by not using fixed size
-  strings
-- use extack for error reporting and warnings
-- send netlink notifications on changes (even if they were done using the
-  ioctl interface) and actions
-- avoid the racy read/modify/write cycle between kernel and userspace by
-  sending only attributes which userspace wants to change; there is still
-  a read/modify/write cycle between generic kernel code and ethtool_ops
-  handler in NIC driver but it is only in kernel and under RTNL lock
-- reduce the number of name lists that need to be kept in sync between
-  kernel and userspace (e.g. recognized link modes)
-- where feasible, allow dump requests to query specific information for all
-  network devices
-- as parsing and generating netlink messages is more complicated than
-  simply copying data structures between userspace API and ethtool_ops
-  handlers (which most ioctl commands do), split the code into multiple
-  files in net/ethtool directory; move net/core/ethtool.c also to this
-  directory and rename it to ioctl.c
+So, I'm not quite clear. Do you mean that something in the existing
+manual page text should change? If so, could you describe the
+needed change please?
 
-The full (work in progress) series, together with the (userspace) ethtool
-counterpart can be found at https://github.com/mkubecek/ethnl
+> Because ``unprivileged'' users can now use pivot_root(2) we may want to
+> rethink the implementation at some point to be cheaper than a global
+> process walk.  So far that process walk has not been a problem in
+> practice.
+> 
+> If we had to write pivot_root(2) from scratch limiting it to just
+> changing the root directory of the process that calls pivot_root(2)
+> would have been the superior semantic.  That would have required run
+> pivot_root(8) like: "exec pivot_root . . -- /bin/bash ..."  but it would
+> not have required walking every thread in the system.
 
-Main changes between v6 and v7:
+Okay.
 
-- split complex messages into small single purpose ones (drop info and
-  request masks and one level of nesting)
-- separate request information and reply data into two structures
-- refactor bitset handling (no simultaneous u32/ulong handling but avoid
-  kmalloc() except for long bitmaps on 64-bit big endian architectures)
-- use only fixed size strings internally (will be replaced by char *
-  eventually but that will require rewriting also existing ioctl code)
-- rework ethnl_update_* helpers to return error code
-- rename request flag constants (to ETHTOOL_[GR]FLAG_ prefix)
-- convert documentation to rst
+[...]
 
-Main changes between v5 and v6:
+>>>>>> DESCRIPTION
+>>>>> [...]>        pivot_root()  changes  the
+>>>>>>        root  directory  and the current working directory of each process
+>>>>>>        or thread in the same mount namespace to new_root if they point to
+>>>>>>        the  old  root  directory.   (See also NOTES.)  On the other hand,
+>>>>>>        pivot_root() does not change the caller's current  working  direc‐
+>>>>>>        tory  (unless it is on the old root directory), and thus it should
+>>>>>>        be followed by a chdir("/") call.
+>>>>>
+>>>>> There is a contradiction here with the NOTES (cf. below).
+>>>>
+>>>> See below.
+>>>>
+>>>>>>        The following restrictions apply:
+>>>>>>
+>>>>>>        -  new_root and put_old must be directories.
+>>>>>>
+>>>>>>        -  new_root and put_old must not be on the same filesystem as  the
+>>>>>>           current root.  In particular, new_root can't be "/" (but can be
+>>>>>>           a bind mounted directory on the current root filesystem).
+>>>>>
+>>>>> Wouldn't "must not be on the same mountpoint" or something similar be
+>>>>> more clear, at least for new_root? The note in parentheses indicates
+>>>>> that new_root can actually be on the same filesystem as the current
+>>>>> note. However, ...
+>>>>
+>>>> For 'put_old', it really is "filesystem".
+>>>
+>>> If we are going to be pedantic "filesystem" is really the wrong concept
+>>> here.  The section about bind mount clarifies it, but I wonder if there
+>>> is a better term.
+>>
+>> Thanks. My aim was to try to distinguish "mount point" from
+>> "a mount somewhere inside the file system associated with a
+>> certain mount point"--in other words, I wanted to make it clear
+>> that 'put_old' (and 'new_root') could not be subdirectories
+>> under the current root mount point (which is correct, right?).
+>>
+>> Using "mount" does seem better. (My only concern is that some
+>> people may take it to mean "the mount point", but perhaps that
+>> just my own confusion.)
+> 
+> I am open to better terms.  But mount or vfsmount is what we are using
+> internal to the kernel and is really a distinct concept from filesystem.
+> And it is starting to leak out in system calls like move_mount.
 
-- use ETHTOOL_MSG_ prefix for message types
-- replace ETHA_ prefix for netlink attributes by ETHTOOL_A_
-- replace ETH_x_IM_y for infomask bits by ETHTOOL_IM_x_y
-- split GET reply types from SET requests and notifications
-- split kernel and userspace message types into different enums
-- remove INFO_GET requests from submitted part
-- drop EVENT notifications (use rtnetlink and on-demand string set load)
-- reorganize patches to reduce the number of intermitent warnings
-- unify request/reply header and its processing
-- another nest around strings in a string set for consistency
-- more consistent identifier naming
-- coding style cleanup
-- get rid of some of the helpers
-- set bad attribute in extack where applicable
-- various bug fixes
-- improve documentation and code comments, more kerneldoc comments
-- more verbose commit messages
+I have no better term to propose.
 
-Changes between v4 and v5:
+[...]
 
-- do not panic on failed initialization, only WARN()
+>> Thanks for the above comments.
+>>
+>> Hmm, doI need to make similar changes in the initial paragraph of
+>> the manual page as well? It currently reads:
+>>
+>>        pivot_root() changes the root filesystem in the mount namespace of
+>>        the calling process.  More precisely, it moves the root filesystem
+>>        to  the directory put_old and makes new_root the new root filesys‐
+>>        tem.  The calling process must have the  CAP_SYS_ADMIN  capability
+>>        in the user namespace that owns the caller's mount namespace.
+>>
+>> Furthermore the one line NAME of the man page reads:
+>>
+>>        pivot_root - change the root filesystem
+>>
+>> Is a change needed there also?
+> 
+> Yes please.  Both locations.
 
-Main changes between RFC v3 and v4:
+Okay. So would the following be okay:
 
-- use more kerneldoc style comments
-- strict attribute policy checking
-- use macros for tables of link mode names and parameters
-- provide permanent hardware address in rtnetlink
-- coding style cleanup
-- split too long patches, reorder
-- wrap more ETHA_SETTINGS_* attributes in nests
-- add also some SET_* implementation into submitted part
+[[
+NAME
+       pivot_root - change the root mount
+...
+DESCRIPTION
+       pivot_root()  changes the root mount in the mount namespace of the
+       calling process.  More precisely, it moves the root mount  to  the
+       directory  put_old  and  makes  new_root  the new root mount.  The
+       calling process must have the CAP_SYS_ADMIN capability in the user
+       namespace that owns the caller's mount namespace.
+]]
 
-Main changes between RFC v2 and RFC v3:
+?
 
-- do not allow building as a module (no netdev notifiers needed)
-- drop some obsolete fields
-- add permanent hw address, timestamping and private flags support
-- rework bitset handling to get rid of variable length arrays
-- notify monitor on device renames
-- restructure GET_SETTINGS/SET_SETTINGS messages
-- split too long patches and submit only first part of the series
+[...]
 
-Main changes between RFC v1 and RFC v2:
+>>>>>>        -  new_root must be a mount point.  (If  it  is  not  otherwise  a
+>>>>>>           mount  point,  it  suffices  to  bind  mount new_root on top of
+>>>>>>           itself.)
+>>>>>
+>>>>> ... this item actually makes the above item almost redundant regarding
+>>>>> new_root (except for the "/") case. So one could replace this item with
+>>>>> something like this:
+>>>>>
+>>>>> - new_root must be a mount point different from "/". (If it is not
+>>>>>   otherwise a mount point, it suffices  to bind mount new_root on top
+>>>>>   of itself.)
+>>>>>
+>>>>> The above item would then only mention put_old (and maybe use clarified
+>>>>> wording on whether actually a different file system is necessary for
+>>>>> put_old or whether a different mount point is enough).
+>>>>
+>>>> Thanks. That's a good suggestion. I simplified the earlier bullet
+>>>> point as you suggested, and changed the text here to say:
+>>>>
+>>>>        -  new_root must be a mount point, but can't be "/".  If it is not
+>>>>           otherwise  a mount point, it suffices to bind mount new_root on
+>>>>           top of itself.  (new_root can be a bind  mounted  directory  on
+>>>>           the current root filesystem.)
+>>>
+>>> How about:
+>>>           - new_root must be the path to a mount, but can't be "/".  Any
+>>
+>> Surely here it must be "mount point" not "mount"? (See my discussion
+>> above.)
+> 
+> Sigh.  I have had my head in the code to long, where new_root is
+> used to refer to the mount that is mounted on that mount point as well.
 
-- support dumps for all "get" requests
-- provide notifications for changes related to supported request types
-- support getting string sets (both global and per device)
-- support getting/setting device features
-- get rid of family specific header, everything passed as attributes
-- split netlink code into multiple files in net/ethtool/ directory
+Okay -- so I made the text here:
 
+       -  new_root  must be a path to a mount point, but can't be "/".  A
+          path that is not already a mount point can  be  converted  into
+          one by bind mounting the path onto itself.
 
-Michal Kubecek (17):
-  rtnetlink: provide permanent hardware address in RTM_NEWLINK
-  netlink: rename nl80211_validate_nested() to nla_validate_nested()
-  ethtool: move to its own directory
-  ethtool: introduce ethtool netlink interface
-  ethtool: helper functions for netlink interface
-  ethtool: netlink bitset handling
-  ethtool: support for netlink notifications
-  ethtool: move string arrays into common file
-  ethtool: generic handlers for GET requests
-  ethtool: provide string sets with STRSET_GET request
-  ethtool: provide link mode names as a string set
-  ethtool: provide link settings with LINKINFO_GET request
-  ethtool: add standard notification handler
-  ethtool: set link settings with LINKINFO_SET request
-  ethtool: provide link mode information with LINKMODES_GET request
-  ethtool: set link modes related data with LINKMODES_SET request
-  ethtool: provide link state with LINKSTATE_GET request
+Okay?
 
- Documentation/networking/ethtool-netlink.rst | 510 ++++++++++++
- include/linux/ethtool.h                      |   4 +
- include/linux/ethtool_netlink.h              |  17 +
- include/linux/netdevice.h                    |   9 +
- include/net/netlink.h                        |   8 +-
- include/uapi/linux/ethtool.h                 |   4 +
- include/uapi/linux/ethtool_netlink.h         | 215 +++++
- include/uapi/linux/if_link.h                 |   1 +
- net/Kconfig                                  |   8 +
- net/Makefile                                 |   2 +-
- net/core/Makefile                            |   2 +-
- net/core/rtnetlink.c                         |   5 +
- net/ethtool/Makefile                         |   8 +
- net/ethtool/bitset.c                         | 714 +++++++++++++++++
- net/ethtool/bitset.h                         |  28 +
- net/ethtool/common.c                         | 141 ++++
- net/ethtool/common.h                         |  24 +
- net/{core/ethtool.c => ethtool/ioctl.c}      | 156 +---
- net/ethtool/linkinfo.c                       | 180 +++++
- net/ethtool/linkmodes.c                      | 406 ++++++++++
- net/ethtool/linkstate.c                      |  77 ++
- net/ethtool/netlink.c                        | 789 +++++++++++++++++++
- net/ethtool/netlink.h                        | 358 +++++++++
- net/ethtool/strset.c                         | 435 ++++++++++
- net/wireless/nl80211.c                       |   3 +-
- 25 files changed, 3960 insertions(+), 144 deletions(-)
- create mode 100644 Documentation/networking/ethtool-netlink.rst
- create mode 100644 include/linux/ethtool_netlink.h
- create mode 100644 include/uapi/linux/ethtool_netlink.h
- create mode 100644 net/ethtool/Makefile
- create mode 100644 net/ethtool/bitset.c
- create mode 100644 net/ethtool/bitset.h
- create mode 100644 net/ethtool/common.c
- create mode 100644 net/ethtool/common.h
- rename net/{core/ethtool.c => ethtool/ioctl.c} (93%)
- create mode 100644 net/ethtool/linkinfo.c
- create mode 100644 net/ethtool/linkmodes.c
- create mode 100644 net/ethtool/linkstate.c
- create mode 100644 net/ethtool/netlink.c
- create mode 100644 net/ethtool/netlink.h
- create mode 100644 net/ethtool/strset.c
+[...]
+
+Thanks, Eric. As always, your input for the man pages is so
+valuable. (My only challenge is to keep up with you...)
+
+Cheers,
+
+Michael
 
 -- 
-2.23.0
-
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
