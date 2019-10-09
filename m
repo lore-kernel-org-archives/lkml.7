@@ -7,53 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2669BECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E501C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3B8720679
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:30:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 339C220679
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:30:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570642214;
-	bh=NJb3PdRwSfT1QSxxEObHPqMhGSClyyumJNuAzDmURQo=;
+	s=default; t=1570642220;
+	bh=fZWWucbpLxJGkKOUSdJkJb/oxZDR/zbWPQ//eAJTko8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=szRt9kfwRK9aLnyP4IokZsiYNJ4dcUIiwxPiUs3YWaFR/laZvltITBRU3pyQ5Ea4k
-	 bw475s88yhrd5RW9WJKHasXLXtbVvsFq7qUCzZW7TLtjeP4AOyUE9CPqV7TYViZq10
-	 eFT9nfQKL7/sjcz37sXK1ssuE6iao0KqtYf3f1p4=
+	b=YTQdMsVyRLogY8AU5ARBrah+LTEWIyJodWW4hVbgADC+b/pdHsI26wCEqNoReRd+L
+	 kG7RnxW72/Ro+Lbi5uZHIiYil433tgHDa92gRdgjiKPGNRFcxjocD/D5damUlsg1qu
+	 2vCXSpqnvf/5YYILePnyq9KwhGC3DTvEHtEnbWt0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732914AbfJIRaM (ORCPT
+        id S1732160AbfJIRYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:30:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48634 "EHLO mail.kernel.org"
+        Wed, 9 Oct 2019 13:24:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732004AbfJIRYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 13:24:10 -0400
+        id S1732004AbfJIRX5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 13:23:57 -0400
 Received: from sasha-vm.mshome.net (unknown [167.220.2.234])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D23A21D7C;
-        Wed,  9 Oct 2019 17:24:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47C3E21929;
+        Wed,  9 Oct 2019 17:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570641849;
-        bh=NJb3PdRwSfT1QSxxEObHPqMhGSClyyumJNuAzDmURQo=;
+        s=default; t=1570641837;
+        bh=fZWWucbpLxJGkKOUSdJkJb/oxZDR/zbWPQ//eAJTko8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1uJa8R0kbCxZdQ5qUiW8s5JVaX82IUiqemxXHRfrBhDWitwXC5RxwpxYxz2/0aAWs
-         GF9ld6ShXXtr8YSceudmzx+CZrgvp47+87v0OroxXVewhM7/wwms5PzZmOjsNpqUXz
-         KoEnLlDWdTO0KWZFm7y2zqPMEuZchx/9jMQeZMEY=
+        b=BUJ5AgSlAze/wY3vUaiHBv3XQloBGFWhzZh9EDWLCV8CpmVNOUjTOjOdLrAclts0i
+         w2YXsoGcCVAgVoc6ByTKV8JLHQssZvXJjEBXcm2TJUG6fN2u8C5qhzNcp207lU9iuY
+         owJj0G05hBD4XDpWymIjVegQF3pjkeFN0yD/JEEI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miaoqing Pan <miaoqing@codeaurora.org>,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 17/26] mac80211: fix txq null pointer dereference
-Date:   Wed,  9 Oct 2019 13:05:49 -0400
-Message-Id: <20191009170558.32517-17-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>, Suman Anna <s-anna@ti.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 14/68] ARM: dts: Fix gpio0 flags for am335x-icev2
+Date:   Wed,  9 Oct 2019 13:04:53 -0400
+Message-Id: <20191009170547.32204-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191009170558.32517-1-sashal@kernel.org>
-References: <20191009170558.32517-1-sashal@kernel.org>
+In-Reply-To: <20191009170547.32204-1-sashal@kernel.org>
+References: <20191009170547.32204-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,72 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaoqing Pan <miaoqing@codeaurora.org>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 8ed31a264065ae92058ce54aa3cc8da8d81dc6d7 ]
+[ Upstream commit 4ef5d76b453908f21341e661a9b6f96862f6f589 ]
 
-If the interface type is P2P_DEVICE or NAN, read the file of
-'/sys/kernel/debug/ieee80211/phyx/netdev:wlanx/aqm' will get a
-NULL pointer dereference. As for those interface type, the
-pointer sdata->vif.txq is NULL.
+The ti,no-idle-on-init and ti,no-reset-on-init flags need to be at
+the interconnect target module level for the modules that have it
+defined. Otherwise we get the following warnings:
 
-Unable to handle kernel NULL pointer dereference at virtual address 00000011
-CPU: 1 PID: 30936 Comm: cat Not tainted 4.14.104 #1
-task: ffffffc0337e4880 task.stack: ffffff800cd20000
-PC is at ieee80211_if_fmt_aqm+0x34/0xa0 [mac80211]
-LR is at ieee80211_if_fmt_aqm+0x34/0xa0 [mac80211]
-[...]
-Process cat (pid: 30936, stack limit = 0xffffff800cd20000)
-[...]
-[<ffffff8000b7cd00>] ieee80211_if_fmt_aqm+0x34/0xa0 [mac80211]
-[<ffffff8000b7c414>] ieee80211_if_read+0x60/0xbc [mac80211]
-[<ffffff8000b7ccc4>] ieee80211_if_read_aqm+0x28/0x30 [mac80211]
-[<ffffff80082eff94>] full_proxy_read+0x2c/0x48
-[<ffffff80081eef00>] __vfs_read+0x2c/0xd4
-[<ffffff80081ef084>] vfs_read+0x8c/0x108
-[<ffffff80081ef494>] SyS_read+0x40/0x7c
+dts flag should be at module level for ti,no-idle-on-init
+dts flag should be at module level for ti,no-reset-on-init
 
-Signed-off-by: Miaoqing Pan <miaoqing@codeaurora.org>
-Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Link: https://lore.kernel.org/r/1569549796-8223-1-git-send-email-miaoqing@codeaurora.org
-[trim useless data from commit message]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 87fc89ced3a7 ("ARM: dts: am335x: Move l4 child devices to probe them with ti-sysc")
+Cc: Lokesh Vutla <lokeshvutla@ti.com>
+Reported-by: Suman Anna <s-anna@ti.com>
+Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/debugfs_netdev.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/am335x-icev2.dts | 2 +-
+ arch/arm/boot/dts/am33xx-l4.dtsi   | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/mac80211/debugfs_netdev.c b/net/mac80211/debugfs_netdev.c
-index d37d4acafebf5..316250ae90712 100644
---- a/net/mac80211/debugfs_netdev.c
-+++ b/net/mac80211/debugfs_netdev.c
-@@ -490,9 +490,14 @@ static ssize_t ieee80211_if_fmt_aqm(
- 	const struct ieee80211_sub_if_data *sdata, char *buf, int buflen)
- {
- 	struct ieee80211_local *local = sdata->local;
--	struct txq_info *txqi = to_txq_info(sdata->vif.txq);
-+	struct txq_info *txqi;
- 	int len;
+diff --git a/arch/arm/boot/dts/am335x-icev2.dts b/arch/arm/boot/dts/am335x-icev2.dts
+index 18f70b35da4c7..204bccfcc110a 100644
+--- a/arch/arm/boot/dts/am335x-icev2.dts
++++ b/arch/arm/boot/dts/am335x-icev2.dts
+@@ -432,7 +432,7 @@
+ 	pinctrl-0 = <&mmc0_pins_default>;
+ };
  
-+	if (!sdata->vif.txq)
-+		return 0;
-+
-+	txqi = to_txq_info(sdata->vif.txq);
-+
- 	spin_lock_bh(&local->fq.lock);
- 	rcu_read_lock();
+-&gpio0 {
++&gpio0_target {
+ 	/* Do not idle the GPIO used for holding the VTT regulator */
+ 	ti,no-reset-on-init;
+ 	ti,no-idle-on-init;
+diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
+index 46849d6ecb3e2..1515f4f914999 100644
+--- a/arch/arm/boot/dts/am33xx-l4.dtsi
++++ b/arch/arm/boot/dts/am33xx-l4.dtsi
+@@ -127,7 +127,7 @@
+ 			ranges = <0x0 0x5000 0x1000>;
+ 		};
  
-@@ -659,7 +664,9 @@ static void add_common_files(struct ieee80211_sub_if_data *sdata)
- 	DEBUGFS_ADD(rc_rateidx_vht_mcs_mask_5ghz);
- 	DEBUGFS_ADD(hw_queues);
- 
--	if (sdata->local->ops->wake_tx_queue)
-+	if (sdata->local->ops->wake_tx_queue &&
-+	    sdata->vif.type != NL80211_IFTYPE_P2P_DEVICE &&
-+	    sdata->vif.type != NL80211_IFTYPE_NAN)
- 		DEBUGFS_ADD(aqm);
- }
- 
+-		target-module@7000 {			/* 0x44e07000, ap 14 20.0 */
++		gpio0_target: target-module@7000 {	/* 0x44e07000, ap 14 20.0 */
+ 			compatible = "ti,sysc-omap2", "ti,sysc";
+ 			ti,hwmods = "gpio1";
+ 			reg = <0x7000 0x4>,
 -- 
 2.20.1
 
