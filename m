@@ -2,152 +2,96 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD32ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1DE7ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC02206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:42:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4C4921721
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:43:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729457AbfJIImJ (ORCPT
+        id S1729664AbfJIInM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 04:42:09 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:58888 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725440AbfJIImI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 04:42:08 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 2430E4051D3B32D1B745;
-        Wed,  9 Oct 2019 16:42:07 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.203) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Wed, 9 Oct 2019
- 16:42:00 +0800
-Subject: Re: [PATCH v7 00/12] implement KASLR for powerpc/fsl_booke/32
-To:     Scott Wood <oss@buserror.net>, <mpe@ellerman.id.au>,
-        <linuxppc-dev@lists.ozlabs.org>, <diana.craciun@nxp.com>,
-        <christophe.leroy@c-s.fr>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>, <npiggin@gmail.com>, <keescook@chromium.org>,
-        <kernel-hardening@lists.openwall.com>
-CC:     <wangkefeng.wang@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <jingxiangfeng@huawei.com>, <zhaohongjiang@huawei.com>,
-        <thunder.leizhen@huawei.com>, <yebin10@huawei.com>
-References: <20190920094546.44948-1-yanaijie@huawei.com>
- <9c2dd2a8-83f2-983c-383e-956e19a7803a@huawei.com>
- <c4769b34-95f6-81b9-4856-50459630aa0d@huawei.com>
- <38141b946f3376ce471e46eaf065e357ac540354.camel@buserror.net>
-From:   Jason Yan <yanaijie@huawei.com>
-Message-ID: <90bb659a-bde4-3b8e-8f01-bf22d7534f44@huawei.com>
-Date:   Wed, 9 Oct 2019 16:41:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
-MIME-Version: 1.0
-In-Reply-To: <38141b946f3376ce471e46eaf065e357ac540354.camel@buserror.net>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.96.203]
-X-CFilter-Loop: Reflected
+        Wed, 9 Oct 2019 04:43:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:56692 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725935AbfJIInM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 04:43:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 67EC6337;
+        Wed,  9 Oct 2019 01:43:09 -0700 (PDT)
+Received: from localhost.localdomain (entos-thunderx2-02.shanghai.arm.com [10.169.40.54])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B69F03F68E;
+        Wed,  9 Oct 2019 01:43:04 -0700 (PDT)
+From:   Jia He <justin.he@arm.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>, hejianet@gmail.com,
+        Kaly Xin <Kaly.Xin@arm.com>, nd@arm.com,
+        Jia He <justin.he@arm.com>
+Subject: [PATCH v11 0/4] fix double page fault in cow_user_page for pfn mapping
+Date:   Wed,  9 Oct 2019 16:42:42 +0800
+Message-Id: <20191009084246.123354-1-justin.he@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Scott,
+When we tested pmdk unit test vmmalloc_fork TEST1 in arm64 guest, there
+will be a double page fault in __copy_from_user_inatomic of cow_user_page.
 
-On 2019/10/9 15:13, Scott Wood wrote:
-> On Wed, 2019-10-09 at 14:10 +0800, Jason Yan wrote:
->> Hi Scott,
->>
->> Would you please take sometime to test this?
->>
->> Thank you so much.
->>
->> On 2019/9/24 13:52, Jason Yan wrote:
->>> Hi Scott,
->>>
->>> Can you test v7 to see if it works to load a kernel at a non-zero address?
->>>
->>> Thanks,
-> 
-> Sorry for the delay.  Here's the output:
-> 
+As told by Catalin: "On arm64 without hardware Access Flag, copying from
+user will fail because the pte is old and cannot be marked young. So we
+always end up with zeroed page after fork() + CoW for pfn mappings. we
+don't always have a hardware-managed access flag on arm64."
 
-Thanks for the test.
+Changes
+v11:
+    refine cpu_has_hw_af in PATCH 01(Will Deacon, Suzuki)
+    change the default return value to true in arch_faults_on_old_pte
+    add PATCH 03 for overriding arch_faults_on_old_pte(false) on x86
+v10:
+    add r-b from Catalin and a-b from Kirill in PATCH 03
+    remoe Reported-by in PATCH 01
+v9: refactor cow_user_page for indention optimization (Catalin)
+    hold the ptl longer (Catalin)
+v8: change cow_user_page's return type (Matthew)
+v7: s/pte_spinlock/pte_offset_map_lock (Kirill)
+v6: fix error case of returning with spinlock taken (Catalin)
+    move kmap_atomic to avoid handling kunmap_atomic
+v5: handle the case correctly when !pte_same
+    fix kbuild test failed
+v4: introduce cpu_has_hw_af (Suzuki)
+    bail out if !pte_same (Kirill)
+v3: add vmf->ptl lock/unlock (Kirill A. Shutemov)
+    add arch_faults_on_old_pte (Matthew, Catalin)
+v2: remove FAULT_FLAG_WRITE when setting pte access flag (Catalin)
 
-> ## Booting kernel from Legacy Image at 10000000 ...
->     Image Name:   Linux-5.4.0-rc2-00050-g8ac2cf5b4
->     Image Type:   PowerPC Linux Kernel Image (gzip compressed)
->     Data Size:    7521134 Bytes = 7.2 MiB
->     Load Address: 04000000
->     Entry Point:  04000000
->     Verifying Checksum ... OK
-> ## Flattened Device Tree blob at 1fc00000
->     Booting using the fdt blob at 0x1fc00000
->     Uncompressing Kernel Image ... OK
->     Loading Device Tree to 07fe0000, end 07fff65c ... OK
-> KASLR: No safe seed for randomizing the kernel base.
-> OF: reserved mem: initialized node qman-fqd, compatible id fsl,qman-fqd
-> OF: reserved mem: initialized node qman-pfdr, compatible id fsl,qman-pfdr
-> OF: reserved mem: initialized node bman-fbpr, compatible id fsl,bman-fbpr
-> Memory CAM mapping: 64/64/64 Mb, residual: 12032Mb
+Jia He (4):
+  arm64: cpufeature: introduce helper cpu_has_hw_af()
+  arm64: mm: implement arch_faults_on_old_pte() on arm64
+  x86/mm: implement arch_faults_on_old_pte() stub on x86
+  mm: fix double page fault on arm64 if PTE_AF is cleared
 
-When boot from 04000000, the max CAM value is 64M. And
-you have a board with 12G memory, CONFIG_LOWMEM_CAM_NUM=3 means only
-192M memory is mapped and when kernel is randomized at the middle of 
-this 192M memory, we will not have enough continuous memory for node map.
+ arch/arm64/include/asm/cpufeature.h |  14 ++++
+ arch/arm64/include/asm/pgtable.h    |  14 ++++
+ arch/x86/include/asm/pgtable.h      |   6 ++
+ mm/memory.c                         | 104 ++++++++++++++++++++++++----
+ 4 files changed, 123 insertions(+), 15 deletions(-)
 
-Can you set CONFIG_LOWMEM_CAM_NUM=8 and see if it works?
-
-Thanks.
-
-> Linux version 5.4.0-rc2-00050-g8ac2cf5b4e4a-dirty (scott@snotra) (gcc version 8.
-> 1.0 (GCC)) #26 SMP Wed Oct 9 01:50:40 CDT 2019
-> Using CoreNet Generic machine description
-> printk: bootconsole [udbg0] enabled
-> CPU maps initialized for 1 thread per core
-> -----------------------------------------------------
-> phys_mem_size     = 0x2fc000000
-> dcache_bsize      = 0x40
-> icache_bsize      = 0x40
-> cpu_features      = 0x00000000000003b4
->    possible        = 0x00000000010103bc
->    always          = 0x0000000000000020
-> cpu_user_features = 0x8c008000 0x08000000
-> mmu_features      = 0x000a0010
-> physical_start    = 0xc7c4000
-> -----------------------------------------------------
-> CoreNet Generic board
-> mpc85xx_qe_init: Could not find Quicc Engine node
-> barrier-nospec: using isync; sync as speculation barrier
-> Zone ranges:
->    Normal   [mem 0x0000000004000000-0x000000000fffffff]
->    HighMem  [mem 0x0000000010000000-0x00000002ffffffff]
-> Movable zone start for each node
-> Early memory node ranges
->    node   0: [mem 0x0000000004000000-0x00000002ffffffff]
-> Initmem setup node 0 [mem 0x0000000004000000-0x00000002ffffffff]
-> Kernel panic - not syncing: Failed to allocate 125173760 bytes for node 0 memory
->   map
-> CPU: 0 PID: 0 Comm: swapper Not tainted 5.4.0-rc2-00050-g8ac2cf5b4e4a-dirty #26
-> Call Trace:
-> [c989fe10] [c924bfb0] dump_stack+0x84/0xb4 (unreliable)
-> [c989fe30] [c880badc] panic+0x140/0x334
-> [c989fe90] [c89a1144] alloc_node_mem_map.constprop.117+0xa0/0x11c
-> [c989feb0] [c95481c4] free_area_init_node+0x314/0x5b8
-> [c989ff30] [c9548b34] free_area_init_nodes+0x57c/0x5c0
-> [c989ff80] [c952cbb4] setup_arch+0x250/0x270
-> [c989ffa0] [c95278e0] start_kernel+0x74/0x4e8
-> [c989fff0] [c87c4478] set_ivor+0x150/0x18c
-> Kernel Offset: 0x87c4000 from 0xc0000000
-> Rebooting in 180 seconds..
-> 
-> -Scott
-> 
-> 
-> 
-> .
-> 
+-- 
+2.17.1
 
