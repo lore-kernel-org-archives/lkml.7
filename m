@@ -2,248 +2,158 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 593F7ECE596
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E86ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2905D206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:30:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F258B2133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:31:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bsE536iH"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="p/7hODrH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728734AbfJIHae (ORCPT
+        id S1729548AbfJIHb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 03:30:34 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:33198 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfJIHad (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 03:30:33 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x997UKhm013883;
-        Wed, 9 Oct 2019 02:30:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570606220;
-        bh=5z+TfXG/+mukQHo2BHWbozbe5qjOLFXVTXcSKio8sx0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=bsE536iHGLRLKaUN5WBJPKBKahpEY/Y+RFUA8zRaoMwdLXIZJLfonUphytm7cKVN2
-         Rn1zKf3m1SLD+dcvWgdKC9RZRSwinWvdZ7/C72cJsQ7rI9Ew4fGiDjsXqWrK1yv+mr
-         UAj4dJRrt31sYJl8kejroBgW8hfV23CDq6yliLqk=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x997UKHx030086
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 9 Oct 2019 02:30:20 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 9 Oct
- 2019 02:30:16 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 9 Oct 2019 02:30:19 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x997UFOT089869;
-        Wed, 9 Oct 2019 02:30:16 -0500
-Subject: Re: [PATCH v3 03/14] dmaengine: doc: Add sections for per descriptor
- metadata support
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <vkoul@kernel.org>,
-        <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>
-CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        Wed, 9 Oct 2019 03:31:26 -0400
+Received: from mail-eopbgr760085.outbound.protection.outlook.com ([40.107.76.85]:22163
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725776AbfJIHb0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 03:31:26 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cln2tRgSpwgVN2orCImqsT8uSH0Z94IZu40s9EGnpd0BhGiqS678s2f/CHTQMPrVj+KxGw3BHkj7SGzEBHb1TUsLQuqpNbKHfJHl+VogsY3xqOySdQ0WXE05MMSe7sBe2w3mxUefq7KjksZhlbaPDxGntwXmpTAm6Cah3iYtZvoNXmT+mWY9dc0ny2fLIhvjy6i1XfAJ4E8l2kksJ2dKE6DDXZEHnpfoH9QnIGyCb9tqwCI159idD79R39l81kr5vo0dBciqJn3owxWHabpNeugMuqCT5DTjq9lYUQ/4BFZTK8a2WLL0sKhpWeOqFE1wUoGwHGL7kIQXrsjObsaotQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TICxxJ4gbVYstsWViRFhRaaguQCT6iZ2qqwVW/bgP1I=;
+ b=UHp6lxzGc70ANJKdujglnNcOxQkY7Ct+evtCo+mdGDfXHvUSH0axlBe/kjZxRZgFGs1OQvQP0TZwvDfyT58NdCnvOaFAucxVLaCljJyDZvNK/kJxBPr5BJD0b6T+Mtek3/QSGZKWrMDAFO5UdRNUDa8YIkPWE9nQYWio99wihbZSkeuUe9lm8mTt9kUFj/eThfZbyfouKr32cPDFzVhU2XnRt8FFzl1cW3Sv0WM3nkj008Ndo/bJylPBS5PHq156e3eSOl/glSxl+sSrLjU4VrB2PAYEr5A6ESsMgpNrFl1AvmENceH3I3vwjMB+8hrs94NOWvq0fqbSW5b7gnm/2A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TICxxJ4gbVYstsWViRFhRaaguQCT6iZ2qqwVW/bgP1I=;
+ b=p/7hODrHMbalsWORDZ1qhskFDGD+5CgidhSxpsAOa0hH78LrCtxFeQPdDU5x0yKJCSX5kdI7KhmmP25y8onXE6cIs/ac5hiWHyWQoWcTw6GlmplKMc59KliiQV3FJsmVWUMNRcXpVKGmjPAAci/sdaPMho8GDV6hi8cmRztCUnU=
+Received: from MN2PR02MB6400.namprd02.prod.outlook.com (52.132.173.155) by
+ MN2PR02MB6046.namprd02.prod.outlook.com (52.132.174.78) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.16; Wed, 9 Oct 2019 07:31:22 +0000
+Received: from MN2PR02MB6400.namprd02.prod.outlook.com
+ ([fe80::2490:5890:f2e7:14b3]) by MN2PR02MB6400.namprd02.prod.outlook.com
+ ([fe80::2490:5890:f2e7:14b3%7]) with mapi id 15.20.2327.026; Wed, 9 Oct 2019
+ 07:31:21 +0000
+From:   Appana Durga Kedareswara Rao <appanad@xilinx.com>
+To:     Marc Kleine-Budde <mkl@pengutronix.de>,
+        Anssi Hannula <anssi.hannula@bitwise.fi>
+CC:     "wg@grandegger.com" <wg@grandegger.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Michal Simek <michals@xilinx.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
-        <tony@atomide.com>, <j-keerthy@ti.com>
-References: <20191001061704.2399-1-peter.ujfalusi@ti.com>
- <20191001061704.2399-4-peter.ujfalusi@ti.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <6b9be9ea-551a-22e1-a86b-9e149656058f@ti.com>
-Date:   Wed, 9 Oct 2019 10:30:15 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20191001061704.2399-4-peter.ujfalusi@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>
+Subject: RE: [PATCH 2/6] net: can: xilinx_can: Fix flags field initialization
+ for axi can and canps
+Thread-Topic: [PATCH 2/6] net: can: xilinx_can: Fix flags field initialization
+ for axi can and canps
+Thread-Index: AQHVesCfvo8HLFt+ZUeAzSH0lYp+g6dRtjlAgAA3lYCAAANrwA==
+Date:   Wed, 9 Oct 2019 07:31:21 +0000
+Message-ID: <MN2PR02MB640062BAF9E353802FF9EDA0DC950@MN2PR02MB6400.namprd02.prod.outlook.com>
+References: <1552908766-26753-1-git-send-email-appana.durga.rao@xilinx.com>
+ <1552908766-26753-3-git-send-email-appana.durga.rao@xilinx.com>
+ <d1bedb13-f66f-b0fd-bd6d-9f95b64fc405@bitwise.fi>
+ <MN2PR02MB64004059908C95EB5E16746FDC950@MN2PR02MB6400.namprd02.prod.outlook.com>
+ <644fb76f-8169-4911-2293-92ae2dfe4e1c@pengutronix.de>
+In-Reply-To: <644fb76f-8169-4911-2293-92ae2dfe4e1c@pengutronix.de>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=appanad@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d3aef0c8-2d47-4967-552e-08d74c8aaeef
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: MN2PR02MB6046:|MN2PR02MB6046:
+x-ms-exchange-purlcount: 1
+x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR02MB60469015DEACA261DA16DE1ADC950@MN2PR02MB6046.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 018577E36E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(39860400002)(376002)(396003)(346002)(199004)(189003)(7736002)(5660300002)(305945005)(316002)(2906002)(7696005)(74316002)(6116002)(3846002)(99286004)(256004)(110136005)(55016002)(54906003)(81166006)(6436002)(6306002)(966005)(4326008)(8936002)(229853002)(8676002)(52536014)(6246003)(81156014)(14454004)(9686003)(478600001)(33656002)(76116006)(66476007)(25786009)(64756008)(66946007)(26005)(186003)(102836004)(66556008)(66446008)(6506007)(53546011)(76176011)(86362001)(486006)(71200400001)(71190400001)(66066001)(11346002)(476003)(446003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR02MB6046;H:MN2PR02MB6400.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: rmHYal2828jrvC/d9/gQRpY9QcOaxWdaZtXTdgwcmUc9MxenKCPsZ6vUYKvgDfBgvmdOMVB00h3VMUSlSinTUlMXeAowSeLIFSL/IOG6AI8hRqie1DKaLu5x8o9G60AxDFt1MrOrFhWxpIhGL2vybVcLvUH6F1pdnjcVjDxOciERGB+Q+0zflOTUXtQ3GH2ylVwRO4s7mf7FxQDMFFfnkyJwtFeL8jqRyeZ/ZTNGfG6V3h0lZWBIJqWko27fxKHghIZwJQOEfSrdAW/ndWYI8uYyGxMI29aCZckC3brcPRJ28U6QVZZiI9770qvc//PKEeufCdFf6db1yV8uooH2dhSB789AMJlxNQQaNfcs49pveWj4kSRDVCwMTM8N4AMmJQGUT01HBlnQvgpwi2Fz5Bq8FcxhDt0oirVNRzjbecSYgNX3BWDrPnGCbNZwZhFBFCr/tRE2Ap0LKi5hKWEYrw==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d3aef0c8-2d47-4967-552e-08d74c8aaeef
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Oct 2019 07:31:21.6545
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: lx2DR9b/mADNn/4gQd4TlTLMTsll+aIVNe2T9i+qiLfZFbsVTK+hvRIKJvv2m4MJ5rdi6ahOstLX8KBTfxB//Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB6046
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/10/2019 09:16, Peter Ujfalusi wrote:
-> Update the provider and client documentation with details about the
-> metadata support.
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-
-Couple of typos below, but they don't really change the readability of 
-the document so:
-
-Reviewed-by: Tero Kristo <t-kristo@ti.com>
-
-> ---
->   Documentation/driver-api/dmaengine/client.rst | 75 +++++++++++++++++++
->   .../driver-api/dmaengine/provider.rst         | 46 ++++++++++++
->   2 files changed, 121 insertions(+)
-> 
-> diff --git a/Documentation/driver-api/dmaengine/client.rst b/Documentation/driver-api/dmaengine/client.rst
-> index 45953f171500..d708e46b88a2 100644
-> --- a/Documentation/driver-api/dmaengine/client.rst
-> +++ b/Documentation/driver-api/dmaengine/client.rst
-> @@ -151,6 +151,81 @@ The details of these operations are:
->        Note that callbacks will always be invoked from the DMA
->        engines tasklet, never from interrupt context.
->   
-> +  Optional: per descriptor metadata
-> +  ---------------------------------
-> +  DMAengine provides two ways for metadata support.
-> +
-> +  DESC_METADATA_CLIENT
-> +
-> +    The metadata buffer is allocated/provided by the client driver and it is
-> +    attached to the descriptor.
-> +
-> +  .. code-block:: c
-> +
-> +     int dmaengine_desc_attach_metadata(struct dma_async_tx_descriptor *desc,
-> +				   void *data, size_t len);
-> +
-> +  DESC_METADATA_ENGINE
-> +
-> +    The metadata buffer is allocated/managed by the DMA driver. The client
-> +    driver can ask for the pointer, maximum size and the currently used size of
-> +    the metadata and can directly update or read it.
-> +
-> +  .. code-block:: c
-> +
-> +     void *dmaengine_desc_get_metadata_ptr(struct dma_async_tx_descriptor *desc,
-> +		size_t *payload_len, size_t *max_len);
-> +
-> +     int dmaengine_desc_set_metadata_len(struct dma_async_tx_descriptor *desc,
-> +		size_t payload_len);
-> +
-> +  Client drivers can query if a given mode is supported with:
-> +
-> +  .. code-block:: c
-> +
-> +     bool dmaengine_is_metadata_mode_supported(struct dma_chan *chan,
-> +		enum dma_desc_metadata_mode mode);
-> +
-> +  Depending on the used mode client drivers must follow different flow.
-> +
-> +  DESC_METADATA_CLIENT
-> +
-> +    - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM:
-> +      1. prepare the descriptor (dmaengine_prep_*)
-> +         construct the metadata in the client's buffer
-> +      2. use dmaengine_desc_attach_metadata() to attach the buffer to the
-> +         descriptor
-> +      3. submit the transfer
-> +    - DMA_DEV_TO_MEM:
-> +      1. prepare the descriptor (dmaengine_prep_*)
-> +      2. use dmaengine_desc_attach_metadata() to attach the buffer to the
-> +         descriptor
-> +      3. submit the transfer
-> +      4. when the transfer is completed, the metadata should be available in the
-> +         attached buffer
-> +
-> +  DESC_METADATA_ENGINE
-> +
-> +    - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM:
-> +      1. prepare the descriptor (dmaengine_prep_*)
-> +      2. use dmaengine_desc_get_metadata_ptr() to get the pointer to the
-> +         engine's metadata area
-> +      3. update the metadata at the pointer
-> +      4. use dmaengine_desc_set_metadata_len()  to tell the DMA engine the
-> +         amount of data the client has placed into the metadata buffer
-> +      5. submit the transfer
-> +    - DMA_DEV_TO_MEM:
-> +      1. prepare the descriptor (dmaengine_prep_*)
-> +      2. submit the transfer
-> +      3. on transfer completion, use dmaengine_desc_get_metadata_ptr() to get the
-> +         pointer to the engine's metadata are
-
-are = area?
-
-> +      4. Read out the metadate from the pointer
-
-metadate = metadata?
-
-> +
-> +  .. note::
-> +
-> +     Mixed use of DESC_METADATA_CLIENT / DESC_METADATA_ENGINE is not allowed,
-> +     client drivers must use either of the modes per descriptor.
-> +
->   4. Submit the transaction
->   
->      Once the descriptor has been prepared and the callback information
-> diff --git a/Documentation/driver-api/dmaengine/provider.rst b/Documentation/driver-api/dmaengine/provider.rst
-> index dfc4486b5743..9e6d87b3c477 100644
-> --- a/Documentation/driver-api/dmaengine/provider.rst
-> +++ b/Documentation/driver-api/dmaengine/provider.rst
-> @@ -247,6 +247,52 @@ after each transfer. In case of a ring buffer, they may loop
->   (DMA_CYCLIC). Addresses pointing to a device's register (e.g. a FIFO)
->   are typically fixed.
->   
-> +Per descriptor metadata support
-> +-------------------------------
-> +Some data movement architecure (DMA controller and peripherals) uses metadata
-
-architecure = architecture?
-
-> +associated with a transaction. The DMA controller role is to transfer the
-> +payload and the metadata alongside.
-> +The metadata itself is not used by the DMA engine itself, but it contains
-> +parameters, keys, vectors, etc for peripheral or from the peripheral.
-> +
-> +The DMAengine framework provides a generic ways to facilitate the metadata for
-> +descriptors. Depending on the architecture the DMA driver can implement either
-> +or both of the methods and it is up to the client driver to choose which one
-> +to use.
-> +
-> +- DESC_METADATA_CLIENT
-> +
-> +  The metadata buffer is allocated/provided by the client driver and it is
-> +  attached (via the dmaengine_desc_attach_metadata() helper to the descriptor.
-> +
-> +  From the DMA driver the following is expected for this mode:
-> +  - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM
-> +    The data from the provided metadata buffer should be prepared for the DMA
-> +    controller to be sent alongside of the payload data. Either by copying to a
-> +    hardware descriptor, or highly coupled packet.
-> +  - DMA_DEV_TO_MEM
-> +    On transfer completion the DMA driver must copy the metadata to the client
-> +    provided metadata buffer.
-> +
-> +- DESC_METADATA_ENGINE
-> +
-> +  The metadata buffer is allocated/managed by the DMA driver. The client driver
-> +  can ask for the pointer, maximum size and the currently used size of the
-> +  metadata and can directly update or read it. dmaengine_desc_get_metadata_ptr()
-> +  and dmaengine_desc_set_metadata_len() is provided as helper functions.
-> +
-> +  From the DMA driver the following is expected for this mode:
-> +  - get_metadata_ptr
-> +    Should return a pointer for the metadata buffer, the maximum size of the
-> +    metadata buffer and the currently used / valid (if any) bytes in the buffer.
-> +  - set_metadata_len
-> +    It is called by the clients after it have placed the metadata to the buffer
-> +    to let the DMA driver know the number of valid bytes provided.
-> +
-> +  Note: since the client will ask for the metadata pointer in the completion
-> +  callback (in DMA_DEV_TO_MEM case) the DMA driver must ensure that the
-> +  descriptor is not freed up prior the callback is called.
-> +
->   Device operations
->   -----------------
->   
-> 
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+SGkgTWFyYywNCg0KPFNuaXA+DQo+IE9uIDEwLzkvMTkgNjowMSBBTSwgQXBwYW5hIER1cmdhIEtl
+ZGFyZXN3YXJhIFJhbyB3cm90ZToNCj4gPiBIaSwNCj4gPg0KPiA+IDxTbmlwPg0KPiA+PiBPbiAx
+OC4zLjIwMTkgMTMuMzIsIEFwcGFuYSBEdXJnYSBLZWRhcmVzd2FyYSByYW8gd3JvdGU6DQo+ID4+
+PiBBWEkgQ0FOIElQIGFuZCBDQU5QUyBJUCBzdXBwb3J0cyB0eCBmaWZvIGVtcHR5IGZlYXR1cmUs
+IHRoaXMgcGF0Y2gNCj4gPj4+IHVwZGF0ZXMgdGhlIGZsYWdzIGZpZWxkIGZvciB0aGUgc2FtZS4N
+Cj4gPj4+DQo+ID4+PiBTaWduZWQtb2ZmLWJ5OiBBcHBhbmEgRHVyZ2EgS2VkYXJlc3dhcmEgcmFv
+DQo+ID4+PiA8YXBwYW5hLmR1cmdhLnJhb0B4aWxpbnguY29tPg0KPiA+Pj4gLS0tDQo+ID4+PiAg
+ZHJpdmVycy9uZXQvY2FuL3hpbGlueF9jYW4uYyB8IDIgKysNCj4gPj4+ICAxIGZpbGUgY2hhbmdl
+ZCwgMiBpbnNlcnRpb25zKCspDQo+ID4+Pg0KPiA+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0
+L2Nhbi94aWxpbnhfY2FuLmMNCj4gPj4+IGIvZHJpdmVycy9uZXQvY2FuL3hpbGlueF9jYW4uYyBp
+bmRleCAyZGU1MWFjLi4yMjU2OWVmIDEwMDY0NA0KPiA+Pj4gLS0tIGEvZHJpdmVycy9uZXQvY2Fu
+L3hpbGlueF9jYW4uYw0KPiA+Pj4gKysrIGIvZHJpdmVycy9uZXQvY2FuL3hpbGlueF9jYW4uYw0K
+PiA+Pj4gQEAgLTE0MjgsNiArMTQyOCw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZGV2X3BtX29w
+cw0KPiB4Y2FuX2Rldl9wbV9vcHMNCj4gPj4gPQ0KPiA+Pj4geyAgfTsNCj4gPj4+DQo+ID4+PiAg
+c3RhdGljIGNvbnN0IHN0cnVjdCB4Y2FuX2RldnR5cGVfZGF0YSB4Y2FuX3p5bnFfZGF0YSA9IHsN
+Cj4gPj4+ICsJLmZsYWdzID0gWENBTl9GTEFHX1RYRkVNUCwNCj4gPj4+ICAJLmJpdHRpbWluZ19j
+b25zdCA9ICZ4Y2FuX2JpdHRpbWluZ19jb25zdCwNCj4gPj4+ICAJLmJ0cl90czJfc2hpZnQgPSBY
+Q0FOX0JUUl9UUzJfU0hJRlQsDQo+ID4+PiAgCS5idHJfc2p3X3NoaWZ0ID0gWENBTl9CVFJfU0pX
+X1NISUZULA0KPiA+Pg0KPiA+PiBUaGFua3MgZm9yIGNhdGNoaW5nIHRoaXMsIHRoaXMgbGluZSBz
+ZWVtZWQgdG8gaGF2ZSBiZWVuIGluY29ycmVjdGx5DQo+ID4+IHJlbW92ZWQgYnkgbXkgOWU1ZjFi
+MjczZSAoImNhbjogeGlsaW54X2NhbjogYWRkIHN1cHBvcnQgZm9yIFhpbGlueCBDQU4gRkQNCj4g
+Y29yZSIpLg0KPiA+Pg0KPiA+PiBCdXQ6DQo+ID4+DQo+ID4+PiBAQCAtMTQzNSw2ICsxNDM2LDcg
+QEAgc3RhdGljIGNvbnN0IHN0cnVjdCB4Y2FuX2RldnR5cGVfZGF0YQ0KPiA+Pj4geGNhbl96eW5x
+X2RhdGEgPSB7ICB9Ow0KPiA+Pj4NCj4gPj4+ICBzdGF0aWMgY29uc3Qgc3RydWN0IHhjYW5fZGV2
+dHlwZV9kYXRhIHhjYW5fYXhpX2RhdGEgPSB7DQo+ID4+PiArCS5mbGFncyA9IFhDQU5fRkxBR19U
+WEZFTVAsDQo+ID4+PiAgCS5iaXR0aW1pbmdfY29uc3QgPSAmeGNhbl9iaXR0aW1pbmdfY29uc3Qs
+DQo+ID4+PiAgCS5idHJfdHMyX3NoaWZ0ID0gWENBTl9CVFJfVFMyX1NISUZULA0KPiA+Pj4gIAku
+YnRyX3Nqd19zaGlmdCA9IFhDQU5fQlRSX1NKV19TSElGVCwNCj4gPj4NCj4gPj4NCj4gPj4gQXJl
+IHlvdSBzdXJlIHRoaXMgaXMgcmlnaHQ/DQo+ID4+IEluIHRoZSBkb2N1bWVudGF0aW9uIFsxXSB0
+aGVyZSBkb2VzIG5vdCBzZWVtIHRvIGJlIGFueSBUWEZFTVANCj4gPj4gaW50ZXJydXB0LCBpdCB3
+b3VsZCBiZSBpbnRlcnJ1cHQgYml0IDE0IGJ1dCBBWEkgQ0FOIDUuMCBzZWVtcyB0byBvbmx5IGdv
+IHVwDQo+IHRvIDExLg0KPiA+Pg0KPiA+PiBPciBtYXliZSBpdCBpcyB1bmRvY3VtZW50ZWQgb3Ig
+dGhlcmUgaXMgYSBuZXdlciB2ZXJzaW9uIHNvbWV3aGVyZT8NCj4gPg0KPiA+IFNvcnJ5IGZvciB0
+aGUgZGVsYXkgaW4gdGhlIHJlcGx5Lg0KPiA+IEFncmVlIFRYRkVNUCBpbnRlcnJ1cHQgZmVhdHVy
+ZSBpcyBub3Qgc3VwcG9ydGVkIGJ5IHRoZSBTb2Z0IElQIENBTi4NCj4gPiBTaW5jZSB0aGlzIHBh
+dGNoIGFscmVhZHkgZ290IGFwcGxpZWQgd2lsbCBzZW5kIGEgc2VwYXJhdGUgcGF0Y2ggdG8gZml4
+IHRoaXMuDQo+IA0KPiBQbGVhc2UgYmFzZSB5b3VyIHBhdGNoIG9uIG5ldC9tYXN0ZXIgYW5kIGFk
+ZCB0aGUgYXBwcm9wcmlhdGUgZml4ZXMgdGFnOg0KPiANCj4gRml4ZXM6IDMyODFiMzgwZWM5ZiAo
+ImNhbjogeGlsaW54X2NhbjogRml4IGZsYWdzIGZpZWxkIGluaXRpYWxpemF0aW9uIGZvciBheGkg
+Y2FuDQo+IGFuZCBjYW5wcyIpDQoNClN1cmUgTWFyYyB3aWxsIHNlbmQgdGhlIHBhdGNoIG9uIHRv
+cCBvZiBuZXQvbWFzdGVyLiANCg0KUmVnYXJkcywNCktlZGFyLg0KDQo+IA0KPiBNYXJjDQo+IA0K
+PiAtLQ0KPiBQZW5ndXRyb25peCBlLksuICAgICAgICAgICAgICAgICAgfCBNYXJjIEtsZWluZS1C
+dWRkZSAgICAgICAgICAgfA0KPiBJbmR1c3RyaWFsIExpbnV4IFNvbHV0aW9ucyAgICAgICAgfCBQ
+aG9uZTogKzQ5LTIzMS0yODI2LTkyNCAgICAgfA0KPiBWZXJ0cmV0dW5nIFdlc3QvRG9ydG11bmQg
+ICAgICAgICAgfCBGYXg6ICAgKzQ5LTUxMjEtMjA2OTE3LTU1NTUgfA0KPiBBbXRzZ2VyaWNodCBI
+aWxkZXNoZWltLCBIUkEgMjY4NiAgfCBodHRwOi8vd3d3LnBlbmd1dHJvbml4LmRlICAgfA0KDQo=
