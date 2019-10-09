@@ -2,164 +2,139 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF8C8ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 18:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A151DC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 18:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4F07218AC
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 18:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A315218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 18:48:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="MNqqYHpM"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="l380up3g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731650AbfJISoM (ORCPT
+        id S1731340AbfJISse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 14:44:12 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:42635 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731254AbfJISoM (ORCPT
+        Wed, 9 Oct 2019 14:48:34 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:41952 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730490AbfJISse (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 14:44:12 -0400
-Received: by mail-oi1-f194.google.com with SMTP id i185so2644062oif.9
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 11:44:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=80jcnPBLsOoks69yHo8g6YiW4RIC2Pi47/8pROpVuWc=;
-        b=MNqqYHpMw01a7siHJTmNDsZU/gVtDJklrOtu9mitWMxnxA/AjOqQHWYUhBI6XkjxBp
-         fb/0SUpv7f97S258loyt9/mP1quCcObSikIDKnzLPgYRkv0mTX1R+JLXdPDMs5nlPoNM
-         hq2MsXJt/oJZugSpmImlMYOydesHrFM6MorA4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=80jcnPBLsOoks69yHo8g6YiW4RIC2Pi47/8pROpVuWc=;
-        b=ri9KB5Qw+yVkAejAYw4SCU+LW9DxKgRIurAeWRg5Iej1vLZoVXO2N9uUZK1M5r2M6J
-         NzHPeA0Cuzv4bfANUvgv8IFrb4ABtxvWIHuXQaDniRjrVHQioT+EJgJoMK1A53U7w8y7
-         Yth6r5v0E3razdhZ7O9n96OE16z42293vPI7TURUp5zIrQshBAA/LYY/nNOvkG5VZK7F
-         GMS4+DLBcGo8uxlbt7NmZm+TYULcM8A7gXC1Z4uq3p9nWlhkkYc9ENnkhKu+0uT2248Y
-         SWssAmOo2ZDtujJwpoMv2oEP86jiyk/+0C4kHw2lXsYAYQnzEK2gpfdX4XzNcB1bFE/p
-         wHBg==
-X-Gm-Message-State: APjAAAW9mnJuoQa4yDIaywsi8xFDTDUarsddzmXtpEazOXKX/Zcl4LR2
-        yQ9iMMvmpXUFC6+6nZkMSmfmP/11SLnCjwS9XUPW5Q==
-X-Google-Smtp-Source: APXvYqxK3ZYbW7gmd9nE9xtV5IyS7KCU4ZqXAfWDOa71iD0fhMG/5Icn6oKm9z6SvhJQad7k7SDKuvifreNikeNYeVw=
-X-Received: by 2002:aca:3a55:: with SMTP id h82mr3856687oia.128.1570646649343;
- Wed, 09 Oct 2019 11:44:09 -0700 (PDT)
+        Wed, 9 Oct 2019 14:48:34 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x99ITRUL113163;
+        Wed, 9 Oct 2019 18:47:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=X/XlqmLhKdpXdwTSj9Wwj61QnnWxUgg9cTTadrNS07o=;
+ b=l380up3gGDjs1AXEw8eYYAUF4Xh0pDZmvYTJ5NKbVXjItsH9NjOUaQk44Tv1q5grs82i
+ alLJ22aTzE86n4SM2kQ8EOy7u+uCRTU3OREZcEzxWrWEZYnbNrG7qqSY07RRT1yPh1LS
+ 60msf4zJWMMc1SKQMv1JyI0U33kihJBFoaaVpsBxeBKy1YI0EOZq1bEoksFkyH9rA872
+ IX/fHOWPkPLSxlCWO/NQ2xWa6/96DE1CMW51SYMKHQlxvP0JFsFqWREtNFb7WRNIIWVn
+ igzuYmuFyF5bwtuMhbMxO5B5oPn3dRC44v8NNL69UacGvSmUqS18dhSjAJhRYtW6yET9 7g== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2vektrpcsk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 09 Oct 2019 18:47:34 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x99IS4wb047107;
+        Wed, 9 Oct 2019 18:45:33 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2vhhsn42cn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 09 Oct 2019 18:45:33 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x99IjV5v010609;
+        Wed, 9 Oct 2019 18:45:31 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 09 Oct 2019 11:45:29 -0700
+Date:   Wed, 9 Oct 2019 21:45:18 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Markus Elfring <Markus.Elfring@web.de>,
+        kernel-janitors@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Joe Perches <joe@perches.com>,
+        Kees Cook <keescook@chromium.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] string.h: Mark 34 functions with __must_check
+Message-ID: <20191009184518.GF13286@kadam>
+References: <75f70e5e-9ece-d6d1-a2c5-2f3ad79b9ccb@web.de>
+ <954c5d70-742f-7b0e-57ad-ea967e93be89@rasmusvillemoes.dk>
+ <20191009135522.GA20194@kadam>
+ <b1f055ec-b4ec-d0ed-a03d-7d9828fa9440@rasmusvillemoes.dk>
+ <20191009143000.GD13286@kadam>
+ <CAKwvOd=Jkd_qJULB+i1u31VJAex6KB=wFAyXO04V0UcAAEZeXw@mail.gmail.com>
 MIME-Version: 1.0
-References: <951eb7dc-bebe-5049-4998-f199e18b0bf3@canonical.com>
- <20191009163235.GT16989@phenom.ffwll.local> <a0d5f3a3-a2b3-5367-42f9-bde514571e25@amd.com>
-In-Reply-To: <a0d5f3a3-a2b3-5367-42f9-bde514571e25@amd.com>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Wed, 9 Oct 2019 20:43:58 +0200
-Message-ID: <CAKMK7uEtJRDhibWDv2TB2WrFzFooMWPSbveDD2N-rudAwvzVFA@mail.gmail.com>
-Subject: Re: drm/amd/display: Add HDCP module - static analysis bug report
-To:     "Lakha, Bhawanpreet" <Bhawanpreet.Lakha@amd.com>
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        "Wentland, Harry" <Harry.Wentland@amd.com>,
-        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        amd-gfx mailing list <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOd=Jkd_qJULB+i1u31VJAex6KB=wFAyXO04V0UcAAEZeXw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9405 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910090152
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9405 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910090152
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 9, 2019 at 8:23 PM Lakha, Bhawanpreet
-<Bhawanpreet.Lakha@amd.com> wrote:
->
-> Hi,
->
-> The reason we don't use drm_hdcp is because our policy is to do hdcp
-> verification using PSP/HW (onboard secure processor).
-
-i915 also uses hw to auth, we still use the parts from drm_hdcp ...
-Did you actually look at what's in there? It's essentially just shared
-defines and data structures from the standard, plus a few minimal
-helpers to en/decode some bits. Just from a quick read the entire
-patch very much looks like midlayer everywhere design that we
-discussed back when DC landed ...
--Daniel
-
->
-> Bhawan
->
-> On 2019-10-09 12:32 p.m., Daniel Vetter wrote:
-> > On Thu, Oct 03, 2019 at 11:08:03PM +0100, Colin Ian King wrote:
-> >> Hi,
-> >>
-> >> Static analysis with Coverity has detected a potential issue with
-> >> function validate_bksv in
-> >> drivers/gpu/drm/amd/display/modules/hdcp/hdcp1_execution.c with recent
-> >> commit:
-> >>
-> >> commit ed9d8e2bcb003ec94658cafe9b1bb3960e2139ec
-> >> Author: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-> >> Date:   Tue Aug 6 17:52:01 2019 -0400
-> >>
-> >>      drm/amd/display: Add HDCP module
-> > I think the real question here is ... why is this not using drm_hdcp?
-> > -Daniel
+On Wed, Oct 09, 2019 at 09:31:41AM -0700, Nick Desaulniers wrote:
+> On Wed, Oct 9, 2019 at 7:30 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
 > >
-> >>
-> >> The analysis is as follows:
-> >>
-> >>   28 static inline enum mod_hdcp_status validate_bksv(struct mod_hdcp *hdcp)
-> >>   29 {
-> >>
-> >> CID 89852 (#1 of 1): Out-of-bounds read (OVERRUN)
-> >>
-> >> 1. overrun-local:
-> >> Overrunning array of 5 bytes at byte offset 7 by dereferencing pointer
-> >> (uint64_t *)hdcp->auth.msg.hdcp1.bksv.
-> >>
-> >>   30        uint64_t n = *(uint64_t *)hdcp->auth.msg.hdcp1.bksv;
-> >>   31        uint8_t count = 0;
-> >>   32
-> >>   33        while (n) {
-> >>   34                count++;
-> >>   35                n &= (n - 1);
-> >>   36        }
-> >>
-> >> hdcp->auth.msg.hdcp1.bksv is an array of 5 uint8_t as defined in
-> >> drivers/gpu/drm/amd/display/modules/hdcp/hdcp.h as follows:
-> >>
-> >> struct mod_hdcp_message_hdcp1 {
-> >>          uint8_t         an[8];
-> >>          uint8_t         aksv[5];
-> >>          uint8_t         ainfo;
-> >>          uint8_t         bksv[5];
-> >>          uint16_t        r0p;
-> >>          uint8_t         bcaps;
-> >>          uint16_t        bstatus;
-> >>          uint8_t         ksvlist[635];
-> >>          uint16_t        ksvlist_size;
-> >>          uint8_t         vp[20];
-> >>
-> >>          uint16_t        binfo_dp;
-> >> };
-> >>
-> >> variable n is going to contain the contains of r0p and bcaps. I'm not
-> >> sure if that is intentional. If not, then the count is going to be
-> >> incorrect if these are non-zero.
-> >>
-> >> Colin
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > On Wed, Oct 09, 2019 at 04:21:20PM +0200, Rasmus Villemoes wrote:
+> > > On 09/10/2019 15.56, Dan Carpenter wrote:
+> > > > That's because glibc strlen is annotated with __attribute_pure__ which
+> > > > means it has no side effects.
+> > >
+> > > I know, except it has nothing to do with glibc headers. Just try the
+> > > same thing in the kernel. gcc itself knows this about __builtin_strlen()
+> > > etc. If anything, we could annotate some of our non-standard functions
+> > > (say, memchr_inv) with __pure - then we'd both get the Wunused-value in
+> > > the nonsense cases, and allow gcc to optimize or reorder the calls.
+> >
+> > Huh.  You're right.  GCC already knows.  So this patch is pointless like
+> > you say.
+> 
+> Is it? None of the functions in include/linux/string.h are currently
+> marked __pure today.
+
+I've already embarrassed myself with my ignorance once so I may as well
+keep talking now...  GCC did complain about the unused result even
+though we don't declare them as __pure.  So GCC rule must have this rule
+built in.
+
+We were discussing in a different thread that standard says that
+memcpy() pointers can't be NULL (even when we're copying zero bytes) so
+GCC will assume that's true.  If you have:
+
+	memcpy(foo, bar, 0);
+
+	if (foo)
+		*foo = 0;
 
 
+GCC will sometimes remove the condition.  This doesn't affect the kernel
+because we use -fno-delete-null-pointer-checks.
+https://groups.google.com/forum/#!msg/syzkaller-netbsd-bugs/8B4CIKN0Xz8/wRvIUWxiAgAJ
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+Weird, huh?
+
+regards,
+dan carpenter
+
