@@ -2,121 +2,156 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F635ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8CFEECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08BEC21721
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:47:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T710TA+m"
+	by mail.kernel.org (Postfix) with ESMTP id 8976621835
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:47:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729918AbfJIJr0 (ORCPT
+        id S1730532AbfJIJrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 05:47:26 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37750 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbfJIJr0 (ORCPT
+        Wed, 9 Oct 2019 05:47:40 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:50512 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726734AbfJIJrk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 05:47:26 -0400
-Received: by mail-lf1-f67.google.com with SMTP id w67so1151808lff.4;
-        Wed, 09 Oct 2019 02:47:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5zz6stZNbLOUF9RwmhIaciO7nTqVUA3pHO2Wwoa5u3U=;
-        b=T710TA+mgpU24hfq4k3XUSrSB5fQWM40wBiC0MV8fEQSFOg/BSkVKCfGlCo7GRiIc8
-         igjpw/S/CIUKNkItOeJ77GtdveVvz6LrhpYdOrkVsmUcxJvneKpEhtHTyMPJG+A8TE9v
-         HmXn/MmSWBbpVKKJRuUm3gBoM3k9+Un6euf25+Uc7HikTS51G9q+ojV3RLbec5vVHyPT
-         ACHHQfE5GPPAaAa60tQ/M+DCIO77/lj9Xv3m2G9Vmpfy+lr5Ev6i8v33Du03sfUeNlfT
-         bKNEjLJTtiEQ4/md0Iizcc8DlCN3mLlHdRYaOUL2bgf0MrdLXg5C1tht1LJ4CHsmVB6+
-         TwgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5zz6stZNbLOUF9RwmhIaciO7nTqVUA3pHO2Wwoa5u3U=;
-        b=J2w2RQzQ1b7pIQ8ubJKPyu9qeYKoiOUxrNkEyQYJniadwCQhXA1M6ap1QuyuRaVCZa
-         0tsO8AcRs+X7MS7Motsa0CPP8aWtdRK2+xuy3M3ToxlkE1lvLLoV57wMi9Oio5mSw8On
-         Tg2nwhCY998SLBKzdbOqTbWg2jN4+bo/had17JR1DzJZdQ2iWCbOt/IItlANGQYrBaux
-         m6tnRYpQuQY1tjTykwGZi5ShvUzqVxMu9EUrRUEnqVRXwzddqR5qpBqLGv/umxO5Zcnb
-         pMKSPRAIVZti0oTgeBt3YrhuD7Uxurh9VIaiAKivJ6MFtEY4OpRjTPpK6PWHF0Ss2/IU
-         wcbg==
-X-Gm-Message-State: APjAAAWusGmSUjzkogN0j0qNpYL/ogiVQq8KhOiMQU6dpAvDnLA2t5WH
-        ZMzQISKx3AuYocNtHVKrNBA=
-X-Google-Smtp-Source: APXvYqzW0zTmznOtUew4N93EV23Ym5wYfpfwTtt85xVX0FBrdwA6+SXB468dIAk+oDGTwFgxbfUjZQ==
-X-Received: by 2002:a19:f709:: with SMTP id z9mr1489231lfe.170.1570614443447;
-        Wed, 09 Oct 2019 02:47:23 -0700 (PDT)
-Received: from pc636 ([37.139.158.167])
-        by smtp.gmail.com with ESMTPSA id d28sm361521lfq.88.2019.10.09.02.47.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 02:47:22 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Wed, 9 Oct 2019 11:47:14 +0200
-To:     Daniel Wagner <dwagner@suse.de>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-rt-users@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] mm: vmalloc: Use the vmap_area_lock to protect
- ne_fit_preload_node
-Message-ID: <20191009094714.GA7343@pc636>
-References: <20191004163042.jpiau6dlxqylbpfh@linutronix.de>
- <20191007083037.zu3n5gindvo7damg@beryllium.lan>
- <20191007105631.iau6zhxqjeuzajnt@linutronix.de>
- <20191007162330.GA26503@pc636>
- <20191007163443.6owts5jp2frum7cy@beryllium.lan>
- <20191007165611.GA26964@pc636>
- <20191007173644.hiiukrl2xryziro3@linutronix.de>
- <20191007214420.GA3212@pc636>
- <20191008160459.GA5487@pc636>
- <20191009060539.fmpqesc4wfisulrl@beryllium.lan>
+        Wed, 9 Oct 2019 05:47:40 -0400
+X-UUID: 51458b6d8c5e4cb8af88b12c7a23a2ec-20191009
+X-UUID: 51458b6d8c5e4cb8af88b12c7a23a2ec-20191009
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 603592139; Wed, 09 Oct 2019 17:47:27 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 9 Oct 2019 17:47:23 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 9 Oct 2019 17:47:22 +0800
+Message-ID: <1570614445.12886.4.camel@mtksdaap41>
+Subject: Re: [PATCH v5, 00/32] add drm support for MT8183
+From:   CK Hu <ck.hu@mediatek.com>
+To:     <yongqiang.niu@mediatek.com>
+CC:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Wed, 9 Oct 2019 17:47:25 +0800
+In-Reply-To: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
+References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191009060539.fmpqesc4wfisulrl@beryllium.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 34AEFD1C4F56C1A0D09EBD74E73936ACCED7E27932AFE928403BD939E21273402000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Daniel.
+Hi, Yongqiang:
 
-On Wed, Oct 09, 2019 at 08:05:39AM +0200, Daniel Wagner wrote:
-> On Tue, Oct 08, 2019 at 06:04:59PM +0200, Uladzislau Rezki wrote:
-> > > so, we do not guarantee, instead we minimize number of allocations
-> > > with GFP_NOWAIT flag. For example on my 4xCPUs i am not able to
-> > > even trigger the case when CPU is not preloaded.
-> > > 
-> > > I can test it tomorrow on my 12xCPUs to see its behavior there.
-> > > 
-> > Tested it on different systems. For example on my 8xCPUs system that
-> > runs PREEMPT kernel i see only few GFP_NOWAIT allocations, i.e. it
-> > happens when we land to another CPU that was not preloaded.
-> > 
-> > I run the special test case that follows the preload pattern and path.
-> > So 20 "unbind" threads run it and each does 1000000 allocations. As a
-> > result only 3.5 times among 1000000, during splitting, CPU was not
-> > preloaded thus, GFP_NOWAIT was used to obtain an extra object.
-> > 
-> > It is obvious that slightly modified approach still minimizes allocations
-> > in atomic context, so it can happen but the number is negligible and can
-> > be ignored, i think.
-> 
-> Thanks for doing the tests. In this case I would suggest to get rid of
-> the preempt_disable() micro optimization, since there is almost no
-> gain in doing so. Do you send a patch? :)
-> 
-I can do it, for sure, in case you do not mind, since it was your
-initiative. Otherwise you can upload v2.
+To make process more smoothly, I've applied some stable patches of this
+series in mediatek-drm-next-5.5 [1]. The applied patches include
+dt-bindings, CCORR, DITHER, OVL, Mutex related patches. The non-applied
+patches include mmsys related patches. Please based on the applied
+patches to send new version.
 
---
-Vlad Rezki
+[1]
+https://github.com/ckhu-mediatek/linux.git-tags/commits/mediatek-drm-next-5.5
+
+Regards,
+CK
+
+On Thu, 2019-08-29 at 22:50 +0800, yongqiang.niu@mediatek.com wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> 
+> This series are based on 5.3-rc1 and provid 32 patch
+> to support mediatek SOC MT8183
+> 
+> Change since v4
+> - fix reviewed issue in v4
+> 
+> Change since v3
+> - fix reviewed issue in v3
+> - fix type error in v3
+> - fix conflict with iommu patch
+> 
+> Change since v2
+> - fix reviewed issue in v2
+> - add mutex node into dts file
+> 
+> Changes since v1:
+> - fix reviewed issue in v1
+> - add dts for mt8183 display nodes
+> - adjust display clock control flow in patch 22
+> - add vmap support for mediatek drm in patch 23
+> - fix page offset issue for mmap function in patch 24
+> - enable allow_fb_modifiers for mediatek drm in patch 25
+> 
+> Yongqiang Niu (32):
+>   dt-bindings: mediatek: add binding for mt8183 display
+>   dt-bindings: mediatek: add ovl_2l description for mt8183 display
+>   dt-bindings: mediatek: add ccorr description for mt8183 display
+>   dt-bindings: mediatek: add dither description for mt8183 display
+>   dt-bindings: mediatek: add mutex description for mt8183 display
+>   arm64: dts: add display nodes for mt8183
+>   drm/mediatek: add mutex mod into ddp private data
+>   drm/mediatek: add mutex mod register offset into ddp private data
+>   drm/mediatek: add mutex sof into ddp private data
+>   drm/mediatek: add mutex sof register offset into ddp private data
+>   drm/mediatek: split DISP_REG_CONFIG_DSI_SEL setting into another use
+>     case
+>   drm/mediatek: add mmsys private data for ddp path config
+>   drm/mediatek: move rdma sout from mtk_ddp_mout_en into
+>     mtk_ddp_sout_sel
+>   drm/mediatek: add ddp component CCORR
+>   drm/mediatek: add commponent OVL_2L0
+>   drm/mediatek: add component OVL_2L1
+>   drm/mediatek: add component DITHER
+>   drm/mediatek: add gmc_bits for ovl private data
+>   drm/medaitek: add layer_nr for ovl private data
+>   drm/mediatek: add function to background color input select for
+>     ovl/ovl_2l direct link
+>   drm/mediatek: add background color input select function for
+>     ovl/ovl_2l
+>   drm/mediatek: add ovl0/ovl_2l0 usecase
+>   drm/mediatek: distinguish ovl and ovl_2l by layer_nr
+>   drm/mediatek: add clock property check before get it
+>   drm/mediatek: add connection from OVL0 to OVL_2L0
+>   drm/mediatek: add connection from RDMA0 to COLOR0
+>   drm/mediatek: add connection from RDMA1 to DSI0
+>   drm/mediatek: add connection from OVL_2L0 to RDMA0
+>   drm/mediatek: add connection from OVL_2L1 to RDMA1
+>   drm/mediatek: add connection from DITHER0 to DSI0
+>   drm/mediatek: add connection from RDMA0 to DSI0
+>   drm/mediatek: add support for mediatek SOC MT8183
+> 
+>  .../bindings/display/mediatek/mediatek,disp.txt    |  30 +-
+>  .../bindings/display/mediatek/mediatek,display.txt |  21 ++
+>  arch/arm64/boot/dts/mediatek/mt8183.dtsi           | 111 ++++++
+>  drivers/gpu/drm/mediatek/mtk_disp_ovl.c            |  79 +++-
+>  drivers/gpu/drm/mediatek/mtk_disp_rdma.c           |  27 +-
+>  drivers/gpu/drm/mediatek/mtk_drm_crtc.c            |  42 ++-
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp.c             | 410 ++++++++++++++++-----
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp.h             |   6 +
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c        |  67 ++++
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h        |  21 ++
+>  drivers/gpu/drm/mediatek/mtk_drm_drv.c             |  50 +++
+>  drivers/gpu/drm/mediatek/mtk_drm_drv.h             |   3 +
+>  12 files changed, 745 insertions(+), 122 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/display/mediatek/mediatek,display.txt
+> 
+
+
