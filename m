@@ -6,53 +6,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E404ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C3EBC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DC5E218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43486218DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:15:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732584AbfJITPR (ORCPT
+        id S1731619AbfJITLH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 15:15:17 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:49547 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731254AbfJITLH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 9 Oct 2019 15:11:07 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:36045 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728804AbfJITLG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 15:11:06 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MlNYj-1hoyMW1KMH-00lpcY; Wed, 09 Oct 2019 21:11:05 +0200
+ 1MCKWI-1iQUqA1iMc-009Tzp; Wed, 09 Oct 2019 21:11:04 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Al Viro <viro@zeniv.linux.org.uk>
 Cc:     linux-kernel@vger.kernel.org, y2038@lists.linaro.org,
         linux-fsdevel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v6 05/43] compat: move FS_IOC_RESVSP_32 handling to fs/ioctl.c
-Date:   Wed,  9 Oct 2019 21:10:05 +0200
-Message-Id: <20191009191044.308087-5-arnd@arndb.de>
+Subject: [PATCH v6 01/43] fix compat handling of FICLONERANGE, FIDEDUPERANGE and FS_IOC_FIEMAP
+Date:   Wed,  9 Oct 2019 21:10:01 +0200
+Message-Id: <20191009191044.308087-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191009190853.245077-1-arnd@arndb.de>
 References: <20191009190853.245077-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:rsGECA5U1Pe5E0luoyAv0WbzCrVjbsQOadFEWZ5NMCYNiZjylnu
- l5AG2Lwa7eM8lTTPAW292gekCpIw4QZxGwpxflTrtG2BDGKIpf1CN2Fl5l9GNrbXFFlS38E
- w2ZW30erZFv5JqXeNwH0pBcbw1RjwNJKb+TpsgUEfmyxdLqRpNtQXRVItdMM5xyq4aINV9o
- QDrteYoQYjcT2Lb8hfZQQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:k9SWxQ9A46E=:lP2JygFTkqc2drkSj6/yBE
- XK4ZqUNVpsvyjl5vBBOymBIrFQWcnaxvUhc/LCsPRUgc+Uy11/Gaq6ijurj0KYajjnJLto9Mg
- 16oDHj/fPWUbB9oAfQalgAn/xa/7h6AvdHw2Qox+EB27RvgZkxrVPAS87cI/QbJ4sIbYi6sYk
- E4h0EU1xUuM4HjEtoXHIqL9+CI1hJCx9z6m3ggTQyfcj2NLF+kXFVx2jS6cXKEYsBtI4GerVK
- tfMzjvAigi/u9jaufKbWwAFOHfh3rzvMCr+NjATrIaBNJHc2Vz3k86syucP2dfc5jbD9fu7Lk
- lJYE8fISka4IUCVHX3AuxzcQGSI8Pq8KoDMqWVtP30nTxUWRhZcwlWMY2eNCDEZCyBx0chsK9
- arvsuaO1LzchSmGfUqJkD9t7Tx1ZEr2enXW2vdEaZNuz0rRfsBXsOQpmPNko9/ukaicr12KnI
- hbZFKY8EQ298JkolT+j852h7ESOl1pVtQgaTvzHnnD86XMALxLZyxczia59VESHuUf+qlqlAZ
- hy7mP8tqX8rGRDBiQ1AR05y6g9bKygQwCYHrDKmqw6ly0hy3FFPNG15jTQi7QaEfFOYu/SBsD
- U2If/yq7omoGMmXFaPbd7yTOWzndKD/tPiC287ZklEnLCLNgWwKgqcGOlcC6rLaEuA8aMibBI
- kzSZCNwzRs4DLA1NDEFkkRlJWEZ6JOkNLSW5Vt6bnsxV4EzI/BGwpm9a/XGXw6yZiiqqXET/t
- aprAN8ZlSJJcK7sjDTnlKGGsLV/dm8gAx+v0nfLYfeSqc8rAktmvMLm1fnH1aK3R9TwYBHkxe
- iu+NjzrE47vuHaAPpj2KLjocVOcmx9B0JfxpXpRjyXvWjc8XQxhgblNsffJ17gPR70oAyTtMr
- twtf4+O51liNOFwlTvwA==
+X-Provags-ID: V03:K1:2uJzilWeK+WiT0h/pPdN3K/mVdDW9vuZKh5Yov5RjBQWLhEkFap
+ up2GIxj8olvwQyD7nR6AsIG1/ngU6zLv+NT0Y0oU00nKWO6ezKQaqr/JnGgm1oSKtbbC3SO
+ uYzStCkbpGXYKZlSiTsjT053BoaE5r0D1mmmRBMk5nKa4JV3IMvPXaF55mk6LpR5WrXNxYf
+ T2KievGd+GbjOXz6xVSfw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:NRFYuPKnEzE=:+jRPMK5onbQzyVK1NHGVFD
+ OTAzT1XPimm0LNZEtTF71Ls8QCgcHoLMeVDlIFljoRwUflgKvHTB7BMUZHgfa4LV/HXvZR6Wi
+ lpCvt26D0MrhZdB7iLnpQyhz/sbkkaDzNPuewSvyG3fk4RyMm3eNlOFGADFygQ7oFf8HlBJrb
+ TSG+GrUflecniKNUu3nUj0LQ87hRmJ9r8mAKzf2uya08bvMmeXXbRHWRcHwM5murzvUhmvW9D
+ UaAY/nQzTBBYXR17b/hHClU2+65r0MqBxGaM9BzqXX6WI65zZ6C7h/jns+vBBkKJg8yVITWGN
+ AlifMCCwgeHZ+7aklSauD6cRN0b55xqXMHAlISjdbfpRMza3GreD/s6r0JbCbuFAaFhpoQuBw
+ p58j7/ZRPbqwlgMA/xQw7h4G3dsJdjyB8dTrcy/570F+X43+YHbOTGzI/sML8wd0+gk+cNnGo
+ PIGHlQvHlGmAQQ3fRr7utBE9d5mo5rMN6gv+zrAIdWThhXelSn8bfUFDWXHb3nxhN27ulG0dL
+ rki5fZl7jLs16uIOe4izdDqhR9a7ZqCe0tvVMZzqaq5O64ksLusQWThq2EJL4qIRjm7QeE29n
+ vNw/Kw+6mVZ4PU1uJEVkCnuBLy6JNWV+j+QtaYfx9PSwBMa6oeJFHfaD/ujFHX62XGFRRHWr0
+ MUkskSrK4tIckxJIDq+blZCBvl1aqEumKcQ9Y6sS0lIRiA4yeA9tQn0Z3wiWOEq7SwPsMMPh8
+ mf920VjPDEVFVfhEAdhAt61uDO9UgQUyIau3EoTCEWuIQPnaO2gUEXX62dN42Ru1t+GSRDNSo
+ 0vUguuUma6IZR2u4o5ElRna9moSK2Qqi9+IJJ1U67PTE+GhYB7qI1P9SnApsa4ezL2S/FIS1Y
+ CromSpYbYmQDcqkn512Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,132 +60,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-... and lose the ridiculous games with compat_alloc_user_space()
-there.
+Unlike FICLONE, all of those take a pointer argument; they do need
+compat_ptr() applied to arg.
 
+Fixes: d79bdd52d8be ("vfs: wire up compat ioctl for CLONE/CLONE_RANGE")
+Fixes: 54dbc1517237 ("vfs: hoist the btrfs deduplication ioctl to the vfs")
+Fixes: ceac204e1da9 ("fs: make fiemap work from compat_ioctl")
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- fs/compat_ioctl.c      | 35 -----------------------------------
- fs/ioctl.c             | 29 +++++++++++++++++++++++++++++
- include/linux/falloc.h | 20 ++++++++++++++++++++
- 3 files changed, 49 insertions(+), 35 deletions(-)
+ fs/compat_ioctl.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/fs/compat_ioctl.c b/fs/compat_ioctl.c
-index 46e8a8f8b6f1..ce995d4fa1f4 100644
+index a7ec2d3dff92..e0226b2138d6 100644
 --- a/fs/compat_ioctl.c
 +++ b/fs/compat_ioctl.c
-@@ -467,41 +467,6 @@ static int rtc_ioctl(struct file *file,
- 	return -ENOIOCTLCMD;
- }
+@@ -1032,10 +1032,11 @@ COMPAT_SYSCALL_DEFINE3(ioctl, unsigned int, fd, unsigned int, cmd,
+ #endif
  
--/* on ia32 l_start is on a 32-bit boundary */
--#if defined(CONFIG_X86_64)
--struct space_resv_32 {
--	__s16		l_type;
--	__s16		l_whence;
--	__s64		l_start	__attribute__((packed));
--			/* len == 0 means until end of file */
--	__s64		l_len __attribute__((packed));
--	__s32		l_sysid;
--	__u32		l_pid;
--	__s32		l_pad[4];	/* reserve area */
--};
--
--#define FS_IOC_RESVSP_32		_IOW ('X', 40, struct space_resv_32)
--#define FS_IOC_RESVSP64_32	_IOW ('X', 42, struct space_resv_32)
--
--/* just account for different alignment */
--static int compat_ioctl_preallocate(struct file *file,
--			struct space_resv_32    __user *p32)
--{
--	struct space_resv	__user *p = compat_alloc_user_space(sizeof(*p));
--
--	if (copy_in_user(&p->l_type,	&p32->l_type,	sizeof(s16)) ||
--	    copy_in_user(&p->l_whence,	&p32->l_whence, sizeof(s16)) ||
--	    copy_in_user(&p->l_start,	&p32->l_start,	sizeof(s64)) ||
--	    copy_in_user(&p->l_len,	&p32->l_len,	sizeof(s64)) ||
--	    copy_in_user(&p->l_sysid,	&p32->l_sysid,	sizeof(s32)) ||
--	    copy_in_user(&p->l_pid,	&p32->l_pid,	sizeof(u32)) ||
--	    copy_in_user(&p->l_pad,	&p32->l_pad,	4*sizeof(u32)))
--		return -EFAULT;
--
--	return ioctl_preallocate(file, p);
--}
--#endif
--
- /*
-  * simple reversible transform to make our table more evenly
-  * distributed after sorting.
-diff --git a/fs/ioctl.c b/fs/ioctl.c
-index 3f28b39f32f3..9d26251f34a9 100644
---- a/fs/ioctl.c
-+++ b/fs/ioctl.c
-@@ -490,6 +490,35 @@ int ioctl_preallocate(struct file *filp, void __user *argp)
- 	return vfs_fallocate(filp, FALLOC_FL_KEEP_SIZE, sr.l_start, sr.l_len);
- }
+ 	case FICLONE:
++		goto do_ioctl;
+ 	case FICLONERANGE:
+ 	case FIDEDUPERANGE:
+ 	case FS_IOC_FIEMAP:
+-		goto do_ioctl;
++		goto found_handler;
  
-+/* on ia32 l_start is on a 32-bit boundary */
-+#if defined CONFIG_COMPAT && defined(CONFIG_X86_64)
-+/* just account for different alignment */
-+int compat_ioctl_preallocate(struct file *file,
-+				struct space_resv_32 __user *argp)
-+{
-+	struct inode *inode = file_inode(file);
-+	struct space_resv_32 sr;
-+
-+	if (copy_from_user(&sr, argp, sizeof(sr)))
-+		return -EFAULT;
-+
-+	switch (sr.l_whence) {
-+	case SEEK_SET:
-+		break;
-+	case SEEK_CUR:
-+		sr.l_start += file->f_pos;
-+		break;
-+	case SEEK_END:
-+		sr.l_start += i_size_read(inode);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return vfs_fallocate(file, FALLOC_FL_KEEP_SIZE, sr.l_start, sr.l_len);
-+}
-+#endif
-+
- static int file_ioctl(struct file *filp, unsigned int cmd,
- 		unsigned long arg)
- {
-diff --git a/include/linux/falloc.h b/include/linux/falloc.h
-index 674d59f4d6ce..fc61fdb9d1e9 100644
---- a/include/linux/falloc.h
-+++ b/include/linux/falloc.h
-@@ -29,4 +29,24 @@ struct space_resv {
- 					 FALLOC_FL_INSERT_RANGE |	\
- 					 FALLOC_FL_UNSHARE_RANGE)
- 
-+/* on ia32 l_start is on a 32-bit boundary */
-+#if defined(CONFIG_X86_64)
-+struct space_resv_32 {
-+	__s16		l_type;
-+	__s16		l_whence;
-+	__s64		l_start	__attribute__((packed));
-+			/* len == 0 means until end of file */
-+	__s64		l_len __attribute__((packed));
-+	__s32		l_sysid;
-+	__u32		l_pid;
-+	__s32		l_pad[4];	/* reserve area */
-+};
-+
-+#define FS_IOC_RESVSP_32		_IOW ('X', 40, struct space_resv_32)
-+#define FS_IOC_RESVSP64_32	_IOW ('X', 42, struct space_resv_32)
-+
-+int compat_ioctl_preallocate(struct file *, struct space_resv_32 __user *);
-+
-+#endif
-+
- #endif /* _FALLOC_H_ */
+ 	case FIBMAP:
+ 	case FIGETBSZ:
 -- 
 2.20.0
 
