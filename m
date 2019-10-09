@@ -6,167 +6,239 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BAA4ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65342C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C63C218AC
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D44F218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:13:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731943AbfJITLU (ORCPT
+        id S1732470AbfJITNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 15:11:20 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:45889 "EHLO
+        Wed, 9 Oct 2019 15:13:52 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:51095 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731144AbfJITLO (ORCPT
+        with ESMTP id S1731922AbfJITLU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 15:11:14 -0400
+        Wed, 9 Oct 2019 15:11:20 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1Mzyi6-1hupE6357e-00wzdx; Wed, 09 Oct 2019 21:11:12 +0200
+ 1MXXdn-1iajhJ3863-00YxNA; Wed, 09 Oct 2019 21:11:10 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Al Viro <viro@zeniv.linux.org.uk>
 Cc:     linux-kernel@vger.kernel.org, y2038@lists.linaro.org,
         linux-fsdevel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Karsten Keil <isdn@linux-pingi.de>, netdev@vger.kernel.org,
-        isdn4linux@listserv.isdn4linux.de
-Subject: [PATCH v6 16/43] compat_ioctl: move isdn/capi ioctl translation into driver
-Date:   Wed,  9 Oct 2019 21:10:16 +0200
-Message-Id: <20191009191044.308087-16-arnd@arndb.de>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: [PATCH v6 13/43] compat_ioctl: use correct compat_ptr() translation in drivers
+Date:   Wed,  9 Oct 2019 21:10:13 +0200
+Message-Id: <20191009191044.308087-13-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191009190853.245077-1-arnd@arndb.de>
 References: <20191009190853.245077-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:3PgdTLn3Isb1E8QdaS6ssQ4smTcDkiVZALshacjmZB+AtPbu7Xq
- +7o5fh40aOG53PwqC68L1xQv4R2rrEcItv3d09B+15mWfs5dq4Tnu4b8BuUmfRm6UOVmtZd
- zpvGOs+siVVcUrX1Q5s/nr5A9T4WhMwaKm/3W3e/li5neiNanzGsyRWZwZ9MgEx1znyplrR
- z2rwUeFAJ5Ft6735YtEjg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:hRo8ARl3Sq8=:RxMdqFFZ5hfQWKhBpuqbgd
- VS0ufeKpg2n65gq107Tujsiiq+j0BdkpZ1R4QKawR0mc5fAuY4/lBYRLNImDpCjMevgpRCMhS
- G+IWYfPMqCzyHXrQgLga8GTWM4/Po7Y7g0TRBTXe2vAC75g2YRgEGafbq7pPLnVrwpBHuDnKE
- hYqyjFb6eMjZstGJaHM+tbsu/QZHUp+gzLmvB3hbOb4Gt3tLwKWyaxJUxJfwl0jPz1Eq2svQr
- 5ylyHlpXJhYZjR4dGwBSOa/MP/aORnAVTAvkgegWEnGuDWCmzpiw9kKM3laiA1Z14aKmbe2pI
- DEc6POaYmrmL6VvCpSxUne1lQPdReizm5P3e52Vw2DNbQAkoG6dsj5x5cNWqmVyFas5TbQ8ay
- zvflQxV28Zo3vv5oom91yCx6kBhGNmsLeI/4GWRM+V7Vq+6Hkh7ZR/IMaR71BoH9Mv4yule5F
- OWym6mvP3Rn1qvAONZ3687WR8lb5vtbRq/M/zGS87JoV3dzUACYtw1VnLsmi/wmJW0cGhds6K
- qHzVxrBqquqPb6hpqU1+y0XUTkYjiL7QGeYnRwSTXYEuNF2c73ytZSBEK3xTnkBimnzI0QS34
- twk72LmazvX8sXsXA+PVkFaXABTgjMzMQuiR37IiPVYC1RkysRc1Tj6uatBg436LsDo61CWTP
- BHTQDUsSH76HOsy2WpWeuMpABGuc8yAWabElkrVTAbGFXyZijT6cXb/i69ProMiSWhwKi1m2v
- cVBieHv8EWbJhV0V//EUVyF02xmhqzHOVJ3Ou6Z3eGtBeYHIvxN8PaQODJPhzzftQh+buHYpf
- KNhSm/38Ro+OTlOUHCLCk38lUx+vQSgTFhrUake83fButfk9TTsrL2/tYHCFmJ3/18ZBN7oe6
- FvDmcjfQbzxT2tWV1cgg==
+X-Provags-ID: V03:K1:2Ri+AmqHP2IgSyuBrP8IXouAO/GywqDxk3Oop8VJyII1VjvrXgG
+ g9gF3z2VGIP5Ci2S3stEsEM2C9eWsVyZmsGxAiDAfzJw7LKUcEYJOFbJRXQkXmcdsOMKvw9
+ fORHBgakc1Gdv3KXkP8MUEYgTFVmyg5fHUUjBj/mYAHfrWwOIE/hUagBclbnVofe8zyZPa+
+ CH0sYmDNlNMuFz+vaBFhg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:2NQGECvoGC4=:S58aRpaPBAOZ8FNVwSW1SG
+ 50dLXpGb+RJ5ycryuKaEPzaJ1PXl9S/CSYXP7wskUMoL5TZTX90q6pTa0t/7dUQRPTcR3KGQv
+ Zyp8IomcQKdRb1MXkib3kFg+OsuNBdJE3XNbg2F6XdrfvZtvoo54Wo8J3uQzc4NdkeHoA1IKk
+ 9+aNqCP6mRUcOu4v+6xkZK493jV1ag1oywXC5C+DDpT/hA1SQEm8zi9PLsvLSAfWgs+0FnzQ2
+ dOdiy/L9Azg57TodxpwlT0k0OdGDx+Hu2NTmeYGzKE3RC3zw6BDs6NvU5LbLY6O7CZrMqbUoG
+ vjTMTPty4v2H+kFxYR+4iM6V8TR5BedxaMMWtM3BNfBzGLWklJ5Z7p8vaQw3k+q6fDEUHrHIg
+ 2xx3aNmLyQJPK/VT4DTujtqiqNaKl1nUEIae/axjp+Xx/jNI1nrKLqd0C/gu+igGT8NFXuJ5O
+ iz3Yh6E1xlkPhdBcvwviyh6ExMfef9Q3fFcT1gurQlJbOiOQUiTPY4dUbfNSzSq84vMFYhFqB
+ 0zFWpev0UXhtamltB3ITKlXky5E0xj2JMhvdm7Rrux71FRQSIGkpLNNSYhl8qSWdCZco7TDbb
+ d4vnw3oUL4UTXPOJhQxB4IiwB4srl8Kn+eDSCAkyWHgGlGebIc4fQUR05mHqI9K3knM9xc17K
+ onwIUjw6wnOdCIZWLeYI4X0jBotHQ6ayJ+w4+zt0o5bHDF0doVwq/BV5pCa3QCANq43sTm2+Z
+ YJRM4LWvZ7WC2QFFFAmEudb2J3yOCZ3d4RhR72YT57dPqbHZVsMhD1tqMYzLTF9YPyvB8c5BV
+ Jsk0u6lFgMhckIw48ZYmnchOh82+4BgBWm0snIHhbyUUYgNzs+oOoEZY5NT/hkgSJ8tTiDENu
+ N7NoF0vA3e3mY2dhv16A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Neither the old isdn4linux interface nor the newer mISDN stack
-ever had working 32-bit compat mode as far as I can tell.
+A handful of drivers all have a trivial wrapper around their ioctl
+handler, but don't call the compat_ptr() conversion function at the
+moment. In practice this does not matter, since none of them are used
+on the s390 architecture and for all other architectures, compat_ptr()
+does not do anything, but using the new compat_ptr_ioctl()
+helper makes it more correct in theory, and simplifies the code.
 
-However, the CAPI stack has some ioctl commands that are
-correctly listed in fs/compat_ioctl.c.
+I checked that all ioctl handlers in these files are compatible
+and take either pointer arguments or no argument.
 
-We can trivially move all of those into the corresponding
-file that implement the native handlers by adding a compat_ioctl
-redirect to that.
-
-I did notice that treating CAPI_MANUFACTURER_CMD() as compatible
-is broken, so I'm also adding a handler for that, realizing that
-in all likelyhood, nobody is ever going to call it.
-
-Cc: Karsten Keil <isdn@linux-pingi.de>
-Cc: netdev@vger.kernel.org
-Cc: isdn4linux@listserv.isdn4linux.de
+Acked-by: Al Viro <viro@zeniv.linux.org.uk>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Acked-by: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
+Acked-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/isdn/capi/capi.c | 31 +++++++++++++++++++++++++++++++
- fs/compat_ioctl.c        | 17 -----------------
- 2 files changed, 31 insertions(+), 17 deletions(-)
+ drivers/misc/cxl/flash.c            |  8 +-------
+ drivers/misc/genwqe/card_dev.c      | 23 +----------------------
+ drivers/scsi/megaraid/megaraid_mm.c | 28 +---------------------------
+ drivers/usb/gadget/function/f_fs.c  | 12 +-----------
+ 4 files changed, 4 insertions(+), 67 deletions(-)
 
-diff --git a/drivers/isdn/capi/capi.c b/drivers/isdn/capi/capi.c
-index c92b405b7646..efce7532513c 100644
---- a/drivers/isdn/capi/capi.c
-+++ b/drivers/isdn/capi/capi.c
-@@ -950,6 +950,34 @@ capi_unlocked_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+diff --git a/drivers/misc/cxl/flash.c b/drivers/misc/cxl/flash.c
+index 4d6836f19489..cb9cca35a226 100644
+--- a/drivers/misc/cxl/flash.c
++++ b/drivers/misc/cxl/flash.c
+@@ -473,12 +473,6 @@ static long device_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ 		return -EINVAL;
+ }
+ 
+-static long device_compat_ioctl(struct file *file, unsigned int cmd,
+-				unsigned long arg)
+-{
+-	return device_ioctl(file, cmd, arg);
+-}
+-
+ static int device_close(struct inode *inode, struct file *file)
+ {
+ 	struct cxl *adapter = file->private_data;
+@@ -514,7 +508,7 @@ static const struct file_operations fops = {
+ 	.owner		= THIS_MODULE,
+ 	.open		= device_open,
+ 	.unlocked_ioctl	= device_ioctl,
+-	.compat_ioctl	= device_compat_ioctl,
++	.compat_ioctl	= compat_ptr_ioctl,
+ 	.release	= device_close,
+ };
+ 
+diff --git a/drivers/misc/genwqe/card_dev.c b/drivers/misc/genwqe/card_dev.c
+index 0e34c0568fed..040a0bda3125 100644
+--- a/drivers/misc/genwqe/card_dev.c
++++ b/drivers/misc/genwqe/card_dev.c
+@@ -1215,34 +1215,13 @@ static long genwqe_ioctl(struct file *filp, unsigned int cmd,
+ 	return rc;
+ }
+ 
+-#if defined(CONFIG_COMPAT)
+-/**
+- * genwqe_compat_ioctl() - Compatibility ioctl
+- *
+- * Called whenever a 32-bit process running under a 64-bit kernel
+- * performs an ioctl on /dev/genwqe<n>_card.
+- *
+- * @filp:        file pointer.
+- * @cmd:         command.
+- * @arg:         user argument.
+- * Return:       zero on success or negative number on failure.
+- */
+-static long genwqe_compat_ioctl(struct file *filp, unsigned int cmd,
+-				unsigned long arg)
+-{
+-	return genwqe_ioctl(filp, cmd, arg);
+-}
+-#endif /* defined(CONFIG_COMPAT) */
+-
+ static const struct file_operations genwqe_fops = {
+ 	.owner		= THIS_MODULE,
+ 	.open		= genwqe_open,
+ 	.fasync		= genwqe_fasync,
+ 	.mmap		= genwqe_mmap,
+ 	.unlocked_ioctl	= genwqe_ioctl,
+-#if defined(CONFIG_COMPAT)
+-	.compat_ioctl   = genwqe_compat_ioctl,
+-#endif
++	.compat_ioctl   = compat_ptr_ioctl,
+ 	.release	= genwqe_release,
+ };
+ 
+diff --git a/drivers/scsi/megaraid/megaraid_mm.c b/drivers/scsi/megaraid/megaraid_mm.c
+index 59cca898f088..e83163c66884 100644
+--- a/drivers/scsi/megaraid/megaraid_mm.c
++++ b/drivers/scsi/megaraid/megaraid_mm.c
+@@ -41,10 +41,6 @@ static int mraid_mm_setup_dma_pools(mraid_mmadp_t *);
+ static void mraid_mm_free_adp_resources(mraid_mmadp_t *);
+ static void mraid_mm_teardown_dma_pools(mraid_mmadp_t *);
+ 
+-#ifdef CONFIG_COMPAT
+-static long mraid_mm_compat_ioctl(struct file *, unsigned int, unsigned long);
+-#endif
+-
+ MODULE_AUTHOR("LSI Logic Corporation");
+ MODULE_DESCRIPTION("LSI Logic Management Module");
+ MODULE_LICENSE("GPL");
+@@ -68,9 +64,7 @@ static wait_queue_head_t wait_q;
+ static const struct file_operations lsi_fops = {
+ 	.open	= mraid_mm_open,
+ 	.unlocked_ioctl = mraid_mm_unlocked_ioctl,
+-#ifdef CONFIG_COMPAT
+-	.compat_ioctl = mraid_mm_compat_ioctl,
+-#endif
++	.compat_ioctl = compat_ptr_ioctl,
+ 	.owner	= THIS_MODULE,
+ 	.llseek = noop_llseek,
+ };
+@@ -224,7 +218,6 @@ mraid_mm_unlocked_ioctl(struct file *filep, unsigned int cmd,
+ {
+ 	int err;
+ 
+-	/* inconsistent: mraid_mm_compat_ioctl doesn't take the BKL */
+ 	mutex_lock(&mraid_mm_mutex);
+ 	err = mraid_mm_ioctl(filep, cmd, arg);
+ 	mutex_unlock(&mraid_mm_mutex);
+@@ -1228,25 +1221,6 @@ mraid_mm_init(void)
+ }
+ 
+ 
+-#ifdef CONFIG_COMPAT
+-/**
+- * mraid_mm_compat_ioctl	- 32bit to 64bit ioctl conversion routine
+- * @filep	: file operations pointer (ignored)
+- * @cmd		: ioctl command
+- * @arg		: user ioctl packet
+- */
+-static long
+-mraid_mm_compat_ioctl(struct file *filep, unsigned int cmd,
+-		      unsigned long arg)
+-{
+-	int err;
+-
+-	err = mraid_mm_ioctl(filep, cmd, arg);
+-
+-	return err;
+-}
+-#endif
+-
+ /**
+  * mraid_mm_exit	- Module exit point
+  */
+diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
+index 59d9d512dcda..ce1d0235969c 100644
+--- a/drivers/usb/gadget/function/f_fs.c
++++ b/drivers/usb/gadget/function/f_fs.c
+@@ -1352,14 +1352,6 @@ static long ffs_epfile_ioctl(struct file *file, unsigned code,
  	return ret;
  }
  
-+#ifdef CONFIG_COMPAT
-+static long
-+capi_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-+{
-+	int ret;
-+
-+	if (cmd == CAPI_MANUFACTURER_CMD) {
-+		struct {
-+			unsigned long cmd;
-+			compat_uptr_t data;
-+		} mcmd32;
-+
-+		if (!capable(CAP_SYS_ADMIN))
-+			return -EPERM;
-+		if (copy_from_user(&mcmd32, compat_ptr(arg), sizeof(mcmd32)))
-+			return -EFAULT;
-+
-+		mutex_lock(&capi_mutex);
-+		ret = capi20_manufacturer(mcmd32.cmd, compat_ptr(mcmd32.data));
-+		mutex_unlock(&capi_mutex);
-+
-+		return ret;
-+	}
-+
-+	return capi_unlocked_ioctl(file, cmd, (unsigned long)compat_ptr(arg));
-+}
-+#endif
-+
- static int capi_open(struct inode *inode, struct file *file)
- {
- 	struct capidev *cdev;
-@@ -996,6 +1024,9 @@ static const struct file_operations capi_fops =
- 	.write		= capi_write,
- 	.poll		= capi_poll,
- 	.unlocked_ioctl	= capi_unlocked_ioctl,
-+#ifdef CONFIG_COMPAT
-+	.compat_ioctl	= capi_compat_ioctl,
-+#endif
- 	.open		= capi_open,
- 	.release	= capi_release,
- };
-diff --git a/fs/compat_ioctl.c b/fs/compat_ioctl.c
-index a4e8fb7da968..f3b4179d6dff 100644
---- a/fs/compat_ioctl.c
-+++ b/fs/compat_ioctl.c
-@@ -44,9 +44,6 @@
- #include <net/bluetooth/hci_sock.h>
- #include <net/bluetooth/rfcomm.h>
- 
--#include <linux/capi.h>
--#include <linux/gigaset_dev.h>
+-#ifdef CONFIG_COMPAT
+-static long ffs_epfile_compat_ioctl(struct file *file, unsigned code,
+-		unsigned long value)
+-{
+-	return ffs_epfile_ioctl(file, code, value);
+-}
+-#endif
 -
- #ifdef CONFIG_BLOCK
- #include <linux/cdrom.h>
- #include <linux/fd.h>
-@@ -681,20 +678,6 @@ COMPATIBLE_IOCTL(RFCOMMRELEASEDEV)
- COMPATIBLE_IOCTL(RFCOMMGETDEVLIST)
- COMPATIBLE_IOCTL(RFCOMMGETDEVINFO)
- COMPATIBLE_IOCTL(RFCOMMSTEALDLC)
--/* CAPI */
--COMPATIBLE_IOCTL(CAPI_REGISTER)
--COMPATIBLE_IOCTL(CAPI_GET_MANUFACTURER)
--COMPATIBLE_IOCTL(CAPI_GET_VERSION)
--COMPATIBLE_IOCTL(CAPI_GET_SERIAL)
--COMPATIBLE_IOCTL(CAPI_GET_PROFILE)
--COMPATIBLE_IOCTL(CAPI_MANUFACTURER_CMD)
--COMPATIBLE_IOCTL(CAPI_GET_ERRCODE)
--COMPATIBLE_IOCTL(CAPI_INSTALLED)
--COMPATIBLE_IOCTL(CAPI_GET_FLAGS)
--COMPATIBLE_IOCTL(CAPI_SET_FLAGS)
--COMPATIBLE_IOCTL(CAPI_CLR_FLAGS)
--COMPATIBLE_IOCTL(CAPI_NCCI_OPENCOUNT)
--COMPATIBLE_IOCTL(CAPI_NCCI_GETUNIT)
- /* Misc. */
- COMPATIBLE_IOCTL(PCIIOC_CONTROLLER)
- COMPATIBLE_IOCTL(PCIIOC_MMAP_IS_IO)
+ static const struct file_operations ffs_epfile_operations = {
+ 	.llseek =	no_llseek,
+ 
+@@ -1368,9 +1360,7 @@ static const struct file_operations ffs_epfile_operations = {
+ 	.read_iter =	ffs_epfile_read_iter,
+ 	.release =	ffs_epfile_release,
+ 	.unlocked_ioctl =	ffs_epfile_ioctl,
+-#ifdef CONFIG_COMPAT
+-	.compat_ioctl = ffs_epfile_compat_ioctl,
+-#endif
++	.compat_ioctl = compat_ptr_ioctl,
+ };
+ 
+ 
 -- 
 2.20.0
 
