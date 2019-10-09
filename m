@@ -2,177 +2,102 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15CB1ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 23:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4612BECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 23:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF8F6206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 23:25:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23710206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 23:26:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x34chc1l"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h1Wrsd2O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732405AbfJIXZn (ORCPT
+        id S1732402AbfJIX0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 19:25:43 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35284 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730900AbfJIXZn (ORCPT
+        Wed, 9 Oct 2019 19:26:55 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:40348 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730815AbfJIX0z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 19:25:43 -0400
-Received: by mail-pg1-f194.google.com with SMTP id p30so2419630pgl.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 16:25:42 -0700 (PDT)
+        Wed, 9 Oct 2019 19:26:55 -0400
+Received: by mail-io1-f68.google.com with SMTP id h144so9379642iof.7;
+        Wed, 09 Oct 2019 16:26:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=nlXGRir7qxNg9h2YHpsllSmIDcGkVZs+qNLw+3OKCsk=;
-        b=x34chc1l4jhUZ+ieWqc/QAPmxIUsAJEfqo1ezDT7BobFrWN6CVavsRTggcyCxErecR
-         YdtdK52rVs80vijSYalZdizlf+im10l6PzquuIoOJ9IkiTVY8jhcKzAgTu260eGu7qez
-         YW7b0/lEKyjdcZNVRisYcSrcC52nmpqRX0WPUIHFx1t5WNPZKBpUKz+/ZLEnCLDzo1JB
-         aAOYMm7hFT2kLclTZohWvBVopRkNgw0dicBjSBI3qFxrarqGlHr5IpUpqCMyvaSvqNUQ
-         XdOnLzIdHBWBlxFUNjytOETYTlxng1UlLjirJN+q4vflwCkudObWX26WWbTisccwAz2r
-         DCYA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=cuZx9RP/Z6zGQW6F5i1QUaqw4xzxwrwMbDsySq/JWK8=;
+        b=h1Wrsd2Ovnm+i9lUFgexhIjnqKzCMoGjbrQFLRN2t+CKoEACRrNnQMWzDYrduxF15G
+         +5J3EEG1VKVSZ2Jtzt8P8jCvyL8im8hr+thoGq+jhJ6tcUPqaXQuf/spbgKriPtCyoCA
+         D+M1c+OExkEeJfPwW2eMUb3TwyXcfIvArdQ+ZcrIyENCFiZObv+8SpTRqDcbiiU3gwr4
+         SWdsc9H1g6CcDVYUt2LYCAbbgKcIRjJxlrlVC7yanqjqU1F00/6NnUYTI/a4QK7BRrJ3
+         eKdk6UPgC2nLdoo2lmhNQyHKyEjzLANSyrG0oaVNx6Jp1d8QkrALorMWiAg51pStjumx
+         wKxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=nlXGRir7qxNg9h2YHpsllSmIDcGkVZs+qNLw+3OKCsk=;
-        b=RNEawtpgSBGkxEElygZf/EOFwyhMAPnxCIi5l/BP5apK24ODEX8NRVLz80Kl8wyoPJ
-         onuVB5BGgvIivKCnzWkz2WquYRUgDeuXjAwTG2yO9bilHa+kFIb4dyR9+Vw2jar0RmNl
-         GUsG+gtmEQi/eJs0Aq0t084n18ip1xYzovMjk5FwLcc461IyPLsU5ONlD1i17C11qhsE
-         tAd6j4LOZMi7c/Uyj9ZvMQDx2n63JDDUb8DSZ7si9bO4Bm3J5sGVLKkrKusltRdBNe44
-         EUd5YAabmxYq6OxV8A8cWaw39ickwa5xUg0rwpDUwZsTKUCQDg4g0oL+mFD/Hpp4LS4x
-         O67A==
-X-Gm-Message-State: APjAAAVamdXrY0vd7uhpWUe84qFy6RtDpAyLa83OgzH7hKR7Wybong+I
-        xkNNcg+sjwYPNiXBkoD3cnE3eg==
-X-Google-Smtp-Source: APXvYqyvw9caDYL9lBwWJwX4I76qO/hB3yMcB4SRwuLzUvSYJfjlZDjoGXvFM1dH/PDxroFRg9jFLw==
-X-Received: by 2002:a17:90a:3623:: with SMTP id s32mr7334902pjb.42.1570663542101;
-        Wed, 09 Oct 2019 16:25:42 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id j25sm3132946pfi.113.2019.10.09.16.25.40
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=cuZx9RP/Z6zGQW6F5i1QUaqw4xzxwrwMbDsySq/JWK8=;
+        b=jY+5gge9eK4h3JYsEdhz/INyuKeSoSPKhCJZyYX5a31SVp9mFwrUNJ6zS2CMahROgu
+         6gxESVLx2hP6QlUd9+K4ap/l1WuO+Qbvcxa8OhE9xyMRJlvj+URNg5jkDR04ls/rdYuW
+         H6f3cVKCJa6EAbKt+rl3NJlys/Gg6wxidl4vxyrfn12EoMA9ia19lLuULQ5aqUvbuYyV
+         p56pHbABQ9CONSN6AreCjTiDNy3pZs8cWcP+e3d+kG9Yr3l2rnXlY1XK4tQ3KrCs2bsX
+         F2yZiptICjDfhQytthxyHw/g/uzMV3Ol4TEhbPPyahFYliV9gB9siAghd4IVlJLc9zu2
+         PtDw==
+X-Gm-Message-State: APjAAAVlBPLQspzIHfw/yyIFu+GLu+gpoN+XeUnxGiOtNnLW2mYt9ZWH
+        EWM7OkPBLyUYZ56ToUdrubYUPr7aQqw=
+X-Google-Smtp-Source: APXvYqyDOI3fJ+Ic0Otb3zXX9izzJREPTdGeMIsHs2hq629IvbPg+pE+OGxvCxk5sGcGR8StaNMmhQ==
+X-Received: by 2002:a02:741a:: with SMTP id o26mr6492816jac.48.1570663614527;
+        Wed, 09 Oct 2019 16:26:54 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id s201sm3286852ios.83.2019.10.09.16.26.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 16:25:41 -0700 (PDT)
-Date:   Wed, 9 Oct 2019 16:25:39 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v11 04/16] leds: multicolor: Introduce a multicolor class
- definition
-Message-ID: <20191009232539.GB571@minitux>
-References: <20191008204800.19870-1-dmurphy@ti.com>
- <20191008204800.19870-5-dmurphy@ti.com>
- <CAOCOHw5uQL56T_DcZA47721yS1tLsp9cyUEdmiWr+Ccfh7YpRQ@mail.gmail.com>
- <d6b68a79-235a-0a9b-bbf3-519571646eff@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d6b68a79-235a-0a9b-bbf3-519571646eff@ti.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Wed, 09 Oct 2019 16:26:53 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] cpufreq/cpufreq_governor: Fix memory leak in cpufreq_dbs_governor_init
+Date:   Wed,  9 Oct 2019 18:26:42 -0500
+Message-Id: <20191009232643.20427-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 09 Oct 13:44 PDT 2019, Dan Murphy wrote:
+In the implementation of cpufreq_dbs_governor_init(), dbs_data is
+allocated and later is assigned to governor_data. But before that
+assignment, if gov->init() fails this allocation is not released.
+dbs_data should be released in case if gov->init() failure.
 
-> Bjorn
-> 
-> On 10/9/19 3:11 PM, Bjorn Andersson wrote:
-> > On Tue, Oct 8, 2019 at 1:49 PM Dan Murphy <dmurphy@ti.com> wrote:
-> > > Introduce a multicolor class that groups colored LEDs
-> > > within a LED node.
-> > > 
-> > > The multi color class groups monochrome LEDs and allows controlling two
-> > > aspects of the final combined color: hue and lightness. The former is
-> > > controlled via <color>_intensity files and the latter is controlled
-> > > via brightness file.
-> > > 
-> > Thanks for making progress on this, it's been the one outstanding
-> > question mark for the long overdue respin of the Qualcomm LPG driver.
-> 
-> > But while it works for the LPG, in that it has outputs named "RGB" I
-> > have boards with "generic" LED drivers that are connected to RGB LEDs.
-> > So per your proposed solution we would need to add the additional
-> 
-> You don't have to add the MC class to those drivers.  This is an optional
-> framework but if you wanted to use the framework for specific devices then
-> yes you would need to add that support. This is why I did the LP55xx patches
-> to demonstrate the feasibility since the LP50xx has the MC class
-> intelligence already.
-> 
+Fixes: 714a2d9c8792 ("cpufreq: governor: split cpufreq_governor_dbs()")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ drivers/cpufreq/cpufreq_governor.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Correct me if I've misunderstood something, but if I have a product
-using e.g. lm3533 connected to an RGB LED then the correct way to
-represent this towards userspace is to introduce the MC class in the
-lm3533 LED driver, no?
+diff --git a/drivers/cpufreq/cpufreq_governor.c b/drivers/cpufreq/cpufreq_governor.c
+index 4bb054d0cb43..deb099d36266 100644
+--- a/drivers/cpufreq/cpufreq_governor.c
++++ b/drivers/cpufreq/cpufreq_governor.c
+@@ -428,8 +428,10 @@ int cpufreq_dbs_governor_init(struct cpufreq_policy *policy)
+ 	gov_attr_set_init(&dbs_data->attr_set, &policy_dbs->list);
+ 
+ 	ret = gov->init(dbs_data);
+-	if (ret)
++	if (ret) {
++		kfree(dbs_data);
+ 		goto free_policy_dbs_info;
++	}
+ 
+ 	/*
+ 	 * The sampling interval should not be less than the transition latency
+-- 
+2.17.1
 
-> The LP55xx driver can register to the LED class and/or the MC LED class
-> pending on the DT organization.
-> 
-
-Understood.
-
-> I don't plan on going through all of TI's RGB drivers and retrofitting them
-> to the MC class.  I do have to update the GPIO LED driver to use the class
-> but that work is still pending.
-> 
-> I may also update the Motorola PCAP driver as well since I have a Droid4 to
-> test.
-> 
-
-My concern with this is that being connected to a RGB LED is not a
-property of the controller, but the system design and the proposed
-implementation makes it a property of each controller.
-
-I'm not saying that the proposed path is wrong, I'm saying that we have
-83 files named leds-*.c in drivers/leds and this adaption needs to
-happen on each one.
-
-
-And I'm not saying I expect you to do this.
-
-> > mc_class handling to every single LED driver that might be used to
-> > sink current into an RGB LED.
-> > 
-> > I also don't see anything preventing hardware designers from feeding
-> > single RGB LEDs from multiple different LED controllers, something the
-> > current proposal would prohibit.
-> 
-> What do you mean by a single RGB LED? Are you referring to a RGB module?
-> 
-> http://wiki.sunfounder.cc/index.php?title=RGB_LED_Module
-> 
-
-Yes
-
-> There is no prevention for HW designers to put a driver on each LED output
-> but I am not sure why they would incur
-> 
-> the additional BOM cost seems quite silly unless you have an unlimited
-> budget ;)
-> 
-
-So if you have a system with e.g. 8 PWM channels on one PMIC and a
-single PWM available on a different PMIC then you're saying that the
-hardware guys would be silly to believe that they can drive 3 RGB LEDS
-off this?
-
-> If they did design the system that way then the SW would need to revert back
-> to the standard LED class as it is done today.
-> 
-
-If that is the agreed upon design then I'll continue to adapt my LED
-drivers to the MC class.
-
-Regards,
-Bjorn
