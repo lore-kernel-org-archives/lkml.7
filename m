@@ -2,156 +2,456 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EAA2ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 05:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F51ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 06:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6BFF20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 05:59:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A384F20679
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 06:04:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DDuJJlQ7"
+	dkim=pass (2048-bit key) header.d=hev-cc.20150623.gappssmtp.com header.i=@hev-cc.20150623.gappssmtp.com header.b="lZzOag8U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727286AbfJIF7J (ORCPT
+        id S1727824AbfJIGER (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 01:59:09 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:42861 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbfJIF7J (ORCPT
+        Wed, 9 Oct 2019 02:04:17 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:39637 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbfJIGEQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 01:59:09 -0400
-Received: by mail-qk1-f195.google.com with SMTP id f16so1118015qkl.9
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 22:59:07 -0700 (PDT)
+        Wed, 9 Oct 2019 02:04:16 -0400
+Received: by mail-lf1-f66.google.com with SMTP id 72so679174lfh.6
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Oct 2019 23:04:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=hev-cc.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=QP9COoIo3B5n4ZVc/Ae6X1MjkUee4h2WyLXSB8IqAg4=;
-        b=DDuJJlQ7O/wq2X7NYrL2Dyt3r3ProJp9keBPOqyFlW53u0BQ7Dqnm/NdV/1ih3i6HB
-         AFAU1ri4+NGJzZVE0oe5Pvm9N8DUpgWuhKloQxnAvSSXM0+Nn7pAbnKOh/U0byPf9xOV
-         Z18IwZyBi+ks4ytrAYSEMkK+zTsCrhf3CNNGaKpxH+S4NVi9y6UTsM//n7TkkVlv1jdy
-         +9/euRTcFsU7NTl9UnnusyWXwH8B+ti/MWJHCocIUOCFf882zVwjlwoKHl+uILM8f3xV
-         XbgWh2f9xFiI3LglFDCtZF4+mjyGsBmKP/UsQczDJREBRq9a4lKNAdnkO/5uA48MV5JC
-         aYIA==
+        bh=l6hBrR6qXV4qdWZNbpeQBt34dXxtvdG8HN8+1zByqys=;
+        b=lZzOag8UrkgFNxYmDYrS3VvLUkKqa1MrRv33wcKuNwbdmW8+mg8UTJGhlmSgv6RDnP
+         YfSidv2+2EwVJflrIBqZPboeS4rMnfDAW2N4unPCTq+DrF/f3ptBxOwfxCh7lwdm0uys
+         fbQuc71R5k5EAov+40NV+Dg41vr7o3a3RPtp4a7X63qCBkGo8xnuGXNtYPGhorX61Ww0
+         vFbgG4onHR2hqFYJVF5uLj7JEaSbSzhlLWPJcmXR9IE91FqtH4XDyD03S5gh05uYoKvj
+         aS0MCW3OzPeg0LqRTttrTRNtM+jPupprevb3i5GgUrYfWn4UAcuBKZsGKhFpupC8bV6g
+         pSPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=QP9COoIo3B5n4ZVc/Ae6X1MjkUee4h2WyLXSB8IqAg4=;
-        b=a1WBO5ARs8687Gj8OIDU/WJWVIVFamdpAak7FU0JIu8xE0GMv17P1B6+OzCs/opcur
-         dL9iqfKBfpnBnn8Sxd73Dxp1YlsdKL7/IPmaV5gE0f4ncrOO+KItWv3/QLwuu5g0Wl0O
-         fB9mzHtXAY3EVq4yD4l7iT8HeocKMgMmW84XbWSMq54VyjqPbTHrqKKa6zAUEPOgKE+R
-         4cj2EKaHSP1RE/UpeIAEmRy5HR8iRkLHfx1lb/zYriDzKVwcze2KnTJ9zB/C81LfB1Ru
-         KiZzl3x6R9jwEYf2A46kcBm60LStNHW07250GbfuinCgwgjbp7HpFSfsWfNUksTuH1OF
-         YDWg==
-X-Gm-Message-State: APjAAAVJ9JNSrqVYPcFX2Gdw6YySS8F68gzuXS6cyK9S8MzY6OHWQWVq
-        JMyYVsO2vVaL0OPIXUlBjRPcJePry2p7eWJueQk=
-X-Google-Smtp-Source: APXvYqwHv3qx96Q9TYazL2MzGf2DtjcHslsu2IVQn1IS+gt0W53MyC9hQkbkjlNN9T2no+E9Y58pQoc86Bvy2xk0cTs=
-X-Received: by 2002:a37:bbc5:: with SMTP id l188mr1964517qkf.118.1570600746816;
- Tue, 08 Oct 2019 22:59:06 -0700 (PDT)
+        bh=l6hBrR6qXV4qdWZNbpeQBt34dXxtvdG8HN8+1zByqys=;
+        b=ZcurQhk11D3MptL/i3C5XYK9mSPqEpzNhkSSmW37DKYX59WqXsrzZWd3sf3WAX6Jtd
+         raMUhGz7fK7SdOKmAbWbx48ScpaHWpd0Y9vQQXH5LetnVkxlg8FR+rj48JR/qdNo12pb
+         pxX3a3NBQc7TNUl+RR39HACJbYc7QWbIGl3zmhmLFOGAmfqvpwTlwxLlDp47tEYGc/Xu
+         7QLs/ToDF9xac3JwW8nQJmHRuGF6SXeln/WxE0SFJ0Bmh+PIMaw8IjdwGLtcJyvtN11M
+         wUNVBUqU8/riaOpOqVHe9nVD/wyx98KpMcuNNpE/K7Xt0gyuy0LuQPxsffvTGG2URQWU
+         pT4A==
+X-Gm-Message-State: APjAAAVtIZZ4ZRO3+qK3J0iDDT5/eIegmEO7JlFw5AaupU2ETDC9o7rs
+        SixxyToTi3exZyPZK9nx1jwQxdWxO/AoQhQxB9/Cew==
+X-Google-Smtp-Source: APXvYqwjxnMQDfm1dc/ybsum4JgoEQRJ5IhQnMFj1EPl2Oa4NI5jsAm+9rReozUbtt3woFHr7xOs4gcKvWJLFgak1wk=
+X-Received: by 2002:a19:6f0e:: with SMTP id k14mr954203lfc.34.1570601053475;
+ Tue, 08 Oct 2019 23:04:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190829091232.15065-1-kai.heng.feng@canonical.com>
-In-Reply-To: <20190829091232.15065-1-kai.heng.feng@canonical.com>
-From:   Feng Tang <feng.79.tang@gmail.com>
-Date:   Wed, 9 Oct 2019 13:58:55 +0800
-Message-ID: <CA++bM2tb_twW_cF9dRx2KaQezXgqZ==Qw3bP-+7D5CnRzgFu6w@mail.gmail.com>
-Subject: Re: [PATCH] x86/hpet: Disable HPET on Intel Coffe Lake
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, harry.pan@intel.com, x86@kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        feng.tang@intel.com
+References: <20190925015603.10939-1-r@hev.cc> <20190927192915.6ec24ad706258de99470a96e@linux-foundation.org>
+ <c0a96dd89d0a361d8061b8c356b57ed2@suse.de> <9ca02c9b-85b7-dced-9c82-1fc453c49b8a@akamai.com>
+ <9a82925ff7dfc314d36b3d36e54316a8@suse.de> <9ceee722-d2a8-b182-c95a-e7a873b08ca1@akamai.com>
+ <cda953c3fec34fe14b231c30c75e57a1@suse.de> <56b7c2c2-debc-4e62-904e-f2f1c2e65293@akamai.com>
+ <addd675e77a7dfc4e78e2bb8757c974b@suse.de>
+In-Reply-To: <addd675e77a7dfc4e78e2bb8757c974b@suse.de>
+From:   Heiher <r@hev.cc>
+Date:   Wed, 9 Oct 2019 14:03:43 +0800
+Message-ID: <CAHirt9hADPxif7BwL_CZaW7vf5VhYWYRmEnFR8HhuYkOq9Vb4w@mail.gmail.com>
+Subject: Re: [PATCH RESEND v4] fs/epoll: Remove unnecessary wakeups of nested
+ epoll that in ET mode
+To:     Roman Penyaev <rpenyaev@suse.de>
+Cc:     Jason Baron <jbaron@akamai.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Davide Libenzi <davidel@xmailserver.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Eric Wong <e@80x24.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sridhar Samudrala <sridhar.samudrala@intel.com>,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kai-Heng,
+Hi,
 
-On Thu, Aug 29, 2019 at 5:14 PM Kai-Heng Feng
-<kai.heng.feng@canonical.com> wrote:
+On Tue, Oct 8, 2019 at 3:10 AM Roman Penyaev <rpenyaev@suse.de> wrote:
 >
-> Some Coffee Lake platforms have skewed HPET timer once the SoCs entered
-> PC10, and marked TSC as unstable clocksource as result.
+> On 2019-10-07 20:43, Jason Baron wrote:
+> > On 10/7/19 2:30 PM, Roman Penyaev wrote:
+> >> On 2019-10-07 18:42, Jason Baron wrote:
+> >>> On 10/7/19 6:54 AM, Roman Penyaev wrote:
+> >>>> On 2019-10-03 18:13, Jason Baron wrote:
+> >>>>> On 9/30/19 7:55 AM, Roman Penyaev wrote:
+> >>>>>> On 2019-09-28 04:29, Andrew Morton wrote:
+> >>>>>>> On Wed, 25 Sep 2019 09:56:03 +0800 hev <r@hev.cc> wrote:
+> >>>>>>>
+> >>>>>>>> From: Heiher <r@hev.cc>
+> >>>>>>>>
+> >>>>>>>> Take the case where we have:
+> >>>>>>>>
+> >>>>>>>>         t0
+> >>>>>>>>          | (ew)
+> >>>>>>>>         e0
+> >>>>>>>>          | (et)
+> >>>>>>>>         e1
+> >>>>>>>>          | (lt)
+> >>>>>>>>         s0
+> >>>>>>>>
+> >>>>>>>> t0: thread 0
+> >>>>>>>> e0: epoll fd 0
+> >>>>>>>> e1: epoll fd 1
+> >>>>>>>> s0: socket fd 0
+> >>>>>>>> ew: epoll_wait
+> >>>>>>>> et: edge-trigger
+> >>>>>>>> lt: level-trigger
+> >>>>>>>>
+> >>>>>>>> We only need to wakeup nested epoll fds if something has been
+> >>>>>>>> queued
+> >>>>>>>> to the
+> >>>>>>>> overflow list, since the ep_poll() traverses the rdllist during
+> >>>>>>>> recursive poll
+> >>>>>>>> and thus events on the overflow list may not be visible yet.
+> >>>>>>>>
+> >>>>>>>> Test code:
+> >>>>>>>
+> >>>>>>> Look sane to me.  Do you have any performance testing results
+> >>>>>>> which
+> >>>>>>> show a benefit?
+> >>>>>>>
+> >>>>>>> epoll maintainership isn't exactly a hive of activity nowadays :(
+> >>>>>>> Roman, would you please have time to review this?
+> >>>>>>
+> >>>>>> So here is my observation: current patch does not fix the
+> >>>>>> described
+> >>>>>> problem (double wakeup) for the case, when new event comes exactly
+> >>>>>> to the ->ovflist.  According to the patch this is the desired
+> >>>>>> intention:
+> >>>>>>
+> >>>>>>    /*
+> >>>>>>     * We only need to wakeup nested epoll fds if something has
+> >>>>>> been
+> >>>>>> queued
+> >>>>>>     * to the overflow list, since the ep_poll() traverses the
+> >>>>>> rdllist
+> >>>>>>     * during recursive poll and thus events on the overflow list
+> >>>>>> may
+> >>>>>> not be
+> >>>>>>     * visible yet.
+> >>>>>>     */
+> >>>>>>     if (nepi != NULL)
+> >>>>>>        pwake++;
+> >>>>>>
+> >>>>>>     ....
+> >>>>>>
+> >>>>>>     if (pwake == 2)
+> >>>>>>        ep_poll_safewake(&ep->poll_wait);
+> >>>>>>
+> >>>>>>
+> >>>>>> but this actually means that we repeat the same behavior (double
+> >>>>>> wakeup)
+> >>>>>> but only for the case, when event comes to the ->ovflist.
+> >>>>>>
+> >>>>>> How to reproduce? Can be easily done (ok, not so easy but it is
+> >>>>>> possible
+> >>>>>> to try): to the given userspace test we need to add one more
+> >>>>>> socket
+> >>>>>> and
+> >>>>>> immediately fire the event:
+> >>>>>>
+> >>>>>>     e.events = EPOLLIN;
+> >>>>>>     if (epoll_ctl(efd[1], EPOLL_CTL_ADD, s2fd[0], &e) < 0)
+> >>>>>>        goto out;
+> >>>>>>
+> >>>>>>     /*
+> >>>>>>      * Signal any fd to let epoll_wait() to call
+> >>>>>> ep_scan_ready_list()
+> >>>>>>      * in order to "catch" it there and add new event to
+> >>>>>> ->ovflist.
+> >>>>>>      */
+> >>>>>>      if (write(s2fd[1], "w", 1) != 1)
+> >>>>>>         goto out;
+> >>>>>>
+> >>>>>> That is done in order to let the following epoll_wait() call to
+> >>>>>> invoke
+> >>>>>> ep_scan_ready_list(), where we can "catch" and insert new event
+> >>>>>> exactly
+> >>>>>> to the ->ovflist. In order to insert event exactly in the correct
+> >>>>>> list
+> >>>>>> I introduce artificial delay.
+> >>>>>>
+> >>>>>> Modified test and kernel patch is below.  Here is the output of
+> >>>>>> the
+> >>>>>> testing tool with some debug lines from kernel:
+> >>>>>>
+> >>>>>>   # ~/devel/test/edge-bug
+> >>>>>>   [   59.263178] ### sleep 2
+> >>>>>>   >> write to sock
+> >>>>>>   [   61.318243] ### done sleep
+> >>>>>>   [   61.318991] !!!!!!!!!!! ep_poll_safewake(&ep->poll_wait);
+> >>>>>> events_in_rdllist=1, events_in_ovflist=1
+> >>>>>>   [   61.321204] ### sleep 2
+> >>>>>>   [   63.398325] ### done sleep
+> >>>>>>   error: What?! Again?!
+> >>>>>>
+> >>>>>> First epoll_wait() call (ep_scan_ready_list()) observes 2 events
+> >>>>>> (see "!!!!!!!!!!! ep_poll_safewake" output line), exactly what we
+> >>>>>> wanted to achieve, so eventually ep_poll_safewake() is called
+> >>>>>> again
+> >>>>>> which leads to double wakeup.
+> >>>>>>
+> >>>>>> In my opinion current patch as it is should be dropped, it does
+> >>>>>> not
+> >>>>>> fix the described problem but just hides it.
+> >>>>>>
+> >>>>>> --
+> >>>>
+> >>>> Hi Jason,
+> >>>>
+> >>>>>
+> >>>>> Yes, there are 2 wakeups in the test case you describe, but if the
+> >>>>> second event (write to s1fd) gets queued after the first call to
+> >>>>> epoll_wait(), we are going to get 2 wakeups anyways.
+> >>>>
+> >>>> Yes, exactly, for this reason I print out the number of events
+> >>>> observed
+> >>>> on first wait, there should be 1 (rdllist) and 1 (ovflist),
+> >>>> otherwise
+> >>>> this is another case, when second event comes exactly after first
+> >>>> wait, which is legitimate wakeup.
+> >>>>
+> >>>>> So yes, there may
+> >>>>> be a slightly bigger window with this patch for 2 wakeups, but its
+> >>>>> small
+> >>>>> and I tried to be conservative with the patch - I'd rather get an
+> >>>>> occasional 2nd wakeup then miss one. Trying to debug missing
+> >>>>> wakeups
+> >>>>> isn't always fun...
+> >>>>>
+> >>>>> That said, the reason for propagating events that end up on the
+> >>>>> overflow
+> >>>>> list was to prevent the race of the wakee not seeing events because
+> >>>>> they
+> >>>>> were still on the overflow list. In the testcase, imagine if there
+> >>>>> was a
+> >>>>> thread doing epoll_wait() on efd[0], and then a write happends on
+> >>>>> s1fd.
+> >>>>> I thought it was possible then that a 2nd thread doing epoll_wait()
+> >>>>> on
+> >>>>> efd[1], wakes up, checks efd[0] and sees no events because they are
+> >>>>> still potentially on the overflow list. However, I think that case
+> >>>>> is
+> >>>>> not possible because the thread doing epoll_wait() on efd[0] is
+> >>>>> going to
+> >>>>> have the ep->mtx, and thus when the thread wakes up on efd[1], its
+> >>>>> going
+> >>>>> to have to be ordered because its also grabbing the ep->mtx
+> >>>>> associated
+> >>>>> with efd[0].
+> >>>>>
+> >>>>> So I think its safe to do the following if we want to go further
+> >>>>> than
+> >>>>> the proposed patch, which is what you suggested earlier in the
+> >>>>> thread
+> >>>>> (minus keeping the wakeup on ep->wq).
+> >>>>
+> >>>> Then I do not understand why we need to keep ep->wq wakeup?
+> >>>> @wq and @poll_wait are almost the same with only one difference:
+> >>>> @wq is used when you sleep on it inside epoll_wait() and the other
+> >>>> is used when you nest epoll fd inside epoll fd.  Either you wake
+> >>>> both up either you don't this at all.
+> >>>>
+> >>>> ep_poll_callback() does wakeup explicitly, ep_insert() and
+> >>>> ep_modify()
+> >>>> do wakeup explicitly, so what are the cases when we need to do
+> >>>> wakeups
+> >>>> from ep_scan_ready_list()?
+> >>>
+> >>> Hi Roman,
+> >>>
+> >>> So the reason I was saying not to drop the ep->wq wakeup was that I
+> >>> was
+> >>> thinking about a usecase where you have multi-threads say thread A
+> >>> and
+> >>> thread B which are doing epoll_wait() on the same epfd. Now, the
+> >>> threads
+> >>> both call epoll_wait() and are added as exclusive to ep->wq. Now a
+> >>> bunch
+> >>> of events happen and thread A is woken up. However, thread A may only
+> >>> process a subset of the events due to its 'maxevents' parameter. In
+> >>> that
+> >>> case, I was thinking that the wakeup on ep->wq might be helpful,
+> >>> because
+> >>> in the absence of subsequent events, thread B can now start
+> >>> processing
+> >>> the rest, instead of waiting for the next event to be queued.
+> >>>
+> >>> However, I was thinking about the state of things before:
+> >>> 86c0517 fs/epoll: deal with wait_queue only once
+> >>>
+> >>> Before that patch, thread A would have been removed from eq->wq
+> >>> before
+> >>> the wakeup call, thus waking up thread B. However, now that thread A
+> >>> stays on the queue during the call to ep_send_events(), I believe the
+> >>> wakeup would only target thread A, which doesn't help since its
+> >>> already
+> >>> checking for events. So given the state of things I think you are
+> >>> right
+> >>> in that its not needed. However, I wonder if not removing from the
+> >>> ep->wq affects the multi-threaded case I described. Its been around
+> >>> since 5.0, so probably not, but it would be a more subtle performance
+> >>> difference.
+> >>
+> >> Now I understand what you mean. You want to prevent "idling" of
+> >> events,
+> >> while thread A is busy with the small portion of events (portion is
+> >> equal
+> >> to maxevents).  On next iteration thread A will pick up the rest, no
+> >> doubts,
+> >> but would be nice to give a chance to thread B immediately to deal
+> >> with the
+> >> rest.  Ok, makes sense.
+> >
+> > Exactly, I don't believe its racy as is - but it seems like it would be
+> > good to wakeup other threads that may be waiting. That said, this logic
+> > was removed as I pointed out. So I'm not sure we need to tie this
+> > change
+> > to the current one - but it may be a nice addition.
+> >
+> >>
+> >> But what if to make this wakeup explicit if we have more events to
+> >> process?
+> >> (nothing is tested, just a guess)
+> >>
+> >> @@ -255,6 +255,7 @@ struct ep_pqueue {
+> >>  struct ep_send_events_data {
+> >>         int maxevents;
+> >>         struct epoll_event __user *events;
+> >> +       bool have_more;
+> >>         int res;
+> >>  };
+> >> @@ -1783,14 +1768,17 @@ static __poll_t ep_send_events_proc(struct
+> >> eventpoll *ep, struct list_head *head
+> >>  }
+> >>
+> >>  static int ep_send_events(struct eventpoll *ep,
+> >> -                         struct epoll_event __user *events, int
+> >> maxevents)
+> >> +                         struct epoll_event __user *events, int
+> >> maxevents,
+> >> +                         bool *have_more)
+> >>  {
+> >> -       struct ep_send_events_data esed;
+> >> -
+> >> -       esed.maxevents = maxevents;
+> >> -       esed.events = events;
+> >> +       struct ep_send_events_data esed = {
+> >> +               .maxevents = maxevents,
+> >> +               .events = events,
+> >> +       };
+> >>
+> >>         ep_scan_ready_list(ep, ep_send_events_proc, &esed, 0, false);
+> >> +       *have_more = esed.have_more;
+> >> +
+> >>         return esed.res;
+> >>  }
+> >>
+> >> @@ -1827,7 +1815,7 @@ static int ep_poll(struct eventpoll *ep, struct
+> >> epoll_event __user *events,
+> >>  {
+> >>         int res = 0, eavail, timed_out = 0;
+> >>         u64 slack = 0;
+> >> -       bool waiter = false;
+> >> +       bool waiter = false, have_more;
+> >>         wait_queue_entry_t wait;
+> >>         ktime_t expires, *to = NULL;
+> >>
+> >> @@ -1927,7 +1915,8 @@ static int ep_poll(struct eventpoll *ep, struct
+> >> epoll_event __user *events,
+> >>          * more luck.
+> >>          */
+> >>         if (!res && eavail &&
+> >> -           !(res = ep_send_events(ep, events, maxevents)) &&
+> >> !timed_out)
+> >> +           !(res = ep_send_events(ep, events, maxevents, &have_more))
+> >> &&
+> >> +           !timed_out)
+> >>                 goto fetch_events;
+> >>
+> >>         if (waiter) {
+> >> @@ -1935,6 +1924,12 @@ static int ep_poll(struct eventpoll *ep, struct
+> >> epoll_event __user *events,
+> >>                 __remove_wait_queue(&ep->wq, &wait);
+> >>                 spin_unlock_irq(&ep->wq.lock);
+> >>         }
+> >> +       /*
+> >> +        * We were not able to process all the events, so immediately
+> >> +        * wakeup other waiter.
+> >> +        */
+> >> +       if (res > 0 && have_more && waitqueue_active(&ep->wq))
+> >> +               wake_up(&ep->wq);
+> >>
+> >>         return res;
+> >>  }
+> >>
+> >>
+> >
+> > Ok, yeah I like making it explicit. Looks like you are missing the
+> > changes to ep_scan_ready_list(), but I think the general approach makes
+> > sense.
 >
-> Harry Pan identified it's a firmware bug [1].
+> Yeah, missed the hunk:
 >
-> To prevent creating a circular dependency between HPET and TSC, let's
-> disable HPET on affected platforms.
+> @@ -1719,8 +1704,10 @@ static __poll_t ep_send_events_proc(struct
+> eventpoll *ep, struct list_head *head
+>          lockdep_assert_held(&ep->mtx);
+>
+>          list_for_each_entry_safe(epi, tmp, head, rdllink) {
+> -               if (esed->res >= esed->maxevents)
+> +               if (esed->res >= esed->maxevents) {
+> +                       esed->have_more = true;
+>                          break;
+> +               }
+>
+> > Although I really didn't have a test case that motivated this -
+> > its just was sort of noting this change in behavior while reviewing the
+> > current change.
+> >
+> >> PS. So what we decide with the original patch?  Remove the whole
+> >> branch?
+> >>
+> >
+> > For fwiw, I'm ok removing the whole branch as you proposed.
+>
+> Then probably Heiher could resend once more. Heiher, can you, please?
 
-Sorry for chiming late.
-
-We have disabled the HPET for Baytrail platforms in
- commit 62187910b0fc : x86/intel: Add quirk to disable HPET for the
-Baytrail platform
-
-Which added a quirk in
-@@ -567,6 +577,12 @@ static struct chipset early_qrk[] __initdata = {
-+       /*
-+        * HPET on current version of Baytrail platform has accuracy
-+        * problems, disable it for now:
-+        */
-+       { PCI_VENDOR_ID_INTEL, 0x0f00,
-+               PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
-
-So maybe we can unify the method to disable HPET. (btw, I have no idea
-about the healthy info of HPET for Kabylake, just want to comment
-on the disabling method).
-
-Thanks,
-Feng
+Sorry for delay.
+Thank you for your help! That's ok, I will re-send the patch and add
+unit-tests to
+kselftests in the later patches.
 
 >
-> [1]: https://lore.kernel.org/lkml/20190516090651.1396-1-harry.pan@intel.com/
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203183
+> > And I think the above change can go in separately (if we decide we want
+> > it). I don't
+> > think they need to be tied together. I also want to make sure this
+> > change gets a full linux-next cycle, so I think it should target 5.5 at
+> > this point.
 >
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
->  arch/x86/kernel/hpet.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+> Sure, this explicit ->wq wakeup is a separate patch, which should be
+> covered with some benchmarks.  I can try to cook something out in order
+> to get numbers.
 >
-> diff --git a/arch/x86/kernel/hpet.c b/arch/x86/kernel/hpet.c
-> index c6f791bc481e..07e9ec6f85b6 100644
-> --- a/arch/x86/kernel/hpet.c
-> +++ b/arch/x86/kernel/hpet.c
-> @@ -7,7 +7,9 @@
->  #include <linux/cpu.h>
->  #include <linux/irq.h>
->
-> +#include <asm/cpu_device_id.h>
->  #include <asm/hpet.h>
-> +#include <asm/intel-family.h>
->  #include <asm/time.h>
->
->  #undef  pr_fmt
-> @@ -806,6 +808,12 @@ static bool __init hpet_counting(void)
->         return false;
->  }
->
-> +static const struct x86_cpu_id hpet_blacklist[] __initconst = {
-> +       { X86_VENDOR_INTEL, 6, INTEL_FAM6_KABYLAKE_MOBILE },
-> +       { X86_VENDOR_INTEL, 6, INTEL_FAM6_KABYLAKE_DESKTOP },
-> +       { }
-> +};
-> +
->  /**
->   * hpet_enable - Try to setup the HPET timer. Returns 1 on success.
->   */
-> @@ -819,6 +827,9 @@ int __init hpet_enable(void)
->         if (!is_hpet_capable())
->                 return 0;
->
-> +       if (!hpet_force_user && x86_match_cpu(hpet_blacklist))
-> +               return 0;
-> +
->         hpet_set_mapping();
->         if (!hpet_virt_address)
->                 return 0;
 > --
-> 2.17.1
+> Roman
 >
+--
+Best regards!
+Hev
+https://hev.cc
