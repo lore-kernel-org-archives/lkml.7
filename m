@@ -2,125 +2,174 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B3FC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2EA0C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E4F821721
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87F0D21721
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:42:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TPCovcmH"
+	dkim=pass (1024-bit key) header.d=epam.com header.i=@epam.com header.b="B+APU4tS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730962AbfJILlj (ORCPT
+        id S1730991AbfJILmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 07:41:39 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41758 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbfJILli (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 07:41:38 -0400
-Received: by mail-wr1-f68.google.com with SMTP id q9so2506543wrm.8;
-        Wed, 09 Oct 2019 04:41:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mMvvYTkM4tkX/zo2Ao0DeJUC7rPkTo80uGcij47czrg=;
-        b=TPCovcmHJMC1pvZXwISoRuCV1Sfonuzn0BlRI4oKPe/hzHj3w6Nl8+hnu5qVdPvcBl
-         eGA+CYXbem4TVh6WET1EKfA3HwV+lDKzOavXpS2D74h5UWzTp9iQ+4zKkTm4Mbz5ypxg
-         9ba2YcuTYX0CqMPqieHUCeefpfHiIFS2Q2AOFAhVQHeDKGZdlZSWKrAqMiHYnAhbcSgf
-         GL/99s2KguOl4JzxwCT9LDZEwRZFV7pKOp+1iaZiSYkuZoQ/80MefTf3Ubv8gZD/oeEG
-         CS5OLib2PdeApMdcwMiosDnbiSsuNPtD5ls7ElllaEQObVROkac2MzarZ+mJWhrS/z/8
-         b68w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mMvvYTkM4tkX/zo2Ao0DeJUC7rPkTo80uGcij47czrg=;
-        b=hu4fJ77kK6b4NX/vNtE/NOMjJIfsbLvanxnM6kUMdND4HWxIB85U1t362TYTnlBzxm
-         YqWCLBW2m6M0u5rUsxVaDKZW4nU3vtdwYKuuPGZuhU9VD21+ppmVTm5b/WxvkRWd3Yg/
-         TWc2M+TyN405mlzOV0doRxP9BLnrGQxF+lVOZH1CBmlG2kfcSdAVi2dFHFQ9bSe5Io54
-         lLxsyh8LKObkWCiFjjsPeO6tiCWPAk1LRJqoGOn2OcSy4dEEzj5EUs72YJTzFUd0VPqb
-         lPs54zqHNqadA2N9AW6D963fg7nELJhTqEPKPvQlimzPKhcz56DdOfgt7GQB/h31ULzT
-         mKuw==
-X-Gm-Message-State: APjAAAW1GfXyDmGjjMcOqRcCC9v0IxrJ2TV23zrUKEFRlZbFcAcAPGsi
-        8vINSqAXnRZOCp3HE14Z3HQ=
-X-Google-Smtp-Source: APXvYqxuonZuaW/TjLvUCvWw0cX8AjeIVxfiHs749gIi+aa0PGQZLcC696dUFWCro0Q5KN+pZ/fRog==
-X-Received: by 2002:a05:6000:1190:: with SMTP id g16mr2490550wrx.133.1570621295757;
-        Wed, 09 Oct 2019 04:41:35 -0700 (PDT)
-Received: from localhost ([51.15.41.238])
-        by smtp.gmail.com with ESMTPSA id h63sm3844894wmf.15.2019.10.09.04.41.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 04:41:34 -0700 (PDT)
-Date:   Wed, 9 Oct 2019 12:41:33 +0100
-From:   Stefan Hajnoczi <stefanha@gmail.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     netdev@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
-        linux-hyperv@vger.kernel.org,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        kvm@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jorgen Hansen <jhansen@vmware.com>
-Subject: Re: [RFC PATCH 01/13] vsock/vmci: remove unused
- VSOCK_DEFAULT_CONNECT_TIMEOUT
-Message-ID: <20191009114133.GB5747@stefanha-x1.localdomain>
-References: <20190927112703.17745-1-sgarzare@redhat.com>
- <20190927112703.17745-2-sgarzare@redhat.com>
+        Wed, 9 Oct 2019 07:42:24 -0400
+Received: from mail-eopbgr70089.outbound.protection.outlook.com ([40.107.7.89]:26550
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725914AbfJILmX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 07:42:23 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JpYb7kHJXP8aiXT4f4/coF5Qp0YG9HhbbqpgzG8ON0I3d31FcHa1BIEFBNLgCBdaXCTIpx4ytaHvq9STpVpfsi4ykP/LOaBhDMY7LsMyc6gz2zAsakpvjRgLBUEkZjVf6u/imy4N2yz0HQZUUEoq808I2N36jsRK0mEe5jLI4XQQ5cGUtwdZbNgqdVWozdCyguZQtDNT49vguGQEFMNLsOonZpi92oJI+ZxzzHEEFFbcmwrEGX0wmkXq8YGZzQLnq2gCSecaQXRZlI9JsctAW4lILVfp1mDymZZZ8Z7M/cWDT+5DKs2XsKOVuNsxmoStxxRbynNoz65Dt50PsYABKg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hOxJMxNkqREYsxq4TXAsCDRwvBimIbgUBGUqXZC8pV0=;
+ b=eH9ccoEmce1agir4ZVMM+yysHLBmSninv701saTj13/ytGYWf14MkCf48YIRdkfAwvCZcVsEsBauhpm9H3OEAgBYSbCh9NVxNMK1BI2lVlDWdLx7CyhxEP2P3k324dWMw6xO15K4g7HR3MjzApU6VR/j4Y/uaQIU5dhpYAJ0Ki9QB1oodsHVtaR7DNAcwXr7xagEMno9+nVX/fjP0LiqqtClKSfmM92I23+jKTp5H4Ta6945jgxkLBzOyQy+mjvAQmMg/z1YUjIJImx8gPXw3DLi1gG5pCLQ/HAcejGJ58QfyqSkabyJWaqdy9YhsCjFKMQXhlfxnd5tGde93HLLWQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=epam.com; dmarc=pass action=none header.from=epam.com;
+ dkim=pass header.d=epam.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=epam.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hOxJMxNkqREYsxq4TXAsCDRwvBimIbgUBGUqXZC8pV0=;
+ b=B+APU4tSEIH4qIUifVGNDaDgzoc9VlnkVw8h6NL2bSfDNCMw8V1ENOV+aaMn2EaQf7yxDFyZFsvjcO4mpKvhxMZWSdb/IMZy4VdrtAA1bsd83KyX1qsCCFigyTkt49paDOn1mnGpCooEBQuYg+rJF3F3kmrpPxbw7qVSZZvKamw=
+Received: from VE1PR03MB5968.eurprd03.prod.outlook.com (20.179.30.10) by
+ VE1PR03MB5808.eurprd03.prod.outlook.com (20.179.31.205) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2327.24; Wed, 9 Oct 2019 11:42:17 +0000
+Received: from VE1PR03MB5968.eurprd03.prod.outlook.com
+ ([fe80::3822:884f:bc7b:ac62]) by VE1PR03MB5968.eurprd03.prod.outlook.com
+ ([fe80::3822:884f:bc7b:ac62%7]) with mapi id 15.20.2347.016; Wed, 9 Oct 2019
+ 11:42:17 +0000
+From:   Oleksandr Andrushchenko <Oleksandr_Andrushchenko@epam.com>
+To:     Rob Herring <robh@kernel.org>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Julien Grall <julien.grall@arm.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v2] xen: Stop abusing DT of_dma_configure API
+Thread-Topic: [PATCH v2] xen: Stop abusing DT of_dma_configure API
+Thread-Index: AQHVfhBzhlN6OkxJQ0qTWpE9XJwQU6dSMRCA
+Date:   Wed, 9 Oct 2019 11:42:16 +0000
+Message-ID: <fd2f61bb-1ff8-f90b-9514-e662db2ff19f@epam.com>
+References: <20191008194155.4810-1-robh@kernel.org>
+In-Reply-To: <20191008194155.4810-1-robh@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Oleksandr_Andrushchenko@epam.com; 
+x-originating-ip: [85.223.209.22]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5670dc36-b7d8-41c0-71b1-08d74cadbcde
+x-ms-traffictypediagnostic: VE1PR03MB5808:
+x-microsoft-antispam-prvs: <VE1PR03MB5808334CD8E62BE80FE89530E7950@VE1PR03MB5808.eurprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2331;
+x-forefront-prvs: 018577E36E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(376002)(346002)(39860400002)(136003)(396003)(189003)(199004)(5660300002)(256004)(486006)(11346002)(7736002)(4326008)(110136005)(55236004)(316002)(54906003)(102836004)(80792005)(2616005)(25786009)(71200400001)(446003)(186003)(6512007)(26005)(76176011)(7416002)(71190400001)(6506007)(53546011)(6246003)(305945005)(99286004)(36756003)(81156014)(229853002)(81166006)(2906002)(478600001)(8676002)(86362001)(66946007)(76116006)(66476007)(3846002)(66066001)(6436002)(66446008)(66556008)(14454004)(64756008)(31686004)(8936002)(31696002)(476003)(6116002)(6486002)(2501003);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR03MB5808;H:VE1PR03MB5968.eurprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: epam.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: efHG9KrMLfxnaaGGyHISosv2r5wbE7i+nLWND6UjET2TDVPD88G3APyoFw8b97y3rWNBBfrmu/V00YSs6bR6MfXmrli5UhZ7d6uSrsjY6+6SguISOlQoqdWCUutdv/QwrRlTxEu3ci3POFs3PrQzGfJ5m+/rt+uXR2OUQYz2FJYwHbtHGTKClvGoCe3jtZAJ1nYHC4p8JZvrohJpucGGP4jUuE8yiCOCtzTLsJFpRiLIB3q5a3acONUNygvkq4VsWS9NRj7cWBNw/omlTVNePq+XAunI7/73tlG2KRRzP2Ew0qa0crC4ey/kS978DnDky8+Ew2ZaVvV4QFn0z45DFdFljCH2qdkC20gUahJa7eF41gGS2o8uRXvv1Xs5rBkXety1VLiOwoY6SCyb1Bky4c2SjC6gLlwDFnxTQxIPkHQ=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <74E3CC96C535DD4DB55943D102EB7193@eurprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="oLBj+sq0vYjzfsbl"
-Content-Disposition: inline
-In-Reply-To: <20190927112703.17745-2-sgarzare@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-OriginatorOrg: epam.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5670dc36-b7d8-41c0-71b1-08d74cadbcde
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Oct 2019 11:42:17.1655
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b41b72d0-4e9f-4c26-8a69-f949f367c91d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Vwl2WseM7fH8PpDOWFnCtUoAStjMvs+Q6xhP9htESqJhbexpU3mmxKGPPfpwnxTq0WIgouWzymkVoUSATOibYxdrYK71Y8nHglDxk8tdnnkcy26uFvKGrFj2M+Scp6Ij
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR03MB5808
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---oLBj+sq0vYjzfsbl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Sep 27, 2019 at 01:26:51PM +0200, Stefano Garzarella wrote:
-> The VSOCK_DEFAULT_CONNECT_TIMEOUT definition was introduced with
-> commit d021c344051af ("VSOCK: Introduce VM Sockets"), but it is
-> never used in the net/vmw_vsock/vmci_transport.c.
->=20
-> VSOCK_DEFAULT_CONNECT_TIMEOUT is used and defined in
-> net/vmw_vsock/af_vsock.c
->=20
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> ---
->  net/vmw_vsock/vmci_transport.c | 5 -----
->  1 file changed, 5 deletions(-)
-
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-
---oLBj+sq0vYjzfsbl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl2dx20ACgkQnKSrs4Gr
-c8hIqAgAvhL+0GDmzG+IqoyqU4u4zMGfhwqu1Tuctdk+5o6AtyHB9jF8qW0lxKfG
-m9BlFbKLMcxjmiirqBXOj24o7GMoko98x8mhqBxofFG0/WTAEqe80ibGyAR8f5/t
-jNyonyKpw3UU9kuYwlQBDZoCjh6ZAOofpmKrtCbE63GntiCzX3waJ5mlK/5Dqtcy
-l7Ol7BjACIKs7gG7i9kF/TtFcU93EcjC8OJuqJ/1bx0y38wMEfCnlpwBkvh2/hQo
-K2Lv1qJHosKW+CqXelAYdeT1YWXmAiE2AYfNTPFzVdStra5QV+O3UDGr536IHmDD
-Y7Mo+oe8VRerZV4xgiCKHY+E7FUw/A==
-=dBuq
------END PGP SIGNATURE-----
-
---oLBj+sq0vYjzfsbl--
+T24gMTAvOC8xOSAxMDo0MSBQTSwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+IEFzIHRoZSByZW1vdmVk
+IGNvbW1lbnRzIHNheSwgdGhlc2UgYXJlbid0IERUIGJhc2VkIGRldmljZXMuDQo+IG9mX2RtYV9j
+b25maWd1cmUoKSBpcyBnb2luZyB0byBzdG9wIGFsbG93aW5nIGEgTlVMTCBEVCBub2RlIGFuZCBj
+YWxsaW5nDQo+IGl0IHdpbGwgbm8gbG9uZ2VyIHdvcmsuDQo+DQo+IFRoZSBjb21tZW50IGlzIGFs
+c28gbm93IG91dCBvZiBkYXRlIGFzIG9mIGNvbW1pdCA5YWI5MWU3YzVjNTEgKCJhcm02NDoNCj4g
+ZGVmYXVsdCB0byB0aGUgZGlyZWN0IG1hcHBpbmcgaW4gZ2V0X2FyY2hfZG1hX29wcyIpLiBEaXJl
+Y3QgbWFwcGluZw0KPiBpcyBub3cgdGhlIGRlZmF1bHQgcmF0aGVyIHRoYW4gZG1hX2R1bW15X29w
+cy4NCj4NCj4gQWNjb3JkaW5nIHRvIFN0ZWZhbm8gYW5kIE9sZWtzYW5kciwgdGhlIG9ubHkgb3Ro
+ZXIgcGFydCBuZWVkZWQgaXMNCj4gc2V0dGluZyB0aGUgRE1BIG1hc2tzIGFuZCB0aGVyZSdzIG5v
+IHJlYXNvbiB0byByZXN0cmljdCB0aGUgbWFza3MgdG8NCj4gMzItYml0cy4gU28gc2V0IHRoZSBt
+YXNrcyB0byA2NCBiaXRzLg0KPg0KPiBDYzogUm9iaW4gTXVycGh5IDxyb2Jpbi5tdXJwaHlAYXJt
+LmNvbT4NCj4gQ2M6IEp1bGllbiBHcmFsbCA8anVsaWVuLmdyYWxsQGFybS5jb20+DQo+IENjOiBO
+aWNvbGFzIFNhZW56IEp1bGllbm5lIDxuc2FlbnpqdWxpZW5uZUBzdXNlLmRlPg0KPiBDYzogT2xl
+a3NhbmRyIEFuZHJ1c2hjaGVua28gPG9sZWtzYW5kcl9hbmRydXNoY2hlbmtvQGVwYW0uY29tPg0K
+PiBDYzogQm9yaXMgT3N0cm92c2t5IDxib3Jpcy5vc3Ryb3Zza3lAb3JhY2xlLmNvbT4NCj4gQ2M6
+IEp1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT4NCj4gQ2M6IFN0ZWZhbm8gU3RhYmVsbGlu
+aSA8c3N0YWJlbGxpbmlAa2VybmVsLm9yZz4NCj4gQ2M6IENocmlzdG9waCBIZWxsd2lnIDxoY2hA
+bHN0LmRlPg0KPiBDYzogeGVuLWRldmVsQGxpc3RzLnhlbnByb2plY3Qub3JnDQo+IFNpZ25lZC1v
+ZmYtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+DQpBY2tlZC1ieTogT2xla3NhbmRy
+IEFuZHJ1c2hjaGVua28gPG9sZWtzYW5kcl9hbmRydXNoY2hlbmtvQGVwYW0uY29tPg0KDQpVbmZv
+cnR1bmF0ZWx5IEkgY2Fubm90IHRlc3QgdGhpcyBwYXRjaCB3aXRoIHJlYWwgSFcgcnVubmluZyBY
+ZW46DQpJIGFtIHN0aWxsIG9uIDQuMTQga2VybmVsIHdoaWNoIGlzIGRpY3RhdGVkIGJ5IHRoZSBi
+b2FyZCdzIEJTUCBhbmQNCml0IGlzIG5vdCBwb3NzaWJsZSB0byBoYXZlIG1vcmUgcmVjZW50IG9u
+ZSBhdCB0aGUgbW9tZW50Lg0KU28sIEkgaG9wZSB0aGUgcGF0Y2ggd2lsbCB3b3JrIGFzIGludGVu
+ZGVkLg0KDQpUaGFuayB5b3UsDQpPbGVrc2FuZHINCj4gLS0tDQo+IHYyOg0KPiAgIC0gU2V0dXAg
+ZG1hIG1hc2tzDQo+ICAgLSBBbHNvIGZpeCB4ZW5fZHJtX2Zyb250LmMNCj4gICANCj4gVGhpcyBj
+YW4gbm93IGJlIGFwcGxpZWQgdG8gdGhlIFhlbiB0cmVlIGluZGVwZW5kZW50IG9mIHRoZSBjb21p
+bmcNCj4gb2ZfZG1hX2NvbmZpZ3VyZSgpIGNoYW5nZXMuDQo+DQo+IFJvYg0KPg0KPiAgIGRyaXZl
+cnMvZ3B1L2RybS94ZW4veGVuX2RybV9mcm9udC5jIHwgMTIgKystLS0tLS0tLS0tDQo+ICAgZHJp
+dmVycy94ZW4vZ250ZGV2LmMgICAgICAgICAgICAgICAgfCAxMyArKy0tLS0tLS0tLS0tDQo+ICAg
+MiBmaWxlcyBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDIxIGRlbGV0aW9ucygtKQ0KPg0KPiBk
+aWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3hlbi94ZW5fZHJtX2Zyb250LmMgYi9kcml2ZXJz
+L2dwdS9kcm0veGVuL3hlbl9kcm1fZnJvbnQuYw0KPiBpbmRleCBiYTE4MjhhY2Q4YzkuLjRiZTQ5
+YzFhZWY1MSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3hlbi94ZW5fZHJtX2Zyb250
+LmMNCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3hlbi94ZW5fZHJtX2Zyb250LmMNCj4gQEAgLTcx
+OCwxNyArNzE4LDkgQEAgc3RhdGljIGludCB4ZW5fZHJ2X3Byb2JlKHN0cnVjdCB4ZW5idXNfZGV2
+aWNlICp4Yl9kZXYsDQo+ICAgCXN0cnVjdCBkZXZpY2UgKmRldiA9ICZ4Yl9kZXYtPmRldjsNCj4g
+ICAJaW50IHJldDsNCj4gICANCj4gLQkvKg0KPiAtCSAqIFRoZSBkZXZpY2UgaXMgbm90IHNwYXdu
+IGZyb20gYSBkZXZpY2UgdHJlZSwgc28gYXJjaF9zZXR1cF9kbWFfb3BzDQo+IC0JICogaXMgbm90
+IGNhbGxlZCwgdGh1cyBsZWF2aW5nIHRoZSBkZXZpY2Ugd2l0aCBkdW1teSBETUEgb3BzLg0KPiAt
+CSAqIFRoaXMgbWFrZXMgdGhlIGRldmljZSByZXR1cm4gZXJyb3Igb24gUFJJTUUgYnVmZmVyIGlt
+cG9ydCwgd2hpY2gNCj4gLQkgKiBpcyBub3QgY29ycmVjdDogdG8gZml4IHRoaXMgY2FsbCBvZl9k
+bWFfY29uZmlndXJlKCkgd2l0aCBhIE5VTEwNCj4gLQkgKiBub2RlIHRvIHNldCBkZWZhdWx0IERN
+QSBvcHMuDQo+IC0JICovDQo+IC0JZGV2LT5jb2hlcmVudF9kbWFfbWFzayA9IERNQV9CSVRfTUFT
+SygzMik7DQo+IC0JcmV0ID0gb2ZfZG1hX2NvbmZpZ3VyZShkZXYsIE5VTEwsIHRydWUpOw0KPiAr
+CXJldCA9IGRtYV9jb2VyY2VfbWFza19hbmRfY29oZXJlbnQoZGV2LCBETUFfQklUX01BU0soNjQp
+KTsNCj4gICAJaWYgKHJldCA8IDApIHsNCj4gLQkJRFJNX0VSUk9SKCJDYW5ub3Qgc2V0dXAgRE1B
+IG9wcywgcmV0ICVkIiwgcmV0KTsNCj4gKwkJRFJNX0VSUk9SKCJDYW5ub3Qgc2V0dXAgRE1BIG1h
+c2ssIHJldCAlZCIsIHJldCk7DQo+ICAgCQlyZXR1cm4gcmV0Ow0KPiAgIAl9DQo+ICAgDQo+IGRp
+ZmYgLS1naXQgYS9kcml2ZXJzL3hlbi9nbnRkZXYuYyBiL2RyaXZlcnMveGVuL2dudGRldi5jDQo+
+IGluZGV4IGE0NDZhNzIyMWUxMy4uODE0MDFmMzg2YzljIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJz
+L3hlbi9nbnRkZXYuYw0KPiArKysgYi9kcml2ZXJzL3hlbi9nbnRkZXYuYw0KPiBAQCAtMjIsNiAr
+MjIsNyBAQA0KPiAgIA0KPiAgICNkZWZpbmUgcHJfZm10KGZtdCkgInhlbjoiIEtCVUlMRF9NT0RO
+QU1FICI6ICIgZm10DQo+ICAgDQo+ICsjaW5jbHVkZSA8bGludXgvZG1hLW1hcHBpbmcuaD4NCj4g
+ICAjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+DQo+ICAgI2luY2x1ZGUgPGxpbnV4L2tlcm5lbC5o
+Pg0KPiAgICNpbmNsdWRlIDxsaW51eC9pbml0Lmg+DQo+IEBAIC0zNCw5ICszNSw2IEBADQo+ICAg
+I2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4NCj4gICAjaW5jbHVkZSA8bGludXgvaGlnaG1lbS5oPg0K
+PiAgICNpbmNsdWRlIDxsaW51eC9yZWZjb3VudC5oPg0KPiAtI2lmZGVmIENPTkZJR19YRU5fR1JB
+TlRfRE1BX0FMTE9DDQo+IC0jaW5jbHVkZSA8bGludXgvb2ZfZGV2aWNlLmg+DQo+IC0jZW5kaWYN
+Cj4gICANCj4gICAjaW5jbHVkZSA8eGVuL3hlbi5oPg0KPiAgICNpbmNsdWRlIDx4ZW4vZ3JhbnRf
+dGFibGUuaD4NCj4gQEAgLTYyNSwxNCArNjIzLDcgQEAgc3RhdGljIGludCBnbnRkZXZfb3Blbihz
+dHJ1Y3QgaW5vZGUgKmlub2RlLCBzdHJ1Y3QgZmlsZSAqZmxpcCkNCj4gICAJZmxpcC0+cHJpdmF0
+ZV9kYXRhID0gcHJpdjsNCj4gICAjaWZkZWYgQ09ORklHX1hFTl9HUkFOVF9ETUFfQUxMT0MNCj4g
+ICAJcHJpdi0+ZG1hX2RldiA9IGdudGRldl9taXNjZGV2LnRoaXNfZGV2aWNlOw0KPiAtDQo+IC0J
+LyoNCj4gLQkgKiBUaGUgZGV2aWNlIGlzIG5vdCBzcGF3biBmcm9tIGEgZGV2aWNlIHRyZWUsIHNv
+IGFyY2hfc2V0dXBfZG1hX29wcw0KPiAtCSAqIGlzIG5vdCBjYWxsZWQsIHRodXMgbGVhdmluZyB0
+aGUgZGV2aWNlIHdpdGggZHVtbXkgRE1BIG9wcy4NCj4gLQkgKiBGaXggdGhpcyBieSBjYWxsaW5n
+IG9mX2RtYV9jb25maWd1cmUoKSB3aXRoIGEgTlVMTCBub2RlIHRvIHNldA0KPiAtCSAqIGRlZmF1
+bHQgRE1BIG9wcy4NCj4gLQkgKi8NCj4gLQlvZl9kbWFfY29uZmlndXJlKHByaXYtPmRtYV9kZXYs
+IE5VTEwsIHRydWUpOw0KPiArCWRtYV9jb2VyY2VfbWFza19hbmRfY29oZXJlbnQocHJpdi0+ZG1h
+X2RldiwgRE1BX0JJVF9NQVNLKDY0KSk7DQo+ICAgI2VuZGlmDQo+ICAgCXByX2RlYnVnKCJwcml2
+ICVwXG4iLCBwcml2KTsNCj4gICANCg==
