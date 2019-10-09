@@ -2,74 +2,122 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E6DC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 03:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D20C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 03:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFD56206A1
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 03:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D00D20B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 03:15:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730227AbfJIDMM (ORCPT
+        id S1730305AbfJIDPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 23:12:12 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3279 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726109AbfJIDMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 23:12:12 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id CFFD475C79EF1DF5BAB5;
-        Wed,  9 Oct 2019 11:12:09 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Wed, 9 Oct 2019
- 11:12:03 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <jhs@mojatatu.com>, <xiyou.wangcong@gmail.com>, <jiri@resnulli.us>,
-        <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH net-next] act_mirred: Fix mirred_init_module error handling
-Date:   Wed, 9 Oct 2019 11:10:52 +0800
-Message-ID: <20191009031052.40528-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 8 Oct 2019 23:15:19 -0400
+Received: from mga03.intel.com ([134.134.136.65]:42057 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726490AbfJIDPT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Oct 2019 23:15:19 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 20:15:18 -0700
+X-IronPort-AV: E=Sophos;i="5.67,273,1566889200"; 
+   d="scan'208";a="197891410"
+Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.239.196.204]) ([10.239.196.204])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 08 Oct 2019 20:15:15 -0700
+Subject: Re: [PATCH 3/3] KVM: x86/vPMU: Add lazy mechanism to release
+ perf_event per vPMC
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
+        vkuznets@redhat.com, Jim Mattson <jmattson@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        ak@linux.intel.com, wei.w.wang@intel.com, kan.liang@intel.com,
+        like.xu@intel.com, ehankland@google.com, arbel.moshe@oracle.com,
+        linux-kernel@vger.kernel.org
+References: <20190930072257.43352-1-like.xu@linux.intel.com>
+ <20190930072257.43352-4-like.xu@linux.intel.com>
+ <20191001082321.GL4519@hirez.programming.kicks-ass.net>
+ <e77fe471-1c65-571d-2b9e-d97c2ee0706f@linux.intel.com>
+ <20191008121140.GN2294@hirez.programming.kicks-ass.net>
+From:   Like Xu <like.xu@linux.intel.com>
+Organization: Intel OTC
+Message-ID: <d492e08e-bf14-0a8b-bc8c-397f8893ddb5@linux.intel.com>
+Date:   Wed, 9 Oct 2019 11:14:56 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20191008121140.GN2294@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If tcf_register_action failed, mirred_device_notifier
-should be unregistered.
+On 2019/10/8 20:11, Peter Zijlstra wrote:
+> On Tue, Oct 01, 2019 at 08:33:45PM +0800, Like Xu wrote:
+>> Hi Peter,
+>>
+>> On 2019/10/1 16:23, Peter Zijlstra wrote:
+>>> On Mon, Sep 30, 2019 at 03:22:57PM +0800, Like Xu wrote:
+>>>> +	union {
+>>>> +		u8 event_count :7; /* the total number of created perf_events */
+>>>> +		bool enable_cleanup :1;
+>>>
+>>> That's atrocious, don't ever create a bitfield with base _Bool.
+>>
+>> I saw this kind of usages in the tree such as "struct
+>> arm_smmu_master/tipc_mon_state/regmap_irq_chip".
+> 
+> Because other people do tasteless things doesn't make it right.
+> 
+>> I'm not sure is this your personal preference or is there a technical
+>> reason such as this usage is not incompatible with union syntax?
+> 
+> Apparently it 'works', so there is no hard technical reason, but
+> consider that _Bool is specified as an integer type large enough to
+> store the values 0 and 1, then consider it as a base type for a
+> bitfield. That's just disguisting.
 
-Fixes: 3b87956ea645 ("net sched: fix race in mirred device removal")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- net/sched/act_mirred.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+It's reasonable. Thanks.
 
-diff --git a/net/sched/act_mirred.c b/net/sched/act_mirred.c
-index 9d1bf50..d0d397e 100644
---- a/net/sched/act_mirred.c
-+++ b/net/sched/act_mirred.c
-@@ -479,7 +479,11 @@ static int __init mirred_init_module(void)
- 		return err;
- 
- 	pr_info("Mirror/redirect action on\n");
--	return tcf_register_action(&act_mirred_ops, &mirred_net_ops);
-+	err = tcf_register_action(&act_mirred_ops, &mirred_net_ops);
-+	if (err)
-+		unregister_netdevice_notifier(&mirred_device_notifier);
-+
-+	return err;
- }
- 
- static void __exit mirred_cleanup_module(void)
--- 
-2.7.4
+> 
+> Now, I suppose it 'works', but there is no actual benefit over just
+> using a single bit of any other base type.
+> 
+>> My design point is to save a little bit space without introducing
+>> two variables such as "int event_count & bool enable_cleanup".
+> 
+> Your design is questionable, the structure is _huge_, and your union has
+> event_count:0 and enable_cleanup:0 as the same bit, which I don't think
+> was intentional.
+> 
+> Did you perhaps want to write:
+> 
+> 	struct {
+> 		u8 event_count : 7;
+> 		u8 event_cleanup : 1;
+> 	};
+> 
+> which has a total size of 1 byte and uses the low 7 bits as count and the
+> msb as cleanup.
 
+Yes, my union here is wrong and let me fix it in the next version.
+
+> 
+> Also, the structure has plenty holes to stick proper variables in
+> without further growing it.
+
+Yes, we could benefit from it.
+
+> 
+>> By the way, is the lazy release mechanism looks reasonable to you?
+> 
+> I've no idea how it works.. I don't know much about virt.
+> 
 
