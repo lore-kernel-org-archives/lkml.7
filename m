@@ -7,149 +7,120 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D64C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1845C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FBAD21D7F
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:13:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4061218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:14:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732458AbfJITNv (ORCPT
+        id S1732474AbfJITOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 15:13:51 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:56219 "EHLO
+        Wed, 9 Oct 2019 15:14:03 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:60635 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731932AbfJITLU (ORCPT
+        with ESMTP id S1731771AbfJITLS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 15:11:20 -0400
+        Wed, 9 Oct 2019 15:11:18 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MEFfB-1iQDzd118v-00AIwU; Wed, 09 Oct 2019 21:11:16 +0200
+ 1MLAF0-1iZOmA1c70-00IBAz; Wed, 09 Oct 2019 21:11:12 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Al Viro <viro@zeniv.linux.org.uk>
 Cc:     linux-kernel@vger.kernel.org, y2038@lists.linaro.org,
         linux-fsdevel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>
-Subject: [PATCH v6 29/43] gfs2: add compat_ioctl support
-Date:   Wed,  9 Oct 2019 21:10:29 +0200
-Message-Id: <20191009191044.308087-29-arnd@arndb.de>
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH v6 15/43] compat_ioctl: move ATYFB_CLK handling to atyfb driver
+Date:   Wed,  9 Oct 2019 21:10:15 +0200
+Message-Id: <20191009191044.308087-15-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191009190853.245077-1-arnd@arndb.de>
 References: <20191009190853.245077-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:7jCKQawljNZjnSFT863FA1hhtX5dPDFfB12E/nVCyioFJdqknCe
- L9BKW4WrOA4wAs00JkEHPmNcOlR7bZveM71zN1NKta7NfCnoql3BSZwF2SjLldXUaRHfm1t
- hoCHWSBdm2IJ9GKtnEzjVXLsfNPnbG65DbPFZs2jU2gRROyHV3bRuuAgW7zhsWb7dWA3XfU
- nHvThfhdWVHzdMyvYMGkQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:DY83x9iTJwY=:05tW64lXHkUiTYHRncVdeq
- pmRnkjw14EHD0tH84Us6D83DQ4jSo6Lfk2Jwxa6EvnwZOFI1WQQie+D2/pBtfqUQ6VT3QD9Cw
- LR5ZoDJ/YWe1FlgG3FYnSVRUNdQfedKIOaOCH+IRs6OWYs7IXtxI6PSeGUYd44HrLzwu2+gCU
- 45EZD4w4BCyQAbTEQUJZzXriYMkvgS6QS8WCaDqWOW4spEdlWZOrI+JfUPQHgYKX5/vZ7fjnX
- bwz3nzpDL+V7eT6244tXsV7RTi8XBhyrXuob0uyRewJkHzg5AVuD1lgeYSVO1cVFUcNqzw0/B
- iZo85vBvnLGm8Q/wcW1xCpb6dD7H6qDdLDYushs8mRplHIwWZ6FBamwlnTTmJaTYSPDUEPDAw
- lPRPDkEx7xMbeS0L9kzoJQg24CMZTmusBfAVnuPNEM3ikIRu1m4ww+9jbejXWkAno9n3tuQHP
- vPlX0dZPnaKw3V/ieJgumWYOQIudsJAttyrb/at4shBlIWLZK+END877WVJl0fGgL+f/edAwN
- gkNmGu7zof55myTrIdoj8K9Ss2nrVHpeqDoXMaz3hScOHY0kqrY0WTzQqJGBkF0Sh6oRE86FO
- dgraGartHXSEZJ2M1minvRUWzpVe1rLBxPLXJ4LIIbKQt2I299OGuCDR0N7YWPv7/VnA3LaJX
- Etg61+5jgF5kDYiPfx7TAhf0zD+zr0NdyxzR5TKyU+W7EinRarED0JLp5QEORXj0Y+A6tLfDC
- o3hKNhiiUjF4IPos+II151K8Ayc3lO1CWcLdGiBET9BpzKtNqTrC3xcl+xfDs8YZu5mH71Iq9
- e6MxK/qhuf6uDGgVWMEZ+QpDMr+vHpMAzTzmDNe9mwzsclkK2EJVzA7UqSsOZsH3rFBtzYGQ3
- YsqyHQ+Rpu9+2IxHSw+w==
+X-Provags-ID: V03:K1:wR2NlVbiBb91Qld9p1E8SVGpgQSa/PNuWiWhAMD/fev06KiD/uN
+ 7xAh8aX5DntNGju6RDV5on88/k6k0s3fIq+ab8ZleNgBUbADW3nutlhIlBOb/0TTD4E/0qv
+ ZzA5n6ipyhv6KcGlE9eCcjyQdEQ/b7ByFb+HGKsJI2+RvYjK4HKWRPsdD2fcT7GKIg7+kDu
+ ydGEUoRl4MUB7ItgTSCsA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:TCHutZOkv2g=:k7QecOAP0I00T1ZLxJ5d9v
+ h47N6yxL/3wzF5sFbBGQ/K4UZvEokUYYSIm2HQfHF2kchCzxYnUUf5IwSMROQu1n2MjvSokxc
+ iMsQcmI3qoOhPC1YI5BeA2eHZ+D2UjqAq0jOygB7xPLUQZSWnV7xzci7SLhiAzq29N5gINODk
+ iT9JjSXFtW0W7WhqKjcLcuxf9Mk1xyqrEkspRsthq5eDbaO12WzdzTTkjq6FoGe6UWwyWqBKo
+ Igwe8BiTqf296IT1+a2amF/MRtZiH90JEix4iOx1CeUTS1g1h3ROTw91SAyVnC75oFOpal5Sy
+ x8manfs1I+2de5PXszzd4oZjFVKLAcm8koWAivK9SV5A+UQIE+06Pw2S7YZ4lRoNVqQzQcgTV
+ f0tNu5UdGfRkYZM2N4F0KcuH5ZHRgL4n+7kbfnlArbvLPJ1gp+oQNUOFTC7C+rJD1+/XpXJmY
+ 4M8Bfl64nrqRcJMaYyuFWDJGZzqGXbdGgI9MsGgSZXb8sZZwAiMAp+kMIidj2+jLBQdZ5wHq9
+ PhDpvpV7T4yVVM23XaoAuS08Hs64vdP1CyHsPBpSRksMMe/K24VEI9gx8Nhlk9qJZc5whUISR
+ il/M1CF2X/cMe5OE99Clnp5qPuP9bqXZPajTpFpbOHnKYGW6ne6G1mYP8SULp+M041cPUC4fO
+ LStac9VL/rUoEIQjjgp5n5Y8oHBxx65A1siXnaVX+DgUBeX0KE+cus4P/NhOcpPLrNljWWI9p
+ qYMqsfX26hU4iRMcZQxUTuvKK1fDWAiIl6hf61DGg6JheUG3NkC+QeP3m2pVRju6e4zBWZSbn
+ gVtlswksuGBtS8F9bihMEEWYgozi+Gm9F0xr1CYmMNxfsPdmQxXqr7qPsi/knipf/d5A5IhQ8
+ XXPCM2upXsi4/zq/l/Ow==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Out of the four ioctl commands supported on gfs2, only FITRIM
-works in compat mode.
+These are two obscure ioctl commands, in a driver that only
+has compatible commands, so just let the driver handle this
+itself.
 
-Add a proper handler based on the ext4 implementation.
-
-Fixes: 6ddc5c3ddf25 ("gfs2: getlabel support")
-Reviewed-by: Bob Peterson <rpeterso@redhat.com>
-Cc: Andreas Gruenbacher <agruenba@redhat.com>
+Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- fs/gfs2/file.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ drivers/video/fbdev/aty/atyfb_base.c | 12 +++++++++++-
+ fs/compat_ioctl.c                    |  2 --
+ 2 files changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/fs/gfs2/file.c b/fs/gfs2/file.c
-index 997b326247e2..e073050c1f2a 100644
---- a/fs/gfs2/file.c
-+++ b/fs/gfs2/file.c
-@@ -6,6 +6,7 @@
+diff --git a/drivers/video/fbdev/aty/atyfb_base.c b/drivers/video/fbdev/aty/atyfb_base.c
+index 6dda5d885a03..79d548746efd 100644
+--- a/drivers/video/fbdev/aty/atyfb_base.c
++++ b/drivers/video/fbdev/aty/atyfb_base.c
+@@ -48,7 +48,7 @@
  
- #include <linux/slab.h>
- #include <linux/spinlock.h>
+ ******************************************************************************/
+ 
+-
 +#include <linux/compat.h>
- #include <linux/completion.h>
- #include <linux/buffer_head.h>
- #include <linux/pagemap.h>
-@@ -354,6 +355,31 @@ static long gfs2_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- 	return -ENOTTY;
- }
- 
+ #include <linux/module.h>
+ #include <linux/moduleparam.h>
+ #include <linux/kernel.h>
+@@ -235,6 +235,13 @@ static int atyfb_pan_display(struct fb_var_screeninfo *var,
+ 			     struct fb_info *info);
+ static int atyfb_blank(int blank, struct fb_info *info);
+ static int atyfb_ioctl(struct fb_info *info, u_int cmd, u_long arg);
 +#ifdef CONFIG_COMPAT
-+static long gfs2_compat_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
++static int atyfb_compat_ioctl(struct fb_info *info, u_int cmd, u_long arg)
 +{
-+	switch(cmd) {
-+	/* These are just misnamed, they actually get/put from/to user an int */
-+	case FS_IOC32_GETFLAGS:
-+		cmd = FS_IOC_GETFLAGS;
-+		break;
-+	case FS_IOC32_SETFLAGS:
-+		cmd = FS_IOC_SETFLAGS;
-+		break;
-+	/* Keep this list in sync with gfs2_ioctl */
-+	case FITRIM:
-+	case FS_IOC_GETFSLABEL:
-+		break;
-+	default:
-+		return -ENOIOCTLCMD;
-+	}
-+
-+	return gfs2_ioctl(filp, cmd, (unsigned long)compat_ptr(arg));
++	return atyfb_ioctl(info, cmd, (u_long)compat_ptr(arg));
 +}
-+#else
-+#define gfs2_compat_ioctl NULL
 +#endif
 +
- /**
-  * gfs2_size_hint - Give a hint to the size of a write request
-  * @filep: The struct file
-@@ -1293,6 +1319,7 @@ const struct file_operations gfs2_file_fops = {
- 	.write_iter	= gfs2_file_write_iter,
- 	.iopoll		= iomap_dio_iopoll,
- 	.unlocked_ioctl	= gfs2_ioctl,
-+	.compat_ioctl	= gfs2_compat_ioctl,
- 	.mmap		= gfs2_mmap,
- 	.open		= gfs2_open,
- 	.release	= gfs2_release,
-@@ -1308,6 +1335,7 @@ const struct file_operations gfs2_file_fops = {
- const struct file_operations gfs2_dir_fops = {
- 	.iterate_shared	= gfs2_readdir,
- 	.unlocked_ioctl	= gfs2_ioctl,
-+	.compat_ioctl	= gfs2_compat_ioctl,
- 	.open		= gfs2_open,
- 	.release	= gfs2_release,
- 	.fsync		= gfs2_fsync,
-@@ -1324,6 +1352,7 @@ const struct file_operations gfs2_file_fops_nolock = {
- 	.write_iter	= gfs2_file_write_iter,
- 	.iopoll		= iomap_dio_iopoll,
- 	.unlocked_ioctl	= gfs2_ioctl,
-+	.compat_ioctl	= gfs2_compat_ioctl,
- 	.mmap		= gfs2_mmap,
- 	.open		= gfs2_open,
- 	.release	= gfs2_release,
-@@ -1337,6 +1366,7 @@ const struct file_operations gfs2_file_fops_nolock = {
- const struct file_operations gfs2_dir_fops_nolock = {
- 	.iterate_shared	= gfs2_readdir,
- 	.unlocked_ioctl	= gfs2_ioctl,
-+	.compat_ioctl	= gfs2_compat_ioctl,
- 	.open		= gfs2_open,
- 	.release	= gfs2_release,
- 	.fsync		= gfs2_fsync,
+ #ifdef __sparc__
+ static int atyfb_mmap(struct fb_info *info, struct vm_area_struct *vma);
+ #endif
+@@ -290,6 +297,9 @@ static struct fb_ops atyfb_ops = {
+ 	.fb_pan_display	= atyfb_pan_display,
+ 	.fb_blank	= atyfb_blank,
+ 	.fb_ioctl	= atyfb_ioctl,
++#ifdef CONFIG_COMPAT
++	.fb_compat_ioctl = atyfb_compat_ioctl,
++#endif
+ 	.fb_fillrect	= atyfb_fillrect,
+ 	.fb_copyarea	= atyfb_copyarea,
+ 	.fb_imageblit	= atyfb_imageblit,
+diff --git a/fs/compat_ioctl.c b/fs/compat_ioctl.c
+index b65eef3d4787..a4e8fb7da968 100644
+--- a/fs/compat_ioctl.c
++++ b/fs/compat_ioctl.c
+@@ -696,8 +696,6 @@ COMPATIBLE_IOCTL(CAPI_CLR_FLAGS)
+ COMPATIBLE_IOCTL(CAPI_NCCI_OPENCOUNT)
+ COMPATIBLE_IOCTL(CAPI_NCCI_GETUNIT)
+ /* Misc. */
+-COMPATIBLE_IOCTL(0x41545900)		/* ATYIO_CLKR */
+-COMPATIBLE_IOCTL(0x41545901)		/* ATYIO_CLKW */
+ COMPATIBLE_IOCTL(PCIIOC_CONTROLLER)
+ COMPATIBLE_IOCTL(PCIIOC_MMAP_IS_IO)
+ COMPATIBLE_IOCTL(PCIIOC_MMAP_IS_MEM)
 -- 
 2.20.0
 
