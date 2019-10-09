@@ -2,165 +2,187 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC74AECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBF6C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A013E21848
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:39:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D678621835
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:40:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730111AbfJILjT (ORCPT
+        id S1730789AbfJILkN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 07:39:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43628 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728054AbfJILjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 07:39:19 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 430DBAFD4;
-        Wed,  9 Oct 2019 11:39:16 +0000 (UTC)
-Date:   Wed, 9 Oct 2019 13:39:15 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Wed, 9 Oct 2019 07:40:13 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:54905 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbfJILkN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 07:40:13 -0400
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iIAJZ-0004IN-3h; Wed, 09 Oct 2019 12:39:33 +0100
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1iIAJY-0003WT-8z; Wed, 09 Oct 2019 12:39:32 +0100
+From:   Ben Dooks <ben.dooks@codethink.co.uk>
+To:     linux-kernel@lists.codethink.co.uk
+Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Salter <msalter@redhat.com>,
+        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        sergey.senozhatsky.work@gmail.com, rostedt@goodmis.org,
-        peterz@infradead.org, linux-mm@kvack.org,
-        john.ogness@linutronix.de, akpm@linux-foundation.org,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>, david@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
-Message-ID: <20191009113915.xhjswocremwmdum7@pathway.suse.cz>
-References: <1570228005-24979-1-git-send-email-cai@lca.pw>
- <20191007143002.l37bt2lzqtnqjqxu@pathway.suse.cz>
- <20191007144937.GO2381@dhcp22.suse.cz>
- <20191008074357.f33f6pbs4cw5majk@pathway.suse.cz>
- <20191008082752.GB6681@dhcp22.suse.cz>
- <aefe7f75-b0ec-9e99-a77e-87324edb24e0@de.ibm.com>
- <1570550917.5576.303.camel@lca.pw>
- <20191008183525.GQ6681@dhcp22.suse.cz>
- <1570561573.5576.307.camel@lca.pw>
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-c6x-dev@linux-c6x.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] proc: centralise declaration of cpuinfo_op
+Date:   Wed,  9 Oct 2019 12:39:30 +0100
+Message-Id: <20191009113930.13236-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1570561573.5576.307.camel@lca.pw>
-User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 2019-10-08 15:06:13, Qian Cai wrote:
-> On Tue, 2019-10-08 at 20:35 +0200, Michal Hocko wrote:
-> > On Tue 08-10-19 12:08:37, Qian Cai wrote:
-> > > On Tue, 2019-10-08 at 14:56 +0200, Christian Borntraeger wrote:
-> > > > Adding Peter Oberparleiter.
-> > > > Peter, can you have a look?
-> > > > 
-> > > > On 08.10.19 10:27, Michal Hocko wrote:
-> > > > > On Tue 08-10-19 09:43:57, Petr Mladek wrote:
-> > > > > > On Mon 2019-10-07 16:49:37, Michal Hocko wrote:
-> > > > > > > [Cc s390 maintainers - the lockdep is http://lkml.kernel.org/r/1570228005-24979-1-git-send-email-cai@lca.pw
-> > > > > > >  Petr has explained it is a false positive
-> > > > > > >  http://lkml.kernel.org/r/20191007143002.l37bt2lzqtnqjqxu@pathway.suse.cz]
-> > > > > > > On Mon 07-10-19 16:30:02, Petr Mladek wrote:
-> > > > > > > [...]
-> > > > > > > > I believe that it cannot really happen because:
-> > > > > > > > 
-> > > > > > > > 	static int __init
-> > > > > > > > 	sclp_console_init(void)
-> > > > > > > > 	{
-> > > > > > > > 	[...]
-> > > > > > > > 		rc = sclp_rw_init();
-> > > > > > > > 	[...]
-> > > > > > > > 		register_console(&sclp_console);
-> > > > > > > > 		return 0;
-> > > > > > > > 	}
-> > > > > > > > 
-> > > > > > > > sclp_rw_init() is called before register_console(). And
-> > > > > > > > console_unlock() will never call sclp_console_write() before
-> > > > > > > > the console is registered.
-> > > > > > > > 
-> > > > > > > > AFAIK, lockdep only compares existing chain of locks. It does
-> > > > > > > > not know about console registration that would make some
-> > > > > > > > code paths mutually exclusive.
-> > > > > > > > 
-> > > > > > > > I believe that it is a false positive. I do not know how to
-> > > > > > > > avoid this lockdep report. I hope that it will disappear
-> > > > > > > > by deferring all printk() calls rather soon.
-> > > > > > > 
-> > > > > > > Thanks a lot for looking into this Petr. I have also checked the code
-> > > > > > > and I really fail to see why the allocation has to be done under the
-> > > > > > > lock in the first place. sclp_read_sccb and sclp_init_sccb are global
-> > > > > > > variables but I strongly suspect that they need a synchronization during
-> > > > > > > early init, callbacks are registered only later IIUC:
-> > > > > > 
-> > > > > > Good idea. It would work when the init function is called only once.
-> > > > > > But see below.
-> > > > > > 
-> > > > > > > diff --git a/drivers/s390/char/sclp.c b/drivers/s390/char/sclp.c
-> > > > > > > index d2ab3f07c008..4b1c033e3255 100644
-> > > > > > > --- a/drivers/s390/char/sclp.c
-> > > > > > > +++ b/drivers/s390/char/sclp.c
-> > > > > > > @@ -1169,13 +1169,13 @@ sclp_init(void)
-> > > > > > >  	unsigned long flags;
-> > > > > > >  	int rc = 0;
-> > > > > > >  
-> > > > > > > +	sclp_read_sccb = (void *) __get_free_page(GFP_ATOMIC | GFP_DMA);
-> > > > > > > +	sclp_init_sccb = (void *) __get_free_page(GFP_ATOMIC | GFP_DMA);
-> > > > > > >  	spin_lock_irqsave(&sclp_lock, flags);
-> > > > > > >  	/* Check for previous or running initialization */
-> > > > > > >  	if (sclp_init_state != sclp_init_state_uninitialized)
-> > > > > > >  		goto fail_unlock;
-> > > > > > 
-> > > > > > It seems that sclp_init() could be called several times in parallel.
-> > > > > > I see it called from sclp_register() and sclp_initcall().
-> > > > > 
-> > > > > Interesting. Something for s390 people to answer I guess.
-> > > > > Anyway, this should be quite trivial to workaround by a cmpxch or alike.
-> > > > > 
-> > > 
-> > > The above fix is simply insufficient,
-> > 
-> > Isn't this yet another init time lockdep false possitive?
-> 
-> Again, this is not 100% false positive for sure yet.
-> 
-> > 
-> > > 00: [    3.654337] -> #3 (console_owner){....}:                                 
-> > > 00: [    3.654343]        lock_acquire+0x21a/0x468                              
-> > > 00: [    3.654345]        console_unlock+0x3a6/0xa30                            
-> > > 00: [    3.654346]        vprintk_emit+0x184/0x3c8                              
-> > > 00: [    3.654348]        vprintk_default+0x44/0x50                             
-> > > 00: [    3.654349]        printk+0xa8/0xc0                                      
-> > > 00: [    3.654351]        get_random_u64+0x40/0x108                             
-> > > 00: [    3.654360]        add_to_free_area_random+0x188/0x1c0                   
-> > > 00: [    3.654364]        free_one_page+0x72/0x128                              
-> > > 00: [    3.654366]        __free_pages_ok+0x51c/0xca0                           
-> > > 00: [    3.654368]        memblock_free_all+0x30a/0x3b0                         
-> > > 00: [    3.654370]        mem_init+0x84/0x200                                   
-> > > 00: [    3.654371]        start_kernel+0x384/0x6a0                              
-> > > 00: [    3.654373]        startup_continue+0x70/0xd0                            
-> > 
-> > This one is actually a nice example why trying to get printk out of the
-> > zone->lock is simply not viable. This one is likely a printk to warn
-> > that the random pool is not fully intiailized. Just because the
-> > allocator tries to randomize the initial free memory pool. You are not
-> > going to remove that printk, right?
-> 
-> Well, Sergey had a patch to convert that one to printk_deferred(), but even with
-> his patch, it will still trigger the lockdep splat here because the lock
-> dependency between zone->lock --> console_owner is still there from memory
-> offline.
+When building for arm, cpuinfo_op generates a warning due
+to no declaration. Since this is used in fs/proc/cpuinfo.c
+and inconsitently declared across archiectures move the
+declaration info <linux/seq_file.h>. This means that the
+cpuinfo_op will have a declaration any place it is used.
 
-Is's this another printk() that might need to become printk_deferred()?
+Removes the following sparse warning:
 
-Best Regards,
-Petr
+arch/arm/kernel/setup.c:1320:29: warning: symbol 'cpuinfo_op' was not declared. Should it be static?
+
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+---
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Mark Salter <msalter@redhat.com>
+Cc: Aurelien Jacquiot <jacquiot.aurelien@gmail.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Rich Felker <dalias@libc.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: x86@kernel.org
+Cc: linux-c6x-dev@linux-c6x.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-s390@vger.kernel.org
+Cc: linux-sh@vger.kernel.org
+Cc: sparclinux@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+---
+ arch/c6x/include/asm/processor.h        | 2 --
+ arch/microblaze/include/asm/processor.h | 3 ---
+ arch/s390/include/asm/processor.h       | 1 -
+ arch/sh/include/asm/processor.h         | 1 -
+ arch/sparc/include/asm/cpudata.h        | 2 --
+ arch/x86/include/asm/processor.h        | 2 --
+ include/linux/seq_file.h                | 2 ++
+ 7 files changed, 2 insertions(+), 11 deletions(-)
+
+diff --git a/arch/c6x/include/asm/processor.h b/arch/c6x/include/asm/processor.h
+index 1456f5e11de3..ecc906854b6a 100644
+--- a/arch/c6x/include/asm/processor.h
++++ b/arch/c6x/include/asm/processor.h
+@@ -100,8 +100,6 @@ extern unsigned long get_wchan(struct task_struct *p);
+ 
+ #define cpu_relax()		do { } while (0)
+ 
+-extern const struct seq_operations cpuinfo_op;
+-
+ /* Reset the board */
+ #define HARD_RESET_NOW()
+ 
+diff --git a/arch/microblaze/include/asm/processor.h b/arch/microblaze/include/asm/processor.h
+index 66b537b8d138..8ab09e94b8ae 100644
+--- a/arch/microblaze/include/asm/processor.h
++++ b/arch/microblaze/include/asm/processor.h
+@@ -18,9 +18,6 @@
+ #include <asm/current.h>
+ 
+ # ifndef __ASSEMBLY__
+-/* from kernel/cpu/mb.c */
+-extern const struct seq_operations cpuinfo_op;
+-
+ # define cpu_relax()		barrier()
+ 
+ #define task_pt_regs(tsk) \
+diff --git a/arch/s390/include/asm/processor.h b/arch/s390/include/asm/processor.h
+index 51a0e4a2dc96..813d2bfc63ac 100644
+--- a/arch/s390/include/asm/processor.h
++++ b/arch/s390/include/asm/processor.h
+@@ -83,7 +83,6 @@ void s390_adjust_jiffies(void);
+ void s390_update_cpu_mhz(void);
+ void cpu_detect_mhz_feature(void);
+ 
+-extern const struct seq_operations cpuinfo_op;
+ extern int sysctl_ieee_emulation_warnings;
+ extern void execve_tail(void);
+ extern void __bpon(void);
+diff --git a/arch/sh/include/asm/processor.h b/arch/sh/include/asm/processor.h
+index 6fbf8c80e498..25ddb34f31d9 100644
+--- a/arch/sh/include/asm/processor.h
++++ b/arch/sh/include/asm/processor.h
+@@ -128,7 +128,6 @@ extern unsigned int mem_init_done;
+ 
+ /* arch/sh/kernel/setup.c */
+ const char *get_cpu_subtype(struct sh_cpuinfo *c);
+-extern const struct seq_operations cpuinfo_op;
+ 
+ /* thread_struct flags */
+ #define SH_THREAD_UAC_NOPRINT	(1 << 0)
+diff --git a/arch/sparc/include/asm/cpudata.h b/arch/sparc/include/asm/cpudata.h
+index d213165ee713..f7e690a7860b 100644
+--- a/arch/sparc/include/asm/cpudata.h
++++ b/arch/sparc/include/asm/cpudata.h
+@@ -7,8 +7,6 @@
+ #include <linux/threads.h>
+ #include <linux/percpu.h>
+ 
+-extern const struct seq_operations cpuinfo_op;
+-
+ #endif /* !(__ASSEMBLY__) */
+ 
+ #if defined(__sparc__) && defined(__arch64__)
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index 6e0a3b43d027..6f22daf892ea 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -169,8 +169,6 @@ DECLARE_PER_CPU_READ_MOSTLY(struct cpuinfo_x86, cpu_info);
+ #define cpu_data(cpu)		boot_cpu_data
+ #endif
+ 
+-extern const struct seq_operations cpuinfo_op;
+-
+ #define cache_line_size()	(boot_cpu_data.x86_cache_alignment)
+ 
+ extern void cpu_detect(struct cpuinfo_x86 *c);
+diff --git a/include/linux/seq_file.h b/include/linux/seq_file.h
+index 5998e1f4ff06..629b0d8302e8 100644
+--- a/include/linux/seq_file.h
++++ b/include/linux/seq_file.h
+@@ -36,6 +36,8 @@ struct seq_operations {
+ 	int (*show) (struct seq_file *m, void *v);
+ };
+ 
++extern const struct seq_operations cpuinfo_op;
++
+ #define SEQ_SKIP 1
+ 
+ /**
+-- 
+2.23.0
+
