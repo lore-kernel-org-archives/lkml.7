@@ -6,95 +6,80 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B64ACECE58E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A90ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 997AE206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1E65206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:10:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730419AbfJIKKl (ORCPT
+        id S1730574AbfJIKKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 06:10:41 -0400
-Received: from foss.arm.com ([217.140.110.172]:58866 "EHLO foss.arm.com"
+        Wed, 9 Oct 2019 06:10:54 -0400
+Received: from mga18.intel.com ([134.134.136.126]:33244 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726579AbfJIKKl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 06:10:41 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 56F3F28;
-        Wed,  9 Oct 2019 03:10:40 -0700 (PDT)
-Received: from [192.168.1.124] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EA2923F68E;
-        Wed,  9 Oct 2019 03:10:38 -0700 (PDT)
-Subject: Re: [PATCH v2] iommu/arm-smmu: fix "hang" when games exit
-To:     Rob Clark <robdclark@gmail.com>, iommu@lists.linux-foundation.org
-Cc:     freedreno@lists.freedesktop.org,
-        Rob Clark <robdclark@chromium.org>,
-        Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        "moderated list:ARM SMMU DRIVERS" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <418d8426-f299-1269-2b2e-f86677cf22c2@arm.com>
- <20191007204906.19571-1-robdclark@gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <e3782ea8-7d6b-21ed-84dd-0751c4cf310a@arm.com>
-Date:   Wed, 9 Oct 2019 11:10:33 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        id S1726579AbfJIKKy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 06:10:54 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 03:10:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,273,1566889200"; 
+   d="scan'208";a="206849744"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 09 Oct 2019 03:10:49 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 09 Oct 2019 13:10:49 +0300
+Date:   Wed, 9 Oct 2019 13:10:48 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Christian Kellner <ckellner@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        Christian Kellner <christian@kellner.me>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>
+Subject: Re: [PATCH] thunderbolt: Add 'generation' attribute for devices
+Message-ID: <20191009101048.GO2819@lahna.fi.intel.com>
+References: <20191003173242.80938-1-ckellner@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20191007204906.19571-1-robdclark@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191003173242.80938-1-ckellner@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-07 9:49 pm, Rob Clark wrote:
-> From: Rob Clark <robdclark@chromium.org>
+On Thu, Oct 03, 2019 at 07:32:40PM +0200, Christian Kellner wrote:
+> From: Christian Kellner <christian@kellner.me>
 > 
-> When games, browser, or anything using a lot of GPU buffers exits, there
-> can be many hundreds or thousands of buffers to unmap and free.  If the
-> GPU is otherwise suspended, this can cause arm-smmu to resume/suspend
-> for each buffer, resulting 5-10 seconds worth of reprogramming the
-> context bank (arm_smmu_write_context_bank()/arm_smmu_write_s2cr()/etc).
-> To the user it would appear that the system just locked up.
+> The Thunderbolt standard went through several major iterations, here
+> called generation. USB4, which will be based on Thunderbolt, will be
+> generation 4. Let userspace know the generation of the controller in
+> the devices in order to distinguish between Thunderbolt and USB4, so
+> it can be shown in various user interfaces.
 > 
-> A simple solution is to use pm_runtime_put_autosuspend() instead, so we
-> don't immediately suspend the SMMU device.
-
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> Signed-off-by: Christian Kellner <christian@kellner.me>
 > ---
-> v1: original
-> v2: unconditionally use autosuspend, rather than deciding based on what
->      consumer does
+>  Documentation/ABI/testing/sysfs-bus-thunderbolt |  8 ++++++++
+>  drivers/thunderbolt/switch.c                    | 10 ++++++++++
+>  2 files changed, 18 insertions(+)
 > 
->   drivers/iommu/arm-smmu.c | 5 ++++-
->   1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> index 3f1d55fb43c4..b7b41f5001bc 100644
-> --- a/drivers/iommu/arm-smmu.c
-> +++ b/drivers/iommu/arm-smmu.c
-> @@ -289,7 +289,7 @@ static inline int arm_smmu_rpm_get(struct arm_smmu_device *smmu)
->   static inline void arm_smmu_rpm_put(struct arm_smmu_device *smmu)
->   {
->   	if (pm_runtime_enabled(smmu->dev))
-> -		pm_runtime_put(smmu->dev);
-> +		pm_runtime_put_autosuspend(smmu->dev);
->   }
->   
->   static struct arm_smmu_domain *to_smmu_domain(struct iommu_domain *dom)
-> @@ -1445,6 +1445,9 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
->   	/* Looks ok, so add the device to the domain */
->   	ret = arm_smmu_domain_add_master(smmu_domain, fwspec);
->   
-> +	pm_runtime_set_autosuspend_delay(smmu->dev, 20);
-> +	pm_runtime_use_autosuspend(smmu->dev);
-> +
->   rpm_put:
->   	arm_smmu_rpm_put(smmu);
->   	return ret;
-> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-thunderbolt b/Documentation/ABI/testing/sysfs-bus-thunderbolt
+> index b21fba14689b..630e51344f1c 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-thunderbolt
+> +++ b/Documentation/ABI/testing/sysfs-bus-thunderbolt
+> @@ -80,6 +80,14 @@ Contact:	thunderbolt-software@lists.01.org
+>  Description:	This attribute contains 1 if Thunderbolt device was already
+>  		authorized on boot and 0 otherwise.
+>  
+> +What: /sys/bus/thunderbolt/devices/.../generation
+> +Date:		Aug 2019
+
+I updated this to be Jan 2020, which is estimated release date of v5.5
+according to http://phb-crystal-ball.org/, and queued it for v5.5.
+
+Thanks!
