@@ -2,82 +2,135 @@ Return-Path: <SRS0=XKeO=YB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B4BECE58C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3853C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B62C2070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:54:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF0692070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Oct 2019 16:58:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbfJHQyw (ORCPT
+        id S1726822AbfJHQ6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Oct 2019 12:54:52 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:51365 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbfJHQyw (ORCPT
+        Tue, 8 Oct 2019 12:58:32 -0400
+Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:28171 "EHLO
+        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725900AbfJHQ6b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Oct 2019 12:54:52 -0400
-Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 4886D240003;
-        Tue,  8 Oct 2019 16:54:50 +0000 (UTC)
-Date:   Tue, 8 Oct 2019 18:54:49 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org,
-        nicolas.ferre@microchip.com, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] clk: at91: add compatible for sam9x60
-Message-ID: <20191008165449.GA4254@piout.net>
-References: <1570553186-24691-1-git-send-email-claudiu.beznea@microchip.com>
+        Tue, 8 Oct 2019 12:58:31 -0400
+X-Greylist: delayed 904 seconds by postgrey-1.27 at vger.kernel.org; Tue, 08 Oct 2019 12:58:30 EDT
+Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
+ EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
+ 15.0.1156.6; Tue, 8 Oct 2019 09:43:23 -0700
+Received: from akaher-lnx-dev.eng.vmware.com (unknown [10.110.19.203])
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 1624D40C43;
+        Tue,  8 Oct 2019 09:43:20 -0700 (PDT)
+From:   Ajay Kaher <akaher@vmware.com>
+To:     <gregkh@linuxfoundation.org>
+CC:     <torvalds@linux-foundation.org>, <punit.agrawal@arm.com>,
+        <akpm@linux-foundation.org>, <kirill.shutemov@linux.intel.com>,
+        <willy@infradead.org>, <will.deacon@arm.com>,
+        <mszeredi@redhat.com>, <stable@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <srivatsab@vmware.com>, <srivatsa@csail.mit.edu>,
+        <amakhalov@vmware.com>, <srinidhir@vmware.com>,
+        <bvikas@vmware.com>, <anishs@vmware.com>, <vsirnapalli@vmware.com>,
+        <srostedt@vmware.com>, <akaher@vmware.com>
+Subject: [PATCH v2 0/8] Backported fixes for 4.4 stable tree
+Date:   Wed, 9 Oct 2019 06:14:15 +0530
+Message-ID: <1570581863-12090-1-git-send-email-akaher@vmware.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1570553186-24691-1-git-send-email-claudiu.beznea@microchip.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
+Received-SPF: None (EX13-EDG-OU-001.vmware.com: akaher@vmware.com does not
+ designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+These patches include few backported fixes for the 4.4 stable
+tree.
+I would appreciate if you could kindly consider including them in the
+next release.
 
-On 08/10/2019 19:46:26+0300, Claudiu Beznea wrote:
-> Add compatible for SAM9X60's PMC.
+Ajay
 
-I think the commit log could be clearer and mention why this is needed
-and the compatible string in sam9x60 is not sufficient.
+---
 
-> 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> ---
->  drivers/clk/at91/pmc.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/clk/at91/pmc.c b/drivers/clk/at91/pmc.c
-> index db24539d5740..24975bca608e 100644
-> --- a/drivers/clk/at91/pmc.c
-> +++ b/drivers/clk/at91/pmc.c
-> @@ -271,6 +271,7 @@ static struct syscore_ops pmc_syscore_ops = {
->  
->  static const struct of_device_id sama5d2_pmc_dt_ids[] = {
+[Changes from v1]: No changes, only answering Greg's below queries:
 
-Maybe rename the array?
+>> Why are these needed?  From what I remember, the last patch here is only
+>> needed for machines that are "HUGE" and for those, you shouldn't be
+>> using 4.4.y anymore anyway, right?  You just end up saving so much more
+>> speed and energy using a newer kernel, why would you want to waste it
+>> using an older one?
+>>
+>> So I need a really good reason why to accept these :)
+>
+> It's been a week, so I'm dropping this from my queue now.  Please resend
+> with this information if you still want these in the tree.
 
->  	{ .compatible = "atmel,sama5d2-pmc" },
-> +	{ .compatible = "microchip,sam9x60-pmc" },
->  	{ /* sentinel */ }
->  };
->  
-> -- 
-> 2.7.4
-> 
+> thanks,
+> greg k-h
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Indeed, the machine needs to have about 140 GB of RAM to exploit
+this vulnerability (CVE-2019-11487). However, Photon OS doesn't
+impose any limits on the amount of RAM that it supports, so we would
+like to safeguard the kernel against this CVE. Also, while newer
+versions of Photon OS are on more recent kernels, Photon OS 1.0 uses
+the 4.4 stable series, so it would be great to get these patches
+included in an upcoming 4.4 stable release.
+    
+We would also like to have the following patches that are for machines
+that are huge:
+    
+Patch 1: Introduced page_ref_zero_or_close_to_overflow() which helps to
+check for small underflows (or _very_ close to overflowing), and ignore
+overflows which have strayed into negative territory.
+And this is being used inside get_page() and get_page_foll() to reduce the
+possibility of overflowing.  
+    
+Patch 6: Attacker could do direct IO on a page multiple times to trigger 
+an overflowing. This patch makes get_user_pages() refuse to if there is
+an overflow.
+    
+Patch 8: This removes another mechanism for overflowing the page refcount
+inside pipe_buf_get().
+    
+---
+
+[PATCH v2 1/8]:
+Backporting of upstream commit f958d7b528b1:
+mm: make page ref count overflow check tighter and more explicit
+
+[PATCH v2 2/8]:
+Backporting of upstream commit 88b1a17dfc3e:
+mm: add 'try_get_page()' helper function
+
+[PATCH v2 3/8]:
+Backporting of upstream commit 7aef4172c795:
+mm: handle PTE-mapped tail pages in gerneric fast gup implementaiton
+
+[PATCH v2 4/8]:
+Backporting of upstream commit a3e328556d41:
+mm, gup: remove broken VM_BUG_ON_PAGE compound check for hugepages
+
+[PATCH v2 5/8]:
+Backporting of upstream commit d63206ee32b6:
+mm, gup: ensure real head page is ref-counted when using hugepages
+
+[PATCH v2 6/8]:
+Backporting of upstream commit 8fde12ca79af:
+mm: prevent get_user_pages() from overflowing page refcount
+
+[PATCH v2 7/8]:
+Backporting of upstream commit 7bf2d1df8082:
+pipe: add pipe_buf_get() helper
+
+[PATCH v2 8/8]:
+Backporting of upstream commit 15fab63e1e57:
+fs: prevent page refcount overflow in pipe_buf_get
+
