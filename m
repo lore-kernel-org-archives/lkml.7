@@ -2,97 +2,131 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0009DECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B73A0ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:29:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAC7B206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:29:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570642187;
-	bh=OxtsmDZcRyjTy/TwgnZe5iInYm/ARc+kAq5vsnT/P2M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JHL3ZQjHFpeCwoUC/t9XsY/2GExsfObbGKsvnTbMsFAq+ztjIuJkEIHlcEgUbWzUB
-	 ySzL3OSeWUMnE0k3ihfQdOgwHkhuX0CvGzNPsCkJJ6JoYx1Q0KRac3H6Cr7TMu4YE4
-	 7YIKNOofi/6vG7zjOSEby4cD/PJsWK6lcjFyCq7M=
+	by mail.kernel.org (Postfix) with ESMTP id 97338206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:29:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732890AbfJIR3q (ORCPT
+        id S1732901AbfJIR3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:29:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48600 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732184AbfJIRYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 13:24:11 -0400
-Received: from sasha-vm.mshome.net (unknown [167.220.2.234])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88DAA21920;
-        Wed,  9 Oct 2019 17:24:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570641850;
-        bh=OxtsmDZcRyjTy/TwgnZe5iInYm/ARc+kAq5vsnT/P2M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O0c67KjO3KueprQfFBsiqV0MlLgB055OZRqyjj3Ax1OKOJwoXdv2XT+PPz/Nl6fNL
-         TlqcSwCphIMx+oba40SNWE5jA1/mNHDoL/zNg+d5VUVrNzpHKlLkO0gYTpOICeDLfC
-         iHyl8MJEzyE6gndafq8CZAgKcbInySEwrNsPEi20=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Paul Burton <paul.burton@mips.com>, chenhc@lemote.com,
-        ralf@linux-mips.org, jhogan@kernel.org, linux-mips@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 20/26] mips: Loongson: Fix the link time qualifier of 'serial_exit()'
-Date:   Wed,  9 Oct 2019 13:05:52 -0400
-Message-Id: <20191009170558.32517-20-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191009170558.32517-1-sashal@kernel.org>
-References: <20191009170558.32517-1-sashal@kernel.org>
+        Wed, 9 Oct 2019 13:29:52 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:49541 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732184AbfJIR3t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 13:29:49 -0400
+Received: from [213.220.153.21] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iIFmU-0002kv-Qn; Wed, 09 Oct 2019 17:29:46 +0000
+Date:   Wed, 9 Oct 2019 19:29:46 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Christian Kellner <ckellner@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        Christian Kellner <christian@kellner.me>,
+        Christian Brauner <christian@brauner.io>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Michal Hocko <mhocko@suse.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Roman Gushchin <guro@fb.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Dmitry V. Levin" <ldv@altlinux.org>
+Subject: Re: [PATCH v2 1/2] pidfd: show pids for nested pid namespaces in
+ fdinfo
+Message-ID: <20191009172944.if5x3rpkb54zs4ry@wittgenstein>
+References: <20191008133641.23019-1-ckellner@redhat.com>
+ <20191009160532.20674-1-ckellner@redhat.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191009160532.20674-1-ckellner@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+On Wed, Oct 09, 2019 at 06:05:30PM +0200, Christian Kellner wrote:
+> From: Christian Kellner <christian@kellner.me>
+> 
+> The fdinfo file for a process file descriptor already contains the
+> pid of the process in the callers namespaces. Additionally, if pid
+> namespaces are configured, show the process ids of the process in
+> all nested namespaces in the same format as in the procfs status
+> file, i.e. "NSPid:\t%d\%d...". This allows the easy identification
+> of the processes in nested namespaces.
+> 
+> Signed-off-by: Christian Kellner <christian@kellner.me>
+> ---
+> 
+> Changes in v2:
+> - Moved into separate function to avoid multiple ifdefs as suggested
+>   by Michal Hocko
+> 
+>  kernel/fork.c | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index 5a0fd518e04e..f7a59ef046e9 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -1681,12 +1681,27 @@ static int pidfd_release(struct inode *inode, struct file *file)
+>  }
+>  
+>  #ifdef CONFIG_PROC_FS
+> +static void pidfd_nspid(struct seq_file *m, struct pid *pid)
 
-[ Upstream commit 25b69a889b638b0b7e51e2c4fe717a66bec0e566 ]
+If it has to be a separate helper then please make it:
 
-'exit' functions should be marked as __exit, not __init.
+static inline void print_pidfd_nspid(struct seq_file *m, struct pid_namespace *ns, struct pid *pid)
+{
+#ifdef CONFIG_PID_NS
+	int i;
 
-Fixes: 85cc028817ef ("mips: make loongsoon serial driver explicitly modular")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: chenhc@lemote.com
-Cc: ralf@linux-mips.org
-Cc: jhogan@kernel.org
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/mips/loongson64/common/serial.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+	seq_puts(m, "\nNSpid:");
+	for (i = ns->level; i <= pid->level; i++) {
+		ns = pid->numbers[i].ns;
+		seq_put_decimal_ull(m, "\t", pid_nr_ns(pid, ns));
+	}
+#endif
+}
 
-diff --git a/arch/mips/loongson64/common/serial.c b/arch/mips/loongson64/common/serial.c
-index ffefc1cb26121..98c3a7feb10f8 100644
---- a/arch/mips/loongson64/common/serial.c
-+++ b/arch/mips/loongson64/common/serial.c
-@@ -110,7 +110,7 @@ static int __init serial_init(void)
- }
- module_init(serial_init);
- 
--static void __init serial_exit(void)
-+static void __exit serial_exit(void)
- {
- 	platform_device_unregister(&uart8250_device);
- }
--- 
-2.20.1
+It's called nowhere else and we've already retrieved the pid_namespace
+in pidfd_show_fdinfo().
 
+> +{
+> +#ifdef CONFIG_PID_NS
+> +	struct pid_namespace *ns = proc_pid_ns(file_inode(m->file));
+> +	int i;
+> +
+> +	seq_puts(m, "\nNSpid:");
+> +	for (i = ns->level; i <= pid->level; i++) {
+> +		ns = pid->numbers[i].ns;
+> +		seq_put_decimal_ull(m, "\t", pid_nr_ns(pid, ns));
+> +	}
+> +#endif
+> +}
+> +
+>  static void pidfd_show_fdinfo(struct seq_file *m, struct file *f)
+>  {
+>  	struct pid_namespace *ns = proc_pid_ns(file_inode(m->file));
+>  	struct pid *pid = f->private_data;
+>  
+>  	seq_put_decimal_ull(m, "Pid:\t", pid_nr_ns(pid, ns));
+> +	pidfd_nspid(m, pid);
+>  	seq_putc(m, '\n');
+>  }
+>  #endif
+> -- 
+> 2.21.0
+> 
