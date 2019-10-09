@@ -2,114 +2,144 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0AD7C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B708ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85D38218AC
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:31:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570627903;
-	bh=oZzfMFCR/j7Wy5PTVMA5uQX2L9GGCFSn0pppXeOTmn0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0+zbmUpiHGGVN3JF7Z7mPBLGLiLtNDb6VohVUpcFtYcID6Y+/PxunxdgWoylQD9Qc
-	 EMta03IYQ6LAMWuNpYIhpakUpKjUWA3KErlu+RlLr2T5hhavuu0EGqxTe3KMfMdBkq
-	 Xs87e0nYBnYnZWdnwQLCVW9YY6lXHWh2mq1/48bU=
+	by mail.kernel.org (Postfix) with ESMTP id 5603F20B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:32:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731382AbfJINbm (ORCPT
+        id S1731423AbfJINcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 09:31:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58394 "EHLO mail.kernel.org"
+        Wed, 9 Oct 2019 09:32:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43512 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730901AbfJINbm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 09:31:42 -0400
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731152AbfJINcw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 09:32:52 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D448320B7C;
-        Wed,  9 Oct 2019 13:31:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570627901;
-        bh=oZzfMFCR/j7Wy5PTVMA5uQX2L9GGCFSn0pppXeOTmn0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0hvHSAxdEvU3eQFJbCNTHqxGpclBsrkmEQIoY6D9TPohbGcsawUwe/9diqs9p0t6/
-         tP4yB1NShXDz88eLxAFzZ+hVSfLsQKjUUOfbLKMOMXsow+I1nsuJ4VJ4SGPB9405oy
-         u+X7FGxkIQ4RB6Cx0rTsBuZqZD2x1LSD/X97pZz0=
-Date:   Wed, 9 Oct 2019 15:31:38 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Noralf =?utf-8?Q?Tr=C3=B8nnes?= <noralf@tronnes.org>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <sean@poorly.run>, dri-devel@lists.freedesktop.org,
-        sam@ravnborg.org, hdegoede@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [1/3] drm/tinydrm/Kconfig: Remove menuconfig DRM_TINYDRM
-Message-ID: <20191009133138.scz3i5jjcqt3gnjd@gilmour>
-References: <20190725105132.22545-2-noralf@tronnes.org>
- <20191001123636.GA8351@ziepe.ca>
- <1fffe7b1-a738-a9e3-ea5f-9d696cb98650@tronnes.org>
- <20191001134555.GB22532@ziepe.ca>
- <75055e2d-44f7-0cba-4e41-537097b73c3c@tronnes.org>
- <20191009104531.GW16989@phenom.ffwll.local>
- <1bc77839-c47a-6e79-dd6e-e26e05b34eae@tronnes.org>
+        by mx1.redhat.com (Postfix) with ESMTPS id BC70130832EA;
+        Wed,  9 Oct 2019 13:32:51 +0000 (UTC)
+Received: from [10.36.118.16] (unknown [10.36.118.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9D9F05C1D6;
+        Wed,  9 Oct 2019 13:32:47 +0000 (UTC)
+Subject: Re: [PATCH v1] mm: Fix access of uninitialized memmaps in
+ fs/proc/page.c
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Qian Cai <cai@lca.pw>, Alexey Dobriyan <adobriyan@gmail.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>,
+        Konstantin Khlebnikov <koct9i@gmail.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        linux-fsdevel@vger.kernel.org
+References: <20191009091205.11753-1-david@redhat.com>
+ <20191009093756.GV6681@dhcp22.suse.cz>
+ <67aeaacc-d850-5c81-bd17-e95c7f7f75df@redhat.com>
+ <20191009112424.GY6681@dhcp22.suse.cz>
+ <a9659e39-3516-13c8-b9ab-d42bdaf4a488@redhat.com>
+ <20191009132256.GZ6681@dhcp22.suse.cz>
+ <8f0542f4-92c6-d450-7343-62bf9f08d5ed@redhat.com>
+ <20191009132950.GB6681@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <d1516f32-8031-8ad2-7d69-1272b5ee480e@redhat.com>
+Date:   Wed, 9 Oct 2019 15:32:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="2a3a74y3f5owva3n"
-Content-Disposition: inline
-In-Reply-To: <1bc77839-c47a-6e79-dd6e-e26e05b34eae@tronnes.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191009132950.GB6681@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 09 Oct 2019 13:32:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 09.10.19 15:29, Michal Hocko wrote:
+> On Wed 09-10-19 15:24:05, David Hildenbrand wrote:
+>> On 09.10.19 15:22, Michal Hocko wrote:
+>>> On Wed 09-10-19 14:58:24, David Hildenbrand wrote:
+>>> [...]
+>>>> I would be fine with this, but it means that - for now - the three
+>>>> /proc/ files won't be able to deal with ZONE_DEVICE memory.
+>>>
+>>> Thanks for the clarification. Is this an actual problem though? Do we
+>>> have any consumers of the functionality?
+>>>
+>>
+>> I don't know, that's why I was being careful in not changing its behavior.
+> 
+> Can we simply go with pfn_to_online_page. I would be quite surprised if
+> anybody was really examining zone device memory ranges as they are
+> static IIUC. If there is some usecase I am pretty sure we will learn
+> that and can address it accordingly.
+> 
 
---2a3a74y3f5owva3n
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I consider it mostly a debug interface either way. Will rework, test and
+resend. Thanks!
 
-On Wed, Oct 09, 2019 at 02:48:20PM +0200, Noralf Tr=F8nnes wrote:
-> Den 09.10.2019 12.45, skrev Daniel Vetter:
-> > On Tue, Oct 01, 2019 at 04:07:38PM +0200, Noralf Tr=F8nnes wrote:
-> >> Hi drm-misc maintainers,
-> >>
-> >> I have just applied a patch to drm-misc-next that as it turns out shou=
-ld
-> >> have been applied to -fixes for this -rc cycle.
-> >>
-> >> Should I cherry pick it to drm-misc-next-fixes?
-> >
-> > Yup, cherry pick and reference the commit that's already in -next (in c=
-ase
-> > it creates conflicts down the road that reference makes the mess easier=
- to
-> > understand).
-> >
->
-> I remembered that Maxime just sent out a fixes pull and the subject says
-> drm-misc-fixes. The prevous one he sent out was -next-fixes.
-> So it looks like I should cherry pick to drm-misc-fixes for it to show
-> up in 5.4?
+-- 
 
-drm-misc-next-fixes is the branch where we gather fixes supposed to be
-applied on top of drm-misc-next during the merge window. If you have
-something targeting the current release, it should be drm-misc-fixes
-indeed.
+Thanks,
 
-Maxime
-
---2a3a74y3f5owva3n
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZ3hOgAKCRDj7w1vZxhR
-xcoFAP9hmbX/w4RrCCKqQTCWRP1Ft+AL7c/nMJYOR0IRZ3qrCwEA7/Pl7InBhhZI
-wtLFUjQymChPxBbMXs1GgwfpUD7ZTgg=
-=iry/
------END PGP SIGNATURE-----
-
---2a3a74y3f5owva3n--
+David / dhildenb
