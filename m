@@ -2,128 +2,148 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF346ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D31DAECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B425320659
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:46:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tfAur79I"
+	by mail.kernel.org (Postfix) with ESMTP id B5C4620659
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:48:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730936AbfJILqq (ORCPT
+        id S1730780AbfJILsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 07:46:46 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42523 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730398AbfJILqq (ORCPT
+        Wed, 9 Oct 2019 07:48:20 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:58852 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725914AbfJILsU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 07:46:46 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n14so2512278wrw.9;
-        Wed, 09 Oct 2019 04:46:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tKPlVOyQX0Mune1fiTMXvubT6ipc/MtiuESvbbCqVwA=;
-        b=tfAur79IhqF7wyao5kZUd9YgUGH1vIsmdgKNoxBs2vpbNOP8YmIxbc5xmrGLAnSgFb
-         nbQSQSxChJq8lAcivLbr0JZHSnbndhraQDtZBqW4F6z7sXPVXdJR1q8hUAyf74dsiuDj
-         W/ZBbrnCh7013OOsNB90IBEwi3GQ1y3MLWqAaQs8QoZhy46MUkwBBWwawYFwDTFMJ9Jp
-         47BDhuQMCOZCjsv8pDWbRQz9ij9hLaBPelGzUX0OfHOaYc+lqdINR0bHzSQelS4pIvuK
-         Vc6zxx6v+x46nwuG/UOXq5SAtsG+P33cxhH37KhBSGLGwQagjNaxCzIrCZ3Z4EhQ47wh
-         FYLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tKPlVOyQX0Mune1fiTMXvubT6ipc/MtiuESvbbCqVwA=;
-        b=rnOI4tXREvFF5N2GwdBt6Z8WE9H2swbZ5d03uEJPEb7bJID5Tes4QwaaAqCDHWUTga
-         R4r5K0jLMwGOdcFXNNcus31sGPcJMnLIGtBfB/sMBiTqbhs1E3pmYxKODMYqapFMMJHb
-         bUyyGDY3W/Q6+6VrNbif5OyqW7cXVEid0CIYijRqGzUQ2ng1SsI7ZpQgbP4/pDtzN/Vq
-         uDKRmbVbsVAQeU9GVVwvIfe/rCNkrNhIaXhVqF0PDLekZucY8VqqHJQCYyNmV4NhMr4p
-         loBOXZ3VMXaLt2XgmSavcze/7Bi4u69tzfNqKHXarrNDpTyQZpumsBtuYvLFFNj3DtzC
-         /fPg==
-X-Gm-Message-State: APjAAAUFF+2avopdxcvmu9Sq2O3Q5ZBsB5L4m1+BnUjCgpy2/TritfCX
-        ycCy71hilNw/XENSC7rPfRc=
-X-Google-Smtp-Source: APXvYqwavV9IPYcWKUfdQEMiJWJzx8yh1yPx1dxVIpmks3FRBII+mSAk/MXkMGyOZd/46y+5xHO+PQ==
-X-Received: by 2002:adf:db43:: with SMTP id f3mr1458077wrj.11.1570621603697;
-        Wed, 09 Oct 2019 04:46:43 -0700 (PDT)
-Received: from localhost ([51.15.41.238])
-        by smtp.gmail.com with ESMTPSA id w5sm2212043wrs.34.2019.10.09.04.46.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 04:46:42 -0700 (PDT)
-Date:   Wed, 9 Oct 2019 12:46:41 +0100
-From:   Stefan Hajnoczi <stefanha@gmail.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     netdev@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
-        linux-hyperv@vger.kernel.org,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        kvm@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jorgen Hansen <jhansen@vmware.com>
-Subject: Re: [RFC PATCH 04/13] vsock: add 'transport' member in the struct
- vsock_sock
-Message-ID: <20191009114641.GE5747@stefanha-x1.localdomain>
-References: <20190927112703.17745-1-sgarzare@redhat.com>
- <20190927112703.17745-5-sgarzare@redhat.com>
+        Wed, 9 Oct 2019 07:48:20 -0400
+Received: from [79.140.115.128] (helo=localhost.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iIAS0-0000pL-Aq; Wed, 09 Oct 2019 11:48:16 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     christian.brauner@ubuntu.com
+Cc:     bsingharora@gmail.com, dvyukov@google.com, elver@google.com,
+        linux-kernel@vger.kernel.org, parri.andrea@gmail.com,
+        stable@vger.kernel.org,
+        syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com,
+        syzkaller-bugs@googlegroups.com
+Subject: [PATCH v5] taskstats: fix data-race
+Date:   Wed,  9 Oct 2019 13:48:09 +0200
+Message-Id: <20191009114809.8643-1-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191009113134.5171-1-christian.brauner@ubuntu.com>
+References: <20191009113134.5171-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="OZkY3AIuv2LYvjdk"
-Content-Disposition: inline
-In-Reply-To: <20190927112703.17745-5-sgarzare@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When assiging and testing taskstats in taskstats_exit() there's a race
+when writing and reading sig->stats when a thread-group with more than
+one thread exits:
 
---OZkY3AIuv2LYvjdk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+cpu0:
+thread catches fatal signal and whole thread-group gets taken down
+ do_exit()
+ do_group_exit()
+ taskstats_exit()
+ taskstats_tgid_alloc()
+The tasks reads sig->stats without holding sighand lock seeing garbage.
 
-On Fri, Sep 27, 2019 at 01:26:54PM +0200, Stefano Garzarella wrote:
-> As a preparation to support multiple transports, this patch adds
-> the 'transport' member at the 'struct vsock_sock'.
-> This new field is initialized during the creation in the
-> __vsock_create() function.
->=20
-> This patch also renames the global 'transport' pointer to
-> 'transport_single', since for now we're only supporting a single
-> transport registered at run-time.
->=20
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> ---
->  include/net/af_vsock.h   |  1 +
->  net/vmw_vsock/af_vsock.c | 56 +++++++++++++++++++++++++++-------------
->  2 files changed, 39 insertions(+), 18 deletions(-)
+cpu1:
+task calls exit_group()
+ do_exit()
+ do_group_exit()
+ taskstats_exit()
+ taskstats_tgid_alloc()
+The task takes sighand lock and assigns new stats to sig->stats.
 
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Fix this by using smp_load_acquire() and smp_store_release().
 
---OZkY3AIuv2LYvjdk
-Content-Type: application/pgp-signature; name="signature.asc"
+Reported-by: syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com
+Fixes: 34ec12349c8a ("taskstats: cleanup ->signal->stats allocation")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
+---
+/* v1 */
+Link: https://lore.kernel.org/r/20191005112806.13960-1-christian.brauner@ubuntu.com
 
------BEGIN PGP SIGNATURE-----
+/* v2 */
+Link: https://lore.kernel.org/r/20191006235216.7483-1-christian.brauner@ubuntu.com
+- Dmitry Vyukov <dvyukov@google.com>, Marco Elver <elver@google.com>:
+  - fix the original double-checked locking using memory barriers
 
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl2dyKEACgkQnKSrs4Gr
-c8gl2wf9GDmxHYnnuV/4iY/UGudKy+Um/JJ6pvLVFrUG/VRJTTs7M23YLemIGqSr
-G8h+cAEog9/59utW/OavWSSiV6dn3b84u74m7VrMCp4SYrYO8XbdUy0adjFAi6CT
-+CeNnNORBhdA98Z8vMb4Z7oRjNF6i93S2Qb/ShDZX1K9zq1OhMNKstoZ+nrCbTOD
-PP8heokQ0sC2Gh6+QOMFmG/yPufk9Yp3Ld1FN4jzxZuLnj7vS/qq8w6/m33qdkKs
-O59qSocNgs90h6x7IP8dxTzfyjPIL76Pd8YeER0+WKvMubbc2tp1fyAZFXGHCf8p
-8MPdEyjQYwluu8naEZY7Xp29OVNOnQ==
-=2nON
------END PGP SIGNATURE-----
+/* v3 */
+Link: https://lore.kernel.org/r/20191007110117.1096-1-christian.brauner@ubuntu.com
+- Andrea Parri <parri.andrea@gmail.com>:
+  - document memory barriers to make checkpatch happy
 
---OZkY3AIuv2LYvjdk--
+/* v4 */
+Link: https://lore.kernel.org/r/20191009113134.5171-1-christian.brauner@ubuntu.com
+- Andrea Parri <parri.andrea@gmail.com>:
+  - use smp_load_acquire(), not READ_ONCE()
+  - update commit message
+
+/* v5 */
+- Andrea Parri <parri.andrea@gmail.com>:
+  - fix typo in smp_load_acquire()
+---
+ kernel/taskstats.c | 24 +++++++++++++++---------
+ 1 file changed, 15 insertions(+), 9 deletions(-)
+
+diff --git a/kernel/taskstats.c b/kernel/taskstats.c
+index 13a0f2e6ebc2..6e18fdc4f7c8 100644
+--- a/kernel/taskstats.c
++++ b/kernel/taskstats.c
+@@ -554,24 +554,30 @@ static int taskstats_user_cmd(struct sk_buff *skb, struct genl_info *info)
+ static struct taskstats *taskstats_tgid_alloc(struct task_struct *tsk)
+ {
+ 	struct signal_struct *sig = tsk->signal;
+-	struct taskstats *stats;
++	struct taskstats *stats_new, *stats;
+ 
+-	if (sig->stats || thread_group_empty(tsk))
+-		goto ret;
++	/* Pairs with smp_store_release() below. */
++	stats = smp_load_acquire(&sig->stats);
++	if (stats || thread_group_empty(tsk))
++		return stats;
+ 
+ 	/* No problem if kmem_cache_zalloc() fails */
+-	stats = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
++	stats_new = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
+ 
+ 	spin_lock_irq(&tsk->sighand->siglock);
+ 	if (!sig->stats) {
+-		sig->stats = stats;
+-		stats = NULL;
++		/*
++		 * Pairs with smp_store_release() above and order the
++		 * kmem_cache_zalloc().
++		 */
++		smp_store_release(&sig->stats, stats_new);
++		stats_new = NULL;
+ 	}
+ 	spin_unlock_irq(&tsk->sighand->siglock);
+ 
+-	if (stats)
+-		kmem_cache_free(taskstats_cache, stats);
+-ret:
++	if (stats_new)
++		kmem_cache_free(taskstats_cache, stats_new);
++
+ 	return sig->stats;
+ }
+ 
+-- 
+2.23.0
+
