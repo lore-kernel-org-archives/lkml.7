@@ -2,241 +2,193 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 471E8C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C3E7C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2181A2067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 270F9206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:56:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jKYu5D9y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731145AbfJINyy (ORCPT
+        id S1731183AbfJIN4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 09:54:54 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:46987 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729865AbfJINyx (ORCPT
+        Wed, 9 Oct 2019 09:56:32 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:54738 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725879AbfJIN4c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 09:54:53 -0400
-Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
-  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="Ludovic.Desroches@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa1.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa1.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: 2Xl7UaHbX/XBwKudh3GNDw3t7vZb5xSHn+qO3PjAJXY1cjVXcwlc1uVVmakt6K5huOLo6QWmcf
- blVmeni2K07fxDUzTNq62aDW2f/CZkCmlQ6on9DkCw2+c7McLMRqJFMGhHbJSNc4eQWifsD5+O
- guWOQJUPi91uhJyZsHbxwYQOHoD2lUPQY3wmZ0v25wjGgpsJijEd27qA+Ekp2qlS+9cxrrq+if
- bK1sBYo8EpwivEeMKpf0Dzff1qltqg7iRQ8Ij94MhY8BqkSVCQrWUdVSx1gUK2Ba8SM3qa2yp2
- 8c4=
-X-IronPort-AV: E=Sophos;i="5.67,276,1566889200"; 
-   d="scan'208";a="53595269"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Oct 2019 06:54:52 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 9 Oct 2019 06:54:52 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Wed, 9 Oct 2019 06:54:51 -0700
-Date:   Wed, 9 Oct 2019 15:55:00 +0200
-From:   Ludovic Desroches <ludovic.desroches@microchip.com>
-To:     Kamel Bouhara <kamel.bouhara@bootlin.com>
-CC:     Wolfram Sang <wsa@the-dreams.de>, <linux-i2c@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>,
-        "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 2/4] i2c: at91: implement i2c bus recovery
-Message-ID: <20191009135500.ufkxcemccwfcfys7@M43218.corp.atmel.com>
-Mail-Followup-To: Kamel Bouhara <kamel.bouhara@bootlin.com>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-References: <20191002144658.7718-1-kamel.bouhara@bootlin.com>
- <20191002144658.7718-3-kamel.bouhara@bootlin.com>
+        Wed, 9 Oct 2019 09:56:32 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x99Du3tW106389;
+        Wed, 9 Oct 2019 08:56:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1570629363;
+        bh=hbdDrA0vSGnIZLRZOIoGDktsgyTNdj9lFpmEA/gGcxo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=jKYu5D9yuPCV40R2N4YRCYuAQ1LSn6zSOsQcAGzUit3tLd9TYmEcG1vtAKJhjGaUr
+         TZ7FQSC9DeyFiI4pKNH0bGyeb9CoOVaoJK1LvrmGI9Qdkrju75W44NuJuSQNl98rfU
+         eubjWi83qcGdkmKl7unKYhAU4W1rrojlyWv8RMUo=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x99Du2bl112740
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 9 Oct 2019 08:56:02 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 9 Oct
+ 2019 08:56:01 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 9 Oct 2019 08:56:01 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x99DtvJL084946;
+        Wed, 9 Oct 2019 08:55:58 -0500
+Subject: Re: Lay common foundation to make PVR/SGX work without hacks on
+ OMAP34xx, OMAP36xx, AM335x and potentially OMAP4, OMAP5
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Tony Lindgren <tony@atomide.com>
+CC:     Merlijn Wajer <merlijn@wizzup.org>, Adam Ford <aford173@gmail.com>,
+        Philipp Rossak <embed3d@gmail.com>,
+        =?UTF-8?Q?Pawe=c5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        =?UTF-8?Q?Filip_Matijevi=c4=87?= <filip.matijevic.pz@gmail.com>,
+        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+        moaz korena <moaz@korena.xyz>,
+        James Hilliard <james.hilliard1@gmail.com>,
+        <kernel@pyra-handheld.com>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, <maemo-leste@lists.dyne.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>
+References: <d0cbfaaf-813e-8803-f90b-931a38396750@wizzup.org>
+ <3A03FF16-C203-43ED-AEEF-0260F6B3331A@goldelico.com>
+ <3b0a5e78-c4c2-1963-bac7-b49496a1e9b9@wizzup.org>
+ <1F942AAB-1648-46C0-ADD5-90F6898778BE@goldelico.com>
+ <84cac9b8-0eff-33f8-464d-4f8045d7db19@wizzup.org>
+ <BFAA7FA6-A352-476A-99F9-02EA663A6AAD@goldelico.com>
+ <CAHCN7x+87xTsA3MeHy7kUWU0SU3X8HmSc2wbk5gKvYm1dRNe6A@mail.gmail.com>
+ <04809E3E-A690-4931-B949-1CFDAF407C14@goldelico.com>
+ <ebb50954-b456-4dab-0765-9dfa06c67075@wizzup.org>
+ <C3A56737-6187-4B31-8697-3A02DD164429@goldelico.com>
+ <20191007155252.GQ5610@atomide.com>
+ <64474fb1-f6d2-52d0-175a-65bb493dc1fe@ti.com>
+ <9253CFB5-0AF7-4EA0-AC7F-6DE37318238A@goldelico.com>
+ <0bb4739d-e26f-de49-fd80-257a836e892a@ti.com>
+ <0FEF1AB1-5FE0-4EEE-BEB9-0957BB424C18@goldelico.com>
+ <270E1695-9B1F-4470-AEA2-724E2139BCF5@goldelico.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <77a524bb-26e7-c090-e7e2-ce0da2896725@ti.com>
+Date:   Wed, 9 Oct 2019 16:55:57 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191002144658.7718-3-kamel.bouhara@bootlin.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <270E1695-9B1F-4470-AEA2-724E2139BCF5@goldelico.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 04:46:56PM +0200, Kamel Bouhara wrote:
-> External E-Mail
+On 09/10/2019 15:53, H. Nikolaus Schaller wrote:
+> 
+>> Am 08.10.2019 um 22:15 schrieb H. Nikolaus Schaller <hns@goldelico.com>:
+>>
+>>
+>>> Am 08.10.2019 um 10:00 schrieb Tero Kristo <t-kristo@ti.com>:
+>>>
+>>> On 07/10/2019 22:24, H. Nikolaus Schaller wrote:
+>>>> Hi Tero,
+>>>>> Am 07.10.2019 um 21:18 schrieb Tero Kristo <t-kristo@ti.com>:
+>>>>>
+>>>>> On 07/10/2019 18:52, Tony Lindgren wrote:
+>>>>>> Hi,
+>>>>>> * H. Nikolaus Schaller <hns@goldelico.com> [191005 16:59]:
+>>>>>> Please try with Tero's current github branch at github.com/t-kristo/linux-pm.git
+>>>>>> 5.4-rc1-ipc from few days ago, the earlier versions had still issues.
+>>>>>
+>>>>> Yeah, this one should be fixed now.
+>>>> Ok! Will try asap.
+>>>>>
+>>>>>>> * OMAP5 (Pyra): fails to enable the clocks (did work with the previous version)
+>>>>>>> [  304.140363] clock-controller:clk:0000:0: failed to enable
+>>>>>>> [  304.147388] PVR_K:(Error): EnableSGXClocks: pm_runtime_get_sync failed (16)
+>>>>>> Hmm no idea what might be up with this one. Did some clkctrl clock
+>>>>>> fixes maybe cause a regression here? Tero do you have any ideas?
+>>>>>
+>>>>> So, this one I am not too sure, I haven't looked at omap5 graphics clocking. I don't think it has anything to do with reset handling though.
+>>>>>
+>>>>> Is there some simple way to try this out on board; without PVR module that is?
+>>>> Yes, I have also seen it when just running the commands in the original commit message [1]:
+>>>> # echo on > $(find /sys -name control | grep \/5600)
+>>>> # rwmem 0x5600fe00	# OCP Revision
+>>>> 0x5600fe00 = 0x40000000
+>>>> # echo auto > $(find /sys -name control | grep \/5600)
+>>>> # rwmem 0x5600fe10
+>>>> # rwmem 0x56000024
+>>>> But I have not yet tested with 5.4-rc2, just 5.4-rc1.
+>>>
+>>> Ok, there is a one liner DTS data fix for this issue, attached.
+>>
+>> Yes, have tested and it fixes omap5. I have the 3D demo running again on the Pyra. Yay!
+>>
+>> Together with the latest rstcrtl patches, am335x is now better.
+>> No omap_reset_deassert: timedout waiting for gfx:0 any more.
+>>
+>> But I can't access the sgx registers and get memory faults. Maybe
+>> my script has a bug and is trying the wrong address. Have to check
+>> with some distance...
+> 
+> Now I have done more tests on am335x. It is not my script but something else.
+> 
+> Trying to read 0x5600fe00 after doing
+> 
+> echo on > /sys/bus/platform/devices/5600fe00.target-module/power/control
+> 
+> gives page faults.
+> 
+> When trying to load the kernel driver, the omap_reset_deassert message has
+> gone but the driver does no initialize:
+> 
+> root@letux:~# modprobe pvrsrvkm_omap_am335x_sgx530_125
+> [   45.774712] pvrsrvkm_omap_am335x_sgx530_125: module is from the staging directory, the quality is unknown, you have been warned.
+> root@letux:~#
+> 
+> Here is the CM/PM register dump after enabling power/control
+> 
+> *** SGX Register Dump ***
+> 0x44E00900 00000301 CM_GFX_L3_CLKSTCTRL
+> 0x44E00904 00050000 CM_GFX_GFX_CLKCTRL
+> 0x44E0090c 00000002 CM_GFX_L4LS_GFX_CLKSTCTR
+> 0x44E00910 00030000 CM_GFX_MMUCFG_CLKCTRL
+> 0x44E00914 00030000 CM_GFX_MMUDATA_CLKCTRL
+> 0x44E0052c 00000000 CM_DPLL.CLKSEL_GFX_FCLK
+> 0x44E01100 00060047 PM_GFX_PWRSTCTRL
+> 0x44E01104 00000001 RM_GFX_RSTCTRL
+> 0x44E01110 00000037 PM_GFX_PWRSTST
+
+Are you sure you have the graphics node properly applied in your kernel?
+
+As you can see the RM_GFX_RSTCTRL is still asserted (it should be zero 
+so that you can access the module) and the CM_GFX_GFX_CLKCTRL is also 
+disabled (bits 0-1 are 0, should be 2 in the working case.)
+
+It works for me with my branch + the single am33xx patch from Tony.
+
+-Tero
+
+> 
+> BR,
+> Nikolaus
 > 
 > 
-> Implement i2c bus recovery when slaves devices might hold SDA low.
-> In this case re-assign SCL/SDA to gpios and issue 9 dummy clock pulses
-> until the slave release SDA.
-> 
 
-Hi Kamel,
-
-Thanks for adding this new feature. As I see patches only for sama5d3 and
-sama5d4, I assume it has not been tested with a sama5d2, isn't it?
-
-I doubt it works with a sama5d2 because of the pinctrl. I also wonder if it can
-work if we add .strict = true to pinmux_ops which is something plan for the
-future...
-
-Are you able to test these points? It would be nice to be aware of
-possible side effects.
-
-Regards
-
-Ludovic
-
-> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> ---
->  drivers/i2c/busses/i2c-at91-master.c | 63 ++++++++++++++++++++++++++++
->  drivers/i2c/busses/i2c-at91.h        |  8 ++++
->  2 files changed, 71 insertions(+)
-> 
-> diff --git a/drivers/i2c/busses/i2c-at91-master.c b/drivers/i2c/busses/i2c-at91-master.c
-> index a3fcc35ffd3b..df5bb93f952d 100644
-> --- a/drivers/i2c/busses/i2c-at91-master.c
-> +++ b/drivers/i2c/busses/i2c-at91-master.c
-> @@ -18,11 +18,13 @@
->  #include <linux/dma-mapping.h>
->  #include <linux/dmaengine.h>
->  #include <linux/err.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/i2c.h>
->  #include <linux/interrupt.h>
->  #include <linux/io.h>
->  #include <linux/of.h>
->  #include <linux/of_device.h>
-> +#include <linux/pinctrl/consumer.h>
->  #include <linux/platform_device.h>
->  #include <linux/platform_data/dma-atmel.h>
->  #include <linux/pm_runtime.h>
-> @@ -768,6 +770,63 @@ static int at91_twi_configure_dma(struct at91_twi_dev *dev, u32 phy_addr)
->  	return ret;
->  }
->  
-> +static void at91_prepare_twi_recovery(struct i2c_adapter *adap)
-> +{
-> +	struct at91_twi_dev *dev = i2c_get_adapdata(adap);
-> +
-> +	pinctrl_select_state(dev->pinctrl, dev->pinctrl_pins_gpio);
-> +}
-> +
-> +static void at91_unprepare_twi_recovery(struct i2c_adapter *adap)
-> +{
-> +	struct at91_twi_dev *dev = i2c_get_adapdata(adap);
-> +
-> +	pinctrl_select_state(dev->pinctrl, dev->pinctrl_pins_default);
-> +}
-> +
-> +static int at91_init_twi_recovery_info(struct platform_device *pdev,
-> +				       struct at91_twi_dev *dev)
-> +{
-> +	struct i2c_bus_recovery_info *rinfo = &dev->rinfo;
-> +
-> +	dev->pinctrl = devm_pinctrl_get(&pdev->dev);
-> +	if (!dev->pinctrl || IS_ERR(dev->pinctrl)) {
-> +		dev_info(dev->dev, "can't get pinctrl, bus recovery not supported\n");
-> +		return PTR_ERR(dev->pinctrl);
-> +	}
-> +
-> +	dev->pinctrl_pins_default = pinctrl_lookup_state(dev->pinctrl,
-> +							 PINCTRL_STATE_DEFAULT);
-> +	dev->pinctrl_pins_gpio = pinctrl_lookup_state(dev->pinctrl,
-> +						      "gpio");
-> +	rinfo->sda_gpiod = devm_gpiod_get(&pdev->dev, "sda", GPIOD_IN);
-> +	if (PTR_ERR(rinfo->sda_gpiod) == -EPROBE_DEFER)
-> +		return -EPROBE_DEFER;
-> +
-> +	rinfo->scl_gpiod = devm_gpiod_get(&pdev->dev, "scl",
-> +					  GPIOD_OUT_HIGH_OPEN_DRAIN);
-> +	if (PTR_ERR(rinfo->scl_gpiod) == -EPROBE_DEFER)
-> +		return -EPROBE_DEFER;
-> +
-> +	if (IS_ERR(rinfo->sda_gpiod) ||
-> +		   IS_ERR(rinfo->scl_gpiod) ||
-> +		   IS_ERR(dev->pinctrl_pins_default) ||
-> +		   IS_ERR(dev->pinctrl_pins_gpio)) {
-> +		dev_info(&pdev->dev, "recovery information incomplete\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	dev_info(&pdev->dev, "using scl%s for recovery\n",
-> +		 rinfo->sda_gpiod ? ",sda" : "");
-> +
-> +	rinfo->prepare_recovery = at91_prepare_twi_recovery;
-> +	rinfo->unprepare_recovery = at91_unprepare_twi_recovery;
-> +	rinfo->recover_bus = i2c_generic_scl_recovery;
-> +	dev->adapter.bus_recovery_info = rinfo;
-> +
-> +	return 0;
-> +}
-> +
->  int at91_twi_probe_master(struct platform_device *pdev,
->  			  u32 phy_addr, struct at91_twi_dev *dev)
->  {
-> @@ -795,6 +854,10 @@ int at91_twi_probe_master(struct platform_device *pdev,
->  
->  	at91_calc_twi_clock(dev);
->  
-> +	rc = at91_init_twi_recovery_info(pdev, dev);
-> +	if (rc == -EPROBE_DEFER)
-> +		return rc;
-> +
->  	dev->adapter.algo = &at91_twi_algorithm;
->  	dev->adapter.quirks = &at91_twi_quirks;
->  
-> diff --git a/drivers/i2c/busses/i2c-at91.h b/drivers/i2c/busses/i2c-at91.h
-> index 499b506f6128..b89dab55e776 100644
-> --- a/drivers/i2c/busses/i2c-at91.h
-> +++ b/drivers/i2c/busses/i2c-at91.h
-> @@ -141,6 +141,10 @@ struct at91_twi_dev {
->  	u32 fifo_size;
->  	struct at91_twi_dma dma;
->  	bool slave_detected;
-> +	struct i2c_bus_recovery_info rinfo;
-> +	struct pinctrl *pinctrl;
-> +	struct pinctrl_state *pinctrl_pins_default;
-> +	struct pinctrl_state *pinctrl_pins_gpio;
->  #ifdef CONFIG_I2C_AT91_SLAVE_EXPERIMENTAL
->  	unsigned smr;
->  	struct i2c_client *slave;
-> @@ -158,6 +162,10 @@ void at91_init_twi_bus_master(struct at91_twi_dev *dev);
->  int at91_twi_probe_master(struct platform_device *pdev, u32 phy_addr,
->  			  struct at91_twi_dev *dev);
->  
-> +void at91_twi_prepare_recovery(struct i2c_adapter *adap);
-> +void at91_twi_unprepare_recovery(struct i2c_adapter *adap);
-> +void at91_twi_init_recovery_info(struct at91_twi_dev *dev);
-> +
->  #ifdef CONFIG_I2C_AT91_SLAVE_EXPERIMENTAL
->  void at91_init_twi_bus_slave(struct at91_twi_dev *dev);
->  int at91_twi_probe_slave(struct platform_device *pdev, u32 phy_addr,
-> -- 
-> 2.23.0
-> 
-> 
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
