@@ -2,276 +2,106 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFE3ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4AD0ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:02:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A6CC20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:01:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B53BF20B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:02:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570640520;
+	bh=JZ/wWXQQAwvzCV2KSokDLFcg8LGeAOcirLa9vgTV9ns=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=dbocoVGGiBtiMo4I5GDWhQ5U85Onn4cTPWdqpKVUOgujk5AI8FBnwA3F1kWzQugOC
+	 vLCYe//fqzKl8NCSoFvx8wPg9hXqTOUJXj9+fwRTMhCYVP1P9VmtPWC/QC5ICtF5JS
+	 Wtt90mDC6bM1r0JNoFSvVQ/sV8T4HbwaKk+o91gk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731768AbfJIRBy (ORCPT
+        id S1731849AbfJIRB7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:01:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:32960 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730546AbfJIRBx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 13:01:53 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9B4DDAFBF;
-        Wed,  9 Oct 2019 17:01:50 +0000 (UTC)
-Message-ID: <d739f691b677fb3ed88a23476d221527a87c363d.camel@suse.de>
-Subject: Re: [PATCH v2] HID: core: check whether usage page item is after
- usage id item
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Candle Sun <candlesea@gmail.com>, jikos@kernel.org,
-        benjamin.tissoires@redhat.com
-Cc:     orson.zhai@unisoc.com, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Candle Sun <candle.sun@unisoc.com>,
-        Nianfu Bai <nianfu.bai@unisoc.com>
-Date:   Wed, 09 Oct 2019 19:01:26 +0200
-In-Reply-To: <1570625609-11083-1-git-send-email-candlesea@gmail.com>
-References: <1570625609-11083-1-git-send-email-candlesea@gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-+cgRzwSHq0mjN6hyjB+b"
-User-Agent: Evolution 3.32.4 
+        Wed, 9 Oct 2019 13:01:59 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36418 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730546AbfJIRB6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 13:01:58 -0400
+Received: by mail-wm1-f66.google.com with SMTP id m18so3385294wmc.1;
+        Wed, 09 Oct 2019 10:01:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1ntg9Cgk0VsZd8S7ttijlhlq6wPX6YWJRFJKhAxqY2s=;
+        b=mEMc6Q/L7kjw1iSYzVLXs9XhqC3PnLnV4NoNnlUjEqunoSPG+nVZCQQxfG/wND5g88
+         g3Go9+SC4Ge1UjdFd6yErAmaZUCqTy8IZg3iYxIIpXqWxN2yMSAzZ9BVWqxTXEVukvcy
+         TxM34quS9INRTI0fdgGvub0XuINjfusaw8YwHu7LtqZFW5t/igltMvCGdPcbjjcDEKPr
+         +O70hKbfiJxHLwMnjIvOdaD1+vF0y17xc1Nwt4uE3UUE95jM0ZYCCV4z7UDXclyKkU7p
+         2YlGhmQ2y21jRTdZqmMb3d5yBMoRG75jfv9CoY0WLdX8iwJZnlzZvnpTHiv4iiTjTf5d
+         HkQA==
+X-Gm-Message-State: APjAAAWjTFrt8rVmHXzb6De7mdFW0BBKu1HpSBltm05k6SvHyqz38onW
+        Jd2Y0aR7yPjB5jiPdRtBLLoAyBzw
+X-Google-Smtp-Source: APXvYqywRoqPo105V6/4gJ2UkRNcxVS4KHZ1uLjw16BuZ4XXdBsIl7s5m/bKvGnMs9P6wgRpjkKSJQ==
+X-Received: by 2002:a1c:55c4:: with SMTP id j187mr3319915wmb.155.1570640515524;
+        Wed, 09 Oct 2019 10:01:55 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.145])
+        by smtp.googlemail.com with ESMTPSA id v6sm5131269wma.24.2019.10.09.10.01.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 09 Oct 2019 10:01:54 -0700 (PDT)
+Date:   Wed, 9 Oct 2019 19:01:52 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Russell King <linux@armlinux.org.uk>,
+        Kukjin Kim <kgene@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Olof Johansson <olof@lixom.net>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 1/2] ARM: multi_v7_defconfig: Enable options for
+ boards with Exynos SoC
+Message-ID: <20191009170152.GA28821@kozik-lap>
+References: <20191008160234.3106-1-krzk@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191008160234.3106-1-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---=-+cgRzwSHq0mjN6hyjB+b
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, 2019-10-09 at 20:53 +0800, Candle Sun wrote:
-> From: Candle Sun <candle.sun@unisoc.com>
->=20
-> Upstream commit 58e75155009c ("HID: core: move Usage Page concatenation
-> to Main item") adds support for Usage Page item after Usage ID items
-> (such as keyboards manufactured by Primax).
->=20
-> Usage Page concatenation in Main item works well for following report
-> descriptor patterns:
->=20
->     USAGE_PAGE (Keyboard)                   05 07
->     USAGE_MINIMUM (Keyboard LeftControl)    19 E0
->     USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
->     LOGICAL_MINIMUM (0)                     15 00
->     LOGICAL_MAXIMUM (1)                     25 01
->     REPORT_SIZE (1)                         75 01
->     REPORT_COUNT (8)                        95 08
->     INPUT (Data,Var,Abs)                    81 02
->=20
-> -------------
->=20
->     USAGE_MINIMUM (Keyboard LeftControl)    19 E0
->     USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
->     LOGICAL_MINIMUM (0)                     15 00
->     LOGICAL_MAXIMUM (1)                     25 01
->     REPORT_SIZE (1)                         75 01
->     REPORT_COUNT (8)                        95 08
->     USAGE_PAGE (Keyboard)                   05 07
->     INPUT (Data,Var,Abs)                    81 02
->=20
-> But it makes the parser act wrong for the following report
-> descriptor pattern(such as some Gamepads):
->=20
->     USAGE_PAGE (Button)                     05 09
->     USAGE (Button 1)                        09 01
->     USAGE (Button 2)                        09 02
->     USAGE (Button 4)                        09 04
->     USAGE (Button 5)                        09 05
->     USAGE (Button 7)                        09 07
->     USAGE (Button 8)                        09 08
->     USAGE (Button 14)                       09 0E
->     USAGE (Button 15)                       09 0F
->     USAGE (Button 13)                       09 0D
->     USAGE_PAGE (Consumer Devices)           05 0C
->     USAGE (Back)                            0a 24 02
->     USAGE (HomePage)                        0a 23 02
->     LOGICAL_MINIMUM (0)                     15 00
->     LOGICAL_MAXIMUM (1)                     25 01
->     REPORT_SIZE (1)                         75 01
->     REPORT_COUNT (11)                       95 0B
->     INPUT (Data,Var,Abs)                    81 02
->=20
-> With Usage Page concatenation in Main item, parser recognizes all the
-> 11 Usages as consumer keys, it is not the HID device's real intention.
->=20
-> This patch adds usage_page_last to flag whether Usage Page is after
-> Usage ID items. usage_page_last is false default, it is set as true
-> once Usage Page item is encountered and is reverted by next Usage ID
-> item.
->=20
-> Usage Page concatenation on the currently defined Usage Page will do
-> firstly in Local parsing when Usage ID items encountered.
->=20
-> When Main item is parsing, concatenation will do again with last
-> defined Usage Page if usage_page_last flag is true.
-
-Functionally I think this is the right approach. Sadly I don't have access =
-to
-any  Primax device anymore so I can't test it. But I suggest you update
-hid-tools' parser and add a new unit test to verify we aren't missing anyth=
-ing.
-
-You can base your code on this:
-
-https://gitlab.freedesktop.org/libevdev/hid-tools/merge_requests/37/commits
-
-> Signed-off-by: Candle Sun <candle.sun@unisoc.com>
-> Signed-off-by: Nianfu Bai <nianfu.bai@unisoc.com>
+On Tue, Oct 08, 2019 at 06:02:33PM +0200, Krzysztof Kozlowski wrote:
+> Sync with exynos_defconfig and enable following options for Samsung
+> Exynos SoC based boards:
+> 1. NFC_S3FWRN5_I2C (with NFC stack): Samsung S3FWRN5 NCI NFC Controller,
+>    used for example on Exynos5433 (if booted in 32-bit mode),
+> 2. S3C2410_WATCHDOG: watchdog driver used on S3C, S5P and Exynos SoCs,
+> 3. REGULATOR_S2MPA01: Samsung S2MPA01 regulators driver present on
+>    Exynos5260 RexNos REX-RED board,
+> 4. SND_SOC_ARNDALE: sound support on Arndale boards,
+> 5. EXYNOS_IOMMU: IOMMU driver used on all Exynos SocS,,
+> 6. EXTCON_MAX14577, EXTCON_MAX77693 and EXTCON_MAX8997: extcon drivers
+>    for handling micro USB on mobile Samsung boards (Trats, Trats2,
+>    Rinato),
+> 7. PHY_EXYNOS5250_SATA: SATA phy for Exynos5250 present on Arndale and
+>    SMDK5250 boards.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
 > ---
-> Changes in v2:
-> - Update patch title
-> - Add GET_COMPLETE_USAGE macro
-> - Change the logic of checking whether to concatenate usage page again
->   in main parsing
+> 
+> SND_SOC_ARNDALE is in progress (patch introducing it was not yet applied)
+> 
+> Changes since v1:
+> 1. Bring back REMOTEPROC.
 > ---
->  drivers/hid/hid-core.c | 31 +++++++++++++++++++++++++------
->  include/linux/hid.h    |  1 +
->  2 files changed, 26 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-> index 3eaee2c..3394222 100644
-> --- a/drivers/hid/hid-core.c
-> +++ b/drivers/hid/hid-core.c
-> @@ -35,6 +35,8 @@
-> =20
->  #include "hid-ids.h"
-> =20
-> +#define GET_COMPLETE_USAGE(page, id) (((page) << 16) + ((id) & 0xffff))
+>  arch/arm/configs/multi_v7_defconfig | 17 ++++++++++++++++-
 
-Not sure I like the macro. I'd rather have the explicit code. That said, le=
-ts
-see what Benjamin has to say.
+Applied both.
 
-> +
->  /*
->   * Version Information
->   */
-> @@ -221,7 +223,15 @@ static int hid_add_usage(struct hid_parser *parser,
-> unsigned usage, u8 size)
->  		hid_err(parser->device, "usage index exceeded\n");
->  		return -1;
->  	}
-> -	parser->local.usage[parser->local.usage_index] =3D usage;
-> +
-> +	if (size <=3D 2) {
-> +		parser->local.usage_page_last =3D false;
-> +		parser->local.usage[parser->local.usage_index] =3D
-> +			GET_COMPLETE_USAGE(parser->global.usage_page, usage);
-> +	} else {
-> +		parser->local.usage[parser->local.usage_index] =3D usage;
-> +	}
-> +
->  	parser->local.usage_size[parser->local.usage_index] =3D size;
->  	parser->local.collection_index[parser->local.usage_index] =3D
->  		parser->collection_stack_ptr ?
-> @@ -366,6 +376,7 @@ static int hid_parser_global(struct hid_parser *parse=
-r,
-> struct hid_item *item)
-> =20
->  	case HID_GLOBAL_ITEM_TAG_USAGE_PAGE:
->  		parser->global.usage_page =3D item_udata(item);
-> +		parser->local.usage_page_last =3D true;
->  		return 0;
-> =20
->  	case HID_GLOBAL_ITEM_TAG_LOGICAL_MINIMUM:
-> @@ -543,13 +554,21 @@ static int hid_parser_local(struct hid_parser *pars=
-er,
-> struct hid_item *item)
->   * usage value."
->   */
-
-I'd expand the comment above to further explain what we're doing here.
-
-> =20
-> -static void hid_concatenate_usage_page(struct hid_parser *parser)
-> +static void hid_concatenate_last_usage_page(struct hid_parser *parser)
->  {
->  	int i;
-> +	unsigned int usage;
-> +	unsigned int usage_page =3D parser->global.usage_page;
-> +
-> +	if (!parser->local.usage_page_last)
-> +		return;
-> =20
->  	for (i =3D 0; i < parser->local.usage_index; i++)
-
-Technically correct but it's preferred if you use braces here.
-
-> -		if (parser->local.usage_size[i] <=3D 2)
-> -			parser->local.usage[i] +=3D parser->global.usage_page <<
-> 16;
-> +		if (parser->local.usage_size[i] <=3D 2) {
-> +			usage =3D parser->local.usage[i];
-> +			parser->local.usage[i] =3D
-> +				GET_COMPLETE_USAGE(usage_page, usage);
-> +		}
->  }
-> =20
->  /*
-> @@ -561,7 +580,7 @@ static int hid_parser_main(struct hid_parser *parser,
-> struct hid_item *item)
->  	__u32 data;
->  	int ret;
-> =20
-> -	hid_concatenate_usage_page(parser);
-> +	hid_concatenate_last_usage_page(parser);
-> =20
->  	data =3D item_udata(item);
-> =20
-> @@ -772,7 +791,7 @@ static int hid_scan_main(struct hid_parser *parser, s=
-truct
-> hid_item *item)
->  	__u32 data;
->  	int i;
-> =20
-> -	hid_concatenate_usage_page(parser);
-> +	hid_concatenate_last_usage_page(parser);
-> =20
->  	data =3D item_udata(item);
-> =20
-> diff --git a/include/linux/hid.h b/include/linux/hid.h
-> index cd41f20..2e0ea2f7 100644
-> --- a/include/linux/hid.h
-> +++ b/include/linux/hid.h
-> @@ -412,6 +412,7 @@ struct hid_local {
->  	unsigned usage_minimum;
->  	unsigned delimiter_depth;
->  	unsigned delimiter_branch;
-> +	bool usage_page_last;      /* whether usage page is after usage id */
->  };
-> =20
->  /*
-
-Regards,
-Nicolas
-
-
---=-+cgRzwSHq0mjN6hyjB+b
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2eEmYACgkQlfZmHno8
-x/78WAf/VdRG9KkWWsJBI1HnxULNw7ZULq4MQ+4PrC+qXn8u5dxxfMLpNxGwRQvN
-FBBqrjXfDvcZDqUE2kqOTOqAnbs2mheNejQCY33L7wSYwWPKzDlejZDAF6lH1Bsv
-a3QfRf9oV2iRDvxR4WZKtoLTm/SeX/VaMOvjQUX4JgxsQzeCkxCRY4GXqQrXrU/s
-YzJBCYDs9SNnfamnkcZOnfnd/LGLA8VBbHE5krpdcV3ivgOv3oZ1OUkBzrz8GSnu
-0VR0T5oGhy3pXHfcXH08eKZE1j2zhhscqNYGtkECZHphq8eAqUDQ7tCBfrILs2Ty
-HY4HB+i+ZDtjDkE/e48W3vix5yGoJQ==
-=TRI3
------END PGP SIGNATURE-----
-
---=-+cgRzwSHq0mjN6hyjB+b--
+Best regards,
+Krzysztof
 
