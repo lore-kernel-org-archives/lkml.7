@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02ABBECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C52BECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C55FD206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28A1E206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:25:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570641912;
-	bh=MAUIFzvj0oCaU6nDVjrgFqLlv1Ar4V2sW0PJ1BSPT3A=;
+	s=default; t=1570641915;
+	bh=ODeQV7D452RsJPvO/GCdLNCAnLcW+rLVjTUnNcBeBLY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lV6K16OCuReot/79Sg7f+sYpsJTqPg8OboGyMnnVF6Dmjr3HpRTOkmC2/7wBxnX8e
-	 oYi+Xl2Ai0IdLD6Ov4BVmIeU5uxPwp7O/7vkwPZllwor0z6L9IdbINGRuUqTk+jCfF
-	 srcn4JXDbjESfZRn9Lc31kmLRFoLeLAkPgRguLRs=
+	b=oRYeeCRzYhZz7LJDWnVfqRwN5HEIXL/9aulfPCfasb6bDEEtwpS7vUkqgfaQZed5G
+	 q3lkYJvOeU2DYQ11dVIHxmLqXHpCm5ypNmYjvo0BHKEDCKO3Rcv4LdGlGOimTG7Hom
+	 IUkxaDtT4sP3sYJ+H0KGr05u24/QpSC1cmv5dr70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732583AbfJIRZL (ORCPT
+        id S1732592AbfJIRZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:25:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49902 "EHLO mail.kernel.org"
+        Wed, 9 Oct 2019 13:25:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732483AbfJIRYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 13:24:53 -0400
+        id S1732494AbfJIRYy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 13:24:54 -0400
 Received: from sasha-vm.mshome.net (unknown [167.220.2.234])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F4E321920;
-        Wed,  9 Oct 2019 17:24:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABFDE21A4A;
+        Wed,  9 Oct 2019 17:24:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570641892;
-        bh=MAUIFzvj0oCaU6nDVjrgFqLlv1Ar4V2sW0PJ1BSPT3A=;
+        s=default; t=1570641893;
+        bh=ODeQV7D452RsJPvO/GCdLNCAnLcW+rLVjTUnNcBeBLY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n//kR9OjvPATfzntjC7rPZYejxVpp5GMSSwiIzWpByyDYv17rCayLwdA5EKB0I82L
-         EwejGtnTzRliv9yRTqGIJH5xdlsLeOAQuMsapLyG+4NpkicTUI6SGgek+ogdiv5pFz
-         ze3AlwzaoP8BfsXAJ3uzkCOZAhMjvbVdfj46ZbrQ=
+        b=e3wViPD4Gg6PR4sEqtyPCp76hWBYhvcxp7M/mfchjj1dtutbqybI2oP+35Ni0LLh+
+         eiEOATpTBjpohpu1/RF6iAMp9lvt2FM+FkF8SgrPKTAoQpsFjtFBhd3DjfQZSTBLnA
+         /qk/BaWtwmn7gML2GlxuGZD9ROZpgFNrZc8QnArE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiang Chen <chenxiang66@hisilicon.com>,
-        John Garry <john.garry@huawei.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>,
-        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 02/11] scsi: megaraid: disable device when probe failed after enabled device
-Date:   Wed,  9 Oct 2019 13:06:36 -0400
-Message-Id: <20191009170646.696-2-sashal@kernel.org>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 05/11] ARM: dts: am4372: Set memory bandwidth limit for DISPC
+Date:   Wed,  9 Oct 2019 13:06:39 -0400
+Message-Id: <20191009170646.696-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191009170646.696-1-sashal@kernel.org>
 References: <20191009170646.696-1-sashal@kernel.org>
@@ -61,40 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiang Chen <chenxiang66@hisilicon.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-[ Upstream commit 70054aa39a013fa52eff432f2223b8bd5c0048f8 ]
+[ Upstream commit f90ec6cdf674248dcad85bf9af6e064bf472b841 ]
 
-For pci device, need to disable device when probe failed after enabled
-device.
+Set memory bandwidth limit to filter out resolutions above 720p@60Hz to
+avoid underflow errors due to the bandwidth needs of higher resolutions.
 
-Link: https://lore.kernel.org/r/1567818450-173315-1-git-send-email-chenxiang66@hisilicon.com
-Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
-Reviewed-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+am43xx can not provide enough bandwidth to DISPC to correctly handle
+'high' resolutions.
+
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/megaraid.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/am4372.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/scsi/megaraid.c b/drivers/scsi/megaraid.c
-index 19bffe0b2cc0a..2cbfec6a74662 100644
---- a/drivers/scsi/megaraid.c
-+++ b/drivers/scsi/megaraid.c
-@@ -4219,11 +4219,11 @@ megaraid_probe_one(struct pci_dev *pdev, const struct pci_device_id *id)
- 		 */
- 		if (pdev->subsystem_vendor == PCI_VENDOR_ID_COMPAQ &&
- 		    pdev->subsystem_device == 0xC000)
--		   	return -ENODEV;
-+			goto out_disable_device;
- 		/* Now check the magic signature byte */
- 		pci_read_config_word(pdev, PCI_CONF_AMISIG, &magic);
- 		if (magic != HBA_SIGNATURE_471 && magic != HBA_SIGNATURE)
--			return -ENODEV;
-+			goto out_disable_device;
- 		/* Ok it is probably a megaraid */
- 	}
+diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+index 3ef1d5a26389c..3bb5254a227a3 100644
+--- a/arch/arm/boot/dts/am4372.dtsi
++++ b/arch/arm/boot/dts/am4372.dtsi
+@@ -1002,6 +1002,8 @@
+ 				ti,hwmods = "dss_dispc";
+ 				clocks = <&disp_clk>;
+ 				clock-names = "fck";
++
++				max-memory-bandwidth = <230000000>;
+ 			};
  
+ 			rfbi: rfbi@4832a800 {
 -- 
 2.20.1
 
