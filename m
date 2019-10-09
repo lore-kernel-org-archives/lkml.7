@@ -2,220 +2,326 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A21EECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E0AAECE596
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDC0B20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:35:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GNKbqmw/"
+	by mail.kernel.org (Postfix) with ESMTP id 695C220B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:36:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731287AbfJINfi (ORCPT
+        id S1731349AbfJINgx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 09:35:38 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:47020 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731178AbfJINfi (ORCPT
+        Wed, 9 Oct 2019 09:36:53 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:45237 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731234AbfJINgw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 09:35:38 -0400
-Received: by mail-wr1-f65.google.com with SMTP id o18so2988795wrv.13
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 06:35:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aekLAqw/SyFzluuZiv2f7cjxSmW6M4TksSOK9MFHyds=;
-        b=GNKbqmw/Ez/9tL9tN5+uFGJyaucl9FtnIu+vsfpWGJLyFz6iK0DF0Y6MtHVaTloJpd
-         Mo339XSUn/o7Axz/n+N9e+IkkI78vszz5BD9V0DN4rmIsGxwO+UZJ2MaJDLoVXp+ApUv
-         P4WbnHWKt+PuXtX12OFZok5yCbMKnwM4KzTMifygJDG7P7qvJ/2/zhfOx+2DNxbDBnEd
-         RFtQC7AiqDrw8yakcBSXvwmXdKHHPnYTdybqPXFh49DEgzcyO6+Z6msiiFYs/KJ6Zdwe
-         PW9JDu/v4ck142AiqMDCUYZ2mgXO178ShgqbJO1xbUgwbknXTDKcOjs/BoE26yalNZOZ
-         gVLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aekLAqw/SyFzluuZiv2f7cjxSmW6M4TksSOK9MFHyds=;
-        b=uaommprxqylpy7tW5R99DCdg0h8ib7aV6kh1Pe8tnQVALKqFQUm39U9nvglcse5XhJ
-         NzgrqM5rAIpwlxbo5CFl8tGdbGo9WDyoVztjuwcHfBfnKo3lx6jpdwShpHDJnICODvDb
-         hDwB71TkrJfQzagAzkc1PiH86jgBWe194B5nN57Lupx+Uu62BxI5RFnhO0YFUYcLSYqW
-         ny1Eu7dtCFd5MTySbN0d+gK0oDUqZplJrxFXs00r9t0BVfkPQAgi7M110Kk0e2kVuJdV
-         XzkARhoePLK0MS3rvU6qph+bW0oBMT3jij/OUHP+csch5gI4UeiXrRnaq6XB3r/X9jP/
-         c/Kg==
-X-Gm-Message-State: APjAAAVwluMsdnd45MpooT9+4xJOGcChzlPGgg4R8oCjGDpgZ0x+buZ5
-        xEQm5PubB5YcHjhw/4v1MDCWUfDlEQK6Z8EwOc0vAg==
-X-Google-Smtp-Source: APXvYqxxCoAS7hYRFHPfYs76Tb409aHh+6XfZ+16gKSnc9u/XR3xEJcwmzQrsK4r3505PJyIjEp9Hw1AiyMl9V14elc=
-X-Received: by 2002:a5d:6449:: with SMTP id d9mr3149794wrw.246.1570628136354;
- Wed, 09 Oct 2019 06:35:36 -0700 (PDT)
+        Wed, 9 Oct 2019 09:36:52 -0400
+Received: from 79.184.255.36.ipv4.supernova.orange.pl (79.184.255.36) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id 2ff32cca8bb795f2; Wed, 9 Oct 2019 15:36:47 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Doug Smythies <dsmythies@telus.net>
+Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Chen, Hu" <hu1.chen@intel.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>
+Subject: Re: [RFC/RFT][PATCH v8] cpuidle: New timer events oriented governor for tickless systems
+Date:   Wed, 09 Oct 2019 15:36:47 +0200
+Message-ID: <3490479.2dnHFFeJIp@kreacher>
+In-Reply-To: <1574317.FFykgJKpNH@kreacher>
+References: <001601d57487$e1029ef0$a307dcd0$@net> <CAJZ5v0jvusVBcKECBueDHk5KQGda=GGuSGPO3F4wCvk3cro56A@mail.gmail.com> <1574317.FFykgJKpNH@kreacher>
 MIME-Version: 1.0
-References: <20191004145056.43267-1-hdegoede@redhat.com> <20191004145056.43267-2-hdegoede@redhat.com>
- <CAKv+Gu9OU3rS-j+L+pxpK7HZi41XtQZTq9BDs6VpUC8RCq5X6g@mail.gmail.com> <c0256726-0aa3-b005-0a18-7b6a41533a0b@redhat.com>
-In-Reply-To: <c0256726-0aa3-b005-0a18-7b6a41533a0b@redhat.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Wed, 9 Oct 2019 15:35:24 +0200
-Message-ID: <CAKv+Gu9YLesC1abXAcUMe+0BE8Vv52Y_BhN-1Ps+h161Q00KKQ@mail.gmail.com>
-Subject: Re: [PATCH v7 1/8] efi: Export boot-services code and data as debugfs-blobs
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Peter Jones <pjones@redhat.com>,
-        Dave Olsthoorn <dave@bewaar.me>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-input@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 9 Oct 2019 at 15:18, Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi,
->
-> On 09-10-2019 15:07, Ard Biesheuvel wrote:
-> > On Fri, 4 Oct 2019 at 16:51, Hans de Goede <hdegoede@redhat.com> wrote:
-> >>
-> >> Sometimes it is useful to be able to dump the efi boot-services code and
-> >> data. This commit adds these as debugfs-blobs to /sys/kernel/debug/efi,
-> >> but only if efi=debug is passed on the kernel-commandline as this requires
-> >> not freeing those memory-regions, which costs 20+ MB of RAM.
-> >>
-> >> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >> Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> >> ---
-> >> Changes in v5:
-> >> -Rename the EFI_BOOT_SERVICES flag to EFI_PRESERVE_BS_REGIONS
-> >>
-> >> Changes in v4:
-> >> -Add new EFI_BOOT_SERVICES flag and use it to determine if the boot-services
-> >>   memory segments are available (and thus if it makes sense to register the
-> >>   debugfs bits for them)
-> >>
-> >> Changes in v2:
-> >> -Do not call pr_err on debugfs call failures
-> >> ---
-> >>   arch/x86/platform/efi/efi.c    |  1 +
-> >>   arch/x86/platform/efi/quirks.c |  4 +++
-> >>   drivers/firmware/efi/efi.c     | 53 ++++++++++++++++++++++++++++++++++
-> >>   include/linux/efi.h            |  1 +
-> >>   4 files changed, 59 insertions(+)
-> >>
-> >> diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-> >> index c202e1b07e29..847730f7e74b 100644
-> >> --- a/arch/x86/platform/efi/efi.c
-> >> +++ b/arch/x86/platform/efi/efi.c
-> >> @@ -232,6 +232,7 @@ int __init efi_memblock_x86_reserve_range(void)
-> >>               efi.memmap.desc_version);
-> >>
-> >>          memblock_reserve(pmap, efi.memmap.nr_map * efi.memmap.desc_size);
-> >> +       set_bit(EFI_PRESERVE_BS_REGIONS, &efi.flags);
-> >
-> > Should we add a Kconfig symbol to opt into this behavior [set by the
-> > driver in question], instead of always preserving all boot services
-> > regions on all x86 systems?
->
-> This bit does not control anything, it merely signals that the arch early
-> boot EFI code keeps the boot-services code around, which is something
-> which the x86 code already does. Where as e.g. on arm / aarch64 this is
-> freed early on, this ties in with the other bits:
->
-> >
-> >>
-> >>          return 0;
-> >>   }
-> >> diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-> >> index 3b9fd679cea9..fab12ebf0ada 100644
-> >> --- a/arch/x86/platform/efi/quirks.c
-> >> +++ b/arch/x86/platform/efi/quirks.c
-> >> @@ -411,6 +411,10 @@ void __init efi_free_boot_services(void)
-> >>          int num_entries = 0;
-> >>          void *new, *new_md;
-> >>
-> >> +       /* Keep all regions for /sys/kernel/debug/efi */
-> >> +       if (efi_enabled(EFI_DBG))
-> >> +               return;
-> >> +
->
-> This is the point where normally on x86 we do actually free the boot-services
-> code which is a lot later then on other arches. And this new code actually
-> does change things to keep the boot-services code *forever* but only
-> if EFI debugging is enabled on the kernel commandline.
->
+On Wednesday, October 9, 2019 1:19:51 AM CEST Rafael J. Wysocki wrote:
+> On Tuesday, October 8, 2019 12:49:01 PM CEST Rafael J. Wysocki wrote:
+> > On Tue, Oct 8, 2019 at 11:51 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > >
+> > > On Tue, Oct 8, 2019 at 8:20 AM Doug Smythies <dsmythies@telus.net> wrote:
+> > > >
+> > > > On 2019.10.06 08:34 Rafael J. Wysocki wrote:
+> > > > > On Sun, Oct 6, 2019 at 4:46 PM Doug Smythies <dsmythies@telus.net> wrote:
+> > > > >> On 2019.10.01 02:32 Rafael J. Wysocki wrote:
+> > > > >>> On Sun, Sep 29, 2019 at 6:05 PM Doug Smythies <dsmythies@telus.net> wrote:
+> > > > >>>> On 2019.09.26 09:32 Doug Smythies wrote:
+> > > > >>>>
+> > > > >>>>> If the deepest idle state is disabled, the system
+> > > > >>>>> can become somewhat unstable, with anywhere between no problem
+> > > > >>>>> at all, to the occasional temporary jump using a lot more
+> > > > >>>>> power for a few seconds, to a permanent jump using a lot more
+> > > > >>>>> power continuously. I have been unable to isolate the exact
+> > > > >>>>> test load conditions under which this will occur. However,
+> > > > >>>>> temporarily disabling and then enabling other idle states
+> > > > >>>>> seems to make for a somewhat repeatable test. It is important
+> > > > >>>>> to note that the issue occurs with only ever disabling the deepest
+> > > > >>>>> idle state, just not reliably.
+> > > > >>>>>
+> > > > >>>>> I want to know how you want to proceed before I do a bunch of
+> > > > >>>>> regression testing.
+> > > > >>>>
+> > > > >> I do not think I stated it clearly before: The problem here is that some CPUs
+> > > > >> seem to get stuck in idle state 0, and when they do power consumption spikes,
+> > > > >> often by several hundred % and often indefinitely.
+> > > > >
+> > > > > That indeed has not been clear to me, thanks for the clarification!
+> > > >
+> > > > >
+> > > > >> I made a hack job automated test:
+> > > > >> Kernel  tests                 fail rate
+> > > > >> 5.4-rc1                6616           13.45%
+> > > > >> 5.3              2376            4.50%
+> > > > >> 5.3-teov7       12136            0.00%  <<< teo.c reverted and teov7 put in its place.
+> > > > >> 5.4-rc1-ds      11168        0.00%  <<< [old] proposed patch (> 7 hours test time)
+> > > >
+> > > >
+> > > >    5.4-rc1-ds12   4224          0.005 <<< new proposed patch
+> > > >
+> > > > >>
+> > > > >> [old] Proposed patch (on top of kernel 5.4-rc1): [deleted]
+> > > >
+> > > > > This change may cause the deepest state to be selected even if its
+> > > > > "hits" metric is less than the "misses" one AFAICS, in which case the
+> > > > > max_early_index state should be selected instead.
+> > > > >
+> > > > > It looks like the max_early_index computation is broken when the
+> > > > > deepest state is disabled.
+> > > >
+> > > > O.K. Thanks for your quick reply, and insight.
+> > > >
+> > > > I think long durations always need to be counted, but currently if
+> > > > the deepest idle state is disabled, they are not.
+> > > > How about this?:
+> > > > (test results added above, more tests pending if this might be a path forward.)
+> > > >
+> > > > diff --git a/drivers/cpuidle/governors/teo.c b/drivers/cpuidle/governors/teo.c
+> > > > index b5a0e49..a970d2c 100644
+> > > > --- a/drivers/cpuidle/governors/teo.c
+> > > > +++ b/drivers/cpuidle/governors/teo.c
+> > > > @@ -155,10 +155,12 @@ static void teo_update(struct cpuidle_driver *drv, struct cpuidle_device *dev)
+> > > >
+> > > >                 cpu_data->states[i].early_hits -= early_hits >> DECAY_SHIFT;
+> > > >
+> > > > -               if (drv->states[i].target_residency <= sleep_length_us) {
+> > > > -                       idx_timer = i;
+> > > > -                       if (drv->states[i].target_residency <= measured_us)
+> > > > -                               idx_hit = i;
+> > > > +               if (!(drv->states[i].disabled || dev->states_usage[i].disable)){
+> > > > +                       if (drv->states[i].target_residency <= sleep_length_us) {
+> > > > +                               idx_timer = i;
+> > > > +                               if (drv->states[i].target_residency <= measured_us)
+> > > > +                                       idx_hit = i;
+> > > > +                       }
+> > >
+> > > What if the state is enabled again after some time?
+> > 
+> > Actually, the states are treated as "bins" here, so for the metrics it
+> > doesn't matter whether or not they are enabled at the moment.
+> > 
+> > > >                 }
+> > > >         }
+> > > >
+> > > > @@ -256,39 +258,25 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
+> > > >                 struct cpuidle_state *s = &drv->states[i];
+> > > >                 struct cpuidle_state_usage *su = &dev->states_usage[i];
+> > > >
+> > > > -               if (s->disabled || su->disable) {
+> > > > -                       /*
+> > > > -                        * If the "early hits" metric of a disabled state is
+> > > > -                        * greater than the current maximum, it should be taken
+> > > > -                        * into account, because it would be a mistake to select
+> > > > -                        * a deeper state with lower "early hits" metric.  The
+> > > > -                        * index cannot be changed to point to it, however, so
+> > > > -                        * just increase the max count alone and let the index
+> > > > -                        * still point to a shallower idle state.
+> > > > -                        */
+> > > > -                       if (max_early_idx >= 0 &&
+> > > > -                           count < cpu_data->states[i].early_hits)
+> > > > -                               count = cpu_data->states[i].early_hits;
+> > > > -
+> > > > -                       continue;
+> > >
+> > > AFAICS, adding early_hits to count is not a mistake if there are still
+> > > enabled states deeper than the current one.
+> > 
+> > And the mistake appears to be that the "hits" and "misses" metrics
+> > aren't handled in analogy with the "early_hits" one when the current
+> > state is disabled.
+> > 
+> > Let me try to cut a patch to address that.
+> 
+> Appended below, not tested.
+> 
+> It is meant to address two problems, one of which is that the "hits" and
+> "misses" metrics of disabled states need to be taken into account too in
+> some cases, and the other is an issue with the handling of "early hits"
+> which may lead to suboptimal state selection if some states are disabled.
 
-I get this part. But at some point, your driver is going to expect
-this memory to be preserved even if EFI_DBG is not set, right? My
-question was whether we should only opt into that if such a driver is
-enabled in the first place.
+Well, it still misses a couple of points.
 
-> This ties in with the next bit:
->
-> >>          for_each_efi_memory_desc(md) {
-> >>                  unsigned long long start = md->phys_addr;
-> >>                  unsigned long long size = md->num_pages << EFI_PAGE_SHIFT;
-> >> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-> >> index 8d3e778e988b..abba49c4c46d 100644
-> >> --- a/drivers/firmware/efi/efi.c
-> >> +++ b/drivers/firmware/efi/efi.c
->
-> <snip>
->
-> >> @@ -370,6 +420,9 @@ static int __init efisubsys_init(void)
-> >>                  goto err_remove_group;
-> >>          }
-> >>
-> >> +       if (efi_enabled(EFI_DBG) && efi_enabled(EFI_PRESERVE_BS_REGIONS))
-> >> +               efi_debugfs_init();
-> >> +
-> >>          return 0;
-> >>
-> >>   err_remove_group:
->
-> Here we register the debugfs dir + files, but only when the
-> boot services code has been kept around, so only if the
-> EFI_PRESERVE_BS_REGIONS arch feature flag has been set and
-> EFI debugging has been requested on the kernel commandline.
->
-> IOW this patch already offers to configurability you ask for, but instead
-> of through a Kconfig option (which IMHO would be cumbersome) the decision
-> is made runtime based on the presence of efi=debug on the kernel commandline.
->
-> Regards,
->
-> Hans
->
->
->
->
-> >> diff --git a/include/linux/efi.h b/include/linux/efi.h
-> >> index bd3837022307..2a30a1bd8bdf 100644
-> >> --- a/include/linux/efi.h
-> >> +++ b/include/linux/efi.h
-> >> @@ -1202,6 +1202,7 @@ extern int __init efi_setup_pcdp_console(char *);
-> >>   #define EFI_DBG                        8       /* Print additional debug info at runtime */
-> >>   #define EFI_NX_PE_DATA         9       /* Can runtime data regions be mapped non-executable? */
-> >>   #define EFI_MEM_ATTR           10      /* Did firmware publish an EFI_MEMORY_ATTRIBUTES table? */
-> >> +#define EFI_PRESERVE_BS_REGIONS        11      /* Are EFI boot-services memory segments available? */
-> >>
-> >>   #ifdef CONFIG_EFI
-> >>   /*
-> >> --
-> >> 2.23.0
-> >>
+First, disable states that are too deep should not be taken into consideration
+at all.
+
+Second, the "hits" and "misses" metrics of disabled states need to be used for
+idle duration ranges corresponding to them regardless of whether or not the
+"hits" value is greater than the "misses" one.
+
+Updated patch is below (still not tested), but it tries to do too much in one
+go, so I need to split it into a series of smaller changes.
+
+---
+ drivers/cpuidle/governors/teo.c |   78 ++++++++++++++++++++++++++++++----------
+ 1 file changed, 59 insertions(+), 19 deletions(-)
+
+Index: linux-pm/drivers/cpuidle/governors/teo.c
+===================================================================
+--- linux-pm.orig/drivers/cpuidle/governors/teo.c
++++ linux-pm/drivers/cpuidle/governors/teo.c
+@@ -233,7 +233,7 @@ static int teo_select(struct cpuidle_dri
+ {
+ 	struct teo_cpu *cpu_data = per_cpu_ptr(&teo_cpus, dev->cpu);
+ 	int latency_req = cpuidle_governor_latency_req(dev->cpu);
+-	unsigned int duration_us, count;
++	unsigned int duration_us, hits, misses, early_hits;
+ 	int max_early_idx, constraint_idx, idx, i;
+ 	ktime_t delta_tick;
+ 
+@@ -247,7 +247,9 @@ static int teo_select(struct cpuidle_dri
+ 	cpu_data->sleep_length_ns = tick_nohz_get_sleep_length(&delta_tick);
+ 	duration_us = ktime_to_us(cpu_data->sleep_length_ns);
+ 
+-	count = 0;
++	hits = 0;
++	misses = 0;
++	early_hits = 0;
+ 	max_early_idx = -1;
+ 	constraint_idx = drv->state_count;
+ 	idx = -1;
+@@ -258,23 +260,61 @@ static int teo_select(struct cpuidle_dri
+ 
+ 		if (s->disabled || su->disable) {
+ 			/*
+-			 * If the "early hits" metric of a disabled state is
+-			 * greater than the current maximum, it should be taken
+-			 * into account, because it would be a mistake to select
+-			 * a deeper state with lower "early hits" metric.  The
+-			 * index cannot be changed to point to it, however, so
+-			 * just increase the max count alone and let the index
+-			 * still point to a shallower idle state.
++			 * Ignore disabled states with target residencies beyond
++			 * the anticipated idle duration.
+ 			 */
+-			if (max_early_idx >= 0 &&
+-			    count < cpu_data->states[i].early_hits)
+-				count = cpu_data->states[i].early_hits;
++			if (s->target_residency > duration_us)
++				continue;
++
++			/*
++			 * This state is disabled, so the range of idle duration
++			 * values corresponding to it is covered by the current
++			 * candidate state, but still the "hits" and "misses"
++			 * metrics of the disabled state need to be used to
++			 * decide whether or not the state covering the range in
++			 * question is good enough.
++			 */
++			hits = cpu_data->states[i].hits;
++			misses = cpu_data->states[i].misses;
++
++			if (early_hits >= cpu_data->states[i].early_hits ||
++			    idx < 0)
++				continue;
++
++			/*
++			 * If the current candidate state has been the one with
++			 * the maximum "early hits" metric so far, the "early
++			 * hits" metric of the disabled state replaces the
++			 * current "early hits" count to avoid selecting a
++			 * deeper state with lower "early hits" metric.
++			 */
++			if (max_early_idx == idx) {
++				early_hits = cpu_data->states[i].early_hits;
++				continue;
++			}
++
++			/*
++			 * The current candidate state is closer to the disabled
++			 * one than the current maximum "early hits" state, so
++			 * replace the latter with it, but in case the maximum
++			 * "early hits" state index has not been set so far,
++			 * check if the current candidate state is not too
++			 * shallow for that role.
++			 */
++			if (!(tick_nohz_tick_stopped() &&
++			      drv->states[idx].target_residency < TICK_USEC)) {
++				early_hits = cpu_data->states[i].early_hits;
++				max_early_idx = idx;
++			}
+ 
+ 			continue;
+ 		}
+ 
+-		if (idx < 0)
++		if (idx < 0) {
+ 			idx = i; /* first enabled state */
++			hits = cpu_data->states[i].hits;
++			misses = cpu_data->states[i].misses;
++		}
+ 
+ 		if (s->target_residency > duration_us)
+ 			break;
+@@ -283,11 +323,13 @@ static int teo_select(struct cpuidle_dri
+ 			constraint_idx = i;
+ 
+ 		idx = i;
++		hits = cpu_data->states[i].hits;
++		misses = cpu_data->states[i].misses;
+ 
+-		if (count < cpu_data->states[i].early_hits &&
++		if (early_hits < cpu_data->states[i].early_hits &&
+ 		    !(tick_nohz_tick_stopped() &&
+ 		      drv->states[i].target_residency < TICK_USEC)) {
+-			count = cpu_data->states[i].early_hits;
++			early_hits = cpu_data->states[i].early_hits;
+ 			max_early_idx = i;
+ 		}
+ 	}
+@@ -300,8 +342,7 @@ static int teo_select(struct cpuidle_dri
+ 	 * "early hits" metric, but if that cannot be determined, just use the
+ 	 * state selected so far.
+ 	 */
+-	if (cpu_data->states[idx].hits <= cpu_data->states[idx].misses &&
+-	    max_early_idx >= 0) {
++	if (hits <= misses && max_early_idx >= 0) {
+ 		idx = max_early_idx;
+ 		duration_us = drv->states[idx].target_residency;
+ 	}
+@@ -316,10 +357,9 @@ static int teo_select(struct cpuidle_dri
+ 	if (idx < 0) {
+ 		idx = 0; /* No states enabled. Must use 0. */
+ 	} else if (idx > 0) {
++		unsigned int count = 0;
+ 		u64 sum = 0;
+ 
+-		count = 0;
+-
+ 		/*
+ 		 * Count and sum the most recent idle duration values less than
+ 		 * the current expected idle duration value.
+
+
+
