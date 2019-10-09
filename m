@@ -2,51 +2,52 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA62C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA619ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0E0021924
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:26:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B6A72190F
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:26:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570641974;
-	bh=rJpc/GW8OOqRXsrjaiIX1kdq+qgdelKGmq0A41L9ncI=;
+	s=default; t=1570641977;
+	bh=OxtsmDZcRyjTy/TwgnZe5iInYm/ARc+kAq5vsnT/P2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pTqayzLRV4YTeMSVzJ3b/H4n9Z8nN4HVfBe/PfPhcFssDt2FXwKzcF6hFBbIIfH+5
-	 OoVLIS9JuRNp0gQd8BdAbZzEJ1DHmcJKEEa12TowFYa/tlvflP/wqiUflUXi6G+izz
-	 Jp0eRoj9vxNYErSSJwTyPWzZXfluqcuqO5HiQGyM=
+	b=pFWJ7PM1wEBo+pIoFhTALWOoWq8Ea69aM8mtDaBu28c0RevjLMBxEv+J8JOletxMK
+	 IYQQJjLQp3X9v9FsYg4m+io8QniDjLRj9N/Hjj4OHL9AasxxInibR3WLInOAWgR4Gp
+	 ns3Ht2z0651GeG1PB9JfUcgN0RoRFONd5/JxUOCY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732714AbfJIR0N (ORCPT
+        id S1732723AbfJIR0P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:26:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49754 "EHLO mail.kernel.org"
+        Wed, 9 Oct 2019 13:26:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732462AbfJIRYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732457AbfJIRYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 9 Oct 2019 13:24:47 -0400
 Received: from sasha-vm.mshome.net (unknown [167.220.2.234])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 339A121929;
-        Wed,  9 Oct 2019 17:24:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8CA020B7C;
+        Wed,  9 Oct 2019 17:24:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1570641887;
-        bh=rJpc/GW8OOqRXsrjaiIX1kdq+qgdelKGmq0A41L9ncI=;
+        bh=OxtsmDZcRyjTy/TwgnZe5iInYm/ARc+kAq5vsnT/P2M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tten3cK5ENc+UCbkFhdRjn5xH7lbh7Pp6i880r+k6bZwey/tbLCRWmJNQz+68JyKu
-         dze/Sb8Lo5qY/atMDPwGpis58sA8qsVQifL6mY85GjRyjbKLP5Kw6gKxVjMuhTdKgg
-         aTpB9cMfGYlYq6Ky0PyEZnwiilO8iYR07VIkXSFo=
+        b=kojkYKNZ84BIjvqH/enoWSKQ/tPp+PqVFTmea+S64Y042dlOqU8l/dDEu97AnX8AE
+         FC5PUMLGpUXbCJU+U8VPmKbZ+iKScT3Plziiib1V8i2hANdEp+HVNNK7PuU6VqQqrJ
+         cUweVdbx8qTTqa33092nObR1/gbxAa1yl1e/aVJA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yizhuo <yzhai003@ucr.edu>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 11/13] net: hisilicon: Fix usage of uninitialized variable in function mdio_sc_cfg_reg_write()
-Date:   Wed,  9 Oct 2019 13:06:30 -0400
-Message-Id: <20191009170635.536-11-sashal@kernel.org>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Paul Burton <paul.burton@mips.com>, chenhc@lemote.com,
+        ralf@linux-mips.org, jhogan@kernel.org, linux-mips@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 10/13] mips: Loongson: Fix the link time qualifier of 'serial_exit()'
+Date:   Wed,  9 Oct 2019 13:06:29 -0400
+Message-Id: <20191009170635.536-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191009170635.536-1-sashal@kernel.org>
 References: <20191009170635.536-1-sashal@kernel.org>
@@ -59,43 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yizhuo <yzhai003@ucr.edu>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 53de429f4e88f538f7a8ec2b18be8c0cd9b2c8e1 ]
+[ Upstream commit 25b69a889b638b0b7e51e2c4fe717a66bec0e566 ]
 
-In function mdio_sc_cfg_reg_write(), variable "reg_value" could be
-uninitialized if regmap_read() fails. However, "reg_value" is used
-to decide the control flow later in the if statement, which is
-potentially unsafe.
+'exit' functions should be marked as __exit, not __init.
 
-Signed-off-by: Yizhuo <yzhai003@ucr.edu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 85cc028817ef ("mips: make loongsoon serial driver explicitly modular")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: chenhc@lemote.com
+Cc: ralf@linux-mips.org
+Cc: jhogan@kernel.org
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns_mdio.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/mips/loongson64/common/serial.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns_mdio.c b/drivers/net/ethernet/hisilicon/hns_mdio.c
-index de23a0ead5d76..d06efcd5f13b1 100644
---- a/drivers/net/ethernet/hisilicon/hns_mdio.c
-+++ b/drivers/net/ethernet/hisilicon/hns_mdio.c
-@@ -166,11 +166,15 @@ static int mdio_sc_cfg_reg_write(struct hns_mdio_device *mdio_dev,
+diff --git a/arch/mips/loongson64/common/serial.c b/arch/mips/loongson64/common/serial.c
+index ffefc1cb26121..98c3a7feb10f8 100644
+--- a/arch/mips/loongson64/common/serial.c
++++ b/arch/mips/loongson64/common/serial.c
+@@ -110,7 +110,7 @@ static int __init serial_init(void)
+ }
+ module_init(serial_init);
+ 
+-static void __init serial_exit(void)
++static void __exit serial_exit(void)
  {
- 	u32 time_cnt;
- 	u32 reg_value;
-+	int ret;
- 
- 	regmap_write(mdio_dev->subctrl_vbase, cfg_reg, set_val);
- 
- 	for (time_cnt = MDIO_TIMEOUT; time_cnt; time_cnt--) {
--		regmap_read(mdio_dev->subctrl_vbase, st_reg, &reg_value);
-+		ret = regmap_read(mdio_dev->subctrl_vbase, st_reg, &reg_value);
-+		if (ret)
-+			return ret;
-+
- 		reg_value &= st_msk;
- 		if ((!!check_st) == (!!reg_value))
- 			break;
+ 	platform_device_unregister(&uart8250_device);
+ }
 -- 
 2.20.1
 
