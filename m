@@ -2,169 +2,166 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CD1C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BACFC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 538A920B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CFAD218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:59:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731226AbfJIM7S (ORCPT
+        id S1731278AbfJIM71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 08:59:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:33838 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730490AbfJIM7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 08:59:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7E014142F;
-        Wed,  9 Oct 2019 05:59:17 -0700 (PDT)
-Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0CC7F3F703;
-        Wed,  9 Oct 2019 05:59:15 -0700 (PDT)
-Date:   Wed, 9 Oct 2019 13:59:13 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        Wed, 9 Oct 2019 08:59:27 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:50858 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730490AbfJIM71 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 08:59:27 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iIBYl-0002nB-DJ; Wed, 09 Oct 2019 14:59:19 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CA0081C01BD;
+        Wed,  9 Oct 2019 14:59:18 +0200 (CEST)
+Date:   Wed, 09 Oct 2019 12:59:18 -0000
+From:   "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/urgent] perf/x86/cstate: Add Comet Lake CPU support
+Cc:     Kan Liang <kan.liang@linux.intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, "H.J. Lu" <hjl.tools@gmail.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mark Brown <mark.brown@arm.com>
-Subject: Re: [RFC PATCH v2 2/2] ELF: Add ELF program property parsing support
-Message-ID: <20191009125913.GE27757@arm.com>
-References: <1566581020-9953-1-git-send-email-Dave.Martin@arm.com>
- <1566581020-9953-3-git-send-email-Dave.Martin@arm.com>
- <201908292224.007EB4D5@keescook>
- <20190830083415.GI27757@arm.com>
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <1570549810-25049-5-git-send-email-kan.liang@linux.intel.com>
+References: <1570549810-25049-5-git-send-email-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190830083415.GI27757@arm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Message-ID: <157062595875.9978.11184059757208184047.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 09:34:17AM +0100, Dave Martin wrote:
-> On Fri, Aug 30, 2019 at 06:37:45AM +0100, Kees Cook wrote:
-> > On Fri, Aug 23, 2019 at 06:23:40PM +0100, Dave Martin wrote:
-> > > ELF program properties will needed for detecting whether to enable
-> > > optional architecture or ABI features for a new ELF process.
-> > > 
-> > > For now, there are no generic properties that we care about, so do
-> > > nothing unless CONFIG_ARCH_USE_GNU_PROPERTY=y.
-> > > 
-> > > Otherwise, the presence of properties using the PT_PROGRAM_PROPERTY
-> > > phdrs entry (if any), and notify each property to the arch code.
-> > > 
-> > > For now, the added code is not used.
-> > > 
-> > > Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-> > 
-> > Reviewed-by: Kees Cook <keescook@chromium.org>
-> 
-> Thanks for the review.
-> 
-> Do you have any thoughts on Yu-Cheng Yu's comments?  It would be nice to
-> early-terminate the scan if we can, but my feeling so far was that the
-> scan is cheap, the number of properties is unlikely to be more than a
-> smallish integer, and the code separation benefits of just calling the
-> arch code for every property probably likely outweigh the costs of
-> having to iterate over every property.  We could always optimise it
-> later if necessary.
-> 
-> I need to double-check that there's no way we can get stuck in an
-> infinite loop with the current code, though I've not seen it in my
-> testing.  I should throw some malformed notes at it though.
-> 
-> > Note below...
-> > 
-> > > [...]
-> > > +static int parse_elf_property(const char *data, size_t *off, size_t datasz,
-> > > +			      struct arch_elf_state *arch,
-> > > +			      bool have_prev_type, u32 *prev_type)
-> > > +{
-> > > +	size_t size, step;
-> > > +	const struct gnu_property *pr;
-> > > +	int ret;
-> > > +
-> > > +	if (*off == datasz)
-> > > +		return -ENOENT;
-> > > +
-> > > +	if (WARN_ON(*off > datasz || *off % elf_gnu_property_align))
-> > > +		return -EIO;
-> > > +
-> > > +	size = datasz - *off;
-> > > +	if (size < sizeof(*pr))
-> > > +		return -EIO;
-> > > +
-> > > +	pr = (const struct gnu_property *)(data + *off);
-> > > +	if (pr->pr_datasz > size - sizeof(*pr))
-> > > +		return -EIO;
-> > > +
-> > > +	step = round_up(sizeof(*pr) + pr->pr_datasz, elf_gnu_property_align);
-> > > +	if (step > size)
-> > > +		return -EIO;
-> > > +
-> > > +	/* Properties are supposed to be unique and sorted on pr_type: */
-> > > +	if (have_prev_type && pr->pr_type <= *prev_type)
-> > > +		return -EIO;
-> > > +	*prev_type = pr->pr_type;
-> > > +
-> > > +	ret = arch_parse_elf_property(pr->pr_type,
-> > > +				      data + *off + sizeof(*pr),
-> > > +				      pr->pr_datasz, ELF_COMPAT, arch);
-> > 
-> > I find it slightly hard to read the "cursor" motion in this parse. It
-> > feels strange, for example, to refer twice to "data + *off" with the
-> > second including consumed *pr size. Everything is fine AFAICT in the math,
-> > though, and I haven't been able to construct a convincingly "cleaner"
-> > version. Maybe:
-> > 
-> > 	data += *off;
-> > 	pr = (const struct gnu_property *)data;
-> > 	data += sizeof(*pr);
-> > 	...
-> > 	ret = arch_parse_elf_property(pr->pr_type, data,
-> > 				      pr->pr_datasz, ELF_COMPAT, arch);
-> 
-> Fair point.  The cursor is really *off, which I suppose I could update
-> as we go through this function, or cache in a local variable and assign
-> on the way out.
-> 
-> > But that feels disjoint from the "step" calculation, so... I think what
-> > you have is fine. :)
-> 
-> It's good to be as clear as possible about exactly how far we have
-> parsed, so I'll see if I can improve this when I repost.
-> 
-> 
-> Do you have any objection to merging patch 1 with this one?  For
-> upstreaming purposes, it seems overkill for that to be a separate patch.
-> 
-> I may also convert elf_gnu_property_align to upper case, since unlike
-> the other related definitions this one isn't trying to look like a
-> struct tag.
-> 
-> Do you have any opinion on the WARN_ON()s?  They should be un-hittable,
-> so they're documenting assumptions rather than protecting against
-> anything real.  Maybe I should replace them with comments.
+The following commit has been merged into the perf/urgent branch of tip:
 
-FYI, I'm going to be inactive for a while, so I'm not going to be able
-to push this patch further.
+Commit-ID:     1d4d9a6e37ebe8e4ffc3abfcdd24988e7f89df4a
+Gitweb:        https://git.kernel.org/tip/1d4d9a6e37ebe8e4ffc3abfcdd24988e7f89df4a
+Author:        Kan Liang <kan.liang@linux.intel.com>
+AuthorDate:    Tue, 08 Oct 2019 08:50:05 -07:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Wed, 09 Oct 2019 12:44:15 +02:00
 
-Mark Brown will be picking up the arm64 BTI series, so it will probably
-make sense if he pulls it into that series.
+perf/x86/cstate: Add Comet Lake CPU support
 
-Any thoughts?
+Comet Lake is the new 10th Gen Intel processor. From the perspective of
+Intel cstate residency counters, there is nothing changed compared with
+Kaby Lake.
 
-Cheers
----Dave
+Share hswult_cstates with Kaby Lake.
+Update the comments for Comet Lake.
+Kaby Lake is missed in the comments for some Residency Counters. Update
+the comments for Kaby Lake as well.
+
+The External Design Specification (EDS) is not published yet. It comes
+from an authoritative internal source.
+
+The patch has been tested on real hardware.
+
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/1570549810-25049-5-git-send-email-kan.liang@linux.intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/events/intel/cstate.c | 24 ++++++++++++++----------
+ 1 file changed, 14 insertions(+), 10 deletions(-)
+
+diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
+index 9f2f390..21c65e1 100644
+--- a/arch/x86/events/intel/cstate.c
++++ b/arch/x86/events/intel/cstate.c
+@@ -45,46 +45,48 @@
+  *	MSR_CORE_C3_RESIDENCY: CORE C3 Residency Counter
+  *			       perf code: 0x01
+  *			       Available model: NHM,WSM,SNB,IVB,HSW,BDW,SKL,GLM,
+-						CNL
++ *						CNL,KBL,CML
+  *			       Scope: Core
+  *	MSR_CORE_C6_RESIDENCY: CORE C6 Residency Counter
+  *			       perf code: 0x02
+  *			       Available model: SLM,AMT,NHM,WSM,SNB,IVB,HSW,BDW,
+- *						SKL,KNL,GLM,CNL
++ *						SKL,KNL,GLM,CNL,KBL,CML
+  *			       Scope: Core
+  *	MSR_CORE_C7_RESIDENCY: CORE C7 Residency Counter
+  *			       perf code: 0x03
+- *			       Available model: SNB,IVB,HSW,BDW,SKL,CNL
++ *			       Available model: SNB,IVB,HSW,BDW,SKL,CNL,KBL,CML
+  *			       Scope: Core
+  *	MSR_PKG_C2_RESIDENCY:  Package C2 Residency Counter.
+  *			       perf code: 0x00
+- *			       Available model: SNB,IVB,HSW,BDW,SKL,KNL,GLM,CNL
++ *			       Available model: SNB,IVB,HSW,BDW,SKL,KNL,GLM,CNL,
++ *						KBL,CML
+  *			       Scope: Package (physical package)
+  *	MSR_PKG_C3_RESIDENCY:  Package C3 Residency Counter.
+  *			       perf code: 0x01
+  *			       Available model: NHM,WSM,SNB,IVB,HSW,BDW,SKL,KNL,
+- *						GLM,CNL
++ *						GLM,CNL,KBL,CML
+  *			       Scope: Package (physical package)
+  *	MSR_PKG_C6_RESIDENCY:  Package C6 Residency Counter.
+  *			       perf code: 0x02
+  *			       Available model: SLM,AMT,NHM,WSM,SNB,IVB,HSW,BDW
+- *						SKL,KNL,GLM,CNL
++ *						SKL,KNL,GLM,CNL,KBL,CML
+  *			       Scope: Package (physical package)
+  *	MSR_PKG_C7_RESIDENCY:  Package C7 Residency Counter.
+  *			       perf code: 0x03
+- *			       Available model: NHM,WSM,SNB,IVB,HSW,BDW,SKL,CNL
++ *			       Available model: NHM,WSM,SNB,IVB,HSW,BDW,SKL,CNL,
++ *						KBL,CML
+  *			       Scope: Package (physical package)
+  *	MSR_PKG_C8_RESIDENCY:  Package C8 Residency Counter.
+  *			       perf code: 0x04
+- *			       Available model: HSW ULT,KBL,CNL
++ *			       Available model: HSW ULT,KBL,CNL,CML
+  *			       Scope: Package (physical package)
+  *	MSR_PKG_C9_RESIDENCY:  Package C9 Residency Counter.
+  *			       perf code: 0x05
+- *			       Available model: HSW ULT,KBL,CNL
++ *			       Available model: HSW ULT,KBL,CNL,CML
+  *			       Scope: Package (physical package)
+  *	MSR_PKG_C10_RESIDENCY: Package C10 Residency Counter.
+  *			       perf code: 0x06
+- *			       Available model: HSW ULT,KBL,GLM,CNL
++ *			       Available model: HSW ULT,KBL,GLM,CNL,CML
+  *			       Scope: Package (physical package)
+  *
+  */
+@@ -614,6 +616,8 @@ static const struct x86_cpu_id intel_cstates_match[] __initconst = {
+ 
+ 	X86_CSTATES_MODEL(INTEL_FAM6_KABYLAKE_L, hswult_cstates),
+ 	X86_CSTATES_MODEL(INTEL_FAM6_KABYLAKE,   hswult_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_COMETLAKE_L, hswult_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_COMETLAKE, hswult_cstates),
+ 
+ 	X86_CSTATES_MODEL(INTEL_FAM6_CANNONLAKE_L, cnl_cstates),
+ 
