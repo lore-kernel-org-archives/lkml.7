@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 383F9C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F76EC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BC2C206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A0D1206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:25:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570641922;
-	bh=ntS1ZYDrYluQD4ZxgQDfJleZc8De5ohU9vXDegslj1w=;
+	s=default; t=1570641926;
+	bh=7//GOyKEzo7xrJIfyzR+9RrVrjKnqDbQZAYgTiMrUSY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gPBHievBxX0rjlEA4tZOGzV6FimDph5KKziP1z4jNvT3pYo8GG1EBCzE2dxNpMHJq
-	 sgkoyRYK9g++x0lqBxXVIDkrvH8pmiT0exlRcUK1n9m2phuWr9DO37WC2vaE6Ph4bW
-	 r1QwNAx+gBWdLdlQaz18b7xbyGX+JEhIrTUDUR8w=
+	b=1IgEpSr0eNV/nD+xvEw6fwDFMwSRyNBV79y6zkVLK4RhqWxidrh1k7jT3Anp45Wr5
+	 Sh5FSMnbEuCkpaRAZDA0JmGfyjm0/NNJEhx2n7wngDG/Wf6le0Vuo7vRCqqICqV0Ma
+	 BI8vS9CS5lhUGYeQtV2Qkjh1iBEuwmCbj4uCCeGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732612AbfJIRZU (ORCPT
+        id S1732629AbfJIRZZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:25:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49952 "EHLO mail.kernel.org"
+        Wed, 9 Oct 2019 13:25:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732497AbfJIRYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 13:24:55 -0400
+        id S1732042AbfJIRY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 13:24:59 -0400
 Received: from sasha-vm.mshome.net (unknown [167.220.2.234])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82E9821BE5;
-        Wed,  9 Oct 2019 17:24:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51DAF206BB;
+        Wed,  9 Oct 2019 17:24:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570641894;
-        bh=ntS1ZYDrYluQD4ZxgQDfJleZc8De5ohU9vXDegslj1w=;
+        s=default; t=1570641898;
+        bh=7//GOyKEzo7xrJIfyzR+9RrVrjKnqDbQZAYgTiMrUSY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r2/IGXl420Fikwq1YO/KrFCHiOegqgoyfdoxKLSD6WauF3g+qxhtrfyFZWFJiW4Y1
-         KiqHtwNMt0cm4ZET4SUvB8GowOik1JTExSW/bNu6BH8JzgOU2SBZdSj8iV8djcLLMX
-         D9WFxrPA85WFmCizuNAnCCk0wK9b9tvOy75er20c=
+        b=Y9CYzRtfOatTcoTg7dbx90cXRXwFKiTfjGjfkkM+JS50wqFF+OFPoj7dH8pdQuTiG
+         EpOOv14cybRq6lFg/iu/y8hcqmtceNvtaV652Z2WEgeJdbe72Nys9wPV5VbpvKmIFY
+         MxlgqaIsFs5BmiQoUhO/zlwzjhFD7VvvN4oTzE50=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miaoqing Pan <miaoqing@codeaurora.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 07/11] nl80211: fix null pointer dereference
-Date:   Wed,  9 Oct 2019 13:06:41 -0400
-Message-Id: <20191009170646.696-7-sashal@kernel.org>
+Cc:     Jacob Keller <jacob.e.keller@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 10/11] namespace: fix namespace.pl script to support relative paths
+Date:   Wed,  9 Oct 2019 13:06:44 -0400
+Message-Id: <20191009170646.696-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191009170646.696-1-sashal@kernel.org>
 References: <20191009170646.696-1-sashal@kernel.org>
@@ -60,60 +60,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaoqing Pan <miaoqing@codeaurora.org>
+From: Jacob Keller <jacob.e.keller@intel.com>
 
-[ Upstream commit b501426cf86e70649c983c52f4c823b3c40d72a3 ]
+[ Upstream commit 82fdd12b95727640c9a8233c09d602e4518e71f7 ]
 
-If the interface is not in MESH mode, the command 'iw wlanx mpath del'
-will cause kernel panic.
+The namespace.pl script does not work properly if objtree is not set to
+an absolute path. The do_nm function is run from within the find
+function, which changes directories.
 
-The root cause is null pointer access in mpp_flush_by_proxy(), as the
-pointer 'sdata->u.mesh.mpp_paths' is NULL for non MESH interface.
+Because of this, appending objtree, $File::Find::dir, and $source, will
+return a path which is not valid from the current directory.
 
-Unable to handle kernel NULL pointer dereference at virtual address 00000068
-[...]
-PC is at _raw_spin_lock_bh+0x20/0x5c
-LR is at mesh_path_del+0x1c/0x17c [mac80211]
-[...]
-Process iw (pid: 4537, stack limit = 0xd83e0238)
-[...]
-[<c021211c>] (_raw_spin_lock_bh) from [<bf8c7648>] (mesh_path_del+0x1c/0x17c [mac80211])
-[<bf8c7648>] (mesh_path_del [mac80211]) from [<bf6cdb7c>] (extack_doit+0x20/0x68 [compat])
-[<bf6cdb7c>] (extack_doit [compat]) from [<c05c309c>] (genl_rcv_msg+0x274/0x30c)
-[<c05c309c>] (genl_rcv_msg) from [<c05c25d8>] (netlink_rcv_skb+0x58/0xac)
-[<c05c25d8>] (netlink_rcv_skb) from [<c05c2e14>] (genl_rcv+0x20/0x34)
-[<c05c2e14>] (genl_rcv) from [<c05c1f90>] (netlink_unicast+0x11c/0x204)
-[<c05c1f90>] (netlink_unicast) from [<c05c2420>] (netlink_sendmsg+0x30c/0x370)
-[<c05c2420>] (netlink_sendmsg) from [<c05886d0>] (sock_sendmsg+0x70/0x84)
-[<c05886d0>] (sock_sendmsg) from [<c0589f4c>] (___sys_sendmsg.part.3+0x188/0x228)
-[<c0589f4c>] (___sys_sendmsg.part.3) from [<c058add4>] (__sys_sendmsg+0x4c/0x70)
-[<c058add4>] (__sys_sendmsg) from [<c0208c80>] (ret_fast_syscall+0x0/0x44)
-Code: e2822c02 e2822001 e5832004 f590f000 (e1902f9f)
----[ end trace bbd717600f8f884d ]---
+This used to work when objtree was set to an absolute path when using
+"make namespacecheck". It appears to have not worked when calling
+./scripts/namespace.pl directly.
 
-Signed-off-by: Miaoqing Pan <miaoqing@codeaurora.org>
-Link: https://lore.kernel.org/r/1569485810-761-1-git-send-email-miaoqing@codeaurora.org
-[trim useless data from commit message]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+This behavior was changed in 7e1c04779efd ("kbuild: Use relative path
+for $(objtree)", 2014-05-14)
+
+Rather than fixing the Makefile to set objtree to an absolute path, just
+fix namespace.pl to work when srctree and objtree are relative. Also fix
+the script to use an absolute path for these by default.
+
+Use the File::Spec module for this purpose. It's been part of perl
+5 since 5.005.
+
+The curdir() function is used to get the current directory when the
+objtree and srctree aren't set in the environment.
+
+rel2abs() is used to convert possibly relative objtree and srctree
+environment variables to absolute paths.
+
+Finally, the catfile() function is used instead of string appending
+paths together, since this is more robust when joining paths together.
+
+Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/nl80211.c | 3 +++
- 1 file changed, 3 insertions(+)
+ scripts/namespace.pl | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
-index 1968998e6c6c2..4c9fc29ee1edf 100644
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -4779,6 +4779,9 @@ static int nl80211_del_mpath(struct sk_buff *skb, struct genl_info *info)
- 	if (!rdev->ops->del_mpath)
- 		return -EOPNOTSUPP;
+diff --git a/scripts/namespace.pl b/scripts/namespace.pl
+index a71be6b7cdec5..9a2a32ce8a3b4 100755
+--- a/scripts/namespace.pl
++++ b/scripts/namespace.pl
+@@ -65,13 +65,14 @@
+ require 5;	# at least perl 5
+ use strict;
+ use File::Find;
++use File::Spec;
  
-+	if (dev->ieee80211_ptr->iftype != NL80211_IFTYPE_MESH_POINT)
-+		return -EOPNOTSUPP;
-+
- 	return rdev_del_mpath(rdev, dev, dst);
- }
+ my $nm = ($ENV{'NM'} || "nm") . " -p";
+ my $objdump = ($ENV{'OBJDUMP'} || "objdump") . " -s -j .comment";
+-my $srctree = "";
+-my $objtree = "";
+-$srctree = "$ENV{'srctree'}/" if (exists($ENV{'srctree'}));
+-$objtree = "$ENV{'objtree'}/" if (exists($ENV{'objtree'}));
++my $srctree = File::Spec->curdir();
++my $objtree = File::Spec->curdir();
++$srctree = File::Spec->rel2abs($ENV{'srctree'}) if (exists($ENV{'srctree'}));
++$objtree = File::Spec->rel2abs($ENV{'objtree'}) if (exists($ENV{'objtree'}));
  
+ if ($#ARGV != -1) {
+ 	print STDERR "usage: $0 takes no parameters\n";
+@@ -229,9 +230,9 @@ sub do_nm
+ 	}
+ 	($source = $basename) =~ s/\.o$//;
+ 	if (-e "$source.c" || -e "$source.S") {
+-		$source = "$objtree$File::Find::dir/$source";
++		$source = File::Spec->catfile($objtree, $File::Find::dir, $source)
+ 	} else {
+-		$source = "$srctree$File::Find::dir/$source";
++		$source = File::Spec->catfile($srctree, $File::Find::dir, $source)
+ 	}
+ 	if (! -e "$source.c" && ! -e "$source.S") {
+ 		# No obvious source, exclude the object if it is conglomerate
 -- 
 2.20.1
 
