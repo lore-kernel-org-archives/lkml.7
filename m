@@ -2,68 +2,138 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 647A9C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 22:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0576DC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 22:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D9E220B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 22:15:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5374218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 22:17:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570659442;
+	bh=K+k72fcp+4Bp9jdYOpjx7BxUtFXIveVOtK1lbT5mR0Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GHWL2WF9W/4fS/uftkQgMEreZ7/LrOOVUsq6p39dtDJ7HCyWnA2yMCF7kvmlUyASV
+	 fWtEysSuhcn1HwG7BaBivUF2lo8yoMtyh5teZ/8pBuW8Z8y3e4tiX+UqL62lN/wiCz
+	 VWPbNg01LsMubMr5vUxQ/elnBD3PEYLgJ5FodoEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732196AbfJIWPm (ORCPT
+        id S1732096AbfJIWRV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 18:15:42 -0400
-Received: from namei.org ([65.99.196.166]:53370 "EHLO namei.org"
+        Wed, 9 Oct 2019 18:17:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730675AbfJIWPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 18:15:41 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by namei.org (8.14.4/8.14.4) with ESMTP id x99MEi61030164;
-        Wed, 9 Oct 2019 22:14:45 GMT
-Date:   Thu, 10 Oct 2019 09:14:44 +1100 (AEDT)
-From:   James Morris <jmorris@namei.org>
-To:     Casey Schaufler <casey@schaufler-ca.com>
-cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>, rostedt@goodmis.org,
-        primiano@google.com, rsavitski@google.com, jeffv@google.com,
-        kernel-team@android.com, Alexei Starovoitov <ast@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        bpf@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-security-module@vger.kernel.org,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Namhyung Kim <namhyung@kernel.org>, selinux@vger.kernel.org,
-        Song Liu <songliubraving@fb.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH RFC] perf_event: Add support for LSM and SELinux checks
-In-Reply-To: <710c5bc0-deca-2649-8351-678e177214e9@schaufler-ca.com>
-Message-ID: <alpine.LRH.2.21.1910100912210.29840@namei.org>
-References: <20191009203657.6070-1-joel@joelfernandes.org> <710c5bc0-deca-2649-8351-678e177214e9@schaufler-ca.com>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        id S1730809AbfJIWRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 18:17:21 -0400
+Received: from washi1.fujisawa.hgst.com (unknown [199.255.47.10])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32AFB206BB;
+        Wed,  9 Oct 2019 22:17:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570659440;
+        bh=K+k72fcp+4Bp9jdYOpjx7BxUtFXIveVOtK1lbT5mR0Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=S990ZtpDdrW7y3rQw34PT+ReoELxPvgGK9t9BRJhik6B/vPr79r7xOnUltJb2qJKe
+         0+mSjjhsfj0ZOXSQsgpK4NbbIhV4KpYb7GHpiW7tzuuNHeVjuIfmB2r68nbBWTHagv
+         P3MT4dSOtAuE8NK1D3e+Fb0lKB5A5tetQzLdzU7E=
+Date:   Thu, 10 Oct 2019 07:17:16 +0900
+From:   Keith Busch <kbusch@kernel.org>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@fb.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>
+Subject: Re: [PATCH v9 03/12] nvmet: add return value to
+  nvmet_add_async_event()
+Message-ID: <20191009221716.GD3009@washi1.fujisawa.hgst.com>
+References: <20191009192530.13079-1-logang@deltatee.com>
+ <20191009192530.13079-4-logang@deltatee.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191009192530.13079-4-logang@deltatee.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 9 Oct 2019, Casey Schaufler wrote:
+On Wed, Oct 09, 2019 at 01:25:20PM -0600, Logan Gunthorpe wrote:
+> From: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+> 
+> Change the return value for nvmet_add_async_event().
+> 
+> This change is needed for the target passthru code which will
+> submit async events on namespaces changes and can fail the command
+> should adding the event fail (on -ENOMEM).
+> 
+> Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+> [logang@deltatee.com:
+>  * fleshed out commit message
+>  * change to using int as a return type instead of bool
+> ]
+> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+> ---
 
-> Please consider making the perf_alloc security blob maintained
-> by the infrastructure rather than the individual modules. This
-> will save it having to be changed later.
+Looks fine, but let's remove the version comments out of commit log if
+we're applying this one.
 
-Is anyone planning on using this with full stacking?
+Reviewed-by: Keith Busch <kbusch@kernel.org>
 
-If not, we don't need the extra code & complexity. Stacking should only 
-cover what's concretely required by in-tree users.
-
--- 
-James Morris
-<jmorris@namei.org>
-
+>  drivers/nvme/target/core.c  | 6 ++++--
+>  drivers/nvme/target/nvmet.h | 2 +-
+>  2 files changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
+> index 3a67e244e568..d6dcb86d8be7 100644
+> --- a/drivers/nvme/target/core.c
+> +++ b/drivers/nvme/target/core.c
+> @@ -173,14 +173,14 @@ static void nvmet_async_event_work(struct work_struct *work)
+>  	}
+>  }
+>  
+> -void nvmet_add_async_event(struct nvmet_ctrl *ctrl, u8 event_type,
+> +int nvmet_add_async_event(struct nvmet_ctrl *ctrl, u8 event_type,
+>  		u8 event_info, u8 log_page)
+>  {
+>  	struct nvmet_async_event *aen;
+>  
+>  	aen = kmalloc(sizeof(*aen), GFP_KERNEL);
+>  	if (!aen)
+> -		return;
+> +		return -ENOMEM;
+>  
+>  	aen->event_type = event_type;
+>  	aen->event_info = event_info;
+> @@ -191,6 +191,8 @@ void nvmet_add_async_event(struct nvmet_ctrl *ctrl, u8 event_type,
+>  	mutex_unlock(&ctrl->lock);
+>  
+>  	schedule_work(&ctrl->async_event_work);
+> +
+> +	return 0;
+>  }
+>  
+>  static void nvmet_add_to_changed_ns_log(struct nvmet_ctrl *ctrl, __le32 nsid)
+> diff --git a/drivers/nvme/target/nvmet.h b/drivers/nvme/target/nvmet.h
+> index c51f8dd01dc4..3d313a6452cc 100644
+> --- a/drivers/nvme/target/nvmet.h
+> +++ b/drivers/nvme/target/nvmet.h
+> @@ -441,7 +441,7 @@ void nvmet_port_disc_changed(struct nvmet_port *port,
+>  		struct nvmet_subsys *subsys);
+>  void nvmet_subsys_disc_changed(struct nvmet_subsys *subsys,
+>  		struct nvmet_host *host);
+> -void nvmet_add_async_event(struct nvmet_ctrl *ctrl, u8 event_type,
+> +int nvmet_add_async_event(struct nvmet_ctrl *ctrl, u8 event_type,
+>  		u8 event_info, u8 log_page);
+>  
+>  #define NVMET_QUEUE_SIZE	1024
+> -- 
+> 2.20.1
+> 
