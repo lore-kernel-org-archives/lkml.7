@@ -2,144 +2,85 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 982C3ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1082C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73745218AC
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:49:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="DKXLDx2T"
+	by mail.kernel.org (Postfix) with ESMTP id B1F5A218DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:51:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570654262;
+	bh=h5UFSrQbxwQ1jaUrIAHWi1a2T2kESQj+kWn/elifWyI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=L7xz3SrGMryyYoICbFU4BpFVi7sogPuzEC3Yi9l6H0jIVVnp9ecxR1q9QP94IB9+E
+	 q4O2/eqD1LXEBWovKGzdE8XE8dVYyyp9OIoCFS7XqYrbC1WfEEpTn1EbCxNVmKOBFG
+	 eaIPGmwaxcdPSYhWTFtdRxQ+MEU9egw0onvvPgJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731915AbfJIUtL (ORCPT
+        id S1731953AbfJIUvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 16:49:11 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:53156 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728804AbfJIUtK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 16:49:10 -0400
-Received: from [10.200.156.146] (unknown [167.220.2.18])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 9792520B71C6;
-        Wed,  9 Oct 2019 13:49:09 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9792520B71C6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1570654149;
-        bh=R1XYwLvD2iwGBu/tSvMiVcIj6u8j47QQ6okMOZpNB7U=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=DKXLDx2TpAjvOkCcLD+fMOQ+UmAKk9f0J4PKC6kqYILap7MQfAxBIF2iiDgV4XJLq
-         GWrcnyuAANdZF6aJ12FQZieemm+kz1XCRB86ccPD2aAux00sIXbYcxnvl7Jf912bkQ
-         R+9ELrLAIdqH9L7Ny8K/E71UScCwE4MURLnjvU3Y=
-Subject: Re: [PATCH v2 1/2] Add support for arm64 to carry ima measurement log
- in kexec_file_load
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-        arnd@arndb.de, jean-philippe@linaro.org, allison@lohutok.net,
-        kristina.martsenko@arm.org, yamada.masahiro@socionext.com,
-        duwe@lst.de, mark.rutland@arm.com, tglx@linutronix.de,
-        takahiro.akashi@linaro.org, james.morse@arm.org,
-        catalin.marinas@arm.com, sboyd@kernel.org, bauerman@linux.ibm.com,
-        zohar@linux.ibm.com
-References: <20191007185943.1828-1-prsriva@linux.microsoft.com>
- <20191007185943.1828-2-prsriva@linux.microsoft.com>
- <20191008212224.GC1396@sasha-vm>
-From:   prsriva <prsriva@linux.microsoft.com>
-Message-ID: <b4ca20f8-dc8c-7266-de54-8062cf6ac8e3@linux.microsoft.com>
-Date:   Wed, 9 Oct 2019 13:49:09 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 9 Oct 2019 16:51:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37254 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729535AbfJIUvB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 16:51:01 -0400
+Received: from localhost (unknown [167.220.2.234])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA02C218AC;
+        Wed,  9 Oct 2019 20:51:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570654260;
+        bh=h5UFSrQbxwQ1jaUrIAHWi1a2T2kESQj+kWn/elifWyI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XQuqQ6Z1qEUd6UB14Af4XMrwnjZf7DdyoQWxIwFF92Q2siHiJodulbfuvdzL3NDSQ
+         I2hcwXyTNmAYvGuCeA7X+g5F4eJeT1igxgitz4B0HNL6pJNSYnVxut1HeDv+fSeTG1
+         +D4WRc3anrDkvyc7JJyZXfwSVzUXX8iN6Ewe/HhI=
+Date:   Wed, 9 Oct 2019 16:51:00 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jann Horn <jannh@google.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH AUTOSEL 4.19 26/26] Make filldir[64]() verify the
+ directory entry filename is valid
+Message-ID: <20191009205100.GV1396@sasha-vm>
+References: <20191009170558.32517-1-sashal@kernel.org>
+ <20191009170558.32517-26-sashal@kernel.org>
+ <CAHk-=wiVe+nxotYXExXRxhvCSTCqyRuZUto6UrvR2oHfeGrJ+g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191008212224.GC1396@sasha-vm>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wiVe+nxotYXExXRxhvCSTCqyRuZUto6UrvR2oHfeGrJ+g@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 10/8/19 2:22 PM, Sasha Levin wrote:
-> On Mon, Oct 07, 2019 at 11:59:42AM -0700, Prakhar Srivastava wrote:
->> During kexec_file_load, carrying forward the ima measurement log allows
->> a verifying party to get the entire runtime event log since the last
->> full reboot since that is when PCRs were last reset.
+On Wed, Oct 09, 2019 at 10:56:56AM -0700, Linus Torvalds wrote:
+>On Wed, Oct 9, 2019 at 10:24 AM Sasha Levin <sashal@kernel.org> wrote:
 >>
->> Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
->> ---
->> arch/Kconfig                           |   6 +-
->> arch/arm64/include/asm/ima.h           |  24 +++
->> arch/arm64/include/asm/kexec.h         |   5 +
->> arch/arm64/kernel/Makefile             |   3 +-
->> arch/arm64/kernel/ima_kexec.c          |  78 ++++++++++
->> arch/arm64/kernel/machine_kexec_file.c |   6 +
->> drivers/of/Kconfig                     |   6 +
->> drivers/of/Makefile                    |   1 +
->> drivers/of/of_ima.c                    | 204 +++++++++++++++++++++++++
->> include/linux/of.h                     |  31 ++++
->> 10 files changed, 362 insertions(+), 2 deletions(-)
->> create mode 100644 arch/arm64/include/asm/ima.h
->> create mode 100644 arch/arm64/kernel/ima_kexec.c
->> create mode 100644 drivers/of/of_ima.c
+>> From: Linus Torvalds <torvalds@linux-foundation.org>
 >>
->> diff --git a/arch/Kconfig b/arch/Kconfig
->> index a7b57dd42c26..d53e1596c5b1 100644
->> --- a/arch/Kconfig
->> +++ b/arch/Kconfig
->> @@ -19,7 +19,11 @@ config KEXEC_CORE
->>     bool
->>
->> config HAVE_IMA_KEXEC
->> -    bool
->> +    bool "Carry over IMA measurement log during kexec_file_load() 
->> syscall"
->> +    depends on KEXEC_FILE
->> +    help
->> +      Select this option to carry over IMA measurement log during
->> +      kexec_file_load.
-> 
-> This change looks very wrong: HAVE_* config symbols are used to indicate
-> the availability of certain arch specific capability, rather than act as
-> a config option. How does this work with CONFIG_IMA_KEXEC ?
-> 
-Thanks for pointing this out. My attempt was to move this out of arch 
-dependent config. I will fix the CONFIG.
+>> [ Upstream commit 8a23eb804ca4f2be909e372cf5a9e7b30ae476cd ]
+>
+>I didn't mark this for stable because I expect things to still change
+>- particularly the WARN_ON_ONCE() should be removed before final 5.4,
+>I just wanted to see if anybody could trigger it with testing etc.
+>
+>(At least syzbot did trigger it).
+>
+>If you do want to take it, take it without the WARN_ON_ONCE() calls
+>and note that in the commit message..
 
-> Also, please, at the very least verify that basic functionality works on
-> the architectures we have access to. Trying it on x86:
-> 
+I'll take both when you send a patch to remove it.
 
-Let me fix the build issues for other archs.
-I have tested these changes for arm64.
-
-> $ make allmodconfig
-> scripts/kconfig/conf  --allmodconfig Kconfig
-> #
-> # No change to .config
-> #
-> $ make
->   CALL    scripts/checksyscalls.sh
->   CALL    scripts/atomic/check-atomics.sh
->   DESCEND  objtool
->   CC      security/integrity/ima/ima_fs.o
-> In file included from security/integrity/ima/ima_fs.c:26:
-> security/integrity/ima/ima.h:28:10: fatal error: asm/ima.h: No such file 
-> or directory
-> #include <asm/ima.h>
->           ^~~~~~~~~~~
-> compilation terminated.
-> make[3]: *** [scripts/Makefile.build:266: 
-> security/integrity/ima/ima_fs.o] Error 1
-> make[2]: *** [scripts/Makefile.build:509: security/integrity/ima] Error 2
-> make[1]: *** [scripts/Makefile.build:509: security/integrity] Error 2
-> make: *** [Makefile:1649: security] Error 2
-> 
-> -- 
-> Thanks,
-> Sasha
+--
+Thanks,
+Sasha
