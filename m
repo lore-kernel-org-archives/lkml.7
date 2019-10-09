@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D42D0C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E1D7ECE58E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B775F2133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F17CB21835
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:41:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729778AbfJIHlK (ORCPT
+        id S1729839AbfJIHlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 03:41:10 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:28011 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726336AbfJIHlJ (ORCPT
+        Wed, 9 Oct 2019 03:41:13 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:64445 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729285AbfJIHlL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 03:41:09 -0400
-X-UUID: 1c0ef69487f141ad80e3b5c84a2adce7-20191009
-X-UUID: 1c0ef69487f141ad80e3b5c84a2adce7-20191009
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        Wed, 9 Oct 2019 03:41:11 -0400
+X-UUID: dfd5932131c74183bd2bba32fb30f582-20191009
+X-UUID: dfd5932131c74183bd2bba32fb30f582-20191009
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
         (envelope-from <chunfeng.yun@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 397385473; Wed, 09 Oct 2019 15:41:03 +0800
+        with ESMTP id 334976308; Wed, 09 Oct 2019 15:41:04 +0800
 Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 9 Oct 2019 15:41:00 +0800
+ MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 9 Oct 2019 15:41:02 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 9 Oct 2019 15:40:58 +0800
+ Transport; Wed, 9 Oct 2019 15:41:00 +0800
 From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
 To:     Kishon Vijay Abraham I <kishon@ti.com>,
         Rob Herring <robh+dt@kernel.org>
@@ -42,45 +42,66 @@ CC:     Mark Rutland <mark.rutland@arm.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [RESEND PATCH v3 01/11] dt-bindings: phy-mtk-tphy: add two optional properties for u2phy
-Date:   Wed, 9 Oct 2019 15:40:24 +0800
-Message-ID: <1570606834-5644-1-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [RESEND PATCH v3 02/11] dt-bindings: phy-mtk-tphy: make the ref clock optional
+Date:   Wed, 9 Oct 2019 15:40:25 +0800
+Message-ID: <1570606834-5644-2-git-send-email-chunfeng.yun@mediatek.com>
 X-Mailer: git-send-email 1.8.1.1.dirty
+In-Reply-To: <1570606834-5644-1-git-send-email-chunfeng.yun@mediatek.com>
+References: <1570606834-5644-1-git-send-email-chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: D92F16B9EE319C5ADF5B71546DF82E0BFA49E37F44BEABF32811ABA90F90DB2B2000:8
+X-TM-SNTS-SMTP: 529B75F880549219B19A483FC609AD75F20A14647891354584FF2E06AC6263472000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add two optional properties, one for tuning J-K voltage by INTR,
-another for disconnect threshold, both of them are related with
-connect detection
+Make the ref clock optional, then we no need refer to a fixed-clock
+in DTS anymore when the clock of USB3 PHY comes from oscillator
+directly
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
-v3: change commit log
+v3: add acked-by Rob
 
-v2: change description
+v2: no changes
 ---
- Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ .../devicetree/bindings/phy/phy-mtk-tphy.txt        | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-index a5f7a4f0dbc1..ce6abfbdfbe1 100644
+index ce6abfbdfbe1..1f4a36dd80e0 100644
 --- a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
 +++ b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-@@ -52,6 +52,8 @@ Optional properties (PHY_TYPE_USB2 port (child) node):
+@@ -34,12 +34,6 @@ Optional properties (controller (parent) node):
+ 
+ Required properties (port (child) node):
+ - reg		: address and length of the register set for the port.
+-- clocks	: a list of phandle + clock-specifier pairs, one for each
+-		  entry in clock-names
+-- clock-names	: must contain
+-		  "ref": 48M reference clock for HighSpeed analog phy; and 26M
+-			reference clock for SuperSpeed analog phy, sometimes is
+-			24M, 25M or 27M, depended on platform.
+ - #phy-cells	: should be 1 (See second example)
+ 		  cell after port phandle is phy type from:
+ 			- PHY_TYPE_USB2
+@@ -48,6 +42,13 @@ Required properties (port (child) node):
+ 			- PHY_TYPE_SATA
+ 
+ Optional properties (PHY_TYPE_USB2 port (child) node):
++- clocks	: a list of phandle + clock-specifier pairs, one for each
++		  entry in clock-names
++- clock-names	: may contain
++		  "ref": 48M reference clock for HighSpeed anolog phy; and 26M
++			reference clock for SuperSpeed anolog phy, sometimes is
++			24M, 25M or 27M, depended on platform.
++
+ - mediatek,eye-src	: u32, the value of slew rate calibrate
  - mediatek,eye-vrt	: u32, the selection of VRT reference voltage
  - mediatek,eye-term	: u32, the selection of HS_TX TERM reference voltage
- - mediatek,bc12	: bool, enable BC12 of u2phy if support it
-+- mediatek,discth	: u32, the selection of disconnect threshold
-+- mediatek,intr	: u32, the selection of internal R (resistance)
- 
- Example:
- 
 -- 
 2.23.0
 
