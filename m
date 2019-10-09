@@ -2,803 +2,708 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B8BC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 21:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F45ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 21:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA865206B6
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 21:48:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84A34206B6
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 21:48:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B5/KXcXg"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="NBBlvtsj";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="b6hJHfO7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732011AbfJIVsA (ORCPT
+        id S1732069AbfJIVst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 17:48:00 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40484 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729161AbfJIVr7 (ORCPT
+        Wed, 9 Oct 2019 17:48:49 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:20182 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729161AbfJIVss (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 17:47:59 -0400
-Received: by mail-wm1-f66.google.com with SMTP id b24so4281068wmj.5;
-        Wed, 09 Oct 2019 14:47:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+cJnhQ198Qm/9TcToLwfWWvvpSRSK72xqUB2jWprbb8=;
-        b=B5/KXcXgshpR4vSTxHg92HsZwm11HK6qXQYq+/xTkXkpOdGpOZ0mmaQ/14IfouQdmZ
-         y7ezZps6a7sD/mpoHXCqmiV7npFJuSgkmIFkQTBfoVHu/gTqPEhRyr9c4xekl09okNua
-         mkNOdRXxFWpz4uZ29mDn/oXIjqpPi8pTxQ9eyTA4iBo+el3ws51w6GQFFKpE7Eoaa9dP
-         v6STndz8OZ8XSsGbQs67TeNb7qm1JojrY5OEDMTE5MdJHwKR7Px+zqJqfl7gJ3N32qSj
-         Y2cekH3cK2axn4LWh6INM03L8OhC5zrmA7E8WXY2X2rh7bUBzBly3MAIpOSSEkGxADcd
-         JW/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=+cJnhQ198Qm/9TcToLwfWWvvpSRSK72xqUB2jWprbb8=;
-        b=VLGeKTSdwI3rSEr5eUM/TGZZCskH+Q5CWL/99AAa8wlS2/JZE8h2JBlUnbR9a3dFs1
-         4/tXjKiY+igPlX7MWsLHwKIQjp7Ig1QKwWzUg8jsKZ4NHzPe5aZX44mO1SrzB1SBD5BY
-         8iQXFd/xO5lq3SkuHfDToau6N+QfJNtR1EQbQgyBTvt4dZXz7IJbYfgDewOBQbjrcUUc
-         elKD5QYJS64tWw6cNbEq1MLzFxds2EvsVPjwEeh5vQ302DepAcY4mx6O2N/Y/8TOohab
-         Eui+kHgobMAXrE/KKrIwzRtZXacMHfwbvAAQRAduNyRoS+RCMmMLqwMLBVHIB92VYpeq
-         RpVA==
-X-Gm-Message-State: APjAAAUhLGjImGFlWFkhou4pBr4V0rm3GCr6xnGdJYufitKKauQdzu7H
-        GCqxHOE47KJyQaXRWldY9Xn/mHi9
-X-Google-Smtp-Source: APXvYqy2NU4vzJfqgZTgkpk2NGubemq/WQ7epVexoEWVSJhjne1YltFsEh9kFbchQrNdTOwX/0zplQ==
-X-Received: by 2002:a1c:a651:: with SMTP id p78mr4383290wme.53.1570657674574;
-        Wed, 09 Oct 2019 14:47:54 -0700 (PDT)
-Received: from [192.168.1.19] (cjk130.neoplus.adsl.tpnet.pl. [83.31.60.130])
-        by smtp.gmail.com with ESMTPSA id j11sm4233813wrw.86.2019.10.09.14.47.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 09 Oct 2019 14:47:53 -0700 (PDT)
-Subject: Re: [PATCH v11 04/16] leds: multicolor: Introduce a multicolor class
- definition
-To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191008204800.19870-1-dmurphy@ti.com>
- <20191008204800.19870-5-dmurphy@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <e031ad7d-3191-eddf-ec7e-db9f31b6f05b@gmail.com>
-Date:   Wed, 9 Oct 2019 23:47:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191008204800.19870-5-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8
+        Wed, 9 Oct 2019 17:48:48 -0400
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x99Li2bS028966;
+        Wed, 9 Oct 2019 14:48:35 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=qWnpHCfVp5Lzw+vnoik5zZtmTBjtcdBUpVmPTwapPFk=;
+ b=NBBlvtsjI5CzlD5SDZYvSbns2j2wbGD25+pKz+CuI19FTMxSOfNjMivElZKvzO2G9NM4
+ rBM+/bu4igZTkv2Y9/PjUERmcwbE7SygPOjIT3khwJ/aVbpp0AKxNEn7Yk6PLY+QhXMk
+ PAb96jVMoha20dMwTXqS7KF9D7abYdedTI4= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2vh6awcjq0-10
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 09 Oct 2019 14:48:35 -0700
+Received: from ash-exhub102.TheFacebook.com (2620:10d:c0a8:82::f) by
+ ash-exhub104.TheFacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 9 Oct 2019 14:48:32 -0700
+Received: from NAM01-SN1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.172) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 9 Oct 2019 14:48:32 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gJRP05FuD3bqH7J+p/L/YR/xsltBC9jEMe6USZEzTVw+Ay37x1D80k6Ez9IiAWlIpgtUp+YKrS3wkZY72UQNMgKR5l6hPGsDeMnN0D6wFq1TS5PNn12vk8JHiPK2f7v2q4buF9DcU57bwzRxZtLBMUJEJfzKmgAmuMKx3vbZ0pR2ZuXI0hnliN8ZNkPn/sLQcDDIie+TotW2ZKVCkCKiKB/7hxp5bwl4NvSVVS1gkubho9wfE7Lh3EoMtVPiheeHY9zOq3LwZIUXaoEeVeollGISBdJGiv6A/q6f26q6xDNSTzZ4bdVqBmp9/ja9BOWgfpSzMkv+Mc7Y76nS8z71OQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qWnpHCfVp5Lzw+vnoik5zZtmTBjtcdBUpVmPTwapPFk=;
+ b=LScnW16Zstoql7qB01rd7kyn+TICuYMAJORJRy+7hqqaCLltPXJOvbBP277pMnZ9rRuyiWBxSdyi6lEpRtJs+qsX9vMHBicygn5x0lEZ9jtEHm1aHvgpLXfHXDO194i3Hu59aSY1PjC4hB2qxAxFFaAvTgIIaAxmJeBmizBgRu/ZbspWoe6DQ1RqnxIIsGolN8qQRvef8VlVDidky/9jDW8uJn9kKFvUXxJ3fXGXaDdHbUcov6+Wr1ig/HqqkqdFvUKYY4KW4Xl7U/fSNjYN6vmRSBwIuQSgoBKiszj07D9g6KodgzszABEORPAt2CgE4d3wzqW4WQokwXF715Vpdw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qWnpHCfVp5Lzw+vnoik5zZtmTBjtcdBUpVmPTwapPFk=;
+ b=b6hJHfO7mqOZceyUrB2+vdtgxrgw0kT1F6Wo1Q3xIdOX/qPgwFm0gfHekJsD/Tr5J6+DhB1erISgxzaaifcL+VSm3h7lV2HHsEylYyzc5844zdDdRK6/LU1ziL/devhqW6YayId5dtXulvlSkSDioDHrgEGGW3TlORsutNqf+ss=
+Received: from BN8PR15MB2626.namprd15.prod.outlook.com (20.179.137.220) by
+ BN8PR15MB2803.namprd15.prod.outlook.com (20.179.139.223) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.16; Wed, 9 Oct 2019 21:48:30 +0000
+Received: from BN8PR15MB2626.namprd15.prod.outlook.com
+ ([fe80::dde5:821f:4571:dea4]) by BN8PR15MB2626.namprd15.prod.outlook.com
+ ([fe80::dde5:821f:4571:dea4%5]) with mapi id 15.20.2327.026; Wed, 9 Oct 2019
+ 21:48:30 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Jan Kara <jack@suse.cz>
+CC:     Dave Chinner <david@fromorbit.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "tj@kernel.org" <tj@kernel.org>
+Subject: Re: [PATCH] cgroup, blkcg: prevent dirty inodes to pin dying memory
+ cgroups
+Thread-Topic: [PATCH] cgroup, blkcg: prevent dirty inodes to pin dying memory
+ cgroups
+Thread-Index: AQHVewChQOAw+GKbfEyRn45Yoe7HH6dQJYaAgAAZ0ACAAC0xgIACdAWA
+Date:   Wed, 9 Oct 2019 21:48:29 +0000
+Message-ID: <20191009214825.GA30747@tower.DHCP.thefacebook.com>
+References: <20191004221104.646711-1-guro@fb.com>
+ <20191008040630.GA15134@dread.disaster.area>
+ <20191008053854.GA14951@castle.dhcp.thefacebook.com>
+ <20191008082039.GA5078@quack2.suse.cz>
+In-Reply-To: <20191008082039.GA5078@quack2.suse.cz>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BY5PR16CA0001.namprd16.prod.outlook.com
+ (2603:10b6:a03:1a0::14) To BN8PR15MB2626.namprd15.prod.outlook.com
+ (2603:10b6:408:c7::28)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::ed76]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 846066bc-69b0-4aed-8b94-08d74d026c2a
+x-ms-traffictypediagnostic: BN8PR15MB2803:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN8PR15MB2803747A69F94FB51497F5FEBE950@BN8PR15MB2803.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3513;
+x-forefront-prvs: 018577E36E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(366004)(39860400002)(396003)(136003)(54094003)(199004)(189003)(316002)(6916009)(52116002)(102836004)(305945005)(229853002)(33656002)(46003)(71200400001)(71190400001)(1076003)(25786009)(76176011)(8936002)(4326008)(86362001)(53546011)(5660300002)(6506007)(386003)(6246003)(14454004)(30864003)(6512007)(9686003)(6486002)(66446008)(7736002)(2906002)(64756008)(66556008)(54906003)(476003)(478600001)(11346002)(446003)(6116002)(486006)(66476007)(14444005)(81156014)(186003)(99286004)(81166006)(5024004)(256004)(8676002)(66946007)(6436002)(14143004)(579004);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR15MB2803;H:BN8PR15MB2626.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: wdIv3HQPI028P9B4TZeRwGtiWqEiYhJX3DgZenLoUszsGjChLeUZ/V3bz4JQiqG9RAwWoFoAKbGemuqAswbs389dSnEtqyVc/FdQc6DC/wc5iWQQ3+7BgM9xCHGxgD40mhF+s6korb6kfdZwJJkw/TMnDf/dkQFG/lejhAW5MA2OFiIkLxVG1Xz18gBD6Ln7iicg72GsgoVD+IWh5ordCK5oHsRZT24m0RsSpE5AwO2LJu0rEgbCPwbeznjUsKsi6rw/qy1tcI1M45jHtPkPd0ZeHmVdm9N+8IZTzzbiuzyq/+tTY9AKq+lvx7j+cxDVLw8idsEAkyqgUWYGpeFtd+TJA7RpvP68p0gX3rHLYnpmrZXPMOJ1UBhjB1qtK6OIgrks5su4z6ine0h3ZDPBqCJmzgme29BS+QDhUnmgpUU=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <DE298DFF0D4E504D8748A7DE749616D1@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 846066bc-69b0-4aed-8b94-08d74d026c2a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Oct 2019 21:48:30.0782
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tV64qbXOPJUg6/cxDtHbGm42A9y+QU+wNdajkf5yjZMP7OJfvAvP0iAzrNqoUoZw
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR15MB2803
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-09_10:2019-10-08,2019-10-09 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 clxscore=1015
+ suspectscore=0 spamscore=0 mlxscore=0 impostorscore=0 malwarescore=0
+ mlxlogscore=999 phishscore=0 priorityscore=1501 bulkscore=0 adultscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1910090170
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan,
+On Tue, Oct 08, 2019 at 10:20:39AM +0200, Jan Kara wrote:
+> On Tue 08-10-19 05:38:59, Roman Gushchin wrote:
+> > On Tue, Oct 08, 2019 at 03:06:31PM +1100, Dave Chinner wrote:
+> > > On Fri, Oct 04, 2019 at 03:11:04PM -0700, Roman Gushchin wrote:
+> > > > This is a RFC patch, which is not intended to be merged as is,
+> > > > but hopefully will start a discussion which can result in a good
+> > > > solution for the described problem.
+> > > >=20
+> > > > --
+> > > >=20
+> > > > We've noticed that the number of dying cgroups on our production ho=
+sts
+> > > > tends to grow with the uptime. This time it's caused by the writeba=
+ck
+> > > > code.
+> > > >=20
+> > > > An inode which is getting dirty for the first time is associated
+> > > > with the wb structure (look at __inode_attach_wb()). It can later
+> > > > be switched to another wb under some conditions (e.g. some other
+> > > > cgroup is writing a lot of data to the same inode), but generally
+> > > > stays associated up to the end of life of the inode structure.
+> > > >=20
+> > > > The problem is that the wb structure holds a reference to the origi=
+nal
+> > > > memory cgroup. So if the inode was dirty once, it has a good chance
+> > > > to pin down the original memory cgroup.
+> > > >=20
+> > > > An example from the real life: some service runs periodically and
+> > > > updates rpm packages. Each time in a new memory cgroup. Installed
+> > > > .so files are heavily used by other cgroups, so corresponding inode=
+s
+> > > > tend to stay alive for a long. So do pinned memory cgroups.
+> > > > In production I've seen many hosts with 1-2 thousands of dying
+> > > > cgroups.
+> > > >=20
+> > > > This is not the first problem with the dying memory cgroups. As
+> > > > always, the problem is with their relative size: memory cgroups
+> > > > are large objects, easily 100x-1000x larger that inodes. So keeping
+> > > > a couple of thousands of dying cgroups in memory without a good rea=
+son
+> > > > (what we easily do with inodes) is quite costly (and is measured
+> > > > in tens and hundreds of Mb).
+> > > >=20
+> > > > One possible approach to this problem is to switch inodes associate=
+d
+> > > > with dying wbs to the root wb. Switching is a best effort operation
+> > > > which can fail silently, so unfortunately we can't run once over a
+> > > > list of associated inodes (even if we'd have such a list). So we
+> > > > really have to scan all inodes.
+> > > >=20
+> > > > In the proposed patch I schedule a work on each memory cgroup
+> > > > deletion, which is probably too often. Alternatively, we can do it
+> > > > periodically under some conditions (e.g. the number of dying memory
+> > > > cgroups is larger than X). So it's basically a gc run.
+> > > >=20
+> > > > I wonder if there are any better ideas?
+> > > >=20
+> > > > Signed-off-by: Roman Gushchin <guro@fb.com>
+> > > > ---
+> > > >  fs/fs-writeback.c | 29 +++++++++++++++++++++++++++++
+> > > >  mm/memcontrol.c   |  5 +++++
+> > > >  2 files changed, 34 insertions(+)
+> > > >=20
+> > > > diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
+> > > > index 542b02d170f8..4bbc9a200b2c 100644
+> > > > --- a/fs/fs-writeback.c
+> > > > +++ b/fs/fs-writeback.c
+> > > > @@ -545,6 +545,35 @@ static void inode_switch_wbs(struct inode *ino=
+de, int new_wb_id)
+> > > >  	up_read(&bdi->wb_switch_rwsem);
+> > > >  }
+> > > > =20
+> > > > +static void reparent_dirty_inodes_one_sb(struct super_block *sb, v=
+oid *arg)
+> > > > +{
+> > > > +	struct inode *inode, *next;
+> > > > +
+> > > > +	spin_lock(&sb->s_inode_list_lock);
+> > > > +	list_for_each_entry_safe(inode, next, &sb->s_inodes, i_sb_list) {
+> > > > +		spin_lock(&inode->i_lock);
+> > > > +		if (inode->i_state & (I_NEW | I_FREEING | I_WILL_FREE)) {
+> > > > +			spin_unlock(&inode->i_lock);
+> > > > +			continue;
+> > > > +		}
+> > > > +
+> > > > +		if (inode->i_wb && wb_dying(inode->i_wb)) {
+> > > > +			spin_unlock(&inode->i_lock);
+> > > > +			inode_switch_wbs(inode, root_mem_cgroup->css.id);
+> > > > +			continue;
+> > > > +		}
+> > > > +
+> > > > +		spin_unlock(&inode->i_lock);
+> > > > +	}
+> > > > +	spin_unlock(&sb->s_inode_list_lock);
+> > >=20
+> > > No idea what the best solution is, but I think this is fundamentally
+> > > unworkable. It's not uncommon to have a hundred million cached
+> > > inodes these days, often on a single filesystem. Anything that
+> > > requires a brute-force system wide inode scan, especially without
+> > > conditional reschedule points, is largely a non-starter.
+> > >=20
+> > > Also, inode_switch_wbs() is not guaranteed to move the inode to the
+> > > destination wb.  There can only be WB_FRN_MAX_IN_FLIGHT (1024)
+> > > switches in flight at once and switches are run via RCU callbacks,
+> > > so I suspect that using inode_switch_wbs() for bulk re-assignment is
+> > > going to be a lot more complex than just finding inodes to call
+> > > inode_switch_wbs() on....
+> >=20
+> > We can schedule it only if the number of dying cgroups exceeds a certai=
+n
+> > number (like 100), which will make it relatively rare event. Maybe we c=
+an
+> > add some other conditions, e.g. count the number of inodes associated w=
+ith
+> > a wb and skip scanning if it's zero.
+> >=20
+> > Alternatively the wb structure can keep the list of associated inodes,
+> > and scan only them, but then it's not trivial to implement without
+> > additional complication of already quite complex locking scheme.
+> > And because inode_switch_wbs() can fail, we can't guarantee that a sing=
+le
+> > pass over such a list will be enough. That means the we need to schedul=
+e
+> > scans periodically until all inodes will be switched.
+> >=20
+> > So I really don't know which option is better, but at the same time
+> > doing nothing isn't the option too. Somehow the problem should be solve=
+d.
+>=20
+> I agree with Dave that scanning all inodes in the system can get really
+> expensive quickly. So what I rather think we could do is create another '=
+IO
+> list' (linked by inode->i_io_list) where we would put inodes that referen=
+ce
+> the wb but are not in any other IO list of the wb. And then we would
+> switch inodes on this list when the wb is dying... One would have to be
+> somewhat careful with properly draining this list since new inodes can be
+> added to it while we work on it but otherwise I don't see any complicatio=
+n
+> with this.
+>=20
+> 								Honza
 
-On 10/8/19 10:47 PM, Dan Murphy wrote:
-> Introduce a multicolor class that groups colored LEDs
-> within a LED node.
-> 
-> The multi color class groups monochrome LEDs and allows controlling two
-> aspects of the final combined color: hue and lightness. The former is
-> controlled via <color>_intensity files and the latter is controlled
-> via brightness file.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  .../ABI/testing/sysfs-class-led-multicolor    |  35 +++
->  Documentation/leds/index.rst                  |   1 +
->  Documentation/leds/leds-class-multicolor.rst  |  96 +++++++
->  drivers/leds/Kconfig                          |  10 +
->  drivers/leds/Makefile                         |   1 +
->  drivers/leds/led-class-multicolor.c           | 271 ++++++++++++++++++
->  include/linux/led-class-multicolor.h          | 143 +++++++++
->  7 files changed, 557 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
->  create mode 100644 Documentation/leds/leds-class-multicolor.rst
->  create mode 100644 drivers/leds/led-class-multicolor.c
->  create mode 100644 include/linux/led-class-multicolor.h
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor b/Documentation/ABI/testing/sysfs-class-led-multicolor
-> new file mode 100644
-> index 000000000000..65cb43de26e6
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-class-led-multicolor
-> @@ -0,0 +1,35 @@
-> +What:		/sys/class/leds/<led>/brightness
-> +Date:		Sept 2019
-> +KernelVersion:	5.5
-> +Contact:	Dan Murphy <dmurphy@ti.com>
-> +Description:	read/write
-> +		Writing to this file will update all LEDs within the group to a
-> +		calculated percentage of what each color LED intensity is set
-> +		to. The percentage is calculated via the equation below:
-> +
-> +		led_brightness = brightness * <color>_intensity/<color>_max_intensity
+How about this one?
 
-This equation alone incites questions on how it is supposed to work.
+--
 
-It would be better to present the whole algorithm for calculating
-combined color here.
+From e74bd7f3cf79e07e8d6e776ee2558a729664cbb8 Mon Sep 17 00:00:00 2001
+From: Roman Gushchin <guro@fb.com>
+Date: Wed, 9 Oct 2019 13:14:04 -0700
+Subject: [PATCH] cgroup, blkcg: prevent dirty inodes to pin dying memory
+ cgroups
 
-> +
-> +		For additional details please refer to
-> +		Documentation/leds/leds-class-multicolor.rst.
-> +
-> +		The value of the color is from 0 to
-> +		/sys/class/leds/<led>/max_brightness.
-> +
-> +What:		/sys/class/leds/<led>/colors/<color>_intensity
-> +Date:		Sept 2019
-> +KernelVersion:	5.5
-> +Contact:	Dan Murphy <dmurphy@ti.com>
-> +Description:	read/write
-> +		The <color>_intensity file is created based on the color
-> +		defined by the registrar of the class.
-> +		There is one file per color presented.
-> +
-> +		The value of the color is from 0 to
-> +		/sys/class/leds/<led>/colors/<color>_max_intensity.
-> +
-> +What:		/sys/class/leds/<led>/colors/<color>_max_intensity
-> +Date:		Sept 2019
-> +KernelVersion:	5.5
-> +Contact:	Dan Murphy <dmurphy@ti.com>
-> +Description:	read only
-> +		Maximum intensity level for the LED color.
-> diff --git a/Documentation/leds/index.rst b/Documentation/leds/index.rst
-> index 060f4e485897..bc70c6aa7138 100644
-> --- a/Documentation/leds/index.rst
-> +++ b/Documentation/leds/index.rst
-> @@ -9,6 +9,7 @@ LEDs
->  
->     leds-class
->     leds-class-flash
-> +   leds-class-multicolor
->     ledtrig-oneshot
->     ledtrig-transient
->     ledtrig-usbport
-> diff --git a/Documentation/leds/leds-class-multicolor.rst b/Documentation/leds/leds-class-multicolor.rst
-> new file mode 100644
-> index 000000000000..7a695a29377e
-> --- /dev/null
-> +++ b/Documentation/leds/leds-class-multicolor.rst
-> @@ -0,0 +1,96 @@
-> +====================================
-> +Multi Color LED handling under Linux
-> +====================================
-> +
-> +Description
-> +===========
-> +The multi color class groups monochrome LEDs and allows controlling two
-> +aspects of the final combined color: hue and lightness. The former is
-> +controlled via <color>_intensity files and the latter is controlled
-> +via brightness file.
-> +
-> +For more details on hue and lightness notions please refer to
-> +https://en.wikipedia.org/wiki/CIECAM02.
-> +
-> +Note that intensity files only cache the written value and the actual
-> +change of hardware state occurs upon writing brightness file. This
-> +allows for changing many factors of the perceived color in a virtually
-> +unnoticeable way for the human observer.
-> +
-> +Multicolor Class Control
-> +========================
-> +The multicolor class presents the LED groups under a directory called "colors".
-> +This directory is a child under the LED parent node created by the led_class
-> +framework.  The led_class framework is documented in led-class.rst within this
-> +documentation directory.
-> +
-> +Each colored LED will have two files created under the colors directory
-> +<color>_intensity and <color>_max_intensity. These files will contain
-> +one of LED_COLOR_ID_* definitions from the header
-> +include/dt-bindings/leds/common.h.
-> +
-> +Directory Layout Example
-> +========================
-> +root:/sys/class/leds/rgb:grouped_leds# ls -lR colors/
-> +-rw-r--r--    1 root     root          4096 Jul  7 03:10 blue_intensity
-> +-r--r--r--    1 root     root          4096 Jul  7 03:10 blue_max_intensity
-> +-rw-r--r--    1 root     root          4096 Jul  7 03:10 green_intensity
-> +-r--r--r--    1 root     root          4096 Jul  7 03:10 green_max_intensity
-> +-rw-r--r--    1 root     root          4096 Jul  7 03:10 red_intensity
-> +-r--r--r--    1 root     root          4096 Jul  7 03:10 red_max_intensity
-> +
-> +Multicolor Class Brightness Control
-> +===================================
-> +The multiclor class framework will calculate each monochrome LEDs intensity.
-> +
-> +The brightness level for each LED is calculated based on the color LED
-> +intensity setting divided by the color LED max intensity setting multiplied by
-> +the requested brightness.
-> +
-> +led_brightness = brightness * <color>_intensity/<color>_max_intensity
-> +
-> +Example:
-> +Three LEDs are present in the group as defined in "Directory Layout Example"
-> +within this document.
-> +
-> +A user first writes the color LED brightness file with the brightness level that
-> +is necessary to achieve a blueish violet output from the RGB LED group.
-> +
-> +echo 138 > /sys/class/leds/rgb:grouped_leds/red_intensity
-> +echo 43 > /sys/class/leds/rgb:grouped_leds/green_intensity
-> +echo 226 > /sys/class/leds/rgb:grouped_leds/blue_intensity
-> +
-> +red -
-> +	intensity = 138
-> +	max_intensity = 255
-> +green -
-> +	intensity = 43
-> +	max_intensity = 255
-> +blue -
-> +	intensity = 226
-> +	max_intensity = 255
-> +
-> +The user can control the brightness of that RGB group by writing the parent
-> +'brightness' control.  Assuming a parent max_brightness of 255 the user may want
-> +to dim the LED color group to half.  The user would write a value of 128 to the
-> +parent brightness file then the values written to each LED will be adjusted
-> +base on this value
-> +
-> +cat /sys/class/leds/rgb:grouped_leds/max_brightness
-> +255
-> +echo 128 > /sys/class/leds/rgb:grouped_leds/brightness
-> +
-> +adjusted_red_value = 128 * 138/255 = 69
-> +adjusted_green_value = 128 * 43/255 = 21
-> +adjusted_blue_value = 128 * 226/255 = 113
-> +
-> +Reading the parent brightness file will return the current brightness value of
-> +the color LED group.
-> +
-> +cat /sys/class/leds/rgb:grouped_leds/max_brightness
-> +255
-> +
-> +echo 128 > /sys/class/leds/rgb:grouped_leds/brightness
-> +
-> +cat /sys/class/leds/rgb:grouped_leds/brightness
-> +128
-> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-> index 4b68520ac251..a1ede89afc9e 100644
-> --- a/drivers/leds/Kconfig
-> +++ b/drivers/leds/Kconfig
-> @@ -30,6 +30,16 @@ config LEDS_CLASS_FLASH
->  	  for the flash related features of a LED device. It can be built
->  	  as a module.
->  
-> +config LEDS_CLASS_MULTI_COLOR
-> +	tristate "LED Mulit Color LED Class Support"
-> +	depends on LEDS_CLASS
-> +	help
-> +	  This option enables the multicolor LED sysfs class in /sys/class/leds.
-> +	  It wraps LED class and adds multicolor LED specific sysfs attributes
-> +	  and kernel internal API to it. You'll need this to provide support
-> +	  for multicolor LEDs that are grouped together. This class is not
-> +	  intended for single color LEDs. It can be built as a module.
-> +
->  config LEDS_BRIGHTNESS_HW_CHANGED
->  	bool "LED Class brightness_hw_changed attribute support"
->  	depends on LEDS_CLASS
-> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-> index 2da39e896ce8..841038cfe35b 100644
-> --- a/drivers/leds/Makefile
-> +++ b/drivers/leds/Makefile
-> @@ -4,6 +4,7 @@
->  obj-$(CONFIG_NEW_LEDS)			+= led-core.o
->  obj-$(CONFIG_LEDS_CLASS)		+= led-class.o
->  obj-$(CONFIG_LEDS_CLASS_FLASH)		+= led-class-flash.o
-> +obj-$(CONFIG_LEDS_CLASS_MULTI_COLOR)	+= led-class-multicolor.o
->  obj-$(CONFIG_LEDS_TRIGGERS)		+= led-triggers.o
->  
->  # LED Platform Drivers
-> diff --git a/drivers/leds/led-class-multicolor.c b/drivers/leds/led-class-multicolor.c
-> new file mode 100644
-> index 000000000000..89f4bc9e057c
-> --- /dev/null
-> +++ b/drivers/leds/led-class-multicolor.c
-> @@ -0,0 +1,271 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// LED Multi Color class interface
-> +// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-> +
-> +#include <linux/device.h>
-> +#include <linux/init.h>
-> +#include <linux/led-class-multicolor.h>
-> +#include <linux/module.h>
-> +#include <linux/slab.h>
-> +#include <linux/uaccess.h>
-> +
-> +#include "leds.h"
-> +
-> +#define INTENSITY_NAME		"_intensity"
-> +#define MAX_INTENSITY_NAME	"_max_intensity"
-> +
-> +int led_mc_calc_brightness(struct led_classdev_mc *mcled_cdev,
-> +			    enum led_brightness brightness,
-> +			    struct led_mc_color_conversion color_component[])
+We've noticed that the number of dying cgroups on our production hosts
+tends to grow with the uptime. This time it's caused by the writeback
+code.
 
-Now the function name doesn't match with the output array name.
+An inode which is getting dirty for the first time is associated
+with the wb structure (look at __inode_attach_wb()). It can later
+be switched to another wb under some conditions (e.g. some other
+cgroup is writing a lot of data to the same inode), but generally
+stays associated up to the end of life of the inode structure.
 
-How about:
+The problem is that the wb structure holds a reference to the original
+memory cgroup. So if an inode has been dirty once, it has a good chance
+to pin down the original memory cgroup.
 
-- led_mc_brightness_to_color_components
-- led_mc_calc_color_components
+An example from the real life: some service runs periodically and
+updates rpm packages. Each time in a new memory cgroup. Installed
+.so files are heavily used by other cgroups, so corresponding inodes
+tend to stay alive for a long. So do pinned memory cgroups.
+In production I've seen many hosts with 1-2 thousands of dying
+cgroups.
 
-Other suggestions?
+This is not the first problem with the dying memory cgroups. As
+always, the problem is with their relative size: memory cgroups
+are large objects, easily 100x-1000x larger that inodes. So keeping
+a couple of thousands of dying cgroups in memory without a good reason
+(what we easily do with inodes) is quite costly (and is measured
+in tens and hundreds of Mb).
 
-> +{
-> +	struct led_mc_color_entry *priv;
-> +	int i = 0;
-> +
-> +	list_for_each_entry(priv, &mcled_cdev->color_list, list) {
-> +		color_component[i].color_id = priv->led_color_id;
-> +		color_component[i].brightness = brightness *
-> +					  priv->intensity / priv->max_intensity;
-> +		i++;
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(led_mc_calc_brightness);
-> +
-> +static ssize_t intensity_store(struct device *dev,
-> +				struct device_attribute *intensity_attr,
-> +				const char *buf, size_t size)
-> +{
-> +	struct led_mc_color_entry *priv = container_of(intensity_attr,
-> +						    struct led_mc_color_entry,
-> +						      intensity_attr);
-> +	struct led_classdev *led_cdev = priv->mcled_cdev->led_cdev;
-> +	unsigned long value;
-> +	ssize_t ret;
-> +
-> +	mutex_lock(&led_cdev->led_access);
-> +
-> +	ret = kstrtoul(buf, 10, &value);
-> +	if (ret)
-> +		goto unlock;
-> +
-> +	if (value > priv->max_intensity) {
-> +		ret = -EINVAL;
-> +		goto unlock;
-> +	}
-> +
-> +	priv->intensity = value;
-> +	ret = size;
-> +
-> +unlock:
-> +	mutex_unlock(&led_cdev->led_access);
-> +	return ret;
-> +}
-> +
-> +static ssize_t intensity_show(struct device *dev,
-> +			      struct device_attribute *intensity_attr,
-> +			      char *buf)
-> +{
-> +	struct led_mc_color_entry *priv = container_of(intensity_attr,
-> +						    struct led_mc_color_entry,
-> +						      intensity_attr);
-> +
-> +	return sprintf(buf, "%d\n", priv->intensity);
-> +}
-> +
-> +static ssize_t max_intensity_show(struct device *dev,
-> +				   struct device_attribute *max_intensity_attr,
-> +				   char *buf)
-> +{
-> +	struct led_mc_color_entry *priv = container_of(max_intensity_attr,
-> +						    struct led_mc_color_entry,
-> +						      max_intensity_attr);
-> +
-> +	return sprintf(buf, "%d\n", priv->max_intensity);
-> +}
-> +
-> +static struct attribute *led_color_attrs[] = {
-> +	NULL,
-> +};
-> +
-> +static struct attribute_group led_color_group = {
-> +	.name = "colors",
-> +	.attrs = led_color_attrs,
-> +};
-> +
-> +static int led_multicolor_init_color(struct led_classdev_mc *mcled_cdev,
-> +				     int color_id)
-> +{
-> +	struct led_classdev *led_cdev = mcled_cdev->led_cdev;
-> +	struct led_mc_color_entry *mc_priv;
-> +	char *intensity_file_name;
-> +	char *max_intensity_file_name;
-> +	size_t len;
-> +	int ret;
-> +
-> +	mc_priv = devm_kzalloc(led_cdev->dev, sizeof(*mc_priv), GFP_KERNEL);
-> +	if (!mc_priv)
-> +		return -ENOMEM;
-> +
-> +	mc_priv->led_color_id = color_id;
-> +	mc_priv->mcled_cdev = mcled_cdev;
-> +
-> +	sysfs_attr_init(&mc_priv->intensity_attr.attr);
-> +	len = strlen(led_colors[color_id]) + strlen(INTENSITY_NAME) + 1;
-> +	intensity_file_name = kzalloc(len, GFP_KERNEL);
-> +	if (!intensity_file_name)
-> +		return -ENOMEM;
-> +
-> +	snprintf(intensity_file_name, len, "%s%s",
-> +		 led_colors[color_id], INTENSITY_NAME);
-> +	mc_priv->intensity_attr.attr.name = intensity_file_name;
-> +	mc_priv->intensity_attr.attr.mode = 0644;
-> +	mc_priv->intensity_attr.store = intensity_store;
-> +	mc_priv->intensity_attr.show = intensity_show;
-> +	ret = sysfs_add_file_to_group(&led_cdev->dev->kobj,
-> +				      &mc_priv->intensity_attr.attr,
-> +				      led_color_group.name);
-> +	if (ret)
-> +		goto intensity_err_out;
-> +
-> +	sysfs_attr_init(&mc_priv->max_intensity_attr.attr);
-> +	len = strlen(led_colors[color_id]) + strlen(MAX_INTENSITY_NAME) + 1;
-> +	max_intensity_file_name = kzalloc(len, GFP_KERNEL);
-> +	if (!max_intensity_file_name) {
-> +		ret = -ENOMEM;
-> +		goto intensity_err_out;
-> +	}
-> +
-> +	snprintf(max_intensity_file_name, len, "%s%s",
-> +		 led_colors[color_id], MAX_INTENSITY_NAME);
-> +	mc_priv->max_intensity_attr.attr.name = max_intensity_file_name;
-> +	mc_priv->max_intensity_attr.attr.mode = 0444;
-> +	mc_priv->max_intensity_attr.show = max_intensity_show;
-> +	ret = sysfs_add_file_to_group(&led_cdev->dev->kobj,
-> +				      &mc_priv->max_intensity_attr.attr,
-> +				      led_color_group.name);
-> +	if (ret)
-> +		goto max_intensity_err_out;
-> +
-> +	mc_priv->max_intensity = LED_FULL;
-> +	list_add_tail(&mc_priv->list, &mcled_cdev->color_list);
-> +
-> +max_intensity_err_out:
-> +	kfree(max_intensity_file_name);
-> +intensity_err_out:
-> +	kfree(intensity_file_name);
-> +	return ret;
-> +}
-> +
-> +static int led_multicolor_init_color_dir(struct led_classdev_mc *mcled_cdev)
-> +{
-> +	struct led_classdev *led_cdev = mcled_cdev->led_cdev;
-> +	int ret;
-> +	int i;
-> +
-> +	ret = sysfs_create_group(&led_cdev->dev->kobj, &led_color_group);
-> +	if (ret)
-> +		return ret;
-> +
-> +	for (i = 0; i < LED_COLOR_ID_MAX; i++) {
-> +		if (test_bit(i, &mcled_cdev->available_colors)) {
-> +			ret = led_multicolor_init_color(mcled_cdev, i);
-> +			if (ret)
-> +				break;
-> +
-> +		}
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +int led_classdev_multicolor_register_ext(struct device *parent,
-> +				     struct led_classdev_mc *mcled_cdev,
-> +				     struct led_init_data *init_data)
-> +{
-> +	struct led_classdev *led_cdev;
-> +	int ret;
-> +
-> +	if (!mcled_cdev)
-> +		return -EINVAL;
-> +
-> +	led_cdev = mcled_cdev->led_cdev;
-> +	INIT_LIST_HEAD(&mcled_cdev->color_list);
-> +
-> +	/* Register led class device */
-> +	ret = led_classdev_register_ext(parent, led_cdev, init_data);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return led_multicolor_init_color_dir(mcled_cdev);
-> +}
-> +EXPORT_SYMBOL_GPL(led_classdev_multicolor_register_ext);
-> +
-> +void led_classdev_multicolor_unregister(struct led_classdev_mc *mcled_cdev)
-> +{
-> +	struct led_mc_color_entry *priv, *next;
-> +
-> +	if (!mcled_cdev)
-> +		return;
-> +
-> +	list_for_each_entry_safe(priv, next, &mcled_cdev->color_list, list)
-> +		list_del(&priv->list);
-> +
-> +	sysfs_remove_group(&mcled_cdev->led_cdev->dev->kobj, &led_color_group);
-> +	led_classdev_unregister(mcled_cdev->led_cdev);
-> +}
-> +EXPORT_SYMBOL_GPL(led_classdev_multicolor_unregister);
-> +
-> +static void devm_led_classdev_multicolor_release(struct device *dev, void *res)
-> +{
-> +	led_classdev_multicolor_unregister(*(struct led_classdev_mc **)res);
-> +}
-> +
-> +int devm_led_classdev_multicolor_register_ext(struct device *parent,
-> +					     struct led_classdev_mc *mcled_cdev,
-> +					      struct led_init_data *init_data)
-> +{
-> +	struct led_classdev_mc **dr;
-> +	int ret;
-> +
-> +	dr = devres_alloc(devm_led_classdev_multicolor_release,
-> +			  sizeof(*dr), GFP_KERNEL);
-> +	if (!dr)
-> +		return -ENOMEM;
-> +
-> +	ret = led_classdev_multicolor_register(parent, mcled_cdev);
-> +	if (ret) {
-> +		devres_free(dr);
-> +		return ret;
-> +	}
-> +
-> +	*dr = mcled_cdev;
-> +	devres_add(parent, dr);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(devm_led_classdev_multicolor_register_ext);
-> +
-> +static int devm_led_classdev_multicolor_match(struct device *dev,
-> +					      void *res, void *data)
-> +{
-> +	struct led_classdev_mc **p = res;
-> +
-> +	if (WARN_ON(!p || !*p))
-> +		return 0;
-> +
-> +	return *p == data;
-> +}
-> +
-> +void devm_led_classdev_multicolor_unregister(struct device *dev,
-> +					     struct led_classdev_mc *mcled_cdev)
-> +{
-> +	WARN_ON(devres_release(dev,
-> +			       devm_led_classdev_multicolor_release,
-> +			       devm_led_classdev_multicolor_match, mcled_cdev));
-> +}
-> +EXPORT_SYMBOL_GPL(devm_led_classdev_multicolor_unregister);
-> +
-> +MODULE_AUTHOR("Dan Murphy <dmurphy@ti.com>");
-> +MODULE_DESCRIPTION("Multi Color LED class interface");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/include/linux/led-class-multicolor.h b/include/linux/led-class-multicolor.h
-> new file mode 100644
-> index 000000000000..5d0cdca32223
-> --- /dev/null
-> +++ b/include/linux/led-class-multicolor.h
-> @@ -0,0 +1,143 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/* LED Multicolor class interface
-> + * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-> + */
-> +
-> +#ifndef __LINUX_MULTICOLOR_LEDS_H_INCLUDED
-> +#define __LINUX_MULTICOLOR_LEDS_H_INCLUDED
-> +
-> +#include <linux/leds.h>
-> +#include <dt-bindings/leds/common.h>
-> +
-> +struct led_classdev_mc;
-> +
-> +struct led_mc_color_conversion {
-> +	int color_id;
-> +	int brightness;
-> +	int output_num;
-> +};
-> +
-> +struct led_mc_color_entry {
-> +	struct led_classdev_mc *mcled_cdev;
-> +
-> +	struct device_attribute max_intensity_attr;
-> +	struct device_attribute intensity_attr;
-> +
-> +	enum led_brightness max_intensity;
-> +	enum led_brightness intensity;
-> +
-> +	struct list_head list;
-> +
-> +	int led_color_id;
-> +};
-> +
-> +struct led_classdev_mc {
-> +	/* led class device */
-> +	struct led_classdev *led_cdev;
-> +	struct list_head color_list;
-> +
-> +	unsigned long available_colors;
-> +	int num_leds;
-> +};
-> +#ifdef CONFIG_LEDS_CLASS_MULTI_COLOR
-> +static inline struct led_classdev_mc *lcdev_to_mccdev(
-> +						struct led_classdev *lcdev)
-> +{
-> +	return container_of(lcdev, struct led_classdev_mc, led_cdev);
-> +}
-> +
-> +/**
-> + * led_classdev_multicolor_register_ext - register a new object of led_classdev
-> + *				      class with support for multicolor LEDs
-> + * @parent: the multicolor LED to register
-> + * @mcled_cdev: the led_classdev_mc structure for this device
-> + * @init_data: the LED class Multi color device initialization data
-> + *
-> + * Returns: 0 on success or negative error value on failure
-> + */
-> +int led_classdev_multicolor_register_ext(struct device *parent,
-> +					    struct led_classdev_mc *mcled_cdev,
-> +					    struct led_init_data *init_data);
-> +
-> +static inline int led_classdev_multicolor_register(struct device *parent,
-> +					    struct led_classdev_mc *mcled_cdev)
-> +{
-> +	return led_classdev_multicolor_register_ext(parent, mcled_cdev, NULL);
-> +}
-> +
-> +/**
-> + * led_classdev_multicolor_unregister - unregisters an object of led_classdev
-> + *					class with support for multicolor LEDs
-> + * @mcled_cdev: the multicolor LED to unregister
-> + *
-> + * Unregister a previously registered via led_classdev_multicolor_register
-> + * object
-> + */
-> +void led_classdev_multicolor_unregister(struct led_classdev_mc *mcled_cdev);
-> +
-> +/* Calculate brightness for the monochrome LED cluster */
-> +int led_mc_calc_brightness(struct led_classdev_mc *mcled_cdev,
-> +			    enum led_brightness brightness,
-> +			    struct led_mc_color_conversion color_component[]);
-> +
-> +int devm_led_classdev_multicolor_register_ext(struct device *parent,
-> +					  struct led_classdev_mc *mcled_cdev,
-> +					  struct led_init_data *init_data);
-> +
-> +static inline int devm_led_classdev_multicolor_register(struct device *parent,
-> +				     struct led_classdev_mc *mcled_cdev)
-> +{
-> +	return devm_led_classdev_multicolor_register_ext(parent, mcled_cdev,
-> +							 NULL);
-> +}
-> +
-> +void devm_led_classdev_multicolor_unregister(struct device *parent,
-> +					    struct led_classdev_mc *mcled_cdev);
-> +#else
-> +
-> +static inline struct led_classdev_mc *lcdev_to_mccdev(
-> +						struct led_classdev *lcdev)
-> +{
-> +	return NULL;
-> +}
-> +
-> +static inline int led_classdev_multicolor_register_ext(struct device *parent,
-> +					    struct led_classdev_mc *mcled_cdev,
-> +					    struct led_init_data *init_data)
-> +{
-> +	return -EINVAL;
-> +}
-> +
-> +static inline int led_classdev_multicolor_register(struct device *parent,
-> +					    struct led_classdev_mc *mcled_cdev)
-> +{
-> +	return -EINVAL;
-> +}
-> +
-> +static inline void led_classdev_multicolor_unregister(struct led_classdev_mc *mcled_cdev) {}
-> +
-> +static inline int led_mc_calc_brightness(struct led_classdev_mc *mcled_cdev,
-> +					 enum led_brightness brightness,
-> +			struct led_mc_color_conversion color_component[])
-> +{
-> +	return -EINVAL;
-> +}
-> +
-> +static inline int devm_led_classdev_multicolor_register_ext(struct device *parent,
-> +					  struct led_classdev_mc *mcled_cdev,
-> +					  struct led_init_data *init_data)
-> +{
-> +	return -EINVAL;
-> +}
-> +
-> +static inline int devm_led_classdev_multicolor_register(struct device *parent,
-> +				     struct led_classdev_mc *mcled_cdev)
-> +{
-> +	return -EINVAL;
-> +}
+To solve this problem let's perform a periodic scan of inodes
+attached to dying wbs, which don't have active io operations,
+and switched them to the root memory cgroup's wb.
+That will eventually release the wb structure and corresponding
+memory cgroup.
 
-Do you have use case for which these no-ops would be useful?
-We don't have no-ops for any of current LED API beside triggers,
-which are indeed useful.
+To make this scanning effective, let's keep a list of attached
+inodes. inode->i_io_list can be reused for this purpose. This idea
+was suggested by Jan Kara.
 
-> +static inline void devm_led_classdev_multicolor_unregister(struct device *parent,
-> +				    struct led_classdev_mc *mcled_cdev) {}
-> +
-> +#endif	/* CONFIG_LEDS_CLASS_MULTI_COLOR */
-> +#endif	/* __LINUX_MULTICOLOR_LEDS_H_INCLUDED */
-> 
+The scan is performed from the cgroup offlining path. Dying wbs
+are placed on the global list. On each cgroup removal we traverse
+the whole list ignoring wbs with active io operations. That will
+allow the majority of io operations to be finished after the
+removal of the cgroup.
 
--- 
-Best regards,
-Jacek Anaszewski
+To avoid scheduling too many switch operations, let's stop on a first
+failure. To make it's possible, inode_switch_wbs() can return a
+boolean value: false if it's failed to schedule a switching operation
+because there are already too many in flight, or if there is not
+enough memory; true otherwise.
+
+Signed-off-by: Roman Gushchin <guro@fb.com>
+---
+ fs/fs-writeback.c                | 64 +++++++++++++++++++++++++------
+ include/linux/backing-dev-defs.h |  2 +
+ include/linux/writeback.h        |  2 +
+ mm/backing-dev.c                 | 66 ++++++++++++++++++++++++++++++--
+ 4 files changed, 119 insertions(+), 15 deletions(-)
+
+diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
+index e88421d9a48d..af608276fbf6 100644
+--- a/fs/fs-writeback.c
++++ b/fs/fs-writeback.c
+@@ -136,16 +136,21 @@ static bool inode_io_list_move_locked(struct inode *i=
+node,
+  * inode_io_list_del_locked - remove an inode from its bdi_writeback IO li=
+st
+  * @inode: inode to be removed
+  * @wb: bdi_writeback @inode is being removed from
++ * @keep_attached: keep the inode on the list of inodes attached to wb
+  *
+  * Remove @inode which may be on one of @wb->b_{dirty|io|more_io} lists an=
+d
+  * clear %WB_has_dirty_io if all are empty afterwards.
+  */
+ static void inode_io_list_del_locked(struct inode *inode,
+-				     struct bdi_writeback *wb)
++				     struct bdi_writeback *wb,
++				     bool keep_attached)
+ {
+ 	assert_spin_locked(&wb->list_lock);
+=20
+-	list_del_init(&inode->i_io_list);
++	if (keep_attached)
++		list_move(&inode->i_io_list, &wb->b_attached);
++	else
++		list_del_init(&inode->i_io_list);
+ 	wb_io_lists_depopulated(wb);
+ }
+=20
+@@ -426,7 +431,7 @@ static void inode_switch_wbs_work_fn(struct work_struct=
+ *work)
+ 	if (!list_empty(&inode->i_io_list)) {
+ 		struct inode *pos;
+=20
+-		inode_io_list_del_locked(inode, old_wb);
++		inode_io_list_del_locked(inode, old_wb, false);
+ 		inode->i_wb =3D new_wb;
+ 		list_for_each_entry(pos, &new_wb->b_dirty, i_io_list)
+ 			if (time_after_eq(inode->dirtied_when,
+@@ -485,24 +490,29 @@ static void inode_switch_wbs_rcu_fn(struct rcu_head *=
+rcu_head)
+  *
+  * Switch @inode's wb association to the wb identified by @new_wb_id.  The
+  * switching is performed asynchronously and may fail silently.
++ *
++ * Returns %true is the operation has been scheduled successfully or
++ * if the inode cannot be switched because of its own state
++ * (e.g. inode is already switching). Returns %false otherwise.
+  */
+-static void inode_switch_wbs(struct inode *inode, int new_wb_id)
++static bool inode_switch_wbs(struct inode *inode, int new_wb_id)
+ {
+ 	struct backing_dev_info *bdi =3D inode_to_bdi(inode);
+ 	struct cgroup_subsys_state *memcg_css;
+ 	struct inode_switch_wbs_context *isw;
++	bool ret =3D false;
+=20
+ 	/* noop if seems to be already in progress */
+ 	if (inode->i_state & I_WB_SWITCH)
+-		return;
++		return true;
+=20
+ 	/* avoid queueing a new switch if too many are already in flight */
+ 	if (atomic_read(&isw_nr_in_flight) > WB_FRN_MAX_IN_FLIGHT)
+-		return;
++		return false;
+=20
+ 	isw =3D kzalloc(sizeof(*isw), GFP_ATOMIC);
+ 	if (!isw)
+-		return;
++		return true;
+=20
+ 	/* find and pin the new wb */
+ 	rcu_read_lock();
+@@ -519,6 +529,7 @@ static void inode_switch_wbs(struct inode *inode, int n=
+ew_wb_id)
+ 	    inode->i_state & (I_WB_SWITCH | I_FREEING) ||
+ 	    inode_to_wb(inode) =3D=3D isw->new_wb) {
+ 		spin_unlock(&inode->i_lock);
++		ret =3D true;
+ 		goto out_free;
+ 	}
+ 	inode->i_state |=3D I_WB_SWITCH;
+@@ -536,12 +547,43 @@ static void inode_switch_wbs(struct inode *inode, int=
+ new_wb_id)
+ 	call_rcu(&isw->rcu_head, inode_switch_wbs_rcu_fn);
+=20
+ 	atomic_inc(&isw_nr_in_flight);
+-	return;
++	return true;
+=20
+ out_free:
+ 	if (isw->new_wb)
+ 		wb_put(isw->new_wb);
+ 	kfree(isw);
++	return ret;
++}
++
++/**
++ * cleanup_offline_wb - switch attached inodes to the root wb
++ * @wb: target wb
++ *
++ * Switch inodes attached to @wb to the root memory cgroup's wb.
++ * Switching is performed asynchronously and may fail silently.
++ *
++ * Returns %false if at least one switching attempt has been failed,
++ * %true otherwise.
++ */
++bool cleanup_offline_wb(struct bdi_writeback *wb)
++{
++	struct inode *inode;
++	bool ret =3D true;
++
++	spin_lock(&wb->list_lock);
++	if (list_empty(&wb->b_attached))
++		goto unlock;
++
++	list_for_each_entry(inode, &wb->b_attached, i_io_list) {
++		ret =3D inode_switch_wbs(inode, root_mem_cgroup->css.id);
++		if (!ret)
++			break;
++	}
++unlock:
++	spin_unlock(&wb->list_lock);
++
++	return ret;
+ }
+=20
+ /**
+@@ -1120,7 +1162,7 @@ void inode_io_list_del(struct inode *inode)
+ 	struct bdi_writeback *wb;
+=20
+ 	wb =3D inode_to_wb_and_lock_list(inode);
+-	inode_io_list_del_locked(inode, wb);
++	inode_io_list_del_locked(inode, wb, false);
+ 	spin_unlock(&wb->list_lock);
+ }
+=20
+@@ -1425,7 +1467,7 @@ static void requeue_inode(struct inode *inode, struct=
+ bdi_writeback *wb,
+ 		inode_io_list_move_locked(inode, wb, &wb->b_dirty_time);
+ 	} else {
+ 		/* The inode is clean. Remove from writeback lists. */
+-		inode_io_list_del_locked(inode, wb);
++		inode_io_list_del_locked(inode, wb, true);
+ 	}
+ }
+=20
+@@ -1570,7 +1612,7 @@ static int writeback_single_inode(struct inode *inode=
+,
+ 	 * touch it. See comment above for explanation.
+ 	 */
+ 	if (!(inode->i_state & I_DIRTY_ALL))
+-		inode_io_list_del_locked(inode, wb);
++		inode_io_list_del_locked(inode, wb, true);
+ 	spin_unlock(&wb->list_lock);
+ 	inode_sync_complete(inode);
+ out:
+diff --git a/include/linux/backing-dev-defs.h b/include/linux/backing-dev-d=
+efs.h
+index 4fc87dee005a..68b167fda259 100644
+--- a/include/linux/backing-dev-defs.h
++++ b/include/linux/backing-dev-defs.h
+@@ -137,6 +137,7 @@ struct bdi_writeback {
+ 	struct list_head b_io;		/* parked for writeback */
+ 	struct list_head b_more_io;	/* parked for more writeback */
+ 	struct list_head b_dirty_time;	/* time stamps are dirty */
++	struct list_head b_attached;	/* attached inodes */
+ 	spinlock_t list_lock;		/* protects the b_* lists */
+=20
+ 	struct percpu_counter stat[NR_WB_STAT_ITEMS];
+@@ -177,6 +178,7 @@ struct bdi_writeback {
+ 	struct cgroup_subsys_state *blkcg_css; /* and blkcg */
+ 	struct list_head memcg_node;	/* anchored at memcg->cgwb_list */
+ 	struct list_head blkcg_node;	/* anchored at blkcg->cgwb_list */
++	struct list_head offline_node;
+=20
+ 	union {
+ 		struct work_struct release_work;
+diff --git a/include/linux/writeback.h b/include/linux/writeback.h
+index a19d845dd7eb..7f430644a629 100644
+--- a/include/linux/writeback.h
++++ b/include/linux/writeback.h
+@@ -220,6 +220,7 @@ void wbc_account_cgroup_owner(struct writeback_control =
+*wbc, struct page *page,
+ int cgroup_writeback_by_id(u64 bdi_id, int memcg_id, unsigned long nr_page=
+s,
+ 			   enum wb_reason reason, struct wb_completion *done);
+ void cgroup_writeback_umount(void);
++bool cleanup_offline_wb(struct bdi_writeback *wb);
+=20
+ /**
+  * inode_attach_wb - associate an inode with its wb
+@@ -247,6 +248,7 @@ static inline void inode_detach_wb(struct inode *inode)
+ 	if (inode->i_wb) {
+ 		WARN_ON_ONCE(!(inode->i_state & I_CLEAR));
+ 		wb_put(inode->i_wb);
++		WARN_ON_ONCE(!list_empty(&inode->i_io_list));
+ 		inode->i_wb =3D NULL;
+ 	}
+ }
+diff --git a/mm/backing-dev.c b/mm/backing-dev.c
+index d9daa3e422d0..774c05672a27 100644
+--- a/mm/backing-dev.c
++++ b/mm/backing-dev.c
+@@ -52,10 +52,10 @@ static int bdi_debug_stats_show(struct seq_file *m, voi=
+d *v)
+ 	unsigned long background_thresh;
+ 	unsigned long dirty_thresh;
+ 	unsigned long wb_thresh;
+-	unsigned long nr_dirty, nr_io, nr_more_io, nr_dirty_time;
++	unsigned long nr_dirty, nr_io, nr_more_io, nr_dirty_time, nr_attached;
+ 	struct inode *inode;
+=20
+-	nr_dirty =3D nr_io =3D nr_more_io =3D nr_dirty_time =3D 0;
++	nr_dirty =3D nr_io =3D nr_more_io =3D nr_dirty_time =3D nr_attached =3D 0=
+;
+ 	spin_lock(&wb->list_lock);
+ 	list_for_each_entry(inode, &wb->b_dirty, i_io_list)
+ 		nr_dirty++;
+@@ -66,6 +66,8 @@ static int bdi_debug_stats_show(struct seq_file *m, void =
+*v)
+ 	list_for_each_entry(inode, &wb->b_dirty_time, i_io_list)
+ 		if (inode->i_state & I_DIRTY_TIME)
+ 			nr_dirty_time++;
++	list_for_each_entry(inode, &wb->b_attached, i_io_list)
++		nr_attached++;
+ 	spin_unlock(&wb->list_lock);
+=20
+ 	global_dirty_limits(&background_thresh, &dirty_thresh);
+@@ -85,6 +87,7 @@ static int bdi_debug_stats_show(struct seq_file *m, void =
+*v)
+ 		   "b_io:               %10lu\n"
+ 		   "b_more_io:          %10lu\n"
+ 		   "b_dirty_time:       %10lu\n"
++		   "b_attached:         %10lu\n"
+ 		   "bdi_list:           %10u\n"
+ 		   "state:              %10lx\n",
+ 		   (unsigned long) K(wb_stat(wb, WB_WRITEBACK)),
+@@ -99,6 +102,7 @@ static int bdi_debug_stats_show(struct seq_file *m, void=
+ *v)
+ 		   nr_io,
+ 		   nr_more_io,
+ 		   nr_dirty_time,
++		   nr_attached,
+ 		   !list_empty(&bdi->bdi_list), bdi->wb.state);
+ #undef K
+=20
+@@ -295,6 +299,7 @@ static int wb_init(struct bdi_writeback *wb, struct bac=
+king_dev_info *bdi,
+ 	INIT_LIST_HEAD(&wb->b_io);
+ 	INIT_LIST_HEAD(&wb->b_more_io);
+ 	INIT_LIST_HEAD(&wb->b_dirty_time);
++	INIT_LIST_HEAD(&wb->b_attached);
+ 	spin_lock_init(&wb->list_lock);
+=20
+ 	wb->bw_time_stamp =3D jiffies;
+@@ -385,11 +390,12 @@ static void wb_exit(struct bdi_writeback *wb)
+=20
+ /*
+  * cgwb_lock protects bdi->cgwb_tree, bdi->cgwb_congested_tree,
+- * blkcg->cgwb_list, and memcg->cgwb_list.  bdi->cgwb_tree is also RCU
+- * protected.
++ * blkcg->cgwb_list, offline_cgwbs and memcg->cgwb_list.
++ * bdi->cgwb_tree is also RCU protected.
+  */
+ static DEFINE_SPINLOCK(cgwb_lock);
+ static struct workqueue_struct *cgwb_release_wq;
++static LIST_HEAD(offline_cgwbs);
+=20
+ /**
+  * wb_congested_get_create - get or create a wb_congested
+@@ -486,6 +492,10 @@ static void cgwb_release_workfn(struct work_struct *wo=
+rk)
+ 	mutex_lock(&wb->bdi->cgwb_release_mutex);
+ 	wb_shutdown(wb);
+=20
++	spin_lock_irq(&cgwb_lock);
++	list_del(&wb->offline_node);
++	spin_unlock_irq(&cgwb_lock);
++
+ 	css_put(wb->memcg_css);
+ 	css_put(wb->blkcg_css);
+ 	mutex_unlock(&wb->bdi->cgwb_release_mutex);
+@@ -513,6 +523,7 @@ static void cgwb_kill(struct bdi_writeback *wb)
+ 	WARN_ON(!radix_tree_delete(&wb->bdi->cgwb_tree, wb->memcg_css->id));
+ 	list_del(&wb->memcg_node);
+ 	list_del(&wb->blkcg_node);
++	list_add(&wb->offline_node, &offline_cgwbs);
+ 	percpu_ref_kill(&wb->refcnt);
+ }
+=20
+@@ -734,6 +745,50 @@ static void cgwb_bdi_unregister(struct backing_dev_inf=
+o *bdi)
+ 	mutex_unlock(&bdi->cgwb_release_mutex);
+ }
+=20
++/**
++ * cleanup_offline_cgwbs - try to release dying cgwbs
++ *
++ * Try to release dying cgwbs by switching attached inodes to the wb
++ * belonging to the root memory cgroup. Processed wbs are placed at the
++ * end of the list to guarantee the forward progress.
++ *
++ * Should be called with the acquired cgwb_lock lock, which might
++ * be released and re-acquired in the process.
++ */
++static void cleanup_offline_cgwbs(void)
++{
++	struct bdi_writeback *wb;
++	LIST_HEAD(processed);
++	bool cont =3D true;
++
++	lockdep_assert_held(&cgwb_lock);
++
++	do {
++		wb =3D list_first_entry_or_null(&offline_cgwbs,
++					      struct bdi_writeback,
++					      offline_node);
++		if (!wb)
++			break;
++
++		list_move_tail(&wb->offline_node, &processed);
++
++		if (wb_has_dirty_io(wb))
++			continue;
++
++		if (!percpu_ref_tryget(&wb->refcnt))
++			continue;
++
++		spin_unlock_irq(&cgwb_lock);
++		cont =3D cleanup_offline_wb(wb);
++		spin_lock_irq(&cgwb_lock);
++
++		wb_put(wb);
++	} while (cont);
++
++	if (!list_empty(&processed))
++		list_splice_tail(&processed, &offline_cgwbs);
++}
++
+ /**
+  * wb_memcg_offline - kill all wb's associated with a memcg being offlined
+  * @memcg: memcg being offlined
+@@ -749,6 +804,9 @@ void wb_memcg_offline(struct mem_cgroup *memcg)
+ 	list_for_each_entry_safe(wb, next, memcg_cgwb_list, memcg_node)
+ 		cgwb_kill(wb);
+ 	memcg_cgwb_list->next =3D NULL;	/* prevent new wb's */
++
++	cleanup_offline_cgwbs();
++
+ 	spin_unlock_irq(&cgwb_lock);
+ }
+=20
+--=20
+2.21.0
+
