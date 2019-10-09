@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABBD4ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 516C9ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84A4B21924
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AC8F20B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:24:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570641837;
-	bh=/4mMuhJyPwKfQfkFTTqyLam8OguJfnlyat4cAdt/7VI=;
+	s=default; t=1570641840;
+	bh=mqorUQN+cdr1Eu4q/RLzx0/E236qnHRyOfcEwcMOZpw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PiUUdZ2/npGxpDpPsRUrz72B2gxa8bqzfInoEcqpiAliJYXfb+ihZRu9NaM3y86uU
-	 enBngV4l2dBbdJbFK0ThsCx8lNObmjdlzDHunMkRDjNGT2fG4i4koGs7eZSo3VcIAq
-	 naJMY3pWmfKyqVg2KMikuIy9IZLIMcRP7Nl8X8F0=
+	b=Va08135KaMJrMdqZxoyINEjmabBFBX7PApp+buW4STalMI1AmmUSWn1MOwRXg29u2
+	 JVVRYSnXNwqsrLCgQzbZhoE/28qcmbCvNRVzBgQ+1NMnNfuJu5Ane1x03OX8NjHebZ
+	 LPRVRRzfENYG83iR9asVe+GxrlV2dDUMbsNncamI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731997AbfJIRX4 (ORCPT
+        id S1732047AbfJIRX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:23:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47978 "EHLO mail.kernel.org"
+        Wed, 9 Oct 2019 13:23:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730490AbfJIRXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 13:23:54 -0400
+        id S1731991AbfJIRX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 13:23:56 -0400
 Received: from sasha-vm.mshome.net (unknown [167.220.2.234])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 119A121920;
-        Wed,  9 Oct 2019 17:23:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4890C2196E;
+        Wed,  9 Oct 2019 17:23:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570641834;
-        bh=/4mMuhJyPwKfQfkFTTqyLam8OguJfnlyat4cAdt/7VI=;
+        s=default; t=1570641835;
+        bh=mqorUQN+cdr1Eu4q/RLzx0/E236qnHRyOfcEwcMOZpw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A6GS984hK9CM5ZnARTBXIjvK6o0cJl8roJSSmMXGxyPdViHpTRvz4T82OrdPDfOhL
-         cr+hLkjOHi8RyQFbbrFg5583BmCCDUZ08U7j40MZY/BGD2nphT4vXN9zD76Oru/vS/
-         owwuI5j8DQRv1Gtdx6VllZzfqo8jHOTd33YRCXFI=
+        b=GvKxjycxuerqhaoq03DkHst1b2I2cDVYLhY/VNCuVUB3DNIJADBn1UjAV5aFhIKcX
+         eaOqQGxNio+g9yN4RVyah+6LbV6ErI2S/zPMYdBrpcTZf2+4IXcYjqep4Av4lu1PEc
+         4S+ZJwhvoWcOpC/1JreNpwf/jVZpeMB/ivxsTcKk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
-        Lowry Li <lowry.li@arm.com>,
-        Brian Starkey <brian.starkey@arm.com>,
-        James Qian Wang <james.qian.wang@arm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.3 03/68] drm: Clear the fence pointer when writeback job signaled
-Date:   Wed,  9 Oct 2019 13:04:42 -0400
-Message-Id: <20191009170547.32204-3-sashal@kernel.org>
+Cc:     Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 07/68] scsi: ufs: skip shutdown if hba is not powered
+Date:   Wed,  9 Oct 2019 13:04:46 -0400
+Message-Id: <20191009170547.32204-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191009170547.32204-1-sashal@kernel.org>
 References: <20191009170547.32204-1-sashal@kernel.org>
@@ -62,77 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+From: Stanley Chu <stanley.chu@mediatek.com>
 
-[ Upstream commit b1066a123538044117f0a78ba8c6a50cf5a04c86 ]
+[ Upstream commit f51913eef23f74c3bd07899dc7f1ed6df9e521d8 ]
 
-During it signals the completion of a writeback job, after releasing
-the out_fence, we'd clear the pointer.
+In some cases, hba may go through shutdown flow without successful
+initialization and then make system hang.
 
-Check if fence left over in drm_writeback_cleanup_job(), release it.
+For example, if ufshcd_change_power_mode() gets error and leads to
+ufshcd_hba_exit() to release resources of the host, future shutdown flow
+may hang the system since the host register will be accessed in unpowered
+state.
 
-Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
-Reviewed-by: Brian Starkey <brian.starkey@arm.com>
-Reviewed-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.com>
-Signed-off-by: james qian wang (Arm Technology China) <james.qian.wang@arm.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/1564571048-15029-3-git-send-email-lowry.li@arm.com
+To solve this issue, simply add checking to skip shutdown for above kind of
+situation.
+
+Link: https://lore.kernel.org/r/1568780438-28753-1-git-send-email-stanley.chu@mediatek.com
+Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+Acked-by: Bean Huo <beanhuo@micron.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_writeback.c | 23 +++++++++++++++--------
- 1 file changed, 15 insertions(+), 8 deletions(-)
+ drivers/scsi/ufs/ufshcd.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/drm_writeback.c b/drivers/gpu/drm/drm_writeback.c
-index ff138b6ec48ba..43d9e3bb3a943 100644
---- a/drivers/gpu/drm/drm_writeback.c
-+++ b/drivers/gpu/drm/drm_writeback.c
-@@ -324,6 +324,9 @@ void drm_writeback_cleanup_job(struct drm_writeback_job *job)
- 	if (job->fb)
- 		drm_framebuffer_put(job->fb);
- 
-+	if (job->out_fence)
-+		dma_fence_put(job->out_fence);
-+
- 	kfree(job);
- }
- EXPORT_SYMBOL(drm_writeback_cleanup_job);
-@@ -366,25 +369,29 @@ drm_writeback_signal_completion(struct drm_writeback_connector *wb_connector,
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 029da74bb2f5c..e674f6148f698 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -8095,6 +8095,9 @@ int ufshcd_shutdown(struct ufs_hba *hba)
  {
- 	unsigned long flags;
- 	struct drm_writeback_job *job;
-+	struct dma_fence *out_fence;
+ 	int ret = 0;
  
- 	spin_lock_irqsave(&wb_connector->job_lock, flags);
- 	job = list_first_entry_or_null(&wb_connector->job_queue,
- 				       struct drm_writeback_job,
- 				       list_entry);
--	if (job) {
-+	if (job)
- 		list_del(&job->list_entry);
--		if (job->out_fence) {
--			if (status)
--				dma_fence_set_error(job->out_fence, status);
--			dma_fence_signal(job->out_fence);
--			dma_fence_put(job->out_fence);
--		}
--	}
++	if (!hba->is_powered)
++		goto out;
 +
- 	spin_unlock_irqrestore(&wb_connector->job_lock, flags);
+ 	if (ufshcd_is_ufs_dev_poweroff(hba) && ufshcd_is_link_off(hba))
+ 		goto out;
  
- 	if (WARN_ON(!job))
- 		return;
- 
-+	out_fence = job->out_fence;
-+	if (out_fence) {
-+		if (status)
-+			dma_fence_set_error(out_fence, status);
-+		dma_fence_signal(out_fence);
-+		dma_fence_put(out_fence);
-+		job->out_fence = NULL;
-+	}
-+
- 	INIT_WORK(&job->cleanup_work, cleanup_work);
- 	queue_work(system_long_wq, &job->cleanup_work);
- }
 -- 
 2.20.1
 
