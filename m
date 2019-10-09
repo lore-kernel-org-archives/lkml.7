@@ -2,113 +2,82 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5584C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8FBC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E3BF20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:24:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30FED20B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:24:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731386AbfJIOYl (ORCPT
+        id S1731450AbfJIOYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 10:24:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54988 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729491AbfJIOYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 10:24:41 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7BEAEAD2C;
-        Wed,  9 Oct 2019 14:24:39 +0000 (UTC)
-Date:   Wed, 9 Oct 2019 16:24:38 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        sergey.senozhatsky.work@gmail.com, rostedt@goodmis.org,
-        peterz@infradead.org, linux-mm@kvack.org,
-        john.ogness@linutronix.de, akpm@linux-foundation.org,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        PeterOberparleiter <oberpar@linux.ibm.com>, david@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
-Message-ID: <20191009142438.yx74ukfqwy2hr4fz@pathway.suse.cz>
-References: <aefe7f75-b0ec-9e99-a77e-87324edb24e0@de.ibm.com>
- <1570550917.5576.303.camel@lca.pw>
- <20191008183525.GQ6681@dhcp22.suse.cz>
- <1570561573.5576.307.camel@lca.pw>
- <20191008191728.GS6681@dhcp22.suse.cz>
- <1570563324.5576.309.camel@lca.pw>
- <20191009114903.aa6j6sa56z2cssom@pathway.suse.cz>
- <1570626402.5937.1.camel@lca.pw>
- <20191009132746.GA6681@dhcp22.suse.cz>
- <1570628593.5937.3.camel@lca.pw>
+        Wed, 9 Oct 2019 10:24:43 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43780 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729491AbfJIOYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 10:24:42 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id ADD4333027C;
+        Wed,  9 Oct 2019 14:24:42 +0000 (UTC)
+Received: from t460s.redhat.com (unknown [10.36.118.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5258D60BF4;
+        Wed,  9 Oct 2019 14:24:36 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Pankaj gupta <pagupta@redhat.com>, Qian Cai <cai@lca.pw>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
+Subject: [PATCH v2 0/2] mm: Don't access uninitialized memmaps in PFN walkers
+Date:   Wed,  9 Oct 2019 16:24:33 +0200
+Message-Id: <20191009142435.3975-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1570628593.5937.3.camel@lca.pw>
-User-Agent: NeoMutt/20170912 (1.9.0)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 09 Oct 2019 14:24:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2019-10-09 09:43:13, Qian Cai wrote:
-> On Wed, 2019-10-09 at 15:27 +0200, Michal Hocko wrote:
-> > On Wed 09-10-19 09:06:42, Qian Cai wrote:
-> > [...]
-> > > https://lore.kernel.org/linux-mm/1570460350.5576.290.camel@lca.pw/
-> > > 
-> > > [  297.425964] -> #1 (&port_lock_key){-.-.}:
-> > > [  297.425967]        __lock_acquire+0x5b3/0xb40
-> > > [  297.425967]        lock_acquire+0x126/0x280
-> > > [  297.425968]        _raw_spin_lock_irqsave+0x3a/0x50
-> > > [  297.425969]        serial8250_console_write+0x3e4/0x450
-> > > [  297.425970]        univ8250_console_write+0x4b/0x60
-> > > [  297.425970]        console_unlock+0x501/0x750
-> > > [  297.425971]        vprintk_emit+0x10d/0x340
-> > > [  297.425972]        vprintk_default+0x1f/0x30
-> > > [  297.425972]        vprintk_func+0x44/0xd4
-> > > [  297.425973]        printk+0x9f/0xc5
-> > > [  297.425974]        register_console+0x39c/0x520
-> > > [  297.425975]        univ8250_console_init+0x23/0x2d
-> > > [  297.425975]        console_init+0x338/0x4cd
-> > > [  297.425976]        start_kernel+0x534/0x724
-> > > [  297.425977]        x86_64_start_reservations+0x24/0x26
-> > > [  297.425977]        x86_64_start_kernel+0xf4/0xfb
-> > > [  297.425978]        secondary_startup_64+0xb6/0xc0
-> > > 
-> > > where the report again show the early boot call trace for the locking
-> > > dependency,
-> > > 
-> > > console_owner --> port_lock_key
-> > > 
-> > > but that dependency clearly not only happen in the early boot.
-> > 
-> > Can you provide an example of the runtime dependency without any early
-> > boot artifacts? Because this discussion really doens't make much sense
-> > without a clear example of a _real_ lockdep report that is not a false
-> > possitive. All of them so far have been concluded to be false possitive
-> > AFAIU.
-> 
-> An obvious one is in the above link. Just replace the trace in #1 above with
-> printk() from anywhere, i.e., just ignore the early boot calls there as they are
->  not important.
-> 
-> printk()
->   console_unlock()
->     console_lock_spinning_enable() --> console_owner_lock
->   call_console_drivers()
->     serial8250_console_write() --> port->lock
+This is the follow-up of:
+  [PATCH v1] mm: Fix access of uninitialized memmaps in fs/proc/page.c
 
-Please, find the location where this really happens and then suggests
-how the real deadlock could get fixed. So far, we have seen only
-false positives and theoretical scenarios.
+We have multiple places where we might access uninitialized memmaps and
+trigger kernel BUGs. Make sure to only access initialized memmaps.
 
-Best Regards,
-Petr
+Some of these places got easier to trigger with:
+  [PATCH v6 00/10] mm/memory_hotplug: Shrink zones before removing memory
+As memmaps are now also poisoned when memory is offlined, before it is
+actually removed.
+
+v1 -> v2:
+- Drop ZONE_DEVICE support from the /proc/k... files as requested by Michal
+- Further simplify the code
+- Split up into two patches
+
+David Hildenbrand (2):
+  mm: Don't access uninitialized memmaps in fs/proc/page.c
+  mm/memory-failure.c: Don't access uninitialized memmaps in
+    memory_failure()
+
+ fs/proc/page.c      | 28 ++++++++++++++++------------
+ mm/memory-failure.c | 14 ++++++++------
+ 2 files changed, 24 insertions(+), 18 deletions(-)
+
+-- 
+2.21.0
+
