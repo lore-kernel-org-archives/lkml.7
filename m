@@ -4,215 +4,282 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC95C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 375A1C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 243BD206B6
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:18:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0904D206B6
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:18:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731335AbfJINSW (ORCPT
+        id S1731356AbfJINS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 09:18:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36302 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731005AbfJINSW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 09:18:22 -0400
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 55C9A87630
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Oct 2019 13:18:21 +0000 (UTC)
-Received: by mail-wm1-f71.google.com with SMTP id r21so663454wme.5
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 06:18:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QSGtDck56uyZ7bQZy6YNbrPNRWeC06OlNw7fuz6920g=;
-        b=DqxynDVuokShlWwSxKMs2VaSiU64xhLQ3Djxe44q5rRNf2YSZa9yPx8wOFt6cc0BED
-         Fhp/zyTle+/fqU3o3fC/D3gsIUugCFfkPFRc3U+tDlVyaJMPi3doYyjmprl9SKJbCK2J
-         tw83vbEla2qmdjnKDbnAxBe8bG3Yl6jVQSU2b3RTJbKBv0MULwvb2Hv0PKNonfkYgjun
-         RIUanln9NvxmUAhsyfxkM+ZjH3IRM0taUHonD26EpqXOQPeSpkIYNmeWW2UI9THa3RmE
-         /I+bx9HDeLkrrIWCRwG1+zhNGCmBGH3OQZZ/Z//7Ufifz+7GBJ26GEz93kQvDeFZJe26
-         clrg==
-X-Gm-Message-State: APjAAAVi1IHR8Kh0ee456s8YE6TDdOHxPfEBJOhAZnjL/oZdoAarILc5
-        WQqp0mNbT6hLIEicgWHYlcn1/00rRSL/JFHvFE6e+UgWvk8FNalr+V4kPJkkqCdqH3pgkZji9X1
-        RNP+viqZWbDbRO/LENSu5Kf9z
-X-Received: by 2002:a5d:654a:: with SMTP id z10mr2870820wrv.159.1570627100020;
-        Wed, 09 Oct 2019 06:18:20 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyEhsE6YKwEHTEE/HZcg+u2Ek0JtIlYFKf+FQD7oObjzI3Nse2MJ3NOgl7JFiN+/rZpZf7MuA==
-X-Received: by 2002:a5d:654a:: with SMTP id z10mr2870794wrv.159.1570627099787;
-        Wed, 09 Oct 2019 06:18:19 -0700 (PDT)
-Received: from shalem.localdomain (2001-1c00-0c14-2800-ec23-a060-24d5-2453.cable.dynamic.v6.ziggo.nl. [2001:1c00:c14:2800:ec23:a060:24d5:2453])
-        by smtp.gmail.com with ESMTPSA id v6sm4176570wma.24.2019.10.09.06.18.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Oct 2019 06:18:18 -0700 (PDT)
-Subject: Re: [PATCH v7 1/8] efi: Export boot-services code and data as
- debugfs-blobs
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Peter Jones <pjones@redhat.com>,
-        Dave Olsthoorn <dave@bewaar.me>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-input@vger.kernel.org
-References: <20191004145056.43267-1-hdegoede@redhat.com>
- <20191004145056.43267-2-hdegoede@redhat.com>
- <CAKv+Gu9OU3rS-j+L+pxpK7HZi41XtQZTq9BDs6VpUC8RCq5X6g@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <c0256726-0aa3-b005-0a18-7b6a41533a0b@redhat.com>
-Date:   Wed, 9 Oct 2019 15:18:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 9 Oct 2019 09:18:26 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:45747 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731005AbfJINSZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 09:18:25 -0400
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1iIBrB-00032D-Ni; Wed, 09 Oct 2019 15:18:21 +0200
+Received: from [IPv6:2a03:f580:87bc:d400:f5:eb93:ca3c:b4e2] (unknown [IPv6:2a03:f580:87bc:d400:f5:eb93:ca3c:b4e2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
+        (Authenticated sender: mkl@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id 25D594637E6;
+        Wed,  9 Oct 2019 13:18:18 +0000 (UTC)
+To:     Jeroen Hofstee <jhofstee@victronenergy.com>,
+        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>
+Cc:     Wolfgang Grandegger <wg@grandegger.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190924184437.10607-1-jhofstee@victronenergy.com>
+ <20190924184437.10607-2-jhofstee@victronenergy.com>
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
+ 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
+Subject: Re: [PATCH 1/7] can: rx-offload: continue on error
+Message-ID: <134ddb8e-a231-922d-f554-ca77ce0c16af@pengutronix.de>
+Date:   Wed, 9 Oct 2019 15:18:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <CAKv+Gu9OU3rS-j+L+pxpK7HZi41XtQZTq9BDs6VpUC8RCq5X6g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190924184437.10607-2-jhofstee@victronenergy.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="BXNKZd3qMlXdhqpqPUPu9DyJyHZxPf3Ik"
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--BXNKZd3qMlXdhqpqPUPu9DyJyHZxPf3Ik
+Content-Type: multipart/mixed; boundary="KNwgur7TmfQkHy3BGycM90HOnustJrKiJ";
+ protected-headers="v1"
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Jeroen Hofstee <jhofstee@victronenergy.com>,
+ "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>
+Cc: Wolfgang Grandegger <wg@grandegger.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>
+Message-ID: <134ddb8e-a231-922d-f554-ca77ce0c16af@pengutronix.de>
+Subject: Re: [PATCH 1/7] can: rx-offload: continue on error
+References: <20190924184437.10607-1-jhofstee@victronenergy.com>
+ <20190924184437.10607-2-jhofstee@victronenergy.com>
+In-Reply-To: <20190924184437.10607-2-jhofstee@victronenergy.com>
 
-On 09-10-2019 15:07, Ard Biesheuvel wrote:
-> On Fri, 4 Oct 2019 at 16:51, Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> Sometimes it is useful to be able to dump the efi boot-services code and
->> data. This commit adds these as debugfs-blobs to /sys/kernel/debug/efi,
->> but only if efi=debug is passed on the kernel-commandline as this requires
->> not freeing those memory-regions, which costs 20+ MB of RAM.
->>
->> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->> Changes in v5:
->> -Rename the EFI_BOOT_SERVICES flag to EFI_PRESERVE_BS_REGIONS
->>
->> Changes in v4:
->> -Add new EFI_BOOT_SERVICES flag and use it to determine if the boot-services
->>   memory segments are available (and thus if it makes sense to register the
->>   debugfs bits for them)
->>
->> Changes in v2:
->> -Do not call pr_err on debugfs call failures
->> ---
->>   arch/x86/platform/efi/efi.c    |  1 +
->>   arch/x86/platform/efi/quirks.c |  4 +++
->>   drivers/firmware/efi/efi.c     | 53 ++++++++++++++++++++++++++++++++++
->>   include/linux/efi.h            |  1 +
->>   4 files changed, 59 insertions(+)
->>
->> diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
->> index c202e1b07e29..847730f7e74b 100644
->> --- a/arch/x86/platform/efi/efi.c
->> +++ b/arch/x86/platform/efi/efi.c
->> @@ -232,6 +232,7 @@ int __init efi_memblock_x86_reserve_range(void)
->>               efi.memmap.desc_version);
->>
->>          memblock_reserve(pmap, efi.memmap.nr_map * efi.memmap.desc_size);
->> +       set_bit(EFI_PRESERVE_BS_REGIONS, &efi.flags);
-> 
-> Should we add a Kconfig symbol to opt into this behavior [set by the
-> driver in question], instead of always preserving all boot services
-> regions on all x86 systems?
+--KNwgur7TmfQkHy3BGycM90HOnustJrKiJ
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
 
-This bit does not control anything, it merely signals that the arch early
-boot EFI code keeps the boot-services code around, which is something
-which the x86 code already does. Where as e.g. on arm / aarch64 this is
-freed early on, this ties in with the other bits:
+Hello Jeroen,
 
-> 
->>
->>          return 0;
->>   }
->> diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
->> index 3b9fd679cea9..fab12ebf0ada 100644
->> --- a/arch/x86/platform/efi/quirks.c
->> +++ b/arch/x86/platform/efi/quirks.c
->> @@ -411,6 +411,10 @@ void __init efi_free_boot_services(void)
->>          int num_entries = 0;
->>          void *new, *new_md;
->>
->> +       /* Keep all regions for /sys/kernel/debug/efi */
->> +       if (efi_enabled(EFI_DBG))
->> +               return;
->> +
+I'm currently looking at the rx-offload error handling in detail.
 
-This is the point where normally on x86 we do actually free the boot-services
-code which is a lot later then on other arches. And this new code actually
-does change things to keep the boot-services code *forever* but only
-if EFI debugging is enabled on the kernel commandline.
+TLDR: I've added the patch to linux-can.
 
-This ties in with the next bit:
+Thanks,
+Marc
 
->>          for_each_efi_memory_desc(md) {
->>                  unsigned long long start = md->phys_addr;
->>                  unsigned long long size = md->num_pages << EFI_PAGE_SHIFT;
->> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
->> index 8d3e778e988b..abba49c4c46d 100644
->> --- a/drivers/firmware/efi/efi.c
->> +++ b/drivers/firmware/efi/efi.c
+For the record, the details:
 
-<snip>
+On 9/24/19 8:45 PM, Jeroen Hofstee wrote:
+> While can_rx_offload_offload_one will call mailbox_read to discard
+> the mailbox in case of an error,
 
->> @@ -370,6 +420,9 @@ static int __init efisubsys_init(void)
->>                  goto err_remove_group;
->>          }
->>
->> +       if (efi_enabled(EFI_DBG) && efi_enabled(EFI_PRESERVE_BS_REGIONS))
->> +               efi_debugfs_init();
->> +
->>          return 0;
->>
->>   err_remove_group:
+Yes.
 
-Here we register the debugfs dir + files, but only when the
-boot services code has been kept around, so only if the
-EFI_PRESERVE_BS_REGIONS arch feature flag has been set and
-EFI debugging has been requested on the kernel commandline.
+can_rx_offload_offload_one() will read into the discard mailbox in case
+of an error.
 
-IOW this patch already offers to configurability you ask for, but instead
-of through a Kconfig option (which IMHO would be cumbersome) the decision
-is made runtime based on the presence of efi=debug on the kernel commandline.
+Currently there are two kinds of errors:
+1) the rx-offoad skb queue (between the IRQ handler and the NAPI)
+   is full
+2) alloc_can_skb() fails to allocate a skb, due to OOM
 
-Regards,
+> can_rx_offload_irq_offload_timestamp bails out in the error case.
 
-Hans
+Yes, in case of an error both can_rx_offload_irq_offload_timestamp() and
+can_rx_offload_irq_offload_fifo() will stop reading mailboxes, add the
+already filled skbs to the queue and schedule NAPI if needed.
+
+Currently both can_rx_offload_irq_offload_timestamp() and
+can_rx_offload_irq_offload_fifo() will return the number of queued
+mailboxes.
+
+This means in case of queue overflow or OOM, only one mailbox is
+discaded, before can_rx_offload_irq_offload_*() returning the number of
+successfully queued mailboxes so far.
+
+Looking at the flexcan driver:
+
+https://elixir.bootlin.com/linux/latest/source/drivers/net/can/flexcan.c#=
+L867
+
+> 		while ((reg_iflag =3D flexcan_read_reg_iflag_rx(priv))) {
+> 			handled =3D IRQ_HANDLED;
+> 			ret =3D can_rx_offload_irq_offload_timestamp(&priv->offload,
+> 								   reg_iflag);
+> 			if (!ret)
+> 				break;
+> 		}
+[...]
+> 		if (reg_iflag1 & FLEXCAN_IFLAG_RX_FIFO_AVAILABLE) {
+> 			handled =3D IRQ_HANDLED;
+> 			can_rx_offload_irq_offload_fifo(&priv->offload);
+> 		}
+
+This means for the timestamp mode, at least one mailbox is discarded or
+if the error occurred after reading one or more mailboxes the while loop
+will try again. If the error persists a second mailbox is discarded.
+
+For the fifo mode, only one mailbox is discarded.
+
+Then the flexcan's IRQ is exited. If there are messages in mailboxes are
+pending another IRQ is triggered.... I doubt that this is a good idea.
+
+On the other hand the ti_hecc driver:
+
+> 		/* offload RX mailboxes and let NAPI deliver them */
+> 		while ((rx_pending =3D hecc_read(priv, HECC_CANRMP))) {
+> 			can_rx_offload_irq_offload_timestamp(&priv->offload,
+> 							     rx_pending);
+> 			hecc_write(priv, HECC_CANRMP, rx_pending);
+> 		}
+
+The error is ignored and the _all_ mailboxes are discarded (given the
+error persists).
+
+> Since it is typically called from a while loop, all message will
+> eventually be discarded. So lets continue on error instead to discard
+> them directly.
+
+After reading my own code and writing it up, your patch totally makes sen=
+se.
+
+If there is a shortage of resources, queue overrun or OOM, it makes no
+sense to return from the IRQ handler, if a mailbox is still active as it
+will trigger the IRQ again. Entering the IRQ handler again probably
+doesn't give the system time to recover from the resource problem.
+
+> Signed-off-by: Jeroen Hofstee <jhofstee@victronenergy.com>
+> ---
+>  drivers/net/can/rx-offload.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/net/can/rx-offload.c b/drivers/net/can/rx-offload.=
+c
+> index e6a668ee7730..39df41280e2d 100644
+> --- a/drivers/net/can/rx-offload.c
+> +++ b/drivers/net/can/rx-offload.c
+> @@ -158,7 +158,7 @@ int can_rx_offload_irq_offload_timestamp(struct can=
+_rx_offload *offload, u64 pen
+> =20
+>  		skb =3D can_rx_offload_offload_one(offload, i);
+>  		if (!skb)
+> -			break;
+> +			continue;
+> =20
+>  		__skb_queue_add_sort(&skb_queue, skb, can_rx_offload_compare);
+>  	}
+>=20
+
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
 
+--KNwgur7TmfQkHy3BGycM90HOnustJrKiJ--
 
+--BXNKZd3qMlXdhqpqPUPu9DyJyHZxPf3Ik
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
->> diff --git a/include/linux/efi.h b/include/linux/efi.h
->> index bd3837022307..2a30a1bd8bdf 100644
->> --- a/include/linux/efi.h
->> +++ b/include/linux/efi.h
->> @@ -1202,6 +1202,7 @@ extern int __init efi_setup_pcdp_console(char *);
->>   #define EFI_DBG                        8       /* Print additional debug info at runtime */
->>   #define EFI_NX_PE_DATA         9       /* Can runtime data regions be mapped non-executable? */
->>   #define EFI_MEM_ATTR           10      /* Did firmware publish an EFI_MEMORY_ATTRIBUTES table? */
->> +#define EFI_PRESERVE_BS_REGIONS        11      /* Are EFI boot-services memory segments available? */
->>
->>   #ifdef CONFIG_EFI
->>   /*
->> --
->> 2.23.0
->>
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEmvEkXzgOfc881GuFWsYho5HknSAFAl2d3hQACgkQWsYho5Hk
+nSBm/Qf/db/9uepOMhA4XKlFASkkpWMbqzjYRhEwCqR2+SPQscKUaCLawPTQFOMS
+LN46ygYSRhbiQ8hSI1DwVwfY/alylL3KP4JqRnuawdj98Vi+HR4ywPG5b4cxlguQ
+7qmip9bFAgODJCGN43tU3DZ+3yBPG75nRO5BCpcu84TV3HxdZ8TbCrPEjTrhwzdF
+aDkMPVSRqe8h3t5KMC3BXgW2MTz7y+ThixpAJUmdeYIDEXS2l0VHWCCXlaeX+/PC
+f9xoa57oKxt1CTHAmQFLjCgJ896+otSkrRwzfM0njNR5pC6zgi88MPQyQZYlC43r
+zgnL87JBES2oqQ22tILFSMFWY/69lA==
+=SEml
+-----END PGP SIGNATURE-----
+
+--BXNKZd3qMlXdhqpqPUPu9DyJyHZxPf3Ik--
