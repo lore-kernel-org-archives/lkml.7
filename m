@@ -2,137 +2,93 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D75ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97CCCC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:23:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42D0B206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6501A206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:23:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="jIaRctw+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730271AbfJIJXK (ORCPT
+        id S1730459AbfJIJXS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 05:23:10 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50444 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726765AbfJIJXJ (ORCPT
+        Wed, 9 Oct 2019 05:23:18 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:32468 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbfJIJXS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 05:23:09 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x999Di4j165335
-        for <linux-kernel@vger.kernel.org>; Wed, 9 Oct 2019 05:23:08 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vhbp9tm16-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 05:23:07 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
-        Wed, 9 Oct 2019 10:23:03 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 9 Oct 2019 10:22:58 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x999Mv7K59703298
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 9 Oct 2019 09:22:57 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 63B854203F;
-        Wed,  9 Oct 2019 09:22:57 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 024C342045;
-        Wed,  9 Oct 2019 09:22:55 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.124.35.210])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  9 Oct 2019 09:22:54 +0000 (GMT)
-Subject: Re: [RFC v5 4/6] sched/fair: Tune task wake-up logic to pack small
- background tasks on fewer cores
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, patrick.bellasi@matbug.net,
-        valentin.schneider@arm.com, pavel@ucw.cz, dsmythies@telus.net,
-        Quentin Perret <qperret@qperret.net>,
-        rafael.j.wysocki@intel.com, tim.c.chen@linux.intel.com,
-        daniel.lezcano@linaro.org
-References: <20191007083051.4820-1-parth@linux.ibm.com>
- <20191008132842.6612-1-hdanton@sina.com>
-From:   Parth Shah <parth@linux.ibm.com>
-Date:   Wed, 9 Oct 2019 14:52:54 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.0
+        Wed, 9 Oct 2019 05:23:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1570612996;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=DMs7x1lyo+EAQpd7qhadPK8XBz5Wdyy6DbTWfKuq6nI=;
+        b=jIaRctw+0NL+aO/6MGb6KzYfgd+vkuus+GBg4Kb2mWs0TFTL94++AYVd3qMTkBOApb
+        lxM2UunOTSymVPkGyLrMcRbuhOwoL3gpd/HIMPOjWS3U9PEiHo3S+kL1GYDWADBvh0bW
+        tb4+cRl+3I/qS4cgoJdBVgKfoXpWnUNXuUXSq6+DOCLNNO1JU5pW6cpID9TjWx5fBT0Y
+        EBkIJfyPucd5b1pDUQYsf3RB/A17CY91j/pjM1ilW71UD8xkKuZNDCHoojnmuA2bBDjm
+        8/x1a301dHC6Ub96fbTlwWCHWXOFgVOCKXbuyjfhwSTRlhH2u5dC3JgtnuOBHBSV6qXL
+        OElQ==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPbJ/SczDZM"
+X-RZG-CLASS-ID: mo00
+Received: from tauon.chronox.de
+        by smtp.strato.de (RZmta 44.28.0 DYNA|AUTH)
+        with ESMTPSA id I003a5v999MuB0j
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Wed, 9 Oct 2019 11:22:56 +0200 (CEST)
+From:   Stephan Mueller <smueller@chronox.de>
+To:     Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        davem@davemloft.net, herbert@gondor.apana.org.au,
+        linux-kernel@lists.codethink.co.uk
+Subject: Re: [PATCH] crypto: jitter - add header to fix buildwarnings
+Date:   Wed, 09 Oct 2019 11:22:56 +0200
+Message-ID: <2519389.eumGI5PgG6@tauon.chronox.de>
+In-Reply-To: <20191009091256.12896-1-ben.dooks@codethink.co.uk>
+References: <20191009091256.12896-1-ben.dooks@codethink.co.uk>
 MIME-Version: 1.0
-In-Reply-To: <20191008132842.6612-1-hdanton@sina.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19100909-0008-0000-0000-00000320633E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19100909-0009-0000-0000-00004A3F6726
-Message-Id: <d4c936d9-c99f-e50d-95c9-0732ae45d1b9@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-09_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910090087
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Am Mittwoch, 9. Oktober 2019, 11:12:56 CEST schrieb Ben Dooks:
 
+Hi Ben,
 
-On 10/8/19 6:58 PM, Hillf Danton wrote:
+> Fix the following build warnings by adding a header for
+> the definitions shared between jitterentropy.c and
+> jitterentropy-kcapi.c. Fixes the following:
 > 
-> On Mon,  7 Oct 2019 14:00:49 +0530 Parth Shah wrote:
->> +/*
->> + * Try to find a non idle core in the system  based on few heuristics:
->> + * - Keep track of overutilized (>80% util) and busy (>12.5% util) CPUs
->> + * - If none CPUs are busy then do not select the core for task packing
->> + * - If atleast one CPU is busy then do task packing unless overutilized CPUs
->> + *   count is < busy/2 CPU count
->> + * - Always select idle CPU for task packing
->> + */
->> +static int select_non_idle_core(struct task_struct *p, int prev_cpu, int target)
->> +{
->> +	struct cpumask *cpus = this_cpu_cpumask_var_ptr(turbo_sched_mask);
->> +	int iter_cpu, sibling;
->> +
->> +	cpumask_and(cpus, cpu_online_mask, p->cpus_ptr);
->> +
->> +	for_each_cpu_wrap(iter_cpu, cpus, prev_cpu) {
->> +		int idle_cpu_count = 0, non_idle_cpu_count = 0;
->> +		int overutil_cpu_count = 0;
->> +		int busy_cpu_count = 0;
->> +		int best_cpu = iter_cpu;
->> +
->> +		for_each_cpu(sibling, cpu_smt_mask(iter_cpu)) {
->> +			__cpumask_clear_cpu(sibling, cpus);
->> +			if (idle_cpu(iter_cpu)) {
+> crypto/jitterentropy.c:445:5: warning: symbol 'jent_read_entropy' was not
+> declared. Should it be static? crypto/jitterentropy.c:475:18: warning:
+> symbol 'jent_entropy_collector_alloc' was not declared. Should it be
+> static? crypto/jitterentropy.c:509:6: warning: symbol
+> 'jent_entropy_collector_free' was not declared. Should it be static?
+> crypto/jitterentropy.c:516:5: warning: symbol 'jent_entropy_init' was not
+> declared. Should it be static? crypto/jitterentropy-kcapi.c:59:6: warning:
+> symbol 'jent_zalloc' was not declared. Should it be static?
+> crypto/jitterentropy-kcapi.c:64:6: warning: symbol 'jent_zfree' was not
+> declared. Should it be static? crypto/jitterentropy-kcapi.c:69:5: warning:
+> symbol 'jent_fips_enabled' was not declared. Should it be static?
+> crypto/jitterentropy-kcapi.c:74:6: warning: symbol 'jent_panic' was not
+> declared. Should it be static? crypto/jitterentropy-kcapi.c:79:6: warning:
+> symbol 'jent_memcpy' was not declared. Should it be static?
+> crypto/jitterentropy-kcapi.c:93:6: warning: symbol 'jent_get_nstime' was
+> not declared. Should it be static?
 > 
-> Would you please elaborate the reasons that the iter cpu is checked idle
-> more than once for finding a busy core?
-> 
+> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
 
-Thanks for looking at the patches.
-Could you please point me out where iter_cpu is checked more than once?
+Reviewed-by: Stephan Mueller <smueller@chronox.de
 
->> +				idle_cpu_count++;
->> +				best_cpu = iter_cpu;
->> +			} else {
->> +				non_idle_cpu_count++;
->> +				if (cpu_overutilized(iter_cpu))
->> +					overutil_cpu_count++;
->> +				if (is_cpu_busy(cpu_util(iter_cpu)))
->> +					busy_cpu_count++;
->> +			}
->> +		}
->> +
-> 
+Ciao
+Stephan
+
 
