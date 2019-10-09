@@ -2,127 +2,83 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6321ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA61C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FACF218AC
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:34:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570631683;
-	bh=Wr2/X8HSCuK/M3kdkMvHCXXbxaluy3TLlgGtJx8l840=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kz3rimis6fTFKdJ0MR2C+0QfuYLLLJyBPuBKXSaUU85pQPRvJaRJ6PatHokt+c85e
-	 V1ChmYSg2/LzY5q3N91B0pGdddvJZhyhpn9y0RzxinJjtnRFyIlnnnrDa42q17+7x8
-	 9geJTiBlk/DCetUzYsabK1iO1LMkv2UMTgutwe/M=
+	by mail.kernel.org (Postfix) with ESMTP id 0AD2D20640
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:37:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731380AbfJIOem (ORCPT
+        id S1731254AbfJIOhR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 10:34:42 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58554 "EHLO mx1.suse.de"
+        Wed, 9 Oct 2019 10:37:17 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3284 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730490AbfJIOem (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 10:34:42 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 55699AD12;
-        Wed,  9 Oct 2019 14:34:40 +0000 (UTC)
-Date:   Wed, 9 Oct 2019 16:34:39 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        sergey.senozhatsky.work@gmail.com, rostedt@goodmis.org,
-        peterz@infradead.org, linux-mm@kvack.org,
-        john.ogness@linutronix.de, akpm@linux-foundation.org,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>, david@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
-Message-ID: <20191009143439.GF6681@dhcp22.suse.cz>
-References: <20191008183525.GQ6681@dhcp22.suse.cz>
- <1570561573.5576.307.camel@lca.pw>
- <20191008191728.GS6681@dhcp22.suse.cz>
- <1570563324.5576.309.camel@lca.pw>
- <20191009114903.aa6j6sa56z2cssom@pathway.suse.cz>
- <1570626402.5937.1.camel@lca.pw>
- <20191009132746.GA6681@dhcp22.suse.cz>
- <1570628593.5937.3.camel@lca.pw>
- <20191009135155.GC6681@dhcp22.suse.cz>
- <1570630784.5937.5.camel@lca.pw>
+        id S1728019AbfJIOhR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 10:37:17 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 68B3417EC3AC044581C8;
+        Wed,  9 Oct 2019 22:37:14 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Wed, 9 Oct 2019
+ 22:37:06 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <yuehaibing@huawei.com>, <talho@nvidia.com>
+CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] firmware: tegra: use devm_platform_ioremap_resource() to simplify code
+Date:   Wed, 9 Oct 2019 22:36:48 +0800
+Message-ID: <20191009143648.3620-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1570630784.5937.5.camel@lca.pw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 09-10-19 10:19:44, Qian Cai wrote:
-> On Wed, 2019-10-09 at 15:51 +0200, Michal Hocko wrote:
-[...]
-> > Can you paste the full lock chain graph to be sure we are on the same
-> > page?
-> 
-> WARNING: possible circular locking dependency detected
-> 5.3.0-next-20190917 #8 Not tainted
-> ------------------------------------------------------
-> test.sh/8653 is trying to acquire lock:
-> ffffffff865a4460 (console_owner){-.-.}, at:
-> console_unlock+0x207/0x750
-> 
-> but task is already holding lock:
-> ffff88883fff3c58 (&(&zone->lock)->rlock){-.-.}, at:
-> __offline_isolated_pages+0x179/0x3e0
-> 
-> which lock already depends on the new lock.
-> 
-> 
-> the existing dependency chain (in reverse order) is:
-> 
-> -> #3 (&(&zone->lock)->rlock){-.-.}:
->        __lock_acquire+0x5b3/0xb40
->        lock_acquire+0x126/0x280
->        _raw_spin_lock+0x2f/0x40
->        rmqueue_bulk.constprop.21+0xb6/0x1160
->        get_page_from_freelist+0x898/0x22c0
->        __alloc_pages_nodemask+0x2f3/0x1cd0
->        alloc_pages_current+0x9c/0x110
->        allocate_slab+0x4c6/0x19c0
->        new_slab+0x46/0x70
->        ___slab_alloc+0x58b/0x960
->        __slab_alloc+0x43/0x70
->        __kmalloc+0x3ad/0x4b0
->        __tty_buffer_request_room+0x100/0x250
->        tty_insert_flip_string_fixed_flag+0x67/0x110
->        pty_write+0xa2/0xf0
->        n_tty_write+0x36b/0x7b0
->        tty_write+0x284/0x4c0
->        __vfs_write+0x50/0xa0
->        vfs_write+0x105/0x290
->        redirected_tty_write+0x6a/0xc0
->        do_iter_write+0x248/0x2a0
->        vfs_writev+0x106/0x1e0
->        do_writev+0xd4/0x180
->        __x64_sys_writev+0x45/0x50
->        do_syscall_64+0xcc/0x76c
->        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Use devm_platform_ioremap_resource() to simplify the code a bit.
+This is detected by coccinelle.
 
-This one looks indeed legit. pty_write is allocating memory from inside
-the port->lock. But this seems to be quite broken, right? The forward
-progress depends on GFP_ATOMIC allocation which might fail easily under
-memory pressure. So the preferred way to fix this should be to change
-the allocation scheme to use the preallocated buffer and size it from a
-context when it doesn't hold internal locks. It might be a more complex
-fix than using printk_deferred or other games but addressing that would
-make the pty code more robust as well.
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/firmware/tegra/bpmp-tegra210.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/firmware/tegra/bpmp-tegra210.c b/drivers/firmware/tegra/bpmp-tegra210.c
+index ae15940..c2447be 100644
+--- a/drivers/firmware/tegra/bpmp-tegra210.c
++++ b/drivers/firmware/tegra/bpmp-tegra210.c
+@@ -162,7 +162,6 @@ static int tegra210_bpmp_init(struct tegra_bpmp *bpmp)
+ {
+ 	struct platform_device *pdev = to_platform_device(bpmp->dev);
+ 	struct tegra210_bpmp *priv;
+-	struct resource *res;
+ 	unsigned int i;
+ 	int err;
+ 
+@@ -172,13 +171,11 @@ static int tegra210_bpmp_init(struct tegra_bpmp *bpmp)
+ 
+ 	bpmp->priv = priv;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	priv->atomics = devm_ioremap_resource(&pdev->dev, res);
++	priv->atomics = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(priv->atomics))
+ 		return PTR_ERR(priv->atomics);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	priv->arb_sema = devm_ioremap_resource(&pdev->dev, res);
++	priv->arb_sema = devm_platform_ioremap_resource(pdev, 1);
+ 	if (IS_ERR(priv->arb_sema))
+ 		return PTR_ERR(priv->arb_sema);
+ 
 -- 
-Michal Hocko
-SUSE Labs
+2.7.4
+
+
