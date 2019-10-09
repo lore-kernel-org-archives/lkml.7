@@ -2,245 +2,123 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39ADBC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A96ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A3E020B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:54:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79B0520B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:54:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QBrUbxSH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ieth1LzW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731192AbfJIMyC (ORCPT
+        id S1731229AbfJIMyl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 08:54:02 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43114 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731170AbfJIMyC (ORCPT
+        Wed, 9 Oct 2019 08:54:41 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:35839 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731215AbfJIMyk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 08:54:02 -0400
-Received: by mail-pg1-f196.google.com with SMTP id i32so1349136pgl.10;
-        Wed, 09 Oct 2019 05:54:02 -0700 (PDT)
+        Wed, 9 Oct 2019 08:54:40 -0400
+Received: by mail-qt1-f196.google.com with SMTP id m15so3249587qtq.2
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 05:54:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=DJP3EtJwnU1At2E0cpdnlKVvFa1qfwS0i3jVgskCmNY=;
-        b=QBrUbxSHIfGezkaPMFV1E8tgALbo4ugWl1DvFB4cyC+XrjUqj9mqXlXy7SnyTl2ro3
-         TTk7wOHp6x1v8DZUWfxTkVWO/D1tHQvh8EIWWlpbm4UodFjc1qbCwwoEtEmbaz+1VXyE
-         5gE3XYR14MNF4T3nJIwztu+7bF8Iihie8QxxXkZo0oz0DOeKjWOjF7qYghLNHZvaVD8L
-         fW5qA1+4i3QadWiNiXB37rVUHZZxPGlVCjdLk31r0H+pniN0XSKlyj759SSWNA7rJCWS
-         XCvdExIjjlZWxYrdh+8bVJL0YQiSmbAMEFBUTel3DUfQSgBNT7foWV5RUO+BA/yksrSx
-         m7gA==
+        d=linaro.org; s=google;
+        h=subject:to:references:cc:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding;
+        bh=TgY7kPmBZqnecD8fmdALLpGAi+Y1sBS44TN0W3OZTbI=;
+        b=Ieth1LzWB3tqDdxRYS6TrTDImdY44X93i3yUuyswKh9NjwTJ9MG4I2p3ASCGRBbhIi
+         EN685xkM080/OSbNL3HVipQhMTiUC3wCskwGs71Fi0G583KGpAhgDjb9VZTSwNOizajq
+         KjMDn74QgrW5rjxwCxpxgHrztK5XKLYGw7Ptb6Dzw2Um68uQEEtb9QD58DgmCL+djw5x
+         hvj6SPb+jQ8H91BafRWYx9bXKeCGoUZ3pYmo9zaWEqj9Hbxyx5PkknrLQpIrt+b6pPv2
+         UWqyEnjMQk6gtxIgsg+zv6Xm7CfObViLTHWCh+F8QEAs8uzXv+iWzUnHp4NYkK8A+eno
+         2GbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=DJP3EtJwnU1At2E0cpdnlKVvFa1qfwS0i3jVgskCmNY=;
-        b=XM/X28AFLGbmoapO74JLq7O1bvX5F7/QLtJi2/65XTFE6T57CCMLubmUHouy4wcf3D
-         n1wgZdi7DcH7Az4369KSdms0FJIawpbA/IpMtwYCpdKzI3oPiOmcbbToOnltV1SCiBne
-         BGbn5gqpfeKqXh2mFtP44lkNHYSzIWPCX9aEZro5JcHWRnzi6juBMM5iJ/W0inC/8/to
-         JRjN/IbbEWViIO+87XAZvb3pSpx2Fj+rksO2y3PvPX2zLBNxWWSiyNwV+RUB/Pz/2QfZ
-         Brfbiu8ICMWtbRGhjuLw8hLXUl/vXa4GOtL4V3Ds66J+7+0zUAycOEM5Ubskyq28AArR
-         KgjQ==
-X-Gm-Message-State: APjAAAVMITVI5D+Hp66yowfI6aUztCVxg3OkDE8yqTj5LR7d6GrHs6y9
-        +nxFJhVP08QnfG6NPU3CedM=
-X-Google-Smtp-Source: APXvYqy1e304xWPAXWtyGl/TDt20eR7yBAFWpO7xyYXpSuTWfg5few7aalangruSL/GdPCLJzwItMw==
-X-Received: by 2002:a17:90a:bc49:: with SMTP id t9mr3841915pjv.111.1570625641460;
-        Wed, 09 Oct 2019 05:54:01 -0700 (PDT)
-Received: from bj04616pcu.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id f5sm674306pgs.72.2019.10.09.05.53.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 09 Oct 2019 05:54:00 -0700 (PDT)
-From:   Candle Sun <candlesea@gmail.com>
-To:     jikos@kernel.org, benjamin.tissoires@redhat.com,
-        nsaenzjulienne@suse.de
-Cc:     orson.zhai@unisoc.com, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Candle Sun <candle.sun@unisoc.com>,
-        Nianfu Bai <nianfu.bai@unisoc.com>
-Subject: [PATCH v2] HID: core: check whether usage page item is after usage id item
-Date:   Wed,  9 Oct 2019 20:53:29 +0800
-Message-Id: <1570625609-11083-1-git-send-email-candlesea@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=TgY7kPmBZqnecD8fmdALLpGAi+Y1sBS44TN0W3OZTbI=;
+        b=CFRZypudoZOcrdsM+Bk1l2aDXpsRAVfwXlo/rtwSplu7t8b/UpujX8r80WrznCBMqn
+         ipbnLM7FQ3Hs0INdQfNfADHyVtBkkkVZAe1NJKmDOJP+zsuCFG3TTg1Fa3urRriN6app
+         pDKqvM4c3SpF8GZuxZ4M63B7iyiszjTrPZF2eJr4SNthGscnoygcBYAwzPpHDDIutXtz
+         lA7nqkuh8txIAcigONcHw2UpBN7zFr2F4YLjttQRZ8K9m7j0WnN9LhvzzVZpONN+R6O6
+         ydTWZ/I6KkpLKs7NqLf1+XXNJ+TALuRrUkxLFXhXCXxUbW9oO2C2CEz1kVfvQiwP/82C
+         qnag==
+X-Gm-Message-State: APjAAAUHPUvd9hH5YfLjS/L5NIcMQsKNBvHF4HEhkCQ8lLlU/5aeTGiL
+        tq1KjNX+vb58lKyi1agV15hiDhunGu9GNg==
+X-Google-Smtp-Source: APXvYqxDRTRnNCFB3xzy90ZREa6zqiTGq9G4A+t6sp3p4WDaJF1dHGjJKNb5yoJjpKhBQP6sEqhRHA==
+X-Received: by 2002:a0c:ef85:: with SMTP id w5mr3460733qvr.159.1570625678531;
+        Wed, 09 Oct 2019 05:54:38 -0700 (PDT)
+Received: from [192.168.1.169] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
+        by smtp.gmail.com with ESMTPSA id c201sm890854qke.128.2019.10.09.05.54.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 09 Oct 2019 05:54:37 -0700 (PDT)
+Subject: Re: [PATCH 1/4] dt-bindings: thermal: Introduce monitor-falling
+ parameter to thermal trip point binding
+To:     Rob Herring <robh@kernel.org>
+References: <1568859503-19725-1-git-send-email-thara.gopinath@linaro.org>
+ <1568859503-19725-2-git-send-email-thara.gopinath@linaro.org>
+ <5d93ce86.1c69fb81.70b0d.ba56@mx.google.com>
+Cc:     rui.zhang@intel.com, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
+        bjorn.andersson@linaro.org, amit.kucheria@verdurent.com,
+        mark.rutland@arm.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+Message-ID: <5D9DD88C.7090804@linaro.org>
+Date:   Wed, 9 Oct 2019 08:54:36 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
+MIME-Version: 1.0
+In-Reply-To: <5d93ce86.1c69fb81.70b0d.ba56@mx.google.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Candle Sun <candle.sun@unisoc.com>
+Hi Rob,
+Thanks for the review.
 
-Upstream commit 58e75155009c ("HID: core: move Usage Page concatenation
-to Main item") adds support for Usage Page item after Usage ID items
-(such as keyboards manufactured by Primax).
+On 10/01/2019 06:09 PM, Rob Herring wrote:
+> On Wed, Sep 18, 2019 at 10:18:20PM -0400, Thara Gopinath wrote:
+>> Introduce a new binding parameter to thermal trip point description
+>> to indicate whether the temperature level specified by the trip point
+>> is monitored for a rise or fall in temperature.
+> 
+> What if it is both?
+> 
+> When do you need this? Seems like you'd always want to monitor both 
+> directions to undo any action done on rising temp. Unless you want a 
+> hysteresis, but this doesn't seem like the best way to implement that.
+> 
 
-Usage Page concatenation in Main item works well for following report
-descriptor patterns:
+The thermal framework is designed in such a manner that I cannot think
+of a use case for both.
+The framework takes care of removing the warming/cooling action when the
+trip point is crossed in the opposite direction. It only needs an
+indication on when to start implementing the
+action.
+For eg. When the temperature crosses/increases above 90 degree, the
+framework will start the cooling action and will continue monitoring
+till the temperature falls below 90 and the cooling action is removed.
+Vice versa when the temperature decreases below say 5 degree, the
+framework should  initiate the warming action and monitor till the
+temperature rises above and remove the warming action.
 
-    USAGE_PAGE (Keyboard)                   05 07
-    USAGE_MINIMUM (Keyboard LeftControl)    19 E0
-    USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
-    LOGICAL_MINIMUM (0)                     15 00
-    LOGICAL_MAXIMUM (1)                     25 01
-    REPORT_SIZE (1)                         75 01
-    REPORT_COUNT (8)                        95 08
-    INPUT (Data,Var,Abs)                    81 02
+So the trip point is really an indication of the temperature crossing a
+threshold in the specified direction.
 
--------------
+Now this parameter is needed to indicate whether the thermal framework
+has to start implementing the warming/cooling action when the
+temperature  rises above the trip point or falls below the trip point.
 
-    USAGE_MINIMUM (Keyboard LeftControl)    19 E0
-    USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
-    LOGICAL_MINIMUM (0)                     15 00
-    LOGICAL_MAXIMUM (1)                     25 01
-    REPORT_SIZE (1)                         75 01
-    REPORT_COUNT (8)                        95 08
-    USAGE_PAGE (Keyboard)                   05 07
-    INPUT (Data,Var,Abs)                    81 02
+Till now the framework was always assuming that the cooling action had
+to be implemented when temperature rises above the trip point.
 
-But it makes the parser act wrong for the following report
-descriptor pattern(such as some Gamepads):
-
-    USAGE_PAGE (Button)                     05 09
-    USAGE (Button 1)                        09 01
-    USAGE (Button 2)                        09 02
-    USAGE (Button 4)                        09 04
-    USAGE (Button 5)                        09 05
-    USAGE (Button 7)                        09 07
-    USAGE (Button 8)                        09 08
-    USAGE (Button 14)                       09 0E
-    USAGE (Button 15)                       09 0F
-    USAGE (Button 13)                       09 0D
-    USAGE_PAGE (Consumer Devices)           05 0C
-    USAGE (Back)                            0a 24 02
-    USAGE (HomePage)                        0a 23 02
-    LOGICAL_MINIMUM (0)                     15 00
-    LOGICAL_MAXIMUM (1)                     25 01
-    REPORT_SIZE (1)                         75 01
-    REPORT_COUNT (11)                       95 0B
-    INPUT (Data,Var,Abs)                    81 02
-
-With Usage Page concatenation in Main item, parser recognizes all the
-11 Usages as consumer keys, it is not the HID device's real intention.
-
-This patch adds usage_page_last to flag whether Usage Page is after
-Usage ID items. usage_page_last is false default, it is set as true
-once Usage Page item is encountered and is reverted by next Usage ID
-item.
-
-Usage Page concatenation on the currently defined Usage Page will do
-firstly in Local parsing when Usage ID items encountered.
-
-When Main item is parsing, concatenation will do again with last
-defined Usage Page if usage_page_last flag is true.
-
-Signed-off-by: Candle Sun <candle.sun@unisoc.com>
-Signed-off-by: Nianfu Bai <nianfu.bai@unisoc.com>
----
-Changes in v2:
-- Update patch title
-- Add GET_COMPLETE_USAGE macro
-- Change the logic of checking whether to concatenate usage page again
-  in main parsing
----
- drivers/hid/hid-core.c | 31 +++++++++++++++++++++++++------
- include/linux/hid.h    |  1 +
- 2 files changed, 26 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-index 3eaee2c..3394222 100644
---- a/drivers/hid/hid-core.c
-+++ b/drivers/hid/hid-core.c
-@@ -35,6 +35,8 @@
- 
- #include "hid-ids.h"
- 
-+#define GET_COMPLETE_USAGE(page, id) (((page) << 16) + ((id) & 0xffff))
-+
- /*
-  * Version Information
-  */
-@@ -221,7 +223,15 @@ static int hid_add_usage(struct hid_parser *parser, unsigned usage, u8 size)
- 		hid_err(parser->device, "usage index exceeded\n");
- 		return -1;
- 	}
--	parser->local.usage[parser->local.usage_index] = usage;
-+
-+	if (size <= 2) {
-+		parser->local.usage_page_last = false;
-+		parser->local.usage[parser->local.usage_index] =
-+			GET_COMPLETE_USAGE(parser->global.usage_page, usage);
-+	} else {
-+		parser->local.usage[parser->local.usage_index] = usage;
-+	}
-+
- 	parser->local.usage_size[parser->local.usage_index] = size;
- 	parser->local.collection_index[parser->local.usage_index] =
- 		parser->collection_stack_ptr ?
-@@ -366,6 +376,7 @@ static int hid_parser_global(struct hid_parser *parser, struct hid_item *item)
- 
- 	case HID_GLOBAL_ITEM_TAG_USAGE_PAGE:
- 		parser->global.usage_page = item_udata(item);
-+		parser->local.usage_page_last = true;
- 		return 0;
- 
- 	case HID_GLOBAL_ITEM_TAG_LOGICAL_MINIMUM:
-@@ -543,13 +554,21 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
-  * usage value."
-  */
- 
--static void hid_concatenate_usage_page(struct hid_parser *parser)
-+static void hid_concatenate_last_usage_page(struct hid_parser *parser)
- {
- 	int i;
-+	unsigned int usage;
-+	unsigned int usage_page = parser->global.usage_page;
-+
-+	if (!parser->local.usage_page_last)
-+		return;
- 
- 	for (i = 0; i < parser->local.usage_index; i++)
--		if (parser->local.usage_size[i] <= 2)
--			parser->local.usage[i] += parser->global.usage_page << 16;
-+		if (parser->local.usage_size[i] <= 2) {
-+			usage = parser->local.usage[i];
-+			parser->local.usage[i] =
-+				GET_COMPLETE_USAGE(usage_page, usage);
-+		}
- }
- 
- /*
-@@ -561,7 +580,7 @@ static int hid_parser_main(struct hid_parser *parser, struct hid_item *item)
- 	__u32 data;
- 	int ret;
- 
--	hid_concatenate_usage_page(parser);
-+	hid_concatenate_last_usage_page(parser);
- 
- 	data = item_udata(item);
- 
-@@ -772,7 +791,7 @@ static int hid_scan_main(struct hid_parser *parser, struct hid_item *item)
- 	__u32 data;
- 	int i;
- 
--	hid_concatenate_usage_page(parser);
-+	hid_concatenate_last_usage_page(parser);
- 
- 	data = item_udata(item);
- 
-diff --git a/include/linux/hid.h b/include/linux/hid.h
-index cd41f20..2e0ea2f7 100644
---- a/include/linux/hid.h
-+++ b/include/linux/hid.h
-@@ -412,6 +412,7 @@ struct hid_local {
- 	unsigned usage_minimum;
- 	unsigned delimiter_depth;
- 	unsigned delimiter_branch;
-+	bool usage_page_last;      /* whether usage page is after usage id */
- };
- 
- /*
 -- 
-2.7.4
-
+Warm Regards
+Thara
