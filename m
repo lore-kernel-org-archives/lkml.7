@@ -2,119 +2,116 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25BB9ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F91C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F39E120679
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:02:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F2702190F
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:03:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c9Atcn/E"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WycN9nME"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731722AbfJIQCE (ORCPT
+        id S1731707AbfJIQDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 12:02:04 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:42125 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731706AbfJIQCE (ORCPT
+        Wed, 9 Oct 2019 12:03:06 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:33332 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731452AbfJIQDG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 12:02:04 -0400
-Received: by mail-lj1-f196.google.com with SMTP id y23so3021331lje.9
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 09:02:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=17Y7y039jET7/TQrdZoED93OrqqyMRwnQxJ9vtZBzO8=;
-        b=c9Atcn/EI08Kf2cBMOvlLq7SNQ707PZ6EdVeCazR/Dm8zc5uaCAs3UNj/GYvUqYqzJ
-         aMXdTfRdgQTYmaPwcj4QiAuKEHKcxMD9ezuazTOGBACs29dqmx3rbJGAvaRpsxX26MTQ
-         fdzuLGgOcX6EDmt6y6XBhXYz14ayEhIMnEfqU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=17Y7y039jET7/TQrdZoED93OrqqyMRwnQxJ9vtZBzO8=;
-        b=O/ADUof4HfZeySOGs2cZyCQewYG7kmxlVGBreN4Vh3PvzTrViLfkHAZEPGuQngVY+e
-         rm8ApNQP21VHYD2+I4lN0pFCNO7xKekXo4k/vy7DRG8/uX8c50mceXjHp9m/+YOoetke
-         6fwTd1kSHq+dQaTC9fSQs7yodOGDn3+eHs4twIMvUR6yxqiMajr4M2vZAZoay4ZN7rZc
-         zXoS2rp/ZiJF2QkKMlgCWtRfkH3bY3ILMzWprD2gXWtVdJ2XlEr7HqEwjBVqBUV7Dzun
-         f2qufQIr4umw7lpKXpGUmfX7J4ZGxU5zkpKNV/8hFOCfUmUc7lzh19GRGfW3pSJXph9F
-         dsAg==
-X-Gm-Message-State: APjAAAWawGTxHD+LmPdn4Wmmarss8qTpg4EUQB2cId9GMQzAaAff7VgR
-        rCWueRg1zcGqy7MzlF4YgcoN3rf8iSM=
-X-Google-Smtp-Source: APXvYqwnworJRsEBTzFkOkGx/Hj9CljvEwQ/b7Wc9X4koqeEUbW2CNV6wZbJvz/M1aQ0ghMBUU6XnA==
-X-Received: by 2002:a2e:9bd2:: with SMTP id w18mr2861800ljj.140.1570636921923;
-        Wed, 09 Oct 2019 09:02:01 -0700 (PDT)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
-        by smtp.gmail.com with ESMTPSA id t22sm588882lfg.91.2019.10.09.09.02.00
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Oct 2019 09:02:00 -0700 (PDT)
-Received: by mail-lj1-f172.google.com with SMTP id l21so3063615lje.4
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 09:02:00 -0700 (PDT)
-X-Received: by 2002:a2e:a41a:: with SMTP id p26mr2740656ljn.15.1570636919621;
- Wed, 09 Oct 2019 09:01:59 -0700 (PDT)
+        Wed, 9 Oct 2019 12:03:06 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x99Fj0MG178749;
+        Wed, 9 Oct 2019 16:02:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=5eyqqcNyRkIYJ/KfstQRnTPLVlNRh+PVIx0mtGqGQzI=;
+ b=WycN9nMEm1Z1hwXQ6EnSR9nzH8nWxZAiSQQX0AJ/m1db544ssaE+cNclh6kS79KwtPqW
+ qkyCY4KWmDxR2QHbMeRKRSas2ynmKu4pCpSiDEIs4uh9i3sE3jUTsO8MJhyolRtylsx9
+ 1n9MnIKyyis6+RkLF18ox55DJgLzUNhl2YWcmiClaqUJoiXpm2VIx5GhE3QsHpcZAuiW
+ vSgqjdjeAMa+IZ+p3ceeyOs22az2yH9LqV0e1PUAzPercLk57ONTVESeFfv7Hos5PNMv
+ aJRGAHWYW/0KKLFwHHg3a3tYJsncOnlDBsFxVPuKg3Z3jsfNd1hIYe5lQJdL6NHRo90k OQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2vejkunqy3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 09 Oct 2019 16:02:56 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x99FhBiM184467;
+        Wed, 9 Oct 2019 16:02:56 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2vhhsmudke-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 09 Oct 2019 16:02:55 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x99G2qL5007340;
+        Wed, 9 Oct 2019 16:02:53 GMT
+Received: from dhcp-10-159-237-174.vpn.oracle.com (/10.159.237.174)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 09 Oct 2019 16:02:52 +0000
+Subject: Re: [PATCH v3 00/14] dmaengine/soc: Add Texas Instruments UDMA
+ support
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, vkoul@kernel.org,
+        robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org
+Cc:     dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
+        lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com,
+        j-keerthy@ti.com
+References: <20191001061704.2399-1-peter.ujfalusi@ti.com>
+ <c567c1a2-2e74-3809-8e0f-4c2049ba4747@oracle.com>
+ <7dd18208-1ca5-c902-dc11-edbd4ded51ed@ti.com>
+From:   "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <5b2d27ca-1a1a-6d17-f5d8-62e7eb76c39b@oracle.com>
+Date:   Wed, 9 Oct 2019 09:02:48 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191008234505.222991-1-swboyd@chromium.org> <20191008235504.GN63675@minitux>
- <5d9d3ed4.1c69fb81.5a936.2b18@mx.google.com>
-In-Reply-To: <5d9d3ed4.1c69fb81.5a936.2b18@mx.google.com>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Wed, 9 Oct 2019 09:01:22 -0700
-X-Gmail-Original-Message-ID: <CAE=gft6SmWH3-Td-mZZPn-3=EzwexEdYTR00z5NCP-X1sspihA@mail.gmail.com>
-Message-ID: <CAE=gft6SmWH3-Td-mZZPn-3=EzwexEdYTR00z5NCP-X1sspihA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] Avoid regmap debugfs collisions in qcom llcc driver
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <7dd18208-1ca5-c902-dc11-edbd4ded51ed@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9405 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910090144
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9405 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910090144
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 8, 2019 at 6:58 PM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Bjorn Andersson (2019-10-08 16:55:04)
-> > On Tue 08 Oct 16:45 PDT 2019, Stephen Boyd wrote:
-> > >     @@ drivers/soc/qcom/llcc-slice.c
-> > >
-> > >       static struct llcc_drv_data *drv_data = (void *) -EPROBE_DEFER;
-> > >
-> > >     --static const struct regmap_config llcc_regmap_config = {
-> > >     +-static struct regmap_config llcc_regmap_config = {
-> > >      -        .reg_bits = 32,
-> > >      -        .reg_stride = 4,
-> > >      -        .val_bits = 32,
-> > >     @@ drivers/soc/qcom/llcc-slice.c: static struct regmap *qcom_llcc_init_mmio(struct
-> > >       {
-> > >               struct resource *res;
-> > >               void __iomem *base;
-> > >     -+        static struct regmap_config llcc_regmap_config = {
-> > >     ++        struct regmap_config llcc_regmap_config = {
-> >
-> > Now that this isn't static I like the end result better. Not sure about
-> > the need for splitting it in two patches, but if Evan is happy I'll take
-> > it.
-> >
->
-> Well I split it into bug fix and micro-optimization so backport choices
-> can be made. But yeah, I hope Evan is happy enough to provide a
-> reviewed-by tag!
 
-It's definitely better without the static local since it no longer has
-the cognitive trap, but I still don't really get why we're messing
-with the global v. local aspect of it. We're now inconsistent with
-every other caller of this function, and for what exactly? We've
-traded some data space for a call to memset() and some instructions. I
-would have thought anecdotally that memory was the cheaper thing (ie
-cpu speeds stopped increasing awhile ago, but memory is still getting
-cheaper).
 
-But either way it's correct, so really it's fine if you ignore me :)
--Evan
+On 10/8/19 3:09 AM, Peter Ujfalusi wrote:
+> Hi Santosh,
+> 
+> On 04/10/2019 19.35, santosh.shilimkar@oracle.com wrote:
+>> On 9/30/19 11:16 PM, Peter Ujfalusi wrote:
+>>> Hi,
+>>>
+>>> Changes since v2
+>>> )https://patchwork.kernel.org/project/linux-dmaengine/list/?series=152609&state=*)
+>>>
+>>> - Based on 5.4-rc1
+>>> - Support for Flow only data transfer for the glue layer
+>>>
+[...]
+
+>> Can you please split this series and post drivers/soc/* bits
+>> separately ?  If its ready, I can apply k3-ringacc.c changes.
+> 
+> I'll wait couple of days for guys to check the series, then I can send
+> the split out ringacc patches separately.
+> 
+Sounds good !!
