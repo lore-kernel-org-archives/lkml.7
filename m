@@ -2,146 +2,264 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FE3C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 18:23:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C58ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 18:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B398720B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 18:23:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86589218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 18:27:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="P8Y+lqob"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PSfZOqnf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731548AbfJISXc (ORCPT
+        id S1731406AbfJIS1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 14:23:32 -0400
-Received: from mail-eopbgr760047.outbound.protection.outlook.com ([40.107.76.47]:60361
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731134AbfJISXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 14:23:32 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VqIOvW2g6ZznHweGbMyGHHZAI4EqM8YiVRs5TWRoLKiwDTHJlpLsgOFA//2W2cNY5CQL0gcN3pdo9IZPSOTophyfngA5t0DKuA8VJ27D1MmbDdPzHgOOPU5AYmSM8lihKI+dfLYQ+Cdo9dLnHYjSA+ssonpZc1iCklaC9lDZdicSzlGEnt2LoVXjV3DeEAqjsb3CoWRGYIRhuAFy0QAzPEazWxxWtr1kpI51iZ4vAcOUkSdzF+t6DlmLogVsCYOdZ62eEepimY6+Whxr9+8kYEm7RAQXOG67M9JvvsoTOmMUxjSW6qtf+heDRslSftUwF3bbsUQUDglgrIz1FRbrng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TO1j7/83vqEDcJ0ez1Y5RLRtPXVci2DdMOuZazIiCDc=;
- b=fd7F5+Ub5CfD1S7UGS8RT9juVP8jTkYboY+HzIx3uJmFf7XQWN8heWhTY/v9N8J/VnmY5Zj85TQWYW++t7eXv3iARJK74xR1jlG4wuPN4++FBPJVOur0DKhEUc+F+LPZVTv3NDQpavalkWtNolEdtViREG/iP0OU89UUSAOt8nJmwAKcznd4Ih2qtSpCUw5gYYhgemfmmX4C4n5U4s+DnMymFrBYsvoM4JZt5fGVFYfYggqdA2HIr3jNU8OpzkEzbf+B+7OSkV7MgABZTi3k0WkRd3OVFUNodvAZBZbHEKc8JG65OihLPB2fhEmrvTyqDa7VCRTKcYMPI8U074ykfQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TO1j7/83vqEDcJ0ez1Y5RLRtPXVci2DdMOuZazIiCDc=;
- b=P8Y+lqobhPnO9vjABjLM48IpY+r+s+Pm7kwVV1bOm6LQvrctjkEPt9yBiA9dTtHZmR/9Q4hREhmqjOaAQvU3LCtTnHeBlBTTvHqRebo+SNRK0wWGzrloOfZ6z3jBjuUeLpjhJhcQYQ2cMzvsFuu9JNAHtOJuhT+liEapH0yE/u8=
-Received: from DM6PR12MB4236.namprd12.prod.outlook.com (10.141.184.142) by
- DM6PR12MB3516.namprd12.prod.outlook.com (20.179.106.152) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.23; Wed, 9 Oct 2019 18:23:27 +0000
-Received: from DM6PR12MB4236.namprd12.prod.outlook.com
- ([fe80::f85b:e64c:1a31:8e95]) by DM6PR12MB4236.namprd12.prod.outlook.com
- ([fe80::f85b:e64c:1a31:8e95%2]) with mapi id 15.20.2347.016; Wed, 9 Oct 2019
- 18:23:26 +0000
-From:   "Lakha, Bhawanpreet" <Bhawanpreet.Lakha@amd.com>
-To:     Colin Ian King <colin.king@canonical.com>,
-        "Wentland, Harry" <Harry.Wentland@amd.com>,
-        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        amd-gfx mailing list <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: drm/amd/display: Add HDCP module - static analysis bug report
-Thread-Topic: drm/amd/display: Add HDCP module - static analysis bug report
-Thread-Index: AQHVejcKxYM7N3T1jUOoIu2sebAn9adSieGAgAAe9gA=
-Date:   Wed, 9 Oct 2019 18:23:26 +0000
-Message-ID: <a0d5f3a3-a2b3-5367-42f9-bde514571e25@amd.com>
-References: <951eb7dc-bebe-5049-4998-f199e18b0bf3@canonical.com>
- <20191009163235.GT16989@phenom.ffwll.local>
-In-Reply-To: <20191009163235.GT16989@phenom.ffwll.local>
-Accept-Language: en-CA, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: YTOPR0101CA0010.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b00:15::23) To DM6PR12MB4236.namprd12.prod.outlook.com
- (2603:10b6:5:212::14)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Bhawanpreet.Lakha@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.55.250]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f7479d5e-69f5-43f8-8a80-08d74ce5c6ef
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: DM6PR12MB3516:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR12MB3516CA423AD7C57999342138F9950@DM6PR12MB3516.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3383;
-x-forefront-prvs: 018577E36E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(376002)(366004)(136003)(39860400002)(199004)(189003)(71190400001)(486006)(11346002)(229853002)(476003)(86362001)(2616005)(2201001)(6486002)(25786009)(6512007)(305945005)(71200400001)(7736002)(26005)(2906002)(31696002)(186003)(81166006)(81156014)(8676002)(446003)(6116002)(3846002)(6436002)(8936002)(478600001)(36756003)(66066001)(14444005)(110136005)(256004)(5660300002)(6246003)(14454004)(31686004)(52116002)(316002)(102836004)(2501003)(76176011)(53546011)(6506007)(386003)(66556008)(66446008)(99286004)(64756008)(66476007)(66946007)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3516;H:DM6PR12MB4236.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: cjSJSiOsFyPRw/SS/KZDSVlhkUKU0zfaDWfNpECXNpPGKyxNsK4qCcdbwqQ2P9oYG+/l5OE8EEqvuArzATVaSQUnVoxibYXxT6BH+2wsvKMWFZ578/oD9oc3tiITmgCd1rbnGdwAnihgVHadts8NXaIOAWel606wtlgTJKeiNAlZoONwG4HKqUdNHJaht8dfNqkg8yngKCSfY/WfD+0kZjz1iaYk3TgGvCMEscxtlRMdvZrot67iU26cU6S2xOaFlOrVBpk80Bi9TYRlU7+t5oCNrnRP+vq5VqGsaiJ6Ahk85e8sYyn5IyyZ/2Ix3ktqkJFAuYC7JuCrTnAIGSuXApLgJzqSdBO8EAcf9BjZ90/glD1NHCRKoERAMgjahvzcWbwo4lfOqAlrjGmwxHm5EbjtY2cowUddxHXqTpJ8RVI=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F0D6969DDC7B294D8B3E2143A2776E83@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 9 Oct 2019 14:27:39 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:53108 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731134AbfJIS1i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 14:27:38 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x99IRGfN041028;
+        Wed, 9 Oct 2019 13:27:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1570645637;
+        bh=czzkGRnOkqOrOyD9j1rwiX/b/j3aTg3xlt71OdRLPPc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=PSfZOqnfwrtwxP78LZn+O7rpGYSux4yC+/wt6I9UN6zv18YZ4Esh0ydF+N5WEtNhV
+         MqAyfHcVGLdma4W7sKYG9AQmcKW7sLrTTH2wFvjxwojw3RYBa4Dt6zDzYhJ02i4Ms9
+         sUHHlg8m3if2C5uF2t8hk7u0YPGwnIpjPXaa2DXI=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x99IRGBd059771
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 9 Oct 2019 13:27:16 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 9 Oct
+ 2019 13:27:16 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 9 Oct 2019 13:27:13 -0500
+Received: from [10.250.95.88] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x99IRFgj029849;
+        Wed, 9 Oct 2019 13:27:15 -0500
+Subject: Re: [RESEND][PATCH v8 0/5] DMA-BUF Heaps (destaging ION)
+To:     Ayan Halder <Ayan.Halder@arm.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>
+CC:     nd <nd@arm.com>, Alistair Strachan <astrachan@google.com>,
+        Vincent Donnefort <Vincent.Donnefort@arm.com>,
+        Chenbo Feng <fengc@google.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        Hridya Valsaraju <hridya@google.com>,
+        Sudipto Paul <Sudipto.Paul@arm.com>,
+        Pratik Patel <pratikp@codeaurora.org>
+References: <20190906184712.91980-1-john.stultz@linaro.org>
+ <CAO_48GFHx4uK6cWwJ4oGdJ8HNZNZYDzdD=yR3VK0EXQ86ya9-g@mail.gmail.com>
+ <20190924162217.GA12974@arm.com> <20191009173742.GA2682@arm.com>
+From:   "Andrew F. Davis" <afd@ti.com>
+Message-ID: <f4fb09a5-999b-e676-0403-cc0de41be440@ti.com>
+Date:   Wed, 9 Oct 2019 14:27:15 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f7479d5e-69f5-43f8-8a80-08d74ce5c6ef
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Oct 2019 18:23:26.8075
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yonVU9L6GXB/YhaP00w8h1Im/6LK1yQJ3PRa6pPllLtEVnWqDyLkJLG4bcVwQxt3
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3516
+In-Reply-To: <20191009173742.GA2682@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNClRoZSByZWFzb24gd2UgZG9uJ3QgdXNlIGRybV9oZGNwIGlzIGJlY2F1c2Ugb3VyIHBv
-bGljeSBpcyB0byBkbyBoZGNwIA0KdmVyaWZpY2F0aW9uIHVzaW5nIFBTUC9IVyAob25ib2FyZCBz
-ZWN1cmUgcHJvY2Vzc29yKS4NCg0KQmhhd2FuDQoNCk9uIDIwMTktMTAtMDkgMTI6MzIgcC5tLiwg
-RGFuaWVsIFZldHRlciB3cm90ZToNCj4gT24gVGh1LCBPY3QgMDMsIDIwMTkgYXQgMTE6MDg6MDNQ
-TSArMDEwMCwgQ29saW4gSWFuIEtpbmcgd3JvdGU6DQo+PiBIaSwNCj4+DQo+PiBTdGF0aWMgYW5h
-bHlzaXMgd2l0aCBDb3Zlcml0eSBoYXMgZGV0ZWN0ZWQgYSBwb3RlbnRpYWwgaXNzdWUgd2l0aA0K
-Pj4gZnVuY3Rpb24gdmFsaWRhdGVfYmtzdiBpbg0KPj4gZHJpdmVycy9ncHUvZHJtL2FtZC9kaXNw
-bGF5L21vZHVsZXMvaGRjcC9oZGNwMV9leGVjdXRpb24uYyB3aXRoIHJlY2VudA0KPj4gY29tbWl0
-Og0KPj4NCj4+IGNvbW1pdCBlZDlkOGUyYmNiMDAzZWM5NDY1OGNhZmU5YjFiYjM5NjBlMjEzOWVj
-DQo+PiBBdXRob3I6IEJoYXdhbnByZWV0IExha2hhIDxCaGF3YW5wcmVldC5MYWtoYUBhbWQuY29t
-Pg0KPj4gRGF0ZTogICBUdWUgQXVnIDYgMTc6NTI6MDEgMjAxOSAtMDQwMA0KPj4NCj4+ICAgICAg
-ZHJtL2FtZC9kaXNwbGF5OiBBZGQgSERDUCBtb2R1bGUNCj4gSSB0aGluayB0aGUgcmVhbCBxdWVz
-dGlvbiBoZXJlIGlzIC4uLiB3aHkgaXMgdGhpcyBub3QgdXNpbmcgZHJtX2hkY3A/DQo+IC1EYW5p
-ZWwNCj4NCj4+DQo+PiBUaGUgYW5hbHlzaXMgaXMgYXMgZm9sbG93czoNCj4+DQo+PiAgIDI4IHN0
-YXRpYyBpbmxpbmUgZW51bSBtb2RfaGRjcF9zdGF0dXMgdmFsaWRhdGVfYmtzdihzdHJ1Y3QgbW9k
-X2hkY3AgKmhkY3ApDQo+PiAgIDI5IHsNCj4+DQo+PiBDSUQgODk4NTIgKCMxIG9mIDEpOiBPdXQt
-b2YtYm91bmRzIHJlYWQgKE9WRVJSVU4pDQo+Pg0KPj4gMS4gb3ZlcnJ1bi1sb2NhbDoNCj4+IE92
-ZXJydW5uaW5nIGFycmF5IG9mIDUgYnl0ZXMgYXQgYnl0ZSBvZmZzZXQgNyBieSBkZXJlZmVyZW5j
-aW5nIHBvaW50ZXINCj4+ICh1aW50NjRfdCAqKWhkY3AtPmF1dGgubXNnLmhkY3AxLmJrc3YuDQo+
-Pg0KPj4gICAzMCAgICAgICAgdWludDY0X3QgbiA9ICoodWludDY0X3QgKiloZGNwLT5hdXRoLm1z
-Zy5oZGNwMS5ia3N2Ow0KPj4gICAzMSAgICAgICAgdWludDhfdCBjb3VudCA9IDA7DQo+PiAgIDMy
-DQo+PiAgIDMzICAgICAgICB3aGlsZSAobikgew0KPj4gICAzNCAgICAgICAgICAgICAgICBjb3Vu
-dCsrOw0KPj4gICAzNSAgICAgICAgICAgICAgICBuICY9IChuIC0gMSk7DQo+PiAgIDM2ICAgICAg
-ICB9DQo+Pg0KPj4gaGRjcC0+YXV0aC5tc2cuaGRjcDEuYmtzdiBpcyBhbiBhcnJheSBvZiA1IHVp
-bnQ4X3QgYXMgZGVmaW5lZCBpbg0KPj4gZHJpdmVycy9ncHUvZHJtL2FtZC9kaXNwbGF5L21vZHVs
-ZXMvaGRjcC9oZGNwLmggYXMgZm9sbG93czoNCj4+DQo+PiBzdHJ1Y3QgbW9kX2hkY3BfbWVzc2Fn
-ZV9oZGNwMSB7DQo+PiAgICAgICAgICB1aW50OF90ICAgICAgICAgYW5bOF07DQo+PiAgICAgICAg
-ICB1aW50OF90ICAgICAgICAgYWtzdls1XTsNCj4+ICAgICAgICAgIHVpbnQ4X3QgICAgICAgICBh
-aW5mbzsNCj4+ICAgICAgICAgIHVpbnQ4X3QgICAgICAgICBia3N2WzVdOw0KPj4gICAgICAgICAg
-dWludDE2X3QgICAgICAgIHIwcDsNCj4+ICAgICAgICAgIHVpbnQ4X3QgICAgICAgICBiY2FwczsN
-Cj4+ICAgICAgICAgIHVpbnQxNl90ICAgICAgICBic3RhdHVzOw0KPj4gICAgICAgICAgdWludDhf
-dCAgICAgICAgIGtzdmxpc3RbNjM1XTsNCj4+ICAgICAgICAgIHVpbnQxNl90ICAgICAgICBrc3Zs
-aXN0X3NpemU7DQo+PiAgICAgICAgICB1aW50OF90ICAgICAgICAgdnBbMjBdOw0KPj4NCj4+ICAg
-ICAgICAgIHVpbnQxNl90ICAgICAgICBiaW5mb19kcDsNCj4+IH07DQo+Pg0KPj4gdmFyaWFibGUg
-biBpcyBnb2luZyB0byBjb250YWluIHRoZSBjb250YWlucyBvZiByMHAgYW5kIGJjYXBzLiBJJ20g
-bm90DQo+PiBzdXJlIGlmIHRoYXQgaXMgaW50ZW50aW9uYWwuIElmIG5vdCwgdGhlbiB0aGUgY291
-bnQgaXMgZ29pbmcgdG8gYmUNCj4+IGluY29ycmVjdCBpZiB0aGVzZSBhcmUgbm9uLXplcm8uDQo+
-Pg0KPj4gQ29saW4NCg==
+On 10/9/19 1:37 PM, Ayan Halder wrote:
+> On Tue, Sep 24, 2019 at 04:22:18PM +0000, Ayan Halder wrote:
+>> On Thu, Sep 19, 2019 at 10:21:52PM +0530, Sumit Semwal wrote:
+>>> Hello Christoph, everyone,
+>>>
+>>> On Sat, 7 Sep 2019 at 00:17, John Stultz <john.stultz@linaro.org> wrote:
+>>>>
+>>>> Here is yet another pass at the dma-buf heaps patchset Andrew
+>>>> and I have been working on which tries to destage a fair chunk
+>>>> of ION functionality.
+>>>>
+>>>> The patchset implements per-heap devices which can be opened
+>>>> directly and then an ioctl is used to allocate a dmabuf from the
+>>>> heap.
+>>>>
+>>>> The interface is similar, but much simpler then IONs, only
+>>>> providing an ALLOC ioctl.
+>>>>
+>>>> Also, I've provided relatively simple system and cma heaps.
+>>>>
+>>>> I've booted and tested these patches with AOSP on the HiKey960
+>>>> using the kernel tree here:
+>>>>   https://git.linaro.org/people/john.stultz/android-dev.git/log/?h=dev/dma-buf-heap
+>>>>
+>>>> And the userspace changes here:
+>>>>   https://android-review.googlesource.com/c/device/linaro/hikey/+/909436
+>>>>
+>>>> Compared to ION, this patchset is missing the system-contig,
+>>>> carveout and chunk heaps, as I don't have a device that uses
+>>>> those, so I'm unable to do much useful validation there.
+>>>> Additionally we have no upstream users of chunk or carveout,
+>>>> and the system-contig has been deprecated in the common/andoid-*
+>>>> kernels, so this should be ok.
+>>>>
+>>>> I've also removed the stats accounting, since any such accounting
+>>>> should be implemented by dma-buf core or the heaps themselves.
+>>>>
+>>>> Most of the changes in this revision are adddressing the more
+>>>> concrete feedback from Christoph (many thanks!). Though I'm not
+>>>> sure if some of the less specific feedback was completely resolved
+>>>> in discussion last time around. Please let me know!
+>>>
+>>> It looks like most of the feedback has been taken care of. If there's
+>>> no more objection to this series, I'd like to merge it in soon.
+>>>
+>>> If there are any more review comments, may I request you to please provide them?
+>>
+>> I tested these patches using our internal test suite with Arm,komeda
+>> driver and the following node in dts
+>>
+>>         reserved-memory {
+>>                 #address-cells = <0x2>;
+>>                 #size-cells = <0x2>;
+>>                 ranges;
+>>
+>>                 framebuffer@60000000 {
+>>                         compatible = "shared-dma-pool";
+>>                         linux,cma-default;
+>>                         reg = <0x0 0x60000000 0x0 0x8000000>;
+>>                 };
+>>         }
+> Apologies for the confusion, this dts node is irrelevant as our tests were using
+> the cma heap (via /dev/dma_heap/reserved).
+> 
+> That raises a question. How do we represent the reserved-memory nodes
+> (as shown above) via the dma-buf heaps framework ?
+
+
+The CMA driver that registers these nodes will have to be expanded to
+export them using this framework as needed. We do something similar to
+export SRAM nodes:
+
+https://lkml.org/lkml/2019/3/21/575
+
+Unlike the system/default-cma driver which can be centralized in the
+tree, these extra exporters will probably live out in other subsystems
+and so are added in later steps.
+
+Andrew
+
+
+>>
+>> The tests went fine. Our tests allocates framebuffers of different
+>> sizes, posts them on screen and the driver writes back to one of the
+>> framebuffers. I havenot tested for any performance, latency or
+>> cache management related stuff. So, it that looks appropriate, feel
+>> free to add:-
+>> Tested-by:- Ayan Kumar Halder <ayan.halder@arm.com>
+>>
+>> Are you planning to write some igt tests for it ?
+>>>
+>>>>
+>>>> New in v8:
+>>>> * Make struct dma_heap_ops consts (Suggested by Christoph)
+>>>> * Add flush_kernel_vmap_range/invalidate_kernel_vmap_range calls
+>>>>   (suggested by Christoph)
+>>>> * Condense dma_heap_buffer and heap_helper_buffer (suggested by
+>>>>   Christoph)
+>>>> * Get rid of needless struct system_heap (suggested by Christoph)
+>>>> * Fix indentation by using shorter argument names (suggested by
+>>>>   Christoph)
+>>>> * Remove unused private_flags value
+>>>> * Add forgotten include file to fix build issue on x86
+>>>> * Checkpatch whitespace fixups
+>>>>
+>>>> Thoughts and feedback would be greatly appreciated!
+>>>>
+>>>> thanks
+>>>> -john
+>>> Best,
+>>> Sumit.
+>>>>
+>>>> Cc: Laura Abbott <labbott@redhat.com>
+>>>> Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+>>>> Cc: Sumit Semwal <sumit.semwal@linaro.org>
+>>>> Cc: Liam Mark <lmark@codeaurora.org>
+>>>> Cc: Pratik Patel <pratikp@codeaurora.org>
+>>>> Cc: Brian Starkey <Brian.Starkey@arm.com>
+>>>> Cc: Vincent Donnefort <Vincent.Donnefort@arm.com>
+>>>> Cc: Sudipto Paul <Sudipto.Paul@arm.com>
+>>>> Cc: Andrew F. Davis <afd@ti.com>
+>>>> Cc: Christoph Hellwig <hch@infradead.org>
+>>>> Cc: Chenbo Feng <fengc@google.com>
+>>>> Cc: Alistair Strachan <astrachan@google.com>
+>>>> Cc: Hridya Valsaraju <hridya@google.com>
+>>>> Cc: dri-devel@lists.freedesktop.org
+>>>>
+>>>>
+>>>> Andrew F. Davis (1):
+>>>>   dma-buf: Add dma-buf heaps framework
+>>>>
+>>>> John Stultz (4):
+>>>>   dma-buf: heaps: Add heap helpers
+>>>>   dma-buf: heaps: Add system heap to dmabuf heaps
+>>>>   dma-buf: heaps: Add CMA heap to dmabuf heaps
+>>>>   kselftests: Add dma-heap test
+>>>>
+>>>>  MAINTAINERS                                   |  18 ++
+>>>>  drivers/dma-buf/Kconfig                       |  11 +
+>>>>  drivers/dma-buf/Makefile                      |   2 +
+>>>>  drivers/dma-buf/dma-heap.c                    | 250 ++++++++++++++++
+>>>>  drivers/dma-buf/heaps/Kconfig                 |  14 +
+>>>>  drivers/dma-buf/heaps/Makefile                |   4 +
+>>>>  drivers/dma-buf/heaps/cma_heap.c              | 164 +++++++++++
+>>>>  drivers/dma-buf/heaps/heap-helpers.c          | 269 ++++++++++++++++++
+>>>>  drivers/dma-buf/heaps/heap-helpers.h          |  55 ++++
+>>>>  drivers/dma-buf/heaps/system_heap.c           | 122 ++++++++
+>>>>  include/linux/dma-heap.h                      |  59 ++++
+>>>>  include/uapi/linux/dma-heap.h                 |  55 ++++
+>>>>  tools/testing/selftests/dmabuf-heaps/Makefile |   9 +
+>>>>  .../selftests/dmabuf-heaps/dmabuf-heap.c      | 230 +++++++++++++++
+>>>>  14 files changed, 1262 insertions(+)
+>>>>  create mode 100644 drivers/dma-buf/dma-heap.c
+>>>>  create mode 100644 drivers/dma-buf/heaps/Kconfig
+>>>>  create mode 100644 drivers/dma-buf/heaps/Makefile
+>>>>  create mode 100644 drivers/dma-buf/heaps/cma_heap.c
+>>>>  create mode 100644 drivers/dma-buf/heaps/heap-helpers.c
+>>>>  create mode 100644 drivers/dma-buf/heaps/heap-helpers.h
+>>>>  create mode 100644 drivers/dma-buf/heaps/system_heap.c
+>>>>  create mode 100644 include/linux/dma-heap.h
+>>>>  create mode 100644 include/uapi/linux/dma-heap.h
+>>>>  create mode 100644 tools/testing/selftests/dmabuf-heaps/Makefile
+>>>>  create mode 100644 tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
+>>>>
+>>>> --
+>>>> 2.17.1
+>>>>
+>>>
+>>>
+>>> -- 
+>>> Thanks and regards,
+>>>
+>>> Sumit Semwal
+>>> Linaro Consumer Group - Kernel Team Lead
+>>> Linaro.org │ Open source software for ARM SoCs
+>>> _______________________________________________
+>>> dri-devel mailing list
+>>> dri-devel@lists.freedesktop.org
+>>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>> _______________________________________________
+>> dri-devel mailing list
+>> dri-devel@lists.freedesktop.org
+>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
