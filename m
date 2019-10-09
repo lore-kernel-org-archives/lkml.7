@@ -2,52 +2,52 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F76EC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC44C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A0D1206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29F4420B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:25:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570641926;
-	bh=7//GOyKEzo7xrJIfyzR+9RrVrjKnqDbQZAYgTiMrUSY=;
+	s=default; t=1570641928;
+	bh=OxtsmDZcRyjTy/TwgnZe5iInYm/ARc+kAq5vsnT/P2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1IgEpSr0eNV/nD+xvEw6fwDFMwSRyNBV79y6zkVLK4RhqWxidrh1k7jT3Anp45Wr5
-	 Sh5FSMnbEuCkpaRAZDA0JmGfyjm0/NNJEhx2n7wngDG/Wf6le0Vuo7vRCqqICqV0Ma
-	 BI8vS9CS5lhUGYeQtV2Qkjh1iBEuwmCbj4uCCeGA=
+	b=gB/NYhZVCUre92eb5HZvGq/IwossNtAupyUkTKcSJZ5cLklYiQ+PRCzA2ImnugAg2
+	 cd73kNsZ4MgfUVf+u1EHCqt+BXLkMeAmIUYdq9j20TOIioN8gK0DR8hA35lZfl+Ihd
+	 BOXEOck/9cF0PaAWR8kYne9wrW0r1OCDsBkRnVZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732629AbfJIRZZ (ORCPT
+        id S1732619AbfJIRZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:25:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50042 "EHLO mail.kernel.org"
+        Wed, 9 Oct 2019 13:25:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732042AbfJIRY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 13:24:59 -0400
+        id S1732519AbfJIRY5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 13:24:57 -0400
 Received: from sasha-vm.mshome.net (unknown [167.220.2.234])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51DAF206BB;
-        Wed,  9 Oct 2019 17:24:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C50620B7C;
+        Wed,  9 Oct 2019 17:24:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570641898;
-        bh=7//GOyKEzo7xrJIfyzR+9RrVrjKnqDbQZAYgTiMrUSY=;
+        s=default; t=1570641896;
+        bh=OxtsmDZcRyjTy/TwgnZe5iInYm/ARc+kAq5vsnT/P2M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y9CYzRtfOatTcoTg7dbx90cXRXwFKiTfjGjfkkM+JS50wqFF+OFPoj7dH8pdQuTiG
-         EpOOv14cybRq6lFg/iu/y8hcqmtceNvtaV652Z2WEgeJdbe72Nys9wPV5VbpvKmIFY
-         MxlgqaIsFs5BmiQoUhO/zlwzjhFD7VvvN4oTzE50=
+        b=VvsJ2+3wao64eG3TrXLZ8w/PER+58AfFCmGusCElUEjXKSSUs3DHQf0u5o85WxCVG
+         u54VfJybzUxumxrIROFsUS4wuNjbGIHrRFCj2+VulxiWg535kKcifNtx7ZRYvDhia/
+         Ir/p4IeFx051QHqIXKN+z1NEUhxsOUjN1ws8/seI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jacob Keller <jacob.e.keller@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 10/11] namespace: fix namespace.pl script to support relative paths
-Date:   Wed,  9 Oct 2019 13:06:44 -0400
-Message-Id: <20191009170646.696-10-sashal@kernel.org>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Paul Burton <paul.burton@mips.com>, chenhc@lemote.com,
+        ralf@linux-mips.org, jhogan@kernel.org, linux-mips@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 08/11] mips: Loongson: Fix the link time qualifier of 'serial_exit()'
+Date:   Wed,  9 Oct 2019 13:06:42 -0400
+Message-Id: <20191009170646.696-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191009170646.696-1-sashal@kernel.org>
 References: <20191009170646.696-1-sashal@kernel.org>
@@ -60,84 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacob Keller <jacob.e.keller@intel.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 82fdd12b95727640c9a8233c09d602e4518e71f7 ]
+[ Upstream commit 25b69a889b638b0b7e51e2c4fe717a66bec0e566 ]
 
-The namespace.pl script does not work properly if objtree is not set to
-an absolute path. The do_nm function is run from within the find
-function, which changes directories.
+'exit' functions should be marked as __exit, not __init.
 
-Because of this, appending objtree, $File::Find::dir, and $source, will
-return a path which is not valid from the current directory.
-
-This used to work when objtree was set to an absolute path when using
-"make namespacecheck". It appears to have not worked when calling
-./scripts/namespace.pl directly.
-
-This behavior was changed in 7e1c04779efd ("kbuild: Use relative path
-for $(objtree)", 2014-05-14)
-
-Rather than fixing the Makefile to set objtree to an absolute path, just
-fix namespace.pl to work when srctree and objtree are relative. Also fix
-the script to use an absolute path for these by default.
-
-Use the File::Spec module for this purpose. It's been part of perl
-5 since 5.005.
-
-The curdir() function is used to get the current directory when the
-objtree and srctree aren't set in the environment.
-
-rel2abs() is used to convert possibly relative objtree and srctree
-environment variables to absolute paths.
-
-Finally, the catfile() function is used instead of string appending
-paths together, since this is more robust when joining paths together.
-
-Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Fixes: 85cc028817ef ("mips: make loongsoon serial driver explicitly modular")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: chenhc@lemote.com
+Cc: ralf@linux-mips.org
+Cc: jhogan@kernel.org
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/namespace.pl | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ arch/mips/loongson64/common/serial.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/scripts/namespace.pl b/scripts/namespace.pl
-index a71be6b7cdec5..9a2a32ce8a3b4 100755
---- a/scripts/namespace.pl
-+++ b/scripts/namespace.pl
-@@ -65,13 +65,14 @@
- require 5;	# at least perl 5
- use strict;
- use File::Find;
-+use File::Spec;
+diff --git a/arch/mips/loongson64/common/serial.c b/arch/mips/loongson64/common/serial.c
+index ffefc1cb26121..98c3a7feb10f8 100644
+--- a/arch/mips/loongson64/common/serial.c
++++ b/arch/mips/loongson64/common/serial.c
+@@ -110,7 +110,7 @@ static int __init serial_init(void)
+ }
+ module_init(serial_init);
  
- my $nm = ($ENV{'NM'} || "nm") . " -p";
- my $objdump = ($ENV{'OBJDUMP'} || "objdump") . " -s -j .comment";
--my $srctree = "";
--my $objtree = "";
--$srctree = "$ENV{'srctree'}/" if (exists($ENV{'srctree'}));
--$objtree = "$ENV{'objtree'}/" if (exists($ENV{'objtree'}));
-+my $srctree = File::Spec->curdir();
-+my $objtree = File::Spec->curdir();
-+$srctree = File::Spec->rel2abs($ENV{'srctree'}) if (exists($ENV{'srctree'}));
-+$objtree = File::Spec->rel2abs($ENV{'objtree'}) if (exists($ENV{'objtree'}));
- 
- if ($#ARGV != -1) {
- 	print STDERR "usage: $0 takes no parameters\n";
-@@ -229,9 +230,9 @@ sub do_nm
- 	}
- 	($source = $basename) =~ s/\.o$//;
- 	if (-e "$source.c" || -e "$source.S") {
--		$source = "$objtree$File::Find::dir/$source";
-+		$source = File::Spec->catfile($objtree, $File::Find::dir, $source)
- 	} else {
--		$source = "$srctree$File::Find::dir/$source";
-+		$source = File::Spec->catfile($srctree, $File::Find::dir, $source)
- 	}
- 	if (! -e "$source.c" && ! -e "$source.S") {
- 		# No obvious source, exclude the object if it is conglomerate
+-static void __init serial_exit(void)
++static void __exit serial_exit(void)
+ {
+ 	platform_device_unregister(&uart8250_device);
+ }
 -- 
 2.20.1
 
