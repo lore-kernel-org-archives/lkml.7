@@ -2,131 +2,151 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 785A5C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 512B2ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57606218AC
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:12:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32FDA218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:12:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732299AbfJITMU (ORCPT
+        id S1732085AbfJITLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 15:12:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45294 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732032AbfJITMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 15:12:18 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7ACE118CB909;
-        Wed,  9 Oct 2019 19:12:18 +0000 (UTC)
-Received: from ovpn-117-172.phx2.redhat.com (ovpn-117-172.phx2.redhat.com [10.3.117.172])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E887F60C05;
-        Wed,  9 Oct 2019 19:12:11 +0000 (UTC)
-Message-ID: <9c12342ed1e6d180fae3348409fabb9fc045361d.camel@redhat.com>
-Subject: Re: [PATCH RT 5/8] sched/deadline: Reclaim cpuset bandwidth in
- .migrate_task_rq()
-From:   Scott Wood <swood@redhat.com>
-To:     Juri Lelli <juri.lelli@redhat.com>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Date:   Wed, 09 Oct 2019 14:12:10 -0500
-In-Reply-To: <20191009072745.GI19588@localhost.localdomain>
-References: <20190727055638.20443-1-swood@redhat.com>
-         <20190727055638.20443-6-swood@redhat.com>
-         <20190927081141.GB31660@localhost.localdomain>
-         <9a4cc499e6de4690c682c03c0c880363fe3c9307.camel@redhat.com>
-         <20190930071233.GE31660@localhost.localdomain>
-         <9acc5f1bd0fe06acb2b7b518c5ef1f082e89ad63.camel@redhat.com>
-         <20191001085209.GA6481@localhost.localdomain>
-         <a1098e5f95a1ab202fdf79a73aedfeeb8e02dd47.camel@redhat.com>
-         <20191009072745.GI19588@localhost.localdomain>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Wed, 9 Oct 2019 15:11:32 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:34679 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731936AbfJITLU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 15:11:20 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MGQSj-1iJcHh1zkj-00GsWY; Wed, 09 Oct 2019 21:11:16 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-kernel@vger.kernel.org, y2038@lists.linaro.org,
+        linux-fsdevel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Bob Peterson <rpeterso@redhat.com>
+Subject: [PATCH v6 29/43] REPLACE gfs2: add compat_ioctl support
+Date:   Wed,  9 Oct 2019 21:10:30 +0200
+Message-Id: <20191009191044.308087-30-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20191009190853.245077-1-arnd@arndb.de>
+References: <20191009190853.245077-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.63]); Wed, 09 Oct 2019 19:12:18 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:cS3/sfwAkrlKljto27S6eVG/uuPsCXcx4FSTY4203dGSHJvWpBw
+ Y/QigecS3No2SqHeWCOGB/W6xC1Ok3w8tcPq9dlYEdZm3BatlYEYVv/wmbhhaLlDcp8uxHs
+ C7lXB1/M5UDHms6xRtOLlXy6Fb0SM4Q7UclbwQgDMDarQqmByhg7nKD8pPDl9rdsGEgG3lD
+ B/HkZp8uQR7x7zFN8P+nQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:lqrUhAhzDB4=:R09Cty2tcFGQtALD0fbRvq
+ 6rGoeKKmIVe4e+wj5XtkY9Np2XBJMJ/te+tI2sr5syyE1YE3/fBWVAd4A/ZbtZ27vtaw++gc1
+ BU4WDcVKKsTcSPdMT8ZSkWaU9XCAVov2ps9NCFt1WKEjPDDtTMt1XkSG4Q93KKke4lCBLVU0/
+ RLt49ycv4tzqkPgfYEyNwVMhgwPaR6KwDPO+DbjBMEBN1Zw/zuv6YewMuAas9/JG90GmfebRA
+ fCelIdGghcHHBH9TL17QTWdMbiPiir9hc7pnbpvxDVkZai7udPUfrakHqP00HwjynnbmRphrF
+ y3PZiTm92s/MxqPORXrrY4P6IErrG5UVhgvYrspWw9xqsvoj3Kpj8pJJa3QRqbrbel4C7v/kF
+ 1obVvQKWJ5T14PLhGlFT0+2OUJOz1dTdDh9oGSLeeMaJK+iunfEajhjuluZbmXg3LABjM4Nm6
+ 3pF02f/p9HmZs1UVmDoOYH9P9wsxUF4G5YSZgBu5qdZmLAH0bR38lzujAXtDV9OgHV7B60YhB
+ k1pJ91U8s8++o2D56cN+RXVe1WmKDEUsmSkl4l650yrf+fDOtgrDpOHQ519OQK5mjUWDIF3Xz
+ +Q72rzqE1dkX45PSBLYTtk0MQIj8+cUO4ZCBLKdxEOoZ5b1G6oVvaurOVi+dm5PuAgnD1BSaC
+ 0I1gn6qWBcWXmV4UTbjroBaxWN57Txmz/I5dNgde9Ux/bFEpn4FCHBxq74fhlrKQ+mh7sR6fC
+ HMdLDCHPMXXdv2uQNn52oAOWr0LluqK8Xm1lhQN2w1CmRAVZTfF6s9UfM83UipxhtNKTq1qKz
+ XsOTI865bM7o4iWQ7iWPeEN0JJ3B+FXzrOaDo80mpnWseZRhqS7bnA1vjaDLI8ULdBqXW7W65
+ fKC9RxEY8zTuLOe9aGWg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-10-09 at 09:27 +0200, Juri Lelli wrote:
-> On 09/10/19 01:25, Scott Wood wrote:
-> > On Tue, 2019-10-01 at 10:52 +0200, Juri Lelli wrote:
-> > > On 30/09/19 11:24, Scott Wood wrote:
-> > > > On Mon, 2019-09-30 at 09:12 +0200, Juri Lelli wrote:
-> > > 
-> > > [...]
-> > > 
-> > > > > Hummm, I was actually more worried about the fact that we call
-> > > > > free_old_
-> > > > > cpuset_bw_dl() only if p->state != TASK_WAKING.
-> > > > 
-> > > > Oh, right. :-P  Not sure what I had in mind there; we want to call
-> > > > it
-> > > > regardless.
-> > > > 
-> > > > I assume we need rq->lock in free_old_cpuset_bw_dl()?  So something
-> > > > like
-> > > 
-> > > I think we can do with rcu_read_lock_sched() (see
-> > > dl_task_can_attach()).
-> > 
-> > RCU will keep dl_bw from being freed under us (we're implicitly in an
-> > RCU
-> > sched read section due to atomic context).  It won't stop rq->rd from
-> > changing, but that could have happened before we took rq->lock.  If the
-> > cpu
-> > the task was running on was removed from the cpuset, and that raced with
-> > the
-> > task being moved to a different cpuset, couldn't we end up erroneously
-> > subtracting from the cpu's new root domain (or failing to subtract at
-> > all if
-> > the old cpu's new cpuset happens to be the task's new cpuset)?  I don't
-> > see
-> > anything that forces tasks off of the cpu when a cpu is removed from a
-> > cpuset (though maybe I'm not looking in the right place), so the race
-> > window
-> > could be quite large.  In any case, that's an existing problem that's
-> > not
-> > going to get solved in this patchset.
-> 
-> OK. So, mainline has got cpuset_read_lock() which should be enough to
-> guard against changes to rd(s).
-> 
-> I agree that rq->lock is needed here.
+Out of the four ioctl commands supported on gfs2, only FITRIM
+works in compat mode.
 
-My point was that rq->lock isn't actually helping, because rq->rd could have
-changed before rq->lock is acquired (and it's still the old rd that needs
-the bandwidth subtraction).  cpuset_mutex/cpuset_rwsem helps somewhat,
-though there's still a problem due to the subtraction not happening until
-the task is woken up (by which time cpuset_mutex may have been released and
-further reconfiguration could have happened).  This would be an issue even
-without lazy migrate, since in that case ->set_cpus_allowed() can get
-deferred, but this patch makes the window much bigger.
+Add a proper handler based on the ext4 implementation.
 
-The right solution is probably to explicitly track the rd for which a task
-has a pending bandwidth subtraction (if any), and to continue doing it from
-set_cpus_allowed() if the task is not migrate-disabled.  In the meantime, I
-think we should drop this patch from the patchset -- without it, lazy
-migrate disable doesn't really make the race situation any worse than it
-already was.
+Fixes: 6ddc5c3ddf25 ("gfs2: getlabel support")
+Reviewed-by: Bob Peterson <rpeterso@redhat.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ fs/gfs2/file.c | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-BTW, what happens to the bw addition in dl_task_can_attach() if a subsequent
-can_attach fails and the whole operation is cancelled?
-
--Scott
-
+diff --git a/fs/gfs2/file.c b/fs/gfs2/file.c
+index 997b326247e2..e073050c1f2a 100644
+--- a/fs/gfs2/file.c
++++ b/fs/gfs2/file.c
+@@ -6,6 +6,7 @@
+ 
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
++#include <linux/compat.h>
+ #include <linux/completion.h>
+ #include <linux/buffer_head.h>
+ #include <linux/pagemap.h>
+@@ -354,6 +355,31 @@ static long gfs2_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ 	return -ENOTTY;
+ }
+ 
++#ifdef CONFIG_COMPAT
++static long gfs2_compat_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
++{
++	switch(cmd) {
++	/* These are just misnamed, they actually get/put from/to user an int */
++	case FS_IOC32_GETFLAGS:
++		cmd = FS_IOC_GETFLAGS;
++		break;
++	case FS_IOC32_SETFLAGS:
++		cmd = FS_IOC_SETFLAGS;
++		break;
++	/* Keep this list in sync with gfs2_ioctl */
++	case FITRIM:
++	case FS_IOC_GETFSLABEL:
++		break;
++	default:
++		return -ENOIOCTLCMD;
++	}
++
++	return gfs2_ioctl(filp, cmd, (unsigned long)compat_ptr(arg));
++}
++#else
++#define gfs2_compat_ioctl NULL
++#endif
++
+ /**
+  * gfs2_size_hint - Give a hint to the size of a write request
+  * @filep: The struct file
+@@ -1293,6 +1319,7 @@ const struct file_operations gfs2_file_fops = {
+ 	.write_iter	= gfs2_file_write_iter,
+ 	.iopoll		= iomap_dio_iopoll,
+ 	.unlocked_ioctl	= gfs2_ioctl,
++	.compat_ioctl	= gfs2_compat_ioctl,
+ 	.mmap		= gfs2_mmap,
+ 	.open		= gfs2_open,
+ 	.release	= gfs2_release,
+@@ -1308,6 +1335,7 @@ const struct file_operations gfs2_file_fops = {
+ const struct file_operations gfs2_dir_fops = {
+ 	.iterate_shared	= gfs2_readdir,
+ 	.unlocked_ioctl	= gfs2_ioctl,
++	.compat_ioctl	= gfs2_compat_ioctl,
+ 	.open		= gfs2_open,
+ 	.release	= gfs2_release,
+ 	.fsync		= gfs2_fsync,
+@@ -1324,6 +1352,7 @@ const struct file_operations gfs2_file_fops_nolock = {
+ 	.write_iter	= gfs2_file_write_iter,
+ 	.iopoll		= iomap_dio_iopoll,
+ 	.unlocked_ioctl	= gfs2_ioctl,
++	.compat_ioctl	= gfs2_compat_ioctl,
+ 	.mmap		= gfs2_mmap,
+ 	.open		= gfs2_open,
+ 	.release	= gfs2_release,
+@@ -1337,6 +1366,7 @@ const struct file_operations gfs2_file_fops_nolock = {
+ const struct file_operations gfs2_dir_fops_nolock = {
+ 	.iterate_shared	= gfs2_readdir,
+ 	.unlocked_ioctl	= gfs2_ioctl,
++	.compat_ioctl	= gfs2_compat_ioctl,
+ 	.open		= gfs2_open,
+ 	.release	= gfs2_release,
+ 	.fsync		= gfs2_fsync,
+-- 
+2.20.0
 
