@@ -2,113 +2,724 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4610C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:14:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E77F7ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:19:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 878D821848
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:14:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570630440;
-	bh=Qi4PLv81q66n38J6ejNqiEYIPuUUxSxzgGAgibO/MIA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qhb4pxATzrQO1PJTC1Yz5tz887l1Q8LGvYWvoYA30KNZImyi/qv//tbpBptKld5lz
-	 ld3dR0XX/zS+3zbrRN4LwnIk30ZD6yNerydbnJvV1pewilH08j/e+dTY9k7eBa+28i
-	 jPtmdrKydIuVPKJeJ9lP+jKK4npFebcsSROSCD64=
+	by mail.kernel.org (Postfix) with ESMTP id B117C218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:19:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731278AbfJION7 (ORCPT
+        id S1731226AbfJIOTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 10:13:59 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:38506 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727769AbfJION7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 10:13:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Qi4PLv81q66n38J6ejNqiEYIPuUUxSxzgGAgibO/MIA=; b=XlsWNpaCBgOAMCQ6aVbxTyaZu
-        NUC3bWBiTBT/J9H5Dmb7d8CXd2lKca+wVhWFcpX8x5VMRty4/pU668SQOq8yY9yKJE/8JJHu1eFT7
-        eHJXP+euu8K6eDVnbpEsBW7+JgrB5fY3kT69pZ8SIl0Si9vZs/3c1LNawCgDq7W5b9VS4=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iICiv-0004we-G1; Wed, 09 Oct 2019 14:13:53 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id B00332741DF9; Wed,  9 Oct 2019 15:13:52 +0100 (BST)
-Date:   Wed, 9 Oct 2019 15:13:52 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-samsung-soc@vger.kernel.org,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Kamil Konieczny <k.konieczny@samsung.com>
-Subject: Re: [PATCH] regulator: core: Skip balancing of the enabled
- regulators in regulator_enable()
-Message-ID: <20191009141352.GC3929@sirena.co.uk>
-References: <20191008124736.GJ4382@sirena.co.uk>
- <86b9b4b5-cca5-9052-7c87-c5679dfffff4@samsung.com>
- <be8d3280-9855-ed18-b2ab-d7fb28d80b82@gmail.com>
- <20191008161535.GN4382@sirena.co.uk>
- <4ad890b7-705e-94f9-2e61-1f3a60984c91@gmail.com>
- <20191008171747.GS4382@sirena.co.uk>
- <439154a4-1502-40af-7086-d4e3eb24025f@gmail.com>
- <CGME20191008180759epcas3p3c367142db499635c71d9601dd3e63956@epcas3p3.samsung.com>
- <20191008180750.GT4382@sirena.co.uk>
- <c9e3ff21-ec50-97c2-06cb-b2f44c70eac8@samsung.com>
+        Wed, 9 Oct 2019 10:19:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52318 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728019AbfJIOTE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 10:19:04 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2C82BB1A4;
+        Wed,  9 Oct 2019 14:19:00 +0000 (UTC)
+Date:   Wed, 9 Oct 2019 16:18:59 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Nicolai Stange <nstange@suse.de>, linux-kernel@vger.kernel.org,
+        live-patching@vger.kernel.org
+Subject: Re: [PATCH v3 5/5] livepatch: Selftests of the API for tracking
+ system state changes
+Message-ID: <20191009141859.ndyv7jznjasxcpsw@pathway.suse.cz>
+References: <20191003090137.6874-1-pmladek@suse.com>
+ <20191003090137.6874-6-pmladek@suse.com>
+ <20191004144742.GB3768@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="JgQwtEuHJzHdouWu"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c9e3ff21-ec50-97c2-06cb-b2f44c70eac8@samsung.com>
-X-Cookie: Every path has its puddle.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191004144742.GB3768@redhat.com>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri 2019-10-04 10:47:42, Joe Lawrence wrote:
+> On Thu, Oct 03, 2019 at 11:01:37AM +0200, Petr Mladek wrote:
+> > Four selftests for the new API.
+> > 
+> > --- /dev/null
+> > +++ b/tools/testing/selftests/livepatch/test-state.sh
+> > @@ -0,0 +1,180 @@
+> > +#!/bin/bash
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +# Copyright (C) 2018 Joe Lawrence <joe.lawrence@redhat.com>
+> > +
+> 
+> nit: this should probably read as:
+> # Copyright (C) 2019 Petr Mladek <pmladek@suse.com>
+> 
+> > +
+> > +load_lp $MOD_LIVEPATCH
+> > +disable_lp $MOD_LIVEPATCH
+> > +unload_lp $MOD_LIVEPATCH
+> > +
+> > +check_result "% modprobe test_klp_state
+> > +livepatch: enabling patch 'test_klp_state'
+> > +livepatch: 'test_klp_state': initializing patching transition
+> > +test_klp_state: pre_patch_callback: vmlinux
+> > +test_klp_state: allocate_loglevel_state: allocating space to store console_loglevel
+> > +livepatch: 'test_klp_state': starting patching transition
+> > +livepatch: 'test_klp_state': completing patching transition
+> > +test_klp_state: post_patch_callback: vmlinux
+> > +test_klp_state: fix_console_loglevel: fixing console_loglevel
+> > +livepatch: 'test_klp_state': patching complete
+> > +% echo 0 > /sys/kernel/livepatch/test_klp_state/enabled
+> > +livepatch: 'test_klp_state': initializing unpatching transition
+> > +test_klp_state: pre_unpatch_callback: vmlinux
+> > +test_klp_state: restore_console_loglevel: restoring console_loglevel
+> > +livepatch: 'test_klp_state': starting unpatching transition
+> > +livepatch: 'test_klp_state': completing unpatching transition
+> > +test_klp_state: post_unpatch_callback: vmlinux
+> > +test_klp_state: free_loglevel_state: freeing space for the stored console_loglevel
+> > +livepatch: 'test_klp_state': unpatching complete
+> > +% rmmod test_klp_state"
+> > +
+> 
+> nit: a matter of style, and I don't mind either, but the other test
+> scripts used $MOD_LIVEPATCH{2,3} variable replacement in the
+> check_result string.  I think I originally did that when we were
+> reviewing the first self-test patchset and the filenames may or may not
+> have changed.  Those names are stable now, so I don't have a strong
+> opinion either way.
 
---JgQwtEuHJzHdouWu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Please, find below and updated version of the patch that fixes
+the two above problems and also the kbuild robot failure.
 
-On Wed, Oct 09, 2019 at 12:29:00PM +0200, Marek Szyprowski wrote:
+The build failure was fixed by #include <linux/slab.h>
 
-> Okay, then what is the conclusion, as I got lost a bit? How do you want=
-=20
-> this issue to be fixed?
+Here we go:
 
-We should revert the enable call, it shouldn't be required, and ideally
-the default balancer could be updated to only make configuration changes
-if they're actually required which would help avoid triggering any such
-things in future if we don't absolutely have to.
+From 206e0a53de25ddb042e5947c2a736e33ca4a2b4c Mon Sep 17 00:00:00 2001
+From: Petr Mladek <pmladek@suse.com>
+Date: Mon, 10 Jun 2019 14:02:42 +0200
+Subject: [PATCH v3.1 5/5] livepatch: Selftests of the API for tracking system state
+ changes
 
---JgQwtEuHJzHdouWu
-Content-Type: application/pgp-signature; name="signature.asc"
+Four selftests for the new API.
 
------BEGIN PGP SIGNATURE-----
+Signed-off-by: Petr Mladek <pmladek@suse.com>
+Acked-by: Miroslav Benes <mbenes@suse.cz>
+---
+ lib/livepatch/Makefile                          |   5 +-
+ lib/livepatch/test_klp_state.c                  | 162 ++++++++++++++++++++
+ lib/livepatch/test_klp_state2.c                 | 191 ++++++++++++++++++++++++
+ lib/livepatch/test_klp_state3.c                 |   5 +
+ tools/testing/selftests/livepatch/Makefile      |   3 +-
+ tools/testing/selftests/livepatch/test-state.sh | 180 ++++++++++++++++++++++
+ 6 files changed, 544 insertions(+), 2 deletions(-)
+ create mode 100644 lib/livepatch/test_klp_state.c
+ create mode 100644 lib/livepatch/test_klp_state2.c
+ create mode 100644 lib/livepatch/test_klp_state3.c
+ create mode 100755 tools/testing/selftests/livepatch/test-state.sh
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2d6wkACgkQJNaLcl1U
-h9BlRAf/YGiMG169n7MCXyjkc8bcLmLH7+9S3stdFllmTYuhOP/M1y/JQJmzzQwg
-XDnAA2bX++oSN2E5ywHFEFnnEMStg5lUCHik0tZbf1SJNwS4O1XsuQaLS3tJajgQ
-ForbctxszdR9Yb+PpwMsjeH1ke5L851Cxd6XjwIVhy8DMqY4vWhrriiojk6ZqniV
-BLMMwT7B1fMwVqVqeLjOlwc7eZopT7cFim47sO1NfXizcuJ0eX9VthVh0HRnM294
-92eCpqwgT1HTNmrkZgmnme9gWgbdB710n/G9w6Ez0/iC8fPp9S5OMyNA92ajbuMs
-JpMjsKKdeYiEQe2ugez8CeAphm/pFg==
-=ljBl
------END PGP SIGNATURE-----
+diff --git a/lib/livepatch/Makefile b/lib/livepatch/Makefile
+index 26900ddaef82..295b94bff370 100644
+--- a/lib/livepatch/Makefile
++++ b/lib/livepatch/Makefile
+@@ -8,7 +8,10 @@ obj-$(CONFIG_TEST_LIVEPATCH) += test_klp_atomic_replace.o \
+ 				test_klp_callbacks_busy.o \
+ 				test_klp_callbacks_mod.o \
+ 				test_klp_livepatch.o \
+-				test_klp_shadow_vars.o
++				test_klp_shadow_vars.o \
++				test_klp_state.o \
++				test_klp_state2.o \
++				test_klp_state3.o
+ 
+ # Target modules to be livepatched require CC_FLAGS_FTRACE
+ CFLAGS_test_klp_callbacks_busy.o	+= $(CC_FLAGS_FTRACE)
+diff --git a/lib/livepatch/test_klp_state.c b/lib/livepatch/test_klp_state.c
+new file mode 100644
+index 000000000000..57a4253acb01
+--- /dev/null
++++ b/lib/livepatch/test_klp_state.c
+@@ -0,0 +1,162 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (C) 2019 SUSE
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/slab.h>
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/printk.h>
++#include <linux/livepatch.h>
++
++#define CONSOLE_LOGLEVEL_STATE 1
++/* Version 1 does not support migration. */
++#define CONSOLE_LOGLEVEL_STATE_VERSION 1
++
++static const char *const module_state[] = {
++	[MODULE_STATE_LIVE]	= "[MODULE_STATE_LIVE] Normal state",
++	[MODULE_STATE_COMING]	= "[MODULE_STATE_COMING] Full formed, running module_init",
++	[MODULE_STATE_GOING]	= "[MODULE_STATE_GOING] Going away",
++	[MODULE_STATE_UNFORMED]	= "[MODULE_STATE_UNFORMED] Still setting it up",
++};
++
++static void callback_info(const char *callback, struct klp_object *obj)
++{
++	if (obj->mod)
++		pr_info("%s: %s -> %s\n", callback, obj->mod->name,
++			module_state[obj->mod->state]);
++	else
++		pr_info("%s: vmlinux\n", callback);
++}
++
++static struct klp_patch patch;
++
++static int allocate_loglevel_state(void)
++{
++	struct klp_state *loglevel_state;
++
++	loglevel_state = klp_get_state(&patch, CONSOLE_LOGLEVEL_STATE);
++	if (!loglevel_state)
++		return -EINVAL;
++
++	loglevel_state->data = kzalloc(sizeof(console_loglevel), GFP_KERNEL);
++	if (!loglevel_state->data)
++		return -ENOMEM;
++
++	pr_info("%s: allocating space to store console_loglevel\n",
++		__func__);
++	return 0;
++}
++
++static void fix_console_loglevel(void)
++{
++	struct klp_state *loglevel_state;
++
++	loglevel_state = klp_get_state(&patch, CONSOLE_LOGLEVEL_STATE);
++	if (!loglevel_state)
++		return;
++
++	pr_info("%s: fixing console_loglevel\n", __func__);
++	*(int *)loglevel_state->data = console_loglevel;
++	console_loglevel = CONSOLE_LOGLEVEL_MOTORMOUTH;
++}
++
++static void restore_console_loglevel(void)
++{
++	struct klp_state *loglevel_state;
++
++	loglevel_state = klp_get_state(&patch, CONSOLE_LOGLEVEL_STATE);
++	if (!loglevel_state)
++		return;
++
++	pr_info("%s: restoring console_loglevel\n", __func__);
++	console_loglevel = *(int *)loglevel_state->data;
++}
++
++static void free_loglevel_state(void)
++{
++	struct klp_state *loglevel_state;
++
++	loglevel_state = klp_get_state(&patch, CONSOLE_LOGLEVEL_STATE);
++	if (!loglevel_state)
++		return;
++
++	pr_info("%s: freeing space for the stored console_loglevel\n",
++		__func__);
++	kfree(loglevel_state->data);
++}
++
++/* Executed on object patching (ie, patch enablement) */
++static int pre_patch_callback(struct klp_object *obj)
++{
++	callback_info(__func__, obj);
++	return allocate_loglevel_state();
++}
++
++/* Executed on object unpatching (ie, patch disablement) */
++static void post_patch_callback(struct klp_object *obj)
++{
++	callback_info(__func__, obj);
++	fix_console_loglevel();
++}
++
++/* Executed on object unpatching (ie, patch disablement) */
++static void pre_unpatch_callback(struct klp_object *obj)
++{
++	callback_info(__func__, obj);
++	restore_console_loglevel();
++}
++
++/* Executed on object unpatching (ie, patch disablement) */
++static void post_unpatch_callback(struct klp_object *obj)
++{
++	callback_info(__func__, obj);
++	free_loglevel_state();
++}
++
++static struct klp_func no_funcs[] = {
++	{}
++};
++
++static struct klp_object objs[] = {
++	{
++		.name = NULL,	/* vmlinux */
++		.funcs = no_funcs,
++		.callbacks = {
++			.pre_patch = pre_patch_callback,
++			.post_patch = post_patch_callback,
++			.pre_unpatch = pre_unpatch_callback,
++			.post_unpatch = post_unpatch_callback,
++		},
++	}, { }
++};
++
++static struct klp_state states[] = {
++	{
++		.id = CONSOLE_LOGLEVEL_STATE,
++		.version = CONSOLE_LOGLEVEL_STATE_VERSION,
++	}, { }
++};
++
++static struct klp_patch patch = {
++	.mod = THIS_MODULE,
++	.objs = objs,
++	.states = states,
++	.replace = true,
++};
++
++static int test_klp_callbacks_demo_init(void)
++{
++	return klp_enable_patch(&patch);
++}
++
++static void test_klp_callbacks_demo_exit(void)
++{
++}
++
++module_init(test_klp_callbacks_demo_init);
++module_exit(test_klp_callbacks_demo_exit);
++MODULE_LICENSE("GPL");
++MODULE_INFO(livepatch, "Y");
++MODULE_AUTHOR("Petr Mladek <pmladek@suse.com>");
++MODULE_DESCRIPTION("Livepatch test: system state modification");
+diff --git a/lib/livepatch/test_klp_state2.c b/lib/livepatch/test_klp_state2.c
+new file mode 100644
+index 000000000000..c978ea4d5e67
+--- /dev/null
++++ b/lib/livepatch/test_klp_state2.c
+@@ -0,0 +1,191 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (C) 2019 SUSE
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/slab.h>
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/printk.h>
++#include <linux/livepatch.h>
++
++#define CONSOLE_LOGLEVEL_STATE 1
++/* Version 2 supports migration. */
++#define CONSOLE_LOGLEVEL_STATE_VERSION 2
++
++static const char *const module_state[] = {
++	[MODULE_STATE_LIVE]	= "[MODULE_STATE_LIVE] Normal state",
++	[MODULE_STATE_COMING]	= "[MODULE_STATE_COMING] Full formed, running module_init",
++	[MODULE_STATE_GOING]	= "[MODULE_STATE_GOING] Going away",
++	[MODULE_STATE_UNFORMED]	= "[MODULE_STATE_UNFORMED] Still setting it up",
++};
++
++static void callback_info(const char *callback, struct klp_object *obj)
++{
++	if (obj->mod)
++		pr_info("%s: %s -> %s\n", callback, obj->mod->name,
++			module_state[obj->mod->state]);
++	else
++		pr_info("%s: vmlinux\n", callback);
++}
++
++static struct klp_patch patch;
++
++static int allocate_loglevel_state(void)
++{
++	struct klp_state *loglevel_state, *prev_loglevel_state;
++
++	prev_loglevel_state = klp_get_prev_state(CONSOLE_LOGLEVEL_STATE);
++	if (prev_loglevel_state) {
++		pr_info("%s: space to store console_loglevel already allocated\n",
++		__func__);
++		return 0;
++	}
++
++	loglevel_state = klp_get_state(&patch, CONSOLE_LOGLEVEL_STATE);
++	if (!loglevel_state)
++		return -EINVAL;
++
++	loglevel_state->data = kzalloc(sizeof(console_loglevel), GFP_KERNEL);
++	if (!loglevel_state->data)
++		return -ENOMEM;
++
++	pr_info("%s: allocating space to store console_loglevel\n",
++		__func__);
++	return 0;
++}
++
++static void fix_console_loglevel(void)
++{
++	struct klp_state *loglevel_state, *prev_loglevel_state;
++
++	loglevel_state = klp_get_state(&patch, CONSOLE_LOGLEVEL_STATE);
++	if (!loglevel_state)
++		return;
++
++	prev_loglevel_state = klp_get_prev_state(CONSOLE_LOGLEVEL_STATE);
++	if (prev_loglevel_state) {
++		pr_info("%s: taking over the console_loglevel change\n",
++		__func__);
++		loglevel_state->data = prev_loglevel_state->data;
++		return;
++	}
++
++	pr_info("%s: fixing console_loglevel\n", __func__);
++	*(int *)loglevel_state->data = console_loglevel;
++	console_loglevel = CONSOLE_LOGLEVEL_MOTORMOUTH;
++}
++
++static void restore_console_loglevel(void)
++{
++	struct klp_state *loglevel_state, *prev_loglevel_state;
++
++	prev_loglevel_state = klp_get_prev_state(CONSOLE_LOGLEVEL_STATE);
++	if (prev_loglevel_state) {
++		pr_info("%s: passing the console_loglevel change back to the old livepatch\n",
++		__func__);
++		return;
++	}
++
++	loglevel_state = klp_get_state(&patch, CONSOLE_LOGLEVEL_STATE);
++	if (!loglevel_state)
++		return;
++
++	pr_info("%s: restoring console_loglevel\n", __func__);
++	console_loglevel = *(int *)loglevel_state->data;
++}
++
++static void free_loglevel_state(void)
++{
++	struct klp_state *loglevel_state, *prev_loglevel_state;
++
++	prev_loglevel_state = klp_get_prev_state(CONSOLE_LOGLEVEL_STATE);
++	if (prev_loglevel_state) {
++		pr_info("%s: keeping space to store console_loglevel\n",
++		__func__);
++		return;
++	}
++
++	loglevel_state = klp_get_state(&patch, CONSOLE_LOGLEVEL_STATE);
++	if (!loglevel_state)
++		return;
++
++	pr_info("%s: freeing space for the stored console_loglevel\n",
++		__func__);
++	kfree(loglevel_state->data);
++}
++
++/* Executed on object patching (ie, patch enablement) */
++static int pre_patch_callback(struct klp_object *obj)
++{
++	callback_info(__func__, obj);
++	return allocate_loglevel_state();
++}
++
++/* Executed on object unpatching (ie, patch disablement) */
++static void post_patch_callback(struct klp_object *obj)
++{
++	callback_info(__func__, obj);
++	fix_console_loglevel();
++}
++
++/* Executed on object unpatching (ie, patch disablement) */
++static void pre_unpatch_callback(struct klp_object *obj)
++{
++	callback_info(__func__, obj);
++	restore_console_loglevel();
++}
++
++/* Executed on object unpatching (ie, patch disablement) */
++static void post_unpatch_callback(struct klp_object *obj)
++{
++	callback_info(__func__, obj);
++	free_loglevel_state();
++}
++
++static struct klp_func no_funcs[] = {
++	{}
++};
++
++static struct klp_object objs[] = {
++	{
++		.name = NULL,	/* vmlinux */
++		.funcs = no_funcs,
++		.callbacks = {
++			.pre_patch = pre_patch_callback,
++			.post_patch = post_patch_callback,
++			.pre_unpatch = pre_unpatch_callback,
++			.post_unpatch = post_unpatch_callback,
++		},
++	}, { }
++};
++
++static struct klp_state states[] = {
++	{
++		.id = CONSOLE_LOGLEVEL_STATE,
++		.version = CONSOLE_LOGLEVEL_STATE_VERSION,
++	}, { }
++};
++
++static struct klp_patch patch = {
++	.mod = THIS_MODULE,
++	.objs = objs,
++	.states = states,
++	.replace = true,
++};
++
++static int test_klp_callbacks_demo_init(void)
++{
++	return klp_enable_patch(&patch);
++}
++
++static void test_klp_callbacks_demo_exit(void)
++{
++}
++
++module_init(test_klp_callbacks_demo_init);
++module_exit(test_klp_callbacks_demo_exit);
++MODULE_LICENSE("GPL");
++MODULE_INFO(livepatch, "Y");
++MODULE_AUTHOR("Petr Mladek <pmladek@suse.com>");
++MODULE_DESCRIPTION("Livepatch test: system state modification");
+diff --git a/lib/livepatch/test_klp_state3.c b/lib/livepatch/test_klp_state3.c
+new file mode 100644
+index 000000000000..9226579d10c5
+--- /dev/null
++++ b/lib/livepatch/test_klp_state3.c
+@@ -0,0 +1,5 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (C) 2019 SUSE
++
++/* The console loglevel fix is the same in the next cumulative patch. */
++#include "test_klp_state2.c"
+diff --git a/tools/testing/selftests/livepatch/Makefile b/tools/testing/selftests/livepatch/Makefile
+index fd405402c3ff..1cf40a9e7185 100644
+--- a/tools/testing/selftests/livepatch/Makefile
++++ b/tools/testing/selftests/livepatch/Makefile
+@@ -4,6 +4,7 @@ TEST_PROGS_EXTENDED := functions.sh
+ TEST_PROGS := \
+ 	test-livepatch.sh \
+ 	test-callbacks.sh \
+-	test-shadow-vars.sh
++	test-shadow-vars.sh \
++	test-state.sh
+ 
+ include ../lib.mk
+diff --git a/tools/testing/selftests/livepatch/test-state.sh b/tools/testing/selftests/livepatch/test-state.sh
+new file mode 100755
+index 000000000000..dc2908c22c26
+--- /dev/null
++++ b/tools/testing/selftests/livepatch/test-state.sh
+@@ -0,0 +1,180 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (C) 2019 SUSE
++
++. $(dirname $0)/functions.sh
++
++MOD_LIVEPATCH=test_klp_state
++MOD_LIVEPATCH2=test_klp_state2
++MOD_LIVEPATCH3=test_klp_state3
++
++set_dynamic_debug
++
++
++# TEST: Loading and removing a module that modifies the system state
++
++echo -n "TEST: system state modification ... "
++dmesg -C
++
++load_lp $MOD_LIVEPATCH
++disable_lp $MOD_LIVEPATCH
++unload_lp $MOD_LIVEPATCH
++
++check_result "% modprobe $MOD_LIVEPATCH
++livepatch: enabling patch '$MOD_LIVEPATCH'
++livepatch: '$MOD_LIVEPATCH': initializing patching transition
++$MOD_LIVEPATCH: pre_patch_callback: vmlinux
++$MOD_LIVEPATCH: allocate_loglevel_state: allocating space to store console_loglevel
++livepatch: '$MOD_LIVEPATCH': starting patching transition
++livepatch: '$MOD_LIVEPATCH': completing patching transition
++$MOD_LIVEPATCH: post_patch_callback: vmlinux
++$MOD_LIVEPATCH: fix_console_loglevel: fixing console_loglevel
++livepatch: '$MOD_LIVEPATCH': patching complete
++% echo 0 > /sys/kernel/livepatch/$MOD_LIVEPATCH/enabled
++livepatch: '$MOD_LIVEPATCH': initializing unpatching transition
++$MOD_LIVEPATCH: pre_unpatch_callback: vmlinux
++$MOD_LIVEPATCH: restore_console_loglevel: restoring console_loglevel
++livepatch: '$MOD_LIVEPATCH': starting unpatching transition
++livepatch: '$MOD_LIVEPATCH': completing unpatching transition
++$MOD_LIVEPATCH: post_unpatch_callback: vmlinux
++$MOD_LIVEPATCH: free_loglevel_state: freeing space for the stored console_loglevel
++livepatch: '$MOD_LIVEPATCH': unpatching complete
++% rmmod $MOD_LIVEPATCH"
++
++
++# TEST: Take over system state change by a cumulative patch
++
++echo -n "TEST: taking over system state modification ... "
++dmesg -C
++
++load_lp $MOD_LIVEPATCH
++load_lp $MOD_LIVEPATCH2
++unload_lp $MOD_LIVEPATCH
++disable_lp $MOD_LIVEPATCH2
++unload_lp $MOD_LIVEPATCH2
++
++check_result "% modprobe $MOD_LIVEPATCH
++livepatch: enabling patch '$MOD_LIVEPATCH'
++livepatch: '$MOD_LIVEPATCH': initializing patching transition
++$MOD_LIVEPATCH: pre_patch_callback: vmlinux
++$MOD_LIVEPATCH: allocate_loglevel_state: allocating space to store console_loglevel
++livepatch: '$MOD_LIVEPATCH': starting patching transition
++livepatch: '$MOD_LIVEPATCH': completing patching transition
++$MOD_LIVEPATCH: post_patch_callback: vmlinux
++$MOD_LIVEPATCH: fix_console_loglevel: fixing console_loglevel
++livepatch: '$MOD_LIVEPATCH': patching complete
++% modprobe $MOD_LIVEPATCH2
++livepatch: enabling patch '$MOD_LIVEPATCH2'
++livepatch: '$MOD_LIVEPATCH2': initializing patching transition
++$MOD_LIVEPATCH2: pre_patch_callback: vmlinux
++$MOD_LIVEPATCH2: allocate_loglevel_state: space to store console_loglevel already allocated
++livepatch: '$MOD_LIVEPATCH2': starting patching transition
++livepatch: '$MOD_LIVEPATCH2': completing patching transition
++$MOD_LIVEPATCH2: post_patch_callback: vmlinux
++$MOD_LIVEPATCH2: fix_console_loglevel: taking over the console_loglevel change
++livepatch: '$MOD_LIVEPATCH2': patching complete
++% rmmod $MOD_LIVEPATCH
++% echo 0 > /sys/kernel/livepatch/$MOD_LIVEPATCH2/enabled
++livepatch: '$MOD_LIVEPATCH2': initializing unpatching transition
++$MOD_LIVEPATCH2: pre_unpatch_callback: vmlinux
++$MOD_LIVEPATCH2: restore_console_loglevel: restoring console_loglevel
++livepatch: '$MOD_LIVEPATCH2': starting unpatching transition
++livepatch: '$MOD_LIVEPATCH2': completing unpatching transition
++$MOD_LIVEPATCH2: post_unpatch_callback: vmlinux
++$MOD_LIVEPATCH2: free_loglevel_state: freeing space for the stored console_loglevel
++livepatch: '$MOD_LIVEPATCH2': unpatching complete
++% rmmod $MOD_LIVEPATCH2"
++
++
++# TEST: Take over system state change by a cumulative patch
++
++echo -n "TEST: compatible cumulative livepatches ... "
++dmesg -C
++
++load_lp $MOD_LIVEPATCH2
++load_lp $MOD_LIVEPATCH3
++unload_lp $MOD_LIVEPATCH2
++load_lp $MOD_LIVEPATCH2
++disable_lp $MOD_LIVEPATCH2
++unload_lp $MOD_LIVEPATCH2
++unload_lp $MOD_LIVEPATCH3
++
++check_result "% modprobe $MOD_LIVEPATCH2
++livepatch: enabling patch '$MOD_LIVEPATCH2'
++livepatch: '$MOD_LIVEPATCH2': initializing patching transition
++$MOD_LIVEPATCH2: pre_patch_callback: vmlinux
++$MOD_LIVEPATCH2: allocate_loglevel_state: allocating space to store console_loglevel
++livepatch: '$MOD_LIVEPATCH2': starting patching transition
++livepatch: '$MOD_LIVEPATCH2': completing patching transition
++$MOD_LIVEPATCH2: post_patch_callback: vmlinux
++$MOD_LIVEPATCH2: fix_console_loglevel: fixing console_loglevel
++livepatch: '$MOD_LIVEPATCH2': patching complete
++% modprobe $MOD_LIVEPATCH3
++livepatch: enabling patch '$MOD_LIVEPATCH3'
++livepatch: '$MOD_LIVEPATCH3': initializing patching transition
++$MOD_LIVEPATCH3: pre_patch_callback: vmlinux
++$MOD_LIVEPATCH3: allocate_loglevel_state: space to store console_loglevel already allocated
++livepatch: '$MOD_LIVEPATCH3': starting patching transition
++livepatch: '$MOD_LIVEPATCH3': completing patching transition
++$MOD_LIVEPATCH3: post_patch_callback: vmlinux
++$MOD_LIVEPATCH3: fix_console_loglevel: taking over the console_loglevel change
++livepatch: '$MOD_LIVEPATCH3': patching complete
++% rmmod $MOD_LIVEPATCH2
++% modprobe $MOD_LIVEPATCH2
++livepatch: enabling patch '$MOD_LIVEPATCH2'
++livepatch: '$MOD_LIVEPATCH2': initializing patching transition
++$MOD_LIVEPATCH2: pre_patch_callback: vmlinux
++$MOD_LIVEPATCH2: allocate_loglevel_state: space to store console_loglevel already allocated
++livepatch: '$MOD_LIVEPATCH2': starting patching transition
++livepatch: '$MOD_LIVEPATCH2': completing patching transition
++$MOD_LIVEPATCH2: post_patch_callback: vmlinux
++$MOD_LIVEPATCH2: fix_console_loglevel: taking over the console_loglevel change
++livepatch: '$MOD_LIVEPATCH2': patching complete
++% echo 0 > /sys/kernel/livepatch/$MOD_LIVEPATCH2/enabled
++livepatch: '$MOD_LIVEPATCH2': initializing unpatching transition
++$MOD_LIVEPATCH2: pre_unpatch_callback: vmlinux
++$MOD_LIVEPATCH2: restore_console_loglevel: restoring console_loglevel
++livepatch: '$MOD_LIVEPATCH2': starting unpatching transition
++livepatch: '$MOD_LIVEPATCH2': completing unpatching transition
++$MOD_LIVEPATCH2: post_unpatch_callback: vmlinux
++$MOD_LIVEPATCH2: free_loglevel_state: freeing space for the stored console_loglevel
++livepatch: '$MOD_LIVEPATCH2': unpatching complete
++% rmmod $MOD_LIVEPATCH2
++% rmmod $MOD_LIVEPATCH3"
++
++
++# TEST: Failure caused by incompatible cumulative livepatches
++
++echo -n "TEST: incompatible cumulative livepatches ... "
++dmesg -C
++
++load_lp $MOD_LIVEPATCH2
++load_failing_mod $MOD_LIVEPATCH
++disable_lp $MOD_LIVEPATCH2
++unload_lp $MOD_LIVEPATCH2
++
++check_result "% modprobe $MOD_LIVEPATCH2
++livepatch: enabling patch '$MOD_LIVEPATCH2'
++livepatch: '$MOD_LIVEPATCH2': initializing patching transition
++$MOD_LIVEPATCH2: pre_patch_callback: vmlinux
++$MOD_LIVEPATCH2: allocate_loglevel_state: allocating space to store console_loglevel
++livepatch: '$MOD_LIVEPATCH2': starting patching transition
++livepatch: '$MOD_LIVEPATCH2': completing patching transition
++$MOD_LIVEPATCH2: post_patch_callback: vmlinux
++$MOD_LIVEPATCH2: fix_console_loglevel: fixing console_loglevel
++livepatch: '$MOD_LIVEPATCH2': patching complete
++% modprobe $MOD_LIVEPATCH
++livepatch: Livepatch patch ($MOD_LIVEPATCH) is not compatible with the already installed livepatches.
++modprobe: ERROR: could not insert '$MOD_LIVEPATCH': Invalid argument
++% echo 0 > /sys/kernel/livepatch/$MOD_LIVEPATCH2/enabled
++livepatch: '$MOD_LIVEPATCH2': initializing unpatching transition
++$MOD_LIVEPATCH2: pre_unpatch_callback: vmlinux
++$MOD_LIVEPATCH2: restore_console_loglevel: restoring console_loglevel
++livepatch: '$MOD_LIVEPATCH2': starting unpatching transition
++livepatch: '$MOD_LIVEPATCH2': completing unpatching transition
++$MOD_LIVEPATCH2: post_unpatch_callback: vmlinux
++$MOD_LIVEPATCH2: free_loglevel_state: freeing space for the stored console_loglevel
++livepatch: '$MOD_LIVEPATCH2': unpatching complete
++% rmmod $MOD_LIVEPATCH2"
++
++exit 0
+-- 
+2.16.4
 
---JgQwtEuHJzHdouWu--
+
