@@ -2,96 +2,215 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C0AECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D10ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCC5920673
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:17:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aelG5uB3"
+	by mail.kernel.org (Postfix) with ESMTP id EC23F206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:17:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730641AbfJIKR3 (ORCPT
+        id S1730843AbfJIKRe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 06:17:29 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45621 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729790AbfJIKR2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 06:17:28 -0400
-Received: by mail-wr1-f66.google.com with SMTP id r5so2108699wrm.12;
-        Wed, 09 Oct 2019 03:17:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rjaYpkcdgVq1Ytww3HoMud9TI2f6caXQj6YPGdN+e0k=;
-        b=aelG5uB3AoOyuYYLVuEOd6mTjlOgUG3CjynlOPLQq2P72KPv8JIXV+BBqk0FZtKrKK
-         FJy9iIwkfpxYYI32HGbmOY8RqnHVS4ZbM/fWfl9gRQmuAACBkeZoQOA/UKwYqigOUzCC
-         vAxZw0dhn6LMFiismlHuDTJEYMo4cD1gCAQdunMdLsx+jiIfL1vevEqbe1KkL8xhU+AF
-         euv6cfD+QeAKZnCrHYU6c1cQMp19hFwJ0kHJV53qtRh7fxQNHZxIcJada7WoMVInCUHH
-         nziY97TNDM9GL625orHdpEP1XbUZPMV2hc98H1DFkIeYRiFMnrybkIkMr3vlzK25kKa8
-         tZRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rjaYpkcdgVq1Ytww3HoMud9TI2f6caXQj6YPGdN+e0k=;
-        b=eMpDYAdlLD3Uj0pAuobvIx0PlYLN++P4ubXc8AIZkoBfab23T7YnGcFyDlAdh/NYlJ
-         K/Q0VuTY4izhoEiSzy++RGjvUIvZRIAWECAjMm48pelQPLWHQRkoIeSFEE70lomQhrjq
-         wkYOb+qEUkC278t8N11fbge3IrgrBD6Oq9RZT3YEK4sK3hVpuVKlfz0l2MSgRAbD6iB9
-         /o6I4iWCWziXu08y10GvV+JsVzqcknNo7KlDF3aKT6gzkZD0NVlkskHxT/93wm4gd5ro
-         HyDCI0jeL9zzLBlpr+Wm8xXUeraX8SLPEcwTw7FA4qJggfqLQwctxAddYg9CufI13xoJ
-         63Uw==
-X-Gm-Message-State: APjAAAXmAglN8nTbikKPqmV0kS0zNg5y2twerAFqTrNlIYvBwGQCAeyD
-        b08s+yuepNP82RJI3pDvZBsy4G3H
-X-Google-Smtp-Source: APXvYqzQReCxE67VrpcC+uJwGYwSVOvO7oEJ3cvsFoI8C7MbuuFXycy49ZeIN5ZdITK9ljRbXcNnmA==
-X-Received: by 2002:adf:e3cc:: with SMTP id k12mr2266353wrm.176.1570616246460;
-        Wed, 09 Oct 2019 03:17:26 -0700 (PDT)
-Received: from AlexGordeev-DPT-VI0092 ([213.86.25.14])
-        by smtp.gmail.com with ESMTPSA id g3sm2561692wro.14.2019.10.09.03.17.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 09 Oct 2019 03:17:25 -0700 (PDT)
-Date:   Wed, 9 Oct 2019 12:17:24 +0200
-From:   Alexander Gordeev <a.gordeev.box@gmail.com>
-To:     Greg KH <greg@kroah.com>
-Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        Michael Chen <micchen@altera.com>, dmaengine@vger.kernel.org
-Subject: Re: [PATCH RFC 0/2] staging: Support Avalon-MM DMA Interface for PCIe
-Message-ID: <20191009101720.GA15462@AlexGordeev-DPT-VI0092>
-References: <cover.1568817357.git.a.gordeev.box@gmail.com>
- <20190919113708.GA3153236@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190919113708.GA3153236@kroah.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Wed, 9 Oct 2019 06:17:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:32858 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729790AbfJIKRb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 06:17:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DE401AFA7;
+        Wed,  9 Oct 2019 10:17:28 +0000 (UTC)
+From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Subject: [PATCH v8 4/5] MIPS: SGI-IP27: fix readb/writeb addressing
+Date:   Wed,  9 Oct 2019 12:17:11 +0200
+Message-Id: <20191009101713.12238-5-tbogendoerfer@suse.de>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20191009101713.12238-1-tbogendoerfer@suse.de>
+References: <20191009101713.12238-1-tbogendoerfer@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 01:37:08PM +0200, Greg KH wrote:
-> Why is this being submitted for drivers/staging/ and not the "real" part
-> of the kernel tree?
+Our chosen byte swapping, which is what firmware already uses, is to
+do readl/writel by normal lw/sw intructions (data invariance). This
+also means we need to mangle addresses for u8 and u16 accesses. The
+mangling for 16bit has been done aready, but 8bit one was missing.
+Correcting this causes different addresses for accesses to the
+SuperIO and local bus of the IOC3 chip. This is fixed by changing
+byte order in ioc3 and m48rtc_rtc structs.
 
-Hi Greg!
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+---
+ arch/mips/include/asm/mach-ip27/mangle-port.h |  4 +--
+ arch/mips/include/asm/sn/ioc3.h               | 38 +++++++++++++--------------
+ drivers/rtc/rtc-m48t35.c                      | 11 ++++++++
+ drivers/tty/serial/8250/8250_ioc3.c           |  4 +--
+ 4 files changed, 34 insertions(+), 23 deletions(-)
 
-I sent v2 of the patchset, but it does not need to be part of the
-staging tree. I CC-ed devel@driverdev.osuosl.org for reference.
+diff --git a/arch/mips/include/asm/mach-ip27/mangle-port.h b/arch/mips/include/asm/mach-ip27/mangle-port.h
+index f6e4912ea062..27c56efa519f 100644
+--- a/arch/mips/include/asm/mach-ip27/mangle-port.h
++++ b/arch/mips/include/asm/mach-ip27/mangle-port.h
+@@ -8,7 +8,7 @@
+ #ifndef __ASM_MACH_IP27_MANGLE_PORT_H
+ #define __ASM_MACH_IP27_MANGLE_PORT_H
+ 
+-#define __swizzle_addr_b(port)	(port)
++#define __swizzle_addr_b(port)	((port) ^ 3)
+ #define __swizzle_addr_w(port)	((port) ^ 2)
+ #define __swizzle_addr_l(port)	(port)
+ #define __swizzle_addr_q(port)	(port)
+@@ -20,6 +20,6 @@
+ # define ioswabl(a, x)		(x)
+ # define __mem_ioswabl(a, x)	cpu_to_le32(x)
+ # define ioswabq(a, x)		(x)
+-# define __mem_ioswabq(a, x)	cpu_to_le32(x)
++# define __mem_ioswabq(a, x)	cpu_to_le64(x)
+ 
+ #endif /* __ASM_MACH_IP27_MANGLE_PORT_H */
+diff --git a/arch/mips/include/asm/sn/ioc3.h b/arch/mips/include/asm/sn/ioc3.h
+index 78ef760ddde4..3865d3225780 100644
+--- a/arch/mips/include/asm/sn/ioc3.h
++++ b/arch/mips/include/asm/sn/ioc3.h
+@@ -21,50 +21,50 @@ struct ioc3_serialregs {
+ 
+ /* SUPERIO uart register map */
+ struct ioc3_uartregs {
++	u8	iu_lcr;
+ 	union {
+-		u8	iu_rbr;	/* read only, DLAB == 0 */
+-		u8	iu_thr;	/* write only, DLAB == 0 */
+-		u8	iu_dll;	/* DLAB == 1 */
++		u8	iu_iir;	/* read only */
++		u8	iu_fcr;	/* write only */
+ 	};
+ 	union {
+ 		u8	iu_ier;	/* DLAB == 0 */
+ 		u8	iu_dlm;	/* DLAB == 1 */
+ 	};
+ 	union {
+-		u8	iu_iir;	/* read only */
+-		u8	iu_fcr;	/* write only */
++		u8	iu_rbr;	/* read only, DLAB == 0 */
++		u8	iu_thr;	/* write only, DLAB == 0 */
++		u8	iu_dll;	/* DLAB == 1 */
+ 	};
+-	u8	iu_lcr;
+-	u8	iu_mcr;
+-	u8	iu_lsr;
+-	u8	iu_msr;
+ 	u8	iu_scr;
++	u8	iu_msr;
++	u8	iu_lsr;
++	u8	iu_mcr;
+ };
+ 
+ struct ioc3_sioregs {
+ 	u8	fill[0x141];	/* starts at 0x141 */
+ 
+-	u8	uartc;
+ 	u8	kbdcg;
++	u8	uartc;
+ 
+-	u8	fill0[0x150 - 0x142 - 1];
++	u8	fill0[0x151 - 0x142 - 1];
+ 
+-	u8	pp_data;
+-	u8	pp_dsr;
+ 	u8	pp_dcr;
++	u8	pp_dsr;
++	u8	pp_data;
+ 
+-	u8	fill1[0x158 - 0x152 - 1];
++	u8	fill1[0x159 - 0x153 - 1];
+ 
+-	u8	pp_fifa;
+-	u8	pp_cfgb;
+ 	u8	pp_ecr;
++	u8	pp_cfgb;
++	u8	pp_fifa;
+ 
+-	u8	fill2[0x168 - 0x15a - 1];
++	u8	fill2[0x16a - 0x15b - 1];
+ 
+-	u8	rtcad;
+ 	u8	rtcdat;
++	u8	rtcad;
+ 
+-	u8	fill3[0x170 - 0x169 - 1];
++	u8	fill3[0x170 - 0x16b - 1];
+ 
+ 	struct ioc3_uartregs	uartb;	/* 0x20170  */
+ 	struct ioc3_uartregs	uarta;	/* 0x20178  */
+diff --git a/drivers/rtc/rtc-m48t35.c b/drivers/rtc/rtc-m48t35.c
+index d3a75d447fce..e8194f1f01a8 100644
+--- a/drivers/rtc/rtc-m48t35.c
++++ b/drivers/rtc/rtc-m48t35.c
+@@ -20,6 +20,16 @@
+ 
+ struct m48t35_rtc {
+ 	u8	pad[0x7ff8];    /* starts at 0x7ff8 */
++#ifdef CONFIG_SGI_IP27
++	u8	hour;
++	u8	min;
++	u8	sec;
++	u8	control;
++	u8	year;
++	u8	month;
++	u8	date;
++	u8	day;
++#else
+ 	u8	control;
+ 	u8	sec;
+ 	u8	min;
+@@ -28,6 +38,7 @@ struct m48t35_rtc {
+ 	u8	date;
+ 	u8	month;
+ 	u8	year;
++#endif
+ };
+ 
+ #define M48T35_RTC_SET		0x80
+diff --git a/drivers/tty/serial/8250/8250_ioc3.c b/drivers/tty/serial/8250/8250_ioc3.c
+index 2be6ed2967e0..4c405f1b9c67 100644
+--- a/drivers/tty/serial/8250/8250_ioc3.c
++++ b/drivers/tty/serial/8250/8250_ioc3.c
+@@ -23,12 +23,12 @@ struct ioc3_8250_data {
+ 
+ static unsigned int ioc3_serial_in(struct uart_port *p, int offset)
+ {
+-	return readb(p->membase + offset);
++	return readb(p->membase + (offset ^ 3));
+ }
+ 
+ static void ioc3_serial_out(struct uart_port *p, int offset, int value)
+ {
+-	writeb(value, p->membase + offset);
++	writeb(value, p->membase + (offset ^ 3));
+ }
+ 
+ static int serial8250_ioc3_probe(struct platform_device *pdev)
+-- 
+2.16.4
 
-Thanks!
-
-> All staging code must have a TODO file listing what needs to be done in
-> order to get it out of staging, and be self-contained (i.e. no files
-> include/linux/)
-> 
-> Please fix that up when resending this series.
-> 
-> thanks,
-> 
-> greg k-h
