@@ -2,43 +2,62 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA30C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 982C3ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44D34218AC
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:48:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73745218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:49:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="DKXLDx2T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731883AbfJIUsq (ORCPT
+        id S1731915AbfJIUtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 16:48:46 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:35815 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728804AbfJIUsq (ORCPT
+        Wed, 9 Oct 2019 16:49:11 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:53156 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728804AbfJIUtK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 16:48:46 -0400
-X-IronPort-AV: E=Sophos;i="5.67,277,1566856800"; 
-   d="scan'208";a="405491148"
-Received: from 81-65-53-202.rev.numericable.fr (HELO hadrien) ([81.65.53.202])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 22:48:44 +0200
-Date:   Wed, 9 Oct 2019 22:48:43 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     Jules Irenge <jbi.octave@gmail.com>
-cc:     outreachy-kernel@googlegroups.com, gregkh@linuxfoundation.org,
-        GR-Linux-NIC-Dev@marvell.com, netdev@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [Outreachy kernel] [PATCH] staging: qlge: Fix multiple assignments
- warning by splitting the assignement into two each
-In-Reply-To: <20191009204311.7988-1-jbi.octave@gmail.com>
-Message-ID: <alpine.DEB.2.21.1910092248170.2570@hadrien>
-References: <20191009204311.7988-1-jbi.octave@gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 9 Oct 2019 16:49:10 -0400
+Received: from [10.200.156.146] (unknown [167.220.2.18])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 9792520B71C6;
+        Wed,  9 Oct 2019 13:49:09 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9792520B71C6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1570654149;
+        bh=R1XYwLvD2iwGBu/tSvMiVcIj6u8j47QQ6okMOZpNB7U=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=DKXLDx2TpAjvOkCcLD+fMOQ+UmAKk9f0J4PKC6kqYILap7MQfAxBIF2iiDgV4XJLq
+         GWrcnyuAANdZF6aJ12FQZieemm+kz1XCRB86ccPD2aAux00sIXbYcxnvl7Jf912bkQ
+         R+9ELrLAIdqH9L7Ny8K/E71UScCwE4MURLnjvU3Y=
+Subject: Re: [PATCH v2 1/2] Add support for arm64 to carry ima measurement log
+ in kexec_file_load
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+        arnd@arndb.de, jean-philippe@linaro.org, allison@lohutok.net,
+        kristina.martsenko@arm.org, yamada.masahiro@socionext.com,
+        duwe@lst.de, mark.rutland@arm.com, tglx@linutronix.de,
+        takahiro.akashi@linaro.org, james.morse@arm.org,
+        catalin.marinas@arm.com, sboyd@kernel.org, bauerman@linux.ibm.com,
+        zohar@linux.ibm.com
+References: <20191007185943.1828-1-prsriva@linux.microsoft.com>
+ <20191007185943.1828-2-prsriva@linux.microsoft.com>
+ <20191008212224.GC1396@sasha-vm>
+From:   prsriva <prsriva@linux.microsoft.com>
+Message-ID: <b4ca20f8-dc8c-7266-de54-8062cf6ac8e3@linux.microsoft.com>
+Date:   Wed, 9 Oct 2019 13:49:09 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20191008212224.GC1396@sasha-vm>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -46,45 +65,81 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On Wed, 9 Oct 2019, Jules Irenge wrote:
+On 10/8/19 2:22 PM, Sasha Levin wrote:
+> On Mon, Oct 07, 2019 at 11:59:42AM -0700, Prakhar Srivastava wrote:
+>> During kexec_file_load, carrying forward the ima measurement log allows
+>> a verifying party to get the entire runtime event log since the last
+>> full reboot since that is when PCRs were last reset.
+>>
+>> Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
+>> ---
+>> arch/Kconfig                           |   6 +-
+>> arch/arm64/include/asm/ima.h           |  24 +++
+>> arch/arm64/include/asm/kexec.h         |   5 +
+>> arch/arm64/kernel/Makefile             |   3 +-
+>> arch/arm64/kernel/ima_kexec.c          |  78 ++++++++++
+>> arch/arm64/kernel/machine_kexec_file.c |   6 +
+>> drivers/of/Kconfig                     |   6 +
+>> drivers/of/Makefile                    |   1 +
+>> drivers/of/of_ima.c                    | 204 +++++++++++++++++++++++++
+>> include/linux/of.h                     |  31 ++++
+>> 10 files changed, 362 insertions(+), 2 deletions(-)
+>> create mode 100644 arch/arm64/include/asm/ima.h
+>> create mode 100644 arch/arm64/kernel/ima_kexec.c
+>> create mode 100644 drivers/of/of_ima.c
+>>
+>> diff --git a/arch/Kconfig b/arch/Kconfig
+>> index a7b57dd42c26..d53e1596c5b1 100644
+>> --- a/arch/Kconfig
+>> +++ b/arch/Kconfig
+>> @@ -19,7 +19,11 @@ config KEXEC_CORE
+>>     bool
+>>
+>> config HAVE_IMA_KEXEC
+>> -    bool
+>> +    bool "Carry over IMA measurement log during kexec_file_load() 
+>> syscall"
+>> +    depends on KEXEC_FILE
+>> +    help
+>> +      Select this option to carry over IMA measurement log during
+>> +      kexec_file_load.
+> 
+> This change looks very wrong: HAVE_* config symbols are used to indicate
+> the availability of certain arch specific capability, rather than act as
+> a config option. How does this work with CONFIG_IMA_KEXEC ?
+> 
+Thanks for pointing this out. My attempt was to move this out of arch 
+dependent config. I will fix the CONFIG.
 
-> Fix multiple assignments warning " check
->  issued by checkpatch.pl tool:
-> "CHECK: multiple assignments should be avoided".
->
-> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
-> ---
->  drivers/staging/qlge/qlge_dbg.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
-> index 086f067fd899..69bd4710c5ec 100644
-> --- a/drivers/staging/qlge/qlge_dbg.c
-> +++ b/drivers/staging/qlge/qlge_dbg.c
-> @@ -141,8 +141,10 @@ static int ql_get_serdes_regs(struct ql_adapter *qdev,
->  	u32 *direct_ptr, temp;
->  	u32 *indirect_ptr;
->
-> -	xfi_direct_valid = xfi_indirect_valid = 0;
-> -	xaui_direct_valid = xaui_indirect_valid = 1;
-> +	xfi_indirect_valid = 0;
-> +	xfi_direct_valid = xfi_indirect_valid;
-> +	xaui_indirect_valid = 1;
-> +	xaui_direct_valid = xaui_indirect_valid
+> Also, please, at the very least verify that basic functionality works on
+> the architectures we have access to. Trying it on x86:
+> 
 
-Despite checkpatch, I think that the original code was easier to
-understand.
+Let me fix the build issues for other archs.
+I have tested these changes for arm64.
 
-julia
-
->
->  	/* The XAUI needs to be read out per port */
->  	status = ql_read_other_func_serdes_reg(qdev,
-> --
-> 2.21.0
->
-> --
-> You received this message because you are subscribed to the Google Groups "outreachy-kernel" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to outreachy-kernel+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/outreachy-kernel/20191009204311.7988-1-jbi.octave%40gmail.com.
->
+> $ make allmodconfig
+> scripts/kconfig/conf  --allmodconfig Kconfig
+> #
+> # No change to .config
+> #
+> $ make
+>   CALL    scripts/checksyscalls.sh
+>   CALL    scripts/atomic/check-atomics.sh
+>   DESCEND  objtool
+>   CC      security/integrity/ima/ima_fs.o
+> In file included from security/integrity/ima/ima_fs.c:26:
+> security/integrity/ima/ima.h:28:10: fatal error: asm/ima.h: No such file 
+> or directory
+> #include <asm/ima.h>
+>           ^~~~~~~~~~~
+> compilation terminated.
+> make[3]: *** [scripts/Makefile.build:266: 
+> security/integrity/ima/ima_fs.o] Error 1
+> make[2]: *** [scripts/Makefile.build:509: security/integrity/ima] Error 2
+> make[1]: *** [scripts/Makefile.build:509: security/integrity] Error 2
+> make: *** [Makefile:1649: security] Error 2
+> 
+> -- 
+> Thanks,
+> Sasha
