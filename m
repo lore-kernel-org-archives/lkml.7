@@ -2,146 +2,147 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD1CEECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 23:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33BADC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 23:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAEB2206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 23:46:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570664812;
-	bh=LEW3i9tlHR9BuIsSdrCFscA3vwMWH2GPnyi04rwzJio=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=KgPKX4z85OAFx++w7zWTuYqeh/Msm8QOVRZtCGks8KUdfCpH5v0Hx2qRxCAM2JaaJ
-	 ex6dNP4ePxzHFBHUQzokvYFZvuGh0NtbTy8WCbXZ2YjIn1wA2/pN1MwDL4ZJiKnhUt
-	 BI/qQgXs3PNkoz5uz8WrBgBaU2aU4OWdq4WPd9MQ=
+	by mail.kernel.org (Postfix) with ESMTP id 07F88218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 23:50:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I3G816pI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732353AbfJIXqv (ORCPT
+        id S1732357AbfJIXuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 19:46:51 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41473 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731155AbfJIXqv (ORCPT
+        Wed, 9 Oct 2019 19:50:17 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:29156 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730955AbfJIXuR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 19:46:51 -0400
-Received: by mail-ot1-f67.google.com with SMTP id g13so3272306otp.8;
-        Wed, 09 Oct 2019 16:46:50 -0700 (PDT)
+        Wed, 9 Oct 2019 19:50:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1570665015;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=YAtqhT5ONsjqWUWONs3upOQbCcX6WU5MkOT7sl7Bewo=;
+        b=I3G816pIrs5JzNswH8L+jg79EoPY0ZBz4gJVEMxnRSCdz/uvZh9bwsSGYPFqBA1tYXdlEz
+        Gp+8G3K47wZHXAo9D8Poj8yTZMaO5lvilRgpdwYs16iXQRrCyX5uEILYoJSC7D+kVgzubP
+        88tSYzqOeI+s3FtBBYZcMe1lK9iMBB8=
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
+ [209.85.166.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-293-_y_RH_CvP06kFIOVtWUGfQ-1; Wed, 09 Oct 2019 19:50:14 -0400
+Received: by mail-io1-f72.google.com with SMTP id r13so6721800ioj.22
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 16:50:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=M+uVx1qcCdR79o4ofc5CjZQotxG1TWVUh9rieCuJiEc=;
-        b=MyTdxP8T69PGLNcz4kuZlHzZrSfGeRAPLH9SMKDdwXaIiFuMVEPbdxtqnVrq5Ahonl
-         r3ebusLU/X+5S1U5Zz74SaiXtMSHy3vnlqPQcofc5eLAZuap4Z8v2QUqiIfhl0LCgaZ2
-         o1UOVpfniJc3F+zLAxcfQH8087daeb8IRmCMZazrFRRPYdwAEpA4Da8Xw5FmTCLsFcgT
-         QREN6r1BFqHDFMnOjaDXb+JIyvvbOa3jE7IBlKB88xBsF6qaHJpVqKWdSw1gg+jSK20L
-         XtJjavI5/pIHL88uCx6s/yshKG/vcFXhoXL7340l84W1aMSPNpJZS9UPTl7vs+q6m3ho
-         7kzQ==
-X-Gm-Message-State: APjAAAU2jze7LGAiI9BBq1+6Xee+E4MTbC5Mpx9ewsnkq6Yct+J2AAy/
-        JEY8DxrUqipbFJSnJuIXIg==
-X-Google-Smtp-Source: APXvYqz/n9SkOtrSQgnGTu0lp4Ci0m5qmetwpMSOC3+wUQp2ustrBx5tiex0ZXLUntj3+cQeHQ4Fqg==
-X-Received: by 2002:a9d:4902:: with SMTP id e2mr5132554otf.263.1570664810148;
-        Wed, 09 Oct 2019 16:46:50 -0700 (PDT)
-Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id t22sm1205672otc.9.2019.10.09.16.46.49
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=focIOQfcQNyrOXPkI531vbndDZb3WURIChJxW2xJzLs=;
+        b=UWP1B+81rqEk5+uFAvbBxMvRR6IZCBOtCtdD7ND/1GicL+7FffFBPBWScXQIlsc9oU
+         TOgrbc8AhbNIaNryhogLH9TsybtLE7P0mqBJx2PqqbgEDIdlsAT6ieDaDMZQIh9ET7RU
+         dYo3SgfbyXsKG2RgmjP55sZnT0mDK6jdA7szpg0VeRc9N6rtMAmxKsTaT/hCMoNZFp9d
+         vno/uC2fW5GJvLbo7eP6BxoSGyA3DWxDqGlDmASdIVsImRz9pvUVusN6QEcH09wK+h3+
+         FBFJKDRy+9VVdsceiXaBpBAlYYaxVvXnCeSrfTAGxwHzWv0Ttqf+QD/czDssr+smshD2
+         nwVQ==
+X-Gm-Message-State: APjAAAVvJeg/WpDfMxQJwPnc8WMU1lZVj/lI1PrCkpy9kxEWpRy3t6je
+        ubkirhARJ3QxFhz8Plvvp0NFRH3aG5jO3nYGT8Y3rNFQUb1cTe6+fwJ8zo+jUdn/pWE1jkhe7v7
+        MPIAsNpPjTwcijzkXQFd8+ABC
+X-Received: by 2002:a5d:8b49:: with SMTP id c9mr4491126iot.209.1570665013831;
+        Wed, 09 Oct 2019 16:50:13 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyBHaFMxZO0WJshtgxh7/OOthnkRt0Ri0Ng2qxBJgBmVLrUfw4ehvtKeNCwBnq7zLTnWQxQQg==
+X-Received: by 2002:a5d:8b49:: with SMTP id c9mr4491111iot.209.1570665013586;
+        Wed, 09 Oct 2019 16:50:13 -0700 (PDT)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id f23sm2553411ioc.36.2019.10.09.16.50.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 16:46:49 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@sifive.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-riscv@lists.infradead.org
-Subject: [PATCH v2] dt-bindings: riscv: Fix CPU schema errors
-Date:   Wed,  9 Oct 2019 18:46:48 -0500
-Message-Id: <20191009234648.2271-1-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Wed, 09 Oct 2019 16:50:12 -0700 (PDT)
+Date:   Wed, 9 Oct 2019 16:50:09 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Keith Busch <keith.busch@intel.com>,
+        iommu@lists.linux-foundation.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH 0/2] iommu/vt-d: Select PCI_PRI for INTEL_IOMMU_SVM
+Message-ID: <20191009235009.a3mxw4qrklkqwuzf@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: Bjorn Helgaas <helgaas@kernel.org>,
+        Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>, Ashok Raj <ashok.raj@intel.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Keith Busch <keith.busch@intel.com>,
+        iommu@lists.linux-foundation.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+References: <20191009224551.179497-1-helgaas@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191009224551.179497-1-helgaas@kernel.org>
+User-Agent: NeoMutt/20180716
+X-MC-Unique: _y_RH_CvP06kFIOVtWUGfQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the errors in the RiscV CPU DT schema:
+On Wed Oct 09 19, Bjorn Helgaas wrote:
+>From: Bjorn Helgaas <bhelgaas@google.com>
+>
+>I think intel-iommu.c depends on CONFIG_AMD_IOMMU in an undesirable way:
+>
+>When CONFIG_INTEL_IOMMU_SVM=3Dy, iommu_enable_dev_iotlb() calls PRI
+>interfaces (pci_reset_pri() and pci_enable_pri()), but those are only
+>implemented when CONFIG_PCI_PRI is enabled.  If CONFIG_PCI_PRI is not
+>enabled, there are stubs that just return failure.
+>
+>The INTEL_IOMMU_SVM Kconfig does nothing with PCI_PRI, but AMD_IOMMU
+>selects PCI_PRI.  So if AMD_IOMMU is enabled, intel-iommu.c gets the full
+>PRI interfaces.  If AMD_IOMMU is not enabled, it gets the PRI stubs.
+>
+>This seems wrong.  The first patch here makes INTEL_IOMMU_SVM select
+>PCI_PRI so intel-iommu.c always gets the full PRI interfaces.
+>
+>The second patch moves pci_prg_resp_pasid_required(), which simply returns
+>a bit from the PCI capability, from #ifdef CONFIG_PCI_PASID to #ifdef
+>CONFIG_PCI_PRI.  This is related because INTEL_IOMMU_SVM already *does*
+>select PCI_PASID, so it previously always got pci_prg_resp_pasid_required(=
+)
+>even though it got stubs for other PRI things.
+>
+>Since these are related and I have several follow-on ATS-related patches i=
+n
+>the queue, I'd like to take these both via the PCI tree.
+>
+>Bjorn Helgaas (2):
+>  iommu/vt-d: Select PCI_PRI for INTEL_IOMMU_SVM
+>  PCI/ATS: Move pci_prg_resp_pasid_required() to CONFIG_PCI_PRI
+>
+> drivers/iommu/Kconfig   |  1 +
+> drivers/pci/ats.c       | 55 +++++++++++++++++++----------------------
+> include/linux/pci-ats.h | 11 ++++-----
+> 3 files changed, 31 insertions(+), 36 deletions(-)
+>
+>--=20
+>2.23.0.581.g78d2f28ef7-goog
+>
+>_______________________________________________
+>iommu mailing list
+>iommu@lists.linux-foundation.org
+>https://lists.linuxfoundation.org/mailman/listinfo/iommu
 
-Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: 'timebase-frequency' is a required property
-Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@1: 'timebase-frequency' is a required property
-Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: compatible:0: 'riscv' is not one of ['sifive,rocket0', 'sifive,e5', 'sifive,e51', 'sifive,u54-mc', 'sifive,u54', 'sifive,u5']
-Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: compatible: ['riscv'] is too short
-Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: 'timebase-frequency' is a required property
-
-The DT spec allows for 'timebase-frequency' to be in 'cpu' or 'cpus' node
-and RiscV is doing nothing special with it, so just drop the definition
-here and don't make it required.
-
-Fixes: 4fd669a8c487 ("dt-bindings: riscv: convert cpu binding to json-schema")
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Palmer Dabbelt <palmer@sifive.com>
-Cc: Albert Ou <aou@eecs.berkeley.edu>
-Cc: linux-riscv@lists.infradead.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/riscv/cpus.yaml       | 28 ++++++++-----------
- 1 file changed, 11 insertions(+), 17 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
-index b261a3015f84..925b531767bf 100644
---- a/Documentation/devicetree/bindings/riscv/cpus.yaml
-+++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
-@@ -24,15 +24,17 @@ description: |
- 
- properties:
-   compatible:
--    items:
--      - enum:
--          - sifive,rocket0
--          - sifive,e5
--          - sifive,e51
--          - sifive,u54-mc
--          - sifive,u54
--          - sifive,u5
--      - const: riscv
-+    oneOf:
-+      - items:
-+          - enum:
-+              - sifive,rocket0
-+              - sifive,e5
-+              - sifive,e51
-+              - sifive,u54-mc
-+              - sifive,u54
-+              - sifive,u5
-+          - const: riscv
-+      - const: riscv    # Simulator only
-     description:
-       Identifies that the hart uses the RISC-V instruction set
-       and identifies the type of the hart.
-@@ -66,13 +68,6 @@ properties:
-       insensitive, letters in the riscv,isa string must be all
-       lowercase to simplify parsing.
- 
--  timebase-frequency:
--    type: integer
--    minimum: 1
--    description:
--      Specifies the clock frequency of the system timer in Hz.
--      This value is common to all harts on a single system image.
--
-   interrupt-controller:
-     type: object
-     description: Describes the CPU's local interrupt controller
-@@ -93,7 +88,6 @@ properties:
- 
- required:
-   - riscv,isa
--  - timebase-frequency
-   - interrupt-controller
- 
- examples:
--- 
-2.20.1
+Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
 
