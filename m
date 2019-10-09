@@ -2,104 +2,100 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF71ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F5AC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6FF120673
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB5F82133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:27:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="SmjR0Yuf";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jtgMakL1"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="EXTxIiip"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729915AbfJII0W (ORCPT
+        id S1730289AbfJII1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 04:26:22 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:58550 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725953AbfJII0W (ORCPT
+        Wed, 9 Oct 2019 04:27:20 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36078 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730030AbfJII1U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 04:26:22 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 2A6D961197; Wed,  9 Oct 2019 08:26:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570609581;
-        bh=Gy1gqEJtCEvYL82/t6Wu3+FpntDcrfhD3/ePtNqcrpg=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=SmjR0Yuf1x7q72QwWO9mbyesUNjtks65vlEMJCx5+k653xycK5emN9FD8mg8D8U1p
-         9ZjcvS3rpWEEyXD4mh79RAul76vZGzGty+SvocSruMcyS7SlkjMNzYdtEhomvLn9KC
-         kKyimG97NyFsvzFtgPKQsV47vw0PTbQY6iRcPle0=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C2AB96087B;
-        Wed,  9 Oct 2019 08:26:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570609580;
-        bh=Gy1gqEJtCEvYL82/t6Wu3+FpntDcrfhD3/ePtNqcrpg=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=jtgMakL1JV63AyL0khRYxBYFm1Kf2GGK4hJDdqL1ultR3CSNyCWymRzxinCPx9l2u
-         x4a9Q3xXENzglqzaNM7s8oFlg3jxxs+cJ2N+QpBMrfAM8tsyZ8GAVURPBvxXGIV8+N
-         ELfoC0AQ2/WghsmrA55WxNrJPHM2WUbJiogxgfnw=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C2AB96087B
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Wed, 9 Oct 2019 04:27:20 -0400
+Received: by mail-wm1-f66.google.com with SMTP id m18so1472356wmc.1
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 01:27:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3ETtimywo0QHOEXACD3eWpss97piVMA8Q9apqqhkw9s=;
+        b=EXTxIiipvuSRt3WpixN9cmSOd/S6uza/iZhQU2JhNUziPV1RMySYp2fvsj53vsagey
+         zR5fa6oQJP1MdHdhhpIYr7fFNG7AhLum4c8Ium/fG1aZPc3Oq54lnZYraX3DloaWyK/a
+         +qbVxpyw30HziDNPNyJBd8LlBqJN+tGxqQ2QN9orrpm36i+jQrOs/MIZQMAuxA/dMgTA
+         7G58AUOSO1CkiagedmeVWfVNr3fRYqxybl6tCJIzt9uDVStjjd/s5xbFs2ZI1adR1YJX
+         37hkNEz7DoTTo07GyJr1LNXzFw74IcIDpUrsm6UxzQPd+tIeTXz/arf3ZcHvhvEIVo54
+         0W3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3ETtimywo0QHOEXACD3eWpss97piVMA8Q9apqqhkw9s=;
+        b=p6xKsMuNmhcXZGzVUM2OfRNUXWBf+u5H7jTW/ASL7aoodhQIPhInzsampc+69xWPJW
+         uWcuB4adt+I7+j4kx56nf15q7EpqNjZSdkRZ3TJmRQdvsVDwYYWY2dvUh6yuGn8uAmIq
+         s+KJ94JUSThjcid//7PwnmMlqZgBX0Vs0owheHTrMnl6i7Obk5dYoOH/gK4C2EI0ZKRK
+         62S6e5KwBAaVGvTq9OFzPnfFwFNCUTsfsoJJIibPkpuxCoQu0Y1/DjUWAXraDLtbUOSA
+         HIWWxYhChaDI+96OBKQuT0jBAxg1Puj6tsim5qv9fpPGtQRYXR3EORdj0CRURhfLzsfd
+         8Ihg==
+X-Gm-Message-State: APjAAAW6DuVnVaUqRctybhSiKlGX3DrLfjuoSP9WXqf9xaHOFTCgKhrH
+        EQs+5+9SdoACoESzhxRM8R4o9A==
+X-Google-Smtp-Source: APXvYqzemyQZ1o5FQC5LcUGT4JwMcSgBGuRC2yCv1uuPFs1osQ0i4ZTxxRPbv1kvQQSlyCH9Rt4zuA==
+X-Received: by 2002:a05:600c:22d7:: with SMTP id 23mr1583514wmg.31.1570609637059;
+        Wed, 09 Oct 2019 01:27:17 -0700 (PDT)
+Received: from starbuck.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id r18sm2545364wme.48.2019.10.09.01.27.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Oct 2019 01:27:16 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Kevin Hilman <khilman@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] arm64: dts: meson: sm1: add audio support
+Date:   Wed,  9 Oct 2019 10:27:06 +0200
+Message-Id: <20191009082708.6337-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v3] rtl8xxxu: add bluetooth co-existence support for
- single antenna
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20191005094826.90814-1-chiu@endlessm.com>
-References: <20191005094826.90814-1-chiu@endlessm.com>
-To:     Chris Chiu <chiu@endlessm.com>
-Cc:     Jes.Sorensen@gmail.com, davem@davemloft.net,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux@endlessm.com
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20191009082621.2A6D961197@smtp.codeaurora.org>
-Date:   Wed,  9 Oct 2019 08:26:21 +0000 (UTC)
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Chris Chiu <chiu@endlessm.com> wrote:
+This patchset adds audio support on the sm1 SoC family and the
+sei610 platform
 
-> The RTL8723BU suffers the wifi disconnection problem while bluetooth
-> device connected. While wifi is doing tx/rx, the bluetooth will scan
-> without results. This is due to the wifi and bluetooth share the same
-> single antenna for RF communication and they need to have a mechanism
-> to collaborate.
-> 
-> BT information is provided via the packet sent from co-processor to
-> host (C2H). It contains the status of BT but the rtl8723bu_handle_c2h
-> dose not really handle it. And there's no bluetooth coexistence
-> mechanism to deal with it.
-> 
-> This commit adds a workqueue to set the tdma configurations and
-> coefficient table per the parsed bluetooth link status and given
-> wifi connection state. The tdma/coef table comes from the vendor
-> driver code of the RTL8192EU and RTL8723BU. However, this commit is
-> only for single antenna scenario which RTL8192EU is default dual
-> antenna. The rtl8xxxu_parse_rxdesc24 which invokes the handle_c2h
-> is only for 8723b and 8192e so the mechanism is expected to work
-> on both chips with single antenna. Note RTL8192EU dual antenna is
-> not supported.
-> 
-> Signed-off-by: Chris Chiu <chiu@endlessm.com>
-> Signed-off-by: Jes Sorensen <Jes.Sorensen@gmail.com>
+Kevin, The patchset depends on:
+ - The ARB binding merged by Philipp [0]
+ - The audio clock controller bindings I just applied. A tag is
+   available for you here [1]
 
-Patch applied to wireless-drivers-next.git, thanks.
+This clk-meson branch [2] has the necessary clock driver changes, if
+you want to test this.
 
-e542e66b7c2e rtl8xxxu: add bluetooth co-existence support for single antenna
+[0]: https://lkml.kernel.org/r/20190905135040.6635-1-jbrunet@baylibre.com
+[1]: git://github.com/BayLibre/clk-meson.git clk-meson-dt-v5.5-1
+[2]: git://github.com/BayLibre/clk-meson.git v5.5/drivers
+
+Jerome Brunet (2):
+  arm64: dts: meson: sm1: add audio devices
+  arm64: dts: meson: sei610: enable audio
+
+ .../boot/dts/amlogic/meson-sm1-sei610.dts     | 205 +++++++++++
+ arch/arm64/boot/dts/amlogic/meson-sm1.dtsi    | 327 ++++++++++++++++++
+ 2 files changed, 532 insertions(+)
 
 -- 
-https://patchwork.kernel.org/patch/11175575/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.21.0
 
