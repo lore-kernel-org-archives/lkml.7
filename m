@@ -2,163 +2,121 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFAA4C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C360ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A963A21835
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:42:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570624977;
-	bh=8M+DEAYR/kzBaNkS05A0Q3XQXAPNI2tmuyQIhPIjbhc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=O7FLKFYAxO8PGV9p2X7Lm6+/zV9wGLWlKIn6yJSPea82FZAzvZ4NntB95AVk+2vhG
-	 ZNwkjm5xc9897kgD7I8Cei4m680qrw0lmU25BHCY1Krwx4DD1vVBBDTyORDVuWoQRs
-	 IhEyVl5CIBZMSMHJmtuic6+LWLZslp/+IPvv8DCk=
+	by mail.kernel.org (Postfix) with ESMTP id 7543B206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:43:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cBeTh2vW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730985AbfJIMm4 (ORCPT
+        id S1731037AbfJIMnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 08:42:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47140 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727878AbfJIMm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 08:42:56 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D8E2206C0;
-        Wed,  9 Oct 2019 12:42:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570624974;
-        bh=8M+DEAYR/kzBaNkS05A0Q3XQXAPNI2tmuyQIhPIjbhc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=VofSiCJpl+RqyREJzKM4/rV84w/YCLlhZuay8ticRz0ZP17bYTxhwaesLUZ8ZTEnw
-         q5S+3eI8uBUHZqhw45KOmVw7BoAiHZpaaq1LcsFMjGJCDxKNg04QjWAdj8thx6owvd
-         RVLrLaUQ/dIdNeaj1Z3lnQXCOxgyBp3OfwaPyrsY=
-Date:   Wed, 9 Oct 2019 07:42:53 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     George Cherian <gcherian@marvell.com>
-Cc:     Robert Richter <rrichter@marvell.com>,
-        Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "shannon.zhao@linux.alibaba.com" <shannon.zhao@linux.alibaba.com>,
-        Sunil Kovvuri Goutham <sgoutham@marvell.com>
-Subject: Re: [EXT] Re: [PATCH] PCI: Enhance the ACS quirk for Cavium devices
-Message-ID: <20191009124253.GA63232@google.com>
+        Wed, 9 Oct 2019 08:43:39 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42247 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727878AbfJIMnj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 08:43:39 -0400
+Received: by mail-wr1-f68.google.com with SMTP id n14so2774636wrw.9;
+        Wed, 09 Oct 2019 05:43:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2aP3QyiaeBnkG3DxeeYQ4nlgffh90nk86KCIg/jKuaU=;
+        b=cBeTh2vWr29qPnCY2i41SlQjI/XBacikQbSAfARZjWlXqMa4R0bf+DQEUlB2oKlYps
+         iealIxs9gvtcIqskd11+6UvPOgcd7wcX/O8YrOP2zvjXiDZEUW7iJYWr1r5nbVm91mD3
+         L4qXbiun3ZpgtKy4Rvj04jASWWV/3tLGIVq8VMhxXpNxzRq4kSl/ISHRiN0fSARF5MaX
+         nfy6dbj5T3cBpUQ3Zepj9sLhfGQ5bUpW8AC6DEWv9SsdmCx380Z+m2MNgLCbfX8bx2n/
+         8gzyan4ExcLnYW4P/ZJgrrwm0ZhkIZKS64TUjuIJRtONtN+gXnZReW0m6JFJ19hvnd+W
+         yY+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2aP3QyiaeBnkG3DxeeYQ4nlgffh90nk86KCIg/jKuaU=;
+        b=M4pf+Y+oz2TTQTcpBITMG1xUbyhIiwSP/QZMDVJ9DEsSnoLWlNgGcHOOBhNyJx4XMW
+         Q0BMst/m6iy1imE+x9vgdW0M3jISswbgxF+zvTVjI7pS8Nvoentu3CvUyQCwptAZMfDj
+         DTcviFWh77W9mCTDIg0522OkukcFEHNOdYQHcR6WRHyJ9sV1y4S/HJyMkjG6iFMVlyDp
+         r/ZDXJlwqNv6nDLLm4UgRNv7eyRUO7ilceQ2W1c8Wf9Wqu4Dld1Tw8SmgIec1N4mrsgF
+         appS6VF8U+lVuOHrwt8xBtrtqVm0oEmMFP5aRVlWnXQ1OyhS0KPrZCXNIRz+ohhQ1Gn8
+         JAuw==
+X-Gm-Message-State: APjAAAXvFqIrOKhGTuHC3T/s3kCsStN0u5PxTUq/bGEtZqewZ1kELC/Z
+        7jKCm5dO11Vn06Ca9eOsKL4=
+X-Google-Smtp-Source: APXvYqyg+4+QGfZoqRK4FuRALg+eUJqhWP99UpdMPJ7+2+soui8JmB5yzjg3klnpqUwKUnTcJwVpCw==
+X-Received: by 2002:a5d:654a:: with SMTP id z10mr2727157wrv.159.1570625017013;
+        Wed, 09 Oct 2019 05:43:37 -0700 (PDT)
+Received: from [192.168.1.35] (46.red-83-42-66.dynamicip.rima-tde.net. [83.42.66.46])
+        by smtp.gmail.com with ESMTPSA id g4sm2599857wrw.9.2019.10.09.05.43.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Oct 2019 05:43:36 -0700 (PDT)
+Subject: Re: [PATCH] MIPS: include: Mark __xchg as __always_inline
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
+References: <20191009100600.10572-1-tbogendoerfer@suse.de>
+From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>
+Message-ID: <a685a8fe-7cd9-7d94-54c8-3b6e133cfd74@amsat.org>
+Date:   Wed, 9 Oct 2019 14:43:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <de9d84e3-bbfe-e81a-1110-e3ef42a06018@marvell.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191009100600.10572-1-tbogendoerfer@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 02:51:15AM +0000, George Cherian wrote:
-> Hi Bjorn,
-> 
-> Sorry for the late reply I was off for couple of days.
-> 
-> On 10/8/19 2:32 PM, Bjorn Helgaas wrote:
-> > External Email
-> >
-> > ----------------------------------------------------------------------
-> > On Tue, Oct 08, 2019 at 08:25:23AM +0000, Robert Richter wrote:
-> >> On 04.10.19 14:48:13, Bjorn Helgaas wrote:
-> >>> commit 37b22fbfec2d
-> >>> Author: George Cherian <george.cherian@marvell.com>
-> >>> Date:   Thu Sep 19 02:43:34 2019 +0000
-> >>>
-> >>>      PCI: Apply Cavium ACS quirk to CN99xx and CN11xxx Root Ports
-> >>>      
-> >>>      Add an array of Cavium Root Port device IDs and apply the quirk only to the
-> >>>      listed devices.
-> >>>      
-> >>>      Instead of applying the quirk to all Root Ports where
-> >>>      "(dev->device & 0xf800) == 0xa000", apply it only to CN88xx 0xa180 and
-> >>>      0xa170 Root Ports.
-> 
-> All the root ports of CN88xx series will have device id's 0xa180 and 0xa170.
-> 
-> This patch currently targets only CN88xx series and not all of the CN8xxx.
-> 
-> For eg:- 83xx devices don't wont the quirk to be applied as of today. 
-> The quirk
-> 
-> needs to be applied only for TX1 series and not oncteon-tx1 series.
-> 
-> >> No, this can't be removed. It is a match all for all CN8xxx variants
-> >> (note the 3 'x', all TX1 cores). So all device ids from 0xa000 to
-> >> 0xa7FF are affected here and need the quirk.
-> > OK, I'll drop the patch and wait for a new one.  Maybe what was needed
-> > was to keep the "(dev->device & 0xf800) == 0xa000" part and add the
-> > pci_quirk_cavium_acs_ids[] array in addition?
-> >
-> >>>      Also apply the quirk to CN99xx (0xaf84) and CN11xxx (0xb884) Root Ports.
-> 
-> The device id's for all variants of CN99xx is 0xaf84 and CN11xxx will be 
-> 0xb884.
-> 
-> So this patch holds good for TX2 as well as TX3 series of processors.
+On 10/9/19 12:06 PM, Thomas Bogendoerfer wrote:
+> Commit ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING
+> forcibly") allows compiler to uninline functions marked as 'inline'.
+> In cace of __xchg this would cause to reference function
 
-OK, can you and Robert get together and post something with Robert's
-Reviewed-by?  Please make the commit log a little more specific about
-which families/variants are supported (the vendor IDs are very
-specific, but not as user-friendly as CN99xx, etc).
+Typo: "in case of"
 
-> >> I thought the quirk is CN8xxx specific, but I could be wrong here.
-> >>
-> >> -Robert
-> >>
-> >>>      
-> >>>      Link: https://urldefense.proofpoint.com/v2/url?u=https-3A__lore.kernel.org_r_20190919024319.GA8792-40dc5-2Deodlnx05.marvell.com&d=DwIBAg&c=nKjWec2b6R0mOyPaz7xtfQ&r=8vKOpC26NZGzQPAMiIlimxyEGCRSJiq-j8yyjPJ6VZ4&m=Vmml-rx3t63ZbbXZ0XaESAM9yAlexE29R-giTbcj4Qk&s=57jKIj8BAydbLpftLt5Ssva7vD6GuoCaIpjTi-sB5kU&e=
-> >>>      Fixes: f2ddaf8dfd4a ("PCI: Apply Cavium ThunderX ACS quirk to more Root Ports")
-> >>>      Fixes: b404bcfbf035 ("PCI: Add ACS quirk for all Cavium devices")
-> >>>      Signed-off-by: George Cherian <george.cherian@marvell.com>
-> >>>      Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> >>>      Cc: stable@vger.kernel.org      # v4.12+
-> >>>
-> >>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> >>> index 320255e5e8f8..4e5048cb5ec6 100644
-> >>> --- a/drivers/pci/quirks.c
-> >>> +++ b/drivers/pci/quirks.c
-> >>> @@ -4311,17 +4311,24 @@ static int pci_quirk_amd_sb_acs(struct pci_dev *dev, u16 acs_flags)
-> >>>   #endif
-> >>>   }
-> >>>   
-> >>> +static const u16 pci_quirk_cavium_acs_ids[] = {
-> >>> +	0xa180, 0xa170,		/* CN88xx family of devices */
-> >>> +	0xaf84,			/* CN99xx family of devices */
-> >>> +	0xb884,			/* CN11xxx family of devices */
-> >>> +};
-> >>> +
-> >>>   static bool pci_quirk_cavium_acs_match(struct pci_dev *dev)
-> >>>   {
-> >>> -	/*
-> >>> -	 * Effectively selects all downstream ports for whole ThunderX 1
-> >>> -	 * family by 0xf800 mask (which represents 8 SoCs), while the lower
-> >>> -	 * bits of device ID are used to indicate which subdevice is used
-> >>> -	 * within the SoC.
-> >>> -	 */
-> >>> -	return (pci_is_pcie(dev) &&
-> >>> -		(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) &&
-> >>> -		((dev->device & 0xf800) == 0xa000));
-> >>> +	int i;
-> >>> +
-> >>> +	if (!pci_is_pcie(dev) || pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
-> >>> +		return false;
-> >>> +
-> >>> +	for (i = 0; i < ARRAY_SIZE(pci_quirk_cavium_acs_ids); i++)
-> >>> +		if (pci_quirk_cavium_acs_ids[i] == dev->device)
-> >>> +			return true;
-> >>> +
-> >>> +	return false;
-> >>>   }
-> >>>   
-> >>>   static int pci_quirk_cavium_acs(struct pci_dev *dev, u16 acs_flags)
+> __xchg_called_with_bad_pointer, which is an error case
+> for catching bugs and will not happen for correct code, if
+> __xchg is inlined.
+> 
+
+Ah, this is the equivalent of ARM commit 920fdab7b3c.
+
+Maybe add:
+
+Fixes: ac7c3e4ff401
+
+> Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+> ---
+>   arch/mips/include/asm/cmpxchg.h | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/mips/include/asm/cmpxchg.h b/arch/mips/include/asm/cmpxchg.h
+> index 012dcf7046ad..f6136871561d 100644
+> --- a/arch/mips/include/asm/cmpxchg.h
+> +++ b/arch/mips/include/asm/cmpxchg.h
+> @@ -77,8 +77,8 @@ extern unsigned long __xchg_called_with_bad_pointer(void)
+>   extern unsigned long __xchg_small(volatile void *ptr, unsigned long val,
+>   				  unsigned int size);
+>   
+> -static inline unsigned long __xchg(volatile void *ptr, unsigned long x,
+> -				   int size)
+> +static __always_inline
+> +unsigned long __xchg(volatile void *ptr, unsigned long x, int size)
+>   {
+>   	switch (size) {
+>   	case 1:
+> 
+
+Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
