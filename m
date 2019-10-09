@@ -2,121 +2,87 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B36C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:28:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00098C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09BEA20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:28:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="ItyJ0r9P"
+	by mail.kernel.org (Postfix) with ESMTP id D6AB220B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:29:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731532AbfJIO2k (ORCPT
+        id S1731538AbfJIO3S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 10:28:40 -0400
-Received: from mail-eopbgr30099.outbound.protection.outlook.com ([40.107.3.99]:36216
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730546AbfJIO2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 10:28:40 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q/HcL4uKJJmOVfgwNvWA/dk65hWSj09SDKm7B0IKb7N6Gex9QseR6b7u/lDKt/XJTb8UrjC78Ll9bVyTgxIkXbT8IXrAUv+boBda/vdtx4CDIsVQmQoHsNeHuf+71C2kxusrcaMoQ4RoBqmUQ4NJqN+TWN7S9+GG1EMRxr3ll7jqdWnEyt4KG4/fUphmGehbqI2XVTFFNWOH6qmTvrjWfs/RM6Qz7ie08WSNK4FUOIj1xojf769fhPUWfnKjin8yAIJxesmcvXLU7guI/VOPyxg6X4mEVSd4SWthheUowLVll5LT6M9FhbHwJC5wR68oxBDkXLBoffbTX2O+h8uW3A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UrD69piIq4Bn04MqSuhVHNBiiZq28QlR6iycYkJ3sqU=;
- b=kTrMmEAURmtiLtrvzrWeejbCQakiWD5/jdBoJPVEHFAqtWWMSB1hO9vQBA9lbp810Zs+n+0PjY7SedjqAgaBRrmqQgjgsfYwhzZtV0D7r5oF5TrrTlzTU1PiRmSi/vnOFW8///rOaLmQhloLqeh2tONqhwjf+KtqZtazYzHJStNKMTMezLIfOWu9qjBhjst9qGQUaOf8e5MRPfeIGpcQCpcc+6NyAFkufUZ3Ln0lBnmNFY7ncUgP0UUUrdzN1a4UJ5epHUwhktTG32/a7uRuZJ2BQ8NqYVI33FMwzE0KcB7FlP2/MFXVRw4/UmOaoiGGz8BzDbs4c8vPBriwxzl2uA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UrD69piIq4Bn04MqSuhVHNBiiZq28QlR6iycYkJ3sqU=;
- b=ItyJ0r9PgaTo6icA/o/vL394Pk3F/r//eiyz2S6ksf4MGvbnGNZS0BcadGOGebCKLlm+GHkoovitomv7CA8kVIrr5/sYZibAr92imrjvzFYB3pEE7D6Pa3GLFuYTEFoCUPBtcNuv1HruD0+fcKT1fvXLfRtfjd8MvUm0cUntsLc=
-Received: from AM6PR05MB6535.eurprd05.prod.outlook.com (20.179.18.212) by
- AM6PR05MB6582.eurprd05.prod.outlook.com (20.179.7.86) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.16; Wed, 9 Oct 2019 14:28:36 +0000
-Received: from AM6PR05MB6535.eurprd05.prod.outlook.com
- ([fe80::c9f9:f21d:d401:7f35]) by AM6PR05MB6535.eurprd05.prod.outlook.com
- ([fe80::c9f9:f21d:d401:7f35%5]) with mapi id 15.20.2347.016; Wed, 9 Oct 2019
- 14:28:36 +0000
-From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-To:     "stable@vger.kernel.org" <stable@vger.kernel.org>
-CC:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Subject: [PATCH 0/1] [for 4.4/4.9] VAG power control improvement for sgtl5000
- codec
-Thread-Topic: [PATCH 0/1] [for 4.4/4.9] VAG power control improvement for
- sgtl5000 codec
-Thread-Index: AQHVfq3WATxnFgRN2ki7elTKWYg1Dw==
-Date:   Wed, 9 Oct 2019 14:28:36 +0000
-Message-ID: <20191009142822.14808-1-oleksandr.suvorov@toradex.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM4PR08CA0062.eurprd08.prod.outlook.com
- (2603:10a6:205:2::33) To AM6PR05MB6535.eurprd05.prod.outlook.com
- (2603:10a6:20b:74::20)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=oleksandr.suvorov@toradex.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.20.1
-x-originating-ip: [194.105.145.90]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 45bad5a5-d5cb-4404-7233-08d74cc4f88e
-x-ms-traffictypediagnostic: AM6PR05MB6582:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR05MB65821D82B51873E3190DC639F9950@AM6PR05MB6582.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1332;
-x-forefront-prvs: 018577E36E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(376002)(396003)(366004)(39850400004)(136003)(199004)(189003)(2501003)(54906003)(316002)(36756003)(3846002)(6116002)(478600001)(256004)(6436002)(66556008)(64756008)(4326008)(66476007)(66446008)(25786009)(66946007)(5640700003)(6486002)(558084003)(66066001)(14454004)(6512007)(8936002)(2906002)(6506007)(1730700003)(386003)(81156014)(305945005)(5660300002)(476003)(2351001)(7736002)(6916009)(71200400001)(26005)(102836004)(8676002)(2616005)(44832011)(71190400001)(186003)(52116002)(86362001)(1076003)(99286004)(81166006)(486006)(50226002);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR05MB6582;H:AM6PR05MB6535.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 5htMwHyfWrw4FvBFMhQB0CtN3qvqf9K4zhR8TCq8Nb5tkU7qAI1KaXX8jkQOoDla1HweBvrknkyCIAmIXTUglDVqSoF3os7eTvEJ1LIno4kuzv34AKNBFoQNVchJEzqyHDXMdDT7oEK8fJjr2yCSFWpI1kkmZggg/ffxZxXI711adaSVHRS/Wem3qbgce+2/WBSy5HciC3PkMYb8x7XHqeO3RmygymsPiI8kNQ5SJqAc/Z+PCzei2xVYkzQsROvBDaUPoM8ze6WVf2xdelLH3SuKiEEcFYRCthSOoLZyfB8NAi3iKXsllB5rea4V4Z8odPYtRJoL9OF9BchUjLkyDMYEHxxdKn8YZudhsjOFcIoWv1G6QFjnnHSfH/T1VOyU1KAH0BukHCWC1+jZW3LPki0p+1ZUcwEfFYbZCfrOEk8=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 45bad5a5-d5cb-4404-7233-08d74cc4f88e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Oct 2019 14:28:36.7058
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Hn8eKEXJyyPTZ8SNbqOOWodovpEDKpRA3ZkXO3/5lnXpX0F6z5ogGLacJQCddbsf/JFXaS5qm86a/97ljSnhau65l402xDcop/z2mhuJYaw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB6582
+        Wed, 9 Oct 2019 10:29:18 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:40192 "EHLO
+        mail.loongson.cn" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731133AbfJIO3S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 10:29:18 -0400
+Received: from linux.loongson.cn (unknown [10.20.41.27])
+        by mail (Coremail) with SMTP id QMiowPAxycSw7p1dSqQMAA--.37S2;
+        Wed, 09 Oct 2019 22:29:04 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     davem@davemloft.net, peppe.cavallaro@st.com,
+        alexandre.torgue@st.com, joabreu@synopsys.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] net: stmmac: Remove break after a return
+Date:   Wed,  9 Oct 2019 22:29:00 +0800
+Message-Id: <1570631340-5467-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: QMiowPAxycSw7p1dSqQMAA--.37S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrtF4rKr4xAF1kCr4kKr45KFg_yoWkCFX_Cr
+        y0qr4fXa90kF1jyw12yayUXryj9FnrXFs3GFsIqF93u3y2qwn5tasxurZYyr1a9ay8AFnr
+        GFn3tFy7A34kKjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb4AYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_JFC_Wr1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4
+        A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
+        w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26F4j6r4UJw
+        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7xvr2IYc2Ij64vIr40E4x8a
+        64kEw24l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
+        AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIY
+        rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+        v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJr1lIxAIcVC2z280aVAFwI0_Jr0_
+        Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8PDG5
+        UUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Since break is not useful after a return, remove it.
 
-This is a backport to stable kernel versions 4.4 and 4.9.
+Fixes: 3b57de958e2a ("net: stmmac: Support devicetree configs for mcast and ucast filter entries")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c | 2 --
+ 1 file changed, 2 deletions(-)
 
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
+index 3d69da1..d0356fb 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
+@@ -130,7 +130,6 @@ static void dwmac1000_set_mchash(void __iomem *ioaddr, u32 *mcfilterbits,
+ 		writel(mcfilterbits[0], ioaddr + GMAC_HASH_LOW);
+ 		writel(mcfilterbits[1], ioaddr + GMAC_HASH_HIGH);
+ 		return;
+-		break;
+ 	case 7:
+ 		numhashregs = 4;
+ 		break;
+@@ -140,7 +139,6 @@ static void dwmac1000_set_mchash(void __iomem *ioaddr, u32 *mcfilterbits,
+ 	default:
+ 		pr_debug("STMMAC: err in setting multicast filter\n");
+ 		return;
+-		break;
+ 	}
+ 	for (regs = 0; regs < numhashregs; regs++)
+ 		writel(mcfilterbits[regs],
+-- 
+2.1.0
 
-Oleksandr Suvorov (1):
-  ASoC: sgtl5000: Improve VAG power and mute control
-
- sound/soc/codecs/sgtl5000.c | 234 +++++++++++++++++++++++++++++++-----
- 1 file changed, 203 insertions(+), 31 deletions(-)
-
---=20
-2.20.1
 
