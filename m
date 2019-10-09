@@ -6,177 +6,113 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B92C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C52ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:12:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9267F2190F
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:12:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 381F8218DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:12:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732321AbfJITMi (ORCPT
+        id S1732355AbfJITMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 15:12:38 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:55809 "EHLO
+        Wed, 9 Oct 2019 15:12:52 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:46385 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732056AbfJITLb (ORCPT
+        with ESMTP id S1732044AbfJITLa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 15:11:31 -0400
+        Wed, 9 Oct 2019 15:11:30 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1Mbzdn-1hfexe4BV1-00dXse; Wed, 09 Oct 2019 21:11:18 +0200
+ 1MofLl-1hleRX2T5V-00p7Pi; Wed, 09 Oct 2019 21:11:22 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Al Viro <viro@zeniv.linux.org.uk>
 Cc:     linux-kernel@vger.kernel.org, y2038@lists.linaro.org,
         linux-fsdevel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
-        linux-nilfs@vger.kernel.org, ocfs2-devel@oss.oracle.com
-Subject: [PATCH v6 30/43] fs: compat_ioctl: move FITRIM emulation into file systems
-Date:   Wed,  9 Oct 2019 21:10:31 +0200
-Message-Id: <20191009191044.308087-31-arnd@arndb.de>
+        linux-scsi@vger.kernel.org,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH v6 43/43] scsi: sd: enable compat ioctls for sed-opal
+Date:   Wed,  9 Oct 2019 21:10:44 +0200
+Message-Id: <20191009191044.308087-44-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191009190853.245077-1-arnd@arndb.de>
 References: <20191009190853.245077-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:Yt5Qym2EiThPkdPiZuVWsOArs8kXwnMpYv8e8jcFHq6aBlEUl35
- 2IN5+k0io/Ejnt6hQYqU5PeavuhijMbDbcKRb1ZxQ/6UItKgQqaET9+WeQFtRybNXL/7Evn
- QrMfvNL1I0AWYpCpt9cUDrfru1T2gMRukpp+x7ARQhmEKsY4PWg2oSrpD+oymHu2Kj+/KUc
- T+MrdQgXOJZMCEpqnSOug==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:7szO+vH6EQs=:V71EFPjAZtDgdRdkiMO12Q
- GDLOgoe6xabrsRpK8dss/1FbSbd0/LRu8BSTX7ftPlUZ+ZrQO/H/faHx7JJk8RieIGlFgEcTT
- EXof9rfzqoBpUY3NJs2WvGoyHioXGOJcv1Ti4timVZ1CMpKrwZubVAerQ6bQxbTMwoXlwZhPJ
- WJWhKviJJ+5ZHWTRMNkj74RwxD4yVonQ4W5VjBHlK1Oo0eblhb0poFzhDCODP46ISMsi/9YD2
- Z4V+18ywpVntd+bOeYwYzv7eX5gkuhOSj+XrBOKfyrRP+pT8nx6Ukjzvd9oHcdrcJFvC8AcvM
- TvBxzq9XsZnQzQ+IfDnHkROqfzx2gcSDKD0pN7QcP8+NDDTTDn+mTZ1jyWFe8szzoDIEf/in/
- Z5HsDqhyHAMOZrRu2p2/5NLbSZdH+gtKjTP7Bm+rsQUQtZoA5sZqPZA5Ke8MPiljJxYAjb3V+
- 8tAWysmnPhzKCTGzz55hWPESGavXF+hXB1U4zToeD0cfYLJFxIXVuC8mA75CIHsiUhPaOlrM+
- S3nXh/SqKBSkahI3UkokDIAHWkeuXN0A9Ra894zoJWdvH9wNUbJsLtVGIM/fifxQThNlWYT5T
- 6R1gelJX7GGYk1z8i6JQP1goaezQjXRvWLMhZVXgf04QdLYqzPCZ0deY+X6VpUqvBULcsaxWj
- j4pGbhm+vSq8rHNdmFVEWNgmvZX9otZDdg2NWWjUTy9l7RSbYel3vhdr4QBBswTCE/pvQbuiK
- haSKR+87qyJ1+499CCnOZ8trUag2y5Kb3V9ee/cpkoDhqP0imin4VTobW5LCiZIFp3Y/AbzmZ
- FtTTQ0cj7UlAaaqwms/+RToktTC6bvO2m2r1rUqodivpkKTexLJqOe/arDm2yym9T4zGxA0VQ
- +W/7eVUm3osaGfa39ACA==
+X-Provags-ID: V03:K1:zX1dBOxTNEIjEWC6S6Aboc9GLFenI7/73H9gQTcEXZJuXQOOPKQ
+ m3Fd1C/SOXXiF/vgpisdbgSmCcJpi/8S/vO/qXr1qfrJIStRYB3s3dEawxyMSUMn+0NTfXy
+ Ab9xMpMNOALYbbrUsRd2FLw0Ye7wS9Iq5k27P/7uitVAlIrvvypAqXWfA5vkc0tbPYZF+1m
+ NIF5nP/JU3XKb21XnisJw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:lFQ+r8yms6g=:sbWCiEgDC0Wd/x2FxEm0lO
+ HIOHewpro6Y6RhDe6KbndIDg0JNlUin7WJAs+q2iO5twgzE03hJmvtw+q/+cNaD+grzoD4Oda
+ gFzYZwLfS9Ef35ZuoxQBOuKAIMQZ7UrTAbC7A4HGnHBdrCJeuL+FAvMkx8d9Q3v8oDLoRK99G
+ guyQ9i6W0+p2M2w3TlNGT+w7ZOCMJIl9i//enaD+YsHcY26KZ2FFZUau1fGlpuhXhAcqODDXX
+ SIcsD74vNvgKtyEPxV9tc3Q2lfXhV6s74yPR+l6P2GlsQnPmu3EOvVNP8zyq8PBq4AP4/0PxD
+ 8mt6NCkQTa6kLkw69qrXpOki8HjCDcvQ2jcGjludeml2Gae0+PG+4flcA4nJzyRMb5pG2bXde
+ Gss218kuyh26mcuzvCMUzxMxLCoTBtDQiVx8PY3oe69kv15zMI+htD6Ocko1S9T0fX+4tn3KN
+ g/dqGY4gdlj/BH/PsPlw7NfC3JvJtW5J8KgG0SAfphyamwOela5x8WVCzovCgjr4yuqFbGZXi
+ /0zOytzYJdzQerNej9emCJzBg4g//n0fKkVR99ce+YbHmaRFLD0+QnF41NuB2SNqlkNEVDWLQ
+ JkJ/iUs6UBYMGqIj35uk/P8skn4f3tiRIkaDlpRk4Rb8G8J9bl8MaT4JrR+dlNzyR1EswTS2M
+ NFx1iku9lwAxHQrhCwDBbP+1xC3i60il2GQ0PiXA9ETGMcBWbWH3QQYqw3bkOQebzBgN1ezzI
+ ucj68bPQaHNnBwPCpejCq7sFoYI8x1G2hI0OzAx8IWJrONDM4BrJghfQQvnMXkjO57YmRW3KR
+ ppoc3ztmdrjMOaKOPqMKgvjeTkKkkZM5MPa/hI7eeaQeYRXyvd6rEK8MQdP/6fH4SgeGNu6Ru
+ eU2kfW0Ze1W96JFfciaA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the special case for FITRIM, and make file systems
-handle that like all other ioctl commands with their own
-handlers.
+The sed_ioctl() function is written to be compatible between
+32-bit and 64-bit processes, however compat mode is only
+wired up for nvme, not for sd.
 
-Cc: linux-ext4@vger.kernel.org
-Cc: linux-f2fs-devel@lists.sourceforge.net
-Cc: Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>
-Cc: linux-nilfs@vger.kernel.org
-Cc: ocfs2-devel@oss.oracle.com
+Add the missing call to sed_ioctl() in sd_compat_ioctl().
+
+Fixes: d80210f25ff0 ("sd: add support for TCG OPAL self encrypting disks")
+Cc: linux-scsi@vger.kernel.org
+Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- fs/compat_ioctl.c  | 2 --
- fs/ecryptfs/file.c | 1 +
- fs/ext4/ioctl.c    | 1 +
- fs/f2fs/file.c     | 1 +
- fs/hpfs/dir.c      | 1 +
- fs/hpfs/file.c     | 1 +
- fs/nilfs2/ioctl.c  | 1 +
- fs/ocfs2/ioctl.c   | 1 +
- 8 files changed, 7 insertions(+), 2 deletions(-)
+ drivers/scsi/sd.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/fs/compat_ioctl.c b/fs/compat_ioctl.c
-index 1e740f4406d3..b20228c19ccd 100644
---- a/fs/compat_ioctl.c
-+++ b/fs/compat_ioctl.c
-@@ -345,8 +345,6 @@ static int ppp_scompress(struct file *file, unsigned int cmd,
- static unsigned int ioctl_pointer[] = {
- /* Little t */
- COMPATIBLE_IOCTL(TIOCOUTQ)
--/* 'X' - originally XFS but some now in the VFS */
--COMPATIBLE_IOCTL(FITRIM)
- #ifdef CONFIG_BLOCK
- /* Big S */
- COMPATIBLE_IOCTL(SCSI_IOCTL_GET_IDLUN)
-diff --git a/fs/ecryptfs/file.c b/fs/ecryptfs/file.c
-index feecb57defa7..5fb45d865ce5 100644
---- a/fs/ecryptfs/file.c
-+++ b/fs/ecryptfs/file.c
-@@ -378,6 +378,7 @@ ecryptfs_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 		return rc;
+diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+index 50928bc266eb..5abdf03083ae 100644
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -1692,20 +1692,30 @@ static void sd_rescan(struct device *dev)
+ static int sd_compat_ioctl(struct block_device *bdev, fmode_t mode,
+ 			   unsigned int cmd, unsigned long arg)
+ {
+-	struct scsi_device *sdev = scsi_disk(bdev->bd_disk)->device;
++	struct gendisk *disk = bdev->bd_disk;
++	struct scsi_disk *sdkp = scsi_disk(disk);
++	struct scsi_device *sdev = sdkp->device;
++	void __user *p = compat_ptr(arg);
+ 	int error;
  
- 	switch (cmd) {
-+	case FITRIM:
- 	case FS_IOC32_GETFLAGS:
- 	case FS_IOC32_SETFLAGS:
- 	case FS_IOC32_GETVERSION:
-diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
-index 0b7f316fd30f..e8870fff8224 100644
---- a/fs/ext4/ioctl.c
-+++ b/fs/ext4/ioctl.c
-@@ -1360,6 +1360,7 @@ long ext4_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 	}
- 	case EXT4_IOC_MOVE_EXT:
- 	case EXT4_IOC_RESIZE_FS:
-+	case FITRIM:
- 	case EXT4_IOC_PRECACHE_EXTENTS:
- 	case EXT4_IOC_SET_ENCRYPTION_POLICY:
- 	case EXT4_IOC_GET_ENCRYPTION_PWSALT:
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 29bc0a542759..57d82f2d2ebd 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -3403,6 +3403,7 @@ long f2fs_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 	case F2FS_IOC_RELEASE_VOLATILE_WRITE:
- 	case F2FS_IOC_ABORT_VOLATILE_WRITE:
- 	case F2FS_IOC_SHUTDOWN:
-+	case FITRIM:
- 	case F2FS_IOC_SET_ENCRYPTION_POLICY:
- 	case F2FS_IOC_GET_ENCRYPTION_PWSALT:
- 	case F2FS_IOC_GET_ENCRYPTION_POLICY:
-diff --git a/fs/hpfs/dir.c b/fs/hpfs/dir.c
-index d85230c84ef2..f32f15669996 100644
---- a/fs/hpfs/dir.c
-+++ b/fs/hpfs/dir.c
-@@ -325,4 +325,5 @@ const struct file_operations hpfs_dir_ops =
- 	.release	= hpfs_dir_release,
- 	.fsync		= hpfs_file_fsync,
- 	.unlocked_ioctl	= hpfs_ioctl,
-+	.compat_ioctl	= compat_ptr_ioctl,
- };
-diff --git a/fs/hpfs/file.c b/fs/hpfs/file.c
-index 1ecec124e76f..b36abf9cb345 100644
---- a/fs/hpfs/file.c
-+++ b/fs/hpfs/file.c
-@@ -215,6 +215,7 @@ const struct file_operations hpfs_file_ops =
- 	.fsync		= hpfs_file_fsync,
- 	.splice_read	= generic_file_splice_read,
- 	.unlocked_ioctl	= hpfs_ioctl,
-+	.compat_ioctl	= compat_ptr_ioctl,
- };
++	error = scsi_verify_blk_ioctl(bdev, cmd);
++	if (error < 0)
++		return error;
++
+ 	error = scsi_ioctl_block_when_processing_errors(sdev, cmd,
+ 			(mode & FMODE_NDELAY) != 0);
+ 	if (error)
+ 		return error;
++
++	if (is_sed_ioctl(cmd))
++		return sed_ioctl(sdkp->opal_dev, cmd, p);
+ 	       
+ 	/* 
+ 	 * Let the static ioctl translation table take care of it.
+ 	 */
+ 	if (!sdev->host->hostt->compat_ioctl)
+ 		return -ENOIOCTLCMD; 
+-	return sdev->host->hostt->compat_ioctl(sdev, cmd, (void __user *)arg);
++	return sdev->host->hostt->compat_ioctl(sdev, cmd, p);
+ }
+ #endif
  
- const struct inode_operations hpfs_file_iops =
-diff --git a/fs/nilfs2/ioctl.c b/fs/nilfs2/ioctl.c
-index 91b9dac6b2cc..4ba73dbf3e8d 100644
---- a/fs/nilfs2/ioctl.c
-+++ b/fs/nilfs2/ioctl.c
-@@ -1354,6 +1354,7 @@ long nilfs_compat_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- 	case NILFS_IOCTL_SYNC:
- 	case NILFS_IOCTL_RESIZE:
- 	case NILFS_IOCTL_SET_ALLOC_RANGE:
-+	case FITRIM:
- 		break;
- 	default:
- 		return -ENOIOCTLCMD;
-diff --git a/fs/ocfs2/ioctl.c b/fs/ocfs2/ioctl.c
-index d6f7b299eb23..2d517b5ec6ac 100644
---- a/fs/ocfs2/ioctl.c
-+++ b/fs/ocfs2/ioctl.c
-@@ -985,6 +985,7 @@ long ocfs2_compat_ioctl(struct file *file, unsigned cmd, unsigned long arg)
- 			return -EFAULT;
- 
- 		return ocfs2_info_handle(inode, &info, 1);
-+	case FITRIM:
- 	case OCFS2_IOC_MOVE_EXT:
- 		break;
- 	default:
 -- 
 2.20.0
 
