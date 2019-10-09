@@ -2,189 +2,145 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA6F1ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3921C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE8C820B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C106E21721
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:57:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="cLAK3N+z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731016AbfJIK4w (ORCPT
+        id S1731068AbfJIK5B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 06:56:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:59804 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725953AbfJIK4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 06:56:52 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4999C28;
-        Wed,  9 Oct 2019 03:56:51 -0700 (PDT)
-Received: from [10.37.12.37] (unknown [10.37.12.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E2B713F703;
-        Wed,  9 Oct 2019 03:56:48 -0700 (PDT)
-Subject: Re: [PATCH v2] of: Make of_dma_get_range() work on bus nodes
-To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Christoph Hellwig <hch@infradead.org>
-References: <20191008195239.12852-1-robh@kernel.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <597158a7-ce42-c4d0-62b0-5aab1ead8313@arm.com>
-Date:   Wed, 9 Oct 2019 11:56:47 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 9 Oct 2019 06:57:01 -0400
+Received: from mail-eopbgr00073.outbound.protection.outlook.com ([40.107.0.73]:39822
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725953AbfJIK5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 06:57:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SlrIMxYyK+VxplBYlv5BsetGV6k4vOFasCdW2bdcIZr9wT8nipBRkeY3r9r44ZsJwN1u2ivYWjZPep4XT2JcpAdLQH9Cx9k3RcFecgSTpYp/8jm23QoIM5N3Euzkj3TJHm7AbNFpkRLIDgTAZT1kWlhll3pv24FD5znm8XLoyocWJZjEdbbSPd24NO6QwE00D+X/xCxWUUAj6RybbjTIyPKF7zp8tLvsUFv0J9ZjChFAdnLjP1PpdlProfPdP3I1Urv1XzQKp3f+PQ96Al2f7g4AhJ/bcoE6HXR44Ncfw7KUj5qhBTnJj19zHvi3mb9S13qY8lUOLOXYqv1yXUXDFg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3OQqyJQagcDPfrabzSYDsznICsWwuIDmwmUsKb0Souk=;
+ b=jkU0HfFnZxqR3nDznOTaVdmJ7y6IAgiHL2DzAVPnYSlScEhozAtYaAB0KFm7xfZOamLJY6eyq7Ol6Ld0HloI7NENPRY9qNF0114FEtF5qJ6ZwaMcNSbSfYafh5zC2wc0ukSwgOcbsJwo7czPjZ1CBOH9pXjdkIouuSli198aS88gxR+4+YEdqDJA8850U1tP2rnYIWk/UFPRP5FtqFVY7RaGoD4+BOIpsJm/0Z6G1Zb3lxChS64uC2o8okhtAKWL89t5BjyG/XtTeVBthx/lt1GmNAe4nq3y9v0ulEAHiTDy0AfskV5BRok6RcRXYAvn1/rJFWdfzcAh7qmaqkkpCw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3OQqyJQagcDPfrabzSYDsznICsWwuIDmwmUsKb0Souk=;
+ b=cLAK3N+zdoDDdTwsd8QKSu4mY4QjbQ4vsHroD4yAHakW0MYC6qsIRvp3LCphtUwaV7/ttJpSjnsPIztaLQRg+xrv3vESK9/ELHweWw7GD2vSk3gvnInHTGbYAKcyjDOBK/klaFbiy/26snz+vPiXQvS9u+U/pwGkmgXtodeoaxE=
+Received: from VI1PR04MB5567.eurprd04.prod.outlook.com (20.178.123.21) by
+ VI1PR04MB4526.eurprd04.prod.outlook.com (20.177.54.218) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2327.24; Wed, 9 Oct 2019 10:56:57 +0000
+Received: from VI1PR04MB5567.eurprd04.prod.outlook.com
+ ([fe80::75ab:67b7:f87b:dfd4]) by VI1PR04MB5567.eurprd04.prod.outlook.com
+ ([fe80::75ab:67b7:f87b:dfd4%6]) with mapi id 15.20.2347.016; Wed, 9 Oct 2019
+ 10:56:57 +0000
+From:   Madalin-cristian Bucur <madalin.bucur@nxp.com>
+To:     Christoph Hellwig <hch@infradead.org>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>
+CC:     "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Roy Pledge <roy.pledge@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 19/20] dpaa_eth: add dpaa_dma_to_virt()
+Thread-Topic: [PATCH 19/20] dpaa_eth: add dpaa_dma_to_virt()
+Thread-Index: AQHVfdGJuMo7qvFB0Ua4q2457e8s/6dR7bYAgAASDKA=
+Date:   Wed, 9 Oct 2019 10:56:57 +0000
+Message-ID: <VI1PR04MB55677E492084AB7F816DED7BEC950@VI1PR04MB5567.eurprd04.prod.outlook.com>
+References: <1570536641-25104-1-git-send-email-madalin.bucur@nxp.com>
+ <1570536641-25104-20-git-send-email-madalin.bucur@nxp.com>
+ <20191009073926.GA6916@infradead.org>
+In-Reply-To: <20191009073926.GA6916@infradead.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=madalin.bucur@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5584e67e-11df-418e-deb2-08d74ca7679d
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: VI1PR04MB4526:|VI1PR04MB4526:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB45265D7502101E56EF5A118EEC950@VI1PR04MB4526.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 018577E36E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(376002)(346002)(136003)(396003)(39860400002)(189003)(199004)(13464003)(99286004)(486006)(14454004)(102836004)(8936002)(2906002)(7696005)(66066001)(446003)(6506007)(53546011)(66556008)(66946007)(11346002)(9686003)(64756008)(66446008)(476003)(76116006)(6246003)(478600001)(76176011)(25786009)(66476007)(14444005)(71190400001)(55016002)(4326008)(110136005)(6636002)(71200400001)(86362001)(81156014)(81166006)(6436002)(8676002)(229853002)(6116002)(3846002)(26005)(316002)(33656002)(186003)(256004)(52536014)(54906003)(305945005)(74316002)(5660300002)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4526;H:VI1PR04MB5567.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Q+//isvwzXV27i7fpjfVOzpCAPz+SRLCq9f5poAcUO7WUoOHI390xujebPMuvVxQ9tmdZFNIq+EsjxJKr2QxGKKZFmJAhcyT/2sVDZqpIUOjDzj92fbtvIgneD2KfO9ofPe9oIcZGzz/7HKPQ8/DIMKXjNPZMbpwNE6ZPKwA420PSEzexjpxGuLgF9sPFeqWcaO3kYaCNojjKPCkMnRVeTYcFQouD8Ick/ybVx5DODLRlBK380F+o8b2eoyeeRWCSQciP9k2SSAV/6MdjHRGo97NI6xqUq+Pd1gdGQpjkkNm/VVsZz582DDK7C+3qMyGiIBrg+IlWfiqTR0F2Y1hsPaFw6Kr9QQk55Xf5YZLJFcI2Umt9HmmIKjs304LZgFvh6OhCLva1Ph+c3I5cP2KBSapCxV4xS1dqjQ+6LZWhNU=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20191008195239.12852-1-robh@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5584e67e-11df-418e-deb2-08d74ca7679d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Oct 2019 10:56:57.6514
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: lYU7Z0xuzz0vOa0mU0EaoxD06yRndruQGi+D95s60GkDDBApKnEivDxbl3TQsGD3vKEMZMiTD7tAmPD5o9sR/A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4526
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-08 8:52 pm, Rob Herring wrote:
-> From: Robin Murphy <robin.murphy@arm.com>
-> 
-> Since the "dma-ranges" property is only valid for a node representing a
-> bus, of_dma_get_range() currently assumes the node passed in is a leaf
-> representing a device, and starts the walk from its parent. In cases
-> like PCI host controllers on typical FDT systems, however, where the PCI
-> endpoints are probed dynamically the initial leaf node represents the
-> 'bus' itself, and this logic means we fail to consider any "dma-ranges"
-> describing the host bridge itself. Rework the logic such that
-> of_dma_get_range() also works correctly starting from a bus node
-> containing "dma-ranges".
-> 
-> While this does mean "dma-ranges" could incorrectly be in a device leaf
-> node, there isn't really any way in this function to ensure that a leaf
-> node is or isn't a bus node.
-> 
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> [robh: Allow for the bus child node to still be passed in]
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> Resending, hit send too quickly.
-> 
-> v2:
->   - Ensure once we find dma-ranges, every parent has it.
->   - Only get the #{size,address}-cells after we find non-empty dma-ranges
->   - Add a check on the 'dma-ranges' length
-> 
-> This is all that remains of the dma-ranges series. I've applied the rest
-> of the series prep and fixes. I dropped "of: Ratify of_dma_configure()
-> interface" as the assertions that the node pointer being the parent only
-> when struct device doesn't have a DT node pointer is not always
-> true.
+> -----Original Message-----
+> From: Christoph Hellwig <hch@infradead.org>
+> Sent: Wednesday, October 9, 2019 10:39 AM
+> To: Madalin-cristian Bucur <madalin.bucur@nxp.com>
+> Cc: davem@davemloft.net; netdev@vger.kernel.org; Roy Pledge
+> <roy.pledge@nxp.com>; Laurentiu Tudor <laurentiu.tudor@nxp.com>; linux-
+> kernel@vger.kernel.org
+> Subject: Re: [PATCH 19/20] dpaa_eth: add dpaa_dma_to_virt()
+>=20
+> On Tue, Oct 08, 2019 at 03:10:40PM +0300, Madalin Bucur wrote:
+> > Centralize the phys_to_virt() calls.
+>=20
+> You don't need to centralize those, you need to fix them.  Calling
+> phys_to_virt on a dma_addr is completely bogus.
 
-I'd still like to rework of_dma_configure() so that callers don't have 
-to pass a redundant node in the common case, but that can wait. For now, 
-this looks good enough to un-block the various 32-bit-PCI folks at 
-least, and we can consider further improvements on top. For the changes:
+Hi Christoph, thank you for your input, I'm aware of the limited scenarios
+that are supported with the current code state (SMMU disabled/bypassed).
+The existing customers using the DPAA platforms cannot make use of the SMMU
+features until this is fixed. The problem is there is no fast forward path
+to fixing this, the performance requirements of the existing use-cases
+preclude the use of the recommended approaches suggested to date. I'm movin=
+g
+all these phys_to_virt calls into one central location specifically because
+of this, as the lack of progress on the SMMU fix problem prevented me from
+upstreaming other driver changes/fixes. Having this contained allows it to
+follow a separate path towards a solution while it enables me to address
+issues for the current users of the DPAA with minimal interference. To
+illustrate the decoupling of the DPAA driver code changes from the iova
+handling fix, the only change to the driver code that would be required
+to make it work with the SMMU enables would look similar to this:
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+static void *dpaa_dma_to_virt(struct device *dev, dma_addr_t addr)
+{
++       struct iommu_domain *domain =3D iommu_get_domain_for_dev(dev);
++
++       if (domain)
++               return phys_to_virt(iommu_iova_to_phys(domain, addr));
++
+        return phys_to_virt(addr);
+}
 
-Cheers,
-Robin.
+Other refinements in regards to the actual APIs to be used would only
+affect this code area.
 
-> I didn't include any tested-bys as this has changed a bit. A git branch
-> is here[1].
-> 
-> Rob
-> 
-> [1] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git dma-masks-v2
-> 
->   drivers/of/address.c | 44 ++++++++++++++++++--------------------------
->   1 file changed, 18 insertions(+), 26 deletions(-)
-> 
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index 5ce69d026584..99c1b8058559 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -930,47 +930,39 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
->   	const __be32 *ranges = NULL;
->   	int len, naddr, nsize, pna;
->   	int ret = 0;
-> +	bool found_dma_ranges = false;
->   	u64 dmaaddr;
->   
-> -	if (!node)
-> -		return -EINVAL;
-> -
-> -	while (1) {
-> -		struct device_node *parent;
-> -
-> -		naddr = of_n_addr_cells(node);
-> -		nsize = of_n_size_cells(node);
-> -
-> -		parent = __of_get_dma_parent(node);
-> -		of_node_put(node);
-> -
-> -		node = parent;
-> -		if (!node)
-> -			break;
-> -
-> +	while (node) {
->   		ranges = of_get_property(node, "dma-ranges", &len);
->   
->   		/* Ignore empty ranges, they imply no translation required */
->   		if (ranges && len > 0)
->   			break;
->   
-> -		/*
-> -		 * At least empty ranges has to be defined for parent node if
-> -		 * DMA is supported
-> -		 */
-> -		if (!ranges)
-> -			break;
-> +		/* Once we find 'dma-ranges', then a missing one is an error */
-> +		if (found_dma_ranges && !ranges) {
-> +			ret = -ENODEV;
-> +			goto out;
-> +		}
-> +		found_dma_ranges = true;
-> +
-> +		node = of_get_next_dma_parent(node);
->   	}
->   
-> -	if (!ranges) {
-> +	if (!node || !ranges) {
->   		pr_debug("no dma-ranges found for node(%pOF)\n", np);
->   		ret = -ENODEV;
->   		goto out;
->   	}
->   
-> -	len /= sizeof(u32);
-> -
-> +	naddr = of_bus_n_addr_cells(node);
-> +	nsize = of_bus_n_size_cells(node);
->   	pna = of_n_addr_cells(node);
-> +	if ((len / sizeof(__be32)) % (pna + naddr + nsize)) {
-> +		ret = -EINVAL;
-> +		goto out;
-> +	}
->   
->   	/* dma-ranges format:
->   	 * DMA addr	: naddr cells
-> @@ -978,7 +970,7 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
->   	 * size		: nsize cells
->   	 */
->   	dmaaddr = of_read_number(ranges, naddr);
-> -	*paddr = of_translate_dma_address(np, ranges);
-> +	*paddr = of_translate_dma_address(node, ranges + naddr);
->   	if (*paddr == OF_BAD_ADDR) {
->   		pr_err("translation of DMA address(%llx) to CPU address failed node(%pOF)\n",
->   		       dmaaddr, np);
-> 
+Thank you,
+Madalin
