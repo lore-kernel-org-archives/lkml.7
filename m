@@ -2,112 +2,159 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BEDECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E42C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F18C206B6
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C77AD2190F
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:51:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dYt29wLq"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="D60ko1or"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728054AbfJIIvY (ORCPT
+        id S1729742AbfJIIvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 04:51:24 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42679 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725440AbfJIIvY (ORCPT
+        Wed, 9 Oct 2019 04:51:50 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:46854 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbfJIIvu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 04:51:24 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q12so1171902pff.9
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 01:51:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=In7lAtEYz40LWfmW5FUqo3PU26fK6KeFFUXZm6ciSko=;
-        b=dYt29wLqZTFg8WlcHAi/6yG/WQQcQ8I0R93gGpxHkNHDIIqsICqRvc0kAZF94I4kMy
-         fBraO+UARhK7ZoZ6I2WmK2snoiEqgdxt49h8/+ZJTzYGyKWOTPx910pLLY/TMAb4Am3u
-         b20ydM1OvAcs7lv131FiryRJI2gJ3lTeOoSmc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=In7lAtEYz40LWfmW5FUqo3PU26fK6KeFFUXZm6ciSko=;
-        b=IPie6vVS1AR/t+5b6GpSp3xSb7NHwCwiIs4fRCelE1WMevU0Xs29vSHzPE3oXhvjtJ
-         hjR/zUlYMf7t7WdyPx4/H0ISWHGNvs3SffzM5bznouztiteOo4GZI3umnQNxmlD5hPv/
-         C/k4MXV/j73qDsW6MRm+unQmUbFMKBxRumj0J3xsNVQ4/R8q3VZphOTiiHdVhrhSnHNc
-         kB+qcl8u4q06XXrk5LZ8S5/lDpa1Breg4ZyyAXHfisLQoW6MoZJ9nr4NJYsT9XO3kWhB
-         qht1MWXH8W4q7Jy91rC5UKWnQFVJhCmNF0jx/dkXByQhn37VkyNsHVmXt33wnDYqgNkD
-         J5Jw==
-X-Gm-Message-State: APjAAAW8qpDA0brC6N85GRWaq2Kd3r6j5PLa7ZL8lHvHtWr7cTydH8rG
-        nh6YXDTPreWWsilR8jJm5YnnQQ==
-X-Google-Smtp-Source: APXvYqw+p6lVwH/R34JigHtj9JxYN6M1A5y1JJmqaZ+wjVVzbJzlOboDC6D/oNEY9AWUlK9aARTFdQ==
-X-Received: by 2002:aa7:92c9:: with SMTP id k9mr2588834pfa.215.1570611082215;
-        Wed, 09 Oct 2019 01:51:22 -0700 (PDT)
-Received: from localhost ([2401:fa00:1:10:3db2:76bf:938b:be05])
-        by smtp.gmail.com with ESMTPSA id g7sm2479081pfm.176.2019.10.09.01.51.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Oct 2019 01:51:21 -0700 (PDT)
-From:   Claire Chang <tientzu@chromium.org>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com
-Cc:     linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rjliao@codeaurora.org, rongchi@codeaurora.org,
-        Claire Chang <tientzu@chromium.org>
-Subject: [PATCH] Bluetooth: hci_qca: fix in-band sleep enablement
-Date:   Wed,  9 Oct 2019 16:51:16 +0800
-Message-Id: <20191009085116.199922-1-tientzu@chromium.org>
-X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
+        Wed, 9 Oct 2019 04:51:50 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x998pdU5016790;
+        Wed, 9 Oct 2019 03:51:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1570611099;
+        bh=2z8YgTtODIlrawxiMLn2c8ZI7bBATmOhOqscoBx++x8=;
+        h=From:To:CC:Subject:Date;
+        b=D60ko1orhIerWI00abYbJIBXI+8nWD2vdDsV3LyyZqhHcfBBXKxuEqUc+Nqip+3M/
+         599PsfYopNqStfkLh33B3Cs1bGtkm0xqsRCdpzyYrVwU0S2p3hdmlvtTEi0E/tVLW2
+         uBWx0RQsxJ9O8PvUsDtOWpO/qAZbt+sPL1udPw4w=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x998pdxZ043360
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 9 Oct 2019 03:51:39 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 9 Oct
+ 2019 03:51:39 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 9 Oct 2019 03:51:36 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x998pcYp094169;
+        Wed, 9 Oct 2019 03:51:39 -0500
+From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <sre@kernel.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <lee.jones@linaro.org>, <daniel.thompson@linaro.org>
+CC:     <dmurphy@ti.com>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <tomi.valkeinen@ti.com>, Jean-Jacques Hiblot <jjhiblot@ti.com>
+Subject: [PATCH v10 0/6] Add a generic driver for LED-based backlight
+Date:   Wed, 9 Oct 2019 10:51:21 +0200
+Message-ID: <20191009085127.22843-1-jjhiblot@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enabling in-band sleep when there is no patch/nvm-config found and
-bluetooth is running with the original fw/config.
+This series aims to add a led-backlight driver, similar to pwm-backlight,
+but using a LED class device underneath.
 
-Fixes: ba8f35979002 ("Bluetooth: hci_qca: Avoid setup failure on missing rampatch")
-Fixes: 7dc5fe0814c3 ("Bluetooth: hci_qca: Avoid missing rampatch failure with userspace fw loader")
-Signed-off-by: Claire Chang <tientzu@chromium.org>
----
- drivers/bluetooth/hci_qca.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+A few years ago (2015), Tomi Valkeinen posted a series implementing a
+backlight driver on top of a LED device:
+https://patchwork.kernel.org/patch/7293991/
+https://patchwork.kernel.org/patch/7294001/
+https://patchwork.kernel.org/patch/7293981/
 
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index e3164c200eac..367eef893a11 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -1291,10 +1291,8 @@ static int qca_setup(struct hci_uart *hu)
- 	/* Setup patch / NVM configurations */
- 	ret = qca_uart_setup(hdev, qca_baudrate, soc_type, soc_ver,
- 			firmware_name);
--	if (!ret) {
--		set_bit(QCA_IBS_ENABLED, &qca->flags);
--		qca_debugfs_init(hdev);
--	} else if (ret == -ENOENT) {
-+
-+	if (ret == -ENOENT) {
- 		/* No patch/nvm-config found, run with original fw/config */
- 		ret = 0;
- 	} else if (ret == -EAGAIN) {
-@@ -1305,6 +1303,11 @@ static int qca_setup(struct hci_uart *hu)
- 		ret = 0;
- 	}
- 
-+	if (!ret) {
-+		set_bit(QCA_IBS_ENABLED, &qca->flags);
-+		qca_debugfs_init(hdev);
-+	}
-+
- 	/* Setup bdaddr */
- 	if (qca_is_wcn399x(soc_type))
- 		hu->hdev->set_bdaddr = qca_set_bdaddr;
+The discussion stopped because Tomi lacked the time to work on it.
+
+changes in v10:
+- Provide a YAML schema instead of text file for the documentation of the
+  LED backlight device-tree bindings.
+- Add a short description of how the LED properties should be named in
+  the common LED binding documentation. (new patch)
+- rename property "default-brightness-level" as "default-brightness",
+  following the majority here.
+
+changes in v9:
+- let to_of_node() check if the fwnode is actually a of_node
+- add some checks in of_led_get()
+- let dev_of_node() do the check about OF availabilty
+- refactor led_bl_probe() to register a cleanup function with
+  devm_add_action_or_reset(). This simplifies the error handling (which
+  was not 100% done in v7) and allows to get rid of led_bl_remove()
+
+changes in v8:
+- use class_find_device_by_of_node() instead of class_find_device()
+- renamed devm_led_get() as devm_of_led_get()
+
+changes in v7:
+- rebased on top of linux-leds/for-next
+- populate the of_node member of the LED device if fwnode is a of_node
+  (this is a new patch and the first of the series).
+- devm_led_get() works only when the device tree is used. Add a few checks
+  for that.  
+
+changes in v6:
+- trim the list of included headers
+- remove useless definition of BKL_FULL_BRIGHTNESS
+
+changes in v5:
+- removed LED brightness scaling
+- disable sysfs the interface of the LEDs when used by the backlight device
+
+changes in v4:
+- fix dev_err() messages and commit logs following the advices of Pavel
+- cosmetic changes (indents, getting rid of  "? 1 : 0" in
+  led_match_led_node())
+
+changes in v3:
+- dt binding: don't limit the brightness range to 0-255. Use the range of
+  the underlying LEDs. as a side-effect, all LEDs must now have the same
+  range
+- driver: Adapt to dt binding update.
+- driver: rework probe() for clarity and remove the remaining goto.
+
+changes in v2:
+- handle more than one LED.
+- don't make the backlight device a child of the LED controller.
+- make brightness-levels and default-brightness-level optional
+- removed the option to use a GPIO enable.
+- removed the option to use a regulator. It should be handled by the LED
+  core
+- don't make any change to the LED core (not needed anymore)
+
+Jean-Jacques Hiblot (4):
+  leds: populate the device's of_node
+  leds: Add managed API to get a LED from a device driver
+  dts-bindings: leds: Document the naming requirement for LED properties
+  dt-bindings: backlight: Add led-backlight binding
+
+Tomi Valkeinen (2):
+  leds: Add of_led_get() and led_put()
+  backlight: add led-backlight driver
+
+ .../leds/backlight/led-backlight.yaml         |  55 ++++
+ .../devicetree/bindings/leds/common.txt       |  20 +-
+ drivers/leds/led-class.c                      | 103 ++++++-
+ drivers/video/backlight/Kconfig               |   7 +
+ drivers/video/backlight/Makefile              |   1 +
+ drivers/video/backlight/led_bl.c              | 258 ++++++++++++++++++
+ include/linux/leds.h                          |   6 +
+ 7 files changed, 446 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/backlight/led-backlight.yaml
+ create mode 100644 drivers/video/backlight/led_bl.c
+
 -- 
-2.23.0.581.g78d2f28ef7-goog
+2.17.1
 
