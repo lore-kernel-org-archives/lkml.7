@@ -2,138 +2,157 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 217F5C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F95DC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E495720B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60E1920B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:00:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bT7cxLKO"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="Zv+GPHH0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729713AbfJIH5f (ORCPT
+        id S1729500AbfJIIA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 03:57:35 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:57212 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725879AbfJIH5f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 03:57:35 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x997sXBm124958;
-        Wed, 9 Oct 2019 07:57:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=XgsFcT5hGVYVzo6YrFsEdxjWbLcz+YMz59J3P6pk7wk=;
- b=bT7cxLKOpJ5m1amur6Nq92dDZ3w1IY/IotFEQAKazmgDUG6lAFViWWQlZnBwbuK7OrFv
- T54xGbJyxb9OtYUqhi7imVpCh9sHg7rO7SVLZuDrecgrUY2RM20wR9NrbJsvzeDcDiO2
- Gp6JDJ3Cz0XLp4EFP55tQUtDe//zo6dEzr+eH1Yg3up8L81x+teX8V8BUqTZJM35h1bV
- 8qhHD5rjCpLWsHCm6uM4az64972JidxnIcUevXcY5wLWB6SEg4sNEL0wlmTujPX/Adlt
- NldHVqBGGQoko3IqgWYrQYTrnKyJVWoS8cqGr3uLe4fCj31UhkeItatP+eYVeDz4Xo1n oA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2vejkujcsy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 09 Oct 2019 07:57:15 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x997rEih158629;
-        Wed, 9 Oct 2019 07:57:15 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2vgev0s72h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 09 Oct 2019 07:57:15 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x997v7JE009598;
-        Wed, 9 Oct 2019 07:57:07 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 09 Oct 2019 00:57:07 -0700
-Date:   Wed, 9 Oct 2019 10:57:00 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Chandra Annamaneni <chandra627@gmail.com>
-Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        gneukum1@gmail.com, michael.scheiderer@fau.de,
-        fabian.krueger@fau.de, linux-kernel@vger.kernel.org,
-        simon@nikanor.nu
-Subject: Re: [PATCH] KPC2000: kpc2000_spi.c: Fix alignment and style problems.
-Message-ID: <20191009075700.GK25098@kadam>
-References: <1570593039-19059-1-git-send-email-chandra627@gmail.com>
+        Wed, 9 Oct 2019 04:00:28 -0400
+Received: from mail-eopbgr1410122.outbound.protection.outlook.com ([40.107.141.122]:7392
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725776AbfJIIA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 04:00:27 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EJv/RnXXSSlJ5IhOO0/mYG2nGzkucbuwbuIoW8SNLOQwZvboesY2YfSnSlHDdvS0dgA6R347kxs0hpS6/8hRQaxJaKD9QbRWqra5A6SHVyJ1MuVaSLbWHp9zZQlU1Y7NjumV9akWWQLkbeVK1k8SS/A/lRyVYEYWjPh7F81UAOEQTx2/odTLjW8NAvwf78Cygd6g7EqgcsQFv/OSQms4djJ3to05qvw9RHOmUYANk3RE4zAuLTlglj68FCSNKqdj+MMo/u/7PtjXlujwPDDn4CtNV88U5lKOrCdYN3AbiF+5d/98Rw6+iJyn8G2oiTwdLn7BjM5Kb466sY+6B16ARQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WJHixULULdO8eZ8aXWPtCKXTThNEZY1ijYNhvzqD/JY=;
+ b=lic2VlBpUJulTXZJZuaR/R1SwqQp0FtWLPs0SM+pwCMsAe3ftgYsmvRVaNulv9oIKl4pxaB+4DG9RfIKlSbjXu0tzeGtUD8Pzn1ivMOATQ/ITWDVMoxaLtscPcBdKE+1cZPHsQcWOrwh6ucsjYbV5kHwQWlK1X5E9s5AzTS/sT8cjYc3m7Oht3TxPT0hSGfhr0+GkHydxpP8KFJchRcxvnsZ2HF3xkJ5X4VCcn3YCdygl4fa/Qtq2tr9N1jRoIBT5g/BYtF0uDoA940Q63r1IHQBLmwwE3BlAOEDhSkT9MwRjHkL5qWfEm6+p4wlb/w9jEIRHlqDyoO9eVkJJzTELA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WJHixULULdO8eZ8aXWPtCKXTThNEZY1ijYNhvzqD/JY=;
+ b=Zv+GPHH0aCuwiDSbCS6wrqXPPQEjptj6z1WYs7gXk9dK19EUSofny/w4yDZ7G0Op9byyZnHCpTsnMU8AXY6MwHO29HVRrHNEkBWy/gyWJ8YWbvORljJLDzJ06o9nHpwkNHDJmEo8s89O//YZof/ngiCjQWNgPJJ/Y2WywN6v7MI=
+Received: from OSBPR01MB2103.jpnprd01.prod.outlook.com (52.134.242.17) by
+ OSBPR01MB1638.jpnprd01.prod.outlook.com (52.134.227.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2327.25; Wed, 9 Oct 2019 08:00:23 +0000
+Received: from OSBPR01MB2103.jpnprd01.prod.outlook.com
+ ([fe80::dc33:9b1f:4522:550e]) by OSBPR01MB2103.jpnprd01.prod.outlook.com
+ ([fe80::dc33:9b1f:4522:550e%3]) with mapi id 15.20.2347.016; Wed, 9 Oct 2019
+ 08:00:23 +0000
+From:   Biju Das <biju.das@bp.renesas.com>
+To:     Mao Wenan <maowenan@huawei.com>,
+        "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        Hulk Robot <hulkci@huawei.com>
+Subject: RE: [PATCH -next] usb: typec: add dependency for TYPEC_HD3SS3220
+Thread-Topic: [PATCH -next] usb: typec: add dependency for TYPEC_HD3SS3220
+Thread-Index: AQHVfkOKloVrfMGidkOyU5GyOdNjm6dR8ZyQ
+Date:   Wed, 9 Oct 2019 08:00:22 +0000
+Message-ID: <OSBPR01MB21038DCAFE45CE0FFC06EE91B8950@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+References: <20191009014707.38716-1-maowenan@huawei.com>
+In-Reply-To: <20191009014707.38716-1-maowenan@huawei.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=biju.das@bp.renesas.com; 
+x-originating-ip: [193.141.220.21]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 72e3dddf-8098-4bfa-eedb-08d74c8ebcb6
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: OSBPR01MB1638:
+x-microsoft-antispam-prvs: <OSBPR01MB1638F55DF223197C5239B413B8950@OSBPR01MB1638.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 018577E36E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(51914003)(189003)(199004)(25786009)(110136005)(11346002)(446003)(26005)(6246003)(74316002)(8676002)(8936002)(14454004)(71190400001)(305945005)(7736002)(71200400001)(44832011)(6436002)(256004)(229853002)(186003)(102836004)(81166006)(81156014)(86362001)(2201001)(498600001)(54906003)(55016002)(5660300002)(76176011)(2501003)(76116006)(9686003)(66066001)(64756008)(4326008)(6506007)(33656002)(486006)(66446008)(66476007)(66556008)(66946007)(476003)(99286004)(7696005)(3846002)(6116002)(52536014)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:OSBPR01MB1638;H:OSBPR01MB2103.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: bp.renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: TTl29+G9Zw0O/YCvTqksnWgGeZgW05IgKtjwokd8yuvVs/BfqHJAsy0H0AGLo5RXCGmQRHLS0JK9V7Dvac1EBMQpOxan004s6oshvrgTvbit2Ox4TBWhfDL1HKgt704SHYSFE/CYke6X3vW28B5BrGgxZK4ARx+LRF/0uiI6wS01QG176xupdcULNWMX7nK3gMFQWS8w4MrA6M/lvEnjINXeEgEq2qFuNScWRK90aV7ILcHpk7IX2KCs/0O5NARVkgfYZv/sIz8R0dqs8IFoHAJli3kBMEVO0bauBU71FGyNVnqeAHY6RNl+czaQ8/UVp3NlaUXhPSn1y8tTJw9u3W7BL9G4v/X2FlbX1Y3FJchdo7HRknfTgZSGU6ZFO8x0NuYtFmwLg9PC8BFax4zx/bi4lmBfxhnLik4lGSy/MyI=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1570593039-19059-1-git-send-email-chandra627@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9404 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=924
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910090074
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9404 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=998 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910090074
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 72e3dddf-8098-4bfa-eedb-08d74c8ebcb6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Oct 2019 08:00:22.9128
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Z4rN1M1F55uKUOjNOBEmLBWcpNjxgyXZ6MO5lUYaYxCU1WbBiQH5Xm64R8I+RsgxS6TOTR9/xg+sPENtNJqftw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB1638
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 08:50:39PM -0700, Chandra Annamaneni wrote:
-> diff --git a/drivers/staging/kpc2000/kpc2000_spi.c b/drivers/staging/kpc2000/kpc2000_spi.c
-> index 3be33c4..a20f2d7 100644
-> --- a/drivers/staging/kpc2000/kpc2000_spi.c
-> +++ b/drivers/staging/kpc2000/kpc2000_spi.c
-> @@ -30,19 +30,27 @@
->  #include "kpc.h"
->  
->  static struct mtd_partition p2kr0_spi0_parts[] = {
-> -	{ .name = "SLOT_0",	.size = 7798784,		.offset = 0,                },
-> -	{ .name = "SLOT_1",	.size = 7798784,		.offset = MTDPART_OFS_NXTBLK},
-> -	{ .name = "SLOT_2",	.size = 7798784,		.offset = MTDPART_OFS_NXTBLK},
-> -	{ .name = "SLOT_3",	.size = 7798784,		.offset = MTDPART_OFS_NXTBLK},
-> -	{ .name = "CS0_EXTRA",	.size = MTDPART_SIZ_FULL,	.offset = MTDPART_OFS_NXTBLK},
-> +	{ .name = "SLOT_0",	.size = 7798784,	.offset = 0,},
-> +	{ .name = "SLOT_1",	.size = 7798784,	.offset =
-> +							 MTDPART_OFS_NXTBLK},
+Hello Mao Wenan,
 
-This looks worse than the original code...  :(  You could maybe make it
-a little bit tighter if you used space characters.
+Thanks for the patch.
 
-	{ .name = "SLOT_0",    .size = 7798784,		 .offset = 0,                },
-	{ .name = "SLOT_1",    .size = 7798784,		 .offset = MTDPART_OFS_NXTBLK},
-	{ .name = "SLOT_2",    .size = 7798784,		 .offset = MTDPART_OFS_NXTBLK},
-	{ .name = "SLOT_3",    .size = 7798784,	         .offset = MTDPART_OFS_NXTBLK},
-	{ .name = "CS0_EXTRA", .size = MTDPART_SIZ_FULL, .offset = MTDPART_OFS_NXTBLK},
+> Subject: [PATCH -next] usb: typec: add dependency for TYPEC_HD3SS3220
+>=20
+> If CONFIG_TYPEC_HD3SS3220=3Dy, CONFIG_USB_ROLE_SWITCH=3Dm, below
+> errors can be found:
+> drivers/usb/typec/hd3ss3220.o: In function `hd3ss3220_remove':
+> hd3ss3220.c:(.text+0x64): undefined reference to `usb_role_switch_put'
+> drivers/usb/typec/hd3ss3220.o: In function `hd3ss3220_dr_set':
+> hd3ss3220.c:(.text+0x154): undefined reference to
+> `usb_role_switch_set_role'
+> drivers/usb/typec/hd3ss3220.o: In function `hd3ss3220_set_role':
+> hd3ss3220.c:(.text+0x294): undefined reference to
+> `usb_role_switch_set_role'
+> hd3ss3220.c:(.text+0x2f4): undefined reference to
+> `usb_role_switch_set_role'
+> hd3ss3220.c:(.text+0x348): undefined reference to
+> `usb_role_switch_set_role'
+> hd3ss3220.c:(.text+0x390): undefined reference to
+> `usb_role_switch_set_role'
+> drivers/usb/typec/hd3ss3220.o: In function `hd3ss3220_probe':
+> hd3ss3220.c:(.text+0x5e8): undefined reference to
+> `fwnode_usb_role_switch_get'
+> hd3ss3220.c:(.text+0x8a4): undefined reference to `usb_role_switch_put'
+> make: *** [vmlinux] Error 1
+>=20
+> This patch add dependency USB_ROLE_SWITCH for TYPEC_HD3SS3220.
+>=20
+> Fixes: 1c48c759ef4b ("usb: typec: driver for TI HD3SS3220 USB Type-C DRP
+> port controller")
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Mao Wenan <maowenan@huawei.com>
 
-It still goes over 80 characters, but that's okay.  Or we could just
-leave the original code as is.
+Reviewed-by: Biju Das <biju.das@bp.renesas.com>
 
-[ snip ]
-
->  static struct flash_platform_data p2kr0_spi1_pdata = {
->  	.name =		"SPI1",
->  	.nr_parts =	ARRAY_SIZE(p2kr0_spi1_parts),
-> @@ -165,7 +174,7 @@ kp_spi_read_reg(struct kp_spi_controller_state *cs, int idx)
->  	u64 val;
->  
->  	addr += idx;
-> -	if ((idx == KP_SPI_REG_CONFIG) && (cs->conf_cache >= 0))
-> +	if (idx == KP_SPI_REG_CONFIG && cs->conf_cache >= 0)
-
-I like these changes but Greg doesn't.  So don't bother with this one.
-
->  		return cs->conf_cache;
->  
->  	val = readq(addr);
-
-The rest of the changes are fine.  Split them into multiple patches and
-resend.
-
-regards,
-dan carpenter
+Regards,
+Biju
+> ---
+>  drivers/usb/typec/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/usb/typec/Kconfig b/drivers/usb/typec/Kconfig index
+> aceb2af..b4f2aac 100644
+> --- a/drivers/usb/typec/Kconfig
+> +++ b/drivers/usb/typec/Kconfig
+> @@ -53,6 +53,7 @@ source "drivers/usb/typec/ucsi/Kconfig"
+>  config TYPEC_HD3SS3220
+>  	tristate "TI HD3SS3220 Type-C DRP Port controller driver"
+>  	depends on I2C
+> +	depends on USB_ROLE_SWITCH
+>  	help
+>  	  Say Y or M here if your system has TI HD3SS3220 Type-C DRP Port
+>  	  controller driver.
+> --
+> 2.7.4
 
