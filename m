@@ -2,62 +2,79 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52352C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BFFECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:40:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27C102133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:39:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qRZLYML8"
+	by mail.kernel.org (Postfix) with ESMTP id 48E902133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 07:40:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729677AbfJIHj2 (ORCPT
+        id S1729705AbfJIHkN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 03:39:28 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48254 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfJIHj1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 03:39:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=baiVv4a2Uea2yTZJrebYsEwZaUn70mxXYupOEm3dQbc=; b=qRZLYML8fZIGPOUFVit/FLmvx
-        qgVXvUHJYoCdC+71GLaypG+EIWHXjTQXPpbTF2mxm9WrpMRbP6OJRVJWjFgaiaW/llFXBOJAR78Vs
-        9Q+px+8LlW9mqzCJImURq9QaryTQdwKGtD4cnbhbuoFslmYUkQs3Extmb7giDPFCEMrtrUyQAPIWT
-        sU9OIgrOfYqTm+AVwzxif+67dDyGiyPrTbb8IxwoQhmR1hy8v0P9oxWmwhhPGm4qq+NDnM38pGTbc
-        9xdXEex2JMqcg6uVZDb36+pDd/1yMHL7h5UhJzoV1OSxImjVtAOzjkWdN4KrKTazYF5G4uilXa9hW
-        0Qgz+JOTA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iI6ZC-0006WF-Mu; Wed, 09 Oct 2019 07:39:26 +0000
-Date:   Wed, 9 Oct 2019 00:39:26 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Madalin Bucur <madalin.bucur@nxp.com>
-Cc:     davem@davemloft.net, netdev@vger.kernel.org, roy.pledge@nxp.com,
-        laurentiu.tudor@nxp.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 19/20] dpaa_eth: add dpaa_dma_to_virt()
-Message-ID: <20191009073926.GA6916@infradead.org>
-References: <1570536641-25104-1-git-send-email-madalin.bucur@nxp.com>
- <1570536641-25104-20-git-send-email-madalin.bucur@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1570536641-25104-20-git-send-email-madalin.bucur@nxp.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Wed, 9 Oct 2019 03:40:13 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:41440 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725914AbfJIHkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 03:40:12 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E08CB1A09EF;
+        Wed,  9 Oct 2019 09:40:10 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0E29A1A09F3;
+        Wed,  9 Oct 2019 09:40:06 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id CA114402B1;
+        Wed,  9 Oct 2019 15:39:59 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     wim@linux-watchdog.org, linux@roeck-us.net, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] watchdog: imx_sc_wdt: Pretimeout should follow SCU firmware format
+Date:   Wed,  9 Oct 2019 15:37:47 +0800
+Message-Id: <1570606667-16729-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 03:10:40PM +0300, Madalin Bucur wrote:
-> Centralize the phys_to_virt() calls.
+SCU firmware calculates pretimeout based on current time stamp
+instead of watchdog timeout stamp, need to convert the pretimeout
+to SCU firmware's timeout value.
 
-You don't need to centralize those, you need to fix them.  Calling
-phys_to_virt on a dma_addr is completely bogus.
+Fixes: 15f7d7fc5542 ("watchdog: imx_sc: Add pretimeout support")
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ drivers/watchdog/imx_sc_wdt.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/watchdog/imx_sc_wdt.c b/drivers/watchdog/imx_sc_wdt.c
+index 7ea5cf5..8ed89f0 100644
+--- a/drivers/watchdog/imx_sc_wdt.c
++++ b/drivers/watchdog/imx_sc_wdt.c
+@@ -99,8 +99,14 @@ static int imx_sc_wdt_set_pretimeout(struct watchdog_device *wdog,
+ {
+ 	struct arm_smccc_res res;
+ 
++	/*
++	 * SCU firmware calculates pretimeout based on current time
++	 * stamp instead of watchdog timeout stamp, need to convert
++	 * the pretimeout to SCU firmware's timeout value.
++	 */
+ 	arm_smccc_smc(IMX_SIP_TIMER, IMX_SIP_TIMER_SET_PRETIME_WDOG,
+-		      pretimeout * 1000, 0, 0, 0, 0, 0, &res);
++		      (wdog->timeout - pretimeout) * 1000, 0, 0, 0,
++		      0, 0, &res);
+ 	if (res.a0)
+ 		return -EACCES;
+ 
+-- 
+2.7.4
+
