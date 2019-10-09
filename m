@@ -2,129 +2,140 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 885F1C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B71CDC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60573206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90321206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 09:18:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="x2bi0GyT"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xKQlY4ca"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729883AbfJIJQV (ORCPT
+        id S1729784AbfJIJSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 05:16:21 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:45542 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727035AbfJIJQU (ORCPT
+        Wed, 9 Oct 2019 05:18:02 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:46390 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbfJIJSB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 05:16:20 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x999DIwJ011666;
-        Wed, 9 Oct 2019 11:16:08 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=rvKrWgmVfwCw+WB+p5j5ZFC8+JEiy93wT4hT1MInc0o=;
- b=x2bi0GyT9/9w9OFd92/x/A2VhkGf/Bo10ex3dyVZ4hq3ALlgGTzmfB+WFqzlkAJo71s8
- bzL26zTCo4csfOukWb+1mcVv/vQe8WW5FC0pKsY9Z0UPUNxxwWcNGlLG9gfVbB3yKMCY
- 1bkmXWDyC4KE5OXJIBJRVKTbgzuklOI5HBfKXgDXOfxuvDWqUF5I/sVu62Ei6LebbRkS
- rkaRqA+Z4sB9sYjjdERrfjUdNgwHuYk8/HbyHshwfeJmdtHjLR3rUwSP1lQZGBbu+9+5
- IfPR3iraDAjnF38kFHG8A3MHhwfCMJuRJyxzc/2sSOxZ6STIvjTtHRl1Q4QvSQ9vw4sh 9w== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2vej2pda7d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 09 Oct 2019 11:16:08 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 92CFE10002A;
-        Wed,  9 Oct 2019 11:16:07 +0200 (CEST)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 842C32062BE;
-        Wed,  9 Oct 2019 11:16:07 +0200 (CEST)
-Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 9 Oct 2019
- 11:16:07 +0200
-Received: from localhost (10.201.22.141) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 9 Oct 2019 11:16:07
- +0200
-From:   Amelie Delaunay <amelie.delaunay@st.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Wed, 9 Oct 2019 05:18:01 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x999Hq59041429;
+        Wed, 9 Oct 2019 04:17:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1570612672;
+        bh=BiA0D7K8f4yqHuNEy0TGXDKxAwiZ2tjyG1G/l4l31HE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=xKQlY4cafMy8hP7XR/deImH1+FQhK2Bvt4/fu2SmKi+Lh8Z40j3nLuLcPKYuC/FNN
+         haAXy0M9bBFvnoUuol5hOt5arOWOkyLtwUlOqjjEh9PUx4YhQHSgxQmX7m+zqQFCHU
+         T3xjUvti6pjnwRS7d+VJUqe2/vBRJVF5hH8sa9is=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x999Hqqw083397
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 9 Oct 2019 04:17:52 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 9 Oct
+ 2019 04:17:48 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 9 Oct 2019 04:17:51 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x999Hlcw101048;
+        Wed, 9 Oct 2019 04:17:48 -0500
+Subject: Re: [PATCH v3 05/14] dmaengine: Add support for reporting DMA cached
+ data amount
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <vkoul@kernel.org>,
+        <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH v2 1/1] pinctrl: stmfx: add irq_request/release_resources callbacks
-Date:   Wed, 9 Oct 2019 11:16:06 +0200
-Message-ID: <20191009091606.17283-1-amelie.delaunay@st.com>
-X-Mailer: git-send-email 2.17.1
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <tony@atomide.com>, <j-keerthy@ti.com>
+References: <20191001061704.2399-1-peter.ujfalusi@ti.com>
+ <20191001061704.2399-6-peter.ujfalusi@ti.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <b20087a9-6a1f-6e5c-9311-e921a1c63f13@ti.com>
+Date:   Wed, 9 Oct 2019 12:17:47 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.22.141]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-09_05:2019-10-08,2019-10-09 signatures=0
+In-Reply-To: <20191001061704.2399-6-peter.ujfalusi@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When an STMFX IO is used as interrupt through the interrupt-controller
-binding, the STMFX driver should configure this IO as input. Default
-value of STMFX IO direction is input, but if the IO is used as output
-before the interrupt use, it will not work without these callbacks.
+On 01/10/2019 09:16, Peter Ujfalusi wrote:
+> A DMA hardware can have big cache or FIFO and the amount of data sitting in
+> the DMA fabric can be an interest for the clients.
+> 
+> For example in audio we want to know the delay in the data flow and in case
+> the DMA have significantly large FIFO/cache, it can affect the latenc/delay
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
----
-Changes in V2:
-- use gpiochip_reqres_irq and gpiochip_relres_irq instead of calling
-explicitely the lock/unlock.
----
- drivers/pinctrl/pinctrl-stmfx.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+Reviewed-by: Tero Kristo <t-kristo@ti.com>
 
-diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
-index 564660028fcc..e5d49742d4db 100644
---- a/drivers/pinctrl/pinctrl-stmfx.c
-+++ b/drivers/pinctrl/pinctrl-stmfx.c
-@@ -505,6 +505,25 @@ static void stmfx_pinctrl_irq_bus_sync_unlock(struct irq_data *data)
- 	mutex_unlock(&pctl->lock);
- }
- 
-+static int stmfx_gpio_irq_request_resources(struct irq_data *data)
-+{
-+	struct gpio_chip *gpio_chip = irq_data_get_irq_chip_data(data);
-+	int ret;
-+
-+	ret = stmfx_gpio_direction_input(gpio_chip, data->hwirq);
-+	if (ret)
-+		return ret;
-+
-+	return gpiochip_reqres_irq(gpio_chip, data->hwirq);
-+}
-+
-+static void stmfx_gpio_irq_release_resources(struct irq_data *data)
-+{
-+	struct gpio_chip *gpio_chip = irq_data_get_irq_chip_data(data);
-+
-+	return gpiochip_relres_irq(gpio_chip, data->hwirq);
-+}
-+
- static void stmfx_pinctrl_irq_toggle_trigger(struct stmfx_pinctrl *pctl,
- 					     unsigned int offset)
- {
-@@ -678,6 +697,8 @@ static int stmfx_pinctrl_probe(struct platform_device *pdev)
- 	pctl->irq_chip.irq_set_type = stmfx_pinctrl_irq_set_type;
- 	pctl->irq_chip.irq_bus_lock = stmfx_pinctrl_irq_bus_lock;
- 	pctl->irq_chip.irq_bus_sync_unlock = stmfx_pinctrl_irq_bus_sync_unlock;
-+	pctl->irq_chip.irq_request_resources = stmfx_gpio_irq_request_resources;
-+	pctl->irq_chip.irq_release_resources = stmfx_gpio_irq_release_resources;
- 
- 	ret = gpiochip_irqchip_add_nested(&pctl->gpio_chip, &pctl->irq_chip,
- 					  0, handle_bad_irq, IRQ_TYPE_NONE);
--- 
-2.17.1
+> ---
+>   drivers/dma/dmaengine.h   | 8 ++++++++
+>   include/linux/dmaengine.h | 2 ++
+>   2 files changed, 10 insertions(+)
+> 
+> diff --git a/drivers/dma/dmaengine.h b/drivers/dma/dmaengine.h
+> index 501c0b063f85..b0b97475707a 100644
+> --- a/drivers/dma/dmaengine.h
+> +++ b/drivers/dma/dmaengine.h
+> @@ -77,6 +77,7 @@ static inline enum dma_status dma_cookie_status(struct dma_chan *chan,
+>   		state->last = complete;
+>   		state->used = used;
+>   		state->residue = 0;
+> +		state->in_flight_bytes = 0;
+>   	}
+>   	return dma_async_is_complete(cookie, complete, used);
+>   }
+> @@ -87,6 +88,13 @@ static inline void dma_set_residue(struct dma_tx_state *state, u32 residue)
+>   		state->residue = residue;
+>   }
+>   
+> +static inline void dma_set_in_flight_bytes(struct dma_tx_state *state,
+> +					   u32 in_flight_bytes)
+> +{
+> +	if (state)
+> +		state->in_flight_bytes = in_flight_bytes;
+> +}
+> +
+>   struct dmaengine_desc_callback {
+>   	dma_async_tx_callback callback;
+>   	dma_async_tx_callback_result callback_result;
+> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> index 40d062c3b359..02ceef95340a 100644
+> --- a/include/linux/dmaengine.h
+> +++ b/include/linux/dmaengine.h
+> @@ -682,11 +682,13 @@ static inline struct dma_async_tx_descriptor *txd_next(struct dma_async_tx_descr
+>    * @residue: the remaining number of bytes left to transmit
+>    *	on the selected transfer for states DMA_IN_PROGRESS and
+>    *	DMA_PAUSED if this is implemented in the driver, else 0
+> + * @in_flight_bytes: amount of data in bytes cached by the DMA.
+>    */
+>   struct dma_tx_state {
+>   	dma_cookie_t last;
+>   	dma_cookie_t used;
+>   	u32 residue;
+> +	u32 in_flight_bytes;
+>   };
+>   
+>   /**
+> 
 
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
