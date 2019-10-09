@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC9BECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA92ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0B40218AC
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:24:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 489DB206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:25:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570641899;
-	bh=ssAzw6BWhGL2G6UWNKMpXMhinAanx/MjgAnixJgzSCs=;
+	s=default; t=1570641903;
+	bh=m2Wldt+Oxkdz9DgshGY7ExZv3/FpcFauughM0Q6awgQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eqk7SUVsQwdjRHNweMphu0LcnpVQhTyevMaR1KpNJ6Dp9QaWaBQXG+msKfJpIieKG
-	 DDn8cml8Llvy1uqMe/hD8UukdN8+OncXlHNghc7kglbv0CBJxD5eBvBn5kieXI1GfT
-	 /kuEjrGETMKJ3ULvEkniwla3TKwiz3iE6e06Oqyk=
+	b=mpRubcKc7sit8UUOecbEiCqtLP2iciRmWcjbGvt/8vAG8IFnaX2Vt2dW5DAozvAgk
+	 F+rhTiK7ghD+hXo2+mc5GadvqG3TOGJCvPuPkrgAjowWM4qUgYsoUE9Sux6SmCEZ2B
+	 ECAyKq5v8emUHIgBLWiC20fY1T1L46GLo2w2w0EA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732535AbfJIRY7 (ORCPT
+        id S1732548AbfJIRZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:24:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49604 "EHLO mail.kernel.org"
+        Wed, 9 Oct 2019 13:25:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732424AbfJIRYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 13:24:42 -0400
+        id S1732432AbfJIRYp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 13:24:45 -0400
 Received: from sasha-vm.mshome.net (unknown [167.220.2.234])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4556121D7F;
-        Wed,  9 Oct 2019 17:24:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDED72196E;
+        Wed,  9 Oct 2019 17:24:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570641882;
-        bh=ssAzw6BWhGL2G6UWNKMpXMhinAanx/MjgAnixJgzSCs=;
+        s=default; t=1570641885;
+        bh=m2Wldt+Oxkdz9DgshGY7ExZv3/FpcFauughM0Q6awgQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hV+d0DfHh3Muuu1HHGD5TkXs7//J4+O8MrVKBxuQU6dhaE4NIoi2afyNOZsVRwIrg
-         U6EWR/DbUhLtd++VTD+jxdHhEjUAz9uQ8mrF1zrG7oHnoNZKh3S+iW+KtpLpkSNdp4
-         GnQqbFA1I8l6fY0nWfHRl0AEDyOrgq/LIfRn/oUU=
+        b=qDUB0/26S+UZsV4Xrfagkcv2rzOn8rNsYznFRIqYFvurHAv3GjU4Q4f+UnKGjOp72
+         EW/Mkki35KkyhPVb26wkOaJymddUUxON+OlIXTFijBF16T0HT/rt7sGr+oZDUyhvv4
+         Q5hlDbwKIuwjfQEaRSLaw8yQCttz3K9pRM0thJZU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 05/13] ARM: dts: am4372: Set memory bandwidth limit for DISPC
-Date:   Wed,  9 Oct 2019 13:06:24 -0400
-Message-Id: <20191009170635.536-5-sashal@kernel.org>
+Cc:     Miaoqing Pan <miaoqing@codeaurora.org>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 08/13] nl80211: fix null pointer dereference
+Date:   Wed,  9 Oct 2019 13:06:27 -0400
+Message-Id: <20191009170635.536-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191009170635.536-1-sashal@kernel.org>
 References: <20191009170635.536-1-sashal@kernel.org>
@@ -61,37 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: Miaoqing Pan <miaoqing@codeaurora.org>
 
-[ Upstream commit f90ec6cdf674248dcad85bf9af6e064bf472b841 ]
+[ Upstream commit b501426cf86e70649c983c52f4c823b3c40d72a3 ]
 
-Set memory bandwidth limit to filter out resolutions above 720p@60Hz to
-avoid underflow errors due to the bandwidth needs of higher resolutions.
+If the interface is not in MESH mode, the command 'iw wlanx mpath del'
+will cause kernel panic.
 
-am43xx can not provide enough bandwidth to DISPC to correctly handle
-'high' resolutions.
+The root cause is null pointer access in mpp_flush_by_proxy(), as the
+pointer 'sdata->u.mesh.mpp_paths' is NULL for non MESH interface.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Unable to handle kernel NULL pointer dereference at virtual address 00000068
+[...]
+PC is at _raw_spin_lock_bh+0x20/0x5c
+LR is at mesh_path_del+0x1c/0x17c [mac80211]
+[...]
+Process iw (pid: 4537, stack limit = 0xd83e0238)
+[...]
+[<c021211c>] (_raw_spin_lock_bh) from [<bf8c7648>] (mesh_path_del+0x1c/0x17c [mac80211])
+[<bf8c7648>] (mesh_path_del [mac80211]) from [<bf6cdb7c>] (extack_doit+0x20/0x68 [compat])
+[<bf6cdb7c>] (extack_doit [compat]) from [<c05c309c>] (genl_rcv_msg+0x274/0x30c)
+[<c05c309c>] (genl_rcv_msg) from [<c05c25d8>] (netlink_rcv_skb+0x58/0xac)
+[<c05c25d8>] (netlink_rcv_skb) from [<c05c2e14>] (genl_rcv+0x20/0x34)
+[<c05c2e14>] (genl_rcv) from [<c05c1f90>] (netlink_unicast+0x11c/0x204)
+[<c05c1f90>] (netlink_unicast) from [<c05c2420>] (netlink_sendmsg+0x30c/0x370)
+[<c05c2420>] (netlink_sendmsg) from [<c05886d0>] (sock_sendmsg+0x70/0x84)
+[<c05886d0>] (sock_sendmsg) from [<c0589f4c>] (___sys_sendmsg.part.3+0x188/0x228)
+[<c0589f4c>] (___sys_sendmsg.part.3) from [<c058add4>] (__sys_sendmsg+0x4c/0x70)
+[<c058add4>] (__sys_sendmsg) from [<c0208c80>] (ret_fast_syscall+0x0/0x44)
+Code: e2822c02 e2822001 e5832004 f590f000 (e1902f9f)
+---[ end trace bbd717600f8f884d ]---
+
+Signed-off-by: Miaoqing Pan <miaoqing@codeaurora.org>
+Link: https://lore.kernel.org/r/1569485810-761-1-git-send-email-miaoqing@codeaurora.org
+[trim useless data from commit message]
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am4372.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ net/wireless/nl80211.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-index c9c9a47446e8e..56224aa5e83ee 100644
---- a/arch/arm/boot/dts/am4372.dtsi
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -1117,6 +1117,8 @@
- 				ti,hwmods = "dss_dispc";
- 				clocks = <&disp_clk>;
- 				clock-names = "fck";
-+
-+				max-memory-bandwidth = <230000000>;
- 			};
+diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
+index d6e6293157717..3d49488c3013a 100644
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -5321,6 +5321,9 @@ static int nl80211_del_mpath(struct sk_buff *skb, struct genl_info *info)
+ 	if (!rdev->ops->del_mpath)
+ 		return -EOPNOTSUPP;
  
- 			rfbi: rfbi@4832a800 {
++	if (dev->ieee80211_ptr->iftype != NL80211_IFTYPE_MESH_POINT)
++		return -EOPNOTSUPP;
++
+ 	return rdev_del_mpath(rdev, dev, dst);
+ }
+ 
 -- 
 2.20.1
 
