@@ -2,80 +2,158 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5860FECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFE8ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37A9C20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:01:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0F8020B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:02:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="gYe64hQi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731614AbfJIPB4 (ORCPT
+        id S1731641AbfJIPCD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 11:01:56 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:36068 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731382AbfJIPBz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 11:01:55 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id E83F1711AE79D2A87657;
-        Wed,  9 Oct 2019 23:01:53 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Wed, 9 Oct 2019
- 23:01:45 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] regulator: stm32-vrefbuf: use devm_platform_ioremap_resource() to simplify code
-Date:   Wed, 9 Oct 2019 23:01:38 +0800
-Message-ID: <20191009150138.11640-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 9 Oct 2019 11:02:03 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:46605 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731343AbfJIPCC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 11:02:02 -0400
+Received: by mail-ed1-f68.google.com with SMTP id t3so2298400edw.13
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 08:02:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=yyvcYwcZMjLvzOg82pdsNDaaC7kmo5LxgAiQA0bNidE=;
+        b=gYe64hQiSH9s0AJCdM7d1Bpyt8JKFCNdMMrjjOcAJi8DHx8XJgIrh57L+Ua+aOEDF3
+         tDEDdsqQtlX72bjr6UtMaozSyJBPTTbaEmX2NDhel45HJY+/8NLQeeGyBEW28ALnz25W
+         IzDdms1jqdIXYegTRSGBxksi1VQ7WtffxRg+8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=yyvcYwcZMjLvzOg82pdsNDaaC7kmo5LxgAiQA0bNidE=;
+        b=WwTcR5DbqBdgZ35my57R3XKED+JELAs/s4rcMvlksaoOXDPjaKCvAlDS/JNljbi2H3
+         ckmtrFE+yy3ITwd/E7oFOu9ox9Ujm+udarvXxwBZ8LKwPvstNeB8LemkTUtB1pQEostX
+         7f/FNNLMLvBWrkjR9ddMZtI45fX2uYSYtJw+sv3Rgdkt/jzBPtr/lh/XJSPNC3/Dfa/3
+         H22+b4Gtbvf7Dn7js93gdNp9PPUD1PK3qo7xwzYnlHFlurDQD3fQ4Wgj9Hvc31ZnFmpJ
+         QEI6QeYtRu38A5fdbTb3tLNiWQ+qPftf3VKC76fgPMV/exC83QC0R6CM5KbZeFQ9ZDei
+         R4MA==
+X-Gm-Message-State: APjAAAVif+0TZnjS9sBbxQ99I/nz0OyBEfsadp1FQPxGAl9PSYNfHDN3
+        Ub+ea47uPrgYmqgW5M23sc1rpQ==
+X-Google-Smtp-Source: APXvYqzkvG0y4CciW6y1869o9q6BjLYLBuhrjR2c8HeHPYa3utK2/23Gs+BF00yuGt+GrnN38hw7bQ==
+X-Received: by 2002:a05:6402:3c5:: with SMTP id t5mr3299252edw.125.1570633320982;
+        Wed, 09 Oct 2019 08:02:00 -0700 (PDT)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id fx25sm279855ejb.19.2019.10.09.08.01.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Oct 2019 08:01:59 -0700 (PDT)
+Date:   Wed, 9 Oct 2019 17:01:55 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Sean Paul <sean@poorly.run>
+Cc:     Lyude Paul <lyude@redhat.com>, amd-gfx@lists.freedesktop.org,
+        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
+        <ville.syrjala@linux.intel.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        David Francis <David.Francis@amd.com>,
+        Mario Kleiner <mario.kleiner.de@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/6] drm/amdgpu/dm/mst: Report possible_crtcs
+ incorrectly, for now
+Message-ID: <20191009150155.GD16989@phenom.ffwll.local>
+Mail-Followup-To: Sean Paul <sean@poorly.run>,
+        Lyude Paul <lyude@redhat.com>, amd-gfx@lists.freedesktop.org,
+        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        David Francis <David.Francis@amd.com>,
+        Mario Kleiner <mario.kleiner.de@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20190926225122.31455-1-lyude@redhat.com>
+ <20190926225122.31455-6-lyude@redhat.com>
+ <20190927152741.GU218215@art_vandelay>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190927152741.GU218215@art_vandelay>
+X-Operating-System: Linux phenom 5.2.0-2-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource() to simplify the code a bit.
-This is detected by coccinelle.
+On Fri, Sep 27, 2019 at 11:27:41AM -0400, Sean Paul wrote:
+> On Thu, Sep 26, 2019 at 06:51:07PM -0400, Lyude Paul wrote:
+> > This commit is seperate from the previous one to make it easier to
+> > revert in the future. Basically, there's multiple userspace applications
+> > that interpret possible_crtcs very wrong:
+> > 
+> > https://gitlab.freedesktop.org/xorg/xserver/merge_requests/277
+> > https://gitlab.gnome.org/GNOME/mutter/issues/759
+> > 
+> > While work is ongoing to fix these issues in userspace, we need to
+> > report ->possible_crtcs incorrectly for now in order to avoid
+> > introducing a regression in in userspace. Once these issues get fixed,
+> > this commit should be reverted.
+> > 
+> > Signed-off-by: Lyude Paul <lyude@redhat.com>
+> > Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
+> > ---
+> >  drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
+> > 
+> > diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> > index b404f1ae6df7..fe8ac801d7a5 100644
+> > --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> > +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> > @@ -4807,6 +4807,17 @@ static int amdgpu_dm_crtc_init(struct amdgpu_display_manager *dm,
+> >  	if (!acrtc->mst_encoder)
+> >  		goto fail;
+> >  
+> > +	/*
+> > +	 * FIXME: This is a hack to workaround the following issues:
+> > +	 *
+> > +	 * https://gitlab.gnome.org/GNOME/mutter/issues/759
+> > +	 * https://gitlab.freedesktop.org/xorg/xserver/merge_requests/277
+> > +	 *
+> > +	 * One these issues are closed, this should be removed
+> 
+> Even when these issues are closed, we'll still be introducing a regression if we
+> revert this change. Time for actually_possible_crtcs? :)
+> 
+> You also might want to briefly explain the u/s bug in case the links go sour.
+> 
+> > +	 */
+> > +	acrtc->mst_encoder->base.possible_crtcs =
+> > +		amdgpu_dm_get_encoder_crtc_mask(dm->adev);
+> 
+> Why don't we put this hack in amdgpu_dm_dp_create_fake_mst_encoder()?
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/regulator/stm32-vrefbuf.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/regulator/stm32-vrefbuf.c b/drivers/regulator/stm32-vrefbuf.c
-index 8919a51..bdfaf7e 100644
---- a/drivers/regulator/stm32-vrefbuf.c
-+++ b/drivers/regulator/stm32-vrefbuf.c
-@@ -181,7 +181,6 @@ static const struct regulator_desc stm32_vrefbuf_regu = {
- 
- static int stm32_vrefbuf_probe(struct platform_device *pdev)
- {
--	struct resource *res;
- 	struct stm32_vrefbuf *priv;
- 	struct regulator_config config = { };
- 	struct regulator_dev *rdev;
-@@ -192,8 +191,7 @@ static int stm32_vrefbuf_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	priv->dev = &pdev->dev;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	priv->base = devm_ioremap_resource(&pdev->dev, res);
-+	priv->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->base))
- 		return PTR_ERR(priv->base);
- 
+If we don't have the same hack for i915 mst I think we shouldn't merge
+this ... broken userspace is broken.
+-Daniel
 -- 
-2.7.4
-
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
