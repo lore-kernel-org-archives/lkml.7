@@ -2,459 +2,161 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25020ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 22:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B77C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 22:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7086205F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 22:31:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570660262;
-	bh=2+F9LpTg0Tr8IeH6cckJbC5ONwnNDN7TzKuRLtIizec=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=NvLJVDwuUimRWIH5HywOEh1deOlXmpRxHVuw5iBTpO5ze62rh6z2bQfwZzUvXvHTJ
-	 fIS/xpTjcXY3dvpG/CTKIKn5ikfu8E9Us8Ziz3zpOJo8ETQ/G8FYVjY0hDO+18qBEO
-	 jfRqYUuLrmTnja2LviO6JvTCvUtYgtan+e8ZXSrk=
+	by mail.kernel.org (Postfix) with ESMTP id 6361F218DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 22:31:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="SFc+lpia"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732171AbfJIWbA (ORCPT
+        id S1732230AbfJIWbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 18:31:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57102 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731150AbfJIWbA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 18:31:00 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D564A205F4;
-        Wed,  9 Oct 2019 22:30:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570660258;
-        bh=2+F9LpTg0Tr8IeH6cckJbC5ONwnNDN7TzKuRLtIizec=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=yhDcR1iAPVSzGTpAMaaSTHTmDv5j71HBhzmLqZau27FQH0hG6pyoZhq9mq63YFBsW
-         gnQCkDdmRUR/54ZQDW00ZbxtLVGCIw1h6A6cYIYyT0hKOUh3r+BhRSKVk8cW3ZIcKA
-         Ps/VIJSm53dhpFRMCZwoErodL2qxFZSzvkfMw2nw=
-Date:   Wed, 9 Oct 2019 17:30:56 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com
-Subject: Re: [PATCH v1 1/1] PCI/ATS: Optimize pci_prg_resp_pasid_required()
- function
-Message-ID: <20191009223056.GA139157@google.com>
+        Wed, 9 Oct 2019 18:31:04 -0400
+Received: from pio-pvt-msa3.bahnhof.se ([79.136.2.42]:56458 "EHLO
+        pio-pvt-msa3.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732190AbfJIWbD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 18:31:03 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTP id B2C6A3FC4D;
+        Thu, 10 Oct 2019 00:30:55 +0200 (CEST)
+Authentication-Results: pio-pvt-msa3.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=SFc+lpia;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa3.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa3.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id PB4vzlwCoQlL; Thu, 10 Oct 2019 00:30:54 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTPA id F01223FC5F;
+        Thu, 10 Oct 2019 00:30:50 +0200 (CEST)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 4FCC13600A4;
+        Thu, 10 Oct 2019 00:30:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1570660250; bh=xLq6mlUzqsfrlLQEbGLDSaiVAsnEbL9m0HBY5Z4lgls=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=SFc+lpia0lDB6X6OZyq0vMGyOoZJ4Z0Y/OHj02v/e2yplb/kQ3pO23hC8FbXn4RJ2
+         BjGpYH5DaYvQU845eooL46Ynk5ePu1BpemDezEIA3CAHw4louz0TU9u7C30WqmHRrb
+         wTJQz+phJEJ/aCEuTENzrGjXclkIxw4g+yBPPlfY=
+Subject: Re: [PATCH v4 3/9] mm: pagewalk: Don't split transhuge pmds when a
+ pmd_entry is present
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rik van Riel <riel@surriel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Huang Ying <ying.huang@intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
+References: <20191008091508.2682-1-thomas_os@shipmail.org>
+ <20191008091508.2682-4-thomas_os@shipmail.org>
+ <20191009152737.p42w7w456zklxz72@box>
+ <CAHk-=wh4waroKr-Xtcv+5pTxBcHxGEj-g73eQvXVawML_C0EXw@mail.gmail.com>
+ <03d85a6a-e24a-82f4-93b8-86584b463471@shipmail.org>
+ <CAHk-=whhdRSqjX5wy1LzFYnOG58UztpifkNvbxBcTVbT3Mzv4g@mail.gmail.com>
+ <MN2PR05MB6141B981C2CAB4955D59747EA1950@MN2PR05MB6141.namprd05.prod.outlook.com>
+ <CAHk-=wgy-ULe8UmEDn9gCCmTtw65chS0h309WrTaQhK3RAXM-A@mail.gmail.com>
+ <c054849e-1e24-6b27-6a54-740ea9d17054@shipmail.org>
+ <CAHk-=wgmr-BPMTnSuKrAMoHL_A0COV_sZkdcNB9aosYfouA_fw@mail.gmail.com>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <80f25292-585c-7729-2a23-7c46b3309a1a@shipmail.org>
+Date:   Thu, 10 Oct 2019 00:30:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f594928de550e151d3537fdd64099de34ffa30da.1570490792.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAHk-=wgmr-BPMTnSuKrAMoHL_A0COV_sZkdcNB9aosYfouA_fw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 04:32:42PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> 
-> Currently, pci_prg_resp_pasid_required() function reads the
-> PASID Required bit status from register every time we call
-> the function. Since PASID Required bit is a read-only value,
-> instead of reading it from register every time, read it once and
-> cache it in struct pci_dev.
-> 
-> Also, since we are caching PASID Required bit in pci_pri_init()
-> function, move the caching of PRI Capability check result to the same
-> function. This will group all PRI related caching at one place.
-> 
-> Since "pasid_required" structure member is protected by CONFIG_PRI,
-> its users should also be protected by same #ifdef. So correct the #ifdef
-> dependency of pci_prg_resp_pasid_required() function.
-> 
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> Cc: Ashok Raj <ashok.raj@intel.com>
-> Cc: Keith Busch <keith.busch@intel.com>
-> ---
->  drivers/pci/ats.c   | 50 ++++++++++++++++++++++++---------------------
->  include/linux/pci.h |  1 +
->  2 files changed, 28 insertions(+), 23 deletions(-)
-> 
-> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-> index cb4f62da7b8a..2b5df5ea208f 100644
-> --- a/drivers/pci/ats.c
-> +++ b/drivers/pci/ats.c
-> @@ -16,6 +16,24 @@
->  
->  #include "pci.h"
->  
-> +static void pci_pri_init(struct pci_dev *pdev)
-> +{
-> +#ifdef CONFIG_PCI_PRI
-> +	int pos;
-> +	u16 status;
-> +
-> +	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
-> +	if (!pos)
-> +		return;
-> +
-> +	pdev->pri_cap = pos;
-> +
-> +	pci_read_config_word(pdev, pos + PCI_PRI_STATUS, &status);
-> +	if (status & PCI_PRI_STATUS_PASID)
-> +		pdev->pasid_required = 1;
-> +#endif
-> +}
+On 10/9/19 10:20 PM, Linus Torvalds wrote:
+> On Wed, Oct 9, 2019 at 1:06 PM Thomas Hellström (VMware)
+> <thomas_os@shipmail.org> wrote:
+>> On 10/9/19 9:20 PM, Linus Torvalds wrote:
+>>> Don't you get it? There *is* no PTE level if you didn't split.
+>> Hmm, This paragraph makes me think we have very different perceptions about what I'm trying to achieve.
+> It's not about what you're trying to achieve.
+>
+> It's about the actual code.
+>
+> You cannot do that
+>
+>> -               split_huge_pmd(walk->vma, pmd, addr);
+>> +               if (!ops->pmd_entry)
+>> +                       split_huge_pmd(walk->vma, pmd, addr);
+> it's insane.
+>
+> You *have* to call split_huge_pmd() if you're doing to call the
+> pte_entry() function.
+>
+> I don't understand why you are arguing. This is not about "feelings"
+> and "intentions" or about "trying to achieve".
+>
+> This is about cold hard "you can't do that", and this is now the third
+> time I tell you _why_ you can't do that: you can't walk the last level
+> if you don't _have_ a last level. You have to split the pmd to do so.
+It's not so much arguing but rather trying to understand your concerns 
+and your perception of what the final code should look like.
+>
+> End of story.
 
-I like this patch a lot but:
+So is it that you want pte_entry() to be strictly called for *each* 
+virtual address, even if we have a pmd_entry()?
+In that case I completely follow your arguments, meaning we skip this 
+patch completely?
 
-1) You started out with a pci_pri_init(), and I screwed up when I
-suggested that you remove it.  I think it makes a lot of sense to have
-it and call it directly from pci_init_capabilities() just like we do
-for other capabilities.
+My take on the change was that pmd_entry() returning 0 would mean we 
+could actually skip the pte level completely and nothing would otherwise 
+pass down to the next level for which split_huge_pmd() wasn't a NOP, 
+similar to how pud_entry does things. FWIW, see
 
-2) The PCI_PRI/PCI_PASID #ifdef thing is still a mess.  Despite the
-fact that its name contains "pasid", pci_prg_resp_pasid_required()
-only looks at the PRI capability, so I think it should be under #ifdef
-CONFIG_PCI_PRI along with the other PRI stuff.
+https://lore.kernel.org/lkml/20191004123732.xpr3vroee5mhg2zt@box.shutemov.name/
 
-3) I'm not sure why pci_prg_resp_pasid_required() was under
-CONFIG_PCI_PASID, but it might be related to the fact that it's called
-from code in intel-iommu.c where CONFIG_PCI_PASID is always defined,
-but CONFIG_PCI_PRI may not be.  I think this is an intel-iommu Kconfig
-defect.  I'll post patches to change the Kconfig and to move
-pci_prg_resp_pasid_required() under CONFIG_PCI_PRI.
+and we could in the long run transform the pte walk in many pmd_entry 
+callbacks into pte_entry callbacks.
 
-So I fiddled with all this and updated my pci/virtualization branch
-with the result.
 
-The interdiff from the v8 series is below.  This includes the
-intel-iommu Kconfig and pci_prg_resp_pasid_required() changes (which I
-haven't posted yet), and the branch includes some unrelated follow-on
-patches (which I also haven't posted yet).  Let me know what you
-think.
+>
+>> I wanted the pte level to *only* get called for *pre-existing* pte entries.
+> Again, I told you what the solution was.
+>
+> But the fact is, it's not what your other code even wants or does.
+>
+> Seriously. You have two cases you care about in your callbacks
+>
+>   - an actual hugepmd. This is an ERROR for you and you do a huge
+> WARN_ON() for it to let people know.
+No, it's typically a NOP, since the hugepmd should be read-only. 
+Write-enabled huge pages are split in fault().
+>
+>   - regular pages. This is what your other code actually handles.
+>
+> So for the hugepomd case, you have two choices:
+>
+>   - handle it by splitting and deal with the regular pages: "return 0;"
+Well, this is not what we want to do, and the reason we have the patch 
+in the first place.
+>
+>   - actually error out: "return -EINVAL".
 
-Bjorn
+/Thomas
 
->  void pci_ats_init(struct pci_dev *dev)
->  {
->  	int pos;
-> @@ -28,6 +46,8 @@ void pci_ats_init(struct pci_dev *dev)
->  		return;
->  
->  	dev->ats_cap = pos;
-> +
-> +	pci_pri_init(dev);
->  }
->  
->  /**
-> @@ -185,12 +205,8 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
->  	if (WARN_ON(pdev->pri_enabled))
->  		return -EBUSY;
->  
-> -	if (!pri) {
-> -		pri = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
-> -		if (!pri)
-> -			return -EINVAL;
-> -		pdev->pri_cap = pri;
-> -	}
-> +	if (!pri)
-> +		return -EINVAL;
->  
->  	pci_read_config_word(pdev, pri + PCI_PRI_STATUS, &status);
->  	if (!(status & PCI_PRI_STATUS_STOPPED))
-> @@ -425,6 +441,7 @@ int pci_pasid_features(struct pci_dev *pdev)
->  }
->  EXPORT_SYMBOL_GPL(pci_pasid_features);
->  
-> +#ifdef CONFIG_PCI_PRI
->  /**
->   * pci_prg_resp_pasid_required - Return PRG Response PASID Required bit
->   *				 status.
-> @@ -432,31 +449,18 @@ EXPORT_SYMBOL_GPL(pci_pasid_features);
->   *
->   * Returns 1 if PASID is required in PRG Response Message, 0 otherwise.
->   *
-> - * Even though the PRG response PASID status is read from PRI Status
-> - * Register, since this API will mainly be used by PASID users, this
-> - * function is defined within #ifdef CONFIG_PCI_PASID instead of
-> - * CONFIG_PCI_PRI.
-> + * Since this API has dependency on both PRI and PASID, protect it
-> + * with both CONFIG_PCI_PRI and CONFIG_PCI_PASID.
->   */
->  int pci_prg_resp_pasid_required(struct pci_dev *pdev)
->  {
-> -	u16 status;
-> -	int pri;
-> -
->  	if (pdev->is_virtfn)
->  		pdev = pci_physfn(pdev);
->  
-> -	pri = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
-> -	if (!pri)
-> -		return 0;
-> -
-> -	pci_read_config_word(pdev, pri + PCI_PRI_STATUS, &status);
-> -
-> -	if (status & PCI_PRI_STATUS_PASID)
-> -		return 1;
-> -
-> -	return 0;
-> +	return pdev->pasid_required;
->  }
->  EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
-> +#endif /* CONFIG_PCI_PRI */
->  
->  #define PASID_NUMBER_SHIFT	8
->  #define PASID_NUMBER_MASK	(0x1f << PASID_NUMBER_SHIFT)
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 6542100bd2dd..f1131fee7fcd 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -456,6 +456,7 @@ struct pci_dev {
->  #ifdef CONFIG_PCI_PRI
->  	u16		pri_cap;	/* PRI Capability offset */
->  	u32		pri_reqs_alloc; /* Number of PRI requests allocated */
-> +	unsigned int	pasid_required:1; /* PRG Response PASID Required bit status */
->  #endif
->  #ifdef CONFIG_PCI_PASID
->  	u16		pasid_cap;	/* PASID Capability offset */
-> -- 
-> 2.21.0
-> 
 
-diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index e3842eabcfdd..b183c9f916b0 100644
---- a/drivers/iommu/Kconfig
-+++ b/drivers/iommu/Kconfig
-@@ -207,6 +207,7 @@ config INTEL_IOMMU_SVM
- 	bool "Support for Shared Virtual Memory with Intel IOMMU"
- 	depends on INTEL_IOMMU && X86
- 	select PCI_PASID
-+	select PCI_PRI
- 	select MMU_NOTIFIER
- 	help
- 	  Shared Virtual Memory (SVM) provides a facility for devices
-diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-index cb4f62da7b8a..76ae518d55f4 100644
---- a/drivers/pci/ats.c
-+++ b/drivers/pci/ats.c
-@@ -159,6 +159,20 @@ int pci_ats_page_aligned(struct pci_dev *pdev)
- EXPORT_SYMBOL_GPL(pci_ats_page_aligned);
- 
- #ifdef CONFIG_PCI_PRI
-+void pci_pri_init(struct pci_dev *pdev)
-+{
-+	u16 status;
-+
-+	pdev->pri_cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
-+
-+	if (!pdev->pri_cap)
-+		return;
-+
-+	pci_read_config_word(pdev, pdev->pri_cap + PCI_PRI_STATUS, &status);
-+	if (status & PCI_PRI_STATUS_PASID)
-+		pdev->pasid_required = 1;
-+}
-+
- /**
-  * pci_enable_pri - Enable PRI capability
-  * @ pdev: PCI device structure
-@@ -185,12 +199,8 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
- 	if (WARN_ON(pdev->pri_enabled))
- 		return -EBUSY;
- 
--	if (!pri) {
--		pri = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
--		if (!pri)
--			return -EINVAL;
--		pdev->pri_cap = pri;
--	}
-+	if (!pri)
-+		return -EINVAL;
- 
- 	pci_read_config_word(pdev, pri + PCI_PRI_STATUS, &status);
- 	if (!(status & PCI_PRI_STATUS_STOPPED))
-@@ -290,9 +300,30 @@ int pci_reset_pri(struct pci_dev *pdev)
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(pci_reset_pri);
-+
-+/**
-+ * pci_prg_resp_pasid_required - Return PRG Response PASID Required bit
-+ *				 status.
-+ * @pdev: PCI device structure
-+ *
-+ * Returns 1 if PASID is required in PRG Response Message, 0 otherwise.
-+ */
-+int pci_prg_resp_pasid_required(struct pci_dev *pdev)
-+{
-+	if (pdev->is_virtfn)
-+		pdev = pci_physfn(pdev);
-+
-+	return pdev->pasid_required;
-+}
-+EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
- #endif /* CONFIG_PCI_PRI */
- 
- #ifdef CONFIG_PCI_PASID
-+void pci_pasid_init(struct pci_dev *pdev)
-+{
-+	pdev->pasid_cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
-+}
-+
- /**
-  * pci_enable_pasid - Enable the PASID capability
-  * @pdev: PCI device structure
-@@ -323,12 +354,8 @@ int pci_enable_pasid(struct pci_dev *pdev, int features)
- 	if (!pdev->eetlp_prefix_path)
- 		return -EINVAL;
- 
--	if (!pasid) {
--		pasid = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
--		if (!pasid)
--			return -EINVAL;
--		pdev->pasid_cap = pasid;
--	}
-+	if (!pasid)
-+		return -EINVAL;
- 
- 	pci_read_config_word(pdev, pasid + PCI_PASID_CAP, &supported);
- 	supported &= PCI_PASID_CAP_EXEC | PCI_PASID_CAP_PRIV;
-@@ -425,39 +452,6 @@ int pci_pasid_features(struct pci_dev *pdev)
- }
- EXPORT_SYMBOL_GPL(pci_pasid_features);
- 
--/**
-- * pci_prg_resp_pasid_required - Return PRG Response PASID Required bit
-- *				 status.
-- * @pdev: PCI device structure
-- *
-- * Returns 1 if PASID is required in PRG Response Message, 0 otherwise.
-- *
-- * Even though the PRG response PASID status is read from PRI Status
-- * Register, since this API will mainly be used by PASID users, this
-- * function is defined within #ifdef CONFIG_PCI_PASID instead of
-- * CONFIG_PCI_PRI.
-- */
--int pci_prg_resp_pasid_required(struct pci_dev *pdev)
--{
--	u16 status;
--	int pri;
--
--	if (pdev->is_virtfn)
--		pdev = pci_physfn(pdev);
--
--	pri = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
--	if (!pri)
--		return 0;
--
--	pci_read_config_word(pdev, pri + PCI_PRI_STATUS, &status);
--
--	if (status & PCI_PRI_STATUS_PASID)
--		return 1;
--
--	return 0;
--}
--EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
--
- #define PASID_NUMBER_SHIFT	8
- #define PASID_NUMBER_MASK	(0x1f << PASID_NUMBER_SHIFT)
- /**
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 3f6947ee3324..ae84d28ba03a 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -456,6 +456,18 @@ static inline void pci_ats_init(struct pci_dev *d) { }
- static inline void pci_restore_ats_state(struct pci_dev *dev) { }
- #endif /* CONFIG_PCI_ATS */
- 
-+#ifdef CONFIG_PCI_PRI
-+void pci_pri_init(struct pci_dev *dev);
-+#else
-+static inline void pci_pri_init(struct pci_dev *dev) { }
-+#endif
-+
-+#ifdef CONFIG_PCI_PASID
-+void pci_pasid_init(struct pci_dev *dev);
-+#else
-+static inline void pci_pasid_init(struct pci_dev *dev) { }
-+#endif
-+
- #ifdef CONFIG_PCI_IOV
- int pci_iov_init(struct pci_dev *dev);
- void pci_iov_release(struct pci_dev *dev);
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 3d5271a7a849..df2b77866f3b 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2324,6 +2324,12 @@ static void pci_init_capabilities(struct pci_dev *dev)
- 	/* Address Translation Services */
- 	pci_ats_init(dev);
- 
-+	/* Page Request Interface */
-+	pci_pri_init(dev);
-+
-+	/* Process Address Space ID */
-+	pci_pasid_init(dev);
-+
- 	/* Enable ACS P2P upstream forwarding */
- 	pci_enable_acs(dev);
- 
-diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
-index 1ebb88e7c184..a7a2b3d94fcc 100644
---- a/include/linux/pci-ats.h
-+++ b/include/linux/pci-ats.h
-@@ -10,6 +10,7 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs);
- void pci_disable_pri(struct pci_dev *pdev);
- void pci_restore_pri_state(struct pci_dev *pdev);
- int pci_reset_pri(struct pci_dev *pdev);
-+int pci_prg_resp_pasid_required(struct pci_dev *pdev);
- 
- #else /* CONFIG_PCI_PRI */
- 
-@@ -31,6 +32,10 @@ static inline int pci_reset_pri(struct pci_dev *pdev)
- 	return -ENODEV;
- }
- 
-+static inline int pci_prg_resp_pasid_required(struct pci_dev *pdev)
-+{
-+	return 0;
-+}
- #endif /* CONFIG_PCI_PRI */
- 
- #ifdef CONFIG_PCI_PASID
-@@ -40,7 +45,6 @@ void pci_disable_pasid(struct pci_dev *pdev);
- void pci_restore_pasid_state(struct pci_dev *pdev);
- int pci_pasid_features(struct pci_dev *pdev);
- int pci_max_pasids(struct pci_dev *pdev);
--int pci_prg_resp_pasid_required(struct pci_dev *pdev);
- 
- #else  /* CONFIG_PCI_PASID */
- 
-@@ -66,11 +70,6 @@ static inline int pci_max_pasids(struct pci_dev *pdev)
- {
- 	return -EINVAL;
- }
--
--static inline int pci_prg_resp_pasid_required(struct pci_dev *pdev)
--{
--	return 0;
--}
- #endif /* CONFIG_PCI_PASID */
- 
- 
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 6542100bd2dd..64d35e730fab 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -456,6 +456,7 @@ struct pci_dev {
- #ifdef CONFIG_PCI_PRI
- 	u16		pri_cap;	/* PRI Capability offset */
- 	u32		pri_reqs_alloc; /* Number of PRI requests allocated */
-+	unsigned int	pasid_required:1; /* PRG Response PASID Required */
- #endif
- #ifdef CONFIG_PCI_PASID
- 	u16		pasid_cap;	/* PASID Capability offset */
