@@ -2,120 +2,118 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A90C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 22:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9EFFC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 22:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57734206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 22:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 976EC218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 22:29:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="cIRDG8mg"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="SVVHfaab"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732328AbfJIW1R (ORCPT
+        id S1732217AbfJIW3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 18:27:17 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:55104 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732217AbfJIW1I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 18:27:08 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        Wed, 9 Oct 2019 18:29:01 -0400
+Received: from ozlabs.org ([203.11.71.1]:35525 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731134AbfJIW3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 18:29:01 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 21006C03E7;
-        Wed,  9 Oct 2019 22:27:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1570660027; bh=+fXx98X7ZWlodVdTQmpmbXd7E1kSCADK/6WXe3QmHgw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cIRDG8mgI2ftLTQM4oxqslIpCO+BLxHMgPosEygMlLNYtUrCBPX7HDsVJZAAvgs+v
-         MBdm2BR2LOOFSTZcnjQaS+qJl5O4cuoIsHsvc9mlMwcIoNWnLIILjeTHR+WFAIJzHU
-         B8L/u6D/fkO2uaFTi21XUmWGCTg0vnELZxIOmiEBQLHRXsyFNGh7HsYUk35e7QQ7eV
-         +S+TgO0TQxJTFVHmNjJXHyEIL58XZPnJdBuDYAbVDHFiPPWfcufJCgPxJM6plviC5H
-         vKjcH3QfIS7Nv5fYwHF04NRonkEGe1Jia82mTrlbwP1erZvZxiRfKWmLJc6hbATUm4
-         /AGi62m11VFvw==
-Received: from vineetg-Latitude-E7450.internal.synopsys.com (vineetg-latitude-e7450.internal.synopsys.com [10.10.161.61])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 8A22CA006D;
-        Wed,  9 Oct 2019 22:27:06 +0000 (UTC)
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-To:     linux-mm@kvack.org
-Cc:     linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Will Deacon <will@kernel.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nick Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: [PATCH 1/3] asm-generic/tlb: stub out pud_free_tlb() if __PAGETABLE_PUD_FOLDED ...
-Date:   Wed,  9 Oct 2019 15:26:56 -0700
-Message-Id: <20191009222658.961-2-vgupta@synopsys.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191009222658.961-1-vgupta@synopsys.com>
-References: <20191009222658.961-1-vgupta@synopsys.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46pTQf5Hygz9sCJ;
+        Thu, 10 Oct 2019 09:28:58 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1570660138;
+        bh=U7amNAqXaEFVDkVi/kudiYCikX+L8b1+UcbwxDjtYI0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=SVVHfaabizcruACky9fX2ctnPRzZk4+fE8aQWOUl7ehdBhXBxJGZtTNndgpumz6M7
+         X2UyB++tQGTfLeqoXstFUO9gMsQJyF4wJTgZ1NR0su4EDXUjIGqudYJ9dKcgJYjbjL
+         f/Y4izcyu1MgsFmruGOIT1lH6rPRO3xuX14fGNdkUTqC4CyroJl9UVKuVhbRhdvyQ1
+         HJM8nFu3+/4E6PTQ0uMngQjA/7dy2/1MYUm1946RyN+j6JIX5BYQcgnTiY7zHXJkKW
+         RU2dEdOQS6XojLZr8ujNzpOGIqZL4NZPBVSoAyM3UESGzDIdy2NmzsIE1/Ai3lKy3T
+         mNEt73Phfti4A==
+Date:   Thu, 10 Oct 2019 09:28:43 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Keerthy <j-keerthy@ti.com>, Olof Johansson <olof@lixom.net>
+Subject: linux-next: manual merge of the samsung-krzk tree with Linus' tree
+Message-ID: <20191010092843.3c38fa36@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/4rmbBEC=jXOMl7Wooy8K1.D";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-... independent of __ARCH_HAS_4LEVEL_HACK
+--Sig_/4rmbBEC=jXOMl7Wooy8K1.D
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This came up when removing __ARCH_HAS_5LEVEL_HACK for ARC as code bloat
-from pud_free_tlb() despite pud being folded (with 2 levels on ARC)
+Hi all,
 
-| bloat-o-meter2 vmlinux-B-elide-ARCH_USE_5LEVEL_HACK vmlinux-C-elide-pud_free_tlb
-| add/remove: 0/0 grow/shrink: 0/1 up/down: 0/-104 (-104)
-| function                                     old     new   delta
-| free_pgd_range                               656     552    -104
-| Total: Before=4137276, After=4137172, chg -1.000000%
+Today's linux-next merge of the samsung-krzk tree got a conflict in:
 
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
----
- include/asm-generic/4level-fixup.h | 2 --
- include/asm-generic/tlb.h          | 4 +++-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+  arch/arm/configs/multi_v7_defconfig
 
-diff --git a/include/asm-generic/4level-fixup.h b/include/asm-generic/4level-fixup.h
-index e3667c9a33a5..d7c5ba1968d3 100644
---- a/include/asm-generic/4level-fixup.h
-+++ b/include/asm-generic/4level-fixup.h
-@@ -27,8 +27,6 @@
- #define pud_page(pud)			pgd_page(pud)
- #define pud_page_vaddr(pud)		pgd_page_vaddr(pud)
- 
--#undef pud_free_tlb
--#define pud_free_tlb(tlb, x, addr)	do { } while (0)
- #define pud_free(mm, x)			do { } while (0)
- #define __pud_free_tlb(tlb, x, addr)	do { } while (0)
- 
-diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
-index 04c0644006fd..1f83188cb331 100644
---- a/include/asm-generic/tlb.h
-+++ b/include/asm-generic/tlb.h
-@@ -584,7 +584,7 @@ static inline void tlb_end_vma(struct mmu_gather *tlb, struct vm_area_struct *vm
- 	} while (0)
- #endif
- 
--#ifndef __ARCH_HAS_4LEVEL_HACK
-+#ifndef __PAGETABLE_PUD_FOLDED
- #ifndef pud_free_tlb
- #define pud_free_tlb(tlb, pudp, address)			\
- 	do {							\
-@@ -594,6 +594,8 @@ static inline void tlb_end_vma(struct mmu_gather *tlb, struct vm_area_struct *vm
- 		__pud_free_tlb(tlb, pudp, address);		\
- 	} while (0)
- #endif
-+#else
-+#define pud_free_tlb(tlb, pudp, address)	do { } while (0)
- #endif
- 
- #ifndef __ARCH_HAS_5LEVEL_HACK
--- 
-2.20.1
+between commit:
 
+  a304c0a60252 ("arm64/ARM: configs: Change CONFIG_REMOTEPROC from m to y")
+
+from Linus' tree and commit:
+
+  00265bee1002 ("ARM: multi_v7_defconfig: Enable options for boards with Ex=
+ynos SoC")
+
+from the samsung-krzk tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/arm/configs/multi_v7_defconfig
+index e4c8def9a0a5,9711c61bd76e..000000000000
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@@ -933,7 -943,8 +943,8 @@@ CONFIG_BCM2835_MBOX=3D
+  CONFIG_ROCKCHIP_IOMMU=3Dy
+  CONFIG_TEGRA_IOMMU_GART=3Dy
+  CONFIG_TEGRA_IOMMU_SMMU=3Dy
++ CONFIG_EXYNOS_IOMMU=3Dy
+ -CONFIG_REMOTEPROC=3Dm
+ +CONFIG_REMOTEPROC=3Dy
+  CONFIG_ST_REMOTEPROC=3Dm
+  CONFIG_RPMSG_VIRTIO=3Dm
+  CONFIG_ASPEED_LPC_CTRL=3Dm
+
+--Sig_/4rmbBEC=jXOMl7Wooy8K1.D
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2eXxsACgkQAVBC80lX
+0Gw4yAf9FelTMg2BDjMr7wGI0IqtNBbbBwGMYFJmfI6yNAh57I3fM9O2ZyaC2MbU
+PWORzrYopkbM0vASImocXAhwRBfjhFxS/EtG85QWCUF5tk2gS9NdAHkEwG8aI9pr
+DndOWt+zACCNz3MhOGl1K4yYrvsq/GjICnVZgqLI0mvFK82K8a5gvjktqA+sMfY5
+ylhlY+42Qm8YoQFRm8UZqKNfPKIU00DI1TcNVsGVw0nn7d31pLyRoDAxzg/2mTIl
+SfDHV8JpRugvukK7EUOm6YYPX+LIRv4ubEjK9ky2arbcgV9rEHKjlWikf5MWxd4Q
+LIpgfbbNIxuSSV1Q7c4CHbkkpY5hNg==
+=ypwT
+-----END PGP SIGNATURE-----
+
+--Sig_/4rmbBEC=jXOMl7Wooy8K1.D--
