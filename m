@@ -6,113 +6,136 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C52ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9150C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 381F8218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:12:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 977DA21920
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:13:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732355AbfJITMw (ORCPT
+        id S1732378AbfJITNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 15:12:52 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:46385 "EHLO
+        Wed, 9 Oct 2019 15:13:01 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:40875 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732044AbfJITLa (ORCPT
+        with ESMTP id S1732023AbfJITL3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 15:11:30 -0400
+        Wed, 9 Oct 2019 15:11:29 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MofLl-1hleRX2T5V-00p7Pi; Wed, 09 Oct 2019 21:11:22 +0200
+ 1M1q8m-1iG5Vf2T6m-002IBj; Wed, 09 Oct 2019 21:11:19 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Al Viro <viro@zeniv.linux.org.uk>
 Cc:     linux-kernel@vger.kernel.org, y2038@lists.linaro.org,
         linux-fsdevel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        linux-scsi@vger.kernel.org,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH v6 43/43] scsi: sd: enable compat ioctls for sed-opal
-Date:   Wed,  9 Oct 2019 21:10:44 +0200
-Message-Id: <20191009191044.308087-44-arnd@arndb.de>
+        netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>
+Subject: [PATCH v6 33/43] af_unix: add compat_ioctl support
+Date:   Wed,  9 Oct 2019 21:10:34 +0200
+Message-Id: <20191009191044.308087-34-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191009190853.245077-1-arnd@arndb.de>
 References: <20191009190853.245077-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:zX1dBOxTNEIjEWC6S6Aboc9GLFenI7/73H9gQTcEXZJuXQOOPKQ
- m3Fd1C/SOXXiF/vgpisdbgSmCcJpi/8S/vO/qXr1qfrJIStRYB3s3dEawxyMSUMn+0NTfXy
- Ab9xMpMNOALYbbrUsRd2FLw0Ye7wS9Iq5k27P/7uitVAlIrvvypAqXWfA5vkc0tbPYZF+1m
- NIF5nP/JU3XKb21XnisJw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:lFQ+r8yms6g=:sbWCiEgDC0Wd/x2FxEm0lO
- HIOHewpro6Y6RhDe6KbndIDg0JNlUin7WJAs+q2iO5twgzE03hJmvtw+q/+cNaD+grzoD4Oda
- gFzYZwLfS9Ef35ZuoxQBOuKAIMQZ7UrTAbC7A4HGnHBdrCJeuL+FAvMkx8d9Q3v8oDLoRK99G
- guyQ9i6W0+p2M2w3TlNGT+w7ZOCMJIl9i//enaD+YsHcY26KZ2FFZUau1fGlpuhXhAcqODDXX
- SIcsD74vNvgKtyEPxV9tc3Q2lfXhV6s74yPR+l6P2GlsQnPmu3EOvVNP8zyq8PBq4AP4/0PxD
- 8mt6NCkQTa6kLkw69qrXpOki8HjCDcvQ2jcGjludeml2Gae0+PG+4flcA4nJzyRMb5pG2bXde
- Gss218kuyh26mcuzvCMUzxMxLCoTBtDQiVx8PY3oe69kv15zMI+htD6Ocko1S9T0fX+4tn3KN
- g/dqGY4gdlj/BH/PsPlw7NfC3JvJtW5J8KgG0SAfphyamwOela5x8WVCzovCgjr4yuqFbGZXi
- /0zOytzYJdzQerNej9emCJzBg4g//n0fKkVR99ce+YbHmaRFLD0+QnF41NuB2SNqlkNEVDWLQ
- JkJ/iUs6UBYMGqIj35uk/P8skn4f3tiRIkaDlpRk4Rb8G8J9bl8MaT4JrR+dlNzyR1EswTS2M
- NFx1iku9lwAxHQrhCwDBbP+1xC3i60il2GQ0PiXA9ETGMcBWbWH3QQYqw3bkOQebzBgN1ezzI
- ucj68bPQaHNnBwPCpejCq7sFoYI8x1G2hI0OzAx8IWJrONDM4BrJghfQQvnMXkjO57YmRW3KR
- ppoc3ztmdrjMOaKOPqMKgvjeTkKkkZM5MPa/hI7eeaQeYRXyvd6rEK8MQdP/6fH4SgeGNu6Ru
- eU2kfW0Ze1W96JFfciaA==
+X-Provags-ID: V03:K1:3hdG2mB6y44B0lENsOLf+2JDxXb3GxKb0/+ZwQvy3N3s/s32/P5
+ vsJoA/nDkhpGhYQ9IuXvMf0Od0U3+NdvFgjzguncjWj0z/nmTWr97Eu7GcWyY/BsZJ7IohE
+ SMbRsEA/pHwT6+RczHlwA+6AEGP6XoJ45JRmyVUF48tW2+sZZMIbmTegWuZER9d2onWnhfB
+ D+6vZRCHykJ9r3s6EFVQw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:QExA1yG/mEs=:1iv7z69M91ozcpEzAcJS8N
+ D5/hPa9khNPOhB1vQ3baDoXoQNI9zNUTMPFc5/itQLeOe7xPmYf4xU6zlKHp8HVjuApbFlvyO
+ THVFT2YBcMFj1kuCAg3KvZB/aowFwzwk5b7sQjQPHBJmF+fxyHQc6moNhH0O8HjJaulu0M+RF
+ xXaF5TFpzThh2tNgxcuLb6TvxnjUxvVaiZ27rOxPTPl9YEB4BSAHc7eWfeWNs9jFDK8jNjjMs
+ eld/n5aprDQILq4LI+aWbemj9Exx+5G7i8OBPa7twZ+AghEra2W5gD7fPTaX7zFiAY5mdihpK
+ FmSBuo18Rd+2SkTpvLkoRfzqr1VZBE9jXUAHXe0dfA3dt3ysA5mq6anQQnQmz5z4cImFOJIXb
+ bOxUXbTlkMSi4uNXnKyMMIslYlyIhqAXKqtmnpyzmE4jD03W+1kgSDnp1lVu4HiFLs2oBFi6z
+ WEzeBrdM7jZwMv74jcLjqDnMyfcgfLyURFnLVNqVyQNooembPsC0nmMYVJY2d4fX0xSaumoNn
+ sz3V4LgAgz2NSzQtfRKp5I5wxGdIbGVrbrQJTrhnzb83hSy4WDExPiLqalLUS/MQoCl9OkiBA
+ fnlEQASdMV2M3OVOc7JLjQow8u/zWNMXH3E4sxWixvU+8VDQDmyCJsFb9QFxOWnMutD1dCNU7
+ ae6hhCSpKQcRyv2K+af5J2GvLRxgS3UWgAR6EMwyKKmFNp//ISdyMBXzRUiaZLU213o0IcIdJ
+ ryA9pBI7Jap+K5zCheTsYPCDOursm+jghdTRfI/3wPN6nUGXzevhieyzjKjwOoRC/1lvnhGYw
+ Ix6OlgQFLR3wRUxaP5PWn3D5jJvCfLDTPjsX1hDdkFIxj4gYvuKKifGLDnvk5aUtQPEamMWJh
+ nzCyruV5Ic0y0PYj9Cug==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sed_ioctl() function is written to be compatible between
-32-bit and 64-bit processes, however compat mode is only
-wired up for nvme, not for sd.
+The af_unix protocol family has a custom ioctl command (inexplicibly
+based on SIOCPROTOPRIVATE), but never had a compat_ioctl handler for
+32-bit applications.
 
-Add the missing call to sed_ioctl() in sd_compat_ioctl().
+Since all commands are compatible here, add a trivial wrapper that
+performs the compat_ptr() conversion for SIOCOUTQ/SIOCINQ.  SIOCUNIXFILE
+does not use the argument, but it doesn't hurt to also use compat_ptr()
+here.
 
-Fixes: d80210f25ff0 ("sd: add support for TCG OPAL self encrypting disks")
-Cc: linux-scsi@vger.kernel.org
-Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+Fixes: ba94f3088b79 ("unix: add ioctl to open a unix socket file with O_PATH")
+Cc: netdev@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/scsi/sd.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ net/unix/af_unix.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
-index 50928bc266eb..5abdf03083ae 100644
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -1692,20 +1692,30 @@ static void sd_rescan(struct device *dev)
- static int sd_compat_ioctl(struct block_device *bdev, fmode_t mode,
- 			   unsigned int cmd, unsigned long arg)
- {
--	struct scsi_device *sdev = scsi_disk(bdev->bd_disk)->device;
-+	struct gendisk *disk = bdev->bd_disk;
-+	struct scsi_disk *sdkp = scsi_disk(disk);
-+	struct scsi_device *sdev = sdkp->device;
-+	void __user *p = compat_ptr(arg);
- 	int error;
- 
-+	error = scsi_verify_blk_ioctl(bdev, cmd);
-+	if (error < 0)
-+		return error;
-+
- 	error = scsi_ioctl_block_when_processing_errors(sdev, cmd,
- 			(mode & FMODE_NDELAY) != 0);
- 	if (error)
- 		return error;
-+
-+	if (is_sed_ioctl(cmd))
-+		return sed_ioctl(sdkp->opal_dev, cmd, p);
- 	       
- 	/* 
- 	 * Let the static ioctl translation table take care of it.
- 	 */
- 	if (!sdev->host->hostt->compat_ioctl)
- 		return -ENOIOCTLCMD; 
--	return sdev->host->hostt->compat_ioctl(sdev, cmd, (void __user *)arg);
-+	return sdev->host->hostt->compat_ioctl(sdev, cmd, p);
+diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
+index 67e87db5877f..e18ca6d9f3d4 100644
+--- a/net/unix/af_unix.c
++++ b/net/unix/af_unix.c
+@@ -646,6 +646,9 @@ static __poll_t unix_poll(struct file *, struct socket *, poll_table *);
+ static __poll_t unix_dgram_poll(struct file *, struct socket *,
+ 				    poll_table *);
+ static int unix_ioctl(struct socket *, unsigned int, unsigned long);
++#ifdef CONFIG_COMPAT
++static int unix_compat_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg);
++#endif
+ static int unix_shutdown(struct socket *, int);
+ static int unix_stream_sendmsg(struct socket *, struct msghdr *, size_t);
+ static int unix_stream_recvmsg(struct socket *, struct msghdr *, size_t, int);
+@@ -687,6 +690,9 @@ static const struct proto_ops unix_stream_ops = {
+ 	.getname =	unix_getname,
+ 	.poll =		unix_poll,
+ 	.ioctl =	unix_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl =	unix_compat_ioctl,
++#endif
+ 	.listen =	unix_listen,
+ 	.shutdown =	unix_shutdown,
+ 	.setsockopt =	sock_no_setsockopt,
+@@ -710,6 +716,9 @@ static const struct proto_ops unix_dgram_ops = {
+ 	.getname =	unix_getname,
+ 	.poll =		unix_dgram_poll,
+ 	.ioctl =	unix_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl =	unix_compat_ioctl,
++#endif
+ 	.listen =	sock_no_listen,
+ 	.shutdown =	unix_shutdown,
+ 	.setsockopt =	sock_no_setsockopt,
+@@ -732,6 +741,9 @@ static const struct proto_ops unix_seqpacket_ops = {
+ 	.getname =	unix_getname,
+ 	.poll =		unix_dgram_poll,
+ 	.ioctl =	unix_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl =	unix_compat_ioctl,
++#endif
+ 	.listen =	unix_listen,
+ 	.shutdown =	unix_shutdown,
+ 	.setsockopt =	sock_no_setsockopt,
+@@ -2582,6 +2594,13 @@ static int unix_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
+ 	return err;
  }
- #endif
  
++#ifdef CONFIG_COMPAT
++static int unix_compat_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
++{
++	return unix_ioctl(sock, cmd, (unsigned long)compat_ptr(arg));
++}
++#endif
++
+ static __poll_t unix_poll(struct file *file, struct socket *sock, poll_table *wait)
+ {
+ 	struct sock *sk = sock->sk;
 -- 
 2.20.0
 
