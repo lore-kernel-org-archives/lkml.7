@@ -2,120 +2,213 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F096ECE58E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B18F0ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC97D218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:37:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570635427;
-	bh=edf3a7Xyb4Ic5cpCpe6yHS1CA/n0vMcGLXMOlQSiBDg=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=iWhtpcp4tP6ljbaYiO+bXLuOW4L2rlAiXDngNPdpJ8LbR9UWG2C89WL6qN/X28t4j
-	 dY2D3FUZwWm2NbVDgDZqizc03eFSfqNvL4W0B5QH53clGnDowWmx4iQclVU6LSKwTC
-	 CzYbkq/mKU/0bx0FWEQISdDa/3YHdfVf1LFsOORs=
+	by mail.kernel.org (Postfix) with ESMTP id 7BC1121848
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:37:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="CJAd+CcA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731486AbfJIPhG (ORCPT
+        id S1731527AbfJIPhN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 11:37:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37162 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729742AbfJIPhG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 11:37:06 -0400
-Received: from paulmck-ThinkPad-P72 (mobile-166-137-176-109.mycingular.net [166.137.176.109])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 304D9218AC;
-        Wed,  9 Oct 2019 15:37:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570635425;
-        bh=edf3a7Xyb4Ic5cpCpe6yHS1CA/n0vMcGLXMOlQSiBDg=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=UsVnXzAIzR9JpLCn6O++S2Alq32z1XzoL7CfrtrT9iC2Bo0HNdbEOUmEWiXGhZKgx
-         vjuRbLjOI8qbqYcp1pQ0CB6If1Fac/28dbE+e+Ue4pYPQwx/LyYIhkw4YIJkL6+Phr
-         UKrIppp5CAM5RiV5D4NOZtnRaAveBHLwVySAldQg=
-Date:   Wed, 9 Oct 2019 08:36:59 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH tip/core/rcu 8/9] net/netfilter: Replace
- rcu_swap_protected() with rcu_replace()
-Message-ID: <20191009153659.GA30521@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191003014153.GA13156@paulmck-ThinkPad-P72>
- <20191003014310.13262-8-paulmck@kernel.org>
- <20191008141611.usmxb5vzoxc36wqw@salvia>
+        Wed, 9 Oct 2019 11:37:13 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46565 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729742AbfJIPhM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 11:37:12 -0400
+Received: by mail-pg1-f193.google.com with SMTP id b8so1627752pgm.13
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 08:37:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5ZGdcOkmNChI8GwI1qcidl2FDH4Bb9peSC073dz7RNI=;
+        b=CJAd+CcAELyW05E819LLecs1+gJPqyY2RarShACD41RGixMe/lGk9gk+HKPTR0iujG
+         9xuBZ/ZnoAXPZrSkM7jSeVMUUrHV/wbM3iX0EF/wFkliAQ97f6hs8Ygj7ZVpsUUk69wb
+         KAINJ+IZp/QNxiqEXUtoUAgd/uU6Pgo5IT+O4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5ZGdcOkmNChI8GwI1qcidl2FDH4Bb9peSC073dz7RNI=;
+        b=hwecIYmiwZcmSOGPu0t3NFcVIu/HxH5Jw0barGu0V7qxG5GG6zKXgiQSiwiOIsVaaZ
+         sOx48zLGdi2Nco6IB62f59BtPtWWh7kGlgVt9wQbGX8FFXMBx2rG7ir0G73m89TQV8Py
+         LwWBOoVOeSKO8FUT3jTBUkav3Sxhf8Zpu1SAAfOFOzHdcr6Gu524hHO6JkxoIiMpeNWu
+         9T+xVWuxGOh6qEdnbxR9j/b/OJan1hcAsM77iWT2zr246fkUM2oFL0x5lfJxM1P9Vo5f
+         uFXQKFw5f5ess7wEcZWHSAYerfij+KofIM/GoKBEXlcaUIMhfIoLzYj8qarUkOcNNvD8
+         uZQg==
+X-Gm-Message-State: APjAAAXs0PaWmuk8Y02W5VD0k2sUmWBKXZNVM36GZczxcBTXIi38ti0c
+        9PfaPXsZU1Rfi50pSEmyeKtm/w==
+X-Google-Smtp-Source: APXvYqwYRXAeX7S2oT8FjXdl9BCAH/zKp7xscFhn8VCIxBtgH911ZQui6ZAkGOu1jgRdabCyxN4ztg==
+X-Received: by 2002:a17:90b:313:: with SMTP id ay19mr4821052pjb.25.1570635431802;
+        Wed, 09 Oct 2019 08:37:11 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id k5sm2222328pgo.45.2019.10.09.08.37.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Oct 2019 08:37:11 -0700 (PDT)
+Date:   Wed, 9 Oct 2019 11:37:10 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Todd Kjos <tkjos@android.com>, jannh@google.com, arve@android.com,
+        christian@brauner.io, devel@driverdev.osuosl.org,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        maco@android.com, tkjos@google.com,
+        Hridya Valsaraju <hridya@google.com>
+Subject: Re: [PATCH] binder: prevent UAF read in
+ print_binder_transaction_log_entry()
+Message-ID: <20191009153710.GC13654@google.com>
+References: <CAG48ez14Q0-F8LqsvcNbyR2o6gPW8SHXsm4u5jmD9MpsteM2Tw@mail.gmail.com>
+ <20191008130159.10161-1-christian.brauner@ubuntu.com>
+ <20191008180516.GB143258@google.com>
+ <20191009104011.rzfdvq7otkkj533m@wittgenstein>
+ <20191009142129.GD143258@google.com>
+ <20191009142910.ggerxqxkft2ifhdn@wittgenstein>
+ <20191009145558.GA96813@google.com>
+ <20191009151044.t2jo3mo4acjtyhez@wittgenstein>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191008141611.usmxb5vzoxc36wqw@salvia>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191009151044.t2jo3mo4acjtyhez@wittgenstein>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 04:16:11PM +0200, Pablo Neira Ayuso wrote:
-> On Wed, Oct 02, 2019 at 06:43:09PM -0700, paulmck@kernel.org wrote:
-> > From: "Paul E. McKenney" <paulmck@kernel.org>
+On Wed, Oct 09, 2019 at 05:10:45PM +0200, Christian Brauner wrote:
+> On Wed, Oct 09, 2019 at 10:55:58AM -0400, Joel Fernandes wrote:
+> > On Wed, Oct 09, 2019 at 04:29:11PM +0200, Christian Brauner wrote:
+> > > On Wed, Oct 09, 2019 at 10:21:29AM -0400, Joel Fernandes wrote:
+> > > > On Wed, Oct 09, 2019 at 12:40:12PM +0200, Christian Brauner wrote:
+> > > > > On Tue, Oct 08, 2019 at 02:05:16PM -0400, Joel Fernandes wrote:
+> > > > > > On Tue, Oct 08, 2019 at 03:01:59PM +0200, Christian Brauner wrote:
+> > > > > > > When a binder transaction is initiated on a binder device coming from a
+> > > > > > > binderfs instance, a pointer to the name of the binder device is stashed
+> > > > > > > in the binder_transaction_log_entry's context_name member. Later on it
+> > > > > > > is used to print the name in print_binder_transaction_log_entry(). By
+> > > > > > > the time print_binder_transaction_log_entry() accesses context_name
+> > > > > > > binderfs_evict_inode() might have already freed the associated memory
+> > > > > > > thereby causing a UAF. Do the simple thing and prevent this by copying
+> > > > > > > the name of the binder device instead of stashing a pointer to it.
+> > > > > > > 
+> > > > > > > Reported-by: Jann Horn <jannh@google.com>
+> > > > > > > Fixes: 03e2e07e3814 ("binder: Make transaction_log available in binderfs")
+> > > > > > > Link: https://lore.kernel.org/r/CAG48ez14Q0-F8LqsvcNbyR2o6gPW8SHXsm4u5jmD9MpsteM2Tw@mail.gmail.com
+> > > > > > > Cc: Joel Fernandes <joel@joelfernandes.org>
+> > > > > > > Cc: Todd Kjos <tkjos@android.com>
+> > > > > > > Cc: Hridya Valsaraju <hridya@google.com>
+> > > > > > > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> > > > > > > ---
+> > > > > > >  drivers/android/binder.c          | 4 +++-
+> > > > > > >  drivers/android/binder_internal.h | 2 +-
+> > > > > > >  2 files changed, 4 insertions(+), 2 deletions(-)
+> > > > > > > 
+> > > > > > > diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+> > > > > > > index c0a491277aca..5b9ac2122e89 100644
+> > > > > > > --- a/drivers/android/binder.c
+> > > > > > > +++ b/drivers/android/binder.c
+> > > > > > > @@ -57,6 +57,7 @@
+> > > > > > >  #include <linux/sched/signal.h>
+> > > > > > >  #include <linux/sched/mm.h>
+> > > > > > >  #include <linux/seq_file.h>
+> > > > > > > +#include <linux/string.h>
+> > > > > > >  #include <linux/uaccess.h>
+> > > > > > >  #include <linux/pid_namespace.h>
+> > > > > > >  #include <linux/security.h>
+> > > > > > > @@ -66,6 +67,7 @@
+> > > > > > >  #include <linux/task_work.h>
+> > > > > > >  
+> > > > > > >  #include <uapi/linux/android/binder.h>
+> > > > > > > +#include <uapi/linux/android/binderfs.h>
+> > > > > > >  
+> > > > > > >  #include <asm/cacheflush.h>
+> > > > > > >  
+> > > > > > > @@ -2876,7 +2878,7 @@ static void binder_transaction(struct binder_proc *proc,
+> > > > > > >  	e->target_handle = tr->target.handle;
+> > > > > > >  	e->data_size = tr->data_size;
+> > > > > > >  	e->offsets_size = tr->offsets_size;
+> > > > > > > -	e->context_name = proc->context->name;
+> > > > > > > +	strscpy(e->context_name, proc->context->name, BINDERFS_MAX_NAME);
+> > > > > > 
+> > > > > > Strictly speaking, proc-context->name can also be initialized for !BINDERFS
+> > > > > > so the BINDERFS in the MAX_NAME macro is misleading. So probably there should
+> > > > > > be a BINDER_MAX_NAME (and associated checks for whether non BINDERFS names
+> > > > > > fit within the MAX.
+> > > > > 
+> > > > > I know but I don't think it's worth special-casing non-binderfs devices.
+> > > > > First, non-binderfs devices can only be created through a KCONFIG option
+> > > > > determined at compile time. For stock Android the names are the same for
+> > > > > all vendors afaik.
+> > > > 
+> > > > I am just talking about the name of weirdly named macro here.
+> > > 
+> > > You might miss context here: It's named that way because currently only
+> > > binderfs binder devices are bound to that limit. That's a point I made
+> > > further below in my previous mail. Non-binderfs devices are not subject
+> > > to that restriction and when we tried to make them subject to the same
+> > > it as rejected.
 > > 
-> > This commit replaces the use of rcu_swap_protected() with the more
-> > intuitively appealing rcu_replace() as a step towards removing
-> > rcu_swap_protected().
-> > 
-> > Link: https://lore.kernel.org/lkml/CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta4gg6Hw@mail.gmail.com/
-> > Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > Cc: Pablo Neira Ayuso <pablo@netfilter.org>
-> > Cc: Jozsef Kadlecsik <kadlec@netfilter.org>
-> > Cc: Florian Westphal <fw@strlen.de>
-> > Cc: "David S. Miller" <davem@davemloft.net>
-> > Cc: <netfilter-devel@vger.kernel.org>
-> > Cc: <coreteam@netfilter.org>
-> > Cc: <netdev@vger.kernel.org>
+> > I know that. I am saying the memcpy is happening for regular binder devices
+> > as well but the macro has BINDERFS in the name. That's all. It is not a
+> > significant eye sore. But is a bit odd.
 > 
-> Acked-by: Pablo Neira Ayuso <pablo@netfilter.org>
+> Right, and I told you that we _can't_ rename it to BINDER_MAX because
+> that check only happens for binderfs devices since you were suggesting
+> this. If you want to rename to get rid of the this being somehow
+> apparently odd then you need to introduce that check for non-binderfs
+> devices too. Or just rename the macro in a follow-up patch. I don't care.
 
-Applied, thank you!
+Here in this patch we are doing mem copy for regular binder device name using
+a BINDERFS macro name.
 
-							Thanx, Paul
-
-> > ---
-> >  net/netfilter/nf_tables_api.c | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
 > > 
-> > diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-> > index d481f9b..8499baf 100644
-> > --- a/net/netfilter/nf_tables_api.c
-> > +++ b/net/netfilter/nf_tables_api.c
-> > @@ -1461,8 +1461,9 @@ static void nft_chain_stats_replace(struct nft_trans *trans)
-> >  	if (!nft_trans_chain_stats(trans))
-> >  		return;
-> >  
-> > -	rcu_swap_protected(chain->stats, nft_trans_chain_stats(trans),
-> > -			   lockdep_commit_lock_is_held(trans->ctx.net));
-> > +	nft_trans_chain_stats(trans) =
-> > +		rcu_replace(chain->stats, nft_trans_chain_stats(trans),
-> > +			    lockdep_commit_lock_is_held(trans->ctx.net));
-> >  
-> >  	if (!nft_trans_chain_stats(trans))
-> >  		static_branch_inc(&nft_counters_enabled);
-> > -- 
-> > 2.9.5
+> > > <snip>
+> > > 
+> > > > 
+> > > > > Fifth, I already tried to push for validation of non-binderfs binder
+> > > > > devices a while back when I wrote binderfs and was told that it's not
+> > > > > needed. Hrydia tried the same and we decided the same thing. So you get
+> > > > > to be the next person to send a patch. :)
+> > > > 
+> > > > I don't follow why we are talking about non-binderfs validation. I am just
+> > > 
+> > > Because above you said
+> > > 
+> > > > > > so the BINDERFS in the MAX_NAME macro is misleading. So probably there should
+> > > > > > be a BINDER_MAX_NAME (and associated checks for whether non BINDERFS names
+> > > > > > fit within the MAX.
+> > > 
+> > > which to me reads like you want generic checks for _all_ binder devices
+> > > not just for the ones from binderfs.
 > > 
+> > No I am not talking about the checks at all, I am talking about the unwanted
+> > mem copy you are doing for regular binder devices now. Before binderfs this
+> > would not have happened, but now for regular binder devices we have to do the
+> > extra mem copies which were avoided before. That was what I was talking about.
+> 
+> I'm sorry but I did not get this at all from:
+> "So probably there should be a BINDER_MAX_NAME (and associated checks
+> for whether non BINDERFS names fit within the MAX." 
+
+Sorry for the misleading statement. That means I have to improve my
+communication game, sorry it is my fault.
+
+> > 
+> > But this discussing is getting to bike shedding at this point, and since the
+> > overhead is likely small, I am Ok with the change (though I don't like very
+> > much the additional memcpy and the associated space wastage in the
+> > transaction buffer for regular binder devices).
+> 
+> Feel free to send a follow-up patch handling both separately.
+
+Ok will do once I get a chance. Thanks for working on the fix!
+
+-  Joel
+
