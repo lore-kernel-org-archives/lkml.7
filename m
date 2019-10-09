@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F45ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31EBFC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBC1221848
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:31:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0374C21848
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:31:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570642287;
-	bh=hwjiPPOo2K3sUN/XgOVRlgCmz1oVu8eixNpFgdwRK/Q=;
+	s=default; t=1570642296;
+	bh=8bnMYcLJcKc4ZU8HhKpFN1Z0TuerJPwW6b+l8HVm9/0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VW/2ZSjJcjPmURQTWEHxfhSu5NBYgY59QychP6US4qyAghBJI/27Bk7cGDopHhVIv
-	 f1UVgicqXiKnpbQkWiyhNx9+iqxHWfpOj7MZRNbF9DSijHNulqxxH5MDWsSjBoFtbB
-	 dHSVrnurQTJbg/cVtGquLHjI2lE/zj2j64OV4QrI=
+	b=czUIor4mXKltdBj2TkLfslnzhMTgyvbkIFnq305dmUHfcJLF7O/f8poDmdeN9TFJl
+	 RamSvHRY2nLVsq5q0LDdYM7NHsP4d6O59wCevpeI9NzWd676/N1f+kgdOD49w4dC9u
+	 1kRxB/OyPXVM6wSSk80tgrJZcrwH5pdUN5bh2UOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732942AbfJIRb0 (ORCPT
+        id S1732940AbfJIRbf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:31:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48018 "EHLO mail.kernel.org"
+        Wed, 9 Oct 2019 13:31:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732078AbfJIRYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 13:24:01 -0400
+        id S1732063AbfJIRYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 13:24:00 -0400
 Received: from sasha-vm.mshome.net (unknown [167.220.2.234])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D938421D82;
-        Wed,  9 Oct 2019 17:24:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91E2921920;
+        Wed,  9 Oct 2019 17:23:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570641841;
-        bh=hwjiPPOo2K3sUN/XgOVRlgCmz1oVu8eixNpFgdwRK/Q=;
+        s=default; t=1570641839;
+        bh=8bnMYcLJcKc4ZU8HhKpFN1Z0TuerJPwW6b+l8HVm9/0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mn06O9Gk+QjOG7NGJfcK0LHb7VeqdHP69crpXn3utoOYNS/6Ipx/YnXlwFX+lMdPu
-         y4gmqcMSnmm7dQoZoPhNNXJpdFUm1TymxmqD1EqiAVOuHXaTd5fEFKZ7dbMbOfpVxD
-         KGYOsMpYkt5TT7cK0IQ0OStQDlRQBekmDNhaNlXU=
+        b=tKGYLMLAa2Wvzk4k5sY9/cXLyczoZgHVFjQ9HdBOWiuyNL0ejS0xdXN3FqD7iCIlE
+         N32dKQRk4WpzxADzu68ifDxCr7x9XCGoKQEeVj/Ap094WqZJQzbCKbfcEykCv5XBLr
+         OXZpvtB0yPrK3/3LReQpbMOm3snaze88lGJrcCIQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jim Mattson <jmattson@google.com>, Marc Orr <marcorr@google.com>,
-        Peter Shier <pshier@google.com>,
-        Jacob Xu <jacobhxu@google.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 27/68] kvm: x86: Use AMD CPUID semantics for AMD vCPUs
-Date:   Wed,  9 Oct 2019 13:05:06 -0400
-Message-Id: <20191009170547.32204-27-sashal@kernel.org>
+Cc:     Jian-Hong Pan <jian-hong@endlessm.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.3 23/68] nvme: Add quirk for Kingston NVME SSD running FW E8FK11.T
+Date:   Wed,  9 Oct 2019 13:05:02 -0400
+Message-Id: <20191009170547.32204-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191009170547.32204-1-sashal@kernel.org>
 References: <20191009170547.32204-1-sashal@kernel.org>
@@ -62,45 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jim Mattson <jmattson@google.com>
+From: Jian-Hong Pan <jian-hong@endlessm.com>
 
-[ Upstream commit 5f41a37b151f6459e0b650a2f4d1d59b6c02d1ab ]
+[ Upstream commit 19ea025e1d28c629b369c3532a85b3df478cc5c6 ]
 
-When the guest CPUID information represents an AMD vCPU, return all
-zeroes for queries of undefined CPUID leaves, whether or not they are
-in range.
+Kingston NVME SSD with firmware version E8FK11.T has no interrupt after
+resume with actions related to suspend to idle. This patch applied
+NVME_QUIRK_SIMPLE_SUSPEND quirk to fix this issue.
 
-Signed-off-by: Jim Mattson <jmattson@google.com>
-Fixes: bd22f5cfcfe8f6 ("KVM: move and fix substitue search for missing CPUID entries")
-Reviewed-by: Marc Orr <marcorr@google.com>
-Reviewed-by: Peter Shier <pshier@google.com>
-Reviewed-by: Jacob Xu <jacobhxu@google.com>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixes: d916b1be94b6 ("nvme-pci: use host managed power state for suspend")
+Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=204887
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/cpuid.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/nvme/host/core.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index a8a46e0b3d13b..fd1b8db8bf242 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -987,9 +987,11 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
- 	/*
- 	 * Intel CPUID semantics treats any query for an out-of-range
- 	 * leaf as if the highest basic leaf (i.e. CPUID.0H:EAX) were
--	 * requested.
-+	 * requested. AMD CPUID semantics returns all zeroes for any
-+	 * undefined leaf, whether or not the leaf is in range.
- 	 */
--	if (!entry && check_limit && !cpuid_function_in_range(vcpu, function)) {
-+	if (!entry && check_limit && !guest_cpuid_is_amd(vcpu) &&
-+	    !cpuid_function_in_range(vcpu, function)) {
- 		max = kvm_find_cpuid_entry(vcpu, 0, 0);
- 		if (max) {
- 			function = max->eax;
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index ac2ac06d870b5..3304e2c8a448a 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -2270,6 +2270,16 @@ static const struct nvme_core_quirk_entry core_quirks[] = {
+ 		.vid = 0x14a4,
+ 		.fr = "22301111",
+ 		.quirks = NVME_QUIRK_SIMPLE_SUSPEND,
++	},
++	{
++		/*
++		 * This Kingston E8FK11.T firmware version has no interrupt
++		 * after resume with actions related to suspend to idle
++		 * https://bugzilla.kernel.org/show_bug.cgi?id=204887
++		 */
++		.vid = 0x2646,
++		.fr = "E8FK11.T",
++		.quirks = NVME_QUIRK_SIMPLE_SUSPEND,
+ 	}
+ };
+ 
 -- 
 2.20.1
 
