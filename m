@@ -2,89 +2,123 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D16C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:15:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52520C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA381206B6
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:15:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 260F7206B6
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:16:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RZx/O7qM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731234AbfJINPd (ORCPT
+        id S1731298AbfJINQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 09:15:33 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:57348 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731144AbfJINPd (ORCPT
+        Wed, 9 Oct 2019 09:16:48 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41904 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730490AbfJINQs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 09:15:33 -0400
-Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1iIBoN-0006s3-B8; Wed, 09 Oct 2019 14:15:27 +0100
-Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
-        (envelope-from <ben@rainbowdash.codethink.co.uk>)
-        id 1iIBoM-00019G-PA; Wed, 09 Oct 2019 14:15:26 +0100
-From:   Ben Dooks <ben.dooks@codethink.co.uk>
-To:     linux-kernel@lists.codethink.co.uk
-Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/nouveau/falcon: make unexported objects static
-Date:   Wed,  9 Oct 2019 14:15:25 +0100
-Message-Id: <20191009131525.4352-1-ben.dooks@codethink.co.uk>
-X-Mailer: git-send-email 2.23.0
+        Wed, 9 Oct 2019 09:16:48 -0400
+Received: by mail-wr1-f66.google.com with SMTP id q9so2942296wrm.8;
+        Wed, 09 Oct 2019 06:16:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NqNWhKNuCxFUkqS6MSW/V4hcC4NeZ3p7cRwpDVaRvJU=;
+        b=RZx/O7qMfkNbDIazZ56VS7ESeE2Z2sLtUueTWwQkf7SSsC3l8tYZzyA/zENcCZu5V7
+         Xkh5tMeMIroML0fjI/u88dqhMAER0sSvU2/NZO4s6hWZKWwoQHR7H5d2jVhAZBQ9JUE9
+         k/d5jIxtHEdcwfxQpVJ7gse++fkOhKrysRGRuqQt8IkMF5MTz6nw6t/sknS82VcWmxOU
+         /5+z1EGFMKdlCbKg8etnls7MfwpreLW+oMaVAikKJ4E5EdYIYjKbZHXlmso3VgwUVcoL
+         2WVVAuIWPrvNdUcvDa+bC7yRb6Em2jU09II/RlPt9E5r4uJ9kOc68WKqTw2iL3hG4tee
+         nU8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NqNWhKNuCxFUkqS6MSW/V4hcC4NeZ3p7cRwpDVaRvJU=;
+        b=eN+ETgUgEuZsbC28moWVT7hblRRIEmDN8xqZj0/HkySzt4c+z6hg6/MdBHC2Ll4tYx
+         UeTZTLxeE2V1ZSx/cKKdIszz3AUv3/2ZvRmrFuBdhCcw05R04xFU1cOGFW8N9zoosyVi
+         tKE5/lsymtxqEquTW8rJhfUhYl9T46rxLDjBVn4mk4ZgMaau4JzuRsFUNZH7N7OPplzC
+         QQ1W32OSq/lUxbibSstOc02o+kt67GhjTht/J7Ohx+Jiufe8hFFBeKDI+nEv+h7MfHFw
+         /5b0SSwNn8KLiXdZxdE4bYqaQ1s+1ypRV2wIw3A9bD8TnygOBFDKvV8TyAbs2anLrbE0
+         L/Mg==
+X-Gm-Message-State: APjAAAXN0Gcbm3UbHZGAG55TmjKSThP41wKSq7KkFBtpsHk8W+82XFp/
+        B2yS9PFyxaMnMINlSdmo1qIAFMB2MLM=
+X-Google-Smtp-Source: APXvYqynU7qFd7yDda1viaOJp3TtU+OF6WkbTnfJ4JhjvUDrcR6isTKKdN0nskgcBotiInIqXq9Pgw==
+X-Received: by 2002:a5d:6ad0:: with SMTP id u16mr2810067wrw.313.1570627005754;
+        Wed, 09 Oct 2019 06:16:45 -0700 (PDT)
+Received: from localhost ([51.15.41.238])
+        by smtp.gmail.com with ESMTPSA id z9sm2771325wrl.35.2019.10.09.06.16.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Oct 2019 06:16:44 -0700 (PDT)
+Date:   Wed, 9 Oct 2019 14:16:43 +0100
+From:   Stefan Hajnoczi <stefanha@gmail.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     netdev@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
+        linux-hyperv@vger.kernel.org,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        kvm@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jorgen Hansen <jhansen@vmware.com>
+Subject: Re: [RFC PATCH 11/13] vsock: add 'transport_hg' to handle g2h\h2g
+ transports
+Message-ID: <20191009131643.GL5747@stefanha-x1.localdomain>
+References: <20190927112703.17745-1-sgarzare@redhat.com>
+ <20190927112703.17745-12-sgarzare@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="1hKfHPzOXWu1rh0v"
+Content-Disposition: inline
+In-Reply-To: <20190927112703.17745-12-sgarzare@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make the msgqueue_0148cdec_acr_func and msgqueue_0148cdec_func
-static to avoid the following sparse warnings:
 
-drivers/gpu/drm/nouveau/nvkm/falcon/msgqueue_0148cdec.c:230:1: warning: symbol 'msgqueue_0148cdec_acr_func' was not declared. Should it be static?
-drivers/gpu/drm/nouveau/nvkm/falcon/msgqueue_0148cdec.c:241:1: warning: symbol 'msgqueue_0148cdec_func' was not declared. Should it be static?
+--1hKfHPzOXWu1rh0v
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
----
-Cc: Ben Skeggs <bskeggs@redhat.com>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org
-Cc: nouveau@lists.freedesktop.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/gpu/drm/nouveau/nvkm/falcon/msgqueue_0148cdec.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Fri, Sep 27, 2019 at 01:27:01PM +0200, Stefano Garzarella wrote:
+> VMCI transport provides both g2h and h2g behaviors in a single
+> transport.
+> We are able to set (or not) the g2h behavior, detecting if we
+> are in a VMware guest (or not), but the h2g feature is always set.
+> This prevents to load other h2g transports while we are in a
+> VMware guest.
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/falcon/msgqueue_0148cdec.c b/drivers/gpu/drm/nouveau/nvkm/falcon/msgqueue_0148cdec.c
-index 9424803b9ef4..dfc0d50f080b 100644
---- a/drivers/gpu/drm/nouveau/nvkm/falcon/msgqueue_0148cdec.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/falcon/msgqueue_0148cdec.c
-@@ -226,7 +226,7 @@ acr_boot_falcon(struct nvkm_msgqueue *priv, enum nvkm_secboot_falcon falcon)
- 	return 0;
- }
- 
--const struct nvkm_msgqueue_acr_func
-+static const struct nvkm_msgqueue_acr_func
- msgqueue_0148cdec_acr_func = {
- 	.boot_falcon = acr_boot_falcon,
- };
-@@ -237,7 +237,7 @@ msgqueue_0148cdec_dtor(struct nvkm_msgqueue *queue)
- 	kfree(msgqueue_0148cdec(queue));
- }
- 
--const struct nvkm_msgqueue_func
-+static const struct nvkm_msgqueue_func
- msgqueue_0148cdec_func = {
- 	.init_func = &msgqueue_0148cdec_init_func,
- 	.acr_func = &msgqueue_0148cdec_acr_func,
--- 
-2.23.0
+In the vhost_vsock.ko case we only register the h2g transport when
+userspace has loaded the module (by opening /dev/vhost-vsock).
 
+VMCI has something kind of similar: /dev/vmci and the
+vmci_host_active_users counter.  Maybe we can use this instead of
+introducing the transport_hg concept?
+
+--1hKfHPzOXWu1rh0v
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl2d3bsACgkQnKSrs4Gr
+c8iGmQf8CrTUBmiSd3MH3EamjJ8bZk3tA9Ej+1ywL//u+F4Qx3lKOoX+rWnMK5O0
+pkoMAUGpvkKpC23xoV8gFfS9jtRax71aGCjFHnCDj6AoIOu/EwdqWTN28DjF0pF/
+v2D3y2FJtItZeyB2JxnV/ouq9wnglcYDXuvVzwlIGvQi7cV2pj4TyVUzo55Qbtqb
++pbmGCQ845YsfBrmNGA28L7r7OiGp0XCXkrNiTpmgBvQpkUiYg5sKxbWZQj13dKU
+UMBAQV8O4rNjJuEW/9oGehzTzq7JqwiA0TPRGlqkdfovgqA3m0dvSAVbZm/D74al
+Y7NuoOX5k8zZlatP7hk+KQoph/MKrg==
+=Wk8M
+-----END PGP SIGNATURE-----
+
+--1hKfHPzOXWu1rh0v--
