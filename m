@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16BA2ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 22:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0048ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 22:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0B39218AC
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 22:40:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D626E218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 22:40:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732246AbfJIWkQ (ORCPT
+        id S1732324AbfJIWkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 18:40:16 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:53175 "EHLO
+        Wed, 9 Oct 2019 18:40:20 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:37375 "EHLO
         relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732158AbfJIWkO (ORCPT
+        with ESMTP id S1731134AbfJIWkP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 18:40:14 -0400
+        Wed, 9 Oct 2019 18:40:15 -0400
 X-Originating-IP: 86.202.229.42
 Received: from localhost (lfbn-lyo-1-146-42.w86-202.abo.wanadoo.fr [86.202.229.42])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id AAADA40008;
-        Wed,  9 Oct 2019 22:40:12 +0000 (UTC)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 74E954000C;
+        Wed,  9 Oct 2019 22:40:13 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
@@ -33,9 +33,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 3/8] ARM: dts: at91: sama5d2: add TCB GCLK
-Date:   Thu, 10 Oct 2019 00:40:01 +0200
-Message-Id: <20191009224006.5021-4-alexandre.belloni@bootlin.com>
+Subject: [PATCH 4/8] clocksource/drivers/timer-atmel-tcb: rework 32khz clock selection
+Date:   Thu, 10 Oct 2019 00:40:02 +0200
+Message-Id: <20191009224006.5021-5-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191009224006.5021-1-alexandre.belloni@bootlin.com>
 References: <20191009224006.5021-1-alexandre.belloni@bootlin.com>
@@ -46,47 +46,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sama5d2 tcbs take an extra input clock, their gclk.
+On all the supported SoCs, the slow clock is always ATMEL_TC_TIMER_CLOCK5,
+avoid looking it up and pass it directly to setup_clkevents.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- arch/arm/boot/dts/sama5d2.dtsi | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/clocksource/timer-atmel-tcb.c | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
-index 2e2c1a7b1d1d..f878d7866970 100644
---- a/arch/arm/boot/dts/sama5d2.dtsi
-+++ b/arch/arm/boot/dts/sama5d2.dtsi
-@@ -495,23 +495,23 @@
- 			};
+diff --git a/drivers/clocksource/timer-atmel-tcb.c b/drivers/clocksource/timer-atmel-tcb.c
+index 7427b07495a8..b255a4a1a36b 100644
+--- a/drivers/clocksource/timer-atmel-tcb.c
++++ b/drivers/clocksource/timer-atmel-tcb.c
+@@ -346,7 +346,7 @@ static void __init tcb_setup_single_chan(struct atmel_tc *tc, int mck_divisor_id
+ 	writel(ATMEL_TC_SYNC, tcaddr + ATMEL_TC_BCR);
+ }
  
- 			tcb0: timer@f800c000 {
--				compatible = "atmel,at91sam9x5-tcb", "simple-mfd", "syscon";
-+				compatible = "atmel,sama5d2-tcb", "simple-mfd", "syscon";
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				reg = <0xf800c000 0x100>;
- 				interrupts = <35 IRQ_TYPE_LEVEL_HIGH 0>;
--				clocks = <&pmc PMC_TYPE_PERIPHERAL 35>, <&clk32k>;
--				clock-names = "t0_clk", "slow_clk";
-+				clocks = <&pmc PMC_TYPE_PERIPHERAL 35>, <&pmc PMC_TYPE_GCK 35>, <&clk32k>;
-+				clock-names = "t0_clk", "gclk", "slow_clk";
- 			};
+-static const u8 atmel_tcb_divisors[5] = { 2, 8, 32, 128, 0, };
++static const u8 atmel_tcb_divisors[] = { 2, 8, 32, 128 };
  
- 			tcb1: timer@f8010000 {
--				compatible = "atmel,at91sam9x5-tcb", "simple-mfd", "syscon";
-+				compatible = "atmel,sama5d2-tcb", "simple-mfd", "syscon";
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				reg = <0xf8010000 0x100>;
- 				interrupts = <36 IRQ_TYPE_LEVEL_HIGH 0>;
--				clocks = <&pmc PMC_TYPE_PERIPHERAL 36>, <&clk32k>;
--				clock-names = "t0_clk", "slow_clk";
-+				clocks = <&pmc PMC_TYPE_PERIPHERAL 36>, <&pmc PMC_TYPE_GCK 36>, <&clk32k>;
-+				clock-names = "t0_clk", "gclk", "slow_clk";
- 			};
+ static const struct of_device_id atmel_tcb_of_match[] = {
+ 	{ .compatible = "atmel,at91rm9200-tcb", .data = (void *)16, },
+@@ -362,7 +362,6 @@ static int __init tcb_clksrc_init(struct device_node *node)
+ 	u64 (*tc_sched_clock)(void);
+ 	u32 rate, divided_rate = 0;
+ 	int best_divisor_idx = -1;
+-	int clk32k_divisor_idx = -1;
+ 	int bits;
+ 	int i;
+ 	int ret;
+@@ -416,12 +415,6 @@ static int __init tcb_clksrc_init(struct device_node *node)
+ 		unsigned divisor = atmel_tcb_divisors[i];
+ 		unsigned tmp;
  
- 			hsmc: hsmc@f8014000 {
+-		/* remember 32 KiHz clock for later */
+-		if (!divisor) {
+-			clk32k_divisor_idx = i;
+-			continue;
+-		}
+-
+ 		tmp = rate / divisor;
+ 		pr_debug("TC: %u / %-3u [%d] --> %u\n", rate, divisor, i, tmp);
+ 		if (best_divisor_idx > 0) {
+@@ -467,7 +460,7 @@ static int __init tcb_clksrc_init(struct device_node *node)
+ 		goto err_disable_t1;
+ 
+ 	/* channel 2:  periodic and oneshot timer support */
+-	ret = setup_clkevents(&tc, clk32k_divisor_idx);
++	ret = setup_clkevents(&tc, ATMEL_TC_TIMER_CLOCK5);
+ 	if (ret)
+ 		goto err_unregister_clksrc;
+ 
 -- 
 2.21.0
 
