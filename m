@@ -2,220 +2,98 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C1A5C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E131C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E50AA20640
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A865206B6
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:41:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IIW6uXWw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731562AbfJIOki (ORCPT
+        id S1731385AbfJIOlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 10:40:38 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:59975 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729491AbfJIOki (ORCPT
+        Wed, 9 Oct 2019 10:41:32 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46634 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728019AbfJIOlb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 10:40:38 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iID8l-0004Bw-CP; Wed, 09 Oct 2019 16:40:35 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iID8k-0003B2-8m; Wed, 09 Oct 2019 16:40:34 +0200
-Date:   Wed, 9 Oct 2019 16:40:34 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        linux-kernel@vger.kernel.org, thierry.reding@gmail.com,
-        heiko@sntech.de, dianders@chromium.org, mka@chromium.org,
-        groeck@chromium.org, kernel@collabora.com, bleung@chromium.org,
-        linux-pwm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH] pwm: cros-ec: Let cros_ec_pwm_get_state() return the
- last applied state
-Message-ID: <20191009144034.jfgopoxm7lba6an6@pengutronix.de>
-References: <20191008143432.pbhcqamd6f4qwbqn@pengutronix.de>
- <4f009344-242e-19a7-6872-2c55df086044@collabora.com>
- <20191008203137.s22clq6v2om5ktio@pengutronix.de>
- <53b7d02b-1a2d-11da-fdd0-5378f360d876@collabora.com>
- <20191009095635.yysr33lnwldicyng@holly.lan>
- <20191009101637.gmvghwdvcmfw4yyk@pengutronix.de>
- <20191009104236.ux23ywnhvsym2qcb@holly.lan>
- <20191009112126.slpyxhnuqpiqgmes@pengutronix.de>
- <20191009113540.x6uxo3ryiuf7ql55@holly.lan>
- <49990b56-44f9-7c3c-ce81-ed295895f90a@collabora.com>
+        Wed, 9 Oct 2019 10:41:31 -0400
+Received: by mail-wr1-f66.google.com with SMTP id o18so3308970wrv.13
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 07:41:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=I5d3DNfj3UA6KCjceYDwu/vM6pXPJTm3mAV1n/RYi9A=;
+        b=IIW6uXWw5x6h2gZOH1bqnOvRlhorhjV9jCwS2rEyxcthChqC/RTW4YZiDTLs0vUeBP
+         oIPFNYSP2BZ6aIxfOOlqNuyb3qJVJzD3j3hhGsIQ9ks9r4F9MOLEAkLWSyJeCmKcxTyj
+         73LkoLXYwGIRBhEF8VlApWMxBSK7W28Fnr12pQnplIAjbla6RO50zow77gJdKLzea+oU
+         ge8f3HhETu3p9GDeI6cduaG3KIKcF+U9ElMQ75+TeVUGnPzkdDqKHMHZNt4h536jTMmp
+         ydhn7xfWECh6los8gITwTucinPO00zgWNYoGu/4lODL0uGbg2ZCxH93G3U/NrhE06/Lh
+         0klw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=I5d3DNfj3UA6KCjceYDwu/vM6pXPJTm3mAV1n/RYi9A=;
+        b=MWcfx582Uq0qWq6uiX1ImQO+I0Lp0s4M5Q/6fLX5GYs+jji1US8wzx7mUhc9oGjw+t
+         SMi9fSET0XozaZdmtnPlebljiBEBH91/iVz3SjPBfy43Bjv9P0rRHWzjMaJdjTnHhwrG
+         Sgm5xVsT0IuxGj7S5dUN8tna0PC/2as37sbElyfHy+2WRzcQm10CZnaGeYIIZ2QlJCJ8
+         AjNG5ck1ikxLUOktz0mhAiEM6fRlyvM25txOeL3SXkivbCZz1595ar0r+fDLExuVqIgb
+         W94qbhksBslwXuYetJ4YQXkpKCODKTauwUsyMyJqMgl1FRA3APw3wrFhbirEqJdeQKxt
+         5qMQ==
+X-Gm-Message-State: APjAAAXqs+esc1Of5p6MBINlnxZaZc//iOknsgJ5c9vz2lRo3kSvqvFI
+        IahdL3gAloOmqJzmvvHlP3by02t1DFc=
+X-Google-Smtp-Source: APXvYqxlxa+gEM60N5SSZPMVXZ7GuaOPp8KqZKR6xvVmxXDmOaFWjFL2GPgWfjtjdbmt+kwl27BoYA==
+X-Received: by 2002:adf:e28f:: with SMTP id v15mr3560520wri.17.1570632089602;
+        Wed, 09 Oct 2019 07:41:29 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id b7sm3031770wrx.56.2019.10.09.07.41.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Oct 2019 07:41:28 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     gregkh@linuxfoundation.org
+Cc:     arnd@arndb.de, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v3 0/5] misc: fastrpc: fixes and map/unmap support
+Date:   Wed,  9 Oct 2019 15:41:18 +0100
+Message-Id: <20191009144123.24583-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <49990b56-44f9-7c3c-ce81-ed295895f90a@collabora.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 03:47:43PM +0200, Enric Balletbo i Serra wrote:
-> Hi Uwe, Daniel,
-> 
-> On 9/10/19 13:35, Daniel Thompson wrote:
-> > On Wed, Oct 09, 2019 at 01:21:26PM +0200, Uwe Kleine-König wrote:
-> >> On Wed, Oct 09, 2019 at 11:42:36AM +0100, Daniel Thompson wrote:
-> >>> On Wed, Oct 09, 2019 at 12:16:37PM +0200, Uwe Kleine-König wrote:
-> >>>> On Wed, Oct 09, 2019 at 10:56:35AM +0100, Daniel Thompson wrote:
-> >>>>> On Wed, Oct 09, 2019 at 11:27:13AM +0200, Enric Balletbo i Serra wrote:
-> >>>>>> Hi Uwe,
-> >>>>>>
-> >>>>>> Adding Daniel and Lee to the discussion ...
-> >>>>>
-> >>>>> Thanks!
-> >>>>>
-> >>>>>> On 8/10/19 22:31, Uwe Kleine-König wrote:
-> >>>>>>> On Tue, Oct 08, 2019 at 06:33:15PM +0200, Enric Balletbo i Serra wrote:
-> >>>>>>>>> A few thoughts to your approach here ...:
-> >>>>>>>>>
-> >>>>>>>>>  - Would it make sense to only store duty_cycle and enabled in the
-> >>>>>>>>>    driver struct?
-> >>>>>>>>>
-> >>>>>>>>
-> >>>>>>>> Yes, in fact, my first approach (that I didn't send) was only storing enabled
-> >>>>>>>> and duty cycle. For some reason I ended storing the full pwm_state struct, but I
-> >>>>>>>> guess is not really needed.
-> >>>>>>>>
-> >>>>>>>>
-> >>>>>>>>>  - Which driver is the consumer of your pwm? If I understand correctly
-> >>>>>>>>>    the following sequence is the bad one:
-> >>>>>>>>>
-> >>>>>>>>
-> >>>>>>>> The consumer is the pwm_bl driver. Actually I'n trying to identify
-> >>>>>>>> other consumers.
-> >>>>>>>
-> >>>>>>
-> >>>>>> So far, the pwm_bl driver is the only consumer of cros-ec-pwm.
-> >>>>>>
-> >>>>>>> Ah, I see why I missed to identify the problem back when I checked this
-> >>>>>>> driver. The problem is not that .duty_cycle isn't set but there .enabled
-> >>>>>>> isn't set. So maybe we just want:
-> >>>>>>>
-> >>>>>>> diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-> >>>>>>> index 2201b8c78641..0468c6ee4448 100644
-> >>>>>>> --- a/drivers/video/backlight/pwm_bl.c
-> >>>>>>> +++ b/drivers/video/backlight/pwm_bl.c
-> >>>>>>> @@ -123,6 +123,7 @@ static int pwm_backlight_update_status(struct backlight_device *bl)
-> >>>>>>>         if (brightness > 0) {
-> >>>>>>>                 pwm_get_state(pb->pwm, &state);
-> >>>>>>>                 state.duty_cycle = compute_duty_cycle(pb, brightness);
-> >>>>>>> +               state.enabled = true;
-> >>>>>>>                 pwm_apply_state(pb->pwm, &state);
-> >>>>>>>                 pwm_backlight_power_on(pb);
-> >>>>>>>         } else
-> >>>>>>>
-> >>>>>>> ? On a side note: It's IMHO strange that pwm_backlight_power_on
-> >>>>>>> reconfigures the PWM once more.
-> >>>>>>>
-> >>>>>>
-> >>>>>> Looking again to the pwm_bl code, now, I am not sure this is correct (although
-> >>>>>> it probably solves the problem for me).
-> >>>>>
-> >>>>> Looking at the pwm_bl code I wouldn't accept the above as it is but I'd
-> >>>>> almost certainly accept a patch to pwm_bl to move the PWM enable/disable
-> >>>>> out of both the power on/off functions so the duty-cycle/enable or
-> >>>>> disable can happen in one go within the update_status function. I don't
-> >>>>> think such a change would interfere with the power and enable sequencing
-> >>>>> needed by panels and it would therefore be a nice continuation of the
-> >>>>> work to convert over to the pwm_apply_state() API.
-> >>>>
-> >>>> OK for me. Enric, do you care enough to come up with a patch for pwm_bl?
-> >>>> I'd expect that this alone should already fix your issue.
-> >>>>  
-> >>>>> None of the above has anything to do with what is right or wrong for
-> >>>>> the PWM API evolution. Of course, if this thread does conclude that it
-> >>>>> is OK the duty cycle of a disabled PWM to be retained for some drivers
-> >>>>> and not others then I'd hope to see some WARN_ON()s added to the PWM
-> >>>>> framework to help bring problems to the surface with all drivers.
-> >>>>
-> >>>> I think it's not possible to add a reliable WARN_ON for that issue. It
-> >>>> is quite expected that .get_state returns something that doesn't
-> >>>> completely match the requested configuration. So if a consumer requests
-> >>>>
-> >>>> 	.duty_cycle = 1
-> >>>> 	.period = 100000000
-> >>>> 	.enabled = false
-> >>>>
-> >>>> pwm_get_state possibly returns .duty_cycle = 0 even for drivers/hardware
-> >>>> that has a concept of duty_cycle for disabled hardware.
-> >>>>
-> >>>> A bit this is addressed in https://patchwork.ozlabs.org/patch/1147517/.
-> >>>
-> >>> Isn't that intended to help identify "odd" PWM drivers rather than "odd"
-> >>> clients?
-> >>>
-> >>> Initially I was thinking that a WARN_ON() could be emitted when:
-> >>>
-> >>> 1. .duty_cycle is non-zero
-> >>> 2. .enabled is false
-> >>> 3. the PWM is not already enabled
-> >>>
-> >>> (#3 included to avoid too many false positives when disabling a PWM)
-> >>
-> >> I think I created a patch for that in the past, don't remember the
-> >> details.
-> >>
-> >>> A poisoning approach might be equally valid. If some drivers are
-> >>> permitted to "round" .duty_cycle to 0 when .enabled is false then the
-> >>> framework could get *all* drivers to behave in the same way by
-> >>> zeroing it out before calling the drivers apply method. It is not that
-> >>> big a deal but minimising the difference between driver behaviour should
-> >>> automatically reduce the difference in API usage by clients.
-> >>
-> >> I like it, but that breaks consumers that set .duty_cycle once during
-> >> probe and then only do:
-> >>
-> >> 	pwm_get_state(pwm, &state);
-> >> 	state.enabled = ...
-> >> 	pwm_apply_state(pwm, &state);
-> >>
-> >> which is a common idiom.
-> > 
-> > Sorry I must have missed something. That appears to be identical to
-> > what pwm_bl.c currently does, albeit for rather better reasons.
-> > 
-> > If setting the duty cycle and then separately enabling it is a
-> > reasonable idiom then the cros-ec-pwm driver is a broken implementation
-> > of the API and needs to be fixed regardless of any changes to pwm_bl.c .
-> > 
-> 
-> I think that Daniel has reason here. Just come to my mind that, if the fix is
-> not in the cros-ec-pwm driver we will also have the PWM sysfs user space
-> interface broken for that driver, apart from future consumers.
-> 
-> This turns on to my first approach, this patch. Uwe, You had some complains
-> regarding is if I can only store enabled and duty_cycle instead of all the
-> pwm_state, that should also work for me. If I solve that concern, might be this
-> solution acceptable for you? Do you have more concerns?
+Hi Greg,
 
-In my eyes we need a decision if "loosing" the value of .duty_cycle (and
-maybe .period) is considered ok. And if it's not we need to decide if we
-catch this in the pwm core or in each driver individually. My preference
-would be to not do it in each driver. Probably the best option is to do
-it in the core with an expressive code comment and then maybe make
-callers aware and issue a warning (if possible).
+These patches implement a few fixes identified while working on the
+QCS404 ML integration plus we now have support for mmap/unmap of
+buffers (so the process can be created with less initial memory
+requirements).
 
-But it's Thierry who has the last word on this.
+Thanks,
+srini
 
-Best regards
-Uwe
+Jorge Ramirez-Ortiz (4):
+  misc: fastrpc: add mmap/unmap support
+  misc: fastrpc: do not interrupt kernel calls
+  misc: fastrpc: handle interrupted contexts
+  misc: fastrpc: revert max init file size back to 2MB
+
+Srinivas Kandagatla (1):
+  misc: fastrpc: fix memory leak from miscdev->name
+
+ drivers/misc/fastrpc.c      | 209 ++++++++++++++++++++++++++++++++++--
+ include/uapi/misc/fastrpc.h |  15 +++
+ 2 files changed, 213 insertions(+), 11 deletions(-)
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+2.21.0
+
