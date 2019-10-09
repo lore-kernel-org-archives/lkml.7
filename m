@@ -2,119 +2,243 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0AFC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8690C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E29D21848
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:55:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ik9UQ1pV"
+	by mail.kernel.org (Postfix) with ESMTP id A5EB921848
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:55:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731724AbfJIQzH (ORCPT
+        id S1731795AbfJIQzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 12:55:07 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:42749 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731145AbfJIQzG (ORCPT
+        Wed, 9 Oct 2019 12:55:39 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6014 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730490AbfJIQzi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 12:55:06 -0400
-Received: by mail-qk1-f193.google.com with SMTP id f16so2830353qkl.9;
-        Wed, 09 Oct 2019 09:55:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2/HF9NREfSQkdboNiYLB4mdV2BC4zZWqkjbH6CrigBU=;
-        b=Ik9UQ1pVjDXAXl5D9zROUvPBuhjWeO0V8nn6PnzCOIuP5EQuq5LQEaSrM+cyyPW3qp
-         faauOXKazJwuaxqCKuYJfs+WkOjQEb4T/JMn/m8tGie6IxEYLvTp7KeUI6KfkKfudlw6
-         GITXuCJTf4PhMkMgXjVhtQfUB5bVwmkOdwm7R499I9enV9JTtSajL0hfMfrZx3pH2NtL
-         woDtjvZ4TuDQotmDSoHv4MJWWA/N6i+7d3rwvvdoV/8m9iYYvioqdqZbdwEUb56AlyZB
-         FMz6K+Tp6XkJlIntRYhqhh0YNvzlcLSoST9pjwVQhDsNB7Tpe3VXZNsZ4HKmNUychf3q
-         9AAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2/HF9NREfSQkdboNiYLB4mdV2BC4zZWqkjbH6CrigBU=;
-        b=ZqNA9w+1CefhFQskq0jnIHxmDbWPKxoE5ZCvN1DTR+cpDyr8bmf5ywpuLk2+lbMMfr
-         f90G6WnlXns4CNgMpo/UP2L95t3XZ+we4dyaSpMabgsjTEH1kJssfIaY1Zh60g+emir7
-         mAF3akPX0HfTUVNlyfoKfeePqShc3IYLxBgQsaRgulkwp+Bg1Mh0BNMWcN8EN7loEnhk
-         7ubGKQX3aS7wrVWdx99gOXM/MwiUKGqapZsDnGoxSdaDvwOKY15G3w8s8XhdWDli7vFw
-         OpdQX2OnM40Ab/A2plw21OUdB9SOcQlFTf7zVCYNa825gH7ZA0fiXRq7ihhU8R2qNqAZ
-         VQ1Q==
-X-Gm-Message-State: APjAAAXRQKMeLo9F+DwN5HLOH0SuXb55FsNGoF7LaUQgisW75IZ6OhHJ
-        KYHa/0d7NJ+F9D1ITqAV/0xe8foR1n7uhfsRgbM=
-X-Google-Smtp-Source: APXvYqwkjEP6LQDwqyHgGNWPt2O8X8oEf9t3UY72mJKFPYOpn1GVrTNy2vlG4+DasgIr1qwwNWVKWBVGof7jwzagf7U=
-X-Received: by 2002:a37:520a:: with SMTP id g10mr4604504qkb.39.1570640103797;
- Wed, 09 Oct 2019 09:55:03 -0700 (PDT)
+        Wed, 9 Oct 2019 12:55:38 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x99GjbXi121561
+        for <linux-kernel@vger.kernel.org>; Wed, 9 Oct 2019 12:55:37 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vhk3f8vv2-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 12:55:36 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
+        Wed, 9 Oct 2019 17:55:35 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 9 Oct 2019 17:55:29 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x99GtTWv45220108
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 9 Oct 2019 16:55:29 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EF22A4C050;
+        Wed,  9 Oct 2019 16:55:28 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 61EBF4C044;
+        Wed,  9 Oct 2019 16:55:24 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.75.123])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  9 Oct 2019 16:55:24 +0000 (GMT)
+Subject: Re: [RFC v5 4/6] sched/fair: Tune task wake-up logic to pack small
+ background tasks on fewer cores
+To:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Hillf Danton <hdanton@sina.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Doug Smythies <dsmythies@telus.net>,
+        Quentin Perret <qperret@qperret.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+References: <20191007083051.4820-1-parth@linux.ibm.com>
+ <20191008132842.6612-1-hdanton@sina.com>
+ <d4c936d9-c99f-e50d-95c9-0732ae45d1b9@linux.ibm.com>
+ <CAKfTPtDghQrjK=4Pd0RbvwbQTU1SP88nVp6NLkNitk+07UfadA@mail.gmail.com>
+From:   Parth Shah <parth@linux.ibm.com>
+Date:   Wed, 9 Oct 2019 22:25:23 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.0
 MIME-Version: 1.0
-References: <20191009164929.17242-1-i.maximets@ovn.org>
-In-Reply-To: <20191009164929.17242-1-i.maximets@ovn.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 9 Oct 2019 09:54:52 -0700
-Message-ID: <CAEf4BzbL1qxyZaS=3-++Z=WDAK+0gVtVEFijgj_SJFi_NpAwyw@mail.gmail.com>
-Subject: Re: [PATCH bpf v2] libbpf: fix passing uninitialized bytes to setsockopt
-To:     Ilya Maximets <i.maximets@ovn.org>
-Cc:     Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAKfTPtDghQrjK=4Pd0RbvwbQTU1SP88nVp6NLkNitk+07UfadA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19100916-0012-0000-0000-000003568EB5
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19100916-0013-0000-0000-0000219194CD
+Message-Id: <24b07842-1770-13b9-8182-8dcf4f0a28fa@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-09_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910090147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 9, 2019 at 9:49 AM Ilya Maximets <i.maximets@ovn.org> wrote:
->
-> 'struct xdp_umem_reg' has 4 bytes of padding at the end that makes
-> valgrind complain about passing uninitialized stack memory to the
-> syscall:
->
->   Syscall param socketcall.setsockopt() points to uninitialised byte(s)
->     at 0x4E7AB7E: setsockopt (in /usr/lib64/libc-2.29.so)
->     by 0x4BDE035: xsk_umem__create@@LIBBPF_0.0.4 (xsk.c:172)
->   Uninitialised value was created by a stack allocation
->     at 0x4BDDEBA: xsk_umem__create@@LIBBPF_0.0.4 (xsk.c:140)
->
-> Padding bytes appeared after introducing of a new 'flags' field.
-> memset() is required to clear them.
->
-> Fixes: 10d30e301732 ("libbpf: add flags to umem config")
-> Signed-off-by: Ilya Maximets <i.maximets@ovn.org>
-> ---
->
 
-Thanks!
 
-Acked-by: Andrii Nakryiko <andriin@fb.com>
+On 10/9/19 5:04 PM, Vincent Guittot wrote:
+> On Wed, 9 Oct 2019 at 11:23, Parth Shah <parth@linux.ibm.com> wrote:
+>>
+>>
+>>
+>> On 10/8/19 6:58 PM, Hillf Danton wrote:
+>>>
+>>> On Mon,  7 Oct 2019 14:00:49 +0530 Parth Shah wrote:
+>>>> +/*
+>>>> + * Try to find a non idle core in the system  based on few heuristics:
+>>>> + * - Keep track of overutilized (>80% util) and busy (>12.5% util) CPUs
+>>>> + * - If none CPUs are busy then do not select the core for task packing
+>>>> + * - If atleast one CPU is busy then do task packing unless overutilized CPUs
+>>>> + *   count is < busy/2 CPU count
+>>>> + * - Always select idle CPU for task packing
+>>>> + */
+>>>> +static int select_non_idle_core(struct task_struct *p, int prev_cpu, int target)
+>>>> +{
+>>>> +    struct cpumask *cpus = this_cpu_cpumask_var_ptr(turbo_sched_mask);
+>>>> +    int iter_cpu, sibling;
+>>>> +
+>>>> +    cpumask_and(cpus, cpu_online_mask, p->cpus_ptr);
+>>>> +
+>>>> +    for_each_cpu_wrap(iter_cpu, cpus, prev_cpu) {
+>>>> +            int idle_cpu_count = 0, non_idle_cpu_count = 0;
+>>>> +            int overutil_cpu_count = 0;
+>>>> +            int busy_cpu_count = 0;
+>>>> +            int best_cpu = iter_cpu;
+>>>> +
+>>>> +            for_each_cpu(sibling, cpu_smt_mask(iter_cpu)) {
+>>>> +                    __cpumask_clear_cpu(sibling, cpus);
+>>>> +                    if (idle_cpu(iter_cpu)) {
+>>>
+>>> Would you please elaborate the reasons that the iter cpu is checked idle
+>>> more than once for finding a busy core?
+>>>
+>>
+>> Thanks for looking at the patches.
+>> Could you please point me out where iter_cpu is checked more than once?
+> 
+> I think that point is that you have a sibling that there is
+> for_each_cpu(sibling, cpu_smt_mask(iter_cpu) but you never use sibling
+> in the loop except for clearing it on the cpumask cpus
+> All the tests are done with iter_cpu so you will test several time
+> iter_cpus but never the other sibling
+> Should you use sibling instead ?
+> 
 
-> Version 2:
->   * Struct initializer replaced with explicit memset(). [Andrii]
->
->  tools/lib/bpf/xsk.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/tools/lib/bpf/xsk.c b/tools/lib/bpf/xsk.c
-> index a902838f9fcc..9d5348086203 100644
-> --- a/tools/lib/bpf/xsk.c
-> +++ b/tools/lib/bpf/xsk.c
-> @@ -163,6 +163,7 @@ int xsk_umem__create_v0_0_4(struct xsk_umem **umem_ptr, void *umem_area,
->         umem->umem_area = umem_area;
->         xsk_set_umem_config(&umem->config, usr_config);
->
-> +       memset(&mr, 0, sizeof(mr));
->         mr.addr = (uintptr_t)umem_area;
->         mr.len = size;
->         mr.chunk_size = umem->config.frame_size;
-> --
-> 2.17.1
->
+oh got it. it was unintentional here, my bad.
+good find
+
+I did s/iter_cpu/sibling/ at required places:
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index d4a1b6474338..a75c2b382771 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -6001,14 +6001,14 @@ static int select_non_idle_core(struct task_struct
+*p, int prev_cpu, int target)
+
+                for_each_cpu(sibling, cpu_smt_mask(iter_cpu)) {
+                        __cpumask_clear_cpu(sibling, cpus);
+-                       if (idle_cpu(iter_cpu)) {
++                       if (idle_cpu(sibling)) {
+                                idle_cpu_count++;
+-                               best_cpu = iter_cpu;
++                               best_cpu = sibling;
+                        } else {
+                                non_idle_cpu_count++;
+-                               if (cpu_overutilized(iter_cpu))
++                               if (cpu_overutilized(sibling))
+                                        overutil_cpu_count++;
+-                               if (is_cpu_busy(cpu_util(iter_cpu)))
++                               if (is_cpu_busy(cpu_util(sibling)))
+                                        busy_cpu_count++;
+                        }
+                }
+
+and the took the results again to see functionality changes.
+Results are still within the bounds with maximum of 15% gain in performance
+and <2% of regression.
+
+		Frequency benefit of TurboSched w.r.t. CFS
+   +-+-+-+-+--+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+--+-+-+-+-+
+20 +-+ + + +  + + + + + + + +  + + + + + + + +  + + + + + + + +  + + + +-+
+   |                                      Frequency benefit in %         |
+   |                    **                                               |
+15 +-+        * * **    ******                                         +-+
+   |          * * ************                                           |
+   |       ** * * ************ *                                         |
+10 +-+     ** * * ************ *                                       +-+
+   |       ** * * ************ * * ****                                  |
+   |     **** * * ************ * * ****                                  |
+ 5 +-+ ****** * * ************ * * ******                              +-+
+   |   ****** * * ************ * * **********                            |
+ 0 +-******** * * ************ * * ************ * * * ********** * * * **+
+   |                                                                     |
+   |                                                                     |
+-5 +-+                                                                 +-+
+   | + + + +  + + + + + + + +  + + + + + + + +  + + + + + + + +  + + + + |
+   +-+-+-+-+--+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+--+-+-+-+-+
+     0 1 2 3  4 5 6 7 8 91011 1213141516171819 2021222324252627 28293031
+                           No. of workload threads
+
+		 Performance benefit of TurboSched w.r.t. CFS
+20 +-+-+-+-+--+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+--+-+-+-+-+
+   | + + + +  + + + + + + + +  + + + + + + + +  + + + + + + + +  + + + + |
+   |                                    Performance benefit in %         |
+15 +-+                    **                                           +-+
+   |                      **                                             |
+   |                  ******** *                                         |
+10 +-+                ******** *   **                                  +-+
+   |                  ******** * * **                                    |
+   |                  ******** * * **                                    |
+ 5 +-+              ********** * * ******                              +-+
+   |                ********** * * **********                            |
+   |              ************ * * **********   *       **               |
+ 0 +-******** * * ************ * * ************ * * * ********** * * * **+
+   | ******** *                                                          |
+   |                                                                     |
+-5 +-+                                                                 +-+
+   | + + + +  + + + + + + + +  + + + + + + + +  + + + + + + + +  + + + + |
+   +-+-+-+-+--+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+--+-+-+-+-+
+     0 1 2 3  4 5 6 7 8 91011 1213141516171819 2021222324252627 28293031
+                           No. of workload threads
+
+Thanks,
+Parth
+
+> 
+>>
+>>>> +                            idle_cpu_count++;
+>>>> +                            best_cpu = iter_cpu;
+>>>> +                    } else {
+>>>> +                            non_idle_cpu_count++;
+>>>> +                            if (cpu_overutilized(iter_cpu))
+>>>> +                                    overutil_cpu_count++;
+>>>> +                            if (is_cpu_busy(cpu_util(iter_cpu)))
+>>>> +                                    busy_cpu_count++;
+>>>> +                    }
+>>>> +            }
+>>>> +
+>>>
+>>
+
