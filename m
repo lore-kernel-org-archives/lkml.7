@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A8B5C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 187F3C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01EE120679
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:29:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E77C120B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:29:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570642161;
-	bh=pzYismJLfx4vIF4SyCyhbDR9A3inGA4T9Ll9hlAjaDc=;
+	s=default; t=1570642165;
+	bh=iUn0+AXJbd2oK9c2oxMcnZEUu2QM6vGDtG0r2+b2KF4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x7Yp3r7zSu+iBJTI0hymy+jBMvnL85Kk1B3sIAD4wAzCj8GWwobYdblxd5Vg/pCT/
-	 McHegoTmcZ2yxoCAkIQbPgrJSriGeZ2nw3WXDI+HVc4xfLETkaEuErF9tYO8+J55Fk
-	 gtCXG21bRheb9126v7DjtSnvhbd/XTQJg5Zlq0TE=
+	b=jqGFs8l2jsRVU2GNhBs3nt8ujHzg6BOaRbjT8HH9AO0jriQz7OY+Xe2c6rro15iQV
+	 +JlOD0kRktHvjNNtLJUXnTjYm2bz2FT4VNSJG3VDufc7L045Fzcy4iK1pO3TTfuNEZ
+	 6e8eG0JoiVZQ0H62KEBbSQi1jNPP1TJZr7MyDmbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732861AbfJIR3T (ORCPT
+        id S1732499AbfJIR3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:29:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48802 "EHLO mail.kernel.org"
+        Wed, 9 Oct 2019 13:29:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732213AbfJIRYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732211AbfJIRYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 9 Oct 2019 13:24:14 -0400
 Received: from sasha-vm.mshome.net (unknown [167.220.2.234])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1684A21D56;
-        Wed,  9 Oct 2019 17:24:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C20FD21924;
+        Wed,  9 Oct 2019 17:24:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570641854;
-        bh=pzYismJLfx4vIF4SyCyhbDR9A3inGA4T9Ll9hlAjaDc=;
+        s=default; t=1570641853;
+        bh=iUn0+AXJbd2oK9c2oxMcnZEUu2QM6vGDtG0r2+b2KF4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gobPve6otbB5UBCpr2m+2faLZCL9pNjwcVTYHogXAZtbDeDCYgXroqrhCrUCwgQs5
-         MXFmjmZmeAD/jGOgN+ipwDIQSNg5ICR1NS9LOnELvrTRniAjlekiSjG0iP155SZXvY
-         zTlCXXbhvDpr2CoU4rahOhYEsHQup5yWcmJ1/MSQ=
+        b=TCfrPSureOAEnLxKYrmXCsJQViA+gRTExvKDVl7nPmU0ROm2PkIYJoYHpSO13XaK1
+         fYURwBTHvQm/1n+IaKabS5t8AaHOpSb2Osw0UauoY2h8w/KO5073w6wCMa6sQukG+Y
+         gvIZERXVc5wHxwDJkjAqutVBPekpPBXAqnrwmK9I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Sandeen <sandeen@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 23/26] vfs: Fix EOVERFLOW testing in put_compat_statfs64
-Date:   Wed,  9 Oct 2019 13:05:55 -0400
-Message-Id: <20191009170558.32517-23-sashal@kernel.org>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 22/26] lib: textsearch: fix escapes in example code
+Date:   Wed,  9 Oct 2019 13:05:54 -0400
+Message-Id: <20191009170558.32517-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191009170558.32517-1-sashal@kernel.org>
 References: <20191009170558.32517-1-sashal@kernel.org>
@@ -59,64 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Sandeen <sandeen@redhat.com>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-[ Upstream commit cc3a7bfe62b947b423fcb2cfe89fcba92bf48fa3 ]
+[ Upstream commit 2105b52e30debe7f19f3218598d8ae777dcc6776 ]
 
-Today, put_compat_statfs64() disallows nearly any field value over
-2^32 if f_bsize is only 32 bits, but that makes no sense.
-compat_statfs64 is there for the explicit purpose of providing 64-bit
-fields for f_files, f_ffree, etc.  And f_bsize is always only 32 bits.
+This textsearch code example does not need the '\' escapes and they can
+be misleading to someone reading the example. Also, gcc and sparse warn
+that the "\%d" is an unknown escape sequence.
 
-As a result, 32-bit userspace gets -EOVERFLOW for i.e.  large file
-counts even with -D_FILE_OFFSET_BITS=64 set.
-
-In reality, only f_bsize and f_frsize can legitimately overflow
-(fields like f_type and f_namelen should never be large), so test
-only those fields.
-
-This bug was discussed at length some time ago, and this is the proposal
-Al suggested at https://lkml.org/lkml/2018/8/6/640.  It seemed to get
-dropped amid the discussion of other related changes, but this
-part seems obviously correct on its own, so I've picked it up and
-sent it, for expediency.
-
-Fixes: 64d2ab32efe3 ("vfs: fix put_compat_statfs64() does not handle errors")
-Signed-off-by: Eric Sandeen <sandeen@redhat.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 5968a70d7af5 ("textsearch: fix kernel-doc warnings and add kernel-api section")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: netdev@vger.kernel.org
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/statfs.c | 17 ++++-------------
- 1 file changed, 4 insertions(+), 13 deletions(-)
+ lib/textsearch.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/statfs.c b/fs/statfs.c
-index f0216629621d6..56f655f757ffb 100644
---- a/fs/statfs.c
-+++ b/fs/statfs.c
-@@ -304,19 +304,10 @@ COMPAT_SYSCALL_DEFINE2(fstatfs, unsigned int, fd, struct compat_statfs __user *,
- static int put_compat_statfs64(struct compat_statfs64 __user *ubuf, struct kstatfs *kbuf)
- {
- 	struct compat_statfs64 buf;
--	if (sizeof(ubuf->f_bsize) == 4) {
--		if ((kbuf->f_type | kbuf->f_bsize | kbuf->f_namelen |
--		     kbuf->f_frsize | kbuf->f_flags) & 0xffffffff00000000ULL)
--			return -EOVERFLOW;
--		/* f_files and f_ffree may be -1; it's okay
--		 * to stuff that into 32 bits */
--		if (kbuf->f_files != 0xffffffffffffffffULL
--		 && (kbuf->f_files & 0xffffffff00000000ULL))
--			return -EOVERFLOW;
--		if (kbuf->f_ffree != 0xffffffffffffffffULL
--		 && (kbuf->f_ffree & 0xffffffff00000000ULL))
--			return -EOVERFLOW;
--	}
-+
-+	if ((kbuf->f_bsize | kbuf->f_frsize) & 0xffffffff00000000ULL)
-+		return -EOVERFLOW;
-+
- 	memset(&buf, 0, sizeof(struct compat_statfs64));
- 	buf.f_type = kbuf->f_type;
- 	buf.f_bsize = kbuf->f_bsize;
+diff --git a/lib/textsearch.c b/lib/textsearch.c
+index 5939549c0e7bc..9135c29add624 100644
+--- a/lib/textsearch.c
++++ b/lib/textsearch.c
+@@ -93,9 +93,9 @@
+  *       goto errout;
+  *   }
+  *
+- *   pos = textsearch_find_continuous(conf, \&state, example, strlen(example));
++ *   pos = textsearch_find_continuous(conf, &state, example, strlen(example));
+  *   if (pos != UINT_MAX)
+- *       panic("Oh my god, dancing chickens at \%d\n", pos);
++ *       panic("Oh my god, dancing chickens at %d\n", pos);
+  *
+  *   textsearch_destroy(conf);
+  */
 -- 
 2.20.1
 
