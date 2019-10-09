@@ -2,241 +2,146 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8509ECE58E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D1B9ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93CAF218AC
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:44:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CB2621835
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:48:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tronnes.org header.i=@tronnes.org header.b="L69K3sSV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731072AbfJIMoW (ORCPT
+        id S1730674AbfJIMs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 08:44:22 -0400
-Received: from 8bytes.org ([81.169.241.247]:46702 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727878AbfJIMoW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 08:44:22 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 46814401; Wed,  9 Oct 2019 14:44:20 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-Cc:     hpa@zytor.com, x86@kernel.org, rjw@rjwysocki.net, lenb@kernel.org,
-        james.morse@arm.com, tony.luck@intel.com,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-mm@kvack.org, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH V2] x86/mm: Split vmalloc_sync_all()
-Date:   Wed,  9 Oct 2019 14:44:18 +0200
-Message-Id: <20191009124418.8286-1-joro@8bytes.org>
-X-Mailer: git-send-email 2.17.1
+        Wed, 9 Oct 2019 08:48:27 -0400
+Received: from smtp.domeneshop.no ([194.63.252.55]:51771 "EHLO
+        smtp.domeneshop.no" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727219AbfJIMs0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 08:48:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=tronnes.org
+        ; s=ds201810; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:Cc:From:References:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=SYIJ6IPWOlpj5WATHXmZNe6pBHCn+BfMqMdU9hKzdt8=; b=L69K3sSVmY1LeI7Fga3acpiRNq
+        1qvgIiW40RId5WHUHO+isXNclHGgeUPyvczPdnNDNOl+2KOtMVkgaWC1aNuxCL0F24uDXDpThLzbb
+        qywKftzwBjivTZkR2OpGXnRqKlm4803pQMuy2CP8+96KIo8vtD0eHRl0PGuZZUdeX+QAE6H0QIptP
+        G51GadLMl2V5hpPN+ZlbjXdJo2gFuI36y2fq6V1jQbcETkod3GQw2ATIdQtlrOg6zBm+Fqz8O8TC1
+        mBpmguOxGCZPRs9lotdzAD2mo6syj2HwI3ZSpGMzyYFOsURO8UoUPHM+yFWivSZydKt+aDLXqlUXv
+        khH7fLxg==;
+Received: from 211.81-166-168.customer.lyse.net ([81.166.168.211]:51119 helo=[192.168.10.177])
+        by smtp.domeneshop.no with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <noralf@tronnes.org>)
+        id 1iIBOC-0003Og-Ok; Wed, 09 Oct 2019 14:48:24 +0200
+Subject: Re: [1/3] drm/tinydrm/Kconfig: Remove menuconfig DRM_TINYDRM
+To:     Daniel Vetter <daniel@ffwll.ch>
+References: <20190725105132.22545-2-noralf@tronnes.org>
+ <20191001123636.GA8351@ziepe.ca>
+ <1fffe7b1-a738-a9e3-ea5f-9d696cb98650@tronnes.org>
+ <20191001134555.GB22532@ziepe.ca>
+ <75055e2d-44f7-0cba-4e41-537097b73c3c@tronnes.org>
+ <20191009104531.GW16989@phenom.ffwll.local>
+From:   =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, dri-devel@lists.freedesktop.org,
+        sam@ravnborg.org, hdegoede@redhat.com, linux-kernel@vger.kernel.org
+Message-ID: <1bc77839-c47a-6e79-dd6e-e26e05b34eae@tronnes.org>
+Date:   Wed, 9 Oct 2019 14:48:20 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191009104531.GW16989@phenom.ffwll.local>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
 
-Git commit 3f8fd02b1bf1 ("mm/vmalloc: Sync unmappings in
-__purge_vmap_area_lazy()") introduced a call to vmalloc_sync_all() in
-the vunmap() code-path.  While this change was necessary to maintain
-correctness on x86-32-pae kernels, it also adds additional cycles for
-architectures that don't need it.
 
-Specifically on x86-64 with CONFIG_VMAP_STACK=y some people reported
-severe performance regressions in micro-benchmarks because it now also
-calls the x86-64 implementation of vmalloc_sync_all() on vunmap(). But
-the vmalloc_sync_all() implementation on x86-64 is only needed for
-newly created mappings.
+Den 09.10.2019 12.45, skrev Daniel Vetter:
+> On Tue, Oct 01, 2019 at 04:07:38PM +0200, Noralf Trønnes wrote:
+>> Hi drm-misc maintainers,
+>>
+>> I have just applied a patch to drm-misc-next that as it turns out should
+>> have been applied to -fixes for this -rc cycle.
+>>
+>> Should I cherry pick it to drm-misc-next-fixes?
+> 
+> Yup, cherry pick and reference the commit that's already in -next (in case
+> it creates conflicts down the road that reference makes the mess easier to
+> understand).
+> 
 
-To avoid the unnecessary work on x86-64 and to gain the performance
-back, split up vmalloc_sync_all() into two functions:
+I remembered that Maxime just sent out a fixes pull and the subject says
+drm-misc-fixes. The prevous one he sent out was -next-fixes.
+So it looks like I should cherry pick to drm-misc-fixes for it to show
+up in 5.4?
 
-	* vmalloc_sync_mappings(), and
-	* vmalloc_sync_unmappings()
+Noralf.
 
-Most call-sites to vmalloc_sync_all() only care about new mappings
-being synchronized. The only exception is the new call-site
-added in the above mentioned commit.
-
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Fixes: 3f8fd02b1bf1 ("mm/vmalloc: Sync unmappings in __purge_vmap_area_lazy()")
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
-Changes to initial post:
-	- Added comments to x86-64 version of
-	  vmalloc_sync_[un]mappings() as suggested by Dave
-	  Hansen.
-
- arch/x86/mm/fault.c      | 26 ++++++++++++++++++++++++--
- drivers/acpi/apei/ghes.c |  2 +-
- include/linux/vmalloc.h  |  5 +++--
- kernel/notifier.c        |  2 +-
- mm/nommu.c               | 10 +++++++---
- mm/vmalloc.c             | 11 +++++++----
- 6 files changed, 43 insertions(+), 13 deletions(-)
-
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 9ceacd1156db..94174361f524 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -189,7 +189,7 @@ static inline pmd_t *vmalloc_sync_one(pgd_t *pgd, unsigned long address)
- 	return pmd_k;
- }
- 
--void vmalloc_sync_all(void)
-+static void vmalloc_sync(void)
- {
- 	unsigned long address;
- 
-@@ -216,6 +216,16 @@ void vmalloc_sync_all(void)
- 	}
- }
- 
-+void vmalloc_sync_mappings(void)
-+{
-+	vmalloc_sync();
-+}
-+
-+void vmalloc_sync_unmappings(void)
-+{
-+	vmalloc_sync();
-+}
-+
- /*
-  * 32-bit:
-  *
-@@ -318,11 +328,23 @@ static void dump_pagetable(unsigned long address)
- 
- #else /* CONFIG_X86_64: */
- 
--void vmalloc_sync_all(void)
-+void vmalloc_sync_mappings(void)
- {
-+	/*
-+	 * 64-bit mappings might allocate new p4d/pud pages
-+	 * that need to be propagated to all tasks' PGDs.
-+	 */
- 	sync_global_pgds(VMALLOC_START & PGDIR_MASK, VMALLOC_END);
- }
- 
-+void vmalloc_sync_unmappings(void)
-+{
-+	/*
-+	 * Unmappings never allocate or free p4d/pud pages.
-+	 * No work is required here.
-+	 */
-+}
-+
- /*
-  * 64-bit:
-  *
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index 777f6f7122b4..e0d82fab1f44 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -171,7 +171,7 @@ int ghes_estatus_pool_init(int num_ghes)
- 	 * New allocation must be visible in all pgd before it can be found by
- 	 * an NMI allocating from the pool.
- 	 */
--	vmalloc_sync_all();
-+	vmalloc_sync_mappings();
- 
- 	rc = gen_pool_add(ghes_estatus_pool, addr, PAGE_ALIGN(len), -1);
- 	if (rc)
-diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
-index 4e7809408073..decac0790fc1 100644
---- a/include/linux/vmalloc.h
-+++ b/include/linux/vmalloc.h
-@@ -126,8 +126,9 @@ extern int remap_vmalloc_range_partial(struct vm_area_struct *vma,
- 
- extern int remap_vmalloc_range(struct vm_area_struct *vma, void *addr,
- 							unsigned long pgoff);
--void vmalloc_sync_all(void);
-- 
-+void vmalloc_sync_mappings(void);
-+void vmalloc_sync_unmappings(void);
-+
- /*
-  *	Lowlevel-APIs (not for driver use!)
-  */
-diff --git a/kernel/notifier.c b/kernel/notifier.c
-index d9f5081d578d..157d7c29f720 100644
---- a/kernel/notifier.c
-+++ b/kernel/notifier.c
-@@ -554,7 +554,7 @@ NOKPROBE_SYMBOL(notify_die);
- 
- int register_die_notifier(struct notifier_block *nb)
- {
--	vmalloc_sync_all();
-+	vmalloc_sync_mappings();
- 	return atomic_notifier_chain_register(&die_chain, nb);
- }
- EXPORT_SYMBOL_GPL(register_die_notifier);
-diff --git a/mm/nommu.c b/mm/nommu.c
-index 99b7ec318824..3b67bd20c2af 100644
---- a/mm/nommu.c
-+++ b/mm/nommu.c
-@@ -359,10 +359,14 @@ void vm_unmap_aliases(void)
- EXPORT_SYMBOL_GPL(vm_unmap_aliases);
- 
- /*
-- * Implement a stub for vmalloc_sync_all() if the architecture chose not to
-- * have one.
-+ * Implement a stub for vmalloc_sync_[un]mapping() if the architecture
-+ * chose not to have one.
-  */
--void __weak vmalloc_sync_all(void)
-+void __weak vmalloc_sync_mappings(void)
-+{
-+}
-+
-+void __weak vmalloc_sync_unmappings(void)
- {
- }
- 
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index a3c70e275f4e..c0be707db434 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -1259,7 +1259,7 @@ static bool __purge_vmap_area_lazy(unsigned long start, unsigned long end)
- 	 * First make sure the mappings are removed from all page-tables
- 	 * before they are freed.
- 	 */
--	vmalloc_sync_all();
-+	vmalloc_sync_unmappings();
- 
- 	/*
- 	 * TODO: to calculate a flush range without looping.
-@@ -3050,16 +3050,19 @@ int remap_vmalloc_range(struct vm_area_struct *vma, void *addr,
- EXPORT_SYMBOL(remap_vmalloc_range);
- 
- /*
-- * Implement a stub for vmalloc_sync_all() if the architecture chose not to
-- * have one.
-+ * Implement stubs for vmalloc_sync_[un]mappings () if the architecture chose
-+ * not to have one.
-  *
-  * The purpose of this function is to make sure the vmalloc area
-  * mappings are identical in all page-tables in the system.
-  */
--void __weak vmalloc_sync_all(void)
-+void __weak vmalloc_sync_mappings(void)
- {
- }
- 
-+void __weak vmalloc_sync_unmappings(void)
-+{
-+}
- 
- static int f(pte_t *pte, unsigned long addr, void *data)
- {
--- 
-2.16.4
-
+>> (I know there's a flowchart in the docs but I've never really understood
+>> it.)
+> 
+> Usually bugfixes for kernel releases should land in drm-misc-next-fixes or
+> drm-misc-fixes. But cherry-picking over in case of mistakes is ok too.
+> -Daniel
+> 
+>>
+>> Noralf.
+>>
+>> Den 01.10.2019 15.45, skrev Jason Gunthorpe:
+>>> On Tue, Oct 01, 2019 at 03:28:46PM +0200, Noralf Trønnes wrote:
+>>>>
+>>>>
+>>>> Den 01.10.2019 14.36, skrev Jason Gunthorpe:
+>>>>> On Thu, Jul 25, 2019 at 12:51:30PM +0200, Noralf Trønnes wrote:
+>>>>>> This makes the tiny drivers visible by default without having to enable a
+>>>>>> knob.
+>>>>>>
+>>>>>> Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
+>>>>>> Reviewed-by: Hans de Goede <hdegoede@redhat.com> to it once
+>>>>>>  drivers/gpu/drm/Makefile        |  2 +-
+>>>>>>  drivers/gpu/drm/tinydrm/Kconfig | 37 +++++++++++++++++++--------------
+>>>>>>  2 files changed, 22 insertions(+), 17 deletions(-)
+>>>>>
+>>>>> Bisection says this patch (28c47e16ea2a19adb47fe2c182cbd61cb854237c)
+>>>>> breaks kconfig stuff in v5.4-rc by creating circular
+>>>>> dependencies. Could someone send a -rc patch to fix this please?
+>>>>>
+>>>>> THINKPAD_ACPI (defined at drivers/platform/x86/Kconfig:484), with definition...
+>>>>> ...depends on FB_SSD1307 (defined at drivers/video/fbdev/Kconfig:2259), with definition...
+>>>>> ...depends on FB (defined at drivers/video/fbdev/Kconfig:12), with definition...
+>>>>> ...depends on DRM_KMS_FB_HELPER (defined at drivers/gpu/drm/Kconfig:79), with definition...
+>>>>> ...depends on DRM_KMS_HELPER (defined at drivers/gpu/drm/Kconfig:73), with definition...
+>>>>> ...depends on TINYDRM_REPAPER (defined at drivers/gpu/drm/tinydrm/Kconfig:51), with definition...
+>>>>> ...depends on THERMAL (defined at drivers/thermal/Kconfig:6), with definition...
+>>>>> ...depends on SENSORS_NPCM7XX (defined at drivers/hwmon/Kconfig:1285), with definition...
+>>>>> ...depends on HWMON (defined at drivers/hwmon/Kconfig:6), with definition...
+>>>>> ...depends on THINKPAD_ACPI (defined at drivers/platform/x86/Kconfig:484), with definition...
+>>>>> ...depends on ACPI_VIDEO (defined at drivers/acpi/Kconfig:193), with definition...
+>>>>> ...depends on ACER_WMI (defined at drivers/platform/x86/Kconfig:19), with definition...
+>>>>> ...depends on BACKLIGHT_CLASS_DEVICE (defined at drivers/video/backlight/Kconfig:144), with definition...
+>>>>> ...depends again on THINKPAD_ACPI (defined at drivers/platform/x86/Kconfig:484)
+>>>>>
+>>>>
+>>>> Would this commit fix this by any chance:
+>>>>
+>>>> drm/tiny: Kconfig: Remove always-y THERMAL dep. from TINYDRM_REPAPER
+>>>> https://cgit.freedesktop.org/drm/drm-misc/commit/?id=dfef959803c728c616ad29b008cd91b3446a993a
+>>>
+>>> Yes, thank you, can someone send this to -rc to unbreak 5.4?
+>>>
+>>> Jason
+>>>
+> 
