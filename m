@@ -2,146 +2,185 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D1B9ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F87ECE58E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:49:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CB2621835
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:48:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tronnes.org header.i=@tronnes.org header.b="L69K3sSV"
+	by mail.kernel.org (Postfix) with ESMTP id A9B7621835
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:49:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570625382;
+	bh=BS4jso9hypNio5lXJwUJxoGbh/2wvN6PY7GhM+KUNGo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=jXmW5s0F5U8W72r3zF0Z5MuB+cLNgq9bYgDD6opPfwsQSGaCYmUgFpd+5R7KRnskj
+	 f3/EAB6QIj5B3f9q2gCUUNvMYQ5BA0sJnL5cM46wdghvbdjh0ev9KR93DmUQhF40l9
+	 XKuJwqbXBQQ9WKvN88mnX2bSbCXKgnPQ3w+RdChk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730674AbfJIMs1 (ORCPT
+        id S1730955AbfJIMtl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 08:48:27 -0400
-Received: from smtp.domeneshop.no ([194.63.252.55]:51771 "EHLO
-        smtp.domeneshop.no" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727219AbfJIMs0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 08:48:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=tronnes.org
-        ; s=ds201810; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:Cc:From:References:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=SYIJ6IPWOlpj5WATHXmZNe6pBHCn+BfMqMdU9hKzdt8=; b=L69K3sSVmY1LeI7Fga3acpiRNq
-        1qvgIiW40RId5WHUHO+isXNclHGgeUPyvczPdnNDNOl+2KOtMVkgaWC1aNuxCL0F24uDXDpThLzbb
-        qywKftzwBjivTZkR2OpGXnRqKlm4803pQMuy2CP8+96KIo8vtD0eHRl0PGuZZUdeX+QAE6H0QIptP
-        G51GadLMl2V5hpPN+ZlbjXdJo2gFuI36y2fq6V1jQbcETkod3GQw2ATIdQtlrOg6zBm+Fqz8O8TC1
-        mBpmguOxGCZPRs9lotdzAD2mo6syj2HwI3ZSpGMzyYFOsURO8UoUPHM+yFWivSZydKt+aDLXqlUXv
-        khH7fLxg==;
-Received: from 211.81-166-168.customer.lyse.net ([81.166.168.211]:51119 helo=[192.168.10.177])
-        by smtp.domeneshop.no with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <noralf@tronnes.org>)
-        id 1iIBOC-0003Og-Ok; Wed, 09 Oct 2019 14:48:24 +0200
-Subject: Re: [1/3] drm/tinydrm/Kconfig: Remove menuconfig DRM_TINYDRM
-To:     Daniel Vetter <daniel@ffwll.ch>
-References: <20190725105132.22545-2-noralf@tronnes.org>
- <20191001123636.GA8351@ziepe.ca>
- <1fffe7b1-a738-a9e3-ea5f-9d696cb98650@tronnes.org>
- <20191001134555.GB22532@ziepe.ca>
- <75055e2d-44f7-0cba-4e41-537097b73c3c@tronnes.org>
- <20191009104531.GW16989@phenom.ffwll.local>
-From:   =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, dri-devel@lists.freedesktop.org,
-        sam@ravnborg.org, hdegoede@redhat.com, linux-kernel@vger.kernel.org
-Message-ID: <1bc77839-c47a-6e79-dd6e-e26e05b34eae@tronnes.org>
-Date:   Wed, 9 Oct 2019 14:48:20 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 9 Oct 2019 08:49:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48454 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729784AbfJIMtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 08:49:41 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C2C920B7C;
+        Wed,  9 Oct 2019 12:49:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570625380;
+        bh=BS4jso9hypNio5lXJwUJxoGbh/2wvN6PY7GhM+KUNGo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=jH2fwKYGgUAT3yvVwlPaj40RpZcpMd28Pv1P0XTRASzDbfUec6elVvevVNgQPnl5L
+         SUolQjQLJky2IL2PxOIjStpZNm3Mnb717g61/tSzlO+i2tTIQjv1Iuy6WMQv+h9rJA
+         n0oJqlQTsS8MU9UPyPVj6ija2LN0Ad0y9AwzM7es=
+Date:   Wed, 9 Oct 2019 07:49:38 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Keith Busch <kbusch@kernel.org>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v3 1/2] PCI: PCIe: ASPM: Introduce pcie_aspm_enabled()
+Message-ID: <20191009124938.GA67585@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20191009104531.GW16989@phenom.ffwll.local>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0j-uSM2gheHViommWcrSaLVfzbwV3M7OOWz3GyzhHSwRA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Den 09.10.2019 12.45, skrev Daniel Vetter:
-> On Tue, Oct 01, 2019 at 04:07:38PM +0200, Noralf Trønnes wrote:
->> Hi drm-misc maintainers,
->>
->> I have just applied a patch to drm-misc-next that as it turns out should
->> have been applied to -fixes for this -rc cycle.
->>
->> Should I cherry pick it to drm-misc-next-fixes?
+On Wed, Oct 09, 2019 at 12:54:37AM +0200, Rafael J. Wysocki wrote:
+> On Tue, Oct 8, 2019 at 11:16 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > On Tue, Oct 08, 2019 at 11:27:51AM +0200, Rafael J. Wysocki wrote:
+> > > On Tue, Oct 8, 2019 at 12:34 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > On Thu, Aug 08, 2019 at 11:55:07PM +0200, Rafael J. Wysocki wrote:
+> > > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > > >
+> > > > > Add a function checking whether or not PCIe ASPM has been enabled for
+> > > > > a given device.
+> > > > >
+> > > > > It will be used by the NVMe driver to decide how to handle the
+> > > > > device during system suspend.
+> > > > >
+> > > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > > > ---
+> > > > >
+> > > > > v2 -> v3:
+> > > > >   * Make the new function return bool.
+> > > > >   * Change its name back to pcie_aspm_enabled().
+> > > > >   * Fix kerneldoc comment formatting.
+> > > > >
+> > > > > -> v2:
+> > > > >   * Move the PCI/PCIe ASPM changes to a separate patch.
+> > > > >   * Add the _mask suffix to the new function name.
+> > > > >   * Add EXPORT_SYMBOL_GPL() to the new function.
+> > > > >   * Avoid adding an unnecessary blank line.
+> > > > >
+> > > > > ---
+> > > > >  drivers/pci/pcie/aspm.c |   20 ++++++++++++++++++++
+> > > > >  include/linux/pci.h     |    3 +++
+> > > > >  2 files changed, 23 insertions(+)
+> > > > >
+> > > > > Index: linux-pm/drivers/pci/pcie/aspm.c
+> > > > > ===================================================================
+> > > > > --- linux-pm.orig/drivers/pci/pcie/aspm.c
+> > > > > +++ linux-pm/drivers/pci/pcie/aspm.c
+> > > > > @@ -1170,6 +1170,26 @@ static int pcie_aspm_get_policy(char *bu
+> > > > >  module_param_call(policy, pcie_aspm_set_policy, pcie_aspm_get_policy,
+> > > > >       NULL, 0644);
+> > > > >
+> > > > > +/**
+> > > > > + * pcie_aspm_enabled - Check if PCIe ASPM has been enabled for a device.
+> > > > > + * @pci_device: Target device.
+> > > > > + */
+> > > > > +bool pcie_aspm_enabled(struct pci_dev *pci_device)
+> > > > > +{
+> > > > > +     struct pci_dev *bridge = pci_upstream_bridge(pci_device);
+> > > > > +     bool ret;
+> > > > > +
+> > > > > +     if (!bridge)
+> > > > > +             return false;
+> > > > > +
+> > > > > +     mutex_lock(&aspm_lock);
+> > > > > +     ret = bridge->link_state ? !!bridge->link_state->aspm_enabled : false;
+> > > > > +     mutex_unlock(&aspm_lock);
+> > > >
+> > > > Why do we need to acquire aspm_lock here?  We aren't modifying
+> > > > anything, and I don't think we're preventing a race.  If this races
+> > > > with another thread that changes aspm_enabled, we'll return either the
+> > > > old state or the new one, and I think that's still the case even if we
+> > > > don't acquire aspm_lock.
+> > >
+> > > Well, if we can guarantee that pci_remove_bus_device() will never be
+> > > called in parallel with this helper, then I agree, but can we
+> > > guarantee that?
+> >
+> > Hmm, yeah, I guess that's the question.  It's not a race with another
+> > thread changing aspm_enabled; the potential race is with another
+> > thread removing the last child of "bridge", which will free the
+> > link_state and set bridge->link_state = NULL.
+> >
+> > I think it should be safe to call device-related PCI interfaces if
+> > you're holding a reference to the device, e.g., from a driver bound to
+> > the device or a sysfs accessor.  Since we call pcie_aspm_enabled(dev)
+> > from a driver bound to "dev", another thread should not be able to
+> > remove "dev" while we're using it.
+> >
+> > I know that's a little hand-wavey, but if it weren't true, I think
+> > we'd have a lot more locking sprinkled everywhere in the PCI core than
+> > we do.
+> >
+> > This has implications for Heiner's ASPM sysfs patches because we're
+> > currently doing this in sysfs accessors:
+> >
+> >   static ssize_t aspm_attr_show_common(struct device *dev, ...)
+> >   {
+> >     ...
+> >     link = pcie_aspm_get_link(pdev);
+> >
+> >     mutex_lock(&aspm_lock);
+> >     enabled = link->aspm_enabled & state;
+> >     mutex_unlock(&aspm_lock);
+> >     ...
+> >   }
+> >
+> > I assume sysfs must be holding a reference that guarantees "dev" is
+> > valid througout this code, and therefore we should not need to hold
+> > aspm_lock.
 > 
-> Yup, cherry pick and reference the commit that's already in -next (in case
-> it creates conflicts down the road that reference makes the mess easier to
-> understand).
+> In principle, pcie_aspm_enabled() need not be called via sysfs.
 > 
+> In the particular NVMe use case, it is called from the driver's own PM
+> callback, so it would be safe without the locking AFAICS.
 
-I remembered that Maxime just sent out a fixes pull and the subject says
-drm-misc-fixes. The prevous one he sent out was -next-fixes.
-So it looks like I should cherry pick to drm-misc-fixes for it to show
-up in 5.4?
+Right, pcie_aspm_enabled() is only used by drivers (actually only by
+the nvme driver so far).  And aspm_attr_show_common() is only used via
+new sysfs code being added by Heiner.
 
-Noralf.
+> I guess it is safe to drop the locking from there, but then it would
+> be good to mention in the kerneldoc that calling it is only safe under
+> the assumption that the link_state object cannot go away while it is
+> running.
 
->> (I know there's a flowchart in the docs but I've never really understood
->> it.)
-> 
-> Usually bugfixes for kernel releases should land in drm-misc-next-fixes or
-> drm-misc-fixes. But cherry-picking over in case of mistakes is ok too.
-> -Daniel
-> 
->>
->> Noralf.
->>
->> Den 01.10.2019 15.45, skrev Jason Gunthorpe:
->>> On Tue, Oct 01, 2019 at 03:28:46PM +0200, Noralf Trønnes wrote:
->>>>
->>>>
->>>> Den 01.10.2019 14.36, skrev Jason Gunthorpe:
->>>>> On Thu, Jul 25, 2019 at 12:51:30PM +0200, Noralf Trønnes wrote:
->>>>>> This makes the tiny drivers visible by default without having to enable a
->>>>>> knob.
->>>>>>
->>>>>> Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
->>>>>> Reviewed-by: Hans de Goede <hdegoede@redhat.com> to it once
->>>>>>  drivers/gpu/drm/Makefile        |  2 +-
->>>>>>  drivers/gpu/drm/tinydrm/Kconfig | 37 +++++++++++++++++++--------------
->>>>>>  2 files changed, 22 insertions(+), 17 deletions(-)
->>>>>
->>>>> Bisection says this patch (28c47e16ea2a19adb47fe2c182cbd61cb854237c)
->>>>> breaks kconfig stuff in v5.4-rc by creating circular
->>>>> dependencies. Could someone send a -rc patch to fix this please?
->>>>>
->>>>> THINKPAD_ACPI (defined at drivers/platform/x86/Kconfig:484), with definition...
->>>>> ...depends on FB_SSD1307 (defined at drivers/video/fbdev/Kconfig:2259), with definition...
->>>>> ...depends on FB (defined at drivers/video/fbdev/Kconfig:12), with definition...
->>>>> ...depends on DRM_KMS_FB_HELPER (defined at drivers/gpu/drm/Kconfig:79), with definition...
->>>>> ...depends on DRM_KMS_HELPER (defined at drivers/gpu/drm/Kconfig:73), with definition...
->>>>> ...depends on TINYDRM_REPAPER (defined at drivers/gpu/drm/tinydrm/Kconfig:51), with definition...
->>>>> ...depends on THERMAL (defined at drivers/thermal/Kconfig:6), with definition...
->>>>> ...depends on SENSORS_NPCM7XX (defined at drivers/hwmon/Kconfig:1285), with definition...
->>>>> ...depends on HWMON (defined at drivers/hwmon/Kconfig:6), with definition...
->>>>> ...depends on THINKPAD_ACPI (defined at drivers/platform/x86/Kconfig:484), with definition...
->>>>> ...depends on ACPI_VIDEO (defined at drivers/acpi/Kconfig:193), with definition...
->>>>> ...depends on ACER_WMI (defined at drivers/platform/x86/Kconfig:19), with definition...
->>>>> ...depends on BACKLIGHT_CLASS_DEVICE (defined at drivers/video/backlight/Kconfig:144), with definition...
->>>>> ...depends again on THINKPAD_ACPI (defined at drivers/platform/x86/Kconfig:484)
->>>>>
->>>>
->>>> Would this commit fix this by any chance:
->>>>
->>>> drm/tiny: Kconfig: Remove always-y THERMAL dep. from TINYDRM_REPAPER
->>>> https://cgit.freedesktop.org/drm/drm-misc/commit/?id=dfef959803c728c616ad29b008cd91b3446a993a
->>>
->>> Yes, thank you, can someone send this to -rc to unbreak 5.4?
->>>
->>> Jason
->>>
-> 
+I'll post a patch to that effect.  Thanks!
+
+Bjorn
