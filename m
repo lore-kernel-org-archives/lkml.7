@@ -2,238 +2,100 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB7BECE58E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03774C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CC6721848
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF861206B6
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:08:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PWOuk/u9"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="hNhbcpxL";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jNBGiYbu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731378AbfJINIJ (ORCPT
+        id S1731390AbfJINIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 09:08:09 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33075 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731254AbfJINIJ (ORCPT
+        Wed, 9 Oct 2019 09:08:22 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:38827 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731224AbfJINIW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 09:08:09 -0400
-Received: by mail-wr1-f66.google.com with SMTP id b9so2944975wrs.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 06:08:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SJluTP7Iu318juEgmVZU0u8unpaoIGl5t74+Cp5PAms=;
-        b=PWOuk/u9tL4/wz/b4im/a8ZiEpZR7EmAStrfBM7wBr3/zK5gmcTd8VE7OGe3SdPWs/
-         Jn3/dWp14MCRSW4zVXOuWfcagR8lbmEmD1HAAmPSHPimtoiQ/awPhVmq4F7xpLwDS1DC
-         tZxYu96zJekPT5Z6I+qRQKLxhuV8Tc4VWQrCkdFegHHi66IjKOQXhNhAxiboWo1hGpQ+
-         GeGkg1F6ZCGAS/Q/0xjtKI6KwAH0ogkYE8u13+UVClgQde09UMHStW+W02BeFjEoo8dF
-         lwy9qTdUxceflZnU9zAx4QYdodwuNKWTe2F/aTEM0zgwVDtv3sTq5ndjeNo0xl19uMTZ
-         kCPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SJluTP7Iu318juEgmVZU0u8unpaoIGl5t74+Cp5PAms=;
-        b=rWim9ILJx3hscPL/E56moBIvYhd/G4qJdkZiQWLYLukZL/fkTBlUIpoRiuY1um1P7K
-         RlnS3BwtbedDQGNBvtwc5A/CKtvZRwYcCvXq18vXymnDEMBNvjOEpCHs8MfIAEymythn
-         Dwxd+UfIgeFN54K+0gP9KqDUzBU+3tFGHikVmWQwHde8a9tCN1MW0b/WnQQ0Ta4HJK3r
-         zhnBa6Kl75jXNn/WE0TqqewnF/3HnoG5FpL7sWvYJHVaW8B6cYyrziaWzNT4/9nX2bph
-         ZiMxpXh5ASwr0U730zICSvudQ98LkPMoADNK5+02tv7HGJlCtLMHoLnHAMsaEJ4gJDfb
-         Xv+w==
-X-Gm-Message-State: APjAAAUQscC84Wsu37aEDDAVAm6q+Kmp+pIDumxHjhZ3z/5YHfO17ZBH
-        eqdG41cMUTpf0WJVAGoj5x1s6ms+L1KhMgAt/OBSyg==
-X-Google-Smtp-Source: APXvYqzfeWVaOVDYT+4IReJSxU7fFbkWaSySdf/aALt3QzhNYwcH96IJX4rFio408cCNtT1Zp8EGzLXmQOFZrOjLTjI=
-X-Received: by 2002:adf:9f08:: with SMTP id l8mr2733709wrf.325.1570626485423;
- Wed, 09 Oct 2019 06:08:05 -0700 (PDT)
+        Wed, 9 Oct 2019 09:08:22 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id D2C992214A;
+        Wed,  9 Oct 2019 09:08:20 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Wed, 09 Oct 2019 09:08:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=mLKOTL/8x5gDgJFUJhb3gNI98kn
+        LsTJTiu2myd2FUm8=; b=hNhbcpxLBrllawZD05Fou1XENFBUs9M6EKGJmP4Lia4
+        2hV2LzodIvo7MnT4LRFkfJQ8g5gs7Ss0xDmYBBWeFVQ6tgjYZpUz/a00tB0ECRj9
+        HkGgu2TAgCjblJ/ug9PHHWL0wdd4KJpKIHhuaC7ixOR6y0dMNIWeK8qyecwFpb1n
+        oeebZ4/6ziYTpYERWG6XsTu3foxkZHH1IQBvewgNvSZZm71T0EI0pTMBEp1oYfSt
+        9VkuAyrQ5oqw9x91KFSWOW+rdo9gbRncM2IgB9YC5l6Kf73+WfugJFhKni6PN59j
+        GfIHXlGhzKMg0HrV7+7QlaLVFI1w1URjL6VD3McV8cg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=mLKOTL
+        /8x5gDgJFUJhb3gNI98knLsTJTiu2myd2FUm8=; b=jNBGiYbuvNrXUM4MjX81uU
+        GqFuP/jUuo+oP39GYep1haEv3KEBTJUppsZy+ldyhL9ievsDhTVMctzaiK8312wE
+        wVae1trfvEv7z/dhmOsZaQx61FD/UG4cR+re8BhTJy2axrc0ylJZUtS6S+nsj8pB
+        h32gG2eBsmbJCkJTdgo7yDL5w9w3Vnj6/GV7wiqs1FdcnIANr3gCRRV7Qn3Yvv6C
+        6sUI4Yxxu+VfM3F8LUg78jkkTlKHN4oKxQ9yALbVQhgfhG0OMkriQ1k6gL7q3PY5
+        fWn0aH3awOhySosC65uD9Ma/9w62AGIsq9bWT2PyOYXcbBneS7w0ilB3/g31lXBQ
+        ==
+X-ME-Sender: <xms:xNudXXcK6dMPpKj0_oxaG-bTWJHiqmRyhVsvG5kvUGntUJTAD3AOhQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedriedugdefiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
+    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
+    lhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:xNudXRcrfEORuG5dl9z9rmsHxSj7qQS_5iwoIpoRpJp4H1tGnwVjKA>
+    <xmx:xNudXde6sP8rTqO2F8bQ7AC5iZXUI4sdMa9qL6dXp5o6MyHHm0-RsQ>
+    <xmx:xNudXXo44Dl4h4BbC7pwG61Q1B-UfEyrgZkvuaxbR_M5PRCwyA53uA>
+    <xmx:xNudXQFZNblyOfLkPG8IKhwn39aidh-ucqUngk2RVygeY0Ii-6868Q>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 4253ED6005D;
+        Wed,  9 Oct 2019 09:08:20 -0400 (EDT)
+Date:   Wed, 9 Oct 2019 15:08:18 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Alexander Gordeev <a.gordeev.box@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        Michael Chen <micchen@altera.com>, dmaengine@vger.kernel.org
+Subject: Re: [PATCH RFC v2 2/2] dmaengine: avalon: Intel Avalon-MM DMA
+ Interface for PCIe test
+Message-ID: <20191009130818.GB4148375@kroah.com>
+References: <cover.1570558807.git.a.gordeev.box@gmail.com>
+ <6b540aeae71112154836003f2356703df2b36333.1570558807.git.a.gordeev.box@gmail.com>
 MIME-Version: 1.0
-References: <20191004145056.43267-1-hdegoede@redhat.com> <20191004145056.43267-2-hdegoede@redhat.com>
-In-Reply-To: <20191004145056.43267-2-hdegoede@redhat.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Wed, 9 Oct 2019 15:07:54 +0200
-Message-ID: <CAKv+Gu9OU3rS-j+L+pxpK7HZi41XtQZTq9BDs6VpUC8RCq5X6g@mail.gmail.com>
-Subject: Re: [PATCH v7 1/8] efi: Export boot-services code and data as debugfs-blobs
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Peter Jones <pjones@redhat.com>,
-        Dave Olsthoorn <dave@bewaar.me>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-input@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6b540aeae71112154836003f2356703df2b36333.1570558807.git.a.gordeev.box@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 4 Oct 2019 at 16:51, Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Sometimes it is useful to be able to dump the efi boot-services code and
-> data. This commit adds these as debugfs-blobs to /sys/kernel/debug/efi,
-> but only if efi=debug is passed on the kernel-commandline as this requires
-> not freeing those memory-regions, which costs 20+ MB of RAM.
->
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
-> Changes in v5:
-> -Rename the EFI_BOOT_SERVICES flag to EFI_PRESERVE_BS_REGIONS
->
-> Changes in v4:
-> -Add new EFI_BOOT_SERVICES flag and use it to determine if the boot-services
->  memory segments are available (and thus if it makes sense to register the
->  debugfs bits for them)
->
-> Changes in v2:
-> -Do not call pr_err on debugfs call failures
-> ---
->  arch/x86/platform/efi/efi.c    |  1 +
->  arch/x86/platform/efi/quirks.c |  4 +++
->  drivers/firmware/efi/efi.c     | 53 ++++++++++++++++++++++++++++++++++
->  include/linux/efi.h            |  1 +
->  4 files changed, 59 insertions(+)
->
-> diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-> index c202e1b07e29..847730f7e74b 100644
-> --- a/arch/x86/platform/efi/efi.c
-> +++ b/arch/x86/platform/efi/efi.c
-> @@ -232,6 +232,7 @@ int __init efi_memblock_x86_reserve_range(void)
->              efi.memmap.desc_version);
->
->         memblock_reserve(pmap, efi.memmap.nr_map * efi.memmap.desc_size);
-> +       set_bit(EFI_PRESERVE_BS_REGIONS, &efi.flags);
+On Wed, Oct 09, 2019 at 12:12:31PM +0200, Alexander Gordeev wrote:
+> +config AVALON_TEST_TARGET_BASE
+> +	hex "Target device base address"
+> +	default "0x70000000"
+> +
+> +config AVALON_TEST_TARGET_SIZE
+> +	hex "Target device memory size"
+> +	default "0x10000000"
 
-Should we add a Kconfig symbol to opt into this behavior [set by the
-driver in question], instead of always preserving all boot services
-regions on all x86 systems?
+Don't put stuff like this as a configuration option, requiring the
+kernel to be rebuilt.  Make it dynamic, or from device tree, but not
+like this.
 
->
->         return 0;
->  }
-> diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-> index 3b9fd679cea9..fab12ebf0ada 100644
-> --- a/arch/x86/platform/efi/quirks.c
-> +++ b/arch/x86/platform/efi/quirks.c
-> @@ -411,6 +411,10 @@ void __init efi_free_boot_services(void)
->         int num_entries = 0;
->         void *new, *new_md;
->
-> +       /* Keep all regions for /sys/kernel/debug/efi */
-> +       if (efi_enabled(EFI_DBG))
-> +               return;
-> +
->         for_each_efi_memory_desc(md) {
->                 unsigned long long start = md->phys_addr;
->                 unsigned long long size = md->num_pages << EFI_PAGE_SHIFT;
-> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-> index 8d3e778e988b..abba49c4c46d 100644
-> --- a/drivers/firmware/efi/efi.c
-> +++ b/drivers/firmware/efi/efi.c
-> @@ -17,6 +17,7 @@
->  #include <linux/kobject.h>
->  #include <linux/module.h>
->  #include <linux/init.h>
-> +#include <linux/debugfs.h>
->  #include <linux/device.h>
->  #include <linux/efi.h>
->  #include <linux/of.h>
-> @@ -314,6 +315,55 @@ static __init int efivar_ssdt_load(void)
->  static inline int efivar_ssdt_load(void) { return 0; }
->  #endif
->
-> +#ifdef CONFIG_DEBUG_FS
-> +
-> +#define EFI_DEBUGFS_MAX_BLOBS 32
-> +
-> +static struct debugfs_blob_wrapper debugfs_blob[EFI_DEBUGFS_MAX_BLOBS];
-> +
-> +static void __init efi_debugfs_init(void)
-> +{
-> +       struct dentry *efi_debugfs;
-> +       efi_memory_desc_t *md;
-> +       char name[32];
-> +       int type_count[EFI_BOOT_SERVICES_DATA + 1] = {};
-> +       int i = 0;
-> +
-> +       efi_debugfs = debugfs_create_dir("efi", NULL);
-> +       if (IS_ERR_OR_NULL(efi_debugfs))
-> +               return;
-> +
-> +       for_each_efi_memory_desc(md) {
-> +               switch (md->type) {
-> +               case EFI_BOOT_SERVICES_CODE:
-> +                       snprintf(name, sizeof(name), "boot_services_code%d",
-> +                                type_count[md->type]++);
-> +                       break;
-> +               case EFI_BOOT_SERVICES_DATA:
-> +                       snprintf(name, sizeof(name), "boot_services_data%d",
-> +                                type_count[md->type]++);
-> +                       break;
-> +               default:
-> +                       continue;
-> +               }
-> +
-> +               debugfs_blob[i].size = md->num_pages << EFI_PAGE_SHIFT;
-> +               debugfs_blob[i].data = memremap(md->phys_addr,
-> +                                               debugfs_blob[i].size,
-> +                                               MEMREMAP_WB);
-> +               if (!debugfs_blob[i].data)
-> +                       continue;
-> +
-> +               debugfs_create_blob(name, 0400, efi_debugfs, &debugfs_blob[i]);
-> +               i++;
-> +               if (i == EFI_DEBUGFS_MAX_BLOBS)
-> +                       break;
-> +       }
-> +}
-> +#else
-> +static inline void efi_debugfs_init(void) {}
-> +#endif
-> +
->  /*
->   * We register the efi subsystem with the firmware subsystem and the
->   * efivars subsystem with the efi subsystem, if the system was booted with
-> @@ -370,6 +420,9 @@ static int __init efisubsys_init(void)
->                 goto err_remove_group;
->         }
->
-> +       if (efi_enabled(EFI_DBG) && efi_enabled(EFI_PRESERVE_BS_REGIONS))
-> +               efi_debugfs_init();
-> +
->         return 0;
->
->  err_remove_group:
-> diff --git a/include/linux/efi.h b/include/linux/efi.h
-> index bd3837022307..2a30a1bd8bdf 100644
-> --- a/include/linux/efi.h
-> +++ b/include/linux/efi.h
-> @@ -1202,6 +1202,7 @@ extern int __init efi_setup_pcdp_console(char *);
->  #define EFI_DBG                        8       /* Print additional debug info at runtime */
->  #define EFI_NX_PE_DATA         9       /* Can runtime data regions be mapped non-executable? */
->  #define EFI_MEM_ATTR           10      /* Did firmware publish an EFI_MEMORY_ATTRIBUTES table? */
-> +#define EFI_PRESERVE_BS_REGIONS        11      /* Are EFI boot-services memory segments available? */
->
->  #ifdef CONFIG_EFI
->  /*
-> --
-> 2.23.0
->
+thanks,
+
+greg k-h
