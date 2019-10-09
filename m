@@ -7,44 +7,47 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AFF5C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF704ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79E6C21835
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:59:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9CE721835
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:59:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731411AbfJIM7p (ORCPT
+        id S1731423AbfJIM7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 08:59:45 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:50940 "EHLO
+        Wed, 9 Oct 2019 08:59:50 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:50952 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731356AbfJIM7h (ORCPT
+        with ESMTP id S1731399AbfJIM7n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 08:59:37 -0400
+        Wed, 9 Oct 2019 08:59:43 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iIBYr-0002pT-4v; Wed, 09 Oct 2019 14:59:25 +0200
+        id 1iIBYp-0002qn-HN; Wed, 09 Oct 2019 14:59:23 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id AFAD01C028F;
-        Wed,  9 Oct 2019 14:59:19 +0200 (CEST)
-Date:   Wed, 09 Oct 2019 12:59:19 -0000
-From:   "tip-bot2 for Song Liu" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 57AF01C0315;
+        Wed,  9 Oct 2019 14:59:20 +0200 (CEST)
+Date:   Wed, 09 Oct 2019 12:59:20 -0000
+From:   "tip-bot2 for Frederic Weisbecker" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf/core: Rework memory accounting in perf_mmap()
-Cc:     Hechao Li <hechaol@fb.com>, Song Liu <songliubraving@fb.com>,
+Subject: [tip: sched/core] sched/cputime: Spare a seqcount lock/unlock cycle
+ on context switch
+Cc:     Frederic Weisbecker <frederic@kernel.org>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        <kernel-team@fb.com>, Jie Meng <jmeng@fb.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
+        Rik van Riel <riel@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20190904214618.3795672-1-songliubraving@fb.com>
-References: <20190904214618.3795672-1-songliubraving@fb.com>
+In-Reply-To: <20191003161745.28464-3-frederic@kernel.org>
+References: <20191003161745.28464-3-frederic@kernel.org>
 MIME-Version: 1.0
-Message-ID: <157062595964.9978.13325399994782902718.tip-bot2@tip-bot2>
+Message-ID: <157062596029.9978.18197974483711646093.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,80 +61,190 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/urgent branch of tip:
+The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     d44248a41337731a111374822d7d4451b64e73e4
-Gitweb:        https://git.kernel.org/tip/d44248a41337731a111374822d7d4451b64e73e4
-Author:        Song Liu <songliubraving@fb.com>
-AuthorDate:    Wed, 04 Sep 2019 14:46:18 -07:00
+Commit-ID:     8d495477d62e4397207f22a432fcaa86d9f2bc2d
+Gitweb:        https://git.kernel.org/tip/8d495477d62e4397207f22a432fcaa86d9f2bc2d
+Author:        Frederic Weisbecker <frederic@kernel.org>
+AuthorDate:    Thu, 03 Oct 2019 18:17:45 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 09 Oct 2019 12:44:12 +02:00
+CommitterDate: Wed, 09 Oct 2019 12:39:26 +02:00
 
-perf/core: Rework memory accounting in perf_mmap()
+sched/cputime: Spare a seqcount lock/unlock cycle on context switch
 
-perf_mmap() always increases user->locked_vm. As a result, "extra" could
-grow bigger than "user_extra", which doesn't make sense. Here is an
-example case:
+On context switch we are locking the vtime seqcount of the scheduling-out
+task twice:
 
-(Note: Assume "user_lock_limit" is very small.)
+ * On vtime_task_switch_common(), when we flush the pending vtime through
+   vtime_account_system()
 
-  | # of perf_mmap calls |vma->vm_mm->pinned_vm|user->locked_vm|
-  | 0                    | 0                   | 0             |
-  | 1                    | user_extra          | user_extra    |
-  | 2                    | 3 * user_extra      | 2 * user_extra|
-  | 3                    | 6 * user_extra      | 3 * user_extra|
-  | 4                    | 10 * user_extra     | 4 * user_extra|
+ * On arch_vtime_task_switch() to reset the vtime state.
 
-Fix this by maintaining proper user_extra and extra.
+This is pointless as these actions can be performed without the need
+to unlock/lock in the middle. The reason these steps are separated is to
+consolidate a very small amount of common code between
+CONFIG_VIRT_CPU_ACCOUNTING_GEN and CONFIG_VIRT_CPU_ACCOUNTING_NATIVE.
 
-Reviewed-By: Hechao Li <hechaol@fb.com>
-Reported-by: Hechao Li <hechaol@fb.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Performance in this fast path is definitely a priority over artificial
+code factorization so split the task switch code between GEN and
+NATIVE and mutualize the parts than can run under a single seqcount
+locked block.
+
+As a side effect, vtime_account_idle() becomes included in the seqcount
+protection. This happens to be a welcome preparation in order to
+properly support kcpustat under vtime in the future and fetch
+CPUTIME_IDLE without race.
+
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: <kernel-team@fb.com>
-Cc: Jie Meng <jmeng@fb.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rik van Riel <riel@redhat.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190904214618.3795672-1-songliubraving@fb.com
+Cc: Wanpeng Li <wanpengli@tencent.com>
+Cc: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
+Link: https://lkml.kernel.org/r/20191003161745.28464-3-frederic@kernel.org
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/events/core.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ include/linux/vtime.h  | 32 ++++++++++++++++----------------
+ kernel/sched/cputime.c | 30 +++++++++++++++++++-----------
+ 2 files changed, 35 insertions(+), 27 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index f953dd1..2b8265a 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -5668,7 +5668,8 @@ again:
- 	 * undo the VM accounting.
- 	 */
+diff --git a/include/linux/vtime.h b/include/linux/vtime.h
+index 2fd247f..d9160ab 100644
+--- a/include/linux/vtime.h
++++ b/include/linux/vtime.h
+@@ -14,8 +14,12 @@ struct task_struct;
+  * vtime_accounting_cpu_enabled() definitions/declarations
+  */
+ #if defined(CONFIG_VIRT_CPU_ACCOUNTING_NATIVE)
++
+ static inline bool vtime_accounting_cpu_enabled(void) { return true; }
++extern void vtime_task_switch(struct task_struct *prev);
++
+ #elif defined(CONFIG_VIRT_CPU_ACCOUNTING_GEN)
++
+ /*
+  * Checks if vtime is enabled on some CPU. Cputime readers want to be careful
+  * in that case and compute the tickless cputime.
+@@ -36,33 +40,29 @@ static inline bool vtime_accounting_cpu_enabled(void)
  
--	atomic_long_sub((size >> PAGE_SHIFT) + 1, &mmap_user->locked_vm);
-+	atomic_long_sub((size >> PAGE_SHIFT) + 1 - mmap_locked,
-+			&mmap_user->locked_vm);
- 	atomic64_sub(mmap_locked, &vma->vm_mm->pinned_vm);
- 	free_uid(mmap_user);
+ 	return false;
+ }
++
++extern void vtime_task_switch_generic(struct task_struct *prev);
++
++static inline void vtime_task_switch(struct task_struct *prev)
++{
++	if (vtime_accounting_cpu_enabled())
++		vtime_task_switch_generic(prev);
++}
++
+ #else /* !CONFIG_VIRT_CPU_ACCOUNTING */
++
+ static inline bool vtime_accounting_cpu_enabled(void) { return false; }
+-#endif
++static inline void vtime_task_switch(struct task_struct *prev) { }
  
-@@ -5812,8 +5813,20 @@ accounting:
++#endif
  
- 	user_locked = atomic_long_read(&user->locked_vm) + user_extra;
+ /*
+  * Common vtime APIs
+  */
+ #ifdef CONFIG_VIRT_CPU_ACCOUNTING
+-
+-#ifdef __ARCH_HAS_VTIME_TASK_SWITCH
+-extern void vtime_task_switch(struct task_struct *prev);
+-#else
+-extern void vtime_common_task_switch(struct task_struct *prev);
+-static inline void vtime_task_switch(struct task_struct *prev)
+-{
+-	if (vtime_accounting_cpu_enabled())
+-		vtime_common_task_switch(prev);
+-}
+-#endif /* __ARCH_HAS_VTIME_TASK_SWITCH */
+-
+ extern void vtime_account_kernel(struct task_struct *tsk);
+ extern void vtime_account_idle(struct task_struct *tsk);
+-
+ #else /* !CONFIG_VIRT_CPU_ACCOUNTING */
+-
+-static inline void vtime_task_switch(struct task_struct *prev) { }
+ static inline void vtime_account_kernel(struct task_struct *tsk) { }
+ #endif /* !CONFIG_VIRT_CPU_ACCOUNTING */
  
--	if (user_locked > user_lock_limit)
-+	if (user_locked <= user_lock_limit) {
-+		/* charge all to locked_vm */
-+	} else if (atomic_long_read(&user->locked_vm) >= user_lock_limit) {
-+		/* charge all to pinned_vm */
-+		extra = user_extra;
-+		user_extra = 0;
-+	} else {
-+		/*
-+		 * charge locked_vm until it hits user_lock_limit;
-+		 * charge the rest from pinned_vm
-+		 */
- 		extra = user_locked - user_lock_limit;
-+		user_extra -= extra;
-+	}
+diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
+index b45932e..cef23c2 100644
+--- a/kernel/sched/cputime.c
++++ b/kernel/sched/cputime.c
+@@ -405,9 +405,10 @@ static inline void irqtime_account_process_tick(struct task_struct *p, int user_
+ /*
+  * Use precise platform statistics if available:
+  */
+-#ifdef CONFIG_VIRT_CPU_ACCOUNTING
++#ifdef CONFIG_VIRT_CPU_ACCOUNTING_NATIVE
++
+ # ifndef __ARCH_HAS_VTIME_TASK_SWITCH
+-void vtime_common_task_switch(struct task_struct *prev)
++void vtime_task_switch(struct task_struct *prev)
+ {
+ 	if (is_idle_task(prev))
+ 		vtime_account_idle(prev);
+@@ -418,10 +419,7 @@ void vtime_common_task_switch(struct task_struct *prev)
+ 	arch_vtime_task_switch(prev);
+ }
+ # endif
+-#endif /* CONFIG_VIRT_CPU_ACCOUNTING */
+-
  
- 	lock_limit = rlimit(RLIMIT_MEMLOCK);
- 	lock_limit >>= PAGE_SHIFT;
+-#ifdef CONFIG_VIRT_CPU_ACCOUNTING_NATIVE
+ /*
+  * Archs that account the whole time spent in the idle task
+  * (outside irq) as idle time can rely on this and just implement
+@@ -731,6 +729,16 @@ static void vtime_account_guest(struct task_struct *tsk,
+ 	}
+ }
+ 
++static void __vtime_account_kernel(struct task_struct *tsk,
++				   struct vtime *vtime)
++{
++	/* We might have scheduled out from guest path */
++	if (tsk->flags & PF_VCPU)
++		vtime_account_guest(tsk, vtime);
++	else
++		vtime_account_system(tsk, vtime);
++}
++
+ void vtime_account_kernel(struct task_struct *tsk)
+ {
+ 	struct vtime *vtime = &tsk->vtime;
+@@ -739,11 +747,7 @@ void vtime_account_kernel(struct task_struct *tsk)
+ 		return;
+ 
+ 	write_seqcount_begin(&vtime->seqcount);
+-	/* We might have scheduled out from guest path */
+-	if (tsk->flags & PF_VCPU)
+-		vtime_account_guest(tsk, vtime);
+-	else
+-		vtime_account_system(tsk, vtime);
++	__vtime_account_kernel(tsk, vtime);
+ 	write_seqcount_end(&vtime->seqcount);
+ }
+ 
+@@ -804,11 +808,15 @@ void vtime_account_idle(struct task_struct *tsk)
+ 	account_idle_time(get_vtime_delta(&tsk->vtime));
+ }
+ 
+-void arch_vtime_task_switch(struct task_struct *prev)
++void vtime_task_switch_generic(struct task_struct *prev)
+ {
+ 	struct vtime *vtime = &prev->vtime;
+ 
+ 	write_seqcount_begin(&vtime->seqcount);
++	if (is_idle_task(prev))
++		vtime_account_idle(prev);
++	else
++		__vtime_account_kernel(prev, vtime);
+ 	vtime->state = VTIME_INACTIVE;
+ 	write_seqcount_end(&vtime->seqcount);
+ 
