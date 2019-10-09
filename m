@@ -7,52 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D272BECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35EC2C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F30C206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:28:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0350120679
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:28:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570642108;
-	bh=HAqjkv96qKv96CwQ5QSUQj+MIDryYPeFAPctadqPLWE=;
+	s=default; t=1570642111;
+	bh=LW+VhAvO5inmcOI9PKMnX5A3MCYkSC9vy+BBhmlKkKE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NFjgGR0kNQHDxRMMcolleE3AA6/PiQz8vMJTLPtMYrpOYS+ifK04V59vw9fc7Iz8l
-	 0MtesnzvF1lY5Y+GOQ4qsP5wIIjvKbvZiG1PZoSWSFmGwgX3Q0oJRzGZ61CT9Epmf7
-	 nLtAV0KtiFY4hUfILRHeNj/zo+xspKsBpQQXO7CE=
+	b=EWpk9lGvDmQsDgkU3A0y7qVWLWD0YhmH333Vms9vXQuJBTYV/AuBScC+/z2ny3O5K
+	 3DaOTdgpxuL6IYMX16dkADtzyXmrHTSciyWmCfHaiVret2nI03yBLtoAiQLPT0pcUC
+	 C6MYcIeyADdsoqdECTKD2FZ/NLwVQViwLajPx/3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732290AbfJIRYY (ORCPT
+        id S1732585AbfJIR23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:24:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48626 "EHLO mail.kernel.org"
+        Wed, 9 Oct 2019 13:28:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732123AbfJIRYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 13:24:07 -0400
+        id S1732284AbfJIRYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 13:24:24 -0400
 Received: from sasha-vm.mshome.net (unknown [167.220.2.234])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5138121D56;
-        Wed,  9 Oct 2019 17:24:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D9A621920;
+        Wed,  9 Oct 2019 17:24:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570641846;
-        bh=HAqjkv96qKv96CwQ5QSUQj+MIDryYPeFAPctadqPLWE=;
+        s=default; t=1570641864;
+        bh=LW+VhAvO5inmcOI9PKMnX5A3MCYkSC9vy+BBhmlKkKE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bOxDhkKVnj3odCphIalpV3WZkRRMqBTYo9k1d7WW1zMLBlNKvrm2h0WRdothKD550
-         oNXZg1AXyI/QNL/ICXK7m0HjgyFp1gZLsViCpskzqWGHPrpIPLshDw0yDE/lVy9hYh
-         OmYzCNJ7P9VEy6y+SL5oafeYz1t7K1Z/lMxgf1OE=
+        b=G6K36boCtDzdPHMH0qXNrFtCyY8muapBHJnze+O4pMVlarS4OSoAut+woG6IDZrp4
+         ArMXrcs5hLCV1hc4x4X1kd9jaquHDgiww5t0ncTCQSI2etCvFimPsoDUebwxYNiNx8
+         rZ6e110mfpkpGuxPVT7x+btfHUNZldVenv1QHAOs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jim Mattson <jmattson@google.com>, Marc Orr <marcorr@google.com>,
-        Peter Shier <pshier@google.com>,
-        Jacob Xu <jacobhxu@google.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 09/26] kvm: x86: Use AMD CPUID semantics for AMD vCPUs
-Date:   Wed,  9 Oct 2019 13:05:41 -0400
-Message-Id: <20191009170558.32517-9-sashal@kernel.org>
+Cc:     Xiang Chen <chenxiang66@hisilicon.com>,
+        John Garry <john.garry@huawei.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>,
+        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 03/21] scsi: megaraid: disable device when probe failed after enabled device
+Date:   Wed,  9 Oct 2019 13:05:56 -0400
+Message-Id: <20191009170615.32750-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191009170558.32517-1-sashal@kernel.org>
-References: <20191009170558.32517-1-sashal@kernel.org>
+In-Reply-To: <20191009170615.32750-1-sashal@kernel.org>
+References: <20191009170615.32750-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,45 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jim Mattson <jmattson@google.com>
+From: Xiang Chen <chenxiang66@hisilicon.com>
 
-[ Upstream commit 5f41a37b151f6459e0b650a2f4d1d59b6c02d1ab ]
+[ Upstream commit 70054aa39a013fa52eff432f2223b8bd5c0048f8 ]
 
-When the guest CPUID information represents an AMD vCPU, return all
-zeroes for queries of undefined CPUID leaves, whether or not they are
-in range.
+For pci device, need to disable device when probe failed after enabled
+device.
 
-Signed-off-by: Jim Mattson <jmattson@google.com>
-Fixes: bd22f5cfcfe8f6 ("KVM: move and fix substitue search for missing CPUID entries")
-Reviewed-by: Marc Orr <marcorr@google.com>
-Reviewed-by: Peter Shier <pshier@google.com>
-Reviewed-by: Jacob Xu <jacobhxu@google.com>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Link: https://lore.kernel.org/r/1567818450-173315-1-git-send-email-chenxiang66@hisilicon.com
+Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
+Reviewed-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/cpuid.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/scsi/megaraid.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index ada2cae6bec51..0854a2a32a61a 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -916,9 +916,11 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
- 	/*
- 	 * Intel CPUID semantics treats any query for an out-of-range
- 	 * leaf as if the highest basic leaf (i.e. CPUID.0H:EAX) were
--	 * requested.
-+	 * requested. AMD CPUID semantics returns all zeroes for any
-+	 * undefined leaf, whether or not the leaf is in range.
- 	 */
--	if (!entry && check_limit && !cpuid_function_in_range(vcpu, function)) {
-+	if (!entry && check_limit && !guest_cpuid_is_amd(vcpu) &&
-+	    !cpuid_function_in_range(vcpu, function)) {
- 		max = kvm_find_cpuid_entry(vcpu, 0, 0);
- 		if (max) {
- 			function = max->eax;
+diff --git a/drivers/scsi/megaraid.c b/drivers/scsi/megaraid.c
+index 9b6f5d024dbae..f5c09bbf93741 100644
+--- a/drivers/scsi/megaraid.c
++++ b/drivers/scsi/megaraid.c
+@@ -4221,11 +4221,11 @@ megaraid_probe_one(struct pci_dev *pdev, const struct pci_device_id *id)
+ 		 */
+ 		if (pdev->subsystem_vendor == PCI_VENDOR_ID_COMPAQ &&
+ 		    pdev->subsystem_device == 0xC000)
+-		   	return -ENODEV;
++			goto out_disable_device;
+ 		/* Now check the magic signature byte */
+ 		pci_read_config_word(pdev, PCI_CONF_AMISIG, &magic);
+ 		if (magic != HBA_SIGNATURE_471 && magic != HBA_SIGNATURE)
+-			return -ENODEV;
++			goto out_disable_device;
+ 		/* Ok it is probably a megaraid */
+ 	}
+ 
 -- 
 2.20.1
 
