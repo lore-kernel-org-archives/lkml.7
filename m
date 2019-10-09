@@ -2,119 +2,119 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6ED8C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0AFC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FE7D21848
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:51:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E29D21848
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:55:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="T06iGA5q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ik9UQ1pV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731848AbfJIQvb (ORCPT
+        id S1731724AbfJIQzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 12:51:31 -0400
-Received: from onstation.org ([52.200.56.107]:53566 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731432AbfJIQva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 12:51:30 -0400
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id BAD3A3E89B;
-        Wed,  9 Oct 2019 16:51:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1570639889;
-        bh=XuRSZUxqlEHuVzlpMa3RostZ9o3RMjnb4AAbLDyG678=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=T06iGA5qp+VAkynZyImFdjFWH6v2KZuxbkYf0n8YKuB5Fyk1DpWhhk9uYLM7m7XeP
-         IMpFzOiFszccfUZpJZTse7j+c2PP5dMpwJBMjFTjccmE0tPUwd0+CDRenOz6CsDInm
-         2ErwCd4ddJOfkcQvPEqjDVwPWfP1Kn1310fpKS+k=
-Date:   Wed, 9 Oct 2019 12:51:28 -0400
-From:   Brian Masney <masneyb@onstation.org>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     robdclark@gmail.com, sean@poorly.run, bjorn.andersson@linaro.org,
-        a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com,
-        airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, jonathan@marek.ca,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH RFC v2 4/5] ARM: dts: qcom: msm8974: add HDMI nodes
-Message-ID: <20191009165128.GB1595@onstation.org>
-References: <20191007014509.25180-1-masneyb@onstation.org>
- <20191007014509.25180-5-masneyb@onstation.org>
- <20191009022131.604B52070B@mail.kernel.org>
- <20191009060520.GA14506@onstation.org>
- <20191009153927.3DC5D21848@mail.kernel.org>
+        Wed, 9 Oct 2019 12:55:07 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:42749 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731145AbfJIQzG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 12:55:06 -0400
+Received: by mail-qk1-f193.google.com with SMTP id f16so2830353qkl.9;
+        Wed, 09 Oct 2019 09:55:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2/HF9NREfSQkdboNiYLB4mdV2BC4zZWqkjbH6CrigBU=;
+        b=Ik9UQ1pVjDXAXl5D9zROUvPBuhjWeO0V8nn6PnzCOIuP5EQuq5LQEaSrM+cyyPW3qp
+         faauOXKazJwuaxqCKuYJfs+WkOjQEb4T/JMn/m8tGie6IxEYLvTp7KeUI6KfkKfudlw6
+         GITXuCJTf4PhMkMgXjVhtQfUB5bVwmkOdwm7R499I9enV9JTtSajL0hfMfrZx3pH2NtL
+         woDtjvZ4TuDQotmDSoHv4MJWWA/N6i+7d3rwvvdoV/8m9iYYvioqdqZbdwEUb56AlyZB
+         FMz6K+Tp6XkJlIntRYhqhh0YNvzlcLSoST9pjwVQhDsNB7Tpe3VXZNsZ4HKmNUychf3q
+         9AAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2/HF9NREfSQkdboNiYLB4mdV2BC4zZWqkjbH6CrigBU=;
+        b=ZqNA9w+1CefhFQskq0jnIHxmDbWPKxoE5ZCvN1DTR+cpDyr8bmf5ywpuLk2+lbMMfr
+         f90G6WnlXns4CNgMpo/UP2L95t3XZ+we4dyaSpMabgsjTEH1kJssfIaY1Zh60g+emir7
+         mAF3akPX0HfTUVNlyfoKfeePqShc3IYLxBgQsaRgulkwp+Bg1Mh0BNMWcN8EN7loEnhk
+         7ubGKQX3aS7wrVWdx99gOXM/MwiUKGqapZsDnGoxSdaDvwOKY15G3w8s8XhdWDli7vFw
+         OpdQX2OnM40Ab/A2plw21OUdB9SOcQlFTf7zVCYNa825gH7ZA0fiXRq7ihhU8R2qNqAZ
+         VQ1Q==
+X-Gm-Message-State: APjAAAXRQKMeLo9F+DwN5HLOH0SuXb55FsNGoF7LaUQgisW75IZ6OhHJ
+        KYHa/0d7NJ+F9D1ITqAV/0xe8foR1n7uhfsRgbM=
+X-Google-Smtp-Source: APXvYqwkjEP6LQDwqyHgGNWPt2O8X8oEf9t3UY72mJKFPYOpn1GVrTNy2vlG4+DasgIr1qwwNWVKWBVGof7jwzagf7U=
+X-Received: by 2002:a37:520a:: with SMTP id g10mr4604504qkb.39.1570640103797;
+ Wed, 09 Oct 2019 09:55:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191009153927.3DC5D21848@mail.kernel.org>
+References: <20191009164929.17242-1-i.maximets@ovn.org>
+In-Reply-To: <20191009164929.17242-1-i.maximets@ovn.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Wed, 9 Oct 2019 09:54:52 -0700
+Message-ID: <CAEf4BzbL1qxyZaS=3-++Z=WDAK+0gVtVEFijgj_SJFi_NpAwyw@mail.gmail.com>
+Subject: Re: [PATCH bpf v2] libbpf: fix passing uninitialized bytes to setsockopt
+To:     Ilya Maximets <i.maximets@ovn.org>
+Cc:     Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 08:39:26AM -0700, Stephen Boyd wrote:
-> Quoting Brian Masney (2019-10-08 23:05:20)
-> > On Tue, Oct 08, 2019 at 07:21:30PM -0700, Stephen Boyd wrote:
-> > > Quoting Brian Masney (2019-10-06 18:45:08)
-> > > > diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-> > > > index 7fc23e422cc5..af02eace14e2 100644
-> > > > --- a/arch/arm/boot/dts/qcom-msm8974.dtsi
-> > > > +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-> > > > @@ -1335,6 +1342,77 @@
-> > > >                                 clocks = <&mmcc MDSS_AHB_CLK>;
-> > > >                                 clock-names = "iface";
-> > > >                         };
-> > > > +
-> > > > +                       hdmi: hdmi-tx@fd922100 {
-> > > > +                               status = "disabled";
-> > > > +
-> > > > +                               compatible = "qcom,hdmi-tx-8974";
-> > > > +                               reg = <0xfd922100 0x35c>,
-> > > > +                                     <0xfc4b8000 0x60f0>;
-> > > > +                               reg-names = "core_physical",
-> > > > +                                           "qfprom_physical";
-> > > 
-> > > Is this the qfprom "uncorrected" physical address? If so, why can't this
-> > > node use an nvmem to read whatever it needs out of the qfprom?
-> > 
-> > The MSM HDMI code is configured to look for this reg-name here:
-> > 
-> > https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/msm/hdmi/hdmi.c#L582
-> > 
-> > There is a qcom,qfprom configured for this board in DTS, however its at
-> > a different address range, so maybe there are multiple qfproms?
-> > 
-> > https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/qcom-msm8974.dtsi#L424
-> > 
-> > msm8996.dtsi has the same style of configuration:
-> > 
-> > https://elixir.bootlin.com/linux/latest/source/arch/arm64/boot/dts/qcom/msm8996.dtsi#L956
-> > https://elixir.bootlin.com/linux/latest/source/arch/arm64/boot/dts/qcom/msm8996.dtsi#L1736
-> > 
-> 
-> There's only one qfprom and there's the address space that's
-> "uncorrected" which is not supposed to be used and there's the space
-> that is "corrected" and is supposed to be used. It looks like this is
-> poking the uncorrected space and it should probably stop doing that and
-> use the nvmem provider instead. Maybe someone with docs for this chip
-> and 8996 can help confirm this.
+On Wed, Oct 9, 2019 at 9:49 AM Ilya Maximets <i.maximets@ovn.org> wrote:
+>
+> 'struct xdp_umem_reg' has 4 bytes of padding at the end that makes
+> valgrind complain about passing uninitialized stack memory to the
+> syscall:
+>
+>   Syscall param socketcall.setsockopt() points to uninitialised byte(s)
+>     at 0x4E7AB7E: setsockopt (in /usr/lib64/libc-2.29.so)
+>     by 0x4BDE035: xsk_umem__create@@LIBBPF_0.0.4 (xsk.c:172)
+>   Uninitialised value was created by a stack allocation
+>     at 0x4BDDEBA: xsk_umem__create@@LIBBPF_0.0.4 (xsk.c:140)
+>
+> Padding bytes appeared after introducing of a new 'flags' field.
+> memset() is required to clear them.
+>
+> Fixes: 10d30e301732 ("libbpf: add flags to umem config")
+> Signed-off-by: Ilya Maximets <i.maximets@ovn.org>
+> ---
+>
 
-Do you know of any publicly-available documentation that describes the
-"uncorrected" and "corrected" addresses? I got that qfprom address for
-the HDMI from here:
+Thanks!
 
-https://github.com/AICP/kernel_lge_hammerhead/blob/n7.1/arch/arm/boot/dts/msm8974-mdss.dtsi#L101
+Acked-by: Andrii Nakryiko <andriin@fb.com>
 
-I assume the downstream kernel probably doesn't have the corrected
-address anywhere else?
-
-Brian
-
+> Version 2:
+>   * Struct initializer replaced with explicit memset(). [Andrii]
+>
+>  tools/lib/bpf/xsk.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/tools/lib/bpf/xsk.c b/tools/lib/bpf/xsk.c
+> index a902838f9fcc..9d5348086203 100644
+> --- a/tools/lib/bpf/xsk.c
+> +++ b/tools/lib/bpf/xsk.c
+> @@ -163,6 +163,7 @@ int xsk_umem__create_v0_0_4(struct xsk_umem **umem_ptr, void *umem_area,
+>         umem->umem_area = umem_area;
+>         xsk_set_umem_config(&umem->config, usr_config);
+>
+> +       memset(&mr, 0, sizeof(mr));
+>         mr.addr = (uintptr_t)umem_area;
+>         mr.len = size;
+>         mr.chunk_size = umem->config.frame_size;
+> --
+> 2.17.1
+>
