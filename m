@@ -2,100 +2,166 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03774C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 159D1C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF861206B6
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9B0C206B6
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:11:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="hNhbcpxL";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jNBGiYbu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mk+INmVR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731390AbfJINIW (ORCPT
+        id S1731224AbfJINL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 09:08:22 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:38827 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731224AbfJINIW (ORCPT
+        Wed, 9 Oct 2019 09:11:28 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33995 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730822AbfJINL2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 09:08:22 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id D2C992214A;
-        Wed,  9 Oct 2019 09:08:20 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Wed, 09 Oct 2019 09:08:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=mLKOTL/8x5gDgJFUJhb3gNI98kn
-        LsTJTiu2myd2FUm8=; b=hNhbcpxLBrllawZD05Fou1XENFBUs9M6EKGJmP4Lia4
-        2hV2LzodIvo7MnT4LRFkfJQ8g5gs7Ss0xDmYBBWeFVQ6tgjYZpUz/a00tB0ECRj9
-        HkGgu2TAgCjblJ/ug9PHHWL0wdd4KJpKIHhuaC7ixOR6y0dMNIWeK8qyecwFpb1n
-        oeebZ4/6ziYTpYERWG6XsTu3foxkZHH1IQBvewgNvSZZm71T0EI0pTMBEp1oYfSt
-        9VkuAyrQ5oqw9x91KFSWOW+rdo9gbRncM2IgB9YC5l6Kf73+WfugJFhKni6PN59j
-        GfIHXlGhzKMg0HrV7+7QlaLVFI1w1URjL6VD3McV8cg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=mLKOTL
-        /8x5gDgJFUJhb3gNI98knLsTJTiu2myd2FUm8=; b=jNBGiYbuvNrXUM4MjX81uU
-        GqFuP/jUuo+oP39GYep1haEv3KEBTJUppsZy+ldyhL9ievsDhTVMctzaiK8312wE
-        wVae1trfvEv7z/dhmOsZaQx61FD/UG4cR+re8BhTJy2axrc0ylJZUtS6S+nsj8pB
-        h32gG2eBsmbJCkJTdgo7yDL5w9w3Vnj6/GV7wiqs1FdcnIANr3gCRRV7Qn3Yvv6C
-        6sUI4Yxxu+VfM3F8LUg78jkkTlKHN4oKxQ9yALbVQhgfhG0OMkriQ1k6gL7q3PY5
-        fWn0aH3awOhySosC65uD9Ma/9w62AGIsq9bWT2PyOYXcbBneS7w0ilB3/g31lXBQ
-        ==
-X-ME-Sender: <xms:xNudXXcK6dMPpKj0_oxaG-bTWJHiqmRyhVsvG5kvUGntUJTAD3AOhQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedriedugdefiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
-    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
-    lhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:xNudXRcrfEORuG5dl9z9rmsHxSj7qQS_5iwoIpoRpJp4H1tGnwVjKA>
-    <xmx:xNudXde6sP8rTqO2F8bQ7AC5iZXUI4sdMa9qL6dXp5o6MyHHm0-RsQ>
-    <xmx:xNudXXo44Dl4h4BbC7pwG61Q1B-UfEyrgZkvuaxbR_M5PRCwyA53uA>
-    <xmx:xNudXQFZNblyOfLkPG8IKhwn39aidh-ucqUngk2RVygeY0Ii-6868Q>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 4253ED6005D;
-        Wed,  9 Oct 2019 09:08:20 -0400 (EDT)
-Date:   Wed, 9 Oct 2019 15:08:18 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Alexander Gordeev <a.gordeev.box@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        Michael Chen <micchen@altera.com>, dmaengine@vger.kernel.org
-Subject: Re: [PATCH RFC v2 2/2] dmaengine: avalon: Intel Avalon-MM DMA
- Interface for PCIe test
-Message-ID: <20191009130818.GB4148375@kroah.com>
-References: <cover.1570558807.git.a.gordeev.box@gmail.com>
- <6b540aeae71112154836003f2356703df2b36333.1570558807.git.a.gordeev.box@gmail.com>
+        Wed, 9 Oct 2019 09:11:28 -0400
+Received: by mail-wm1-f66.google.com with SMTP id y135so4751191wmc.1;
+        Wed, 09 Oct 2019 06:11:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2pQmxSEy5O4RUtCVnV8Yf/x1Ag/UDy5/MGukZNn79Q0=;
+        b=mk+INmVRkRDoT4Bs6Nxmev59RMyapJN7jDswk5JjtC0k+6bcGsazyhsWJHx6SpDK0l
+         AbIEM7i85+3V47TX+c/cWTSk3II/7EJOtPtPGYrtsqwNgScxLyWHiPn1y9zW0KjI+n2i
+         0e3b43fc/X/+nRTUDhdzwyCoowAL2fHXihzFMq8Vh5y46dkn7YZ7GHiT3XHwBYKWErX0
+         Taf00CbGmtxWROZd3GNRQAXSA0Ksx818dA/SC6oT/3qQ/xRqJ8mWvhuJqT8OmcAgfsG9
+         AU4yyL/nBsYSfSpobna5dmmUBYw5ym3Hai7uW9DWQzef+CEPNQ/C0SuUAqeBS1DOJP6r
+         ryjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2pQmxSEy5O4RUtCVnV8Yf/x1Ag/UDy5/MGukZNn79Q0=;
+        b=g9SpOLmaSrFFsTQWMpkm55YqgMDYpUCr1OJPbedu5jY2774GjrNV9x4LfLymlwdZ13
+         +uZu6/bjQN6Nx0vvoAKUoQR9vq6bJU8BOABsGjBu7ZVRsERjOJcXVNPvNmGWDfFePmrd
+         Rgkx4yGeo/5fYtyprhZixpGZO+zcyLAdnaPjsEfZ3iUTqAJEwt2jwlVil3Zvuzv7dQpJ
+         S3b+A47PcehxM+vq18ugTOX1siMeq961gDUwANb/f7fIk0UEMUVjAkfIeWuzCqpAZncS
+         kXd+qqZJa0dToXCcCTbQMAch4dRUyrZdRf7L6Zc8LRRymeZHrnSCXGcEKIORl73Aitg8
+         Hlsg==
+X-Gm-Message-State: APjAAAUb+OovhlDN64DoufSWslAJ1hT60/93mhKktxJUoFcKbxH/5Vyg
+        ZYCyDVn0j1ZTWEcuXwvERJY=
+X-Google-Smtp-Source: APXvYqxK8FcAs+SBpkNlf7mfE+EHGTKFvUN/qAClYU9GQc9ACK8NpwSGL0VEqOAY9F4eXxCOAphvIQ==
+X-Received: by 2002:a7b:c74a:: with SMTP id w10mr2605040wmk.30.1570626685433;
+        Wed, 09 Oct 2019 06:11:25 -0700 (PDT)
+Received: from localhost ([51.15.41.238])
+        by smtp.gmail.com with ESMTPSA id r18sm3705058wme.48.2019.10.09.06.11.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Oct 2019 06:11:24 -0700 (PDT)
+Date:   Wed, 9 Oct 2019 14:11:23 +0100
+From:   Stefan Hajnoczi <stefanha@gmail.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     netdev@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
+        linux-hyperv@vger.kernel.org,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        kvm@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jorgen Hansen <jhansen@vmware.com>
+Subject: Re: [RFC PATCH 10/13] vsock: add multi-transports support
+Message-ID: <20191009131123.GK5747@stefanha-x1.localdomain>
+References: <20190927112703.17745-1-sgarzare@redhat.com>
+ <20190927112703.17745-11-sgarzare@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="IA03tywDYuoVKXrw"
 Content-Disposition: inline
-In-Reply-To: <6b540aeae71112154836003f2356703df2b36333.1570558807.git.a.gordeev.box@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20190927112703.17745-11-sgarzare@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 12:12:31PM +0200, Alexander Gordeev wrote:
-> +config AVALON_TEST_TARGET_BASE
-> +	hex "Target device base address"
-> +	default "0x70000000"
+
+--IA03tywDYuoVKXrw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Sep 27, 2019 at 01:27:00PM +0200, Stefano Garzarella wrote:
+> RFC:
+> - I'd like to move MODULE_ALIAS_NETPROTO(PF_VSOCK) to af_vsock.c.
+>   @Jorgen could this break the VMware products?
+
+What will cause the vmw_vsock_vmci_transport.ko module to be loaded
+after you remove MODULE_ALIAS_NETPROTO(PF_VSOCK)?  Perhaps
+drivers/misc/vmw_vmci/vmci_guest.c:vmci_guest_probe_device() could do
+something when the guest driver loads.  There would need to be something
+equivalent for the host side too.
+
+This will solve another issue too.  Today the VMCI transport can be
+loaded if an application creates an AF_VSOCK socket during early boot
+before the virtio transport has been probed.  This happens because the
+VMCI transport uses MODULE_ALIAS_NETPROTO(PF_VSOCK) *and* it does not
+probe whether this system is actually a VMware guest.
+
+If we instead load the core af_vsock.ko module and transports are only
+loaded based on hardware feature probing (e.g. the presence of VMware
+guest mode, a virtio PCI adapter, etc) then transports will be
+well-behaved.
+
+> - DGRAM sockets are handled as before, I don't know if make sense work
+>   on it now, or when another transport will support DGRAM. The big
+>   issues here is that we cannot link 1-1 a socket to transport as
+>   for stream sockets since DGRAM is not connection-oriented.
+
+Let's ignore DGRAM for now since only VMCI supports it and we therefore
+do not require multi-transport support.
+
+> diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
+> index 86f8f463e01a..2a081d19e20d 100644
+> --- a/include/net/af_vsock.h
+> +++ b/include/net/af_vsock.h
+> @@ -94,7 +94,13 @@ struct vsock_transport_send_notify_data {
+>  	u64 data2; /* Transport-defined. */
+>  };
+> =20
+> +#define VSOCK_TRANSPORT_F_H2G		0x00000001
+> +#define VSOCK_TRANSPORT_F_G2H		0x00000002
+> +#define VSOCK_TRANSPORT_F_DGRAM		0x00000004
+
+Documentation comments, please.
+
+> +void vsock_core_unregister(const struct vsock_transport *t)
+> +{
+> +	mutex_lock(&vsock_register_mutex);
 > +
-> +config AVALON_TEST_TARGET_SIZE
-> +	hex "Target device memory size"
-> +	default "0x10000000"
+> +	/* RFC-TODO: maybe we should check if there are open sockets
+> +	 * assigned to that transport and avoid the unregistration
+> +	 */
 
-Don't put stuff like this as a configuration option, requiring the
-kernel to be rebuilt.  Make it dynamic, or from device tree, but not
-like this.
+If unregister() is only called from module_exit() functions then holding
+a reference to the transport module would be enough to prevent this
+case.  The transport could only be removed once all sockets have been
+destroyed (and dropped their transport module reference).
 
-thanks,
+--IA03tywDYuoVKXrw
+Content-Type: application/pgp-signature; name="signature.asc"
 
-greg k-h
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl2d3HoACgkQnKSrs4Gr
+c8hckgf/ZTFwJLw3fxdGNwt8fds62hVvtGGsVru3VbLN9WrtPanY8WHTVxqC18Vp
+pF78jglD8L0LV3gjDG4rc5A4Op4a/ND2IjjaEwixZzEeuzkxO+tw/zuGsEQM63jz
+Kckudl+xi6pD5hgxV4a3qH07yLcdBdDXyUdbrHOpxfhvvOEAHaNLdXZhXjvtrrtd
+XnsSEr9/3Be4cTcwhN1+nugiFit8xhonF/zYnIv3rZsouWpJnwUKcy4fEazCSRTz
+6yWFh/iRSwq/5roe5KrD6rJFh4XoW3VDF4oVQKwZ8vaviYSl1kw8AJY/W7tErbrd
+yneRuN0muehGfAMpX1z/jwcR05p6Hg==
+=sE/v
+-----END PGP SIGNATURE-----
+
+--IA03tywDYuoVKXrw--
