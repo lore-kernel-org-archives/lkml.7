@@ -6,95 +6,117 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3EDCC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F378C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:49:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB83720659
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:49:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E0DB21848
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:49:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731005AbfJILtF (ORCPT
+        id S1730946AbfJILtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 07:49:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47548 "EHLO mx1.suse.de"
+        Wed, 9 Oct 2019 07:49:49 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:33486 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728054AbfJILtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 07:49:05 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B5CF7B117;
-        Wed,  9 Oct 2019 11:49:03 +0000 (UTC)
-Date:   Wed, 9 Oct 2019 13:49:03 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        sergey.senozhatsky.work@gmail.com, rostedt@goodmis.org,
-        peterz@infradead.org, linux-mm@kvack.org,
-        john.ogness@linutronix.de, akpm@linux-foundation.org,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>, david@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
-Message-ID: <20191009114903.aa6j6sa56z2cssom@pathway.suse.cz>
-References: <20191007143002.l37bt2lzqtnqjqxu@pathway.suse.cz>
- <20191007144937.GO2381@dhcp22.suse.cz>
- <20191008074357.f33f6pbs4cw5majk@pathway.suse.cz>
- <20191008082752.GB6681@dhcp22.suse.cz>
- <aefe7f75-b0ec-9e99-a77e-87324edb24e0@de.ibm.com>
- <1570550917.5576.303.camel@lca.pw>
- <20191008183525.GQ6681@dhcp22.suse.cz>
- <1570561573.5576.307.camel@lca.pw>
- <20191008191728.GS6681@dhcp22.suse.cz>
- <1570563324.5576.309.camel@lca.pw>
+        id S1727002AbfJILts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 07:49:48 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id BCA2ABB2A54D7503D44C;
+        Wed,  9 Oct 2019 19:49:46 +0800 (CST)
+Received: from [127.0.0.1] (10.133.215.182) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Wed, 9 Oct 2019
+ 19:49:37 +0800
+Subject: Re: [RFC PATCH 2/3] perf tools: Add support for "report" for some spe
+ events
+From:   Tan Xiaojun <tanxiaojun@huawei.com>
+To:     James Clark <James.Clark@arm.com>,
+        Jeremy Linton <Jeremy.Linton@arm.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "acme@kernel.org" <acme@kernel.org>,
+        "alexander.shishkin@linux.intel.com" 
+        <alexander.shishkin@linux.intel.com>,
+        "jolsa@redhat.com" <jolsa@redhat.com>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+        "yao.jin@linux.intel.com" <yao.jin@linux.intel.com>,
+        "tmricht@linux.ibm.com" <tmricht@linux.ibm.com>,
+        "brueckner@linux.ibm.com" <brueckner@linux.ibm.com>,
+        "songliubraving@fb.com" <songliubraving@fb.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Kim Phillips <Kim.Phillips@amd.com>
+CC:     "gengdongjiu@huawei.com" <gengdongjiu@huawei.com>,
+        "wxf.wang@hisilicon.com" <wxf.wang@hisilicon.com>,
+        "liwei391@huawei.com" <liwei391@huawei.com>,
+        "huawei.libin@huawei.com" <huawei.libin@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "Al Grant" <Al.Grant@arm.com>, nd <nd@arm.com>
+References: <1564738813-10944-1-git-send-email-tanxiaojun@huawei.com>
+ <1564738813-10944-3-git-send-email-tanxiaojun@huawei.com>
+ <0ac06995-273c-034d-52a3-921ea0337be2@arm.com>
+ <016c1ce8-7220-75a2-43fa-0efe150f897c@huawei.com>
+ <805660ca-1cf3-4c7f-3aa2-61fed59afa8b@arm.com>
+ <637836d6-c884-1a55-7730-eeb45b590d39@huawei.com>
+ <b7e5ca2d-8c6c-8ab8-637e-a9aaebaf62a5@arm.com>
+ <2b1fc8c7-c0b9-f4b9-a24f-444bc22129af@huawei.com>
+Message-ID: <335fedb8-128c-7d34-c5e8-15cd660fe12e@huawei.com>
+Date:   Wed, 9 Oct 2019 19:49:35 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1570563324.5576.309.camel@lca.pw>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <2b1fc8c7-c0b9-f4b9-a24f-444bc22129af@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.215.182]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 2019-10-08 15:35:24, Qian Cai wrote:
-> On Tue, 2019-10-08 at 21:17 +0200, Michal Hocko wrote:
-> > On Tue 08-10-19 15:06:13, Qian Cai wrote:
-> > > On Tue, 2019-10-08 at 20:35 +0200, Michal Hocko wrote:
-> > 
-> > [...]
-> > > > I fully agree that this class of lockdep splats are annoying especially
-> > > > when they make the lockdep unusable but please discuss this with lockdep
-> > > > maintainers and try to find some solution rather than go and try to
-> > > > workaround the problem all over the place. If there are places that
-> > > > would result in a cleaner code then go for it but please do not make the
-> > > > code worse just because of a non existent problem flagged by a false
-> > > > positive.
-> > > 
-> > > It makes me wonder what make you think it is a false positive for sure.
-> > 
-> > Because this is an early init code? Because if it were a real deadlock
+On 2019/10/9 19:09, Tan Xiaojun wrote:
+> On 2019/10/9 17:48, James Clark wrote:
+>> Hi Xiaojun,
+>>
+>>> By the way, you mentioned before that you want the spe event to be in the form of "event:pp" like pebs. Is that the whole framework should be made similar to pebs? Or is it just a modification to the command format? 
+>>
+>> We're currently still investigating if it makes sense to modify the Perf event open syscall to use SPE when the "precise_ip" attribute is set. And then synthesize samples using the SPE data when available. This would keep the syscall interface more consistent between architectures.
+>>
+>> And if tools other than Perf want more precise data, they don't have to be aware of SPE or any of the implementation defined details of it. For example the 'data source' encoding can be different from one micro architecture to the next. The kernel is probably the best place to handle this.
+>>
+>> At the moment, every tool that wants to use the Perf syscall to get precise data on ARM would have to be aware of SPE and implement their own decoding.
+>>
 > 
-> No, that alone does not prove it is a false positive. There are many places
-> could generate that lock dependency but lockdep will always save the earliest
-> one.
+> Hi James,
+> 
+> What do you mean when the user specifies "event:pp", if the SPE is available, configure and record the spe data directly via the perf event open syscall?
+> (perf.data itself is the same as using -e arm_spe_0//xxx?)
 
-You are still mixing the pasted lockdep report and other situations
-that will not get reported because of the first one.
+I mean, for the perf record, if the user does not add ":pp" to these events, the original process is taken, and if ":pp" is added, the spe process is taken.
 
-We believe that the pasted report is pasted is false positive. And we
-are against complicating the code just to avoid this false positive.
+Xiaojun.
 
-Are you sure that the workaround will not create real deadlocks
-or races?
+> 
+> OK. If I have not misunderstood, I think I know how to do it.
+> Thank you.
+> 
+>>> For the former, this may be a bit difficult. For the latter, there is currently no modification to the record part, so "-c -F, etc." is only for instructions rather than events, so it may be misunderstood by users.
+>>>
+>>> So I haven't figured out how to do. What do you think of this?
+>>
+>> I think the patch at the moment is a good start to make SPE more accessible. And the changes I mentioned above wouldn't change the fact that the raw SPE data would still be available via the SPE PMU. So I think continuing with the patch as-is for now is the best idea.
+>>
+> 
+> Yes. I agree.
+> 
+> Xiaojun.
+> 
+>>
+>> James
+>>
+>>
+> 
 
-I see two realistic possibilities:
-
-   + Make printk() always deferred. This will hopefully happen soon.
-
-   + Improve lockdep so that false positives could get ignored
-     without complicating the code.
-
-Best Regards,
-Petr
 
