@@ -2,103 +2,113 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E83CC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B6C9ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF4D1218AC
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D7D7218DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:14:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732523AbfJITOc (ORCPT
+        id S1732528AbfJITOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 15:14:32 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:48645 "EHLO
+        Wed, 9 Oct 2019 15:14:38 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:44107 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731827AbfJITLQ (ORCPT
+        with ESMTP id S1731815AbfJITLQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 9 Oct 2019 15:11:16 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MUY9w-1iiiBO2Rnc-00QSut; Wed, 09 Oct 2019 21:11:14 +0200
+ 1MUGuZ-1iiRKk3Akl-00RHrY; Wed, 09 Oct 2019 21:11:13 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Al Viro <viro@zeniv.linux.org.uk>
 Cc:     linux-kernel@vger.kernel.org, y2038@lists.linaro.org,
         linux-fsdevel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v6 23/43] compat_ioctl: remove /dev/random commands
-Date:   Wed,  9 Oct 2019 21:10:23 +0200
-Message-Id: <20191009191044.308087-23-arnd@arndb.de>
+        linux-bluetooth@vger.kernel.org,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>
+Subject: [PATCH v6 20/43] compat_ioctl: remove HIDIO translation
+Date:   Wed,  9 Oct 2019 21:10:20 +0200
+Message-Id: <20191009191044.308087-20-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191009190853.245077-1-arnd@arndb.de>
 References: <20191009190853.245077-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:ch73ytSgkS4oO2S41UnNXUn/KSJkmlRmqTVkiyababZ9lcd2HmZ
- l18W6SmPMr4W7U9DWKyd3pxDD1nj9yEj1Ou4wqNRLKtzbDLLCXdXpAoeBb1eYQODVbRCd25
- 7kh75HGXTVxdLptZI8IsTTBoPfgxqkZx/APabZcPCZimckfmVFsY7EwOgC2AuzpQimd9Pzv
- iGnWmE0DSKNq074mPIXiQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Mp88p1QWiEE=:vZ9uVfiRDQJSgHqzjVRZzC
- BLZy+JtpG647XofXSYFHsX58YjMhiQy0tlW9NM2tYEjhWuHmmFUNEGNFEb0IXxI0xS9gZCsLC
- dTYqJ+6UktTYxrBJz6hprK++ur0WUla5FN6ejzfosIH4SGGpaE5qOxB937769UxopXr+jRqeZ
- +HgZ+pYPJ9MqrccH28mt5dVlVQJN5nDef0horNZ5Cn5JGQPTy8oBqzaLZp8vkgbrqOojs4/bx
- XRpswMQDTVp0+ohB82I7JbcIAzk2o1KHYyZ/qsWOwJz9Rzt65fd1GdHN1sm1vnY6A6DEv9F+U
- Vm80fKI8uSDF7hd+TUdZOQh9bMLvon9DTrQyEvVznhN0rgXfZiAy7Di8M2bnv0O2cytW6UhPI
- p14zadmbezGpIQSYg4yJJlyMMob8QkE3eZNlQyRJXvprX19Y8LiwbRatlZwN13GqDt4eFGfsB
- SMMi5u0/zmyK0r5c9B5ZjWoxTr+lKqFHZnvSRmN2m+gxGD/yApL8t5wy9QMIKGwqFvbO+MSU0
- GMPrFqGhiByU8cl+x4jiS2fTXS1C+WfSBmMMCkDz1ivvO+CbMVOYBbhdMdDh1GXxLuADVb+yP
- hOV3v7t/WLNHAAGVEoGs/71LHQjOqOUOnyNte6npQvWkNFf5lx6qf3EHOBSLuTOCokg3OSTX5
- dlqto6yy8strq2ogrPAoj9rSYmd2Ld3BlqXu6VHBsj6+r1wJgDHKF5BaGG6CP+LlkrH9VIT+g
- z3MuEy3tSsAiZOJ1A2PExwAfl+q041oJkdcbkl+fQ8OH+5SkoPG4fLwl5sCdhSXTrzOnZp6Mk
- WHIbNwY3Xl7IEht+6Q1OCvj7AJrDRWmZPBviXYXm99FxtTxtiBnh0EyVXbNOeUNqbcpVHAwr/
- RetjiPXaFCl2b+MblZIw==
+X-Provags-ID: V03:K1:7RMTQj/IzXWYNqxbs38UjXmvOPx/nPUg/Jyhl5K5JkL70CQCnF4
+ P7q/KM2dZFFM1mtdBuyaIqUOFQ17HlCzmqS0tuXPXTEirxZH9GS8gORXXirs/gILMvMEyja
+ 5hNst7E+UHJdZxWMQnw0p3I0VbnvpoDPWpJHRD/vsv8+rHK2g9WQfQad4vs+tpXs/xmRHjT
+ MbggUfSSb6Uvr6f+ZBoDQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:x0djXe2zRmc=:ad8+YXein6bQ0QFyxFmaf5
+ 3H7cUXons26UtN1mFsrj6+7EPNH5+j8wl04KuKJboRJXY6swmLiRvc2JyvfLrEwlXQnApxrrp
+ JsHHkVh32zh6mpb/a1ZZzohM0N9ua+czPNFXB8Y5VKPHQB88O2yvmWRJ5v/EO/6e5vCMqGOGn
+ HZQrkA8YxrqX8y3mXBAlsGQgF6eWxC9pet/+6xkbNcvRSiUfjTtwLO/D/1bdK3RjjVrMtfX13
+ Xf+DT120gHyHUcN0adf2srndF+BLmhNdds4gL9y+YukBzCKnRd/MrjS3PYPYs5CWwjMpwADFF
+ ZXD21oeBdqGpQ9N2vhzZzGie+FQ/0pV3U8EI7RuzDHyv+HvmODurkqCyQ589vXvvkzeDfbRcl
+ HfFO4XhgNzIKLH2PYpsoE21njqZi8n6u5N8zxYxCSyenIemzI1RWzck/FgqetAymWZeEkblrj
+ xuJyI7N908igBl2AWWo8e3QHjMmmKzdx+blAea9rfGZAK7/FKCF3sdtZBV8OhbFgD3rWEPtTI
+ Iwx1yNMvY4hiyhHf8ajTTJRvCeyMigqy/MorBDgZNFJdj66MK4Zlx/Itv9rjcv1S8pfERWjlI
+ kZbOmbjKQG+w3GcxfAfeCJvE5uqiA+DYh4yJA1duY34hTLQsvBR8qKr7g7lPJpJMlp9C+TCEH
+ YB+U6wL6C3kRUyp8skEW6cwIp23vVHz9t8WH5nvk6ypeLbdays2PKFEbiD20MRjpCZXCpgqVB
+ Qs5zxUonl/onGJKMvt8dIrbIEdGPfGgHFFX4LZQRmmFlL5iuHF3xzgThTj53kV21/1G8oUnpW
+ bomS/5kPMX2XtDxewQlWEkfyyOlvZFLk+OwzZg40ihqyPe2xvxr8qIM1sICy067JDcGPgnlzg
+ sBUW1gq3ojBcK0FdJojg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These are all handled by the random driver, so instead of listing
-each ioctl, we can use the generic compat_ptr_ioctl() helper.
+The two drivers implementing these both gained proper compat_ioctl()
+handlers a long time ago with commits bb6c8d8fa9b5 ("HID: hiddev:
+Add 32bit ioctl compatibilty") and ae5e49c79c05 ("HID: hidraw: add
+compatibility ioctl() for 32-bit applications."), so the lists in
+fs/compat_ioctl.c are no longer used.
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+It appears that the lists were also incomplete, so the translation
+didn't actually work correctly when it was still in use.
+
+Remove them as cleanup.
+
+Cc: linux-bluetooth@vger.kernel.org
+Cc: Marcel Holtmann <marcel@holtmann.org>
+Cc: Johan Hedberg <johan.hedberg@gmail.com>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/char/random.c | 1 +
- fs/compat_ioctl.c     | 7 -------
- 2 files changed, 1 insertion(+), 7 deletions(-)
+ fs/compat_ioctl.c | 17 -----------------
+ 1 file changed, 17 deletions(-)
 
-diff --git a/drivers/char/random.c b/drivers/char/random.c
-index de434feb873a..46afd14facb7 100644
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -2167,6 +2167,7 @@ const struct file_operations random_fops = {
- 	.write = random_write,
- 	.poll  = random_poll,
- 	.unlocked_ioctl = random_ioctl,
-+	.compat_ioctl = compat_ptr_ioctl,
- 	.fasync = random_fasync,
- 	.llseek = noop_llseek,
- };
 diff --git a/fs/compat_ioctl.c b/fs/compat_ioctl.c
-index 10dfe4d80bbd..398268604ab7 100644
+index 758b8b934b70..03da7934a351 100644
 --- a/fs/compat_ioctl.c
 +++ b/fs/compat_ioctl.c
-@@ -439,13 +439,6 @@ COMPATIBLE_IOCTL(WDIOC_SETTIMEOUT)
- COMPATIBLE_IOCTL(WDIOC_GETTIMEOUT)
- COMPATIBLE_IOCTL(WDIOC_SETPRETIMEOUT)
- COMPATIBLE_IOCTL(WDIOC_GETPRETIMEOUT)
--/* Big R */
--COMPATIBLE_IOCTL(RNDGETENTCNT)
--COMPATIBLE_IOCTL(RNDADDTOENTCNT)
--COMPATIBLE_IOCTL(RNDGETPOOL)
--COMPATIBLE_IOCTL(RNDADDENTROPY)
--COMPATIBLE_IOCTL(RNDZAPENTCNT)
--COMPATIBLE_IOCTL(RNDCLEARPOOL)
- /* Misc. */
- COMPATIBLE_IOCTL(PCIIOC_CONTROLLER)
+@@ -640,23 +640,6 @@ COMPATIBLE_IOCTL(PCIIOC_CONTROLLER)
  COMPATIBLE_IOCTL(PCIIOC_MMAP_IS_IO)
+ COMPATIBLE_IOCTL(PCIIOC_MMAP_IS_MEM)
+ COMPATIBLE_IOCTL(PCIIOC_WRITE_COMBINE)
+-/* hiddev */
+-COMPATIBLE_IOCTL(HIDIOCGVERSION)
+-COMPATIBLE_IOCTL(HIDIOCAPPLICATION)
+-COMPATIBLE_IOCTL(HIDIOCGDEVINFO)
+-COMPATIBLE_IOCTL(HIDIOCGSTRING)
+-COMPATIBLE_IOCTL(HIDIOCINITREPORT)
+-COMPATIBLE_IOCTL(HIDIOCGREPORT)
+-COMPATIBLE_IOCTL(HIDIOCSREPORT)
+-COMPATIBLE_IOCTL(HIDIOCGREPORTINFO)
+-COMPATIBLE_IOCTL(HIDIOCGFIELDINFO)
+-COMPATIBLE_IOCTL(HIDIOCGUSAGE)
+-COMPATIBLE_IOCTL(HIDIOCSUSAGE)
+-COMPATIBLE_IOCTL(HIDIOCGUCODE)
+-COMPATIBLE_IOCTL(HIDIOCGFLAG)
+-COMPATIBLE_IOCTL(HIDIOCSFLAG)
+-COMPATIBLE_IOCTL(HIDIOCGCOLLECTIONINDEX)
+-COMPATIBLE_IOCTL(HIDIOCGCOLLECTIONINFO)
+ /* joystick */
+ COMPATIBLE_IOCTL(JSIOCGVERSION)
+ COMPATIBLE_IOCTL(JSIOCGAXES)
 -- 
 2.20.0
 
