@@ -2,187 +2,145 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4227EC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE58C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 212A92133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24E9D21835
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:22:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AQnXcr5a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730754AbfJILVa (ORCPT
+        id S1730822AbfJILWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 07:21:30 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:46601 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727035AbfJILVa (ORCPT
+        Wed, 9 Oct 2019 07:22:33 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53922 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727657AbfJILWc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 07:21:30 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iIA23-0007hD-Hi; Wed, 09 Oct 2019 13:21:27 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iIA22-0005BZ-D3; Wed, 09 Oct 2019 13:21:26 +0200
-Date:   Wed, 9 Oct 2019 13:21:26 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-kernel@vger.kernel.org, thierry.reding@gmail.com,
-        heiko@sntech.de, dianders@chromium.org, mka@chromium.org,
-        groeck@chromium.org, kernel@collabora.com, bleung@chromium.org,
-        linux-pwm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH] pwm: cros-ec: Let cros_ec_pwm_get_state() return the
- last applied state
-Message-ID: <20191009112126.slpyxhnuqpiqgmes@pengutronix.de>
-References: <20191008105417.16132-1-enric.balletbo@collabora.com>
- <20191008143432.pbhcqamd6f4qwbqn@pengutronix.de>
- <4f009344-242e-19a7-6872-2c55df086044@collabora.com>
- <20191008203137.s22clq6v2om5ktio@pengutronix.de>
- <53b7d02b-1a2d-11da-fdd0-5378f360d876@collabora.com>
- <20191009095635.yysr33lnwldicyng@holly.lan>
- <20191009101637.gmvghwdvcmfw4yyk@pengutronix.de>
- <20191009104236.ux23ywnhvsym2qcb@holly.lan>
+        Wed, 9 Oct 2019 07:22:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1570620151;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fSxt4vlw0RrCjrUOMeZ4WTD/1koGsyolXMub27Mf3ik=;
+        b=AQnXcr5a8aL/YagCSA2qprzTtotFsBMDUsQlivdb9IkE2iKvJSq++xnuYZDZbPe1MB0j5P
+        QGQfcb+Z2MbkraUVpwrrEmD6lOuZTD5culnfGOyYsXO1IhRAP8HExldKocCd/o7sNPcyYT
+        FDlZA6MysfebozT5VQRP65M0vK3gfho=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-363-Y66rTtV-Mx-6IQa7PTDtkQ-1; Wed, 09 Oct 2019 07:22:29 -0400
+Received: by mail-wr1-f69.google.com with SMTP id y18so968727wrw.8
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 04:22:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Eew1CqsB5Kurpo7mgW6HjC4gIkz4FQUu+JSkbHqlln8=;
+        b=rNFrZ917XSOUIwxQtLVuwJzVNSJa/qNST7JyDKE0c3YfYqZiE0ulzPMgbtWxOIiibg
+         yqSBFAM1gtMOWtPo5xCeHDq1iEntgVZodcW5/OeTLlK2z4qSKRFidK5NohxkXPnpw67n
+         n+5OXIgKnTqCO7vYeVphCdBHRuf1GqBZX88LHep4VEwrBRN+poFdSlEabAZhe0zuVAye
+         iAHD2YSuGDoAetCG5DxdOFuQ4nvZ31nQ6ijPjnOXqMZhtbiUujsEejrc5TASvdFrFgoR
+         ZJ7pn9YBYf+kO5jqaLbHMBCA0bIAjrs2yY2v0G7SGJ71kYRH/ykmGLlGb1JdKKL2aTVm
+         rYjw==
+X-Gm-Message-State: APjAAAVs34GD6NWjMpdgeE+18mxaSAMIEHPosxB5LW4XBfKpVysTnUhM
+        RS45O8P2ELiqYSd8Iy25fb9hrwYCF+hA6bmTrGkhea2QQ1iOPP9kBRURs8w+vkSbCgdIHqvh8QZ
+        KF+EnlKHiDDrwXgxwCO1cjvry
+X-Received: by 2002:a5d:670b:: with SMTP id o11mr134151wru.31.1570620148243;
+        Wed, 09 Oct 2019 04:22:28 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzyDH2yB45oDJuaeMzYuAzPHkv+uoWcEOBdzCqvL0hQ3GLQFyhYxwGywmUes44prwkkxN0yjw==
+X-Received: by 2002:a5d:670b:: with SMTP id o11mr134132wru.31.1570620148012;
+        Wed, 09 Oct 2019 04:22:28 -0700 (PDT)
+Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id n7sm1839941wrt.59.2019.10.09.04.22.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Oct 2019 04:22:27 -0700 (PDT)
+Date:   Wed, 9 Oct 2019 13:22:25 +0200
+From:   Oleksandr Natalenko <oleksandr@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Thorsten Leemhuis <linux@leemhuis.info>,
+        Quentin Perret <qperret@qperret.net>
+Subject: Re: [PATCH] docs: admin-guide: fix printk_ratelimit explanation
+Message-ID: <20191009112225.tspuot7sstybqeud@butterfly.localdomain>
+References: <20191002114610.5773-1-oleksandr@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+In-Reply-To: <20191002114610.5773-1-oleksandr@redhat.com>
+User-Agent: NeoMutt/20180716
+X-MC-Unique: Y66rTtV-Mx-6IQa7PTDtkQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191009104236.ux23ywnhvsym2qcb@holly.lan>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 11:42:36AM +0100, Daniel Thompson wrote:
-> On Wed, Oct 09, 2019 at 12:16:37PM +0200, Uwe Kleine-König wrote:
-> > On Wed, Oct 09, 2019 at 10:56:35AM +0100, Daniel Thompson wrote:
-> > > On Wed, Oct 09, 2019 at 11:27:13AM +0200, Enric Balletbo i Serra wrote:
-> > > > Hi Uwe,
-> > > > 
-> > > > Adding Daniel and Lee to the discussion ...
-> > > 
-> > > Thanks!
-> > > 
-> > > > On 8/10/19 22:31, Uwe Kleine-König wrote:
-> > > > > On Tue, Oct 08, 2019 at 06:33:15PM +0200, Enric Balletbo i Serra wrote:
-> > > > >>> A few thoughts to your approach here ...:
-> > > > >>>
-> > > > >>>  - Would it make sense to only store duty_cycle and enabled in the
-> > > > >>>    driver struct?
-> > > > >>>
-> > > > >>
-> > > > >> Yes, in fact, my first approach (that I didn't send) was only storing enabled
-> > > > >> and duty cycle. For some reason I ended storing the full pwm_state struct, but I
-> > > > >> guess is not really needed.
-> > > > >>
-> > > > >>
-> > > > >>>  - Which driver is the consumer of your pwm? If I understand correctly
-> > > > >>>    the following sequence is the bad one:
-> > > > >>>
-> > > > >>
-> > > > >> The consumer is the pwm_bl driver. Actually I'n trying to identify
-> > > > >> other consumers.
-> > > > > 
-> > > > 
-> > > > So far, the pwm_bl driver is the only consumer of cros-ec-pwm.
-> > > > 
-> > > > > Ah, I see why I missed to identify the problem back when I checked this
-> > > > > driver. The problem is not that .duty_cycle isn't set but there .enabled
-> > > > > isn't set. So maybe we just want:
-> > > > > 
-> > > > > diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-> > > > > index 2201b8c78641..0468c6ee4448 100644
-> > > > > --- a/drivers/video/backlight/pwm_bl.c
-> > > > > +++ b/drivers/video/backlight/pwm_bl.c
-> > > > > @@ -123,6 +123,7 @@ static int pwm_backlight_update_status(struct backlight_device *bl)
-> > > > >         if (brightness > 0) {
-> > > > >                 pwm_get_state(pb->pwm, &state);
-> > > > >                 state.duty_cycle = compute_duty_cycle(pb, brightness);
-> > > > > +               state.enabled = true;
-> > > > >                 pwm_apply_state(pb->pwm, &state);
-> > > > >                 pwm_backlight_power_on(pb);
-> > > > >         } else
-> > > > > 
-> > > > > ? On a side note: It's IMHO strange that pwm_backlight_power_on
-> > > > > reconfigures the PWM once more.
-> > > > > 
-> > > > 
-> > > > Looking again to the pwm_bl code, now, I am not sure this is correct (although
-> > > > it probably solves the problem for me).
-> > > 
-> > > Looking at the pwm_bl code I wouldn't accept the above as it is but I'd
-> > > almost certainly accept a patch to pwm_bl to move the PWM enable/disable
-> > > out of both the power on/off functions so the duty-cycle/enable or
-> > > disable can happen in one go within the update_status function. I don't
-> > > think such a change would interfere with the power and enable sequencing
-> > > needed by panels and it would therefore be a nice continuation of the
-> > > work to convert over to the pwm_apply_state() API.
-> > 
-> > OK for me. Enric, do you care enough to come up with a patch for pwm_bl?
-> > I'd expect that this alone should already fix your issue.
-> >  
-> > > None of the above has anything to do with what is right or wrong for
-> > > the PWM API evolution. Of course, if this thread does conclude that it
-> > > is OK the duty cycle of a disabled PWM to be retained for some drivers
-> > > and not others then I'd hope to see some WARN_ON()s added to the PWM
-> > > framework to help bring problems to the surface with all drivers.
-> > 
-> > I think it's not possible to add a reliable WARN_ON for that issue. It
-> > is quite expected that .get_state returns something that doesn't
-> > completely match the requested configuration. So if a consumer requests
-> > 
-> > 	.duty_cycle = 1
-> > 	.period = 100000000
-> > 	.enabled = false
-> > 
-> > pwm_get_state possibly returns .duty_cycle = 0 even for drivers/hardware
-> > that has a concept of duty_cycle for disabled hardware.
-> > 
-> > A bit this is addressed in https://patchwork.ozlabs.org/patch/1147517/.
-> 
-> Isn't that intended to help identify "odd" PWM drivers rather than "odd"
-> clients?
-> 
-> Initially I was thinking that a WARN_ON() could be emitted when:
-> 
-> 1. .duty_cycle is non-zero
-> 2. .enabled is false
-> 3. the PWM is not already enabled
-> 
-> (#3 included to avoid too many false positives when disabling a PWM)
+Hi.
 
-I think I created a patch for that in the past, don't remember the
-details.
+On Wed, Oct 02, 2019 at 01:46:10PM +0200, Oleksandr Natalenko wrote:
+> The printk_ratelimit value accepts seconds, not jiffies (though it is
+> converted into jiffies internally). Update documentation to reflect
+> this.
+>=20
+> Also, remove the statement about allowing 1 message in 5 seconds since
+> bursts up to 10 messages are allowed by default.
+>=20
+> Finally, while we are here, mention default value for
+> printk_ratelimit_burst too.
+>=20
+> Signed-off-by: Oleksandr Natalenko <oleksandr@redhat.com>
+> ---
+>  Documentation/admin-guide/sysctl/kernel.rst | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/=
+admin-guide/sysctl/kernel.rst
+> index 032c7cd3cede..6e0da29e55f1 100644
+> --- a/Documentation/admin-guide/sysctl/kernel.rst
+> +++ b/Documentation/admin-guide/sysctl/kernel.rst
+> @@ -831,8 +831,8 @@ printk_ratelimit:
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> =20
+>  Some warning messages are rate limited. printk_ratelimit specifies
+> -the minimum length of time between these messages (in jiffies), by
+> -default we allow one every 5 seconds.
+> +the minimum length of time between these messages (in seconds).
+> +The default value is 5 seconds.
+> =20
+>  A value of 0 will disable rate limiting.
+> =20
+> @@ -845,6 +845,8 @@ seconds, we do allow a burst of messages to pass thro=
+ugh.
+>  printk_ratelimit_burst specifies the number of messages we can
+>  send before ratelimiting kicks in.
+> =20
+> +The default value is 10 messages.
+> +
+> =20
+>  printk_devkmsg:
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --=20
+> 2.23.0
+>=20
 
-> A poisoning approach might be equally valid. If some drivers are
-> permitted to "round" .duty_cycle to 0 when .enabled is false then the
-> framework could get *all* drivers to behave in the same way by
-> zeroing it out before calling the drivers apply method. It is not that
-> big a deal but minimising the difference between driver behaviour should
-> automatically reduce the difference in API usage by clients.
+This is a gentle ping. Please review.
 
-I like it, but that breaks consumers that set .duty_cycle once during
-probe and then only do:
+Thanks.
 
-	pwm_get_state(pwm, &state);
-	state.enabled = ...
-	pwm_apply_state(pwm, &state);
+--=20
+  Best regards,
+    Oleksandr Natalenko (post-factum)
+    Senior Software Maintenance Engineer
 
-which is a common idiom.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
