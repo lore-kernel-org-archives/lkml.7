@@ -2,173 +2,247 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 573F1ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B43C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27163218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:50:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3A33218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:51:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="XBu/XJtT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SJKcgq2i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731473AbfJIOue (ORCPT
+        id S1731497AbfJIOvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 10:50:34 -0400
-Received: from mail-eopbgr00135.outbound.protection.outlook.com ([40.107.0.135]:7840
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731083AbfJIOud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 10:50:33 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WO8tQ3Vh/P6dT9y3HdD/2VZPEuiLkURdWxiKY7DH8x+LexicWSe7s9wnjyb4jLbamDn3tzpyjmgg93Shn3ray6zdDlfhxR4MX+W7Rhlqkhy68neWE9b3Rz6hjGWh4MX/yh9exqagbDSfgGidQge3h8pbHEs9qX19Roc4lld2O+ImHAyySeM+htE+gRBp6t2fT/X4XFoiTuaYZOUwX+pnLDnnLzGNzCaSBEuZq2u+1adPUr+qWj3X1wKFwpZjiI3F14tjivGHF0nLeD7Q22darVsfsGa4dfUgrvG/ZYLgzx1Q6VCWyYQnhu55LuXUwfHVKkj3DlVdQrIZPg03yfAPGA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=F05fU4vT9u91Mr8UjkmHCWAHFFKynVAqhVBDsEiCgtA=;
- b=RwehupzgJARy7mMa+0ph148bNpPyzKxQQH4x3JfjQPmdtFEszM7XZbF6MtEDPUlGUFv6dLwtQX69TQ1JMv+Zz9GX/0i2n4Btqoo3hnqqytgvLZORDjChqAQv2AZ518xUsF+mrCFqmHURtYIwMkCIMnFOF84VCT0uHFP7LOzkGKilpV1Dqzib+EdtqUIr1frp01zz8y2k+v6+3PedRARmlQqekmUFXgWAmagppZuaotemgzS5Mv9Pvrs6xCXBorBKx/fuNMBV2a+uNrLJekx6+qZvRpzKqJuysUh5fFnHvJkfYqyjPbyeVtqJu481M+101LS/8qsT/NUEVwIuMznrWQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
- header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=F05fU4vT9u91Mr8UjkmHCWAHFFKynVAqhVBDsEiCgtA=;
- b=XBu/XJtTjm49oqy5W+AFXi3m2+vMCgTzJCBYnViSg0HcK8s2NKgPJCjJEy+ZCXqfKdZDJwGM94cBsDI5nUmKWSHpd82iPGNKREiJwZBtt4108mZDF3We1hx0rGt5mJaETxYv2RY68clX26+ncI2JWhVCeYiVFqDgdG9XdxET+Ng=
-Received: from AM0PR08MB5537.eurprd08.prod.outlook.com (20.179.36.87) by
- AM0PR08MB5122.eurprd08.prod.outlook.com (10.255.30.97) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.16; Wed, 9 Oct 2019 14:50:30 +0000
-Received: from AM0PR08MB5537.eurprd08.prod.outlook.com
- ([fe80::a8ea:5223:db78:dd3]) by AM0PR08MB5537.eurprd08.prod.outlook.com
- ([fe80::a8ea:5223:db78:dd3%7]) with mapi id 15.20.2327.026; Wed, 9 Oct 2019
- 14:50:29 +0000
-From:   Roman Kagan <rkagan@virtuozzo.com>
-To:     Michael Kelley <mikelley@microsoft.com>,
-        Lan Tianyu <Tianyu.Lan@microsoft.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: [PATCH v3] x86/hyperv: make vapic support x2apic mode
-Thread-Topic: [PATCH v3] x86/hyperv: make vapic support x2apic mode
-Thread-Index: AQHVfrDkN3MUr0xlFEms4FiPcOct8Q==
-Date:   Wed, 9 Oct 2019 14:50:29 +0000
-Message-ID: <20191009145022.28442-1-rkagan@virtuozzo.com>
-Accept-Language: en-US, ru-RU
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [185.231.240.5]
-x-clientproxiedby: HE1PR02CA0087.eurprd02.prod.outlook.com
- (2603:10a6:7:29::16) To AM0PR08MB5537.eurprd08.prod.outlook.com
- (2603:10a6:208:148::23)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=rkagan@virtuozzo.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.21.0
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3846aca9-3625-4774-620b-08d74cc80759
-x-ms-traffictypediagnostic: AM0PR08MB5122:
-x-microsoft-antispam-prvs: <AM0PR08MB51222AC54BEE67B4A2A67793C9950@AM0PR08MB5122.eurprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 018577E36E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(366004)(39840400004)(136003)(396003)(189003)(199004)(25786009)(8936002)(1511001)(7416002)(186003)(6512007)(50226002)(4326008)(99286004)(1076003)(14444005)(52116002)(102836004)(6486002)(71190400001)(71200400001)(256004)(478600001)(81156014)(81166006)(8676002)(26005)(6436002)(486006)(316002)(305945005)(7736002)(2616005)(6506007)(5660300002)(54906003)(66066001)(386003)(36756003)(3846002)(6116002)(2906002)(110136005)(476003)(66946007)(2201001)(86362001)(64756008)(66446008)(66556008)(14454004)(2501003)(66476007)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:AM0PR08MB5122;H:AM0PR08MB5537.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: virtuozzo.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ek51EBeXAhmlbw5Ve4YQJYo+DggMzjzbJ/rGU5XhnrBMQDYqg5ig/OaufHoUkdP4XC1oIZhktB6YUdsdzj2R8iup2ZQ0qDYjK9X7eHFfFIs7whBD+zeb7K4FeP6tpihdy/xonG41aQxU4G8hWevaqOgDMmjTt8V5NwI68w238giX+S+7poQ8Q5nu7zygKhD6bfi3gayXdjZQW6N3pA6cPWuCM2Ym/lvnD0CwxdRXn2P3cjqVcRWXB9vqV/DAFAW5AMWDLa6aeoJkXjPuxS1J7KDU/TGyaLu1KYdSc9MIHZT4nISqTFyvuqOWD+dENS+iValu60N+KqIPxZZZMiH6gIys+krQzIl46ORVjwDZ8NbUUo9ccsmcj88OsSqV9bPVx+aaYg9+c9gNht1i2oZV0RnC+CQfj/2P4pHuVDlqlpQ=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 9 Oct 2019 10:51:22 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:42668 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728019AbfJIOvW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 10:51:22 -0400
+Received: by mail-ed1-f68.google.com with SMTP id y91so2281809ede.9
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 07:51:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dm4M9uK9mKzWNZjUUbbJt1yeuLljxo5ejZPu2BC83M4=;
+        b=SJKcgq2ihghim/W7kVfmBmNqh79wLmu4103r0DbiMKwiRtP8hHl4SnGH4yFP/8wG7u
+         c0Q1r+Y9bnuoMZL6tWAJl52p9wensFYCBVmSiV/ghDbbpH7B5TCmE9xxUA0aKv3S3Ioo
+         PbXA5z3VZli1iGQW8rRNf+pctvByJug9EAOyeE4x6M+cJBVjYVSVZ5qvkWLaort4Xq3W
+         qttdN6eFHmKFVo6HdjK7/27cZkwZFyxnHIPF8KQUR5ZTY15KKLnoVPcfmRG4rtHZMe/r
+         yyub9eFCood8G+gN73j2Mxp3FQYtCxARiGuJQ06OjPjXwpOjxa4RmHWivOwtdD0Tf8CT
+         V1lQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dm4M9uK9mKzWNZjUUbbJt1yeuLljxo5ejZPu2BC83M4=;
+        b=FnI5BUZ3KeaH9S4bI/wkVqJsTcD3yTfypR8clON5Otn2D5JHZtnv5NmPUxtw1AeBsP
+         Xb5WahMiEVYvk2t+92G2B2NpsSniuXfw5A3NQgJeS9kh5nHTZly4X4cNrGarbKOyQ3Qm
+         Tbsh+i8kgUcMYMwe1Zy9l2aSz1kCD54dyaZUp3dQRUQf82k1faLSrL21N+W78BUSM/qh
+         NG1DaaIZZU9a6UTPgO60+LO8VpsAQzh+jgPO6SAT7Cfqr+Yt/bvAb/cQILoWicyBdrx6
+         /dDmgoMAjZ4kdsKe7A+r9zt7QK90kLC2EQsJXJ+JeRruieDvJpIEuMGRO6BOfewsnb1m
+         gRUw==
+X-Gm-Message-State: APjAAAURdCC0Uzs1R01rF6UQ9xU7WS48+49imrGD5HCLcvr3loCFGDhu
+        bUHm5j9JOTXjCrBV3xjCDsdg7BP+yyBEHp6OrEUPXG8=
+X-Google-Smtp-Source: APXvYqyvhpB9GnuLNHg5HldXBlWLYT5rq27yj/Qq42UJRJr/lyubDc/7zYyqwil9FcitKPYxd1FONV4gtdUsLxJpnjE=
+X-Received: by 2002:a17:906:2410:: with SMTP id z16mr3256611eja.120.1570632678183;
+ Wed, 09 Oct 2019 07:51:18 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: virtuozzo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3846aca9-3625-4774-620b-08d74cc80759
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Oct 2019 14:50:29.8851
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: e7hF6pRMPbrbr0ONydIBnLB2poupA+BCaIR9i7iN058Uc5Yjf+XMmuVbqS9YDBZT8lbN1TH4shy7QJmrj8NZaA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB5122
+References: <20191008220824.7911-1-viktor.rosendahl@gmail.com>
+ <20191008220824.7911-5-viktor.rosendahl@gmail.com> <20191009141114.GC143258@google.com>
+In-Reply-To: <20191009141114.GC143258@google.com>
+From:   Viktor Rosendahl <viktor.rosendahl@gmail.com>
+Date:   Wed, 9 Oct 2019 16:51:07 +0200
+Message-ID: <CAPQh3wP93yF4R4LOabmBf8zqTgM7ZVT=_eZRPwgq5WKEESjnyw@mail.gmail.com>
+Subject: Re: [PATCH v8 4/4] ftrace: Add an option for tracing console latencies
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that there's Hyper-V IOMMU driver, Linux can switch to x2apic mode
-when supported by the vcpus.
+Den ons 9 okt. 2019 kl 16:11 skrev Joel Fernandes <joel@joelfernandes.org>:
+>
+> On Wed, Oct 09, 2019 at 12:08:24AM +0200, Viktor Rosendahl (BMW) wrote:
+> > This new trace option "console-latency" will enable the latency
+> > tracers to trace the console latencies. Previously this has always been
+> > implicitely disabled. I guess this is because they are considered
+> > to be well known and unavoidable.
+> >
+> > However, for some organizations it may nevertheless be desirable to
+> > trace them. Basically, we want to be able to tell that there are
+> > latencies in the system under test because someone has incorrectly
+> > enabled the serial console.
+> >
+> > Signed-off-by: Viktor Rosendahl (BMW) <viktor.rosendahl@gmail.com>
+> > ---
+> >  include/linux/irqflags.h     | 22 ++++++++++++++++++++++
+> >  kernel/printk/printk.c       |  6 ++++--
+> >  kernel/trace/trace.h         |  1 +
+> >  kernel/trace/trace_irqsoff.c | 18 ++++++++++++++++++
+> >  4 files changed, 45 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/include/linux/irqflags.h b/include/linux/irqflags.h
+> > index 21619c92c377..3de891723331 100644
+> > --- a/include/linux/irqflags.h
+> > +++ b/include/linux/irqflags.h
+> > @@ -13,6 +13,7 @@
+> >  #define _LINUX_TRACE_IRQFLAGS_H
+> >
+> >  #include <linux/typecheck.h>
+> > +#include <linux/types.h>
+> >  #include <asm/irqflags.h>
+> >
+> >  /* Currently trace_softirqs_on/off is used only by lockdep */
+> > @@ -68,9 +69,30 @@ do {                                               \
+> >       defined(CONFIG_PREEMPT_TRACER)
+> >   extern void stop_critical_timings(void);
+> >   extern void start_critical_timings(void);
+> > + extern bool console_tracing_disabled(void);
+> > +
+> > +# define console_stop_critical_timings(flag)         \
+> > +     do {                                            \
+> > +             typecheck(bool, flag);                  \
+> > +             flag = console_tracing_disabled();      \
+> > +             if (flag)                               \
+> > +                     stop_critical_timings();        \
+> > +     } while (0)
+> > +
+> > +# define console_start_critical_timings(flag)                 \
+> > +     do {                                             \
+> > +             typecheck(bool, flag);                   \
+> > +             if (flag)                                \
+> > +                     start_critical_timings();        \
+> > +     } while (0)
+> > +
+> >  #else
+> >  # define stop_critical_timings() do { } while (0)
+> >  # define start_critical_timings() do { } while (0)
+> > +# define console_stop_critical_timings(flag) \
+> > +     do { typecheck(bool, flag); } while (0)
+> > +# define console_start_critical_timings(flag)        \
+> > +     do { typecheck(bool, flag); } while (0)
+> >  #endif
+> >
+> >  /*
+> > diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> > index ca65327a6de8..f27e96273453 100644
+> > --- a/kernel/printk/printk.c
+> > +++ b/kernel/printk/printk.c
+> > @@ -2369,6 +2369,7 @@ void console_unlock(void)
+> >       static char ext_text[CONSOLE_EXT_LOG_MAX];
+> >       static char text[LOG_LINE_MAX + PREFIX_MAX];
+> >       unsigned long flags;
+> > +     bool cflag;
+> >       bool do_cond_resched, retry;
+> >
+> >       if (console_suspended) {
+> > @@ -2469,9 +2470,10 @@ void console_unlock(void)
+> >                */
+> >               console_lock_spinning_enable();
+> >
+> > -             stop_critical_timings();        /* don't trace print latency */
+> > +             /* don't trace print latency if it's disabled */
+> > +             console_stop_critical_timings(cflag);
+> >               call_console_drivers(ext_text, ext_len, text, len);
+> > -             start_critical_timings();
+> > +             console_start_critical_timings(cflag);
+> >
+> >               if (console_lock_spinning_disable_and_check()) {
+> >                       printk_safe_exit_irqrestore(flags);
+> > diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+> > index 591c7a873235..10d12c8f7f77 100644
+> > --- a/kernel/trace/trace.h
+> > +++ b/kernel/trace/trace.h
+> > @@ -1261,6 +1261,7 @@ extern int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
+> >               C(PRINTK_MSGONLY,       "printk-msg-only"),     \
+> >               C(CONTEXT_INFO,         "context-info"),   /* Print pid/cpu/time */ \
+> >               C(LATENCY_FMT,          "latency-format"),      \
+> > +             C(CONSOLE_LATENCY,      "console-latency"),     \
+> >               C(RECORD_CMD,           "record-cmd"),          \
+> >               C(RECORD_TGID,          "record-tgid"),         \
+> >               C(OVERWRITE,            "overwrite"),           \
+> > diff --git a/kernel/trace/trace_irqsoff.c b/kernel/trace/trace_irqsoff.c
+> > index a745b0cee5d3..576e2162114e 100644
+> > --- a/kernel/trace/trace_irqsoff.c
+> > +++ b/kernel/trace/trace_irqsoff.c
+> > @@ -456,6 +456,24 @@ void stop_critical_timings(void)
+> >  EXPORT_SYMBOL_GPL(stop_critical_timings);
+> >  NOKPROBE_SYMBOL(stop_critical_timings);
+> >
+> > +bool console_tracing_disabled(void)
+> > +{
+> > +     struct trace_array *tr = irqsoff_trace;
+> > +     int pc = preempt_count();
+> > +
+> > +     /*
+> > +      * If tracing is disabled, then the question of whether to trace console
+> > +      * latencies is moot. By always returning false here we save the caller
+> > +      * the calls to start/stop_critical_timings(). These calls would not do
+> > +      * anything anyway.
+> > +      */
+>
+> I thought you were going to drop this patch, or at least I had suggested so
+> but did not hear a reply from you: https://lkml.org/lkml/2019/10/3/464
+>
 
-However, the apic access functions for Hyper-V enlightened apic assume
-xapic mode only.
+Apologies, I should have replied there but I have been a bit busy the
+last few days with other topics, and I felt a bit indecisive about
+that point, so I just sloppily addressed the issue in the cover letter
+of this new series:
 
-As a result, Linux fails to bring up secondary cpus when run as a guest
-in QEMU/KVM with both hv_apic and x2apic enabled.
+"I have retained the fourth patch, although it was suggested that is becoming
+obsolete soon. I have retained it only because I do not know the status of
+the code that will make it obsolete. It's the last patch of the series and
+if there indeed is some code that will remove the latency issues from the
+printk code, then of course it makes sense to drop it. The first three patches
+will work without it."
 
-According to Michael Kelley, when in x2apic mode, the Hyper-V synthetic
-apic MSRs behave exactly the same as the corresponding architectural
-x2apic MSRs, so there's no need to override the apic accessors.  The
-only exception is hv_apic_eoi_write, which benefits from lazy EOI when
-available; however, its implementation works for both xapic and x2apic
-modes.
+I thought that, since it's the last in the series, it would be
+possible for maintainers to just take the first three if the last one
+is not wanted.
 
-Fixes: 29217a474683 ("iommu/hyper-v: Add Hyper-V stub IOMMU driver")
-Fixes: 6b48cb5f8347 ("X86/Hyper-V: Enlighten APIC access")
-Cc: stable@vger.kernel.org
-Suggested-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Roman Kagan <rkagan@virtuozzo.com>
----
-v2 -> v3:
-- do not introduce x2apic-capable hv_apic accessors; leave original
-  x2apic accessors instead
+For me it solves a rather important problem though, so if the code
+that will make it obsolete isn't available for some time, then perhaps
+it should be considered as a temporary solution.
 
-v1 -> v2:
-- add ifdefs to handle !CONFIG_X86_X2APIC
+Of course, if there is a commitment to never remove any knobs from
+/sys/kernel/debug/tracing/trace_options, then I can easily understand
+that it's not wanted as a temporary fix.
 
- arch/x86/hyperv/hv_apic.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+best regards,
 
-diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
-index 5c056b8aebef..26eeff5bd535 100644
---- a/arch/x86/hyperv/hv_apic.c
-+++ b/arch/x86/hyperv/hv_apic.c
-@@ -261,10 +261,19 @@ void __init hv_apic_init(void)
-=20
- 	if (ms_hyperv.hints & HV_X64_APIC_ACCESS_RECOMMENDED) {
- 		pr_info("Hyper-V: Using MSR based APIC access\n");
-+		/*
-+		 * With x2apic, architectural x2apic MSRs are equivalent to the
-+		 * respective synthetic MSRs, so there's no need to override
-+		 * the apic accessors.  The only exception is
-+		 * hv_apic_eoi_write, because it benefits from lazy EOI when
-+		 * available, but it works for both xapic and x2apic modes.
-+		 */
- 		apic_set_eoi_write(hv_apic_eoi_write);
--		apic->read      =3D hv_apic_read;
--		apic->write     =3D hv_apic_write;
--		apic->icr_write =3D hv_apic_icr_write;
--		apic->icr_read  =3D hv_apic_icr_read;
-+		if (!x2apic_enabled()) {
-+			apic->read      =3D hv_apic_read;
-+			apic->write     =3D hv_apic_write;
-+			apic->icr_write =3D hv_apic_icr_write;
-+			apic->icr_read  =3D hv_apic_icr_read;
-+		}
- 	}
- }
---=20
-2.21.0
+Viktor
 
+> Thanks for adding the comments though.
+>
+> Steve, what do you think about this patch? I am worried the extra flag may go
+> obsolete at some point if the console latencies are fixed and we have yet
+> another knob.
+>
+> thanks,
+>
+>  - Joel
+>
+> > +     if (!preempt_trace(pc) && !irq_trace())
+> > +             return false;
+> > +
+> > +     return !(tr->trace_flags & TRACE_ITER_CONSOLE_LATENCY);
+> > +}
+> > +EXPORT_SYMBOL_GPL(console_tracing_disabled);
+> > +
+> >  #ifdef CONFIG_FUNCTION_TRACER
+> >  static bool function_enabled;
+> >
+> > --
+> > 2.17.1
+> >
