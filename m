@@ -2,120 +2,90 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D0EC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8ABC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8826B21835
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:51:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570629119;
-	bh=UNc/8F9d9S64kVqPjtUhAd+6LIUympZdKfhz72oz8B4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Nm6g9XKtfpXBnDD3et44mQfygk4iR8l73I0lGdLCWb77z3FTyv3QNi2Z4mxflID/a
-	 7IvN0Qi9Ycm9GKyHJOBN4qL1HoLv9f0oi5NV8IJjnSCzuNcIETmT+EyWSGASy7KNre
-	 7dQRZtgqUdMCPxV5q65YatMU9y4MGpP/6nC4d/YM=
+	by mail.kernel.org (Postfix) with ESMTP id 943642067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:54:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731315AbfJINv6 (ORCPT
+        id S1729742AbfJINyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 09:51:58 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39914 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729883AbfJINv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 09:51:58 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 287BDAF6B;
-        Wed,  9 Oct 2019 13:51:56 +0000 (UTC)
-Date:   Wed, 9 Oct 2019 15:51:55 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        sergey.senozhatsky.work@gmail.com, rostedt@goodmis.org,
-        peterz@infradead.org, linux-mm@kvack.org,
-        john.ogness@linutronix.de, akpm@linux-foundation.org,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>, david@redhat.com,
+        Wed, 9 Oct 2019 09:54:05 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:58840 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725879AbfJINyF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 09:54:05 -0400
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iICPd-00080u-TF; Wed, 09 Oct 2019 14:53:58 +0100
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1iICPd-0002v5-DO; Wed, 09 Oct 2019 14:53:57 +0100
+From:   Ben Dooks <ben.dooks@codethink.co.uk>
+To:     linux-kernel@lists.codethink.co.uk
+Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Barry Song <baohua@kernel.org>,
+        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
-Message-ID: <20191009135155.GC6681@dhcp22.suse.cz>
-References: <aefe7f75-b0ec-9e99-a77e-87324edb24e0@de.ibm.com>
- <1570550917.5576.303.camel@lca.pw>
- <20191008183525.GQ6681@dhcp22.suse.cz>
- <1570561573.5576.307.camel@lca.pw>
- <20191008191728.GS6681@dhcp22.suse.cz>
- <1570563324.5576.309.camel@lca.pw>
- <20191009114903.aa6j6sa56z2cssom@pathway.suse.cz>
- <1570626402.5937.1.camel@lca.pw>
- <20191009132746.GA6681@dhcp22.suse.cz>
- <1570628593.5937.3.camel@lca.pw>
+Subject: [PATCH] serial: sirf: make register info static
+Date:   Wed,  9 Oct 2019 14:53:56 +0100
+Message-Id: <20191009135356.11180-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1570628593.5937.3.camel@lca.pw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 09-10-19 09:43:13, Qian Cai wrote:
-> On Wed, 2019-10-09 at 15:27 +0200, Michal Hocko wrote:
-> > On Wed 09-10-19 09:06:42, Qian Cai wrote:
-> > [...]
-> > > https://lore.kernel.org/linux-mm/1570460350.5576.290.camel@lca.pw/
-> > > 
-> > > [  297.425964] -> #1 (&port_lock_key){-.-.}:
-> > > [  297.425967]        __lock_acquire+0x5b3/0xb40
-> > > [  297.425967]        lock_acquire+0x126/0x280
-> > > [  297.425968]        _raw_spin_lock_irqsave+0x3a/0x50
-> > > [  297.425969]        serial8250_console_write+0x3e4/0x450
-> > > [  297.425970]        univ8250_console_write+0x4b/0x60
-> > > [  297.425970]        console_unlock+0x501/0x750
-> > > [  297.425971]        vprintk_emit+0x10d/0x340
-> > > [  297.425972]        vprintk_default+0x1f/0x30
-> > > [  297.425972]        vprintk_func+0x44/0xd4
-> > > [  297.425973]        printk+0x9f/0xc5
-> > > [  297.425974]        register_console+0x39c/0x520
-> > > [  297.425975]        univ8250_console_init+0x23/0x2d
-> > > [  297.425975]        console_init+0x338/0x4cd
-> > > [  297.425976]        start_kernel+0x534/0x724
-> > > [  297.425977]        x86_64_start_reservations+0x24/0x26
-> > > [  297.425977]        x86_64_start_kernel+0xf4/0xfb
-> > > [  297.425978]        secondary_startup_64+0xb6/0xc0
-> > > 
-> > > where the report again show the early boot call trace for the locking
-> > > dependency,
-> > > 
-> > > console_owner --> port_lock_key
-> > > 
-> > > but that dependency clearly not only happen in the early boot.
-> > 
-> > Can you provide an example of the runtime dependency without any early
-> > boot artifacts? Because this discussion really doens't make much sense
-> > without a clear example of a _real_ lockdep report that is not a false
-> > possitive. All of them so far have been concluded to be false possitive
-> > AFAIU.
-> 
-> An obvious one is in the above link. Just replace the trace in #1 above with
-> printk() from anywhere, i.e., just ignore the early boot calls there as they are
->  not important.
-> 
-> printk()
->   console_unlock()
->     console_lock_spinning_enable() --> console_owner_lock
->   call_console_drivers()
->     serial8250_console_write() --> port->lock
+The sirfsoc_usp and sirfsoc_uart objects are not
+used outside of the drivers/tty/serial/sirfsoc_uart.o
+so make them static. Fixes following sparse warnings:
 
-Can you paste the full lock chain graph to be sure we are on the same
-page?
+drivers/tty/serial/sirfsoc_uart.h:123:30: warning: symbol 'sirfsoc_usp' was not declared. Should it be static?
+drivers/tty/serial/sirfsoc_uart.h:189:30: warning: symbol 'sirfsoc_uart' was not declared. Should it be static?
 
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+---
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jiri Slaby <jslaby@suse.com>
+Cc: Barry Song <baohua@kernel.org>
+Cc: linux-serial@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/tty/serial/sirfsoc_uart.h | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/tty/serial/sirfsoc_uart.h b/drivers/tty/serial/sirfsoc_uart.h
+index 004ca684d3ae..637b09d3fe79 100644
+--- a/drivers/tty/serial/sirfsoc_uart.h
++++ b/drivers/tty/serial/sirfsoc_uart.h
+@@ -120,7 +120,8 @@ static u32 uart_usp_ff_empty_mask(struct uart_port *port)
+ 	empty_bit = ilog2(port->fifosize) + 1;
+ 	return (1 << empty_bit);
+ }
+-struct sirfsoc_uart_register sirfsoc_usp = {
++
++static struct sirfsoc_uart_register sirfsoc_usp = {
+ 	.uart_reg = {
+ 		.sirfsoc_mode1		= 0x0000,
+ 		.sirfsoc_mode2		= 0x0004,
+@@ -186,7 +187,7 @@ struct sirfsoc_uart_register sirfsoc_usp = {
+ 	},
+ };
+ 
+-struct sirfsoc_uart_register sirfsoc_uart = {
++static struct sirfsoc_uart_register sirfsoc_uart = {
+ 	.uart_reg = {
+ 		.sirfsoc_line_ctrl	= 0x0040,
+ 		.sirfsoc_tx_rx_en	= 0x004c,
 -- 
-Michal Hocko
-SUSE Labs
+2.23.0
+
