@@ -2,106 +2,94 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE8AC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 23:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90019C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 23:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C8EE20659
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 23:44:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EBE820659
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 23:44:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570664655;
+	bh=ttUVmrIzuf0w22zjSvNcVAQBL4zgFKEq3DaArSdKV2Y=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=evP25ublzzUSJrGGYYF1d4FPpw8o9n9qzDbCNdF5EMzfZSPVXqjjZVsX80q003Sdy
+	 SgWoBbsIb+cR8pNqpezFSg+ESLYGdMgUkP+KZOfKsD6OiPD2gYGPA54TVkYr0qvL11
+	 k/jbEeHvdjSwBh36fPenxeiSB0CF7oji86Xdc5dY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732233AbfJIXoB (ORCPT
+        id S1732432AbfJIXoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 19:44:01 -0400
-Received: from mga18.intel.com ([134.134.136.126]:36281 "EHLO mga18.intel.com"
+        Wed, 9 Oct 2019 19:44:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730815AbfJIXoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 19:44:01 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 16:44:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,278,1566889200"; 
-   d="scan'208";a="193027202"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 09 Oct 2019 16:44:00 -0700
-Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
-        by linux.intel.com (Postfix) with ESMTP id EEC7E5802BC;
-        Wed,  9 Oct 2019 16:43:59 -0700 (PDT)
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH 1/2] iommu/vt-d: Select PCI_PRI for INTEL_IOMMU_SVM
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     Ashok Raj <ashok.raj@intel.com>,
-        Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-References: <20191009224551.179497-1-helgaas@kernel.org>
- <20191009224551.179497-2-helgaas@kernel.org>
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Organization: Intel
-Message-ID: <76ec2ac0-129e-ef65-8229-6405020fdc9f@linux.intel.com>
-Date:   Wed, 9 Oct 2019 16:42:10 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1730815AbfJIXoO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 19:44:14 -0400
+Received: from ebiggers-linuxstation.mtv.corp.google.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 653C120659;
+        Wed,  9 Oct 2019 23:44:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570664653;
+        bh=ttUVmrIzuf0w22zjSvNcVAQBL4zgFKEq3DaArSdKV2Y=;
+        h=From:To:Cc:Subject:Date:From;
+        b=v/OYP3CyOlLnK2h3sAFmFUGU3iqw5O5dngP0EVdfJjPUZ/ArystkmFd08w34mNqSz
+         pjiomgybOGYsjelIiBb3dYzL6k9NlbeQIHJ7JfQdKraMPjd1qngnEmM3MMI0nz26Mc
+         4YdJTHcNq5ANvLpldLMsgV9LJAN6GWGIfFbZnkLc=
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-fscrypt@vger.kernel.org
+Cc:     "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH] fscrypt: avoid data race on fscrypt_mode::logged_impl_name
+Date:   Wed,  9 Oct 2019 16:43:37 -0700
+Message-Id: <20191009234337.225469-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
 MIME-Version: 1.0
-In-Reply-To: <20191009224551.179497-2-helgaas@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Eric Biggers <ebiggers@google.com>
 
-On 10/9/19 3:45 PM, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
->
-> When CONFIG_INTEL_IOMMU_SVM=y, iommu_enable_dev_iotlb() calls PRI
-> interfaces (pci_reset_pri() and pci_enable_pri()), but those are only
-> implemented when CONFIG_PCI_PRI is enabled.
->
-> Previously INTEL_IOMMU_SVM selected PCI_PASID but not PCI_PRI, so the state
-> of PCI_PRI depended on whether AMD_IOMMU (which selects PCI_PRI) was
-> enabled or PCI_PRI was enabled explicitly.
->
-> The behavior of iommu_enable_dev_iotlb() should not depend on whether
-> AMD_IOMMU is enabled.  Make it predictable by having INTEL_IOMMU_SVM select
-> PCI_PRI so iommu_enable_dev_iotlb() always uses the full implementations of
-> PRI interfaces.
->
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+The access to logged_impl_name is technically a data race, which tools
+like KCSAN could complain about in the future.  See:
+https://github.com/google/ktsan/wiki/READ_ONCE-and-WRITE_ONCE
 
-Looks good to me.
+Fix by using xchg(), which also ensures that only one thread does the
+logging.
 
-Reviewed-by: Kuppuswamy Sathyanarayanan 
-<sathyanarayanan.kuppuswamy@linux.intel.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+ fs/crypto/keysetup.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-> ---
->   drivers/iommu/Kconfig | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> index e3842eabcfdd..b183c9f916b0 100644
-> --- a/drivers/iommu/Kconfig
-> +++ b/drivers/iommu/Kconfig
-> @@ -207,6 +207,7 @@ config INTEL_IOMMU_SVM
->   	bool "Support for Shared Virtual Memory with Intel IOMMU"
->   	depends on INTEL_IOMMU && X86
->   	select PCI_PASID
-> +	select PCI_PRI
->   	select MMU_NOTIFIER
->   	help
->   	  Shared Virtual Memory (SVM) provides a facility for devices
-
+diff --git a/fs/crypto/keysetup.c b/fs/crypto/keysetup.c
+index 8eb5a0e762ec6..df3e1c8653884 100644
+--- a/fs/crypto/keysetup.c
++++ b/fs/crypto/keysetup.c
+@@ -81,15 +81,13 @@ struct crypto_skcipher *fscrypt_allocate_skcipher(struct fscrypt_mode *mode,
+ 			    mode->cipher_str, PTR_ERR(tfm));
+ 		return tfm;
+ 	}
+-	if (unlikely(!mode->logged_impl_name)) {
++	if (!xchg(&mode->logged_impl_name, true)) {
+ 		/*
+ 		 * fscrypt performance can vary greatly depending on which
+ 		 * crypto algorithm implementation is used.  Help people debug
+ 		 * performance problems by logging the ->cra_driver_name the
+-		 * first time a mode is used.  Note that multiple threads can
+-		 * race here, but it doesn't really matter.
++		 * first time a mode is used.
+ 		 */
+-		mode->logged_impl_name = true;
+ 		pr_info("fscrypt: %s using implementation \"%s\"\n",
+ 			mode->friendly_name,
+ 			crypto_skcipher_alg(tfm)->base.cra_driver_name);
 -- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+2.23.0.581.g78d2f28ef7-goog
 
