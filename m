@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C1BC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 559E0ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA75C21848
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3541521848
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:00:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731446AbfJINAD (ORCPT
+        id S1731458AbfJINAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 09:00:03 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:50929 "EHLO
+        Wed, 9 Oct 2019 09:00:07 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:50978 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731335AbfJIM7f (ORCPT
+        with ESMTP id S1731441AbfJINAE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 08:59:35 -0400
+        Wed, 9 Oct 2019 09:00:04 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iIBYo-0002oe-PV; Wed, 09 Oct 2019 14:59:22 +0200
+        id 1iIBYu-0002qh-Bt; Wed, 09 Oct 2019 14:59:28 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5DEB81C026C;
-        Wed,  9 Oct 2019 14:59:19 +0200 (CEST)
-Date:   Wed, 09 Oct 2019 12:59:19 -0000
-From:   "tip-bot2 for Tom Lendacky" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2B3921C02FC;
+        Wed,  9 Oct 2019 14:59:20 +0200 (CEST)
+Date:   Wed, 09 Oct 2019 12:59:20 -0000
+From:   "tip-bot2 for Xuewei Zhang" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf/x86/amd: Change/fix NMI latency mitigation to
- use a timestamp
-Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
+Subject: [tip: sched/urgent] sched/fair: Scale bandwidth quota and period
+ without losing quota/period ratio precision
+Cc:     Phil Auld <pauld@redhat.com>, Xuewei Zhang <xueweiz@google.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Ben Segall <bsegall@google.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20191004001243.140897-1-xueweiz@google.com>
+References: <20191004001243.140897-1-xueweiz@google.com>
 MIME-Version: 1.0
-Message-ID: <157062595932.9978.12198303438251229144.tip-bot2@tip-bot2>
+Message-ID: <157062596009.9978.18110832344830515975.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,132 +65,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/urgent branch of tip:
+The following commit has been merged into the sched/urgent branch of tip:
 
-Commit-ID:     df4d29732fdad43a51284f826bec3e6ded177540
-Gitweb:        https://git.kernel.org/tip/df4d29732fdad43a51284f826bec3e6ded177540
-Author:        Tom Lendacky <thomas.lendacky@amd.com>
-AuthorDate:    Thu, 01 Aug 2019 18:57:41 
+Commit-ID:     4929a4e6faa0f13289a67cae98139e727f0d4a97
+Gitweb:        https://git.kernel.org/tip/4929a4e6faa0f13289a67cae98139e727f0d4a97
+Author:        Xuewei Zhang <xueweiz@google.com>
+AuthorDate:    Thu, 03 Oct 2019 17:12:43 -07:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 09 Oct 2019 12:44:14 +02:00
+CommitterDate: Wed, 09 Oct 2019 12:38:02 +02:00
 
-perf/x86/amd: Change/fix NMI latency mitigation to use a timestamp
+sched/fair: Scale bandwidth quota and period without losing quota/period ratio precision
 
-It turns out that the NMI latency workaround from commit:
+The quota/period ratio is used to ensure a child task group won't get
+more bandwidth than the parent task group, and is calculated as:
 
-  6d3edaae16c6 ("x86/perf/amd: Resolve NMI latency issues for active PMCs")
+  normalized_cfs_quota() = [(quota_us << 20) / period_us]
 
-ends up being too conservative and results in the perf NMI handler claiming
-NMIs too easily on AMD hardware when the NMI watchdog is active.
+If the quota/period ratio was changed during this scaling due to
+precision loss, it will cause inconsistency between parent and child
+task groups.
 
-This has an impact, for example, on the hpwdt (HPE watchdog timer) module.
-This module can produce an NMI that is used to reset the system. It
-registers an NMI handler for the NMI_UNKNOWN type and relies on the fact
-that nothing has claimed an NMI so that its handler will be invoked when
-the watchdog device produces an NMI. After the referenced commit, the
-hpwdt module is unable to process its generated NMI if the NMI watchdog is
-active, because the current NMI latency mitigation results in the NMI
-being claimed by the perf NMI handler.
+See below example:
 
-Update the AMD perf NMI latency mitigation workaround to, instead, use a
-window of time. Whenever a PMC is handled in the perf NMI handler, set a
-timestamp which will act as a perf NMI window. Any NMIs arriving within
-that window will be claimed by perf. Anything outside that window will
-not be claimed by perf. The value for the NMI window is set to 100 msecs.
-This is a conservative value that easily covers any NMI latency in the
-hardware. While this still results in a window in which the hpwdt module
-will not receive its NMI, the window is now much, much smaller.
+A userspace container manager (kubelet) does three operations:
 
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+ 1) Create a parent cgroup, set quota to 1,000us and period to 10,000us.
+ 2) Create a few children cgroups.
+ 3) Set quota to 1,000us and period to 10,000us on a child cgroup.
+
+These operations are expected to succeed. However, if the scaling of
+147/128 happens before step 3, quota and period of the parent cgroup
+will be changed:
+
+  new_quota: 1148437ns,   1148us
+ new_period: 11484375ns, 11484us
+
+And when step 3 comes in, the ratio of the child cgroup will be
+104857, which will be larger than the parent cgroup ratio (104821),
+and will fail.
+
+Scaling them by a factor of 2 will fix the problem.
+
+Tested-by: Phil Auld <pauld@redhat.com>
+Signed-off-by: Xuewei Zhang <xueweiz@google.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Jerry Hoemann <jerry.hoemann@hpe.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Acked-by: Phil Auld <pauld@redhat.com>
+Cc: Anton Blanchard <anton@ozlabs.org>
+Cc: Ben Segall <bsegall@google.com>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Juri Lelli <juri.lelli@redhat.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Mel Gorman <mgorman@suse.de>
 Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: 6d3edaae16c6 ("x86/perf/amd: Resolve NMI latency issues for active PMCs")
-Link: https://lkml.kernel.org/r/Message-ID:
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Fixes: 2e8e19226398 ("sched/fair: Limit sched_cfs_period_timer() loop to avoid hard lockup")
+Link: https://lkml.kernel.org/r/20191004001243.140897-1-xueweiz@google.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/events/amd/core.c | 30 +++++++++++++++++-------------
- 1 file changed, 17 insertions(+), 13 deletions(-)
+ kernel/sched/fair.c | 36 ++++++++++++++++++++++--------------
+ 1 file changed, 22 insertions(+), 14 deletions(-)
 
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index e7d35f6..64c3e70 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -5,12 +5,14 @@
- #include <linux/init.h>
- #include <linux/slab.h>
- #include <linux/delay.h>
-+#include <linux/jiffies.h>
- #include <asm/apicdef.h>
- #include <asm/nmi.h>
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 83ab35e..682a754 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4926,20 +4926,28 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
+ 		if (++count > 3) {
+ 			u64 new, old = ktime_to_ns(cfs_b->period);
  
- #include "../perf_event.h"
- 
--static DEFINE_PER_CPU(unsigned int, perf_nmi_counter);
-+static DEFINE_PER_CPU(unsigned long, perf_nmi_tstamp);
-+static unsigned long perf_nmi_window;
- 
- static __initconst const u64 amd_hw_cache_event_ids
- 				[PERF_COUNT_HW_CACHE_MAX]
-@@ -641,11 +643,12 @@ static void amd_pmu_disable_event(struct perf_event *event)
-  * handler when multiple PMCs are active or PMC overflow while handling some
-  * other source of an NMI.
-  *
-- * Attempt to mitigate this by using the number of active PMCs to determine
-- * whether to return NMI_HANDLED if the perf NMI handler did not handle/reset
-- * any PMCs. The per-CPU perf_nmi_counter variable is set to a minimum of the
-- * number of active PMCs or 2. The value of 2 is used in case an NMI does not
-- * arrive at the LAPIC in time to be collapsed into an already pending NMI.
-+ * Attempt to mitigate this by creating an NMI window in which un-handled NMIs
-+ * received during this window will be claimed. This prevents extending the
-+ * window past when it is possible that latent NMIs should be received. The
-+ * per-CPU perf_nmi_tstamp will be set to the window end time whenever perf has
-+ * handled a counter. When an un-handled NMI is received, it will be claimed
-+ * only if arriving within that window.
-  */
- static int amd_pmu_handle_irq(struct pt_regs *regs)
- {
-@@ -663,21 +666,19 @@ static int amd_pmu_handle_irq(struct pt_regs *regs)
- 	handled = x86_pmu_handle_irq(regs);
- 
- 	/*
--	 * If a counter was handled, record the number of possible remaining
--	 * NMIs that can occur.
-+	 * If a counter was handled, record a timestamp such that un-handled
-+	 * NMIs will be claimed if arriving within that window.
- 	 */
- 	if (handled) {
--		this_cpu_write(perf_nmi_counter,
--			       min_t(unsigned int, 2, active));
-+		this_cpu_write(perf_nmi_tstamp,
-+			       jiffies + perf_nmi_window);
- 
- 		return handled;
- 	}
- 
--	if (!this_cpu_read(perf_nmi_counter))
-+	if (time_after(jiffies, this_cpu_read(perf_nmi_tstamp)))
- 		return NMI_DONE;
- 
--	this_cpu_dec(perf_nmi_counter);
+-			new = (old * 147) / 128; /* ~115% */
+-			new = min(new, max_cfs_quota_period);
 -
- 	return NMI_HANDLED;
- }
- 
-@@ -909,6 +910,9 @@ static int __init amd_core_pmu_init(void)
- 	if (!boot_cpu_has(X86_FEATURE_PERFCTR_CORE))
- 		return 0;
- 
-+	/* Avoid calulating the value each time in the NMI handler */
-+	perf_nmi_window = msecs_to_jiffies(100);
+-			cfs_b->period = ns_to_ktime(new);
+-
+-			/* since max is 1s, this is limited to 1e9^2, which fits in u64 */
+-			cfs_b->quota *= new;
+-			cfs_b->quota = div64_u64(cfs_b->quota, old);
+-
+-			pr_warn_ratelimited(
+-	"cfs_period_timer[cpu%d]: period too short, scaling up (new cfs_period_us %lld, cfs_quota_us = %lld)\n",
+-				smp_processor_id(),
+-				div_u64(new, NSEC_PER_USEC),
+-				div_u64(cfs_b->quota, NSEC_PER_USEC));
++			/*
++			 * Grow period by a factor of 2 to avoid losing precision.
++			 * Precision loss in the quota/period ratio can cause __cfs_schedulable
++			 * to fail.
++			 */
++			new = old * 2;
++			if (new < max_cfs_quota_period) {
++				cfs_b->period = ns_to_ktime(new);
++				cfs_b->quota *= 2;
 +
- 	switch (boot_cpu_data.x86) {
- 	case 0x15:
- 		pr_cont("Fam15h ");
++				pr_warn_ratelimited(
++	"cfs_period_timer[cpu%d]: period too short, scaling up (new cfs_period_us = %lld, cfs_quota_us = %lld)\n",
++					smp_processor_id(),
++					div_u64(new, NSEC_PER_USEC),
++					div_u64(cfs_b->quota, NSEC_PER_USEC));
++			} else {
++				pr_warn_ratelimited(
++	"cfs_period_timer[cpu%d]: period too short, but cannot scale up without losing precision (cfs_period_us = %lld, cfs_quota_us = %lld)\n",
++					smp_processor_id(),
++					div_u64(old, NSEC_PER_USEC),
++					div_u64(cfs_b->quota, NSEC_PER_USEC));
++			}
+ 
+ 			/* reset count so we don't come right back in here */
+ 			count = 0;
