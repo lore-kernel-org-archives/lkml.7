@@ -2,77 +2,128 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4152ECE58E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D98EBC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A507121920
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B286C21848
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:28:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LMKtmy8h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731428AbfJIN1a (ORCPT
+        id S1731538AbfJIN2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 09:27:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47412 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731152AbfJIN1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 09:27:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 70562AC6E;
-        Wed,  9 Oct 2019 13:27:28 +0000 (UTC)
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 0/6] Clean up ARC code and fix IP22/28 early printk
-Date:   Wed,  9 Oct 2019 15:27:11 +0200
-Message-Id: <20191009132718.25346-1-tbogendoerfer@suse.de>
-X-Mailer: git-send-email 2.16.4
+        Wed, 9 Oct 2019 09:28:39 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36536 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731138AbfJIN2i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 09:28:38 -0400
+Received: by mail-wm1-f65.google.com with SMTP id m18so2627268wmc.1;
+        Wed, 09 Oct 2019 06:28:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=I7jMF/Qy1gpLzvR/kN34jEJdNQ3gvhWQW+1n1B3riaI=;
+        b=LMKtmy8hlP943Yo/NfDhtwq/wBaNOX0zpKbxyEeVZyrNN1kGf7yoo+/6R2c9OZNEZs
+         k/fQbrQhamPPC4uKg8s4ic+2Hm3gLRfw7nwlsDdVUc5CYMtR9mFFosPvhv2gPkBu0q5j
+         Fr31uCccDz26FsVg/EeINyhgyvEWsKjCIfZzCsr4gTkbWHo6YOJoG9pWmGWtCX+QVEqc
+         9X4bhfhfHqfVOamQ3hFW4xhq1sG8HU9vDQhFlzc7Aya/VFqeKTNlgFtCKSBIIbVXu3dx
+         /+IUVX6MghDY4n+V08lebyJDwIdWQeCzV72IK8gWQWEf5Sq2ff1Bb5ZhhXVk41uvhGvm
+         HrEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=I7jMF/Qy1gpLzvR/kN34jEJdNQ3gvhWQW+1n1B3riaI=;
+        b=S4gm70sEgfUhZIWkKEDWe4IqGmcJJ84YK1G8D8XvK4BTMgE+GbLHgrm/ENV5VaF081
+         X1k6HsYWmB8iC9HzbaUMBp8wb8WJ/bbOaIrf/urgm6D3Xl1I0EGawgqWbbm6WIqQ85dN
+         tp2AzlNjTwh8AzJSf+jdEQp3e4Ub3WL+UouAIILZ+ork+LVCuzKVdK7x/geY3BS4s0dl
+         tuiUPGKsRJdqDSV+0AGIhcerW0IKsR3gZgSKzyPxnGKh8/py3ZPfmeoesyUPUxZ4lz+T
+         +ehHNVWUyKu9JRKUkGI1+paO2pVWHdSdkOkI64z7y9QwSiGum/dgv0savoAXWC3XNZeQ
+         Y53w==
+X-Gm-Message-State: APjAAAX/zkc2IbWRF+DRZXAZZfXlQbxFlJqdYAbgIOf7IZSK828ctOIv
+        c5fJuZRyN08TihoK/VNt05g=
+X-Google-Smtp-Source: APXvYqxKwJu6lkxS1KK3M8WqeAE93yjTEj4R/WrVk3k/UcBmQ2RJXQeaqdeRl98n5f6etP6D+PHErw==
+X-Received: by 2002:a1c:658a:: with SMTP id z132mr2596866wmb.174.1570627715977;
+        Wed, 09 Oct 2019 06:28:35 -0700 (PDT)
+Received: from localhost ([51.15.41.238])
+        by smtp.gmail.com with ESMTPSA id b7sm2763342wrx.56.2019.10.09.06.28.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Oct 2019 06:28:35 -0700 (PDT)
+Date:   Wed, 9 Oct 2019 14:28:33 +0100
+From:   Stefan Hajnoczi <stefanha@gmail.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     netdev@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
+        linux-hyperv@vger.kernel.org,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        kvm@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jorgen Hansen <jhansen@vmware.com>
+Subject: Re: [RFC PATCH 12/13] vsock: prevent transport modules unloading
+Message-ID: <20191009132833.GM5747@stefanha-x1.localdomain>
+References: <20190927112703.17745-1-sgarzare@redhat.com>
+ <20190927112703.17745-13-sgarzare@redhat.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="kunpHVz1op/+13PW"
+Content-Disposition: inline
+In-Reply-To: <20190927112703.17745-13-sgarzare@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While fixing the problem of not working EARLY_PRINTK on IP22/IP28
-I've removed not used ARC function and made 32bit ARC PROMs working
-with 64bit kernels. By switching to memory detection via PROM calls
-EARLY_PRINTK works now. And by using the regular 64bit spaces
-maximum memory of 384MB on Indigo2 R4k machines is working, too.
 
-Thomas Bogendoerfer (6):
-  MIPS: fw: arc: remove unused ARC code
-  MIPS: fw: arc: use call_o32 to call ARC prom from 64bit kernel
-  MIPS: Kconfig: always select ARC_MEMORY and ARC_PROMLIB for platform
-  MIPS: fw: arc: workaround 64bit kernel/32bit ARC problems
-  MIPS: SGI-IP22: set PHYS_OFFSET to memory start
-  MIPS: SGI-IP22/28: Use PROM for memory detection
+--kunpHVz1op/+13PW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- arch/mips/Kconfig                        |  32 +++-----
- arch/mips/fw/arc/Makefile                |   2 +-
- arch/mips/fw/arc/env.c                   |   6 --
- arch/mips/fw/arc/file.c                  |  49 ------------
- arch/mips/fw/arc/identify.c              |   5 ++
- arch/mips/fw/arc/init.c                  |   5 ++
- arch/mips/fw/arc/memory.c                |   9 +++
- arch/mips/fw/arc/misc.c                  |  59 --------------
- arch/mips/fw/arc/promlib.c               |  25 +++++-
- arch/mips/fw/arc/salone.c                |  25 ------
- arch/mips/fw/arc/time.c                  |  25 ------
- arch/mips/fw/arc/tree.c                  | 127 -------------------------------
- arch/mips/include/asm/bootinfo.h         |   1 +
- arch/mips/include/asm/mach-ip22/spaces.h |  12 +--
- arch/mips/include/asm/sgialib.h          |  12 ---
- arch/mips/include/asm/sgiarcs.h          | 103 ++++++++-----------------
- arch/mips/sgi-ip22/ip22-mc.c             |  74 +++++-------------
- 17 files changed, 105 insertions(+), 466 deletions(-)
- delete mode 100644 arch/mips/fw/arc/salone.c
- delete mode 100644 arch/mips/fw/arc/time.c
- delete mode 100644 arch/mips/fw/arc/tree.c
+On Fri, Sep 27, 2019 at 01:27:02PM +0200, Stefano Garzarella wrote:
+> diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+> index c5f46b8242ce..750b62711b01 100644
+> --- a/net/vmw_vsock/af_vsock.c
+> +++ b/net/vmw_vsock/af_vsock.c
+> @@ -416,13 +416,28 @@ int vsock_assign_transport(struct vsock_sock *vsk, =
+struct vsock_sock *psk)
+>  		return -ESOCKTNOSUPPORT;
+>  	}
+> =20
+> -	if (!vsk->transport)
+> +	/* We increase the module refcnt to prevent the tranport unloading
 
--- 
-2.16.4
+s/tranport/transport/
 
+Otherwise:
+
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+
+--kunpHVz1op/+13PW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl2d4IEACgkQnKSrs4Gr
+c8gJ2gf/fEP3ucMouPO/fhEeGplHc1JeWTI82mmjT2/LiJgxHaNqylqpIMASW19q
+7nn9yxlVS1rBu7D/Os+q4CtQwAc3ea5KvmwwHgFa4v/N1Sm25jklsw/zWMyus6gw
+0xc5zcifHOfttIiSKldJuRCc1nYYUnUrakwm1MJjlzB+LEIYUm2/264mLBbyxWqa
+TxQBVZSI0BlpISSAry9LKNQIqZU/3gWBa1sIHT3PElSZQ5Z9be7XQciuLi84Hfag
+uOky8F3zdmzG2REAu8mKuF0thOyFpPP05O2qo6GML9+ERqf1PwR2qenlTO/cMBzS
+KwNQ3ydpast9dLj7idIKHuiQgTIxcQ==
+=qIxu
+-----END PGP SIGNATURE-----
+
+--kunpHVz1op/+13PW--
