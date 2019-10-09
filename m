@@ -2,117 +2,104 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D9EC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF10EECE58E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8DDB20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:20:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OP10dNe+";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="nx46Cuoi"
+	by mail.kernel.org (Postfix) with ESMTP id A30DD2133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:21:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729878AbfJIIUo (ORCPT
+        id S1729820AbfJIIVC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 04:20:44 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:52680 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfJIIUo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 04:20:44 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 150BC602F2; Wed,  9 Oct 2019 08:20:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570609243;
-        bh=won6aQFfRzI6wDg9O8Y3PJvAuhPwmALIXjuPviDx9LE=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=OP10dNe+oHNpvEGq6bw1RIHPVA8t8XPwNUAU4aQdpiUOC+iZRF8ZNl4IZUkeKYVDj
-         Vbmt3jvlHTTFJv45UBb4/+PxMujwfaEdbuf9isuLPyjGUA80Yi/mgELpRcsP37fABl
-         epcc6fkHiLG5MDgjgp/8KmyLKyVvxbmXDNVbOCDQ=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AF446602F2;
-        Wed,  9 Oct 2019 08:20:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570609241;
-        bh=won6aQFfRzI6wDg9O8Y3PJvAuhPwmALIXjuPviDx9LE=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=nx46CuoiHm7zhPfsb4z/gse3vvadalnS81V6iDQ0D8tSHY5cKAFxJwgcBkPz/MHBX
-         wQH1AuXRJyUcqsRa8SFtRqQv/7H2bF48KT/DcmhBdncfyjYkj8OWPdol05zgCE5YBN
-         im0++dtwCm8/75hNMba8Uc8fpzrFT376e88nFjs0=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AF446602F2
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Wed, 9 Oct 2019 04:21:02 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:51768 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725776AbfJIIVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 04:21:02 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 2659932AA2271B9FDEC2;
+        Wed,  9 Oct 2019 16:21:00 +0800 (CST)
+Received: from huawei.com (10.90.53.225) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Wed, 9 Oct 2019
+ 16:20:49 +0800
+From:   Zhihao Cheng <chengzhihao1@huawei.com>
+To:     <guaneryu@gmail.com>, <darrick.wong@oracle.com>,
+        <ebiggers@google.com>, <yi.zhang@huawei.com>
+CC:     <fstests@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <chengzhihao1@huawei.com>
+Subject: [PATCH xfstests] generic/192: Move 'cd /' to the place where the program exits
+Date:   Wed, 9 Oct 2019 16:27:57 +0800
+Message-ID: <1570609677-49586-1-git-send-email-chengzhihao1@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v8] rtl8xxxu: Improve TX performance of RTL8723BU on
- rtl8xxxu driver
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20191002121808.59376-1-chiu@endlessm.com>
-References: <20191002121808.59376-1-chiu@endlessm.com>
-To:     Chris Chiu <chiu@endlessm.com>
-Cc:     Jes.Sorensen@gmail.com, davem@davemloft.net,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux@endlessm.com,
-        Daniel Drake <drake@endlessm.com>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20191009082043.150BC602F2@smtp.codeaurora.org>
-Date:   Wed,  9 Oct 2019 08:20:42 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Chris Chiu <chiu@endlessm.com> wrote:
+Running generic/192 with overlayfs(Let ubifs as base fs) yields the
+following output:
 
-> We have 3 laptops which connect the wifi by the same RTL8723BU.
-> The PCI VID/PID of the wifi chip is 10EC:B720 which is supported.
-> They have the same problem with the in-kernel rtl8xxxu driver, the
-> iperf (as a client to an ethernet-connected server) gets ~1Mbps.
-> Nevertheless, the signal strength is reported as around -40dBm,
-> which is quite good. From the wireshark capture, the tx rate for each
-> data and qos data packet is only 1Mbps. Compare to the Realtek driver
-> at https://github.com/lwfinger/rtl8723bu, the same iperf test gets
-> ~12Mbps or better. The signal strength is reported similarly around
-> -40dBm. That's why we want to improve.
-> 
-> After reading the source code of the rtl8xxxu driver and Realtek's, the
-> major difference is that Realtek's driver has a watchdog which will keep
-> monitoring the signal quality and updating the rate mask just like the
-> rtl8xxxu_gen2_update_rate_mask() does if signal quality changes.
-> And this kind of watchdog also exists in rtlwifi driver of some specific
-> chips, ex rtl8192ee, rtl8188ee, rtl8723ae, rtl8821ae...etc. They have
-> the same member function named dm_watchdog and will invoke the
-> corresponding dm_refresh_rate_adaptive_mask to adjust the tx rate
-> mask.
-> 
-> With this commit, the tx rate of each data and qos data packet will
-> be 39Mbps (MCS4) with the 0xF00000 as the tx rate mask. The 20th bit
-> to 23th bit means MCS4 to MCS7. It means that the firmware still picks
-> the lowest rate from the rate mask and explains why the tx rate of
-> data and qos data is always lowest 1Mbps because the default rate mask
-> passed is always 0xFFFFFFF ranges from the basic CCK rate, OFDM rate,
-> and MCS rate. However, with Realtek's driver, the tx rate observed from
-> wireshark under the same condition is almost 65Mbps or 72Mbps, which
-> indicating that rtl8xxxu could still be further improved.
-> 
-> Signed-off-by: Chris Chiu <chiu@endlessm.com>
-> Reviewed-by: Daniel Drake <drake@endlessm.com>
-> Acked-by: Jes Sorensen <Jes.Sorensen@gmail.com>
+  generic/192 - output mismatch
+     QA output created by 192
+     sleep for 5 seconds
+     test
+    +./common/rc: line 316: src/t_dir_type: No such file or directory
+     delta1 is in range
+     delta2 is in range
+    ...
 
-Patch applied to wireless-drivers-next.git, thanks.
+When the use case fails, the call stack in generic/192 is:
 
-a9bb0b515778 rtl8xxxu: Improve TX performance of RTL8723BU on rtl8xxxu driver
+  local unknowns=$(src/t_dir_type $dir u | wc -l)	common/rc:316
+  _supports_filetype					common/rc:299
+  _overlay_mount					common/overlay:52
+  _overlay_test_mount					common/overlay:93
+  _test_mount						common/rc:407
+  _test_cycle_mount					generic/192:50
 
+Before _test_cycle_mount() being invoked, generic/192 executed 'cd /'
+to change work dir from 'xfstests-dev' to '/', so src/t_dir_type was not
+found.
+
+Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+---
+ tests/generic/192 | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/tests/generic/192 b/tests/generic/192
+index 50b3d6fd..5550f39e 100755
+--- a/tests/generic/192
++++ b/tests/generic/192
+@@ -15,7 +15,12 @@ echo "QA output created by $seq"
+ here=`pwd`
+ tmp=/tmp/$$
+ status=1	# failure is the default!
+-trap "exit \$status" 0 1 2 3 15
++trap "_cleanup; exit \$status" 0 1 2 3 15
++
++_cleanup()
++{
++	cd /
++}
+ 
+ _access_time()
+ {
+@@ -46,7 +51,6 @@ sleep $delay # sleep to allow time to move on for access
+ cat $testfile
+ time2=`_access_time $testfile | tee -a $seqres.full`
+ 
+-cd /
+ _test_cycle_mount
+ time3=`_access_time $testfile | tee -a $seqres.full`
+ 
 -- 
-https://patchwork.kernel.org/patch/11170977/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.13.6
 
