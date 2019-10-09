@@ -2,104 +2,122 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E76ACECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D31C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B90A4206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:56:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XSNQSZgT"
+	by mail.kernel.org (Postfix) with ESMTP id 94348206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:57:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731544AbfJIP4n (ORCPT
+        id S1731582AbfJIP5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 11:56:43 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39589 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731386AbfJIP4n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 11:56:43 -0400
-Received: by mail-lj1-f193.google.com with SMTP id y3so3031425ljj.6
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 08:56:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WFlHeCQkLJIGXl9Y3KrukrQID/Wna2DJQv+XBSRue9Y=;
-        b=XSNQSZgTy/3vmdQhLFPTjXXYD6ObdqSRS6amglcHznGRfnkPseJTLpqG9mOCmXl20O
-         yIHDn/sAzQOKTJcW92jhNrq38uA1AW8FAVMp/p+RDlfrBN4jSNPVGjVxOBCnDbl/9fqj
-         QjQNcNQbugzH3odS4wlSIae/lZolrXDPU0cZgOqJvTvBAKVVPfzbZvyNNTEiRf6lTwwU
-         E8jvNcw8MbQjm91OZL4ozM0rTDsPxu0yEFfUSHLkFsc8VwjVv5uY2+mcMpXAeidrfPSi
-         ckhYDlIvrUpEaplYaM3oIpnshhIrYknkLUi3TStf4taJX64c439wzauU2hee+gtVbzf/
-         Itxg==
+        Wed, 9 Oct 2019 11:57:40 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36526 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730708AbfJIP5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 11:57:40 -0400
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BEDC458
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Oct 2019 15:57:39 +0000 (UTC)
+Received: by mail-wr1-f70.google.com with SMTP id 32so1307994wrk.15
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 08:57:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WFlHeCQkLJIGXl9Y3KrukrQID/Wna2DJQv+XBSRue9Y=;
-        b=bJInqtD0Xo080viSuzXZ0A7u0VB42KCZ0xphTIhNcgmt3LynXlSpE6LcPFWDFqskIC
-         SRUbFP1FskuOlIdshiBfTGmb9sJG1RENca30MMgAJadCEESrj9Pkwr1SU1smqBStxH6+
-         03WpcvS4LoClxqlgkn3VhB9xfVEnovXeBPIYlKjyj6cbYgTWi3cY9JGrakcIEvXaDLAc
-         XahOaKiQWyB+7oQlT3KMWgmese+3ukwEQnGv6Rai6RrpIOaO8CNWAOp6LxYFBzK7W8zK
-         JFf2TIcwyVjH+IE4rj/iVwVU4Fh3B5rAqzagiaJYt54sxq0+d5tmBr8Ls5HscC4BbyD6
-         yNlQ==
-X-Gm-Message-State: APjAAAU1lPPq8ZNHXi1XHp9/OhaPdsiiwuQZt25otkO7Jt2uwBihMjzZ
-        famrlytng1pEoqAXK9g/TdyzXmpZCxawBEZkvCw0Aw==
-X-Google-Smtp-Source: APXvYqwLxpC/TiGljRX1NvHEZ/6aqwkZ3/aGIm6AEuP60itEXeqeP/1veKDYHWpVrchgY89b5qCCjN0JGRYZm6lQc50=
-X-Received: by 2002:a2e:6a04:: with SMTP id f4mr2924621ljc.186.1570636599381;
- Wed, 09 Oct 2019 08:56:39 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=y3ptxyyHx0/qzXbUl9U/H+quIFMeBGhW5hUUCE/0MjM=;
+        b=LHZpNHS6AQ+vANZPM9vSNkkciAktkK6zK+CHiE6KkdnMeAyenih3HWVpX43DOCC4s6
+         uP8SStzjMi9Vd6c9xgBI68768T0CMWpJpmuJUBwQlfuwYqlDrwVObw+nHeTo7m3u7u3t
+         i0BsfaAyu0lcuXS5r5YOzBUlwZx14OlyFZHd4JPiYfMdFCa/sEhRimCLYogvV6rrGQ7m
+         a0gBLlfDUOEn1n58SXxAkXoYbXtTJBCt6alGJWZ/1fZ/3s62mnZRYQ5rloid70QWKSXI
+         ZrsBfCRwLWx5+YcFDP65ntIxfqZu2jgVDHLkxgxCiNmtNjmLi2BWSpglmEjWrEarVx40
+         O4mQ==
+X-Gm-Message-State: APjAAAXzVRwb2oco1SwKJTN3/KQsKhy9uJThwwZ0R2FUYvkfm1fyvHDW
+        ca0BuCixqq+BCRCftphI9v10dw9Rad3Ek32ijMaqKNctQvUvVAaEaBmuuFAWylC08FvJw55P7c3
+        NoFsz/Dk54vmrFcRLTnA04Z2e
+X-Received: by 2002:adf:dc8c:: with SMTP id r12mr3468314wrj.107.1570636658567;
+        Wed, 09 Oct 2019 08:57:38 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqw+wX+0Fvu5SZNmKleHQuTrQYzbUMiEsd1/1OUnhTlZ4mxXcbH5/HWJm+m8uqOx261atg4O6A==
+X-Received: by 2002:adf:dc8c:: with SMTP id r12mr3468273wrj.107.1570636658129;
+        Wed, 09 Oct 2019 08:57:38 -0700 (PDT)
+Received: from shalem.localdomain (2001-1c00-0c14-2800-ec23-a060-24d5-2453.cable.dynamic.v6.ziggo.nl. [2001:1c00:c14:2800:ec23:a060:24d5:2453])
+        by smtp.gmail.com with ESMTPSA id a10sm3027406wrm.52.2019.10.09.08.57.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Oct 2019 08:57:37 -0700 (PDT)
+Subject: Re: [PATCH] x86/mce: Lower throttling MCE messages to warnings
+To:     Benjamin Berg <bberg@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Christian Kellner <ckellner@redhat.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-edac@vger.kernel.org
+References: <20191009155424.249277-1-bberg@redhat.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <dafb0aa8-b1e1-14ac-7345-1a504ac2c441@redhat.com>
+Date:   Wed, 9 Oct 2019 17:57:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <CAG48ez14Q0-F8LqsvcNbyR2o6gPW8SHXsm4u5jmD9MpsteM2Tw@mail.gmail.com>
- <20191008130159.10161-1-christian.brauner@ubuntu.com> <20191008180516.GB143258@google.com>
- <20191009104011.rzfdvq7otkkj533m@wittgenstein>
-In-Reply-To: <20191009104011.rzfdvq7otkkj533m@wittgenstein>
-From:   Todd Kjos <tkjos@google.com>
-Date:   Wed, 9 Oct 2019 08:56:28 -0700
-Message-ID: <CAHRSSExAL3fQMP9x9p34qF8dnFKLSp7EzhZ7Y5y-qbzExCRo1w@mail.gmail.com>
-Subject: Re: [PATCH] binder: prevent UAF read in print_binder_transaction_log_entry()
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Todd Kjos <tkjos@android.com>, Jann Horn <jannh@google.com>,
-        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
-        Christian Brauner <christian@brauner.io>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Martijn Coenen <maco@android.com>,
-        Hridya Valsaraju <hridya@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191009155424.249277-1-bberg@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 9, 2019 at 3:40 AM Christian Brauner
-<christian.brauner@ubuntu.com> wrote:
->
-> On Tue, Oct 08, 2019 at 02:05:16PM -0400, Joel Fernandes wrote:
-> > On Tue, Oct 08, 2019 at 03:01:59PM +0200, Christian Brauner wrote:
+Hi,
 
-[...]
+On 09-10-2019 17:54, Benjamin Berg wrote:
+> On modern CPUs it is quite normal that the temperature limits are
+> reached and the CPU is throttled. In fact, often the thermal design is
+> not sufficient to cool the CPU at full load and limits can quickly be
+> reached when a burst in load happens. This will even happen with
+> technologies like RAPL limitting the long term power consumption of
+> the package.
+> 
+> So these messages do not usually indicate a hardware issue (e.g.
+> insufficient cooling). Log them as warnings to avoid confusion about
+> their severity.
+> 
+> Signed-off-by: Benjamin Berg <bberg@redhat.com>
+> Tested-by: Christian Kellner <ckellner@redhat.com>
 
-> >
-> > One more thought, this can be made dependent on CONFIG_BINDERFS since regular
-> > binder devices cannot be unregistered AFAICS and as Jann said, the problem is
-> > BINDERFS specific. That way we avoid the memcpy for _every_ transaction.
-> > These can be thundering when Android starts up.
->
-> Unless Todd sees this as a real performance problem I'm weary to
-> introduce additional checking and record a pointer for non-binderfs and
-> a memcpy() for binderfs devices. :)
->
+Ah, yes lets please lower the log-prio of these messages:
 
-I don't see this as a real problem. In practice, memcpy will be moving
-< 10 bytes. Also, by the time this code is in an android device,
-CONFIG_BINDERFS will always be enabled since this is how we are
-removing binder's use of debugfs. So a micro-optimization of the
-!BINDERFS case will not be meaningful.
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-[...]
+Regards,
+
+Hans
+
+
+
+> ---
+>   arch/x86/kernel/cpu/mce/therm_throt.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kernel/cpu/mce/therm_throt.c b/arch/x86/kernel/cpu/mce/therm_throt.c
+> index 6e2becf547c5..bc441d68d060 100644
+> --- a/arch/x86/kernel/cpu/mce/therm_throt.c
+> +++ b/arch/x86/kernel/cpu/mce/therm_throt.c
+> @@ -188,7 +188,7 @@ static void therm_throt_process(bool new_event, int event, int level)
+>   	/* if we just entered the thermal event */
+>   	if (new_event) {
+>   		if (event == THERMAL_THROTTLING_EVENT)
+> -			pr_crit("CPU%d: %s temperature above threshold, cpu clock throttled (total events = %lu)\n",
+> +			pr_warn("CPU%d: %s temperature above threshold, cpu clock throttled (total events = %lu)\n",
+>   				this_cpu,
+>   				level == CORE_LEVEL ? "Core" : "Package",
+>   				state->count);
+> 
