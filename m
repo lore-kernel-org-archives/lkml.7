@@ -2,144 +2,92 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4393AECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B122FECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2127721924
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87056218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:14:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732511AbfJITOS (ORCPT
+        id S1732513AbfJITO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 15:14:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33998 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732492AbfJITOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 15:14:11 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 15EDE10DCC95;
-        Wed,  9 Oct 2019 19:14:11 +0000 (UTC)
-Received: from ovpn-116-36.ams2.redhat.com (ovpn-116-36.ams2.redhat.com [10.36.116.36])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BA4AE5EE1D;
-        Wed,  9 Oct 2019 19:14:08 +0000 (UTC)
-Message-ID: <95c5a697932e19ebd6577b5dac4d7052fe8c4255.camel@redhat.com>
-Subject: Re: Packet gets stuck in NOLOCK pfifo_fast qdisc
-From:   Paolo Abeni <pabeni@redhat.com>
-To:     Jonas Bonn <jonas.bonn@netrounds.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        John Fastabend <john.fastabend@gmail.com>
-Date:   Wed, 09 Oct 2019 21:14:07 +0200
-In-Reply-To: <d102074f-7489-e35a-98cf-e2cad7efd8a2@netrounds.com>
-References: <d102074f-7489-e35a-98cf-e2cad7efd8a2@netrounds.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Wed, 9 Oct 2019 15:14:26 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:43013 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731864AbfJITLR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 15:11:17 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1N8XgH-1i5Vg21fDl-014SRC; Wed, 09 Oct 2019 21:11:15 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-kernel@vger.kernel.org, y2038@lists.linaro.org,
+        linux-fsdevel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v6 26/43] compat_ioctl: remove /dev/raw ioctl translation
+Date:   Wed,  9 Oct 2019 21:10:26 +0200
+Message-Id: <20191009191044.308087-26-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20191009190853.245077-1-arnd@arndb.de>
+References: <20191009190853.245077-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Wed, 09 Oct 2019 19:14:11 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:HjmQR2MNOTNwefTsjwqXeNcWNZPnuTYPOOSVxTpgnh2+kWgBjbC
+ 4PWuHL970NpwGIA5s3UWCPN1Omd5A64scatHOWaJ+7yyjqcPRPkZvWoDLJddAUMjHxd8TMe
+ WXeF3ct/fl1bR1JpWgoDqTAkj+2/snW5MNxisE5FmgoJXqEydS2hZ5ttp6q4tQ2FOB5KwBS
+ iHe3QAPY0UxkgO2/B2w3Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:45nQ4/dGAik=:DO1TvolxEo/1OP/A40PdOF
+ /3xFLkn2AU8Jita6p/Bhi1wlqnFoQLKfjj7vn8n3Sdr7vYXkDth9RRRdpy0QCh3q1BXD+Lu2H
+ UH2xEZYJPdWyqyG+ff9Q8sLDFpk3lU5dQKx/n3gIBEIKDCdhJCIfG0E02cpSZQzwfsBle4Xs7
+ 3isDDA4le1OHK9nKSG4v9F5tK2XMZp8VqF1PjBSalkAnpMMCOqlJN2QxsJ7M11Nu+kRd4gie6
+ gEEWP4cIT1v3Lc4S6F/iirQPJ6wggrmbEon7ADjJvmA0C7eO01O069Jwu/ttz1F0IGiygNa4+
+ CjSyGVFpVS7+SE74O32iWZbfvJ3HDzUqR7BZp5Xpm7kzDxFhIyBfVizvTgDcmz5yM5X5GKp72
+ 6JecmkvjiL/z4Ft8wqFiXGt3+Uk2uxpHtwBjS9nZSKstJyWVCzhbimk+0TkMrzYgLOcHt2oKm
+ 7k+ybls+YG3uZpb32reCMFTGborhcTYoqm3oE8tsWGtwJnkdpm6yFxTfEwTHbemCyg6yw0mrj
+ lZjnpwQTVYECKjjfivVB9kVXdC+voSk7hK1XfKDW5Y6hYXaQNR3PX5QPvO15IJNqlVclop3tu
+ jm9gHon0bLnMTcSR7GOYzdqCeHnCya6MqUzfzvJCFQ8c2A+Era9YKNb848GZyRdvB+biQ1SPa
+ ABMrB8idWXltDhd2A6LOv4g6Fd53eTOx4wy5NF0Ed0aCTQYZoMG+yE+WL9VY61L6g+jJr14WR
+ tsjXFxVuGFzyqVqLp43kLlvNL2S7Vp1vgxxbsY9mZzj5mxudqBiQgGnn2g0bxhLeVbp6oOr4/
+ vF2ZBFtgIF2Tmof+ac3Z5lfnJdzKtTFYLM33O8fspWr67Gj5Gj1l5W/4kt0H16qMw1m7H5OQx
+ OMBnnNUzm9uE3NzRGNqg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-10-09 at 08:46 +0200, Jonas Bonn wrote:
-> Hi,
-> 
-> The lockless pfifo_fast qdisc has an issue with packets getting stuck in 
-> the queue.  What appears to happen is:
-> 
-> i)  Thread 1 holds the 'seqlock' on the qdisc and dequeues packets.
-> ii)  Thread 1 dequeues the last packet in the queue.
-> iii)  Thread 1 iterates through the qdisc->dequeue function again and 
-> determines that the queue is empty.
-> 
-> iv)  Thread 2 queues up a packet.  Since 'seqlock' is busy, it just 
-> assumes the packet will be dequeued by whoever is holding the lock.
-> 
-> v)  Thread 1 releases 'seqlock'.
-> 
-> After v), nobody will check if there are packets in the queue until a 
-> new packet is enqueued.  Thereby, the packet enqueued by Thread 2 may be 
-> delayed indefinitely.
+The /dev/rawX implementation already handles these just fine, so
+the entries in the table are not needed any more.
 
-I think you are right.
-
-It looks like this possible race is present since the initial lockless
-implementation - commit 6b3ba9146fe6 ("net: sched: allow qdiscs to
-handle locking")
-
-Anyhow the racing windows looks quite tiny - I never observed that
-issue in my tests. Do you have a working reproducer?
-
-Something alike the following code - completely untested - can possibly
-address the issue, but it's a bit rough and I would prefer not adding
-additonal complexity to the lockless qdiscs, can you please have a spin
-a it?
-
-Thanks,
-
-Paolo
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
-diff --git a/include/net/pkt_sched.h b/include/net/pkt_sched.h
-index 6a70845bd9ab..65a1c03330d6 100644
---- a/include/net/pkt_sched.h
-+++ b/include/net/pkt_sched.h
-@@ -113,18 +113,23 @@ bool sch_direct_xmit(struct sk_buff *skb, struct Qdisc *q,
- 		     struct net_device *dev, struct netdev_queue *txq,
- 		     spinlock_t *root_lock, bool validate);
- 
--void __qdisc_run(struct Qdisc *q);
-+int __qdisc_run(struct Qdisc *q);
- 
- static inline void qdisc_run(struct Qdisc *q)
- {
-+	int quota = 0;
-+
- 	if (qdisc_run_begin(q)) {
- 		/* NOLOCK qdisc must check 'state' under the qdisc seqlock
- 		 * to avoid racing with dev_qdisc_reset()
- 		 */
- 		if (!(q->flags & TCQ_F_NOLOCK) ||
- 		    likely(!test_bit(__QDISC_STATE_DEACTIVATED, &q->state)))
--			__qdisc_run(q);
-+			quota = __qdisc_run(q);
- 		qdisc_run_end(q);
-+
-+		if (quota > 0 && q->flags & TCQ_F_NOLOCK && q->ops->peek(q))
-+			__netif_schedule(q);
- 	}
- }
- 
-diff --git a/net/sched/sch_generic.c b/net/sched/sch_generic.c
-index 17bd8f539bc7..013480f6a794 100644
---- a/net/sched/sch_generic.c
-+++ b/net/sched/sch_generic.c
-@@ -376,7 +376,7 @@ static inline bool qdisc_restart(struct Qdisc *q, int *packets)
- 	return sch_direct_xmit(skb, q, dev, txq, root_lock, validate);
- }
- 
--void __qdisc_run(struct Qdisc *q)
-+int __qdisc_run(struct Qdisc *q)
- {
- 	int quota = dev_tx_weight;
- 	int packets;
-@@ -390,9 +390,10 @@ void __qdisc_run(struct Qdisc *q)
- 		quota -= packets;
- 		if (quota <= 0 || need_resched()) {
- 			__netif_schedule(q);
--			break;
-+			return 0;
- 		}
- 	}
-+	return quota;
- }
- 
- unsigned long dev_trans_start(struct net_device *dev)
+ fs/compat_ioctl.c | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/fs/compat_ioctl.c b/fs/compat_ioctl.c
+index 37f45644528a..6070481f2b6a 100644
+--- a/fs/compat_ioctl.c
++++ b/fs/compat_ioctl.c
+@@ -27,7 +27,6 @@
+ #include <linux/if_pppox.h>
+ #include <linux/tty.h>
+ #include <linux/vt_kern.h>
+-#include <linux/raw.h>
+ #include <linux/blkdev.h>
+ #include <linux/serial.h>
+ #include <linux/ctype.h>
+@@ -422,9 +421,6 @@ COMPATIBLE_IOCTL(PPPIOCDISCONN)
+ COMPATIBLE_IOCTL(PPPIOCATTCHAN)
+ COMPATIBLE_IOCTL(PPPIOCGCHAN)
+ COMPATIBLE_IOCTL(PPPIOCGL2TPSTATS)
+-/* Raw devices */
+-COMPATIBLE_IOCTL(RAW_SETBIND)
+-COMPATIBLE_IOCTL(RAW_GETBIND)
+ /* Watchdog */
+ COMPATIBLE_IOCTL(WDIOC_GETSUPPORT)
+ COMPATIBLE_IOCTL(WDIOC_GETSTATUS)
+-- 
+2.20.0
 
