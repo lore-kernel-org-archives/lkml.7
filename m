@@ -2,73 +2,97 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62364ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 21:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4254BC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 21:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4859C2054F
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 21:36:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E587E218DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 21:39:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u/wm28kE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731956AbfJIVgQ (ORCPT
+        id S1731940AbfJIVjw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 17:36:16 -0400
-Received: from mga11.intel.com ([192.55.52.93]:10309 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730490AbfJIVgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 17:36:15 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 14:36:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,277,1566889200"; 
-   d="scan'208";a="200262511"
-Received: from thomaske-mobl.ger.corp.intel.com (HELO localhost) ([10.252.3.55])
-  by FMSMGA003.fm.intel.com with ESMTP; 09 Oct 2019 14:36:12 -0700
-Date:   Thu, 10 Oct 2019 00:36:10 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     James Bottomley <jejb@linux.ibm.com>
-Cc:     linux-integrity@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/2] tpm: Use GFP_KERNEL for allocating struct tpm_buf
-Message-ID: <20191009213559.GA30044@linux.intel.com>
-References: <20191003185103.26347-1-jarkko.sakkinen@linux.intel.com>
- <20191003185103.26347-2-jarkko.sakkinen@linux.intel.com>
- <1570148716.10818.19.camel@linux.ibm.com>
- <20191006095005.GA7660@linux.intel.com>
- <1570475528.4242.2.camel@linux.ibm.com>
+        Wed, 9 Oct 2019 17:39:52 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44750 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728804AbfJIVjv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 17:39:51 -0400
+Received: by mail-wr1-f68.google.com with SMTP id z9so4910072wrl.11;
+        Wed, 09 Oct 2019 14:39:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tcMFZrYzkXthDN2tPL7urUoh2Atq6M3SFm7VW5KGajA=;
+        b=u/wm28kEkru3TyprTgddW261vX/5XbEce1Ws5zmBXcfUf86jiP3Djy4kG4KxmxxUK9
+         S+zhx24CvvPULDAfFFD2kFVkW4DRwrjnX9utOwcH92CSl5YKmfbNg9XpeZF132H7zSYW
+         BgNF4fWC5tGSlU9/dumZWgq+xHME9yHEqQ5LBs9I9FhBY9TvNuOJt3NFpX7BInPeC3Hx
+         iIyzQvFQkqpJzQXd8VUBNbfbgnwvoxm3DgpbN5vkWBWOGw2Vuf/7MedZnz2h24lBEATp
+         oBEmCJ0XnLkbxX+hEmPpelZVHP1oH1/yqeMIo4rZze1m/qHEnHk0C+z734FNqo/EXXE9
+         mXdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tcMFZrYzkXthDN2tPL7urUoh2Atq6M3SFm7VW5KGajA=;
+        b=iPTeIVL6irSBueLe5kKrVYU5Ybc+UiQeeybXaR6C12sRw6ZkmiD06fipozpqav+nN/
+         Gvh2SBTzYZzthhDKmOj2NvCTPbfbQ/4Mt4UCW8V4s2TE0TN1HJfZonxfhGjZDmbHCFgN
+         VVT4Y7DLpq+9TUrkTgikDKrXlm7e3zUypuUt5U+i2mwmV4ArX1ZVDARs0kZ/Lr7mRCK0
+         9La9BmpFpIaRfTr60Z6I91DNFbTaGSFTFpBgNxoMQ73M/UTNmz/dZfE1cmYzAWEHkwtF
+         +OfkGULkHNvcW/xsgeJOpgqlsvpOaU/oikU9WAzd7P1DWL3ishJObYfcc5zal3ALZrva
+         87UQ==
+X-Gm-Message-State: APjAAAXU2HaY3aANCd6rwZ+OR3e9qcUlmh7LPW3hJsfR02yBbipfpozh
+        Pv3KIS/kdEtbLgOex2hz7g==
+X-Google-Smtp-Source: APXvYqz9GgQL7LY/Prh1ynW6SbQqAmf4NSYqACjsQLaU2Yfg3bbHUaT8l8/n5bdfBvFPpdpcDfsvxQ==
+X-Received: by 2002:adf:f2cc:: with SMTP id d12mr4943049wrp.105.1570657187704;
+        Wed, 09 Oct 2019 14:39:47 -0700 (PDT)
+Received: from ninjahub.lan (host-2-102-13-201.as13285.net. [2.102.13.201])
+        by smtp.googlemail.com with ESMTPSA id a3sm6025741wmc.3.2019.10.09.14.39.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Oct 2019 14:39:46 -0700 (PDT)
+From:   Jules Irenge <jbi.octave@gmail.com>
+To:     outreachy-kernel@googlegroups.com
+Cc:     gregkh@linuxfoundation.org, GR-Linux-NIC-Dev@marvell.com,
+        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, Jules Irenge <jbi.octave@gmail.com>
+Subject: [PATCH v2] staging: qlge: correct  a misspelled word
+Date:   Wed,  9 Oct 2019 22:39:36 +0100
+Message-Id: <20191009213936.11532-1-jbi.octave@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1570475528.4242.2.camel@linux.ibm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 12:12:08PM -0700, James Bottomley wrote:
-> From: James Bottomley <James.Bottomley@HansenPartnership.com>
-> Subject: [PATCH] tpm: use GFP kernel for tpm_buf allocations
-> 
-> The current code uses GFP_HIGHMEM, which is wrong because GFP_HIGHMEM
-> (on 32 bit systems) is memory ordinarily inaccessible to the kernel
-> and should only be used for allocations affecting userspace.  In order
-> to make highmem visible to the kernel on 32 bit it has to be kmapped,
-> which consumes valuable entries in the kmap region.  Since the tpm_buf
-> is only ever used in the kernel, switch to using a GFP_KERNEL
-> allocation so as not to waste kmap space on 32 bits.
-> 
-> Fixes: a74f8b36352e (tpm: introduce tpm_buf)
-> Signed-off-by: James Bottomley <James.Bottomley@HansenPartnership.com>
+Fix a misspelling of "several" detected by checkpatch
 
-Pushed to master branch.
+Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+---
+ drivers/staging/qlge/qlge_dbg.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-/Jarkko
+diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
+index 5599525a19d5..28fc974ce982 100644
+--- a/drivers/staging/qlge/qlge_dbg.c
++++ b/drivers/staging/qlge/qlge_dbg.c
+@@ -354,7 +354,7 @@ static int ql_get_xgmac_regs(struct ql_adapter *qdev, u32 *buf,
+ 
+ 	for (i = PAUSE_SRC_LO; i < XGMAC_REGISTER_END; i += 4, buf++) {
+ 		/* We're reading 400 xgmac registers, but we filter out
+-		 * serveral locations that are non-responsive to reads.
++		 * several locations that are non-responsive to reads.
+ 		 */
+ 		if ((i == 0x00000114) ||
+ 			(i == 0x00000118) ||
+-- 
+2.21.0
+
