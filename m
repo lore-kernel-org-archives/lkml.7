@@ -2,133 +2,78 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86253C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F02C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6930D20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:26:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C52F20B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:26:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570631186;
+	bh=yudd37jFtksou7o+9ottvvR9rEZ6mmPGDXXR+6QNG3Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bh52/+Bn7YLYe3x6zLSfjb8PDlD+xi9n81WnGJo81CXW/t8VurzVbOlAISMpunnFd
+	 kH/jrjAoNWRnvNKLECmOTz+rXArcSt3EfNed6w+3dSpkQJnpJ0kbDaDXU1n5lTX693
+	 nNlhwqqroE/yZfIYPWED54Nr2EFhyGDfKd9Rir4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731339AbfJIO0Q (ORCPT
+        id S1731518AbfJIO0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 10:26:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:35562 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727769AbfJIO0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 10:26:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 19D451576;
-        Wed,  9 Oct 2019 07:26:15 -0700 (PDT)
-Received: from [192.168.0.9] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CB8103F71A;
-        Wed,  9 Oct 2019 07:26:12 -0700 (PDT)
-Subject: Re: [RFC v5 4/6] sched/fair: Tune task wake-up logic to pack small
- background tasks on fewer cores
-To:     Parth Shah <parth@linux.ibm.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Doug Smythies <dsmythies@telus.net>,
-        Quentin Perret <qperret@qperret.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-References: <20191007083051.4820-1-parth@linux.ibm.com>
- <20191007083051.4820-5-parth@linux.ibm.com>
- <CAKfTPtCgoTJXxbYyza1W55ayw9QeM7fue2e91Xpt804sL9GQWA@mail.gmail.com>
- <80bb34ec-6358-f4dc-d20d-cde6c9d7e197@linux.ibm.com>
- <d55c593d-af8e-c8ba-cc0e-c9917df5d593@arm.com>
- <86dc25e4-9f19-627f-9581-d74608b7f20c@linux.ibm.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <eef32b9e-1f24-e8a9-cd91-dcc6546a636f@arm.com>
-Date:   Wed, 9 Oct 2019 16:26:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 9 Oct 2019 10:26:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56032 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727769AbfJIO0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 10:26:25 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7364CAD2C;
+        Wed,  9 Oct 2019 14:26:23 +0000 (UTC)
+Date:   Wed, 9 Oct 2019 16:26:23 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc:     Qian Cai <cai@lca.pw>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Petr Mladek <pmladek@suse.com>, akpm@linux-foundation.org,
+        sergey.senozhatsky.work@gmail.com, rostedt@goodmis.org,
+        peterz@infradead.org, linux-mm@kvack.org,
+        john.ogness@linutronix.de, david@redhat.com,
+        linux-kernel@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
+Message-ID: <20191009142623.GE6681@dhcp22.suse.cz>
+References: <1570228005-24979-1-git-send-email-cai@lca.pw>
+ <20191007143002.l37bt2lzqtnqjqxu@pathway.suse.cz>
+ <20191007144937.GO2381@dhcp22.suse.cz>
+ <20191008074357.f33f6pbs4cw5majk@pathway.suse.cz>
+ <20191008082752.GB6681@dhcp22.suse.cz>
+ <aefe7f75-b0ec-9e99-a77e-87324edb24e0@de.ibm.com>
+ <1570550917.5576.303.camel@lca.pw>
+ <1157b3ae-006e-5b8e-71f0-883918992ecc@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <86dc25e4-9f19-627f-9581-d74608b7f20c@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1157b3ae-006e-5b8e-71f0-883918992ecc@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/10/2019 10:57, Parth Shah wrote:
-
+On Wed 09-10-19 15:56:32, Peter Oberparleiter wrote:
 [...]
+> A generic solution would be preferable from my point of view though,
+> because otherwise each console driver owner would need to ensure that any
+> lock taken in their console.write implementation is never held while
+> memory is allocated/released.
 
->> On 07/10/2019 18:53, Parth Shah wrote:
->>>
->>>
->>> On 10/7/19 5:49 PM, Vincent Guittot wrote:
->>>> On Mon, 7 Oct 2019 at 10:31, Parth Shah <parth@linux.ibm.com> wrote:
-
-[...]
-
->>> Maybe I can add just below the sched_energy_present(){...} construct giving
->>> precedence to EAS? I'm asking this because I remember Patrick telling me to
->>> leverage task packing for android as well?
->>
->> I have a hard time imaging that Turbosched will be used in Android next
->> to EAS in the foreseeable future.
->>
->> First of all, EAS provides task packing already on Performance Domain
->> (PD) level (a.k.a. as cluster on traditional 2-cluster Arm/Arm64
->> big.LITTLE or DynamIQ (with Phantom domains (out of tree solution)).
->> This is where we can safe energy without harming latency.
->>
->> See the tests results under '2.1 Energy test case' in
->>
->> https://lore.kernel.org/r/20181203095628.11858-1-quentin.perret@arm.com
->>
->> There are 10 to 50 small (classified solely by task utilization) tasks
->> per test case and EAS shows an effect on energy consumption by packing
->> them onto the PD (cluster) of the small CPUs.
->>
->> And second, the CPU supported topology is different to the one you're
->> testing on.
->>
-> 
-> cool. I was just keeping in mind the following quote
-> " defining a generic spread-vs-pack wakeup policy which is something
-> Android also could benefit from " (https://lkml.org/lkml/2019/6/28/628)
-
-The main thing is that in case we want to introduce a new functionality
-into CFS, we should try hard to use existing infrastructure (or
-infrastructure there is agreement on that we'll need it) as much as
-possible.
-
-If I understand Patrick here correctly, he suggested not to use uclamp
-but the task latency nice approach. There is agreement that we would
-need something like this as infrastructure:
-
-https://lore.kernel.org/r/20190830174944.21741-1-subhra.mazumdar@oracle.com
-
-So p->latency_nice is suitable to include your p->flags |=
-PF_CAN_BE_PACKED concept nicely.
-
-> 
-> BTW, IIUC that does task consolidation only on single CPU unless
-> rd->overload is set, right?
-
-Task consolidation on Performance Domains (PDs) w/ multiple CPUs (e.g.
-on a per-cluster PD big.LITTLE system) only works when the system is not
-overutilized:
-
-6326 int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
-6327 {
-...
-6337         if (!pd || *READ_ONCE(rd->overutilized)*)
-6338                 goto fail;
-...
-
-[...]
+Considering that console.write is called from essentially arbitrary code
+path IIUC then all the locks used in this path should be pretty much
+tail locks or console internal ones without external dependencies.
+Otherwise we are in a whack a mole situation chasing very complex lock
+chains.
+-- 
+Michal Hocko
+SUSE Labs
