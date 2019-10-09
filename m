@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A04B6C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26B3EC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F9AB20679
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E89C120679
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:26:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570642005;
-	bh=5GkXiogEjh0gXaUB168ghFLY0SN5YJns/jSqnDuxvFc=;
+	s=default; t=1570642008;
+	bh=uG3ifd4LdU/S4tdk5jXdV8M3Xx9rLvJA2I7pmFRBINY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OmJPma4P95lOhigwI4+XHoB4PdvfXxBytBqb9oua0CLgftr6EiLtvhW84gDgKwFN9
-	 slDDiAjH/q4X+lya4N256nb7LgDQOM82uMRQ5leq230hKmTRexQtTWHzpVyVFXqMIj
-	 rYx9BGCSwhZIxxgpzAZHLo0pGMFTGGnPajgrye5Q=
+	b=i1xm39u49KN7sh2bo8ch4kAyoUwLmGPHB+zJzq268Tv2tvhgTtOJzXf3ba2Xr2CbW
+	 9ZrwEHJZfliaMLaeVLge4m4A+DBELI9B/oyBVH7ico4OTFm5n5QzPvP4Cg9+GGhuvc
+	 PsSg39arKQhW3NMScH2qncdVVK3FeDVocry+iCxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732245AbfJIRYf (ORCPT
+        id S1732748AbfJIR0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:24:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49058 "EHLO mail.kernel.org"
+        Wed, 9 Oct 2019 13:26:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732314AbfJIRY0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 13:24:26 -0400
+        id S1732377AbfJIRYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 13:24:35 -0400
 Received: from sasha-vm.mshome.net (unknown [167.220.2.234])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C90A21D82;
-        Wed,  9 Oct 2019 17:24:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DB9221920;
+        Wed,  9 Oct 2019 17:24:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570641866;
-        bh=5GkXiogEjh0gXaUB168ghFLY0SN5YJns/jSqnDuxvFc=;
+        s=default; t=1570641874;
+        bh=uG3ifd4LdU/S4tdk5jXdV8M3Xx9rLvJA2I7pmFRBINY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w+/NUk9dAzBUB3U6Y/fkWjfZdXIL+VsOxz/AbC5Wiz3/227vW2LgYx9KmRu8AXCaw
-         YhFl94GkW4vAwH3YeepqYRmFHWKxJZREE6ckX9kz1e1jS6sOpMob7HGmCRaMAzJFcX
-         zogRjCvwhgpBfwYkytT0Xv2Q0vunDBLmplF9nDvA=
+        b=SspeWhi0CajVZ39KNWCMCrWeKG04DChsiP8OY2cdRqJJyFE726GwTWNVU3WmC5oTw
+         BFoxcWzAqr6RioEo75NWzQKl+rTgYZtx5iZ7oUPgLy3DQsgX3O44MKzFaxhlYwWp2m
+         IxafM9od+qU/TfURaAw9eDjmVCn7nkAH0tGe5oSQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 09/21] ARM: dts: am4372: Set memory bandwidth limit for DISPC
-Date:   Wed,  9 Oct 2019 13:06:02 -0400
-Message-Id: <20191009170615.32750-9-sashal@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 19/21] r8152: Set macpassthru in reset_resume callback
+Date:   Wed,  9 Oct 2019 13:06:12 -0400
+Message-Id: <20191009170615.32750-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191009170615.32750-1-sashal@kernel.org>
 References: <20191009170615.32750-1-sashal@kernel.org>
@@ -61,37 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit f90ec6cdf674248dcad85bf9af6e064bf472b841 ]
+[ Upstream commit a54cdeeb04fc719e4c7f19d6e28dba7ea86cee5b ]
 
-Set memory bandwidth limit to filter out resolutions above 720p@60Hz to
-avoid underflow errors due to the bandwidth needs of higher resolutions.
+r8152 may fail to establish network connection after resume from system
+suspend.
 
-am43xx can not provide enough bandwidth to DISPC to correctly handle
-'high' resolutions.
+If the USB port connects to r8152 lost its power during system suspend,
+the MAC address was written before is lost. The reason is that The MAC
+address doesn't get written again in its reset_resume callback.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+So let's set MAC address again in reset_resume callback. Also remove
+unnecessary lock as no other locking attempt will happen during
+reset_resume.
+
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am4372.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/usb/r8152.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-index 4714a59fd86df..345c117bd5ef5 100644
---- a/arch/arm/boot/dts/am4372.dtsi
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -1118,6 +1118,8 @@
- 				ti,hwmods = "dss_dispc";
- 				clocks = <&disp_clk>;
- 				clock-names = "fck";
-+
-+				max-memory-bandwidth = <230000000>;
- 			};
+diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+index 455eec3c46942..c0964281ab983 100644
+--- a/drivers/net/usb/r8152.c
++++ b/drivers/net/usb/r8152.c
+@@ -4465,10 +4465,9 @@ static int rtl8152_reset_resume(struct usb_interface *intf)
+ 	struct r8152 *tp = usb_get_intfdata(intf);
  
- 			rfbi: rfbi@4832a800 {
+ 	clear_bit(SELECTIVE_SUSPEND, &tp->flags);
+-	mutex_lock(&tp->control);
+ 	tp->rtl_ops.init(tp);
+ 	queue_delayed_work(system_long_wq, &tp->hw_phy_work, 0);
+-	mutex_unlock(&tp->control);
++	set_ethernet_addr(tp);
+ 	return rtl8152_resume(intf);
+ }
+ 
 -- 
 2.20.1
 
