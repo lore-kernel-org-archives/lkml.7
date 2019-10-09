@@ -2,134 +2,96 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6C7C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7187AC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2817A206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:41:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="0aURVBUX"
+	by mail.kernel.org (Postfix) with ESMTP id 4B3C0206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:45:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731929AbfJIRlq (ORCPT
+        id S1731907AbfJIRpF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:41:46 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:51056 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730256AbfJIRlq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 13:41:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=30zvL17WUhifmX2hcBLj8F5VwlxGK4MB5wNSDqeJSiI=; b=0aURVBUXhcnLbvON8Yp5HrFlw
-        NKOvoW08wma5yDaMHv6HyErRkFqhnsxjQfHAPoOAZV6hUP/uXLJYQAMjy3nWDFpY+M5cRQiYGCsJq
-        SqVNJ4hKi2a8wM5wZ/js0/twBv+UC6MY3c2TINyTf5Wdc6dEpnBe02QFARtBtmMAAlI3YKcidTZG4
-        3/wxG9FETG8ycj4l2UL6hWJuUvgQSAvYQ0fYVmR5X5NDNdPcdaeYikqvhj/vzdxaNfLBxVbH8JBv8
-        aYa/RYTbJwfz2X/AgibVxgmeel1CXGi1WAcoruFpMumMcF90X0vmkT/MB60UYpk1fYlxEHvLb5fBO
-        OnYMFwRfA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iIFxm-0006ER-Kt; Wed, 09 Oct 2019 17:41:26 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 535DB9802E0; Wed,  9 Oct 2019 19:41:24 +0200 (CEST)
-Date:   Wed, 9 Oct 2019 19:41:24 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Jan Glauber <jglauber@marvell.com>
-Subject: Re: [PATCH v3 05/10] lib/refcount: Improve performance of generic
- REFCOUNT_FULL code
-Message-ID: <20191009174124.GD22902@worktop.programming.kicks-ass.net>
-References: <20191007154703.5574-1-will@kernel.org>
- <20191007154703.5574-6-will@kernel.org>
- <20191009092508.GH2311@hirez.programming.kicks-ass.net>
- <20191009164433.4dhgsmgkl4pe2nlx@willie-the-truck>
+        Wed, 9 Oct 2019 13:45:05 -0400
+Received: from muru.com ([72.249.23.125]:36278 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730256AbfJIRpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 13:45:05 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id CCC468140;
+        Wed,  9 Oct 2019 17:45:36 +0000 (UTC)
+Date:   Wed, 9 Oct 2019 10:45:00 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Yi Zheng <goodmenzy@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+        Jason Cooper <jason@lakedaemon.net>,
+        Sekhar Nori <nsekhar@ti.com>, Zheng Yi <yzheng@techyauld.com>
+Subject: Re: Maybe a bug in kernel/irq/chip.c unmask_irq(), device IRQ masked
+ unexpectedly. (re-formated the mail body, sorry)
+Message-ID: <20191009174500.GM5610@atomide.com>
+References: <CAJPHfYNx31=JjKiSEvihk_NszAWGuB-CKP84SAgx4EGsKrJxfA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191009164433.4dhgsmgkl4pe2nlx@willie-the-truck>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAJPHfYNx31=JjKiSEvihk_NszAWGuB-CKP84SAgx4EGsKrJxfA@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 05:44:33PM +0100, Will Deacon wrote:
+Hi,
 
-> > > @@ -224,26 +208,19 @@ static inline void refcount_inc(refcount_t *r)
-> > >   */
-> > >  static inline __must_check bool refcount_sub_and_test(int i, refcount_t *r)
-> > >  {
-> > > +	int old = atomic_fetch_sub_release(i, &r->refs);
-> > >  
-> > > +	if (old == i) {
-> > >  		smp_acquire__after_ctrl_dep();
-> > >  		return true;
-> > >  	}
-> > >  
-> > > +	if (unlikely(old - i < 0)) {
-> > > +		refcount_set(r, REFCOUNT_SATURATED);
-> > > +		WARN_ONCE(1, "refcount_t: underflow; use-after-free.\n");
-> > > +	}
-> > 
-> > I'm failing to see how this preserves REFCOUNT_SATURATED for
-> > non-underflow. AFAICT this should have:
-> > 
-> > 	if (unlikely(old == REFCOUNT_SATURATED || old - i < 0))
+* Yi Zheng <goodmenzy@gmail.com> [191008 13:06]:
+>       NOTE: (1) My SoC is a single core ARM chip: TI-AM3352, so the raw
+>          spin-lock irq_desc->lock will be optimized to
+>          nothing. handle_level_irq() has no spin-lock protection, right?
+
+Well not always, With CONFIG_SMP we modify only some of the SMP code on boot,
+see arch/arm/kernel/head.S for smp_on_up and then the related macro usage.
+
+>          (2) In AM3352, INTC driver ACK the IRQ by write 0x01 into INTC Control
+>              Register(offset 0x48).  The chip doc seems that bit[0] of
+>              INTC-Control Reg is only an enable/disable flag.  The IRQ may
+>              generated even if no ACK action done. Any one can give me an
+>              clarification?
+
+The TI INTC is probably better documented in dm3630 trm, it's the same
+controller but with a different revision.
+
+>          (3) My analysis is not verified on the real machine. After some code
+>              change for debug(add counter to indicates the iteration level, save
+>              the IRQ mask status etc.), the device IRQ wrongly masked problem
+>              vanished. In fact, the original code can not re-produce the
+>              phenomena easily. In tens of machine, only one can get the bug. I
+>              have try my best to hacking the code, but the only verified result
+>              is here: when bug occur, the HW IRQ is masked, but the
+>              IRQD_IRQ_MASKED flag is cleared.
 > 
-> Well spotted! I think we just want:
-> 
-> 	if (unlikely(old < 0 || old - i < 0))
-> 
-> here, which is reassuringly similar to the logic in refcount_add() and
-> refcount_add_not_zero().
+>       My fixup is in the attachment, which remove the unexpected time window of
+>       IRQ iteration.
 
-Oh indeed, I missed that saturated was negative. That should work.
+Let's see what Thomas has to say for that. Meanwhile, please take a
+look at Documentation/process/submitting-patches.rst for getting things
+right for sending out patches that can be applied without manual
+editing :)
 
-> > > +	return false;
-> > >  }
-> > >  
-> > >  /**
-> > > @@ -276,9 +253,13 @@ static inline __must_check bool refcount_dec_and_test(refcount_t *r)
-> > >   */
-> > >  static inline void refcount_dec(refcount_t *r)
-> > >  {
-> > > +	int old = atomic_fetch_sub_release(1, &r->refs);
-> > >  
-> > > +	if (unlikely(old <= 1)) {
-> > 
-> > Idem.
-> 
-> Hmm, I don't get what you mean with the one, since we're looking at the
-> old value. REFCOUNT_SATURATED is negative, so it will do the right thing.
+Cheers,
 
-Yep, missed that.
+Tony
 
-> > > +		refcount_set(r, REFCOUNT_SATURATED);
-> > > +		WARN_ONCE(1, "refcount_t: decrement hit 0; leaking memory.\n");
-> > > +	}
-> > > +}
-> > 
-> > Also, things like refcount_dec_not_one() might need fixing to preserve
-> > REFCOUNT_SATURATED, because they're not expecting that value to actually
-> > change, but you do!
-> 
-> refcount_dec_not_one() already checks for REFCOUNT_SATURATED and, in the
-> case of a racing thread setting the saturated value, the cmpxchg() will
-> fail if the saturated value is written after the check or the saturated
-> value will overwrite the value written by the cmpxchg(). Is there another
-> race that you're thinking of?
+> --- kernel/irq/chip.c	2019-07-13 09:28:23.683787367 +0800
+> +++ /tmp/chip.c	2019-10-08 11:32:35.082258572 +0800
+> @@ -432,8 +432,8 @@ void unmask_irq(struct irq_desc *desc)
+>  		return;
+>  
+>  	if (desc->irq_data.chip->irq_unmask) {
+> -		desc->irq_data.chip->irq_unmask(&desc->irq_data);
+>  		irq_state_clr_masked(desc);
+> +		desc->irq_data.chip->irq_unmask(&desc->irq_data);
+>  	}
+>  }
+>  
 
-Hmm, yes. I was afraid that by not recognising SATURATED it'd go wrong,
-but now that I try I can't make it go wrong.
