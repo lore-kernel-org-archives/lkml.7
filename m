@@ -2,87 +2,88 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD16C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6745CC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:29:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54EF821721
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45F3821721
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:29:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730606AbfJIM2P (ORCPT
+        id S1730950AbfJIM3t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 08:28:15 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:45038 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727878AbfJIM2O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 08:28:14 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 9F1BDB972E4E356DC9F2;
-        Wed,  9 Oct 2019 20:28:12 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 9 Oct 2019 20:28:02 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     Andrea Arcangeli <aarcange@redhat.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Mike Kravetz" <mike.kravetz@oracle.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        Hugh Dickins <hughd@google.com>
-CC:     YueHaibing <yuehaibing@huawei.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] userfaultfd: remove set but not used variable 'h'
-Date:   Wed, 9 Oct 2019 12:27:40 +0000
-Message-ID: <20191009122740.70517-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 9 Oct 2019 08:29:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42612 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727029AbfJIM3s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 08:29:48 -0400
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9061434CC
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Oct 2019 12:29:48 +0000 (UTC)
+Received: by mail-wm1-f69.google.com with SMTP id 190so991985wme.4
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 05:29:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=xvThJK+yx5Ccn9NmhrAQG/4aOZL4annIFveYbxX7LRY=;
+        b=PiY62UuC9RHHxnofqDuidHBZE10TMkZfMKaxrLNBwLqReKlDLMhTfHoPbCCvr9B9Rm
+         4NxwoZ/ISrFDknyXxvmc5FvkxW4R2f7TpC9hCnQu7f/t3qHjRjpTpG/WXHu9psbAy8pD
+         p/tPdNl6ZTGhKaxeg/w98lDF9gLKqtMqGFgc1vcmZXqXwkRH6PbkwqgkJmvQr7uiIELX
+         /UtZkn59GPZBFyPsE227yx/Ap0koDZBxgCxnY6RHNKe1FFgCxKn47nkEgCwFMCqxrHb2
+         GQFotuwAKOGEyJeZ5/FloR9SZxId84pC0EgXpLHfmPxpjvByYpgHgIZKDKU31/Dnc19d
+         eFaA==
+X-Gm-Message-State: APjAAAWrQ2C3MuExIX14dPg5M2BZuzgq1abTsPUEqeZEAbjWkl5dERz7
+        bkn1b4Gzyt6T21tPtLBGkGUfm0PjlrU1G+Y35U4OXe3HP33Vy5i49CX7D6vih2n/2VOI3n3DVzb
+        OH0aoyyTawMWeZy0jKoK1+Nao
+X-Received: by 2002:a1c:6389:: with SMTP id x131mr2379539wmb.77.1570624187334;
+        Wed, 09 Oct 2019 05:29:47 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzmSCLkj57Flq62wjjdik+sMsp+Gw9vcplMUYMGct4y5MTaJRpQ2Q5fyhVBXbKv5lQZ0l/Y2A==
+X-Received: by 2002:a1c:6389:: with SMTP id x131mr2379523wmb.77.1570624187133;
+        Wed, 09 Oct 2019 05:29:47 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id 59sm3512855wrc.23.2019.10.09.05.29.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Oct 2019 05:29:46 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH] selftests: kvm: fix sync_regs_test with newer gccs
+In-Reply-To: <5b1b95e5-4836-ab55-fe4d-e9cc78a7a95e@redhat.com>
+References: <20191008180808.14181-1-vkuznets@redhat.com> <20191008183634.GF14020@linux.intel.com> <b7d20806-4e88-91af-31c1-8cbb0a8a330b@redhat.com> <87d0f6yzd3.fsf@vitty.brq.redhat.com> <5b1b95e5-4836-ab55-fe4d-e9cc78a7a95e@redhat.com>
+Date:   Wed, 09 Oct 2019 14:29:45 +0200
+Message-ID: <874l0iyudi.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+Paolo Bonzini <pbonzini@redhat.com> writes:
 
-mm/userfaultfd.c: In function '__mcopy_atomic_hugetlb':
-mm/userfaultfd.c:217:17: warning:
- variable 'h' set but not used [-Wunused-but-set-variable]
+> On 09/10/19 12:42, Vitaly Kuznetsov wrote:
+>> Paolo Bonzini <pbonzini@redhat.com> writes:
+>>> There is no practical difference with Vitaly's patch.  The first
+>>> _vcpu_run has no pre-/post-conditions on the value of %rbx:
+>> 
+>> I think what Sean was suggesting is to prevent GCC from inserting
+>> anything (and thus clobbering RBX) between the call to guest_call() and
+>> the beginning of 'asm volatile' block by calling *inside* 'asm volatile'
+>> block instead.
+>
+> Yes, but there is no way that clobbering RBX will break the test,
+> because RBX is not initialized until after the first _vcpu_run succeeds.
+>
 
-It is not used since commit 78911d0e18ac ("userfaultfd: use vma_pagesize
-for all huge page size calculation")
+Right, we're always resuming after so potential clobbering doesn't
+matter. Thanks!
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- mm/userfaultfd.c | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-index 4cb4ef3d9128..1b0d7abad1d4 100644
---- a/mm/userfaultfd.c
-+++ b/mm/userfaultfd.c
-@@ -214,7 +214,6 @@ static __always_inline ssize_t __mcopy_atomic_hugetlb(struct mm_struct *dst_mm,
- 	unsigned long src_addr, dst_addr;
- 	long copied;
- 	struct page *page;
--	struct hstate *h;
- 	unsigned long vma_hpagesize;
- 	pgoff_t idx;
- 	u32 hash;
-@@ -271,8 +270,6 @@ static __always_inline ssize_t __mcopy_atomic_hugetlb(struct mm_struct *dst_mm,
- 			goto out_unlock;
- 	}
- 
--	h = hstate_vma(dst_vma);
--
- 	while (src_addr < src_start + len) {
- 		pte_t dst_pteval;
-
-
-
+-- 
+Vitaly
