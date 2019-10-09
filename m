@@ -2,112 +2,106 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF311ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE35ECE596
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:32:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FD0C206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:31:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE82821835
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:32:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="k015dyKK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731155AbfJIMbq (ORCPT
+        id S1731178AbfJIMcn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 08:31:46 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3670 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727029AbfJIMbq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 08:31:46 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 95FD72B76B81C23962B2;
-        Wed,  9 Oct 2019 20:31:41 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 9 Oct 2019 20:31:32 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     David Howells <dhowells@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vitaly Wool <vitaly.wool@konsulko.com>,
-        "Henry Burns" <henryburns@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        "Stephen Rothwell" <sfr@canb.auug.org.au>
-CC:     YueHaibing <yuehaibing@huawei.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] mm/z3fold.c: remove set but not used variable 'newpage'
-Date:   Wed, 9 Oct 2019 12:31:11 +0000
-Message-ID: <20191009123111.80425-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 9 Oct 2019 08:32:43 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:43798 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727029AbfJIMcn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 08:32:43 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x99CWbmh083932;
+        Wed, 9 Oct 2019 07:32:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1570624357;
+        bh=XaZjzqsxGyot7zxeFeRURYCsWaQ2BuhASHwvEDXgv8Y=;
+        h=From:To:CC:Subject:Date;
+        b=k015dyKKFvbVmTk0K9d0NrbKsx1WVw34tsUrBKEKtljCmqHB2zsH9fmN/nCqngx1M
+         OTCOg2JJls88z0JpUms3R6866jQ72687VyHe+bUfWkxJr+jNtUohj4skBgJhv+hrAf
+         UJjFV85+74V2aQigAux/nf/N9koyWFCPyeAie2bU=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x99CWb6v090457
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 9 Oct 2019 07:32:37 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 9 Oct
+ 2019 07:32:34 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 9 Oct 2019 07:32:37 -0500
+Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x99CWbNP081004;
+        Wed, 9 Oct 2019 07:32:37 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+CC:     Jacopo Mondi <jacopo@jmondi.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Benoit Parrot <bparrot@ti.com>
+Subject: [Patch v4 0/3] media: ov5640: updates
+Date:   Wed, 9 Oct 2019 07:35:07 -0500
+Message-ID: <20191009123510.19106-1-bparrot@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+This patch series is a collection of patches we have been carrying for a
+while.
 
-mm/z3fold.c: In function 'compact_single_buddy':
-mm/z3fold.c:693:16: warning:
- variable 'newpage' set but not used [-Wunused-but-set-variable]
+First, it adds support for PIXEL_RATE control which is used by some
+CSI2 receiver driver to properly set-up their DPHY.
 
-mm/z3fold.c:664:13: warning:
- variable 'bud' set but not used [-Wunused-but-set-variable]
+Then we fix an issue related to having extra sensor enable/disable in
+the register array for the 1920x1080 mode.
 
-It is never used, so can be removed.
+Finally we restrict the largest resolution which should only be
+available at the lowest FPS.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- mm/z3fold.c | 6 ------
- 1 file changed, 6 deletions(-)
+Changes since v3:
+- Fix a potential early pointer dereference in init_controls.
+  Reported by Sakari.
 
-diff --git a/mm/z3fold.c b/mm/z3fold.c
-index 25713a4a7186..d48d0ec3bcdd 100644
---- a/mm/z3fold.c
-+++ b/mm/z3fold.c
-@@ -661,7 +661,6 @@ static struct z3fold_header *compact_single_buddy(struct z3fold_header *zhdr)
- 	struct z3fold_pool *pool = zhdr_to_pool(zhdr);
- 	void *p = zhdr;
- 	unsigned long old_handle = 0;
--	enum buddy bud;
- 	size_t sz = 0;
- 	struct z3fold_header *new_zhdr = NULL;
- 	int first_idx = __idx(zhdr, FIRST);
-@@ -673,24 +672,20 @@ static struct z3fold_header *compact_single_buddy(struct z3fold_header *zhdr)
- 	 * the page lock is already taken
- 	 */
- 	if (zhdr->first_chunks && zhdr->slots->slot[first_idx]) {
--		bud = FIRST;
- 		p += ZHDR_SIZE_ALIGNED;
- 		sz = zhdr->first_chunks << CHUNK_SHIFT;
- 		old_handle = (unsigned long)&zhdr->slots->slot[first_idx];
- 	} else if (zhdr->middle_chunks && zhdr->slots->slot[middle_idx]) {
--		bud = MIDDLE;
- 		p += zhdr->start_middle << CHUNK_SHIFT;
- 		sz = zhdr->middle_chunks << CHUNK_SHIFT;
- 		old_handle = (unsigned long)&zhdr->slots->slot[middle_idx];
- 	} else if (zhdr->last_chunks && zhdr->slots->slot[last_idx]) {
--		bud = LAST;
- 		p += PAGE_SIZE - (zhdr->last_chunks << CHUNK_SHIFT);
- 		sz = zhdr->last_chunks << CHUNK_SHIFT;
- 		old_handle = (unsigned long)&zhdr->slots->slot[last_idx];
- 	}
- 
- 	if (sz > 0) {
--		struct page *newpage;
- 		enum buddy new_bud = HEADLESS;
- 		short chunks = size_to_chunks(sz);
- 		void *q;
-@@ -699,7 +694,6 @@ static struct z3fold_header *compact_single_buddy(struct z3fold_header *zhdr)
- 		if (!new_zhdr)
- 			return NULL;
- 
--		newpage = virt_to_page(new_zhdr);
- 		if (WARN_ON(new_zhdr == zhdr))
- 			goto out_fail;
+Changes since v2:
+- Addressed comment from Sakari and Jacopo.
+- Make use of the calc_pixel_rate in set_mode also
+- Cleaned up the pixel_rate ctrl struct
+- Fix the fps condition checking for the max resolution case
+
+Changes since v1:
+- Addressed comment from Sakari.
+  added a function to calculate the pixel rate and remove the need to
+  cache its value
 
 
+Benoit Parrot (3):
+  media: ov5640: add PIXEL_RATE control
+  media: ov5640: Fix 1920x1080 mode to remove extra enable/disable
+  media: ov5640: Make 2592x1944 mode only available at 15 fps
+
+ drivers/media/i2c/ov5640.c | 33 +++++++++++++++++++++++++++++----
+ 1 file changed, 29 insertions(+), 4 deletions(-)
+
+-- 
+2.17.1
 
