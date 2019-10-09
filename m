@@ -2,114 +2,203 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DDCECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 23:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3528CECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 23:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3992218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 23:13:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570662784;
-	bh=oCRn3JjATva9R6bAW/lMjEkdJaPC+cn6csIMs4uFiPw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2TuAvSRF3K+zGD5cflSnSSrs5aRbt2nDzkJeaNPpv8QAjkJu69qLva0zIKO/HHQ8D
-	 S9Lhscc8JyrNUplXsdv6UTEbEwYX1iC2L1Q8i0bxQ8ttajWPlDdJUXj47vZvVAg29D
-	 KbxTio6x7hiVQQLSuTaCE0PcmScNOU9XWpXORgls=
+	by mail.kernel.org (Postfix) with ESMTP id 157C8206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 23:18:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732375AbfJIXND (ORCPT
+        id S1732384AbfJIXSy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 19:13:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35492 "EHLO mail.kernel.org"
+        Wed, 9 Oct 2019 19:18:54 -0400
+Received: from mga09.intel.com ([134.134.136.24]:52773 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731542AbfJIXND (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 19:13:03 -0400
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5ECAE206BB;
-        Wed,  9 Oct 2019 23:13:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570662782;
-        bh=oCRn3JjATva9R6bAW/lMjEkdJaPC+cn6csIMs4uFiPw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YxgfdepboPDcp50suajDKZE/jFrWOWYBnGVR4FSn2qQjsRNg+b9CmsuTOAsRCHJjB
-         BwW76CsJVUUb3/Ec8lupsntFXyszdN5pHcf3HMVZKuC5aqbYfaOy7yS73Pu8Rg8lnQ
-         VsQDblnJTIxudsD45Dh4kH8dRJnckGlSDiDGAamU=
-Date:   Wed, 9 Oct 2019 16:13:00 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-kernel@lists.codethink.co.uk,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fs/namespace: make to_mnt_ns static
-Message-ID: <20191009231259.GA125579@gmail.com>
-Mail-Followup-To: Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-kernel@lists.codethink.co.uk,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191009145211.16614-1-ben.dooks@codethink.co.uk>
+        id S1731145AbfJIXSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 19:18:53 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 16:18:52 -0700
+X-IronPort-AV: E=Sophos;i="5.67,277,1566889200"; 
+   d="scan'208";a="395182803"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 16:18:51 -0700
+Subject: [PATCH v6 00/12] EFI Specific Purpose Memory Support
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     mingo@redhat.com
+Cc:     Andy Shevchenko <andy@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Keith Busch <kbusch@kernel.org>, Len Brown <lenb@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kbuild test robot <lkp@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
+        linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Date:   Wed, 09 Oct 2019 16:04:33 -0700
+Message-ID: <157066227329.1059972.5659620631541203458.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-2-gc94f
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191009145211.16614-1-ben.dooks@codethink.co.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 03:52:11PM +0100, Ben Dooks wrote:
-> The to_mnt_ns() is not exported outside the file so
-> make it static to fix the following sparse warning:
-> 
-> fs/namespace.c:1731:22: warning: symbol 'to_mnt_ns' was not declared. Should it be static?
-> 
-> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-> ---
-> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> Cc: linux-fsdevel@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  fs/namespace.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/namespace.c b/fs/namespace.c
-> index fe0e9e1410fe..b87b127fdce4 100644
-> --- a/fs/namespace.c
-> +++ b/fs/namespace.c
-> @@ -1728,7 +1728,7 @@ static bool is_mnt_ns_file(struct dentry *dentry)
->  	       dentry->d_fsdata == &mntns_operations;
->  }
->  
-> -struct mnt_namespace *to_mnt_ns(struct ns_common *ns)
-> +static struct mnt_namespace *to_mnt_ns(struct ns_common *ns)
->  {
->  	return container_of(ns, struct mnt_namespace, ns);
->  }
-> -- 
-> 2.23.0
-> 
+Changes since v5 [1]:
 
-Al, this patch has been sent to you 11 times by 8 different people over 2 years:
+- Move efi=nosoftreserve infrastructure to a common location. (Ard)
 
-https://lore.kernel.org/linux-fsdevel/20191009145211.16614-1-ben.dooks@codethink.co.uk/
-https://lore.kernel.org/linux-fsdevel/20190822154014.14401-1-ebiggers@kernel.org/
-https://lore.kernel.org/linux-fsdevel/20190529212108.164246-1-ebiggers@kernel.org/
-https://lore.kernel.org/linux-fsdevel/20190414191913.GA11798@bharath12345-Inspiron-5559/
-https://lore.kernel.org/linux-fsdevel/20190319151756.96768-1-maowenan@huawei.com/
-https://lore.kernel.org/linux-fsdevel/20190110204147.120073-1-ebiggers@kernel.org/
-https://lore.kernel.org/linux-fsdevel/20181115000930.47611-1-ebiggers@kernel.org/
-https://lore.kernel.org/linux-fsdevel/20180630120447.17861-1-colin.king@canonical.com/
-https://lore.kernel.org/linux-fsdevel/20170111104846.26220-1-tklauser@distanz.ch/
-https://lore.kernel.org/linux-fsdevel/20181207204318.1920-1-malat@debian.org/
-https://lore.kernel.org/linux-fsdevel/a2cc7bd9cd4cd5be54303090c7ba6654d7b04b4f.1443364195.git.geliangtang@163.com/
+- Define a common efi_soft_reserve_enabled() helper for efi
+  stub code and runtime core efi. (Ard)
 
-No response from you to any of them.  I guess this means you're just not taking
-these types of obvious cleanups?  Should people be sending them to Andrew Morton
-instead?
+- Add ARM support for honoring soft reservations (Ard)
 
-- Eric
+- Rename x86-fake_mem.c to x86_fake_mem.c. (Ard)
+
+- Rebase on v5.4-rc2
+
+[1]: http://lkml.kernel.org/r/156712993795.1616117.3781864460118989466.stgit@dwillia2-desk3.amr.corp.intel.com
+
+---
+Merge notes:
+
+Hi Ingo,
+
+I'm targeting you since you piped on v5, and tip.git in general since
+the deepest changes are in x86 init code. The entanglements between
+tip.git and acpi.git that v5 hit have been resolved with what went
+upstream during the 5.4 merge window. This all still needs an ack from
+Ard to make sure he's on board with all the current changes, or
+otherwise spots some more fixups. The ARM changes have only been compile
+tested (0day-robot). The x86 changes, as mentioned below, have been boot
+tested with efi_fake_mem= on a QEMU config that produces an HMAT.
+
+---
+
+The EFI 2.8 Specification [2] introduces the EFI_MEMORY_SP ("specific
+purpose") memory attribute. This attribute bit replaces the deprecated
+ACPI HMAT "reservation hint" that was introduced in ACPI 6.2 and removed
+in ACPI 6.3.
+
+Given the increasing diversity of memory types that might be advertised
+to the operating system, there is a need for platform firmware to hint
+which memory ranges are free for the OS to use as general purpose memory
+and which ranges are intended for application specific usage. For
+example, an application with prior knowledge of the platform may expect
+to be able to exclusively allocate a precious / limited pool of high
+bandwidth memory. Alternatively, for the general purpose case, the
+operating system may want to make the memory available on a best effort
+basis as a unique numa-node with performance properties by the new
+CONFIG_HMEM_REPORTING [3] facility.
+
+In support of optionally allowing either application-exclusive and
+core-kernel-mm managed access to differentiated memory, claim
+EFI_MEMORY_SP ranges for exposure as "soft reserved" and assigned to a
+device-dax instance by default. Such instances can be directly owned /
+mapped by a platform-topology-aware application. Alternatively, with the
+new kmem facility [4], the administrator has the option to instead
+designate that those memory ranges be hot-added to the core-kernel-mm as
+a unique memory numa-node. In short, allow for the decision about what
+software agent manages soft-reserved memory to be made at runtime.
+
+The patches build on the new HMAT+HMEM_REPORTING facilities merged
+for v5.2-rc1. The implementation is tested with qemu emulation of HMAT
+[5] plus the efi_fake_mem facility for applying the EFI_MEMORY_SP
+attribute. Specific details on reproducing the test configuration are in
+patch 12.
+
+[2]: https://uefi.org/sites/default/files/resources/UEFI_Spec_2_8_final.pdf
+[3]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e1cf33aafb84
+[4]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=c221c0b0308f
+[5]: http://patchwork.ozlabs.org/cover/1096737/
+
+---
+
+Dan Williams (12):
+      acpi/numa: Establish a new drivers/acpi/numa/ directory
+      efi: Enumerate EFI_MEMORY_SP
+      x86/efi: Push EFI_MEMMAP check into leaf routines
+      efi: Common enable/disable infrastructure for EFI soft reservation
+      x86/efi: EFI soft reservation to E820 enumeration
+      arm/efi: EFI soft reservation to memblock
+      x86/efi: Add efi_fake_mem support for EFI_MEMORY_SP
+      lib: Uplevel the pmem "region" ida to a global allocator
+      dax: Fix alloc_dax_region() compile warning
+      device-dax: Add a driver for "hmem" devices
+      acpi/numa/hmat: Register HMAT at device_initcall level
+      acpi/numa/hmat: Register "soft reserved" memory as an "hmem" device
+
+
+ Documentation/admin-guide/kernel-parameters.txt |   19 +++
+ arch/arm64/mm/mmu.c                             |    2 
+ arch/x86/boot/compressed/eboot.c                |    6 +
+ arch/x86/boot/compressed/kaslr.c                |   46 +++++++-
+ arch/x86/include/asm/e820/types.h               |    8 +
+ arch/x86/include/asm/efi.h                      |   17 +++
+ arch/x86/kernel/e820.c                          |   12 ++
+ arch/x86/kernel/setup.c                         |   18 +--
+ arch/x86/platform/efi/efi.c                     |   53 ++++++++-
+ arch/x86/platform/efi/quirks.c                  |    3 +
+ drivers/acpi/Kconfig                            |    9 --
+ drivers/acpi/Makefile                           |    3 -
+ drivers/acpi/hmat/Makefile                      |    2 
+ drivers/acpi/numa/Kconfig                       |    7 +
+ drivers/acpi/numa/Makefile                      |    3 +
+ drivers/acpi/numa/hmat.c                        |  138 +++++++++++++++++++++--
+ drivers/acpi/numa/srat.c                        |    0 
+ drivers/dax/Kconfig                             |   27 ++++-
+ drivers/dax/Makefile                            |    2 
+ drivers/dax/bus.c                               |    2 
+ drivers/dax/bus.h                               |    2 
+ drivers/dax/dax-private.h                       |    2 
+ drivers/dax/hmem.c                              |   56 +++++++++
+ drivers/firmware/efi/Kconfig                    |   21 ++++
+ drivers/firmware/efi/Makefile                   |    5 +
+ drivers/firmware/efi/arm-init.c                 |    9 ++
+ drivers/firmware/efi/arm-runtime.c              |   24 ++++
+ drivers/firmware/efi/efi.c                      |   14 ++
+ drivers/firmware/efi/esrt.c                     |    3 +
+ drivers/firmware/efi/fake_mem.c                 |   26 ++--
+ drivers/firmware/efi/fake_mem.h                 |   10 ++
+ drivers/firmware/efi/libstub/arm32-stub.c       |    5 +
+ drivers/firmware/efi/libstub/efi-stub-helper.c  |   19 +++
+ drivers/firmware/efi/libstub/random.c           |    4 +
+ drivers/firmware/efi/x86_fake_mem.c             |   69 ++++++++++++
+ drivers/nvdimm/Kconfig                          |    1 
+ drivers/nvdimm/core.c                           |    1 
+ drivers/nvdimm/nd-core.h                        |    1 
+ drivers/nvdimm/region_devs.c                    |   13 +-
+ include/linux/efi.h                             |   10 ++
+ include/linux/ioport.h                          |    1 
+ include/linux/memregion.h                       |   23 ++++
+ lib/Kconfig                                     |    3 +
+ lib/Makefile                                    |    1 
+ lib/memregion.c                                 |   18 +++
+ 45 files changed, 627 insertions(+), 91 deletions(-)
+ delete mode 100644 drivers/acpi/hmat/Makefile
+ rename drivers/acpi/{hmat/Kconfig => numa/Kconfig} (75%)
+ create mode 100644 drivers/acpi/numa/Makefile
+ rename drivers/acpi/{hmat/hmat.c => numa/hmat.c} (85%)
+ rename drivers/acpi/{numa.c => numa/srat.c} (100%)
+ create mode 100644 drivers/dax/hmem.c
+ create mode 100644 drivers/firmware/efi/fake_mem.h
+ create mode 100644 drivers/firmware/efi/x86_fake_mem.c
+ create mode 100644 include/linux/memregion.h
+ create mode 100644 lib/memregion.c
