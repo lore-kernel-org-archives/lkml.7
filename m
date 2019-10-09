@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D2DAECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C01ECE596
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A4DE206B6
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90EDA206B6
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:25:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732001AbfJITZo (ORCPT
+        id S1732027AbfJITZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 15:25:44 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:37626 "EHLO ale.deltatee.com"
+        Wed, 9 Oct 2019 15:25:46 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:37632 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731874AbfJITZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 15:25:41 -0400
+        id S1731911AbfJITZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 15:25:42 -0400
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1iIHaa-0002g3-6l; Wed, 09 Oct 2019 13:25:40 -0600
+        id 1iIHaa-0002g1-6d; Wed, 09 Oct 2019 13:25:40 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1iIHaY-0003Q1-AO; Wed, 09 Oct 2019 13:25:34 -0600
+        id 1iIHaY-0003Pv-49; Wed, 09 Oct 2019 13:25:34 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
@@ -35,19 +35,18 @@ Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
         Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
         Max Gurtovoy <maxg@mellanox.com>,
         Stephen Bates <sbates@raithlin.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Wed,  9 Oct 2019 13:25:20 -0600
-Message-Id: <20191009192530.13079-4-logang@deltatee.com>
+Date:   Wed,  9 Oct 2019 13:25:18 -0600
+Message-Id: <20191009192530.13079-2-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191009192530.13079-1-logang@deltatee.com>
 References: <20191009192530.13079-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, maxg@mellanox.com, sbates@raithlin.com, Chaitanya.Kulkarni@wdc.com, chaitanya.kulkarni@wdc.com, logang@deltatee.com
+X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, Chaitanya.Kulkarni@wdc.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v9 03/12] nvmet: add return value to  nvmet_add_async_event()
+Subject: [PATCH v9 01/12] nvme-core: introduce nvme_ctrl_get_by_path()
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,69 +54,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+nvme_ctrl_get_by_path() is analagous to blkdev_get_by_path() except it
+gets a struct nvme_ctrl from the path to its char dev (/dev/nvme0).
+It makes use of filp_open() to open the file and uses the private
+data to obtain a pointer to the struct nvme_ctrl. If the fops of the
+file do not match, -EINVAL is returned.
 
-Change the return value for nvmet_add_async_event().
+The purpose of this function is to support NVMe-OF target passthru.
 
-This change is needed for the target passthru code which will
-submit async events on namespaces changes and can fail the command
-should adding the event fail (on -ENOMEM).
-
-Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-[logang@deltatee.com:
- * fleshed out commit message
- * change to using int as a return type instead of bool
-]
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
 Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
 ---
- drivers/nvme/target/core.c  | 6 ++++--
- drivers/nvme/target/nvmet.h | 2 +-
- 2 files changed, 5 insertions(+), 3 deletions(-)
+ drivers/nvme/host/core.c | 24 ++++++++++++++++++++++++
+ drivers/nvme/host/nvme.h |  2 ++
+ 2 files changed, 26 insertions(+)
 
-diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
-index 3a67e244e568..d6dcb86d8be7 100644
---- a/drivers/nvme/target/core.c
-+++ b/drivers/nvme/target/core.c
-@@ -173,14 +173,14 @@ static void nvmet_async_event_work(struct work_struct *work)
- 	}
- }
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index fd7dea36c3b6..30f9d91e25e3 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -2950,6 +2950,30 @@ static const struct file_operations nvme_dev_fops = {
+ 	.compat_ioctl	= nvme_dev_ioctl,
+ };
  
--void nvmet_add_async_event(struct nvmet_ctrl *ctrl, u8 event_type,
-+int nvmet_add_async_event(struct nvmet_ctrl *ctrl, u8 event_type,
- 		u8 event_info, u8 log_page)
- {
- 	struct nvmet_async_event *aen;
- 
- 	aen = kmalloc(sizeof(*aen), GFP_KERNEL);
- 	if (!aen)
--		return;
-+		return -ENOMEM;
- 
- 	aen->event_type = event_type;
- 	aen->event_info = event_info;
-@@ -191,6 +191,8 @@ void nvmet_add_async_event(struct nvmet_ctrl *ctrl, u8 event_type,
- 	mutex_unlock(&ctrl->lock);
- 
- 	schedule_work(&ctrl->async_event_work);
++struct nvme_ctrl *nvme_ctrl_get_by_path(const char *path)
++{
++	struct nvme_ctrl *ctrl;
++	struct file *f;
 +
-+	return 0;
- }
++	f = filp_open(path, O_RDWR, 0);
++	if (IS_ERR(f))
++		return ERR_CAST(f);
++
++	if (f->f_op != &nvme_dev_fops) {
++		ctrl = ERR_PTR(-EINVAL);
++		goto out_close;
++	}
++
++	ctrl = f->private_data;
++	nvme_get_ctrl(ctrl);
++
++out_close:
++	filp_close(f, NULL);
++
++	return ctrl;
++}
++EXPORT_SYMBOL_GPL(nvme_ctrl_get_by_path);
++
+ static ssize_t nvme_sysfs_reset(struct device *dev,
+ 				struct device_attribute *attr, const char *buf,
+ 				size_t count)
+diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+index 38a83ef5bcd3..f83f990e409d 100644
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -507,6 +507,8 @@ int nvme_get_log(struct nvme_ctrl *ctrl, u32 nsid, u8 log_page, u8 lsp,
+ extern const struct attribute_group *nvme_ns_id_attr_groups[];
+ extern const struct block_device_operations nvme_ns_head_ops;
  
- static void nvmet_add_to_changed_ns_log(struct nvmet_ctrl *ctrl, __le32 nsid)
-diff --git a/drivers/nvme/target/nvmet.h b/drivers/nvme/target/nvmet.h
-index c51f8dd01dc4..3d313a6452cc 100644
---- a/drivers/nvme/target/nvmet.h
-+++ b/drivers/nvme/target/nvmet.h
-@@ -441,7 +441,7 @@ void nvmet_port_disc_changed(struct nvmet_port *port,
- 		struct nvmet_subsys *subsys);
- void nvmet_subsys_disc_changed(struct nvmet_subsys *subsys,
- 		struct nvmet_host *host);
--void nvmet_add_async_event(struct nvmet_ctrl *ctrl, u8 event_type,
-+int nvmet_add_async_event(struct nvmet_ctrl *ctrl, u8 event_type,
- 		u8 event_info, u8 log_page);
- 
- #define NVMET_QUEUE_SIZE	1024
++struct nvme_ctrl *nvme_ctrl_get_by_path(const char *path);
++
+ #ifdef CONFIG_NVME_MULTIPATH
+ static inline bool nvme_ctrl_use_ana(struct nvme_ctrl *ctrl)
+ {
 -- 
 2.20.1
 
