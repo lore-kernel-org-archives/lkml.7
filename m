@@ -2,85 +2,82 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E96ADECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 18:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 079CFECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 18:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF2D121848
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 18:40:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570646442;
-	bh=zszbWCsT4olebZC5fAmGt3V+UZkT0u8TZGE92g8jp80=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=T4hkshmiUkMtNkgeNWSP4CLJ2dQLqkzEMNQQy7Kvhy8mKHsS6mSWu8P8IITEfZe8D
-	 WDgwhhgto74PDo/aBULJ+h1ClFppM2RcgXnKbA/9mAldCwT3n37OaCIVQaJbHEjKCb
-	 +EiYe0kCa5GqE7goBthAEKeZZHa5ULnmsXTPFBMw=
+	by mail.kernel.org (Postfix) with ESMTP id D3E5D21848
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 18:43:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WNndJd8i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731600AbfJISkl (ORCPT
+        id S1731507AbfJISnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 14:40:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41514 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731158AbfJISkl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 14:40:41 -0400
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C679121920
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Oct 2019 18:40:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570646440;
-        bh=zszbWCsT4olebZC5fAmGt3V+UZkT0u8TZGE92g8jp80=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=kA9F4odN2BKvjEfj+poT7re9ekv0Biizf5prdfyxa1t5opD1RqY7D61tXOJ0oGJFq
-         uPzp7AtfhOPsfKvT632lrOmxzidwye8wqKMkPbBjzF7IOv5aKIXLtx4y0VczWdE7c9
-         t73cPRFqpMq3IhqLu70XwZp2cGvhIGS4BA/t0AVU=
-Received: by mail-qt1-f169.google.com with SMTP id m15so4897725qtq.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 11:40:40 -0700 (PDT)
-X-Gm-Message-State: APjAAAWUp5ZlccLEwWgpBug/5S/7K7ZxDPg34OT0IQWhlfLtP7Und3m4
-        vtYDdUIcDw3NAryF+5s3yVU4H1gAvyP1DACuww==
-X-Google-Smtp-Source: APXvYqzG9tT6XNZvDA6vm+Sp9mNK5+JebOo9CJE9L9ORPqscv/GJAMrijcnXEq/tSUucm3w4QRxozt53Lls3zhtrUvI=
-X-Received: by 2002:ad4:5044:: with SMTP id m4mr5384425qvq.85.1570646439943;
- Wed, 09 Oct 2019 11:40:39 -0700 (PDT)
+        Wed, 9 Oct 2019 14:43:14 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33612 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728804AbfJISnO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 14:43:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=4IINCFeaSJyuK///5d+ZVyEn9IR5HdVzFzHth3rJj94=; b=WNndJd8iEM1zprft3l27wvIsf
+        meIaoWTsmNDuGLgQZJ7VOmwlYs9l8Y1l8AkowGTHRJ1VfNpJvUVIZfCkr4gTvDcWTooV5KloG0czV
+        x8sXo2VRYn+K/fsyIGfoYSX34WcnneGFkDIIG6yaoEu5MR2I9dRjPw/JO25DXmGmTWQAxnPvfC0+R
+        ttVYbv7tLrm4gjTz3+MswMTyJ6zryiXjew9wDj4pLpJ2TLdVEeaTP6Ewjzbkv+QIxPaswGm2bUCwv
+        0S0axOq7ytdUaKGF1vbwUoJYlF8Uj0LF3NA/+KmQ/oBi80MtmKf/IGBRw1CqlYvo85ERvDgXD1/Zu
+        q92iUrevg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iIGvX-0001tD-Ee; Wed, 09 Oct 2019 18:43:11 +0000
+Date:   Wed, 9 Oct 2019 11:43:11 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MIPS: add support for SGI Octane (IP30)
+Message-ID: <20191009184311.GA20261@infradead.org>
+References: <20191009155928.3047-1-tbogendoerfer@suse.de>
 MIME-Version: 1.0
-References: <20191004144413.42586-1-steven.price@arm.com>
-In-Reply-To: <20191004144413.42586-1-steven.price@arm.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 9 Oct 2019 13:40:28 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+WveA27wtuHgW+AbAG69x3gEL4LNLtiqS48tCDyJuWJQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+WveA27wtuHgW+AbAG69x3gEL4LNLtiqS48tCDyJuWJQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/panfrost: Remove NULL check for regulator
-To:     Steven Price <steven.price@arm.com>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191009155928.3047-1-tbogendoerfer@suse.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 4, 2019 at 9:44 AM Steven Price <steven.price@arm.com> wrote:
->
-> devm_regulator_get() is used to populate pfdev->regulator which ensures
-> that this cannot be NULL (a dummy regulator will be returned if
-> necessary). So remove the check in panfrost_devfreq_target().
->
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
-> This looks like it was accidentally reintroduced by the merge from
-> drm-next into drm-misc-next due to the duplication of "drm/panfrost: Add
-> missing check for pfdev-regulator" (commits c90f30812a79 and
-> 52282163dfa6).
-> ---
->  drivers/gpu/drm/panfrost/panfrost_devfreq.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
+> +++ b/arch/mips/sgi-ip30/ip30-pci.c
+> @@ -0,0 +1,19 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * ip30-pci.c: misc PCI related helper code for IP30 architecture
+> + */
+> +
+> +#include <asm/pci/bridge.h>
+> +
+> +dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
+> +{
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +	struct bridge_controller *bc = BRIDGE_CONTROLLER(pdev->bus);
+> +
+> +	return bc->baddr + paddr;
+> +}
+> +
+> +phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t dma_addr)
+> +{
+> +	return dma_addr & ~(0xffUL << 56);
+> +}
 
-Applied, thanks.
-
-Rob
+This file is duplicated from ip27.  I think we should aim to share
+it given the common hardware even if it is mostly trivial.
