@@ -6,53 +6,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C3EBC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7AFC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43486218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE733218DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:15:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731619AbfJITLH (ORCPT
+        id S1732588AbfJITPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 15:11:07 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:36045 "EHLO
+        Wed, 9 Oct 2019 15:15:24 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:47711 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728804AbfJITLG (ORCPT
+        with ESMTP id S1730490AbfJITLH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 15:11:06 -0400
+        Wed, 9 Oct 2019 15:11:07 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MCKWI-1iQUqA1iMc-009Tzp; Wed, 09 Oct 2019 21:11:04 +0200
+ 1MWAjC-1ibYVn29tK-00XaSj; Wed, 09 Oct 2019 21:11:05 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Al Viro <viro@zeniv.linux.org.uk>
 Cc:     linux-kernel@vger.kernel.org, y2038@lists.linaro.org,
         linux-fsdevel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v6 01/43] fix compat handling of FICLONERANGE, FIDEDUPERANGE and FS_IOC_FIEMAP
-Date:   Wed,  9 Oct 2019 21:10:01 +0200
-Message-Id: <20191009191044.308087-1-arnd@arndb.de>
+Subject: [PATCH v6 06/43] compat_sys_ioctl(): make parallel to do_vfs_ioctl()
+Date:   Wed,  9 Oct 2019 21:10:06 +0200
+Message-Id: <20191009191044.308087-6-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191009190853.245077-1-arnd@arndb.de>
 References: <20191009190853.245077-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:2uJzilWeK+WiT0h/pPdN3K/mVdDW9vuZKh5Yov5RjBQWLhEkFap
- up2GIxj8olvwQyD7nR6AsIG1/ngU6zLv+NT0Y0oU00nKWO6ezKQaqr/JnGgm1oSKtbbC3SO
- uYzStCkbpGXYKZlSiTsjT053BoaE5r0D1mmmRBMk5nKa4JV3IMvPXaF55mk6LpR5WrXNxYf
- T2KievGd+GbjOXz6xVSfw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:NRFYuPKnEzE=:+jRPMK5onbQzyVK1NHGVFD
- OTAzT1XPimm0LNZEtTF71Ls8QCgcHoLMeVDlIFljoRwUflgKvHTB7BMUZHgfa4LV/HXvZR6Wi
- lpCvt26D0MrhZdB7iLnpQyhz/sbkkaDzNPuewSvyG3fk4RyMm3eNlOFGADFygQ7oFf8HlBJrb
- TSG+GrUflecniKNUu3nUj0LQ87hRmJ9r8mAKzf2uya08bvMmeXXbRHWRcHwM5murzvUhmvW9D
- UaAY/nQzTBBYXR17b/hHClU2+65r0MqBxGaM9BzqXX6WI65zZ6C7h/jns+vBBkKJg8yVITWGN
- AlifMCCwgeHZ+7aklSauD6cRN0b55xqXMHAlISjdbfpRMza3GreD/s6r0JbCbuFAaFhpoQuBw
- p58j7/ZRPbqwlgMA/xQw7h4G3dsJdjyB8dTrcy/570F+X43+YHbOTGzI/sML8wd0+gk+cNnGo
- PIGHlQvHlGmAQQ3fRr7utBE9d5mo5rMN6gv+zrAIdWThhXelSn8bfUFDWXHb3nxhN27ulG0dL
- rki5fZl7jLs16uIOe4izdDqhR9a7ZqCe0tvVMZzqaq5O64ksLusQWThq2EJL4qIRjm7QeE29n
- vNw/Kw+6mVZ4PU1uJEVkCnuBLy6JNWV+j+QtaYfx9PSwBMa6oeJFHfaD/ujFHX62XGFRRHWr0
- MUkskSrK4tIckxJIDq+blZCBvl1aqEumKcQ9Y6sS0lIRiA4yeA9tQn0Z3wiWOEq7SwPsMMPh8
- mf920VjPDEVFVfhEAdhAt61uDO9UgQUyIau3EoTCEWuIQPnaO2gUEXX62dN42Ru1t+GSRDNSo
- 0vUguuUma6IZR2u4o5ElRna9moSK2Qqi9+IJJ1U67PTE+GhYB7qI1P9SnApsa4ezL2S/FIS1Y
- CromSpYbYmQDcqkn512Q==
+X-Provags-ID: V03:K1:WOVEDt2np91eiK1oiQBp5uo+5rR4In1UdGh9NlEpbg6vm0omKcr
+ a3KGO6PgQtVlWhhfEl3CfgF6SJvcwClHasJeqzVP/gVaagwqhhjYTkWjOqYlvKplGTAjeIr
+ wFQiWC2yxSaJ2bCZVl5yuOyGcpGCfAgdTngpr2EvOsUDi5t/bcVP8fZZwsjCJewwfKra4ta
+ K9yHvmpA5S+jX6ob/2ZTA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Qq913+1lsiY=:S/eqYoa/lf0TVLC4kpg5Zb
+ s8aubOCVqEVZyXHXPU3kIvoCcP9M0y1Sbyt/n2DvzqCH+A+1Btt1GK4CbLDvLzYimMAJv7WL/
+ 1U4bGlXj9vhNF39rf5+fk2eaZC1DN3qZe9vuFDepDNlfiwBxE9kJa6ftnk2ciQaKFx5+F1RFz
+ Gc9ktAF+NtQ7pV5RjNsImxOBVKP+f4rNebsNh9L0hdpsuJ+OBuE15p+1SNGkbByFoJj3oK1x0
+ r6t2SrRHmketKaPMCE2BduIjjMkF550H9Y0hygM1P8klPcq2qJocm1M584sJJUqiYtPNVxW/r
+ u3OAiCEm3QJRzFfGjKbPbU6TkWHBYaRjcj+dfnAcMgNzNBBmHzjbOwhK4XVQkQ4YrbiN43MKU
+ 9o/HMIuMRosfD9ZhZu0QDrbhzrNIDz4deIovRsPUPBsYVpctUMP/hrTOc4Zm8CoUlS5br7gRN
+ Rlzm3A36hyLn9BZOsD6FBeYe4HslxJAPflRfd4+S0/fv1n6qctW17IspBfEcoYyFvMJVB7NC/
+ hryFw3mqP4ki5tqexOj1G8q9ePsPj75mpvBnEbzMNyNnORMuFGLAX08G6AY6MKu3FELKmq9qF
+ 9ob3QrLX9WyorQ+pAmwxlMGvSPF/gvGOO1amVLm/4eeykY9ey0seTI/PORE1tNzQvVFNW8/++
+ xuhB3W5z6xfUqz3wVUD0DeH1bHK+aVmt3fOR1vs+kd6ZBnMlPWQplLq/4AfS4JV6Xu3U5fi8c
+ rS4jJHGAmFOAmEtSNw7mra9EcDM0hyRy1aXmmyewFrGWUoxmXytB3EpmNSzTBaJUmrvVl2jaJ
+ lmKzKVf7kOns6C8kIXlBXPCgy4zu72SJuhplCEZ6AIQDVPIFVHPLQHsuzevxWExlmpBIP0A/b
+ rvNVT6WH8mNzOMTpTDOQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,35 +60,116 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-Unlike FICLONE, all of those take a pointer argument; they do need
-compat_ptr() applied to arg.
+Handle ioctls that might be handled without reaching ->ioctl() in
+native case on the top level there.  The counterpart of vfs_ioctl()
+(i.e. calling ->unlock_ioctl(), etc.) left as-is; eventually
+that would turn simply into the call of ->compat_ioctl(), but
+that'll take more work.  Once that is done, we can move the
+remains of compat_sys_ioctl() into fs/ioctl.c and finally bury
+fs/compat_ioctl.c.
 
-Fixes: d79bdd52d8be ("vfs: wire up compat ioctl for CLONE/CLONE_RANGE")
-Fixes: 54dbc1517237 ("vfs: hoist the btrfs deduplication ioctl to the vfs")
-Fixes: ceac204e1da9 ("fs: make fiemap work from compat_ioctl")
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- fs/compat_ioctl.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/compat_ioctl.c | 63 +++++++++++++++++++++--------------------------
+ 1 file changed, 28 insertions(+), 35 deletions(-)
 
 diff --git a/fs/compat_ioctl.c b/fs/compat_ioctl.c
-index a7ec2d3dff92..e0226b2138d6 100644
+index ce995d4fa1f4..ecbd5254b547 100644
 --- a/fs/compat_ioctl.c
 +++ b/fs/compat_ioctl.c
-@@ -1032,10 +1032,11 @@ COMPAT_SYSCALL_DEFINE3(ioctl, unsigned int, fd, unsigned int, cmd,
- #endif
+@@ -487,19 +487,7 @@ static unsigned int ioctl_pointer[] = {
+ /* compatible ioctls first */
+ /* Little t */
+ COMPATIBLE_IOCTL(TIOCOUTQ)
+-/* Little f */
+-COMPATIBLE_IOCTL(FIOCLEX)
+-COMPATIBLE_IOCTL(FIONCLEX)
+-COMPATIBLE_IOCTL(FIOASYNC)
+-COMPATIBLE_IOCTL(FIONBIO)
+-COMPATIBLE_IOCTL(FIONREAD)  /* This is also TIOCINQ */
+-COMPATIBLE_IOCTL(FS_IOC_FIEMAP)
+-/* 0x00 */
+-COMPATIBLE_IOCTL(FIBMAP)
+-COMPATIBLE_IOCTL(FIGETBSZ)
+ /* 'X' - originally XFS but some now in the VFS */
+-COMPATIBLE_IOCTL(FIFREEZE)
+-COMPATIBLE_IOCTL(FITHAW)
+ COMPATIBLE_IOCTL(FITRIM)
+ #ifdef CONFIG_BLOCK
+ /* Big S */
+@@ -971,19 +959,39 @@ COMPAT_SYSCALL_DEFINE3(ioctl, unsigned int, fd, unsigned int, cmd,
+ 	if (error)
+ 		goto out_fput;
  
- 	case FICLONE:
+-	/*
+-	 * To allow the compat_ioctl handlers to be self contained
+-	 * we need to check the common ioctls here first.
+-	 * Just handle them with the standard handlers below.
+-	 */
+ 	switch (cmd) {
++	/* these are never seen by ->ioctl(), no argument or int argument */
+ 	case FIOCLEX:
+ 	case FIONCLEX:
++	case FIFREEZE:
++	case FITHAW:
++	case FICLONE:
 +		goto do_ioctl;
- 	case FICLONERANGE:
- 	case FIDEDUPERANGE:
- 	case FS_IOC_FIEMAP:
--		goto do_ioctl;
++	/* these are never seen by ->ioctl(), pointer argument */
+ 	case FIONBIO:
+ 	case FIOASYNC:
+ 	case FIOQSIZE:
+-		break;
+-
++	case FS_IOC_FIEMAP:
++	case FIGETBSZ:
++	case FICLONERANGE:
++	case FIDEDUPERANGE:
 +		goto found_handler;
++	/*
++	 * The next group is the stuff handled inside file_ioctl().
++	 * For regular files these never reach ->ioctl(); for
++	 * devices, sockets, etc. they do and one (FIONREAD) is
++	 * even accepted in some cases.  In all those cases
++	 * argument has the same type, so we can handle these
++	 * here, shunting them towards do_vfs_ioctl().
++	 * ->compat_ioctl() will never see any of those.
++	 */
++	/* pointer argument, never actually handled by ->ioctl() */
++	case FIBMAP:
++		goto found_handler;
++	/* handled by some ->ioctl(); always a pointer to int */
++	case FIONREAD:
++		goto found_handler;
++	/* these two get messy on amd64 due to alignment differences */
+ #if defined(CONFIG_X86_64)
+ 	case FS_IOC_RESVSP_32:
+ 	case FS_IOC_RESVSP64_32:
+@@ -992,23 +1000,8 @@ COMPAT_SYSCALL_DEFINE3(ioctl, unsigned int, fd, unsigned int, cmd,
+ #else
+ 	case FS_IOC_RESVSP:
+ 	case FS_IOC_RESVSP64:
+-		error = ioctl_preallocate(f.file, compat_ptr(arg));
+-		goto out_fput;
+-#endif
+-
+-	case FICLONE:
+-		goto do_ioctl;
+-	case FICLONERANGE:
+-	case FIDEDUPERANGE:
+-	case FS_IOC_FIEMAP:
+-	case FIGETBSZ:
+ 		goto found_handler;
+-
+-	case FIBMAP:
+-	case FIONREAD:
+-		if (S_ISREG(file_inode(f.file)->i_mode))
+-			break;
+-		/*FALL THROUGH*/
++#endif
  
- 	case FIBMAP:
- 	case FIGETBSZ:
+ 	default:
+ 		if (f.file->f_op->compat_ioctl) {
 -- 
 2.20.0
 
