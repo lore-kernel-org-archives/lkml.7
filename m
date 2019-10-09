@@ -2,119 +2,188 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B239C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6190EECE58E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEED32133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B6A8206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:08:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Sb27QG4z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gfaNQInk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731037AbfJIMEq (ORCPT
+        id S1730533AbfJIMIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 08:04:46 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35495 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730490AbfJIMEq (ORCPT
+        Wed, 9 Oct 2019 08:08:22 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41078 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729566AbfJIMIV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 08:04:46 -0400
-Received: by mail-wr1-f66.google.com with SMTP id v8so2632764wrt.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 05:04:44 -0700 (PDT)
+        Wed, 9 Oct 2019 08:08:21 -0400
+Received: by mail-wr1-f68.google.com with SMTP id q9so2628029wrm.8;
+        Wed, 09 Oct 2019 05:08:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=JO2boY9XIzvrkHIaKUA5yfCjUYvN4PStHFpOCRTj0IU=;
-        b=Sb27QG4zeMrMyblGOWbVXVqhM64b9igT0eyvM0n+yMALY78Hhs/InNJRQZRzEHrM64
-         pRRSbkPlsVh28m0q6F6QIgXdusWugNeN1FOB2DtjQlJXIUY0NADoTEyuIutff25FPG/9
-         MqhCbG4cznoIHCysiEwXaiKnFRS+GLuZxg11+KHOFAqcCoWd1SOPSKoT4qcEBEcve4vR
-         zvPgb2594qAI4ORHz68aXDFY9669SZphZcBQhDSmEmZJz6WmeY9T5p8Uk/bh31aijbZh
-         XlNL50zWs3JbKYXeh8/3evsO5gF0Ux6dxAViQ3ZIZ5rlxHHXKi59dr5QhIzUDtoqnWWT
-         WCWA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JhfXuvTocSOOADPa6XnIM/jkBN52oSbETxTvK9+NuWA=;
+        b=gfaNQInkt2HkBhIF/m5lj5kBr2Fhi9UOXgBNg6wRypoY7AR47klPq+JEfsZknfycLU
+         hCPc+7wliM3ZQ5YhcGjeFEGFvV6W4R+TLriHT3MetoCcIfMCtpXHIgF5Xoxsk1/qvXUy
+         4MTbA3aqYRP31WKuXgEdWyHVJXafN4T2UD5M2M/O+QenWBjMAwWx8bZbEWcWCMmNBYni
+         zDwoX3Jo23cUH/6OPR+IpKid+RJAc4Qw5doasVb0U48YNavQhy1/Bi0OagRLl+8v8SmH
+         G1BbtIT0Mjl5KhMFV4JC56Ib2LYwMI+MSZk3nP37jw5mgewh8+CgCkvQWl5iFosmtc1W
+         HUIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=JO2boY9XIzvrkHIaKUA5yfCjUYvN4PStHFpOCRTj0IU=;
-        b=QTIISvbcDYpjaCV6JlEtSdz/ptCY1jhxuo8P9+mILUDvpcJwoPsrpfmkG1BbrNIzTh
-         R8HsPJicHHFgotvH5TD1wY+ygNa8VbLs/RZn7mDehAg+FSCTBm2OctSjuklHnbasa5eZ
-         ZfmQQxEGBbG1/gVSoRZiTATQ2TH8y2niHmKecsbfHoXKezPiFILdC0KGC4jADisKvun1
-         hGtqFqdeLT6kdNxtLa4X83I39Oj5zB+0ttg9WfBJbeTR0e9gaRslh2x2Ya/Aulg6dD9k
-         nRg6nBbnKopjwJzjIQsSR7nC9jx87IlsB4WTaBKJhXhL4i3szhuB+PEiJUX7W5jWCcx7
-         QuZg==
-X-Gm-Message-State: APjAAAWHw7yJJBzJrS1qmP6ANFz0ZaicX0sfALtdXWGugD+J45Q95AcW
-        bJBo4CsM1s6GtKfJxDb/vj1DVg==
-X-Google-Smtp-Source: APXvYqxfSJCr9n23ZoCYM//W85uSjfZCWYHlQ3vm8HJkbBUb5NQ2yN7Uw43iwcqmki/bK3aM87soog==
-X-Received: by 2002:adf:fa92:: with SMTP id h18mr2616323wrr.220.1570622683443;
-        Wed, 09 Oct 2019 05:04:43 -0700 (PDT)
-Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id b5sm1890075wmj.18.2019.10.09.05.04.42
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JhfXuvTocSOOADPa6XnIM/jkBN52oSbETxTvK9+NuWA=;
+        b=adg+k+up30Y2WJqZsoiRePqOpfcIkzmtCwTavmMoDDe1Vl4HVH8a04pSXtt0Mm3m+3
+         emKQt0y6KzAYE+79rTDZewKLaS6rMTrQfqn47PtMWSHthBP/H30ItMnNmbEvZqnblVNH
+         0nK5zD8fQc7G+oPIVG0GjB2eeTDytOVQCrrCxC069nU7Vc9gOj5Ef4sIYfyUlvwka8s+
+         4I4TIQQ9Xyjd9Eb5KHCE4MXtSYwb39zqdhZhGQp5AT1XsAsYBr7IfSbB/2PYYkkOCk5P
+         HU64+nciWLpXphf066wnAte5lO/5UozrB4Y9gJLc55kUG2vl8eWJcHe+/X1GqVD2/d0w
+         xwtA==
+X-Gm-Message-State: APjAAAULWlZgZJyTSXbjqltm5usAyB2JXZ924VBzdMKg5QEgSi0PtEAW
+        3AErLeIYfvKqZWmBm+pBTyw=
+X-Google-Smtp-Source: APXvYqz7paT7mj8d8xLlvmA20Bu2nJielivY3fjEo4X5R5EYyDhFUKZY7NB2DLK4BLCF6tim/yrhog==
+X-Received: by 2002:adf:ed03:: with SMTP id a3mr2579425wro.282.1570622897158;
+        Wed, 09 Oct 2019 05:08:17 -0700 (PDT)
+Received: from andrea.guest.corp.microsoft.com ([2a01:110:8012:1010:e0e:643a:f61b:5721])
+        by smtp.gmail.com with ESMTPSA id z5sm3353181wrs.54.2019.10.09.05.08.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 05:04:42 -0700 (PDT)
-References: <20191007131649.1768-1-linux.amoon@gmail.com> <20191007131649.1768-6-linux.amoon@gmail.com> <CAFBinCAoJLZj9Kh+SfF4Q+0OCzac2+huon_BU=Q3yE7Fu38U3w@mail.gmail.com> <7hsgo4cgeg.fsf@baylibre.com> <CANAwSgRfcFa6uBNtpqz6y=9Uwsa4gcp_4tDD+Chhg4SynJCq0Q@mail.gmail.com> <CAFBinCA6ZoeR4m4bhj08HF1DqxY1qB5mygpaQCGbo3d8M+Wr9Q@mail.gmail.com> <CANAwSgSeYTnUkLnjw-RORw76Fyj3_WT0cdM9D0vFsY8g=9L94Q@mail.gmail.com>
-User-agent: mu4e 1.3.3; emacs 26.2
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Anand Moon <linux.amoon@gmail.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-amlogic@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [RFCv1 5/5] arm64/ARM: configs: Change CONFIG_PWM_MESON from m to y
-In-reply-to: <CANAwSgSeYTnUkLnjw-RORw76Fyj3_WT0cdM9D0vFsY8g=9L94Q@mail.gmail.com>
-Date:   Wed, 09 Oct 2019 14:04:41 +0200
-Message-ID: <1jwode9lba.fsf@starbuckisacylon.baylibre.com>
+        Wed, 09 Oct 2019 05:08:16 -0700 (PDT)
+Date:   Wed, 9 Oct 2019 14:08:10 +0200
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     bsingharora@gmail.com, dvyukov@google.com, elver@google.com,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH v5] taskstats: fix data-race
+Message-ID: <20191009120800.GB4941@andrea.guest.corp.microsoft.com>
+References: <20191009113134.5171-1-christian.brauner@ubuntu.com>
+ <20191009114809.8643-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191009114809.8643-1-christian.brauner@ubuntu.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Oct 09, 2019 at 01:48:09PM +0200, Christian Brauner wrote:
+> When assiging and testing taskstats in taskstats_exit() there's a race
+> when writing and reading sig->stats when a thread-group with more than
+> one thread exits:
+> 
+> cpu0:
+> thread catches fatal signal and whole thread-group gets taken down
+>  do_exit()
+>  do_group_exit()
+>  taskstats_exit()
+>  taskstats_tgid_alloc()
+> The tasks reads sig->stats without holding sighand lock seeing garbage.
+> 
+> cpu1:
+> task calls exit_group()
+>  do_exit()
+>  do_group_exit()
+>  taskstats_exit()
+>  taskstats_tgid_alloc()
+> The task takes sighand lock and assigns new stats to sig->stats.
+> 
+> Fix this by using smp_load_acquire() and smp_store_release().
+> 
+> Reported-by: syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com
+> Fixes: 34ec12349c8a ("taskstats: cleanup ->signal->stats allocation")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
 
-On Wed 09 Oct 2019 at 10:48, Anand Moon <linux.amoon@gmail.com> wrote:
->
-> Kernel command line: console=ttyAML0,115200n8
-> root=PARTUUID=45d7d61e-01 rw rootwait
-> earlyprintk=serial,ttyAML0,115200 initcall_debug printk.time=y
->
-> [0] https://pastebin.com/eBgJrSKe
->
->> you can also try the command line parameter "clk_ignore_unused" (it's
->> just a gut feeling: maybe a "critical" clock is being disabled because
->> it's not wired up correctly).
->>
->
-> It look like some clk issue after I added the *clk_ignore_unused* to
-> kernel command line
-> it booted further to login prompt and cpufreq DVFS seem to be loaded.
-> So I could conclude this is clk issue.below is the boot log
->
-> Kernel command line: console=ttyAML0,115200n8
-> root=PARTUUID=45d7d61e-01 rw rootwait
-> earlyprintk=serial,ttyAML0,115200 initcall_debug printk.time=y
-> clk_ignore_unused
->
-> [1] https://pastebin.com/Nsk0wZQJ
->
+Reviewed-by: Andrea Parri <parri.andrea@gmail.com>
 
-Next step it to try narrow down the clock causing the issue.
-Remove clk_ignore_unused from the command line and add CLK_INGORE_UNUSED
-to the flag of some clocks your clock controller (g12a I think) until
+Thanks,
+  Andrea
 
-The peripheral clock gates already have this flag (something we should
-fix someday) so don't bother looking there.
 
-Most likely the source of the pwm is getting disabled between the
-late_init call and the probe of the PWM module. Since the pwm is already
-active (w/o a driver), gating the clock source shuts dowm the power to
-the cores.
-
-Looking a the possible inputs in pwm driver, I'd bet on fdiv4.
-
+> ---
+> /* v1 */
+> Link: https://lore.kernel.org/r/20191005112806.13960-1-christian.brauner@ubuntu.com
+> 
+> /* v2 */
+> Link: https://lore.kernel.org/r/20191006235216.7483-1-christian.brauner@ubuntu.com
+> - Dmitry Vyukov <dvyukov@google.com>, Marco Elver <elver@google.com>:
+>   - fix the original double-checked locking using memory barriers
+> 
+> /* v3 */
+> Link: https://lore.kernel.org/r/20191007110117.1096-1-christian.brauner@ubuntu.com
+> - Andrea Parri <parri.andrea@gmail.com>:
+>   - document memory barriers to make checkpatch happy
+> 
+> /* v4 */
+> Link: https://lore.kernel.org/r/20191009113134.5171-1-christian.brauner@ubuntu.com
+> - Andrea Parri <parri.andrea@gmail.com>:
+>   - use smp_load_acquire(), not READ_ONCE()
+>   - update commit message
+> 
+> /* v5 */
+> - Andrea Parri <parri.andrea@gmail.com>:
+>   - fix typo in smp_load_acquire()
+> ---
+>  kernel/taskstats.c | 24 +++++++++++++++---------
+>  1 file changed, 15 insertions(+), 9 deletions(-)
+> 
+> diff --git a/kernel/taskstats.c b/kernel/taskstats.c
+> index 13a0f2e6ebc2..6e18fdc4f7c8 100644
+> --- a/kernel/taskstats.c
+> +++ b/kernel/taskstats.c
+> @@ -554,24 +554,30 @@ static int taskstats_user_cmd(struct sk_buff *skb, struct genl_info *info)
+>  static struct taskstats *taskstats_tgid_alloc(struct task_struct *tsk)
+>  {
+>  	struct signal_struct *sig = tsk->signal;
+> -	struct taskstats *stats;
+> +	struct taskstats *stats_new, *stats;
+>  
+> -	if (sig->stats || thread_group_empty(tsk))
+> -		goto ret;
+> +	/* Pairs with smp_store_release() below. */
+> +	stats = smp_load_acquire(&sig->stats);
+> +	if (stats || thread_group_empty(tsk))
+> +		return stats;
+>  
+>  	/* No problem if kmem_cache_zalloc() fails */
+> -	stats = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
+> +	stats_new = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
+>  
+>  	spin_lock_irq(&tsk->sighand->siglock);
+>  	if (!sig->stats) {
+> -		sig->stats = stats;
+> -		stats = NULL;
+> +		/*
+> +		 * Pairs with smp_store_release() above and order the
+> +		 * kmem_cache_zalloc().
+> +		 */
+> +		smp_store_release(&sig->stats, stats_new);
+> +		stats_new = NULL;
+>  	}
+>  	spin_unlock_irq(&tsk->sighand->siglock);
+>  
+> -	if (stats)
+> -		kmem_cache_free(taskstats_cache, stats);
+> -ret:
+> +	if (stats_new)
+> +		kmem_cache_free(taskstats_cache, stats_new);
+> +
+>  	return sig->stats;
+>  }
+>  
+> -- 
+> 2.23.0
+> 
