@@ -2,124 +2,92 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D69CECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53930C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 465D821835
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:43:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2870420659
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:46:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cfMf0bjE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KmHbCL/Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731099AbfJILnS (ORCPT
+        id S1730110AbfJILqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 07:43:18 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37465 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728054AbfJILnR (ORCPT
+        Wed, 9 Oct 2019 07:46:35 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42290 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725914AbfJILqf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 07:43:17 -0400
-Received: by mail-wm1-f68.google.com with SMTP id f22so2221617wmc.2;
-        Wed, 09 Oct 2019 04:43:14 -0700 (PDT)
+        Wed, 9 Oct 2019 07:46:35 -0400
+Received: by mail-pg1-f196.google.com with SMTP id z12so1241194pgp.9;
+        Wed, 09 Oct 2019 04:46:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=un54BHtF8/awpbVtp/5g79CNHp0Pmiod9UP21TSYdIs=;
-        b=cfMf0bjET/C22i1LZv7PCr+g/yJ9RnLl9uGwurRAvBjn0NYDYYQRs1gIqnv8uGj/NQ
-         2Ozi08WMklKmYKIPAf0vzXFyxKPSgIafOdCfrdUleJ2gUGUb6MJH6HcG8XJMt/RRG06q
-         11xh9mP1omeOfOR6xBznOdBhuMdMnBHXRiFst9dWjXoGXrFGac1aZkQTzLEhjWTaPrGd
-         PfjV15f9vGdTf1YzNGJXq9etjhmNZTgUobdSaBSJsxR+SD9HMh7vIayhHEEHrnE+GmCs
-         7hk0FM1Dfus0zIN+FBYhTTmtYRVThG5Pqqm4nHAXqKvQKl/P94MG+RlM26LTQr+OOGKX
-         LmPA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uS9mErjexiYqpscpzCPSEdkzAe7OAyNyD3avSiLikIM=;
+        b=KmHbCL/QwB0yoKhsX8fQN1LgGHi9YP7I/icWDLTIMYedCvFYFVNPGzgrullChnyvi2
+         BTMcjy5eqbVvope4/Lex7VBfrb53Ryr2VEeB93WDezcP/Gj6n4cWWKvrOCEvGHhYtyV2
+         gx0fy+rEaxCoMgDX4og/6vgJa3OpJGTVZKLX6eht58ChV4sMUlPjFlra6GjUuq07enWk
+         GXRJdVqG4VgNVpvZGvj6bChhqSt2ChiE3ce06Pyr49Y+cfqGvjpmcVIqBC8A3vU8YFbA
+         QCKkTemvCr/s5E+eY4NRs8E2UlQYq2Tc0DQ3CNk2rec0F6L0lcPDxuwzoJG6yA8cTF8f
+         hftA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=un54BHtF8/awpbVtp/5g79CNHp0Pmiod9UP21TSYdIs=;
-        b=mBHMpttoI6QE90++lB6YGUc3I8Y8zgovqXdb1dvYfP4WTI7J1JGoi580KHMaagPk6d
-         TDYFGrcAZavGS9cD7ebSFFdsoAhFxh4EIJ1unhyp3s4oksrS7mcCC6EJZWn+qOl7I8He
-         EpyF4633fe1FKICx6h3e6NzM0vHVfomLt4mA+pHyS3n6ErcpEfKkdABdJ27CLGYIZoax
-         4JOrZPTypb1aP+HZq8XKiQM+oLa6Xhbq9ow4kayU4hVyba+k4taVEVH2xwH2Xdwa+Z22
-         VZwm8vvrHThTO1tklm7Z2mGaSE5yZw83wlMt1eGcNW6h0V3q9mLNrLeNQelgXzDz8FJ2
-         MuMg==
-X-Gm-Message-State: APjAAAUP4jKMrZKMnUEqrNHv1NzPSPXTwermKJh3ZuTgWCwFDHo+qo3g
-        1inVRLMzRsKSyras9Vt/ZhY=
-X-Google-Smtp-Source: APXvYqwLwyMkVEpNNJPRSOBI4ea7XjQ9JE2cU8KiTuH7Of7THeIGHSWgXddwJKHY1bi+w7iTxsprIQ==
-X-Received: by 2002:a7b:c8d9:: with SMTP id f25mr2332753wml.153.1570621393615;
-        Wed, 09 Oct 2019 04:43:13 -0700 (PDT)
-Received: from localhost ([51.15.41.238])
-        by smtp.gmail.com with ESMTPSA id p5sm2915817wmi.4.2019.10.09.04.43.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 04:43:12 -0700 (PDT)
-Date:   Wed, 9 Oct 2019 12:43:11 +0100
-From:   Stefan Hajnoczi <stefanha@gmail.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     netdev@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
-        linux-hyperv@vger.kernel.org,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        kvm@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jorgen Hansen <jhansen@vmware.com>
-Subject: Re: [RFC PATCH 03/13] vsock: remove include/linux/vm_sockets.h file
-Message-ID: <20191009114311.GD5747@stefanha-x1.localdomain>
-References: <20190927112703.17745-1-sgarzare@redhat.com>
- <20190927112703.17745-4-sgarzare@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uS9mErjexiYqpscpzCPSEdkzAe7OAyNyD3avSiLikIM=;
+        b=GzJMDqTdioTH/RlwzjQbK5iLT2AEa9R8Aje9CqrntQ9hdF8+glGN+0Bn5ROFr8kUtW
+         3WNEH9GpWlsbT9uejHABPhCbkaGdePOuj+x4w9fF7s9ClUVAqXv8c7kyuuFG7+jJzgdQ
+         UffEb/a3jjkvbY7Brm2zMhyQkQxlIYkiAP8EGFCpplupI+sK26knRZIgTV0X7abJidpe
+         hWUR7Mp8ZDXOM6cmQs12H8j9/XfDJUHSP1IF26SAFlVAk0qNnAQGzJFXIMLtGt5vsi3s
+         0Tu1ayVOgT9PfZjmnogLu8htfIjOUFVghMdza8x9eKVc71teKqUDJiiHly1vh4ODKCdD
+         fC3A==
+X-Gm-Message-State: APjAAAW+IXwTlwidkJ8X1teJRyZNP50qArdodfDsZcnsstL4TrPFEvYX
+        Kbkf+uDHhR6wXqvh42cyf6TDVDWrtoCkM5IhtnA=
+X-Google-Smtp-Source: APXvYqw3fvOCCwZdu8etRKGUl+A0EcL6W+NwnuNaYHNthGzXg84eYTZMvn61pHZyFs8vXT75iPcVvqpMk9zcr+f7CXo=
+X-Received: by 2002:a65:5a08:: with SMTP id y8mr3834154pgs.4.1570621593361;
+ Wed, 09 Oct 2019 04:46:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="/unnNtmY43mpUSKx"
-Content-Disposition: inline
-In-Reply-To: <20190927112703.17745-4-sgarzare@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190923185906.76032-1-srinivas.pandruvada@linux.intel.com>
+In-Reply-To: <20190923185906.76032-1-srinivas.pandruvada@linux.intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 9 Oct 2019 14:46:22 +0300
+Message-ID: <CAHp75VeJPNhuWK0NiTg9dWk9Kg26ApzVi7NUKfGxydHm1v6bPA@mail.gmail.com>
+Subject: Re: [PATCH 0/3] Auto configuration mode and error
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc:     Andriy Shevchenko <andriy.shevchenko@intel.com>,
+        Prarit Bhargava <prarit@redhat.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Sep 26, 2019 at 1:32 AM Srinivas Pandruvada
+<srinivas.pandruvada@linux.intel.com> wrote:
+>
+> These are some changes, which help users to use the base-freq and
+> turbo-freq features without going through multiple steps for
+> basic configuration. Also add some error when user is trying
+> to disable core-power feature while it is getting used.
+>
+> None of these patches are urgent and can wait for kernel version v5.5.
 
---/unnNtmY43mpUSKx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm completely lost in ISST patches.
+Please send an updated version of the entire bunch of changes for ISST
+driver and do the same for tools.
+Thanks.
 
-On Fri, Sep 27, 2019 at 01:26:53PM +0200, Stefano Garzarella wrote:
-> This header file now only includes the "uapi/linux/vm_sockets.h".
-> We can include directly it when needed.
->=20
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> ---
->  include/linux/vm_sockets.h            | 13 -------------
->  include/net/af_vsock.h                |  2 +-
->  include/net/vsock_addr.h              |  2 +-
->  net/vmw_vsock/vmci_transport_notify.h |  1 -
->  4 files changed, 2 insertions(+), 16 deletions(-)
->  delete mode 100644 include/linux/vm_sockets.h
+I'm going to drop these ones from my review queue, so, I'm expecting
+it as a part of new version against tools.
 
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-
---/unnNtmY43mpUSKx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl2dx88ACgkQnKSrs4Gr
-c8g54wf+PL7xAZ3eI74ytwJozmNe/9DWAw5l7bnOPC5lh3yi3O6H/afVtuNy65xz
-NYAwGHyFqaMtLm4reJeETuun6duQ7+ZKHr8NJHdUkQJFCQIfHJLI7JXfjDD2VSbp
-xn9tbLC2eFnCvlnT7Ke8Er9e1KOI2IBGggkOVvn4HbowDVF8/aeCh0aoPt6bYBVf
-FXFaWL0WeGoaalzf14LEf3uDMQptQaMFfcXudbWsv4Xfdmtu9EULADXwa2o4rNVx
-1c7Iiu7NOXS7jiD/2NzveQvH0lxrPvUQtgNth9abPF1XA+6yJev9DrLnlYTKCn5q
-rmIv4DoNGcc8wrcQ6ZB+Quid23UtAg==
-=13TI
------END PGP SIGNATURE-----
-
---/unnNtmY43mpUSKx--
+-- 
+With Best Regards,
+Andy Shevchenko
