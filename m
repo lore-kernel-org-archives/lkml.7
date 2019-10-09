@@ -2,124 +2,89 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50599C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D90FEC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24AC621848
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:29:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f+nXm2f/"
+	by mail.kernel.org (Postfix) with ESMTP id B035821924
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:29:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570627795;
+	bh=KqfPVq79nF57S2ONhyrCNLEt7HeN1pXjSPo4ELOWnYc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Eyg6EwL6ZEXUtbR3x+I62xx4lWDNL/k1pNW/+W4iBZyoQXAzYc4BVbSl6uGtzWCqg
+	 lguJFI6G3PXNDBxrV0IMHglBXgkbWnNpQ3CFzKeXgwNeTMw+UDJdbzIfYdmMWfNAB/
+	 1HKbk/mMyTyH/2cPwgTTQt6Y+lxAS0Vt1zIW8BKw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731570AbfJIN3Y (ORCPT
+        id S1731437AbfJIN3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 09:29:24 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40806 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731181AbfJIN3X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 09:29:23 -0400
-Received: by mail-wm1-f65.google.com with SMTP id b24so2611017wmj.5;
-        Wed, 09 Oct 2019 06:29:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=GDuh8wOWud4/h7FBqgUO27K9UbX8e3rhEg2xYH7BQNg=;
-        b=f+nXm2f/x4SFc3z61bN/4O+TQEsVxwJLm1a8Ysx2R0Jwt5UoKtc7Rb9yu4+9HgkILs
-         2wvIwU68sXGIVb1+YrM4MaTImBjZfYmarAqMC2Y7wZCPqcBvarWKAZ06VBSN8aGr/yhu
-         CFfyXyi9K+DxQ8OHAp3bJFHDFyGpXl+PfCZPVC9Rmphk88/T5Y2xYIxo91ECmlJC8BZk
-         9H6aB0DiFx3hQa1Z9M2a4UJbePb/vpazuPthF2V4dtM+Qx0r8gHkCyjKoAqa0IzscDd2
-         GeUfBWin4JZN/V8wtLAGvLX3g816AfgCZG/57Xt3zlpLYNh+I6iatUhB3mS76zoyZ0ss
-         ZNuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GDuh8wOWud4/h7FBqgUO27K9UbX8e3rhEg2xYH7BQNg=;
-        b=khLE/CPVTXAleTvOTe0cyHUiwO1HmVxuhOASHbTlpjB7IXmI9plWaY0IHpU5Y/Wr0N
-         sBYry0IFyXPiioFvGoQDG3ob/Huq+MIXhum3q4RfM569wzrP3qW7f5C6uYH7ai6ajt7n
-         yLR0Yic2fQbnbhIulAXVnjjrbFnxqJHMyhzNYAgZG3E/9ytoT+nALmNuDf+ol/QhyeXu
-         P2M84RgaZ1LEZLb+R4OeugZGG4ovkXzgRYXzb74Zk+UJ2+gGjtr0lWi38D6nvzODE8qN
-         TJFcKHm6V2GXzueLkuqmxI3VamMdJ+D8gYCLo1jQ6laT7qIDQf8Sbv4Uax0kJ6xUpXo7
-         ipVA==
-X-Gm-Message-State: APjAAAVXlMnhzZQ7noAJjylVgOpoYN8Vyq7LCdRQq10OLu2tAg9z3bG/
-        vqxvUfNl7RS20Ttg9x/Xbas=
-X-Google-Smtp-Source: APXvYqw1aUJubsYg5UUcikhG5dviUNyvuNRUtpwlBrEioF409+G2sxwGyLDf1q0QhLloVC316zvwsQ==
-X-Received: by 2002:a1c:f210:: with SMTP id s16mr2434290wmc.24.1570627761339;
-        Wed, 09 Oct 2019 06:29:21 -0700 (PDT)
-Received: from localhost ([51.15.41.238])
-        by smtp.gmail.com with ESMTPSA id t83sm3862315wmt.18.2019.10.09.06.29.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 06:29:20 -0700 (PDT)
-Date:   Wed, 9 Oct 2019 14:29:19 +0100
-From:   Stefan Hajnoczi <stefanha@gmail.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     netdev@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
-        linux-hyperv@vger.kernel.org,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        kvm@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jorgen Hansen <jhansen@vmware.com>
-Subject: Re: [RFC PATCH 13/13] vsock: fix bind() behaviour taking care of CID
-Message-ID: <20191009132919.GN5747@stefanha-x1.localdomain>
-References: <20190927112703.17745-1-sgarzare@redhat.com>
- <20190927112703.17745-14-sgarzare@redhat.com>
+        Wed, 9 Oct 2019 09:29:54 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48596 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731083AbfJIN3y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 09:29:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5A22DAC6E;
+        Wed,  9 Oct 2019 13:29:52 +0000 (UTC)
+Date:   Wed, 9 Oct 2019 15:29:50 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Qian Cai <cai@lca.pw>, Alexey Dobriyan <adobriyan@gmail.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>,
+        Konstantin Khlebnikov <koct9i@gmail.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v1] mm: Fix access of uninitialized memmaps in
+ fs/proc/page.c
+Message-ID: <20191009132950.GB6681@dhcp22.suse.cz>
+References: <20191009091205.11753-1-david@redhat.com>
+ <20191009093756.GV6681@dhcp22.suse.cz>
+ <67aeaacc-d850-5c81-bd17-e95c7f7f75df@redhat.com>
+ <20191009112424.GY6681@dhcp22.suse.cz>
+ <a9659e39-3516-13c8-b9ab-d42bdaf4a488@redhat.com>
+ <20191009132256.GZ6681@dhcp22.suse.cz>
+ <8f0542f4-92c6-d450-7343-62bf9f08d5ed@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cs5saTBZh7UZl2eX"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190927112703.17745-14-sgarzare@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <8f0542f4-92c6-d450-7343-62bf9f08d5ed@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed 09-10-19 15:24:05, David Hildenbrand wrote:
+> On 09.10.19 15:22, Michal Hocko wrote:
+> > On Wed 09-10-19 14:58:24, David Hildenbrand wrote:
+> > [...]
+> >> I would be fine with this, but it means that - for now - the three
+> >> /proc/ files won't be able to deal with ZONE_DEVICE memory.
+> > 
+> > Thanks for the clarification. Is this an actual problem though? Do we
+> > have any consumers of the functionality?
+> > 
+> 
+> I don't know, that's why I was being careful in not changing its behavior.
 
---cs5saTBZh7UZl2eX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Sep 27, 2019 at 01:27:03PM +0200, Stefano Garzarella wrote:
-> When we are looking for a socket bound to a specific address,
-> we also have to take into account the CID.
->=20
-> This patch is useful with multi-transports support because it
-> allows the binding of the same port with different CID, and
-> it prevents a connection to a wrong socket bound to the same
-> port, but with different CID.
->=20
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> ---
->  net/vmw_vsock/af_vsock.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
-
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-
---cs5saTBZh7UZl2eX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl2d4K8ACgkQnKSrs4Gr
-c8jIHQgArLXLyHXwZu55EHHu9yiNNFHasNE5dRT3AdGHmJvK/neRvEFmuyQ2w9Xr
-Ap1yzIgihhRbUNxJaiyxXeuB1KwSQmWUSs15m027eetOieQFnnPZodUYF1PVRloj
-+2ol43xqmHW4vOlqdXbTrl6Ggr97gSNylVBDC5naNbR/r7/md1MYEmkpRTGHlUFe
-IPQ5Ip2z8hWKLnK70fs1yYKmj8Tbb+pZBDN68i3iC5+98SzrvY9Tix1SfeQwVSn+
-HKXhugUiYvtl2VwaqSEud28/3Hqcxe3wnfZcYXFJkPhj5p0/gprCBUeLUfP4jwlz
-b42+Ttg66N+HW7vXgrTesK83l3PpJA==
-=f3oL
------END PGP SIGNATURE-----
-
---cs5saTBZh7UZl2eX--
+Can we simply go with pfn_to_online_page. I would be quite surprised if
+anybody was really examining zone device memory ranges as they are
+static IIUC. If there is some usecase I am pretty sure we will learn
+that and can address it accordingly.
+-- 
+Michal Hocko
+SUSE Labs
