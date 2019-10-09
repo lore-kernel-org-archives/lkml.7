@@ -2,158 +2,175 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21852ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B3AECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED77920B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:10:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B2mxlj0l"
+	by mail.kernel.org (Postfix) with ESMTP id 5FBD620B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:10:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731532AbfJIPKi (ORCPT
+        id S1731552AbfJIPKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 11:10:38 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29458 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729644AbfJIPKi (ORCPT
+        Wed, 9 Oct 2019 11:10:52 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:36230 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729644AbfJIPKw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 11:10:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1570633837;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=eHwEpktLjemhDVWBTEE5wdMKU4jlPm/MsrXeEwc5KjE=;
-        b=B2mxlj0lnjrlG6zX49vE7p9bjUH3hj8GjGCEfEHxDiqXia1thAlDBX5f/qsMmUOAu4Qftc
-        o4RuZXJnb9wrZl0W7YiDuZZyBg42Pw2ymKPavVsBhowpGvW9dbt3+NqGz32xmKq5yFwwF4
-        M4sO+X44fCxT6kgLeBxt6Og33awo4wo=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-371-viXaEt5iNF6tq0J-nUDL7A-1; Wed, 09 Oct 2019 11:10:33 -0400
-Received: by mail-wm1-f72.google.com with SMTP id g67so799878wmg.4
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 08:10:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LxNQTZ3YeufmomqfUHsgwjNWfLwpx4ZrPxKfNiHSTCQ=;
-        b=RcrNIWuwxH67WYl5L067qF/tHTzHWzxH4ekXmvSpP9ynEsYEHvZ94ea8dCHqddVWWG
-         baVXrIWH5OsUMX//g2eksCI55QzsrExyQSLwpxcPDzi2Ke8BiUSMMUzH7BtT/UPskyVs
-         vTqz71H6hPC9uataBVWmrsf5n2D48quPLyL/Ygb8pUsaHFdPjrPFXzT5ufPCsuScklqx
-         ipl4y9JlJM32qd1XTx/bN0ql+sf2B0mLcj/1hdFpg4T2kEfo/ueEwHxnjODV6MPEn01y
-         aevpbkNcKcaJjJf7u1hlJ1btAeT0DkaOJueGIEzAWKqGo7oZq/cA/6CoePeqoxBGwTIZ
-         59Kg==
-X-Gm-Message-State: APjAAAV4RiDoTww+fCbqoviU4WVRkdE1RIoOvEgIBrK7TLh+aaapWosk
-        N5KJR/1Obz/3YWvhjY52AyqC99vcvSziHx6ONt/Fh2ZDfr99A7zcJLmScu5wE9a8XiUvZfRfead
-        VgwKkbHQdSA0u1vF0w45F5pWN
-X-Received: by 2002:a1c:a651:: with SMTP id p78mr3091154wme.53.1570633832723;
-        Wed, 09 Oct 2019 08:10:32 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqy2DKfpiOa0gDYGVHcI1QGzExxF+RjY57g4EvetJOtB+5T4xjb1JbF4tMF5HPiOYyOdwRBr+Q==
-X-Received: by 2002:a1c:a651:: with SMTP id p78mr3091130wme.53.1570633832474;
-        Wed, 09 Oct 2019 08:10:32 -0700 (PDT)
-Received: from mcroce-redhat.mxp.redhat.com (nat-pool-mxp-t.redhat.com. [149.6.153.186])
-        by smtp.gmail.com with ESMTPSA id e3sm2708136wme.39.2019.10.09.08.10.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 08:10:31 -0700 (PDT)
-From:   Matteo Croce <mcroce@redhat.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] kbuild: Add make dir-pkg build option
-Date:   Wed,  9 Oct 2019 17:10:19 +0200
-Message-Id: <20191009151019.13488-1-mcroce@redhat.com>
-X-Mailer: git-send-email 2.21.0
+        Wed, 9 Oct 2019 11:10:52 -0400
+Received: from [213.220.153.21] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iIDby-0007Jf-7z; Wed, 09 Oct 2019 15:10:46 +0000
+Date:   Wed, 9 Oct 2019 17:10:45 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Todd Kjos <tkjos@android.com>, jannh@google.com, arve@android.com,
+        christian@brauner.io, devel@driverdev.osuosl.org,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        maco@android.com, tkjos@google.com,
+        Hridya Valsaraju <hridya@google.com>
+Subject: Re: [PATCH] binder: prevent UAF read in
+ print_binder_transaction_log_entry()
+Message-ID: <20191009151044.t2jo3mo4acjtyhez@wittgenstein>
+References: <CAG48ez14Q0-F8LqsvcNbyR2o6gPW8SHXsm4u5jmD9MpsteM2Tw@mail.gmail.com>
+ <20191008130159.10161-1-christian.brauner@ubuntu.com>
+ <20191008180516.GB143258@google.com>
+ <20191009104011.rzfdvq7otkkj533m@wittgenstein>
+ <20191009142129.GD143258@google.com>
+ <20191009142910.ggerxqxkft2ifhdn@wittgenstein>
+ <20191009145558.GA96813@google.com>
 MIME-Version: 1.0
-X-MC-Unique: viXaEt5iNF6tq0J-nUDL7A-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191009145558.GA96813@google.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a 'dir-pkg' target which just creates the same directory structures
-as in tar-pkg, but doesn't package anything.
-Useful when the user wants to copy the kernel tree on a machine using
-ssh, rsync or whatever.
+On Wed, Oct 09, 2019 at 10:55:58AM -0400, Joel Fernandes wrote:
+> On Wed, Oct 09, 2019 at 04:29:11PM +0200, Christian Brauner wrote:
+> > On Wed, Oct 09, 2019 at 10:21:29AM -0400, Joel Fernandes wrote:
+> > > On Wed, Oct 09, 2019 at 12:40:12PM +0200, Christian Brauner wrote:
+> > > > On Tue, Oct 08, 2019 at 02:05:16PM -0400, Joel Fernandes wrote:
+> > > > > On Tue, Oct 08, 2019 at 03:01:59PM +0200, Christian Brauner wrote:
+> > > > > > When a binder transaction is initiated on a binder device coming from a
+> > > > > > binderfs instance, a pointer to the name of the binder device is stashed
+> > > > > > in the binder_transaction_log_entry's context_name member. Later on it
+> > > > > > is used to print the name in print_binder_transaction_log_entry(). By
+> > > > > > the time print_binder_transaction_log_entry() accesses context_name
+> > > > > > binderfs_evict_inode() might have already freed the associated memory
+> > > > > > thereby causing a UAF. Do the simple thing and prevent this by copying
+> > > > > > the name of the binder device instead of stashing a pointer to it.
+> > > > > > 
+> > > > > > Reported-by: Jann Horn <jannh@google.com>
+> > > > > > Fixes: 03e2e07e3814 ("binder: Make transaction_log available in binderfs")
+> > > > > > Link: https://lore.kernel.org/r/CAG48ez14Q0-F8LqsvcNbyR2o6gPW8SHXsm4u5jmD9MpsteM2Tw@mail.gmail.com
+> > > > > > Cc: Joel Fernandes <joel@joelfernandes.org>
+> > > > > > Cc: Todd Kjos <tkjos@android.com>
+> > > > > > Cc: Hridya Valsaraju <hridya@google.com>
+> > > > > > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> > > > > > ---
+> > > > > >  drivers/android/binder.c          | 4 +++-
+> > > > > >  drivers/android/binder_internal.h | 2 +-
+> > > > > >  2 files changed, 4 insertions(+), 2 deletions(-)
+> > > > > > 
+> > > > > > diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+> > > > > > index c0a491277aca..5b9ac2122e89 100644
+> > > > > > --- a/drivers/android/binder.c
+> > > > > > +++ b/drivers/android/binder.c
+> > > > > > @@ -57,6 +57,7 @@
+> > > > > >  #include <linux/sched/signal.h>
+> > > > > >  #include <linux/sched/mm.h>
+> > > > > >  #include <linux/seq_file.h>
+> > > > > > +#include <linux/string.h>
+> > > > > >  #include <linux/uaccess.h>
+> > > > > >  #include <linux/pid_namespace.h>
+> > > > > >  #include <linux/security.h>
+> > > > > > @@ -66,6 +67,7 @@
+> > > > > >  #include <linux/task_work.h>
+> > > > > >  
+> > > > > >  #include <uapi/linux/android/binder.h>
+> > > > > > +#include <uapi/linux/android/binderfs.h>
+> > > > > >  
+> > > > > >  #include <asm/cacheflush.h>
+> > > > > >  
+> > > > > > @@ -2876,7 +2878,7 @@ static void binder_transaction(struct binder_proc *proc,
+> > > > > >  	e->target_handle = tr->target.handle;
+> > > > > >  	e->data_size = tr->data_size;
+> > > > > >  	e->offsets_size = tr->offsets_size;
+> > > > > > -	e->context_name = proc->context->name;
+> > > > > > +	strscpy(e->context_name, proc->context->name, BINDERFS_MAX_NAME);
+> > > > > 
+> > > > > Strictly speaking, proc-context->name can also be initialized for !BINDERFS
+> > > > > so the BINDERFS in the MAX_NAME macro is misleading. So probably there should
+> > > > > be a BINDER_MAX_NAME (and associated checks for whether non BINDERFS names
+> > > > > fit within the MAX.
+> > > > 
+> > > > I know but I don't think it's worth special-casing non-binderfs devices.
+> > > > First, non-binderfs devices can only be created through a KCONFIG option
+> > > > determined at compile time. For stock Android the names are the same for
+> > > > all vendors afaik.
+> > > 
+> > > I am just talking about the name of weirdly named macro here.
+> > 
+> > You might miss context here: It's named that way because currently only
+> > binderfs binder devices are bound to that limit. That's a point I made
+> > further below in my previous mail. Non-binderfs devices are not subject
+> > to that restriction and when we tried to make them subject to the same
+> > it as rejected.
+> 
+> I know that. I am saying the memcpy is happening for regular binder devices
+> as well but the macro has BINDERFS in the name. That's all. It is not a
+> significant eye sore. But is a bit odd.
 
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
----
- scripts/Makefile.package | 3 ++-
- scripts/package/buildtar | 9 +++++++--
- 2 files changed, 9 insertions(+), 3 deletions(-)
+Right, and I told you that we _can't_ rename it to BINDER_MAX because
+that check only happens for binderfs devices since you were suggesting
+this. If you want to rename to get rid of the this being somehow
+apparently odd then you need to introduce that check for non-binderfs
+devices too. Or just rename the macro in a follow-up patch. I don't care.
 
-diff --git a/scripts/Makefile.package b/scripts/Makefile.package
-index 56eadcc48d46..36600ad1d5e6 100644
---- a/scripts/Makefile.package
-+++ b/scripts/Makefile.package
-@@ -103,7 +103,7 @@ snap-pkg:
-=20
- # tarball targets
- # ------------------------------------------------------------------------=
----
--tar-pkgs :=3D tar-pkg targz-pkg tarbz2-pkg tarxz-pkg
-+tar-pkgs :=3D dir-pkg tar-pkg targz-pkg tarbz2-pkg tarxz-pkg
- PHONY +=3D $(tar-pkgs)
- $(tar-pkgs):
- =09$(MAKE) -f $(srctree)/Makefile
-@@ -147,6 +147,7 @@ help:
- =09@echo '  deb-pkg             - Build both source and binary deb kernel =
-packages'
- =09@echo '  bindeb-pkg          - Build only the binary kernel deb package=
-'
- =09@echo '  snap-pkg            - Build only the binary kernel snap packag=
-e (will connect to external hosts)'
-+=09@echo '  dir-pkg             - Build the kernel as a plain directory st=
-ructure'
- =09@echo '  tar-pkg             - Build the kernel as an uncompressed tarb=
-all'
- =09@echo '  targz-pkg           - Build the kernel as a gzip compressed ta=
-rball'
- =09@echo '  tarbz2-pkg          - Build the kernel as a bzip2 compressed t=
-arball'
-diff --git a/scripts/package/buildtar b/scripts/package/buildtar
-index 2f66c81e4021..ca283079f652 100755
---- a/scripts/package/buildtar
-+++ b/scripts/package/buildtar
-@@ -2,7 +2,7 @@
- # SPDX-License-Identifier: GPL-2.0
-=20
- #
--# buildtar 0.0.4
-+# buildtar 0.0.5
- #
- # (C) 2004-2006 by Jan-Benedict Glaw <jbglaw@lug-owl.de>
- #
-@@ -24,7 +24,7 @@ tarball=3D"${objtree}/linux-${KERNELRELEASE}-${ARCH}.tar"
- # Figure out how to compress, if requested at all
- #
- case "${1}" in
--=09tar-pkg)
-+=09dir-pkg|tar-pkg)
- =09=09opts=3D
- =09=09;;
- =09targz-pkg)
-@@ -133,6 +133,11 @@ if tar --owner=3Droot --group=3Droot --help >/dev/null=
- 2>&1; then
- =09opts=3D"$opts --owner=3Droot --group=3Droot"
- fi
-=20
-+if [ "${1}" =3D dir-pkg ]; then
-+=09echo "Kernel tree successfully created in $tmpdir"
-+=09exit 0
-+fi
-+
- tar cf $tarball -C $tmpdir $opts $dirs
-=20
- echo "Tarball successfully created in $tarball"
---=20
-2.21.0
+> 
+> > <snip>
+> > 
+> > > 
+> > > > Fifth, I already tried to push for validation of non-binderfs binder
+> > > > devices a while back when I wrote binderfs and was told that it's not
+> > > > needed. Hrydia tried the same and we decided the same thing. So you get
+> > > > to be the next person to send a patch. :)
+> > > 
+> > > I don't follow why we are talking about non-binderfs validation. I am just
+> > 
+> > Because above you said
+> > 
+> > > > > so the BINDERFS in the MAX_NAME macro is misleading. So probably there should
+> > > > > be a BINDER_MAX_NAME (and associated checks for whether non BINDERFS names
+> > > > > fit within the MAX.
+> > 
+> > which to me reads like you want generic checks for _all_ binder devices
+> > not just for the ones from binderfs.
+> 
+> No I am not talking about the checks at all, I am talking about the unwanted
+> mem copy you are doing for regular binder devices now. Before binderfs this
+> would not have happened, but now for regular binder devices we have to do the
+> extra mem copies which were avoided before. That was what I was talking about.
 
+I'm sorry but I did not get this at all from:
+"So probably there should be a BINDER_MAX_NAME (and associated checks
+for whether non BINDERFS names fit within the MAX." 
+
+> 
+> But this discussing is getting to bike shedding at this point, and since the
+> overhead is likely small, I am Ok with the change (though I don't like very
+> much the additional memcpy and the associated space wastage in the
+> transaction buffer for regular binder devices).
+
+Feel free to send a follow-up patch handling both separately.
+
+Thanks!
+Christian
