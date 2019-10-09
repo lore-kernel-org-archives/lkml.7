@@ -4,72 +4,110 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD8B3ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 04:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0275BC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 04:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0F2021835
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 04:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3B872133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 04:47:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730516AbfJIEjD (ORCPT
+        id S1729895AbfJIEpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 00:39:03 -0400
-Received: from gate.crashing.org ([63.228.1.57]:34629 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729040AbfJIEjC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 00:39:02 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x994cklP016126;
-        Tue, 8 Oct 2019 23:38:47 -0500
-Message-ID: <75d915aec936be64ea5ebd63402efd90bb1c29d9.camel@kernel.crashing.org>
-Subject: Re: [PATCH 1/3] dt-bindings: net: ftgmac100: Document AST2600
- compatible
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Andrew Jeffery <andrew@aj.id.au>, netdev@vger.kernel.org
-Cc:     davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        joel@jms.id.au
-Date:   Wed, 09 Oct 2019 15:38:46 +1100
-In-Reply-To: <20191008115143.14149-2-andrew@aj.id.au>
-References: <20191008115143.14149-1-andrew@aj.id.au>
-         <20191008115143.14149-2-andrew@aj.id.au>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
+        Wed, 9 Oct 2019 00:45:55 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3280 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729040AbfJIEpy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 00:45:54 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 536C27FB91AF7942FE52;
+        Wed,  9 Oct 2019 12:45:51 +0800 (CST)
+Received: from [127.0.0.1] (10.177.251.225) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Wed, 9 Oct 2019
+ 12:45:44 +0800
+Subject: [PATCH V2] arm64: psci: Reduce waiting time of cpu_psci_cpu_kill()
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+To:     David Laight <David.Laight@ACULAB.COM>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>
+CC:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "wuyun.wu@huawei.com" <wuyun.wu@huawei.com>
+References: <18068756-0f39-6388-3290-cf03746e767d@huawei.com>
+Message-ID: <9df267db-e647-a81d-16bb-b8bfb06c2624@huawei.com>
+Date:   Wed, 9 Oct 2019 12:45:16 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <18068756-0f39-6388-3290-cf03746e767d@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.251.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-10-08 at 22:21 +1030, Andrew Jeffery wrote:
-> The AST2600 contains an FTGMAC100-compatible MAC, although it no-
-> longer
-> contains an MDIO controller.
+If psci_ops.affinity_info() fails, it will sleep 10ms, which will not
+take so long in the right case. Use usleep_range() instead of msleep(),
+reduce the waiting time, and give a chance to busy wait before sleep.
 
-How do you talk to the PHY then ?
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+---
+V1->V2:
+- use usleep_range() instead of udelay() after waiting for a while
 
-Cheers,
-Ben.
+ arch/arm64/kernel/psci.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> ---
->  Documentation/devicetree/bindings/net/ftgmac100.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/ftgmac100.txt
-> b/Documentation/devicetree/bindings/net/ftgmac100.txt
-> index 72e7aaf7242e..04cc0191b7dd 100644
-> --- a/Documentation/devicetree/bindings/net/ftgmac100.txt
-> +++ b/Documentation/devicetree/bindings/net/ftgmac100.txt
-> @@ -9,6 +9,7 @@ Required properties:
->  
->       - "aspeed,ast2400-mac"
->       - "aspeed,ast2500-mac"
-> +     - "aspeed,ast2600-mac"
->  
->  - reg: Address and length of the register set for the device
->  - interrupts: Should contain ethernet controller interrupt
+diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
+index c9f72b2..99b3122 100644
+--- a/arch/arm64/kernel/psci.c
++++ b/arch/arm64/kernel/psci.c
+@@ -82,6 +82,7 @@ static void cpu_psci_cpu_die(unsigned int cpu)
+ static int cpu_psci_cpu_kill(unsigned int cpu)
+ {
+ 	int err, i;
++	unsigned long timeout;
+
+ 	if (!psci_ops.affinity_info)
+ 		return 0;
+@@ -91,16 +92,24 @@ static int cpu_psci_cpu_kill(unsigned int cpu)
+ 	 * while it is dying. So, try again a few times.
+ 	 */
+
+-	for (i = 0; i < 10; i++) {
++	i = 0;
++	timeout = jiffies + msecs_to_jiffies(100);
++	do {
+ 		err = psci_ops.affinity_info(cpu_logical_map(cpu), 0);
+ 		if (err == PSCI_0_2_AFFINITY_LEVEL_OFF) {
+ 			pr_info("CPU%d killed.\n", cpu);
+ 			return 0;
+ 		}
+
+-		msleep(10);
+-		pr_info("Retrying again to check for CPU kill\n");
+-	}
++		/* busy-wait max 1ms */
++		if (i++ < 100) {
++			cond_resched();
++			udelay(10);
++			continue;
++		}
++
++		usleep_range(100, 1000);
++	} while (time_before(jiffies, timeout));
+
+ 	pr_warn("CPU%d may not have shut down cleanly (AFFINITY_INFO reports %d)\n",
+ 			cpu, err);
+-- 
+2.7.4.3
 
