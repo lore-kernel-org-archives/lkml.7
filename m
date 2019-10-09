@@ -2,174 +2,144 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7AFC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5CFEC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE733218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:15:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC73A206B6
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:16:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570648589;
+	bh=XuMD2QGK90yTrch2+VMFx3D7BCfCZtyxgbv4opGfzMQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ARwySBiGJD462DZ+iG6xQIDilDsoYZzUyDRzbA4Id9Z7LUKLxBKNg9ahQa5GmlJUE
+	 fFm7KBc2pmg+lfb+90ggyY7QQ78y7P05KNIa44ksVC1EaN1Hkn+P4Zr+KQcCvA3Hq0
+	 lKzHwF7R8vgbwZwllNwqgLp5Z7uy+uDHbOtiBmzs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732588AbfJITPY (ORCPT
+        id S1732033AbfJITQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 15:15:24 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:47711 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730490AbfJITLH (ORCPT
+        Wed, 9 Oct 2019 15:16:28 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:33198 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731144AbfJITQ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 15:11:07 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MWAjC-1ibYVn29tK-00XaSj; Wed, 09 Oct 2019 21:11:05 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-kernel@vger.kernel.org, y2038@lists.linaro.org,
-        linux-fsdevel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v6 06/43] compat_sys_ioctl(): make parallel to do_vfs_ioctl()
-Date:   Wed,  9 Oct 2019 21:10:06 +0200
-Message-Id: <20191009191044.308087-6-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20191009190853.245077-1-arnd@arndb.de>
-References: <20191009190853.245077-1-arnd@arndb.de>
+        Wed, 9 Oct 2019 15:16:27 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 60so2724147otu.0;
+        Wed, 09 Oct 2019 12:16:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NsEhGh1kFaBNKGsSiEy6NKNPiYELx9hdX+GfRAKSPVg=;
+        b=YjVfrtKrMEzOZ+WLkmgXY7tbQUdOTvzkr6Wg1olFXtPslH3gjHM9zaCvp6R6zCu1lR
+         YnoftlxFNuiGADq+KxcUEgb5KV6JCmUHI8rEK2TzoQUXuxQXHtCcCTqvs9tEkQjNLy9J
+         eZxox+A8adI6PrpDOqnxOHcDaT3QucAcb8ScSMLgkRQrbAv7wt23NlvPMC36pgUo1A5u
+         /nb42/E2Iy5RBhcitd7iTPV6/X5CV5hKJz0qgOwOKNUNLkJ6iYW+mTp4k5KLaSNWy7SF
+         UUagTwm63asMsysFN24/2Y0Zb0Wk+Zmuj9mUO0MKc9K6MdLElKOLcl68HqRkwgt/k56C
+         CtoQ==
+X-Gm-Message-State: APjAAAXXja3OtUZugE+1G7iNBxkdKyCyQed33wlEBaD5gL/uKdZv6eFb
+        JzsOuPvbY6z3kk1ULdUwFw==
+X-Google-Smtp-Source: APXvYqxM9n9jUehaPoDUkjLcg71MT46PUEqivMh5AfPwwaW1yPIijflLW5J8dPQdilMcg/UbuPNGhg==
+X-Received: by 2002:a9d:4501:: with SMTP id w1mr4457932ote.239.1570648586846;
+        Wed, 09 Oct 2019 12:16:26 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id y6sm959195oiy.45.2019.10.09.12.16.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Oct 2019 12:16:26 -0700 (PDT)
+Date:   Wed, 9 Oct 2019 14:16:25 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Talel Shenhar <talel@amazon.com>
+Cc:     mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org,
+        james.morse@arm.com, davem@davemloft.net,
+        gregkh@linuxfoundation.org, paulmck@linux.ibm.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-edac@vger.kernel.org, dwmw@amazon.co.uk,
+        benh@kernel.crashing.org, hhhawa@amazon.com, ronenk@amazon.com,
+        jonnyc@amazon.com, hanochu@amazon.com, amirkl@amazon.com,
+        barakw@amazon.com
+Subject: Re: [PATCH v3 1/2] dt-bindings: edac: al-mc-edac: Amazon's Annapurna
+ Labs Memory Controller EDAC
+Message-ID: <20191009191625.GA8179@bogus>
+References: <1570103363-21486-1-git-send-email-talel@amazon.com>
+ <1570103363-21486-2-git-send-email-talel@amazon.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:WOVEDt2np91eiK1oiQBp5uo+5rR4In1UdGh9NlEpbg6vm0omKcr
- a3KGO6PgQtVlWhhfEl3CfgF6SJvcwClHasJeqzVP/gVaagwqhhjYTkWjOqYlvKplGTAjeIr
- wFQiWC2yxSaJ2bCZVl5yuOyGcpGCfAgdTngpr2EvOsUDi5t/bcVP8fZZwsjCJewwfKra4ta
- K9yHvmpA5S+jX6ob/2ZTA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Qq913+1lsiY=:S/eqYoa/lf0TVLC4kpg5Zb
- s8aubOCVqEVZyXHXPU3kIvoCcP9M0y1Sbyt/n2DvzqCH+A+1Btt1GK4CbLDvLzYimMAJv7WL/
- 1U4bGlXj9vhNF39rf5+fk2eaZC1DN3qZe9vuFDepDNlfiwBxE9kJa6ftnk2ciQaKFx5+F1RFz
- Gc9ktAF+NtQ7pV5RjNsImxOBVKP+f4rNebsNh9L0hdpsuJ+OBuE15p+1SNGkbByFoJj3oK1x0
- r6t2SrRHmketKaPMCE2BduIjjMkF550H9Y0hygM1P8klPcq2qJocm1M584sJJUqiYtPNVxW/r
- u3OAiCEm3QJRzFfGjKbPbU6TkWHBYaRjcj+dfnAcMgNzNBBmHzjbOwhK4XVQkQ4YrbiN43MKU
- 9o/HMIuMRosfD9ZhZu0QDrbhzrNIDz4deIovRsPUPBsYVpctUMP/hrTOc4Zm8CoUlS5br7gRN
- Rlzm3A36hyLn9BZOsD6FBeYe4HslxJAPflRfd4+S0/fv1n6qctW17IspBfEcoYyFvMJVB7NC/
- hryFw3mqP4ki5tqexOj1G8q9ePsPj75mpvBnEbzMNyNnORMuFGLAX08G6AY6MKu3FELKmq9qF
- 9ob3QrLX9WyorQ+pAmwxlMGvSPF/gvGOO1amVLm/4eeykY9ey0seTI/PORE1tNzQvVFNW8/++
- xuhB3W5z6xfUqz3wVUD0DeH1bHK+aVmt3fOR1vs+kd6ZBnMlPWQplLq/4AfS4JV6Xu3U5fi8c
- rS4jJHGAmFOAmEtSNw7mra9EcDM0hyRy1aXmmyewFrGWUoxmXytB3EpmNSzTBaJUmrvVl2jaJ
- lmKzKVf7kOns6C8kIXlBXPCgy4zu72SJuhplCEZ6AIQDVPIFVHPLQHsuzevxWExlmpBIP0A/b
- rvNVT6WH8mNzOMTpTDOQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1570103363-21486-2-git-send-email-talel@amazon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+On Thu, Oct 03, 2019 at 02:49:22PM +0300, Talel Shenhar wrote:
+> Document Amazon's Annapurna Labs Memory Controller EDAC SoC binding.
+> 
+> Signed-off-by: Talel Shenhar <talel@amazon.com>
+> ---
+>  .../bindings/edac/amazon,al-mc-edac.yaml           | 40 ++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
+> new file mode 100644
+> index 0000000..33da051
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
+> @@ -0,0 +1,40 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/edac/amazon,al-mc-edac.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Amazon's Annapurna Labs Memory Controller EDAC
+> +
+> +maintainers:
+> +  - Talel Shenhar <talel@amazon.com>
+> +  - Talel Shenhar <talelshenhar@gmail.com>
+> +
+> +description: |
+> +  EDAC node is defined to describe on-chip error detection and correction for
+> +  Amazon's Annapurna Labs Memory Controller.
+> +
+> +properties:
+> +
+> +  compatible:
+> +    - const: "amazon,al-mc-edac"
 
-Handle ioctls that might be handled without reaching ->ioctl() in
-native case on the top level there.  The counterpart of vfs_ioctl()
-(i.e. calling ->unlock_ioctl(), etc.) left as-is; eventually
-that would turn simply into the call of ->compat_ioctl(), but
-that'll take more work.  Once that is done, we can move the
-remains of compat_sys_ioctl() into fs/ioctl.c and finally bury
-fs/compat_ioctl.c.
+Fails 'make dt_binding_check'. Drop the '-' as a property is not a list.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- fs/compat_ioctl.c | 63 +++++++++++++++++++++--------------------------
- 1 file changed, 28 insertions(+), 35 deletions(-)
+The "" are also unnecessary.
 
-diff --git a/fs/compat_ioctl.c b/fs/compat_ioctl.c
-index ce995d4fa1f4..ecbd5254b547 100644
---- a/fs/compat_ioctl.c
-+++ b/fs/compat_ioctl.c
-@@ -487,19 +487,7 @@ static unsigned int ioctl_pointer[] = {
- /* compatible ioctls first */
- /* Little t */
- COMPATIBLE_IOCTL(TIOCOUTQ)
--/* Little f */
--COMPATIBLE_IOCTL(FIOCLEX)
--COMPATIBLE_IOCTL(FIONCLEX)
--COMPATIBLE_IOCTL(FIOASYNC)
--COMPATIBLE_IOCTL(FIONBIO)
--COMPATIBLE_IOCTL(FIONREAD)  /* This is also TIOCINQ */
--COMPATIBLE_IOCTL(FS_IOC_FIEMAP)
--/* 0x00 */
--COMPATIBLE_IOCTL(FIBMAP)
--COMPATIBLE_IOCTL(FIGETBSZ)
- /* 'X' - originally XFS but some now in the VFS */
--COMPATIBLE_IOCTL(FIFREEZE)
--COMPATIBLE_IOCTL(FITHAW)
- COMPATIBLE_IOCTL(FITRIM)
- #ifdef CONFIG_BLOCK
- /* Big S */
-@@ -971,19 +959,39 @@ COMPAT_SYSCALL_DEFINE3(ioctl, unsigned int, fd, unsigned int, cmd,
- 	if (error)
- 		goto out_fput;
- 
--	/*
--	 * To allow the compat_ioctl handlers to be self contained
--	 * we need to check the common ioctls here first.
--	 * Just handle them with the standard handlers below.
--	 */
- 	switch (cmd) {
-+	/* these are never seen by ->ioctl(), no argument or int argument */
- 	case FIOCLEX:
- 	case FIONCLEX:
-+	case FIFREEZE:
-+	case FITHAW:
-+	case FICLONE:
-+		goto do_ioctl;
-+	/* these are never seen by ->ioctl(), pointer argument */
- 	case FIONBIO:
- 	case FIOASYNC:
- 	case FIOQSIZE:
--		break;
--
-+	case FS_IOC_FIEMAP:
-+	case FIGETBSZ:
-+	case FICLONERANGE:
-+	case FIDEDUPERANGE:
-+		goto found_handler;
-+	/*
-+	 * The next group is the stuff handled inside file_ioctl().
-+	 * For regular files these never reach ->ioctl(); for
-+	 * devices, sockets, etc. they do and one (FIONREAD) is
-+	 * even accepted in some cases.  In all those cases
-+	 * argument has the same type, so we can handle these
-+	 * here, shunting them towards do_vfs_ioctl().
-+	 * ->compat_ioctl() will never see any of those.
-+	 */
-+	/* pointer argument, never actually handled by ->ioctl() */
-+	case FIBMAP:
-+		goto found_handler;
-+	/* handled by some ->ioctl(); always a pointer to int */
-+	case FIONREAD:
-+		goto found_handler;
-+	/* these two get messy on amd64 due to alignment differences */
- #if defined(CONFIG_X86_64)
- 	case FS_IOC_RESVSP_32:
- 	case FS_IOC_RESVSP64_32:
-@@ -992,23 +1000,8 @@ COMPAT_SYSCALL_DEFINE3(ioctl, unsigned int, fd, unsigned int, cmd,
- #else
- 	case FS_IOC_RESVSP:
- 	case FS_IOC_RESVSP64:
--		error = ioctl_preallocate(f.file, compat_ptr(arg));
--		goto out_fput;
--#endif
--
--	case FICLONE:
--		goto do_ioctl;
--	case FICLONERANGE:
--	case FIDEDUPERANGE:
--	case FS_IOC_FIEMAP:
--	case FIGETBSZ:
- 		goto found_handler;
--
--	case FIBMAP:
--	case FIONREAD:
--		if (S_ISREG(file_inode(f.file)->i_mode))
--			break;
--		/*FALL THROUGH*/
-+#endif
- 
- 	default:
- 		if (f.file->f_op->compat_ioctl) {
--- 
-2.20.0
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    edac@f0080000 {
+> +      compatible = "amazon,al-mc-edac";
+> +      reg = <0x0 0xf0080000 0x0 0x00010000>;
+> +      interrupt-parent = <&amazon_al_system_fabric>;
+> +      interrupt-names = "ue";
 
+Need to document the name or drop as -names on a single entry is 
+pointless.
+
+> +      interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
+> +    };
+> -- 
+> 2.7.4
+> 
