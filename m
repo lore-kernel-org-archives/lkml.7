@@ -2,146 +2,109 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AAC5ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F20ECECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:52:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 354AD206B6
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:52:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAF16206B6
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:52:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="usk5TxWf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vPBVAl//"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730523AbfJIIwV (ORCPT
+        id S1730565AbfJIIwY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 04:52:21 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:43738 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730212AbfJIIwM (ORCPT
+        Wed, 9 Oct 2019 04:52:24 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41184 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730406AbfJIIwV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 04:52:12 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x998q4H2035244;
-        Wed, 9 Oct 2019 03:52:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570611125;
-        bh=s5d/szql8fU2uDVYRw2K7PeI4Cnl3Z9+5CQzwG1wYJU=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=usk5TxWfAR6ogFjaJI14GXUZfVYQq2jWISyTbJW95JeDsUsk/EqlSVxie8frZ3npV
-         AVZzuMjtOZqj2bNAlKKcAbR5Nme/YxHYxuCP1AwEo0OSEihMKsqNTAmZi/iUoyGOeV
-         /Yww1zCQ+FyLtOkBesUAmpSnCFBLe/GGiT/8HpUw=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x998q43U023525
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 9 Oct 2019 03:52:04 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 9 Oct
- 2019 03:52:01 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 9 Oct 2019 03:52:04 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x998q3SO099447;
-        Wed, 9 Oct 2019 03:52:04 -0500
-From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <sre@kernel.org>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <lee.jones@linaro.org>, <daniel.thompson@linaro.org>
-CC:     <dmurphy@ti.com>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <tomi.valkeinen@ti.com>, Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        <devicetree@vger.kernel.org>
-Subject: [PATCH v10 5/6] dt-bindings: backlight: Add led-backlight binding
-Date:   Wed, 9 Oct 2019 10:51:26 +0200
-Message-ID: <20191009085127.22843-6-jjhiblot@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191009085127.22843-1-jjhiblot@ti.com>
-References: <20191009085127.22843-1-jjhiblot@ti.com>
+        Wed, 9 Oct 2019 04:52:21 -0400
+Received: by mail-lj1-f195.google.com with SMTP id f5so1620931ljg.8;
+        Wed, 09 Oct 2019 01:52:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=f04OdU6Fyk3m2zdZCMUEKpGzg4pA3Tu5ccwXrcxWMa0=;
+        b=vPBVAl//lPkqDRQlLMjKuZdWOSz95s6yp3C/B+ltHKl8GcNV8r85ugL9sN1QgKnIrU
+         WnnXRA7G04rnxLe+J5vCllC5fLr1Mi4gYBgtT0ADwWN4zyIQu/Uedr2oXwUop/WKaaMg
+         WWNXqZi6W/tPcxxG7zwAs4AnS0hbOQvJUembAd9dX+kYzmm7fBdYuNfHfOUj+5eeHZvt
+         4Iw1N+d1vBD14mJ4GozTAWfJvtDfE7MifSUkNKNFEtiKYxKX9AmQGk8NWgzpr2P89QtX
+         HN7a1jiU9KLxzBiBkOxEepeWZwa/zwALjN4PsUIzJgWpR4VA+A566hrTqgdf+3s7uh6k
+         bH1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=f04OdU6Fyk3m2zdZCMUEKpGzg4pA3Tu5ccwXrcxWMa0=;
+        b=E1MGvBlMdWW5CwUCwhPLdUc4Dgw5RnJaQCCXQFSWGBsQd3MkRWlQxPtQI8vPxNBpLr
+         Y36hihQJzMFuhhEDfasqwY/sqhb6Uf/qKlhVUBG/tRpyDnYjcvBIbjTqCytKtNY9WvsR
+         CF9GmQT11jUMNOYVOMkC7hv5r6f9VF4fVknKJhKk9OQojj+LPq5PoiHFYaSgzgCPa+10
+         aKtlXjgydRgZtNQ7SjgtA0Z73+9kE+ToKivCzLP9clnYk4FN95E9vKDcALdlrl4YngBH
+         5+77sPYIw7YFHp7u9sOV2Fj1O5n2iYUmJi/Zcj6HkiX8u1QzAUXQ/Cu1YxDFaw4DuxpY
+         t21Q==
+X-Gm-Message-State: APjAAAVETSDkOBSWcznpfupuDcBr4HJBSwco/HpAnPrzSJtfnvl0rPKv
+        wIQk+l4lRdAvgAazQZly8rhd2BI/
+X-Google-Smtp-Source: APXvYqx5wbfdt6yNdn2U6rc1m53le8zF3t+PqSJO6cvPIxeB8MW6r9epDp1r+XLEuOcFdRv3aRzjVg==
+X-Received: by 2002:a2e:880e:: with SMTP id x14mr1584844ljh.42.1570611138277;
+        Wed, 09 Oct 2019 01:52:18 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.34.231])
+        by smtp.googlemail.com with ESMTPSA id v1sm325809lfa.87.2019.10.09.01.52.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Oct 2019 01:52:17 -0700 (PDT)
+Subject: Re: [PATCH v10 12/15] memory: tegra: Introduce Tegra30 EMC driver
+To:     Peter Geis <pgwipeout@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Joseph Lo <josephl@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190811210043.20122-1-digetx@gmail.com>
+ <20190811210043.20122-13-digetx@gmail.com>
+ <CAMdYzYqNL_KAYwsnWYuz9wf2xT_RM0cWA8jkKATWMX7yuVq7Hw@mail.gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <ebd9b2df-e4dd-1207-ad38-fc52cf4e86d4@gmail.com>
+Date:   Wed, 9 Oct 2019 11:52:16 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <CAMdYzYqNL_KAYwsnWYuz9wf2xT_RM0cWA8jkKATWMX7yuVq7Hw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DT binding for led-backlight.
+05.10.2019 19:28, Peter Geis пишет:
+> Tested on the Ouya (tegra30).
+> 
+> Tested-by: Peter Geis <pgwipeout@gmail.com>
+> 
+> On Sun, Aug 11, 2019 at 5:02 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+>>
+>> Introduce driver for the External Memory Controller (EMC) found on Tegra30
+>> chips, it controls the external DRAM on the board. The purpose of this
+>> driver is to program memory timing for external memory on the EMC clock
+>> rate change.
+>>
+>> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+Peter, thank you very much for the testing!
 
----
-
-.../leds/backlight/led-backlight.yaml         | 55 +++++++++++++++++++
- 1 file changed, 55 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/backlight/led-backlight.yaml
-
-diff --git a/Documentation/devicetree/bindings/leds/backlight/led-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/led-backlight.yaml
-new file mode 100644
-index 000000000000..47ae3d6b4f31
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/backlight/led-backlight.yaml
-@@ -0,0 +1,55 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/leds/backlight/led-backlight.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: LED-based Backlight Device Tree Bindings
-+
-+maintainers:
-+  - Jean-Jacques Hiblot <jjhiblot@ti.com>
-+
-+description: |
-+  This binding is used to describe a basic backlight device made of LEDs.
-+  It can also be used to describe a backlight device controlled by the
-+  output of a LED driver.
-+
-+properties:
-+  compatible:
-+    const: led-backlight
-+
-+  leds:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description: List of LEDs constitutive of the backlight.
-+
-+  default-brightness:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Default brightness level on boot.
-+    minimum: 0
-+
-+  brightness-levels:
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+    description: Array of distinct brightness levels. The levels must be in
-+      the range accepted by the underlying LED devices. This is used to
-+      translate a backlight brightness level into a LED brightness level. If
-+      it is not provided, the identity mapping is used.
-+
-+required:
-+  - compatible
-+  - backlight-leds
-+
-+examples:
-+  - |
-+    backlight {
-+      compatible = "led-backlight";
-+      backlight-leds = <&led1>;
-+      brightness-levels = <0 4 8 16 32 64 128 255>;
-+      default-brightness = <6>; /*6th level => brightness of the LEDs is 128*/
-+    };
-+  - |
-+    backlight {
-+      compatible = "led-backlight";
-+      backlight-leds = <&led1>, <&led2>;
-+      default-brightness = <255>;
-+    };
-+...
--- 
-2.17.1
-
+Thierry, could you please pick up this series and other relevant patches
+for 5.5? Thanks in advance!
