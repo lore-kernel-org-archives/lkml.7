@@ -4,65 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE41AC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 22:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 722F9ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 22:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB912218AC
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 22:01:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48458218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 22:01:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="B1Js9JjI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="PGRm3frG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732094AbfJIWBa (ORCPT
+        id S1732153AbfJIWBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 18:01:30 -0400
+        Wed, 9 Oct 2019 18:01:31 -0400
 Received: from esa6.hgst.iphmx.com ([216.71.154.45]:58909 "EHLO
         esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730815AbfJIWB3 (ORCPT
+        with ESMTP id S1731736AbfJIWBa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 18:01:29 -0400
+        Wed, 9 Oct 2019 18:01:30 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
   t=1570658490; x=1602194490;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=lbd+AIGQrRoThAxs3oEN+bBjg5z+KPSZ65JKtN5StOg=;
-  b=B1Js9JjIXX3891OnbKoTNZDxu/59ux7Yqm5nL0O2OcF7Z7bYdVtQQYig
-   F1OPwWWLHOwUn/629HZ/DJxUwO02TSVRKkDiuo1AnJIbLw7MmI94tHipp
-   3iZUOdwnFLCa9N4AcXcaT8btVSzIpOQt2H8dEBl774ZQktlqEkpYZJmSR
-   nTsAjYqXSUXMZmoqMI+I4XshsQo4Nn03IjYSer96tczQay1/ndH50R4ln
-   TMiSOmSAIjCUy8QF1uogKQUIMChr0OZz09VdeRYafYW7qsL3+Dne4QoRF
-   5nzCORM3RA8SZ+0pKQAWN0jWG1SRbh4HwsoStCD0bEtsgA+ajZKSnhY2u
-   g==;
-IronPort-SDR: +3fmK3aVMPG6Hkp4GGHLodzHTmV2nsapiMR/xG5BzrPre+CTtqn48srXc4n/rhhvJkBUL1X8PM
- ALF02qUMBco7yIpC3K4dUdgPeqJPbuajvj2+A9wDhDmMLQhgmdPEeOrF1vFShm9pVEqDaFLeku
- +6IlF6/73SGLRn6MeHg7I6H5/tRMbqQopGGxBPLclYH35Lv6yBK9TL6x8IMLzKt9fIA8k2Be0u
- rllORs73tcl08oXEarM9uHwpoCp+0hUmUJqdOixh+k5KeI/B+nkdAdhZ8Z/7CLFCf8KYHLuMg4
- tlE=
+  bh=glioQ9gbQCwDyZ1lhDR7P9tsfgoc1+ZWkzIr2khfKYM=;
+  b=PGRm3frGjgvMORRBMxaITscBg9zHXgcpbn/ZxT33CZaQaP0kDnxavQ76
+   8UwceYfjKNgt00foQptAOm+b8Cngb/Yxpt2a6aP9NXHGM8RJy/197faJY
+   F1NdcJ6Pd/yzNswy/qWO6oaQU2xbNSMN8jEc+XaitWaf/Ih4GkdjkdwKc
+   n3/pDTxWVyPDf1pj+LGZRfw1oUgU7XNQZsHVmdD5V13wSQEJo+TkiCA3P
+   WRs35cJxGN3uRKvKfps3qgfXuKY3/jJPGdcV/tLpOOofPEQp025zRd52K
+   4dcFvAozrOEqa6QqIYEPBiABCZf1BacblDDLvS1arBJPPuV1OknWyzXUF
+   A==;
+IronPort-SDR: Hix8DplbLu/t0uII8+vQEz3tXhhseZf0CqsSphcRw9gdjwBfeKCHjccJGI5voUxnUitT/3Qn/3
+ AGyBhiINlGSXcBnx9AGgZlyO9WvFrffhE6pYEX9/zWn4vN3PnJZyljkdPw40qocY0uoMedriCp
+ GCfQQ6MFbOpQQiiTghAXd3ji+rLCSXVywPnauHy/rYtd4+7qQKVltkeTDPP5tTNINFg1ElaAFa
+ MuRalqmUfauUT5zqS3kI/uEVFNjfWTNc3PhLUwI7t6EXASNPIc/eBpY6aJtNdJDIkKVtMw9Xoc
+ 6wY=
 X-IronPort-AV: E=Sophos;i="5.67,277,1566835200"; 
-   d="scan'208";a="121776284"
+   d="scan'208";a="121776287"
 Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
   by ob1.hgst.iphmx.com with ESMTP; 10 Oct 2019 06:01:30 +0800
-IronPort-SDR: AohxBxgZJlpUlwMwToqjXjaIDz/wQvJY5MGuVqa7FxDdUSfqwH5S7JHPjpRVnGxy1weiChmH9T
- rDv20BVWFpXtBGJ+JpkeULQPkFNcb3DqreCU5kWy/Qz+LDI209t2Xgxq2ZWD2H8NQFANWAH4E9
- cACuiJriABiFkf46RIvW/cpCYmzZ6hicvNgHxtHejUzq/IZJ2NuQpqCj2kDCcVkQAnxbDyRGNO
- deHc0YqeN3HbDhHTVfZV9Zgs+u2F++ojck83JI/JAbQEQxf/i8GRr+fwlBg1LKt6/vTuv5QIzK
- kOpGekbGjjgowoqH7/VRTsI7
+IronPort-SDR: 8pKUP6XiutD+fjqbk40Am0sN534JqPDfCVP4TDCgNhZsZTHiEA2o4TzxonjkVbA/OZVnR9D7IE
+ TYJbO6FfqBWHIWZfd48zNQaJEbLOStbUxYLpmfnIDgN/keh0n6FM4ykY3YYTY6MEDda7HsbYrO
+ MEWCUDr10uInZTeN0llL4MaOT8TfbFWL5lea33zy2Nx1EjZuoLiJp/PrWYxMt7a/ohnEpSPZFm
+ vzYv5klVG1FzwCv0RxB2pToNL/arWv2KkBSK23gUIlHyjQNUZlxOhLrnDAaBF31N3cZxFbouSD
+ 9m187ZOP3nWn0GLIGxTMKKlY
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
   by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 14:57:28 -0700
-IronPort-SDR: OSfHRalZnckQ+CMwFJuI9c2cHFJ5980REgWsO9HlLdWYOA9e/Xnja3lHpA/bBzYMh3y+14r+vX
- jFPL34GtuhDEtYwD4Z1KDUgRqboAKwulDmx7HlJm48/04ZQ7rVb3/T84nTshQt9MrX/KCCgZXQ
- q//5RaXrtYFF9k3Zm4rRjtw3axETY+J2XeAph1wjymWL9mQjmWEJi8crXOVQz6s1S0cNMqZWA2
- ePWMktMmAyTO2iv41PIvKd5EL3O7Mhu3dqC2bWcQkMg3bsRWn2D7H2c8Ui/iq1IzhJ9n8acYgs
- xh4=
+IronPort-SDR: NyxctKEn7ncwH/wA8FjcZp+ShlYaHe5YcCbwrG7kc3vUEoYiZzialcvIWkyZMDcgCofvTkPo+G
+ rU4chCkgn3vdYe7QKBSzx9mPmUzKJhQDvpU97V5tN0IyRMHBVVio47LNeKEh31SdyRo+3MS+fM
+ /+h7dM/yttFW8wtmuMpxpts7jFKS9H+cRw5OmcItbGRcp5NlKJpwfIt7VGW6ksoN3TsfjkvvRi
+ B5YmcR7746rsJ+v4M8PyaWad30CWqc3TIAhxeXE766F+LdQkGgJT61vkSkpLLkgvEO2AMebrFq
+ K90=
 WDCIronportException: Internal
 Received: from jedi-01.sdcorp.global.sandisk.com (HELO jedi-01.int.fusionio.com) ([10.11.143.218])
   by uls-op-cesaip02.wdc.com with ESMTP; 09 Oct 2019 15:01:29 -0700
 From:   Atish Patra <atish.patra@wdc.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Atish Patra <atish.patra@wdc.com>, Christoph Hellwig <hch@lst.de>,
+Cc:     Atish Patra <atish.patra@wdc.com>,
         Albert Ou <aou@eecs.berkeley.edu>,
         Allison Randal <allison@lohutok.net>,
         Anup Patel <anup@brainfault.org>,
@@ -74,9 +74,9 @@ Cc:     Atish Patra <atish.patra@wdc.com>, Christoph Hellwig <hch@lst.de>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         Richard Fontana <rfontana@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH v2  1/2] RISC-V: Remove unsupported isa string info print
-Date:   Wed,  9 Oct 2019 15:00:57 -0700
-Message-Id: <20191009220058.24964-2-atish.patra@wdc.com>
+Subject: [PATCH v2  2/2] RISC-V: Consolidate isa correctness check
+Date:   Wed,  9 Oct 2019 15:00:58 -0700
+Message-Id: <20191009220058.24964-3-atish.patra@wdc.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191009220058.24964-1-atish.patra@wdc.com>
 References: <20191009220058.24964-1-atish.patra@wdc.com>
@@ -87,81 +87,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-/proc/cpuinfo should just print all the isa string as an information
-instead of determining what is supported or not. ELF hwcap can be
-used by the userspace to figure out that.
+Currently, isa string is read and checked for correctness at multiple
+places.
 
-Simplify the isa string printing by removing the unsupported isa string
-print and all related code.
-
-The relevant discussion can be found at
-http://lists.infradead.org/pipermail/linux-riscv/2019-September/006702.html
+Consolidate them into one function and use it only during early bootup.
+In case of a incorrect isa string, the cpu shouldn't boot at all.
 
 Signed-off-by: Atish Patra <atish.patra@wdc.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/riscv/kernel/cpu.c | 45 +++--------------------------------------
- 1 file changed, 3 insertions(+), 42 deletions(-)
+ arch/riscv/include/asm/processor.h |  1 +
+ arch/riscv/kernel/cpu.c            | 41 ++++++++++++++++++++++--------
+ arch/riscv/kernel/cpufeature.c     |  4 +--
+ arch/riscv/kernel/smpboot.c        |  4 +++
+ 4 files changed, 37 insertions(+), 13 deletions(-)
 
-diff --git a/arch/riscv/kernel/cpu.c b/arch/riscv/kernel/cpu.c
-index 7da3c6a93abd..40a3c442ac5f 100644
---- a/arch/riscv/kernel/cpu.c
-+++ b/arch/riscv/kernel/cpu.c
-@@ -46,51 +46,12 @@ int riscv_of_processor_hartid(struct device_node *node)
- 
- #ifdef CONFIG_PROC_FS
- 
--static void print_isa(struct seq_file *f, const char *orig_isa)
-+static void print_isa(struct seq_file *f, const char *isa)
- {
--	static const char *ext = "mafdcsu";
--	const char *isa = orig_isa;
--	const char *e;
--
--	/*
--	 * Linux doesn't support rv32e or rv128i, and we only support booting
--	 * kernels on harts with the same ISA that the kernel is compiled for.
--	 */
--#if defined(CONFIG_32BIT)
--	if (strncmp(isa, "rv32i", 5) != 0)
--		return;
--#elif defined(CONFIG_64BIT)
--	if (strncmp(isa, "rv64i", 5) != 0)
--		return;
--#endif
--
--	/* Print the base ISA, as we already know it's legal. */
-+	/* Print the entire ISA as it is */
- 	seq_puts(f, "isa\t\t: ");
--	seq_write(f, isa, 5);
--	isa += 5;
--
--	/*
--	 * Check the rest of the ISA string for valid extensions, printing those
--	 * we find.  RISC-V ISA strings define an order, so we only print the
--	 * extension bits when they're in order. Hide the supervisor (S)
--	 * extension from userspace as it's not accessible from there.
--	 */
--	for (e = ext; *e != '\0'; ++e) {
--		if (isa[0] == e[0]) {
--			if (isa[0] != 's')
--				seq_write(f, isa, 1);
--
--			isa++;
--		}
--	}
-+	seq_write(f, isa, strlen(isa));
- 	seq_puts(f, "\n");
--
--	/*
--	 * If we were given an unsupported ISA in the device tree then print
--	 * a bit of info describing what went wrong.
--	 */
--	if (isa[0] != '\0')
--		pr_info("unsupported ISA \"%s\" in device tree\n", orig_isa);
+diff --git a/arch/riscv/include/asm/processor.h b/arch/riscv/include/asm/processor.h
+index f539149d04c2..189bf98f9a3f 100644
+--- a/arch/riscv/include/asm/processor.h
++++ b/arch/riscv/include/asm/processor.h
+@@ -74,6 +74,7 @@ static inline void wait_for_interrupt(void)
  }
  
- static void print_mmu(struct seq_file *f, const char *mmu_type)
+ struct device_node;
++int riscv_read_check_isa(struct device_node *node, const char **isa);
+ int riscv_of_processor_hartid(struct device_node *node);
+ 
+ extern void riscv_fill_hwcap(void);
+diff --git a/arch/riscv/kernel/cpu.c b/arch/riscv/kernel/cpu.c
+index 40a3c442ac5f..6bd4c7176bf6 100644
+--- a/arch/riscv/kernel/cpu.c
++++ b/arch/riscv/kernel/cpu.c
+@@ -8,13 +8,43 @@
+ #include <linux/of.h>
+ #include <asm/smp.h>
+ 
++int riscv_read_check_isa(struct device_node *node, const char **isa)
++{
++	u32 hart;
++
++	if (of_property_read_u32(node, "reg", &hart)) {
++		pr_warn("Found CPU without hart ID\n");
++		return -ENODEV;
++	}
++
++	if (of_property_read_string(node, "riscv,isa", isa)) {
++		pr_warn("CPU with hartid=%d has no \"riscv,isa\" property\n",
++			hart);
++		return -ENODEV;
++	}
++	/*
++	 * Linux doesn't support rv32e or rv128i, and we only support booting
++	 * kernels on harts with the same ISA that the kernel is compiled for.
++	 */
++	if (IS_ENABLED(CONFIG_32BIT) && (strncmp(*isa, "rv32i", 5) != 0)) {
++		pr_warn("hartid=%d has an invalid ISA \"%s\" for 32bit config\n",
++			hart, *isa);
++		return -ENODEV;
++	} else if (IS_ENABLED(CONFIG_64BIT) &&
++		  (strncmp(*isa, "rv64i", 5) != 0)) {
++		pr_warn("hartid=%d has an invalid ISA \"%s\" for 64bit config\n",
++			hart, *isa);
++		return -ENODEV;
++	}
++	return 0;
++}
++
+ /*
+  * Returns the hart ID of the given device tree node, or -ENODEV if the node
+  * isn't an enabled and valid RISC-V hart node.
+  */
+ int riscv_of_processor_hartid(struct device_node *node)
+ {
+-	const char *isa;
+ 	u32 hart;
+ 
+ 	if (!of_device_is_compatible(node, "riscv")) {
+@@ -32,15 +62,6 @@ int riscv_of_processor_hartid(struct device_node *node)
+ 		return -ENODEV;
+ 	}
+ 
+-	if (of_property_read_string(node, "riscv,isa", &isa)) {
+-		pr_warn("CPU with hartid=%d has no \"riscv,isa\" property\n", hart);
+-		return -ENODEV;
+-	}
+-	if (isa[0] != 'r' || isa[1] != 'v') {
+-		pr_warn("CPU with hartid=%d has an invalid ISA of \"%s\"\n", hart, isa);
+-		return -ENODEV;
+-	}
+-
+ 	return hart;
+ }
+ 
+diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+index b1ade9a49347..eaad5aa07403 100644
+--- a/arch/riscv/kernel/cpufeature.c
++++ b/arch/riscv/kernel/cpufeature.c
+@@ -38,10 +38,8 @@ void riscv_fill_hwcap(void)
+ 		if (riscv_of_processor_hartid(node) < 0)
+ 			continue;
+ 
+-		if (of_property_read_string(node, "riscv,isa", &isa)) {
+-			pr_warn("Unable to find \"riscv,isa\" devicetree entry\n");
++		if (riscv_read_check_isa(node, &isa) < 0)
+ 			continue;
+-		}
+ 
+ 		for (i = 0; i < strlen(isa); ++i)
+ 			this_hwcap |= isa2hwcap[(unsigned char)(isa[i])];
+diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
+index 18ae6da5115e..15ee71297abf 100644
+--- a/arch/riscv/kernel/smpboot.c
++++ b/arch/riscv/kernel/smpboot.c
+@@ -60,12 +60,16 @@ void __init setup_smp(void)
+ 	int hart;
+ 	bool found_boot_cpu = false;
+ 	int cpuid = 1;
++	const char *isa;
+ 
+ 	for_each_of_cpu_node(dn) {
+ 		hart = riscv_of_processor_hartid(dn);
+ 		if (hart < 0)
+ 			continue;
+ 
++		if (riscv_read_check_isa(dn, &isa) < 0)
++			continue;
++
+ 		if (hart == cpuid_to_hartid_map(0)) {
+ 			BUG_ON(found_boot_cpu);
+ 			found_boot_cpu = 1;
 -- 
 2.21.0
 
