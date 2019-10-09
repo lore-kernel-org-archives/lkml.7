@@ -2,145 +2,68 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59772ECE58E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4784ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CA3021721
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:03:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98DF021721
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:04:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731375AbfJINDH convert rfc822-to-8bit (ORCPT
+        id S1731245AbfJINEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 09:03:07 -0400
-Received: from mx0b-00176a03.pphosted.com ([67.231.157.48]:41762 "EHLO
-        mx0a-00176a03.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730901AbfJINDG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 09:03:06 -0400
-X-Greylist: delayed 3109 seconds by postgrey-1.27 at vger.kernel.org; Wed, 09 Oct 2019 09:03:05 EDT
-Received: from pps.filterd (m0048205.ppops.net [127.0.0.1])
-        by m0048205.ppops.net-00176a03. (8.16.0.27/8.16.0.27) with SMTP id x99C9XgY029449;
-        Wed, 9 Oct 2019 08:11:15 -0400
-From:   "Safford, David (GE Global Research, US)" <david.safford@ge.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Ken Goldman <kgold@linux.ibm.com>
-CC:     Mimi Zohar <zohar@linux.ibm.com>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Thread-Topic: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
-Thread-Index: AQHVdI4g9L3xPAeMJki3mq4fpV79C6dHrWSAgAFrf4CAABaxAIAAUs4AgAAPVoCAAOxxAIAAnnWA///LRNCAA7fgAIABcvOAgAGtUICAAAEjgIAAiUkQ
-Date:   Wed, 9 Oct 2019 12:11:06 +0000
-Message-ID: <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2B995@ALPMBAPA12.e2k.ad.ge.com>
-References: <20191003114119.GF8933@linux.intel.com>
- <1570107752.4421.183.camel@linux.ibm.com>
- <20191003175854.GB19679@linux.intel.com>
- <1570128827.5046.19.camel@linux.ibm.com>
- <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A22E@ALPMBAPA12.e2k.ad.ge.com>
- <20191004182711.GC6945@linux.intel.com>
- <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A38B@ALPMBAPA12.e2k.ad.ge.com>
- <20191007000520.GA17116@linux.intel.com>
- <59b88042-9c56-c891-f75e-7c0719eb5ff9@linux.ibm.com>
- <20191008234935.GA13926@linux.intel.com>
- <20191008235339.GB13926@linux.intel.com>
-In-Reply-To: <20191008235339.GB13926@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcMjEyNDczOTUw?=
- =?us-ascii?Q?XGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0?=
- =?us-ascii?Q?YmEyOWUzNWJcbXNnc1xtc2ctZGRkMDhkMzItZWE4ZC0xMWU5LThlNjQtYTRj?=
- =?us-ascii?Q?M2YwYjU5OGE2XGFtZS10ZXN0XGRkZDA4ZDM0LWVhOGQtMTFlOS04ZTY0LWE0?=
- =?us-ascii?Q?YzNmMGI1OThhNmJvZHkudHh0IiBzej0iMjA5NSIgdD0iMTMyMTUwOTY2NjU0?=
- =?us-ascii?Q?NTEyMTE0IiBoPSJOeUxXaXhaaHFjUHNKaXhDWEppNWF4MkppRkE9IiBpZD0i?=
- =?us-ascii?Q?IiBibD0iMCIgYm89IjEiIGNpPSJjQUFBQUVSSFUxUlNSVUZOQ2dVQUFFb0NB?=
- =?us-ascii?Q?QUR5cXlxZ21uN1ZBZGZLMWFPdHBmaG4xOHJWbzYybCtHY0RBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBSEFBQUFEYUFRQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBRUFBUUFCQUFBQUZ0R2VRd0FBQUFBQUFBQUFBQUFBQUo0QUFBQm5BR1VB?=
- =?us-ascii?Q?WHdCakFHOEFiZ0JtQUdrQVpBQmxBRzRBZEFCcEFHRUFiQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdjQVpRQmZBR2dBYVFCbkFHZ0Fi?=
- =?us-ascii?Q?QUI1QUdNQWJ3QnVBR1lBYVFCa0FHVUFiZ0IwQUdrQVlRQnNBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNB?=
- =?us-ascii?Q?QUFBQUFDZUFBQUFad0JsQUY4QWJnQnZBRzRBY0FCMUFHSUFiQUJwQUdNQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBQT09Ii8+PC9t?=
- =?us-ascii?Q?ZXRhPg=3D=3D?=
-x-dg-rorf: 
-x-originating-ip: [3.159.16.111]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 9 Oct 2019 09:04:38 -0400
+Received: from mga04.intel.com ([192.55.52.120]:5507 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731049AbfJINEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 09:04:38 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 06:04:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,276,1566889200"; 
+   d="scan'208";a="223580488"
+Received: from skassina-mobl.ccr.corp.intel.com (HELO caravaggio.ger.corp.intel.com) ([10.251.93.62])
+  by fmsmga002.fm.intel.com with ESMTP; 09 Oct 2019 06:04:34 -0700
+From:   Samuel Ortiz <sameo@linux.intel.com>
+To:     Len Brown <lenb@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>
+Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        Samuel Ortiz <sameo@linux.intel.com>
+Subject: [PATCH 0/2] acpi: Unconditional GED build
+Date:   Wed,  9 Oct 2019 15:04:31 +0200
+Message-Id: <20191009130433.29134-1-sameo@linux.intel.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Subject: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-09_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910090115
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The Generic Event Device is a hardware-reduced ACPI specific device, but
+kernels supporting both fixed and hardware-reduced ACPI hardware should
+be able to probe it dynamically.
 
-> From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Sent: Tuesday, October 8, 2019 7:54 PM
-> To: Ken Goldman <kgold@linux.ibm.com>
-> Cc: Safford, David (GE Global Research, US) <david.safford@ge.com>; Mimi
-> Zohar <zohar@linux.ibm.com>; linux-integrity@vger.kernel.org;
-> stable@vger.kernel.org; open list:ASYMMETRIC KEYS
-> <keyrings@vger.kernel.org>; open list:CRYPTO API <linux-
-> crypto@vger.kernel.org>; open list <linux-kernel@vger.kernel.org>
-> Subject: EXT: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
-> 
-> On Wed, Oct 09, 2019 at 02:49:35AM +0300, Jarkko Sakkinen wrote:
-> > On Mon, Oct 07, 2019 at 06:13:01PM -0400, Ken Goldman wrote:
-> > > The TPM library specification states that the TPM must comply with
-> > > NIST
-> > > SP800-90 A.
-> > >
-> > > https://trustedcomputinggroup.org/membership/certification/tpm-certi
-> > > fied-products/
-> > >
-> > > shows that the TPMs get third party certification, Common Criteria EAL 4+.
-> > >
-> > > While it's theoretically possible that an attacker could compromise
-> > > both the TPM vendors and the evaluation agencies, we do have EAL 4+
-> > > assurance against both 1 and 2.
-> >
-> > Certifications do not equal to trust.
-> 
-> And for trusted keys the least trust solution is to do generation with the kernel
-> assets and sealing with TPM. With TEE the least trust solution is equivalent.
-> 
-> Are you proposing that the kernel random number generation should be
-> removed? That would be my conclusion of this discussion if I would agree any
-> of this (I don't).
-> 
-> /Jarkko
+For that purpose, here are 2 patches:
 
-No one is suggesting that.
+- The first one makes the GED device probe fail on non hardware-reduced
+  platforms.
+- The second one disable the conditional evged build.
 
-You are suggesting changing the documented behavior of trusted keys, and
-that would cause problems for some of our use cases. While certification
-may not in your mind be equal to trust, it is equal to compliance with 
-mandatory regulations.
+Arjan van de Ven (1):
+  acpi: Always build evged in
 
-Perhaps rather than arguing past each other, we should look into 
-providing users the ability to choose, as an argument to keyctl?
+Samuel Ortiz (1):
+  acpi: Fail GED probe when not on hardware-reduced
 
-dave
+ drivers/acpi/Makefile | 2 +-
+ drivers/acpi/evged.c  | 3 +++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+-- 
+2.21.0
+
