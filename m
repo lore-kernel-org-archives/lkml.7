@@ -6,85 +6,88 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BEFAECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:01:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CECECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 028BE206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:01:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A209206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:03:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730857AbfJIKBI (ORCPT
+        id S1729742AbfJIKDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 06:01:08 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3282 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726211AbfJIKBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 06:01:08 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 252BB9A4CA4130BAA917;
-        Wed,  9 Oct 2019 18:01:06 +0800 (CST)
-Received: from [127.0.0.1] (10.177.223.23) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Wed, 9 Oct 2019
- 18:01:01 +0800
-Subject: Re: [PATCH v3 00/10] Rework REFCOUNT_FULL using atomic_fetch_*
- operations
-To:     Will Deacon <will@kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Kees Cook <keescook@chromium.org>, Ingo Molnar <mingo@kernel.org>,
-        "Elena Reshetova" <elena.reshetova@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jan Glauber <jglauber@marvell.com>
-References: <20191007154703.5574-1-will@kernel.org>
-From:   Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <644616a9-ec05-1d2e-22fc-93890adb3324@huawei.com>
-Date:   Wed, 9 Oct 2019 18:01:00 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.0
+        Wed, 9 Oct 2019 06:03:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:58736 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726734AbfJIKDa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 06:03:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A435F28;
+        Wed,  9 Oct 2019 03:03:27 -0700 (PDT)
+Received: from [192.168.1.124] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 137A73F68E;
+        Wed,  9 Oct 2019 03:03:25 -0700 (PDT)
+Subject: Re: [PATCH] arm64: lse: fix LSE atomics with LLVM's integrated
+ assembler
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <20191007201452.208067-1-samitolvanen@google.com>
+ <CAKwvOdmaMaO-Gpv2x0CWG+CRUCNKbNWJij97Jr0LaRaZXjAiTA@mail.gmail.com>
+ <CABCJKufxncBPOx6==57asbMF_On=g1sZAv+w6RnqHJFSwOSeTw@mail.gmail.com>
+ <CAKwvOd=k5iE8L5xbxwYDF=hSftqUXDdpgKYBDBa35XOkAx3d0w@mail.gmail.com>
+ <CABCJKucPcqSS=8dP-6hOwGpKUYxOk8Q_Av83O0A2A85JKznypQ@mail.gmail.com>
+ <c0f0eb7e-9e46-10cc-1277-b37fcd48d0be@arm.com>
+ <CAKv+Gu82ERZjaEH265+RNVjtQSk51ekHONniDZg-4vWy1VHkuQ@mail.gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <240f81a1-4fe5-0ff3-f97a-0c9aa6b68e03@arm.com>
+Date:   Wed, 9 Oct 2019 11:03:16 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20191007154703.5574-1-will@kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+In-Reply-To: <CAKv+Gu82ERZjaEH265+RNVjtQSk51ekHONniDZg-4vWy1VHkuQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.223.23]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/10/7 23:46, Will Deacon wrote:
-> Hi all,
+On 2019-10-08 10:03 pm, Ard Biesheuvel wrote:
+> On Tue, 8 Oct 2019 at 18:19, Robin Murphy <robin.murphy@arm.com> wrote:
+>>
+>> On 08/10/2019 16:22, Sami Tolvanen wrote:
+>>> On Mon, Oct 7, 2019 at 2:46 PM 'Nick Desaulniers' via Clang Built
+>>> Linux <clang-built-linux@googlegroups.com> wrote:
+>>>> I'm worried that one of these might lower to LSE atomics without
+>>>> ALTERNATIVE guards by blanketing all C code with `-march=armv8-a+lse`.
+>>>
+>>> True, that's a valid concern. I think adding the directive to each
+>>> assembly block is the way forward then, assuming the maintainers are
+>>> fine with that.
+>>
+>> It's definitely a valid concern in principle, but in practice note that
+>> lse.h ends up included in ~99% of C files, so the extension is enabled
+>> more or less everywhere already.
+>>
 > 
-> This is version three of the patches I previously posted here:
+> lse.h currently does
 > 
->   v1: https://lkml.kernel.org/r/20190802101000.12958-1-will@kernel.org
->   v2: https://lkml.kernel.org/r/20190827163204.29903-1-will@kernel.org
+> __asm__(".arch_extension        lse");
 > 
-> Changes since v2 include:
-> 
->   - Remove the x86 assembly version and enable this code unconditionally
->   - Move saturation warnings out-of-line to reduce image bloat
-> 
-> Cheers,
-> 
-> Will
-> 
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: Elena Reshetova <elena.reshetova@intel.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> Cc: Hanjun Guo <guohanjun@huawei.com>
-> Cc: Jan Glauber <jglauber@marvell.com>
-> 
+> which instructs the assembler to permit the use of LSE opcodes, but it
+> does not instruct the compiler to emit them, so this is not quite the
+> same thing.
 
-I tested on top of 5.4-rc2 (with Jan's open-read-close file test case), on a 96 CPU
-cores ARM64 server, I can see no much difference under 24 cores (each 24 core is
-a NUMA node), but +5.9% performance improve on 48 cores and +8.4% for 96 cores.
+Derp, of course it isn't. And IIRC we can't just pass the option through 
+with -Wa either because at least some versions of GCC emit an explicit 
+.arch directive at the top of the output. Oh well; sorry for the 
+distraction.
 
-For the ARM64 arch,
-
-Tested-by: Hanjun Guo <guohanjun@huawei.com>
-
-Thanks
-Hanjun
-
+Robin.
