@@ -2,82 +2,85 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB45C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26614ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33EB8206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00F9D206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:54:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k5CIuaOd"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UykJLdor"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731370AbfJIRw1 (ORCPT
+        id S1731591AbfJIRx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:52:27 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53930 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728804AbfJIRw1 (ORCPT
+        Wed, 9 Oct 2019 13:53:59 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:49128 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729865AbfJIRx7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 13:52:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=PSn13oxF1UKczQrMvsfZpMiSrhunC9qsLBVGsQ7Tqig=; b=k5CIuaOdffDt+qOqubPEs3YjO
-        04Lm9Op0nHnYX2SLaNFPReScjyHgiAA/mQLYIA4gCDv/LwArZ0GcJDNvFtd+btvyj1kPscQR/LXE3
-        fgcRigi0bM+f3rxFyvzjsWL4lc1kHP9zmzzkSeSJyQ6u/NfqrCnspNu9O/wlEeZG25StjbklYoz5O
-        Kouz/QfmWHmeSlh3RKHp6oqK2wFUgoIz9PrL5/kY84aFqzIh8hWfstrji680e1n4CXBWRK+PGumrK
-        IyCU+5cfFBMYjWCJH4Ldgb0HzlbErtSy3r11IroMj4iWTTT5teAIt/sNT9SFbiDvudNZwe1Vu8EfO
-        aaL1rAfHA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iIG7p-0000JD-TI; Wed, 09 Oct 2019 17:51:49 +0000
-Date:   Wed, 9 Oct 2019 10:51:49 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Ben Dooks <ben.dooks@codethink.co.uk>
-Cc:     linux-kernel@lists.codethink.co.uk,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Salter <msalter@redhat.com>,
-        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-c6x-dev@linux-c6x.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] proc: centralise declaration of cpuinfo_op
-Message-ID: <20191009175149.GA28540@infradead.org>
-References: <20191009113930.13236-1-ben.dooks@codethink.co.uk>
+        Wed, 9 Oct 2019 13:53:59 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x99Hrttj032259;
+        Wed, 9 Oct 2019 12:53:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1570643635;
+        bh=FcFxGHNZSeZ2QDi/0mIGHWN9xxGBNaup5w8sjlaEJEs=;
+        h=From:To:CC:Subject:Date;
+        b=UykJLdorJQLt8kkFH7UDLvWEjXzLz7Nsb3+yYK7Yxwe0kpG2U0IZ52W7j+Cw+t2Rq
+         xsMQYw42HZd7v/NVfs/vo+rEemZbFTJ4vGIVjZetLtVD0b8gj4GKkm9eibSeeByt30
+         4KahrnRUsZuPoc7oKB8TFICuLIlX0h0el41RzZIo=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x99HrtxP047240;
+        Wed, 9 Oct 2019 12:53:55 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 9 Oct
+ 2019 12:53:54 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 9 Oct 2019 12:53:54 -0500
+Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x99Hrsh8069742;
+        Wed, 9 Oct 2019 12:53:54 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>
+CC:     Rob Herring <robh+dt@kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
+Subject: [Patch 0/3] ARM: dts: dra7: add vpe nodes 
+Date:   Wed, 9 Oct 2019 12:56:25 -0500
+Message-ID: <20191009175628.20570-1-bparrot@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191009113930.13236-1-ben.dooks@codethink.co.uk>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 12:39:30PM +0100, Ben Dooks wrote:
-> When building for arm, cpuinfo_op generates a warning due
-> to no declaration. Since this is used in fs/proc/cpuinfo.c
-> and inconsitently declared across archiectures move the
-> declaration info <linux/seq_file.h>. This means that the
-> cpuinfo_op will have a declaration any place it is used.
-> 
-> Removes the following sparse warning:
-> 
-> arch/arm/kernel/setup.c:1320:29: warning: symbol 'cpuinfo_op' was not declared. Should it be static?
+This patch series adds the needed clkctrl and ty-sysc nodes for VPE module.
+We also document the VPE DT bindings.
 
-I like the consolidation, but I don't think seq_file.h is the right
-place.  A procfs or cpu topology related header seems like the better
-choice.
+Benoit Parrot (3):
+  dt-bindings: media: ti-vpe: Document VPE driver
+  ARM: dts: dra7: add vpe clkctrl node
+  ARM: dts: dra7: Add ti-sysc node for VPE
+
+ .../devicetree/bindings/media/ti-vpe.txt      | 48 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ arch/arm/boot/dts/dra7-l4.dtsi                | 30 ++++++++++--
+ arch/arm/boot/dts/dra7xx-clocks.dtsi          | 18 ++++++-
+ drivers/clk/ti/clk-7xx.c                      |  6 +++
+ include/dt-bindings/clock/dra7.h              | 10 ++++
+ 6 files changed, 108 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/ti-vpe.txt
+
+-- 
+2.17.1
+
