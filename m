@@ -2,111 +2,107 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6DD0C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE9E1C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E51E20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:55:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qqpha/Te"
+	by mail.kernel.org (Postfix) with ESMTP id CDE1A20B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:55:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730893AbfJIKzX (ORCPT
+        id S1730928AbfJIKzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 06:55:23 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:42494 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725953AbfJIKzW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 06:55:22 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x99An3EM076380;
-        Wed, 9 Oct 2019 10:54:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2019-08-05;
- bh=M33GVO9Y3jme01jHHD3zcMXHqJ6aM2z9oePhh2hkmuM=;
- b=qqpha/Te0Pky6KVXQk6AfDXZU2rXagKbsGeiW09MRWld8zjLm9/Ca+V9NZIcRUTcP1Hp
- w/n76C552Hetap0fxKNnEQ9LoesxXYBtHMlazkm5/rKaq8t+L67kAFN8CLu6yeVTWF0s
- wyiJP5m6Bqi94EcYz3RRLU2ytkAMDkl8YB0uNEe2vIYai8pcGNSnD+gpdHHpH6vRxPCs
- eSQmKOJRg8QQNG+Y/UYNW30dTChC2GdjjKcrtFeM7JLrbudajEHPoMJCfB5LpJeYwKZ4
- FnUtQeYQkIpc4mTqkcxGD99Qz2QUOihkg5ZrrxY/v2c3vHt+xJIyNEqNfjvvzTUSaKIn +w== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2vejkukb03-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 09 Oct 2019 10:54:25 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x99AmbN2162723;
-        Wed, 9 Oct 2019 10:54:24 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2vh5caap72-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 09 Oct 2019 10:54:24 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x99AsHxQ031048;
-        Wed, 9 Oct 2019 10:54:19 GMT
-Received: from tomti.i.net-space.pl (/10.175.167.68)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 09 Oct 2019 03:54:16 -0700
-From:   Daniel Kiper <daniel.kiper@oracle.com>
-To:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, xen-devel@lists.xenproject.org
-Cc:     ard.biesheuvel@linaro.org, boris.ostrovsky@oracle.com,
-        bp@alien8.de, corbet@lwn.net, dave.hansen@linux.intel.com,
-        luto@kernel.org, peterz@infradead.org, eric.snowberg@oracle.com,
-        hpa@zytor.com, jgross@suse.com, konrad.wilk@oracle.com,
-        mingo@redhat.com, ross.philipson@oracle.com, tglx@linutronix.de
-Subject: [PATCH v3 0/3] x86/boot: Introduce the kernel_info et consortes
-Date:   Wed,  9 Oct 2019 12:53:55 +0200
-Message-Id: <20191009105358.32256-1-daniel.kiper@oracle.com>
-X-Mailer: git-send-email 2.11.0
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9404 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=672
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910090101
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9404 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=747 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910090101
+        Wed, 9 Oct 2019 06:55:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:59716 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727035AbfJIKzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 06:55:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A51628;
+        Wed,  9 Oct 2019 03:55:47 -0700 (PDT)
+Received: from [10.1.196.133] (unknown [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9F3443F703;
+        Wed,  9 Oct 2019 03:55:44 -0700 (PDT)
+Subject: Re: [PATCH v11 07/22] riscv: mm: Add p?d_leaf() definitions
+To:     Paul Walmsley <paul.walmsley@sifive.com>, alex@ghiti.fr
+Cc:     Mark Rutland <Mark.Rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>, linux-mm@kvack.org,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-riscv@lists.infradead.org,
+        Will Deacon <will@kernel.org>,
+        "Liang, Kan" <kan.liang@linux.intel.com>, x86@kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20191007153822.16518-1-steven.price@arm.com>
+ <20191007153822.16518-8-steven.price@arm.com>
+ <alpine.DEB.2.21.9999.1910081431310.11044@viisi.sifive.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <b0ed95cd-703f-9ac2-a2e8-9a059f4095f9@arm.com>
+Date:   Wed, 9 Oct 2019 11:55:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <alpine.DEB.2.21.9999.1910081431310.11044@viisi.sifive.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 08/10/2019 22:33, Paul Walmsley wrote:
+> On Mon, 7 Oct 2019, Steven Price wrote:
+> 
+>> walk_page_range() is going to be allowed to walk page tables other than
+>> those of user space. For this it needs to know when it has reached a
+>> 'leaf' entry in the page tables. This information is provided by the
+>> p?d_leaf() functions/macros.
+>>
+>> For riscv a page is a leaf page when it has a read, write or execute bit
+>> set on it.
+>>
+>> CC: Palmer Dabbelt <palmer@sifive.com>
+>> CC: Albert Ou <aou@eecs.berkeley.edu>
+>> CC: linux-riscv@lists.infradead.org
+>> Signed-off-by: Steven Price <steven.price@arm.com>
+> 
+> Acked-by: Paul Walmsley <paul.walmsley@sifive.com> # for arch/riscv  
+> 
+> Alex has a good point, but probably the right thing to do is to replace 
+> the contents of the arch/riscv/mm/hugetlbpage.c p{u,m}d_huge() functions 
+> with calls to Steven's new static inline functions.
 
-Due to very limited space in the setup_header this patch series introduces new
-kernel_info struct which will be used to convey information from the kernel to
-the bootloader. This way the boot protocol can be extended regardless of the
-setup_header limitations. Additionally, the patch series introduces some
-convenience features like the setup_indirect struct and the
-kernel_info.setup_type_max field.
+The intention is to create new functions that are not dependent on
+hugepage support in user space. hugetlbpage.c is only built if
+CONFIG_HUGETLB_PAGE is defined.
 
-Daniel
+As you say - the p{u,m}d_huge() functions can be reimplemented using the
+new static inline functions if desired.
 
- Documentation/x86/boot.rst             | 168 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- arch/x86/boot/Makefile                 |   2 +-
- arch/x86/boot/compressed/Makefile      |   4 +-
- arch/x86/boot/compressed/kaslr.c       |  12 ++++++
- arch/x86/boot/compressed/kernel_info.S |  22 +++++++++++
- arch/x86/boot/header.S                 |   3 +-
- arch/x86/boot/tools/build.c            |   5 +++
- arch/x86/include/uapi/asm/bootparam.h  |  16 +++++++-
- arch/x86/kernel/e820.c                 |  11 ++++++
- arch/x86/kernel/kdebugfs.c             |  20 ++++++++--
- arch/x86/kernel/ksysfs.c               |  30 ++++++++++----
- arch/x86/kernel/setup.c                |   4 ++
- arch/x86/mm/ioremap.c                  |  11 ++++++
- 13 files changed, 292 insertions(+), 16 deletions(-)
+Thanks for the review.
 
-Daniel Kiper (3):
-      x86/boot: Introduce the kernel_info
-      x86/boot: Introduce the kernel_info.setup_type_max
-      x86/boot: Introduce the setup_indirect
+Steve
+
+> 
+> - Paul
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
