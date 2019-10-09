@@ -6,36 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6CE0C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B025DC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89E9621721
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93D0A21835
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:04:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731326AbfJINEl (ORCPT
+        id S1731370AbfJINEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 09:04:41 -0400
+        Wed, 9 Oct 2019 09:04:44 -0400
 Received: from mga04.intel.com ([192.55.52.120]:5507 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731049AbfJINEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 09:04:40 -0400
+        id S1731049AbfJINEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 09:04:43 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 06:04:39 -0700
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 06:04:42 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.67,276,1566889200"; 
-   d="scan'208";a="223580511"
+   d="scan'208";a="223580524"
 Received: from skassina-mobl.ccr.corp.intel.com (HELO caravaggio.ger.corp.intel.com) ([10.251.93.62])
-  by fmsmga002.fm.intel.com with ESMTP; 09 Oct 2019 06:04:37 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 09 Oct 2019 06:04:40 -0700
 From:   Samuel Ortiz <sameo@linux.intel.com>
 To:     Len Brown <lenb@kernel.org>,
         "Rafael J . Wysocki" <rjw@rjwysocki.net>
 Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        Arjan van de Ven <arjan@linux.intel.com>,
         Samuel Ortiz <sameo@linux.intel.com>
-Subject: [PATCH 1/2] acpi: Fail GED probe when not on hardware-reduced
-Date:   Wed,  9 Oct 2019 15:04:32 +0200
-Message-Id: <20191009130433.29134-2-sameo@linux.intel.com>
+Subject: [PATCH 2/2] acpi: Always build evged in
+Date:   Wed,  9 Oct 2019 15:04:33 +0200
+Message-Id: <20191009130433.29134-3-sameo@linux.intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191009130433.29134-1-sameo@linux.intel.com>
 References: <20191009130433.29134-1-sameo@linux.intel.com>
@@ -46,28 +47,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Generic Event Device (GED) is a hardware-reduced platform device.
-Probing this driver on fixed platforms should fail.
+From: Arjan van de Ven <arjan@linux.intel.com>
 
+Although the Generic Event Device is a Hardware-reduced platfom device,
+it should not be restricted to ACPI_REDUCED_HARDWARE_ONLY.
+Kernels supporting both fixed and hardware-reduced ACPI platforms should
+be able to probe the GED when dynamically detecting that a platform is
+hardware-reduced. For that, the driver must be unconditionally built in.
+
+Signed-off-by: Arjan van de Ven <arjan@linux.intel.com>
 Signed-off-by: Samuel Ortiz <sameo@linux.intel.com>
 ---
- drivers/acpi/evged.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/acpi/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/evged.c b/drivers/acpi/evged.c
-index aba0d0027586..55de4b2d2fee 100644
---- a/drivers/acpi/evged.c
-+++ b/drivers/acpi/evged.c
-@@ -127,6 +127,9 @@ static int ged_probe(struct platform_device *pdev)
- 	struct acpi_ged_device *geddev;
- 	acpi_status acpi_ret;
- 
-+	if (!acpi_gbl_reduced_hardware)
-+		return -ENODEV;
-+
- 	geddev = devm_kzalloc(&pdev->dev, sizeof(*geddev), GFP_KERNEL);
- 	if (!geddev)
- 		return -ENOMEM;
+diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
+index 5d361e4e3405..ef1ac4d127da 100644
+--- a/drivers/acpi/Makefile
++++ b/drivers/acpi/Makefile
+@@ -48,7 +48,7 @@ acpi-y				+= acpi_pnp.o
+ acpi-$(CONFIG_ARM_AMBA)	+= acpi_amba.o
+ acpi-y				+= power.o
+ acpi-y				+= event.o
+-acpi-$(CONFIG_ACPI_REDUCED_HARDWARE_ONLY) += evged.o
++acpi-y				+= evged.o
+ acpi-y				+= sysfs.o
+ acpi-y				+= property.o
+ acpi-$(CONFIG_X86)		+= acpi_cmos_rtc.o
 -- 
 2.21.0
 
