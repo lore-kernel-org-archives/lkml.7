@@ -2,92 +2,93 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC7AECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 06:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC82ECE58E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 06:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 715E82133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 06:20:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3745A21835
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 06:25:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbfJIGU5 (ORCPT
+        id S1728567AbfJIGZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 02:20:57 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:50952 "EHLO inva020.nxp.com"
+        Wed, 9 Oct 2019 02:25:46 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48104 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726254AbfJIGU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 02:20:56 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C16261A0394;
-        Wed,  9 Oct 2019 08:20:52 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E1DAC1A00A7;
-        Wed,  9 Oct 2019 08:20:47 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B22D7402EC;
-        Wed,  9 Oct 2019 14:20:41 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     gregkh@linuxfoundation.org, jslaby@suse.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] tty: serial: imx: Only get second/third IRQ when there is more than one IRQ
-Date:   Wed,  9 Oct 2019 14:18:31 +0800
-Message-Id: <1570601911-9162-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1726651AbfJIGZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 02:25:45 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6367018C8924;
+        Wed,  9 Oct 2019 06:25:45 +0000 (UTC)
+Received: from ovpn-117-172.phx2.redhat.com (ovpn-117-172.phx2.redhat.com [10.3.117.172])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C82F860A9F;
+        Wed,  9 Oct 2019 06:25:39 +0000 (UTC)
+Message-ID: <a1098e5f95a1ab202fdf79a73aedfeeb8e02dd47.camel@redhat.com>
+Subject: Re: [PATCH RT 5/8] sched/deadline: Reclaim cpuset bandwidth in
+ .migrate_task_rq()
+From:   Scott Wood <swood@redhat.com>
+To:     Juri Lelli <juri.lelli@redhat.com>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Date:   Wed, 09 Oct 2019 01:25:38 -0500
+In-Reply-To: <20191001085209.GA6481@localhost.localdomain>
+References: <20190727055638.20443-1-swood@redhat.com>
+         <20190727055638.20443-6-swood@redhat.com>
+         <20190927081141.GB31660@localhost.localdomain>
+         <9a4cc499e6de4690c682c03c0c880363fe3c9307.camel@redhat.com>
+         <20190930071233.GE31660@localhost.localdomain>
+         <9acc5f1bd0fe06acb2b7b518c5ef1f082e89ad63.camel@redhat.com>
+         <20191001085209.GA6481@localhost.localdomain>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Wed, 09 Oct 2019 06:25:45 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All i.MX SoCs except i.MX1 have ONLY 1 IRQ, so it is better to check
-the IRQ count before getting second/third IRQ to avoid below error
-message during probe:
+On Tue, 2019-10-01 at 10:52 +0200, Juri Lelli wrote:
+> On 30/09/19 11:24, Scott Wood wrote:
+> > On Mon, 2019-09-30 at 09:12 +0200, Juri Lelli wrote:
+> 
+> [...]
+> 
+> > > Hummm, I was actually more worried about the fact that we call
+> > > free_old_
+> > > cpuset_bw_dl() only if p->state != TASK_WAKING.
+> > 
+> > Oh, right. :-P  Not sure what I had in mind there; we want to call it
+> > regardless.
+> > 
+> > I assume we need rq->lock in free_old_cpuset_bw_dl()?  So something like
+> 
+> I think we can do with rcu_read_lock_sched() (see dl_task_can_attach()).
 
-[    0.726219] imx-uart 30860000.serial: IRQ index 1 not found
-[    0.731329] imx-uart 30860000.serial: IRQ index 2 not found
+RCU will keep dl_bw from being freed under us (we're implicitly in an RCU
+sched read section due to atomic context).  It won't stop rq->rd from
+changing, but that could have happened before we took rq->lock.  If the cpu
+the task was running on was removed from the cpuset, and that raced with the
+task being moved to a different cpuset, couldn't we end up erroneously
+subtracting from the cpu's new root domain (or failing to subtract at all if
+the old cpu's new cpuset happens to be the task's new cpuset)?  I don't see
+anything that forces tasks off of the cpu when a cpu is removed from a
+cpuset (though maybe I'm not looking in the right place), so the race window
+could be quite large.  In any case, that's an existing problem that's not
+going to get solved in this patchset.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- drivers/tty/serial/imx.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+-Scott
 
-diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
-index 504d81c..081fa82 100644
---- a/drivers/tty/serial/imx.c
-+++ b/drivers/tty/serial/imx.c
-@@ -2198,6 +2198,7 @@ static int imx_uart_probe(struct platform_device *pdev)
- 	u32 ucr1;
- 	struct resource *res;
- 	int txirq, rxirq, rtsirq;
-+	int irq_count;
- 
- 	sport = devm_kzalloc(&pdev->dev, sizeof(*sport), GFP_KERNEL);
- 	if (!sport)
-@@ -2220,9 +2221,17 @@ static int imx_uart_probe(struct platform_device *pdev)
- 	if (IS_ERR(base))
- 		return PTR_ERR(base);
- 
-+	irq_count = platform_irq_count(pdev);
-+	if (irq_count < 0)
-+		return irq_count;
-+
- 	rxirq = platform_get_irq(pdev, 0);
--	txirq = platform_get_irq(pdev, 1);
--	rtsirq = platform_get_irq(pdev, 2);
-+	if (irq_count > 1) {
-+		txirq = platform_get_irq(pdev, 1);
-+		rtsirq = platform_get_irq(pdev, 2);
-+	} else {
-+		txirq = rtsirq = -ENXIO;
-+	}
- 
- 	sport->port.dev = &pdev->dev;
- 	sport->port.mapbase = res->start;
--- 
-2.7.4
 
