@@ -2,147 +2,106 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E9CECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 21:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E030ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 21:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C023520B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 21:29:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="ByPkjco4"
+	by mail.kernel.org (Postfix) with ESMTP id 7268120B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 21:30:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732106AbfJIV3f (ORCPT
+        id S1732130AbfJIVaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 17:29:35 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:39118 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732082AbfJIV3f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 17:29:35 -0400
-Received: by mail-qk1-f193.google.com with SMTP id 4so3632739qki.6
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 14:29:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:mime-version
-         :content-transfer-encoding;
-        bh=dIDzN1TKiY/MFPYq9mr7pNPGjNRJ119lyvL+5vcql2k=;
-        b=ByPkjco4JiEeJAqac+I/JzwSeFttDQ8uxHxG2x2rBXKA107pUwCku9HH8nPFZcQrsr
-         KTzfGf2yfp60U1sxA/hw25HWA/5VoQhySL7r7Br8hD3Ee90NHuZq3/b3D/xpMqdmwHaq
-         zqCPxYlhtGVomUAiW+xXeawFqOmPo5VYZwLnpxda+SxwZu0R7xOfkfCAYfIpNTFOKPgT
-         onf/peae0XC2xIqf6f88DYk+4bE3rgObIPAvacCQ9hmaEfs5LeKJKpyS0RQrVHytAEL+
-         pumc4CUONqdgLXnVd99g4gvmZv4L0l+IMQCaEqyfY49vTxa4fyGUOidKjB+uf/qe0Zrv
-         DfHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:mime-version
-         :content-transfer-encoding;
-        bh=dIDzN1TKiY/MFPYq9mr7pNPGjNRJ119lyvL+5vcql2k=;
-        b=Kfp9L7j+KQxrA8xtD0tySiwcSpQr7IKPWM1U9beuOR/G/qFZhKPdMRzPEvXzZm4fqH
-         zO0U36Z5XsXMmjIhBWp3To8+OdseqVrOVLki9PIcMEWYq1DSKRkkqifn6LYSlcjiDs9U
-         JquYtOsHJKKN8zu0d0Hpq2AlGal/3EdcuG8MwNtMNaFPFiv+VH8hdx++v9gtRKWe133K
-         zV1tYWHjAlnHQ9YmFb5iQgKcK5oRGc8qsPJOkz10Fxx4Y8+FjHOm+6tTiyHoeEeeWVe/
-         tg0QB6mxqd1VjnaF6t2dqA6NRYYIn2M+Gq1jN0nxSs7KZwT8nh92V73rPuxkLaHlM1kj
-         RyuQ==
-X-Gm-Message-State: APjAAAUXIfTVSdAD2loY1spd0Ag5bD88IDUTtrvT20iiED11m3HgfZ8n
-        nLRWk5vNQpSLxuJ5bg2djtXCQD1oU+M=
-X-Google-Smtp-Source: APXvYqw0RMsb2vJiOo9HceATB2lQ9s1WY/bkZQYqu9XLdiPxPIU7x2Vv2Gq4yRry8p0DZ0uG60MmOQ==
-X-Received: by 2002:a05:620a:2193:: with SMTP id g19mr6125307qka.184.1570656572646;
-        Wed, 09 Oct 2019 14:29:32 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id n44sm2260197qtf.51.2019.10.09.14.29.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 09 Oct 2019 14:29:31 -0700 (PDT)
-Message-ID: <1570656570.5937.24.camel@lca.pw>
-Subject: "reuse mergeable anon_vma as parent when fork" causes a crash on
- s390
-From:   Qian Cai <cai@lca.pw>
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Rik van Riel <riel@surriel.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Date:   Wed, 09 Oct 2019 17:29:30 -0400
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 9 Oct 2019 17:30:23 -0400
+Received: from mga14.intel.com ([192.55.52.115]:5036 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729908AbfJIVaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 17:30:22 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 14:30:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,277,1566889200"; 
+   d="scan'208";a="205880605"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga002.jf.intel.com with ESMTP; 09 Oct 2019 14:30:21 -0700
+Date:   Wed, 9 Oct 2019 14:30:21 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Reto Buerki <reet@codelabs.ch>,
+        Liran Alon <liran.alon@oracle.com>
+Subject: Re: [PATCH v2 4/8] KVM: VMX: Optimize vmx_set_rflags() for
+ unrestricted guest
+Message-ID: <20191009213021.GH19952@linux.intel.com>
+References: <20190927214523.3376-1-sean.j.christopherson@intel.com>
+ <20190927214523.3376-5-sean.j.christopherson@intel.com>
+ <99e57095-d855-99d7-e10e-a415c6ef13b2@redhat.com>
+ <20191009163835.GB19952@linux.intel.com>
+ <aee0fe86-6a5a-680a-4147-3b68fc3718c9@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aee0fe86-6a5a-680a-4147-3b68fc3718c9@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The linux-next commit "mm/rmap.c: reuse mergeable anon_vma as parent when fork"
-[1] causes a crash on s390 while compiling some C code. Reverted it fixes the
-issue.
+On Wed, Oct 09, 2019 at 10:59:10PM +0200, Paolo Bonzini wrote:
+> On 09/10/19 18:38, Sean Christopherson wrote:
+> > On Wed, Oct 09, 2019 at 12:40:53PM +0200, Paolo Bonzini wrote:
+> >> On 27/09/19 23:45, Sean Christopherson wrote:
+> >>> Rework vmx_set_rflags() to avoid the extra code need to handle emulation
+> >>> of real mode and invalid state when unrestricted guest is disabled.  The
+> >>> primary reason for doing so is to avoid the call to vmx_get_rflags(),
+> >>> which will incur a VMREAD when RFLAGS is not already available.  When
+> >>> running nested VMs, the majority of calls to vmx_set_rflags() will occur
+> >>> without an associated vmx_get_rflags(), i.e. when stuffing GUEST_RFLAGS
+> >>> during transitions between vmcs01 and vmcs02.
+> >>>
+> >>> Note, vmx_get_rflags() guarantees RFLAGS is marked available.
+> >>
+> >> Slightly nicer this way:
+> >>
+> >> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> >> index 8de9853d7ab6..62ab19d65efd 100644
+> >> --- a/arch/x86/kvm/vmx/vmx.c
+> >> +++ b/arch/x86/kvm/vmx/vmx.c
+> >> @@ -1431,9 +1431,17 @@ unsigned long vmx_get_rflags(struct kvm_vcpu *vcpu)
+> >>  void vmx_set_rflags(struct kvm_vcpu *vcpu, unsigned long rflags)
+> >>  {
+> >>  	struct vcpu_vmx *vmx = to_vmx(vcpu);
+> >> -	unsigned long old_rflags = vmx_get_rflags(vcpu);
+> >> +	unsigned long old_rflags;
+> >> +
+> >> +	if (enable_unrestricted_guest) {
+> >> +		__set_bit(VCPU_EXREG_RFLAGS, (ulong *)&vcpu->arch.regs_avail);
+> >> +		vmx->rflags = rflags;
+> >> +		vmcs_writel(GUEST_RFLAGS, rflags);
+> >> +		return;
+> >> +	}
+> >> +
+> >> +	old_rflags = vmx_get_rflags(vcpu);
+> >>  
+> >> -	__set_bit(VCPU_EXREG_RFLAGS, (ulong *)&vcpu->arch.regs_avail);
+> >>  	vmx->rflags = rflags;
+> >>  	if (vmx->rmode.vm86_active) {
+> >>  		vmx->rmode.save_rflags = rflags;
+> > 
+> > Works for me.  Do you want me to spin a v3 to incorporate this and remove
+> > the open coding of the RIP/RSP accessors?  Or are you planning on squashing
+> > the changes as you apply?
+> 
+> If it's okay for you I can squash it.
 
-[1] https://lore.kernel.org/lkml/20191004160632.30251-1-richardw.yang@linux.intel.com/
-
-00: [  330.681233] vma 0000000049a08008 start 000003ff8ee7f000 end 000003ff8eee4
-00: 000                                                                         
-00: [  330.681233] next 000000004f272008 prev 0000000065c84230 mm 0000000037d1c1
-00: 00                                                                          
-00: [  330.681233] prot 711 anon_vma 000000001f4e4a80 vm_ops 0000000000000000   
-00: [  330.681233] pgoff 3ff8ee7f file 0000000000000000 private_data 00000000000
-00: 00000                                                                       
-00: [  330.681233] flags: 0x8100073(read|write|mayread|maywrite|mayexec|account|
-00: softdirty)                                                                  
-00: [  330.681344] ------------[ cut here ]------------                         
-00: [  330.681357] kernel BUG at include/linux/rmap.h:159!                      
-00: [  330.681442] illegal operation: 0001 ilc:1 [#1] SMP DEBUG_PAGEALLOC       
-00: [  330.681460] Modules linked in: ip_tables x_tables xfs dasd_fba_mod dasd_e
-00: ckd_mod dm_mirror dm_region_hash dm_log dm_mod                              
-00: [  330.681502] CPU: 0 PID: 7651 Comm: cc1 Not tainted 5.4.0-rc2-next-2019100
-00: 9+ #4                                                                       
-00: [  330.681516] Hardware name: IBM 2964 N96 400 (z/VM 6.4.0)                 
-00: [  330.681530] Krnl PSW : 0704c00180000000 00000000531d9cac (__vma_adjust+0x
-00: cf4/0xf30)                                                                  
-00: [  330.681561]            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:0 PM:0
-00:  RI:0 EA:3                                                                  
-00: [  330.681579] Krnl GPRS: 0000000000000001 0000030000000000 0000000000000146
-00:  000000006cc03da4                                                           
-00: [  330.681595]            0000030000000000 000000005304378c 00000000513de008
-00:  0000000000000000                                                           
-00: [  330.681611]            0000000049a08008 0000000049a08080 0000000000000000
-00:  000000005a178438                                                           
-00: [  330.681627]            0000000053bae3b0 0000000037d1c100 00000000531d9ca8
-00:  00000000235ef880                                                           
-01: HCPGSP2629I The virtual machine is placed in CP mode due to a SIGP stop from
- CPU 01.                                                                        
-01: HCPGSP2629I The virtual machine is placed in CP mode due to a SIGP stop from
- CPU 00.                                                                        
-00: [  330.681668] Krnl Code: 00000000531d9c9c: fae0b9040028        ap      2308
-00: (15,%r11),40(1,%r0)                                                         
-00: [  330.681668]            00000000531d9ca2: c0e5ffff145f        brasl   %r14
-00: ,531bc560                                                                   
-00: [  330.681668]           #00000000531d9ca8: a7f40001            brc     15,5
-00: 31d9caa                                                                     
-00: [  330.681668]           >00000000531d9cac: c020005f1a5a        larl    %r2,
-00: 53dbd160                                                                    
-00: [  330.681668]            00000000531d9cb2: c0e50015ec2b        brasl   %r14
-00: ,53497508                                                                   
-00: [  330.681668]            00000000531d9cb8: e320f0d80004        lg      %r2,
-00: 216(%r15)                                                                   
-00: [  330.681668]            00000000531d9cbe: c0e500040de1        brasl   %r14
-00: ,5325b880                                                                   
-00: [  330.681668]            00000000531d9cc4: 4120d038            la      %r2,
-00: 56(%r13)                                                                    
-00: [  330.682579] Call Trace:                                                  
-00: [  330.682665] ([<00000000531d9ca8>] __vma_adjust+0xcf0/0xf30)              
-00: [  330.682684]  [<00000000531da4f0>] vma_merge+0x608/0x6b8                  
-00: [  330.682699]  [<00000000531de3b8>] mmap_region+0x1e0/0x9b0                
-00: [  330.682713]  [<00000000531defec>] do_mmap+0x464/0x650                    
-00: [  330.682730]  [<00000000531930ba>] vm_mmap_pgoff+0x132/0x1c0              
-00: [  330.682745]  [<00000000531da7b4>] ksys_mmap_pgoff+0xd4/0x458             
-00: [  330.682761]  [<00000000531dac54>] __s390x_sys_old_mmap+0xdc/0x108        
-00: [  330.682779]  [<00000000537dcdd0>] system_call+0xd8/0x2b4                 
-00: [  330.682791] INFO: lockdep is turned off.                                 
-00: [  330.682801] Last Breaking-Event-Address:                                 
-00: [  330.682815]  [<00000000531d9ca8>] __vma_adjust+0xcf0/0xf30               
-00: [  330.682833] Kernel panic - not syncing: Fatal exception: panic_on_oops
+Squash away.
