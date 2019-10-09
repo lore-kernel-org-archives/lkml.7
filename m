@@ -2,152 +2,187 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 971CFECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4227EC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68B8621835
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:20:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IYUqb/h3"
+	by mail.kernel.org (Postfix) with ESMTP id 212A92133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:21:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730678AbfJILUK (ORCPT
+        id S1730754AbfJILVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 07:20:10 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38215 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfJILUK (ORCPT
+        Wed, 9 Oct 2019 07:21:30 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:46601 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727035AbfJILVa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 07:20:10 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w12so2411418wro.5
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 04:20:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NiFi50FuqI1VBpxzFdOXo/50+9I/uAkHDK87JHPscnU=;
-        b=IYUqb/h35TlOVvANFhPXRwdzAJit1HS7e8FL86O0yeE6P8hgNfhos27Ng6uveFyPyw
-         2mf36pEI87UXaGXeLkOr1yOQe+onbuyQ/DoIL+nFkyGAj+kHFjN+IB4PCfv9KVrqE6aM
-         /kyYvCbklhWGYbmsUeHdoeqo9DmeJslfqOY4o+nqx5s9dYQe4dthhWF4WR/b8KLIPZPo
-         BKUZiaSLr/lOFjOStbueSEKq81bBBjh+TAU3v/QFaHcIkEYyrv3ID0DRMg3suNM2xeMf
-         R36IjldPLxPfA+siJfNs9KxyUMDN/U3ihcuYGO4THYVe2AC94XI26aN2mgrVhRcYhz6z
-         AZhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NiFi50FuqI1VBpxzFdOXo/50+9I/uAkHDK87JHPscnU=;
-        b=cLfVtnAu8R/R2KfQXqcd1L0r6CsH8d5rpRwLuFeFXCdCizP+7JGsmNZPbQ05Id8P61
-         UT8nXdI6dAbRtPnkyFX+KlkuAzzYyuvyi+wVssA4UkpJR8DCB0GVf9RFKNlq3B8LZ37S
-         MiJO3bxdH192l8KH5so5erwp3YvTVBn3YdmnUSmizA12yNb9HiLrHX36u1ZKhZ3CKApY
-         3+Vzl7gDHcJE1QUyKefoyAuygd3jo/8CRRlhqiLZRd+xTg6C7nxKo/I6wk08POnjrzdd
-         uCLRpZK962jX/kELjBZV8QjEckjRclytIy3519gGbdInH1ddTj/mG0v1vHPn4rlkykyy
-         n5eQ==
-X-Gm-Message-State: APjAAAX3lvBwPMgODp1upKvdcbBmD/Pk/hs4CfuVheLNeCyfDrlyN+zL
-        Ffpqj0wQmv99xwEpBeNWfknqtQ==
-X-Google-Smtp-Source: APXvYqxfoIMEQHrCYevrzZsV5a92ggMZZsyuGPNKm0meavL9E991mpyYRdC345pA/uJsZsgpQ5WMbQ==
-X-Received: by 2002:adf:fa88:: with SMTP id h8mr2392734wrr.89.1570620008255;
-        Wed, 09 Oct 2019 04:20:08 -0700 (PDT)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id q15sm3197470wrg.65.2019.10.09.04.20.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 04:20:07 -0700 (PDT)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     broonie@kernel.org
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        lgirdwood@gmail.com,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH] ASoC: msm8916-wcd-digital: add missing MIX2 path for RX1/2
-Date:   Wed,  9 Oct 2019 12:19:44 +0100
-Message-Id: <20191009111944.28069-1-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        Wed, 9 Oct 2019 07:21:30 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iIA23-0007hD-Hi; Wed, 09 Oct 2019 13:21:27 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iIA22-0005BZ-D3; Wed, 09 Oct 2019 13:21:26 +0200
+Date:   Wed, 9 Oct 2019 13:21:26 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-kernel@vger.kernel.org, thierry.reding@gmail.com,
+        heiko@sntech.de, dianders@chromium.org, mka@chromium.org,
+        groeck@chromium.org, kernel@collabora.com, bleung@chromium.org,
+        linux-pwm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH] pwm: cros-ec: Let cros_ec_pwm_get_state() return the
+ last applied state
+Message-ID: <20191009112126.slpyxhnuqpiqgmes@pengutronix.de>
+References: <20191008105417.16132-1-enric.balletbo@collabora.com>
+ <20191008143432.pbhcqamd6f4qwbqn@pengutronix.de>
+ <4f009344-242e-19a7-6872-2c55df086044@collabora.com>
+ <20191008203137.s22clq6v2om5ktio@pengutronix.de>
+ <53b7d02b-1a2d-11da-fdd0-5378f360d876@collabora.com>
+ <20191009095635.yysr33lnwldicyng@holly.lan>
+ <20191009101637.gmvghwdvcmfw4yyk@pengutronix.de>
+ <20191009104236.ux23ywnhvsym2qcb@holly.lan>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191009104236.ux23ywnhvsym2qcb@holly.lan>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds missing MIX2 path on RX1/2 which take IIR1 and
-IIR2 as inputs.
+On Wed, Oct 09, 2019 at 11:42:36AM +0100, Daniel Thompson wrote:
+> On Wed, Oct 09, 2019 at 12:16:37PM +0200, Uwe Kleine-König wrote:
+> > On Wed, Oct 09, 2019 at 10:56:35AM +0100, Daniel Thompson wrote:
+> > > On Wed, Oct 09, 2019 at 11:27:13AM +0200, Enric Balletbo i Serra wrote:
+> > > > Hi Uwe,
+> > > > 
+> > > > Adding Daniel and Lee to the discussion ...
+> > > 
+> > > Thanks!
+> > > 
+> > > > On 8/10/19 22:31, Uwe Kleine-König wrote:
+> > > > > On Tue, Oct 08, 2019 at 06:33:15PM +0200, Enric Balletbo i Serra wrote:
+> > > > >>> A few thoughts to your approach here ...:
+> > > > >>>
+> > > > >>>  - Would it make sense to only store duty_cycle and enabled in the
+> > > > >>>    driver struct?
+> > > > >>>
+> > > > >>
+> > > > >> Yes, in fact, my first approach (that I didn't send) was only storing enabled
+> > > > >> and duty cycle. For some reason I ended storing the full pwm_state struct, but I
+> > > > >> guess is not really needed.
+> > > > >>
+> > > > >>
+> > > > >>>  - Which driver is the consumer of your pwm? If I understand correctly
+> > > > >>>    the following sequence is the bad one:
+> > > > >>>
+> > > > >>
+> > > > >> The consumer is the pwm_bl driver. Actually I'n trying to identify
+> > > > >> other consumers.
+> > > > > 
+> > > > 
+> > > > So far, the pwm_bl driver is the only consumer of cros-ec-pwm.
+> > > > 
+> > > > > Ah, I see why I missed to identify the problem back when I checked this
+> > > > > driver. The problem is not that .duty_cycle isn't set but there .enabled
+> > > > > isn't set. So maybe we just want:
+> > > > > 
+> > > > > diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+> > > > > index 2201b8c78641..0468c6ee4448 100644
+> > > > > --- a/drivers/video/backlight/pwm_bl.c
+> > > > > +++ b/drivers/video/backlight/pwm_bl.c
+> > > > > @@ -123,6 +123,7 @@ static int pwm_backlight_update_status(struct backlight_device *bl)
+> > > > >         if (brightness > 0) {
+> > > > >                 pwm_get_state(pb->pwm, &state);
+> > > > >                 state.duty_cycle = compute_duty_cycle(pb, brightness);
+> > > > > +               state.enabled = true;
+> > > > >                 pwm_apply_state(pb->pwm, &state);
+> > > > >                 pwm_backlight_power_on(pb);
+> > > > >         } else
+> > > > > 
+> > > > > ? On a side note: It's IMHO strange that pwm_backlight_power_on
+> > > > > reconfigures the PWM once more.
+> > > > > 
+> > > > 
+> > > > Looking again to the pwm_bl code, now, I am not sure this is correct (although
+> > > > it probably solves the problem for me).
+> > > 
+> > > Looking at the pwm_bl code I wouldn't accept the above as it is but I'd
+> > > almost certainly accept a patch to pwm_bl to move the PWM enable/disable
+> > > out of both the power on/off functions so the duty-cycle/enable or
+> > > disable can happen in one go within the update_status function. I don't
+> > > think such a change would interfere with the power and enable sequencing
+> > > needed by panels and it would therefore be a nice continuation of the
+> > > work to convert over to the pwm_apply_state() API.
+> > 
+> > OK for me. Enric, do you care enough to come up with a patch for pwm_bl?
+> > I'd expect that this alone should already fix your issue.
+> >  
+> > > None of the above has anything to do with what is right or wrong for
+> > > the PWM API evolution. Of course, if this thread does conclude that it
+> > > is OK the duty cycle of a disabled PWM to be retained for some drivers
+> > > and not others then I'd hope to see some WARN_ON()s added to the PWM
+> > > framework to help bring problems to the surface with all drivers.
+> > 
+> > I think it's not possible to add a reliable WARN_ON for that issue. It
+> > is quite expected that .get_state returns something that doesn't
+> > completely match the requested configuration. So if a consumer requests
+> > 
+> > 	.duty_cycle = 1
+> > 	.period = 100000000
+> > 	.enabled = false
+> > 
+> > pwm_get_state possibly returns .duty_cycle = 0 even for drivers/hardware
+> > that has a concept of duty_cycle for disabled hardware.
+> > 
+> > A bit this is addressed in https://patchwork.ozlabs.org/patch/1147517/.
+> 
+> Isn't that intended to help identify "odd" PWM drivers rather than "odd"
+> clients?
+> 
+> Initially I was thinking that a WARN_ON() could be emitted when:
+> 
+> 1. .duty_cycle is non-zero
+> 2. .enabled is false
+> 3. the PWM is not already enabled
+> 
+> (#3 included to avoid too many false positives when disabling a PWM)
 
-Without this patch sound card fails to intialize with below warning:
+I think I created a patch for that in the past, don't remember the
+details.
 
- ASoC: no sink widget found for RX1 MIX2 INP1
- ASoC: Failed to add route IIR1 -> IIR1 -> RX1 MIX2 INP1
- ASoC: no sink widget found for RX2 MIX2 INP1
- ASoC: Failed to add route IIR1 -> IIR1 -> RX2 MIX2 INP1
- ASoC: no sink widget found for RX1 MIX2 INP1
- ASoC: Failed to add route IIR2 -> IIR2 -> RX1 MIX2 INP1
- ASoC: no sink widget found for RX2 MIX2 INP1
- ASoC: Failed to add route IIR2 -> IIR2 -> RX2 MIX2 INP1
+> A poisoning approach might be equally valid. If some drivers are
+> permitted to "round" .duty_cycle to 0 when .enabled is false then the
+> framework could get *all* drivers to behave in the same way by
+> zeroing it out before calling the drivers apply method. It is not that
+> big a deal but minimising the difference between driver behaviour should
+> automatically reduce the difference in API usage by clients.
 
-Reported-by: Stephan Gerhold <stephan@gerhold.net>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Tested-by: Stephan Gerhold <stephan@gerhold.net>
----
- sound/soc/codecs/msm8916-wcd-digital.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+I like it, but that breaks consumers that set .duty_cycle once during
+probe and then only do:
 
-diff --git a/sound/soc/codecs/msm8916-wcd-digital.c b/sound/soc/codecs/msm8916-wcd-digital.c
-index 9fa5d44fdc79..58b2468fb2a7 100644
---- a/sound/soc/codecs/msm8916-wcd-digital.c
-+++ b/sound/soc/codecs/msm8916-wcd-digital.c
-@@ -243,6 +243,10 @@ static const char *const rx_mix1_text[] = {
- 	"ZERO", "IIR1", "IIR2", "RX1", "RX2", "RX3"
- };
- 
-+static const char * const rx_mix2_text[] = {
-+	"ZERO", "IIR1", "IIR2"
-+};
-+
- static const char *const dec_mux_text[] = {
- 	"ZERO", "ADC1", "ADC2", "ADC3", "DMIC1", "DMIC2"
- };
-@@ -270,6 +274,16 @@ static const struct soc_enum rx3_mix1_inp_enum[] = {
- 	SOC_ENUM_SINGLE(LPASS_CDC_CONN_RX3_B2_CTL, 0, 6, rx_mix1_text),
- };
- 
-+/* RX1 MIX2 */
-+static const struct soc_enum rx_mix2_inp1_chain_enum =
-+	SOC_ENUM_SINGLE(LPASS_CDC_CONN_RX1_B3_CTL,
-+		0, 3, rx_mix2_text);
-+
-+/* RX2 MIX2 */
-+static const struct soc_enum rx2_mix2_inp1_chain_enum =
-+	SOC_ENUM_SINGLE(LPASS_CDC_CONN_RX2_B3_CTL,
-+		0, 3, rx_mix2_text);
-+
- /* DEC */
- static const struct soc_enum dec1_mux_enum = SOC_ENUM_SINGLE(
- 				LPASS_CDC_CONN_TX_B1_CTL, 0, 6, dec_mux_text);
-@@ -309,6 +323,10 @@ static const struct snd_kcontrol_new rx3_mix1_inp2_mux = SOC_DAPM_ENUM(
- 				"RX3 MIX1 INP2 Mux", rx3_mix1_inp_enum[1]);
- static const struct snd_kcontrol_new rx3_mix1_inp3_mux = SOC_DAPM_ENUM(
- 				"RX3 MIX1 INP3 Mux", rx3_mix1_inp_enum[2]);
-+static const struct snd_kcontrol_new rx1_mix2_inp1_mux = SOC_DAPM_ENUM(
-+				"RX1 MIX2 INP1 Mux", rx_mix2_inp1_chain_enum);
-+static const struct snd_kcontrol_new rx2_mix2_inp1_mux = SOC_DAPM_ENUM(
-+				"RX2 MIX2 INP1 Mux", rx2_mix2_inp1_chain_enum);
- 
- /* Digital Gain control -38.4 dB to +38.4 dB in 0.3 dB steps */
- static const DECLARE_TLV_DB_SCALE(digital_gain, -3840, 30, 0);
-@@ -740,6 +758,10 @@ static const struct snd_soc_dapm_widget msm8916_wcd_digital_dapm_widgets[] = {
- 			 &rx3_mix1_inp2_mux),
- 	SND_SOC_DAPM_MUX("RX3 MIX1 INP3", SND_SOC_NOPM, 0, 0,
- 			 &rx3_mix1_inp3_mux),
-+	SND_SOC_DAPM_MUX("RX1 MIX2 INP1", SND_SOC_NOPM, 0, 0,
-+			 &rx1_mix2_inp1_mux),
-+	SND_SOC_DAPM_MUX("RX2 MIX2 INP1", SND_SOC_NOPM, 0, 0,
-+			 &rx2_mix2_inp1_mux),
- 
- 	SND_SOC_DAPM_MUX("CIC1 MUX", SND_SOC_NOPM, 0, 0, &cic1_mux),
- 	SND_SOC_DAPM_MUX("CIC2 MUX", SND_SOC_NOPM, 0, 0, &cic2_mux),
+	pwm_get_state(pwm, &state);
+	state.enabled = ...
+	pwm_apply_state(pwm, &state);
+
+which is a common idiom.
+
+Best regards
+Uwe
+
 -- 
-2.21.0
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
