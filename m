@@ -4,55 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2553BC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B16EC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE11B206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:27:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 430C520B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:28:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570642074;
-	bh=8aKOuuqY5V4XqPQXlPH6ZYhPGkDDwBA5ONjdJGBW6rw=;
+	s=default; t=1570642085;
+	bh=mpVfi+A2VV7XDoIj1M8d0rcZZUt1N63X7CXHAW2KBAc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1qH33bE9+AIocB5Qac2SDik0gDUHm/q8weIBOWdl1wr1BlFADM+TaAfEWfCwNnDKx
-	 rSnorTeFE1NWI96SpBAFvrnAyYTJDRMIhlhIdYvJVPqyafw8JQfGpzb1Ga+f/2o5Qv
-	 4eQcTB67+FV521NVC+S5c954n+WqsdB30U/NR1+0=
+	b=l7SEDLCWPr/sI22j5cGhiiBw0HA5RBYhFutFU2xtZGGWcfxJ1WYXPtJbse0AT0k3K
+	 VgvsQCr1TDO1+iMUSumjIcKguQL2+lnROPuOcHAFSqUU4ikm+WA75r0/sF7rpFfREk
+	 3KbC1wKqO/q3N+q7uxGWFr9EptEx8kh96xovgv0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732820AbfJIR1x (ORCPT
+        id S1732844AbfJIR2D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:27:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49102 "EHLO mail.kernel.org"
+        Wed, 9 Oct 2019 13:28:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732155AbfJIRY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 13:24:27 -0400
+        id S1732299AbfJIRYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 13:24:25 -0400
 Received: from sasha-vm.mshome.net (unknown [167.220.2.234])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A85CE206BB;
-        Wed,  9 Oct 2019 17:24:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E53521D7B;
+        Wed,  9 Oct 2019 17:24:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570641866;
-        bh=8aKOuuqY5V4XqPQXlPH6ZYhPGkDDwBA5ONjdJGBW6rw=;
+        s=default; t=1570641865;
+        bh=mpVfi+A2VV7XDoIj1M8d0rcZZUt1N63X7CXHAW2KBAc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qF9LOKl5Eb8U/cG2MNl8lAfIdQrbwB0un6S3T1vFJjrGmnylI8NK+6D+aGuGC+wP9
-         Iacw3EW7o2oz4OX4/hvUTdIljMgUGsqA8kCfHS4cJlGoN1oJJFBuGHmfRtnZLKzK2e
-         X5gXj5J833kdBoPdMtZvtRH4ahltPxd6PjncIhf0=
+        b=Ox+2t/Ze6fbcTYtj2IcgyssiFQzaFNXperwGl8WZQTcogJ2ilyP1+HQOULQHMFuBa
+         KdF5Ggd523mFQ3koS4tInWzgPChLHSpxMrjLvoRfDtKAROXwlWTQItiD7GQNizObFf
+         kobg+1gUcbvcmjwLQS5E5he6psmbHi4NW6gFT1w4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 10/21] net: dsa: qca8k: Use up to 7 ports for all operations
-Date:   Wed,  9 Oct 2019 13:06:03 -0400
-Message-Id: <20191009170615.32750-10-sashal@kernel.org>
+Cc:     Jim Mattson <jmattson@google.com>, Marc Orr <marcorr@google.com>,
+        Peter Shier <pshier@google.com>,
+        Jacob Xu <jacobhxu@google.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 06/21] kvm: x86: Improve emulation of CPUID leaves 0BH and 1FH
+Date:   Wed,  9 Oct 2019 13:05:59 -0400
+Message-Id: <20191009170615.32750-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191009170615.32750-1-sashal@kernel.org>
 References: <20191009170615.32750-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,51 +62,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Vokáč <michal.vokac@ysoft.com>
+From: Jim Mattson <jmattson@google.com>
 
-[ Upstream commit 7ae6d93c8f052b7a77ba56ed0f654e22a2876739 ]
+[ Upstream commit 43561123ab3759eb6ff47693aec1a307af0aef83 ]
 
-The QCA8K family supports up to 7 ports. So use the existing
-QCA8K_NUM_PORTS define to allocate the switch structure and limit all
-operations with the switch ports.
+For these CPUID leaves, the EDX output is not dependent on the ECX
+input (i.e. the SIGNIFCANT_INDEX flag doesn't apply to
+EDX). Furthermore, the low byte of the ECX output is always identical
+to the low byte of the ECX input. KVM does not produce the correct ECX
+and EDX outputs for any undefined subleaves beyond the first.
 
-This was not an issue until commit 0394a63acfe2 ("net: dsa: enable and
-disable all ports") disabled all unused ports. Since the unused ports 7-11
-are outside of the correct register range on this switch some registers
-were rewritten with invalid content.
+Special-case these CPUID leaves in kvm_cpuid, so that the ECX and EDX
+outputs are properly generated for all undefined subleaves.
 
-Fixes: 6b93fb46480a ("net-next: dsa: add new driver for qca8xxx family")
-Fixes: a0c02161ecfc ("net: dsa: variable number of ports")
-Fixes: 0394a63acfe2 ("net: dsa: enable and disable all ports")
-Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 0771671749b59a ("KVM: Enhance guest cpuid management")
+Fixes: a87f2d3a6eadab ("KVM: x86: Add Intel CPUID.1F cpuid emulation support")
+Signed-off-by: Jim Mattson <jmattson@google.com>
+Reviewed-by: Marc Orr <marcorr@google.com>
+Reviewed-by: Peter Shier <pshier@google.com>
+Reviewed-by: Jacob Xu <jacobhxu@google.com>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/qca8k.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kvm/cpuid.c | 83 +++++++++++++++++++++++++-------------------
+ 1 file changed, 47 insertions(+), 36 deletions(-)
 
-diff --git a/drivers/net/dsa/qca8k.c b/drivers/net/dsa/qca8k.c
-index c3c9d7e33bd6c..8e49974ffa0ed 100644
---- a/drivers/net/dsa/qca8k.c
-+++ b/drivers/net/dsa/qca8k.c
-@@ -551,7 +551,7 @@ qca8k_setup(struct dsa_switch *ds)
- 		    BIT(0) << QCA8K_GLOBAL_FW_CTRL1_UC_DP_S);
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 5c82b4bc4a68a..f3c49dc423895 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -868,53 +868,64 @@ struct kvm_cpuid_entry2 *kvm_find_cpuid_entry(struct kvm_vcpu *vcpu,
+ EXPORT_SYMBOL_GPL(kvm_find_cpuid_entry);
  
- 	/* Setup connection between CPU port & user ports */
--	for (i = 0; i < DSA_MAX_PORTS; i++) {
-+	for (i = 0; i < QCA8K_NUM_PORTS; i++) {
- 		/* CPU port gets connected to all user ports of the switch */
- 		if (dsa_is_cpu_port(ds, i)) {
- 			qca8k_rmw(priv, QCA8K_PORT_LOOKUP_CTRL(QCA8K_CPU_PORT),
-@@ -900,7 +900,7 @@ qca8k_sw_probe(struct mdio_device *mdiodev)
- 	if (id != QCA8K_ID_QCA8337)
- 		return -ENODEV;
+ /*
+- * If no match is found, check whether we exceed the vCPU's limit
+- * and return the content of the highest valid _standard_ leaf instead.
+- * This is to satisfy the CPUID specification.
++ * If the basic or extended CPUID leaf requested is higher than the
++ * maximum supported basic or extended leaf, respectively, then it is
++ * out of range.
+  */
+-static struct kvm_cpuid_entry2* check_cpuid_limit(struct kvm_vcpu *vcpu,
+-                                                  u32 function, u32 index)
++static bool cpuid_function_in_range(struct kvm_vcpu *vcpu, u32 function)
+ {
+-	struct kvm_cpuid_entry2 *maxlevel;
+-
+-	maxlevel = kvm_find_cpuid_entry(vcpu, function & 0x80000000, 0);
+-	if (!maxlevel || maxlevel->eax >= function)
+-		return NULL;
+-	if (function & 0x80000000) {
+-		maxlevel = kvm_find_cpuid_entry(vcpu, 0, 0);
+-		if (!maxlevel)
+-			return NULL;
+-	}
+-	return kvm_find_cpuid_entry(vcpu, maxlevel->eax, index);
++	struct kvm_cpuid_entry2 *max;
++
++	max = kvm_find_cpuid_entry(vcpu, function & 0x80000000, 0);
++	return max && function <= max->eax;
+ }
  
--	priv->ds = dsa_switch_alloc(&mdiodev->dev, DSA_MAX_PORTS);
-+	priv->ds = dsa_switch_alloc(&mdiodev->dev, QCA8K_NUM_PORTS);
- 	if (!priv->ds)
- 		return -ENOMEM;
+ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+ 	       u32 *ecx, u32 *edx, bool check_limit)
+ {
+ 	u32 function = *eax, index = *ecx;
+-	struct kvm_cpuid_entry2 *best;
+-	bool entry_found = true;
+-
+-	best = kvm_find_cpuid_entry(vcpu, function, index);
+-
+-	if (!best) {
+-		entry_found = false;
+-		if (!check_limit)
+-			goto out;
++	struct kvm_cpuid_entry2 *entry;
++	struct kvm_cpuid_entry2 *max;
++	bool found;
+ 
+-		best = check_cpuid_limit(vcpu, function, index);
++	entry = kvm_find_cpuid_entry(vcpu, function, index);
++	found = entry;
++	/*
++	 * Intel CPUID semantics treats any query for an out-of-range
++	 * leaf as if the highest basic leaf (i.e. CPUID.0H:EAX) were
++	 * requested.
++	 */
++	if (!entry && check_limit && !cpuid_function_in_range(vcpu, function)) {
++		max = kvm_find_cpuid_entry(vcpu, 0, 0);
++		if (max) {
++			function = max->eax;
++			entry = kvm_find_cpuid_entry(vcpu, function, index);
++		}
+ 	}
+-
+-out:
+-	if (best) {
+-		*eax = best->eax;
+-		*ebx = best->ebx;
+-		*ecx = best->ecx;
+-		*edx = best->edx;
+-	} else
++	if (entry) {
++		*eax = entry->eax;
++		*ebx = entry->ebx;
++		*ecx = entry->ecx;
++		*edx = entry->edx;
++	} else {
+ 		*eax = *ebx = *ecx = *edx = 0;
+-	trace_kvm_cpuid(function, *eax, *ebx, *ecx, *edx, entry_found);
+-	return entry_found;
++		/*
++		 * When leaf 0BH or 1FH is defined, CL is pass-through
++		 * and EDX is always the x2APIC ID, even for undefined
++		 * subleaves. Index 1 will exist iff the leaf is
++		 * implemented, so we pass through CL iff leaf 1
++		 * exists. EDX can be copied from any existing index.
++		 */
++		if (function == 0xb || function == 0x1f) {
++			entry = kvm_find_cpuid_entry(vcpu, function, 1);
++			if (entry) {
++				*ecx = index & 0xff;
++				*edx = entry->edx;
++			}
++		}
++	}
++	trace_kvm_cpuid(function, *eax, *ebx, *ecx, *edx, found);
++	return found;
+ }
+ EXPORT_SYMBOL_GPL(kvm_cpuid);
  
 -- 
 2.20.1
