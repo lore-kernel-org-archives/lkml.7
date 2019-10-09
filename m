@@ -2,128 +2,120 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4903FECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F096ECE58E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22B2F21848
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:36:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC97D218DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:37:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570635427;
+	bh=edf3a7Xyb4Ic5cpCpe6yHS1CA/n0vMcGLXMOlQSiBDg=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=iWhtpcp4tP6ljbaYiO+bXLuOW4L2rlAiXDngNPdpJ8LbR9UWG2C89WL6qN/X28t4j
+	 dY2D3FUZwWm2NbVDgDZqizc03eFSfqNvL4W0B5QH53clGnDowWmx4iQclVU6LSKwTC
+	 CzYbkq/mKU/0bx0FWEQISdDa/3YHdfVf1LFsOORs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731430AbfJIPgh (ORCPT
+        id S1731486AbfJIPhG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 11:36:37 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36374 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730503AbfJIPgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 11:36:36 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CA13FAD49;
-        Wed,  9 Oct 2019 15:36:33 +0000 (UTC)
-Date:   Wed, 9 Oct 2019 17:36:29 +0200
-From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     hannes@cmpxchg.org, clm@fb.com, dennisz@fb.com,
-        Josef Bacik <jbacik@fb.com>, kernel-team@fb.com,
-        newella@fb.com, lizefan@huawei.com, axboe@kernel.dk,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Rik van Riel <riel@surriel.com>, josef@toxicpanda.com,
-        cgroups@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/10] blkcg: implement blk-iocost
-Message-ID: <20191009153629.GA5400@blackbody.suse.cz>
-References: <20190828220600.2527417-1-tj@kernel.org>
- <20190828220600.2527417-9-tj@kernel.org>
- <20190910125513.GA6399@blackbody.suse.cz>
- <20190910160855.GS2263813@devbig004.ftw2.facebook.com>
- <20191003145106.GC6678@blackbody.suse.cz>
- <20191003164552.GA3247445@devbig004.ftw2.facebook.com>
+        Wed, 9 Oct 2019 11:37:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37162 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729742AbfJIPhG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 11:37:06 -0400
+Received: from paulmck-ThinkPad-P72 (mobile-166-137-176-109.mycingular.net [166.137.176.109])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 304D9218AC;
+        Wed,  9 Oct 2019 15:37:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570635425;
+        bh=edf3a7Xyb4Ic5cpCpe6yHS1CA/n0vMcGLXMOlQSiBDg=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=UsVnXzAIzR9JpLCn6O++S2Alq32z1XzoL7CfrtrT9iC2Bo0HNdbEOUmEWiXGhZKgx
+         vjuRbLjOI8qbqYcp1pQ0CB6If1Fac/28dbE+e+Ue4pYPQwx/LyYIhkw4YIJkL6+Phr
+         UKrIppp5CAM5RiV5D4NOZtnRaAveBHLwVySAldQg=
+Date:   Wed, 9 Oct 2019 08:36:59 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mingo@kernel.org, jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH tip/core/rcu 8/9] net/netfilter: Replace
+ rcu_swap_protected() with rcu_replace()
+Message-ID: <20191009153659.GA30521@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191003014153.GA13156@paulmck-ThinkPad-P72>
+ <20191003014310.13262-8-paulmck@kernel.org>
+ <20191008141611.usmxb5vzoxc36wqw@salvia>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Kj7319i9nmIyA2yE"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191003164552.GA3247445@devbig004.ftw2.facebook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191008141611.usmxb5vzoxc36wqw@salvia>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Oct 08, 2019 at 04:16:11PM +0200, Pablo Neira Ayuso wrote:
+> On Wed, Oct 02, 2019 at 06:43:09PM -0700, paulmck@kernel.org wrote:
+> > From: "Paul E. McKenney" <paulmck@kernel.org>
+> > 
+> > This commit replaces the use of rcu_swap_protected() with the more
+> > intuitively appealing rcu_replace() as a step towards removing
+> > rcu_swap_protected().
+> > 
+> > Link: https://lore.kernel.org/lkml/CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta4gg6Hw@mail.gmail.com/
+> > Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> > Cc: Pablo Neira Ayuso <pablo@netfilter.org>
+> > Cc: Jozsef Kadlecsik <kadlec@netfilter.org>
+> > Cc: Florian Westphal <fw@strlen.de>
+> > Cc: "David S. Miller" <davem@davemloft.net>
+> > Cc: <netfilter-devel@vger.kernel.org>
+> > Cc: <coreteam@netfilter.org>
+> > Cc: <netdev@vger.kernel.org>
+> 
+> Acked-by: Pablo Neira Ayuso <pablo@netfilter.org>
 
---Kj7319i9nmIyA2yE
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied, thank you!
 
-On Thu, Oct 03, 2019 at 09:45:52AM -0700, Tejun Heo <tj@kernel.org> wrote:
-> [...] but the qos file gets weird because the content of the file is
-> more resource control policies than device properties.
-I see two facets on this -- the semantics of the QoS controls and
-storing controller parameters generally.
+							Thanx, Paul
 
-Because I'm not fully convinced using the root cgroup for the latter is
-a good idea and I don't have a better one (what about
-/sys/kernel/cgroup/?), I'd like to question the former to potentially
-postpone finding the place for its parameters :-)
-
-
-On Wed, Aug 28, 2019 at 03:05:58PM -0700, Tejun Heo <tj@kernel.org> wrote:
-> [...]
-> Please see the top comment in blk-iocost.c and documentation for
-> more details.
-I admit I did't grasp the explanations in the cgroup-v2.rst, perhaps
-some of the explanations from blk-iocost.c would be useful there as
-well.
-
-IIUC, the controls are supposed to be abstracted and generic to express
-high-level ideas and be independent of particular details.
-Here a bunch of parameters is introduced whose tuning may become a
-complex optimization task.
-
-What is the metric that is the QoS controller striving to guarantee?
-How does it differ from the io.latency policy?
-
-
-> [...]=20
-> + * 2-2. Vrate Adjustment
-> + * [...] When this delay becomes noticeable, it's a clear
-> + * indication that the device is saturated and we lower the vrate.  This
-> + * saturation signal is fairly conservative as it only triggers when both
-> + * hardware and software queues are filled up, and is used as the default
-> + * busy signal.
-(The following paragraph is based only on na=EFve understanding of the
-block layer.) So the device's vrate is lowered, causing its vtime
-growing slower, i.e.  postponing issuing an IO later for all cgroups
-accessing the device. But what's the purpose of this? If the queues fill
-up, wouldn't be all naturally pushed back by the longer queue time
-anyway? And wouldn't slowing down the device's vtime just cause queueing
-elsewhere?
-
-Thanks,
-Michal
-
---Kj7319i9nmIyA2yE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl2d/nUACgkQia1+riC5
-qSgceA//QDkptfj5otDY4KHhLNVykDf/CbJN9RXtXKVybJ+GMFUF0hZqur090XJ/
-OIy+rmh6WXf6HEislGKoc9UvRxko+6jxteR1ROd9b9S4tzQib1vJ8i2euw61uO8U
-PLhkmGGU7vXvMwdI07vrmfI7XnrCH7cC1gAVkZ25m7NPwDGTq55h0h9FZDhcyJWL
-PI66dmr5yJnfV6W+A/JmlzUV0s7D2h9KFiPm1wxtxQaCacsN5A54OyqMvgJ+W1WM
-5+udGwMol41ukl9VeHQEhrsx0gRFwIzP6P/zS4tGiFmxyPEGkH6o+nXSUKdOAm6I
-91Z7bCI6dFVZHAA4BXzpEpMQAQADk654H3OPhxxKrb9jtPMm+SoC7Ch87bbb0uc3
-8WfjMl4DNaEroncGCFEI/i5YfA/8hh9yRktC0SZ3KKDMm/Ne4P0PPtK25JTjRynM
-2T030Z2RGSs0EjBw4e/6mhsb4NpuQczoQ4bMKxFDj13gX2myWwxKuBz5BBfi8npl
-u/z6RDT1DVekTBHGE3tycDdwzFFZ7iXLgjJMQpQK+nyZIk3/dHqrSF0QDhz6dST4
-rLUbzAzhATbDMGIswWvl57/CloudeL9oSev6HFCNGnhL4yMp2ue0RkGG1vTaNLgy
-3VKYlosU7zWHM8sSj+3/dxLVZAaHT85veMWUjdv9l8x8jAD/snc=
-=JD5Q
------END PGP SIGNATURE-----
-
---Kj7319i9nmIyA2yE--
+> > ---
+> >  net/netfilter/nf_tables_api.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+> > index d481f9b..8499baf 100644
+> > --- a/net/netfilter/nf_tables_api.c
+> > +++ b/net/netfilter/nf_tables_api.c
+> > @@ -1461,8 +1461,9 @@ static void nft_chain_stats_replace(struct nft_trans *trans)
+> >  	if (!nft_trans_chain_stats(trans))
+> >  		return;
+> >  
+> > -	rcu_swap_protected(chain->stats, nft_trans_chain_stats(trans),
+> > -			   lockdep_commit_lock_is_held(trans->ctx.net));
+> > +	nft_trans_chain_stats(trans) =
+> > +		rcu_replace(chain->stats, nft_trans_chain_stats(trans),
+> > +			    lockdep_commit_lock_is_held(trans->ctx.net));
+> >  
+> >  	if (!nft_trans_chain_stats(trans))
+> >  		static_branch_inc(&nft_counters_enabled);
+> > -- 
+> > 2.9.5
+> > 
