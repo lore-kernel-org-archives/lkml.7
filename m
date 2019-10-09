@@ -2,119 +2,124 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE87DECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B201C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F933206B6
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53FCA206B6
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:54:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GxeHshJj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730757AbfJILx2 (ORCPT
+        id S1730985AbfJILyi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 07:53:28 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:58907 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbfJILx2 (ORCPT
+        Wed, 9 Oct 2019 07:54:38 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51662 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727002AbfJILyh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 07:53:28 -0400
-Received: from [79.140.115.128] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iIAX0-00013X-4J; Wed, 09 Oct 2019 11:53:26 +0000
-Date:   Wed, 9 Oct 2019 13:53:25 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Marco Elver <elver@google.com>
-Cc:     Andrea Parri <parri.andrea@gmail.com>, bsingharora@gmail.com,
-        Dmitry Vyukov <dvyukov@google.com>,
-        LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
-        syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH] taskstats: fix data-race
-Message-ID: <20191009115324.iczitezqqkotpocj@wittgenstein>
-References: <20191008154418.GA16972@andrea>
- <20191009113134.5171-1-christian.brauner@ubuntu.com>
- <CANpmjNMgVub_pSGVfjBOtXg1ufdBvpXC_XUTnvNyQeF17JSCSw@mail.gmail.com>
+        Wed, 9 Oct 2019 07:54:37 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 7so2227673wme.1;
+        Wed, 09 Oct 2019 04:54:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=K8xuIIKxM4jr1Ezc8qWxiUcuTrmdodaACnbuRgrOwy4=;
+        b=GxeHshJj+pdQQGjLZMzMN4EUBZaXzB04GuP45+JvMpVKsr3ERgg4f1ZQEsslNFQgVV
+         5fdzzDUW1CKqZD7zcCNIogsT5shD3oQG/dKx9UAXikI4JgTgn9UYj7XkluVRFNbB0Tz7
+         TUaxxYn3QH0oHUo/tMnl6EAP13Ze+HSDtziaHGgvnjKvEcqX4zFh74vIAB5wdfeOuux/
+         ppK7L2kobeIinaHOPQtgDHv7O3MgN6NWhMon6AVidemhPFfqAwzO9A81fx8zR/1bBnV3
+         QbcnoA00+0ZVLHd+lii0sTPxLS87csmc4par/EdmeSMwPC1qihpecG587Ol6WNNgH4qX
+         e8nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=K8xuIIKxM4jr1Ezc8qWxiUcuTrmdodaACnbuRgrOwy4=;
+        b=VkvkdFh5ffgq55C5USts+CFt0HZVVu8tRmmUKJBRWMxztQvW7s/HhkStXX6eb7hvnm
+         RfGs3safhSiWGTDRvffKf+f8v4gLmQr+RQCsq3rAuXjNbLUBptrEQQKualatU5uGX5If
+         aiwC0MUkVLCUOnIWiO53vvNgRBS7iOaX/sHrzUjIX/yHo0bc/axz0IKdPtgXz2qm8wvf
+         L7S7mC/IsaDhorVmxB/wuZqssdT0eKtBD+gfTwsnOMtG54bXRSu6Pnf+4/HOuT5ysVVZ
+         m6rD3zkfNgJUtrVjRfL4GjitqhMZEuwfV2uSF9iTqSliUQ6ZmPY9L+LbY4NbkcbeoUpJ
+         Aa5g==
+X-Gm-Message-State: APjAAAU/brntEcn1REL8m8fLOYdy+vYVG7lMVGtnQqk8FppTw2NYTj9m
+        hnJ2+2cx/A2enGdsgFEfCLOJTn5ay3k=
+X-Google-Smtp-Source: APXvYqwzyNhjFy4mMbFEikZ//E8PDfqotwLY5TpxA1ZDPjhg8ZiTa057fShpgEBfYZvhww31eMEocQ==
+X-Received: by 2002:a7b:c049:: with SMTP id u9mr2276879wmc.12.1570622075184;
+        Wed, 09 Oct 2019 04:54:35 -0700 (PDT)
+Received: from localhost ([51.15.41.238])
+        by smtp.gmail.com with ESMTPSA id z9sm1734307wrp.26.2019.10.09.04.54.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Oct 2019 04:54:34 -0700 (PDT)
+Date:   Wed, 9 Oct 2019 12:54:33 +0100
+From:   Stefan Hajnoczi <stefanha@gmail.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     netdev@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
+        linux-hyperv@vger.kernel.org,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        kvm@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jorgen Hansen <jhansen@vmware.com>
+Subject: Re: [RFC PATCH 06/13] vsock: add 'struct vsock_sock *' param to
+ vsock_core_get_transport()
+Message-ID: <20191009115433.GG5747@stefanha-x1.localdomain>
+References: <20190927112703.17745-1-sgarzare@redhat.com>
+ <20190927112703.17745-7-sgarzare@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="S5HS5MvDw4DmbRmb"
 Content-Disposition: inline
-In-Reply-To: <CANpmjNMgVub_pSGVfjBOtXg1ufdBvpXC_XUTnvNyQeF17JSCSw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190927112703.17745-7-sgarzare@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 01:48:27PM +0200, Marco Elver wrote:
-> On Wed, 9 Oct 2019 at 13:31, Christian Brauner
-> <christian.brauner@ubuntu.com> wrote:
-> >
-> > When assiging and testing taskstats in taskstats_exit() there's a race
-> > when writing and reading sig->stats when a thread-group with more than
-> > one thread exits:
-> >
-> > cpu0:
-> > thread catches fatal signal and whole thread-group gets taken down
-> >  do_exit()
-> >  do_group_exit()
-> >  taskstats_exit()
-> >  taskstats_tgid_alloc()
-> > The tasks reads sig->stats without holding sighand lock seeing garbage.
-> >
-> > cpu1:
-> > task calls exit_group()
-> >  do_exit()
-> >  do_group_exit()
-> >  taskstats_exit()
-> >  taskstats_tgid_alloc()
-> > The task takes sighand lock and assigns new stats to sig->stats.
-> >
-> > Fix this by using smp_load_acquire() and smp_store_release().
-> >
-> > Reported-by: syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com
-> > Fixes: 34ec12349c8a ("taskstats: cleanup ->signal->stats allocation")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> > Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
-> > ---
-> > /* v1 */
-> > Link: https://lore.kernel.org/r/20191005112806.13960-1-christian.brauner@ubuntu.com
-> >
-> > /* v2 */
-> > Link: https://lore.kernel.org/r/20191006235216.7483-1-christian.brauner@ubuntu.com
-> > - Dmitry Vyukov <dvyukov@google.com>, Marco Elver <elver@google.com>:
-> >   - fix the original double-checked locking using memory barriers
-> >
-> > /* v3 */
-> > Link: https://lore.kernel.org/r/20191007110117.1096-1-christian.brauner@ubuntu.com/
-> > - Andrea Parri <parri.andrea@gmail.com>:
-> >   - document memory barriers to make checkpatch happy
-> >
-> > /* v4 */
-> > - Andrea Parri <parri.andrea@gmail.com>:
-> >   - use smp_load_acquire(), not READ_ONCE()
-> >   - update commit message
-> 
-> Acked-by: Marco Elver <elver@google.com>
-> 
-> Note that this now looks almost like what I suggested, except the
 
-Right, I think we all just needed to get our heads clear about what
-exactly is happening here. This codepath is not a very prominent one. :)
+--S5HS5MvDw4DmbRmb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> return at the end of the function is accessing sig->stats again. In
-> this case, it seems it's fine assuming sig->stats cannot be written
-> elsewhere. Just wanted to point it out to make sure it's considered.
+On Fri, Sep 27, 2019 at 01:26:56PM +0200, Stefano Garzarella wrote:
+> -const struct vsock_transport *vsock_core_get_transport(void)
+> +const struct vsock_transport *vsock_core_get_transport(struct vsock_sock *vsk)
+>  {
+>  	/* vsock_register_mutex not taken since only the transport uses this
+>  	 * function and only while registered.
+>  	 */
+> -	return transport_single;
 
-Yes, I considered that but thanks for mentioning it.
+This comment is about protecting transport_single.  It no longer applies
+when using vsk->transport.  Please drop it.
 
-Note that this patch has a bug. It should be
-smp_load_acquire(&sig->stats) and not smp_load_acquire(sig->stats).
-I accidently didn't automatically recompile the patchset after the last
-change I made. Andrea thankfully caught this.
+Otherwise:
 
-Thanks!
-Christian
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+
+--S5HS5MvDw4DmbRmb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl2dyngACgkQnKSrs4Gr
+c8jpGwf+OKGaK9OPf0rceIKo+5pdDJMkf+lhw9ooooqK7bZFZkqZFYhUYOP9qYqk
+iPKeaY6YWLpuWMJRuh2EObxLrC1VrmfYA1lPcNXDEq6yVOloX43zrBM5Zec2GVq3
+GVJHTW2tw1bTyRAtLI/zSYy9hblQlWcG6BKmK1WBNFIyQ9JLGvRqFGKobpJPP2LS
+/7z3MWkRsZkFTUnJGocbhjbkZk2dLUwY9cy/IrOzfPAgX79WB7DSl7RpjH/hx7+b
+M8cDi9WDJ53vRN81sXNSHg8JQA3x+DoErU3TdY1sTxSyHqcZiPgI13LXZmIw3wSS
+W8aTJLNML/vAaTn6rvoGHkQXwt3Izw==
+=2X/V
+-----END PGP SIGNATURE-----
+
+--S5HS5MvDw4DmbRmb--
