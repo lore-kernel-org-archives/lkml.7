@@ -6,61 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC279C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDD2C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C112920B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:30:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3529020B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:30:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570649411;
-	bh=3yuozM4FLhSm+i6yEQ1YGbYeMOgWaz07K3LfwiSuah4=;
+	s=default; t=1570649413;
+	bh=JJ5I9OVWtkwkRq2I70I9m+OltylDY3E9ybe8AUc5jGE=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=NGfq70uNYzSbPADFPvWvt8iU2OKwPZdMQRMaR3Psi0AN+zrOvZe59XL3M1tLpmbWu
-	 js8H8k/UOXsXVepQKmIHJ/JKpEAVQRRIkyeKVCsAxefELQPZLkX1osVCBMw2S0+NES
-	 CoKIS5gtpfo5JnLH3Pc5crpyQ1+CxNvdskR6pVAE=
+	b=0wDfjAsVCv4tVFY9toWUF6a8P3E1LQmceoPe+EXD8RZ01BIQ/XJSyWucQo7I8o++B
+	 +wZUFaks30r2xOTwPAbiGyex95uzTN0JvC3RJjfdAmeDpVeM7EVP46yu8Qwu5UitNq
+	 T3Bmd9f57p1ZjCaEPTwDuwozoxNdn7/ibW4Hziq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731614AbfJITaK (ORCPT
+        id S1731750AbfJITaL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 15:30:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51064 "EHLO mail.kernel.org"
+        Wed, 9 Oct 2019 15:30:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729535AbfJITaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730708AbfJITaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 9 Oct 2019 15:30:10 -0400
-Subject: Re: [GIT PULL] arm64: Fixes for -rc3
+Subject: Re: [GIT PULL] Please pull RDMA subsystem changes
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570649409;
-        bh=3yuozM4FLhSm+i6yEQ1YGbYeMOgWaz07K3LfwiSuah4=;
+        s=default; t=1570649410;
+        bh=JJ5I9OVWtkwkRq2I70I9m+OltylDY3E9ybe8AUc5jGE=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=OCXIDH/uxYHRlXIF5Tfm07UizQk4ej6Ea89+dhYt7o8q+gFRAwKoDEw0janNMOmDw
-         zhYnsVxevTQ+9WVUvJtU3Myvv6g0S4b4BmXrmTj5zoUft4aT4PvvSLVjjH4b5yX3UD
-         sA4+jHB5qC/PwGOmuZeMSpGcluqHr076+z7eCS4M=
+        b=tb4EmhwdpNyI6jrgmIV42aT98s0RiyYFR3xJMegVm1/80YxWttg2vTU1iNUYm2BkI
+         o5ljmLd7p89u/Elcu3nKSH9TceMe5vNb4GL7XHTfcJfe30HP+vE+8LfCqkj/lu0wdR
+         +4Gmjsxh3jHdl+FtppW57JH/Uwi/o0r8gTP7NVCQ=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191009133053.p7bxzkub32x3mclb@willie-the-truck>
-References: <20191009133053.p7bxzkub32x3mclb@willie-the-truck>
+In-Reply-To: <20191009142811.GA29521@ziepe.ca>
+References: <20191009142811.GA29521@ziepe.ca>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191009133053.p7bxzkub32x3mclb@willie-the-truck>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git
- tags/arm64-fixes
-X-PR-Tracked-Commit-Id: 3e7c93bd04edfb0cae7dad1215544c9350254b8f
+X-PR-Tracked-Message-Id: <20191009142811.GA29521@ziepe.ca>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
+X-PR-Tracked-Commit-Id: 0417791536ae1e28d7f0418f1d20048ec4d3c6cf
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: e60329c97b9cc07ce15e3c39fc42e57bf14add92
-Message-Id: <157064940962.25372.13156786010603530011.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: 8a8c600de5dc1d9a7f4b83269fddc80ebd3dd045
+Message-Id: <157064940999.25372.866898993735455801.pr-tracker-bot@kernel.org>
 Date:   Wed, 09 Oct 2019 19:30:09 +0000
-To:     Will Deacon <will@kernel.org>
-Cc:     torvalds@linux-foundation.org, catalin.marinas@arm.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Doug Ledford <dledford@redhat.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 9 Oct 2019 14:30:54 +0100:
+The pull request you sent on Wed, 9 Oct 2019 14:28:15 +0000:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
+> git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/e60329c97b9cc07ce15e3c39fc42e57bf14add92
+https://git.kernel.org/torvalds/c/8a8c600de5dc1d9a7f4b83269fddc80ebd3dd045
 
 Thank you!
 
