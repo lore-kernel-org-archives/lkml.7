@@ -2,99 +2,94 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E06C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:02:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF64ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:02:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88EEF21721
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:02:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94D3B21721
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 13:02:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GHo82XUA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731218AbfJINCP (ORCPT
+        id S1731315AbfJINC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 09:02:15 -0400
-Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:53031 "EHLO
-        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730901AbfJINCP (ORCPT
+        Wed, 9 Oct 2019 09:02:28 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55678 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730901AbfJINC2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 09:02:15 -0400
-Received: from [IPv6:2001:983:e9a7:1:2801:e038:f2c3:e060] ([IPv6:2001:983:e9a7:1:2801:e038:f2c3:e060])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id IBbYigmgKjZ8vIBbZiI1pc; Wed, 09 Oct 2019 15:02:13 +0200
-Subject: Re: [PATCH] staging: media: Fix alignment to match open parenthesis
-To:     Amol Grover <frextrite@gmail.com>,
-        Steve Longerbeam <slongerbeam@gmail.com>
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-References: <20190911165655.GA22041@Debian.gxnx00eri1wudnlrc5f3ppaydc.bx.internal.cloudapp.net>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <27da1d8b-09fc-8d23-5213-f0c352ee615d@xs4all.nl>
-Date:   Wed, 9 Oct 2019 15:02:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 9 Oct 2019 09:02:28 -0400
+Received: by mail-wm1-f68.google.com with SMTP id a6so2493986wma.5
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 06:02:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6gKyU2lVUG9r8tkVXQwlslVrnGaZcT+vH7d3AbPHYB0=;
+        b=GHo82XUApFZmoJ9rbUiaxY0lPH5g1hfz9r8MSUnSI3GN9JdNoZQcA4UQ6OJo1rICO0
+         qzfEEIaPLpbItb/8PbB0tgtmMY3OvSBeFhFZiL7aO0dIhyWBySy0Gc4iZkpX6vcuzMon
+         Wj//7wE6Nd30Th7JDUX9ivMJk8/CkfEoL9COKkOw/OLGxaSlPBMlO4GEdXfniAHaK+uV
+         ThL1YwwiUvNrQ4RoX+Gkqtnk4np+XvZsHPcUah8iL/Z2af9/saPP/imUSPit0/RkYjkD
+         lCQnoyj1ClCApdV1FAhLZTizqvX7pcIkRlATP26I2RICqhtg4PmooQaeKNBqRXA5MyyA
+         j92g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6gKyU2lVUG9r8tkVXQwlslVrnGaZcT+vH7d3AbPHYB0=;
+        b=GZDh9BQ9xPARU/mCI9JbiBgCn0fTGJR1rM074yj+WfDmG4UoVJGQJ80+UNSMopooib
+         yz1RewPfwcp1+HbHe7IyvOU/fnwfJQeq1SD7SyyJUWMOZhf/S9Y9ih8no31Hiomlc7nH
+         z/h7ipPOcbykxTqaTlIWlQamtMEQSINHie6QXVuyPI+iR1gOZgK+zkRh/Vj9itj74ikh
+         XWKT49PA6XK1YvSG+yWTSTEKZVdVblPs1X+ct7Fh7kRTBIKe0tTAgm1krARZQjuyV1Mi
+         BKd2BDjVf5qVYschH6OFjPH8QL/1OwfzitfSQegX8EvaHQWYcl5jI8+PT/vH6TfxDarK
+         KsKg==
+X-Gm-Message-State: APjAAAUDCWm9T6AOH6Mgdd1OwcK9Za7HosZyRr4NF6rJZWqVOs2qvMD2
+        PHOoFMBbmzvDD26ukWEx4lH1X0EhleGaUZP/wSpZaA==
+X-Google-Smtp-Source: APXvYqx+LxYtjcQzWODIZ+2Z6/00LXRbD8qwCw7fnhTtTZ7OXnXpkwtdFXmQrWSQSDmS0fILF/nvqqpHFCBNgF8/Vuo=
+X-Received: by 2002:a7b:cb54:: with SMTP id v20mr2412915wmj.119.1570626144905;
+ Wed, 09 Oct 2019 06:02:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190911165655.GA22041@Debian.gxnx00eri1wudnlrc5f3ppaydc.bx.internal.cloudapp.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfD9xGs8YOYZuV2WnHUMHNDzu/rb3+CIh2AtNp5uss+ux5BI/fVCKdjPT2bWBacECXDWhk3Hf31un/fG+RhxxTg16tusrwCrpOJ0ZB00szu2mhkTClY/7
- 4f/V7rNk74jiJaH6t5+c8ix9wYWAf6YeUbzUkHV2JnW+cTZPHuPJ3lVFR3i/jv61sKvcaLlKjl/tzm5D9yporFfLKj2nBVr2IrmBak8yeIsFkuhAj9xiCM91
- Z+cRkBjrpP8E2WbB4vAqd75vw430EJLKXor3vg9m3ojfPtWHJ/v2eMboHFtgpWQr0tAGn8xY9Q5cFFsmQqiPkqptDi2B3Y/+PRKEJ0p2ZD/8ycjSPdIyfaQe
- htaGq53QKeHef36+PMxMMCqaowIiuqtRuscWoIXQrw6JYJrNfbXFu6w57kVcLWUJDZG8uPDX8NUJhncy+TLQwnp5XfxTV3uKA1y+PKQb8x9P0yUzbdFnkE9F
- qUEN4JH7dJojP8BJmCY4Fnfu4lhGPkhATd2J2d9LbzXXqW3iQAA7kw2N2wt7BhA6uavtrk6fXcPkokAZ
+References: <20191008105510.6975-1-javierm@redhat.com> <CACdnJusuMQf8B9u83mB2Wye+aZ4aV8v4j2eFrokURHkLGA0G_w@mail.gmail.com>
+In-Reply-To: <CACdnJusuMQf8B9u83mB2Wye+aZ4aV8v4j2eFrokURHkLGA0G_w@mail.gmail.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Wed, 9 Oct 2019 15:02:13 +0200
+Message-ID: <CAKv+Gu8xgqEqeRPQSyEkcW6q0rosFRsGNdDxfOL2QdQXzkKvWw@mail.gmail.com>
+Subject: Re: [PATCH v2] efi/efi_test: lock down /dev/efi_test and require CAP_SYS_ADMIN
+To:     Matthew Garrett <mjg59@google.com>
+Cc:     Javier Martinez Canillas <javierm@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ivan Hu <ivan.hu@canonical.com>,
+        Laszlo Ersek <lersek@redhat.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Josh Boyer <jwboyer@redhat.com>,
+        Peter Jones <pjones@redhat.com>,
+        Janne Karhunen <janne.karhunen@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Howells <dhowells@redhat.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Micah Morton <mortonm@chromium.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        James Morris <jmorris@namei.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Serge E. Hallyn" <serge@hallyn.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Amol,
+On Wed, 9 Oct 2019 at 04:18, Matthew Garrett <mjg59@google.com> wrote:
+>
+> On Tue, Oct 8, 2019 at 9:55 PM Javier Martinez Canillas
+> <javierm@redhat.com> wrote:
+> > Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
+> > Acked-by: Laszlo Ersek <lersek@redhat.com>
+>
+> Acked-by: Matthew Garrett <mjg59@google.com>
 
-For future reference: always include the driver name in the subject.
-
-I've added "imx: " to the subject for you, so no need to resend, but
-the driver name is important information.
-
-Regards,
-
-	Hans
-
-On 9/11/19 6:56 PM, Amol Grover wrote:
-> CHECK: Alignment should match open parenthesis
-> 
-> Signed-off-by: Amol Grover <frextrite@gmail.com>
-> ---
->  drivers/staging/media/imx/imx-media-csi.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
-> index 367e39f5b382..773b3d6964cf 100644
-> --- a/drivers/staging/media/imx/imx-media-csi.c
-> +++ b/drivers/staging/media/imx/imx-media-csi.c
-> @@ -627,8 +627,8 @@ static int csi_idmac_start(struct csi_priv *priv)
->  	}
->  
->  	priv->nfb4eof_irq = ipu_idmac_channel_irq(priv->ipu,
-> -						 priv->idmac_ch,
-> -						 IPU_IRQ_NFB4EOF);
-> +						  priv->idmac_ch,
-> +						  IPU_IRQ_NFB4EOF);
->  	ret = devm_request_irq(priv->dev, priv->nfb4eof_irq,
->  			       csi_idmac_nfb4eof_interrupt, 0,
->  			       "imx-smfc-nfb4eof", priv);
-> @@ -1472,7 +1472,7 @@ static void csi_try_fmt(struct csi_priv *priv,
->  			imx_media_enum_mbus_format(&code, 0,
->  						   CS_SEL_ANY, false);
->  			*cc = imx_media_find_mbus_format(code,
-> -							CS_SEL_ANY, false);
-> +							 CS_SEL_ANY, false);
->  			sdformat->format.code = (*cc)->codes[0];
->  		}
->  
-> 
-
+Thanks all. Queued as a fix.
