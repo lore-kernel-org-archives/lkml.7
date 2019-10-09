@@ -2,115 +2,151 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8723C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37BF9ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7AA7206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:38:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BC0F206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 08:41:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729595AbfJIIiN (ORCPT
+        id S1727766AbfJIIlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 04:38:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54334 "EHLO mx1.redhat.com"
+        Wed, 9 Oct 2019 04:41:17 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:57892 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725440AbfJIIiN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 04:38:13 -0400
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9565676531
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Oct 2019 08:38:12 +0000 (UTC)
-Received: by mail-wr1-f71.google.com with SMTP id o10so750317wrm.22
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 01:38:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6sCDH8nIKuAbvdBSReQkc1Tfo1aumnautyMnOnbULKw=;
-        b=JV+bp7pssxGjS35MPdUq4xnhft1MPz6ykpQ3NPvqoJyDsQHazgaHhK5kl5tfyTRJIX
-         A8cvMBJvZjo+3jTWPMY/i5seQx7+O9P9KIx9mPz7X7uXY+x7qPi92IFkUmjoHR+6uZVC
-         Q262kFt2WN+WWi755qHxwkmlrJQKCpfWvkpH3uNSD0hpHqg23t39ZhLTr6wUqsBsYo3y
-         Zk3+18qzx28P+253GSOmQq41JUJ0bS4RuFAewBQNB+WRrKmbBJGTwSwu+VGHvsu7uO31
-         wZP7YKfSlx9c8b0T+pZJIubRx5XMR9ndVyrU/aFIGyZe8KzotvlYl2SGDkATB4cekmXK
-         wxkw==
-X-Gm-Message-State: APjAAAUEvLGEwHw7oYFTKAPNX6/WCsxHkc60ztpSFtdAMPC+tBNDs0J2
-        NSO6+H7gxavYANfJAVJrsXhm5eHXladxbb3gviXe5ySp+Bsu623qNFD7GAF1usGgDAwYNMMgc1o
-        NxkBYgy3ALaw96evgwAJOQ5mr
-X-Received: by 2002:a1c:3884:: with SMTP id f126mr1648374wma.162.1570610291195;
-        Wed, 09 Oct 2019 01:38:11 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxQZaix6vJKYl2c9qjg9YpvxY0MzDGVuhPitYZByc1tDk3IGmYtrO+zhOBVanBCC7oo9lFJ2g==
-X-Received: by 2002:a1c:3884:: with SMTP id f126mr1648349wma.162.1570610290915;
-        Wed, 09 Oct 2019 01:38:10 -0700 (PDT)
-Received: from [192.168.10.150] ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id q10sm3014658wrd.39.2019.10.09.01.38.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Oct 2019 01:38:10 -0700 (PDT)
-Subject: Re: [PATCH v3 04/16] kvm: x86: Add support for activate/de-activate
- APICv at runtime
-To:     "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Cc:     "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "graf@amazon.com" <graf@amazon.com>,
-        "jschoenh@amazon.de" <jschoenh@amazon.de>,
-        "karahmed@amazon.de" <karahmed@amazon.de>,
-        "rimasluk@amazon.com" <rimasluk@amazon.com>,
-        "Grimm, Jon" <Jon.Grimm@amd.com>
-References: <1568401242-260374-1-git-send-email-suravee.suthikulpanit@amd.com>
- <1568401242-260374-5-git-send-email-suravee.suthikulpanit@amd.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <5a5b13e9-4efa-b35c-dc22-003ff3109b07@redhat.com>
-Date:   Wed, 9 Oct 2019 10:38:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <1568401242-260374-5-git-send-email-suravee.suthikulpanit@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1725440AbfJIIlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 04:41:17 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D2C1520039E;
+        Wed,  9 Oct 2019 10:41:14 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 50E90200044;
+        Wed,  9 Oct 2019 10:41:09 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 95725402DA;
+        Wed,  9 Oct 2019 16:41:02 +0800 (SGT)
+From:   Hui Song <hui.song_1@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Song Hui <hui.song_1@nxp.com>
+Subject: [PATCH v6] gpio/mpc8xxx: change irq handler from chained to normal
+Date:   Wed,  9 Oct 2019 16:30:21 +0800
+Message-Id: <20191009083021.33529-1-hui.song_1@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/09/19 21:00, Suthikulpanit, Suravee wrote:
-> +	kvm_for_each_vcpu(i, v, kvm)
-> +		kvm_clear_request(KVM_REQ_APICV_DEACTIVATE, v);
-> +
-> +	if (kvm_x86_ops->pre_update_apicv_exec_ctrl)
-> +		kvm_x86_ops->pre_update_apicv_exec_ctrl(vcpu, true);
-> +
-> +	kvm->arch.apicv_state = APICV_ACTIVATED;
-> +
-> +	kvm_make_all_cpus_request(kvm, KVM_REQ_APICV_ACTIVATE);
-> +
-> +	mutex_unlock(&kvm->arch.apicv_lock);
+From: Song Hui <hui.song_1@nxp.com>
 
-I think a lot of this logic can be simplified.  In particular, I would have:
+More than one gpio controllers can share one interrupt, change the
+driver to request shared irq.
 
-- a single KVM_REQ_APICV_TOGGLE request that unifies
-kvm_vcpu_activate_apicv and kvm_vcpu_deactivate_apicv.  The invariant is
-that, at the end of the function, (vcpu->arch.apicv_active ==
-(kvm->arch.apicv_state = APICV_ACTIVATED)).  The apicv_lock then becomes
-an rwsem, so that kvm_activate_apic and kvm_deactivate_apic will
-down_write it, while the processing of KVM_REQ_APICV_TOGGLE can
-down_read it.
+While this will work, it will mess up userspace accounting of the number
+of interrupts per second in tools such as vmstat.  The reason is that
+for every GPIO interrupt, /proc/interrupts records the count against GIC
+interrupt 68 or 69, as well as the GPIO itself.  So, for every GPIO
+interrupt, the total number of interrupts that the system has seen
+increments by two
 
-- the srcu_read_unlock/srcu_read_lock should be hidden in
-svm_request_activate_avic/svm_request_deactivate_avic.  Everything else
-should only take struct kvm*, following what you've started with patch
-1.  In particular kvm_vcpu_deactivate_apicv should be changed to take a
-struct kvm*, so that Hyper-V can do kvm_deactivate_apic(kvm,
-APIC_DISABLED).  Hyper-V should not care about
-srcu_read_lock/srcu_read_unlock.  avic_setup_access_page and
-avic_destroy_access_page also can be changed to take struct kvm*.
+Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
+Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
+Signed-off-by: Song Hui <hui.song_1@nxp.com>
+---
+ Changes in v6:
+	- change request_irq to devm_request_irq and add commit message.
+ Changes in v5:
+	- add traverse every bit function.
+ Changes in v4:
+	- convert 'pr_err' to 'dev_err'.
+ Changes in v3:
+	- update the patch description.
+ Changes in v2:
+	- delete the compatible of ls1088a.
 
-Paolo
+ drivers/gpio/gpio-mpc8xxx.c | 31 ++++++++++++++++++++-----------
+ 1 file changed, 20 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+index 16a47de..f0be284 100644
+--- a/drivers/gpio/gpio-mpc8xxx.c
++++ b/drivers/gpio/gpio-mpc8xxx.c
+@@ -22,6 +22,7 @@
+ #include <linux/irq.h>
+ #include <linux/gpio/driver.h>
+ #include <linux/bitops.h>
++#include <linux/interrupt.h>
+ 
+ #define MPC8XXX_GPIO_PINS	32
+ 
+@@ -127,20 +128,20 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
+ 		return -ENXIO;
+ }
+ 
+-static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
++static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
+ {
+-	struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_desc_get_handler_data(desc);
+-	struct irq_chip *chip = irq_desc_get_chip(desc);
++	struct mpc8xxx_gpio_chip *mpc8xxx_gc = data;
+ 	struct gpio_chip *gc = &mpc8xxx_gc->gc;
+ 	unsigned int mask;
++	int i;
+ 
+ 	mask = gc->read_reg(mpc8xxx_gc->regs + GPIO_IER)
+ 		& gc->read_reg(mpc8xxx_gc->regs + GPIO_IMR);
+-	if (mask)
++	for_each_set_bit(i, &mask, 32)
+ 		generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
+-						     32 - ffs(mask)));
+-	if (chip->irq_eoi)
+-		chip->irq_eoi(&desc->irq_data);
++						     31 - i));
++
++	return IRQ_HANDLED;
+ }
+ 
+ static void mpc8xxx_irq_unmask(struct irq_data *d)
+@@ -388,8 +389,8 @@ static int mpc8xxx_probe(struct platform_device *pdev)
+ 
+ 	ret = gpiochip_add_data(gc, mpc8xxx_gc);
+ 	if (ret) {
+-		pr_err("%pOF: GPIO chip registration failed with status %d\n",
+-		       np, ret);
++		dev_err(&pdev->dev, "%pOF: GPIO chip registration failed with status %d\n",
++			np, ret);
+ 		goto err;
+ 	}
+ 
+@@ -409,8 +410,16 @@ static int mpc8xxx_probe(struct platform_device *pdev)
+ 	if (devtype->gpio_dir_in_init)
+ 		devtype->gpio_dir_in_init(gc);
+ 
+-	irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
+-					 mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
++	ret = devm_request_irq(&pdev->dev, mpc8xxx_gc->irqn,
++			       mpc8xxx_gpio_irq_cascade,
++			       IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade",
++			       mpc8xxx_gc);
++	if (ret) {
++		dev_err(&pdev->dev, "%s: failed to devm_request_irq(%d), ret = %d\n",
++			np->full_name, mpc8xxx_gc->irqn, ret);
++		goto err;
++	}
++
+ 	return 0;
+ err:
+ 	iounmap(mpc8xxx_gc->regs);
+-- 
+2.9.5
+
