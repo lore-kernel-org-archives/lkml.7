@@ -2,210 +2,108 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98EB1C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 06:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACA1ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 06:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FC6F20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 06:55:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E61620B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 06:56:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727474AbfJIGzA (ORCPT
+        id S1727657AbfJIG4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 02:55:00 -0400
-Received: from mga09.intel.com ([134.134.136.24]:65443 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725848AbfJIGy7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 02:54:59 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 23:54:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,273,1566889200"; 
-   d="scan'208";a="200042363"
-Received: from unknown (HELO localhost) ([10.239.159.128])
-  by FMSMGA003.fm.intel.com with ESMTP; 08 Oct 2019 23:54:54 -0700
-Date:   Wed, 9 Oct 2019 14:56:51 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Subject: Re: [PATCH v7 7/7] KVM: x86: Add user-space access interface for CET
- MSRs
-Message-ID: <20191009065651.GE27851@local-michael-cet-test>
-References: <20190927021927.23057-1-weijiang.yang@intel.com>
- <20190927021927.23057-8-weijiang.yang@intel.com>
- <CALMp9eQNDNmmCr8DM-2fMVYvQ-eTEpeE=bW8+BLbfxmBsTmQvg@mail.gmail.com>
+        Wed, 9 Oct 2019 02:56:43 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:43442 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfJIG4n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 02:56:43 -0400
+Received: by mail-oi1-f193.google.com with SMTP id t84so842680oih.10;
+        Tue, 08 Oct 2019 23:56:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PU6pSC4rpDZQ3hpvHq0TdAZIyHq1I2BJFZ45k90UauQ=;
+        b=aXGk+zTTZtNhTOqe5hG6l45X8ZAGAMnHpjwy2jCFfY7F+cOuD+spDH591CGuMRun35
+         1o+hnr0KF7OM1BJTLX9TMyqJ7Rqr2/mBVqPhv9sTPMbtTA+rIZCrL+O9ZFxAbtU1O6Bc
+         uL87Tf9HAwuq+k0eKbnhHX2hGCPJndBSKt/wdqEmJCssFFaWtvN4OVuBaqHQwCfWAhb0
+         9zQtin41/iNwxhHM8ttgrSQ4ePKciHhWPQXwO1vzSSJXJMgQfkQfo0HnLEEcGZKEIAbv
+         weUNEnafcauv1WcgirUTy6HtMC74BUo8C7KREbaCreo2gm70qfQy+v7S8G0v+G3sB+R6
+         7Niw==
+X-Gm-Message-State: APjAAAUJNeQ9B8/5QGzZgF6BM5jj6nQ8YV866qNsx5JCNgQOKkKZbWny
+        T6dy8eFLv1FsJAW2QxP8IbY4nXDpSFDnoW3z/NM=
+X-Google-Smtp-Source: APXvYqzk0JepZ+39323h3KeMWAoARy2zy0zvOEiZjj4NXFq1sVESz2FopGsJeLg/sq9NCFM5eUSSDs+5Dmi4PItkesg=
+X-Received: by 2002:a05:6808:3b4:: with SMTP id n20mr1049904oie.131.1570604200276;
+ Tue, 08 Oct 2019 23:56:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALMp9eQNDNmmCr8DM-2fMVYvQ-eTEpeE=bW8+BLbfxmBsTmQvg@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <alpine.DEB.2.21.9999.1910081606370.11044@viisi.sifive.com>
+In-Reply-To: <alpine.DEB.2.21.9999.1910081606370.11044@viisi.sifive.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 9 Oct 2019 08:56:29 +0200
+Message-ID: <CAMuHMdVdPFSU_3VEtO=P73kqLezV5Dmki=N3nxsKibzy-U5pBg@mail.gmail.com>
+Subject: Re: [PATCH] Documentation: admin-guide: add earlycon documentation
+ for the sifive serial driver
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Andreas Schwab <schwab@suse.de>, Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 01:57:50PM -0700, Jim Mattson wrote:
-> On Thu, Sep 26, 2019 at 7:17 PM Yang Weijiang <weijiang.yang@intel.com> wrote:
-> >
-> > There're two different places storing Guest CET states, the states
-> > managed with XSAVES/XRSTORS, as restored/saved
-> > in previous patch, can be read/write directly from/to the MSRs.
-> > For those stored in VMCS fields, they're access via vmcs_read/
-> > vmcs_write.
-> >
-> > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-> > ---
-> >  arch/x86/kvm/vmx/vmx.c | 83 ++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 83 insertions(+)
-> >
-> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > index 44913e4ab558..5265db7cd2af 100644
-> > --- a/arch/x86/kvm/vmx/vmx.c
-> > +++ b/arch/x86/kvm/vmx/vmx.c
-> > @@ -1671,6 +1671,49 @@ static int vmx_get_msr_feature(struct kvm_msr_entry *msr)
-> >         return 0;
-> >  }
-> >
-> > +static int check_cet_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
-> 
-> I'd suggest changing return type to bool, since you are essentially
-> returning true or false.
+Hi Paul,
+
+On Wed, Oct 9, 2019 at 1:09 AM Paul Walmsley <paul.walmsley@sifive.com> wrote:
+> Document earlycon usage for the SiFive serial port driver in the same
+> fashion as for the other serial port IP blocks, since the SiFive
+> serial port driver supports it.
 >
-Sure, will change it.
+> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+> Reported-by: Andreas Schwab <schwab@suse.de>
+> Cc: Christoph Hellwig <hch@lst.de>
 
-> > +{
-> > +       u64 kvm_xss = kvm_supported_xss();
-> > +
-> > +       switch (msr_info->index) {
-> > +       case MSR_IA32_PL0_SSP ... MSR_IA32_PL2_SSP:
-> > +               if (!(kvm_xss | XFEATURE_MASK_CET_KERNEL))
-> '|' should be '&'
-Oops, thanks for the capture!
+Thanks for your patch!
 
-> > +                       return 1;
-> > +               if (!msr_info->host_initiated &&
-> > +                   !guest_cpuid_has(vcpu, X86_FEATURE_SHSTK))
-> > +                       return 1;
-> > +               break;
-> > +       case MSR_IA32_PL3_SSP:
-> > +               if (!(kvm_xss | XFEATURE_MASK_CET_USER))
-> '|' should be '&'
-> > +                       return 1;
-> > +               if (!msr_info->host_initiated &&
-> > +                   !guest_cpuid_has(vcpu, X86_FEATURE_SHSTK))
-> > +                       return 1;
-> > +               break;
-> > +       case MSR_IA32_U_CET:
-> > +               if (!(kvm_xss | XFEATURE_MASK_CET_USER))
-> '|' should be '&'
-> > +                       return 1;
-> > +               if (!msr_info->host_initiated &&
-> > +                   !guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) &&
-> > +                   !guest_cpuid_has(vcpu, X86_FEATURE_IBT))
-> > +                       return 1;
-> > +               break;
-> > +       case MSR_IA32_S_CET:
-> > +               if (!msr_info->host_initiated &&
-> > +                   !guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) &&
-> > +                   !guest_cpuid_has(vcpu, X86_FEATURE_IBT))
-> > +                       return 1;
-> > +               break;
-> > +       case MSR_IA32_INT_SSP_TAB:
-> > +               if (!msr_info->host_initiated &&
-> > +                   !guest_cpuid_has(vcpu, X86_FEATURE_SHSTK))
-> > +                       return 1;
-> > +               break;
-> > +       default:
-> > +               return 1;
-> > +       }
-> > +       return 0;
-> > +}
-> >  /*
-> >   * Reads an msr value (of 'msr_index') into 'pdata'.
-> >   * Returns 0 on success, non-0 otherwise.
-> > @@ -1788,6 +1831,26 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
-> >                 else
-> >                         msr_info->data = vmx->pt_desc.guest.addr_a[index / 2];
-> >                 break;
-> > +       case MSR_IA32_S_CET:
-> > +               if (check_cet_msr(vcpu, msr_info))
-> > +                       return 1;
-> > +               msr_info->data = vmcs_readl(GUEST_S_CET);
-> Have we ensured that this VMCS field exists?
-> > +               break;
-> > +       case MSR_IA32_INT_SSP_TAB:
-> > +               if (check_cet_msr(vcpu, msr_info))
-> > +                       return 1;
-> > +               msr_info->data = vmcs_readl(GUEST_INTR_SSP_TABLE);
-> Have we ensured that this VMCS field exists?
-If host kernel sets correct info, we can make sure here.
+Why do you need this?
+I believe risc-v is DT-only, so if chosen/stdout-path is set up, just
+passing "earlycon" (without any options) should work.
 
-> > +               break;
-> > +       case MSR_IA32_U_CET:
-> Can this be lumped together with MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP, below?
-Unfortunately, this MSR is not adjacent to below MSRs.
+> ---
+>  Documentation/admin-guide/kernel-parameters.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index c7ac2f3ac99f..90becb00221b 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -1106,6 +1106,12 @@
+>                         address must be provided, and the serial port must
+>                         already be setup and configured.
+>
+> +               sifive,<addr>
+> +                       Start an early, polled-mode console on a SiFive
+> +                       serial port at the specified address.  The port must
+> +                       already be setup and configured.  Options are not
+> +                       yet supported.
+> +
+>         earlyprintk=    [X86,SH,ARM,M68k,S390]
+>                         earlyprintk=vga
+>                         earlyprintk=sclp
 
-> > +               if (check_cet_msr(vcpu, msr_info))
-> > +                       return 1;
-> > +               rdmsrl(MSR_IA32_U_CET, msr_info->data);
-> > +               break;
-> > +       case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
-> > +               if (check_cet_msr(vcpu, msr_info))
-> > +                       return 1;
-> > +               rdmsrl(msr_info->index, msr_info->data);
-> > +               break;
-> >         case MSR_TSC_AUX:
-> >                 if (!msr_info->host_initiated &&
-> >                     !guest_cpuid_has(vcpu, X86_FEATURE_RDTSCP))
-> > @@ -2039,6 +2102,26 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
-> >                 else
-> >                         vmx->pt_desc.guest.addr_a[index / 2] = data;
-> >                 break;
-> > +       case MSR_IA32_S_CET:
-> > +               if (check_cet_msr(vcpu, msr_info))
-> > +                       return 1;
-> Bits 9:6 must be zero.
-> > +               vmcs_writel(GUEST_S_CET, data);
-> Have we ensured that this VMCS field exists?
-> > +               break;
-> > +       case MSR_IA32_INT_SSP_TAB:
-> > +               if (check_cet_msr(vcpu, msr_info))
-> > +                       return 1;
-> Must be canonical. vCPU must support longmode.
-> > +               vmcs_writel(GUEST_INTR_SSP_TABLE, data);
-> Have we ensured that this VMCS field exists?
-> > +               break;
-> > +       case MSR_IA32_U_CET:
-> > +               if (check_cet_msr(vcpu, msr_info))
-> > +                       return 1;
-> Bits 9:6 must be zero.
-> > +               wrmsrl(MSR_IA32_U_CET, data);
-> > +               break;
-> > +       case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
-> > +               if (check_cet_msr(vcpu, msr_info))
-> > +                       return 1;
-> 'Data' must be canonical and 4-byte aligned. High dword must be zero
-> on vCPUs that don't support longmode.
+Gr{oetje,eeting}s,
 
-Thanks a lot for all above captures, will add sanity checks in next
-version.
+                        Geert
 
-> > +               wrmsrl(msr_info->index, data);
-> > +               break;
-> >         case MSR_TSC_AUX:
-> >                 if (!msr_info->host_initiated &&
-> >                     !guest_cpuid_has(vcpu, X86_FEATURE_RDTSCP))
-> > --
-> > 2.17.2
-> >
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
