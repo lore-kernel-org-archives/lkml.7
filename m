@@ -4,33 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB619ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 577B0C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FE71206B6
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:59:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39C12206B6
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 20:59:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732092AbfJIU7L (ORCPT
+        id S1732129AbfJIU7N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 16:59:11 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51310 "EHLO mx1.suse.de"
+        Wed, 9 Oct 2019 16:59:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51334 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731996AbfJIU7I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 16:59:08 -0400
+        id S1732074AbfJIU7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 16:59:12 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 128CAB234;
-        Wed,  9 Oct 2019 20:59:07 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 18E35B235;
+        Wed,  9 Oct 2019 20:59:10 +0000 (UTC)
 Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id B7C0DE3785; Wed,  9 Oct 2019 22:59:06 +0200 (CEST)
-Message-Id: <3f6d4d0eb98bdd78269439174d483b011c330c90.1570654310.git.mkubecek@suse.cz>
+        id BEBBFE3785; Wed,  9 Oct 2019 22:59:09 +0200 (CEST)
+Message-Id: <3c28884b1d16e1b9fa148e78a3916fd944f62762.1570654310.git.mkubecek@suse.cz>
 In-Reply-To: <cover.1570654310.git.mkubecek@suse.cz>
 References: <cover.1570654310.git.mkubecek@suse.cz>
 From:   Michal Kubecek <mkubecek@suse.cz>
-Subject: [PATCH net-next v7 02/17] netlink: rename nl80211_validate_nested()
- to nla_validate_nested()
+Subject: [PATCH net-next v7 03/17] ethtool: move to its own directory
 To:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org
 Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
         Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
@@ -39,65 +38,68 @@ Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
         Stephen Hemminger <stephen@networkplumber.org>,
         Johannes Berg <johannes@sipsolutions.net>,
         linux-kernel@vger.kernel.org
-Date:   Wed,  9 Oct 2019 22:59:06 +0200 (CEST)
+Date:   Wed,  9 Oct 2019 22:59:09 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Function nl80211_validate_nested() is not specific to nl80211, it's
-a counterpart to nla_validate_nested_deprecated() with strict validation.
-For consistency with other validation and parse functions, rename it to
-nla_validate_nested().
+The ethtool netlink interface is going to be split into multiple files so
+that it will be more convenient to put all of them in a separate directory
+net/ethtool. Start by moving current ethtool.c with ioctl interface into
+this directory and renaming it to ioctl.c.
 
 Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
 Acked-by: Jiri Pirko <jiri@mellanox.com>
-Reviewed-by: Johannes Berg <johannes@sipsolutions.net>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- include/net/netlink.h  | 8 ++++----
- net/wireless/nl80211.c | 3 +--
- 2 files changed, 5 insertions(+), 6 deletions(-)
+ net/Makefile                            | 2 +-
+ net/core/Makefile                       | 2 +-
+ net/ethtool/Makefile                    | 3 +++
+ net/{core/ethtool.c => ethtool/ioctl.c} | 0
+ 4 files changed, 5 insertions(+), 2 deletions(-)
+ create mode 100644 net/ethtool/Makefile
+ rename net/{core/ethtool.c => ethtool/ioctl.c} (100%)
 
-diff --git a/include/net/netlink.h b/include/net/netlink.h
-index b140c8f1be22..56c365dc6dc7 100644
---- a/include/net/netlink.h
-+++ b/include/net/netlink.h
-@@ -1735,7 +1735,7 @@ static inline void nla_nest_cancel(struct sk_buff *skb, struct nlattr *start)
- }
+diff --git a/net/Makefile b/net/Makefile
+index 449fc0b221f8..848303d98d3d 100644
+--- a/net/Makefile
++++ b/net/Makefile
+@@ -13,7 +13,7 @@ obj-$(CONFIG_NET)		+= $(tmp-y)
  
- /**
-- * nla_validate_nested - Validate a stream of nested attributes
-+ * __nla_validate_nested - Validate a stream of nested attributes
-  * @start: container attribute
-  * @maxtype: maximum attribute type to be expected
-  * @policy: validation policy
-@@ -1758,9 +1758,9 @@ static inline int __nla_validate_nested(const struct nlattr *start, int maxtype,
- }
+ # LLC has to be linked before the files in net/802/
+ obj-$(CONFIG_LLC)		+= llc/
+-obj-$(CONFIG_NET)		+= ethernet/ 802/ sched/ netlink/ bpf/
++obj-$(CONFIG_NET)		+= ethernet/ 802/ sched/ netlink/ bpf/ ethtool/
+ obj-$(CONFIG_NETFILTER)		+= netfilter/
+ obj-$(CONFIG_INET)		+= ipv4/
+ obj-$(CONFIG_TLS)		+= tls/
+diff --git a/net/core/Makefile b/net/core/Makefile
+index a104dc8faafc..3e2c378e5f31 100644
+--- a/net/core/Makefile
++++ b/net/core/Makefile
+@@ -8,7 +8,7 @@ obj-y := sock.o request_sock.o skbuff.o datagram.o stream.o scm.o \
  
- static inline int
--nl80211_validate_nested(const struct nlattr *start, int maxtype,
--			const struct nla_policy *policy,
--			struct netlink_ext_ack *extack)
-+nla_validate_nested(const struct nlattr *start, int maxtype,
-+		    const struct nla_policy *policy,
-+		    struct netlink_ext_ack *extack)
- {
- 	return __nla_validate_nested(start, maxtype, policy,
- 				     NL_VALIDATE_STRICT, extack);
-diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
-index 141cdb171665..b551db41aa8a 100644
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -12891,8 +12891,7 @@ static int nl80211_vendor_check_policy(const struct wiphy_vendor_command *vcmd,
- 		return -EINVAL;
- 	}
+ obj-$(CONFIG_SYSCTL) += sysctl_net_core.o
  
--	return nl80211_validate_nested(attr, vcmd->maxattr, vcmd->policy,
--				       extack);
-+	return nla_validate_nested(attr, vcmd->maxattr, vcmd->policy, extack);
- }
- 
- static int nl80211_vendor_cmd(struct sk_buff *skb, struct genl_info *info)
+-obj-y		     += dev.o ethtool.o dev_addr_lists.o dst.o netevent.o \
++obj-y		     += dev.o dev_addr_lists.o dst.o netevent.o \
+ 			neighbour.o rtnetlink.o utils.o link_watch.o filter.o \
+ 			sock_diag.o dev_ioctl.o tso.o sock_reuseport.o \
+ 			fib_notifier.o xdp.o flow_offload.o
+diff --git a/net/ethtool/Makefile b/net/ethtool/Makefile
+new file mode 100644
+index 000000000000..3ebfab2bca66
+--- /dev/null
++++ b/net/ethtool/Makefile
+@@ -0,0 +1,3 @@
++# SPDX-License-Identifier: GPL-2.0
++
++obj-y		+= ioctl.o
+diff --git a/net/core/ethtool.c b/net/ethtool/ioctl.c
+similarity index 100%
+rename from net/core/ethtool.c
+rename to net/ethtool/ioctl.c
 -- 
 2.23.0
 
