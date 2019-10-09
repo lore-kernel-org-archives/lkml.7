@@ -2,170 +2,161 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCC2C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC23C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1C6621848
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:50:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="hVmQr1Gn"
+	by mail.kernel.org (Postfix) with ESMTP id 8199621848
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:50:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731333AbfJIOuQ (ORCPT
+        id S1731424AbfJIOua (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 10:50:16 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:35717 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728019AbfJIOuQ (ORCPT
+        Wed, 9 Oct 2019 10:50:30 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49826 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728019AbfJIOua (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 10:50:16 -0400
-Received: by mail-ed1-f65.google.com with SMTP id v8so2314067eds.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 07:50:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pPIM3FVIyT4/97LZJrg01pJy7drmhWtVlls1Zso13no=;
-        b=hVmQr1GnBuN40rDT4E/BRln+PJoMbsljTx3gzRJTOJM0UUYm8V9NUURUafrM4bJqsw
-         WlpvqyEy6xMYETra2Uss7YjZaW5Lfyv4K2oVU+Ak7xSxoNmZdSkJ97LaUlomVfv6xgEQ
-         qirtaSShBcRrHxGhZmzzUYOIw3ST6+UNKeZ2M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=pPIM3FVIyT4/97LZJrg01pJy7drmhWtVlls1Zso13no=;
-        b=D6HRVSnRiRMFTrOpP6PgbMEo/BOqUx2Ex60q5TJV+RoSZoxyFczCszOPxNDVNw06Rd
-         db0gS4OQeYQsHNtI7oRGpo128GRODkk4OzLpHJDH15i9U3Gk42IRbkD3eKkfzePXvaiq
-         vwFc738wnO5xcBcUREWcp9Pf0d8YDsi5Con1MmBCnlY3LXahYMTEFnX7gegFjQFTRI9T
-         XmIOmHlEQKoprIR90drFpZIx9PoSbgWBgSV+5gwsHx5++bs1rpfGrdcSLB1zoYZBouQ4
-         kEvfeA3bt00d2Mev5S9ZSYZ4QKvoTpezn+eMPZYBYmy+8lmCsQjYNOvJiBWiQRm3zfFM
-         oSGg==
-X-Gm-Message-State: APjAAAWiGfmhmPsi+Vx7vSCZkIjWhBDxyzYzPYX3NscREz2HXno+BbhM
-        LVPuHkgUF6dkK0oX/QxqJGeRJg==
-X-Google-Smtp-Source: APXvYqzC/vaAU5Hwqs5iVlB9k9gKRt59IN2idRdOSETZNdFWZMypkQIsONWbgpgTS741jKSCwurSVw==
-X-Received: by 2002:a50:8f65:: with SMTP id 92mr3485562edy.9.1570632612053;
-        Wed, 09 Oct 2019 07:50:12 -0700 (PDT)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id f36sm384659ede.28.2019.10.09.07.50.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 07:50:10 -0700 (PDT)
-Date:   Wed, 9 Oct 2019 16:50:08 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Sandy Huang <hjc@rock-chips.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, heiko@sntech.de,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] drm: Add some new format DRM_FORMAT_NVXX_10
-Message-ID: <20191009145008.GB16989@phenom.ffwll.local>
-Mail-Followup-To: Sandy Huang <hjc@rock-chips.com>,
-        dri-devel@lists.freedesktop.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        heiko@sntech.de, linux-kernel@vger.kernel.org
-References: <1569486289-152061-1-git-send-email-hjc@rock-chips.com>
- <1569486289-152061-2-git-send-email-hjc@rock-chips.com>
+        Wed, 9 Oct 2019 10:50:30 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x99ElJAm125886
+        for <linux-kernel@vger.kernel.org>; Wed, 9 Oct 2019 10:50:28 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vhhgugdtc-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 10:50:28 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Wed, 9 Oct 2019 15:50:26 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 9 Oct 2019 15:50:24 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x99EoMoF46989584
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 9 Oct 2019 14:50:22 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9236C5204E;
+        Wed,  9 Oct 2019 14:50:22 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.152.224.44])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 4837152050;
+        Wed,  9 Oct 2019 14:50:22 +0000 (GMT)
+Subject: Re: [RFC v2 0/1] s390/purgatory: Make sure we fail the build if
+ purgatory has missing symbols
+To:     Philipp Rudo <prudo@linux.ibm.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191008085421.11011-1-hdegoede@redhat.com>
+ <20191009113917.47ef6eda@laptop-ibm>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ syiRa+UVlsKmx1hsEg==
+Date:   Wed, 9 Oct 2019 16:50:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1569486289-152061-2-git-send-email-hjc@rock-chips.com>
-X-Operating-System: Linux phenom 5.2.0-2-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191009113917.47ef6eda@laptop-ibm>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19100914-0008-0000-0000-000003208326
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19100914-0009-0000-0000-00004A3F888A
+Message-Id: <ee1e9da7-2f5a-8651-78ba-15398c4ceab6@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-09_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=907 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910090141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 04:24:47PM +0800, Sandy Huang wrote:
-> These new format is supported by some rockchip socs:
+On 09.10.19 11:39, Philipp Rudo wrote:
+> Hi Hans,
 > 
-> DRM_FORMAT_NV12_10/DRM_FORMAT_NV21_10
-> DRM_FORMAT_NV16_10/DRM_FORMAT_NV61_10
-> DRM_FORMAT_NV24_10/DRM_FORMAT_NV42_10
+> also adding Ingo on Cc.
 > 
-> Signed-off-by: Sandy Huang <hjc@rock-chips.com>
-> ---
->  drivers/gpu/drm/drm_fourcc.c  | 18 ++++++++++++++++++
->  include/uapi/drm/drm_fourcc.h | 14 ++++++++++++++
->  2 files changed, 32 insertions(+)
+> I tested you patch on s390 and it does what it's supposed to do. The build now
+> fails with 
 > 
-> diff --git a/drivers/gpu/drm/drm_fourcc.c b/drivers/gpu/drm/drm_fourcc.c
-> index c630064..ccd78a3 100644
-> --- a/drivers/gpu/drm/drm_fourcc.c
-> +++ b/drivers/gpu/drm/drm_fourcc.c
-> @@ -261,6 +261,24 @@ const struct drm_format_info *__drm_format_info(u32 format)
->  		{ .format = DRM_FORMAT_P016,		.depth = 0,  .num_planes = 2,
->  		  .char_per_block = { 2, 4, 0 }, .block_w = { 1, 0, 0 }, .block_h = { 1, 0, 0 },
->  		  .hsub = 2, .vsub = 2, .is_yuv = true},
-> +		{ .format = DRM_FORMAT_NV12_10,		.depth = 0,  .num_planes = 2,
-> +		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
-> +		  .hsub = 2, .vsub = 2, .is_yuv = true},
-> +		{ .format = DRM_FORMAT_NV21_10,		.depth = 0,  .num_planes = 2,
-> +		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
-> +		  .hsub = 2, .vsub = 2, .is_yuv = true},
-> +		{ .format = DRM_FORMAT_NV16_10,		.depth = 0,  .num_planes = 2,
-> +		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
-> +		  .hsub = 2, .vsub = 1, .is_yuv = true},
-> +		{ .format = DRM_FORMAT_NV61_10,		.depth = 0,  .num_planes = 2,
-> +		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
-> +		  .hsub = 2, .vsub = 1, .is_yuv = true},
-> +		{ .format = DRM_FORMAT_NV24_10,		.depth = 0,  .num_planes = 2,
-> +		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
-> +		  .hsub = 1, .vsub = 1, .is_yuv = true},
-> +		{ .format = DRM_FORMAT_NV42_10,		.depth = 0,  .num_planes = 2,
-> +		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
-> +		  .hsub = 1, .vsub = 1, .is_yuv = true},
->  		{ .format = DRM_FORMAT_P210,		.depth = 0,
->  		  .num_planes = 2, .char_per_block = { 2, 4, 0 },
->  		  .block_w = { 1, 0, 0 }, .block_h = { 1, 0, 0 }, .hsub = 2,
+>   LD      arch/s390/purgatory/purgatory.chk
+> arch/s390/purgatory/purgatory: In function `sha256_update':
+> (.text+0x3bc2): undefined reference to `memzero_explicit'
+> /home/prudo/git/linux/linux/arch/s390/purgatory/Makefile:38: recipe for target 'arch/s390/purgatory/purgatory.chk' failed
+> make[3]: *** [arch/s390/purgatory/purgatory.chk] Error 1
+> 
+> After applying Arvid's memzero_explizit fix ("[PATCH] lib/string: make
+> memzero_explicit inline instead of external") as well the build works again.
+> 
+> My only problem is how to uptream your patch. Just adding it to our branch
+> would cause a (intentional) build breakage until Ingo's branch is merged.
+> 
+> @Vasliy & Ingo: Can you please find a solution for this.
 
-Yup this is what I had in mind with using the block stuff to describe your
-new 10bit yuv formats. Thanks for respining.
 
-Once we've nailed the exact bit description of the format precisely this
-can be merged imo.
--Daniel
+I talked quickly to Vasily. The best solution is likely to carry that
+patch in the tree that contains the fix. Ingo, can you carry the s390
+patch in your tip tree as well?
 
-> diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
-> index 3feeaa3..08e2221 100644
-> --- a/include/uapi/drm/drm_fourcc.h
-> +++ b/include/uapi/drm/drm_fourcc.h
-> @@ -238,6 +238,20 @@ extern "C" {
->  #define DRM_FORMAT_NV42		fourcc_code('N', 'V', '4', '2') /* non-subsampled Cb:Cr plane */
->  
->  /*
-> + * 2 plane YCbCr
-> + * index 0 = Y plane, Y3:Y2:Y1:Y0 10:10:10:10
-> + * index 1 = Cb:Cr plane, Cb3:Cr3:Cb2:Cr2:Cb1:Cr1:Cb0:Cr0 10:10:10:10:10:10:10:10
-> + * or
-> + * index 1 = Cr:Cb plane, Cr3:Cb3:Cr2:Cb2:Cr1:Cb1:Cr0:Cb0 10:10:10:10:10:10:10:10
-> + */
-> +#define DRM_FORMAT_NV12_10	fourcc_code('N', 'A', '1', '2') /* 2x2 subsampled Cr:Cb plane */
-> +#define DRM_FORMAT_NV21_10	fourcc_code('N', 'A', '2', '1') /* 2x2 subsampled Cb:Cr plane */
-> +#define DRM_FORMAT_NV16_10	fourcc_code('N', 'A', '1', '6') /* 2x1 subsampled Cr:Cb plane */
-> +#define DRM_FORMAT_NV61_10	fourcc_code('N', 'A', '6', '1') /* 2x1 subsampled Cb:Cr plane */
-> +#define DRM_FORMAT_NV24_10	fourcc_code('N', 'A', '2', '4') /* non-subsampled Cr:Cb plane */
-> +#define DRM_FORMAT_NV42_10	fourcc_code('N', 'A', '4', '2') /* non-subsampled Cb:Cr plane */
-> +
-> +/*
->   * 2 plane YCbCr MSB aligned
->   * index 0 = Y plane, [15:0] Y:x [10:6] little endian
->   * index 1 = Cr:Cb plane, [31:0] Cr:x:Cb:x [10:6:10:6] little endian
-> -- 
-> 2.7.4
-> 
-> 
-> 
+With my s390 co-maintainer hat on:
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
+
+Please also consider Philipps mail as "Tested-by:"
+
