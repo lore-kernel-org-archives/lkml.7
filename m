@@ -2,121 +2,130 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 089F9C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D67DDC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:39:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4B7C206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC0A7206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:39:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YXWWoxP6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VpDUMh43"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731173AbfJIMf3 (ORCPT
+        id S1730490AbfJIMjS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 08:35:29 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:33152 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730662AbfJIMf3 (ORCPT
+        Wed, 9 Oct 2019 08:39:18 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46295 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728200AbfJIMjS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 08:35:29 -0400
-Received: by mail-wm1-f67.google.com with SMTP id r17so4676578wme.0;
-        Wed, 09 Oct 2019 05:35:27 -0700 (PDT)
+        Wed, 9 Oct 2019 08:39:18 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q5so1537158pfg.13
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 05:39:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zrukuNIIpELS1SFhnaqgjV+S03DcpwgywhfpTJYGiQY=;
-        b=YXWWoxP687A4XDYTVavYfNNciK2iQ3bmHf87UHCsApkdu79BpNx2//OcEqWcVxnCyi
-         xLJgx28lRn8/3stvBve9smtm0pdcFk5rF6GR32ipf7KGFWBiSDNJ/G313z/GJbOLOyf1
-         0GgmM4KMdLcmEr2tkc2lUPvzB9oV1LKtFNj5r1N1ztWPV3Ihq78w4at+y9KLqPFjD2dr
-         wCUpV6hILJU9EpH4psIpdxWw/p5i64tRaF8FSoAJB6NFaftHNxo7ruiynw+UvZgN0PXt
-         vjlD/f63gHYQPqtUD/uzBOMUaPgw9i4Bx9EbeTD923ox9nnMe3Eo1FhGzxATp5KDB48A
-         5spw==
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wFsvEPN4hiHMlDYyUwsnor18aPb0yDPMcBpGrLSQCi4=;
+        b=VpDUMh43gYy18DlDXwaI0fdCcjDxFbwRCbZ699C+HMhCH3mmjb90A7d7FYgRfkhLxP
+         svU7gIRD8ZtUGry4LonkwC3oUkAN3obM1CDkN8djdMBA1Do2wCkpFriR4UXUP1ek0rr1
+         bvVzEEYqDtUAESKugVOGD3FcfB472NbwE8hC5TOv+M72z0Gz+YUWxLz/R77z1E04hhMi
+         EVO3UvRBhFmlBfpKDks28mS12bPazC1fQTx7F/MvMsKtlGxd+B+x9NOes8zVNBpGBLjW
+         UcTIwhx5/hh/njLIU8GCGgzgx+m/xRl0YZebcRMvsHmRW/1z6iARgXnTWSFCVuZRLXEs
+         3Czw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zrukuNIIpELS1SFhnaqgjV+S03DcpwgywhfpTJYGiQY=;
-        b=qW9QJ+LgomqnTpkiGoXM/ymUIu9J6xR5z//GCto1U9Goo4nQzxGMU47OIfAEynakS9
-         W8UPBBDpL6ZBYMZEoV074umoyPp2MN88a8LGLQXHwkxZGynLa7KHYRSWvztc3QM6cLeD
-         OjZ0+0bs7xw14ZJpPMBtPwzOC6XXNL4P7Sb75qZkSuUpOsHHNoc5qmWwHbZdRBoQ3S+t
-         bvu89vEuJ97BoRl/KMvKrtRhf74WIv8qP1Ff1A6FycaSHIMtZQ2Hssf5+aP5Wm3N4T/a
-         YfKXg8cf2heiOEPMJg61/+kjSdOmRYguh+4NerAud4TI7SeQFQUO7nh9gQhumaSVx5WR
-         JjJg==
-X-Gm-Message-State: APjAAAVUdb+kcX7SCxf/p7vL4vBihj9ED5FLWJ+14PaqwkI1bYM75o6n
-        KJMTQCQ7Mr4e8LBxE+2CuhI=
-X-Google-Smtp-Source: APXvYqyIM0rgTcW2Gxf93OV7hWpxtlNpWqt+guqqmn2grspSyMcKu7E2vZauZhYTsT6VIMg9UDo/NQ==
-X-Received: by 2002:a1c:a8c7:: with SMTP id r190mr2445724wme.162.1570624526496;
-        Wed, 09 Oct 2019 05:35:26 -0700 (PDT)
-Received: from localhost ([51.15.41.238])
-        by smtp.gmail.com with ESMTPSA id d15sm2260310wru.50.2019.10.09.05.35.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 05:35:25 -0700 (PDT)
-Date:   Wed, 9 Oct 2019 13:35:24 +0100
-From:   Stefan Hajnoczi <stefanha@gmail.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     netdev@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
-        linux-hyperv@vger.kernel.org,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        kvm@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jorgen Hansen <jhansen@vmware.com>
-Subject: Re: [RFC PATCH 09/13] hv_sock: set VMADDR_CID_HOST in the
- hvs_remote_addr_init()
-Message-ID: <20191009123524.GJ5747@stefanha-x1.localdomain>
-References: <20190927112703.17745-1-sgarzare@redhat.com>
- <20190927112703.17745-10-sgarzare@redhat.com>
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wFsvEPN4hiHMlDYyUwsnor18aPb0yDPMcBpGrLSQCi4=;
+        b=D4PCKfiidUUf9R4cfo73mUe2V5/x/G78v92gJvjLn7NnvSzNZ7biysj/fsgFvaDfkh
+         iC0aCDIRTTnzvYBMVUjGWRHLyGJh5YVog5fEa+iMXFu46nIl66dyWlj8jMPMrB6Ee8cE
+         EQCmphBgX8Y8krBQQvzGLmlBQOg61i8lDcokUb3+HKOLZqnvOcvfQqWlKavZXx5RlIUl
+         wwNuFKtITBN0s4B3i8BxT6YYkmsStnBkyLn1s240OiTpCn2eKrVvWLtc9Vsd2+3PShGS
+         Fh77oRBS7tAW3edssnO5V6lWDoedO2/D6zsFSqQVSiM06lZptDZMfQsJySI6ibLa+vbU
+         8JWw==
+X-Gm-Message-State: APjAAAUdYPsE5gsjA2+S8foQzxQq9AHS4NpIgYtSiumN3+d2YVhQCOi+
+        6vIXggllEPKU36nJgHUgvIg=
+X-Google-Smtp-Source: APXvYqzE1Y6pQ9aLhmsuA7JioJhkfDo6/AAqH/MW7E8npnCx6z6gUVu56q8LUFvRo7r7ebq0n5dVxA==
+X-Received: by 2002:a63:c445:: with SMTP id m5mr4073422pgg.211.1570624757250;
+        Wed, 09 Oct 2019 05:39:17 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id s3sm2169915pjq.32.2019.10.09.05.39.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 09 Oct 2019 05:39:15 -0700 (PDT)
+Subject: Re: [PATCH v4 2/2] sched/topology: Improve load balancing on AMD EPYC
+To:     Matt Fleming <matt@codeblueprint.co.uk>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
+        Rik van Riel <riel@surriel.com>,
+        Suravee.Suthikulpanit@amd.com, Borislav Petkov <bp@alien8.de>,
+        Thomas.Lendacky@amd.com, Mel Gorman <mgorman@techsingularity.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+References: <20190808195301.13222-1-matt@codeblueprint.co.uk>
+ <20190808195301.13222-3-matt@codeblueprint.co.uk>
+ <20191007152816.GA10940@roeck-us.net>
+ <20191009120412.GA4065@codeblueprint.co.uk>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <846c01c4-f388-0634-9b98-618b82f74ca4@roeck-us.net>
+Date:   Wed, 9 Oct 2019 05:39:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="5me2qT3T17SWzdxI"
-Content-Disposition: inline
-In-Reply-To: <20190927112703.17745-10-sgarzare@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191009120412.GA4065@codeblueprint.co.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 10/9/19 5:04 AM, Matt Fleming wrote:
+> On Mon, 07 Oct, at 08:28:16AM, Guenter Roeck wrote:
+>>
+>> This patch causes build errors on systems where NUMA does not depend on SMP,
+>> for example MIPS and PPC. For example, building mips:ip27_defconfig with SMP
+>> disabled results in
+>>
+>> mips-linux-ld: mm/page_alloc.o: in function `get_page_from_freelist':
+>> page_alloc.c:(.text+0x5018): undefined reference to `node_reclaim_distance'
+>> mips-linux-ld: page_alloc.c:(.text+0x5020): undefined reference to `node_reclaim_distance'
+>> mips-linux-ld: page_alloc.c:(.text+0x5028): undefined reference to `node_reclaim_distance'
+>> mips-linux-ld: page_alloc.c:(.text+0x5040): undefined reference to `node_reclaim_distance'
+>> Makefile:1074: recipe for target 'vmlinux' failed
+>> make: *** [vmlinux] Error 1
+>>
+>> I have seen a similar problem with one of my PPC test builds.
+>>
+>> powerpc64-linux-ld: mm/page_alloc.o:(.toc+0x18): undefined reference to `node_reclaim_distance'
+> 
+> Thanks for this Guenter.
+> 
+> So, the way I've fixed this same issue for ia64 was to make NUMA
+> depend on SMP. Does that seem like a suitable solution for both PPC
+> and MIPS?
+> 
 
---5me2qT3T17SWzdxI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+You would still have to cover all other architectures where SMP and NUMA are independent
+of each other. Fortunately, it looks like this is only sh4.
 
-On Fri, Sep 27, 2019 at 01:26:59PM +0200, Stefano Garzarella wrote:
-> Remote peer is always the host, so we set VMADDR_CID_HOST as
-> remote CID instead of VMADDR_CID_ANY.
->=20
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> ---
->  net/vmw_vsock/hyperv_transport.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+sh4-linux-ld: mm/page_alloc.o: in function `get_page_from_freelist':
+page_alloc.c:(.text+0x3ce0): undefined reference to `node_reclaim_distance'
+Makefile:1074: recipe for target 'vmlinux' failed
+make: *** [vmlinux] Error 1
 
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+arm64 and s390 happen to work because they mandate SMP support, even though NUMA
+is nominally independent.
 
---5me2qT3T17SWzdxI
-Content-Type: application/pgp-signature; name="signature.asc"
+Wondering - why not declare node_reclaim_distance outside SMP dependency ?
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl2d1AwACgkQnKSrs4Gr
-c8jb5wf/RiXbiexvEEg0hOVPHCNYSDBNEehuU8/ZUOo11ueiWzI9+b5rFidWUcc9
-4VZ3SCtzOW/3meXooyF42QP97QPJ0sQO3jpPZjCECe9McxAbm0zum+N3Cb/0AbjT
-xrpQ1FHtTgGBHydsxFcsyIcZMvp91o4Q7qNtExg/CB7vbOEJXFkSmh5968GD3o1f
-uK0Rqjqgx1Fm30mT41uRe41JvrE7QtJr8yc/uFB2h2JL7RgxRa+G+mIV1+66P2t+
-xIwq8Nj/JyQBfvD82Bvezuvf6ITNloJ7/97xTnHgg2U0YcslB/cU8gArZJlWHAKv
-O9b3imMu/xyzY1oO4yJ+mmOM3cEtFQ==
-=ktlx
------END PGP SIGNATURE-----
-
---5me2qT3T17SWzdxI--
+Thanks,
+Guenter
