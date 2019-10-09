@@ -2,104 +2,164 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DCA0ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 23:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5250ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 23:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4808821D7F
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 23:19:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3269206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 23:19:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570663189;
+	bh=lUJoAmwVYmxxiLBq1t4lFuiOCc5wh99DLAMa0XWi83Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=aqUCNezoSblA/YrkzAyYn4wP6DMSrk9D7zrpfCOcxvwen1VupYk4a7XiYl8CaCd0A
+	 RRffb2dVM5KfLJ03woPTSM+7lwXZI/+6YW3on6l3KJrl6/x0pUDTCXaR5nOmNFmx0a
+	 w2eeBQayl+yo7ZnZ9+Wz004xv1Jgyk0mqPyq/iMA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732662AbfJIXTo (ORCPT
+        id S1732678AbfJIXTs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 19:19:44 -0400
-Received: from mga07.intel.com ([134.134.136.100]:59994 "EHLO mga07.intel.com"
+        Wed, 9 Oct 2019 19:19:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732643AbfJIXTm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 19:19:42 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 16:19:42 -0700
-X-IronPort-AV: E=Sophos;i="5.67,277,1566889200"; 
-   d="scan'208";a="368893835"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 16:19:42 -0700
-Subject: [PATCH v6 09/12] dax: Fix alloc_dax_region() compile warning
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     mingo@redhat.com
-Cc:     Vishal Verma <vishal.l.verma@intel.com>,
-        kbuild test robot <lkp@intel.com>, peterz@infradead.org,
-        dave.hansen@linux.intel.com, ard.biesheuvel@linaro.org,
-        x86@kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
-Date:   Wed, 09 Oct 2019 16:05:24 -0700
-Message-ID: <157066232472.1059972.3929286986071931373.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <157066227329.1059972.5659620631541203458.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <157066227329.1059972.5659620631541203458.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-2-gc94f
+        id S1732643AbfJIXTp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 19:19:45 -0400
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2D9E21D7A;
+        Wed,  9 Oct 2019 23:19:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570663184;
+        bh=lUJoAmwVYmxxiLBq1t4lFuiOCc5wh99DLAMa0XWi83Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=EX0XvZkUqRywUXEZluTpt8by0lHIdCK0jXPS5QiWzgkmoqtDPcb8vs+/4csID0idh
+         iuI+A4/4AaNMjW05zuB+OIPXeaO34GcyKyEEFea6ZOiHHQWZbwVX282H6ZDd85uWqB
+         rao57zDmN4mh8HK9pAEEpRfTKZvfVL1wt33VE2d4=
+Received: by mail-qk1-f172.google.com with SMTP id u22so3824978qkk.11;
+        Wed, 09 Oct 2019 16:19:44 -0700 (PDT)
+X-Gm-Message-State: APjAAAW/S3U+viHuqTPO6nNFg62Bl9HrPhquxkCeNpod6CkTE4JCcTHZ
+        BOjKpIW04FN+zxbUD48OOlW+4LF7LGNHtXIeiA==
+X-Google-Smtp-Source: APXvYqyPSfTjVLV3COlA1kAK+1OFfKGo6+mldinX14j08Mhg6XsRIJdoe4XiZTLLEwhEamG94ntdDl3vE8H5N2e0G8U=
+X-Received: by 2002:a05:620a:12f1:: with SMTP id f17mr6421929qkl.152.1570663183781;
+ Wed, 09 Oct 2019 16:19:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20191007151730.7705-1-hhhawa@amazon.com> <20191007151730.7705-4-hhhawa@amazon.com>
+In-Reply-To: <20191007151730.7705-4-hhhawa@amazon.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 9 Oct 2019 18:19:32 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLZOHx=3d9jPy+7y0a92wA-VKEDQ4PVNvo6L8fRe7xJCQ@mail.gmail.com>
+Message-ID: <CAL_JsqLZOHx=3d9jPy+7y0a92wA-VKEDQ4PVNvo6L8fRe7xJCQ@mail.gmail.com>
+Subject: Re: [PATCH v6 3/3] edac: Add support for Amazon's Annapurna Labs L2 EDAC
+To:     Hanna Hawa <hhhawa@amazon.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>, daniel@iogearbox.net,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        devicetree@vger.kernel.org, "Woodhouse, David" <dwmw@amazon.co.uk>,
+        benh@amazon.com, "Krupnik, Ronen" <ronenk@amazon.com>,
+        Talel Shenhar <talel@amazon.com>,
+        Jonathan Chocron <jonnyc@amazon.com>,
+        "Hanoch, Uri" <hanochu@amazon.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PFN flags are (unsigned long long), fix the alloc_dax_region() calling
-convention to fix warnings of the form:
+On Mon, Oct 7, 2019 at 10:18 AM Hanna Hawa <hhhawa@amazon.com> wrote:
+>
+> Adds support for Amazon's Annapurna Labs L2 EDAC driver to detect and
+> report L2 errors.
+>
+> Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
+> ---
+>  MAINTAINERS               |   5 +
+>  drivers/edac/Kconfig      |   8 ++
+>  drivers/edac/Makefile     |   1 +
+>  drivers/edac/al_l2_edac.c | 251 ++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 265 insertions(+)
+>  create mode 100644 drivers/edac/al_l2_edac.c
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 7887a62dc843..0eabcfcf91a9 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -748,6 +748,11 @@ M: Hanna Hawa <hhhawa@amazon.com>
+>  S:     Maintained
+>  F:     drivers/edac/al_l1_edac.c
+>
+> +AMAZON ANNAPURNA LABS L2 EDAC
+> +M:     Hanna Hawa <hhhawa@amazon.com>
+> +S:     Maintained
+> +F:     drivers/edac/al_l2_edac.c
+> +
+>  AMAZON ANNAPURNA LABS THERMAL MMIO DRIVER
+>  M:     Talel Shenhar <talel@amazon.com>
+>  S:     Maintained
+> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+> index e8161d7c7469..cb394aff1cab 100644
+> --- a/drivers/edac/Kconfig
+> +++ b/drivers/edac/Kconfig
+> @@ -82,6 +82,14 @@ config EDAC_AL_L1
+>           for Amazon's Annapurna Labs SoCs.
+>           This driver detects errors of L1 caches.
+>
+> +config EDAC_AL_L2
+> +       tristate "Amazon's Annapurna Labs L2 EDAC"
 
->> include/linux/pfn_t.h:18:17: warning: large integer implicitly truncated to unsigned type [-Woverflow]
-    #define PFN_DEV (1ULL << (BITS_PER_LONG_LONG - 3))
+I still think this should be an "A57 L2 ECC" driver, but if no one
+cares I'll shut up and the 2nd person can rename everything.
 
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/dax/bus.c         |    2 +-
- drivers/dax/bus.h         |    2 +-
- drivers/dax/dax-private.h |    2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+> +       depends on ARCH_ALPINE
 
-diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-index 8fafbeab510a..eccdda1f7b71 100644
---- a/drivers/dax/bus.c
-+++ b/drivers/dax/bus.c
-@@ -227,7 +227,7 @@ static void dax_region_unregister(void *region)
- 
- struct dax_region *alloc_dax_region(struct device *parent, int region_id,
- 		struct resource *res, int target_node, unsigned int align,
--		unsigned long pfn_flags)
-+		unsigned long long pfn_flags)
- {
- 	struct dax_region *dax_region;
- 
-diff --git a/drivers/dax/bus.h b/drivers/dax/bus.h
-index 8619e3299943..9e4eba67e8b9 100644
---- a/drivers/dax/bus.h
-+++ b/drivers/dax/bus.h
-@@ -11,7 +11,7 @@ struct dax_region;
- void dax_region_put(struct dax_region *dax_region);
- struct dax_region *alloc_dax_region(struct device *parent, int region_id,
- 		struct resource *res, int target_node, unsigned int align,
--		unsigned long flags);
-+		unsigned long long flags);
- 
- enum dev_dax_subsys {
- 	DEV_DAX_BUS,
-diff --git a/drivers/dax/dax-private.h b/drivers/dax/dax-private.h
-index 6ccca3b890d6..3107ce80e809 100644
---- a/drivers/dax/dax-private.h
-+++ b/drivers/dax/dax-private.h
-@@ -32,7 +32,7 @@ struct dax_region {
- 	struct device *dev;
- 	unsigned int align;
- 	struct resource res;
--	unsigned long pfn_flags;
-+	unsigned long long pfn_flags;
- };
- 
- /**
+|| COMPILE_TEST
 
+Maybe it needs an ARM64 dependency too in this case?
+
+> +       help
+> +         Support for L2 error detection and correction
+> +         for Amazon's Annapurna Labs SoCs.
+> +         This driver detects errors of L2 caches.
+> +
+
+> +
+> +       ret = platform_driver_register(&al_l2_edac_driver);
+> +       if (ret) {
+> +               pr_err("Failed to register %s (%d)\n", DRV_NAME, ret);
+> +               return ret;
+> +       }
+> +
+> +       edac_l2_device = platform_device_register_simple(DRV_NAME, -1, NULL, 0);
+> +       if (IS_ERR(edac_l2_device)) {
+> +               pr_err("Failed to register EDAC AL L2 platform device\n");
+> +               return PTR_ERR(edac_l2_device);
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static void __exit al_l2_exit(void)
+> +{
+> +       platform_device_unregister(edac_l2_device);
+> +       platform_driver_unregister(&al_l2_edac_driver);
+> +}
+> +
+> +late_initcall(al_l2_init);
+> +module_exit(al_l2_exit);
+> +
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_AUTHOR("Hanna Hawa <hhhawa@amazon.com>");
+> +MODULE_DESCRIPTION("Amazon's Annapurna Lab's L2 EDAC Driver");
+> --
+> 2.17.1
+>
