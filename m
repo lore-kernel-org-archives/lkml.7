@@ -2,194 +2,195 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D60B8C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31632ECE58E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4E262133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:42:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gE6og7rg"
+	by mail.kernel.org (Postfix) with ESMTP id 0CD2C2133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:43:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730789AbfJIKmm (ORCPT
+        id S1730857AbfJIKnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 06:42:42 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33677 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbfJIKmm (ORCPT
+        Wed, 9 Oct 2019 06:43:15 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:41163 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727035AbfJIKnP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 06:42:42 -0400
-Received: by mail-wr1-f66.google.com with SMTP id b9so2281566wrs.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 03:42:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=K/8jkJc7wc7u6udSGdjINbk+0yMvperAB6aWTlp1WT0=;
-        b=gE6og7rgU8o5Rlz2ZI6A6EhutjxNfdftMOg7MInNxNp92eEck/fsA/l5SVqKU+e7DC
-         tOjV8/2S0tkCi5+d2NDfquRnEEGvAOSw9YLG0DEWhDb3OCz+ZNqpYU40pt101L2T7G1E
-         oiCPuyj5xUmAOGirz1/4rCrp/5sQTZqMVTJtW3nX4j3ctGZcwm8kPXN7llubCxytlCbY
-         HZAlu/o1Ikd8JbwCfKslIr53DD0l1p9KzYt6vhi9HSlLb+qtrPflLY8kd3fItlbMrFl/
-         csMNLjJLpP14UMthQp/pHeaaSpzlBX7ePmEeSN7yF2gZvt2RYlyKHrRFOeryKXH8sFbm
-         PKQg==
+        Wed, 9 Oct 2019 06:43:15 -0400
+Received: by mail-ed1-f66.google.com with SMTP id f20so1555295edv.8;
+        Wed, 09 Oct 2019 03:43:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=K/8jkJc7wc7u6udSGdjINbk+0yMvperAB6aWTlp1WT0=;
-        b=RePSLnliNuNwgn3wUo/WelXFRma15JSFTTgw77ufQw8nHFzhVPM3oCYvOQejSfszzM
-         QNU2ZjNB0aU/azabCrGBLiLBNheBAUUszGy59ZpOG42H8j5tmxb73Vh0QJuw7PDfVu38
-         vnQgajD6i8f0POzs0J88WyeR3k/hzajAAVjMETVhpzDV+vsd4EKrg3ly0najP9Xwzbm5
-         vpNh8D+4nF6cwJCLY9eqLWCcvuyzoDxMnNKkTqYlMkbOAHqSh2nCQnbw95MILZIfV8Ic
-         gbqEtJih25Gwg3FbGS3O7GXc06ED9gK4iOMIg+auMzhglFlUxcbcH4BMiUO7Ls5jsZom
-         SNMw==
-X-Gm-Message-State: APjAAAXKMyYSLHRuhbfp+cGV+YH6bmjqoJzYGJfzZ/YXXNiZeBUoiIek
-        WVIjK2zEBnWpQ0Cu6wh2mA9Vwg==
-X-Google-Smtp-Source: APXvYqx4WIEy/7qJ94hIy8ENASggcnfwGTDmcb6vVAwNjKFf7pZqhO3uSlODVxx+IjTeKRTH9Qw7kg==
-X-Received: by 2002:a5d:5309:: with SMTP id e9mr2448771wrv.276.1570617758872;
-        Wed, 09 Oct 2019 03:42:38 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id k24sm7128343wmi.1.2019.10.09.03.42.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 03:42:37 -0700 (PDT)
-Date:   Wed, 9 Oct 2019 11:42:36 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-kernel@vger.kernel.org, thierry.reding@gmail.com,
-        heiko@sntech.de, dianders@chromium.org, mka@chromium.org,
-        groeck@chromium.org, kernel@collabora.com, bleung@chromium.org,
-        linux-pwm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH] pwm: cros-ec: Let cros_ec_pwm_get_state() return the
- last applied state
-Message-ID: <20191009104236.ux23ywnhvsym2qcb@holly.lan>
-References: <20191008105417.16132-1-enric.balletbo@collabora.com>
- <20191008143432.pbhcqamd6f4qwbqn@pengutronix.de>
- <4f009344-242e-19a7-6872-2c55df086044@collabora.com>
- <20191008203137.s22clq6v2om5ktio@pengutronix.de>
- <53b7d02b-1a2d-11da-fdd0-5378f360d876@collabora.com>
- <20191009095635.yysr33lnwldicyng@holly.lan>
- <20191009101637.gmvghwdvcmfw4yyk@pengutronix.de>
+        h=x-gm-message-state:to:cc:references:from:autocrypt:subject
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=ZH/t6Z5SKm0O+GF3c+jnCpiA2fHZKai+CXFJKmI0anE=;
+        b=foNGsBUMMxcNRAm4b8gjo6ARjAE3C0mTF2iEdJzjkqR4UW0tgVi6q8qf/gcmA0pDOn
+         FMIY52VVAYRu7/DGTAfcWsMWfpUuJZd+H7bwNqpyQ/CeywlWBSLr6t7tZNMLFXgG/yDH
+         3WvNtKKn4Q/Iu95GBClEeYzQn6CFzIqKj9THxTy6wh44cwvvaUIWfvIZFQfSDfc7UPo8
+         DH/aAJLTkMszWDrOevk9XZ/gN7GrBZu2/LxdINyTFw1AUBvCN0rajzx5M50z2p+2sfNp
+         F+A7piHckxLqpa4ejujZ6Yw4+MVAeUjnkKJkDvV3jh6NRaztAwkixlU19DiPnWA2xVWd
+         KE1A==
+X-Gm-Message-State: APjAAAXMJkuybu6APl8L1x/rA4xc+1g4XydsN+W2iaDTWsWKqEmVtGvo
+        Knj1bIxWvQSOjuUbb5WU6spuhTtZEwc=
+X-Google-Smtp-Source: APXvYqyNrmyb6MX/tNGEjdMfBRcon/IjHUNxtV7X/50ybrVaIrAFeHEb0Rq/5QqQ03f9oNPdMt+syw==
+X-Received: by 2002:a17:906:4748:: with SMTP id j8mr2143495ejs.210.1570617792769;
+        Wed, 09 Oct 2019 03:43:12 -0700 (PDT)
+Received: from [172.16.14.133] ([62.28.178.14])
+        by smtp.gmail.com with ESMTPSA id t9sm202921eji.26.2019.10.09.03.43.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Oct 2019 03:43:11 -0700 (PDT)
+To:     Hans de Goede <hdegoede@redhat.com>, devel@driverdev.osuosl.org
+Cc:     linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bastien Nocera <hadess@hadess.net>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Jes Sorensen <jes.sorensen@gmail.com>, stable@vger.kernel.org
+References: <20190930110141.29271-1-efremov@linux.com>
+ <94af475e-dd7a-6066-146a-30a9915cd325@redhat.com>
+From:   Denis Efremov <efremov@linux.com>
+Autocrypt: addr=efremov@linux.com; keydata=
+ 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
+Subject: Re: [PATCH] staging: rtl8723bs: hal: Fix memcpy calls
+Message-ID: <996e0e51-019a-5d65-026a-9599f9228299@linux.com>
+Date:   Wed, 9 Oct 2019 13:43:09 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <94af475e-dd7a-6066-146a-30a9915cd325@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191009101637.gmvghwdvcmfw4yyk@pengutronix.de>
-User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 12:16:37PM +0200, Uwe Kleine-K�nig wrote:
-> On Wed, Oct 09, 2019 at 10:56:35AM +0100, Daniel Thompson wrote:
-> > On Wed, Oct 09, 2019 at 11:27:13AM +0200, Enric Balletbo i Serra wrote:
-> > > Hi Uwe,
-> > > 
-> > > Adding Daniel and Lee to the discussion ...
-> > 
-> > Thanks!
-> > 
-> > > On 8/10/19 22:31, Uwe Kleine-K�nig wrote:
-> > > > On Tue, Oct 08, 2019 at 06:33:15PM +0200, Enric Balletbo i Serra wrote:
-> > > >>> A few thoughts to your approach here ...:
-> > > >>>
-> > > >>>  - Would it make sense to only store duty_cycle and enabled in the
-> > > >>>    driver struct?
-> > > >>>
-> > > >>
-> > > >> Yes, in fact, my first approach (that I didn't send) was only storing enabled
-> > > >> and duty cycle. For some reason I ended storing the full pwm_state struct, but I
-> > > >> guess is not really needed.
-> > > >>
-> > > >>
-> > > >>>  - Which driver is the consumer of your pwm? If I understand correctly
-> > > >>>    the following sequence is the bad one:
-> > > >>>
-> > > >>
-> > > >> The consumer is the pwm_bl driver. Actually I'n trying to identify
-> > > >> other consumers.
-> > > > 
-> > > 
-> > > So far, the pwm_bl driver is the only consumer of cros-ec-pwm.
-> > > 
-> > > > Ah, I see why I missed to identify the problem back when I checked this
-> > > > driver. The problem is not that .duty_cycle isn't set but there .enabled
-> > > > isn't set. So maybe we just want:
-> > > > 
-> > > > diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-> > > > index 2201b8c78641..0468c6ee4448 100644
-> > > > --- a/drivers/video/backlight/pwm_bl.c
-> > > > +++ b/drivers/video/backlight/pwm_bl.c
-> > > > @@ -123,6 +123,7 @@ static int pwm_backlight_update_status(struct backlight_device *bl)
-> > > >         if (brightness > 0) {
-> > > >                 pwm_get_state(pb->pwm, &state);
-> > > >                 state.duty_cycle = compute_duty_cycle(pb, brightness);
-> > > > +               state.enabled = true;
-> > > >                 pwm_apply_state(pb->pwm, &state);
-> > > >                 pwm_backlight_power_on(pb);
-> > > >         } else
-> > > > 
-> > > > ? On a side note: It's IMHO strange that pwm_backlight_power_on
-> > > > reconfigures the PWM once more.
-> > > > 
-> > > 
-> > > Looking again to the pwm_bl code, now, I am not sure this is correct (although
-> > > it probably solves the problem for me).
-> > 
-> > Looking at the pwm_bl code I wouldn't accept the above as it is but I'd
-> > almost certainly accept a patch to pwm_bl to move the PWM enable/disable
-> > out of both the power on/off functions so the duty-cycle/enable or
-> > disable can happen in one go within the update_status function. I don't
-> > think such a change would interfere with the power and enable sequencing
-> > needed by panels and it would therefore be a nice continuation of the
-> > work to convert over to the pwm_apply_state() API.
+Hi,
+
+On 09.10.2019 12:35, Hans de Goede wrote:
+> Hi Denis,
 > 
-> OK for me. Enric, do you care enough to come up with a patch for pwm_bl?
-> I'd expect that this alone should already fix your issue.
->  
-> > None of the above has anything to do with what is right or wrong for
-> > the PWM API evolution. Of course, if this thread does conclude that it
-> > is OK the duty cycle of a disabled PWM to be retained for some drivers
-> > and not others then I'd hope to see some WARN_ON()s added to the PWM
-> > framework to help bring problems to the surface with all drivers.
+> On 30-09-2019 13:01, Denis Efremov wrote:
+>> memcpy() in phy_ConfigBBWithParaFile() and PHY_ConfigRFWithParaFile() is
+>> called with "src == NULL && len == 0". This is an undefined behavior.
+>> Moreover this if pre-condition "pBufLen && (*pBufLen == 0) && !pBuf"
+>> is constantly false because it is a nested if in the else brach, i.e.,
+>> "if (cond) { ... } else { if (cond) {...} }". This patch alters the
+>> if condition to check "pBufLen && pBuf" pointers are not NULL.
+>>
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Cc: Hans de Goede <hdegoede@redhat.com>
+>> Cc: Bastien Nocera <hadess@hadess.net>
+>> Cc: Larry Finger <Larry.Finger@lwfinger.net>
+>> Cc: Jes Sorensen <jes.sorensen@gmail.com>
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Denis Efremov <efremov@linux.com>
+>> ---
+>> Not tested. I don't have the hardware. The fix is based on my guess.
 > 
-> I think it's not possible to add a reliable WARN_ON for that issue. It
-> is quite expected that .get_state returns something that doesn't
-> completely match the requested configuration. So if a consumer requests
+> Thsnk you for your patch.
 > 
-> 	.duty_cycle = 1
-> 	.period = 100000000
-> 	.enabled = false
+> So I've been doing some digging and this code normally never executes.
 > 
-> pwm_get_state possibly returns .duty_cycle = 0 even for drivers/hardware
-> that has a concept of duty_cycle for disabled hardware.
+> For this to execute the user would need to change the rtw_load_phy_file module
+> param from its default of 0x44 (LOAD_BB_PG_PARA_FILE | LOAD_RF_TXPWR_LMT_PARA_FILE)
+> to something which includes 0x02 (LOAD_BB_PARA_FILE) as mask.
 > 
-> A bit this is addressed in https://patchwork.ozlabs.org/patch/1147517/.
+> And even with that param set for this code to actually do something /
+> for pBuf to ever not be NULL the following conditions would have to
+> be true:
+> 
+> 1) Set the rtw_load_phy_file module param from its default of
+>    0x44 (LOAD_BB_PG_PARA_FILE | LOAD_RF_TXPWR_LMT_PARA_FILE) to something
+>    which includes 0x02 as mask; and
+> 2) Set rtw_phy_file_path module parameter to say "/lib/firmware/"; and
+> 3) Store a /lib/firmware/rtl8723b/PHY_REG.txt file in the expected format.
+> 
+> So I've come to the conclusion that all the phy_Config*WithParaFile functions
+> (and a bunch of stuff they use) can be removed.
+> 
+> I will prepare and submit a patch for this.
+> 
 
-Isn't that intended to help identify "odd" PWM drivers rather than "odd"
-clients?
+Thank you for perfect investigation! I can only agree with you, because this
+code is buggy. It looks like no one faced this bug previously and the code
+can be safely removed.
 
-Initially I was thinking that a WARN_ON() could be emitted when:
+Best Regards,
+Denis
 
-1. .duty_cycle is non-zero
-2. .enabled is false
-3. the PWM is not already enabled
-
-(#3 included to avoid too many false positives when disabling a PWM)
-
-A poisoning approach might be equally valid. If some drivers are
-permitted to "round" .duty_cycle to 0 when .enabled is false then the
-framework could get *all* drivers to behave in the same way by
-zeroing it out before calling the drivers apply method. It is not that
-big a deal but minimising the difference between driver behaviour should
-automatically reduce the difference in API usage by clients.
-
-
-Daniel.
+> 
+>>
+>>   drivers/staging/rtl8723bs/hal/hal_com_phycfg.c | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c b/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c
+>> index 6539bee9b5ba..0902dc3c1825 100644
+>> --- a/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c
+>> +++ b/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c
+>> @@ -2320,7 +2320,7 @@ int phy_ConfigBBWithParaFile(
+>>               }
+>>           }
+>>       } else {
+>> -        if (pBufLen && (*pBufLen == 0) && !pBuf) {
+>> +        if (pBufLen && pBuf) {
+>>               memcpy(pHalData->para_file_buf, pBuf, *pBufLen);
+>>               rtStatus = _SUCCESS;
+>>           } else
+>> @@ -2752,7 +2752,7 @@ int PHY_ConfigRFWithParaFile(
+>>               }
+>>           }
+>>       } else {
+>> -        if (pBufLen && (*pBufLen == 0) && !pBuf) {
+>> +        if (pBufLen && pBuf) {
+>>               memcpy(pHalData->para_file_buf, pBuf, *pBufLen);
+>>               rtStatus = _SUCCESS;
+>>           } else
+>>
+> 
