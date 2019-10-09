@@ -2,173 +2,119 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93559ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6ED8C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69E0021848
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:50:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FE7D21848
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:51:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="T06iGA5q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731845AbfJIQuL (ORCPT
+        id S1731848AbfJIQvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 12:50:11 -0400
-Received: from mga03.intel.com ([134.134.136.65]:41840 "EHLO mga03.intel.com"
+        Wed, 9 Oct 2019 12:51:31 -0400
+Received: from onstation.org ([52.200.56.107]:53566 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730490AbfJIQuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 12:50:10 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 09:50:10 -0700
-X-IronPort-AV: E=Sophos;i="5.67,276,1566889200"; 
-   d="scan'208";a="187674509"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 09:50:10 -0700
-Message-ID: <4b6a9bda0a19c20b04338fd1d9b4f96086480355.camel@linux.intel.com>
-Subject: Re: [PATCH v11 0/6] mm / virtio: Provide support for unused page
- reporting
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
-        David Hildenbrand <david@redhat.com>,
-        virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
-        "Wang, Wei W" <wei.w.wang@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 09 Oct 2019 09:50:09 -0700
-In-Reply-To: <9bd52b8e-fa9e-a5ad-de39-660684757cdb@redhat.com>
-References: <20191001152441.27008.99285.stgit@localhost.localdomain>
-         <7233498c-2f64-d661-4981-707b59c78fd5@redhat.com>
-         <1ea1a4e11617291062db81f65745b9c95fd0bb30.camel@linux.intel.com>
-         <8bd303a6-6e50-b2dc-19ab-4c3f176c4b02@redhat.com>
-         <CAKgT0Uf37xAFK2CWqUZJgn7bWznSAi6qncLxBpC55oSpBMG1HQ@mail.gmail.com>
-         <c06b68cb-5e94-ae3e-f84e-48087d675a8f@redhat.com>
-         <CAKgT0Ud6TT=XxqFx6ePHzbUYqMp5FHVPozRvnNZK3tKV7j2xjg@mail.gmail.com>
-         <0a16b11e-ec3b-7196-5b7f-e7395876cf28@redhat.com>
-         <d96f744d2c48f5a96c6962c6a0a89d2429e5cab8.camel@linux.intel.com>
-         <7fc13837-546c-9c4a-1456-753df199e171@redhat.com>
-         <5b6e0b6df46c03bfac906313071ac0362d43c432.camel@linux.intel.com>
-         <c2fd074b-1c86-cd93-41ea-ae1a6b2ca841@redhat.com>
-         <CAKgT0Uecy96y-bOj4TpXBxSwJhn3jaCtGjD2+Zswh9gN7i+Otg@mail.gmail.com>
-         <9bd52b8e-fa9e-a5ad-de39-660684757cdb@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        id S1731432AbfJIQva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 12:51:30 -0400
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id BAD3A3E89B;
+        Wed,  9 Oct 2019 16:51:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1570639889;
+        bh=XuRSZUxqlEHuVzlpMa3RostZ9o3RMjnb4AAbLDyG678=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=T06iGA5qp+VAkynZyImFdjFWH6v2KZuxbkYf0n8YKuB5Fyk1DpWhhk9uYLM7m7XeP
+         IMpFzOiFszccfUZpJZTse7j+c2PP5dMpwJBMjFTjccmE0tPUwd0+CDRenOz6CsDInm
+         2ErwCd4ddJOfkcQvPEqjDVwPWfP1Kn1310fpKS+k=
+Date:   Wed, 9 Oct 2019 12:51:28 -0400
+From:   Brian Masney <masneyb@onstation.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     robdclark@gmail.com, sean@poorly.run, bjorn.andersson@linaro.org,
+        a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com,
+        airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, jonathan@marek.ca,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH RFC v2 4/5] ARM: dts: qcom: msm8974: add HDMI nodes
+Message-ID: <20191009165128.GB1595@onstation.org>
+References: <20191007014509.25180-1-masneyb@onstation.org>
+ <20191007014509.25180-5-masneyb@onstation.org>
+ <20191009022131.604B52070B@mail.kernel.org>
+ <20191009060520.GA14506@onstation.org>
+ <20191009153927.3DC5D21848@mail.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191009153927.3DC5D21848@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-10-09 at 12:25 -0400, Nitesh Narayan Lal wrote:
-> On 10/7/19 1:20 PM, Alexander Duyck wrote:
-> > On Mon, Oct 7, 2019 at 10:07 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
-> > > On 10/7/19 12:27 PM, Alexander Duyck wrote:
-> > > > On Mon, 2019-10-07 at 12:19 -0400, Nitesh Narayan Lal wrote:
-> > > > > On 10/7/19 11:33 AM, Alexander Duyck wrote:
-> > > > > > On Mon, 2019-10-07 at 08:29 -0400, Nitesh Narayan Lal wrote:
-> > > > > > > On 10/2/19 10:25 AM, Alexander Duyck wrote:
-> > <snip>
-> > 
-> > > > > > > page_reporting.c change:
-> > > > > > > @@ -101,8 +101,12 @@ static void scan_zone_bitmap(struct page_reporting_config
-> > > > > > > *phconf,
-> > > > > > >                 /* Process only if the page is still online */
-> > > > > > >                 page = pfn_to_online_page((setbit << PAGE_REPORTING_MIN_ORDER) +
-> > > > > > >                                           zone->base_pfn);
-> > > > > > > -               if (!page)
-> > > > > > > +               if (!page || !PageBuddy(page)) {
-> > > > > > > +                       clear_bit(setbit, zone->bitmap);
-> > > > > > > +                       atomic_dec(&zone->free_pages);
-> > > > > > >                         continue;
-> > > > > > > +               }
-> > > > > > > 
-> > > > > > I suspect the zone->free_pages is going to be expensive for you to deal
-> > > > > > with. It is a global atomic value and is going to have the cacheline
-> > > > > > bouncing that it is contained in. As a result thinks like setting the
-> > > > > > bitmap with be more expensive as every tome a CPU increments free_pages it
-> > > > > > will likely have to take the cache line containing the bitmap pointer as
-> > > > > > well.
-> > > > > I see I will have to explore this more. I am wondering if there is a way to
-> > > > > measure this If its effect is not visible in will-it-scale/page_fault1. If
-> > > > > there is a noticeable amount of degradation, I will have to address this.
-> > > > If nothing else you might look at seeing if you can split up the
-> > > > structures so that the bitmap and nr_bits is in a different region
-> > > > somewhere since those are read-mostly values.
-> > > ok, I will try to understand the issue and your suggestion.
-> > > Thank you for bringing this up.
+On Wed, Oct 09, 2019 at 08:39:26AM -0700, Stephen Boyd wrote:
+> Quoting Brian Masney (2019-10-08 23:05:20)
+> > On Tue, Oct 08, 2019 at 07:21:30PM -0700, Stephen Boyd wrote:
+> > > Quoting Brian Masney (2019-10-06 18:45:08)
+> > > > diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+> > > > index 7fc23e422cc5..af02eace14e2 100644
+> > > > --- a/arch/arm/boot/dts/qcom-msm8974.dtsi
+> > > > +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+> > > > @@ -1335,6 +1342,77 @@
+> > > >                                 clocks = <&mmcc MDSS_AHB_CLK>;
+> > > >                                 clock-names = "iface";
+> > > >                         };
+> > > > +
+> > > > +                       hdmi: hdmi-tx@fd922100 {
+> > > > +                               status = "disabled";
+> > > > +
+> > > > +                               compatible = "qcom,hdmi-tx-8974";
+> > > > +                               reg = <0xfd922100 0x35c>,
+> > > > +                                     <0xfc4b8000 0x60f0>;
+> > > > +                               reg-names = "core_physical",
+> > > > +                                           "qfprom_physical";
 > > > 
-> > > > Also you are now updating the bitmap and free_pages both inside and
-> > > > outside of the zone lock so that will likely have some impact.
-> > > So as per your previous suggestion, I have made the bitmap structure
-> > > object as a rcu protected pointer. So we are safe from that side.
-> > > The other downside which I can think of is a race where one page
-> > > trying to increment free_pages and other trying to decrements it.
-> > > However, being an atomic variable that should not be a problem.
-> > > Did I miss anything?
-> > I'm not so much worried about a race as the cache line bouncing
-> > effect. Basically your notifier combined within this hinting thread
-> > will likely result in more time spent by the thread that holds the
-> > lock since it will be trying to access the bitmap to set the bit and
-> > the free_pages to report the bit, but at the same time you will have
-> > this thread clearing bits and decrementing the free_pages values.
+> > > Is this the qfprom "uncorrected" physical address? If so, why can't this
+> > > node use an nvmem to read whatever it needs out of the qfprom?
 > > 
-> > One thing you could consider in your worker thread would be to do
-> > reallocate and replace the bitmap every time you plan to walk it. By
-> > doing that you would avoid the cacheline bouncing on the bitmap since
-> > you would only have to read it, and you would no longer have another
-> > thread dirtying it. You could essentially reset the free_pages at the
-> > same time you replace the bitmap. It would need to all happen with the
-> > zone lock held though when you swap it out.
+> > The MSM HDMI code is configured to look for this reg-name here:
+> > 
+> > https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/msm/hdmi/hdmi.c#L582
+> > 
+> > There is a qcom,qfprom configured for this board in DTS, however its at
+> > a different address range, so maybe there are multiple qfproms?
+> > 
+> > https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/qcom-msm8974.dtsi#L424
+> > 
+> > msm8996.dtsi has the same style of configuration:
+> > 
+> > https://elixir.bootlin.com/linux/latest/source/arch/arm64/boot/dts/qcom/msm8996.dtsi#L956
+> > https://elixir.bootlin.com/linux/latest/source/arch/arm64/boot/dts/qcom/msm8996.dtsi#L1736
+> > 
 > 
-> If I am not mistaken then from what you are suggesting, I will have to hold
-> the zone lock for the entire duration of swap & scan which would be costly if
-> the bitmap is large, isn't? Also, we might end up missing free pages that are
-> getting
-> freed while we are scanning.
+> There's only one qfprom and there's the address space that's
+> "uncorrected" which is not supposed to be used and there's the space
+> that is "corrected" and is supposed to be used. It looks like this is
+> poking the uncorrected space and it should probably stop doing that and
+> use the nvmem provider instead. Maybe someone with docs for this chip
+> and 8996 can help confirm this.
 
-You would only need to hold the zone lock when you swap the bitmap. Once
-it is swapped you wouldn't need to worry about the locking again for
-bitmap access since your worker thread would be the only one holding the
-current bitmap. Think of it as a batch clearing of the bits.
+Do you know of any publicly-available documentation that describes the
+"uncorrected" and "corrected" addresses? I got that qfprom address for
+the HDMI from here:
 
-You already end up missing pages freed while scanning since you are doing
-it linearly.
+https://github.com/AICP/kernel_lge_hammerhead/blob/n7.1/arch/arm/boot/dts/msm8974-mdss.dtsi#L101
 
-> As far as free_pages count is concerned, I am thinking if I should
-> replace it with zone->free_area[REPORTING_ORDER].nr_free which is already there
-> (I still need to explore this in a bit more depth).
-> 
-> > - Alex
+I assume the downstream kernel probably doesn't have the corrected
+address anywhere else?
 
-So there ends up being two ways you could use nr_free. One is to track it
-the way I did with the number of reported pages being tracked, however
-that requires reducing the count when reported pages are pulled from the
-free_area and identifying reported pages vs unreported ones.
-
-The other option would be to look at converting nr_free into a pair of
-free running counters, one tracking frees, and another tracking
-allocations. Then you just need to record a snapshot of the nr_free values
-when you do something like the bitmap swap, and then you would be able to
-track churn, but it wouldn't give you an exact count of unreported pages
-since it is possible to just alloc/free a single page multiple times to
-make it look like you have freed a number of pages even though you really
-haven't.
+Brian
 
