@@ -2,82 +2,89 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 457CEECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF739ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21EAD21848
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:06:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3D3C218DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:07:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731378AbfJIOGn (ORCPT
+        id S1731406AbfJIOH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 10:06:43 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:59385 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730708AbfJIOGn (ORCPT
+        Wed, 9 Oct 2019 10:07:29 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36576 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731291AbfJIOH3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 10:06:43 -0400
-Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1iICbv-0008Pz-1y; Wed, 09 Oct 2019 15:06:39 +0100
-Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
-        (envelope-from <ben@rainbowdash.codethink.co.uk>)
-        id 1iICbu-0003FS-Af; Wed, 09 Oct 2019 15:06:38 +0100
-From:   Ben Dooks <ben.dooks@codethink.co.uk>
-To:     linux-kernel@lists.codethink.co.uk
-Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm: add kernel/fork.c function definitions
-Date:   Wed,  9 Oct 2019 15:06:37 +0100
-Message-Id: <20191009140637.12443-1-ben.dooks@codethink.co.uk>
-X-Mailer: git-send-email 2.23.0
+        Wed, 9 Oct 2019 10:07:29 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 67so1827038oto.3;
+        Wed, 09 Oct 2019 07:07:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Xoqu4/6gzZJfqydmLWCZZExTM+Z/HHchEI/c3BMPIcY=;
+        b=T/mfS4YAhhPvuePxJ6MIJOcbml47SI6B5hvCOOLVEdt+DFDJO1PHQ0q047P//wVQKC
+         rXsR0Hextecd6M7RP0EiWHlv/E45lpCuAAdrOY5X8abxrZFyAqIUB+N1vXJr0+yMYqGm
+         0zSocij5OnAFpz5DCvTY6AGVSd/GJUEXn/O0l1Gt6KkJ0g9lCNXeKY2MikxaqNqV6CKR
+         UwGPEhbCpdvOsk53BNCDQ0455AV1fESSjyDh0uujWJOpTKESIBp6F8/LSf9UmtDLU/0U
+         dEW3FGbf6xA2B+2WJsxWejL5ZQy5rmHAVpbmcBk2KZ6P1xMPBCDms0ZHnG5Am839nJyw
+         z9Fw==
+X-Gm-Message-State: APjAAAWDOBNUSdM4ji4yctZcJ00mJ9AGKCDHn6k6X3r/4FFSkc4QCZLA
+        LqQFBCw7YVeqazeIcJ+EJFG3pClb8NU3LtIROvc=
+X-Google-Smtp-Source: APXvYqxG9nKgXLSoFI7/giibY8i89eFKiPK6JRXt8GaE/1srOdt2enUGLSmmEHLF6Cfzpg5dHk5/eRRLlvpTtbTZ5ZA=
+X-Received: by 2002:a05:6830:1b75:: with SMTP id d21mr3034304ote.145.1570630048241;
+ Wed, 09 Oct 2019 07:07:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1570531132-21856-1-git-send-email-fabrizio.castro@bp.renesas.com> <1570531132-21856-8-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1570531132-21856-8-git-send-email-fabrizio.castro@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 9 Oct 2019 16:07:17 +0200
+Message-ID: <CAMuHMdV8+Rsb53dsMEoRMk3Oj7yEqbhJ7CTNz-Z90ZZaBkZV8Q@mail.gmail.com>
+Subject: Re: [PATCH 07/10] arm64: dts: renesas: r8a774b1: Add USB2.0 phy and
+ host (EHCI/OHCI) device nodes
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Simon Horman <horms@verge.net.au>, Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>, dmaengine@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the definitions of arch_release_task_struct,
-arch_task_cache_init and arch_dup_task_struct which
-are used in kernel/fork.c but defined in various
-architecture's <asm/thread_info.h>.
+On Tue, Oct 8, 2019 at 12:39 PM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+> Add USB2.0 phy and host (EHCI/OHCI) device nodes on RZ/G2N SoC dtsi.
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-Fixes the following warnings:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.5.
 
-kernel/fork.c:160:13: warning: symbol 'arch_release_task_struct' was not declared. Should it be static?
-kernel/fork.c:752:20: warning: symbol 'arch_task_cache_init' was not declared. Should it be static?
-kernel/fork.c:841:12: warning: symbol 'arch_dup_task_struct' was not declared. Should it be static?
+Gr{oetje,eeting}s,
 
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
----
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- arch/arm/include/asm/thread_info.h | 5 +++++
- 1 file changed, 5 insertions(+)
+                        Geert
 
-diff --git a/arch/arm/include/asm/thread_info.h b/arch/arm/include/asm/thread_info.h
-index 0d0d5178e2c3..3d65d152dd19 100644
---- a/arch/arm/include/asm/thread_info.h
-+++ b/arch/arm/include/asm/thread_info.h
-@@ -118,6 +118,11 @@ extern void iwmmxt_task_switch(struct thread_info *);
- extern void vfp_sync_hwstate(struct thread_info *);
- extern void vfp_flush_hwstate(struct thread_info *);
- 
-+/* for kernel/fork.c */
-+extern void arch_release_task_struct(struct task_struct *tsk);
-+extern void arch_task_cache_init(void);
-+extern int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src);
-+
- struct user_vfp;
- struct user_vfp_exc;
- 
 -- 
-2.23.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
