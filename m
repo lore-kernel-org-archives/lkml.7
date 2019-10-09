@@ -2,188 +2,212 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6190EECE58E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CF8ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B6A8206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B7A9206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:10:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gfaNQInk"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="s/OAY4zK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730533AbfJIMIW (ORCPT
+        id S1730882AbfJIMKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 08:08:22 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41078 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729566AbfJIMIV (ORCPT
+        Wed, 9 Oct 2019 08:10:08 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:36602 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729686AbfJIMKH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 08:08:21 -0400
-Received: by mail-wr1-f68.google.com with SMTP id q9so2628029wrm.8;
-        Wed, 09 Oct 2019 05:08:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JhfXuvTocSOOADPa6XnIM/jkBN52oSbETxTvK9+NuWA=;
-        b=gfaNQInkt2HkBhIF/m5lj5kBr2Fhi9UOXgBNg6wRypoY7AR47klPq+JEfsZknfycLU
-         hCPc+7wliM3ZQ5YhcGjeFEGFvV6W4R+TLriHT3MetoCcIfMCtpXHIgF5Xoxsk1/qvXUy
-         4MTbA3aqYRP31WKuXgEdWyHVJXafN4T2UD5M2M/O+QenWBjMAwWx8bZbEWcWCMmNBYni
-         zDwoX3Jo23cUH/6OPR+IpKid+RJAc4Qw5doasVb0U48YNavQhy1/Bi0OagRLl+8v8SmH
-         G1BbtIT0Mjl5KhMFV4JC56Ib2LYwMI+MSZk3nP37jw5mgewh8+CgCkvQWl5iFosmtc1W
-         HUIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JhfXuvTocSOOADPa6XnIM/jkBN52oSbETxTvK9+NuWA=;
-        b=adg+k+up30Y2WJqZsoiRePqOpfcIkzmtCwTavmMoDDe1Vl4HVH8a04pSXtt0Mm3m+3
-         emKQt0y6KzAYE+79rTDZewKLaS6rMTrQfqn47PtMWSHthBP/H30ItMnNmbEvZqnblVNH
-         0nK5zD8fQc7G+oPIVG0GjB2eeTDytOVQCrrCxC069nU7Vc9gOj5Ef4sIYfyUlvwka8s+
-         4I4TIQQ9Xyjd9Eb5KHCE4MXtSYwb39zqdhZhGQp5AT1XsAsYBr7IfSbB/2PYYkkOCk5P
-         HU64+nciWLpXphf066wnAte5lO/5UozrB4Y9gJLc55kUG2vl8eWJcHe+/X1GqVD2/d0w
-         xwtA==
-X-Gm-Message-State: APjAAAULWlZgZJyTSXbjqltm5usAyB2JXZ924VBzdMKg5QEgSi0PtEAW
-        3AErLeIYfvKqZWmBm+pBTyw=
-X-Google-Smtp-Source: APXvYqz7paT7mj8d8xLlvmA20Bu2nJielivY3fjEo4X5R5EYyDhFUKZY7NB2DLK4BLCF6tim/yrhog==
-X-Received: by 2002:adf:ed03:: with SMTP id a3mr2579425wro.282.1570622897158;
-        Wed, 09 Oct 2019 05:08:17 -0700 (PDT)
-Received: from andrea.guest.corp.microsoft.com ([2a01:110:8012:1010:e0e:643a:f61b:5721])
-        by smtp.gmail.com with ESMTPSA id z5sm3353181wrs.54.2019.10.09.05.08.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 05:08:16 -0700 (PDT)
-Date:   Wed, 9 Oct 2019 14:08:10 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     bsingharora@gmail.com, dvyukov@google.com, elver@google.com,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH v5] taskstats: fix data-race
-Message-ID: <20191009120800.GB4941@andrea.guest.corp.microsoft.com>
-References: <20191009113134.5171-1-christian.brauner@ubuntu.com>
- <20191009114809.8643-1-christian.brauner@ubuntu.com>
+        Wed, 9 Oct 2019 08:10:07 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id D67CC4FF;
+        Wed,  9 Oct 2019 14:10:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1570623005;
+        bh=PhDy22LrAQFV8Qw9nKo9Fl2O0XPBZ7UF53kHk9fNHd0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=s/OAY4zKq9Khyr4jLxDi3B11juGmESo3MpIm8kqWoJMxRl6UqddUXbz8eJ6PeqIRr
+         JSXDUg9LnCqIiqr+PEW9E5W6nOe6rtry1XJ7FehyW8AoInJep7rwxyht1DGFvEiDxJ
+         cwIbpMyTXLI1/0JA3Frqj5A4Hz8RmmN8tyj41ig0=
+Date:   Wed, 9 Oct 2019 15:10:03 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Xin Ji <xji@analogixsemi.com>
+Cc:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Sheng Pan <span@analogixsemi.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: drm/bridge: anx7625: MIPI to DP
+ transmitter binding
+Message-ID: <20191009121003.GM22998@pendragon.ideasonboard.com>
+References: <cover.1570588741.git.xji@analogixsemi.com>
+ <82d9e3d505699da8f32069844b3cfe7c9fbfd0f1.1570588741.git.xji@analogixsemi.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191009114809.8643-1-christian.brauner@ubuntu.com>
+In-Reply-To: <82d9e3d505699da8f32069844b3cfe7c9fbfd0f1.1570588741.git.xji@analogixsemi.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 01:48:09PM +0200, Christian Brauner wrote:
-> When assiging and testing taskstats in taskstats_exit() there's a race
-> when writing and reading sig->stats when a thread-group with more than
-> one thread exits:
-> 
-> cpu0:
-> thread catches fatal signal and whole thread-group gets taken down
->  do_exit()
->  do_group_exit()
->  taskstats_exit()
->  taskstats_tgid_alloc()
-> The tasks reads sig->stats without holding sighand lock seeing garbage.
-> 
-> cpu1:
-> task calls exit_group()
->  do_exit()
->  do_group_exit()
->  taskstats_exit()
->  taskstats_tgid_alloc()
-> The task takes sighand lock and assigns new stats to sig->stats.
-> 
-> Fix this by using smp_load_acquire() and smp_store_release().
-> 
-> Reported-by: syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com
-> Fixes: 34ec12349c8a ("taskstats: cleanup ->signal->stats allocation")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
+Hi Xin Ji,
 
-Reviewed-by: Andrea Parri <parri.andrea@gmail.com>
+Thank you for the patch.
 
-Thanks,
-  Andrea
-
-
+On Wed, Oct 09, 2019 at 09:27:07AM +0000, Xin Ji wrote:
+> The ANX7625 is an ultra-low power 4K Mobile HD Transmitter designed
+> for portable device. It converts MIPI to DisplayPort 1.3 4K.
+> 
+> You can add support to your board with binding.
+> 
+> Example:
+> 	anx_bridge: anx7625@58 {
+> 		compatible = "analogix,anx7625";
+> 		reg = <0x58>;
+> 		enable-gpios = <&gpio0 45 GPIO_ACTIVE_LOW>;
+> 		reset-gpios = <&gpio0 73 GPIO_ACTIVE_LOW>;
+> 		status = "okay";
+> 		port@0 {
+> 			reg = <0>;
+> 			anx7625_1_in: endpoint {
+> 				remote-endpoint = <&mipi_dsi_bridge_1>;
+> 			};
+> 		};
+> 	};
+> 
+> Signed-off-by: Xin Ji <xji@analogixsemi.com>
 > ---
-> /* v1 */
-> Link: https://lore.kernel.org/r/20191005112806.13960-1-christian.brauner@ubuntu.com
+>  .../bindings/display/bridge/anx7625.yaml           | 79 ++++++++++++++++++++++
+>  1 file changed, 79 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/anx7625.yaml
 > 
-> /* v2 */
-> Link: https://lore.kernel.org/r/20191006235216.7483-1-christian.brauner@ubuntu.com
-> - Dmitry Vyukov <dvyukov@google.com>, Marco Elver <elver@google.com>:
->   - fix the original double-checked locking using memory barriers
-> 
-> /* v3 */
-> Link: https://lore.kernel.org/r/20191007110117.1096-1-christian.brauner@ubuntu.com
-> - Andrea Parri <parri.andrea@gmail.com>:
->   - document memory barriers to make checkpatch happy
-> 
-> /* v4 */
-> Link: https://lore.kernel.org/r/20191009113134.5171-1-christian.brauner@ubuntu.com
-> - Andrea Parri <parri.andrea@gmail.com>:
->   - use smp_load_acquire(), not READ_ONCE()
->   - update commit message
-> 
-> /* v5 */
-> - Andrea Parri <parri.andrea@gmail.com>:
->   - fix typo in smp_load_acquire()
-> ---
->  kernel/taskstats.c | 24 +++++++++++++++---------
->  1 file changed, 15 insertions(+), 9 deletions(-)
-> 
-> diff --git a/kernel/taskstats.c b/kernel/taskstats.c
-> index 13a0f2e6ebc2..6e18fdc4f7c8 100644
-> --- a/kernel/taskstats.c
-> +++ b/kernel/taskstats.c
-> @@ -554,24 +554,30 @@ static int taskstats_user_cmd(struct sk_buff *skb, struct genl_info *info)
->  static struct taskstats *taskstats_tgid_alloc(struct task_struct *tsk)
->  {
->  	struct signal_struct *sig = tsk->signal;
-> -	struct taskstats *stats;
-> +	struct taskstats *stats_new, *stats;
->  
-> -	if (sig->stats || thread_group_empty(tsk))
-> -		goto ret;
-> +	/* Pairs with smp_store_release() below. */
-> +	stats = smp_load_acquire(&sig->stats);
-> +	if (stats || thread_group_empty(tsk))
-> +		return stats;
->  
->  	/* No problem if kmem_cache_zalloc() fails */
-> -	stats = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
-> +	stats_new = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
->  
->  	spin_lock_irq(&tsk->sighand->siglock);
->  	if (!sig->stats) {
-> -		sig->stats = stats;
-> -		stats = NULL;
-> +		/*
-> +		 * Pairs with smp_store_release() above and order the
-> +		 * kmem_cache_zalloc().
-> +		 */
-> +		smp_store_release(&sig->stats, stats_new);
-> +		stats_new = NULL;
->  	}
->  	spin_unlock_irq(&tsk->sighand->siglock);
->  
-> -	if (stats)
-> -		kmem_cache_free(taskstats_cache, stats);
-> -ret:
-> +	if (stats_new)
-> +		kmem_cache_free(taskstats_cache, stats_new);
+> diff --git a/Documentation/devicetree/bindings/display/bridge/anx7625.yaml b/Documentation/devicetree/bindings/display/bridge/anx7625.yaml
+> new file mode 100644
+> index 0000000..0ef6271
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/anx7625.yaml
+> @@ -0,0 +1,79 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019 Analogix Semiconductor, Inc.
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/display/bridge/anx7625.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 > +
->  	return sig->stats;
->  }
->  
-> -- 
-> 2.23.0
-> 
+> +title: Analogix ANX7625 SlimPort (4K Mobile HD Transmitter)
+> +
+> +maintainers:
+> +  - Xin Ji <xji@analogixsemi.com>
+> +
+> +description: |
+> +  The ANX7625 is an ultra-low power 4K Mobile HD Transmitter
+> +  designed for portable devices.
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: analogix,anx7625
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  hpd-gpios:
+> +    description: used for HPD interrupt
+> +    maxItems: 1
+
+You explained in your reply to v1 review that this describes the
+interrupt generated by the ANX7625. It should be replaced by an
+interrupts property.
+
+> +
+> +  enable-gpios:
+> +    description: used for power on chip control
+> +    maxItems: 1
+> +
+> +  reset-gpios:
+> +    description: used for reset chip control
+> +    maxItems: 1
+
+Could you please mention the exact name of the corresponding pins on the
+chip for enable and reset ?
+
+> +
+> +  port@0:
+> +    type: object
+> +    description:
+> +      A port node pointing to MIPI DSI host port node.
+> +
+> +  port@1:
+> +    type: object
+> +    description:
+> +      A port node pointing to MIPI DPI host port node.
+> +
+> +  port@2:
+> +    type: object
+> +    description:
+> +      A port node pointing to external connector port node.
+> +
+> +  port@3:
+> +    type: object
+> +    description:
+> +      A port node pointing to internal panel port node.
+> +
+> +  port@4:
+> +    type: object
+> +    description:
+> +      A port node pointing to normal eDP port node.
+
+I don't think three output ports is correct. Ports 3 and 4 are really
+the same. I'm even unsure about port 2 and 3, someone with better
+knowledge of USB-C and DisplayPort would be in a better position to
+comment.
+
+> +
+
+You're missing the #address-cells and #size-cells properties required
+for the ports. As the device is an I2C device we're lucky that the
+parent will specify compatible address and size cells numbers, but I'm
+not sure we should rely on that luck.
+
+Rob, how does yaml schema handle this ?
+
+> +required:
+> +  - compatible
+> +  - reg
+> +  - port@0 | port@1
+> +
+> +example:
+> +  - |
+> +    anx_bridge: anx7625@58 {
+
+The node name should describe the device's function. How about
+encoder@58 ?
+
+> +        compatible = "analogix,anx7625";
+> +        reg = <0x58>;
+> +        status = "okay";
+> +        port@0 {
+> +          reg = <0>;
+> +          anx7625_1_in: endpoint {
+> +            remote-endpoint = <&mipi_dsi_bridge_1>;
+> +          };
+> +        };
+> +    };
+
+-- 
+Regards,
+
+Laurent Pinchart
