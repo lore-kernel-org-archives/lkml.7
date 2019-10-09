@@ -2,395 +2,208 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41221C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9F7ECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 087AD20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:41:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pp/82ul4"
+	by mail.kernel.org (Postfix) with ESMTP id 18F3320B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 14:41:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570632105;
+	bh=jc71WNpC3MZfHvf5s+XbA13mLFopbjxF2T5tg1XYETc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fBv4T5BPAfnwJWZFvRYNCGyYPS8SUYbLP7UQ3zXDt12K9Ov0MkxV7LH7Xb7gsRwTY
+	 rENPMHPELuqEHuF9ddDjUXbr1e8YzF98HW/lo9BrfTw+24oCyATK84EABVUGgoSap+
+	 C5axhsvDgi2rWf1tdpsyHulqbPslnC1mPKhxXXO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731581AbfJIOlh (ORCPT
+        id S1731611AbfJIOln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 10:41:37 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37036 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731390AbfJIOlf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 10:41:35 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p14so3362529wro.4
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 07:41:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=5nBXWrU6aXm7J3BteGnTL1p5DiTQVhK5l9RgM79wd9Q=;
-        b=Pp/82ul4P/+RGjIomCpUJ4eu9DMl7AC6QuLhmdhJSlAy4pqSVzACr3MFk0Kpfk9hD2
-         jBrFkVIrdaUzgStNzi01a+MUimxAkCQ5NGzFvOSAHvV7xNx1naxnLKICvuQJegHInhM/
-         46Fzhfqqk+yKIbVEwSwkcDuMD773pXrQwrr3LYpvbIri3/t4XHgvOVLhskQqVI1lUHTJ
-         v7fNp9LupQaX5mYOO/S4LLEXxJMiK4IWY/psBVHhdXjwmMsI0Wr9PPm3UVIvGyB2TqLS
-         VSH//ViPVSBfJmxxu5yVkUswa+JZmA0WpwiRYAb+a+Zm5lXgtfZ5GPRd02KTsE6A9YNE
-         4aFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=5nBXWrU6aXm7J3BteGnTL1p5DiTQVhK5l9RgM79wd9Q=;
-        b=XCj8RimJeRLfbTEtnTTTy4guLfjYX7ASs4e0yrBBWhZHq6q0a05MRr6vEApMlWkXX2
-         qpA2m+/Patzc0Ms7hugJbXa9dJTrkbqJD4xN8UZCiiDBFF2+Vr6lbvOFTrp+yCO9i7E5
-         U4A8iN50VabV5npfkPgVHPBN7zsQKAAErWw2VUmIG0ERFyCBRiOd7y5kNp/1j1jVWHM/
-         wH7nQLaP+y5Almj5ERt4Oq1d7RTfWQo9u5MrUKUzAQg9+vHQ7fi54k2SCej2j6rwIU3+
-         sLwuSy5I300AkgYCrOvKOB/QDLxJ4QozivoZ+wZ9gqdDYstlRqobNE2+zpZ7fAqIHzij
-         fzNg==
-X-Gm-Message-State: APjAAAXDutjbt39TxDhOsSsiL2AikykKRZtBY9ftiQYzNsByEHpSmR9B
-        ys2NaVv+EXBs2o6ovf3o8zqBbA==
-X-Google-Smtp-Source: APXvYqz6WwcJLNCcwHhrC05NpHyoYQ2ZOcydG3Q673puKdgzfQGng6gTjOT1R+QnInk4c3So81EoRw==
-X-Received: by 2002:adf:aacc:: with SMTP id i12mr3240033wrc.15.1570632090761;
-        Wed, 09 Oct 2019 07:41:30 -0700 (PDT)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id b7sm3031770wrx.56.2019.10.09.07.41.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 07:41:30 -0700 (PDT)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     gregkh@linuxfoundation.org
-Cc:     arnd@arndb.de, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v3 1/5] misc: fastrpc: add mmap/unmap support
-Date:   Wed,  9 Oct 2019 15:41:19 +0100
-Message-Id: <20191009144123.24583-2-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191009144123.24583-1-srinivas.kandagatla@linaro.org>
-References: <20191009144123.24583-1-srinivas.kandagatla@linaro.org>
+        Wed, 9 Oct 2019 10:41:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33988 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731597AbfJIOlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 10:41:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id EFE1AAD12;
+        Wed,  9 Oct 2019 14:41:38 +0000 (UTC)
+Date:   Wed, 9 Oct 2019 16:41:37 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Qian Cai <cai@lca.pw>, Dan Williams <dan.j.williams@intel.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>,
+        Pankaj gupta <pagupta@redhat.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] mm: Don't access uninitialized memmaps in
+ fs/proc/page.c
+Message-ID: <20191009144137.GG6681@dhcp22.suse.cz>
+References: <20191009142435.3975-1-david@redhat.com>
+ <20191009142435.3975-2-david@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191009142435.3975-2-david@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+On Wed 09-10-19 16:24:34, David Hildenbrand wrote:
+> There are three places where we access uninitialized memmaps, namely:
+> - /proc/kpagecount
+> - /proc/kpageflags
+> - /proc/kpagecgroup
+> 
+> We have initialized memmaps either when the section is online or when
+> the page was initialized to the ZONE_DEVICE. Uninitialized memmaps contain
+> garbage and in the worst case trigger kernel BUGs, especially with
+> CONFIG_PAGE_POISONING.
+> 
+> For example, not onlining a DIMM during boot and calling /proc/kpagecount
+> with CONFIG_PAGE_POISONING:
+> :/# cat /proc/kpagecount > tmp.test
+> [   95.600592] BUG: unable to handle page fault for address: fffffffffffffffe
+> [   95.601238] #PF: supervisor read access in kernel mode
+> [   95.601675] #PF: error_code(0x0000) - not-present page
+> [   95.602116] PGD 114616067 P4D 114616067 PUD 114618067 PMD 0
+> [   95.602596] Oops: 0000 [#1] SMP NOPTI
+> [   95.602920] CPU: 0 PID: 469 Comm: cat Not tainted 5.4.0-rc1-next-20191004+ #11
+> [   95.603547] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.4
+> [   95.604521] RIP: 0010:kpagecount_read+0xce/0x1e0
+> [   95.604917] Code: e8 09 83 e0 3f 48 0f a3 02 73 2d 4c 89 e7 48 c1 e7 06 48 03 3d ab 51 01 01 74 1d 48 8b 57 08 480
+> [   95.606450] RSP: 0018:ffffa14e409b7e78 EFLAGS: 00010202
+> [   95.606904] RAX: fffffffffffffffe RBX: 0000000000020000 RCX: 0000000000000000
+> [   95.607519] RDX: 0000000000000001 RSI: 00007f76b5595000 RDI: fffff35645000000
+> [   95.608128] RBP: 00007f76b5595000 R08: 0000000000000001 R09: 0000000000000000
+> [   95.608731] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000140000
+> [   95.609327] R13: 0000000000020000 R14: 00007f76b5595000 R15: ffffa14e409b7f08
+> [   95.609924] FS:  00007f76b577d580(0000) GS:ffff8f41bd400000(0000) knlGS:0000000000000000
+> [   95.610599] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   95.611083] CR2: fffffffffffffffe CR3: 0000000078960000 CR4: 00000000000006f0
+> [   95.611686] Call Trace:
+> [   95.611906]  proc_reg_read+0x3c/0x60
+> [   95.612228]  vfs_read+0xc5/0x180
+> [   95.612505]  ksys_read+0x68/0xe0
+> [   95.612785]  do_syscall_64+0x5c/0xa0
+> [   95.613092]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> For now, let's drop support for ZONE_DEVICE from the three pseudo files
+> in order to fix this. To distinguish offline memory (with garbage memmap)
+> from ZONE_DEVICE memory with properly initialized memmaps, we would have to
+> check get_dev_pagemap() and pfn_zone_device_reserved() right now. The usage
+> of both (especially, special casing devmem) is frowned upon and needs to
+> be reworked. The fundamental issue we have is:
+> 
+> 	if (pfn_to_online_page(pfn)) {
+> 		/* memmap initialized */
+> 	} else if (pfn_valid(pfn)) {
+> 		/*
+> 		 * ???
+> 		 * a) offline memory. memmap garbage.
+> 		 * b) devmem: memmap initialized to ZONE_DEVICE.
+> 		 * c) devmem: reserved for driver. memmap garbage.
+> 		 * (d) devmem: memmap currently initializing - garbage)
+> 		 */
+> 	}
+> 
+> We'll leave the pfn_zone_device_reserved() check in stable_page_flags()
+> in place as that function is also used from memory failure. We now
+> no longer dump information about pages that are not in use anymore -
+> offline.
+> 
+> Reported-by: Qian Cai <cai@lca.pw>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Alexey Dobriyan <adobriyan@gmail.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+> Cc: Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
+> Cc: Pankaj gupta <pagupta@redhat.com>
+> Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+> Cc: Anthony Yznaga <anthony.yznaga@oracle.com>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+> Cc: linux-fsdevel@vger.kernel.org
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+Fixes: f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded memory to zones until online") # visible after d0dc12e86b319
 
-Support the allocation/deallocation of buffers mapped to the DSP.
+usage of pfn_to_online_page is the right way to dereference the pfn
+here. My understanding of the zone device internals is limited to see
+whether this fixes it as well.
 
-When the memory mapped to the DSP at process creation is not enough,
-the fastrpc library can extend it at runtime. This avoids having to do
-large preallocations by default.
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- drivers/misc/fastrpc.c      | 181 ++++++++++++++++++++++++++++++++++++
- include/uapi/misc/fastrpc.h |  15 +++
- 2 files changed, 196 insertions(+)
+> ---
+>  fs/proc/page.c | 28 ++++++++++++++++------------
+>  1 file changed, 16 insertions(+), 12 deletions(-)
+> 
+> diff --git a/fs/proc/page.c b/fs/proc/page.c
+> index decd3fe39674..e40dbfe1168e 100644
+> --- a/fs/proc/page.c
+> +++ b/fs/proc/page.c
+> @@ -42,10 +42,12 @@ static ssize_t kpagecount_read(struct file *file, char __user *buf,
+>  		return -EINVAL;
+>  
+>  	while (count > 0) {
+> -		if (pfn_valid(pfn))
+> -			ppage = pfn_to_page(pfn);
+> -		else
+> -			ppage = NULL;
+> +		/*
+> +		 * TODO: ZONE_DEVICE support requires to identify
+> +		 * memmaps that were actually initialized.
+> +		 */
+> +		ppage = pfn_to_online_page(pfn);
+> +
+>  		if (!ppage || PageSlab(ppage) || page_has_type(ppage))
+>  			pcount = 0;
+>  		else
+> @@ -218,10 +220,11 @@ static ssize_t kpageflags_read(struct file *file, char __user *buf,
+>  		return -EINVAL;
+>  
+>  	while (count > 0) {
+> -		if (pfn_valid(pfn))
+> -			ppage = pfn_to_page(pfn);
+> -		else
+> -			ppage = NULL;
+> +		/*
+> +		 * TODO: ZONE_DEVICE support requires to identify
+> +		 * memmaps that were actually initialized.
+> +		 */
+> +		ppage = pfn_to_online_page(pfn);
+>  
+>  		if (put_user(stable_page_flags(ppage), out)) {
+>  			ret = -EFAULT;
+> @@ -263,10 +266,11 @@ static ssize_t kpagecgroup_read(struct file *file, char __user *buf,
+>  		return -EINVAL;
+>  
+>  	while (count > 0) {
+> -		if (pfn_valid(pfn))
+> -			ppage = pfn_to_page(pfn);
+> -		else
+> -			ppage = NULL;
+> +		/*
+> +		 * TODO: ZONE_DEVICE support requires to identify
+> +		 * memmaps that were actually initialized.
+> +		 */
+> +		ppage = pfn_to_online_page(pfn);
+>  
+>  		if (ppage)
+>  			ino = page_cgroup_ino(ppage);
+> -- 
+> 2.21.0
 
-diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
-index 47ae84afac2e..aa1249bb581a 100644
---- a/drivers/misc/fastrpc.c
-+++ b/drivers/misc/fastrpc.c
-@@ -34,6 +34,7 @@
- #define FASTRPC_CTXID_MASK (0xFF0)
- #define INIT_FILELEN_MAX (64 * 1024 * 1024)
- #define FASTRPC_DEVICE_NAME	"fastrpc"
-+#define ADSP_MMAP_ADD_PAGES 0x1000
- 
- /* Retrives number of input buffers from the scalars parameter */
- #define REMOTE_SCALARS_INBUFS(sc)	(((sc) >> 16) & 0x0ff)
-@@ -66,6 +67,8 @@
- /* Remote Method id table */
- #define FASTRPC_RMID_INIT_ATTACH	0
- #define FASTRPC_RMID_INIT_RELEASE	1
-+#define FASTRPC_RMID_INIT_MMAP		4
-+#define FASTRPC_RMID_INIT_MUNMAP	5
- #define FASTRPC_RMID_INIT_CREATE	6
- #define FASTRPC_RMID_INIT_CREATE_ATTR	7
- #define FASTRPC_RMID_INIT_CREATE_STATIC	8
-@@ -89,6 +92,23 @@ struct fastrpc_remote_arg {
- 	u64 len;
- };
- 
-+struct fastrpc_mmap_rsp_msg {
-+	u64 vaddr;
-+};
-+
-+struct fastrpc_mmap_req_msg {
-+	s32 pgid;
-+	u32 flags;
-+	u64 vaddr;
-+	s32 num;
-+};
-+
-+struct fastrpc_munmap_req_msg {
-+	s32 pgid;
-+	u64 vaddr;
-+	u64 size;
-+};
-+
- struct fastrpc_msg {
- 	int pid;		/* process group id */
- 	int tid;		/* thread id */
-@@ -123,6 +143,9 @@ struct fastrpc_buf {
- 	/* Lock for dma buf attachments */
- 	struct mutex lock;
- 	struct list_head attachments;
-+	/* mmap support */
-+	struct list_head node; /* list of user requested mmaps */
-+	uintptr_t raddr;
- };
- 
- struct fastrpc_dma_buf_attachment {
-@@ -192,6 +215,7 @@ struct fastrpc_user {
- 	struct list_head user;
- 	struct list_head maps;
- 	struct list_head pending;
-+	struct list_head mmaps;
- 
- 	struct fastrpc_channel_ctx *cctx;
- 	struct fastrpc_session_ctx *sctx;
-@@ -269,6 +293,7 @@ static int fastrpc_buf_alloc(struct fastrpc_user *fl, struct device *dev,
- 		return -ENOMEM;
- 
- 	INIT_LIST_HEAD(&buf->attachments);
-+	INIT_LIST_HEAD(&buf->node);
- 	mutex_init(&buf->lock);
- 
- 	buf->fl = fl;
-@@ -276,6 +301,7 @@ static int fastrpc_buf_alloc(struct fastrpc_user *fl, struct device *dev,
- 	buf->phys = 0;
- 	buf->size = size;
- 	buf->dev = dev;
-+	buf->raddr = 0;
- 
- 	buf->virt = dma_alloc_coherent(dev, buf->size, (dma_addr_t *)&buf->phys,
- 				       GFP_KERNEL);
-@@ -1130,6 +1156,7 @@ static int fastrpc_device_release(struct inode *inode, struct file *file)
- 	struct fastrpc_channel_ctx *cctx = fl->cctx;
- 	struct fastrpc_invoke_ctx *ctx, *n;
- 	struct fastrpc_map *map, *m;
-+	struct fastrpc_buf *buf, *b;
- 	unsigned long flags;
- 
- 	fastrpc_release_current_dsp_process(fl);
-@@ -1151,6 +1178,11 @@ static int fastrpc_device_release(struct inode *inode, struct file *file)
- 		fastrpc_map_put(map);
- 	}
- 
-+	list_for_each_entry_safe(buf, b, &fl->mmaps, node) {
-+		list_del(&buf->node);
-+		fastrpc_buf_free(buf);
-+	}
-+
- 	fastrpc_session_free(cctx, fl->sctx);
- 	fastrpc_channel_ctx_put(cctx);
- 
-@@ -1179,6 +1211,7 @@ static int fastrpc_device_open(struct inode *inode, struct file *filp)
- 	mutex_init(&fl->mutex);
- 	INIT_LIST_HEAD(&fl->pending);
- 	INIT_LIST_HEAD(&fl->maps);
-+	INIT_LIST_HEAD(&fl->mmaps);
- 	INIT_LIST_HEAD(&fl->user);
- 	fl->tgid = current->tgid;
- 	fl->cctx = cctx;
-@@ -1284,6 +1317,148 @@ static int fastrpc_invoke(struct fastrpc_user *fl, char __user *argp)
- 	return err;
- }
- 
-+static int fastrpc_req_munmap_impl(struct fastrpc_user *fl,
-+				   struct fastrpc_req_munmap *req)
-+{
-+	struct fastrpc_invoke_args args[1] = { [0] = { 0 } };
-+	struct fastrpc_buf *buf, *b;
-+	struct fastrpc_munmap_req_msg req_msg;
-+	struct device *dev = fl->sctx->dev;
-+	int err;
-+	u32 sc;
-+
-+	spin_lock(&fl->lock);
-+	list_for_each_entry_safe(buf, b, &fl->mmaps, node) {
-+		if ((buf->raddr == req->vaddrout) && (buf->size == req->size))
-+			break;
-+		buf = NULL;
-+	}
-+	spin_unlock(&fl->lock);
-+
-+	if (!buf) {
-+		dev_err(dev, "mmap not in list\n");
-+		return -EINVAL;
-+	}
-+
-+	req_msg.pgid = fl->tgid;
-+	req_msg.size = buf->size;
-+	req_msg.vaddr = buf->raddr;
-+
-+	args[0].ptr = (u64) (uintptr_t) &req_msg;
-+	args[0].length = sizeof(req_msg);
-+
-+	sc = FASTRPC_SCALARS(FASTRPC_RMID_INIT_MUNMAP, 1, 0);
-+	err = fastrpc_internal_invoke(fl, true, FASTRPC_INIT_HANDLE, sc,
-+				      &args[0]);
-+	if (!err) {
-+		dev_dbg(dev, "unmmap\tpt 0x%09lx OK\n", buf->raddr);
-+		spin_lock(&fl->lock);
-+		list_del(&buf->node);
-+		spin_unlock(&fl->lock);
-+		fastrpc_buf_free(buf);
-+	} else {
-+		dev_err(dev, "unmmap\tpt 0x%09lx ERROR\n", buf->raddr);
-+	}
-+
-+	return err;
-+}
-+
-+static int fastrpc_req_munmap(struct fastrpc_user *fl, char __user *argp)
-+{
-+	struct fastrpc_req_munmap req;
-+
-+	if (copy_from_user(&req, argp, sizeof(req)))
-+		return -EFAULT;
-+
-+	return fastrpc_req_munmap_impl(fl, &req);
-+}
-+
-+static int fastrpc_req_mmap(struct fastrpc_user *fl, char __user *argp)
-+{
-+	struct fastrpc_invoke_args args[3] = { [0 ... 2] = { 0 } };
-+	struct fastrpc_buf *buf = NULL;
-+	struct fastrpc_mmap_req_msg req_msg;
-+	struct fastrpc_mmap_rsp_msg rsp_msg;
-+	struct fastrpc_req_munmap req_unmap;
-+	struct fastrpc_phy_page pages;
-+	struct fastrpc_req_mmap req;
-+	struct device *dev = fl->sctx->dev;
-+	int err;
-+	u32 sc;
-+
-+	if (copy_from_user(&req, argp, sizeof(req)))
-+		return -EFAULT;
-+
-+	if (req.flags != ADSP_MMAP_ADD_PAGES) {
-+		dev_err(dev, "flag not supported 0x%x\n", req.flags);
-+		return -EINVAL;
-+	}
-+
-+	if (req.vaddrin) {
-+		dev_err(dev, "adding user allocated pages is not supported\n");
-+		return -EINVAL;
-+	}
-+
-+	err = fastrpc_buf_alloc(fl, fl->sctx->dev, req.size, &buf);
-+	if (err) {
-+		dev_err(dev, "failed to allocate buffer\n");
-+		return err;
-+	}
-+
-+	req_msg.pgid = fl->tgid;
-+	req_msg.flags = req.flags;
-+	req_msg.vaddr = req.vaddrin;
-+	req_msg.num = sizeof(pages);
-+
-+	args[0].ptr = (u64) (uintptr_t) &req_msg;
-+	args[0].length = sizeof(req_msg);
-+
-+	pages.addr = buf->phys;
-+	pages.size = buf->size;
-+
-+	args[1].ptr = (u64) (uintptr_t) &pages;
-+	args[1].length = sizeof(pages);
-+
-+	args[2].ptr = (u64) (uintptr_t) &rsp_msg;
-+	args[2].length = sizeof(rsp_msg);
-+
-+	sc = FASTRPC_SCALARS(FASTRPC_RMID_INIT_MMAP, 2, 1);
-+	err = fastrpc_internal_invoke(fl, true, FASTRPC_INIT_HANDLE, sc,
-+				      &args[0]);
-+	if (err) {
-+		dev_err(dev, "mmap error (len 0x%08llx)\n", buf->size);
-+		goto err_invoke;
-+	}
-+
-+	/* update the buffer to be able to deallocate the memory on the DSP */
-+	buf->raddr = (uintptr_t) rsp_msg.vaddr;
-+
-+	/* let the client know the address to use */
-+	req.vaddrout = rsp_msg.vaddr;
-+
-+	spin_lock(&fl->lock);
-+	list_add_tail(&buf->node, &fl->mmaps);
-+	spin_unlock(&fl->lock);
-+
-+	if (copy_to_user((void __user *)argp, &req, sizeof(req))) {
-+		/* unmap the memory and release the buffer */
-+		req_unmap.vaddrout = buf->raddr;
-+		req_unmap.size = buf->size;
-+		fastrpc_req_munmap_impl(fl, &req_unmap);
-+		return -EFAULT;
-+	}
-+
-+	dev_dbg(dev, "mmap\t\tpt 0x%09lx OK [len 0x%08llx]\n",
-+		buf->raddr, buf->size);
-+
-+	return 0;
-+
-+err_invoke:
-+	fastrpc_buf_free(buf);
-+
-+	return err;
-+}
-+
- static long fastrpc_device_ioctl(struct file *file, unsigned int cmd,
- 				 unsigned long arg)
- {
-@@ -1304,6 +1479,12 @@ static long fastrpc_device_ioctl(struct file *file, unsigned int cmd,
- 	case FASTRPC_IOCTL_ALLOC_DMA_BUFF:
- 		err = fastrpc_dmabuf_alloc(fl, argp);
- 		break;
-+	case FASTRPC_IOCTL_MMAP:
-+		err = fastrpc_req_mmap(fl, argp);
-+		break;
-+	case FASTRPC_IOCTL_MUNMAP:
-+		err = fastrpc_req_munmap(fl, argp);
-+		break;
- 	default:
- 		err = -ENOTTY;
- 		break;
-diff --git a/include/uapi/misc/fastrpc.h b/include/uapi/misc/fastrpc.h
-index fb792e882cef..07de2b7aac85 100644
---- a/include/uapi/misc/fastrpc.h
-+++ b/include/uapi/misc/fastrpc.h
-@@ -10,6 +10,8 @@
- #define FASTRPC_IOCTL_INVOKE		_IOWR('R', 3, struct fastrpc_invoke)
- #define FASTRPC_IOCTL_INIT_ATTACH	_IO('R', 4)
- #define FASTRPC_IOCTL_INIT_CREATE	_IOWR('R', 5, struct fastrpc_init_create)
-+#define FASTRPC_IOCTL_MMAP              _IOWR('R', 6, struct fastrpc_req_mmap)
-+#define FASTRPC_IOCTL_MUNMAP            _IOWR('R', 7, struct fastrpc_req_munmap)
- 
- struct fastrpc_invoke_args {
- 	__u64 ptr;
-@@ -38,4 +40,17 @@ struct fastrpc_alloc_dma_buf {
- 	__u64 size;	/* size */
- };
- 
-+struct fastrpc_req_mmap {
-+	__s32 fd;
-+	__u32 flags;	/* flags for dsp to map with */
-+	__u64 vaddrin;	/* optional virtual address */
-+	__u64 size;	/* size */
-+	__u64 vaddrout;	/* dsp virtual address */
-+};
-+
-+struct fastrpc_req_munmap {
-+	__u64 vaddrout;	/* address to unmap */
-+	__u64 size;	/* size */
-+};
-+
- #endif /* __QCOM_FASTRPC_H__ */
 -- 
-2.21.0
-
+Michal Hocko
+SUSE Labs
