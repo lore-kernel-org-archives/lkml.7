@@ -2,98 +2,56 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A66EFC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC65C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED0D20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACEDC20B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 19:07:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="P+q9EXk9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731528AbfJITGj (ORCPT
+        id S1731611AbfJITHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 15:06:39 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34962 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728804AbfJITGi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 15:06:38 -0400
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 9 Oct 2019 15:07:11 -0400
+Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:37260 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728804AbfJITHL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 15:07:11 -0400
+X-Greylist: delayed 570 seconds by postgrey-1.27 at vger.kernel.org; Wed, 09 Oct 2019 15:07:10 EDT
+Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 241FB11A31
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Oct 2019 19:06:38 +0000 (UTC)
-Received: by mail-qt1-f198.google.com with SMTP id f15so3120055qth.6
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 12:06:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=KdJ9eR9SxTz3WPIrVw97FI+J80rJ8nwCrH/6lba2Agk=;
-        b=BfFO30dXFOzLXLagnfVy+kguqBCB9WDenmA5L7UcahGCVG46O7gE2nRQ4CceX6Mp5w
-         8fsEHWw8HKUDYMmhXpXSAt5FTfYkVrL8rIVBta7ntW8GzSsUdSgoo0H4xz9V73R7atK3
-         V6iTpRgLDqt9L9Kpgxokc7hQkiC6wt1lhArswmocDyCrXpjbV1DBTUKEeQ3g3bnztrQM
-         iMNfAc4XywyUx5iJOdTHpDAi/J/C5MhyRwSNMua/+UyCI8ainxwVIV0GsuNPLxrI1brh
-         F8wd2oapM88US0Ic4RkulgJBSHaauxqCCibUule+1Lm2lTJ6akTDSXSA5ap0UbJ4k/Tr
-         SgNA==
-X-Gm-Message-State: APjAAAURtjJqtDE2oKP3EHI8rGcz5W8B3MKoBVJWiWePlYsuFLaCqPDY
-        WXCSFs0Q3TirYV0nm5yLVJYrlqeruvLD1jOBSoHm8GZr3oZWxFqWnsd6yYYW4uS9w/gJgVzldhr
-        6WBCDrULmRoASyiq7h8XXf1hy
-X-Received: by 2002:ac8:22b6:: with SMTP id f51mr5350409qta.210.1570647997341;
-        Wed, 09 Oct 2019 12:06:37 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqy5AhgoO7tMowHm0OxxsRU9Rxv2UplSfpHjgV/kBrVIlDrwY/orJBcwTEAiDgb7N+x8rLL/Ew==
-X-Received: by 2002:ac8:22b6:: with SMTP id f51mr5350364qta.210.1570647996936;
-        Wed, 09 Oct 2019 12:06:36 -0700 (PDT)
-Received: from dhcp-10-20-1-34.bss.redhat.com ([144.121.20.162])
-        by smtp.gmail.com with ESMTPSA id t32sm1908703qtb.64.2019.10.09.12.06.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 12:06:36 -0700 (PDT)
-Message-ID: <6b2a3798235b3b485bd920d79a39ec849200143d.camel@redhat.com>
-Subject: Re: [PATCH v2 25/27] drm/dp_mst: Add basic topology reprobing when
- resuming
-From:   Lyude Paul <lyude@redhat.com>
-To:     Sean Paul <sean@poorly.run>
-Cc:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        amd-gfx@lists.freedesktop.org, Juston Li <juston.li@intel.com>,
-        Imre Deak <imre.deak@intel.com>,
-        Ville =?ISO-8859-1?Q?Syrj=E4l=E4?= 
-        <ville.syrjala@linux.intel.com>, Harry Wentland <hwentlan@amd.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        David Francis <David.Francis@amd.com>,
-        Mario Kleiner <mario.kleiner.de@gmail.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Manasi Navare <manasi.d.navare@intel.com>,
-        Dhinakaran Pandiyan <dhinakaran.pandiyan@intel.com>,
-        =?ISO-8859-1?Q?Jos=E9?= Roberto de Souza 
-        <jose.souza@intel.com>, Karol Herbst <karolherbst@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Ilia Mirkin <imirkin@alum.mit.edu>,
-        linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org
-Date:   Wed, 09 Oct 2019 15:06:34 -0400
-In-Reply-To: <20190927135207.GR218215@art_vandelay>
-References: <20190903204645.25487-1-lyude@redhat.com>
-         <20190903204645.25487-26-lyude@redhat.com>
-         <20190927135207.GR218215@art_vandelay>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 1B40BC04D5;
+        Wed,  9 Oct 2019 18:57:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1570647460; bh=MgRIVfEAJ94OkyjrBQhZFPU5pG5MPCWR3XI6euyMrTY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=P+q9EXk90lZx9V+thbZSLXi49Y0ooOEh5vUOV8p3jhCTwLzIHl/RZ7ohsPJYil6S5
+         MX+hMG6F8kJl+0eeDQWxtLCi/cwYPeHsOOdRGya1RISfM9OIOB2RQrkk1GecY+QMjj
+         a/2Pn0fH8yKHPvi1RFOqc+3/3N4OND0/sYKMktnctjKSxiyuv6ceGCKkkh4dSwi6z/
+         PayIEkKnBy3eEQxM10ruy0N3aFHd8dQOnMMvL5skgVWo+Wkdb7TJKBlw7Idw7ra3Qn
+         nAiX1/VYXOy14er8uHy08AgCTMs9si1hkMijKYZ1o7w0ezfl4kf6mwUKW4hgYHc6SR
+         jZs8RKEqLqEog==
+Received: from vineetg-Latitude-E7450.internal.synopsys.com (vineetg-latitude-e7450.internal.synopsys.com [10.10.161.61])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 93B7EA006B;
+        Wed,  9 Oct 2019 18:57:33 +0000 (UTC)
+From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
+To:     linux-snps-arc@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCH v3] ARC: mm: remove __ARCH_USE_5LEVEL_HACK
+Date:   Wed,  9 Oct 2019 11:57:31 -0700
+Message-Id: <20191009185731.25814-1-vgupta@synopsys.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191009184350.18323-1-vgupta@synopsys.com>
+References: <20191009184350.18323-1-vgupta@synopsys.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -101,383 +59,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-09-27 at 09:52 -0400, Sean Paul wrote:
-> On Tue, Sep 03, 2019 at 04:46:03PM -0400, Lyude Paul wrote:
-> > Finally! For a very long time, our MST helpers have had one very
-> > annoying issue: They don't know how to reprobe the topology state when
-> > coming out of suspend. This means that if a user has a machine connected
-> > to an MST topology and decides to suspend their machine, we lose all
-> > topology changes that happened during that period. That can be a big
-> > problem if the machine was connected to a different topology on the same
-> > port before resuming, as we won't bother reprobing any of the ports and
-> > likely cause the user's monitors not to come back up as expected.
-> > 
-> > So, we start fixing this by teaching our MST helpers how to reprobe the
-> > link addresses of each connected topology when resuming. As it turns
-> > out, the behavior that we want here is identical to the behavior we want
-> > when initially probing a newly connected MST topology, with a couple of
-> > important differences:
-> > 
-> > - We need to be more careful about handling the potential races between
-> >   events from the MST hub that could change the topology state as we're
-> >   performing the link address reprobe
-> > - We need to be more careful about handling unlikely state changes on
-> >   ports - such as an input port turning into an output port, something
-> >   that would be far more likely to happen in situations like the MST hub
-> >   we're connected to being changed while we're suspend
-> > 
-> > Both of which have been solved by previous commits. That leaves one
-> > requirement:
-> > 
-> > - We need to prune any MST ports in our in-memory topology state that
-> >   were present when suspending, but have not appeared in the post-resume
-> >   link address response from their parent branch device
-> > 
-> > Which we can now handle in this commit by modifying
-> > drm_dp_send_link_address(). We then introduce suspend/resume reprobing
-> > by introducing drm_dp_mst_topology_mgr_invalidate_mstb(), which we call
-> > in drm_dp_mst_topology_mgr_suspend() to traverse the in-memory topology
-> > state to indicate that each mstb needs it's link address resent and PBN
-> > resources reprobed.
-> > 
-> > On resume, we start back up &mgr->work and have it reprobe the topology
-> > in the same way we would on a hotplug, removing any leftover ports that
-> > no longer appear in the topology state.
-> > 
-> > Cc: Juston Li <juston.li@intel.com>
-> > Cc: Imre Deak <imre.deak@intel.com>
-> > Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-> > Cc: Harry Wentland <hwentlan@amd.com>
-> > Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-> > Signed-off-by: Lyude Paul <lyude@redhat.com>
-> > ---
-> >  .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |   2 +-
-> >  drivers/gpu/drm/drm_dp_mst_topology.c         | 138 +++++++++++++-----
-> >  drivers/gpu/drm/i915/display/intel_dp.c       |   3 +-
-> >  drivers/gpu/drm/nouveau/dispnv50/disp.c       |   6 +-
-> >  include/drm/drm_dp_mst_helper.h               |   3 +-
-> >  5 files changed, 112 insertions(+), 40 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > index 4d3c8bff77da..27ee3e045b86 100644
-> > --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > @@ -973,7 +973,7 @@ static void s3_handle_mst(struct drm_device *dev, bool
-> > suspend)
-> >  		if (suspend) {
-> >  			drm_dp_mst_topology_mgr_suspend(mgr);
-> >  		} else {
-> > -			ret = drm_dp_mst_topology_mgr_resume(mgr);
-> > +			ret = drm_dp_mst_topology_mgr_resume(mgr, true);
-> >  			if (ret < 0) {
-> >  				drm_dp_mst_topology_mgr_set_mst(mgr, false);
-> >  				need_hotplug = true;
-> > diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c
-> > b/drivers/gpu/drm/drm_dp_mst_topology.c
-> > index e407aba1fbd2..2fe24e366925 100644
-> > --- a/drivers/gpu/drm/drm_dp_mst_topology.c
-> > +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-> > @@ -2020,6 +2020,14 @@ drm_dp_mst_handle_link_address_port(struct
-> > drm_dp_mst_branch *mstb,
-> >  		goto fail_unlock;
-> >  	}
-> >  
-> > +	/*
-> > +	 * If this port wasn't just created, then we're reprobing because
-> > +	 * we're coming out of suspend. In this case, always resend the link
-> > +	 * address if there's an MSTB on this port
-> > +	 */
-> > +	if (!created && port->pdt == DP_PEER_DEVICE_MST_BRANCHING)
-> > +		send_link_addr = true;
-> > +
-> >  	if (send_link_addr) {
-> >  		mutex_lock(&mgr->lock);
-> >  		if (port->mstb) {
-> > @@ -2530,7 +2538,8 @@ static void drm_dp_send_link_address(struct
-> > drm_dp_mst_topology_mgr *mgr,
-> >  {
-> >  	struct drm_dp_sideband_msg_tx *txmsg;
-> >  	struct drm_dp_link_address_ack_reply *reply;
-> > -	int i, len, ret;
-> > +	struct drm_dp_mst_port *port, *tmp;
-> > +	int i, len, ret, port_mask = 0;
-> >  
-> >  	txmsg = kzalloc(sizeof(*txmsg), GFP_KERNEL);
-> >  	if (!txmsg)
-> > @@ -2560,9 +2569,28 @@ static void drm_dp_send_link_address(struct
-> > drm_dp_mst_topology_mgr *mgr,
-> >  
-> >  	drm_dp_check_mstb_guid(mstb, reply->guid);
-> >  
-> > -	for (i = 0; i < reply->nports; i++)
-> > +	for (i = 0; i < reply->nports; i++) {
-> > +		port_mask |= BIT(reply->ports[i].port_number);
-> >  		drm_dp_mst_handle_link_address_port(mstb, mgr->dev,
-> >  						    &reply->ports[i]);
-> > +	}
-> > +
-> > +	/* Prune any ports that are currently a part of mstb in our in-memory
-> > +	 * topology, but were not seen in this link address. Usually this
-> > +	 * means that they were removed while the topology was out of sync,
-> > +	 * e.g. during suspend/resume
-> > +	 */
-> > +	mutex_lock(&mgr->lock);
-> > +	list_for_each_entry_safe(port, tmp, &mstb->ports, next) {
-> > +		if (port_mask & BIT(port->port_num))
-> > +			continue;
-> > +
-> > +		DRM_DEBUG_KMS("port %d was not in link address, removing\n",
-> > +			      port->port_num);
-> > +		list_del(&port->next);
-> > +		drm_dp_mst_topology_put_port(port);
-> > +	}
-> > +	mutex_unlock(&mgr->lock);
-> >  
-> >  	drm_kms_helper_hotplug_event(mgr->dev);
-> >  
-> > @@ -3191,6 +3219,23 @@ int drm_dp_mst_topology_mgr_set_mst(struct
-> > drm_dp_mst_topology_mgr *mgr, bool ms
-> >  }
-> >  EXPORT_SYMBOL(drm_dp_mst_topology_mgr_set_mst);
-> >  
-> > +static void
-> > +drm_dp_mst_topology_mgr_invalidate_mstb(struct drm_dp_mst_branch *mstb)
-> > +{
-> > +	struct drm_dp_mst_port *port;
-> > +
-> > +	/* The link address will need to be re-sent on resume */
-> > +	mstb->link_address_sent = false;
-> > +
-> > +	list_for_each_entry(port, &mstb->ports, next) {
-> > +		/* The PBN for each port will also need to be re-probed */
-> > +		port->available_pbn = 0;
-> > +
-> > +		if (port->mstb)
-> > +			drm_dp_mst_topology_mgr_invalidate_mstb(port->mstb);
-> > +	}
-> > +}
-> > +
-> >  /**
-> >   * drm_dp_mst_topology_mgr_suspend() - suspend the MST manager
-> >   * @mgr: manager to suspend
-> > @@ -3207,60 +3252,85 @@ void drm_dp_mst_topology_mgr_suspend(struct
-> > drm_dp_mst_topology_mgr *mgr)
-> >  	flush_work(&mgr->up_req_work);
-> >  	flush_work(&mgr->work);
-> >  	flush_work(&mgr->delayed_destroy_work);
-> > +
-> > +	mutex_lock(&mgr->lock);
-> > +	if (mgr->mst_state && mgr->mst_primary)
-> > +		drm_dp_mst_topology_mgr_invalidate_mstb(mgr->mst_primary);
-> > +	mutex_unlock(&mgr->lock);
-> >  }
-> >  EXPORT_SYMBOL(drm_dp_mst_topology_mgr_suspend);
-> >  
-> >  /**
-> >   * drm_dp_mst_topology_mgr_resume() - resume the MST manager
-> >   * @mgr: manager to resume
-> > + * @sync: whether or not to perform topology reprobing synchronously
-> >   *
-> >   * This will fetch DPCD and see if the device is still there,
-> >   * if it is, it will rewrite the MSTM control bits, and return.
-> >   *
-> > - * if the device fails this returns -1, and the driver should do
-> > + * If the device fails this returns -1, and the driver should do
-> >   * a full MST reprobe, in case we were undocked.
-> 
-> nit: I don't think this sentence applies any longer since we're doing the
-> reprobe.
-Note that this does actually still apply, but I should be a bit more clear
-about it: "reprobe" in this sense just means drm_dp_mst_topology_set_mst(mgr,
-off)
-> 
-> > + *
-> > + * During system resume (where it is assumed that the driver will be
-> > calling
-> > + * drm_atomic_helper_resume()) this function should be called beforehand
-> > with
-> > + * @sync set to true. In contexts like runtime resume where the driver is
-> > not
-> > + * expected to be calling drm_atomic_helper_resume(), this function
-> > should be
-> > + * called with @sync set to false in order to avoid deadlocking.
-> > + *
-> > + * Returns: -1 if the MST topology was removed while we were suspended, 0
-> > + * otherwise.
-> >   */
-> > -int drm_dp_mst_topology_mgr_resume(struct drm_dp_mst_topology_mgr *mgr)
-> > +int drm_dp_mst_topology_mgr_resume(struct drm_dp_mst_topology_mgr *mgr,
-> > +				   bool sync)
-> >  {
-> > -	int ret = 0;
-> > +	int ret;
-> > +	u8 guid[16];
-> >  
-> >  	mutex_lock(&mgr->lock);
-> > +	if (!mgr->mst_primary)
-> > +		goto out_fail;
-> >  
-> > -	if (mgr->mst_primary) {
-> > -		int sret;
-> > -		u8 guid[16];
-> > +	ret = drm_dp_dpcd_read(mgr->aux, DP_DPCD_REV, mgr->dpcd,
-> > +			       DP_RECEIVER_CAP_SIZE);
-> > +	if (ret != DP_RECEIVER_CAP_SIZE) {
-> > +		DRM_DEBUG_KMS("dpcd read failed - undocked during
-> > suspend?\n");
-> > +		goto out_fail;
-> > +	}
-> >  
-> > -		sret = drm_dp_dpcd_read(mgr->aux, DP_DPCD_REV, mgr->dpcd,
-> > DP_RECEIVER_CAP_SIZE);
-> > -		if (sret != DP_RECEIVER_CAP_SIZE) {
-> > -			DRM_DEBUG_KMS("dpcd read failed - undocked during
-> > suspend?\n");
-> > -			ret = -1;
-> > -			goto out_unlock;
-> > -		}
-> > +	ret = drm_dp_dpcd_writeb(mgr->aux, DP_MSTM_CTRL,
-> > +				 DP_MST_EN |
-> > +				 DP_UP_REQ_EN |
-> > +				 DP_UPSTREAM_IS_SRC);
-> > +	if (ret < 0) {
-> > +		DRM_DEBUG_KMS("mst write failed - undocked during
-> > suspend?\n");
-> > +		goto out_fail;
-> > +	}
-> >  
-> > -		ret = drm_dp_dpcd_writeb(mgr->aux, DP_MSTM_CTRL,
-> > -					 DP_MST_EN | DP_UP_REQ_EN |
-> > DP_UPSTREAM_IS_SRC);
-> > -		if (ret < 0) {
-> > -			DRM_DEBUG_KMS("mst write failed - undocked during
-> > suspend?\n");
-> > -			ret = -1;
-> > -			goto out_unlock;
-> > -		}
-> > +	/* Some hubs forget their guids after they resume */
-> > +	ret = drm_dp_dpcd_read(mgr->aux, DP_GUID, guid, 16);
-> > +	if (ret != 16) {
-> > +		DRM_DEBUG_KMS("dpcd read failed - undocked during
-> > suspend?\n");
-> > +		goto out_fail;
-> > +	}
-> > +	drm_dp_check_mstb_guid(mgr->mst_primary, guid);
-> >  
-> > -		/* Some hubs forget their guids after they resume */
-> > -		sret = drm_dp_dpcd_read(mgr->aux, DP_GUID, guid, 16);
-> > -		if (sret != 16) {
-> > -			DRM_DEBUG_KMS("dpcd read failed - undocked during
-> > suspend?\n");
-> > -			ret = -1;
-> > -			goto out_unlock;
-> > -		}
-> > -		drm_dp_check_mstb_guid(mgr->mst_primary, guid);
-> > +	/* For the final step of resuming the topology, we need to bring the
-> > +	 * state of our in-memory topology back into sync with reality. So,
-> > +	 * restart the probing process as if we're probing a new hub
-> > +	 */
-> > +	queue_work(system_long_wq, &mgr->work);
-> > +	mutex_unlock(&mgr->lock);
-> >  
-> > -		ret = 0;
-> > -	} else
-> > -		ret = -1;
-> > +	if (sync) {
-> > +		DRM_DEBUG_KMS("Waiting for link probe work to finish re-
-> > syncing topology...\n");
-> > +		flush_work(&mgr->work);
-> > +	}
-> 
-> It took me longer than I'd like to admit to realize that most of the diff in
-> this function is just removing the indent. Would you mind splitting that out
-> into a separate patch so the reprobe change is more obvious?
-> 
-> With these nits fixed,
-> 
-> Reviewed-by: Sean Paul <sean@poorly.run>
-> 
-> 
-> >  
-> > -out_unlock:
-> > +	return 0;
-> > +
-> > +out_fail:
-> >  	mutex_unlock(&mgr->lock);
-> > -	return ret;
-> > +	return -1;
-> >  }
-> >  EXPORT_SYMBOL(drm_dp_mst_topology_mgr_resume);
-> >  
-> > diff --git a/drivers/gpu/drm/i915/display/intel_dp.c
-> > b/drivers/gpu/drm/i915/display/intel_dp.c
-> > index 5673ed75e428..b78364dcdef9 100644
-> > --- a/drivers/gpu/drm/i915/display/intel_dp.c
-> > +++ b/drivers/gpu/drm/i915/display/intel_dp.c
-> > @@ -7400,7 +7400,8 @@ void intel_dp_mst_resume(struct drm_i915_private
-> > *dev_priv)
-> >  		if (!intel_dp->can_mst)
-> >  			continue;
-> >  
-> > -		ret = drm_dp_mst_topology_mgr_resume(&intel_dp->mst_mgr);
-> > +		ret = drm_dp_mst_topology_mgr_resume(&intel_dp->mst_mgr,
-> > +						     true);
-> >  		if (ret) {
-> >  			intel_dp->is_mst = false;
-> >  			drm_dp_mst_topology_mgr_set_mst(&intel_dp->mst_mgr,
-> > diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c
-> > b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-> > index 307584107d77..e459e2a79d78 100644
-> > --- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
-> > +++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-> > @@ -1309,14 +1309,14 @@ nv50_mstm_fini(struct nv50_mstm *mstm)
-> >  }
-> >  
-> >  static void
-> > -nv50_mstm_init(struct nv50_mstm *mstm)
-> > +nv50_mstm_init(struct nv50_mstm *mstm, bool runtime)
-> >  {
-> >  	int ret;
-> >  
-> >  	if (!mstm || !mstm->mgr.mst_state)
-> >  		return;
-> >  
-> > -	ret = drm_dp_mst_topology_mgr_resume(&mstm->mgr);
-> > +	ret = drm_dp_mst_topology_mgr_resume(&mstm->mgr, !runtime);
-> >  	if (ret == -1) {
-> >  		drm_dp_mst_topology_mgr_set_mst(&mstm->mgr, false);
-> >  		drm_kms_helper_hotplug_event(mstm->mgr.dev);
-> > @@ -2262,7 +2262,7 @@ nv50_display_init(struct drm_device *dev, bool
-> > resume, bool runtime)
-> >  		if (encoder->encoder_type != DRM_MODE_ENCODER_DPMST) {
-> >  			struct nouveau_encoder *nv_encoder =
-> >  				nouveau_encoder(encoder);
-> > -			nv50_mstm_init(nv_encoder->dp.mstm);
-> > +			nv50_mstm_init(nv_encoder->dp.mstm, runtime);
-> >  		}
-> >  	}
-> >  
-> > diff --git a/include/drm/drm_dp_mst_helper.h
-> > b/include/drm/drm_dp_mst_helper.h
-> > index 1efbb086f7ac..1bdee5ee6dcd 100644
-> > --- a/include/drm/drm_dp_mst_helper.h
-> > +++ b/include/drm/drm_dp_mst_helper.h
-> > @@ -685,7 +685,8 @@ void drm_dp_mst_dump_topology(struct seq_file *m,
-> >  
-> >  void drm_dp_mst_topology_mgr_suspend(struct drm_dp_mst_topology_mgr
-> > *mgr);
-> >  int __must_check
-> > -drm_dp_mst_topology_mgr_resume(struct drm_dp_mst_topology_mgr *mgr);
-> > +drm_dp_mst_topology_mgr_resume(struct drm_dp_mst_topology_mgr *mgr,
-> > +			       bool sync);
-> >  
-> >  ssize_t drm_dp_mst_dpcd_read(struct drm_dp_aux *aux,
-> >  			     unsigned int offset, void *buffer, size_t size);
-> > -- 
-> > 2.21.0
-> > 
+Add the intermediate p4d accessors to make it 5 level compliant.
+
+This is a non-functional change anyways since ARC has software page walker
+with 2 lookup levels (pgd -> pte)
+
+There is slight code bloat due to pulling in needless p*d_free_tlb()
+macros which needs to be addressed seperately.
+
+| bloat-o-meter2 vmlinux-with-5LEVEL_HACK vmlinux-patched
+| add/remove: 0/0 grow/shrink: 2/0 up/down: 128/0 (128)
+| function                                     old     new   delta
+| free_pgd_range                               546     656    +110
+| p4d_clear_bad                                  2      20     +18
+| Total: Before=4137148, After=4137276, chg 0.000000%
+
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+---
+v3 <- v2
+  - fix highmem build error
+
+v2 <- v1
+ - fix highmem code
+---
+ arch/arc/include/asm/pgtable.h |  1 -
+ arch/arc/mm/fault.c            | 10 ++++++++--
+ arch/arc/mm/highmem.c          |  4 +++-
+ 3 files changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arc/include/asm/pgtable.h b/arch/arc/include/asm/pgtable.h
+index 976b5931372e..902d45428cea 100644
+--- a/arch/arc/include/asm/pgtable.h
++++ b/arch/arc/include/asm/pgtable.h
+@@ -33,7 +33,6 @@
+ #define _ASM_ARC_PGTABLE_H
+ 
+ #include <linux/bits.h>
+-#define __ARCH_USE_5LEVEL_HACK
+ #include <asm-generic/pgtable-nopmd.h>
+ #include <asm/page.h>
+ #include <asm/mmu.h>	/* to propagate CONFIG_ARC_MMU_VER <n> */
+diff --git a/arch/arc/mm/fault.c b/arch/arc/mm/fault.c
+index 3861543b66a0..fb86bc3e9b35 100644
+--- a/arch/arc/mm/fault.c
++++ b/arch/arc/mm/fault.c
+@@ -30,6 +30,7 @@ noinline static int handle_kernel_vaddr_fault(unsigned long address)
+ 	 * with the 'reference' page table.
+ 	 */
+ 	pgd_t *pgd, *pgd_k;
++	p4d_t *p4d, *p4d_k;
+ 	pud_t *pud, *pud_k;
+ 	pmd_t *pmd, *pmd_k;
+ 
+@@ -39,8 +40,13 @@ noinline static int handle_kernel_vaddr_fault(unsigned long address)
+ 	if (!pgd_present(*pgd_k))
+ 		goto bad_area;
+ 
+-	pud = pud_offset(pgd, address);
+-	pud_k = pud_offset(pgd_k, address);
++	p4d = p4d_offset(pgd, address);
++	p4d_k = p4d_offset(pgd_k, address);
++	if (!p4d_present(*p4d_k))
++		goto bad_area;
++
++	pud = pud_offset(p4d, address);
++	pud_k = pud_offset(p4d_k, address);
+ 	if (!pud_present(*pud_k))
+ 		goto bad_area;
+ 
+diff --git a/arch/arc/mm/highmem.c b/arch/arc/mm/highmem.c
+index a4856bfaedf3..fc8849e4f72e 100644
+--- a/arch/arc/mm/highmem.c
++++ b/arch/arc/mm/highmem.c
+@@ -111,12 +111,14 @@ EXPORT_SYMBOL(__kunmap_atomic);
+ static noinline pte_t * __init alloc_kmap_pgtable(unsigned long kvaddr)
+ {
+ 	pgd_t *pgd_k;
++	p4d_t *p4d_k;
+ 	pud_t *pud_k;
+ 	pmd_t *pmd_k;
+ 	pte_t *pte_k;
+ 
+ 	pgd_k = pgd_offset_k(kvaddr);
+-	pud_k = pud_offset(pgd_k, kvaddr);
++	p4d_k = p4d_offset(pgd_k, kvaddr);
++	pud_k = pud_offset(p4d_k, kvaddr);
+ 	pmd_k = pmd_offset(pud_k, kvaddr);
+ 
+ 	pte_k = (pte_t *)memblock_alloc_low(PAGE_SIZE, PAGE_SIZE);
 -- 
-Cheers,
-	Lyude Paul
+2.20.1
 
