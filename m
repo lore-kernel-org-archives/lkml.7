@@ -2,159 +2,141 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE71ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC318C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADC3920B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:05:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8859020B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:06:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XzVmSlbV"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="SmKMpQLM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731887AbfJIRFO (ORCPT
+        id S1731892AbfJIRF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:05:14 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:35268 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731824AbfJIRFO (ORCPT
+        Wed, 9 Oct 2019 13:05:59 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:41538 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731173AbfJIRF6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 13:05:14 -0400
-Received: by mail-yw1-f65.google.com with SMTP id r134so1086199ywg.2;
-        Wed, 09 Oct 2019 10:05:12 -0700 (PDT)
+        Wed, 9 Oct 2019 13:05:58 -0400
+Received: by mail-oi1-f194.google.com with SMTP id w65so2382015oiw.8;
+        Wed, 09 Oct 2019 10:05:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cXYEAzqhy4HyxKWCqy6LZ1LbETT8kg39/BhJJ7xImgY=;
-        b=XzVmSlbV54ObweYND+EDGBljHGj8sj2ueCWS95v8Cm859OOOsxIuOqof31AgJZJrgP
-         sYoUG7ZWjf0njqLgiU/hHNjEW3C0MMBKx89WWFO4DlJsMsmXm9jBIVcqPd+ZLd3OohCE
-         KhSVBkByAnQTmF2FGZmUJkgGhHEEaZhRl6B9NyXxJUeV2DGCqJZ0MjYh5FNdExNErUXW
-         GEbdBw/gn5VkXbsjJ7FErGQIO1W5a+kZIEUbAKx6L4oG0gifFpjsyGy6tO64qy7oFvz6
-         37uGRsoh98fhFqLA7+BGliNL2VfTiKSiDP9UYDDl71wQtxmr3M3OEC59H09+EJL7JJen
-         pD0A==
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D2mWDjNiFA8ZmwOSzNfxAaNscOF3X+a/Kjb9sBM4nYM=;
+        b=SmKMpQLMdu9zF+nZETtyRyzRFHvqJQM931spdY+ZgtQexKRYWMGEJ/SEMSjPLRwgyX
+         sGCfwlBzFBSSOoOzZLbNiPuenj186i0Q7O7o4hyzoB/N1b6hXnlm4oQPBxy0cSQ98bGH
+         +x4VPv8LVWtflqbB9+1yalCGMt+xywez2ywORN8R2ErdI0GVP9PpkcGn8eZZ8O2JUM0a
+         eD/ZrXd47/tKoNo4ITdNZBi9cgx0HQu6Az30CNCGEEg6kXWwqoRIrbg0h5iH+fCF1bLF
+         M1G353WsH6zE4VwfLPFeaGBAVKlGrbU1LWazFwx1S2wB5DtSH+hZg90j0MwtKUYG5/lu
+         g2Aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cXYEAzqhy4HyxKWCqy6LZ1LbETT8kg39/BhJJ7xImgY=;
-        b=LCvPtMumfKNP3A8dkOFeffqUuv80fN7PyFhiTl61Z/TwINmYrVqfJt9VYPRBDtzXrp
-         ZH5vrlOozTPyvqQ5lYvKRLjm/+1a6MSgAldxvfHPuGwsEzyGuFGPjqCIYfQfg3p+6nWJ
-         1/YaKP2ilapc9Zvd9wuZ+ChtJqAQZGuVrIdC4yitdHgstJLb93Zw30kWzjJ2lMElNocB
-         E4qwecSB5lAemO/AZjQ8po9xpDmrD8Q2mUHuNO8710J0Rn1re0EhmIcUuK8KpvvQ/B8m
-         3Gu3cP66XlYPtM8zr1ul5XRvsp9WTG0bRBCDfKd4l5/v4MHFEjh8yR3vvIvk+RPCfRUN
-         s2GQ==
-X-Gm-Message-State: APjAAAVQ00+TOWBqUIyNg+eJTv8EIt5+x4vliiVSAf4lTa/unE4NVELT
-        0rD2V6UZZsoG6oc1Wn1tKnI=
-X-Google-Smtp-Source: APXvYqyrAU/nAC3kYzoD94JUe4/RiRHCUfehRJlN8ivjdiAlO4Zf6n0Riga+hkaAtINX8fhZjpe9Nw==
-X-Received: by 2002:a0d:e1c2:: with SMTP id k185mr3552287ywe.103.1570640712141;
-        Wed, 09 Oct 2019 10:05:12 -0700 (PDT)
-Received: from icarus (072-189-084-142.res.spectrum.com. [72.189.84.142])
-        by smtp.gmail.com with ESMTPSA id u67sm682257ywf.44.2019.10.09.10.05.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 10:05:11 -0700 (PDT)
-Date:   Wed, 9 Oct 2019 13:05:08 -0400
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux PM mailing list <linux-pm@vger.kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        preid@electromag.com.au, Lukas Wunner <lukas@wunner.de>,
-        sean.nyekjaer@prevas.dk, morten.tiljeset@prevas.dk
-Subject: Re: [PATCH v17 09/14] gpio: uniphier: Utilize for_each_set_clump8
- macro
-Message-ID: <20191009170508.GB93820@icarus>
-References: <cover.1570633189.git.vilhelm.gray@gmail.com>
- <271a7735b02b6a8b1f54c018e38ea932d1fd299e.1570633189.git.vilhelm.gray@gmail.com>
- <CAK7LNAQStJsZ4cYTJyAPvjyngWkKs+5y=yzJb6vz3-cco+2-ug@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D2mWDjNiFA8ZmwOSzNfxAaNscOF3X+a/Kjb9sBM4nYM=;
+        b=R4NMN9HGVxQvfLvgm0Oip4YBwfSAjoAW1qDb1vebtvlZ+2Yojcel5FGdrqjAzhoGWQ
+         g8401l2l0vIreZgy1LRsAT7pVU4joodhZUWgFi6809gND6XPhz+x0/aPP6QCwsGCE2h3
+         trxLns+Jxt1tqLKgMGdpJGW+zySjW8Zmd6Fsoeh9snymilynFrnPuSRdYnIZGiH0JRa8
+         p/ViB7hSViN1mgWkminODlAnG9Y8PZ4e/RB9opEYanFm8PaEF1xPJOKRKXQWVc9PBQfX
+         N3826/L3IrvFtjfKEujIUs1xpWueEB09xb1chgGM7DT2xUFEbka/iGlvqsmQOnE/cvKA
+         WkwQ==
+X-Gm-Message-State: APjAAAWGtAvUFNgVug8wLi+PL6rl1sQiUwGN8iqqD6yBJ95o517vuN7W
+        Qggi65bglMLUI6SpZV4gC6YVrKobxTe4FI+uJDE=
+X-Google-Smtp-Source: APXvYqzRkSN7OkK/hbG3KqKLVZ1gB3egs7zTwNvk2ZAefW8rYVwzudrNvLiAtRk9tvfW75gia/FxyzlIvLMQYI7QLR0=
+X-Received: by 2002:aca:d90a:: with SMTP id q10mr3536020oig.129.1570640757567;
+ Wed, 09 Oct 2019 10:05:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAK7LNAQStJsZ4cYTJyAPvjyngWkKs+5y=yzJb6vz3-cco+2-ug@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191007131649.1768-1-linux.amoon@gmail.com> <20191007131649.1768-6-linux.amoon@gmail.com>
+ <CAFBinCAoJLZj9Kh+SfF4Q+0OCzac2+huon_BU=Q3yE7Fu38U3w@mail.gmail.com>
+ <7hsgo4cgeg.fsf@baylibre.com> <CANAwSgRfcFa6uBNtpqz6y=9Uwsa4gcp_4tDD+Chhg4SynJCq0Q@mail.gmail.com>
+ <CAFBinCA6ZoeR4m4bhj08HF1DqxY1qB5mygpaQCGbo3d8M+Wr9Q@mail.gmail.com> <CANAwSgSeYTnUkLnjw-RORw76Fyj3_WT0cdM9D0vFsY8g=9L94Q@mail.gmail.com>
+In-Reply-To: <CANAwSgSeYTnUkLnjw-RORw76Fyj3_WT0cdM9D0vFsY8g=9L94Q@mail.gmail.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Wed, 9 Oct 2019 19:05:46 +0200
+Message-ID: <CAFBinCCHrvjNTruVk7qr+7Y_m7mP2BJ-0HxftJpiPXpvoD=-QQ@mail.gmail.com>
+Subject: Re: [RFCv1 5/5] arm64/ARM: configs: Change CONFIG_PWM_MESON from m to y
+To:     Anand Moon <linux.amoon@gmail.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic@lists.infradead.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 01:33:06AM +0900, Masahiro Yamada wrote:
-> On Thu, Oct 10, 2019 at 12:27 AM William Breathitt Gray
-> <vilhelm.gray@gmail.com> wrote:
-> >
-> > Replace verbose implementation in set_multiple callback with
-> > for_each_set_clump8 macro to simplify code and improve clarity. An
-> > improvement in this case is that banks that are not masked will now be
-> > skipped.
-> >
-> > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
-> > ---
-> >  drivers/gpio/gpio-uniphier.c | 16 ++++++----------
-> >  1 file changed, 6 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpio-uniphier.c b/drivers/gpio/gpio-uniphier.c
-> > index 93cdcc41e9fb..3e4b15d0231e 100644
-> > --- a/drivers/gpio/gpio-uniphier.c
-> > +++ b/drivers/gpio/gpio-uniphier.c
-> > @@ -15,9 +15,6 @@
-> >  #include <linux/spinlock.h>
-> >  #include <dt-bindings/gpio/uniphier-gpio.h>
-> >
-> > -#define UNIPHIER_GPIO_BANK_MASK                \
-> > -                               GENMASK((UNIPHIER_GPIO_LINES_PER_BANK) - 1, 0)
-> > -
-> >  #define UNIPHIER_GPIO_IRQ_MAX_NUM      24
-> >
-> >  #define UNIPHIER_GPIO_PORT_DATA                0x0     /* data */
-> > @@ -147,15 +144,14 @@ static void uniphier_gpio_set(struct gpio_chip *chip,
-> >  static void uniphier_gpio_set_multiple(struct gpio_chip *chip,
-> >                                        unsigned long *mask, unsigned long *bits)
-> >  {
-> > -       unsigned int bank, shift, bank_mask, bank_bits;
-> > -       int i;
-> > +       unsigned long i;
-> > +       unsigned long bank_mask;
-> > +       unsigned long bank;
-> > +       unsigned long bank_bits;
-> 
-> 
-> Please do not split it into multiple lines
-> unless you need to do so.
-> 
-> Thanks.
+Hi Anand,
 
-No problem, I'll update this patch to declare them all on the same line.
-
-William Breathitt Gray
-
-> > -       for (i = 0; i < chip->ngpio; i += UNIPHIER_GPIO_LINES_PER_BANK) {
-> > +       for_each_set_clump8(i, bank_mask, mask, chip->ngpio) {
-> >                 bank = i / UNIPHIER_GPIO_LINES_PER_BANK;
-> > -               shift = i % BITS_PER_LONG;
-> > -               bank_mask = (mask[BIT_WORD(i)] >> shift) &
-> > -                                               UNIPHIER_GPIO_BANK_MASK;
-> > -               bank_bits = bits[BIT_WORD(i)] >> shift;
-> > +               bank_bits = bitmap_get_value8(bits, i);
+On Wed, Oct 9, 2019 at 10:49 AM Anand Moon <linux.amoon@gmail.com> wrote:
+[...]
+> > can you please share a boot log with the command line parameter
+> > "initcall_debug" [0]?
+> > from Documentation/admin-guide/kernel-parameters.txt:
+> >  initcall_debug [KNL] Trace initcalls as they are executed.  Useful
+> >  for working out where the kernel is dying during
+> >  startup.
 > >
-> >                 uniphier_gpio_bank_write(chip, bank, UNIPHIER_GPIO_PORT_DATA,
-> >                                          bank_mask, bank_bits);
-> > --
-> > 2.23.0
+>
+> Well I have tied to add this command  *initcall_debug* to kernel command prompt.
+> Here is the console log,  but I did not see any init kernel timer logs
+I don't remember from the top of my head if any additional Kconfig
+setting is needed
+
+> Kernel command line: console=ttyAML0,115200n8
+> root=PARTUUID=45d7d61e-01 rw rootwait
+> earlyprintk=serial,ttyAML0,115200 initcall_debug printk.time=y
+>
+> [0] https://pastebin.com/eBgJrSKe
+>
+> > you can also try the command line parameter "clk_ignore_unused" (it's
+> > just a gut feeling: maybe a "critical" clock is being disabled because
+> > it's not wired up correctly).
 > >
-> 
-> 
-> -- 
-> Best Regards
-> Masahiro Yamada
+>
+> It look like some clk issue after I added the *clk_ignore_unused* to
+> kernel command line
+> it booted further to login prompt and cpufreq DVFS seem to be loaded.
+> So I could conclude this is clk issue.below is the boot log
+interesting - as Jerome suggested: the next step is to find out which
+clock is causing problems
+last time I checked there was no debug print in the code which
+disables unused clocks so I had to add that myself
+
+> Kernel command line: console=ttyAML0,115200n8
+> root=PARTUUID=45d7d61e-01 rw rootwait
+> earlyprintk=serial,ttyAML0,115200 initcall_debug printk.time=y
+> clk_ignore_unused
+>
+> [1] https://pastebin.com/Nsk0wZQJ
+>
+> > back when I was working out the CPU clock tree for the 32-bit SoCs I
+> > had a bad parent clock in one of the muxes which resulted in sporadic
+> > lockups if CPU DVFS was enabled.
+> > you can try to disable CPU DVFS by dropping the OPP table and it's
+> > references from the .dtsi
+> >
+>
+> Yep yesterday my focus was to disable PWM feature and get boot up-to
+> login prompt
+> But not I have to look into clk feature.
+>
+> *Many thanks for your valuable inputs, I learned a lot of things.*
+you're welcome :-)
+
+
+Martin
