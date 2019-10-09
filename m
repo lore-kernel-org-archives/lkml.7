@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C2C6C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC87ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:29:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 753A820679
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:29:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F02F220679
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:29:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570642142;
-	bh=UFK1WtzZLrkSEEchJBI8gx7rovS0P8dlEXQR2eR/gR4=;
+	s=default; t=1570642146;
+	bh=NNl2VEcS5iXIkcI2f5gpfTalyoIENeQKXES09/ID1C8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lzPDA4Uf9jepIenXLWkbrke4q/LC67PZItq+YKNmR20UmxFw3Ut/H69VJR0HjIKNo
-	 OwhUh+bUQQ0LMYTe1gn5aClP+lTj1Hg+oX8g9h5Bl6gkQeCfav63VBV6Ms5U1ta0x6
-	 i7hssURP8+JGnAJ+KBcmM/e0lpl+3Lxq7dwGTFcQ=
+	b=tHmMPXOvtumK00+GWOChUsNYM6Sx8NT444mMFKRx/gczOPEomUp3aMJ0uUYWBpqb5
+	 GT27ETuIrwMhqWz4N3o8dtqpc+fgS19lOW+IUQTOyQx4IJ3BKb6HslRd9006vcqpJW
+	 1f2QLE0wQQnn/+Uf/5sPlDmtmPA0ddvkq/nG0jug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732646AbfJIR3B (ORCPT
+        id S1732237AbfJIRYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:29:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48902 "EHLO mail.kernel.org"
+        Wed, 9 Oct 2019 13:24:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732235AbfJIRYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 13:24:19 -0400
+        id S1731995AbfJIRYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 13:24:01 -0400
 Received: from sasha-vm.mshome.net (unknown [167.220.2.234])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBB8E21D7D;
-        Wed,  9 Oct 2019 17:24:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45E8321D7C;
+        Wed,  9 Oct 2019 17:24:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570641858;
-        bh=UFK1WtzZLrkSEEchJBI8gx7rovS0P8dlEXQR2eR/gR4=;
+        s=default; t=1570641841;
+        bh=NNl2VEcS5iXIkcI2f5gpfTalyoIENeQKXES09/ID1C8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZpGjxY3WLx48OtoJGyGQXcCqkfMO/4Th273rPTZvUvcN/nlsRZilLPWy4DsazZf/V
-         JzclQo5kKOWRhk/k20HJ5IDQX/7qXwNCMxXNfU0UwCqxB71a2TkGVFFz79rPq/N3E/
-         qGMzwm6uJ+lxuBUfmpfSD4zQtrNmQr6ySrQnp+Rg=
+        b=jH/BU0hBjW7mRS/bT+t2ndJ1fZw31uybVEqAgUW74xQV5yCmCWQlIPQjs7B7ATO3X
+         kmMH5SKlVTxINbktVu9aVEqkcSSXfuL+qBQd3P/jhdLIPZV/jUx6qI/qy3sW9Rz8eJ
+         ra21LFfN1KOb1lSRqYXCpfiUcKeIzwJ3+sD2A61I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jann Horn <jannh@google.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 26/26] Make filldir[64]() verify the directory entry filename is valid
-Date:   Wed,  9 Oct 2019 13:05:58 -0400
-Message-Id: <20191009170558.32517-26-sashal@kernel.org>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 28/68] KVM: x86: Expose XSAVEERPTR to the guest
+Date:   Wed,  9 Oct 2019 13:05:07 -0400
+Message-Id: <20191009170547.32204-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191009170558.32517-1-sashal@kernel.org>
-References: <20191009170558.32517-1-sashal@kernel.org>
+In-Reply-To: <20191009170547.32204-1-sashal@kernel.org>
+References: <20191009170547.32204-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,143 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-[ Upstream commit 8a23eb804ca4f2be909e372cf5a9e7b30ae476cd ]
+[ Upstream commit 504ce1954fba888936c9d13ccc1e3db9b8f613d5 ]
 
-This has been discussed several times, and now filesystem people are
-talking about doing it individually at the filesystem layer, so head
-that off at the pass and just do it in getdents{64}().
+I was surprised to see that the guest reported `fxsave_leak' while the
+host did not. After digging deeper I noticed that the bits are simply
+masked out during enumeration.
 
-This is partially based on a patch by Jann Horn, but checks for NUL
-bytes as well, and somewhat simplified.
+The XSAVEERPTR feature is actually a bug fix on AMD which means the
+kernel can disable a workaround.
 
-There's also commentary about how it might be better if invalid names
-due to filesystem corruption don't cause an immediate failure, but only
-an error at the end of the readdir(), so that people can still see the
-filenames that are ok.
+Pass XSAVEERPTR to the guest if available on the host.
 
-There's also been discussion about just how much POSIX strictly speaking
-requires this since it's about filesystem corruption.  It's really more
-"protect user space from bad behavior" as pointed out by Jann.  But
-since Eric Biederman looked up the POSIX wording, here it is for context:
-
- "From readdir:
-
-   The readdir() function shall return a pointer to a structure
-   representing the directory entry at the current position in the
-   directory stream specified by the argument dirp, and position the
-   directory stream at the next entry. It shall return a null pointer
-   upon reaching the end of the directory stream. The structure dirent
-   defined in the <dirent.h> header describes a directory entry.
-
-  From definitions:
-
-   3.129 Directory Entry (or Link)
-
-   An object that associates a filename with a file. Several directory
-   entries can associate names with the same file.
-
-  ...
-
-   3.169 Filename
-
-   A name consisting of 1 to {NAME_MAX} bytes used to name a file. The
-   characters composing the name may be selected from the set of all
-   character values excluding the slash character and the null byte. The
-   filenames dot and dot-dot have special meaning. A filename is
-   sometimes referred to as a 'pathname component'."
-
-Note that I didn't bother adding the checks to any legacy interfaces
-that nobody uses.
-
-Also note that if this ends up being noticeable as a performance
-regression, we can fix that to do a much more optimized model that
-checks for both NUL and '/' at the same time one word at a time.
-
-We haven't really tended to optimize 'memchr()', and it only checks for
-one pattern at a time anyway, and we really _should_ check for NUL too
-(but see the comment about "soft errors" in the code about why it
-currently only checks for '/')
-
-See the CONFIG_DCACHE_WORD_ACCESS case of hash_name() for how the name
-lookup code looks for pathname terminating characters in parallel.
-
-Link: https://lore.kernel.org/lkml/20190118161440.220134-2-jannh@google.com/
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Jann Horn <jannh@google.com>
-Cc: Eric W. Biederman <ebiederm@xmission.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/readdir.c | 40 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+ arch/x86/kvm/cpuid.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/readdir.c b/fs/readdir.c
-index d97f548e63233..91a28ddf50942 100644
---- a/fs/readdir.c
-+++ b/fs/readdir.c
-@@ -64,6 +64,40 @@ int iterate_dir(struct file *file, struct dir_context *ctx)
- }
- EXPORT_SYMBOL(iterate_dir);
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index fd1b8db8bf242..59b66e343fa5a 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -479,6 +479,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
  
-+/*
-+ * POSIX says that a dirent name cannot contain NULL or a '/'.
-+ *
-+ * It's not 100% clear what we should really do in this case.
-+ * The filesystem is clearly corrupted, but returning a hard
-+ * error means that you now don't see any of the other names
-+ * either, so that isn't a perfect alternative.
-+ *
-+ * And if you return an error, what error do you use? Several
-+ * filesystems seem to have decided on EUCLEAN being the error
-+ * code for EFSCORRUPTED, and that may be the error to use. Or
-+ * just EIO, which is perhaps more obvious to users.
-+ *
-+ * In order to see the other file names in the directory, the
-+ * caller might want to make this a "soft" error: skip the
-+ * entry, and return the error at the end instead.
-+ *
-+ * Note that this should likely do a "memchr(name, 0, len)"
-+ * check too, since that would be filesystem corruption as
-+ * well. However, that case can't actually confuse user space,
-+ * which has to do a strlen() on the name anyway to find the
-+ * filename length, and the above "soft error" worry means
-+ * that it's probably better left alone until we have that
-+ * issue clarified.
-+ */
-+static int verify_dirent_name(const char *name, int len)
-+{
-+	if (WARN_ON_ONCE(!len))
-+		return -EIO;
-+	if (WARN_ON_ONCE(memchr(name, '/', len)))
-+		return -EIO;
-+	return 0;
-+}
-+
- /*
-  * Traditional linux readdir() handling..
-  *
-@@ -173,6 +207,9 @@ static int filldir(struct dir_context *ctx, const char *name, int namlen,
- 	int reclen = ALIGN(offsetof(struct linux_dirent, d_name) + namlen + 2,
- 		sizeof(long));
+ 	/* cpuid 0x80000008.ebx */
+ 	const u32 kvm_cpuid_8000_0008_ebx_x86_features =
++		F(XSAVEERPTR) |
+ 		F(WBNOINVD) | F(AMD_IBPB) | F(AMD_IBRS) | F(AMD_SSBD) | F(VIRT_SSBD) |
+ 		F(AMD_SSB_NO) | F(AMD_STIBP) | F(AMD_STIBP_ALWAYS_ON);
  
-+	buf->error = verify_dirent_name(name, namlen);
-+	if (unlikely(buf->error))
-+		return buf->error;
- 	buf->error = -EINVAL;	/* only used if we fail.. */
- 	if (reclen > buf->count)
- 		return -EINVAL;
-@@ -259,6 +296,9 @@ static int filldir64(struct dir_context *ctx, const char *name, int namlen,
- 	int reclen = ALIGN(offsetof(struct linux_dirent64, d_name) + namlen + 1,
- 		sizeof(u64));
- 
-+	buf->error = verify_dirent_name(name, namlen);
-+	if (unlikely(buf->error))
-+		return buf->error;
- 	buf->error = -EINVAL;	/* only used if we fail.. */
- 	if (reclen > buf->count)
- 		return -EINVAL;
 -- 
 2.20.1
 
