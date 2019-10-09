@@ -7,50 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B96ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D04FC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26FF7206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2730420679
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:28:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570642118;
-	bh=u2PERKJ5Oo1DyMWofqCOrqYj+rOF3pYWR+5pcYdb3lI=;
+	s=default; t=1570642123;
+	bh=0n0vAQGmipGpyI/AMrQCo2G1tsKLSKQXTFv/Wdt/X2U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bekKwBf9rwYifTGLWUXw/TgqBQnm+EnWFtkdnyTSRE6owk1eywuI21mfFNdxvxOdN
-	 gf19+V5VtlpQbF8g6g87Uo1hNGEtc0hWXk1k9r/TCinQ3LocZixGajpPAOT5JDeKYU
-	 K+id4VydTVKAWw8pFhv7wMB3CVSs2cWqmWxHp2Gw=
+	b=QO0wAd7UrWeQHtMD1D3s5SEdSQaaZjXHfyi2XyR5S4Fmk5XrZtEZ6tCdg6tCsRPZI
+	 QjwJzTzjN34Pw1fXlUjEyUZSEDaX6hxMJhUTyP3QjD4srHHH2+uA4PCYrBuqOoMPwd
+	 HDtgeGuFmC7xs0JViCYGT1/R1DJNDs7pElw2Shbw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732180AbfJIR2g (ORCPT
+        id S1732279AbfJIRYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:28:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49020 "EHLO mail.kernel.org"
+        Wed, 9 Oct 2019 13:24:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732114AbfJIRYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 13:24:24 -0400
+        id S1732114AbfJIRYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 13:24:06 -0400
 Received: from sasha-vm.mshome.net (unknown [167.220.2.234])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B36C218AC;
-        Wed,  9 Oct 2019 17:24:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E96F620B7C;
+        Wed,  9 Oct 2019 17:24:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570641863;
-        bh=u2PERKJ5Oo1DyMWofqCOrqYj+rOF3pYWR+5pcYdb3lI=;
+        s=default; t=1570641846;
+        bh=0n0vAQGmipGpyI/AMrQCo2G1tsKLSKQXTFv/Wdt/X2U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j8lA5hRPONR1JZhMAjbwiuu5/82AnjVj+spkDaRiDZJO0zEhYe7+poX0nwKfBlGbV
-         Mf+e4YouehFkUIHm8jM3yr/lngBtOcwJSXqwXQp6qAZmHRV8zVrHY37qJzva81JbgE
-         J6Cz5NrP5IXwyC4amN17sgDeivo9XYQMX1wYecyQ=
+        b=y5diIJkXSq8RHzcipt0RbcXCIutB5eVwSvnMDMk2ULepedbAL+pHQPZBNxtLXC8Vc
+         4zBFAq4bqG3+6vdpA9uMgqBoY8EjTHr1F4BDUM+9++GLc1tk5GVabr8U2enrrJBpsi
+         GJ2m6e167FWRC0+G6jkgurkFC50QdpNZpUDeIl7o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 02/21] scsi: ufs: skip shutdown if hba is not powered
-Date:   Wed,  9 Oct 2019 13:05:55 -0400
-Message-Id: <20191009170615.32750-2-sashal@kernel.org>
+Cc:     Jim Mattson <jmattson@google.com>, Marc Orr <marcorr@google.com>,
+        Peter Shier <pshier@google.com>,
+        Jacob Xu <jacobhxu@google.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 08/26] kvm: x86: Improve emulation of CPUID leaves 0BH and 1FH
+Date:   Wed,  9 Oct 2019 13:05:40 -0400
+Message-Id: <20191009170558.32517-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191009170615.32750-1-sashal@kernel.org>
-References: <20191009170615.32750-1-sashal@kernel.org>
+In-Reply-To: <20191009170558.32517-1-sashal@kernel.org>
+References: <20191009170558.32517-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,43 +62,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanley Chu <stanley.chu@mediatek.com>
+From: Jim Mattson <jmattson@google.com>
 
-[ Upstream commit f51913eef23f74c3bd07899dc7f1ed6df9e521d8 ]
+[ Upstream commit 43561123ab3759eb6ff47693aec1a307af0aef83 ]
 
-In some cases, hba may go through shutdown flow without successful
-initialization and then make system hang.
+For these CPUID leaves, the EDX output is not dependent on the ECX
+input (i.e. the SIGNIFCANT_INDEX flag doesn't apply to
+EDX). Furthermore, the low byte of the ECX output is always identical
+to the low byte of the ECX input. KVM does not produce the correct ECX
+and EDX outputs for any undefined subleaves beyond the first.
 
-For example, if ufshcd_change_power_mode() gets error and leads to
-ufshcd_hba_exit() to release resources of the host, future shutdown flow
-may hang the system since the host register will be accessed in unpowered
-state.
+Special-case these CPUID leaves in kvm_cpuid, so that the ECX and EDX
+outputs are properly generated for all undefined subleaves.
 
-To solve this issue, simply add checking to skip shutdown for above kind of
-situation.
-
-Link: https://lore.kernel.org/r/1568780438-28753-1-git-send-email-stanley.chu@mediatek.com
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Acked-by: Bean Huo <beanhuo@micron.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 0771671749b59a ("KVM: Enhance guest cpuid management")
+Fixes: a87f2d3a6eadab ("KVM: x86: Add Intel CPUID.1F cpuid emulation support")
+Signed-off-by: Jim Mattson <jmattson@google.com>
+Reviewed-by: Marc Orr <marcorr@google.com>
+Reviewed-by: Peter Shier <pshier@google.com>
+Reviewed-by: Jacob Xu <jacobhxu@google.com>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/kvm/cpuid.c | 83 +++++++++++++++++++++++++-------------------
+ 1 file changed, 47 insertions(+), 36 deletions(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 60c9184bad3be..07cae5ea608c7 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -7755,6 +7755,9 @@ int ufshcd_shutdown(struct ufs_hba *hba)
- {
- 	int ret = 0;
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index b810102a9cfac..ada2cae6bec51 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -891,53 +891,64 @@ struct kvm_cpuid_entry2 *kvm_find_cpuid_entry(struct kvm_vcpu *vcpu,
+ EXPORT_SYMBOL_GPL(kvm_find_cpuid_entry);
  
-+	if (!hba->is_powered)
-+		goto out;
+ /*
+- * If no match is found, check whether we exceed the vCPU's limit
+- * and return the content of the highest valid _standard_ leaf instead.
+- * This is to satisfy the CPUID specification.
++ * If the basic or extended CPUID leaf requested is higher than the
++ * maximum supported basic or extended leaf, respectively, then it is
++ * out of range.
+  */
+-static struct kvm_cpuid_entry2* check_cpuid_limit(struct kvm_vcpu *vcpu,
+-                                                  u32 function, u32 index)
++static bool cpuid_function_in_range(struct kvm_vcpu *vcpu, u32 function)
+ {
+-	struct kvm_cpuid_entry2 *maxlevel;
+-
+-	maxlevel = kvm_find_cpuid_entry(vcpu, function & 0x80000000, 0);
+-	if (!maxlevel || maxlevel->eax >= function)
+-		return NULL;
+-	if (function & 0x80000000) {
+-		maxlevel = kvm_find_cpuid_entry(vcpu, 0, 0);
+-		if (!maxlevel)
+-			return NULL;
+-	}
+-	return kvm_find_cpuid_entry(vcpu, maxlevel->eax, index);
++	struct kvm_cpuid_entry2 *max;
 +
- 	if (ufshcd_is_ufs_dev_poweroff(hba) && ufshcd_is_link_off(hba))
- 		goto out;
++	max = kvm_find_cpuid_entry(vcpu, function & 0x80000000, 0);
++	return max && function <= max->eax;
+ }
+ 
+ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+ 	       u32 *ecx, u32 *edx, bool check_limit)
+ {
+ 	u32 function = *eax, index = *ecx;
+-	struct kvm_cpuid_entry2 *best;
+-	bool entry_found = true;
+-
+-	best = kvm_find_cpuid_entry(vcpu, function, index);
+-
+-	if (!best) {
+-		entry_found = false;
+-		if (!check_limit)
+-			goto out;
++	struct kvm_cpuid_entry2 *entry;
++	struct kvm_cpuid_entry2 *max;
++	bool found;
+ 
+-		best = check_cpuid_limit(vcpu, function, index);
++	entry = kvm_find_cpuid_entry(vcpu, function, index);
++	found = entry;
++	/*
++	 * Intel CPUID semantics treats any query for an out-of-range
++	 * leaf as if the highest basic leaf (i.e. CPUID.0H:EAX) were
++	 * requested.
++	 */
++	if (!entry && check_limit && !cpuid_function_in_range(vcpu, function)) {
++		max = kvm_find_cpuid_entry(vcpu, 0, 0);
++		if (max) {
++			function = max->eax;
++			entry = kvm_find_cpuid_entry(vcpu, function, index);
++		}
+ 	}
+-
+-out:
+-	if (best) {
+-		*eax = best->eax;
+-		*ebx = best->ebx;
+-		*ecx = best->ecx;
+-		*edx = best->edx;
+-	} else
++	if (entry) {
++		*eax = entry->eax;
++		*ebx = entry->ebx;
++		*ecx = entry->ecx;
++		*edx = entry->edx;
++	} else {
+ 		*eax = *ebx = *ecx = *edx = 0;
+-	trace_kvm_cpuid(function, *eax, *ebx, *ecx, *edx, entry_found);
+-	return entry_found;
++		/*
++		 * When leaf 0BH or 1FH is defined, CL is pass-through
++		 * and EDX is always the x2APIC ID, even for undefined
++		 * subleaves. Index 1 will exist iff the leaf is
++		 * implemented, so we pass through CL iff leaf 1
++		 * exists. EDX can be copied from any existing index.
++		 */
++		if (function == 0xb || function == 0x1f) {
++			entry = kvm_find_cpuid_entry(vcpu, function, 1);
++			if (entry) {
++				*ecx = index & 0xff;
++				*edx = entry->edx;
++			}
++		}
++	}
++	trace_kvm_cpuid(function, *eax, *ebx, *ecx, *edx, found);
++	return found;
+ }
+ EXPORT_SYMBOL_GPL(kvm_cpuid);
  
 -- 
 2.20.1
