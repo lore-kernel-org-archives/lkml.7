@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AEFBECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E963FECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 413D7206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8CF4206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 12:33:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="B04y+Unf"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yuh5FDLT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731199AbfJIMcr (ORCPT
+        id S1731204AbfJIMdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 08:32:47 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:38008 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727029AbfJIMco (ORCPT
+        Wed, 9 Oct 2019 08:33:00 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:43818 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727029AbfJIMc7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 08:32:44 -0400
+        Wed, 9 Oct 2019 08:32:59 -0400
 Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x99CWcmR078367;
-        Wed, 9 Oct 2019 07:32:38 -0500
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x99CWfZZ083947;
+        Wed, 9 Oct 2019 07:32:41 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570624358;
-        bh=0qKzBdXqB1Y5415oJEapjmDF/1xOO/DjBM2lHReI6hc=;
+        s=ti-com-17Q1; t=1570624361;
+        bh=wy74BV+gADxjYq84q/3icEqfPmppjgnaKhtU7G9oYJM=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=B04y+UnfsI+XIbC+djTq/mP55oSlkzVUwDbh0sAjLLReI3mN2B7r70JZo2wBPR6Sd
-         Ibi4iBSXcw6QXUo60tOwZccA4iB/IFNYuoHU6X/kSM+oSTK2GaOPwmhUOtRXLNrSII
-         P3nfO7MkGc4aKZB9ZgyF6Cx6m//Z99UILo9NCHNU=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x99CWcQ6090486
+        b=yuh5FDLTaWIkFnM/ECeh1Gucupgc11l0TsYvbWxZxIrVMv/ua5k3ONVZoGs4CTwRS
+         3Mq04p2jAnku+Djw/x8Y6NjxtbwjwlN+fgHc6TTBVTQklkEeaTMQH8ShUL5vmrFPg4
+         gaONubkEn9so8UAclt9I6Rtuymp0Hg9Kh4DNI1Fw=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x99CWf4p090522
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 9 Oct 2019 07:32:38 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 9 Oct 2019 07:32:41 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 9 Oct
- 2019 07:32:35 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 07:32:37 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 9 Oct 2019 07:32:35 -0500
+ Frontend Transport; Wed, 9 Oct 2019 07:32:37 -0500
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x99CWbNQ081004;
-        Wed, 9 Oct 2019 07:32:38 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x99CWbNS081004;
+        Wed, 9 Oct 2019 07:32:40 -0500
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
         Hans Verkuil <hverkuil@xs4all.nl>
 CC:     Jacopo Mondi <jacopo@jmondi.org>, <linux-media@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v4 1/3] media: ov5640: add PIXEL_RATE control
-Date:   Wed, 9 Oct 2019 07:35:08 -0500
-Message-ID: <20191009123510.19106-2-bparrot@ti.com>
+Subject: [Patch v4 3/3] media: ov5640: Make 2592x1944 mode only available at 15 fps
+Date:   Wed, 9 Oct 2019 07:35:10 -0500
+Message-ID: <20191009123510.19106-4-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191009123510.19106-1-bparrot@ti.com>
 References: <20191009123510.19106-1-bparrot@ti.com>
@@ -68,93 +68,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add v4l2 controls to report the pixel rates of each mode. This is
-needed by some CSI2 receiver in order to perform proper DPHY
-configuration.
+The sensor data sheet clearly state that 2592x1944 only works at 15 fps
+make sure we don't try to miss configure the pll out of acceptable
+range.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
 ---
- drivers/media/i2c/ov5640.c | 25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
+ drivers/media/i2c/ov5640.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
-index 500d9bbff10b..b93b61baace5 100644
+index 065c9b61ecbd..5e495c833d32 100644
 --- a/drivers/media/i2c/ov5640.c
 +++ b/drivers/media/i2c/ov5640.c
-@@ -193,6 +193,7 @@ struct ov5640_mode_info {
+@@ -1611,6 +1611,11 @@ ov5640_find_mode(struct ov5640_dev *sensor, enum ov5640_frame_rate fr,
+ 	    !(mode->hact == 640 && mode->vact == 480))
+ 		return NULL;
  
- struct ov5640_ctrls {
- 	struct v4l2_ctrl_handler handler;
-+	struct v4l2_ctrl *pixel_rate;
- 	struct {
- 		struct v4l2_ctrl *auto_exp;
- 		struct v4l2_ctrl *exposure;
-@@ -1614,6 +1615,16 @@ ov5640_find_mode(struct ov5640_dev *sensor, enum ov5640_frame_rate fr,
++	/* 2592x1944 only works at 15fps max */
++	if ((mode->hact == 2592 && mode->vact == 1944) &&
++	    fr > OV5640_15_FPS)
++		return NULL;
++
  	return mode;
  }
  
-+static u64 ov5640_calc_pixel_rate(struct ov5640_dev *sensor)
-+{
-+	u64 rate;
-+
-+	rate = sensor->current_mode->vtot * sensor->current_mode->htot;
-+	rate *= ov5640_framerates[sensor->current_fr];
-+
-+	return rate;
-+}
-+
- /*
-  * sensor changes between scaling and subsampling, go through
-  * exposure calculation
-@@ -1818,8 +1829,7 @@ static int ov5640_set_mode(struct ov5640_dev *sensor)
- 	 * All the formats we support have 16 bits per pixel, seems to require
- 	 * the same rate than YUV, so we can just use 16 bpp all the time.
- 	 */
--	rate = mode->vtot * mode->htot * 16;
--	rate *= ov5640_framerates[sensor->current_fr];
-+	rate = ov5640_calc_pixel_rate(sensor) * 16;
- 	if (sensor->ep.bus_type == V4L2_MBUS_CSI2_DPHY) {
- 		rate = rate / sensor->ep.bus.mipi_csi2.num_data_lanes;
- 		ret = ov5640_set_mipi_pclk(sensor, rate);
-@@ -2233,6 +2243,8 @@ static int ov5640_set_fmt(struct v4l2_subdev *sd,
- 	if (mbus_fmt->code != sensor->fmt.code)
- 		sensor->pending_fmt_change = true;
- 
-+	__v4l2_ctrl_s_ctrl_int64(sensor->ctrls.pixel_rate,
-+				 ov5640_calc_pixel_rate(sensor));
- out:
- 	mutex_unlock(&sensor->lock);
- 	return ret;
-@@ -2657,6 +2669,11 @@ static int ov5640_init_controls(struct ov5640_dev *sensor)
- 	/* we can use our own mutex for the ctrl lock */
- 	hdl->lock = &sensor->lock;
- 
-+	/* Clock related controls */
-+	ctrls->pixel_rate = v4l2_ctrl_new_std(hdl, ops, V4L2_CID_PIXEL_RATE,
-+					      0, INT_MAX, 1,
-+					      ov5640_calc_pixel_rate(sensor));
-+
- 	/* Auto/manual white balance */
- 	ctrls->auto_wb = v4l2_ctrl_new_std(hdl, ops,
- 					   V4L2_CID_AUTO_WHITE_BALANCE,
-@@ -2704,6 +2721,7 @@ static int ov5640_init_controls(struct ov5640_dev *sensor)
- 		goto free_ctrls;
- 	}
- 
-+	ctrls->pixel_rate->flags |= V4L2_CTRL_FLAG_READ_ONLY;
- 	ctrls->gain->flags |= V4L2_CTRL_FLAG_VOLATILE;
- 	ctrls->exposure->flags |= V4L2_CTRL_FLAG_VOLATILE;
- 
-@@ -2816,6 +2834,9 @@ static int ov5640_s_frame_interval(struct v4l2_subdev *sd,
- 		sensor->frame_interval = fi->interval;
- 		sensor->current_mode = mode;
- 		sensor->pending_mode_change = true;
-+
-+		__v4l2_ctrl_s_ctrl_int64(sensor->ctrls.pixel_rate,
-+					 ov5640_calc_pixel_rate(sensor));
- 	}
- out:
- 	mutex_unlock(&sensor->lock);
 -- 
 2.17.1
 
