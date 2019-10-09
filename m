@@ -2,271 +2,152 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28263C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 971CFECE58D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3ED82133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:17:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68B8621835
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 11:20:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IYUqb/h3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730912AbfJILRV (ORCPT
+        id S1730678AbfJILUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 07:17:21 -0400
-Received: from cmccmta2.chinamobile.com ([221.176.66.80]:5376 "EHLO
-        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727035AbfJILRU (ORCPT
+        Wed, 9 Oct 2019 07:20:10 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38215 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfJILUK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 07:17:20 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.19]) by rmmx-syy-dmz-app06-12006 (RichMail) with SMTP id 2ee65d9dc19b812-08715; Wed, 09 Oct 2019 19:16:44 +0800 (CST)
-X-RM-TRANSID: 2ee65d9dc19b812-08715
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost (unknown[223.105.0.241])
-        by rmsmtp-syy-appsvr10-12010 (RichMail) with SMTP id 2eea5d9dc19a15a-fa1a6;
-        Wed, 09 Oct 2019 19:16:43 +0800 (CST)
-X-RM-TRANSID: 2eea5d9dc19a15a-fa1a6
-From:   Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
-To:     Shuah Khan <shuah@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Simon Horman <horms@verge.net.au>
-Cc:     Julian Anastasov <ja@ssi.bg>, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, lvs-devel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org,
-        Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
-Subject: [PATCH v5 1/3] selftests: netfilter: add ipvs test script
-Date:   Wed,  9 Oct 2019 19:16:28 +0800
-Message-Id: <1570619790-6086-2-git-send-email-yanhaishuang@cmss.chinamobile.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1570619790-6086-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
-References: <1570619790-6086-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
+        Wed, 9 Oct 2019 07:20:10 -0400
+Received: by mail-wr1-f66.google.com with SMTP id w12so2411418wro.5
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 04:20:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NiFi50FuqI1VBpxzFdOXo/50+9I/uAkHDK87JHPscnU=;
+        b=IYUqb/h35TlOVvANFhPXRwdzAJit1HS7e8FL86O0yeE6P8hgNfhos27Ng6uveFyPyw
+         2mf36pEI87UXaGXeLkOr1yOQe+onbuyQ/DoIL+nFkyGAj+kHFjN+IB4PCfv9KVrqE6aM
+         /kyYvCbklhWGYbmsUeHdoeqo9DmeJslfqOY4o+nqx5s9dYQe4dthhWF4WR/b8KLIPZPo
+         BKUZiaSLr/lOFjOStbueSEKq81bBBjh+TAU3v/QFaHcIkEYyrv3ID0DRMg3suNM2xeMf
+         R36IjldPLxPfA+siJfNs9KxyUMDN/U3ihcuYGO4THYVe2AC94XI26aN2mgrVhRcYhz6z
+         AZhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NiFi50FuqI1VBpxzFdOXo/50+9I/uAkHDK87JHPscnU=;
+        b=cLfVtnAu8R/R2KfQXqcd1L0r6CsH8d5rpRwLuFeFXCdCizP+7JGsmNZPbQ05Id8P61
+         UT8nXdI6dAbRtPnkyFX+KlkuAzzYyuvyi+wVssA4UkpJR8DCB0GVf9RFKNlq3B8LZ37S
+         MiJO3bxdH192l8KH5so5erwp3YvTVBn3YdmnUSmizA12yNb9HiLrHX36u1ZKhZ3CKApY
+         3+Vzl7gDHcJE1QUyKefoyAuygd3jo/8CRRlhqiLZRd+xTg6C7nxKo/I6wk08POnjrzdd
+         uCLRpZK962jX/kELjBZV8QjEckjRclytIy3519gGbdInH1ddTj/mG0v1vHPn4rlkykyy
+         n5eQ==
+X-Gm-Message-State: APjAAAX3lvBwPMgODp1upKvdcbBmD/Pk/hs4CfuVheLNeCyfDrlyN+zL
+        Ffpqj0wQmv99xwEpBeNWfknqtQ==
+X-Google-Smtp-Source: APXvYqxfoIMEQHrCYevrzZsV5a92ggMZZsyuGPNKm0meavL9E991mpyYRdC345pA/uJsZsgpQ5WMbQ==
+X-Received: by 2002:adf:fa88:: with SMTP id h8mr2392734wrr.89.1570620008255;
+        Wed, 09 Oct 2019 04:20:08 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id q15sm3197470wrg.65.2019.10.09.04.20.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Oct 2019 04:20:07 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     broonie@kernel.org
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        lgirdwood@gmail.com,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>
+Subject: [PATCH] ASoC: msm8916-wcd-digital: add missing MIX2 path for RX1/2
+Date:   Wed,  9 Oct 2019 12:19:44 +0100
+Message-Id: <20191009111944.28069-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Test virutal server via directing routing for IPv4.
+This patch adds missing MIX2 path on RX1/2 which take IIR1 and
+IIR2 as inputs.
 
-Tested:
+Without this patch sound card fails to intialize with below warning:
 
-# selftests: netfilter: ipvs.sh
-# Testing DR mode...
-# ipvs.sh: PASS
-ok 6 selftests: netfilter: ipvs.sh
+ ASoC: no sink widget found for RX1 MIX2 INP1
+ ASoC: Failed to add route IIR1 -> IIR1 -> RX1 MIX2 INP1
+ ASoC: no sink widget found for RX2 MIX2 INP1
+ ASoC: Failed to add route IIR1 -> IIR1 -> RX2 MIX2 INP1
+ ASoC: no sink widget found for RX1 MIX2 INP1
+ ASoC: Failed to add route IIR2 -> IIR2 -> RX1 MIX2 INP1
+ ASoC: no sink widget found for RX2 MIX2 INP1
+ ASoC: Failed to add route IIR2 -> IIR2 -> RX2 MIX2 INP1
 
-Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+Reported-by: Stephan Gerhold <stephan@gerhold.net>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Tested-by: Stephan Gerhold <stephan@gerhold.net>
 ---
-v5: use cmp to compare two file contents suggested by Simon Horman
-v4: use #!/bin/bash -p suggested by Duncan Roe
-v3: use bash style
-v2: optimize test script
----
- tools/testing/selftests/netfilter/Makefile |   2 +-
- tools/testing/selftests/netfilter/ipvs.sh  | 178 +++++++++++++++++++++++++++++
- 2 files changed, 179 insertions(+), 1 deletion(-)
- create mode 100755 tools/testing/selftests/netfilter/ipvs.sh
+ sound/soc/codecs/msm8916-wcd-digital.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/tools/testing/selftests/netfilter/Makefile b/tools/testing/selftests/netfilter/Makefile
-index 4144984..de1032b 100644
---- a/tools/testing/selftests/netfilter/Makefile
-+++ b/tools/testing/selftests/netfilter/Makefile
-@@ -2,6 +2,6 @@
- # Makefile for netfilter selftests
+diff --git a/sound/soc/codecs/msm8916-wcd-digital.c b/sound/soc/codecs/msm8916-wcd-digital.c
+index 9fa5d44fdc79..58b2468fb2a7 100644
+--- a/sound/soc/codecs/msm8916-wcd-digital.c
++++ b/sound/soc/codecs/msm8916-wcd-digital.c
+@@ -243,6 +243,10 @@ static const char *const rx_mix1_text[] = {
+ 	"ZERO", "IIR1", "IIR2", "RX1", "RX2", "RX3"
+ };
  
- TEST_PROGS := nft_trans_stress.sh nft_nat.sh bridge_brouter.sh \
--	conntrack_icmp_related.sh nft_flowtable.sh
-+	conntrack_icmp_related.sh nft_flowtable.sh ipvs.sh
++static const char * const rx_mix2_text[] = {
++	"ZERO", "IIR1", "IIR2"
++};
++
+ static const char *const dec_mux_text[] = {
+ 	"ZERO", "ADC1", "ADC2", "ADC3", "DMIC1", "DMIC2"
+ };
+@@ -270,6 +274,16 @@ static const struct soc_enum rx3_mix1_inp_enum[] = {
+ 	SOC_ENUM_SINGLE(LPASS_CDC_CONN_RX3_B2_CTL, 0, 6, rx_mix1_text),
+ };
  
- include ../lib.mk
-diff --git a/tools/testing/selftests/netfilter/ipvs.sh b/tools/testing/selftests/netfilter/ipvs.sh
-new file mode 100755
-index 0000000..f844c0a
---- /dev/null
-+++ b/tools/testing/selftests/netfilter/ipvs.sh
-@@ -0,0 +1,178 @@
-+#!/bin/bash -p
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# End-to-end ipvs test suite
-+# Topology:
-+#--------------------------------------------------------------+
-+#                      |                                       |
-+#         ns0          |         ns1                           |
-+#      -----------     |     -----------    -----------        |
-+#      | veth01  | --------- | veth10  |    | veth12  |        |
-+#      -----------    peer   -----------    -----------        |
-+#           |          |                        |              |
-+#      -----------     |                        |              |
-+#      |  br0    |     |-----------------  peer |--------------|
-+#      -----------     |                        |              |
-+#           |          |                        |              |
-+#      ----------     peer   ----------      -----------       |
-+#      |  veth02 | --------- |  veth20 |     | veth21  |       |
-+#      ----------      |     ----------      -----------       |
-+#                      |         ns2                           |
-+#                      |                                       |
-+#--------------------------------------------------------------+
-+#
-+# We assume that all network driver are loaded
-+#
++/* RX1 MIX2 */
++static const struct soc_enum rx_mix2_inp1_chain_enum =
++	SOC_ENUM_SINGLE(LPASS_CDC_CONN_RX1_B3_CTL,
++		0, 3, rx_mix2_text);
 +
-+# Kselftest framework requirement - SKIP code is 4.
-+ksft_skip=4
-+ret=0
-+GREEN='\033[0;92m'
-+RED='\033[0;31m'
-+NC='\033[0m' # No Color
++/* RX2 MIX2 */
++static const struct soc_enum rx2_mix2_inp1_chain_enum =
++	SOC_ENUM_SINGLE(LPASS_CDC_CONN_RX2_B3_CTL,
++		0, 3, rx_mix2_text);
 +
-+readonly port=8080
-+
-+readonly vip_v4=207.175.44.110
-+readonly cip_v4=10.0.0.2
-+readonly gip_v4=10.0.0.1
-+readonly dip_v4=172.16.0.1
-+readonly rip_v4=172.16.0.2
-+readonly sip_v4=10.0.0.3
-+
-+readonly infile="$(mktemp)"
-+readonly outfile="$(mktemp)"
-+readonly datalen=32
-+
-+sysipvsnet="/proc/sys/net/ipv4/vs/"
-+if [ ! -d $sysipvsnet ]; then
-+	modprobe -q ip_vs
-+	if [ $? -ne 0 ]; then
-+		echo "skip: could not run test without ipvs module"
-+		exit $ksft_skip
-+	fi
-+fi
-+
-+ip -Version > /dev/null 2>&1
-+if [ $? -ne 0 ]; then
-+	echo "SKIP: Could not run test without ip tool"
-+	exit $ksft_skip
-+fi
-+
-+ipvsadm -v > /dev/null 2>&1
-+if [ $? -ne 0 ]; then
-+	echo "SKIP: Could not run test without ipvsadm"
-+	exit $ksft_skip
-+fi
-+
-+setup() {
-+	ip netns add ns0
-+	ip netns add ns1
-+	ip netns add ns2
-+
-+	ip link add veth01 netns ns0 type veth peer name veth10 netns ns1
-+	ip link add veth02 netns ns0 type veth peer name veth20 netns ns2
-+	ip link add veth12 netns ns1 type veth peer name veth21 netns ns2
-+
-+	ip netns exec ns0 ip link set veth01 up
-+	ip netns exec ns0 ip link set veth02 up
-+	ip netns exec ns0 ip link add br0 type bridge
-+	ip netns exec ns0 ip link set veth01 master br0
-+	ip netns exec ns0 ip link set veth02 master br0
-+	ip netns exec ns0 ip link set br0 up
-+	ip netns exec ns0 ip addr add ${cip_v4}/24 dev br0
-+
-+	ip netns exec ns1 ip link set lo up
-+	ip netns exec ns1 ip link set veth10 up
-+	ip netns exec ns1 ip addr add ${gip_v4}/24 dev veth10
-+	ip netns exec ns1 ip link set veth12 up
-+	ip netns exec ns1 ip addr add ${dip_v4}/24 dev veth12
-+
-+	ip netns exec ns2 ip link set lo up
-+	ip netns exec ns2 ip link set veth21 up
-+	ip netns exec ns2 ip addr add ${rip_v4}/24 dev veth21
-+	ip netns exec ns2 ip link set veth20 up
-+	ip netns exec ns2 ip addr add ${sip_v4}/24 dev veth20
-+
-+	sleep 1
-+
-+	dd if=/dev/urandom of="${infile}" bs="${datalen}" count=1 status=none
-+}
-+
-+cleanup() {
-+	for i in 0 1 2
-+	do
-+		ip netns del ns$i > /dev/null 2>&1
-+	done
-+
-+	if [ -f "${outfile}" ]; then
-+		rm "${outfile}"
-+	fi
-+	if [ -f "${infile}" ]; then
-+		rm "${infile}"
-+	fi
-+}
-+
-+server_listen() {
-+	ip netns exec ns2 nc -l -p 8080 > "${outfile}" &
-+	server_pid=$!
-+	sleep 0.2
-+}
-+
-+client_connect() {
-+	ip netns exec ns0 timeout 2 nc -w 1 ${vip_v4} ${port} < "${infile}"
-+}
-+
-+verify_data() {
-+	wait "${server_pid}"
-+	cmp "$infile" "$outfile" 2>/dev/null
-+}
-+
-+test_service() {
-+	server_listen
-+	client_connect
-+	verify_data
-+}
-+
-+
-+test_dr() {
-+	ip netns exec ns0 ip route add ${vip_v4} via ${gip_v4} dev br0
-+
-+	ip netns exec ns1 sysctl -qw net.ipv4.ip_forward=1
-+	ip netns exec ns1 ipvsadm -A -t ${vip_v4}:${port} -s rr
-+	ip netns exec ns1 ipvsadm -a -t ${vip_v4}:${port} -r ${rip_v4}:${port}
-+	ip netns exec ns1 ip addr add ${vip_v4}/32 dev lo:1
-+
-+	# avoid incorrect arp response
-+	ip netns exec ns2 sysctl -qw net.ipv4.conf.all.arp_ignore=1
-+	ip netns exec ns2 sysctl -qw net.ipv4.conf.all.arp_announce=2
-+	# avoid reverse route lookup
-+	ip netns exec ns2 sysctl -qw  net.ipv4.conf.all.rp_filter=0
-+	ip netns exec ns2 sysctl -qw  net.ipv4.conf.veth21.rp_filter=0
-+	ip netns exec ns2 ip addr add ${vip_v4}/32 dev lo:1
-+
-+	test_service
-+}
-+
-+run_tests() {
-+	local errors=
-+
-+	echo "Testing DR mode..."
-+	setup
-+	test_dr
-+	errors=$(( $errors + $? ))
-+
-+	return $errors
-+}
-+
-+trap cleanup EXIT
-+
-+cleanup
-+run_tests
-+
-+if [ $? -ne 0 ]; then
-+	echo -e "$(basename $0): ${RED}FAIL${NC}"
-+	exit 1
-+fi
-+echo -e "$(basename $0): ${GREEN}PASS${NC}"
-+exit 0
+ /* DEC */
+ static const struct soc_enum dec1_mux_enum = SOC_ENUM_SINGLE(
+ 				LPASS_CDC_CONN_TX_B1_CTL, 0, 6, dec_mux_text);
+@@ -309,6 +323,10 @@ static const struct snd_kcontrol_new rx3_mix1_inp2_mux = SOC_DAPM_ENUM(
+ 				"RX3 MIX1 INP2 Mux", rx3_mix1_inp_enum[1]);
+ static const struct snd_kcontrol_new rx3_mix1_inp3_mux = SOC_DAPM_ENUM(
+ 				"RX3 MIX1 INP3 Mux", rx3_mix1_inp_enum[2]);
++static const struct snd_kcontrol_new rx1_mix2_inp1_mux = SOC_DAPM_ENUM(
++				"RX1 MIX2 INP1 Mux", rx_mix2_inp1_chain_enum);
++static const struct snd_kcontrol_new rx2_mix2_inp1_mux = SOC_DAPM_ENUM(
++				"RX2 MIX2 INP1 Mux", rx2_mix2_inp1_chain_enum);
+ 
+ /* Digital Gain control -38.4 dB to +38.4 dB in 0.3 dB steps */
+ static const DECLARE_TLV_DB_SCALE(digital_gain, -3840, 30, 0);
+@@ -740,6 +758,10 @@ static const struct snd_soc_dapm_widget msm8916_wcd_digital_dapm_widgets[] = {
+ 			 &rx3_mix1_inp2_mux),
+ 	SND_SOC_DAPM_MUX("RX3 MIX1 INP3", SND_SOC_NOPM, 0, 0,
+ 			 &rx3_mix1_inp3_mux),
++	SND_SOC_DAPM_MUX("RX1 MIX2 INP1", SND_SOC_NOPM, 0, 0,
++			 &rx1_mix2_inp1_mux),
++	SND_SOC_DAPM_MUX("RX2 MIX2 INP1", SND_SOC_NOPM, 0, 0,
++			 &rx2_mix2_inp1_mux),
+ 
+ 	SND_SOC_DAPM_MUX("CIC1 MUX", SND_SOC_NOPM, 0, 0, &cic1_mux),
+ 	SND_SOC_DAPM_MUX("CIC2 MUX", SND_SOC_NOPM, 0, 0, &cic2_mux),
 -- 
-1.8.3.1
-
-
+2.21.0
 
