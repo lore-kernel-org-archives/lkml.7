@@ -2,332 +2,341 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5402ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D81C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B914920B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E311321721
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 10:46:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730722AbfJIKqb (ORCPT
+        id S1730793AbfJIKql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 06:46:31 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:36559 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbfJIKqb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 06:46:31 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iI9UD-0003wQ-Fz; Wed, 09 Oct 2019 12:46:29 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iI9UA-0002w6-RZ; Wed, 09 Oct 2019 12:46:26 +0200
-Date:   Wed, 9 Oct 2019 12:46:26 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Matt Helsley <mhelsley@vmware.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>, kernel@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 4/8] recordmcount: Rewrite error/success handling
-Message-ID: <20191009104626.f3hy5dcehdfagxto@pengutronix.de>
-References: <cover.1564596289.git.mhelsley@vmware.com>
- <8ba8633d4afe444931f363c8d924bf9565b89a86.1564596289.git.mhelsley@vmware.com>
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="ty77l2etqcnjy4dl"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8ba8633d4afe444931f363c8d924bf9565b89a86.1564596289.git.mhelsley@vmware.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Wed, 9 Oct 2019 06:46:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:59522 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730728AbfJIKql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 06:46:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3236128;
+        Wed,  9 Oct 2019 03:46:40 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B01843F703;
+        Wed,  9 Oct 2019 03:46:38 -0700 (PDT)
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org, Qais Yousef <qais.yousef@arm.com>
+Subject: [PATCH v2] sched: rt: Make RT capacity aware
+Date:   Wed,  9 Oct 2019 11:46:11 +0100
+Message-Id: <20191009104611.15363-1-qais.yousef@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Capacity Awareness refers to the fact that on heterogeneous systems
+(like Arm big.LITTLE), the capacity of the CPUs is not uniform, hence
+when placing tasks we need to be aware of this difference of CPU
+capacities.
 
---ty77l2etqcnjy4dl
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+In such scenarios we want to ensure that the selected CPU has enough
+capacity to meet the requirement of the running task. Enough capacity
+means here that capacity_orig_of(cpu) >= task.requirement.
 
-Hello,
+The definition of task.requirement is dependent on the scheduling class.
 
-On Wed, Jul 31, 2019 at 11:24:12AM -0700, Matt Helsley wrote:
-> Recordmcount uses setjmp/longjmp to manage control flow as
-> it reads and then writes the ELF file. This unusual control
-> flow is hard to follow and check in addition to being unlike
-> kernel coding style.
-> 
-> So we rewrite these paths to use regular return values to
-> indicate error/success. When an error or previously-completed object
-> file is found we return an error code following kernel
-> coding conventions -- negative error values and 0 for success when
-> we're not returning a pointer. We return NULL for those that fail
-> and return non-NULL pointers otherwise.
-> 
-> One oddity is already_has_rel_mcount -- there we use pointer comparison
-> rather than string comparison to differentiate between
-> previously-processed object files and returning the name of a text
-> section.
-> 
-> Signed-off-by: Matt Helsley <mhelsley@vmware.com>
+For CFS, utilization is used to select a CPU that has >= capacity value
+than the cfs_task.util.
 
-This is 3f1df12019f333442b12c3b5d110b8fc43eb0b36 in mainline now.
+	capacity_orig_of(cpu) >= cfs_task.util
 
-I have the following problem:
+DL isn't capacity aware at the moment but can make use of the bandwidth
+reservation to implement that in a similar manner CFS uses utilization.
+The following patchset implements that:
 
-	$ make ARCH=arm arch/arm/crypto/
-	  Using /home/uwe/gsrc/linux as source for kernel
-	  GEN     Makefile
-	  CALL    /home/uwe/gsrc/linux/scripts/checksyscalls.sh
-	  CALL    /home/uwe/gsrc/linux/scripts/atomic/check-atomics.sh
-	  CC      arch/arm/crypto/aes-cipher-glue.o
-	arch/arm/crypto/aes-cipher-glue.o: failed
-	make[2]: *** [/home/uwe/gsrc/linux/scripts/Makefile.build:281: arch/arm/crypto/aes-cipher-glue.o] Error 1
-	make[2]: *** Deleting file 'arch/arm/crypto/aes-cipher-glue.o'
-	make[1]: *** [/home/uwe/gsrc/linux/Makefile:1792: arch/arm/crypto/] Error 2
-	make: *** [/home/uwe/gsrc/linux/Makefile:179: sub-make] Error 2
+https://lore.kernel.org/lkml/20190506044836.2914-1-luca.abeni@santannapisa.it/
 
-and bisection points to 3f1df12019f333442b12c3b5d110b8fc43eb0b36.
+	capacity_orig_of(cpu)/SCHED_CAPACITY >= dl_deadline/dl_runtime
 
-This doesn't affect all files, most compile just fine. After calling the
-compiler by hand to get aes-cipher-glue.o back I have:
+For RT we don't have a per task utilization signal and we lack any
+information in general about what performance requirement the RT task
+needs. But with the introduction of uclamp, RT tasks can now control
+that by setting uclamp_min to guarantee a minimum performance point.
 
-uwe@taurus:~/arietta/kbuild$ ./scripts/recordmcount "arch/arm/crypto/aes-cipher-glue.o"
-arch/arm/crypto/aes-cipher-glue.o: failed
+ATM the uclamp value are only used for frequency selection; but on
+heterogeneous systems this is not enough and we need to ensure that the
+capacity of the CPU is >= uclamp_min. Which is what implemented here.
 
-I didn't debug this further, if you have problems reproducing or need more
-infos tell me. The defconfig I'm using is attached.
+	capacity_orig_of(cpu) >= rt_task.uclamp_min
 
-Best regards
-Uwe
+Note that by default uclamp.min is 1024, which means that RT tasks will
+always be biased towards the big CPUs, which make for a better more
+predictable behavior for the default case.
 
+Must stress that the bias acts as a hint rather than a definite
+placement strategy. For example, if all big cores are busy executing
+other RT tasks we can't guarantee that a new RT task will be placed
+there.
+
+On non-heterogeneous systems the original behavior of RT should be
+retained. Similarly if uclamp is not selected in the config.
+
+Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+---
+
+Changes in v2:
+	- Use cpupri_find() to check the fitness of the task instead of
+	  sprinkling find_lowest_rq() with several checks of
+	  rt_task_fits_capacity().
+
+	  The selected implementation opted to pass the fitness function as an
+	  argument rather than call rt_task_fits_capacity() capacity which is
+	  a cleaner to keep the logical separation of the 2 modules; but it
+	  means the compiler has less room to optimize rt_task_fits_capacity()
+	  out when it's a constant value.
+
+The logic is not perfect. For example if a 'small' task is occupying a big CPU
+and another big task wakes up; we won't force migrate the small task to clear
+the big cpu for the big task that woke up.
+
+IOW, the logic is best effort and can't give hard guarantees. But improves the
+current situation where a task can randomly end up on any CPU regardless of
+what it needs. ie: without this patch an RT task can wake up on a big or small
+CPU, but with this it will always wake up on a big CPU (assuming the big CPUs
+aren't overloaded) - hence provide a consistent performance.
+
+I'm looking at ways to improve this best effort, but this patch should be
+a good start to discuss our Capacity Awareness requirement. There's a trade-off
+of complexity to be made here and I'd like to keep things as simple as
+possible and build on top as needed.
+
+
+ kernel/sched/cpupri.c | 23 ++++++++++--
+ kernel/sched/cpupri.h |  4 ++-
+ kernel/sched/rt.c     | 81 +++++++++++++++++++++++++++++++++++--------
+ 3 files changed, 91 insertions(+), 17 deletions(-)
+
+diff --git a/kernel/sched/cpupri.c b/kernel/sched/cpupri.c
+index b7abca987d94..799791c01d60 100644
+--- a/kernel/sched/cpupri.c
++++ b/kernel/sched/cpupri.c
+@@ -57,7 +57,8 @@ static int convert_prio(int prio)
+  * Return: (int)bool - CPUs were found
+  */
+ int cpupri_find(struct cpupri *cp, struct task_struct *p,
+-		struct cpumask *lowest_mask)
++		struct cpumask *lowest_mask,
++		bool (*fitness_fn)(struct task_struct *p, int cpu))
+ {
+ 	int idx = 0;
+ 	int task_pri = convert_prio(p->prio);
+@@ -98,6 +99,8 @@ int cpupri_find(struct cpupri *cp, struct task_struct *p,
+ 			continue;
+ 
+ 		if (lowest_mask) {
++			int cpu;
++
+ 			cpumask_and(lowest_mask, p->cpus_ptr, vec->mask);
+ 
+ 			/*
+@@ -108,7 +111,23 @@ int cpupri_find(struct cpupri *cp, struct task_struct *p,
+ 			 * condition, simply act as though we never hit this
+ 			 * priority level and continue on.
+ 			 */
+-			if (cpumask_any(lowest_mask) >= nr_cpu_ids)
++			if (cpumask_empty(lowest_mask))
++				continue;
++
++			if (!fitness_fn)
++				return 1;
++
++			/* Ensure the capacity of the CPUs fit the task */
++			for_each_cpu(cpu, lowest_mask) {
++				if (!fitness_fn(p, cpu))
++					cpumask_clear_cpu(cpu, lowest_mask);
++			}
++
++			/*
++			 * If no CPU at the current priority can fit the task
++			 * continue looking
++			 */
++			if (cpumask_empty(lowest_mask))
+ 				continue;
+ 		}
+ 
+diff --git a/kernel/sched/cpupri.h b/kernel/sched/cpupri.h
+index 7dc20a3232e7..32dd520db11f 100644
+--- a/kernel/sched/cpupri.h
++++ b/kernel/sched/cpupri.h
+@@ -18,7 +18,9 @@ struct cpupri {
+ };
+ 
+ #ifdef CONFIG_SMP
+-int  cpupri_find(struct cpupri *cp, struct task_struct *p, struct cpumask *lowest_mask);
++int  cpupri_find(struct cpupri *cp, struct task_struct *p,
++		 struct cpumask *lowest_mask,
++		 bool (*fitness_fn)(struct task_struct *p, int cpu));
+ void cpupri_set(struct cpupri *cp, int cpu, int pri);
+ int  cpupri_init(struct cpupri *cp);
+ void cpupri_cleanup(struct cpupri *cp);
+diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+index ebaa4e619684..3a68054e15b3 100644
+--- a/kernel/sched/rt.c
++++ b/kernel/sched/rt.c
+@@ -437,6 +437,45 @@ static inline int on_rt_rq(struct sched_rt_entity *rt_se)
+ 	return rt_se->on_rq;
+ }
+ 
++#ifdef CONFIG_UCLAMP_TASK
++/*
++ * Verify the fitness of task @p to run on @cpu taking into account the uclamp
++ * settings.
++ *
++ * This check is only important for heterogeneous systems where uclamp_min value
++ * is higher than the capacity of a @cpu. For non-heterogeneous system this
++ * function will always return true.
++ *
++ * The function will return true if the capacity of the @cpu is >= the
++ * uclamp_min and false otherwise.
++ *
++ * Note that uclamp_min will be clamped to uclamp_max if uclamp_min
++ * > uclamp_max.
++ */
++inline bool rt_task_fits_capacity(struct task_struct *p, int cpu)
++{
++	unsigned int min_cap;
++	unsigned int max_cap;
++	unsigned int cpu_cap;
++
++	/* Only heterogeneous systems can benefit from this check */
++	if (!static_branch_unlikely(&sched_asym_cpucapacity))
++		return true;
++
++	min_cap = uclamp_eff_value(p, UCLAMP_MIN);
++	max_cap = uclamp_eff_value(p, UCLAMP_MAX);
++
++	cpu_cap = capacity_orig_of(cpu);
++
++	return cpu_cap >= min(min_cap, max_cap);
++}
++#else
++static inline bool rt_task_fits_capacity(struct task_struct *p, int cpu)
++{
++	return true;
++}
++#endif
++
+ #ifdef CONFIG_RT_GROUP_SCHED
+ 
+ static inline u64 sched_rt_runtime(struct rt_rq *rt_rq)
+@@ -1391,6 +1430,7 @@ select_task_rq_rt(struct task_struct *p, int cpu, int sd_flag, int flags)
+ {
+ 	struct task_struct *curr;
+ 	struct rq *rq;
++	bool test;
+ 
+ 	/* For anything but wake ups, just return the task_cpu */
+ 	if (sd_flag != SD_BALANCE_WAKE && sd_flag != SD_BALANCE_FORK)
+@@ -1422,10 +1462,16 @@ select_task_rq_rt(struct task_struct *p, int cpu, int sd_flag, int flags)
+ 	 *
+ 	 * This test is optimistic, if we get it wrong the load-balancer
+ 	 * will have to sort it out.
++	 *
++	 * We take into account the capacity of the cpu to ensure it fits the
++	 * requirement of the task - which is only important on heterogeneous
++	 * systems like big.LITTLE.
+ 	 */
+-	if (curr && unlikely(rt_task(curr)) &&
+-	    (curr->nr_cpus_allowed < 2 ||
+-	     curr->prio <= p->prio)) {
++	test = curr &&
++	       unlikely(rt_task(curr)) &&
++	       (curr->nr_cpus_allowed < 2 || curr->prio <= p->prio);
++
++	if (test || !rt_task_fits_capacity(p, cpu)) {
+ 		int target = find_lowest_rq(p);
+ 
+ 		/*
+@@ -1449,7 +1495,7 @@ static void check_preempt_equal_prio(struct rq *rq, struct task_struct *p)
+ 	 * let's hope p can move out.
+ 	 */
+ 	if (rq->curr->nr_cpus_allowed == 1 ||
+-	    !cpupri_find(&rq->rd->cpupri, rq->curr, NULL))
++	    !cpupri_find(&rq->rd->cpupri, rq->curr, NULL, NULL))
+ 		return;
+ 
+ 	/*
+@@ -1457,7 +1503,7 @@ static void check_preempt_equal_prio(struct rq *rq, struct task_struct *p)
+ 	 * see if it is pushed or pulled somewhere else.
+ 	 */
+ 	if (p->nr_cpus_allowed != 1
+-	    && cpupri_find(&rq->rd->cpupri, p, NULL))
++	    && cpupri_find(&rq->rd->cpupri, p, NULL, NULL))
+ 		return;
+ 
+ 	/*
+@@ -1600,7 +1646,8 @@ static void put_prev_task_rt(struct rq *rq, struct task_struct *p, struct rq_fla
+ static int pick_rt_task(struct rq *rq, struct task_struct *p, int cpu)
+ {
+ 	if (!task_running(rq, p) &&
+-	    cpumask_test_cpu(cpu, p->cpus_ptr))
++	    cpumask_test_cpu(cpu, p->cpus_ptr) &&
++	    rt_task_fits_capacity(p, cpu))
+ 		return 1;
+ 
+ 	return 0;
+@@ -1642,7 +1689,8 @@ static int find_lowest_rq(struct task_struct *task)
+ 	if (task->nr_cpus_allowed == 1)
+ 		return -1; /* No other targets possible */
+ 
+-	if (!cpupri_find(&task_rq(task)->rd->cpupri, task, lowest_mask))
++	if (!cpupri_find(&task_rq(task)->rd->cpupri, task, lowest_mask,
++			 rt_task_fits_capacity))
+ 		return -1; /* No targets found */
+ 
+ 	/*
+@@ -2146,12 +2194,14 @@ static void pull_rt_task(struct rq *this_rq)
+  */
+ static void task_woken_rt(struct rq *rq, struct task_struct *p)
+ {
+-	if (!task_running(rq, p) &&
+-	    !test_tsk_need_resched(rq->curr) &&
+-	    p->nr_cpus_allowed > 1 &&
+-	    (dl_task(rq->curr) || rt_task(rq->curr)) &&
+-	    (rq->curr->nr_cpus_allowed < 2 ||
+-	     rq->curr->prio <= p->prio))
++	bool need_to_push = !task_running(rq, p) &&
++			    !test_tsk_need_resched(rq->curr) &&
++			    p->nr_cpus_allowed > 1 &&
++			    (dl_task(rq->curr) || rt_task(rq->curr)) &&
++			    (rq->curr->nr_cpus_allowed < 2 ||
++			     rq->curr->prio <= p->prio);
++
++	if (need_to_push || !rt_task_fits_capacity(p, cpu_of(rq)))
+ 		push_rt_tasks(rq);
+ }
+ 
+@@ -2223,7 +2273,10 @@ static void switched_to_rt(struct rq *rq, struct task_struct *p)
+ 	 */
+ 	if (task_on_rq_queued(p) && rq->curr != p) {
+ #ifdef CONFIG_SMP
+-		if (p->nr_cpus_allowed > 1 && rq->rt.overloaded)
++		bool need_to_push = rq->rt.overloaded ||
++				    !rt_task_fits_capacity(p, cpu_of(rq));
++
++		if (p->nr_cpus_allowed > 1 && need_to_push)
+ 			rt_queue_push_tasks(rq);
+ #endif /* CONFIG_SMP */
+ 		if (p->prio < rq->curr->prio && cpu_online(cpu_of(rq)))
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+2.17.1
 
---ty77l2etqcnjy4dl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename=arietta_defconfig
-
-# CONFIG_LOCALVERSION_AUTO is not set
-# CONFIG_SWAP is not set
-CONFIG_SYSVIPC=y
-CONFIG_HIGH_RES_TIMERS=y
-CONFIG_IKCONFIG=y
-CONFIG_IKCONFIG_PROC=y
-CONFIG_CGROUPS=y
-CONFIG_CGROUP_BPF=y
-CONFIG_NAMESPACES=y
-CONFIG_BLK_DEV_INITRD=y
-CONFIG_CC_OPTIMIZE_FOR_SIZE=y
-CONFIG_KALLSYMS_ALL=y
-CONFIG_BPF_SYSCALL=y
-CONFIG_EMBEDDED=y
-CONFIG_SLAB=y
-CONFIG_ARCH_MULTI_V4T=y
-CONFIG_ARCH_MULTI_V5=y
-# CONFIG_ARCH_MULTI_V7 is not set
-CONFIG_ARCH_AT91=y
-CONFIG_SOC_AT91RM9200=y
-CONFIG_SOC_AT91SAM9=y
-CONFIG_AEABI=y
-CONFIG_UACCESS_WITH_MEMCPY=y
-CONFIG_SECCOMP=y
-CONFIG_ZBOOT_ROM_TEXT=0x0
-CONFIG_ZBOOT_ROM_BSS=0x0
-CONFIG_ARM_APPENDED_DTB=y
-CONFIG_ARM_ATAG_DTB_COMPAT=y
-CONFIG_KEXEC=y
-CONFIG_CPU_IDLE=y
-CONFIG_ARM_CRYPTO=y
-CONFIG_CRYPTO_SHA1_ARM=y
-CONFIG_CRYPTO_SHA256_ARM=y
-CONFIG_CRYPTO_SHA512_ARM=y
-CONFIG_CRYPTO_AES_ARM=y
-CONFIG_MODULES=y
-CONFIG_MODULE_UNLOAD=y
-# CONFIG_BLK_DEV_BSG is not set
-# CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
-CONFIG_NET=y
-CONFIG_PACKET=y
-CONFIG_UNIX=y
-CONFIG_INET=y
-CONFIG_IP_MULTICAST=y
-CONFIG_IP_PNP=y
-CONFIG_IP_PNP_DHCP=y
-CONFIG_IP_PNP_BOOTP=y
-CONFIG_IP_PNP_RARP=y
-# CONFIG_INET_DIAG is not set
-CONFIG_IPV6_SIT_6RD=y
-CONFIG_CFG80211=y
-CONFIG_MAC80211=y
-CONFIG_DEVTMPFS=y
-CONFIG_DEVTMPFS_MOUNT=y
-# CONFIG_STANDALONE is not set
-# CONFIG_PREVENT_FIRMWARE_BUILD is not set
-CONFIG_MTD=y
-CONFIG_MTD_CMDLINE_PARTS=y
-CONFIG_MTD_BLOCK=y
-CONFIG_MTD_DATAFLASH=y
-CONFIG_MTD_UBI=y
-CONFIG_MTD_UBI_GLUEBI=y
-CONFIG_BLK_DEV_LOOP=y
-CONFIG_BLK_DEV_RAM=y
-CONFIG_BLK_DEV_RAM_COUNT=4
-CONFIG_BLK_DEV_RAM_SIZE=8192
-CONFIG_ATMEL_TCLIB=y
-CONFIG_ATMEL_SSC=y
-CONFIG_EEPROM_93CX6=y
-CONFIG_SCSI=y
-CONFIG_BLK_DEV_SD=y
-# CONFIG_SCSI_LOWLEVEL is not set
-CONFIG_NETDEVICES=y
-# CONFIG_NET_VENDOR_BROADCOM is not set
-CONFIG_MACB=y
-CONFIG_DM9000=y
-# CONFIG_NET_VENDOR_FARADAY is not set
-# CONFIG_NET_VENDOR_INTEL is not set
-# CONFIG_NET_VENDOR_MARVELL is not set
-# CONFIG_NET_VENDOR_MICREL is not set
-# CONFIG_NET_VENDOR_NATSEMI is not set
-# CONFIG_NET_VENDOR_SEEQ is not set
-# CONFIG_NET_VENDOR_SMSC is not set
-# CONFIG_NET_VENDOR_STMICRO is not set
-CONFIG_DAVICOM_PHY=y
-CONFIG_MICREL_PHY=y
-CONFIG_RT2X00=y
-CONFIG_RT2500USB=y
-CONFIG_RT73USB=y
-CONFIG_RT2800USB=y
-CONFIG_RT2800USB_RT53XX=y
-CONFIG_RT2800USB_RT55XX=y
-CONFIG_RT2800USB_UNKNOWN=y
-# CONFIG_RTL_CARDS is not set
-CONFIG_INPUT_POLLDEV=y
-CONFIG_INPUT_JOYDEV=y
-CONFIG_INPUT_EVDEV=y
-# CONFIG_KEYBOARD_ATKBD is not set
-CONFIG_KEYBOARD_QT1070=y
-CONFIG_KEYBOARD_GPIO=y
-# CONFIG_INPUT_MOUSE is not set
-CONFIG_INPUT_TOUCHSCREEN=y
-CONFIG_TOUCHSCREEN_ADS7846=y
-# CONFIG_SERIO is not set
-CONFIG_LEGACY_PTY_COUNT=4
-CONFIG_SERIAL_ATMEL=y
-CONFIG_SERIAL_ATMEL_CONSOLE=y
-CONFIG_HW_RANDOM=y
-CONFIG_I2C=y
-CONFIG_I2C_CHARDEV=y
-CONFIG_I2C_AT91=y
-CONFIG_I2C_GPIO=y
-CONFIG_SPI=y
-CONFIG_SPI_ATMEL=y
-CONFIG_SPI_GPIO=y
-CONFIG_SPI_SPIDEV=y
-CONFIG_GPIO_SYSFS=y
-CONFIG_W1=y
-CONFIG_W1_MASTER_GPIO=y
-CONFIG_W1_SLAVE_THERM=y
-CONFIG_POWER_RESET=y
-CONFIG_POWER_SUPPLY=y
-CONFIG_SENSORS_SHT3x=y
-CONFIG_WATCHDOG=y
-CONFIG_AT91SAM9X_WATCHDOG=y
-CONFIG_REGULATOR=y
-CONFIG_REGULATOR_FIXED_VOLTAGE=y
-CONFIG_FB=y
-CONFIG_FB_ATMEL=y
-# CONFIG_LCD_CLASS_DEVICE is not set
-# CONFIG_BACKLIGHT_GENERIC is not set
-CONFIG_FRAMEBUFFER_CONSOLE=y
-CONFIG_FRAMEBUFFER_CONSOLE_DETECT_PRIMARY=y
-CONFIG_SOUND=y
-CONFIG_SND=y
-CONFIG_SND_SOC=y
-CONFIG_SND_ATMEL_SOC=y
-CONFIG_SND_AT91_SOC_SAM9G20_WM8731=y
-CONFIG_SND_ATMEL_SOC_WM8904=y
-CONFIG_SND_AT91_SOC_SAM9X5_WM8731=y
-CONFIG_USB=y
-CONFIG_USB_ANNOUNCE_NEW_DEVICES=y
-CONFIG_USB_EHCI_HCD=y
-CONFIG_USB_OHCI_HCD=y
-CONFIG_USB_ACM=y
-CONFIG_USB_STORAGE=y
-CONFIG_USB_SERIAL=y
-CONFIG_USB_SERIAL_GENERIC=y
-CONFIG_USB_SERIAL_FTDI_SIO=y
-CONFIG_USB_SERIAL_PL2303=y
-CONFIG_USB_GADGET=y
-CONFIG_USB_AT91=y
-CONFIG_USB_ATMEL_USBA=y
-CONFIG_USB_ETH=y
-CONFIG_MMC=y
-CONFIG_MMC_ATMELMCI=y
-CONFIG_MMC_SPI=y
-CONFIG_NEW_LEDS=y
-CONFIG_LEDS_CLASS=y
-CONFIG_LEDS_GPIO=y
-CONFIG_LEDS_PWM=y
-CONFIG_LEDS_TRIGGERS=y
-CONFIG_LEDS_TRIGGER_TIMER=y
-CONFIG_LEDS_TRIGGER_HEARTBEAT=y
-CONFIG_LEDS_TRIGGER_GPIO=y
-CONFIG_RTC_CLASS=y
-CONFIG_RTC_DRV_S35390A=y
-CONFIG_RTC_DRV_RV3029C2=y
-CONFIG_RTC_DRV_AT91RM9200=y
-CONFIG_RTC_DRV_AT91SAM9=y
-CONFIG_DMADEVICES=y
-CONFIG_AT_HDMAC=y
-# CONFIG_IOMMU_SUPPORT is not set
-CONFIG_IIO=y
-CONFIG_AT91_ADC=y
-CONFIG_PWM=y
-CONFIG_PWM_DEBUG=y
-CONFIG_PWM_ATMEL=y
-CONFIG_PWM_ATMEL_TCB=y
-CONFIG_EXT4_FS=y
-CONFIG_FANOTIFY=y
-CONFIG_AUTOFS4_FS=y
-CONFIG_VFAT_FS=y
-CONFIG_TMPFS=y
-CONFIG_UBIFS_FS=y
-CONFIG_UBIFS_FS_ADVANCED_COMPR=y
-CONFIG_NFS_FS=y
-CONFIG_ROOT_NFS=y
-CONFIG_NLS_CODEPAGE_437=y
-CONFIG_NLS_CODEPAGE_850=y
-CONFIG_NLS_ISO8859_1=y
-CONFIG_NLS_UTF8=y
-CONFIG_CRYPTO_ECHAINIV=y
-CONFIG_CRYPTO_ECB=y
-CONFIG_CRYPTO_USER_API_HASH=y
-CONFIG_CRYPTO_USER_API_SKCIPHER=y
-# CONFIG_CRYPTO_HW is not set
-CONFIG_FONTS=y
-CONFIG_FONT_8x8=y
-CONFIG_FONT_ACORN_8x8=y
-CONFIG_FONT_MINI_4x6=y
-CONFIG_PRINTK_TIME=y
-CONFIG_STRIP_ASM_SYMS=y
-# CONFIG_SCHED_DEBUG is not set
-# CONFIG_DEBUG_BUGVERBOSE is not set
-CONFIG_FUNCTION_TRACER=y
-CONFIG_TEST_PRINTF=y
-CONFIG_DEBUG_USER=y
-
---ty77l2etqcnjy4dl--
