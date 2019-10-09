@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D34ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D49ECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:28:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F244D20679
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:28:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1448620679
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 17:28:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570642126;
-	bh=hgWiUJDqFhtiAu2EufDq0H/kyP+i6BeWCEBmU9Aiu3U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yYEDLIPAB8mWADpwPqSa2t7k1kGqox0ROuzveFDI/9rTfkKyWxtgXF8tiO1nkgmIr
-	 WGqaiQDa+Yl3U1QBBonjx49qVp9bUmTMM3oLepUOKSVtDqwp9fitbJhy3RmQ6NqaoO
-	 FDUYxpkdi1FRwwhbIZi3b7DthKO4N3xwP+DYdkKc=
+	s=default; t=1570642130;
+	bh=BnNP/S94t0ycyVIws48GAEBsgOMeY35JYl69u3+93fc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=y87rHfGH0OtHt5Jf7EW4OCmZc0tZHONE6fGDWQ4ED/3BK3++Qny42iZ8J2j/uWGc3
+	 7tN6USYfB6kcDHbu+r7+TQDoVipaV4WklPSJ54edc8OI417YEgwVfEu5iyAoDNS+pe
+	 EtgmJhhK4gvQHco4H/PMCBPZ/GFlqPeUYIM7XbdY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732266AbfJIRYW (ORCPT
+        id S1732284AbfJIR2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 13:24:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48592 "EHLO mail.kernel.org"
+        Wed, 9 Oct 2019 13:28:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732108AbfJIRYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 13:24:05 -0400
+        id S1732257AbfJIRYV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 13:24:21 -0400
 Received: from sasha-vm.mshome.net (unknown [167.220.2.234])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39229222BD;
-        Wed,  9 Oct 2019 17:24:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 110C2218DE;
+        Wed,  9 Oct 2019 17:24:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570641845;
-        bh=hgWiUJDqFhtiAu2EufDq0H/kyP+i6BeWCEBmU9Aiu3U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WrWEUih8E7BWeS6xn+OyrF5GCN5QHYV06QSef4tXlbDr2aSbfmFZoXQRkfdS4bbXt
-         Uxod9siqTCSXBrdg5hXcYRS6fGpbmx2Ilycg4DQSrZI015wwWBayPBx2C7DqVvplMe
-         iGN+UZwJSVF4RBgYJQYYnlG+9VuEHdk6GImUxpMU=
+        s=default; t=1570641861;
+        bh=BnNP/S94t0ycyVIws48GAEBsgOMeY35JYl69u3+93fc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=SbeWUKDKwKqsp4Ni7++f16Zn6d/zQS8tkfkfeoMYWc8RfgjohPsV2jLfjmtbr8kLg
+         sS7C/qBVtSVk9hywa/1C/kF7owDIALeYAy6NwpSDSxIVeAi4v/8qKsgxHE8kKC5gfX
+         jvEluiNnT8vNbNXX6V8mDKPYCMOzW5VRIEp7qRPg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>,
-        linux-omap@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 06/26] ARM: OMAP2+: Fix missing reset done flag for am3 and am43
-Date:   Wed,  9 Oct 2019 13:05:38 -0400
-Message-Id: <20191009170558.32517-6-sashal@kernel.org>
+Cc:     Zenghui Yu <yuzenghui@huawei.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        kvmarm@lists.cs.columbia.edu
+Subject: [PATCH AUTOSEL 4.14 01/21] KVM: arm/arm64: vgic: Use the appropriate TRACE_INCLUDE_PATH
+Date:   Wed,  9 Oct 2019 13:05:54 -0400
+Message-Id: <20191009170615.32750-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191009170558.32517-1-sashal@kernel.org>
-References: <20191009170558.32517-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,51 +58,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Zenghui Yu <yuzenghui@huawei.com>
 
-[ Upstream commit 8ad8041b98c665b6147e607b749586d6e20ba73a ]
+[ Upstream commit aac60f1a867773de9eb164013d89c99f3ea1f009 ]
 
-For ti,sysc-omap4 compatible devices with no sysstatus register, we do have
-reset done status available in the SOFTRESET bit that clears when the reset
-is done. This is documented for example in am437x TRM for DMTIMER_TIOCP_CFG
-register. The am335x TRM just says that SOFTRESET bit value 1 means reset is
-ongoing, but it behaves the same way clearing after reset is done.
+Commit 49dfe94fe5ad ("KVM: arm/arm64: Fix TRACE_INCLUDE_PATH") fixes
+TRACE_INCLUDE_PATH to the correct relative path to the define_trace.h
+and explains why did the old one work.
 
-With the ti-sysc driver handling this automatically based on no sysstatus
-register defined, we see warnings if SYSC_HAS_RESET_STATUS is missing in the
-legacy platform data:
+The same fix should be applied to virt/kvm/arm/vgic/trace.h.
 
-ti-sysc 48042000.target-module: sysc_flags 00000222 != 00000022
-ti-sysc 48044000.target-module: sysc_flags 00000222 != 00000022
-ti-sysc 48046000.target-module: sysc_flags 00000222 != 00000022
-...
-
-Let's fix these warnings by adding SYSC_HAS_RESET_STATUS. Let's also
-remove the useless parentheses while at it.
-
-If it turns out we do have ti,sysc-omap4 compatible devices without a
-working SOFTRESET bit we can set up additional quirk handling for it.
-
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ virt/kvm/arm/vgic/trace.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
-index 9ded7bf972e71..3b8fe014a3e94 100644
---- a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
-@@ -946,7 +946,8 @@ static struct omap_hwmod_class_sysconfig am33xx_timer_sysc = {
- 	.rev_offs	= 0x0000,
- 	.sysc_offs	= 0x0010,
- 	.syss_offs	= 0x0014,
--	.sysc_flags	= (SYSC_HAS_SIDLEMODE | SYSC_HAS_SOFTRESET),
-+	.sysc_flags	= SYSC_HAS_SIDLEMODE | SYSC_HAS_SOFTRESET |
-+			  SYSC_HAS_RESET_STATUS,
- 	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
- 			  SIDLE_SMART_WKUP),
- 	.sysc_fields	= &omap_hwmod_sysc_type2,
+diff --git a/virt/kvm/arm/vgic/trace.h b/virt/kvm/arm/vgic/trace.h
+index 55fed77a9f739..4fd4f6db181b0 100644
+--- a/virt/kvm/arm/vgic/trace.h
++++ b/virt/kvm/arm/vgic/trace.h
+@@ -30,7 +30,7 @@ TRACE_EVENT(vgic_update_irq_pending,
+ #endif /* _TRACE_VGIC_H */
+ 
+ #undef TRACE_INCLUDE_PATH
+-#define TRACE_INCLUDE_PATH ../../../virt/kvm/arm/vgic
++#define TRACE_INCLUDE_PATH ../../virt/kvm/arm/vgic
+ #undef TRACE_INCLUDE_FILE
+ #define TRACE_INCLUDE_FILE trace
+ 
 -- 
 2.20.1
 
