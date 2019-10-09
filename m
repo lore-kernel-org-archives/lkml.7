@@ -6,116 +6,206 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D2AECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 06:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98EB1C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 06:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BF9020B7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 06:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FC6F20B7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 06:55:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727228AbfJIGx2 (ORCPT
+        id S1727474AbfJIGzA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 02:53:28 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:60835 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbfJIGx2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 02:53:28 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iI5qZ-0006pi-5k; Wed, 09 Oct 2019 08:53:19 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iI5qV-0002hI-D8; Wed, 09 Oct 2019 08:53:15 +0200
-Date:   Wed, 9 Oct 2019 08:53:15 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Anson Huang <Anson.Huang@nxp.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     jslaby@suse.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com,
-        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] tty: serial: imx: Only get second/third IRQ when there
- is more than one IRQ
-Message-ID: <20191009065315.wgdvmkv6skteyul4@pengutronix.de>
+        Wed, 9 Oct 2019 02:55:00 -0400
+Received: from mga09.intel.com ([134.134.136.24]:65443 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725848AbfJIGy7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 02:54:59 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 23:54:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,273,1566889200"; 
+   d="scan'208";a="200042363"
+Received: from unknown (HELO localhost) ([10.239.159.128])
+  by FMSMGA003.fm.intel.com with ESMTP; 08 Oct 2019 23:54:54 -0700
+Date:   Wed, 9 Oct 2019 14:56:51 +0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     Jim Mattson <jmattson@google.com>
+Cc:     Yang Weijiang <weijiang.yang@intel.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Subject: Re: [PATCH v7 7/7] KVM: x86: Add user-space access interface for CET
+ MSRs
+Message-ID: <20191009065651.GE27851@local-michael-cet-test>
+References: <20190927021927.23057-1-weijiang.yang@intel.com>
+ <20190927021927.23057-8-weijiang.yang@intel.com>
+ <CALMp9eQNDNmmCr8DM-2fMVYvQ-eTEpeE=bW8+BLbfxmBsTmQvg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1570601911-9162-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <CALMp9eQNDNmmCr8DM-2fMVYvQ-eTEpeE=bW8+BLbfxmBsTmQvg@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-On Wed, Oct 09, 2019 at 02:18:31PM +0800, Anson Huang wrote:
-> All i.MX SoCs except i.MX1 have ONLY 1 IRQ, so it is better to check
-> the IRQ count before getting second/third IRQ to avoid below error
-> message during probe:
+On Wed, Oct 02, 2019 at 01:57:50PM -0700, Jim Mattson wrote:
+> On Thu, Sep 26, 2019 at 7:17 PM Yang Weijiang <weijiang.yang@intel.com> wrote:
+> >
+> > There're two different places storing Guest CET states, the states
+> > managed with XSAVES/XRSTORS, as restored/saved
+> > in previous patch, can be read/write directly from/to the MSRs.
+> > For those stored in VMCS fields, they're access via vmcs_read/
+> > vmcs_write.
+> >
+> > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> > ---
+> >  arch/x86/kvm/vmx/vmx.c | 83 ++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 83 insertions(+)
+> >
+> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > index 44913e4ab558..5265db7cd2af 100644
+> > --- a/arch/x86/kvm/vmx/vmx.c
+> > +++ b/arch/x86/kvm/vmx/vmx.c
+> > @@ -1671,6 +1671,49 @@ static int vmx_get_msr_feature(struct kvm_msr_entry *msr)
+> >         return 0;
+> >  }
+> >
+> > +static int check_cet_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
 > 
-> [    0.726219] imx-uart 30860000.serial: IRQ index 1 not found
-> [    0.731329] imx-uart 30860000.serial: IRQ index 2 not found
+> I'd suggest changing return type to bool, since you are essentially
+> returning true or false.
+>
+Sure, will change it.
 
-This message was introduced in commit
-7723f4c5ecdb8d832f049f8483beb0d1081cedf6 for 5.4-rc1. I added the
-involved people to the recipents of this mail.
+> > +{
+> > +       u64 kvm_xss = kvm_supported_xss();
+> > +
+> > +       switch (msr_info->index) {
+> > +       case MSR_IA32_PL0_SSP ... MSR_IA32_PL2_SSP:
+> > +               if (!(kvm_xss | XFEATURE_MASK_CET_KERNEL))
+> '|' should be '&'
+Oops, thanks for the capture!
 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  drivers/tty/serial/imx.c | 13 +++++++++++--
->  1 file changed, 11 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
-> index 504d81c..081fa82 100644
-> --- a/drivers/tty/serial/imx.c
-> +++ b/drivers/tty/serial/imx.c
-> @@ -2198,6 +2198,7 @@ static int imx_uart_probe(struct platform_device *pdev)
->  	u32 ucr1;
->  	struct resource *res;
->  	int txirq, rxirq, rtsirq;
-> +	int irq_count;
->  
->  	sport = devm_kzalloc(&pdev->dev, sizeof(*sport), GFP_KERNEL);
->  	if (!sport)
-> @@ -2220,9 +2221,17 @@ static int imx_uart_probe(struct platform_device *pdev)
->  	if (IS_ERR(base))
->  		return PTR_ERR(base);
->  
-> +	irq_count = platform_irq_count(pdev);
-> +	if (irq_count < 0)
-> +		return irq_count;
-> +
->  	rxirq = platform_get_irq(pdev, 0);
-> -	txirq = platform_get_irq(pdev, 1);
-> -	rtsirq = platform_get_irq(pdev, 2);
-> +	if (irq_count > 1) {
-> +		txirq = platform_get_irq(pdev, 1);
-> +		rtsirq = platform_get_irq(pdev, 2);
-> +	} else {
-> +		txirq = rtsirq = -ENXIO;
-> +	}
+> > +                       return 1;
+> > +               if (!msr_info->host_initiated &&
+> > +                   !guest_cpuid_has(vcpu, X86_FEATURE_SHSTK))
+> > +                       return 1;
+> > +               break;
+> > +       case MSR_IA32_PL3_SSP:
+> > +               if (!(kvm_xss | XFEATURE_MASK_CET_USER))
+> '|' should be '&'
+> > +                       return 1;
+> > +               if (!msr_info->host_initiated &&
+> > +                   !guest_cpuid_has(vcpu, X86_FEATURE_SHSTK))
+> > +                       return 1;
+> > +               break;
+> > +       case MSR_IA32_U_CET:
+> > +               if (!(kvm_xss | XFEATURE_MASK_CET_USER))
+> '|' should be '&'
+> > +                       return 1;
+> > +               if (!msr_info->host_initiated &&
+> > +                   !guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) &&
+> > +                   !guest_cpuid_has(vcpu, X86_FEATURE_IBT))
+> > +                       return 1;
+> > +               break;
+> > +       case MSR_IA32_S_CET:
+> > +               if (!msr_info->host_initiated &&
+> > +                   !guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) &&
+> > +                   !guest_cpuid_has(vcpu, X86_FEATURE_IBT))
+> > +                       return 1;
+> > +               break;
+> > +       case MSR_IA32_INT_SSP_TAB:
+> > +               if (!msr_info->host_initiated &&
+> > +                   !guest_cpuid_has(vcpu, X86_FEATURE_SHSTK))
+> > +                       return 1;
+> > +               break;
+> > +       default:
+> > +               return 1;
+> > +       }
+> > +       return 0;
+> > +}
+> >  /*
+> >   * Reads an msr value (of 'msr_index') into 'pdata'.
+> >   * Returns 0 on success, non-0 otherwise.
+> > @@ -1788,6 +1831,26 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+> >                 else
+> >                         msr_info->data = vmx->pt_desc.guest.addr_a[index / 2];
+> >                 break;
+> > +       case MSR_IA32_S_CET:
+> > +               if (check_cet_msr(vcpu, msr_info))
+> > +                       return 1;
+> > +               msr_info->data = vmcs_readl(GUEST_S_CET);
+> Have we ensured that this VMCS field exists?
+> > +               break;
+> > +       case MSR_IA32_INT_SSP_TAB:
+> > +               if (check_cet_msr(vcpu, msr_info))
+> > +                       return 1;
+> > +               msr_info->data = vmcs_readl(GUEST_INTR_SSP_TABLE);
+> Have we ensured that this VMCS field exists?
+If host kernel sets correct info, we can make sure here.
 
-The patch is fine given the changed behaviour of platform_get_irq. I
-wonder if it is sensible to introduce a variant of platform_get_irq (say
-platform_get_irq_nowarn) that behaves like __platform_get_irq does
-today. Then the imx driver would just call platform_get_irq_nowarn
-without having to check the number of available irqs first.
+> > +               break;
+> > +       case MSR_IA32_U_CET:
+> Can this be lumped together with MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP, below?
+Unfortunately, this MSR is not adjacent to below MSRs.
 
-Best regards
-Uwe
+> > +               if (check_cet_msr(vcpu, msr_info))
+> > +                       return 1;
+> > +               rdmsrl(MSR_IA32_U_CET, msr_info->data);
+> > +               break;
+> > +       case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
+> > +               if (check_cet_msr(vcpu, msr_info))
+> > +                       return 1;
+> > +               rdmsrl(msr_info->index, msr_info->data);
+> > +               break;
+> >         case MSR_TSC_AUX:
+> >                 if (!msr_info->host_initiated &&
+> >                     !guest_cpuid_has(vcpu, X86_FEATURE_RDTSCP))
+> > @@ -2039,6 +2102,26 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+> >                 else
+> >                         vmx->pt_desc.guest.addr_a[index / 2] = data;
+> >                 break;
+> > +       case MSR_IA32_S_CET:
+> > +               if (check_cet_msr(vcpu, msr_info))
+> > +                       return 1;
+> Bits 9:6 must be zero.
+> > +               vmcs_writel(GUEST_S_CET, data);
+> Have we ensured that this VMCS field exists?
+> > +               break;
+> > +       case MSR_IA32_INT_SSP_TAB:
+> > +               if (check_cet_msr(vcpu, msr_info))
+> > +                       return 1;
+> Must be canonical. vCPU must support longmode.
+> > +               vmcs_writel(GUEST_INTR_SSP_TABLE, data);
+> Have we ensured that this VMCS field exists?
+> > +               break;
+> > +       case MSR_IA32_U_CET:
+> > +               if (check_cet_msr(vcpu, msr_info))
+> > +                       return 1;
+> Bits 9:6 must be zero.
+> > +               wrmsrl(MSR_IA32_U_CET, data);
+> > +               break;
+> > +       case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
+> > +               if (check_cet_msr(vcpu, msr_info))
+> > +                       return 1;
+> 'Data' must be canonical and 4-byte aligned. High dword must be zero
+> on vCPUs that don't support longmode.
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Thanks a lot for all above captures, will add sanity checks in next
+version.
+
+> > +               wrmsrl(msr_info->index, data);
+> > +               break;
+> >         case MSR_TSC_AUX:
+> >                 if (!msr_info->host_initiated &&
+> >                     !guest_cpuid_has(vcpu, X86_FEATURE_RDTSCP))
+> > --
+> > 2.17.2
+> >
