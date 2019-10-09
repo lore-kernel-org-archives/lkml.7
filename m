@@ -2,152 +2,174 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA389C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E51C0ECE58E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7A5520679
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE3C920679
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 15:27:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eNviB35I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731702AbfJIP1K (ORCPT
+        id S1731349AbfJIP1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 11:27:10 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35758 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731689AbfJIP1K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 11:27:10 -0400
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 95D2872FD4
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Oct 2019 15:27:09 +0000 (UTC)
-Received: by mail-wr1-f71.google.com with SMTP id n3so1278317wrt.9
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 08:27:09 -0700 (PDT)
+        Wed, 9 Oct 2019 11:27:33 -0400
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:43599 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731173AbfJIP1c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 11:27:32 -0400
+Received: by mail-yb1-f196.google.com with SMTP id y204so855295yby.10;
+        Wed, 09 Oct 2019 08:27:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QSdPkLvnnsMdiZ+6XfR6tWFXWqzKs2oliNxvPIoDunQ=;
+        b=eNviB35I7i63+r1g+2iDyKbCH56ABSueAeX/QFiRyX1Veje41eJbUiLkr6ugAfNFo1
+         uLANxIbk7WiyFJT9Ri8QIrsHeBQW39EwsLKzC3iylHW7tnmwEPUdXw41MmOBJ/GJ0Jmo
+         hOXq/hWVVsyK7K+/kIx33X0jkkphbou9C6O4lCHo+b3Uo8stCJehY2a94z9Wx0YDxn2Z
+         k4HgdR3pTepYvq1w6pd0mK1QPuaMiVAfevFknU+Jc+FZvxHFadGcUbiF09XXGiBXyaDQ
+         qTvrQVDF4gZs92snLr5h9QKmKn3npTOBwoRnGZmS5TOOVA9adwYm3PuK9ixc6q1WjlVQ
+         uGeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=LnjHlFJZ3FGQs1QMmZ0Kw4G8OSYD5KUzSAtQFbnF6ZY=;
-        b=KyPP10Lrk39V7LYEh3Y9SMWqjFVL6eY2ABOT+SPACfdzAVnMqD1KfjuyH0LrjoiQNr
-         rS8ZefsRpJdHi7oJReaGlAIPfwSr8GLX1RW80jo3UCIF+0uAID5NhGs1nsM0FPwSMFC4
-         nGGnbpPBNm7p58GHBNeYkHRgLKQYUFqDtiRYMmXYULkBIxuJyFwIff1/KdF53Y8/M/qE
-         Efi/CUEwhV/WyvxhGRiT+8pzicMfo/HB3zU3rtiXe8C3dOzX1yBaOQBJ1BZV7gb6KRB2
-         6TYpRJ5mEatnCJYLxm6AY8cszA8nIKave7QkFps79KRdniOVd/ztVihm4l3nNnByrvJv
-         U5QA==
-X-Gm-Message-State: APjAAAXKrTFafKkV8wa9ilm6vUu5oUm5vImi52W0Be1i2ea04vhpzUNR
-        NYvd8KLkiei8eUugKKgti2bdOf/AcJAktR4dk8Sfp2lAbYFh9XEQmRrZ/Un5fmMNzGrbh3X7BEZ
-        gYsto5I1wjXeiOWI2dSZTqbUX
-X-Received: by 2002:a5d:558b:: with SMTP id i11mr3472660wrv.166.1570634827932;
-        Wed, 09 Oct 2019 08:27:07 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqz0yhf0MXP9Ng1677vjj7N5mFHVu5KZ31jlXdy5OfBdWtvgpCjVAte/20NBF1wNoCg+0aCTPg==
-X-Received: by 2002:a5d:558b:: with SMTP id i11mr3472632wrv.166.1570634827634;
-        Wed, 09 Oct 2019 08:27:07 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id h125sm3559380wmf.31.2019.10.09.08.27.06
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QSdPkLvnnsMdiZ+6XfR6tWFXWqzKs2oliNxvPIoDunQ=;
+        b=N5/55FiYNln4Dt/ORQlv5zwpGaN/Qwu1WUcawBMsd/fRtXRWipG+0B78zxlQ3lj0fv
+         NA4N8UtAsakO9j/bIMdxDWoaIfJwYRCxQQSEKh0O/ZeK55hArXJqmH/UKPThbqDBeMdr
+         C+XNCKCx1lC0l1TMEvYHjTGV6Ta8lUlEpUOH/RTCHH3TK0tUGvPsmxH+ueURAS2+g+HE
+         Dfe+00cdfFIcJRZMOGd+0VWKASR+ErVIFv24c04nt9jtOlR2prNAi4btCipfCNy2+VhS
+         lJaGS17O33DooXP0k6xLEnAgxKRJsIDD69TSB/uywx6qJTQSDaEuVqtnogxj7oKc/SPk
+         P89Q==
+X-Gm-Message-State: APjAAAXySnjTsgmGSUFx4A7+BcVb+qDR/nRZRFIx98isfM9kUWmBmFAl
+        Z0m8MmJj+CLjDn2NR+rqRd8=
+X-Google-Smtp-Source: APXvYqzbYaOJ/4RGKB2EynkFqV+aKl+67zvtQakjDDx6Y9Kun1tIgsnf9lipFkBfOWSYYIcKG4itUA==
+X-Received: by 2002:a25:830b:: with SMTP id s11mr2317054ybk.230.1570634850866;
+        Wed, 09 Oct 2019 08:27:30 -0700 (PDT)
+Received: from localhost.localdomain (072-189-084-142.res.spectrum.com. [72.189.84.142])
+        by smtp.gmail.com with ESMTPSA id g40sm611863ywk.14.2019.10.09.08.27.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 08:27:07 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Roman Kagan <rkagan@virtuozzo.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Cc:     "kvm\@vger.kernel.org" <kvm@vger.kernel.org>,
-        Lan Tianyu <Tianyu.Lan@microsoft.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "x86\@kernel.org" <x86@kernel.org>,
-        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] x86/hyperv: make vapic support x2apic mode
-In-Reply-To: <20191009145022.28442-1-rkagan@virtuozzo.com>
-References: <20191009145022.28442-1-rkagan@virtuozzo.com>
-Date:   Wed, 09 Oct 2019 17:27:06 +0200
-Message-ID: <87r23mx7lh.fsf@vitty.brq.redhat.com>
+        Wed, 09 Oct 2019 08:27:29 -0700 (PDT)
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        akpm@linux-foundation.org
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, andriy.shevchenko@linux.intel.com,
+        linux@rasmusvillemoes.dk, yamada.masahiro@socionext.com,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        geert@linux-m68k.org, preid@electromag.com.au, lukas@wunner.de,
+        sean.nyekjaer@prevas.dk, morten.tiljeset@prevas.dk,
+        William Breathitt Gray <vilhelm.gray@gmail.com>
+Subject: [PATCH v17 00/14] Introduce the for_each_set_clump8 macro
+Date:   Wed,  9 Oct 2019 11:26:58 -0400
+Message-Id: <cover.1570633189.git.vilhelm.gray@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Roman Kagan <rkagan@virtuozzo.com> writes:
+Changes in v17:
+  - Move bitmap_get_value8/bitmap_set_value8 to include/linux/bitmap.h
+  - add style changes suggested by Andy Shevchenko to intel_soc_dts_iosf
 
-> Now that there's Hyper-V IOMMU driver, Linux can switch to x2apic mode
-> when supported by the vcpus.
->
-> However, the apic access functions for Hyper-V enlightened apic assume
-> xapic mode only.
->
-> As a result, Linux fails to bring up secondary cpus when run as a guest
-> in QEMU/KVM with both hv_apic and x2apic enabled.
->
-> According to Michael Kelley, when in x2apic mode, the Hyper-V synthetic
-> apic MSRs behave exactly the same as the corresponding architectural
-> x2apic MSRs, so there's no need to override the apic accessors.  The
-> only exception is hv_apic_eoi_write, which benefits from lazy EOI when
-> available; however, its implementation works for both xapic and x2apic
-> modes.
->
-> Fixes: 29217a474683 ("iommu/hyper-v: Add Hyper-V stub IOMMU driver")
-> Fixes: 6b48cb5f8347 ("X86/Hyper-V: Enlighten APIC access")
-> Cc: stable@vger.kernel.org
-> Suggested-by: Michael Kelley <mikelley@microsoft.com>
-> Signed-off-by: Roman Kagan <rkagan@virtuozzo.com>
-> ---
-> v2 -> v3:
-> - do not introduce x2apic-capable hv_apic accessors; leave original
->   x2apic accessors instead
->
-> v1 -> v2:
-> - add ifdefs to handle !CONFIG_X86_X2APIC
->
->  arch/x86/hyperv/hv_apic.c | 17 +++++++++++++----
->  1 file changed, 13 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
-> index 5c056b8aebef..26eeff5bd535 100644
-> --- a/arch/x86/hyperv/hv_apic.c
-> +++ b/arch/x86/hyperv/hv_apic.c
-> @@ -261,10 +261,19 @@ void __init hv_apic_init(void)
->  
->  	if (ms_hyperv.hints & HV_X64_APIC_ACCESS_RECOMMENDED) {
->  		pr_info("Hyper-V: Using MSR based APIC access\n");
+While adding GPIO get_multiple/set_multiple callback support for various
+drivers, I noticed a pattern of looping manifesting that would be useful
+standardized as a macro.
 
-This pr_info() becomes a bit misleading in x2apic mode, maybe do
-something like
+This patchset introduces the for_each_set_clump8 macro and utilizes it
+in several GPIO drivers. The for_each_set_clump macro8 facilitates a
+for-loop syntax that iterates over a memory region entire groups of set
+bits at a time.
 
-pr_info("Hyper-V: using Enlightened APIC (%s mode)",
-        x2apic_enabled() ? "x2apic" : "xapic");
+For example, suppose you would like to iterate over a 32-bit integer 8
+bits at a time, skipping over 8-bit groups with no set bit, where
+XXXXXXXX represents the current 8-bit group:
 
-> +		/*
-> +		 * With x2apic, architectural x2apic MSRs are equivalent to the
-> +		 * respective synthetic MSRs, so there's no need to override
-> +		 * the apic accessors.  The only exception is
-> +		 * hv_apic_eoi_write, because it benefits from lazy EOI when
-> +		 * available, but it works for both xapic and x2apic modes.
-> +		 */
->  		apic_set_eoi_write(hv_apic_eoi_write);
-> -		apic->read      = hv_apic_read;
-> -		apic->write     = hv_apic_write;
-> -		apic->icr_write = hv_apic_icr_write;
-> -		apic->icr_read  = hv_apic_icr_read;
-> +		if (!x2apic_enabled()) {
-> +			apic->read      = hv_apic_read;
-> +			apic->write     = hv_apic_write;
-> +			apic->icr_write = hv_apic_icr_write;
-> +			apic->icr_read  = hv_apic_icr_read;
-> +		}
->  	}
->  }
+    Example:        10111110 00000000 11111111 00110011
+    First loop:     10111110 00000000 11111111 XXXXXXXX
+    Second loop:    10111110 00000000 XXXXXXXX 00110011
+    Third loop:     XXXXXXXX 00000000 11111111 00110011
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Each iteration of the loop returns the next 8-bit group that has at
+least one set bit.
 
+The for_each_set_clump8 macro has four parameters:
+
+    * start: set to the bit offset of the current clump
+    * clump: set to the current clump value
+    * bits: bitmap to search within
+    * size: bitmap size in number of bits
+
+In this version of the patchset, the for_each_set_clump macro has been
+reimplemented and simplified based on the suggestions provided by Rasmus
+Villemoes and Andy Shevchenko in the version 4 submission.
+
+In particular, the function of the for_each_set_clump macro has been
+restricted to handle only 8-bit clumps; the drivers that use the
+for_each_set_clump macro only handle 8-bit ports so a generic
+for_each_set_clump implementation is not necessary. Thus, a solution for
+large clumps (i.e. those larger than the width of a bitmap word) can be
+postponed until a driver appears that actually requires such a generic
+for_each_set_clump implementation.
+
+For what it's worth, a semi-generic for_each_set_clump (i.e. for clumps
+smaller than the width of a bitmap word) can be implemented by simply
+replacing the hardcoded '8' and '0xFF' instances with respective
+variables. I have not yet had a need for such an implementation, and
+since it falls short of a true generic for_each_set_clump function, I
+have decided to forgo such an implementation for now.
+
+In addition, the bitmap_get_value8 and bitmap_set_value8 functions are
+introduced to get and set 8-bit values respectively. Their use is based
+on the behavior suggested in the patchset version 4 review.
+
+William Breathitt Gray (14):
+  bitops: Introduce the for_each_set_clump8 macro
+  lib/test_bitmap.c: Add for_each_set_clump8 test cases
+  gpio: 104-dio-48e: Utilize for_each_set_clump8 macro
+  gpio: 104-idi-48: Utilize for_each_set_clump8 macro
+  gpio: gpio-mm: Utilize for_each_set_clump8 macro
+  gpio: ws16c48: Utilize for_each_set_clump8 macro
+  gpio: pci-idio-16: Utilize for_each_set_clump8 macro
+  gpio: pcie-idio-24: Utilize for_each_set_clump8 macro
+  gpio: uniphier: Utilize for_each_set_clump8 macro
+  gpio: 74x164: Utilize the for_each_set_clump8 macro
+  thermal: intel: intel_soc_dts_iosf: Utilize for_each_set_clump8 macro
+  gpio: pisosr: Utilize the for_each_set_clump8 macro
+  gpio: max3191x: Utilize the for_each_set_clump8 macro
+  gpio: pca953x: Utilize the for_each_set_clump8 macro
+
+ drivers/gpio/gpio-104-dio-48e.c            |  73 ++++----------
+ drivers/gpio/gpio-104-idi-48.c             |  36 ++-----
+ drivers/gpio/gpio-74x164.c                 |  19 ++--
+ drivers/gpio/gpio-gpio-mm.c                |  73 ++++----------
+ drivers/gpio/gpio-max3191x.c               |  19 ++--
+ drivers/gpio/gpio-pca953x.c                |  17 ++--
+ drivers/gpio/gpio-pci-idio-16.c            |  75 +++++---------
+ drivers/gpio/gpio-pcie-idio-24.c           | 109 ++++++++-------------
+ drivers/gpio/gpio-pisosr.c                 |  12 +--
+ drivers/gpio/gpio-uniphier.c               |  16 ++-
+ drivers/gpio/gpio-ws16c48.c                |  73 ++++----------
+ drivers/thermal/intel/intel_soc_dts_iosf.c |  31 +++---
+ drivers/thermal/intel/intel_soc_dts_iosf.h |   2 -
+ include/asm-generic/bitops/find.h          |  17 ++++
+ include/linux/bitmap.h                     |  35 +++++++
+ include/linux/bitops.h                     |   5 +
+ lib/find_bit.c                             |  14 +++
+ lib/test_bitmap.c                          |  65 ++++++++++++
+ 18 files changed, 328 insertions(+), 363 deletions(-)
+
+
+base-commit: 8c550e94b8835170593169a45b5ba30d3fc72a70
 -- 
-Vitaly
+2.23.0
+
