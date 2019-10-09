@@ -2,154 +2,169 @@ Return-Path: <SRS0=kpxk=YC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04296ECE58D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ECF1C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0E222067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:17:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02A7F21848
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Oct 2019 16:18:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mZTMp25p"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="mNnrhg1j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731590AbfJIQRy (ORCPT
+        id S1731677AbfJIQSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 12:17:54 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37756 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729644AbfJIQRy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 12:17:54 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p14so3764096wro.4;
-        Wed, 09 Oct 2019 09:17:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/XG8wGMoyUv6lYKMyZk/b63prTSeiN7OqjwfzhXPeBU=;
-        b=mZTMp25p5tZ0QS0QQn2WdAs83YNBwqRMFSxTq86nFaKIOCf6chuWTaKlENsao9OeDa
-         CgKnDADSE7Dx8ODu0JgVhrgWjnRKMJ8mLWF8hwOvWD1fTLSGiLKWDozvjerIiL8V3Ggr
-         5OTCrQ+ZGZUaMshEx0AyLZjb3p5dwvfgKoTZMynJGZHvgMuW74cqgCYYF4gZuClipIAM
-         Pf7+SfYjBr3ipQG9Znp04j3nKycyUWT6604f5EZRVDocOU441jop29clCIKCU6wIbhLK
-         Mt1OomC3eSIhfyaEWnQcS2UPXs4KhsBEJnGw1+YGgowp/9LnB1Pu+IEu0ednFtBwIGyD
-         goEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/XG8wGMoyUv6lYKMyZk/b63prTSeiN7OqjwfzhXPeBU=;
-        b=Ftiw+9F+MH/ywgIozgawOO8+jmiUnYVZK5Tt8r65COGVwd1OPi83EULgGHhsGaNxuh
-         herrydCEz23540MU12ELJv073lxFFSsFuXcf/LwB51Ti14JJKPaZOU3sie/VV6E3H2Fu
-         bmPo1hveh9XAhFzo+zlBVw+yY2moAhJjlglWyn6d6OY+pa4TrAWyFNn4fiIXE9o81P/0
-         4eHSnKhRYBTo3NoGDmYtfWvgJY874WARm8dlxp8Ex5Df7Xz10ptQc1r4pHbvuPAI2wr5
-         ojI/8kEngMtULmBn+y1OWqt3EO48ltFzkEeZHLcgtpSJkem9zXatwLDsgnYFbhrQ0rh3
-         v10w==
-X-Gm-Message-State: APjAAAW65xIUsZ1O55sqnNQ+pd1HFbr5k+QkP06vbVZU0rMYzokNnCDY
-        mZwnAO0JJrx1zV+qz1QuDv4qrMNuNFvxNMwXxtFliQ==
-X-Google-Smtp-Source: APXvYqwuFxizJIc608t7uMIyzZUpg60M7UXO170bbTV8WWpxvxozUM5YuBaV9KuuipR2H0z6C97a1BSFfNMask+sQyg=
-X-Received: by 2002:adf:db43:: with SMTP id f3mr2544310wrj.11.1570637872054;
- Wed, 09 Oct 2019 09:17:52 -0700 (PDT)
+        Wed, 9 Oct 2019 12:18:09 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:57340 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729644AbfJIQSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 12:18:09 -0400
+Received: from zn.tnic (p200300EC2F0C2000D4AB68DE84D2DF26.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:2000:d4ab:68de:84d2:df26])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C96521EC0A91;
+        Wed,  9 Oct 2019 18:18:07 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1570637887;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=bvwkXAXhg+KG+yEXnbCW6bYT14rWgG9307Z/GR1yYlU=;
+        b=mNnrhg1jbqttD53dG+1plrFMoW0qLAmK3iEaey5ML2fn3zPIwVT712pbTKsgdOxbxeBNe8
+        YGRPY/hiOax73PxGAGYaO2gT6mzU22phyU9bwRgWZGBivpYL46kfPYCes2WRNX7ZzN4l+C
+        sBKENldjQ6wnpMW7bXB/rWz1zOvopQU=
+Date:   Wed, 9 Oct 2019 18:17:59 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH 2/6] x86/fpu/xstate: Define new macros for supervisor and
+ user xstates
+Message-ID: <20191009161759.GF10395@zn.tnic>
+References: <20190925151022.21688-1-yu-cheng.yu@intel.com>
+ <20190925151022.21688-3-yu-cheng.yu@intel.com>
 MIME-Version: 1.0
-References: <20191009113557.41ced49e@canb.auug.org.au>
-In-Reply-To: <20191009113557.41ced49e@canb.auug.org.au>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Wed, 9 Oct 2019 12:17:36 -0400
-Message-ID: <CADnq5_M0+PqajRUxgho2WVLq4ykdHJh=4-mWKrR25_93HMj68Q@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the drm-misc tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Harish Kasiviswanathan <Harish.Kasiviswanathan@amd.com>,
-        Sam Ravnborg <sam@ravnborg.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190925151022.21688-3-yu-cheng.yu@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Applied.  thanks!
+On Wed, Sep 25, 2019 at 08:10:18AM -0700, Yu-cheng Yu wrote:
+> From: Fenghua Yu <fenghua.yu@intel.com>
+> 
+> XCNTXT_MASK is 'all supported xfeatures' before introducing supervisor
+> xstates.  It is hereby renamed to SUPPORTED_XFEATURES_MASK_USER to make it
+	    ^^^^^^^^^^^^^^^^^^^^
 
-Alex
+To quote straight from Documentation/process/submitting-patches.rst:
 
-On Tue, Oct 8, 2019 at 8:36 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> After merging the drm-misc tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
->
-> In file included from drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_module.c:25:
-> drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_priv.h:40:10: fatal error: drm/drmP.h: No such file or directory
->    40 | #include <drm/drmP.h>
->       |          ^~~~~~~~~~~~
-> In file included from drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_chardev.c:38:
-> drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_priv.h:40:10: fatal error: drm/drmP.h: No such file or directory
->    40 | #include <drm/drmP.h>
->       |          ^~~~~~~~~~~~
-> In file included from drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_device.c:26:
-> drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_priv.h:40:10: fatal error: drm/drmP.h: No such file or directory
->    40 | #include <drm/drmP.h>
->       |          ^~~~~~~~~~~~
-> In file included from drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_topology.c:34:
-> drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_priv.h:40:10: fatal error: drm/drmP.h: No such file or directory
->    40 | #include <drm/drmP.h>
->       |          ^~~~~~~~~~~~
->
->
-> Caused by commit
->
->   4e98f871bcff ("drm: delete drmP.h + drm_os_linux.h")
->
-> interacting with commit
->
->   6b855f7b83d2 ("drm/amdkfd: Check against device cgroup")
->
-> from the amdgpu tree.
->
-> I added the following merge fix patch for today:
->
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Wed, 9 Oct 2019 11:24:38 +1100
-> Subject: [PATCH] drm/amdkfd: update for drmP.h removal
->
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+ "Describe your changes in imperative mood, e.g. "make xyzzy do frotz"
+  instead of "[This patch] makes xyzzy do frotz" or "[I] changed xyzzy
+  to do frotz", as if you are giving orders to the codebase to change
+  its behaviour."
+
+IOW, s/It is hereby renamed/Rename it/ - much simpler. Check all your
+commit messages too pls.
+
+> clear that these are user xstates.
+> 
+> XFEATURE_MASK_SUPERVISOR is replaced with the following:
+> - SUPPORTED_XFEATURES_MASK_SUPERVISOR: Currently nothing.  ENQCMD and
+>   Control-flow Enforcement Technology (CET) will be introduced in separate
+>   series.
+> - UNSUPPORTED_XFEATURES_MASK_SUPERVISOR: Currently only Processor Trace.
+> - ALL_XFEATURES_MASK_SUPERVISOR: the combination of above.
+> 
+> Co-developed-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+> Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+
+Your SOB needs to come after Fenghua's since you're sending the patch:
+
+Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+Co-developed-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+
+This way, the SOB chain shows the path the patch has taken and who has
+handled it along the way.
+
+Check your other SOB chains too because they have the same/similar
+issue.
+
+> Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+> Reviewed-by: Tony Luck <tony.luck@intel.com>
 > ---
->  drivers/gpu/drm/amd/amdkfd/kfd_priv.h | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_priv.h b/drivers/gpu/drm/amd/amdkfd/kfd_priv.h
-> index b8b4485c8f74..41bc0428bfc0 100644
-> --- a/drivers/gpu/drm/amd/amdkfd/kfd_priv.h
-> +++ b/drivers/gpu/drm/amd/amdkfd/kfd_priv.h
-> @@ -37,7 +37,9 @@
->  #include <linux/kref.h>
->  #include <linux/sysfs.h>
->  #include <linux/device_cgroup.h>
-> -#include <drm/drmP.h>
-> +#include <drm/drm_file.h>
-> +#include <drm/drm_drv.h>
-> +#include <drm/drm_device.h>
->  #include <kgd_kfd_interface.h>
->
->  #include "amd_shared.h"
-> @@ -49,8 +51,6 @@
->  /* GPU ID hash width in bits */
->  #define KFD_GPU_ID_HASH_WIDTH 16
->
-> -struct drm_device;
+>  arch/x86/include/asm/fpu/xstate.h | 36 ++++++++++++++++++++-----------
+>  arch/x86/kernel/fpu/init.c        |  3 ++-
+>  arch/x86/kernel/fpu/xstate.c      | 26 +++++++++++-----------
+>  3 files changed, 38 insertions(+), 27 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/fpu/xstate.h b/arch/x86/include/asm/fpu/xstate.h
+> index c6136d79f8c0..014c386deaa3 100644
+> --- a/arch/x86/include/asm/fpu/xstate.h
+> +++ b/arch/x86/include/asm/fpu/xstate.h
+> @@ -21,19 +21,29 @@
+>  #define XSAVE_YMM_SIZE	    256
+>  #define XSAVE_YMM_OFFSET    (XSAVE_HDR_SIZE + XSAVE_HDR_OFFSET)
+>  
+> -/* Supervisor features */
+> -#define XFEATURE_MASK_SUPERVISOR (XFEATURE_MASK_PT)
 > -
->  /* Use upper bits of mmap offset to store KFD driver specific information.
->   * BITS[63:62] - Encode MMAP type
->   * BITS[61:46] - Encode gpu_id. To identify to which GPU the offset belongs to
-> --
-> 2.23.0
->
-> --
-> Cheers,
-> Stephen Rothwell
+> -/* All currently supported features */
+> -#define XCNTXT_MASK		(XFEATURE_MASK_FP | \
+> -				 XFEATURE_MASK_SSE | \
+> -				 XFEATURE_MASK_YMM | \
+> -				 XFEATURE_MASK_OPMASK | \
+> -				 XFEATURE_MASK_ZMM_Hi256 | \
+> -				 XFEATURE_MASK_Hi16_ZMM	 | \
+> -				 XFEATURE_MASK_PKRU | \
+> -				 XFEATURE_MASK_BNDREGS | \
+> -				 XFEATURE_MASK_BNDCSR)
+> +/* All currently supported user features */
+> +#define SUPPORTED_XFEATURES_MASK_USER (XFEATURE_MASK_FP | \
+> +				       XFEATURE_MASK_SSE | \
+> +				       XFEATURE_MASK_YMM | \
+> +				       XFEATURE_MASK_OPMASK | \
+> +				       XFEATURE_MASK_ZMM_Hi256 | \
+> +				       XFEATURE_MASK_Hi16_ZMM	 | \
+> +				       XFEATURE_MASK_PKRU | \
+> +				       XFEATURE_MASK_BNDREGS | \
+> +				       XFEATURE_MASK_BNDCSR)
+> +
+> +/* All currently supported supervisor features */
+> +#define SUPPORTED_XFEATURES_MASK_SUPERVISOR (0)
+> +
+> +/*
+> + * Unsupported supervisor features. When a supervisor feature in this mask is
+> + * supported in the future, move it to the supported supervisor feature mask.
+> + */
+> +#define UNSUPPORTED_XFEATURES_MASK_SUPERVISOR (XFEATURE_MASK_PT)
+> +
+> +/* All supervisor states including supported and unsupported states. */
+> +#define ALL_XFEATURES_MASK_SUPERVISOR (SUPPORTED_XFEATURES_MASK_SUPERVISOR | \
+> +				       UNSUPPORTED_XFEATURES_MASK_SUPERVISOR)
+
+Those are kinda too long for my taste but they're at least descriptive... :-)
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
