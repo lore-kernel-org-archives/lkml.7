@@ -2,183 +2,95 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC4CC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B4DAC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FFDD21920
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:03:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570698205;
-	bh=m5bKekGyG+UJ+dgiw3Tg31ttRSjqcr2cZTnp/STQPfA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dWKIqQNat6wuXpTjz7xMz9d4goGdWYqBFtn/NJaW/NwFtGaCxs6zNmF8ZhxNP9Cci
-	 WRGKn6QSWmPuUmwfZ8YDVUw09DGuiZlQyJC4Ai8PaR4OBKLwl7Y2/9p1vkVG8O6sz2
-	 2q2EoIfAEQahdpzdWwhS699ihI+tbms0f9QMOgYc=
+	by mail.kernel.org (Postfix) with ESMTP id 6541221920
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:03:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cZmrGisy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387539AbfJJIiL (ORCPT
+        id S2388314AbfJJJDl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:38:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40878 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387519AbfJJIiI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:38:08 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52B2520B7C;
-        Thu, 10 Oct 2019 08:38:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696685;
-        bh=m5bKekGyG+UJ+dgiw3Tg31ttRSjqcr2cZTnp/STQPfA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sD00p9FjVKZSVqeQJgoyP1kuMvVcY0uot8AmINvy1djisEs+Pu86pyM9gXxAe/NsG
-         rso+utBxhmmKbGJILt33hm5KGUtH4+jXRBrBk8zvuicVMF7cR5i7uSliByoZxn1TZd
-         MpO/Y6hlP1mg004VlAf8bWLcW1QAX5JAxvRqU5VE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+0f1819555fbdce992df9@syzkaller.appspotmail.com,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.3 016/148] KVM: X86: Fix userspace set invalid CR4
-Date:   Thu, 10 Oct 2019 10:34:37 +0200
-Message-Id: <20191010083612.099185303@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
-References: <20191010083609.660878383@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 10 Oct 2019 05:03:41 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:55504 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387568AbfJJJDk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 05:03:40 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9A91cR3151143;
+        Thu, 10 Oct 2019 09:03:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=1cw9oEH7ZCs2HBUY1nZ4KMAQ/HcXcPqu2GOx+IY6xHk=;
+ b=cZmrGisygrGJvpWx+UEHZkW6tZu3t3Nd3AwP5usb1NAjPek5krF5fYXukRoeNRqyBkxS
+ 2WmNnoY6kKFdPcdCBjZnxGvL8lcLk8ed6/Xmw55hS6OgMbRiNQohk0iwuV4EqhmJT95c
+ TL7Dj0R0hvtLpqLjGXqOnX2JxyUNjb1VNreyazNmXba0r7X/A7x0AngQlG2mDncqYbjv
+ MKL7MJahO7kX+N6DOwab2YQCdJAebAqkMM889B1ptbhpozqx5xAFcNOv1bfIXVOPXnLD
+ HOM3OC9CKYj7YvvzNEu3+iUWezrmS7qIyZ2nhDMIkFUBVjVWOzlfn+N3mOeVU3kwGDa7 Gw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2vek4qst9v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Oct 2019 09:03:34 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9A8qnRm078254;
+        Thu, 10 Oct 2019 09:03:33 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2vhrxd95p0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Oct 2019 09:03:33 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9A93WcV021873;
+        Thu, 10 Oct 2019 09:03:32 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 10 Oct 2019 02:03:31 -0700
+Date:   Thu, 10 Oct 2019 12:03:23 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Wambui Karuga <wambui.karugax@gmail.com>
+Cc:     outreachy-kernel@googlegroups.com, devel@driverdev.osuosl.org,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] staging: rtl8723bs: Style clean-up in rtw_mlme.c
+Message-ID: <20191010090323.GE20470@kadam>
+References: <cover.1570682635.git.wambui.karugax@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1570682635.git.wambui.karugax@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9405 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=693
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910100082
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9405 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=791 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910100082
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+On Thu, Oct 10, 2019 at 07:49:04AM +0300, Wambui Karuga wrote:
+> This patchset addresses multiple style and formatting issues reported by
+> checkpatch.pl in drivers/staging/rtl8723bs/core/rtw_mlme.c
+> 
+> PATCH v2 of the series corrects the "patchest" mispelling in the
+> original cover letter and provides a clearer subject line.
 
-commit 3ca94192278ca8de169d78c085396c424be123b3 upstream.
+The cover letter isn't stored in the git log so spelling is not
+important.  The original subjects were fine as well.
 
-Reported by syzkaller:
-
-	WARNING: CPU: 0 PID: 6544 at /home/kernel/data/kvm/arch/x86/kvm//vmx/vmx.c:4689 handle_desc+0x37/0x40 [kvm_intel]
-	CPU: 0 PID: 6544 Comm: a.out Tainted: G           OE     5.3.0-rc4+ #4
-	RIP: 0010:handle_desc+0x37/0x40 [kvm_intel]
-	Call Trace:
-	 vmx_handle_exit+0xbe/0x6b0 [kvm_intel]
-	 vcpu_enter_guest+0x4dc/0x18d0 [kvm]
-	 kvm_arch_vcpu_ioctl_run+0x407/0x660 [kvm]
-	 kvm_vcpu_ioctl+0x3ad/0x690 [kvm]
-	 do_vfs_ioctl+0xa2/0x690
-	 ksys_ioctl+0x6d/0x80
-	 __x64_sys_ioctl+0x1a/0x20
-	 do_syscall_64+0x74/0x720
-	 entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-When CR4.UMIP is set, guest should have UMIP cpuid flag. Current
-kvm set_sregs function doesn't have such check when userspace inputs
-sregs values. SECONDARY_EXEC_DESC is enabled on writes to CR4.UMIP
-in vmx_set_cr4 though guest doesn't have UMIP cpuid flag. The testcast
-triggers handle_desc warning when executing ltr instruction since
-guest architectural CR4 doesn't set UMIP. This patch fixes it by
-adding valid CR4 and CPUID combination checking in __set_sregs.
-
-syzkaller source: https://syzkaller.appspot.com/x/repro.c?x=138efb99600000
-
-Reported-by: syzbot+0f1819555fbdce992df9@syzkaller.appspotmail.com
-Cc: stable@vger.kernel.org
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/x86/kvm/x86.c |   38 +++++++++++++++++++++-----------------
- 1 file changed, 21 insertions(+), 17 deletions(-)
-
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -884,34 +884,42 @@ int kvm_set_xcr(struct kvm_vcpu *vcpu, u
- }
- EXPORT_SYMBOL_GPL(kvm_set_xcr);
- 
--int kvm_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
-+static int kvm_valid_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
- {
--	unsigned long old_cr4 = kvm_read_cr4(vcpu);
--	unsigned long pdptr_bits = X86_CR4_PGE | X86_CR4_PSE | X86_CR4_PAE |
--				   X86_CR4_SMEP | X86_CR4_SMAP | X86_CR4_PKE;
--
- 	if (cr4 & CR4_RESERVED_BITS)
--		return 1;
-+		return -EINVAL;
- 
- 	if (!guest_cpuid_has(vcpu, X86_FEATURE_XSAVE) && (cr4 & X86_CR4_OSXSAVE))
--		return 1;
-+		return -EINVAL;
- 
- 	if (!guest_cpuid_has(vcpu, X86_FEATURE_SMEP) && (cr4 & X86_CR4_SMEP))
--		return 1;
-+		return -EINVAL;
- 
- 	if (!guest_cpuid_has(vcpu, X86_FEATURE_SMAP) && (cr4 & X86_CR4_SMAP))
--		return 1;
-+		return -EINVAL;
- 
- 	if (!guest_cpuid_has(vcpu, X86_FEATURE_FSGSBASE) && (cr4 & X86_CR4_FSGSBASE))
--		return 1;
-+		return -EINVAL;
- 
- 	if (!guest_cpuid_has(vcpu, X86_FEATURE_PKU) && (cr4 & X86_CR4_PKE))
--		return 1;
-+		return -EINVAL;
- 
- 	if (!guest_cpuid_has(vcpu, X86_FEATURE_LA57) && (cr4 & X86_CR4_LA57))
--		return 1;
-+		return -EINVAL;
- 
- 	if (!guest_cpuid_has(vcpu, X86_FEATURE_UMIP) && (cr4 & X86_CR4_UMIP))
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+int kvm_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
-+{
-+	unsigned long old_cr4 = kvm_read_cr4(vcpu);
-+	unsigned long pdptr_bits = X86_CR4_PGE | X86_CR4_PSE | X86_CR4_PAE |
-+				   X86_CR4_SMEP | X86_CR4_SMAP | X86_CR4_PKE;
-+
-+	if (kvm_valid_cr4(vcpu, cr4))
- 		return 1;
- 
- 	if (is_long_mode(vcpu)) {
-@@ -8598,10 +8606,6 @@ EXPORT_SYMBOL_GPL(kvm_task_switch);
- 
- static int kvm_valid_sregs(struct kvm_vcpu *vcpu, struct kvm_sregs *sregs)
- {
--	if (!guest_cpuid_has(vcpu, X86_FEATURE_XSAVE) &&
--			(sregs->cr4 & X86_CR4_OSXSAVE))
--		return  -EINVAL;
--
- 	if ((sregs->efer & EFER_LME) && (sregs->cr0 & X86_CR0_PG)) {
- 		/*
- 		 * When EFER.LME and CR0.PG are set, the processor is in
-@@ -8620,7 +8624,7 @@ static int kvm_valid_sregs(struct kvm_vc
- 			return -EINVAL;
- 	}
- 
--	return 0;
-+	return kvm_valid_cr4(vcpu, sregs->cr4);
- }
- 
- static int __set_sregs(struct kvm_vcpu *vcpu, struct kvm_sregs *sregs)
-
+regards,
+dan carpenter
 
