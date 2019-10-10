@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4A0C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08262C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AA9F2190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD0BD208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:46:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697176;
-	bh=ULwYx4Q1NCG16srlI3fJS7zmEXdK3GkZILdEY+2LNlY=;
+	s=default; t=1570697179;
+	bh=SpB5N8pAkIuM01uVBkL7NmZpdTQQGJm7TotlPNgVfMM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FcyeO+Cl6Jsfe8LW7UUB+AHvaD4bfJL7a8KWdEDGggYkurUSJMUzHGDEboWnjXMk2
-	 jDAVvnzeczHC9G0dMu84PAyrCYCOKnlmWBfEJmdDpFQ4KroDVKOVonSKqOKit5grDa
-	 Sax2uMZSnvZyzXJk+7eP2WUoqtmduYl9LjPGa//I=
+	b=IQj8bYj1B+miMRbZkgmi+bBlzHvdqSt/iR4Tz7YqEnuU76lQjHByOC/fCrHHzpzct
+	 1HJR85gXaXo3ocTwCUD/IeSvHiNOB0qa1SqJPo09Tr9pKP2xrR38vznc48E8KKXcKf
+	 TCCweaQbQKV8RlmRR+UYX6Q1CSCTgMNUaqpmVs5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389293AbfJJIqO (ORCPT
+        id S2389297AbfJJIqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:46:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51980 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:46:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389269AbfJJIqM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:46:12 -0400
+        id S2389287AbfJJIqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:46:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0384208C3;
-        Thu, 10 Oct 2019 08:46:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E393208C3;
+        Thu, 10 Oct 2019 08:46:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697171;
-        bh=ULwYx4Q1NCG16srlI3fJS7zmEXdK3GkZILdEY+2LNlY=;
+        s=default; t=1570697173;
+        bh=SpB5N8pAkIuM01uVBkL7NmZpdTQQGJm7TotlPNgVfMM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B+72YhTuXkOp0DgnemKSAuUU3HRntgcmL0y9by+U3Nd5505MZXOXsiWrBzbOV4VV8
-         Ayr/K2JZTqb9I5U0sv5xmoCUgRb4+6BPkK5DaqUgcG7VJ9eF3q9br6eFJjLnyoT88S
-         kxWOey4vGY8x61OV1gM+dmBR/pa8ctuKDHduOwgs=
+        b=U0HKMwo21tj1eSp1Th02HoYp0BpXjx4pJuFcY/oHGZ0bEzYZrLTymxqpRCyjeyDyQ
+         GvNzXu/THQ1yKORCibFy1/a2Fy0LKsOY13GAVcYn7UOzfxEKLJy6q9seHzOpu+Sgby
+         p1MZYSGXhB63PhwxEMo/vx9J6BXJ58rvEfpQFjO8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Adam Ford <aford173@gmail.com>, Jyri Sarha <jsarha@ti.com>
-Subject: [PATCH 4.19 037/114] drm/omap: fix max fclk divider for omap36xx
-Date:   Thu, 10 Oct 2019 10:35:44 +0200
-Message-Id: <20191010083603.611123885@linuxfoundation.org>
+        stable@vger.kernel.org, Sebastian Ott <sebott@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 4.19 046/114] s390/cio: avoid calling strlen on null pointer
+Date:   Thu, 10 Oct 2019 10:35:53 +0200
+Message-Id: <20191010083607.728156732@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -59,42 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-commit e2c4ed148cf3ec8669a1d90dc66966028e5fad70 upstream.
+commit ea298e6ee8b34b3ed4366be7eb799d0650ebe555 upstream.
 
-The OMAP36xx and AM/DM37x TRMs say that the maximum divider for DSS fclk
-(in CM_CLKSEL_DSS) is 32. Experimentation shows that this is not
-correct, and using divider of 32 breaks DSS with a flood or underflows
-and sync losts. Dividers up to 31 seem to work fine.
+Fix the following kasan finding:
+BUG: KASAN: global-out-of-bounds in ccwgroup_create_dev+0x850/0x1140
+Read of size 1 at addr 0000000000000000 by task systemd-udevd.r/561
 
-There is another patch to the DT files to limit the divider correctly,
-but as the DSS driver also needs to know the maximum divider to be able
-to iteratively find good rates, we also need to do the fix in the DSS
-driver.
+CPU: 30 PID: 561 Comm: systemd-udevd.r Tainted: G    B
+Hardware name: IBM 3906 M04 704 (LPAR)
+Call Trace:
+([<0000000231b3db7e>] show_stack+0x14e/0x1a8)
+ [<0000000233826410>] dump_stack+0x1d0/0x218
+ [<000000023216fac4>] print_address_description+0x64/0x380
+ [<000000023216f5a8>] __kasan_report+0x138/0x168
+ [<00000002331b8378>] ccwgroup_create_dev+0x850/0x1140
+ [<00000002332b618a>] group_store+0x3a/0x50
+ [<00000002323ac706>] kernfs_fop_write+0x246/0x3b8
+ [<00000002321d409a>] vfs_write+0x132/0x450
+ [<00000002321d47da>] ksys_write+0x122/0x208
+ [<0000000233877102>] system_call+0x2a6/0x2c8
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Adam Ford <aford173@gmail.com>
+Triggered by:
+openat(AT_FDCWD, "/sys/bus/ccwgroup/drivers/qeth/group",
+		O_WRONLY|O_CREAT|O_TRUNC|O_CLOEXEC, 0666) = 16
+write(16, "0.0.bd00,0.0.bd01,0.0.bd02", 26) = 26
+
+The problem is that __get_next_id in ccwgroup_create_dev might set "buf"
+buffer pointer to NULL and explicit check for that is required.
+
 Cc: stable@vger.kernel.org
-Link: https://patchwork.freedesktop.org/patch/msgid/20191002122542.8449-1-tomi.valkeinen@ti.com
-Tested-by: Adam Ford <aford173@gmail.com>
-Reviewed-by: Jyri Sarha <jsarha@ti.com>
+Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/omapdrm/dss/dss.c |    2 +-
+ drivers/s390/cio/ccwgroup.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/omapdrm/dss/dss.c
-+++ b/drivers/gpu/drm/omapdrm/dss/dss.c
-@@ -1110,7 +1110,7 @@ static const struct dss_features omap34x
- 
- static const struct dss_features omap3630_dss_feats = {
- 	.model			=	DSS_MODEL_OMAP3,
--	.fck_div_max		=	32,
-+	.fck_div_max		=	31,
- 	.fck_freq_max		=	173000000,
- 	.dss_fck_multiplier	=	1,
- 	.parent_clk_name	=	"dpll4_ck",
+--- a/drivers/s390/cio/ccwgroup.c
++++ b/drivers/s390/cio/ccwgroup.c
+@@ -372,7 +372,7 @@ int ccwgroup_create_dev(struct device *p
+ 		goto error;
+ 	}
+ 	/* Check for trailing stuff. */
+-	if (i == num_devices && strlen(buf) > 0) {
++	if (i == num_devices && buf && strlen(buf) > 0) {
+ 		rc = -EINVAL;
+ 		goto error;
+ 	}
 
 
