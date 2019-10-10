@@ -4,56 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECDAECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 088C1C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7896D2067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8A7A2190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:02:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570698133;
-	bh=/XgYEavpy/3HYlm+L0OW095hxFwEFZ4l1yMxKgRX3EQ=;
+	s=default; t=1570698141;
+	bh=ZJWDCC2fU/a/3yXYhKk3XyY44xVH0QvR1aJCNfPUzJc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z1jrdyP8EcMO+/laTeGbq7lCu/YS5uxbJPFiQTKqIiNl+KQrb4wdrfcRpqgqenQ5Z
-	 eFSx2hd39pKucxu+TEqV7iCa3BZuQGb5oarBZY/qaTmihkyq0tyQPzeYGF29z8BYos
-	 u91VGByJ6ZDic4UJRWjLTz6OxRF7Oafixd/XUbqw=
+	b=ORtqZ/RrclOqI2zwUOohmcJygco37csjfp7QDHziBOVzoITOJzSbo/5hSmP+NG3y2
+	 m9vEth7J+cgFaH2VsBB6yr//NE+LkRIH8nwtCHmV6aBNdurliEbM5HnD1hABdv2Eb+
+	 uwmJZ8cIMn+UnAwga960/EFLEjWTrza5oKBNgimU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388095AbfJJIkZ (ORCPT
+        id S2388019AbfJJIkD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:40:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44454 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:40:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387411AbfJJIkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:40:23 -0400
+        id S1733089AbfJJIj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:39:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58B2F21A4C;
-        Thu, 10 Oct 2019 08:40:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF3E520B7C;
+        Thu, 10 Oct 2019 08:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696821;
-        bh=/XgYEavpy/3HYlm+L0OW095hxFwEFZ4l1yMxKgRX3EQ=;
+        s=default; t=1570696797;
+        bh=ZJWDCC2fU/a/3yXYhKk3XyY44xVH0QvR1aJCNfPUzJc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vnF/BVoUvbKn+ubGm8sDbwpfq9gaf0Xyc4KFD282Hot/BP4kXlk4Ea3wx72xpBGHi
-         VuDBf9HsBFFOZ4MZ8jN/qoqcYLZP+s1pqgzF1coKNRxlvQdj5nyYM0wtnTyEwLUJZ0
-         HGm1Sa8yz/PSfUOdCIJ5t2k3oN4gpsrQANGYkj00=
+        b=UAOSjTg0LNYa9RG+++67/I9oojVCtNLnNMURXR581PwutS2Kz+kjUmWxA6F0RfaUO
+         nE4WtACxJ1wusOiCedru/+nBNQBomPOLNL1sccGDUt5zuVQh/sWlzTAB/5F1XFmS9I
+         HT0NIxoBiHeXeA2bNq7zKC8tbOs69ZvFvWrAAO88=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilia Mirkin <imirkin@alum.mit.edu>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        =?UTF-8?q?Michel=20D=C3=A4nzer?= <michel@daenzer.net>,
-        Alex Deucher <alexdeucher@gmail.com>,
-        Adam Jackson <ajax@redhat.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Rob Clark <robdclark@gmail.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Subject: [PATCH 5.3 064/148] drm/atomic: Take the atomic toys away from X
-Date:   Thu, 10 Oct 2019 10:35:25 +0200
-Message-Id: <20191010083615.346318040@linuxfoundation.org>
+        stable@vger.kernel.org, Sumit Saxena <sumit.saxena@broadcom.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
+Subject: [PATCH 5.3 056/148] PCI: Restore Resizable BAR size bits correctly for 1MB BARs
+Date:   Thu, 10 Oct 2019 10:35:17 +0200
+Message-Id: <20191010083614.542332247@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -66,73 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Vetter <daniel.vetter@ffwll.ch>
+From: Sumit Saxena <sumit.saxena@broadcom.com>
 
-commit 26b1d3b527e7bf3e24b814d617866ac5199ce68d upstream.
+commit d2182b2d4b71ff0549a07f414d921525fade707b upstream.
 
-The -modesetting ddx has a totally broken idea of how atomic works:
-- doesn't disable old connectors, assuming they get auto-disable like
-  with the legacy setcrtc
-- assumes ASYNC_FLIP is wired through for the atomic ioctl
-- not a single call to TEST_ONLY
+In a Resizable BAR Control Register, bits 13:8 control the size of the BAR.
+The encoded values of these bits are as follows (see PCIe r5.0, sec
+7.8.6.3):
 
-Iow the implementation is a 1:1 translation of legacy ioctls to
-atomic, which is a) broken b) pointless.
+  Value    BAR size
+     0     1 MB (2^20 bytes)
+     1     2 MB (2^21 bytes)
+     2     4 MB (2^22 bytes)
+   ...
+    43     8 EB (2^63 bytes)
 
-We already have bugs in both i915 and amdgpu-DC where this prevents us
-from enabling neat features.
+Previously we incorrectly set the BAR size bits for a 1 MB BAR to 0x1f
+instead of 0, so devices that support that size, e.g., new megaraid_sas and
+mpt3sas adapters, fail to initialize during resume from S3 sleep.
 
-If anyone ever cares about atomic in X we can easily add a new atomic
-level (req->value == 2) for X to get back the shiny toys.
+Correctly calculate the BAR size bits for Resizable BAR control registers.
 
-Since these broken versions of -modesetting have been shipping,
-there's really no other way to get out of this bind.
-
-v2:
-- add an informational dmesg output (Rob, Ajax)
-- reorder after the DRIVER_ATOMIC check to avoid useless noise (Ilia)
-- allow req->value > 2 so that X can do another attempt at atomic in
-  the future
-
-v3: Go with paranoid, insist that the X should be first (suggested by
-Rob)
-
-Cc: Ilia Mirkin <imirkin@alum.mit.edu>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Reviewed-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com> (v1)
-Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com> (v1)
-Cc: Michel Dänzer <michel@daenzer.net>
-Cc: Alex Deucher <alexdeucher@gmail.com>
-Cc: Adam Jackson <ajax@redhat.com>
-Acked-by: Adam Jackson <ajax@redhat.com>
-Cc: Sean Paul <sean@poorly.run>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Rob Clark <robdclark@gmail.com>
-Acked-by: Rob Clark <robdclark@gmail.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190905185318.31363-1-daniel.vetter@ffwll.ch
+Link: https://lore.kernel.org/r/20190725192552.24295-1-sumit.saxena@broadcom.com
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203939
+Fixes: d3252ace0bc6 ("PCI: Restore resized BAR state on resume")
+Signed-off-by: Sumit Saxena <sumit.saxena@broadcom.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Cc: stable@vger.kernel.org	# v4.19+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/drm_ioctl.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/pci/pci.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/drm_ioctl.c
-+++ b/drivers/gpu/drm/drm_ioctl.c
-@@ -336,7 +336,12 @@ drm_setclientcap(struct drm_device *dev,
- 	case DRM_CLIENT_CAP_ATOMIC:
- 		if (!drm_core_check_feature(dev, DRIVER_ATOMIC))
- 			return -EOPNOTSUPP;
--		if (req->value > 1)
-+		/* The modesetting DDX has a totally broken idea of atomic. */
-+		if (current->comm[0] == 'X' && req->value == 1) {
-+			pr_info("broken atomic modeset userspace detected, disabling atomic\n");
-+			return -EOPNOTSUPP;
-+		}
-+		if (req->value > 2)
- 			return -EINVAL;
- 		file_priv->atomic = req->value;
- 		file_priv->universal_planes = req->value;
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1443,7 +1443,7 @@ static void pci_restore_rebar_state(stru
+ 		pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
+ 		bar_idx = ctrl & PCI_REBAR_CTRL_BAR_IDX;
+ 		res = pdev->resource + bar_idx;
+-		size = order_base_2((resource_size(res) >> 20) | 1) - 1;
++		size = ilog2(resource_size(res)) - 20;
+ 		ctrl &= ~PCI_REBAR_CTRL_BAR_SIZE;
+ 		ctrl |= size << PCI_REBAR_CTRL_BAR_SHIFT;
+ 		pci_write_config_dword(pdev, pos + PCI_REBAR_CTRL, ctrl);
 
 
