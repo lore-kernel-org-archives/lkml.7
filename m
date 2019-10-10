@@ -2,277 +2,251 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0770C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4ABFC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1A7120B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A06DB208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:29:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Buhty/DM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="s+ewWJ1a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733254AbfJJMYx (ORCPT
+        id S1733139AbfJJM3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 08:24:53 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:47055 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1733010AbfJJMYx (ORCPT
+        Thu, 10 Oct 2019 08:29:13 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55404 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728172AbfJJM3N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 08:24:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1570710290;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Z1PiOTpfKA6S0H6nQpCOs61aSj3VGg1/5P4RB8zuLvo=;
-        b=Buhty/DMhVQKEN9I6bGn59Icvyj7Gje1rLRQtKryrsfDYjheIKlT+5EFD7CPKdIXv56CqL
-        2QXC6g/44lv6g8gnGEpIkYWR3CApNcEns33bmXh/6RQHjws9TIdvjQ929a0MyelMq4Fm1H
-        xzY7XrmUOaCUuRFAnrxasYEfGcYSvIE=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-137-0hc7sEkwN0OPCsefIiQp9w-1; Thu, 10 Oct 2019 08:24:47 -0400
-Received: by mail-qt1-f198.google.com with SMTP id m20so5537480qtq.16
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 05:24:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1+C6ea0hNuFJ0RH805lPfk6alhjeCeIJ9+VYkTTd2Ww=;
-        b=A11fp6cob70Hd20wftdOakgTqFCh3ucQEBTUoP+c3awq3NNUMYxdSHdWO9Zhz1S++P
-         2HkXVVK46Ge10VCYAOX6dt4yFxuw4M7DIU+QG07fMlFFJXzEBqCKc9+ptNlkCDjE0g8Y
-         ZqRw/JSOvhh6Feh7p2LNAfUB+UGvujl1tTdzmjoczM8lktdemjzq0hchCdE6+pxrpYIk
-         w9kW4rBKf/ZoPr2OFthV6M3qUOgf3fKyoPVpjhWqK/AuT9cT56OL7trdGPINx9m0eZUo
-         fBNFwAQ10kPmeg9Ibd6U3K1k5caFZIjxrF0eCIyk4OpaFW3b1mcEN/aruBFHx3GA2Y4H
-         8p1w==
-X-Gm-Message-State: APjAAAWyziBtYOEbezZ8pNiBZYFSzrtFi47+l7FY3e3c4w7nJOrIddb8
-        131c0w42FJf2sN/g1erjeg2yh3FsgYw931s+ngIdDw+qcwunY4lKta/Nb6qOUIxEEvryFqlr/fw
-        1kWSlv6Y1VdJz65kqq+XaiN+4wvxT2alFzR/96A2D
-X-Received: by 2002:a37:648d:: with SMTP id y135mr8958856qkb.459.1570710286659;
-        Thu, 10 Oct 2019 05:24:46 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzkMt3NS82xgyIf0scvKcdLuCY5ChVMQq28kCW69B6P3qMz7wQusBovzbRCTAhZgcV4StFli0LR8QN+ughoOuM=
-X-Received: by 2002:a37:648d:: with SMTP id y135mr8958821qkb.459.1570710286350;
- Thu, 10 Oct 2019 05:24:46 -0700 (PDT)
+        Thu, 10 Oct 2019 08:29:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=cyGuSzlLK8Ww0fG0pIigUmbAo7iv2JCMlIrCcI1UaGw=; b=s+ewWJ1aI+0TvhFWpyoUsiS8j
+        BQ3MdBlHPwvCQPSMpBcX75ijEm1UAiMKA0sclLRnU/HBpyrhRzW7XfExwcxzXdAuxz+rqlUkyzk4K
+        Q6iypNrLimKvAn6+moYHZI7vs7kOh3pPZRfZNYcoWLfirOOnO1+YNu+JwRlzaKWMys+K4C6MiHVVf
+        kZ+LGZfoMZTVawVqs+r3yb8JIE50VcGoPmPQCCOetVeVgNw9edAp0eheyOkiYDCx9FaPN8UmlV2Vr
+        2363XWsvvHe/0Bo2KY71OQ2RmF2VB+TdmzKceHvnOPVtGeW4D5TJoUYSw2kTkBH+mIAQrLEV+ItC4
+        YAKIR6ZGg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iIXZ9-00069s-8n; Thu, 10 Oct 2019 12:29:11 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 461BB301224;
+        Thu, 10 Oct 2019 14:28:17 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4D96C202F4F4F; Thu, 10 Oct 2019 14:29:09 +0200 (CEST)
+Date:   Thu, 10 Oct 2019 14:29:09 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH] ftrace/module: Allow ftrace to make only loaded module
+ text read-write
+Message-ID: <20191010122909.GK2359@hirez.programming.kicks-ass.net>
+References: <20191009223638.60b78727@oasis.local.home>
+ <20191010073121.GN2311@hirez.programming.kicks-ass.net>
+ <20191010093329.GI2359@hirez.programming.kicks-ass.net>
+ <20191010093650.GJ2359@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <1570625609-11083-1-git-send-email-candlesea@gmail.com>
-In-Reply-To: <1570625609-11083-1-git-send-email-candlesea@gmail.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Thu, 10 Oct 2019 14:24:34 +0200
-Message-ID: <CAO-hwJKjZedG6yySDHKQoAmG5DdQ7QPhuaoMN9g0_KmbktD9fA@mail.gmail.com>
-Subject: Re: [PATCH v2] HID: core: check whether usage page item is after
- usage id item
-To:     Candle Sun <candlesea@gmail.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        orson.zhai@unisoc.com,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Candle Sun <candle.sun@unisoc.com>,
-        Nianfu Bai <nianfu.bai@unisoc.com>
-X-MC-Unique: 0hc7sEkwN0OPCsefIiQp9w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191010093650.GJ2359@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 9, 2019 at 2:54 PM Candle Sun <candlesea@gmail.com> wrote:
->
-> From: Candle Sun <candle.sun@unisoc.com>
->
-> Upstream commit 58e75155009c ("HID: core: move Usage Page concatenation
-> to Main item") adds support for Usage Page item after Usage ID items
-> (such as keyboards manufactured by Primax).
->
-> Usage Page concatenation in Main item works well for following report
-> descriptor patterns:
->
->     USAGE_PAGE (Keyboard)                   05 07
->     USAGE_MINIMUM (Keyboard LeftControl)    19 E0
->     USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
->     LOGICAL_MINIMUM (0)                     15 00
->     LOGICAL_MAXIMUM (1)                     25 01
->     REPORT_SIZE (1)                         75 01
->     REPORT_COUNT (8)                        95 08
->     INPUT (Data,Var,Abs)                    81 02
->
-> -------------
->
->     USAGE_MINIMUM (Keyboard LeftControl)    19 E0
->     USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
->     LOGICAL_MINIMUM (0)                     15 00
->     LOGICAL_MAXIMUM (1)                     25 01
->     REPORT_SIZE (1)                         75 01
->     REPORT_COUNT (8)                        95 08
->     USAGE_PAGE (Keyboard)                   05 07
->     INPUT (Data,Var,Abs)                    81 02
->
-> But it makes the parser act wrong for the following report
-> descriptor pattern(such as some Gamepads):
->
->     USAGE_PAGE (Button)                     05 09
->     USAGE (Button 1)                        09 01
->     USAGE (Button 2)                        09 02
->     USAGE (Button 4)                        09 04
->     USAGE (Button 5)                        09 05
->     USAGE (Button 7)                        09 07
->     USAGE (Button 8)                        09 08
->     USAGE (Button 14)                       09 0E
->     USAGE (Button 15)                       09 0F
->     USAGE (Button 13)                       09 0D
->     USAGE_PAGE (Consumer Devices)           05 0C
->     USAGE (Back)                            0a 24 02
->     USAGE (HomePage)                        0a 23 02
->     LOGICAL_MINIMUM (0)                     15 00
->     LOGICAL_MAXIMUM (1)                     25 01
->     REPORT_SIZE (1)                         75 01
->     REPORT_COUNT (11)                       95 0B
->     INPUT (Data,Var,Abs)                    81 02
->
-> With Usage Page concatenation in Main item, parser recognizes all the
-> 11 Usages as consumer keys, it is not the HID device's real intention.
->
-> This patch adds usage_page_last to flag whether Usage Page is after
-> Usage ID items. usage_page_last is false default, it is set as true
-> once Usage Page item is encountered and is reverted by next Usage ID
-> item.
->
-> Usage Page concatenation on the currently defined Usage Page will do
-> firstly in Local parsing when Usage ID items encountered.
->
-> When Main item is parsing, concatenation will do again with last
-> defined Usage Page if usage_page_last flag is true.
->
-> Signed-off-by: Candle Sun <candle.sun@unisoc.com>
-> Signed-off-by: Nianfu Bai <nianfu.bai@unisoc.com>
-> ---
-> Changes in v2:
-> - Update patch title
-> - Add GET_COMPLETE_USAGE macro
-> - Change the logic of checking whether to concatenate usage page again
->   in main parsing
-> ---
->  drivers/hid/hid-core.c | 31 +++++++++++++++++++++++++------
->  include/linux/hid.h    |  1 +
->  2 files changed, 26 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-> index 3eaee2c..3394222 100644
-> --- a/drivers/hid/hid-core.c
-> +++ b/drivers/hid/hid-core.c
-> @@ -35,6 +35,8 @@
->
->  #include "hid-ids.h"
->
-> +#define GET_COMPLETE_USAGE(page, id) (((page) << 16) + ((id) & 0xffff))
-> +
->  /*
->   * Version Information
->   */
-> @@ -221,7 +223,15 @@ static int hid_add_usage(struct hid_parser *parser, =
-unsigned usage, u8 size)
->                 hid_err(parser->device, "usage index exceeded\n");
->                 return -1;
->         }
-> -       parser->local.usage[parser->local.usage_index] =3D usage;
-> +
-> +       if (size <=3D 2) {
-> +               parser->local.usage_page_last =3D false;
-> +               parser->local.usage[parser->local.usage_index] =3D
-> +                       GET_COMPLETE_USAGE(parser->global.usage_page, usa=
-ge);
-> +       } else {
-> +               parser->local.usage[parser->local.usage_index] =3D usage;
-> +       }
-> +
->         parser->local.usage_size[parser->local.usage_index] =3D size;
->         parser->local.collection_index[parser->local.usage_index] =3D
->                 parser->collection_stack_ptr ?
-> @@ -366,6 +376,7 @@ static int hid_parser_global(struct hid_parser *parse=
-r, struct hid_item *item)
->
->         case HID_GLOBAL_ITEM_TAG_USAGE_PAGE:
->                 parser->global.usage_page =3D item_udata(item);
-> +               parser->local.usage_page_last =3D true;
->                 return 0;
->
->         case HID_GLOBAL_ITEM_TAG_LOGICAL_MINIMUM:
-> @@ -543,13 +554,21 @@ static int hid_parser_local(struct hid_parser *pars=
-er, struct hid_item *item)
->   * usage value."
->   */
->
-> -static void hid_concatenate_usage_page(struct hid_parser *parser)
-> +static void hid_concatenate_last_usage_page(struct hid_parser *parser)
->  {
->         int i;
-> +       unsigned int usage;
-> +       unsigned int usage_page =3D parser->global.usage_page;
-> +
-> +       if (!parser->local.usage_page_last)
-> +               return;
->
->         for (i =3D 0; i < parser->local.usage_index; i++)
-> -               if (parser->local.usage_size[i] <=3D 2)
-> -                       parser->local.usage[i] +=3D parser->global.usage_=
-page << 16;
-> +               if (parser->local.usage_size[i] <=3D 2) {
-> +                       usage =3D parser->local.usage[i];
-> +                       parser->local.usage[i] =3D
-> +                               GET_COMPLETE_USAGE(usage_page, usage);
-> +               }
->  }
->
->  /*
-> @@ -561,7 +580,7 @@ static int hid_parser_main(struct hid_parser *parser,=
- struct hid_item *item)
->         __u32 data;
->         int ret;
->
-> -       hid_concatenate_usage_page(parser);
-> +       hid_concatenate_last_usage_page(parser);
->
->         data =3D item_udata(item);
->
-> @@ -772,7 +791,7 @@ static int hid_scan_main(struct hid_parser *parser, s=
-truct hid_item *item)
->         __u32 data;
->         int i;
->
-> -       hid_concatenate_usage_page(parser);
-> +       hid_concatenate_last_usage_page(parser);
->
->         data =3D item_udata(item);
->
-> diff --git a/include/linux/hid.h b/include/linux/hid.h
-> index cd41f20..2e0ea2f7 100644
-> --- a/include/linux/hid.h
-> +++ b/include/linux/hid.h
-> @@ -412,6 +412,7 @@ struct hid_local {
->         unsigned usage_minimum;
->         unsigned delimiter_depth;
->         unsigned delimiter_branch;
-> +       bool usage_page_last;      /* whether usage page is after usage i=
-d */
+On Thu, Oct 10, 2019 at 11:36:50AM +0200, Peter Zijlstra wrote:
+> On Thu, Oct 10, 2019 at 11:33:29AM +0200, Peter Zijlstra wrote:
 
-We don't need that extra flag:
-if you just check on the last element, you can guess that information:
+> > I don't see any reason what so ever..
+> > 
+> > load_module()
+> >   ...
+> >   complete_formation()
+> >     mutex_lock(&module_mutex);
+> >     ...
+> >     module_enable_ro();
+> >     module_enable_nx();
+> >     module_enable_x();
+> > 
+> >     mod->state = MODULE_STATE_COMING;
+> >     mutex_unlock(&module_mutex);
+> > 
+> >   prepare_coming_module()
+> >     ftrace_module_enable();
+> >     ...
+> > 
+> > IOW, we're doing ftrace_module_enable() immediately after we flip it
+> > RO+X. There is nothing in between that we can possibly rely on.
+> > 
+> > I was going to put:
+> > 
+> >   blocking_notifier_call_chain(&module_notify_list,
+> > 			       MODULE_STATE_UNFORMED, mod);
+> > 
+> > right before module_enable_ro(), in complete_formation(), for jump_label
+> > and static_call. It looks like ftrace (and possibly klp) want that too.
+> 
+> Also, you already have ftrace_module_init() right before that. The only
+> thing inbetween ftrace_module_init() and ftrace_module_enable() is
+> verify_exported_symbols() and module_bug_finalize().
+> 
+> Do you really need that for patching stuff?
 
-        if ((parser->local.usage[parser->local.usage_index - 1] &
-HID_USAGE_PAGE) >> 16 =3D=3D usage_page)
-              return 0;
+If you rework the locking slightly, such that you have to call
+ftrace_process_locs() with ftrace_lock already held, then it looks like
+you can squash ftrace_module_enable() right in there.
 
-Let's see the next version before requesting too many changes.
+There is absolutely no fundamental reason you cannot patch it from
+ftrace_module_init().
 
-And yes, I agree I need the hid-tools patches or I will not merge this
-patch (and I will advise Jiri to not take it either).
+Yes, your code is anal about checking the NOPs, so you first have to
+write NOPs before you can write CALLs, if it is enabled. But afaict you
+really can do all that from ftrace_module_init(), as long as you do it
+all under the same ftrace_lock section.
 
-Cheers,
-Benjamin
+If you have two sections, like now, then there is indeed that race that
+ftrace can get enabled in between, and all the confusion that that
+brings.
 
+That is, what's fundamentally buggered about something like this?
+
+---
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 62a50bf399d6..5f7113f100ce 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -5626,6 +5626,48 @@ static int ftrace_process_locs(struct module *mod,
+ 	ftrace_update_code(mod, start_pg);
+ 	if (!mod)
+ 		local_irq_restore(flags);
++
++	if (ftrace_disabled || !mod)
++		goto out_loop;
++
++	do_for_each_ftrace_rec(pg, rec) {
++		int cnt;
++		/*
++		 * do_for_each_ftrace_rec() is a double loop.
++		 * module text shares the pg. If a record is
++		 * not part of this module, then skip this pg,
++		 * which the "break" will do.
++		 */
++		if (!within_module_core(rec->ip, mod) &&
++		    !within_module_init(rec->ip, mod))
++			break;
++
++		cnt = 0;
++
++		/*
++		 * When adding a module, we need to check if tracers are
++		 * currently enabled and if they are, and can trace this record,
++		 * we need to enable the module functions as well as update the
++		 * reference counts for those function records.
++		 */
++		if (ftrace_start_up)
++			cnt += referenced_filters(rec);
++
++		/* This clears FTRACE_FL_DISABLED */
++		rec->flags = cnt;
++
++		if (ftrace_start_up && cnt) {
++			int failed = __ftrace_replace_code(rec, 1);
++			if (failed) {
++				ftrace_bug(failed, rec);
++				goto out_loop;
++			}
++		}
++
++	} while_for_each_ftrace_rec();
++
++ out_loop:
++
+ 	ret = 0;
+  out:
+ 	mutex_unlock(&ftrace_lock);
+@@ -5793,73 +5835,6 @@ void ftrace_release_mod(struct module *mod)
+ 
+ void ftrace_module_enable(struct module *mod)
+ {
+-	struct dyn_ftrace *rec;
+-	struct ftrace_page *pg;
+-
+-	mutex_lock(&ftrace_lock);
+-
+-	if (ftrace_disabled)
+-		goto out_unlock;
+-
+-	/*
+-	 * If the tracing is enabled, go ahead and enable the record.
+-	 *
+-	 * The reason not to enable the record immediately is the
+-	 * inherent check of ftrace_make_nop/ftrace_make_call for
+-	 * correct previous instructions.  Making first the NOP
+-	 * conversion puts the module to the correct state, thus
+-	 * passing the ftrace_make_call check.
+-	 *
+-	 * We also delay this to after the module code already set the
+-	 * text to read-only, as we now need to set it back to read-write
+-	 * so that we can modify the text.
+-	 */
+-	if (ftrace_start_up)
+-		ftrace_arch_code_modify_prepare();
+-
+-	do_for_each_ftrace_rec(pg, rec) {
+-		int cnt;
+-		/*
+-		 * do_for_each_ftrace_rec() is a double loop.
+-		 * module text shares the pg. If a record is
+-		 * not part of this module, then skip this pg,
+-		 * which the "break" will do.
+-		 */
+-		if (!within_module_core(rec->ip, mod) &&
+-		    !within_module_init(rec->ip, mod))
+-			break;
+-
+-		cnt = 0;
+-
+-		/*
+-		 * When adding a module, we need to check if tracers are
+-		 * currently enabled and if they are, and can trace this record,
+-		 * we need to enable the module functions as well as update the
+-		 * reference counts for those function records.
+-		 */
+-		if (ftrace_start_up)
+-			cnt += referenced_filters(rec);
+-
+-		/* This clears FTRACE_FL_DISABLED */
+-		rec->flags = cnt;
+-
+-		if (ftrace_start_up && cnt) {
+-			int failed = __ftrace_replace_code(rec, 1);
+-			if (failed) {
+-				ftrace_bug(failed, rec);
+-				goto out_loop;
+-			}
+-		}
+-
+-	} while_for_each_ftrace_rec();
+-
+- out_loop:
+-	if (ftrace_start_up)
+-		ftrace_arch_code_modify_post_process();
+-
+- out_unlock:
+-	mutex_unlock(&ftrace_lock);
+-
+ 	process_cached_mods(mod->name);
+ }
+ 
