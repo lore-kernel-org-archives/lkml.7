@@ -7,52 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B016DC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C64C6C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:48:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B94421BE5
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:48:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E13921BE5
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:48:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697323;
-	bh=4jbZCZ8oCBzOUrTMKx+74Dexkyj4kfRpRIGLN0rEjmc=;
+	s=default; t=1570697329;
+	bh=IyVvloWswiwb0rHjj5ssPaCzfOBHQsDBo6CZ5n2dG7o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tL4ZD9wMIhhdecw3/P5fgCXJ9gaAALsh/uPJCpTQtaQYUkeh48vrOKEid2L8NjMXF
-	 /byH8alFe4DSqtWVNs0+FUL/V5PzH+lTAi0f5BX3t8xvZvT5H9Z7KvVE8C83kjti/v
-	 0+MbM/hbm1sodDxLZZyhMduWMtkYmPibkQFgRMM8=
+	b=pI+OtHi+VANsDSUKv6jCOYZByIp3BdSKtU+ajytzJ3nruP3NcNzNfzTeHBpId/vjP
+	 sFTfSIVm5xRu64z1DqymZyhtQGf2gQ9zpW+DCbdzX0psZJPCVWt2NMrm3YcfAiA4uX
+	 XRoBU7m35K6KSwaQBx6+1GRDc68JIL8A/AmzQBvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389153AbfJJIsl (ORCPT
+        id S2388114AbfJJIsr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:48:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54788 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:48:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389658AbfJJIse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:48:34 -0400
+        id S2389157AbfJJIsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:48:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F784208C3;
-        Thu, 10 Oct 2019 08:48:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B833121929;
+        Thu, 10 Oct 2019 08:48:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697313;
-        bh=4jbZCZ8oCBzOUrTMKx+74Dexkyj4kfRpRIGLN0rEjmc=;
+        s=default; t=1570697321;
+        bh=IyVvloWswiwb0rHjj5ssPaCzfOBHQsDBo6CZ5n2dG7o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iJkcT+Dg1vW7lj80N7aFhcRb3sFQDen8O6inhgjBwytA1s5ANu6arEII9sjOY+DlM
-         rLHkOiZwqRxnoHau3Gn3pnAolNLsk5Kkln1sfWjt+M1fQflhvtO3P+ngwHiTX1Jpoa
-         0yWso3NtVvFdBlQhCRHIwBVPCyVUl2uflzFlu+Pw=
+        b=siq/iEVaQlSVNtjn/p3JBKEpbkKzNDmrrbS7Dr4V1H7jjz8KRLH4VupRd166e8NFu
+         Vwb73Y4t4AicllntYTo4FFd15md9UrqbGoHVjsb4/D99gUkNfK1Lf9rcs5a++o0PNI
+         MqBk/LxYP9i3uN1NrsznUHgYLT6pOprpY7G/ahxs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Jeremy Linton <jeremy.linton@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
         Andre Przywara <andre.przywara@arm.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Stefan Wahren <stefan.wahren@i2se.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
         Will Deacon <will.deacon@arm.com>,
         Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: [PATCH 4.19 097/114] arm64: Provide a command line to disable spectre_v2 mitigation
-Date:   Thu, 10 Oct 2019 10:36:44 +0200
-Message-Id: <20191010083613.292731617@linuxfoundation.org>
+Subject: [PATCH 4.19 100/114] arm64: add sysfs vulnerability show for spectre-v2
+Date:   Thu, 10 Oct 2019 10:36:47 +0200
+Message-Id: <20191010083613.477591447@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -67,71 +65,87 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jeremy Linton <jeremy.linton@arm.com>
 
-[ Upstream commit e5ce5e7267ddcbe13ab9ead2542524e1b7993e5a ]
+[ Upstream commit d2532e27b5638bb2e2dd52b80b7ea2ec65135377 ]
 
-There are various reasons, such as benchmarking, to disable spectrev2
-mitigation on a machine. Provide a command-line option to do so.
+Track whether all the cores in the machine are vulnerable to Spectre-v2,
+and whether all the vulnerable cores have been mitigated. We then expose
+this information to userspace via sysfs.
 
 Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 Reviewed-by: Andre Przywara <andre.przywara@arm.com>
 Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
 Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org
 Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- Documentation/admin-guide/kernel-parameters.txt |    8 ++++----
- arch/arm64/kernel/cpu_errata.c                  |   13 +++++++++++++
- 2 files changed, 17 insertions(+), 4 deletions(-)
+ arch/arm64/kernel/cpu_errata.c |   27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
 
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -2866,10 +2866,10 @@
- 			(bounds check bypass). With this option data leaks
- 			are possible in the system.
- 
--	nospectre_v2	[X86,PPC_FSL_BOOK3E] Disable all mitigations for the Spectre variant 2
--			(indirect branch prediction) vulnerability. System may
--			allow data leaks with this option, which is equivalent
--			to spectre_v2=off.
-+	nospectre_v2	[X86,PPC_FSL_BOOK3E,ARM64] Disable all mitigations for
-+			the Spectre variant 2 (indirect branch prediction)
-+			vulnerability. System may allow data leaks with this
-+			option.
- 
- 	nospec_store_bypass_disable
- 			[HW] Disable all mitigations for the Speculative Store Bypass vulnerability
 --- a/arch/arm64/kernel/cpu_errata.c
 +++ b/arch/arm64/kernel/cpu_errata.c
-@@ -189,6 +189,14 @@ static void qcom_link_stack_sanitization
- 		     : "=&r" (tmp));
- }
+@@ -480,6 +480,10 @@ has_cortex_a76_erratum_1463225(const str
+ 	.type = ARM64_CPUCAP_LOCAL_CPU_ERRATUM,			\
+ 	CAP_MIDR_RANGE_LIST(midr_list)
  
-+static bool __nospectre_v2;
-+static int __init parse_nospectre_v2(char *str)
-+{
-+	__nospectre_v2 = true;
-+	return 0;
-+}
-+early_param("nospectre_v2", parse_nospectre_v2);
++/* Track overall mitigation state. We are only mitigated if all cores are ok */
++static bool __hardenbp_enab = true;
++static bool __spectrev2_safe = true;
 +
- static void
- enable_smccc_arch_workaround_1(const struct arm64_cpu_capabilities *entry)
+ /*
+  * Generic helper for handling capabilties with multiple (match,enable) pairs
+  * of call backs, sharing the same capability bit.
+@@ -522,6 +526,10 @@ static const struct midr_range spectre_v
+ 	{ /* sentinel */ }
+ };
+ 
++/*
++ * Track overall bp hardening for all heterogeneous cores in the machine.
++ * We are only considered "safe" if all booted cores are known safe.
++ */
+ static bool __maybe_unused
+ check_branch_predictor(const struct arm64_cpu_capabilities *entry, int scope)
  {
-@@ -200,6 +208,11 @@ enable_smccc_arch_workaround_1(const str
- 	if (!entry->matches(entry, SCOPE_LOCAL_CPU))
- 		return;
+@@ -543,6 +551,8 @@ check_branch_predictor(const struct arm6
+ 	if (!need_wa)
+ 		return false;
  
-+	if (__nospectre_v2) {
-+		pr_info_once("spectrev2 mitigation disabled by command line option\n");
-+		return;
-+	}
++	__spectrev2_safe = false;
 +
- 	if (psci_ops.smccc_version == SMCCC_VERSION_1_0)
- 		return;
+ 	if (!IS_ENABLED(CONFIG_HARDEN_BRANCH_PREDICTOR)) {
+ 		pr_warn_once("spectrev2 mitigation disabled by kernel configuration\n");
+ 		__hardenbp_enab = false;
+@@ -552,11 +562,14 @@ check_branch_predictor(const struct arm6
+ 	/* forced off */
+ 	if (__nospectre_v2) {
+ 		pr_info_once("spectrev2 mitigation disabled by command line option\n");
++		__hardenbp_enab = false;
+ 		return false;
+ 	}
  
+-	if (need_wa < 0)
++	if (need_wa < 0) {
+ 		pr_warn_once("ARM_SMCCC_ARCH_WORKAROUND_1 missing from firmware\n");
++		__hardenbp_enab = false;
++	}
+ 
+ 	return (need_wa > 0);
+ }
+@@ -753,3 +766,15 @@ ssize_t cpu_show_spectre_v1(struct devic
+ {
+ 	return sprintf(buf, "Mitigation: __user pointer sanitization\n");
+ }
++
++ssize_t cpu_show_spectre_v2(struct device *dev, struct device_attribute *attr,
++		char *buf)
++{
++	if (__spectrev2_safe)
++		return sprintf(buf, "Not affected\n");
++
++	if (__hardenbp_enab)
++		return sprintf(buf, "Mitigation: Branch predictor hardening\n");
++
++	return sprintf(buf, "Vulnerable\n");
++}
 
 
