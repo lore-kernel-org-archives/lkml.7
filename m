@@ -2,57 +2,52 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B13B7C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF1B9C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F06B20679
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:53:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96F522064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:53:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697624;
-	bh=kgzfr/vRrO0hm5BZsVAdICd2cayTt5lbLSD11QS0AvY=;
+	s=default; t=1570697629;
+	bh=6xA0OjtMQAkM6FlhW2SATp8wTFV1qQGzpiLWe71Hg/Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PLpur5v+SfYLIQKFoAFTw0iGSRZrYwl/l2fQvVuXiEYYvRh68w0TLxFanRSpCAej+
-	 anLMRcNaIBEHiSTS0qoa3U5Lo8ghjro1R878vAXxYU0H3ehZuky7J6NO/ipAeQ93gJ
-	 PxQLQdheEqVqkdKqWIeX8l/5bJHIb03+qI0BAC2I=
+	b=lJYdQe0+E7eWoSviKF32qKZuRDvBn9qZrV1pb3VJC3UBaP5PvFX8cDy3uC2WIdmt4
+	 SU/ccr350YzmQuVFOajLMrOJyES1HjThGKw5GsnDcAVhzzdWghDa+Y8krIKZ9FHbwH
+	 /qBR7EC+7AEsCVvTDwWhMIhWK17bWRHnCYFjGh4I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389656AbfJJIxn (ORCPT
+        id S2389729AbfJJIxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:53:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58888 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:53:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390107AbfJJIvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:51:25 -0400
+        id S2388950AbfJJIvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:51:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52F5021D71;
-        Thu, 10 Oct 2019 08:51:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F33012190F;
+        Thu, 10 Oct 2019 08:51:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697484;
-        bh=kgzfr/vRrO0hm5BZsVAdICd2cayTt5lbLSD11QS0AvY=;
+        s=default; t=1570697479;
+        bh=6xA0OjtMQAkM6FlhW2SATp8wTFV1qQGzpiLWe71Hg/Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R8WMB8Wn21QgiP3Kkqc1MNlLnYDL8ZGrprA4Fu3GrQ6tZr8EGG3ngX4W3ZQZZXK/T
-         z46woI9BwY+rIzhdCn+hzKAhb+U7gL3ppKJpHeQqdHfSvYgVZ50A1z4ztZIUuOBF/o
-         v03TpnDiz6JoRFw5lpvMADvAFlENP7IFZg1HpV5s=
+        b=0NbIfEnhUUo7grUWfRZ0f7wp0ksz/hyDhW+QzIdAT/8dnLdDKc+3AhPrR/XsP221y
+         n22WCCbuPZyyteyPDlVD05hDUnHvNffUKfse2wMjj/Py21RCGgjIozKWntJ9aOYWJq
+         1TEgcagZiXr0ge/DPl58/n9our7XSAorzQjT4qkU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 44/61] perf unwind: Fix libunwind build failure on i386 systems
-Date:   Thu, 10 Oct 2019 10:37:09 +0200
-Message-Id: <20191010083517.704814108@linuxfoundation.org>
+        stable@vger.kernel.org, James Dingwall <james@dingwall.me.uk>,
+        Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Subject: [PATCH 4.14 25/61] xen/xenbus: fix self-deadlock after killing user process
+Date:   Thu, 10 Oct 2019 10:36:50 +0200
+Message-Id: <20191010083504.679557065@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083449.500442342@linuxfoundation.org>
 References: <20191010083449.500442342@linuxfoundation.org>
@@ -65,51 +60,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Juergen Gross <jgross@suse.com>
 
-[ Upstream commit 26acf400d2dcc72c7e713e1f55db47ad92010cc2 ]
+commit a8fabb38525c51a094607768bac3ba46b3f4a9d5 upstream.
 
-Naresh Kamboju reported, that on the i386 build pr_err()
-doesn't get defined properly due to header ordering:
+In case a user process using xenbus has open transactions and is killed
+e.g. via ctrl-C the following cleanup of the allocated resources might
+result in a deadlock due to trying to end a transaction in the xenbus
+worker thread:
 
-  perf-in.o: In function `libunwind__x86_reg_id':
-  tools/perf/util/libunwind/../../arch/x86/util/unwind-libunwind.c:109:
-  undefined reference to `pr_err'
+[ 2551.474706] INFO: task xenbus:37 blocked for more than 120 seconds.
+[ 2551.492215]       Tainted: P           OE     5.0.0-29-generic #5
+[ 2551.510263] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[ 2551.528585] xenbus          D    0    37      2 0x80000080
+[ 2551.528590] Call Trace:
+[ 2551.528603]  __schedule+0x2c0/0x870
+[ 2551.528606]  ? _cond_resched+0x19/0x40
+[ 2551.528632]  schedule+0x2c/0x70
+[ 2551.528637]  xs_talkv+0x1ec/0x2b0
+[ 2551.528642]  ? wait_woken+0x80/0x80
+[ 2551.528645]  xs_single+0x53/0x80
+[ 2551.528648]  xenbus_transaction_end+0x3b/0x70
+[ 2551.528651]  xenbus_file_free+0x5a/0x160
+[ 2551.528654]  xenbus_dev_queue_reply+0xc4/0x220
+[ 2551.528657]  xenbus_thread+0x7de/0x880
+[ 2551.528660]  ? wait_woken+0x80/0x80
+[ 2551.528665]  kthread+0x121/0x140
+[ 2551.528667]  ? xb_read+0x1d0/0x1d0
+[ 2551.528670]  ? kthread_park+0x90/0x90
+[ 2551.528673]  ret_from_fork+0x35/0x40
 
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fix this by doing the cleanup via a workqueue instead.
+
+Reported-by: James Dingwall <james@dingwall.me.uk>
+Fixes: fd8aa9095a95c ("xen: optimize xenbus driver for multiple concurrent xenstore accesses")
+Cc: <stable@vger.kernel.org> # 4.11
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- tools/perf/arch/x86/util/unwind-libunwind.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/xen/xenbus/xenbus_dev_frontend.c |   20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/arch/x86/util/unwind-libunwind.c b/tools/perf/arch/x86/util/unwind-libunwind.c
-index 05920e3edf7a7..47357973b55b2 100644
---- a/tools/perf/arch/x86/util/unwind-libunwind.c
-+++ b/tools/perf/arch/x86/util/unwind-libunwind.c
-@@ -1,11 +1,11 @@
- // SPDX-License-Identifier: GPL-2.0
+--- a/drivers/xen/xenbus/xenbus_dev_frontend.c
++++ b/drivers/xen/xenbus/xenbus_dev_frontend.c
+@@ -55,6 +55,7 @@
+ #include <linux/string.h>
+ #include <linux/slab.h>
+ #include <linux/miscdevice.h>
++#include <linux/workqueue.h>
  
- #include <errno.h>
-+#include "../../util/debug.h"
- #ifndef REMOTE_UNWIND_LIBUNWIND
- #include <libunwind.h>
- #include "perf_regs.h"
- #include "../../util/unwind.h"
--#include "../../util/debug.h"
- #endif
+ #include <xen/xenbus.h>
+ #include <xen/xen.h>
+@@ -113,6 +114,8 @@ struct xenbus_file_priv {
+ 	wait_queue_head_t read_waitq;
  
- #ifdef HAVE_ARCH_X86_64_SUPPORT
--- 
-2.20.1
-
+ 	struct kref kref;
++
++	struct work_struct wq;
+ };
+ 
+ /* Read out any raw xenbus messages queued up. */
+@@ -297,14 +300,14 @@ static void watch_fired(struct xenbus_wa
+ 	mutex_unlock(&adap->dev_data->reply_mutex);
+ }
+ 
+-static void xenbus_file_free(struct kref *kref)
++static void xenbus_worker(struct work_struct *wq)
+ {
+ 	struct xenbus_file_priv *u;
+ 	struct xenbus_transaction_holder *trans, *tmp;
+ 	struct watch_adapter *watch, *tmp_watch;
+ 	struct read_buffer *rb, *tmp_rb;
+ 
+-	u = container_of(kref, struct xenbus_file_priv, kref);
++	u = container_of(wq, struct xenbus_file_priv, wq);
+ 
+ 	/*
+ 	 * No need for locking here because there are no other users,
+@@ -330,6 +333,18 @@ static void xenbus_file_free(struct kref
+ 	kfree(u);
+ }
+ 
++static void xenbus_file_free(struct kref *kref)
++{
++	struct xenbus_file_priv *u;
++
++	/*
++	 * We might be called in xenbus_thread().
++	 * Use workqueue to avoid deadlock.
++	 */
++	u = container_of(kref, struct xenbus_file_priv, kref);
++	schedule_work(&u->wq);
++}
++
+ static struct xenbus_transaction_holder *xenbus_get_transaction(
+ 	struct xenbus_file_priv *u, uint32_t tx_id)
+ {
+@@ -626,6 +641,7 @@ static int xenbus_file_open(struct inode
+ 	INIT_LIST_HEAD(&u->watches);
+ 	INIT_LIST_HEAD(&u->read_buffers);
+ 	init_waitqueue_head(&u->read_waitq);
++	INIT_WORK(&u->wq, xenbus_worker);
+ 
+ 	mutex_init(&u->reply_mutex);
+ 	mutex_init(&u->msgbuffer_mutex);
 
 
