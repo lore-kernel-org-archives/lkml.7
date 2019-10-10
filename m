@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95668ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE08C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F0D620679
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:53:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55FCE20679
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:53:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697619;
-	bh=6SkMzT9k6yp6Cj1bG3nLbeaWUtm82QQSSSOy363reCI=;
+	s=default; t=1570697621;
+	bh=6FO32yOtCVloDZBsqif4npnbRKdAuNoJFjki84pFNh8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nlnGYDoaoKE/+3f+BDLZtDd0bClpFvK5PTVEDahws+2jiB9AWIovRv3X+pQI/6WCc
-	 DrGF5gEDoRoY4yiOeMyOOqHVirXi5B7EKRdRok6ffOQIfFJzoqYTKUc2MhaH9pPo/C
-	 ig6SADpR/HlRwCMWiFhti7J3Jc78AA18qwXa5qtk=
+	b=dVNIocciG/MGh2g273ksCp5PsIUY+AlDxK4UUB2XhUsWQk7FbjC43cmd2V+D+LAhK
+	 vt+AJPM9ForUQeA6bqvRwXmoAsxs1zLvGSn+ClDJ8MtxHr4GcNW6/GRyCs9kRal/p1
+	 37XtwvzSzOp/flOAJ5XUqslpNbLM3ZT0FdAOW5oM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390130AbfJJIvg (ORCPT
+        id S2390115AbfJJIv2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:51:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59098 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:51:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390123AbfJJIvb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:51:31 -0400
+        id S2390094AbfJJIvS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:51:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C806220679;
-        Thu, 10 Oct 2019 08:51:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5317A2064A;
+        Thu, 10 Oct 2019 08:51:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697490;
-        bh=6SkMzT9k6yp6Cj1bG3nLbeaWUtm82QQSSSOy363reCI=;
+        s=default; t=1570697476;
+        bh=6FO32yOtCVloDZBsqif4npnbRKdAuNoJFjki84pFNh8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IaAmdnwNeTHO6jTWbJIZFfOk924U1sROlothrV46NasFBmAyqnSlggUGrDktd1GyX
-         AeYYCqtDjSJlhO0lHbyeExyrMFgTScWzzaVyqDAt1nu51KHGtMFssq8b9k3IyyolC7
-         xpdlIreKieWRPcjPMLLS3BowHa1T0B9RW6BkvDqM=
+        b=ihuO3A/v6Cur8uJYqkutcuP3gK9mcqQxsdFh6ot4ZQ7Fv/u5ZsuyEMlvUtSR4TDB3
+         +q8PfCDNM75f87JMkkJHaXSMyq+sDjSvQc1quAGVHEKn4Bi2ziEgtE1uPUm7RH0RNk
+         7XmcNRWqBtqJuYUZSvc+ardoAigArowahaMMDWfE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Xiubo Li <xiubli@redhat.com>,
-        Mike Christie <mchristi@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 46/61] nbd: fix crash when the blksize is zero
-Date:   Thu, 10 Oct 2019 10:37:11 +0200
-Message-Id: <20191010083518.820493491@linuxfoundation.org>
+        stable@vger.kernel.org, Andreas Krebbel <krebbel@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Hendrik Brueckner <brueckner@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 42/61] perf build: Add detection of java-11-openjdk-devel package
+Date:   Thu, 10 Oct 2019 10:37:07 +0200
+Message-Id: <20191010083516.751061291@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083449.500442342@linuxfoundation.org>
 References: <20191010083449.500442342@linuxfoundation.org>
@@ -61,85 +64,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiubo Li <xiubli@redhat.com>
+From: Thomas Richter <tmricht@linux.ibm.com>
 
-[ Upstream commit 553768d1169a48c0cd87c4eb4ab57534ee663415 ]
+[ Upstream commit 815c1560bf8fd522b8d93a1d727868b910c1cc24 ]
 
-This will allow the blksize to be set zero and then use 1024 as
-default.
+With Java 11 there is no seperate JRE anymore.
 
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Xiubo Li <xiubli@redhat.com>
-[fix to use goto out instead of return in genl_connect]
-Signed-off-by: Mike Christie <mchristi@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Details:
+
+  https://coderanch.com/t/701603/java/JRE-JDK
+
+Therefore the detection of the JRE needs to be adapted.
+
+This change works for s390 and x86.  I have not tested other platforms.
+
+Committer testing:
+
+Continues to work with the OpenJDK 8:
+
+  $ rm -f ~acme/lib64/libperf-jvmti.so
+  $ rpm -qa | grep jdk-devel
+  java-1.8.0-openjdk-devel-1.8.0.222.b10-0.fc30.x86_64
+  $ git log --oneline -1
+  a51937170f33 (HEAD -> perf/core) perf build: Add detection of java-11-openjdk-devel package
+  $ rm -rf /tmp/build/perf ; mkdir -p /tmp/build/perf ; make -C tools/perf O=/tmp/build/perf install > /dev/null 2>1
+  $ ls -la ~acme/lib64/libperf-jvmti.so
+  -rwxr-xr-x. 1 acme acme 230744 Sep 24 16:46 /home/acme/lib64/libperf-jvmti.so
+  $
+
+Suggested-by: Andreas Krebbel <krebbel@linux.ibm.com>
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Hendrik Brueckner <brueckner@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Link: http://lore.kernel.org/lkml/20190909114116.50469-4-tmricht@linux.ibm.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/nbd.c | 23 ++++++++++++++++++++---
- 1 file changed, 20 insertions(+), 3 deletions(-)
+ tools/perf/Makefile.config | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index e4b049f281f50..a65e4ed6c9372 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -132,6 +132,8 @@ static struct dentry *nbd_dbg_dir;
- 
- #define NBD_MAGIC 0x68797548
- 
-+#define NBD_DEF_BLKSIZE 1024
-+
- static unsigned int nbds_max = 16;
- static int max_part = 16;
- static struct workqueue_struct *recv_workqueue;
-@@ -1216,6 +1218,14 @@ static void nbd_clear_sock_ioctl(struct nbd_device *nbd,
- 		nbd_config_put(nbd);
- }
- 
-+static bool nbd_is_valid_blksize(unsigned long blksize)
-+{
-+	if (!blksize || !is_power_of_2(blksize) || blksize < 512 ||
-+	    blksize > PAGE_SIZE)
-+		return false;
-+	return true;
-+}
-+
- /* Must be called with config_lock held */
- static int __nbd_ioctl(struct block_device *bdev, struct nbd_device *nbd,
- 		       unsigned int cmd, unsigned long arg)
-@@ -1231,8 +1241,9 @@ static int __nbd_ioctl(struct block_device *bdev, struct nbd_device *nbd,
- 	case NBD_SET_SOCK:
- 		return nbd_add_socket(nbd, arg, false);
- 	case NBD_SET_BLKSIZE:
--		if (!arg || !is_power_of_2(arg) || arg < 512 ||
--		    arg > PAGE_SIZE)
-+		if (!arg)
-+			arg = NBD_DEF_BLKSIZE;
-+		if (!nbd_is_valid_blksize(arg))
- 			return -EINVAL;
- 		nbd_size_set(nbd, arg,
- 			     div_s64(config->bytesize, arg));
-@@ -1312,7 +1323,7 @@ static struct nbd_config *nbd_alloc_config(void)
- 	atomic_set(&config->recv_threads, 0);
- 	init_waitqueue_head(&config->recv_wq);
- 	init_waitqueue_head(&config->conn_wait);
--	config->blksize = 1024;
-+	config->blksize = NBD_DEF_BLKSIZE;
- 	atomic_set(&config->live_connections, 0);
- 	try_module_get(THIS_MODULE);
- 	return config;
-@@ -1744,6 +1755,12 @@ static int nbd_genl_connect(struct sk_buff *skb, struct genl_info *info)
- 	if (info->attrs[NBD_ATTR_BLOCK_SIZE_BYTES]) {
- 		u64 bsize =
- 			nla_get_u64(info->attrs[NBD_ATTR_BLOCK_SIZE_BYTES]);
-+		if (!bsize)
-+			bsize = NBD_DEF_BLKSIZE;
-+		if (!nbd_is_valid_blksize(bsize)) {
-+			ret = -EINVAL;
-+			goto out;
-+		}
- 		nbd_size_set(nbd, bsize, div64_u64(config->bytesize, bsize));
- 	}
- 	if (info->attrs[NBD_ATTR_TIMEOUT]) {
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index f362ee46506ad..b97e31498ff76 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -795,7 +795,7 @@ ifndef NO_JVMTI
+     JDIR=$(shell /usr/sbin/update-java-alternatives -l | head -1 | awk '{print $$3}')
+   else
+     ifneq (,$(wildcard /usr/sbin/alternatives))
+-      JDIR=$(shell /usr/sbin/alternatives --display java | tail -1 | cut -d' ' -f 5 | sed 's%/jre/bin/java.%%g')
++      JDIR=$(shell /usr/sbin/alternatives --display java | tail -1 | cut -d' ' -f 5 | sed -e 's%/jre/bin/java.%%g' -e 's%/bin/java.%%g')
+     endif
+   endif
+   ifndef JDIR
 -- 
 2.20.1
 
