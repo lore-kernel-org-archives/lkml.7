@@ -5,62 +5,62 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 341B4C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 15:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBCDC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 15:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01A2B21835
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 15:16:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8864720B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 15:16:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CEhsoKqb"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GJzkF6Ky"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbfJJPQG (ORCPT
+        id S1726566AbfJJPQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 11:16:06 -0400
-Received: from mail-wm1-f73.google.com ([209.85.128.73]:43994 "EHLO
-        mail-wm1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726479AbfJJPQF (ORCPT
+        Thu, 10 Oct 2019 11:16:10 -0400
+Received: from mail-wr1-f74.google.com ([209.85.221.74]:46481 "EHLO
+        mail-wr1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbfJJPQH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 11:16:05 -0400
-Received: by mail-wm1-f73.google.com with SMTP id l3so2757729wmf.8
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 08:16:04 -0700 (PDT)
+        Thu, 10 Oct 2019 11:16:07 -0400
+Received: by mail-wr1-f74.google.com with SMTP id z17so2902154wru.13
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 08:16:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=IzMPe/tjamSa0KLYQxTKRfMo0szpHPyKHH63Rc8COQE=;
-        b=CEhsoKqb1NUOR2q9K12j5UZX10yW1wI2M3yPsx7L52TxlBGNCNvfJ8OpKpFeodUWNO
-         A8V/AN3q5wNrJ4f2inCZFsdFJRT8MoUDRp4LP77DqdmmB5/2jnF0zZMk1UzqK9rmTIZN
-         7fQFJyk6lzYIeOtWenG5f9RdXOyf5j6OrG914HRXCGVMNAOZURmjzdtQkUvdMfdy3Wq1
-         9/iZ0Yap9Hol6k0NlLwvulKLYBo3qG7C9XQzwpqGYI0RZmuzQZXQvkhOtKJ4yXwrpHgi
-         D1uQQmY72bE6vHjTxMJalR8KGShZmbyMybxZQDzfEsFjGhTX15OtTM3Ol9doWeF1+ihk
-         x69Q==
+        bh=1ARHOj6w9aLyVTJEhzjEUyZm1gwUAbrQST+T57l1TKQ=;
+        b=GJzkF6KyMP2v5SqFDiGZJugryBGiWEYtoB5Op7MJqsvBGEf1CmHYnQ8lhAWb8rJ5eH
+         U1d3KEhCjV9KKwOYgyXJQ2FjPpDgWhGPRsjzCi3CjTkjf/j+DfstrQNGUtEhO5IanBNo
+         TN2iZtJvoFLSVDwtNDfXGsg2Sjjf8e8rdF9pQX1efteHrrB4z1Q77M9PFWlabzr0lrtv
+         t7GYMczsCoi8TkgZrhAud5IwHrAmQbSwfT6b7CIJESHL3/S1vbL1e14GevU22E0Ls6Ha
+         Aq6QXeBCZ+dmN+V/1MsQONiaamFlStqgk0h2VdqlLhl5jF25igC9mEzhrdhI+yPbiTXr
+         bOXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=IzMPe/tjamSa0KLYQxTKRfMo0szpHPyKHH63Rc8COQE=;
-        b=j16TVOkXoCdtDMgUul6EKK5UeMTZ0Rd2VW3XO0PRffgBQT3xYUCVkO4ZmFjFBMTXG8
-         yPxu/iryM/Cp41iiGdOPrlvNLaAne6zkbdudKsDuOBHoc8STamzc+ssTSHpQEPVa+ixg
-         2va1PGTSjeawy56KKGCa+scgPdpWAWw9F/OsD0KhZQdBGNAuVKgPDhByXuufBQAb184S
-         2NvuXzpNOtW6FMFKSoOpB1V26S/0zOP3qD8GCvoW8YkPKgmxdnj4VpmxfjERGZjyRNpH
-         H6rRCChhGDk5DBpWIW3+dMKLr6bNbxF52rPAo6eu4ANtonO607sayYAdP5xdYlJlhy5z
-         8caw==
-X-Gm-Message-State: APjAAAVa7ms57/tOawodIYch+ywaH8qceo/LnhkA64o59G1/Y5sq0KD2
-        kMosc+dBv44XibK7Zk4A4nasQ8jpGbKS/OkBEx3uzcZuyaVN9y+pnU/oCQeBGKkAo0Kafy3xuiX
-        C/LKaqM+rIeOb96NPOq8cqZrFmcaNGEZWe7E082g7sTIASkLuz+f104lma6qHApiE5dShIMCYMR
-        U=
-X-Google-Smtp-Source: APXvYqxUFrO45AenqhkUTcZaTxun64DQq7V5a8YzdTqBy7fIUjqZPr6+DetwheUXxVd12BKdJKq68KIhnd9B1w==
-X-Received: by 2002:adf:9cca:: with SMTP id h10mr8720719wre.339.1570720563350;
- Thu, 10 Oct 2019 08:16:03 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 16:14:40 +0100
+        bh=1ARHOj6w9aLyVTJEhzjEUyZm1gwUAbrQST+T57l1TKQ=;
+        b=Z4Iv8jDfGphaVRjR8MvExS1mY2VZ6t73XOxQqBBynVxMvwoBI7L6Vv9IGay+v8vbpC
+         av0W8Kwxbu00zwWE2+dIBJPcM4840otYwLwMUoroc7e688XMDhsmko+D83m9yXIVMnsb
+         yZOD5MHnvmqx6/K9QmwuN2A7GWji+e7KJ6/DluLsLAX8FHHtkpC0fHWjGgvgI6DopFch
+         9QiSiQbs8yNqz+V+V6+/rVn4XSQmCfYwwkfL1PJ+DOtb9zWJrQMNJJdHx72BzGo4RWdd
+         WhWbxmEDDZW+Ev8CPwtB+t6Tb/3Lcu07EjHHhH/hFZHjOXT9e8sH/sC+9k/aXGq4GL4x
+         1aaw==
+X-Gm-Message-State: APjAAAVh67JSI1gyawdVHxCAZUquwyYOdUewjONRYldpz1j6Vg7WQ548
+        jyho7rBioc9LNR4fz76w2zD4y3EaR8aM+uICvr+MISQmEYgeDEouCOy8n4DnRzWn9eAmbZ5pKwk
+        qRF6Uy6y4Zf4L1TQ9Hl2QhIIVOHeR63vRVca11lL+JChAof6hfrzQS2qvHkx9xVyMDCWLtsASkQ
+        c=
+X-Google-Smtp-Source: APXvYqyLuvisTP6JI3eALfLl1SscfJp8IEhzE6/QbZAsoJJkpvtr4f8EkjksGu0SFkAYCwb3cUbZwM1xdQ7ydQ==
+X-Received: by 2002:a05:6000:128f:: with SMTP id f15mr8853717wrx.319.1570720566104;
+ Thu, 10 Oct 2019 08:16:06 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 16:14:41 +0100
 In-Reply-To: <20191010151443.7399-1-maennich@google.com>
-Message-Id: <20191010151443.7399-2-maennich@google.com>
+Message-Id: <20191010151443.7399-3-maennich@google.com>
 Mime-Version: 1.0
 References: <20191010151443.7399-1-maennich@google.com>
 X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
-Subject: [PATCH 1/4] modpost: delegate updating namespaces to separate function
+Subject: [PATCH 2/4] modpost: make updating the symbol namespace explict
 From:   Matthias Maennich <maennich@google.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     kernel-team@android.com, maennich@google.com,
@@ -78,71 +78,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let the function 'sym_update_namespace' take care of updating the
-namespace for a symbol. While this currently only replaces one single
-location where namespaces are updated, in a following patch, this
-function will get more call sites.
-
-The function signature is intentionally close to sym_update_crc and
-taking the name by char* seems like unnecessary work as the symbol has
-to be looked up again. In a later patch of this series, this concern
-will be addressed.
-
-This function ensures that symbol::namespace is either NULL or has a
-valid non-empty value. Previously, the empty string was considered 'no
-namespace' as well and this lead to confusion.
+Setting the symbol namespace of a symbol within sym_add_exported feels
+displaced and lead to issues in the current implementation of symbol
+namespaces. This patch makes updating the namespace an explicit call to
+decouple it from adding a symbol to the export list.
 
 Signed-off-by: Matthias Maennich <maennich@google.com>
 ---
- scripts/mod/modpost.c | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ scripts/mod/modpost.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index 4d2cdb4d71e3..9f5dcdff4d2f 100644
+index 9f5dcdff4d2f..46137b730447 100644
 --- a/scripts/mod/modpost.c
 +++ b/scripts/mod/modpost.c
-@@ -362,6 +362,22 @@ static char *sym_extract_namespace(const char **symname)
- 	return namespace;
- }
- 
-+static void sym_update_namespace(const char *symname, const char *namespace)
-+{
-+       struct symbol *s = find_symbol(symname);
-+       /* That symbol should have been created earlier and thus this is
-+        * actually an assertion. */
-+       if (!s) {
-+               merror("Could not update namespace(%s) for symbol %s\n",
-+                      namespace, symname);
-+               return;
-+       }
-+
-+       free(s->namespace);
-+       s->namespace =
-+	       namespace && namespace[0] ? NOFAIL(strdup(namespace)) : NULL;
-+}
-+
- /**
+@@ -382,8 +382,8 @@ static void sym_update_namespace(const char *symname, const char *namespace)
   * Add an exported symbol - it may have already been added without a
   * CRC, in this case just update the CRC
-@@ -383,8 +399,7 @@ static struct symbol *sym_add_exported(const char *name, const char *namespace,
+  **/
+-static struct symbol *sym_add_exported(const char *name, const char *namespace,
+-				       struct module *mod, enum export export)
++static struct symbol *sym_add_exported(const char *name, struct module *mod,
++				       enum export export)
+ {
+ 	struct symbol *s = find_symbol(name);
+ 
+@@ -399,7 +399,6 @@ static struct symbol *sym_add_exported(const char *name, const char *namespace,
  			s->module = mod;
  		}
  	}
--	free(s->namespace);
--	s->namespace = namespace ? strdup(namespace) : NULL;
-+	sym_update_namespace(name, namespace);
+-	sym_update_namespace(name, namespace);
  	s->preloaded = 0;
  	s->vmlinux   = is_vmlinux(mod->name);
  	s->kernel    = 0;
-@@ -2196,7 +2211,7 @@ static int check_exports(struct module *mod)
- 		else
- 			basename = mod->name;
- 
--		if (exp->namespace && exp->namespace[0]) {
-+		if (exp->namespace) {
- 			add_namespace(&mod->required_namespaces,
- 				      exp->namespace);
- 
+@@ -761,7 +760,8 @@ static void handle_modversions(struct module *mod, struct elf_info *info,
+ 		if (strstarts(symname, "__ksymtab_")) {
+ 			name = symname + strlen("__ksymtab_");
+ 			namespace = sym_extract_namespace(&name);
+-			sym_add_exported(name, namespace, mod, export);
++			sym_add_exported(name, mod, export);
++			sym_update_namespace(name, namespace);
+ 			free(namespace);
+ 		}
+ 		if (strcmp(symname, "init_module") == 0)
+@@ -2469,12 +2469,12 @@ static void read_dump(const char *fname, unsigned int kernel)
+ 			mod = new_module(modname);
+ 			mod->skip = 1;
+ 		}
+-		s = sym_add_exported(symname, namespace, mod,
+-				     export_no(export));
++		s = sym_add_exported(symname, mod, export_no(export));
+ 		s->kernel    = kernel;
+ 		s->preloaded = 1;
+ 		s->is_static = 0;
+ 		sym_update_crc(symname, mod, crc, export_no(export));
++		sym_update_namespace(symname, namespace);
+ 	}
+ 	release_file(file, size);
+ 	return;
 -- 
 2.23.0.581.g78d2f28ef7-goog
 
