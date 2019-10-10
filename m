@@ -2,107 +2,153 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2920C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 06:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B3BC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 06:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE392218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 06:07:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D31320B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 06:15:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="sbIhRX2J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732885AbfJJGHt (ORCPT
+        id S1732815AbfJJGPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 02:07:49 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:43000 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726983AbfJJGHs (ORCPT
+        Thu, 10 Oct 2019 02:15:12 -0400
+Received: from ste-pvt-msa1.bahnhof.se ([213.80.101.70]:49439 "EHLO
+        ste-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726664AbfJJGPL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 02:07:48 -0400
-Received: by mail-lf1-f66.google.com with SMTP id c195so3405070lfg.9;
-        Wed, 09 Oct 2019 23:07:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=GYwpl+dJNMNoXcqNJFFxQgmx1yNVNLIbdWMuM8XH/a0=;
-        b=ekNISIm84MiFipvdd8pp5OrxXwE3qgr0PytWDBaWFGlJuf0WfJqbq7Nwa4zk+5A7cV
-         gRZp0XbA/q7IMJKsjE8oWLcP9xrhih4iOQSmzKlyef44Vq4rjoXagYz/VM9cYo+QY/C0
-         1cPeg8qdN/7zYEKvJXNbJ14mbdJXslkUCx/7ISbAk5wgymAytiQG37ajsEfqCyRW282u
-         8dQ+joUEbyeJ7X4LAno6FZAo6QmhJy7t75mMlULRNCK3ZvaG3+sDiFcBlA0TicHe4Lgi
-         D7igaIebuGDLAoUFyCI0sErK8xzLlND5BuDlDIPUjk2gI0FOZ+FvLQje17cxQ91CrogO
-         DelQ==
-X-Gm-Message-State: APjAAAXixSCYjJMonwx1mxR2YHtFt8lSrzGMZSdMemiYqoW1F0HWDPtQ
-        izwuZWnWdV1rxjR5w6MJgPo=
-X-Google-Smtp-Source: APXvYqz2V7USWc2sG27n/LR7ANjruXPbL1AKm7rjryZYn5k1t8ncB1nNwCuCIs/bQ43h+jqoIzVJiQ==
-X-Received: by 2002:a19:4f0e:: with SMTP id d14mr4567119lfb.177.1570687665921;
-        Wed, 09 Oct 2019 23:07:45 -0700 (PDT)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id q66sm919806ljq.101.2019.10.09.23.07.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 23:07:45 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 09:07:33 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jiri Kosina <trivial@kernel.org>,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] wdt: bd70528: Trivial function documentation fix
-Message-ID: <20191010060733.GA9979@localhost.localdomain>
+        Thu, 10 Oct 2019 02:15:11 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 1772C3F669;
+        Thu, 10 Oct 2019 08:15:09 +0200 (CEST)
+Authentication-Results: ste-pvt-msa1.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=sbIhRX2J;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
+        by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id yF_BPEmU0Hjj; Thu, 10 Oct 2019 08:15:08 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 9B3E83F382;
+        Thu, 10 Oct 2019 08:15:04 +0200 (CEST)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id D1CAF360162;
+        Thu, 10 Oct 2019 08:15:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1570688103; bh=4ue4EqSxzXPPi4ag3sKg2WTH3PY+hWrK79ED1yBsa+0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=sbIhRX2JQ+of5RLA1KLI3iQ7xs3ubZLmjQuAA5owJXkEMaAF+3Wgh6UKoEZkI7KJo
+         66hjoJLEsbvXDc87+xAg1IhFKaHJEBhnegJnUKu4vAx/NNDexVYH+TUbDBPK5B2Vsd
+         ohUzQ8JecXUJerZgrz2/9c6Rzc0OdurkQyVquwHk=
+Subject: Re: [PATCH v4 3/9] mm: pagewalk: Don't split transhuge pmds when a
+ pmd_entry is present
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rik van Riel <riel@surriel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Huang Ying <ying.huang@intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
+References: <20191008091508.2682-1-thomas_os@shipmail.org>
+ <20191008091508.2682-4-thomas_os@shipmail.org>
+ <20191009152737.p42w7w456zklxz72@box>
+ <CAHk-=wh4waroKr-Xtcv+5pTxBcHxGEj-g73eQvXVawML_C0EXw@mail.gmail.com>
+ <03d85a6a-e24a-82f4-93b8-86584b463471@shipmail.org>
+ <CAHk-=whhdRSqjX5wy1LzFYnOG58UztpifkNvbxBcTVbT3Mzv4g@mail.gmail.com>
+ <MN2PR05MB6141B981C2CAB4955D59747EA1950@MN2PR05MB6141.namprd05.prod.outlook.com>
+ <CAHk-=wgy-ULe8UmEDn9gCCmTtw65chS0h309WrTaQhK3RAXM-A@mail.gmail.com>
+ <c054849e-1e24-6b27-6a54-740ea9d17054@shipmail.org>
+ <CAHk-=wgmr-BPMTnSuKrAMoHL_A0COV_sZkdcNB9aosYfouA_fw@mail.gmail.com>
+ <80f25292-585c-7729-2a23-7c46b3309a1a@shipmail.org>
+ <CAHk-=wg6n_nGRtJd4MeXZrA5QrrVViJeO4x2w37KDbcDmTh3dg@mail.gmail.com>
+ <6d3ef513-ca9d-9778-10da-86f368a57cd0@shipmail.org>
+ <CAHk-=wimOMuhBVrxYneQ5bawFNeGW1h_D3cxN80pitDKgfBx0A@mail.gmail.com>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <2899bd30-ca8a-3b44-8946-a69de8db7b93@shipmail.org>
+Date:   Thu, 10 Oct 2019 08:15:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CAHk-=wimOMuhBVrxYneQ5bawFNeGW1h_D3cxN80pitDKgfBx0A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function documentation for the exported  ROHM BD70528 WDG control
-functions used old argument names. Fix the names.
+On 10/10/19 4:07 AM, Linus Torvalds wrote:
+> On Wed, Oct 9, 2019 at 6:10 PM Thomas Hellström (VMware)
+> <thomas_os@shipmail.org> wrote:
+>> Your original patch does exactly the same!
+> Oh, no. You misread my original patch.
+>
+> Look again.
+>
+> The logic in my original patch was very different. It said that
+>
+>   - *if* we have a pmd_entry function, then we obviously call that one.
+>
+>      And if - after calling the pmd_entry function - we are still a
+> hugepage, then we skip the pte_entry case entirely.
+>
+>     And part of skipping is obviously "don't split" - but it never had
+> that "don't split and then call the pte walker" case.
+>
+>   - and if we *don't* have a pmd_entry function, but we do have a
+> pte_entry function, then we always split before calling it.
+>
+> Notice the difference?
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
- drivers/watchdog/bd70528_wdt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ From what I can tell, my patch is doing the same. At least that always 
+was the intention. To determine whether to skip pte and skip split, your 
+patch uses
 
-diff --git a/drivers/watchdog/bd70528_wdt.c b/drivers/watchdog/bd70528_wdt.c
-index b0152fef4fc7..439f9920978a 100644
---- a/drivers/watchdog/bd70528_wdt.c
-+++ b/drivers/watchdog/bd70528_wdt.c
-@@ -97,7 +97,7 @@ EXPORT_SYMBOL(bd70528_wdt_set);
- /**
-  * bd70528_wdt_lock - take WDT lock
-  *
-- * @bd70528:	device data for the PMIC instance we want to operate on
-+ * @data:	device data for the PMIC instance we want to operate on
-  *
-  * Lock WDT for arming/disarming in order to avoid race condition caused
-  * by WDT state changes initiated by WDT and RTC drivers.
-@@ -114,7 +114,7 @@ EXPORT_SYMBOL(bd70528_wdt_lock);
- /**
-  * bd70528_wdt_unlock - unlock WDT lock
-  *
-- * @bd70528:	device data for the PMIC instance we want to operate on
-+ * @data:	device data for the PMIC instance we want to operate on
-  *
-  * Unlock WDT lock which has previously been taken by call to
-  * bd70528_wdt_lock.
--- 
-2.21.0
+                         /* No pte level at all? */
+                         if (is_swap_pmd(*pmd) || pmd_trans_huge(*pmd)
+|| pmd_devmap(*pmd))
+                                 continue;
+
+whereas my patch does
+
+                         if (pmd_trans_unstable(pmd))
+                                 goto again;
+			/* Fall through */
+
+which is the same (pmd_trans_unstable() is the same test as you do, but 
+not racy). Yes, it's missing the test for pmd_devmap() but I think 
+that's an mm bug been discussed elsewhere, and we also rerun because a 
+huge / none pmd at this (FALLBACK) point is probably a race and unintended.
+
+>
+> But I think the "change pmd_entry to have a sane return code" is a
+> simpler and more flexible model, and then the pmd_entry code can just
+> let the pte walker split the pmd if needed.
+
+OK, let's aim for that then.
+
+Thanks,
+
+Thomas
 
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+>
+> So I liked that part of your patch.
+>
+>             Linus
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+
