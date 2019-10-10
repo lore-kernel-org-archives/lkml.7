@@ -2,104 +2,98 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A735C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA435C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E9A9208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:20:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BB2220650
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:21:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TThZtPzW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388172AbfJJNUA (ORCPT
+        id S1727852AbfJJNVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 09:20:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59340 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727852AbfJJNUA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 09:20:00 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 456B92064A;
-        Thu, 10 Oct 2019 13:19:58 +0000 (UTC)
-Date:   Thu, 10 Oct 2019 09:19:56 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com
-Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
-Message-ID: <20191010091956.48fbcf42@gandalf.local.home>
-In-Reply-To: <20191010092054.GR2311@hirez.programming.kicks-ass.net>
-References: <20191007081716.07616230.8@infradead.org>
-        <20191007081945.10951536.8@infradead.org>
-        <20191008104335.6fcd78c9@gandalf.local.home>
-        <20191009224135.2dcf7767@oasis.local.home>
-        <20191010092054.GR2311@hirez.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 10 Oct 2019 09:21:19 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39536 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387669AbfJJNVT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 09:21:19 -0400
+Received: by mail-pg1-f196.google.com with SMTP id e1so3667426pgj.6
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 06:21:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sNkcoz2qQQJzkBN7TPFJIs9Ujhr7nKC1loZQV/g1Ccw=;
+        b=TThZtPzWNwtue6y9ZvOvLq6kR6ynBi2BIcoQKTknfEa20G6yABruMP0e6OSvYmKL1R
+         xy0qmWhh+Dmj0wdywBiBYLDq5/efZroBtm0ys74wBJ363qjZH0aw/8QmT/GqT2lFbcKV
+         xJl81Bb/6SqayixA/EZLwSqDCWirabUa8la2y3XTHjMI2l5KxKQ5FD9eNfwc/srsgnEA
+         eOe8yAUdtzhVwqk+kSss+GeHaoy3FEx/gNw3paIOBUl4GsBPvxuWyEA4DwIMfOS4lbad
+         y0APRmiuziMLmxPC/2afgJiUOqMLawyGSptp0hQerIjkLpff9qUJf9dsj+WDBxzOq23G
+         YN9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sNkcoz2qQQJzkBN7TPFJIs9Ujhr7nKC1loZQV/g1Ccw=;
+        b=NXmUxoguY6vExY9Fcyjj26EPhGHm+MIb0lPSTaNJW3T6t8ObDvQOf6xxQqHTgny/+L
+         0gT+ZXKY6F1d2fHiPxnrNmTBMYLbjjVRfMawVjrhpbwdN3l1RYnhm9rL/gs9nY+TjtT9
+         hEWeH6AvL6ROO/04IIMq+pSmue1nY0Pm08yx8w/8OXL+NvEMEWdAnQeFWrhGeIOS/5zf
+         HeCXT6BRuB0M1LVLsXkQZh0afFirN0+rrhBb7Jwsu7UM3i+Igp53BIUeiod95a1AEqtz
+         aBuH6FhdpJQD80lsy95PLU2PdGOhiaMsvgI3AWFrKPoB73D0d62pXzBjNJLnPpn0s9Ev
+         ViiQ==
+X-Gm-Message-State: APjAAAXpEYn5mw67ej8wKB2co/JMIQx6yTQnzO0/vn8WbW2lhfp2vC0d
+        h8f/I+Zf3nFUgqVTojNkYKw=
+X-Google-Smtp-Source: APXvYqxxC4XA4qnMxZf6DlRr2Y8MbCIXklm2si2jFX3l34k7sQf8bVDhfMiWHlrhxWxuRU0PD4GJig==
+X-Received: by 2002:a63:215c:: with SMTP id s28mr9934229pgm.302.1570713678298;
+        Thu, 10 Oct 2019 06:21:18 -0700 (PDT)
+Received: from wambui.brck.local ([197.254.95.158])
+        by smtp.googlemail.com with ESMTPSA id w189sm6619667pfw.101.2019.10.10.06.21.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 06:21:17 -0700 (PDT)
+From:   Wambui Karuga <wambui.karugax@gmail.com>
+To:     outreachy-kernel@googlegroups.com
+Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        Wambui Karuga <wambui.karugax@gmail.com>
+Subject: [PATCH] rtl8723bs: Remove comparison to NULL
+Date:   Thu, 10 Oct 2019 16:20:58 +0300
+Message-Id: <20191010132058.20887-1-wambui.karugax@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 10 Oct 2019 11:20:54 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+Remove comparison to NULL in drivers/staging/rtl8723bs/core/rtw_ap.c:1449.
+Issue found by checkpatch.pl
 
-> On Wed, Oct 09, 2019 at 10:41:35PM -0400, Steven Rostedt wrote:
-> > On Tue, 8 Oct 2019 10:43:35 -0400
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
-> > 
-> >   
-> > > BTW, I'd really like to take this patch series through my tree. That
-> > > way I can really hammer it, as well as I have code that will be built
-> > > on top of it.  
-> > 
-> > I did a bit of hammering and found two bugs. One I sent a patch to fix
-> > (adding a module when tracing is enabled), but the other bug I
-> > triggered, I'm too tired to debug right now. But figured I'd mention it
-> > anyway.  
-> 
-> I'm thinking this should fix it... Just not sure this is the right plce,
-> then again, we're doing the same thing in jump_label and static_call, so
-> perhaps we should do it like this.
-> 
-> --- a/arch/x86/kernel/alternative.c
-> +++ b/arch/x86/kernel/alternative.c
-> @@ -1230,10 +1230,15 @@ void text_poke_queue(void *addr, const v
->   * dynamically allocated memory. This function should be used when it is
->   * not possible to allocate memory.
->   */
-> -void text_poke_bp(void *addr, const void *opcode, size_t len, const void *emulate)
-> +void __ref text_poke_bp(void *addr, const void *opcode, size_t len, const void *emulate)
->  {
->  	struct text_poke_loc tp;
->  
-> +	if (unlikely(system_state == SYSTEM_BOOTING)) {
-> +		text_poke_early(addr, opcode, len);
-> +		return;
-> +	}
+Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
+---
+ drivers/staging/rtl8723bs/core/rtw_ap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-We need a new system state. SYSTEM_UP ? (Arg, that name is confusing,
-SYSTEM_BOOTING_SMP?) Or perhaps just test num_online_cpus()?
-
-	if (unlikely(system_state == SYSTEM_BOOTING &&
-		     num_online_cpus() == 1)
-
-?
-
-Because we can't do the above once we have more than one CPU running.
-
--- Steve
-
-> +
->  	text_poke_loc_init(&tp, addr, opcode, len, emulate);
->  	text_poke_bp_batch(&tp, 1);
->  }
+diff --git a/drivers/staging/rtl8723bs/core/rtw_ap.c b/drivers/staging/rtl8723bs/core/rtw_ap.c
+index 80027ac765d0..7117d16a30f9 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_ap.c
++++ b/drivers/staging/rtl8723bs/core/rtw_ap.c
+@@ -1447,7 +1447,7 @@ u8 rtw_ap_set_pairwise_key(struct adapter *padapter, struct sta_info *psta)
+ 	u8 res = _SUCCESS;
+ 
+ 	ph2c = rtw_zmalloc(sizeof(struct cmd_obj));
+-	if (ph2c == NULL) {
++	if (!ph2c) {
+ 		res = _FAIL;
+ 		goto exit;
+ 	}
+-- 
+2.23.0
 
