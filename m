@@ -2,129 +2,115 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 699A6C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76130C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42F382064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:52:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697577;
-	bh=QpR1/10jKNxxHHlEsodxsXoxMK9wQijIJ/gKND8ySxc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=utgTaRcX4Oaz9+MI5u3/h94jnyWi1TcdrbzznpsRzr+R67x9gNYe1ko8fLHXq7WuB
-	 UVtDTpPYe4oXypRugV5B67Zo0mnoszi4T47SzyOepOAKIjciB4daYO0Xo4IchMZtyH
-	 l2vRlWfCfgYaRSEA2WvUePJgHVGW9Dn+l7pvgjXI=
+	by mail.kernel.org (Postfix) with ESMTP id 4D51B20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:52:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="M4BS0+tP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389060AbfJJIwz (ORCPT
+        id S2388809AbfJJIwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:52:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60164 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389707AbfJJIwR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:52:17 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5971420B7C;
-        Thu, 10 Oct 2019 08:52:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697536;
-        bh=QpR1/10jKNxxHHlEsodxsXoxMK9wQijIJ/gKND8ySxc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1Q7ZOFtULp8Lw8RNV37/K7FnPvbJMPLQyTE0K60hLpNRZNqyDwuOjQTLVvefyEmQC
-         RF8Srl4+65wOFc8a1u6q5yVVdrgf/GILb/vWo87o1zhQyusbm7Ze7o1UETwjWHstEW
-         8Ej8toOQlCfXl5iBYDNQRPQTXXwX+o8NtTfMQ8K0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.14 27/61] cfg80211: initialize on-stack chandefs
-Date:   Thu, 10 Oct 2019 10:36:52 +0200
-Message-Id: <20191010083506.939760520@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191010083449.500442342@linuxfoundation.org>
-References: <20191010083449.500442342@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 10 Oct 2019 04:52:16 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:48904 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390209AbfJJIwI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:52:08 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9A8hf1M171675;
+        Thu, 10 Oct 2019 08:52:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=G0KsV1YxbVFGrkZatR+VCZvWIuzuocCgwD5kF42g0f0=;
+ b=M4BS0+tPoSTzkf49boQcsxdnt4/vqXWQQn7l13mMQwFAmohAyMoS/uLFd6f9CGW/4HQF
+ cd3TtsyZqi784lsMp3UEVhMiWjC8IP7sEu6N/5DItKA6nH/BlUvqdoJaPzEb7Dl661Hz
+ 6LDeOGftOpW833nzoBhpGfbh5toOyh77Q/UAgnYXroHuq6I7N+wZ+M8aVdoHs11lK5v5
+ 9f6Ve86+heFVaXc+iUogC8adP1QkLtzPxu4f5cc7j0jy4aq6MNBcPkIHuXdL6I9DUsR6
+ 2xIAq+3ob2yvMs7SdDsrnufU7zv90O5GnoYu6bEazghtIIzFFVBR3yH0T+0TMRW47AGQ bA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2vejkustce-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Oct 2019 08:52:01 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9A8m98r066979;
+        Thu, 10 Oct 2019 08:52:00 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2vhrxd8f02-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Oct 2019 08:52:00 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9A8pxjN002980;
+        Thu, 10 Oct 2019 08:51:59 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 10 Oct 2019 01:51:57 -0700
+Date:   Thu, 10 Oct 2019 11:51:49 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Jules Irenge <jbi.octave@gmail.com>
+Cc:     outreachy-kernel@googlegroups.com, devel@driverdev.osuosl.org,
+        grekh@linuxfoundation.org, GR-Linux-NIC-Dev@marvell.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: qlge: Fix multiple assignments warning by
+ splitting the assignement into two each
+Message-ID: <20191010085048.GC20470@kadam>
+References: <20191009201029.7051-1-jbi.octave@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191009201029.7051-1-jbi.octave@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9405 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=965
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910100081
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9405 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910100081
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+On Wed, Oct 09, 2019 at 09:10:29PM +0100, Jules Irenge wrote:
+> Fix multiple assignments warning " check
+>  issued by checkpatch.pl tool:
+> "CHECK: multiple assignments should be avoided".
+> 
+> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+> ---
+>  drivers/staging/qlge/qlge_dbg.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
+> index 086f067fd899..69bd4710c5ec 100644
+> --- a/drivers/staging/qlge/qlge_dbg.c
+> +++ b/drivers/staging/qlge/qlge_dbg.c
+> @@ -141,8 +141,10 @@ static int ql_get_serdes_regs(struct ql_adapter *qdev,
+>  	u32 *direct_ptr, temp;
+>  	u32 *indirect_ptr;
+>  
+> -	xfi_direct_valid = xfi_indirect_valid = 0;
+> -	xaui_direct_valid = xaui_indirect_valid = 1;
+> +	xfi_indirect_valid = 0;
+> +	xfi_direct_valid = xfi_indirect_valid;
+> +	xaui_indirect_valid = 1;
+> +	xaui_direct_valid = xaui_indirect_valid
 
-commit f43e5210c739fe76a4b0ed851559d6902f20ceb1 upstream.
+The original code is fine here.  Just ignore checkpatch on this.
 
-In a few places we don't properly initialize on-stack chandefs,
-resulting in EDMG data to be non-zero, which broke things.
-
-Additionally, in a few places we rely on the driver to init the
-data completely, but perhaps we shouldn't as non-EDMG drivers
-may not initialize the EDMG data, also initialize it there.
-
-Cc: stable@vger.kernel.org
-Fixes: 2a38075cd0be ("nl80211: Add support for EDMG channels")
-Reported-by: Dmitry Osipenko <digetx@gmail.com>
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
-Link: https://lore.kernel.org/r/1569239475-I2dcce394ecf873376c386a78f31c2ec8b538fa25@changeid
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- net/wireless/nl80211.c     |    4 +++-
- net/wireless/reg.c         |    2 +-
- net/wireless/wext-compat.c |    2 +-
- 3 files changed, 5 insertions(+), 3 deletions(-)
-
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -2111,6 +2111,8 @@ static int nl80211_parse_chandef(struct
- 
- 	control_freq = nla_get_u32(info->attrs[NL80211_ATTR_WIPHY_FREQ]);
- 
-+	memset(chandef, 0, sizeof(*chandef));
-+
- 	chandef->chan = ieee80211_get_channel(&rdev->wiphy, control_freq);
- 	chandef->width = NL80211_CHAN_WIDTH_20_NOHT;
- 	chandef->center_freq1 = control_freq;
-@@ -2580,7 +2582,7 @@ static int nl80211_send_iface(struct sk_
- 
- 	if (rdev->ops->get_channel) {
- 		int ret;
--		struct cfg80211_chan_def chandef;
-+		struct cfg80211_chan_def chandef = {};
- 
- 		ret = rdev_get_channel(rdev, wdev, &chandef);
- 		if (ret == 0) {
---- a/net/wireless/reg.c
-+++ b/net/wireless/reg.c
-@@ -1567,7 +1567,7 @@ static void reg_call_notifier(struct wip
- 
- static bool reg_wdev_chan_valid(struct wiphy *wiphy, struct wireless_dev *wdev)
- {
--	struct cfg80211_chan_def chandef;
-+	struct cfg80211_chan_def chandef = {};
- 	struct cfg80211_registered_device *rdev = wiphy_to_rdev(wiphy);
- 	enum nl80211_iftype iftype;
- 
---- a/net/wireless/wext-compat.c
-+++ b/net/wireless/wext-compat.c
-@@ -800,7 +800,7 @@ static int cfg80211_wext_giwfreq(struct
- {
- 	struct wireless_dev *wdev = dev->ieee80211_ptr;
- 	struct cfg80211_registered_device *rdev = wiphy_to_rdev(wdev->wiphy);
--	struct cfg80211_chan_def chandef;
-+	struct cfg80211_chan_def chandef = {};
- 	int ret;
- 
- 	switch (wdev->iftype) {
-
+regards,
+dan carpenter
 
