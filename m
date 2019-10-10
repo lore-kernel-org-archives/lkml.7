@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E12C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 606D9C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0399222D2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:41:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D764222D2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:41:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570696914;
-	bh=au7RXpazVKg8aDvc0+r3dLxy0AhQ6+CZk+Ol5BMAo6c=;
+	s=default; t=1570696918;
+	bh=vp8BY+ig8VH0RV4ooBLtwJ7jzgPrMoIacvhyxXcgS8Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rG6lFYbZWc3R3eKYxBqo13ZzUIq8h20G/Ca8r5hzMrOHN9FYT3JwwwnNJCurZkE9z
-	 taYKQXMvo+4MhTt2sYgbwHp/hnAQGd0uaEtN/B9/V2v8STAq+uVktxus3IZQj0/4X4
-	 S1pNTeA1f/RKEQoDoiz9HUqTZWBE2MUOfobdXazs=
+	b=G0uj3qSboIzRh6zLpGhRxasc4ifaQe9krsuDoMfWEnEPVT/nml4EpB3QY/MeK+eSO
+	 yA85YMblA2nfMLJo7L5jeHOvTyvCXfX0BYsoQHysFUPdQpxeeuc5OD43GbkjgwZaJK
+	 OmzURIm4dWUKOYDyJvwbSPVb9GkV3j4oy6+mBL2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388424AbfJJIlx (ORCPT
+        id S2388435AbfJJIl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:41:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46356 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:41:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388414AbfJJIlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:41:49 -0400
+        id S2387721AbfJJIlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:41:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E061021BE5;
-        Thu, 10 Oct 2019 08:41:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 560952190F;
+        Thu, 10 Oct 2019 08:41:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696909;
-        bh=au7RXpazVKg8aDvc0+r3dLxy0AhQ6+CZk+Ol5BMAo6c=;
+        s=default; t=1570696914;
+        bh=vp8BY+ig8VH0RV4ooBLtwJ7jzgPrMoIacvhyxXcgS8Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MVKa4tWZPmZ4xfXKZDmkyXI+eizSyCeByXgVeMmo11Ma+SUOmgrAf+4DHPwYHHaXg
-         RXTuKZDN+EiU65yzqaZrwAJar+btKyJw1Ld0shahTA6C9DyPdXBDLG4fO2SEpIhvEK
-         Tt8DGIcXZQAgWYGvVByF0ZqjuyRHYQOIv3VK+AP0=
+        b=JLbraXo5VLgCHo63WXJ7NSFxuyfC80d/xvwzpFrmYB6sMAyRafKV4QBx/grBNbsTN
+         95ESHzr46DBc7h9i7nGsqLG0XqdQK2GI4Ij72Ct0dzahM9YOunpYWdMr0rq8rwUr7b
+         KPXOfTD5gsoNj2Xdu8DGuuMpV1eV9XQjlsM1p3Ow=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luis Henriques <lhenriques@suse.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
+        stable@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
+        "Yan, Zheng" <zyan@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 098/148] ceph: fix directories inode i_blkbits initialization
-Date:   Thu, 10 Oct 2019 10:35:59 +0200
-Message-Id: <20191010083617.195609047@linuxfoundation.org>
+Subject: [PATCH 5.3 099/148] ceph: fetch cap_gen under spinlock in ceph_add_cap
+Date:   Thu, 10 Oct 2019 10:36:00 +0200
+Message-Id: <20191010083617.246042248@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -61,48 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luis Henriques <lhenriques@suse.com>
+From: Jeff Layton <jlayton@kernel.org>
 
-[ Upstream commit 750670341a24cb714e624e0fd7da30900ad93752 ]
+[ Upstream commit 606d102327a45a49d293557527802ee7fbfd7af1 ]
 
-When filling an inode with info from the MDS, i_blkbits is being
-initialized using fl_stripe_unit, which contains the stripe unit in
-bytes.  Unfortunately, this doesn't make sense for directories as they
-have fl_stripe_unit set to '0'.  This means that i_blkbits will be set
-to 0xff, causing an UBSAN undefined behaviour in i_blocksize():
+It's protected by the s_gen_ttl_lock, so we should fetch under it
+and ensure that we're using the same generation in both places.
 
-  UBSAN: Undefined behaviour in ./include/linux/fs.h:731:12
-  shift exponent 255 is too large for 32-bit type 'int'
-
-Fix this by initializing i_blkbits to CEPH_BLOCK_SHIFT if fl_stripe_unit
-is zero.
-
-Signed-off-by: Luis Henriques <lhenriques@suse.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
 Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/inode.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ fs/ceph/caps.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
-index 18500edefc56f..3b537e7038c7a 100644
---- a/fs/ceph/inode.c
-+++ b/fs/ceph/inode.c
-@@ -801,7 +801,12 @@ static int fill_inode(struct inode *inode, struct page *locked_page,
+diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+index ce0f5658720ab..8fd5301128106 100644
+--- a/fs/ceph/caps.c
++++ b/fs/ceph/caps.c
+@@ -645,6 +645,7 @@ void ceph_add_cap(struct inode *inode,
+ 	struct ceph_cap *cap;
+ 	int mds = session->s_mds;
+ 	int actual_wanted;
++	u32 gen;
  
- 	/* update inode */
- 	inode->i_rdev = le32_to_cpu(info->rdev);
--	inode->i_blkbits = fls(le32_to_cpu(info->layout.fl_stripe_unit)) - 1;
-+	/* directories have fl_stripe_unit set to zero */
-+	if (le32_to_cpu(info->layout.fl_stripe_unit))
-+		inode->i_blkbits =
-+			fls(le32_to_cpu(info->layout.fl_stripe_unit)) - 1;
-+	else
-+		inode->i_blkbits = CEPH_BLOCK_SHIFT;
+ 	dout("add_cap %p mds%d cap %llx %s seq %d\n", inode,
+ 	     session->s_mds, cap_id, ceph_cap_string(issued), seq);
+@@ -656,6 +657,10 @@ void ceph_add_cap(struct inode *inode,
+ 	if (fmode >= 0)
+ 		wanted |= ceph_caps_for_mode(fmode);
  
- 	__ceph_update_quota(ci, iinfo->max_bytes, iinfo->max_files);
++	spin_lock(&session->s_gen_ttl_lock);
++	gen = session->s_cap_gen;
++	spin_unlock(&session->s_gen_ttl_lock);
++
+ 	cap = __get_cap_for_mds(ci, mds);
+ 	if (!cap) {
+ 		cap = *new_cap;
+@@ -681,7 +686,7 @@ void ceph_add_cap(struct inode *inode,
+ 		list_move_tail(&cap->session_caps, &session->s_caps);
+ 		spin_unlock(&session->s_cap_lock);
  
+-		if (cap->cap_gen < session->s_cap_gen)
++		if (cap->cap_gen < gen)
+ 			cap->issued = cap->implemented = CEPH_CAP_PIN;
+ 
+ 		/*
+@@ -775,7 +780,7 @@ void ceph_add_cap(struct inode *inode,
+ 	cap->seq = seq;
+ 	cap->issue_seq = seq;
+ 	cap->mseq = mseq;
+-	cap->cap_gen = session->s_cap_gen;
++	cap->cap_gen = gen;
+ 
+ 	if (fmode >= 0)
+ 		__ceph_get_fmode(ci, fmode);
 -- 
 2.20.1
 
